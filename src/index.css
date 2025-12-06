@@ -43,6 +43,7 @@
   /* Red (Danger) */
   --color-red-50: #fef2f2;
   --color-red-100: #fee2e2;
+  --color-red-300: #fca5a5;
   --color-red-500: #ef4444;
   --color-red-600: #dc2626;
   --color-red-700: #b91c1c;
@@ -51,6 +52,7 @@
   /* Green (Success) */
   --color-green-50: #f0fdf4;
   --color-green-100: #dcfce7;
+  --color-green-300: #86efac;
   --color-green-500: #22c55e;
   --color-green-600: #16a34a;
   --color-green-700: #15803d;
@@ -59,6 +61,7 @@
   /* Orange (Warning) */
   --color-orange-50: #fff7ed;
   --color-orange-100: #ffedd5;
+  --color-orange-300: #fdba74;
   --color-orange-500: #f97316;
   --color-orange-600: #ea580c;
   --color-orange-700: #c2410c;
@@ -419,6 +422,20 @@
   --window-control-size: 16px;
   --window-control-radius: var(--radius-sm);
   --window-control-gap: var(--spacing-1);
+
+  /* ----------------------------------------
+     Component - ContextMenu
+     ---------------------------------------- */
+  --context-menu-min-width: 80px;
+  --context-menu-padding-x: var(--spacing-3);
+  --context-menu-padding-y: var(--spacing-1-5);
+  --context-menu-radius: var(--radius-md);
+
+  /* ----------------------------------------
+     Component - ProgressBar
+     ---------------------------------------- */
+  --progress-bar-height: 4px;
+  --progress-bar-radius: var(--radius-pill);
 
   /* ----------------------------------------
      Component - Slider

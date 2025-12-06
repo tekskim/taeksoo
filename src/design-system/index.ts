@@ -17,6 +17,8 @@ export * from './components/Slider';
 export * from './components/Chip';
 export * from './components/DatePicker';
 export * from './components/WindowControl';
+export * from './components/ContextMenu';
+export * from './components/ProgressBar';
 export * from './components/InlineMessage';
 export * from './components/Disclosure';
 export * from './components/Badge';

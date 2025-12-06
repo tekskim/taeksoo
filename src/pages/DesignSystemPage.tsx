@@ -11,6 +11,8 @@ import {
   DatePicker,
   WindowControl,
   WindowControls,
+  ContextMenu,
+  ProgressBar,
   Toggle,
   Checkbox,
   CheckboxGroup,
@@ -191,6 +193,7 @@ const formControlItems = [
 const dataDisplayItems = [
   { id: 'badge', label: 'Badge', icon: IconTag },
   { id: 'chip', label: 'Chip', icon: IconTag },
+  { id: 'progress-bar', label: 'Progress Bar', icon: IconProgress },
   { id: 'status-indicator', label: 'Status Indicator', icon: IconActivity },
   { id: 'tooltip', label: 'Tooltip', icon: IconMessage2 },
   { id: 'window-control', label: 'Window Control', icon: IconAppWindow },
@@ -201,6 +204,7 @@ const navigationItems = [
   { id: 'tabs', label: 'Tabs', icon: IconLayoutNavbar },
   { id: 'breadcrumb', label: 'Breadcrumb', icon: IconChevronRight },
   { id: 'menu', label: 'Menu', icon: IconMenu2 },
+  { id: 'context-menu', label: 'Context Menu', icon: IconMenu2 },
 ];
 
 // Feedback
@@ -1486,6 +1490,131 @@ export function DesignSystemPage() {
               </VStack>
             </Section>
 
+            {/* ProgressBar Component */}
+            <Section id="progress-bar" title="Progress Bar" description="Visual indicator for quota usage and progress with status-based colors">
+              <VStack gap={8}>
+                {/* Tokens */}
+                <VStack gap={3}>
+                  <Label>Design Tokens</Label>
+                  <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
+                    <code>height: 4px</code> · <code>radius: pill</code>
+                  </div>
+                </VStack>
+
+                {/* Quota Variant - Status Examples */}
+                <VStack gap={3}>
+                  <Label>Quota Variant - Status Based Colors</Label>
+                  <div className="w-[280px] flex flex-col gap-4 p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-subtle)] rounded-[var(--radius-lg)]">
+                    {/* 1. Normal (under 70%) - Green */}
+                    <ProgressBar
+                      variant="quota"
+                      label="Instance"
+                      value={2}
+                      newValue={0}
+                      max={10}
+                    />
+
+                    {/* 2. Warning (70-100%) - Orange */}
+                    <ProgressBar
+                      variant="quota"
+                      label="Instance"
+                      value={8}
+                      newValue={2}
+                      max={10}
+                    />
+
+                    {/* 3. Used < 70% but total >= 70% - Green + Orange */}
+                    <ProgressBar
+                      variant="quota"
+                      label="Instance"
+                      value={5}
+                      newValue={2}
+                      max={10}
+                    />
+
+                    {/* 4. Total exceeds 100% - Red */}
+                    <ProgressBar
+                      variant="quota"
+                      label="Instance"
+                      value={8}
+                      newValue={5}
+                      max={10}
+                    />
+
+                    {/* 5. Already over quota - Red */}
+                    <ProgressBar
+                      variant="quota"
+                      label="Instance"
+                      value={10}
+                      newValue={0}
+                      max={10}
+                    />
+
+                    {/* 6. Unlimited - Gray */}
+                    <ProgressBar
+                      variant="quota"
+                      label="Instance"
+                      value={10}
+                      newValue={0}
+                    />
+                  </div>
+                </VStack>
+
+                {/* Default Variant - Simple Progress */}
+                <VStack gap={3}>
+                  <Label>Default Variant - Simple Progress</Label>
+                  <div className="w-[280px] flex flex-col gap-4 p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-md)]">
+                    <ProgressBar
+                      label="60 MB (75%)"
+                      value={75}
+                      max={100}
+                      statusText="chunking"
+                      showValue={false}
+                    />
+                  </div>
+                </VStack>
+
+                {/* Error State */}
+                <VStack gap={3}>
+                  <Label>Error State</Label>
+                  <div className="w-[280px] flex flex-col gap-4 p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-md)]">
+                    <ProgressBar
+                      label="60 MB (75%)"
+                      value={75}
+                      max={100}
+                      statusText="error"
+                      showValue={false}
+                      error
+                      errorMessage="Upload failed: Network error"
+                    />
+                  </div>
+                </VStack>
+
+                {/* Color Legend */}
+                <VStack gap={3}>
+                  <Label>Status Colors</Label>
+                  <div className="flex flex-wrap gap-4">
+                    <div className="flex items-center gap-2">
+                      <div className="w-4 h-4 rounded bg-[var(--color-state-success-default)]" />
+                      <span className="text-[length:var(--font-size-11)] text-[var(--color-text-muted)]">0% ~ 70%: Normal</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <div className="w-4 h-4 rounded bg-[var(--color-state-warning-default)]" />
+                      <span className="text-[length:var(--font-size-11)] text-[var(--color-text-muted)]">70% ~ 100%: Warning</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <div className="w-4 h-4 rounded bg-[var(--color-state-error-default)]" />
+                      <span className="text-[length:var(--font-size-11)] text-[var(--color-text-muted)]">&gt;100%: Danger</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <div className="w-4 h-4 rounded bg-[var(--color-border-default)]" />
+                      <span className="text-[length:var(--font-size-11)] text-[var(--color-text-muted)]">Unlimited: Neutral</span>
+                    </div>
+                  </div>
+                </VStack>
+              </VStack>
+            </Section>
+
             {/* Toggle Component */}
             <Section id="toggle" title="Toggle" description="On/Off switch control for binary settings">
               <VStack gap={8}>
@@ -2416,6 +2545,92 @@ export function DesignSystemPage() {
                     </div>
                   </VStack>
                 </div>
+              </VStack>
+            </Section>
+
+            {/* ContextMenu Component */}
+            <Section id="context-menu" title="Context Menu" description="Popup menu triggered by right-click or click with submenu support">
+              <VStack gap={8}>
+                {/* Tokens */}
+                <VStack gap={3}>
+                  <Label>Design Tokens</Label>
+                  <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
+                    <code>min-width: 80px</code> · <code>padding: 12×6px</code> · <code>radius: 6px</code> · <code>shadow: md</code>
+                  </div>
+                </VStack>
+
+                {/* Right Click Trigger */}
+                <VStack gap={3}>
+                  <Label>Right Click Trigger</Label>
+                  <ContextMenu
+                    trigger="contextmenu"
+                    items={[
+                      { id: 'edit', label: 'Edit', onClick: () => {} },
+                      { id: 'duplicate', label: 'Duplicate', onClick: () => {} },
+                      { id: 'copy', label: 'Copy', onClick: () => {}, divider: true },
+                      { id: 'delete', label: 'Delete', status: 'danger', onClick: () => {} },
+                    ]}
+                  >
+                    <div className="w-[200px] h-[100px] flex items-center justify-center bg-[var(--color-surface-subtle)] border border-dashed border-[var(--color-border-default)] rounded-[var(--radius-md)] text-[length:var(--font-size-12)] text-[var(--color-text-muted)]">
+                      Right-click here
+                    </div>
+                  </ContextMenu>
+                </VStack>
+
+                {/* Click Trigger */}
+                <VStack gap={3}>
+                  <Label>Click Trigger</Label>
+                  <ContextMenu
+                    trigger="click"
+                    items={[
+                      { id: 'view', label: 'View Details', onClick: () => {} },
+                      { id: 'edit', label: 'Edit', onClick: () => {} },
+                      { id: 'share', label: 'Share', onClick: () => {}, divider: true },
+                      { id: 'delete', label: 'Delete', status: 'danger', onClick: () => {} },
+                    ]}
+                  >
+                    <Button variant="outline" size="sm">Click for Menu</Button>
+                  </ContextMenu>
+                </VStack>
+
+                {/* With Submenu */}
+                <VStack gap={3}>
+                  <Label>With Submenu</Label>
+                  <ContextMenu
+                    trigger="click"
+                    items={[
+                      { id: 'new', label: 'New', submenu: [
+                        { id: 'new-file', label: 'File', onClick: () => {} },
+                        { id: 'new-folder', label: 'Folder', onClick: () => {} },
+                      ]},
+                      { id: 'open', label: 'Open', onClick: () => {} },
+                      { id: 'save', label: 'Save', onClick: () => {}, divider: true },
+                      { id: 'export', label: 'Export', submenu: [
+                        { id: 'export-pdf', label: 'PDF', onClick: () => {} },
+                        { id: 'export-csv', label: 'CSV', onClick: () => {} },
+                        { id: 'export-json', label: 'JSON', onClick: () => {} },
+                      ]},
+                    ]}
+                  >
+                    <Button variant="outline" size="sm">Menu with Submenu</Button>
+                  </ContextMenu>
+                </VStack>
+
+                {/* Status Variants */}
+                <VStack gap={3}>
+                  <Label>Status Variants</Label>
+                  <ContextMenu
+                    trigger="click"
+                    items={[
+                      { id: 'item1', label: 'Default Item', onClick: () => {} },
+                      { id: 'item2', label: 'Another Item', onClick: () => {}, divider: true },
+                      { id: 'danger1', label: 'Warning Action', status: 'danger', onClick: () => {} },
+                      { id: 'danger2', label: 'Delete Forever', status: 'danger', onClick: () => {} },
+                    ]}
+                  >
+                    <Button variant="outline" size="sm">Show Status Variants</Button>
+                  </ContextMenu>
+                </VStack>
               </VStack>
             </Section>
 
