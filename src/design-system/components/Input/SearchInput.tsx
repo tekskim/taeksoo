@@ -1,0 +1,153 @@
+import { forwardRef, type InputHTMLAttributes, useState, useCallback } from 'react';
+import { twMerge } from 'tailwind-merge';
+import { IconSearch, IconX } from '@tabler/icons-react';
+
+/* ----------------------------------------
+   SearchInput Types
+   ---------------------------------------- */
+
+export type SearchInputSize = 'sm' | 'md';
+
+export interface SearchInputProps
+  extends Omit<InputHTMLAttributes<HTMLInputElement>, 'size' | 'type'> {
+  /** Input size */
+  size?: SearchInputSize;
+  /** Label text */
+  label?: string;
+  /** Full width */
+  fullWidth?: boolean;
+  /** Show clear button when has value */
+  clearable?: boolean;
+  /** Callback when clear button is clicked */
+  onClear?: () => void;
+}
+
+/* ----------------------------------------
+   Size Styles
+   ---------------------------------------- */
+
+const sizes: Record<SearchInputSize, string> = {
+  sm: 'h-[var(--search-input-height-sm)] text-[length:var(--input-font-size-sm)]',
+  md: 'h-[var(--search-input-height-md)] text-[length:var(--input-font-size-sm)]',
+};
+
+/* ----------------------------------------
+   SearchInput Component
+   ---------------------------------------- */
+
+export const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
+  (
+    {
+      size = 'md',
+      label,
+      fullWidth = false,
+      clearable = true,
+      onClear,
+      className = '',
+      id,
+      disabled,
+      value,
+      defaultValue,
+      onChange,
+      ...props
+    },
+    ref
+  ) => {
+    const inputId = id || `search-input-${Math.random().toString(36).substr(2, 9)}`;
+
+    // Track value for clear button visibility
+    const [internalValue, setInternalValue] = useState(defaultValue ?? '');
+    const currentValue = value !== undefined ? value : internalValue;
+    const hasValue = String(currentValue).length > 0;
+
+    const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+      if (value === undefined) {
+        setInternalValue(e.target.value);
+      }
+      onChange?.(e);
+    }, [value, onChange]);
+
+    const handleClear = useCallback(() => {
+      if (value === undefined) {
+        setInternalValue('');
+      }
+      onClear?.();
+    }, [value, onClear]);
+
+    // Base styles
+    const inputClasses = twMerge(
+      'w-full',
+      'pl-8',
+      clearable && hasValue ? 'pr-8' : 'pr-[var(--input-padding-x)]',
+      'py-[var(--input-padding-y)]',
+      'leading-[var(--input-line-height)]',
+      'bg-[var(--input-bg)]',
+      'text-[var(--color-text-default)]',
+      'border-[length:var(--input-border-width)]',
+      'border-solid',
+      'border-[var(--input-border)]',
+      'rounded-[var(--input-radius)]',
+      'transition-all duration-[var(--duration-fast)]',
+      'placeholder:text-[var(--color-text-subtle)]',
+      'focus:outline-none',
+      'focus:border-[length:var(--input-border-width-focus)]',
+      'focus:border-[var(--input-border-focus)]',
+      disabled ? 'bg-[var(--input-bg-disabled)] text-[var(--input-text-disabled)] cursor-not-allowed' : '',
+      sizes[size],
+      className
+    );
+
+    const wrapperClasses = [
+      'flex flex-col gap-[var(--input-label-gap)]',
+      fullWidth ? 'w-full' : 'w-fit',
+    ].join(' ');
+
+    return (
+      <div className={wrapperClasses}>
+        {label && (
+          <label
+            htmlFor={inputId}
+            className="font-medium text-[var(--color-text-default)] text-[length:var(--font-size-11)]"
+          >
+            {label}
+          </label>
+        )}
+
+        <div className="relative">
+          {/* Search icon */}
+          <div className="absolute left-[var(--input-icon-offset)] top-1/2 -translate-y-1/2 text-[var(--color-text-subtle)] pointer-events-none">
+            <IconSearch size={12} strokeWidth={2} />
+          </div>
+
+          <input
+            ref={ref}
+            type="search"
+            id={inputId}
+            className={inputClasses}
+            value={currentValue}
+            onChange={handleChange}
+            disabled={disabled}
+            aria-label={label || 'Search'}
+            {...props}
+          />
+
+          {/* Clear button */}
+          {clearable && hasValue && !disabled && (
+            <button
+              type="button"
+              tabIndex={-1}
+              className="absolute right-[var(--input-icon-offset)] top-1/2 -translate-y-1/2 text-[var(--color-text-subtle)] hover:text-[var(--color-text-default)] transition-colors duration-[var(--duration-fast)]"
+              onClick={handleClear}
+              aria-label="Clear search"
+            >
+              <IconX size={12} strokeWidth={2} />
+            </button>
+          )}
+        </div>
+      </div>
+    );
+  }
+);
+
+SearchInput.displayName = 'SearchInput';
+

@@ -1,0 +1,846 @@
+@import "tailwindcss";
+
+/* ========================================
+   TDS Design System - CSS Variables
+   Based on tokens.json structure
+   ======================================== */
+
+@theme {
+  /* ========================================
+     PRIMITIVE TOKENS
+     ======================================== */
+
+  /* ----------------------------------------
+     Primitive - Colors
+     ---------------------------------------- */
+  --color-white: #ffffff;
+  --color-black: #000000;
+
+  /* Slate (Neutral) */
+  --color-slate-50: #f8fafc;
+  --color-slate-100: #f1f5f9;
+  --color-slate-200: #e2e8f0;
+  --color-slate-300: #cbd5e1;
+  --color-slate-400: #94a3b8;
+  --color-slate-500: #64748b;
+  --color-slate-600: #475569;
+  --color-slate-700: #334155;
+  --color-slate-800: #1e293b;
+  --color-slate-900: #0f172a;
+
+  /* Blue (Primary) */
+  --color-blue-50: #eff6ff;
+  --color-blue-100: #dbeafe;
+  --color-blue-200: #bfdbfe;
+  --color-blue-300: #93c5fd;
+  --color-blue-400: #60a5fa;
+  --color-blue-500: #3b82f6;
+  --color-blue-600: #2563eb;
+  --color-blue-700: #1d4ed8;
+  --color-blue-800: #1e40af;
+  --color-blue-900: #1e3a8a;
+
+  /* Red (Danger) */
+  --color-red-50: #fef2f2;
+  --color-red-100: #fee2e2;
+  --color-red-500: #ef4444;
+  --color-red-600: #dc2626;
+  --color-red-700: #b91c1c;
+  --color-red-800: #991b1b;
+
+  /* Green (Success) */
+  --color-green-50: #f0fdf4;
+  --color-green-100: #dcfce7;
+  --color-green-500: #22c55e;
+  --color-green-600: #16a34a;
+  --color-green-700: #15803d;
+  --color-green-800: #166534;
+
+  /* Orange (Warning) */
+  --color-orange-50: #fff7ed;
+  --color-orange-100: #ffedd5;
+  --color-orange-500: #f97316;
+  --color-orange-600: #ea580c;
+  --color-orange-700: #c2410c;
+  --color-orange-800: #9a3412;
+
+  /* Yellow */
+  --color-yellow-50: #fefce8;
+  --color-yellow-100: #fef9c3;
+
+  /* ----------------------------------------
+     Primitive - Spacing (4px base)
+     ---------------------------------------- */
+  --spacing-0: 0px;
+  --spacing-0-5: 2px;
+  --spacing-1: 4px;
+  --spacing-1-5: 6px;
+  --spacing-2: 8px;
+  --spacing-2-5: 10px;
+  --spacing-3: 12px;
+  --spacing-4: 16px;
+  --spacing-5: 20px;
+  --spacing-6: 24px;
+  --spacing-7: 28px;
+  --spacing-8: 32px;
+  --spacing-9: 36px;
+  --spacing-10: 40px;
+  --spacing-12: 48px;
+  --spacing-14: 56px;
+  --spacing-16: 64px;
+  --spacing-20: 80px;
+  --spacing-24: 96px;
+  --spacing-32: 128px;
+
+  /* ----------------------------------------
+     Primitive - Font Size
+     ---------------------------------------- */
+  --font-size-10: 10px;
+  --font-size-11: 11px;
+  --font-size-12: 12px;
+  --font-size-14: 14px;
+  --font-size-16: 16px;
+  --font-size-18: 18px;
+  --font-size-24: 24px;
+  --font-size-32: 32px;
+  --font-size-40: 40px;
+
+  /* ----------------------------------------
+     Primitive - Line Height
+     ---------------------------------------- */
+  --line-height-14: 14px;
+  --line-height-16: 16px;
+  --line-height-18: 18px;
+  --line-height-20: 20px;
+  --line-height-24: 24px;
+  --line-height-28: 28px;
+  --line-height-32: 32px;
+  --line-height-40: 40px;
+  --line-height-48: 48px;
+
+  /* ----------------------------------------
+     Primitive - Font Weight
+     ---------------------------------------- */
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+
+  /* ----------------------------------------
+     Primitive - Font Family
+     ---------------------------------------- */
+  --font-sans: "Mona Sans Variable", "Mona Sans", -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+  --font-mono: Menlo, "Fira Code", Consolas, monospace;
+
+  /* ----------------------------------------
+     Primitive - Border Radius
+     ---------------------------------------- */
+  --radius-none: 0px;
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 8px;
+  --radius-xl: 16px;
+  --radius-full: 999px;
+
+  /* ----------------------------------------
+     Primitive - Duration
+     ---------------------------------------- */
+  --duration-fast: 150ms;
+  --duration-normal: 200ms;
+  --duration-slow: 300ms;
+
+  /* ----------------------------------------
+     Primitive - Shadow
+     ---------------------------------------- */
+  --shadow-xs: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+
+  /* ----------------------------------------
+     Primitive - Z-Index
+     ---------------------------------------- */
+  --z-dropdown: 1000;
+  --z-sticky: 1100;
+  --z-modal: 1200;
+  --z-popover: 1300;
+  --z-tooltip: 1400;
+  --z-toast: 1500;
+
+  /* ========================================
+     SEMANTIC TOKENS
+     ======================================== */
+
+  /* ----------------------------------------
+     Semantic - Radius
+     ---------------------------------------- */
+  --radius-field: var(--radius-sm);
+  --radius-button: var(--radius-md);
+  --radius-card: var(--radius-lg);
+  --radius-modal: var(--radius-xl);
+  --radius-pill: var(--radius-full);
+
+  /* ----------------------------------------
+     Semantic - Spacing (Component)
+     ---------------------------------------- */
+  --spacing-component-3xs: var(--spacing-0-5);
+  --spacing-component-2xs: var(--spacing-1);
+  --spacing-component-xs: var(--spacing-1-5);
+  --spacing-component-sm: var(--spacing-2);
+  --spacing-component-md: var(--spacing-3);
+  --spacing-component-lg: var(--spacing-4);
+  --spacing-component-xl: var(--spacing-6);
+
+  /* ----------------------------------------
+     Semantic - Spacing (Layout)
+     ---------------------------------------- */
+  --spacing-layout-xs: var(--spacing-4);
+  --spacing-layout-sm: var(--spacing-6);
+  --spacing-layout-md: var(--spacing-8);
+  --spacing-layout-lg: var(--spacing-12);
+  --spacing-layout-xl: var(--spacing-16);
+  --spacing-layout-2xl: var(--spacing-24);
+
+  /* ========================================
+     SEMANTIC COLOR TOKENS (Light Theme)
+     ======================================== */
+
+  /* Action */
+  --color-action-primary: var(--color-blue-600);
+  --color-action-primary-hover: var(--color-blue-700);
+  --color-action-primary-active: var(--color-blue-800);
+
+  /* Text */
+  --color-text-default: var(--color-slate-900);
+  --color-text-muted: var(--color-slate-600);
+  --color-text-subtle: var(--color-slate-500);
+  --color-text-disabled: var(--color-slate-400);
+  --color-text-inverse: var(--color-white);
+  --color-text-on-primary: var(--color-white);
+
+  /* Surface */
+  --color-surface-default: var(--color-white);
+  --color-surface-subtle: var(--color-slate-50);
+  --color-surface-muted: var(--color-slate-100);
+  --color-surface-inverse: var(--color-slate-900);
+
+  /* Border */
+  --color-border-default: var(--color-slate-200);
+  --color-border-subtle: var(--color-slate-100);
+  --color-border-strong: var(--color-slate-300);
+  --color-border-focus: var(--color-blue-500);
+
+  /* State - Info */
+  --color-state-info: var(--color-blue-600);
+  --color-state-info-bg: var(--color-blue-50);
+  --color-state-info-text: var(--color-blue-800);
+
+  /* State - Success */
+  --color-state-success: var(--color-green-600);
+  --color-state-success-bg: var(--color-green-50);
+  --color-state-success-text: var(--color-green-800);
+
+  /* State - Warning */
+  --color-state-warning: var(--color-orange-600);
+  --color-state-warning-bg: var(--color-yellow-50);
+  --color-state-warning-text: var(--color-orange-800);
+
+  /* State - Danger */
+  --color-state-danger: var(--color-red-600);
+  --color-state-danger-bg: var(--color-red-50);
+  --color-state-danger-text: var(--color-red-800);
+
+  /* ========================================
+     COMPONENT TOKENS
+     ======================================== */
+
+  /* ----------------------------------------
+     Component - Button
+     ---------------------------------------- */
+  --button-height-sm: 28px;
+  --button-height-md: 32px;
+  --button-height-lg: 40px;
+
+  --button-min-width-sm: 60px;
+  --button-min-width-md: 80px;
+  --button-min-width-lg: 80px;
+
+  --button-padding-x-sm: var(--spacing-2-5);
+  --button-padding-x-md: var(--spacing-3);
+  --button-padding-x-lg: var(--spacing-4);
+
+  --button-padding-y-sm: var(--spacing-1-5);
+  --button-padding-y-md: var(--spacing-2);
+  --button-padding-y-lg: var(--spacing-2-5);
+
+  --button-gap-sm: var(--spacing-1-5);
+  --button-gap-md: var(--spacing-1-5);
+  --button-gap-lg: var(--spacing-2);
+
+  --button-radius: var(--radius-button);
+
+  --button-font-size-sm: var(--font-size-12);
+  --button-font-size-md: var(--font-size-12);
+  --button-font-size-lg: var(--font-size-14);
+
+  /* ----------------------------------------
+     Component - Input
+     ---------------------------------------- */
+  /* Input - Sizes */
+  --input-height-sm: 28px;
+  --input-height-md: 32px;
+  --input-height-lg: 40px;
+
+  --input-padding-x: var(--spacing-2-5);
+  --input-padding-y: var(--spacing-2);
+
+  --input-radius: var(--radius-md);
+  --input-radius-code: var(--radius-sm);
+  --input-icon-offset: var(--spacing-2);
+  --input-label-gap: var(--spacing-1-5);
+
+  /* Input - Font */
+  --input-font-size: var(--font-size-12);
+  --input-font-size-sm: var(--font-size-11);
+  --input-line-height: var(--line-height-16);
+
+  /* Input - Colors */
+  --input-bg: var(--color-surface-default);
+  --input-border: var(--color-border-strong);
+  --input-border-focus: var(--color-action-primary);
+  --input-border-readonly: var(--color-border-subtle);
+  --input-border-error: var(--color-state-danger);
+  --input-bg-disabled: var(--color-slate-200);
+  --input-text-disabled: var(--color-text-muted);
+
+  /* Input - Border Width */
+  --input-border-width: 1px;
+  --input-border-width-focus: 2px;
+
+  /* Textarea */
+  --textarea-min-height: 70px;
+
+  /* NumberInput */
+  --number-input-height: 32px;
+  --number-input-padding-y: var(--spacing-1);
+  --number-input-button-size: 12px;
+
+  /* SearchInput */
+  --search-input-height-sm: 28px;
+  --search-input-height-md: 32px;
+  --search-input-icon-size: 12px;
+
+  /* ----------------------------------------
+     Component - Badge
+     ---------------------------------------- */
+  /* Size: SM - padding 6×2px, font 11px, lh 16px */
+  --badge-padding-x-sm: var(--spacing-1-5);
+  --badge-padding-y-sm: var(--spacing-0-5);
+  --badge-font-size-sm: var(--font-size-11);
+  --badge-line-height-sm: var(--line-height-16);
+
+  /* Size: MD - padding 8×4px, font 12px, lh 16px */
+  --badge-padding-x-md: var(--spacing-2);
+  --badge-padding-y-md: var(--spacing-1);
+  --badge-font-size-md: var(--font-size-12);
+  --badge-line-height-md: var(--line-height-16);
+
+  /* Size: LG - padding 12×4px, font 14px, lh 20px */
+  --badge-padding-x-lg: var(--spacing-3);
+  --badge-padding-y-lg: var(--spacing-1);
+  --badge-font-size-lg: var(--font-size-14);
+  --badge-line-height-lg: var(--line-height-20);
+
+  /* Common */
+  --badge-radius: var(--radius-md);
+  --badge-gap: var(--spacing-1);
+  --badge-dot-size: 6px;
+
+  /* ----------------------------------------
+     Component - Menu
+     ---------------------------------------- */
+  --menu-item-padding-x: var(--spacing-2);
+  --menu-item-padding-y: var(--spacing-1-5);
+  --menu-item-gap: var(--spacing-1-5);
+  --menu-item-radius: var(--radius-button);
+
+  --menu-section-padding-x: var(--spacing-2);
+  --menu-section-padding-y: var(--spacing-1);
+
+  --menu-divider-margin: var(--spacing-2);
+
+  /* ----------------------------------------
+     Component - Card
+     ---------------------------------------- */
+  --card-padding-sm: var(--spacing-3);
+  --card-padding-md: var(--spacing-4);
+  --card-padding-lg: var(--spacing-6);
+  --card-radius: var(--radius-card);
+  --card-gap: var(--spacing-4);
+
+  /* ----------------------------------------
+     Component - Modal
+     ---------------------------------------- */
+  --modal-padding: var(--spacing-6);
+  --modal-radius: var(--radius-modal);
+  --modal-gap: var(--spacing-4);
+
+  /* ----------------------------------------
+     Component - Chip
+     ---------------------------------------- */
+  --chip-padding-left: var(--spacing-2);
+  --chip-padding-right: var(--spacing-1-5);
+  --chip-padding-y: var(--spacing-1);
+  --chip-gap: var(--spacing-1-5);
+  --chip-radius: var(--radius-md);
+  --chip-font-size: var(--font-size-11);
+  --chip-line-height: var(--line-height-16);
+  --chip-bg: var(--color-surface-default);
+  --chip-border: var(--color-border-default);
+  --chip-separator-color: var(--color-border-default);
+
+  /* Chip - Selected Variant */
+  --chip-padding-selected: var(--spacing-2);
+  --chip-border-selected: var(--color-action-primary);
+
+  /* ----------------------------------------
+     Component - DatePicker
+     ---------------------------------------- */
+  --datepicker-padding: var(--spacing-3);
+  --datepicker-gap: var(--spacing-3);
+  --datepicker-radius: var(--radius-lg);
+  --datepicker-cell-size: 32px;
+  --datepicker-cell-gap: 6px;
+  --datepicker-row-gap: var(--spacing-1-5);
+
+  /* ----------------------------------------
+     Component - WindowControl
+     ---------------------------------------- */
+  --window-control-size: 16px;
+  --window-control-radius: var(--radius-sm);
+  --window-control-gap: var(--spacing-1);
+
+  /* ----------------------------------------
+     Component - Slider
+     ---------------------------------------- */
+  --slider-track-height: 6px;
+  --slider-track-radius: var(--radius-lg);
+  --slider-track-bg: var(--color-border-subtle);
+  --slider-fill-bg: var(--color-action-primary);
+
+  --slider-thumb-size: 16px;
+  --slider-thumb-bg: var(--color-surface-default);
+  --slider-thumb-border: var(--color-action-primary);
+  --slider-thumb-border-width: 3px;
+  --slider-thumb-shadow: var(--shadow-sm);
+
+  --slider-gap: var(--spacing-3);
+  --slider-value-font-size: var(--font-size-12);
+
+  /* ----------------------------------------
+     Component - Select
+     ---------------------------------------- */
+  --select-padding-x: var(--spacing-2-5);
+  --select-padding-y: var(--spacing-2);
+  --select-radius: var(--radius-md);
+  --select-font-size: var(--font-size-12);
+  --select-line-height: var(--line-height-16);
+  --select-border-width: 1px;
+  --select-border-width-focus: 2px;
+
+  /* Select - Colors */
+  --select-bg: var(--color-surface-default);
+  --select-border: var(--color-border-strong);
+  --select-border-focus: var(--color-action-primary);
+  --select-bg-disabled: var(--color-slate-200);
+
+  /* Select - Dropdown Menu */
+  --select-menu-bg: var(--color-surface-default);
+  --select-menu-border: var(--color-border-strong);
+  --select-menu-radius: var(--radius-md);
+  --select-menu-shadow: var(--shadow-sm);
+
+  /* Select - Items */
+  --select-item-padding-x: var(--spacing-2-5);
+  --select-item-padding-y: var(--spacing-1-5);
+  --select-item-font-size: var(--font-size-11);
+  --select-item-line-height: var(--line-height-16);
+  --select-item-hover-bg: var(--color-slate-50);
+  --select-item-selected-bg: var(--color-blue-50);
+  --select-item-selected-text: var(--color-action-primary);
+
+  /* ----------------------------------------
+     Component - Disclosure
+     ---------------------------------------- */
+  --disclosure-gap: var(--spacing-1-5);
+  --disclosure-icon-size: 12px;
+  --disclosure-font-size: var(--font-size-14);
+  --disclosure-line-height: var(--line-height-20);
+
+  /* ----------------------------------------
+     Component - Inline Message
+     ---------------------------------------- */
+  --inline-message-padding: var(--spacing-3);
+  --inline-message-gap: var(--spacing-2);
+  --inline-message-radius: var(--radius-md);
+  --inline-message-font-size: var(--font-size-12);
+  --inline-message-line-height: var(--line-height-16);
+  --inline-message-text: var(--color-text-default);
+
+  /* InlineMessage - Success */
+  --inline-message-success-bg: var(--color-green-50);
+  --inline-message-success-icon: var(--color-green-600);
+
+  /* InlineMessage - Warning */
+  --inline-message-warning-bg: var(--color-orange-50);
+  --inline-message-warning-icon: var(--color-orange-600);
+
+  /* InlineMessage - Error */
+  --inline-message-error-bg: var(--color-red-50);
+  --inline-message-error-icon: var(--color-red-600);
+
+  /* InlineMessage - Info */
+  --inline-message-info-bg: var(--color-blue-50);
+  --inline-message-info-icon: var(--color-blue-600);
+
+  /* ----------------------------------------
+     Component - Tabs
+     ---------------------------------------- */
+  --tabs-gap: var(--spacing-6);
+  --tabs-min-width: 80px;
+  --tabs-padding-x: var(--spacing-3);
+  --tabs-indicator-gap: var(--spacing-2-5);
+  --tabs-indicator-height: 2px;
+  --tabs-panel-padding: var(--spacing-4);
+
+  /* Tabs - Size SM */
+  --tabs-font-size-sm: var(--font-size-12);
+  --tabs-line-height-sm: var(--line-height-16);
+
+  /* Tabs - Size MD */
+  --tabs-font-size-md: var(--font-size-14);
+  --tabs-line-height-md: var(--line-height-20);
+
+  /* Tabs - Colors */
+  --tabs-active-color: var(--color-action-primary);
+  --tabs-inactive-color: var(--color-text-subtle);
+  --tabs-hover-color: var(--color-text-default);
+
+  /* Tabs - Boxed Variant */
+  --tabs-boxed-padding: 0px;
+  --tabs-boxed-bg: transparent;
+  --tabs-boxed-border: var(--color-border-default);
+  --tabs-boxed-radius: var(--radius-sm);
+  --tabs-boxed-item-padding-x: var(--spacing-6);
+  --tabs-boxed-item-padding-y: var(--spacing-2);
+  --tabs-boxed-item-radius: var(--radius-sm);
+  --tabs-boxed-active-bg: var(--color-surface-default);
+  --tabs-indicator-color: var(--color-action-primary);
+
+  /* ----------------------------------------
+     Component - Radio
+     ---------------------------------------- */
+  --radio-size: 16px;
+  --radio-dot-size: 6px;
+  --radio-border-width: 1.5px;
+  --radio-checked-border-width: 4px;
+  --radio-gap: var(--spacing-1-5);
+
+  /* Radio - Border */
+  --radio-border: var(--color-slate-300);
+  --radio-border-hover: var(--color-action-primary);
+  --radio-checked-border: var(--color-action-primary);
+  --radio-checked-dot: var(--color-action-primary);
+
+  /* Radio - Disabled */
+  --radio-disabled-bg: var(--color-slate-200);
+  --radio-disabled-border: var(--color-slate-200);
+  --radio-disabled-dot: var(--color-slate-200);
+
+  /* Radio - Label */
+  --radio-label-size: var(--font-size-12);
+  --radio-label-line-height: var(--line-height-16);
+  --radio-label-color: var(--color-text-default);
+  --radio-label-disabled: var(--color-text-disabled);
+
+  /* Radio - Description */
+  --radio-description-gap: var(--spacing-1);
+  --radio-description-size: var(--font-size-11);
+  --radio-description-line-height: var(--line-height-16);
+  --radio-description-color: var(--color-text-subtle);
+
+  /* Radio - Error */
+  --radio-error-size: var(--font-size-11);
+  --radio-error-line-height: var(--line-height-16);
+  --radio-error-text: var(--color-red-500);
+
+  /* RadioGroup */
+  --radio-group-gap: var(--spacing-3);
+  --radio-group-label-size: var(--font-size-12);
+  --radio-group-label-line-height: var(--line-height-16);
+  --radio-group-label-gap: var(--spacing-2);
+  --radio-group-item-gap: var(--spacing-2);
+  --radio-group-item-gap-horizontal: var(--spacing-4);
+
+  /* ----------------------------------------
+     Component - Toggle
+     ---------------------------------------- */
+  --toggle-width: 36px;
+  --toggle-height: 20px;
+  --toggle-padding: 4px;
+  --toggle-radius: var(--radius-pill);
+  --toggle-gap: var(--spacing-2);
+  --toggle-thumb-size: 12px;
+  --toggle-thumb-translate: 16px;
+
+  /* Toggle - Track */
+  --toggle-bg: var(--color-slate-200);
+  --toggle-checked-bg: var(--color-action-primary);
+  --toggle-disabled-bg: var(--color-slate-100);
+  --toggle-checked-disabled-bg: var(--color-slate-200);
+
+  /* Toggle - Thumb */
+  --toggle-thumb: white;
+  --toggle-thumb-disabled: var(--color-slate-300);
+
+  /* Toggle - Label */
+  --toggle-label-size: var(--font-size-12);
+  --toggle-label-line-height: var(--line-height-16);
+  --toggle-label-color: var(--color-text-default);
+  --toggle-label-disabled: var(--color-text-disabled);
+
+  /* Toggle - Description */
+  --toggle-description-gap: var(--spacing-1);
+  --toggle-description-size: var(--font-size-11);
+  --toggle-description-line-height: var(--line-height-16);
+  --toggle-description-color: var(--color-text-subtle);
+
+  /* ----------------------------------------
+     Component - Checkbox
+     ---------------------------------------- */
+  --checkbox-size: 16px;
+  --checkbox-radius: var(--radius-sm);
+  --checkbox-gap: var(--spacing-1-5);
+  
+  /* Checkbox - Border */
+  --checkbox-border: var(--color-border-strong);
+  --checkbox-border-hover: var(--color-action-primary);
+  
+  /* Checkbox - Checked */
+  --checkbox-checked-bg: var(--color-action-primary);
+  --checkbox-icon-color: white;
+  
+  /* Checkbox - Disabled */
+  --checkbox-disabled-bg: var(--color-surface-muted);
+  --checkbox-disabled-border: var(--color-border-default);
+  --checkbox-disabled-checked-bg: var(--color-slate-200);
+  --checkbox-icon-disabled: var(--color-slate-400);
+  
+  /* Checkbox - Error */
+  --checkbox-error-bg: var(--color-red-500);
+  --checkbox-error-border: var(--color-red-500);
+  --checkbox-error-text: var(--color-red-500);
+  
+  /* Checkbox - Label */
+  --checkbox-label-size: var(--font-size-12);
+  --checkbox-label-line-height: var(--line-height-16);
+  --checkbox-label-color: var(--color-text-default);
+  --checkbox-label-disabled: var(--color-text-disabled);
+  --checkbox-label-error: var(--color-text-default);
+  
+  /* Checkbox - Description */
+  --checkbox-description-gap: var(--spacing-1);
+  --checkbox-description-size: var(--font-size-11);
+  --checkbox-description-line-height: var(--line-height-16);
+  --checkbox-description-color: var(--color-text-subtle);
+  
+  /* Checkbox - Error message */
+  --checkbox-error-size: var(--font-size-11);
+  --checkbox-error-line-height: var(--line-height-16);
+  
+  /* CheckboxGroup */
+  --checkbox-group-gap: var(--spacing-3);
+  --checkbox-group-label-size: var(--font-size-12);
+  --checkbox-group-label-line-height: var(--line-height-16);
+  --checkbox-group-label-gap: var(--spacing-2);
+  --checkbox-group-item-gap: var(--spacing-2);
+  --checkbox-group-item-gap-horizontal: var(--spacing-4);
+
+  /* ----------------------------------------
+     Component - Breadcrumb
+     ---------------------------------------- */
+  --breadcrumb-gap: var(--spacing-1);
+  --breadcrumb-font-size: var(--font-size-11);
+  --breadcrumb-line-height: var(--line-height-16);
+  --breadcrumb-text-color: var(--color-text-subtle);
+  --breadcrumb-text-hover: var(--color-text-default);
+  --breadcrumb-text-current: var(--color-text-default);
+  --breadcrumb-separator-color: var(--color-text-subtle);
+
+  /* ----------------------------------------
+     Component - Status Indicator
+     ---------------------------------------- */
+  --status-padding-x: var(--spacing-1-5);
+  --status-padding-y: var(--spacing-1);
+  --status-padding-icon-only: var(--spacing-1);
+  --status-gap: var(--spacing-1);
+  --status-radius: var(--radius-pill);
+  --status-font-size: var(--font-size-11);
+  --status-line-height: var(--line-height-16);
+  --status-text: var(--color-text-inverse);
+
+  /* Status colors */
+  --status-active-bg: var(--color-green-400);
+  --status-error-bg: var(--color-red-400);
+  --status-muted-bg: var(--color-slate-600);
+  --status-building-bg: var(--color-blue-400);
+
+  /* ----------------------------------------
+     Component - Tooltip
+     ---------------------------------------- */
+  --tooltip-padding-x: var(--spacing-2);
+  --tooltip-padding-y: var(--spacing-1);
+  --tooltip-radius: var(--radius-sm);
+  --tooltip-font-size: var(--font-size-11);
+  --tooltip-line-height: var(--line-height-16);
+  --tooltip-min-width: 60px;
+  --tooltip-max-width: 230px;
+  --tooltip-bg: var(--color-surface-inverse);
+  --tooltip-text: var(--color-text-inverse);
+  --tooltip-arrow-size: 4px;
+}
+
+/* ========================================
+   Dark Theme Overrides
+   ======================================== */
+
+.dark {
+  /* Action */
+  --color-action-primary: var(--color-blue-500);
+  --color-action-primary-hover: var(--color-blue-400);
+  --color-action-primary-active: var(--color-blue-300);
+
+  /* Text */
+  --color-text-default: var(--color-slate-50);
+  --color-text-muted: var(--color-slate-400);
+  --color-text-subtle: var(--color-slate-500);
+  --color-text-disabled: var(--color-slate-600);
+  --color-text-inverse: var(--color-slate-900);
+
+  /* Surface */
+  --color-surface-default: var(--color-slate-900);
+  --color-surface-subtle: var(--color-slate-800);
+  --color-surface-muted: var(--color-slate-700);
+  --color-surface-inverse: var(--color-white);
+
+  /* Border */
+  --color-border-default: var(--color-slate-700);
+  --color-border-subtle: var(--color-slate-800);
+  --color-border-strong: var(--color-slate-600);
+  --color-border-focus: var(--color-blue-400);
+
+  /* State - Info */
+  --color-state-info: var(--color-blue-400);
+  --color-state-info-bg: var(--color-blue-900);
+  --color-state-info-text: var(--color-blue-200);
+
+  /* State - Success */
+  --color-state-success: var(--color-green-400);
+  --color-state-success-bg: var(--color-green-900);
+  --color-state-success-text: var(--color-green-200);
+
+  /* State - Warning */
+  --color-state-warning: var(--color-orange-400);
+  --color-state-warning-bg: var(--color-orange-900);
+  --color-state-warning-text: var(--color-orange-200);
+
+  /* State - Danger */
+  --color-state-danger: var(--color-red-400);
+  --color-state-danger-bg: var(--color-red-900);
+  --color-state-danger-text: var(--color-red-200);
+}
+
+/* ========================================
+   Base Styles
+   ======================================== */
+
+@layer base {
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+
+  html {
+    font-family: var(--font-sans);
+    font-size: var(--font-size-12);
+    line-height: var(--line-height-18);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+
+  body {
+    margin: 0;
+    min-height: 100vh;
+    background-color: var(--color-surface-subtle);
+    color: var(--color-text-default);
+  }
+
+  /* Typography defaults */
+  h1, h2, h3, h4, h5, h6 {
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-text-default);
+  }
+
+  h1 { font-size: var(--font-size-40); line-height: var(--line-height-48); }
+  h2 { font-size: var(--font-size-32); line-height: var(--line-height-40); }
+  h3 { font-size: var(--font-size-24); line-height: var(--line-height-32); }
+  h4 { font-size: var(--font-size-18); line-height: var(--line-height-28); }
+  h5 { font-size: var(--font-size-16); line-height: var(--line-height-24); }
+  h6 { font-size: var(--font-size-14); line-height: var(--line-height-20); }
+
+  p {
+    color: var(--color-text-muted);
+  }
+
+  /* Focus styles */
+  :focus-visible {
+    outline: 2px solid var(--color-border-focus);
+    outline-offset: 2px;
+  }
+
+  /* Selection */
+  ::selection {
+    background-color: var(--color-blue-200);
+    color: var(--color-blue-900);
+  }
+}
+
+/* ========================================
+   Custom Utilities
+   ======================================== */
+
+@utility container {
+  width: 100%;
+  margin-inline: auto;
+  padding-inline: var(--spacing-4);
+
+  @media (min-width: 640px) {
+    max-width: 640px;
+    padding-inline: var(--spacing-6);
+  }
+
+  @media (min-width: 768px) {
+    max-width: 768px;
+  }
+
+  @media (min-width: 1024px) {
+    max-width: 1024px;
+    padding-inline: var(--spacing-8);
+  }
+
+  @media (min-width: 1280px) {
+    max-width: 1280px;
+  }
+}

@@ -1,0 +1,175 @@
+import { forwardRef, type TextareaHTMLAttributes } from 'react';
+import { twMerge } from 'tailwind-merge';
+
+/* ----------------------------------------
+   Textarea Types
+   ---------------------------------------- */
+
+export type TextareaVariant = 'default' | 'code';
+
+export interface TextareaProps
+  extends Omit<TextareaHTMLAttributes<HTMLTextAreaElement>, 'children'> {
+  /** Textarea variant */
+  variant?: TextareaVariant;
+  /** Label text */
+  label?: string;
+  /** Helper text */
+  helperText?: string;
+  /** Error message */
+  error?: string;
+  /** Full width */
+  fullWidth?: boolean;
+  /** Show character count */
+  showCount?: boolean;
+  /** Max character count */
+  maxLength?: number;
+}
+
+/* ----------------------------------------
+   Textarea Component
+   ---------------------------------------- */
+
+export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
+  (
+    {
+      variant = 'default',
+      label,
+      helperText,
+      error,
+      fullWidth = false,
+      showCount = false,
+      maxLength,
+      className = '',
+      id,
+      disabled,
+      readOnly,
+      value,
+      defaultValue,
+      ...props
+    },
+    ref
+  ) => {
+    const inputId = id || `textarea-${Math.random().toString(36).substr(2, 9)}`;
+
+    // Calculate character count
+    const currentLength = String(value ?? defaultValue ?? '').length;
+
+    // Base styles
+    const baseStyles = [
+      'w-full',
+      'min-h-[var(--textarea-min-height)]',
+      'px-[var(--input-padding-x)]',
+      'py-[var(--input-padding-y)]',
+      'text-[length:var(--input-font-size)]',
+      'leading-[var(--input-line-height)]',
+      'bg-[var(--input-bg)]',
+      'text-[var(--color-text-default)]',
+      'border-[length:var(--input-border-width)]',
+      'border-solid',
+      'transition-all duration-[var(--duration-fast)]',
+      'placeholder:text-[var(--color-text-subtle)]',
+      'focus:outline-none',
+      'resize-y',
+    ];
+
+    // Focus styles (not applied for readOnly)
+    const focusStyles = !readOnly ? [
+      'focus:border-[length:var(--input-border-width-focus)]',
+      'focus:border-[var(--input-border-focus)]',
+    ] : [];
+
+    // Variant styles
+    const variantStyles: Record<TextareaVariant, string> = {
+      default: 'rounded-[var(--input-radius)]',
+      code: 'rounded-[var(--input-radius-code)] font-mono',
+    };
+
+    // Border color based on state
+    const getBorderColor = () => {
+      if (error) return 'border-[var(--input-border-error)]';
+      if (readOnly) return 'border-[var(--input-border-readonly)]';
+      return 'border-[var(--input-border)]';
+    };
+
+    // Disabled styles
+    const disabledStyles = disabled
+      ? 'bg-[var(--input-bg-disabled)] text-[var(--input-text-disabled)] cursor-not-allowed border-transparent resize-none'
+      : '';
+
+    // ReadOnly styles
+    const readOnlyStyles = readOnly && !disabled
+      ? 'cursor-default'
+      : '';
+
+    const textareaClasses = twMerge(
+      baseStyles.join(' '),
+      focusStyles.join(' '),
+      variantStyles[variant],
+      getBorderColor(),
+      disabledStyles,
+      readOnlyStyles,
+      className
+    );
+
+    const wrapperClasses = [
+      'flex flex-col gap-[var(--input-label-gap)]',
+      fullWidth ? 'w-full' : 'w-fit',
+    ].join(' ');
+
+    return (
+      <div className={wrapperClasses}>
+        {label && (
+          <label
+            htmlFor={inputId}
+            className="font-medium text-[var(--color-text-default)] text-[length:var(--font-size-11)]"
+          >
+            {label}
+          </label>
+        )}
+
+        <div className="relative">
+          <textarea
+            ref={ref}
+            id={inputId}
+            className={textareaClasses}
+            disabled={disabled}
+            readOnly={readOnly}
+            maxLength={maxLength}
+            value={value}
+            defaultValue={defaultValue}
+            aria-invalid={!!error}
+            aria-describedby={
+              error ? `${inputId}-error` : helperText ? `${inputId}-helper` : undefined
+            }
+            {...props}
+          />
+        </div>
+
+        <div className="flex items-center justify-between">
+          <div>
+            {error && (
+              <p id={`${inputId}-error`} className="text-[length:var(--font-size-11)] text-[var(--color-state-danger)]">
+                {error}
+              </p>
+            )}
+
+            {helperText && !error && (
+              <p id={`${inputId}-helper`} className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
+                {helperText}
+              </p>
+            )}
+          </div>
+
+          {showCount && maxLength && (
+            <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
+              {currentLength}/{maxLength}
+            </span>
+          )}
+        </div>
+      </div>
+    );
+  }
+);
+
+Textarea.displayName = 'Textarea';
+

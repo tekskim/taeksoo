@@ -1,0 +1,198 @@
+import { HStack, VStack, MenuItem, MenuSection } from '@/design-system';
+import {
+  IconHome,
+  IconServer,
+  IconTemplate,
+  IconCamera,
+  IconPhoto,
+  IconCpu,
+  IconKey,
+  IconUsers,
+  IconBox,
+  IconStack2,
+  IconDatabase,
+  IconDatabaseExport,
+  IconDeviceFloppy,
+  IconServer2,
+  IconNetwork,
+  IconRouter,
+  IconPlug,
+  IconWorldWww,
+  IconShield,
+  IconScale,
+  IconCertificate,
+  IconTopologyRing,
+  IconTransfer,
+  IconLayoutSidebar,
+} from '@tabler/icons-react';
+
+/* ----------------------------------------
+   Sidebar Component
+   ---------------------------------------- */
+
+export function Sidebar() {
+  return (
+    <aside className="w-[200px] h-screen bg-white border-r border-neutral-200 flex flex-col fixed left-0 top-0">
+      {/* Logo */}
+      <div className="h-8 px-3 flex items-center justify-between">
+        <HStack gap={2}>
+          <div className="w-4 h-4 rounded bg-neutral-900 flex items-center justify-center">
+            <span className="text-[8px] font-bold text-white">◇</span>
+          </div>
+          <span className="text-xs font-medium text-neutral-900">
+            <span className="font-semibold">THAKI</span>
+            <span className="text-neutral-400 ml-0.5">Cloud</span>
+          </span>
+        </HStack>
+        <button className="p-1 hover:bg-neutral-100 rounded transition-colors">
+          <IconLayoutSidebar size={16} className="text-neutral-400" stroke={1.5} />
+        </button>
+      </div>
+
+      {/* Project Selector */}
+      <div className="px-3 py-2">
+        <button className="w-full px-2.5 py-1.5 rounded-md bg-neutral-50 hover:bg-neutral-100 transition-colors flex items-center justify-between">
+          <span className="text-[11px] font-medium text-neutral-900">Proj-1</span>
+          <IconTransfer size={16} className="text-neutral-900" stroke={1.5} />
+        </button>
+      </div>
+
+      {/* Navigation */}
+      <nav className="flex-1 px-3 py-2 overflow-y-auto">
+        <VStack gap={4}>
+          {/* Home */}
+          <MenuItem
+            icon={<IconHome size={16} stroke={1.5} />}
+            label="Home"
+            href="/home"
+          />
+
+          {/* Compute Section */}
+          <MenuSection title="Compute" defaultOpen={true}>
+            <MenuItem
+              icon={<IconServer size={16} stroke={1.5} />}
+              label="Instances"
+              href="/instances"
+              active={true}
+            />
+            <MenuItem
+              icon={<IconTemplate size={16} stroke={1.5} />}
+              label="Instance Templates"
+              href="/instance-templates"
+            />
+            <MenuItem
+              icon={<IconCamera size={16} stroke={1.5} />}
+              label="Instance Snapshots"
+              href="/instance-snapshots"
+            />
+            <MenuItem
+              icon={<IconPhoto size={16} stroke={1.5} />}
+              label="Images"
+              href="/images"
+            />
+            <MenuItem
+              icon={<IconCpu size={16} stroke={1.5} />}
+              label="Flavors"
+              href="/flavors"
+            />
+            <MenuItem
+              icon={<IconKey size={16} stroke={1.5} />}
+              label="Key Pairs"
+              href="/key-pairs"
+            />
+            <MenuItem
+              icon={<IconUsers size={16} stroke={1.5} />}
+              label="Server Groups"
+              href="/server-groups"
+            />
+            <MenuItem
+              icon={<IconBox size={16} stroke={1.5} />}
+              label="Hypervisors"
+              href="/hypervisors"
+            />
+            <MenuItem
+              icon={<IconStack2 size={16} stroke={1.5} />}
+              label="Host Aggregates"
+              href="/host-aggregates"
+            />
+          </MenuSection>
+
+          {/* Storage Section */}
+          <MenuSection title="Storage" defaultOpen={true}>
+            <MenuItem
+              icon={<IconDatabase size={16} stroke={1.5} />}
+              label="Volumes"
+              href="/volumes"
+            />
+            <MenuItem
+              icon={<IconCamera size={16} stroke={1.5} />}
+              label="Volume Snapshots"
+              href="/volume-snapshots"
+            />
+            <MenuItem
+              icon={<IconDatabaseExport size={16} stroke={1.5} />}
+              label="Volume Backups"
+              href="/volume-backups"
+            />
+            <MenuItem
+              icon={<IconDeviceFloppy size={16} stroke={1.5} />}
+              label="Volume Type"
+              href="/volume-type"
+            />
+            <MenuItem
+              icon={<IconServer2 size={16} stroke={1.5} />}
+              label="Storage Backends"
+              href="/storage-backends"
+            />
+          </MenuSection>
+
+          {/* Network Section */}
+          <MenuSection title="Network" defaultOpen={true}>
+            <MenuItem
+              icon={<IconNetwork size={16} stroke={1.5} />}
+              label="Networks"
+              href="/networks"
+            />
+            <MenuItem
+              icon={<IconRouter size={16} stroke={1.5} />}
+              label="Routers"
+              href="/routers"
+            />
+            <MenuItem
+              icon={<IconPlug size={16} stroke={1.5} />}
+              label="Ports"
+              href="/ports"
+            />
+            <MenuItem
+              icon={<IconWorldWww size={16} stroke={1.5} />}
+              label="Floating IPs"
+              href="/floating-ips"
+            />
+            <MenuItem
+              icon={<IconShield size={16} stroke={1.5} />}
+              label="Security Groups"
+              href="/security-groups"
+            />
+            <MenuItem
+              icon={<IconScale size={16} stroke={1.5} />}
+              label="Load Balancers"
+              href="/load-balancers"
+            />
+            <MenuItem
+              icon={<IconCertificate size={16} stroke={1.5} />}
+              label="Certificates"
+              href="/certificates"
+            />
+            <MenuItem
+              icon={<IconTopologyRing size={16} stroke={1.5} />}
+              label="Topology"
+              href="/topology"
+            />
+          </MenuSection>
+        </VStack>
+      </nav>
+    </aside>
+  );
+}
+
+export default Sidebar;
