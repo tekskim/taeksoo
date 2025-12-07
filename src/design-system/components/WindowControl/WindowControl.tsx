@@ -115,3 +115,6 @@ export const WindowControls: React.FC<WindowControlsProps> = ({
 
 export default WindowControl;
 
+
+
+

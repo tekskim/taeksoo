@@ -32,6 +32,7 @@ export function Tooltip({
   disabled = false,
 }: TooltipProps) {
   const [isVisible, setIsVisible] = useState(false);
+  const [isPositioned, setIsPositioned] = useState(false);
   const [coords, setCoords] = useState({ x: 0, y: 0 });
   const triggerRef = useRef<HTMLDivElement>(null);
   const tooltipRef = useRef<HTMLDivElement>(null);
@@ -71,6 +72,7 @@ export function Tooltip({
     y = Math.max(8, Math.min(y, window.innerHeight - tooltipRect.height - 8));
 
     setCoords({ x, y });
+    setIsPositioned(true);
   };
 
   const handleMouseEnter = () => {
@@ -85,6 +87,7 @@ export function Tooltip({
       clearTimeout(timeoutRef.current);
     }
     setIsVisible(false);
+    setIsPositioned(false);
   };
 
   useEffect(() => {
@@ -127,8 +130,12 @@ export function Tooltip({
           <div
             ref={tooltipRef}
             role="tooltip"
-            className="fixed z-[var(--z-tooltip)] pointer-events-none animate-in fade-in duration-[var(--duration-fast)]"
-            style={{ left: coords.x, top: coords.y }}
+            className="fixed z-[var(--z-tooltip)] pointer-events-none transition-opacity duration-[var(--duration-fast)]"
+            style={{ 
+              left: coords.x, 
+              top: coords.y,
+              opacity: isPositioned ? 1 : 0,
+            }}
           >
             <div className="relative">
               {/* Tooltip Box */}

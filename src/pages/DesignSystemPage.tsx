@@ -13,6 +13,12 @@ import {
   WindowControls,
   ContextMenu,
   ProgressBar,
+  Pagination,
+  TopBar,
+  TopBarAction,
+  TabBar,
+  useTabBar,
+  Table,
   Toggle,
   Checkbox,
   CheckboxGroup,
@@ -127,6 +133,7 @@ import {
   // System - Monitoring & Analytics
   IconTerminal,
   IconTerminal2,
+  IconPower,
   IconActivity,
   IconChartBar,
   IconGauge,
@@ -158,6 +165,11 @@ import {
   IconMessage2,
   IconCalendar,
   IconAppWindow,
+  // Brand Icons
+  IconBrandUbuntu,
+  IconBrandDebian,
+  IconBrandWindows,
+  IconBrandRedhat,
 } from '@tabler/icons-react';
 import { Link } from 'react-router-dom';
 
@@ -191,8 +203,10 @@ const formControlItems = [
 
 // Data Display
 const dataDisplayItems = [
+  { id: 'table', label: 'Table', icon: IconList },
   { id: 'badge', label: 'Badge', icon: IconTag },
   { id: 'chip', label: 'Chip', icon: IconTag },
+  { id: 'pagination', label: 'Pagination', icon: IconProgress },
   { id: 'progress-bar', label: 'Progress Bar', icon: IconProgress },
   { id: 'status-indicator', label: 'Status Indicator', icon: IconActivity },
   { id: 'tooltip', label: 'Tooltip', icon: IconMessage2 },
@@ -201,6 +215,8 @@ const dataDisplayItems = [
 
 // Navigation
 const navigationItems = [
+  { id: 'topbar', label: 'TopBar', icon: IconLayoutNavbar },
+  { id: 'tabbar', label: 'TabBar', icon: IconLayoutNavbar },
   { id: 'tabs', label: 'Tabs', icon: IconLayoutNavbar },
   { id: 'breadcrumb', label: 'Breadcrumb', icon: IconChevronRight },
   { id: 'menu', label: 'Menu', icon: IconMenu2 },
@@ -318,6 +334,267 @@ function DatePickerSection() {
         </VStack>
       </VStack>
     </Section>
+  );
+}
+
+/* ----------------------------------------
+   TabBar Demo (with state)
+   ---------------------------------------- */
+
+function TabBarDemo() {
+  const { tabs, activeTab, addTab, closeTab, selectTab } = useTabBar({
+    initialTabs: [
+      { id: 'tab-1', label: 'Dashboard', closable: true },
+      { id: 'tab-2', label: 'Settings', closable: true },
+      { id: 'tab-3', label: 'Profile', closable: true },
+    ],
+    initialActiveTab: 'tab-1',
+  });
+
+  let tabCounter = 4;
+
+  const handleAddTab = () => {
+    addTab({
+      id: `tab-${tabCounter}`,
+      label: `New Tab ${tabCounter}`,
+      closable: true,
+    });
+    tabCounter++;
+  };
+
+  return (
+    <VStack gap={8}>
+      {/* Tokens */}
+      <VStack gap={3}>
+        <Label>Design Tokens</Label>
+        <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
+          <code>height: 36px</code> · <code>tab-width: 100-200px</code> · <code>padding-x: 12px</code> · <code>font: 12px</code>
+        </div>
+      </VStack>
+
+      {/* Interactive Demo */}
+      <VStack gap={3}>
+        <Label>Interactive Demo</Label>
+        <div className="w-full border border-[var(--color-border-default)] rounded-[var(--radius-md)] overflow-hidden">
+          <TabBar
+            tabs={tabs}
+            activeTab={activeTab}
+            onTabChange={selectTab}
+            onTabClose={closeTab}
+            onTabAdd={handleAddTab}
+          />
+          <div className="h-[120px] flex items-center justify-center bg-[var(--color-surface-default)] text-[var(--color-text-muted)] text-[length:var(--font-size-12)]">
+            Content for: {tabs.find(t => t.id === activeTab)?.label || 'No tab selected'}
+          </div>
+        </div>
+        <p className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
+          Click tabs to switch, click × to close, click + to add new tabs
+        </p>
+      </VStack>
+
+      {/* With Icons */}
+      <VStack gap={3}>
+        <Label>With Icons</Label>
+        <div className="w-full border border-[var(--color-border-default)] rounded-[var(--radius-md)] overflow-hidden">
+          <TabBar
+            tabs={[
+              { id: 'home', label: 'Home', icon: <IconHome size={14} stroke={1.5} />, closable: false },
+              { id: 'docs', label: 'Documents', icon: <IconFile size={14} stroke={1.5} /> },
+              { id: 'settings', label: 'Settings', icon: <IconSettings size={14} stroke={1.5} /> },
+            ]}
+            activeTab="docs"
+            onTabChange={() => {}}
+            onTabClose={() => {}}
+            showAddButton={false}
+          />
+        </div>
+      </VStack>
+
+      {/* No Add Button */}
+      <VStack gap={3}>
+        <Label>Without Add Button</Label>
+        <div className="w-full border border-[var(--color-border-default)] rounded-[var(--radius-md)] overflow-hidden">
+          <TabBar
+            tabs={[
+              { id: 'tab-a', label: 'Tab A' },
+              { id: 'tab-b', label: 'Tab B' },
+            ]}
+            activeTab="tab-a"
+            onTabChange={() => {}}
+            onTabClose={() => {}}
+            showAddButton={false}
+          />
+        </div>
+      </VStack>
+    </VStack>
+  );
+}
+
+/* ----------------------------------------
+   Table Demo (with state)
+   ---------------------------------------- */
+
+interface InstanceData {
+  id: string;
+  name: string;
+  status: 'Running' | 'Stopped' | 'Building';
+  locked: boolean;
+  fixedIp: string;
+  floatingIp: string;
+  image: string;
+  flavor: string;
+  vCPU: number;
+  ram: string;
+  disk: string;
+  gpu: number;
+  az: string;
+}
+
+const sampleTableData: InstanceData[] = [
+  { id: '1', name: 'worker-node-01', status: 'Running', locked: true, fixedIp: '10.20.30.40', floatingIp: '20.30.40.50', image: 'CentOS 7', flavor: 'Medium', vCPU: 4, ram: '8GB', disk: '100GB', gpu: 1, az: 'keystone' },
+  { id: '2', name: 'web-server-01', status: 'Running', locked: false, fixedIp: '10.20.30.41', floatingIp: '-', image: 'Ubuntu 22.04', flavor: 'Large', vCPU: 8, ram: '16GB', disk: '200GB', gpu: 0, az: 'keystone' },
+  { id: '3', name: 'db-master', status: 'Running', locked: true, fixedIp: '10.20.30.42', floatingIp: '20.30.40.52', image: 'Rocky Linux 9', flavor: 'XLarge', vCPU: 16, ram: '32GB', disk: '500GB', gpu: 2, az: 'nova' },
+  { id: '4', name: 'api-gateway', status: 'Stopped', locked: false, fixedIp: '10.20.30.43', floatingIp: '-', image: 'Ubuntu 22.04', flavor: 'Small', vCPU: 2, ram: '4GB', disk: '50GB', gpu: 0, az: 'keystone' },
+  { id: '5', name: 'redis-cache', status: 'Running', locked: false, fixedIp: '10.20.30.44', floatingIp: '20.30.40.54', image: 'Debian 12', flavor: 'Medium', vCPU: 4, ram: '8GB', disk: '100GB', gpu: 0, az: 'nova' },
+  { id: '6', name: 'ml-worker', status: 'Building', locked: false, fixedIp: '-', floatingIp: '-', image: 'Ubuntu 22.04', flavor: 'GPU Large', vCPU: 8, ram: '64GB', disk: '1TB', gpu: 4, az: 'gpu-zone' },
+];
+
+function TableDemo() {
+  const [selectedKeys, setSelectedKeys] = useState<string[]>([]);
+
+  const columns = [
+    { 
+      key: 'status', 
+      label: 'Status', 
+      sortable: true, 
+      width: '80px',
+      render: (value: string) => (
+        <StatusIndicator 
+          status={value === 'Running' ? 'active' : value === 'Stopped' ? 'error' : 'building'}
+        />
+      )
+    },
+    { 
+      key: 'name', 
+      label: 'Name', 
+      sortable: true, 
+      width: '140px',
+      render: (value: string) => (
+        <span className="text-[var(--color-action-primary)] cursor-pointer hover:underline">{value}</span>
+      )
+    },
+    { 
+      key: 'locked', 
+      label: 'Locked', 
+      width: '70px',
+      render: (value: boolean) => value ? (
+        <IconLock size={16} className="text-[var(--color-text-subtle)]" />
+      ) : null
+    },
+    { key: 'fixedIp', label: 'Fixed IP', sortable: true, width: '120px' },
+    { key: 'floatingIp', label: 'Floating IP', sortable: true, width: '120px' },
+    { key: 'image', label: 'Image', sortable: true, width: '110px' },
+    { key: 'flavor', label: 'Flavor', sortable: true, width: '90px' },
+    { key: 'vCPU', label: 'vCPU', sortable: true, width: '70px' },
+    { key: 'ram', label: 'RAM', sortable: true, width: '70px' },
+    { key: 'disk', label: 'Disk', sortable: true, width: '80px' },
+    { key: 'gpu', label: 'GPU', sortable: true, width: '60px' },
+    { key: 'az', label: 'AZ', sortable: true, width: '90px' },
+    { 
+      key: 'actions', 
+      label: 'Action', 
+      width: '100px',
+      render: () => (
+        <div className="flex items-center gap-1">
+          <button className="p-1 rounded hover:bg-[var(--color-surface-muted)] text-[var(--color-text-subtle)]">
+            <IconTerminal2 size={16} />
+          </button>
+          <button className="p-1 rounded hover:bg-[var(--color-surface-muted)] text-[var(--color-text-subtle)]">
+            <IconPower size={16} />
+          </button>
+        </div>
+      )
+    },
+  ];
+
+  return (
+    <VStack gap={8}>
+      {/* Tokens */}
+      <VStack gap={3}>
+        <Label>Design Tokens</Label>
+        <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
+          <code>cell-padding: 12×10px</code> · <code>header-padding: 12×8px</code> · <code>radius: 8px</code> · <code>font: 12px</code>
+        </div>
+      </VStack>
+
+      {/* Basic Table */}
+      <VStack gap={3}>
+        <Label>Basic Table with Sorting</Label>
+        <Table
+          columns={columns}
+          data={sampleTableData}
+          rowKey="id"
+        />
+        <p className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
+          Click column headers to sort
+        </p>
+      </VStack>
+
+      {/* Selectable Table */}
+      <VStack gap={3}>
+        <Label>Selectable Table</Label>
+        <Table
+          columns={columns}
+          data={sampleTableData}
+          rowKey="id"
+          selectable
+          selectedKeys={selectedKeys}
+          onSelectionChange={setSelectedKeys}
+        />
+        <p className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
+          Selected: {selectedKeys.length > 0 ? selectedKeys.join(', ') : 'None'}
+        </p>
+      </VStack>
+
+      {/* Sticky Header */}
+      <VStack gap={3}>
+        <Label>Sticky Header (scroll to see effect)</Label>
+        <Table
+          columns={columns}
+          data={[...sampleTableData, ...sampleTableData]}
+          rowKey={(row) => `${row.id}-${Math.random()}`}
+          maxHeight="200px"
+          stickyHeader
+        />
+      </VStack>
+
+      {/* Horizontal Scroll */}
+      <VStack gap={3}>
+        <Label>Horizontal Scroll (max-width: 600px)</Label>
+        <div className="max-w-[600px] border border-dashed border-[var(--color-border-default)] rounded-[var(--radius-md)] p-2">
+          <Table
+            columns={columns}
+            data={sampleTableData.slice(0, 3)}
+            rowKey="id"
+            selectable
+          />
+        </div>
+        <p className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
+          Shift + Mouse wheel or trackpad swipe to scroll horizontally
+        </p>
+      </VStack>
+
+      {/* Empty State */}
+      <VStack gap={3}>
+        <Label>Empty State</Label>
+        <Table
+          columns={columns}
+          data={[]}
+          rowKey="id"
+          emptyMessage="No instances found"
+        />
+      </VStack>
+    </VStack>
   );
 }
 
@@ -569,6 +846,16 @@ export function DesignSystemPage() {
             {/* Primitive Colors */}
             <Section id="primitive-colors" title="Primitive Colors" description="Core color palette used as building blocks">
               <VStack gap={6}>
+                {/* Base Colors */}
+                <VStack gap={2}>
+                  <Label>Base</Label>
+                  <div className="flex gap-2">
+                    <ColorSwatch name="white" color="var(--color-white)" textLight={false} />
+                    <ColorSwatch name="black" color="var(--color-black)" textLight={true} />
+                  </div>
+                </VStack>
+                
+                {/* Slate (Neutral) */}
                 <VStack gap={2}>
                   <Label>Slate (Neutral)</Label>
                   <div className="grid grid-cols-5 md:grid-cols-10 gap-2">
@@ -577,6 +864,8 @@ export function DesignSystemPage() {
                     ))}
                   </div>
                 </VStack>
+                
+                {/* Blue (Primary) */}
                 <VStack gap={2}>
                   <Label>Blue (Primary)</Label>
                   <div className="grid grid-cols-5 md:grid-cols-10 gap-2">
@@ -585,45 +874,135 @@ export function DesignSystemPage() {
                     ))}
                   </div>
                 </VStack>
+                
+                {/* Red (Danger) */}
+                <VStack gap={2}>
+                  <Label>Red (Danger)</Label>
+                  <div className="grid grid-cols-5 md:grid-cols-10 gap-2">
+                    {[50, 100, 500, 600, 700, 800].map((shade) => (
+                      <ColorSwatch key={shade} name={`${shade}`} color={`var(--color-red-${shade})`} textLight={shade >= 500} />
+                    ))}
+                  </div>
+                </VStack>
+                
+                {/* Green (Success) */}
+                <VStack gap={2}>
+                  <Label>Green (Success)</Label>
+                  <div className="grid grid-cols-5 md:grid-cols-10 gap-2">
+                    {[50, 100, 500, 600, 700, 800].map((shade) => (
+                      <ColorSwatch key={shade} name={`${shade}`} color={`var(--color-green-${shade})`} textLight={shade >= 500} />
+                    ))}
+                  </div>
+                </VStack>
+                
+                {/* Orange (Warning) */}
+                <VStack gap={2}>
+                  <Label>Orange (Warning)</Label>
+                  <div className="grid grid-cols-5 md:grid-cols-10 gap-2">
+                    {[50, 100, 500, 600, 700, 800].map((shade) => (
+                      <ColorSwatch key={shade} name={`${shade}`} color={`var(--color-orange-${shade})`} textLight={shade >= 500} />
+                    ))}
+                  </div>
+                </VStack>
+                
+                {/* Yellow */}
+                <VStack gap={2}>
+                  <Label>Yellow</Label>
+                  <div className="grid grid-cols-5 md:grid-cols-10 gap-2">
+                    {[50, 100, 500, 600].map((shade) => (
+                      <ColorSwatch key={shade} name={`${shade}`} color={`var(--color-yellow-${shade})`} textLight={shade >= 500} />
+                    ))}
+                  </div>
+                </VStack>
               </VStack>
             </Section>
 
             {/* Semantic Colors */}
             <Section id="semantic-colors" title="Semantic Colors" description="Purpose-driven color tokens with light/dark theme support">
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+              <VStack gap={6}>
+                {/* Action, Text, Surface, Border */}
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+                  <VStack gap={3}>
+                    <Label>Action</Label>
+                    <div className="flex gap-2">
+                      <SemanticColorBox name="primary" color="var(--color-action-primary)" />
+                      <SemanticColorBox name="hover" color="var(--color-action-primary-hover)" />
+                      <SemanticColorBox name="active" color="var(--color-action-primary-active)" />
+                    </div>
+                  </VStack>
+                  <VStack gap={3}>
+                    <Label>Text</Label>
+                    <div className="flex gap-2 flex-wrap">
+                      <SemanticColorBox name="default" color="var(--color-text-default)" />
+                      <SemanticColorBox name="muted" color="var(--color-text-muted)" />
+                      <SemanticColorBox name="subtle" color="var(--color-text-subtle)" />
+                      <SemanticColorBox name="disabled" color="var(--color-text-disabled)" />
+                      <SemanticColorBox name="inverse" color="var(--color-text-inverse)" border />
+                    </div>
+                  </VStack>
+                  <VStack gap={3}>
+                    <Label>Surface</Label>
+                    <div className="flex gap-2">
+                      <SemanticColorBox name="default" color="var(--color-surface-default)" border />
+                      <SemanticColorBox name="subtle" color="var(--color-surface-subtle)" border />
+                      <SemanticColorBox name="muted" color="var(--color-surface-muted)" />
+                      <SemanticColorBox name="inverse" color="var(--color-surface-inverse)" />
+                    </div>
+                  </VStack>
+                  <VStack gap={3}>
+                    <Label>Border</Label>
+                    <div className="flex gap-2">
+                      <SemanticColorBox name="default" color="var(--color-border-default)" />
+                      <SemanticColorBox name="subtle" color="var(--color-border-subtle)" />
+                      <SemanticColorBox name="strong" color="var(--color-border-strong)" />
+                      <SemanticColorBox name="focus" color="var(--color-border-focus)" />
+                    </div>
+                  </VStack>
+                </div>
+                
+                {/* State Colors */}
                 <VStack gap={3}>
-                  <Label>Action</Label>
-                  <div className="flex gap-2">
-                    <SemanticColorBox name="primary" color="var(--color-action-primary)" />
-                    <SemanticColorBox name="hover" color="var(--color-action-primary-hover)" />
-                    <SemanticColorBox name="active" color="var(--color-action-primary-active)" />
+                  <Label>State</Label>
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    {/* Info */}
+                    <VStack gap={2}>
+                      <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">Info</span>
+                      <div className="flex gap-2">
+                        <SemanticColorBox name="default" color="var(--color-state-info)" />
+                        <SemanticColorBox name="bg" color="var(--color-state-info-bg)" border />
+                        <SemanticColorBox name="text" color="var(--color-state-info-text)" />
+                      </div>
+                    </VStack>
+                    {/* Success */}
+                    <VStack gap={2}>
+                      <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">Success</span>
+                      <div className="flex gap-2">
+                        <SemanticColorBox name="default" color="var(--color-state-success)" />
+                        <SemanticColorBox name="bg" color="var(--color-state-success-bg)" border />
+                        <SemanticColorBox name="text" color="var(--color-state-success-text)" />
+                      </div>
+                    </VStack>
+                    {/* Warning */}
+                    <VStack gap={2}>
+                      <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">Warning</span>
+                      <div className="flex gap-2">
+                        <SemanticColorBox name="default" color="var(--color-state-warning)" />
+                        <SemanticColorBox name="bg" color="var(--color-state-warning-bg)" border />
+                        <SemanticColorBox name="text" color="var(--color-state-warning-text)" />
+                      </div>
+                    </VStack>
+                    {/* Danger */}
+                    <VStack gap={2}>
+                      <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">Danger</span>
+                      <div className="flex gap-2">
+                        <SemanticColorBox name="default" color="var(--color-state-danger)" />
+                        <SemanticColorBox name="bg" color="var(--color-state-danger-bg)" border />
+                        <SemanticColorBox name="text" color="var(--color-state-danger-text)" />
+                      </div>
+                    </VStack>
                   </div>
                 </VStack>
-                <VStack gap={3}>
-                  <Label>Text</Label>
-                  <div className="flex gap-2">
-                    <SemanticColorBox name="default" color="var(--color-text-default)" />
-                    <SemanticColorBox name="muted" color="var(--color-text-muted)" />
-                    <SemanticColorBox name="subtle" color="var(--color-text-subtle)" />
-                  </div>
-                </VStack>
-                <VStack gap={3}>
-                  <Label>Surface</Label>
-                  <div className="flex gap-2">
-                    <SemanticColorBox name="default" color="var(--color-surface-default)" border />
-                    <SemanticColorBox name="subtle" color="var(--color-surface-subtle)" border />
-                    <SemanticColorBox name="muted" color="var(--color-surface-muted)" />
-                  </div>
-                </VStack>
-                <VStack gap={3}>
-                  <Label>Border</Label>
-                  <div className="flex gap-2">
-                    <SemanticColorBox name="default" color="var(--color-border-default)" />
-                    <SemanticColorBox name="strong" color="var(--color-border-strong)" />
-                    <SemanticColorBox name="focus" color="var(--color-border-focus)" />
-                  </div>
-                </VStack>
-              </div>
+              </VStack>
             </Section>
 
             {/* Typography */}
@@ -980,15 +1359,15 @@ export function DesignSystemPage() {
                   ]}
                 />
 
-                {/* Missing / Custom Required */}
+                {/* OS / Brand Icons */}
                 <IconGrid
-                  title="Missing (Custom SVG Required)"
+                  title="OS / Brand"
                   icons={[
+                    { Icon: IconBrandUbuntu, name: 'Ubuntu' },
+                    { Icon: IconBrandDebian, name: 'Debian' },
+                    { Icon: IconBrandWindows, name: 'Windows' },
+                    { Icon: IconBrandRedhat, name: 'RedHat' },
                     { Icon: IconHelp, name: 'Rocky Linux', missing: true },
-                    { Icon: IconHelp, name: 'Ubuntu', missing: true },
-                    { Icon: IconHelp, name: 'Microsoft', missing: true },
-                    { Icon: IconHelp, name: 'CentOS', missing: true },
-                    { Icon: IconHelp, name: 'Debian', missing: true },
                   ]}
                 />
               </VStack>
@@ -1490,6 +1869,70 @@ export function DesignSystemPage() {
               </VStack>
             </Section>
 
+            {/* Pagination Component */}
+            <Section id="pagination" title="Pagination" description="Navigation for paginated content">
+              <VStack gap={8}>
+                {/* Tokens */}
+                <VStack gap={3}>
+                  <Label>Design Tokens</Label>
+                  <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
+                    <code>item-size: 28px</code> · <code>gap: 4px</code> · <code>radius: 4px</code> · <code>font: 12px</code>
+                  </div>
+                </VStack>
+
+                {/* Basic */}
+                <VStack gap={3}>
+                  <Label>Basic</Label>
+                  <Pagination
+                    currentPage={1}
+                    totalPages={10}
+                    onPageChange={(page) => console.log('Page:', page)}
+                  />
+                </VStack>
+
+                {/* Middle Page */}
+                <VStack gap={3}>
+                  <Label>Middle Page (with dots)</Label>
+                  <Pagination
+                    currentPage={5}
+                    totalPages={10}
+                    onPageChange={(page) => console.log('Page:', page)}
+                  />
+                </VStack>
+
+                {/* Many Pages */}
+                <VStack gap={3}>
+                  <Label>Many Pages</Label>
+                  <Pagination
+                    currentPage={15}
+                    totalPages={50}
+                    onPageChange={(page) => console.log('Page:', page)}
+                  />
+                </VStack>
+
+                {/* Few Pages */}
+                <VStack gap={3}>
+                  <Label>Few Pages (no dots)</Label>
+                  <Pagination
+                    currentPage={2}
+                    totalPages={5}
+                    onPageChange={(page) => console.log('Page:', page)}
+                  />
+                </VStack>
+
+                {/* Disabled */}
+                <VStack gap={3}>
+                  <Label>Disabled</Label>
+                  <Pagination
+                    currentPage={3}
+                    totalPages={10}
+                    onPageChange={(page) => console.log('Page:', page)}
+                    disabled
+                  />
+                </VStack>
+              </VStack>
+            </Section>
+
             {/* ProgressBar Component */}
             <Section id="progress-bar" title="Progress Bar" description="Visual indicator for quota usage and progress with status-based colors">
               <VStack gap={8}>
@@ -1873,6 +2316,120 @@ export function DesignSystemPage() {
               </VStack>
             </Section>
 
+            {/* TopBar Component */}
+            <Section id="topbar" title="TopBar" description="Application header with sidebar toggle, navigation, breadcrumb, and actions">
+              <VStack gap={8}>
+                {/* Tokens */}
+                <VStack gap={3}>
+                  <Label>Design Tokens</Label>
+                  <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
+                    <code>height: 40px</code> · <code>padding-x: 12px</code> · <code>button-size: 28px</code> · <code>radius: 4px</code>
+                  </div>
+                </VStack>
+
+                {/* Basic */}
+                <VStack gap={3}>
+                  <Label>Basic</Label>
+                  <div className="w-full border border-[var(--color-border-default)] rounded-[var(--radius-md)] overflow-hidden">
+                    <TopBar
+                      onSidebarToggle={() => console.log('Toggle sidebar')}
+                      onBack={() => console.log('Go back')}
+                      onForward={() => console.log('Go forward')}
+                      breadcrumb={
+                        <Breadcrumb
+                          items={[
+                            { label: 'Home', onClick: () => {} },
+                            { label: 'Dashboard', onClick: () => {} },
+                            { label: 'Settings' },
+                          ]}
+                        />
+                      }
+                      actions={
+                        <>
+                          <TopBarAction
+                            icon={<IconBell size={16} stroke={1.5} />}
+                            aria-label="Notifications"
+                            onClick={() => console.log('Notifications')}
+                          />
+                          <TopBarAction
+                            icon={<IconUser size={16} stroke={1.5} />}
+                            aria-label="Profile"
+                            onClick={() => console.log('Profile')}
+                          />
+                        </>
+                      }
+                    />
+                  </div>
+                </VStack>
+
+                {/* With Badge */}
+                <VStack gap={3}>
+                  <Label>With Notification Badge</Label>
+                  <div className="w-full border border-[var(--color-border-default)] rounded-[var(--radius-md)] overflow-hidden">
+                    <TopBar
+                      onSidebarToggle={() => console.log('Toggle sidebar')}
+                      canGoBack={true}
+                      canGoForward={false}
+                      breadcrumb={
+                        <Breadcrumb
+                          items={[
+                            { label: 'Projects', onClick: () => {} },
+                            { label: 'My Project' },
+                          ]}
+                        />
+                      }
+                      actions={
+                        <>
+                          <TopBarAction
+                            icon={<IconBell size={16} stroke={1.5} />}
+                            aria-label="Notifications"
+                            badge
+                          />
+                          <TopBarAction
+                            icon={<IconBell size={16} stroke={1.5} />}
+                            aria-label="Notifications with count"
+                            badgeCount={5}
+                          />
+                          <TopBarAction
+                            icon={<IconSettings size={16} stroke={1.5} />}
+                            aria-label="Settings"
+                          />
+                        </>
+                      }
+                    />
+                  </div>
+                </VStack>
+
+                {/* Minimal */}
+                <VStack gap={3}>
+                  <Label>Minimal (No Navigation)</Label>
+                  <div className="w-full border border-[var(--color-border-default)] rounded-[var(--radius-md)] overflow-hidden">
+                    <TopBar
+                      showNavigation={false}
+                      breadcrumb={
+                        <Breadcrumb
+                          items={[
+                            { label: 'Settings' },
+                          ]}
+                        />
+                      }
+                      actions={
+                        <TopBarAction
+                          icon={<IconHelp size={16} stroke={1.5} />}
+                          aria-label="Help"
+                        />
+                      }
+                    />
+                  </div>
+                </VStack>
+              </VStack>
+            </Section>
+
+            {/* TabBar Component */}
+            <Section id="tabbar" title="TabBar" description="Browser-style tabs with add/close functionality">
+              <TabBarDemo />
+            </Section>
+
             {/* Tabs Component */}
             <Section id="tabs" title="Tabs" description="Tabs for navigation between views with underline and boxed variants">
               <VStack gap={8}>
@@ -2122,6 +2679,11 @@ export function DesignSystemPage() {
                   </InlineMessage>
                 </VStack>
               </VStack>
+            </Section>
+
+            {/* Table Component */}
+            <Section id="table" title="Table" description="Data table with sorting, selection, and sticky header">
+              <TableDemo />
             </Section>
 
             {/* Badge Component */}

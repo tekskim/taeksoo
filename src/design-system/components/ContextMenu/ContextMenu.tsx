@@ -194,29 +194,32 @@ const ContextMenuContent: React.FC<ContextMenuContentProps> = ({
   parentDirection = 'right',
 }) => {
   const menuRef = useRef<HTMLDivElement>(null);
-  const [adjustedPosition, setAdjustedPosition] = useState(position);
+  const [adjustedPosition, setAdjustedPosition] = useState<{ x: number; y: number } | null>(null);
 
   useEffect(() => {
-    if (menuRef.current) {
-      const rect = menuRef.current.getBoundingClientRect();
-      const viewportWidth = window.innerWidth;
-      const viewportHeight = window.innerHeight;
+    // Use requestAnimationFrame to ensure DOM is ready
+    requestAnimationFrame(() => {
+      if (menuRef.current) {
+        const rect = menuRef.current.getBoundingClientRect();
+        const viewportWidth = window.innerWidth;
+        const viewportHeight = window.innerHeight;
 
-      let newX = position.x;
-      let newY = position.y;
+        let newX = position.x;
+        let newY = position.y;
 
-      // Adjust horizontal position
-      if (position.x + rect.width > viewportWidth) {
-        newX = position.x - rect.width;
+        // Adjust horizontal position - flip to left if overflows
+        if (position.x + rect.width > viewportWidth - 8) {
+          newX = Math.max(8, position.x - rect.width - 8);
+        }
+
+        // Adjust vertical position
+        if (position.y + rect.height > viewportHeight - 8) {
+          newY = Math.max(8, viewportHeight - rect.height - 8);
+        }
+
+        setAdjustedPosition({ x: newX, y: newY });
       }
-
-      // Adjust vertical position
-      if (position.y + rect.height > viewportHeight) {
-        newY = viewportHeight - rect.height - 8;
-      }
-
-      setAdjustedPosition({ x: newX, y: newY });
-    }
+    });
   }, [position]);
 
   return createPortal(
@@ -230,10 +233,12 @@ const ContextMenuContent: React.FC<ContextMenuContentProps> = ({
         rounded-[var(--context-menu-radius)]
         shadow-[var(--shadow-md)]
         overflow-hidden
+        transition-opacity duration-[var(--duration-fast)]
       "
       style={{
-        left: adjustedPosition.x,
-        top: adjustedPosition.y,
+        left: adjustedPosition?.x ?? position.x,
+        top: adjustedPosition?.y ?? position.y,
+        opacity: adjustedPosition ? 1 : 0,
       }}
     >
       {items.map((item) => (
@@ -269,11 +274,22 @@ export const ContextMenu: React.FC<ContextMenuProps> = ({
     
     if (trigger === 'contextmenu') {
       e.preventDefault();
+      setPosition({ x: e.clientX, y: e.clientY });
+      setIsOpen(true);
+    } else {
+      // Click trigger: toggle menu and position relative to trigger element
+      if (isOpen) {
+        setIsOpen(false);
+        return;
+      }
+      
+      if (triggerRef.current) {
+        const rect = triggerRef.current.getBoundingClientRect();
+        setPosition({ x: rect.right + 4, y: rect.top });
+      }
+      setIsOpen(true);
     }
-    
-    setPosition({ x: e.clientX, y: e.clientY });
-    setIsOpen(true);
-  }, [disabled, trigger]);
+  }, [disabled, trigger, isOpen]);
 
   const handleClose = useCallback(() => {
     setIsOpen(false);
@@ -312,7 +328,7 @@ export const ContextMenu: React.FC<ContextMenuProps> = ({
     : { onClick: handleOpen };
 
   return (
-    <div ref={triggerRef} className={className} {...triggerProps}>
+    <div ref={triggerRef} className={`inline-block w-fit ${className}`} {...triggerProps}>
       {children}
       {isOpen && (
         <ContextMenuContent

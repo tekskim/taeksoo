@@ -70,6 +70,8 @@
   /* Yellow */
   --color-yellow-50: #fefce8;
   --color-yellow-100: #fef9c3;
+  --color-yellow-500: #eab308;
+  --color-yellow-600: #ca8a04;
 
   /* ----------------------------------------
      Primitive - Spacing (4px base)
@@ -355,7 +357,7 @@
   --badge-line-height-lg: var(--line-height-20);
 
   /* Common */
-  --badge-radius: var(--radius-md);
+  --badge-radius: var(--radius-sm);
   --badge-gap: var(--spacing-1);
   --badge-dot-size: 6px;
 
@@ -430,6 +432,55 @@
   --context-menu-padding-x: var(--spacing-3);
   --context-menu-padding-y: var(--spacing-1-5);
   --context-menu-radius: var(--radius-md);
+
+  /* ----------------------------------------
+     Component - Table
+     ---------------------------------------- */
+  --table-row-gap: var(--spacing-1);
+  --table-row-radius: var(--radius-md);
+  --table-cell-padding-x: var(--spacing-3);
+  --table-cell-padding-y: var(--spacing-2-5);
+  --table-header-padding-y: var(--spacing-2);
+  --table-font-size: var(--font-size-12);
+  --table-header-font-size: var(--font-size-11);
+  --table-line-height: var(--line-height-16);
+  --table-checkbox-width: 40px;
+  --table-empty-padding-y: var(--spacing-8);
+
+  /* ----------------------------------------
+     Component - TabBar
+     ---------------------------------------- */
+  --tabbar-height: 36px;
+  --tabbar-tab-min-width: 100px;
+  --tabbar-tab-max-width: 200px;
+  --tabbar-tab-padding-x: var(--spacing-3);
+  --tabbar-tab-gap: var(--spacing-2);
+  --tabbar-font-size: var(--font-size-12);
+  --tabbar-line-height: var(--line-height-16);
+  --tabbar-close-size: 16px;
+  --tabbar-add-size: 28px;
+  --tabbar-add-margin: var(--spacing-1);
+
+  /* ----------------------------------------
+     Component - TopBar
+     ---------------------------------------- */
+  --topbar-height: 40px;
+  --topbar-padding-x: var(--spacing-3);
+  --topbar-gap: var(--spacing-3);
+  --topbar-section-gap: var(--spacing-2);
+  --topbar-nav-gap: var(--spacing-0-5);
+  --topbar-action-gap: var(--spacing-1);
+  --topbar-button-size: 28px;
+  --topbar-button-radius: var(--radius-sm);
+
+  /* ----------------------------------------
+     Component - Pagination
+     ---------------------------------------- */
+  --pagination-item-size: 28px;
+  --pagination-gap: var(--spacing-1);
+  --pagination-radius: var(--radius-sm);
+  --pagination-font-size: var(--font-size-12);
+  --pagination-line-height: var(--line-height-16);
 
   /* ----------------------------------------
      Component - ProgressBar
@@ -560,7 +611,7 @@
   --radio-size: 16px;
   --radio-dot-size: 6px;
   --radio-border-width: 1.5px;
-  --radio-checked-border-width: 4px;
+  --radio-checked-border-width: 5px;
   --radio-gap: var(--spacing-1-5);
 
   /* Radio - Border */
@@ -860,4 +911,40 @@
   @media (min-width: 1280px) {
     max-width: 1280px;
   }
+}
+
+/* ========================================
+   Table Scrollbar (always visible)
+   ======================================== */
+
+.table-scroll-container {
+  /* Force scrollbar visibility on macOS */
+  -webkit-overflow-scrolling: touch;
+}
+
+/* WebKit browsers (Chrome, Safari, Edge) */
+.table-scroll-container::-webkit-scrollbar {
+  height: 8px;
+  display: block;
+}
+
+.table-scroll-container::-webkit-scrollbar-track {
+  background: var(--color-surface-muted);
+  border-radius: var(--radius-full);
+}
+
+.table-scroll-container::-webkit-scrollbar-thumb {
+  background: var(--color-border-strong);
+  border-radius: var(--radius-full);
+  min-width: 40px;
+}
+
+.table-scroll-container::-webkit-scrollbar-thumb:hover {
+  background: var(--color-text-disabled);
+}
+
+/* Firefox */
+.table-scroll-container {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-border-strong) var(--color-surface-muted);
 }
