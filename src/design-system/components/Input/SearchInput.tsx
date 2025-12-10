@@ -90,8 +90,9 @@ export const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
       'transition-all duration-[var(--duration-fast)]',
       'placeholder:text-[var(--color-text-subtle)]',
       'focus:outline-none',
-      'focus:border-[length:var(--input-border-width-focus)]',
+      // Use box-shadow instead of border-width change to prevent text jumping
       'focus:border-[var(--input-border-focus)]',
+      'focus:shadow-[0_0_0_1px_var(--input-border-focus)]',
       disabled ? 'bg-[var(--input-bg-disabled)] text-[var(--input-text-disabled)] cursor-not-allowed' : '',
       sizes[size],
       className

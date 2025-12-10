@@ -129,8 +129,9 @@ export const NumberInput = forwardRef<HTMLInputElement, NumberInputProps>(
       'rounded-[var(--input-radius)]',
       'transition-all duration-[var(--duration-fast)]',
       'focus:outline-none',
-      'focus:border-[length:var(--input-border-width-focus)]',
+      // Use box-shadow instead of border-width change to prevent text jumping
       'focus:border-[var(--input-border-focus)]',
+      'focus:shadow-[0_0_0_1px_var(--input-border-focus)]',
       '[appearance:textfield]',
       '[&::-webkit-outer-spin-button]:appearance-none',
       '[&::-webkit-inner-spin-button]:appearance-none',

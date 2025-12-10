@@ -73,9 +73,10 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
     ];
 
     // Focus styles (not applied for readOnly)
+    // Use box-shadow instead of border-width change to prevent text jumping
     const focusStyles = !readOnly ? [
-      'focus:border-[length:var(--input-border-width-focus)]',
       'focus:border-[var(--input-border-focus)]',
+      'focus:shadow-[0_0_0_1px_var(--input-border-focus)]',
     ] : [];
 
     // Variant styles

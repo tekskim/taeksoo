@@ -106,6 +106,7 @@ export function StatusIndicator({
     'text-[var(--status-text)]',
     'text-[length:var(--status-font-size)]',
     'leading-[var(--status-line-height)]',
+    'mr-2', // Ensure spacing from adjacent elements
   ].join(' ');
 
   const paddingStyles = layout === 'icon-only'

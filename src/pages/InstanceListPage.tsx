@@ -1,11 +1,21 @@
-import { useState } from 'react';
-import { Button, Input, Badge, HStack, VStack } from '@/design-system';
+import { useState, useMemo } from 'react';
+import {
+  Button,
+  SearchInput,
+  Table,
+  StatusIndicator,
+  Pagination,
+  Checkbox,
+  HStack,
+  VStack,
+  type TableColumn,
+  type StatusType,
+} from '@/design-system';
 import { Sidebar } from '@/components/Sidebar';
 import { TabBar } from '@/components/TabBar';
 import { BreadcrumbNavigation } from '@/components/BreadcrumbNavigation';
 import {
   IconPlus,
-  IconSearch,
   IconFilter,
   IconDotsVertical,
   IconPlayerPlay,
@@ -14,13 +24,14 @@ import {
   IconCpu,
   IconServer,
   IconRefresh,
+  IconLock,
 } from '@tabler/icons-react';
 
 /* ----------------------------------------
    Types
    ---------------------------------------- */
 
-type InstanceStatus = 'running' | 'stopped' | 'pending' | 'error';
+type InstanceStatus = 'running' | 'stopped' | 'pending' | 'error' | 'building';
 
 interface Instance {
   id: string;
@@ -32,6 +43,7 @@ interface Instance {
   storage: number;
   ip: string;
   region: string;
+  locked?: boolean;
   createdAt: string;
 }
 
@@ -50,6 +62,7 @@ const mockInstances: Instance[] = [
     storage: 100,
     ip: '10.0.1.101',
     region: 'us-east-1',
+    locked: true,
     createdAt: '2024-01-15',
   },
   {
@@ -86,6 +99,7 @@ const mockInstances: Instance[] = [
     storage: 500,
     ip: '10.0.3.10',
     region: 'eu-west-1',
+    locked: true,
     createdAt: '2024-03-01',
   },
   {
@@ -112,17 +126,30 @@ const mockInstances: Instance[] = [
     region: 'us-east-1',
     createdAt: '2024-01-05',
   },
+  {
+    id: 'i-007',
+    name: 'ml-worker',
+    type: 'p3.2xlarge',
+    status: 'building',
+    cpu: 8,
+    memory: 64,
+    storage: 500,
+    ip: '—',
+    region: 'us-west-2',
+    createdAt: '2024-03-12',
+  },
 ];
 
 /* ----------------------------------------
-   Status Badge Config
+   Status Config - Map to StatusIndicator types
    ---------------------------------------- */
 
-const statusConfig: Record<InstanceStatus, { variant: 'success' | 'default' | 'warning' | 'error'; label: string }> = {
-  running: { variant: 'success', label: 'Running' },
-  stopped: { variant: 'default', label: 'Stopped' },
-  pending: { variant: 'warning', label: 'Pending' },
-  error: { variant: 'error', label: 'Error' },
+const statusMap: Record<InstanceStatus, StatusType> = {
+  running: 'active',
+  stopped: 'shutoff',
+  pending: 'paused',
+  error: 'error',
+  building: 'building',
 };
 
 /* ----------------------------------------
@@ -132,31 +159,121 @@ const statusConfig: Record<InstanceStatus, { variant: 'success' | 'default' | 'w
 export function InstanceListPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedInstances, setSelectedInstances] = useState<string[]>([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const pageSize = 10;
 
-  const filteredInstances = mockInstances.filter((instance) =>
-    instance.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    instance.id.toLowerCase().includes(searchQuery.toLowerCase())
+  const filteredInstances = useMemo(() => 
+    mockInstances.filter((instance) =>
+      instance.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      instance.id.toLowerCase().includes(searchQuery.toLowerCase())
+    ), [searchQuery]
   );
 
-  const toggleSelectAll = () => {
-    if (selectedInstances.length === filteredInstances.length) {
-      setSelectedInstances([]);
-    } else {
-      setSelectedInstances(filteredInstances.map((i) => i.id));
-    }
-  };
-
-  const toggleSelect = (id: string) => {
-    setSelectedInstances((prev) =>
-      prev.includes(id) ? prev.filter((i) => i !== id) : [...prev, id]
-    );
-  };
+  const totalPages = Math.ceil(filteredInstances.length / pageSize);
 
   const runningCount = mockInstances.filter((i) => i.status === 'running').length;
   const stoppedCount = mockInstances.filter((i) => i.status === 'stopped').length;
 
+  // Table columns definition
+  const columns: TableColumn<Instance>[] = [
+    {
+      key: 'status',
+      label: 'Status',
+      width: '120px',
+      sortable: true,
+      render: (_, row) => (
+        <StatusIndicator status={statusMap[row.status]} />
+      ),
+    },
+    {
+      key: 'name',
+      label: 'Name',
+      flex: 2,
+      sortable: true,
+      render: (_, row) => (
+        <VStack gap={0} align="start">
+          <span className="font-medium text-[var(--color-text-default)]">{row.name}</span>
+          <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">{row.id}</span>
+        </VStack>
+      ),
+    },
+    {
+      key: 'locked',
+      label: 'Locked',
+      width: '80px',
+      align: 'center',
+      render: (_, row) => row.locked ? (
+        <IconLock size={14} className="text-[var(--color-text-subtle)]" />
+      ) : null,
+    },
+    {
+      key: 'ip',
+      label: 'Fixed IP',
+      width: '120px',
+      sortable: true,
+      render: (value) => (
+        <span className="font-mono text-[var(--color-text-default)]">{value}</span>
+      ),
+    },
+    {
+      key: 'type',
+      label: 'Flavor',
+      width: '110px',
+      sortable: true,
+      render: (value) => (
+        <span className="font-mono text-[var(--color-text-default)]">{value}</span>
+      ),
+    },
+    {
+      key: 'cpu',
+      label: 'vCPU',
+      width: '70px',
+      align: 'center',
+      sortable: true,
+      render: (value) => (
+        <HStack gap={1} justify="center">
+          <IconCpu size={14} className="text-[var(--color-text-subtle)]" />
+          <span>{value}</span>
+        </HStack>
+      ),
+    },
+    {
+      key: 'memory',
+      label: 'RAM',
+      width: '80px',
+      align: 'center',
+      sortable: true,
+      render: (value) => `${value}GB`,
+    },
+    {
+      key: 'storage',
+      label: 'Disk',
+      width: '80px',
+      align: 'center',
+      sortable: true,
+      render: (value) => value >= 1000 ? `${value / 1000}TB` : `${value}GB`,
+    },
+    {
+      key: 'region',
+      label: 'Region',
+      width: '130px',
+      sortable: true,
+    },
+    {
+      key: 'actions',
+      label: '',
+      width: '48px',
+      align: 'center',
+      render: () => (
+        <button className="p-1 rounded hover:bg-[var(--color-surface-subtle)] transition-colors">
+          <IconDotsVertical size={16} className="text-[var(--color-text-subtle)]" />
+        </button>
+      ),
+    },
+  ];
+
   return (
-    <div className="min-h-screen bg-neutral-50">
+    <div className="min-h-screen bg-[var(--color-surface-subtle)]">
       {/* Sidebar */}
       <Sidebar />
 
@@ -180,11 +297,15 @@ export function InstanceListPage() {
 
         {/* Page Content */}
         <div className="p-6">
-          <VStack gap={6} className="max-w-[1320px] mx-auto">
+          <VStack gap={6} className="max-w-[1400px] mx-auto">
             {/* Page Header */}
             <div className="flex items-center justify-between">
-              <h1 className="text-base font-semibold text-neutral-900">Instances</h1>
-              <Button>Create Instance</Button>
+              <h1 className="text-[length:var(--font-size-16)] font-semibold text-[var(--color-text-default)]">
+                Instances
+              </h1>
+              <Button leftIcon={<IconPlus size={16} />}>
+                Create Instance
+              </Button>
             </div>
 
             {/* Stats Cards */}
@@ -196,159 +317,81 @@ export function InstanceListPage() {
             </div>
 
             {/* Filters & Actions Bar */}
-            <div className="bg-white rounded-xl border border-neutral-200 p-4">
-              <div className="flex items-center justify-between gap-4">
-                <HStack gap={3} className="flex-1">
-                  <div className="w-80">
-                    <Input
-                      placeholder="Search instances..."
-                      leftElement={<IconSearch size={16} />}
-                      value={searchQuery}
-                      onChange={(e) => setSearchQuery(e.target.value)}
-                    />
-                  </div>
-                  <Button variant="outline" size="md" leftIcon={<IconFilter size={16} />}>
-                    Filters
-                  </Button>
-                </HStack>
-                <HStack gap={2}>
-                  <Button variant="ghost" size="md" leftIcon={<IconRefresh size={16} />}>
-                    Refresh
-                  </Button>
-                  {selectedInstances.length > 0 && (
-                    <>
-                      <Button variant="outline" size="md" leftIcon={<IconPlayerPlay size={16} />}>
-                        Start
-                      </Button>
-                      <Button variant="outline" size="md" leftIcon={<IconPlayerStop size={16} />}>
-                        Stop
-                      </Button>
-                      <Button variant="danger" size="md" leftIcon={<IconTrash size={16} />}>
-                        Delete
-                      </Button>
-                    </>
-                  )}
-                </HStack>
-              </div>
+            <div className="flex items-center justify-between gap-4">
+              <HStack gap={3} className="flex-1">
+                <div className="w-80">
+                  <SearchInput
+                    placeholder="Search instances..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    onClear={() => setSearchQuery('')}
+                    fullWidth
+                  />
+                </div>
+                <Button variant="outline" size="md" leftIcon={<IconFilter size={16} />}>
+                  Filters
+                </Button>
+              </HStack>
+              <HStack gap={2}>
+                <Button variant="ghost" size="md" leftIcon={<IconRefresh size={16} />}>
+                  Refresh
+                </Button>
+                {selectedInstances.length > 0 && (
+                  <>
+                    <Button variant="outline" size="md" leftIcon={<IconPlayerPlay size={16} />}>
+                      Start
+                    </Button>
+                    <Button variant="outline" size="md" leftIcon={<IconPlayerStop size={16} />}>
+                      Stop
+                    </Button>
+                    <Button variant="danger" size="md" leftIcon={<IconTrash size={16} />}>
+                      Delete
+                    </Button>
+                  </>
+                )}
+              </HStack>
             </div>
 
             {/* Instance Table */}
-            <div className="bg-white rounded-xl border border-neutral-200 overflow-hidden">
-              <table className="w-full">
-                <thead>
-                  <tr className="bg-neutral-50 border-b border-neutral-200">
-                    <th className="w-12 px-4 py-3">
-                      <input
-                        type="checkbox"
-                        checked={selectedInstances.length === filteredInstances.length && filteredInstances.length > 0}
-                        onChange={toggleSelectAll}
-                        className="w-4 h-4 rounded border-neutral-300 text-primary-600 focus:ring-primary-500"
-                      />
-                    </th>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">
-                      Name
-                    </th>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">
-                      Status
-                    </th>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">
-                      Type
-                    </th>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">
-                      Specs
-                    </th>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">
-                      IP Address
-                    </th>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">
-                      Region
-                    </th>
-                    <th className="w-12 px-4 py-3"></th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-neutral-200">
-                  {filteredInstances.map((instance) => (
-                    <tr
-                      key={instance.id}
-                      className={`hover:bg-neutral-50 transition-colors ${
-                        selectedInstances.includes(instance.id) ? 'bg-primary-50' : ''
-                      }`}
-                    >
-                      <td className="px-4 py-4">
-                        <input
-                          type="checkbox"
-                          checked={selectedInstances.includes(instance.id)}
-                          onChange={() => toggleSelect(instance.id)}
-                          className="w-4 h-4 rounded border-neutral-300 text-primary-600 focus:ring-primary-500"
-                        />
-                      </td>
-                      <td className="px-4 py-4">
-                        <VStack gap={0} align="start">
-                          <span className="font-medium text-neutral-900">{instance.name}</span>
-                          <span className="text-xs text-neutral-500">{instance.id}</span>
-                        </VStack>
-                      </td>
-                      <td className="px-4 py-4">
-                        <Badge variant={statusConfig[instance.status].variant} dot>
-                          {statusConfig[instance.status].label}
-                        </Badge>
-                      </td>
-                      <td className="px-4 py-4">
-                        <span className="text-sm text-neutral-700 font-mono">{instance.type}</span>
-                      </td>
-                      <td className="px-4 py-4">
-                        <HStack gap={3}>
-                          <HStack gap={1}>
-                            <IconCpu size={14} className="text-neutral-400" />
-                            <span className="text-sm text-neutral-600">{instance.cpu} vCPU</span>
-                          </HStack>
-                          <span className="text-neutral-300">•</span>
-                          <span className="text-sm text-neutral-600">{instance.memory} GB</span>
-                        </HStack>
-                      </td>
-                      <td className="px-4 py-4">
-                        <span className="text-sm text-neutral-700 font-mono">{instance.ip}</span>
-                      </td>
-                      <td className="px-4 py-4">
-                        <span className="text-sm text-neutral-600">{instance.region}</span>
-                      </td>
-                      <td className="px-4 py-4">
-                        <button className="p-1 rounded hover:bg-neutral-100 transition-colors">
-                          <IconDotsVertical size={16} className="text-neutral-500" />
-                        </button>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+            <Table<Instance>
+              columns={columns}
+              data={filteredInstances}
+              rowKey="id"
+              selectable
+              selectedKeys={selectedInstances}
+              onSelectionChange={setSelectedInstances}
+              emptyMessage="No instances found"
+            />
 
-              {/* Empty State */}
-              {filteredInstances.length === 0 && (
-                <div className="py-16 text-center">
-                  <IconServer size={48} className="mx-auto text-neutral-300 mb-4" />
-                  <h3 className="text-lg font-medium text-neutral-900 mb-1">No instances found</h3>
-                  <p className="text-sm text-neutral-500 mb-4">
-                    {searchQuery ? 'Try adjusting your search query' : 'Get started by creating your first instance'}
-                  </p>
-                  {!searchQuery && (
-                    <Button leftIcon={<IconPlus size={16} />}>Create Instance</Button>
-                  )}
-                </div>
-              )}
+            {/* Empty State */}
+            {filteredInstances.length === 0 && (
+              <div className="py-16 text-center">
+                <IconServer size={48} className="mx-auto text-[var(--color-text-disabled)] mb-4" />
+                <h3 className="text-[length:var(--font-size-16)] font-medium text-[var(--color-text-default)] mb-1">
+                  No instances found
+                </h3>
+                <p className="text-[length:var(--font-size-12)] text-[var(--color-text-subtle)] mb-4">
+                  {searchQuery ? 'Try adjusting your search query' : 'Get started by creating your first instance'}
+                </p>
+                {!searchQuery && (
+                  <Button leftIcon={<IconPlus size={16} />}>Create Instance</Button>
+                )}
+              </div>
+            )}
 
-              {/* Pagination */}
-              {filteredInstances.length > 0 && (
-                <div className="px-4 py-3 border-t border-neutral-200 flex items-center justify-between">
-                  <span className="text-sm text-neutral-500">
-                    Showing {filteredInstances.length} of {mockInstances.length} instances
-                  </span>
-                  <HStack gap={2}>
-                    <Button variant="outline" size="sm" disabled>Previous</Button>
-                    <Button variant="outline" size="sm" disabled>Next</Button>
-                  </HStack>
-                </div>
-              )}
-            </div>
+            {/* Pagination */}
+            {filteredInstances.length > 0 && (
+              <div className="flex items-center justify-between">
+                <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
+                  Showing {filteredInstances.length} of {mockInstances.length} instances
+                </span>
+                <Pagination
+                  currentPage={currentPage}
+                  totalPages={totalPages}
+                  onPageChange={setCurrentPage}
+                />
+              </div>
+            )}
           </VStack>
         </div>
       </main>
@@ -370,21 +413,20 @@ function StatCard({
   variant?: 'primary' | 'success' | 'neutral' | 'info';
 }) {
   const colors = {
-    primary: 'text-primary-600',
-    success: 'text-success-500',
-    neutral: 'text-neutral-600',
-    info: 'text-info-500',
+    primary: 'text-[var(--color-action-primary)]',
+    success: 'text-[var(--color-state-success)]',
+    neutral: 'text-[var(--color-text-muted)]',
+    info: 'text-[var(--color-state-info)]',
   };
 
   return (
-    <div className="bg-white rounded-xl border border-neutral-200 p-4">
+    <div className="bg-[var(--color-surface-default)] rounded-xl border border-[var(--color-border-default)] p-4">
       <VStack gap={1} align="start">
-        <span className="text-sm text-neutral-500">{label}</span>
-        <span className={`text-2xl font-semibold ${colors[variant]}`}>{value}</span>
+        <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">{label}</span>
+        <span className={`text-[length:var(--font-size-24)] font-semibold ${colors[variant]}`}>{value}</span>
       </VStack>
     </div>
   );
 }
 
 export default InstanceListPage;
-

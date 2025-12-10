@@ -12,6 +12,7 @@
   "dependencies": {
     "@fontsource-variable/mona-sans": "^5.2.8",
     "@tabler/icons-react": "^3.35.0",
+    "@xyflow/react": "^12.10.0",
     "class-variance-authority": "^0.7.1",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
