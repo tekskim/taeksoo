@@ -22,60 +22,143 @@ import { TabBar } from '@/components/TabBar';
 import { BreadcrumbNavigation } from '@/components/BreadcrumbNavigation';
 import { VStack, Tooltip } from '@/design-system';
 import {
-  IconWorld,
-  IconRouter,
-  IconNetwork,
-  IconScale,
-  IconLayoutGrid,
-  IconX,
-  IconExternalLink,
-} from '@tabler/icons-react';
+  Globe,
+  Network,
+  Grid3X3,
+  Scale,
+  X,
+  ExternalLink,
+} from 'lucide-react';
+
+/* ----------------------------------------
+   Topology Theme Configuration (한 곳에서 관리)
+   ---------------------------------------- */
+
+// 컬러 설정 (인디케이터 색상 red/green 제외)
+const TOPOLOGY_COLORS = {
+  externalNetwork: {
+    bg: 'bg-slate-500',
+    bgInactive: 'bg-slate-400',
+    hex: '#64748b',
+  },
+  router: {
+    bg: 'bg-orange-500',
+    bgInactive: 'bg-orange-300',
+    hex: '#f97316',
+  },
+  subnet: {
+    bg: 'bg-blue-500',
+    bgInactive: 'bg-blue-300',
+    hex: '#3b82f6',
+    textAccent: 'text-blue-600',
+  },
+  loadBalancer: {
+    bg: 'bg-violet-500',
+    bgInactive: 'bg-violet-300',
+    hex: '#8b5cf6',
+  },
+  error: {
+    bg: 'bg-red-500',
+    hex: '#ef4444',
+  },
+  inactive: {
+    hex: '#cbd5e1',
+  },
+} as const;
+
+// 노드 크기 설정
+const TOPOLOGY_SIZES = {
+  externalNetwork: { node: 'w-16 h-16', icon: 32, indicator: 'w-4 h-4' },
+  router: { node: 'w-14 h-14', icon: 28, indicator: 'w-4 h-4' },
+  subnet: { node: 'w-12 h-12', icon: 24, indicator: 'w-3.5 h-3.5' },
+  loadBalancer: { node: 'w-10 h-10', icon: 20, indicator: 'w-3.5 h-3.5' },
+} as const;
+
+// 스타일 설정
+const TOPOLOGY_STYLES = {
+  node: {
+    shape: 'rounded-full',           // rounded-full | rounded-2xl | rounded-xl | rounded-lg
+    shadow: 'var(--shadow-md)',      // var(--shadow-sm) | var(--shadow-md) | var(--shadow-lg)
+    hoverScale: 'hover:scale-105',
+    transition: 'transition-transform',
+  },
+  indicator: {
+    position: 'absolute -bottom-1 -right-1',
+    border: 'border-2 border-white',
+    shape: 'rounded-full',
+  },
+  font: {
+    label: 'text-[length:var(--font-size-11)]',
+    sublabel: 'text-[length:var(--font-size-10)]',
+  },
+  legend: {
+    dot: 'w-3 h-3 rounded-full',
+  },
+} as const;
+
+// 상태에 따른 배경색 헬퍼
+const getNodeBgColor = (type: keyof typeof TOPOLOGY_COLORS, status: string) => {
+  if (status === 'error') return TOPOLOGY_COLORS.error.bg;
+  if (status === 'inactive') return TOPOLOGY_COLORS[type]?.bgInactive || TOPOLOGY_COLORS[type]?.bg;
+  return TOPOLOGY_COLORS[type]?.bg;
+};
+
+// 상태에 따른 엣지 색상 헬퍼
+const getEdgeColor = (type: keyof typeof TOPOLOGY_COLORS, status: string) => {
+  if (status === 'error') return TOPOLOGY_COLORS.error.hex;
+  if (status === 'inactive') return TOPOLOGY_COLORS.inactive.hex;
+  return TOPOLOGY_COLORS[type]?.hex;
+};
 
 /* ----------------------------------------
    Custom Node Components
    ---------------------------------------- */
 
-// External Network Node
+// External Network Node - 인터넷/외부 연결
 function ExternalNetworkNode({ data }: NodeProps) {
-  const status = data.status || 'active'; // 기본값: active
-  const bgColor = status === 'error' ? 'bg-red-500' : status === 'inactive' ? 'bg-blue-300' : 'bg-blue-500';
+  const status = (data.status as string) || 'active';
+  const bgColor = getNodeBgColor('externalNetwork', status);
   const statusColor = status === 'active' ? 'bg-green-500' : status === 'inactive' ? 'bg-slate-400' : 'bg-red-500';
   const statusText = status === 'active' ? '활성' : status === 'inactive' ? '비활성' : '오류';
   
   const tooltipContent = (
     <div className="text-left">
       <div className="font-semibold">{data.label}</div>
-      <div className="text-[10px] opacity-80">External Network</div>
-      <div className="text-[10px] mt-1">상태: {statusText}</div>
+      <div className="text-[length:var(--font-size-10)] opacity-80">External Network</div>
+      <div className="text-[length:var(--font-size-10)] mt-1">상태: {statusText}</div>
     </div>
   );
   
   return (
     <Tooltip content={tooltipContent} position="top" delay={300}>
       <div className="flex flex-col items-center w-[100px] cursor-pointer">
-        <div className={`w-16 h-16 ${bgColor} rounded-2xl flex items-center justify-center text-white shadow-lg relative hover:scale-105 transition-transform`}>
-          <IconWorld size={32} strokeWidth={1.5} />
-          <div className={`absolute -bottom-1 -right-1 w-4 h-4 rounded-full border-2 border-white ${statusColor}`} />
+        <div 
+          className={`${TOPOLOGY_SIZES.externalNetwork.node} ${bgColor} ${TOPOLOGY_STYLES.node.shape} flex items-center justify-center text-white relative ${TOPOLOGY_STYLES.node.hoverScale} ${TOPOLOGY_STYLES.node.transition}`} 
+          style={{ boxShadow: TOPOLOGY_STYLES.node.shadow }}
+        >
+          <Globe size={TOPOLOGY_SIZES.externalNetwork.icon} strokeWidth={1.5} />
+          <div className={`${TOPOLOGY_STYLES.indicator.position} ${TOPOLOGY_SIZES.externalNetwork.indicator} ${TOPOLOGY_STYLES.indicator.shape} ${TOPOLOGY_STYLES.indicator.border} ${statusColor}`} />
         </div>
-        <div className="mt-2 text-[11px] font-medium text-[var(--color-text-default)] text-center truncate w-full">{data.label}</div>
+        <div className={`mt-2 ${TOPOLOGY_STYLES.font.label} font-medium text-[var(--color-text-default)] text-center truncate w-full`}>{data.label}</div>
         <Handle type="source" position={Position.Bottom} className="!opacity-0" />
       </div>
     </Tooltip>
   );
 }
 
-// Router Node
+// Router Node - 네트워크 라우팅
 function RouterNode({ data }: NodeProps) {
-  const bgColor = data.status === 'active' ? 'bg-purple-500' : data.status === 'inactive' ? 'bg-purple-300' : 'bg-red-500';
+  const status = (data.status as string) || 'active';
+  const bgColor = getNodeBgColor('router', status);
   const statusColor = data.status === 'active' ? 'bg-green-500' : data.status === 'inactive' ? 'bg-slate-400' : 'bg-red-500';
   const statusText = data.status === 'active' ? '활성' : data.status === 'inactive' ? '비활성' : '오류';
   
   const tooltipContent = (
     <div className="text-left">
       <div className="font-semibold">{data.label}</div>
-      <div className="text-[10px] opacity-80">Router</div>
-      <div className="text-[10px] mt-1">상태: {statusText}</div>
-      {data.gateway && <div className="text-[10px]">게이트웨이: {data.gateway}</div>}
+      <div className="text-[length:var(--font-size-10)] opacity-80">Router</div>
+      <div className="text-[length:var(--font-size-10)] mt-1">상태: {statusText}</div>
+      {data.gateway && <div className="text-[length:var(--font-size-10)]">게이트웨이: {data.gateway}</div>}
     </div>
   );
   
@@ -83,48 +166,35 @@ function RouterNode({ data }: NodeProps) {
     <Tooltip content={tooltipContent} position="top" delay={300}>
       <div className="flex flex-col items-center w-[100px] cursor-pointer">
         <Handle type="target" position={Position.Top} className="!opacity-0" />
-        <div className={`w-14 h-14 ${bgColor} rounded-xl flex items-center justify-center text-white shadow-lg relative hover:scale-105 transition-transform`}>
-          <IconRouter size={28} strokeWidth={1.5} />
-          <div className={`absolute -bottom-1 -right-1 w-4 h-4 rounded-full border-2 border-white ${statusColor}`} />
+        <div 
+          className={`${TOPOLOGY_SIZES.router.node} ${bgColor} ${TOPOLOGY_STYLES.node.shape} flex items-center justify-center text-white relative ${TOPOLOGY_STYLES.node.hoverScale} ${TOPOLOGY_STYLES.node.transition}`} 
+          style={{ boxShadow: TOPOLOGY_STYLES.node.shadow }}
+        >
+          <Network size={TOPOLOGY_SIZES.router.icon} strokeWidth={1.5} />
+          <div className={`${TOPOLOGY_STYLES.indicator.position} ${TOPOLOGY_SIZES.router.indicator} ${TOPOLOGY_STYLES.indicator.shape} ${TOPOLOGY_STYLES.indicator.border} ${statusColor}`} />
         </div>
-        <div className="mt-2 text-[11px] font-medium text-[var(--color-text-default)] text-center truncate w-full">{data.label}</div>
+        <div className={`mt-2 ${TOPOLOGY_STYLES.font.label} font-medium text-[var(--color-text-default)] text-center truncate w-full`}>{data.label}</div>
         <Handle type="source" position={Position.Bottom} className="!opacity-0" />
       </div>
     </Tooltip>
   );
 }
 
-// Network (VPC) Node
-function NetworkNode({ data }: NodeProps) {
-  const bgColor = data.status === 'active' ? 'bg-emerald-500' : data.status === 'inactive' ? 'bg-emerald-300' : 'bg-red-500';
-  const statusColor = data.status === 'active' ? 'bg-green-500' : data.status === 'inactive' ? 'bg-slate-400' : 'bg-red-500';
-  
-  return (
-    <div className="flex flex-col items-center w-[100px]">
-      <Handle type="target" position={Position.Top} className="!opacity-0" />
-      <div className={`w-12 h-12 ${bgColor} rounded-xl flex items-center justify-center text-white shadow-lg relative`}>
-        <IconNetwork size={24} strokeWidth={1.5} />
-        <div className={`absolute -bottom-1 -right-1 w-3.5 h-3.5 rounded-full border-2 border-white ${statusColor}`} />
-      </div>
-      <div className="mt-2 text-[11px] font-medium text-[var(--color-text-default)] text-center truncate w-full">{data.label}</div>
-      <Handle type="source" position={Position.Bottom} className="!opacity-0" />
-    </div>
-  );
-}
-
-// Individual Subnet Node (Router에 직접 연결)
+// Network (VPC) Node - 클라우드 네트워크
+// Individual Subnet Node - 네트워크 세그먼트
 function SubnetNode({ data }: NodeProps) {
-  const bgColor = data.status === 'active' ? 'bg-teal-500' : data.status === 'inactive' ? 'bg-teal-300' : 'bg-red-500';
+  const status = (data.status as string) || 'active';
+  const bgColor = getNodeBgColor('subnet', status);
   const statusColor = data.status === 'active' ? 'bg-green-500' : data.status === 'inactive' ? 'bg-slate-400' : 'bg-red-500';
   const statusText = data.status === 'active' ? '활성' : data.status === 'inactive' ? '비활성' : '오류';
   
   const tooltipContent = (
     <div className="text-left">
       <div className="font-semibold">{data.label}</div>
-      <div className="text-[10px] opacity-80">Subnet</div>
-      <div className="text-[10px] mt-1">CIDR: {data.cidr}</div>
-      {data.networkName && <div className="text-[10px]">VPC: {data.networkName}</div>}
-      <div className="text-[10px]">상태: {statusText}</div>
+      <div className="text-[length:var(--font-size-10)] opacity-80">Subnet</div>
+      <div className="text-[length:var(--font-size-10)] mt-1">CIDR: {data.cidr}</div>
+      {data.networkName && <div className="text-[length:var(--font-size-10)]">VPC: {data.networkName}</div>}
+      <div className="text-[length:var(--font-size-10)]">상태: {statusText}</div>
     </div>
   );
   
@@ -132,15 +202,18 @@ function SubnetNode({ data }: NodeProps) {
     <Tooltip content={tooltipContent} position="top" delay={300}>
       <div className="flex flex-col items-center w-[120px] cursor-pointer">
         <Handle type="target" position={Position.Top} className="!opacity-0" />
-        <div className={`w-12 h-12 ${bgColor} rounded-lg flex items-center justify-center text-white shadow-md relative hover:scale-105 transition-transform`}>
-          <IconLayoutGrid size={24} strokeWidth={1.5} />
-          <div className={`absolute -bottom-1 -right-1 w-3.5 h-3.5 rounded-full border-2 border-white ${statusColor}`} />
+        <div 
+          className={`${TOPOLOGY_SIZES.subnet.node} ${bgColor} ${TOPOLOGY_STYLES.node.shape} flex items-center justify-center text-white relative ${TOPOLOGY_STYLES.node.hoverScale} ${TOPOLOGY_STYLES.node.transition}`} 
+          style={{ boxShadow: TOPOLOGY_STYLES.node.shadow }}
+        >
+          <Grid3X3 size={TOPOLOGY_SIZES.subnet.icon} strokeWidth={1.5} />
+          <div className={`${TOPOLOGY_STYLES.indicator.position} ${TOPOLOGY_SIZES.subnet.indicator} ${TOPOLOGY_STYLES.indicator.shape} ${TOPOLOGY_STYLES.indicator.border} ${statusColor}`} />
         </div>
         <div className="mt-1.5 text-center w-full">
-          <div className="text-[10px] font-medium text-[var(--color-text-default)] truncate">{data.label}</div>
-          <div className="text-[9px] text-[var(--color-text-subtle)] font-mono truncate">{data.cidr}</div>
+          <div className={`${TOPOLOGY_STYLES.font.sublabel} font-medium text-[var(--color-text-default)] truncate`}>{data.label}</div>
+          <div className={`${TOPOLOGY_STYLES.font.sublabel} text-[var(--color-text-subtle)] font-mono truncate`}>{data.cidr}</div>
           {data.networkName && (
-            <div className="text-[8px] text-teal-600 truncate mt-0.5">({data.networkName})</div>
+            <div className={`${TOPOLOGY_STYLES.font.sublabel} ${TOPOLOGY_COLORS.subnet.textAccent} truncate mt-0.5`}>({data.networkName})</div>
           )}
         </div>
         <Handle type="source" position={Position.Bottom} className="!opacity-0" />
@@ -154,16 +227,16 @@ function SubnetGroupNode({ data }: NodeProps) {
   return (
     <div className="bg-slate-50 border border-slate-200 rounded-lg p-3 min-w-[180px]">
       <Handle type="target" position={Position.Top} className="!opacity-0" />
-      <div className="text-[10px] font-medium text-slate-500 mb-2 uppercase tracking-wide">Subnets</div>
+      <div className="text-[length:var(--font-size-10)] font-medium text-slate-500 mb-2 uppercase tracking-wide">Subnets</div>
       <div className="flex flex-col gap-2">
         {data.subnets?.map((subnet: any) => (
           <div key={subnet.id} className="flex items-center gap-2">
-            <div className={`w-7 h-7 ${subnet.status === 'active' ? 'bg-teal-500' : subnet.status === 'error' ? 'bg-red-500' : 'bg-teal-300'} rounded-md flex items-center justify-center text-white`}>
-              <IconLayoutGrid size={14} strokeWidth={1.5} />
+            <div className={`w-7 h-7 ${getNodeBgColor('subnet', subnet.status)} rounded-full flex items-center justify-center text-white`}>
+              <Grid3X3 size={14} strokeWidth={1.5} />
             </div>
             <div>
-              <div className="text-[10px] font-medium text-slate-700">{subnet.name}</div>
-              <div className="text-[9px] text-slate-500 font-mono">{subnet.cidr}</div>
+              <div className="text-[length:var(--font-size-10)] font-medium text-slate-700">{subnet.name}</div>
+              <div className="text-[length:var(--font-size-10)] text-slate-500 font-mono">{subnet.cidr}</div>
             </div>
           </div>
         ))}
@@ -173,19 +246,19 @@ function SubnetGroupNode({ data }: NodeProps) {
   );
 }
 
-// Load Balancer Node
+// Load Balancer Node - 트래픽 분산
 function LoadBalancerNode({ data }: NodeProps) {
-  const status = data.status || 'active';
-  const bgColor = status === 'active' ? 'bg-orange-500' : status === 'inactive' ? 'bg-orange-300' : 'bg-red-500';
+  const status = (data.status as string) || 'active';
+  const bgColor = getNodeBgColor('loadBalancer', status);
   const statusColor = status === 'active' ? 'bg-green-500' : status === 'inactive' ? 'bg-slate-400' : 'bg-red-500';
   const statusText = status === 'active' ? '활성' : status === 'inactive' ? '비활성' : '오류';
   
   const tooltipContent = (
     <div className="text-left">
       <div className="font-semibold">{data.label}</div>
-      <div className="text-[10px] opacity-80">Load Balancer</div>
-      <div className="text-[10px] mt-1">VIP: {data.vip}</div>
-      <div className="text-[10px]">상태: {statusText}</div>
+      <div className="text-[length:var(--font-size-10)] opacity-80">Load Balancer</div>
+      <div className="text-[length:var(--font-size-10)] mt-1">VIP: {data.vip}</div>
+      <div className="text-[length:var(--font-size-10)]">상태: {statusText}</div>
     </div>
   );
   
@@ -193,13 +266,16 @@ function LoadBalancerNode({ data }: NodeProps) {
     <Tooltip content={tooltipContent} position="top" delay={300}>
       <div className="flex flex-col items-center w-[80px] cursor-pointer">
         <Handle type="target" position={Position.Top} className="!opacity-0" />
-        <div className={`w-10 h-10 ${bgColor} rounded-lg flex items-center justify-center text-white shadow-md relative hover:scale-105 transition-transform`}>
-          <IconScale size={20} strokeWidth={1.5} />
-          <div className={`absolute -bottom-1 -right-1 w-3 h-3 rounded-full border-2 border-white ${statusColor}`} />
+        <div 
+          className={`${TOPOLOGY_SIZES.loadBalancer.node} ${bgColor} ${TOPOLOGY_STYLES.node.shape} flex items-center justify-center text-white relative ${TOPOLOGY_STYLES.node.hoverScale} ${TOPOLOGY_STYLES.node.transition}`} 
+          style={{ boxShadow: TOPOLOGY_STYLES.node.shadow }}
+        >
+          <Scale size={TOPOLOGY_SIZES.loadBalancer.icon} strokeWidth={1.5} />
+          <div className={`${TOPOLOGY_STYLES.indicator.position} ${TOPOLOGY_SIZES.loadBalancer.indicator} ${TOPOLOGY_STYLES.indicator.shape} ${TOPOLOGY_STYLES.indicator.border} ${statusColor}`} />
         </div>
         <div className="mt-1.5 text-center w-full">
-          <div className="text-[10px] font-medium text-[var(--color-text-default)] truncate">{data.label}</div>
-          <div className="text-[9px] text-[var(--color-text-subtle)] font-mono truncate">{data.vip}</div>
+          <div className={`${TOPOLOGY_STYLES.font.sublabel} font-medium text-[var(--color-text-default)] truncate`}>{data.label}</div>
+          <div className={`${TOPOLOGY_STYLES.font.sublabel} text-[var(--color-text-subtle)] font-mono truncate`}>{data.vip}</div>
         </div>
       </div>
     </Tooltip>
@@ -222,7 +298,6 @@ function DividerNode({ data }: NodeProps) {
 const nodeTypes = {
   externalNetwork: ExternalNetworkNode,
   router: RouterNode,
-  network: NetworkNode,
   subnet: SubnetNode,
   subnetGroup: SubnetGroupNode,
   loadBalancer: LoadBalancerNode,
@@ -425,8 +500,8 @@ function generateTopology() {
         type: 'smoothstep',
         pathOptions: { borderRadius: 0, offset: 40 },
         animated: router.status === 'active',
-        style: { stroke: router.status === 'active' ? '#8b5cf6' : router.status === 'error' ? '#ef4444' : '#cbd5e1', strokeWidth: 2 },
-        markerEnd: { type: MarkerType.ArrowClosed, color: router.status === 'active' ? '#8b5cf6' : router.status === 'error' ? '#ef4444' : '#cbd5e1' },
+        style: { stroke: getEdgeColor('router', router.status), strokeWidth: 2 },
+        markerEnd: { type: MarkerType.ArrowClosed, color: getEdgeColor('router', router.status) },
       });
 
       routerCurrentX += routerWidth;
@@ -557,8 +632,8 @@ function generateTopology() {
         target: subnet.id,
         type: 'smoothstep',
         pathOptions: { borderRadius: 0, offset: 25 },
-        style: { stroke: subnet.status === 'active' ? '#14b8a6' : subnet.status === 'error' ? '#ef4444' : '#cbd5e1', strokeWidth: 2 },
-        markerEnd: { type: MarkerType.ArrowClosed, color: subnet.status === 'active' ? '#14b8a6' : subnet.status === 'error' ? '#ef4444' : '#cbd5e1' },
+        style: { stroke: getEdgeColor('subnet', subnet.status), strokeWidth: 2 },
+        markerEnd: { type: MarkerType.ArrowClosed, color: getEdgeColor('subnet', subnet.status) },
       });
 
       subnetCurrentX += width;
@@ -589,8 +664,8 @@ function generateTopology() {
         target: lb.id,
         type: 'smoothstep',
         pathOptions: { borderRadius: 0, offset: 20 },
-        style: { stroke: lb.status === 'active' ? '#f97316' : lb.status === 'error' ? '#ef4444' : '#cbd5e1', strokeWidth: 2 },
-        markerEnd: { type: MarkerType.ArrowClosed, color: lb.status === 'active' ? '#f97316' : lb.status === 'error' ? '#ef4444' : '#cbd5e1' },
+        style: { stroke: getEdgeColor('loadBalancer', lb.status), strokeWidth: 2 },
+        markerEnd: { type: MarkerType.ArrowClosed, color: getEdgeColor('loadBalancer', lb.status) },
       });
 
       lbCurrentX += lbSpacing;
@@ -645,8 +720,8 @@ function generateTopology() {
         target: lb.id,
         type: 'smoothstep',
         pathOptions: { borderRadius: 0, offset: 20 },
-        style: { stroke: '#f97316', strokeWidth: 2 },
-        markerEnd: { type: MarkerType.ArrowClosed, color: '#f97316' },
+        style: { stroke: TOPOLOGY_COLORS.loadBalancer.hex, strokeWidth: 2 },
+        markerEnd: { type: MarkerType.ArrowClosed, color: TOPOLOGY_COLORS.loadBalancer.hex },
       });
     });
   });
@@ -685,10 +760,10 @@ function NodePopover({
   };
 
   const typeColors: Record<string, string> = {
-    externalNetwork: 'bg-blue-500',
-    router: 'bg-purple-500',
-    subnet: 'bg-teal-500',
-    loadBalancer: 'bg-orange-500',
+    externalNetwork: TOPOLOGY_COLORS.externalNetwork.bg,
+    router: TOPOLOGY_COLORS.router.bg,
+    subnet: TOPOLOGY_COLORS.subnet.bg,
+    loadBalancer: TOPOLOGY_COLORS.loadBalancer.bg,
   };
 
   const statusColors: Record<string, string> = {
@@ -712,7 +787,7 @@ function NodePopover({
       <div className={`${typeColors[info.type] || 'bg-slate-500'} px-4 py-3 text-white`}>
         <div className="flex items-center justify-between">
           <div>
-            <div className="text-[10px] opacity-80 uppercase tracking-wide">
+            <div className="text-[length:var(--font-size-10)] opacity-80 uppercase tracking-wide">
               {typeLabels[info.type] || info.type}
             </div>
             <div className="font-semibold text-sm mt-0.5">{info.label}</div>
@@ -721,7 +796,7 @@ function NodePopover({
             onClick={onClose}
             className="w-7 h-7 rounded-lg bg-white/20 hover:bg-white/30 flex items-center justify-center transition-colors"
           >
-            <IconX size={16} />
+            <X size={16} />
           </button>
         </div>
       </div>
@@ -740,7 +815,7 @@ function NodePopover({
         <div className="space-y-3">
           {Object.entries(info.details).map(([key, value]) => (
             <div key={key}>
-              <div className="text-[10px] text-slate-500 uppercase tracking-wide mb-1">{key}</div>
+              <div className="text-[length:var(--font-size-10)] text-slate-500 uppercase tracking-wide mb-1">{key}</div>
               {Array.isArray(value) ? (
                 <div className="flex flex-wrap gap-1">
                   {value.map((v, i) => (
@@ -760,7 +835,7 @@ function NodePopover({
       {/* Footer */}
       <div className="px-4 py-3 bg-slate-50 border-t border-slate-100 flex justify-end gap-2">
         <button className="text-xs text-blue-600 hover:text-blue-700 font-medium flex items-center gap-1">
-          <IconExternalLink size={12} />
+          <ExternalLink size={12} />
           상세 보기
         </button>
       </div>
@@ -860,7 +935,7 @@ export function TopologyPage() {
               <h1 className="text-[length:var(--font-size-16)] font-semibold text-[var(--color-text-default)]">
                 Network Topology
               </h1>
-              <div className="flex items-center gap-4 text-[11px] text-[var(--color-text-subtle)]">
+              <div className="flex items-center gap-4 text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
                 <span>Drag to move • Scroll to zoom • Click for details</span>
               </div>
             </div>
@@ -891,11 +966,11 @@ export function TopologyPage() {
                 <MiniMap 
                   nodeColor={(node) => {
                     switch (node.type) {
-                      case 'externalNetwork': return '#3b82f6';
-                      case 'router': return '#8b5cf6';
-                      case 'network': return '#10b981';
-                      case 'subnetGroup': return '#14b8a6';
-                      case 'loadBalancer': return '#f97316';
+                      case 'externalNetwork': return TOPOLOGY_COLORS.externalNetwork.hex;
+                      case 'router': return TOPOLOGY_COLORS.router.hex;
+                      case 'subnet': return TOPOLOGY_COLORS.subnet.hex;
+                      case 'subnetGroup': return TOPOLOGY_COLORS.subnet.hex;
+                      case 'loadBalancer': return TOPOLOGY_COLORS.loadBalancer.hex;
                       default: return '#64748b';
                     }
                   }}
@@ -907,11 +982,10 @@ export function TopologyPage() {
             {/* Legend */}
             <div className="flex items-center gap-6">
               <span className="text-[length:var(--font-size-11)] font-medium text-[var(--color-text-subtle)]">Legend:</span>
-              <LegendItem color="bg-blue-500" label="External Network" />
-              <LegendItem color="bg-purple-500" label="Router" />
-              <LegendItem color="bg-emerald-500" label="Network (VPC)" />
-              <LegendItem color="bg-teal-500" label="Subnet" />
-              <LegendItem color="bg-orange-500" label="Load Balancer" />
+              <LegendItem color={TOPOLOGY_COLORS.externalNetwork.bg} label="External Network" />
+              <LegendItem color={TOPOLOGY_COLORS.router.bg} label="Router" />
+              <LegendItem color={TOPOLOGY_COLORS.subnet.bg} label="Subnet" />
+              <LegendItem color={TOPOLOGY_COLORS.loadBalancer.bg} label="Load Balancer" />
             </div>
           </VStack>
         </div>
@@ -932,8 +1006,8 @@ export function TopologyPage() {
 function LegendItem({ color, label }: { color: string; label: string }) {
   return (
     <div className="flex items-center gap-1.5">
-      <div className={`w-3 h-3 rounded ${color}`} />
-      <span className="text-[length:var(--font-size-11)] text-[var(--color-text-muted)]">{label}</span>
+      <div className={`${TOPOLOGY_STYLES.legend.dot} ${color}`} />
+      <span className={`${TOPOLOGY_STYLES.font.label} text-[var(--color-text-muted)]`}>{label}</span>
     </div>
   );
 }
