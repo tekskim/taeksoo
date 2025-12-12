@@ -689,6 +689,7 @@ export function TopologyD3Page() {
     position: { x: number; y: number };
   } | null>(null);
   const [tooltip, setTooltip] = useState<TooltipState>({ visible: false, x: 0, y: 0, content: { name: '', type: '', status: '' } });
+  const [zoomLevel, setZoomLevel] = useState(1);
 
   // Filter states
   const [searchTerm, setSearchTerm] = useState('');
@@ -797,12 +798,54 @@ export function TopologyD3Page() {
     // updateMinimap will be defined later, declare here for hoisting
     let updateMinimap: (transform: d3.ZoomTransform) => void = () => {};
 
+    // Semantic zoom level thresholds
+    const ZOOM_THRESHOLDS = {
+      FULL_DETAIL: 1.0,    // >= 1.0: 전체 상세 (아이콘, 이름, 상태, CIDR)
+      MEDIUM_DETAIL: 0.6,  // >= 0.6: 아이콘 + 이름만
+      // < 0.6: 아이콘만 (축약 모드)
+    };
+
+    // Update visual elements based on zoom level
+    const updateSemanticZoom = (scale: number) => {
+      // Labels (이름)
+      g.selectAll('.node-label')
+        .transition()
+        .duration(150)
+        .style('opacity', scale >= ZOOM_THRESHOLDS.MEDIUM_DETAIL ? 1 : 0);
+
+      // Sublabels (CIDR, VIP)
+      g.selectAll('.node-sublabel')
+        .transition()
+        .duration(150)
+        .style('opacity', scale >= ZOOM_THRESHOLDS.FULL_DETAIL ? 1 : 0);
+
+      // Status indicators
+      g.selectAll('.node-status')
+        .transition()
+        .duration(150)
+        .style('opacity', scale >= ZOOM_THRESHOLDS.MEDIUM_DETAIL ? 1 : 0);
+
+      // VPC labels
+      g.selectAll('.vpc-label')
+        .transition()
+        .duration(150)
+        .style('opacity', scale >= ZOOM_THRESHOLDS.MEDIUM_DETAIL ? 1 : 0);
+
+      // VPC sublabels (subnet count, status)
+      g.selectAll('.vpc-sublabel')
+        .transition()
+        .duration(150)
+        .style('opacity', scale >= ZOOM_THRESHOLDS.FULL_DETAIL ? 1 : 0);
+    };
+
     // Create zoom behavior
     const zoom = d3.zoom<SVGSVGElement, unknown>()
       .scaleExtent([0.3, 2])
       .on('zoom', (event) => {
         g.attr('transform', event.transform);
         updateMinimap(event.transform);
+        updateSemanticZoom(event.transform.k);
+        setZoomLevel(event.transform.k);
       });
 
     svg.call(zoom);
@@ -1433,6 +1476,7 @@ export function TopologyD3Page() {
 
       // VPC 라벨
       vpcGroup.append('text')
+        .attr('class', 'vpc-label')
         .attr('x', vpc.x - vpcPadding + 12)
         .attr('y', vpc.y + 18)
         .attr('font-size', '11px')
@@ -1450,6 +1494,7 @@ export function TopologyD3Page() {
         
         // 뱃지 배경 (Blue)
         vpcGroup.append('rect')
+          .attr('class', 'vpc-sublabel')
           .attr('x', badgeX)
           .attr('y', badgeY)
           .attr('width', badgeWidth)
@@ -1459,6 +1504,7 @@ export function TopologyD3Page() {
         
         // 뱃지 텍스트
         vpcGroup.append('text')
+          .attr('class', 'vpc-sublabel')
           .attr('x', badgeX + badgeWidth / 2)
           .attr('y', badgeY + badgeHeight / 2 + 4)
           .attr('font-size', '10px')
@@ -1639,6 +1685,7 @@ export function TopologyD3Page() {
 
       // Status indicator
       nodeGroup.append('circle')
+        .attr('class', 'node-status')
         .attr('cx', size.node / 2 - 6)
         .attr('cy', size.node / 2 - 6)
         .attr('r', INDICATOR_SIZE / 2)
@@ -1648,6 +1695,7 @@ export function TopologyD3Page() {
 
       // Label
       nodeGroup.append('text')
+        .attr('class', 'node-label')
         .attr('y', size.node / 2 + 16)
         .attr('text-anchor', 'middle')
         .attr('font-size', '10px')
@@ -1658,6 +1706,7 @@ export function TopologyD3Page() {
       // Sublabel (CIDR or VIP)
       if (data.cidr || data.vip) {
         nodeGroup.append('text')
+          .attr('class', 'node-sublabel')
           .attr('y', size.node / 2 + 28)
           .attr('text-anchor', 'middle')
           .attr('font-size', '9px')
@@ -1684,6 +1733,10 @@ export function TopologyD3Page() {
       const translateY = (height - effectiveHeight * scale) / 2 - bounds.y * scale + 50;
 
       svg.call(zoom.transform, d3.zoomIdentity.translate(translateX, translateY).scale(scale));
+      
+      // Apply semantic zoom for initial scale
+      updateSemanticZoom(scale);
+      setZoomLevel(scale);
     }
 
     // Click outside to close popover
@@ -1816,9 +1869,25 @@ export function TopologyD3Page() {
                 {stats.filteredLbs > 0 && <span className="text-slate-500 ml-1">• {stats.filteredLbs} LBs</span>}
               </p>
             </div>
-            <span className="text-sm text-[var(--color-text-subtle)]">
-              Scroll to zoom • Click for details
-            </span>
+            <div className="flex items-center gap-3">
+              <span className="text-sm text-[var(--color-text-subtle)]">
+                Scroll to zoom • Click for details
+              </span>
+              <div className="flex items-center gap-2 px-2 py-1 bg-slate-100 rounded-md">
+                <span className="text-xs font-medium text-slate-600">
+                  {Math.round(zoomLevel * 100)}%
+                </span>
+                <span className={`text-xs px-1.5 py-0.5 rounded ${
+                  zoomLevel >= 1.0 
+                    ? 'bg-green-100 text-green-700' 
+                    : zoomLevel >= 0.6 
+                      ? 'bg-yellow-100 text-yellow-700' 
+                      : 'bg-slate-200 text-slate-600'
+                }`}>
+                  {zoomLevel >= 1.0 ? 'Full' : zoomLevel >= 0.6 ? 'Medium' : 'Compact'}
+                </span>
+              </div>
+            </div>
           </div>
 
           {/* Filters */}
