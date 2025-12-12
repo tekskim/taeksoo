@@ -1311,7 +1311,7 @@ export function TopologyD3Page() {
     let currentX = startX;
 
     // Process network groups (External Network -> Routers)
-    currentNetworkGroups.forEach((group, groupIdx) => {
+    currentNetworkGroups.forEach((group) => {
       const groupStartX = currentX;
       let groupWidth = 0;
 
@@ -1499,32 +1499,10 @@ export function TopologyD3Page() {
       });
 
       currentX = Math.max(currentX + groupWidth + nodeGap / 2, routerX + nodeGap / 2);
-
-      // Add divider after group (except last)
-      if (groupIdx < currentNetworkGroups.length - 1) {
-        g.append('line')
-          .attr('x1', currentX - nodeGap / 4)
-          .attr('y1', startY - 20)
-          .attr('x2', currentX - nodeGap / 4)
-          .attr('y2', startY + layerGap * 3 + 80)
-          .attr('stroke', '#e2e8f0')
-          .attr('stroke-width', 1)
-          .attr('stroke-dasharray', '4,4');
-      }
     });
 
     // Standalone routers
     if (standaloneRouters.length > 0) {
-      // Divider
-      g.append('line')
-        .attr('x1', currentX - nodeGap / 4)
-        .attr('y1', startY - 20)
-        .attr('x2', currentX - nodeGap / 4)
-        .attr('y2', startY + layerGap * 3 + 80)
-        .attr('stroke', '#e2e8f0')
-        .attr('stroke-width', 1)
-        .attr('stroke-dasharray', '4,4');
-
       let standaloneX = currentX;
       standaloneRouters.forEach((router) => {
         const routerWidth = Math.max(nodeGap, getRouterWidth(router.id));
