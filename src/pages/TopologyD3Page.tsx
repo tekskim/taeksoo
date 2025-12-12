@@ -28,13 +28,16 @@ const EDGE_COLORS = {
   loadBalancer: { active: '#eab308', inactive: '#fde047', error: '#ef4444' },     // Yellow
 };
 
-const SIZES = {
+type NodeType = 'externalNetwork' | 'router' | 'subnet' | 'loadBalancer';
+
+const NODE_SIZES: Record<NodeType, { node: number; icon: number }> = {
   externalNetwork: { node: 64, icon: 32 },
   router: { node: 56, icon: 28 },
   subnet: { node: 48, icon: 24 },
   loadBalancer: { node: 40, icon: 20 },
-  indicator: 12,
 };
+
+const INDICATOR_SIZE = 12;
 
 // SVG Icon paths (from Tabler Icons)
 // Custom SVG icons (16x16 viewBox)
@@ -385,7 +388,7 @@ function LinkText({ value, href }: { value: string; href?: string }) {
 }
 
 // Helper component for view detail link
-function ViewDetailLink({ count, label }: { count: number; label: string }) {
+function ViewDetailLink({ count }: { count: number }) {
   return (
     <span>
       <span className="font-medium">{count}</span>
@@ -440,15 +443,6 @@ function Popover({ data, position, onClose }: PopoverProps) {
   if (!data) return null;
 
   const statusText = data.status === 'active' ? 'Available' : data.status === 'inactive' ? 'Inactive' : 'Error';
-
-  // Type-specific title
-  const typeLabels: Record<string, string> = {
-    externalNetwork: 'External Network',
-    router: 'Router',
-    subnet: 'Subnet',
-    loadBalancer: 'Load Balancer',
-    vpc: 'VPC',
-  };
 
   return (
     <div
@@ -609,31 +603,31 @@ function Popover({ data, position, onClose }: PopoverProps) {
         {data.routerCount !== undefined && data.routerCount > 0 && (
           <div className="flex justify-between">
             <span className="text-slate-500">Routers:</span>
-            <ViewDetailLink count={data.routerCount} label="routers" />
+            <ViewDetailLink count={data.routerCount} />
           </div>
         )}
         {data.subnetCount !== undefined && data.subnetCount > 0 && (
           <div className="flex justify-between">
             <span className="text-slate-500">Subnets:</span>
-            <ViewDetailLink count={data.subnetCount} label="subnets" />
+            <ViewDetailLink count={data.subnetCount} />
           </div>
         )}
         {data.instanceCount !== undefined && data.instanceCount > 0 && (
           <div className="flex justify-between">
             <span className="text-slate-500">Instances:</span>
-            <ViewDetailLink count={data.instanceCount} label="instances" />
+            <ViewDetailLink count={data.instanceCount} />
           </div>
         )}
         {data.loadBalancerCount !== undefined && data.loadBalancerCount > 0 && (
           <div className="flex justify-between">
             <span className="text-slate-500">Load Balancer:</span>
-            <ViewDetailLink count={data.loadBalancerCount} label="load balancers" />
+            <ViewDetailLink count={data.loadBalancerCount} />
           </div>
         )}
         {data.listenerCount !== undefined && data.listenerCount > 0 && (
           <div className="flex justify-between">
             <span className="text-slate-500">Listeners:</span>
-            <ViewDetailLink count={data.listenerCount} label="listeners" />
+            <ViewDetailLink count={data.listenerCount} />
           </div>
         )}
         
@@ -848,8 +842,6 @@ export function TopologyD3Page() {
     const edges: EdgeData[] = [];
     const vpcGroups: { x: number; y: number; width: number; height: number; name: string; networkId: string; status: string; isSplit?: boolean; splitIndex?: number; splitTotal?: number }[] = [];
     
-    // Track VPC split counts for indexing
-    const vpcSplitCounts: Record<string, number> = {};
     // Track which VPCs have already had their unrouted subnets added (to avoid duplicates)
     const vpcUnroutedAdded: Set<string> = new Set();
     // Deferred router-to-subnet edges (to be drawn after all routers are positioned)
@@ -1000,8 +992,8 @@ export function TopologyD3Page() {
 
         // Edge: External Network -> Router (use router status for edge color)
         edges.push({
-          source: { x: extNetX, y: extNetY + SIZES.externalNetwork.node / 2 },
-          target: { x: rx, y: ry - SIZES.router.node / 2 },
+          source: { x: extNetX, y: extNetY + NODE_SIZES.externalNetwork.node / 2 },
+          target: { x: rx, y: ry - NODE_SIZES.router.node / 2 },
           sourceType: 'externalNetwork',
           status: router.status,  // Use router status to reflect error state
           animated: router.status === 'active',
@@ -1058,7 +1050,6 @@ export function TopologyD3Page() {
           const vpc = networks.find(n => n.id === vpcId);
           const vpcStartX = subnetX;
           let vpcWidth = 0;
-          const isSplitVpc = splitVpcs.has(vpcId);
 
           // Store subnet positions for edge drawing
           const subnetPositions: Record<string, { x: number, y: number }> = {};
@@ -1096,8 +1087,8 @@ export function TopologyD3Page() {
 
               // Edge: Subnet -> LB (use subnet color)
               edges.push({
-                source: { x: sx, y: sy + SIZES.subnet.node / 2 },
-                target: { x: lx, y: ly - SIZES.loadBalancer.node / 2 },
+                source: { x: sx, y: sy + NODE_SIZES.subnet.node / 2 },
+                target: { x: lx, y: ly - NODE_SIZES.loadBalancer.node / 2 },
                 sourceType: 'subnet',
                 status: subnet.status,
               });
@@ -1232,8 +1223,8 @@ export function TopologyD3Page() {
             });
 
             edges.push({
-              source: { x: rx, y: ry + SIZES.router.node / 2 },
-              target: { x: sx, y: sy - SIZES.subnet.node / 2 },
+              source: { x: rx, y: ry + NODE_SIZES.router.node / 2 },
+              target: { x: sx, y: sy - NODE_SIZES.subnet.node / 2 },
               sourceType: 'router',
               status: router.status,
             });
@@ -1253,8 +1244,8 @@ export function TopologyD3Page() {
               });
 
               edges.push({
-                source: { x: sx, y: sy + SIZES.subnet.node / 2 },
-                target: { x: lx, y: ly - SIZES.loadBalancer.node / 2 },
+                source: { x: sx, y: sy + NODE_SIZES.subnet.node / 2 },
+                target: { x: lx, y: ly - NODE_SIZES.loadBalancer.node / 2 },
                 sourceType: 'subnet',
                 status: subnet.status,
               });
@@ -1319,13 +1310,13 @@ export function TopologyD3Page() {
     }
 
     // Draw deferred router-to-subnet edges (now all routers are positioned)
-    deferredRouterEdges.forEach(({ subnetId, routerId, subnetPos }) => {
+    deferredRouterEdges.forEach(({ routerId, subnetPos }) => {
       const routerNode = nodes.find(n => n.id === routerId);
       if (routerNode) {
         const routerData = [...networkGroups.flatMap(g => g.routers), ...standaloneRouters].find(r => r.id === routerId);
         edges.push({
-          source: { x: routerNode.x, y: routerNode.y + SIZES.router.node / 2 },
-          target: { x: subnetPos.x, y: subnetPos.y - SIZES.subnet.node / 2 },
+          source: { x: routerNode.x, y: routerNode.y + NODE_SIZES.router.node / 2 },
+          target: { x: subnetPos.x, y: subnetPos.y - NODE_SIZES.subnet.node / 2 },
           sourceType: 'router',
           status: routerData?.status || 'active',
         });
@@ -1536,7 +1527,7 @@ export function TopologyD3Page() {
     // Draw nodes
     const drawNode = (node: NodePosition) => {
       const { x, y, type, data } = node;
-      const size = SIZES[type as keyof typeof SIZES];
+      const size = NODE_SIZES[type as NodeType];
       const colorSet = COLORS[type as keyof typeof COLORS];
       const color = colorSet[data.status as keyof typeof colorSet] || colorSet.active;
       const statusColor = COLORS.status[data.status as keyof typeof COLORS.status] || COLORS.status.active;
@@ -1650,7 +1641,7 @@ export function TopologyD3Page() {
       nodeGroup.append('circle')
         .attr('cx', size.node / 2 - 6)
         .attr('cy', size.node / 2 - 6)
-        .attr('r', SIZES.indicator / 2)
+        .attr('r', INDICATOR_SIZE / 2)
         .attr('fill', statusColor)
         .attr('stroke', 'white')
         .attr('stroke-width', 2);

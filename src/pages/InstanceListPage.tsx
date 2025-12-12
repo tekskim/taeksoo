@@ -5,7 +5,6 @@ import {
   Table,
   StatusIndicator,
   Pagination,
-  Checkbox,
   HStack,
   VStack,
   type TableColumn,
