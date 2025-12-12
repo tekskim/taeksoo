@@ -5,7 +5,7 @@ import { TopologyD3Page } from '@/pages/TopologyD3Page';
 
 function App() {
   return (
-    <BrowserRouter basename="/tds">
+    <BrowserRouter basename="/topology">
       <Routes>
         <Route path="/" element={<InstanceListPage />} />
         <Route path="/topology" element={<TopologyD3Page />} />

@@ -330,6 +330,31 @@ interface VpcSubnetGroup {
   subnets: { name: string; cidr: string; status: string }[];
 }
 
+// Item types for detailed lists
+interface RouterItem {
+  name: string;
+  status: 'active' | 'inactive' | 'error';
+  externalGateway?: string;
+}
+
+interface InstanceItem {
+  name: string;
+  status: 'active' | 'inactive' | 'error';
+  ip?: string;
+}
+
+interface LoadBalancerItem {
+  name: string;
+  status: 'active' | 'inactive' | 'error';
+  vip?: string;
+}
+
+interface SubnetItem {
+  name: string;
+  status: 'active' | 'inactive' | 'error';
+  cidr?: string;
+}
+
 interface PopoverProps {
   data: {
     type: string;
@@ -341,6 +366,7 @@ interface PopoverProps {
     adminState?: string;
     // External Network
     routerCount?: number;
+    routerList?: RouterItem[]; // Detailed router list
     // VPC
     shared?: boolean;
     mtu?: number;
@@ -349,16 +375,25 @@ interface PopoverProps {
     snat?: boolean;
     externalGateway?: string;
     subnetCount?: number;
+    subnetList?: SubnetItem[]; // Detailed subnet list
     // Subnet
     gatewayIp?: string;
     cidr?: string;
     instanceCount?: number;
+    instanceList?: InstanceItem[]; // Detailed instance list
     loadBalancerCount?: number;
+    loadBalancerList?: LoadBalancerItem[]; // Detailed LB list
     // Load Balancer
     vip?: string;
     floatingIp?: string;
     listenerCount?: number;
-    healthMonitor?: { healthy: number; degraded: number; error: number };
+    healthMonitor?: { 
+      healthy: number; 
+      degraded: number; 
+      error: number;
+      pools?: { name: string; status: 'healthy' | 'degraded' | 'error' }[];
+    };
+    listenerList?: { name: string; protocol: string; port: number; status: 'active' | 'inactive' | 'error' }[];
   } | null;
   position: { x: number; y: number };
   onClose: () => void;
@@ -394,6 +429,220 @@ function ViewDetailLink({ count }: { count: number }) {
       <span className="font-medium">{count}</span>
       <a href="#" className="text-blue-500 hover:underline ml-2 text-xs">View detail</a>
     </span>
+  );
+}
+
+// Health Monitor Section Component
+function HealthMonitorSection({ healthMonitor }: { 
+  healthMonitor: { 
+    healthy: number; 
+    degraded: number; 
+    error: number;
+    pools?: { name: string; status: 'healthy' | 'degraded' | 'error' }[];
+  } 
+}) {
+  const [isExpanded, setIsExpanded] = useState(true);
+  
+  // Sort pools by status: error first, then degraded, then healthy
+  const sortedPools = healthMonitor.pools ? [...healthMonitor.pools].sort((a, b) => {
+    const order = { error: 0, degraded: 1, healthy: 2 };
+    return order[a.status] - order[b.status];
+  }) : [];
+
+  return (
+    <div className="mt-3 pt-3 border-t border-slate-100">
+      {/* Header */}
+      <button 
+        className="flex items-start gap-2 w-full text-left"
+        onClick={() => setIsExpanded(!isExpanded)}
+      >
+        <span className="text-slate-400 mt-0.5">
+          {isExpanded ? '▼' : '▶'}
+        </span>
+        <div className="flex-1">
+          <div className="flex items-center gap-2 flex-wrap">
+            <span className="text-slate-500 font-medium">Health Monitor :</span>
+            <span className="text-green-500 font-medium text-sm">{healthMonitor.healthy} Healthy</span>
+            <span className="text-amber-500 font-medium text-sm">{healthMonitor.degraded} Degraded</span>
+            <span className="text-red-500 font-medium text-sm">{healthMonitor.error} Error</span>
+          </div>
+        </div>
+      </button>
+      
+      {/* Pool List */}
+      {isExpanded && sortedPools.length > 0 && (
+        <div className="mt-2 pt-2 border-t border-dashed border-slate-200">
+          <div className="space-y-2 text-sm max-h-40 overflow-y-auto">
+            {sortedPools.map((pool, idx) => (
+              <div key={idx} className="flex items-center justify-between">
+                <span className={`font-medium ${
+                  pool.status === 'error' ? 'text-red-500' :
+                  pool.status === 'degraded' ? 'text-amber-500' :
+                  'text-green-500'
+                }`}>
+                  {pool.status === 'error' ? 'Error' : 
+                   pool.status === 'degraded' ? 'Degraded' : 'Healthy'}
+                </span>
+                <a href="#" className="text-blue-500 hover:underline inline-flex items-center gap-1 font-medium">
+                  {pool.name}
+                  <IconExternalLink size={14} />
+                </a>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// Listeners Section Component
+function ListenersSection({ listeners }: { 
+  listeners: { name: string; protocol: string; port: number; status: 'active' | 'inactive' | 'error' }[];
+}) {
+  const [isExpanded, setIsExpanded] = useState(true);
+
+  return (
+    <div className="mt-3 pt-3 border-t border-slate-100">
+      {/* Header */}
+      <button 
+        className="flex items-start gap-2 w-full text-left"
+        onClick={() => setIsExpanded(!isExpanded)}
+      >
+        <span className="text-slate-400 mt-0.5">
+          {isExpanded ? '▼' : '▶'}
+        </span>
+        <div className="flex-1">
+          <div className="flex items-center justify-between">
+            <span className="text-slate-500 font-medium">Listeners ({listeners.length})</span>
+            <a href="#" className="text-blue-500 hover:underline text-xs" onClick={(e) => e.stopPropagation()}>View detail</a>
+          </div>
+        </div>
+      </button>
+      
+      {/* Listener List */}
+      {isExpanded && (
+        <div className="mt-2 pt-2 border-t border-dashed border-slate-200">
+          <div className="space-y-2 text-sm max-h-40 overflow-y-auto">
+            {listeners.map((listener, idx) => (
+              <div key={idx} className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <span className={`w-2 h-2 rounded-full ${
+                    listener.status === 'active' ? 'bg-green-500' :
+                    listener.status === 'error' ? 'bg-red-500' : 'bg-slate-400'
+                  }`} />
+                  <span className="text-slate-600">{listener.protocol}:{listener.port}</span>
+                </div>
+                <a href="#" className="text-blue-500 hover:underline inline-flex items-center gap-1 font-medium">
+                  {listener.name}
+                  <IconExternalLink size={14} />
+                </a>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// Routers Section Component (for External Network)
+function RoutersSection({ routers }: { 
+  routers: RouterItem[];
+}) {
+  const [isExpanded, setIsExpanded] = useState(true);
+
+  return (
+    <div className="mt-3 pt-3 border-t border-slate-100">
+      {/* Header */}
+      <button 
+        className="flex items-start gap-2 w-full text-left"
+        onClick={() => setIsExpanded(!isExpanded)}
+      >
+        <span className="text-slate-400 mt-0.5">
+          {isExpanded ? '▼' : '▶'}
+        </span>
+        <div className="flex-1">
+          <div className="flex items-center justify-between">
+            <span className="text-slate-500 font-medium">Routers ({routers.length})</span>
+            <a href="#" className="text-blue-500 hover:underline text-xs" onClick={(e) => e.stopPropagation()}>View detail</a>
+          </div>
+        </div>
+      </button>
+      
+      {/* Router List */}
+      {isExpanded && (
+        <div className="mt-2 pt-2 border-t border-dashed border-slate-200">
+          <div className="space-y-2 text-sm max-h-40 overflow-y-auto">
+            {routers.map((router, idx) => (
+              <div key={idx} className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <span className={`w-2 h-2 rounded-full ${
+                    router.status === 'active' ? 'bg-green-500' :
+                    router.status === 'error' ? 'bg-red-500' : 'bg-slate-400'
+                  }`} />
+                  <span className="text-slate-600">{router.externalGateway || 'internal'}</span>
+                </div>
+                <a href="#" className="text-blue-500 hover:underline inline-flex items-center gap-1 font-medium">
+                  {router.name}
+                  <IconExternalLink size={14} />
+                </a>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// Subnets Section Component (for Router)
+function SubnetsSection({ subnets }: { 
+  subnets: SubnetItem[];
+}) {
+  const [isExpanded, setIsExpanded] = useState(true);
+
+  return (
+    <div className="mt-3 pt-3 border-t border-slate-100">
+      {/* Header */}
+      <button 
+        className="flex items-start gap-2 w-full text-left"
+        onClick={() => setIsExpanded(!isExpanded)}
+      >
+        <span className="text-slate-400 mt-0.5">
+          {isExpanded ? '▼' : '▶'}
+        </span>
+        <div className="flex-1">
+          <div className="flex items-center justify-between">
+            <span className="text-slate-500 font-medium">Subnets ({subnets.length})</span>
+            <a href="#" className="text-blue-500 hover:underline text-xs" onClick={(e) => e.stopPropagation()}>View detail</a>
+          </div>
+        </div>
+      </button>
+      
+      {/* Subnet List */}
+      {isExpanded && (
+        <div className="mt-2 pt-2 border-t border-dashed border-slate-200">
+          <div className="space-y-2 text-sm max-h-40 overflow-y-auto">
+            {subnets.map((subnet, idx) => (
+              <div key={idx} className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <span className={`w-2 h-2 rounded-full ${
+                    subnet.status === 'active' ? 'bg-green-500' :
+                    subnet.status === 'error' ? 'bg-red-500' : 'bg-slate-400'
+                  }`} />
+                  <span className="font-mono text-slate-400 text-xs">{subnet.cidr || '-'}</span>
+                </div>
+                <a href="#" className="text-blue-500 hover:underline inline-flex items-center gap-1 font-medium">
+                  {subnet.name}
+                  <IconExternalLink size={14} />
+                </a>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
   );
 }
 
@@ -578,6 +827,84 @@ function Popover({ data, position, onClose }: PopoverProps) {
                 <CopyableText value={data.cidr} />
               </div>
             )}
+            
+            {/* Routers Section */}
+            {data.routerList && data.routerList.length > 0 && (
+              <div className="mt-3 pt-3 border-t border-slate-100">
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-slate-500 font-medium">Routers ({data.routerList.length})</span>
+                  <a href="#" className="text-blue-500 hover:underline text-xs">View detail</a>
+                </div>
+                <div className="space-y-1.5 text-xs max-h-24 overflow-y-auto">
+                  {data.routerList.map((router, idx) => (
+                    <div key={idx} className="flex items-center justify-between text-slate-600">
+                      <div className="flex items-center gap-1.5">
+                        <span className={`w-2 h-2 rounded-full ${
+                          router.status === 'active' ? 'bg-green-500' : 
+                          router.status === 'error' ? 'bg-red-500' : 'bg-slate-400'
+                        }`} />
+                        <span>{router.name}</span>
+                      </div>
+                      {router.externalGateway && (
+                        <span className="text-slate-400 text-[10px]">{router.externalGateway}</span>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+            
+            {/* Instances Section */}
+            {data.instanceList && data.instanceList.length > 0 && (
+              <div className="mt-3 pt-3 border-t border-slate-100">
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-slate-500 font-medium">Instances ({data.instanceList.length})</span>
+                  <a href="#" className="text-blue-500 hover:underline text-xs">View detail</a>
+                </div>
+                <div className="space-y-1.5 text-xs max-h-24 overflow-y-auto">
+                  {data.instanceList.map((instance, idx) => (
+                    <div key={idx} className="flex items-center justify-between text-slate-600">
+                      <div className="flex items-center gap-1.5">
+                        <span className={`w-2 h-2 rounded-full ${
+                          instance.status === 'active' ? 'bg-green-500' : 
+                          instance.status === 'error' ? 'bg-red-500' : 'bg-slate-400'
+                        }`} />
+                        <span>{instance.name}</span>
+                      </div>
+                      {instance.ip && (
+                        <span className="font-mono text-slate-400">{instance.ip}</span>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+            
+            {/* Load Balancers Section */}
+            {data.loadBalancerList && data.loadBalancerList.length > 0 && (
+              <div className="mt-3 pt-3 border-t border-slate-100">
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-slate-500 font-medium">Load Balancers ({data.loadBalancerList.length})</span>
+                  <a href="#" className="text-blue-500 hover:underline text-xs">View detail</a>
+                </div>
+                <div className="space-y-1.5 text-xs max-h-24 overflow-y-auto">
+                  {data.loadBalancerList.map((lb, idx) => (
+                    <div key={idx} className="flex items-center justify-between text-slate-600">
+                      <div className="flex items-center gap-1.5">
+                        <span className={`w-2 h-2 rounded-full ${
+                          lb.status === 'active' ? 'bg-green-500' : 
+                          lb.status === 'error' ? 'bg-red-500' : 'bg-slate-400'
+                        }`} />
+                        <span>{lb.name}</span>
+                      </div>
+                      {lb.vip && (
+                        <span className="font-mono text-slate-400">{lb.vip}</span>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
           </>
         )}
         
@@ -599,68 +926,56 @@ function Popover({ data, position, onClose }: PopoverProps) {
           </>
         )}
         
-        {/* Counts with View detail links */}
-        {data.routerCount !== undefined && data.routerCount > 0 && (
+        {/* Counts with View detail links (for non-subnet types or when no detailed list) */}
+        {data.routerCount !== undefined && data.routerCount > 0 && !data.routerList && (
           <div className="flex justify-between">
             <span className="text-slate-500">Routers:</span>
             <ViewDetailLink count={data.routerCount} />
           </div>
         )}
-        {data.subnetCount !== undefined && data.subnetCount > 0 && (
+        {data.subnetCount !== undefined && data.subnetCount > 0 && !data.subnetList && (
           <div className="flex justify-between">
             <span className="text-slate-500">Subnets:</span>
             <ViewDetailLink count={data.subnetCount} />
           </div>
         )}
-        {data.instanceCount !== undefined && data.instanceCount > 0 && (
+        
+        {/* Routers Section (External Network) */}
+        {data.routerList && data.routerList.length > 0 && data.type === 'externalNetwork' && (
+          <RoutersSection routers={data.routerList} />
+        )}
+        
+        {/* Subnets Section (Router) */}
+        {data.subnetList && data.subnetList.length > 0 && data.type === 'router' && (
+          <SubnetsSection subnets={data.subnetList} />
+        )}
+        {data.instanceCount !== undefined && data.instanceCount > 0 && !data.instanceList && (
           <div className="flex justify-between">
             <span className="text-slate-500">Instances:</span>
             <ViewDetailLink count={data.instanceCount} />
           </div>
         )}
-        {data.loadBalancerCount !== undefined && data.loadBalancerCount > 0 && (
+        {data.loadBalancerCount !== undefined && data.loadBalancerCount > 0 && !data.loadBalancerList && (
           <div className="flex justify-between">
             <span className="text-slate-500">Load Balancer:</span>
             <ViewDetailLink count={data.loadBalancerCount} />
           </div>
         )}
-        {data.listenerCount !== undefined && data.listenerCount > 0 && (
+        {data.listenerCount !== undefined && data.listenerCount > 0 && !data.listenerList && (
           <div className="flex justify-between">
             <span className="text-slate-500">Listeners:</span>
             <ViewDetailLink count={data.listenerCount} />
           </div>
         )}
         
+        {/* Listeners Section (Load Balancer) */}
+        {data.listenerList && data.listenerList.length > 0 && (
+          <ListenersSection listeners={data.listenerList} />
+        )}
+        
         {/* Health Monitor (Load Balancer) */}
         {data.healthMonitor && (
-          <div className="mt-3 pt-3 border-t border-slate-100">
-            <div className="text-slate-500 mb-2 font-medium">
-              Health Monitor ({data.healthMonitor.healthy + data.healthMonitor.degraded + data.healthMonitor.error} members)
-            </div>
-            <div className="space-y-1.5 text-xs">
-              <div className="flex items-center justify-between text-slate-600">
-                <div className="flex items-center gap-1.5">
-                  <span className="w-2 h-2 rounded-full bg-green-500" />
-                  <span>Healthy</span>
-                </div>
-                <span className="font-medium text-green-600">{data.healthMonitor.healthy}</span>
-              </div>
-              <div className="flex items-center justify-between text-slate-600">
-                <div className="flex items-center gap-1.5">
-                  <span className="w-2 h-2 rounded-full bg-amber-500" />
-                  <span>Degraded</span>
-                </div>
-                <span className="font-medium text-amber-500">{data.healthMonitor.degraded}</span>
-              </div>
-              <div className="flex items-center justify-between text-slate-600">
-                <div className="flex items-center gap-1.5">
-                  <span className="w-2 h-2 rounded-full bg-red-500" />
-                  <span>Error</span>
-                </div>
-                <span className="font-medium text-red-500">{data.healthMonitor.error}</span>
-              </div>
-            </div>
-          </div>
+          <HealthMonitorSection healthMonitor={data.healthMonitor} />
         )}
       </div>
     </div>
@@ -1626,35 +1941,92 @@ export function TopologyD3Page() {
           };
           
           if (type === 'externalNetwork') {
+            // Find routers connected to this external network
+            const connectedRouters = routers.filter(r => r.externalNetworkId === data.id);
+            
             popoverData = {
               ...popoverData,
-              routerCount: 5,
+              routerList: connectedRouters.map(r => ({
+                name: r.name,
+                status: r.status,
+                externalGateway: 'public',
+              })),
             };
           } else if (type === 'router') {
             const connectedSubnets = subnets.filter(s => s.routerId === data.id);
+            
             popoverData = {
               ...popoverData,
               snat: true,
               externalGateway: 'public-network',
-              subnetCount: connectedSubnets.length || 5,
+              subnetList: connectedSubnets.map(s => ({
+                name: s.name,
+                status: s.status,
+                cidr: s.cidr,
+              })),
             };
           } else if (type === 'subnet') {
             const connectedLbs = loadBalancers.filter(lb => lb.subnetId === data.id);
+            
+            // Find connected router
+            const connectedRouter = data.routerId 
+              ? [...networkGroups.flatMap(g => g.routers), ...standaloneRouters].find(r => r.id === data.routerId)
+              : null;
+            
+            // Generate sample instances based on subnet
+            const sampleInstances: InstanceItem[] = [
+              { name: `${data.name}-web-01`, status: 'active', ip: data.cidr?.replace('.0/24', '.10') },
+              { name: `${data.name}-web-02`, status: 'active', ip: data.cidr?.replace('.0/24', '.11') },
+              { name: `${data.name}-api-01`, status: 'active', ip: data.cidr?.replace('.0/24', '.20') },
+              { name: `${data.name}-worker-01`, status: 'inactive', ip: data.cidr?.replace('.0/24', '.30') },
+              { name: `${data.name}-db-01`, status: 'error', ip: data.cidr?.replace('.0/24', '.50') },
+            ];
+            
             popoverData = {
               ...popoverData,
               gatewayIp: data.cidr?.replace('/24', '.1') || '10.0.0.1',
               cidr: data.cidr || '10.0.0.0/24',
-              instanceCount: 5,
-              routerCount: 1,
-              loadBalancerCount: connectedLbs.length || 1,
+              // Router list
+              routerList: connectedRouter ? [{
+                name: connectedRouter.name,
+                status: connectedRouter.status,
+                externalGateway: 'public-network',
+              }] : [],
+              // Instance list
+              instanceList: sampleInstances,
+              // Load Balancer list
+              loadBalancerList: connectedLbs.map(lb => ({
+                name: lb.name,
+                status: lb.status,
+                vip: lb.vip,
+              })),
             };
           } else if (type === 'loadBalancer') {
             popoverData = {
               ...popoverData,
               vip: data.vip || '10.0.0.100',
               floatingIp: '10.0.0.100',
-              listenerCount: 5,
-              healthMonitor: { healthy: 3, degraded: 2, error: 2 },
+              listenerList: [
+                { name: 'http-listener', protocol: 'HTTP', port: 80, status: 'active' },
+                { name: 'https-listener', protocol: 'HTTPS', port: 443, status: 'active' },
+                { name: 'api-listener', protocol: 'HTTP', port: 8080, status: 'active' },
+                { name: 'grpc-listener', protocol: 'TCP', port: 9090, status: 'inactive' },
+                { name: 'metrics-listener', protocol: 'HTTP', port: 9100, status: 'error' },
+              ],
+              healthMonitor: {
+                healthy: 3,
+                degraded: 2,
+                error: 2,
+                pools: [
+                  { name: 'pool1', status: 'error' },
+                  { name: 'pool2', status: 'error' },
+                  { name: 'pool3', status: 'degraded' },
+                  { name: 'pool4', status: 'degraded' },
+                  { name: 'pool5', status: 'healthy' },
+                  { name: 'pool6', status: 'healthy' },
+                  { name: 'pool7', status: 'healthy' },
+                ],
+              },
             };
           }
 
