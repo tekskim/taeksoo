@@ -22,13 +22,14 @@ import { TabBar } from '@/components/TabBar';
 import { BreadcrumbNavigation } from '@/components/BreadcrumbNavigation';
 import { VStack, Tooltip } from '@/design-system';
 import {
-  Globe,
-  Network,
-  Grid3X3,
-  Scale,
-  X,
-  ExternalLink,
-} from 'lucide-react';
+  IconWorld,
+  IconNetwork,
+  IconLayoutGrid,
+  IconScale,
+  IconRouter,
+  IconExternalLink,
+  IconX,
+} from '@tabler/icons-react';
 
 /* ----------------------------------------
    Topology Theme Configuration (한 곳에서 관리)
@@ -136,7 +137,7 @@ function ExternalNetworkNode({ data }: NodeProps) {
           className={`${TOPOLOGY_SIZES.externalNetwork.node} ${bgColor} ${TOPOLOGY_STYLES.node.shape} flex items-center justify-center text-white relative ${TOPOLOGY_STYLES.node.hoverScale} ${TOPOLOGY_STYLES.node.transition}`} 
           style={{ boxShadow: TOPOLOGY_STYLES.node.shadow }}
         >
-          <Globe size={TOPOLOGY_SIZES.externalNetwork.icon} strokeWidth={1.5} />
+          <IconWorld size={TOPOLOGY_SIZES.externalNetwork.icon} strokeWidth={1.5} />
           <div className={`${TOPOLOGY_STYLES.indicator.position} ${TOPOLOGY_SIZES.externalNetwork.indicator} ${TOPOLOGY_STYLES.indicator.shape} ${TOPOLOGY_STYLES.indicator.border} ${statusColor}`} />
         </div>
         <div className={`mt-2 ${TOPOLOGY_STYLES.font.label} font-medium text-[var(--color-text-default)] text-center truncate w-full`}>{data.label}</div>
@@ -170,7 +171,7 @@ function RouterNode({ data }: NodeProps) {
           className={`${TOPOLOGY_SIZES.router.node} ${bgColor} ${TOPOLOGY_STYLES.node.shape} flex items-center justify-center text-white relative ${TOPOLOGY_STYLES.node.hoverScale} ${TOPOLOGY_STYLES.node.transition}`} 
           style={{ boxShadow: TOPOLOGY_STYLES.node.shadow }}
         >
-          <Network size={TOPOLOGY_SIZES.router.icon} strokeWidth={1.5} />
+          <IconRouter size={TOPOLOGY_SIZES.router.icon} strokeWidth={1.5} />
           <div className={`${TOPOLOGY_STYLES.indicator.position} ${TOPOLOGY_SIZES.router.indicator} ${TOPOLOGY_STYLES.indicator.shape} ${TOPOLOGY_STYLES.indicator.border} ${statusColor}`} />
         </div>
         <div className={`mt-2 ${TOPOLOGY_STYLES.font.label} font-medium text-[var(--color-text-default)] text-center truncate w-full`}>{data.label}</div>
@@ -206,15 +207,12 @@ function SubnetNode({ data }: NodeProps) {
           className={`${TOPOLOGY_SIZES.subnet.node} ${bgColor} ${TOPOLOGY_STYLES.node.shape} flex items-center justify-center text-white relative ${TOPOLOGY_STYLES.node.hoverScale} ${TOPOLOGY_STYLES.node.transition}`} 
           style={{ boxShadow: TOPOLOGY_STYLES.node.shadow }}
         >
-          <Grid3X3 size={TOPOLOGY_SIZES.subnet.icon} strokeWidth={1.5} />
+          <IconLayoutGrid size={TOPOLOGY_SIZES.subnet.icon} strokeWidth={1.5} />
           <div className={`${TOPOLOGY_STYLES.indicator.position} ${TOPOLOGY_SIZES.subnet.indicator} ${TOPOLOGY_STYLES.indicator.shape} ${TOPOLOGY_STYLES.indicator.border} ${statusColor}`} />
         </div>
         <div className="mt-1.5 text-center w-full">
           <div className={`${TOPOLOGY_STYLES.font.sublabel} font-medium text-[var(--color-text-default)] truncate`}>{data.label}</div>
           <div className={`${TOPOLOGY_STYLES.font.sublabel} text-[var(--color-text-subtle)] font-mono truncate`}>{data.cidr}</div>
-          {data.networkName && (
-            <div className={`${TOPOLOGY_STYLES.font.sublabel} ${TOPOLOGY_COLORS.subnet.textAccent} truncate mt-0.5`}>({data.networkName})</div>
-          )}
         </div>
         <Handle type="source" position={Position.Bottom} className="!opacity-0" />
       </div>
@@ -232,7 +230,7 @@ function SubnetGroupNode({ data }: NodeProps) {
         {data.subnets?.map((subnet: any) => (
           <div key={subnet.id} className="flex items-center gap-2">
             <div className={`w-7 h-7 ${getNodeBgColor('subnet', subnet.status)} rounded-full flex items-center justify-center text-white`}>
-              <Grid3X3 size={14} strokeWidth={1.5} />
+              <IconLayoutGrid size={14} strokeWidth={1.5} />
             </div>
             <div>
               <div className="text-[length:var(--font-size-10)] font-medium text-slate-700">{subnet.name}</div>
@@ -243,6 +241,61 @@ function SubnetGroupNode({ data }: NodeProps) {
       </div>
       <Handle type="source" position={Position.Bottom} className="!opacity-0" />
     </div>
+  );
+}
+
+// VPC Group Panel Node - VPC별 서브넷 그룹핑 배경 패널
+function VpcGroupNode({ data }: NodeProps) {
+  const status = (data.status as string) || 'active';
+  const isPartial = data.isPartial as boolean;
+  
+  // 분할된 VPC는 다른 스타일 적용
+  const borderColor = status === 'active' 
+    ? (isPartial ? 'border-blue-300' : 'border-emerald-300')
+    : status === 'inactive' ? 'border-slate-300' : 'border-red-300';
+  const bgColor = status === 'active' 
+    ? (isPartial ? 'bg-blue-50/50' : 'bg-emerald-50/50')
+    : status === 'inactive' ? 'bg-slate-50/50' : 'bg-red-50/50';
+  const textColor = status === 'active' 
+    ? (isPartial ? 'text-blue-700' : 'text-emerald-700')
+    : status === 'inactive' ? 'text-slate-500' : 'text-red-700';
+  
+  const vpcName = (data.vpcName as string) || data.label;
+  
+  const tooltipContent = (
+    <div className="text-left">
+      <div className="font-semibold">{vpcName}</div>
+      <div className="text-[10px] opacity-80">Network (VPC)</div>
+      {isPartial && (
+        <div className="text-[10px] text-blue-600 mt-1">
+          이 VPC는 {data.totalParts}개 라우터에 분산됨 ({data.partIndex}/{data.totalParts})
+        </div>
+      )}
+      <div className="text-[10px] mt-1">이 그룹의 서브넷: {data.subnetCount}개</div>
+    </div>
+  );
+  
+  return (
+    <Tooltip content={tooltipContent} position="top" delay={300}>
+      <div 
+        className={`${bgColor} ${borderColor} border-2 border-dashed rounded-xl cursor-pointer hover:border-solid transition-all`}
+        style={{ 
+          width: data.width || 200, 
+          height: data.height || 120,
+          padding: '10px 12px',
+        }}
+      >
+        <div className={`text-[10px] font-semibold ${textColor} flex items-center gap-1 whitespace-nowrap`}>
+          <IconNetwork size={12} className="flex-shrink-0" />
+          <span className="truncate">{data.label}</span>
+          {isPartial && (
+            <span className="flex-shrink-0 ml-1 px-1.5 py-0.5 bg-blue-100 text-blue-600 rounded text-[8px]">
+              Split
+            </span>
+          )}
+        </div>
+      </div>
+    </Tooltip>
   );
 }
 
@@ -270,7 +323,7 @@ function LoadBalancerNode({ data }: NodeProps) {
           className={`${TOPOLOGY_SIZES.loadBalancer.node} ${bgColor} ${TOPOLOGY_STYLES.node.shape} flex items-center justify-center text-white relative ${TOPOLOGY_STYLES.node.hoverScale} ${TOPOLOGY_STYLES.node.transition}`} 
           style={{ boxShadow: TOPOLOGY_STYLES.node.shadow }}
         >
-          <Scale size={TOPOLOGY_SIZES.loadBalancer.icon} strokeWidth={1.5} />
+          <IconScale size={TOPOLOGY_SIZES.loadBalancer.icon} strokeWidth={1.5} />
           <div className={`${TOPOLOGY_STYLES.indicator.position} ${TOPOLOGY_SIZES.loadBalancer.indicator} ${TOPOLOGY_STYLES.indicator.shape} ${TOPOLOGY_STYLES.indicator.border} ${statusColor}`} />
         </div>
         <div className="mt-1.5 text-center w-full">
@@ -300,6 +353,7 @@ const nodeTypes = {
   router: RouterNode,
   subnet: SubnetNode,
   subnetGroup: SubnetGroupNode,
+  vpcGroup: VpcGroupNode,
   loadBalancer: LoadBalancerNode,
   divider: DividerNode,
 };
@@ -314,10 +368,10 @@ function generateTopology() {
 
   // Layout constants
   const startX = 50;
-  const groupGap = 80;        // 외부 네트워크 그룹 간 간격
+  const groupGap = 100;       // 외부 네트워크 그룹 간 간격
   const minRouterWidth = 150; // 최소 라우터 너비 (서브넷 없을 때)
   const lbSpacing = 100;      // LB 간 간격
-  const minSubnetWidth = 130; // 최소 서브넷 너비 (LB 없거나 1개일 때)
+  const minSubnetWidth = 180; // 최소 서브넷 너비 (LB 없거나 1개일 때) - VPC 그룹 중첩 방지
   
   const layerY = {
     external: 0,
@@ -500,7 +554,7 @@ function generateTopology() {
         type: 'smoothstep',
         pathOptions: { borderRadius: 0, offset: 40 },
         animated: router.status === 'active',
-        style: { stroke: getEdgeColor('router', router.status), strokeWidth: 2 },
+        style: { stroke: getEdgeColor('router', router.status), strokeWidth: 1 },
         markerEnd: { type: MarkerType.ArrowClosed, color: getEdgeColor('router', router.status) },
       });
 
@@ -599,6 +653,32 @@ function generateTopology() {
   }
 
   // ========== 서브넷 노드 생성 ==========
+  // 라우터+VPC별 서브넷 위치 추적을 위한 맵 (라우터별로 VPC 그룹 분리)
+  const routerVpcBounds: Record<string, { 
+    routerId: string;
+    vpcId: string;
+    minX: number; 
+    maxX: number; 
+    subnets: typeof subnets;
+  }> = {};
+
+  // VPC가 몇 개의 라우터에 걸쳐 있는지 추적
+  const vpcRouterCount: Record<string, Set<string>> = {};
+
+  // 먼저 VPC별 라우터 수를 계산
+  Object.entries(subnetsByRouter).forEach(([routerId, routerSubnets]) => {
+    routerSubnets.forEach((subnet) => {
+      const vpcId = subnet.networkId;
+      if (!vpcRouterCount[vpcId]) {
+        vpcRouterCount[vpcId] = new Set();
+      }
+      vpcRouterCount[vpcId].add(routerId);
+    });
+  });
+
+  // 라우터별 VPC 인덱스 추적
+  const vpcRouterIndex: Record<string, number> = {};
+
   Object.entries(subnetsByRouter).forEach(([routerId, routerSubnets]) => {
     const routerPos = routerPositions[routerId];
     if (!routerPos) return;
@@ -613,10 +693,37 @@ function generateTopology() {
       const subnetCenterX = subnetCurrentX + width / 2;
       subnetPositions[subnet.id] = subnetCenterX;
 
+      const subnetX = subnetCenterX - 60;
+
+      // 라우터+VPC별 서브넷 위치 추적
+      const vpcId = subnet.networkId;
+      const groupKey = `${routerId}-${vpcId}`;
+      
+      if (!routerVpcBounds[groupKey]) {
+        // 이 VPC가 이 라우터에 처음 등장
+        if (!vpcRouterIndex[vpcId]) {
+          vpcRouterIndex[vpcId] = 1;
+        } else {
+          vpcRouterIndex[vpcId]++;
+        }
+        
+        routerVpcBounds[groupKey] = { 
+          routerId,
+          vpcId,
+          minX: subnetX, 
+          maxX: subnetX + 120, 
+          subnets: [] 
+        };
+      } else {
+        routerVpcBounds[groupKey].minX = Math.min(routerVpcBounds[groupKey].minX, subnetX);
+        routerVpcBounds[groupKey].maxX = Math.max(routerVpcBounds[groupKey].maxX, subnetX + 120);
+      }
+      routerVpcBounds[groupKey].subnets.push(subnet);
+
       nodes.push({
         id: subnet.id,
         type: 'subnet',
-        position: { x: subnetCenterX - 60, y: layerY.subnet },
+        position: { x: subnetX, y: layerY.subnet },
         data: { 
           label: subnet.name, 
           cidr: subnet.cidr, 
@@ -632,11 +739,65 @@ function generateTopology() {
         target: subnet.id,
         type: 'smoothstep',
         pathOptions: { borderRadius: 0, offset: 25 },
-        style: { stroke: getEdgeColor('subnet', subnet.status), strokeWidth: 2 },
+        style: { stroke: getEdgeColor('subnet', subnet.status), strokeWidth: 1 },
         markerEnd: { type: MarkerType.ArrowClosed, color: getEdgeColor('subnet', subnet.status) },
       });
 
       subnetCurrentX += width;
+    });
+  });
+
+  // ========== VPC 그룹 패널 노드 생성 (라우터별로 분리) ==========
+  // 각 VPC별로 현재까지 생성된 그룹 수 추적
+  const vpcGroupCounter: Record<string, number> = {};
+
+  Object.entries(routerVpcBounds).forEach(([groupKey, bounds]) => {
+    const vpc = networks.find(n => n.id === bounds.vpcId);
+    if (!vpc || bounds.subnets.length < 1) return;
+
+    // 이 VPC가 몇 개의 라우터에 걸쳐 있는지
+    const totalRouters = vpcRouterCount[bounds.vpcId]?.size || 1;
+    
+    // 현재 이 VPC의 몇 번째 그룹인지
+    if (!vpcGroupCounter[bounds.vpcId]) {
+      vpcGroupCounter[bounds.vpcId] = 1;
+    } else {
+      vpcGroupCounter[bounds.vpcId]++;
+    }
+    const currentIndex = vpcGroupCounter[bounds.vpcId];
+
+    const padding = 12;
+    const labelHeight = 28;  // 타이틀 영역 높이 증가
+    const panelWidth = bounds.maxX - bounds.minX + padding * 2;
+    const panelHeight = 110 + labelHeight;  // 하단 CIDR이 잘리지 않도록 높이 증가
+
+    // 라벨 생성: 여러 라우터에 걸쳐 있으면 (1/2), (2/2) 표시
+    const label = totalRouters > 1 
+      ? `${vpc.name} (${currentIndex}/${totalRouters})`
+      : vpc.name;
+
+    nodes.push({
+      id: `vpc-group-${groupKey}`,
+      type: 'vpcGroup',
+      position: { 
+        x: bounds.minX - padding, 
+        y: layerY.subnet - labelHeight - 8  // 타이틀이 가려지지 않도록 더 위로
+      },
+      data: { 
+        label,
+        status: vpc.status,
+        width: panelWidth,
+        height: panelHeight,
+        subnetCount: bounds.subnets.length,
+        subnets: bounds.subnets,
+        vpcName: vpc.name,
+        isPartial: totalRouters > 1,
+        partIndex: currentIndex,
+        totalParts: totalRouters,
+      },
+      zIndex: -1,
+      selectable: true,
+      draggable: false,
     });
   });
 
@@ -664,7 +825,7 @@ function generateTopology() {
         target: lb.id,
         type: 'smoothstep',
         pathOptions: { borderRadius: 0, offset: 20 },
-        style: { stroke: getEdgeColor('loadBalancer', lb.status), strokeWidth: 2 },
+        style: { stroke: getEdgeColor('loadBalancer', lb.status), strokeWidth: 1 },
         markerEnd: { type: MarkerType.ArrowClosed, color: getEdgeColor('loadBalancer', lb.status) },
       });
 
@@ -720,7 +881,7 @@ function generateTopology() {
         target: lb.id,
         type: 'smoothstep',
         pathOptions: { borderRadius: 0, offset: 20 },
-        style: { stroke: TOPOLOGY_COLORS.loadBalancer.hex, strokeWidth: 2 },
+        style: { stroke: TOPOLOGY_COLORS.loadBalancer.hex, strokeWidth: 1 },
         markerEnd: { type: MarkerType.ArrowClosed, color: TOPOLOGY_COLORS.loadBalancer.hex },
       });
     });
@@ -796,7 +957,7 @@ function NodePopover({
             onClick={onClose}
             className="w-7 h-7 rounded-lg bg-white/20 hover:bg-white/30 flex items-center justify-center transition-colors"
           >
-            <X size={16} />
+            <IconX size={16} />
           </button>
         </div>
       </div>
@@ -835,7 +996,7 @@ function NodePopover({
       {/* Footer */}
       <div className="px-4 py-3 bg-slate-50 border-t border-slate-100 flex justify-end gap-2">
         <button className="text-xs text-blue-600 hover:text-blue-700 font-medium flex items-center gap-1">
-          <ExternalLink size={12} />
+          <IconExternalLink size={12} />
           상세 보기
         </button>
       </div>
@@ -954,10 +1115,11 @@ export function TopologyPage() {
                 defaultEdgeOptions={{
                   type: 'step',
                 }}
+                proOptions={{ hideAttribution: true }}
                 // 읽기 전용 설정
                 nodesConnectable={false}
                 nodesDraggable={false}
-                elementsSelectable={false}
+                elementsSelectable={true}
                 panOnDrag={true}
                 zoomOnScroll={true}
               >

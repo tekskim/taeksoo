@@ -164,8 +164,8 @@ export function InstanceListPage() {
 
   const filteredInstances = useMemo(() => 
     mockInstances.filter((instance) =>
-      instance.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      instance.id.toLowerCase().includes(searchQuery.toLowerCase())
+    instance.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    instance.id.toLowerCase().includes(searchQuery.toLowerCase())
     ), [searchQuery]
   );
 
@@ -317,39 +317,39 @@ export function InstanceListPage() {
             </div>
 
             {/* Filters & Actions Bar */}
-            <div className="flex items-center justify-between gap-4">
-              <HStack gap={3} className="flex-1">
-                <div className="w-80">
+              <div className="flex items-center justify-between gap-4">
+                <HStack gap={3} className="flex-1">
+                  <div className="w-80">
                   <SearchInput
-                    placeholder="Search instances..."
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
+                      placeholder="Search instances..."
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
                     onClear={() => setSearchQuery('')}
                     fullWidth
-                  />
-                </div>
-                <Button variant="outline" size="md" leftIcon={<IconFilter size={16} />}>
-                  Filters
-                </Button>
-              </HStack>
-              <HStack gap={2}>
-                <Button variant="ghost" size="md" leftIcon={<IconRefresh size={16} />}>
-                  Refresh
-                </Button>
-                {selectedInstances.length > 0 && (
-                  <>
-                    <Button variant="outline" size="md" leftIcon={<IconPlayerPlay size={16} />}>
-                      Start
-                    </Button>
-                    <Button variant="outline" size="md" leftIcon={<IconPlayerStop size={16} />}>
-                      Stop
-                    </Button>
-                    <Button variant="danger" size="md" leftIcon={<IconTrash size={16} />}>
-                      Delete
-                    </Button>
-                  </>
-                )}
-              </HStack>
+                    />
+                  </div>
+                  <Button variant="outline" size="md" leftIcon={<IconFilter size={16} />}>
+                    Filters
+                  </Button>
+                </HStack>
+                <HStack gap={2}>
+                  <Button variant="ghost" size="md" leftIcon={<IconRefresh size={16} />}>
+                    Refresh
+                  </Button>
+                  {selectedInstances.length > 0 && (
+                    <>
+                      <Button variant="outline" size="md" leftIcon={<IconPlayerPlay size={16} />}>
+                        Start
+                      </Button>
+                      <Button variant="outline" size="md" leftIcon={<IconPlayerStop size={16} />}>
+                        Stop
+                      </Button>
+                      <Button variant="danger" size="md" leftIcon={<IconTrash size={16} />}>
+                        Delete
+                      </Button>
+                    </>
+                  )}
+                </HStack>
             </div>
 
             {/* Instance Table */}
@@ -363,35 +363,35 @@ export function InstanceListPage() {
               emptyMessage="No instances found"
             />
 
-            {/* Empty State */}
-            {filteredInstances.length === 0 && (
-              <div className="py-16 text-center">
+              {/* Empty State */}
+              {filteredInstances.length === 0 && (
+                <div className="py-16 text-center">
                 <IconServer size={48} className="mx-auto text-[var(--color-text-disabled)] mb-4" />
                 <h3 className="text-[length:var(--font-size-16)] font-medium text-[var(--color-text-default)] mb-1">
                   No instances found
                 </h3>
                 <p className="text-[length:var(--font-size-12)] text-[var(--color-text-subtle)] mb-4">
-                  {searchQuery ? 'Try adjusting your search query' : 'Get started by creating your first instance'}
-                </p>
-                {!searchQuery && (
-                  <Button leftIcon={<IconPlus size={16} />}>Create Instance</Button>
-                )}
-              </div>
-            )}
+                    {searchQuery ? 'Try adjusting your search query' : 'Get started by creating your first instance'}
+                  </p>
+                  {!searchQuery && (
+                    <Button leftIcon={<IconPlus size={16} />}>Create Instance</Button>
+                  )}
+                </div>
+              )}
 
-            {/* Pagination */}
-            {filteredInstances.length > 0 && (
+              {/* Pagination */}
+              {filteredInstances.length > 0 && (
               <div className="flex items-center justify-between">
                 <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
-                  Showing {filteredInstances.length} of {mockInstances.length} instances
-                </span>
+                    Showing {filteredInstances.length} of {mockInstances.length} instances
+                  </span>
                 <Pagination
                   currentPage={currentPage}
                   totalPages={totalPages}
                   onPageChange={setCurrentPage}
                 />
-              </div>
-            )}
+                </div>
+              )}
           </VStack>
         </div>
       </main>
