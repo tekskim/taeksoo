@@ -10,6 +10,13 @@ import { useState } from 'react';
 
 const GRADIENTS = [
   {
+    name: 'HUMAIN Brand',
+    css: 'linear-gradient(180deg in oklab, #00D4AA 0%, #6366F1 55%, #EC4899 100%)',
+    cssVariable: 'linear-gradient(180deg in oklab, var(--color-tertiary) 0%, var(--color-primary) 55%, var(--color-secondary) 100%)',
+    colors: ['#00D4AA', '#6366F1', '#EC4899'],
+    description: 'Official HUMAIN brand gradient (oklab color space)',
+  },
+  {
     name: 'HUMAIN Primary',
     css: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
     colors: ['#667eea', '#764ba2'],
@@ -103,7 +110,15 @@ function CopyButton({ text }: { text: string }) {
   );
 }
 
-function GradientCard({ gradient }: { gradient: typeof GRADIENTS[0] }) {
+interface GradientItem {
+  name: string;
+  css: string;
+  cssVariable?: string;
+  colors: string[];
+  description: string;
+}
+
+function GradientCard({ gradient }: { gradient: GradientItem }) {
   return (
     <div className="rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-shadow duration-300">
       {/* Gradient Preview */}
@@ -112,7 +127,7 @@ function GradientCard({ gradient }: { gradient: typeof GRADIENTS[0] }) {
         style={{ background: gradient.css }}
       >
         <div className="flex gap-2">
-          <CopyButton text={gradient.css} />
+          <CopyButton text={gradient.cssVariable || gradient.css} />
         </div>
       </div>
       
@@ -122,7 +137,7 @@ function GradientCard({ gradient }: { gradient: typeof GRADIENTS[0] }) {
         <p className="text-sm text-slate-500">{gradient.description}</p>
         
         {/* Color Swatches */}
-        <div className="flex gap-2 pt-2">
+        <div className="flex flex-wrap gap-2 pt-2">
           {gradient.colors.map((color, idx) => (
             <div key={idx} className="flex items-center gap-1.5">
               <div 
@@ -134,8 +149,22 @@ function GradientCard({ gradient }: { gradient: typeof GRADIENTS[0] }) {
           ))}
         </div>
         
+        {/* CSS Variable Code (if exists) */}
+        {gradient.cssVariable && (
+          <div className="mt-3 p-2 bg-purple-50 rounded-lg border border-purple-200">
+            <div className="flex items-center justify-between mb-1">
+              <span className="text-xs font-medium text-purple-700">CSS Variable</span>
+              <CopyButton text={gradient.cssVariable} />
+            </div>
+            <code className="text-xs text-purple-800 break-all">{gradient.cssVariable}</code>
+          </div>
+        )}
+        
         {/* CSS Code */}
         <div className="mt-3 p-2 bg-slate-100 rounded-lg">
+          <div className="flex items-center justify-between mb-1">
+            <span className="text-xs font-medium text-slate-600">CSS</span>
+          </div>
           <code className="text-xs text-slate-700 break-all">{gradient.css}</code>
         </div>
       </div>
