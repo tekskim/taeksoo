@@ -24,6 +24,13 @@ const GRADIENTS = [
     description: 'HUMAIN secondary gradient - Teal to Indigo (oklab)',
   },
   {
+    name: 'HUMAIN Tertiary',
+    css: 'linear-gradient(180deg in oklab, #00D4AA 0%, #FFFFFF 100%)',
+    cssVariable: 'linear-gradient(180deg in oklab, var(--color-tertiary) 0%, var(--color-white) 100%)',
+    colors: ['#00D4AA', '#FFFFFF'],
+    description: 'HUMAIN tertiary gradient - Teal to White (oklab)',
+  },
+  {
     name: 'HUMAIN Primary',
     css: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
     colors: ['#667eea', '#764ba2'],
