@@ -17,6 +17,13 @@ const GRADIENTS = [
     description: 'Official HUMAIN brand gradient (oklab color space)',
   },
   {
+    name: 'HUMAIN Secondary',
+    css: 'linear-gradient(180deg in oklab, #00D4AA 0%, #6366F1 100%)',
+    cssVariable: 'linear-gradient(180deg in oklab, var(--color-tertiary) 0%, var(--color-primary) 100%)',
+    colors: ['#00D4AA', '#6366F1'],
+    description: 'HUMAIN secondary gradient - Teal to Indigo (oklab)',
+  },
+  {
     name: 'HUMAIN Primary',
     css: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
     colors: ['#667eea', '#764ba2'],
