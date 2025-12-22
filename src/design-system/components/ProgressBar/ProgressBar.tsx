@@ -73,19 +73,19 @@ const getStatus = (
 const getStatusColor = (status: ProgressBarStatus, isLight = false): string => {
   const colors: Record<ProgressBarStatus, { default: string; light: string }> = {
     success: {
-      default: 'var(--color-green-600)',
+      default: 'var(--color-state-success)',
       light: 'var(--color-green-300)',
     },
     warning: {
-      default: 'var(--color-orange-500)',
+      default: 'var(--color-state-warning)',
       light: 'var(--color-orange-300)',
     },
     danger: {
-      default: 'var(--color-state-error)',
+      default: 'var(--color-state-danger)',
       light: 'var(--color-red-300)',
     },
     info: {
-      default: 'var(--color-action-primary)',
+      default: 'var(--color-state-info)',
       light: 'var(--color-blue-300)',
     },
     neutral: {
@@ -169,7 +169,11 @@ export const ProgressBar: React.FC<ProgressBarProps> = ({
 
           {/* Used segment */}
           <div
-            className="absolute inset-y-0 left-0 rounded-[var(--progress-bar-radius)] z-[3]"
+            className={`absolute inset-y-0 left-0 z-[3] ${
+              newValue > 0 
+                ? 'rounded-l-[var(--progress-bar-radius)]' 
+                : 'rounded-[var(--progress-bar-radius)]'
+            }`}
             style={{
               width: `${usedPercent}%`,
               backgroundColor: getStatusColor(usedStatus),
@@ -180,7 +184,7 @@ export const ProgressBar: React.FC<ProgressBarProps> = ({
           {/* New segment */}
           {newValue > 0 && (
             <div
-              className="absolute inset-y-0 rounded-[var(--progress-bar-radius)] z-[2]"
+              className="absolute inset-y-0 rounded-r-[var(--progress-bar-radius)] z-[2]"
               style={{
                 left: `${usedPercent}%`,
                 width: `${newPercent}%`,
@@ -193,7 +197,7 @@ export const ProgressBar: React.FC<ProgressBarProps> = ({
           {/* Tooltip */}
           {showTooltip && newValue > 0 && (
             <div className="absolute left-1/2 -translate-x-1/2 -top-2 -translate-y-full z-10">
-              <div className="bg-[var(--color-text-default)] text-[var(--color-text-on-primary)] text-[length:var(--font-size-11)] leading-[var(--line-height-16)] px-2 py-1 rounded-[var(--radius-sm)] shadow-[var(--shadow-md)]">
+              <div className="bg-[var(--tooltip-bg)] text-[var(--tooltip-text)] text-[length:var(--font-size-11)] leading-[var(--line-height-16)] px-2 py-1 rounded-[var(--radius-sm)] shadow-[var(--shadow-md)]">
                 <div className="flex flex-col gap-1">
                   <div className="flex items-center gap-1">
                     <span
@@ -235,11 +239,11 @@ export const ProgressBar: React.FC<ProgressBarProps> = ({
                 <IconAlertCircle
                   size={16}
                   stroke={1.5}
-                  className="text-[var(--color-state-error-default)]"
+                  className="text-[var(--color-state-danger)]"
                 />
                 {errorMessage && (
                   <div className="absolute left-1/2 -translate-x-1/2 bottom-full mb-1 hidden group-hover:block z-10">
-                    <div className="bg-[var(--color-text-default)] text-[var(--color-text-on-primary)] text-[length:var(--font-size-11)] leading-[var(--line-height-16)] px-2 py-1 rounded-[var(--radius-sm)] shadow-[var(--shadow-md)] whitespace-nowrap">
+                    <div className="bg-[var(--tooltip-bg)] text-[var(--tooltip-text)] text-[length:var(--font-size-11)] leading-[var(--line-height-16)] px-2 py-1 rounded-[var(--radius-sm)] shadow-[var(--shadow-md)] whitespace-nowrap">
                       {errorMessage}
                     </div>
                   </div>

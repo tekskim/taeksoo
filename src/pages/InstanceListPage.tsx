@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import {
   Button,
   SearchInput,
@@ -24,6 +24,7 @@ import {
   IconServer,
   IconRefresh,
   IconLock,
+  IconArrowUp,
 } from '@tabler/icons-react';
 
 /* ----------------------------------------
@@ -152,14 +153,28 @@ const statusMap: Record<InstanceStatus, StatusType> = {
 };
 
 /* ----------------------------------------
-   Instance List Page
+   Instances List Page
    ---------------------------------------- */
 
 export function InstanceListPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedInstances, setSelectedInstances] = useState<string[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
+  const [showScrollTop, setShowScrollTop] = useState(false);
   const pageSize = 10;
+
+  // Scroll to top handler
+  useEffect(() => {
+    const handleScroll = () => {
+      setShowScrollTop(window.scrollY > 300);
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
 
   const filteredInstances = useMemo(() => 
     mockInstances.filter((instance) =>
@@ -281,7 +296,7 @@ export function InstanceListPage() {
         {/* Tab Bar */}
         <TabBar
           tabs={[
-            { id: 'instances', label: 'Instances', active: true },
+            { id: 'instances', label: 'Instances List', active: true },
           ]}
         />
 
@@ -289,7 +304,7 @@ export function InstanceListPage() {
         <BreadcrumbNavigation
           items={[
             { label: 'Proj-1', href: '/project' },
-            { label: 'Instances', active: true },
+            { label: 'Instances List', active: true },
           ]}
           hasNotification={true}
         />
@@ -300,7 +315,7 @@ export function InstanceListPage() {
             {/* Page Header */}
             <div className="flex items-center justify-between">
               <h1 className="text-[length:var(--font-size-16)] font-semibold text-[var(--color-text-default)]">
-                Instances
+                Instances List
               </h1>
               <Button leftIcon={<IconPlus size={16} />}>
                 Create Instance
@@ -394,6 +409,17 @@ export function InstanceListPage() {
           </VStack>
         </div>
       </main>
+
+      {/* Scroll to Top Button */}
+      {showScrollTop && (
+        <button
+          onClick={scrollToTop}
+          className="fixed bottom-6 right-6 w-10 h-10 bg-[var(--color-action-primary)] hover:bg-[var(--color-action-primary-hover)] text-white rounded-full shadow-lg flex items-center justify-center transition-all duration-200 hover:scale-110 z-50"
+          aria-label="Scroll to top"
+        >
+          <IconArrowUp size={20} stroke={2} />
+        </button>
+      )}
     </div>
   );
 }

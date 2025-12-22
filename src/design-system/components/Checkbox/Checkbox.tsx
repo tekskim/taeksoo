@@ -83,14 +83,14 @@ export const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
         if (isChecked) {
           return [...base, 'bg-[var(--checkbox-error-bg)]'];
         }
-        return [...base, 'bg-white border-2 border-[var(--checkbox-error-border)]'];
+        return [...base, 'bg-[var(--checkbox-bg)] border-2 border-[var(--checkbox-error-border)]'];
       }
 
       if (isChecked) {
         return [...base, 'bg-[var(--checkbox-checked-bg)]'];
       }
 
-      return [...base, 'bg-white border border-[var(--checkbox-border)]', 'group-hover:border-[var(--checkbox-border-hover)]'];
+      return [...base, 'bg-[var(--checkbox-bg)] border border-[var(--checkbox-border)]', 'group-hover:border-[var(--checkbox-border-hover)]'];
     };
 
     // Label styles based on state

@@ -24,7 +24,9 @@ import {
   IconTopologyRing,
   IconTransfer,
   IconLayoutSidebar,
+  IconPalette,
 } from '@tabler/icons-react';
+import { Link } from 'react-router-dom';
 
 /* ----------------------------------------
    Sidebar Component
@@ -60,6 +62,15 @@ export function Sidebar() {
       {/* Navigation */}
       <nav className="flex-1 px-3 py-2 overflow-y-auto">
         <VStack gap={4}>
+          {/* Design System Link */}
+          <Link
+            to="/design-system"
+            className="flex items-center gap-2 px-2 py-1.5 rounded-md bg-[var(--color-action-primary)] hover:bg-[var(--color-action-primary-hover)] text-white text-[11px] font-medium transition-colors"
+          >
+            <IconPalette size={16} stroke={1.5} />
+            <span>Design System</span>
+          </Link>
+
           {/* Home */}
           <MenuItem
             icon={<IconHome size={16} stroke={1.5} />}

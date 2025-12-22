@@ -78,8 +78,8 @@ export const Radio = forwardRef<HTMLInputElement, RadioProps>(
               disabled
                 ? 'bg-[var(--radio-disabled-bg)]'
                 : isChecked
-                  ? 'border-[length:var(--radio-checked-border-width)] border-[var(--radio-checked-border)] bg-white'
-                  : 'border-[length:var(--radio-border-width)] border-[var(--radio-border)] bg-white',
+                  ? 'border-[length:var(--radio-checked-border-width)] border-[var(--radio-checked-border)] bg-[var(--radio-bg)]'
+                  : 'border-[length:var(--radio-border-width)] border-[var(--radio-border)] bg-[var(--radio-bg)]',
             )}
           />
 

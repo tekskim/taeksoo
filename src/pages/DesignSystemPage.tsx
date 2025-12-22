@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { DarkModeToggle } from '@/components/DarkModeToggle';
 import {
   Button,
   Input,
@@ -165,6 +166,7 @@ import {
   IconMessage2,
   IconCalendar,
   IconAppWindow,
+  IconBorderAll,
   // Brand Icons
   IconBrandUbuntu,
   IconBrandDebian,
@@ -184,8 +186,10 @@ const foundationItems = [
   { id: 'semantic-colors', label: 'Semantic Colors', icon: IconPalette },
   { id: 'typography', label: 'Typography', icon: IconTypography },
   { id: 'spacing-radius', label: 'Spacing & Radius', icon: IconBoxMultiple },
+  { id: 'borders', label: 'Borders', icon: IconBorderAll },
   { id: 'shadows', label: 'Shadows', icon: IconBoxMultiple },
   { id: 'icons', label: 'Icons', icon: IconStar },
+  { id: 'layout', label: 'Layout', icon: IconLayoutSidebar },
 ];
 
 // Component items (UI 컴포넌트)
@@ -577,6 +581,8 @@ function TableDemo() {
             data={sampleTableData.slice(0, 3)}
             rowKey="id"
             selectable
+            selectedKeys={selectedKeys}
+            onSelectionChange={setSelectedKeys}
           />
         </div>
         <p className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
@@ -604,6 +610,21 @@ function TableDemo() {
 
 export function DesignSystemPage() {
   const [activeSection, setActiveSection] = useState('token-architecture');
+  const [searchQuery, setSearchQuery] = useState('');
+  const [showScrollTop, setShowScrollTop] = useState(false);
+
+  // Scroll to top handler
+  useEffect(() => {
+    const handleScroll = () => {
+      setShowScrollTop(window.scrollY > 300);
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
 
   // Intersection Observer to track active section
   useEffect(() => {
@@ -630,6 +651,24 @@ export function DesignSystemPage() {
     const element = document.getElementById(id);
     if (element) {
       element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  };
+
+  // Filter nav items based on search query
+  const filteredNavItems = searchQuery.trim()
+    ? navItems.filter(item => 
+        item.label.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        item.id.toLowerCase().includes(searchQuery.toLowerCase())
+      )
+    : [];
+
+  const handleSearchKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter' && filteredNavItems.length > 0) {
+      scrollToSection(filteredNavItems[0].id);
+      setSearchQuery('');
+    }
+    if (e.key === 'Escape') {
+      setSearchQuery('');
     }
   };
 
@@ -793,6 +832,7 @@ export function DesignSystemPage() {
                 </button>
               ))}
             </VStack>
+
           </VStack>
         </div>
       </nav>
@@ -811,9 +851,66 @@ export function DesignSystemPage() {
                   Design tokens and components built with a 3-tier token architecture
                 </p>
               </VStack>
-              <Link to="/">
-                <Button variant="outline">View Instance List →</Button>
-              </Link>
+              <div className="flex items-center gap-3">
+                <DarkModeToggle size="sm" />
+                <Link to="/">
+                  <Button variant="outline">View Instance List →</Button>
+                </Link>
+              </div>
+            </div>
+
+            {/* Search Bar */}
+            <div className="relative">
+              <div className="relative">
+                <IconSearch 
+                  size={18} 
+                  stroke={1.5} 
+                  className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--color-text-muted)]" 
+                />
+                <input
+                  type="text"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  onKeyDown={handleSearchKeyDown}
+                  placeholder="Search components, tokens... (Enter to go, Esc to clear)"
+                  className="w-full pl-10 pr-4 py-3 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] text-[length:var(--font-size-14)] text-[var(--color-text-default)] placeholder:text-[var(--color-text-muted)] focus:outline-none focus:border-[var(--color-border-focus)] focus:ring-2 focus:ring-[var(--color-border-focus)] focus:ring-opacity-20 transition-colors"
+                />
+                {searchQuery && (
+                  <button
+                    onClick={() => setSearchQuery('')}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--color-text-muted)] hover:text-[var(--color-text-default)] transition-colors"
+                  >
+                    <IconX size={16} stroke={1.5} />
+                  </button>
+                )}
+              </div>
+              
+              {/* Search Results Dropdown */}
+              {searchQuery.trim() && (
+                <div className="absolute top-full left-0 right-0 mt-2 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] shadow-[var(--shadow-lg)] z-50 max-h-[300px] overflow-y-auto">
+                  {filteredNavItems.length > 0 ? (
+                    <div className="p-2">
+                      {filteredNavItems.map(({ id, label, icon: Icon }) => (
+                        <button
+                          key={id}
+                          onClick={() => {
+                            scrollToSection(id);
+                            setSearchQuery('');
+                          }}
+                          className="w-full px-3 py-2 rounded-[var(--radius-md)] flex items-center gap-3 text-left hover:bg-[var(--color-surface-muted)] transition-colors"
+                        >
+                          <Icon size={16} stroke={1.5} className="text-[var(--color-text-muted)]" />
+                          <span className="text-[length:var(--font-size-12)] text-[var(--color-text-default)]">{label}</span>
+                        </button>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="p-4 text-center text-[length:var(--font-size-12)] text-[var(--color-text-muted)]">
+                      No results found for "{searchQuery}"
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
 
             {/* Token Architecture Overview */}
@@ -1166,6 +1263,118 @@ export function DesignSystemPage() {
               </div>
             </Section>
 
+            {/* Borders */}
+            <Section id="borders" title="Borders" description="Border tokens for colors, widths, and styles">
+              <VStack gap={8}>
+                {/* Border Colors */}
+                <VStack gap={4}>
+                  <Label>Border Colors</Label>
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    {[
+                      { name: 'default', token: '--color-border-default', desc: '기본 보더' },
+                      { name: 'subtle', token: '--color-border-subtle', desc: '미세한 구분선' },
+                      { name: 'strong', token: '--color-border-strong', desc: '강조 보더' },
+                      { name: 'focus', token: '--color-border-focus', desc: '포커스 링' },
+                    ].map(({ name, token, desc }) => (
+                      <div key={name} className="flex flex-col gap-2">
+                        <div
+                          className="h-16 rounded-[var(--radius-md)] bg-[var(--color-surface-default)]"
+                          style={{ border: `2px solid var(--color-border-${name})` }}
+                        />
+                        <div>
+                          <code className="text-[length:var(--font-size-11)] font-mono text-[var(--color-text-default)]">
+                            border-{name}
+                          </code>
+                          <p className="text-[length:var(--font-size-10)] text-[var(--color-text-muted)]">{desc}</p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </VStack>
+
+                {/* Border Widths */}
+                <VStack gap={4}>
+                  <Label>Border Widths</Label>
+                  <div className="grid grid-cols-4 gap-4">
+                    {[
+                      { name: '0', value: '0px' },
+                      { name: '1', value: '1px' },
+                      { name: '2', value: '2px' },
+                      { name: '4', value: '4px' },
+                    ].map(({ name, value }) => (
+                      <div key={name} className="flex flex-col gap-2 items-center">
+                        <div
+                          className="w-full h-12 rounded-[var(--radius-md)] bg-[var(--color-surface-default)]"
+                          style={{ border: `${value} solid var(--color-border-strong)` }}
+                        />
+                        <code className="text-[length:var(--font-size-10)] font-mono text-[var(--color-text-subtle)]">
+                          {value}
+                        </code>
+                      </div>
+                    ))}
+                  </div>
+                </VStack>
+
+                {/* Border Styles */}
+                <VStack gap={4}>
+                  <Label>Border Styles</Label>
+                  <div className="grid grid-cols-3 md:grid-cols-5 gap-4">
+                    {['solid', 'dashed', 'dotted', 'double', 'none'].map((style) => (
+                      <div key={style} className="flex flex-col gap-2 items-center">
+                        <div
+                          className="w-full h-12 rounded-[var(--radius-md)] bg-[var(--color-surface-default)]"
+                          style={{ border: `2px ${style} var(--color-border-strong)` }}
+                        />
+                        <code className="text-[length:var(--font-size-10)] font-mono text-[var(--color-text-subtle)]">
+                          {style}
+                        </code>
+                      </div>
+                    ))}
+                  </div>
+                </VStack>
+
+                {/* Border Usage Examples */}
+                <VStack gap={4}>
+                  <Label>Usage Examples</Label>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="p-4 rounded-[var(--radius-lg)] border border-[var(--color-border-default)] bg-[var(--color-surface-default)]">
+                      <p className="text-[length:var(--font-size-12)] text-[var(--color-text-default)] mb-2">Card with default border</p>
+                      <code className="text-[length:var(--font-size-10)] text-[var(--color-text-muted)]">border border-[var(--color-border-default)]</code>
+                    </div>
+                    <div className="p-4 rounded-[var(--radius-lg)] border-2 border-[var(--color-border-strong)] bg-[var(--color-surface-default)]">
+                      <p className="text-[length:var(--font-size-12)] text-[var(--color-text-default)] mb-2">Card with strong border</p>
+                      <code className="text-[length:var(--font-size-10)] text-[var(--color-text-muted)]">border-2 border-[var(--color-border-strong)]</code>
+                    </div>
+                    <div className="p-4 rounded-[var(--radius-lg)] border-l-4 border-[var(--color-action-primary)] bg-[var(--color-surface-default)]">
+                      <p className="text-[length:var(--font-size-12)] text-[var(--color-text-default)] mb-2">Accent left border</p>
+                      <code className="text-[length:var(--font-size-10)] text-[var(--color-text-muted)]">border-l-4 border-[var(--color-action-primary)]</code>
+                    </div>
+                    <div className="p-4 rounded-[var(--radius-lg)] border border-dashed border-[var(--color-border-default)] bg-[var(--color-surface-default)]">
+                      <p className="text-[length:var(--font-size-12)] text-[var(--color-text-default)] mb-2">Dashed border (dropzone)</p>
+                      <code className="text-[length:var(--font-size-10)] text-[var(--color-text-muted)]">border border-dashed</code>
+                    </div>
+                  </div>
+                </VStack>
+
+                {/* CSS Variables Reference */}
+                <VStack gap={3}>
+                  <Label>CSS Variables</Label>
+                  <pre className="text-[length:var(--font-size-11)] p-4 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)] overflow-x-auto text-[var(--color-text-muted)]">
+{`/* Border Colors */
+--color-border-default   /* 기본 보더 (slate-200 / #333) */
+--color-border-subtle    /* 미세한 구분선 (slate-100 / #252525) */
+--color-border-strong    /* 강조 보더 (slate-300 / #444) */
+--color-border-focus     /* 포커스 링 (blue-500 / blue-400) */
+
+/* Usage */
+border: 1px solid var(--color-border-default);
+border-color: var(--color-border-strong);
+outline: 2px solid var(--color-border-focus);`}
+                  </pre>
+                </VStack>
+              </VStack>
+            </Section>
+
             {/* Shadows */}
             <Section id="shadows" title="Shadows" description="Box shadow tokens for elevation and depth">
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -1431,12 +1640,12 @@ export function DesignSystemPage() {
                 <VStack gap={3}>
                   <Label>Variants</Label>
                   <div className="flex flex-wrap gap-3">
-                    <Button variant="primary">Primary</Button>
-                    <Button variant="secondary">Secondary</Button>
-                    <Button variant="outline">Outline</Button>
-                    <Button variant="ghost">Ghost</Button>
-                    <Button variant="danger">Danger</Button>
-                    <Button variant="link">Link</Button>
+                    <Button size="sm" variant="primary">Primary</Button>
+                    <Button size="sm" variant="secondary">Secondary</Button>
+                    <Button size="sm" variant="outline">Outline</Button>
+                    <Button size="sm" variant="ghost">Ghost</Button>
+                    <Button size="sm" variant="danger">Danger</Button>
+                    <Button size="sm" variant="link">Link</Button>
                   </div>
                 </VStack>
 
@@ -1444,10 +1653,10 @@ export function DesignSystemPage() {
                 <VStack gap={3}>
                   <Label>With Icons</Label>
                   <div className="flex flex-wrap gap-3">
-                    <Button leftIcon={<IconPlus size={16} />}>Left Icon</Button>
-                    <Button rightIcon={<IconArrowRight size={16} />}>Right Icon</Button>
-                    <Button icon={<IconHeart size={16} />} aria-label="Like" />
-                    <Button variant="secondary" icon={<IconStar size={16} />} aria-label="Star" />
+                    <Button size="sm" leftIcon={<IconPlus size={14} />}>Left Icon</Button>
+                    <Button size="sm" rightIcon={<IconArrowRight size={14} />}>Right Icon</Button>
+                    <Button size="sm" icon={<IconHeart size={14} />} aria-label="Like" />
+                    <Button size="sm" variant="secondary" icon={<IconStar size={14} />} aria-label="Star" />
                   </div>
                 </VStack>
 
@@ -1455,13 +1664,13 @@ export function DesignSystemPage() {
                 <VStack gap={3}>
                   <Label>States</Label>
                   <div className="flex flex-wrap gap-3">
-                    <Button>Default</Button>
-                    <Button disabled>Disabled</Button>
-                    <Button isLoading>Loading</Button>
+                    <Button size="sm">Default</Button>
+                    <Button size="sm" disabled>Disabled</Button>
+                    <Button size="sm" isLoading>Loading</Button>
                   </div>
                   <div className="flex flex-wrap gap-3">
-                    <Button variant="secondary">Default</Button>
-                    <Button variant="secondary" disabled>Disabled</Button>
+                    <Button size="sm" variant="secondary">Default</Button>
+                    <Button size="sm" variant="secondary" disabled>Disabled</Button>
                   </div>
                 </VStack>
 
@@ -1469,8 +1678,8 @@ export function DesignSystemPage() {
                 <VStack gap={3}>
                   <Label>Polymorphic (as prop)</Label>
                   <div className="flex flex-wrap gap-3">
-                    <Button as="a" href="#" target="_blank">As Anchor</Button>
-                    <Button as={Link} to="/">As Router Link</Button>
+                    <Button size="sm" as="a" href="#" target="_blank">As Anchor</Button>
+                    <Button size="sm" as={Link} to="/">As Router Link</Button>
                   </div>
                 </VStack>
               </VStack>
@@ -2809,7 +3018,7 @@ export function DesignSystemPage() {
                 {/* Basic Usage */}
                 <VStack gap={3}>
                   <Label>Basic Usage</Label>
-                  <div className="p-4 bg-white border border-[var(--color-border-default)] rounded-[var(--radius-md)]">
+                  <div className="p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-md)]">
                     <Breadcrumb
                       items={[
                         { label: 'Home', onClick: () => {} },
@@ -2824,7 +3033,7 @@ export function DesignSystemPage() {
                 {/* Long Path */}
                 <VStack gap={3}>
                   <Label>Long Path</Label>
-                  <div className="p-4 bg-white border border-[var(--color-border-default)] rounded-[var(--radius-md)]">
+                  <div className="p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-md)]">
                     <Breadcrumb
                       items={[
                         { label: 'Home', onClick: () => {} },
@@ -3196,9 +3405,221 @@ export function DesignSystemPage() {
               </VStack>
             </Section>
 
+            {/* Layout Section */}
+            <Section id="layout" title="Layout" description="Application layout structure with responsive sidebar">
+              <VStack gap={8}>
+                {/* Layout Specs */}
+                <VStack gap={4}>
+                  <Label>Layout Specifications</Label>
+                  <div className="overflow-x-auto">
+                    <table className="w-full text-[length:var(--font-size-12)]">
+                      <thead>
+                        <tr className="border-b border-[var(--color-border-default)]">
+                          <th className="text-left py-3 pr-4 font-medium text-[var(--color-text-subtle)]">Breakpoint</th>
+                          <th className="text-left py-3 pr-4 font-medium text-[var(--color-text-subtle)]">Width</th>
+                          <th className="text-left py-3 pr-4 font-medium text-[var(--color-text-subtle)]">Sidebar</th>
+                          <th className="text-left py-3 pr-4 font-medium text-[var(--color-text-subtle)]">Content Area</th>
+                          <th className="text-left py-3 font-medium text-[var(--color-text-subtle)]">Features</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr className="border-b border-[var(--color-border-subtle)]">
+                          <td className="py-3 pr-4 font-mono text-[var(--color-text-default)]">Desktop (Default)</td>
+                          <td className="py-3 pr-4 font-mono text-[var(--color-action-primary)]">1920px</td>
+                          <td className="py-3 pr-4 text-[var(--color-text-default)]">200px (collapsible)</td>
+                          <td className="py-3 pr-4 text-[var(--color-text-muted)]">1720px max</td>
+                          <td className="py-3 text-[var(--color-text-muted)]">Sidebar toggle</td>
+                        </tr>
+                        <tr className="border-b border-[var(--color-border-subtle)]">
+                          <td className="py-3 pr-4 font-mono text-[var(--color-text-default)]">Laptop (Min)</td>
+                          <td className="py-3 pr-4 font-mono text-[var(--color-action-primary)]">1440px</td>
+                          <td className="py-3 pr-4 text-[var(--color-text-default)]">200px (collapsible)</td>
+                          <td className="py-3 pr-4 text-[var(--color-text-muted)]">1240px max</td>
+                          <td className="py-3 text-[var(--color-text-muted)]">Sidebar toggle</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </VStack>
+
+                {/* Visual Diagram - Desktop */}
+                <VStack gap={4}>
+                  <Label>Desktop Layout (1920px)</Label>
+                  <div className="border border-[var(--color-border-default)] rounded-[var(--radius-lg)] overflow-hidden bg-[var(--color-surface-muted)]">
+                    <div className="flex h-[200px]">
+                      {/* Sidebar */}
+                      <div className="w-[52px] bg-[var(--color-surface-default)] border-r border-[var(--color-border-default)] flex flex-col">
+                        <div className="p-2 border-b border-[var(--color-border-subtle)]">
+                          <div className="w-6 h-6 rounded bg-[var(--color-action-primary)] flex items-center justify-center">
+                            <span className="text-[6px] font-bold text-white">TDS</span>
+                          </div>
+                        </div>
+                        <div className="flex-1 p-2 space-y-1">
+                          <div className="h-2 bg-[var(--color-surface-muted)] rounded" />
+                          <div className="h-2 bg-[var(--color-action-primary)] rounded opacity-50" />
+                          <div className="h-2 bg-[var(--color-surface-muted)] rounded" />
+                          <div className="h-2 bg-[var(--color-surface-muted)] rounded" />
+                        </div>
+                        <div className="p-2 border-t border-[var(--color-border-subtle)] flex justify-center">
+                          <IconChevronLeft size={12} className="text-[var(--color-text-muted)]" />
+                        </div>
+                      </div>
+                      {/* Content */}
+                      <div className="flex-1 p-4 flex flex-col gap-3">
+                        <div className="h-4 w-32 bg-[var(--color-surface-default)] rounded" />
+                        <div className="flex-1 bg-[var(--color-surface-default)] rounded-[var(--radius-md)] p-3">
+                          <div className="space-y-2">
+                            <div className="h-2 bg-[var(--color-border-subtle)] rounded w-3/4" />
+                            <div className="h-2 bg-[var(--color-border-subtle)] rounded w-1/2" />
+                            <div className="h-2 bg-[var(--color-border-subtle)] rounded w-2/3" />
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    {/* Dimensions */}
+                    <div className="flex border-t border-[var(--color-border-default)] bg-[var(--color-surface-default)]">
+                      <div className="w-[52px] py-2 text-center border-r border-[var(--color-border-default)]">
+                        <span className="text-[length:var(--font-size-10)] font-mono text-[var(--color-action-primary)]">200px</span>
+                      </div>
+                      <div className="flex-1 py-2 text-center">
+                        <span className="text-[length:var(--font-size-10)] font-mono text-[var(--color-text-muted)]">Content Area (1720px max)</span>
+                      </div>
+                    </div>
+                  </div>
+                </VStack>
+
+                {/* Visual Diagram - Laptop */}
+                <VStack gap={4}>
+                  <Label>Laptop Layout (1440px)</Label>
+                  <div className="border border-[var(--color-border-default)] rounded-[var(--radius-lg)] overflow-hidden bg-[var(--color-surface-muted)] max-w-[600px]">
+                    <div className="flex h-[160px]">
+                      {/* Sidebar */}
+                      <div className="w-[42px] bg-[var(--color-surface-default)] border-r border-[var(--color-border-default)] flex flex-col">
+                        <div className="p-1.5 border-b border-[var(--color-border-subtle)]">
+                          <div className="w-5 h-5 rounded bg-[var(--color-action-primary)] flex items-center justify-center">
+                            <span className="text-[5px] font-bold text-white">TDS</span>
+                          </div>
+                        </div>
+                        <div className="flex-1 p-1.5 space-y-1">
+                          <div className="h-1.5 bg-[var(--color-surface-muted)] rounded" />
+                          <div className="h-1.5 bg-[var(--color-action-primary)] rounded opacity-50" />
+                          <div className="h-1.5 bg-[var(--color-surface-muted)] rounded" />
+                        </div>
+                      </div>
+                      {/* Content */}
+                      <div className="flex-1 p-3 flex flex-col gap-2">
+                        <div className="h-3 w-24 bg-[var(--color-surface-default)] rounded" />
+                        <div className="flex-1 bg-[var(--color-surface-default)] rounded-[var(--radius-md)] p-2">
+                          <div className="space-y-1.5">
+                            <div className="h-1.5 bg-[var(--color-border-subtle)] rounded w-3/4" />
+                            <div className="h-1.5 bg-[var(--color-border-subtle)] rounded w-1/2" />
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    {/* Dimensions */}
+                    <div className="flex border-t border-[var(--color-border-default)] bg-[var(--color-surface-default)]">
+                      <div className="w-[42px] py-1.5 text-center border-r border-[var(--color-border-default)]">
+                        <span className="text-[length:var(--font-size-9)] font-mono text-[var(--color-action-primary)]">200px</span>
+                      </div>
+                      <div className="flex-1 py-1.5 text-center">
+                        <span className="text-[length:var(--font-size-9)] font-mono text-[var(--color-text-muted)]">Content (1240px max)</span>
+                      </div>
+                    </div>
+                  </div>
+                </VStack>
+
+                {/* Sidebar Toggle States */}
+                <VStack gap={4}>
+                  <Label>Sidebar States</Label>
+                  <div className="grid grid-cols-2 gap-4">
+                    {/* Expanded */}
+                    <div className="border border-[var(--color-border-default)] rounded-[var(--radius-lg)] overflow-hidden">
+                      <div className="flex h-[120px] bg-[var(--color-surface-muted)]">
+                        <div className="w-[60px] bg-[var(--color-surface-default)] border-r border-[var(--color-border-default)] p-2">
+                          <div className="space-y-2">
+                            <div className="h-2 bg-[var(--color-action-primary)] rounded opacity-50" />
+                            <div className="h-2 bg-[var(--color-surface-muted)] rounded" />
+                            <div className="h-2 bg-[var(--color-surface-muted)] rounded" />
+                          </div>
+                        </div>
+                        <div className="flex-1 p-3">
+                          <div className="h-full bg-[var(--color-surface-default)] rounded" />
+                        </div>
+                      </div>
+                      <div className="p-2 bg-[var(--color-surface-default)] border-t border-[var(--color-border-default)] text-center">
+                        <span className="text-[length:var(--font-size-11)] text-[var(--color-text-default)]">Sidebar Expanded</span>
+                      </div>
+                    </div>
+                    {/* Collapsed */}
+                    <div className="border border-[var(--color-border-default)] rounded-[var(--radius-lg)] overflow-hidden">
+                      <div className="flex h-[120px] bg-[var(--color-surface-muted)]">
+                        <div className="w-0 bg-[var(--color-surface-default)] overflow-hidden transition-all" />
+                        <div className="flex-1 p-3">
+                          <div className="h-full bg-[var(--color-surface-default)] rounded flex items-start p-2">
+                            <div className="w-6 h-6 rounded bg-[var(--color-action-primary)] flex items-center justify-center cursor-pointer">
+                              <IconMenu2 size={12} className="text-white" />
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="p-2 bg-[var(--color-surface-default)] border-t border-[var(--color-border-default)] text-center">
+                        <span className="text-[length:var(--font-size-11)] text-[var(--color-text-default)]">Sidebar Collapsed</span>
+                      </div>
+                    </div>
+                  </div>
+                </VStack>
+
+                {/* CSS Variables */}
+                <VStack gap={3}>
+                  <Label>Layout Tokens</Label>
+                  <pre className="text-[length:var(--font-size-11)] p-4 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)] overflow-x-auto text-[var(--color-text-muted)]">
+{`/* Layout Variables */
+--layout-max-width: 1920px;      /* Maximum viewport */
+--layout-min-width: 1440px;      /* Minimum supported */
+--layout-sidebar-width: 200px;   /* Fixed sidebar width */
+--layout-sidebar-collapsed: 0px; /* Collapsed state */
+
+/* Content Area */
+--layout-content-padding: var(--spacing-8);  /* 32px */
+--layout-content-max-width: calc(100% - var(--layout-sidebar-width));
+
+/* Responsive behavior */
+@media (max-width: 1440px) {
+  /* Maintain same structure, content scales */
+}`}
+                  </pre>
+                </VStack>
+
+                {/* Notes */}
+                <div className="p-4 bg-[var(--color-state-info-bg)] rounded-[var(--radius-md)]">
+                  <div className="text-[length:var(--font-size-12)] text-[var(--color-state-info)]">
+                    <strong>📐 Layout Guidelines:</strong>
+                    <ul className="mt-2 space-y-1 list-disc list-inside">
+                      <li>Sidebar는 200px 고정, 숨김/표시 토글 가능</li>
+                      <li>1920px에서 1440px까지 반응형 지원</li>
+                      <li>1440px 미만은 모바일 레이아웃 (추후 확장)</li>
+                      <li>Content area는 sidebar 상태에 따라 자동 조절</li>
+                    </ul>
+                  </div>
+                </div>
+              </VStack>
+            </Section>
+
           </VStack>
         </div>
       </main>
+
+      {/* Scroll to Top Button */}
+      {showScrollTop && (
+        <button
+          onClick={scrollToTop}
+          className="fixed bottom-6 right-6 w-10 h-10 bg-[var(--color-action-primary)] hover:bg-[var(--color-action-primary-hover)] text-white rounded-full shadow-lg flex items-center justify-center transition-all duration-200 hover:scale-110 z-50"
+          aria-label="Scroll to top"
+        >
+          <IconChevronUp size={20} stroke={2} />
+        </button>
+      )}
     </div>
   );
 }

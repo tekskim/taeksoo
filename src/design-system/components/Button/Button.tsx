@@ -36,20 +36,20 @@ const buttonVariants = cva(
         secondary: [
           'bg-[var(--color-surface-default)] text-[var(--color-text-default)]',
           'border border-[var(--color-border-strong)]',
-          'hover:bg-[var(--color-surface-subtle)]',
+          'hover:bg-[var(--button-secondary-hover-bg)]',
           'active:bg-[var(--color-surface-default)]',
           'disabled:bg-[var(--color-surface-subtle)] disabled:text-[var(--color-text-disabled)] disabled:border-[var(--color-border-default)]',
         ],
         outline: [
           'bg-transparent text-[var(--color-text-default)]',
           'border border-[var(--color-border-strong)]',
-          'hover:bg-[var(--color-surface-subtle)]',
+          'hover:bg-[var(--button-secondary-hover-bg)]',
           'active:bg-[var(--color-surface-default)]',
           'disabled:text-[var(--color-text-disabled)] disabled:border-[var(--color-border-default)]',
         ],
         ghost: [
           'bg-transparent text-[var(--color-text-muted)]',
-          'hover:bg-[var(--color-surface-muted)]',
+          'hover:bg-[var(--button-ghost-hover-bg)]',
           'active:bg-[var(--color-border-default)]',
           'disabled:text-[var(--color-text-disabled)]',
         ],

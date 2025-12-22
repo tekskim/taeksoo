@@ -240,20 +240,20 @@
   --color-state-info-bg: var(--color-blue-50);
   --color-state-info-text: var(--color-blue-800);
 
-  /* State - Success */
-  --color-state-success: var(--color-green-600);
+  /* State - Success (Vivid) */
+  --color-state-success: var(--color-green-500);
   --color-state-success-bg: var(--color-green-50);
-  --color-state-success-text: var(--color-green-800);
+  --color-state-success-text: var(--color-green-600);
 
-  /* State - Warning */
-  --color-state-warning: var(--color-orange-600);
-  --color-state-warning-bg: var(--color-yellow-50);
-  --color-state-warning-text: var(--color-orange-800);
+  /* State - Warning (Vivid) */
+  --color-state-warning: var(--color-orange-500);
+  --color-state-warning-bg: var(--color-orange-50);
+  --color-state-warning-text: var(--color-orange-600);
 
-  /* State - Danger */
-  --color-state-danger: var(--color-red-600);
+  /* State - Danger (Vivid) */
+  --color-state-danger: var(--color-red-500);
   --color-state-danger-bg: var(--color-red-50);
-  --color-state-danger-text: var(--color-red-800);
+  --color-state-danger-text: var(--color-red-600);
 
   /* ========================================
      COMPONENT TOKENS
@@ -287,6 +287,10 @@
   --button-font-size-sm: var(--font-size-12);
   --button-font-size-md: var(--font-size-12);
   --button-font-size-lg: var(--font-size-14);
+
+  /* Button - Hover Colors */
+  --button-secondary-hover-bg: var(--color-slate-100);
+  --button-ghost-hover-bg: var(--color-slate-100);
 
   /* ----------------------------------------
      Component - Input
@@ -368,6 +372,7 @@
   --menu-item-padding-y: var(--spacing-1-5);
   --menu-item-gap: var(--spacing-1-5);
   --menu-item-radius: var(--radius-button);
+  --menu-item-hover-bg: var(--color-slate-100);
 
   --menu-section-padding-x: var(--spacing-2);
   --menu-section-padding-y: var(--spacing-1);
@@ -417,6 +422,8 @@
   --datepicker-cell-size: 32px;
   --datepicker-cell-gap: 6px;
   --datepicker-row-gap: var(--spacing-1-5);
+  --datepicker-range-bg: var(--color-blue-100);
+  --datepicker-hover-bg: var(--color-slate-100);
 
   /* ----------------------------------------
      Component - WindowControl
@@ -481,6 +488,9 @@
   --pagination-radius: var(--radius-sm);
   --pagination-font-size: var(--font-size-12);
   --pagination-line-height: var(--line-height-16);
+  --pagination-hover-bg: var(--color-slate-100);
+  --pagination-text: var(--color-text-muted);
+  --pagination-text-hover: var(--color-text-default);
 
   /* ----------------------------------------
      Component - ProgressBar
@@ -614,7 +624,8 @@
   --radio-checked-border-width: 5px;
   --radio-gap: var(--spacing-1-5);
 
-  /* Radio - Border */
+  /* Radio - Default */
+  --radio-bg: var(--color-white);
   --radio-border: var(--color-slate-300);
   --radio-border-hover: var(--color-action-primary);
   --radio-checked-border: var(--color-action-primary);
@@ -690,7 +701,8 @@
   --checkbox-radius: var(--radius-sm);
   --checkbox-gap: var(--spacing-1-5);
   
-  /* Checkbox - Border */
+  /* Checkbox - Default */
+  --checkbox-bg: var(--color-white);
   --checkbox-border: var(--color-border-strong);
   --checkbox-border-hover: var(--color-action-primary);
   
@@ -783,49 +795,123 @@
    ======================================== */
 
 .dark {
-  /* Action */
+  /* Action - 유지 */
   --color-action-primary: var(--color-blue-500);
   --color-action-primary-hover: var(--color-blue-400);
   --color-action-primary-active: var(--color-blue-300);
 
-  /* Text */
-  --color-text-default: var(--color-slate-50);
-  --color-text-muted: var(--color-slate-400);
-  --color-text-subtle: var(--color-slate-500);
-  --color-text-disabled: var(--color-slate-600);
-  --color-text-inverse: var(--color-slate-900);
+  /* Text - Linear Style (높은 대비) */
+  --color-text-default: #EBEBEB;           /* 거의 흰색 */
+  --color-text-muted: #A0A0A0;             /* 중간 회색 */
+  --color-text-subtle: #6B6B6B;            /* 연한 회색 */
+  --color-text-disabled: #4A4A4A;          /* 비활성 텍스트 */
+  --color-text-inverse: #0D0D0D;           /* 역전 텍스트 */
 
-  /* Surface */
-  --color-surface-default: var(--color-slate-900);
-  --color-surface-subtle: var(--color-slate-800);
-  --color-surface-muted: var(--color-slate-700);
-  --color-surface-inverse: var(--color-white);
+  /* Surface - RunPod Style */
+  --color-surface-default: #1C1C1C;        /* 카드, 모달 배경 */
+  --color-surface-subtle: #141414;         /* 앱 배경 (가장 어두움) */
+  --color-surface-muted: #252525;          /* 호버, 강조 배경 */
+  --color-surface-inverse: #FAFAFA;        /* 밝은 표면 */
 
-  /* Border */
-  --color-border-default: var(--color-slate-700);
-  --color-border-subtle: var(--color-slate-800);
-  --color-border-strong: var(--color-slate-600);
+  /* Border - RunPod Style */
+  --color-border-default: #2e2e2e;         /* 기본 보더 */
+  --color-border-subtle: #252525;          /* 미세한 구분선 */
+  --color-border-strong: #444444;          /* 강조 보더 */
   --color-border-focus: var(--color-blue-400);
 
   /* State - Info */
   --color-state-info: var(--color-blue-400);
-  --color-state-info-bg: var(--color-blue-900);
-  --color-state-info-text: var(--color-blue-200);
+  --color-state-info-bg: rgba(59, 130, 246, 0.12);  /* blue-500 12% - 더 은은하게 */
+  --color-state-info-text: var(--color-blue-300);
 
-  /* State - Success */
+  /* State - Success (유지) */
   --color-state-success: var(--color-green-400);
   --color-state-success-bg: var(--color-green-900);
   --color-state-success-text: var(--color-green-200);
 
-  /* State - Warning */
+  /* State - Warning (유지) */
   --color-state-warning: var(--color-orange-400);
   --color-state-warning-bg: var(--color-orange-900);
   --color-state-warning-text: var(--color-orange-200);
 
-  /* State - Danger */
+  /* State - Danger (유지) */
   --color-state-danger: var(--color-red-400);
   --color-state-danger-bg: var(--color-red-900);
   --color-state-danger-text: var(--color-red-200);
+
+  /* Input - Disabled (Dark Mode) */
+  --input-bg-disabled: #252525;              /* surface-muted */
+  --input-text-disabled: #4A4A4A;            /* text-disabled */
+
+  /* Select (Dark Mode) */
+  --select-bg-disabled: #252525;             /* surface-muted */
+  --select-menu-bg: #1C1C1C;                 /* surface-default */
+  --select-menu-border: #444444;             /* border-strong */
+  --select-item-hover-bg: #252525;           /* surface-muted */
+  --select-item-selected-bg: rgba(59, 130, 246, 0.15);  /* blue with opacity */
+  --select-item-selected-text: var(--color-blue-400);   /* 밝은 파랑 */
+
+  /* Radio (Dark Mode) */
+  --radio-bg: #1C1C1C;                       /* surface-default */
+  --radio-border: #444444;                   /* 더 밝은 보더 */
+  --radio-disabled-bg: #252525;
+  --radio-disabled-border: #333333;
+  --radio-disabled-dot: #4A4A4A;
+
+  /* Toggle (Dark Mode) */
+  --toggle-bg: #333333;                      /* Off 상태 배경 */
+  --toggle-disabled-bg: #1C1C1C;
+  --toggle-checked-disabled-bg: #333333;
+  --toggle-thumb-disabled: #4A4A4A;
+
+  /* Checkbox (Dark Mode) */
+  --checkbox-bg: #1C1C1C;                    /* surface-default */
+  --checkbox-border: #444444;                /* 더 밝은 보더 */
+  --checkbox-disabled-bg: #252525;
+  --checkbox-disabled-border: #333333;
+  --checkbox-disabled-checked-bg: #333333;
+  --checkbox-icon-disabled: #4A4A4A;
+
+  /* InlineMessage (Dark Mode) - 은은한 반투명 */
+  --inline-message-success-bg: rgba(34, 197, 94, 0.12);   /* green-500 12% */
+  --inline-message-success-icon: var(--color-green-400);
+  --inline-message-warning-bg: rgba(249, 115, 22, 0.12);  /* orange-500 12% */
+  --inline-message-warning-icon: var(--color-orange-400);
+  --inline-message-error-bg: rgba(239, 68, 68, 0.12);     /* red-500 12% */
+  --inline-message-error-icon: var(--color-red-400);
+  --inline-message-info-bg: rgba(59, 130, 246, 0.12);     /* blue-500 12% */
+  --inline-message-info-icon: var(--color-blue-400);
+
+  /* Breadcrumb (Dark Mode) */
+  --breadcrumb-text-color: #A0A0A0;          /* 더 밝은 회색 */
+  --breadcrumb-text-hover: #EBEBEB;          /* 거의 흰색 */
+  --breadcrumb-text-current: #EBEBEB;        /* 거의 흰색 */
+  --breadcrumb-separator-color: #6B6B6B;     /* 구분자는 약간 어둡게 */
+
+  /* Tabs (Dark Mode) */
+  --tabs-inactive-color: #A0A0A0;            /* 비활성 탭 - 더 밝게 */
+  --tabs-hover-color: #EBEBEB;               /* 호버 - 거의 흰색 */
+
+  /* Pagination (Dark Mode) */
+  --pagination-hover-bg: #2a2a2a;            /* 명확한 호버 배경 */
+  --pagination-text: #A0A0A0;                /* 비활성 페이지 */
+  --pagination-text-hover: #EBEBEB;          /* 호버 텍스트 */
+
+  /* Status Indicator (Dark Mode) */
+  --status-text: var(--color-white);         /* 컬러 배경 위에는 항상 흰색 텍스트 */
+
+  /* Menu Item (Dark Mode) */
+  --menu-item-hover-bg: #2a2a2a;                    /* 호버 배경 - 밝아지는 방향 */
+  --menu-item-active-bg: rgba(59, 130, 246, 0.15);  /* blue-500 with 15% opacity */
+  --menu-item-active-text: var(--color-blue-400);   /* 더 밝은 파랑 */
+
+  /* DatePicker (Dark Mode) */
+  --datepicker-range-bg: #253754;                   /* 기간 선택 배경 - solid color */
+  --datepicker-hover-bg: #2a2a2a;                   /* 호버 배경 */
+
+  /* Button (Dark Mode) - 일관되게 밝아지는 방향 */
+  --button-secondary-hover-bg: #2a2a2a;             /* surface-default보다 밝게 */
+  --button-ghost-hover-bg: #2a2a2a;                 /* 동일하게 */
 }
 
 /* ========================================

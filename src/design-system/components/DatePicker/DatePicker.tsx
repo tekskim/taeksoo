@@ -286,7 +286,7 @@ export const DatePicker: React.FC<DatePickerProps> = ({
             flex items-center justify-center
             w-6 h-6
             text-[var(--color-text-default)]
-            hover:bg-[var(--color-surface-subtle)]
+            hover:bg-[var(--datepicker-hover-bg)]
             rounded-[var(--radius-button)]
             transition-colors duration-[var(--duration-fast)]
           "
@@ -314,7 +314,7 @@ export const DatePicker: React.FC<DatePickerProps> = ({
             flex items-center justify-center
             w-6 h-6
             text-[var(--color-text-default)]
-            hover:bg-[var(--color-surface-subtle)]
+            hover:bg-[var(--datepicker-hover-bg)]
             rounded-[var(--radius-button)]
             transition-colors duration-[var(--duration-fast)]
           "
@@ -371,21 +371,21 @@ export const DatePicker: React.FC<DatePickerProps> = ({
             if (isInRange) {
               if (day.isRangeStart) {
                 // Range start: round left, square right (extend to edge)
-                rangeBgClass = 'before:absolute before:inset-y-0 before:left-1/2 before:right-0 before:bg-[var(--color-state-info-bg)]';
+                rangeBgClass = 'before:absolute before:inset-y-0 before:left-1/2 before:right-0 before:bg-[var(--datepicker-range-bg)]';
                 if (isLastCol) {
-                  rangeBgClass = 'before:absolute before:inset-y-0 before:left-1/2 before:right-[-3px] before:bg-[var(--color-state-info-bg)]';
+                  rangeBgClass = 'before:absolute before:inset-y-0 before:left-1/2 before:right-[-3px] before:bg-[var(--datepicker-range-bg)]';
                 }
               } else if (day.isRangeEnd) {
                 // Range end: square left (extend to edge), round right
-                rangeBgClass = 'before:absolute before:inset-y-0 before:left-0 before:right-1/2 before:bg-[var(--color-state-info-bg)]';
+                rangeBgClass = 'before:absolute before:inset-y-0 before:left-0 before:right-1/2 before:bg-[var(--datepicker-range-bg)]';
                 if (isFirstCol) {
-                  rangeBgClass = 'before:absolute before:inset-y-0 before:left-[-3px] before:right-1/2 before:bg-[var(--color-state-info-bg)]';
+                  rangeBgClass = 'before:absolute before:inset-y-0 before:left-[-3px] before:right-1/2 before:bg-[var(--datepicker-range-bg)]';
                 }
               } else {
                 // In range: full background, extend to fill gaps
                 let leftExtend = isFirstCol ? '0' : '-3px';
                 let rightExtend = isLastCol ? '0' : '-3px';
-                rangeBgClass = `before:absolute before:inset-y-0 before:left-[${leftExtend}] before:right-[${rightExtend}] before:bg-[var(--color-state-info-bg)]`;
+                rangeBgClass = `before:absolute before:inset-y-0 before:left-[${leftExtend}] before:right-[${rightExtend}] before:bg-[var(--datepicker-range-bg)]`;
               }
             }
 
@@ -403,7 +403,7 @@ export const DatePicker: React.FC<DatePickerProps> = ({
                 {/* Range background layer - only when both start and end are selected */}
                 {hasCompleteRange && isInRange && !day.isRangeStart && !day.isRangeEnd && (
                   <div 
-                    className="absolute inset-y-0 bg-[var(--color-state-info-bg)]"
+                    className="absolute inset-y-0 bg-[var(--datepicker-range-bg)]"
                     style={{
                       left: isFirstCol ? 0 : -3,
                       right: isLastCol ? 0 : -3,
@@ -412,7 +412,7 @@ export const DatePicker: React.FC<DatePickerProps> = ({
                 )}
                 {hasCompleteRange && day.isRangeStart && (
                   <div 
-                    className="absolute inset-y-0 bg-[var(--color-state-info-bg)]"
+                    className="absolute inset-y-0 bg-[var(--datepicker-range-bg)]"
                     style={{
                       left: '50%',
                       right: isLastCol ? 0 : -3,
@@ -421,7 +421,7 @@ export const DatePicker: React.FC<DatePickerProps> = ({
                 )}
                 {hasCompleteRange && day.isRangeEnd && (
                   <div 
-                    className="absolute inset-y-0 bg-[var(--color-state-info-bg)]"
+                    className="absolute inset-y-0 bg-[var(--datepicker-range-bg)]"
                     style={{
                       left: isFirstCol ? 0 : -3,
                       right: '50%',
@@ -447,8 +447,8 @@ export const DatePicker: React.FC<DatePickerProps> = ({
                     ${isSelected
                       ? 'bg-[var(--color-action-primary)] text-[var(--color-text-on-primary)]'
                       : day.isCurrentMonth
-                        ? 'text-[var(--color-text-default)] hover:bg-[var(--color-surface-subtle)]'
-                        : 'text-[var(--color-text-muted)] hover:bg-[var(--color-surface-subtle)]'
+                        ? 'text-[var(--color-text-default)] hover:bg-[var(--datepicker-hover-bg)]'
+                        : 'text-[var(--color-text-muted)] hover:bg-[var(--datepicker-hover-bg)]'
                     }
                     ${day.isDisabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}
                     ${day.isToday && !isSelected ? 'ring-1 ring-[var(--color-action-primary)]' : ''}

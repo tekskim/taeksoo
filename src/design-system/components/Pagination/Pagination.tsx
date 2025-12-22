@@ -123,9 +123,9 @@ export const Pagination: React.FC<PaginationProps> = ({
 
   const pageButtonClass = `
     ${baseButtonClass}
-    text-[var(--color-text-muted)]
-    hover:bg-[var(--color-surface-subtle)]
-    hover:text-[var(--color-text-default)]
+    text-[var(--pagination-text)]
+    hover:bg-[var(--pagination-hover-bg)]
+    hover:text-[var(--pagination-text-hover)]
   `;
 
   const activePageClass = `
@@ -136,9 +136,9 @@ export const Pagination: React.FC<PaginationProps> = ({
 
   const navButtonClass = `
     ${baseButtonClass}
-    text-[var(--color-text-muted)]
-    hover:bg-[var(--color-surface-subtle)]
-    hover:text-[var(--color-text-default)]
+    text-[var(--pagination-text)]
+    hover:bg-[var(--pagination-hover-bg)]
+    hover:text-[var(--pagination-text-hover)]
     disabled:text-[var(--color-text-disabled)]
     disabled:cursor-not-allowed
     disabled:hover:bg-transparent
@@ -148,7 +148,7 @@ export const Pagination: React.FC<PaginationProps> = ({
     inline-flex items-center justify-center
     size-[var(--pagination-item-size)]
     text-[length:var(--pagination-font-size)]
-    text-[var(--color-text-muted)]
+    text-[var(--pagination-text)]
   `;
 
   return (

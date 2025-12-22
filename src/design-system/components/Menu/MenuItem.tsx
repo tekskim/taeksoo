@@ -50,10 +50,10 @@ export function MenuItem({
   ].join(' ');
 
   const stateStyles = active
-    ? 'bg-[var(--color-state-info-bg)] text-[var(--color-action-primary)] font-medium'
+    ? 'bg-[var(--menu-item-active-bg,var(--color-state-info-bg))] text-[var(--menu-item-active-text,var(--color-action-primary))] font-medium'
     : disabled
     ? 'text-[var(--color-text-disabled)] cursor-not-allowed'
-    : 'text-[var(--color-text-default)] hover:bg-[var(--color-surface-subtle)] font-normal';
+    : 'text-[var(--color-text-default)] hover:bg-[var(--menu-item-hover-bg)] font-normal';
 
   return (
     <Component
@@ -64,13 +64,13 @@ export function MenuItem({
       aria-disabled={disabled}
     >
       {icon && (
-        <span className={`shrink-0 ${active ? 'text-[var(--color-action-primary)]' : 'text-[var(--color-text-default)]'}`}>
+        <span className={`shrink-0 ${active ? 'text-[var(--menu-item-active-text,var(--color-action-primary))]' : 'text-[var(--color-text-default)]'}`}>
           {icon}
         </span>
       )}
       <span className="flex-1 text-left truncate">{label}</span>
       {badge && (
-        <span className="px-1.5 py-0.5 text-[10px] font-medium bg-[var(--color-state-info-bg)] text-[var(--color-action-primary)] rounded">
+        <span className="px-1.5 py-0.5 text-[10px] font-medium bg-[var(--menu-item-active-bg,var(--color-state-info-bg))] text-[var(--menu-item-active-text,var(--color-action-primary))] rounded">
           {badge}
         </span>
       )}

@@ -3,17 +3,24 @@ import { InstanceListPage } from '@/pages/InstanceListPage';
 import { DesignSystemPage } from '@/pages/DesignSystemPage';
 import { TopologyD3Page } from '@/pages/TopologyD3Page';
 import { GradientShowcasePage } from '@/pages/GradientShowcasePage';
+import ColorPalettePage from '@/pages/ColorPalettePage';
+import MetallicPalettePage from '@/pages/MetallicPalettePage';
+import { DarkModeProvider } from '@/hooks/useDarkMode';
 
 function App() {
   return (
-    <BrowserRouter basename="/topology">
-      <Routes>
-        <Route path="/" element={<InstanceListPage />} />
-        <Route path="/topology" element={<TopologyD3Page />} />
-        <Route path="/design-system" element={<DesignSystemPage />} />
-        <Route path="/gradients" element={<GradientShowcasePage />} />
-      </Routes>
-    </BrowserRouter>
+    <DarkModeProvider>
+      <BrowserRouter basename="/instances-list">
+        <Routes>
+          <Route path="/" element={<InstanceListPage />} />
+          <Route path="/topology" element={<TopologyD3Page />} />
+          <Route path="/design-system" element={<DesignSystemPage />} />
+          <Route path="/gradients" element={<GradientShowcasePage />} />
+          <Route path="/color-palette" element={<ColorPalettePage />} />
+          <Route path="/metallic-palette" element={<MetallicPalettePage />} />
+        </Routes>
+      </BrowserRouter>
+    </DarkModeProvider>
   );
 }
 
