@@ -24,7 +24,7 @@ interface TabBarProps {
 
 export function TabBar({ tabs, onTabClose, onTabClick, onNewTab }: TabBarProps) {
   return (
-    <div className="h-8 bg-neutral-50 border-b border-neutral-200 flex items-center justify-between pr-4">
+    <div className="h-8 bg-[var(--color-surface-subtle)] border-b border-[var(--color-border-default)] flex items-center justify-between pr-4">
       {/* Tab Container */}
       <div className="flex items-center">
         {tabs.map((tab) => (
@@ -33,13 +33,13 @@ export function TabBar({ tabs, onTabClose, onTabClick, onNewTab }: TabBarProps) 
             className={`
               flex items-center gap-3 px-3 py-2 cursor-pointer
               ${tab.active
-                ? 'bg-white border-r border-neutral-200'
-                : 'hover:bg-neutral-100'
+                ? 'bg-[var(--color-surface-default)] border-r border-[var(--color-border-default)]'
+                : 'hover:bg-[var(--color-surface-muted)]'
               }
             `}
             onClick={() => onTabClick?.(tab.id)}
           >
-            <span className="text-xs font-medium text-neutral-900">
+            <span className="text-xs font-medium text-[var(--color-text-default)]">
               {tab.label}
             </span>
             <button
@@ -47,9 +47,9 @@ export function TabBar({ tabs, onTabClose, onTabClick, onNewTab }: TabBarProps) 
                 e.stopPropagation();
                 onTabClose?.(tab.id);
               }}
-              className="p-0.5 hover:bg-neutral-200 rounded transition-colors"
+              className="p-0.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
             >
-              <IconX size={12} className="text-neutral-900" stroke={2} />
+              <IconX size={12} className="text-[var(--color-text-default)]" stroke={2} />
             </button>
           </div>
         ))}
@@ -57,9 +57,9 @@ export function TabBar({ tabs, onTabClose, onTabClick, onNewTab }: TabBarProps) 
         {/* New Tab Button */}
         <button
           onClick={onNewTab}
-          className="p-2 hover:bg-neutral-100 rounded-md transition-colors"
+          className="p-2 hover:bg-[var(--color-surface-muted)] rounded-md transition-colors"
         >
-          <IconPlus size={16} className="text-neutral-900" stroke={1.5} />
+          <IconPlus size={16} className="text-[var(--color-text-default)]" stroke={1.5} />
         </button>
       </div>
 
@@ -79,15 +79,15 @@ export function TabBar({ tabs, onTabClose, onTabClick, onNewTab }: TabBarProps) 
 
 function WindowControl({ type }: { type: 'minimize' | 'maximize' | 'close' }) {
   return (
-    <button className="w-4 h-4 flex items-center justify-center hover:bg-neutral-200 rounded transition-colors">
+    <button className="w-4 h-4 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors">
       {type === 'minimize' && (
-        <IconMinus size={10} className="text-neutral-900" stroke={2} />
+        <IconMinus size={10} className="text-[var(--color-text-default)]" stroke={2} />
       )}
       {type === 'maximize' && (
-        <div className="w-[6px] h-[6px] border border-neutral-900 rounded-[1px]" />
+        <div className="w-[6px] h-[6px] border border-[var(--color-text-default)] rounded-[1px]" />
       )}
       {type === 'close' && (
-        <IconX size={10} className="text-neutral-900" stroke={2} />
+        <IconX size={10} className="text-[var(--color-text-default)]" stroke={2} />
       )}
     </button>
   );

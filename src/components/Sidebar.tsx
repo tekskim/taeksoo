@@ -34,28 +34,28 @@ import { Link } from 'react-router-dom';
 
 export function Sidebar() {
   return (
-    <aside className="w-[200px] h-screen bg-white border-r border-neutral-200 flex flex-col fixed left-0 top-0">
+    <aside className="w-[200px] h-screen bg-[var(--color-surface-default)] border-r border-[var(--color-border-default)] flex flex-col fixed left-0 top-0">
       {/* Logo */}
       <div className="h-8 px-3 flex items-center justify-between">
         <HStack gap={2}>
-          <div className="w-4 h-4 rounded bg-neutral-900 flex items-center justify-center">
-            <span className="text-[8px] font-bold text-white">◇</span>
+          <div className="w-4 h-4 rounded bg-[var(--color-text-default)] flex items-center justify-center">
+            <span className="text-[8px] font-bold text-[var(--color-text-inverse)]">◇</span>
           </div>
-          <span className="text-xs font-medium text-neutral-900">
+          <span className="text-xs font-medium text-[var(--color-text-default)]">
             <span className="font-semibold">THAKI</span>
-            <span className="text-neutral-400 ml-0.5">Cloud</span>
+            <span className="text-[var(--color-text-muted)] ml-0.5">Cloud</span>
           </span>
         </HStack>
-        <button className="p-1 hover:bg-neutral-100 rounded transition-colors">
-          <IconLayoutSidebar size={16} className="text-neutral-400" stroke={1.5} />
+        <button className="p-1 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
+          <IconLayoutSidebar size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
         </button>
       </div>
 
       {/* Project Selector */}
       <div className="px-3 py-2">
-        <button className="w-full px-2.5 py-1.5 rounded-md bg-neutral-50 hover:bg-neutral-100 transition-colors flex items-center justify-between">
-          <span className="text-[11px] font-medium text-neutral-900">Proj-1</span>
-          <IconTransfer size={16} className="text-neutral-900" stroke={1.5} />
+        <button className="w-full px-2.5 py-1.5 rounded-md bg-[var(--color-surface-subtle)] hover:bg-[var(--color-surface-muted)] transition-colors flex items-center justify-between">
+          <span className="text-[11px] font-medium text-[var(--color-text-default)]">Proj-1</span>
+          <IconTransfer size={16} className="text-[var(--color-text-default)]" stroke={1.5} />
         </button>
       </div>
 

@@ -37,7 +37,7 @@ export function BreadcrumbNavigation({
   }));
 
   return (
-    <div className="h-8 bg-white border-b border-[var(--color-border-default)] px-3 flex items-center justify-between">
+    <div className="h-8 bg-[var(--color-surface-default)] border-b border-[var(--color-border-default)] px-3 flex items-center justify-between">
       {/* Left: Navigation + Breadcrumbs */}
       <HStack gap={2} align="center">
         {/* Navigation Buttons */}
