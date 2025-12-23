@@ -7,12 +7,14 @@ import {
   Pagination,
   HStack,
   VStack,
+  TabBar,
+  TopBar,
+  TopBarAction,
+  Breadcrumb,
   type TableColumn,
   type StatusType,
 } from '@/design-system';
 import { Sidebar } from '@/components/Sidebar';
-import { TabBar } from '@/components/TabBar';
-import { BreadcrumbNavigation } from '@/components/BreadcrumbNavigation';
 import {
   IconPlus,
   IconFilter,
@@ -25,6 +27,7 @@ import {
   IconRefresh,
   IconLock,
   IconArrowUp,
+  IconBell,
 } from '@tabler/icons-react';
 
 /* ----------------------------------------
@@ -296,17 +299,35 @@ export function InstanceListPage() {
         {/* Tab Bar */}
         <TabBar
           tabs={[
-            { id: 'instances', label: 'Instances List', active: true },
+            { id: 'instances', label: 'Instances List', closable: true },
           ]}
+          activeTab="instances"
+          onTabChange={() => {}}
+          onTabClose={() => {}}
+          onTabAdd={() => {}}
         />
 
-        {/* Breadcrumb Navigation */}
-        <BreadcrumbNavigation
-          items={[
-            { label: 'Proj-1', href: '/project' },
-            { label: 'Instances List', active: true },
-          ]}
-          hasNotification={true}
+        {/* Top Bar with Breadcrumb Navigation */}
+        <TopBar
+          showSidebarToggle={false}
+          showNavigation={true}
+          onBack={() => window.history.back()}
+          onForward={() => window.history.forward()}
+          breadcrumb={
+            <Breadcrumb
+              items={[
+                { label: 'Proj-1', href: '/project' },
+                { label: 'Instances List' },
+              ]}
+            />
+          }
+          actions={
+            <TopBarAction
+              icon={<IconBell size={16} stroke={1.5} />}
+              aria-label="Notifications"
+              badge={true}
+            />
+          }
         />
 
         {/* Page Content */}
