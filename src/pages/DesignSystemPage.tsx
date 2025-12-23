@@ -1680,6 +1680,7 @@ outline: 2px solid var(--color-border-focus);`}
                     <Button size="sm" variant="secondary">Secondary</Button>
                     <Button size="sm" variant="outline">Outline</Button>
                     <Button size="sm" variant="ghost">Ghost</Button>
+                    <Button size="sm" variant="muted">Muted</Button>
                     <Button size="sm" variant="danger">Danger</Button>
                     <Button size="sm" variant="link">Link</Button>
                   </div>
@@ -1693,6 +1694,15 @@ outline: 2px solid var(--color-border-focus);`}
                     <Button size="sm" rightIcon={<IconArrowRight size={14} />}>Right Icon</Button>
                     <Button size="sm" icon={<IconHeart size={14} />} aria-label="Like" />
                     <Button size="sm" variant="secondary" icon={<IconStar size={14} />} aria-label="Star" />
+                  </div>
+                  <div className="mt-4"><Label>Icon + Text (Action Buttons)</Label></div>
+                  <div className="flex flex-wrap gap-3">
+                    <Button size="sm" variant="secondary" leftIcon={<IconPlayerPlay size={12} />}>Start</Button>
+                    <Button size="sm" variant="muted" leftIcon={<IconPlayerPlay size={12} />}>Start</Button>
+                    <Button size="sm" variant="secondary" leftIcon={<IconPlus size={12} />}>Create</Button>
+                    <Button size="sm" variant="muted" leftIcon={<IconPlus size={12} />}>Create</Button>
+                    <Button size="sm" variant="secondary" leftIcon={<IconEdit size={12} />}>Edit</Button>
+                    <Button size="sm" variant="muted" leftIcon={<IconEdit size={12} />}>Edit</Button>
                   </div>
                 </VStack>
 

@@ -53,6 +53,13 @@ const buttonVariants = cva(
           'active:bg-[var(--color-border-default)]',
           'disabled:text-[var(--color-text-disabled)]',
         ],
+        muted: [
+          'bg-[var(--color-surface-default)] text-[var(--color-text-muted)]',
+          'border border-[var(--color-border-default)]',
+          'hover:bg-[var(--color-surface-subtle)] hover:text-[var(--color-text-default)] hover:border-[var(--color-border-strong)]',
+          'active:bg-[var(--color-surface-default)]',
+          'disabled:bg-[var(--color-surface-subtle)] disabled:text-[var(--color-text-disabled)] disabled:border-[var(--color-border-subtle)]',
+        ],
         danger: [
           'bg-[var(--color-state-danger)] text-[var(--color-text-on-primary)]',
           'hover:bg-[var(--color-red-700)]',
