@@ -5,7 +5,7 @@ import path from 'path'
 
 // https://vite.dev/config/
 export default defineConfig({
-  base: '/instances-list/', // GitHub Pages 배포용
+  base: '/topology/', // GitHub Pages 배포용 (저장소명과 일치)
   plugins: [react(), tailwindcss()],
   resolve: {
     alias: {

@@ -10,7 +10,7 @@ import { DarkModeProvider } from '@/hooks/useDarkMode';
 function App() {
   return (
     <DarkModeProvider>
-      <BrowserRouter basename="/instances-list">
+      <BrowserRouter basename="/topology">
         <Routes>
           <Route path="/" element={<InstanceListPage />} />
           <Route path="/topology" element={<TopologyD3Page />} />
