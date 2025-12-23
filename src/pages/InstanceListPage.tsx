@@ -228,18 +228,12 @@ export function InstanceListPage() {
       label: 'Fixed IP',
       width: '120px',
       sortable: true,
-      render: (value) => (
-        <span className="font-mono text-[var(--color-text-default)]">{value}</span>
-      ),
     },
     {
       key: 'type',
       label: 'Flavor',
       width: '110px',
       sortable: true,
-      render: (value) => (
-        <span className="font-mono text-[var(--color-text-default)]">{value}</span>
-      ),
     },
     {
       key: 'cpu',
