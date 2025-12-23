@@ -169,7 +169,7 @@ export const TabBar: React.FC<TabBarProps> = ({
             rounded-[var(--radius-sm)]
             text-[var(--color-text-muted)]
             transition-colors duration-[var(--duration-fast)]
-            hover:bg-[var(--color-surface-subtle)]
+            hover:bg-[var(--tabbar-hover-bg)]
             hover:text-[var(--color-text-default)]
           "
           aria-label="Add new tab"

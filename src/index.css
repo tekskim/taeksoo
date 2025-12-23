@@ -506,6 +506,7 @@
   --tabbar-close-size: 16px;
   --tabbar-add-size: 28px;
   --tabbar-add-margin: var(--spacing-1);
+  --tabbar-hover-bg: var(--color-surface-muted);
 
   /* ----------------------------------------
      Component - TopBar
@@ -983,6 +984,9 @@
 
   /* TopBar (Dark Mode) */
   --topbar-button-hover-bg: #2a2a2a;                /* 버튼 호버 배경 */
+
+  /* TabBar (Dark Mode) */
+  --tabbar-hover-bg: #2a2a2a;                       /* 탭바 호버 배경 */
 
   /* Button (Dark Mode) - 일관되게 밝아지는 방향 */
   --button-secondary-hover-bg: #2a2a2a;             /* surface-default보다 밝게 */
