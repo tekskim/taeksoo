@@ -22,10 +22,10 @@ import {
   IconScale,
   IconCertificate,
   IconTopologyRing,
-  IconTransfer,
   IconLayoutSidebar,
   IconPalette,
 } from '@tabler/icons-react';
+import { ArrowRightLeft } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 /* ----------------------------------------
@@ -55,7 +55,7 @@ export function Sidebar() {
       <div className="px-3 py-2">
         <button className="w-full px-2.5 py-1.5 rounded-md bg-[var(--color-surface-subtle)] hover:bg-[var(--color-surface-muted)] transition-colors flex items-center justify-between">
           <span className="text-[11px] font-medium text-[var(--color-text-default)]">Proj-1</span>
-          <IconTransfer size={16} className="text-[var(--color-text-default)]" stroke={1.5} />
+          <ArrowRightLeft size={16} className="text-[var(--color-text-default)]" strokeWidth={1.5} />
         </button>
       </div>
 
