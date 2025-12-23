@@ -2131,7 +2131,7 @@ outline: 2px solid var(--color-border-focus);`}
                 <VStack gap={3}>
                   <Label>Design Tokens</Label>
                   <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
-                    <code>item-size: 28px</code> · <code>gap: 4px</code> · <code>radius: 4px</code> · <code>font: 12px</code>
+                    <code>item-size: 24px</code> · <code>gap: 4px</code> · <code>radius: 4px</code> · <code>font: 11px</code>
                   </div>
                 </VStack>
 
@@ -2183,6 +2183,19 @@ outline: 2px solid var(--color-border-focus);`}
                     totalPages={10}
                     onPageChange={(page) => console.log('Page:', page)}
                     disabled
+                  />
+                </VStack>
+
+                {/* With Settings & Total Items */}
+                <VStack gap={3}>
+                  <Label>With Settings & Total Items</Label>
+                  <Pagination
+                    currentPage={demoPage1}
+                    totalPages={10}
+                    onPageChange={setDemoPage1}
+                    showSettings
+                    onSettingsClick={() => console.log('Settings clicked')}
+                    totalItems={115}
                   />
                 </VStack>
               </VStack>

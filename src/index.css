@@ -320,7 +320,7 @@
 
   --button-radius: var(--radius-button);
 
-  --button-font-size-sm: var(--font-size-12);
+  --button-font-size-sm: var(--font-size-11);
   --button-font-size-md: var(--font-size-12);
   --button-font-size-lg: var(--font-size-14);
 
@@ -524,8 +524,8 @@
   /* ----------------------------------------
      Component - Pagination
      ---------------------------------------- */
-  --pagination-item-size: 28px;
-  --pagination-gap: var(--spacing-1);
+  --pagination-item-size: 24px;
+  --pagination-gap: var(--spacing-2);
   --pagination-radius: var(--radius-sm);
   --pagination-font-size: var(--font-size-12);
   --pagination-line-height: var(--line-height-16);
@@ -1094,7 +1094,7 @@
 }
 
 .table-scroll-container::-webkit-scrollbar-track {
-  background: var(--color-surface-muted);
+  background: transparent;
   border-radius: var(--radius-full);
 }
 
@@ -1111,5 +1111,61 @@
 /* Firefox */
 .table-scroll-container {
   scrollbar-width: thin;
-  scrollbar-color: var(--color-border-strong) var(--color-surface-muted);
+  scrollbar-color: var(--color-border-strong) transparent;
+}
+
+/* Sidebar Scrollbar */
+.sidebar-scroll::-webkit-scrollbar {
+  width: 6px;
+}
+
+.sidebar-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.sidebar-scroll::-webkit-scrollbar-thumb {
+  background: var(--color-border-default);
+  border-radius: var(--radius-full);
+}
+
+.sidebar-scroll::-webkit-scrollbar-thumb:hover {
+  background: var(--color-border-strong);
+}
+
+/* Firefox */
+.sidebar-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-border-default) transparent;
+}
+
+/* Drawer Scrollbar */
+.drawer-scroll::-webkit-scrollbar {
+  width: 6px;
+}
+
+.drawer-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.drawer-scroll::-webkit-scrollbar-thumb {
+  background: var(--color-border-default);
+  border-radius: var(--radius-full);
+}
+
+.drawer-scroll::-webkit-scrollbar-thumb:hover {
+  background: var(--color-border-strong);
+}
+
+/* Firefox + padding */
+.drawer-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-border-default) transparent;
+  padding-right: 2px;
+}
+
+/* Hide native search input clear button */
+input[type="search"]::-webkit-search-cancel-button,
+input[type="search"]::-webkit-search-decoration {
+  -webkit-appearance: none;
+  appearance: none;
 }

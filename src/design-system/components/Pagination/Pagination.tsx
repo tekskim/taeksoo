@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import { IconChevronLeft, IconChevronRight } from '@tabler/icons-react';
+import { IconChevronLeft, IconChevronRight, IconSettings } from '@tabler/icons-react';
 
 /* ----------------------------------------
    Types
@@ -18,6 +18,12 @@ export interface PaginationProps {
   showFirstLast?: boolean;
   /** Disabled state */
   disabled?: boolean;
+  /** Show settings button */
+  showSettings?: boolean;
+  /** Callback when settings button is clicked */
+  onSettingsClick?: () => void;
+  /** Total number of items (displayed after divider) */
+  totalItems?: number;
   /** Custom class name */
   className?: string;
 }
@@ -44,6 +50,9 @@ export const Pagination: React.FC<PaginationProps> = ({
   siblingCount = 1,
   // showFirstLast = true, // Reserved for future use
   disabled = false,
+  showSettings = false,
+  onSettingsClick,
+  totalItems,
   className = '',
 }) => {
   // Generate pagination range with dots
@@ -206,6 +215,29 @@ export const Pagination: React.FC<PaginationProps> = ({
       >
         <IconChevronRight size={14} stroke={2} />
       </button>
+
+      {/* Settings Button */}
+      {showSettings && (
+        <button
+          type="button"
+          onClick={onSettingsClick}
+          disabled={disabled}
+          className={navButtonClass}
+          aria-label="Pagination settings"
+        >
+          <IconSettings size={16} stroke={1.5} />
+        </button>
+      )}
+
+      {/* Divider and Total Items */}
+      {totalItems !== undefined && (
+        <>
+          <div className="h-4 w-px bg-[var(--color-border-default)]" />
+          <span className="text-[length:var(--font-size-11)] leading-[var(--line-height-16)] text-[var(--color-text-subtle)]">
+            {totalItems} items
+          </span>
+        </>
+      )}
     </nav>
   );
 };

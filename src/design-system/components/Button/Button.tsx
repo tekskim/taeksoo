@@ -58,7 +58,7 @@ const buttonVariants = cva(
           'border border-[var(--color-border-default)]',
           'hover:bg-[var(--color-surface-subtle)] hover:text-[var(--color-text-default)] hover:border-[var(--color-border-strong)]',
           'active:bg-[var(--color-surface-default)]',
-          'disabled:bg-[var(--color-surface-subtle)] disabled:text-[var(--color-text-disabled)] disabled:border-[var(--color-border-subtle)]',
+          'disabled:bg-[var(--color-surface-default)] disabled:text-[var(--color-text-disabled)] disabled:border-[var(--color-border-default)]',
         ],
         danger: [
           'bg-[var(--color-state-danger)] text-[var(--color-text-on-primary)]',

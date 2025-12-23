@@ -11,24 +11,28 @@ import {
   TopBar,
   TopBarAction,
   Breadcrumb,
+  Tabs,
+  TabList,
+  Tab,
+  Chip,
   type TableColumn,
   type StatusType,
 } from '@/design-system';
 import { Sidebar } from '@/components/Sidebar';
 import {
   IconPlus,
-  IconFilter,
   IconDotsVertical,
   IconPlayerPlay,
   IconPlayerStop,
   IconTrash,
-  IconCpu,
-  IconServer,
   IconRefresh,
-  IconLock,
   IconArrowUp,
   IconBell,
+  IconDownload,
+  IconLock,
+  IconTerminal2,
 } from '@tabler/icons-react';
+import { ViewPreferencesDrawer, defaultColumns, type ColumnConfig } from '@/components/ViewPreferencesDrawer';
 
 /* ----------------------------------------
    Types
@@ -39,15 +43,31 @@ type InstanceStatus = 'running' | 'stopped' | 'pending' | 'error' | 'building';
 interface Instance {
   id: string;
   name: string;
-  type: string;
   status: InstanceStatus;
-  cpu: number;
-  memory: number;
-  storage: number;
+  locked: boolean;
+  fixedIp: string;
+  floatingIp: string;
+  image: string;
+  flavor: string;
+  vcpu: number;
+  ram: string;
+  disk: string;
+  gpu: string;
+  az: string;
+}
+
+interface BareMetalInstance {
+  id: string;
+  name: string;
+  status: InstanceStatus;
   ip: string;
-  region: string;
-  locked?: boolean;
-  createdAt: string;
+  image: string;
+  flavor: string;
+  cpu: number;
+  ram: string;
+  disk: string;
+  gpu: string;
+  az: string;
 }
 
 /* ----------------------------------------
@@ -55,92 +75,29 @@ interface Instance {
    ---------------------------------------- */
 
 const mockInstances: Instance[] = [
-  {
-    id: 'i-001',
-    name: 'production-api-1',
-    type: 'c5.xlarge',
-    status: 'running',
-    cpu: 4,
-    memory: 8,
-    storage: 100,
-    ip: '10.0.1.101',
-    region: 'us-east-1',
-    locked: true,
-    createdAt: '2024-01-15',
-  },
-  {
-    id: 'i-002',
-    name: 'production-api-2',
-    type: 'c5.xlarge',
-    status: 'running',
-    cpu: 4,
-    memory: 8,
-    storage: 100,
-    ip: '10.0.1.102',
-    region: 'us-east-1',
-    createdAt: '2024-01-15',
-  },
-  {
-    id: 'i-003',
-    name: 'staging-web',
-    type: 't3.medium',
-    status: 'stopped',
-    cpu: 2,
-    memory: 4,
-    storage: 50,
-    ip: '10.0.2.50',
-    region: 'us-west-2',
-    createdAt: '2024-02-20',
-  },
-  {
-    id: 'i-004',
-    name: 'dev-database',
-    type: 'r5.large',
-    status: 'running',
-    cpu: 2,
-    memory: 16,
-    storage: 500,
-    ip: '10.0.3.10',
-    region: 'eu-west-1',
-    locked: true,
-    createdAt: '2024-03-01',
-  },
-  {
-    id: 'i-005',
-    name: 'analytics-worker',
-    type: 'm5.2xlarge',
-    status: 'pending',
-    cpu: 8,
-    memory: 32,
-    storage: 200,
-    ip: '—',
-    region: 'ap-northeast-1',
-    createdAt: '2024-03-10',
-  },
-  {
-    id: 'i-006',
-    name: 'backup-server',
-    type: 't3.small',
-    status: 'error',
-    cpu: 2,
-    memory: 2,
-    storage: 1000,
-    ip: '10.0.4.5',
-    region: 'us-east-1',
-    createdAt: '2024-01-05',
-  },
-  {
-    id: 'i-007',
-    name: 'ml-worker',
-    type: 'p3.2xlarge',
-    status: 'building',
-    cpu: 8,
-    memory: 64,
-    storage: 500,
-    ip: '—',
-    region: 'us-west-2',
-    createdAt: '2024-03-12',
-  },
+  { id: 'vm-001', name: 'worker-node-01', status: 'running', locked: true, fixedIp: '10.20.30.40', floatingIp: '20.30.40.50', image: 'CentOS 7', flavor: 'Medium', vcpu: 4, ram: '8GB', disk: '100GB', gpu: '1', az: 'keystone' },
+  { id: 'vm-002', name: 'worker-node-02', status: 'running', locked: false, fixedIp: '10.20.30.41', floatingIp: '20.30.40.51', image: 'CentOS 7', flavor: 'Medium', vcpu: 4, ram: '8GB', disk: '100GB', gpu: '1', az: 'keystone' },
+  { id: 'vm-003', name: 'master-node-01', status: 'running', locked: true, fixedIp: '10.20.30.10', floatingIp: '20.30.40.10', image: 'Ubuntu 22.04', flavor: 'Large', vcpu: 8, ram: '16GB', disk: '200GB', gpu: '-', az: 'nova' },
+  { id: 'vm-004', name: 'db-server-01', status: 'stopped', locked: true, fixedIp: '10.20.30.20', floatingIp: '-', image: 'CentOS 8', flavor: 'XLarge', vcpu: 16, ram: '64GB', disk: '500GB', gpu: '-', az: 'keystone' },
+  { id: 'vm-005', name: 'gpu-node-01', status: 'running', locked: false, fixedIp: '10.20.30.50', floatingIp: '20.30.40.60', image: 'Ubuntu 22.04', flavor: 'GPU Large', vcpu: 32, ram: '128GB', disk: '1TB', gpu: '4', az: 'nova' },
+  { id: 'vm-006', name: 'gpu-node-02', status: 'running', locked: false, fixedIp: '10.20.30.51', floatingIp: '20.30.40.61', image: 'Ubuntu 22.04', flavor: 'GPU Large', vcpu: 32, ram: '128GB', disk: '1TB', gpu: '4', az: 'nova' },
+  { id: 'vm-007', name: 'web-server-01', status: 'pending', locked: false, fixedIp: '-', floatingIp: '-', image: 'Rocky Linux 9', flavor: 'Small', vcpu: 2, ram: '4GB', disk: '50GB', gpu: '-', az: 'keystone' },
+  { id: 'vm-008', name: 'web-server-02', status: 'building', locked: false, fixedIp: '-', floatingIp: '-', image: 'Rocky Linux 9', flavor: 'Small', vcpu: 2, ram: '4GB', disk: '50GB', gpu: '-', az: 'keystone' },
+  { id: 'vm-009', name: 'analytics-01', status: 'error', locked: true, fixedIp: '10.20.30.80', floatingIp: '-', image: 'Debian 12', flavor: 'XLarge', vcpu: 16, ram: '32GB', disk: '500GB', gpu: '2', az: 'nova' },
+  { id: 'vm-010', name: 'cache-server-01', status: 'running', locked: false, fixedIp: '10.20.30.90', floatingIp: '20.30.40.90', image: 'Debian 12', flavor: 'Medium', vcpu: 4, ram: '16GB', disk: '100GB', gpu: '-', az: 'keystone' },
+];
+
+const mockBareMetalInstances: BareMetalInstance[] = [
+  { id: 'bm-001', name: 'web-server-1', status: 'running', ip: '10.62.0.30', image: 'BM image', flavor: 'BM flavor', cpu: 8, ram: '16GiB', disk: '10GiB', gpu: '-', az: 'zone-a' },
+  { id: 'bm-002', name: 'web-server-2', status: 'running', ip: '10.62.0.31', image: 'BM image', flavor: 'BM flavor', cpu: 8, ram: '16GiB', disk: '10GiB', gpu: '-', az: 'zone-a' },
+  { id: 'bm-003', name: 'db-server-1', status: 'running', ip: '10.62.0.40', image: 'BM image', flavor: 'BM large', cpu: 16, ram: '64GiB', disk: '500GiB', gpu: '-', az: 'zone-b' },
+  { id: 'bm-004', name: 'db-server-2', status: 'stopped', ip: '10.62.0.41', image: 'BM image', flavor: 'BM large', cpu: 16, ram: '64GiB', disk: '500GiB', gpu: '-', az: 'zone-b' },
+  { id: 'bm-005', name: 'gpu-node-1', status: 'running', ip: '10.62.0.50', image: 'BM GPU', flavor: 'BM GPU', cpu: 32, ram: '128GiB', disk: '1TiB', gpu: 'A100 x4', az: 'zone-c' },
+  { id: 'bm-006', name: 'gpu-node-2', status: 'running', ip: '10.62.0.51', image: 'BM GPU', flavor: 'BM GPU', cpu: 32, ram: '128GiB', disk: '1TiB', gpu: 'A100 x4', az: 'zone-c' },
+  { id: 'bm-007', name: 'compute-1', status: 'pending', ip: '—', image: 'BM image', flavor: 'BM xlarge', cpu: 64, ram: '256GiB', disk: '2TiB', gpu: '-', az: 'zone-a' },
+  { id: 'bm-008', name: 'compute-2', status: 'building', ip: '—', image: 'BM image', flavor: 'BM xlarge', cpu: 64, ram: '256GiB', disk: '2TiB', gpu: '-', az: 'zone-a' },
+  { id: 'bm-009', name: 'storage-node-1', status: 'running', ip: '10.62.0.60', image: 'BM storage', flavor: 'BM storage', cpu: 8, ram: '32GiB', disk: '10TiB', gpu: '-', az: 'zone-b' },
+  { id: 'bm-010', name: 'storage-node-2', status: 'error', ip: '10.62.0.61', image: 'BM storage', flavor: 'BM storage', cpu: 8, ram: '32GiB', disk: '10TiB', gpu: '-', az: 'zone-b' },
 ];
 
 /* ----------------------------------------
@@ -159,12 +116,39 @@ const statusMap: Record<InstanceStatus, StatusType> = {
    Instances List Page
    ---------------------------------------- */
 
+interface Filter {
+  id: string;
+  field: string;
+  value: string;
+}
+
 export function InstanceListPage() {
+  const [sidebarOpen, setSidebarOpen] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedInstances, setSelectedInstances] = useState<string[]>([]);
+  const [selectedBareMetalInstances, setSelectedBareMetalInstances] = useState<string[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
+  const [currentBareMetalPage, setCurrentBareMetalPage] = useState(1);
+  const [activeTab, setActiveTab] = useState('vm');
+  const [activeFilters, setActiveFilters] = useState<Filter[]>([
+    { id: '1', field: 'Name', value: 'a' },
+    { id: '2', field: 'Name', value: 'a' },
+    { id: '3', field: 'Name', value: 'a' },
+    { id: '4', field: 'Name', value: 'aasdf' },
+  ]);
+
+  const removeFilter = (filterId: string) => {
+    setActiveFilters(prev => prev.filter(f => f.id !== filterId));
+  };
+
+  const clearAllFilters = () => {
+    setActiveFilters([]);
+  };
   const [showScrollTop, setShowScrollTop] = useState(false);
-  const pageSize = 10;
+  const [isPreferencesOpen, setIsPreferencesOpen] = useState(false);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [columnPreferences, setColumnPreferences] = useState<ColumnConfig[]>(defaultColumns);
+  const pageSize = rowsPerPage;
 
   // Scroll to top handler
   useEffect(() => {
@@ -186,110 +170,210 @@ export function InstanceListPage() {
     ), [searchQuery]
   );
 
-  const totalPages = Math.ceil(filteredInstances.length / pageSize);
+  const filteredBareMetalInstances = useMemo(() => 
+    mockBareMetalInstances.filter((instance) =>
+    instance.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    instance.id.toLowerCase().includes(searchQuery.toLowerCase())
+    ), [searchQuery]
+  );
 
-  const runningCount = mockInstances.filter((i) => i.status === 'running').length;
-  const stoppedCount = mockInstances.filter((i) => i.status === 'stopped').length;
+  const totalPages = Math.ceil(filteredInstances.length / pageSize);
+  const totalBareMetalPages = Math.ceil(filteredBareMetalInstances.length / pageSize);
+
 
   // Table columns definition
   const columns: TableColumn<Instance>[] = [
     {
       key: 'status',
       label: 'Status',
-      width: '120px',
-      sortable: true,
+      width: '59px',
+      align: 'center',
+      sortable: false,
       render: (_, row) => (
-        <StatusIndicator status={statusMap[row.status]} />
+        <StatusIndicator status={statusMap[row.status]} layout="icon-only" />
       ),
     },
     {
       key: 'name',
       label: 'Name',
-      flex: 2,
+      flex: 1,
       sortable: true,
       render: (_, row) => (
-        <VStack gap={0} align="start">
-          <span className="font-medium text-[var(--color-text-default)]">{row.name}</span>
-          <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">{row.id}</span>
-        </VStack>
+        <a 
+          href={`/instances/${row.id}`}
+          className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
+          onClick={(e) => e.stopPropagation()}
+        >
+          {row.name}
+        </a>
       ),
     },
     {
       key: 'locked',
       label: 'Locked',
-      width: '80px',
+      width: '62px',
       align: 'center',
+      sortable: false,
       render: (_, row) => row.locked ? (
-        <IconLock size={14} className="text-[var(--color-text-subtle)]" />
+        <IconLock size={16} stroke={1} className="text-[var(--color-text-default)]" />
       ) : null,
     },
     {
-      key: 'ip',
+      key: 'fixedIp',
       label: 'Fixed IP',
-      width: '120px',
+      flex: 1,
+      sortable: false,
+    },
+    {
+      key: 'floatingIp',
+      label: 'Floating IP',
+      flex: 1,
+      sortable: false,
+    },
+    {
+      key: 'image',
+      label: 'Image',
+      flex: 1,
       sortable: true,
     },
     {
-      key: 'type',
+      key: 'flavor',
       label: 'Flavor',
-      width: '110px',
+      flex: 1,
       sortable: true,
     },
     {
-      key: 'cpu',
+      key: 'vcpu',
       label: 'vCPU',
-      width: '70px',
-      align: 'center',
+      flex: 1,
       sortable: true,
-      render: (value) => (
-        <HStack gap={1} justify="center">
-          <IconCpu size={14} className="text-[var(--color-text-subtle)]" />
-          <span>{value}</span>
-        </HStack>
-      ),
     },
     {
-      key: 'memory',
+      key: 'ram',
       label: 'RAM',
-      width: '80px',
-      align: 'center',
+      flex: 1,
       sortable: true,
-      render: (value) => `${value}GB`,
     },
     {
-      key: 'storage',
+      key: 'disk',
       label: 'Disk',
-      width: '80px',
-      align: 'center',
+      flex: 1,
       sortable: true,
-      render: (value) => value >= 1000 ? `${value / 1000}TB` : `${value}GB`,
     },
     {
-      key: 'region',
-      label: 'Region',
-      width: '130px',
+      key: 'gpu',
+      label: 'GPU',
+      flex: 1,
+      sortable: true,
+    },
+    {
+      key: 'az',
+      label: 'AZ',
+      flex: 1,
       sortable: true,
     },
     {
       key: 'actions',
-      label: '',
-      width: '48px',
+      label: 'Action',
+      width: '72px',
       align: 'center',
       render: () => (
-        <button className="p-1 rounded hover:bg-[var(--color-surface-subtle)] transition-colors">
-          <IconDotsVertical size={16} className="text-[var(--color-text-subtle)]" />
-        </button>
+        <HStack gap={1} className="justify-center">
+          <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
+            <IconTerminal2 size={16} stroke={1} className="text-[var(--color-text-subtle)] group-hover:text-[var(--color-text-default)]" />
+          </button>
+          <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
+            <IconDotsVertical size={16} stroke={1} className="text-[var(--color-text-subtle)] group-hover:text-[var(--color-text-default)]" />
+          </button>
+        </HStack>
       ),
+    },
+  ];
+
+  // Bare Metal Table columns definition
+  const bareMetalColumns: TableColumn<BareMetalInstance>[] = [
+    {
+      key: 'status',
+      label: 'Status',
+      width: '80px',
+      align: 'center',
+      sortable: true,
+      render: (_, row) => (
+        <StatusIndicator status={statusMap[row.status]} layout="icon-only" />
+      ),
+    },
+    {
+      key: 'name',
+      label: 'Name',
+      flex: 1,
+      sortable: true,
+      render: (_, row) => (
+        <a 
+          href={`/bare-metal/${row.id}`}
+          className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
+          onClick={(e) => e.stopPropagation()}
+        >
+          {row.name}
+        </a>
+      ),
+    },
+    {
+      key: 'ip',
+      label: 'Fixed IP',
+      flex: 1,
+      sortable: false,
+    },
+    {
+      key: 'image',
+      label: 'Image',
+      flex: 1,
+      sortable: true,
+    },
+    {
+      key: 'flavor',
+      label: 'Flavor',
+      flex: 1,
+      sortable: true,
+    },
+    {
+      key: 'cpu',
+      label: 'CPU',
+      flex: 1,
+      sortable: true,
+    },
+    {
+      key: 'ram',
+      label: 'RAM',
+      flex: 1,
+      sortable: true,
+    },
+    {
+      key: 'disk',
+      label: 'Disk',
+      flex: 1,
+      sortable: true,
+    },
+    {
+      key: 'gpu',
+      label: 'GPU',
+      flex: 1,
+      sortable: true,
+    },
+    {
+      key: 'az',
+      label: 'AZ',
+      flex: 1,
+      sortable: true,
     },
   ];
 
   return (
     <div className="min-h-screen bg-[var(--color-surface-subtle)]">
       {/* Sidebar */}
-      <Sidebar />
+      <Sidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(false)} />
 
       {/* Main Content */}
-      <main className="ml-[200px] min-h-screen">
+      <main className={`min-h-screen bg-[var(--color-surface-default)] transition-[margin] duration-200 ${sidebarOpen ? 'ml-[200px]' : 'ml-0'}`}>
         {/* Tab Bar */}
         <TabBar
           tabs={[
@@ -303,7 +387,8 @@ export function InstanceListPage() {
 
         {/* Top Bar with Breadcrumb Navigation */}
         <TopBar
-          showSidebarToggle={false}
+          showSidebarToggle={!sidebarOpen}
+          onSidebarToggle={() => setSidebarOpen(true)}
           showNavigation={true}
           onBack={() => window.history.back()}
           onForward={() => window.history.forward()}
@@ -325,10 +410,10 @@ export function InstanceListPage() {
         />
 
         {/* Page Content */}
-        <div className="p-6">
-          <VStack gap={6} className="max-w-[1400px] mx-auto">
+        <div className="pt-4 px-8 pb-6 bg-[var(--color-surface-default)]">
+          <VStack gap={3}>
             {/* Page Header */}
-            <div className="flex items-center justify-between">
+            <div className="flex items-center justify-between h-8">
               <h1 className="text-[length:var(--font-size-16)] font-semibold text-[var(--color-text-default)]">
                 Instances List
               </h1>
@@ -337,90 +422,121 @@ export function InstanceListPage() {
               </Button>
             </div>
 
-            {/* Stats Cards */}
-            <div className="grid grid-cols-4 gap-4">
-              <StatCard label="Total Instances" value={mockInstances.length} />
-              <StatCard label="Running" value={runningCount} variant="success" />
-              <StatCard label="Stopped" value={stoppedCount} variant="neutral" />
-              <StatCard label="Regions" value={4} variant="info" />
-            </div>
+            {/* Type Tabs */}
+            <Tabs value={activeTab} onChange={setActiveTab} variant="underline" size="sm">
+              <TabList>
+                <Tab value="vm">VM</Tab>
+                <Tab value="bare-metal">Bare Metal</Tab>
+              </TabList>
+            </Tabs>
 
             {/* Filters & Actions Bar */}
-              <div className="flex items-center justify-between gap-4">
-                <HStack gap={3} className="flex-1">
-                  <div className="w-80">
+            <div className="flex items-center gap-2">
+              {/* Search */}
+              <HStack gap={1}>
+                <div className="w-[280px]">
                   <SearchInput
-                      placeholder="Search instances..."
-                      value={searchQuery}
-                      onChange={(e) => setSearchQuery(e.target.value)}
+                    placeholder="Find Instance with filters"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
                     onClear={() => setSearchQuery('')}
+                    size="sm"
                     fullWidth
-                    />
-                  </div>
-                  <Button variant="outline" size="md" leftIcon={<IconFilter size={16} />}>
-                    Filters
-                  </Button>
-                </HStack>
-                <HStack gap={2}>
-                  <Button variant="ghost" size="md" leftIcon={<IconRefresh size={16} />}>
-                    Refresh
-                  </Button>
-                  {selectedInstances.length > 0 && (
-                    <>
-                      <Button variant="outline" size="md" leftIcon={<IconPlayerPlay size={16} />}>
-                        Start
-                      </Button>
-                      <Button variant="outline" size="md" leftIcon={<IconPlayerStop size={16} />}>
-                        Stop
-                      </Button>
-                      <Button variant="danger" size="md" leftIcon={<IconTrash size={16} />}>
-                        Delete
-                      </Button>
-                    </>
-                  )}
-                </HStack>
+                  />
+                </div>
+                <Button variant="secondary" size="sm" icon={<IconDownload size={12} />} aria-label="Download" />
+              </HStack>
+
+              {/* Divider */}
+              <div className="h-4 w-px bg-[var(--color-border-default)]" />
+
+              {/* Actions */}
+              <HStack gap={1}>
+                <Button variant="muted" size="sm" leftIcon={<IconPlayerPlay size={12} />} disabled={selectedInstances.length === 0}>
+                  Start
+                </Button>
+                <Button variant="muted" size="sm" leftIcon={<IconPlayerStop size={12} />} disabled={selectedInstances.length === 0}>
+                  Stop
+                </Button>
+                <Button variant="muted" size="sm" leftIcon={<IconRefresh size={12} />} disabled={selectedInstances.length === 0}>
+                  Reboot
+                </Button>
+                <Button variant="muted" size="sm" leftIcon={<IconTrash size={12} />} disabled={selectedInstances.length === 0}>
+                  Delete
+                </Button>
+              </HStack>
             </div>
 
-            {/* Instance Table */}
-            <Table<Instance>
-              columns={columns}
-              data={filteredInstances}
-              rowKey="id"
-              selectable
-              selectedKeys={selectedInstances}
-              onSelectionChange={setSelectedInstances}
-              emptyMessage="No instances found"
-            />
-
-              {/* Empty State */}
-              {filteredInstances.length === 0 && (
-                <div className="py-16 text-center">
-                <IconServer size={48} className="mx-auto text-[var(--color-text-disabled)] mb-4" />
-                <h3 className="text-[length:var(--font-size-16)] font-medium text-[var(--color-text-default)] mb-1">
-                  No instances found
-                </h3>
-                <p className="text-[length:var(--font-size-12)] text-[var(--color-text-subtle)] mb-4">
-                    {searchQuery ? 'Try adjusting your search query' : 'Get started by creating your first instance'}
-                  </p>
-                  {!searchQuery && (
-                    <Button leftIcon={<IconPlus size={16} />}>Create Instance</Button>
-                  )}
+            {/* Filter Bar */}
+            {activeFilters.length > 0 && (
+              <div className="flex items-center justify-between pl-2 pr-4 py-2 bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)]">
+                <div className="flex items-center gap-1">
+                  {activeFilters.map((filter) => (
+                    <Chip
+                      key={filter.id}
+                      label={filter.field}
+                      value={filter.value}
+                      onRemove={() => removeFilter(filter.id)}
+                    />
+                  ))}
                 </div>
-              )}
+                <button
+                  onClick={clearAllFilters}
+                  className="text-[length:var(--font-size-11)] leading-[var(--line-height-16)] font-medium text-[var(--color-action-primary)] hover:text-[var(--color-action-primary-hover)]"
+                >
+                  Clear Filters
+                </button>
+              </div>
+            )}
 
-              {/* Pagination */}
-              {filteredInstances.length > 0 && (
-              <div className="flex items-center justify-between">
-                <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
-                    Showing {filteredInstances.length} of {mockInstances.length} instances
-                  </span>
-                <Pagination
-                  currentPage={currentPage}
-                  totalPages={totalPages}
-                  onPageChange={setCurrentPage}
-                />
-                </div>
-              )}
+            {/* Pagination */}
+            {activeTab === 'vm' && filteredInstances.length > 0 && (
+              <Pagination
+                currentPage={currentPage}
+                totalPages={totalPages}
+                onPageChange={setCurrentPage}
+                showSettings
+                onSettingsClick={() => setIsPreferencesOpen(true)}
+                totalItems={mockInstances.length}
+              />
+            )}
+            {activeTab === 'bare-metal' && filteredBareMetalInstances.length > 0 && (
+              <Pagination
+                currentPage={currentBareMetalPage}
+                totalPages={totalBareMetalPages}
+                onPageChange={setCurrentBareMetalPage}
+                showSettings
+                onSettingsClick={() => setIsPreferencesOpen(true)}
+                totalItems={mockBareMetalInstances.length}
+              />
+            )}
+
+            {/* VM Table */}
+            {activeTab === 'vm' && (
+              <Table<Instance>
+                columns={columns}
+                data={filteredInstances}
+                rowKey="id"
+                selectable
+                selectedKeys={selectedInstances}
+                onSelectionChange={setSelectedInstances}
+                emptyMessage="No instances found"
+              />
+            )}
+
+            {/* Bare Metal Table */}
+            {activeTab === 'bare-metal' && (
+              <Table<BareMetalInstance>
+                columns={bareMetalColumns}
+                data={filteredBareMetalInstances}
+                rowKey="id"
+                selectable
+                selectedKeys={selectedBareMetalInstances}
+                onSelectionChange={setSelectedBareMetalInstances}
+                emptyMessage="No bare metal instances found"
+              />
+            )}
+
           </VStack>
         </div>
       </main>
@@ -435,38 +551,23 @@ export function InstanceListPage() {
           <IconArrowUp size={20} stroke={2} />
         </button>
       )}
-    </div>
-  );
-}
 
-/* ----------------------------------------
-   Stat Card Component
-   ---------------------------------------- */
-
-function StatCard({
-  label,
-  value,
-  variant = 'primary',
-}: {
-  label: string;
-  value: number;
-  variant?: 'primary' | 'success' | 'neutral' | 'info';
-}) {
-  const colors = {
-    primary: 'text-[var(--color-action-primary)]',
-    success: 'text-[var(--color-state-success)]',
-    neutral: 'text-[var(--color-text-muted)]',
-    info: 'text-[var(--color-state-info)]',
-  };
-
-  return (
-    <div className="bg-[var(--color-surface-default)] rounded-xl border border-[var(--color-border-default)] p-4">
-      <VStack gap={1} align="start">
-        <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">{label}</span>
-        <span className={`text-[length:var(--font-size-24)] font-semibold ${colors[variant]}`}>{value}</span>
-      </VStack>
+      {/* View Preferences Drawer */}
+      <ViewPreferencesDrawer
+        isOpen={isPreferencesOpen}
+        onClose={() => setIsPreferencesOpen(false)}
+        rowsPerPage={rowsPerPage}
+        onRowsPerPageChange={setRowsPerPage}
+        columns={columnPreferences}
+        onColumnsChange={setColumnPreferences}
+      />
     </div>
   );
 }
 
 export default InstanceListPage;
+
+
+
+
+

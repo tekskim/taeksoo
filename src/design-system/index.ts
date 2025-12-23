@@ -30,6 +30,7 @@ export * from './components/Breadcrumb';
 export * from './components/StatusIndicator';
 export * from './components/Menu';
 export * from './components/Tooltip';
+export * from './components/Drawer';
 
 // Layouts
 export * from './layouts';
