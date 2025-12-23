@@ -136,10 +136,10 @@ const ContextMenuItemComponent: React.FC<{
           ${item.divider ? 'border-b border-[var(--color-border-subtle)]' : ''}
           ${item.status === 'danger'
             ? 'text-[var(--color-state-error-text)] hover:bg-[var(--color-state-error-bg)]'
-            : 'text-[var(--color-text-default)] hover:bg-[var(--color-surface-subtle)]'
+            : 'text-[var(--color-text-default)] hover:bg-[var(--context-menu-hover-bg)]'
           }
           ${item.disabled ? 'opacity-50 cursor-not-allowed' : ''}
-          ${showSubmenu ? 'bg-[var(--color-surface-subtle)]' : ''}
+          ${showSubmenu ? 'bg-[var(--context-menu-hover-bg)]' : ''}
         `}
       >
         <span>{item.label}</span>

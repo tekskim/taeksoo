@@ -38,8 +38,8 @@ export function Chip({
   ...props
 }: ChipProps) {
   const variantStyles = {
-    default: 'border-[var(--chip-border)] pl-[var(--chip-padding-left)] pr-[var(--chip-padding-right)]',
-    selected: 'border-[var(--chip-border-selected)] px-[var(--chip-padding-selected)]',
+    default: `border-[var(--chip-border)] pl-[var(--chip-padding-left)] ${onRemove ? 'pr-[var(--chip-padding-right)]' : 'pr-[var(--chip-padding-left)]'}`,
+    selected: `border-[var(--chip-border-selected)] pl-[var(--chip-padding-selected)] ${onRemove ? 'pr-[var(--chip-padding-right)]' : 'pr-[var(--chip-padding-selected)]'}`,
   };
 
   return (

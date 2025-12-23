@@ -28,6 +28,42 @@
   --color-slate-800: #1e293b;
   --color-slate-900: #0f172a;
 
+  /* Gray (Pure Neutral) */
+  --color-gray-50: #f9fafb;
+  --color-gray-100: #f3f4f6;
+  --color-gray-200: #e5e7eb;
+  --color-gray-300: #d1d5db;
+  --color-gray-400: #9ca3af;
+  --color-gray-500: #6b7280;
+  --color-gray-600: #4b5563;
+  --color-gray-700: #374151;
+  --color-gray-800: #1f2937;
+  --color-gray-900: #111827;
+
+  /* Zinc (Warm Neutral) */
+  --color-zinc-50: #fafafa;
+  --color-zinc-100: #f4f4f5;
+  --color-zinc-200: #e4e4e7;
+  --color-zinc-300: #d4d4d8;
+  --color-zinc-400: #a1a1aa;
+  --color-zinc-500: #71717a;
+  --color-zinc-600: #52525b;
+  --color-zinc-700: #3f3f46;
+  --color-zinc-800: #27272a;
+  --color-zinc-900: #18181b;
+
+  /* Neutral (True Neutral) */
+  --color-neutral-50: #fafafa;
+  --color-neutral-100: #f5f5f5;
+  --color-neutral-200: #e5e5e5;
+  --color-neutral-300: #d4d4d4;
+  --color-neutral-400: #a3a3a3;
+  --color-neutral-500: #737373;
+  --color-neutral-600: #525252;
+  --color-neutral-700: #404040;
+  --color-neutral-800: #262626;
+  --color-neutral-900: #171717;
+
   /* Blue (Primary) */
   --color-blue-50: #eff6ff;
   --color-blue-100: #dbeafe;
@@ -439,6 +475,7 @@
   --context-menu-padding-x: var(--spacing-3);
   --context-menu-padding-y: var(--spacing-1-5);
   --context-menu-radius: var(--radius-md);
+  --context-menu-hover-bg: var(--color-slate-100);
 
   /* ----------------------------------------
      Component - Table
@@ -451,6 +488,8 @@
   --table-font-size: var(--font-size-12);
   --table-header-font-size: var(--font-size-11);
   --table-line-height: var(--line-height-16);
+  --table-header-bg: var(--color-surface-subtle);
+  --table-row-hover-bg: var(--color-surface-subtle);
   --table-checkbox-width: 40px;
   --table-empty-padding-y: var(--spacing-8);
 
@@ -479,6 +518,7 @@
   --topbar-action-gap: var(--spacing-1);
   --topbar-button-size: 28px;
   --topbar-button-radius: var(--radius-sm);
+  --topbar-button-hover-bg: var(--color-surface-subtle);
 
   /* ----------------------------------------
      Component - Pagination
@@ -790,6 +830,31 @@
   --tooltip-arrow-size: 4px;
 }
 
+/* Override Tailwind's default gray/zinc to use our values */
+:root {
+  --color-gray-50: #f9fafb;
+  --color-gray-100: #f3f4f6;
+  --color-gray-200: #e5e7eb;
+  --color-gray-300: #d1d5db;
+  --color-gray-400: #9ca3af;
+  --color-gray-500: #6b7280;
+  --color-gray-600: #4b5563;
+  --color-gray-700: #374151;
+  --color-gray-800: #1f2937;
+  --color-gray-900: #111827;
+
+  --color-zinc-50: #fafafa;
+  --color-zinc-100: #f4f4f5;
+  --color-zinc-200: #e4e4e7;
+  --color-zinc-300: #d4d4d8;
+  --color-zinc-400: #a1a1aa;
+  --color-zinc-500: #71717a;
+  --color-zinc-600: #52525b;
+  --color-zinc-700: #3f3f46;
+  --color-zinc-800: #27272a;
+  --color-zinc-900: #18181b;
+}
+
 /* ========================================
    Dark Theme Overrides
    ======================================== */
@@ -813,10 +878,10 @@
   --color-surface-muted: #252525;          /* 호버, 강조 배경 */
   --color-surface-inverse: #FAFAFA;        /* 밝은 표면 */
 
-  /* Border - RunPod Style */
-  --color-border-default: #2e2e2e;         /* 기본 보더 */
-  --color-border-subtle: #252525;          /* 미세한 구분선 */
-  --color-border-strong: #444444;          /* 강조 보더 */
+  /* Border - Apple Style */
+  --color-border-default: #3a3a3a;         /* 기본 보더 (Apple HIG 참고) */
+  --color-border-subtle: #2e2e2e;          /* 미세한 구분선 */
+  --color-border-strong: #4a4a4a;          /* 강조 보더 */
   --color-border-focus: var(--color-blue-400);
 
   /* State - Info */
@@ -908,6 +973,16 @@
   /* DatePicker (Dark Mode) */
   --datepicker-range-bg: #253754;                   /* 기간 선택 배경 - solid color */
   --datepicker-hover-bg: #2a2a2a;                   /* 호버 배경 */
+
+  /* ContextMenu (Dark Mode) */
+  --context-menu-hover-bg: #2a2a2a;                 /* 메뉴 아이템 호버 배경 */
+
+  /* Table (Dark Mode) */
+  --table-header-bg: var(--color-surface-muted);    /* 테이블 헤더 배경 (#252525) */
+  --table-row-hover-bg: #2a2a2a;                    /* 테이블 행 호버 배경 */
+
+  /* TopBar (Dark Mode) */
+  --topbar-button-hover-bg: #2a2a2a;                /* 버튼 호버 배경 */
 
   /* Button (Dark Mode) - 일관되게 밝아지는 방향 */
   --button-secondary-hover-bg: #2a2a2a;             /* surface-default보다 밝게 */

@@ -612,6 +612,12 @@ export function DesignSystemPage() {
   const [activeSection, setActiveSection] = useState('token-architecture');
   const [searchQuery, setSearchQuery] = useState('');
   const [showScrollTop, setShowScrollTop] = useState(false);
+  
+  // Pagination demo states
+  const [demoPage1, setDemoPage1] = useState(1);
+  const [demoPage2, setDemoPage2] = useState(5);
+  const [demoPage3, setDemoPage3] = useState(15);
+  const [demoPage4, setDemoPage4] = useState(2);
 
   // Scroll to top handler
   useEffect(() => {
@@ -952,12 +958,42 @@ export function DesignSystemPage() {
                   </div>
                 </VStack>
                 
-                {/* Slate (Neutral) */}
+                {/* Slate (Cool Neutral) */}
                 <VStack gap={2}>
-                  <Label>Slate (Neutral)</Label>
+                  <Label>Slate <span className="text-[var(--color-text-subtle)] font-normal">(Cool Neutral - Blue tint)</span></Label>
                   <div className="grid grid-cols-5 md:grid-cols-10 gap-2">
                     {[50, 100, 200, 300, 400, 500, 600, 700, 800, 900].map((shade) => (
                       <ColorSwatch key={shade} name={`${shade}`} color={`var(--color-slate-${shade})`} textLight={shade >= 500} />
+                    ))}
+                  </div>
+                </VStack>
+
+                {/* Gray (Pure Neutral) */}
+                <VStack gap={2}>
+                  <Label>Gray <span className="text-[var(--color-text-subtle)] font-normal">(Pure Neutral)</span></Label>
+                  <div className="grid grid-cols-5 md:grid-cols-10 gap-2">
+                    {[50, 100, 200, 300, 400, 500, 600, 700, 800, 900].map((shade) => (
+                      <ColorSwatch key={shade} name={`${shade}`} color={`var(--color-gray-${shade})`} textLight={shade >= 500} />
+                    ))}
+                  </div>
+                </VStack>
+
+                {/* Zinc (Warm Neutral) */}
+                <VStack gap={2}>
+                  <Label>Zinc <span className="text-[var(--color-text-subtle)] font-normal">(Warm Neutral)</span></Label>
+                  <div className="grid grid-cols-5 md:grid-cols-10 gap-2">
+                    {[50, 100, 200, 300, 400, 500, 600, 700, 800, 900].map((shade) => (
+                      <ColorSwatch key={shade} name={`${shade}`} color={`var(--color-zinc-${shade})`} textLight={shade >= 500} />
+                    ))}
+                  </div>
+                </VStack>
+
+                {/* Neutral (True Neutral) */}
+                <VStack gap={2}>
+                  <Label>Neutral <span className="text-[var(--color-text-subtle)] font-normal">(True Neutral)</span></Label>
+                  <div className="grid grid-cols-5 md:grid-cols-10 gap-2">
+                    {[50, 100, 200, 300, 400, 500, 600, 700, 800, 900].map((shade) => (
+                      <ColorSwatch key={shade} name={`${shade}`} color={`var(--color-neutral-${shade})`} textLight={shade >= 500} />
                     ))}
                   </div>
                 </VStack>
@@ -2093,9 +2129,9 @@ outline: 2px solid var(--color-border-focus);`}
                 <VStack gap={3}>
                   <Label>Basic</Label>
                   <Pagination
-                    currentPage={1}
+                    currentPage={demoPage1}
                     totalPages={10}
-                    onPageChange={(page) => console.log('Page:', page)}
+                    onPageChange={setDemoPage1}
                   />
                 </VStack>
 
@@ -2103,9 +2139,9 @@ outline: 2px solid var(--color-border-focus);`}
                 <VStack gap={3}>
                   <Label>Middle Page (with dots)</Label>
                   <Pagination
-                    currentPage={5}
+                    currentPage={demoPage2}
                     totalPages={10}
-                    onPageChange={(page) => console.log('Page:', page)}
+                    onPageChange={setDemoPage2}
                   />
                 </VStack>
 
@@ -2113,9 +2149,9 @@ outline: 2px solid var(--color-border-focus);`}
                 <VStack gap={3}>
                   <Label>Many Pages</Label>
                   <Pagination
-                    currentPage={15}
+                    currentPage={demoPage3}
                     totalPages={50}
-                    onPageChange={(page) => console.log('Page:', page)}
+                    onPageChange={setDemoPage3}
                   />
                 </VStack>
 
@@ -2123,9 +2159,9 @@ outline: 2px solid var(--color-border-focus);`}
                 <VStack gap={3}>
                   <Label>Few Pages (no dots)</Label>
                   <Pagination
-                    currentPage={2}
+                    currentPage={demoPage4}
                     totalPages={5}
-                    onPageChange={(page) => console.log('Page:', page)}
+                    onPageChange={setDemoPage4}
                   />
                 </VStack>
 

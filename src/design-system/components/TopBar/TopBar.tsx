@@ -54,7 +54,7 @@ export const TopBar: React.FC<TopBarProps> = ({
     rounded-[var(--topbar-button-radius)]
     text-[var(--color-text-muted)]
     transition-colors duration-[var(--duration-fast)]
-    hover:bg-[var(--color-surface-subtle)]
+    hover:bg-[var(--topbar-button-hover-bg)]
     hover:text-[var(--color-text-default)]
     disabled:text-[var(--color-text-disabled)]
     disabled:cursor-not-allowed
@@ -174,7 +174,7 @@ export const TopBarAction: React.FC<TopBarActionProps> = ({
         rounded-[var(--topbar-button-radius)]
         text-[var(--color-text-muted)]
         transition-colors duration-[var(--duration-fast)]
-        hover:bg-[var(--color-surface-subtle)]
+        hover:bg-[var(--topbar-button-hover-bg)]
         hover:text-[var(--color-text-default)]
         disabled:text-[var(--color-text-disabled)]
         disabled:cursor-not-allowed

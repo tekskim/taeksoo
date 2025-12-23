@@ -171,7 +171,7 @@ export function Table<T extends Record<string, any>>({
           <div
             className={`
               flex items-center
-              bg-[var(--color-surface-subtle)]
+              bg-[var(--table-header-bg)]
               border border-[var(--color-border-default)]
               rounded-[var(--table-row-radius)]
               ${enableStickyHeader ? 'sticky top-0 z-10' : ''}
@@ -259,7 +259,7 @@ export function Table<T extends Record<string, any>>({
                     flex items-center
                     rounded-[var(--table-row-radius)]
                     transition-all
-                    hover:bg-[var(--color-surface-subtle)]
+                    hover:bg-[var(--table-row-hover-bg)]
                     border border-[var(--color-border-default)]
                     ${isSelected 
                       ? 'bg-[var(--color-state-info-bg)] border-[var(--color-action-primary)] shadow-[inset_0_0_0_1px_var(--color-action-primary)]' 

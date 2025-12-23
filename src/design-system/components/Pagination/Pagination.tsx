@@ -126,6 +126,7 @@ export const Pagination: React.FC<PaginationProps> = ({
     text-[var(--pagination-text)]
     hover:bg-[var(--pagination-hover-bg)]
     hover:text-[var(--pagination-text-hover)]
+    cursor-pointer
   `;
 
   const activePageClass = `
