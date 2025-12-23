@@ -9,7 +9,7 @@ interface DarkModeToggleProps {
 }
 
 export function DarkModeToggle({ showLabel = false, size = 'md' }: DarkModeToggleProps) {
-  const { theme, setTheme, isDark } = useDarkMode();
+  const { theme, setTheme } = useDarkMode();
 
   const iconSize = size === 'sm' ? 16 : size === 'md' ? 20 : 24;
   const buttonSize = size === 'sm' ? 'p-1.5' : size === 'md' ? 'p-2' : 'p-2.5';

@@ -1311,7 +1311,7 @@ export function DesignSystemPage() {
                       { name: 'subtle', token: '--color-border-subtle', desc: '미세한 구분선' },
                       { name: 'strong', token: '--color-border-strong', desc: '강조 보더' },
                       { name: 'focus', token: '--color-border-focus', desc: '포커스 링' },
-                    ].map(({ name, token, desc }) => (
+                    ].map(({ name, desc }) => (
                       <div key={name} className="flex flex-col gap-2">
                         <div
                           className="h-16 rounded-[var(--radius-md)] bg-[var(--color-surface-default)]"
