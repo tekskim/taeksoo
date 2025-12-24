@@ -15,9 +15,11 @@ import {
   TabList,
   Tab,
   ListToolbar,
+  ContextMenu,
   type TableColumn,
   type StatusType,
   type FilterItem,
+  type ContextMenuItem,
 } from '@/design-system';
 import { Sidebar } from '@/components/Sidebar';
 import { useTabs } from '@/contexts/TabContext';
@@ -188,6 +190,73 @@ export function InstanceListPage() {
   const totalPages = Math.ceil(filteredInstances.length / pageSize);
   const totalBareMetalPages = Math.ceil(filteredBareMetalInstances.length / pageSize);
 
+  // Context menu items for instances
+  const getInstanceContextMenuItems = (_instance: Instance): ContextMenuItem[] => [
+    { id: 'start', label: 'Start' },
+    { id: 'stop', label: 'Stop', status: 'danger' },
+    { id: 'reboot', label: 'Reboot', status: 'danger' },
+    { id: 'soft-reboot', label: 'Soft reboot' },
+    { id: 'pause', label: 'Pause' },
+    { id: 'suspend', label: 'Suspend' },
+    { id: 'shelve', label: 'Shelve' },
+    { id: 'unpause', label: 'Unpause' },
+    { id: 'resume', label: 'Resume' },
+    { id: 'unshelve', label: 'Unshelve' },
+    { id: 'rescue', label: 'Rescue' },
+    { id: 'unrescue', label: 'Unrescue', divider: true },
+    {
+      id: 'instance-status',
+      label: 'Instance Status',
+      submenu: [
+        { id: 'start-sub', label: 'Start' },
+        { id: 'stop-sub', label: 'Stop', status: 'danger' },
+        { id: 'reboot-sub', label: 'Reboot', status: 'danger' },
+        { id: 'soft-reboot-sub', label: 'Soft reboot' },
+        { id: 'pause-sub', label: 'Pause' },
+        { id: 'suspend-sub', label: 'Suspend' },
+        { id: 'shelve-sub', label: 'Shelve' },
+        { id: 'unpause-sub', label: 'Unpause' },
+        { id: 'resume-sub', label: 'Resume' },
+        { id: 'unshelve-sub', label: 'Unshelve' },
+        { id: 'rescue-sub', label: 'Rescue' },
+        { id: 'unrescue-sub', label: 'Unrescue' },
+      ],
+    },
+    {
+      id: 'storage-snapshot',
+      label: 'Storage&Snapshot',
+      submenu: [
+        { id: 'attach-volume', label: 'Attach Volume' },
+        { id: 'detach-volume', label: 'Detach Volume', status: 'danger' },
+        { id: 'create-snapshot', label: 'Create Instance Snapshot' },
+      ],
+    },
+    {
+      id: 'network',
+      label: 'Network',
+      submenu: [
+        { id: 'attach-interface', label: 'Attach Interface' },
+        { id: 'detach-interface', label: 'Detach Interface', status: 'danger' },
+        { id: 'associate-floating-ip', label: 'Associate Floating IP' },
+        { id: 'disassociate-floating-ip', label: 'Disassociate Floating IP', status: 'danger' },
+        { id: 'manage-security-groups', label: 'Manage Security Groups' },
+      ],
+    },
+    {
+      id: 'configuration',
+      label: 'Configuration',
+      submenu: [
+        { id: 'lock-setting', label: 'Lock Setting' },
+        { id: 'rebuild', label: 'Rebuild', status: 'danger' },
+        { id: 'resize', label: 'Resize' },
+        { id: 'manage-tags', label: 'Manage Tags' },
+        { id: 'edit', label: 'Edit' },
+      ],
+    },
+    { id: 'confirm-resize', label: 'Confirm Resize' },
+    { id: 'revert-resize', label: 'Revert Resize', divider: true },
+    { id: 'delete', label: 'Delete', status: 'danger' },
+  ];
 
   // Table columns definition
   const columns: TableColumn<Instance>[] = [
@@ -285,14 +354,18 @@ export function InstanceListPage() {
       label: 'Action',
       width: '72px',
       align: 'center',
-      render: () => (
+      render: (_, row) => (
         <HStack gap={1} className="justify-center">
           <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
             <IconTerminal2 size={16} stroke={1} className="text-[var(--color-text-subtle)] group-hover:text-[var(--color-text-default)]" />
           </button>
-          <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
-            <IconDotsVertical size={16} stroke={1} className="text-[var(--color-text-subtle)] group-hover:text-[var(--color-text-default)]" />
-          </button>
+          <div onClick={(e) => e.stopPropagation()}>
+            <ContextMenu items={getInstanceContextMenuItems(row)} trigger="click">
+              <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
+                <IconDotsVertical size={16} stroke={1} className="text-[var(--color-text-subtle)] group-hover:text-[var(--color-text-default)]" />
+              </button>
+            </ContextMenu>
+          </div>
         </HStack>
       ),
     },
