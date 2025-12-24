@@ -9,7 +9,7 @@ import {
   IconDisc,
   IconCpu,
   IconKey,
-  IconUsers,
+  IconServer,
   IconDatabase,
   IconDatabaseExport,
   IconNetwork,
@@ -138,7 +138,7 @@ export function Sidebar({ isOpen = true, onToggle }: SidebarProps) {
               active={isActive('/key-pairs')}
             />
             <MenuItem
-              icon={<IconUsers size={16} stroke={1.5} />}
+              icon={<IconServer size={16} stroke={1.5} />}
               label="Server Groups"
               href="/server-groups"
               active={isActive('/server-groups')}
