@@ -249,7 +249,7 @@ export function VolumeSnapshotsPage() {
           showNavigation={true}
           onBack={() => window.history.back()}
           onForward={() => window.history.forward()}
-          leftContent={
+          breadcrumb={
             <Breadcrumb
               items={[
                 { label: 'Proj-1', href: '/project' },
@@ -257,7 +257,7 @@ export function VolumeSnapshotsPage() {
               ]}
             />
           }
-          rightContent={
+          actions={
             <TopBarAction
               icon={<IconBell size={16} stroke={1.5} />}
               aria-label="Notifications"
@@ -269,11 +269,11 @@ export function VolumeSnapshotsPage() {
         <div className="pt-4 px-8 pb-6 bg-[var(--color-surface-default)]">
           <VStack gap={3}>
             {/* Page Header */}
-            <div className="flex justify-between items-center w-full">
+            <div className="flex items-center justify-between h-8">
               <h1 className="text-[length:var(--font-size-16)] font-semibold text-[var(--color-text-default)]">
                 Volume Snapshots
               </h1>
-              <Button variant="primary" size="md" leftIcon={<IconPlus size={14} />}>
+              <Button leftIcon={<IconPlus size={16} />}>
                 Create Snapshot
               </Button>
             </div>
