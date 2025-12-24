@@ -28,6 +28,10 @@ import {
   IconTrash,
   IconDownload,
   IconBell,
+  IconBrandUbuntu,
+  IconBrandDebian,
+  IconBrandWindows,
+  IconBrandRedhat,
 } from '@tabler/icons-react';
 
 /* ----------------------------------------
@@ -42,6 +46,8 @@ interface Image {
   name: string;
   os: string;
   size: string;
+  diskFormat: string;
+  protected: boolean;
   access: AccessType;
   createdAt: string;
   status: ImageStatus;
@@ -52,16 +58,16 @@ interface Image {
    ---------------------------------------- */
 
 const mockImages: Image[] = [
-  { id: 'img-001', name: 'Ubuntu-22.04-base', os: 'Ubuntu24.04', size: '16GiB', access: 'Private', createdAt: '2025-09-12', status: 'active' },
-  { id: 'img-002', name: 'CentOS-8-minimal', os: 'CentOS8', size: '8GiB', access: 'Private', createdAt: '2025-09-10', status: 'active' },
-  { id: 'img-003', name: 'Rocky-Linux-9', os: 'Rocky Linux 9', size: '12GiB', access: 'Shared', createdAt: '2025-09-08', status: 'active' },
-  { id: 'img-004', name: 'Debian-12-standard', os: 'Debian 12', size: '10GiB', access: 'Public', createdAt: '2025-09-05', status: 'active' },
-  { id: 'img-005', name: 'Ubuntu-20.04-LTS', os: 'Ubuntu20.04', size: '14GiB', access: 'Private', createdAt: '2025-08-28', status: 'active' },
-  { id: 'img-006', name: 'Windows-Server-2022', os: 'Windows Server 2022', size: '32GiB', access: 'Shared', createdAt: '2025-08-25', status: 'pending' },
-  { id: 'img-007', name: 'Alpine-3.18-minimal', os: 'Alpine 3.18', size: '256MiB', access: 'Public', createdAt: '2025-08-20', status: 'active' },
-  { id: 'img-008', name: 'Fedora-39-workstation', os: 'Fedora 39', size: '20GiB', access: 'Private', createdAt: '2025-08-15', status: 'active' },
-  { id: 'img-009', name: 'Oracle-Linux-8', os: 'Oracle Linux 8', size: '18GiB', access: 'Shared', createdAt: '2025-08-10', status: 'deactivated' },
-  { id: 'img-010', name: 'Ubuntu-22.04-GPU', os: 'Ubuntu22.04', size: '24GiB', access: 'Private', createdAt: '2025-08-05', status: 'active' },
+  { id: '29tgj234', name: 'image', os: 'Ubuntu24.04', size: '16GiB', diskFormat: 'RAW', protected: true, access: 'Private', createdAt: '2025-09-12', status: 'active' },
+  { id: 'img-002', name: 'CentOS-8-minimal', os: 'CentOS8', size: '8GiB', diskFormat: 'QCOW2', protected: false, access: 'Private', createdAt: '2025-09-10', status: 'active' },
+  { id: 'img-003', name: 'Rocky-Linux-9', os: 'Rocky Linux 9', size: '12GiB', diskFormat: 'RAW', protected: true, access: 'Shared', createdAt: '2025-09-08', status: 'active' },
+  { id: 'img-004', name: 'Debian-12-standard', os: 'Debian 12', size: '10GiB', diskFormat: 'QCOW2', protected: false, access: 'Public', createdAt: '2025-09-05', status: 'active' },
+  { id: 'img-005', name: 'Ubuntu-20.04-LTS', os: 'Ubuntu20.04', size: '14GiB', diskFormat: 'RAW', protected: true, access: 'Private', createdAt: '2025-08-28', status: 'active' },
+  { id: 'img-006', name: 'Windows-Server-2022', os: 'Windows Server 2022', size: '32GiB', diskFormat: 'QCOW2', protected: false, access: 'Shared', createdAt: '2025-08-25', status: 'pending' },
+  { id: 'img-007', name: 'Alpine-3.18-minimal', os: 'Alpine 3.18', size: '256MiB', diskFormat: 'RAW', protected: false, access: 'Public', createdAt: '2025-08-20', status: 'active' },
+  { id: 'img-008', name: 'Fedora-39-workstation', os: 'Fedora 39', size: '20GiB', diskFormat: 'RAW', protected: true, access: 'Private', createdAt: '2025-08-15', status: 'active' },
+  { id: 'img-009', name: 'Oracle-Linux-8', os: 'Oracle Linux 8', size: '18GiB', diskFormat: 'QCOW2', protected: false, access: 'Shared', createdAt: '2025-08-10', status: 'deactivated' },
+  { id: 'img-010', name: 'Ubuntu-22.04-GPU', os: 'Ubuntu22.04', size: '24GiB', diskFormat: 'RAW', protected: true, access: 'Private', createdAt: '2025-08-05', status: 'active' },
 ];
 
 /* ----------------------------------------
@@ -151,15 +157,30 @@ export function ImagesPage() {
     all: images.length,
   }), [images]);
 
+  // Get OS icon based on OS name
+  const getOsIcon = (os: string) => {
+    const osLower = os.toLowerCase();
+    if (osLower.includes('ubuntu')) {
+      return <IconBrandUbuntu size={16} stroke={1.5} className="text-[#E95420]" />;
+    } else if (osLower.includes('debian')) {
+      return <IconBrandDebian size={16} stroke={1.5} className="text-[#A81D33]" />;
+    } else if (osLower.includes('windows')) {
+      return <IconBrandWindows size={16} stroke={1.5} className="text-[#0078D6]" />;
+    } else if (osLower.includes('centos') || osLower.includes('rocky') || osLower.includes('fedora') || osLower.includes('oracle')) {
+      return <IconBrandRedhat size={16} stroke={1.5} className="text-[#EE0000]" />;
+    }
+    return <div className="w-4 h-4 rounded-full bg-[var(--color-text-subtle)]" />;
+  };
+
   // Table columns
   const columns: TableColumn<Image>[] = [
     {
       key: 'status',
       label: 'Status',
-      width: '59px',
+      width: '80px',
       align: 'center',
       render: (_, row) => (
-        <StatusIndicator status={row.status} layout="icon-only" />
+        <StatusIndicator status={row.status} />
       ),
     },
     {
@@ -168,13 +189,18 @@ export function ImagesPage() {
       flex: 1,
       sortable: true,
       render: (_, row) => (
-        <a
-          href={`/images/${row.id}`}
-          className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
-          onClick={(e) => e.stopPropagation()}
-        >
-          {row.name}
-        </a>
+        <div className="flex flex-col gap-0.5">
+          <a
+            href={`/images/${row.id}`}
+            className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {row.name}
+          </a>
+          <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
+            ID : {row.id}
+          </span>
+        </div>
       ),
     },
     {
@@ -182,22 +208,37 @@ export function ImagesPage() {
       label: 'OS',
       flex: 1,
       sortable: true,
+      render: (_, row) => (
+        <div className="flex items-center gap-2">
+          {getOsIcon(row.os)}
+          <span>{row.os}</span>
+        </div>
+      ),
     },
     {
       key: 'size',
       label: 'Size',
-      flex: 1,
+      width: '100px',
       sortable: true,
     },
     {
-      key: 'access',
-      label: 'Access',
-      flex: 1,
+      key: 'diskFormat',
+      label: 'Disk format',
+      width: '120px',
+      sortable: true,
+    },
+    {
+      key: 'protected',
+      label: 'protected',
+      width: '100px',
+      render: (_, row) => (
+        <span>{row.protected ? 'On' : 'Off'}</span>
+      ),
     },
     {
       key: 'createdAt',
       label: 'Created At',
-      flex: 1,
+      width: '120px',
       sortable: true,
     },
     {
@@ -211,6 +252,16 @@ export function ImagesPage() {
             id: 'create-instance',
             label: 'Create Instance',
             onClick: () => console.log('Create instance from image:', row.id),
+          },
+          {
+            id: 'create-instance-template',
+            label: 'Create Instance Template',
+            onClick: () => console.log('Create instance template from image:', row.id),
+          },
+          {
+            id: 'create-volume',
+            label: 'Create Volume',
+            onClick: () => console.log('Create volume from image:', row.id),
           },
           {
             id: 'edit',
@@ -296,7 +347,7 @@ export function ImagesPage() {
             {/* Category Tabs */}
             <Tabs value={activeTab} onChange={setActiveTab} variant="underline" size="sm">
               <TabList>
-                <Tab value="current">Current Project</Tab>
+                <Tab value="current">Current Tenant</Tab>
                 <Tab value="shared">Shared</Tab>
                 <Tab value="public">Public</Tab>
                 <Tab value="all">All</Tab>

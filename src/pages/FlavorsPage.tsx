@@ -171,8 +171,11 @@ export function FlavorsPage() {
     },
     {
       key: 'access',
-      label: 'Access',
-      flex: 1,
+      label: 'Public',
+      width: '100px',
+      render: (_, row) => (
+        <span>{row.access === 'Public' ? 'On' : 'Off'}</span>
+      ),
     },
     {
       key: 'actions',
@@ -182,14 +185,14 @@ export function FlavorsPage() {
       render: (_, row) => {
         const menuItems: ContextMenuItem[] = [
           {
-            id: 'view-details',
-            label: 'View Details',
-            onClick: () => console.log('View details:', row.id),
-          },
-          {
             id: 'create-instance',
             label: 'Create Instance',
             onClick: () => console.log('Create instance with flavor:', row.id),
+          },
+          {
+            id: 'create-instance-template',
+            label: 'Create Instance template',
+            onClick: () => console.log('Create instance template with flavor:', row.id),
           },
         ];
         

@@ -40,6 +40,8 @@ interface Network {
   name: string;
   subnetCidr: string;
   external: boolean;
+  shared: boolean;
+  adminState: 'Up' | 'Down';
   diskTag: string;
   status: NetworkStatus;
 }
@@ -49,16 +51,16 @@ interface Network {
    ---------------------------------------- */
 
 const mockNetworks: Network[] = [
-  { id: 'net-001', name: 'net-01', subnetCidr: '10.62.0.0/24', external: true, diskTag: 'Project', status: 'active' },
-  { id: 'net-002', name: 'internal-net', subnetCidr: '192.168.1.0/24', external: false, diskTag: 'Project', status: 'active' },
-  { id: 'net-003', name: 'dev-network', subnetCidr: '10.10.0.0/16', external: false, diskTag: 'Project', status: 'active' },
-  { id: 'net-004', name: 'prod-net', subnetCidr: '172.16.0.0/12', external: true, diskTag: 'Project', status: 'building' },
-  { id: 'net-005', name: 'test-network', subnetCidr: '10.20.0.0/24', external: false, diskTag: 'Project', status: 'active' },
-  { id: 'net-006', name: 'dmz-net', subnetCidr: '10.30.0.0/24', external: true, diskTag: 'Project', status: 'active' },
-  { id: 'net-007', name: 'management-net', subnetCidr: '10.0.0.0/8', external: false, diskTag: 'Project', status: 'error' },
-  { id: 'net-008', name: 'backup-network', subnetCidr: '192.168.100.0/24', external: false, diskTag: 'Project', status: 'active' },
-  { id: 'net-009', name: 'external-gateway', subnetCidr: '203.0.113.0/24', external: true, diskTag: 'Shared', status: 'active' },
-  { id: 'net-010', name: 'provider-net', subnetCidr: '198.51.100.0/24', external: true, diskTag: 'External', status: 'active' },
+  { id: 'net-001', name: 'net-01', subnetCidr: '10.62.0.0/24', external: true, shared: true, adminState: 'Up', diskTag: 'Project', status: 'active' },
+  { id: 'net-002', name: 'internal-net', subnetCidr: '192.168.1.0/24', external: false, shared: false, adminState: 'Up', diskTag: 'Project', status: 'active' },
+  { id: 'net-003', name: 'dev-network', subnetCidr: '10.10.0.0/16', external: false, shared: true, adminState: 'Up', diskTag: 'Project', status: 'active' },
+  { id: 'net-004', name: 'prod-net', subnetCidr: '172.16.0.0/12', external: true, shared: false, adminState: 'Up', diskTag: 'Project', status: 'building' },
+  { id: 'net-005', name: 'test-network', subnetCidr: '10.20.0.0/24', external: false, shared: false, adminState: 'Down', diskTag: 'Project', status: 'active' },
+  { id: 'net-006', name: 'dmz-net', subnetCidr: '10.30.0.0/24', external: true, shared: true, adminState: 'Up', diskTag: 'Project', status: 'active' },
+  { id: 'net-007', name: 'management-net', subnetCidr: '10.0.0.0/8', external: false, shared: false, adminState: 'Down', diskTag: 'Project', status: 'error' },
+  { id: 'net-008', name: 'backup-network', subnetCidr: '192.168.100.0/24', external: false, shared: true, adminState: 'Up', diskTag: 'Project', status: 'active' },
+  { id: 'net-009', name: 'external-gateway', subnetCidr: '203.0.113.0/24', external: true, shared: true, adminState: 'Up', diskTag: 'Shared', status: 'active' },
+  { id: 'net-010', name: 'provider-net', subnetCidr: '198.51.100.0/24', external: true, shared: true, adminState: 'Up', diskTag: 'External', status: 'active' },
 ];
 
 /* ----------------------------------------
@@ -99,9 +101,9 @@ export function NetworksPage() {
 
   // Context menu items
   const getContextMenuItems = (network: Network): ContextMenuItem[] => [
-    { id: 'view', label: 'View Details' },
-    { id: 'edit', label: 'Edit Network' },
-    { id: 'delete', label: 'Delete', status: 'danger' },
+    { id: 'create-subnet', label: 'Create Subnet', onClick: () => console.log('Create subnet:', network.id) },
+    { id: 'edit', label: 'Edit', onClick: () => console.log('Edit:', network.id) },
+    { id: 'delete', label: 'Delete', status: 'danger', onClick: () => { setNetworkToDelete(network); setDeleteModalOpen(true); } },
   ];
 
   // Filter networks based on search and tab
@@ -136,35 +138,54 @@ export function NetworksPage() {
     {
       key: 'status',
       label: 'Status',
-      width: '59px',
+      width: '80px',
       align: 'center',
       render: (_, row) => (
-        <StatusIndicator status={networkStatusMap[row.status]} layout="icon-only" />
+        <StatusIndicator status={networkStatusMap[row.status]} />
       ),
     },
     {
       key: 'name',
       label: 'Name',
       flex: 1,
-      render: (value: string) => (
-        <span className="font-medium text-[var(--color-action-primary)]">{value}</span>
+      sortable: true,
+      render: (_, row) => (
+        <div className="flex flex-col gap-0.5">
+          <a
+            href={`/networks/${row.id}`}
+            className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {row.name}
+          </a>
+          <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
+            ID : {row.id}
+          </span>
+        </div>
       ),
     },
     {
       key: 'subnetCidr',
       label: 'Subnet CIDR',
       flex: 1,
+      sortable: true,
     },
     {
       key: 'external',
       label: 'External',
-      flex: 1,
+      width: '100px',
       render: (value: boolean) => value ? 'Yes' : 'No',
     },
     {
-      key: 'diskTag',
-      label: 'Disk Tag',
-      flex: 1,
+      key: 'shared',
+      label: 'Shared',
+      width: '100px',
+      render: (value: boolean) => value ? 'On' : 'Off',
+    },
+    {
+      key: 'adminState',
+      label: 'Admin State',
+      width: '120px',
     },
     {
       key: 'actions',
@@ -173,17 +194,9 @@ export function NetworksPage() {
       align: 'center',
       render: (_, row) => (
         <div onClick={(e) => e.stopPropagation()}>
-          <ContextMenu
-            items={getContextMenuItems(row)}
-            onSelect={(itemId) => {
-              if (itemId === 'delete') {
-                setNetworkToDelete(row);
-                setDeleteModalOpen(true);
-              }
-            }}
-          >
+          <ContextMenu items={getContextMenuItems(row)} trigger="click">
             <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors">
-              <IconDotsVertical size={16} stroke={1} className="text-[var(--color-text-default)]" />
+              <IconDotsVertical size={16} stroke={1} className="text-[var(--color-text-subtle)]" />
             </button>
           </ContextMenu>
         </div>
@@ -258,7 +271,7 @@ export function NetworksPage() {
             {/* Tabs */}
             <Tabs value={activeTab} onChange={setActiveTab} size="sm">
               <TabList>
-                <Tab value="current">Current Project</Tab>
+                <Tab value="current">Current Tenant</Tab>
                 <Tab value="shared">Shared</Tab>
                 <Tab value="external">External</Tab>
               </TabList>

@@ -110,9 +110,14 @@ export function PortsPage() {
 
   // Context menu items
   const getContextMenuItems = (port: Port): ContextMenuItem[] => [
-    { id: 'view', label: 'View Details' },
-    { id: 'edit', label: 'Edit Port' },
-    { id: 'delete', label: 'Delete', status: 'danger' },
+    { id: 'attach-instance', label: 'Attach Instance', onClick: () => console.log('Attach instance:', port.id) },
+    { id: 'detach-instance', label: 'Detach Instance', onClick: () => console.log('Detach instance:', port.id) },
+    { id: 'associate-floating-ip', label: 'Associate Floating IP', onClick: () => console.log('Associate floating IP:', port.id) },
+    { id: 'disassociate-floating-ip', label: 'Disassociate Floating IP', onClick: () => console.log('Disassociate floating IP:', port.id) },
+    { id: 'allocate-ip', label: 'Allocate IP', onClick: () => console.log('Allocate IP:', port.id) },
+    { id: 'manage-security-groups', label: 'Manage Security Groups', onClick: () => console.log('Manage security groups:', port.id) },
+    { id: 'edit', label: 'Edit', onClick: () => console.log('Edit:', port.id) },
+    { id: 'delete', label: 'Delete', status: 'danger', onClick: () => { setPortToDelete(port); setDeleteModalOpen(true); } },
   ];
 
   // Filter ports based on search and tab
@@ -242,17 +247,9 @@ export function PortsPage() {
       align: 'center',
       render: (_, row) => (
         <div onClick={(e) => e.stopPropagation()}>
-          <ContextMenu
-            items={getContextMenuItems(row)}
-            onSelect={(itemId) => {
-              if (itemId === 'delete') {
-                setPortToDelete(row);
-                setDeleteModalOpen(true);
-              }
-            }}
-          >
+          <ContextMenu items={getContextMenuItems(row)} trigger="click">
             <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors">
-              <IconDotsVertical size={16} stroke={1} className="text-[var(--color-text-default)]" />
+              <IconDotsVertical size={16} stroke={1} className="text-[var(--color-text-subtle)]" />
             </button>
           </ContextMenu>
         </div>

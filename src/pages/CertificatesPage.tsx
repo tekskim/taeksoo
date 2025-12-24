@@ -101,10 +101,9 @@ export function CertificatesPage() {
   }));
 
   // Context menu items
-  const getContextMenuItems = (): ContextMenuItem[] => [
-    { id: 'view', label: 'View Details' },
-    { id: 'download', label: 'Download Certificate' },
-    { id: 'delete', label: 'Delete', status: 'danger' },
+  const getContextMenuItems = (cert: Certificate): ContextMenuItem[] => [
+    { id: 'download', label: 'Download', onClick: () => console.log('Download:', cert.id), divider: true },
+    { id: 'delete', label: 'Delete', status: 'danger', onClick: () => { setCertToDelete(cert); setDeleteModalOpen(true); } },
   ];
 
   // Filter certificates based on search and tab
@@ -153,17 +152,9 @@ export function CertificatesPage() {
       align: 'center',
       render: (_, row) => (
         <div onClick={(e) => e.stopPropagation()}>
-          <ContextMenu
-            items={getContextMenuItems()}
-            onSelect={(itemId) => {
-              if (itemId === 'delete') {
-                setCertToDelete(row);
-                setDeleteModalOpen(true);
-              }
-            }}
-          >
+          <ContextMenu items={getContextMenuItems(row)} trigger="click">
             <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors">
-              <IconDotsVertical size={16} stroke={1} className="text-[var(--color-text-default)]" />
+              <IconDotsVertical size={16} stroke={1} className="text-[var(--color-text-subtle)]" />
             </button>
           </ContextMenu>
         </div>

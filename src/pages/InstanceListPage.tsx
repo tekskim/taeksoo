@@ -276,13 +276,18 @@ export function InstanceListPage() {
       flex: 1,
       sortable: true,
       render: (_, row) => (
-        <a 
-          href={`/instances/${row.id}`}
-          className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
-          onClick={(e) => e.stopPropagation()}
-        >
-          {row.name}
-        </a>
+        <div className="flex flex-col gap-0.5">
+          <a 
+            href={`/instances/${row.id}`}
+            className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {row.name}
+          </a>
+          <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
+            ID : {row.id}
+          </span>
+        </div>
       ),
     },
     {
@@ -312,12 +317,40 @@ export function InstanceListPage() {
       label: 'Image',
       flex: 1,
       sortable: true,
+      render: (_, row) => (
+        <div className="flex flex-col gap-0.5">
+          <a 
+            href={`/images/${row.id}`}
+            className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {row.image}
+          </a>
+          <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
+            ID : {row.id.substring(0, 8)}
+          </span>
+        </div>
+      ),
     },
     {
       key: 'flavor',
       label: 'Flavor',
       flex: 1,
       sortable: true,
+      render: (_, row) => (
+        <div className="flex flex-col gap-0.5">
+          <a 
+            href={`/flavors/${row.id}`}
+            className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {row.flavor}
+          </a>
+          <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
+            ID : {row.id.substring(0, 8)}
+          </span>
+        </div>
+      ),
     },
     {
       key: 'vcpu',
@@ -389,13 +422,18 @@ export function InstanceListPage() {
       flex: 1,
       sortable: true,
       render: (_, row) => (
-        <a 
-          href={`/bare-metal/${row.id}`}
-          className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
-          onClick={(e) => e.stopPropagation()}
-        >
-          {row.name}
-        </a>
+        <div className="flex flex-col gap-0.5">
+          <a 
+            href={`/bare-metal/${row.id}`}
+            className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {row.name}
+          </a>
+          <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
+            ID : {row.id}
+          </span>
+        </div>
       ),
     },
     {
@@ -409,12 +447,40 @@ export function InstanceListPage() {
       label: 'Image',
       flex: 1,
       sortable: true,
+      render: (_, row) => (
+        <div className="flex flex-col gap-0.5">
+          <a 
+            href={`/images/${row.id}`}
+            className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {row.image}
+          </a>
+          <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
+            ID : {row.id.substring(0, 8)}
+          </span>
+        </div>
+      ),
     },
     {
       key: 'flavor',
       label: 'Flavor',
       flex: 1,
       sortable: true,
+      render: (_, row) => (
+        <div className="flex flex-col gap-0.5">
+          <a 
+            href={`/flavors/${row.id}`}
+            className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {row.flavor}
+          </a>
+          <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
+            ID : {row.id.substring(0, 8)}
+          </span>
+        </div>
+      ),
     },
     {
       key: 'cpu',

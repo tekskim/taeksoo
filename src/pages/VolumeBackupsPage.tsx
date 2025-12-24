@@ -172,14 +172,19 @@ export function VolumeBackupsPage() {
       flex: 1,
       sortable: true,
       render: (_, row) => (
-        <a
-          href={`/volumes/${row.sourceVolumeId}`}
-          className="inline-flex items-center gap-1.5 font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
-          onClick={(e) => e.stopPropagation()}
-        >
-          {row.sourceVolume}
-          <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
-        </a>
+        <div className="flex flex-col gap-0.5">
+          <a
+            href={`/volumes/${row.sourceVolumeId}`}
+            className="inline-flex items-center gap-1.5 font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {row.sourceVolume}
+            <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
+          </a>
+          <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
+            ID : {row.sourceVolumeId}
+          </span>
+        </div>
       ),
     },
     {
@@ -202,29 +207,33 @@ export function VolumeBackupsPage() {
       render: (_, row) => {
         const menuItems: ContextMenuItem[] = [
           {
+            id: 'create-volume',
+            label: 'Create Volume',
+            onClick: () => console.log('Create volume from', row.name),
+          },
+          {
             id: 'restore',
-            label: 'Restore to Volume',
+            label: 'Restore Backup',
             onClick: () => console.log('Restore', row.name),
           },
           {
             id: 'edit',
-            label: 'Edit Metadata',
+            label: 'Edit',
             onClick: () => console.log('Edit', row.name),
           },
-          { id: 'divider', type: 'divider' },
           {
             id: 'delete',
             label: 'Delete',
-            onClick: () => handleDeleteClick(row),
             status: 'danger',
+            onClick: () => handleDeleteClick(row),
           },
         ];
 
         return (
           <div onClick={(e) => e.stopPropagation()}>
-            <ContextMenu items={menuItems}>
+            <ContextMenu items={menuItems} trigger="click">
               <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors">
-                <IconDotsVertical size={16} stroke={1} className="text-[var(--color-text-default)]" />
+                <IconDotsVertical size={16} stroke={1} className="text-[var(--color-text-subtle)]" />
               </button>
             </ContextMenu>
           </div>

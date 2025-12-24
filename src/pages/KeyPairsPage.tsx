@@ -183,11 +183,6 @@ export function KeyPairsPage() {
       render: (_, row) => {
         const menuItems: ContextMenuItem[] = [
           {
-            id: 'download',
-            label: 'Download Public Key',
-            onClick: () => console.log('Download public key:', row.id),
-          },
-          {
             id: 'delete',
             label: 'Delete',
             status: 'danger',

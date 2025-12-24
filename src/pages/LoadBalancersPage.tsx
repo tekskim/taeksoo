@@ -100,10 +100,11 @@ export function LoadBalancersPage() {
 
   // Context menu items
   const getContextMenuItems = (lb: LoadBalancer): ContextMenuItem[] => [
-    { id: 'view', label: 'View Details' },
-    { id: 'edit', label: 'Edit Load Balancer' },
-    { id: 'listeners', label: 'Manage Listeners' },
-    { id: 'delete', label: 'Delete', status: 'danger' },
+    { id: 'associate-floating-ip', label: 'Associate Floating IP', onClick: () => console.log('Associate floating IP:', lb.id) },
+    { id: 'disassociate-floating-ip', label: 'Disassociate Floating IP', onClick: () => console.log('Disassociate floating IP:', lb.id) },
+    { id: 'create-listener', label: 'Create Listener', onClick: () => console.log('Create listener:', lb.id) },
+    { id: 'edit', label: 'Edit', onClick: () => console.log('Edit:', lb.id) },
+    { id: 'delete', label: 'Delete', status: 'danger', onClick: () => { setLbToDelete(lb); setDeleteModalOpen(true); } },
   ];
 
   // Filter load balancers based on search
@@ -185,17 +186,9 @@ export function LoadBalancersPage() {
       align: 'center',
       render: (_, row) => (
         <div onClick={(e) => e.stopPropagation()}>
-          <ContextMenu
-            items={getContextMenuItems(row)}
-            onSelect={(itemId) => {
-              if (itemId === 'delete') {
-                setLbToDelete(row);
-                setDeleteModalOpen(true);
-              }
-            }}
-          >
+          <ContextMenu items={getContextMenuItems(row)} trigger="click">
             <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors">
-              <IconDotsVertical size={16} stroke={1} className="text-[var(--color-text-default)]" />
+              <IconDotsVertical size={16} stroke={1} className="text-[var(--color-text-subtle)]" />
             </button>
           </ContextMenu>
         </div>

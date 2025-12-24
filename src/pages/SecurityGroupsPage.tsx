@@ -94,9 +94,9 @@ export function SecurityGroupsPage() {
 
   // Context menu items
   const getContextMenuItems = (sg: SecurityGroup): ContextMenuItem[] => [
-    { id: 'view', label: 'View Details' },
-    { id: 'edit', label: 'Edit Rules' },
-    { id: 'delete', label: 'Delete', status: 'danger' },
+    { id: 'create-rule', label: 'Create Rule', onClick: () => console.log('Create rule:', sg.id) },
+    { id: 'edit', label: 'Edit', onClick: () => console.log('Edit:', sg.id) },
+    { id: 'delete', label: 'Delete', status: 'danger', onClick: () => { setGroupToDelete(sg); setDeleteModalOpen(true); } },
   ];
 
   // Filter security groups based on search
@@ -152,17 +152,9 @@ export function SecurityGroupsPage() {
       align: 'center',
       render: (_, row) => (
         <div onClick={(e) => e.stopPropagation()}>
-          <ContextMenu
-            items={getContextMenuItems(row)}
-            onSelect={(itemId) => {
-              if (itemId === 'delete') {
-                setGroupToDelete(row);
-                setDeleteModalOpen(true);
-              }
-            }}
-          >
+          <ContextMenu items={getContextMenuItems(row)} trigger="click">
             <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors">
-              <IconDotsVertical size={16} stroke={1} className="text-[var(--color-text-default)]" />
+              <IconDotsVertical size={16} stroke={1} className="text-[var(--color-text-subtle)]" />
             </button>
           </ContextMenu>
         </div>

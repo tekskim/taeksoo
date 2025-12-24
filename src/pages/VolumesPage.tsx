@@ -188,16 +188,21 @@ export function VolumesPage() {
       flex: 1,
       render: (_, row) => (
         row.attachedTo && row.attachedToId ? (
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              handleOpenInNewTab(row.attachedToId!, row.attachedTo!);
-            }}
-            className="inline-flex items-center gap-1.5 font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
-          >
-            {row.attachedTo}
-            <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
-          </button>
+          <div className="flex flex-col gap-0.5">
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                handleOpenInNewTab(row.attachedToId!, row.attachedTo!);
+              }}
+              className="inline-flex items-center gap-1.5 font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
+            >
+              {row.attachedTo}
+              <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
+            </button>
+            <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
+              ID : {row.attachedToId}
+            </span>
+          </div>
         ) : (
           <span className="text-[var(--color-text-muted)]">-</span>
         )
@@ -217,24 +222,44 @@ export function VolumesPage() {
       render: (_, row) => {
         const menuItems: ContextMenuItem[] = [
           {
-            id: 'view-details',
-            label: 'View Details',
-            onClick: () => console.log('View details:', row.id),
+            id: 'data-protection',
+            label: 'Data Protection',
+            submenu: [
+              { id: 'create-snapshot', label: 'Create Volume Snapshot', onClick: () => console.log('Create snapshot:', row.id) },
+              { id: 'create-backup', label: 'Create Volume Backup', onClick: () => console.log('Create backup:', row.id) },
+              { id: 'clone-volume', label: 'Clone Volume', onClick: () => console.log('Clone volume:', row.id) },
+              { id: 'restore-snapshot', label: 'Restore from Snapshot', onClick: () => console.log('Restore from snapshot:', row.id) },
+            ],
           },
           {
-            id: 'extend',
-            label: 'Extend Volume',
-            onClick: () => console.log('Extend volume:', row.id),
+            id: 'operate',
+            label: 'Operate',
+            submenu: [
+              { id: 'create-instance', label: 'Create Instance', onClick: () => console.log('Create instance:', row.id) },
+              { id: 'create-image', label: 'Create Image', onClick: () => console.log('Create image:', row.id) },
+              { id: 'attach-instance', label: 'Attach Instance', onClick: () => console.log('Attach instance:', row.id) },
+              { id: 'detach-instance', label: 'Detach Instance', onClick: () => console.log('Detach instance:', row.id) },
+              { id: 'boot-setting', label: 'Boot Setting', onClick: () => console.log('Boot setting:', row.id) },
+            ],
           },
           {
-            id: 'snapshot',
-            label: 'Create Snapshot',
-            onClick: () => console.log('Create snapshot:', row.id),
+            id: 'configuration',
+            label: 'Configuration',
+            submenu: [
+              { id: 'edit', label: 'Edit', onClick: () => console.log('Edit:', row.id) },
+              { id: 'extend-volume', label: 'Extend Volume', onClick: () => console.log('Extend volume:', row.id) },
+              { id: 'change-volume-type', label: 'Change Volume Type', onClick: () => console.log('Change volume type:', row.id) },
+            ],
           },
           {
-            id: 'transfer',
-            label: 'Transfer Volume',
-            onClick: () => console.log('Transfer volume:', row.id),
+            id: 'create-transfer',
+            label: 'Create Transfer',
+            onClick: () => console.log('Create transfer:', row.id),
+          },
+          {
+            id: 'cancel-transfer',
+            label: 'Cancel Transfer',
+            onClick: () => console.log('Cancel transfer:', row.id),
           },
           {
             id: 'delete',

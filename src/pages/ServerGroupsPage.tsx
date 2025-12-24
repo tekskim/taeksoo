@@ -151,14 +151,9 @@ export function ServerGroupsPage() {
       render: (_, row) => {
         const menuItems: ContextMenuItem[] = [
           {
-            id: 'view-details',
-            label: 'View Details',
-            onClick: () => console.log('View details:', row.id),
-          },
-          {
-            id: 'edit',
-            label: 'Edit',
-            onClick: () => console.log('Edit server group:', row.id),
+            id: 'create-instance',
+            label: 'Create Instance',
+            onClick: () => console.log('Create instance in server group:', row.id),
           },
           {
             id: 'delete',

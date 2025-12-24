@@ -101,9 +101,10 @@ export function FloatingIPsPage() {
 
   // Context menu items
   const getContextMenuItems = (fip: FloatingIP): ContextMenuItem[] => [
-    { id: 'view', label: 'View Details' },
-    { id: 'associate', label: fip.associatedTo ? 'Disassociate' : 'Associate' },
-    { id: 'release', label: 'Release', status: 'danger' },
+    { id: 'associate', label: 'Associate', onClick: () => console.log('Associate:', fip.id) },
+    { id: 'disassociate', label: 'Disassociate', onClick: () => console.log('Disassociate:', fip.id) },
+    { id: 'edit', label: 'Edit', onClick: () => console.log('Edit:', fip.id) },
+    { id: 'release', label: 'Release', status: 'danger', onClick: () => { setFloatingIPToDelete(fip); setDeleteModalOpen(true); } },
   ];
 
   // Filter floating IPs based on search
@@ -208,17 +209,9 @@ export function FloatingIPsPage() {
       align: 'center',
       render: (_, row) => (
         <div onClick={(e) => e.stopPropagation()}>
-          <ContextMenu
-            items={getContextMenuItems(row)}
-            onSelect={(itemId) => {
-              if (itemId === 'release') {
-                setFloatingIPToDelete(row);
-                setDeleteModalOpen(true);
-              }
-            }}
-          >
+          <ContextMenu items={getContextMenuItems(row)} trigger="click">
             <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors">
-              <IconDotsVertical size={16} stroke={1} className="text-[var(--color-text-default)]" />
+              <IconDotsVertical size={16} stroke={1} className="text-[var(--color-text-subtle)]" />
             </button>
           </ContextMenu>
         </div>

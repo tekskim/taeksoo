@@ -35,11 +35,11 @@ type RouterStatus = 'active' | 'error' | 'building';
 interface Router {
   id: string;
   name: string;
-  portsCount: number;
   externalGateway: boolean;
   externalFixedIp: string;
   externalNetwork: string;
   externalNetworkId: string;
+  adminState: 'Up' | 'Down';
   status: RouterStatus;
 }
 
@@ -48,16 +48,16 @@ interface Router {
    ---------------------------------------- */
 
 const mockRouters: Router[] = [
-  { id: 'router-001', name: 'router-01', portsCount: 5, externalGateway: true, externalFixedIp: '10.7.60.91', externalNetwork: 'net-01', externalNetworkId: 'net-001', status: 'active' },
-  { id: 'router-002', name: 'main-router', portsCount: 12, externalGateway: true, externalFixedIp: '10.7.60.92', externalNetwork: 'external-net', externalNetworkId: 'net-002', status: 'active' },
-  { id: 'router-003', name: 'dev-router', portsCount: 3, externalGateway: false, externalFixedIp: '-', externalNetwork: '-', externalNetworkId: '', status: 'active' },
-  { id: 'router-004', name: 'prod-router', portsCount: 8, externalGateway: true, externalFixedIp: '10.7.60.93', externalNetwork: 'prod-net', externalNetworkId: 'net-003', status: 'building' },
-  { id: 'router-005', name: 'test-router', portsCount: 2, externalGateway: false, externalFixedIp: '-', externalNetwork: '-', externalNetworkId: '', status: 'active' },
-  { id: 'router-006', name: 'backup-router', portsCount: 4, externalGateway: true, externalFixedIp: '10.7.60.94', externalNetwork: 'backup-net', externalNetworkId: 'net-004', status: 'active' },
-  { id: 'router-007', name: 'dmz-router', portsCount: 6, externalGateway: true, externalFixedIp: '10.7.60.95', externalNetwork: 'dmz-net', externalNetworkId: 'net-005', status: 'error' },
-  { id: 'router-008', name: 'internal-router', portsCount: 15, externalGateway: false, externalFixedIp: '-', externalNetwork: '-', externalNetworkId: '', status: 'active' },
-  { id: 'router-009', name: 'edge-router', portsCount: 7, externalGateway: true, externalFixedIp: '10.7.60.96', externalNetwork: 'edge-net', externalNetworkId: 'net-006', status: 'active' },
-  { id: 'router-010', name: 'vpn-router', portsCount: 10, externalGateway: true, externalFixedIp: '10.7.60.97', externalNetwork: 'vpn-net', externalNetworkId: 'net-007', status: 'active' },
+  { id: '29tgj234', name: 'router-01', externalGateway: true, externalFixedIp: '10.7.60.91', externalNetwork: 'net-01', externalNetworkId: '29tgj234', adminState: 'Up', status: 'active' },
+  { id: 'router-002', name: 'main-router', externalGateway: true, externalFixedIp: '10.7.60.92', externalNetwork: 'external-net', externalNetworkId: 'net-002', adminState: 'Up', status: 'active' },
+  { id: 'router-003', name: 'dev-router', externalGateway: false, externalFixedIp: '-', externalNetwork: '-', externalNetworkId: '', adminState: 'Up', status: 'active' },
+  { id: 'router-004', name: 'prod-router', externalGateway: true, externalFixedIp: '10.7.60.93', externalNetwork: 'prod-net', externalNetworkId: 'net-003', adminState: 'Up', status: 'building' },
+  { id: 'router-005', name: 'test-router', externalGateway: false, externalFixedIp: '-', externalNetwork: '-', externalNetworkId: '', adminState: 'Down', status: 'active' },
+  { id: 'router-006', name: 'backup-router', externalGateway: true, externalFixedIp: '10.7.60.94', externalNetwork: 'backup-net', externalNetworkId: 'net-004', adminState: 'Up', status: 'active' },
+  { id: 'router-007', name: 'dmz-router', externalGateway: true, externalFixedIp: '10.7.60.95', externalNetwork: 'dmz-net', externalNetworkId: 'net-005', adminState: 'Down', status: 'error' },
+  { id: 'router-008', name: 'internal-router', externalGateway: false, externalFixedIp: '-', externalNetwork: '-', externalNetworkId: '', adminState: 'Up', status: 'active' },
+  { id: 'router-009', name: 'edge-router', externalGateway: true, externalFixedIp: '10.7.60.96', externalNetwork: 'edge-net', externalNetworkId: 'net-006', adminState: 'Up', status: 'active' },
+  { id: 'router-010', name: 'vpn-router', externalGateway: true, externalFixedIp: '10.7.60.97', externalNetwork: 'vpn-net', externalNetworkId: 'net-007', adminState: 'Up', status: 'active' },
 ];
 
 /* ----------------------------------------
@@ -97,9 +97,13 @@ export function RoutersPage() {
 
   // Context menu items
   const getContextMenuItems = (router: Router): ContextMenuItem[] => [
-    { id: 'view', label: 'View Details' },
-    { id: 'edit', label: 'Edit Router' },
-    { id: 'delete', label: 'Delete', status: 'danger' },
+    { id: 'connect-subnet', label: 'Connect Subnet', onClick: () => console.log('Connect subnet:', router.id) },
+    { id: 'disconnect-subnet', label: 'Disconnect Subnet', onClick: () => console.log('Disconnect subnet:', router.id) },
+    { id: 'external-gateway', label: 'External Gateway Setting', onClick: () => console.log('External gateway setting:', router.id) },
+    { id: 'enable-snat', label: 'Enable SNAT', onClick: () => console.log('Enable SNAT:', router.id) },
+    { id: 'disable-snat', label: 'Disable SNAT', onClick: () => console.log('Disable SNAT:', router.id) },
+    { id: 'edit', label: 'Edit', onClick: () => console.log('Edit:', router.id) },
+    { id: 'delete', label: 'Delete', status: 'danger', onClick: () => { setRouterToDelete(router); setDeleteModalOpen(true); } },
   ];
 
   // Filter routers based on search
@@ -119,40 +123,49 @@ export function RoutersPage() {
     {
       key: 'status',
       label: 'Status',
-      width: '59px',
+      width: '80px',
       align: 'center',
       render: (_, row) => (
-        <StatusIndicator status={routerStatusMap[row.status]} layout="icon-only" />
+        <StatusIndicator status={routerStatusMap[row.status]} />
       ),
     },
     {
       key: 'name',
       label: 'Name',
       flex: 1,
-      render: (value: string) => (
-        <span className="font-medium text-[var(--color-action-primary)]">{value}</span>
+      sortable: true,
+      render: (_, row) => (
+        <div className="flex flex-col gap-0.5">
+          <a
+            href={`/routers/${row.id}`}
+            className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {row.name}
+          </a>
+          <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
+            ID : {row.id}
+          </span>
+        </div>
       ),
-    },
-    {
-      key: 'portsCount',
-      label: 'Ports Count',
-      flex: 1,
     },
     {
       key: 'externalGateway',
       label: 'External Gateway',
-      flex: 1,
-      render: (value: boolean) => value ? 'Yes' : 'No',
+      width: '140px',
+      render: (value: boolean) => value ? 'Open' : 'Close',
     },
     {
       key: 'externalFixedIp',
       label: 'External Fixed IP',
       flex: 1,
+      sortable: true,
     },
     {
       key: 'externalNetwork',
       label: 'External Network',
       flex: 1,
+      sortable: true,
       render: (_, row) => (
         row.externalNetworkId ? (
           <div className="flex flex-col gap-0.5">
@@ -165,11 +178,16 @@ export function RoutersPage() {
               <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
             </a>
             <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
-              ID : {row.externalNetworkId.substring(0, 8)}
+              ID : {row.externalNetworkId}
             </span>
           </div>
         ) : '-'
       ),
+    },
+    {
+      key: 'adminState',
+      label: 'Admin State',
+      width: '120px',
     },
     {
       key: 'actions',
@@ -178,17 +196,9 @@ export function RoutersPage() {
       align: 'center',
       render: (_, row) => (
         <div onClick={(e) => e.stopPropagation()}>
-          <ContextMenu
-            items={getContextMenuItems(row)}
-            onSelect={(itemId) => {
-              if (itemId === 'delete') {
-                setRouterToDelete(row);
-                setDeleteModalOpen(true);
-              }
-            }}
-          >
+          <ContextMenu items={getContextMenuItems(row)} trigger="click">
             <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors">
-              <IconDotsVertical size={16} stroke={1} className="text-[var(--color-text-default)]" />
+              <IconDotsVertical size={16} stroke={1} className="text-[var(--color-text-subtle)]" />
             </button>
           </ContextMenu>
         </div>
