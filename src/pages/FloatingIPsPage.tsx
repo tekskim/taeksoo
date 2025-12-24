@@ -26,7 +26,7 @@ import {
   IconDownload,
   IconBell,
   IconExternalLink,
-  IconServer2,
+  IconCube,
 } from '@tabler/icons-react';
 
 /* ----------------------------------------
@@ -147,7 +147,7 @@ export function FloatingIPsPage() {
           <div className="flex items-center gap-2">
             <Tooltip content="Instance" position="top">
               <div className="flex-shrink-0 bg-white border border-[var(--color-border-default)] rounded-[4px] p-1 cursor-default">
-                <IconServer2 size={12} className="text-[var(--color-text-subtle)]" />
+                <IconCube size={12} className="text-[var(--color-text-subtle)]" />
               </div>
             </Tooltip>
             <div className="flex flex-col gap-0.5 min-w-0">

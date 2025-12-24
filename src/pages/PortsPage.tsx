@@ -29,7 +29,7 @@ import {
   IconDownload,
   IconBell,
   IconExternalLink,
-  IconServer2,
+  IconCube,
   IconRouter,
 } from '@tabler/icons-react';
 
@@ -170,7 +170,7 @@ export function PortsPage() {
                 {row.attachedType === 'router' ? (
                   <IconRouter size={12} className="text-[var(--color-text-subtle)]" />
                 ) : (
-                  <IconServer2 size={12} className="text-[var(--color-text-subtle)]" />
+                  <IconCube size={12} className="text-[var(--color-text-subtle)]" />
                 )}
               </div>
             </Tooltip>
