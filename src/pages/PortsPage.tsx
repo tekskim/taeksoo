@@ -161,7 +161,7 @@ export function PortsPage() {
     {
       key: 'attachedTo',
       label: 'Attached To',
-      flex: 1,
+      width: '160px',
       render: (_, row) => (
         row.attachedTo ? (
           <div className="flex items-center gap-2">
@@ -194,7 +194,7 @@ export function PortsPage() {
     {
       key: 'ownedNetwork',
       label: 'Owned Network',
-      flex: 1,
+      width: '140px',
       render: (_, row) => (
         <div className="flex flex-col gap-0.5 min-w-0">
           <a
