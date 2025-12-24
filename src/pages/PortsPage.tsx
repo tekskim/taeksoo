@@ -175,14 +175,16 @@ export function PortsPage() {
               </div>
             </Tooltip>
             <div className="flex flex-col gap-0.5 min-w-0">
-              <a
-                href={row.attachedType === 'router' ? `/routers/${row.attachedToId}` : `/instances/${row.attachedToId}`}
-                className="inline-flex items-center gap-1 font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
-                onClick={(e) => e.stopPropagation()}
-              >
-                <span className="truncate">{row.attachedTo}</span>
-                <IconExternalLink size={12} className="flex-shrink-0 text-[var(--color-action-primary)]" />
-              </a>
+              <Tooltip content={row.attachedTo} position="top">
+                <a
+                  href={row.attachedType === 'router' ? `/routers/${row.attachedToId}` : `/instances/${row.attachedToId}`}
+                  className="inline-flex items-center gap-1 font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  <span className="truncate">{row.attachedTo}</span>
+                  <IconExternalLink size={12} className="flex-shrink-0 text-[var(--color-action-primary)]" />
+                </a>
+              </Tooltip>
               <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] truncate">
                 ID : {row.attachedToId?.substring(0, 8)}
               </span>
@@ -197,14 +199,16 @@ export function PortsPage() {
       width: '140px',
       render: (_, row) => (
         <div className="flex flex-col gap-0.5 min-w-0">
-          <a
-            href={`/networks/${row.ownedNetworkId}`}
-            className="inline-flex items-center gap-1 font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <span className="truncate">{row.ownedNetwork}</span>
-            <IconExternalLink size={12} className="flex-shrink-0 text-[var(--color-action-primary)]" />
-          </a>
+          <Tooltip content={row.ownedNetwork} position="top">
+            <a
+              href={`/networks/${row.ownedNetworkId}`}
+              className="inline-flex items-center gap-1 font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <span className="truncate">{row.ownedNetwork}</span>
+              <IconExternalLink size={12} className="flex-shrink-0 text-[var(--color-action-primary)]" />
+            </a>
+          </Tooltip>
           <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] truncate">
             ID : {row.ownedNetworkId.substring(0, 8)}
           </span>
