@@ -10,8 +10,6 @@ import {
   IconCpu,
   IconKey,
   IconUsers,
-  IconBox,
-  IconStack2,
   IconDatabase,
   IconDatabaseExport,
   IconDeviceFloppy,
@@ -146,18 +144,6 @@ export function Sidebar({ isOpen = true, onToggle }: SidebarProps) {
               label="Server Groups"
               href="/server-groups"
               active={isActive('/server-groups')}
-            />
-            <MenuItem
-              icon={<IconBox size={16} stroke={1.5} />}
-              label="Hypervisors"
-              href="/hypervisors"
-              active={isActive('/hypervisors')}
-            />
-            <MenuItem
-              icon={<IconStack2 size={16} stroke={1.5} />}
-              label="Host Aggregates"
-              href="/host-aggregates"
-              active={isActive('/host-aggregates')}
             />
           </MenuSection>
 
