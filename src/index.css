@@ -636,7 +636,7 @@
   --tabs-padding-x: var(--spacing-3);
   --tabs-indicator-gap: var(--spacing-2-5);
   --tabs-indicator-height: 2px;
-  --tabs-panel-padding: var(--spacing-4);
+  --tabs-panel-padding: 0;
 
   /* Tabs - Size SM */
   --tabs-font-size-sm: var(--font-size-12);

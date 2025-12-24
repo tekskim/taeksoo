@@ -33,6 +33,8 @@ export * from './components/Tooltip';
 export * from './components/Drawer';
 export * from './components/ListToolbar';
 export * from './components/Modal';
+export * from './components/DetailHeader';
+export * from './components/SectionCard';
 
 // Layouts
 export * from './layouts';

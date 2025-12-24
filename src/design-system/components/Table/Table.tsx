@@ -166,7 +166,7 @@ export function Table<T extends Record<string, any>>({
         style={maxHeight ? { maxHeight } : undefined}
       >
         {/* Inner container for min-width */}
-        <div style={{ minWidth: `${minWidth}px` }}>
+        <div style={{ minWidth: `${minWidth}px`, width: '100%' }}>
           {/* Header */}
           <div
             className={`

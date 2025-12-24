@@ -41,6 +41,8 @@ import {
   Tooltip,
   Modal,
   ConfirmModal,
+  DetailHeader,
+  SectionCard,
 } from '@/design-system';
 import {
   // Navigation icons (for sidebar)
@@ -217,6 +219,8 @@ const dataDisplayItems = [
   { id: 'status-indicator', label: 'Status Indicator', icon: IconActivity },
   { id: 'tooltip', label: 'Tooltip', icon: IconMessage2 },
   { id: 'window-control', label: 'Window Control', icon: IconAppWindow },
+  { id: 'detail-header', label: 'Detail Header', icon: IconLayoutNavbar },
+  { id: 'section-card', label: 'Section Card', icon: IconLayoutGrid },
 ];
 
 // Navigation
@@ -3577,6 +3581,164 @@ outline: 2px solid var(--color-border-focus);`}
                     <span className="text-[length:var(--font-size-12)] font-medium">Application Title</span>
                     <WindowControls />
                   </div>
+                </VStack>
+              </VStack>
+            </Section>
+
+            {/* DetailHeader Component */}
+            <Section id="detail-header" title="Detail Header" description="Page header component for resource detail views with title, actions, and info cards">
+              <VStack gap={8}>
+                {/* Tokens */}
+                <VStack gap={3}>
+                  <Label>Design Tokens</Label>
+                  <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
+                    <code>padding: 16px</code> · <code>radius: 8px</code> · <code>title: 16px semibold</code> · <code>info-card.padding: 16×12px</code> · <code>info-card.radius: 8px</code>
+                  </div>
+                </VStack>
+
+                {/* Basic Example */}
+                <VStack gap={3}>
+                  <Label>Basic Usage</Label>
+                  <DetailHeader>
+                    <DetailHeader.Title>Instance Name</DetailHeader.Title>
+                    <DetailHeader.Actions>
+                      <Button variant="secondary" size="sm">Start</Button>
+                      <Button variant="secondary" size="sm">Stop</Button>
+                      <Button variant="destructive" size="sm">Delete</Button>
+                    </DetailHeader.Actions>
+                    <DetailHeader.InfoGrid>
+                      <DetailHeader.InfoCard label="Status" value="Active" status="active" />
+                      <DetailHeader.InfoCard label="ID" value="abc123-def456" copyable />
+                      <DetailHeader.InfoCard label="Created At" value="2025-01-15 10:30:00" />
+                    </DetailHeader.InfoGrid>
+                  </DetailHeader>
+                </VStack>
+
+                {/* With Different Status */}
+                <VStack gap={3}>
+                  <Label>Different Status States</Label>
+                  <div className="grid grid-cols-2 gap-4">
+                    <DetailHeader.InfoCard label="Active" value="Running" status="active" />
+                    <DetailHeader.InfoCard label="Shutoff" value="Stopped" status="shutoff" />
+                    <DetailHeader.InfoCard label="Degraded" value="Degraded" status="degraded" />
+                    <DetailHeader.InfoCard label="Error" value="Failed" status="error" />
+                  </div>
+                </VStack>
+
+                {/* With Copy Button */}
+                <VStack gap={3}>
+                  <Label>Copyable Info Cards</Label>
+                  <div className="grid grid-cols-2 gap-4">
+                    <DetailHeader.InfoCard label="Instance ID" value="i-0abc123def456789" copyable />
+                    <DetailHeader.InfoCard label="IP Address" value="192.168.1.100" copyable />
+                  </div>
+                </VStack>
+
+                {/* Full Example */}
+                <VStack gap={3}>
+                  <Label>Full Example (VM Detail Page)</Label>
+                  <DetailHeader>
+                    <DetailHeader.Title>web-server-01</DetailHeader.Title>
+                    <DetailHeader.Actions>
+                      <Button variant="secondary" size="sm" leftIcon={<IconTerminal2 size={12} />}>Console</Button>
+                      <Button variant="secondary" size="sm" leftIcon={<IconPlayerPlay size={12} />}>Start</Button>
+                      <Button variant="secondary" size="sm" leftIcon={<IconPlayerStop size={12} />}>Stop</Button>
+                      <Button variant="secondary" size="sm" leftIcon={<IconRefresh size={12} />}>Reboot</Button>
+                      <Button variant="destructive" size="sm" leftIcon={<IconTrash size={12} />}>Delete</Button>
+                    </DetailHeader.Actions>
+                    <DetailHeader.InfoGrid>
+                      <DetailHeader.InfoCard label="Status" value="Active" status="active" />
+                      <DetailHeader.InfoCard label="ID" value="7284d9174e81431e93060a9bbcf2cdfd" copyable />
+                      <DetailHeader.InfoCard label="Host" value="compute-03" />
+                      <DetailHeader.InfoCard label="Created At" value="2025-07-25 09:12:20" />
+                    </DetailHeader.InfoGrid>
+                  </DetailHeader>
+                </VStack>
+              </VStack>
+            </Section>
+
+            {/* SectionCard Component */}
+            <Section id="section-card" title="Section Card" description="Container component for grouping related content in detail views">
+              <VStack gap={8}>
+                {/* Tokens */}
+                <VStack gap={3}>
+                  <Label>Design Tokens</Label>
+                  <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
+                    <code>padding: 16×12px</code> · <code>radius: 6px (md)</code> · <code>header.height: 32px</code> · <code>title: 14px medium</code> · <code>label: 11px medium</code> · <code>value: 12px</code>
+                  </div>
+                </VStack>
+
+                {/* Basic Example */}
+                <VStack gap={3}>
+                  <Label>Basic Usage</Label>
+                  <SectionCard>
+                    <SectionCard.Header title="Basic Information" />
+                    <SectionCard.Content>
+                      <SectionCard.DataRow label="Instance Name" value="web-server-01" />
+                      <SectionCard.DataRow label="Availability Zone" value="nova" />
+                      <SectionCard.DataRow label="Description" value="Production web server" />
+                    </SectionCard.Content>
+                  </SectionCard>
+                </VStack>
+
+                {/* With Actions */}
+                <VStack gap={3}>
+                  <Label>With Action Buttons</Label>
+                  <SectionCard>
+                    <SectionCard.Header 
+                      title="Basic Information" 
+                      actions={<Button variant="secondary" size="sm" leftIcon={<IconEdit size={16} />}>Edit</Button>}
+                    />
+                    <SectionCard.Content>
+                      <SectionCard.DataRow label="Instance Name" value="web-server-01" />
+                      <SectionCard.DataRow label="Availability Zone" value="nova" />
+                    </SectionCard.Content>
+                  </SectionCard>
+                </VStack>
+
+                {/* With Links */}
+                <VStack gap={3}>
+                  <Label>With Link Values</Label>
+                  <SectionCard>
+                    <SectionCard.Header title="Flavor" />
+                    <SectionCard.Content>
+                      <SectionCard.DataRow label="Flavor Name" value="m1.large" isLink linkHref="/flavors" />
+                      <SectionCard.DataRow label="Spec" value="vCPU: 4 / RAM: 8 GiB / Disk: 80 GiB" />
+                    </SectionCard.Content>
+                  </SectionCard>
+                </VStack>
+
+                {/* Multiple Sections Example */}
+                <VStack gap={3}>
+                  <Label>Multiple Sections (Detail Page Layout)</Label>
+                  <VStack gap={4}>
+                    <SectionCard>
+                      <SectionCard.Header 
+                        title="Basic Information" 
+                        actions={<Button variant="secondary" size="sm" leftIcon={<IconEdit size={16} />}>Edit</Button>}
+                      />
+                      <SectionCard.Content>
+                        <SectionCard.DataRow label="Instance Name" value="tk-test" />
+                        <SectionCard.DataRow label="Availability Zone" value="nova" />
+                        <SectionCard.DataRow label="Description" value="-" />
+                      </SectionCard.Content>
+                    </SectionCard>
+
+                    <SectionCard>
+                      <SectionCard.Header title="Flavor" />
+                      <SectionCard.Content>
+                        <SectionCard.DataRow label="Flavor Name" value="web-server-10" isLink linkHref="/flavors" />
+                        <SectionCard.DataRow label="Spec" value="vCPU: 1 / RAM: 4 GiB / Disk: 40 GiB / GPU: 1" />
+                      </SectionCard.Content>
+                    </SectionCard>
+
+                    <SectionCard>
+                      <SectionCard.Header title="Image" />
+                      <SectionCard.Content>
+                        <SectionCard.DataRow label="Image" value="web-server-10" isLink linkHref="/images" />
+                      </SectionCard.Content>
+                    </SectionCard>
+                  </VStack>
                 </VStack>
               </VStack>
             </Section>

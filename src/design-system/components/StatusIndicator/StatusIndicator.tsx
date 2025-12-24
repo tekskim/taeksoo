@@ -44,6 +44,7 @@ export type StatusType =
   | 'down';
 
 export type StatusLayout = 'default' | 'icon-only';
+export type StatusSize = 'sm' | 'md' | 'lg';
 
 export interface StatusConfig {
   label: string;
@@ -160,6 +161,8 @@ export interface StatusIndicatorProps extends Omit<HTMLAttributes<HTMLSpanElemen
   status: StatusType;
   /** Layout variant */
   layout?: StatusLayout;
+  /** Size variant (only applies to icon-only layout) */
+  size?: StatusSize;
   /** Custom label (overrides default) */
   label?: string;
 }
@@ -171,6 +174,7 @@ export interface StatusIndicatorProps extends Omit<HTMLAttributes<HTMLSpanElemen
 export function StatusIndicator({
   status,
   layout = 'default',
+  size = 'md',
   label,
   className = '',
   ...props
@@ -178,6 +182,48 @@ export function StatusIndicator({
   const config = statusConfig[status];
   const displayLabel = label ?? config.label;
 
+  // Size-based icon sizes for icon-only layout
+  const iconSizes: Record<StatusSize, number> = {
+    sm: 12,
+    md: 14,
+    lg: 16,
+  };
+
+  // Size-based container sizes for icon-only layout
+  const sizeStyles: Record<StatusSize, string> = {
+    sm: 'size-[20px]',
+    md: 'size-[24px]',
+    lg: 'size-[28px]',
+  };
+
+  // For icon-only layout with size variant
+  if (layout === 'icon-only') {
+    const iconSize = iconSizes[size];
+    const containerSize = sizeStyles[size];
+    
+    // Clone the icon with the appropriate size
+    const IconComponent = config.icon.type;
+    const iconProps = { ...config.icon.props, size: iconSize };
+    
+    const classes = twMerge(
+      'inline-flex items-center justify-center',
+      'rounded-full',
+      'text-[var(--status-text)]',
+      containerSize,
+      config.bgColor,
+      className
+    );
+
+    return (
+      <span className={classes} role="status" aria-label={displayLabel} {...props}>
+        <span className="shrink-0">
+          <IconComponent {...iconProps} />
+        </span>
+      </span>
+    );
+  }
+
+  // Default layout with label
   const baseStyles = [
     'inline-flex items-center',
     'gap-[var(--status-gap)]',
@@ -186,12 +232,9 @@ export function StatusIndicator({
     'text-[var(--status-text)]',
     'text-[length:var(--status-font-size)]',
     'leading-[var(--status-line-height)]',
-    'mr-2', // Ensure spacing from adjacent elements
   ].join(' ');
 
-  const paddingStyles = layout === 'icon-only'
-    ? 'p-[var(--status-padding-icon-only)]'
-    : 'px-[var(--status-padding-x)] py-[var(--status-padding-y)]';
+  const paddingStyles = 'px-[var(--status-padding-x)] py-[var(--status-padding-y)]';
 
   const classes = twMerge(
     baseStyles,
@@ -203,7 +246,7 @@ export function StatusIndicator({
   return (
     <span className={classes} role="status" aria-label={displayLabel} {...props}>
       <span className="shrink-0">{config.icon}</span>
-      {layout !== 'icon-only' && <span>{displayLabel}</span>}
+      <span>{displayLabel}</span>
     </span>
   );
 }

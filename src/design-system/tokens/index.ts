@@ -499,7 +499,7 @@ export const component = {
     paddingX: 'var(--tabs-padding-x)',            // 12px
     indicatorGap: 'var(--tabs-indicator-gap)',    // 10px
     indicatorHeight: 'var(--tabs-indicator-height)', // 2px
-    panelPadding: 'var(--tabs-panel-padding)',    // 16px
+    panelPadding: 'var(--tabs-panel-padding)',    // 0
     fontSize: {
       sm: 'var(--tabs-font-size-sm)',             // 12px
       md: 'var(--tabs-font-size-md)',             // 14px

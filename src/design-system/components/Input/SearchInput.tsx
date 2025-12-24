@@ -74,11 +74,12 @@ export const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
       onClear?.();
     }, [value, onClear]);
 
-    // Base styles
+    // Base styles - icons are on the right (search icon + optional clear button)
     const inputClasses = twMerge(
       'w-full',
-      'pl-8',
-      clearable && hasValue ? 'pr-8' : 'pr-[var(--input-padding-x)]',
+      'pl-[var(--input-padding-x)]',
+      // Extra padding when both clear button and search icon are shown
+      clearable && hasValue && !disabled ? 'pr-14' : 'pr-8',
       'py-[var(--input-padding-y)]',
       'leading-[var(--input-line-height)]',
       'bg-[var(--input-bg)]',
@@ -115,11 +116,6 @@ export const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
         )}
 
         <div className="relative">
-          {/* Search icon */}
-          <div className="absolute left-[var(--input-icon-offset)] top-1/2 -translate-y-1/2 text-[var(--color-text-subtle)] pointer-events-none">
-            <IconSearch size={12} strokeWidth={2} />
-          </div>
-
           <input
             ref={ref}
             type="search"
@@ -132,18 +128,23 @@ export const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
             {...props}
           />
 
-          {/* Clear button */}
+          {/* Clear button - shown to the left of search icon when has value */}
           {clearable && hasValue && !disabled && (
             <button
               type="button"
               tabIndex={-1}
-              className="absolute right-[var(--input-icon-offset)] top-1/2 -translate-y-1/2 text-[var(--color-text-subtle)] hover:text-[var(--color-text-default)] transition-colors duration-[var(--duration-fast)]"
+              className="absolute right-7 top-1/2 -translate-y-1/2 text-[var(--color-text-subtle)] hover:text-[var(--color-text-default)] transition-colors duration-[var(--duration-fast)]"
               onClick={handleClear}
               aria-label="Clear search"
             >
               <IconX size={12} strokeWidth={2} />
             </button>
           )}
+
+          {/* Search icon - always visible on the right */}
+          <div className="absolute right-[var(--input-icon-offset)] top-1/2 -translate-y-1/2 text-[var(--color-text-subtle)] pointer-events-none">
+            <IconSearch size={12} strokeWidth={2} />
+          </div>
         </div>
       </div>
     );

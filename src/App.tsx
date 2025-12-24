@@ -1,9 +1,13 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { InstanceListPage } from '@/pages/InstanceListPage';
+import { InstanceDetailPage } from '@/pages/InstanceDetailPage';
 import { InstanceTemplatesPage } from '@/pages/InstanceTemplatesPage';
 import { InstanceSnapshotsPage } from '@/pages/InstanceSnapshotsPage';
+import { InstanceSnapshotDetailPage } from '@/pages/InstanceSnapshotDetailPage';
 import { ImagesPage } from '@/pages/ImagesPage';
+import { ImageDetailPage } from '@/pages/ImageDetailPage';
 import { FlavorsPage } from '@/pages/FlavorsPage';
+import { FlavorDetailPage } from '@/pages/FlavorDetailPage';
 import { KeyPairsPage } from '@/pages/KeyPairsPage';
 import { ServerGroupsPage } from '@/pages/ServerGroupsPage';
 import { VolumesPage } from '@/pages/VolumesPage';
@@ -35,11 +39,14 @@ function AppRoutes() {
       <Routes>
         <Route path="/" element={<InstanceListPage />} />
         <Route path="/instances" element={<InstanceListPage />} />
-        <Route path="/instances/:id" element={<InstanceListPage />} />
+        <Route path="/instances/:id" element={<InstanceDetailPage />} />
         <Route path="/instance-templates" element={<InstanceTemplatesPage />} />
         <Route path="/instance-snapshots" element={<InstanceSnapshotsPage />} />
+        <Route path="/instance-snapshots/:id" element={<InstanceSnapshotDetailPage />} />
         <Route path="/images" element={<ImagesPage />} />
+        <Route path="/images/:id" element={<ImageDetailPage />} />
         <Route path="/flavors" element={<FlavorsPage />} />
+        <Route path="/flavors/:id" element={<FlavorDetailPage />} />
         <Route path="/key-pairs" element={<KeyPairsPage />} />
         <Route path="/server-groups" element={<ServerGroupsPage />} />
         <Route path="/volumes" element={<VolumesPage />} />
