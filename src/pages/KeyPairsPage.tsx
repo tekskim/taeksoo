@@ -297,6 +297,7 @@ export function KeyPairsPage() {
                 onPageChange={setCurrentPage}
                 showSettings
                 totalItems={filteredKeyPairs.length}
+                selectedCount={selectedKeyPairs.length}
               />
             )}
 

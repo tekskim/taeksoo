@@ -270,6 +270,7 @@ export function ServerGroupsPage() {
                 onPageChange={setCurrentPage}
                 showSettings
                 totalItems={filteredServerGroups.length}
+                selectedCount={selectedServerGroups.length}
               />
             )}
 

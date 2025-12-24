@@ -314,6 +314,7 @@ export function VolumeSnapshotsPage() {
               currentPage={currentPage}
               totalPages={totalPages}
               totalItems={filteredSnapshots.length}
+              selectedCount={selectedSnapshots.length}
               onPageChange={setCurrentPage}
             />
 

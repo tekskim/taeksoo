@@ -483,6 +483,7 @@ export function InstanceListPage() {
                 showSettings
                 onSettingsClick={() => setIsPreferencesOpen(true)}
                 totalItems={mockInstances.length}
+                selectedCount={selectedInstances.length}
               />
             )}
             {activeTab === 'bare-metal' && filteredBareMetalInstances.length > 0 && (
@@ -493,6 +494,7 @@ export function InstanceListPage() {
                 showSettings
                 onSettingsClick={() => setIsPreferencesOpen(true)}
                 totalItems={mockBareMetalInstances.length}
+                selectedCount={selectedBareMetalInstances.length}
               />
             )}
 

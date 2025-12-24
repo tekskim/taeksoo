@@ -393,6 +393,7 @@ export function InstanceTemplatesPage() {
                 onPageChange={setCurrentPage}
                 showSettings
                 totalItems={filteredTemplates.length}
+                selectedCount={selectedTemplates.length}
               />
             )}
 

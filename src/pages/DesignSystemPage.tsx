@@ -2357,6 +2357,23 @@ outline: 2px solid var(--color-border-focus);`}
                     totalItems={115}
                   />
                 </VStack>
+
+                {/* With Selected Count */}
+                <VStack gap={3}>
+                  <Label>With Selected Count (3 selected)</Label>
+                  <Pagination
+                    currentPage={demoPage1}
+                    totalPages={10}
+                    onPageChange={setDemoPage1}
+                    showSettings
+                    onSettingsClick={() => console.log('Settings clicked')}
+                    totalItems={115}
+                    selectedCount={3}
+                  />
+                  <p className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
+                    When rows are selected in a table, the pagination shows "X selected / Y items" format.
+                  </p>
+                </VStack>
               </VStack>
             </Section>
 

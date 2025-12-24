@@ -24,6 +24,8 @@ export interface PaginationProps {
   onSettingsClick?: () => void;
   /** Total number of items (displayed after divider) */
   totalItems?: number;
+  /** Number of selected items */
+  selectedCount?: number;
   /** Custom class name */
   className?: string;
 }
@@ -53,6 +55,7 @@ export const Pagination: React.FC<PaginationProps> = ({
   showSettings = false,
   onSettingsClick,
   totalItems,
+  selectedCount = 0,
   className = '',
 }) => {
   // Generate pagination range with dots
@@ -229,12 +232,19 @@ export const Pagination: React.FC<PaginationProps> = ({
         </button>
       )}
 
-      {/* Divider and Total Items */}
+      {/* Divider and Total Items / Selected Count */}
       {totalItems !== undefined && (
         <>
           <div className="h-4 w-px bg-[var(--color-border-default)]" />
           <span className="text-[length:var(--font-size-11)] leading-[var(--line-height-16)] text-[var(--color-text-subtle)]">
-            {totalItems} items
+            {selectedCount > 0 ? (
+              <span>
+                <span className="text-[var(--color-text-default)] font-medium">{selectedCount} selected</span>
+                <span className="text-[var(--color-text-muted)]"> / {totalItems} items</span>
+              </span>
+            ) : (
+              `${totalItems} items`
+            )}
           </span>
         </>
       )}

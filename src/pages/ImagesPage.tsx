@@ -337,6 +337,7 @@ export function ImagesPage() {
                 onPageChange={setCurrentPage}
                 showSettings
                 totalItems={filteredImages.length}
+                selectedCount={selectedImages.length}
               />
             )}
 

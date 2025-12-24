@@ -323,6 +323,7 @@ export function VolumeBackupsPage() {
               currentPage={currentPage}
               totalPages={totalPages}
               totalItems={filteredBackups.length}
+              selectedCount={selectedBackups.length}
               onPageChange={setCurrentPage}
             />
 

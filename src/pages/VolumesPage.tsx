@@ -350,6 +350,7 @@ export function VolumesPage() {
                 onPageChange={setCurrentPage}
                 showSettings
                 totalItems={filteredVolumes.length}
+                selectedCount={selectedVolumes.length}
               />
             )}
 

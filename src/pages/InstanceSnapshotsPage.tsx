@@ -393,6 +393,7 @@ export function InstanceSnapshotsPage() {
                 onPageChange={setCurrentPage}
                 showSettings
                 totalItems={filteredSnapshots.length}
+                selectedCount={selectedSnapshots.length}
               />
             )}
 
