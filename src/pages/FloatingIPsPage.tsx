@@ -13,6 +13,7 @@ import {
   ContextMenu,
   ConfirmModal,
   StatusIndicator,
+  Tooltip,
   type TableColumn,
   type ContextMenuItem,
 } from '@/design-system';
@@ -140,25 +141,29 @@ export function FloatingIPsPage() {
     {
       key: 'associatedTo',
       label: 'Associated To',
-      flex: 1,
+      width: '160px',
       render: (_, row) => (
         row.associatedTo ? (
-          <div className="flex items-center justify-between">
-            <div className="flex flex-col gap-0.5">
-              <a
-                href={`/instances/${row.associatedToId}`}
-                className="inline-flex items-center gap-1.5 font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
-                onClick={(e) => e.stopPropagation()}
-              >
-                {row.associatedTo}
-                <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
-              </a>
-              <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
+          <div className="flex items-center gap-2">
+            <Tooltip content="Instance" position="top">
+              <div className="flex-shrink-0 bg-white border border-[var(--color-border-default)] rounded-[4px] p-1 cursor-default">
+                <IconServer2 size={12} className="text-[var(--color-text-subtle)]" />
+              </div>
+            </Tooltip>
+            <div className="flex flex-col gap-0.5 min-w-0">
+              <Tooltip content={row.associatedTo} position="top">
+                <a
+                  href={`/instances/${row.associatedToId}`}
+                  className="inline-flex items-center gap-1 font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  <span className="truncate">{row.associatedTo}</span>
+                  <IconExternalLink size={12} className="flex-shrink-0 text-[var(--color-action-primary)]" />
+                </a>
+              </Tooltip>
+              <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] truncate">
                 ID : {row.associatedToId?.substring(0, 8)}
               </span>
-            </div>
-            <div className="bg-white border border-[var(--color-border-default)] rounded-[4px] p-1">
-              <IconServer2 size={12} className="text-[var(--color-text-subtle)]" />
             </div>
           </div>
         ) : '-'
@@ -172,18 +177,20 @@ export function FloatingIPsPage() {
     {
       key: 'network',
       label: 'Network',
-      flex: 1,
+      width: '140px',
       render: (_, row) => (
-        <div className="flex flex-col gap-0.5">
-          <a
-            href={`/networks/${row.networkId}`}
-            className="inline-flex items-center gap-1.5 font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
-            onClick={(e) => e.stopPropagation()}
-          >
-            {row.network}
-            <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
-          </a>
-          <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
+        <div className="flex flex-col gap-0.5 min-w-0">
+          <Tooltip content={row.network} position="top">
+            <a
+              href={`/networks/${row.networkId}`}
+              className="inline-flex items-center gap-1 font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <span className="truncate">{row.network}</span>
+              <IconExternalLink size={12} className="flex-shrink-0 text-[var(--color-action-primary)]" />
+            </a>
+          </Tooltip>
+          <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] truncate">
             ID : {row.networkId.substring(0, 8)}
           </span>
         </div>
