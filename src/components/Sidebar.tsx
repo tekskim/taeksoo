@@ -17,7 +17,7 @@ import {
   IconPlug,
   IconWorldWww,
   IconShield,
-  IconScale,
+  IconLoadBalancer,
   IconCertificate,
   IconTopologyRing,
   IconLayoutSidebar,
@@ -200,7 +200,7 @@ export function Sidebar({ isOpen = true, onToggle }: SidebarProps) {
               active={isActive('/security-groups')}
             />
             <MenuItem
-              icon={<IconScale size={16} stroke={1.5} />}
+              icon={<IconLoadBalancer size={16} stroke={1.5} />}
               label="Load Balancers"
               href="/load-balancers"
               active={isActive('/load-balancers')}
