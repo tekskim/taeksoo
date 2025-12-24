@@ -2243,25 +2243,20 @@ export function TopologyD3Page() {
         <div className="pt-4 px-8 pb-6 bg-[var(--color-surface-default)] h-[calc(100vh-72px)] flex flex-col">
           <VStack gap={3} className="flex-1 min-h-0">
             {/* Page Header */}
-            <div className="flex justify-between items-center w-full">
-              <div>
-                <h1 className="text-[length:var(--font-size-16)] font-semibold text-[var(--color-text-default)]">
-                  Topology
-                </h1>
-                <p className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] mt-0.5">
+            <div className="flex justify-between items-center h-8 w-full">
+              <h1 className="text-[length:var(--font-size-16)] font-semibold text-[var(--color-text-default)]">
+                Topology
+              </h1>
+              <div className="flex items-center gap-3">
+                <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
                   {stats.filteredSubnets === stats.totalSubnets 
                     ? `${stats.totalSubnets} subnets` 
                     : `${stats.filteredSubnets} of ${stats.totalSubnets} subnets`
                   } across {filteredData.networks.length} VPCs • 
-                  <span className="text-green-600 ml-1">{stats.activeSubnets} active</span>
-                  {stats.errorSubnets > 0 && <span className="text-red-600 ml-1">• {stats.errorSubnets} error</span>}
-                  {stats.filteredLbs > 0 && <span className="text-slate-500 ml-1">• {stats.filteredLbs} LBs</span>}
-                </p>
-              </div>
-              <div className="flex items-center gap-3">
-                <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
-                  Scroll to zoom • Click for details
+                  <span className="text-green-600">{stats.activeSubnets} active</span>
+                  {stats.errorSubnets > 0 && <span className="text-red-600"> • {stats.errorSubnets} error</span>}
                 </span>
+                <div className="h-4 w-px bg-[var(--color-border-default)]" />
                 <div className="flex items-center gap-2 px-2 py-1 bg-[var(--color-surface-muted)] rounded-md">
                   <span className="text-[length:var(--font-size-11)] font-medium text-[var(--color-text-default)]">
                     {Math.round(zoomLevel * 100)}%
