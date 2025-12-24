@@ -164,7 +164,16 @@ export function PortsPage() {
       flex: 1,
       render: (_, row) => (
         row.attachedTo ? (
-          <div className="flex items-center justify-between gap-2">
+          <div className="flex items-center gap-2">
+            <Tooltip content={row.attachedType === 'router' ? 'Router' : 'Instance'} position="top">
+              <div className="flex-shrink-0 bg-white border border-[var(--color-border-default)] rounded-[4px] p-1 cursor-default">
+                {row.attachedType === 'router' ? (
+                  <IconRouter size={12} className="text-[var(--color-text-subtle)]" />
+                ) : (
+                  <IconServer2 size={12} className="text-[var(--color-text-subtle)]" />
+                )}
+              </div>
+            </Tooltip>
             <div className="flex flex-col gap-0.5 min-w-0">
               <a
                 href={row.attachedType === 'router' ? `/routers/${row.attachedToId}` : `/instances/${row.attachedToId}`}
@@ -178,15 +187,6 @@ export function PortsPage() {
                 ID : {row.attachedToId?.substring(0, 8)}
               </span>
             </div>
-            <Tooltip content={row.attachedType === 'router' ? 'Router' : 'Instance'} position="top">
-              <div className="flex-shrink-0 bg-white border border-[var(--color-border-default)] rounded-[4px] p-1 cursor-default">
-                {row.attachedType === 'router' ? (
-                  <IconRouter size={12} className="text-[var(--color-text-subtle)]" />
-                ) : (
-                  <IconServer2 size={12} className="text-[var(--color-text-subtle)]" />
-                )}
-              </div>
-            </Tooltip>
           </div>
         ) : '-'
       ),
