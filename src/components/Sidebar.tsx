@@ -12,8 +12,6 @@ import {
   IconUsers,
   IconDatabase,
   IconDatabaseExport,
-  IconDeviceFloppy,
-  IconServer2,
   IconNetwork,
   IconRouter,
   IconPlug,
@@ -166,18 +164,6 @@ export function Sidebar({ isOpen = true, onToggle }: SidebarProps) {
               label="Volume Backups"
               href="/volume-backups"
               active={isActive('/volume-backups')}
-            />
-            <MenuItem
-              icon={<IconDeviceFloppy size={16} stroke={1.5} />}
-              label="Volume Type"
-              href="/volume-type"
-              active={isActive('/volume-type')}
-            />
-            <MenuItem
-              icon={<IconServer2 size={16} stroke={1.5} />}
-              label="Storage Backends"
-              href="/storage-backends"
-              active={isActive('/storage-backends')}
             />
           </MenuSection>
 
