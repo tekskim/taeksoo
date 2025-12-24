@@ -1,0 +1,336 @@
+import { useState, useMemo } from 'react';
+import {
+  Button,
+  SearchInput,
+  Table,
+  Pagination,
+  VStack,
+  TabBar,
+  TopBar,
+  TopBarAction,
+  Breadcrumb,
+  ListToolbar,
+  ContextMenu,
+  ConfirmModal,
+  StatusIndicator,
+  Tabs,
+  TabList,
+  Tab,
+  type TableColumn,
+  type ContextMenuItem,
+} from '@/design-system';
+import { Sidebar } from '@/components/Sidebar';
+import { useTabs } from '@/contexts/TabContext';
+import {
+  IconPlus,
+  IconDotsVertical,
+  IconTrash,
+  IconDownload,
+  IconBell,
+} from '@tabler/icons-react';
+
+/* ----------------------------------------
+   Types
+   ---------------------------------------- */
+
+type NetworkStatus = 'active' | 'error' | 'building';
+
+interface Network {
+  id: string;
+  name: string;
+  subnetCidr: string;
+  external: boolean;
+  diskTag: string;
+  status: NetworkStatus;
+}
+
+/* ----------------------------------------
+   Mock Data
+   ---------------------------------------- */
+
+const mockNetworks: Network[] = [
+  { id: 'net-001', name: 'net-01', subnetCidr: '10.62.0.0/24', external: true, diskTag: 'Project', status: 'active' },
+  { id: 'net-002', name: 'internal-net', subnetCidr: '192.168.1.0/24', external: false, diskTag: 'Project', status: 'active' },
+  { id: 'net-003', name: 'dev-network', subnetCidr: '10.10.0.0/16', external: false, diskTag: 'Project', status: 'active' },
+  { id: 'net-004', name: 'prod-net', subnetCidr: '172.16.0.0/12', external: true, diskTag: 'Project', status: 'building' },
+  { id: 'net-005', name: 'test-network', subnetCidr: '10.20.0.0/24', external: false, diskTag: 'Project', status: 'active' },
+  { id: 'net-006', name: 'dmz-net', subnetCidr: '10.30.0.0/24', external: true, diskTag: 'Project', status: 'active' },
+  { id: 'net-007', name: 'management-net', subnetCidr: '10.0.0.0/8', external: false, diskTag: 'Project', status: 'error' },
+  { id: 'net-008', name: 'backup-network', subnetCidr: '192.168.100.0/24', external: false, diskTag: 'Project', status: 'active' },
+  { id: 'net-009', name: 'external-gateway', subnetCidr: '203.0.113.0/24', external: true, diskTag: 'Shared', status: 'active' },
+  { id: 'net-010', name: 'provider-net', subnetCidr: '198.51.100.0/24', external: true, diskTag: 'External', status: 'active' },
+];
+
+/* ----------------------------------------
+   Status Mapping
+   ---------------------------------------- */
+
+const networkStatusMap: Record<NetworkStatus, 'active' | 'error' | 'building'> = {
+  'active': 'active',
+  'error': 'error',
+  'building': 'building',
+};
+
+/* ----------------------------------------
+   Component
+   ---------------------------------------- */
+
+export function NetworksPage() {
+  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [selectedNetworks, setSelectedNetworks] = useState<string[]>([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [networks] = useState(mockNetworks);
+  const [activeTab, setActiveTab] = useState('current');
+  
+  // Delete modal state
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [networkToDelete, setNetworkToDelete] = useState<Network | null>(null);
+
+  // Global tab management
+  const { tabs, activeTabId, closeTab, selectTab } = useTabs();
+
+  // Convert tabs to TabBar format
+  const tabBarTabs = tabs.map((tab) => ({
+    id: tab.id,
+    label: tab.label,
+    closable: tab.closable,
+  }));
+
+  // Context menu items
+  const getContextMenuItems = (network: Network): ContextMenuItem[] => [
+    { id: 'view', label: 'View Details' },
+    { id: 'edit', label: 'Edit Network' },
+    { id: 'delete', label: 'Delete', status: 'danger' },
+  ];
+
+  // Filter networks based on search and tab
+  const filteredNetworks = useMemo(() => {
+    let filtered = networks;
+    
+    // Filter by tab
+    if (activeTab === 'current') {
+      filtered = filtered.filter(n => n.diskTag === 'Project');
+    } else if (activeTab === 'shared') {
+      filtered = filtered.filter(n => n.diskTag === 'Shared');
+    } else if (activeTab === 'external') {
+      filtered = filtered.filter(n => n.diskTag === 'External');
+    }
+    
+    // Filter by search
+    if (searchQuery) {
+      const query = searchQuery.toLowerCase();
+      filtered = filtered.filter(n =>
+        n.name.toLowerCase().includes(query) ||
+        n.subnetCidr.toLowerCase().includes(query)
+      );
+    }
+    
+    return filtered;
+  }, [networks, searchQuery, activeTab]);
+
+  const totalPages = Math.ceil(filteredNetworks.length / 10);
+
+  // Table columns
+  const columns: TableColumn<Network>[] = [
+    {
+      key: 'status',
+      label: 'Status',
+      width: '59px',
+      align: 'center',
+      render: (_, row) => (
+        <StatusIndicator status={networkStatusMap[row.status]} layout="icon-only" />
+      ),
+    },
+    {
+      key: 'name',
+      label: 'Name',
+      flex: 1,
+      render: (value: string) => (
+        <span className="font-medium text-[var(--color-action-primary)]">{value}</span>
+      ),
+    },
+    {
+      key: 'subnetCidr',
+      label: 'Subnet CIDR',
+      flex: 1,
+    },
+    {
+      key: 'external',
+      label: 'External',
+      flex: 1,
+      render: (value: boolean) => value ? 'Yes' : 'No',
+    },
+    {
+      key: 'diskTag',
+      label: 'Disk Tag',
+      flex: 1,
+    },
+    {
+      key: 'actions',
+      label: 'Action',
+      width: '72px',
+      align: 'center',
+      render: (_, row) => (
+        <div onClick={(e) => e.stopPropagation()}>
+          <ContextMenu
+            items={getContextMenuItems(row)}
+            onSelect={(itemId) => {
+              if (itemId === 'delete') {
+                setNetworkToDelete(row);
+                setDeleteModalOpen(true);
+              }
+            }}
+          >
+            <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors">
+              <IconDotsVertical size={16} stroke={1} className="text-[var(--color-text-default)]" />
+            </button>
+          </ContextMenu>
+        </div>
+      ),
+    },
+  ];
+
+  const handleContextMenuSelect = (itemId: string) => {
+    if (itemId === 'delete' && networkToDelete) {
+      // Handle delete
+      setDeleteModalOpen(false);
+      setNetworkToDelete(null);
+    }
+  };
+
+  return (
+    <div className="min-h-screen bg-[var(--color-surface-subtle)]">
+      <Sidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(false)} />
+
+      <main
+        className={`min-h-screen bg-[var(--color-surface-default)] transition-[margin] duration-200 ${
+          sidebarOpen ? 'ml-[200px]' : 'ml-0'
+        }`}
+      >
+        {/* Tab Bar */}
+        <TabBar
+          tabs={tabBarTabs}
+          activeTab={activeTabId}
+          onTabChange={selectTab}
+          onTabClose={closeTab}
+          showAddButton={false}
+          showWindowControls={true}
+        />
+
+        {/* Top Bar */}
+        <TopBar
+          showSidebarToggle={!sidebarOpen}
+          onSidebarToggle={() => setSidebarOpen(true)}
+          showNavigation={true}
+          onBack={() => window.history.back()}
+          onForward={() => window.history.forward()}
+          breadcrumb={
+            <Breadcrumb
+              items={[
+                { label: 'Proj-1', href: '/project' },
+                { label: 'Networks' },
+              ]}
+            />
+          }
+          actions={
+            <TopBarAction
+              icon={<IconBell size={16} stroke={1.5} />}
+              aria-label="Notifications"
+              badge={true}
+            />
+          }
+        />
+
+        {/* Main Content */}
+        <div className="pt-4 px-8 pb-6 bg-[var(--color-surface-default)]">
+          <VStack gap={3}>
+            {/* Page Header */}
+            <div className="flex justify-between items-center h-8 w-full">
+              <h1 className="text-[length:var(--font-size-16)] font-semibold text-[var(--color-text-default)]">
+                Networks
+              </h1>
+              <Button variant="primary" size="md" leftIcon={<IconPlus size={14} />}>
+                Create Network
+              </Button>
+            </div>
+
+            {/* Tabs */}
+            <Tabs value={activeTab} onChange={setActiveTab} size="sm">
+              <TabList>
+                <Tab value="current">Current Project</Tab>
+                <Tab value="shared">Shared</Tab>
+                <Tab value="external">External</Tab>
+              </TabList>
+            </Tabs>
+
+            {/* Toolbar */}
+            <ListToolbar
+              primaryActions={
+                <ListToolbar.Actions>
+                  <div className="w-[280px]">
+                    <SearchInput
+                      placeholder="Find network with filters"
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      onClear={() => setSearchQuery('')}
+                      size="sm"
+                      fullWidth
+                    />
+                  </div>
+                  <Button variant="secondary" size="sm" icon={<IconDownload size={12} />} aria-label="Download" />
+                </ListToolbar.Actions>
+              }
+              bulkActions={
+                <ListToolbar.Actions>
+                  <Button
+                    variant="muted"
+                    size="sm"
+                    leftIcon={<IconTrash size={12} />}
+                    disabled={selectedNetworks.length === 0}
+                  >
+                    Delete
+                  </Button>
+                </ListToolbar.Actions>
+              }
+            />
+
+            {/* Pagination */}
+            <Pagination
+              currentPage={currentPage}
+              totalPages={totalPages}
+              totalItems={filteredNetworks.length}
+              onPageChange={setCurrentPage}
+              selectedCount={selectedNetworks.length}
+            />
+
+            {/* Table */}
+            <Table
+              columns={columns}
+              data={filteredNetworks}
+              rowKey="id"
+              selectable
+              selectedKeys={selectedNetworks}
+              onSelectionChange={setSelectedNetworks}
+            />
+          </VStack>
+        </div>
+      </main>
+
+      {/* Delete Modal */}
+      <ConfirmModal
+        isOpen={deleteModalOpen}
+        onClose={() => {
+          setDeleteModalOpen(false);
+          setNetworkToDelete(null);
+        }}
+        title="Delete Network"
+        message={`Are you sure you want to delete "${networkToDelete?.name}"? This action cannot be undone.`}
+        confirmLabel="Delete"
+        cancelLabel="Cancel"
+        confirmVariant="danger"
+        onConfirm={() => handleContextMenuSelect('delete')}
+      />
+    </div>
+  );
+}

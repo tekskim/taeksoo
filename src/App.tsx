@@ -9,6 +9,13 @@ import { ServerGroupsPage } from '@/pages/ServerGroupsPage';
 import { VolumesPage } from '@/pages/VolumesPage';
 import { VolumeSnapshotsPage } from '@/pages/VolumeSnapshotsPage';
 import { VolumeBackupsPage } from '@/pages/VolumeBackupsPage';
+import { NetworksPage } from '@/pages/NetworksPage';
+import { RoutersPage } from '@/pages/RoutersPage';
+import { PortsPage } from '@/pages/PortsPage';
+import { FloatingIPsPage } from '@/pages/FloatingIPsPage';
+import { SecurityGroupsPage } from '@/pages/SecurityGroupsPage';
+import { LoadBalancersPage } from '@/pages/LoadBalancersPage';
+import { CertificatesPage } from '@/pages/CertificatesPage';
 import { DesignSystemPage } from '@/pages/DesignSystemPage';
 import { TopologyD3Page } from '@/pages/TopologyD3Page';
 import { GradientShowcasePage } from '@/pages/GradientShowcasePage';
@@ -38,6 +45,13 @@ function AppRoutes() {
         <Route path="/volumes" element={<VolumesPage />} />
         <Route path="/volume-snapshots" element={<VolumeSnapshotsPage />} />
         <Route path="/volume-backups" element={<VolumeBackupsPage />} />
+        <Route path="/networks" element={<NetworksPage />} />
+        <Route path="/routers" element={<RoutersPage />} />
+        <Route path="/ports" element={<PortsPage />} />
+        <Route path="/floating-ips" element={<FloatingIPsPage />} />
+        <Route path="/security-groups" element={<SecurityGroupsPage />} />
+        <Route path="/load-balancers" element={<LoadBalancersPage />} />
+        <Route path="/certificates" element={<CertificatesPage />} />
         <Route path="/topology" element={<TopologyD3Page />} />
         <Route path="/design-system" element={<DesignSystemPage />} />
         <Route path="/gradients" element={<GradientShowcasePage />} />
