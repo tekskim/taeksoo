@@ -31,6 +31,8 @@ export * from './components/StatusIndicator';
 export * from './components/Menu';
 export * from './components/Tooltip';
 export * from './components/Drawer';
+export * from './components/ListToolbar';
+export * from './components/Modal';
 
 // Layouts
 export * from './layouts';

@@ -106,8 +106,14 @@
   /* Yellow */
   --color-yellow-50: #fefce8;
   --color-yellow-100: #fef9c3;
+  --color-yellow-200: #fef08a;
+  --color-yellow-300: #fde047;
+  --color-yellow-400: #facc15;
   --color-yellow-500: #eab308;
   --color-yellow-600: #ca8a04;
+  --color-yellow-700: #a16207;
+  --color-yellow-800: #854d0e;
+  --color-yellow-900: #713f12;
 
   /* ----------------------------------------
      Primitive - Spacing (4px base)
@@ -810,11 +816,12 @@
   --status-line-height: var(--line-height-16);
   --status-text: var(--color-text-inverse);
 
-  /* Status colors */
-  --status-active-bg: var(--color-green-400);
-  --status-error-bg: var(--color-red-400);
-  --status-muted-bg: var(--color-slate-600);
-  --status-building-bg: var(--color-blue-400);
+  /* Status colors - Using semantic state colors */
+  --status-success-bg: var(--color-state-success);
+  --status-danger-bg: var(--color-state-danger);
+  --status-info-bg: var(--color-state-info);
+  --status-warning-bg: var(--color-state-warning);
+  --status-muted-bg: var(--color-text-muted);
 
   /* ----------------------------------------
      Component - Tooltip
@@ -854,6 +861,18 @@
   --color-zinc-700: #3f3f46;
   --color-zinc-800: #27272a;
   --color-zinc-900: #18181b;
+
+  /* Yellow - Tailwind CSS */
+  --color-yellow-50: #fefce8;
+  --color-yellow-100: #fef9c3;
+  --color-yellow-200: #fef08a;
+  --color-yellow-300: #fde047;
+  --color-yellow-400: #facc15;
+  --color-yellow-500: #eab308;
+  --color-yellow-600: #ca8a04;
+  --color-yellow-700: #a16207;
+  --color-yellow-800: #854d0e;
+  --color-yellow-900: #713f12;
 }
 
 /* ========================================
@@ -1156,11 +1175,10 @@
   background: var(--color-border-strong);
 }
 
-/* Firefox + padding */
+/* Firefox */
 .drawer-scroll {
   scrollbar-width: thin;
   scrollbar-color: var(--color-border-default) transparent;
-  padding-right: 2px;
 }
 
 /* Hide native search input clear button */

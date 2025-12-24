@@ -14,11 +14,13 @@ import {
   Tabs,
   TabList,
   Tab,
-  Chip,
+  ListToolbar,
   type TableColumn,
   type StatusType,
+  type FilterItem,
 } from '@/design-system';
 import { Sidebar } from '@/components/Sidebar';
+import { useTabs } from '@/contexts/TabContext';
 import {
   IconPlus,
   IconDotsVertical,
@@ -116,11 +118,7 @@ const statusMap: Record<InstanceStatus, StatusType> = {
    Instances List Page
    ---------------------------------------- */
 
-interface Filter {
-  id: string;
-  field: string;
-  value: string;
-}
+// Filter type is imported from design-system as FilterItem
 
 export function InstanceListPage() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -130,7 +128,7 @@ export function InstanceListPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const [currentBareMetalPage, setCurrentBareMetalPage] = useState(1);
   const [activeTab, setActiveTab] = useState('vm');
-  const [activeFilters, setActiveFilters] = useState<Filter[]>([
+  const [activeFilters, setActiveFilters] = useState<FilterItem[]>([
     { id: '1', field: 'Name', value: 'a' },
     { id: '2', field: 'Name', value: 'a' },
     { id: '3', field: 'Name', value: 'a' },
@@ -149,6 +147,16 @@ export function InstanceListPage() {
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [columnPreferences, setColumnPreferences] = useState<ColumnConfig[]>(defaultColumns);
   const pageSize = rowsPerPage;
+
+  // Global tab management
+  const { tabs, activeTabId, closeTab, selectTab } = useTabs();
+
+  // Convert tabs to TabBar format
+  const tabBarTabs = tabs.map((tab) => ({
+    id: tab.id,
+    label: tab.label,
+    closable: tab.closable,
+  }));
 
   // Scroll to top handler
   useEffect(() => {
@@ -376,13 +384,11 @@ export function InstanceListPage() {
       <main className={`min-h-screen bg-[var(--color-surface-default)] transition-[margin] duration-200 ${sidebarOpen ? 'ml-[200px]' : 'ml-0'}`}>
         {/* Tab Bar */}
         <TabBar
-          tabs={[
-            { id: 'instances', label: 'Instances List', closable: true },
-          ]}
-          activeTab="instances"
-          onTabChange={() => {}}
-          onTabClose={() => {}}
-          onTabAdd={() => {}}
+          tabs={tabBarTabs}
+          activeTab={activeTabId}
+          onTabChange={selectTab}
+          onTabClose={closeTab}
+          showWindowControls={true}
         />
 
         {/* Top Bar with Breadcrumb Navigation */}
@@ -430,64 +436,43 @@ export function InstanceListPage() {
               </TabList>
             </Tabs>
 
-            {/* Filters & Actions Bar */}
-            <div className="flex items-center gap-2">
-              {/* Search */}
-              <HStack gap={1}>
-                <div className="w-[280px]">
-                  <SearchInput
-                    placeholder="Find Instance with filters"
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    onClear={() => setSearchQuery('')}
-                    size="sm"
-                    fullWidth
-                  />
-                </div>
-                <Button variant="secondary" size="sm" icon={<IconDownload size={12} />} aria-label="Download" />
-              </HStack>
-
-              {/* Divider */}
-              <div className="h-4 w-px bg-[var(--color-border-default)]" />
-
-              {/* Actions */}
-              <HStack gap={1}>
-                <Button variant="muted" size="sm" leftIcon={<IconPlayerPlay size={12} />} disabled={selectedInstances.length === 0}>
-                  Start
-                </Button>
-                <Button variant="muted" size="sm" leftIcon={<IconPlayerStop size={12} />} disabled={selectedInstances.length === 0}>
-                  Stop
-                </Button>
-                <Button variant="muted" size="sm" leftIcon={<IconRefresh size={12} />} disabled={selectedInstances.length === 0}>
-                  Reboot
-                </Button>
-                <Button variant="muted" size="sm" leftIcon={<IconTrash size={12} />} disabled={selectedInstances.length === 0}>
-                  Delete
-                </Button>
-              </HStack>
-            </div>
-
-            {/* Filter Bar */}
-            {activeFilters.length > 0 && (
-              <div className="flex items-center justify-between pl-2 pr-4 py-2 bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)]">
-                <div className="flex items-center gap-1">
-                  {activeFilters.map((filter) => (
-                    <Chip
-                      key={filter.id}
-                      label={filter.field}
-                      value={filter.value}
-                      onRemove={() => removeFilter(filter.id)}
+            {/* List Toolbar */}
+            <ListToolbar
+              primaryActions={
+                <ListToolbar.Actions>
+                  <div className="w-[280px]">
+                    <SearchInput
+                      placeholder="Find Instance with filters"
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      onClear={() => setSearchQuery('')}
+                      size="sm"
+                      fullWidth
                     />
-                  ))}
-                </div>
-                <button
-                  onClick={clearAllFilters}
-                  className="text-[length:var(--font-size-11)] leading-[var(--line-height-16)] font-medium text-[var(--color-action-primary)] hover:text-[var(--color-action-primary-hover)]"
-                >
-                  Clear Filters
-                </button>
-              </div>
-            )}
+                  </div>
+                  <Button variant="secondary" size="sm" icon={<IconDownload size={12} />} aria-label="Download" />
+                </ListToolbar.Actions>
+              }
+              bulkActions={
+                <ListToolbar.Actions>
+                  <Button variant="muted" size="sm" leftIcon={<IconPlayerPlay size={12} />} disabled={selectedInstances.length === 0}>
+                    Start
+                  </Button>
+                  <Button variant="muted" size="sm" leftIcon={<IconPlayerStop size={12} />} disabled={selectedInstances.length === 0}>
+                    Stop
+                  </Button>
+                  <Button variant="muted" size="sm" leftIcon={<IconRefresh size={12} />} disabled={selectedInstances.length === 0}>
+                    Reboot
+                  </Button>
+                  <Button variant="muted" size="sm" leftIcon={<IconTrash size={12} />} disabled={selectedInstances.length === 0}>
+                    Delete
+                  </Button>
+                </ListToolbar.Actions>
+              }
+              filters={activeFilters}
+              onFilterRemove={removeFilter}
+              onFiltersClear={clearAllFilters}
+            />
 
             {/* Pagination */}
             {activeTab === 'vm' && filteredInstances.length > 0 && (

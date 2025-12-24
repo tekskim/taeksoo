@@ -66,6 +66,12 @@ const buttonVariants = cva(
           'active:bg-[var(--color-red-800)]',
           'disabled:opacity-50',
         ],
+        warning: [
+          'bg-[var(--color-state-warning)] text-[var(--color-text-on-primary)]',
+          'hover:bg-[var(--color-orange-600)]',
+          'active:bg-[var(--color-orange-700)]',
+          'disabled:opacity-50',
+        ],
         link: [
           'bg-transparent text-[var(--color-action-primary)] p-0 min-w-0 h-auto rounded-none',
           'hover:underline hover:underline-offset-4',

@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { VStack, MenuItem, MenuSection } from '@/design-system';
 import { useDarkMode } from '@/hooks/useDarkMode';
 import {
@@ -26,10 +27,10 @@ import {
   IconLayoutSidebar,
   IconPalette,
 } from '@tabler/icons-react';
-import { ArrowRightLeft } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import ThakiLogoLight from '@/assets/thakiLogo_light.svg';
 import ThakiLogoDark from '@/assets/thakiLogo-dark.svg';
+import { ProjectSelector, mockProjects } from './ProjectSelector';
 
 /* ----------------------------------------
    Sidebar Component
@@ -42,6 +43,16 @@ interface SidebarProps {
 
 export function Sidebar({ isOpen = true, onToggle }: SidebarProps) {
   const { isDark } = useDarkMode();
+  const [selectedProjectId, setSelectedProjectId] = useState(mockProjects[0].id);
+  const location = useLocation();
+  
+  // Check if current path matches href (also handle root path for instances)
+  const isActive = (href: string) => {
+    if (href === '/instances' && (location.pathname === '/' || location.pathname === '/instances')) {
+      return true;
+    }
+    return location.pathname === href;
+  };
   
   if (!isOpen) return null;
 
@@ -65,10 +76,11 @@ export function Sidebar({ isOpen = true, onToggle }: SidebarProps) {
 
       {/* Project Selector */}
       <div className="px-3 py-2">
-        <button className="w-full px-2.5 py-1.5 rounded-md bg-[var(--color-surface-subtle)] hover:bg-[var(--color-surface-muted)] transition-colors flex items-center justify-between">
-          <span className="text-[11px] font-medium text-[var(--color-text-default)]">Proj-1</span>
-          <ArrowRightLeft size={12} className="text-[var(--color-text-default)]" strokeWidth={1.5} />
-        </button>
+        <ProjectSelector
+          projects={mockProjects}
+          selectedProjectId={selectedProjectId}
+          onProjectSelect={setSelectedProjectId}
+        />
       </div>
 
       {/* Navigation */}
@@ -88,6 +100,7 @@ export function Sidebar({ isOpen = true, onToggle }: SidebarProps) {
             icon={<IconHome size={16} stroke={1.5} />}
             label="Home"
             href="/home"
+            active={isActive('/home')}
           />
 
           {/* Compute Section */}
@@ -96,47 +109,55 @@ export function Sidebar({ isOpen = true, onToggle }: SidebarProps) {
               icon={<IconServer size={16} stroke={1.5} />}
               label="Instances"
               href="/instances"
-              active={true}
+              active={isActive('/instances')}
             />
             <MenuItem
               icon={<IconTemplate size={16} stroke={1.5} />}
               label="Instance Templates"
               href="/instance-templates"
+              active={isActive('/instance-templates')}
             />
             <MenuItem
               icon={<IconCamera size={16} stroke={1.5} />}
               label="Instance Snapshots"
               href="/instance-snapshots"
+              active={isActive('/instance-snapshots')}
             />
             <MenuItem
               icon={<IconPhoto size={16} stroke={1.5} />}
               label="Images"
               href="/images"
+              active={isActive('/images')}
             />
             <MenuItem
               icon={<IconCpu size={16} stroke={1.5} />}
               label="Flavors"
               href="/flavors"
+              active={isActive('/flavors')}
             />
             <MenuItem
               icon={<IconKey size={16} stroke={1.5} />}
               label="Key Pairs"
               href="/key-pairs"
+              active={isActive('/key-pairs')}
             />
             <MenuItem
               icon={<IconUsers size={16} stroke={1.5} />}
               label="Server Groups"
               href="/server-groups"
+              active={isActive('/server-groups')}
             />
             <MenuItem
               icon={<IconBox size={16} stroke={1.5} />}
               label="Hypervisors"
               href="/hypervisors"
+              active={isActive('/hypervisors')}
             />
             <MenuItem
               icon={<IconStack2 size={16} stroke={1.5} />}
               label="Host Aggregates"
               href="/host-aggregates"
+              active={isActive('/host-aggregates')}
             />
           </MenuSection>
 
@@ -146,26 +167,31 @@ export function Sidebar({ isOpen = true, onToggle }: SidebarProps) {
               icon={<IconDatabase size={16} stroke={1.5} />}
               label="Volumes"
               href="/volumes"
+              active={isActive('/volumes')}
             />
             <MenuItem
               icon={<IconCamera size={16} stroke={1.5} />}
               label="Volume Snapshots"
               href="/volume-snapshots"
+              active={isActive('/volume-snapshots')}
             />
             <MenuItem
               icon={<IconDatabaseExport size={16} stroke={1.5} />}
               label="Volume Backups"
               href="/volume-backups"
+              active={isActive('/volume-backups')}
             />
             <MenuItem
               icon={<IconDeviceFloppy size={16} stroke={1.5} />}
               label="Volume Type"
               href="/volume-type"
+              active={isActive('/volume-type')}
             />
             <MenuItem
               icon={<IconServer2 size={16} stroke={1.5} />}
               label="Storage Backends"
               href="/storage-backends"
+              active={isActive('/storage-backends')}
             />
           </MenuSection>
 
@@ -175,41 +201,49 @@ export function Sidebar({ isOpen = true, onToggle }: SidebarProps) {
               icon={<IconNetwork size={16} stroke={1.5} />}
               label="Networks"
               href="/networks"
+              active={isActive('/networks')}
             />
             <MenuItem
               icon={<IconRouter size={16} stroke={1.5} />}
               label="Routers"
               href="/routers"
+              active={isActive('/routers')}
             />
             <MenuItem
               icon={<IconPlug size={16} stroke={1.5} />}
               label="Ports"
               href="/ports"
+              active={isActive('/ports')}
             />
             <MenuItem
               icon={<IconWorldWww size={16} stroke={1.5} />}
               label="Floating IPs"
               href="/floating-ips"
+              active={isActive('/floating-ips')}
             />
             <MenuItem
               icon={<IconShield size={16} stroke={1.5} />}
               label="Security Groups"
               href="/security-groups"
+              active={isActive('/security-groups')}
             />
             <MenuItem
               icon={<IconScale size={16} stroke={1.5} />}
               label="Load Balancers"
               href="/load-balancers"
+              active={isActive('/load-balancers')}
             />
             <MenuItem
               icon={<IconCertificate size={16} stroke={1.5} />}
               label="Certificates"
               href="/certificates"
+              active={isActive('/certificates')}
             />
             <MenuItem
               icon={<IconTopologyRing size={16} stroke={1.5} />}
               label="Topology"
               href="/topology"
+              active={isActive('/topology')}
             />
           </MenuSection>
         </VStack>

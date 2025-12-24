@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { IconPlus, IconX } from '@tabler/icons-react';
+import { IconPlus, IconX, IconMinus, IconSquare } from '@tabler/icons-react';
 
 /* ----------------------------------------
    Types
@@ -29,6 +29,14 @@ export interface TabBarProps {
   onTabAdd?: () => void;
   /** Show add button */
   showAddButton?: boolean;
+  /** Show window controls (minimize, maximize, close) */
+  showWindowControls?: boolean;
+  /** Callback when minimize button is clicked */
+  onMinimize?: () => void;
+  /** Callback when maximize button is clicked */
+  onMaximize?: () => void;
+  /** Callback when window close button is clicked */
+  onWindowClose?: () => void;
   /** Custom class name */
   className?: string;
 }
@@ -44,6 +52,10 @@ export const TabBar: React.FC<TabBarProps> = ({
   onTabClose,
   onTabAdd,
   showAddButton = true,
+  showWindowControls = true,
+  onMinimize,
+  onMaximize,
+  onWindowClose,
   className = '',
 }) => {
   const tabsRef = useRef<HTMLDivElement>(null);
@@ -99,11 +111,17 @@ export const TabBar: React.FC<TabBarProps> = ({
                 transition-colors duration-[var(--duration-fast)]
                 border-r border-[var(--color-border-subtle)]
                 ${isActive
-                  ? 'bg-[var(--color-surface-default)] border-b-2 border-b-[var(--color-action-primary)]'
+                  ? 'bg-[var(--color-surface-default)]'
                   : 'bg-[var(--color-surface-subtle)] hover:bg-[var(--color-surface-muted)]'
                 }
               `}
             >
+              {/* Active indicator */}
+              {isActive && (
+                <div 
+                  className="absolute bottom-0 left-0 right-0 h-[2px] bg-[var(--color-action-primary)]"
+                />
+              )}
               {/* Icon */}
               {tab.icon && (
                 <span className={`
@@ -176,6 +194,63 @@ export const TabBar: React.FC<TabBarProps> = ({
         >
           <IconPlus size={14} stroke={2} />
         </button>
+      )}
+
+      {/* Spacer to push window controls to the right */}
+      <div className="flex-1" />
+
+      {/* Window Controls */}
+      {showWindowControls && (
+        <div className="flex items-center gap-1 px-2">
+          <button
+            type="button"
+            onClick={onMinimize}
+            className="
+              flex items-center justify-center
+              size-[24px]
+              rounded-[var(--radius-sm)]
+              text-[var(--color-text-muted)]
+              transition-colors duration-[var(--duration-fast)]
+              hover:bg-[var(--color-surface-subtle)]
+              hover:text-[var(--color-text-default)]
+            "
+            aria-label="Minimize"
+          >
+            <IconMinus size={12} stroke={1.5} />
+          </button>
+          <button
+            type="button"
+            onClick={onMaximize}
+            className="
+              flex items-center justify-center
+              size-[24px]
+              rounded-[var(--radius-sm)]
+              text-[var(--color-text-muted)]
+              transition-colors duration-[var(--duration-fast)]
+              hover:bg-[var(--color-surface-subtle)]
+              hover:text-[var(--color-text-default)]
+            "
+            aria-label="Maximize"
+          >
+            <IconSquare size={12} stroke={1.5} />
+          </button>
+          <button
+            type="button"
+            onClick={onWindowClose}
+            className="
+              flex items-center justify-center
+              size-[24px]
+              rounded-[var(--radius-sm)]
+              text-[var(--color-text-muted)]
+              transition-colors duration-[var(--duration-fast)]
+              hover:bg-[var(--color-state-danger-bg)]
+              hover:text-[var(--color-state-danger-text)]
+            "
+            aria-label="Close window"
+          >
+            <IconX size={12} stroke={1.5} />
+          </button>
+        </div>
       )}
     </div>
   );

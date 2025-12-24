@@ -1,0 +1,431 @@
+import { useState, useMemo } from 'react';
+import {
+  Button,
+  SearchInput,
+  Table,
+  Pagination,
+  HStack,
+  VStack,
+  TabBar,
+  TopBar,
+  TopBarAction,
+  Breadcrumb,
+  Tabs,
+  TabList,
+  Tab,
+  ListToolbar,
+  ContextMenu,
+  ConfirmModal,
+  type TableColumn,
+  type ContextMenuItem,
+} from '@/design-system';
+import { Sidebar } from '@/components/Sidebar';
+import { useTabs } from '@/contexts/TabContext';
+import {
+  IconPlus,
+  IconDotsVertical,
+  IconTrash,
+  IconDownload,
+  IconBell,
+  IconStar,
+  IconStarFilled,
+  IconServer,
+  IconCopy,
+} from '@tabler/icons-react';
+
+/* ----------------------------------------
+   Types
+   ---------------------------------------- */
+
+type AccessType = 'Personal' | 'Project' | 'Public';
+
+interface InstanceTemplate {
+  id: string;
+  name: string;
+  image: string;
+  flavor: string;
+  vcpu: number;
+  ram: string;
+  disk: string;
+  network: string;
+  floatingIp: string;
+  access: AccessType;
+  favorite: boolean;
+}
+
+/* ----------------------------------------
+   Mock Data
+   ---------------------------------------- */
+
+const mockTemplates: InstanceTemplate[] = [
+  { id: 'tpl-001', name: 'hj-small', image: 'Ubuntu 22.04 LTS', flavor: 'm1.medium', vcpu: 8, ram: '16GiB', disk: '10GiB', network: 'in-net', floatingIp: 'None', access: 'Personal', favorite: true },
+  { id: 'tpl-002', name: 'web-server-template', image: 'Ubuntu 22.04 LTS', flavor: 'm1.large', vcpu: 16, ram: '32GiB', disk: '50GiB', network: 'public-net', floatingIp: 'Auto', access: 'Project', favorite: true },
+  { id: 'tpl-003', name: 'db-template', image: 'CentOS 8', flavor: 'm1.xlarge', vcpu: 32, ram: '64GiB', disk: '200GiB', network: 'db-net', floatingIp: 'None', access: 'Personal', favorite: false },
+  { id: 'tpl-004', name: 'gpu-ml-template', image: 'Ubuntu 22.04 LTS', flavor: 'g1.xlarge', vcpu: 16, ram: '128GiB', disk: '500GiB', network: 'ml-net', floatingIp: 'Auto', access: 'Public', favorite: true },
+  { id: 'tpl-005', name: 'minimal-template', image: 'Alpine 3.18', flavor: 'm1.small', vcpu: 2, ram: '4GiB', disk: '10GiB', network: 'in-net', floatingIp: 'None', access: 'Personal', favorite: false },
+  { id: 'tpl-006', name: 'k8s-worker', image: 'Rocky Linux 9', flavor: 'm1.large', vcpu: 8, ram: '16GiB', disk: '100GiB', network: 'k8s-net', floatingIp: 'None', access: 'Project', favorite: true },
+  { id: 'tpl-007', name: 'k8s-master', image: 'Rocky Linux 9', flavor: 'm1.medium', vcpu: 4, ram: '8GiB', disk: '50GiB', network: 'k8s-net', floatingIp: 'Auto', access: 'Project', favorite: true },
+  { id: 'tpl-008', name: 'dev-environment', image: 'Ubuntu 22.04 LTS', flavor: 'm1.medium', vcpu: 4, ram: '8GiB', disk: '30GiB', network: 'dev-net', floatingIp: 'Auto', access: 'Personal', favorite: false },
+  { id: 'tpl-009', name: 'monitoring-stack', image: 'Debian 12', flavor: 'm1.large', vcpu: 8, ram: '16GiB', disk: '100GiB', network: 'monitor-net', floatingIp: 'Auto', access: 'Public', favorite: true },
+  { id: 'tpl-010', name: 'cache-server', image: 'Ubuntu 22.04 LTS', flavor: 'm1.medium', vcpu: 4, ram: '32GiB', disk: '20GiB', network: 'cache-net', floatingIp: 'None', access: 'Project', favorite: false },
+];
+
+/* ----------------------------------------
+   Component
+   ---------------------------------------- */
+
+export function InstanceTemplatesPage() {
+  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [selectedTemplates, setSelectedTemplates] = useState<string[]>([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [activeTab, setActiveTab] = useState('favorites');
+  const [templates, setTemplates] = useState(mockTemplates);
+  
+  // Delete modal state
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [templateToDelete, setTemplateToDelete] = useState<InstanceTemplate | null>(null);
+
+  // Global tab management
+  const { tabs, activeTabId, closeTab, selectTab } = useTabs();
+
+  // Convert tabs to TabBar format
+  const tabBarTabs = tabs.map((tab) => ({
+    id: tab.id,
+    label: tab.label,
+    closable: tab.closable,
+  }));
+
+  const pageSize = 10;
+
+  // Handle delete template
+  const handleDeleteClick = (template: InstanceTemplate) => {
+    setTemplateToDelete(template);
+    setDeleteModalOpen(true);
+  };
+
+  const handleDeleteConfirm = () => {
+    if (templateToDelete) {
+      setTemplates((prev) => prev.filter((t) => t.id !== templateToDelete.id));
+      setDeleteModalOpen(false);
+      setTemplateToDelete(null);
+    }
+  };
+
+  const handleDeleteCancel = () => {
+    setDeleteModalOpen(false);
+    setTemplateToDelete(null);
+  };
+
+  // Filter templates by tab and search
+  const filteredTemplates = useMemo(() => {
+    let filtered = templates;
+
+    // Filter by tab
+    switch (activeTab) {
+      case 'favorites':
+        filtered = filtered.filter((t) => t.favorite);
+        break;
+      case 'personal':
+        filtered = filtered.filter((t) => t.access === 'Personal');
+        break;
+      case 'project':
+        filtered = filtered.filter((t) => t.access === 'Project');
+        break;
+      case 'public':
+        filtered = filtered.filter((t) => t.access === 'Public');
+        break;
+      // 'all' shows everything
+    }
+
+    // Filter by search
+    if (searchQuery) {
+      filtered = filtered.filter(
+        (t) =>
+          t.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          t.image.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+    }
+
+    return filtered;
+  }, [templates, activeTab, searchQuery]);
+
+  const totalPages = Math.ceil(filteredTemplates.length / pageSize);
+
+  // Toggle favorite
+  const toggleFavorite = (id: string) => {
+    setTemplates((prev) =>
+      prev.map((t) => (t.id === id ? { ...t, favorite: !t.favorite } : t))
+    );
+  };
+
+  // Tab counts
+  const tabCounts = useMemo(() => ({
+    favorites: templates.filter((t) => t.favorite).length,
+    personal: templates.filter((t) => t.access === 'Personal').length,
+    project: templates.filter((t) => t.access === 'Project').length,
+    public: templates.filter((t) => t.access === 'Public').length,
+    all: templates.length,
+  }), [templates]);
+
+  // Table columns
+  const columns: TableColumn<InstanceTemplate>[] = [
+    {
+      key: 'favorite',
+      label: '',
+      width: '48px',
+      align: 'center',
+      render: (_, row) => (
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            toggleFavorite(row.id);
+          }}
+          className="p-1 rounded hover:bg-[var(--color-surface-subtle)] transition-colors"
+        >
+          {row.favorite ? (
+            <IconStarFilled size={16} className="text-yellow-400" />
+          ) : (
+            <IconStar size={16} stroke={1} className="text-[var(--color-text-muted)]" />
+          )}
+        </button>
+      ),
+    },
+    {
+      key: 'name',
+      label: 'Name',
+      flex: 1,
+      sortable: true,
+      render: (_, row) => (
+        <a
+          href={`/instance-templates/${row.id}`}
+          className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
+          onClick={(e) => e.stopPropagation()}
+        >
+          {row.name}
+        </a>
+      ),
+    },
+    {
+      key: 'image',
+      label: 'Image',
+      flex: 1,
+      sortable: true,
+    },
+    {
+      key: 'flavor',
+      label: 'Flavor',
+      flex: 1,
+      sortable: true,
+    },
+    {
+      key: 'vcpu',
+      label: 'vCPU',
+      width: '80px',
+      align: 'center',
+      sortable: true,
+    },
+    {
+      key: 'ram',
+      label: 'RAM',
+      width: '80px',
+      align: 'center',
+      sortable: true,
+    },
+    {
+      key: 'disk',
+      label: 'Disk',
+      width: '80px',
+      align: 'center',
+      sortable: true,
+    },
+    {
+      key: 'network',
+      label: 'Network',
+      flex: 1,
+      sortable: true,
+    },
+    {
+      key: 'floatingIp',
+      label: 'Floating IP',
+      flex: 1,
+    },
+    {
+      key: 'access',
+      label: 'Access',
+      flex: 1,
+    },
+    {
+      key: 'actions',
+      label: 'Action',
+      width: '72px',
+      align: 'center',
+      render: (_, row) => {
+        const menuItems: ContextMenuItem[] = [
+          {
+            id: 'create-instance',
+            label: 'Create Instance',
+            onClick: () => console.log('Create instance from template:', row.id),
+          },
+          {
+            id: 'duplicate',
+            label: 'Duplicate',
+            onClick: () => console.log('Duplicate template:', row.id),
+          },
+{
+          id: 'delete',
+          label: 'Delete',
+          status: 'danger',
+          onClick: () => handleDeleteClick(row),
+        },
+        ];
+        
+        return (
+          <div onClick={(e) => e.stopPropagation()}>
+            <ContextMenu items={menuItems} trigger="click">
+              <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors">
+                <IconDotsVertical size={16} stroke={1} className="text-[var(--color-text-subtle)]" />
+              </button>
+            </ContextMenu>
+          </div>
+        );
+      },
+    },
+  ];
+
+  return (
+    <div className="min-h-screen bg-[var(--color-surface-subtle)]">
+      <Sidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(false)} />
+
+      <main
+        className={`min-h-screen bg-[var(--color-surface-default)] transition-[margin] duration-200 ${
+          sidebarOpen ? 'ml-[200px]' : 'ml-0'
+        }`}
+      >
+        {/* Tab Bar */}
+        <TabBar
+          tabs={tabBarTabs}
+          activeTab={activeTabId}
+          onTabChange={selectTab}
+          onTabClose={closeTab}
+          showWindowControls={true}
+        />
+
+        {/* Top Bar */}
+        <TopBar
+          showSidebarToggle={!sidebarOpen}
+          onSidebarToggle={() => setSidebarOpen(true)}
+          showNavigation={true}
+          onBack={() => window.history.back()}
+          onForward={() => window.history.forward()}
+          breadcrumb={
+            <Breadcrumb
+              items={[
+                { label: 'Proj-1', href: '/project' },
+                { label: 'Instance Templates' },
+              ]}
+            />
+          }
+          actions={
+            <TopBarAction
+              icon={<IconBell size={16} stroke={1.5} />}
+              aria-label="Notifications"
+              badge={true}
+            />
+          }
+        />
+
+        {/* Page Content */}
+        <div className="pt-4 px-8 pb-6 bg-[var(--color-surface-default)]">
+          <VStack gap={3}>
+            {/* Page Header */}
+            <div className="flex items-center justify-between h-8">
+              <h1 className="text-[length:var(--font-size-16)] font-semibold text-[var(--color-text-default)]">
+                Instance Templates
+              </h1>
+              <Button leftIcon={<IconPlus size={16} />}>
+                Create Template
+              </Button>
+            </div>
+
+            {/* Category Tabs */}
+            <Tabs value={activeTab} onChange={setActiveTab} variant="underline" size="sm">
+              <TabList>
+                <Tab value="favorites">Favorites({tabCounts.favorites})</Tab>
+                <Tab value="personal">Personal({tabCounts.personal})</Tab>
+                <Tab value="project">Project({tabCounts.project})</Tab>
+                <Tab value="public">Public({tabCounts.public})</Tab>
+                <Tab value="all">All({tabCounts.all})</Tab>
+              </TabList>
+            </Tabs>
+
+            {/* List Toolbar */}
+            <ListToolbar
+              primaryActions={
+                <ListToolbar.Actions>
+                  <div className="w-[280px]">
+                    <SearchInput
+                      placeholder="Find Template with filters"
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      onClear={() => setSearchQuery('')}
+                      size="sm"
+                      fullWidth
+                    />
+                  </div>
+                  <Button variant="secondary" size="sm" icon={<IconDownload size={12} />} aria-label="Download" />
+                </ListToolbar.Actions>
+              }
+              bulkActions={
+                <ListToolbar.Actions>
+                  <Button variant="muted" size="sm" leftIcon={<IconTrash size={12} />} disabled={selectedTemplates.length === 0}>
+                    Delete
+                  </Button>
+                </ListToolbar.Actions>
+              }
+            />
+
+            {/* Pagination */}
+            {filteredTemplates.length > 0 && (
+              <Pagination
+                currentPage={currentPage}
+                totalPages={totalPages}
+                onPageChange={setCurrentPage}
+                showSettings
+                totalItems={filteredTemplates.length}
+              />
+            )}
+
+            {/* Template Table */}
+            <Table<InstanceTemplate>
+              columns={columns}
+              data={filteredTemplates}
+              rowKey="id"
+              selectable
+              selectedKeys={selectedTemplates}
+              onSelectionChange={setSelectedTemplates}
+              emptyMessage="No templates found"
+            />
+          </VStack>
+        </div>
+      </main>
+
+      {/* Delete Confirmation Modal */}
+      <ConfirmModal
+        isOpen={deleteModalOpen}
+        onClose={handleDeleteCancel}
+        onConfirm={handleDeleteConfirm}
+        title="Delete Template"
+        description="Are you sure you want to delete this template? This action cannot be undone."
+        confirmText="Delete"
+        cancelText="Cancel"
+        confirmVariant="danger"
+        infoLabel="Template name"
+        infoValue={templateToDelete?.name}
+      />
+    </div>
+  );
+}
+
+export default InstanceTemplatesPage;
+

@@ -39,6 +39,8 @@ import {
   MenuSection,
   MenuDivider,
   Tooltip,
+  Modal,
+  ConfirmModal,
 } from '@/design-system';
 import {
   // Navigation icons (for sidebar)
@@ -225,6 +227,7 @@ const navigationItems = [
   { id: 'breadcrumb', label: 'Breadcrumb', icon: IconChevronRight },
   { id: 'menu', label: 'Menu', icon: IconMenu2 },
   { id: 'context-menu', label: 'Context Menu', icon: IconMenu2 },
+  { id: 'modal', label: 'Modal', icon: IconLayoutGrid },
 ];
 
 // Feedback
@@ -338,6 +341,85 @@ function DatePickerSection() {
         </VStack>
       </VStack>
     </Section>
+  );
+}
+
+/* ----------------------------------------
+   Modal Demo (with state)
+   ---------------------------------------- */
+
+function ModalDemo({ variant }: { variant: 'basic' | 'delete' | 'size-sm' | 'size-md' | 'size-lg' }) {
+  const [isOpen, setIsOpen] = useState(false);
+
+  const getButtonLabel = () => {
+    switch (variant) {
+      case 'basic': return 'Open Basic Modal';
+      case 'delete': return 'Open Delete Modal';
+      case 'size-sm': return 'Small (320px)';
+      case 'size-md': return 'Medium (400px)';
+      case 'size-lg': return 'Large (560px)';
+      default: return 'Open Modal';
+    }
+  };
+
+  const getSize = (): 'sm' | 'md' | 'lg' => {
+    if (variant === 'size-sm') return 'sm';
+    if (variant === 'size-lg') return 'lg';
+    return variant === 'delete' ? 'sm' : 'md';
+  };
+
+  if (variant === 'delete') {
+    return (
+      <>
+        <Button variant="outline" size="sm" onClick={() => setIsOpen(true)}>
+          {getButtonLabel()}
+        </Button>
+        <ConfirmModal
+          isOpen={isOpen}
+          onClose={() => setIsOpen(false)}
+          onConfirm={() => {
+            console.log('Deleted!');
+            setIsOpen(false);
+          }}
+          title="Delete Template"
+          description="Are you sure you want to delete this template? This action cannot be undone."
+          confirmText="Delete"
+          cancelText="Cancel"
+          confirmVariant="danger"
+          infoLabel="Template name"
+          infoValue="My-web-template"
+        />
+      </>
+    );
+  }
+
+  return (
+    <>
+      <Button variant="outline" size="sm" onClick={() => setIsOpen(true)}>
+        {getButtonLabel()}
+      </Button>
+      <Modal
+        isOpen={isOpen}
+        onClose={() => setIsOpen(false)}
+        title="Modal Title"
+        description="This is a modal description that provides additional context."
+        size={getSize()}
+      >
+        <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] p-4">
+          <p className="text-[length:var(--font-size-12)] text-[var(--color-text-default)]">
+            Modal content goes here. You can put any content inside a modal.
+          </p>
+        </div>
+        <div className="flex gap-2 w-full">
+          <Button variant="outline" size="md" onClick={() => setIsOpen(false)} className="flex-1">
+            Cancel
+          </Button>
+          <Button variant="primary" size="md" onClick={() => setIsOpen(false)} className="flex-1">
+            Confirm
+          </Button>
+        </div>
+      </Modal>
+    </>
   );
 }
 
@@ -463,8 +545,71 @@ const sampleTableData: InstanceData[] = [
   { id: '6', name: 'ml-worker', status: 'Building', locked: false, fixedIp: '-', floatingIp: '-', image: 'Ubuntu 22.04', flavor: 'GPU Large', vCPU: 8, ram: '64GB', disk: '1TB', gpu: 4, az: 'gpu-zone' },
 ];
 
+// Sample Key Pair data for copy demo
+interface KeyPairData {
+  id: string;
+  name: string;
+  fingerprint: string;
+  createdAt: string;
+}
+
+const sampleKeyPairData: KeyPairData[] = [
+  { id: 'kp-001', name: 'tk-keypair', fingerprint: '02:c1:ff:54:df:d9:69:0e:bb:46:a9:c8:0c:dc:2f:bb', createdAt: '2025-09-10' },
+  { id: 'kp-002', name: 'dev-keypair', fingerprint: 'a3:b2:c1:d4:e5:f6:07:18:29:3a:4b:5c:6d:7e:8f:90', createdAt: '2025-09-08' },
+  { id: 'kp-003', name: 'prod-keypair', fingerprint: '11:22:33:44:55:66:77:88:99:aa:bb:cc:dd:ee:ff:00', createdAt: '2025-09-05' },
+];
+
 function TableDemo() {
   const [selectedKeys, setSelectedKeys] = useState<string[]>([]);
+  const [copiedId, setCopiedId] = useState<string | null>(null);
+
+  // Copy handler with visual feedback
+  const handleCopy = async (id: string, text: string) => {
+    try {
+      await navigator.clipboard.writeText(text);
+      setCopiedId(id);
+      setTimeout(() => setCopiedId(null), 2000);
+    } catch (err) {
+      console.error('Failed to copy:', err);
+    }
+  };
+
+  // Columns with copy functionality
+  const copyColumns = [
+    { 
+      key: 'name', 
+      label: 'Name', 
+      width: '160px',
+      render: (value: string) => (
+        <span className="text-[var(--color-action-primary)] cursor-pointer hover:underline">{value}</span>
+      )
+    },
+    { 
+      key: 'fingerprint', 
+      label: 'Fingerprint', 
+      flex: 1,
+      render: (_: string, row: KeyPairData) => (
+        <div className="flex items-center gap-2">
+          <span className="font-mono text-[length:var(--font-size-11)] text-[var(--color-text-default)]">{row.fingerprint}</span>
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              handleCopy(row.id, row.fingerprint);
+            }}
+            className="p-1.5 -m-1 rounded-md hover:bg-[var(--color-surface-muted)] active:bg-[var(--color-surface-subtle)] transition-colors"
+            title={copiedId === row.id ? 'Copied!' : 'Copy fingerprint'}
+          >
+            {copiedId === row.id ? (
+              <IconCheck size={12} className="text-[var(--color-state-success)]" />
+            ) : (
+              <IconCopy size={12} className="text-[var(--color-action-primary)]" />
+            )}
+          </button>
+        </div>
+      )
+    },
+    { key: 'createdAt', label: 'Created At', width: '120px' },
+  ];
 
   const columns = [
     { 
@@ -599,6 +744,19 @@ function TableDemo() {
           rowKey="id"
           emptyMessage="No instances found"
         />
+      </VStack>
+
+      {/* Copy Cell */}
+      <VStack gap={3}>
+        <Label>Cell with Copy Button</Label>
+        <Table
+          columns={copyColumns}
+          data={sampleKeyPairData}
+          rowKey="id"
+        />
+        <p className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
+          Click copy icon to copy fingerprint. Icon changes to checkmark for 2 seconds after copying.
+        </p>
       </VStack>
     </VStack>
   );
@@ -1042,7 +1200,7 @@ export function DesignSystemPage() {
                 <VStack gap={2}>
                   <Label>Yellow</Label>
                   <div className="grid grid-cols-5 md:grid-cols-10 gap-2">
-                    {[50, 100, 500, 600].map((shade) => (
+                    {[50, 100, 200, 300, 400, 500, 600, 700, 800, 900].map((shade) => (
                       <ColorSwatch key={shade} name={`${shade}`} color={`var(--color-yellow-${shade})`} textLight={shade >= 500} />
                     ))}
                   </div>
@@ -1682,6 +1840,7 @@ outline: 2px solid var(--color-border-focus);`}
                     <Button size="sm" variant="ghost">Ghost</Button>
                     <Button size="sm" variant="muted">Muted</Button>
                     <Button size="sm" variant="danger">Danger</Button>
+                    <Button size="sm" variant="warning">Warning</Button>
                     <Button size="sm" variant="link">Link</Button>
                   </div>
                 </VStack>
@@ -3137,41 +3296,106 @@ outline: 2px solid var(--color-border-focus);`}
                   </div>
                 </VStack>
 
-                {/* All Status Types */}
+                {/* All Status Types by Category */}
                 <VStack gap={3}>
-                  <Label>Status Types</Label>
+                  <Label>Success (Green)</Label>
                   <div className="flex flex-wrap gap-3 items-center">
                     <StatusIndicator status="active" />
+                  </div>
+                </VStack>
+
+                <VStack gap={3}>
+                  <Label>Danger (Red)</Label>
+                  <div className="flex flex-wrap gap-3 items-center">
                     <StatusIndicator status="error" />
-                    <StatusIndicator status="suspended" />
-                    <StatusIndicator status="shelved" />
-                    <StatusIndicator status="shutoff" />
-                    <StatusIndicator status="paused" />
+                  </div>
+                </VStack>
+
+                <VStack gap={3}>
+                  <Label>Info (Blue)</Label>
+                  <div className="flex flex-wrap gap-3 items-center">
                     <StatusIndicator status="building" />
                   </div>
                 </VStack>
 
-                {/* Layout Variants */}
                 <VStack gap={3}>
-                  <Label>Layout</Label>
-                  <div className="flex gap-6">
+                  <Label>Warning (Orange)</Label>
+                  <div className="flex flex-wrap gap-3 items-center">
+                    <StatusIndicator status="verify-resized" />
+                    <StatusIndicator status="degraded" />
+                    <StatusIndicator status="no-monitor" />
+                  </div>
+                </VStack>
+
+                <VStack gap={3}>
+                  <Label>Muted (Gray)</Label>
+                  <div className="flex flex-wrap gap-3 items-center">
+                    <StatusIndicator status="suspended" />
+                    <StatusIndicator status="shelved-offloaded" />
+                    <StatusIndicator status="mounted" />
+                    <StatusIndicator status="shutoff" />
+                    <StatusIndicator status="paused" />
+                    <StatusIndicator status="pending" />
+                    <StatusIndicator status="draft" />
+                    <StatusIndicator status="deactivated" />
+                    <StatusIndicator status="in-use" />
+                    <StatusIndicator status="maintenance" />
+                    <StatusIndicator status="down" />
+                  </div>
+                </VStack>
+
+                {/* Layout Variants - Icon Only (All Cases) */}
+                <VStack gap={3}>
+                  <Label>Icon Only - All Status Types</Label>
+                  <VStack gap={4}>
+                    {/* Success */}
                     <VStack gap={2}>
-                      <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">Default (left-icon)</span>
-                      <div className="flex gap-2 items-center">
-                        <StatusIndicator status="active" />
-                        <StatusIndicator status="error" />
-                        <StatusIndicator status="building" />
+                      <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">Success (Green)</span>
+                      <div className="flex flex-wrap gap-2 items-center">
+                        <StatusIndicator status="active" layout="icon-only" />
                       </div>
                     </VStack>
+                    {/* Danger */}
                     <VStack gap={2}>
-                      <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">Icon Only</span>
-                      <div className="flex gap-2 items-center">
-                        <StatusIndicator status="active" layout="icon-only" />
+                      <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">Danger (Red)</span>
+                      <div className="flex flex-wrap gap-2 items-center">
                         <StatusIndicator status="error" layout="icon-only" />
+                      </div>
+                    </VStack>
+                    {/* Info */}
+                    <VStack gap={2}>
+                      <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">Info (Blue)</span>
+                      <div className="flex flex-wrap gap-2 items-center">
                         <StatusIndicator status="building" layout="icon-only" />
                       </div>
                     </VStack>
-                  </div>
+                    {/* Warning */}
+                    <VStack gap={2}>
+                      <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">Warning (Orange)</span>
+                      <div className="flex flex-wrap gap-2 items-center">
+                        <StatusIndicator status="verify-resized" layout="icon-only" />
+                        <StatusIndicator status="degraded" layout="icon-only" />
+                        <StatusIndicator status="no-monitor" layout="icon-only" />
+                      </div>
+                    </VStack>
+                    {/* Muted */}
+                    <VStack gap={2}>
+                      <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">Muted (Gray)</span>
+                      <div className="flex flex-wrap gap-2 items-center">
+                        <StatusIndicator status="suspended" layout="icon-only" />
+                        <StatusIndicator status="shelved-offloaded" layout="icon-only" />
+                        <StatusIndicator status="mounted" layout="icon-only" />
+                        <StatusIndicator status="shutoff" layout="icon-only" />
+                        <StatusIndicator status="paused" layout="icon-only" />
+                        <StatusIndicator status="pending" layout="icon-only" />
+                        <StatusIndicator status="draft" layout="icon-only" />
+                        <StatusIndicator status="deactivated" layout="icon-only" />
+                        <StatusIndicator status="in-use" layout="icon-only" />
+                        <StatusIndicator status="maintenance" layout="icon-only" />
+                        <StatusIndicator status="down" layout="icon-only" />
+                      </div>
+                    </VStack>
+                  </VStack>
                 </VStack>
 
                 {/* Custom Labels */}
@@ -3184,25 +3408,29 @@ outline: 2px solid var(--color-border-focus);`}
                   </div>
                 </VStack>
 
-                {/* Color Reference */}
+                {/* Color Reference - Semantic Status Tokens */}
                 <VStack gap={3}>
-                  <Label>Color Reference</Label>
-                  <div className="grid grid-cols-4 gap-2 text-[length:var(--font-size-10)]">
+                  <Label>Semantic Color Tokens</Label>
+                  <div className="grid grid-cols-5 gap-2 text-[length:var(--font-size-10)]">
                     <div className="flex items-center gap-2">
-                      <span className="w-4 h-4 rounded bg-[var(--status-active-bg)]" />
-                      <span className="text-[var(--color-text-subtle)]">active: green-400</span>
+                      <span className="w-4 h-4 rounded bg-[var(--status-success-bg)]" />
+                      <span className="text-[var(--color-text-subtle)]">--status-success-bg</span>
                     </div>
                     <div className="flex items-center gap-2">
-                      <span className="w-4 h-4 rounded bg-[var(--status-error-bg)]" />
-                      <span className="text-[var(--color-text-subtle)]">error: red-400</span>
+                      <span className="w-4 h-4 rounded bg-[var(--status-danger-bg)]" />
+                      <span className="text-[var(--color-text-subtle)]">--status-danger-bg</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <span className="w-4 h-4 rounded bg-[var(--status-info-bg)]" />
+                      <span className="text-[var(--color-text-subtle)]">--status-info-bg</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <span className="w-4 h-4 rounded bg-[var(--status-warning-bg)]" />
+                      <span className="text-[var(--color-text-subtle)]">--status-warning-bg</span>
                     </div>
                     <div className="flex items-center gap-2">
                       <span className="w-4 h-4 rounded bg-[var(--status-muted-bg)]" />
-                      <span className="text-[var(--color-text-subtle)]">muted: slate-600</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <span className="w-4 h-4 rounded bg-[var(--status-building-bg)]" />
-                      <span className="text-[var(--color-text-subtle)]">building: blue-400</span>
+                      <span className="text-[var(--color-text-subtle)]">--status-muted-bg</span>
                     </div>
                   </div>
                 </VStack>
@@ -3464,6 +3692,41 @@ outline: 2px solid var(--color-border-focus);`}
               </VStack>
             </Section>
 
+            {/* Modal Component */}
+            <Section id="modal" title="Modal" description="Dialog overlay for confirmations, alerts, and user interactions">
+              <VStack gap={8}>
+                {/* Tokens */}
+                <VStack gap={3}>
+                  <Label>Design Tokens</Label>
+                  <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
+                    <code>padding: 16px</code> · <code>gap: 24px</code> · <code>radius: 16px</code> · <code>backdrop: black/60</code>
+                  </div>
+                </VStack>
+
+                {/* Basic Modal */}
+                <VStack gap={3}>
+                  <Label>Basic Modal</Label>
+                  <ModalDemo variant="basic" />
+                </VStack>
+
+                {/* Confirm Modal */}
+                <VStack gap={3}>
+                  <Label>Confirm Modal (Delete)</Label>
+                  <ModalDemo variant="delete" />
+                </VStack>
+
+                {/* Sizes */}
+                <VStack gap={3}>
+                  <Label>Sizes</Label>
+                  <div className="flex gap-2">
+                    <ModalDemo variant="size-sm" />
+                    <ModalDemo variant="size-md" />
+                    <ModalDemo variant="size-lg" />
+                  </div>
+                </VStack>
+              </VStack>
+            </Section>
+
             {/* Layout Section */}
             <Section id="layout" title="Layout" description="Application layout structure with responsive sidebar">
               <VStack gap={8}>
@@ -3705,7 +3968,10 @@ function Label({ children }: { children: React.ReactNode }) {
 
 function ColorSwatch({ name, color, textLight = false }: { name: string; color: string; textLight?: boolean }) {
   return (
-    <div className="w-full h-12 rounded-[var(--radius-md)] flex items-center justify-center" style={{ backgroundColor: color }}>
+    <div 
+      className="w-full h-12 rounded-[var(--radius-md)] flex items-center justify-center border border-[var(--color-border-subtle)]" 
+      style={{ backgroundColor: color }}
+    >
       <span className={`text-[10px] font-mono ${textLight ? 'text-white' : 'text-black'}`}>{name}</span>
     </div>
   );
