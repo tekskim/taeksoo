@@ -2250,35 +2250,7 @@ export function TopologyD3Page() {
             </div>
 
           {/* Filters */}
-          <div className="bg-white rounded-lg border border-slate-200 p-3">
-            {/* Stats Row */}
-            <div className="flex items-center gap-3 mb-3">
-              <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
-                {stats.filteredSubnets === stats.totalSubnets 
-                  ? `${stats.totalSubnets} subnets` 
-                  : `${stats.filteredSubnets} of ${stats.totalSubnets} subnets`
-                } across {filteredData.networks.length} VPCs • 
-                <span className="text-green-600">{stats.activeSubnets} active</span>
-                {stats.errorSubnets > 0 && <span className="text-red-600"> • {stats.errorSubnets} error</span>}
-              </span>
-              <div className="h-4 w-px bg-[var(--color-border-default)]" />
-              <div className="flex items-center gap-2 px-2 py-1 bg-[var(--color-surface-muted)] rounded-md">
-                <span className="text-[length:var(--font-size-11)] font-medium text-[var(--color-text-default)]">
-                  {Math.round(zoomLevel * 100)}%
-                </span>
-                <span className={`text-[length:var(--font-size-11)] px-1.5 py-0.5 rounded ${
-                  zoomLevel >= 1.0 
-                    ? 'bg-green-100 text-green-700' 
-                    : zoomLevel >= 0.6 
-                      ? 'bg-yellow-100 text-yellow-700' 
-                      : 'bg-[var(--color-surface-subtle)] text-[var(--color-text-muted)]'
-                }`}>
-                  {zoomLevel >= 1.0 ? 'Full' : zoomLevel >= 0.6 ? 'Medium' : 'Compact'}
-                </span>
-              </div>
-            </div>
-            {/* Filter Controls */}
-            <div className="flex items-center gap-3 flex-wrap">
+          <div className="flex items-center gap-3 flex-wrap bg-white rounded-lg border border-slate-200 p-3">
             {/* Search */}
             <div className="w-[240px]">
               <SearchInput
@@ -2339,7 +2311,6 @@ export function TopologyD3Page() {
                 Reset
               </Button>
             )}
-            </div>
           </div>
 
           {/* Empty state when no results */}
@@ -2363,6 +2334,33 @@ export function TopologyD3Page() {
             style={{ minHeight: '500px' }}
           >
             <svg ref={svgRef} className="w-full h-full" />
+            
+            {/* Stats & Zoom Controls */}
+            <div className="absolute top-4 left-4 flex items-center gap-3 bg-white/90 px-3 py-2 rounded-lg border border-slate-200">
+              <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
+                {stats.filteredSubnets === stats.totalSubnets 
+                  ? `${stats.totalSubnets} subnets` 
+                  : `${stats.filteredSubnets} of ${stats.totalSubnets} subnets`
+                } across {filteredData.networks.length} VPCs • 
+                <span className="text-green-600">{stats.activeSubnets} active</span>
+                {stats.errorSubnets > 0 && <span className="text-red-600"> • {stats.errorSubnets} error</span>}
+              </span>
+              <div className="h-4 w-px bg-[var(--color-border-default)]" />
+              <div className="flex items-center gap-2 px-2 py-1 bg-[var(--color-surface-muted)] rounded-md">
+                <span className="text-[length:var(--font-size-11)] font-medium text-[var(--color-text-default)]">
+                  {Math.round(zoomLevel * 100)}%
+                </span>
+                <span className={`text-[length:var(--font-size-11)] px-1.5 py-0.5 rounded ${
+                  zoomLevel >= 1.0 
+                    ? 'bg-green-100 text-green-700' 
+                    : zoomLevel >= 0.6 
+                      ? 'bg-yellow-100 text-yellow-700' 
+                      : 'bg-[var(--color-surface-subtle)] text-[var(--color-text-muted)]'
+                }`}>
+                  {zoomLevel >= 1.0 ? 'Full' : zoomLevel >= 0.6 ? 'Medium' : 'Compact'}
+                </span>
+              </div>
+            </div>
             
             {/* Minimap */}
             <div className="absolute bottom-4 right-4 shadow-md rounded-md overflow-hidden">
