@@ -162,21 +162,21 @@ export function PortsPage() {
       flex: 1,
       render: (_, row) => (
         row.attachedTo ? (
-          <div className="flex items-center justify-between">
-            <div className="flex flex-col gap-0.5">
+          <div className="flex items-center justify-between gap-2">
+            <div className="flex flex-col gap-0.5 min-w-0">
               <a
                 href={`/instances/${row.attachedToId}`}
-                className="inline-flex items-center gap-1.5 font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
+                className="inline-flex items-center gap-1 font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
                 onClick={(e) => e.stopPropagation()}
               >
-                {row.attachedTo}
-                <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
+                <span className="truncate">{row.attachedTo}</span>
+                <IconExternalLink size={12} className="flex-shrink-0 text-[var(--color-action-primary)]" />
               </a>
-              <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
+              <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] truncate">
                 ID : {row.attachedToId?.substring(0, 8)}
               </span>
             </div>
-            <div className="bg-white border border-[var(--color-border-default)] rounded-[4px] p-1">
+            <div className="flex-shrink-0 bg-white border border-[var(--color-border-default)] rounded-[4px] p-1">
               <IconServer2 size={12} className="text-[var(--color-text-subtle)]" />
             </div>
           </div>
@@ -188,16 +188,16 @@ export function PortsPage() {
       label: 'Owned Network',
       flex: 1,
       render: (_, row) => (
-        <div className="flex flex-col gap-0.5">
+        <div className="flex flex-col gap-0.5 min-w-0">
           <a
             href={`/networks/${row.ownedNetworkId}`}
-            className="inline-flex items-center gap-1.5 font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
+            className="inline-flex items-center gap-1 font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
             onClick={(e) => e.stopPropagation()}
           >
-            {row.ownedNetwork}
-            <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
+            <span className="truncate">{row.ownedNetwork}</span>
+            <IconExternalLink size={12} className="flex-shrink-0 text-[var(--color-action-primary)]" />
           </a>
-          <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
+          <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] truncate">
             ID : {row.ownedNetworkId.substring(0, 8)}
           </span>
         </div>
