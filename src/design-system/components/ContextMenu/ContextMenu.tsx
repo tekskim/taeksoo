@@ -58,8 +58,46 @@ const ContextMenuItemComponent: React.FC<{
 }> = ({ item, onClose, parentDirection = 'right' }) => {
   const [showSubmenu, setShowSubmenu] = useState(false);
   const [submenuPosition, setSubmenuPosition] = useState({ x: 0, y: 0 });
+  const [submenuDirection, setSubmenuDirection] = useState<'left' | 'right'>('right');
   const itemRef = useRef<HTMLDivElement>(null);
+  const submenuRef = useRef<HTMLDivElement>(null);
   const closeTimeoutRef = useRef<number | null>(null);
+
+  // Adjust submenu position after it renders
+  useEffect(() => {
+    if (showSubmenu && submenuRef.current && itemRef.current) {
+      const submenuRect = submenuRef.current.getBoundingClientRect();
+      const itemRect = itemRef.current.getBoundingClientRect();
+      const viewportWidth = window.innerWidth;
+      const viewportHeight = window.innerHeight;
+      
+      let newX = submenuPosition.x;
+      let newY = submenuPosition.y;
+      let newDirection: 'left' | 'right' = 'right';
+      
+      // Check if submenu overflows right edge
+      if (submenuPosition.x + submenuRect.width > viewportWidth - 8) {
+        // Position to the left of the parent item
+        newX = itemRect.left - submenuRect.width - 4;
+        newDirection = 'left';
+      }
+      
+      // Check if submenu overflows bottom edge
+      if (submenuPosition.y + submenuRect.height > viewportHeight - 8) {
+        newY = Math.max(8, viewportHeight - submenuRect.height - 8);
+      }
+      
+      // Check if submenu overflows left edge (when positioned left)
+      if (newX < 8) {
+        newX = 8;
+      }
+      
+      if (newX !== submenuPosition.x || newY !== submenuPosition.y) {
+        setSubmenuPosition({ x: newX, y: newY });
+      }
+      setSubmenuDirection(newDirection);
+    }
+  }, [showSubmenu, submenuPosition.x, submenuPosition.y]);
 
   const handleMouseEnter = () => {
     // Cancel any pending close
@@ -70,6 +108,7 @@ const ContextMenuItemComponent: React.FC<{
 
     if (item.submenu && itemRef.current) {
       const rect = itemRef.current.getBoundingClientRect();
+      // Initially position to the right
       setSubmenuPosition({
         x: rect.right + 4,
         y: rect.top - 1, // Offset for border alignment
@@ -151,6 +190,7 @@ const ContextMenuItemComponent: React.FC<{
       {/* Submenu - rendered via portal */}
       {showSubmenu && item.submenu && createPortal(
         <div
+          ref={submenuRef}
           onMouseEnter={handleSubmenuMouseEnter}
           onMouseLeave={handleSubmenuMouseLeave}
           className="
@@ -162,6 +202,8 @@ const ContextMenuItemComponent: React.FC<{
             shadow-[var(--shadow-md)]
             overflow-hidden
             z-[calc(var(--z-popover)+1)]
+            max-h-[calc(100vh-16px)]
+            overflow-y-auto
           "
           style={{
             left: submenuPosition.x,
@@ -173,7 +215,7 @@ const ContextMenuItemComponent: React.FC<{
               key={subItem.id}
               item={subItem}
               onClose={onClose}
-              parentDirection={parentDirection}
+              parentDirection={submenuDirection}
             />
           ))}
         </div>,
