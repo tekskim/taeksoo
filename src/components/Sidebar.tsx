@@ -19,7 +19,7 @@ import {
   IconShield,
   IconLoadBalancer,
   IconCertificate,
-  IconTopologyRing,
+  IconTopologyStar3,
   IconLayoutSidebar,
   IconPalette,
 } from '@tabler/icons-react';
@@ -212,7 +212,7 @@ export function Sidebar({ isOpen = true, onToggle }: SidebarProps) {
               active={isActive('/certificates')}
             />
             <MenuItem
-              icon={<IconTopologyRing size={16} stroke={1.5} />}
+              icon={<IconTopologyStar3 size={16} stroke={1.5} />}
               label="Topology"
               href="/topology"
               active={isActive('/topology')}
