@@ -6,7 +6,7 @@ import {
   IconCube,
   IconTemplate,
   IconCamera,
-  IconPhoto,
+  IconDisc,
   IconCpu,
   IconKey,
   IconUsers,
@@ -120,7 +120,7 @@ export function Sidebar({ isOpen = true, onToggle }: SidebarProps) {
               active={isActive('/instance-snapshots')}
             />
             <MenuItem
-              icon={<IconPhoto size={16} stroke={1.5} />}
+              icon={<IconDisc size={16} stroke={1.5} />}
               label="Images"
               href="/images"
               active={isActive('/images')}
