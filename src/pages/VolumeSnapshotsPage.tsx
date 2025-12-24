@@ -279,30 +279,35 @@ export function VolumeSnapshotsPage() {
             </div>
 
             {/* List Toolbar */}
-            <ListToolbar>
-              <ListToolbar.Actions>
-                <SearchInput
-                  placeholder="Find snapshot with filters"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  onClear={() => setSearchQuery('')}
-                />
-                <Button variant="outline" size="sm" iconOnly>
-                  <IconDownload size={12} />
-                </Button>
-              </ListToolbar.Actions>
-              <ListToolbar.Divider />
-              <ListToolbar.Actions>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  leftIcon={<IconTrash size={12} />}
-                  disabled={selectedSnapshots.length === 0}
-                >
-                  Delete
-                </Button>
-              </ListToolbar.Actions>
-            </ListToolbar>
+            <ListToolbar
+              primaryActions={
+                <ListToolbar.Actions>
+                  <div className="w-[280px]">
+                    <SearchInput
+                      placeholder="Find snapshot with filters"
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      onClear={() => setSearchQuery('')}
+                      size="sm"
+                      fullWidth
+                    />
+                  </div>
+                  <Button variant="secondary" size="sm" icon={<IconDownload size={12} />} aria-label="Download" />
+                </ListToolbar.Actions>
+              }
+              bulkActions={
+                <ListToolbar.Actions>
+                  <Button
+                    variant="muted"
+                    size="sm"
+                    leftIcon={<IconTrash size={12} />}
+                    disabled={selectedSnapshots.length === 0}
+                  >
+                    Delete
+                  </Button>
+                </ListToolbar.Actions>
+              }
+            />
 
             {/* Pagination */}
             <Pagination
