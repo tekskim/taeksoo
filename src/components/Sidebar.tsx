@@ -3,7 +3,7 @@ import { VStack, MenuItem, MenuSection } from '@/design-system';
 import { useDarkMode } from '@/hooks/useDarkMode';
 import {
   IconHome,
-  IconServer,
+  IconCube,
   IconTemplate,
   IconCamera,
   IconPhoto,
@@ -102,7 +102,7 @@ export function Sidebar({ isOpen = true, onToggle }: SidebarProps) {
           {/* Compute Section */}
           <MenuSection title="Compute" defaultOpen={true}>
             <MenuItem
-              icon={<IconServer size={16} stroke={1.5} />}
+              icon={<IconCube size={16} stroke={1.5} />}
               label="Instances"
               href="/instances"
               active={isActive('/instances')}
