@@ -16,6 +16,7 @@ import {
   Tabs,
   TabList,
   Tab,
+  Tooltip,
   type TableColumn,
   type ContextMenuItem,
 } from '@/design-system';
@@ -29,6 +30,7 @@ import {
   IconBell,
   IconExternalLink,
   IconServer2,
+  IconRouter,
 } from '@tabler/icons-react';
 
 /* ----------------------------------------
@@ -165,7 +167,7 @@ export function PortsPage() {
           <div className="flex items-center justify-between gap-2">
             <div className="flex flex-col gap-0.5 min-w-0">
               <a
-                href={`/instances/${row.attachedToId}`}
+                href={row.attachedType === 'router' ? `/routers/${row.attachedToId}` : `/instances/${row.attachedToId}`}
                 className="inline-flex items-center gap-1 font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
                 onClick={(e) => e.stopPropagation()}
               >
@@ -176,9 +178,15 @@ export function PortsPage() {
                 ID : {row.attachedToId?.substring(0, 8)}
               </span>
             </div>
-            <div className="flex-shrink-0 bg-white border border-[var(--color-border-default)] rounded-[4px] p-1">
-              <IconServer2 size={12} className="text-[var(--color-text-subtle)]" />
-            </div>
+            <Tooltip content={row.attachedType === 'router' ? 'Router' : 'Instance'} position="top">
+              <div className="flex-shrink-0 bg-white border border-[var(--color-border-default)] rounded-[4px] p-1 cursor-default">
+                {row.attachedType === 'router' ? (
+                  <IconRouter size={12} className="text-[var(--color-text-subtle)]" />
+                ) : (
+                  <IconServer2 size={12} className="text-[var(--color-text-subtle)]" />
+                )}
+              </div>
+            </Tooltip>
           </div>
         ) : '-'
       ),
