@@ -2,10 +2,9 @@ import { useEffect, useRef, useState, useCallback, useMemo } from 'react';
 import * as d3 from 'd3';
 
 import { Sidebar } from '@/components/Sidebar';
-import { TabBar } from '@/components/TabBar';
-import { BreadcrumbNavigation } from '@/components/BreadcrumbNavigation';
-import { VStack, Select, SearchInput, Button } from '@/design-system';
-import { IconX, IconCopy, IconExternalLink, IconRefresh, IconSearch } from '@tabler/icons-react';
+import { useTabs } from '@/contexts/TabContext';
+import { VStack, Select, SearchInput, Button, TabBar, TopBar, TopBarAction, Breadcrumb } from '@/design-system';
+import { IconX, IconCopy, IconExternalLink, IconRefresh, IconSearch, IconBell } from '@tabler/icons-react';
 
 /* ----------------------------------------
    Theme Configuration
@@ -2185,60 +2184,100 @@ export function TopologyD3Page() {
 
   }, [filteredData]);
 
+  // Global tab management
+  const { tabs, activeTabId, closeTab, selectTab } = useTabs();
+
+  // Convert tabs to TabBar format
+  const tabBarTabs = tabs.map((tab) => ({
+    id: tab.id,
+    label: tab.label,
+    closable: tab.closable,
+  }));
+
+  const [sidebarOpen, setSidebarOpen] = useState(true);
+
   return (
-    <div className="flex h-screen bg-[var(--color-surface-default)]">
-      <Sidebar />
+    <div className="min-h-screen bg-[var(--color-surface-subtle)]">
+      <Sidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(false)} />
 
-      <VStack className="flex-1 overflow-hidden ml-[200px]">
+      <main
+        className={`min-h-screen bg-[var(--color-surface-default)] transition-[margin] duration-200 ${
+          sidebarOpen ? 'ml-[200px]' : 'ml-0'
+        }`}
+      >
+        {/* Tab Bar */}
         <TabBar
-          tabs={[
-            { id: 'topology-d3', label: 'Network Topology (D3.js)', active: true },
-          ]}
-        />
-        <BreadcrumbNavigation 
-          items={[
-            { label: 'Proj-1', href: '/' },
-            { label: 'Network Topology (D3.js)', href: '/topology-d3' },
-          ]}
+          tabs={tabBarTabs}
+          activeTab={activeTabId}
+          onTabChange={selectTab}
+          onTabClose={closeTab}
+          showAddButton={false}
+          showWindowControls={true}
         />
 
-        <VStack className="flex-1 overflow-auto p-4 gap-4">
-          {/* Header */}
-          <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-[length:var(--font-size-24)] font-semibold text-[var(--color-text-default)]">
-                Network Topology
-              </h1>
-              <p className="text-sm text-[var(--color-text-subtle)] mt-1">
-                {stats.filteredSubnets === stats.totalSubnets 
-                  ? `${stats.totalSubnets} subnets` 
-                  : `${stats.filteredSubnets} of ${stats.totalSubnets} subnets`
-                } across {filteredData.networks.length} VPCs • 
-                <span className="text-green-600 ml-1">{stats.activeSubnets} active</span>
-                {stats.errorSubnets > 0 && <span className="text-red-600 ml-1">• {stats.errorSubnets} error</span>}
-                {stats.filteredLbs > 0 && <span className="text-slate-500 ml-1">• {stats.filteredLbs} LBs</span>}
-              </p>
-            </div>
-            <div className="flex items-center gap-3">
-              <span className="text-sm text-[var(--color-text-subtle)]">
-                Scroll to zoom • Click for details
-              </span>
-              <div className="flex items-center gap-2 px-2 py-1 bg-slate-100 rounded-md">
-                <span className="text-xs font-medium text-slate-600">
-                  {Math.round(zoomLevel * 100)}%
+        {/* Top Bar */}
+        <TopBar
+          showSidebarToggle={!sidebarOpen}
+          onSidebarToggle={() => setSidebarOpen(true)}
+          showNavigation={true}
+          onBack={() => window.history.back()}
+          onForward={() => window.history.forward()}
+          breadcrumb={
+            <Breadcrumb
+              items={[
+                { label: 'Proj-1', href: '/project' },
+                { label: 'Topology' },
+              ]}
+            />
+          }
+          actions={
+            <TopBarAction
+              icon={<IconBell size={16} stroke={1.5} />}
+              aria-label="Notifications"
+              badge={true}
+            />
+          }
+        />
+
+        {/* Main Content */}
+        <div className="pt-4 px-8 pb-6 bg-[var(--color-surface-default)] h-[calc(100vh-72px)] flex flex-col">
+          <VStack gap={3} className="flex-1 min-h-0">
+            {/* Page Header */}
+            <div className="flex justify-between items-center w-full">
+              <div>
+                <h1 className="text-[length:var(--font-size-16)] font-semibold text-[var(--color-text-default)]">
+                  Topology
+                </h1>
+                <p className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] mt-0.5">
+                  {stats.filteredSubnets === stats.totalSubnets 
+                    ? `${stats.totalSubnets} subnets` 
+                    : `${stats.filteredSubnets} of ${stats.totalSubnets} subnets`
+                  } across {filteredData.networks.length} VPCs • 
+                  <span className="text-green-600 ml-1">{stats.activeSubnets} active</span>
+                  {stats.errorSubnets > 0 && <span className="text-red-600 ml-1">• {stats.errorSubnets} error</span>}
+                  {stats.filteredLbs > 0 && <span className="text-slate-500 ml-1">• {stats.filteredLbs} LBs</span>}
+                </p>
+              </div>
+              <div className="flex items-center gap-3">
+                <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
+                  Scroll to zoom • Click for details
                 </span>
-                <span className={`text-xs px-1.5 py-0.5 rounded ${
-                  zoomLevel >= 1.0 
-                    ? 'bg-green-100 text-green-700' 
-                    : zoomLevel >= 0.6 
-                      ? 'bg-yellow-100 text-yellow-700' 
-                      : 'bg-slate-200 text-slate-600'
-                }`}>
-                  {zoomLevel >= 1.0 ? 'Full' : zoomLevel >= 0.6 ? 'Medium' : 'Compact'}
-                </span>
+                <div className="flex items-center gap-2 px-2 py-1 bg-[var(--color-surface-muted)] rounded-md">
+                  <span className="text-[length:var(--font-size-11)] font-medium text-[var(--color-text-default)]">
+                    {Math.round(zoomLevel * 100)}%
+                  </span>
+                  <span className={`text-[length:var(--font-size-11)] px-1.5 py-0.5 rounded ${
+                    zoomLevel >= 1.0 
+                      ? 'bg-green-100 text-green-700' 
+                      : zoomLevel >= 0.6 
+                        ? 'bg-yellow-100 text-yellow-700' 
+                        : 'bg-[var(--color-surface-subtle)] text-[var(--color-text-muted)]'
+                  }`}>
+                    {zoomLevel >= 1.0 ? 'Full' : zoomLevel >= 0.6 ? 'Medium' : 'Compact'}
+                  </span>
+                </div>
               </div>
             </div>
-          </div>
 
           {/* Filters */}
           <div className="flex items-center gap-3 flex-wrap bg-white rounded-lg border border-slate-200 p-3">
@@ -2353,8 +2392,9 @@ export function TopologyD3Page() {
             </div>
           </div>
           )}
-        </VStack>
-      </VStack>
+          </VStack>
+        </div>
+      </main>
 
       {/* Tooltip */}
       {tooltip.visible && (
