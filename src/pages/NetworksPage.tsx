@@ -338,9 +338,9 @@ export function NetworksPage() {
           setNetworkToDelete(null);
         }}
         title="Delete Network"
-        message={`Are you sure you want to delete "${networkToDelete?.name}"? This action cannot be undone.`}
-        confirmLabel="Delete"
-        cancelLabel="Cancel"
+        description={`Are you sure you want to delete "${networkToDelete?.name}"? This action cannot be undone.`}
+        confirmText="Delete"
+        cancelText="Cancel"
         confirmVariant="danger"
         onConfirm={() => handleContextMenuSelect('delete')}
       />

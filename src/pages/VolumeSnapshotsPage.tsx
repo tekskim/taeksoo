@@ -340,9 +340,9 @@ export function VolumeSnapshotsPage() {
         isOpen={deleteModalOpen}
         onClose={handleDeleteCancel}
         title="Delete Volume Snapshot"
-        message={`Are you sure you want to delete "${snapshotToDelete?.name}"? This action cannot be undone.`}
-        confirmLabel="Delete"
-        cancelLabel="Cancel"
+        description={`Are you sure you want to delete "${snapshotToDelete?.name}"? This action cannot be undone.`}
+        confirmText="Delete"
+        cancelText="Cancel"
         confirmVariant="danger"
         onConfirm={handleDeleteConfirm}
       />

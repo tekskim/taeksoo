@@ -344,9 +344,9 @@ export function FloatingIPsPage() {
           setFloatingIPToDelete(null);
         }}
         title="Release Floating IP"
-        message={`Are you sure you want to release "${floatingIPToDelete?.floatingIp}"? This action cannot be undone.`}
-        confirmLabel="Release"
-        cancelLabel="Cancel"
+        description={`Are you sure you want to release "${floatingIPToDelete?.floatingIp}"? This action cannot be undone.`}
+        confirmText="Release"
+        cancelText="Cancel"
         confirmVariant="danger"
         onConfirm={() => handleContextMenuSelect('release')}
       />

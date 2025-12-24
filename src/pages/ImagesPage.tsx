@@ -4,7 +4,6 @@ import {
   SearchInput,
   Table,
   Pagination,
-  HStack,
   VStack,
   TabBar,
   TopBar,
@@ -148,14 +147,6 @@ export function ImagesPage() {
   }, [images, activeTab, searchQuery]);
 
   const totalPages = Math.ceil(filteredImages.length / pageSize);
-
-  // Tab counts
-  const tabCounts = useMemo(() => ({
-    current: images.filter((img) => img.access === 'Private').length,
-    shared: images.filter((img) => img.access === 'Shared').length,
-    public: images.filter((img) => img.access === 'Public').length,
-    all: images.length,
-  }), [images]);
 
   // Get OS icon based on OS name
   const getOsIcon = (os: string) => {

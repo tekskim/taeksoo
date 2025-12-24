@@ -55,7 +55,7 @@ const ContextMenuItemComponent: React.FC<{
   item: ContextMenuItem;
   onClose: () => void;
   parentDirection?: 'left' | 'right';
-}> = ({ item, onClose, parentDirection = 'right' }) => {
+}> = ({ item, onClose, parentDirection: _parentDirection = 'right' }) => {
   const [showSubmenu, setShowSubmenu] = useState(false);
   const [submenuPosition, setSubmenuPosition] = useState({ x: 0, y: 0 });
   const [submenuDirection, setSubmenuDirection] = useState<'left' | 'right'>('right');

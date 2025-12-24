@@ -390,9 +390,9 @@ export function PortsPage() {
           setPortToDelete(null);
         }}
         title="Delete Port"
-        message={`Are you sure you want to delete "${portToDelete?.name}"? This action cannot be undone.`}
-        confirmLabel="Delete"
-        cancelLabel="Cancel"
+        description={`Are you sure you want to delete "${portToDelete?.name}"? This action cannot be undone.`}
+        confirmText="Delete"
+        cancelText="Cancel"
         confirmVariant="danger"
         onConfirm={() => handleContextMenuSelect('delete')}
       />

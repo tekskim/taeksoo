@@ -4,7 +4,6 @@ import {
   SearchInput,
   Table,
   Pagination,
-  HStack,
   VStack,
   TabBar,
   TopBar,

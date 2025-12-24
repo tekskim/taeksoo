@@ -58,7 +58,7 @@ export function Modal({
   description,
   children,
   size = 'md',
-  showCloseButton = false,
+  showCloseButton: _showCloseButton = false,
   closeOnBackdropClick = true,
   closeOnEscape = true,
   className,

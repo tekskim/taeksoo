@@ -321,9 +321,9 @@ export function LoadBalancersPage() {
           setLbToDelete(null);
         }}
         title="Delete Load Balancer"
-        message={`Are you sure you want to delete "${lbToDelete?.name}"? This action cannot be undone.`}
-        confirmLabel="Delete"
-        cancelLabel="Cancel"
+        description={`Are you sure you want to delete "${lbToDelete?.name}"? This action cannot be undone.`}
+        confirmText="Delete"
+        cancelText="Cancel"
         confirmVariant="danger"
         onConfirm={() => handleContextMenuSelect('delete')}
       />

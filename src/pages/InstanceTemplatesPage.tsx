@@ -4,7 +4,6 @@ import {
   SearchInput,
   Table,
   Pagination,
-  HStack,
   VStack,
   TabBar,
   TopBar,
@@ -29,8 +28,6 @@ import {
   IconBell,
   IconStar,
   IconStarFilled,
-  IconServer,
-  IconCopy,
 } from '@tabler/icons-react';
 
 /* ----------------------------------------

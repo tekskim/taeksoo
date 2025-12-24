@@ -203,9 +203,9 @@ export function CertificatesPage() {
         isOpen={deleteModalOpen}
         onClose={() => { setDeleteModalOpen(false); setCertToDelete(null); }}
         title="Delete Certificate"
-        message={`Are you sure you want to delete "${certToDelete?.name}"? This action cannot be undone.`}
-        confirmLabel="Delete"
-        cancelLabel="Cancel"
+        description={`Are you sure you want to delete "${certToDelete?.name}"? This action cannot be undone.`}
+        confirmText="Delete"
+        cancelText="Cancel"
         confirmVariant="danger"
         onConfirm={handleDeleteConfirm}
       />
