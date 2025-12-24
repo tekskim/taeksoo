@@ -16,7 +16,7 @@ import {
   IconRouter,
   IconPlug,
   IconWorldWww,
-  IconShield,
+  IconShieldLock,
   IconLoadBalancer,
   IconCertificate,
   IconTopologyStar3,
@@ -194,7 +194,7 @@ export function Sidebar({ isOpen = true, onToggle }: SidebarProps) {
               active={isActive('/floating-ips')}
             />
             <MenuItem
-              icon={<IconShield size={16} stroke={1.5} />}
+              icon={<IconShieldLock size={16} stroke={1.5} />}
               label="Security Groups"
               href="/security-groups"
               active={isActive('/security-groups')}
