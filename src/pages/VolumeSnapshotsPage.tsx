@@ -323,7 +323,7 @@ export function VolumeSnapshotsPage() {
               data={paginatedSnapshots}
               rowKey="id"
               selectable={true}
-              selectedRows={selectedSnapshots}
+              selectedKeys={selectedSnapshots}
               onSelectionChange={setSelectedSnapshots}
             />
           </VStack>
