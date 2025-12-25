@@ -77,7 +77,7 @@ export function FlavorsPage() {
   const [activeTab, setActiveTab] = useState('cpu');
 
   // Global tab management
-  const { tabs, activeTabId, closeTab, selectTab } = useTabs();
+  const { tabs, activeTabId, closeTab, selectTab, addNewTab } = useTabs();
 
   // Convert tabs to TabBar format
   const tabBarTabs = tabs.map((tab) => ({
@@ -224,6 +224,8 @@ export function FlavorsPage() {
           activeTab={activeTabId}
           onTabChange={selectTab}
           onTabClose={closeTab}
+          onTabAdd={addNewTab}
+          showAddButton={true}
           showWindowControls={true}
         />
 

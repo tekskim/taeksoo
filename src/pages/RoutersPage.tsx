@@ -18,6 +18,7 @@ import {
 } from '@/design-system';
 import { Sidebar } from '@/components/Sidebar';
 import { useTabs } from '@/contexts/TabContext';
+import { ViewPreferencesDrawer, type ColumnConfig } from '@/components/ViewPreferencesDrawer';
 import {
   IconDotsVertical,
   IconTrash,
@@ -85,8 +86,24 @@ export function RoutersPage() {
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [routerToDelete, setRouterToDelete] = useState<Router | null>(null);
 
+  // View preferences state
+  const [isPreferencesOpen, setIsPreferencesOpen] = useState(false);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
+
+  const defaultColumnConfig: ColumnConfig[] = [
+    { id: 'status', label: 'Status', visible: true, locked: true },
+    { id: 'name', label: 'Name', visible: true, locked: true },
+    { id: 'externalGateway', label: 'External Gateway', visible: true },
+    { id: 'externalFixedIp', label: 'External Fixed IP', visible: true },
+    { id: 'externalNetwork', label: 'External Network', visible: true },
+    { id: 'adminState', label: 'Admin State', visible: true },
+    { id: 'actions', label: 'Action', visible: true, locked: true },
+  ];
+
+  const [columnConfig, setColumnConfig] = useState<ColumnConfig[]>(defaultColumnConfig);
+
   // Global tab management
-  const { tabs, activeTabId, closeTab, selectTab } = useTabs();
+  const { tabs, activeTabId, closeTab, selectTab, addNewTab } = useTabs();
 
   // Convert tabs to TabBar format
   const tabBarTabs = tabs.map((tab) => ({
@@ -116,7 +133,13 @@ export function RoutersPage() {
     );
   }, [routers, searchQuery]);
 
-  const totalPages = Math.ceil(filteredRouters.length / 10);
+  const totalPages = Math.ceil(filteredRouters.length / rowsPerPage);
+
+  // Paginated data
+  const paginatedRouters = useMemo(() => {
+    const start = (currentPage - 1) * rowsPerPage;
+    return filteredRouters.slice(start, start + rowsPerPage);
+  }, [filteredRouters, currentPage, rowsPerPage]);
 
   // Table columns
   const columns: TableColumn<Router>[] = [
@@ -126,7 +149,7 @@ export function RoutersPage() {
       width: '80px',
       align: 'center',
       render: (_, row) => (
-        <StatusIndicator status={routerStatusMap[row.status]} />
+        <StatusIndicator status={routerStatusMap[row.status]} layout="icon-only" />
       ),
     },
     {
@@ -135,18 +158,13 @@ export function RoutersPage() {
       flex: 1,
       sortable: true,
       render: (_, row) => (
-        <div className="flex flex-col gap-0.5">
-          <a
-            href={`/routers/${row.id}`}
-            className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
-            onClick={(e) => e.stopPropagation()}
-          >
-            {row.name}
-          </a>
-          <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
-            ID : {row.id}
-          </span>
-        </div>
+        <a
+          href={`/routers/${row.id}`}
+          className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
+          onClick={(e) => e.stopPropagation()}
+        >
+          {row.name}
+        </a>
       ),
     },
     {
@@ -206,6 +224,19 @@ export function RoutersPage() {
     },
   ];
 
+  // Filter and order columns based on preferences
+  const visibleColumns = useMemo(() => {
+    const visibleColumnIds = columnConfig
+      .filter((col) => col.visible)
+      .map((col) => col.id);
+
+    const columnMap = new Map(columns.map((col) => [col.key, col]));
+
+    return visibleColumnIds
+      .map((id) => columnMap.get(id))
+      .filter((col): col is TableColumn<Router> => col !== undefined);
+  }, [columns, columnConfig]);
+
   const handleContextMenuSelect = (itemId: string) => {
     if (itemId === 'delete' && routerToDelete) {
       // Handle delete
@@ -229,7 +260,8 @@ export function RoutersPage() {
           activeTab={activeTabId}
           onTabChange={selectTab}
           onTabClose={closeTab}
-          showAddButton={false}
+          onTabAdd={addNewTab}
+          showAddButton={true}
           showWindowControls={true}
         />
 
@@ -305,12 +337,14 @@ export function RoutersPage() {
               totalItems={filteredRouters.length}
               onPageChange={setCurrentPage}
               selectedCount={selectedRouters.length}
+              showSettings
+              onSettingsClick={() => setIsPreferencesOpen(true)}
             />
 
             {/* Table */}
             <Table
-              columns={columns}
-              data={filteredRouters}
+              columns={visibleColumns}
+              data={paginatedRouters}
               rowKey="id"
               selectable
               selectedKeys={selectedRouters}
@@ -333,6 +367,17 @@ export function RoutersPage() {
         cancelText="Cancel"
         confirmVariant="danger"
         onConfirm={() => handleContextMenuSelect('delete')}
+      />
+
+      {/* View Preferences Drawer */}
+      <ViewPreferencesDrawer
+        isOpen={isPreferencesOpen}
+        onClose={() => setIsPreferencesOpen(false)}
+        rowsPerPage={rowsPerPage}
+        onRowsPerPageChange={setRowsPerPage}
+        columns={columnConfig}
+        defaultColumns={defaultColumnConfig}
+        onColumnsChange={setColumnConfig}
       />
     </div>
   );

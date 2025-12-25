@@ -90,7 +90,7 @@ export function VolumeBackupsPage() {
   const [backupToDelete, setBackupToDelete] = useState<VolumeBackup | null>(null);
 
   // Global tab management
-  const { tabs, activeTabId, closeTab, selectTab } = useTabs();
+  const { tabs, activeTabId, closeTab, selectTab, addNewTab } = useTabs();
 
   // Convert tabs to TabBar format
   const tabBarTabs = tabs.map((tab) => ({
@@ -257,6 +257,8 @@ export function VolumeBackupsPage() {
           activeTab={activeTabId}
           onTabChange={selectTab}
           onTabClose={closeTab}
+          onTabAdd={addNewTab}
+          showAddButton={true}
           showWindowControls={true}
         />
 

@@ -18,6 +18,7 @@ import {
 } from '@/design-system';
 import { Sidebar } from '@/components/Sidebar';
 import { useTabs } from '@/contexts/TabContext';
+import { ViewPreferencesDrawer, type ColumnConfig } from '@/components/ViewPreferencesDrawer';
 import {
   IconPlus,
   IconDotsVertical,
@@ -40,6 +41,7 @@ interface LoadBalancer {
   ownedNetwork: string;
   ownedNetworkId: string;
   floatingIp: string;
+  floatingIpId: string;
   listeners: string;
   createdAt: string;
   status: LoadBalancerStatus;
@@ -50,16 +52,16 @@ interface LoadBalancer {
    ---------------------------------------- */
 
 const mockLoadBalancers: LoadBalancer[] = [
-  { id: 'lb-001', name: 'web-lb-01', vipAddress: '192.168.10.13', ownedNetwork: 'net-02', ownedNetworkId: 'net-002', floatingIp: '192.168.10.13', listeners: 'listener-http-80(+2)', createdAt: '2025-10-03', status: 'active' },
-  { id: 'lb-002', name: 'api-lb', vipAddress: '192.168.10.14', ownedNetwork: 'net-01', ownedNetworkId: 'net-001', floatingIp: '192.168.10.14', listeners: 'listener-https-443', createdAt: '2025-10-02', status: 'active' },
-  { id: 'lb-003', name: 'app-lb', vipAddress: '192.168.10.15', ownedNetwork: 'net-03', ownedNetworkId: 'net-003', floatingIp: '192.168.10.15', listeners: 'listener-tcp-8080(+1)', createdAt: '2025-10-01', status: 'building' },
-  { id: 'lb-004', name: 'db-lb', vipAddress: '192.168.10.16', ownedNetwork: 'net-01', ownedNetworkId: 'net-001', floatingIp: '-', listeners: 'listener-mysql-3306', createdAt: '2025-09-28', status: 'active' },
-  { id: 'lb-005', name: 'cache-lb', vipAddress: '192.168.10.17', ownedNetwork: 'net-02', ownedNetworkId: 'net-002', floatingIp: '-', listeners: 'listener-redis-6379', createdAt: '2025-09-25', status: 'active' },
-  { id: 'lb-006', name: 'internal-lb', vipAddress: '192.168.10.18', ownedNetwork: 'net-04', ownedNetworkId: 'net-004', floatingIp: '-', listeners: 'listener-grpc-9090(+3)', createdAt: '2025-09-20', status: 'error' },
-  { id: 'lb-007', name: 'streaming-lb', vipAddress: '192.168.10.19', ownedNetwork: 'net-01', ownedNetworkId: 'net-001', floatingIp: '192.168.10.19', listeners: 'listener-rtmp-1935', createdAt: '2025-09-15', status: 'active' },
-  { id: 'lb-008', name: 'mail-lb', vipAddress: '192.168.10.20', ownedNetwork: 'net-02', ownedNetworkId: 'net-002', floatingIp: '192.168.10.20', listeners: 'listener-smtp-25', createdAt: '2025-09-10', status: 'pending' },
-  { id: 'lb-009', name: 'vpn-lb', vipAddress: '192.168.10.21', ownedNetwork: 'net-03', ownedNetworkId: 'net-003', floatingIp: '192.168.10.21', listeners: 'listener-openvpn-1194', createdAt: '2025-09-05', status: 'active' },
-  { id: 'lb-010', name: 'monitoring-lb', vipAddress: '192.168.10.22', ownedNetwork: 'net-01', ownedNetworkId: 'net-001', floatingIp: '-', listeners: 'listener-http-3000(+4)', createdAt: '2025-09-01', status: 'active' },
+  { id: 'lb-001', name: 'web-lb-01', vipAddress: '192.168.10.13', ownedNetwork: 'net-02', ownedNetworkId: 'net-002', floatingIp: '192.168.10.13', floatingIpId: 'fip-001', listeners: 'listener-http-80(+2)', createdAt: '2025-10-03', status: 'active' },
+  { id: 'lb-002', name: 'api-lb', vipAddress: '192.168.10.14', ownedNetwork: 'net-01', ownedNetworkId: 'net-001', floatingIp: '192.168.10.14', floatingIpId: 'fip-002', listeners: 'listener-https-443', createdAt: '2025-10-02', status: 'active' },
+  { id: 'lb-003', name: 'app-lb', vipAddress: '192.168.10.15', ownedNetwork: 'net-03', ownedNetworkId: 'net-003', floatingIp: '192.168.10.15', floatingIpId: 'fip-003', listeners: 'listener-tcp-8080(+1)', createdAt: '2025-10-01', status: 'building' },
+  { id: 'lb-004', name: 'db-lb', vipAddress: '192.168.10.16', ownedNetwork: 'net-01', ownedNetworkId: 'net-001', floatingIp: '-', floatingIpId: '', listeners: 'listener-mysql-3306', createdAt: '2025-09-28', status: 'active' },
+  { id: 'lb-005', name: 'cache-lb', vipAddress: '192.168.10.17', ownedNetwork: 'net-02', ownedNetworkId: 'net-002', floatingIp: '-', floatingIpId: '', listeners: 'listener-redis-6379', createdAt: '2025-09-25', status: 'active' },
+  { id: 'lb-006', name: 'internal-lb', vipAddress: '192.168.10.18', ownedNetwork: 'net-04', ownedNetworkId: 'net-004', floatingIp: '-', floatingIpId: '', listeners: 'listener-grpc-9090(+3)', createdAt: '2025-09-20', status: 'error' },
+  { id: 'lb-007', name: 'streaming-lb', vipAddress: '192.168.10.19', ownedNetwork: 'net-01', ownedNetworkId: 'net-001', floatingIp: '192.168.10.19', floatingIpId: 'fip-007', listeners: 'listener-rtmp-1935', createdAt: '2025-09-15', status: 'active' },
+  { id: 'lb-008', name: 'mail-lb', vipAddress: '192.168.10.20', ownedNetwork: 'net-02', ownedNetworkId: 'net-002', floatingIp: '192.168.10.20', floatingIpId: 'fip-008', listeners: 'listener-smtp-25', createdAt: '2025-09-10', status: 'pending' },
+  { id: 'lb-009', name: 'vpn-lb', vipAddress: '192.168.10.21', ownedNetwork: 'net-03', ownedNetworkId: 'net-003', floatingIp: '192.168.10.21', floatingIpId: 'fip-009', listeners: 'listener-openvpn-1194', createdAt: '2025-09-05', status: 'active' },
+  { id: 'lb-010', name: 'monitoring-lb', vipAddress: '192.168.10.22', ownedNetwork: 'net-01', ownedNetworkId: 'net-001', floatingIp: '-', floatingIpId: '', listeners: 'listener-http-3000(+4)', createdAt: '2025-09-01', status: 'active' },
 ];
 
 /* ----------------------------------------
@@ -88,8 +90,25 @@ export function LoadBalancersPage() {
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [lbToDelete, setLbToDelete] = useState<LoadBalancer | null>(null);
 
+  // View preferences state
+  const [isPreferencesOpen, setIsPreferencesOpen] = useState(false);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
+
+  const defaultColumnConfig: ColumnConfig[] = [
+    { id: 'status', label: 'Status', visible: true, locked: true },
+    { id: 'name', label: 'Name', visible: true, locked: true },
+    { id: 'vipAddress', label: 'VIP Address', visible: true },
+    { id: 'ownedNetwork', label: 'Owned Network', visible: true },
+    { id: 'floatingIp', label: 'Floating IP', visible: true },
+    { id: 'listeners', label: 'Listeners', visible: true },
+    { id: 'createdAt', label: 'Created At', visible: true },
+    { id: 'actions', label: 'Action', visible: true, locked: true },
+  ];
+
+  const [columnConfig, setColumnConfig] = useState<ColumnConfig[]>(defaultColumnConfig);
+
   // Global tab management
-  const { tabs, activeTabId, closeTab, selectTab } = useTabs();
+  const { tabs, activeTabId, closeTab, selectTab, addNewTab } = useTabs();
 
   // Convert tabs to TabBar format
   const tabBarTabs = tabs.map((tab) => ({
@@ -118,7 +137,13 @@ export function LoadBalancersPage() {
     );
   }, [loadBalancers, searchQuery]);
 
-  const totalPages = Math.ceil(filteredLBs.length / 10);
+  const totalPages = Math.ceil(filteredLBs.length / rowsPerPage);
+
+  // Paginated data
+  const paginatedLBs = useMemo(() => {
+    const start = (currentPage - 1) * rowsPerPage;
+    return filteredLBs.slice(start, start + rowsPerPage);
+  }, [filteredLBs, currentPage, rowsPerPage]);
 
   // Table columns
   const columns: TableColumn<LoadBalancer>[] = [
@@ -135,8 +160,19 @@ export function LoadBalancersPage() {
       key: 'name',
       label: 'Name',
       flex: 1,
-      render: (value: string) => (
-        <span className="font-medium text-[var(--color-action-primary)]">{value}</span>
+      render: (_, row) => (
+        <div className="flex flex-col gap-0.5">
+          <a
+            href={`/load-balancers/${row.id}`}
+            className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {row.name}
+          </a>
+          <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
+            ID : {row.id}
+          </span>
+        </div>
       ),
     },
     {
@@ -168,6 +204,22 @@ export function LoadBalancersPage() {
       key: 'floatingIp',
       label: 'Floating IP',
       flex: 1,
+      render: (_, row) => (
+        row.floatingIpId ? (
+          <div className="flex flex-col gap-0.5">
+            <a
+              href={`/floating-ips/${row.floatingIpId}`}
+              className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
+              onClick={(e) => e.stopPropagation()}
+            >
+              {row.floatingIp}
+            </a>
+            <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
+              ID : {row.floatingIpId}
+            </span>
+          </div>
+        ) : '-'
+      ),
     },
     {
       key: 'listeners',
@@ -196,6 +248,19 @@ export function LoadBalancersPage() {
     },
   ];
 
+  // Filter and order columns based on preferences
+  const visibleColumns = useMemo(() => {
+    const visibleColumnIds = columnConfig
+      .filter((col) => col.visible)
+      .map((col) => col.id);
+
+    const columnMap = new Map(columns.map((col) => [col.key, col]));
+
+    return visibleColumnIds
+      .map((id) => columnMap.get(id))
+      .filter((col): col is TableColumn<LoadBalancer> => col !== undefined);
+  }, [columns, columnConfig]);
+
   const handleContextMenuSelect = (itemId: string) => {
     if (itemId === 'delete' && lbToDelete) {
       // Handle delete
@@ -219,7 +284,8 @@ export function LoadBalancersPage() {
           activeTab={activeTabId}
           onTabChange={selectTab}
           onTabClose={closeTab}
-          showAddButton={false}
+          onTabAdd={addNewTab}
+          showAddButton={true}
           showWindowControls={true}
         />
 
@@ -298,12 +364,14 @@ export function LoadBalancersPage() {
               totalItems={filteredLBs.length}
               onPageChange={setCurrentPage}
               selectedCount={selectedLBs.length}
+              showSettings
+              onSettingsClick={() => setIsPreferencesOpen(true)}
             />
 
             {/* Table */}
             <Table
-              columns={columns}
-              data={filteredLBs}
+              columns={visibleColumns}
+              data={paginatedLBs}
               rowKey="id"
               selectable
               selectedKeys={selectedLBs}
@@ -326,6 +394,17 @@ export function LoadBalancersPage() {
         cancelText="Cancel"
         confirmVariant="danger"
         onConfirm={() => handleContextMenuSelect('delete')}
+      />
+
+      {/* View Preferences Drawer */}
+      <ViewPreferencesDrawer
+        isOpen={isPreferencesOpen}
+        onClose={() => setIsPreferencesOpen(false)}
+        rowsPerPage={rowsPerPage}
+        onRowsPerPageChange={setRowsPerPage}
+        columns={columnConfig}
+        defaultColumns={defaultColumnConfig}
+        onColumnsChange={setColumnConfig}
       />
     </div>
   );

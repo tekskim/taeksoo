@@ -29,6 +29,8 @@ export interface ViewPreferencesDrawerProps {
   columns: ColumnConfig[];
   /** Callback when columns change */
   onColumnsChange: (columns: ColumnConfig[]) => void;
+  /** Default column configurations for reset */
+  defaultColumns?: ColumnConfig[];
   /** Callback when settings are saved */
   onSave?: () => void;
 }
@@ -74,17 +76,24 @@ export function ViewPreferencesDrawer({
   onRowsPerPageChange,
   columns,
   onColumnsChange,
+  defaultColumns: customDefaultColumns,
   onSave,
 }: ViewPreferencesDrawerProps) {
   const [localRowsPerPage, setLocalRowsPerPage] = useState(rowsPerPage.toString());
   const [localColumns, setLocalColumns] = useState<ColumnConfig[]>(columns);
   const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
 
+  // Sync local state when columns prop changes
+  useState(() => {
+    setLocalColumns(columns);
+  });
+
   // Reset to default
   const handleResetToDefault = useCallback(() => {
-    setLocalColumns(defaultColumns);
+    const resetColumns = customDefaultColumns || defaultColumns;
+    setLocalColumns(resetColumns);
     setLocalRowsPerPage('10');
-  }, []);
+  }, [customDefaultColumns]);
 
   // Toggle column visibility
   const toggleColumnVisibility = useCallback((columnId: string) => {

@@ -256,6 +256,7 @@
   --color-action-primary: var(--color-blue-600);
   --color-action-primary-hover: var(--color-blue-700);
   --color-action-primary-active: var(--color-blue-800);
+  --color-action-primary-subtle: var(--color-blue-50);
 
   /* Text */
   --color-text-default: var(--color-slate-900);
@@ -296,6 +297,26 @@
   --color-state-danger: var(--color-red-500);
   --color-state-danger-bg: var(--color-red-50);
   --color-state-danger-text: var(--color-red-600);
+
+  /* Extended Text Colors */
+  --color-text-success: var(--color-green-600);
+  --color-text-warning: var(--color-orange-600);
+  --color-text-danger: var(--color-red-600);
+
+  /* Extended Surface Colors */
+  --color-surface-sunken: var(--color-slate-50);
+  
+  /* Extended Border Colors */
+  --color-border-muted: var(--color-slate-100);
+
+  /* Status Colors (for dashboard) */
+  --color-status-success: var(--color-green-500);
+  --color-status-warning: var(--color-orange-500);
+  --color-status-error: var(--color-red-500);
+  --color-status-idle: var(--color-slate-400);
+  --color-status-success-subtle: var(--color-green-50);
+  --color-status-warning-subtle: var(--color-orange-50);
+  --color-status-error-subtle: var(--color-red-50);
 
   /* ========================================
      COMPONENT TOKENS
@@ -923,6 +944,27 @@
   --color-state-danger: var(--color-red-400);
   --color-state-danger-bg: var(--color-red-900);
   --color-state-danger-text: var(--color-red-200);
+
+  /* Extended Text Colors - Dark Mode */
+  --color-text-success: var(--color-green-400);
+  --color-text-warning: var(--color-orange-400);
+  --color-text-danger: var(--color-red-400);
+
+  /* Extended Surface Colors - Dark Mode */
+  --color-surface-sunken: #141414;
+  --color-action-primary-subtle: rgba(59, 130, 246, 0.15);
+  
+  /* Extended Border Colors - Dark Mode */
+  --color-border-muted: #2e2e2e;
+
+  /* Status Colors - Dark Mode */
+  --color-status-success: var(--color-green-400);
+  --color-status-warning: var(--color-orange-400);
+  --color-status-error: var(--color-red-400);
+  --color-status-idle: var(--color-slate-500);
+  --color-status-success-subtle: rgba(34, 197, 94, 0.15);
+  --color-status-warning-subtle: rgba(249, 115, 22, 0.15);
+  --color-status-error-subtle: rgba(239, 68, 68, 0.15);
 
   /* Input - Disabled (Dark Mode) */
   --input-bg-disabled: #252525;              /* surface-muted */

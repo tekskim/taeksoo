@@ -90,7 +90,7 @@ export function VolumesPage() {
   const [volumeToDelete, setVolumeToDelete] = useState<Volume | null>(null);
 
   // Global tab management
-  const { tabs, activeTabId, closeTab, selectTab, openInNewTab } = useTabs();
+  const { tabs, activeTabId, closeTab, selectTab, openInNewTab, addNewTab } = useTabs();
 
   // Handle opening instance in new tab
   const handleOpenInNewTab = (instanceId: string, instanceName: string) => {
@@ -297,7 +297,8 @@ export function VolumesPage() {
           activeTab={activeTabId}
           onTabChange={selectTab}
           onTabClose={closeTab}
-          showAddButton={false}
+          onTabAdd={addNewTab}
+          showAddButton={true}
           showWindowControls={true}
         />
 

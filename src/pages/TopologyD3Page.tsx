@@ -2185,7 +2185,7 @@ export function TopologyD3Page() {
   }, [filteredData]);
 
   // Global tab management
-  const { tabs, activeTabId, closeTab, selectTab } = useTabs();
+  const { tabs, activeTabId, closeTab, selectTab, addNewTab } = useTabs();
 
   // Convert tabs to TabBar format
   const tabBarTabs = tabs.map((tab) => ({
@@ -2211,7 +2211,8 @@ export function TopologyD3Page() {
           activeTab={activeTabId}
           onTabChange={selectTab}
           onTabClose={closeTab}
-          showAddButton={false}
+          onTabAdd={addNewTab}
+          showAddButton={true}
           showWindowControls={true}
         />
 

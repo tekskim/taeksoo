@@ -86,7 +86,7 @@ export function ImagesPage() {
   const [imageToDelete, setImageToDelete] = useState<Image | null>(null);
 
   // Global tab management
-  const { tabs, activeTabId, closeTab, selectTab } = useTabs();
+  const { tabs, activeTabId, closeTab, selectTab, addNewTab } = useTabs();
 
   // Convert tabs to TabBar format
   const tabBarTabs = tabs.map((tab) => ({
@@ -171,7 +171,7 @@ export function ImagesPage() {
       width: '80px',
       align: 'center',
       render: (_, row) => (
-        <StatusIndicator status={row.status} />
+        <StatusIndicator status={row.status} layout="icon-only" />
       ),
     },
     {
@@ -295,6 +295,8 @@ export function ImagesPage() {
           activeTab={activeTabId}
           onTabChange={selectTab}
           onTabClose={closeTab}
+          onTabAdd={addNewTab}
+          showAddButton={true}
           showWindowControls={true}
         />
 

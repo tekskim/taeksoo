@@ -19,6 +19,7 @@ import {
 } from '@/design-system';
 import { Sidebar } from '@/components/Sidebar';
 import { useTabs } from '@/contexts/TabContext';
+import { ViewPreferencesDrawer, type ColumnConfig } from '@/components/ViewPreferencesDrawer';
 import {
   IconPlus,
   IconDotsVertical,
@@ -89,8 +90,24 @@ export function FloatingIPsPage() {
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [floatingIPToDelete, setFloatingIPToDelete] = useState<FloatingIP | null>(null);
 
+  // View preferences state
+  const [isPreferencesOpen, setIsPreferencesOpen] = useState(false);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
+
+  const defaultColumnConfig: ColumnConfig[] = [
+    { id: 'status', label: 'Status', visible: true, locked: true },
+    { id: 'floatingIp', label: 'Floating IP', visible: true, locked: true },
+    { id: 'associatedTo', label: 'Associated To', visible: true },
+    { id: 'fixedIp', label: 'Fixed IP', visible: true },
+    { id: 'network', label: 'Network', visible: true },
+    { id: 'createdAt', label: 'Created At', visible: true },
+    { id: 'actions', label: 'Action', visible: true, locked: true },
+  ];
+
+  const [columnConfig, setColumnConfig] = useState<ColumnConfig[]>(defaultColumnConfig);
+
   // Global tab management
-  const { tabs, activeTabId, closeTab, selectTab } = useTabs();
+  const { tabs, activeTabId, closeTab, selectTab, addNewTab } = useTabs();
 
   // Convert tabs to TabBar format
   const tabBarTabs = tabs.map((tab) => ({
@@ -118,7 +135,13 @@ export function FloatingIPsPage() {
     );
   }, [floatingIPs, searchQuery]);
 
-  const totalPages = Math.ceil(filteredFloatingIPs.length / 10);
+  const totalPages = Math.ceil(filteredFloatingIPs.length / rowsPerPage);
+
+  // Paginated data
+  const paginatedFloatingIPs = useMemo(() => {
+    const start = (currentPage - 1) * rowsPerPage;
+    return filteredFloatingIPs.slice(start, start + rowsPerPage);
+  }, [filteredFloatingIPs, currentPage, rowsPerPage]);
 
   // Table columns
   const columns: TableColumn<FloatingIP>[] = [
@@ -135,8 +158,19 @@ export function FloatingIPsPage() {
       key: 'floatingIp',
       label: 'Floating IP',
       flex: 1,
-      render: (value: string) => (
-        <span className="font-medium text-[var(--color-action-primary)]">{value}</span>
+      render: (_, row) => (
+        <div className="flex flex-col gap-0.5">
+          <a
+            href={`/floating-ips/${row.id}`}
+            className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {row.floatingIp}
+          </a>
+          <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
+            ID : {row.id}
+          </span>
+        </div>
       ),
     },
     {
@@ -147,7 +181,7 @@ export function FloatingIPsPage() {
         row.associatedTo ? (
           <div className="flex items-center gap-2">
             <Tooltip content="Instance" position="top">
-              <div className="flex-shrink-0 bg-white border border-[var(--color-border-default)] rounded-[4px] p-1 cursor-default">
+              <div className="flex-shrink-0 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[4px] p-1 cursor-default">
                 <IconCube size={12} className="text-[var(--color-text-subtle)]" />
               </div>
             </Tooltip>
@@ -219,6 +253,19 @@ export function FloatingIPsPage() {
     },
   ];
 
+  // Filter and order columns based on preferences
+  const visibleColumns = useMemo(() => {
+    const visibleColumnIds = columnConfig
+      .filter((col) => col.visible)
+      .map((col) => col.id);
+
+    const columnMap = new Map(columns.map((col) => [col.key, col]));
+
+    return visibleColumnIds
+      .map((id) => columnMap.get(id))
+      .filter((col): col is TableColumn<FloatingIP> => col !== undefined);
+  }, [columns, columnConfig]);
+
   const handleContextMenuSelect = (itemId: string) => {
     if (itemId === 'release' && floatingIPToDelete) {
       // Handle release
@@ -242,7 +289,8 @@ export function FloatingIPsPage() {
           activeTab={activeTabId}
           onTabChange={selectTab}
           onTabClose={closeTab}
-          showAddButton={false}
+          onTabAdd={addNewTab}
+          showAddButton={true}
           showWindowControls={true}
         />
 
@@ -321,12 +369,14 @@ export function FloatingIPsPage() {
               totalItems={filteredFloatingIPs.length}
               onPageChange={setCurrentPage}
               selectedCount={selectedFloatingIPs.length}
+              showSettings
+              onSettingsClick={() => setIsPreferencesOpen(true)}
             />
 
             {/* Table */}
             <Table
-              columns={columns}
-              data={filteredFloatingIPs}
+              columns={visibleColumns}
+              data={paginatedFloatingIPs}
               rowKey="id"
               selectable
               selectedKeys={selectedFloatingIPs}
@@ -349,6 +399,17 @@ export function FloatingIPsPage() {
         cancelText="Cancel"
         confirmVariant="danger"
         onConfirm={() => handleContextMenuSelect('release')}
+      />
+
+      {/* View Preferences Drawer */}
+      <ViewPreferencesDrawer
+        isOpen={isPreferencesOpen}
+        onClose={() => setIsPreferencesOpen(false)}
+        rowsPerPage={rowsPerPage}
+        onRowsPerPageChange={setRowsPerPage}
+        columns={columnConfig}
+        defaultColumns={defaultColumnConfig}
+        onColumnsChange={setColumnConfig}
       />
     </div>
   );

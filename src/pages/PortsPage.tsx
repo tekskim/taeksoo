@@ -22,6 +22,7 @@ import {
 } from '@/design-system';
 import { Sidebar } from '@/components/Sidebar';
 import { useTabs } from '@/contexts/TabContext';
+import { ViewPreferencesDrawer, type ColumnConfig } from '@/components/ViewPreferencesDrawer';
 import {
   IconPlus,
   IconDotsVertical,
@@ -98,8 +99,26 @@ export function PortsPage() {
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [portToDelete, setPortToDelete] = useState<Port | null>(null);
 
+  // View preferences state
+  const [isPreferencesOpen, setIsPreferencesOpen] = useState(false);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
+
+  const defaultColumnConfig: ColumnConfig[] = [
+    { id: 'status', label: 'Status', visible: true, locked: true },
+    { id: 'name', label: 'Name', visible: true, locked: true },
+    { id: 'attachedTo', label: 'Attached To', visible: true },
+    { id: 'ownedNetwork', label: 'Owned Network', visible: true },
+    { id: 'securityGroups', label: 'SG', visible: true },
+    { id: 'fixedIp', label: 'Fixed IP', visible: true },
+    { id: 'floatingIp', label: 'Floating IP', visible: true },
+    { id: 'macAddress', label: 'Mac Address', visible: true },
+    { id: 'actions', label: 'Action', visible: true, locked: true },
+  ];
+
+  const [columnConfig, setColumnConfig] = useState<ColumnConfig[]>(defaultColumnConfig);
+
   // Global tab management
-  const { tabs, activeTabId, closeTab, selectTab } = useTabs();
+  const { tabs, activeTabId, closeTab, selectTab, addNewTab } = useTabs();
 
   // Convert tabs to TabBar format
   const tabBarTabs = tabs.map((tab) => ({
@@ -142,7 +161,13 @@ export function PortsPage() {
     return filtered;
   }, [ports, searchQuery, activeTab]);
 
-  const totalPages = Math.ceil(filteredPorts.length / 10);
+  const totalPages = Math.ceil(filteredPorts.length / rowsPerPage);
+
+  // Paginated data
+  const paginatedPorts = useMemo(() => {
+    const start = (currentPage - 1) * rowsPerPage;
+    return filteredPorts.slice(start, start + rowsPerPage);
+  }, [filteredPorts, currentPage, rowsPerPage]);
 
   // Table columns
   const columns: TableColumn<Port>[] = [
@@ -159,8 +184,19 @@ export function PortsPage() {
       key: 'name',
       label: 'Name',
       flex: 1,
-      render: (value: string) => (
-        <span className="font-medium text-[var(--color-action-primary)]">{value}</span>
+      render: (_, row) => (
+        <div className="flex flex-col gap-0.5">
+          <a
+            href={`/ports/${row.id}`}
+            className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {row.name}
+          </a>
+          <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
+            ID : {row.id}
+          </span>
+        </div>
       ),
     },
     {
@@ -171,7 +207,7 @@ export function PortsPage() {
         row.attachedTo ? (
           <div className="flex items-center gap-2">
             <Tooltip content={row.attachedType === 'router' ? 'Router' : 'Instance'} position="top">
-              <div className="flex-shrink-0 bg-white border border-[var(--color-border-default)] rounded-[4px] p-1 cursor-default">
+              <div className="flex-shrink-0 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[4px] p-1 cursor-default">
                 {row.attachedType === 'router' ? (
                   <IconRouter size={12} className="text-[var(--color-text-subtle)]" />
                 ) : (
@@ -257,6 +293,19 @@ export function PortsPage() {
     },
   ];
 
+  // Filter and order columns based on preferences
+  const visibleColumns = useMemo(() => {
+    const visibleColumnIds = columnConfig
+      .filter((col) => col.visible)
+      .map((col) => col.id);
+
+    const columnMap = new Map(columns.map((col) => [col.key, col]));
+
+    return visibleColumnIds
+      .map((id) => columnMap.get(id))
+      .filter((col): col is TableColumn<Port> => col !== undefined);
+  }, [columns, columnConfig]);
+
   const handleContextMenuSelect = (itemId: string) => {
     if (itemId === 'delete' && portToDelete) {
       // Handle delete
@@ -280,7 +329,8 @@ export function PortsPage() {
           activeTab={activeTabId}
           onTabChange={selectTab}
           onTabClose={closeTab}
-          showAddButton={false}
+          onTabAdd={addNewTab}
+          showAddButton={true}
           showWindowControls={true}
         />
 
@@ -367,12 +417,14 @@ export function PortsPage() {
               totalItems={filteredPorts.length}
               onPageChange={setCurrentPage}
               selectedCount={selectedPorts.length}
+              showSettings
+              onSettingsClick={() => setIsPreferencesOpen(true)}
             />
 
             {/* Table */}
             <Table
-              columns={columns}
-              data={filteredPorts}
+              columns={visibleColumns}
+              data={paginatedPorts}
               rowKey="id"
               selectable
               selectedKeys={selectedPorts}
@@ -395,6 +447,17 @@ export function PortsPage() {
         cancelText="Cancel"
         confirmVariant="danger"
         onConfirm={() => handleContextMenuSelect('delete')}
+      />
+
+      {/* View Preferences Drawer */}
+      <ViewPreferencesDrawer
+        isOpen={isPreferencesOpen}
+        onClose={() => setIsPreferencesOpen(false)}
+        rowsPerPage={rowsPerPage}
+        onRowsPerPageChange={setRowsPerPage}
+        columns={columnConfig}
+        defaultColumns={defaultColumnConfig}
+        onColumnsChange={setColumnConfig}
       />
     </div>
   );

@@ -36,7 +36,11 @@ import {
   IconLock,
   IconTerminal2,
 } from '@tabler/icons-react';
-import { ViewPreferencesDrawer, defaultColumns, type ColumnConfig } from '@/components/ViewPreferencesDrawer';
+import { ViewPreferencesDrawer, type ColumnConfig } from '@/components/ViewPreferencesDrawer';
+import { CreateInstanceSnapshotDrawer, type InstanceInfo } from '@/components/CreateInstanceSnapshotDrawer';
+import { LockSettingDrawer, type InstanceInfo as LockInstanceInfo } from '@/components/LockSettingDrawer';
+import { EditInstanceDrawer, type InstanceInfo as EditInstanceInfo } from '@/components/EditInstanceDrawer';
+import { useTablePreferences } from '@/hooks/useTablePreferences';
 
 /* ----------------------------------------
    Types
@@ -58,6 +62,7 @@ interface Instance {
   disk: string;
   gpu: string;
   az: string;
+  description?: string;
 }
 
 interface BareMetalInstance {
@@ -147,11 +152,40 @@ export function InstanceListPage() {
   const [showScrollTop, setShowScrollTop] = useState(false);
   const [isPreferencesOpen, setIsPreferencesOpen] = useState(false);
   const [rowsPerPage, setRowsPerPage] = useState(10);
-  const [columnPreferences, setColumnPreferences] = useState<ColumnConfig[]>(defaultColumns);
-  const pageSize = rowsPerPage;
+  
+  // Create Instance Snapshot Drawer state
+  const [isSnapshotDrawerOpen, setIsSnapshotDrawerOpen] = useState(false);
+  const [selectedInstanceForSnapshot, setSelectedInstanceForSnapshot] = useState<InstanceInfo | null>(null);
+
+  // Lock Setting Drawer state
+  const [isLockDrawerOpen, setIsLockDrawerOpen] = useState(false);
+  const [selectedInstanceForLock, setSelectedInstanceForLock] = useState<LockInstanceInfo | null>(null);
+
+  // Edit Instance Drawer state
+  const [isEditDrawerOpen, setIsEditDrawerOpen] = useState(false);
+  const [selectedInstanceForEdit, setSelectedInstanceForEdit] = useState<EditInstanceInfo | null>(null);
+
+  // Default column config for VM instances
+  const defaultVMColumnConfig: ColumnConfig[] = [
+    { id: 'status', label: 'Status', visible: true, locked: true },
+    { id: 'name', label: 'Name', visible: true, locked: true },
+    { id: 'locked', label: 'Locked', visible: true },
+    { id: 'fixedIp', label: 'Fixed IP', visible: true },
+    { id: 'floatingIp', label: 'Floating IP', visible: true },
+    { id: 'image', label: 'Image', visible: true },
+    { id: 'flavor', label: 'Flavor', visible: true },
+    { id: 'vcpu', label: 'vCPU', visible: true },
+    { id: 'ram', label: 'RAM', visible: true },
+    { id: 'disk', label: 'Disk', visible: true },
+    { id: 'gpu', label: 'GPU', visible: false },
+    { id: 'az', label: 'AZ', visible: false },
+    { id: 'actions', label: 'Action', visible: true, locked: true },
+  ];
+
+  const [columnConfig, setColumnConfig] = useState<ColumnConfig[]>(defaultVMColumnConfig);
 
   // Global tab management
-  const { tabs, activeTabId, closeTab, selectTab } = useTabs();
+  const { tabs, activeTabId, closeTab, selectTab, addNewTab } = useTabs();
 
   // Convert tabs to TabBar format
   const tabBarTabs = tabs.map((tab) => ({
@@ -187,11 +221,53 @@ export function InstanceListPage() {
     ), [searchQuery]
   );
 
-  const totalPages = Math.ceil(filteredInstances.length / pageSize);
-  const totalBareMetalPages = Math.ceil(filteredBareMetalInstances.length / pageSize);
+  const totalPages = Math.ceil(filteredInstances.length / rowsPerPage);
+  const totalBareMetalPages = Math.ceil(filteredBareMetalInstances.length / rowsPerPage);
+
+  // Get paginated data
+  const paginatedInstances = useMemo(() => {
+    const start = (currentPage - 1) * rowsPerPage;
+    return filteredInstances.slice(start, start + rowsPerPage);
+  }, [filteredInstances, currentPage, rowsPerPage]);
+
+  const paginatedBareMetalInstances = useMemo(() => {
+    const start = (currentBareMetalPage - 1) * rowsPerPage;
+    return filteredBareMetalInstances.slice(start, start + rowsPerPage);
+  }, [filteredBareMetalInstances, currentBareMetalPage, rowsPerPage]);
+
+  // Handle create snapshot click
+  const handleCreateSnapshot = (instance: Instance) => {
+    setSelectedInstanceForSnapshot({
+      id: instance.id,
+      name: instance.name,
+      image: instance.image,
+      flavor: instance.flavor,
+    });
+    setIsSnapshotDrawerOpen(true);
+  };
+
+  // Handle lock setting click
+  const handleLockSetting = (instance: Instance) => {
+    setSelectedInstanceForLock({
+      id: instance.id,
+      name: instance.name,
+      isLocked: instance.locked,
+    });
+    setIsLockDrawerOpen(true);
+  };
+
+  // Handle edit instance click
+  const handleEditInstance = (instance: Instance) => {
+    setSelectedInstanceForEdit({
+      id: instance.id,
+      name: instance.name,
+      description: instance.description,
+    });
+    setIsEditDrawerOpen(true);
+  };
 
   // Context menu items for instances
-  const getInstanceContextMenuItems = (_instance: Instance): ContextMenuItem[] => [
+  const getInstanceContextMenuItems = (instance: Instance): ContextMenuItem[] => [
     { id: 'start', label: 'Start' },
     { id: 'stop', label: 'Stop', status: 'danger' },
     { id: 'reboot', label: 'Reboot', status: 'danger' },
@@ -228,7 +304,11 @@ export function InstanceListPage() {
       submenu: [
         { id: 'attach-volume', label: 'Attach Volume' },
         { id: 'detach-volume', label: 'Detach Volume', status: 'danger' },
-        { id: 'create-snapshot', label: 'Create Instance Snapshot' },
+        { 
+          id: 'create-snapshot', 
+          label: 'Create Instance Snapshot',
+          onClick: () => handleCreateSnapshot(instance),
+        },
       ],
     },
     {
@@ -246,11 +326,19 @@ export function InstanceListPage() {
       id: 'configuration',
       label: 'Configuration',
       submenu: [
-        { id: 'lock-setting', label: 'Lock Setting' },
+        { 
+          id: 'lock-setting', 
+          label: 'Lock Setting',
+          onClick: () => handleLockSetting(instance),
+        },
         { id: 'rebuild', label: 'Rebuild', status: 'danger' },
         { id: 'resize', label: 'Resize' },
         { id: 'manage-tags', label: 'Manage Tags' },
-        { id: 'edit', label: 'Edit' },
+        { 
+          id: 'edit', 
+          label: 'Edit',
+          onClick: () => handleEditInstance(instance),
+        },
       ],
     },
     { id: 'confirm-resize', label: 'Confirm Resize' },
@@ -404,6 +492,19 @@ export function InstanceListPage() {
     },
   ];
 
+  // Filter and order columns based on preferences
+  const visibleColumns = useMemo(() => {
+    const visibleColumnIds = columnConfig
+      .filter((col) => col.visible)
+      .map((col) => col.id);
+
+    const columnMap = new Map(columns.map((col) => [col.key, col]));
+
+    return visibleColumnIds
+      .map((id) => columnMap.get(id))
+      .filter((col): col is TableColumn<Instance> => col !== undefined);
+  }, [columns, columnConfig]);
+
   // Bare Metal Table columns definition
   const bareMetalColumns: TableColumn<BareMetalInstance>[] = [
     {
@@ -527,6 +628,8 @@ export function InstanceListPage() {
           activeTab={activeTabId}
           onTabChange={selectTab}
           onTabClose={closeTab}
+          onTabAdd={addNewTab}
+          showAddButton={true}
           showWindowControls={true}
         />
 
@@ -640,8 +743,8 @@ export function InstanceListPage() {
             {/* VM Table */}
             {activeTab === 'vm' && (
               <Table<Instance>
-                columns={columns}
-                data={filteredInstances}
+                columns={visibleColumns}
+                data={paginatedInstances}
                 rowKey="id"
                 selectable
                 selectedKeys={selectedInstances}
@@ -654,7 +757,7 @@ export function InstanceListPage() {
             {activeTab === 'bare-metal' && (
               <Table<BareMetalInstance>
                 columns={bareMetalColumns}
-                data={filteredBareMetalInstances}
+                data={paginatedBareMetalInstances}
                 rowKey="id"
                 selectable
                 selectedKeys={selectedBareMetalInstances}
@@ -684,8 +787,51 @@ export function InstanceListPage() {
         onClose={() => setIsPreferencesOpen(false)}
         rowsPerPage={rowsPerPage}
         onRowsPerPageChange={setRowsPerPage}
-        columns={columnPreferences}
-        onColumnsChange={setColumnPreferences}
+        columns={columnConfig}
+        defaultColumns={defaultVMColumnConfig}
+        onColumnsChange={setColumnConfig}
+      />
+
+      {/* Create Instance Snapshot Drawer */}
+      <CreateInstanceSnapshotDrawer
+        isOpen={isSnapshotDrawerOpen}
+        onClose={() => {
+          setIsSnapshotDrawerOpen(false);
+          setSelectedInstanceForSnapshot(null);
+        }}
+        instance={selectedInstanceForSnapshot}
+        onSubmit={(snapshotName, description) => {
+          console.log('Creating snapshot:', snapshotName, 'description:', description, 'for instance:', selectedInstanceForSnapshot?.id);
+          // TODO: Implement actual snapshot creation API call
+        }}
+      />
+
+      {/* Lock Setting Drawer */}
+      <LockSettingDrawer
+        isOpen={isLockDrawerOpen}
+        onClose={() => {
+          setIsLockDrawerOpen(false);
+          setSelectedInstanceForLock(null);
+        }}
+        instance={selectedInstanceForLock}
+        onSubmit={(isLocked) => {
+          console.log('Setting lock status:', isLocked, 'for instance:', selectedInstanceForLock?.id);
+          // TODO: Implement actual lock setting API call
+        }}
+      />
+
+      {/* Edit Instance Drawer */}
+      <EditInstanceDrawer
+        isOpen={isEditDrawerOpen}
+        onClose={() => {
+          setIsEditDrawerOpen(false);
+          setSelectedInstanceForEdit(null);
+        }}
+        instance={selectedInstanceForEdit}
+        onSubmit={(name, description) => {
+          console.log('Editing instance:', name, 'description:', description, 'for instance:', selectedInstanceForEdit?.id);
+          // TODO: Implement actual edit API call
+        }}
       />
     </div>
   );

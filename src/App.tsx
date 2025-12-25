@@ -1,4 +1,5 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { HomePage } from '@/pages/HomePage';
 import { InstanceListPage } from '@/pages/InstanceListPage';
 import { InstanceTemplatesPage } from '@/pages/InstanceTemplatesPage';
 import { InstanceSnapshotsPage } from '@/pages/InstanceSnapshotsPage';
@@ -33,7 +34,8 @@ function AppRoutes() {
   return (
     <TabProvider defaultTabs={defaultTabs}>
       <Routes>
-        <Route path="/" element={<InstanceListPage />} />
+        <Route path="/" element={<HomePage />} />
+        <Route path="/home" element={<HomePage />} />
         <Route path="/instances" element={<InstanceListPage />} />
         <Route path="/instances/:id" element={<InstanceListPage />} />
         <Route path="/instance-templates" element={<InstanceTemplatesPage />} />

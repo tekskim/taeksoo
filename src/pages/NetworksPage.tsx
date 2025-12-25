@@ -21,6 +21,7 @@ import {
 } from '@/design-system';
 import { Sidebar } from '@/components/Sidebar';
 import { useTabs } from '@/contexts/TabContext';
+import { ViewPreferencesDrawer, type ColumnConfig } from '@/components/ViewPreferencesDrawer';
 import {
   IconPlus,
   IconDotsVertical,
@@ -89,8 +90,24 @@ export function NetworksPage() {
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [networkToDelete, setNetworkToDelete] = useState<Network | null>(null);
 
+  // View preferences state
+  const [isPreferencesOpen, setIsPreferencesOpen] = useState(false);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
+
+  const defaultColumnConfig: ColumnConfig[] = [
+    { id: 'status', label: 'Status', visible: true, locked: true },
+    { id: 'name', label: 'Name', visible: true, locked: true },
+    { id: 'subnetCidr', label: 'Subnet CIDR', visible: true },
+    { id: 'external', label: 'External', visible: true },
+    { id: 'shared', label: 'Shared', visible: true },
+    { id: 'adminState', label: 'Admin State', visible: true },
+    { id: 'actions', label: 'Action', visible: true, locked: true },
+  ];
+
+  const [columnConfig, setColumnConfig] = useState<ColumnConfig[]>(defaultColumnConfig);
+
   // Global tab management
-  const { tabs, activeTabId, closeTab, selectTab } = useTabs();
+  const { tabs, activeTabId, closeTab, selectTab, addNewTab } = useTabs();
 
   // Convert tabs to TabBar format
   const tabBarTabs = tabs.map((tab) => ({
@@ -131,7 +148,13 @@ export function NetworksPage() {
     return filtered;
   }, [networks, searchQuery, activeTab]);
 
-  const totalPages = Math.ceil(filteredNetworks.length / 10);
+  const totalPages = Math.ceil(filteredNetworks.length / rowsPerPage);
+
+  // Paginated data
+  const paginatedNetworks = useMemo(() => {
+    const start = (currentPage - 1) * rowsPerPage;
+    return filteredNetworks.slice(start, start + rowsPerPage);
+  }, [filteredNetworks, currentPage, rowsPerPage]);
 
   // Table columns
   const columns: TableColumn<Network>[] = [
@@ -141,7 +164,7 @@ export function NetworksPage() {
       width: '80px',
       align: 'center',
       render: (_, row) => (
-        <StatusIndicator status={networkStatusMap[row.status]} />
+        <StatusIndicator status={networkStatusMap[row.status]} layout="icon-only" />
       ),
     },
     {
@@ -150,18 +173,13 @@ export function NetworksPage() {
       flex: 1,
       sortable: true,
       render: (_, row) => (
-        <div className="flex flex-col gap-0.5">
-          <a
-            href={`/networks/${row.id}`}
-            className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
-            onClick={(e) => e.stopPropagation()}
-          >
-            {row.name}
-          </a>
-          <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
-            ID : {row.id}
-          </span>
-        </div>
+        <a
+          href={`/networks/${row.id}`}
+          className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
+          onClick={(e) => e.stopPropagation()}
+        >
+          {row.name}
+        </a>
       ),
     },
     {
@@ -204,6 +222,19 @@ export function NetworksPage() {
     },
   ];
 
+  // Filter and order columns based on preferences
+  const visibleColumns = useMemo(() => {
+    const visibleColumnIds = columnConfig
+      .filter((col) => col.visible)
+      .map((col) => col.id);
+
+    const columnMap = new Map(columns.map((col) => [col.key, col]));
+
+    return visibleColumnIds
+      .map((id) => columnMap.get(id))
+      .filter((col): col is TableColumn<Network> => col !== undefined);
+  }, [columns, columnConfig]);
+
   const handleContextMenuSelect = (itemId: string) => {
     if (itemId === 'delete' && networkToDelete) {
       // Handle delete
@@ -227,7 +258,8 @@ export function NetworksPage() {
           activeTab={activeTabId}
           onTabChange={selectTab}
           onTabClose={closeTab}
-          showAddButton={false}
+          onTabAdd={addNewTab}
+          showAddButton={true}
           showWindowControls={true}
         />
 
@@ -315,12 +347,14 @@ export function NetworksPage() {
               totalItems={filteredNetworks.length}
               onPageChange={setCurrentPage}
               selectedCount={selectedNetworks.length}
+              showSettings
+              onSettingsClick={() => setIsPreferencesOpen(true)}
             />
 
             {/* Table */}
             <Table
-              columns={columns}
-              data={filteredNetworks}
+              columns={visibleColumns}
+              data={paginatedNetworks}
               rowKey="id"
               selectable
               selectedKeys={selectedNetworks}
@@ -343,6 +377,17 @@ export function NetworksPage() {
         cancelText="Cancel"
         confirmVariant="danger"
         onConfirm={() => handleContextMenuSelect('delete')}
+      />
+
+      {/* View Preferences Drawer */}
+      <ViewPreferencesDrawer
+        isOpen={isPreferencesOpen}
+        onClose={() => setIsPreferencesOpen(false)}
+        rowsPerPage={rowsPerPage}
+        onRowsPerPageChange={setRowsPerPage}
+        columns={columnConfig}
+        defaultColumns={defaultColumnConfig}
+        onColumnsChange={setColumnConfig}
       />
     </div>
   );
