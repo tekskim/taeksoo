@@ -19,6 +19,7 @@ import {
 } from '@/design-system';
 import { Sidebar } from '@/components/Sidebar';
 import { useTabs } from '@/contexts/TabContext';
+import { ViewPreferencesDrawer, type ColumnConfig } from '@/components/ViewPreferencesDrawer';
 import {
   IconDotsVertical,
   IconDownload,
@@ -76,6 +77,23 @@ export function FlavorsPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const [activeTab, setActiveTab] = useState('cpu');
 
+  // View Preferences state
+  const [isPreferencesOpen, setIsPreferencesOpen] = useState(false);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
+
+  // Default column config
+  const defaultColumnConfig: ColumnConfig[] = [
+    { id: 'name', label: 'Name', visible: true, locked: true },
+    { id: 'category', label: 'Category', visible: true },
+    { id: 'vcpu', label: 'vCPU', visible: true },
+    { id: 'ram', label: 'RAM', visible: true },
+    { id: 'ephemeralDisk', label: 'Ephemeral Disk', visible: true },
+    { id: 'internalNetworkBandwidth', label: 'Internal Network Bandwidth', visible: true },
+    { id: 'access', label: 'Access', visible: true },
+    { id: 'actions', label: 'Action', visible: true, locked: true },
+  ];
+  const [columnConfig, setColumnConfig] = useState<ColumnConfig[]>(defaultColumnConfig);
+
   // Global tab management
   const { tabs, activeTabId, closeTab, selectTab, addNewTab } = useTabs();
 
@@ -85,8 +103,6 @@ export function FlavorsPage() {
     label: tab.label,
     closable: tab.closable,
   }));
-
-  const pageSize = 10;
 
   // Filter flavors by tab and search
   const filteredFlavors = useMemo(() => {
@@ -120,7 +136,7 @@ export function FlavorsPage() {
     return filtered;
   }, [activeTab, searchQuery]);
 
-  const totalPages = Math.ceil(filteredFlavors.length / pageSize);
+  const totalPages = Math.ceil(filteredFlavors.length / rowsPerPage);
 
   // Table columns
   const columns: TableColumn<Flavor>[] = [
@@ -209,15 +225,29 @@ export function FlavorsPage() {
     },
   ];
 
+  // Filter and order columns based on preferences
+  const visibleColumns = useMemo(() => {
+    const visibleColumnIds = columnConfig
+      .filter((col) => col.visible)
+      .map((col) => col.id);
+
+    const columnMap = new Map(columns.map((col) => [col.key, col]));
+
+    return visibleColumnIds
+      .map((id) => columnMap.get(id))
+      .filter((col): col is TableColumn<Flavor> => col !== undefined);
+  }, [columns, columnConfig]);
+
   return (
     <div className="min-h-screen bg-[var(--color-surface-subtle)]">
       <Sidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(false)} />
 
       <main
-        className={`min-h-screen bg-[var(--color-surface-default)] transition-[margin] duration-200 ${
+        className={`min-h-screen bg-[var(--color-surface-default)] transition-[margin] duration-200 overflow-x-auto ${
           sidebarOpen ? 'ml-[200px]' : 'ml-0'
         }`}
       >
+        <div className="min-w-[var(--layout-content-min-width)]">
         {/* Tab Bar */}
         <TabBar
           tabs={tabBarTabs}
@@ -299,20 +329,33 @@ export function FlavorsPage() {
                 totalPages={totalPages}
                 onPageChange={setCurrentPage}
                 showSettings
+                onSettingsClick={() => setIsPreferencesOpen(true)}
                 totalItems={filteredFlavors.length}
               />
             )}
 
             {/* Flavor Table */}
             <Table<Flavor>
-              columns={columns}
-              data={filteredFlavors}
+              columns={visibleColumns}
+              data={filteredFlavors.slice((currentPage - 1) * rowsPerPage, currentPage * rowsPerPage)}
               rowKey="id"
               emptyMessage="No flavors found"
             />
           </VStack>
         </div>
+        </div>
       </main>
+
+      {/* View Preferences Drawer */}
+      <ViewPreferencesDrawer
+        isOpen={isPreferencesOpen}
+        onClose={() => setIsPreferencesOpen(false)}
+        rowsPerPage={rowsPerPage}
+        onRowsPerPageChange={setRowsPerPage}
+        columns={columnConfig}
+        defaultColumns={defaultColumnConfig}
+        onColumnsChange={setColumnConfig}
+      />
     </div>
   );
 }

@@ -69,10 +69,11 @@ export function AppLayout({ children }: AppLayoutProps) {
       <Sidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(false)} />
 
       <main
-        className={`min-h-screen bg-[var(--color-surface-default)] transition-[margin] duration-200 ${
+        className={`min-h-screen bg-[var(--color-surface-default)] transition-[margin] duration-200 overflow-x-auto ${
           sidebarOpen ? 'ml-[200px]' : 'ml-0'
         }`}
       >
+        <div className="min-w-[var(--layout-content-min-width)]">
         {/* Tab Bar */}
         <TabBar
           tabs={tabBarTabs}
@@ -110,6 +111,7 @@ export function AppLayout({ children }: AppLayoutProps) {
 
         {/* Page Content */}
         {children || <Outlet />}
+        </div>
       </main>
     </div>
   );

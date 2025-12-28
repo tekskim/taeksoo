@@ -22,6 +22,7 @@ import {
   IconTopologyStar3,
   IconLayoutSidebar,
   IconPalette,
+  IconLayoutSidebarRight,
 } from '@tabler/icons-react';
 import { Link, useLocation } from 'react-router-dom';
 import ThakiLogoLight from '@/assets/thakiLogo_light.svg';
@@ -89,6 +90,15 @@ export function Sidebar({ isOpen = true, onToggle }: SidebarProps) {
           >
             <IconPalette size={16} stroke={1.5} />
             <span>Design System</span>
+          </Link>
+
+          {/* Drawers Link */}
+          <Link
+            to="/drawers"
+            className="flex items-center gap-2 px-2 py-1.5 rounded-md bg-[var(--color-action-secondary)] hover:bg-[var(--color-action-secondary-hover)] text-[var(--color-text-default)] text-[11px] font-medium transition-colors border border-[var(--color-border-default)]"
+          >
+            <IconLayoutSidebarRight size={16} stroke={1.5} />
+            <span>Drawers</span>
           </Link>
 
           {/* Home */}

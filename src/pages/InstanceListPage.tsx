@@ -621,7 +621,8 @@ export function InstanceListPage() {
       <Sidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(false)} />
 
       {/* Main Content */}
-      <main className={`min-h-screen bg-[var(--color-surface-default)] transition-[margin] duration-200 ${sidebarOpen ? 'ml-[200px]' : 'ml-0'}`}>
+      <main className={`min-h-screen bg-[var(--color-surface-default)] transition-[margin] duration-200 overflow-x-auto ${sidebarOpen ? 'ml-[200px]' : 'ml-0'}`}>
+        <div className="min-w-[var(--layout-content-min-width)]">
         {/* Tab Bar */}
         <TabBar
           tabs={tabBarTabs}
@@ -767,6 +768,7 @@ export function InstanceListPage() {
             )}
 
           </VStack>
+        </div>
         </div>
       </main>
 

@@ -21,6 +21,7 @@ import {
 } from '@/design-system';
 import { Sidebar } from '@/components/Sidebar';
 import { useTabs } from '@/contexts/TabContext';
+import { ViewPreferencesDrawer, type ColumnConfig } from '@/components/ViewPreferencesDrawer';
 import {
   IconPlus,
   IconDotsVertical,
@@ -85,6 +86,24 @@ export function ImagesPage() {
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [imageToDelete, setImageToDelete] = useState<Image | null>(null);
 
+  // View Preferences state
+  const [isPreferencesOpen, setIsPreferencesOpen] = useState(false);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
+
+  // Default column config
+  const defaultColumnConfig: ColumnConfig[] = [
+    { id: 'status', label: 'Status', visible: true, locked: true },
+    { id: 'name', label: 'Name', visible: true, locked: true },
+    { id: 'os', label: 'OS', visible: true },
+    { id: 'size', label: 'Size', visible: true },
+    { id: 'diskFormat', label: 'Disk Format', visible: true },
+    { id: 'protected', label: 'Protected', visible: true },
+    { id: 'access', label: 'Access', visible: true },
+    { id: 'createdAt', label: 'Created At', visible: true },
+    { id: 'actions', label: 'Action', visible: true, locked: true },
+  ];
+  const [columnConfig, setColumnConfig] = useState<ColumnConfig[]>(defaultColumnConfig);
+
   // Global tab management
   const { tabs, activeTabId, closeTab, selectTab, addNewTab } = useTabs();
 
@@ -94,8 +113,6 @@ export function ImagesPage() {
     label: tab.label,
     closable: tab.closable,
   }));
-
-  const pageSize = 10;
 
   // Handle delete image
   const handleDeleteClick = (image: Image) => {
@@ -146,7 +163,7 @@ export function ImagesPage() {
     return filtered;
   }, [images, activeTab, searchQuery]);
 
-  const totalPages = Math.ceil(filteredImages.length / pageSize);
+  const totalPages = Math.ceil(filteredImages.length / rowsPerPage);
 
   // Get OS icon based on OS name
   const getOsIcon = (os: string) => {
@@ -280,15 +297,29 @@ export function ImagesPage() {
     },
   ];
 
+  // Filter and order columns based on preferences
+  const visibleColumns = useMemo(() => {
+    const visibleColumnIds = columnConfig
+      .filter((col) => col.visible)
+      .map((col) => col.id);
+
+    const columnMap = new Map(columns.map((col) => [col.key, col]));
+
+    return visibleColumnIds
+      .map((id) => columnMap.get(id))
+      .filter((col): col is TableColumn<Image> => col !== undefined);
+  }, [columns, columnConfig]);
+
   return (
     <div className="min-h-screen bg-[var(--color-surface-subtle)]">
       <Sidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(false)} />
 
       <main
-        className={`min-h-screen bg-[var(--color-surface-default)] transition-[margin] duration-200 ${
+        className={`min-h-screen bg-[var(--color-surface-default)] transition-[margin] duration-200 overflow-x-auto ${
           sidebarOpen ? 'ml-[200px]' : 'ml-0'
         }`}
       >
+        <div className="min-w-[var(--layout-content-min-width)]">
         {/* Tab Bar */}
         <TabBar
           tabs={tabBarTabs}
@@ -380,6 +411,7 @@ export function ImagesPage() {
                 totalPages={totalPages}
                 onPageChange={setCurrentPage}
                 showSettings
+                onSettingsClick={() => setIsPreferencesOpen(true)}
                 totalItems={filteredImages.length}
                 selectedCount={selectedImages.length}
               />
@@ -387,8 +419,8 @@ export function ImagesPage() {
 
             {/* Image Table */}
             <Table<Image>
-              columns={columns}
-              data={filteredImages}
+              columns={visibleColumns}
+              data={filteredImages.slice((currentPage - 1) * rowsPerPage, currentPage * rowsPerPage)}
               rowKey="id"
               selectable
               selectedKeys={selectedImages}
@@ -396,6 +428,7 @@ export function ImagesPage() {
               emptyMessage="No images found"
             />
           </VStack>
+        </div>
         </div>
       </main>
 
@@ -411,6 +444,17 @@ export function ImagesPage() {
         confirmVariant="danger"
         infoLabel="Image name"
         infoValue={imageToDelete?.name}
+      />
+
+      {/* View Preferences Drawer */}
+      <ViewPreferencesDrawer
+        isOpen={isPreferencesOpen}
+        onClose={() => setIsPreferencesOpen(false)}
+        rowsPerPage={rowsPerPage}
+        onRowsPerPageChange={setRowsPerPage}
+        columns={columnConfig}
+        defaultColumns={defaultColumnConfig}
+        onColumnsChange={setColumnConfig}
       />
     </div>
   );

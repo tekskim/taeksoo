@@ -18,6 +18,7 @@ import { SecurityGroupsPage } from '@/pages/SecurityGroupsPage';
 import { LoadBalancersPage } from '@/pages/LoadBalancersPage';
 import { CertificatesPage } from '@/pages/CertificatesPage';
 import { DesignSystemPage } from '@/pages/DesignSystemPage';
+import { DrawersPage } from '@/pages/DrawersPage';
 import { TopologyD3Page } from '@/pages/TopologyD3Page';
 import { GradientShowcasePage } from '@/pages/GradientShowcasePage';
 import ColorPalettePage from '@/pages/ColorPalettePage';
@@ -56,6 +57,7 @@ function AppRoutes() {
         <Route path="/certificates" element={<CertificatesPage />} />
         <Route path="/topology" element={<TopologyD3Page />} />
         <Route path="/design-system" element={<DesignSystemPage />} />
+        <Route path="/drawers" element={<DrawersPage />} />
         <Route path="/gradients" element={<GradientShowcasePage />} />
         <Route path="/color-palette" element={<ColorPalettePage />} />
         <Route path="/metallic-palette" element={<MetallicPalettePage />} />

@@ -248,6 +248,14 @@
   --spacing-layout-xl: var(--spacing-16);
   --spacing-layout-2xl: var(--spacing-24);
 
+  /* ----------------------------------------
+     Layout Structure
+     ---------------------------------------- */
+  --layout-max-width: 1920px;
+  --layout-min-width: 1440px;
+  --layout-sidebar-width: 200px;
+  --layout-content-min-width: calc(var(--layout-min-width) - var(--layout-sidebar-width));
+
   /* ========================================
      SEMANTIC COLOR TOKENS (Light Theme)
      ======================================== */

@@ -18,6 +18,7 @@ import {
 } from '@/design-system';
 import { Sidebar } from '@/components/Sidebar';
 import { useTabs } from '@/contexts/TabContext';
+import { ViewPreferencesDrawer, type ColumnConfig } from '@/components/ViewPreferencesDrawer';
 import {
   IconPlus,
   IconDotsVertical,
@@ -89,6 +90,23 @@ export function VolumesPage() {
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [volumeToDelete, setVolumeToDelete] = useState<Volume | null>(null);
 
+  // View Preferences state
+  const [isPreferencesOpen, setIsPreferencesOpen] = useState(false);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
+
+  // Default column config
+  const defaultColumnConfig: ColumnConfig[] = [
+    { id: 'status', label: 'Status', visible: true, locked: true },
+    { id: 'name', label: 'Name', visible: true, locked: true },
+    { id: 'size', label: 'Size', visible: true },
+    { id: 'type', label: 'Type', visible: true },
+    { id: 'diskTag', label: 'Disk Tag', visible: true },
+    { id: 'attachedTo', label: 'Attached To', visible: true },
+    { id: 'createdAt', label: 'Created At', visible: true },
+    { id: 'actions', label: 'Action', visible: true, locked: true },
+  ];
+  const [columnConfig, setColumnConfig] = useState<ColumnConfig[]>(defaultColumnConfig);
+
   // Global tab management
   const { tabs, activeTabId, closeTab, selectTab, openInNewTab, addNewTab } = useTabs();
 
@@ -138,7 +156,7 @@ export function VolumesPage() {
     );
   }, [volumes, searchQuery]);
 
-  const totalPages = Math.ceil(filteredVolumes.length / pageSize);
+  const totalPages = Math.ceil(filteredVolumes.length / rowsPerPage);
 
   // Table columns
   const columns: TableColumn<Volume>[] = [
@@ -282,15 +300,29 @@ export function VolumesPage() {
     },
   ];
 
+  // Filter and order columns based on preferences
+  const visibleColumns = useMemo(() => {
+    const visibleColumnIds = columnConfig
+      .filter((col) => col.visible)
+      .map((col) => col.id);
+
+    const columnMap = new Map(columns.map((col) => [col.key, col]));
+
+    return visibleColumnIds
+      .map((id) => columnMap.get(id))
+      .filter((col): col is TableColumn<Volume> => col !== undefined);
+  }, [columns, columnConfig]);
+
   return (
     <div className="min-h-screen bg-[var(--color-surface-subtle)]">
       <Sidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(false)} />
 
       <main
-        className={`min-h-screen bg-[var(--color-surface-default)] transition-[margin] duration-200 ${
+        className={`min-h-screen bg-[var(--color-surface-default)] transition-[margin] duration-200 overflow-x-auto ${
           sidebarOpen ? 'ml-[200px]' : 'ml-0'
         }`}
       >
+        <div className="min-w-[var(--layout-content-min-width)]">
         {/* Tab Bar */}
         <TabBar
           tabs={tabBarTabs}
@@ -375,6 +407,7 @@ export function VolumesPage() {
                 totalPages={totalPages}
                 onPageChange={setCurrentPage}
                 showSettings
+                onSettingsClick={() => setIsPreferencesOpen(true)}
                 totalItems={filteredVolumes.length}
                 selectedCount={selectedVolumes.length}
               />
@@ -382,8 +415,8 @@ export function VolumesPage() {
 
             {/* Volumes Table */}
             <Table<Volume>
-              columns={columns}
-              data={filteredVolumes}
+              columns={visibleColumns}
+              data={filteredVolumes.slice((currentPage - 1) * rowsPerPage, currentPage * rowsPerPage)}
               rowKey="id"
               selectable
               selectedKeys={selectedVolumes}
@@ -391,6 +424,7 @@ export function VolumesPage() {
               emptyMessage="No volumes found"
             />
           </VStack>
+        </div>
         </div>
       </main>
 
@@ -406,6 +440,17 @@ export function VolumesPage() {
         confirmVariant="danger"
         infoLabel="Volume name"
         infoValue={volumeToDelete?.name}
+      />
+
+      {/* View Preferences Drawer */}
+      <ViewPreferencesDrawer
+        isOpen={isPreferencesOpen}
+        onClose={() => setIsPreferencesOpen(false)}
+        rowsPerPage={rowsPerPage}
+        onRowsPerPageChange={setRowsPerPage}
+        columns={columnConfig}
+        defaultColumns={defaultColumnConfig}
+        onColumnsChange={setColumnConfig}
       />
     </div>
   );

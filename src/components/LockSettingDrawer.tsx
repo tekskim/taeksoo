@@ -103,7 +103,7 @@ export function LockSettingDrawer({
           <HStack gap={2} className="items-center">
             <Toggle
               checked={isLocked}
-              onChange={setIsLocked}
+              onChange={(e) => setIsLocked(e.target.checked)}
             />
             <span className="text-[12px] text-[var(--color-text-default)]">
               {isLocked ? 'Locked' : 'Unlocked'}
@@ -114,4 +114,6 @@ export function LockSettingDrawer({
     </Drawer>
   );
 }
+
+
 

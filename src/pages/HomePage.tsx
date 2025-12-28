@@ -17,6 +17,7 @@ import {
   IconKey,
   IconServer,
   IconCopy,
+  IconCheck,
   IconChevronRight,
   IconBell,
 } from '@tabler/icons-react';
@@ -94,14 +95,13 @@ function ComputeQuotaBar({ label, used, total, unit }: ComputeQuotaBarProps) {
 interface SummaryStatBoxProps {
   value: number;
   label: string;
-  isHighlighted?: boolean;
 }
 
-function SummaryStatBox({ value, label, isHighlighted = false }: SummaryStatBoxProps) {
+function SummaryStatBox({ value, label }: SummaryStatBoxProps) {
   const textColor = value === 0 ? 'text-[#64748b]' : 'text-[#0f172a]';
   
   return (
-    <div className={`flex-1 bg-[#fafafa] rounded-lg p-4 ${isHighlighted ? 'border-2 border-[#2563eb]' : ''}`}>
+    <div className="flex-1 bg-[#fafafa] rounded-lg p-4 border-2 border-transparent hover:border-[#2563eb] transition-colors cursor-pointer">
       <div className={`text-[20px] font-medium ${textColor} pb-1`}>{value}</div>
       <div className="text-[11px] text-[#475569]">{label}</div>
     </div>
@@ -189,7 +189,7 @@ interface CardProps {
 function Card({ title, children, className = '', bgColor = 'bg-white' }: CardProps) {
   return (
     <div className={`p-6 rounded-2xl border border-[#e2e8f0] ${bgColor} ${className}`}>
-      <h2 className="text-[16px] font-medium text-[#475569] mb-6">{title}</h2>
+      <h6 className="text-[length:var(--font-size-12)] leading-[var(--line-height-16)] font-semibold text-[var(--color-text-muted)] mb-6">{title}</h6>
       {children}
     </div>
   );
@@ -221,7 +221,8 @@ export function HomePage() {
     <div className="min-h-screen bg-[var(--color-surface-subtle)]">
       <Sidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(false)} />
 
-      <main className={`min-h-screen bg-white transition-[margin] duration-200 ${sidebarOpen ? 'ml-[200px]' : 'ml-0'}`}>
+      <main className={`min-h-screen bg-white transition-[margin] duration-200 overflow-x-auto ${sidebarOpen ? 'ml-[200px]' : 'ml-0'}`}>
+        <div className="min-w-[var(--layout-content-min-width)]">
         <TabBar
           tabs={tabBarTabs}
           activeTab={activeTabId}
@@ -271,10 +272,14 @@ export function HomePage() {
                     <span className="text-[12px] text-[#0f172a]">{projectId}</span>
                     <button 
                       onClick={handleCopyId}
-                      className="p-0.5 hover:bg-[#e2e8f0] rounded transition-colors"
+                      className="p-1.5 -m-1 rounded-md hover:bg-[var(--color-surface-muted)] active:bg-[var(--color-surface-subtle)] transition-colors"
                       title={copied ? 'Copied!' : 'Copy ID'}
                     >
-                      <IconCopy size={13} className="text-[#9ca3af]" />
+                      {copied ? (
+                        <IconCheck size={12} className="text-[var(--color-state-success)]" />
+                      ) : (
+                        <IconCopy size={12} className="text-[var(--color-action-primary)]" />
+                      )}
                     </button>
                   </div>
                 </div>
@@ -306,7 +311,7 @@ export function HomePage() {
               </div>
               <div className="space-y-2">
                 <div className="flex gap-2">
-                  <SummaryStatBox value={10} label="Active" isHighlighted />
+                  <SummaryStatBox value={10} label="Active" />
                   <SummaryStatBox value={0} label="Error" />
                 </div>
                 <div className="flex gap-2">
@@ -325,7 +330,7 @@ export function HomePage() {
               <div className="space-y-2">
                 <div className="flex gap-2">
                   <SummaryStatBox value={6} label="Active" />
-                  <SummaryStatBox value={1} label="Error" isHighlighted />
+                  <SummaryStatBox value={1} label="Error" />
                 </div>
                 <div className="flex gap-2">
                   <SummaryStatBox value={0} label="Shutoff" />
@@ -440,6 +445,7 @@ export function HomePage() {
               </div>
             </Card>
           </div>
+        </div>
         </div>
       </main>
     </div>

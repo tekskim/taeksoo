@@ -1104,7 +1104,8 @@ export function DesignSystemPage() {
       </nav>
 
       {/* Main Content */}
-      <main className="ml-[200px] py-12 px-8">
+      <main className="ml-[200px] py-12 px-8 overflow-x-auto">
+        <div className="min-w-[var(--layout-content-min-width)]">
         <div className="max-w-[1000px] mx-auto">
           <VStack gap={12} align="stretch">
             {/* Header */}
@@ -4134,6 +4135,7 @@ outline: 2px solid var(--color-border-focus);`}
             </Section>
 
           </VStack>
+        </div>
         </div>
       </main>
 

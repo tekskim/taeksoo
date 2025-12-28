@@ -229,7 +229,8 @@ export function CertificatesPage() {
   return (
     <div className="min-h-screen bg-[var(--color-surface-subtle)]">
       <Sidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(false)} />
-      <main className={`min-h-screen bg-[var(--color-surface-default)] transition-[margin] duration-200 ${sidebarOpen ? 'ml-[200px]' : 'ml-0'}`}>
+      <main className={`min-h-screen bg-[var(--color-surface-default)] transition-[margin] duration-200 overflow-x-auto ${sidebarOpen ? 'ml-[200px]' : 'ml-0'}`}>
+        <div className="min-w-[var(--layout-content-min-width)]">
         <TabBar tabs={tabBarTabs} activeTab={activeTabId} onTabChange={selectTab} onTabClose={closeTab} onTabAdd={addNewTab} showAddButton={true} showWindowControls={true} />
         <TopBar
           showSidebarToggle={!sidebarOpen}
@@ -256,6 +257,7 @@ export function CertificatesPage() {
             <Pagination currentPage={currentPage} totalPages={totalPages} totalItems={filteredCerts.length} onPageChange={setCurrentPage} selectedCount={selectedCerts.length} showSettings onSettingsClick={() => setIsPreferencesOpen(true)} />
             <Table columns={visibleColumns} data={paginatedCerts} rowKey="id" selectable selectedKeys={selectedCerts} onSelectionChange={setSelectedCerts} />
           </VStack>
+        </div>
         </div>
       </main>
       <ConfirmModal

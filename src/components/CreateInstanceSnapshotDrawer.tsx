@@ -116,10 +116,10 @@ export function CreateInstanceSnapshotDrawer({
           </div>
 
           {/* Warning Message */}
-          <div className="w-full flex gap-2 p-3 bg-[#fef2f2] rounded-lg">
+          <div className="w-full flex gap-2 p-3 bg-[var(--color-state-danger-bg)] rounded-lg">
             <IconAlertCircle 
               size={16} 
-              className="text-[#f87171] shrink-0 mt-0.5" 
+              className="text-[var(--color-state-danger)] shrink-0 mt-0.5" 
               stroke={1.5}
             />
             <p className="text-[11px] text-[var(--color-text-default)] leading-4">
