@@ -21,6 +21,7 @@ import {
 } from '@/design-system';
 import { Sidebar } from '@/components/Sidebar';
 import { useTabs } from '@/contexts/TabContext';
+import { ViewPreferencesDrawer, type ColumnConfig } from '@/components/ViewPreferencesDrawer';
 import {
   IconPlus,
   IconDotsVertical,
@@ -90,8 +91,24 @@ export function CertificatesPage() {
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [certToDelete, setCertToDelete] = useState<Certificate | null>(null);
 
+  // View preferences state
+  const [isPreferencesOpen, setIsPreferencesOpen] = useState(false);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
+
+  const defaultColumnConfig: ColumnConfig[] = [
+    { id: 'status', label: 'Status', visible: true, locked: true },
+    { id: 'name', label: 'Name', visible: true, locked: true },
+    { id: 'domain', label: 'SAN', visible: true },
+    { id: 'listener', label: 'Listener', visible: true },
+    { id: 'expiresAt', label: 'Expires At', visible: true },
+    { id: 'createdAt', label: 'Created At', visible: true },
+    { id: 'actions', label: 'Action', visible: true, locked: true },
+  ];
+
+  const [columnConfig, setColumnConfig] = useState<ColumnConfig[]>(defaultColumnConfig);
+
   // Global tab management
-  const { tabs, activeTabId, closeTab, selectTab } = useTabs();
+  const { tabs, activeTabId, closeTab, selectTab, addNewTab } = useTabs();
 
   // Convert tabs to TabBar format
   const tabBarTabs = tabs.map((tab) => ({
@@ -101,10 +118,9 @@ export function CertificatesPage() {
   }));
 
   // Context menu items
-  const getContextMenuItems = (): ContextMenuItem[] => [
-    { id: 'view', label: 'View Details' },
-    { id: 'download', label: 'Download Certificate' },
-    { id: 'delete', label: 'Delete', status: 'danger' },
+  const getContextMenuItems = (cert: Certificate): ContextMenuItem[] => [
+    { id: 'download', label: 'Download', onClick: () => console.log('Download:', cert.id), divider: true },
+    { id: 'delete', label: 'Delete', status: 'danger', onClick: () => { setCertToDelete(cert); setDeleteModalOpen(true); } },
   ];
 
   // Filter certificates based on search and tab
@@ -121,7 +137,13 @@ export function CertificatesPage() {
     return filtered;
   }, [certificates, searchQuery, activeTab]);
 
-  const totalPages = Math.ceil(filteredCerts.length / 10);
+  const totalPages = Math.ceil(filteredCerts.length / rowsPerPage);
+
+  // Paginated data
+  const paginatedCerts = useMemo(() => {
+    const start = (currentPage - 1) * rowsPerPage;
+    return filteredCerts.slice(start, start + rowsPerPage);
+  }, [filteredCerts, currentPage, rowsPerPage]);
 
   // Table columns
   const columns: TableColumn<Certificate>[] = [
@@ -138,13 +160,36 @@ export function CertificatesPage() {
       key: 'name',
       label: 'Name',
       flex: 1,
-      render: (value: string) => (
-        <span className="font-medium text-[var(--color-action-primary)]">{value}</span>
+      render: (_, row) => (
+        <div className="flex flex-col gap-0.5">
+          <a
+            href={`/certificates/${row.id}`}
+            className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {row.name}
+          </a>
+          <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
+            ID : {row.id}
+          </span>
+        </div>
       ),
     },
-    { key: 'domain', label: 'Domain', flex: 1 },
+    { key: 'domain', label: 'SAN', flex: 1 },
     { key: 'listener', label: 'Listener', flex: 1 },
-    { key: 'expiresAt', label: 'Expires At', flex: 1 },
+    {
+      key: 'expiresAt',
+      label: 'Expires At',
+      flex: 1,
+      render: (value: string) => {
+        const isExpired = new Date(value) < new Date();
+        return (
+          <span className={isExpired ? 'text-[var(--color-text-danger)]' : ''}>
+            {value}
+          </span>
+        );
+      },
+    },
     { key: 'createdAt', label: 'Created At', flex: 1 },
     {
       key: 'actions',
@@ -153,23 +198,28 @@ export function CertificatesPage() {
       align: 'center',
       render: (_, row) => (
         <div onClick={(e) => e.stopPropagation()}>
-          <ContextMenu
-            items={getContextMenuItems()}
-            onSelect={(itemId) => {
-              if (itemId === 'delete') {
-                setCertToDelete(row);
-                setDeleteModalOpen(true);
-              }
-            }}
-          >
+          <ContextMenu items={getContextMenuItems(row)} trigger="click">
             <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors">
-              <IconDotsVertical size={16} stroke={1} className="text-[var(--color-text-default)]" />
+              <IconDotsVertical size={16} stroke={1} className="text-[var(--color-text-subtle)]" />
             </button>
           </ContextMenu>
         </div>
       ),
     },
   ];
+
+  // Filter and order columns based on preferences
+  const visibleColumns = useMemo(() => {
+    const visibleColumnIds = columnConfig
+      .filter((col) => col.visible)
+      .map((col) => col.id);
+
+    const columnMap = new Map(columns.map((col) => [col.key, col]));
+
+    return visibleColumnIds
+      .map((id) => columnMap.get(id))
+      .filter((col): col is TableColumn<Certificate> => col !== undefined);
+  }, [columns, columnConfig]);
 
   const handleDeleteConfirm = () => {
     setDeleteModalOpen(false);
@@ -179,8 +229,9 @@ export function CertificatesPage() {
   return (
     <div className="min-h-screen bg-[var(--color-surface-subtle)]">
       <Sidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(false)} />
-      <main className={`min-h-screen bg-[var(--color-surface-default)] transition-[margin] duration-200 ${sidebarOpen ? 'ml-[200px]' : 'ml-0'}`}>
-        <TabBar tabs={tabBarTabs} activeTab={activeTabId} onTabChange={selectTab} onTabClose={closeTab} showAddButton={false} showWindowControls={true} />
+      <main className={`min-h-screen bg-[var(--color-surface-default)] transition-[margin] duration-200 overflow-x-auto ${sidebarOpen ? 'ml-[200px]' : 'ml-0'}`}>
+        <div className="min-w-[var(--layout-content-min-width)]">
+        <TabBar tabs={tabBarTabs} activeTab={activeTabId} onTabChange={selectTab} onTabClose={closeTab} onTabAdd={addNewTab} showAddButton={true} showWindowControls={true} />
         <TopBar
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(true)}
@@ -203,20 +254,30 @@ export function CertificatesPage() {
               primaryActions={<ListToolbar.Actions><div className="w-[280px]"><SearchInput placeholder="Find certificate with filters" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} onClear={() => setSearchQuery('')} size="sm" fullWidth /></div><Button variant="secondary" size="sm" icon={<IconDownload size={12} />} aria-label="Download" /></ListToolbar.Actions>}
               bulkActions={<ListToolbar.Actions><Button variant="muted" size="sm" leftIcon={<IconTrash size={12} />} disabled={selectedCerts.length === 0}>Delete</Button></ListToolbar.Actions>}
             />
-            <Pagination currentPage={currentPage} totalPages={totalPages} totalItems={filteredCerts.length} onPageChange={setCurrentPage} selectedCount={selectedCerts.length} />
-            <Table columns={columns} data={filteredCerts} rowKey="id" selectable selectedKeys={selectedCerts} onSelectionChange={setSelectedCerts} />
+            <Pagination currentPage={currentPage} totalPages={totalPages} totalItems={filteredCerts.length} onPageChange={setCurrentPage} selectedCount={selectedCerts.length} showSettings onSettingsClick={() => setIsPreferencesOpen(true)} />
+            <Table columns={visibleColumns} data={paginatedCerts} rowKey="id" selectable selectedKeys={selectedCerts} onSelectionChange={setSelectedCerts} />
           </VStack>
+        </div>
         </div>
       </main>
       <ConfirmModal
         isOpen={deleteModalOpen}
         onClose={() => { setDeleteModalOpen(false); setCertToDelete(null); }}
         title="Delete Certificate"
-        message={`Are you sure you want to delete "${certToDelete?.name}"? This action cannot be undone.`}
-        confirmLabel="Delete"
-        cancelLabel="Cancel"
+        description={`Are you sure you want to delete "${certToDelete?.name}"? This action cannot be undone.`}
+        confirmText="Delete"
+        cancelText="Cancel"
         confirmVariant="danger"
         onConfirm={handleDeleteConfirm}
+      />
+      <ViewPreferencesDrawer
+        isOpen={isPreferencesOpen}
+        onClose={() => setIsPreferencesOpen(false)}
+        rowsPerPage={rowsPerPage}
+        onRowsPerPageChange={setRowsPerPage}
+        columns={columnConfig}
+        defaultColumns={defaultColumnConfig}
+        onColumnsChange={setColumnConfig}
       />
     </div>
   );

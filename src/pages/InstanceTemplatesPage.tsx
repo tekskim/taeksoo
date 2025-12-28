@@ -4,7 +4,6 @@ import {
   SearchInput,
   Table,
   Pagination,
-  HStack,
   VStack,
   TabBar,
   TopBar,
@@ -21,6 +20,7 @@ import {
 } from '@/design-system';
 import { Sidebar } from '@/components/Sidebar';
 import { useTabs } from '@/contexts/TabContext';
+import { ViewPreferencesDrawer, type ColumnConfig } from '@/components/ViewPreferencesDrawer';
 import {
   IconPlus,
   IconDotsVertical,
@@ -29,8 +29,6 @@ import {
   IconBell,
   IconStar,
   IconStarFilled,
-  IconServer,
-  IconCopy,
 } from '@tabler/icons-react';
 
 /* ----------------------------------------
@@ -86,8 +84,27 @@ export function InstanceTemplatesPage() {
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [templateToDelete, setTemplateToDelete] = useState<InstanceTemplate | null>(null);
 
+  // View Preferences state
+  const [isPreferencesOpen, setIsPreferencesOpen] = useState(false);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
+
+  // Default column config
+  const defaultColumnConfig: ColumnConfig[] = [
+    { id: 'favorite', label: '', visible: true, locked: true },
+    { id: 'name', label: 'Name', visible: true, locked: true },
+    { id: 'image', label: 'Image', visible: true },
+    { id: 'flavor', label: 'Flavor', visible: true },
+    { id: 'vcpu', label: 'vCPU', visible: true },
+    { id: 'ram', label: 'RAM', visible: true },
+    { id: 'disk', label: 'Disk', visible: true },
+    { id: 'network', label: 'Network', visible: true },
+    { id: 'floatingIp', label: 'Floating IP', visible: true },
+    { id: 'actions', label: 'Action', visible: true, locked: true },
+  ];
+  const [columnConfig, setColumnConfig] = useState<ColumnConfig[]>(defaultColumnConfig);
+
   // Global tab management
-  const { tabs, activeTabId, closeTab, selectTab } = useTabs();
+  const { tabs, activeTabId, closeTab, selectTab, addNewTab } = useTabs();
 
   // Convert tabs to TabBar format
   const tabBarTabs = tabs.map((tab) => ({
@@ -95,8 +112,6 @@ export function InstanceTemplatesPage() {
     label: tab.label,
     closable: tab.closable,
   }));
-
-  const pageSize = 10;
 
   // Handle delete template
   const handleDeleteClick = (template: InstanceTemplate) => {
@@ -150,7 +165,7 @@ export function InstanceTemplatesPage() {
     return filtered;
   }, [templates, activeTab, searchQuery]);
 
-  const totalPages = Math.ceil(filteredTemplates.length / pageSize);
+  const totalPages = Math.ceil(filteredTemplates.length / rowsPerPage);
 
   // Toggle favorite
   const toggleFavorite = (id: string) => {
@@ -293,21 +308,37 @@ export function InstanceTemplatesPage() {
     },
   ];
 
+  // Filter and order columns based on preferences
+  const visibleColumns = useMemo(() => {
+    const visibleColumnIds = columnConfig
+      .filter((col) => col.visible)
+      .map((col) => col.id);
+
+    const columnMap = new Map(columns.map((col) => [col.key, col]));
+
+    return visibleColumnIds
+      .map((id) => columnMap.get(id))
+      .filter((col): col is TableColumn<InstanceTemplate> => col !== undefined);
+  }, [columns, columnConfig]);
+
   return (
     <div className="min-h-screen bg-[var(--color-surface-subtle)]">
       <Sidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(false)} />
 
       <main
-        className={`min-h-screen bg-[var(--color-surface-default)] transition-[margin] duration-200 ${
+        className={`min-h-screen bg-[var(--color-surface-default)] transition-[margin] duration-200 overflow-x-auto ${
           sidebarOpen ? 'ml-[200px]' : 'ml-0'
         }`}
       >
+        <div className="min-w-[var(--layout-content-min-width)]">
         {/* Tab Bar */}
         <TabBar
           tabs={tabBarTabs}
           activeTab={activeTabId}
           onTabChange={selectTab}
           onTabClose={closeTab}
+          onTabAdd={addNewTab}
+          showAddButton={true}
           showWindowControls={true}
         />
 
@@ -392,6 +423,7 @@ export function InstanceTemplatesPage() {
                 totalPages={totalPages}
                 onPageChange={setCurrentPage}
                 showSettings
+                onSettingsClick={() => setIsPreferencesOpen(true)}
                 totalItems={filteredTemplates.length}
                 selectedCount={selectedTemplates.length}
               />
@@ -399,8 +431,8 @@ export function InstanceTemplatesPage() {
 
             {/* Template Table */}
             <Table<InstanceTemplate>
-              columns={columns}
-              data={filteredTemplates}
+              columns={visibleColumns}
+              data={filteredTemplates.slice((currentPage - 1) * rowsPerPage, currentPage * rowsPerPage)}
               rowKey="id"
               selectable
               selectedKeys={selectedTemplates}
@@ -408,6 +440,7 @@ export function InstanceTemplatesPage() {
               emptyMessage="No templates found"
             />
           </VStack>
+        </div>
         </div>
       </main>
 
@@ -423,6 +456,17 @@ export function InstanceTemplatesPage() {
         confirmVariant="danger"
         infoLabel="Template name"
         infoValue={templateToDelete?.name}
+      />
+
+      {/* View Preferences Drawer */}
+      <ViewPreferencesDrawer
+        isOpen={isPreferencesOpen}
+        onClose={() => setIsPreferencesOpen(false)}
+        rowsPerPage={rowsPerPage}
+        onRowsPerPageChange={setRowsPerPage}
+        columns={columnConfig}
+        defaultColumns={defaultColumnConfig}
+        onColumnsChange={setColumnConfig}
       />
     </div>
   );

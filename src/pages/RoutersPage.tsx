@@ -18,6 +18,7 @@ import {
 } from '@/design-system';
 import { Sidebar } from '@/components/Sidebar';
 import { useTabs } from '@/contexts/TabContext';
+import { ViewPreferencesDrawer, type ColumnConfig } from '@/components/ViewPreferencesDrawer';
 import {
   IconDotsVertical,
   IconTrash,
@@ -35,11 +36,11 @@ type RouterStatus = 'active' | 'error' | 'building';
 interface Router {
   id: string;
   name: string;
-  portsCount: number;
   externalGateway: boolean;
   externalFixedIp: string;
   externalNetwork: string;
   externalNetworkId: string;
+  adminState: 'Up' | 'Down';
   status: RouterStatus;
 }
 
@@ -48,16 +49,16 @@ interface Router {
    ---------------------------------------- */
 
 const mockRouters: Router[] = [
-  { id: 'router-001', name: 'router-01', portsCount: 5, externalGateway: true, externalFixedIp: '10.7.60.91', externalNetwork: 'net-01', externalNetworkId: 'net-001', status: 'active' },
-  { id: 'router-002', name: 'main-router', portsCount: 12, externalGateway: true, externalFixedIp: '10.7.60.92', externalNetwork: 'external-net', externalNetworkId: 'net-002', status: 'active' },
-  { id: 'router-003', name: 'dev-router', portsCount: 3, externalGateway: false, externalFixedIp: '-', externalNetwork: '-', externalNetworkId: '', status: 'active' },
-  { id: 'router-004', name: 'prod-router', portsCount: 8, externalGateway: true, externalFixedIp: '10.7.60.93', externalNetwork: 'prod-net', externalNetworkId: 'net-003', status: 'building' },
-  { id: 'router-005', name: 'test-router', portsCount: 2, externalGateway: false, externalFixedIp: '-', externalNetwork: '-', externalNetworkId: '', status: 'active' },
-  { id: 'router-006', name: 'backup-router', portsCount: 4, externalGateway: true, externalFixedIp: '10.7.60.94', externalNetwork: 'backup-net', externalNetworkId: 'net-004', status: 'active' },
-  { id: 'router-007', name: 'dmz-router', portsCount: 6, externalGateway: true, externalFixedIp: '10.7.60.95', externalNetwork: 'dmz-net', externalNetworkId: 'net-005', status: 'error' },
-  { id: 'router-008', name: 'internal-router', portsCount: 15, externalGateway: false, externalFixedIp: '-', externalNetwork: '-', externalNetworkId: '', status: 'active' },
-  { id: 'router-009', name: 'edge-router', portsCount: 7, externalGateway: true, externalFixedIp: '10.7.60.96', externalNetwork: 'edge-net', externalNetworkId: 'net-006', status: 'active' },
-  { id: 'router-010', name: 'vpn-router', portsCount: 10, externalGateway: true, externalFixedIp: '10.7.60.97', externalNetwork: 'vpn-net', externalNetworkId: 'net-007', status: 'active' },
+  { id: '29tgj234', name: 'router-01', externalGateway: true, externalFixedIp: '10.7.60.91', externalNetwork: 'net-01', externalNetworkId: '29tgj234', adminState: 'Up', status: 'active' },
+  { id: 'router-002', name: 'main-router', externalGateway: true, externalFixedIp: '10.7.60.92', externalNetwork: 'external-net', externalNetworkId: 'net-002', adminState: 'Up', status: 'active' },
+  { id: 'router-003', name: 'dev-router', externalGateway: false, externalFixedIp: '-', externalNetwork: '-', externalNetworkId: '', adminState: 'Up', status: 'active' },
+  { id: 'router-004', name: 'prod-router', externalGateway: true, externalFixedIp: '10.7.60.93', externalNetwork: 'prod-net', externalNetworkId: 'net-003', adminState: 'Up', status: 'building' },
+  { id: 'router-005', name: 'test-router', externalGateway: false, externalFixedIp: '-', externalNetwork: '-', externalNetworkId: '', adminState: 'Down', status: 'active' },
+  { id: 'router-006', name: 'backup-router', externalGateway: true, externalFixedIp: '10.7.60.94', externalNetwork: 'backup-net', externalNetworkId: 'net-004', adminState: 'Up', status: 'active' },
+  { id: 'router-007', name: 'dmz-router', externalGateway: true, externalFixedIp: '10.7.60.95', externalNetwork: 'dmz-net', externalNetworkId: 'net-005', adminState: 'Down', status: 'error' },
+  { id: 'router-008', name: 'internal-router', externalGateway: false, externalFixedIp: '-', externalNetwork: '-', externalNetworkId: '', adminState: 'Up', status: 'active' },
+  { id: 'router-009', name: 'edge-router', externalGateway: true, externalFixedIp: '10.7.60.96', externalNetwork: 'edge-net', externalNetworkId: 'net-006', adminState: 'Up', status: 'active' },
+  { id: 'router-010', name: 'vpn-router', externalGateway: true, externalFixedIp: '10.7.60.97', externalNetwork: 'vpn-net', externalNetworkId: 'net-007', adminState: 'Up', status: 'active' },
 ];
 
 /* ----------------------------------------
@@ -85,8 +86,24 @@ export function RoutersPage() {
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [routerToDelete, setRouterToDelete] = useState<Router | null>(null);
 
+  // View preferences state
+  const [isPreferencesOpen, setIsPreferencesOpen] = useState(false);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
+
+  const defaultColumnConfig: ColumnConfig[] = [
+    { id: 'status', label: 'Status', visible: true, locked: true },
+    { id: 'name', label: 'Name', visible: true, locked: true },
+    { id: 'externalGateway', label: 'External Gateway', visible: true },
+    { id: 'externalFixedIp', label: 'External Fixed IP', visible: true },
+    { id: 'externalNetwork', label: 'External Network', visible: true },
+    { id: 'adminState', label: 'Admin State', visible: true },
+    { id: 'actions', label: 'Action', visible: true, locked: true },
+  ];
+
+  const [columnConfig, setColumnConfig] = useState<ColumnConfig[]>(defaultColumnConfig);
+
   // Global tab management
-  const { tabs, activeTabId, closeTab, selectTab } = useTabs();
+  const { tabs, activeTabId, closeTab, selectTab, addNewTab } = useTabs();
 
   // Convert tabs to TabBar format
   const tabBarTabs = tabs.map((tab) => ({
@@ -97,9 +114,13 @@ export function RoutersPage() {
 
   // Context menu items
   const getContextMenuItems = (router: Router): ContextMenuItem[] => [
-    { id: 'view', label: 'View Details' },
-    { id: 'edit', label: 'Edit Router' },
-    { id: 'delete', label: 'Delete', status: 'danger' },
+    { id: 'connect-subnet', label: 'Connect Subnet', onClick: () => console.log('Connect subnet:', router.id) },
+    { id: 'disconnect-subnet', label: 'Disconnect Subnet', onClick: () => console.log('Disconnect subnet:', router.id) },
+    { id: 'external-gateway', label: 'External Gateway Setting', onClick: () => console.log('External gateway setting:', router.id) },
+    { id: 'enable-snat', label: 'Enable SNAT', onClick: () => console.log('Enable SNAT:', router.id) },
+    { id: 'disable-snat', label: 'Disable SNAT', onClick: () => console.log('Disable SNAT:', router.id) },
+    { id: 'edit', label: 'Edit', onClick: () => console.log('Edit:', router.id) },
+    { id: 'delete', label: 'Delete', status: 'danger', onClick: () => { setRouterToDelete(router); setDeleteModalOpen(true); } },
   ];
 
   // Filter routers based on search
@@ -112,14 +133,20 @@ export function RoutersPage() {
     );
   }, [routers, searchQuery]);
 
-  const totalPages = Math.ceil(filteredRouters.length / 10);
+  const totalPages = Math.ceil(filteredRouters.length / rowsPerPage);
+
+  // Paginated data
+  const paginatedRouters = useMemo(() => {
+    const start = (currentPage - 1) * rowsPerPage;
+    return filteredRouters.slice(start, start + rowsPerPage);
+  }, [filteredRouters, currentPage, rowsPerPage]);
 
   // Table columns
   const columns: TableColumn<Router>[] = [
     {
       key: 'status',
       label: 'Status',
-      width: '59px',
+      width: '80px',
       align: 'center',
       render: (_, row) => (
         <StatusIndicator status={routerStatusMap[row.status]} layout="icon-only" />
@@ -129,30 +156,34 @@ export function RoutersPage() {
       key: 'name',
       label: 'Name',
       flex: 1,
-      render: (value: string) => (
-        <span className="font-medium text-[var(--color-action-primary)]">{value}</span>
+      sortable: true,
+      render: (_, row) => (
+        <a
+          href={`/routers/${row.id}`}
+          className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
+          onClick={(e) => e.stopPropagation()}
+        >
+          {row.name}
+        </a>
       ),
-    },
-    {
-      key: 'portsCount',
-      label: 'Ports Count',
-      flex: 1,
     },
     {
       key: 'externalGateway',
       label: 'External Gateway',
-      flex: 1,
-      render: (value: boolean) => value ? 'Yes' : 'No',
+      width: '140px',
+      render: (value: boolean) => value ? 'Open' : 'Close',
     },
     {
       key: 'externalFixedIp',
       label: 'External Fixed IP',
       flex: 1,
+      sortable: true,
     },
     {
       key: 'externalNetwork',
       label: 'External Network',
       flex: 1,
+      sortable: true,
       render: (_, row) => (
         row.externalNetworkId ? (
           <div className="flex flex-col gap-0.5">
@@ -165,11 +196,16 @@ export function RoutersPage() {
               <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
             </a>
             <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
-              ID : {row.externalNetworkId.substring(0, 8)}
+              ID : {row.externalNetworkId}
             </span>
           </div>
         ) : '-'
       ),
+    },
+    {
+      key: 'adminState',
+      label: 'Admin State',
+      width: '120px',
     },
     {
       key: 'actions',
@@ -178,23 +214,28 @@ export function RoutersPage() {
       align: 'center',
       render: (_, row) => (
         <div onClick={(e) => e.stopPropagation()}>
-          <ContextMenu
-            items={getContextMenuItems(row)}
-            onSelect={(itemId) => {
-              if (itemId === 'delete') {
-                setRouterToDelete(row);
-                setDeleteModalOpen(true);
-              }
-            }}
-          >
+          <ContextMenu items={getContextMenuItems(row)} trigger="click">
             <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors">
-              <IconDotsVertical size={16} stroke={1} className="text-[var(--color-text-default)]" />
+              <IconDotsVertical size={16} stroke={1} className="text-[var(--color-text-subtle)]" />
             </button>
           </ContextMenu>
         </div>
       ),
     },
   ];
+
+  // Filter and order columns based on preferences
+  const visibleColumns = useMemo(() => {
+    const visibleColumnIds = columnConfig
+      .filter((col) => col.visible)
+      .map((col) => col.id);
+
+    const columnMap = new Map(columns.map((col) => [col.key, col]));
+
+    return visibleColumnIds
+      .map((id) => columnMap.get(id))
+      .filter((col): col is TableColumn<Router> => col !== undefined);
+  }, [columns, columnConfig]);
 
   const handleContextMenuSelect = (itemId: string) => {
     if (itemId === 'delete' && routerToDelete) {
@@ -209,17 +250,19 @@ export function RoutersPage() {
       <Sidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(false)} />
 
       <main
-        className={`min-h-screen bg-[var(--color-surface-default)] transition-[margin] duration-200 ${
+        className={`min-h-screen bg-[var(--color-surface-default)] transition-[margin] duration-200 overflow-x-auto ${
           sidebarOpen ? 'ml-[200px]' : 'ml-0'
         }`}
       >
+        <div className="min-w-[var(--layout-content-min-width)]">
         {/* Tab Bar */}
         <TabBar
           tabs={tabBarTabs}
           activeTab={activeTabId}
           onTabChange={selectTab}
           onTabClose={closeTab}
-          showAddButton={false}
+          onTabAdd={addNewTab}
+          showAddButton={true}
           showWindowControls={true}
         />
 
@@ -295,18 +338,21 @@ export function RoutersPage() {
               totalItems={filteredRouters.length}
               onPageChange={setCurrentPage}
               selectedCount={selectedRouters.length}
+              showSettings
+              onSettingsClick={() => setIsPreferencesOpen(true)}
             />
 
             {/* Table */}
             <Table
-              columns={columns}
-              data={filteredRouters}
+              columns={visibleColumns}
+              data={paginatedRouters}
               rowKey="id"
               selectable
               selectedKeys={selectedRouters}
               onSelectionChange={setSelectedRouters}
             />
           </VStack>
+        </div>
         </div>
       </main>
 
@@ -318,11 +364,22 @@ export function RoutersPage() {
           setRouterToDelete(null);
         }}
         title="Delete Router"
-        message={`Are you sure you want to delete "${routerToDelete?.name}"? This action cannot be undone.`}
-        confirmLabel="Delete"
-        cancelLabel="Cancel"
+        description={`Are you sure you want to delete "${routerToDelete?.name}"? This action cannot be undone.`}
+        confirmText="Delete"
+        cancelText="Cancel"
         confirmVariant="danger"
         onConfirm={() => handleContextMenuSelect('delete')}
+      />
+
+      {/* View Preferences Drawer */}
+      <ViewPreferencesDrawer
+        isOpen={isPreferencesOpen}
+        onClose={() => setIsPreferencesOpen(false)}
+        rowsPerPage={rowsPerPage}
+        onRowsPerPageChange={setRowsPerPage}
+        columns={columnConfig}
+        defaultColumns={defaultColumnConfig}
+        onColumnsChange={setColumnConfig}
       />
     </div>
   );

@@ -13,6 +13,8 @@ export interface RadioProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 
   description?: ReactNode;
   /** Radio value */
   value: string;
+  /** Children (alternative to label) */
+  children?: ReactNode;
 }
 
 /* ----------------------------------------
@@ -28,10 +30,13 @@ export const Radio = forwardRef<HTMLInputElement, RadioProps>(
       disabled: propDisabled,
       className = '',
       id,
+      children,
       ...props
     },
     ref
   ) => {
+    // Support children as alternative to label
+    const displayLabel = label ?? children;
     const generatedId = useId();
     const inputId = id ?? generatedId;
     const descriptionId = description ? `${inputId}-description` : undefined;
@@ -84,7 +89,7 @@ export const Radio = forwardRef<HTMLInputElement, RadioProps>(
           />
 
           {/* Label */}
-          {label && (
+          {displayLabel && (
             <span
               className={twMerge(
                 'text-[length:var(--radio-label-size)] leading-[var(--radio-label-line-height)] font-normal',
@@ -93,7 +98,7 @@ export const Radio = forwardRef<HTMLInputElement, RadioProps>(
                   : 'text-[var(--radio-label-color)]'
               )}
             >
-              {label}
+              {displayLabel}
             </span>
           )}
         </label>

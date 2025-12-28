@@ -35,10 +35,14 @@ function getBreadcrumbLabel(path: string): string {
    AppLayout Component
    ---------------------------------------- */
 
-export function AppLayout() {
+interface AppLayoutProps {
+  children?: React.ReactNode;
+}
+
+export function AppLayout({ children }: AppLayoutProps) {
   const location = useLocation();
   const [sidebarOpen, setSidebarOpen] = useState(true);
-  const { tabs, activeTabId, selectTab, closeTab } = useTabs();
+  const { tabs, activeTabId, selectTab, closeTab, addNewTab } = useTabs();
 
   // Convert tabs to TabBar format
   const tabBarTabs = tabs.map((tab) => ({
@@ -65,17 +69,19 @@ export function AppLayout() {
       <Sidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(false)} />
 
       <main
-        className={`min-h-screen bg-[var(--color-surface-default)] transition-[margin] duration-200 ${
+        className={`min-h-screen bg-[var(--color-surface-default)] transition-[margin] duration-200 overflow-x-auto ${
           sidebarOpen ? 'ml-[200px]' : 'ml-0'
         }`}
       >
+        <div className="min-w-[var(--layout-content-min-width)]">
         {/* Tab Bar */}
         <TabBar
           tabs={tabBarTabs}
           activeTab={activeTabId}
           onTabChange={handleTabChange}
           onTabClose={handleTabClose}
-          showAddButton={false}
+          onTabAdd={addNewTab}
+          showAddButton={true}
           showWindowControls={true}
         />
 
@@ -104,7 +110,8 @@ export function AppLayout() {
         />
 
         {/* Page Content */}
-        <Outlet />
+        {children || <Outlet />}
+        </div>
       </main>
     </div>
   );

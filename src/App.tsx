@@ -1,4 +1,5 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { HomePage } from '@/pages/HomePage';
 import { InstanceListPage } from '@/pages/InstanceListPage';
 import { InstanceDetailPage } from '@/pages/InstanceDetailPage';
 import { InstanceTemplatesPage } from '@/pages/InstanceTemplatesPage';
@@ -21,6 +22,7 @@ import { SecurityGroupsPage } from '@/pages/SecurityGroupsPage';
 import { LoadBalancersPage } from '@/pages/LoadBalancersPage';
 import { CertificatesPage } from '@/pages/CertificatesPage';
 import { DesignSystemPage } from '@/pages/DesignSystemPage';
+import { DrawersPage } from '@/pages/DrawersPage';
 import { TopologyD3Page } from '@/pages/TopologyD3Page';
 import { GradientShowcasePage } from '@/pages/GradientShowcasePage';
 import ColorPalettePage from '@/pages/ColorPalettePage';
@@ -37,7 +39,8 @@ function AppRoutes() {
   return (
     <TabProvider defaultTabs={defaultTabs}>
       <Routes>
-        <Route path="/" element={<InstanceListPage />} />
+        <Route path="/" element={<HomePage />} />
+        <Route path="/home" element={<HomePage />} />
         <Route path="/instances" element={<InstanceListPage />} />
         <Route path="/instances/:id" element={<InstanceDetailPage />} />
         <Route path="/instance-templates" element={<InstanceTemplatesPage />} />
@@ -61,6 +64,7 @@ function AppRoutes() {
         <Route path="/certificates" element={<CertificatesPage />} />
         <Route path="/topology" element={<TopologyD3Page />} />
         <Route path="/design-system" element={<DesignSystemPage />} />
+        <Route path="/drawers" element={<DrawersPage />} />
         <Route path="/gradients" element={<GradientShowcasePage />} />
         <Route path="/color-palette" element={<ColorPalettePage />} />
         <Route path="/metallic-palette" element={<MetallicPalettePage />} />

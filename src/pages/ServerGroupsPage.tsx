@@ -17,6 +17,7 @@ import {
 } from '@/design-system';
 import { Sidebar } from '@/components/Sidebar';
 import { useTabs } from '@/contexts/TabContext';
+import { ViewPreferencesDrawer, type ColumnConfig } from '@/components/ViewPreferencesDrawer';
 import {
   IconPlus,
   IconDotsVertical,
@@ -70,8 +71,21 @@ export function ServerGroupsPage() {
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [serverGroupToDelete, setServerGroupToDelete] = useState<ServerGroup | null>(null);
 
+  // View Preferences state
+  const [isPreferencesOpen, setIsPreferencesOpen] = useState(false);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
+
+  // Default column config
+  const defaultColumnConfig: ColumnConfig[] = [
+    { id: 'name', label: 'Name', visible: true, locked: true },
+    { id: 'policy', label: 'Policy', visible: true },
+    { id: 'instances', label: 'Instances', visible: true },
+    { id: 'actions', label: 'Action', visible: true, locked: true },
+  ];
+  const [columnConfig, setColumnConfig] = useState<ColumnConfig[]>(defaultColumnConfig);
+
   // Global tab management
-  const { tabs, activeTabId, closeTab, selectTab } = useTabs();
+  const { tabs, activeTabId, closeTab, selectTab, addNewTab } = useTabs();
 
   // Convert tabs to TabBar format
   const tabBarTabs = tabs.map((tab) => ({
@@ -79,8 +93,6 @@ export function ServerGroupsPage() {
     label: tab.label,
     closable: tab.closable,
   }));
-
-  const pageSize = 10;
 
   // Handle delete server group
   const handleDeleteClick = (serverGroup: ServerGroup) => {
@@ -113,7 +125,7 @@ export function ServerGroupsPage() {
     );
   }, [serverGroups, searchQuery]);
 
-  const totalPages = Math.ceil(filteredServerGroups.length / pageSize);
+  const totalPages = Math.ceil(filteredServerGroups.length / rowsPerPage);
 
   // Table columns
   const columns: TableColumn<ServerGroup>[] = [
@@ -151,14 +163,9 @@ export function ServerGroupsPage() {
       render: (_, row) => {
         const menuItems: ContextMenuItem[] = [
           {
-            id: 'view-details',
-            label: 'View Details',
-            onClick: () => console.log('View details:', row.id),
-          },
-          {
-            id: 'edit',
-            label: 'Edit',
-            onClick: () => console.log('Edit server group:', row.id),
+            id: 'create-instance',
+            label: 'Create Instance',
+            onClick: () => console.log('Create instance in server group:', row.id),
           },
           {
             id: 'delete',
@@ -181,21 +188,37 @@ export function ServerGroupsPage() {
     },
   ];
 
+  // Filter and order columns based on preferences
+  const visibleColumns = useMemo(() => {
+    const visibleColumnIds = columnConfig
+      .filter((col) => col.visible)
+      .map((col) => col.id);
+
+    const columnMap = new Map(columns.map((col) => [col.key, col]));
+
+    return visibleColumnIds
+      .map((id) => columnMap.get(id))
+      .filter((col): col is TableColumn<ServerGroup> => col !== undefined);
+  }, [columns, columnConfig]);
+
   return (
     <div className="min-h-screen bg-[var(--color-surface-subtle)]">
       <Sidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(false)} />
 
       <main
-        className={`min-h-screen bg-[var(--color-surface-default)] transition-[margin] duration-200 ${
+        className={`min-h-screen bg-[var(--color-surface-default)] transition-[margin] duration-200 overflow-x-auto ${
           sidebarOpen ? 'ml-[200px]' : 'ml-0'
         }`}
       >
+        <div className="min-w-[var(--layout-content-min-width)]">
         {/* Tab Bar */}
         <TabBar
           tabs={tabBarTabs}
           activeTab={activeTabId}
           onTabChange={selectTab}
           onTabClose={closeTab}
+          onTabAdd={addNewTab}
+          showAddButton={true}
           showWindowControls={true}
         />
 
@@ -269,6 +292,7 @@ export function ServerGroupsPage() {
                 totalPages={totalPages}
                 onPageChange={setCurrentPage}
                 showSettings
+                onSettingsClick={() => setIsPreferencesOpen(true)}
                 totalItems={filteredServerGroups.length}
                 selectedCount={selectedServerGroups.length}
               />
@@ -276,8 +300,8 @@ export function ServerGroupsPage() {
 
             {/* Server Groups Table */}
             <Table<ServerGroup>
-              columns={columns}
-              data={filteredServerGroups}
+              columns={visibleColumns}
+              data={filteredServerGroups.slice((currentPage - 1) * rowsPerPage, currentPage * rowsPerPage)}
               rowKey="id"
               selectable
               selectedKeys={selectedServerGroups}
@@ -285,6 +309,7 @@ export function ServerGroupsPage() {
               emptyMessage="No server groups found"
             />
           </VStack>
+        </div>
         </div>
       </main>
 
@@ -300,6 +325,17 @@ export function ServerGroupsPage() {
         confirmVariant="danger"
         infoLabel="Server group name"
         infoValue={serverGroupToDelete?.name}
+      />
+
+      {/* View Preferences Drawer */}
+      <ViewPreferencesDrawer
+        isOpen={isPreferencesOpen}
+        onClose={() => setIsPreferencesOpen(false)}
+        rowsPerPage={rowsPerPage}
+        onRowsPerPageChange={setRowsPerPage}
+        columns={columnConfig}
+        defaultColumns={defaultColumnConfig}
+        onColumnsChange={setColumnConfig}
       />
     </div>
   );

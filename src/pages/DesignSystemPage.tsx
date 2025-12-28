@@ -43,6 +43,7 @@ import {
   ConfirmModal,
   DetailHeader,
   SectionCard,
+  Drawer,
 } from '@/design-system';
 import {
   // Navigation icons (for sidebar)
@@ -232,6 +233,7 @@ const navigationItems = [
   { id: 'menu', label: 'Menu', icon: IconMenu2 },
   { id: 'context-menu', label: 'Context Menu', icon: IconMenu2 },
   { id: 'modal', label: 'Modal', icon: IconLayoutGrid },
+  { id: 'drawer', label: 'Drawer', icon: IconLayoutGrid },
 ];
 
 // Feedback
@@ -424,6 +426,106 @@ function ModalDemo({ variant }: { variant: 'basic' | 'delete' | 'size-sm' | 'siz
         </div>
       </Modal>
     </>
+  );
+}
+
+/* ----------------------------------------
+   Drawer Demo (with state)
+   ---------------------------------------- */
+
+function DrawerDemo() {
+  const [isBasicOpen, setIsBasicOpen] = useState(false);
+  const [isFormOpen, setIsFormOpen] = useState(false);
+  const [isLeftOpen, setIsLeftOpen] = useState(false);
+  const [formValue, setFormValue] = useState('');
+
+  return (
+    <div className="flex gap-2 flex-wrap">
+      {/* Basic Drawer */}
+      <Button variant="outline" size="sm" onClick={() => setIsBasicOpen(true)}>
+        Basic Drawer
+      </Button>
+      <Drawer
+        isOpen={isBasicOpen}
+        onClose={() => setIsBasicOpen(false)}
+        title="Drawer Title"
+        width={376}
+      >
+        <VStack gap={4}>
+          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] p-4">
+            <p className="text-[length:var(--font-size-12)] text-[var(--color-text-default)]">
+              This is a basic drawer with content. Drawers are useful for secondary content, forms, or detail views.
+            </p>
+          </div>
+          <VStack gap={2}>
+            <Label>Example Content</Label>
+            <p className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
+              You can put any content inside a drawer, including forms, lists, or details.
+            </p>
+          </VStack>
+        </VStack>
+      </Drawer>
+
+      {/* Drawer with Footer */}
+      <Button variant="outline" size="sm" onClick={() => setIsFormOpen(true)}>
+        With Footer
+      </Button>
+      <Drawer
+        isOpen={isFormOpen}
+        onClose={() => setIsFormOpen(false)}
+        title="Edit Settings"
+        width={376}
+        footer={
+          <div className="flex gap-2 w-full">
+            <Button variant="secondary" className="flex-1" onClick={() => setIsFormOpen(false)}>
+              Cancel
+            </Button>
+            <Button variant="primary" className="flex-1" onClick={() => setIsFormOpen(false)}>
+              Save
+            </Button>
+          </div>
+        }
+      >
+        <VStack gap={4}>
+          <VStack gap={2}>
+            <label className="text-[length:var(--font-size-12)] font-medium text-[var(--color-text-default)]">
+              Setting Name
+            </label>
+            <Input
+              value={formValue}
+              onChange={(e) => setFormValue(e.target.value)}
+              placeholder="Enter value..."
+              fullWidth
+            />
+          </VStack>
+          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] p-3">
+            <p className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
+              Drawers with footers are useful for forms with action buttons.
+            </p>
+          </div>
+        </VStack>
+      </Drawer>
+
+      {/* Left Side Drawer */}
+      <Button variant="outline" size="sm" onClick={() => setIsLeftOpen(true)}>
+        Left Side
+      </Button>
+      <Drawer
+        isOpen={isLeftOpen}
+        onClose={() => setIsLeftOpen(false)}
+        title="Left Drawer"
+        side="left"
+        width={320}
+      >
+        <VStack gap={4}>
+          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] p-4">
+            <p className="text-[length:var(--font-size-12)] text-[var(--color-text-default)]">
+              This drawer slides in from the left side.
+            </p>
+          </div>
+        </VStack>
+      </Drawer>
+    </div>
   );
 }
 
@@ -1006,7 +1108,8 @@ export function DesignSystemPage() {
       </nav>
 
       {/* Main Content */}
-      <main className="ml-[200px] py-12 px-8">
+      <main className="ml-[200px] py-12 px-8 overflow-x-auto">
+        <div className="min-w-[var(--layout-content-min-width)]">
         <div className="max-w-[1000px] mx-auto">
           <VStack gap={12} align="stretch">
             {/* Header */}
@@ -3906,6 +4009,92 @@ outline: 2px solid var(--color-border-focus);`}
               </VStack>
             </Section>
 
+            {/* Drawer Component */}
+            <Section id="drawer" title="Drawer" description="Slide-out panel for forms, details, and secondary content">
+              <VStack gap={8}>
+                {/* Design Tokens */}
+                <VStack gap={3}>
+                  <Label>Design Tokens</Label>
+                  <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
+                    <code>width: 376px (default)</code> · <code>padding-x: 24px</code> · <code>padding-y: 16px</code> · <code>animation: 300ms ease-out</code>
+                  </div>
+                </VStack>
+
+                {/* Interactive Demo */}
+                <VStack gap={3}>
+                  <Label>Interactive Demo</Label>
+                  <DrawerDemo />
+                </VStack>
+
+                {/* Specifications */}
+                <VStack gap={3}>
+                  <Label>Specifications</Label>
+                  <div className="overflow-x-auto">
+                    <table className="w-full text-[length:var(--font-size-12)]">
+                      <thead>
+                        <tr className="border-b border-[var(--color-border-default)]">
+                          <th className="text-left py-2 pr-4 font-medium text-[var(--color-text-subtle)]">Property</th>
+                          <th className="text-left py-2 pr-4 font-medium text-[var(--color-text-subtle)]">Type</th>
+                          <th className="text-left py-2 pr-4 font-medium text-[var(--color-text-subtle)]">Default</th>
+                          <th className="text-left py-2 font-medium text-[var(--color-text-subtle)]">Description</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr className="border-b border-[var(--color-border-subtle)]">
+                          <td className="py-2 pr-4 font-mono text-[var(--color-action-primary)]">isOpen</td>
+                          <td className="py-2 pr-4 text-[var(--color-text-muted)]">boolean</td>
+                          <td className="py-2 pr-4 text-[var(--color-text-muted)]">-</td>
+                          <td className="py-2 text-[var(--color-text-default)]">Whether the drawer is open</td>
+                        </tr>
+                        <tr className="border-b border-[var(--color-border-subtle)]">
+                          <td className="py-2 pr-4 font-mono text-[var(--color-action-primary)]">onClose</td>
+                          <td className="py-2 pr-4 text-[var(--color-text-muted)]">() =&gt; void</td>
+                          <td className="py-2 pr-4 text-[var(--color-text-muted)]">-</td>
+                          <td className="py-2 text-[var(--color-text-default)]">Callback when drawer should close</td>
+                        </tr>
+                        <tr className="border-b border-[var(--color-border-subtle)]">
+                          <td className="py-2 pr-4 font-mono text-[var(--color-action-primary)]">title</td>
+                          <td className="py-2 pr-4 text-[var(--color-text-muted)]">string</td>
+                          <td className="py-2 pr-4 text-[var(--color-text-muted)]">-</td>
+                          <td className="py-2 text-[var(--color-text-default)]">Drawer title</td>
+                        </tr>
+                        <tr className="border-b border-[var(--color-border-subtle)]">
+                          <td className="py-2 pr-4 font-mono text-[var(--color-action-primary)]">width</td>
+                          <td className="py-2 pr-4 text-[var(--color-text-muted)]">string | number</td>
+                          <td className="py-2 pr-4 text-[var(--color-text-muted)]">320</td>
+                          <td className="py-2 text-[var(--color-text-default)]">Width of the drawer</td>
+                        </tr>
+                        <tr className="border-b border-[var(--color-border-subtle)]">
+                          <td className="py-2 pr-4 font-mono text-[var(--color-action-primary)]">side</td>
+                          <td className="py-2 pr-4 text-[var(--color-text-muted)]">'left' | 'right'</td>
+                          <td className="py-2 pr-4 text-[var(--color-text-muted)]">'right'</td>
+                          <td className="py-2 text-[var(--color-text-default)]">Side from which drawer appears</td>
+                        </tr>
+                        <tr className="border-b border-[var(--color-border-subtle)]">
+                          <td className="py-2 pr-4 font-mono text-[var(--color-action-primary)]">footer</td>
+                          <td className="py-2 pr-4 text-[var(--color-text-muted)]">ReactNode</td>
+                          <td className="py-2 pr-4 text-[var(--color-text-muted)]">-</td>
+                          <td className="py-2 text-[var(--color-text-default)]">Footer content (typically action buttons)</td>
+                        </tr>
+                        <tr className="border-b border-[var(--color-border-subtle)]">
+                          <td className="py-2 pr-4 font-mono text-[var(--color-action-primary)]">showCloseButton</td>
+                          <td className="py-2 pr-4 text-[var(--color-text-muted)]">boolean</td>
+                          <td className="py-2 pr-4 text-[var(--color-text-muted)]">true</td>
+                          <td className="py-2 text-[var(--color-text-default)]">Whether to show close button</td>
+                        </tr>
+                        <tr>
+                          <td className="py-2 pr-4 font-mono text-[var(--color-action-primary)]">closeOnBackdropClick</td>
+                          <td className="py-2 pr-4 text-[var(--color-text-muted)]">boolean</td>
+                          <td className="py-2 pr-4 text-[var(--color-text-muted)]">true</td>
+                          <td className="py-2 text-[var(--color-text-default)]">Whether clicking backdrop closes drawer</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </VStack>
+              </VStack>
+            </Section>
+
             {/* Layout Section */}
             <Section id="layout" title="Layout" description="Application layout structure with responsive sidebar">
               <VStack gap={8}>
@@ -4108,6 +4297,7 @@ outline: 2px solid var(--color-border-focus);`}
             </Section>
 
           </VStack>
+        </div>
         </div>
       </main>
 

@@ -17,6 +17,7 @@ import {
 } from '@/design-system';
 import { Sidebar } from '@/components/Sidebar';
 import { useTabs } from '@/contexts/TabContext';
+import { ViewPreferencesDrawer, type ColumnConfig } from '@/components/ViewPreferencesDrawer';
 import {
   IconPlus,
   IconDotsVertical,
@@ -73,8 +74,21 @@ export function KeyPairsPage() {
   // Copy feedback state
   const [copiedId, setCopiedId] = useState<string | null>(null);
 
+  // View Preferences state
+  const [isPreferencesOpen, setIsPreferencesOpen] = useState(false);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
+
+  // Default column config
+  const defaultColumnConfig: ColumnConfig[] = [
+    { id: 'name', label: 'Name', visible: true, locked: true },
+    { id: 'fingerprint', label: 'Fingerprint', visible: true },
+    { id: 'createdAt', label: 'Created At', visible: true },
+    { id: 'actions', label: 'Action', visible: true, locked: true },
+  ];
+  const [columnConfig, setColumnConfig] = useState<ColumnConfig[]>(defaultColumnConfig);
+
   // Global tab management
-  const { tabs, activeTabId, closeTab, selectTab } = useTabs();
+  const { tabs, activeTabId, closeTab, selectTab, addNewTab } = useTabs();
 
   // Convert tabs to TabBar format
   const tabBarTabs = tabs.map((tab) => ({
@@ -82,8 +96,6 @@ export function KeyPairsPage() {
     label: tab.label,
     closable: tab.closable,
   }));
-
-  const pageSize = 10;
 
   // Handle delete key pair
   const handleDeleteClick = (keyPair: KeyPair) => {
@@ -126,7 +138,7 @@ export function KeyPairsPage() {
     );
   }, [keyPairs, searchQuery]);
 
-  const totalPages = Math.ceil(filteredKeyPairs.length / pageSize);
+  const totalPages = Math.ceil(filteredKeyPairs.length / rowsPerPage);
 
   // Table columns
   const columns: TableColumn<KeyPair>[] = [
@@ -183,11 +195,6 @@ export function KeyPairsPage() {
       render: (_, row) => {
         const menuItems: ContextMenuItem[] = [
           {
-            id: 'download',
-            label: 'Download Public Key',
-            onClick: () => console.log('Download public key:', row.id),
-          },
-          {
             id: 'delete',
             label: 'Delete',
             status: 'danger',
@@ -208,21 +215,37 @@ export function KeyPairsPage() {
     },
   ];
 
+  // Filter and order columns based on preferences
+  const visibleColumns = useMemo(() => {
+    const visibleColumnIds = columnConfig
+      .filter((col) => col.visible)
+      .map((col) => col.id);
+
+    const columnMap = new Map(columns.map((col) => [col.key, col]));
+
+    return visibleColumnIds
+      .map((id) => columnMap.get(id))
+      .filter((col): col is TableColumn<KeyPair> => col !== undefined);
+  }, [columns, columnConfig]);
+
   return (
     <div className="min-h-screen bg-[var(--color-surface-subtle)]">
       <Sidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(false)} />
 
       <main
-        className={`min-h-screen bg-[var(--color-surface-default)] transition-[margin] duration-200 ${
+        className={`min-h-screen bg-[var(--color-surface-default)] transition-[margin] duration-200 overflow-x-auto ${
           sidebarOpen ? 'ml-[200px]' : 'ml-0'
         }`}
       >
+        <div className="min-w-[var(--layout-content-min-width)]">
         {/* Tab Bar */}
         <TabBar
           tabs={tabBarTabs}
           activeTab={activeTabId}
           onTabChange={selectTab}
           onTabClose={closeTab}
+          onTabAdd={addNewTab}
+          showAddButton={true}
           showWindowControls={true}
         />
 
@@ -296,6 +319,7 @@ export function KeyPairsPage() {
                 totalPages={totalPages}
                 onPageChange={setCurrentPage}
                 showSettings
+                onSettingsClick={() => setIsPreferencesOpen(true)}
                 totalItems={filteredKeyPairs.length}
                 selectedCount={selectedKeyPairs.length}
               />
@@ -303,8 +327,8 @@ export function KeyPairsPage() {
 
             {/* Key Pairs Table */}
             <Table<KeyPair>
-              columns={columns}
-              data={filteredKeyPairs}
+              columns={visibleColumns}
+              data={filteredKeyPairs.slice((currentPage - 1) * rowsPerPage, currentPage * rowsPerPage)}
               rowKey="id"
               selectable
               selectedKeys={selectedKeyPairs}
@@ -312,6 +336,7 @@ export function KeyPairsPage() {
               emptyMessage="No key pairs found"
             />
           </VStack>
+        </div>
         </div>
       </main>
 
@@ -327,6 +352,17 @@ export function KeyPairsPage() {
         confirmVariant="danger"
         infoLabel="Key pair name"
         infoValue={keyPairToDelete?.name}
+      />
+
+      {/* View Preferences Drawer */}
+      <ViewPreferencesDrawer
+        isOpen={isPreferencesOpen}
+        onClose={() => setIsPreferencesOpen(false)}
+        rowsPerPage={rowsPerPage}
+        onRowsPerPageChange={setRowsPerPage}
+        columns={columnConfig}
+        defaultColumns={defaultColumnConfig}
+        onColumnsChange={setColumnConfig}
       />
     </div>
   );

@@ -16,6 +16,7 @@ interface TabContextValue {
   tabs: TabItem[];
   activeTabId: string;
   addTab: (tab: TabItem) => void;
+  addNewTab: () => void;
   closeTab: (tabId: string) => void;
   selectTab: (tabId: string) => void;
   openInNewTab: (id: string, label: string, path: string) => void;
@@ -104,12 +105,26 @@ export function TabProvider({ children, defaultTabs = [] }: TabProviderProps) {
     navigate(path);
   }, [addTab, navigate]);
 
+  // Add a new empty tab (for + button) - opens Home page
+  const addNewTab = useCallback(() => {
+    const newTabId = `home-${Date.now()}`;
+    const newTab: TabItem = {
+      id: newTabId,
+      label: 'Home',
+      path: '/',
+      closable: true,
+    };
+    addTab(newTab);
+    navigate('/');
+  }, [addTab, navigate]);
+
   return (
     <TabContext.Provider
       value={{
         tabs,
         activeTabId,
         addTab,
+        addNewTab,
         closeTab,
         selectTab,
         openInNewTab,

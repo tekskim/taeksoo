@@ -4,7 +4,6 @@ import {
   SearchInput,
   Table,
   Pagination,
-  HStack,
   VStack,
   TabBar,
   TopBar,
@@ -19,6 +18,7 @@ import {
 } from '@/design-system';
 import { Sidebar } from '@/components/Sidebar';
 import { useTabs } from '@/contexts/TabContext';
+import { ViewPreferencesDrawer, type ColumnConfig } from '@/components/ViewPreferencesDrawer';
 import {
   IconPlus,
   IconDotsVertical,
@@ -32,15 +32,16 @@ import {
    ---------------------------------------- */
 
 type SnapshotStatus = 'active' | 'creating' | 'error' | 'deleting';
-type AccessType = 'Private' | 'Project' | 'Public';
 
 interface InstanceSnapshot {
   id: string;
   name: string;
   status: SnapshotStatus;
-  os: string;
   size: string;
-  access: AccessType;
+  diskFormat: string;
+  sourceInstance: string;
+  sourceInstanceId: string;
+  description: string;
   createdAt: string;
 }
 
@@ -50,93 +51,113 @@ interface InstanceSnapshot {
 
 const mockSnapshots: InstanceSnapshot[] = [
   {
-    id: 'snap-001',
-    name: 'Ubuntu-22.04-base',
+    id: '29tgj234',
+    name: 'snapshot',
     status: 'active',
-    os: 'Ubuntu 24.04',
-    size: '16GiB',
-    access: 'Private',
+    size: '30GiB',
+    diskFormat: 'RAW',
+    sourceInstance: 'web-server-01',
+    sourceInstanceId: '29tgj234',
+    description: '-',
     createdAt: '2025-09-12',
   },
   {
     id: 'snap-002',
     name: 'web-server-snapshot',
     status: 'active',
-    os: 'Ubuntu 22.04 LTS',
     size: '32GiB',
-    access: 'Project',
+    diskFormat: 'QCOW2',
+    sourceInstance: 'api-server-01',
+    sourceInstanceId: 'inst-002',
+    description: 'Weekly backup',
     createdAt: '2025-09-10',
   },
   {
     id: 'snap-003',
     name: 'db-backup-20250908',
     status: 'active',
-    os: 'Rocky Linux 9',
     size: '64GiB',
-    access: 'Private',
+    diskFormat: 'RAW',
+    sourceInstance: 'db-master-01',
+    sourceInstanceId: 'inst-003',
+    description: 'Database backup',
     createdAt: '2025-09-08',
   },
   {
     id: 'snap-004',
     name: 'ml-training-checkpoint',
     status: 'creating',
-    os: 'Ubuntu 22.04 LTS',
     size: '128GiB',
-    access: 'Private',
+    diskFormat: 'QCOW2',
+    sourceInstance: 'ml-worker-01',
+    sourceInstanceId: 'inst-004',
+    description: '-',
     createdAt: '2025-09-07',
   },
   {
     id: 'snap-005',
     name: 'k8s-node-image',
     status: 'active',
-    os: 'Rocky Linux 9',
     size: '24GiB',
-    access: 'Project',
+    diskFormat: 'RAW',
+    sourceInstance: 'k8s-node-01',
+    sourceInstanceId: 'inst-005',
+    description: 'K8s node snapshot',
     createdAt: '2025-09-05',
   },
   {
     id: 'snap-006',
     name: 'dev-environment-v2',
     status: 'active',
-    os: 'Ubuntu 24.04',
     size: '48GiB',
-    access: 'Private',
+    diskFormat: 'QCOW2',
+    sourceInstance: 'dev-server-01',
+    sourceInstanceId: 'inst-006',
+    description: '-',
     createdAt: '2025-09-03',
   },
   {
     id: 'snap-007',
     name: 'monitoring-stack',
     status: 'active',
-    os: 'Debian 12',
     size: '20GiB',
-    access: 'Public',
+    diskFormat: 'RAW',
+    sourceInstance: 'monitor-01',
+    sourceInstanceId: 'inst-007',
+    description: 'Monitoring setup',
     createdAt: '2025-09-01',
   },
   {
     id: 'snap-008',
     name: 'legacy-app-backup',
     status: 'error',
-    os: 'CentOS 7',
     size: '80GiB',
-    access: 'Private',
+    diskFormat: 'RAW',
+    sourceInstance: 'legacy-app-01',
+    sourceInstanceId: 'inst-008',
+    description: '-',
     createdAt: '2025-08-28',
   },
   {
     id: 'snap-009',
     name: 'test-environment',
     status: 'active',
-    os: 'Ubuntu 22.04 LTS',
     size: '16GiB',
-    access: 'Private',
+    diskFormat: 'QCOW2',
+    sourceInstance: 'test-server-01',
+    sourceInstanceId: 'inst-009',
+    description: 'Test env snapshot',
     createdAt: '2025-08-25',
   },
   {
     id: 'snap-010',
     name: 'production-baseline',
     status: 'active',
-    os: 'Rocky Linux 9',
     size: '40GiB',
-    access: 'Project',
+    diskFormat: 'RAW',
+    sourceInstance: 'prod-server-01',
+    sourceInstanceId: 'inst-010',
+    description: '-',
     createdAt: '2025-08-20',
   },
 ];
@@ -156,8 +177,25 @@ export function InstanceSnapshotsPage() {
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [snapshotToDelete, setSnapshotToDelete] = useState<InstanceSnapshot | null>(null);
 
+  // View Preferences state
+  const [isPreferencesOpen, setIsPreferencesOpen] = useState(false);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
+
+  // Default column config
+  const defaultColumnConfig: ColumnConfig[] = [
+    { id: 'status', label: 'Status', visible: true, locked: true },
+    { id: 'name', label: 'Name', visible: true, locked: true },
+    { id: 'size', label: 'Size', visible: true },
+    { id: 'diskFormat', label: 'Disk Format', visible: true },
+    { id: 'sourceInstance', label: 'Source Instance', visible: true },
+    { id: 'description', label: 'Description', visible: true },
+    { id: 'createdAt', label: 'Created At', visible: true },
+    { id: 'actions', label: 'Action', visible: true, locked: true },
+  ];
+  const [columnConfig, setColumnConfig] = useState<ColumnConfig[]>(defaultColumnConfig);
+
   // Global tab management
-  const { tabs, activeTabId, closeTab, selectTab } = useTabs();
+  const { tabs, activeTabId, closeTab, selectTab, addNewTab } = useTabs();
 
   // Convert tabs to TabBar format
   const tabBarTabs = tabs.map((tab) => ({
@@ -166,8 +204,6 @@ export function InstanceSnapshotsPage() {
     closable: tab.closable,
   }));
 
-  const pageSize = 10;
-
   // Filter snapshots by search
   const filteredSnapshots = useMemo(() => {
     if (!searchQuery) return snapshots;
@@ -175,11 +211,11 @@ export function InstanceSnapshotsPage() {
     return snapshots.filter(
       (s) =>
         s.name.toLowerCase().includes(query) ||
-        s.os.toLowerCase().includes(query)
+        s.sourceInstance.toLowerCase().includes(query)
     );
   }, [snapshots, searchQuery]);
 
-  const totalPages = Math.ceil(filteredSnapshots.length / pageSize);
+  const totalPages = Math.ceil(filteredSnapshots.length / rowsPerPage);
 
   // Handle delete
   const handleDeleteClick = (snapshot: InstanceSnapshot) => {
@@ -213,7 +249,7 @@ export function InstanceSnapshotsPage() {
     {
       key: 'status',
       label: 'Status',
-      width: '60px',
+      width: '80px',
       align: 'center',
       sortable: true,
       render: (_, row) => (
@@ -223,23 +259,22 @@ export function InstanceSnapshotsPage() {
     {
       key: 'name',
       label: 'Name',
-      flex: 1.5,
-      sortable: true,
-      render: (_, row) => (
-        <a
-          href={`/instance-snapshots/${row.id}`}
-          className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
-          onClick={(e) => e.stopPropagation()}
-        >
-          {row.name}
-        </a>
-      ),
-    },
-    {
-      key: 'os',
-      label: 'OS',
       flex: 1,
       sortable: true,
+      render: (_, row) => (
+        <div className="flex flex-col gap-0.5">
+          <a
+            href={`/instance-snapshots/${row.id}`}
+            className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {row.name}
+          </a>
+          <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
+            ID : {row.id}
+          </span>
+        </div>
+      ),
     },
     {
       key: 'size',
@@ -248,9 +283,35 @@ export function InstanceSnapshotsPage() {
       sortable: true,
     },
     {
-      key: 'access',
-      label: 'Access',
-      width: '100px',
+      key: 'diskFormat',
+      label: 'Disk Format',
+      width: '120px',
+      sortable: true,
+    },
+    {
+      key: 'sourceInstance',
+      label: 'Source instance',
+      flex: 1,
+      sortable: true,
+      render: (_, row) => (
+        <div className="flex flex-col gap-0.5">
+          <a
+            href={`/instances/${row.sourceInstanceId}`}
+            className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {row.sourceInstance}
+          </a>
+          <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
+            ID : {row.sourceInstanceId}
+          </span>
+        </div>
+      ),
+    },
+    {
+      key: 'description',
+      label: 'Description',
+      flex: 1,
       sortable: false,
     },
     {
@@ -270,6 +331,11 @@ export function InstanceSnapshotsPage() {
             id: 'create-instance',
             label: 'Create Instance',
             onClick: () => console.log('Create instance from snapshot:', row.id),
+          },
+          {
+            id: 'create-volume',
+            label: 'Create Volume',
+            onClick: () => console.log('Create volume from snapshot:', row.id),
           },
           {
             id: 'edit',
@@ -297,6 +363,19 @@ export function InstanceSnapshotsPage() {
     },
   ];
 
+  // Filter and order columns based on preferences
+  const visibleColumns = useMemo(() => {
+    const visibleColumnIds = columnConfig
+      .filter((col) => col.visible)
+      .map((col) => col.id);
+
+    const columnMap = new Map(columns.map((col) => [col.key, col]));
+
+    return visibleColumnIds
+      .map((id) => columnMap.get(id))
+      .filter((col): col is TableColumn<InstanceSnapshot> => col !== undefined);
+  }, [columns, columnConfig]);
+
   return (
     <div className="min-h-screen bg-[var(--color-surface-subtle)]">
       {/* Sidebar */}
@@ -304,16 +383,19 @@ export function InstanceSnapshotsPage() {
 
       {/* Main Content */}
       <main
-        className={`min-h-screen bg-[var(--color-surface-default)] transition-[margin] duration-200 ${
+        className={`min-h-screen bg-[var(--color-surface-default)] transition-[margin] duration-200 overflow-x-auto ${
           sidebarOpen ? 'ml-[200px]' : 'ml-0'
         }`}
       >
+        <div className="min-w-[var(--layout-content-min-width)]">
         {/* Tab Bar */}
         <TabBar
           tabs={tabBarTabs}
           activeTab={activeTabId}
           onTabChange={selectTab}
           onTabClose={closeTab}
+          onTabAdd={addNewTab}
+          showAddButton={true}
           showWindowControls={true}
         />
 
@@ -392,6 +474,7 @@ export function InstanceSnapshotsPage() {
                 totalPages={totalPages}
                 onPageChange={setCurrentPage}
                 showSettings
+                onSettingsClick={() => setIsPreferencesOpen(true)}
                 totalItems={filteredSnapshots.length}
                 selectedCount={selectedSnapshots.length}
               />
@@ -399,8 +482,8 @@ export function InstanceSnapshotsPage() {
 
             {/* Table */}
             <Table<InstanceSnapshot>
-              columns={columns}
-              data={filteredSnapshots}
+              columns={visibleColumns}
+              data={filteredSnapshots.slice((currentPage - 1) * rowsPerPage, currentPage * rowsPerPage)}
               rowKey="id"
               selectable
               selectedKeys={selectedSnapshots}
@@ -408,6 +491,7 @@ export function InstanceSnapshotsPage() {
               emptyMessage="No snapshots found"
             />
           </VStack>
+        </div>
         </div>
       </main>
 
@@ -423,6 +507,17 @@ export function InstanceSnapshotsPage() {
         confirmVariant="danger"
         infoLabel="Snapshot name"
         infoValue={snapshotToDelete?.name}
+      />
+
+      {/* View Preferences Drawer */}
+      <ViewPreferencesDrawer
+        isOpen={isPreferencesOpen}
+        onClose={() => setIsPreferencesOpen(false)}
+        rowsPerPage={rowsPerPage}
+        onRowsPerPageChange={setRowsPerPage}
+        columns={columnConfig}
+        defaultColumns={defaultColumnConfig}
+        onColumnsChange={setColumnConfig}
       />
     </div>
   );

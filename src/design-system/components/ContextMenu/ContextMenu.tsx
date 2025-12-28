@@ -55,7 +55,7 @@ const ContextMenuItemComponent: React.FC<{
   item: ContextMenuItem;
   onClose: () => void;
   parentDirection?: 'left' | 'right';
-}> = ({ item, onClose, parentDirection = 'right' }) => {
+}> = ({ item, onClose, parentDirection: _parentDirection = 'right' }) => {
   const [showSubmenu, setShowSubmenu] = useState(false);
   const [submenuPosition, setSubmenuPosition] = useState({ x: 0, y: 0 });
   const [submenuDirection, setSubmenuDirection] = useState<'left' | 'right'>('right');
@@ -167,9 +167,9 @@ const ContextMenuItemComponent: React.FC<{
           min-w-[var(--context-menu-min-width)]
           px-[var(--context-menu-padding-x)]
           py-[var(--context-menu-padding-y)]
-          text-[length:var(--font-size-12)]
+          text-[length:var(--font-size-11)]
           leading-[var(--line-height-16)]
-          font-medium
+          whitespace-nowrap
           cursor-pointer
           transition-colors duration-[var(--duration-fast)]
           ${item.divider ? 'border-b border-[var(--color-border-subtle)]' : ''}

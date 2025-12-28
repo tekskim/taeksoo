@@ -18,6 +18,7 @@ import {
 } from '@/design-system';
 import { Sidebar } from '@/components/Sidebar';
 import { useTabs } from '@/contexts/TabContext';
+import { ViewPreferencesDrawer, type ColumnConfig } from '@/components/ViewPreferencesDrawer';
 import {
   IconPlus,
   IconDotsVertical,
@@ -89,8 +90,25 @@ export function VolumesPage() {
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [volumeToDelete, setVolumeToDelete] = useState<Volume | null>(null);
 
+  // View Preferences state
+  const [isPreferencesOpen, setIsPreferencesOpen] = useState(false);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
+
+  // Default column config
+  const defaultColumnConfig: ColumnConfig[] = [
+    { id: 'status', label: 'Status', visible: true, locked: true },
+    { id: 'name', label: 'Name', visible: true, locked: true },
+    { id: 'size', label: 'Size', visible: true },
+    { id: 'type', label: 'Type', visible: true },
+    { id: 'diskTag', label: 'Disk Tag', visible: true },
+    { id: 'attachedTo', label: 'Attached To', visible: true },
+    { id: 'createdAt', label: 'Created At', visible: true },
+    { id: 'actions', label: 'Action', visible: true, locked: true },
+  ];
+  const [columnConfig, setColumnConfig] = useState<ColumnConfig[]>(defaultColumnConfig);
+
   // Global tab management
-  const { tabs, activeTabId, closeTab, selectTab, openInNewTab } = useTabs();
+  const { tabs, activeTabId, closeTab, selectTab, openInNewTab, addNewTab } = useTabs();
 
   // Handle opening instance in new tab
   const handleOpenInNewTab = (instanceId: string, instanceName: string) => {
@@ -103,8 +121,6 @@ export function VolumesPage() {
     label: tab.label,
     closable: tab.closable,
   }));
-
-  const pageSize = 10;
 
   // Handle delete volume
   const handleDeleteClick = (volume: Volume) => {
@@ -138,7 +154,7 @@ export function VolumesPage() {
     );
   }, [volumes, searchQuery]);
 
-  const totalPages = Math.ceil(filteredVolumes.length / pageSize);
+  const totalPages = Math.ceil(filteredVolumes.length / rowsPerPage);
 
   // Table columns
   const columns: TableColumn<Volume>[] = [
@@ -188,16 +204,21 @@ export function VolumesPage() {
       flex: 1,
       render: (_, row) => (
         row.attachedTo && row.attachedToId ? (
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              handleOpenInNewTab(row.attachedToId!, row.attachedTo!);
-            }}
-            className="inline-flex items-center gap-1.5 font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
-          >
-            {row.attachedTo}
-            <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
-          </button>
+          <div className="flex flex-col gap-0.5">
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                handleOpenInNewTab(row.attachedToId!, row.attachedTo!);
+              }}
+              className="inline-flex items-center gap-1.5 font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
+            >
+              {row.attachedTo}
+              <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
+            </button>
+            <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
+              ID : {row.attachedToId}
+            </span>
+          </div>
         ) : (
           <span className="text-[var(--color-text-muted)]">-</span>
         )
@@ -217,24 +238,44 @@ export function VolumesPage() {
       render: (_, row) => {
         const menuItems: ContextMenuItem[] = [
           {
-            id: 'view-details',
-            label: 'View Details',
-            onClick: () => console.log('View details:', row.id),
+            id: 'data-protection',
+            label: 'Data Protection',
+            submenu: [
+              { id: 'create-snapshot', label: 'Create Volume Snapshot', onClick: () => console.log('Create snapshot:', row.id) },
+              { id: 'create-backup', label: 'Create Volume Backup', onClick: () => console.log('Create backup:', row.id) },
+              { id: 'clone-volume', label: 'Clone Volume', onClick: () => console.log('Clone volume:', row.id) },
+              { id: 'restore-snapshot', label: 'Restore from Snapshot', onClick: () => console.log('Restore from snapshot:', row.id) },
+            ],
           },
           {
-            id: 'extend',
-            label: 'Extend Volume',
-            onClick: () => console.log('Extend volume:', row.id),
+            id: 'operate',
+            label: 'Operate',
+            submenu: [
+              { id: 'create-instance', label: 'Create Instance', onClick: () => console.log('Create instance:', row.id) },
+              { id: 'create-image', label: 'Create Image', onClick: () => console.log('Create image:', row.id) },
+              { id: 'attach-instance', label: 'Attach Instance', onClick: () => console.log('Attach instance:', row.id) },
+              { id: 'detach-instance', label: 'Detach Instance', onClick: () => console.log('Detach instance:', row.id) },
+              { id: 'boot-setting', label: 'Boot Setting', onClick: () => console.log('Boot setting:', row.id) },
+            ],
           },
           {
-            id: 'snapshot',
-            label: 'Create Snapshot',
-            onClick: () => console.log('Create snapshot:', row.id),
+            id: 'configuration',
+            label: 'Configuration',
+            submenu: [
+              { id: 'edit', label: 'Edit', onClick: () => console.log('Edit:', row.id) },
+              { id: 'extend-volume', label: 'Extend Volume', onClick: () => console.log('Extend volume:', row.id) },
+              { id: 'change-volume-type', label: 'Change Volume Type', onClick: () => console.log('Change volume type:', row.id) },
+            ],
           },
           {
-            id: 'transfer',
-            label: 'Transfer Volume',
-            onClick: () => console.log('Transfer volume:', row.id),
+            id: 'create-transfer',
+            label: 'Create Transfer',
+            onClick: () => console.log('Create transfer:', row.id),
+          },
+          {
+            id: 'cancel-transfer',
+            label: 'Cancel Transfer',
+            onClick: () => console.log('Cancel transfer:', row.id),
           },
           {
             id: 'delete',
@@ -257,22 +298,37 @@ export function VolumesPage() {
     },
   ];
 
+  // Filter and order columns based on preferences
+  const visibleColumns = useMemo(() => {
+    const visibleColumnIds = columnConfig
+      .filter((col) => col.visible)
+      .map((col) => col.id);
+
+    const columnMap = new Map(columns.map((col) => [col.key, col]));
+
+    return visibleColumnIds
+      .map((id) => columnMap.get(id))
+      .filter((col): col is TableColumn<Volume> => col !== undefined);
+  }, [columns, columnConfig]);
+
   return (
     <div className="min-h-screen bg-[var(--color-surface-subtle)]">
       <Sidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(false)} />
 
       <main
-        className={`min-h-screen bg-[var(--color-surface-default)] transition-[margin] duration-200 ${
+        className={`min-h-screen bg-[var(--color-surface-default)] transition-[margin] duration-200 overflow-x-auto ${
           sidebarOpen ? 'ml-[200px]' : 'ml-0'
         }`}
       >
+        <div className="min-w-[var(--layout-content-min-width)]">
         {/* Tab Bar */}
         <TabBar
           tabs={tabBarTabs}
           activeTab={activeTabId}
           onTabChange={selectTab}
           onTabClose={closeTab}
-          showAddButton={false}
+          onTabAdd={addNewTab}
+          showAddButton={true}
           showWindowControls={true}
         />
 
@@ -349,6 +405,7 @@ export function VolumesPage() {
                 totalPages={totalPages}
                 onPageChange={setCurrentPage}
                 showSettings
+                onSettingsClick={() => setIsPreferencesOpen(true)}
                 totalItems={filteredVolumes.length}
                 selectedCount={selectedVolumes.length}
               />
@@ -356,8 +413,8 @@ export function VolumesPage() {
 
             {/* Volumes Table */}
             <Table<Volume>
-              columns={columns}
-              data={filteredVolumes}
+              columns={visibleColumns}
+              data={filteredVolumes.slice((currentPage - 1) * rowsPerPage, currentPage * rowsPerPage)}
               rowKey="id"
               selectable
               selectedKeys={selectedVolumes}
@@ -365,6 +422,7 @@ export function VolumesPage() {
               emptyMessage="No volumes found"
             />
           </VStack>
+        </div>
         </div>
       </main>
 
@@ -380,6 +438,17 @@ export function VolumesPage() {
         confirmVariant="danger"
         infoLabel="Volume name"
         infoValue={volumeToDelete?.name}
+      />
+
+      {/* View Preferences Drawer */}
+      <ViewPreferencesDrawer
+        isOpen={isPreferencesOpen}
+        onClose={() => setIsPreferencesOpen(false)}
+        rowsPerPage={rowsPerPage}
+        onRowsPerPageChange={setRowsPerPage}
+        columns={columnConfig}
+        defaultColumns={defaultColumnConfig}
+        onColumnsChange={setColumnConfig}
       />
     </div>
   );
