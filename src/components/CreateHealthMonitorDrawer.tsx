@@ -151,7 +151,7 @@ export function CreateHealthMonitorDrawer({
 
         {/* Health Monitor Name */}
         <VStack gap={2} className="w-full">
-          <HStack gap={1.5} items="center">
+          <HStack gap={2} className="items-center">
             <label className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
               Health Monitor Name
             </label>
@@ -249,7 +249,7 @@ export function CreateHealthMonitorDrawer({
           <label className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
             Admin State
           </label>
-          <HStack gap={2} items="center">
+          <HStack gap={2} className="items-center">
             <Toggle 
               checked={adminStateUp} 
               onChange={(e) => setAdminStateUp(e.target.checked)} 

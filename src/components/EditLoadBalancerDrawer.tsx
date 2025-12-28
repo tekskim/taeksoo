@@ -118,7 +118,7 @@ export function EditLoadBalancerDrawer({
 
         {/* Description Input */}
         <VStack gap={2} className="w-full">
-          <HStack gap={1} items="center">
+          <HStack gap={1} className="items-center">
             <label className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
               Description
             </label>
@@ -151,7 +151,7 @@ export function EditLoadBalancerDrawer({
 
           {/* Admin State Toggle (Collapsible) */}
           {isAdvancedExpanded && (
-            <HStack gap={2} items="center">
+            <HStack gap={2} className="items-center">
               <Toggle 
                 checked={adminStateUp} 
                 onChange={(e) => setAdminStateUp(e.target.checked)} 

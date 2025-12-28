@@ -235,7 +235,7 @@ export function EditMemberDrawer({
                 <label className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
                   Backup
                 </label>
-                <HStack gap={2} items="center">
+                <HStack gap={2} className="items-center">
                   <Toggle 
                     checked={backup} 
                     onChange={(e) => setBackup(e.target.checked)} 
@@ -251,7 +251,7 @@ export function EditMemberDrawer({
                 <label className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
                   Admin State
                 </label>
-                <HStack gap={2} items="center">
+                <HStack gap={2} className="items-center">
                   <Toggle 
                     checked={adminStateUp} 
                     onChange={(e) => setAdminStateUp(e.target.checked)} 

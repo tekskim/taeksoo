@@ -102,7 +102,7 @@ export function EditFloatingIPDrawer({
 
         {/* Description Input */}
         <VStack gap={2} className="w-full">
-          <HStack gap={1} items="center">
+          <HStack gap={1} className="items-center">
             <label className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
               Description
             </label>

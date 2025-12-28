@@ -94,7 +94,7 @@ interface PolicyRadioOptionProps {
 
 function PolicyRadioOption({ value, label, tooltip }: PolicyRadioOptionProps) {
   return (
-    <HStack gap={1.5} className="items-start">
+    <HStack gap={2} className="items-start">
       <Radio value={value} label={label} />
       <Tooltip content={tooltip}>
         <button type="button" className="p-0 mt-0.5">

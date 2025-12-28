@@ -131,7 +131,7 @@ export function EditNetworkDrawer({
 
         {/* Description Input */}
         <VStack gap={2} className="w-full">
-          <HStack gap={1} items="center">
+          <HStack gap={1} className="items-center">
             <label className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
               Description
             </label>
@@ -174,7 +174,7 @@ export function EditNetworkDrawer({
                   Setting it to "Down" disables all related network or control operations, regardless of runtime status.
                 </p>
               </VStack>
-              <HStack gap={2} items="center">
+              <HStack gap={2} className="items-center">
                 <Toggle 
                   checked={adminStateUp} 
                   onChange={(e) => setAdminStateUp(e.target.checked)} 
@@ -195,7 +195,7 @@ export function EditNetworkDrawer({
                   Enhances security by allowing only permitted devices to access this network. It is recommended to keep this enabled in most cases.
                 </p>
               </VStack>
-              <HStack gap={2} items="center">
+              <HStack gap={2} className="items-center">
                 <Toggle 
                   checked={portSecurityEnabled} 
                   onChange={(e) => setPortSecurityEnabled(e.target.checked)} 

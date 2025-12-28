@@ -1,11 +1,9 @@
 import { useState } from 'react';
-import { useDarkMode } from '@/hooks/useDarkMode';
 import { useTabs } from '@/contexts/TabContext';
 import { Sidebar } from '@/components/Sidebar';
 import { TabBar } from '@/components/TabBar';
-import { TopBar } from '@/design-system';
+import { TopBar, Breadcrumb } from '@/design-system';
 import { Button, VStack, HStack, Badge } from '@/design-system';
-import { IconLayoutSidebar } from '@tabler/icons-react';
 
 // Import all drawer components
 import { CreateInstanceSnapshotDrawer, type InstanceInfo as SnapshotInstanceInfo } from '@/components/CreateInstanceSnapshotDrawer';
@@ -247,8 +245,7 @@ const DrawerCard = DrawerListItem;
    ---------------------------------------- */
 
 export function DrawersPage() {
-  const { isDark, toggle: toggleDarkMode } = useDarkMode();
-  const { tabs, activeTabId, setActiveTab, removeTab, addNewTab } = useTabs();
+  const { tabs, activeTabId, selectTab, closeTab, addNewTab } = useTabs();
   const [sidebarOpen, setSidebarOpen] = useState(true);
 
   // Drawer states
@@ -311,21 +308,31 @@ export function DrawersPage() {
         <div className="min-w-[var(--layout-content-min-width)]">
           {/* TabBar */}
           <TabBar
-            tabs={tabs}
-            activeTabId={activeTabId}
-            onTabClick={setActiveTab}
-            onTabClose={removeTab}
-            onTabAdd={addNewTab}
+            tabs={tabs.map((tab) => ({
+              id: tab.id,
+              label: tab.label,
+              active: tab.id === activeTabId,
+            }))}
+            onTabClick={selectTab}
+            onTabClose={closeTab}
+            onNewTab={addNewTab}
           />
 
           {/* TopBar */}
           <TopBar
-            title="Drawers"
-            isDark={isDark}
-            onDarkModeToggle={toggleDarkMode}
             showSidebarToggle={!sidebarOpen}
             onSidebarToggle={() => setSidebarOpen(true)}
-            sidebarToggleIcon={<IconLayoutSidebar size={16} stroke={1.5} />}
+            showNavigation={true}
+            onBack={() => window.history.back()}
+            onForward={() => window.history.forward()}
+            breadcrumb={
+              <Breadcrumb
+                items={[
+                  { label: 'Design System', href: '/design-system' },
+                  { label: 'Drawers' },
+                ]}
+              />
+            }
           />
 
           {/* Content */}

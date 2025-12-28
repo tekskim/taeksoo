@@ -171,7 +171,7 @@ export function AddL7PolicyDrawer({
 
         {/* Position Input */}
         <VStack gap={2} className="w-full">
-          <HStack gap={1.5} className="items-center">
+          <HStack gap={2} className="items-center">
             <label className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
               Position
             </label>

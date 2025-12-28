@@ -122,8 +122,6 @@ export function VolumesPage() {
     closable: tab.closable,
   }));
 
-  const pageSize = 10;
-
   // Handle delete volume
   const handleDeleteClick = (volume: Volume) => {
     setVolumeToDelete(volume);

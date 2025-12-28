@@ -428,7 +428,7 @@ export function EditListenerDrawer({
                 <label className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
                   Listener Admin State
                 </label>
-                <HStack gap={2} items="center">
+                <HStack gap={2} className="items-center">
                   <Toggle 
                     checked={adminStateUp} 
                     onChange={(e) => setAdminStateUp(e.target.checked)} 
