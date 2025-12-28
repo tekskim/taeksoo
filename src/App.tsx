@@ -76,7 +76,7 @@ function AppRoutes() {
 function App() {
   return (
     <DarkModeProvider>
-      <BrowserRouter>
+      <BrowserRouter basename="/topology">
         <AppRoutes />
       </BrowserRouter>
     </DarkModeProvider>
