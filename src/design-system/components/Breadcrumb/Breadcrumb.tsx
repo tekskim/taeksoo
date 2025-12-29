@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react';
+import { Link } from 'react-router-dom';
 import { twMerge } from 'tailwind-merge';
 import { IconChevronRight } from '@tabler/icons-react';
 
@@ -88,14 +89,14 @@ export function Breadcrumb({
                   {item.label}
                 </span>
               ) : item.href ? (
-                <a
-                  href={item.href}
+                <Link
+                  to={item.href}
                   onClick={item.onClick}
                   className="text-[length:var(--breadcrumb-font-size)] leading-[var(--breadcrumb-line-height)] font-medium text-[var(--breadcrumb-text-color)] hover:text-[var(--breadcrumb-text-hover)] transition-colors duration-[var(--duration-fast)]"
                 >
                   {item.icon && <span className="mr-1">{item.icon}</span>}
                   {item.label}
-                </a>
+                </Link>
               ) : (
                 <button
                   type="button"

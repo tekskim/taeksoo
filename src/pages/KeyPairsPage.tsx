@@ -20,13 +20,14 @@ import { useTabs } from '@/contexts/TabContext';
 import { ViewPreferencesDrawer, type ColumnConfig } from '@/components/ViewPreferencesDrawer';
 import {
   IconPlus,
-  IconDotsVertical,
+  IconDotsCircleHorizontal,
   IconTrash,
   IconDownload,
   IconBell,
   IconCopy,
   IconCheck,
 } from '@tabler/icons-react';
+import { Link } from 'react-router-dom';
 
 /* ----------------------------------------
    Types
@@ -63,7 +64,6 @@ const mockKeyPairs: KeyPair[] = [
 export function KeyPairsPage() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedKeyPairs, setSelectedKeyPairs] = useState<string[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [keyPairs, setKeyPairs] = useState(mockKeyPairs);
   
@@ -148,13 +148,13 @@ export function KeyPairsPage() {
       width: '200px',
       sortable: true,
       render: (_, row) => (
-        <a
-          href={`/key-pairs/${row.id}`}
+        <Link
+          to={`/key-pairs/${row.id}`}
           className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
           onClick={(e) => e.stopPropagation()}
         >
           {row.name}
-        </a>
+        </Link>
       ),
     },
     {
@@ -206,7 +206,7 @@ export function KeyPairsPage() {
           <div onClick={(e) => e.stopPropagation()}>
             <ContextMenu items={menuItems} trigger="click">
               <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors">
-                <IconDotsVertical size={16} stroke={1} className="text-[var(--color-text-subtle)]" />
+                <IconDotsCircleHorizontal size={16} stroke={1} className="text-[var(--color-text-subtle)]" />
               </button>
             </ContextMenu>
           </div>
@@ -321,7 +321,6 @@ export function KeyPairsPage() {
                 showSettings
                 onSettingsClick={() => setIsPreferencesOpen(true)}
                 totalItems={filteredKeyPairs.length}
-                selectedCount={selectedKeyPairs.length}
               />
             )}
 
@@ -330,9 +329,6 @@ export function KeyPairsPage() {
               columns={visibleColumns}
               data={filteredKeyPairs.slice((currentPage - 1) * rowsPerPage, currentPage * rowsPerPage)}
               rowKey="id"
-              selectable
-              selectedKeys={selectedKeyPairs}
-              onSelectionChange={setSelectedKeyPairs}
               emptyMessage="No key pairs found"
             />
           </VStack>

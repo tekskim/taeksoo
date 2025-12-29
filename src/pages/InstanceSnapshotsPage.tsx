@@ -21,11 +21,12 @@ import { useTabs } from '@/contexts/TabContext';
 import { ViewPreferencesDrawer, type ColumnConfig } from '@/components/ViewPreferencesDrawer';
 import {
   IconPlus,
-  IconDotsVertical,
+  IconDotsCircleHorizontal,
   IconTrash,
   IconDownload,
   IconBell,
 } from '@tabler/icons-react';
+import { Link } from 'react-router-dom';
 
 /* ----------------------------------------
    Types
@@ -169,7 +170,6 @@ const mockSnapshots: InstanceSnapshot[] = [
 export function InstanceSnapshotsPage() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedSnapshots, setSelectedSnapshots] = useState<string[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [snapshots, setSnapshots] = useState(mockSnapshots);
 
@@ -263,13 +263,13 @@ export function InstanceSnapshotsPage() {
       sortable: true,
       render: (_, row) => (
         <div className="flex flex-col gap-0.5">
-          <a
-            href={`/instance-snapshots/${row.id}`}
+          <Link
+          to={`/instance-snapshots/${row.id}`}
             className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
             onClick={(e) => e.stopPropagation()}
           >
             {row.name}
-          </a>
+          </Link>
           <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
             ID : {row.id}
           </span>
@@ -295,13 +295,13 @@ export function InstanceSnapshotsPage() {
       sortable: true,
       render: (_, row) => (
         <div className="flex flex-col gap-0.5">
-          <a
-            href={`/instances/${row.sourceInstanceId}`}
+          <Link
+          to={`/instances/${row.sourceInstanceId}`}
             className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
             onClick={(e) => e.stopPropagation()}
           >
             {row.sourceInstance}
-          </a>
+          </Link>
           <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
             ID : {row.sourceInstanceId}
           </span>
@@ -354,7 +354,7 @@ export function InstanceSnapshotsPage() {
           <div onClick={(e) => e.stopPropagation()}>
             <ContextMenu items={menuItems} trigger="click">
               <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors">
-                <IconDotsVertical size={16} stroke={1} className="text-[var(--color-text-subtle)]" />
+                <IconDotsCircleHorizontal size={16} stroke={1} className="text-[var(--color-text-subtle)]" />
               </button>
             </ContextMenu>
           </div>
@@ -476,7 +476,6 @@ export function InstanceSnapshotsPage() {
                 showSettings
                 onSettingsClick={() => setIsPreferencesOpen(true)}
                 totalItems={filteredSnapshots.length}
-                selectedCount={selectedSnapshots.length}
               />
             )}
 
@@ -485,9 +484,6 @@ export function InstanceSnapshotsPage() {
               columns={visibleColumns}
               data={filteredSnapshots.slice((currentPage - 1) * rowsPerPage, currentPage * rowsPerPage)}
               rowKey="id"
-              selectable
-              selectedKeys={selectedSnapshots}
-              onSelectionChange={setSelectedSnapshots}
               emptyMessage="No snapshots found"
             />
           </VStack>

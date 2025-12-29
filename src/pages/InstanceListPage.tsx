@@ -25,7 +25,7 @@ import { Sidebar } from '@/components/Sidebar';
 import { useTabs } from '@/contexts/TabContext';
 import {
   IconPlus,
-  IconDotsVertical,
+  IconDotsCircleHorizontal,
   IconPlayerPlay,
   IconPlayerStop,
   IconTrash,
@@ -40,6 +40,7 @@ import { ViewPreferencesDrawer, type ColumnConfig } from '@/components/ViewPrefe
 import { CreateInstanceSnapshotDrawer, type InstanceInfo } from '@/components/CreateInstanceSnapshotDrawer';
 import { LockSettingDrawer, type InstanceInfo as LockInstanceInfo } from '@/components/LockSettingDrawer';
 import { EditInstanceDrawer, type InstanceInfo as EditInstanceInfo } from '@/components/EditInstanceDrawer';
+import { Link } from 'react-router-dom';
 
 /* ----------------------------------------
    Types
@@ -129,8 +130,6 @@ const statusMap: Record<InstanceStatus, StatusType> = {
 export function InstanceListPage() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedInstances, setSelectedInstances] = useState<string[]>([]);
-  const [selectedBareMetalInstances, setSelectedBareMetalInstances] = useState<string[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [currentBareMetalPage, setCurrentBareMetalPage] = useState(1);
   const [activeTab, setActiveTab] = useState('vm');
@@ -364,13 +363,13 @@ export function InstanceListPage() {
       sortable: true,
       render: (_, row) => (
         <div className="flex flex-col gap-0.5">
-          <a 
-            href={`/instances/${row.id}`}
+          <Link 
+            to={`/instances/${row.id}`}
             className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
             onClick={(e) => e.stopPropagation()}
           >
             {row.name}
-          </a>
+          </Link>
           <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
             ID : {row.id}
           </span>
@@ -406,13 +405,13 @@ export function InstanceListPage() {
       sortable: true,
       render: (_, row) => (
         <div className="flex flex-col gap-0.5">
-          <a 
-            href={`/images/${row.id}`}
+          <Link 
+            to={`/images/${row.id}`}
             className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
             onClick={(e) => e.stopPropagation()}
           >
             {row.image}
-          </a>
+          </Link>
           <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
             ID : {row.id.substring(0, 8)}
           </span>
@@ -426,13 +425,13 @@ export function InstanceListPage() {
       sortable: true,
       render: (_, row) => (
         <div className="flex flex-col gap-0.5">
-          <a 
-            href={`/flavors/${row.id}`}
+          <Link 
+            to={`/flavors/${row.id}`}
             className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
             onClick={(e) => e.stopPropagation()}
           >
             {row.flavor}
-          </a>
+          </Link>
           <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
             ID : {row.id.substring(0, 8)}
           </span>
@@ -482,7 +481,7 @@ export function InstanceListPage() {
           <div onClick={(e) => e.stopPropagation()}>
             <ContextMenu items={getInstanceContextMenuItems(row)} trigger="click">
               <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
-                <IconDotsVertical size={16} stroke={1} className="text-[var(--color-text-subtle)] group-hover:text-[var(--color-text-default)]" />
+                <IconDotsCircleHorizontal size={16} stroke={1} className="text-[var(--color-text-subtle)] group-hover:text-[var(--color-text-default)]" />
               </button>
             </ContextMenu>
           </div>
@@ -523,13 +522,13 @@ export function InstanceListPage() {
       sortable: true,
       render: (_, row) => (
         <div className="flex flex-col gap-0.5">
-          <a 
-            href={`/bare-metal/${row.id}`}
+          <Link 
+            to={`/bare-metal/${row.id}`}
             className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
             onClick={(e) => e.stopPropagation()}
           >
             {row.name}
-          </a>
+          </Link>
           <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
             ID : {row.id}
           </span>
@@ -549,13 +548,13 @@ export function InstanceListPage() {
       sortable: true,
       render: (_, row) => (
         <div className="flex flex-col gap-0.5">
-          <a 
-            href={`/images/${row.id}`}
+          <Link 
+            to={`/images/${row.id}`}
             className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
             onClick={(e) => e.stopPropagation()}
           >
             {row.image}
-          </a>
+          </Link>
           <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
             ID : {row.id.substring(0, 8)}
           </span>
@@ -569,13 +568,13 @@ export function InstanceListPage() {
       sortable: true,
       render: (_, row) => (
         <div className="flex flex-col gap-0.5">
-          <a 
-            href={`/flavors/${row.id}`}
+          <Link 
+            to={`/flavors/${row.id}`}
             className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
             onClick={(e) => e.stopPropagation()}
           >
             {row.flavor}
-          </a>
+          </Link>
           <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
             ID : {row.id.substring(0, 8)}
           </span>
@@ -697,16 +696,16 @@ export function InstanceListPage() {
               }
               bulkActions={
                 <ListToolbar.Actions>
-                  <Button variant="muted" size="sm" leftIcon={<IconPlayerPlay size={12} />} disabled={selectedInstances.length === 0}>
+                  <Button variant="muted" size="sm" leftIcon={<IconPlayerPlay size={12} />} disabled>
                     Start
                   </Button>
-                  <Button variant="muted" size="sm" leftIcon={<IconPlayerStop size={12} />} disabled={selectedInstances.length === 0}>
+                  <Button variant="muted" size="sm" leftIcon={<IconPlayerStop size={12} />} disabled>
                     Stop
                   </Button>
-                  <Button variant="muted" size="sm" leftIcon={<IconRefresh size={12} />} disabled={selectedInstances.length === 0}>
+                  <Button variant="muted" size="sm" leftIcon={<IconRefresh size={12} />} disabled>
                     Reboot
                   </Button>
-                  <Button variant="muted" size="sm" leftIcon={<IconTrash size={12} />} disabled={selectedInstances.length === 0}>
+                  <Button variant="muted" size="sm" leftIcon={<IconTrash size={12} />} disabled>
                     Delete
                   </Button>
                 </ListToolbar.Actions>
@@ -725,7 +724,6 @@ export function InstanceListPage() {
                 showSettings
                 onSettingsClick={() => setIsPreferencesOpen(true)}
                 totalItems={mockInstances.length}
-                selectedCount={selectedInstances.length}
               />
             )}
             {activeTab === 'bare-metal' && filteredBareMetalInstances.length > 0 && (
@@ -736,7 +734,6 @@ export function InstanceListPage() {
                 showSettings
                 onSettingsClick={() => setIsPreferencesOpen(true)}
                 totalItems={mockBareMetalInstances.length}
-                selectedCount={selectedBareMetalInstances.length}
               />
             )}
 
@@ -746,9 +743,6 @@ export function InstanceListPage() {
                 columns={visibleColumns}
                 data={paginatedInstances}
                 rowKey="id"
-                selectable
-                selectedKeys={selectedInstances}
-                onSelectionChange={setSelectedInstances}
                 emptyMessage="No instances found"
               />
             )}
@@ -759,9 +753,6 @@ export function InstanceListPage() {
                 columns={bareMetalColumns}
                 data={paginatedBareMetalInstances}
                 rowKey="id"
-                selectable
-                selectedKeys={selectedBareMetalInstances}
-                onSelectionChange={setSelectedBareMetalInstances}
                 emptyMessage="No bare metal instances found"
               />
             )}

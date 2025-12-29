@@ -20,12 +20,13 @@ import { Sidebar } from '@/components/Sidebar';
 import { useTabs } from '@/contexts/TabContext';
 import { ViewPreferencesDrawer, type ColumnConfig } from '@/components/ViewPreferencesDrawer';
 import {
-  IconDotsVertical,
+  IconDotsCircleHorizontal,
   IconTrash,
   IconDownload,
   IconBell,
   IconExternalLink,
 } from '@tabler/icons-react';
+import { Link } from 'react-router-dom';
 
 /* ----------------------------------------
    Types
@@ -78,7 +79,6 @@ const routerStatusMap: Record<RouterStatus, 'active' | 'error' | 'building'> = {
 export function RoutersPage() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedRouters, setSelectedRouters] = useState<string[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [routers] = useState(mockRouters);
   
@@ -158,13 +158,13 @@ export function RoutersPage() {
       flex: 1,
       sortable: true,
       render: (_, row) => (
-        <a
-          href={`/routers/${row.id}`}
+        <Link
+          to={`/routers/${row.id}`}
           className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
           onClick={(e) => e.stopPropagation()}
         >
           {row.name}
-        </a>
+        </Link>
       ),
     },
     {
@@ -187,14 +187,14 @@ export function RoutersPage() {
       render: (_, row) => (
         row.externalNetworkId ? (
           <div className="flex flex-col gap-0.5">
-            <a
-              href={`/networks/${row.externalNetworkId}`}
+            <Link
+          to={`/networks/${row.externalNetworkId}`}
               className="inline-flex items-center gap-1.5 font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
               onClick={(e) => e.stopPropagation()}
             >
               {row.externalNetwork}
               <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
-            </a>
+            </Link>
             <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
               ID : {row.externalNetworkId}
             </span>
@@ -216,7 +216,7 @@ export function RoutersPage() {
         <div onClick={(e) => e.stopPropagation()}>
           <ContextMenu items={getContextMenuItems(row)} trigger="click">
             <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors">
-              <IconDotsVertical size={16} stroke={1} className="text-[var(--color-text-subtle)]" />
+              <IconDotsCircleHorizontal size={16} stroke={1} className="text-[var(--color-text-subtle)]" />
             </button>
           </ContextMenu>
         </div>
@@ -337,7 +337,6 @@ export function RoutersPage() {
               totalPages={totalPages}
               totalItems={filteredRouters.length}
               onPageChange={setCurrentPage}
-              selectedCount={selectedRouters.length}
               showSettings
               onSettingsClick={() => setIsPreferencesOpen(true)}
             />
@@ -347,9 +346,6 @@ export function RoutersPage() {
               columns={visibleColumns}
               data={paginatedRouters}
               rowKey="id"
-              selectable
-              selectedKeys={selectedRouters}
-              onSelectionChange={setSelectedRouters}
             />
           </VStack>
         </div>

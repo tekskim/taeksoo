@@ -21,10 +21,11 @@ import { Sidebar } from '@/components/Sidebar';
 import { useTabs } from '@/contexts/TabContext';
 import { ViewPreferencesDrawer, type ColumnConfig } from '@/components/ViewPreferencesDrawer';
 import {
-  IconDotsVertical,
+  IconDotsCircleHorizontal,
   IconDownload,
   IconBell,
 } from '@tabler/icons-react';
+import { Link } from 'react-router-dom';
 
 /* ----------------------------------------
    Types
@@ -146,13 +147,13 @@ export function FlavorsPage() {
       flex: 1,
       sortable: true,
       render: (_, row) => (
-        <a
-          href={`/flavors/${row.id}`}
+        <Link
+          to={`/flavors/${row.id}`}
           className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
           onClick={(e) => e.stopPropagation()}
         >
           {row.name}
-        </a>
+        </Link>
       ),
     },
     {
@@ -216,7 +217,7 @@ export function FlavorsPage() {
           <div onClick={(e) => e.stopPropagation()}>
             <ContextMenu items={menuItems} trigger="click">
               <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors">
-                <IconDotsVertical size={16} stroke={1} className="text-[var(--color-text-subtle)]" />
+                <IconDotsCircleHorizontal size={16} stroke={1} className="text-[var(--color-text-subtle)]" />
               </button>
             </ContextMenu>
           </div>

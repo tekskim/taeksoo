@@ -15,6 +15,7 @@ import {
   ListToolbar,
   ContextMenu,
   ConfirmModal,
+  Checkbox,
   type TableColumn,
   type ContextMenuItem,
 } from '@/design-system';
@@ -23,13 +24,14 @@ import { useTabs } from '@/contexts/TabContext';
 import { ViewPreferencesDrawer, type ColumnConfig } from '@/components/ViewPreferencesDrawer';
 import {
   IconPlus,
-  IconDotsVertical,
+  IconDotsCircleHorizontal,
   IconTrash,
   IconDownload,
   IconBell,
   IconStar,
   IconStarFilled,
 } from '@tabler/icons-react';
+import { Link } from 'react-router-dom';
 
 /* ----------------------------------------
    Types
@@ -75,7 +77,6 @@ const mockTemplates: InstanceTemplate[] = [
 export function InstanceTemplatesPage() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedTemplates, setSelectedTemplates] = useState<string[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [activeTab, setActiveTab] = useState('favorites');
   const [templates, setTemplates] = useState(mockTemplates);
@@ -84,12 +85,16 @@ export function InstanceTemplatesPage() {
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [templateToDelete, setTemplateToDelete] = useState<InstanceTemplate | null>(null);
 
+  // Selection state
+  const [selectedTemplates, setSelectedTemplates] = useState<string[]>([]);
+
   // View Preferences state
   const [isPreferencesOpen, setIsPreferencesOpen] = useState(false);
   const [rowsPerPage, setRowsPerPage] = useState(10);
 
   // Default column config
   const defaultColumnConfig: ColumnConfig[] = [
+    { id: 'selection', label: '', visible: true, locked: true },
     { id: 'favorite', label: '', visible: true, locked: true },
     { id: 'name', label: 'Name', visible: true, locked: true },
     { id: 'image', label: 'Image', visible: true },
@@ -99,6 +104,7 @@ export function InstanceTemplatesPage() {
     { id: 'disk', label: 'Disk', visible: true },
     { id: 'network', label: 'Network', visible: true },
     { id: 'floatingIp', label: 'Floating IP', visible: true },
+    { id: 'access', label: 'Access', visible: true },
     { id: 'actions', label: 'Action', visible: true, locked: true },
   ];
   const [columnConfig, setColumnConfig] = useState<ColumnConfig[]>(defaultColumnConfig);
@@ -174,6 +180,33 @@ export function InstanceTemplatesPage() {
     );
   };
 
+  // Selection handlers
+  const toggleSelection = (id: string) => {
+    setSelectedTemplates((prev) =>
+      prev.includes(id) ? prev.filter((i) => i !== id) : [...prev, id]
+    );
+  };
+
+  const toggleAllSelection = () => {
+    const currentPageIds = filteredTemplates
+      .slice((currentPage - 1) * rowsPerPage, currentPage * rowsPerPage)
+      .map((t) => t.id);
+    
+    const allSelected = currentPageIds.every((id) => selectedTemplates.includes(id));
+    
+    if (allSelected) {
+      setSelectedTemplates((prev) => prev.filter((id) => !currentPageIds.includes(id)));
+    } else {
+      setSelectedTemplates((prev) => [...new Set([...prev, ...currentPageIds])]);
+    }
+  };
+
+  // Bulk delete handler
+  const handleBulkDelete = () => {
+    setTemplates((prev) => prev.filter((t) => !selectedTemplates.includes(t.id)));
+    setSelectedTemplates([]);
+  };
+
   // Tab counts
   const tabCounts = useMemo(() => ({
     favorites: templates.filter((t) => t.favorite).length,
@@ -183,8 +216,37 @@ export function InstanceTemplatesPage() {
     all: templates.length,
   }), [templates]);
 
+  // Get current page IDs for "select all" checkbox state
+  const currentPageIds = filteredTemplates
+    .slice((currentPage - 1) * rowsPerPage, currentPage * rowsPerPage)
+    .map((t) => t.id);
+  const allCurrentPageSelected = currentPageIds.length > 0 && currentPageIds.every((id) => selectedTemplates.includes(id));
+  const someCurrentPageSelected = currentPageIds.some((id) => selectedTemplates.includes(id));
+
   // Table columns
   const columns: TableColumn<InstanceTemplate>[] = [
+    {
+      key: 'selection',
+      label: '',
+      width: '40px',
+      align: 'center',
+      headerRender: () => (
+        <Checkbox
+          checked={allCurrentPageSelected}
+          indeterminate={someCurrentPageSelected && !allCurrentPageSelected}
+          onChange={toggleAllSelection}
+          aria-label="Select all"
+        />
+      ),
+      render: (_, row) => (
+        <Checkbox
+          checked={selectedTemplates.includes(row.id)}
+          onChange={() => toggleSelection(row.id)}
+          onClick={(e) => e.stopPropagation()}
+          aria-label={`Select ${row.name}`}
+        />
+      ),
+    },
     {
       key: 'favorite',
       label: '',
@@ -212,13 +274,13 @@ export function InstanceTemplatesPage() {
       flex: 1,
       sortable: true,
       render: (_, row) => (
-        <a
-          href={`/instance-templates/${row.id}`}
+        <Link
+          to={`/instance-templates/${row.id}`}
           className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
           onClick={(e) => e.stopPropagation()}
         >
           {row.name}
-        </a>
+        </Link>
       ),
     },
     {
@@ -299,7 +361,7 @@ export function InstanceTemplatesPage() {
           <div onClick={(e) => e.stopPropagation()}>
             <ContextMenu items={menuItems} trigger="click">
               <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors">
-                <IconDotsVertical size={16} stroke={1} className="text-[var(--color-text-subtle)]" />
+                <IconDotsCircleHorizontal size={16} stroke={1} className="text-[var(--color-text-subtle)]" />
               </button>
             </ContextMenu>
           </div>
@@ -409,7 +471,13 @@ export function InstanceTemplatesPage() {
               }
               bulkActions={
                 <ListToolbar.Actions>
-                  <Button variant="muted" size="sm" leftIcon={<IconTrash size={12} />} disabled={selectedTemplates.length === 0}>
+                  <Button 
+                    variant="muted" 
+                    size="sm" 
+                    leftIcon={<IconTrash size={12} />} 
+                    disabled={selectedTemplates.length === 0}
+                    onClick={handleBulkDelete}
+                  >
                     Delete
                   </Button>
                 </ListToolbar.Actions>
@@ -425,7 +493,6 @@ export function InstanceTemplatesPage() {
                 showSettings
                 onSettingsClick={() => setIsPreferencesOpen(true)}
                 totalItems={filteredTemplates.length}
-                selectedCount={selectedTemplates.length}
               />
             )}
 
@@ -434,9 +501,6 @@ export function InstanceTemplatesPage() {
               columns={visibleColumns}
               data={filteredTemplates.slice((currentPage - 1) * rowsPerPage, currentPage * rowsPerPage)}
               rowKey="id"
-              selectable
-              selectedKeys={selectedTemplates}
-              onSelectionChange={setSelectedTemplates}
               emptyMessage="No templates found"
             />
           </VStack>
