@@ -11,10 +11,15 @@ import { ImageDetailPage } from '@/pages/ImageDetailPage';
 import { FlavorsPage } from '@/pages/FlavorsPage';
 import { FlavorDetailPage } from '@/pages/FlavorDetailPage';
 import { KeyPairsPage } from '@/pages/KeyPairsPage';
+import { KeyPairDetailPage } from '@/pages/KeyPairDetailPage';
 import { ServerGroupsPage } from '@/pages/ServerGroupsPage';
+import { ServerGroupDetailPage } from '@/pages/ServerGroupDetailPage';
 import { VolumesPage } from '@/pages/VolumesPage';
+import { VolumeDetailPage } from '@/pages/VolumeDetailPage';
 import { VolumeSnapshotsPage } from '@/pages/VolumeSnapshotsPage';
+import { VolumeSnapshotDetailPage } from '@/pages/VolumeSnapshotDetailPage';
 import { VolumeBackupsPage } from '@/pages/VolumeBackupsPage';
+import { VolumeBackupDetailPage } from '@/pages/VolumeBackupDetailPage';
 import { NetworksPage } from '@/pages/NetworksPage';
 import { RoutersPage } from '@/pages/RoutersPage';
 import { PortsPage } from '@/pages/PortsPage';
@@ -53,10 +58,15 @@ function AppRoutes() {
         <Route path="/flavors" element={<FlavorsPage />} />
         <Route path="/flavors/:id" element={<FlavorDetailPage />} />
         <Route path="/key-pairs" element={<KeyPairsPage />} />
+        <Route path="/key-pairs/:id" element={<KeyPairDetailPage />} />
         <Route path="/server-groups" element={<ServerGroupsPage />} />
+        <Route path="/server-groups/:id" element={<ServerGroupDetailPage />} />
         <Route path="/volumes" element={<VolumesPage />} />
+        <Route path="/volumes/:id" element={<VolumeDetailPage />} />
         <Route path="/volume-snapshots" element={<VolumeSnapshotsPage />} />
+        <Route path="/volume-snapshots/:id" element={<VolumeSnapshotDetailPage />} />
         <Route path="/volume-backups" element={<VolumeBackupsPage />} />
+        <Route path="/volume-backups/:id" element={<VolumeBackupDetailPage />} />
         <Route path="/networks" element={<NetworksPage />} />
         <Route path="/routers" element={<RoutersPage />} />
         <Route path="/ports" element={<PortsPage />} />

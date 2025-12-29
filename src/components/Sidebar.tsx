@@ -43,12 +43,21 @@ export function Sidebar({ isOpen = true, onToggle }: SidebarProps) {
   const [selectedProjectId, setSelectedProjectId] = useState(mockProjects[0].id);
   const location = useLocation();
   
-  // Check if current path matches href (also handle root path for instances)
+  // Check if current path matches href (also handle detail pages and root path)
   const isActive = (href: string) => {
-    if (href === '/instances' && (location.pathname === '/' || location.pathname === '/instances')) {
+    // Handle root path for instances
+    if (href === '/instances' && location.pathname === '/') {
       return true;
     }
-    return location.pathname === href;
+    // Exact match
+    if (location.pathname === href) {
+      return true;
+    }
+    // Match detail pages (e.g., /volumes/vol-001 matches /volumes)
+    if (href !== '/home' && location.pathname.startsWith(href + '/')) {
+      return true;
+    }
+    return false;
   };
   
   if (!isOpen) return null;

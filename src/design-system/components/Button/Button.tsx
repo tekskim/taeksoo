@@ -211,6 +211,7 @@ export const Button: ButtonComponent = forwardRef(
       variant = 'primary',
       size = 'md',
       fullWidth,
+      iconOnly,
       isLoading = false,
       leftIcon,
       rightIcon,
@@ -224,7 +225,7 @@ export const Button: ButtonComponent = forwardRef(
     ref: PolymorphicRef<C>
   ) => {
     const Component = as || 'button';
-    const isIconOnly = !!icon;
+    const isIconOnly = iconOnly || !!icon;
     const isDisabled = disabled || isLoading;
 
     const classes = twMerge(
@@ -259,7 +260,7 @@ export const Button: ButtonComponent = forwardRef(
             <span className="sr-only">Loading...</span>
           </>
         ) : isIconOnly ? (
-          <span className="shrink-0 flex items-center justify-center">{icon}</span>
+          <span className="shrink-0 flex items-center justify-center">{icon || children}</span>
         ) : (
           <>
             {leftIcon && <span className="shrink-0">{leftIcon}</span>}

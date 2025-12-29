@@ -20,7 +20,6 @@ import { Sidebar } from '@/components/Sidebar';
 import { useTabs } from '@/contexts/TabContext';
 import { ViewPreferencesDrawer, type ColumnConfig } from '@/components/ViewPreferencesDrawer';
 import {
-  IconPlus,
   IconDotsCircleHorizontal,
   IconTrash,
   IconDownload,
@@ -85,6 +84,7 @@ export function LoadBalancersPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [loadBalancers] = useState(mockLoadBalancers);
+  const [selectedLBs, setSelectedLBs] = useState<string[]>([]);
   
   // Delete modal state
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
@@ -322,7 +322,7 @@ export function LoadBalancersPage() {
               <h1 className="text-[length:var(--font-size-16)] font-semibold text-[var(--color-text-default)]">
                 Load Balancers
               </h1>
-              <Button variant="primary" size="md" leftIcon={<IconPlus size={14} />}>
+              <Button variant="primary" size="md">
                 Create Load Balancer
               </Button>
             </div>
@@ -341,7 +341,7 @@ export function LoadBalancersPage() {
                       fullWidth
                     />
                   </div>
-                  <Button variant="secondary" size="sm" icon={<IconDownload size={12} />} aria-label="Download" />
+                  <Button variant="secondary" size="sm" iconOnly icon={<IconDownload size={12} />} aria-label="Download" />
                 </ListToolbar.Actions>
               }
               bulkActions={
@@ -373,6 +373,9 @@ export function LoadBalancersPage() {
               columns={visibleColumns}
               data={paginatedLBs}
               rowKey="id"
+              selectable
+              selectedRows={selectedLBs}
+              onSelectionChange={setSelectedLBs}
             />
           </VStack>
         </div>
