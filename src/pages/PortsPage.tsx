@@ -25,7 +25,7 @@ import { useTabs } from '@/contexts/TabContext';
 import { ViewPreferencesDrawer, type ColumnConfig } from '@/components/ViewPreferencesDrawer';
 import {
   IconPlus,
-  IconDotsVertical,
+  IconDotsCircleHorizontal,
   IconTrash,
   IconDownload,
   IconBell,
@@ -33,6 +33,7 @@ import {
   IconCube,
   IconRouter,
 } from '@tabler/icons-react';
+import { Link } from 'react-router-dom';
 
 /* ----------------------------------------
    Types
@@ -90,7 +91,6 @@ const portStatusMap: Record<PortStatus, 'active' | 'error' | 'building' | 'down'
 export function PortsPage() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedPorts, setSelectedPorts] = useState<string[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [ports] = useState(mockPorts);
   const [activeTab, setActiveTab] = useState('all');
@@ -186,13 +186,13 @@ export function PortsPage() {
       flex: 1,
       render: (_, row) => (
         <div className="flex flex-col gap-0.5">
-          <a
-            href={`/ports/${row.id}`}
+          <Link
+          to={`/ports/${row.id}`}
             className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
             onClick={(e) => e.stopPropagation()}
           >
             {row.name}
-          </a>
+          </Link>
           <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
             ID : {row.id}
           </span>
@@ -217,14 +217,14 @@ export function PortsPage() {
             </Tooltip>
             <div className="flex flex-col gap-0.5 min-w-0">
               <Tooltip content={row.attachedTo} position="top">
-                <a
-                  href={row.attachedType === 'router' ? `/routers/${row.attachedToId}` : `/instances/${row.attachedToId}`}
+                <Link
+          to={row.attachedType === 'router' ? `/routers/${row.attachedToId}` : `/instances/${row.attachedToId}`}
                   className="inline-flex items-center gap-1 font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
                   onClick={(e) => e.stopPropagation()}
                 >
                   <span className="truncate">{row.attachedTo}</span>
                   <IconExternalLink size={12} className="flex-shrink-0 text-[var(--color-action-primary)]" />
-                </a>
+                </Link>
               </Tooltip>
               <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] truncate">
                 ID : {row.attachedToId?.substring(0, 8)}
@@ -241,14 +241,14 @@ export function PortsPage() {
       render: (_, row) => (
         <div className="flex flex-col gap-0.5 min-w-0">
           <Tooltip content={row.ownedNetwork} position="top">
-            <a
-              href={`/networks/${row.ownedNetworkId}`}
+            <Link
+          to={`/networks/${row.ownedNetworkId}`}
               className="inline-flex items-center gap-1 font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
               onClick={(e) => e.stopPropagation()}
             >
               <span className="truncate">{row.ownedNetwork}</span>
               <IconExternalLink size={12} className="flex-shrink-0 text-[var(--color-action-primary)]" />
-            </a>
+            </Link>
           </Tooltip>
           <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] truncate">
             ID : {row.ownedNetworkId.substring(0, 8)}
@@ -285,7 +285,7 @@ export function PortsPage() {
         <div onClick={(e) => e.stopPropagation()}>
           <ContextMenu items={getContextMenuItems(row)} trigger="click">
             <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors">
-              <IconDotsVertical size={16} stroke={1} className="text-[var(--color-text-subtle)]" />
+              <IconDotsCircleHorizontal size={16} stroke={1} className="text-[var(--color-text-subtle)]" />
             </button>
           </ContextMenu>
         </div>
@@ -417,7 +417,6 @@ export function PortsPage() {
               totalPages={totalPages}
               totalItems={filteredPorts.length}
               onPageChange={setCurrentPage}
-              selectedCount={selectedPorts.length}
               showSettings
               onSettingsClick={() => setIsPreferencesOpen(true)}
             />
@@ -427,9 +426,6 @@ export function PortsPage() {
               columns={visibleColumns}
               data={paginatedPorts}
               rowKey="id"
-              selectable
-              selectedKeys={selectedPorts}
-              onSelectionChange={setSelectedPorts}
             />
           </VStack>
         </div>

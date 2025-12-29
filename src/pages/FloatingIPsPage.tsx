@@ -22,13 +22,14 @@ import { useTabs } from '@/contexts/TabContext';
 import { ViewPreferencesDrawer, type ColumnConfig } from '@/components/ViewPreferencesDrawer';
 import {
   IconPlus,
-  IconDotsVertical,
+  IconDotsCircleHorizontal,
   IconTrash,
   IconDownload,
   IconBell,
   IconExternalLink,
   IconCube,
 } from '@tabler/icons-react';
+import { Link } from 'react-router-dom';
 
 /* ----------------------------------------
    Types
@@ -82,7 +83,6 @@ const floatingIPStatusMap: Record<FloatingIPStatus, 'active' | 'error' | 'down'>
 export function FloatingIPsPage() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedFloatingIPs, setSelectedFloatingIPs] = useState<string[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [floatingIPs] = useState(mockFloatingIPs);
   
@@ -160,13 +160,13 @@ export function FloatingIPsPage() {
       flex: 1,
       render: (_, row) => (
         <div className="flex flex-col gap-0.5">
-          <a
-            href={`/floating-ips/${row.id}`}
+          <Link
+          to={`/floating-ips/${row.id}`}
             className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
             onClick={(e) => e.stopPropagation()}
           >
             {row.floatingIp}
-          </a>
+          </Link>
           <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
             ID : {row.id}
           </span>
@@ -187,14 +187,14 @@ export function FloatingIPsPage() {
             </Tooltip>
             <div className="flex flex-col gap-0.5 min-w-0">
               <Tooltip content={row.associatedTo} position="top">
-                <a
-                  href={`/instances/${row.associatedToId}`}
+                <Link
+          to={`/instances/${row.associatedToId}`}
                   className="inline-flex items-center gap-1 font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
                   onClick={(e) => e.stopPropagation()}
                 >
                   <span className="truncate">{row.associatedTo}</span>
                   <IconExternalLink size={12} className="flex-shrink-0 text-[var(--color-action-primary)]" />
-                </a>
+                </Link>
               </Tooltip>
               <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] truncate">
                 ID : {row.associatedToId?.substring(0, 8)}
@@ -216,14 +216,14 @@ export function FloatingIPsPage() {
       render: (_, row) => (
         <div className="flex flex-col gap-0.5 min-w-0">
           <Tooltip content={row.network} position="top">
-            <a
-              href={`/networks/${row.networkId}`}
+            <Link
+          to={`/networks/${row.networkId}`}
               className="inline-flex items-center gap-1 font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
               onClick={(e) => e.stopPropagation()}
             >
               <span className="truncate">{row.network}</span>
               <IconExternalLink size={12} className="flex-shrink-0 text-[var(--color-action-primary)]" />
-            </a>
+            </Link>
           </Tooltip>
           <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] truncate">
             ID : {row.networkId.substring(0, 8)}
@@ -245,7 +245,7 @@ export function FloatingIPsPage() {
         <div onClick={(e) => e.stopPropagation()}>
           <ContextMenu items={getContextMenuItems(row)} trigger="click">
             <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors">
-              <IconDotsVertical size={16} stroke={1} className="text-[var(--color-text-subtle)]" />
+              <IconDotsCircleHorizontal size={16} stroke={1} className="text-[var(--color-text-subtle)]" />
             </button>
           </ContextMenu>
         </div>
@@ -369,7 +369,6 @@ export function FloatingIPsPage() {
               totalPages={totalPages}
               totalItems={filteredFloatingIPs.length}
               onPageChange={setCurrentPage}
-              selectedCount={selectedFloatingIPs.length}
               showSettings
               onSettingsClick={() => setIsPreferencesOpen(true)}
             />
@@ -379,9 +378,6 @@ export function FloatingIPsPage() {
               columns={visibleColumns}
               data={paginatedFloatingIPs}
               rowKey="id"
-              selectable
-              selectedKeys={selectedFloatingIPs}
-              onSelectionChange={setSelectedFloatingIPs}
             />
           </VStack>
         </div>

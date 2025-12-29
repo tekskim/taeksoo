@@ -20,11 +20,12 @@ import { useTabs } from '@/contexts/TabContext';
 import { ViewPreferencesDrawer, type ColumnConfig } from '@/components/ViewPreferencesDrawer';
 import {
   IconPlus,
-  IconDotsVertical,
+  IconDotsCircleHorizontal,
   IconTrash,
   IconDownload,
   IconBell,
 } from '@tabler/icons-react';
+import { Link } from 'react-router-dom';
 
 /* ----------------------------------------
    Types
@@ -63,7 +64,6 @@ const mockServerGroups: ServerGroup[] = [
 export function ServerGroupsPage() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedServerGroups, setSelectedServerGroups] = useState<string[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [serverGroups, setServerGroups] = useState(mockServerGroups);
   
@@ -135,13 +135,13 @@ export function ServerGroupsPage() {
       flex: 1,
       sortable: true,
       render: (_, row) => (
-        <a
-          href={`/server-groups/${row.id}`}
+        <Link
+          to={`/server-groups/${row.id}`}
           className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
           onClick={(e) => e.stopPropagation()}
         >
           {row.name}
-        </a>
+        </Link>
       ),
     },
     {
@@ -179,7 +179,7 @@ export function ServerGroupsPage() {
           <div onClick={(e) => e.stopPropagation()}>
             <ContextMenu items={menuItems} trigger="click">
               <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors">
-                <IconDotsVertical size={16} stroke={1} className="text-[var(--color-text-subtle)]" />
+                <IconDotsCircleHorizontal size={16} stroke={1} className="text-[var(--color-text-subtle)]" />
               </button>
             </ContextMenu>
           </div>
@@ -294,7 +294,6 @@ export function ServerGroupsPage() {
                 showSettings
                 onSettingsClick={() => setIsPreferencesOpen(true)}
                 totalItems={filteredServerGroups.length}
-                selectedCount={selectedServerGroups.length}
               />
             )}
 
@@ -303,9 +302,6 @@ export function ServerGroupsPage() {
               columns={visibleColumns}
               data={filteredServerGroups.slice((currentPage - 1) * rowsPerPage, currentPage * rowsPerPage)}
               rowKey="id"
-              selectable
-              selectedKeys={selectedServerGroups}
-              onSelectionChange={setSelectedServerGroups}
               emptyMessage="No server groups found"
             />
           </VStack>

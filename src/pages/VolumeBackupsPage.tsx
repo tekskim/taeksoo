@@ -21,12 +21,13 @@ import { useTabs } from '@/contexts/TabContext';
 import { ViewPreferencesDrawer, type ColumnConfig } from '@/components/ViewPreferencesDrawer';
 import {
   IconPlus,
-  IconDotsVertical,
+  IconDotsCircleHorizontal,
   IconTrash,
   IconDownload,
   IconBell,
   IconExternalLink,
 } from '@tabler/icons-react';
+import { Link } from 'react-router-dom';
 
 /* ----------------------------------------
    Types
@@ -82,7 +83,6 @@ const volumeBackupStatusMap: Record<BackupStatus, 'active' | 'building' | 'error
 export function VolumeBackupsPage() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedBackups, setSelectedBackups] = useState<string[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [backups, setBackups] = useState(mockVolumeBackups);
   
@@ -188,14 +188,14 @@ export function VolumeBackupsPage() {
       sortable: true,
       render: (_, row) => (
         <div className="flex flex-col gap-0.5">
-          <a
-            href={`/volumes/${row.sourceVolumeId}`}
+          <Link
+          to={`/volumes/${row.sourceVolumeId}`}
             className="inline-flex items-center gap-1.5 font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
             onClick={(e) => e.stopPropagation()}
           >
             {row.sourceVolume}
             <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
-          </a>
+          </Link>
           <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
             ID : {row.sourceVolumeId}
           </span>
@@ -248,7 +248,7 @@ export function VolumeBackupsPage() {
           <div onClick={(e) => e.stopPropagation()}>
             <ContextMenu items={menuItems} trigger="click">
               <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors">
-                <IconDotsVertical size={16} stroke={1} className="text-[var(--color-text-subtle)]" />
+                <IconDotsCircleHorizontal size={16} stroke={1} className="text-[var(--color-text-subtle)]" />
               </button>
             </ContextMenu>
           </div>
@@ -363,7 +363,6 @@ export function VolumeBackupsPage() {
               currentPage={currentPage}
               totalPages={totalPages}
               totalItems={filteredBackups.length}
-              selectedCount={selectedBackups.length}
               onPageChange={setCurrentPage}
               showSettings
               onSettingsClick={() => setIsPreferencesOpen(true)}
@@ -374,9 +373,6 @@ export function VolumeBackupsPage() {
               columns={visibleColumns}
               data={paginatedBackups}
               rowKey="id"
-              selectable={true}
-              selectedKeys={selectedBackups}
-              onSelectionChange={setSelectedBackups}
             />
           </VStack>
         </div>
