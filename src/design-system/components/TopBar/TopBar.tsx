@@ -3,7 +3,10 @@ import {
   IconLayoutSidebar,
   IconChevronLeft,
   IconChevronRight,
+  IconSun,
+  IconMoon,
 } from '@tabler/icons-react';
+import { useDarkMode } from '@/hooks/useDarkMode';
 
 /* ----------------------------------------
    Types
@@ -48,6 +51,8 @@ export const TopBar: React.FC<TopBarProps> = ({
   showNavigation = true,
   className = '',
 }) => {
+  const { isDark, toggleDarkMode } = useDarkMode();
+  
   const iconButtonClass = `
     inline-flex items-center justify-center
     size-[var(--topbar-button-size)]
@@ -120,12 +125,26 @@ export const TopBar: React.FC<TopBarProps> = ({
         {breadcrumb}
       </div>
 
-      {/* Right Section: Actions */}
-      {actions && (
-        <div className="flex items-center gap-[var(--topbar-action-gap)]">
-          {actions}
-        </div>
-      )}
+      {/* Right Section: Dark Mode Toggle + Actions */}
+      <div className="flex items-center gap-[var(--topbar-action-gap)]">
+        {/* Dark Mode Toggle */}
+        <button
+          type="button"
+          onClick={toggleDarkMode}
+          className={iconButtonClass}
+          aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
+          title={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
+        >
+          {isDark ? (
+            <IconSun size={16} stroke={1.5} />
+          ) : (
+            <IconMoon size={16} stroke={1.5} />
+          )}
+        </button>
+        
+        {/* Custom Actions */}
+        {actions}
+      </div>
     </header>
   );
 };

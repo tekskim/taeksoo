@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { DarkModeToggle } from '@/components/DarkModeToggle';
+import { AttachVolumeDrawer } from '@/components/AttachVolumeDrawer';
 import {
   Button,
   Input,
@@ -123,6 +124,7 @@ import {
   IconDatabase,
   IconNetwork,
   IconRouter,
+  IconCube,
   IconScale,
   IconWorldWww,
   IconShield,
@@ -436,7 +438,7 @@ function ModalDemo({ variant }: { variant: 'basic' | 'delete' | 'size-sm' | 'siz
 function DrawerDemo() {
   const [isBasicOpen, setIsBasicOpen] = useState(false);
   const [isFormOpen, setIsFormOpen] = useState(false);
-  const [isLeftOpen, setIsLeftOpen] = useState(false);
+  const [isAttachVolumeOpen, setIsAttachVolumeOpen] = useState(false);
   const [formValue, setFormValue] = useState('');
 
   return (
@@ -506,25 +508,22 @@ function DrawerDemo() {
         </VStack>
       </Drawer>
 
-      {/* Left Side Drawer */}
-      <Button variant="outline" size="sm" onClick={() => setIsLeftOpen(true)}>
-        Left Side
+      {/* Attach Volume Drawer */}
+      <Button variant="outline" size="sm" onClick={() => setIsAttachVolumeOpen(true)}>
+        Attach Volume
       </Button>
-      <Drawer
-        isOpen={isLeftOpen}
-        onClose={() => setIsLeftOpen(false)}
-        title="Left Drawer"
-        side="left"
-        width={320}
-      >
-        <VStack gap={4}>
-          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] p-4">
-            <p className="text-[length:var(--font-size-12)] text-[var(--color-text-default)]">
-              This drawer slides in from the left side.
-            </p>
-          </div>
-        </VStack>
-      </Drawer>
+      <AttachVolumeDrawer
+        isOpen={isAttachVolumeOpen}
+        onClose={() => setIsAttachVolumeOpen(false)}
+        instanceName="web-server-10"
+        onAttach={(volumeId) => {
+          console.log('Attach volume:', volumeId);
+          setIsAttachVolumeOpen(false);
+        }}
+        onCreateNewVolume={() => {
+          console.log('Create new volume');
+        }}
+      />
     </div>
   );
 }
@@ -634,21 +633,25 @@ interface InstanceData {
   fixedIp: string;
   floatingIp: string;
   image: string;
+  imageId: string;
   flavor: string;
+  flavorId: string;
+  attachedTo: string | null;
+  attachedToId: string | null;
+  attachedType: 'instance' | 'router' | null;
+  fingerprint: string;
   vCPU: number;
   ram: string;
   disk: string;
-  gpu: number;
-  az: string;
 }
 
 const sampleTableData: InstanceData[] = [
-  { id: '1', name: 'worker-node-01', status: 'Running', locked: true, fixedIp: '10.20.30.40', floatingIp: '20.30.40.50', image: 'CentOS 7', flavor: 'Medium', vCPU: 4, ram: '8GB', disk: '100GB', gpu: 1, az: 'keystone' },
-  { id: '2', name: 'web-server-01', status: 'Running', locked: false, fixedIp: '10.20.30.41', floatingIp: '-', image: 'Ubuntu 22.04', flavor: 'Large', vCPU: 8, ram: '16GB', disk: '200GB', gpu: 0, az: 'keystone' },
-  { id: '3', name: 'db-master', status: 'Running', locked: true, fixedIp: '10.20.30.42', floatingIp: '20.30.40.52', image: 'Rocky Linux 9', flavor: 'XLarge', vCPU: 16, ram: '32GB', disk: '500GB', gpu: 2, az: 'nova' },
-  { id: '4', name: 'api-gateway', status: 'Stopped', locked: false, fixedIp: '10.20.30.43', floatingIp: '-', image: 'Ubuntu 22.04', flavor: 'Small', vCPU: 2, ram: '4GB', disk: '50GB', gpu: 0, az: 'keystone' },
-  { id: '5', name: 'redis-cache', status: 'Running', locked: false, fixedIp: '10.20.30.44', floatingIp: '20.30.40.54', image: 'Debian 12', flavor: 'Medium', vCPU: 4, ram: '8GB', disk: '100GB', gpu: 0, az: 'nova' },
-  { id: '6', name: 'ml-worker', status: 'Building', locked: false, fixedIp: '-', floatingIp: '-', image: 'Ubuntu 22.04', flavor: 'GPU Large', vCPU: 8, ram: '64GB', disk: '1TB', gpu: 4, az: 'gpu-zone' },
+  { id: 'vm-001', name: 'worker-node-01', status: 'Running', locked: true, fixedIp: '10.20.30.40', floatingIp: '20.30.40.50', image: 'CentOS 7', imageId: 'img-001', flavor: 'Medium', flavorId: 'flv-001', attachedTo: 'web-server-1', attachedToId: 'inst-001', attachedType: 'instance', fingerprint: '02:c1:ff:54:df:d9:69:0e', vCPU: 4, ram: '8GB', disk: '100GB' },
+  { id: 'vm-002', name: 'web-server-01', status: 'Running', locked: false, fixedIp: '10.20.30.41', floatingIp: '-', image: 'Ubuntu 22.04', imageId: 'img-002', flavor: 'Large', flavorId: 'flv-002', attachedTo: 'main-router', attachedToId: 'router-001', attachedType: 'router', fingerprint: 'a3:b2:c1:d4:e5:f6:07:18', vCPU: 8, ram: '16GB', disk: '200GB' },
+  { id: 'vm-003', name: 'db-master', status: 'Running', locked: true, fixedIp: '10.20.30.42', floatingIp: '20.30.40.52', image: 'Rocky Linux 9', imageId: 'img-003', flavor: 'XLarge', flavorId: 'flv-003', attachedTo: null, attachedToId: null, attachedType: null, fingerprint: '11:22:33:44:55:66:77:88', vCPU: 16, ram: '32GB', disk: '500GB' },
+  { id: 'vm-004', name: 'api-gateway', status: 'Stopped', locked: false, fixedIp: '10.20.30.43', floatingIp: '-', image: 'Ubuntu 22.04', imageId: 'img-002', flavor: 'Small', flavorId: 'flv-004', attachedTo: 'log-server', attachedToId: 'inst-003', attachedType: 'instance', fingerprint: 'ff:ee:dd:cc:bb:aa:99:88', vCPU: 2, ram: '4GB', disk: '50GB' },
+  { id: 'vm-005', name: 'redis-cache', status: 'Running', locked: false, fixedIp: '10.20.30.44', floatingIp: '20.30.40.54', image: 'Debian 12', imageId: 'img-004', flavor: 'Medium', flavorId: 'flv-001', attachedTo: null, attachedToId: null, attachedType: null, fingerprint: '12:34:56:78:9a:bc:de:f0', vCPU: 4, ram: '8GB', disk: '100GB' },
+  { id: 'vm-006', name: 'ml-worker', status: 'Building', locked: false, fixedIp: '-', floatingIp: '-', image: 'Ubuntu 22.04', imageId: 'img-002', flavor: 'GPU Large', flavorId: 'flv-005', attachedTo: 'gpu-server-1', attachedToId: 'inst-005', attachedType: 'instance', fingerprint: 'ab:cd:ef:01:23:45:67:89', vCPU: 8, ram: '64GB', disk: '1TB' },
 ];
 
 // Sample Key Pair data for copy demo
@@ -722,10 +725,12 @@ function TableDemo() {
       key: 'status', 
       label: 'Status', 
       sortable: true, 
-      width: '80px',
+      width: '70px',
+      align: 'center' as const,
       render: (value: string) => (
         <StatusIndicator 
           status={value === 'Running' ? 'active' : value === 'Stopped' ? 'error' : 'building'}
+          layout="icon-only"
         />
       )
     },
@@ -733,39 +738,119 @@ function TableDemo() {
       key: 'name', 
       label: 'Name', 
       sortable: true, 
-      width: '140px',
-      render: (value: string) => (
-        <span className="text-[var(--color-action-primary)] cursor-pointer hover:underline">{value}</span>
+      width: '150px',
+      render: (value: string, row: InstanceData) => (
+        <div className="flex flex-col gap-0.5">
+          <span className="font-medium text-[var(--color-action-primary)] cursor-pointer hover:underline hover:underline-offset-2">{value}</span>
+          <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">ID : {row.id}</span>
+        </div>
       )
     },
     { 
       key: 'locked', 
       label: 'Locked', 
       width: '70px',
+      align: 'center' as const,
       render: (value: boolean) => value ? (
-        <IconLock size={16} className="text-[var(--color-text-subtle)]" />
+        <IconLock size={16} stroke={1} className="text-[var(--color-text-default)]" />
       ) : null
     },
-    { key: 'fixedIp', label: 'Fixed IP', sortable: true, width: '120px' },
-    { key: 'floatingIp', label: 'Floating IP', sortable: true, width: '120px' },
-    { key: 'image', label: 'Image', sortable: true, width: '110px' },
-    { key: 'flavor', label: 'Flavor', sortable: true, width: '90px' },
-    { key: 'vCPU', label: 'vCPU', sortable: true, width: '70px' },
-    { key: 'ram', label: 'RAM', sortable: true, width: '70px' },
-    { key: 'disk', label: 'Disk', sortable: true, width: '80px' },
-    { key: 'gpu', label: 'GPU', sortable: true, width: '60px' },
-    { key: 'az', label: 'AZ', sortable: true, width: '90px' },
+    { key: 'fixedIp', label: 'Fixed IP', sortable: true, width: '110px' },
+    { key: 'floatingIp', label: 'Floating IP', sortable: true, width: '110px' },
+    { 
+      key: 'image', 
+      label: 'Image', 
+      sortable: true, 
+      width: '130px',
+      render: (value: string, row: InstanceData) => (
+        <div className="flex flex-col gap-0.5">
+          <span className="font-medium text-[var(--color-action-primary)] cursor-pointer hover:underline hover:underline-offset-2">{value}</span>
+          <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">ID : {row.imageId}</span>
+        </div>
+      )
+    },
+    { 
+      key: 'flavor', 
+      label: 'Flavor', 
+      sortable: true, 
+      width: '110px',
+      render: (value: string, row: InstanceData) => (
+        <div className="flex flex-col gap-0.5">
+          <span className="font-medium text-[var(--color-action-primary)] cursor-pointer hover:underline hover:underline-offset-2">{value}</span>
+          <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">ID : {row.flavorId}</span>
+        </div>
+      )
+    },
+    { 
+      key: 'attachedTo', 
+      label: 'Attached To', 
+      width: '160px',
+      render: (_: string | null, row: InstanceData) => (
+        row.attachedTo && row.attachedToId ? (
+          <div className="flex items-center gap-2">
+            <div 
+              className="flex-shrink-0 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[4px] p-1"
+              title={row.attachedType === 'router' ? 'Router' : 'Instance'}
+            >
+              {row.attachedType === 'router' ? (
+                <IconRouter size={12} stroke={1.5} className="text-[var(--color-text-subtle)]" />
+              ) : (
+                <IconCube size={12} stroke={1.5} className="text-[var(--color-text-subtle)]" />
+              )}
+            </div>
+            <div className="flex flex-col gap-0.5 min-w-0">
+              <button
+                onClick={(e) => e.stopPropagation()}
+                className="inline-flex items-center gap-1 font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
+              >
+                <span className="truncate">{row.attachedTo}</span>
+                <IconExternalLink size={12} className="flex-shrink-0 text-[var(--color-action-primary)]" />
+              </button>
+              <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] truncate">
+                ID : {row.attachedToId}
+              </span>
+            </div>
+          </div>
+        ) : (
+          <span className="text-[var(--color-text-muted)]">-</span>
+        )
+      )
+    },
+    { 
+      key: 'fingerprint', 
+      label: 'Fingerprint', 
+      width: '200px',
+      render: (value: string, row: InstanceData) => (
+        <div className="flex items-center gap-2">
+          <span className="font-mono text-[length:var(--font-size-11)] text-[var(--color-text-default)]">{value}</span>
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              handleCopy(row.id, row.fingerprint);
+            }}
+            className="p-1.5 -m-1 rounded-md hover:bg-[var(--color-surface-muted)] active:bg-[var(--color-surface-subtle)] transition-colors flex-shrink-0"
+            title={copiedId === row.id ? 'Copied!' : 'Copy fingerprint'}
+          >
+            {copiedId === row.id ? (
+              <IconCheck size={12} className="text-[var(--color-state-success)]" />
+            ) : (
+              <IconCopy size={12} className="text-[var(--color-action-primary)]" />
+            )}
+          </button>
+        </div>
+      )
+    },
     { 
       key: 'actions', 
       label: 'Action', 
-      width: '100px',
+      width: '80px',
       render: () => (
         <div className="flex items-center gap-1">
-          <button className="p-1 rounded hover:bg-[var(--color-surface-muted)] text-[var(--color-text-subtle)]">
-            <IconTerminal2 size={16} />
+          <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors text-[var(--color-text-subtle)] hover:text-[var(--color-text-default)]">
+            <IconTerminal2 size={16} stroke={1} />
           </button>
-          <button className="p-1 rounded hover:bg-[var(--color-surface-muted)] text-[var(--color-text-subtle)]">
-            <IconPower size={16} />
+          <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors text-[var(--color-text-subtle)] hover:text-[var(--color-text-default)]">
+            <IconDotsVertical size={16} stroke={1} />
           </button>
         </div>
       )
@@ -948,13 +1033,23 @@ export function DesignSystemPage() {
       <nav className="fixed left-0 top-0 w-[200px] h-screen bg-[var(--color-surface-default)] border-r border-[var(--color-border-default)] overflow-y-auto z-50">
         <div className="p-4">
           {/* Logo */}
-          <Link to="/" className="flex items-center gap-2 mb-6">
+          <Link to="/" className="flex items-center gap-2 mb-4">
             <div className="w-6 h-6 rounded bg-[var(--color-action-primary)] flex items-center justify-center">
               <span className="text-[10px] font-bold text-white">TDS</span>
             </div>
             <span className="text-[length:var(--font-size-14)] font-semibold text-[var(--color-text-default)]">
               Design System
             </span>
+          </Link>
+
+          {/* View Instance List Link */}
+          <Link
+            to="/instances"
+            className="flex items-center gap-2 w-full px-3 py-2 mb-4 rounded-[var(--radius-button)] bg-[var(--color-action-secondary)] hover:bg-[var(--color-action-secondary-hover)] text-[var(--color-text-default)] text-[length:var(--font-size-11)] font-medium transition-colors border border-[var(--color-border-default)]"
+          >
+            <IconList size={16} stroke={1.5} />
+            <span>View Instance List</span>
+            <IconChevronRight size={14} stroke={1.5} className="ml-auto" />
           </Link>
 
           {/* Navigation */}
