@@ -1,6 +1,27 @@
 @import "tailwindcss";
 
 /* ========================================
+   Theme Transition - Prevent flicker
+   ======================================== */
+
+html {
+  color-scheme: light dark;
+}
+
+/* Smooth transition for theme switching */
+html.theme-transition,
+html.theme-transition *,
+html.theme-transition *::before,
+html.theme-transition *::after {
+  transition: background-color 0.3s ease, 
+              border-color 0.3s ease, 
+              color 0.15s ease,
+              fill 0.15s ease,
+              stroke 0.15s ease !important;
+  transition-delay: 0s !important;
+}
+
+/* ========================================
    TDS Design System - CSS Variables
    Based on tokens.json structure
    ======================================== */

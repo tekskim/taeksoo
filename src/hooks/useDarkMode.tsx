@@ -39,14 +39,25 @@ export function DarkModeProvider({ children }: { children: ReactNode }) {
     return false;
   });
 
-  // Apply dark class to document
+  // Apply dark class to document with smooth transition
   useEffect(() => {
     const root = document.documentElement;
+    
+    // Add transition class for smooth theme switching
+    root.classList.add('theme-transition');
+    
     if (isDark) {
       root.classList.add('dark');
     } else {
       root.classList.remove('dark');
     }
+    
+    // Remove transition class after animation completes
+    const timeout = setTimeout(() => {
+      root.classList.remove('theme-transition');
+    }, 300);
+    
+    return () => clearTimeout(timeout);
   }, [isDark]);
 
   // Listen for system theme changes
