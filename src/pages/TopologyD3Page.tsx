@@ -5,6 +5,7 @@ import { Sidebar } from '@/components/Sidebar';
 import { useTabs } from '@/contexts/TabContext';
 import { VStack, Select, SearchInput, Button, TabBar, TopBar, TopBarAction, Breadcrumb } from '@/design-system';
 import { IconX, IconCopy, IconExternalLink, IconRefresh, IconSearch, IconBell } from '@tabler/icons-react';
+import { Link } from 'react-router-dom';
 
 /* ----------------------------------------
    Theme Configuration
@@ -414,10 +415,10 @@ function CopyableText({ value }: { value: string }) {
 // Helper component for link text
 function LinkText({ value, href }: { value: string; href?: string }) {
   return (
-    <a href={href || '#'} className="text-blue-500 hover:underline inline-flex items-center gap-0.5">
+    <Link to={href || '#'} className="text-blue-500 hover:underline inline-flex items-center gap-0.5">
       {value}
       <IconExternalLink size={12} />
-    </a>
+    </Link>
   );
 }
 
@@ -426,7 +427,8 @@ function ViewDetailLink({ count }: { count: number }) {
   return (
     <span>
       <span className="font-medium">{count}</span>
-      <a href="#" className="text-blue-500 hover:underline ml-2 text-xs">View detail</a>
+      <Link
+          to="#" className="text-blue-500 hover:underline ml-2 text-xs">View detail</Link>
     </span>
   );
 }
@@ -482,10 +484,11 @@ function HealthMonitorSection({ healthMonitor }: {
                   {pool.status === 'error' ? 'Error' : 
                    pool.status === 'degraded' ? 'Degraded' : 'Healthy'}
                 </span>
-                <a href="#" className="text-blue-500 hover:underline inline-flex items-center gap-1 font-medium">
+                <Link
+          to="#" className="text-blue-500 hover:underline inline-flex items-center gap-1 font-medium">
                   {pool.name}
                   <IconExternalLink size={14} />
-                </a>
+                </Link>
               </div>
             ))}
           </div>
@@ -514,7 +517,8 @@ function ListenersSection({ listeners }: {
         <div className="flex-1">
           <div className="flex items-center justify-between">
             <span className="text-slate-500 font-medium">Listeners ({listeners.length})</span>
-            <a href="#" className="text-blue-500 hover:underline text-xs" onClick={(e) => e.stopPropagation()}>View detail</a>
+            <Link
+          to="#" className="text-blue-500 hover:underline text-xs" onClick={(e) => e.stopPropagation()}>View detail</Link>
           </div>
         </div>
       </button>
@@ -532,10 +536,11 @@ function ListenersSection({ listeners }: {
                   }`} />
                   <span className="text-slate-600">{listener.protocol}:{listener.port}</span>
                 </div>
-                <a href="#" className="text-blue-500 hover:underline inline-flex items-center gap-1 font-medium">
+                <Link
+          to="#" className="text-blue-500 hover:underline inline-flex items-center gap-1 font-medium">
                   {listener.name}
                   <IconExternalLink size={14} />
-                </a>
+                </Link>
               </div>
             ))}
           </div>
@@ -564,7 +569,8 @@ function RoutersSection({ routers }: {
         <div className="flex-1">
           <div className="flex items-center justify-between">
             <span className="text-slate-500 font-medium">Routers ({routers.length})</span>
-            <a href="#" className="text-blue-500 hover:underline text-xs" onClick={(e) => e.stopPropagation()}>View detail</a>
+            <Link
+          to="#" className="text-blue-500 hover:underline text-xs" onClick={(e) => e.stopPropagation()}>View detail</Link>
           </div>
         </div>
       </button>
@@ -582,10 +588,11 @@ function RoutersSection({ routers }: {
                   }`} />
                   <span className="text-slate-600">{router.externalGateway || 'internal'}</span>
                 </div>
-                <a href="#" className="text-blue-500 hover:underline inline-flex items-center gap-1 font-medium">
+                <Link
+          to="#" className="text-blue-500 hover:underline inline-flex items-center gap-1 font-medium">
                   {router.name}
                   <IconExternalLink size={14} />
-                </a>
+                </Link>
               </div>
             ))}
           </div>
@@ -614,7 +621,8 @@ function SubnetsSection({ subnets }: {
         <div className="flex-1">
           <div className="flex items-center justify-between">
             <span className="text-slate-500 font-medium">Subnets ({subnets.length})</span>
-            <a href="#" className="text-blue-500 hover:underline text-xs" onClick={(e) => e.stopPropagation()}>View detail</a>
+            <Link
+          to="#" className="text-blue-500 hover:underline text-xs" onClick={(e) => e.stopPropagation()}>View detail</Link>
           </div>
         </div>
       </button>
@@ -632,10 +640,11 @@ function SubnetsSection({ subnets }: {
                   }`} />
                   <span className="font-mono text-slate-400 text-xs">{subnet.cidr || '-'}</span>
                 </div>
-                <a href="#" className="text-blue-500 hover:underline inline-flex items-center gap-1 font-medium">
+                <Link
+          to="#" className="text-blue-500 hover:underline inline-flex items-center gap-1 font-medium">
                   {subnet.name}
                   <IconExternalLink size={14} />
-                </a>
+                </Link>
               </div>
             ))}
           </div>
@@ -832,7 +841,8 @@ function Popover({ data, position, onClose }: PopoverProps) {
               <div className="mt-3 pt-3 border-t border-slate-100">
                 <div className="flex items-center justify-between mb-2">
                   <span className="text-slate-500 font-medium">Routers ({data.routerList.length})</span>
-                  <a href="#" className="text-blue-500 hover:underline text-xs">View detail</a>
+                  <Link
+          to="#" className="text-blue-500 hover:underline text-xs">View detail</Link>
                 </div>
                 <div className="space-y-1.5 text-xs max-h-24 overflow-y-auto">
                   {data.routerList.map((router, idx) => (
@@ -858,7 +868,8 @@ function Popover({ data, position, onClose }: PopoverProps) {
               <div className="mt-3 pt-3 border-t border-slate-100">
                 <div className="flex items-center justify-between mb-2">
                   <span className="text-slate-500 font-medium">Instances ({data.instanceList.length})</span>
-                  <a href="#" className="text-blue-500 hover:underline text-xs">View detail</a>
+                  <Link
+          to="#" className="text-blue-500 hover:underline text-xs">View detail</Link>
                 </div>
                 <div className="space-y-1.5 text-xs max-h-24 overflow-y-auto">
                   {data.instanceList.map((instance, idx) => (
@@ -884,7 +895,8 @@ function Popover({ data, position, onClose }: PopoverProps) {
               <div className="mt-3 pt-3 border-t border-slate-100">
                 <div className="flex items-center justify-between mb-2">
                   <span className="text-slate-500 font-medium">Load Balancers ({data.loadBalancerList.length})</span>
-                  <a href="#" className="text-blue-500 hover:underline text-xs">View detail</a>
+                  <Link
+          to="#" className="text-blue-500 hover:underline text-xs">View detail</Link>
                 </div>
                 <div className="space-y-1.5 text-xs max-h-24 overflow-y-auto">
                   {data.loadBalancerList.map((lb, idx) => (

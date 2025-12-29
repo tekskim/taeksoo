@@ -3,6 +3,7 @@ import { HomePage } from '@/pages/HomePage';
 import { InstanceListPage } from '@/pages/InstanceListPage';
 import { InstanceDetailPage } from '@/pages/InstanceDetailPage';
 import { InstanceTemplatesPage } from '@/pages/InstanceTemplatesPage';
+import { InstanceTemplateDetailPage } from '@/pages/InstanceTemplateDetailPage';
 import { InstanceSnapshotsPage } from '@/pages/InstanceSnapshotsPage';
 import { InstanceSnapshotDetailPage } from '@/pages/InstanceSnapshotDetailPage';
 import { ImagesPage } from '@/pages/ImagesPage';
@@ -44,6 +45,7 @@ function AppRoutes() {
         <Route path="/instances" element={<InstanceListPage />} />
         <Route path="/instances/:id" element={<InstanceDetailPage />} />
         <Route path="/instance-templates" element={<InstanceTemplatesPage />} />
+        <Route path="/instance-templates/:id" element={<InstanceTemplateDetailPage />} />
         <Route path="/instance-snapshots" element={<InstanceSnapshotsPage />} />
         <Route path="/instance-snapshots/:id" element={<InstanceSnapshotDetailPage />} />
         <Route path="/images" element={<ImagesPage />} />

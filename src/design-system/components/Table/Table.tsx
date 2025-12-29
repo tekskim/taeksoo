@@ -160,9 +160,9 @@ export function Table<T extends Record<string, any>>({
     <div
       className={`flex flex-col gap-[var(--table-row-gap)] ${className}`}
     >
-      {/* Scrollable container - horizontal + vertical */}
+      {/* Table container */}
       <div
-        className={`table-scroll-container overflow-x-scroll ${maxHeight ? 'overflow-y-auto' : ''}`}
+        className={`table-scroll-container ${maxHeight ? 'overflow-y-auto' : ''}`}
         style={maxHeight ? { maxHeight } : undefined}
       >
         {/* Inner container for min-width */}
@@ -170,7 +170,8 @@ export function Table<T extends Record<string, any>>({
           {/* Header */}
           <div
             className={`
-              flex items-center
+              flex items-stretch
+              h-[var(--table-row-height)]
               bg-[var(--table-header-bg)]
               border border-[var(--color-border-default)]
               rounded-[var(--table-row-radius)]
@@ -182,9 +183,9 @@ export function Table<T extends Record<string, any>>({
             <div
               className="
                 shrink-0
+                flex items-center
                 w-[var(--table-checkbox-width)]
                 px-[var(--table-cell-padding-x)]
-                py-[var(--table-header-padding-y)]
               "
             >
               <Checkbox
@@ -197,37 +198,44 @@ export function Table<T extends Record<string, any>>({
           )}
 
           {/* Column headers */}
-          {columns.map((column) => (
-            <div
-              key={column.key}
-              className={`
-                px-[var(--table-cell-padding-x)]
-                py-[var(--table-header-padding-y)]
-                text-[length:var(--table-header-font-size)]
-                leading-[var(--table-line-height)]
-                font-medium
-                text-[var(--color-text-default)]
-                ${column.align === 'center' ? 'text-center' : ''}
-                ${column.align === 'right' ? 'text-right' : 'text-left'}
-                ${column.sortable ? 'cursor-pointer select-none hover:text-[var(--color-action-primary)] transition-colors' : ''}
-              `}
-              style={{ 
-                width: column.width,
-                flex: column.flex ?? (column.width ? undefined : 1),
-              }}
-              onClick={column.sortable ? () => handleSort(column.key) : undefined}
-            >
+          {columns.map((column, index) => {
+            // First column has divider if there's a checkbox, otherwise no divider
+            const showDivider = selectable ? true : index > 0;
+            
+            return (
               <div
+                key={column.key}
                 className={`
-                  inline-flex items-center gap-1
-                  ${column.align === 'right' ? 'flex-row-reverse' : ''}
+                  flex items-center
+                  px-[var(--table-cell-padding-x)]
+                  text-[length:var(--table-header-font-size)]
+                  leading-[var(--table-line-height)]
+                  font-medium
+                  text-[var(--color-text-default)]
+                  ${column.align === 'center' ? 'text-center' : ''}
+                  ${column.align === 'right' ? 'text-right' : 'text-left'}
+                  ${column.sortable ? 'cursor-pointer select-none hover:text-[var(--color-action-primary)] transition-colors' : ''}
+                  ${showDivider ? 'border-l border-[var(--color-border-default)]' : ''}
                 `}
+                style={{ 
+                  width: column.width,
+                  flex: column.flex ?? (column.width ? undefined : 1),
+                }}
+                onClick={column.sortable ? () => handleSort(column.key) : undefined}
               >
-                <span>{column.label}</span>
-                {column.sortable && renderSortIcon(column.key)}
+                <div
+                  className={`
+                    flex items-center gap-1 w-full
+                    ${column.align === 'center' ? 'justify-center' : ''}
+                    ${column.align === 'right' ? 'justify-end flex-row-reverse' : ''}
+                  `}
+                >
+                  <span>{column.label}</span>
+                  {column.sortable && renderSortIcon(column.key)}
+                </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
 
         {/* Body */}
@@ -257,6 +265,7 @@ export function Table<T extends Record<string, any>>({
                   key={key}
                   className={`
                     flex items-center
+                    h-[var(--table-row-height)]
                     rounded-[var(--table-row-radius)]
                     transition-all
                     hover:bg-[var(--table-row-hover-bg)]
@@ -298,8 +307,8 @@ export function Table<T extends Record<string, any>>({
                         text-[length:var(--table-font-size)]
                         leading-[var(--table-line-height)]
                         text-[var(--color-text-default)]
-                        ${column.align === 'center' ? 'text-center' : ''}
-                        ${column.align === 'right' ? 'text-right' : 'text-left'}
+                        ${column.align === 'center' ? 'flex items-center justify-center' : ''}
+                        ${column.align === 'right' ? 'text-right' : column.align === 'center' ? '' : 'text-left'}
                       `}
                       style={{ 
                         width: column.width,

@@ -87,7 +87,7 @@ import {
   IconArrowRight,
   IconArrowsMaximize,
   IconArrowsMinimize,
-  IconDotsVertical,
+  IconDotsCircleHorizontal,
   IconDots,
   // Basic - Status & Feedback
   IconAlertCircle,
@@ -1742,7 +1742,7 @@ outline: 2px solid var(--color-border-focus);`}
                     { Icon: IconArrowRight, name: 'Arrow' },
                     { Icon: IconArrowsMaximize, name: 'Expand' },
                     { Icon: IconArrowsMinimize, name: 'Collapse' },
-                    { Icon: IconDotsVertical, name: 'Kebab' },
+                    { Icon: IconDotsCircleHorizontal, name: 'Action' },
                     { Icon: IconDots, name: 'Meatball' },
                   ]}
                 />

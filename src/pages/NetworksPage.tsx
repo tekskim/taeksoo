@@ -24,11 +24,12 @@ import { useTabs } from '@/contexts/TabContext';
 import { ViewPreferencesDrawer, type ColumnConfig } from '@/components/ViewPreferencesDrawer';
 import {
   IconPlus,
-  IconDotsVertical,
+  IconDotsCircleHorizontal,
   IconTrash,
   IconDownload,
   IconBell,
 } from '@tabler/icons-react';
+import { Link } from 'react-router-dom';
 
 /* ----------------------------------------
    Types
@@ -81,7 +82,6 @@ const networkStatusMap: Record<NetworkStatus, 'active' | 'error' | 'building'> =
 export function NetworksPage() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedNetworks, setSelectedNetworks] = useState<string[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [networks] = useState(mockNetworks);
   const [activeTab, setActiveTab] = useState('current');
@@ -173,13 +173,13 @@ export function NetworksPage() {
       flex: 1,
       sortable: true,
       render: (_, row) => (
-        <a
-          href={`/networks/${row.id}`}
+        <Link
+          to={`/networks/${row.id}`}
           className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
           onClick={(e) => e.stopPropagation()}
         >
           {row.name}
-        </a>
+        </Link>
       ),
     },
     {
@@ -214,7 +214,7 @@ export function NetworksPage() {
         <div onClick={(e) => e.stopPropagation()}>
           <ContextMenu items={getContextMenuItems(row)} trigger="click">
             <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors">
-              <IconDotsVertical size={16} stroke={1} className="text-[var(--color-text-subtle)]" />
+              <IconDotsCircleHorizontal size={16} stroke={1} className="text-[var(--color-text-subtle)]" />
             </button>
           </ContextMenu>
         </div>
@@ -347,7 +347,6 @@ export function NetworksPage() {
               totalPages={totalPages}
               totalItems={filteredNetworks.length}
               onPageChange={setCurrentPage}
-              selectedCount={selectedNetworks.length}
               showSettings
               onSettingsClick={() => setIsPreferencesOpen(true)}
             />
@@ -357,9 +356,6 @@ export function NetworksPage() {
               columns={visibleColumns}
               data={paginatedNetworks}
               rowKey="id"
-              selectable
-              selectedKeys={selectedNetworks}
-              onSelectionChange={setSelectedNetworks}
             />
           </VStack>
         </div>
