@@ -13,6 +13,7 @@ import {
   ListToolbar,
   ContextMenu,
   ConfirmModal,
+  Checkbox,
   type TableColumn,
   type ContextMenuItem,
 } from '@/design-system';
@@ -20,7 +21,6 @@ import { Sidebar } from '@/components/Sidebar';
 import { useTabs } from '@/contexts/TabContext';
 import { ViewPreferencesDrawer, type ColumnConfig } from '@/components/ViewPreferencesDrawer';
 import {
-  IconPlus,
   IconDotsCircleHorizontal,
   IconTrash,
   IconDownload,
@@ -33,16 +33,15 @@ import { Link } from 'react-router-dom';
    ---------------------------------------- */
 
 type SnapshotStatus = 'active' | 'creating' | 'error' | 'deleting';
+type AccessType = 'Private' | 'Public';
 
 interface InstanceSnapshot {
   id: string;
   name: string;
   status: SnapshotStatus;
+  os: string;
   size: string;
-  diskFormat: string;
-  sourceInstance: string;
-  sourceInstanceId: string;
-  description: string;
+  access: AccessType;
   createdAt: string;
 }
 
@@ -51,116 +50,18 @@ interface InstanceSnapshot {
    ---------------------------------------- */
 
 const mockSnapshots: InstanceSnapshot[] = [
-  {
-    id: '29tgj234',
-    name: 'snapshot',
-    status: 'active',
-    size: '30GiB',
-    diskFormat: 'RAW',
-    sourceInstance: 'web-server-01',
-    sourceInstanceId: '29tgj234',
-    description: '-',
-    createdAt: '2025-09-12',
-  },
-  {
-    id: 'snap-002',
-    name: 'web-server-snapshot',
-    status: 'active',
-    size: '32GiB',
-    diskFormat: 'QCOW2',
-    sourceInstance: 'api-server-01',
-    sourceInstanceId: 'inst-002',
-    description: 'Weekly backup',
-    createdAt: '2025-09-10',
-  },
-  {
-    id: 'snap-003',
-    name: 'db-backup-20250908',
-    status: 'active',
-    size: '64GiB',
-    diskFormat: 'RAW',
-    sourceInstance: 'db-master-01',
-    sourceInstanceId: 'inst-003',
-    description: 'Database backup',
-    createdAt: '2025-09-08',
-  },
-  {
-    id: 'snap-004',
-    name: 'ml-training-checkpoint',
-    status: 'creating',
-    size: '128GiB',
-    diskFormat: 'QCOW2',
-    sourceInstance: 'ml-worker-01',
-    sourceInstanceId: 'inst-004',
-    description: '-',
-    createdAt: '2025-09-07',
-  },
-  {
-    id: 'snap-005',
-    name: 'k8s-node-image',
-    status: 'active',
-    size: '24GiB',
-    diskFormat: 'RAW',
-    sourceInstance: 'k8s-node-01',
-    sourceInstanceId: 'inst-005',
-    description: 'K8s node snapshot',
-    createdAt: '2025-09-05',
-  },
-  {
-    id: 'snap-006',
-    name: 'dev-environment-v2',
-    status: 'active',
-    size: '48GiB',
-    diskFormat: 'QCOW2',
-    sourceInstance: 'dev-server-01',
-    sourceInstanceId: 'inst-006',
-    description: '-',
-    createdAt: '2025-09-03',
-  },
-  {
-    id: 'snap-007',
-    name: 'monitoring-stack',
-    status: 'active',
-    size: '20GiB',
-    diskFormat: 'RAW',
-    sourceInstance: 'monitor-01',
-    sourceInstanceId: 'inst-007',
-    description: 'Monitoring setup',
-    createdAt: '2025-09-01',
-  },
-  {
-    id: 'snap-008',
-    name: 'legacy-app-backup',
-    status: 'error',
-    size: '80GiB',
-    diskFormat: 'RAW',
-    sourceInstance: 'legacy-app-01',
-    sourceInstanceId: 'inst-008',
-    description: '-',
-    createdAt: '2025-08-28',
-  },
-  {
-    id: 'snap-009',
-    name: 'test-environment',
-    status: 'active',
-    size: '16GiB',
-    diskFormat: 'QCOW2',
-    sourceInstance: 'test-server-01',
-    sourceInstanceId: 'inst-009',
-    description: 'Test env snapshot',
-    createdAt: '2025-08-25',
-  },
-  {
-    id: 'snap-010',
-    name: 'production-baseline',
-    status: 'active',
-    size: '40GiB',
-    diskFormat: 'RAW',
-    sourceInstance: 'prod-server-01',
-    sourceInstanceId: 'inst-010',
-    description: '-',
-    createdAt: '2025-08-20',
-  },
+  { id: 'snap-001', name: 'Ubuntu-22.04-base', status: 'active', os: 'Ubuntu24.04', size: '16GiB', access: 'Private', createdAt: '2025-09-12' },
+  { id: 'snap-002', name: 'CentOS-8-web', status: 'active', os: 'CentOS 8', size: '32GiB', access: 'Private', createdAt: '2025-09-10' },
+  { id: 'snap-003', name: 'Debian-12-db', status: 'active', os: 'Debian 12', size: '64GiB', access: 'Public', createdAt: '2025-09-08' },
+  { id: 'snap-004', name: 'Rocky-9-ml', status: 'creating', os: 'Rocky Linux 9', size: '128GiB', access: 'Private', createdAt: '2025-09-07' },
+  { id: 'snap-005', name: 'Ubuntu-22.04-k8s', status: 'active', os: 'Ubuntu 22.04', size: '24GiB', access: 'Public', createdAt: '2025-09-05' },
+  { id: 'snap-006', name: 'Alpine-3.18-minimal', status: 'active', os: 'Alpine 3.18', size: '8GiB', access: 'Private', createdAt: '2025-09-03' },
+  { id: 'snap-007', name: 'Windows-Server-2022', status: 'active', os: 'Windows Server', size: '80GiB', access: 'Public', createdAt: '2025-09-01' },
+  { id: 'snap-008', name: 'RHEL-8-enterprise', status: 'error', os: 'RHEL 8', size: '48GiB', access: 'Private', createdAt: '2025-08-28' },
+  { id: 'snap-009', name: 'Fedora-39-dev', status: 'active', os: 'Fedora 39', size: '20GiB', access: 'Private', createdAt: '2025-08-25' },
+  { id: 'snap-010', name: 'Ubuntu-20.04-legacy', status: 'active', os: 'Ubuntu 20.04', size: '40GiB', access: 'Public', createdAt: '2025-08-20' },
+  { id: 'snap-011', name: 'Arch-Linux-custom', status: 'active', os: 'Arch Linux', size: '12GiB', access: 'Private', createdAt: '2025-08-18' },
+  { id: 'snap-012', name: 'openSUSE-15-prod', status: 'active', os: 'openSUSE 15', size: '36GiB', access: 'Public', createdAt: '2025-08-15' },
 ];
 
 /* ----------------------------------------
@@ -177,18 +78,21 @@ export function InstanceSnapshotsPage() {
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [snapshotToDelete, setSnapshotToDelete] = useState<InstanceSnapshot | null>(null);
 
+  // Selection state
+  const [selectedSnapshots, setSelectedSnapshots] = useState<string[]>([]);
+
   // View Preferences state
   const [isPreferencesOpen, setIsPreferencesOpen] = useState(false);
   const [rowsPerPage, setRowsPerPage] = useState(10);
 
   // Default column config
   const defaultColumnConfig: ColumnConfig[] = [
+    { id: 'selection', label: '', visible: true, locked: true },
     { id: 'status', label: 'Status', visible: true, locked: true },
     { id: 'name', label: 'Name', visible: true, locked: true },
+    { id: 'os', label: 'OS', visible: true },
     { id: 'size', label: 'Size', visible: true },
-    { id: 'diskFormat', label: 'Disk Format', visible: true },
-    { id: 'sourceInstance', label: 'Source Instance', visible: true },
-    { id: 'description', label: 'Description', visible: true },
+    { id: 'access', label: 'Access', visible: true },
     { id: 'createdAt', label: 'Created At', visible: true },
     { id: 'actions', label: 'Action', visible: true, locked: true },
   ];
@@ -211,7 +115,7 @@ export function InstanceSnapshotsPage() {
     return snapshots.filter(
       (s) =>
         s.name.toLowerCase().includes(query) ||
-        s.sourceInstance.toLowerCase().includes(query)
+        s.os.toLowerCase().includes(query)
     );
   }, [snapshots, searchQuery]);
 
@@ -236,6 +140,40 @@ export function InstanceSnapshotsPage() {
     setSnapshotToDelete(null);
   };
 
+  // Selection handlers
+  const toggleSelection = (id: string) => {
+    setSelectedSnapshots((prev) =>
+      prev.includes(id) ? prev.filter((i) => i !== id) : [...prev, id]
+    );
+  };
+
+  const toggleAllSelection = () => {
+    const currentPageIds = filteredSnapshots
+      .slice((currentPage - 1) * rowsPerPage, currentPage * rowsPerPage)
+      .map((s) => s.id);
+
+    const allSelected = currentPageIds.every((id) => selectedSnapshots.includes(id));
+
+    if (allSelected) {
+      setSelectedSnapshots((prev) => prev.filter((id) => !currentPageIds.includes(id)));
+    } else {
+      setSelectedSnapshots((prev) => [...new Set([...prev, ...currentPageIds])]);
+    }
+  };
+
+  // Bulk delete handler
+  const handleBulkDelete = () => {
+    setSnapshots((prev) => prev.filter((s) => !selectedSnapshots.includes(s.id)));
+    setSelectedSnapshots([]);
+  };
+
+  // Get current page IDs for "select all" checkbox state
+  const currentPageIds = filteredSnapshots
+    .slice((currentPage - 1) * rowsPerPage, currentPage * rowsPerPage)
+    .map((s) => s.id);
+  const allCurrentPageSelected = currentPageIds.length > 0 && currentPageIds.every((id) => selectedSnapshots.includes(id));
+  const someCurrentPageSelected = currentPageIds.some((id) => selectedSnapshots.includes(id));
+
   // Status mapping
   const statusMap: Record<SnapshotStatus, 'active' | 'building' | 'error' | 'shutoff'> = {
     active: 'active',
@@ -246,6 +184,26 @@ export function InstanceSnapshotsPage() {
 
   // Table columns
   const columns: TableColumn<InstanceSnapshot>[] = [
+    {
+      key: 'selection',
+      label: (
+        <Checkbox
+          checked={paginatedSnapshots.length > 0 && paginatedSnapshots.every((s) => selectedSnapshots.includes(s.id))}
+          indeterminate={paginatedSnapshots.some((s) => selectedSnapshots.includes(s.id)) && !paginatedSnapshots.every((s) => selectedSnapshots.includes(s.id))}
+          onChange={toggleAllSelection}
+        />
+      ),
+      width: '40px',
+      align: 'center',
+      render: (_, row) => (
+        <Checkbox
+          checked={selectedSnapshots.includes(row.id)}
+          onChange={() => toggleSelection(row.id)}
+          onClick={(e) => e.stopPropagation()}
+          aria-label={`Select ${row.name}`}
+        />
+      ),
+    },
     {
       key: 'status',
       label: 'Status',
@@ -262,62 +220,37 @@ export function InstanceSnapshotsPage() {
       flex: 1,
       sortable: true,
       render: (_, row) => (
-        <div className="flex flex-col gap-0.5">
-          <Link
+        <Link
           to={`/instance-snapshots/${row.id}`}
-            className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
-            onClick={(e) => e.stopPropagation()}
-          >
-            {row.name}
-          </Link>
-          <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
-            ID : {row.id}
-          </span>
-        </div>
+          className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
+          onClick={(e) => e.stopPropagation()}
+        >
+          {row.name}
+        </Link>
       ),
+    },
+    {
+      key: 'os',
+      label: 'OS',
+      flex: 1,
+      sortable: true,
     },
     {
       key: 'size',
       label: 'Size',
-      width: '100px',
-      sortable: true,
-    },
-    {
-      key: 'diskFormat',
-      label: 'Disk Format',
-      width: '120px',
-      sortable: true,
-    },
-    {
-      key: 'sourceInstance',
-      label: 'Source instance',
       flex: 1,
       sortable: true,
-      render: (_, row) => (
-        <div className="flex flex-col gap-0.5">
-          <Link
-          to={`/instances/${row.sourceInstanceId}`}
-            className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
-            onClick={(e) => e.stopPropagation()}
-          >
-            {row.sourceInstance}
-          </Link>
-          <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
-            ID : {row.sourceInstanceId}
-          </span>
-        </div>
-      ),
     },
     {
-      key: 'description',
-      label: 'Description',
+      key: 'access',
+      label: 'Access',
       flex: 1,
-      sortable: false,
+      sortable: true,
     },
     {
       key: 'createdAt',
       label: 'Created At',
-      width: '120px',
+      flex: 1,
       sortable: true,
     },
     {
@@ -431,7 +364,7 @@ export function InstanceSnapshotsPage() {
               <h1 className="text-[length:var(--font-size-16)] font-semibold text-[var(--color-text-default)]">
                 Instance Snapshots
               </h1>
-              <Button leftIcon={<IconPlus size={16} />}>
+              <Button>
                 Create Snapshot
               </Button>
             </div>
@@ -460,6 +393,7 @@ export function InstanceSnapshotsPage() {
                     size="sm"
                     leftIcon={<IconTrash size={12} />}
                     disabled={selectedSnapshots.length === 0}
+                    onClick={handleBulkDelete}
                   >
                     Delete
                   </Button>

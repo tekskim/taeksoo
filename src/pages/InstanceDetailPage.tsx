@@ -864,9 +864,7 @@ export function InstanceDetailPage() {
                           width: '72px',
                           align: 'center',
                           render: () => (
-                            <Button variant="tertiary" size="sm" iconOnly>
-                              <IconDotsCircleHorizontal size={16} stroke={1} />
-                            </Button>
+                            <Button variant="tertiary" size="sm" iconOnly icon={<IconDotsCircleHorizontal size={16} stroke={1} />} aria-label="Actions" />
                           ),
                         },
                       ]}
@@ -951,9 +949,7 @@ export function InstanceDetailPage() {
                           width: '72px',
                           align: 'center' as const,
                           render: () => (
-                            <Button variant="tertiary" size="sm" iconOnly>
-                              <IconDotsCircleHorizontal size={16} stroke={1} />
-                            </Button>
+                            <Button variant="tertiary" size="sm" iconOnly icon={<IconDotsCircleHorizontal size={16} stroke={1} />} aria-label="Actions" />
                           ),
                         },
                       ]}
@@ -1048,9 +1044,7 @@ export function InstanceDetailPage() {
                           width: '72px',
                           align: 'center',
                           render: () => (
-                            <Button variant="tertiary" size="sm" iconOnly>
-                              <IconDotsCircleHorizontal size={16} stroke={1} />
-                            </Button>
+                            <Button variant="tertiary" size="sm" iconOnly icon={<IconDotsCircleHorizontal size={16} stroke={1} />} aria-label="Actions" />
                           ),
                         },
                       ]}
@@ -1113,7 +1107,7 @@ export function InstanceDetailPage() {
                     </div>
 
                     {/* Console Area */}
-                    <div className="w-full flex-1 min-h-[500px] bg-[#333333] rounded-lg p-6 overflow-auto">
+                    <div className="w-full flex-1 min-h-[500px] bg-[#0F172A] border border-[var(--color-border-default)] rounded-lg p-6 overflow-auto">
                       <pre className="font-mono text-[13px] leading-[22px] text-[#e2e8f0] whitespace-pre-wrap">
 {`[    0.000000] Linux version 5.15.0-107-cloud (buildd@ubuntu) (gcc 11.3.0) #119-Ubuntu SMP Thu Sep 5 10:10:10 UTC 2025
 [    0.500123] cloud-init[101]: Starting network configuration...
@@ -1186,17 +1180,17 @@ export function InstanceDetailPage() {
                       <div className="flex items-start bg-[var(--table-header-bg)] border border-[var(--color-border-default)] rounded-md">
                         <div className="flex-1 flex items-center h-10 px-3">
                           <div className="flex items-center gap-1.5">
-                            <span className="text-[11px] font-medium text-white">Operation Name</span>
-                            <IconChevronDown size={12} stroke={1} className="text-white" />
+                            <span className="text-[11px] font-medium text-[var(--color-text-default)]">Operation Name</span>
+                            <IconChevronDown size={12} stroke={1} className="text-[var(--color-text-default)]" />
                           </div>
                         </div>
                         <div className="flex-1 flex items-center h-10 px-3 border-l border-[var(--color-border-default)]">
-                          <span className="text-[11px] font-medium text-white">Request ID</span>
+                          <span className="text-[11px] font-medium text-[var(--color-text-default)]">Request ID</span>
                         </div>
                         <div className="flex-1 flex items-center h-10 px-3 border-l border-[var(--color-border-default)]">
                           <div className="flex items-center gap-1.5">
-                            <span className="text-[11px] font-medium text-white">Requested Time</span>
-                            <IconChevronDown size={12} stroke={1} className="text-white" />
+                            <span className="text-[11px] font-medium text-[var(--color-text-default)]">Requested Time</span>
+                            <IconChevronDown size={12} stroke={1} className="text-[var(--color-text-default)]" />
                           </div>
                         </div>
                       </div>

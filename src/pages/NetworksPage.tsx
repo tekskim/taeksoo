@@ -23,7 +23,6 @@ import { Sidebar } from '@/components/Sidebar';
 import { useTabs } from '@/contexts/TabContext';
 import { ViewPreferencesDrawer, type ColumnConfig } from '@/components/ViewPreferencesDrawer';
 import {
-  IconPlus,
   IconDotsCircleHorizontal,
   IconTrash,
   IconDownload,
@@ -85,6 +84,7 @@ export function NetworksPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const [networks] = useState(mockNetworks);
   const [activeTab, setActiveTab] = useState('current');
+  const [selectedNetworks, setSelectedNetworks] = useState<string[]>([]);
   
   // Delete modal state
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
@@ -99,8 +99,7 @@ export function NetworksPage() {
     { id: 'name', label: 'Name', visible: true, locked: true },
     { id: 'subnetCidr', label: 'Subnet CIDR', visible: true },
     { id: 'external', label: 'External', visible: true },
-    { id: 'shared', label: 'Shared', visible: true },
-    { id: 'adminState', label: 'Admin State', visible: true },
+    { id: 'diskTag', label: 'Disk Tag', visible: true },
     { id: 'actions', label: 'Action', visible: true, locked: true },
   ];
 
@@ -191,19 +190,13 @@ export function NetworksPage() {
     {
       key: 'external',
       label: 'External',
-      width: '100px',
+      flex: 1,
       render: (value: boolean) => value ? 'Yes' : 'No',
     },
     {
-      key: 'shared',
-      label: 'Shared',
-      width: '100px',
-      render: (value: boolean) => value ? 'On' : 'Off',
-    },
-    {
-      key: 'adminState',
-      label: 'Admin State',
-      width: '120px',
+      key: 'diskTag',
+      label: 'Disk Tag',
+      flex: 1,
     },
     {
       key: 'actions',
@@ -296,7 +289,7 @@ export function NetworksPage() {
               <h1 className="text-[length:var(--font-size-16)] font-semibold text-[var(--color-text-default)]">
                 Networks
               </h1>
-              <Button variant="primary" size="md" leftIcon={<IconPlus size={14} />}>
+              <Button variant="primary" size="md">
                 Create Network
               </Button>
             </div>
@@ -304,7 +297,7 @@ export function NetworksPage() {
             {/* Tabs */}
             <Tabs value={activeTab} onChange={setActiveTab} size="sm">
               <TabList>
-                <Tab value="current">Current Tenant</Tab>
+                <Tab value="current">Current Project</Tab>
                 <Tab value="shared">Shared</Tab>
                 <Tab value="external">External</Tab>
               </TabList>
@@ -324,7 +317,7 @@ export function NetworksPage() {
                       fullWidth
                     />
                   </div>
-                  <Button variant="secondary" size="sm" icon={<IconDownload size={12} />} aria-label="Download" />
+                  <Button variant="secondary" size="sm" iconOnly icon={<IconDownload size={12} />} aria-label="Download" />
                 </ListToolbar.Actions>
               }
               bulkActions={
@@ -356,6 +349,9 @@ export function NetworksPage() {
               columns={visibleColumns}
               data={paginatedNetworks}
               rowKey="id"
+              selectable
+              selectedRows={selectedNetworks}
+              onSelectionChange={setSelectedNetworks}
             />
           </VStack>
         </div>

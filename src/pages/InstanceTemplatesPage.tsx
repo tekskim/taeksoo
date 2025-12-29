@@ -23,7 +23,6 @@ import { Sidebar } from '@/components/Sidebar';
 import { useTabs } from '@/contexts/TabContext';
 import { ViewPreferencesDrawer, type ColumnConfig } from '@/components/ViewPreferencesDrawer';
 import {
-  IconPlus,
   IconDotsCircleHorizontal,
   IconTrash,
   IconDownload,
@@ -227,17 +226,15 @@ export function InstanceTemplatesPage() {
   const columns: TableColumn<InstanceTemplate>[] = [
     {
       key: 'selection',
-      label: '',
-      width: '40px',
-      align: 'center',
-      headerRender: () => (
+      label: (
         <Checkbox
-          checked={allCurrentPageSelected}
-          indeterminate={someCurrentPageSelected && !allCurrentPageSelected}
+          checked={paginatedTemplates.length > 0 && paginatedTemplates.every((t) => selectedTemplates.includes(t.id))}
+          indeterminate={paginatedTemplates.some((t) => selectedTemplates.includes(t.id)) && !paginatedTemplates.every((t) => selectedTemplates.includes(t.id))}
           onChange={toggleAllSelection}
-          aria-label="Select all"
         />
       ),
+      width: '40px',
+      align: 'center',
       render: (_, row) => (
         <Checkbox
           checked={selectedTemplates.includes(row.id)}
@@ -436,7 +433,7 @@ export function InstanceTemplatesPage() {
               <h1 className="text-[length:var(--font-size-16)] font-semibold text-[var(--color-text-default)]">
                 Instance Templates
               </h1>
-              <Button leftIcon={<IconPlus size={16} />}>
+              <Button>
                 Create Template
               </Button>
             </div>
