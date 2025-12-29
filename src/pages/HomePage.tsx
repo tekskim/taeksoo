@@ -31,28 +31,30 @@ interface PercentageBadgeProps {
 }
 
 function PercentageBadge({ percentage }: PercentageBadgeProps) {
-  const getBgColor = () => {
-    if (percentage >= 100) return 'bg-[#fee2e2]';
-    if (percentage >= 70) return 'bg-[#ffedd5]';
-    return 'bg-[#dcfce7]';
+  const getColors = () => {
+    if (percentage >= 100) return {
+      bg: 'bg-[var(--color-state-danger)]/15',
+      dot: 'bg-[var(--color-state-danger)]',
+      text: 'text-[var(--color-state-danger)]'
+    };
+    if (percentage >= 70) return {
+      bg: 'bg-[var(--color-state-warning)]/15',
+      dot: 'bg-[var(--color-state-warning)]',
+      text: 'text-[var(--color-state-warning)]'
+    };
+    return {
+      bg: 'bg-[var(--color-state-success)]/15',
+      dot: 'bg-[var(--color-state-success)]',
+      text: 'text-[var(--color-state-success)]'
+    };
   };
   
-  const getDotColor = () => {
-    if (percentage >= 100) return 'bg-[#ef4444]';
-    if (percentage >= 70) return 'bg-[#f97316]';
-    return 'bg-[#22c55e]';
-  };
-  
-  const getTextColor = () => {
-    if (percentage >= 100) return 'text-[#ef4444]';
-    if (percentage >= 70) return 'text-[#f97316]';
-    return 'text-[#22c55e]';
-  };
+  const colors = getColors();
   
   return (
-    <div className={`flex items-center gap-1 px-1.5 py-0.5 rounded-md ${getBgColor()}`}>
-      <div className={`w-2 h-2 rounded-full ${getDotColor()}`} />
-      <span className={`text-[11px] font-medium ${getTextColor()}`}>{percentage}%</span>
+    <div className={`flex items-center gap-1 px-1.5 py-0.5 rounded-md ${colors.bg}`}>
+      <div className={`w-2 h-2 rounded-full ${colors.dot}`} />
+      <span className={`text-[11px] font-medium ${colors.text}`}>{percentage}%</span>
     </div>
   );
 }
@@ -73,15 +75,15 @@ function ComputeQuotaBar({ label, used, total, unit }: ComputeQuotaBarProps) {
   return (
     <div className="flex flex-col gap-2">
       <div className="flex items-center justify-between">
-        <span className="text-[12px] font-medium text-[#0f172a]">{label}</span>
+        <span className="text-[12px] font-medium text-[var(--color-text-default)]">{label}</span>
         <div className="flex items-center gap-2">
-          <span className="text-[11px] text-[#64748b]">{used}/{total} {unit}</span>
+          <span className="text-[11px] text-[var(--color-text-muted)]">{used}/{total} {unit}</span>
           <PercentageBadge percentage={percentage} />
         </div>
       </div>
-      <div className="h-1 rounded-sm bg-[#e2e8f0] overflow-hidden">
+      <div className="h-1 rounded-sm bg-[var(--color-surface-muted)] overflow-hidden">
         <div 
-          className="h-full rounded-sm bg-[#475569]"
+          className="h-full rounded-sm bg-[var(--color-text-muted)]"
           style={{ width: `${Math.min(percentage, 100)}%` }}
         />
       </div>
@@ -98,12 +100,13 @@ interface SummaryStatBoxProps {
 }
 
 function SummaryStatBox({ value, label }: SummaryStatBoxProps) {
-  const textColor = value === 0 ? 'text-[#64748b]' : 'text-[#0f172a]';
+  const textColor = value === 0 ? 'text-[var(--color-text-muted)]' : 'text-[var(--color-text-default)]';
+  const isClickable = label !== 'Others';
   
   return (
-    <div className="flex-1 bg-[#fafafa] rounded-lg p-4 border-2 border-transparent hover:border-[#2563eb] transition-colors cursor-pointer">
+    <div className={`flex-1 bg-[var(--color-surface-subtle)] rounded-lg p-4 border-2 border-transparent transition-colors ${isClickable ? 'hover:border-[var(--color-action-primary)] cursor-pointer' : ''}`}>
       <div className={`text-[20px] font-medium ${textColor} pb-1`}>{value}</div>
-      <div className="text-[11px] text-[#475569]">{label}</div>
+      <div className="text-[11px] text-[var(--color-text-subtle)]">{label}</div>
     </div>
   );
 }
@@ -123,25 +126,25 @@ function InfraQuotaCard({ icon, label, used, total, href }: InfraQuotaCardProps)
   const percentage = Math.round((used / total) * 100);
   
   return (
-    <div className="bg-[#fafafa] rounded-lg pt-4 pb-5 px-5">
+    <div className="bg-[var(--color-surface-subtle)] rounded-lg p-4">
       <div className="flex items-center justify-between mb-3">
         <Link 
           to={href}
-          className="flex items-center gap-1 text-[12px] font-medium text-[#0f172a] hover:text-[#2563eb]"
+          className="flex items-center gap-1 text-[12px] font-medium text-[var(--color-text-default)] hover:text-[var(--color-action-primary)] min-w-0"
         >
-          {icon}
-          <span>{label}</span>
-          <IconChevronRight size={12} className="text-[#64748b]" />
+          <span className="flex-shrink-0">{icon}</span>
+          <span className="truncate">{label}</span>
+          <IconChevronRight size={12} className="text-[var(--color-text-muted)] flex-shrink-0" />
         </Link>
         <PercentageBadge percentage={percentage} />
       </div>
       <div className="flex items-baseline mb-3">
-        <span className="text-[24px] text-[#0f172a]">{used}</span>
-        <span className="text-[14px] text-[#64748b] pt-1.5">/{total}</span>
+        <span className="text-[24px] text-[var(--color-text-default)]">{used}</span>
+        <span className="text-[14px] text-[var(--color-text-muted)] pt-1.5">/{total}</span>
       </div>
-      <div className="h-1 rounded-sm bg-[#e2e8f0] overflow-hidden">
+      <div className="h-1 rounded-sm bg-[var(--color-surface-muted)] overflow-hidden">
         <div 
-          className="h-full rounded-sm bg-[#475569]"
+          className="h-full rounded-sm bg-[var(--color-text-muted)]"
           style={{ width: `${Math.min(percentage, 100)}%` }}
         />
       </div>
@@ -162,16 +165,16 @@ interface ActivityItemProps {
 
 function ActivityItem({ name, resourceType, action, time, isLast = false }: ActivityItemProps) {
   return (
-    <div className={`flex items-center justify-between py-2.5 ${!isLast ? 'border-b border-[#f1f5f9]' : ''}`}>
+    <div className={`flex items-center justify-between py-2.5 ${!isLast ? 'border-b border-[var(--color-border-subtle)]' : ''}`}>
       <div>
-        <div className="text-[12px] font-medium text-[#2563eb]">{name}</div>
-        <div className="flex items-center gap-1.5 text-[11px] text-[#64748b]">
+        <div className="text-[12px] font-medium text-[var(--color-action-primary)]">{name}</div>
+        <div className="flex items-center gap-1.5 text-[11px] text-[var(--color-text-muted)]">
           <span>{resourceType}</span>
-          <span className="text-[#e2e8f0]">|</span>
+          <span className="text-[var(--color-border-default)]">|</span>
           <span>{action}</span>
         </div>
       </div>
-      <span className="text-[11px] text-[#64748b]">{time}</span>
+      <span className="text-[11px] text-[var(--color-text-muted)]">{time}</span>
     </div>
   );
 }
@@ -186,10 +189,10 @@ interface CardProps {
   bgColor?: string;
 }
 
-function Card({ title, children, className = '', bgColor = 'bg-white' }: CardProps) {
+function Card({ title, children, className = '', bgColor = 'bg-[var(--color-surface-default)]' }: CardProps) {
   return (
-    <div className={`p-6 rounded-2xl border border-[#e2e8f0] ${bgColor} ${className}`}>
-      <h6 className="text-[length:var(--font-size-12)] leading-[var(--line-height-16)] font-semibold text-[var(--color-text-muted)] mb-6">{title}</h6>
+    <div className={`p-4 rounded-2xl border border-[var(--color-border-default)] ${bgColor} ${className}`}>
+      <h6 className="text-[length:var(--font-size-12)] leading-[var(--line-height-16)] font-semibold text-[var(--color-text-muted)] mb-4">{title}</h6>
       {children}
     </div>
   );
@@ -221,7 +224,7 @@ export function HomePage() {
     <div className="min-h-screen bg-[var(--color-surface-subtle)]">
       <Sidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(false)} />
 
-      <main className={`min-h-screen bg-white transition-[margin] duration-200 overflow-x-auto ${sidebarOpen ? 'ml-[200px]' : 'ml-0'}`}>
+      <main className={`min-h-screen bg-[var(--color-surface-default)] transition-[margin] duration-200 overflow-x-auto ${sidebarOpen ? 'ml-[200px]' : 'ml-0'}`}>
         <div className="min-w-[var(--layout-content-min-width)]">
         <TabBar
           tabs={tabBarTabs}
@@ -261,15 +264,15 @@ export function HomePage() {
           {/* Top Row - 4 Cards */}
           <div className="grid grid-cols-4 gap-6 mb-6">
             {/* PROJECT INFO */}
-            <Card title="PROJECT INFO" bgColor="bg-[#fafafa]" className="flex flex-col justify-between">
+            <Card title="PROJECT INFO" bgColor="bg-[var(--color-surface-subtle)]" className="flex flex-col justify-between">
               <div>
-                <h3 className="text-[32px] font-semibold text-[#0f172a] mb-4">proj-1</h3>
+                <h3 className="text-[32px] font-semibold text-[var(--color-text-default)] mb-4">proj-1</h3>
               </div>
               <div className="space-y-4">
                 <div>
-                  <div className="text-[10px] text-[#64748b] mb-1">ID</div>
+                  <div className="text-[10px] text-[var(--color-text-muted)] mb-1">ID</div>
                   <div className="flex items-center gap-1">
-                    <span className="text-[12px] text-[#0f172a]">{projectId}</span>
+                    <span className="text-[12px] text-[var(--color-text-default)]">{projectId}</span>
                     <button 
                       onClick={handleCopyId}
                       className="p-1.5 -m-1 rounded-md hover:bg-[var(--color-surface-muted)] active:bg-[var(--color-surface-subtle)] transition-colors"
@@ -284,8 +287,8 @@ export function HomePage() {
                   </div>
                 </div>
                 <div>
-                  <div className="text-[10px] text-[#64748b] mb-1">Description</div>
-                  <p className="text-[12px] text-[#0f172a]">
+                  <div className="text-[10px] text-[var(--color-text-muted)] mb-1">Description</div>
+                  <p className="text-[12px] text-[var(--color-text-default)]">
                     Development environment for the 'service' backend services.
                   </p>
                 </div>
@@ -304,12 +307,12 @@ export function HomePage() {
             </Card>
 
             {/* INSTANCE SUMMARY */}
-            <Card title="INSTANCE SUMMARY">
-              <div className="mb-6">
-                <div className="text-[24px] font-semibold text-[#0f172a]">13</div>
-                <div className="text-[12px] text-[#475569]">Total</div>
+            <Card title="INSTANCE SUMMARY" className="flex flex-col">
+              <div className="mb-4">
+                <div className="text-[24px] font-semibold text-[var(--color-text-default)]">13</div>
+                <div className="text-[12px] text-[var(--color-text-subtle)]">Total</div>
               </div>
-              <div className="space-y-2">
+              <div className="space-y-2 mt-auto">
                 <div className="flex gap-2">
                   <SummaryStatBox value={10} label="Active" />
                   <SummaryStatBox value={0} label="Error" />
@@ -322,12 +325,12 @@ export function HomePage() {
             </Card>
 
             {/* BARE METAL SUMMARY */}
-            <Card title="BARE METAL SUMMARY" className="border-[#e0e0e0]">
-              <div className="mb-6">
-                <div className="text-[24px] font-semibold text-[#0f172a]">8</div>
-                <div className="text-[12px] text-[#475569]">Total</div>
+            <Card title="BARE METAL SUMMARY" className="flex flex-col">
+              <div className="mb-4">
+                <div className="text-[24px] font-semibold text-[var(--color-text-default)]">8</div>
+                <div className="text-[12px] text-[var(--color-text-subtle)]">Total</div>
               </div>
-              <div className="space-y-2">
+              <div className="space-y-2 mt-auto">
                 <div className="flex gap-2">
                   <SummaryStatBox value={6} label="Active" />
                   <SummaryStatBox value={1} label="Error" />
@@ -343,8 +346,8 @@ export function HomePage() {
           {/* Bottom Row - 2 Cards */}
           <div className="grid grid-cols-[1fr_396px] gap-6">
             {/* INFRASTRUCTURE QUOTA */}
-            <Card title="INFRASTRUCTURE QUOTA">
-              <div className="space-y-4">
+            <Card title="INFRASTRUCTURE QUOTA" className="flex flex-col">
+              <div className="space-y-4 mt-auto">
                 <div className="grid grid-cols-4 gap-4">
                   <InfraQuotaCard
                     icon={<IconDatabase size={16} stroke={1.5} />}
@@ -409,8 +412,8 @@ export function HomePage() {
             </Card>
 
             {/* RECENT ACTIVITIES */}
-            <Card title="RECENT ACTIVITIES">
-              <div>
+            <Card title="RECENT ACTIVITIES" className="flex flex-col">
+              <div className="mt-auto">
                 <ActivityItem
                   name="web-server-01"
                   resourceType="Instance"
