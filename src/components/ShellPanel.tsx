@@ -313,6 +313,7 @@ export function ShellPanel({
             onChange={setSelectedContainer}
             options={containerOptions}
             placeholder="Container"
+            menuPlacement="top"
           />
 
           {/* Clear Button - Using Design System */}
@@ -349,6 +350,7 @@ export function ShellPanel({
             onChange={setViewTime}
             options={viewTimeOptions}
             placeholder="View"
+            menuPlacement="top"
           />
         </div>
       </div>

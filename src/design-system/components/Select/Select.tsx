@@ -20,6 +20,7 @@ export interface SelectOption {
 }
 
 export type SelectSize = 'sm' | 'md';
+export type SelectMenuPlacement = 'top' | 'bottom' | 'auto';
 
 export interface SelectProps {
   /** Options to display */
@@ -44,6 +45,8 @@ export interface SelectProps {
   fullWidth?: boolean;
   /** Size variant */
   size?: SelectSize;
+  /** Menu placement direction */
+  menuPlacement?: SelectMenuPlacement;
   /** Additional CSS classes */
   className?: string;
 }
@@ -64,6 +67,7 @@ export function Select({
   disabled = false,
   fullWidth = false,
   size = 'md',
+  menuPlacement = 'bottom',
   className = '',
 }: SelectProps) {
   const id = useId();
@@ -74,7 +78,7 @@ export function Select({
   const [isOpen, setIsOpen] = useState(false);
   const [internalValue, setInternalValue] = useState(defaultValue ?? '');
   const [focusedIndex, setFocusedIndex] = useState(-1);
-  const [dropdownPosition, setDropdownPosition] = useState({ top: 0, left: 0, width: 0 });
+  const [dropdownStyle, setDropdownStyle] = useState<React.CSSProperties>({});
 
   // Refs
   const triggerRef = useRef<HTMLButtonElement>(null);
@@ -94,12 +98,46 @@ export function Select({
   const updatePosition = useCallback(() => {
     if (!triggerRef.current) return;
     const rect = triggerRef.current.getBoundingClientRect();
-    setDropdownPosition({
-      top: rect.bottom + 4,
-      left: rect.left,
-      width: rect.width,
-    });
-  }, []);
+    
+    // For 'top' placement, position from bottom of viewport
+    if (menuPlacement === 'top') {
+      setDropdownStyle({
+        bottom: window.innerHeight - rect.top + 4,
+        left: rect.left,
+        width: rect.width,
+        maxHeight: rect.top - 16,
+      });
+    } else if (menuPlacement === 'auto') {
+      // Auto: check available space
+      const spaceBelow = window.innerHeight - rect.bottom - 8;
+      const spaceAbove = rect.top - 8;
+      const estimatedHeight = options.length * 32 + 8;
+      
+      if (spaceBelow < estimatedHeight && spaceAbove > spaceBelow) {
+        setDropdownStyle({
+          bottom: window.innerHeight - rect.top + 4,
+          left: rect.left,
+          width: rect.width,
+          maxHeight: spaceAbove,
+        });
+      } else {
+        setDropdownStyle({
+          top: rect.bottom + 4,
+          left: rect.left,
+          width: rect.width,
+          maxHeight: spaceBelow,
+        });
+      }
+    } else {
+      // Default: bottom
+      setDropdownStyle({
+        top: rect.bottom + 4,
+        left: rect.left,
+        width: rect.width,
+        maxHeight: window.innerHeight - rect.bottom - 16,
+      });
+    }
+  }, [menuPlacement, options.length]);
 
   // Handle open/close
   const openDropdown = useCallback(() => {
@@ -264,7 +302,7 @@ export function Select({
     'border border-[var(--select-menu-border)]',
     'rounded-[var(--select-menu-radius)]',
     'shadow-[var(--select-menu-shadow)]',
-    'overflow-hidden',
+    'overflow-y-auto',
     'focus:outline-none',
   );
 
@@ -342,11 +380,7 @@ export function Select({
             tabIndex={-1}
             onKeyDown={handleListboxKeyDown}
             className={dropdownClasses}
-            style={{
-              top: dropdownPosition.top,
-              left: dropdownPosition.left,
-              width: dropdownPosition.width,
-            }}
+            style={dropdownStyle}
           >
             {options.map((option, index) => {
               const isSelected = option.value === currentValue;
