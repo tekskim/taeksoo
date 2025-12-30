@@ -23,7 +23,7 @@ function AppRoutes() {
 function App() {
   return (
     <DarkModeProvider>
-      <BrowserRouter>
+      <BrowserRouter basename={import.meta.env.BASE_URL}>
         <AppRoutes />
       </BrowserRouter>
     </DarkModeProvider>
