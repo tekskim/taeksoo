@@ -486,6 +486,9 @@ export function InstanceSnapshotsPage() {
               data={filteredSnapshots.slice((currentPage - 1) * rowsPerPage, currentPage * rowsPerPage)}
               rowKey="id"
               emptyMessage="No snapshots found"
+              selectable
+              selectedRows={selectedSnapshots}
+              onSelectionChange={setSelectedSnapshots}
             />
           </VStack>
         </div>

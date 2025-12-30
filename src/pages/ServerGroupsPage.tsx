@@ -304,6 +304,9 @@ export function ServerGroupsPage() {
               data={filteredServerGroups.slice((currentPage - 1) * rowsPerPage, currentPage * rowsPerPage)}
               rowKey="id"
               emptyMessage="No server groups found"
+              selectable
+              selectedRows={selectedServerGroups}
+              onSelectionChange={setSelectedServerGroups}
             />
           </VStack>
         </div>

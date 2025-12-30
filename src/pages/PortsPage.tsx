@@ -427,6 +427,9 @@ export function PortsPage() {
               columns={visibleColumns}
               data={paginatedPorts}
               rowKey="id"
+              selectable
+              selectedRows={selectedPorts}
+              onSelectionChange={setSelectedPorts}
             />
           </VStack>
         </div>

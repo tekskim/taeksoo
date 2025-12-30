@@ -81,6 +81,7 @@ export function ImagesPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const [activeTab, setActiveTab] = useState('current');
   const [images, setImages] = useState(mockImages);
+  const [selectedImages, setSelectedImages] = useState<string[]>([]);
   
   // Delete modal state
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
@@ -422,6 +423,9 @@ export function ImagesPage() {
               data={filteredImages.slice((currentPage - 1) * rowsPerPage, currentPage * rowsPerPage)}
               rowKey="id"
               emptyMessage="No images found"
+              selectable
+              selectedRows={selectedImages}
+              onSelectionChange={setSelectedImages}
             />
           </VStack>
         </div>
