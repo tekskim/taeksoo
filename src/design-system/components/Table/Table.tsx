@@ -21,6 +21,8 @@ export interface TableColumn<T = any> {
   align?: 'left' | 'center' | 'right';
   /** Whether column is sortable */
   sortable?: boolean;
+  /** Custom header renderer */
+  headerRender?: () => React.ReactNode;
   /** Custom cell renderer */
   render?: (value: any, row: T, rowIndex: number) => React.ReactNode;
 }
@@ -223,16 +225,20 @@ export function Table<T extends Record<string, any>>({
                 }}
                 onClick={column.sortable ? () => handleSort(column.key) : undefined}
               >
-                <div
-                  className={`
-                    flex items-center gap-1 w-full
-                    ${column.align === 'center' ? 'justify-center' : ''}
-                    ${column.align === 'right' ? 'justify-end flex-row-reverse' : ''}
-                  `}
-                >
-                  <span>{column.label}</span>
-                  {column.sortable && renderSortIcon(column.key)}
-                </div>
+                {column.headerRender ? (
+                  column.headerRender()
+                ) : (
+                  <div
+                    className={`
+                      flex items-center gap-1 w-full
+                      ${column.align === 'center' ? 'justify-center' : ''}
+                      ${column.align === 'right' ? 'justify-end flex-row-reverse' : ''}
+                    `}
+                  >
+                    <span>{column.label}</span>
+                    {column.sortable && renderSortIcon(column.key)}
+                  </div>
+                )}
               </div>
             );
           })}
