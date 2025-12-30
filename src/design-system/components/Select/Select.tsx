@@ -19,6 +19,9 @@ export interface SelectOption {
   disabled?: boolean;
 }
 
+export type SelectSize = 'sm' | 'md';
+export type SelectMenuPlacement = 'top' | 'bottom' | 'auto';
+
 export interface SelectProps {
   /** Options to display */
   options: SelectOption[];
@@ -40,6 +43,10 @@ export interface SelectProps {
   disabled?: boolean;
   /** Full width */
   fullWidth?: boolean;
+  /** Size variant */
+  size?: SelectSize;
+  /** Menu placement direction */
+  menuPlacement?: SelectMenuPlacement;
   /** Additional CSS classes */
   className?: string;
 }
@@ -59,6 +66,8 @@ export function Select({
   error,
   disabled = false,
   fullWidth = false,
+  size = 'md',
+  menuPlacement = 'bottom',
   className = '',
 }: SelectProps) {
   const id = useId();
@@ -69,7 +78,7 @@ export function Select({
   const [isOpen, setIsOpen] = useState(false);
   const [internalValue, setInternalValue] = useState(defaultValue ?? '');
   const [focusedIndex, setFocusedIndex] = useState(-1);
-  const [dropdownPosition, setDropdownPosition] = useState({ top: 0, left: 0, width: 0 });
+  const [dropdownStyle, setDropdownStyle] = useState<React.CSSProperties>({});
 
   // Refs
   const triggerRef = useRef<HTMLButtonElement>(null);
@@ -89,12 +98,46 @@ export function Select({
   const updatePosition = useCallback(() => {
     if (!triggerRef.current) return;
     const rect = triggerRef.current.getBoundingClientRect();
-    setDropdownPosition({
-      top: rect.bottom + 4,
-      left: rect.left,
-      width: rect.width,
-    });
-  }, []);
+    
+    // For 'top' placement, position from bottom of viewport
+    if (menuPlacement === 'top') {
+      setDropdownStyle({
+        bottom: window.innerHeight - rect.top + 4,
+        left: rect.left,
+        width: rect.width,
+        maxHeight: rect.top - 16,
+      });
+    } else if (menuPlacement === 'auto') {
+      // Auto: check available space
+      const spaceBelow = window.innerHeight - rect.bottom - 8;
+      const spaceAbove = rect.top - 8;
+      const estimatedHeight = options.length * 32 + 8;
+      
+      if (spaceBelow < estimatedHeight && spaceAbove > spaceBelow) {
+        setDropdownStyle({
+          bottom: window.innerHeight - rect.top + 4,
+          left: rect.left,
+          width: rect.width,
+          maxHeight: spaceAbove,
+        });
+      } else {
+        setDropdownStyle({
+          top: rect.bottom + 4,
+          left: rect.left,
+          width: rect.width,
+          maxHeight: spaceBelow,
+        });
+      }
+    } else {
+      // Default: bottom
+      setDropdownStyle({
+        top: rect.bottom + 4,
+        left: rect.left,
+        width: rect.width,
+        maxHeight: window.innerHeight - rect.bottom - 16,
+      });
+    }
+  }, [menuPlacement, options.length]);
 
   // Handle open/close
   const openDropdown = useCallback(() => {
@@ -216,12 +259,29 @@ export function Select({
     fullWidth ? 'w-full' : 'w-fit',
   );
 
+  // Size styles
+  const sizeStyles = {
+    sm: {
+      trigger: 'h-[28px] px-2 text-[11px] leading-[16px] min-w-[60px] gap-1',
+      item: 'px-2 py-1 text-[11px] leading-[16px]',
+      icon: 14,
+      checkIcon: 12,
+    },
+    md: {
+      trigger: 'px-[var(--select-padding-x)] py-[var(--select-padding-y)] text-[length:var(--select-font-size)] leading-[var(--select-line-height)] min-w-[80px] gap-2',
+      item: 'px-[var(--select-item-padding-x)] py-[var(--select-item-padding-y)] text-[length:var(--select-item-font-size)] leading-[var(--select-item-line-height)]',
+      icon: 16,
+      checkIcon: 14,
+    },
+  };
+
+  const currentSize = sizeStyles[size];
+
   const triggerClasses = twMerge(
     'flex items-center justify-between',
-    'w-full min-w-[80px]',
-    'px-[var(--select-padding-x)] py-[var(--select-padding-y)]',
+    'w-full',
+    currentSize.trigger,
     'bg-[var(--select-bg)]',
-    'text-[length:var(--select-font-size)] leading-[var(--select-line-height)]',
     'border border-solid rounded-[var(--select-radius)]',
     'transition-colors duration-[var(--duration-fast)]',
     'cursor-pointer',
@@ -242,8 +302,13 @@ export function Select({
     'border border-[var(--select-menu-border)]',
     'rounded-[var(--select-menu-radius)]',
     'shadow-[var(--select-menu-shadow)]',
-    'overflow-hidden',
+    'overflow-y-auto',
     'focus:outline-none',
+    // Custom scrollbar - transparent track
+    '[&::-webkit-scrollbar]:w-1.5',
+    '[&::-webkit-scrollbar-track]:bg-transparent',
+    '[&::-webkit-scrollbar-thumb]:bg-[var(--color-border-default)]',
+    '[&::-webkit-scrollbar-thumb]:rounded-full',
   );
 
   return (
@@ -284,7 +349,8 @@ export function Select({
           {selectedOption?.label ?? placeholder}
         </span>
         <IconChevronDown
-          size={16}
+          size={currentSize.icon}
+          stroke={1.5}
           className={twMerge(
             'shrink-0 transition-transform duration-[var(--duration-fast)]',
             'text-[var(--color-text-default)]',
@@ -319,11 +385,7 @@ export function Select({
             tabIndex={-1}
             onKeyDown={handleListboxKeyDown}
             className={dropdownClasses}
-            style={{
-              top: dropdownPosition.top,
-              left: dropdownPosition.left,
-              width: dropdownPosition.width,
-            }}
+            style={dropdownStyle}
           >
             {options.map((option, index) => {
               const isSelected = option.value === currentValue;
@@ -344,8 +406,7 @@ export function Select({
                   }}
                   className={twMerge(
                     'flex items-center justify-between',
-                    'px-[var(--select-item-padding-x)] py-[var(--select-item-padding-y)]',
-                    'text-[length:var(--select-item-font-size)] leading-[var(--select-item-line-height)]',
+                    currentSize.item,
                     'font-medium',
                     'cursor-pointer transition-colors duration-[var(--duration-fast)]',
                     // Border bottom (except last)
@@ -362,7 +423,7 @@ export function Select({
                 >
                   <span>{option.label}</span>
                   {isSelected && (
-                    <IconCheck size={14} className="shrink-0 text-[var(--select-item-selected-text)]" />
+                    <IconCheck size={currentSize.checkIcon} className="shrink-0 text-[var(--select-item-selected-text)]" />
                   )}
                 </div>
               );

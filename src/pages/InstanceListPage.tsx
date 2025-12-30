@@ -39,7 +39,8 @@ import { ViewPreferencesDrawer, type ColumnConfig } from '@/components/ViewPrefe
 import { CreateInstanceSnapshotDrawer, type InstanceInfo } from '@/components/CreateInstanceSnapshotDrawer';
 import { LockSettingDrawer, type InstanceInfo as LockInstanceInfo } from '@/components/LockSettingDrawer';
 import { EditInstanceDrawer, type InstanceInfo as EditInstanceInfo } from '@/components/EditInstanceDrawer';
-import { Link } from 'react-router-dom';
+import { ShellPanel, useShellPanel, type ShellTab } from '@/components/ShellPanel';
+import { Link, useNavigate } from 'react-router-dom';
 
 /* ----------------------------------------
    Types
@@ -161,6 +162,31 @@ export function InstanceListPage() {
   // Edit Instance Drawer state
   const [isEditDrawerOpen, setIsEditDrawerOpen] = useState(false);
   const [selectedInstanceForEdit, setSelectedInstanceForEdit] = useState<EditInstanceInfo | null>(null);
+
+  // Table selection state
+  const [selectedInstances, setSelectedInstances] = useState<string[]>([]);
+  const [selectedBareMetalInstances, setSelectedBareMetalInstances] = useState<string[]>([]);
+
+  // Shell Panel state (using hook for multi-tab support)
+  const shellPanel = useShellPanel();
+  const navigate = useNavigate();
+  const { addTab } = useTabs();
+
+  // Handle opening shell tab in new browser tab
+  const handleOpenInNewTab = (tab: ShellTab) => {
+    // Add tab to the tab bar
+    const tabId = `console-${tab.instanceId}`;
+    addTab({
+      id: tabId,
+      label: tab.title,
+      path: `/console/${tab.instanceId}?name=${encodeURIComponent(tab.title)}`,
+      closable: true,
+    });
+    // Close the shell panel
+    shellPanel.closeTab(tab.id);
+    // Navigate to the console page
+    navigate(`/console/${tab.instanceId}?name=${encodeURIComponent(tab.title)}`);
+  };
 
   // Default column config for VM instances
   const defaultVMColumnConfig: ColumnConfig[] = [
@@ -474,7 +500,14 @@ export function InstanceListPage() {
       align: 'center',
       render: (_, row) => (
         <HStack gap={1} className="justify-center">
-          <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
+          <button 
+            className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group"
+            onClick={(e) => {
+              e.stopPropagation();
+              shellPanel.openConsole(row.id, row.name);
+            }}
+            title="Open console"
+          >
             <IconTerminal2 size={16} stroke={1} className="text-[var(--color-text-subtle)] group-hover:text-[var(--color-text-default)]" />
           </button>
           <div onClick={(e) => e.stopPropagation()}>
@@ -507,9 +540,9 @@ export function InstanceListPage() {
     {
       key: 'status',
       label: 'Status',
-      width: '80px',
+      width: '59px',
       align: 'center',
-      sortable: true,
+      sortable: false,
       render: (_, row) => (
         <StatusIndicator status={statusMap[row.status]} layout="icon-only" />
       ),
@@ -743,6 +776,9 @@ export function InstanceListPage() {
                 data={paginatedInstances}
                 rowKey="id"
                 emptyMessage="No instances found"
+                selectable
+                selectedKeys={selectedInstances}
+                onSelectionChange={setSelectedInstances}
               />
             )}
 
@@ -753,6 +789,9 @@ export function InstanceListPage() {
                 data={paginatedBareMetalInstances}
                 rowKey="id"
                 emptyMessage="No bare metal instances found"
+                selectable
+                selectedKeys={selectedBareMetalInstances}
+                onSelectionChange={setSelectedBareMetalInstances}
               />
             )}
 
@@ -823,6 +862,21 @@ export function InstanceListPage() {
           console.log('Editing instance:', name, 'description:', description, 'for instance:', selectedInstanceForEdit?.id);
           // TODO: Implement actual edit API call
         }}
+      />
+
+      {/* Shell Panel (Multi-tab Console) */}
+      <ShellPanel
+        isExpanded={shellPanel.isExpanded}
+        onExpandedChange={shellPanel.setIsExpanded}
+        tabs={shellPanel.tabs}
+        activeTabId={shellPanel.activeTabId}
+        onActiveTabChange={shellPanel.setActiveTabId}
+        onCloseTab={shellPanel.closeTab}
+        onContentChange={shellPanel.updateContent}
+        onClear={shellPanel.clearContent}
+        onOpenInNewTab={handleOpenInNewTab}
+        initialHeight={350}
+        minHeight={300}
       />
     </div>
   );
