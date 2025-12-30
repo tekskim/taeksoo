@@ -309,7 +309,7 @@ export function HomePage() {
             {/* INSTANCE SUMMARY */}
             <Card title="INSTANCE SUMMARY" className="flex flex-col">
               <div className="mb-4">
-                <div className="text-[24px] font-semibold text-[var(--color-text-default)]">13</div>
+                <div className="text-[24px] leading-[32px] font-semibold text-[var(--color-text-default)]">13</div>
                 <div className="text-[12px] text-[var(--color-text-subtle)]">Total</div>
               </div>
               <div className="space-y-2 mt-auto">
@@ -327,7 +327,7 @@ export function HomePage() {
             {/* BARE METAL SUMMARY */}
             <Card title="BARE METAL SUMMARY" className="flex flex-col">
               <div className="mb-4">
-                <div className="text-[24px] font-semibold text-[var(--color-text-default)]">8</div>
+                <div className="text-[24px] leading-[32px] font-semibold text-[var(--color-text-default)]">8</div>
                 <div className="text-[12px] text-[var(--color-text-subtle)]">Total</div>
               </div>
               <div className="space-y-2 mt-auto">

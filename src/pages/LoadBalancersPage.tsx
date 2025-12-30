@@ -81,6 +81,7 @@ const lbStatusMap: Record<LoadBalancerStatus, 'active' | 'error' | 'building' | 
    ---------------------------------------- */
 
 export function LoadBalancersPage() {
+  const [selectedLBs, setSelectedLBs] = useState<string[]>([]);
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);

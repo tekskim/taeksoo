@@ -78,6 +78,7 @@ const volumeSnapshotStatusMap: Record<SnapshotStatus, 'active' | 'building' | 'e
    ---------------------------------------- */
 
 export function VolumeSnapshotsPage() {
+  const [selectedSnapshots, setSelectedSnapshots] = useState<string[]>([]);
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);

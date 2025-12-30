@@ -33,7 +33,7 @@ import { TabProvider, type TabItem } from '@/contexts/TabContext';
 
 // Default tabs configuration
 const defaultTabs: TabItem[] = [
-  { id: 'instances', label: 'Instances List', path: '/instances', closable: true },
+  { id: 'home', label: 'Home', path: '/', closable: true },
 ];
 
 function AppRoutes() {
@@ -76,9 +76,12 @@ function AppRoutes() {
 }
 
 function App() {
+  // Vite의 base 설정을 자동으로 가져옴 (개발: '/', 프로덕션: '/tds_ssot/')
+  const basename = import.meta.env.BASE_URL.replace(/\/$/, '') || '/';
+  
   return (
     <DarkModeProvider>
-      <BrowserRouter basename="/topology">
+      <BrowserRouter basename={basename}>
         <AppRoutes />
       </BrowserRouter>
     </DarkModeProvider>

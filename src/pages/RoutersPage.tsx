@@ -77,6 +77,7 @@ const routerStatusMap: Record<RouterStatus, 'active' | 'error' | 'building'> = {
    ---------------------------------------- */
 
 export function RoutersPage() {
+  const [selectedRouters, setSelectedRouters] = useState<string[]>([]);
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
