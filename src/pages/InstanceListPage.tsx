@@ -778,7 +778,7 @@ export function InstanceListPage() {
                 rowKey="id"
                 emptyMessage="No instances found"
                 selectable
-                selectedRows={selectedInstances}
+                selectedKeys={selectedInstances}
                 onSelectionChange={setSelectedInstances}
               />
             )}
@@ -791,7 +791,7 @@ export function InstanceListPage() {
                 rowKey="id"
                 emptyMessage="No bare metal instances found"
                 selectable
-                selectedRows={selectedBareMetalInstances}
+                selectedKeys={selectedBareMetalInstances}
                 onSelectionChange={setSelectedBareMetalInstances}
               />
             )}

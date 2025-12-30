@@ -32,44 +32,42 @@ const defaultTabs = [
 
 function AppRoutes() {
   return (
-    <TabProvider defaultTabs={defaultTabs}>
-      <Routes>
-        {/* Home */}
-        <Route path="/" element={<HomePage />} />
-        <Route path="/home" element={<HomePage />} />
-        
-        {/* Design System */}
-        <Route path="/design-system" element={<DesignSystemPage />} />
-        <Route path="/drawers" element={<DrawersPage />} />
-        
-        {/* Compute */}
-        <Route path="/instances" element={<InstanceListPage />} />
-        <Route path="/instance-templates" element={<InstanceTemplatesPage />} />
-        <Route path="/instance-snapshots" element={<InstanceSnapshotsPage />} />
-        <Route path="/images" element={<ImagesPage />} />
-        <Route path="/flavors" element={<FlavorsPage />} />
-        <Route path="/key-pairs" element={<KeyPairsPage />} />
-        <Route path="/server-groups" element={<ServerGroupsPage />} />
-        
-        {/* Storage */}
-        <Route path="/volumes" element={<VolumesPage />} />
-        <Route path="/volume-snapshots" element={<VolumeSnapshotsPage />} />
-        <Route path="/volume-backups" element={<VolumeBackupsPage />} />
-        
-        {/* Network */}
-        <Route path="/networks" element={<NetworksPage />} />
-        <Route path="/routers" element={<RoutersPage />} />
-        <Route path="/ports" element={<PortsPage />} />
-        <Route path="/floating-ips" element={<FloatingIPsPage />} />
-        <Route path="/security-groups" element={<SecurityGroupsPage />} />
-        <Route path="/load-balancers" element={<LoadBalancersPage />} />
-        <Route path="/certificates" element={<CertificatesPage />} />
-        <Route path="/topology" element={<TopologyD3Page />} />
-        
-        {/* Console */}
-        <Route path="/console/:instanceId" element={<ConsolePage />} />
-      </Routes>
-    </TabProvider>
+    <Routes>
+      {/* Home */}
+      <Route path="/" element={<HomePage />} />
+      <Route path="/home" element={<HomePage />} />
+      
+      {/* Design System */}
+      <Route path="/design-system" element={<DesignSystemPage />} />
+      <Route path="/drawers" element={<DrawersPage />} />
+      
+      {/* Compute */}
+      <Route path="/instances" element={<InstanceListPage />} />
+      <Route path="/instance-templates" element={<InstanceTemplatesPage />} />
+      <Route path="/instance-snapshots" element={<InstanceSnapshotsPage />} />
+      <Route path="/images" element={<ImagesPage />} />
+      <Route path="/flavors" element={<FlavorsPage />} />
+      <Route path="/key-pairs" element={<KeyPairsPage />} />
+      <Route path="/server-groups" element={<ServerGroupsPage />} />
+      
+      {/* Storage */}
+      <Route path="/volumes" element={<VolumesPage />} />
+      <Route path="/volume-snapshots" element={<VolumeSnapshotsPage />} />
+      <Route path="/volume-backups" element={<VolumeBackupsPage />} />
+      
+      {/* Network */}
+      <Route path="/networks" element={<NetworksPage />} />
+      <Route path="/routers" element={<RoutersPage />} />
+      <Route path="/ports" element={<PortsPage />} />
+      <Route path="/floating-ips" element={<FloatingIPsPage />} />
+      <Route path="/security-groups" element={<SecurityGroupsPage />} />
+      <Route path="/load-balancers" element={<LoadBalancersPage />} />
+      <Route path="/certificates" element={<CertificatesPage />} />
+      <Route path="/topology" element={<TopologyD3Page />} />
+
+      {/* Console */}
+      <Route path="/console/:instanceId" element={<ConsolePage />} />
+    </Routes>
   );
 }
 
@@ -77,7 +75,9 @@ function App() {
   return (
     <DarkModeProvider>
       <BrowserRouter basename={import.meta.env.BASE_URL}>
-        <AppRoutes />
+        <TabProvider defaultTabs={defaultTabs}>
+          <AppRoutes />
+        </TabProvider>
       </BrowserRouter>
     </DarkModeProvider>
   );

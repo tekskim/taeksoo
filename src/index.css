@@ -801,7 +801,7 @@ html.theme-transition *::after {
   
   /* Checkbox - Default */
   --checkbox-bg: var(--color-white);
-  --checkbox-border: var(--color-border-strong);
+  --checkbox-border: var(--color-slate-400);
   --checkbox-border-hover: var(--color-action-primary);
   
   /* Checkbox - Checked */
