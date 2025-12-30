@@ -164,6 +164,10 @@ export function InstanceListPage() {
   const [isEditDrawerOpen, setIsEditDrawerOpen] = useState(false);
   const [selectedInstanceForEdit, setSelectedInstanceForEdit] = useState<EditInstanceInfo | null>(null);
 
+  // Table selection state
+  const [selectedInstances, setSelectedInstances] = useState<string[]>([]);
+  const [selectedBareMetalInstances, setSelectedBareMetalInstances] = useState<string[]>([]);
+
   // Shell Panel state (using hook for multi-tab support)
   const shellPanel = useShellPanel();
   const navigate = useNavigate();
@@ -773,6 +777,9 @@ export function InstanceListPage() {
                 data={paginatedInstances}
                 rowKey="id"
                 emptyMessage="No instances found"
+                selectable
+                selectedRows={selectedInstances}
+                onSelectionChange={setSelectedInstances}
               />
             )}
 
@@ -783,6 +790,9 @@ export function InstanceListPage() {
                 data={paginatedBareMetalInstances}
                 rowKey="id"
                 emptyMessage="No bare metal instances found"
+                selectable
+                selectedRows={selectedBareMetalInstances}
+                onSelectionChange={setSelectedBareMetalInstances}
               />
             )}
 
