@@ -96,7 +96,7 @@ export function Sidebar({ isOpen = true, onToggle }: SidebarProps) {
           {/* Design System Link */}
           <button
             onClick={() => handleMenuClick('/design-system', 'Design System')}
-            className="flex items-center gap-2 px-2 py-1.5 rounded-md bg-[var(--color-action-primary)] hover:bg-[var(--color-action-primary-hover)] text-white text-[11px] font-medium transition-colors w-full"
+            className="flex items-center gap-2 px-2 py-1.5 rounded-md bg-[var(--color-action-primary)] hover:bg-[var(--color-action-primary-hover)] text-white text-[11px] font-medium transition-colors w-full cursor-pointer"
           >
             <IconPalette size={16} stroke={1.5} />
             <span>Design System</span>
@@ -105,7 +105,7 @@ export function Sidebar({ isOpen = true, onToggle }: SidebarProps) {
           {/* Drawers Link */}
           <button
             onClick={() => handleMenuClick('/drawers', 'Drawers')}
-            className="flex items-center gap-2 px-2 py-1.5 rounded-md bg-[var(--color-action-secondary)] hover:bg-[var(--color-action-secondary-hover)] text-[var(--color-text-default)] text-[11px] font-medium transition-colors border border-[var(--color-border-default)] w-full"
+            className="flex items-center gap-2 px-2 py-1.5 rounded-md bg-[var(--color-action-secondary)] hover:bg-[var(--color-action-secondary-hover)] text-[var(--color-text-default)] text-[11px] font-medium transition-colors border border-[var(--color-border-default)] w-full cursor-pointer"
           >
             <IconLayoutSidebarRight size={16} stroke={1.5} />
             <span>Drawers</span>

@@ -85,7 +85,6 @@ export function VolumesPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [volumes, setVolumes] = useState(mockVolumes);
-  const [selectedVolumes, setSelectedVolumes] = useState<string[]>([]);
   
   // Delete modal state
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
@@ -417,9 +416,6 @@ export function VolumesPage() {
               data={filteredVolumes.slice((currentPage - 1) * rowsPerPage, currentPage * rowsPerPage)}
               rowKey="id"
               emptyMessage="No volumes found"
-              selectable
-              selectedRows={selectedVolumes}
-              onSelectionChange={setSelectedVolumes}
             />
           </VStack>
         </div>

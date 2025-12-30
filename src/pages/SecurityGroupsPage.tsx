@@ -328,9 +328,6 @@ export function SecurityGroupsPage() {
               columns={visibleColumns}
               data={paginatedGroups}
               rowKey="id"
-              selectable
-              selectedRows={selectedGroups}
-              onSelectionChange={setSelectedGroups}
             />
           </VStack>
         </div>
