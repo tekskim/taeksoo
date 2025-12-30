@@ -327,9 +327,10 @@ export function ShellPanel({
           {/* Download Button */}
           <Button
             size="sm"
-            variant="ghost"
+            variant="secondary"
             onClick={handleDownload}
-            title="Download logs"
+            aria-label="Download"
+            iconOnly
           >
             <IconDownload size={14} stroke={1.5} />
           </Button>
