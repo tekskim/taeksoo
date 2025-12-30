@@ -380,7 +380,7 @@ export function FloatingIPsPage() {
               data={paginatedFloatingIPs}
               rowKey="id"
               selectable
-              selectedRows={selectedFloatingIPs}
+              selectedKeys={selectedFloatingIPs}
               onSelectionChange={setSelectedFloatingIPs}
             />
           </VStack>

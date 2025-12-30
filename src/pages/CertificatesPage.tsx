@@ -255,7 +255,7 @@ export function CertificatesPage() {
               bulkActions={<ListToolbar.Actions><Button variant="muted" size="sm" leftIcon={<IconTrash size={12} />} disabled={selectedCerts.length === 0}>Delete</Button></ListToolbar.Actions>}
             />
             <Pagination currentPage={currentPage} totalPages={totalPages} totalItems={filteredCerts.length} onPageChange={setCurrentPage} showSettings onSettingsClick={() => setIsPreferencesOpen(true)} />
-            <Table columns={visibleColumns} data={paginatedCerts} rowKey="id" selectable selectedRows={selectedCerts} onSelectionChange={setSelectedCerts} />
+            <Table columns={visibleColumns} data={paginatedCerts} rowKey="id" selectable selectedKeys={selectedCerts} onSelectionChange={setSelectedCerts} />
           </VStack>
         </div>
         </div>

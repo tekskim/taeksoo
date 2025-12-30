@@ -228,7 +228,7 @@ export function VolumeBackupDetailPage() {
 
               {/* Backup Tabs */}
               <div className="w-full">
-                <Tabs value={activeDetailTab} onChange={setActiveDetailTab} variant="underline" size="md">
+                <Tabs value={activeDetailTab} onChange={setActiveDetailTab} variant="underline" size="sm">
                   <TabList className="gap-6">
                     <Tab value="details">Details</Tab>
                   </TabList>

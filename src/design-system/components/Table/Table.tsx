@@ -174,7 +174,7 @@ export function Table<T extends Record<string, any>>({
           <div
             className={`
               flex items-stretch
-              h-[var(--table-row-height)]
+              min-h-[var(--table-row-height)]
               bg-[var(--table-header-bg)]
               border border-[var(--color-border-default)]
               rounded-[var(--table-row-radius)]
@@ -189,6 +189,7 @@ export function Table<T extends Record<string, any>>({
                 flex items-center
                 w-[var(--table-checkbox-width)]
                 px-[var(--table-cell-padding-x)]
+                py-[var(--table-header-padding-y)]
               "
             >
               <Checkbox
@@ -212,6 +213,7 @@ export function Table<T extends Record<string, any>>({
                 className={`
                   flex items-center
                   px-[var(--table-cell-padding-x)]
+                  py-[var(--table-header-padding-y)]
                   text-[length:var(--table-header-font-size)]
                   leading-[var(--table-line-height)]
                   font-medium
@@ -273,7 +275,7 @@ export function Table<T extends Record<string, any>>({
                   key={key}
                   className={`
                     flex items-center
-                    h-[var(--table-row-height)]
+                    min-h-[var(--table-row-height)]
                     rounded-[var(--table-row-radius)]
                     transition-all
                     hover:bg-[var(--table-row-hover-bg)]
@@ -310,13 +312,14 @@ export function Table<T extends Record<string, any>>({
                     <div
                       key={column.key}
                       className={`
+                        flex items-center
                         px-[var(--table-cell-padding-x)]
                         py-[var(--table-cell-padding-y)]
                         text-[length:var(--table-font-size)]
                         leading-[var(--table-line-height)]
                         text-[var(--color-text-default)]
-                        ${column.align === 'center' ? 'flex items-center justify-center' : ''}
-                        ${column.align === 'right' ? 'text-right' : column.align === 'center' ? '' : 'text-left'}
+                        ${column.align === 'center' ? 'justify-center' : ''}
+                        ${column.align === 'right' ? 'justify-end' : ''}
                       `}
                       style={{ 
                         width: column.width,

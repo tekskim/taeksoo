@@ -429,7 +429,7 @@ export function PortsPage() {
               data={paginatedPorts}
               rowKey="id"
               selectable
-              selectedRows={selectedPorts}
+              selectedKeys={selectedPorts}
               onSelectionChange={setSelectedPorts}
             />
           </VStack>

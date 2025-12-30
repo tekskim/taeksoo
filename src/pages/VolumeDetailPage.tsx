@@ -424,7 +424,7 @@ export function VolumeDetailPage() {
 
             {/* Volume Tabs */}
             <div className="w-full">
-              <Tabs value={activeDetailTab} onChange={setActiveDetailTab} variant="underline" size="md">
+              <Tabs value={activeDetailTab} onChange={setActiveDetailTab} variant="underline" size="sm">
                 <TabList className="gap-6">
                   <Tab value="details">Details</Tab>
                   <Tab value="snapshots">Volume Snapshots</Tab>

@@ -81,7 +81,6 @@ export function KeyPairsPage() {
 
   // Default column config (matching Figma: Selection, Name, Fingerprint, Created At, Action)
   const defaultColumnConfig: ColumnConfig[] = [
-    { id: 'selection', label: '', visible: true, locked: true },
     { id: 'name', label: 'Name', visible: true, locked: true },
     { id: 'fingerprint', label: 'Fingerprint', visible: true },
     { id: 'createdAt', label: 'Created At', visible: true },
@@ -171,24 +170,6 @@ export function KeyPairsPage() {
 
   // Table columns (matching Figma design: Selection, Name, Fingerprint, Created At, Action)
   const columns: TableColumn<KeyPair>[] = [
-    {
-      key: 'selection',
-      label: (
-        <Checkbox
-          checked={selectedKeyPairs.length === paginatedKeyPairs.length && paginatedKeyPairs.length > 0}
-          indeterminate={selectedKeyPairs.length > 0 && selectedKeyPairs.length < paginatedKeyPairs.length}
-          onChange={toggleAllSelection}
-        />
-      ),
-      width: '48px',
-      align: 'center',
-      render: (_, row) => (
-        <Checkbox
-          checked={selectedKeyPairs.includes(row.id)}
-          onChange={() => toggleSelection(row.id)}
-        />
-      ),
-    },
     {
       key: 'name',
       label: 'Name',
@@ -383,6 +364,9 @@ export function KeyPairsPage() {
               data={paginatedKeyPairs}
               rowKey="id"
               emptyMessage="No key pairs found"
+              selectable
+              selectedKeys={selectedKeyPairs}
+              onSelectionChange={setSelectedKeyPairs}
             />
           </VStack>
         </div>
