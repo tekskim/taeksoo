@@ -62,6 +62,7 @@ const mockServerGroups: ServerGroup[] = [
    ---------------------------------------- */
 
 export function ServerGroupsPage() {
+  const [selectedServerGroups, setSelectedServerGroups] = useState<string[]>([]);
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);

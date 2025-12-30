@@ -88,6 +88,7 @@ const portStatusMap: Record<PortStatus, 'active' | 'error' | 'building' | 'down'
    ---------------------------------------- */
 
 export function PortsPage() {
+  const [selectedPorts, setSelectedPorts] = useState<string[]>([]);
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);

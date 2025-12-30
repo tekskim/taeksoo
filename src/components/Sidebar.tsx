@@ -43,10 +43,10 @@ export function Sidebar({ isOpen = true, onToggle }: SidebarProps) {
   const [selectedProjectId, setSelectedProjectId] = useState(mockProjects[0].id);
   const location = useLocation();
   
-  // Check if current path matches href (also handle detail pages and root path)
+  // Check if current path matches href (handle root path for home)
   const isActive = (href: string) => {
-    // Handle root path for instances
-    if (href === '/instances' && location.pathname === '/') {
+    // Home is active for both '/' and '/home'
+    if ((href === '/' || href === '/home') && (location.pathname === '/' || location.pathname === '/home')) {
       return true;
     }
     // Exact match
@@ -114,8 +114,8 @@ export function Sidebar({ isOpen = true, onToggle }: SidebarProps) {
           <MenuItem
             icon={<IconHome size={16} stroke={1.5} />}
             label="Home"
-            href="/home"
-            active={isActive('/home')}
+            href="/"
+            active={isActive('/')}
           />
 
           {/* Compute Section */}
