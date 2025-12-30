@@ -116,10 +116,10 @@ export const TabBar: React.FC<TabBarProps> = ({
                 }
               `}
             >
-              {/* Active indicator */}
+              {/* Active indicator - positioned to overlap bottom border */}
               {isActive && (
                 <div 
-                  className="absolute bottom-0 left-0 right-0 h-[2px] bg-[var(--color-action-primary)]"
+                  className="absolute bottom-[-1px] left-0 right-0 h-[2px] bg-[var(--color-action-primary)] z-10"
                 />
               )}
               {/* Icon */}
