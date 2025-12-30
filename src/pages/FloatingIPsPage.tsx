@@ -85,7 +85,6 @@ export function FloatingIPsPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [floatingIPs] = useState(mockFloatingIPs);
-  const [selectedFloatingIPs, setSelectedFloatingIPs] = useState<string[]>([]);
   
   // Delete modal state
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);

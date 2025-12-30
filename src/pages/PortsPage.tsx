@@ -94,7 +94,6 @@ export function PortsPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const [ports] = useState(mockPorts);
   const [activeTab, setActiveTab] = useState('all');
-  const [selectedPorts, setSelectedPorts] = useState<string[]>([]);
   
   // Delete modal state
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);

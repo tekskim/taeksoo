@@ -79,7 +79,6 @@ export function SecurityGroupsPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [securityGroups] = useState(mockSecurityGroups);
-  const [selectedGroups, setSelectedGroups] = useState<string[]>([]);
   
   // Delete modal state
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);

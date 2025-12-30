@@ -79,7 +79,6 @@ export function RoutersPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [routers] = useState(mockRouters);
-  const [selectedRouters, setSelectedRouters] = useState<string[]>([]);
   
   // Delete modal state
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);

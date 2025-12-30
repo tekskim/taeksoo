@@ -316,3 +316,5 @@ export function InstanceTemplateDetailPage() {
 export default InstanceTemplateDetailPage;
 
 
+
+

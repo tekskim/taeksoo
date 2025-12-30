@@ -57,6 +57,18 @@ export function Sidebar({ isOpen = true, onToggle }: SidebarProps) {
     if (href !== '/home' && location.pathname.startsWith(href + '/')) {
       return true;
     }
+    // Match child resources - Subnets are under Networks
+    if (href === '/networks' && location.pathname.startsWith('/subnets')) {
+      return true;
+    }
+    // Match child resources - Listeners are under Load Balancers
+    if (href === '/load-balancers' && location.pathname.startsWith('/listeners')) {
+      return true;
+    }
+    // Match child resources - Pools are under Load Balancers
+    if (href === '/load-balancers' && location.pathname.startsWith('/pools')) {
+      return true;
+    }
     return false;
   };
   
