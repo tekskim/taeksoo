@@ -20,7 +20,6 @@ import { Sidebar } from '@/components/Sidebar';
 import { useTabs } from '@/contexts/TabContext';
 import { ViewPreferencesDrawer, type ColumnConfig } from '@/components/ViewPreferencesDrawer';
 import {
-  IconPlus,
   IconDotsCircleHorizontal,
   IconTrash,
   IconDownload,
@@ -95,7 +94,6 @@ export function SecurityGroupsPage() {
     { id: 'description', label: 'Description', visible: true },
     { id: 'ingressRules', label: 'Ingress Rules', visible: true },
     { id: 'egressRules', label: 'Egress Rules', visible: true },
-    { id: 'createdAt', label: 'Created at', visible: true },
     { id: 'actions', label: 'Action', visible: true, locked: true },
   ];
 
@@ -180,11 +178,6 @@ export function SecurityGroupsPage() {
       key: 'egressRules',
       label: 'Egress Rules',
       width: '109px',
-    },
-    {
-      key: 'createdAt',
-      label: 'Created at',
-      width: '120px',
     },
     {
       key: 'actions',
@@ -277,7 +270,7 @@ export function SecurityGroupsPage() {
               <h1 className="text-[length:var(--font-size-16)] font-semibold text-[var(--color-text-default)]">
                 Security Groups
               </h1>
-              <Button variant="primary" size="md" leftIcon={<IconPlus size={14} />}>
+              <Button variant="primary" size="md">
                 Create Security Group
               </Button>
             </div>
@@ -296,7 +289,7 @@ export function SecurityGroupsPage() {
                       fullWidth
                     />
                   </div>
-                  <Button variant="secondary" size="sm" icon={<IconDownload size={12} />} aria-label="Download" />
+                  <Button variant="secondary" size="sm" iconOnly icon={<IconDownload size={12} />} aria-label="Download" />
                 </ListToolbar.Actions>
               }
               bulkActions={
@@ -328,6 +321,9 @@ export function SecurityGroupsPage() {
               columns={visibleColumns}
               data={paginatedGroups}
               rowKey="id"
+              selectable
+              selectedRows={selectedGroups}
+              onSelectionChange={setSelectedGroups}
             />
           </VStack>
         </div>

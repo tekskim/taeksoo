@@ -16,6 +16,7 @@ import {
   ContextMenu,
   ConfirmModal,
   StatusIndicator,
+  Checkbox,
   type TableColumn,
   type ContextMenuItem,
 } from '@/design-system';
@@ -23,15 +24,10 @@ import { Sidebar } from '@/components/Sidebar';
 import { useTabs } from '@/contexts/TabContext';
 import { ViewPreferencesDrawer, type ColumnConfig } from '@/components/ViewPreferencesDrawer';
 import {
-  IconPlus,
   IconDotsCircleHorizontal,
   IconTrash,
   IconDownload,
   IconBell,
-  IconBrandUbuntu,
-  IconBrandDebian,
-  IconBrandWindows,
-  IconBrandRedhat,
 } from '@tabler/icons-react';
 import { Link } from 'react-router-dom';
 
@@ -59,7 +55,7 @@ interface Image {
    ---------------------------------------- */
 
 const mockImages: Image[] = [
-  { id: '29tgj234', name: 'image', os: 'Ubuntu24.04', size: '16GiB', diskFormat: 'RAW', protected: true, access: 'Private', createdAt: '2025-09-12', status: 'active' },
+  { id: '29tgj234', name: 'Ubuntu-22.04-base', os: 'Ubuntu24.04', size: '16GiB', diskFormat: 'RAW', protected: true, access: 'Private', createdAt: '2025-09-12', status: 'active' },
   { id: 'img-002', name: 'CentOS-8-minimal', os: 'CentOS8', size: '8GiB', diskFormat: 'QCOW2', protected: false, access: 'Private', createdAt: '2025-09-10', status: 'active' },
   { id: 'img-003', name: 'Rocky-Linux-9', os: 'Rocky Linux 9', size: '12GiB', diskFormat: 'RAW', protected: true, access: 'Shared', createdAt: '2025-09-08', status: 'active' },
   { id: 'img-004', name: 'Debian-12-standard', os: 'Debian 12', size: '10GiB', diskFormat: 'QCOW2', protected: false, access: 'Public', createdAt: '2025-09-05', status: 'active' },
@@ -81,6 +77,7 @@ export function ImagesPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const [activeTab, setActiveTab] = useState('current');
   const [images, setImages] = useState(mockImages);
+  const [selectedImages, setSelectedImages] = useState<string[]>([]);
   
   // Delete modal state
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
@@ -90,14 +87,13 @@ export function ImagesPage() {
   const [isPreferencesOpen, setIsPreferencesOpen] = useState(false);
   const [rowsPerPage, setRowsPerPage] = useState(10);
 
-  // Default column config
+  // Default column config (matching Figma: Selection, Status, Name, OS, Size, Access, Created At, Action)
   const defaultColumnConfig: ColumnConfig[] = [
+    { id: 'selection', label: '', visible: true, locked: true },
     { id: 'status', label: 'Status', visible: true, locked: true },
     { id: 'name', label: 'Name', visible: true, locked: true },
     { id: 'os', label: 'OS', visible: true },
     { id: 'size', label: 'Size', visible: true },
-    { id: 'diskFormat', label: 'Disk Format', visible: true },
-    { id: 'protected', label: 'Protected', visible: true },
     { id: 'access', label: 'Access', visible: true },
     { id: 'createdAt', label: 'Created At', visible: true },
     { id: 'actions', label: 'Action', visible: true, locked: true },
@@ -165,23 +161,53 @@ export function ImagesPage() {
 
   const totalPages = Math.ceil(filteredImages.length / rowsPerPage);
 
-  // Get OS icon based on OS name
-  const getOsIcon = (os: string) => {
-    const osLower = os.toLowerCase();
-    if (osLower.includes('ubuntu')) {
-      return <IconBrandUbuntu size={16} stroke={1.5} className="text-[#E95420]" />;
-    } else if (osLower.includes('debian')) {
-      return <IconBrandDebian size={16} stroke={1.5} className="text-[#A81D33]" />;
-    } else if (osLower.includes('windows')) {
-      return <IconBrandWindows size={16} stroke={1.5} className="text-[#0078D6]" />;
-    } else if (osLower.includes('centos') || osLower.includes('rocky') || osLower.includes('fedora') || osLower.includes('oracle')) {
-      return <IconBrandRedhat size={16} stroke={1.5} className="text-[#EE0000]" />;
-    }
-    return <div className="w-4 h-4 rounded-full bg-[var(--color-text-subtle)]" />;
+  // Paginated images for display
+  const paginatedImages = filteredImages.slice(
+    (currentPage - 1) * rowsPerPage,
+    currentPage * rowsPerPage
+  );
+
+  // Selection toggle functions
+  const toggleSelection = (id: string) => {
+    setSelectedImages((prev) =>
+      prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
+    );
   };
 
-  // Table columns
+  const toggleAllSelection = () => {
+    if (selectedImages.length === paginatedImages.length) {
+      setSelectedImages([]);
+    } else {
+      setSelectedImages(paginatedImages.map((img) => img.id));
+    }
+  };
+
+  // Handle bulk delete
+  const handleBulkDelete = () => {
+    setImages((prev) => prev.filter((img) => !selectedImages.includes(img.id)));
+    setSelectedImages([]);
+  };
+
+  // Table columns (matching Figma design: Selection, Status, Name, OS, Size, Access, Created At, Action)
   const columns: TableColumn<Image>[] = [
+    {
+      key: 'selection',
+      label: (
+        <Checkbox
+          isChecked={selectedImages.length === paginatedImages.length && paginatedImages.length > 0}
+          isIndeterminate={selectedImages.length > 0 && selectedImages.length < paginatedImages.length}
+          onChange={toggleAllSelection}
+        />
+      ),
+      width: '48px',
+      align: 'center',
+      render: (_, row) => (
+        <Checkbox
+          isChecked={selectedImages.includes(row.id)}
+          onChange={() => toggleSelection(row.id)}
+        />
+      ),
+    },
     {
       key: 'status',
       label: 'Status',
@@ -197,18 +223,13 @@ export function ImagesPage() {
       flex: 1,
       sortable: true,
       render: (_, row) => (
-        <div className="flex flex-col gap-0.5">
-          <Link
-            to={`/images/${row.id}`}
-            className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
-            onClick={(e) => e.stopPropagation()}
-          >
-            {row.name}
-          </Link>
-          <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
-            ID : {row.id}
-          </span>
-        </div>
+        <Link
+          to={`/images/${row.id}`}
+          className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
+          onClick={(e) => e.stopPropagation()}
+        >
+          {row.name}
+        </Link>
       ),
     },
     {
@@ -216,37 +237,22 @@ export function ImagesPage() {
       label: 'OS',
       flex: 1,
       sortable: true,
-      render: (_, row) => (
-        <div className="flex items-center gap-2">
-          {getOsIcon(row.os)}
-          <span>{row.os}</span>
-        </div>
-      ),
     },
     {
       key: 'size',
       label: 'Size',
-      width: '100px',
+      flex: 1,
       sortable: true,
     },
     {
-      key: 'diskFormat',
-      label: 'Disk format',
-      width: '120px',
-      sortable: true,
-    },
-    {
-      key: 'protected',
-      label: 'protected',
-      width: '100px',
-      render: (_, row) => (
-        <span>{row.protected ? 'On' : 'Off'}</span>
-      ),
+      key: 'access',
+      label: 'Access',
+      flex: 1,
     },
     {
       key: 'createdAt',
       label: 'Created At',
-      width: '120px',
+      flex: 1,
       sortable: true,
     },
     {
@@ -363,7 +369,7 @@ export function ImagesPage() {
               <h1 className="text-[length:var(--font-size-16)] font-semibold text-[var(--color-text-default)]">
                 Images
               </h1>
-              <Button leftIcon={<IconPlus size={16} />}>
+              <Button>
                 Create Image
               </Button>
             </div>
@@ -371,7 +377,7 @@ export function ImagesPage() {
             {/* Category Tabs */}
             <Tabs value={activeTab} onChange={setActiveTab} variant="underline" size="sm">
               <TabList>
-                <Tab value="current">Current Tenant</Tab>
+                <Tab value="current">Current Project</Tab>
                 <Tab value="shared">Shared</Tab>
                 <Tab value="public">Public</Tab>
                 <Tab value="all">All</Tab>
@@ -397,7 +403,13 @@ export function ImagesPage() {
               }
               bulkActions={
                 <ListToolbar.Actions>
-                  <Button variant="muted" size="sm" leftIcon={<IconTrash size={12} />} disabled>
+                  <Button
+                    variant="muted"
+                    size="sm"
+                    leftIcon={<IconTrash size={12} />}
+                    disabled={selectedImages.length === 0}
+                    onClick={handleBulkDelete}
+                  >
                     Delete
                   </Button>
                 </ListToolbar.Actions>
@@ -419,7 +431,7 @@ export function ImagesPage() {
             {/* Image Table */}
             <Table<Image>
               columns={visibleColumns}
-              data={filteredImages.slice((currentPage - 1) * rowsPerPage, currentPage * rowsPerPage)}
+              data={paginatedImages}
               rowKey="id"
               emptyMessage="No images found"
             />
