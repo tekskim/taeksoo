@@ -37,7 +37,7 @@ function ConnectionStatusIndicator({ status }: { status: ConnectionStatus }) {
   const config = statusConfig[status];
 
   return (
-    <div className="flex items-center gap-1.5">
+    <div className="flex items-center gap-1.5 ml-3">
       <span className={`size-2 rounded-full ${config.color}`} />
       <span className="text-[12px] text-[var(--color-text-default)]">
         {config.label}
@@ -183,7 +183,6 @@ export function ConsolePage() {
               <span className="text-[14px] font-medium text-[var(--color-text-default)]">
                 {instanceName}
               </span>
-              <ConnectionStatusIndicator status={connectionStatus} />
             </div>
 
             {/* Log Content - Dark background */}
@@ -200,9 +199,12 @@ export function ConsolePage() {
               )}
             </div>
 
-            {/* Bottom Status Bar */}
-            <div className="flex items-center justify-between px-4 py-2 border-t border-[var(--color-border-default)] bg-[var(--color-surface-subtle)]">
-              <div className="flex items-center gap-3">
+            {/* Bottom Status Bar - Same as ShellPanel */}
+            <div className="flex items-center justify-between px-3 py-2 border-t border-[var(--color-border-default)] bg-[var(--color-surface-subtle)]">
+              <div className="flex items-center gap-1">
+                {/* Connection Status Indicator */}
+                <ConnectionStatusIndicator status={connectionStatus} />
+
                 {/* Container Select */}
                 <Select
                   size="sm"
@@ -213,28 +215,6 @@ export function ConsolePage() {
                   menuPlacement="top"
                 />
 
-                {/* Clear Button */}
-                <Button
-                  size="sm"
-                  variant="secondary"
-                  onClick={handleClear}
-                >
-                  Clear
-                </Button>
-
-                {/* Download Button */}
-                <Button
-                  size="sm"
-                  variant="secondary"
-                  onClick={handleDownload}
-                  aria-label="Download"
-                  iconOnly
-                >
-                  <IconDownload size={14} stroke={1.5} />
-                </Button>
-              </div>
-
-              <div className="flex items-center gap-3">
                 {/* View Time Select */}
                 <Select
                   size="sm"
@@ -244,6 +224,26 @@ export function ConsolePage() {
                   placeholder="View"
                   menuPlacement="top"
                 />
+              </div>
+
+              <div className="flex items-center gap-1">
+                {/* Clear Button */}
+                <Button
+                  size="sm"
+                  variant="secondary"
+                  onClick={handleClear}
+                >
+                  Clear
+                </Button>
+
+                {/* Download Button - Custom style for 28x28 */}
+                <button
+                  onClick={handleDownload}
+                  aria-label="Download"
+                  className="inline-flex items-center justify-center size-[28px] rounded-[var(--button-radius)] bg-[var(--color-surface-default)] text-[var(--color-text-default)] border border-[var(--color-border-strong)] hover:bg-[var(--button-secondary-hover-bg)] transition-colors"
+                >
+                  <IconDownload size={14} stroke={1.5} />
+                </button>
               </div>
             </div>
           </div>
