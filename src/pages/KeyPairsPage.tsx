@@ -67,7 +67,6 @@ export function KeyPairsPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [keyPairs, setKeyPairs] = useState(mockKeyPairs);
-  const [selectedKeyPairs, setSelectedKeyPairs] = useState<string[]>([]);
   
   // Delete modal state
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);

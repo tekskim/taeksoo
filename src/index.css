@@ -1236,9 +1236,889 @@ html.theme-transition *::after {
   scrollbar-color: var(--color-border-default) transparent;
 }
 
+/* Legend Scrollbar (smaller, lighter) */
+.legend-scroll::-webkit-scrollbar {
+  width: 4px;
+}
+
+.legend-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.legend-scroll::-webkit-scrollbar-thumb {
+  background: var(--color-border-subtle);
+  border-radius: var(--radius-full);
+}
+
+.legend-scroll::-webkit-scrollbar-thumb:hover {
+  background: var(--color-border-default);
+}
+
+/* Firefox */
+.legend-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-border-subtle) transparent;
+}
+
 /* Hide native search input clear button */
 input[type="search"]::-webkit-search-cancel-button,
 input[type="search"]::-webkit-search-decoration {
   -webkit-appearance: none;
   appearance: none;
+}
+
+/* ============== Chart Card ============== */
+.chartCard {
+  background: var(--color-surface-default);
+  border: 1px solid var(--color-border-default);
+  border-radius: 8px;
+  padding: 12px 12px 4px 12px;
+}
+
+.chartHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.chartTitle {
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 20px;
+  color: var(--color-text-default);
+}
+
+.chartBody {
+  display: flex;
+  gap: 4px;
+  align-items: flex-start;
+}
+
+.chartWrapper {
+  flex: 1;
+  min-width: 0;
+  padding-left: 12px;
+}
+
+/* ============== Chart Legend ============== */
+.chartLegend {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding-top: 20px;
+  padding-right: 0px;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.chartLegend::-webkit-scrollbar {
+  width: 4px;
+}
+
+.chartLegend::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.chartLegend::-webkit-scrollbar-thumb {
+  background-color: var(--color-border-default);
+  border-radius: 2px;
+}
+
+.legendItem {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--color-text-muted);
+  cursor: pointer;
+  transition: opacity 0.2s;
+  white-space: nowrap;
+}
+
+.legendItem:hover {
+  color: var(--color-text-default);
+}
+
+.legendItemHidden {
+  opacity: 0.4;
+}
+
+.legendDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 2px;
+  flex-shrink: 0;
+}
+
+/* ============== Chart Controls ============== */
+.chartControls {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.toggleBtn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 8px;
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--color-text-muted);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+.toggleBtn:hover {
+  color: var(--color-text-default);
+}
+
+.toggleSwitch {
+  width: 28px;
+  height: 14px;
+  background: var(--color-border-default);
+  border-radius: 7px;
+  position: relative;
+  transition: background 0.2s;
+}
+
+.toggleSwitch::after {
+  content: '';
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  background: white;
+  border-radius: 50%;
+  top: 2px;
+  left: 2px;
+  transition: transform 0.2s;
+}
+
+.toggleSwitchActive {
+  background: var(--color-action-primary);
+}
+
+.toggleSwitchActive::after {
+  transform: translateX(14px);
+}
+
+.toggleDivider {
+  color: var(--color-border-default);
+}
+
+.menuContainer {
+  position: relative;
+}
+
+.menuTrigger,
+.expandTrigger {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  background: transparent;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  color: var(--color-text-muted);
+}
+
+.menuTrigger:hover,
+.expandTrigger:hover {
+  background: var(--color-surface-muted);
+  color: var(--color-text-default);
+}
+
+.contextMenu {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background: var(--color-surface-default);
+  border: 1px solid var(--color-border-default);
+  border-radius: 6px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  min-width: 140px;
+  z-index: 100;
+  overflow: hidden;
+}
+
+.contextMenuItem,
+.contextMenuItemLast {
+  display: block;
+  width: 100%;
+  padding: 8px 12px;
+  font-size: 12px;
+  text-align: left;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: var(--color-text-default);
+}
+
+.contextMenuItem:hover,
+.contextMenuItemLast:hover {
+  background: var(--color-surface-subtle);
+}
+
+/* ============== Full Screen Overlay ============== */
+.fullScreenOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(15, 23, 42, 0.4);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  z-index: 999;
+}
+
+/* ============== Full Screen Floating Container ============== */
+.fullScreenFloating {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: calc(100vw - 120px);
+  max-width: 1400px;
+  height: calc(100vh - 160px);
+  max-height: 800px;
+  z-index: 1000;
+  animation: floatIn 0.25s ease-out;
+}
+
+@keyframes floatIn {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+/* ============== Full Screen Chart Card ============== */
+.chartCardFullScreen {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25),
+              0 0 0 1px rgba(0, 0, 0, 0.05);
+  border-radius: 16px;
+  background: var(--color-surface-default);
+  padding: 20px;
+}
+
+.chartCardFullScreen .chartBody {
+  flex: 1;
+  display: flex;
+  min-height: 0;
+  height: 100%;
+}
+
+.chartCardFullScreen .chartWrapper {
+  flex: 1;
+  min-width: 0;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.chartCardFullScreen .chartWrapper > div {
+  flex: 1;
+  min-height: 0;
+}
+
+.chartCardFullScreen .chartLegend {
+  max-height: none;
+  min-width: 160px;
+}
+
+.chartCardFullScreen .chartHeader {
+  position: relative;
+  margin-bottom: 16px;
+}
+
+.chartCardFullScreen .chartTitle {
+  font-size: 16px;
+}
+
+/* ============== Time Controls Container ============== */
+.fullScreenTimeControls {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.chartHeaderCenter {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
+}
+
+/* ============== Time Segments (30m, 1h, 6h, etc.) ============== */
+.timeSegments {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  background: transparent;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 0;
+}
+
+.dark .timeSegments {
+  border-color: var(--color-border-default);
+}
+
+.timeSegment {
+  padding: 7px 16px;
+  font-size: 13px;
+  font-weight: 500;
+  color: #64748b;
+  background: white;
+  border: none;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  margin: -1px;
+  border: 1px solid transparent;
+  border-radius: 8px;
+}
+
+.timeSegment:first-child {
+  margin-left: -1px;
+}
+
+.timeSegment:last-child {
+  margin-right: -1px;
+}
+
+.dark .timeSegment {
+  color: var(--color-text-muted);
+  background: var(--color-surface-default);
+}
+
+.timeSegment:hover {
+  color: #1e293b;
+}
+
+.dark .timeSegment:hover {
+  color: var(--color-text-default);
+}
+
+.timeSegmentActive {
+  color: #1e40af;
+  background: white;
+  border: 2px solid #2563eb;
+  z-index: 1;
+  position: relative;
+}
+
+.dark .timeSegmentActive {
+  color: var(--color-action-primary);
+  background: var(--color-surface-default);
+  border-color: var(--color-action-primary);
+}
+
+/* ============== Date Picker Container ============== */
+.datePickerContainer {
+  position: relative;
+}
+
+/* ============== Custom Period Button ============== */
+.customPeriodBtn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  font-size: 13px;
+  font-weight: 500;
+  color: #64748b;
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.dark .customPeriodBtn {
+  background: var(--color-surface-default);
+  border-color: var(--color-border-default);
+  color: var(--color-text-muted);
+}
+
+.customPeriodBtn:hover {
+  border-color: #cbd5e1;
+  color: #1e293b;
+}
+
+.dark .customPeriodBtn:hover {
+  border-color: var(--color-border-strong);
+  color: var(--color-text-default);
+}
+
+.customPeriodBtnActive {
+  border-color: #2563eb;
+  color: #2563eb;
+}
+
+.dark .customPeriodBtnActive {
+  border-color: var(--color-action-primary);
+  color: var(--color-action-primary);
+}
+
+/* ============== Period Tag (when date range is selected) ============== */
+.periodTag {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 8px 4px 12px;
+  background: #3b82f6;
+  color: white;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.periodTagText {
+  cursor: pointer;
+}
+
+.periodTagText:hover {
+  text-decoration: underline;
+}
+
+.periodTagDivider {
+  margin: 0 4px;
+  opacity: 0.6;
+}
+
+.periodTagClose {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  color: white;
+  transition: background 0.15s ease;
+}
+
+.periodTagClose:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+/* ============== Date Picker Dropdown ============== */
+.datePickerDropdown {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  margin-top: 8px;
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  padding: 16px;
+  min-width: 240px;
+  z-index: 100;
+}
+
+.dark .datePickerDropdown {
+  background: var(--color-surface-default);
+  border-color: var(--color-border-default);
+}
+
+.datePickerRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.datePickerRow label {
+  font-size: 12px;
+  font-weight: 500;
+  color: #64748b;
+  min-width: 40px;
+}
+
+.dark .datePickerRow label {
+  color: var(--color-text-muted);
+}
+
+.datePickerRow input {
+  flex: 1;
+  padding: 6px 10px;
+  font-size: 12px;
+  border: 1px solid #e2e8f0;
+  border-radius: 4px;
+  outline: none;
+  background: white;
+  color: #1e293b;
+}
+
+.dark .datePickerRow input {
+  background: var(--color-surface-default);
+  border-color: var(--color-border-default);
+  color: var(--color-text-default);
+}
+
+.datePickerRow input:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1);
+}
+
+.datePickerActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 16px;
+  padding-top: 12px;
+  border-top: 1px solid #f1f5f9;
+}
+
+.dark .datePickerActions {
+  border-top-color: var(--color-border-default);
+}
+
+.datePickerCancel {
+  padding: 6px 12px;
+  font-size: 12px;
+  font-weight: 500;
+  color: #64748b;
+  background: transparent;
+  border: 1px solid #e2e8f0;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.dark .datePickerCancel {
+  color: var(--color-text-muted);
+  border-color: var(--color-border-default);
+}
+
+.datePickerCancel:hover {
+  background: #f8fafc;
+}
+
+.dark .datePickerCancel:hover {
+  background: var(--color-surface-muted);
+}
+
+.datePickerApply {
+  padding: 6px 12px;
+  font-size: 12px;
+  font-weight: 500;
+  color: white;
+  background: #3b82f6;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.datePickerApply:hover {
+  background: #2563eb;
+}
+
+/* ============== Calendar Dropdown ============== */
+.calendarDropdown {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  margin-top: 8px;
+  background: var(--color-surface-default);
+  border: 1px solid var(--color-border-default);
+  border-radius: var(--datepicker-radius);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  padding: var(--datepicker-padding);
+  width: 284px;
+  z-index: 100;
+}
+
+/* Calendar Header - Start/End Date Boxes */
+.calendarHeader {
+  display: flex;
+  align-items: center;
+  margin-bottom: var(--datepicker-gap);
+}
+
+.calendarDateBox {
+  flex: 1;
+  padding: 10px 14px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  background: var(--color-surface-default);
+  border: none;
+  border-radius: 6px;
+}
+
+.calendarDateBoxActive {
+  background: var(--datepicker-range-bg);
+}
+
+.calendarDateLabel {
+  display: block;
+  font-size: 10px;
+  font-weight: 500;
+  color: var(--color-text-subtle);
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  margin-bottom: 2px;
+}
+
+.calendarDateValue {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-text-default);
+}
+
+.calendarDateSeparator {
+  display: flex;
+  align-items: center;
+  padding: 0 8px;
+  font-size: 12px;
+  color: var(--color-text-subtle);
+  background: var(--color-surface-default);
+}
+
+/* Month Navigation */
+.calendarMonthNav {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin-bottom: var(--datepicker-gap);
+}
+
+.calendarNavBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  background: transparent;
+  border: none;
+  border-radius: var(--radius-button);
+  cursor: pointer;
+  color: var(--color-text-default);
+  transition: all 0.15s ease;
+}
+
+.calendarNavBtn:hover {
+  background: var(--datepicker-hover-bg);
+}
+
+.calendarMonthLabel {
+  font-size: var(--font-size-16);
+  line-height: var(--line-height-24);
+  font-weight: 600;
+  color: var(--color-text-default);
+}
+
+/* Weekday Headers */
+.calendarWeekdays {
+  display: grid;
+  grid-template-columns: repeat(7, var(--datepicker-cell-size));
+  gap: var(--datepicker-cell-gap);
+}
+
+.calendarWeekday {
+  font-size: var(--font-size-11);
+  line-height: var(--line-height-16);
+  font-weight: 500;
+  color: var(--color-text-muted);
+  text-align: center;
+  padding: 4px 0;
+}
+
+/* Calendar Grid */
+.calendarGrid {
+  display: grid;
+  grid-template-columns: repeat(7, var(--datepicker-cell-size));
+  gap: var(--datepicker-cell-gap);
+  row-gap: var(--datepicker-row-gap);
+}
+
+/* Calendar Day Cell Wrapper */
+.calendarDayWrapper {
+  position: relative;
+  width: var(--datepicker-cell-size);
+  height: var(--datepicker-cell-size);
+}
+
+/* Range background layers */
+.calendarDayWrapper.inRange .rangeBackground {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  background: var(--datepicker-range-bg);
+}
+
+.calendarDayWrapper.inRange:not(.rangeStart):not(.rangeEnd) .rangeBackground {
+  left: calc(var(--datepicker-cell-gap) / -2);
+  right: calc(var(--datepicker-cell-gap) / -2);
+}
+
+.calendarDayWrapper.rangeStart .rangeBackground {
+  left: 50%;
+  right: calc(var(--datepicker-cell-gap) / -2);
+}
+
+.calendarDayWrapper.rangeEnd .rangeBackground {
+  left: calc(var(--datepicker-cell-gap) / -2);
+  right: 50%;
+}
+
+.calendarDayWrapper.rangeStart.rangeEnd .rangeBackground {
+  display: none;
+}
+
+/* First/Last column adjustments */
+.calendarDayWrapper.firstCol.inRange:not(.rangeStart) .rangeBackground {
+  left: 0;
+}
+
+.calendarDayWrapper.lastCol.inRange:not(.rangeEnd) .rangeBackground {
+  right: 0;
+}
+
+.calendarDayWrapper.lastCol.rangeStart .rangeBackground {
+  right: 0;
+}
+
+.calendarDayWrapper.firstCol.rangeEnd .rangeBackground {
+  left: 0;
+}
+
+.calendarDay {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: var(--datepicker-cell-size);
+  height: var(--datepicker-cell-size);
+  font-size: var(--font-size-12);
+  line-height: var(--line-height-16);
+  font-weight: 500;
+  color: var(--color-text-default);
+  background: transparent;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.calendarDay:hover {
+  background: var(--datepicker-hover-bg);
+}
+
+.calendarDayOther {
+  color: var(--color-text-muted);
+}
+
+.calendarDaySelected {
+  background: var(--color-action-primary) !important;
+  color: var(--color-text-on-primary) !important;
+}
+
+.calendarDayToday:not(.calendarDaySelected) {
+  box-shadow: inset 0 0 0 1px var(--color-action-primary);
+}
+
+.calendarTodayDot {
+  position: absolute;
+  bottom: 2px;
+  width: 4px;
+  height: 4px;
+  background: var(--color-action-primary);
+  border-radius: 50%;
+}
+
+.calendarDaySelected .calendarTodayDot {
+  background: var(--color-text-on-primary);
+}
+
+/* Calendar Actions */
+.calendarActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: var(--datepicker-gap);
+}
+
+.calendarCancel {
+  padding: 8px 16px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--color-text-default);
+  background: var(--color-surface-default);
+  border: 1px solid var(--color-border-default);
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.calendarCancel:hover {
+  background: var(--color-surface-subtle);
+}
+
+.calendarApply {
+  padding: 8px 16px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--color-text-on-primary);
+  background: var(--color-action-primary);
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.calendarApply:hover {
+  background: var(--color-action-primary-hover);
+}
+
+/* ============== Refresh Button ============== */
+.refreshButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  cursor: pointer;
+  color: #64748b;
+  transition: all 0.15s ease;
+}
+
+.dark .refreshButton {
+  background: var(--color-surface-default);
+  border-color: var(--color-border-default);
+  color: var(--color-text-muted);
+}
+
+.refreshButton:hover {
+  border-color: #cbd5e1;
+  color: #1e293b;
+}
+
+.dark .refreshButton:hover {
+  border-color: var(--color-border-strong);
+  color: var(--color-text-default);
+}
+
+.refreshButton:active {
+  background: var(--color-surface-subtle);
 }

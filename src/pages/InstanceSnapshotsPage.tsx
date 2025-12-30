@@ -79,9 +79,6 @@ export function InstanceSnapshotsPage() {
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [snapshotToDelete, setSnapshotToDelete] = useState<InstanceSnapshot | null>(null);
 
-  // Selection state
-  const [selectedSnapshots, setSelectedSnapshots] = useState<string[]>([]);
-
   // View Preferences state
   const [isPreferencesOpen, setIsPreferencesOpen] = useState(false);
   const [rowsPerPage, setRowsPerPage] = useState(10);
@@ -189,8 +186,8 @@ export function InstanceSnapshotsPage() {
       key: 'selection',
       label: (
         <Checkbox
-          checked={paginatedSnapshots.length > 0 && paginatedSnapshots.every((s) => selectedSnapshots.includes(s.id))}
-          indeterminate={paginatedSnapshots.some((s) => selectedSnapshots.includes(s.id)) && !paginatedSnapshots.every((s) => selectedSnapshots.includes(s.id))}
+          checked={allCurrentPageSelected}
+          indeterminate={someCurrentPageSelected && !allCurrentPageSelected}
           onChange={toggleAllSelection}
         />
       ),

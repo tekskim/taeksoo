@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
+import ReactECharts from 'echarts-for-react';
 import { DarkModeToggle } from '@/components/DarkModeToggle';
 import { AttachVolumeDrawer } from '@/components/AttachVolumeDrawer';
 import {
@@ -249,6 +250,14 @@ const disclosureItems = [
   { id: 'disclosure', label: 'Disclosure', icon: IconSelector },
 ];
 
+// Graphs
+const graphItems = [
+  { id: 'bar-chart', label: 'Bar Chart', icon: IconChartBar },
+  { id: 'area-chart', label: 'Area Chart', icon: IconChartBar },
+  { id: 'pie-chart', label: 'Pie Chart', icon: IconActivity },
+  { id: 'half-doughnut-chart', label: 'Half-Doughnut Chart', icon: IconGauge },
+];
+
 // All component items
 const componentItems = [
   ...formControlItems,
@@ -256,6 +265,7 @@ const componentItems = [
   ...navigationItems,
   ...feedbackItems,
   ...disclosureItems,
+  ...graphItems,
 ];
 
 // All items for intersection observer
@@ -530,6 +540,1092 @@ function DrawerDemo() {
 }
 
 /* ----------------------------------------
+   Chart Color Palette (from storage-dashboard)
+   ---------------------------------------- */
+
+const chartColors = {
+  // Primary 5-color palette (Tailwind 400 shades)
+  cyan400: '#22d3ee',
+  emerald400: '#34d399',
+  amber400: '#fbbf24',
+  violet400: '#a78bfa',
+  fuchsia400: '#e879f9',
+  // Additional colors
+  rose400: '#fb7185',
+  blue400: '#60a5fa',
+  green400: '#4ade80',
+  yellow400: '#facc15',
+  red400: '#f87171',
+  // Neutral
+  slate400: '#94a3b8',
+  slate100: '#f1f5f9',
+  slate800: '#1e293b',
+};
+
+const primaryChartColors = [
+  chartColors.cyan400,
+  chartColors.emerald400,
+  chartColors.amber400,
+  chartColors.violet400,
+  chartColors.fuchsia400,
+];
+
+/* ----------------------------------------
+   Base Chart Options (from storage-dashboard)
+   ---------------------------------------- */
+
+const baseChartOptions = {
+  animation: false,
+  grid: {
+    left: '0',
+    right: '16px',
+    top: '30px',
+    bottom: '16px',
+    containLabel: true
+  },
+  xAxis: {
+    type: 'category' as const,
+    axisLine: { show: false },
+    axisTick: { show: false },
+    axisLabel: {
+      color: chartColors.slate400,
+      fontSize: 10
+    },
+    boundaryGap: false
+  },
+  yAxis: {
+    type: 'value' as const,
+    axisLine: { show: false },
+    axisTick: { show: false },
+    splitLine: {
+      lineStyle: { color: chartColors.slate100, opacity: 0.5 }
+    },
+    axisLabel: {
+      color: chartColors.slate400,
+      fontSize: 10
+    }
+  },
+  tooltip: {
+    trigger: 'axis' as const,
+    backgroundColor: 'white',
+    borderColor: '#e2e8f0',
+    textStyle: { color: chartColors.slate800, fontSize: 11 },
+    axisPointer: {
+      type: 'line',
+      snap: true,
+      lineStyle: {
+        color: chartColors.slate400,
+        type: 'dashed'
+      }
+    }
+  }
+};
+
+/* ----------------------------------------
+   Bar Chart Demo (ECharts - from storage-dashboard)
+   ---------------------------------------- */
+
+function BarChartDemo({ variant }: { variant: 'vertical' | 'horizontal' | 'grouped' }) {
+  const labels = ['Instances', 'Volumes', 'Networks', 'Snapshots', 'Backups'];
+  const currentData = [45, 72, 28, 56, 33];
+  const previousData = [35, 55, 42, 38, 28];
+
+  const getOption = () => {
+    if (variant === 'horizontal') {
+      return {
+        ...baseChartOptions,
+        grid: { ...baseChartOptions.grid, left: '80px' },
+        xAxis: {
+          type: 'value' as const,
+          min: 0,
+          max: 100,
+          axisLine: { show: false },
+          axisTick: { show: false },
+          splitLine: { lineStyle: { color: chartColors.slate100, opacity: 0.5 } },
+          axisLabel: { color: chartColors.slate400, fontSize: 10 }
+        },
+        yAxis: {
+          type: 'category' as const,
+          data: labels,
+          axisLine: { show: false },
+          axisTick: { show: false },
+          axisLabel: { color: chartColors.slate400, fontSize: 10 }
+        },
+        series: [{
+          type: 'bar',
+          data: currentData,
+          itemStyle: { color: primaryChartColors[0], borderRadius: [0, 4, 4, 0] },
+          barWidth: '50%'
+        }]
+      };
+    }
+
+    if (variant === 'grouped') {
+      return {
+        ...baseChartOptions,
+        xAxis: {
+          type: 'category' as const,
+          data: labels,
+          axisLine: { show: false },
+          axisTick: { show: false },
+          axisLabel: { color: chartColors.slate400, fontSize: 10 }
+        },
+        yAxis: {
+          ...baseChartOptions.yAxis,
+          min: 0,
+          max: 100
+        },
+        series: [
+          {
+            name: 'Current',
+            type: 'bar',
+            data: currentData,
+            itemStyle: { color: primaryChartColors[0], borderRadius: [4, 4, 0, 0] },
+            barGap: '10%'
+          },
+          {
+            name: 'Previous',
+            type: 'bar',
+            data: previousData,
+            itemStyle: { color: primaryChartColors[1], borderRadius: [4, 4, 0, 0] }
+          }
+        ]
+      };
+    }
+
+    // Vertical (default)
+    return {
+      ...baseChartOptions,
+      xAxis: {
+        type: 'category' as const,
+        data: labels,
+        axisLine: { show: false },
+        axisTick: { show: false },
+        axisLabel: { color: chartColors.slate400, fontSize: 10 }
+      },
+      yAxis: {
+        ...baseChartOptions.yAxis,
+        min: 0,
+        max: 100
+      },
+      series: [{
+        type: 'bar',
+        data: currentData,
+        itemStyle: { color: primaryChartColors[0], borderRadius: [4, 4, 0, 0] },
+        barWidth: '50%'
+      }]
+    };
+  };
+
+  return (
+    <div className="w-full bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-md)] p-4">
+      <ReactECharts option={getOption()} style={{ height: variant === 'horizontal' ? '250px' : '200px' }} notMerge={true} />
+      {variant === 'grouped' && (
+        <div className="flex gap-4 mt-2 justify-start">
+          <div className="flex items-center gap-1.5">
+            <div className="w-2 h-2 rounded-sm" style={{ backgroundColor: primaryChartColors[0] }} />
+            <span className="text-[length:var(--font-size-11)] text-[var(--color-text-muted)]">Current</span>
+          </div>
+          <div className="flex items-center gap-1.5">
+            <div className="w-2 h-2 rounded-sm" style={{ backgroundColor: primaryChartColors[1] }} />
+            <span className="text-[length:var(--font-size-11)] text-[var(--color-text-muted)]">Previous</span>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+/* ----------------------------------------
+   Area Chart Demo (ECharts - from storage-dashboard)
+   ---------------------------------------- */
+
+// Generate time labels for charts
+const generateTimeLabels = () => {
+  const labels = [];
+  for (let i = 0; i <= 50; i += 10) {
+    const min = i.toString().padStart(2, '0');
+    labels.push(`13:${min}`);
+  }
+  return labels;
+};
+
+
+// LineChart Component (from storage-dashboard)
+interface LineChartSeries {
+  name: string;
+  data: number[];
+  color: string;
+}
+
+// Time options for full screen mode
+const timeOptions = [
+  { label: '30m', value: '30m' },
+  { label: '1h', value: '1h' },
+  { label: '6h', value: '6h' },
+  { label: '12h', value: '12h' },
+  { label: '24h', value: '24h' },
+];
+
+// Icons for time controls
+const CalendarIcon = () => (
+  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+    <line x1="16" y1="2" x2="16" y2="6" />
+    <line x1="8" y1="2" x2="8" y2="6" />
+    <line x1="3" y1="10" x2="21" y2="10" />
+  </svg>
+);
+
+const CloseIcon = () => (
+  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <line x1="18" y1="6" x2="6" y2="18" />
+    <line x1="6" y1="6" x2="18" y2="18" />
+  </svg>
+);
+
+
+// Helper function for date formatting
+const formatDateForDisplay = (date: Date | null) => {
+  if (!date) return '';
+  const year = date.getFullYear();
+  const month = (date.getMonth() + 1).toString().padStart(2, '0');
+  const day = date.getDate().toString().padStart(2, '0');
+  return `${year}.${month}.${day}`;
+};
+
+// TimeControls Component
+function TimeControls({
+  onTimeRangeChange,
+  onRefresh
+}: {
+  onTimeRangeChange?: (value: string) => void;
+  onRefresh?: () => void;
+}) {
+  const [timeRange, setTimeRange] = useState('30m');
+  const [customPeriod, setCustomPeriod] = useState<{ start: Date; end: Date } | null>(null);
+  const [showDatePicker, setShowDatePicker] = useState(false);
+  const [tempStartDate, setTempStartDate] = useState<Date | null>(null);
+  const [tempEndDate, setTempEndDate] = useState<Date | null>(null);
+  const [selectingStart, setSelectingStart] = useState(true);
+  const [viewMonth, setViewMonth] = useState(new Date());
+  const datePickerRef = useRef<HTMLDivElement>(null);
+
+  // Close date picker when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (datePickerRef.current && !datePickerRef.current.contains(event.target as Node)) {
+        setShowDatePicker(false);
+      }
+    };
+
+    if (showDatePicker) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [showDatePicker]);
+
+  const handleTimeRangeClick = (value: string) => {
+    setTimeRange(value);
+    setCustomPeriod(null);
+    onTimeRangeChange?.(value);
+  };
+
+  const handleCustomPeriodClick = () => {
+    if (customPeriod) {
+      setTempStartDate(customPeriod.start);
+      setTempEndDate(customPeriod.end);
+      setViewMonth(customPeriod.start);
+    } else {
+      const now = new Date();
+      const oneWeekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+      setTempStartDate(oneWeekAgo);
+      setTempEndDate(now);
+      setViewMonth(now);
+    }
+    setSelectingStart(true);
+    setShowDatePicker(true);
+  };
+
+  const handleApplyCustomPeriod = () => {
+    if (tempStartDate && tempEndDate) {
+      const newPeriod = { start: tempStartDate, end: tempEndDate };
+      setCustomPeriod(newPeriod);
+      setTimeRange('');
+      setShowDatePicker(false);
+    }
+  };
+
+  const handleClearCustomPeriod = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setCustomPeriod(null);
+    setTimeRange('30m');
+    onTimeRangeChange?.('30m');
+  };
+
+  const handlePeriodTextClick = () => {
+    if (customPeriod) {
+      setTempStartDate(customPeriod.start);
+      setTempEndDate(customPeriod.end);
+      setViewMonth(customPeriod.start);
+    }
+    setSelectingStart(true);
+    setShowDatePicker(true);
+  };
+
+  // Calendar helpers
+  const formatCalendarDate = (date: Date | null) => {
+    if (!date) return '';
+    const year = date.getFullYear();
+    const month = (date.getMonth() + 1).toString().padStart(2, '0');
+    const day = date.getDate().toString().padStart(2, '0');
+    return `${year}.${month}.${day}`;
+  };
+
+  const getDaysInMonth = (date: Date) => {
+    const year = date.getFullYear();
+    const month = date.getMonth();
+    const firstDay = new Date(year, month, 1);
+    const lastDay = new Date(year, month + 1, 0);
+    const daysInMonth = lastDay.getDate();
+    const startingDay = firstDay.getDay();
+    
+    const days: { date: Date; isCurrentMonth: boolean; isToday: boolean }[] = [];
+    
+    // Previous month days
+    const prevMonth = new Date(year, month, 0);
+    const prevMonthDays = prevMonth.getDate();
+    for (let i = startingDay - 1; i >= 0; i--) {
+      days.push({
+        date: new Date(year, month - 1, prevMonthDays - i),
+        isCurrentMonth: false,
+        isToday: false
+      });
+    }
+    
+    // Current month days
+    const today = new Date();
+    for (let i = 1; i <= daysInMonth; i++) {
+      const d = new Date(year, month, i);
+      days.push({
+        date: d,
+        isCurrentMonth: true,
+        isToday: d.toDateString() === today.toDateString()
+      });
+    }
+    
+    // Next month days
+    const remainingDays = 42 - days.length;
+    for (let i = 1; i <= remainingDays; i++) {
+      days.push({
+        date: new Date(year, month + 1, i),
+        isCurrentMonth: false,
+        isToday: false
+      });
+    }
+    
+    return days;
+  };
+
+  const handleDayClick = (date: Date) => {
+    if (selectingStart) {
+      setTempStartDate(date);
+      if (tempEndDate && date > tempEndDate) {
+        setTempEndDate(null);
+      }
+      setSelectingStart(false);
+    } else {
+      if (tempStartDate && date < tempStartDate) {
+        setTempEndDate(tempStartDate);
+        setTempStartDate(date);
+      } else {
+        setTempEndDate(date);
+      }
+      setSelectingStart(true);
+    }
+  };
+
+  const isDateInRange = (date: Date) => {
+    if (!tempStartDate || !tempEndDate) return false;
+    return date >= tempStartDate && date <= tempEndDate;
+  };
+
+  const isStartDate = (date: Date) => {
+    return tempStartDate?.toDateString() === date.toDateString();
+  };
+
+  const isEndDate = (date: Date) => {
+    return tempEndDate?.toDateString() === date.toDateString();
+  };
+
+  const prevMonth = () => {
+    setViewMonth(new Date(viewMonth.getFullYear(), viewMonth.getMonth() - 1, 1));
+  };
+
+  const nextMonth = () => {
+    setViewMonth(new Date(viewMonth.getFullYear(), viewMonth.getMonth() + 1, 1));
+  };
+
+  const weekDays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+
+  return (
+    <div className="fullScreenTimeControls">
+      {/* Time Range Buttons */}
+      <div className="timeSegments">
+        {timeOptions.map(option => (
+          <button 
+            key={option.value}
+            className={`timeSegment ${timeRange === option.value && !customPeriod ? 'timeSegmentActive' : ''}`}
+            onClick={() => handleTimeRangeClick(option.value)}
+          >
+            {option.label}
+          </button>
+        ))}
+      </div>
+
+      {/* Period Selector */}
+      <div className="datePickerContainer" ref={datePickerRef}>
+        {customPeriod ? (
+          <div className="periodTag">
+            <span className="periodTagText" onClick={handlePeriodTextClick}>
+              {formatDateForDisplay(customPeriod.start)}
+              <span className="periodTagDivider">—</span>
+              {formatDateForDisplay(customPeriod.end)}
+            </span>
+            <button className="periodTagClose" onClick={handleClearCustomPeriod}>
+              <CloseIcon />
+          </button>
+        </div>
+        ) : (
+          <button 
+            className={`customPeriodBtn ${showDatePicker ? 'customPeriodBtnActive' : ''}`}
+            onClick={handleCustomPeriodClick}
+          >
+            <CalendarIcon />
+            Period
+          </button>
+        )}
+
+        {/* Calendar Date Picker Dropdown */}
+        {showDatePicker && (
+          <div className="calendarDropdown">
+            {/* Date Range Header */}
+            <div className="calendarHeader">
+              <div 
+                className={`calendarDateBox ${selectingStart ? 'calendarDateBoxActive' : ''}`}
+                onClick={() => setSelectingStart(true)}
+              >
+                <span className="calendarDateLabel">START</span>
+                <span className="calendarDateValue">{formatCalendarDate(tempStartDate)}</span>
+          </div>
+              <div className="calendarDateSeparator">~</div>
+          <div 
+                className={`calendarDateBox ${!selectingStart ? 'calendarDateBoxActive' : ''}`}
+                onClick={() => setSelectingStart(false)}
+          >
+                <span className="calendarDateLabel">END</span>
+                <span className="calendarDateValue">{formatCalendarDate(tempEndDate)}</span>
+          </div>
+            </div>
+
+            {/* Month Navigation */}
+            <div className="calendarMonthNav">
+              <button className="calendarNavBtn" onClick={prevMonth}>
+                <IconChevronLeft size={16} stroke={1.5} />
+              </button>
+              <span className="calendarMonthLabel">
+                {viewMonth.getFullYear()}.{(viewMonth.getMonth() + 1).toString().padStart(2, '0')}
+              </span>
+              <button className="calendarNavBtn" onClick={nextMonth}>
+                <IconChevronRight size={16} stroke={1.5} />
+              </button>
+            </div>
+
+            {/* Weekday Headers */}
+            <div className="calendarWeekdays">
+              {weekDays.map(day => (
+                <div key={day} className="calendarWeekday">{day}</div>
+              ))}
+            </div>
+
+            {/* Calendar Grid */}
+            <div className="calendarGrid">
+              {getDaysInMonth(viewMonth).map((day, index) => {
+                const isStart = isStartDate(day.date);
+                const isEnd = isEndDate(day.date);
+                const inRange = isDateInRange(day.date);
+                const colIndex = index % 7;
+                const isFirstCol = colIndex === 0;
+                const isLastCol = colIndex === 6;
+                
+                const wrapperClasses = [
+                  'calendarDayWrapper',
+                  inRange && 'inRange',
+                  isStart && 'rangeStart',
+                  isEnd && 'rangeEnd',
+                  isFirstCol && 'firstCol',
+                  isLastCol && 'lastCol',
+                ].filter(Boolean).join(' ');
+                
+                const dayClasses = [
+                  'calendarDay',
+                  !day.isCurrentMonth && 'calendarDayOther',
+                  (isStart || isEnd) && 'calendarDaySelected',
+                  day.isToday && 'calendarDayToday',
+                ].filter(Boolean).join(' ');
+                
+                return (
+                  <div key={index} className={wrapperClasses}>
+                    {inRange && <div className="rangeBackground" />}
+                    <button
+                      className={dayClasses}
+                      onClick={() => handleDayClick(day.date)}
+                    >
+                      <span>{day.date.getDate()}</span>
+                      {day.isToday && <span className="calendarTodayDot" />}
+                    </button>
+                  </div>
+                );
+              })}
+            </div>
+
+            {/* Actions */}
+            <div className="calendarActions">
+              <button className="calendarCancel" onClick={() => setShowDatePicker(false)}>Cancel</button>
+              <button className="calendarApply" onClick={handleApplyCustomPeriod}>Apply</button>
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* Refresh Button */}
+      <button className="refreshButton" onClick={onRefresh}>
+        <IconRefresh size={14} stroke={1.5} />
+      </button>
+    </div>
+  );
+}
+
+function LineChart({ 
+  title, 
+  series, 
+  yAxisFormatter = (v: number) => `${v}`,
+  height = '200px',
+  onFullScreen,
+  isFullScreen = false,
+  onExitFullScreen,
+  timeControls
+}: { 
+  title: string;
+  series: LineChartSeries[];
+  yAxisFormatter?: (value: number) => string;
+  height?: string;
+  onFullScreen?: () => void;
+  isFullScreen?: boolean;
+  onExitFullScreen?: () => void;
+  timeControls?: React.ReactNode;
+}) {
+  const [visibleSeries, setVisibleSeries] = useState<Record<string, boolean>>(
+    Object.fromEntries(series.map(s => [s.name, true]))
+  );
+  const [menuOpen, setMenuOpen] = useState(false);
+
+  const timeLabels = generateTimeLabels();
+
+  const allVisible = Object.values(visibleSeries).every(v => v);
+  const toggleAll = () => {
+    const newState = !allVisible;
+    setVisibleSeries(Object.fromEntries(series.map(s => [s.name, newState])));
+  };
+
+  const handleFullScreen = () => {
+    setMenuOpen(false);
+    if (onFullScreen) onFullScreen();
+  };
+
+  const option = {
+    animation: false,
+    grid: {
+      left: '0',
+      right: '16px',
+      top: '20px',
+      bottom: '16px',
+      containLabel: true
+    },
+        xAxis: {
+      type: 'category' as const,
+      data: timeLabels,
+      axisLine: { show: false },
+      axisTick: { show: false },
+      axisLabel: {
+        color: chartColors.slate400,
+        fontSize: 10
+      },
+      boundaryGap: false
+        },
+        yAxis: {
+      type: 'value' as const,
+      axisLine: { show: false },
+      axisTick: { show: false },
+      splitLine: {
+        lineStyle: { color: chartColors.slate100, opacity: 0.5 }
+      },
+      axisLabel: {
+        color: chartColors.slate400,
+        fontSize: 10,
+        formatter: yAxisFormatter
+      }
+    },
+    tooltip: {
+      trigger: 'axis' as const,
+      backgroundColor: 'white',
+      borderColor: '#e2e8f0',
+      textStyle: { 
+        color: chartColors.slate800, 
+        fontSize: 11, 
+        fontFamily: 'Mona Sans, -apple-system, BlinkMacSystemFont, sans-serif' 
+      }
+    },
+    series: series
+      .filter(s => visibleSeries[s.name])
+      .map(s => ({
+        name: s.name,
+        type: 'line',
+        smooth: true,
+        symbol: 'circle',
+        symbolSize: 6,
+        showSymbol: false,
+        lineStyle: { color: s.color, width: 1 },
+        itemStyle: { color: s.color },
+        areaStyle: { color: s.color, opacity: 0.1 },
+        data: s.data
+      }))
+  };
+
+  return (
+    <div className={`chartCard ${isFullScreen ? 'chartCardFullScreen' : ''}`}>
+      {/* Header */}
+      <div className="chartHeader">
+        <span className="chartTitle">{title}</span>
+        {isFullScreen && timeControls && (
+          <div className="chartHeaderCenter">{timeControls}</div>
+        )}
+        <div className="chartControls">
+          {/* Toggle Button - only show for multiple series */}
+          {series.length > 1 && (
+            <>
+              <button className="toggleBtn" onClick={toggleAll}>
+                <span className={`toggleSwitch ${allVisible ? 'toggleSwitchActive' : ''}`} />
+                <span>{allVisible ? 'Hide All' : 'View All'}</span>
+              </button>
+              <span className="toggleDivider">|</span>
+            </>
+          )}
+          
+          {/* Menu Button */}
+          <div className="menuContainer">
+            <button 
+              className="menuTrigger"
+              onClick={(e) => { e.stopPropagation(); setMenuOpen(!menuOpen); }}
+            >
+              <IconDotsCircleHorizontal size={16} stroke={1.5} />
+            </button>
+            {menuOpen && (
+              <div className="contextMenu">
+                <button className="contextMenuItem" onClick={() => setMenuOpen(false)}>
+                  Download Image
+                </button>
+                <button className="contextMenuItem" onClick={() => setMenuOpen(false)}>
+                  Download CSV
+                </button>
+                <button className="contextMenuItemLast" onClick={() => setMenuOpen(false)}>
+                  Data View
+                </button>
+              </div>
+            )}
+          </div>
+          
+          {/* Expand/Minimize Button */}
+          <button 
+            className="expandTrigger" 
+            title={isFullScreen ? "Minimize" : "Expand"}
+            onClick={isFullScreen ? onExitFullScreen : handleFullScreen}
+          >
+            {isFullScreen ? (
+              <IconArrowsMinimize size={16} stroke={1.5} />
+            ) : (
+              <IconArrowsMaximize size={16} stroke={1.5} />
+            )}
+          </button>
+        </div>
+      </div>
+      
+      {/* Chart Body */}
+      <div className="chartBody">
+        <div className="chartWrapper" style={isFullScreen ? { height: '100%' } : undefined}>
+          <ReactECharts option={option} style={{ height: isFullScreen ? '100%' : height }} notMerge={true} />
+        </div>
+        <div className="chartLegend">
+          {series.map((s, i) => (
+            <div 
+              key={i}
+              className={`legendItem ${!visibleSeries[s.name] ? 'legendItemHidden' : ''}`}
+              onClick={() => setVisibleSeries(prev => ({ ...prev, [s.name]: !prev[s.name] }))}
+            >
+              <div className="legendDot" style={{ backgroundColor: s.color }} />
+              <span>{s.name}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// Full Screen Chart Data Interface
+interface FullScreenChartData {
+  title: string;
+  series: LineChartSeries[];
+  yAxisFormatter: (value: number) => string;
+}
+
+// ChartWithFullScreen Wrapper Component
+function ChartWithFullScreen({
+  title,
+  series,
+  yAxisFormatter = (v: number) => `${v}`,
+  height = '200px'
+}: {
+  title: string;
+  series: LineChartSeries[];
+  yAxisFormatter?: (value: number) => string;
+  height?: string;
+}) {
+  const [fullScreenChart, setFullScreenChart] = useState<FullScreenChartData | null>(null);
+
+  // Close on ESC key
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape' && fullScreenChart) {
+        setFullScreenChart(null);
+      }
+    };
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, [fullScreenChart]);
+
+  const handleEnterFullScreen = () => {
+    setFullScreenChart({ title, series, yAxisFormatter });
+  };
+
+  const handleExitFullScreen = () => {
+    setFullScreenChart(null);
+  };
+
+  return (
+    <>
+      {/* Regular Chart */}
+      <LineChart
+        title={title}
+        series={series}
+        yAxisFormatter={yAxisFormatter}
+        height={height}
+        onFullScreen={handleEnterFullScreen}
+      />
+
+      {/* Full Screen Overlay & Chart */}
+      {fullScreenChart && (
+        <>
+          <div className="fullScreenOverlay" onClick={handleExitFullScreen} />
+          <div className="fullScreenFloating">
+            <LineChart
+              title={fullScreenChart.title}
+              series={fullScreenChart.series}
+              yAxisFormatter={fullScreenChart.yAxisFormatter}
+              isFullScreen={true}
+              onExitFullScreen={handleExitFullScreen}
+              timeControls={<TimeControls />}
+            />
+          </div>
+        </>
+      )}
+    </>
+  );
+}
+
+// QuotaBarDemo Component
+function QuotaBarDemo({ label, used, total, unit }: { label: string; used: number; total: number; unit: string }) {
+  const percentage = Math.round((used / total) * 100);
+  
+  const getColors = () => {
+    if (percentage >= 100) return {
+      bg: 'bg-[var(--color-status-error)]/15',
+      dot: 'bg-[var(--color-status-error)]',
+      text: 'text-[var(--color-status-error)]'
+    };
+    if (percentage >= 70) return {
+      bg: 'bg-[var(--color-status-warning)]/15',
+      dot: 'bg-[var(--color-status-warning)]',
+      text: 'text-[var(--color-status-warning)]'
+    };
+    return {
+      bg: 'bg-[var(--color-status-success)]/15',
+      dot: 'bg-[var(--color-status-success)]',
+      text: 'text-[var(--color-status-success)]'
+    };
+  };
+  
+  const colors = getColors();
+  
+  return (
+    <div className="flex flex-col gap-2">
+      <div className="flex items-center justify-between">
+        <span className="text-[12px] font-medium text-[var(--color-text-default)]">{label}</span>
+        <div className="flex items-center gap-2">
+          <span className="text-[11px] text-[var(--color-text-muted)]">{used}/{total} {unit}</span>
+          <div className={`flex items-center gap-1 px-1.5 py-0.5 rounded-md ${colors.bg}`}>
+            <div className={`w-2 h-2 rounded-full ${colors.dot}`} />
+            <span className={`text-[11px] font-medium ${colors.text}`}>{percentage}%</span>
+          </div>
+        </div>
+      </div>
+      <div className="h-1 rounded-sm bg-[var(--color-surface-muted)] overflow-hidden">
+        <div 
+          className="h-full rounded-sm bg-[var(--color-text-muted)]"
+          style={{ width: `${Math.min(percentage, 100)}%` }}
+        />
+      </div>
+    </div>
+  );
+}
+
+function AreaChartDemo({ variant }: { variant: 'basic' | 'stacked' }) {
+  // Basic variant - Network Traffic (single series)
+  const networkTrafficSeries: LineChartSeries[] = [
+    { name: 'Traffic', data: [120, 180, 150, 220, 280, 240], color: chartColors.cyan400 },
+  ];
+
+  if (variant === 'basic') {
+    return (
+      <ChartWithFullScreen 
+        title="Network Traffic"
+        series={networkTrafficSeries}
+        yAxisFormatter={(v) => `${v} MB/s`}
+        height="200px"
+      />
+    );
+  }
+
+  // Stacked variant - CPU Utilization
+  const cpuUtilizationSeries: LineChartSeries[] = [
+    { name: 'osd.0', data: [0.3, 0.45, 0.55, 0.6, 0.8, 1.1], color: chartColors.cyan400 },
+    { name: 'osd.1', data: [0.8, 0.95, 1.15, 1.2, 1.0, 1.5], color: chartColors.emerald400 },
+    { name: 'osd.2', data: [0.5, 0.7, 0.9, 0.85, 0.75, 1.1], color: chartColors.amber400 },
+    { name: 'osd.3', data: [0.3, 0.5, 0.6, 0.55, 0.65, 0.8], color: chartColors.violet400 },
+  ];
+
+  return (
+    <ChartWithFullScreen 
+      title="CPU Utilization"
+      series={cpuUtilizationSeries}
+      yAxisFormatter={(v) => `${v.toFixed(2)}%`}
+      height="200px"
+    />
+  );
+}
+
+/* ----------------------------------------
+   Pie Chart Demo (ECharts - from storage-dashboard)
+   ---------------------------------------- */
+
+// Extended color palette for pie charts with many segments
+const extendedChartColors = [
+  chartColors.cyan400,     // cyan
+  chartColors.emerald400,  // emerald/green
+  chartColors.amber400,    // amber/yellow
+  chartColors.violet400,   // violet/purple
+  chartColors.fuchsia400,  // fuchsia/pink
+  chartColors.red400,      // red/coral
+  chartColors.slate400,    // slate/gray
+  '#60a5fa',               // blue-400
+  '#f472b6',               // pink-400
+  '#4ade80',               // green-400
+];
+
+interface PieChartData {
+  name: string;
+  value: number;
+}
+
+function PieChartDemo({ 
+  title, 
+  data,
+  showPercentOnSlice = true 
+}: { 
+  title: string; 
+  data: PieChartData[];
+  showPercentOnSlice?: boolean;
+}) {
+  const total = data.reduce((sum, item) => sum + item.value, 0);
+  
+  const chartData = data.map((item, index) => ({
+    ...item,
+    itemStyle: { color: extendedChartColors[index % extendedChartColors.length] }
+  }));
+
+  const legendData = data.map((item, index) => ({
+    label: item.name,
+    value: Math.round((item.value / total) * 100),
+    color: extendedChartColors[index % extendedChartColors.length]
+  }));
+
+  const getOption = () => ({
+    tooltip: {
+      show: true,
+      trigger: 'item',
+      backgroundColor: '#ffffff',
+      borderColor: '#e2e8f0',
+      borderWidth: 1,
+      borderRadius: 6,
+      padding: [8, 12],
+      textStyle: {
+        color: '#1e293b',
+        fontSize: 11
+      },
+      formatter: (params: { marker: string; name: string; value: number; percent: number }) => {
+        return `${params.marker} ${params.name}<br/><span style="font-weight: 600; margin-left: 14px;">${params.value} (${params.percent.toFixed(0)}%)</span>`;
+      }
+    },
+    animation: false,
+    series: [
+      {
+        type: 'pie',
+        radius: '80%',
+        center: ['50%', '50%'],
+        avoidLabelOverlap: true,
+        label: showPercentOnSlice ? {
+          show: true,
+          position: 'inside',
+          formatter: (params: { percent: number }) => {
+            return params.percent >= 15 ? `${params.percent.toFixed(0)}%` : '';
+          },
+          fontSize: 12,
+          fontWeight: 600,
+          color: '#ffffff'
+        } : {
+          show: false
+        },
+        emphasis: {
+          scale: true,
+          scaleSize: 5,
+          itemStyle: {
+            shadowBlur: 10,
+            shadowOffsetX: 0,
+            shadowColor: 'rgba(0, 0, 0, 0.2)'
+          }
+        },
+        labelLine: {
+          show: false
+        },
+        data: chartData
+      }
+    ]
+  });
+
+  return (
+    <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] p-5 flex flex-col gap-4 w-[280px]">
+      <span className="text-[length:var(--font-size-13)] font-medium text-[var(--color-text-default)]">{title}</span>
+      <div className="flex justify-center">
+        <ReactECharts option={getOption()} style={{ height: '180px', width: '180px' }} />
+      </div>
+      <div className="flex flex-wrap items-center gap-x-4 gap-y-2 justify-center max-h-[60px] overflow-y-auto legend-scroll">
+        {legendData.map((item, i) => (
+          <div key={i} className="flex items-center gap-1.5">
+            <div className="w-2.5 h-2.5 rounded-sm shrink-0" style={{ backgroundColor: item.color }} />
+            <span className="text-[length:var(--font-size-11)] text-[var(--color-text-muted)]">{item.label}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+/* ----------------------------------------
+   Half-Doughnut Chart Demo (ECharts - from storage-dashboard)
+   ---------------------------------------- */
+
+function HalfDoughnutChartDemo({ value, label, status = 'default' }: { value: number; label: string; status?: 'default' | 'success' | 'warning' | 'error' }) {
+  // Get color from design system CSS variables
+  const getColor = (cssVar: string, fallback: string) => {
+    if (typeof window !== 'undefined') {
+      const value = getComputedStyle(document.documentElement).getPropertyValue(cssVar).trim();
+      return value || fallback;
+    }
+    return fallback;
+  };
+
+  const colorMap = {
+    default: primaryChartColors[0],
+    success: getColor('--color-status-success', '#22c55e'),
+    warning: getColor('--color-status-warning', '#f97316'),
+    error: getColor('--color-status-error', '#ef4444'),
+  };
+
+  const color = colorMap[status];
+
+  const getOption = () => ({
+    series: [
+      {
+        type: 'gauge',
+        startAngle: 210,
+        endAngle: -30,
+        center: ['50%', '65%'],
+        radius: '90%',
+        min: 0,
+        max: 100,
+        axisLine: {
+          lineStyle: {
+            width: 14,
+            color: [
+              [value / 100, color],
+              [1, getColor('--color-border-subtle', '#f1f5f9')]
+            ]
+          }
+        },
+        pointer: {
+          show: false
+        },
+        axisTick: {
+          show: false
+        },
+        splitLine: {
+          show: false
+        },
+        axisLabel: {
+          show: false
+        },
+        title: {
+          show: false
+        },
+        detail: {
+          show: false
+        }
+      }
+    ]
+  });
+
+  return (
+    <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] p-4 relative">
+      <ReactECharts option={getOption()} style={{ height: '160px', width: '180px' }} />
+      <div className="absolute inset-0 flex flex-col items-center justify-center pt-8">
+        <span className="text-[24px] leading-[28px] font-semibold text-[var(--color-text-default)]">{value}%</span>
+        <span className="text-[12px] text-[var(--color-text-subtle)]">{label}</span>
+      </div>
+    </div>
+  );
+}
+
+/* ----------------------------------------
    TabBar Demo (with state)
    ---------------------------------------- */
 
@@ -783,16 +1879,17 @@ function TableDemo() {
       render: (_: string | null, row: InstanceData) => (
         row.attachedTo && row.attachedToId ? (
           <div className="flex items-center gap-2">
-            <div 
-              className="flex-shrink-0 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[4px] p-1"
-              title={row.attachedType === 'router' ? 'Router' : 'Instance'}
-            >
-              {row.attachedType === 'router' ? (
-                <IconRouter size={12} stroke={1.5} className="text-[var(--color-text-subtle)]" />
-              ) : (
-                <IconCube size={12} stroke={1.5} className="text-[var(--color-text-subtle)]" />
-              )}
-            </div>
+            <Tooltip content={row.attachedType === 'router' ? 'Router' : 'Instance'} position="top" delay={0}>
+              <div 
+                className="flex-shrink-0 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[4px] p-1 cursor-pointer hover:bg-[var(--color-surface-muted)] transition-colors"
+              >
+                {row.attachedType === 'router' ? (
+                  <IconRouter size={12} stroke={1.5} className="text-[var(--color-text-subtle)]" />
+                ) : (
+                  <IconCube size={12} stroke={1.5} className="text-[var(--color-text-subtle)]" />
+                )}
+              </div>
+            </Tooltip>
             <div className="flex flex-col gap-0.5 min-w-0">
               <button
                 onClick={(e) => e.stopPropagation()}
@@ -954,13 +2051,13 @@ function TableDemo() {
       <VStack gap={3}>
         <Label>Sticky Header (scroll to see effect)</Label>
         <div className="overflow-hidden rounded-[var(--radius-md)]">
-          <Table
+        <Table
             columns={compactColumns}
             data={sampleTableData.slice(0, 5)}
             rowKey="id"
             maxHeight="180px"
-            stickyHeader
-          />
+          stickyHeader
+        />
         </div>
         <p className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
           Scroll vertically to see sticky header effect
@@ -1223,6 +2320,30 @@ export function DesignSystemPage() {
                 Disclosure
               </span>
               {disclosureItems.map(({ id, label, icon: Icon }) => (
+                <button
+                  key={id}
+                  onClick={() => scrollToSection(id)}
+                  className={`
+                    w-full px-3 py-2 rounded-[var(--radius-button)] flex items-center gap-2
+                    text-[length:var(--font-size-11)] text-left transition-colors
+                    ${activeSection === id
+                      ? 'bg-[var(--color-state-info-bg)] text-[var(--color-action-primary)] font-medium'
+                      : 'text-[var(--color-text-muted)] hover:bg-[var(--color-surface-subtle)]'
+                    }
+                  `}
+                >
+                  <Icon size={16} stroke={1.5} />
+                  {label}
+                </button>
+              ))}
+            </VStack>
+
+            {/* Graphs */}
+            <VStack gap={1}>
+              <span className="px-3 py-1 text-[length:var(--font-size-10)] font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider">
+                Graphs
+              </span>
+              {graphItems.map(({ id, label, icon: Icon }) => (
                 <button
                   key={id}
                   onClick={() => scrollToSection(id)}
@@ -4434,6 +5555,131 @@ outline: 2px solid var(--color-border-focus);`}
               </VStack>
             </Section>
 
+            {/* ============================================
+                GRAPHS SECTION
+                ============================================ */}
+
+            {/* Bar Chart */}
+            <Section id="bar-chart" title="Bar Chart" description="Categorical data comparison with vertical or horizontal bars">
+              <VStack gap={8}>
+                {/* Design Tokens */}
+                <VStack gap={3}>
+                  <Label>Design Tokens</Label>
+                  <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
+                    <code>bar-height: 4px</code> · <code>bar-radius: 2px</code> · <code>row-gap: 22px</code> · <code>status-colors: success/warning/error</code>
+                  </div>
+                </VStack>
+
+                {/* Quota Bar */}
+                <VStack gap={3}>
+                  <Label>Quota Bar</Label>
+                  <div className="w-[288px] p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-2xl">
+                    <div className="text-[11px] font-semibold text-[var(--color-text-muted)] tracking-wide mb-4">COMPUTE QUOTA</div>
+                    <div className="space-y-[22px]">
+                      <QuotaBarDemo label="vCPU" used={4} total={8} unit="vCPU" />
+                      <QuotaBarDemo label="RAM" used={22} total={32} unit="GiB" />
+                      <QuotaBarDemo label="Disk" used={4} total={6} unit="GiB" />
+                      <QuotaBarDemo label="GPU" used={6} total={8} unit="GPU" />
+                      <QuotaBarDemo label="NPU" used={6} total={8} unit="NPU" />
+                    </div>
+                  </div>
+                </VStack>
+              </VStack>
+            </Section>
+
+            {/* Area Chart */}
+            <Section id="area-chart" title="Area Chart" description="Filled area visualization for volume and cumulative data">
+              <VStack gap={8}>
+                {/* Design Tokens */}
+                <VStack gap={3}>
+                  <Label>Design Tokens</Label>
+                  <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
+                    <code>fill-opacity: 0.1</code> · <code>line-width: 1px</code> · <code>smooth: true</code> · <code>symbol-size: 6px</code>
+                  </div>
+                </VStack>
+
+                {/* Basic Area Chart */}
+                <VStack gap={3}>
+                  <Label>Basic Area Chart</Label>
+                  <AreaChartDemo variant="basic" />
+                </VStack>
+
+                {/* Stacked Area Chart */}
+                <VStack gap={3}>
+                  <Label>Stacked Area Chart</Label>
+                  <AreaChartDemo variant="stacked" />
+                </VStack>
+              </VStack>
+            </Section>
+
+            {/* Pie Chart */}
+            <Section id="pie-chart" title="Pie Chart" description="Part-to-whole relationships with percentage labels on slices">
+              <VStack gap={8}>
+                {/* Design Tokens */}
+                <VStack gap={3}>
+                  <Label>Design Tokens</Label>
+                  <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
+                    <code>radius: 90px</code> · <code>label-threshold: 15%</code> · <code>legend: external</code> · <code>legend-scroll: 60px</code>
+                  </div>
+                </VStack>
+
+                {/* Pie Charts Examples */}
+                <VStack gap={3}>
+                  <Label>Examples (from storage-dashboard)</Label>
+                  <div className="flex gap-6 flex-wrap">
+                    <PieChartDemo 
+                      title="OSD Types Summary"
+                      data={[
+                        { name: 'hdd', value: 15 },
+                        { name: 'nvme', value: 25 },
+                        { name: 'ssd', value: 30 },
+                        { name: 'hybrid', value: 10 },
+                        { name: 'sata', value: 5 },
+                        { name: 'sas', value: 5 },
+                        { name: 'pcie', value: 4 },
+                        { name: 'u.2', value: 3 },
+                        { name: 'm.2', value: 3 },
+                        { name: 'scsi', value: 2 },
+                        { name: 'fc', value: 2 },
+                        { name: 'iscsi', value: 1 },
+                      ]}
+                    />
+                    <PieChartDemo 
+                      title="OSD Objectstore Types"
+                      data={[
+                        { name: 'bluestore', value: 70 },
+                        { name: 'filestore', value: 20 },
+                        { name: 'seastore', value: 10 },
+                      ]}
+                    />
+                  </div>
+                </VStack>
+              </VStack>
+            </Section>
+
+            {/* Half-Doughnut Chart */}
+            <Section id="half-doughnut-chart" title="Half-Doughnut Chart" description="Progress and metric visualization with half-circular arc design">
+              <VStack gap={8}>
+                {/* Design Tokens */}
+                <VStack gap={3}>
+                  <Label>Design Tokens</Label>
+                  <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
+                    <code>arc-width: 14px</code> · <code>start-angle: 200°</code> · <code>end-angle: -20°</code> · <code>status-colors: success/warning/error</code>
+                  </div>
+                </VStack>
+
+                {/* Status Variants */}
+                <VStack gap={3}>
+                  <Label>Status Variants</Label>
+                  <div className="flex items-center gap-8 flex-wrap">
+                    <HalfDoughnutChartDemo value={35} label="Safe" status="success" />
+                    <HalfDoughnutChartDemo value={75} label="Warning" status="warning" />
+                    <HalfDoughnutChartDemo value={95} label="Danger" status="error" />
+                  </div>
+                </VStack>
+              </VStack>
+            </Section>
+
           </VStack>
         </div>
         </div>
@@ -4501,17 +5747,17 @@ function ColorSwatch({ name, color, textLight = false }: { name: string; color: 
 
   return (
     <Tooltip content={`${color}\n${hexValue}`} position="top">
-      <div 
+    <div 
         ref={ref}
         className="w-full h-12 rounded-[var(--radius-md)] flex flex-col items-center justify-center border border-[var(--color-border-subtle)] cursor-pointer hover:ring-2 hover:ring-[var(--color-border-focus)] transition-shadow" 
-        style={{ backgroundColor: color }}
+      style={{ backgroundColor: color }}
         onClick={handleCopy}
-      >
+    >
         <span className={`text-[10px] font-mono font-medium ${textLight ? 'text-white' : 'text-black'}`}>{name}</span>
         <span className={`text-[8px] font-mono ${textLight ? 'text-white/70' : 'text-black/50'}`}>
           {copied ? 'Copied!' : hexValue}
         </span>
-      </div>
+    </div>
     </Tooltip>
   );
 }
@@ -4543,7 +5789,7 @@ function SemanticColorBox({ name, color, border = false }: { name: string; color
 
   return (
     <Tooltip content={`${color}\n${hexValue}`} position="top">
-      <VStack gap={1} align="center">
+    <VStack gap={1} align="center">
         <div 
           ref={ref}
           className={`w-10 h-10 rounded-[var(--radius-md)] cursor-pointer hover:ring-2 hover:ring-[var(--color-border-focus)] transition-shadow ${border ? 'border border-[var(--color-border-default)]' : ''}`} 
@@ -4553,7 +5799,7 @@ function SemanticColorBox({ name, color, border = false }: { name: string; color
         <span className="text-[8px] font-mono text-[var(--color-text-disabled)] truncate max-w-10">
           {copied ? '✓' : name}
         </span>
-      </VStack>
+    </VStack>
     </Tooltip>
   );
 }

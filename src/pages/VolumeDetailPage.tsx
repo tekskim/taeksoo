@@ -414,7 +414,7 @@ export function VolumeDetailPage() {
                 <DetailHeader.InfoCard
                   label="Status"
                   value={volumeStatusDisplayMap[volume.status]}
-                  statusIndicator={<StatusIndicator status="active" layout="icon-only" />}
+                  status="active"
                 />
                 <DetailHeader.InfoCard label="ID" value={volume.id} copyable />
                 <DetailHeader.InfoCard label="Size" value={volume.size} />

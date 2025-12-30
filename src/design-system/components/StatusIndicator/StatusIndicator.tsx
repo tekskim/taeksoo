@@ -44,7 +44,7 @@ export type StatusType =
   | 'down';
 
 export type StatusLayout = 'default' | 'icon-only';
-export type StatusSize = 'sm' | 'md' | 'lg';
+export type StatusSize = 'xs' | 'sm' | 'md' | 'lg';
 
 export interface StatusConfig {
   label: string;
@@ -184,6 +184,7 @@ export function StatusIndicator({
 
   // Size-based icon sizes for icon-only layout
   const iconSizes: Record<StatusSize, number> = {
+    xs: 10,
     sm: 12,
     md: 14,
     lg: 16,
@@ -191,6 +192,7 @@ export function StatusIndicator({
 
   // Size-based container sizes for icon-only layout
   const sizeStyles: Record<StatusSize, string> = {
+    xs: 'size-[16px]',
     sm: 'size-[20px]',
     md: 'size-[24px]',
     lg: 'size-[28px]',

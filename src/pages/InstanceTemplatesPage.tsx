@@ -228,8 +228,8 @@ export function InstanceTemplatesPage() {
       key: 'selection',
       label: (
         <Checkbox
-          checked={paginatedTemplates.length > 0 && paginatedTemplates.every((t) => selectedTemplates.includes(t.id))}
-          indeterminate={paginatedTemplates.some((t) => selectedTemplates.includes(t.id)) && !paginatedTemplates.every((t) => selectedTemplates.includes(t.id))}
+          checked={allCurrentPageSelected}
+          indeterminate={someCurrentPageSelected && !allCurrentPageSelected}
           onChange={toggleAllSelection}
         />
       ),

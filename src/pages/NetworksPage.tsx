@@ -85,7 +85,6 @@ export function NetworksPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const [networks] = useState(mockNetworks);
   const [activeTab, setActiveTab] = useState('current');
-  const [selectedNetworks, setSelectedNetworks] = useState<string[]>([]);
   
   // Delete modal state
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);

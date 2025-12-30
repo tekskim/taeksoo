@@ -83,7 +83,6 @@ export function VolumeSnapshotsPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [snapshots, setSnapshots] = useState(mockVolumeSnapshots);
-  const [selectedSnapshots, setSelectedSnapshots] = useState<string[]>([]);
   
   // Delete modal state
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);

@@ -85,7 +85,6 @@ export function LoadBalancersPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [loadBalancers] = useState(mockLoadBalancers);
-  const [selectedLBs, setSelectedLBs] = useState<string[]>([]);
   
   // Delete modal state
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
