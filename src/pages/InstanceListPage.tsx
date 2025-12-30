@@ -543,7 +543,7 @@ export function InstanceListPage() {
       label: 'Status',
       width: '59px',
       align: 'center',
-      sortable: true,
+      sortable: false,
       render: (_, row) => (
         <StatusIndicator status={statusMap[row.status]} layout="icon-only" />
       ),
