@@ -73,7 +73,7 @@ function ConnectionStatusIndicator({ status }: { status: ConnectionStatus }) {
   const config = statusConfig[status];
 
   return (
-    <div className="flex items-center gap-1.5">
+    <div className="flex items-center gap-1.5 ml-3">
       <span className={`size-2 rounded-full ${config.color}`} />
       <span className="text-[12px] text-[var(--color-text-default)]">
         {config.label}
