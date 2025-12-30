@@ -40,8 +40,8 @@ import { ViewPreferencesDrawer, type ColumnConfig } from '@/components/ViewPrefe
 import { CreateInstanceSnapshotDrawer, type InstanceInfo } from '@/components/CreateInstanceSnapshotDrawer';
 import { LockSettingDrawer, type InstanceInfo as LockInstanceInfo } from '@/components/LockSettingDrawer';
 import { EditInstanceDrawer, type InstanceInfo as EditInstanceInfo } from '@/components/EditInstanceDrawer';
-import { ShellPanel, useShellPanel } from '@/components/ShellPanel';
-import { Link } from 'react-router-dom';
+import { ShellPanel, useShellPanel, type ShellTab } from '@/components/ShellPanel';
+import { Link, useNavigate } from 'react-router-dom';
 
 /* ----------------------------------------
    Types
@@ -166,6 +166,24 @@ export function InstanceListPage() {
 
   // Shell Panel state (using hook for multi-tab support)
   const shellPanel = useShellPanel();
+  const navigate = useNavigate();
+  const { addTab } = useTabs();
+
+  // Handle opening shell tab in new browser tab
+  const handleOpenInNewTab = (tab: ShellTab) => {
+    // Add tab to the tab bar
+    const tabId = `console-${tab.instanceId}`;
+    addTab({
+      id: tabId,
+      label: tab.title,
+      path: `/console/${tab.instanceId}?name=${encodeURIComponent(tab.title)}`,
+      closable: true,
+    });
+    // Close the shell panel
+    shellPanel.closeTab(tab.id);
+    // Navigate to the console page
+    navigate(`/console/${tab.instanceId}?name=${encodeURIComponent(tab.title)}`);
+  };
 
   // Default column config for VM instances
   const defaultVMColumnConfig: ColumnConfig[] = [
@@ -847,6 +865,7 @@ export function InstanceListPage() {
         onCloseTab={shellPanel.closeTab}
         onContentChange={shellPanel.updateContent}
         onClear={shellPanel.clearContent}
+        onOpenInNewTab={handleOpenInNewTab}
         initialHeight={350}
         minHeight={300}
       />
