@@ -44,7 +44,7 @@ export function Sidebar({ isOpen = true, onToggle }: SidebarProps) {
   const [selectedProjectId, setSelectedProjectId] = useState(mockProjects[0].id);
   const location = useLocation();
   const navigate = useNavigate();
-  const { addTab, selectTab, tabs } = useTabs();
+  const { updateActiveTab } = useTabs();
   
   // Check if current path matches href (handle root path for home)
   const isActive = (href: string) => {
@@ -55,24 +55,11 @@ export function Sidebar({ isOpen = true, onToggle }: SidebarProps) {
     return location.pathname === href;
   };
 
-  // Handle menu click - add/select tab and navigate
+  // Handle menu click - update current tab title and navigate
   const handleMenuClick = useCallback((href: string, label: string) => {
-    // Check if tab already exists
-    const existingTab = tabs.find(t => t.path === href);
-    if (existingTab) {
-      selectTab(existingTab.id);
-    } else {
-      // Add new tab
-      const tabId = `tab-${href.replace(/\//g, '-')}`;
-      addTab({
-        id: tabId,
-        label,
-        path: href,
-        closable: true,
-      });
-    }
+    updateActiveTab(label, href);
     navigate(href);
-  }, [tabs, selectTab, addTab, navigate]);
+  }, [updateActiveTab, navigate]);
   
   if (!isOpen) return null;
 
