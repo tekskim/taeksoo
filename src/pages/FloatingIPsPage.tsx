@@ -379,9 +379,6 @@ export function FloatingIPsPage() {
               columns={visibleColumns}
               data={paginatedFloatingIPs}
               rowKey="id"
-              selectable
-              selectedRows={selectedFloatingIPs}
-              onSelectionChange={setSelectedFloatingIPs}
             />
           </VStack>
         </div>

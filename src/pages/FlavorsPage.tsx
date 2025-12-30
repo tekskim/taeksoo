@@ -77,7 +77,6 @@ export function FlavorsPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [activeTab, setActiveTab] = useState('cpu');
-  const [selectedFlavors, setSelectedFlavors] = useState<string[]>([]);
 
   // View Preferences state
   const [isPreferencesOpen, setIsPreferencesOpen] = useState(false);
@@ -342,9 +341,6 @@ export function FlavorsPage() {
               data={filteredFlavors.slice((currentPage - 1) * rowsPerPage, currentPage * rowsPerPage)}
               rowKey="id"
               emptyMessage="No flavors found"
-              selectable
-              selectedRows={selectedFlavors}
-              onSelectionChange={setSelectedFlavors}
             />
           </VStack>
         </div>

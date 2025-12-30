@@ -502,9 +502,6 @@ export function InstanceTemplatesPage() {
               data={filteredTemplates.slice((currentPage - 1) * rowsPerPage, currentPage * rowsPerPage)}
               rowKey="id"
               emptyMessage="No templates found"
-              selectable
-              selectedRows={selectedTemplates}
-              onSelectionChange={setSelectedTemplates}
             />
           </VStack>
         </div>

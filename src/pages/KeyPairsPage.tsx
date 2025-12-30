@@ -331,9 +331,6 @@ export function KeyPairsPage() {
               data={filteredKeyPairs.slice((currentPage - 1) * rowsPerPage, currentPage * rowsPerPage)}
               rowKey="id"
               emptyMessage="No key pairs found"
-              selectable
-              selectedRows={selectedKeyPairs}
-              onSelectionChange={setSelectedKeyPairs}
             />
           </VStack>
         </div>

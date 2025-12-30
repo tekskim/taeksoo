@@ -374,9 +374,6 @@ export function LoadBalancersPage() {
               columns={visibleColumns}
               data={paginatedLBs}
               rowKey="id"
-              selectable
-              selectedRows={selectedLBs}
-              onSelectionChange={setSelectedLBs}
             />
           </VStack>
         </div>
