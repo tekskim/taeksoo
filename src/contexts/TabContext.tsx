@@ -147,4 +147,5 @@ export function useTabs() {
   return context;
 }
 
+export type { TabItem };
 export default TabContext;
