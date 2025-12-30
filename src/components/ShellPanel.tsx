@@ -6,7 +6,6 @@ import {
   IconGripHorizontal,
   IconDownload,
   IconChevronDown,
-  IconChevronUp,
 } from '@tabler/icons-react';
 
 /* ----------------------------------------
@@ -96,10 +95,10 @@ function ShellTabButton({ tab, isActive, onClick, onClose }: ShellTabButtonProps
   return (
     <div
       className={`
-        flex items-center gap-2 px-3 h-9 cursor-pointer transition-colors border-r border-slate-700
+        flex items-center gap-2 px-3 h-9 cursor-pointer transition-colors border-r border-[#1e293b]
         ${isActive 
-          ? 'bg-slate-800' 
-          : 'bg-slate-900 hover:bg-slate-800/50'
+          ? 'bg-[#1e293b]' 
+          : 'bg-[#0f172a] hover:bg-[#1e293b]/50'
         }
       `}
       onClick={onClick}
@@ -116,7 +115,7 @@ function ShellTabButton({ tab, isActive, onClick, onClose }: ShellTabButtonProps
             window.open(`/console/${tab.instanceId}`, '_blank');
           }
         }}
-        className="p-0.5 rounded hover:bg-slate-700 transition-colors text-slate-500 hover:text-slate-300"
+        className="p-0.5 rounded hover:bg-[#334155] transition-colors text-slate-500 hover:text-slate-300"
         title="Open in new window"
       >
         <IconExternalLink size={12} stroke={1.5} />
@@ -126,43 +125,11 @@ function ShellTabButton({ tab, isActive, onClick, onClose }: ShellTabButtonProps
           e.stopPropagation();
           onClose();
         }}
-        className="p-0.5 rounded hover:bg-slate-700 transition-colors text-slate-500 hover:text-slate-300"
+        className="p-0.5 rounded hover:bg-[#334155] transition-colors text-slate-500 hover:text-slate-300"
         title="Close tab"
       >
         <IconX size={12} stroke={1.5} />
       </button>
-    </div>
-  );
-}
-
-/* ----------------------------------------
-   Bottom Bar (Collapsed State)
-   ---------------------------------------- */
-
-interface BottomBarProps {
-  tabCount: number;
-  onExpand: () => void;
-}
-
-function BottomBar({ tabCount, onExpand }: BottomBarProps) {
-  return (
-    <div
-      className="fixed bottom-0 right-0 z-40 h-8 bg-slate-900 border-t border-l border-slate-700 flex items-center px-3 cursor-pointer hover:bg-slate-800 transition-colors"
-      style={{ left: '200px' }}
-      onClick={onExpand}
-    >
-      <div className="flex items-center gap-2">
-        <IconChevronUp size={14} className="text-slate-400" />
-        <IconTerminal2 size={14} className="text-slate-400" />
-        <span className="text-[12px] font-medium text-slate-300">
-          Console
-        </span>
-        {tabCount > 0 && (
-          <span className="text-[11px] text-slate-400 bg-slate-800 px-1.5 py-0.5 rounded">
-            {tabCount}
-          </span>
-        )}
-      </div>
     </div>
   );
 }
@@ -183,7 +150,7 @@ function ContainerSelect({ value, options, onChange }: ContainerSelectProps) {
       <select
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        className="appearance-none bg-slate-800 border border-slate-600 rounded px-3 py-1 pr-7 text-[12px] text-slate-200 cursor-pointer hover:bg-slate-700 focus:outline-none focus:ring-1 focus:ring-slate-500"
+        className="appearance-none bg-[#1e293b] border border-[#334155] rounded px-3 py-1 pr-7 text-[12px] text-slate-200 cursor-pointer hover:bg-[#334155] focus:outline-none focus:ring-1 focus:ring-[#475569]"
       >
         {options.map((opt) => (
           <option key={opt} value={opt}>
@@ -221,7 +188,7 @@ function ViewTimeSelect({ value, onChange }: ViewTimeSelectProps) {
       <select
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        className="appearance-none bg-slate-800 border border-slate-600 rounded px-3 py-1 pr-7 text-[12px] text-slate-200 cursor-pointer hover:bg-slate-700 focus:outline-none focus:ring-1 focus:ring-slate-500"
+        className="appearance-none bg-[#1e293b] border border-[#334155] rounded px-3 py-1 pr-7 text-[12px] text-slate-200 cursor-pointer hover:bg-[#334155] focus:outline-none focus:ring-1 focus:ring-[#475569]"
       >
         {options.map((opt) => (
           <option key={opt} value={opt}>
@@ -329,14 +296,14 @@ export function ShellPanel({
     }
   }, [activeTab]);
 
-  // Show bottom bar when collapsed
-  if (!isExpanded) {
-    return <BottomBar tabCount={tabs.length} onExpand={() => onExpandedChange(true)} />;
+  // Don't render anything if no tabs or not expanded
+  if (!isExpanded || tabs.length === 0) {
+    return null;
   }
 
   return (
     <div
-      className="fixed bottom-0 right-0 z-40 bg-slate-900 border-t border-l border-slate-700 shadow-2xl flex flex-col"
+      className="fixed bottom-0 right-0 z-40 bg-[#0f172a] border-t border-l border-[#1e293b] shadow-2xl flex flex-col"
       style={{
         height: `${height}px`,
         left: '200px',
@@ -345,17 +312,17 @@ export function ShellPanel({
     >
       {/* Resize Handle */}
       <div
-        className="absolute -top-1 left-0 right-0 h-2 cursor-ns-resize flex items-center justify-center group hover:bg-slate-800"
+        className="absolute -top-1 left-0 right-0 h-2 cursor-ns-resize flex items-center justify-center group hover:bg-[#1e293b]"
         onMouseDown={handleMouseDown}
       >
         <IconGripHorizontal
           size={16}
-          className="text-slate-600 group-hover:text-slate-400"
+          className="text-[#334155] group-hover:text-slate-400"
         />
       </div>
 
-      {/* Tab Bar */}
-      <div className="flex items-center bg-slate-900 border-b border-slate-700">
+      {/* Tab Bar - Same background as bottom bar */}
+      <div className="flex items-center bg-[#0f172a] border-b border-[#1e293b]">
         {/* Tabs */}
         <div className="flex items-center overflow-x-auto scrollbar-none">
           {tabs.map(tab => (
@@ -388,8 +355,8 @@ export function ShellPanel({
         )}
       </div>
 
-      {/* Bottom Status Bar */}
-      <div className="flex items-center justify-between px-3 py-2 border-t border-slate-700 bg-slate-800/80">
+      {/* Bottom Status Bar - Same background as tab bar */}
+      <div className="flex items-center justify-between px-3 py-2 border-t border-[#1e293b] bg-[#0f172a]">
         <div className="flex items-center gap-3">
           {/* Container Select */}
           <ContainerSelect
@@ -401,7 +368,7 @@ export function ShellPanel({
           {/* Clear Button */}
           <button
             onClick={handleClear}
-            className="px-3 py-1 rounded border border-slate-600 bg-slate-800 hover:bg-slate-700 transition-colors text-[12px] text-slate-200"
+            className="px-3 py-1 rounded border border-[#334155] bg-[#1e293b] hover:bg-[#334155] transition-colors text-[12px] text-slate-200"
           >
             Clear
           </button>
@@ -409,7 +376,7 @@ export function ShellPanel({
           {/* Download Button */}
           <button
             onClick={handleDownload}
-            className="p-1.5 rounded border border-slate-600 bg-slate-800 hover:bg-slate-700 transition-colors text-slate-400 hover:text-slate-200"
+            className="p-1.5 rounded border border-[#334155] bg-[#1e293b] hover:bg-[#334155] transition-colors text-slate-400 hover:text-slate-200"
             title="Download logs"
           >
             <IconDownload size={14} stroke={1.5} />
