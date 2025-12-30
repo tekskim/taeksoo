@@ -107,7 +107,7 @@ function ShellTabButton({ tab, isActive, onClick, onClose, onOpenInNewTab }: She
       onClick={onClick}
     >
       <IconTerminal2 size={14} className="text-[var(--color-text-muted)]" stroke={1.5} />
-      <span className="text-[13px] text-[var(--color-text-default)] truncate max-w-[140px]">
+      <span className="flex-1 truncate text-[length:var(--tabbar-font-size)] leading-[var(--tabbar-line-height)] text-[var(--color-text-default)] font-medium max-w-[140px]">
         {tab.title}
       </span>
       <button
