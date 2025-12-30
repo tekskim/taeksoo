@@ -328,15 +328,13 @@ export function ShellPanel({
           </Button>
 
           {/* Download Button */}
-          <Button
-            size="sm"
-            variant="secondary"
+          <button
             onClick={handleDownload}
             aria-label="Download"
-            iconOnly
+            className="inline-flex items-center justify-center size-[28px] rounded-[var(--button-radius)] bg-[var(--color-surface-default)] text-[var(--color-text-default)] border border-[var(--color-border-strong)] hover:bg-[var(--button-secondary-hover-bg)] transition-colors"
           >
             <IconDownload size={14} stroke={1.5} />
-          </Button>
+          </button>
 
           {/* Connection Status */}
           {activeTab && (
