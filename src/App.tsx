@@ -24,6 +24,7 @@ import { SecurityGroupsPage } from '@/pages/SecurityGroupsPage';
 import { LoadBalancersPage } from '@/pages/LoadBalancersPage';
 import { CertificatesPage } from '@/pages/CertificatesPage';
 import { TopologyD3Page } from '@/pages/TopologyD3Page';
+import { ConsolePage } from '@/pages/ConsolePage';
 
 const defaultTabs = [
   { id: 'home', label: 'Home', path: '/', closable: true },
@@ -64,6 +65,9 @@ function AppRoutes() {
         <Route path="/load-balancers" element={<LoadBalancersPage />} />
         <Route path="/certificates" element={<CertificatesPage />} />
         <Route path="/topology" element={<TopologyD3Page />} />
+        
+        {/* Console */}
+        <Route path="/console/:instanceId" element={<ConsolePage />} />
       </Routes>
     </TabProvider>
   );

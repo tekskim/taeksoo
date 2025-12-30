@@ -42,6 +42,8 @@ export interface ShellPanelProps {
   onContentChange?: (tabId: string, content: string) => void;
   /** Callback when clear button is clicked */
   onClear?: (tabId: string) => void;
+  /** Callback when open in new tab is clicked */
+  onOpenInNewTab?: (tab: ShellTab) => void;
   /** Initial height of the panel */
   initialHeight?: number;
   /** Minimum height of the panel */
@@ -89,9 +91,10 @@ interface ShellTabButtonProps {
   isActive: boolean;
   onClick: () => void;
   onClose: () => void;
+  onOpenInNewTab?: () => void;
 }
 
-function ShellTabButton({ tab, isActive, onClick, onClose }: ShellTabButtonProps) {
+function ShellTabButton({ tab, isActive, onClick, onClose, onOpenInNewTab }: ShellTabButtonProps) {
   return (
     <div
       className={`
@@ -110,13 +113,10 @@ function ShellTabButton({ tab, isActive, onClick, onClose }: ShellTabButtonProps
       <button
         onClick={(e) => {
           e.stopPropagation();
-          // Open in new window
-          if (tab.instanceId) {
-            window.open(`/console/${tab.instanceId}`, '_blank');
-          }
+          onOpenInNewTab?.();
         }}
         className="p-0.5 rounded hover:bg-[var(--color-surface-muted)] transition-colors text-[var(--color-text-muted)] hover:text-[var(--color-text-default)]"
-        title="Open in new window"
+        title="Open in new tab"
       >
         <IconExternalLink size={12} stroke={1.5} />
       </button>
@@ -147,6 +147,7 @@ export function ShellPanel({
   onCloseTab,
   onContentChange,
   onClear,
+  onOpenInNewTab,
   initialHeight = 350,
   minHeight = 300,
 }: ShellPanelProps) {
@@ -280,6 +281,7 @@ export function ShellPanel({
               isActive={tab.id === activeTabId}
               onClick={() => onActiveTabChange(tab.id)}
               onClose={() => onCloseTab(tab.id)}
+              onOpenInNewTab={() => onOpenInNewTab?.(tab)}
             />
           ))}
         </div>
