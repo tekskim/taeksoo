@@ -360,6 +360,9 @@ export function VolumeSnapshotsPage() {
               columns={visibleColumns}
               data={paginatedSnapshots}
               rowKey="id"
+              selectable
+              selectedRows={selectedSnapshots}
+              onSelectionChange={setSelectedSnapshots}
             />
           </VStack>
         </div>

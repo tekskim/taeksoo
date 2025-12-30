@@ -86,6 +86,7 @@ export function CertificatesPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const [certificates] = useState(mockCertificates);
   const [activeTab, setActiveTab] = useState('server');
+  const [selectedCerts, setSelectedCerts] = useState<string[]>([]);
   
   // Delete modal state
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
@@ -255,7 +256,7 @@ export function CertificatesPage() {
               bulkActions={<ListToolbar.Actions><Button variant="muted" size="sm" leftIcon={<IconTrash size={12} />} disabled>Delete</Button></ListToolbar.Actions>}
             />
             <Pagination currentPage={currentPage} totalPages={totalPages} totalItems={filteredCerts.length} onPageChange={setCurrentPage} showSettings onSettingsClick={() => setIsPreferencesOpen(true)} />
-            <Table columns={visibleColumns} data={paginatedCerts} rowKey="id" />
+            <Table columns={visibleColumns} data={paginatedCerts} rowKey="id" selectable selectedRows={selectedCerts} onSelectionChange={setSelectedCerts} />
           </VStack>
         </div>
         </div>
