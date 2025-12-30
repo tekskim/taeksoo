@@ -177,10 +177,10 @@ export function ConsolePage() {
           
           {/* Console Content */}
           <div className="flex flex-col h-[calc(100vh-var(--tabbar-height))]">
-            {/* Header */}
-            <div className="flex items-center gap-3 px-6 py-3 border-b border-[var(--color-border-default)] bg-[var(--color-surface-subtle)]">
-              <IconTerminal2 size={18} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+            {/* Header - Same style as ShellPanel tab */}
+            <div className="flex items-center gap-2 px-6 py-3 border-b border-[var(--color-border-default)] bg-[var(--color-surface-subtle)]">
+              <IconTerminal2 size={14} className="text-[var(--color-text-muted)]" stroke={1.5} />
+              <span className="text-[length:var(--tabbar-font-size)] leading-[var(--tabbar-line-height)] font-medium text-[var(--color-text-default)]">
                 {instanceName}
               </span>
             </div>
