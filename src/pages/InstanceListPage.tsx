@@ -40,6 +40,7 @@ import { ViewPreferencesDrawer, type ColumnConfig } from '@/components/ViewPrefe
 import { CreateInstanceSnapshotDrawer, type InstanceInfo } from '@/components/CreateInstanceSnapshotDrawer';
 import { LockSettingDrawer, type InstanceInfo as LockInstanceInfo } from '@/components/LockSettingDrawer';
 import { EditInstanceDrawer, type InstanceInfo as EditInstanceInfo } from '@/components/EditInstanceDrawer';
+import { ShellPanel, useShellPanel } from '@/components/ShellPanel';
 import { Link } from 'react-router-dom';
 
 /* ----------------------------------------
@@ -162,6 +163,9 @@ export function InstanceListPage() {
   // Edit Instance Drawer state
   const [isEditDrawerOpen, setIsEditDrawerOpen] = useState(false);
   const [selectedInstanceForEdit, setSelectedInstanceForEdit] = useState<EditInstanceInfo | null>(null);
+
+  // Shell Panel state (using hook for multi-tab support)
+  const shellPanel = useShellPanel();
 
   // Default column config for VM instances
   const defaultVMColumnConfig: ColumnConfig[] = [
@@ -475,7 +479,14 @@ export function InstanceListPage() {
       align: 'center',
       render: (_, row) => (
         <HStack gap={1} className="justify-center">
-          <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
+          <button 
+            className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group"
+            onClick={(e) => {
+              e.stopPropagation();
+              shellPanel.openConsole(row.id, row.name);
+            }}
+            title="Open console"
+          >
             <IconTerminal2 size={16} stroke={1} className="text-[var(--color-text-subtle)] group-hover:text-[var(--color-text-default)]" />
           </button>
           <div onClick={(e) => e.stopPropagation()}>
@@ -824,6 +835,20 @@ export function InstanceListPage() {
           console.log('Editing instance:', name, 'description:', description, 'for instance:', selectedInstanceForEdit?.id);
           // TODO: Implement actual edit API call
         }}
+      />
+
+      {/* Shell Panel (Multi-tab Console) */}
+      <ShellPanel
+        isExpanded={shellPanel.isExpanded}
+        onExpandedChange={shellPanel.setIsExpanded}
+        tabs={shellPanel.tabs}
+        activeTabId={shellPanel.activeTabId}
+        onActiveTabChange={shellPanel.setActiveTabId}
+        onCloseTab={shellPanel.closeTab}
+        onContentChange={shellPanel.updateContent}
+        onClear={shellPanel.clearContent}
+        initialHeight={350}
+        minHeight={300}
       />
     </div>
   );
