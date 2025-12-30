@@ -147,7 +147,7 @@ export function RoutersPage() {
     {
       key: 'status',
       label: 'Status',
-      width: '80px',
+      width: '59px',
       align: 'center',
       render: (_, row) => (
         <StatusIndicator status={routerStatusMap[row.status]} layout="icon-only" />
