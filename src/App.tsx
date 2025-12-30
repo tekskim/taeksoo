@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { TabProvider } from '@/contexts/TabContext';
+import { SidebarProvider } from '@/contexts/SidebarContext';
 import { DarkModeProvider } from '@/hooks/useDarkMode';
 
 // Pages
@@ -55,7 +56,7 @@ const defaultTabs = [
 
 function AppRoutes() {
   return (
-    <Routes>
+      <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/home" element={<HomePage />} />
         <Route path="/instances" element={<InstanceListPage />} />
@@ -110,9 +111,11 @@ function App() {
   return (
     <DarkModeProvider>
       <BrowserRouter basename={import.meta.env.BASE_URL}>
-        <TabProvider defaultTabs={defaultTabs}>
-          <AppRoutes />
-        </TabProvider>
+        <SidebarProvider>
+          <TabProvider defaultTabs={defaultTabs}>
+            <AppRoutes />
+          </TabProvider>
+        </SidebarProvider>
       </BrowserRouter>
     </DarkModeProvider>
   );

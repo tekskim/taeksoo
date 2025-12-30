@@ -3,7 +3,6 @@ import {
   IconX,
   IconExternalLink,
   IconTerminal2,
-  IconGripHorizontal,
   IconDownload,
 } from '@tabler/icons-react';
 import { Select, Button } from '@/design-system';
@@ -200,6 +199,10 @@ export function ShellPanel({
   useEffect(() => {
     if (!isResizing) return;
 
+    // Prevent text selection during resize
+    document.body.style.userSelect = 'none';
+    document.body.style.cursor = 'ns-resize';
+
     const handleMouseMove = (e: MouseEvent) => {
       const maxHeight = getMaxHeight();
       const newHeight = window.innerHeight - e.clientY;
@@ -208,6 +211,8 @@ export function ShellPanel({
 
     const handleMouseUp = () => {
       setIsResizing(false);
+      document.body.style.userSelect = '';
+      document.body.style.cursor = '';
     };
 
     document.addEventListener('mousemove', handleMouseMove);
@@ -216,6 +221,8 @@ export function ShellPanel({
     return () => {
       document.removeEventListener('mousemove', handleMouseMove);
       document.removeEventListener('mouseup', handleMouseUp);
+      document.body.style.userSelect = '';
+      document.body.style.cursor = '';
     };
   }, [isResizing, minHeight, getMaxHeight]);
 
@@ -265,14 +272,9 @@ export function ShellPanel({
     >
       {/* Resize Handle */}
       <div
-        className="absolute -top-1 left-0 right-0 h-2 cursor-ns-resize flex items-center justify-center group hover:bg-[var(--color-surface-subtle)]"
+        className="absolute -top-1 left-0 right-0 h-2 cursor-ns-resize"
         onMouseDown={handleMouseDown}
-      >
-        <IconGripHorizontal
-          size={16}
-          className="text-[var(--color-text-disabled)] group-hover:text-[var(--color-text-muted)]"
-        />
-      </div>
+      />
 
       {/* Tab Bar - White tone */}
       <div className="flex items-center bg-[var(--color-surface-subtle)]">
@@ -294,7 +296,7 @@ export function ShellPanel({
       {/* Content - Dark background for logs */}
       <div
         ref={contentRef}
-        className="flex-1 overflow-auto p-4 font-mono text-[12px] leading-5 bg-[#0d1117] text-slate-300 [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-slate-600 [&::-webkit-scrollbar-thumb]:rounded-full"
+        className="flex-1 overflow-auto p-4 font-mono text-[12px] leading-5 bg-[#0d1117] text-slate-300 shell-scroll"
       >
         {activeTab ? (
           activeTab.content ? (
@@ -461,8 +463,8 @@ function generateSampleLogs(instanceName: string): string {
   };
 
   const logs = [
-    `${formatDate(now)} ${formatTime(now)}  I1029 02:06:11.570725    1 main.go:152] "Version" version="v"`,
-    `${formatDate(now)} ${formatTime(now)}  I1029 02:06:11.570824    1 main.go:153] "Running node-driver-registrar" mode=""`,
+    `${formatDate(now)} ${formatTime(now)}  I1029 02:06:11.570725    1 main.go:152] "Version" version="v1.2.3"`,
+    `${formatDate(now)} ${formatTime(now)}  I1029 02:06:11.570824    1 main.go:153] "Running node-driver-registrar" mode="csi"`,
     `${formatDate(now)} ${formatTime(now)}  I1029 02:06:11.570828    1 main.go:174] "Attempting to open a gRPC connection" csiAddress="/csi/csi.sock"`,
     `${formatDate(now)} ${formatTime(now)}  I1029 02:06:17.836012    1 main.go:182] "Calling CSI driver to discover driver name"`,
     `${formatDate(now)} ${formatTime(now)}  I1029 02:06:17.837013    1 main.go:191] "CSI driver name" csiDriverName="driver.csi.io"`,
@@ -471,6 +473,45 @@ function generateSampleLogs(instanceName: string): string {
     `${formatDate(now)} ${formatTime(now)}  I1029 02:06:17.837245    1 node_register.go:96] "Skipping HTTP server"`,
     `${formatDate(now)} ${formatTime(now)}  I1029 02:06:18.515514    1 main.go:97] "Received GetInfo call" request="&InfoRequest{}"`,
     `${formatDate(now)} ${formatTime(now)}  I1029 02:06:18.529723    1 main.go:109] "Received NotifyRegistrationStatus call" status="&RegistrationStatus{PluginRegistered:true,Error:,}"`,
+    `${formatDate(now)} ${formatTime(now)}  I1029 02:06:19.123456    1 kubelet.go:201] "Container runtime initialized" runtime="containerd://1.6.20"`,
+    `${formatDate(now)} ${formatTime(now)}  I1029 02:06:19.234567    1 kubelet.go:210] "Pod sandbox created" podSandboxID="abc123def456"`,
+    `${formatDate(now)} ${formatTime(now)}  I1029 02:06:20.345678    1 container.go:89] "Pulling image" image="nginx:1.25-alpine"`,
+    `${formatDate(now)} ${formatTime(now)}  I1029 02:06:25.456789    1 container.go:102] "Successfully pulled image" image="nginx:1.25-alpine" duration="5.111s"`,
+    `${formatDate(now)} ${formatTime(now)}  I1029 02:06:25.567890    1 container.go:115] "Creating container" containerName="web-server"`,
+    `${formatDate(now)} ${formatTime(now)}  I1029 02:06:26.678901    1 container.go:128] "Container created" containerID="container-xyz789"`,
+    `${formatDate(now)} ${formatTime(now)}  I1029 02:06:26.789012    1 container.go:141] "Starting container" containerID="container-xyz789"`,
+    `${formatDate(now)} ${formatTime(now)}  I1029 02:06:27.890123    1 container.go:154] "Container started successfully" containerID="container-xyz789"`,
+    `${formatDate(now)} ${formatTime(now)}  I1029 02:06:28.901234    1 network.go:67] "Network interface attached" interface="eth0" ip="10.244.1.15"`,
+    `${formatDate(now)} ${formatTime(now)}  I1029 02:06:29.012345    1 network.go:78] "DNS configured" nameserver="10.96.0.10"`,
+    `${formatDate(now)} ${formatTime(now)}  I1029 02:06:30.123456    1 volume.go:45] "Volume mounted" volumeName="config-vol" mountPath="/etc/nginx/conf.d"`,
+    `${formatDate(now)} ${formatTime(now)}  I1029 02:06:30.234567    1 volume.go:56] "Volume mounted" volumeName="data-vol" mountPath="/var/www/html"`,
+    `${formatDate(now)} ${formatTime(now)}  I1029 02:06:31.345678    1 health.go:34] "Liveness probe configured" initialDelaySeconds="30" periodSeconds="10"`,
+    `${formatDate(now)} ${formatTime(now)}  I1029 02:06:31.456789    1 health.go:45] "Readiness probe configured" initialDelaySeconds="5" periodSeconds="5"`,
+    `${formatDate(now)} ${formatTime(now)}  I1029 02:06:32.567890    1 scheduler.go:89] "Pod scheduled" nodeName="worker-node-01" namespace="default"`,
+    `${formatDate(now)} ${formatTime(now)}  I1029 02:06:33.678901    1 events.go:56] "Event recorded" type="Normal" reason="Started" message="Started container web-server"`,
+    `${formatDate(now)} ${formatTime(now)}  I1029 02:06:34.789012    1 status.go:78] "Pod status updated" phase="Running" conditions="Ready,ContainersReady"`,
+    `${formatDate(now)} ${formatTime(now)}  I1029 02:06:35.890123    1 metrics.go:34] "Metrics server listening" port="9090" path="/metrics"`,
+    `${formatDate(now)} ${formatTime(now)}  I1029 02:06:36.901234    1 audit.go:45] "Audit log enabled" logPath="/var/log/audit/audit.log"`,
+    `${formatDate(now)} ${formatTime(now)}  I1029 02:06:37.012345    1 service.go:89] "Service endpoint created" serviceName="web-service" clusterIP="10.96.145.78"`,
+    `${formatDate(now)} ${formatTime(now)}  I1029 02:06:38.123456    1 ingress.go:67] "Ingress rule applied" host="app.example.com" path="/"`,
+    `${formatDate(now)} ${formatTime(now)}  I1029 02:06:39.234567    1 tls.go:45] "TLS certificate loaded" secretName="app-tls-secret" expiry="2025-12-31"`,
+    `${formatDate(now)} ${formatTime(now)}  I1029 02:06:40.345678    1 hpa.go:56] "HorizontalPodAutoscaler configured" minReplicas="2" maxReplicas="10"`,
+    `${formatDate(now)} ${formatTime(now)}  I1029 02:06:41.456789    1 pdb.go:34] "PodDisruptionBudget applied" minAvailable="1"`,
+    `${formatDate(now)} ${formatTime(now)}  I1029 02:06:42.567890    1 resourcequota.go:78] "ResourceQuota checked" cpu="200m/1000m" memory="256Mi/2Gi"`,
+    `${formatDate(now)} ${formatTime(now)}  I1029 02:06:43.678901    1 limitrange.go:45] "LimitRange validated" defaultCPU="100m" defaultMemory="128Mi"`,
+    `${formatDate(now)} ${formatTime(now)}  I1029 02:06:44.789012    1 secret.go:67] "Secret mounted" secretName="db-credentials" mountPath="/etc/secrets"`,
+    `${formatDate(now)} ${formatTime(now)}  I1029 02:06:45.890123    1 configmap.go:56] "ConfigMap mounted" configMapName="app-config" mountPath="/etc/config"`,
+    `${formatDate(now)} ${formatTime(now)}  I1029 02:06:46.901234    1 rbac.go:89] "RBAC permissions verified" serviceAccount="default" namespace="default"`,
+    `${formatDate(now)} ${formatTime(now)}  I1029 02:06:47.012345    1 admission.go:45] "Admission webhook passed" webhookName="validate-pods"`,
+    `${formatDate(now)} ${formatTime(now)}  I1029 02:06:48.123456    1 finalizer.go:34] "Finalizer registered" finalizerName="kubernetes.io/pvc-protection"`,
+    `${formatDate(now)} ${formatTime(now)}  I1029 02:06:49.234567    1 controller.go:78] "Controller reconciliation complete" controller="deployment-controller"`,
+    `${formatDate(now)} ${formatTime(now)}  I1029 02:06:50.345678    1 watch.go:56] "Watch established" resourceType="pods" namespace="default"`,
+    `${formatDate(now)} ${formatTime(now)}  I1029 02:06:51.456789    1 cache.go:89] "Cache synced" resourceType="configmaps" itemCount="15"`,
+    `${formatDate(now)} ${formatTime(now)}  I1029 02:06:52.567890    1 informer.go:45] "Informer started" resourceType="services"`,
+    `${formatDate(now)} ${formatTime(now)}  I1029 02:06:53.678901    1 endpoint.go:67] "Endpoints updated" serviceName="web-service" endpointCount="3"`,
+    `${formatDate(now)} ${formatTime(now)}  I1029 02:06:54.789012    1 sync.go:34] "Sync cycle completed" duration="243ms" itemsProcessed="127"`,
+    `${formatDate(now)} ${formatTime(now)}  I1029 02:06:55.890123    1 gc.go:78] "Garbage collection started" orphanedResources="0"`,
+    `${formatDate(now)} ${formatTime(now)}  I1029 02:06:56.901234    1 lease.go:45] "Lease renewed" leaseName="kube-scheduler" holderIdentity="scheduler-01"`,
   ];
 
   return logs.join('\n');

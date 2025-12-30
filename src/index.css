@@ -568,7 +568,7 @@ html.theme-transition *::after {
   /* ----------------------------------------
      Component - TopBar
      ---------------------------------------- */
-  --topbar-height: 40px;
+  --topbar-height: 36px;
   --topbar-padding-x: var(--spacing-3);
   --topbar-gap: var(--spacing-3);
   --topbar-section-gap: var(--spacing-2);
@@ -682,7 +682,7 @@ html.theme-transition *::after {
   /* ----------------------------------------
      Component - Tabs
      ---------------------------------------- */
-  --tabs-gap: var(--spacing-6);
+  --tabs-gap: var(--spacing-2);
   --tabs-min-width: 80px;
   --tabs-padding-x: var(--spacing-3);
   --tabs-indicator-gap: var(--spacing-2-5);
@@ -1258,6 +1258,30 @@ html.theme-transition *::after {
 .legend-scroll {
   scrollbar-width: thin;
   scrollbar-color: var(--color-border-subtle) transparent;
+}
+
+/* Shell/Console Scrollbar (dark background) */
+.shell-scroll::-webkit-scrollbar {
+  width: 6px;
+}
+
+.shell-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.shell-scroll::-webkit-scrollbar-thumb {
+  background: #475569;
+  border-radius: var(--radius-full);
+}
+
+.shell-scroll::-webkit-scrollbar-thumb:hover {
+  background: #64748b;
+}
+
+/* Firefox */
+.shell-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: #475569 transparent;
 }
 
 /* Hide native search input clear button */

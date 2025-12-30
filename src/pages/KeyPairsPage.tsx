@@ -355,6 +355,7 @@ export function KeyPairsPage() {
                 showSettings
                 onSettingsClick={() => setIsPreferencesOpen(true)}
                 totalItems={filteredKeyPairs.length}
+                selectedCount={selectedKeyPairs.length}
               />
             )}
 

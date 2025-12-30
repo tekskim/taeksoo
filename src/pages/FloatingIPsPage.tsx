@@ -369,6 +369,7 @@ export function FloatingIPsPage() {
               currentPage={currentPage}
               totalPages={totalPages}
               totalItems={filteredFloatingIPs.length}
+              selectedCount={selectedFloatingIPs.length}
               onPageChange={setCurrentPage}
               showSettings
               onSettingsClick={() => setIsPreferencesOpen(true)}

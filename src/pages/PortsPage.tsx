@@ -418,6 +418,7 @@ export function PortsPage() {
               currentPage={currentPage}
               totalPages={totalPages}
               totalItems={filteredPorts.length}
+              selectedCount={selectedPorts.length}
               onPageChange={setCurrentPage}
               showSettings
               onSettingsClick={() => setIsPreferencesOpen(true)}

@@ -387,6 +387,7 @@ export function InstanceSnapshotsPage() {
                 showSettings
                 onSettingsClick={() => setIsPreferencesOpen(true)}
                 totalItems={filteredSnapshots.length}
+                selectedCount={selectedSnapshots.length}
               />
             )}
 

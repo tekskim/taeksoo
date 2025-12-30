@@ -228,6 +228,11 @@ export function InstanceTemplatesPage() {
       label: '',
       width: '48px',
       align: 'center',
+      headerRender: () => (
+        <div className="flex items-center justify-center w-full">
+          <IconStar size={14} stroke={1.5} className="text-[var(--color-text-muted)]" />
+        </div>
+      ),
       render: (_, row) => (
         <button
           onClick={(e) => {
@@ -469,6 +474,7 @@ export function InstanceTemplatesPage() {
                 showSettings
                 onSettingsClick={() => setIsPreferencesOpen(true)}
                 totalItems={filteredTemplates.length}
+                selectedCount={selectedTemplates.length}
               />
             )}
 

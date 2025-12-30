@@ -363,6 +363,7 @@ export function LoadBalancersPage() {
               currentPage={currentPage}
               totalPages={totalPages}
               totalItems={filteredLBs.length}
+              selectedCount={selectedLBs.length}
               onPageChange={setCurrentPage}
               showSettings
               onSettingsClick={() => setIsPreferencesOpen(true)}

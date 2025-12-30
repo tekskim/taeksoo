@@ -23,6 +23,7 @@ import {
 } from '@/design-system';
 import { Sidebar } from '@/components/Sidebar';
 import { useTabs } from '@/contexts/TabContext';
+import { useSidebar } from '@/contexts/SidebarContext';
 import {
   IconDotsCircleHorizontal,
   IconPlayerPlay,
@@ -94,6 +95,16 @@ const mockInstances: Instance[] = [
   { id: 'vm-008', name: 'web-server-02', status: 'building', locked: false, fixedIp: '-', floatingIp: '-', image: 'Rocky Linux 9', flavor: 'Small', vcpu: 2, ram: '4GB', disk: '50GB', gpu: '-', az: 'keystone' },
   { id: 'vm-009', name: 'analytics-01', status: 'error', locked: true, fixedIp: '10.20.30.80', floatingIp: '-', image: 'Debian 12', flavor: 'XLarge', vcpu: 16, ram: '32GB', disk: '500GB', gpu: '2', az: 'nova' },
   { id: 'vm-010', name: 'cache-server-01', status: 'running', locked: false, fixedIp: '10.20.30.90', floatingIp: '20.30.40.90', image: 'Debian 12', flavor: 'Medium', vcpu: 4, ram: '16GB', disk: '100GB', gpu: '-', az: 'keystone' },
+  { id: 'vm-011', name: 'api-server-01', status: 'running', locked: false, fixedIp: '10.20.30.100', floatingIp: '20.30.40.100', image: 'Ubuntu 22.04', flavor: 'Medium', vcpu: 4, ram: '8GB', disk: '100GB', gpu: '-', az: 'nova' },
+  { id: 'vm-012', name: 'api-server-02', status: 'running', locked: true, fixedIp: '10.20.30.101', floatingIp: '20.30.40.101', image: 'Ubuntu 22.04', flavor: 'Medium', vcpu: 4, ram: '8GB', disk: '100GB', gpu: '-', az: 'nova' },
+  { id: 'vm-013', name: 'monitoring-01', status: 'running', locked: false, fixedIp: '10.20.30.110', floatingIp: '-', image: 'CentOS 8', flavor: 'Large', vcpu: 8, ram: '16GB', disk: '200GB', gpu: '-', az: 'keystone' },
+  { id: 'vm-014', name: 'logging-01', status: 'running', locked: false, fixedIp: '10.20.30.111', floatingIp: '-', image: 'CentOS 8', flavor: 'Large', vcpu: 8, ram: '32GB', disk: '500GB', gpu: '-', az: 'keystone' },
+  { id: 'vm-015', name: 'etcd-01', status: 'running', locked: true, fixedIp: '10.20.30.120', floatingIp: '-', image: 'Ubuntu 22.04', flavor: 'Small', vcpu: 2, ram: '4GB', disk: '50GB', gpu: '-', az: 'nova' },
+  { id: 'vm-016', name: 'etcd-02', status: 'running', locked: true, fixedIp: '10.20.30.121', floatingIp: '-', image: 'Ubuntu 22.04', flavor: 'Small', vcpu: 2, ram: '4GB', disk: '50GB', gpu: '-', az: 'nova' },
+  { id: 'vm-017', name: 'etcd-03', status: 'stopped', locked: true, fixedIp: '10.20.30.122', floatingIp: '-', image: 'Ubuntu 22.04', flavor: 'Small', vcpu: 2, ram: '4GB', disk: '50GB', gpu: '-', az: 'keystone' },
+  { id: 'vm-018', name: 'ml-training-01', status: 'running', locked: false, fixedIp: '10.20.30.130', floatingIp: '20.30.40.130', image: 'Ubuntu 22.04', flavor: 'GPU Large', vcpu: 32, ram: '256GB', disk: '2TB', gpu: '8', az: 'nova' },
+  { id: 'vm-019', name: 'dev-server-01', status: 'running', locked: false, fixedIp: '10.20.30.140', floatingIp: '20.30.40.140', image: 'Rocky Linux 9', flavor: 'Medium', vcpu: 4, ram: '8GB', disk: '100GB', gpu: '-', az: 'keystone' },
+  { id: 'vm-020', name: 'staging-server-01', status: 'pending', locked: false, fixedIp: '-', floatingIp: '-', image: 'Rocky Linux 9', flavor: 'Large', vcpu: 8, ram: '16GB', disk: '200GB', gpu: '-', az: 'keystone' },
 ];
 
 const mockBareMetalInstances: BareMetalInstance[] = [
@@ -128,7 +139,7 @@ const statusMap: Record<InstanceStatus, StatusType> = {
 // Filter type is imported from design-system as FilterItem
 
 export function InstanceListPage() {
-  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const { isOpen: sidebarOpen, open: openSidebar, close: closeSidebar } = useSidebar();
   const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [currentBareMetalPage, setCurrentBareMetalPage] = useState(1);
@@ -646,47 +657,54 @@ export function InstanceListPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-[var(--color-surface-subtle)]">
+    <>
+    <div className="h-screen bg-[var(--color-surface-subtle)] flex">
       {/* Sidebar */}
-      <Sidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(false)} />
+      <Sidebar isOpen={sidebarOpen} onToggle={closeSidebar} />
 
       {/* Main Content */}
-      <main className={`min-h-screen bg-[var(--color-surface-default)] transition-[margin] duration-200 overflow-x-auto ${sidebarOpen ? 'ml-[200px]' : 'ml-0'}`}>
-        <div className="min-w-[var(--layout-content-min-width)]">
-        {/* Tab Bar */}
-        <TabBar
-          tabs={tabBarTabs}
-          activeTab={activeTabId}
-          onTabChange={selectTab}
-          onTabClose={closeTab}
-          onTabAdd={addNewTab}
-          showAddButton={true}
-          showWindowControls={true}
-        />
+      <main className={`flex-1 flex flex-col bg-[var(--color-surface-default)] transition-[margin] duration-200 ${sidebarOpen ? 'ml-[200px]' : 'ml-0'}`}>
+        {/* Fixed Header */}
+        <div className="shrink-0 bg-[var(--color-surface-default)] z-30">
+          {/* Tab Bar */}
+          <TabBar
+            tabs={tabBarTabs}
+            activeTab={activeTabId}
+            onTabChange={selectTab}
+            onTabClose={closeTab}
+            onTabAdd={addNewTab}
+            showAddButton={true}
+            showWindowControls={true}
+          />
 
-        {/* Top Bar with Breadcrumb Navigation */}
-        <TopBar
-          showSidebarToggle={!sidebarOpen}
-          onSidebarToggle={() => setSidebarOpen(true)}
-          showNavigation={true}
-          onBack={() => window.history.back()}
-          onForward={() => window.history.forward()}
-          breadcrumb={
-            <Breadcrumb
-              items={[
-                { label: 'Proj-1', href: '/project' },
-                { label: 'Instances List' },
-              ]}
-            />
-          }
-          actions={
-            <TopBarAction
-              icon={<IconBell size={16} stroke={1.5} />}
-              aria-label="Notifications"
-              badge={true}
-            />
-          }
-        />
+          {/* Top Bar with Breadcrumb Navigation */}
+          <TopBar
+            showSidebarToggle={!sidebarOpen}
+            onSidebarToggle={openSidebar}
+            showNavigation={true}
+            onBack={() => window.history.back()}
+            onForward={() => window.history.forward()}
+            canGoForward={false}
+            breadcrumb={
+              <Breadcrumb
+                items={[
+                  { label: 'Proj-1', href: '/project' },
+                  { label: 'Instances List' },
+                ]}
+              />
+            }
+            actions={
+              <TopBarAction
+                icon={<IconBell size={16} stroke={1.5} />}
+                aria-label="Notifications"
+                badge={true}
+              />
+            }
+          />
+        </div>
+
+        {/* Scrollable Content */}
+        <div className="flex-1 overflow-auto min-w-[var(--layout-content-min-width)] sidebar-scroll">
 
         {/* Page Content */}
         <div className="pt-4 px-8 pb-6 bg-[var(--color-surface-default)]">
@@ -756,6 +774,7 @@ export function InstanceListPage() {
                 showSettings
                 onSettingsClick={() => setIsPreferencesOpen(true)}
                 totalItems={mockInstances.length}
+                selectedCount={selectedInstances.length}
               />
             )}
             {activeTab === 'bare-metal' && filteredBareMetalInstances.length > 0 && (
@@ -799,6 +818,7 @@ export function InstanceListPage() {
         </div>
         </div>
       </main>
+    </div>
 
       {/* Scroll to Top Button */}
       {showScrollTop && (
@@ -878,7 +898,7 @@ export function InstanceListPage() {
         initialHeight={350}
         minHeight={300}
       />
-    </div>
+    </>
   );
 }
 

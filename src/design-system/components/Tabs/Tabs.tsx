@@ -115,7 +115,7 @@ export function TabList({ children, className = '' }: TabListProps) {
   const { variant } = useTabsContext();
 
   const variantStyles = {
-    underline: 'border-b border-[var(--color-border-default)]',
+    underline: 'relative after:absolute after:bottom-0 after:left-0 after:right-0 after:h-px after:bg-[var(--color-border-default)] after:pointer-events-none after:z-10',
     boxed: [
       'inline-flex',
       'p-[var(--tabs-boxed-padding)]',
@@ -187,6 +187,7 @@ export function Tab({ value, children, disabled = false, className = '' }: TabPr
         {/* Active Indicator */}
         <span
           className={twMerge(
+            'relative z-20',
             'w-full h-[var(--tabs-indicator-height)]',
             'transition-colors duration-[var(--duration-fast)]',
             isActive ? 'bg-[var(--tabs-indicator-color)]' : 'bg-transparent',

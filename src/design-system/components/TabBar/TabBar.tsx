@@ -117,10 +117,11 @@ export const TabBar: React.FC<TabBarProps> = ({
   return (
     <div
       className={`
+        relative
         flex items-center
         h-[var(--tabbar-height)]
         bg-[var(--color-surface-default)]
-        border-b border-[var(--color-border-default)]
+        after:absolute after:bottom-0 after:left-0 after:right-0 after:h-px after:bg-[var(--color-border-default)] after:pointer-events-none after:z-10
         ${className}
       `}
     >
@@ -168,7 +169,7 @@ export const TabBar: React.FC<TabBarProps> = ({
                 group
                 relative
                 flex items-center
-                h-[calc(var(--tabbar-height)-1px)]
+                h-full
                 min-w-[var(--tabbar-tab-min-width)]
                 max-w-[var(--tabbar-tab-max-width)]
                 px-[var(--tabbar-tab-padding-x)]
@@ -185,7 +186,7 @@ export const TabBar: React.FC<TabBarProps> = ({
               {/* Active indicator */}
               {isActive && (
                 <div 
-                  className="absolute bottom-0 left-0 right-0 h-[2px] bg-[var(--color-action-primary)]"
+                  className="absolute bottom-0 left-0 right-0 h-[2px] bg-[var(--color-action-primary)] z-20"
                 />
               )}
               {/* Icon */}
@@ -205,8 +206,9 @@ export const TabBar: React.FC<TabBarProps> = ({
                   truncate
                   text-[length:var(--tabbar-font-size)]
                   leading-[var(--tabbar-line-height)]
+                  font-medium
                   ${isActive
-                    ? 'text-[var(--color-text-default)] font-medium'
+                    ? 'text-[var(--color-text-default)]'
                     : 'text-[var(--color-text-muted)]'
                   }
                 `}

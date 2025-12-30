@@ -410,6 +410,7 @@ export function VolumesPage() {
                 showSettings
                 onSettingsClick={() => setIsPreferencesOpen(true)}
                 totalItems={filteredVolumes.length}
+                selectedCount={selectedVolumes.length}
               />
             )}
 

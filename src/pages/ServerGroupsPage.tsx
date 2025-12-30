@@ -326,6 +326,7 @@ export function ServerGroupsPage() {
                 showSettings
                 onSettingsClick={() => setIsPreferencesOpen(true)}
                 totalItems={filteredServerGroups.length}
+                selectedCount={selectedServerGroups.length}
               />
             )}
 

@@ -305,6 +305,7 @@ export function RoutersPage() {
               currentPage={currentPage}
               totalPages={totalPages}
               totalItems={filteredRouters.length}
+              selectedCount={selectedRouters.length}
               onPageChange={setCurrentPage}
               showSettings
               onSettingsClick={() => setIsPreferencesOpen(true)}

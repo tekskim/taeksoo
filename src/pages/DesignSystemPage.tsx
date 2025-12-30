@@ -2141,6 +2141,11 @@ export function DesignSystemPage() {
   const [demoPage3, setDemoPage3] = useState(15);
   const [demoPage4, setDemoPage4] = useState(2);
 
+  // Scroll to top on page load
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   // Scroll to top handler
   useEffect(() => {
     const handleScroll = () => {

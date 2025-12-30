@@ -311,6 +311,7 @@ export function SecurityGroupsPage() {
               currentPage={currentPage}
               totalPages={totalPages}
               totalItems={filteredGroups.length}
+              selectedCount={selectedGroups.length}
               onPageChange={setCurrentPage}
               showSettings
               onSettingsClick={() => setIsPreferencesOpen(true)}

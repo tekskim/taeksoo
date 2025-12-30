@@ -377,7 +377,7 @@ export default function RouterDetailPage() {
               {/* Router Tabs */}
               <div className="w-full">
                 <Tabs value={activeDetailTab} onChange={setActiveDetailTab} variant="underline" size="sm">
-                  <TabList className="gap-6">
+                  <TabList>
                     <Tab value="details">Details</Tab>
                     <Tab value="ports">Ports</Tab>
                     <Tab value="static-routes">Static Routes</Tab>
