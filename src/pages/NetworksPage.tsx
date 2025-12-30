@@ -339,6 +339,7 @@ export function NetworksPage() {
               currentPage={currentPage}
               totalPages={totalPages}
               totalItems={filteredNetworks.length}
+              selectedCount={selectedNetworks.length}
               onPageChange={setCurrentPage}
               showSettings
               onSettingsClick={() => setIsPreferencesOpen(true)}

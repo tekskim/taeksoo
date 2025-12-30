@@ -254,7 +254,7 @@ export function CertificatesPage() {
               primaryActions={<ListToolbar.Actions><div className="w-[280px]"><SearchInput placeholder="Find certificate with filters" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} onClear={() => setSearchQuery('')} size="sm" fullWidth /></div><Button variant="secondary" size="sm" iconOnly icon={<IconDownload size={12} />} aria-label="Download" /></ListToolbar.Actions>}
               bulkActions={<ListToolbar.Actions><Button variant="muted" size="sm" leftIcon={<IconTrash size={12} />} disabled={selectedCerts.length === 0}>Delete</Button></ListToolbar.Actions>}
             />
-            <Pagination currentPage={currentPage} totalPages={totalPages} totalItems={filteredCerts.length} onPageChange={setCurrentPage} showSettings onSettingsClick={() => setIsPreferencesOpen(true)} />
+            <Pagination currentPage={currentPage} totalPages={totalPages} totalItems={filteredCerts.length} selectedCount={selectedCerts.length} onPageChange={setCurrentPage} showSettings onSettingsClick={() => setIsPreferencesOpen(true)} />
             <Table columns={visibleColumns} data={paginatedCerts} rowKey="id" selectable selectedKeys={selectedCerts} onSelectionChange={setSelectedCerts} />
           </VStack>
         </div>

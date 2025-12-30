@@ -351,7 +351,7 @@ export function FlavorDetailPage() {
             {/* Flavor Tabs */}
             <div className="w-full">
               <Tabs value={activeDetailTab} onChange={setActiveDetailTab} variant="underline" size="sm">
-                <TabList className="gap-6">
+                <TabList>
                   <Tab value="details">Details</Tab>
                   <Tab value="instances">Instances</Tab>
                   <Tab value="parameters">Parameters</Tab>

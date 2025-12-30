@@ -406,6 +406,7 @@ export function ImagesPage() {
                 showSettings
                 onSettingsClick={() => setIsPreferencesOpen(true)}
                 totalItems={filteredImages.length}
+                selectedCount={selectedImages.length}
               />
             )}
 

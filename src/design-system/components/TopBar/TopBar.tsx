@@ -1,8 +1,8 @@
 import React, { type ReactNode } from 'react';
 import {
   IconLayoutSidebar,
-  IconChevronLeft,
-  IconChevronRight,
+  IconArrowLeft,
+  IconArrowRight,
   IconSun,
   IconMoon,
 } from '@tabler/icons-react';
@@ -105,7 +105,7 @@ export const TopBar: React.FC<TopBarProps> = ({
               className={iconButtonClass}
               aria-label="Go back"
             >
-              <IconChevronLeft size={16} stroke={1.5} />
+              <IconArrowLeft size={12} stroke={1.5} />
             </button>
             <button
               type="button"
@@ -114,7 +114,7 @@ export const TopBar: React.FC<TopBarProps> = ({
               className={iconButtonClass}
               aria-label="Go forward"
             >
-              <IconChevronRight size={16} stroke={1.5} />
+              <IconArrowRight size={12} stroke={1.5} />
             </button>
           </div>
         )}
