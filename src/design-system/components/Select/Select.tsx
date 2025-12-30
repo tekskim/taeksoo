@@ -304,6 +304,11 @@ export function Select({
     'shadow-[var(--select-menu-shadow)]',
     'overflow-y-auto',
     'focus:outline-none',
+    // Custom scrollbar - transparent track
+    '[&::-webkit-scrollbar]:w-1.5',
+    '[&::-webkit-scrollbar-track]:bg-transparent',
+    '[&::-webkit-scrollbar-thumb]:bg-[var(--color-border-default)]',
+    '[&::-webkit-scrollbar-thumb]:rounded-full',
   );
 
   return (
