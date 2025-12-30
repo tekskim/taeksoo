@@ -275,7 +275,7 @@ export function ShellPanel({
       </div>
 
       {/* Tab Bar - White tone */}
-      <div className="flex items-center bg-[var(--color-surface-subtle)] border-b border-[var(--color-border-default)]">
+      <div className="flex items-center bg-[var(--color-surface-subtle)]">
         {/* Tabs */}
         <div className="flex items-center overflow-x-auto scrollbar-none">
           {tabs.map(tab => (
