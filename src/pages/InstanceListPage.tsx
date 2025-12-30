@@ -541,7 +541,7 @@ export function InstanceListPage() {
     {
       key: 'status',
       label: 'Status',
-      width: '80px',
+      width: '59px',
       align: 'center',
       sortable: true,
       render: (_, row) => (
