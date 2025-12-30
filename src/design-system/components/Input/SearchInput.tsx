@@ -99,10 +99,16 @@ export const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
       className
     );
 
-    const wrapperClasses = [
+    // Extract width-related classes from className to apply to wrapper
+    const widthClassRegex = /\bw-\[?[^\s]+\]?/g;
+    const widthClasses = className.match(widthClassRegex) || [];
+    const hasWidthClass = widthClasses.length > 0;
+    
+    const wrapperClasses = twMerge(
       'flex flex-col gap-[var(--input-label-gap)]',
-      fullWidth ? 'w-full' : 'w-fit',
-    ].join(' ');
+      // Default to w-full so the input fills its container
+      fullWidth || !hasWidthClass ? 'w-full' : widthClasses.join(' '),
+    );
 
     return (
       <div className={wrapperClasses}>

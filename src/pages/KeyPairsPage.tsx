@@ -12,6 +12,7 @@ import {
   ListToolbar,
   ContextMenu,
   ConfirmModal,
+  Checkbox,
   type TableColumn,
   type ContextMenuItem,
 } from '@/design-system';
@@ -19,7 +20,6 @@ import { Sidebar } from '@/components/Sidebar';
 import { useTabs } from '@/contexts/TabContext';
 import { ViewPreferencesDrawer, type ColumnConfig } from '@/components/ViewPreferencesDrawer';
 import {
-  IconPlus,
   IconDotsCircleHorizontal,
   IconTrash,
   IconDownload,
@@ -79,8 +79,9 @@ export function KeyPairsPage() {
   const [isPreferencesOpen, setIsPreferencesOpen] = useState(false);
   const [rowsPerPage, setRowsPerPage] = useState(10);
 
-  // Default column config
+  // Default column config (matching Figma: Selection, Name, Fingerprint, Created At, Action)
   const defaultColumnConfig: ColumnConfig[] = [
+    { id: 'selection', label: '', visible: true, locked: true },
     { id: 'name', label: 'Name', visible: true, locked: true },
     { id: 'fingerprint', label: 'Fingerprint', visible: true },
     { id: 'createdAt', label: 'Created At', visible: true },
@@ -141,8 +142,53 @@ export function KeyPairsPage() {
 
   const totalPages = Math.ceil(filteredKeyPairs.length / rowsPerPage);
 
-  // Table columns
+  // Paginated key pairs for display
+  const paginatedKeyPairs = filteredKeyPairs.slice(
+    (currentPage - 1) * rowsPerPage,
+    currentPage * rowsPerPage
+  );
+
+  // Selection toggle functions
+  const toggleSelection = (id: string) => {
+    setSelectedKeyPairs((prev) =>
+      prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
+    );
+  };
+
+  const toggleAllSelection = () => {
+    if (selectedKeyPairs.length === paginatedKeyPairs.length) {
+      setSelectedKeyPairs([]);
+    } else {
+      setSelectedKeyPairs(paginatedKeyPairs.map((kp) => kp.id));
+    }
+  };
+
+  // Handle bulk delete
+  const handleBulkDelete = () => {
+    setKeyPairs((prev) => prev.filter((kp) => !selectedKeyPairs.includes(kp.id)));
+    setSelectedKeyPairs([]);
+  };
+
+  // Table columns (matching Figma design: Selection, Name, Fingerprint, Created At, Action)
   const columns: TableColumn<KeyPair>[] = [
+    {
+      key: 'selection',
+      label: (
+        <Checkbox
+          checked={selectedKeyPairs.length === paginatedKeyPairs.length && paginatedKeyPairs.length > 0}
+          indeterminate={selectedKeyPairs.length > 0 && selectedKeyPairs.length < paginatedKeyPairs.length}
+          onChange={toggleAllSelection}
+        />
+      ),
+      width: '48px',
+      align: 'center',
+      render: (_, row) => (
+        <Checkbox
+          checked={selectedKeyPairs.includes(row.id)}
+          onChange={() => toggleSelection(row.id)}
+        />
+      ),
+    },
     {
       key: 'name',
       label: 'Name',
@@ -282,7 +328,7 @@ export function KeyPairsPage() {
               <h1 className="text-[length:var(--font-size-16)] font-semibold text-[var(--color-text-default)]">
                 Key Pairs
               </h1>
-              <Button leftIcon={<IconPlus size={16} />}>
+              <Button>
                 Create Key Pair
               </Button>
             </div>
@@ -306,7 +352,13 @@ export function KeyPairsPage() {
               }
               bulkActions={
                 <ListToolbar.Actions>
-                  <Button variant="muted" size="sm" leftIcon={<IconTrash size={12} />} disabled={selectedKeyPairs.length === 0}>
+                  <Button
+                    variant="muted"
+                    size="sm"
+                    leftIcon={<IconTrash size={12} />}
+                    disabled={selectedKeyPairs.length === 0}
+                    onClick={handleBulkDelete}
+                  >
                     Delete
                   </Button>
                 </ListToolbar.Actions>
@@ -328,7 +380,7 @@ export function KeyPairsPage() {
             {/* Key Pairs Table */}
             <Table<KeyPair>
               columns={visibleColumns}
-              data={filteredKeyPairs.slice((currentPage - 1) * rowsPerPage, currentPage * rowsPerPage)}
+              data={paginatedKeyPairs}
               rowKey="id"
               emptyMessage="No key pairs found"
             />

@@ -169,8 +169,14 @@ export function VolumeSnapshotsPage() {
       label: 'Name',
       flex: 1,
       sortable: true,
-      render: (value: string) => (
-        <span className="font-medium text-[var(--color-action-primary)]">{value}</span>
+      render: (value: string, row) => (
+        <Link
+          to={`/volume-snapshots/${row.id}`}
+          className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
+          onClick={(e) => e.stopPropagation()}
+        >
+          {value}
+        </Link>
       ),
     },
     {
@@ -309,7 +315,7 @@ export function VolumeSnapshotsPage() {
               <h1 className="text-[length:var(--font-size-16)] font-semibold text-[var(--color-text-default)]">
                 Volume Snapshots
               </h1>
-              <Button leftIcon={<IconPlus size={16} />}>
+              <Button>
                 Create Snapshot
               </Button>
             </div>
@@ -328,7 +334,7 @@ export function VolumeSnapshotsPage() {
                       fullWidth
                     />
                   </div>
-                  <Button variant="secondary" size="sm" icon={<IconDownload size={12} />} aria-label="Download" />
+                  <Button variant="secondary" size="sm" iconOnly icon={<IconDownload size={12} />} aria-label="Download" />
                 </ListToolbar.Actions>
               }
               bulkActions={
@@ -360,6 +366,9 @@ export function VolumeSnapshotsPage() {
               columns={visibleColumns}
               data={paginatedSnapshots}
               rowKey="id"
+              selectable
+              selectedRows={selectedSnapshots}
+              onSelectionChange={setSelectedSnapshots}
             />
           </VStack>
         </div>

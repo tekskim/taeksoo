@@ -21,7 +21,6 @@ import { Sidebar } from '@/components/Sidebar';
 import { useTabs } from '@/contexts/TabContext';
 import { ViewPreferencesDrawer, type ColumnConfig } from '@/components/ViewPreferencesDrawer';
 import {
-  IconPlus,
   IconDotsCircleHorizontal,
   IconTrash,
   IconDownload,
@@ -178,18 +177,14 @@ export function FloatingIPsPage() {
       key: 'associatedTo',
       label: 'Associated To',
       width: '160px',
+      align: 'right',
       render: (_, row) => (
         row.associatedTo ? (
-          <div className="flex items-center gap-2">
-            <Tooltip content="Instance" position="top">
-              <div className="flex-shrink-0 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[4px] p-1 cursor-default">
-                <IconCube size={12} className="text-[var(--color-text-subtle)]" />
-              </div>
-            </Tooltip>
-            <div className="flex flex-col gap-0.5 min-w-0">
+          <div className="flex items-center gap-2 justify-between w-full">
+            <div className="flex flex-col gap-0.5 min-w-0 text-left">
               <Tooltip content={row.associatedTo} position="top">
                 <Link
-          to={`/instances/${row.associatedToId}`}
+                  to={`/instances/${row.associatedToId}`}
                   className="inline-flex items-center gap-1 font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
                   onClick={(e) => e.stopPropagation()}
                 >
@@ -201,8 +196,13 @@ export function FloatingIPsPage() {
                 ID : {row.associatedToId?.substring(0, 8)}
               </span>
             </div>
+            <Tooltip content="Instance" position="top">
+              <div className="flex-shrink-0 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[4px] p-[3px] cursor-default">
+                <IconCube size={12} className="text-[var(--color-text-subtle)]" />
+              </div>
+            </Tooltip>
           </div>
-        ) : '-'
+        ) : <span className="block text-left w-full">-</span>
       ),
     },
     {
@@ -328,7 +328,7 @@ export function FloatingIPsPage() {
               <h1 className="text-[length:var(--font-size-16)] font-semibold text-[var(--color-text-default)]">
                 Floating IPs
               </h1>
-              <Button variant="primary" size="md" leftIcon={<IconPlus size={14} />}>
+              <Button variant="primary" size="md">
                 Allocate Floating IP
               </Button>
             </div>
@@ -347,7 +347,7 @@ export function FloatingIPsPage() {
                       fullWidth
                     />
                   </div>
-                  <Button variant="secondary" size="sm" icon={<IconDownload size={12} />} aria-label="Download" />
+                  <Button variant="secondary" size="sm" iconOnly icon={<IconDownload size={12} />} aria-label="Download" />
                 </ListToolbar.Actions>
               }
               bulkActions={
@@ -379,6 +379,9 @@ export function FloatingIPsPage() {
               columns={visibleColumns}
               data={paginatedFloatingIPs}
               rowKey="id"
+              selectable
+              selectedRows={selectedFloatingIPs}
+              onSelectionChange={setSelectedFloatingIPs}
             />
           </VStack>
         </div>

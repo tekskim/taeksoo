@@ -24,7 +24,6 @@ import {
 import { Sidebar } from '@/components/Sidebar';
 import { useTabs } from '@/contexts/TabContext';
 import {
-  IconPlus,
   IconDotsCircleHorizontal,
   IconPlayerPlay,
   IconPlayerStop,
@@ -697,7 +696,7 @@ export function InstanceListPage() {
               <h1 className="text-[length:var(--font-size-16)] font-semibold text-[var(--color-text-default)]">
                 Instances List
               </h1>
-              <Button leftIcon={<IconPlus size={16} />}>
+              <Button>
                 Create Instance
               </Button>
             </div>
