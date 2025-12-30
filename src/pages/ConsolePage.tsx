@@ -202,9 +202,6 @@ export function ConsolePage() {
             {/* Bottom Status Bar - Same as ShellPanel */}
             <div className="flex items-center justify-between px-3 py-2 border-t border-[var(--color-border-default)] bg-[var(--color-surface-subtle)]">
               <div className="flex items-center gap-1">
-                {/* Connection Status Indicator */}
-                <ConnectionStatusIndicator status={connectionStatus} />
-
                 {/* Container Select */}
                 <Select
                   size="sm"
@@ -215,18 +212,6 @@ export function ConsolePage() {
                   menuPlacement="top"
                 />
 
-                {/* View Time Select */}
-                <Select
-                  size="sm"
-                  value={viewTime}
-                  onChange={setViewTime}
-                  options={viewTimeOptions}
-                  placeholder="View"
-                  menuPlacement="top"
-                />
-              </div>
-
-              <div className="flex items-center gap-1">
                 {/* Clear Button */}
                 <Button
                   size="sm"
@@ -244,6 +229,21 @@ export function ConsolePage() {
                 >
                   <IconDownload size={14} stroke={1.5} />
                 </button>
+
+                {/* Connection Status Indicator */}
+                <ConnectionStatusIndicator status={connectionStatus} />
+              </div>
+
+              <div className="flex items-center gap-3">
+                {/* View Time Select */}
+                <Select
+                  size="sm"
+                  value={viewTime}
+                  onChange={setViewTime}
+                  options={viewTimeOptions}
+                  placeholder="View"
+                  menuPlacement="top"
+                />
               </div>
             </div>
           </div>
