@@ -139,8 +139,9 @@ export const TabBar: React.FC<TabBarProps> = ({
                   truncate
                   text-[length:var(--tabbar-font-size)]
                   leading-[var(--tabbar-line-height)]
+                  font-medium
                   ${isActive
-                    ? 'text-[var(--color-text-default)] font-medium'
+                    ? 'text-[var(--color-text-default)]'
                     : 'text-[var(--color-text-muted)]'
                   }
                 `}
