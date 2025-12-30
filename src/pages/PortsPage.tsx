@@ -24,7 +24,6 @@ import { Sidebar } from '@/components/Sidebar';
 import { useTabs } from '@/contexts/TabContext';
 import { ViewPreferencesDrawer, type ColumnConfig } from '@/components/ViewPreferencesDrawer';
 import {
-  IconPlus,
   IconDotsCircleHorizontal,
   IconTrash,
   IconDownload,
@@ -185,6 +184,7 @@ export function PortsPage() {
       key: 'name',
       label: 'Name',
       flex: 1,
+      sortable: true,
       render: (_, row) => (
         <div className="flex flex-col gap-0.5">
           <Link
@@ -204,22 +204,14 @@ export function PortsPage() {
       key: 'attachedTo',
       label: 'Attached To',
       width: '160px',
+      align: 'right',
       render: (_, row) => (
         row.attachedTo ? (
-          <div className="flex items-center gap-2">
-            <Tooltip content={row.attachedType === 'router' ? 'Router' : 'Instance'} position="top">
-              <div className="flex-shrink-0 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[4px] p-1 cursor-default">
-                {row.attachedType === 'router' ? (
-                  <IconRouter size={12} className="text-[var(--color-text-subtle)]" />
-                ) : (
-                  <IconCube size={12} className="text-[var(--color-text-subtle)]" />
-                )}
-              </div>
-            </Tooltip>
-            <div className="flex flex-col gap-0.5 min-w-0">
+          <div className="flex items-center gap-2 justify-between w-full">
+            <div className="flex flex-col gap-0.5 min-w-0 text-left">
               <Tooltip content={row.attachedTo} position="top">
                 <Link
-          to={row.attachedType === 'router' ? `/routers/${row.attachedToId}` : `/instances/${row.attachedToId}`}
+                  to={row.attachedType === 'router' ? `/routers/${row.attachedToId}` : `/instances/${row.attachedToId}`}
                   className="inline-flex items-center gap-1 font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
                   onClick={(e) => e.stopPropagation()}
                 >
@@ -231,8 +223,17 @@ export function PortsPage() {
                 ID : {row.attachedToId?.substring(0, 8)}
               </span>
             </div>
+            <Tooltip content={row.attachedType === 'router' ? 'Router' : 'Instance'} position="top">
+              <div className="flex-shrink-0 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[4px] p-[3px] cursor-default">
+                {row.attachedType === 'router' ? (
+                  <IconRouter size={12} className="text-[var(--color-text-subtle)]" />
+                ) : (
+                  <IconCube size={12} className="text-[var(--color-text-subtle)]" />
+                )}
+              </div>
+            </Tooltip>
           </div>
-        ) : '-'
+        ) : <span className="block text-left w-full">-</span>
       ),
     },
     {
@@ -368,7 +369,7 @@ export function PortsPage() {
               <h1 className="text-[length:var(--font-size-16)] font-semibold text-[var(--color-text-default)]">
                 Ports
               </h1>
-              <Button variant="primary" size="md" leftIcon={<IconPlus size={14} />}>
+              <Button variant="primary" size="md">
                 Create Virtual Adapter
               </Button>
             </div>
@@ -395,7 +396,7 @@ export function PortsPage() {
                       fullWidth
                     />
                   </div>
-                  <Button variant="secondary" size="sm" icon={<IconDownload size={12} />} aria-label="Download" />
+                  <Button variant="secondary" size="sm" iconOnly icon={<IconDownload size={12} />} aria-label="Download" />
                 </ListToolbar.Actions>
               }
               bulkActions={
@@ -427,6 +428,9 @@ export function PortsPage() {
               columns={visibleColumns}
               data={paginatedPorts}
               rowKey="id"
+              selectable
+              selectedRows={selectedPorts}
+              onSelectionChange={setSelectedPorts}
             />
           </VStack>
         </div>

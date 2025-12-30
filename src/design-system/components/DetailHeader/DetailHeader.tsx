@@ -170,7 +170,7 @@ function DetailHeaderInfoCard({
       )}
       
       <div className="flex flex-col gap-1.5 min-w-0 pr-6">
-        <span className="text-[11px] font-medium leading-4 text-[var(--color-text-subtle)]">
+        <span className="text-[11px] font-medium leading-4 text-[var(--color-text-subtle)] whitespace-nowrap">
           {label}
         </span>
         <span className="text-[12px] leading-4 text-[var(--color-text-default)] font-normal truncate" title={value}>

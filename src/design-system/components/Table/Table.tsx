@@ -113,17 +113,6 @@ export function Table<T extends Record<string, any>>({
   }, [data, sortKey, sortDirection]);
 
   // Selection handlers
-  const allSelected = data.length > 0 && selectedKeys.length === data.length;
-  const someSelected = selectedKeys.length > 0 && selectedKeys.length < data.length;
-
-  const handleSelectAll = () => {
-    if (allSelected) {
-      onSelectionChange?.([]);
-    } else {
-      onSelectionChange?.(data.map(getRowKey));
-    }
-  };
-
   const handleSelectRow = (key: string) => {
     if (selectedKeys.includes(key)) {
       onSelectionChange?.(selectedKeys.filter((k) => k !== key));
@@ -131,6 +120,18 @@ export function Table<T extends Record<string, any>>({
       onSelectionChange?.([...selectedKeys, key]);
     }
   };
+
+  const handleSelectAll = () => {
+    const allKeys = sortedData.map(getRowKey);
+    if (selectedKeys.length === sortedData.length && sortedData.length > 0) {
+      onSelectionChange?.([]);
+    } else {
+      onSelectionChange?.(allKeys);
+    }
+  };
+
+  const allSelected = sortedData.length > 0 && selectedKeys.length === sortedData.length;
+  const someSelected = selectedKeys.length > 0 && selectedKeys.length < sortedData.length;
 
   // Render sort icon
   const renderSortIcon = (columnKey: string) => {
@@ -180,7 +181,7 @@ export function Table<T extends Record<string, any>>({
               ${enableStickyHeader ? 'sticky top-0 z-10' : ''}
             `}
           >
-          {/* Selection checkbox */}
+          {/* Selection column with select all checkbox */}
           {selectable && (
             <div
               className="
@@ -201,8 +202,9 @@ export function Table<T extends Record<string, any>>({
 
           {/* Column headers */}
           {columns.map((column, index) => {
-            // First column has divider if there's a checkbox, otherwise no divider
-            const showDivider = selectable ? true : index > 0;
+            // Show divider: first column gets border when selectable (to separate from checkbox), all other columns always get border
+            const isFirstColumn = index === 0;
+            const showDivider = isFirstColumn ? selectable : true;
             
             return (
               <div

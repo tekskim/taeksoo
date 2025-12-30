@@ -83,7 +83,7 @@ const mockSnapshotDetail: SnapshotDetail = {
     'owner_specified.openstack.md5': '-',
     'image_type': 'snapshot',
     'owner_specified.openstack.object': 'images/ubuntu-24.04-server',
-    'base_image_ref': '1e568eb7-a277-4810-97d4-e4812dd1ef4',
+    'base_image_ref': '1e568eb7-a277-48f0-97d4-e481f2dd1ef4',
     'owner_user_name': 'admin',
     'owner_project_name': 'test',
     'boot_roles': 'reader,member,load-balancer_member,manager',
@@ -142,7 +142,7 @@ export function InstanceSnapshotDetailPage() {
   const snapshot = mockSnapshotDetail;
 
   // Global tab management
-  const { tabs, activeTabId, closeTab, selectTab } = useTabs();
+  const { tabs, activeTabId, closeTab, selectTab, addNewTab } = useTabs();
 
   // Convert tabs to TabBar format
   const tabBarTabs = tabs.map((tab) => ({
@@ -165,16 +165,20 @@ export function InstanceSnapshotDetailPage() {
 
       {/* Main Content */}
       <main
-        className={`min-h-screen bg-[var(--color-surface-default)] transition-[margin] duration-200 ${
-          sidebarOpen ? 'ml-[200px]' : 'ml-[52px]'
+        className={`min-h-screen bg-[var(--color-surface-default)] transition-[margin] duration-200 overflow-x-auto ${
+          sidebarOpen ? 'ml-[200px]' : 'ml-0'
         }`}
       >
+        <div className="min-w-[var(--layout-content-min-width)]">
         {/* Tab Bar */}
         <TabBar
           tabs={tabBarTabs}
-          activeTabId={activeTabId}
-          onTabSelect={selectTab}
+          activeTab={activeTabId}
+          onTabChange={selectTab}
           onTabClose={closeTab}
+          onTabAdd={addNewTab}
+          showAddButton={true}
+          showWindowControls={true}
         />
 
         {/* Top Bar */}
@@ -317,6 +321,7 @@ export function InstanceSnapshotDetailPage() {
               </Tabs>
             </div>
           </VStack>
+        </div>
         </div>
       </main>
     </div>

@@ -364,7 +364,7 @@ export function VolumesPage() {
               <h1 className="text-[length:var(--font-size-16)] font-semibold text-[var(--color-text-default)]">
                 Volumes
               </h1>
-              <Button leftIcon={<IconPlus size={16} />}>
+              <Button>
                 Create Volume
               </Button>
             </div>
@@ -383,7 +383,7 @@ export function VolumesPage() {
                       fullWidth
                     />
                   </div>
-                  <Button variant="secondary" size="sm" icon={<IconDownload size={12} />} aria-label="Download" />
+                  <Button variant="secondary" size="sm" iconOnly icon={<IconDownload size={12} />} aria-label="Download" />
                 </ListToolbar.Actions>
               }
               bulkActions={
