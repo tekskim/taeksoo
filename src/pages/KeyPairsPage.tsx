@@ -62,6 +62,7 @@ const mockKeyPairs: KeyPair[] = [
    ---------------------------------------- */
 
 export function KeyPairsPage() {
+  const [selectedKeyPairs, setSelectedKeyPairs] = useState<string[]>([]);
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);

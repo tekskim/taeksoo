@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { DarkModeToggle } from '@/components/DarkModeToggle';
 import { AttachVolumeDrawer } from '@/components/AttachVolumeDrawer';
 import {
@@ -90,6 +90,7 @@ import {
   IconArrowsMinimize,
   IconDotsCircleHorizontal,
   IconDots,
+  IconDotsVertical,
   // Basic - Status & Feedback
   IconAlertCircle,
   IconAlertTriangle,
@@ -683,44 +684,8 @@ function TableDemo() {
     }
   };
 
-  // Columns with copy functionality
-  const copyColumns = [
-    { 
-      key: 'name', 
-      label: 'Name', 
-      width: '160px',
-      render: (value: string) => (
-        <span className="text-[var(--color-action-primary)] cursor-pointer hover:underline">{value}</span>
-      )
-    },
-    { 
-      key: 'fingerprint', 
-      label: 'Fingerprint', 
-      flex: 1,
-      render: (_: string, row: KeyPairData) => (
-        <div className="flex items-center gap-2">
-          <span className="font-mono text-[length:var(--font-size-11)] text-[var(--color-text-default)]">{row.fingerprint}</span>
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              handleCopy(row.id, row.fingerprint);
-            }}
-            className="p-1.5 -m-1 rounded-md hover:bg-[var(--color-surface-muted)] active:bg-[var(--color-surface-subtle)] transition-colors"
-            title={copiedId === row.id ? 'Copied!' : 'Copy fingerprint'}
-          >
-            {copiedId === row.id ? (
-              <IconCheck size={12} className="text-[var(--color-state-success)]" />
-            ) : (
-              <IconCopy size={12} className="text-[var(--color-action-primary)]" />
-            )}
-          </button>
-        </div>
-      )
-    },
-    { key: 'createdAt', label: 'Created At', width: '120px' },
-  ];
-
-  const columns = [
+  // Basic columns for main table demos
+  const basicColumns = [
     { 
       key: 'status', 
       label: 'Status', 
@@ -738,7 +703,7 @@ function TableDemo() {
       key: 'name', 
       label: 'Name', 
       sortable: true, 
-      width: '150px',
+      width: '180px',
       render: (value: string, row: InstanceData) => (
         <div className="flex flex-col gap-0.5">
           <span className="font-medium text-[var(--color-action-primary)] cursor-pointer hover:underline hover:underline-offset-2">{value}</span>
@@ -755,13 +720,12 @@ function TableDemo() {
         <IconLock size={16} stroke={1} className="text-[var(--color-text-default)]" />
       ) : null
     },
-    { key: 'fixedIp', label: 'Fixed IP', sortable: true, width: '110px' },
-    { key: 'floatingIp', label: 'Floating IP', sortable: true, width: '110px' },
+    { key: 'fixedIp', label: 'Fixed IP', sortable: true, width: '120px' },
     { 
       key: 'image', 
       label: 'Image', 
       sortable: true, 
-      width: '130px',
+      width: '150px',
       render: (value: string, row: InstanceData) => (
         <div className="flex flex-col gap-0.5">
           <span className="font-medium text-[var(--color-action-primary)] cursor-pointer hover:underline hover:underline-offset-2">{value}</span>
@@ -773,7 +737,7 @@ function TableDemo() {
       key: 'flavor', 
       label: 'Flavor', 
       sortable: true, 
-      width: '110px',
+      width: '130px',
       render: (value: string, row: InstanceData) => (
         <div className="flex flex-col gap-0.5">
           <span className="font-medium text-[var(--color-action-primary)] cursor-pointer hover:underline hover:underline-offset-2">{value}</span>
@@ -782,9 +746,40 @@ function TableDemo() {
       )
     },
     { 
+      key: 'actions', 
+      label: 'Action', 
+      width: '80px',
+      render: () => (
+        <div className="flex items-center gap-1">
+          <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors text-[var(--color-text-subtle)] hover:text-[var(--color-text-default)]">
+            <IconTerminal2 size={16} stroke={1} />
+          </button>
+          <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors text-[var(--color-text-subtle)] hover:text-[var(--color-text-default)]">
+            <IconDotsVertical size={16} stroke={1} />
+          </button>
+        </div>
+      )
+    },
+  ];
+
+  // Columns with Attached To (external link + resource icon)
+  const attachedToColumns = [
+    { 
+      key: 'name', 
+      label: 'Name', 
+      width: '180px',
+      render: (value: string, row: InstanceData) => (
+        <div className="flex flex-col gap-0.5">
+          <span className="font-medium text-[var(--color-action-primary)] cursor-pointer hover:underline hover:underline-offset-2">{value}</span>
+          <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">ID : {row.id}</span>
+        </div>
+      )
+    },
+    { key: 'fixedIp', label: 'Fixed IP', width: '120px' },
+    { 
       key: 'attachedTo', 
       label: 'Attached To', 
-      width: '160px',
+      flex: 1,
       render: (_: string | null, row: InstanceData) => (
         row.attachedTo && row.attachedToId ? (
           <div className="flex items-center gap-2">
@@ -816,13 +811,25 @@ function TableDemo() {
         )
       )
     },
+  ];
+
+  // Columns with copy functionality (Key Pairs style)
+  const copyColumns = [
+    { 
+      key: 'name', 
+      label: 'Name', 
+      width: '180px',
+      render: (value: string) => (
+        <span className="text-[var(--color-action-primary)] cursor-pointer hover:underline hover:underline-offset-2">{value}</span>
+      )
+    },
     { 
       key: 'fingerprint', 
       label: 'Fingerprint', 
-      width: '200px',
-      render: (value: string, row: InstanceData) => (
+      flex: 1,
+      render: (_: string, row: KeyPairData) => (
         <div className="flex items-center gap-2">
-          <span className="font-mono text-[length:var(--font-size-11)] text-[var(--color-text-default)]">{value}</span>
+          <span className="font-mono text-[length:var(--font-size-11)] text-[var(--color-text-default)]">{row.fingerprint}</span>
           <button
             onClick={(e) => {
               e.stopPropagation();
@@ -840,21 +847,42 @@ function TableDemo() {
         </div>
       )
     },
+    { key: 'createdAt', label: 'Created At', width: '140px' },
+  ];
+
+  // Compact columns for horizontal scroll demo
+  const compactColumns = [
     { 
-      key: 'actions', 
-      label: 'Action', 
-      width: '80px',
-      render: () => (
-        <div className="flex items-center gap-1">
-          <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors text-[var(--color-text-subtle)] hover:text-[var(--color-text-default)]">
-            <IconTerminal2 size={16} stroke={1} />
-          </button>
-          <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors text-[var(--color-text-subtle)] hover:text-[var(--color-text-default)]">
-            <IconDotsVertical size={16} stroke={1} />
-          </button>
-        </div>
+      key: 'status', 
+      label: 'Status', 
+      width: '60px',
+      align: 'center' as const,
+      render: (value: string) => (
+        <StatusIndicator 
+          status={value === 'Running' ? 'active' : value === 'Stopped' ? 'error' : 'building'}
+          layout="icon-only"
+        />
       )
     },
+    { 
+      key: 'name', 
+      label: 'Name', 
+      width: '150px',
+      render: (value: string) => (
+        <span className="font-medium text-[var(--color-action-primary)] cursor-pointer hover:underline hover:underline-offset-2">{value}</span>
+      )
+    },
+    { key: 'fixedIp', label: 'Fixed IP', width: '110px' },
+    { key: 'image', label: 'Image', width: '110px' },
+    { key: 'flavor', label: 'Flavor', width: '90px' },
+  ];
+
+  // Empty state columns
+  const emptyColumns = [
+    { key: 'status', label: 'Status', width: '80px' },
+    { key: 'name', label: 'Name', flex: 1 },
+    { key: 'fixedIp', label: 'Fixed IP', width: '120px' },
+    { key: 'image', label: 'Image', width: '120px' },
   ];
 
   return (
@@ -871,12 +899,12 @@ function TableDemo() {
       <VStack gap={3}>
         <Label>Basic Table with Sorting</Label>
         <Table
-          columns={columns}
+          columns={basicColumns}
           data={sampleTableData}
           rowKey="id"
         />
         <p className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
-          Click column headers to sort
+          Click column headers to sort. Status shows icon-only, Name/Image/Flavor show ID below name.
         </p>
       </VStack>
 
@@ -884,7 +912,7 @@ function TableDemo() {
       <VStack gap={3}>
         <Label>Selectable Table</Label>
         <Table
-          columns={columns}
+          columns={basicColumns}
           data={sampleTableData}
           rowKey="id"
           selectable
@@ -896,45 +924,17 @@ function TableDemo() {
         </p>
       </VStack>
 
-      {/* Sticky Header */}
+      {/* External Link with Resource Icon */}
       <VStack gap={3}>
-        <Label>Sticky Header (scroll to see effect)</Label>
+        <Label>External Link with Resource Icon</Label>
         <Table
-          columns={columns}
-          data={[...sampleTableData, ...sampleTableData]}
-          rowKey={(row) => `${row.id}-${Math.random()}`}
-          maxHeight="200px"
-          stickyHeader
-        />
-      </VStack>
-
-      {/* Horizontal Scroll */}
-      <VStack gap={3}>
-        <Label>Horizontal Scroll (max-width: 600px)</Label>
-        <div className="max-w-[600px] border border-dashed border-[var(--color-border-default)] rounded-[var(--radius-md)] p-2">
-          <Table
-            columns={columns}
-            data={sampleTableData.slice(0, 3)}
-            rowKey="id"
-            selectable
-            selectedKeys={selectedKeys}
-            onSelectionChange={setSelectedKeys}
-          />
-        </div>
-        <p className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
-          Shift + Mouse wheel or trackpad swipe to scroll horizontally
-        </p>
-      </VStack>
-
-      {/* Empty State */}
-      <VStack gap={3}>
-        <Label>Empty State</Label>
-        <Table
-          columns={columns}
-          data={[]}
+          columns={attachedToColumns}
+          data={sampleTableData}
           rowKey="id"
-          emptyMessage="No instances found"
         />
+        <p className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
+          Attached To column shows resource type icon (Instance/Router), clickable link opens in new window
+        </p>
       </VStack>
 
       {/* Copy Cell */}
@@ -948,6 +948,49 @@ function TableDemo() {
         <p className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
           Click copy icon to copy fingerprint. Icon changes to checkmark for 2 seconds after copying.
         </p>
+      </VStack>
+
+      {/* Sticky Header */}
+      <VStack gap={3}>
+        <Label>Sticky Header (scroll to see effect)</Label>
+        <div className="overflow-hidden rounded-[var(--radius-md)]">
+          <Table
+            columns={compactColumns}
+            data={sampleTableData.slice(0, 5)}
+            rowKey="id"
+            maxHeight="180px"
+            stickyHeader
+          />
+        </div>
+        <p className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
+          Scroll vertically to see sticky header effect
+        </p>
+      </VStack>
+
+      {/* Horizontal Scroll */}
+      <VStack gap={3}>
+        <Label>Horizontal Scroll (max-width: 500px)</Label>
+        <div className="max-w-[500px] border border-dashed border-[var(--color-border-default)] rounded-[var(--radius-md)] p-2 overflow-hidden">
+          <Table
+            columns={compactColumns}
+            data={sampleTableData.slice(0, 3)}
+            rowKey="id"
+          />
+        </div>
+        <p className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
+          Shift + Mouse wheel or trackpad swipe to scroll horizontally
+        </p>
+      </VStack>
+
+      {/* Empty State */}
+      <VStack gap={3}>
+        <Label>Empty State</Label>
+        <Table
+          columns={emptyColumns}
+          data={[]}
+          rowKey="id"
+          emptyMessage="No instances found"
+        />
       </VStack>
     </VStack>
   );
@@ -1042,13 +1085,13 @@ export function DesignSystemPage() {
             </span>
           </Link>
 
-          {/* View Instance List Link */}
+          {/* Dashboard Link */}
           <Link
-            to="/instances"
+            to="/"
             className="flex items-center gap-2 w-full px-3 py-2 mb-4 rounded-[var(--radius-button)] bg-[var(--color-action-secondary)] hover:bg-[var(--color-action-secondary-hover)] text-[var(--color-text-default)] text-[length:var(--font-size-11)] font-medium transition-colors border border-[var(--color-border-default)]"
           >
-            <IconList size={16} stroke={1.5} />
-            <span>View Instance List</span>
+            <IconHome size={16} stroke={1.5} />
+            <span>Dashboard</span>
             <IconChevronRight size={14} stroke={1.5} className="ml-auto" />
           </Link>
 
@@ -1220,7 +1263,7 @@ export function DesignSystemPage() {
               <div className="flex items-center gap-3">
                 <DarkModeToggle size="sm" />
                 <Link to="/">
-                  <Button variant="outline">View Instance List →</Button>
+                  <Button variant="outline">Dashboard →</Button>
                 </Link>
               </div>
             </div>
@@ -4431,22 +4474,87 @@ function Label({ children }: { children: React.ReactNode }) {
 }
 
 function ColorSwatch({ name, color, textLight = false }: { name: string; color: string; textLight?: boolean }) {
+  const [hexValue, setHexValue] = useState('');
+  const [copied, setCopied] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (ref.current) {
+      const computed = getComputedStyle(ref.current).backgroundColor;
+      // Convert rgb(r, g, b) to hex
+      const match = computed.match(/rgb\((\d+),\s*(\d+),\s*(\d+)\)/);
+      if (match) {
+        const hex = '#' + [match[1], match[2], match[3]].map(x => {
+          const h = parseInt(x).toString(16);
+          return h.length === 1 ? '0' + h : h;
+        }).join('').toUpperCase();
+        setHexValue(hex);
+      }
+    }
+  }, [color]);
+
+  const handleCopy = () => {
+    navigator.clipboard.writeText(color);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 1500);
+  };
+
   return (
-    <div 
-      className="w-full h-12 rounded-[var(--radius-md)] flex items-center justify-center border border-[var(--color-border-subtle)]" 
-      style={{ backgroundColor: color }}
-    >
-      <span className={`text-[10px] font-mono ${textLight ? 'text-white' : 'text-black'}`}>{name}</span>
-    </div>
+    <Tooltip content={`${color}\n${hexValue}`} position="top">
+      <div 
+        ref={ref}
+        className="w-full h-12 rounded-[var(--radius-md)] flex flex-col items-center justify-center border border-[var(--color-border-subtle)] cursor-pointer hover:ring-2 hover:ring-[var(--color-border-focus)] transition-shadow" 
+        style={{ backgroundColor: color }}
+        onClick={handleCopy}
+      >
+        <span className={`text-[10px] font-mono font-medium ${textLight ? 'text-white' : 'text-black'}`}>{name}</span>
+        <span className={`text-[8px] font-mono ${textLight ? 'text-white/70' : 'text-black/50'}`}>
+          {copied ? 'Copied!' : hexValue}
+        </span>
+      </div>
+    </Tooltip>
   );
 }
 
 function SemanticColorBox({ name, color, border = false }: { name: string; color: string; border?: boolean }) {
+  const [hexValue, setHexValue] = useState('');
+  const [copied, setCopied] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (ref.current) {
+      const computed = getComputedStyle(ref.current).backgroundColor;
+      const match = computed.match(/rgb\((\d+),\s*(\d+),\s*(\d+)\)/);
+      if (match) {
+        const hex = '#' + [match[1], match[2], match[3]].map(x => {
+          const h = parseInt(x).toString(16);
+          return h.length === 1 ? '0' + h : h;
+        }).join('').toUpperCase();
+        setHexValue(hex);
+      }
+    }
+  }, [color]);
+
+  const handleCopy = () => {
+    navigator.clipboard.writeText(color);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 1500);
+  };
+
   return (
-    <VStack gap={1} align="center">
-      <div className={`w-10 h-10 rounded-[var(--radius-md)] ${border ? 'border border-[var(--color-border-default)]' : ''}`} style={{ backgroundColor: color }} />
-      <span className="text-[8px] font-mono text-[var(--color-text-disabled)] truncate max-w-10">{name}</span>
-    </VStack>
+    <Tooltip content={`${color}\n${hexValue}`} position="top">
+      <VStack gap={1} align="center">
+        <div 
+          ref={ref}
+          className={`w-10 h-10 rounded-[var(--radius-md)] cursor-pointer hover:ring-2 hover:ring-[var(--color-border-focus)] transition-shadow ${border ? 'border border-[var(--color-border-default)]' : ''}`} 
+          style={{ backgroundColor: color }}
+          onClick={handleCopy}
+        />
+        <span className="text-[8px] font-mono text-[var(--color-text-disabled)] truncate max-w-10">
+          {copied ? '✓' : name}
+        </span>
+      </VStack>
+    </Tooltip>
   );
 }
 
