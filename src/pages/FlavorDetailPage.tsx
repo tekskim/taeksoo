@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useState, useMemo } from 'react';
+import { useParams, useNavigate, Link } from 'react-router-dom';
 import {
   Button,
   VStack,
@@ -13,12 +13,23 @@ import {
   TabPanel,
   DetailHeader,
   SectionCard,
+  SearchInput,
+  Table,
+  Pagination,
+  StatusIndicator,
+  ContextMenu,
+  type TableColumn,
+  type ContextMenuItem,
 } from '@/design-system';
 import { Sidebar } from '@/components/Sidebar';
 import { useTabs } from '@/contexts/TabContext';
 import {
   IconCirclePlus,
   IconBell,
+  IconDotsCircleHorizontal,
+  IconLock,
+  IconLockOpen,
+  IconTerminal2,
 } from '@tabler/icons-react';
 
 /* ----------------------------------------
@@ -26,6 +37,7 @@ import {
    ---------------------------------------- */
 
 type VisibilityType = 'Public' | 'Private' | 'Project';
+type InstanceStatus = 'active' | 'building' | 'error' | 'shutoff' | 'paused';
 
 interface FlavorDetail {
   id: string;
@@ -46,6 +58,17 @@ interface FlavorDetail {
   memoryPage: string;
   internalNetworkBandwidth: string;
   storageIOPS: string;
+}
+
+interface FlavorInstance {
+  id: string;
+  name: string;
+  status: InstanceStatus;
+  locked: boolean;
+  image: string;
+  fixedIP: string;
+  az: string;
+  createdAt: string;
 }
 
 /* ----------------------------------------
@@ -73,6 +96,50 @@ const mockFlavorDetail: FlavorDetail = {
   storageIOPS: '-',
 };
 
+// Mock flavor parameters (raw API response)
+const mockFlavorParameters = {
+  id: 'b95aaf8a-80c5-4be0-ae67-5c983f5c9536',
+  name: 'c5.large',
+  ram: 4096,
+  disk: 0,
+  swap: 0,
+  'OS-FLV-EXT-DATA:ephemeral': 0,
+  'OS-FLV-DISABLED:disabled': false,
+  vcpus: 2,
+  'os-flavor-access:is_public': true,
+  rxtx_factor: 1,
+  links: [
+    {
+      rel: 'self',
+      href: 'http://10.7.12.10/v2.1/flavors/b95aaf8a-80c5-4be0-ae67-5c983f5c9536',
+    },
+    {
+      rel: 'bookmark',
+      href: 'http://10.7.12.10/flavors/b95aaf8a-80c5-4be0-ae67-5c983f5c9536',
+    },
+  ],
+  description: null,
+  extra_specs: {
+    ':architecture': 'x86_architecture',
+    ':category': 'compute_optimized',
+    'hw:mem_page_size': 'any',
+    'hw:numa_nodes': '1',
+  },
+};
+
+// Mock instances data using this flavor
+const mockFlavorInstances: FlavorInstance[] = Array.from({ length: 115 }, (_, i) => ({
+  id: `inst-${String(i + 1).padStart(3, '0')}`,
+  name: `web-server-${String(i + 1).padStart(2, '0')}`,
+  status: (['active', 'building', 'error', 'shutoff', 'paused'] as InstanceStatus[])[i % 5],
+  locked: i % 3 === 0,
+  image: ['Ubuntu24.04', 'CentOS8', 'Debian12', 'Rocky9'][i % 4],
+  fixedIP: `10.62.0.${30 + i}`,
+  az: ['zone-a', 'zone-b', 'zone-o'][i % 3],
+  createdAt: `2025-09-${String(30 - (i % 28)).padStart(2, '0')}`,
+}));
+
+
 /* ----------------------------------------
    Flavor Detail Page
    ---------------------------------------- */
@@ -83,8 +150,14 @@ export function FlavorDetailPage() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [activeDetailTab, setActiveDetailTab] = useState('details');
   
+  // Instances tab state
+  const [instanceSearchQuery, setInstanceSearchQuery] = useState('');
+  const [instanceCurrentPage, setInstanceCurrentPage] = useState(1);
+  const instancesPerPage = 10;
+  
   // In a real app, you would fetch the flavor data based on the ID
   const flavor = mockFlavorDetail;
+  const instances = mockFlavorInstances;
 
   const { tabs, activeTabId, closeTab, selectTab } = useTabs();
 
@@ -98,6 +171,132 @@ export function FlavorDetailPage() {
     { label: 'Proj-1', href: '#' },
     { label: 'Flavors', href: '/flavors' },
     { label: flavor.name, href: `/flavors/${flavor.id}` },
+  ];
+
+  // Filter instances by search query
+  const filteredInstances = useMemo(() => {
+    if (!instanceSearchQuery) return instances;
+    const query = instanceSearchQuery.toLowerCase();
+    return instances.filter(
+      (inst) =>
+        inst.name.toLowerCase().includes(query) ||
+        inst.id.toLowerCase().includes(query) ||
+        inst.image.toLowerCase().includes(query) ||
+        inst.fixedIP.toLowerCase().includes(query)
+    );
+  }, [instances, instanceSearchQuery]);
+
+  const instanceTotalPages = Math.ceil(filteredInstances.length / instancesPerPage);
+  const paginatedInstances = filteredInstances.slice(
+    (instanceCurrentPage - 1) * instancesPerPage,
+    instanceCurrentPage * instancesPerPage
+  );
+
+  // Context menu items for instance actions
+  const getInstanceContextMenuItems = (_instance: FlavorInstance): ContextMenuItem[] => [
+    { label: 'View Details', onClick: () => {} },
+    { label: 'Start', onClick: () => {} },
+    { label: 'Stop', onClick: () => {} },
+    { label: 'Restart', onClick: () => {} },
+    { type: 'divider' },
+    { label: 'Delete', onClick: () => {}, danger: true },
+  ];
+
+  // Instance table columns
+  const instanceColumns: TableColumn<FlavorInstance>[] = [
+    {
+      key: 'status',
+      label: 'Status',
+      width: '59px',
+      align: 'center',
+      render: (_, row) => (
+        <StatusIndicator status={row.status} layout="icon-only" />
+      ),
+    },
+    {
+      key: 'name',
+      label: 'Name',
+      flex: 1,
+      render: (_, row) => (
+        <div className="flex flex-col gap-0.5">
+          <Link
+            to={`/instances/${row.id}`}
+            className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {row.name}
+          </Link>
+          <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
+            ID : {row.id}
+          </span>
+        </div>
+      ),
+    },
+    {
+      key: 'locked',
+      label: 'Locked',
+      width: '62px',
+      align: 'center',
+      render: (_, row) => (
+        row.locked ? (
+          <IconLock size={16} stroke={1.5} className="text-[var(--color-text-subtle)]" />
+        ) : (
+          <IconLockOpen size={16} stroke={1.5} className="text-[var(--color-text-subtle)]" />
+        )
+      ),
+    },
+    {
+      key: 'image',
+      label: 'Image',
+      flex: 1,
+      render: (value) => <span>{value}</span>,
+    },
+    {
+      key: 'fixedIP',
+      label: 'Fixed IP',
+      flex: 1,
+      render: (value) => <span>{value}</span>,
+    },
+    {
+      key: 'az',
+      label: 'AZ',
+      flex: 1,
+      render: (value) => <span>{value}</span>,
+    },
+    {
+      key: 'createdAt',
+      label: 'Created At',
+      flex: 1,
+      render: (value) => <span>{value}</span>,
+    },
+    {
+      key: 'action',
+      label: 'Action',
+      width: '72px',
+      align: 'center',
+      render: (_, row) => (
+        <div className="flex items-center justify-center gap-1">
+          <button
+            className="p-1 rounded hover:bg-[var(--color-surface-hover)] transition-colors"
+            onClick={(e) => e.stopPropagation()}
+            title="Console"
+          >
+            <IconTerminal2 size={14} stroke={1.5} />
+          </button>
+          <ContextMenu
+            items={getInstanceContextMenuItems(row)}
+            trigger={
+              <button
+                className="p-1 rounded hover:bg-[var(--color-surface-hover)] transition-colors"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <IconDotsCircleHorizontal size={16} stroke={1.5} />
+              </button>
+            }
+          />
+        </div>
+      ),
+    },
   ];
 
   return (
@@ -206,15 +405,54 @@ export function FlavorDetailPage() {
 
                 {/* Instances Tab Panel */}
                 <TabPanel value="instances">
-                  <div className="pt-6">
-                    <p className="text-[var(--color-text-subtle)]">Instances using this flavor will be displayed here.</p>
-                  </div>
+                  <VStack gap={3} className="pt-6">
+                    {/* Section Header */}
+                    <h2 className="text-[length:var(--font-size-14)] font-semibold text-[var(--color-text-default)]">
+                      Instances
+                    </h2>
+
+                    {/* Search */}
+                    <div className="w-[280px]">
+                      <SearchInput
+                        placeholder="Find instance with filters"
+                        value={instanceSearchQuery}
+                        onChange={(e) => setInstanceSearchQuery(e.target.value)}
+                        onClear={() => setInstanceSearchQuery('')}
+                        size="sm"
+                        fullWidth
+                      />
+                    </div>
+
+                    {/* Pagination */}
+                    <div className="flex items-center gap-2">
+                      <Pagination
+                        currentPage={instanceCurrentPage}
+                        totalPages={instanceTotalPages}
+                        onPageChange={setInstanceCurrentPage}
+                      />
+                      <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
+                        {filteredInstances.length} items
+                      </span>
+                    </div>
+
+                    {/* Instances Table */}
+                    <Table<FlavorInstance>
+                      columns={instanceColumns}
+                      data={paginatedInstances}
+                      rowKey="id"
+                      emptyMessage="No instances found"
+                    />
+                  </VStack>
                 </TabPanel>
 
                 {/* Parameters Tab Panel */}
                 <TabPanel value="parameters">
                   <div className="pt-6">
-                    <p className="text-[var(--color-text-subtle)]">Flavor parameters will be displayed here.</p>
+                    <div className="bg-[#0F172A] border border-[var(--color-border-default)] rounded-md p-4 w-full min-h-[576px] overflow-auto">
+                      <pre className="font-mono text-[12px] leading-[18px] text-white whitespace-pre">
+{JSON.stringify(mockFlavorParameters, null, 5)}
+                      </pre>
+                    </div>
                   </div>
                 </TabPanel>
               </Tabs>

@@ -12,6 +12,7 @@ import {
   ListToolbar,
   ContextMenu,
   ConfirmModal,
+  Checkbox,
   type TableColumn,
   type ContextMenuItem,
 } from '@/design-system';
@@ -19,7 +20,6 @@ import { Sidebar } from '@/components/Sidebar';
 import { useTabs } from '@/contexts/TabContext';
 import { ViewPreferencesDrawer, type ColumnConfig } from '@/components/ViewPreferencesDrawer';
 import {
-  IconPlus,
   IconDotsCircleHorizontal,
   IconTrash,
   IconDownload,
@@ -78,6 +78,7 @@ export function ServerGroupsPage() {
 
   // Default column config
   const defaultColumnConfig: ColumnConfig[] = [
+    { id: 'selection', label: '', visible: true, locked: true },
     { id: 'name', label: 'Name', visible: true, locked: true },
     { id: 'policy', label: 'Policy', visible: true },
     { id: 'instances', label: 'Instances', visible: true },
@@ -128,8 +129,51 @@ export function ServerGroupsPage() {
 
   const totalPages = Math.ceil(filteredServerGroups.length / rowsPerPage);
 
+  // Paginated data
+  const paginatedServerGroups = useMemo(() => {
+    return filteredServerGroups.slice((currentPage - 1) * rowsPerPage, currentPage * rowsPerPage);
+  }, [filteredServerGroups, currentPage, rowsPerPage]);
+
+  // Selection handlers
+  const toggleSelection = (id: string) => {
+    setSelectedServerGroups((prev) =>
+      prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
+    );
+  };
+
+  const toggleAllSelection = () => {
+    if (selectedServerGroups.length === paginatedServerGroups.length) {
+      setSelectedServerGroups([]);
+    } else {
+      setSelectedServerGroups(paginatedServerGroups.map((sg) => sg.id));
+    }
+  };
+
+  const handleBulkDelete = () => {
+    setServerGroups((prev) => prev.filter((sg) => !selectedServerGroups.includes(sg.id)));
+    setSelectedServerGroups([]);
+  };
+
   // Table columns
   const columns: TableColumn<ServerGroup>[] = [
+    {
+      key: 'selection',
+      label: (
+        <Checkbox
+          checked={selectedServerGroups.length === paginatedServerGroups.length && paginatedServerGroups.length > 0}
+          indeterminate={selectedServerGroups.length > 0 && selectedServerGroups.length < paginatedServerGroups.length}
+          onChange={toggleAllSelection}
+        />
+      ),
+      width: '48px',
+      align: 'center',
+      render: (_, row) => (
+        <Checkbox
+          checked={selectedServerGroups.includes(row.id)}
+          onChange={() => toggleSelection(row.id)}
+        />
+      ),
+    },
     {
       key: 'name',
       label: 'Name',
@@ -255,7 +299,7 @@ export function ServerGroupsPage() {
               <h1 className="text-[length:var(--font-size-16)] font-semibold text-[var(--color-text-default)]">
                 Server Group
               </h1>
-              <Button leftIcon={<IconPlus size={16} />}>
+              <Button>
                 Create Server Group
               </Button>
             </div>
@@ -279,7 +323,13 @@ export function ServerGroupsPage() {
               }
               bulkActions={
                 <ListToolbar.Actions>
-                  <Button variant="muted" size="sm" leftIcon={<IconTrash size={12} />} disabled={selectedServerGroups.length === 0}>
+                  <Button
+                    variant="muted"
+                    size="sm"
+                    leftIcon={<IconTrash size={12} />}
+                    disabled={selectedServerGroups.length === 0}
+                    onClick={handleBulkDelete}
+                  >
                     Delete
                   </Button>
                 </ListToolbar.Actions>
@@ -301,7 +351,7 @@ export function ServerGroupsPage() {
             {/* Server Groups Table */}
             <Table<ServerGroup>
               columns={visibleColumns}
-              data={filteredServerGroups.slice((currentPage - 1) * rowsPerPage, currentPage * rowsPerPage)}
+              data={paginatedServerGroups}
               rowKey="id"
               emptyMessage="No server groups found"
             />

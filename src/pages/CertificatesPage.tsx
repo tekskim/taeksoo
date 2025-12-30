@@ -23,7 +23,6 @@ import { Sidebar } from '@/components/Sidebar';
 import { useTabs } from '@/contexts/TabContext';
 import { ViewPreferencesDrawer, type ColumnConfig } from '@/components/ViewPreferencesDrawer';
 import {
-  IconPlus,
   IconDotsCircleHorizontal,
   IconTrash,
   IconDownload,
@@ -86,6 +85,7 @@ export function CertificatesPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const [certificates] = useState(mockCertificates);
   const [activeTab, setActiveTab] = useState('server');
+  const [selectedCerts, setSelectedCerts] = useState<string[]>([]);
   
   // Delete modal state
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
@@ -98,7 +98,7 @@ export function CertificatesPage() {
   const defaultColumnConfig: ColumnConfig[] = [
     { id: 'status', label: 'Status', visible: true, locked: true },
     { id: 'name', label: 'Name', visible: true, locked: true },
-    { id: 'domain', label: 'SAN', visible: true },
+    { id: 'domain', label: 'Domain', visible: true },
     { id: 'listener', label: 'Listener', visible: true },
     { id: 'expiresAt', label: 'Expires At', visible: true },
     { id: 'createdAt', label: 'Created At', visible: true },
@@ -175,7 +175,7 @@ export function CertificatesPage() {
         </div>
       ),
     },
-    { key: 'domain', label: 'SAN', flex: 1 },
+    { key: 'domain', label: 'Domain', flex: 1 },
     { key: 'listener', label: 'Listener', flex: 1 },
     {
       key: 'expiresAt',
@@ -245,17 +245,17 @@ export function CertificatesPage() {
           <VStack gap={3}>
             <div className="flex justify-between items-center h-8 w-full">
               <h1 className="text-[length:var(--font-size-16)] font-semibold text-[var(--color-text-default)]">Certificates</h1>
-              <Button variant="primary" size="md" leftIcon={<IconPlus size={14} />}>Register Certificate</Button>
+              <Button variant="primary" size="md">Register Certificate</Button>
             </div>
             <Tabs value={activeTab} onChange={setActiveTab} size="sm">
               <TabList><Tab value="server">Server</Tab><Tab value="ca">CA</Tab></TabList>
             </Tabs>
             <ListToolbar
-              primaryActions={<ListToolbar.Actions><div className="w-[280px]"><SearchInput placeholder="Find certificate with filters" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} onClear={() => setSearchQuery('')} size="sm" fullWidth /></div><Button variant="secondary" size="sm" icon={<IconDownload size={12} />} aria-label="Download" /></ListToolbar.Actions>}
-              bulkActions={<ListToolbar.Actions><Button variant="muted" size="sm" leftIcon={<IconTrash size={12} />} disabled>Delete</Button></ListToolbar.Actions>}
+              primaryActions={<ListToolbar.Actions><div className="w-[280px]"><SearchInput placeholder="Find certificate with filters" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} onClear={() => setSearchQuery('')} size="sm" fullWidth /></div><Button variant="secondary" size="sm" iconOnly icon={<IconDownload size={12} />} aria-label="Download" /></ListToolbar.Actions>}
+              bulkActions={<ListToolbar.Actions><Button variant="muted" size="sm" leftIcon={<IconTrash size={12} />} disabled={selectedCerts.length === 0}>Delete</Button></ListToolbar.Actions>}
             />
             <Pagination currentPage={currentPage} totalPages={totalPages} totalItems={filteredCerts.length} onPageChange={setCurrentPage} showSettings onSettingsClick={() => setIsPreferencesOpen(true)} />
-            <Table columns={visibleColumns} data={paginatedCerts} rowKey="id" />
+            <Table columns={visibleColumns} data={paginatedCerts} rowKey="id" selectable selectedRows={selectedCerts} onSelectionChange={setSelectedCerts} />
           </VStack>
         </div>
         </div>
