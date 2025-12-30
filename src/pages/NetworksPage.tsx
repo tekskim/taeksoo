@@ -79,6 +79,7 @@ const networkStatusMap: Record<NetworkStatus, 'active' | 'error' | 'building'> =
    ---------------------------------------- */
 
 export function NetworksPage() {
+  const [selectedNetworks, setSelectedNetworks] = useState<string[]>([]);
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);

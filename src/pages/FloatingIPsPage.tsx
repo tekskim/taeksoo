@@ -80,6 +80,7 @@ const floatingIPStatusMap: Record<FloatingIPStatus, 'active' | 'error' | 'down'>
    ---------------------------------------- */
 
 export function FloatingIPsPage() {
+  const [selectedFloatingIPs, setSelectedFloatingIPs] = useState<string[]>([]);
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);

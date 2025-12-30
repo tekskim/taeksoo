@@ -74,6 +74,7 @@ const sgStatusMap: Record<SecurityGroupStatus, 'active' | 'error'> = {
    ---------------------------------------- */
 
 export function SecurityGroupsPage() {
+  const [selectedGroups, setSelectedGroups] = useState<string[]>([]);
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
