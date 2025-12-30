@@ -307,7 +307,7 @@ export function ShellPanel({
 
       {/* Bottom Status Bar - White tone */}
       <div className="flex items-center justify-between px-3 py-2 border-t border-[var(--color-border-default)] bg-[var(--color-surface-subtle)]">
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-1">
           {/* Container Select - Using Design System */}
           <Select
             size="sm"
