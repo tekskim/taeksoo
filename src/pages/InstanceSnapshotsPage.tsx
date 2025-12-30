@@ -205,9 +205,9 @@ export function InstanceSnapshotsPage() {
     {
       key: 'status',
       label: 'Status',
-      width: '80px',
+      width: '59px',
       align: 'center',
-      sortable: true,
+      sortable: false,
       render: (_, row) => (
         <StatusIndicator status={statusMap[row.status]} layout="icon-only" />
       ),

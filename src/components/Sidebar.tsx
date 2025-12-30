@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import { VStack, MenuItem, MenuSection } from '@/design-system';
 import { useDarkMode } from '@/hooks/useDarkMode';
 import {
@@ -24,10 +24,11 @@ import {
   IconPalette,
   IconLayoutSidebarRight,
 } from '@tabler/icons-react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import ThakiLogoLight from '@/assets/thakiLogo_light.svg';
 import ThakiLogoDark from '@/assets/thakiLogo-dark.svg';
 import { ProjectSelector, mockProjects } from './ProjectSelector';
+import { useTabs } from '@/contexts/TabContext';
 
 /* ----------------------------------------
    Sidebar Component
@@ -42,6 +43,8 @@ export function Sidebar({ isOpen = true, onToggle }: SidebarProps) {
   const { isDark } = useDarkMode();
   const [selectedProjectId, setSelectedProjectId] = useState(mockProjects[0].id);
   const location = useLocation();
+  const navigate = useNavigate();
+  const { updateActiveTab } = useTabs();
   
   // Check if current path matches href (handle root path for home)
   const isActive = (href: string) => {
@@ -71,6 +74,12 @@ export function Sidebar({ isOpen = true, onToggle }: SidebarProps) {
     }
     return false;
   };
+
+  // Handle menu click - update current tab title and navigate
+  const handleMenuClick = useCallback((href: string, label: string) => {
+    updateActiveTab(label, href);
+    navigate(href);
+  }, [updateActiveTab, navigate]);
   
   if (!isOpen) return null;
 
@@ -105,22 +114,22 @@ export function Sidebar({ isOpen = true, onToggle }: SidebarProps) {
       <nav className="flex-1 px-3 py-2 overflow-y-auto sidebar-scroll">
         <VStack gap={4}>
           {/* Design System Link */}
-          <Link
-            to="/design-system"
-            className="flex items-center gap-2 px-2 py-1.5 rounded-md bg-[var(--color-action-primary)] hover:bg-[var(--color-action-primary-hover)] text-white text-[11px] font-medium transition-colors"
+          <button
+            onClick={() => handleMenuClick('/design-system', 'Design System')}
+            className="flex items-center gap-2 px-2 py-1.5 rounded-md bg-[var(--color-action-primary)] hover:bg-[var(--color-action-primary-hover)] text-white text-[11px] font-medium transition-colors w-full cursor-pointer"
           >
             <IconPalette size={16} stroke={1.5} />
             <span>Design System</span>
-          </Link>
+          </button>
 
           {/* Drawers Link */}
-          <Link
-            to="/drawers"
-            className="flex items-center gap-2 px-2 py-1.5 rounded-md bg-[var(--color-action-secondary)] hover:bg-[var(--color-action-secondary-hover)] text-[var(--color-text-default)] text-[11px] font-medium transition-colors border border-[var(--color-border-default)]"
+          <button
+            onClick={() => handleMenuClick('/drawers', 'Drawers')}
+            className="flex items-center gap-2 px-2 py-1.5 rounded-md bg-[var(--color-action-secondary)] hover:bg-[var(--color-action-secondary-hover)] text-[var(--color-text-default)] text-[11px] font-medium transition-colors border border-[var(--color-border-default)] w-full cursor-pointer"
           >
             <IconLayoutSidebarRight size={16} stroke={1.5} />
             <span>Drawers</span>
-          </Link>
+          </button>
 
           {/* Home */}
           <MenuItem
@@ -128,6 +137,7 @@ export function Sidebar({ isOpen = true, onToggle }: SidebarProps) {
             label="Home"
             href="/"
             active={isActive('/')}
+            onClick={() => handleMenuClick('/', 'Home')}
           />
 
           {/* Compute Section */}
@@ -137,42 +147,49 @@ export function Sidebar({ isOpen = true, onToggle }: SidebarProps) {
               label="Instances"
               href="/instances"
               active={isActive('/instances')}
+              onClick={() => handleMenuClick('/instances', 'Instances')}
             />
             <MenuItem
               icon={<IconTemplate size={16} stroke={1.5} />}
               label="Instance Templates"
               href="/instance-templates"
               active={isActive('/instance-templates')}
+              onClick={() => handleMenuClick('/instance-templates', 'Instance Templates')}
             />
             <MenuItem
               icon={<IconCamera size={16} stroke={1.5} />}
               label="Instance Snapshots"
               href="/instance-snapshots"
               active={isActive('/instance-snapshots')}
+              onClick={() => handleMenuClick('/instance-snapshots', 'Instance Snapshots')}
             />
             <MenuItem
               icon={<IconDisc size={16} stroke={1.5} />}
               label="Images"
               href="/images"
               active={isActive('/images')}
+              onClick={() => handleMenuClick('/images', 'Images')}
             />
             <MenuItem
               icon={<IconCpu size={16} stroke={1.5} />}
               label="Flavors"
               href="/flavors"
               active={isActive('/flavors')}
+              onClick={() => handleMenuClick('/flavors', 'Flavors')}
             />
             <MenuItem
               icon={<IconKey size={16} stroke={1.5} />}
               label="Key Pairs"
               href="/key-pairs"
               active={isActive('/key-pairs')}
+              onClick={() => handleMenuClick('/key-pairs', 'Key Pairs')}
             />
             <MenuItem
               icon={<IconServer size={16} stroke={1.5} />}
               label="Server Groups"
               href="/server-groups"
               active={isActive('/server-groups')}
+              onClick={() => handleMenuClick('/server-groups', 'Server Groups')}
             />
           </MenuSection>
 
@@ -183,18 +200,21 @@ export function Sidebar({ isOpen = true, onToggle }: SidebarProps) {
               label="Volumes"
               href="/volumes"
               active={isActive('/volumes')}
+              onClick={() => handleMenuClick('/volumes', 'Volumes')}
             />
             <MenuItem
               icon={<IconCamera size={16} stroke={1.5} />}
               label="Volume Snapshots"
               href="/volume-snapshots"
               active={isActive('/volume-snapshots')}
+              onClick={() => handleMenuClick('/volume-snapshots', 'Volume Snapshots')}
             />
             <MenuItem
               icon={<IconDatabaseExport size={16} stroke={1.5} />}
               label="Volume Backups"
               href="/volume-backups"
               active={isActive('/volume-backups')}
+              onClick={() => handleMenuClick('/volume-backups', 'Volume Backups')}
             />
           </MenuSection>
 
@@ -205,48 +225,56 @@ export function Sidebar({ isOpen = true, onToggle }: SidebarProps) {
               label="Networks"
               href="/networks"
               active={isActive('/networks')}
+              onClick={() => handleMenuClick('/networks', 'Networks')}
             />
             <MenuItem
               icon={<IconRouter size={16} stroke={1.5} />}
               label="Routers"
               href="/routers"
               active={isActive('/routers')}
+              onClick={() => handleMenuClick('/routers', 'Routers')}
             />
             <MenuItem
               icon={<IconPlug size={16} stroke={1.5} />}
               label="Ports"
               href="/ports"
               active={isActive('/ports')}
+              onClick={() => handleMenuClick('/ports', 'Ports')}
             />
             <MenuItem
               icon={<IconWorldWww size={16} stroke={1.5} />}
               label="Floating IPs"
               href="/floating-ips"
               active={isActive('/floating-ips')}
+              onClick={() => handleMenuClick('/floating-ips', 'Floating IPs')}
             />
             <MenuItem
               icon={<IconShieldLock size={16} stroke={1.5} />}
               label="Security Groups"
               href="/security-groups"
               active={isActive('/security-groups')}
+              onClick={() => handleMenuClick('/security-groups', 'Security Groups')}
             />
             <MenuItem
               icon={<IconLoadBalancer size={16} stroke={1.5} />}
               label="Load Balancers"
               href="/load-balancers"
               active={isActive('/load-balancers')}
+              onClick={() => handleMenuClick('/load-balancers', 'Load Balancers')}
             />
             <MenuItem
               icon={<IconCertificate size={16} stroke={1.5} />}
               label="Certificates"
               href="/certificates"
               active={isActive('/certificates')}
+              onClick={() => handleMenuClick('/certificates', 'Certificates')}
             />
             <MenuItem
               icon={<IconTopologyStar3 size={16} stroke={1.5} />}
               label="Topology"
               href="/topology"
               active={isActive('/topology')}
+              onClick={() => handleMenuClick('/topology', 'Topology')}
             />
           </MenuSection>
         </VStack>

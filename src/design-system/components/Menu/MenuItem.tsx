@@ -74,7 +74,17 @@ export function MenuItem({
     return (
       <Link
         to={href}
-        onClick={disabled ? (e) => e.preventDefault() : onClick}
+        onClick={(e) => {
+          if (disabled) {
+            e.preventDefault();
+            return;
+          }
+          // If onClick is provided, prevent default navigation and call onClick
+          if (onClick) {
+            e.preventDefault();
+            onClick();
+          }
+        }}
         className={twMerge(baseStyles, stateStyles)}
         aria-current={active ? 'page' : undefined}
         aria-disabled={disabled}

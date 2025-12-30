@@ -224,8 +224,6 @@ const dataDisplayItems = [
   { id: 'status-indicator', label: 'Status Indicator', icon: IconActivity },
   { id: 'tooltip', label: 'Tooltip', icon: IconMessage2 },
   { id: 'window-control', label: 'Window Control', icon: IconAppWindow },
-  { id: 'detail-header', label: 'Detail Header', icon: IconLayoutNavbar },
-  { id: 'section-card', label: 'Section Card', icon: IconLayoutGrid },
 ];
 
 // Navigation
@@ -256,6 +254,10 @@ const graphItems = [
   { id: 'area-chart', label: 'Area Chart', icon: IconChartBar },
   { id: 'pie-chart', label: 'Pie Chart', icon: IconActivity },
   { id: 'half-doughnut-chart', label: 'Half-Doughnut Chart', icon: IconGauge },
+// Patterns (복합 컴포넌트 패턴)
+const patternItems = [
+  { id: 'detail-header', label: 'Detail Header', icon: IconLayoutNavbar },
+  { id: 'section-card', label: 'Section Card', icon: IconLayoutGrid },
 ];
 
 // All component items
@@ -266,6 +268,7 @@ const componentItems = [
   ...feedbackItems,
   ...disclosureItems,
   ...graphItems,
+  ...patternItems,
 ];
 
 // All items for intersection observer
@@ -1976,7 +1979,7 @@ function TableDemo() {
 
   // Empty state columns
   const emptyColumns = [
-    { key: 'status', label: 'Status', width: '80px' },
+    { key: 'status', label: 'Status', width: '59px' },
     { key: 'name', label: 'Name', flex: 1 },
     { key: 'fixedIp', label: 'Fixed IP', width: '120px' },
     { key: 'image', label: 'Image', width: '120px' },
@@ -2344,6 +2347,12 @@ export function DesignSystemPage() {
                 Graphs
               </span>
               {graphItems.map(({ id, label, icon: Icon }) => (
+            {/* Patterns */}
+            <VStack gap={1}>
+              <span className="px-3 py-1 text-[length:var(--font-size-10)] font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider">
+                Patterns
+              </span>
+              {patternItems.map(({ id, label, icon: Icon }) => (
                 <button
                   key={id}
                   onClick={() => scrollToSection(id)}
@@ -2937,7 +2946,7 @@ outline: 2px solid var(--color-border-focus);`}
 
             {/* Shadows */}
             <Section id="shadows" title="Shadows" description="Box shadow tokens for elevation and depth">
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {[
                   { name: 'xs', value: '0 1px 2px 0 rgba(0,0,0,0.05)' },
                   { name: 'sm', value: '0 1px 3px rgba(0,0,0,0.1), 0 1px 2px -1px rgba(0,0,0,0.1)' },
@@ -2945,17 +2954,22 @@ outline: 2px solid var(--color-border-focus);`}
                   { name: 'lg', value: '0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -4px rgba(0,0,0,0.1)' },
                   { name: 'xl', value: '0 20px 25px -5px rgba(0,0,0,0.1), 0 8px 10px -6px rgba(0,0,0,0.1)' },
                 ].map(({ name, value }) => (
-                  <div key={name} className="flex flex-col gap-3">
+                  <div key={name} className="flex gap-4 items-center p-4 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)]">
                     <div
-                      className="h-20 bg-[var(--color-surface-default)] rounded-[var(--radius-lg)] flex items-center justify-center"
+                      className="w-24 h-16 bg-[var(--color-surface-default)] rounded-[var(--radius-md)] flex items-center justify-center shrink-0"
                       style={{ boxShadow: `var(--shadow-${name})` }}
                     >
-                      <span className="text-[length:var(--font-size-12)] text-[var(--color-text-subtle)]">
-                        shadow-{name}
+                      <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
+                        {name}
                       </span>
                     </div>
-                    <div className="text-[length:var(--font-size-10)] text-[var(--color-text-muted)] font-mono truncate" title={value}>
-                      --shadow-{name}
+                    <div className="flex flex-col gap-1 min-w-0">
+                      <div className="text-[length:var(--font-size-12)] text-[var(--color-text-default)] font-medium font-mono">
+                        --shadow-{name}
+                      </div>
+                      <div className="text-[length:var(--font-size-10)] text-[var(--color-text-muted)] font-mono break-all">
+                        {value}
+                      </div>
                     </div>
                   </div>
                 ))}
@@ -3493,6 +3507,39 @@ outline: 2px solid var(--color-border-focus);`}
                       ]}
                       className="w-[200px]"
                     />
+                  </div>
+                </VStack>
+
+                {/* Size Variants */}
+                <VStack gap={3}>
+                  <Label>Size Variants</Label>
+                  <div className="flex gap-4 items-end flex-wrap">
+                    <VStack gap={1}>
+                      <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">SM</span>
+                      <Select
+                        size="sm"
+                        placeholder="Select"
+                        defaultValue="active"
+                        options={[
+                          { value: 'active', label: 'Active' },
+                          { value: 'shutoff', label: 'Shutoff' },
+                          { value: 'building', label: 'Building' },
+                        ]}
+                      />
+                    </VStack>
+                    <VStack gap={1}>
+                      <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">MD (Default)</span>
+                      <Select
+                        size="md"
+                        placeholder="Select"
+                        defaultValue="active"
+                        options={[
+                          { value: 'active', label: 'Active' },
+                          { value: 'shutoff', label: 'Shutoff' },
+                          { value: 'building', label: 'Building' },
+                        ]}
+                      />
+                    </VStack>
                   </div>
                 </VStack>
 
@@ -4954,59 +5001,22 @@ outline: 2px solid var(--color-border-focus);`}
                 <VStack gap={3}>
                   <Label>Design Tokens</Label>
                   <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
-                    <code>padding: 16px</code> · <code>radius: 8px</code> · <code>title: 16px semibold</code> · <code>info-card.padding: 16×12px</code> · <code>info-card.radius: 8px</code>
+                    <code>container.padding: 16×12px</code> · <code>container.radius: 8px</code> · <code>container.gap: 12px</code> · <code>title: 16px semibold</code> · <code>actions.gap: 4px</code> · <code>info-grid.gap: 8px</code> · <code>info-card.padding: 16×12px</code> · <code>info-card.radius: 8px</code> · <code>info-card.gap: 6px</code>
                   </div>
                 </VStack>
 
-                {/* Basic Example */}
+                {/* Full Example - Figma Reference */}
                 <VStack gap={3}>
-                  <Label>Basic Usage</Label>
+                  <Label>Instance Detail Header (Figma Reference)</Label>
                   <DetailHeader>
-                    <DetailHeader.Title>Instance Name</DetailHeader.Title>
+                    <DetailHeader.Title>tk-test</DetailHeader.Title>
                     <DetailHeader.Actions>
-                      <Button variant="secondary" size="sm">Start</Button>
-                      <Button variant="secondary" size="sm">Stop</Button>
-                      <Button variant="destructive" size="sm">Delete</Button>
-                    </DetailHeader.Actions>
-                    <DetailHeader.InfoGrid>
-                      <DetailHeader.InfoCard label="Status" value="Active" status="active" />
-                      <DetailHeader.InfoCard label="ID" value="abc123-def456" copyable />
-                      <DetailHeader.InfoCard label="Created At" value="2025-01-15 10:30:00" />
-                    </DetailHeader.InfoGrid>
-                  </DetailHeader>
-                </VStack>
-
-                {/* With Different Status */}
-                <VStack gap={3}>
-                  <Label>Different Status States</Label>
-                  <div className="grid grid-cols-2 gap-4">
-                    <DetailHeader.InfoCard label="Active" value="Running" status="active" />
-                    <DetailHeader.InfoCard label="Shutoff" value="Stopped" status="shutoff" />
-                    <DetailHeader.InfoCard label="Degraded" value="Degraded" status="degraded" />
-                    <DetailHeader.InfoCard label="Error" value="Failed" status="error" />
-                  </div>
-                </VStack>
-
-                {/* With Copy Button */}
-                <VStack gap={3}>
-                  <Label>Copyable Info Cards</Label>
-                  <div className="grid grid-cols-2 gap-4">
-                    <DetailHeader.InfoCard label="Instance ID" value="i-0abc123def456789" copyable />
-                    <DetailHeader.InfoCard label="IP Address" value="192.168.1.100" copyable />
-                  </div>
-                </VStack>
-
-                {/* Full Example */}
-                <VStack gap={3}>
-                  <Label>Full Example (VM Detail Page)</Label>
-                  <DetailHeader>
-                    <DetailHeader.Title>web-server-01</DetailHeader.Title>
-                    <DetailHeader.Actions>
-                      <Button variant="secondary" size="sm" leftIcon={<IconTerminal2 size={12} />}>Console</Button>
-                      <Button variant="secondary" size="sm" leftIcon={<IconPlayerPlay size={12} />}>Start</Button>
-                      <Button variant="secondary" size="sm" leftIcon={<IconPlayerStop size={12} />}>Stop</Button>
-                      <Button variant="secondary" size="sm" leftIcon={<IconRefresh size={12} />}>Reboot</Button>
-                      <Button variant="destructive" size="sm" leftIcon={<IconTrash size={12} />}>Delete</Button>
+                      <Button variant="outline" size="sm" leftIcon={<IconTerminal2 size={12} stroke={1.5} />}>Console</Button>
+                      <Button variant="outline" size="sm" leftIcon={<IconPlayerPlay size={12} stroke={1.5} />}>Start</Button>
+                      <Button variant="outline" size="sm" leftIcon={<IconPlayerStop size={12} stroke={1.5} />}>Stop</Button>
+                      <Button variant="outline" size="sm" leftIcon={<IconRefresh size={12} stroke={1.5} />}>Reboot</Button>
+                      <Button variant="outline" size="sm" leftIcon={<IconTrash size={12} stroke={1.5} />}>Delete</Button>
+                      <Button variant="outline" size="sm" rightIcon={<IconChevronDown size={12} stroke={1.5} />}>More Actions</Button>
                     </DetailHeader.Actions>
                     <DetailHeader.InfoGrid>
                       <DetailHeader.InfoCard label="Status" value="Active" status="active" />
@@ -5015,6 +5025,36 @@ outline: 2px solid var(--color-border-focus);`}
                       <DetailHeader.InfoCard label="Created At" value="2025-07-25 09:12:20" />
                     </DetailHeader.InfoGrid>
                   </DetailHeader>
+                </VStack>
+
+                {/* Info Card Status States */}
+                <VStack gap={3}>
+                  <Label>Info Card - Status Indicator States</Label>
+                  <div className="grid grid-cols-4 gap-2">
+                    <DetailHeader.InfoCard label="Status" value="Active" status="active" />
+                    <DetailHeader.InfoCard label="Status" value="Shutoff" status="shutoff" />
+                    <DetailHeader.InfoCard label="Status" value="Degraded" status="degraded" />
+                    <DetailHeader.InfoCard label="Status" value="Error" status="error" />
+                  </div>
+                </VStack>
+
+                {/* Info Card with Copy */}
+                <VStack gap={3}>
+                  <Label>Info Card - Copyable Values</Label>
+                  <div className="grid grid-cols-2 gap-2">
+                    <DetailHeader.InfoCard label="Instance ID" value="7284d9174e81431e93060a9bbcf2cdfd" copyable />
+                    <DetailHeader.InfoCard label="IP Address" value="192.168.1.100" copyable />
+                  </div>
+                </VStack>
+
+                {/* Info Card Basic */}
+                <VStack gap={3}>
+                  <Label>Info Card - Basic Text</Label>
+                  <div className="grid grid-cols-3 gap-2">
+                    <DetailHeader.InfoCard label="Host" value="compute-03" />
+                    <DetailHeader.InfoCard label="Created At" value="2025-07-25 09:12:20" />
+                    <DetailHeader.InfoCard label="Availability Zone" value="nova" />
+                  </div>
                 </VStack>
               </VStack>
             </Section>
