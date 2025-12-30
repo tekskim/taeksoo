@@ -381,7 +381,7 @@ export function VolumeBackupsPage() {
               data={paginatedBackups}
               rowKey="id"
               selectable
-              selectedRows={selectedBackups}
+              selectedKeys={selectedBackups}
               onSelectionChange={setSelectedBackups}
             />
           </VStack>

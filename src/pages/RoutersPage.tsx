@@ -316,7 +316,7 @@ export function RoutersPage() {
               data={paginatedRouters}
               rowKey="id"
               selectable
-              selectedRows={selectedRouters}
+              selectedKeys={selectedRouters}
               onSelectionChange={setSelectedRouters}
             />
           </VStack>

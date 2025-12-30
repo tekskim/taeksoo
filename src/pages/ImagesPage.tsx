@@ -89,7 +89,6 @@ export function ImagesPage() {
 
   // Default column config (matching Figma: Selection, Status, Name, OS, Size, Access, Created At, Action)
   const defaultColumnConfig: ColumnConfig[] = [
-    { id: 'selection', label: '', visible: true, locked: true },
     { id: 'status', label: 'Status', visible: true, locked: true },
     { id: 'name', label: 'Name', visible: true, locked: true },
     { id: 'os', label: 'OS', visible: true },
@@ -190,24 +189,6 @@ export function ImagesPage() {
 
   // Table columns (matching Figma design: Selection, Status, Name, OS, Size, Access, Created At, Action)
   const columns: TableColumn<Image>[] = [
-    {
-      key: 'selection',
-      label: (
-        <Checkbox
-          isChecked={selectedImages.length === paginatedImages.length && paginatedImages.length > 0}
-          isIndeterminate={selectedImages.length > 0 && selectedImages.length < paginatedImages.length}
-          onChange={toggleAllSelection}
-        />
-      ),
-      width: '48px',
-      align: 'center',
-      render: (_, row) => (
-        <Checkbox
-          isChecked={selectedImages.includes(row.id)}
-          onChange={() => toggleSelection(row.id)}
-        />
-      ),
-    },
     {
       key: 'status',
       label: 'Status',
@@ -434,6 +415,9 @@ export function ImagesPage() {
               data={paginatedImages}
               rowKey="id"
               emptyMessage="No images found"
+              selectable
+              selectedKeys={selectedImages}
+              onSelectionChange={setSelectedImages}
             />
           </VStack>
         </div>

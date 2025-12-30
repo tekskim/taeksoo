@@ -350,7 +350,7 @@ export function NetworksPage() {
               data={paginatedNetworks}
               rowKey="id"
               selectable
-              selectedRows={selectedNetworks}
+              selectedKeys={selectedNetworks}
               onSelectionChange={setSelectedNetworks}
             />
           </VStack>

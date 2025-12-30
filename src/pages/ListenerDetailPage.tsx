@@ -572,7 +572,7 @@ export default function ListenerDetailPage() {
 
               {/* Tabs */}
               <div className="w-full">
-                <Tabs value={activeDetailTab} onChange={setActiveDetailTab}>
+                <Tabs value={activeDetailTab} onChange={setActiveDetailTab} size="sm">
                   <TabList>
                     <Tab value="details">Details</Tab>
                     <Tab value="pools">Pools</Tab>

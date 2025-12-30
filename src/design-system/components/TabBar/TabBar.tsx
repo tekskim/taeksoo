@@ -1,5 +1,5 @@
-import React, { useState, useRef } from 'react';
-import { IconPlus, IconX, IconMinus, IconSquare } from '@tabler/icons-react';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
+import { IconPlus, IconX, IconMinus, IconSquare, IconChevronLeft, IconChevronRight } from '@tabler/icons-react';
 
 /* ----------------------------------------
    Types
@@ -59,6 +59,51 @@ export const TabBar: React.FC<TabBarProps> = ({
   className = '',
 }) => {
   const tabsRef = useRef<HTMLDivElement>(null);
+  const [canScrollLeft, setCanScrollLeft] = useState(false);
+  const [canScrollRight, setCanScrollRight] = useState(false);
+
+  const checkScrollability = useCallback(() => {
+    if (tabsRef.current) {
+      const { scrollLeft, scrollWidth, clientWidth } = tabsRef.current;
+      setCanScrollLeft(scrollLeft > 0);
+      setCanScrollRight(scrollLeft + clientWidth < scrollWidth - 1);
+    }
+  }, []);
+
+  useEffect(() => {
+    checkScrollability();
+    const tabsEl = tabsRef.current;
+    if (tabsEl) {
+      tabsEl.addEventListener('scroll', checkScrollability);
+      window.addEventListener('resize', checkScrollability);
+    }
+    return () => {
+      if (tabsEl) {
+        tabsEl.removeEventListener('scroll', checkScrollability);
+      }
+      window.removeEventListener('resize', checkScrollability);
+    };
+  }, [checkScrollability, tabs]);
+
+  // Scroll to active tab when it changes
+  useEffect(() => {
+    if (tabsRef.current && activeTab) {
+      const activeTabEl = tabsRef.current.querySelector(`[data-tab-id="${activeTab}"]`) as HTMLElement;
+      if (activeTabEl) {
+        activeTabEl.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
+      }
+    }
+  }, [activeTab]);
+
+  const scrollTabs = (direction: 'left' | 'right') => {
+    if (tabsRef.current) {
+      const scrollAmount = 200;
+      tabsRef.current.scrollBy({
+        left: direction === 'left' ? -scrollAmount : scrollAmount,
+        behavior: 'smooth',
+      });
+    }
+  };
 
   const handleTabClick = (tabId: string) => {
     onTabChange(tabId);
@@ -79,6 +124,26 @@ export const TabBar: React.FC<TabBarProps> = ({
         ${className}
       `}
     >
+      {/* Left Scroll Button */}
+      {canScrollLeft && (
+        <button
+          type="button"
+          onClick={() => scrollTabs('left')}
+          className="
+            shrink-0
+            flex items-center justify-center
+            size-[28px]
+            text-[var(--color-text-muted)]
+            hover:text-[var(--color-text-default)]
+            hover:bg-[var(--color-surface-subtle)]
+            transition-colors
+          "
+          aria-label="Scroll tabs left"
+        >
+          <IconChevronLeft size={16} stroke={2} />
+        </button>
+      )}
+
       {/* Tabs Container */}
       <div
         ref={tabsRef}
@@ -97,6 +162,7 @@ export const TabBar: React.FC<TabBarProps> = ({
           return (
             <div
               key={tab.id}
+              data-tab-id={tab.id}
               onClick={() => handleTabClick(tab.id)}
               className={`
                 group
@@ -173,6 +239,26 @@ export const TabBar: React.FC<TabBarProps> = ({
           );
         })}
       </div>
+
+      {/* Right Scroll Button */}
+      {canScrollRight && (
+        <button
+          type="button"
+          onClick={() => scrollTabs('right')}
+          className="
+            shrink-0
+            flex items-center justify-center
+            size-[28px]
+            text-[var(--color-text-muted)]
+            hover:text-[var(--color-text-default)]
+            hover:bg-[var(--color-surface-subtle)]
+            transition-colors
+          "
+          aria-label="Scroll tabs right"
+        >
+          <IconChevronRight size={16} stroke={2} />
+        </button>
+      )}
 
       {/* Add Button */}
       {showAddButton && onTabAdd && (

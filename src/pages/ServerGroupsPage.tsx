@@ -78,7 +78,6 @@ export function ServerGroupsPage() {
 
   // Default column config
   const defaultColumnConfig: ColumnConfig[] = [
-    { id: 'selection', label: '', visible: true, locked: true },
     { id: 'name', label: 'Name', visible: true, locked: true },
     { id: 'policy', label: 'Policy', visible: true },
     { id: 'instances', label: 'Instances', visible: true },
@@ -156,24 +155,6 @@ export function ServerGroupsPage() {
 
   // Table columns
   const columns: TableColumn<ServerGroup>[] = [
-    {
-      key: 'selection',
-      label: (
-        <Checkbox
-          checked={selectedServerGroups.length === paginatedServerGroups.length && paginatedServerGroups.length > 0}
-          indeterminate={selectedServerGroups.length > 0 && selectedServerGroups.length < paginatedServerGroups.length}
-          onChange={toggleAllSelection}
-        />
-      ),
-      width: '48px',
-      align: 'center',
-      render: (_, row) => (
-        <Checkbox
-          checked={selectedServerGroups.includes(row.id)}
-          onChange={() => toggleSelection(row.id)}
-        />
-      ),
-    },
     {
       key: 'name',
       label: 'Name',
@@ -354,6 +335,9 @@ export function ServerGroupsPage() {
               data={paginatedServerGroups}
               rowKey="id"
               emptyMessage="No server groups found"
+              selectable
+              selectedKeys={selectedServerGroups}
+              onSelectionChange={setSelectedServerGroups}
             />
           </VStack>
         </div>

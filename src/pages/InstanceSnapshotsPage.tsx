@@ -85,7 +85,6 @@ export function InstanceSnapshotsPage() {
 
   // Default column config
   const defaultColumnConfig: ColumnConfig[] = [
-    { id: 'selection', label: '', visible: true, locked: true },
     { id: 'status', label: 'Status', visible: true, locked: true },
     { id: 'name', label: 'Name', visible: true, locked: true },
     { id: 'os', label: 'OS', visible: true },
@@ -182,26 +181,6 @@ export function InstanceSnapshotsPage() {
 
   // Table columns
   const columns: TableColumn<InstanceSnapshot>[] = [
-    {
-      key: 'selection',
-      label: (
-        <Checkbox
-          checked={allCurrentPageSelected}
-          indeterminate={someCurrentPageSelected && !allCurrentPageSelected}
-          onChange={toggleAllSelection}
-        />
-      ),
-      width: '40px',
-      align: 'center',
-      render: (_, row) => (
-        <Checkbox
-          checked={selectedSnapshots.includes(row.id)}
-          onChange={() => toggleSelection(row.id)}
-          onClick={(e) => e.stopPropagation()}
-          aria-label={`Select ${row.name}`}
-        />
-      ),
-    },
     {
       key: 'status',
       label: 'Status',
@@ -417,6 +396,9 @@ export function InstanceSnapshotsPage() {
               data={filteredSnapshots.slice((currentPage - 1) * rowsPerPage, currentPage * rowsPerPage)}
               rowKey="id"
               emptyMessage="No snapshots found"
+              selectable
+              selectedKeys={selectedSnapshots}
+              onSelectionChange={setSelectedSnapshots}
             />
           </VStack>
         </div>

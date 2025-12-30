@@ -296,7 +296,7 @@ export function LoadBalancerDetailPage() {
 
               {/* Tabs Section */}
               <div className="w-full">
-                <Tabs value={activeTab} onChange={setActiveTab}>
+                <Tabs value={activeTab} onChange={setActiveTab} size="sm">
                   <div className="flex flex-col">
                     <TabList>
                       <Tab value="details">Details</Tab>

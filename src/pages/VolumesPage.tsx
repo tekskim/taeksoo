@@ -90,6 +90,9 @@ export function VolumesPage() {
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [volumeToDelete, setVolumeToDelete] = useState<Volume | null>(null);
 
+  // Selection state
+  const [selectedVolumes, setSelectedVolumes] = useState<string[]>([]);
+
   // View Preferences state
   const [isPreferencesOpen, setIsPreferencesOpen] = useState(false);
   const [rowsPerPage, setRowsPerPage] = useState(10);
@@ -416,6 +419,9 @@ export function VolumesPage() {
               data={filteredVolumes.slice((currentPage - 1) * rowsPerPage, currentPage * rowsPerPage)}
               rowKey="id"
               emptyMessage="No volumes found"
+              selectable
+              selectedKeys={selectedVolumes}
+              onSelectionChange={setSelectedVolumes}
             />
           </VStack>
         </div>

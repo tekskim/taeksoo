@@ -52,8 +52,7 @@ function PercentageBadge({ percentage }: PercentageBadgeProps) {
   const colors = getColors();
   
   return (
-    <div className={`flex items-center gap-1 px-1.5 py-0.5 rounded-md ${colors.bg}`}>
-      <div className={`w-2 h-2 rounded-full ${colors.dot}`} />
+    <div className={`flex items-center px-1.5 py-0.5 rounded-md ${colors.bg}`}>
       <span className={`text-[11px] font-medium ${colors.text}`}>{percentage}%</span>
     </div>
   );

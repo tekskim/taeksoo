@@ -254,6 +254,8 @@ const graphItems = [
   { id: 'area-chart', label: 'Area Chart', icon: IconChartBar },
   { id: 'pie-chart', label: 'Pie Chart', icon: IconActivity },
   { id: 'half-doughnut-chart', label: 'Half-Doughnut Chart', icon: IconGauge },
+];
+
 // Patterns (복합 컴포넌트 패턴)
 const patternItems = [
   { id: 'detail-header', label: 'Detail Header', icon: IconLayoutNavbar },
@@ -1717,6 +1719,34 @@ function TabBarDemo() {
           />
         </div>
       </VStack>
+
+      {/* Many Tabs (Scroll) */}
+      <VStack gap={3}>
+        <Label>Many Tabs (with scroll navigation)</Label>
+        <div className="w-full border border-[var(--color-border-default)] rounded-[var(--radius-md)] overflow-hidden">
+          <TabBar
+            tabs={[
+              { id: 'tab-1', label: 'Dashboard', closable: true },
+              { id: 'tab-2', label: 'Analytics', closable: true },
+              { id: 'tab-3', label: 'Reports', closable: true },
+              { id: 'tab-4', label: 'Users', closable: true },
+              { id: 'tab-5', label: 'Settings', closable: true },
+              { id: 'tab-6', label: 'Notifications', closable: true },
+              { id: 'tab-7', label: 'Integrations', closable: true },
+              { id: 'tab-8', label: 'Security', closable: true },
+              { id: 'tab-9', label: 'Billing', closable: true },
+              { id: 'tab-10', label: 'Support', closable: true },
+            ]}
+            activeTab="tab-1"
+            onTabChange={() => {}}
+            onTabClose={() => {}}
+            showAddButton={false}
+          />
+        </div>
+        <p className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
+          When tabs overflow, use arrow buttons to scroll left/right
+        </p>
+      </VStack>
     </VStack>
   );
 }
@@ -2347,6 +2377,24 @@ export function DesignSystemPage() {
                 Graphs
               </span>
               {graphItems.map(({ id, label, icon: Icon }) => (
+                <button
+                  key={id}
+                  onClick={() => scrollToSection(id)}
+                  className={`
+                    w-full px-3 py-2 rounded-[var(--radius-button)] flex items-center gap-2
+                    text-[length:var(--font-size-11)] text-left transition-colors
+                    ${activeSection === id
+                      ? 'bg-[var(--color-state-info-bg)] text-[var(--color-action-primary)] font-medium'
+                      : 'text-[var(--color-text-muted)] hover:bg-[var(--color-surface-subtle)]'
+                    }
+                  `}
+                >
+                  <Icon size={16} stroke={1.5} />
+                  {label}
+                </button>
+              ))}
+            </VStack>
+
             {/* Patterns */}
             <VStack gap={1}>
               <span className="px-3 py-1 text-[length:var(--font-size-10)] font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider">

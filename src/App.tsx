@@ -4,13 +4,18 @@ import { DarkModeProvider } from '@/hooks/useDarkMode';
 
 // Pages
 import { InstanceListPage } from '@/pages/InstanceListPage';
+import { InstanceDetailPage } from '@/pages/InstanceDetailPage';
 import { DesignSystemPage } from '@/pages/DesignSystemPage';
 import { DrawersPage } from '@/pages/DrawersPage';
 import { HomePage } from '@/pages/HomePage';
 import { InstanceTemplatesPage } from '@/pages/InstanceTemplatesPage';
+import { InstanceTemplateDetailPage } from '@/pages/InstanceTemplateDetailPage';
 import { InstanceSnapshotsPage } from '@/pages/InstanceSnapshotsPage';
+import { InstanceSnapshotDetailPage } from '@/pages/InstanceSnapshotDetailPage';
 import { ImagesPage } from '@/pages/ImagesPage';
+import { ImageDetailPage } from '@/pages/ImageDetailPage';
 import { FlavorsPage } from '@/pages/FlavorsPage';
+import { FlavorDetailPage } from '@/pages/FlavorDetailPage';
 import { KeyPairsPage } from '@/pages/KeyPairsPage';
 import { KeyPairDetailPage } from '@/pages/KeyPairDetailPage';
 import { ServerGroupsPage } from '@/pages/ServerGroupsPage';
@@ -38,10 +43,11 @@ import CertificateDetailPage from '@/pages/CertificateDetailPage';
 import SubnetDetailPage from '@/pages/SubnetDetailPage';
 import ListenerDetailPage from '@/pages/ListenerDetailPage';
 import PoolDetailPage from '@/pages/PoolDetailPage';
-import { DesignSystemPage } from '@/pages/DesignSystemPage';
-import { DrawersPage } from '@/pages/DrawersPage';
 import { TopologyD3Page } from '@/pages/TopologyD3Page';
 import { ConsolePage } from '@/pages/ConsolePage';
+import { GradientShowcasePage } from '@/pages/GradientShowcasePage';
+import ColorPalettePage from '@/pages/ColorPalettePage';
+import MetallicPalettePage from '@/pages/MetallicPalettePage';
 
 const defaultTabs = [
   { id: 'home', label: 'Home', path: '/', closable: true },
@@ -49,8 +55,7 @@ const defaultTabs = [
 
 function AppRoutes() {
   return (
-    <TabProvider defaultTabs={defaultTabs}>
-      <Routes>
+    <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/home" element={<HomePage />} />
         <Route path="/instances" element={<InstanceListPage />} />
@@ -91,49 +96,13 @@ function AppRoutes() {
         <Route path="/certificates" element={<CertificatesPage />} />
         <Route path="/certificates/:id" element={<CertificateDetailPage />} />
         <Route path="/topology" element={<TopologyD3Page />} />
+        <Route path="/console/:instanceId" element={<ConsolePage />} />
         <Route path="/design-system" element={<DesignSystemPage />} />
         <Route path="/drawers" element={<DrawersPage />} />
         <Route path="/gradients" element={<GradientShowcasePage />} />
         <Route path="/color-palette" element={<ColorPalettePage />} />
         <Route path="/metallic-palette" element={<MetallicPalettePage />} />
       </Routes>
-    </TabProvider>
-    <Routes>
-      {/* Home */}
-      <Route path="/" element={<HomePage />} />
-      <Route path="/home" element={<HomePage />} />
-      
-      {/* Design System */}
-      <Route path="/design-system" element={<DesignSystemPage />} />
-      <Route path="/drawers" element={<DrawersPage />} />
-      
-      {/* Compute */}
-      <Route path="/instances" element={<InstanceListPage />} />
-      <Route path="/instance-templates" element={<InstanceTemplatesPage />} />
-      <Route path="/instance-snapshots" element={<InstanceSnapshotsPage />} />
-      <Route path="/images" element={<ImagesPage />} />
-      <Route path="/flavors" element={<FlavorsPage />} />
-      <Route path="/key-pairs" element={<KeyPairsPage />} />
-      <Route path="/server-groups" element={<ServerGroupsPage />} />
-      
-      {/* Storage */}
-      <Route path="/volumes" element={<VolumesPage />} />
-      <Route path="/volume-snapshots" element={<VolumeSnapshotsPage />} />
-      <Route path="/volume-backups" element={<VolumeBackupsPage />} />
-      
-      {/* Network */}
-      <Route path="/networks" element={<NetworksPage />} />
-      <Route path="/routers" element={<RoutersPage />} />
-      <Route path="/ports" element={<PortsPage />} />
-      <Route path="/floating-ips" element={<FloatingIPsPage />} />
-      <Route path="/security-groups" element={<SecurityGroupsPage />} />
-      <Route path="/load-balancers" element={<LoadBalancersPage />} />
-      <Route path="/certificates" element={<CertificatesPage />} />
-      <Route path="/topology" element={<TopologyD3Page />} />
-
-      {/* Console */}
-      <Route path="/console/:instanceId" element={<ConsolePage />} />
-    </Routes>
   );
 }
 

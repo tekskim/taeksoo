@@ -408,7 +408,7 @@ export default function SecurityGroupDetailPage() {
 
               {/* Tabs Section */}
               <div className="w-full">
-                <Tabs value={activeTab} onChange={setActiveTab}>
+                <Tabs value={activeTab} onChange={setActiveTab} size="sm">
                   <TabList>
                     <Tab value="rules">Rules</Tab>
                     <Tab value="ports">Ports</Tab>

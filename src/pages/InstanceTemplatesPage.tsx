@@ -93,7 +93,6 @@ export function InstanceTemplatesPage() {
 
   // Default column config
   const defaultColumnConfig: ColumnConfig[] = [
-    { id: 'selection', label: '', visible: true, locked: true },
     { id: 'favorite', label: '', visible: true, locked: true },
     { id: 'name', label: 'Name', visible: true, locked: true },
     { id: 'image', label: 'Image', visible: true },
@@ -224,26 +223,6 @@ export function InstanceTemplatesPage() {
 
   // Table columns
   const columns: TableColumn<InstanceTemplate>[] = [
-    {
-      key: 'selection',
-      label: (
-        <Checkbox
-          checked={allCurrentPageSelected}
-          indeterminate={someCurrentPageSelected && !allCurrentPageSelected}
-          onChange={toggleAllSelection}
-        />
-      ),
-      width: '40px',
-      align: 'center',
-      render: (_, row) => (
-        <Checkbox
-          checked={selectedTemplates.includes(row.id)}
-          onChange={() => toggleSelection(row.id)}
-          onClick={(e) => e.stopPropagation()}
-          aria-label={`Select ${row.name}`}
-        />
-      ),
-    },
     {
       key: 'favorite',
       label: '',
@@ -499,6 +478,9 @@ export function InstanceTemplatesPage() {
               data={filteredTemplates.slice((currentPage - 1) * rowsPerPage, currentPage * rowsPerPage)}
               rowKey="id"
               emptyMessage="No templates found"
+              selectable
+              selectedKeys={selectedTemplates}
+              onSelectionChange={setSelectedTemplates}
             />
           </VStack>
         </div>
