@@ -884,7 +884,7 @@ function TableDemo() {
 
   // Empty state columns
   const emptyColumns = [
-    { key: 'status', label: 'Status', width: '80px' },
+    { key: 'status', label: 'Status', width: '59px' },
     { key: 'name', label: 'Name', flex: 1 },
     { key: 'fixedIp', label: 'Fixed IP', width: '120px' },
     { key: 'image', label: 'Image', width: '120px' },
