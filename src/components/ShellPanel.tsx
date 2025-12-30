@@ -5,8 +5,8 @@ import {
   IconTerminal2,
   IconGripHorizontal,
   IconDownload,
-  IconChevronDown,
 } from '@tabler/icons-react';
+import { Select, Button } from '@/design-system';
 
 /* ----------------------------------------
    Types
@@ -73,7 +73,7 @@ function ConnectionStatusIndicator({ status }: { status: ConnectionStatus }) {
   return (
     <div className="flex items-center gap-1.5">
       <span className={`size-2 rounded-full ${config.color}`} />
-      <span className="text-[12px] text-slate-300">
+      <span className="text-[12px] text-[var(--color-text-default)]">
         {config.label}
       </span>
     </div>
@@ -95,16 +95,16 @@ function ShellTabButton({ tab, isActive, onClick, onClose }: ShellTabButtonProps
   return (
     <div
       className={`
-        flex items-center gap-2 px-3 h-9 cursor-pointer transition-colors border-r border-[#1e293b]
+        flex items-center gap-2 px-3 h-9 cursor-pointer transition-colors border-r border-[var(--color-border-subtle)]
         ${isActive 
-          ? 'bg-[#1e293b]' 
-          : 'bg-[#0f172a] hover:bg-[#1e293b]/50'
+          ? 'bg-[var(--color-surface-default)]' 
+          : 'bg-[var(--color-surface-subtle)] hover:bg-[var(--color-surface-muted)]'
         }
       `}
       onClick={onClick}
     >
-      <IconTerminal2 size={14} className="text-slate-400" stroke={1.5} />
-      <span className="text-[13px] text-slate-200 truncate max-w-[140px]">
+      <IconTerminal2 size={14} className="text-[var(--color-text-muted)]" stroke={1.5} />
+      <span className="text-[13px] text-[var(--color-text-default)] truncate max-w-[140px]">
         {tab.title}
       </span>
       <button
@@ -115,7 +115,7 @@ function ShellTabButton({ tab, isActive, onClick, onClose }: ShellTabButtonProps
             window.open(`/console/${tab.instanceId}`, '_blank');
           }
         }}
-        className="p-0.5 rounded hover:bg-[#334155] transition-colors text-slate-500 hover:text-slate-300"
+        className="p-0.5 rounded hover:bg-[var(--color-surface-muted)] transition-colors text-[var(--color-text-muted)] hover:text-[var(--color-text-default)]"
         title="Open in new window"
       >
         <IconExternalLink size={12} stroke={1.5} />
@@ -125,78 +125,11 @@ function ShellTabButton({ tab, isActive, onClick, onClose }: ShellTabButtonProps
           e.stopPropagation();
           onClose();
         }}
-        className="p-0.5 rounded hover:bg-[#334155] transition-colors text-slate-500 hover:text-slate-300"
+        className="p-0.5 rounded hover:bg-[var(--color-surface-muted)] transition-colors text-[var(--color-text-muted)] hover:text-[var(--color-text-default)]"
         title="Close tab"
       >
         <IconX size={12} stroke={1.5} />
       </button>
-    </div>
-  );
-}
-
-/* ----------------------------------------
-   Container Select Dropdown
-   ---------------------------------------- */
-
-interface ContainerSelectProps {
-  value: string;
-  options: string[];
-  onChange: (value: string) => void;
-}
-
-function ContainerSelect({ value, options, onChange }: ContainerSelectProps) {
-  return (
-    <div className="relative">
-      <select
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
-        className="appearance-none bg-[#1e293b] border border-[#334155] rounded px-3 py-1 pr-7 text-[12px] text-slate-200 cursor-pointer hover:bg-[#334155] focus:outline-none focus:ring-1 focus:ring-[#475569]"
-      >
-        {options.map((opt) => (
-          <option key={opt} value={opt}>
-            Container: {opt}
-          </option>
-        ))}
-      </select>
-      <IconChevronDown size={12} className="absolute right-2 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" />
-    </div>
-  );
-}
-
-/* ----------------------------------------
-   View Time Select Dropdown
-   ---------------------------------------- */
-
-interface ViewTimeSelectProps {
-  value: string;
-  onChange: (value: string) => void;
-}
-
-function ViewTimeSelect({ value, onChange }: ViewTimeSelectProps) {
-  const options = [
-    'Last 15 minutes',
-    'Last 30 minutes',
-    'Last 1 hour',
-    'Last 3 hours',
-    'Last 6 hours',
-    'Last 12 hours',
-    'Last 24 hours',
-  ];
-
-  return (
-    <div className="relative">
-      <select
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
-        className="appearance-none bg-[#1e293b] border border-[#334155] rounded px-3 py-1 pr-7 text-[12px] text-slate-200 cursor-pointer hover:bg-[#334155] focus:outline-none focus:ring-1 focus:ring-[#475569]"
-      >
-        {options.map((opt) => (
-          <option key={opt} value={opt}>
-            View: {opt}
-          </option>
-        ))}
-      </select>
-      <IconChevronDown size={12} className="absolute right-2 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" />
     </div>
   );
 }
@@ -220,13 +153,28 @@ export function ShellPanel({
   const [height, setHeight] = useState(initialHeight);
   const [isResizing, setIsResizing] = useState(false);
   const [selectedContainer, setSelectedContainer] = useState('container-0');
-  const [viewTime, setViewTime] = useState('Last 15 minutes');
+  const [viewTime, setViewTime] = useState('last-15');
   const contentRef = useRef<HTMLDivElement>(null);
 
   const activeTab = tabs.find(t => t.id === activeTabId);
   
-  // Mock container options
-  const containerOptions = ['container-0', 'container-1', 'container-2'];
+  // Container options for Select
+  const containerOptions = [
+    { value: 'container-0', label: 'container-0' },
+    { value: 'container-1', label: 'container-1' },
+    { value: 'container-2', label: 'container-2' },
+  ];
+
+  // View time options for Select
+  const viewTimeOptions = [
+    { value: 'last-15', label: 'Last 15 minutes' },
+    { value: 'last-30', label: 'Last 30 minutes' },
+    { value: 'last-1h', label: 'Last 1 hour' },
+    { value: 'last-3h', label: 'Last 3 hours' },
+    { value: 'last-6h', label: 'Last 6 hours' },
+    { value: 'last-12h', label: 'Last 12 hours' },
+    { value: 'last-24h', label: 'Last 24 hours' },
+  ];
 
   // Calculate max height (content area height - 100px)
   const getMaxHeight = useCallback(() => {
@@ -303,7 +251,7 @@ export function ShellPanel({
 
   return (
     <div
-      className="fixed bottom-0 right-0 z-40 bg-[#0f172a] border-t border-l border-[#1e293b] shadow-2xl flex flex-col"
+      className="fixed bottom-0 right-0 z-40 bg-[var(--color-surface-default)] border-t border-l border-[var(--color-border-default)] shadow-lg flex flex-col"
       style={{
         height: `${height}px`,
         left: '200px',
@@ -312,17 +260,17 @@ export function ShellPanel({
     >
       {/* Resize Handle */}
       <div
-        className="absolute -top-1 left-0 right-0 h-2 cursor-ns-resize flex items-center justify-center group hover:bg-[#1e293b]"
+        className="absolute -top-1 left-0 right-0 h-2 cursor-ns-resize flex items-center justify-center group hover:bg-[var(--color-surface-subtle)]"
         onMouseDown={handleMouseDown}
       >
         <IconGripHorizontal
           size={16}
-          className="text-[#334155] group-hover:text-slate-400"
+          className="text-[var(--color-text-disabled)] group-hover:text-[var(--color-text-muted)]"
         />
       </div>
 
-      {/* Tab Bar - Same background as bottom bar */}
-      <div className="flex items-center bg-[#0f172a] border-b border-[#1e293b]">
+      {/* Tab Bar - White tone */}
+      <div className="flex items-center bg-[var(--color-surface-subtle)] border-b border-[var(--color-border-default)]">
         {/* Tabs */}
         <div className="flex items-center overflow-x-auto scrollbar-none">
           {tabs.map(tab => (
@@ -337,7 +285,7 @@ export function ShellPanel({
         </div>
       </div>
 
-      {/* Content */}
+      {/* Content - Dark background for logs */}
       <div
         ref={contentRef}
         className="flex-1 overflow-auto p-4 font-mono text-[13px] leading-6 bg-[#0d1117] text-slate-300"
@@ -355,32 +303,36 @@ export function ShellPanel({
         )}
       </div>
 
-      {/* Bottom Status Bar - Same background as tab bar */}
-      <div className="flex items-center justify-between px-3 py-2 border-t border-[#1e293b] bg-[#0f172a]">
+      {/* Bottom Status Bar - White tone */}
+      <div className="flex items-center justify-between px-3 py-2 border-t border-[var(--color-border-default)] bg-[var(--color-surface-subtle)]">
         <div className="flex items-center gap-3">
-          {/* Container Select */}
-          <ContainerSelect
+          {/* Container Select - Using Design System */}
+          <Select
+            size="sm"
             value={selectedContainer}
-            options={containerOptions}
             onChange={setSelectedContainer}
+            options={containerOptions}
+            placeholder="Container"
           />
 
-          {/* Clear Button */}
-          <button
+          {/* Clear Button - Using Design System */}
+          <Button
+            size="sm"
+            variant="secondary"
             onClick={handleClear}
-            className="px-3 py-1 rounded border border-[#334155] bg-[#1e293b] hover:bg-[#334155] transition-colors text-[12px] text-slate-200"
           >
             Clear
-          </button>
+          </Button>
 
           {/* Download Button */}
-          <button
+          <Button
+            size="sm"
+            variant="ghost"
             onClick={handleDownload}
-            className="p-1.5 rounded border border-[#334155] bg-[#1e293b] hover:bg-[#334155] transition-colors text-slate-400 hover:text-slate-200"
             title="Download logs"
           >
             <IconDownload size={14} stroke={1.5} />
-          </button>
+          </Button>
 
           {/* Connection Status */}
           {activeTab && (
@@ -389,8 +341,14 @@ export function ShellPanel({
         </div>
 
         <div className="flex items-center gap-3">
-          {/* View Time Select */}
-          <ViewTimeSelect value={viewTime} onChange={setViewTime} />
+          {/* View Time Select - Using Design System */}
+          <Select
+            size="sm"
+            value={viewTime}
+            onChange={setViewTime}
+            options={viewTimeOptions}
+            placeholder="View"
+          />
         </div>
       </div>
     </div>
