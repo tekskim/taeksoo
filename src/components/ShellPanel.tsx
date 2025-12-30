@@ -290,7 +290,7 @@ export function ShellPanel({
       {/* Content - Dark background for logs */}
       <div
         ref={contentRef}
-        className="flex-1 overflow-auto p-4 font-mono text-[13px] leading-6 bg-[#0d1117] text-slate-300"
+        className="flex-1 overflow-auto p-4 font-mono text-[13px] leading-6 bg-[#0d1117] text-slate-300 [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-slate-600 [&::-webkit-scrollbar-thumb]:rounded-full"
       >
         {activeTab ? (
           activeTab.content ? (
