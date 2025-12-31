@@ -8,6 +8,11 @@ html {
   color-scheme: light dark;
 }
 
+html, body {
+  overflow: hidden;
+  height: 100%;
+}
+
 /* Smooth transition for theme switching */
 html.theme-transition,
 html.theme-transition *,
