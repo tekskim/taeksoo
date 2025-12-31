@@ -3,6 +3,7 @@ import { useParams, useNavigate, Link } from 'react-router-dom';
 import {
   Button,
   VStack,
+  HStack,
   TabBar,
   TopBar,
   TopBarAction,
@@ -32,6 +33,7 @@ import {
   IconLockOpen,
   IconCopy,
   IconCheck,
+  IconTerminal2,
 } from '@tabler/icons-react';
 
 /* ----------------------------------------
@@ -104,7 +106,7 @@ function CopyButton({ value }: { value: string }) {
       {copied ? (
         <IconCheck size={16} className="text-[var(--color-state-success)]" />
       ) : (
-        <IconCopy size={16} className="text-[var(--color-text-subtle)]" />
+        <IconCopy size={12} className="text-[var(--color-text-subtle)]" />
       )}
     </button>
   );
@@ -123,7 +125,11 @@ export function ServerGroupDetailPage() {
   // Instance search and pagination state
   const [instanceSearchQuery, setInstanceSearchQuery] = useState('');
   const [instanceCurrentPage, setInstanceCurrentPage] = useState(1);
+  const [selectedInstances, setSelectedInstances] = useState<string[]>([]);
   const instancesPerPage = 10;
+  
+  // Preferences state
+  const [isPreferencesOpen, setIsPreferencesOpen] = useState(false);
 
   // In a real app, you would fetch the server group data based on the ID
   const serverGroup = mockServerGroupDetail;
@@ -249,33 +255,46 @@ export function ServerGroupDetailPage() {
       width: '72px',
       align: 'center',
       render: (_, row) => (
-        <ContextMenu
-          items={getInstanceContextMenuItems(row)}
-          trigger={
-            <button
-              className="p-1 rounded hover:bg-[var(--color-surface-hover)] transition-colors"
-              onClick={(e) => e.stopPropagation()}
-            >
-              <IconDotsCircleHorizontal size={16} stroke={1.5} className="text-[var(--color-text-subtle)]" />
-            </button>
-          }
-        />
+        <HStack gap={1} className="justify-center">
+          <button 
+            className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group"
+            onClick={(e) => {
+              e.stopPropagation();
+              console.log('Open console for', row.id);
+            }}
+            title="Open console"
+          >
+            <IconTerminal2 size={16} stroke={1.5} className="text-[var(--action-icon-color)]" />
+          </button>
+          <ContextMenu
+            items={getInstanceContextMenuItems(row)}
+            trigger={
+              <button
+                className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <IconDotsCircleHorizontal size={16} stroke={1.5} className="text-[var(--action-icon-color)]" />
+              </button>
+            }
+          />
+        </HStack>
       ),
     },
   ];
 
   return (
-    <div className="min-h-screen bg-[var(--color-surface-subtle)]">
+    <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
       {/* Sidebar */}
       <Sidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
 
       {/* Main Content */}
       <main
-        className={`min-h-screen bg-[var(--color-surface-default)] transition-[margin] duration-200 overflow-x-auto ${
-          sidebarOpen ? 'ml-[200px]' : 'ml-0'
+        className={`absolute top-0 bottom-0 right-0 flex flex-col bg-[var(--color-surface-default)] transition-[left] duration-200 ${
+          sidebarOpen ? 'left-[200px]' : 'left-0'
         }`}
       >
-        <div className="min-w-[var(--layout-content-min-width)]">
+        {/* Fixed Header Area */}
+        <div className="shrink-0 bg-[var(--color-surface-default)]">
           {/* Tab Bar */}
           <TabBar
             tabs={tabBarTabs}
@@ -303,7 +322,10 @@ export function ServerGroupDetailPage() {
               />
             }
           />
+        </div>
 
+        {/* Scrollable Content Area */}
+        <div className="flex-1 overflow-auto min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll">
           {/* Page Content */}
           <div className="pt-4 px-8 pb-20 bg-[var(--color-surface-default)]">
             <VStack gap={6} className="min-w-[1176px]">
@@ -364,16 +386,15 @@ export function ServerGroupDetailPage() {
                       </div>
 
                       {/* Pagination */}
-                      <div className="flex items-center gap-2">
-                        <Pagination
-                          currentPage={instanceCurrentPage}
-                          totalPages={instanceTotalPages}
-                          onPageChange={setInstanceCurrentPage}
-                        />
-                        <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
-                          {filteredInstances.length} items
-                        </span>
-                      </div>
+                      <Pagination
+                        currentPage={instanceCurrentPage}
+                        totalPages={instanceTotalPages}
+                        onPageChange={setInstanceCurrentPage}
+                        totalItems={filteredInstances.length}
+                        selectedCount={selectedInstances.length}
+                        showSettings
+                        onSettingsClick={() => setIsPreferencesOpen(true)}
+                      />
 
                       {/* Instances Table */}
                       <Table<ServerGroupInstance>
@@ -395,6 +416,11 @@ export function ServerGroupDetailPage() {
 }
 
 export default ServerGroupDetailPage;
+
+
+
+
+
 
 
 

@@ -155,6 +155,9 @@ export function FlavorDetailPage() {
   const [instanceCurrentPage, setInstanceCurrentPage] = useState(1);
   const instancesPerPage = 10;
   
+  // Preferences state
+  const [isPreferencesOpen, setIsPreferencesOpen] = useState(false);
+  
   // In a real app, you would fetch the flavor data based on the ID
   const flavor = mockFlavorDetail;
   const instances = mockFlavorInstances;
@@ -194,12 +197,12 @@ export function FlavorDetailPage() {
 
   // Context menu items for instance actions
   const getInstanceContextMenuItems = (_instance: FlavorInstance): ContextMenuItem[] => [
-    { label: 'View Details', onClick: () => {} },
-    { label: 'Start', onClick: () => {} },
-    { label: 'Stop', onClick: () => {} },
-    { label: 'Restart', onClick: () => {} },
-    { type: 'divider' },
-    { label: 'Delete', onClick: () => {}, danger: true },
+    { id: 'view-details', label: 'View Details', onClick: () => {} },
+    { id: 'start', label: 'Start', onClick: () => {} },
+    { id: 'stop', label: 'Stop', onClick: () => {} },
+    { id: 'restart', label: 'Restart', onClick: () => {} },
+    { id: 'divider1', type: 'divider' },
+    { id: 'delete', label: 'Delete', onClick: () => {}, status: 'danger' },
   ];
 
   // Instance table columns
@@ -277,20 +280,20 @@ export function FlavorDetailPage() {
       render: (_, row) => (
         <div className="flex items-center justify-center gap-1">
           <button
-            className="p-1 rounded hover:bg-[var(--color-surface-hover)] transition-colors"
+            className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group"
             onClick={(e) => e.stopPropagation()}
             title="Console"
           >
-            <IconTerminal2 size={14} stroke={1.5} />
+            <IconTerminal2 size={16} stroke={1.5} className="text-[var(--action-icon-color)]" />
           </button>
           <ContextMenu
             items={getInstanceContextMenuItems(row)}
             trigger={
               <button
-                className="p-1 rounded hover:bg-[var(--color-surface-hover)] transition-colors"
+                className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group"
                 onClick={(e) => e.stopPropagation()}
               >
-                <IconDotsCircleHorizontal size={16} stroke={1.5} />
+                <IconDotsCircleHorizontal size={16} stroke={1.5} className="text-[var(--action-icon-color)]" />
               </button>
             }
           />
@@ -300,32 +303,37 @@ export function FlavorDetailPage() {
   ];
 
   return (
-    <div className="flex min-h-screen bg-[var(--color-surface-subtle)]">
+    <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
       <Sidebar isOpen={sidebarOpen} setIsOpen={setSidebarOpen} />
       <main
-        className={`min-h-screen bg-[var(--color-surface-default)] transition-[margin] duration-200 ${
-          sidebarOpen ? 'ml-[200px]' : 'ml-[var(--sidebar-collapsed-width)]'
-        } flex-1`}
+        className={`absolute top-0 bottom-0 right-0 flex flex-col bg-[var(--color-surface-default)] transition-[left] duration-200 ${
+          sidebarOpen ? 'left-[200px]' : 'left-[var(--sidebar-collapsed-width)]'
+        }`}
       >
-        {/* Top Bar */}
-        <TopBar
-          showSidebarToggle={!sidebarOpen}
-          onSidebarToggle={() => setSidebarOpen(true)}
-          showNavigation={true}
-          onBack={() => navigate('/flavors')}
-          onForward={() => window.history.forward()}
-          breadcrumb={<Breadcrumb items={breadcrumbItems} />}
-          actions={
-            <TopBarAction
-              icon={<IconBell size={16} stroke={1.5} />}
-              aria-label="Notifications"
-              badge={true}
-            />
-          }
-        />
-        <TabBar tabs={tabBarTabs} activeTabId={activeTabId} onTabClick={selectTab} onTabClose={closeTab} />
+        {/* Fixed Header Area */}
+        <div className="shrink-0 bg-[var(--color-surface-default)]">
+          {/* Top Bar */}
+          <TopBar
+            showSidebarToggle={!sidebarOpen}
+            onSidebarToggle={() => setSidebarOpen(true)}
+            showNavigation={true}
+            onBack={() => navigate('/flavors')}
+            onForward={() => window.history.forward()}
+            breadcrumb={<Breadcrumb items={breadcrumbItems} />}
+            actions={
+              <TopBarAction
+                icon={<IconBell size={16} stroke={1.5} />}
+                aria-label="Notifications"
+                badge={true}
+              />
+            }
+          />
+          <TabBar tabs={tabBarTabs} activeTabId={activeTabId} onTabClick={selectTab} onTabClose={closeTab} />
+        </div>
 
-        <div className="pt-4 px-8 pb-20 bg-[var(--color-surface-default)]">
+        {/* Scrollable Content Area */}
+        <div className="flex-1 overflow-auto min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll">
+          <div className="pt-4 px-8 pb-20 bg-[var(--color-surface-default)]">
           <VStack gap={6} className="min-w-[1176px]">
             {/* Flavor Header Card */}
             <DetailHeader>
@@ -424,16 +432,14 @@ export function FlavorDetailPage() {
                     </div>
 
                     {/* Pagination */}
-                    <div className="flex items-center gap-2">
                       <Pagination
                         currentPage={instanceCurrentPage}
                         totalPages={instanceTotalPages}
                         onPageChange={setInstanceCurrentPage}
+                      totalItems={filteredInstances.length}
+                      showSettings
+                      onSettingsClick={() => setIsPreferencesOpen(true)}
                       />
-                      <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
-                        {filteredInstances.length} items
-                      </span>
-                    </div>
 
                     {/* Instances Table */}
                     <Table<FlavorInstance>
@@ -448,8 +454,8 @@ export function FlavorDetailPage() {
                 {/* Parameters Tab Panel */}
                 <TabPanel value="parameters">
                   <div className="pt-6">
-                    <div className="bg-[#0F172A] border border-[var(--color-border-default)] rounded-md p-4 w-full min-h-[576px] overflow-auto">
-                      <pre className="font-mono text-[12px] leading-[18px] text-white whitespace-pre">
+                    <div className="bg-[#141414] dark:bg-[#FAFAFA] border border-[var(--color-border-default)] rounded-md p-4 w-full min-h-[576px] overflow-auto">
+                      <pre className="font-mono text-[12px] leading-[18px] text-[#e2e8f0] dark:text-[#1e293b] whitespace-pre">
 {JSON.stringify(mockFlavorParameters, null, 5)}
                       </pre>
                     </div>
@@ -458,6 +464,7 @@ export function FlavorDetailPage() {
               </Tabs>
             </div>
           </VStack>
+          </div>
         </div>
       </main>
     </div>

@@ -17,7 +17,9 @@ import {
   StatusIndicator,
   SearchInput,
   Pagination,
+  ContextMenu,
   type TableColumn,
+  type ContextMenuItem,
 } from '@/design-system';
 import { Sidebar } from '@/components/Sidebar';
 import { useTabs } from '@/contexts/TabContext';
@@ -151,7 +153,11 @@ export default function RouterDetailPage() {
   // Static route state
   const [routeSearchTerm, setRouteSearchTerm] = useState('');
   const [routeCurrentPage, setRouteCurrentPage] = useState(1);
+  const [selectedRoutes, setSelectedRoutes] = useState<string[]>([]);
   const routesPerPage = 10;
+  
+  // Preferences state
+  const [isPreferencesOpen, setIsPreferencesOpen] = useState(false);
 
   // In a real app, fetch based on id
   const router = mockRouterDetail;
@@ -274,9 +280,20 @@ export default function RouterDetailPage() {
       label: 'Action',
       width: '72px',
       align: 'center',
-      render: () => (
-        <Button variant="tertiary" size="sm" iconOnly icon={<IconDotsCircleHorizontal size={16} stroke={1} />} />
-      ),
+      render: (_: unknown, row: Port) => {
+        const portMenuItems: ContextMenuItem[] = [
+          { id: 'disconnect', label: 'Disconnect', status: 'danger', onClick: () => console.log('Disconnect port', row.id) },
+        ];
+        return (
+          <div onClick={(e) => e.stopPropagation()}>
+            <ContextMenu items={portMenuItems} trigger="click">
+              <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
+                <IconDotsCircleHorizontal size={16} stroke={1.5} className="text-[var(--action-icon-color)]" />
+              </button>
+            </ContextMenu>
+          </div>
+        );
+      },
     },
   ];
 
@@ -299,22 +316,35 @@ export default function RouterDetailPage() {
       label: 'Action',
       width: '72px',
       align: 'center',
-      render: () => (
-        <Button variant="tertiary" size="sm" iconOnly icon={<IconDotsCircleHorizontal size={16} stroke={1} />} />
-      ),
+      render: (_: unknown, row: StaticRoute) => {
+        const routeMenuItems: ContextMenuItem[] = [
+          { id: 'edit', label: 'Edit', onClick: () => console.log('Edit route', row.id) },
+          { id: 'delete', label: 'Delete', status: 'danger', onClick: () => console.log('Delete route', row.id) },
+        ];
+        return (
+          <div onClick={(e) => e.stopPropagation()}>
+            <ContextMenu items={routeMenuItems} trigger="click">
+              <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
+                <IconDotsCircleHorizontal size={16} stroke={1.5} className="text-[var(--action-icon-color)]" />
+              </button>
+            </ContextMenu>
+          </div>
+        );
+      },
     },
   ];
 
   return (
-    <div className="min-h-screen bg-[var(--color-surface-subtle)]">
+    <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
       <Sidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
       
       <main
-        className={`min-h-screen bg-[var(--color-surface-default)] transition-[margin] duration-200 overflow-x-auto ${
-          sidebarOpen ? 'ml-[200px]' : 'ml-0'
+        className={`absolute top-0 bottom-0 right-0 flex flex-col bg-[var(--color-surface-default)] transition-[left] duration-200 ${
+          sidebarOpen ? 'left-[200px]' : 'left-0'
         }`}
       >
-        <div className="min-w-[var(--layout-content-min-width)]">
+        {/* Fixed Header Area */}
+        <div className="shrink-0 bg-[var(--color-surface-default)]">
           {/* Tab Bar */}
           <TabBar
             tabs={tabBarTabs}
@@ -342,7 +372,10 @@ export default function RouterDetailPage() {
               />
             }
           />
+        </div>
 
+        {/* Scrollable Content Area */}
+        <div className="flex-1 overflow-auto min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll">
           {/* Main Content */}
           <div className="pt-4 px-8 pb-20 bg-[var(--color-surface-default)]">
             <VStack gap={8} className="min-w-[1176px] max-w-[1320px]">
@@ -391,7 +424,7 @@ export default function RouterDetailPage() {
                         <SectionCard.Header 
                           title="Basic Information" 
                           actions={
-                            <Button variant="tertiary" size="sm" leftIcon={<IconEdit size={12} />}>
+                            <Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />}>
                               Edit
                             </Button>
                           }
@@ -480,17 +513,15 @@ export default function RouterDetailPage() {
                       </div>
 
                       {/* Pagination */}
-                      <div className="flex items-center gap-2">
-                        <Pagination
-                          currentPage={portCurrentPage}
-                          totalPages={totalPortPages}
-                          onPageChange={setPortCurrentPage}
-                        />
-                        <div className="h-4 w-px bg-[var(--color-border-default)]" />
-                        <span className="text-[length:var(--font-size-12)] text-[var(--color-text-subtle)]">
-                          {filteredPorts.length} items
-                        </span>
-                      </div>
+                      <Pagination
+                        currentPage={portCurrentPage}
+                        totalPages={totalPortPages}
+                        onPageChange={setPortCurrentPage}
+                        totalItems={filteredPorts.length}
+                        selectedCount={selectedPorts.length}
+                        showSettings
+                        onSettingsClick={() => setIsPreferencesOpen(true)}
+                      />
 
                       {/* Table */}
                       <Table
@@ -544,17 +575,15 @@ export default function RouterDetailPage() {
                       </div>
 
                       {/* Pagination */}
-                      <div className="flex items-center gap-2">
-                        <Pagination
-                          currentPage={routeCurrentPage}
-                          totalPages={totalRoutePages}
-                          onPageChange={setRouteCurrentPage}
-                        />
-                        <div className="h-4 w-px bg-[var(--color-border-default)]" />
-                        <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
-                          {filteredRoutes.length} items
-                        </span>
-                      </div>
+                      <Pagination
+                        currentPage={routeCurrentPage}
+                        totalPages={totalRoutePages}
+                        onPageChange={setRouteCurrentPage}
+                        totalItems={filteredRoutes.length}
+                        selectedCount={selectedRoutes.length}
+                        showSettings
+                        onSettingsClick={() => setIsPreferencesOpen(true)}
+                      />
 
                       {/* Table */}
                       <Table

@@ -155,15 +155,16 @@ export function ConsolePage() {
   }, [content, instanceName]);
 
   return (
-    <div className="min-h-screen bg-[var(--color-surface-subtle)]">
+    <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
       <Sidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
       
       <main
-        className={`min-h-screen bg-[var(--color-surface-default)] transition-[margin] duration-200 overflow-x-auto ${
-          sidebarOpen ? 'ml-[200px]' : 'ml-[48px]'
+        className={`absolute top-0 bottom-0 right-0 flex flex-col bg-[var(--color-surface-default)] transition-[left] duration-200 ${
+          sidebarOpen ? 'left-[200px]' : 'left-[48px]'
         }`}
       >
-        <div className="min-w-[var(--layout-content-min-width)]">
+        {/* Fixed Header Area */}
+        <div className="shrink-0 bg-[var(--color-surface-default)]">
           {/* Tab Bar */}
           <TabBar
             tabs={tabBarTabs}
@@ -174,6 +175,7 @@ export function ConsolePage() {
             showAddButton={true}
             showWindowControls={true}
           />
+        </div>
           
           {/* Console Content */}
           <div className="flex flex-col h-[calc(100vh-var(--tabbar-height))]">
@@ -247,7 +249,6 @@ export function ConsolePage() {
               </div>
             </div>
           </div>
-        </div>
       </main>
     </div>
   );

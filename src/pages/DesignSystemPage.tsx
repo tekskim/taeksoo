@@ -1387,17 +1387,14 @@ function QuotaBarDemo({ label, used, total, unit }: { label: string; used: numbe
   const getColors = () => {
     if (percentage >= 100) return {
       bg: 'bg-[var(--color-status-error)]/15',
-      dot: 'bg-[var(--color-status-error)]',
       text: 'text-[var(--color-status-error)]'
     };
     if (percentage >= 70) return {
       bg: 'bg-[var(--color-status-warning)]/15',
-      dot: 'bg-[var(--color-status-warning)]',
       text: 'text-[var(--color-status-warning)]'
     };
     return {
       bg: 'bg-[var(--color-status-success)]/15',
-      dot: 'bg-[var(--color-status-success)]',
       text: 'text-[var(--color-status-success)]'
     };
   };
@@ -1411,7 +1408,6 @@ function QuotaBarDemo({ label, used, total, unit }: { label: string; used: numbe
         <div className="flex items-center gap-2">
           <span className="text-[11px] text-[var(--color-text-muted)]">{used}/{total} {unit}</span>
           <div className={`flex items-center gap-1 px-1.5 py-0.5 rounded-md ${colors.bg}`}>
-            <div className={`w-2 h-2 rounded-full ${colors.dot}`} />
             <span className={`text-[11px] font-medium ${colors.text}`}>{percentage}%</span>
           </div>
         </div>
@@ -1868,7 +1864,7 @@ function TableDemo() {
       width: '70px',
       align: 'center' as const,
       render: (value: boolean) => value ? (
-        <IconLock size={16} stroke={1} className="text-[var(--color-text-default)]" />
+        <IconLock size={16} stroke={1.5} className="text-[var(--color-text-default)]" />
       ) : null
     },
     { key: 'fixedIp', label: 'Fixed IP', sortable: true, width: '120px' },
@@ -1903,10 +1899,10 @@ function TableDemo() {
       render: () => (
         <div className="flex items-center gap-1">
           <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors text-[var(--color-text-subtle)] hover:text-[var(--color-text-default)]">
-            <IconTerminal2 size={16} stroke={1} />
+            <IconTerminal2 size={16} stroke={1.5} />
           </button>
           <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors text-[var(--color-text-subtle)] hover:text-[var(--color-text-default)]">
-            <IconDotsVertical size={16} stroke={1} />
+            <IconDotsVertical size={16} stroke={1.5} />
           </button>
         </div>
       )
@@ -2228,9 +2224,9 @@ export function DesignSystemPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[var(--color-surface-subtle)]">
+    <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
       {/* Left Sidebar Navigation */}
-      <nav className="fixed left-0 top-0 w-[200px] h-screen bg-[var(--color-surface-default)] border-r border-[var(--color-border-default)] overflow-y-auto z-50">
+      <nav className="fixed left-0 top-0 w-[200px] h-screen bg-[var(--color-surface-default)] border-r border-[var(--color-border-default)] overflow-y-auto z-50 sidebar-scroll">
         <div className="p-4">
           {/* Logo */}
           <Link to="/" className="flex items-center gap-2 mb-4">
@@ -2451,8 +2447,8 @@ export function DesignSystemPage() {
       </nav>
 
       {/* Main Content */}
-      <main className="ml-[200px] py-12 px-8 overflow-x-auto">
-        <div className="min-w-[var(--layout-content-min-width)]">
+      <main className="ml-[200px] h-screen overflow-y-auto overflow-x-auto sidebar-scroll">
+        <div className="min-w-[var(--layout-content-min-width)] py-12 px-8">
         <div className="max-w-[1000px] mx-auto">
           <VStack gap={12} align="stretch">
             {/* Header */}
@@ -5164,7 +5160,7 @@ outline: 2px solid var(--color-border-focus);`}
                   <SectionCard>
                     <SectionCard.Header 
                       title="Basic Information" 
-                      actions={<Button variant="secondary" size="sm" leftIcon={<IconEdit size={16} />}>Edit</Button>}
+                      actions={<Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />}>Edit</Button>}
                     />
                     <SectionCard.Content>
                       <SectionCard.DataRow label="Instance Name" value="web-server-01" />
@@ -5192,7 +5188,7 @@ outline: 2px solid var(--color-border-focus);`}
                     <SectionCard>
                       <SectionCard.Header 
                         title="Basic Information" 
-                        actions={<Button variant="secondary" size="sm" leftIcon={<IconEdit size={16} />}>Edit</Button>}
+                        actions={<Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />}>Edit</Button>}
                       />
                       <SectionCard.Content>
                         <SectionCard.DataRow label="Instance Name" value="tk-test" />
@@ -5788,7 +5784,7 @@ outline: 2px solid var(--color-border-focus);`}
                   <Label>Status Variants</Label>
                   <div className="flex items-center gap-8 flex-wrap">
                     <HalfDoughnutChartDemo value={35} label="Safe" status="success" />
-                    <HalfDoughnutChartDemo value={75} label="Warning" status="warning" />
+                    <HalfDoughnutChartDemo value={85} label="Warning" status="warning" />
                     <HalfDoughnutChartDemo value={95} label="Danger" status="error" />
                   </div>
                 </VStack>
@@ -5807,7 +5803,7 @@ outline: 2px solid var(--color-border-focus);`}
           className="fixed bottom-6 right-6 w-10 h-10 bg-[var(--color-action-primary)] hover:bg-[var(--color-action-primary-hover)] text-white rounded-full shadow-lg flex items-center justify-center transition-all duration-200 hover:scale-110 z-50"
           aria-label="Scroll to top"
         >
-          <IconChevronUp size={20} stroke={2} />
+          <IconChevronUp size={20} stroke={1.5} />
         </button>
       )}
     </div>

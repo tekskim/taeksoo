@@ -153,6 +153,9 @@ export default function SubnetDetailPage() {
   const [selectedPorts, setSelectedPorts] = useState<string[]>([]);
   const portsPerPage = 10;
 
+  // Preferences state
+  const [isPreferencesOpen, setIsPreferencesOpen] = useState(false);
+
   // In a real app, fetch based on id
   const subnet = id && mockSubnets[id] ? mockSubnets[id] : mockSubnetDetail;
 
@@ -307,17 +310,18 @@ export default function SubnetDetailPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-[var(--color-surface-subtle)]">
+    <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
       {/* Sidebar */}
       <Sidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
 
       {/* Main Content */}
       <main
-        className={`min-h-screen bg-[var(--color-surface-default)] transition-[margin] duration-200 overflow-x-auto ${
-          sidebarOpen ? 'ml-[200px]' : 'ml-0'
+        className={`absolute top-0 bottom-0 right-0 flex flex-col bg-[var(--color-surface-default)] transition-[left] duration-200 ${
+          sidebarOpen ? 'left-[200px]' : 'left-0'
         }`}
       >
-        <div className="min-w-[var(--layout-content-min-width)]">
+        {/* Fixed Header Area */}
+        <div className="shrink-0 bg-[var(--color-surface-default)]">
           {/* Tab Bar */}
           <TabBar
             tabs={tabBarTabs}
@@ -344,7 +348,10 @@ export default function SubnetDetailPage() {
               />
             }
           />
+        </div>
 
+        {/* Scrollable Content Area */}
+        <div className="flex-1 overflow-auto min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll">
           {/* Page Content */}
           <div className="pt-4 px-8 pb-20 bg-[var(--color-surface-default)]">
             <VStack gap={8} className="min-w-[1176px] max-w-[1320px]">
@@ -471,17 +478,15 @@ export default function SubnetDetailPage() {
                       </div>
 
                       {/* Pagination */}
-                      <div className="flex items-center gap-2">
-                        <Pagination
-                          currentPage={portCurrentPage}
-                          totalPages={totalPortPages}
-                          onPageChange={setPortCurrentPage}
-                        />
-                        <div className="h-4 w-px bg-[var(--color-border-default)]" />
-                        <span className="text-[length:var(--font-size-12)] text-[var(--color-text-subtle)]">
-                          {filteredPorts.length} items
-                        </span>
-                      </div>
+                      <Pagination
+                        currentPage={portCurrentPage}
+                        totalPages={totalPortPages}
+                        onPageChange={setPortCurrentPage}
+                        totalItems={filteredPorts.length}
+                        selectedCount={selectedPorts.length}
+                        showSettings
+                        onSettingsClick={() => setIsPreferencesOpen(true)}
+                      />
 
                       {/* Table */}
                       <Table
