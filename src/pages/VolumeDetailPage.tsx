@@ -257,14 +257,14 @@ export function VolumeDetailPage() {
       flex: 1,
       render: (_, row) => (
         <div className="flex flex-col gap-0.5">
-          <Link
-            to={`/volume-snapshots/${row.id}`}
-            className="inline-flex items-center gap-1.5 font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
-            onClick={(e) => e.stopPropagation()}
-          >
-            {row.name}
-            <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
-          </Link>
+        <Link
+          to={`/volume-snapshots/${row.id}`}
+          className="inline-flex items-center gap-1.5 font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
+          onClick={(e) => e.stopPropagation()}
+        >
+          {row.name}
+          <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
+        </Link>
           <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
             ID : {row.id}
           </span>
@@ -325,14 +325,14 @@ export function VolumeDetailPage() {
       flex: 1,
       render: (_, row) => (
         <div className="flex flex-col gap-0.5">
-          <Link
-            to={`/volume-backups/${row.id}`}
-            className="inline-flex items-center gap-1.5 font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
-            onClick={(e) => e.stopPropagation()}
-          >
-            {row.name}
-            <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
-          </Link>
+        <Link
+          to={`/volume-backups/${row.id}`}
+          className="inline-flex items-center gap-1.5 font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
+          onClick={(e) => e.stopPropagation()}
+        >
+          {row.name}
+          <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
+        </Link>
           <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
             ID : {row.id}
           </span>
@@ -392,28 +392,28 @@ export function VolumeDetailPage() {
       >
         {/* Fixed Header Area */}
         <div className="shrink-0 bg-[var(--color-surface-default)]">
-          {/* Top Bar */}
-          <TopBar
-            showSidebarToggle={!sidebarOpen}
-            onSidebarToggle={() => setSidebarOpen(true)}
-            showNavigation={true}
-            onBack={() => navigate('/volumes')}
-            onForward={() => window.history.forward()}
-            breadcrumb={<Breadcrumb items={breadcrumbItems} />}
-            actions={
-              <TopBarAction
-                icon={<IconBell size={16} stroke={1.5} />}
-                aria-label="Notifications"
-                badge={true}
-              />
-            }
-          />
-          <TabBar tabs={tabBarTabs} activeTabId={activeTabId} onTabClick={selectTab} onTabClose={closeTab} />
+        {/* Top Bar */}
+        <TopBar
+          showSidebarToggle={!sidebarOpen}
+          onSidebarToggle={() => setSidebarOpen(true)}
+          showNavigation={true}
+          onBack={() => navigate('/volumes')}
+          onForward={() => window.history.forward()}
+          breadcrumb={<Breadcrumb items={breadcrumbItems} />}
+          actions={
+            <TopBarAction
+              icon={<IconBell size={16} stroke={1.5} />}
+              aria-label="Notifications"
+              badge={true}
+            />
+          }
+        />
+        <TabBar tabs={tabBarTabs} activeTabId={activeTabId} onTabClick={selectTab} onTabClose={closeTab} />
         </div>
 
         {/* Scrollable Content Area */}
         <div className="flex-1 overflow-auto min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll">
-          <div className="pt-4 px-8 pb-20 bg-[var(--color-surface-default)]">
+        <div className="pt-4 px-8 pb-20 bg-[var(--color-surface-default)]">
           <VStack gap={6} className="min-w-[1176px]">
             {/* Volume Header Card */}
             <DetailHeader>

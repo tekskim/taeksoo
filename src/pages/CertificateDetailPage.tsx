@@ -551,14 +551,14 @@ export default function CertificateDetailPage() {
                       </div>
 
                       {/* Pagination */}
-                      <Pagination
-                        currentPage={listenerCurrentPage}
-                        totalPages={totalListenerPages}
-                        onPageChange={setListenerCurrentPage}
+                        <Pagination
+                          currentPage={listenerCurrentPage}
+                          totalPages={totalListenerPages}
+                          onPageChange={setListenerCurrentPage}
                         totalItems={filteredListeners.length}
                         showSettings
                         onSettingsClick={() => setIsPreferencesOpen(true)}
-                      />
+                        />
 
                       {/* Table */}
                       <Table

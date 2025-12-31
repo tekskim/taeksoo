@@ -231,7 +231,7 @@ export default function SubnetDetailPage() {
       label: 'Attached To',
       flex: 1,
       render: (_, row) => row.attachedTo ? (
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between w-full">
           <div className="flex flex-col gap-0.5">
             <Link
               to={row.attachedTo.type === 'router' ? `/routers/${row.attachedTo.id}` : `/instances/${row.attachedTo.id}`}
@@ -478,24 +478,21 @@ export default function SubnetDetailPage() {
                       </div>
 
                       {/* Pagination */}
-                      <Pagination
-                        currentPage={portCurrentPage}
-                        totalPages={totalPortPages}
-                        onPageChange={setPortCurrentPage}
+                        <Pagination
+                          currentPage={portCurrentPage}
+                          totalPages={totalPortPages}
+                          onPageChange={setPortCurrentPage}
                         totalItems={filteredPorts.length}
                         selectedCount={selectedPorts.length}
                         showSettings
                         onSettingsClick={() => setIsPreferencesOpen(true)}
-                      />
+                        />
 
                       {/* Table */}
                       <Table
                         columns={portColumns}
                         data={paginatedPorts}
                         rowKey="id"
-                        selectable
-                        selectedRows={selectedPorts}
-                        onSelectionChange={setSelectedPorts}
                       />
                     </VStack>
                   </TabPanel>

@@ -428,15 +428,15 @@ export default function L7PolicyDetailPage() {
                       </div>
 
                       {/* Pagination */}
-                      <Pagination
-                        currentPage={l7RuleCurrentPage}
-                        totalPages={totalL7RulePages}
-                        onPageChange={setL7RuleCurrentPage}
+                        <Pagination
+                          currentPage={l7RuleCurrentPage}
+                          totalPages={totalL7RulePages}
+                          onPageChange={setL7RuleCurrentPage}
                         totalItems={filteredL7Rules.length}
                         selectedCount={selectedL7Rules.length}
                         showSettings
                         onSettingsClick={() => setIsPreferencesOpen(true)}
-                      />
+                        />
 
                       {/* Table */}
                       <Table

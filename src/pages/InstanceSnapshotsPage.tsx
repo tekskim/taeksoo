@@ -201,13 +201,13 @@ export function InstanceSnapshotsPage() {
       sortable: true,
       render: (_, row) => (
         <div className="flex flex-col gap-0.5">
-          <Link
-            to={`/instance-snapshots/${row.id}`}
-            className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
-            onClick={(e) => e.stopPropagation()}
-          >
-            {row.name}
-          </Link>
+        <Link
+          to={`/instance-snapshots/${row.id}`}
+          className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
+          onClick={(e) => e.stopPropagation()}
+        >
+          {row.name}
+        </Link>
           <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
             ID : {row.id}
           </span>
@@ -326,46 +326,46 @@ export function InstanceSnapshotsPage() {
       >
         {/* Fixed Header Area */}
         <div className="shrink-0 bg-[var(--color-surface-default)]">
-          {/* Tab Bar */}
-          <TabBar
-            tabs={tabBarTabs}
-            activeTab={activeTabId}
-            onTabChange={selectTab}
-            onTabClose={closeTab}
-            onTabAdd={addNewTab}
-            showAddButton={true}
-            showWindowControls={true}
-          />
+        {/* Tab Bar */}
+        <TabBar
+          tabs={tabBarTabs}
+          activeTab={activeTabId}
+          onTabChange={selectTab}
+          onTabClose={closeTab}
+          onTabAdd={addNewTab}
+          showAddButton={true}
+          showWindowControls={true}
+        />
 
-          {/* Top Bar with Breadcrumb Navigation */}
-          <TopBar
-            showSidebarToggle={!sidebarOpen}
-            onSidebarToggle={() => setSidebarOpen(true)}
-            showNavigation={true}
-            onBack={() => window.history.back()}
-            onForward={() => window.history.forward()}
-            breadcrumb={
-              <Breadcrumb
-                items={[
-                  { label: 'Proj-1', href: '/project' },
-                  { label: 'Instance Snapshots' },
-                ]}
-              />
-            }
-            actions={
-              <TopBarAction
-                icon={<IconBell size={16} stroke={1.5} />}
-                aria-label="Notifications"
-                badge={true}
-              />
-            }
-          />
+        {/* Top Bar with Breadcrumb Navigation */}
+        <TopBar
+          showSidebarToggle={!sidebarOpen}
+          onSidebarToggle={() => setSidebarOpen(true)}
+          showNavigation={true}
+          onBack={() => window.history.back()}
+          onForward={() => window.history.forward()}
+          breadcrumb={
+            <Breadcrumb
+              items={[
+                { label: 'Proj-1', href: '/project' },
+                { label: 'Instance Snapshots' },
+              ]}
+            />
+          }
+          actions={
+            <TopBarAction
+              icon={<IconBell size={16} stroke={1.5} />}
+              aria-label="Notifications"
+              badge={true}
+            />
+          }
+        />
         </div>
 
         {/* Scrollable Content Area */}
         <div className="flex-1 overflow-auto min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll">
-          {/* Page Content */}
-          <div className="pt-4 px-8 pb-6 bg-[var(--color-surface-default)]">
+        {/* Page Content */}
+        <div className="pt-4 px-8 pb-6 bg-[var(--color-surface-default)]">
           <VStack gap={3}>
             {/* Page Header */}
             <div className="flex items-center justify-between h-8">
