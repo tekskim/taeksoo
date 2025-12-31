@@ -294,6 +294,7 @@ export default function CertificateDetailPage() {
       key: 'loadBalancer',
       label: 'Load Balancer',
       flex: 1,
+      sortable: true,
       render: (_, row) => (
         <div className="flex flex-col gap-0.5">
           <Link

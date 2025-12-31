@@ -89,11 +89,11 @@ export function SecurityGroupsPage() {
   const [rowsPerPage, setRowsPerPage] = useState(10);
 
   const defaultColumnConfig: ColumnConfig[] = [
-    { id: 'status', label: 'Status', visible: true, locked: true },
     { id: 'name', label: 'Name', visible: true, locked: true },
     { id: 'description', label: 'Description', visible: true },
     { id: 'ingressRules', label: 'Ingress Rules', visible: true },
     { id: 'egressRules', label: 'Egress Rules', visible: true },
+    { id: 'createdAt', label: 'Created At', visible: true },
     { id: 'actions', label: 'Action', visible: true, locked: true },
   ];
 
@@ -137,18 +137,10 @@ export function SecurityGroupsPage() {
   // Table columns
   const columns: TableColumn<SecurityGroup>[] = [
     {
-      key: 'status',
-      label: 'Status',
-      width: '59px',
-      align: 'center',
-      render: (_, row) => (
-        <StatusIndicator status={sgStatusMap[row.status]} layout="icon-only" />
-      ),
-    },
-    {
       key: 'name',
       label: 'Name',
       flex: 1,
+      sortable: true,
       render: (_, row) => (
         <div className="flex flex-col gap-0.5">
           <Link
@@ -168,16 +160,25 @@ export function SecurityGroupsPage() {
       key: 'description',
       label: 'Description',
       flex: 1,
+      sortable: true,
     },
     {
       key: 'ingressRules',
       label: 'Ingress Rules',
-      width: '112px',
+      flex: 1,
+      sortable: true,
     },
     {
       key: 'egressRules',
       label: 'Egress Rules',
-      width: '109px',
+      flex: 1,
+      sortable: true,
+    },
+    {
+      key: 'createdAt',
+      label: 'Created At',
+      flex: 1,
+      sortable: true,
     },
     {
       key: 'actions',
@@ -219,7 +220,7 @@ export function SecurityGroupsPage() {
 
   return (
     <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
-      <Sidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(false)} />
+      <Sidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(prev => !prev)} />
 
       <main
         className={`absolute top-0 bottom-0 right-0 flex flex-col bg-[var(--color-surface-default)] transition-[left] duration-200 ${
