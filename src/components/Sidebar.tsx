@@ -93,11 +93,12 @@ export function Sidebar({ isOpen = true, onToggle }: SidebarProps) {
           className="h-4"
         />
         <button 
+          type="button"
           onClick={onToggle}
-          className="p-1 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+          className="p-1 hover:bg-[var(--color-surface-muted)] rounded transition-colors cursor-pointer"
           aria-label="Toggle sidebar"
         >
-          <IconLayoutSidebar size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
+          <IconLayoutSidebar size={16} className="text-[var(--color-text-muted)] pointer-events-none" stroke={1.5} />
         </button>
       </div>
 

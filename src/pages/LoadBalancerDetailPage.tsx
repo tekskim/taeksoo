@@ -111,6 +111,7 @@ export function LoadBalancerDetailPage() {
   const { tabs, activeTabId, closeTab, selectTab, addNewTab } = useTabs();
   const [activeTab, setActiveTab] = useState('details');
   const [isCopied, setIsCopied] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(true);
   
   // Listeners state
   const [listenerSearchTerm, setListenerSearchTerm] = useState('');
@@ -233,8 +234,8 @@ export function LoadBalancerDetailPage() {
 
   return (
     <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
-      <Sidebar />
-      <main className="absolute top-0 bottom-0 right-0 left-[200px] flex flex-col bg-[var(--color-surface-default)] transition-[left] duration-200">
+      <Sidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(prev => !prev)} />
+      <main className={`absolute top-0 bottom-0 right-0 flex flex-col bg-[var(--color-surface-default)] transition-[left] duration-200 ${sidebarOpen ? 'left-[200px]' : 'left-0'}`}>
         {/* Fixed Header Area */}
         <div className="shrink-0 bg-[var(--color-surface-default)]">
           {/* Tab Bar */}
@@ -250,6 +251,8 @@ export function LoadBalancerDetailPage() {
 
           {/* Top Bar with Breadcrumb */}
           <TopBar
+            showSidebarToggle={!sidebarOpen}
+            onSidebarToggle={() => setSidebarOpen(true)}
             showNavigation={true}
             onBack={() => window.history.back()}
             onForward={() => window.history.forward()}

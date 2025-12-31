@@ -209,7 +209,6 @@ export default function SecurityGroupDetailPage() {
       key: 'name',
       label: 'Name',
       flex: 1,
-      sortable: true,
       render: (_, row) => (
         <Link
           to={`/networks/${row.id}`}
@@ -224,7 +223,6 @@ export default function SecurityGroupDetailPage() {
       key: 'subnet',
       label: 'Subnet',
       flex: 1,
-      sortable: true,
     },
     {
       key: 'dhcp',
@@ -276,13 +274,11 @@ export default function SecurityGroupDetailPage() {
       key: 'remote',
       label: 'Remote',
       flex: 1,
-      sortable: true,
     },
     {
       key: 'icmpTypeCode',
       label: 'ICMP Type/Code',
       flex: 1,
-      sortable: true,
     },
     {
       key: 'actions',
@@ -303,7 +299,7 @@ export default function SecurityGroupDetailPage() {
 
   return (
     <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
-      <Sidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(false)} />
+      <Sidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(prev => !prev)} />
 
       <main
         className={`absolute top-0 bottom-0 right-0 flex flex-col bg-[var(--color-surface-default)] transition-[left] duration-200 ${
