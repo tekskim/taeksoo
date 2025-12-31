@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useMemo, useEffect, useRef, useLayoutEffect } from 'react';
 import {
   Button,
   SearchInput,
@@ -23,8 +23,8 @@ import {
 } from '@/design-system';
 import { Sidebar } from '@/components/Sidebar';
 import { useTabs } from '@/contexts/TabContext';
-import { useSidebar } from '@/contexts/SidebarContext';
 import {
+  IconPlus,
   IconDotsCircleHorizontal,
   IconPlayerPlay,
   IconPlayerStop,
@@ -95,16 +95,6 @@ const mockInstances: Instance[] = [
   { id: 'vm-008', name: 'web-server-02', status: 'building', locked: false, fixedIp: '-', floatingIp: '-', image: 'Rocky Linux 9', flavor: 'Small', vcpu: 2, ram: '4GB', disk: '50GB', gpu: '-', az: 'keystone' },
   { id: 'vm-009', name: 'analytics-01', status: 'error', locked: true, fixedIp: '10.20.30.80', floatingIp: '-', image: 'Debian 12', flavor: 'XLarge', vcpu: 16, ram: '32GB', disk: '500GB', gpu: '2', az: 'nova' },
   { id: 'vm-010', name: 'cache-server-01', status: 'running', locked: false, fixedIp: '10.20.30.90', floatingIp: '20.30.40.90', image: 'Debian 12', flavor: 'Medium', vcpu: 4, ram: '16GB', disk: '100GB', gpu: '-', az: 'keystone' },
-  { id: 'vm-011', name: 'api-server-01', status: 'running', locked: false, fixedIp: '10.20.30.100', floatingIp: '20.30.40.100', image: 'Ubuntu 22.04', flavor: 'Medium', vcpu: 4, ram: '8GB', disk: '100GB', gpu: '-', az: 'nova' },
-  { id: 'vm-012', name: 'api-server-02', status: 'running', locked: true, fixedIp: '10.20.30.101', floatingIp: '20.30.40.101', image: 'Ubuntu 22.04', flavor: 'Medium', vcpu: 4, ram: '8GB', disk: '100GB', gpu: '-', az: 'nova' },
-  { id: 'vm-013', name: 'monitoring-01', status: 'running', locked: false, fixedIp: '10.20.30.110', floatingIp: '-', image: 'CentOS 8', flavor: 'Large', vcpu: 8, ram: '16GB', disk: '200GB', gpu: '-', az: 'keystone' },
-  { id: 'vm-014', name: 'logging-01', status: 'running', locked: false, fixedIp: '10.20.30.111', floatingIp: '-', image: 'CentOS 8', flavor: 'Large', vcpu: 8, ram: '32GB', disk: '500GB', gpu: '-', az: 'keystone' },
-  { id: 'vm-015', name: 'etcd-01', status: 'running', locked: true, fixedIp: '10.20.30.120', floatingIp: '-', image: 'Ubuntu 22.04', flavor: 'Small', vcpu: 2, ram: '4GB', disk: '50GB', gpu: '-', az: 'nova' },
-  { id: 'vm-016', name: 'etcd-02', status: 'running', locked: true, fixedIp: '10.20.30.121', floatingIp: '-', image: 'Ubuntu 22.04', flavor: 'Small', vcpu: 2, ram: '4GB', disk: '50GB', gpu: '-', az: 'nova' },
-  { id: 'vm-017', name: 'etcd-03', status: 'stopped', locked: true, fixedIp: '10.20.30.122', floatingIp: '-', image: 'Ubuntu 22.04', flavor: 'Small', vcpu: 2, ram: '4GB', disk: '50GB', gpu: '-', az: 'keystone' },
-  { id: 'vm-018', name: 'ml-training-01', status: 'running', locked: false, fixedIp: '10.20.30.130', floatingIp: '20.30.40.130', image: 'Ubuntu 22.04', flavor: 'GPU Large', vcpu: 32, ram: '256GB', disk: '2TB', gpu: '8', az: 'nova' },
-  { id: 'vm-019', name: 'dev-server-01', status: 'running', locked: false, fixedIp: '10.20.30.140', floatingIp: '20.30.40.140', image: 'Rocky Linux 9', flavor: 'Medium', vcpu: 4, ram: '8GB', disk: '100GB', gpu: '-', az: 'keystone' },
-  { id: 'vm-020', name: 'staging-server-01', status: 'pending', locked: false, fixedIp: '-', floatingIp: '-', image: 'Rocky Linux 9', flavor: 'Large', vcpu: 8, ram: '16GB', disk: '200GB', gpu: '-', az: 'keystone' },
 ];
 
 const mockBareMetalInstances: BareMetalInstance[] = [
@@ -139,7 +129,7 @@ const statusMap: Record<InstanceStatus, StatusType> = {
 // Filter type is imported from design-system as FilterItem
 
 export function InstanceListPage() {
-  const { isOpen: sidebarOpen, open: openSidebar, close: closeSidebar } = useSidebar();
+  const [sidebarOpen, setSidebarOpen] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [currentBareMetalPage, setCurrentBareMetalPage] = useState(1);
@@ -182,6 +172,24 @@ export function InstanceListPage() {
   const shellPanel = useShellPanel();
   const navigate = useNavigate();
   const { addTab } = useTabs();
+  
+  // Scroll container ref for maintaining scroll position
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const scrollPositionRef = useRef(0);
+
+  // Preserve scroll position when shell panel opens
+  useLayoutEffect(() => {
+    const container = scrollContainerRef.current;
+    if (!container) return;
+    
+    if (shellPanel.isExpanded) {
+      // When panel opens, restore scroll position
+      container.scrollTop = scrollPositionRef.current;
+    } else {
+      // When panel closes, save current scroll position
+      scrollPositionRef.current = container.scrollTop;
+    }
+  }, [shellPanel.isExpanded]);
 
   // Handle opening shell tab in new browser tab
   const handleOpenInNewTab = (tab: ShellTab) => {
@@ -657,15 +665,16 @@ export function InstanceListPage() {
   ];
 
   return (
-    <>
-    <div className="h-screen bg-[var(--color-surface-subtle)] flex">
+    <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
       {/* Sidebar */}
-      <Sidebar isOpen={sidebarOpen} onToggle={closeSidebar} />
+      <Sidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(false)} />
 
       {/* Main Content */}
-      <main className={`flex-1 flex flex-col bg-[var(--color-surface-default)] transition-[margin] duration-200 ${sidebarOpen ? 'ml-[200px]' : 'ml-0'}`}>
-        {/* Fixed Header */}
-        <div className="shrink-0 bg-[var(--color-surface-default)] z-30">
+      <main 
+        className={`absolute top-0 bottom-0 right-0 flex flex-col bg-[var(--color-surface-default)] transition-[left] duration-200 ${sidebarOpen ? 'left-[200px]' : 'left-0'}`}
+      >
+        {/* Fixed Header Area */}
+        <div className="shrink-0 bg-[var(--color-surface-default)]">
           {/* Tab Bar */}
           <TabBar
             tabs={tabBarTabs}
@@ -680,11 +689,10 @@ export function InstanceListPage() {
           {/* Top Bar with Breadcrumb Navigation */}
           <TopBar
             showSidebarToggle={!sidebarOpen}
-            onSidebarToggle={openSidebar}
+            onSidebarToggle={() => setSidebarOpen(true)}
             showNavigation={true}
             onBack={() => window.history.back()}
             onForward={() => window.history.forward()}
-            canGoForward={false}
             breadcrumb={
               <Breadcrumb
                 items={[
@@ -703,8 +711,12 @@ export function InstanceListPage() {
           />
         </div>
 
-        {/* Scrollable Content */}
-        <div className="flex-1 overflow-auto min-w-[var(--layout-content-min-width)] sidebar-scroll">
+        {/* Scrollable Content Area */}
+        <div 
+          ref={scrollContainerRef}
+          className="flex-1 overflow-auto min-w-[var(--layout-content-min-width)] overscroll-contain"
+          style={{ paddingBottom: shellPanel.isExpanded ? '350px' : '0' }}
+        >
 
         {/* Page Content */}
         <div className="pt-4 px-8 pb-6 bg-[var(--color-surface-default)]">
@@ -714,7 +726,7 @@ export function InstanceListPage() {
               <h1 className="text-[length:var(--font-size-16)] font-semibold text-[var(--color-text-default)]">
                 Instances List
               </h1>
-              <Button>
+              <Button leftIcon={<IconPlus size={16} />}>
                 Create Instance
               </Button>
             </div>
@@ -774,7 +786,6 @@ export function InstanceListPage() {
                 showSettings
                 onSettingsClick={() => setIsPreferencesOpen(true)}
                 totalItems={mockInstances.length}
-                selectedCount={selectedInstances.length}
               />
             )}
             {activeTab === 'bare-metal' && filteredBareMetalInstances.length > 0 && (
@@ -816,9 +827,8 @@ export function InstanceListPage() {
 
           </VStack>
         </div>
-        </div>
+      </div>
       </main>
-    </div>
 
       {/* Scroll to Top Button */}
       {showScrollTop && (
@@ -898,7 +908,7 @@ export function InstanceListPage() {
         initialHeight={350}
         minHeight={300}
       />
-    </>
+    </div>
   );
 }
 
