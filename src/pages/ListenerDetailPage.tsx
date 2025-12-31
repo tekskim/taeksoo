@@ -717,15 +717,15 @@ export default function ListenerDetailPage() {
                       </div>
 
                       {/* Pagination */}
-                      <Pagination
-                        currentPage={poolCurrentPage}
-                        totalPages={totalPoolPages}
-                        onPageChange={setPoolCurrentPage}
+                        <Pagination
+                          currentPage={poolCurrentPage}
+                          totalPages={totalPoolPages}
+                          onPageChange={setPoolCurrentPage}
                         totalItems={filteredPools.length}
                         selectedCount={selectedPools.length}
                         showSettings
                         onSettingsClick={() => setIsPreferencesOpen(true)}
-                      />
+                        />
 
                       {/* Table */}
                       <Table
@@ -776,15 +776,15 @@ export default function ListenerDetailPage() {
                       </div>
 
                       {/* Pagination */}
-                      <Pagination
-                        currentPage={l7PolicyCurrentPage}
-                        totalPages={totalL7PolicyPages}
-                        onPageChange={setL7PolicyCurrentPage}
+                        <Pagination
+                          currentPage={l7PolicyCurrentPage}
+                          totalPages={totalL7PolicyPages}
+                          onPageChange={setL7PolicyCurrentPage}
                         totalItems={filteredL7Policies.length}
                         selectedCount={selectedL7Policies.length}
                         showSettings
                         onSettingsClick={() => setIsPreferencesOpen(true)}
-                      />
+                        />
 
                       {/* Table */}
                       <Table
@@ -835,14 +835,14 @@ export default function ListenerDetailPage() {
                       </div>
 
                       {/* Pagination */}
-                      <Pagination
-                        currentPage={certificateCurrentPage}
-                        totalPages={totalCertificatePages}
-                        onPageChange={setCertificateCurrentPage}
+                        <Pagination
+                          currentPage={certificateCurrentPage}
+                          totalPages={totalCertificatePages}
+                          onPageChange={setCertificateCurrentPage}
                         totalItems={filteredCertificates.length}
                         showSettings
                         onSettingsClick={() => setIsPreferencesOpen(true)}
-                      />
+                        />
 
                       {/* Table */}
                       <Table

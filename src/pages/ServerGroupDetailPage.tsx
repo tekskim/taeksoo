@@ -266,17 +266,17 @@ export function ServerGroupDetailPage() {
           >
             <IconTerminal2 size={16} stroke={1.5} className="text-[var(--action-icon-color)]" />
           </button>
-          <ContextMenu
-            items={getInstanceContextMenuItems(row)}
-            trigger={
-              <button
+        <ContextMenu
+          items={getInstanceContextMenuItems(row)}
+          trigger={
+            <button
                 className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group"
-                onClick={(e) => e.stopPropagation()}
-              >
-                <IconDotsCircleHorizontal size={16} stroke={1.5} className="text-[var(--action-icon-color)]" />
-              </button>
-            }
-          />
+              onClick={(e) => e.stopPropagation()}
+            >
+              <IconDotsCircleHorizontal size={16} stroke={1.5} className="text-[var(--action-icon-color)]" />
+            </button>
+          }
+        />
         </HStack>
       ),
     },

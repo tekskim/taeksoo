@@ -427,45 +427,45 @@ export function InstanceDetailPage() {
       <main className={`absolute top-0 bottom-0 right-0 flex flex-col bg-[var(--color-surface-default)] transition-[left] duration-200 ${sidebarOpen ? 'left-[200px]' : 'left-0'}`}>
         {/* Fixed Header Area */}
         <div className="shrink-0 bg-[var(--color-surface-default)]">
-          {/* Tab Bar */}
-          <TabBar
-            tabs={tabBarTabs}
-            activeTab={activeTabId}
-            onTabChange={selectTab}
-            onTabClose={closeTab}
-            showWindowControls={true}
-          />
+        {/* Tab Bar */}
+        <TabBar
+          tabs={tabBarTabs}
+          activeTab={activeTabId}
+          onTabChange={selectTab}
+          onTabClose={closeTab}
+          showWindowControls={true}
+        />
 
-          {/* Top Bar with Breadcrumb Navigation */}
-          <TopBar
-            showSidebarToggle={!sidebarOpen}
-            onSidebarToggle={() => setSidebarOpen(true)}
-            showNavigation={true}
-            onBack={() => window.history.back()}
-            onForward={() => window.history.forward()}
-            breadcrumb={
-              <Breadcrumb
-                items={[
-                  { label: 'Proj-1', href: '/project' },
-                  { label: 'Instances List', href: '/instances' },
-                  { label: instance.name },
-                ]}
-              />
-            }
-            actions={
-              <TopBarAction
-                icon={<IconBell size={16} stroke={1.5} />}
-                aria-label="Notifications"
-                badge={true}
-              />
-            }
-          />
+        {/* Top Bar with Breadcrumb Navigation */}
+        <TopBar
+          showSidebarToggle={!sidebarOpen}
+          onSidebarToggle={() => setSidebarOpen(true)}
+          showNavigation={true}
+          onBack={() => window.history.back()}
+          onForward={() => window.history.forward()}
+          breadcrumb={
+            <Breadcrumb
+              items={[
+                { label: 'Proj-1', href: '/project' },
+                { label: 'Instances List', href: '/instances' },
+                { label: instance.name },
+              ]}
+            />
+          }
+          actions={
+            <TopBarAction
+              icon={<IconBell size={16} stroke={1.5} />}
+              aria-label="Notifications"
+              badge={true}
+            />
+          }
+        />
         </div>
 
         {/* Scrollable Content Area */}
         <div className="flex-1 overflow-auto min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll">
-          {/* Page Content */}
-          <div className="pt-4 px-8 pb-20 bg-[var(--color-surface-default)]">
+        {/* Page Content */}
+        <div className="pt-4 px-8 pb-20 bg-[var(--color-surface-default)]">
           <VStack gap={6} className="min-w-[1176px]">
             {/* Instance Header Card */}
             <DetailHeader>
@@ -712,8 +712,8 @@ export function InstanceDetailPage() {
                               <div onClick={(e) => e.stopPropagation()}>
                                 <ContextMenu items={volumeMenuItems} trigger="click">
                                   <button className="p-1.5 rounded hover:bg-[var(--color-surface-muted)] transition-colors group">
-                                    <IconDotsCircleHorizontal size={16} stroke={1.5} className="text-[var(--action-icon-color)]" />
-                                  </button>
+                              <IconDotsCircleHorizontal size={16} stroke={1.5} className="text-[var(--action-icon-color)]" />
+                            </button>
                                 </ContextMenu>
                               </div>
                             );
@@ -781,12 +781,12 @@ export function InstanceDetailPage() {
                           sortable: true,
                           render: (_value: string, iface: AttachedInterface) => (
                             <div className="flex flex-col gap-0.5">
-                              <Link 
+                            <Link 
                                 to={`/ports/${iface.id}`}
                                 className="font-medium text-[var(--color-action-primary)] hover:underline"
-                              >
+                            >
                                 {iface.name}
-                              </Link>
+                            </Link>
                               <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
                                 ID : {iface.id}
                               </span>
@@ -799,12 +799,12 @@ export function InstanceDetailPage() {
                           sortable: true,
                           render: (_value: string, iface: AttachedInterface) => (
                             <div className="flex flex-col gap-0.5">
-                              <Link 
+                            <Link 
                                 to={`/networks/${iface.id}`}
                                 className="font-medium text-[var(--color-action-primary)] hover:underline"
-                              >
+                            >
                                 {iface.network}
-                              </Link>
+                            </Link>
                               <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
                                 ID : {iface.id}
                               </span>
@@ -846,8 +846,8 @@ export function InstanceDetailPage() {
                               <div onClick={(e) => e.stopPropagation()}>
                                 <ContextMenu items={interfaceMenuItems} trigger="click">
                                   <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
-                                    <IconDotsCircleHorizontal size={16} stroke={1.5} className="text-[var(--action-icon-color)]" />
-                                  </button>
+                              <IconDotsCircleHorizontal size={16} stroke={1.5} className="text-[var(--action-icon-color)]" />
+                            </button>
                                 </ContextMenu>
                               </div>
                             );
@@ -904,12 +904,12 @@ export function InstanceDetailPage() {
                           sortable: true,
                           render: (_value: string, row: FloatingIP) => (
                             <div className="flex flex-col gap-0.5">
-                              <Link 
-                                to={`/floating-ips/${row.id}`}
+                            <Link 
+                              to={`/floating-ips/${row.id}`}
                                 className="font-medium text-[var(--color-action-primary)] hover:underline"
-                              >
+                            >
                                 {row.floatingIp}
-                              </Link>
+                            </Link>
                               <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
                                 ID : {row.id}
                               </span>
@@ -1009,12 +1009,12 @@ export function InstanceDetailPage() {
                           sortable: true,
                           render: (_value: string, row: SecurityGroup) => (
                             <div className="flex flex-col gap-0.5">
-                              <Link 
-                                to={`/security-groups/${row.id}`}
+                            <Link 
+                              to={`/security-groups/${row.id}`}
                                 className="font-medium text-[var(--color-action-primary)] hover:underline"
-                              >
-                                {row.name}
-                              </Link>
+                            >
+                              {row.name}
+                            </Link>
                               <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
                                 ID : {row.id}
                               </span>
@@ -1117,12 +1117,12 @@ export function InstanceDetailPage() {
                           sortable: true,
                           render: (_value: string, row: InstanceSnapshot) => (
                             <div className="flex flex-col gap-0.5">
-                              <Link 
-                                to={`/instance-snapshots/${row.id}`}
+                            <Link 
+                              to={`/instance-snapshots/${row.id}`}
                                 className="font-medium text-[var(--color-action-primary)] hover:underline"
-                              >
-                                {row.name}
-                              </Link>
+                            >
+                              {row.name}
+                            </Link>
                               <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
                                 ID : {row.id}
                               </span>

@@ -71,6 +71,7 @@ interface Subnet {
   gatewayIp: string;
   dhcpEnabled: boolean;
   portCount: number;
+  createdAt: string;
 }
 
 interface Port {
@@ -126,6 +127,7 @@ const mockSubnets: Subnet[] = Array.from({ length: 115 }, (_, i) => ({
   gatewayIp: '192.168.11',
   dhcpEnabled: true,
   portCount: 2,
+  createdAt: '2025-01-15 10:30:00',
 }));
 
 const mockPorts: Port[] = Array.from({ length: 115 }, (_, i) => ({
@@ -295,15 +297,6 @@ export default function NetworkDetailPage() {
   // Subnet columns
   const subnetColumns: TableColumn<Subnet>[] = [
     {
-      key: 'status',
-      label: 'Status',
-      width: '59px',
-      align: 'center',
-      render: (_, row) => (
-        <StatusIndicator status={subnetStatusMap[row.status]} layout="icon-only" />
-      ),
-    },
-    {
       key: 'name',
       label: 'Name',
       flex: 1,
@@ -335,17 +328,17 @@ export default function NetworkDetailPage() {
       flex: 1,
     },
     {
-      key: 'dhcpEnabled',
-      label: 'DHCP',
-      flex: 1,
-      render: (value: boolean) => value ? 'Yes' : 'No',
-    },
-    {
       key: 'portCount',
       label: 'Port Count',
       flex: 1,
       sortable: true,
       align: 'left',
+    },
+    {
+      key: 'createdAt',
+      label: 'Created At',
+      flex: 1,
+      sortable: true,
     },
     {
       key: 'actions',
@@ -387,13 +380,19 @@ export default function NetworkDetailPage() {
       flex: 1,
       sortable: true,
       render: (_, row) => (
-        <Link
-          to={`/ports/${row.id}`}
-          className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
-          onClick={(e) => e.stopPropagation()}
-        >
-          {row.name}
-        </Link>
+        <div className="flex flex-col gap-0.5">
+          <Link
+            to={`/ports/${row.id}`}
+            className="inline-flex items-center gap-1 font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {row.name}
+            <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
+          </Link>
+          <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
+            ID : {row.id}
+          </span>
+        </div>
       ),
     },
     {
@@ -480,27 +479,6 @@ export default function NetworkDetailPage() {
       label: 'MAC Address',
       flex: 1,
       sortable: true,
-    },
-    {
-      key: 'actions',
-      label: 'Action',
-      width: '72px',
-      align: 'center',
-      render: (_: unknown, row: Port) => {
-        const portMenuItems: ContextMenuItem[] = [
-          { id: 'edit', label: 'Edit', onClick: () => console.log('Edit port', row.id) },
-          { id: 'delete', label: 'Delete', status: 'danger', onClick: () => console.log('Delete port', row.id) },
-        ];
-        return (
-          <div onClick={(e) => e.stopPropagation()}>
-            <ContextMenu items={portMenuItems} trigger="click">
-              <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
-                <IconDotsCircleHorizontal size={16} stroke={1.5} className="text-[var(--action-icon-color)]" />
-              </button>
-            </ContextMenu>
-          </div>
-        );
-      },
     },
   ];
 
@@ -654,6 +632,9 @@ export default function NetworkDetailPage() {
                         sortBy={subnetSortBy}
                         sortDirection={subnetSortDirection}
                         onSort={handleSubnetSort}
+                        selectable
+                        selectedKeys={selectedSubnets}
+                        onSelectionChange={setSelectedSubnets}
                       />
                     </VStack>
                   </TabPanel>

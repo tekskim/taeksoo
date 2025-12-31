@@ -509,14 +509,14 @@ export default function PoolDetailPage() {
                       </div>
 
                       {/* Pagination */}
-                      <Pagination
-                        currentPage={memberCurrentPage}
-                        totalPages={totalMemberPages}
-                        onPageChange={setMemberCurrentPage}
+                        <Pagination
+                          currentPage={memberCurrentPage}
+                          totalPages={totalMemberPages}
+                          onPageChange={setMemberCurrentPage}
                         totalItems={filteredMembers.length}
                         showSettings
                         onSettingsClick={() => setIsPreferencesOpen(true)}
-                      />
+                        />
 
                       {/* Table */}
                       <Table

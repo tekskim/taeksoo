@@ -99,7 +99,7 @@ export function NetworksPage() {
     { id: 'name', label: 'Name', visible: true, locked: true },
     { id: 'subnetCidr', label: 'Subnet CIDR', visible: true },
     { id: 'external', label: 'External', visible: true },
-    { id: 'diskTag', label: 'Shared', visible: true },
+    { id: 'diskTag', label: 'Shared / Is Current Tenant', visible: true },
     { id: 'adminState', label: 'Admin State', visible: true },
     { id: 'actions', label: 'Action', visible: true, locked: true },
   ];
@@ -196,7 +196,7 @@ export function NetworksPage() {
     },
     {
       key: 'diskTag',
-      label: 'Shared',
+      label: activeTab === 'current' ? 'Shared' : 'Is Current Tenant',
       flex: 1,
       render: (_, row) => row.shared ? 'On' : 'Off',
     },
