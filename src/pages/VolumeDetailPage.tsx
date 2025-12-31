@@ -169,6 +169,9 @@ export function VolumeDetailPage() {
   const [backupCurrentPage, setBackupCurrentPage] = useState(1);
   const backupsPerPage = 10;
 
+  // Preferences state
+  const [isPreferencesOpen, setIsPreferencesOpen] = useState(false);
+
   // In a real app, you would fetch the volume data based on the ID
   const volume = mockVolumeDetail;
   const snapshots = mockVolumeSnapshots;
@@ -231,7 +234,8 @@ export function VolumeDetailPage() {
 
   // Context menu items for backup actions
   const getBackupContextMenuItems = (_backup: VolumeBackup): ContextMenuItem[] => [
-    { id: 'restore-volume', label: 'Restore Volume', onClick: () => {} },
+    { id: 'create-volume', label: 'Create Volume', onClick: () => {} },
+    { id: 'restore-backup', label: 'Restore Backup', onClick: () => {} },
     { id: 'edit', label: 'Edit', onClick: () => {} },
     { id: 'delete', label: 'Delete', onClick: () => {}, status: 'danger' },
   ];
@@ -252,14 +256,19 @@ export function VolumeDetailPage() {
       label: 'Name',
       flex: 1,
       render: (_, row) => (
-        <Link
-          to={`/volume-snapshots/${row.id}`}
-          className="inline-flex items-center gap-1.5 font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
-          onClick={(e) => e.stopPropagation()}
-        >
-          {row.name}
-          <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
-        </Link>
+        <div className="flex flex-col gap-0.5">
+          <Link
+            to={`/volume-snapshots/${row.id}`}
+            className="inline-flex items-center gap-1.5 font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {row.name}
+            <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
+          </Link>
+          <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
+            ID : {row.id}
+          </span>
+        </div>
       ),
     },
     {
@@ -288,10 +297,10 @@ export function VolumeDetailPage() {
             trigger="click"
           >
             <button
-              className="p-1 rounded hover:bg-[var(--color-surface-hover)] transition-colors"
+              className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group"
               onClick={(e) => e.stopPropagation()}
             >
-              <IconDotsCircleHorizontal size={16} stroke={1.5} />
+              <IconDotsCircleHorizontal size={16} stroke={1.5} className="text-[var(--action-icon-color)]" />
             </button>
           </ContextMenu>
         </div>
@@ -315,14 +324,19 @@ export function VolumeDetailPage() {
       label: 'Name',
       flex: 1,
       render: (_, row) => (
-        <Link
-          to={`/volume-backups/${row.id}`}
-          className="inline-flex items-center gap-1.5 font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
-          onClick={(e) => e.stopPropagation()}
-        >
-          {row.name}
-          <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
-        </Link>
+        <div className="flex flex-col gap-0.5">
+          <Link
+            to={`/volume-backups/${row.id}`}
+            className="inline-flex items-center gap-1.5 font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {row.name}
+            <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
+          </Link>
+          <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
+            ID : {row.id}
+          </span>
+        </div>
       ),
     },
     {
@@ -357,10 +371,10 @@ export function VolumeDetailPage() {
             trigger="click"
           >
             <button
-              className="p-1 rounded hover:bg-[var(--color-surface-hover)] transition-colors"
+              className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group"
               onClick={(e) => e.stopPropagation()}
             >
-              <IconDotsCircleHorizontal size={16} stroke={1.5} />
+              <IconDotsCircleHorizontal size={16} stroke={1.5} className="text-[var(--action-icon-color)]" />
             </button>
           </ContextMenu>
         </div>
@@ -369,32 +383,37 @@ export function VolumeDetailPage() {
   ];
 
   return (
-    <div className="flex min-h-screen bg-[var(--color-surface-subtle)]">
+    <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
       <Sidebar isOpen={sidebarOpen} setIsOpen={setSidebarOpen} />
       <main
-        className={`min-h-screen bg-[var(--color-surface-default)] transition-[margin] duration-200 ${
-          sidebarOpen ? 'ml-[200px]' : 'ml-[var(--sidebar-collapsed-width)]'
-        } flex-1`}
+        className={`absolute top-0 bottom-0 right-0 flex flex-col bg-[var(--color-surface-default)] transition-[left] duration-200 ${
+          sidebarOpen ? 'left-[200px]' : 'left-[var(--sidebar-collapsed-width)]'
+        }`}
       >
-        {/* Top Bar */}
-        <TopBar
-          showSidebarToggle={!sidebarOpen}
-          onSidebarToggle={() => setSidebarOpen(true)}
-          showNavigation={true}
-          onBack={() => navigate('/volumes')}
-          onForward={() => window.history.forward()}
-          breadcrumb={<Breadcrumb items={breadcrumbItems} />}
-          actions={
-            <TopBarAction
-              icon={<IconBell size={16} stroke={1.5} />}
-              aria-label="Notifications"
-              badge={true}
-            />
-          }
-        />
-        <TabBar tabs={tabBarTabs} activeTabId={activeTabId} onTabClick={selectTab} onTabClose={closeTab} />
+        {/* Fixed Header Area */}
+        <div className="shrink-0 bg-[var(--color-surface-default)]">
+          {/* Top Bar */}
+          <TopBar
+            showSidebarToggle={!sidebarOpen}
+            onSidebarToggle={() => setSidebarOpen(true)}
+            showNavigation={true}
+            onBack={() => navigate('/volumes')}
+            onForward={() => window.history.forward()}
+            breadcrumb={<Breadcrumb items={breadcrumbItems} />}
+            actions={
+              <TopBarAction
+                icon={<IconBell size={16} stroke={1.5} />}
+                aria-label="Notifications"
+                badge={true}
+              />
+            }
+          />
+          <TabBar tabs={tabBarTabs} activeTabId={activeTabId} onTabClick={selectTab} onTabClose={closeTab} />
+        </div>
 
-        <div className="pt-4 px-8 pb-20 bg-[var(--color-surface-default)]">
+        {/* Scrollable Content Area */}
+        <div className="flex-1 overflow-auto min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll">
+          <div className="pt-4 px-8 pb-20 bg-[var(--color-surface-default)]">
           <VStack gap={6} className="min-w-[1176px]">
             {/* Volume Header Card */}
             <DetailHeader>
@@ -523,16 +542,14 @@ export function VolumeDetailPage() {
                     </div>
 
                     {/* Pagination */}
-                    <div className="flex items-center gap-2">
                       <Pagination
                         currentPage={snapshotCurrentPage}
                         totalPages={snapshotTotalPages}
                         onPageChange={setSnapshotCurrentPage}
+                      totalItems={filteredSnapshots.length}
+                      showSettings
+                      onSettingsClick={() => setIsPreferencesOpen(true)}
                       />
-                      <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
-                        {filteredSnapshots.length} items
-                      </span>
-                    </div>
 
                     {/* Snapshots Table */}
                     <Table<VolumeSnapshot>
@@ -579,16 +596,14 @@ export function VolumeDetailPage() {
                     </div>
 
                     {/* Pagination */}
-                    <div className="flex items-center gap-2">
                       <Pagination
                         currentPage={backupCurrentPage}
                         totalPages={backupTotalPages}
                         onPageChange={setBackupCurrentPage}
+                      totalItems={filteredBackups.length}
+                      showSettings
+                      onSettingsClick={() => setIsPreferencesOpen(true)}
                       />
-                      <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
-                        {filteredBackups.length} items
-                      </span>
-                    </div>
 
                     {/* Backups Table */}
                     <Table<VolumeBackup>
@@ -602,6 +617,7 @@ export function VolumeDetailPage() {
               </Tabs>
             </div>
           </VStack>
+          </div>
         </div>
       </main>
     </div>

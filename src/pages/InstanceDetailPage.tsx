@@ -17,6 +17,8 @@ import {
   SearchInput,
   Pagination,
   StatusIndicator,
+  ContextMenu,
+  type ContextMenuItem,
 } from '@/design-system';
 import { Link } from 'react-router-dom';
 import { Sidebar } from '@/components/Sidebar';
@@ -57,11 +59,13 @@ interface AttachedVolume {
 
 interface AttachedInterface {
   id: string;
+  name: string;
   network: string;
   port: string;
   portStatus: 'Active' | 'Inactive' | 'Down' | 'Build';
   fixedIp: string;
   macAddress: string;
+  createdAt: string;
 }
 
 interface FloatingIP {
@@ -77,6 +81,7 @@ interface SecurityGroup {
   id: string;
   name: string;
   description: string;
+  createdAt: string;
 }
 
 interface NetworkInterface {
@@ -161,7 +166,7 @@ const mockAttachedVolumes: AttachedVolume[] = [
     type: '_DEFAULT_',
     diskTag: 'OS Disk',
     bootable: false,
-    access: 'Public',
+    access: '2025-11-11',
   },
   {
     id: 'vol-002',
@@ -171,7 +176,7 @@ const mockAttachedVolumes: AttachedVolume[] = [
     type: 'SSD',
     diskTag: 'Data Disk',
     bootable: false,
-    access: 'Private',
+    access: '2025-11-10',
   },
   {
     id: 'vol-003',
@@ -181,7 +186,7 @@ const mockAttachedVolumes: AttachedVolume[] = [
     type: '_DEFAULT_',
     diskTag: 'Backup',
     bootable: false,
-    access: 'Public',
+    access: '2025-11-09',
   },
   {
     id: 'vol-004',
@@ -191,7 +196,7 @@ const mockAttachedVolumes: AttachedVolume[] = [
     type: 'SSD',
     diskTag: 'App Data',
     bootable: false,
-    access: 'Private',
+    access: '2025-11-08',
   },
   {
     id: 'vol-005',
@@ -201,7 +206,7 @@ const mockAttachedVolumes: AttachedVolume[] = [
     type: 'SSD',
     diskTag: 'Database',
     bootable: false,
-    access: 'Private',
+    access: '2025-11-07',
   },
   {
     id: 'vol-006',
@@ -211,7 +216,7 @@ const mockAttachedVolumes: AttachedVolume[] = [
     type: '_DEFAULT_',
     diskTag: 'Logs',
     bootable: false,
-    access: 'Public',
+    access: '2025-11-06',
   },
   {
     id: 'vol-007',
@@ -221,7 +226,7 @@ const mockAttachedVolumes: AttachedVolume[] = [
     type: '_DEFAULT_',
     diskTag: 'Media',
     bootable: false,
-    access: 'Public',
+    access: '2025-11-05',
   },
   {
     id: 'vol-008',
@@ -231,7 +236,7 @@ const mockAttachedVolumes: AttachedVolume[] = [
     type: 'SSD',
     diskTag: 'Cache',
     bootable: false,
-    access: 'Private',
+    access: '2025-11-04',
   },
   {
     id: 'vol-009',
@@ -241,7 +246,7 @@ const mockAttachedVolumes: AttachedVolume[] = [
     type: 'SSD',
     diskTag: 'Temp',
     bootable: false,
-    access: 'Private',
+    access: '2025-11-03',
   },
   {
     id: 'vol-010',
@@ -251,38 +256,38 @@ const mockAttachedVolumes: AttachedVolume[] = [
     type: '_DEFAULT_',
     diskTag: 'Shared',
     bootable: false,
-    access: 'Public',
+    access: '2025-11-02',
   },
 ];
 
 const mockAttachedInterfaces: AttachedInterface[] = [
-  { id: 'iface-001', network: 'ens-server-03', port: '123984734', portStatus: 'Inactive', fixedIp: '10.0.0.6', macAddress: '10.0.0.2' },
-  { id: 'iface-002', network: 'ens-server-02', port: '987654321', portStatus: 'Active', fixedIp: '10.0.0.5', macAddress: 'fa:16:3e:12:34:56' },
-  { id: 'iface-003', network: 'private-network', port: '456789123', portStatus: 'Active', fixedIp: '192.168.1.10', macAddress: 'fa:16:3e:ab:cd:ef' },
-  { id: 'iface-004', network: 'public-network', port: '789012345', portStatus: 'Active', fixedIp: '172.16.0.10', macAddress: 'fa:16:3e:11:22:33' },
-  { id: 'iface-005', network: 'management-net', port: '234567890', portStatus: 'Active', fixedIp: '10.10.0.5', macAddress: 'fa:16:3e:44:55:66' },
-  { id: 'iface-006', network: 'storage-net', port: '345678901', portStatus: 'Down', fixedIp: '10.20.0.15', macAddress: 'fa:16:3e:77:88:99' },
-  { id: 'iface-007', network: 'backup-network', port: '456789012', portStatus: 'Active', fixedIp: '10.30.0.20', macAddress: 'fa:16:3e:aa:bb:cc' },
-  { id: 'iface-008', network: 'monitoring-net', port: '567890123', portStatus: 'Active', fixedIp: '10.40.0.25', macAddress: 'fa:16:3e:dd:ee:ff' },
-  { id: 'iface-009', network: 'replication-net', port: '678901234', portStatus: 'Build', fixedIp: '10.50.0.30', macAddress: 'fa:16:3e:12:34:ab' },
-  { id: 'iface-010', network: 'cluster-network', port: '789012345', portStatus: 'Active', fixedIp: '10.60.0.35', macAddress: 'fa:16:3e:cd:ef:12' },
-  { id: 'iface-011', network: 'api-network', port: '890123456', portStatus: 'Active', fixedIp: '10.70.0.40', macAddress: 'fa:16:3e:34:56:78' },
-  { id: 'iface-012', network: 'tenant-network', port: '901234567', portStatus: 'Inactive', fixedIp: '10.80.0.45', macAddress: 'fa:16:3e:9a:bc:de' },
+  { id: '29tgj234', name: 'port-01', network: 'net-01', port: '123984734', portStatus: 'Inactive', fixedIp: '10.0.0.6', macAddress: '10.0.0.2', createdAt: '2025-11-11' },
+  { id: '38hdk456', name: 'port-02', network: 'net-02', port: '987654321', portStatus: 'Active', fixedIp: '10.0.0.5', macAddress: 'fa:16:3e:12:34:56', createdAt: '2025-11-10' },
+  { id: '47jfl789', name: 'port-03', network: 'net-03', port: '456789123', portStatus: 'Active', fixedIp: '192.168.1.10', macAddress: 'fa:16:3e:ab:cd:ef', createdAt: '2025-11-09' },
+  { id: '56kgm012', name: 'port-04', network: 'net-04', port: '789012345', portStatus: 'Active', fixedIp: '172.16.0.10', macAddress: 'fa:16:3e:11:22:33', createdAt: '2025-11-08' },
+  { id: '65lhn345', name: 'port-05', network: 'net-05', port: '234567890', portStatus: 'Active', fixedIp: '10.10.0.5', macAddress: 'fa:16:3e:44:55:66', createdAt: '2025-11-07' },
+  { id: '74mip678', name: 'port-06', network: 'net-06', port: '345678901', portStatus: 'Down', fixedIp: '10.20.0.15', macAddress: 'fa:16:3e:77:88:99', createdAt: '2025-11-06' },
+  { id: '83njq901', name: 'port-07', network: 'net-07', port: '456789012', portStatus: 'Active', fixedIp: '10.30.0.20', macAddress: 'fa:16:3e:aa:bb:cc', createdAt: '2025-11-05' },
+  { id: '92okr234', name: 'port-08', network: 'net-08', port: '567890123', portStatus: 'Active', fixedIp: '10.40.0.25', macAddress: 'fa:16:3e:dd:ee:ff', createdAt: '2025-11-04' },
+  { id: '01pls567', name: 'port-09', network: 'net-09', port: '678901234', portStatus: 'Build', fixedIp: '10.50.0.30', macAddress: 'fa:16:3e:12:34:ab', createdAt: '2025-11-03' },
+  { id: '10qmt890', name: 'port-10', network: 'net-10', port: '789012345', portStatus: 'Active', fixedIp: '10.60.0.35', macAddress: 'fa:16:3e:cd:ef:12', createdAt: '2025-11-02' },
+  { id: '29rnu123', name: 'port-11', network: 'net-11', port: '890123456', portStatus: 'Active', fixedIp: '10.70.0.40', macAddress: 'fa:16:3e:34:56:78', createdAt: '2025-11-01' },
+  { id: '38sov456', name: 'port-12', network: 'net-12', port: '901234567', portStatus: 'Inactive', fixedIp: '10.80.0.45', macAddress: 'fa:16:3e:9a:bc:de', createdAt: '2025-10-31' },
 ];
 
 const mockFloatingIPs: FloatingIP[] = [
-  { id: 'fip-001', name: 'ens-server-04', status: 'active', floatingIp: '10.0.0.11', fixedIp: '10.0.0.11', createdAt: '2025-09-01' },
-  { id: 'fip-002', name: 'public-ip-01', status: 'active', floatingIp: '192.168.1.100', fixedIp: '10.0.0.5', createdAt: '2025-08-15' },
-  { id: 'fip-003', name: 'lb-frontend', status: 'shutoff', floatingIp: '172.16.0.50', fixedIp: '10.0.0.20', createdAt: '2025-07-20' },
-  { id: 'fip-004', name: 'web-server-01', status: 'active', floatingIp: '203.0.113.10', fixedIp: '10.0.1.10', createdAt: '2025-09-10' },
-  { id: 'fip-005', name: 'api-gateway', status: 'active', floatingIp: '203.0.113.20', fixedIp: '10.0.1.20', createdAt: '2025-09-12' },
-  { id: 'fip-006', name: 'db-primary', status: 'error', floatingIp: '203.0.113.30', fixedIp: '10.0.1.30', createdAt: '2025-09-15' },
-  { id: 'fip-007', name: 'cache-server', status: 'active', floatingIp: '203.0.113.40', fixedIp: '10.0.1.40', createdAt: '2025-09-18' },
-  { id: 'fip-008', name: 'monitoring', status: 'active', floatingIp: '203.0.113.50', fixedIp: '10.0.1.50', createdAt: '2025-09-20' },
-  { id: 'fip-009', name: 'backup-server', status: 'shutoff', floatingIp: '203.0.113.60', fixedIp: '10.0.1.60', createdAt: '2025-09-22' },
-  { id: 'fip-010', name: 'staging-env', status: 'active', floatingIp: '203.0.113.70', fixedIp: '10.0.1.70', createdAt: '2025-09-25' },
-  { id: 'fip-011', name: 'dev-server', status: 'active', floatingIp: '203.0.113.80', fixedIp: '10.0.1.80', createdAt: '2025-09-28' },
-  { id: 'fip-012', name: 'test-instance', status: 'shutoff', floatingIp: '203.0.113.90', fixedIp: '10.0.1.90', createdAt: '2025-09-30' },
+  { id: '29tgj234', name: 'ens-server-04', status: 'active', floatingIp: '10.0.0.11', fixedIp: '10.0.0.11', createdAt: '2025-09-01' },
+  { id: '38hdk456', name: 'public-ip-01', status: 'active', floatingIp: '192.168.1.100', fixedIp: '10.0.0.5', createdAt: '2025-08-15' },
+  { id: '47jfl789', name: 'lb-frontend', status: 'shutoff', floatingIp: '172.16.0.50', fixedIp: '10.0.0.20', createdAt: '2025-07-20' },
+  { id: '56kgm012', name: 'web-server-01', status: 'active', floatingIp: '203.0.113.10', fixedIp: '10.0.1.10', createdAt: '2025-09-10' },
+  { id: '65lhn345', name: 'api-gateway', status: 'active', floatingIp: '203.0.113.20', fixedIp: '10.0.1.20', createdAt: '2025-09-12' },
+  { id: '74mip678', name: 'db-primary', status: 'error', floatingIp: '203.0.113.30', fixedIp: '10.0.1.30', createdAt: '2025-09-15' },
+  { id: '83njq901', name: 'cache-server', status: 'active', floatingIp: '203.0.113.40', fixedIp: '10.0.1.40', createdAt: '2025-09-18' },
+  { id: '92okr234', name: 'monitoring', status: 'active', floatingIp: '203.0.113.50', fixedIp: '10.0.1.50', createdAt: '2025-09-20' },
+  { id: '01pls567', name: 'backup-server', status: 'shutoff', floatingIp: '203.0.113.60', fixedIp: '10.0.1.60', createdAt: '2025-09-22' },
+  { id: '10qmt890', name: 'staging-env', status: 'active', floatingIp: '203.0.113.70', fixedIp: '10.0.1.70', createdAt: '2025-09-25' },
+  { id: '29rnu123', name: 'dev-server', status: 'active', floatingIp: '203.0.113.80', fixedIp: '10.0.1.80', createdAt: '2025-09-28' },
+  { id: '38sov456', name: 'test-instance', status: 'shutoff', floatingIp: '203.0.113.90', fixedIp: '10.0.1.90', createdAt: '2025-09-30' },
 ];
 
 const mockNetworkInterfaces: NetworkInterface[] = [
@@ -292,22 +297,22 @@ const mockNetworkInterfaces: NetworkInterface[] = [
 ];
 
 const mockSecurityGroups: SecurityGroup[] = [
-  { id: 'sg-001', name: '00cc559f', description: '10.0.0.11' },
-  { id: 'sg-002', name: 'default', description: 'Default security group' },
-  { id: 'sg-003', name: 'web-servers', description: 'Web server security group' },
-  { id: 'sg-004', name: 'ssh-access', description: 'SSH access security group' },
-  { id: 'sg-005', name: 'db-servers', description: 'Database server security group' },
-  { id: 'sg-006', name: 'internal-only', description: 'Internal network only' },
-  { id: 'sg-007', name: 'load-balancer', description: 'Load balancer security group' },
-  { id: 'sg-008', name: 'monitoring', description: 'Monitoring services access' },
-  { id: 'sg-009', name: 'kubernetes', description: 'Kubernetes cluster security group' },
-  { id: 'sg-010', name: 'api-gateway', description: 'API gateway security group' },
-  { id: 'sg-011', name: 'cache-servers', description: 'Cache server security group' },
-  { id: 'sg-012', name: 'message-queue', description: 'Message queue security group' },
+  { id: 'sg-001', name: 'sg-02', description: '10.0.0.11', createdAt: '2025-11-11' },
+  { id: 'sg-002', name: 'default', description: 'Default security group', createdAt: '2025-11-10' },
+  { id: 'sg-003', name: 'web-servers', description: 'Web server security group', createdAt: '2025-11-09' },
+  { id: 'sg-004', name: 'ssh-access', description: 'SSH access security group', createdAt: '2025-11-08' },
+  { id: 'sg-005', name: 'db-servers', description: 'Database server security group', createdAt: '2025-11-07' },
+  { id: 'sg-006', name: 'internal-only', description: 'Internal network only', createdAt: '2025-11-06' },
+  { id: 'sg-007', name: 'load-balancer', description: 'Load balancer security group', createdAt: '2025-11-05' },
+  { id: 'sg-008', name: 'monitoring', description: 'Monitoring services access', createdAt: '2025-11-04' },
+  { id: 'sg-009', name: 'kubernetes', description: 'Kubernetes cluster security group', createdAt: '2025-11-03' },
+  { id: 'sg-010', name: 'api-gateway', description: 'API gateway security group', createdAt: '2025-11-02' },
+  { id: 'sg-011', name: 'cache-servers', description: 'Cache server security group', createdAt: '2025-11-01' },
+  { id: 'sg-012', name: 'message-queue', description: 'Message queue security group', createdAt: '2025-10-31' },
 ];
 
 const mockInstanceSnapshots: InstanceSnapshot[] = [
-  { id: 'snap-001', name: 'ens-server-03', status: 'active', size: '30GiB', diskFormat: 'RAW', createdAt: '2025-09-01' },
+  { id: 'snap-001', name: 'snap-01', status: 'active', size: '30GiB', diskFormat: 'RAW', createdAt: '2025-09-01' },
   { id: 'snap-002', name: 'db-backup-weekly', status: 'active', size: '50GiB', diskFormat: 'QCOW2', createdAt: '2025-08-28' },
   { id: 'snap-003', name: 'web-server-snapshot', status: 'active', size: '20GiB', diskFormat: 'RAW', createdAt: '2025-08-25' },
   { id: 'snap-004', name: 'pre-upgrade-backup', status: 'active', size: '45GiB', diskFormat: 'QCOW2', createdAt: '2025-08-20' },
@@ -370,7 +375,7 @@ export function InstanceDetailPage() {
   );
   const snapshotTotalPages = Math.ceil(filteredSnapshots.length / snapshotRowsPerPage);
 
-  // Monitoring (Console Logs) state
+  // Logs (Console Logs) state
   const [logLength, setLogLength] = useState(20);
 
   // Action Logs tab state
@@ -414,48 +419,53 @@ export function InstanceDetailPage() {
   }));
 
   return (
-    <div className="min-h-screen bg-[var(--color-surface-subtle)]">
+    <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
       {/* Sidebar */}
       <Sidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(false)} />
 
       {/* Main Content */}
-      <main className={`min-h-screen bg-[var(--color-surface-default)] transition-[margin] duration-200 ${sidebarOpen ? 'ml-[200px]' : 'ml-0'}`}>
-        {/* Tab Bar */}
-        <TabBar
-          tabs={tabBarTabs}
-          activeTab={activeTabId}
-          onTabChange={selectTab}
-          onTabClose={closeTab}
-          showWindowControls={true}
-        />
+      <main className={`absolute top-0 bottom-0 right-0 flex flex-col bg-[var(--color-surface-default)] transition-[left] duration-200 ${sidebarOpen ? 'left-[200px]' : 'left-0'}`}>
+        {/* Fixed Header Area */}
+        <div className="shrink-0 bg-[var(--color-surface-default)]">
+          {/* Tab Bar */}
+          <TabBar
+            tabs={tabBarTabs}
+            activeTab={activeTabId}
+            onTabChange={selectTab}
+            onTabClose={closeTab}
+            showWindowControls={true}
+          />
 
-        {/* Top Bar with Breadcrumb Navigation */}
-        <TopBar
-          showSidebarToggle={!sidebarOpen}
-          onSidebarToggle={() => setSidebarOpen(true)}
-          showNavigation={true}
-          onBack={() => window.history.back()}
-          onForward={() => window.history.forward()}
-          breadcrumb={
-            <Breadcrumb
-              items={[
-                { label: 'Proj-1', href: '/project' },
-                { label: 'Instances List', href: '/instances' },
-                { label: instance.name },
-              ]}
-            />
-          }
-          actions={
-            <TopBarAction
-              icon={<IconBell size={16} stroke={1.5} />}
-              aria-label="Notifications"
-              badge={true}
-            />
-          }
-        />
+          {/* Top Bar with Breadcrumb Navigation */}
+          <TopBar
+            showSidebarToggle={!sidebarOpen}
+            onSidebarToggle={() => setSidebarOpen(true)}
+            showNavigation={true}
+            onBack={() => window.history.back()}
+            onForward={() => window.history.forward()}
+            breadcrumb={
+              <Breadcrumb
+                items={[
+                  { label: 'Proj-1', href: '/project' },
+                  { label: 'Instances List', href: '/instances' },
+                  { label: instance.name },
+                ]}
+              />
+            }
+            actions={
+              <TopBarAction
+                icon={<IconBell size={16} stroke={1.5} />}
+                aria-label="Notifications"
+                badge={true}
+              />
+            }
+          />
+        </div>
 
-        {/* Page Content */}
-        <div className="pt-4 px-8 pb-20 bg-[var(--color-surface-default)]">
+        {/* Scrollable Content Area */}
+        <div className="flex-1 overflow-auto min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll">
+          {/* Page Content */}
+          <div className="pt-4 px-8 pb-20 bg-[var(--color-surface-default)]">
           <VStack gap={6} className="min-w-[1176px]">
             {/* Instance Header Card */}
             <DetailHeader>
@@ -513,7 +523,7 @@ export function InstanceDetailPage() {
                     <SectionCard>
                       <SectionCard.Header 
                         title="Basic Information" 
-                        actions={<Button variant="secondary" size="sm" leftIcon={<IconEdit size={16} />}>Edit</Button>}
+                        actions={<Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />}>Edit</Button>}
                       />
                       <SectionCard.Content>
                         <SectionCard.DataRow label="Instance Name" value={instance.name} />
@@ -675,7 +685,7 @@ export function InstanceDetailPage() {
                         },
                         {
                           key: 'access',
-                          label: 'Access',
+                          label: 'Created at',
                           sortable: true,
                         },
                         {
@@ -683,11 +693,31 @@ export function InstanceDetailPage() {
                           label: 'Action',
                           width: '72px',
                           align: 'center',
-                          render: () => (
-                            <button className="p-1.5 rounded hover:bg-[var(--color-surface-subtle)] transition-colors">
-                              <IconDotsCircleHorizontal size={16} stroke={1} className="text-[var(--color-text-default)]" />
-                            </button>
-                          ),
+                          render: (_: unknown, row: AttachedVolume) => {
+                            const volumeMenuItems: ContextMenuItem[] = [
+                              {
+                                id: 'data-protection',
+                                label: 'Data Protection',
+                                submenu: [
+                                  { id: 'create-snapshot', label: 'Create Volume Snapshot', onClick: () => console.log('Create snapshot', row.id) },
+                                  { id: 'create-backup', label: 'Create Volume Backup', onClick: () => console.log('Create backup', row.id) },
+                                  { id: 'clone-volume', label: 'Clone Volume', onClick: () => console.log('Clone volume', row.id) },
+                                ],
+                              },
+                              { id: 'extend-volume', label: 'Extend Volume', onClick: () => console.log('Extend volume', row.id) },
+                              { id: 'bootable', label: 'Bootable', onClick: () => console.log('Toggle bootable', row.id) },
+                              { id: 'detach', label: 'Detach', status: 'danger', onClick: () => console.log('Detach volume', row.id) },
+                            ];
+                            return (
+                              <div onClick={(e) => e.stopPropagation()}>
+                                <ContextMenu items={volumeMenuItems} trigger="click">
+                                  <button className="p-1.5 rounded hover:bg-[var(--color-surface-muted)] transition-colors group">
+                                    <IconDotsCircleHorizontal size={16} stroke={1.5} className="text-[var(--action-icon-color)]" />
+                                  </button>
+                                </ContextMenu>
+                              </div>
+                            );
+                          },
                         },
                       ]}
                       data={mockAttachedVolumes}
@@ -726,38 +756,59 @@ export function InstanceDetailPage() {
                     <Table
                       columns={[
                         {
+                          key: 'status',
+                          label: 'Status',
+                          width: '72px',
+                          align: 'center',
+                          render: (_value: string, iface: AttachedInterface) => {
+                            const statusMap: Record<string, 'active' | 'down' | 'building' | 'shutoff'> = {
+                              Active: 'active',
+                              Inactive: 'shutoff',
+                              Down: 'down',
+                              Build: 'building',
+                            };
+                            return (
+                              <StatusIndicator 
+                                status={statusMap[iface.portStatus] || 'down'} 
+                                layout="icon-only"
+                              />
+                            );
+                          },
+                        },
+                        {
+                          key: 'name',
+                          label: 'Name',
+                          sortable: true,
+                          render: (_value: string, iface: AttachedInterface) => (
+                            <div className="flex flex-col gap-0.5">
+                              <Link 
+                                to={`/ports/${iface.id}`}
+                                className="font-medium text-[var(--color-action-primary)] hover:underline"
+                              >
+                                {iface.name}
+                              </Link>
+                              <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
+                                ID : {iface.id}
+                              </span>
+                            </div>
+                          ),
+                        },
+                        {
                           key: 'network',
                           label: 'Network',
                           sortable: true,
                           render: (_value: string, iface: AttachedInterface) => (
-                            <Link 
-                              to={`/networks/${iface.id}`}
-                              className="flex items-center gap-1.5 font-medium text-[var(--color-action-primary)] hover:underline"
-                            >
-                              {iface.network}
-                              <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
-                            </Link>
-                          ),
-                        },
-                        {
-                          key: 'port',
-                          label: 'Port',
-                          sortable: true,
-                          render: (_value: string, iface: AttachedInterface) => (
-                            <Link 
-                              to={`/ports/${iface.port}`}
-                              className="flex items-center gap-1.5 font-medium text-[var(--color-action-primary)] hover:underline"
-                            >
-                              {iface.port}
-                              <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
-                            </Link>
-                          ),
-                        },
-                        {
-                          key: 'portStatus',
-                          label: 'Port Status',
-                          render: (_value: string, iface: AttachedInterface) => (
-                            <span className="text-[var(--color-text-default)]">{iface.portStatus}</span>
+                            <div className="flex flex-col gap-0.5">
+                              <Link 
+                                to={`/networks/${iface.id}`}
+                                className="font-medium text-[var(--color-action-primary)] hover:underline"
+                              >
+                                {iface.network}
+                              </Link>
+                              <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
+                                ID : {iface.id}
+                              </span>
+                            </div>
                           ),
                         },
                         {
@@ -775,15 +826,32 @@ export function InstanceDetailPage() {
                           ),
                         },
                         {
+                          key: 'createdAt',
+                          label: 'Created At',
+                          sortable: true,
+                          render: (_value: string, iface: AttachedInterface) => (
+                            <span className="text-[var(--color-text-default)]">{iface.createdAt}</span>
+                          ),
+                        },
+                        {
                           key: 'action',
                           label: 'Action',
                           width: '72px',
                           align: 'center' as const,
-                          render: () => (
-                            <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-subtle)] transition-colors">
-                              <IconDotsCircleHorizontal size={16} stroke={1} className="text-[var(--color-text-default)]" />
-                            </button>
-                          ),
+                          render: (_: unknown, iface: AttachedInterface) => {
+                            const interfaceMenuItems: ContextMenuItem[] = [
+                              { id: 'detach', label: 'Detach', status: 'danger', onClick: () => console.log('Detach interface', iface.id) },
+                            ];
+                            return (
+                              <div onClick={(e) => e.stopPropagation()}>
+                                <ContextMenu items={interfaceMenuItems} trigger="click">
+                                  <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
+                                    <IconDotsCircleHorizontal size={16} stroke={1.5} className="text-[var(--action-icon-color)]" />
+                                  </button>
+                                </ContextMenu>
+                              </div>
+                            );
+                          },
                         },
                       ]}
                       data={mockAttachedInterfaces.slice((interfaceCurrentPage - 1) * interfaceRowsPerPage, interfaceCurrentPage * interfaceRowsPerPage)}
@@ -824,29 +892,29 @@ export function InstanceDetailPage() {
                         {
                           key: 'status',
                           label: 'Status',
-                          width: '59px',
+                          width: '72px',
+                          align: 'center',
                           render: (_value: string, row: FloatingIP) => (
                             <StatusIndicator status={row.status} layout="icon-only" size="md" />
-                          ),
-                        },
-                        {
-                          key: 'name',
-                          label: 'ID',
-                          sortable: true,
-                          render: (_value: string, row: FloatingIP) => (
-                            <Link 
-                              to={`/floating-ips/${row.id}`}
-                              className="flex items-center gap-1.5 font-medium text-[var(--color-action-primary)] hover:underline"
-                            >
-                              {row.name}
-                              <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
-                            </Link>
                           ),
                         },
                         {
                           key: 'floatingIp',
                           label: 'Floating IP',
                           sortable: true,
+                          render: (_value: string, row: FloatingIP) => (
+                            <div className="flex flex-col gap-0.5">
+                              <Link 
+                                to={`/floating-ips/${row.id}`}
+                                className="font-medium text-[var(--color-action-primary)] hover:underline"
+                              >
+                                {row.floatingIp}
+                              </Link>
+                              <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
+                                ID : {row.id}
+                              </span>
+                            </div>
+                          ),
                         },
                         {
                           key: 'fixedIp',
@@ -863,9 +931,20 @@ export function InstanceDetailPage() {
                           label: 'Action',
                           width: '72px',
                           align: 'center',
-                          render: () => (
-                            <Button variant="tertiary" size="sm" iconOnly icon={<IconDotsCircleHorizontal size={16} stroke={1} />} aria-label="Actions" />
-                          ),
+                          render: (_: unknown, row: FloatingIP) => {
+                            const floatingIpMenuItems: ContextMenuItem[] = [
+                              { id: 'disassociate', label: 'Disassociate', status: 'danger', onClick: () => console.log('Disassociate', row.id) },
+                            ];
+                            return (
+                              <div onClick={(e) => e.stopPropagation()}>
+                                <ContextMenu items={floatingIpMenuItems} trigger="click">
+                                  <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
+                                    <IconDotsCircleHorizontal size={16} stroke={1.5} className="text-[var(--action-icon-color)]" />
+                                  </button>
+                                </ContextMenu>
+                              </div>
+                            );
+                          },
                         },
                       ]}
                       data={mockFloatingIPs.slice((floatingIpCurrentPage - 1) * floatingIpRowsPerPage, floatingIpCurrentPage * floatingIpRowsPerPage)}
@@ -926,16 +1005,20 @@ export function InstanceDetailPage() {
                       columns={[
                         {
                           key: 'name',
-                          label: 'Security Group',
+                          label: 'Name',
                           sortable: true,
                           render: (_value: string, row: SecurityGroup) => (
-                            <Link 
-                              to={`/security-groups/${row.id}`}
-                              className="flex items-center gap-1.5 font-medium text-[var(--color-action-primary)] hover:underline"
-                            >
-                              {row.name}
-                              <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
-                            </Link>
+                            <div className="flex flex-col gap-0.5">
+                              <Link 
+                                to={`/security-groups/${row.id}`}
+                                className="font-medium text-[var(--color-action-primary)] hover:underline"
+                              >
+                                {row.name}
+                              </Link>
+                              <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
+                                ID : {row.id}
+                              </span>
+                            </div>
                           ),
                         },
                         {
@@ -944,13 +1027,32 @@ export function InstanceDetailPage() {
                           sortable: true,
                         },
                         {
+                          key: 'createdAt',
+                          label: 'Created At',
+                          sortable: true,
+                          render: (_value: string, row: SecurityGroup) => (
+                            <span className="text-[var(--color-text-default)]">{row.createdAt}</span>
+                          ),
+                        },
+                        {
                           key: 'action',
                           label: 'Action',
                           width: '72px',
                           align: 'center' as const,
-                          render: () => (
-                            <Button variant="tertiary" size="sm" iconOnly icon={<IconDotsCircleHorizontal size={16} stroke={1} />} aria-label="Actions" />
-                          ),
+                          render: (_: unknown, row: SecurityGroup) => {
+                            const securityGroupMenuItems: ContextMenuItem[] = [
+                              { id: 'detach', label: 'Detach', status: 'danger', onClick: () => console.log('Detach security group', row.id) },
+                            ];
+                            return (
+                              <div onClick={(e) => e.stopPropagation()}>
+                                <ContextMenu items={securityGroupMenuItems} trigger="click">
+                                  <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
+                                    <IconDotsCircleHorizontal size={16} stroke={1.5} className="text-[var(--action-icon-color)]" />
+                                  </button>
+                                </ContextMenu>
+                              </div>
+                            );
+                          },
                         },
                       ]}
                       data={mockSecurityGroups.slice((securityCurrentPage - 1) * securityRowsPerPage, securityCurrentPage * securityRowsPerPage)}
@@ -1014,13 +1116,17 @@ export function InstanceDetailPage() {
                           label: 'Name',
                           sortable: true,
                           render: (_value: string, row: InstanceSnapshot) => (
-                            <Link 
-                              to={`/instance-snapshots/${row.id}`}
-                              className="flex items-center gap-1.5 font-medium text-[var(--color-action-primary)] hover:underline"
-                            >
-                              {row.name}
-                              <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
-                            </Link>
+                            <div className="flex flex-col gap-0.5">
+                              <Link 
+                                to={`/instance-snapshots/${row.id}`}
+                                className="font-medium text-[var(--color-action-primary)] hover:underline"
+                              >
+                                {row.name}
+                              </Link>
+                              <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
+                                ID : {row.id}
+                              </span>
+                            </div>
                           ),
                         },
                         {
@@ -1043,9 +1149,23 @@ export function InstanceDetailPage() {
                           label: 'Action',
                           width: '72px',
                           align: 'center',
-                          render: () => (
-                            <Button variant="tertiary" size="sm" iconOnly icon={<IconDotsCircleHorizontal size={16} stroke={1} />} aria-label="Actions" />
-                          ),
+                          render: (_: unknown, row: InstanceSnapshot) => {
+                            const snapshotMenuItems: ContextMenuItem[] = [
+                              { id: 'edit', label: 'Edit', onClick: () => console.log('Edit snapshot', row.id) },
+                              { id: 'create-instance', label: 'Create Instance', onClick: () => console.log('Create instance from', row.id) },
+                              { id: 'create-volume', label: 'Create Volume', onClick: () => console.log('Create volume from', row.id) },
+                              { id: 'delete', label: 'Delete', status: 'danger', onClick: () => console.log('Delete snapshot', row.id) },
+                            ];
+                            return (
+                              <div onClick={(e) => e.stopPropagation()}>
+                                <ContextMenu items={snapshotMenuItems} trigger="click">
+                                  <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
+                                    <IconDotsCircleHorizontal size={16} stroke={1.5} className="text-[var(--action-icon-color)]" />
+                                  </button>
+                                </ContextMenu>
+                              </div>
+                            );
+                          },
                         },
                       ]}
                       data={filteredSnapshots.slice((snapshotCurrentPage - 1) * snapshotRowsPerPage, snapshotCurrentPage * snapshotRowsPerPage)}
@@ -1057,6 +1177,20 @@ export function InstanceDetailPage() {
 
                 {/* Monitoring Tab Panel */}
                 <TabPanel value="monitoring">
+                  <div className="pt-6">
+                    <p className="text-[var(--color-text-subtle)]">Monitoring content will be displayed here.</p>
+                  </div>
+                </TabPanel>
+
+                {/* Resource Map Tab Panel */}
+                <TabPanel value="resource-map">
+                  <div className="pt-6">
+                    <p className="text-[var(--color-text-subtle)]">Resource Map content will be displayed here.</p>
+                  </div>
+                </TabPanel>
+
+                {/* Logs Tab Panel */}
+                <TabPanel value="logs">
                   <VStack gap={3} className="pt-6">
                     {/* Header */}
                     <div className="flex items-center h-7">
@@ -1077,19 +1211,19 @@ export function InstanceDetailPage() {
                                 onClick={() => setLogLength(prev => prev + 1)}
                                 className="text-[var(--color-text-default)] hover:text-[var(--color-action-primary)]"
                               >
-                                <IconChevronUp size={12} stroke={1} />
+                                <IconChevronUp size={12} stroke={1.5} />
                               </button>
                               <button
                                 onClick={() => setLogLength(prev => Math.max(1, prev - 1))}
                                 className="text-[var(--color-text-default)] hover:text-[var(--color-action-primary)]"
                               >
-                                <IconChevronDown size={12} stroke={1} />
+                                <IconChevronDown size={12} stroke={1.5} />
                               </button>
                             </div>
                           </div>
                           {/* Search Button */}
                           <Button variant="secondary" size="sm" className="!p-2 !w-8 !h-8 !min-w-8 text-[var(--color-text-default)]">
-                            <IconSearch size={16} stroke={1} />
+                            <IconSearch size={16} stroke={1.5} />
                           </Button>
                         </div>
                       </div>
@@ -1097,18 +1231,18 @@ export function InstanceDetailPage() {
                       {/* Right side - View Full Log */}
                       <div className="flex items-center gap-1">
                         <Button variant="secondary" size="sm" className="text-[var(--color-text-default)]">
-                          <IconTerminal2 size={14} stroke={1} />
+                          <IconTerminal2 size={14} stroke={1.5} />
                           View Full Log
                         </Button>
                         <Button variant="secondary" size="sm" className="!p-2 !w-8 !h-8 !min-w-8 text-[var(--color-text-default)]">
-                          <IconDownload size={18} stroke={1} className="w-[14px]" />
+                          <IconDownload size={18} stroke={1.5} className="w-[14px]" />
                         </Button>
                       </div>
                     </div>
 
                     {/* Console Area */}
-                    <div className="w-full flex-1 min-h-[500px] bg-[#0F172A] border border-[var(--color-border-default)] rounded-lg p-6 overflow-auto">
-                      <pre className="font-mono text-[13px] leading-[22px] text-[#e2e8f0] whitespace-pre-wrap">
+                    <div className="w-full flex-1 min-h-[500px] bg-[#141414] dark:bg-[#FAFAFA] border border-[var(--color-border-default)] rounded-lg p-6 overflow-auto text-[#fafafa] dark:text-[#0f172a]">
+                      <pre className="font-mono text-[13px] leading-[22px] text-[#e2e8f0] dark:text-[#1e293b] whitespace-pre-wrap">
 {`[    0.000000] Linux version 5.15.0-107-cloud (buildd@ubuntu) (gcc 11.3.0) #119-Ubuntu SMP Thu Sep 5 10:10:10 UTC 2025
 [    0.500123] cloud-init[101]: Starting network configuration...
 [    1.002345] cloud-init[101]: eth0: assigned 192.168.0.15 via DHCP
@@ -1124,20 +1258,6 @@ export function InstanceDetailPage() {
                       </pre>
                     </div>
                   </VStack>
-                </TabPanel>
-
-                {/* Resource Map Tab Panel */}
-                <TabPanel value="resource-map">
-                  <div className="pt-6">
-                    <p className="text-[var(--color-text-subtle)]">Resource Map content will be displayed here.</p>
-                  </div>
-                </TabPanel>
-
-                {/* Logs Tab Panel */}
-                <TabPanel value="logs">
-                  <div className="pt-6">
-                    <p className="text-[var(--color-text-subtle)]">Logs content will be displayed here.</p>
-                  </div>
                 </TabPanel>
 
                 {/* Action Logs Tab Panel */}
@@ -1160,7 +1280,7 @@ export function InstanceDetailPage() {
                         className="w-[280px]"
                       />
                       <Button variant="secondary" size="sm" className="!p-2 !w-7 !h-7 !min-w-7">
-                        <IconDownload size={12} stroke={1} className="w-3 h-3" />
+                        <IconDownload size={12} stroke={1.5} className="w-3 h-3" />
                       </Button>
                     </div>
 
@@ -1180,8 +1300,8 @@ export function InstanceDetailPage() {
                       <div className="flex items-start bg-[var(--table-header-bg)] border border-[var(--color-border-default)] rounded-md">
                         <div className="flex-1 flex items-center h-10 px-3">
                           <div className="flex items-center gap-1.5">
-                            <span className="text-[11px] font-medium text-[var(--color-text-default)]">Operation Name</span>
-                            <IconChevronDown size={12} stroke={1} className="text-[var(--color-text-default)]" />
+                            <span className="text-[11px] font-medium text-[var(--color-text-default)]">Action</span>
+                            <IconChevronDown size={12} stroke={1.5} className="text-[var(--color-text-default)]" />
                           </div>
                         </div>
                         <div className="flex-1 flex items-center h-10 px-3 border-l border-[var(--color-border-default)]">
@@ -1190,7 +1310,7 @@ export function InstanceDetailPage() {
                         <div className="flex-1 flex items-center h-10 px-3 border-l border-[var(--color-border-default)]">
                           <div className="flex items-center gap-1.5">
                             <span className="text-[11px] font-medium text-[var(--color-text-default)]">Requested Time</span>
-                            <IconChevronDown size={12} stroke={1} className="text-[var(--color-text-default)]" />
+                            <IconChevronDown size={12} stroke={1.5} className="text-[var(--color-text-default)]" />
                           </div>
                         </div>
                       </div>
@@ -1210,12 +1330,12 @@ export function InstanceDetailPage() {
                                 <div className="flex-1 flex items-center gap-2 min-h-[40px] px-3 py-2">
                                   <button
                                     onClick={() => toggleLogExpansion(log.id)}
-                                    className="p-0.5 hover:bg-[var(--color-surface-subtle)] rounded transition-colors"
+                                    className="p-0.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
                                   >
                                     {isExpanded ? (
-                                      <IconChevronDown size={12} stroke={1} className="text-[var(--color-text-default)]" />
+                                      <IconChevronDown size={12} stroke={1.5} className="text-[var(--color-text-default)]" />
                                     ) : (
-                                      <IconChevronRight size={12} stroke={1} className="text-[var(--color-text-default)]" />
+                                      <IconChevronRight size={12} stroke={1.5} className="text-[var(--color-text-default)]" />
                                     )}
                                   </button>
                                   <span className="text-[12px] text-[var(--color-text-default)]">{log.operationName}</span>
@@ -1224,9 +1344,9 @@ export function InstanceDetailPage() {
                                   <span className="text-[12px] text-[var(--color-text-default)]">{log.requestId}</span>
                                   <button
                                     onClick={() => copyToClipboard(log.requestId)}
-                                    className="p-0.5 hover:bg-[var(--color-surface-subtle)] rounded transition-colors"
+                                    className="p-0.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
                                   >
-                                    <IconCopy size={12} stroke={1} className="text-[var(--color-action-primary)]" />
+                                    <IconCopy size={12} stroke={1.5} className="text-[var(--color-action-primary)]" />
                                   </button>
                                 </div>
                                 <div className="flex-1 flex items-center min-h-[40px] px-3 py-2">
@@ -1262,6 +1382,7 @@ export function InstanceDetailPage() {
               </Tabs>
             </div>
           </VStack>
+        </div>
         </div>
       </main>
     </div>

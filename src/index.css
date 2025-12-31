@@ -892,6 +892,11 @@ html.theme-transition *::after {
   --tooltip-bg: var(--color-surface-inverse);
   --tooltip-text: var(--color-text-inverse);
   --tooltip-arrow-size: 4px;
+
+  /* ----------------------------------------
+     Component - Action Icon (Table Actions)
+     ---------------------------------------- */
+  --action-icon-color: #64748b;
 }
 
 /* Override Tailwind's default gray/zinc to use our values */
@@ -1087,6 +1092,9 @@ html.theme-transition *::after {
   /* Button (Dark Mode) - 일관되게 밝아지는 방향 */
   --button-secondary-hover-bg: #2a2a2a;             /* surface-default보다 밝게 */
   --button-ghost-hover-bg: #2a2a2a;                 /* 동일하게 */
+
+  /* Action Icon (Dark Mode) */
+  --action-icon-color: #EBEBEB;
 }
 
 /* ========================================

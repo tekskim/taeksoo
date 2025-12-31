@@ -117,6 +117,9 @@ export default function SecurityGroupDetailPage() {
   // Delete modal state
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [ruleToDelete, setRuleToDelete] = useState<SecurityGroupRule | null>(null);
+  
+  // Preferences state
+  const [isPreferencesOpen, setIsPreferencesOpen] = useState(false);
 
   // Global tab management
   const { tabs, activeTabId, closeTab, selectTab, addNewTab } = useTabs();
@@ -242,8 +245,8 @@ export default function SecurityGroupDetailPage() {
       render: (_, row) => (
         <div onClick={(e) => e.stopPropagation()}>
           <ContextMenu items={getPortContextMenuItems(row)} trigger="click">
-            <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors">
-              <IconDotsCircleHorizontal size={16} stroke={1} className="text-[var(--color-text-subtle)]" />
+            <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
+              <IconDotsCircleHorizontal size={16} stroke={1.5} className="text-[var(--action-icon-color)]" />
             </button>
           </ContextMenu>
         </div>
@@ -289,8 +292,8 @@ export default function SecurityGroupDetailPage() {
       render: (_, row) => (
         <div onClick={(e) => e.stopPropagation()}>
           <ContextMenu items={getRuleContextMenuItems(row)} trigger="click">
-            <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors">
-              <IconDotsCircleHorizontal size={16} stroke={1} className="text-[var(--color-text-subtle)]" />
+            <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
+              <IconDotsCircleHorizontal size={16} stroke={1.5} className="text-[var(--action-icon-color)]" />
             </button>
           </ContextMenu>
         </div>
@@ -299,15 +302,16 @@ export default function SecurityGroupDetailPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-[var(--color-surface-subtle)]">
+    <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
       <Sidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(false)} />
 
       <main
-        className={`min-h-screen bg-[var(--color-surface-default)] transition-[margin] duration-200 overflow-x-auto ${
-          sidebarOpen ? 'ml-[200px]' : 'ml-0'
+        className={`absolute top-0 bottom-0 right-0 flex flex-col bg-[var(--color-surface-default)] transition-[left] duration-200 ${
+          sidebarOpen ? 'left-[200px]' : 'left-0'
         }`}
       >
-        <div className="min-w-[var(--layout-content-min-width)]">
+        {/* Fixed Header Area */}
+        <div className="shrink-0 bg-[var(--color-surface-default)]">
           {/* Tab Bar */}
           <TabBar
             tabs={tabBarTabs}
@@ -343,7 +347,10 @@ export default function SecurityGroupDetailPage() {
               />
             }
           />
+        </div>
 
+        {/* Scrollable Content Area */}
+        <div className="flex-1 overflow-auto min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll">
           {/* Main Content */}
           <div className="pt-4 px-8 pb-20 bg-[var(--color-surface-default)]">
             <VStack gap={8} className="min-w-[1176px] max-w-[1320px]">
@@ -376,7 +383,7 @@ export default function SecurityGroupDetailPage() {
                         onClick={() => copyToClipboard(securityGroup.id)}
                         className="p-0.5 rounded hover:bg-[var(--color-surface-muted)] transition-colors"
                       >
-                        <IconCopy size={12} className="text-[var(--color-text-default)]" />
+                        <IconCopy size={12} className="text-[var(--color-action-primary)]" />
                       </button>
                     </div>
                     <p className="text-[length:var(--font-size-12)] text-[var(--color-text-default)] mt-1.5">
@@ -454,7 +461,10 @@ export default function SecurityGroupDetailPage() {
                         currentPage={ruleCurrentPage}
                         totalPages={Math.ceil(filteredRules.length / rulesPerPage)}
                         totalItems={filteredRules.length}
+                        selectedCount={selectedRules.length}
                         onPageChange={setRuleCurrentPage}
+                        showSettings
+                        onSettingsClick={() => setIsPreferencesOpen(true)}
                       />
 
                       {/* Table */}
@@ -506,7 +516,10 @@ export default function SecurityGroupDetailPage() {
                         currentPage={portCurrentPage}
                         totalPages={Math.ceil(filteredPorts.length / portsPerPage)}
                         totalItems={filteredPorts.length}
+                        selectedCount={selectedPorts.length}
                         onPageChange={setPortCurrentPage}
+                        showSettings
+                        onSettingsClick={() => setIsPreferencesOpen(true)}
                       />
 
                       {/* Table */}
