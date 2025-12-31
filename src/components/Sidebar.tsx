@@ -64,12 +64,12 @@ export function Sidebar({ isOpen = true, onToggle }: SidebarProps) {
     if (href === '/networks' && location.pathname.startsWith('/subnets')) {
       return true;
     }
-    // Match child resources - Listeners are under Load Balancers
-    if (href === '/load-balancers' && location.pathname.startsWith('/listeners')) {
-      return true;
-    }
-    // Match child resources - Pools are under Load Balancers
-    if (href === '/load-balancers' && location.pathname.startsWith('/pools')) {
+    // Match child resources - Listeners, Pools, and L7 Policies are under Load Balancers
+    if (href === '/load-balancers' && (
+      location.pathname.startsWith('/listeners') ||
+      location.pathname.startsWith('/pools') ||
+      location.pathname.startsWith('/l7-policies')
+    )) {
       return true;
     }
     return false;

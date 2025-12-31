@@ -1997,13 +1997,17 @@ input[type="search"]::-webkit-search-decoration {
 }
 
 .calendarDayWrapper.rangeStart .rangeBackground {
-  left: 50%;
+  left: 0;
   right: calc(var(--datepicker-cell-gap) / -2);
+  border-top-left-radius: var(--datepicker-cell-size);
+  border-bottom-left-radius: var(--datepicker-cell-size);
 }
 
 .calendarDayWrapper.rangeEnd .rangeBackground {
   left: calc(var(--datepicker-cell-gap) / -2);
-  right: 50%;
+  right: 0;
+  border-top-right-radius: var(--datepicker-cell-size);
+  border-bottom-right-radius: var(--datepicker-cell-size);
 }
 
 .calendarDayWrapper.rangeStart.rangeEnd .rangeBackground {

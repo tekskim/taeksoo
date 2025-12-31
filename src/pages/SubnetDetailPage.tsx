@@ -331,6 +331,9 @@ export default function SubnetDetailPage() {
 
           {/* Top Bar */}
           <TopBar
+            showNavigation={true}
+            onBack={() => window.history.back()}
+            onForward={() => window.history.forward()}
             breadcrumb={<Breadcrumb items={breadcrumbItems} />}
             onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
             actions={
