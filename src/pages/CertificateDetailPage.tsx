@@ -339,6 +339,9 @@ export default function CertificateDetailPage() {
 
           {/* Top Bar */}
           <TopBar
+            showNavigation={true}
+            onBack={() => window.history.back()}
+            onForward={() => window.history.forward()}
             breadcrumb={<Breadcrumb items={breadcrumbItems} />}
             onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
             actions={

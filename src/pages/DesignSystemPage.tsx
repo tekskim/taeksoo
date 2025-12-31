@@ -646,7 +646,7 @@ function BarChartDemo({ variant }: { variant: 'vertical' | 'horizontal' | 'group
           max: 100,
           axisLine: { show: false },
           axisTick: { show: false },
-          splitLine: { lineStyle: { color: chartColors.slate100, opacity: 0.5 } },
+          splitLine: { lineStyle: { color: chartColors.slate100, opacity: 0.2 } },
           axisLabel: { color: chartColors.slate400, fontSize: 10 }
         },
         yAxis: {
@@ -1134,6 +1134,21 @@ function LineChart({
     Object.fromEntries(series.map(s => [s.name, true]))
   );
   const [menuOpen, setMenuOpen] = useState(false);
+  const [isDarkMode, setIsDarkMode] = useState(false);
+
+  // Detect dark mode changes
+  useEffect(() => {
+    const checkDarkMode = () => {
+      setIsDarkMode(document.documentElement.classList.contains('dark'));
+    };
+    checkDarkMode();
+    
+    // Observe class changes on html element
+    const observer = new MutationObserver(checkDarkMode);
+    observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
+    
+    return () => observer.disconnect();
+  }, []);
 
   const timeLabels = generateTimeLabels();
 
@@ -1148,14 +1163,21 @@ function LineChart({
     if (onFullScreen) onFullScreen();
   };
 
+  // Get theme-aware colors
+  const splitLineColor = isDarkMode ? 'rgba(255, 255, 255, 0.08)' : chartColors.slate100;
+  const splitLineOpacity = isDarkMode ? 1 : 0.5;
+  const tooltipBg = isDarkMode ? '#1C1C1C' : 'white';
+  const tooltipBorder = isDarkMode ? '#3a3a3a' : '#e2e8f0';
+  const tooltipTextColor = isDarkMode ? '#e5e5e5' : chartColors.slate800;
+
   const option = {
     animation: false,
     grid: {
-      left: '0',
+      left: '60px',
       right: '16px',
       top: '20px',
       bottom: '16px',
-      containLabel: true
+      containLabel: false
     },
         xAxis: {
       type: 'category' as const,
@@ -1173,7 +1195,7 @@ function LineChart({
       axisLine: { show: false },
       axisTick: { show: false },
       splitLine: {
-        lineStyle: { color: chartColors.slate100, opacity: 0.5 }
+        lineStyle: { color: splitLineColor, opacity: splitLineOpacity }
       },
       axisLabel: {
         color: chartColors.slate400,
@@ -1183,10 +1205,10 @@ function LineChart({
     },
     tooltip: {
       trigger: 'axis' as const,
-      backgroundColor: 'white',
-      borderColor: '#e2e8f0',
+      backgroundColor: tooltipBg,
+      borderColor: tooltipBorder,
       textStyle: { 
-        color: chartColors.slate800, 
+        color: tooltipTextColor, 
         fontSize: 11, 
         fontFamily: 'Mona Sans, -apple-system, BlinkMacSystemFont, sans-serif' 
       }
@@ -1279,7 +1301,7 @@ function LineChart({
             >
               <div className="legendDot" style={{ backgroundColor: s.color }} />
               <span>{s.name}</span>
-            </div>
+          </div>
           ))}
         </div>
       </div>
@@ -1913,15 +1935,15 @@ function TableDemo() {
         row.attachedTo && row.attachedToId ? (
           <div className="flex items-center gap-2">
             <Tooltip content={row.attachedType === 'router' ? 'Router' : 'Instance'} position="top" delay={0}>
-              <div 
+            <div 
                 className="flex-shrink-0 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[4px] p-1 cursor-pointer hover:bg-[var(--color-surface-muted)] transition-colors"
-              >
-                {row.attachedType === 'router' ? (
-                  <IconRouter size={12} stroke={1.5} className="text-[var(--color-text-subtle)]" />
-                ) : (
-                  <IconCube size={12} stroke={1.5} className="text-[var(--color-text-subtle)]" />
-                )}
-              </div>
+            >
+              {row.attachedType === 'router' ? (
+                <IconRouter size={12} stroke={1.5} className="text-[var(--color-text-subtle)]" />
+              ) : (
+                <IconCube size={12} stroke={1.5} className="text-[var(--color-text-subtle)]" />
+              )}
+            </div>
             </Tooltip>
             <div className="flex flex-col gap-0.5 min-w-0">
               <button
@@ -3018,7 +3040,7 @@ outline: 2px solid var(--color-border-focus);`}
                     </div>
                     <div className="flex flex-col gap-1 min-w-0">
                       <div className="text-[length:var(--font-size-12)] text-[var(--color-text-default)] font-medium font-mono">
-                        --shadow-{name}
+                      --shadow-{name}
                       </div>
                       <div className="text-[length:var(--font-size-10)] text-[var(--color-text-muted)] font-mono break-all">
                         {value}
@@ -5104,8 +5126,8 @@ outline: 2px solid var(--color-border-focus);`}
                 <VStack gap={3}>
                   <Label>Info Card - Basic Text</Label>
                   <div className="grid grid-cols-3 gap-2">
-                    <DetailHeader.InfoCard label="Host" value="compute-03" />
-                    <DetailHeader.InfoCard label="Created At" value="2025-07-25 09:12:20" />
+                      <DetailHeader.InfoCard label="Host" value="compute-03" />
+                      <DetailHeader.InfoCard label="Created At" value="2025-07-25 09:12:20" />
                     <DetailHeader.InfoCard label="Availability Zone" value="nova" />
                   </div>
                 </VStack>

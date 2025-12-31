@@ -212,7 +212,6 @@ export default function ListenerDetailPage() {
   // Certificates state
   const [certificateSearchTerm, setCertificateSearchTerm] = useState('');
   const [certificateCurrentPage, setCertificateCurrentPage] = useState(1);
-  const [selectedCertificates, setSelectedCertificates] = useState<string[]>([]);
   const certificatesPerPage = 10;
 
   // In a real app, fetch based on id
@@ -504,6 +503,9 @@ export default function ListenerDetailPage() {
 
           {/* Top Bar */}
           <TopBar
+            showNavigation={true}
+            onBack={() => window.history.back()}
+            onForward={() => window.history.forward()}
             breadcrumb={<Breadcrumb items={breadcrumbItems} />}
             onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
             actions={
@@ -789,7 +791,7 @@ export default function ListenerDetailPage() {
                           variant="secondary"
                           size="sm"
                           leftIcon={<IconTrash size={12} />}
-                          disabled={selectedCertificates.length === 0}
+                          disabled
                         >
                           Delete
                         </Button>
@@ -813,9 +815,6 @@ export default function ListenerDetailPage() {
                         columns={certificateColumns}
                         data={paginatedCertificates}
                         rowKey="id"
-                        selectable
-                        selectedRows={selectedCertificates}
-                        onSelectionChange={setSelectedCertificates}
                       />
                     </VStack>
                   </TabPanel>
