@@ -8,6 +8,7 @@ import { InstanceListPage } from '@/pages/InstanceListPage';
 import { InstanceDetailPage } from '@/pages/InstanceDetailPage';
 import { DesignSystemPage } from '@/pages/DesignSystemPage';
 import { DrawersPage } from '@/pages/DrawersPage';
+import { ModalsPage } from '@/pages/ModalsPage';
 import { HomePage } from '@/pages/HomePage';
 import { InstanceTemplatesPage } from '@/pages/InstanceTemplatesPage';
 import { InstanceTemplateDetailPage } from '@/pages/InstanceTemplateDetailPage';
@@ -102,6 +103,7 @@ function AppRoutes() {
         <Route path="/console/:instanceId" element={<ConsolePage />} />
         <Route path="/design-system" element={<DesignSystemPage />} />
         <Route path="/drawers" element={<DrawersPage />} />
+        <Route path="/modals" element={<ModalsPage />} />
         <Route path="/gradients" element={<GradientShowcasePage />} />
         <Route path="/color-palette" element={<ColorPalettePage />} />
         <Route path="/metallic-palette" element={<MetallicPalettePage />} />

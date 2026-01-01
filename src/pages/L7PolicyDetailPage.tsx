@@ -217,12 +217,14 @@ export default function L7PolicyDetailPage() {
       key: 'key',
       label: 'Key',
       flex: 1,
+      sortable: true,
       render: (_, row) => row.key || '-',
     },
     {
       key: 'value',
       label: 'Value',
       flex: 1,
+      sortable: true,
     },
     {
       key: 'invert',
