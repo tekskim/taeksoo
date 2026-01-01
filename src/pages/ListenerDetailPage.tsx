@@ -487,7 +487,6 @@ export default function ListenerDetailPage() {
       key: 'type',
       label: 'Type',
       flex: 1,
-      sortable: true,
     },
     {
       key: 'domain',
@@ -850,9 +849,17 @@ export default function ListenerDetailPage() {
                         <h3 className="text-[16px] font-semibold text-[var(--color-text-default)]">
                           Certificates
                         </h3>
-                        <Button variant="secondary" size="sm" leftIcon={<IconCirclePlus size={12} />}>
-                          Add Certificate
-                        </Button>
+                        <div className="flex items-center gap-2">
+                          <Button variant="secondary" size="sm" leftIcon={<IconCertificate size={12} />}>
+                            Change Server Certificate
+                          </Button>
+                          <Button variant="secondary" size="sm" leftIcon={<IconCertificate size={12} />}>
+                            Change CA Certificate
+                          </Button>
+                          <Button variant="secondary" size="sm" leftIcon={<IconListDetails size={12} />}>
+                            Manage SNI Certificates
+                          </Button>
+                        </div>
                       </div>
 
                       {/* Action Bar */}

@@ -23,6 +23,7 @@ import {
   IconLayoutSidebar,
   IconPalette,
   IconLayoutSidebarRight,
+  IconAppWindow,
 } from '@tabler/icons-react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import ThakiLogoLight from '@/assets/thakiLogo_light.svg';
@@ -126,10 +127,27 @@ export function Sidebar({ isOpen = true, onToggle }: SidebarProps) {
           {/* Drawers Link */}
           <button
             onClick={() => handleMenuClick('/drawers', 'Drawers')}
-            className="flex items-center gap-2 px-2 py-1.5 rounded-md bg-[var(--color-action-secondary)] hover:bg-[var(--color-action-secondary-hover)] text-[var(--color-text-default)] text-[11px] font-medium transition-colors border border-[var(--color-border-default)] w-full cursor-pointer"
+            className={`flex items-center gap-2 px-2 py-1.5 rounded-md text-[11px] font-medium transition-colors w-full cursor-pointer border ${
+              isActive('/drawers')
+                ? 'bg-transparent border-[var(--color-action-primary)] text-[var(--color-action-primary)] hover:bg-[var(--color-action-primary-hover)]/10'
+                : 'bg-[var(--color-action-secondary)] hover:bg-[var(--color-action-secondary-hover)] text-[var(--color-text-default)] border-[var(--color-border-default)]'
+            }`}
           >
             <IconLayoutSidebarRight size={16} stroke={1.5} />
             <span>Drawers</span>
+          </button>
+
+          {/* Modals Link */}
+          <button
+            onClick={() => handleMenuClick('/modals', 'Modals')}
+            className={`flex items-center gap-2 px-2 py-1.5 rounded-md text-[11px] font-medium transition-colors w-full cursor-pointer border ${
+              isActive('/modals')
+                ? 'bg-transparent border-[var(--color-action-primary)] text-[var(--color-action-primary)] hover:bg-[var(--color-action-primary-hover)]/10'
+                : 'bg-[var(--color-action-secondary)] hover:bg-[var(--color-action-secondary-hover)] text-[var(--color-text-default)] border-[var(--color-border-default)]'
+            }`}
+          >
+            <IconAppWindow size={16} stroke={1.5} />
+            <span>Modals</span>
           </button>
 
           {/* Home */}
