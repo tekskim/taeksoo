@@ -217,6 +217,7 @@ export function LoadBalancerDetailPage() {
       align: 'center',
       render: (_: unknown, row: Listener) => {
         const listenerMenuItems: ContextMenuItem[] = [
+          { id: 'edit', label: 'Edit', icon: <IconEdit size={14} stroke={1.5} />, onClick: () => console.log('Edit listener', row.id) },
           { id: 'delete', label: 'Delete', status: 'danger', onClick: () => console.log('Delete listener', row.id) },
         ];
         return (
@@ -293,9 +294,27 @@ export function LoadBalancerDetailPage() {
                   <Button variant="secondary" size="sm" leftIcon={<IconTrash size={12} />}>
                     Delete
                   </Button>
-                  <Button variant="secondary" size="sm" rightIcon={<IconChevronDown size={12} />}>
-                    More Actions
-                  </Button>
+                  <ContextMenu
+                    trigger="click"
+                    items={[
+                      {
+                        id: 'edit',
+                        label: 'Edit',
+                        icon: <IconEdit size={14} stroke={1.5} />,
+                        onClick: () => console.log('Edit clicked'),
+                      },
+                      {
+                        id: 'create-listener',
+                        label: 'Create Listener',
+                        icon: <IconCirclePlus size={14} stroke={1.5} />,
+                        onClick: () => console.log('Create Listener clicked'),
+                      },
+                    ]}
+                  >
+                    <Button variant="secondary" size="sm" rightIcon={<IconChevronDown size={12} />}>
+                      More Actions
+                    </Button>
+                  </ContextMenu>
                 </DetailHeader.Actions>
                 <DetailHeader.InfoGrid>
                   <DetailHeader.InfoCard
