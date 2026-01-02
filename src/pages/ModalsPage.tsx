@@ -72,13 +72,18 @@ export function ModalsPage() {
   const [isConfirmDeleteOpen, setIsConfirmDeleteOpen] = useState(false);
   const [isDeleteSecurityGroupOpen, setIsDeleteSecurityGroupOpen] = useState(false);
   const [isDeleteSecurityGroupsMultipleOpen, setIsDeleteSecurityGroupsMultipleOpen] = useState(false);
+  const [isDeleteRuleOpen, setIsDeleteRuleOpen] = useState(false);
+  const [isDeleteRulesMultipleOpen, setIsDeleteRulesMultipleOpen] = useState(false);
   const [isDetachVolumeOpen, setIsDetachVolumeOpen] = useState(false);
   const [isRestoreBackupSmallOpen, setIsRestoreBackupSmallOpen] = useState(false);
   const [isRestoreBackupMediumOpen, setIsRestoreBackupMediumOpen] = useState(false);
   const [isRestoreBackupLargeOpen, setIsRestoreBackupLargeOpen] = useState(false);
   const [isDisassociateFloatingIPOpen, setIsDisassociateFloatingIPOpen] = useState(false);
+  const [isDisassociateFloatingIPLBOpen, setIsDisassociateFloatingIPLBOpen] = useState(false);
   const [isReleaseFloatingIPSmallOpen, setIsReleaseFloatingIPSmallOpen] = useState(false);
   const [isReleaseFloatingIPMediumOpen, setIsReleaseFloatingIPMediumOpen] = useState(false);
+  const [isDeleteLoadBalancerOpen, setIsDeleteLoadBalancerOpen] = useState(false);
+  const [isDeleteLoadBalancersMultipleOpen, setIsDeleteLoadBalancersMultipleOpen] = useState(false);
 
   return (
     <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
@@ -163,6 +168,20 @@ export function ModalsPage() {
                       size="md"
                       onOpen={() => setIsDeleteSecurityGroupsMultipleOpen(true)}
                     />
+                    <ModalListItem
+                      title="Delete Rule"
+                      description="Confirm deletion of a single security group rule."
+                      category="Confirm"
+                      size="sm"
+                      onOpen={() => setIsDeleteRuleOpen(true)}
+                    />
+                    <ModalListItem
+                      title="Delete Rules (Multiple)"
+                      description="Confirm deletion of multiple rules with scrollable list and warning."
+                      category="Confirm"
+                      size="md"
+                      onOpen={() => setIsDeleteRulesMultipleOpen(true)}
+                    />
                   </div>
                 </VStack>
 
@@ -226,6 +245,13 @@ export function ModalsPage() {
                       onOpen={() => setIsDisassociateFloatingIPOpen(true)}
                     />
                     <ModalListItem
+                      title="Disassociate Floating IP (Load Balancer)"
+                      description="Disassociate a floating IP from a load balancer."
+                      category="Network"
+                      size="sm"
+                      onOpen={() => setIsDisassociateFloatingIPLBOpen(true)}
+                    />
+                    <ModalListItem
                       title="Release Floating IP"
                       description="Release a single floating IP with warning about permanent action."
                       category="Network"
@@ -238,6 +264,29 @@ export function ModalsPage() {
                       category="Network"
                       size="md"
                       onOpen={() => setIsReleaseFloatingIPMediumOpen(true)}
+                    />
+                  </div>
+                </VStack>
+
+                {/* Load Balancers */}
+                <VStack gap={2}>
+                  <h2 className="text-[14px] font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
+                    Load Balancers
+                  </h2>
+                  <div className="flex flex-col gap-2">
+                    <ModalListItem
+                      title="Delete Load Balancer"
+                      description="Delete a single load balancer with warning about associated resources."
+                      category="Network"
+                      size="sm"
+                      onOpen={() => setIsDeleteLoadBalancerOpen(true)}
+                    />
+                    <ModalListItem
+                      title="Release Load Balancers"
+                      description="Delete multiple load balancers with scrollable list and warning."
+                      category="Network"
+                      size="md"
+                      onOpen={() => setIsDeleteLoadBalancersMultipleOpen(true)}
                     />
                   </div>
                 </VStack>
@@ -411,6 +460,103 @@ export function ModalsPage() {
             onClick={() => {
               console.log('Security groups deleted');
               setIsDeleteSecurityGroupsMultipleOpen(false);
+            }} 
+            className="flex-1"
+          >
+            Delete
+          </Button>
+        </div>
+      </Modal>
+
+      {/* Delete Rule Modal (Single) */}
+      <Modal
+        isOpen={isDeleteRuleOpen}
+        onClose={() => setIsDeleteRuleOpen(false)}
+        title="Delete Rule"
+        description="Are you sure you want to delete this rule? This action cannot be undone."
+        size="sm"
+      >
+        <div className="flex flex-col gap-2">
+          {/* Rule Info Box */}
+          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
+            <span className="text-[11px] text-[var(--color-text-subtle)] font-medium leading-4">
+              Rule
+            </span>
+            <span className="text-[12px] text-[var(--color-text-default)] leading-4">
+              Ingress TCP 80 from 0.0.0.0/0
+            </span>
+          </div>
+        </div>
+
+        {/* Button Group */}
+        <div className="flex gap-2 w-full">
+          <Button variant="outline" size="md" onClick={() => setIsDeleteRuleOpen(false)} className="flex-1">
+            Cancel
+          </Button>
+          <Button 
+            variant="primary" 
+            size="md" 
+            onClick={() => {
+              console.log('Rule deleted');
+              setIsDeleteRuleOpen(false);
+            }} 
+            className="flex-1"
+          >
+            Delete
+          </Button>
+        </div>
+      </Modal>
+
+      {/* Delete Rules Modal (Multiple with Warning) */}
+      <Modal
+        isOpen={isDeleteRulesMultipleOpen}
+        onClose={() => setIsDeleteRulesMultipleOpen(false)}
+        title="Delete Rules"
+        description="Are you sure you want to delete the selected rules? This action cannot be undone."
+        size="md"
+      >
+        <div className="flex flex-col gap-2">
+          {/* Rules Info Box with Scrollable List */}
+          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5 max-h-[96px] overflow-y-auto sidebar-scroll">
+            <span className="text-[11px] text-[var(--color-text-subtle)] font-medium leading-4">
+              Rules(10)
+            </span>
+            <ul className="text-[12px] text-[var(--color-text-default)] leading-4 list-disc pl-4 space-y-0.5">
+              <li>Ingress TCP 80 from 0.0.0.0/0</li>
+              <li>Ingress TCP 443 from 0.0.0.0/0</li>
+              <li>Ingress TCP 22 from 10.0.0.0/8</li>
+              <li>Egress TCP 80 to 0.0.0.0/0</li>
+              <li>Egress TCP 443 to 0.0.0.0/0</li>
+              <li>Ingress UDP 53 from 0.0.0.0/0</li>
+              <li>Egress UDP 53 to 0.0.0.0/0</li>
+              <li>Ingress ICMP from 0.0.0.0/0</li>
+              <li>Egress ICMP to 0.0.0.0/0</li>
+              <li>Ingress TCP 3306 from 10.0.0.0/8</li>
+            </ul>
+          </div>
+
+          {/* Warning Alert Box */}
+          <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
+            <IconAlertCircle size={16} className="text-[var(--color-state-danger)] shrink-0 mt-0.5" stroke={1.5} />
+            <p className="text-[11px] text-[var(--color-text-default)] leading-4">
+              This action will permanently delete the selected rules.
+              <br />
+              If these rules are attached to any instances, their network traffic may be affected.
+            </p>
+          </div>
+        </div>
+
+        {/* Button Group */}
+        <div className="flex gap-2 w-full">
+          <Button variant="outline" size="md" onClick={() => setIsDeleteRulesMultipleOpen(false)} className="flex-1">
+            Cancel
+          </Button>
+          <Button 
+            variant="primary" 
+            size="md" 
+            onClick={() => {
+              console.log('Rules deleted');
+              setIsDeleteRulesMultipleOpen(false);
             }} 
             className="flex-1"
           >
@@ -665,6 +811,55 @@ export function ModalsPage() {
         </div>
       </Modal>
 
+      {/* Disassociate Floating IP (Load Balancer) Modal */}
+      <Modal
+        isOpen={isDisassociateFloatingIPLBOpen}
+        onClose={() => setIsDisassociateFloatingIPLBOpen(false)}
+        title="Disassociate Floating IP"
+        description="Disassociating will detach the floating IP from this load balancer. External access to the load balancer will be interrupted."
+        size="sm"
+      >
+        <div className="flex flex-col gap-2">
+          {/* Load Balancer Info Box */}
+          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
+            <span className="text-[11px] text-[var(--color-text-subtle)] font-medium leading-4">
+              Load Balancer
+            </span>
+            <span className="text-[12px] text-[var(--color-text-default)] leading-4">
+              web-lb-01(10.0.0.10)
+            </span>
+          </div>
+
+          {/* Floating IP Info Box */}
+          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
+            <span className="text-[11px] text-[var(--color-text-subtle)] font-medium leading-4">
+              Floating IP
+            </span>
+            <span className="text-[12px] text-[var(--color-text-default)] leading-4">
+              123.45.67.8
+            </span>
+          </div>
+        </div>
+
+        {/* Button Group */}
+        <div className="flex gap-2 w-full">
+          <Button variant="outline" size="md" onClick={() => setIsDisassociateFloatingIPLBOpen(false)} className="flex-1">
+            Cancel
+          </Button>
+          <Button 
+            variant="primary" 
+            size="md" 
+            onClick={() => {
+              console.log('Disassociate floating IP from load balancer confirmed');
+              setIsDisassociateFloatingIPLBOpen(false);
+            }} 
+            className="flex-1"
+          >
+            Disassociate
+          </Button>
+        </div>
+      </Modal>
+
       {/* Release Floating IP (Small) Modal */}
       <Modal
         isOpen={isReleaseFloatingIPSmallOpen}
@@ -760,6 +955,105 @@ export function ModalsPage() {
             className="flex-1"
           >
             Disassociate
+          </Button>
+        </div>
+      </Modal>
+
+      {/* Delete Load Balancer Modal (Single) */}
+      <Modal
+        isOpen={isDeleteLoadBalancerOpen}
+        onClose={() => setIsDeleteLoadBalancerOpen(false)}
+        title="Delete Load Balancer"
+        description="Are you sure you want to delete this load balancer? This action cannot be undone."
+        size="sm"
+      >
+        <div className="flex flex-col gap-2">
+          {/* Load Balancer Info Box */}
+          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
+            <span className="text-[11px] text-[var(--color-text-subtle)] font-medium leading-4">
+              Load Balancer
+            </span>
+            <span className="text-[12px] text-[var(--color-text-default)] leading-4">
+              web-lb-01
+            </span>
+          </div>
+
+          {/* Warning Alert Box */}
+          <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
+            <IconAlertCircle size={16} className="text-[var(--color-state-danger)] shrink-0 mt-0.5" stroke={1.5} />
+            <p className="text-[11px] text-[var(--color-text-default)] leading-4">
+              All listeners, pools, and members associated with it will be removed.
+            </p>
+          </div>
+        </div>
+
+        {/* Button Group */}
+        <div className="flex gap-2 w-full">
+          <Button variant="outline" size="md" onClick={() => setIsDeleteLoadBalancerOpen(false)} className="flex-1">
+            Cancel
+          </Button>
+          <Button 
+            variant="primary" 
+            size="md" 
+            onClick={() => {
+              console.log('Load balancer deleted');
+              setIsDeleteLoadBalancerOpen(false);
+            }} 
+            className="flex-1"
+          >
+            Delete
+          </Button>
+        </div>
+      </Modal>
+
+      {/* Release Load Balancers Modal (Multiple) */}
+      <Modal
+        isOpen={isDeleteLoadBalancersMultipleOpen}
+        onClose={() => setIsDeleteLoadBalancersMultipleOpen(false)}
+        title="Release Load Balancers"
+        description="Are you sure you want to delete the selected load balancers? This action cannot be undone."
+        size="md"
+      >
+        <div className="flex flex-col gap-2">
+          {/* Load Balancers Info Box with Scrollable List */}
+          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5 max-h-[96px] overflow-y-auto sidebar-scroll">
+            <span className="text-[11px] text-[var(--color-text-subtle)] font-medium leading-4">
+              Load Balancers
+            </span>
+            <ul className="text-[12px] text-[var(--color-text-default)] leading-4 list-disc pl-4 space-y-0.5">
+              <li>web-lb-01</li>
+              <li>web-lb-02</li>
+              <li>web-lb-03</li>
+              <li>web-lb-04</li>
+              <li>web-lb-05</li>
+              <li>web-lb-06</li>
+            </ul>
+          </div>
+
+          {/* Warning Alert Box */}
+          <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
+            <IconAlertCircle size={16} className="text-[var(--color-state-danger)] shrink-0 mt-0.5" stroke={1.5} />
+            <p className="text-[11px] text-[var(--color-text-default)] leading-4">
+              All listeners, pools, and members associated with them will be removed.
+            </p>
+          </div>
+        </div>
+
+        {/* Button Group */}
+        <div className="flex gap-2 w-full">
+          <Button variant="outline" size="md" onClick={() => setIsDeleteLoadBalancersMultipleOpen(false)} className="flex-1">
+            Cancel
+          </Button>
+          <Button 
+            variant="primary" 
+            size="md" 
+            onClick={() => {
+              console.log('Load balancers deleted');
+              setIsDeleteLoadBalancersMultipleOpen(false);
+            }} 
+            className="flex-1"
+          >
+            Delete
           </Button>
         </div>
       </Modal>
