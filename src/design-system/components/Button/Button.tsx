@@ -54,8 +54,8 @@ const buttonVariants = cva(
           'disabled:text-[var(--color-text-disabled)]',
         ],
         muted: [
-          'bg-[var(--color-surface-default)] text-[var(--color-text-default)]',
-          'border border-[var(--color-border-strong)]',
+          'bg-[var(--color-surface-default)] text-[var(--color-text-muted)]',
+          'border border-[var(--color-border-default)]',
           'hover:bg-[var(--color-surface-subtle)] hover:text-[var(--color-text-default)] hover:border-[var(--color-border-strong)]',
           'active:bg-[var(--color-surface-default)]',
           'disabled:bg-[var(--color-surface-default)] disabled:text-[var(--color-text-disabled)] disabled:border-[var(--color-border-default)]',
@@ -211,7 +211,6 @@ export const Button: ButtonComponent = forwardRef(
       variant = 'primary',
       size = 'md',
       fullWidth,
-      iconOnly,
       isLoading = false,
       leftIcon,
       rightIcon,
@@ -225,7 +224,7 @@ export const Button: ButtonComponent = forwardRef(
     ref: PolymorphicRef<C>
   ) => {
     const Component = as || 'button';
-    const isIconOnly = iconOnly || !!icon;
+    const isIconOnly = !!icon;
     const isDisabled = disabled || isLoading;
 
     const classes = twMerge(
@@ -260,7 +259,7 @@ export const Button: ButtonComponent = forwardRef(
             <span className="sr-only">Loading...</span>
           </>
         ) : isIconOnly ? (
-          <span className="shrink-0 flex items-center justify-center">{icon || children}</span>
+          <span className="shrink-0 flex items-center justify-center">{icon}</span>
         ) : (
           <>
             {leftIcon && <span className="shrink-0">{leftIcon}</span>}
