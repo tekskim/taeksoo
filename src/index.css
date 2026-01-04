@@ -892,6 +892,11 @@ html.theme-transition *::after {
   --tooltip-bg: var(--color-surface-inverse);
   --tooltip-text: var(--color-text-inverse);
   --tooltip-arrow-size: 4px;
+
+  /* ----------------------------------------
+     Component - Action Icon (Table Actions)
+     ---------------------------------------- */
+  --action-icon-color: #64748b;
 }
 
 /* Override Tailwind's default gray/zinc to use our values */
@@ -1087,6 +1092,9 @@ html.theme-transition *::after {
   /* Button (Dark Mode) - 일관되게 밝아지는 방향 */
   --button-secondary-hover-bg: #2a2a2a;             /* surface-default보다 밝게 */
   --button-ghost-hover-bg: #2a2a2a;                 /* 동일하게 */
+
+  /* Action Icon (Dark Mode) */
+  --action-icon-color: #EBEBEB;
 }
 
 /* ========================================
@@ -1997,13 +2005,17 @@ input[type="search"]::-webkit-search-decoration {
 }
 
 .calendarDayWrapper.rangeStart .rangeBackground {
-  left: 50%;
+  left: 0;
   right: calc(var(--datepicker-cell-gap) / -2);
+  border-top-left-radius: var(--datepicker-cell-size);
+  border-bottom-left-radius: var(--datepicker-cell-size);
 }
 
 .calendarDayWrapper.rangeEnd .rangeBackground {
   left: calc(var(--datepicker-cell-gap) / -2);
-  right: 50%;
+  right: 0;
+  border-top-right-radius: var(--datepicker-cell-size);
+  border-bottom-right-radius: var(--datepicker-cell-size);
 }
 
 .calendarDayWrapper.rangeStart.rangeEnd .rangeBackground {

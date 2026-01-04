@@ -114,15 +114,16 @@ export default function FloatingIPDetailPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[var(--color-surface-subtle)]">
+    <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
       <Sidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
       
       <main
-        className={`min-h-screen bg-[var(--color-surface-default)] transition-[margin] duration-200 overflow-x-auto ${
-          sidebarOpen ? 'ml-[200px]' : 'ml-0'
+        className={`absolute top-0 bottom-0 right-0 flex flex-col bg-[var(--color-surface-default)] transition-[left] duration-200 ${
+          sidebarOpen ? 'left-[200px]' : 'left-0'
         }`}
       >
-        <div className="min-w-[var(--layout-content-min-width)]">
+        {/* Fixed Header Area */}
+        <div className="shrink-0 bg-[var(--color-surface-default)]">
           {/* Tab Bar */}
           <TabBar
             tabs={tabBarTabs}
@@ -150,7 +151,10 @@ export default function FloatingIPDetailPage() {
               />
             }
           />
+        </div>
 
+        {/* Scrollable Content Area */}
+        <div className="flex-1 overflow-auto min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll">
           {/* Main Content */}
           <div className="pt-4 px-8 pb-20 bg-[var(--color-surface-default)]">
             <VStack gap={8} className="min-w-[1176px] max-w-[1320px]">
@@ -263,7 +267,7 @@ export default function FloatingIPDetailPage() {
                                     className="p-0.5 rounded hover:bg-[var(--color-surface-muted)] transition-colors"
                                     title={copiedFqdn ? 'Copied!' : 'Copy FQDN'}
                                   >
-                                    <IconCopy size={16} className="text-[var(--color-text-subtle)]" />
+                                    <IconCopy size={12} className="text-[var(--color-text-subtle)]" />
                                   </button>
                                 </div>
                               ) : '-'

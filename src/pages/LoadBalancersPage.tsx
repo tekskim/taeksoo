@@ -43,6 +43,8 @@ interface LoadBalancer {
   floatingIp: string;
   floatingIpId: string;
   listeners: string;
+  listenerId: string;
+  listenerCount: number;
   createdAt: string;
   status: LoadBalancerStatus;
 }
@@ -52,16 +54,16 @@ interface LoadBalancer {
    ---------------------------------------- */
 
 const mockLoadBalancers: LoadBalancer[] = [
-  { id: 'lb-001', name: 'web-lb-01', vipAddress: '192.168.10.13', ownedNetwork: 'net-02', ownedNetworkId: 'net-002', floatingIp: '192.168.10.13', floatingIpId: 'fip-001', listeners: 'listener-http-80(+2)', createdAt: '2025-10-03', status: 'active' },
-  { id: 'lb-002', name: 'api-lb', vipAddress: '192.168.10.14', ownedNetwork: 'net-01', ownedNetworkId: 'net-001', floatingIp: '192.168.10.14', floatingIpId: 'fip-002', listeners: 'listener-https-443', createdAt: '2025-10-02', status: 'active' },
-  { id: 'lb-003', name: 'app-lb', vipAddress: '192.168.10.15', ownedNetwork: 'net-03', ownedNetworkId: 'net-003', floatingIp: '192.168.10.15', floatingIpId: 'fip-003', listeners: 'listener-tcp-8080(+1)', createdAt: '2025-10-01', status: 'building' },
-  { id: 'lb-004', name: 'db-lb', vipAddress: '192.168.10.16', ownedNetwork: 'net-01', ownedNetworkId: 'net-001', floatingIp: '-', floatingIpId: '', listeners: 'listener-mysql-3306', createdAt: '2025-09-28', status: 'active' },
-  { id: 'lb-005', name: 'cache-lb', vipAddress: '192.168.10.17', ownedNetwork: 'net-02', ownedNetworkId: 'net-002', floatingIp: '-', floatingIpId: '', listeners: 'listener-redis-6379', createdAt: '2025-09-25', status: 'active' },
-  { id: 'lb-006', name: 'internal-lb', vipAddress: '192.168.10.18', ownedNetwork: 'net-04', ownedNetworkId: 'net-004', floatingIp: '-', floatingIpId: '', listeners: 'listener-grpc-9090(+3)', createdAt: '2025-09-20', status: 'error' },
-  { id: 'lb-007', name: 'streaming-lb', vipAddress: '192.168.10.19', ownedNetwork: 'net-01', ownedNetworkId: 'net-001', floatingIp: '192.168.10.19', floatingIpId: 'fip-007', listeners: 'listener-rtmp-1935', createdAt: '2025-09-15', status: 'active' },
-  { id: 'lb-008', name: 'mail-lb', vipAddress: '192.168.10.20', ownedNetwork: 'net-02', ownedNetworkId: 'net-002', floatingIp: '192.168.10.20', floatingIpId: 'fip-008', listeners: 'listener-smtp-25', createdAt: '2025-09-10', status: 'pending' },
-  { id: 'lb-009', name: 'vpn-lb', vipAddress: '192.168.10.21', ownedNetwork: 'net-03', ownedNetworkId: 'net-003', floatingIp: '192.168.10.21', floatingIpId: 'fip-009', listeners: 'listener-openvpn-1194', createdAt: '2025-09-05', status: 'active' },
-  { id: 'lb-010', name: 'monitoring-lb', vipAddress: '192.168.10.22', ownedNetwork: 'net-01', ownedNetworkId: 'net-001', floatingIp: '-', floatingIpId: '', listeners: 'listener-http-3000(+4)', createdAt: '2025-09-01', status: 'active' },
+  { id: 'lb-001', name: 'web-lb-01', vipAddress: '192.168.10.13', ownedNetwork: 'net-02', ownedNetworkId: 'net-002', floatingIp: '192.168.10.13', floatingIpId: 'fip-001', listeners: 'listener-http-80', listenerId: '29tgj234', listenerCount: 2, createdAt: '2025-10-03', status: 'active' },
+  { id: 'lb-002', name: 'api-lb', vipAddress: '192.168.10.14', ownedNetwork: 'net-01', ownedNetworkId: 'net-001', floatingIp: '192.168.10.14', floatingIpId: 'fip-002', listeners: 'listener-https-443', listenerId: '38fk29dk', listenerCount: 0, createdAt: '2025-10-02', status: 'active' },
+  { id: 'lb-003', name: 'app-lb', vipAddress: '192.168.10.15', ownedNetwork: 'net-03', ownedNetworkId: 'net-003', floatingIp: '192.168.10.15', floatingIpId: 'fip-003', listeners: 'listener-tcp-8080', listenerId: '9dk38fj2', listenerCount: 1, createdAt: '2025-10-01', status: 'building' },
+  { id: 'lb-004', name: 'db-lb', vipAddress: '192.168.10.16', ownedNetwork: 'net-01', ownedNetworkId: 'net-001', floatingIp: '-', floatingIpId: '', listeners: 'listener-mysql-3306', listenerId: 'k29dk38f', listenerCount: 0, createdAt: '2025-09-28', status: 'active' },
+  { id: 'lb-005', name: 'cache-lb', vipAddress: '192.168.10.17', ownedNetwork: 'net-02', ownedNetworkId: 'net-002', floatingIp: '-', floatingIpId: '', listeners: 'listener-redis-6379', listenerId: 'fj29dk38', listenerCount: 0, createdAt: '2025-09-25', status: 'active' },
+  { id: 'lb-006', name: 'internal-lb', vipAddress: '192.168.10.18', ownedNetwork: 'net-04', ownedNetworkId: 'net-004', floatingIp: '-', floatingIpId: '', listeners: 'listener-grpc-9090', listenerId: '8fj29dk3', listenerCount: 3, createdAt: '2025-09-20', status: 'error' },
+  { id: 'lb-007', name: 'streaming-lb', vipAddress: '192.168.10.19', ownedNetwork: 'net-01', ownedNetworkId: 'net-001', floatingIp: '192.168.10.19', floatingIpId: 'fip-007', listeners: 'listener-rtmp-1935', listenerId: 'dk38fj29', listenerCount: 0, createdAt: '2025-09-15', status: 'active' },
+  { id: 'lb-008', name: 'mail-lb', vipAddress: '192.168.10.20', ownedNetwork: 'net-02', ownedNetworkId: 'net-002', floatingIp: '192.168.10.20', floatingIpId: 'fip-008', listeners: 'listener-smtp-25', listenerId: '29dk38fj', listenerCount: 0, createdAt: '2025-09-10', status: 'pending' },
+  { id: 'lb-009', name: 'vpn-lb', vipAddress: '192.168.10.21', ownedNetwork: 'net-03', ownedNetworkId: 'net-003', floatingIp: '192.168.10.21', floatingIpId: 'fip-009', listeners: 'listener-openvpn-1194', listenerId: '3fj29dk8', listenerCount: 0, createdAt: '2025-09-05', status: 'active' },
+  { id: 'lb-010', name: 'monitoring-lb', vipAddress: '192.168.10.22', ownedNetwork: 'net-01', ownedNetworkId: 'net-001', floatingIp: '-', floatingIpId: '', listeners: 'listener-http-3000', listenerId: 'j29dk38f', listenerCount: 4, createdAt: '2025-09-01', status: 'active' },
 ];
 
 /* ----------------------------------------
@@ -160,6 +162,7 @@ export function LoadBalancersPage() {
       key: 'name',
       label: 'Name',
       flex: 1,
+      sortable: true,
       render: (_, row) => (
         <div className="flex flex-col gap-0.5">
           <Link
@@ -184,6 +187,7 @@ export function LoadBalancersPage() {
       key: 'ownedNetwork',
       label: 'Owned Network',
       flex: 1,
+      sortable: true,
       render: (_, row) => (
         <div className="flex flex-col gap-0.5">
           <Link
@@ -225,11 +229,29 @@ export function LoadBalancersPage() {
       key: 'listeners',
       label: 'Listeners',
       flex: 1,
+      render: (_, row) => (
+        <div className="flex items-center gap-[5px]">
+          <div className="flex flex-col gap-0.5">
+            <span className="text-[length:var(--font-size-12)] text-[var(--color-text-default)]">
+              {row.listeners}
+            </span>
+            <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
+              ID : {row.listenerId}
+            </span>
+          </div>
+          {row.listenerCount > 0 && (
+            <span className="text-[length:var(--font-size-12)] text-[var(--color-text-default)]">
+              (+{row.listenerCount})
+            </span>
+          )}
+        </div>
+      ),
     },
     {
       key: 'createdAt',
       label: 'Created At',
       flex: 1,
+      sortable: true,
     },
     {
       key: 'actions',
@@ -239,8 +261,8 @@ export function LoadBalancersPage() {
       render: (_, row) => (
         <div onClick={(e) => e.stopPropagation()}>
           <ContextMenu items={getContextMenuItems(row)} trigger="click">
-            <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors">
-              <IconDotsCircleHorizontal size={16} stroke={1} className="text-[var(--color-text-subtle)]" />
+            <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
+              <IconDotsCircleHorizontal size={16} stroke={1.5} className="text-[var(--action-icon-color)]" />
             </button>
           </ContextMenu>
         </div>
@@ -270,15 +292,16 @@ export function LoadBalancersPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[var(--color-surface-subtle)]">
-      <Sidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(false)} />
+    <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
+      <Sidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(prev => !prev)} />
 
       <main
-        className={`min-h-screen bg-[var(--color-surface-default)] transition-[margin] duration-200 overflow-x-auto ${
-          sidebarOpen ? 'ml-[200px]' : 'ml-0'
+        className={`absolute top-0 bottom-0 right-0 flex flex-col bg-[var(--color-surface-default)] transition-[left] duration-200 ${
+          sidebarOpen ? 'left-[200px]' : 'left-0'
         }`}
       >
-        <div className="min-w-[var(--layout-content-min-width)]">
+        {/* Fixed Header Area */}
+        <div className="shrink-0 bg-[var(--color-surface-default)]">
         {/* Tab Bar */}
         <TabBar
           tabs={tabBarTabs}
@@ -313,7 +336,10 @@ export function LoadBalancersPage() {
             />
           }
         />
+        </div>
 
+        {/* Scrollable Content Area */}
+        <div className="flex-1 overflow-auto min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll">
         {/* Main Content */}
         <div className="pt-4 px-8 pb-6 bg-[var(--color-surface-default)]">
           <VStack gap={3}>

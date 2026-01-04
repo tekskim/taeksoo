@@ -17,8 +17,9 @@ import {
   SearchInput,
   Pagination,
   StatusIndicator,
+  ContextMenu,
 } from '@/design-system';
-import type { TableColumn } from '@/design-system';
+import type { TableColumn, ContextMenuItem } from '@/design-system';
 import { Sidebar } from '@/components/Sidebar';
 import { useTabs } from '@/contexts/TabContext';
 import {
@@ -29,6 +30,11 @@ import {
   IconExternalLink,
   IconCirclePlus,
   IconDotsCircleHorizontal,
+  IconPool,
+  IconPlus,
+  IconCertificate,
+  IconShieldLock,
+  IconListDetails,
 } from '@tabler/icons-react';
 
 /* ----------------------------------------
@@ -89,6 +95,7 @@ interface Certificate {
   status: CertificateStatus;
   type: CertificateType;
   domain: string;
+  issuer: string;
   expiresAt: string;
 }
 
@@ -154,6 +161,7 @@ const mockCertificates: Certificate[] = Array.from({ length: 115 }, (_, i) => ({
   status: ['active', 'active', 'active', 'error', 'pending'][i % 5] as CertificateStatus,
   type: i % 2 === 0 ? 'Server' : 'CA',
   domain: i % 2 === 0 ? `*.domain${i}.com` : 'N/A',
+  issuer: ['DigiCert', 'Let\'s Encrypt', 'Comodo', 'GlobalSign', 'Sectigo'][i % 5],
   expiresAt: `2026-${String((i % 12) + 1).padStart(2, '0')}-${String((i % 28) + 1).padStart(2, '0')}`,
 }));
 
@@ -212,8 +220,10 @@ export default function ListenerDetailPage() {
   // Certificates state
   const [certificateSearchTerm, setCertificateSearchTerm] = useState('');
   const [certificateCurrentPage, setCertificateCurrentPage] = useState(1);
-  const [selectedCertificates, setSelectedCertificates] = useState<string[]>([]);
   const certificatesPerPage = 10;
+
+  // Preferences state
+  const [isPreferencesOpen, setIsPreferencesOpen] = useState(false);
 
   // In a real app, fetch based on id
   const listener = mockListenerDetail;
@@ -351,9 +361,20 @@ export default function ListenerDetailPage() {
       label: 'Action',
       width: '72px',
       align: 'center',
-      render: () => (
-        <Button variant="tertiary" size="sm" iconOnly icon={<IconDotsCircleHorizontal size={16} stroke={1} />} />
-      ),
+      render: (_: unknown, row: Pool) => {
+        const poolMenuItems: ContextMenuItem[] = [
+          { id: 'delete', label: 'Delete', status: 'danger', onClick: () => console.log('Delete pool', row.id) },
+        ];
+        return (
+          <div onClick={(e) => e.stopPropagation()}>
+            <ContextMenu items={poolMenuItems} trigger="click">
+              <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
+                <IconDotsCircleHorizontal size={16} stroke={1.5} className="text-[var(--action-icon-color)]" />
+              </button>
+            </ContextMenu>
+          </div>
+        );
+      },
     },
   ];
 
@@ -412,9 +433,21 @@ export default function ListenerDetailPage() {
       label: 'Action',
       width: '72px',
       align: 'center',
-      render: () => (
-        <Button variant="tertiary" size="sm" iconOnly icon={<IconDotsCircleHorizontal size={16} stroke={1} />} />
-      ),
+      render: (_: unknown, row: L7Policy) => {
+        const policyMenuItems: ContextMenuItem[] = [
+          { id: 'edit', label: 'Edit', icon: <IconEdit size={14} stroke={1.5} />, onClick: () => console.log('Edit policy', row.id) },
+          { id: 'delete', label: 'Delete', status: 'danger', onClick: () => console.log('Delete policy', row.id) },
+        ];
+        return (
+          <div onClick={(e) => e.stopPropagation()}>
+            <ContextMenu items={policyMenuItems} trigger="click">
+              <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
+                <IconDotsCircleHorizontal size={16} stroke={1.5} className="text-[var(--action-icon-color)]" />
+              </button>
+            </ContextMenu>
+          </div>
+        );
+      },
     },
   ];
 
@@ -454,11 +487,16 @@ export default function ListenerDetailPage() {
       key: 'type',
       label: 'Type',
       flex: 1,
-      sortable: true,
     },
     {
       key: 'domain',
-      label: 'Domain',
+      label: 'SAN',
+      flex: 1,
+      sortable: true,
+    },
+    {
+      key: 'issuer',
+      label: 'Issuer',
       flex: 1,
       sortable: true,
     },
@@ -473,24 +511,40 @@ export default function ListenerDetailPage() {
       label: 'Action',
       width: '72px',
       align: 'center',
-      render: () => (
-        <Button variant="tertiary" size="sm" iconOnly icon={<IconDotsCircleHorizontal size={16} stroke={1} />} />
-      ),
+      render: (_: unknown, row: Certificate) => {
+        const certMenuItems: ContextMenuItem[] = row.type === 'Server' 
+          ? [
+              { id: 'change-server-cert', label: 'Change Server Certificate', icon: <IconCertificate size={14} stroke={1.5} />, onClick: () => console.log('Change server certificate', row.id) },
+            ]
+          : [
+              { id: 'change-ca-cert', label: 'Change CA Certificate', icon: <IconCertificate size={14} stroke={1.5} />, onClick: () => console.log('Change CA certificate', row.id) },
+            ];
+        return (
+          <div onClick={(e) => e.stopPropagation()}>
+            <ContextMenu items={certMenuItems} trigger="click">
+              <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
+                <IconDotsCircleHorizontal size={16} stroke={1.5} className="text-[var(--action-icon-color)]" />
+              </button>
+            </ContextMenu>
+          </div>
+        );
+      },
     },
   ];
 
   return (
-    <div className="min-h-screen bg-[var(--color-surface-subtle)]">
+    <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
       {/* Sidebar */}
       <Sidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
 
       {/* Main Content */}
       <main
-        className={`min-h-screen bg-[var(--color-surface-default)] transition-[margin] duration-200 overflow-x-auto ${
-          sidebarOpen ? 'ml-[200px]' : 'ml-0'
+        className={`absolute top-0 bottom-0 right-0 flex flex-col bg-[var(--color-surface-default)] transition-[left] duration-200 ${
+          sidebarOpen ? 'left-[200px]' : 'left-0'
         }`}
       >
-        <div className="min-w-[var(--layout-content-min-width)]">
+        {/* Fixed Header Area */}
+        <div className="shrink-0 bg-[var(--color-surface-default)]">
           {/* Tab Bar */}
           <TabBar
             tabs={tabBarTabs}
@@ -504,6 +558,9 @@ export default function ListenerDetailPage() {
 
           {/* Top Bar */}
           <TopBar
+            showNavigation={true}
+            onBack={() => window.history.back()}
+            onForward={() => window.history.forward()}
             breadcrumb={<Breadcrumb items={breadcrumbItems} />}
             onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
             actions={
@@ -514,7 +571,10 @@ export default function ListenerDetailPage() {
               />
             }
           />
+        </div>
 
+        {/* Scrollable Content Area */}
+        <div className="flex-1 overflow-auto min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll">
           {/* Page Content */}
           <div className="pt-4 px-8 pb-20 bg-[var(--color-surface-default)]">
             <VStack gap={8} className="min-w-[1176px] max-w-[1320px]">
@@ -537,13 +597,62 @@ export default function ListenerDetailPage() {
                   >
                     Delete
                   </Button>
-                  <Button
-                    variant="secondary"
-                    size="sm"
-                    rightIcon={<IconChevronDown size={12} />}
+                  <ContextMenu
+                    trigger="click"
+                    items={[
+                      {
+                        id: 'create-default-pool',
+                        label: 'Create default pool',
+                        icon: <IconPool size={14} stroke={1.5} />,
+                        onClick: () => console.log('Create default pool clicked'),
+                      },
+                      {
+                        id: 'delete-default-pool',
+                        label: 'Delete default pool',
+                        icon: <IconTrash size={14} stroke={1.5} />,
+                        status: 'danger',
+                        onClick: () => console.log('Delete default pool clicked'),
+                      },
+                      {
+                        id: 'edit-default-pool',
+                        label: 'Edit default pool',
+                        icon: <IconEdit size={14} stroke={1.5} />,
+                        onClick: () => console.log('Edit default pool clicked'),
+                      },
+                      {
+                        id: 'add-l7-policy',
+                        label: 'Add L7 policy',
+                        icon: <IconPlus size={14} stroke={1.5} />,
+                        onClick: () => console.log('Add L7 policy clicked'),
+                      },
+                      {
+                        id: 'change-server-certificates',
+                        label: 'Change server certificates',
+                        icon: <IconCertificate size={14} stroke={1.5} />,
+                        onClick: () => console.log('Change server certificates clicked'),
+                      },
+                      {
+                        id: 'change-ca-certificate',
+                        label: 'Change CA certificate',
+                        icon: <IconShieldLock size={14} stroke={1.5} />,
+                        onClick: () => console.log('Change CA certificate clicked'),
+                      },
+                      {
+                        id: 'manage-sni-certificate',
+                        label: 'Manage SNI certificate',
+                        icon: <IconListDetails size={14} stroke={1.5} />,
+                        onClick: () => console.log('Manage SNI certificate clicked'),
+                      },
+                    ]}
                   >
-                    More Actions
-                  </Button>
+                    <Button
+                      variant="secondary"
+                      size="sm"
+                      rightIcon={<IconChevronDown size={12} />}
+                    >
+                      More Actions
+                    </Button>
+                  </ContextMenu>
                 </DetailHeader.Actions>
 
                 <DetailHeader.InfoGrid>
@@ -575,7 +684,7 @@ export default function ListenerDetailPage() {
                 <Tabs value={activeDetailTab} onChange={setActiveDetailTab} size="sm">
                   <TabList>
                     <Tab value="details">Details</Tab>
-                    <Tab value="pools">Pools</Tab>
+                    <Tab value="pools">Default Pool</Tab>
                     <Tab value="l7-policies">L7 Policies</Tab>
                     <Tab value="certificates">Certificates</Tab>
                   </TabList>
@@ -637,64 +746,39 @@ export default function ListenerDetailPage() {
                     </VStack>
                   </TabPanel>
 
-                  {/* Pools Tab */}
+                  {/* Default Pool Tab */}
                   <TabPanel value="pools">
-                    <VStack gap={3} className="pt-6">
-                      {/* Header */}
-                      <div className="flex items-center justify-between">
-                        <h3 className="text-[16px] font-semibold text-[var(--color-text-default)]">
-                          Pools
-                        </h3>
-                        <Button variant="secondary" size="sm" leftIcon={<IconCirclePlus size={12} />}>
-                          Create Pool
-                        </Button>
-                      </div>
-
-                      {/* Action Bar */}
-                      <div className="flex items-center gap-2">
-                        <div className="w-[280px]">
-                          <SearchInput
-                            value={poolSearchTerm}
-                            onChange={(e) => {
-                              setPoolSearchTerm(e.target.value);
-                              setPoolCurrentPage(1);
-                            }}
-                            placeholder="Find pool with filters"
-                          />
-                        </div>
-                        <div className="h-4 w-px bg-[var(--color-border-default)]" />
-                        <Button
-                          variant="secondary"
-                          size="sm"
-                          leftIcon={<IconTrash size={12} />}
-                          disabled={selectedPools.length === 0}
-                        >
-                          Delete
-                        </Button>
-                      </div>
-
-                      {/* Pagination */}
-                      <div className="flex items-center gap-2">
-                        <Pagination
-                          currentPage={poolCurrentPage}
-                          totalPages={totalPoolPages}
-                          onPageChange={setPoolCurrentPage}
+                    <VStack gap={4} className="pt-6">
+                      {/* Default Pool */}
+                      <SectionCard>
+                        <SectionCard.Header
+                          title="Default Pool"
+                          actions={
+                            <>
+                              <Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />}>
+                                Edit
+                              </Button>
+                              <Button variant="secondary" size="sm" leftIcon={<IconTrash size={12} />}>
+                                Delete
+                              </Button>
+                            </>
+                          }
                         />
-                        <div className="h-4 w-px bg-[var(--color-border-default)]" />
-                        <span className="text-[length:var(--font-size-12)] text-[var(--color-text-subtle)]">
-                          {filteredPools.length} items
-                        </span>
-                      </div>
-
-                      {/* Table */}
-                      <Table
-                        columns={poolColumns}
-                        data={paginatedPools}
-                        rowKey="id"
-                        selectable
-                        selectedRows={selectedPools}
-                        onSelectionChange={setSelectedPools}
-                      />
+                        <SectionCard.Content>
+                          <SectionCard.DataRow label="Name" value={mockPools[0]?.name || '-'} />
+                          <SectionCard.DataRow 
+                            label="Status" 
+                            value={
+                              <StatusIndicator status={poolStatusMap[mockPools[0]?.status] || 'down'} />
+                            } 
+                          />
+                          <SectionCard.DataRow label="Description" value="-" />
+                          <SectionCard.DataRow label="Algorithm" value={mockPools[0]?.algorithm || '-'} />
+                          <SectionCard.DataRow label="Protocol" value={mockPools[0]?.protocol || '-'} />
+                          <SectionCard.DataRow label="Session Persistence" value="-" />
+                          <SectionCard.DataRow label="Admin State" value={mockPools[0]?.adminState || '-'} />
+                        </SectionCard.Content>
+                      </SectionCard>
                     </VStack>
                   </TabPanel>
 
@@ -735,17 +819,15 @@ export default function ListenerDetailPage() {
                       </div>
 
                       {/* Pagination */}
-                      <div className="flex items-center gap-2">
                         <Pagination
                           currentPage={l7PolicyCurrentPage}
                           totalPages={totalL7PolicyPages}
                           onPageChange={setL7PolicyCurrentPage}
+                        totalItems={filteredL7Policies.length}
+                        selectedCount={selectedL7Policies.length}
+                        showSettings
+                        onSettingsClick={() => setIsPreferencesOpen(true)}
                         />
-                        <div className="h-4 w-px bg-[var(--color-border-default)]" />
-                        <span className="text-[length:var(--font-size-12)] text-[var(--color-text-subtle)]">
-                          {filteredL7Policies.length} items
-                        </span>
-                      </div>
 
                       {/* Table */}
                       <Table
@@ -767,9 +849,17 @@ export default function ListenerDetailPage() {
                         <h3 className="text-[16px] font-semibold text-[var(--color-text-default)]">
                           Certificates
                         </h3>
-                        <Button variant="secondary" size="sm" leftIcon={<IconCirclePlus size={12} />}>
-                          Add Certificate
-                        </Button>
+                        <div className="flex items-center gap-2">
+                          <Button variant="secondary" size="sm" leftIcon={<IconCertificate size={12} />}>
+                            Change Server Certificate
+                          </Button>
+                          <Button variant="secondary" size="sm" leftIcon={<IconCertificate size={12} />}>
+                            Change CA Certificate
+                          </Button>
+                          <Button variant="secondary" size="sm" leftIcon={<IconListDetails size={12} />}>
+                            Manage SNI Certificates
+                          </Button>
+                        </div>
                       </div>
 
                       {/* Action Bar */}
@@ -789,33 +879,27 @@ export default function ListenerDetailPage() {
                           variant="secondary"
                           size="sm"
                           leftIcon={<IconTrash size={12} />}
-                          disabled={selectedCertificates.length === 0}
+                          disabled
                         >
                           Delete
                         </Button>
                       </div>
 
                       {/* Pagination */}
-                      <div className="flex items-center gap-2">
                         <Pagination
                           currentPage={certificateCurrentPage}
                           totalPages={totalCertificatePages}
                           onPageChange={setCertificateCurrentPage}
+                        totalItems={filteredCertificates.length}
+                        showSettings
+                        onSettingsClick={() => setIsPreferencesOpen(true)}
                         />
-                        <div className="h-4 w-px bg-[var(--color-border-default)]" />
-                        <span className="text-[length:var(--font-size-12)] text-[var(--color-text-subtle)]">
-                          {filteredCertificates.length} items
-                        </span>
-                      </div>
 
                       {/* Table */}
                       <Table
                         columns={certificateColumns}
                         data={paginatedCertificates}
                         rowKey="id"
-                        selectable
-                        selectedRows={selectedCertificates}
-                        onSelectionChange={setSelectedCertificates}
                       />
                     </VStack>
                   </TabPanel>

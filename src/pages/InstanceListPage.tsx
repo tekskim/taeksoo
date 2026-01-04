@@ -24,7 +24,6 @@ import {
 import { Sidebar } from '@/components/Sidebar';
 import { useTabs } from '@/contexts/TabContext';
 import {
-  IconPlus,
   IconDotsCircleHorizontal,
   IconPlayerPlay,
   IconPlayerStop,
@@ -427,7 +426,7 @@ export function InstanceListPage() {
       align: 'center',
       sortable: false,
       render: (_, row) => row.locked ? (
-        <IconLock size={16} stroke={1} className="text-[var(--color-text-default)]" />
+        <IconLock size={16} stroke={1.5} className="text-[var(--color-text-default)]" />
       ) : null,
     },
     {
@@ -527,12 +526,12 @@ export function InstanceListPage() {
             }}
             title="Open console"
           >
-            <IconTerminal2 size={16} stroke={1} className="text-[var(--color-text-subtle)] group-hover:text-[var(--color-text-default)]" />
+            <IconTerminal2 size={16} stroke={1.5} className="text-[var(--action-icon-color)]" />
           </button>
           <div onClick={(e) => e.stopPropagation()}>
             <ContextMenu items={getInstanceContextMenuItems(row)} trigger="click">
               <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
-                <IconDotsCircleHorizontal size={16} stroke={1} className="text-[var(--color-text-subtle)] group-hover:text-[var(--color-text-default)]" />
+                <IconDotsCircleHorizontal size={16} stroke={1.5} className="text-[var(--action-icon-color)]" />
               </button>
             </ContextMenu>
           </div>
@@ -662,12 +661,35 @@ export function InstanceListPage() {
       flex: 1,
       sortable: true,
     },
+    {
+      key: 'actions',
+      label: 'Action',
+      width: '72px',
+      align: 'center',
+      render: (_, row) => (
+        <HStack gap={1} className="justify-center">
+          <button 
+            className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group"
+            onClick={(e) => {
+              e.stopPropagation();
+              shellPanel.openConsole(row.id, row.name);
+            }}
+            title="Open console"
+          >
+            <IconTerminal2 size={16} stroke={1.5} className="text-[var(--action-icon-color)]" />
+          </button>
+          <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
+            <IconDotsCircleHorizontal size={16} stroke={1.5} className="text-[var(--action-icon-color)]" />
+          </button>
+        </HStack>
+      ),
+    },
   ];
 
   return (
     <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
       {/* Sidebar */}
-      <Sidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(false)} />
+      <Sidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(prev => !prev)} />
 
       {/* Main Content */}
       <main 
@@ -726,7 +748,7 @@ export function InstanceListPage() {
               <h1 className="text-[length:var(--font-size-16)] font-semibold text-[var(--color-text-default)]">
                 Instances List
               </h1>
-              <Button leftIcon={<IconPlus size={16} />}>
+              <Button>
                 Create Instance
               </Button>
             </div>
@@ -796,6 +818,7 @@ export function InstanceListPage() {
                 showSettings
                 onSettingsClick={() => setIsPreferencesOpen(true)}
                 totalItems={mockBareMetalInstances.length}
+                selectedCount={selectedBareMetalInstances.length}
               />
             )}
 
@@ -837,7 +860,7 @@ export function InstanceListPage() {
           className="fixed bottom-6 right-6 w-10 h-10 bg-[var(--color-action-primary)] hover:bg-[var(--color-action-primary-hover)] text-white rounded-full shadow-lg flex items-center justify-center transition-all duration-200 hover:scale-110 z-50"
           aria-label="Scroll to top"
         >
-          <IconArrowUp size={20} stroke={2} />
+          <IconArrowUp size={20} stroke={1.5} />
         </button>
       )}
 
