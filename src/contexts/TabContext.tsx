@@ -1,5 +1,5 @@
-import React, { createContext, useContext, useState, useCallback, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { createContext, useContext, useState, useCallback, useRef, useEffect } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 /* ----------------------------------------
    Types
@@ -37,8 +37,57 @@ interface TabProviderProps {
   defaultTabs?: TabItem[];
 }
 
+// Helper function to get label from path
+function getLabelFromPath(path: string): string {
+  const pathLabelMap: Record<string, string> = {
+    '/': 'Home',
+    '/home': 'Home',
+    '/instances': 'Instances',
+    '/instance-templates': 'Instance Templates',
+    '/instance-snapshots': 'Instance Snapshots',
+    '/images': 'Images',
+    '/flavors': 'Flavors',
+    '/key-pairs': 'Key Pairs',
+    '/server-groups': 'Server Groups',
+    '/volumes': 'Volumes',
+    '/volume-snapshots': 'Volume Snapshots',
+    '/volume-backups': 'Volume Backups',
+    '/networks': 'Networks',
+    '/routers': 'Routers',
+    '/ports': 'Ports',
+    '/floating-ips': 'Floating IPs',
+    '/security-groups': 'Security Groups',
+    '/load-balancers': 'Load Balancers',
+    '/certificates': 'Certificates',
+    '/topology': 'Topology',
+    '/design-system': 'Design System',
+    '/drawers': 'Drawers',
+    '/modals': 'Modals',
+  };
+  
+  // Check for exact match first
+  if (pathLabelMap[path]) {
+    return pathLabelMap[path];
+  }
+  
+  // Check for detail pages (e.g., /volumes/vol-001)
+  for (const [basePath, label] of Object.entries(pathLabelMap)) {
+    if (basePath !== '/' && path.startsWith(basePath + '/')) {
+      // Extract the ID from the path for detail pages
+      const id = path.split('/').pop();
+      return `${label} - ${id}`;
+    }
+  }
+  
+  // Default: capitalize the path
+  return path.split('/').filter(Boolean).map(s => 
+    s.charAt(0).toUpperCase() + s.slice(1).replace(/-/g, ' ')
+  ).join(' > ') || 'Home';
+}
+
 export function TabProvider({ children, defaultTabs = [] }: TabProviderProps) {
   const navigate = useNavigate();
+  const location = useLocation();
   
   const [tabs, setTabs] = useState<TabItem[]>(defaultTabs);
   const [activeTabId, setActiveTabId] = useState<string>(defaultTabs[0]?.id || '');
@@ -46,6 +95,31 @@ export function TabProvider({ children, defaultTabs = [] }: TabProviderProps) {
   // Use ref to access latest tabs without re-creating callbacks
   const tabsRef = useRef(tabs);
   tabsRef.current = tabs;
+
+  // Sync tab with current route when location changes
+  useEffect(() => {
+    const currentPath = location.pathname;
+    const currentLabel = getLabelFromPath(currentPath);
+    
+    setTabs((prevTabs) => {
+      // Find if there's already a tab for this path
+      const existingTab = prevTabs.find((t) => t.path === currentPath);
+      
+      if (existingTab) {
+        // Tab exists, just make sure it's active
+        setActiveTabId(existingTab.id);
+        return prevTabs;
+      }
+      
+      // Update the active tab's path and label
+      return prevTabs.map((tab) => {
+        if (tab.id === tabsRef.current.find((t) => t.id === activeTabId)?.id) {
+          return { ...tab, path: currentPath, label: currentLabel };
+        }
+        return tab;
+      });
+    });
+  }, [location.pathname, activeTabId]);
 
   // Add a new tab
   const addTab = useCallback((tab: TabItem) => {
