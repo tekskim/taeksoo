@@ -367,7 +367,7 @@ export const ContextMenu: React.FC<ContextMenuProps> = ({
 
   const triggerProps = trigger === 'contextmenu'
     ? { onContextMenu: handleOpen }
-    : { onClick: handleOpen };
+    : { onClickCapture: handleOpen };
 
   return (
     <div ref={triggerRef} className={`inline-block w-fit ${className}`} {...triggerProps}>

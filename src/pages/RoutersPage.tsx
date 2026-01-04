@@ -39,6 +39,7 @@ interface Router {
   externalFixedIp: string;
   externalNetwork: string;
   externalNetworkId: string;
+  adminState: boolean;
   status: RouterStatus;
 }
 
@@ -47,16 +48,16 @@ interface Router {
    ---------------------------------------- */
 
 const mockRouters: Router[] = [
-  { id: '29tgj234', name: 'router-01', portsCount: 5, externalGateway: true, externalFixedIp: '10.7.60.91', externalNetwork: 'net-01', externalNetworkId: '29tgj234', status: 'active' },
-  { id: 'router-002', name: 'main-router', portsCount: 3, externalGateway: true, externalFixedIp: '10.7.60.92', externalNetwork: 'external-net', externalNetworkId: 'net-002', status: 'active' },
-  { id: 'router-003', name: 'dev-router', portsCount: 2, externalGateway: false, externalFixedIp: '-', externalNetwork: '-', externalNetworkId: '', status: 'active' },
-  { id: 'router-004', name: 'prod-router', portsCount: 8, externalGateway: true, externalFixedIp: '10.7.60.93', externalNetwork: 'prod-net', externalNetworkId: 'net-003', status: 'building' },
-  { id: 'router-005', name: 'test-router', portsCount: 1, externalGateway: false, externalFixedIp: '-', externalNetwork: '-', externalNetworkId: '', status: 'active' },
-  { id: 'router-006', name: 'backup-router', portsCount: 4, externalGateway: true, externalFixedIp: '10.7.60.94', externalNetwork: 'backup-net', externalNetworkId: 'net-004', status: 'active' },
-  { id: 'router-007', name: 'dmz-router', portsCount: 6, externalGateway: true, externalFixedIp: '10.7.60.95', externalNetwork: 'dmz-net', externalNetworkId: 'net-005', status: 'error' },
-  { id: 'router-008', name: 'internal-router', portsCount: 2, externalGateway: false, externalFixedIp: '-', externalNetwork: '-', externalNetworkId: '', status: 'active' },
-  { id: 'router-009', name: 'edge-router', portsCount: 7, externalGateway: true, externalFixedIp: '10.7.60.96', externalNetwork: 'edge-net', externalNetworkId: 'net-006', status: 'active' },
-  { id: 'router-010', name: 'vpn-router', portsCount: 3, externalGateway: true, externalFixedIp: '10.7.60.97', externalNetwork: 'vpn-net', externalNetworkId: 'net-007', status: 'active' },
+  { id: '29tgj234', name: 'router-01', portsCount: 5, externalGateway: true, externalFixedIp: '10.7.60.91', externalNetwork: 'net-01', externalNetworkId: '29tgj234', adminState: true, status: 'active' },
+  { id: 'router-002', name: 'main-router', portsCount: 3, externalGateway: true, externalFixedIp: '10.7.60.92', externalNetwork: 'external-net', externalNetworkId: 'net-002', adminState: true, status: 'active' },
+  { id: 'router-003', name: 'dev-router', portsCount: 2, externalGateway: false, externalFixedIp: '-', externalNetwork: '-', externalNetworkId: '', adminState: true, status: 'active' },
+  { id: 'router-004', name: 'prod-router', portsCount: 8, externalGateway: true, externalFixedIp: '10.7.60.93', externalNetwork: 'prod-net', externalNetworkId: 'net-003', adminState: true, status: 'building' },
+  { id: 'router-005', name: 'test-router', portsCount: 1, externalGateway: false, externalFixedIp: '-', externalNetwork: '-', externalNetworkId: '', adminState: false, status: 'active' },
+  { id: 'router-006', name: 'backup-router', portsCount: 4, externalGateway: true, externalFixedIp: '10.7.60.94', externalNetwork: 'backup-net', externalNetworkId: 'net-004', adminState: true, status: 'active' },
+  { id: 'router-007', name: 'dmz-router', portsCount: 6, externalGateway: true, externalFixedIp: '10.7.60.95', externalNetwork: 'dmz-net', externalNetworkId: 'net-005', adminState: false, status: 'error' },
+  { id: 'router-008', name: 'internal-router', portsCount: 2, externalGateway: false, externalFixedIp: '-', externalNetwork: '-', externalNetworkId: '', adminState: true, status: 'active' },
+  { id: 'router-009', name: 'edge-router', portsCount: 7, externalGateway: true, externalFixedIp: '10.7.60.96', externalNetwork: 'edge-net', externalNetworkId: 'net-006', adminState: true, status: 'active' },
+  { id: 'router-010', name: 'vpn-router', portsCount: 3, externalGateway: true, externalFixedIp: '10.7.60.97', externalNetwork: 'vpn-net', externalNetworkId: 'net-007', adminState: true, status: 'active' },
 ];
 
 /* ----------------------------------------
@@ -91,10 +92,10 @@ export function RoutersPage() {
   const defaultColumnConfig: ColumnConfig[] = [
     { id: 'status', label: 'Status', visible: true, locked: true },
     { id: 'name', label: 'Name', visible: true, locked: true },
-    { id: 'portsCount', label: 'Ports Count', visible: true },
     { id: 'externalGateway', label: 'External Gateway', visible: true },
     { id: 'externalFixedIp', label: 'External Fixed IP', visible: true },
     { id: 'externalNetwork', label: 'External Network', visible: true },
+    { id: 'adminState', label: 'Admin State', visible: true },
   ];
 
   const [columnConfig, setColumnConfig] = useState<ColumnConfig[]>(defaultColumnConfig);
@@ -154,12 +155,6 @@ export function RoutersPage() {
       ),
     },
     {
-      key: 'portsCount',
-      label: 'Ports Count',
-      flex: 1,
-      sortable: true,
-    },
-    {
       key: 'externalGateway',
       label: 'External Gateway',
       flex: 1,
@@ -193,6 +188,12 @@ export function RoutersPage() {
         ) : '-'
       ),
     },
+    {
+      key: 'adminState',
+      label: 'Admin State',
+      flex: 1,
+      render: (value: boolean) => value ? 'Up' : 'Down',
+    },
   ];
 
   // Filter and order columns based on preferences
@@ -215,15 +216,16 @@ export function RoutersPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[var(--color-surface-subtle)]">
-      <Sidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(false)} />
+    <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
+      <Sidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(prev => !prev)} />
 
       <main
-        className={`min-h-screen bg-[var(--color-surface-default)] transition-[margin] duration-200 overflow-x-auto ${
-          sidebarOpen ? 'ml-[200px]' : 'ml-0'
+        className={`absolute top-0 bottom-0 right-0 flex flex-col bg-[var(--color-surface-default)] transition-[left] duration-200 ${
+          sidebarOpen ? 'left-[200px]' : 'left-0'
         }`}
       >
-        <div className="min-w-[var(--layout-content-min-width)]">
+        {/* Fixed Header Area */}
+        <div className="shrink-0 bg-[var(--color-surface-default)]">
         {/* Tab Bar */}
         <TabBar
           tabs={tabBarTabs}
@@ -258,7 +260,10 @@ export function RoutersPage() {
             />
           }
         />
+        </div>
 
+        {/* Scrollable Content Area */}
+        <div className="flex-1 overflow-auto min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll">
         {/* Main Content */}
         <div className="pt-4 px-8 pb-6 bg-[var(--color-surface-default)]">
           <VStack gap={3}>

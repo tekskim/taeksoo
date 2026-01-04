@@ -17,8 +17,9 @@ import {
   SearchInput,
   Pagination,
   StatusIndicator,
+  ContextMenu,
 } from '@/design-system';
-import type { TableColumn } from '@/design-system';
+import type { TableColumn, ContextMenuItem } from '@/design-system';
 import { Sidebar } from '@/components/Sidebar';
 import { useTabs } from '@/contexts/TabContext';
 import {
@@ -110,12 +111,16 @@ export function LoadBalancerDetailPage() {
   const { tabs, activeTabId, closeTab, selectTab, addNewTab } = useTabs();
   const [activeTab, setActiveTab] = useState('details');
   const [isCopied, setIsCopied] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(true);
   
   // Listeners state
   const [listenerSearchTerm, setListenerSearchTerm] = useState('');
   const [listenerCurrentPage, setListenerCurrentPage] = useState(1);
   const [selectedListeners, setSelectedListeners] = useState<string[]>([]);
   const listenersPerPage = 10;
+  
+  // Preferences state
+  const [isPreferencesOpen, setIsPreferencesOpen] = useState(false);
 
   // In a real app, you would fetch the load balancer details based on the id
   const loadBalancer = mockLoadBalancer;
@@ -210,17 +215,30 @@ export function LoadBalancerDetailPage() {
       label: 'Action',
       width: '72px',
       align: 'center',
-      render: () => (
-        <Button variant="tertiary" size="sm" iconOnly icon={<IconDotsCircleHorizontal size={16} stroke={1} />} />
-      ),
+      render: (_: unknown, row: Listener) => {
+        const listenerMenuItems: ContextMenuItem[] = [
+          { id: 'edit', label: 'Edit', icon: <IconEdit size={14} stroke={1.5} />, onClick: () => console.log('Edit listener', row.id) },
+          { id: 'delete', label: 'Delete', status: 'danger', onClick: () => console.log('Delete listener', row.id) },
+        ];
+        return (
+          <div onClick={(e) => e.stopPropagation()}>
+            <ContextMenu items={listenerMenuItems} trigger="click">
+              <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
+                <IconDotsCircleHorizontal size={16} stroke={1.5} className="text-[var(--action-icon-color)]" />
+              </button>
+            </ContextMenu>
+          </div>
+        );
+      },
     },
   ];
 
   return (
-    <div className="min-h-screen bg-[var(--color-surface-subtle)]">
-      <Sidebar />
-      <main className="min-h-screen bg-[var(--color-surface-default)] transition-[margin] duration-200 overflow-x-auto ml-[200px]">
-        <div className="min-w-[var(--layout-content-min-width)]">
+    <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
+      <Sidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(prev => !prev)} />
+      <main className={`absolute top-0 bottom-0 right-0 flex flex-col bg-[var(--color-surface-default)] transition-[left] duration-200 ${sidebarOpen ? 'left-[200px]' : 'left-0'}`}>
+        {/* Fixed Header Area */}
+        <div className="shrink-0 bg-[var(--color-surface-default)]">
           {/* Tab Bar */}
           <TabBar
             tabs={tabBarTabs}
@@ -234,6 +252,8 @@ export function LoadBalancerDetailPage() {
 
           {/* Top Bar with Breadcrumb */}
           <TopBar
+            showSidebarToggle={!sidebarOpen}
+            onSidebarToggle={() => setSidebarOpen(true)}
             showNavigation={true}
             onBack={() => window.history.back()}
             onForward={() => window.history.forward()}
@@ -254,7 +274,10 @@ export function LoadBalancerDetailPage() {
               />
             }
           />
+        </div>
 
+        {/* Scrollable Content Area */}
+        <div className="flex-1 overflow-auto min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll">
           {/* Main Content */}
           <div className="pt-4 px-8 pb-20 bg-[var(--color-surface-default)]">
             <VStack gap={8} className="min-w-[1176px] max-w-[1320px]">
@@ -271,9 +294,27 @@ export function LoadBalancerDetailPage() {
                   <Button variant="secondary" size="sm" leftIcon={<IconTrash size={12} />}>
                     Delete
                   </Button>
-                  <Button variant="secondary" size="sm" rightIcon={<IconChevronDown size={12} />}>
-                    More Actions
-                  </Button>
+                  <ContextMenu
+                    trigger="click"
+                    items={[
+                      {
+                        id: 'edit',
+                        label: 'Edit',
+                        icon: <IconEdit size={14} stroke={1.5} />,
+                        onClick: () => console.log('Edit clicked'),
+                      },
+                      {
+                        id: 'create-listener',
+                        label: 'Create Listener',
+                        icon: <IconCirclePlus size={14} stroke={1.5} />,
+                        onClick: () => console.log('Create Listener clicked'),
+                      },
+                    ]}
+                  >
+                    <Button variant="secondary" size="sm" rightIcon={<IconChevronDown size={12} />}>
+                      More Actions
+                    </Button>
+                  </ContextMenu>
                 </DetailHeader.Actions>
                 <DetailHeader.InfoGrid>
                   <DetailHeader.InfoCard
@@ -433,11 +474,11 @@ export function LoadBalancerDetailPage() {
                             currentPage={listenerCurrentPage}
                             totalPages={totalListenerPages}
                             onPageChange={setListenerCurrentPage}
+                            totalItems={filteredListeners.length}
+                            selectedCount={selectedListeners.length}
+                            showSettings
+                            onSettingsClick={() => setIsPreferencesOpen(true)}
                           />
-                          <div className="h-4 w-px bg-[var(--color-border-default)]" />
-                          <span className="text-[length:var(--font-size-12)] text-[var(--color-text-subtle)]">
-                            {filteredListeners.length} items
-                          </span>
                         </div>
 
                         {/* Table */}

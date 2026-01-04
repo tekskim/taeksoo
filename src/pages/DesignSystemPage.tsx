@@ -646,7 +646,7 @@ function BarChartDemo({ variant }: { variant: 'vertical' | 'horizontal' | 'group
           max: 100,
           axisLine: { show: false },
           axisTick: { show: false },
-          splitLine: { lineStyle: { color: chartColors.slate100, opacity: 0.5 } },
+          splitLine: { lineStyle: { color: chartColors.slate100, opacity: 0.2 } },
           axisLabel: { color: chartColors.slate400, fontSize: 10 }
         },
         yAxis: {
@@ -1134,6 +1134,21 @@ function LineChart({
     Object.fromEntries(series.map(s => [s.name, true]))
   );
   const [menuOpen, setMenuOpen] = useState(false);
+  const [isDarkMode, setIsDarkMode] = useState(false);
+
+  // Detect dark mode changes
+  useEffect(() => {
+    const checkDarkMode = () => {
+      setIsDarkMode(document.documentElement.classList.contains('dark'));
+    };
+    checkDarkMode();
+    
+    // Observe class changes on html element
+    const observer = new MutationObserver(checkDarkMode);
+    observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
+    
+    return () => observer.disconnect();
+  }, []);
 
   const timeLabels = generateTimeLabels();
 
@@ -1148,14 +1163,21 @@ function LineChart({
     if (onFullScreen) onFullScreen();
   };
 
+  // Get theme-aware colors
+  const splitLineColor = isDarkMode ? 'rgba(255, 255, 255, 0.08)' : chartColors.slate100;
+  const splitLineOpacity = isDarkMode ? 1 : 0.5;
+  const tooltipBg = isDarkMode ? '#1C1C1C' : 'white';
+  const tooltipBorder = isDarkMode ? '#3a3a3a' : '#e2e8f0';
+  const tooltipTextColor = isDarkMode ? '#e5e5e5' : chartColors.slate800;
+
   const option = {
     animation: false,
     grid: {
-      left: '0',
+      left: '60px',
       right: '16px',
       top: '20px',
       bottom: '16px',
-      containLabel: true
+      containLabel: false
     },
         xAxis: {
       type: 'category' as const,
@@ -1173,7 +1195,7 @@ function LineChart({
       axisLine: { show: false },
       axisTick: { show: false },
       splitLine: {
-        lineStyle: { color: chartColors.slate100, opacity: 0.5 }
+        lineStyle: { color: splitLineColor, opacity: splitLineOpacity }
       },
       axisLabel: {
         color: chartColors.slate400,
@@ -1183,10 +1205,10 @@ function LineChart({
     },
     tooltip: {
       trigger: 'axis' as const,
-      backgroundColor: 'white',
-      borderColor: '#e2e8f0',
+      backgroundColor: tooltipBg,
+      borderColor: tooltipBorder,
       textStyle: { 
-        color: chartColors.slate800, 
+        color: tooltipTextColor, 
         fontSize: 11, 
         fontFamily: 'Mona Sans, -apple-system, BlinkMacSystemFont, sans-serif' 
       }
@@ -1279,7 +1301,7 @@ function LineChart({
             >
               <div className="legendDot" style={{ backgroundColor: s.color }} />
               <span>{s.name}</span>
-            </div>
+          </div>
           ))}
         </div>
       </div>
@@ -1365,17 +1387,14 @@ function QuotaBarDemo({ label, used, total, unit }: { label: string; used: numbe
   const getColors = () => {
     if (percentage >= 100) return {
       bg: 'bg-[var(--color-status-error)]/15',
-      dot: 'bg-[var(--color-status-error)]',
       text: 'text-[var(--color-status-error)]'
     };
     if (percentage >= 70) return {
       bg: 'bg-[var(--color-status-warning)]/15',
-      dot: 'bg-[var(--color-status-warning)]',
       text: 'text-[var(--color-status-warning)]'
     };
     return {
       bg: 'bg-[var(--color-status-success)]/15',
-      dot: 'bg-[var(--color-status-success)]',
       text: 'text-[var(--color-status-success)]'
     };
   };
@@ -1389,7 +1408,6 @@ function QuotaBarDemo({ label, used, total, unit }: { label: string; used: numbe
         <div className="flex items-center gap-2">
           <span className="text-[11px] text-[var(--color-text-muted)]">{used}/{total} {unit}</span>
           <div className={`flex items-center gap-1 px-1.5 py-0.5 rounded-md ${colors.bg}`}>
-            <div className={`w-2 h-2 rounded-full ${colors.dot}`} />
             <span className={`text-[11px] font-medium ${colors.text}`}>{percentage}%</span>
           </div>
         </div>
@@ -1846,7 +1864,7 @@ function TableDemo() {
       width: '70px',
       align: 'center' as const,
       render: (value: boolean) => value ? (
-        <IconLock size={16} stroke={1} className="text-[var(--color-text-default)]" />
+        <IconLock size={16} stroke={1.5} className="text-[var(--color-text-default)]" />
       ) : null
     },
     { key: 'fixedIp', label: 'Fixed IP', sortable: true, width: '120px' },
@@ -1881,10 +1899,10 @@ function TableDemo() {
       render: () => (
         <div className="flex items-center gap-1">
           <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors text-[var(--color-text-subtle)] hover:text-[var(--color-text-default)]">
-            <IconTerminal2 size={16} stroke={1} />
+            <IconTerminal2 size={16} stroke={1.5} />
           </button>
           <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors text-[var(--color-text-subtle)] hover:text-[var(--color-text-default)]">
-            <IconDotsVertical size={16} stroke={1} />
+            <IconDotsVertical size={16} stroke={1.5} />
           </button>
         </div>
       )
@@ -1913,15 +1931,15 @@ function TableDemo() {
         row.attachedTo && row.attachedToId ? (
           <div className="flex items-center gap-2">
             <Tooltip content={row.attachedType === 'router' ? 'Router' : 'Instance'} position="top" delay={0}>
-              <div 
+            <div 
                 className="flex-shrink-0 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[4px] p-1 cursor-pointer hover:bg-[var(--color-surface-muted)] transition-colors"
-              >
-                {row.attachedType === 'router' ? (
-                  <IconRouter size={12} stroke={1.5} className="text-[var(--color-text-subtle)]" />
-                ) : (
-                  <IconCube size={12} stroke={1.5} className="text-[var(--color-text-subtle)]" />
-                )}
-              </div>
+            >
+              {row.attachedType === 'router' ? (
+                <IconRouter size={12} stroke={1.5} className="text-[var(--color-text-subtle)]" />
+              ) : (
+                <IconCube size={12} stroke={1.5} className="text-[var(--color-text-subtle)]" />
+              )}
+            </div>
             </Tooltip>
             <div className="flex flex-col gap-0.5 min-w-0">
               <button
@@ -2206,9 +2224,9 @@ export function DesignSystemPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[var(--color-surface-subtle)]">
+    <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
       {/* Left Sidebar Navigation */}
-      <nav className="fixed left-0 top-0 w-[200px] h-screen bg-[var(--color-surface-default)] border-r border-[var(--color-border-default)] overflow-y-auto z-50">
+      <nav className="fixed left-0 top-0 w-[200px] h-screen bg-[var(--color-surface-default)] border-r border-[var(--color-border-default)] overflow-y-auto z-50 sidebar-scroll">
         <div className="p-4">
           {/* Logo */}
           <Link to="/" className="flex items-center gap-2 mb-4">
@@ -2429,8 +2447,8 @@ export function DesignSystemPage() {
       </nav>
 
       {/* Main Content */}
-      <main className="ml-[200px] py-12 px-8 overflow-x-auto">
-        <div className="min-w-[var(--layout-content-min-width)]">
+      <main className="ml-[200px] h-screen overflow-y-auto overflow-x-auto sidebar-scroll">
+        <div className="min-w-[var(--layout-content-min-width)] py-12 px-8">
         <div className="max-w-[1000px] mx-auto">
           <VStack gap={12} align="stretch">
             {/* Header */}
@@ -3018,7 +3036,7 @@ outline: 2px solid var(--color-border-focus);`}
                     </div>
                     <div className="flex flex-col gap-1 min-w-0">
                       <div className="text-[length:var(--font-size-12)] text-[var(--color-text-default)] font-medium font-mono">
-                        --shadow-{name}
+                      --shadow-{name}
                       </div>
                       <div className="text-[length:var(--font-size-10)] text-[var(--color-text-muted)] font-mono break-all">
                         {value}
@@ -5104,8 +5122,8 @@ outline: 2px solid var(--color-border-focus);`}
                 <VStack gap={3}>
                   <Label>Info Card - Basic Text</Label>
                   <div className="grid grid-cols-3 gap-2">
-                    <DetailHeader.InfoCard label="Host" value="compute-03" />
-                    <DetailHeader.InfoCard label="Created At" value="2025-07-25 09:12:20" />
+                      <DetailHeader.InfoCard label="Host" value="compute-03" />
+                      <DetailHeader.InfoCard label="Created At" value="2025-07-25 09:12:20" />
                     <DetailHeader.InfoCard label="Availability Zone" value="nova" />
                   </div>
                 </VStack>
@@ -5142,7 +5160,7 @@ outline: 2px solid var(--color-border-focus);`}
                   <SectionCard>
                     <SectionCard.Header 
                       title="Basic Information" 
-                      actions={<Button variant="secondary" size="sm" leftIcon={<IconEdit size={16} />}>Edit</Button>}
+                      actions={<Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />}>Edit</Button>}
                     />
                     <SectionCard.Content>
                       <SectionCard.DataRow label="Instance Name" value="web-server-01" />
@@ -5170,7 +5188,7 @@ outline: 2px solid var(--color-border-focus);`}
                     <SectionCard>
                       <SectionCard.Header 
                         title="Basic Information" 
-                        actions={<Button variant="secondary" size="sm" leftIcon={<IconEdit size={16} />}>Edit</Button>}
+                        actions={<Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />}>Edit</Button>}
                       />
                       <SectionCard.Content>
                         <SectionCard.DataRow label="Instance Name" value="tk-test" />
@@ -5766,7 +5784,7 @@ outline: 2px solid var(--color-border-focus);`}
                   <Label>Status Variants</Label>
                   <div className="flex items-center gap-8 flex-wrap">
                     <HalfDoughnutChartDemo value={35} label="Safe" status="success" />
-                    <HalfDoughnutChartDemo value={75} label="Warning" status="warning" />
+                    <HalfDoughnutChartDemo value={85} label="Warning" status="warning" />
                     <HalfDoughnutChartDemo value={95} label="Danger" status="error" />
                   </div>
                 </VStack>
@@ -5785,7 +5803,7 @@ outline: 2px solid var(--color-border-focus);`}
           className="fixed bottom-6 right-6 w-10 h-10 bg-[var(--color-action-primary)] hover:bg-[var(--color-action-primary-hover)] text-white rounded-full shadow-lg flex items-center justify-center transition-all duration-200 hover:scale-110 z-50"
           aria-label="Scroll to top"
         >
-          <IconChevronUp size={20} stroke={2} />
+          <IconChevronUp size={20} stroke={1.5} />
         </button>
       )}
     </div>

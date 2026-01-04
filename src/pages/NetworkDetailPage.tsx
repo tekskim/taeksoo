@@ -18,7 +18,9 @@ import {
   SearchInput,
   Pagination,
   Tooltip,
+  ContextMenu,
   type TableColumn,
+  type ContextMenuItem,
 } from '@/design-system';
 import { Sidebar } from '@/components/Sidebar';
 import { useTabs } from '@/contexts/TabContext';
@@ -28,7 +30,7 @@ import {
   IconBell,
   IconExternalLink,
   IconDotsCircleHorizontal,
-  IconServer,
+  IconCube,
   IconRouter,
 } from '@tabler/icons-react';
 
@@ -69,6 +71,7 @@ interface Subnet {
   gatewayIp: string;
   dhcpEnabled: boolean;
   portCount: number;
+  createdAt: string;
 }
 
 interface Port {
@@ -124,6 +127,7 @@ const mockSubnets: Subnet[] = Array.from({ length: 115 }, (_, i) => ({
   gatewayIp: '192.168.11',
   dhcpEnabled: true,
   portCount: 2,
+  createdAt: '2025-01-15 10:30:00',
 }));
 
 const mockPorts: Port[] = Array.from({ length: 115 }, (_, i) => ({
@@ -186,6 +190,13 @@ export default function NetworkDetailPage() {
   const [portSortBy, setPortSortBy] = useState<string>('name');
   const [portSortDirection, setPortSortDirection] = useState<'asc' | 'desc'>('asc');
   const portsPerPage = 10;
+  
+  // Selection state
+  const [selectedSubnets, setSelectedSubnets] = useState<string[]>([]);
+  const [selectedPorts, setSelectedPorts] = useState<string[]>([]);
+  
+  // Preferences state
+  const [isPreferencesOpen, setIsPreferencesOpen] = useState(false);
   
   // In a real app, fetch based on id
   const network = mockNetworkDetail;
@@ -286,15 +297,6 @@ export default function NetworkDetailPage() {
   // Subnet columns
   const subnetColumns: TableColumn<Subnet>[] = [
     {
-      key: 'status',
-      label: 'Status',
-      width: '59px',
-      align: 'center',
-      render: (_, row) => (
-        <StatusIndicator status={subnetStatusMap[row.status]} layout="icon-only" />
-      ),
-    },
-    {
       key: 'name',
       label: 'Name',
       flex: 1,
@@ -326,12 +328,6 @@ export default function NetworkDetailPage() {
       flex: 1,
     },
     {
-      key: 'dhcpEnabled',
-      label: 'DHCP',
-      flex: 1,
-      render: (value: boolean) => value ? 'Yes' : 'No',
-    },
-    {
       key: 'portCount',
       label: 'Port Count',
       flex: 1,
@@ -339,13 +335,31 @@ export default function NetworkDetailPage() {
       align: 'left',
     },
     {
+      key: 'createdAt',
+      label: 'Created At',
+      flex: 1,
+      sortable: true,
+    },
+    {
       key: 'actions',
       label: 'Action',
       width: '72px',
       align: 'center',
-      render: () => (
-        <Button variant="tertiary" size="sm" iconOnly icon={<IconDotsCircleHorizontal size={16} stroke={1} />} />
-      ),
+      render: (_: unknown, row: Subnet) => {
+        const subnetMenuItems: ContextMenuItem[] = [
+          { id: 'edit', label: 'Edit', onClick: () => console.log('Edit subnet', row.id) },
+          { id: 'delete', label: 'Delete', status: 'danger', onClick: () => console.log('Delete subnet', row.id) },
+        ];
+        return (
+          <div onClick={(e) => e.stopPropagation()}>
+            <ContextMenu items={subnetMenuItems} trigger="click">
+              <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
+                <IconDotsCircleHorizontal size={16} stroke={1.5} className="text-[var(--action-icon-color)]" />
+              </button>
+            </ContextMenu>
+          </div>
+        );
+      },
     },
   ];
 
@@ -366,13 +380,19 @@ export default function NetworkDetailPage() {
       flex: 1,
       sortable: true,
       render: (_, row) => (
-        <Link
-          to={`/ports/${row.id}`}
-          className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
-          onClick={(e) => e.stopPropagation()}
-        >
-          {row.name}
-        </Link>
+        <div className="flex flex-col gap-0.5">
+          <Link
+            to={`/ports/${row.id}`}
+            className="inline-flex items-center gap-1 font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {row.name}
+            <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
+          </Link>
+          <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
+            ID : {row.id}
+          </span>
+        </div>
       ),
     },
     {
@@ -380,7 +400,7 @@ export default function NetworkDetailPage() {
       label: 'Attached To',
       flex: 1,
       render: (_, row) => row.attachedTo ? (
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between w-full">
           <div className="flex flex-col gap-0.5">
             <Link
               to={row.attachedTo.type === 'router' ? `/routers/${row.attachedTo.id}` : `/instances/${row.attachedTo.id}`}
@@ -395,11 +415,11 @@ export default function NetworkDetailPage() {
             </span>
           </div>
           <Tooltip content={row.attachedTo.type === 'router' ? 'Router' : 'Instance'} position="top" delay={0}>
-            <div className="flex items-center justify-center p-1 border border-[var(--color-border-default)] rounded bg-white cursor-pointer hover:bg-[var(--color-surface-muted)] transition-colors">
+            <div className="flex-shrink-0 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[4px] p-1 cursor-pointer hover:bg-[var(--color-surface-muted)] transition-colors">
               {row.attachedTo.type === 'router' ? (
                 <IconRouter size={12} className="text-[var(--color-text-subtle)]" />
               ) : (
-                <IconServer size={12} className="text-[var(--color-text-subtle)]" />
+                <IconCube size={12} className="text-[var(--color-text-subtle)]" />
               )}
             </div>
           </Tooltip>
@@ -460,27 +480,19 @@ export default function NetworkDetailPage() {
       flex: 1,
       sortable: true,
     },
-    {
-      key: 'actions',
-      label: 'Action',
-      width: '72px',
-      align: 'center',
-      render: () => (
-        <Button variant="tertiary" size="sm" iconOnly icon={<IconDotsCircleHorizontal size={16} stroke={1} />} />
-      ),
-    },
   ];
 
   return (
-    <div className="min-h-screen bg-[var(--color-surface-subtle)]">
+    <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
       <Sidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
       
       <main
-        className={`min-h-screen bg-[var(--color-surface-default)] transition-[margin] duration-200 overflow-x-auto ${
-          sidebarOpen ? 'ml-[200px]' : 'ml-0'
+        className={`absolute top-0 bottom-0 right-0 flex flex-col bg-[var(--color-surface-default)] transition-[left] duration-200 ${
+          sidebarOpen ? 'left-[200px]' : 'left-0'
         }`}
       >
-        <div className="min-w-[var(--layout-content-min-width)]">
+        {/* Fixed Header Area */}
+        <div className="shrink-0 bg-[var(--color-surface-default)]">
           {/* Tab Bar */}
           <TabBar
             tabs={tabs}
@@ -504,7 +516,10 @@ export default function NetworkDetailPage() {
               />
             }
           />
+        </div>
 
+        {/* Scrollable Content Area */}
+        <div className="flex-1 overflow-auto min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll">
           {/* Main Content */}
           <div className="pt-4 px-8 pb-20 bg-[var(--color-surface-default)]">
             <VStack gap={8} className="min-w-[1176px] max-w-[1320px]">
@@ -602,11 +617,11 @@ export default function NetworkDetailPage() {
                           currentPage={subnetCurrentPage}
                           totalPages={totalSubnetPages}
                           onPageChange={setSubnetCurrentPage}
+                          totalItems={filteredSubnets.length}
+                          selectedCount={selectedSubnets.length}
+                          showSettings
+                          onSettingsClick={() => setIsPreferencesOpen(true)}
                         />
-                        <div className="h-4 w-px bg-[var(--color-border-default)]" />
-                        <span className="text-[length:var(--font-size-12)] text-[var(--color-text-subtle)]">
-                          {filteredSubnets.length} items
-                        </span>
                       </div>
 
                       {/* Table */}
@@ -617,6 +632,9 @@ export default function NetworkDetailPage() {
                         sortBy={subnetSortBy}
                         sortDirection={subnetSortDirection}
                         onSort={handleSubnetSort}
+                        selectable
+                        selectedKeys={selectedSubnets}
+                        onSelectionChange={setSelectedSubnets}
                       />
                     </VStack>
                   </TabPanel>
@@ -649,11 +667,11 @@ export default function NetworkDetailPage() {
                           currentPage={portCurrentPage}
                           totalPages={totalPortPages}
                           onPageChange={setPortCurrentPage}
+                          totalItems={filteredPorts.length}
+                          selectedCount={selectedPorts.length}
+                          showSettings
+                          onSettingsClick={() => setIsPreferencesOpen(true)}
                         />
-                        <div className="h-4 w-px bg-[var(--color-border-default)]" />
-                        <span className="text-[length:var(--font-size-12)] text-[var(--color-text-subtle)]">
-                          {filteredPorts.length} items
-                        </span>
                       </div>
 
                       {/* Table */}
