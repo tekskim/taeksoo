@@ -46,6 +46,7 @@ interface Image {
   diskFormat: string;
   protected: boolean;
   access: AccessType;
+  description: string;
   createdAt: string;
   status: ImageStatus;
 }
@@ -55,16 +56,16 @@ interface Image {
    ---------------------------------------- */
 
 const mockImages: Image[] = [
-  { id: '29tgj234', name: 'Ubuntu-22.04-base', os: 'Ubuntu24.04', size: '16GiB', diskFormat: 'RAW', protected: true, access: 'Private', createdAt: '2025-09-12', status: 'active' },
-  { id: 'img-002', name: 'CentOS-8-minimal', os: 'CentOS8', size: '8GiB', diskFormat: 'QCOW2', protected: false, access: 'Private', createdAt: '2025-09-10', status: 'active' },
-  { id: 'img-003', name: 'Rocky-Linux-9', os: 'Rocky Linux 9', size: '12GiB', diskFormat: 'RAW', protected: true, access: 'Shared', createdAt: '2025-09-08', status: 'active' },
-  { id: 'img-004', name: 'Debian-12-standard', os: 'Debian 12', size: '10GiB', diskFormat: 'QCOW2', protected: false, access: 'Public', createdAt: '2025-09-05', status: 'active' },
-  { id: 'img-005', name: 'Ubuntu-20.04-LTS', os: 'Ubuntu20.04', size: '14GiB', diskFormat: 'RAW', protected: true, access: 'Private', createdAt: '2025-08-28', status: 'active' },
-  { id: 'img-006', name: 'Windows-Server-2022', os: 'Windows Server 2022', size: '32GiB', diskFormat: 'QCOW2', protected: false, access: 'Shared', createdAt: '2025-08-25', status: 'pending' },
-  { id: 'img-007', name: 'Alpine-3.18-minimal', os: 'Alpine 3.18', size: '256MiB', diskFormat: 'RAW', protected: false, access: 'Public', createdAt: '2025-08-20', status: 'active' },
-  { id: 'img-008', name: 'Fedora-39-workstation', os: 'Fedora 39', size: '20GiB', diskFormat: 'RAW', protected: true, access: 'Private', createdAt: '2025-08-15', status: 'active' },
-  { id: 'img-009', name: 'Oracle-Linux-8', os: 'Oracle Linux 8', size: '18GiB', diskFormat: 'QCOW2', protected: false, access: 'Shared', createdAt: '2025-08-10', status: 'deactivated' },
-  { id: 'img-010', name: 'Ubuntu-22.04-GPU', os: 'Ubuntu22.04', size: '24GiB', diskFormat: 'RAW', protected: true, access: 'Private', createdAt: '2025-08-05', status: 'active' },
+  { id: '29tgj234', name: 'Ubuntu-22.04-base', os: 'Ubuntu24.04', size: '16GiB', diskFormat: 'RAW', protected: true, access: 'Private', description: 'Base Ubuntu 22.04 image', createdAt: '2025-09-12', status: 'active' },
+  { id: 'img-002', name: 'CentOS-8-minimal', os: 'CentOS8', size: '8GiB', diskFormat: 'QCOW2', protected: false, access: 'Private', description: 'Minimal CentOS 8 installation', createdAt: '2025-09-10', status: 'active' },
+  { id: 'img-003', name: 'Rocky-Linux-9', os: 'Rocky Linux 9', size: '12GiB', diskFormat: 'RAW', protected: true, access: 'Shared', description: 'Rocky Linux 9 server image', createdAt: '2025-09-08', status: 'active' },
+  { id: 'img-004', name: 'Debian-12-standard', os: 'Debian 12', size: '10GiB', diskFormat: 'QCOW2', protected: false, access: 'Public', description: 'Standard Debian 12 image', createdAt: '2025-09-05', status: 'active' },
+  { id: 'img-005', name: 'Ubuntu-20.04-LTS', os: 'Ubuntu20.04', size: '14GiB', diskFormat: 'RAW', protected: true, access: 'Private', description: 'Ubuntu 20.04 LTS server', createdAt: '2025-08-28', status: 'active' },
+  { id: 'img-006', name: 'Windows-Server-2022', os: 'Windows Server 2022', size: '32GiB', diskFormat: 'QCOW2', protected: false, access: 'Shared', description: 'Windows Server 2022 Datacenter', createdAt: '2025-08-25', status: 'pending' },
+  { id: 'img-007', name: 'Alpine-3.18-minimal', os: 'Alpine 3.18', size: '256MiB', diskFormat: 'RAW', protected: false, access: 'Public', description: 'Lightweight Alpine Linux', createdAt: '2025-08-20', status: 'active' },
+  { id: 'img-008', name: 'Fedora-39-workstation', os: 'Fedora 39', size: '20GiB', diskFormat: 'RAW', protected: true, access: 'Private', description: 'Fedora 39 workstation image', createdAt: '2025-08-15', status: 'active' },
+  { id: 'img-009', name: 'Oracle-Linux-8', os: 'Oracle Linux 8', size: '18GiB', diskFormat: 'QCOW2', protected: false, access: 'Shared', description: 'Oracle Linux 8 for databases', createdAt: '2025-08-10', status: 'deactivated' },
+  { id: 'img-010', name: 'Ubuntu-22.04-GPU', os: 'Ubuntu22.04', size: '24GiB', diskFormat: 'RAW', protected: true, access: 'Private', description: 'Ubuntu with GPU drivers', createdAt: '2025-08-05', status: 'active' },
 ];
 
 /* ----------------------------------------
@@ -93,7 +94,8 @@ export function ImagesPage() {
     { id: 'name', label: 'Name', visible: true, locked: true },
     { id: 'os', label: 'OS', visible: true },
     { id: 'size', label: 'Size', visible: true },
-    { id: 'access', label: 'Access', visible: true },
+    { id: 'diskFormat', label: 'Disk Format', visible: true },
+    { id: 'protected', label: 'Protected', visible: true },
     { id: 'createdAt', label: 'Created At', visible: true },
     { id: 'actions', label: 'Action', visible: true, locked: true },
   ];
@@ -204,6 +206,7 @@ export function ImagesPage() {
       flex: 1,
       sortable: true,
       render: (_, row) => (
+        <div className="flex flex-col gap-0.5">
         <Link
           to={`/images/${row.id}`}
           className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
@@ -211,6 +214,10 @@ export function ImagesPage() {
         >
           {row.name}
         </Link>
+          <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
+            ID : {row.id}
+          </span>
+        </div>
       ),
     },
     {
@@ -226,9 +233,16 @@ export function ImagesPage() {
       sortable: true,
     },
     {
-      key: 'access',
-      label: 'Access',
+      key: 'diskFormat',
+      label: 'Disk Format',
       flex: 1,
+      sortable: true,
+    },
+    {
+      key: 'protected',
+      label: 'Protected',
+      flex: 1,
+      render: (_, row) => row.protected ? 'On' : 'Off',
     },
     {
       key: 'createdAt',
@@ -274,8 +288,8 @@ export function ImagesPage() {
         return (
           <div onClick={(e) => e.stopPropagation()}>
             <ContextMenu items={menuItems} trigger="click">
-              <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors">
-                <IconDotsCircleHorizontal size={16} stroke={1} className="text-[var(--color-text-subtle)]" />
+              <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
+                <IconDotsCircleHorizontal size={16} stroke={1.5} className="text-[var(--action-icon-color)]" />
               </button>
             </ContextMenu>
           </div>
@@ -298,15 +312,16 @@ export function ImagesPage() {
   }, [columns, columnConfig]);
 
   return (
-    <div className="min-h-screen bg-[var(--color-surface-subtle)]">
-      <Sidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(false)} />
+    <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
+      <Sidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(prev => !prev)} />
 
       <main
-        className={`min-h-screen bg-[var(--color-surface-default)] transition-[margin] duration-200 overflow-x-auto ${
-          sidebarOpen ? 'ml-[200px]' : 'ml-0'
+        className={`absolute top-0 bottom-0 right-0 flex flex-col bg-[var(--color-surface-default)] transition-[left] duration-200 ${
+          sidebarOpen ? 'left-[200px]' : 'left-0'
         }`}
       >
-        <div className="min-w-[var(--layout-content-min-width)]">
+        {/* Fixed Header Area */}
+        <div className="shrink-0 bg-[var(--color-surface-default)]">
         {/* Tab Bar */}
         <TabBar
           tabs={tabBarTabs}
@@ -341,7 +356,10 @@ export function ImagesPage() {
             />
           }
         />
+        </div>
 
+        {/* Scrollable Content Area */}
+        <div className="flex-1 overflow-auto min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll">
         {/* Page Content */}
         <div className="pt-4 px-8 pb-6 bg-[var(--color-surface-default)]">
           <VStack gap={3}>

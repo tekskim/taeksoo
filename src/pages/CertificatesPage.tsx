@@ -42,6 +42,8 @@ interface Certificate {
   name: string;
   domain: string;
   listener: string;
+  listenerId: string;
+  listenerCount: number;
   expiresAt: string;
   createdAt: string;
   type: CertificateType;
@@ -53,16 +55,16 @@ interface Certificate {
    ---------------------------------------- */
 
 const mockCertificates: Certificate[] = [
-  { id: 'cert-001', name: 'server-cert-1', domain: '*.domain.com', listener: 'listener-1 (+10)', expiresAt: '2025-10-05', createdAt: '2025-10-03', type: 'server', status: 'active' },
-  { id: 'cert-002', name: 'api-cert', domain: 'api.example.com', listener: 'listener-api (+2)', expiresAt: '2026-01-15', createdAt: '2025-09-28', type: 'server', status: 'active' },
-  { id: 'cert-003', name: 'wildcard-cert', domain: '*.example.org', listener: 'listener-web', expiresAt: '2025-12-01', createdAt: '2025-09-20', type: 'server', status: 'active' },
-  { id: 'cert-004', name: 'staging-cert', domain: 'staging.domain.com', listener: 'listener-staging', expiresAt: '2025-11-15', createdAt: '2025-09-15', type: 'server', status: 'pending' },
-  { id: 'cert-005', name: 'internal-cert', domain: 'internal.company.com', listener: 'listener-internal (+5)', expiresAt: '2026-03-20', createdAt: '2025-09-10', type: 'server', status: 'active' },
-  { id: 'cert-006', name: 'root-ca', domain: 'N/A', listener: '-', expiresAt: '2030-01-01', createdAt: '2025-01-01', type: 'ca', status: 'active' },
-  { id: 'cert-007', name: 'intermediate-ca', domain: 'N/A', listener: '-', expiresAt: '2028-06-15', createdAt: '2025-06-15', type: 'ca', status: 'active' },
-  { id: 'cert-008', name: 'expired-cert', domain: 'old.domain.com', listener: '-', expiresAt: '2025-08-01', createdAt: '2024-08-01', type: 'server', status: 'error' },
-  { id: 'cert-009', name: 'dev-ca', domain: 'N/A', listener: '-', expiresAt: '2027-12-31', createdAt: '2025-01-15', type: 'ca', status: 'active' },
-  { id: 'cert-010', name: 'client-auth-cert', domain: 'auth.domain.com', listener: 'listener-auth', expiresAt: '2026-06-01', createdAt: '2025-06-01', type: 'server', status: 'active' },
+  { id: 'cert-001', name: 'server-cert-1', domain: 'www.domain.com (+3)', listener: 'listener-1', listenerId: '294u92s2', listenerCount: 10, expiresAt: '2025-10-05', createdAt: '2025-10-03', type: 'server', status: 'active' },
+  { id: 'cert-002', name: 'api-cert', domain: 'api.example.com (+2)', listener: 'listener-api', listenerId: '38fj29dk', listenerCount: 2, expiresAt: '2026-01-15', createdAt: '2025-09-28', type: 'server', status: 'active' },
+  { id: 'cert-003', name: 'wildcard-cert', domain: 'www.example.org (+5)', listener: 'listener-web', listenerId: '9dk38fj2', listenerCount: 0, expiresAt: '2025-12-01', createdAt: '2025-09-20', type: 'server', status: 'active' },
+  { id: 'cert-004', name: 'staging-cert', domain: 'staging.domain.com (+1)', listener: 'listener-staging', listenerId: 'k29dk38f', listenerCount: 0, expiresAt: '2025-11-15', createdAt: '2025-09-15', type: 'server', status: 'pending' },
+  { id: 'cert-005', name: 'internal-cert', domain: 'internal.company.com (+4)', listener: 'listener-internal', listenerId: 'fj29dk38', listenerCount: 5, expiresAt: '2026-03-20', createdAt: '2025-09-10', type: 'server', status: 'active' },
+  { id: 'cert-006', name: 'root-ca', domain: 'N/A', listener: '-', listenerId: '', listenerCount: 0, expiresAt: '2030-01-01', createdAt: '2025-01-01', type: 'ca', status: 'active' },
+  { id: 'cert-007', name: 'intermediate-ca', domain: 'N/A', listener: '-', listenerId: '', listenerCount: 0, expiresAt: '2028-06-15', createdAt: '2025-06-15', type: 'ca', status: 'active' },
+  { id: 'cert-008', name: 'expired-cert', domain: 'old.domain.com (+2)', listener: '-', listenerId: '', listenerCount: 0, expiresAt: '2025-08-01', createdAt: '2024-08-01', type: 'server', status: 'error' },
+  { id: 'cert-009', name: 'dev-ca', domain: 'N/A', listener: '-', listenerId: '', listenerCount: 0, expiresAt: '2027-12-31', createdAt: '2025-01-15', type: 'ca', status: 'active' },
+  { id: 'cert-010', name: 'client-auth-cert', domain: 'auth.domain.com (+1)', listener: 'listener-auth', listenerId: '29dk38fj', listenerCount: 0, expiresAt: '2026-06-01', createdAt: '2025-06-01', type: 'server', status: 'active' },
 ];
 
 /* ----------------------------------------
@@ -98,7 +100,7 @@ export function CertificatesPage() {
   const defaultColumnConfig: ColumnConfig[] = [
     { id: 'status', label: 'Status', visible: true, locked: true },
     { id: 'name', label: 'Name', visible: true, locked: true },
-    { id: 'domain', label: 'Domain', visible: true },
+    { id: 'domain', label: 'SAN', visible: true },
     { id: 'listener', label: 'Listener', visible: true },
     { id: 'expiresAt', label: 'Expires At', visible: true },
     { id: 'createdAt', label: 'Created At', visible: true },
@@ -160,6 +162,7 @@ export function CertificatesPage() {
       key: 'name',
       label: 'Name',
       flex: 1,
+      sortable: true,
       render: (_, row) => (
         <div className="flex flex-col gap-0.5">
           <Link
@@ -175,12 +178,37 @@ export function CertificatesPage() {
         </div>
       ),
     },
-    { key: 'domain', label: 'Domain', flex: 1 },
-    { key: 'listener', label: 'Listener', flex: 1 },
+    { key: 'domain', label: 'SAN', flex: 1 },
+    {
+      key: 'listener',
+      label: 'Listener',
+      flex: 1,
+      sortable: true,
+      render: (_, row) => (
+        row.listener === '-' ? '-' : (
+          <div className="flex items-center gap-[5px]">
+            <div className="flex flex-col gap-0.5">
+              <span className="text-[length:var(--font-size-12)] text-[var(--color-text-default)]">
+                {row.listener}
+              </span>
+              <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
+                ID : {row.listenerId}
+              </span>
+            </div>
+            {row.listenerCount > 0 && (
+              <span className="text-[length:var(--font-size-12)] text-[var(--color-text-default)]">
+                (+{row.listenerCount})
+              </span>
+            )}
+          </div>
+        )
+      ),
+    },
     {
       key: 'expiresAt',
       label: 'Expires At',
       flex: 1,
+      sortable: true,
       render: (value: string) => {
         const isExpired = new Date(value) < new Date();
         return (
@@ -190,7 +218,7 @@ export function CertificatesPage() {
         );
       },
     },
-    { key: 'createdAt', label: 'Created At', flex: 1 },
+    { key: 'createdAt', label: 'Created At', flex: 1, sortable: true },
     {
       key: 'actions',
       label: 'Action',
@@ -199,8 +227,8 @@ export function CertificatesPage() {
       render: (_, row) => (
         <div onClick={(e) => e.stopPropagation()}>
           <ContextMenu items={getContextMenuItems(row)} trigger="click">
-            <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors">
-              <IconDotsCircleHorizontal size={16} stroke={1} className="text-[var(--color-text-subtle)]" />
+            <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
+              <IconDotsCircleHorizontal size={16} stroke={1.5} className="text-[var(--action-icon-color)]" />
             </button>
           </ContextMenu>
         </div>
@@ -227,10 +255,10 @@ export function CertificatesPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[var(--color-surface-subtle)]">
-      <Sidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(false)} />
-      <main className={`min-h-screen bg-[var(--color-surface-default)] transition-[margin] duration-200 overflow-x-auto ${sidebarOpen ? 'ml-[200px]' : 'ml-0'}`}>
-        <div className="min-w-[var(--layout-content-min-width)]">
+    <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
+      <Sidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(prev => !prev)} />
+      <main className={`absolute top-0 bottom-0 right-0 flex flex-col bg-[var(--color-surface-default)] transition-[left] duration-200 ${sidebarOpen ? 'left-[200px]' : 'left-0'}`}>
+        <div className="shrink-0 bg-[var(--color-surface-default)]">
         <TabBar tabs={tabBarTabs} activeTab={activeTabId} onTabChange={selectTab} onTabClose={closeTab} onTabAdd={addNewTab} showAddButton={true} showWindowControls={true} />
         <TopBar
           showSidebarToggle={!sidebarOpen}
@@ -241,6 +269,8 @@ export function CertificatesPage() {
           breadcrumb={<Breadcrumb items={[{ label: 'Proj-1', href: '/project' }, { label: 'Certificates' }]} />}
           actions={<TopBarAction icon={<IconBell size={16} stroke={1.5} />} aria-label="Notifications" badge={true} />}
         />
+        </div>
+        <div className="flex-1 overflow-auto min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll">
         <div className="pt-4 px-8 pb-6 bg-[var(--color-surface-default)]">
           <VStack gap={3}>
             <div className="flex justify-between items-center h-8 w-full">

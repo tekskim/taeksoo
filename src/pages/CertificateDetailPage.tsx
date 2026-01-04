@@ -203,6 +203,9 @@ export default function CertificateDetailPage() {
   const [listenerCurrentPage, setListenerCurrentPage] = useState(1);
   const listenersPerPage = 10;
 
+  // Preferences state
+  const [isPreferencesOpen, setIsPreferencesOpen] = useState(false);
+
   // In a real app, fetch based on id
   const certificate = id && mockCertificates[id] ? mockCertificates[id] : mockServerCertificate;
 
@@ -291,6 +294,7 @@ export default function CertificateDetailPage() {
       key: 'loadBalancer',
       label: 'Load Balancer',
       flex: 1,
+      sortable: true,
       render: (_, row) => (
         <div className="flex flex-col gap-0.5">
           <Link
@@ -315,17 +319,18 @@ export default function CertificateDetailPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-[var(--color-surface-subtle)]">
+    <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
       {/* Sidebar */}
       <Sidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
 
       {/* Main Content */}
       <main
-        className={`min-h-screen bg-[var(--color-surface-default)] transition-[margin] duration-200 overflow-x-auto ${
-          sidebarOpen ? 'ml-[200px]' : 'ml-0'
+        className={`absolute top-0 bottom-0 right-0 flex flex-col bg-[var(--color-surface-default)] transition-[left] duration-200 ${
+          sidebarOpen ? 'left-[200px]' : 'left-0'
         }`}
       >
-        <div className="min-w-[var(--layout-content-min-width)]">
+        {/* Fixed Header Area */}
+        <div className="shrink-0 bg-[var(--color-surface-default)]">
           {/* Tab Bar */}
           <TabBar
             tabs={tabBarTabs}
@@ -339,6 +344,9 @@ export default function CertificateDetailPage() {
 
           {/* Top Bar */}
           <TopBar
+            showNavigation={true}
+            onBack={() => window.history.back()}
+            onForward={() => window.history.forward()}
             breadcrumb={<Breadcrumb items={breadcrumbItems} />}
             onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
             actions={
@@ -349,7 +357,10 @@ export default function CertificateDetailPage() {
               />
             }
           />
+        </div>
 
+        {/* Scrollable Content Area */}
+        <div className="flex-1 overflow-auto min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll">
           {/* Page Content */}
           <div className="pt-4 px-8 pb-20 bg-[var(--color-surface-default)]">
             <VStack gap={8} className="min-w-[1176px] max-w-[1320px]">
@@ -541,17 +552,14 @@ export default function CertificateDetailPage() {
                       </div>
 
                       {/* Pagination */}
-                      <div className="flex items-center gap-2">
                         <Pagination
                           currentPage={listenerCurrentPage}
                           totalPages={totalListenerPages}
                           onPageChange={setListenerCurrentPage}
+                        totalItems={filteredListeners.length}
+                        showSettings
+                        onSettingsClick={() => setIsPreferencesOpen(true)}
                         />
-                        <div className="h-4 w-px bg-[var(--color-border-default)]" />
-                        <span className="text-[length:var(--font-size-12)] text-[var(--color-text-subtle)]">
-                          {filteredListeners.length} items
-                        </span>
-                      </div>
 
                       {/* Table */}
                       <Table

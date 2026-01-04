@@ -17,8 +17,9 @@ import {
   SearchInput,
   Pagination,
   StatusIndicator,
+  ContextMenu,
 } from '@/design-system';
-import type { TableColumn } from '@/design-system';
+import type { TableColumn, ContextMenuItem } from '@/design-system';
 import { Sidebar } from '@/components/Sidebar';
 import { useTabs } from '@/contexts/TabContext';
 import {
@@ -30,6 +31,7 @@ import {
   IconCirclePlus,
   IconDotsCircleHorizontal,
   IconUsers,
+  IconCopy,
 } from '@tabler/icons-react';
 
 /* ----------------------------------------
@@ -56,19 +58,24 @@ interface PoolDetail {
 
 interface Member {
   id: string;
-  name: string;
   status: MemberStatus;
-  address: string;
+  source: {
+    name: string;
+    id: string;
+  };
+  ipAddress: string;
   port: number;
   weight: number;
+  backup: boolean;
   adminState: 'Up' | 'Down';
 }
 
 interface HealthMonitor {
   id: string;
   name: string;
+  state: string;
   type: string;
-  delay: number;
+  interval: number;
   timeout: number;
   maxRetries: number;
   adminState: 'Up' | 'Down';
@@ -98,28 +105,33 @@ const mockPoolDetail: PoolDetail = {
    ---------------------------------------- */
 
 const mockMembers: Member[] = Array.from({ length: 115 }, (_, i) => ({
-  id: `member-${String(i + 1).padStart(3, '0')}`,
-  name: `member-${String(i + 1).padStart(2, '0')}`,
+  id: `29fg234`,
   status: ['active', 'active', 'active', 'down', 'error'][i % 5] as MemberStatus,
-  address: `192.168.1.${(i % 254) + 1}`,
-  port: [80, 443, 8080, 3000][i % 4],
-  weight: i % 10 + 1,
-  adminState: i % 10 === 0 ? 'Down' : 'Up',
+  source: {
+    name: 'instance-usw-lo',
+    id: `29fg234`,
+  },
+  ipAddress: '10.63.0.46',
+  port: 80,
+  weight: 1,
+  backup: false,
+  adminState: 'Up' as const,
 }));
 
 /* ----------------------------------------
    Mock Health Monitor Data
    ---------------------------------------- */
 
-const mockHealthMonitors: HealthMonitor[] = Array.from({ length: 10 }, (_, i) => ({
-  id: `hm-${String(i + 1).padStart(3, '0')}`,
-  name: `health-monitor-${String(i + 1).padStart(2, '0')}`,
-  type: ['HTTP', 'HTTPS', 'TCP', 'PING'][i % 4],
-  delay: [5, 10, 15, 30][i % 4],
-  timeout: [5, 10, 15, 20][i % 4],
-  maxRetries: [3, 5, 10][i % 3],
-  adminState: i % 5 === 0 ? 'Down' : 'Up',
-}));
+const mockHealthMonitor: HealthMonitor = {
+  id: 'hm-001',
+  name: 'hm-pool-http',
+  state: 'Online',
+  type: 'HTTP',
+  interval: 5,
+  timeout: 3,
+  maxRetries: 3,
+  adminState: 'Up',
+};
 
 /* ----------------------------------------
    Status Mapping
@@ -152,17 +164,14 @@ export default function PoolDetailPage() {
   // Members state
   const [memberSearchTerm, setMemberSearchTerm] = useState('');
   const [memberCurrentPage, setMemberCurrentPage] = useState(1);
-  const [selectedMembers, setSelectedMembers] = useState<string[]>([]);
   const membersPerPage = 10;
-
-  // Health Monitor state
-  const [healthMonitorSearchTerm, setHealthMonitorSearchTerm] = useState('');
-  const [healthMonitorCurrentPage, setHealthMonitorCurrentPage] = useState(1);
-  const [selectedHealthMonitors, setSelectedHealthMonitors] = useState<string[]>([]);
-  const healthMonitorsPerPage = 10;
+  
+  // Preferences state
+  const [isPreferencesOpen, setIsPreferencesOpen] = useState(false);
 
   // In a real app, fetch based on id
   const pool = mockPoolDetail;
+  const healthMonitor = mockHealthMonitor;
 
   const breadcrumbItems = [
     { label: 'Proj-1', href: '/' },
@@ -190,8 +199,9 @@ export default function PoolDetailPage() {
     if (!memberSearchTerm) return mockMembers;
     const query = memberSearchTerm.toLowerCase();
     return mockMembers.filter(member =>
-      member.name.toLowerCase().includes(query) ||
-      member.address.toLowerCase().includes(query)
+      member.id.toLowerCase().includes(query) ||
+      member.source.name.toLowerCase().includes(query) ||
+      member.ipAddress.toLowerCase().includes(query)
     );
   }, [memberSearchTerm]);
 
@@ -202,22 +212,6 @@ export default function PoolDetailPage() {
     return filteredMembers.slice(start, start + membersPerPage);
   }, [filteredMembers, memberCurrentPage, membersPerPage]);
 
-  // Filtered health monitors based on search
-  const filteredHealthMonitors = useMemo(() => {
-    if (!healthMonitorSearchTerm) return mockHealthMonitors;
-    const query = healthMonitorSearchTerm.toLowerCase();
-    return mockHealthMonitors.filter(hm =>
-      hm.name.toLowerCase().includes(query) ||
-      hm.type.toLowerCase().includes(query)
-    );
-  }, [healthMonitorSearchTerm]);
-
-  // Paginated health monitors
-  const totalHealthMonitorPages = Math.ceil(filteredHealthMonitors.length / healthMonitorsPerPage);
-  const paginatedHealthMonitors = useMemo(() => {
-    const start = (healthMonitorCurrentPage - 1) * healthMonitorsPerPage;
-    return filteredHealthMonitors.slice(start, start + healthMonitorsPerPage);
-  }, [filteredHealthMonitors, healthMonitorCurrentPage, healthMonitorsPerPage]);
 
   // Member columns
   const memberColumns: TableColumn<Member>[] = [
@@ -231,29 +225,48 @@ export default function PoolDetailPage() {
       ),
     },
     {
-      key: 'name',
-      label: 'Name',
+      key: 'id',
+      label: 'ID',
       flex: 1,
       sortable: true,
       render: (_, row) => (
+        <div className="flex items-center gap-1.5">
+          <span className="text-[var(--color-text-default)]">{row.id}</span>
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              navigator.clipboard.writeText(row.id);
+            }}
+            className="text-[var(--color-text-subtle)] hover:text-[var(--color-text-default)] transition-colors"
+          >
+            <IconCopy size={12} stroke={1.5} className="text-[var(--color-action-primary)]" />
+          </button>
+        </div>
+      ),
+    },
+    {
+      key: 'source',
+      label: 'Source',
+      flex: 1,
+      render: (_, row) => (
         <div className="flex flex-col gap-0.5">
           <Link
-            to={`/members/${row.id}`}
+            to={`/instances/${row.source.id}`}
             className="inline-flex items-center gap-1.5 font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
             onClick={(e) => e.stopPropagation()}
           >
-            {row.name}
+            {row.source.name}
             <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
           </Link>
           <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
-            ID : {row.id}
+            ID : {row.source.id}
           </span>
         </div>
       ),
     },
     {
-      key: 'address',
-      label: 'Address',
+      key: 'ipAddress',
+      label: 'IP Address',
       flex: 1,
       sortable: true,
     },
@@ -270,6 +283,12 @@ export default function PoolDetailPage() {
       sortable: true,
     },
     {
+      key: 'backup',
+      label: 'Backup',
+      flex: 1,
+      render: (_, row) => row.backup ? 'Yes' : 'No',
+    },
+    {
       key: 'adminState',
       label: 'Admin State',
       flex: 1,
@@ -279,89 +298,37 @@ export default function PoolDetailPage() {
       label: 'Action',
       width: '72px',
       align: 'center',
-      render: () => (
-        <Button variant="tertiary" size="sm" iconOnly icon={<IconDotsCircleHorizontal size={16} stroke={1} />} />
-      ),
+      render: (_: unknown, row: Member) => {
+        const memberMenuItems: ContextMenuItem[] = [
+          { id: 'delete', label: 'Delete', status: 'danger', onClick: () => console.log('Delete member', row.id) },
+        ];
+        return (
+          <div onClick={(e) => e.stopPropagation()}>
+            <ContextMenu items={memberMenuItems} trigger="click">
+              <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
+                <IconDotsCircleHorizontal size={16} stroke={1.5} className="text-[var(--action-icon-color)]" />
+              </button>
+            </ContextMenu>
+          </div>
+        );
+      },
     },
   ];
 
   // Health Monitor columns
-  const healthMonitorColumns: TableColumn<HealthMonitor>[] = [
-    {
-      key: 'name',
-      label: 'Name',
-      flex: 1,
-      sortable: true,
-      render: (_, row) => (
-        <div className="flex flex-col gap-0.5">
-          <Link
-            to={`/health-monitors/${row.id}`}
-            className="inline-flex items-center gap-1.5 font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
-            onClick={(e) => e.stopPropagation()}
-          >
-            {row.name}
-            <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
-          </Link>
-          <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
-            ID : {row.id}
-          </span>
-        </div>
-      ),
-    },
-    {
-      key: 'type',
-      label: 'Type',
-      flex: 1,
-      sortable: true,
-    },
-    {
-      key: 'delay',
-      label: 'Delay',
-      flex: 1,
-      sortable: true,
-      render: (_, row) => `${row.delay}s`,
-    },
-    {
-      key: 'timeout',
-      label: 'Timeout',
-      flex: 1,
-      sortable: true,
-      render: (_, row) => `${row.timeout}s`,
-    },
-    {
-      key: 'maxRetries',
-      label: 'Max Retries',
-      flex: 1,
-      sortable: true,
-    },
-    {
-      key: 'adminState',
-      label: 'Admin State',
-      flex: 1,
-    },
-    {
-      key: 'actions',
-      label: 'Action',
-      width: '72px',
-      align: 'center',
-      render: () => (
-        <Button variant="tertiary" size="sm" iconOnly icon={<IconDotsCircleHorizontal size={16} stroke={1} />} />
-      ),
-    },
-  ];
-
   return (
-    <div className="min-h-screen bg-[var(--color-surface-subtle)]">
+    <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
       {/* Sidebar */}
       <Sidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
 
       {/* Main Content */}
       <main
-        className={`min-h-screen bg-[var(--color-surface-default)] transition-[margin] duration-200 overflow-x-auto ${
-          sidebarOpen ? 'ml-[200px]' : 'ml-0'
+        className={`absolute top-0 bottom-0 right-0 flex flex-col bg-[var(--color-surface-default)] transition-[left] duration-200 ${
+          sidebarOpen ? 'left-[200px]' : 'left-0'
         }`}
       >
-        <div className="min-w-[var(--layout-content-min-width)]">
+        {/* Fixed Header Area */}
+        <div className="shrink-0 bg-[var(--color-surface-default)]">
           {/* Tab Bar */}
           <TabBar
             tabs={tabBarTabs}
@@ -375,6 +342,9 @@ export default function PoolDetailPage() {
 
           {/* Top Bar */}
           <TopBar
+            showNavigation={true}
+            onBack={() => window.history.back()}
+            onForward={() => window.history.forward()}
             breadcrumb={<Breadcrumb items={breadcrumbItems} />}
             onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
             actions={
@@ -385,7 +355,10 @@ export default function PoolDetailPage() {
               />
             }
           />
+        </div>
 
+        {/* Scrollable Content Area */}
+        <div className="flex-1 overflow-auto min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll">
           {/* Page Content */}
           <div className="pt-4 px-8 pb-20 bg-[var(--color-surface-default)]">
             <VStack gap={8} className="min-w-[1176px] max-w-[1320px]">
@@ -516,8 +489,8 @@ export default function PoolDetailPage() {
                         <h3 className="text-[16px] font-semibold text-[var(--color-text-default)]">
                           Members
                         </h3>
-                        <Button variant="secondary" size="sm" leftIcon={<IconCirclePlus size={12} />}>
-                          Add Member
+                        <Button variant="secondary" size="sm" leftIcon={<IconUsers size={12} />}>
+                          Manage Members
                         </Button>
                       </div>
 
@@ -533,100 +506,54 @@ export default function PoolDetailPage() {
                             placeholder="Find member with filters"
                           />
                         </div>
-                        <div className="h-4 w-px bg-[var(--color-border-default)]" />
-                        <Button
-                          variant="secondary"
-                          size="sm"
-                          leftIcon={<IconTrash size={12} />}
-                          disabled={selectedMembers.length === 0}
-                        >
-                          Delete
-                        </Button>
                       </div>
 
                       {/* Pagination */}
-                      <div className="flex items-center gap-2">
                         <Pagination
                           currentPage={memberCurrentPage}
                           totalPages={totalMemberPages}
                           onPageChange={setMemberCurrentPage}
+                        totalItems={filteredMembers.length}
+                        showSettings
+                        onSettingsClick={() => setIsPreferencesOpen(true)}
                         />
-                        <div className="h-4 w-px bg-[var(--color-border-default)]" />
-                        <span className="text-[length:var(--font-size-12)] text-[var(--color-text-subtle)]">
-                          {filteredMembers.length} items
-                        </span>
-                      </div>
 
                       {/* Table */}
                       <Table
                         columns={memberColumns}
                         data={paginatedMembers}
                         rowKey="id"
-                        selectable
-                        selectedRows={selectedMembers}
-                        onSelectionChange={setSelectedMembers}
                       />
                     </VStack>
                   </TabPanel>
 
                   {/* Health Monitor Tab */}
                   <TabPanel value="health-monitor">
-                    <VStack gap={3} className="pt-6">
-                      {/* Header */}
-                      <div className="flex items-center justify-between">
-                        <h3 className="text-[16px] font-semibold text-[var(--color-text-default)]">
-                          Health Monitor
-                        </h3>
-                        <Button variant="secondary" size="sm" leftIcon={<IconCirclePlus size={12} />}>
-                          Create Health Monitor
-                        </Button>
-                      </div>
-
-                      {/* Action Bar */}
-                      <div className="flex items-center gap-2">
-                        <div className="w-[280px]">
-                          <SearchInput
-                            value={healthMonitorSearchTerm}
-                            onChange={(e) => {
-                              setHealthMonitorSearchTerm(e.target.value);
-                              setHealthMonitorCurrentPage(1);
-                            }}
-                            placeholder="Find health monitor with filters"
-                          />
-                        </div>
-                        <div className="h-4 w-px bg-[var(--color-border-default)]" />
-                        <Button
-                          variant="secondary"
-                          size="sm"
-                          leftIcon={<IconTrash size={12} />}
-                          disabled={selectedHealthMonitors.length === 0}
-                        >
-                          Delete
-                        </Button>
-                      </div>
-
-                      {/* Pagination */}
-                      <div className="flex items-center gap-2">
-                        <Pagination
-                          currentPage={healthMonitorCurrentPage}
-                          totalPages={totalHealthMonitorPages}
-                          onPageChange={setHealthMonitorCurrentPage}
+                    <VStack gap={6} className="pt-6">
+                      <SectionCard>
+                        <SectionCard.Header
+                          title="Health Monitor"
+                          actions={
+                            <div className="flex items-center gap-2">
+                              <Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />}>
+                                Edit
+                              </Button>
+                              <Button variant="secondary" size="sm" leftIcon={<IconTrash size={12} />}>
+                                Delete
+                              </Button>
+                            </div>
+                          }
                         />
-                        <div className="h-4 w-px bg-[var(--color-border-default)]" />
-                        <span className="text-[length:var(--font-size-12)] text-[var(--color-text-subtle)]">
-                          {filteredHealthMonitors.length} items
-                        </span>
-                      </div>
-
-                      {/* Table */}
-                      <Table
-                        columns={healthMonitorColumns}
-                        data={paginatedHealthMonitors}
-                        rowKey="id"
-                        selectable
-                        selectedRows={selectedHealthMonitors}
-                        onSelectionChange={setSelectedHealthMonitors}
-                      />
+                        <SectionCard.Content>
+                          <SectionCard.DataRow label="Name" value={healthMonitor.name} />
+                          <SectionCard.DataRow label="State" value={healthMonitor.state} />
+                          <SectionCard.DataRow label="Type" value={healthMonitor.type} />
+                          <SectionCard.DataRow label="Interval" value={`${healthMonitor.interval} sec`} />
+                          <SectionCard.DataRow label="Timeout" value={`${healthMonitor.timeout} sec`} />
+                          <SectionCard.DataRow label="Max Retries" value={String(healthMonitor.maxRetries)} />
+                          <SectionCard.DataRow label="Admin State" value={healthMonitor.adminState} />
+                        </SectionCard.Content>
+                      </SectionCard>
                     </VStack>
                   </TabPanel>
                 </Tabs>

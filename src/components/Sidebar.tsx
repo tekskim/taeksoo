@@ -23,6 +23,7 @@ import {
   IconLayoutSidebar,
   IconPalette,
   IconLayoutSidebarRight,
+  IconAppWindow,
 } from '@tabler/icons-react';
 import { Link, useLocation } from 'react-router-dom';
 import ThakiLogoLight from '@/assets/thakiLogo_light.svg';
@@ -48,7 +49,27 @@ export function Sidebar({ isOpen = true, onToggle }: SidebarProps) {
     if (href === '/instances' && (location.pathname === '/' || location.pathname === '/instances')) {
       return true;
     }
-    return location.pathname === href;
+    // Exact match
+    if (location.pathname === href) {
+      return true;
+    }
+    // Match detail pages (e.g., /volumes/vol-001 matches /volumes)
+    if (href !== '/home' && location.pathname.startsWith(href + '/')) {
+      return true;
+    }
+    // Match child resources - Subnets are under Networks
+    if (href === '/networks' && location.pathname.startsWith('/subnets')) {
+      return true;
+    }
+    // Match child resources - Listeners, Pools, and L7 Policies are under Load Balancers
+    if (href === '/load-balancers' && (
+      location.pathname.startsWith('/listeners') ||
+      location.pathname.startsWith('/pools') ||
+      location.pathname.startsWith('/l7-policies')
+    )) {
+      return true;
+    }
+    return false;
   };
   
   if (!isOpen) return null;
@@ -63,11 +84,12 @@ export function Sidebar({ isOpen = true, onToggle }: SidebarProps) {
           className="h-4"
         />
         <button 
+          type="button"
           onClick={onToggle}
-          className="p-1 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+          className="p-1 hover:bg-[var(--color-surface-muted)] rounded transition-colors cursor-pointer"
           aria-label="Toggle sidebar"
         >
-          <IconLayoutSidebar size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
+          <IconLayoutSidebar size={16} className="text-[var(--color-text-muted)] pointer-events-none" stroke={1.5} />
         </button>
       </div>
 
@@ -95,10 +117,27 @@ export function Sidebar({ isOpen = true, onToggle }: SidebarProps) {
           {/* Drawers Link */}
           <Link
             to="/drawers"
-            className="flex items-center gap-2 px-2 py-1.5 rounded-md bg-[var(--color-action-secondary)] hover:bg-[var(--color-action-secondary-hover)] text-[var(--color-text-default)] text-[11px] font-medium transition-colors border border-[var(--color-border-default)]"
+            className={`flex items-center gap-2 px-2 py-1.5 rounded-md text-[11px] font-medium transition-colors border ${
+              isActive('/drawers')
+                ? 'bg-transparent border-[var(--color-action-primary)] text-[var(--color-action-primary)] hover:bg-[var(--color-action-primary-hover)]/10'
+                : 'bg-[var(--color-action-secondary)] hover:bg-[var(--color-action-secondary-hover)] text-[var(--color-text-default)] border-[var(--color-border-default)]'
+            }`}
           >
             <IconLayoutSidebarRight size={16} stroke={1.5} />
             <span>Drawers</span>
+          </Link>
+
+          {/* Modals Link */}
+          <Link
+            to="/modals"
+            className={`flex items-center gap-2 px-2 py-1.5 rounded-md text-[11px] font-medium transition-colors border ${
+              isActive('/modals')
+                ? 'bg-transparent border-[var(--color-action-primary)] text-[var(--color-action-primary)] hover:bg-[var(--color-action-primary-hover)]/10'
+                : 'bg-[var(--color-action-secondary)] hover:bg-[var(--color-action-secondary-hover)] text-[var(--color-text-default)] border-[var(--color-border-default)]'
+            }`}
+          >
+            <IconAppWindow size={16} stroke={1.5} />
+            <span>Modals</span>
           </Link>
 
           {/* Home */}

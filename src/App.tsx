@@ -8,6 +8,7 @@ import { InstanceListPage } from '@/pages/InstanceListPage';
 import { InstanceDetailPage } from '@/pages/InstanceDetailPage';
 import { DesignSystemPage } from '@/pages/DesignSystemPage';
 import { DrawersPage } from '@/pages/DrawersPage';
+import { ModalsPage } from '@/pages/ModalsPage';
 import { HomePage } from '@/pages/HomePage';
 import { InstanceTemplatesPage } from '@/pages/InstanceTemplatesPage';
 import { InstanceTemplateDetailPage } from '@/pages/InstanceTemplateDetailPage';
@@ -44,6 +45,7 @@ import CertificateDetailPage from '@/pages/CertificateDetailPage';
 import SubnetDetailPage from '@/pages/SubnetDetailPage';
 import ListenerDetailPage from '@/pages/ListenerDetailPage';
 import PoolDetailPage from '@/pages/PoolDetailPage';
+import L7PolicyDetailPage from '@/pages/L7PolicyDetailPage';
 import { TopologyD3Page } from '@/pages/TopologyD3Page';
 import { ConsolePage } from '@/pages/ConsolePage';
 import { GradientShowcasePage } from '@/pages/GradientShowcasePage';
@@ -94,12 +96,14 @@ function AppRoutes() {
         <Route path="/load-balancers/:id" element={<LoadBalancerDetailPage />} />
         <Route path="/listeners/:id" element={<ListenerDetailPage />} />
         <Route path="/pools/:id" element={<PoolDetailPage />} />
+        <Route path="/l7-policies/:id" element={<L7PolicyDetailPage />} />
         <Route path="/certificates" element={<CertificatesPage />} />
         <Route path="/certificates/:id" element={<CertificateDetailPage />} />
         <Route path="/topology" element={<TopologyD3Page />} />
         <Route path="/console/:instanceId" element={<ConsolePage />} />
         <Route path="/design-system" element={<DesignSystemPage />} />
         <Route path="/drawers" element={<DrawersPage />} />
+        <Route path="/modals" element={<ModalsPage />} />
         <Route path="/gradients" element={<GradientShowcasePage />} />
         <Route path="/color-palette" element={<ColorPalettePage />} />
         <Route path="/metallic-palette" element={<MetallicPalettePage />} />

@@ -17,8 +17,10 @@ import {
   Table,
   SearchInput,
   Pagination,
+  ContextMenu,
+  Modal,
 } from '@/design-system';
-import type { TableColumn } from '@/design-system';
+import type { TableColumn, ContextMenuItem } from '@/design-system';
 import { Sidebar } from '@/components/Sidebar';
 import { useTabs } from '@/contexts/TabContext';
 import {
@@ -33,6 +35,7 @@ import {
   IconDotsCircleHorizontal,
   IconCirclePlus,
   IconSettings,
+  IconAlertCircle,
 } from '@tabler/icons-react';
 
 /* ----------------------------------------
@@ -153,6 +156,18 @@ export default function PortDetailPage() {
   const [sgSearchTerm, setSgSearchTerm] = useState('');
   const [sgCurrentPage, setSgCurrentPage] = useState(1);
   const sgPerPage = 10;
+  
+  // Selection state
+  const [selectedFixedIPs, setSelectedFixedIPs] = useState<string[]>([]);
+  const [selectedAaps, setSelectedAaps] = useState<string[]>([]);
+  const [selectedSgs, setSelectedSgs] = useState<string[]>([]);
+  
+  // Preferences state
+  const [isPreferencesOpen, setIsPreferencesOpen] = useState(false);
+  
+  // Detach security group modal state
+  const [detachModalOpen, setDetachModalOpen] = useState(false);
+  const [securityGroupToDetach, setSecurityGroupToDetach] = useState<SecurityGroup | null>(null);
 
   // In a real app, fetch based on id
   const port = mockPortDetail;
@@ -269,9 +284,21 @@ export default function PortDetailPage() {
       label: 'Action',
       width: '72px',
       align: 'center',
-      render: () => (
-        <Button variant="tertiary" size="sm" iconOnly icon={<IconDotsCircleHorizontal size={16} stroke={1} />} />
-      ),
+      render: (_: unknown, row: FixedIP) => {
+        const fixedIpMenuItems: ContextMenuItem[] = [
+          { id: 'disassociate-floating-ip', label: 'Disassociate floating IP', status: 'danger', onClick: () => console.log('Disassociate floating IP', row.id) },
+          { id: 'release-fixed-ip', label: 'Release fixed IP', status: 'danger', onClick: () => console.log('Release fixed IP', row.id) },
+        ];
+        return (
+          <div onClick={(e) => e.stopPropagation()}>
+            <ContextMenu items={fixedIpMenuItems} trigger="click">
+              <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
+                <IconDotsCircleHorizontal size={16} stroke={1.5} className="text-[var(--action-icon-color)]" />
+              </button>
+            </ContextMenu>
+          </div>
+        );
+      },
     },
   ];
 
@@ -293,9 +320,20 @@ export default function PortDetailPage() {
       label: 'Action',
       width: '72px',
       align: 'center',
-      render: () => (
-        <Button variant="tertiary" size="sm" iconOnly icon={<IconDotsCircleHorizontal size={16} stroke={1} />} />
-      ),
+      render: (_: unknown, row: AllowedAddressPair) => {
+        const pairMenuItems: ContextMenuItem[] = [
+          { id: 'delete', label: 'Delete', status: 'danger', onClick: () => console.log('Delete address pair', row.id) },
+        ];
+        return (
+          <div onClick={(e) => e.stopPropagation()}>
+            <ContextMenu items={pairMenuItems} trigger="click">
+              <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
+                <IconDotsCircleHorizontal size={16} stroke={1.5} className="text-[var(--action-icon-color)]" />
+              </button>
+            </ContextMenu>
+          </div>
+        );
+      },
     },
   ];
 
@@ -339,11 +377,39 @@ export default function PortDetailPage() {
       label: 'Action',
       width: '72px',
       align: 'center',
-      render: () => (
-        <Button variant="tertiary" size="sm" iconOnly icon={<IconDotsCircleHorizontal size={16} stroke={1} />} />
-      ),
+      render: (_: unknown, row: SecurityGroup) => {
+        const sgMenuItems: ContextMenuItem[] = [
+          { 
+            id: 'detach', 
+            label: 'Detach', 
+            status: 'danger', 
+            onClick: () => {
+              setSecurityGroupToDetach(row);
+              setDetachModalOpen(true);
+            }
+          },
+        ];
+        return (
+          <div onClick={(e) => e.stopPropagation()}>
+            <ContextMenu items={sgMenuItems} trigger="click">
+              <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
+                <IconDotsCircleHorizontal size={16} stroke={1.5} className="text-[var(--action-icon-color)]" />
+              </button>
+            </ContextMenu>
+          </div>
+        );
+      },
     },
   ];
+
+  const handleDetachSecurityGroup = () => {
+    if (securityGroupToDetach) {
+      console.log('Detaching security group', securityGroupToDetach.id, 'from port', port.id);
+      // API call would go here
+      setDetachModalOpen(false);
+      setSecurityGroupToDetach(null);
+    }
+  };
 
   const breadcrumbItems = [
     { label: 'Proj-1', href: '/' },
@@ -369,15 +435,16 @@ export default function PortDetailPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[var(--color-surface-subtle)]">
+    <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
       <Sidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
       
       <main
-        className={`min-h-screen bg-[var(--color-surface-default)] transition-[margin] duration-200 overflow-x-auto ${
-          sidebarOpen ? 'ml-[200px]' : 'ml-0'
+        className={`absolute top-0 bottom-0 right-0 flex flex-col bg-[var(--color-surface-default)] transition-[left] duration-200 ${
+          sidebarOpen ? 'left-[200px]' : 'left-0'
         }`}
       >
-        <div className="min-w-[var(--layout-content-min-width)]">
+        {/* Fixed Header Area */}
+        <div className="shrink-0 bg-[var(--color-surface-default)]">
           {/* Tab Bar */}
           <TabBar
             tabs={tabBarTabs}
@@ -405,7 +472,10 @@ export default function PortDetailPage() {
               />
             }
           />
+        </div>
 
+        {/* Scrollable Content Area */}
+        <div className="flex-1 overflow-auto min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll">
           {/* Main Content */}
           <div className="pt-4 px-8 pb-20 bg-[var(--color-surface-default)]">
             <VStack gap={8} className="min-w-[1176px] max-w-[1320px]">
@@ -520,7 +590,7 @@ export default function PortDetailPage() {
                                   className="p-1 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
                                   title={copiedMac ? 'Copied!' : 'Copy MAC Address'}
                                 >
-                                  <IconCopy size={16} stroke={1.5} className="text-[var(--color-text-default)]" />
+                                  <IconCopy size={12} stroke={1.5} className="text-[var(--color-action-primary)]" />
                                 </button>
                               </div>
                             }
@@ -592,11 +662,11 @@ export default function PortDetailPage() {
                           currentPage={fixedIpCurrentPage}
                           totalPages={totalFixedIpPages}
                           onPageChange={setFixedIpCurrentPage}
+                          totalItems={filteredFixedIPs.length}
+                          selectedCount={selectedFixedIPs.length}
+                          showSettings
+                          onSettingsClick={() => setIsPreferencesOpen(true)}
                         />
-                        <div className="h-4 w-px bg-[var(--color-border-default)]" />
-                        <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
-                          {filteredFixedIPs.length} items
-                        </span>
                       </div>
 
                       {/* Table */}
@@ -639,11 +709,11 @@ export default function PortDetailPage() {
                           currentPage={aapCurrentPage}
                           totalPages={totalAapPages}
                           onPageChange={setAapCurrentPage}
+                          totalItems={filteredAaps.length}
+                          selectedCount={selectedAaps.length}
+                          showSettings
+                          onSettingsClick={() => setIsPreferencesOpen(true)}
                         />
-                        <div className="h-4 w-px bg-[var(--color-border-default)]" />
-                        <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
-                          {filteredAaps.length} items
-                        </span>
                       </div>
 
                       {/* Table */}
@@ -686,11 +756,11 @@ export default function PortDetailPage() {
                           currentPage={sgCurrentPage}
                           totalPages={totalSgPages}
                           onPageChange={setSgCurrentPage}
+                          totalItems={filteredSgs.length}
+                          selectedCount={selectedSgs.length}
+                          showSettings
+                          onSettingsClick={() => setIsPreferencesOpen(true)}
                         />
-                        <div className="h-4 w-px bg-[var(--color-border-default)]" />
-                        <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
-                          {filteredSgs.length} items
-                        </span>
                       </div>
 
                       {/* Table */}
@@ -707,6 +777,71 @@ export default function PortDetailPage() {
           </div>
         </div>
       </main>
+
+      {/* Detach Security Group Modal */}
+      <Modal
+        isOpen={detachModalOpen}
+        onClose={() => {
+          setDetachModalOpen(false);
+          setSecurityGroupToDetach(null);
+        }}
+        title="Detach security group"
+        description="This action detaches the security group from the port."
+        size="sm"
+      >
+        <div className="flex flex-col gap-2">
+          {/* Port Info */}
+          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
+            <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] font-medium leading-4">
+              Port
+            </span>
+            <span className="text-[length:var(--font-size-12)] text-[var(--color-text-default)] leading-4">
+              {port.name}
+            </span>
+          </div>
+          
+          {/* Security Group Info */}
+          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
+            <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] font-medium leading-4">
+              Security group
+            </span>
+            <span className="text-[length:var(--font-size-12)] text-[var(--color-text-default)] leading-4">
+              {securityGroupToDetach?.name || '-'}
+            </span>
+          </div>
+          
+          {/* Warning Box */}
+          <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
+            <IconAlertCircle size={16} className="text-red-400 flex-shrink-0 mt-0.5" />
+            <span className="text-[length:var(--font-size-11)] text-[var(--color-text-default)] leading-4">
+              Detaching this security group may affect network access for the port.
+            </span>
+          </div>
+        </div>
+
+        {/* Button Group */}
+        <div className="flex gap-2 w-full">
+          <Button
+            variant="outline"
+            size="md"
+            onClick={() => {
+              setDetachModalOpen(false);
+              setSecurityGroupToDetach(null);
+            }}
+            className="flex-1"
+          >
+            Cancel
+          </Button>
+          <Button
+            variant="primary"
+            size="md"
+            onClick={handleDetachSecurityGroup}
+            className="flex-1"
+          >
+            Detach
+          </Button>
+        </div>
+      </Modal>
     </div>
   );
 }
