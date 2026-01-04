@@ -20,7 +20,6 @@ interface TabContextValue {
   closeTab: (tabId: string) => void;
   selectTab: (tabId: string) => void;
   openInNewTab: (id: string, label: string, path: string) => void;
-  updateActiveTab: (label: string, path: string) => void;
 }
 
 /* ----------------------------------------
@@ -119,15 +118,6 @@ export function TabProvider({ children, defaultTabs = [] }: TabProviderProps) {
     navigate('/');
   }, [addTab, navigate]);
 
-  // Update the active tab's label and path (for syncing with navigation)
-  const updateActiveTab = useCallback((label: string, path: string) => {
-    setTabs((prev) =>
-      prev.map((tab) =>
-        tab.id === activeTabId ? { ...tab, label, path } : tab
-      )
-    );
-  }, [activeTabId]);
-
   return (
     <TabContext.Provider
       value={{
@@ -138,7 +128,6 @@ export function TabProvider({ children, defaultTabs = [] }: TabProviderProps) {
         closeTab,
         selectTab,
         openInNewTab,
-        updateActiveTab,
       }}
     >
       {children}

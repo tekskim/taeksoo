@@ -1,5 +1,4 @@
 import type { ReactNode } from 'react';
-import { Link } from 'react-router-dom';
 import { twMerge } from 'tailwind-merge';
 
 /* ----------------------------------------
@@ -36,6 +35,8 @@ export function MenuItem({
   onClick,
   disabled = false,
 }: MenuItemProps) {
+  const Component = href ? 'a' : 'button';
+
   const baseStyles = [
     'w-full',
     'px-[var(--menu-item-padding-x)]',
@@ -49,59 +50,30 @@ export function MenuItem({
   ].join(' ');
 
   const stateStyles = active
-    ? 'bg-[var(--menu-item-active-bg,var(--color-state-info-bg))] text-[var(--menu-item-active-text,var(--color-action-primary))] font-medium'
+    ? 'bg-[var(--color-state-info-bg)] text-[var(--color-action-primary)] font-medium'
     : disabled
     ? 'text-[var(--color-text-disabled)] cursor-not-allowed'
-    : 'text-[var(--color-text-default)] hover:bg-[var(--menu-item-hover-bg)] font-normal';
-
-  const content = (
-    <>
-      {icon && (
-        <span className={`shrink-0 ${active ? 'text-[var(--menu-item-active-text,var(--color-action-primary))]' : 'text-[var(--color-text-default)]'}`}>
-          {icon}
-        </span>
-      )}
-      <span className="flex-1 text-left truncate">{label}</span>
-      {badge && (
-        <span className="px-1.5 py-0.5 text-[10px] font-medium bg-[var(--menu-item-active-bg,var(--color-state-info-bg))] text-[var(--menu-item-active-text,var(--color-action-primary))] rounded">
-          {badge}
-        </span>
-      )}
-    </>
-  );
-
-  if (href) {
-    return (
-      <Link
-        to={href}
-        onClick={(e) => {
-          if (disabled) {
-            e.preventDefault();
-            return;
-          }
-          // If onClick is provided, prevent default navigation and call onClick
-          if (onClick) {
-            e.preventDefault();
-            onClick();
-          }
-        }}
-        className={twMerge(baseStyles, stateStyles)}
-        aria-current={active ? 'page' : undefined}
-        aria-disabled={disabled}
-      >
-        {content}
-      </Link>
-    );
-  }
+    : 'text-[var(--color-text-default)] hover:bg-[var(--color-surface-subtle)] font-normal';
 
   return (
-    <button
+    <Component
+      href={href}
       onClick={disabled ? undefined : onClick}
       className={twMerge(baseStyles, stateStyles)}
       aria-current={active ? 'page' : undefined}
       aria-disabled={disabled}
     >
-      {content}
-    </button>
+      {icon && (
+        <span className={`shrink-0 ${active ? 'text-[var(--color-action-primary)]' : 'text-[var(--color-text-default)]'}`}>
+          {icon}
+        </span>
+      )}
+      <span className="flex-1 text-left truncate">{label}</span>
+      {badge && (
+        <span className="px-1.5 py-0.5 text-[10px] font-medium bg-[var(--color-state-info-bg)] text-[var(--color-action-primary)] rounded">
+          {badge}
+        </span>
+      )}
+    </Component>
   );
 }
