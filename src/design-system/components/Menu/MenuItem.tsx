@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react';
+import { Link } from 'react-router-dom';
 import { twMerge } from 'tailwind-merge';
 
 /* ----------------------------------------
@@ -35,8 +36,6 @@ export function MenuItem({
   onClick,
   disabled = false,
 }: MenuItemProps) {
-  const Component = href ? 'a' : 'button';
-
   const baseStyles = [
     'w-full',
     'px-[var(--menu-item-padding-x)]',
@@ -55,14 +54,8 @@ export function MenuItem({
     ? 'text-[var(--color-text-disabled)] cursor-not-allowed'
     : 'text-[var(--color-text-default)] hover:bg-[var(--color-surface-subtle)] font-normal';
 
-  return (
-    <Component
-      href={href}
-      onClick={disabled ? undefined : onClick}
-      className={twMerge(baseStyles, stateStyles)}
-      aria-current={active ? 'page' : undefined}
-      aria-disabled={disabled}
-    >
+  const content = (
+    <>
       {icon && (
         <span className={`shrink-0 ${active ? 'text-[var(--color-action-primary)]' : 'text-[var(--color-text-default)]'}`}>
           {icon}
@@ -74,6 +67,33 @@ export function MenuItem({
           {badge}
         </span>
       )}
-    </Component>
+    </>
+  );
+
+  // Use react-router Link for internal navigation
+  if (href) {
+    return (
+      <Link
+        to={href}
+        onClick={disabled ? (e) => e.preventDefault() : onClick}
+        className={twMerge(baseStyles, stateStyles)}
+        aria-current={active ? 'page' : undefined}
+        aria-disabled={disabled}
+      >
+        {content}
+      </Link>
+    );
+  }
+
+  // Use button for non-navigation actions
+  return (
+    <button
+      type="button"
+      onClick={disabled ? undefined : onClick}
+      className={twMerge(baseStyles, stateStyles)}
+      aria-disabled={disabled}
+    >
+      {content}
+    </button>
   );
 }
