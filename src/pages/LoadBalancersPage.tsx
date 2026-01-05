@@ -24,7 +24,6 @@ import {
   IconTrash,
   IconDownload,
   IconBell,
-  IconExternalLink,
 } from '@tabler/icons-react';
 import { Link } from 'react-router-dom';
 
@@ -196,7 +195,6 @@ export function LoadBalancersPage() {
             onClick={(e) => e.stopPropagation()}
           >
             {row.ownedNetwork}
-            <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
           </Link>
           <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
             ID : {row.ownedNetworkId.substring(0, 8)}
@@ -233,17 +231,12 @@ export function LoadBalancersPage() {
         <div className="flex items-center gap-[5px]">
           <div className="flex flex-col gap-0.5">
             <span className="text-[length:var(--font-size-12)] text-[var(--color-text-default)]">
-              {row.listeners}
+              {row.listeners} {row.listenerCount > 0 && `(+${row.listenerCount})`}
             </span>
             <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
               ID : {row.listenerId}
             </span>
           </div>
-          {row.listenerCount > 0 && (
-            <span className="text-[length:var(--font-size-12)] text-[var(--color-text-default)]">
-              (+{row.listenerCount})
-            </span>
-          )}
         </div>
       ),
     },

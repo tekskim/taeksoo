@@ -27,11 +27,9 @@ import {
   IconTrash,
   IconBell,
   IconChevronDown,
-  IconExternalLink,
   IconCirclePlus,
   IconDotsCircleHorizontal,
   IconUsers,
-  IconCopy,
 } from '@tabler/icons-react';
 
 /* ----------------------------------------
@@ -97,7 +95,7 @@ const mockPoolDetail: PoolDetail = {
   protocol: 'HTTP',
   sessionPersistence: 'None',
   // Association
-  listener: { name: 'web-server-10', id: 'listener-001' },
+  listener: { name: 'listener-http-80', id: 'listener-001' },
 };
 
 /* ----------------------------------------
@@ -225,50 +223,9 @@ export default function PoolDetailPage() {
       ),
     },
     {
-      key: 'id',
-      label: 'ID',
-      flex: 1,
-      sortable: true,
-      render: (_, row) => (
-        <div className="flex items-center gap-1.5">
-          <span className="text-[var(--color-text-default)]">{row.id}</span>
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              navigator.clipboard.writeText(row.id);
-            }}
-            className="text-[var(--color-text-subtle)] hover:text-[var(--color-text-default)] transition-colors"
-          >
-            <IconCopy size={12} stroke={1.5} className="text-[var(--color-action-primary)]" />
-          </button>
-        </div>
-      ),
-    },
-    {
-      key: 'source',
-      label: 'Source',
-      flex: 1,
-      render: (_, row) => (
-        <div className="flex flex-col gap-0.5">
-          <Link
-            to={`/instances/${row.source.id}`}
-            className="inline-flex items-center gap-1.5 font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
-            onClick={(e) => e.stopPropagation()}
-          >
-            {row.source.name}
-            <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
-          </Link>
-          <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
-            ID : {row.source.id}
-          </span>
-        </div>
-      ),
-    },
-    {
       key: 'ipAddress',
       label: 'IP Address',
       flex: 1,
-      sortable: true,
     },
     {
       key: 'port',
@@ -300,6 +257,7 @@ export default function PoolDetailPage() {
       align: 'center',
       render: (_: unknown, row: Member) => {
         const memberMenuItems: ContextMenuItem[] = [
+          { id: 'edit', label: 'Edit', onClick: () => console.log('Edit member', row.id) },
           { id: 'delete', label: 'Delete', status: 'danger', onClick: () => console.log('Delete member', row.id) },
         ];
         return (
@@ -388,13 +346,22 @@ export default function PoolDetailPage() {
                   >
                     Delete
                   </Button>
-                  <Button
-                    variant="secondary"
-                    size="sm"
-                    rightIcon={<IconChevronDown size={12} />}
+                  <ContextMenu
+                    items={[
+                      { id: 'create-health-monitor', label: 'Create health monitor', onClick: () => console.log('Create health monitor') },
+                      { id: 'edit-health-monitor', label: 'Edit health monitor', onClick: () => console.log('Edit health monitor') },
+                      { id: 'delete-health-monitor', label: 'Delete health monitor', status: 'danger', onClick: () => console.log('Delete health monitor') },
+                    ]}
+                    trigger="click"
                   >
-                    More Actions
-                  </Button>
+                    <Button
+                      variant="secondary"
+                      size="sm"
+                      rightIcon={<IconChevronDown size={12} />}
+                    >
+                      More Actions
+                    </Button>
+                  </ContextMenu>
                 </DetailHeader.Actions>
 
                 <DetailHeader.InfoGrid>
@@ -469,7 +436,6 @@ export default function PoolDetailPage() {
                                   className="flex items-center gap-1.5 text-[12px] font-medium leading-4 text-[var(--color-action-primary)] hover:underline"
                                 >
                                   {pool.listener.name}
-                                  <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
                                 </Link>
                               ) : (
                                 <span className="text-[12px] leading-4 text-[var(--color-text-default)]">-</span>

@@ -224,7 +224,6 @@ export function ImagesPage() {
       key: 'os',
       label: 'OS',
       flex: 1,
-      sortable: true,
     },
     {
       key: 'size',
@@ -242,6 +241,7 @@ export function ImagesPage() {
       key: 'protected',
       label: 'Protected',
       flex: 1,
+      sortable: true,
       render: (_, row) => row.protected ? 'On' : 'Off',
     },
     {
@@ -376,7 +376,7 @@ export function ImagesPage() {
             {/* Category Tabs */}
             <Tabs value={activeTab} onChange={setActiveTab} variant="underline" size="sm">
               <TabList>
-                <Tab value="current">Current Project</Tab>
+                <Tab value="current">Current Tenant</Tab>
                 <Tab value="shared">Shared</Tab>
                 <Tab value="public">Public</Tab>
                 <Tab value="all">All</Tab>

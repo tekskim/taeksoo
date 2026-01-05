@@ -30,6 +30,7 @@ import {
   IconLock,
   IconLockOpen,
   IconTerminal2,
+  IconExternalLink,
 } from '@tabler/icons-react';
 
 /* ----------------------------------------
@@ -224,10 +225,11 @@ export function FlavorDetailPage() {
         <div className="flex flex-col gap-0.5">
           <Link
             to={`/instances/${row.id}`}
-            className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
+            className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2 inline-flex items-center gap-1"
             onClick={(e) => e.stopPropagation()}
           >
             {row.name}
+            <IconExternalLink size={12} stroke={1.5} />
           </Link>
           <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
             ID : {row.id}
@@ -252,6 +254,7 @@ export function FlavorDetailPage() {
       key: 'image',
       label: 'Image',
       flex: 1,
+      sortable: true,
       render: (value) => <span>{value}</span>,
     },
     {
@@ -264,12 +267,14 @@ export function FlavorDetailPage() {
       key: 'az',
       label: 'AZ',
       flex: 1,
+      sortable: true,
       render: (value) => <span>{value}</span>,
     },
     {
       key: 'createdAt',
       label: 'Created At',
       flex: 1,
+      sortable: true,
       render: (value) => <span>{value}</span>,
     },
     {

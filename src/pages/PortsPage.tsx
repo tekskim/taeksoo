@@ -216,7 +216,6 @@ export function PortsPage() {
                   onClick={(e) => e.stopPropagation()}
                 >
                   <span className="truncate">{row.attachedTo}</span>
-                  <IconExternalLink size={12} className="flex-shrink-0 text-[var(--color-action-primary)]" />
                 </Link>
               </Tooltip>
               <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] truncate">
@@ -240,6 +239,7 @@ export function PortsPage() {
       key: 'ownedNetwork',
       label: 'Owned Network',
       width: '140px',
+      sortable: true,
       render: (_, row) => (
         <div className="flex flex-col gap-0.5 min-w-0">
           <Tooltip content={row.ownedNetwork} position="top">
@@ -249,7 +249,6 @@ export function PortsPage() {
               onClick={(e) => e.stopPropagation()}
             >
               <span className="truncate">{row.ownedNetwork}</span>
-              <IconExternalLink size={12} className="flex-shrink-0 text-[var(--color-action-primary)]" />
             </Link>
           </Tooltip>
           <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] truncate">

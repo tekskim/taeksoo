@@ -33,6 +33,7 @@ import {
   IconLockOpen,
   IconCopy,
   IconCheck,
+  IconExternalLink,
   IconTerminal2,
 } from '@tabler/icons-react';
 
@@ -200,10 +201,11 @@ export function ServerGroupDetailPage() {
         <div className="flex flex-col gap-0.5">
           <Link
             to={`/instances/${row.id}`}
-            className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
+            className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2 inline-flex items-center gap-1"
             onClick={(e) => e.stopPropagation()}
           >
             {row.name}
+            <IconExternalLink size={12} stroke={1.5} />
           </Link>
           <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
             ID : {row.id}
@@ -234,6 +236,7 @@ export function ServerGroupDetailPage() {
       key: 'fixedIP',
       label: 'Fixed IP',
       flex: 1,
+      sortable: true,
       render: (value) => <span>{value}</span>,
     },
     {

@@ -25,9 +25,7 @@ import {
   IconEdit,
   IconTrash,
   IconBell,
-  IconChevronDown,
   IconCopy,
-  IconTransfer,
   IconDownload,
   IconExternalLink,
 } from '@tabler/icons-react';
@@ -375,9 +373,9 @@ export default function CertificateDetailPage() {
                       <Button
                         variant="secondary"
                         size="sm"
-                        leftIcon={<IconTransfer size={12} />}
+                        leftIcon={<IconDownload size={12} />}
                       >
-                        Replace
+                        Download
                       </Button>
                       <Button
                         variant="secondary"
@@ -385,13 +383,6 @@ export default function CertificateDetailPage() {
                         leftIcon={<IconTrash size={12} />}
                       >
                         Delete
-                      </Button>
-                      <Button
-                        variant="secondary"
-                        size="sm"
-                        rightIcon={<IconChevronDown size={12} />}
-                      >
-                        More Actions
                       </Button>
                     </>
                   ) : (
@@ -427,6 +418,7 @@ export default function CertificateDetailPage() {
                     label="Status"
                     value={certificate.status.charAt(0).toUpperCase() + certificate.status.slice(1)}
                     status={certificateStatusMap[certificate.status]}
+                    className="flex-1"
                   />
                   <DetailHeader.InfoCard
                     label="ID"
@@ -436,18 +428,11 @@ export default function CertificateDetailPage() {
                     className="flex-1"
                   />
                   {isServerCertificate(certificate) && (
-                    <>
-                      <DetailHeader.InfoCard
-                        label="Type"
-                        value={certificate.type}
-                        className="w-[148px] flex-none"
-                      />
-                      <DetailHeader.InfoCard
-                        label="Domain"
-                        value={certificate.domain}
-                        className="w-[148px] flex-none"
-                      />
-                    </>
+                    <DetailHeader.InfoCard
+                      label="Type"
+                      value={certificate.type}
+                      className="flex-1"
+                    />
                   )}
                   <DetailHeader.InfoCard
                     label="Expires At"
@@ -475,38 +460,23 @@ export default function CertificateDetailPage() {
                     <VStack gap={4} className="pt-6">
                       {/* Basic Information */}
                       <SectionCard>
-                        <SectionCard.Header
-                          title="Basic Information"
-                          actions={
-                            <Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />}>
-                              Edit
-                            </Button>
-                          }
-                        />
+                        <SectionCard.Header title="Basic Information" />
                         <SectionCard.Content>
                           <SectionCard.DataRow label="Certificate Name" value={certificate.name} />
-                          <SectionCard.DataRow label="Description" value={certificate.description} />
                         </SectionCard.Content>
                       </SectionCard>
 
                       {/* Certificate Metadata */}
                       <SectionCard>
                         {isServerCertificate(certificate) ? (
-                          // Server Certificate Metadata with Edit button
+                          // Server Certificate Metadata
                           <>
-                            <SectionCard.Header
-                              title="Certificate Metadata"
-                              actions={
-                                <Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />}>
-                                  Edit
-                                </Button>
-                              }
-                            />
+                            <SectionCard.Header title="Certificate Metadata" />
                             <SectionCard.Content>
                               <SectionCard.DataRow label="Classification" value={certificate.classification} />
                               <SectionCard.DataRow label="Issuer" value={certificate.issuer} />
                               <SectionCard.DataRow label="Type" value={certificate.type} />
-                              <SectionCard.DataRow label="Domain" value={certificate.domain} />
+                              <SectionCard.DataRow label="CN" value={certificate.domain} />
                               <SectionCard.DataRow label="SAN" value={certificate.san} />
                               <SectionCard.DataRow label="Signature Type" value={certificate.signatureType} />
                               <SectionCard.DataRow label="Valid From / To" value={`${certificate.validFrom} ~ ${certificate.validTo}`} />

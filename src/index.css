@@ -543,7 +543,7 @@ html.theme-transition *::after {
      ---------------------------------------- */
   --table-row-gap: var(--spacing-1);
   --table-row-radius: var(--radius-md);
-  --table-row-height: 40px;
+  --table-row-height: 48px;
   --table-cell-padding-x: var(--spacing-3);
   --table-cell-padding-y: var(--spacing-1-5);
   --table-header-padding-y: var(--spacing-2);
@@ -1187,18 +1187,33 @@ html.theme-transition *::after {
    ======================================== */
 
 .table-scroll-container {
-  /* Hide scrollbar - rely on pagination instead */
-  overflow: visible;
+  /* Enable horizontal scrolling for wide tables */
+  overflow-x: auto;
+  overflow-y: visible;
 }
 
 /* WebKit browsers (Chrome, Safari, Edge) */
 .table-scroll-container::-webkit-scrollbar {
-  display: none;
+  height: 6px;
+}
+
+.table-scroll-container::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.table-scroll-container::-webkit-scrollbar-thumb {
+  background: var(--color-border-default);
+  border-radius: 3px;
+}
+
+.table-scroll-container::-webkit-scrollbar-thumb:hover {
+  background: var(--color-border-strong);
 }
 
 /* Firefox */
 .table-scroll-container {
-  scrollbar-width: none;
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-border-default) transparent;
 }
 
 /* Sidebar Scrollbar */

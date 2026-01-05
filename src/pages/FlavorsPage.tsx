@@ -44,6 +44,11 @@ interface Flavor {
   internalNetworkBandwidth: string;
   access: AccessType;
   type: FlavorType;
+  // GPU-specific fields
+  gpuType?: string;
+  numaNodes?: string;
+  cpuPolicy?: string;
+  cpuThreadPolicy?: string;
 }
 
 /* ----------------------------------------
@@ -59,11 +64,11 @@ const mockFlavors: Flavor[] = [
   { id: 'flv-006', name: 'r5.xlarge', category: 'Memory Optimized', vcpu: 4, ram: '32GiB', ephemeralDisk: '0GiB', internalNetworkBandwidth: '10Gbps', access: 'Public', type: 'CPU' },
   { id: 'flv-007', name: 't3.micro', category: 'Burstable', vcpu: 2, ram: '1GiB', ephemeralDisk: '0GiB', internalNetworkBandwidth: '-', access: 'Public', type: 'CPU' },
   { id: 'flv-008', name: 't3.small', category: 'Burstable', vcpu: 2, ram: '2GiB', ephemeralDisk: '0GiB', internalNetworkBandwidth: '-', access: 'Public', type: 'CPU' },
-  { id: 'flv-009', name: 'g4dn.xlarge', category: 'GPU Accelerated', vcpu: 4, ram: '16GiB', ephemeralDisk: '125GiB', internalNetworkBandwidth: '25Gbps', access: 'Public', type: 'GPU' },
-  { id: 'flv-010', name: 'g4dn.2xlarge', category: 'GPU Accelerated', vcpu: 8, ram: '32GiB', ephemeralDisk: '225GiB', internalNetworkBandwidth: '25Gbps', access: 'Public', type: 'GPU' },
-  { id: 'flv-011', name: 'p3.2xlarge', category: 'GPU Compute', vcpu: 8, ram: '61GiB', ephemeralDisk: '0GiB', internalNetworkBandwidth: '10Gbps', access: 'Public', type: 'GPU' },
-  { id: 'flv-012', name: 'inf1.xlarge', category: 'ML Inference', vcpu: 4, ram: '8GiB', ephemeralDisk: '0GiB', internalNetworkBandwidth: '25Gbps', access: 'Public', type: 'MPU' },
-  { id: 'flv-013', name: 'inf1.2xlarge', category: 'ML Inference', vcpu: 8, ram: '16GiB', ephemeralDisk: '0GiB', internalNetworkBandwidth: '25Gbps', access: 'Public', type: 'MPU' },
+  { id: 'flv-009', name: 'g4dn.xlarge', category: 'GPU Accelerated', vcpu: 4, ram: '16GiB', ephemeralDisk: '125GiB', internalNetworkBandwidth: '25Gbps', access: 'Public', type: 'GPU', gpuType: 'NVIDIA T4', numaNodes: '1', cpuPolicy: 'Dedicated', cpuThreadPolicy: 'Prefer' },
+  { id: 'flv-010', name: 'g4dn.2xlarge', category: 'GPU Accelerated', vcpu: 8, ram: '32GiB', ephemeralDisk: '225GiB', internalNetworkBandwidth: '25Gbps', access: 'Public', type: 'GPU', gpuType: 'NVIDIA T4', numaNodes: '2', cpuPolicy: 'Dedicated', cpuThreadPolicy: 'Isolate' },
+  { id: 'flv-011', name: 'p3.2xlarge', category: 'GPU Compute', vcpu: 8, ram: '61GiB', ephemeralDisk: '0GiB', internalNetworkBandwidth: '10Gbps', access: 'Public', type: 'GPU', gpuType: 'NVIDIA V100', numaNodes: '2', cpuPolicy: 'Shared', cpuThreadPolicy: 'Require' },
+  { id: 'flv-012', name: 'inf1.xlarge', category: 'ML Inference', vcpu: 4, ram: '8GiB', ephemeralDisk: '0GiB', internalNetworkBandwidth: '25Gbps', access: 'Public', type: 'MPU', gpuType: 'AWS Inferentia', numaNodes: '1', cpuPolicy: 'Dedicated', cpuThreadPolicy: 'Prefer' },
+  { id: 'flv-013', name: 'inf1.2xlarge', category: 'ML Inference', vcpu: 8, ram: '16GiB', ephemeralDisk: '0GiB', internalNetworkBandwidth: '25Gbps', access: 'Public', type: 'MPU', gpuType: 'AWS Inferentia', numaNodes: '2', cpuPolicy: 'Shared', cpuThreadPolicy: 'Isolate' },
   { id: 'flv-014', name: 'custom.small', category: 'Custom', vcpu: 2, ram: '4GiB', ephemeralDisk: '20GiB', internalNetworkBandwidth: '-', access: 'Private', type: 'Custom' },
   { id: 'flv-015', name: 'custom.medium', category: 'Custom', vcpu: 4, ram: '8GiB', ephemeralDisk: '50GiB', internalNetworkBandwidth: '10Gbps', access: 'Private', type: 'Custom' },
 ];
@@ -142,8 +147,8 @@ export function FlavorsPage() {
 
   const totalPages = Math.ceil(filteredFlavors.length / rowsPerPage);
 
-  // Table columns
-  const columns: TableColumn<Flavor>[] = [
+  // Table columns (memoized to react to activeTab changes)
+  const columns: TableColumn<Flavor>[] = useMemo(() => [
     {
       key: 'name',
       label: 'Name',
@@ -189,6 +194,33 @@ export function FlavorsPage() {
       flex: 1,
       sortable: true,
     },
+    // GPU/MPU-specific columns (only shown when GPU or MPU tab is active)
+    ...((activeTab === 'gpu' || activeTab === 'mpu') ? [
+      {
+        key: 'gpuType',
+        label: 'GPU Type',
+        flex: 1,
+        sortable: true,
+      },
+      {
+        key: 'numaNodes',
+        label: 'NUMA Nodes',
+        flex: 1,
+        sortable: true,
+      },
+      {
+        key: 'cpuPolicy',
+        label: 'CPU Policy',
+        flex: 1,
+        sortable: true,
+      },
+      {
+        key: 'cpuThreadPolicy',
+        label: 'CPU Thread Policy',
+        flex: 1,
+        sortable: true,
+      },
+    ] as TableColumn<Flavor>[] : []),
     {
       key: 'access',
       label: 'Public',
@@ -227,20 +259,40 @@ export function FlavorsPage() {
         );
       },
     },
-  ];
+  ], [activeTab]);
 
   // Filter and order columns based on preferences
   const visibleColumns = useMemo(() => {
+    // GPU-specific column keys that should always show when GPU tab is active
+    const gpuColumnKeys = ['gpuType', 'numaNodes', 'cpuPolicy', 'cpuThreadPolicy'];
+    
     const visibleColumnIds = columnConfig
       .filter((col) => col.visible)
       .map((col) => col.id);
 
     const columnMap = new Map(columns.map((col) => [col.key, col]));
 
-    return visibleColumnIds
+    // Get base columns from config
+    const baseColumns = visibleColumnIds
       .map((id) => columnMap.get(id))
       .filter((col): col is TableColumn<Flavor> => col !== undefined);
-  }, [columns, columnConfig]);
+    
+    // If GPU or MPU tab is active, insert GPU columns before the 'access' column
+    if (activeTab === 'gpu' || activeTab === 'mpu') {
+      const gpuColumns = gpuColumnKeys
+        .map((key) => columnMap.get(key))
+        .filter((col): col is TableColumn<Flavor> => col !== undefined);
+      
+      const accessIndex = baseColumns.findIndex((col) => col.key === 'access');
+      if (accessIndex !== -1) {
+        baseColumns.splice(accessIndex, 0, ...gpuColumns);
+      } else {
+        baseColumns.push(...gpuColumns);
+      }
+    }
+    
+    return baseColumns;
+  }, [columns, columnConfig, activeTab]);
 
   return (
     <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">

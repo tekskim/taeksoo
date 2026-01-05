@@ -12,6 +12,7 @@ import {
   ListToolbar,
   ConfirmModal,
   StatusIndicator,
+  ContextMenu,
   type TableColumn,
 } from '@/design-system';
 import { Sidebar } from '@/components/Sidebar';
@@ -22,6 +23,7 @@ import {
   IconDownload,
   IconBell,
   IconExternalLink,
+  IconDotsCircleHorizontal,
 } from '@tabler/icons-react';
 import { Link } from 'react-router-dom';
 
@@ -96,6 +98,7 @@ export function RoutersPage() {
     { id: 'externalFixedIp', label: 'External Fixed IP', visible: true },
     { id: 'externalNetwork', label: 'External Network', visible: true },
     { id: 'adminState', label: 'Admin State', visible: true },
+    { id: 'actions', label: 'Action', visible: true, locked: true },
   ];
 
   const [columnConfig, setColumnConfig] = useState<ColumnConfig[]>(defaultColumnConfig);
@@ -164,6 +167,7 @@ export function RoutersPage() {
       key: 'externalFixedIp',
       label: 'External Fixed IP',
       flex: 1,
+      sortable: true,
     },
     {
       key: 'externalNetwork',
@@ -193,6 +197,32 @@ export function RoutersPage() {
       label: 'Admin State',
       flex: 1,
       render: (value: boolean) => value ? 'Up' : 'Down',
+    },
+    {
+      key: 'actions',
+      label: 'Action',
+      width: '80px',
+      align: 'center',
+      render: () => (
+        <div onClick={(e) => e.stopPropagation()}>
+          <ContextMenu
+            items={[
+              { label: 'Connect Subnet', onClick: () => {} },
+              { label: 'Disconnect Subnet', onClick: () => {} },
+              { label: 'External Gateway Setting', onClick: () => {} },
+              { label: 'Enable SNAT', onClick: () => {} },
+              { label: 'Disable SNAT', onClick: () => {} },
+              { label: 'Edit', onClick: () => {} },
+              { label: 'Delete', onClick: () => {}, variant: 'danger' },
+            ]}
+            trigger="click"
+          >
+            <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
+              <IconDotsCircleHorizontal size={16} stroke={1.5} className="text-[var(--action-icon-color)]" />
+            </button>
+          </ContextMenu>
+        </div>
+      ),
     },
   ];
 
@@ -272,6 +302,9 @@ export function RoutersPage() {
               <h1 className="text-[length:var(--font-size-16)] font-semibold text-[var(--color-text-default)]">
                 Routers
               </h1>
+              <Button variant="primary" size="md">
+                Create Router
+              </Button>
             </div>
 
             {/* Toolbar */}
