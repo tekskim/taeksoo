@@ -91,7 +91,7 @@ export function Sidebar({ isOpen = true, onToggle, disableActive = false }: Side
           className="p-1 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
           aria-label="Toggle sidebar"
         >
-          <IconLayoutSidebar size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
+          <IconLayoutSidebar size={16} className="text-[var(--color-text-muted)]" stroke={1} />
         </button>
       </div>
 
@@ -112,7 +112,7 @@ export function Sidebar({ isOpen = true, onToggle, disableActive = false }: Side
             onClick={() => handleMenuClick('/design-system', 'Design System')}
             className="flex items-center gap-2 px-2 py-1.5 rounded-md bg-[var(--color-action-primary)] hover:bg-[var(--color-action-primary-hover)] text-white text-[11px] font-medium transition-colors w-full cursor-pointer"
           >
-            <IconPalette size={16} stroke={1.5} />
+            <IconPalette size={16} stroke={1} />
             <span>Design System</span>
           </button>
 
@@ -121,13 +121,13 @@ export function Sidebar({ isOpen = true, onToggle, disableActive = false }: Side
             onClick={() => handleMenuClick('/drawers', 'Drawers')}
             className="flex items-center gap-2 px-2 py-1.5 rounded-md bg-[var(--color-action-secondary)] hover:bg-[var(--color-action-secondary-hover)] text-[var(--color-text-default)] text-[11px] font-medium transition-colors border border-[var(--color-border-default)] w-full cursor-pointer"
           >
-            <IconLayoutSidebarRight size={16} stroke={1.5} />
+            <IconLayoutSidebarRight size={16} stroke={1} />
             <span>Drawers</span>
           </button>
 
           {/* Home */}
           <MenuItem
-            icon={<IconHome size={16} stroke={1.5} />}
+            icon={<IconHome size={16} stroke={1} />}
             label="Home"
             href="/"
             active={getActiveState('/')}
@@ -141,49 +141,49 @@ export function Sidebar({ isOpen = true, onToggle, disableActive = false }: Side
             onTitleClick={() => handleMenuClick('/instances', 'Instances')}
           >
             <MenuItem
-              icon={<IconCube size={16} stroke={1.5} />}
+              icon={<IconCube size={16} stroke={1} />}
               label="Instances"
               href="/instances"
               active={getActiveState('/instances')}
               onClick={() => handleMenuClick('/instances', 'Instances')}
             />
             <MenuItem
-              icon={<IconTemplate size={16} stroke={1.5} />}
+              icon={<IconTemplate size={16} stroke={1} />}
               label="Instance Templates"
               href="/instance-templates"
               active={getActiveState('/instance-templates')}
               onClick={() => handleMenuClick('/instance-templates', 'Instance Templates')}
             />
             <MenuItem
-              icon={<IconCamera size={16} stroke={1.5} />}
+              icon={<IconCamera size={16} stroke={1} />}
               label="Instance Snapshots"
               href="/instance-snapshots"
               active={getActiveState('/instance-snapshots')}
               onClick={() => handleMenuClick('/instance-snapshots', 'Instance Snapshots')}
             />
             <MenuItem
-              icon={<IconDisc size={16} stroke={1.5} />}
+              icon={<IconDisc size={16} stroke={1} />}
               label="Images"
               href="/images"
               active={getActiveState('/images')}
               onClick={() => handleMenuClick('/images', 'Images')}
             />
             <MenuItem
-              icon={<IconCpu size={16} stroke={1.5} />}
+              icon={<IconCpu size={16} stroke={1} />}
               label="Flavors"
               href="/flavors"
               active={getActiveState('/flavors')}
               onClick={() => handleMenuClick('/flavors', 'Flavors')}
             />
             <MenuItem
-              icon={<IconKey size={16} stroke={1.5} />}
+              icon={<IconKey size={16} stroke={1} />}
               label="Key Pairs"
               href="/key-pairs"
               active={getActiveState('/key-pairs')}
               onClick={() => handleMenuClick('/key-pairs', 'Key Pairs')}
             />
             <MenuItem
-              icon={<IconServer size={16} stroke={1.5} />}
+              icon={<IconServer size={16} stroke={1} />}
               label="Server Groups"
               href="/server-groups"
               active={getActiveState('/server-groups')}
@@ -194,21 +194,21 @@ export function Sidebar({ isOpen = true, onToggle, disableActive = false }: Side
           {/* Storage Section */}
           <MenuSection title="Storage" defaultOpen={true}>
             <MenuItem
-              icon={<IconDatabase size={16} stroke={1.5} />}
+              icon={<IconDatabase size={16} stroke={1} />}
               label="Volumes"
               href="/volumes"
               active={getActiveState('/volumes')}
               onClick={() => handleMenuClick('/volumes', 'Volumes')}
             />
             <MenuItem
-              icon={<IconCamera size={16} stroke={1.5} />}
+              icon={<IconCamera size={16} stroke={1} />}
               label="Volume Snapshots"
               href="/volume-snapshots"
               active={getActiveState('/volume-snapshots')}
               onClick={() => handleMenuClick('/volume-snapshots', 'Volume Snapshots')}
             />
             <MenuItem
-              icon={<IconDatabaseExport size={16} stroke={1.5} />}
+              icon={<IconDatabaseExport size={16} stroke={1} />}
               label="Volume Backups"
               href="/volume-backups"
               active={getActiveState('/volume-backups')}
@@ -219,56 +219,56 @@ export function Sidebar({ isOpen = true, onToggle, disableActive = false }: Side
           {/* Network Section */}
           <MenuSection title="Network" defaultOpen={true}>
             <MenuItem
-              icon={<IconNetwork size={16} stroke={1.5} />}
+              icon={<IconNetwork size={16} stroke={1} />}
               label="Networks"
               href="/networks"
               active={getActiveState('/networks')}
               onClick={() => handleMenuClick('/networks', 'Networks')}
             />
             <MenuItem
-              icon={<IconRouter size={16} stroke={1.5} />}
+              icon={<IconRouter size={16} stroke={1} />}
               label="Routers"
               href="/routers"
               active={getActiveState('/routers')}
               onClick={() => handleMenuClick('/routers', 'Routers')}
             />
             <MenuItem
-              icon={<IconPlug size={16} stroke={1.5} />}
+              icon={<IconPlug size={16} stroke={1} />}
               label="Ports"
               href="/ports"
               active={getActiveState('/ports')}
               onClick={() => handleMenuClick('/ports', 'Ports')}
             />
             <MenuItem
-              icon={<IconWorldWww size={16} stroke={1.5} />}
+              icon={<IconWorldWww size={16} stroke={1} />}
               label="Floating IPs"
               href="/floating-ips"
               active={getActiveState('/floating-ips')}
               onClick={() => handleMenuClick('/floating-ips', 'Floating IPs')}
             />
             <MenuItem
-              icon={<IconShieldLock size={16} stroke={1.5} />}
+              icon={<IconShieldLock size={16} stroke={1} />}
               label="Security Groups"
               href="/security-groups"
               active={getActiveState('/security-groups')}
               onClick={() => handleMenuClick('/security-groups', 'Security Groups')}
             />
             <MenuItem
-              icon={<IconLoadBalancer size={16} stroke={1.5} />}
+              icon={<IconLoadBalancer size={16} stroke={1} />}
               label="Load Balancers"
               href="/load-balancers"
               active={getActiveState('/load-balancers')}
               onClick={() => handleMenuClick('/load-balancers', 'Load Balancers')}
             />
             <MenuItem
-              icon={<IconCertificate size={16} stroke={1.5} />}
+              icon={<IconCertificate size={16} stroke={1} />}
               label="Certificates"
               href="/certificates"
               active={getActiveState('/certificates')}
               onClick={() => handleMenuClick('/certificates', 'Certificates')}
             />
             <MenuItem
-              icon={<IconTopologyStar3 size={16} stroke={1.5} />}
+              icon={<IconTopologyStar3 size={16} stroke={1} />}
               label="Topology"
               href="/topology"
               active={getActiveState('/topology')}

@@ -145,7 +145,7 @@ export const ProgressBar: React.FC<ProgressBarProps> = ({
             <div className="flex items-center text-[length:var(--font-size-12)] leading-[var(--line-height-16)] text-[var(--color-text-default)]">
               <span>{value + newValue}/</span>
               {isUnlimited ? (
-                <IconInfinity size={16} stroke={1.5} />
+                <IconInfinity size={16} stroke={1} />
               ) : (
                 <span>{max}</span>
               )}
@@ -238,7 +238,7 @@ export const ProgressBar: React.FC<ProgressBarProps> = ({
               <div className="relative group">
                 <IconAlertCircle
                   size={16}
-                  stroke={1.5}
+                  stroke={1}
                   className="text-[var(--color-state-danger)]"
                 />
                 {errorMessage && (

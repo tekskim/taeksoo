@@ -26,8 +26,10 @@ import { CertificatesPage } from '@/pages/CertificatesPage';
 import { TopologyD3Page } from '@/pages/TopologyD3Page';
 import { ConsolePage } from '@/pages/ConsolePage';
 import { AgentPage } from '@/pages/AgentPage';
+import { CreateAgentPage } from '@/pages/CreateAgentPage';
 import { ChatPage } from '@/pages/ChatPage';
 import { StoragePage } from '@/pages/StoragePage';
+import { MCPToolsPage } from '@/pages/MCPToolsPage';
 
 const defaultTabs = [
   { id: 'home', label: 'Home', path: '/', closable: true },
@@ -47,10 +49,14 @@ function AppRoutes() {
         
         {/* Agent */}
         <Route path="/agent" element={<AgentPage />} />
+        <Route path="/agent/create" element={<CreateAgentPage />} />
         <Route path="/chat" element={<ChatPage />} />
         
         {/* Storage */}
         <Route path="/storage" element={<StoragePage />} />
+        
+        {/* MCP Tools */}
+        <Route path="/mcp-tools" element={<MCPToolsPage />} />
         
         {/* Compute */}
         <Route path="/instances" element={<InstanceListPage />} />

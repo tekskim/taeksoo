@@ -53,9 +53,9 @@ export function MenuSection({
             {title}
           </span>
           {isOpen ? (
-            <IconChevronDown size={16} className="text-[var(--color-text-disabled)]" stroke={1.5} />
+            <IconChevronDown size={16} className="text-[var(--color-text-disabled)]" stroke={1} />
           ) : (
-            <IconChevronRight size={16} className="text-[var(--color-text-disabled)]" stroke={1.5} />
+            <IconChevronRight size={16} className="text-[var(--color-text-disabled)]" stroke={1} />
           )}
         </button>
       ) : (

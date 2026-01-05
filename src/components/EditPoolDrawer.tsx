@@ -227,9 +227,9 @@ export function EditPoolDrawer({
             className="flex items-center gap-1.5 text-[14px] font-medium text-[var(--color-text-default)] leading-5"
           >
             {isSessionPersistenceExpanded ? (
-              <IconChevronDown size={12} stroke={2} />
+              <IconChevronDown size={12} stroke={1} />
             ) : (
-              <IconChevronRight size={12} stroke={2} />
+              <IconChevronRight size={12} stroke={1} />
             )}
             Lable
           </button>

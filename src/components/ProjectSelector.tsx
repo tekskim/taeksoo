@@ -214,7 +214,7 @@ export function ProjectSelector({
                           <IconCheck
                             size={16}
                             className="text-[var(--color-action-primary)]"
-                            stroke={2}
+                            stroke={1}
                           />
                         )}
                         {isDisabled && (
