@@ -31,6 +31,10 @@ import {
   Tab,
   TabPanel,
   InlineMessage,
+  Toast,
+  ToastContainer,
+  ToastProvider,
+  useToast,
   Disclosure,
   Badge,
   Breadcrumb,
@@ -45,6 +49,12 @@ import {
   DetailHeader,
   SectionCard,
   Drawer,
+  IconExpandOn,
+  IconExpandOff,
+  IconTimeout,
+  IconHistory,
+  IconRobotCustom,
+  IconAddRobotCustom,
 } from '@/design-system';
 import {
   // Navigation icons (for sidebar)
@@ -66,7 +76,8 @@ import {
   IconPlayerStop,
   IconPlayerPause,
   IconRefresh,
-  IconRotate,
+  IconRefreshDot,
+  IconRotateClockwise,
   IconTrash,
   IconEdit,
   IconCopy,
@@ -78,7 +89,6 @@ import {
   IconLink,
   IconUnlink,
   IconExternalLink,
-  IconHistory,
   IconSend,
   // Basic - Navigation
   IconChevronLeft,
@@ -86,8 +96,6 @@ import {
   IconChevronDown,
   IconChevronUp,
   IconArrowRight,
-  IconArrowsMaximize,
-  IconArrowsMinimize,
   IconDotsCircleHorizontal,
   IconDots,
   IconDotsVertical,
@@ -98,6 +106,7 @@ import {
   IconCircleCheck,
   IconBan,
   IconLoader,
+  IconLoader2,
   IconProgress,
   // Basic - UI
   IconSearch,
@@ -163,7 +172,6 @@ import {
   IconCloud,
   IconGitBranch,
   IconBrain,
-  IconRobot,
   IconMessageChatbot,
   IconBooks,
   IconTestPipe,
@@ -218,8 +226,8 @@ const dataDisplayItems = [
   { id: 'table', label: 'Table', icon: IconList },
   { id: 'badge', label: 'Badge', icon: IconTag },
   { id: 'chip', label: 'Chip', icon: IconTag },
-  { id: 'pagination', label: 'Pagination', icon: IconProgress },
-  { id: 'progress-bar', label: 'Progress Bar', icon: IconProgress },
+  { id: 'pagination', label: 'Pagination', icon: IconLoader2 },
+  { id: 'progress-bar', label: 'Progress Bar', icon: IconLoader2 },
   { id: 'status-indicator', label: 'Status Indicator', icon: IconActivity },
   { id: 'tooltip', label: 'Tooltip', icon: IconMessage2 },
   { id: 'window-control', label: 'Window Control', icon: IconAppWindow },
@@ -240,6 +248,7 @@ const navigationItems = [
 // Feedback
 const feedbackItems = [
   { id: 'inline-message', label: 'Inline Message', icon: IconInfoCircle },
+  { id: 'toast', label: 'Toast', icon: IconBell },
 ];
 
 // Disclosure
@@ -355,6 +364,143 @@ function DatePickerSection() {
         </VStack>
       </VStack>
     </Section>
+  );
+}
+
+/* ----------------------------------------
+   Toast Demo (with state)
+   ---------------------------------------- */
+
+function ToastDemo() {
+  const { toast, success, warning, error, info, dismissAll } = useToast();
+
+  const handleShowSuccess = () => {
+    success('작업이 성공적으로 완료되었습니다.');
+  };
+
+  const handleShowWarning = () => {
+    warning('주의가 필요한 상황입니다.', { title: '경고' });
+  };
+
+  const handleShowError = () => {
+    error('작업 중 오류가 발생했습니다.', { title: '오류 발생' });
+  };
+
+  const handleShowInfo = () => {
+    info('새로운 업데이트가 있습니다.');
+  };
+
+  const handleShowWithTitle = () => {
+    toast({
+      variant: 'success',
+      title: '인스턴스 생성 완료',
+      message: 'web-server-01 인스턴스가 성공적으로 생성되었습니다.',
+    });
+  };
+
+  const handleShowLongDuration = () => {
+    info('이 알림은 10초 후에 사라집니다.', { duration: 10000, title: '긴 지속 시간' });
+  };
+
+  const handleShowNonDismissible = () => {
+    success('자동으로만 닫히는 알림입니다.', { dismissible: false });
+  };
+
+  return (
+    <VStack gap={8}>
+      {/* Design Tokens */}
+      <VStack gap={3}>
+        <Label>Design Tokens</Label>
+        <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
+          <code>width: 360px</code> · <code>padding: 12px</code> · <code>gap: 12px</code> · <code>radius: 8px</code>
+        </div>
+      </VStack>
+
+      {/* Variants */}
+      <VStack gap={3}>
+        <Label>Variants</Label>
+        <div className="flex flex-wrap gap-2">
+          <Button variant="outline" size="sm" onClick={handleShowSuccess}>
+            Success
+          </Button>
+          <Button variant="outline" size="sm" onClick={handleShowWarning}>
+            Warning
+          </Button>
+          <Button variant="outline" size="sm" onClick={handleShowError}>
+            Error
+          </Button>
+          <Button variant="outline" size="sm" onClick={handleShowInfo}>
+            Info
+          </Button>
+        </div>
+      </VStack>
+
+      {/* With Title */}
+      <VStack gap={3}>
+        <Label>With Title</Label>
+        <Button variant="outline" size="sm" onClick={handleShowWithTitle}>
+          Show Toast with Title
+        </Button>
+      </VStack>
+
+      {/* Options */}
+      <VStack gap={3}>
+        <Label>Options</Label>
+        <div className="flex flex-wrap gap-2">
+          <Button variant="outline" size="sm" onClick={handleShowLongDuration}>
+            Long Duration (10s)
+          </Button>
+          <Button variant="outline" size="sm" onClick={handleShowNonDismissible}>
+            Non-dismissible
+          </Button>
+          <Button variant="outline" size="sm" onClick={dismissAll}>
+            Dismiss All
+          </Button>
+        </div>
+      </VStack>
+
+      {/* Static Preview */}
+      <VStack gap={3}>
+        <Label>Static Preview</Label>
+        <div className="flex flex-col gap-3">
+          <Toast
+            toast={{ id: 'preview-success', variant: 'success', message: 'Used for completed or normal operations.' }}
+            onDismiss={() => {}}
+          />
+          <Toast
+            toast={{ id: 'preview-warning', variant: 'warning', title: 'Warning', message: 'Used when attention is needed but not critical.' }}
+            onDismiss={() => {}}
+          />
+          <Toast
+            toast={{ id: 'preview-error', variant: 'error', title: 'Error', message: 'Used for failed actions or system issues.' }}
+            onDismiss={() => {}}
+          />
+          <Toast
+            toast={{ id: 'preview-info', variant: 'info', message: 'Used for general or non-critical updates.' }}
+            onDismiss={() => {}}
+          />
+        </div>
+      </VStack>
+
+      {/* Usage */}
+      <VStack gap={3}>
+        <Label>Usage</Label>
+        <div className="text-[length:var(--font-size-11)] text-[var(--color-text-muted)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)] font-mono whitespace-pre-wrap">
+{`// 1. App을 ToastProvider로 감싸기
+<ToastProvider>
+  <App />
+  <ToastContainer position="top-right" />
+</ToastProvider>
+
+// 2. useToast 훅 사용
+const { success, error, info, warning } = useToast();
+
+// 3. 토스트 표시
+success('작업이 완료되었습니다.');
+error('오류가 발생했습니다.', { title: '에러' });`}
+        </div>
+      </VStack>
+    </VStack>
   );
 }
 
@@ -595,9 +741,9 @@ function TabBarDemo() {
         <div className="w-full border border-[var(--color-border-default)] rounded-[var(--radius-md)] overflow-hidden">
           <TabBar
             tabs={[
-              { id: 'home', label: 'Home', icon: <IconHome size={14} stroke={1.5} />, closable: false },
-              { id: 'docs', label: 'Documents', icon: <IconFile size={14} stroke={1.5} /> },
-              { id: 'settings', label: 'Settings', icon: <IconSettings size={14} stroke={1.5} /> },
+              { id: 'home', label: 'Home', icon: <IconHome size={14} stroke={1} />, closable: false },
+              { id: 'docs', label: 'Documents', icon: <IconFile size={14} stroke={1} /> },
+              { id: 'settings', label: 'Settings', icon: <IconSettings size={14} stroke={1} /> },
             ]}
             activeTab="docs"
             onTabChange={() => {}}
@@ -793,9 +939,9 @@ function TableDemo() {
               title={row.attachedType === 'router' ? 'Router' : 'Instance'}
             >
               {row.attachedType === 'router' ? (
-                <IconRouter size={12} stroke={1.5} className="text-[var(--color-text-subtle)]" />
+                <IconRouter size={12} stroke={1} className="text-[var(--color-text-subtle)]" />
               ) : (
-                <IconCube size={12} stroke={1.5} className="text-[var(--color-text-subtle)]" />
+                <IconCube size={12} stroke={1} className="text-[var(--color-text-subtle)]" />
               )}
             </div>
             <div className="flex flex-col gap-0.5 min-w-0">
@@ -1009,6 +1155,8 @@ export function DesignSystemPage() {
   const [activeSection, setActiveSection] = useState('token-architecture');
   const [searchQuery, setSearchQuery] = useState('');
   const [showScrollTop, setShowScrollTop] = useState(false);
+  const [dashboardDropdownOpen, setDashboardDropdownOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
   
   // Pagination demo states
   const [demoPage1, setDemoPage1] = useState(1);
@@ -1075,7 +1223,23 @@ export function DesignSystemPage() {
     }
   };
 
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setDashboardDropdownOpen(false);
+      }
+    };
+    if (dashboardDropdownOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [dashboardDropdownOpen]);
+
   return (
+    <ToastProvider>
     <div className="min-h-screen bg-[var(--color-surface-subtle)]">
       {/* Left Sidebar Navigation */}
       <nav className="fixed left-0 top-0 w-[200px] h-screen bg-[var(--color-surface-default)] border-r border-[var(--color-border-default)] overflow-y-auto z-50">
@@ -1090,15 +1254,35 @@ export function DesignSystemPage() {
             </span>
           </Link>
 
-          {/* Dashboard Link */}
-          <Link
-            to="/"
-            className="flex items-center gap-2 w-full px-3 py-2 mb-4 rounded-[var(--radius-button)] bg-[var(--color-action-secondary)] hover:bg-[var(--color-action-secondary-hover)] text-[var(--color-text-default)] text-[length:var(--font-size-11)] font-medium transition-colors border border-[var(--color-border-default)]"
-          >
-            <IconHome size={16} stroke={1.5} />
-            <span>Dashboard</span>
-            <IconChevronRight size={14} stroke={1.5} className="ml-auto" />
-          </Link>
+          {/* Dashboard Dropdown */}
+          <div className="relative mb-4" ref={dropdownRef}>
+            <button
+              onClick={() => setDashboardDropdownOpen(!dashboardDropdownOpen)}
+              className="flex items-center gap-2 w-full px-3 py-2 rounded-[var(--radius-button)] bg-[var(--color-action-secondary)] hover:bg-[var(--color-action-secondary-hover)] text-[var(--color-text-default)] text-[length:var(--font-size-11)] font-medium transition-colors border border-[var(--color-border-default)]"
+            >
+              <IconHome size={16} stroke={1} />
+              <span>Dashboard</span>
+              <IconChevronDown size={14} stroke={1} className={`ml-auto transition-transform ${dashboardDropdownOpen ? 'rotate-180' : ''}`} />
+            </button>
+            {dashboardDropdownOpen && (
+              <div className="absolute top-full left-0 right-0 mt-1 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-md)] shadow-lg z-50">
+                <Link
+                  to="/"
+                  onClick={() => setDashboardDropdownOpen(false)}
+                  className="flex items-center gap-2 px-3 py-2 text-[length:var(--font-size-11)] text-[var(--color-text-default)] hover:bg-[var(--color-surface-muted)] transition-colors first:rounded-t-[var(--radius-md)] last:rounded-b-[var(--radius-md)]"
+                >
+                  <span>Compute</span>
+                </Link>
+                <Link
+                  to="/agent"
+                  onClick={() => setDashboardDropdownOpen(false)}
+                  className="flex items-center gap-2 px-3 py-2 text-[length:var(--font-size-11)] text-[var(--color-text-default)] hover:bg-[var(--color-surface-muted)] transition-colors first:rounded-t-[var(--radius-md)] last:rounded-b-[var(--radius-md)]"
+                >
+                  <span>Agent</span>
+                </Link>
+              </div>
+            )}
+          </div>
 
           {/* Navigation */}
           <VStack gap={4}>
@@ -1120,7 +1304,7 @@ export function DesignSystemPage() {
                     }
                   `}
                 >
-                  <Icon size={16} stroke={1.5} />
+                  <Icon size={16} stroke={1} />
                   {label}
                 </button>
               ))}
@@ -1144,7 +1328,7 @@ export function DesignSystemPage() {
                     }
                   `}
                 >
-                  <Icon size={16} stroke={1.5} />
+                  <Icon size={16} stroke={1} />
                   {label}
                 </button>
               ))}
@@ -1168,7 +1352,7 @@ export function DesignSystemPage() {
                     }
                   `}
                 >
-                  <Icon size={16} stroke={1.5} />
+                  <Icon size={16} stroke={1} />
                   {label}
                 </button>
               ))}
@@ -1192,7 +1376,7 @@ export function DesignSystemPage() {
                     }
                   `}
                 >
-                  <Icon size={16} stroke={1.5} />
+                  <Icon size={16} stroke={1} />
                   {label}
                 </button>
               ))}
@@ -1216,7 +1400,7 @@ export function DesignSystemPage() {
                     }
                   `}
                 >
-                  <Icon size={16} stroke={1.5} />
+                  <Icon size={16} stroke={1} />
                   {label}
                 </button>
               ))}
@@ -1240,7 +1424,7 @@ export function DesignSystemPage() {
                     }
                   `}
                 >
-                  <Icon size={16} stroke={1.5} />
+                  <Icon size={16} stroke={1} />
                   {label}
                 </button>
               ))}
@@ -1264,7 +1448,7 @@ export function DesignSystemPage() {
                     }
                   `}
                 >
-                  <Icon size={16} stroke={1.5} />
+                  <Icon size={16} stroke={1} />
                   {label}
                 </button>
               ))}
@@ -1302,7 +1486,7 @@ export function DesignSystemPage() {
               <div className="relative">
                 <IconSearch 
                   size={18} 
-                  stroke={1.5} 
+                  stroke={1} 
                   className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--color-text-muted)]" 
                 />
                 <input
@@ -1318,7 +1502,7 @@ export function DesignSystemPage() {
                     onClick={() => setSearchQuery('')}
                     className="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--color-text-muted)] hover:text-[var(--color-text-default)] transition-colors"
                   >
-                    <IconX size={16} stroke={1.5} />
+                    <IconX size={16} stroke={1} />
                   </button>
                 )}
               </div>
@@ -1337,7 +1521,7 @@ export function DesignSystemPage() {
                           }}
                           className="w-full px-3 py-2 rounded-[var(--radius-md)] flex items-center gap-3 text-left hover:bg-[var(--color-surface-muted)] transition-colors"
                         >
-                          <Icon size={16} stroke={1.5} className="text-[var(--color-text-muted)]" />
+                          <Icon size={16} stroke={1} className="text-[var(--color-text-muted)]" />
                           <span className="text-[length:var(--font-size-12)] text-[var(--color-text-default)]">{label}</span>
                         </button>
                       ))}
@@ -1876,7 +2060,7 @@ outline: 2px solid var(--color-border-focus);`}
             </Section>
 
             {/* Icons */}
-            <Section id="icons" title="Icons" description="Tabler Icons library - Stroke width 1.5, Size 16-20px">
+            <Section id="icons" title="Icons" description="Tabler Icons library - Stroke width 1.5, Size 16px">
               <VStack gap={8}>
                 {/* Basic - Actions */}
                 <IconGrid
@@ -1885,8 +2069,6 @@ outline: 2px solid var(--color-border-focus);`}
                     { Icon: IconPlayerPlay, name: 'Play' },
                     { Icon: IconPlayerStop, name: 'Stop' },
                     { Icon: IconPlayerPause, name: 'Pause' },
-                    { Icon: IconRefresh, name: 'Refresh' },
-                    { Icon: IconRotate, name: 'Reboot' },
                     { Icon: IconTrash, name: 'Delete' },
                     { Icon: IconEdit, name: 'Edit' },
                     { Icon: IconCopy, name: 'Copy' },
@@ -1898,7 +2080,6 @@ outline: 2px solid var(--color-border-focus);`}
                     { Icon: IconLink, name: 'Link' },
                     { Icon: IconUnlink, name: 'Unlink' },
                     { Icon: IconExternalLink, name: 'External' },
-                    { Icon: IconHistory, name: 'History' },
                     { Icon: IconSend, name: 'Send' },
                   ]}
                 />
@@ -1912,10 +2093,10 @@ outline: 2px solid var(--color-border-focus);`}
                     { Icon: IconChevronDown, name: 'Down' },
                     { Icon: IconChevronUp, name: 'Up' },
                     { Icon: IconArrowRight, name: 'Arrow' },
-                    { Icon: IconArrowsMaximize, name: 'Expand' },
-                    { Icon: IconArrowsMinimize, name: 'Collapse' },
                     { Icon: IconDotsCircleHorizontal, name: 'Action' },
                     { Icon: IconDots, name: 'Meatball' },
+                    { Icon: IconExpandOn, name: 'ExpandOn' },
+                    { Icon: IconExpandOff, name: 'ExpandOff' },
                   ]}
                 />
 
@@ -1928,8 +2109,6 @@ outline: 2px solid var(--color-border-focus);`}
                     { Icon: IconAlertTriangle, name: 'Warning' },
                     { Icon: IconInfoCircle, name: 'Info' },
                     { Icon: IconBan, name: 'Suspended' },
-                    { Icon: IconLoader, name: 'Loading' },
-                    { Icon: IconProgress, name: 'Progress' },
                   ]}
                 />
 
@@ -2022,8 +2201,7 @@ outline: 2px solid var(--color-border-focus);`}
                     { Icon: IconAdjustments, name: 'Adjust' },
                     { Icon: IconBolt, name: 'Action' },
                     { Icon: IconGitBranch, name: 'Branch' },
-                    { Icon: IconClock, name: 'Schedule' },
-                    { Icon: IconHourglass, name: 'Timeout' },
+                    { Icon: IconHourglass, name: 'Hourglass' },
                     { Icon: IconCurrencyDollar, name: 'Billing' },
                     { Icon: IconLanguage, name: 'Language' },
                   ]}
@@ -2034,7 +2212,8 @@ outline: 2px solid var(--color-border-focus);`}
                   title="AI & Advanced"
                   icons={[
                     { Icon: IconBrain, name: 'Brain' },
-                    { Icon: IconRobot, name: 'Robot' },
+                    { Icon: IconRobotCustom, name: 'Robot', stroke: 1 },
+                    { Icon: IconAddRobotCustom, name: 'AddRobot' },
                     { Icon: IconMessageChatbot, name: 'Chatbot' },
                     { Icon: IconBooks, name: 'Study' },
                     { Icon: IconTestPipe, name: 'Test' },
@@ -2050,6 +2229,21 @@ outline: 2px solid var(--color-border-focus);`}
                     { Icon: IconBrandWindows, name: 'Windows' },
                     { Icon: IconBrandRedhat, name: 'RedHat' },
                     { Icon: IconHelp, name: 'Rocky Linux', missing: true },
+                  ]}
+                />
+
+                {/* Newly Added Icons */}
+                <IconGrid
+                  title="Newly Added Icons"
+                  icons={[
+                    { Icon: IconRefresh, name: 'Refresh' },
+                    { Icon: IconHistory, name: 'History', stroke: 1.5 },
+                    { Icon: IconLoader, name: 'Loading' },
+                    { Icon: IconClock, name: 'Schedule' },
+                    { Icon: IconRefreshDot, name: 'Reboot' },
+                    { Icon: IconRotateClockwise, name: 'Retry' },
+                    { Icon: IconProgress, name: 'Progress' },
+                    { Icon: IconTimeout, name: 'Timeout', stroke: 1.5 },
                   ]}
                 />
               </VStack>
@@ -3103,12 +3297,12 @@ outline: 2px solid var(--color-border-focus);`}
                       actions={
                         <>
                           <TopBarAction
-                            icon={<IconBell size={16} stroke={1.5} />}
+                            icon={<IconBell size={16} stroke={1} />}
                             aria-label="Notifications"
                             onClick={() => console.log('Notifications')}
                           />
                           <TopBarAction
-                            icon={<IconUser size={16} stroke={1.5} />}
+                            icon={<IconUser size={16} stroke={1} />}
                             aria-label="Profile"
                             onClick={() => console.log('Profile')}
                           />
@@ -3137,17 +3331,17 @@ outline: 2px solid var(--color-border-focus);`}
                       actions={
                         <>
                           <TopBarAction
-                            icon={<IconBell size={16} stroke={1.5} />}
+                            icon={<IconBell size={16} stroke={1} />}
                             aria-label="Notifications"
                             badge
                           />
                           <TopBarAction
-                            icon={<IconBell size={16} stroke={1.5} />}
+                            icon={<IconBell size={16} stroke={1} />}
                             aria-label="Notifications with count"
                             badgeCount={5}
                           />
                           <TopBarAction
-                            icon={<IconSettings size={16} stroke={1.5} />}
+                            icon={<IconSettings size={16} stroke={1} />}
                             aria-label="Settings"
                           />
                         </>
@@ -3171,7 +3365,7 @@ outline: 2px solid var(--color-border-focus);`}
                       }
                       actions={
                         <TopBarAction
-                          icon={<IconHelp size={16} stroke={1.5} />}
+                          icon={<IconHelp size={16} stroke={1} />}
                           aria-label="Help"
                         />
                       }
@@ -3435,6 +3629,11 @@ outline: 2px solid var(--color-border-focus);`}
                   </InlineMessage>
                 </VStack>
               </VStack>
+            </Section>
+
+            {/* Toast Component */}
+            <Section id="toast" title="Toast" description="Temporary notification messages that appear and auto-dismiss">
+              <ToastDemo />
             </Section>
 
             {/* Table Component */}
@@ -3910,12 +4109,12 @@ outline: 2px solid var(--color-border-focus);`}
                   <DetailHeader>
                     <DetailHeader.Title>tk-test</DetailHeader.Title>
                     <DetailHeader.Actions>
-                      <Button variant="outline" size="sm" leftIcon={<IconTerminal2 size={12} stroke={1.5} />}>Console</Button>
-                      <Button variant="outline" size="sm" leftIcon={<IconPlayerPlay size={12} stroke={1.5} />}>Start</Button>
-                      <Button variant="outline" size="sm" leftIcon={<IconPlayerStop size={12} stroke={1.5} />}>Stop</Button>
-                      <Button variant="outline" size="sm" leftIcon={<IconRefresh size={12} stroke={1.5} />}>Reboot</Button>
-                      <Button variant="outline" size="sm" leftIcon={<IconTrash size={12} stroke={1.5} />}>Delete</Button>
-                      <Button variant="outline" size="sm" rightIcon={<IconChevronDown size={12} stroke={1.5} />}>More Actions</Button>
+                      <Button variant="outline" size="sm" leftIcon={<IconTerminal2 size={12} stroke={1} />}>Console</Button>
+                      <Button variant="outline" size="sm" leftIcon={<IconPlayerPlay size={12} stroke={1} />}>Start</Button>
+                      <Button variant="outline" size="sm" leftIcon={<IconPlayerStop size={12} stroke={1} />}>Stop</Button>
+                      <Button variant="outline" size="sm" leftIcon={<IconRefresh size={12} stroke={1} />}>Reboot</Button>
+                      <Button variant="outline" size="sm" leftIcon={<IconTrash size={12} stroke={1} />}>Delete</Button>
+                      <Button variant="outline" size="sm" rightIcon={<IconChevronDown size={12} stroke={1} />}>More Actions</Button>
                     </DetailHeader.Actions>
                     <DetailHeader.InfoGrid>
                       <DetailHeader.InfoCard label="Status" value="Active" status="active" />
@@ -4509,7 +4708,11 @@ outline: 2px solid var(--color-border-focus);`}
           <IconChevronUp size={20} stroke={2} />
         </button>
       )}
+
+      {/* Toast Container */}
+      <ToastContainer position="top-right" />
     </div>
+    </ToastProvider>
   );
 }
 
@@ -4643,22 +4846,22 @@ function TokenCard({ title, description, items, color, textColor }: { title: str
   );
 }
 
-function IconGrid({ title, icons }: { title: string; icons: { Icon: React.ComponentType<{ size?: number; stroke?: number; className?: string }>; name: string; missing?: boolean }[] }) {
+function IconGrid({ title, icons }: { title: string; icons: { Icon: React.ComponentType<{ size?: number; stroke?: number; className?: string }>; name: string; missing?: boolean; stroke?: number }[] }) {
   return (
     <VStack gap={3}>
       <Label>{title}</Label>
-      <div className="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 lg:grid-cols-10 gap-2">
-        {icons.map(({ Icon, name, missing }, i) => (
+      <div className="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 lg:grid-cols-10 gap-2 items-stretch">
+        {icons.map(({ Icon, name, missing, stroke: iconStroke }, i) => (
           <div
             key={i}
             title={missing ? `⚠️ ${name} (needs custom icon)` : name}
-            className={`flex flex-col items-center gap-2 p-3 rounded-[var(--radius-md)] border transition-colors cursor-default group ${
+            className={`flex flex-col items-center justify-end gap-2 p-3 rounded-[var(--radius-md)] border transition-colors cursor-default group h-full ${
               missing
                 ? 'bg-[var(--color-state-warning-bg)] border-[var(--color-state-warning)] border-dashed hover:bg-[var(--color-yellow-100)]'
                 : 'bg-[var(--color-surface-subtle)] border-[var(--color-border-subtle)] hover:border-[var(--color-border-focus)] hover:bg-[var(--color-surface-default)]'
             }`}
           >
-            <Icon size={18} stroke={1.5} className={`shrink-0 transition-colors ${missing ? 'text-[var(--color-state-warning)]' : 'text-[var(--color-text-muted)] group-hover:text-[var(--color-text-default)]'}`} />
+            <Icon size={16} {...(iconStroke !== undefined ? { stroke: iconStroke } : {})} className={`shrink-0 transition-colors ${missing ? 'text-[var(--color-state-warning)]' : 'text-[var(--color-text-muted)] group-hover:text-[var(--color-text-default)]'}`} />
             <span className={`text-[length:var(--font-size-10)] transition-colors truncate w-full text-center ${missing ? 'text-[var(--color-state-warning-text)]' : 'text-[var(--color-text-disabled)] group-hover:text-[var(--color-text-subtle)]'}`}>
               {name}
             </span>
