@@ -1,6 +1,5 @@
 import { type ReactNode, type HTMLAttributes } from 'react';
 import { twMerge } from 'tailwind-merge';
-import { IconExternalLink } from '@tabler/icons-react';
 import { Link } from 'react-router-dom';
 import { VStack } from '../../layouts';
 
@@ -121,10 +120,9 @@ function SectionCardDataRow({
         {isLink ? (
           <Link
             to={linkHref || '#'}
-            className="flex items-center gap-1.5 text-[12px] font-medium leading-4 text-[var(--color-action-primary)] hover:underline"
+            className="text-[12px] font-medium leading-4 text-[var(--color-action-primary)] hover:underline"
           >
             {value}
-            <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
           </Link>
         ) : (
           <span className="text-[12px] leading-4 text-[var(--color-text-default)]">

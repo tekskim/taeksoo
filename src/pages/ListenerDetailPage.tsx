@@ -159,13 +159,13 @@ const mockCertificates: Certificate[] = Array.from({ length: 115 }, (_, i) => {
   const type = types[i % 3];
   const namePrefix = type === 'Server' ? 'server-cert' : type === 'CA' ? 'ca-cert' : 'sni-cert';
   return {
-    id: `cert-${String(i + 1).padStart(3, '0')}`,
+  id: `cert-${String(i + 1).padStart(3, '0')}`,
     name: `${namePrefix}-${String(i + 1).padStart(2, '0')}`,
-    status: ['active', 'active', 'active', 'error', 'pending'][i % 5] as CertificateStatus,
+  status: ['active', 'active', 'active', 'error', 'pending'][i % 5] as CertificateStatus,
     type,
     domain: type === 'CA' ? 'N/A' : `*.domain${i}.com`,
     issuer: ['DigiCert', 'Let\'s Encrypt', 'Comodo', 'GlobalSign', 'Sectigo'][i % 5],
-    expiresAt: `2026-${String((i % 12) + 1).padStart(2, '0')}-${String((i % 28) + 1).padStart(2, '0')}`,
+  expiresAt: `2026-${String((i % 12) + 1).padStart(2, '0')}-${String((i % 28) + 1).padStart(2, '0')}`,
   };
 });
 
@@ -863,7 +863,7 @@ export default function ListenerDetailPage() {
                           </Button>
                           <Button variant="secondary" size="sm">
                             Manage SNI Certificates
-                          </Button>
+                        </Button>
                         </div>
                       </div>
 

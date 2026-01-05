@@ -295,7 +295,7 @@ export function ImageDetailPage() {
                       <SectionCard.Content>
                         <SectionCard.DataRow label="Size" value={image.size} />
                         <SectionCard.DataRow label="OS" value={image.os} />
-                        <SectionCard.DataRow label="Disk Format / Container Format" value={`${image.diskFormat} / ${image.containerFormat}`} />
+                        <SectionCard.DataRow label="Disk Format" value={`${image.diskFormat} / ${image.containerFormat}`} />
                         <SectionCard.DataRow label="Min Disk / Min RAM" value={`${image.minDisk} / ${image.minRam}`} />
                       </SectionCard.Content>
                     </SectionCard>

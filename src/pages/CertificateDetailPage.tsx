@@ -428,11 +428,11 @@ export default function CertificateDetailPage() {
                     className="flex-1"
                   />
                   {isServerCertificate(certificate) && (
-                    <DetailHeader.InfoCard
-                      label="Type"
-                      value={certificate.type}
+                      <DetailHeader.InfoCard
+                        label="Type"
+                        value={certificate.type}
                       className="flex-1"
-                    />
+                      />
                   )}
                   <DetailHeader.InfoCard
                     label="Expires At"
