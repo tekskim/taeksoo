@@ -517,7 +517,7 @@ export function InstanceDetailPage() {
                 </TabList>
 
                 {/* Details Tab Panel */}
-                <TabPanel value="details">
+                <TabPanel value="details" className="pt-0">
                   <VStack gap={4} className="pt-6">
                     {/* Basic Information */}
                     <SectionCard>
@@ -1062,29 +1062,28 @@ export function InstanceDetailPage() {
                 </TabPanel>
 
                 {/* Instance Snapshots Tab Panel */}
-                <TabPanel value="snapshots">
+                <TabPanel value="snapshots" className="pt-0">
                   <VStack gap={3} className="pt-6">
                     {/* Header */}
                     <div className="flex items-center justify-between w-full">
-                      <h2 className="text-[16px] font-semibold text-[var(--color-text-default)]">Instance Snapshots</h2>
+                      <h2 className="text-[16px] font-semibold leading-6 text-[var(--color-text-default)]">Instance Snapshots</h2>
                       <Button variant="secondary" size="sm">
                         <IconCirclePlus size={12} />
                         Create Snapshot
                       </Button>
                     </div>
 
-                    {/* Search and Download */}
-                    <div className="flex items-center gap-1">
-                      <SearchInput
-                        placeholder="Find Instance Snapshot with filters"
-                        value={snapshotSearchQuery}
-                        onChange={(e) => {
-                          setSnapshotSearchQuery(e.target.value);
-                          setSnapshotCurrentPage(1);
-                        }}
-                        className="w-[280px]"
-                      />
-                    </div>
+                    {/* Search */}
+                    <SearchInput
+                      placeholder="Find Instance Snapshot with filters"
+                      value={snapshotSearchQuery}
+                      onChange={(e) => {
+                        setSnapshotSearchQuery(e.target.value);
+                        setSnapshotCurrentPage(1);
+                      }}
+                      size="sm"
+                      className="w-[280px]"
+                    />
 
                     {/* Pagination */}
                     <Pagination
@@ -1176,21 +1175,21 @@ export function InstanceDetailPage() {
                 </TabPanel>
 
                 {/* Monitoring Tab Panel */}
-                <TabPanel value="monitoring">
+                <TabPanel value="monitoring" className="pt-0">
                   <div className="pt-6">
                     <p className="text-[var(--color-text-subtle)]">Monitoring content will be displayed here.</p>
                   </div>
                 </TabPanel>
 
                 {/* Resource Map Tab Panel */}
-                <TabPanel value="resource-map">
+                <TabPanel value="resource-map" className="pt-0">
                   <div className="pt-6">
                     <p className="text-[var(--color-text-subtle)]">Resource Map content will be displayed here.</p>
                   </div>
                 </TabPanel>
 
                 {/* Logs Tab Panel */}
-                <TabPanel value="logs">
+                <TabPanel value="logs" className="pt-0">
                   <VStack gap={3} className="pt-6">
                     {/* Header */}
                     <div className="flex items-center h-7">
@@ -1261,7 +1260,7 @@ export function InstanceDetailPage() {
                 </TabPanel>
 
                 {/* Action Logs Tab Panel */}
-                <TabPanel value="action-logs">
+                <TabPanel value="action-logs" className="pt-0">
                   <VStack gap={3} className="pt-6">
                     {/* Header */}
                     <div className="flex items-center h-7">
