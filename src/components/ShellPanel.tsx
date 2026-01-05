@@ -47,6 +47,8 @@ export interface ShellPanelProps {
   initialHeight?: number;
   /** Minimum height of the panel */
   minHeight?: number;
+  /** Whether the sidebar is open */
+  sidebarOpen?: boolean;
 }
 
 /* ----------------------------------------
@@ -153,6 +155,7 @@ export function ShellPanel({
   onOpenInNewTab,
   initialHeight = 350,
   minHeight = 300,
+  sidebarOpen = true,
 }: ShellPanelProps) {
   const [height, setHeight] = useState(initialHeight);
   const [isResizing, setIsResizing] = useState(false);
@@ -266,8 +269,8 @@ export function ShellPanel({
       className="fixed bottom-0 right-0 z-40 bg-[var(--color-surface-default)] border-t border-l border-[var(--color-border-default)] shadow-lg flex flex-col"
       style={{
         height: `${height}px`,
-        left: '200px',
-        transition: isResizing ? 'none' : 'height 0.1s ease-out',
+        left: sidebarOpen ? '200px' : '0px',
+        transition: isResizing ? 'none' : 'left 0.2s ease-out, height 0.1s ease-out',
       }}
     >
       {/* Resize Handle */}
