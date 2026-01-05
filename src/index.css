@@ -982,7 +982,7 @@ html.theme-transition *::after {
 
   /* State - Danger (유지) */
   --color-state-danger: var(--color-red-400);
-  --color-state-danger-bg: var(--color-red-900);
+  --color-state-danger-bg: rgba(239, 68, 68, 0.12);  /* red-500 12% - matches inline message error */
   --color-state-danger-text: var(--color-red-200);
 
   /* Extended Text Colors - Dark Mode */

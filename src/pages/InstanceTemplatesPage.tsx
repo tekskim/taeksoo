@@ -57,16 +57,16 @@ interface InstanceTemplate {
    ---------------------------------------- */
 
 const mockTemplates: InstanceTemplate[] = [
-  { id: 'tpl-001', name: 'hj-small', image: '-', flavor: '2025-01-03 14:23', vcpu: 8, ram: '16GiB', disk: '10GiB', network: 'in-net', floatingIp: 'None', access: 'Personal', favorite: true },
-  { id: 'tpl-002', name: 'web-server-template', image: '-', flavor: '2025-01-02 09:15', vcpu: 16, ram: '32GiB', disk: '50GiB', network: 'public-net', floatingIp: 'Auto', access: 'Project', favorite: true },
-  { id: 'tpl-003', name: 'db-template', image: '-', flavor: '2024-12-28 16:42', vcpu: 32, ram: '64GiB', disk: '200GiB', network: 'db-net', floatingIp: 'None', access: 'Personal', favorite: false },
-  { id: 'tpl-004', name: 'gpu-ml-template', image: '-', flavor: '2024-12-25 11:30', vcpu: 16, ram: '128GiB', disk: '500GiB', network: 'ml-net', floatingIp: 'Auto', access: 'Public', favorite: true },
-  { id: 'tpl-005', name: 'minimal-template', image: '-', flavor: '2024-12-20 08:55', vcpu: 2, ram: '4GiB', disk: '10GiB', network: 'in-net', floatingIp: 'None', access: 'Personal', favorite: false },
-  { id: 'tpl-006', name: 'k8s-worker', image: '-', flavor: '2024-12-18 13:20', vcpu: 8, ram: '16GiB', disk: '100GiB', network: 'k8s-net', floatingIp: 'None', access: 'Project', favorite: true },
-  { id: 'tpl-007', name: 'k8s-master', image: '-', flavor: '2024-12-18 12:45', vcpu: 4, ram: '8GiB', disk: '50GiB', network: 'k8s-net', floatingIp: 'Auto', access: 'Project', favorite: true },
-  { id: 'tpl-008', name: 'dev-environment', image: '-', flavor: '2024-12-15 10:10', vcpu: 4, ram: '8GiB', disk: '30GiB', network: 'dev-net', floatingIp: 'Auto', access: 'Personal', favorite: false },
-  { id: 'tpl-009', name: 'monitoring-stack', image: '-', flavor: '2024-12-10 15:38', vcpu: 8, ram: '16GiB', disk: '100GiB', network: 'monitor-net', floatingIp: 'Auto', access: 'Public', favorite: true },
-  { id: 'tpl-010', name: 'cache-server', image: '-', flavor: '2024-12-05 09:25', vcpu: 4, ram: '32GiB', disk: '20GiB', network: 'cache-net', floatingIp: 'None', access: 'Project', favorite: false },
+  { id: 'tpl-001', name: 'hj-small', image: '-', flavor: '2025-01-03', vcpu: 8, ram: '16GiB', disk: '10GiB', network: 'in-net', floatingIp: 'None', access: 'Personal', favorite: true },
+  { id: 'tpl-002', name: 'web-server-template', image: '-', flavor: '2025-01-02', vcpu: 16, ram: '32GiB', disk: '50GiB', network: 'public-net', floatingIp: 'Auto', access: 'Project', favorite: true },
+  { id: 'tpl-003', name: 'db-template', image: '-', flavor: '2024-12-28', vcpu: 32, ram: '64GiB', disk: '200GiB', network: 'db-net', floatingIp: 'None', access: 'Personal', favorite: false },
+  { id: 'tpl-004', name: 'gpu-ml-template', image: '-', flavor: '2024-12-25', vcpu: 16, ram: '128GiB', disk: '500GiB', network: 'ml-net', floatingIp: 'Auto', access: 'Public', favorite: true },
+  { id: 'tpl-005', name: 'minimal-template', image: '-', flavor: '2024-12-20', vcpu: 2, ram: '4GiB', disk: '10GiB', network: 'in-net', floatingIp: 'None', access: 'Personal', favorite: false },
+  { id: 'tpl-006', name: 'k8s-worker', image: '-', flavor: '2024-12-18', vcpu: 8, ram: '16GiB', disk: '100GiB', network: 'k8s-net', floatingIp: 'None', access: 'Project', favorite: true },
+  { id: 'tpl-007', name: 'k8s-master', image: '-', flavor: '2024-12-18', vcpu: 4, ram: '8GiB', disk: '50GiB', network: 'k8s-net', floatingIp: 'Auto', access: 'Project', favorite: true },
+  { id: 'tpl-008', name: 'dev-environment', image: '-', flavor: '2024-12-15', vcpu: 4, ram: '8GiB', disk: '30GiB', network: 'dev-net', floatingIp: 'Auto', access: 'Personal', favorite: false },
+  { id: 'tpl-009', name: 'monitoring-stack', image: '-', flavor: '2024-12-10', vcpu: 8, ram: '16GiB', disk: '100GiB', network: 'monitor-net', floatingIp: 'Auto', access: 'Public', favorite: true },
+  { id: 'tpl-010', name: 'cache-server', image: '-', flavor: '2024-12-05', vcpu: 4, ram: '32GiB', disk: '20GiB', network: 'cache-net', floatingIp: 'None', access: 'Project', favorite: false },
 ];
 
 /* ----------------------------------------

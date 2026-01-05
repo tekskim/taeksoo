@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, Link } from 'react-router-dom';
 import {
   Button,
   VStack,
@@ -13,7 +13,9 @@ import {
   TabPanel,
   DetailHeader,
   SectionCard,
+  ContextMenu,
 } from '@/design-system';
+import type { ContextMenuItem } from '@/design-system';
 import { Sidebar } from '@/components/Sidebar';
 import { useTabs } from '@/contexts/TabContext';
 import {
@@ -23,6 +25,8 @@ import {
   IconBell,
   IconCopy,
   IconCheck,
+  IconChevronDown,
+  IconExternalLink,
 } from '@tabler/icons-react';
 
 /* ----------------------------------------
@@ -212,12 +216,20 @@ export function InstanceSnapshotDetailPage() {
                 <Button variant="secondary" size="sm" leftIcon={<IconCirclePlus size={12} />}>
                   Create Instance
                 </Button>
-                <Button variant="secondary" size="sm" leftIcon={<IconCirclePlus size={12} />}>
-                  Create Volume
-                </Button>
                 <Button variant="secondary" size="sm" leftIcon={<IconTrash size={12} />}>
                   Delete
                 </Button>
+                <ContextMenu
+                  items={[
+                    { id: 'create-volume', label: 'Create Volume', onClick: () => console.log('Create Volume') },
+                    { id: 'edit', label: 'Edit', onClick: () => console.log('Edit') },
+                  ] as ContextMenuItem[]}
+                  trigger="click"
+                >
+                  <Button variant="secondary" size="sm" rightIcon={<IconChevronDown size={12} />}>
+                    More Actions
+                  </Button>
+                </ContextMenu>
               </DetailHeader.Actions>
               <DetailHeader.InfoGrid>
                 <DetailHeader.InfoCard label="Status" value="Active" status="active" />
@@ -256,9 +268,15 @@ export function InstanceSnapshotDetailPage() {
                       <SectionCard.Content>
                         <SectionCard.DataRow 
                           label="Instance" 
-                          value={snapshot.sourceInstance} 
-                          isLink 
-                          linkHref="/instances" 
+                          value={
+                            <Link
+                              to="/instances"
+                              className="inline-flex items-center gap-1.5 text-[12px] font-medium leading-4 text-[var(--color-action-primary)] hover:underline"
+                            >
+                              {snapshot.sourceInstance}
+                              <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
+                            </Link>
+                          }
                         />
                       </SectionCard.Content>
                     </SectionCard>

@@ -36,7 +36,6 @@ import {
   IconBell,
   IconCirclePlus,
   IconDotsCircleHorizontal,
-  IconExternalLink,
   IconDownload,
   IconSearch,
   IconCopy,
@@ -145,17 +144,17 @@ const mockInstanceDetail: InstanceDetail = {
   availabilityZone: 'nova',
   description: '-',
   flavor: {
-    name: 'web-server-10',
+    name: 'tk.medium',
     vcpu: 1,
     ram: '4 GiB',
     disk: '40 GiB',
     gpu: 1,
   },
-  image: 'web-server-10',
+  image: 'Ubuntu 20.04 LTS',
   interfaces: 5,
-  keyPair: 'web-server-10',
-  serverGroup: 'web-server-10',
-  userData: 'web-server-10',
+  keyPair: 'default-keypair',
+  serverGroup: 'web-ha-group',
+  userData: 'Provided at creation',
 };
 
 const mockAttachedVolumes: AttachedVolume[] = [
@@ -591,26 +590,15 @@ export function InstanceDetailPage() {
                       </SectionCard.Content>
                     </SectionCard>
 
-                    {/* Image */}
+                    {/* Start Source */}
                     <SectionCard>
-                      <SectionCard.Header title="Image" />
+                      <SectionCard.Header title="Start Source" />
                       <SectionCard.Content>
                         <SectionCard.DataRow 
                           label="Image" 
                           value={instance.image} 
                           isLink 
                           linkHref="/images" 
-                        />
-                      </SectionCard.Content>
-                    </SectionCard>
-
-                    {/* Network */}
-                    <SectionCard>
-                      <SectionCard.Header title="Network" />
-                      <SectionCard.Content>
-                        <SectionCard.DataRow 
-                          label="Interfaces" 
-                          value={`${instance.interfaces} connected`} 
                         />
                       </SectionCard.Content>
                     </SectionCard>
@@ -630,8 +618,19 @@ export function InstanceDetailPage() {
 
                     {/* Advanced */}
                     <SectionCard>
-                      <SectionCard.Header title="Advanced" />
+                      <SectionCard.Header 
+                        title="Advanced" 
+                        actions={
+                          <Button variant="secondary" size="sm">
+                            Manage Tags
+                          </Button>
+                        }
+                      />
                       <SectionCard.Content>
+                        <SectionCard.DataRow 
+                          label="Tags" 
+                          value="Team: Backend"
+                        />
                         <SectionCard.DataRow 
                           label="Server Group" 
                           value={instance.serverGroup} 
@@ -640,9 +639,7 @@ export function InstanceDetailPage() {
                         />
                         <SectionCard.DataRow 
                           label="User Data" 
-                          value={instance.userData} 
-                          isLink 
-                          linkHref="#" 
+                          value={instance.userData}
                         />
                       </SectionCard.Content>
                     </SectionCard>
@@ -695,12 +692,17 @@ export function InstanceDetailPage() {
                           key: 'name',
                           label: 'Name',
                           render: (value: string, row: AttachedVolume) => (
-                            <Link
-                              to={`/volumes/${row.id}`}
-                              className="text-[var(--color-action-primary)] hover:underline"
-                            >
-                              {value}
-                            </Link>
+                            <div className="flex flex-col gap-0.5">
+                              <Link
+                                to={`/volumes/${row.id}`}
+                                className="font-medium text-[var(--color-action-primary)] hover:underline"
+                              >
+                                {value}
+                              </Link>
+                              <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
+                                ID : {row.id}
+                              </span>
+                            </div>
                           ),
                         },
                         {
