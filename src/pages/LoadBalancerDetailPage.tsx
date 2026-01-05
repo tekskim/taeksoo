@@ -23,12 +23,10 @@ import type { TableColumn, ContextMenuItem } from '@/design-system';
 import { Sidebar } from '@/components/Sidebar';
 import { useTabs } from '@/contexts/TabContext';
 import {
-  IconLink,
   IconUnlink,
   IconTrash,
   IconBell,
   IconChevronDown,
-  IconExternalLink,
   IconEdit,
   IconCirclePlus,
   IconDotsCircleHorizontal,
@@ -37,6 +35,7 @@ import {
 // Types
 type LoadBalancerStatus = 'active' | 'pending' | 'error';
 type ListenerStatus = 'active' | 'down' | 'error';
+type PoolStatus = 'online' | 'offline' | 'error';
 
 interface LoadBalancerDetail {
   id: string;
@@ -61,6 +60,17 @@ interface Listener {
   protocol: string;
   port: number;
   connectionLimit: number;
+  adminState: 'Up' | 'Down';
+}
+
+interface Pool {
+  id: string;
+  name: string;
+  status: PoolStatus;
+  protocol: string;
+  algorithm: string;
+  listener: { name: string; id: string };
+  members: number;
   adminState: 'Up' | 'Down';
 }
 
@@ -106,6 +116,25 @@ const listenerStatusMap: Record<ListenerStatus, 'active' | 'down' | 'error'> = {
   error: 'error',
 };
 
+// Mock pools data
+const mockPools: Pool[] = Array.from({ length: 13 }, (_, i) => ({
+  id: `29tgj234${String(i).padStart(2, '0')}`,
+  name: `pool-http`,
+  status: ['online', 'online', 'online', 'offline', 'error'][i % 5] as PoolStatus,
+  protocol: ['HTTP', 'HTTPS', 'TCP', 'UDP'][i % 4],
+  algorithm: ['Round Robin', 'Least Connections', 'Source IP'][i % 3],
+  listener: { name: 'listener', id: `29tgj234${String(i).padStart(2, '0')}` },
+  members: (i % 5) + 1,
+  adminState: i % 7 === 0 ? 'Down' : 'Up',
+}));
+
+// Pool status mapping
+const poolStatusMap: Record<PoolStatus, 'active' | 'down' | 'error'> = {
+  online: 'active',
+  offline: 'down',
+  error: 'error',
+};
+
 export function LoadBalancerDetailPage() {
   const { id } = useParams<{ id: string }>();
   const { tabs, activeTabId, closeTab, selectTab, addNewTab } = useTabs();
@@ -118,6 +147,12 @@ export function LoadBalancerDetailPage() {
   const [listenerCurrentPage, setListenerCurrentPage] = useState(1);
   const [selectedListeners, setSelectedListeners] = useState<string[]>([]);
   const listenersPerPage = 10;
+
+  // Pools state
+  const [poolSearchTerm, setPoolSearchTerm] = useState('');
+  const [poolCurrentPage, setPoolCurrentPage] = useState(1);
+  const [selectedPools, setSelectedPools] = useState<string[]>([]);
+  const poolsPerPage = 10;
   
   // Preferences state
   const [isPreferencesOpen, setIsPreferencesOpen] = useState(false);
@@ -155,6 +190,24 @@ export function LoadBalancerDetailPage() {
     return filteredListeners.slice(start, start + listenersPerPage);
   }, [filteredListeners, listenerCurrentPage, listenersPerPage]);
 
+  // Filtered pools based on search
+  const filteredPools = useMemo(() => {
+    if (!poolSearchTerm) return mockPools;
+    const query = poolSearchTerm.toLowerCase();
+    return mockPools.filter(pool =>
+      pool.name.toLowerCase().includes(query) ||
+      pool.protocol.toLowerCase().includes(query) ||
+      pool.algorithm.toLowerCase().includes(query)
+    );
+  }, [poolSearchTerm]);
+
+  // Paginated pools
+  const totalPoolPages = Math.ceil(filteredPools.length / poolsPerPage);
+  const paginatedPools = useMemo(() => {
+    const start = (poolCurrentPage - 1) * poolsPerPage;
+    return filteredPools.slice(start, start + poolsPerPage);
+  }, [filteredPools, poolCurrentPage, poolsPerPage]);
+
   // Listener columns
   const listenerColumns: TableColumn<Listener>[] = [
     {
@@ -179,7 +232,6 @@ export function LoadBalancerDetailPage() {
             onClick={(e) => e.stopPropagation()}
           >
             {row.name}
-            <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
           </Link>
           <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
             ID : {row.id}
@@ -223,6 +275,105 @@ export function LoadBalancerDetailPage() {
         return (
           <div onClick={(e) => e.stopPropagation()}>
             <ContextMenu items={listenerMenuItems} trigger="click">
+              <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
+                <IconDotsCircleHorizontal size={16} stroke={1.5} className="text-[var(--action-icon-color)]" />
+              </button>
+            </ContextMenu>
+          </div>
+        );
+      },
+    },
+  ];
+
+  // Pool columns
+  const poolColumns: TableColumn<Pool>[] = [
+    {
+      key: 'status',
+      label: 'Status',
+      width: '59px',
+      align: 'center',
+      render: (_, row) => (
+        <StatusIndicator status={poolStatusMap[row.status]} layout="icon-only" />
+      ),
+    },
+    {
+      key: 'name',
+      label: 'Name',
+      flex: 1,
+      sortable: true,
+      render: (_, row) => (
+        <div className="flex flex-col gap-0.5">
+          <Link
+            to={`/pools/${row.id}`}
+            className="inline-flex items-center gap-1.5 font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {row.name}
+          </Link>
+          <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
+            ID : {row.id}
+          </span>
+        </div>
+      ),
+    },
+    {
+      key: 'protocol',
+      label: 'Protocol',
+      width: '100px',
+      sortable: true,
+    },
+    {
+      key: 'algorithm',
+      label: 'Algorithm',
+      width: '123px',
+      sortable: true,
+    },
+    {
+      key: 'listener',
+      label: 'Listener',
+      width: '123px',
+      sortable: true,
+      render: (_, row) => (
+        <div className="flex flex-col gap-0.5">
+          <Link
+            to={`/listeners/${row.listener.id}`}
+            className="inline-flex items-center gap-1.5 font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {row.listener.name}
+          </Link>
+          <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
+            ID : {row.listener.id}
+          </span>
+        </div>
+      ),
+    },
+    {
+      key: 'members',
+      label: 'Members',
+      width: '120px',
+      sortable: true,
+      align: 'center',
+    },
+    {
+      key: 'adminState',
+      label: 'Admin State',
+      width: '103px',
+      align: 'center',
+    },
+    {
+      key: 'actions',
+      label: 'Action',
+      width: '72px',
+      align: 'center',
+      render: (_: unknown, row: Pool) => {
+        const poolMenuItems: ContextMenuItem[] = [
+          { id: 'edit', label: 'Edit', icon: <IconEdit size={14} stroke={1.5} />, onClick: () => console.log('Edit pool', row.id) },
+          { id: 'delete', label: 'Delete', status: 'danger', onClick: () => console.log('Delete pool', row.id) },
+        ];
+        return (
+          <div onClick={(e) => e.stopPropagation()}>
+            <ContextMenu items={poolMenuItems} trigger="click">
               <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
                 <IconDotsCircleHorizontal size={16} stroke={1.5} className="text-[var(--action-icon-color)]" />
               </button>
@@ -285,9 +436,6 @@ export function LoadBalancerDetailPage() {
               <DetailHeader>
                 <DetailHeader.Title>{loadBalancer.name}</DetailHeader.Title>
                 <DetailHeader.Actions>
-                  <Button variant="secondary" size="sm" leftIcon={<IconLink size={12} />}>
-                    Associate
-                  </Button>
                   <Button variant="secondary" size="sm" leftIcon={<IconUnlink size={12} />}>
                     Disassociate
                   </Button>
@@ -311,9 +459,9 @@ export function LoadBalancerDetailPage() {
                       },
                     ]}
                   >
-                    <Button variant="secondary" size="sm" rightIcon={<IconChevronDown size={12} />}>
-                      More Actions
-                    </Button>
+                  <Button variant="secondary" size="sm" rightIcon={<IconChevronDown size={12} />}>
+                    More Actions
+                  </Button>
                   </ContextMenu>
                 </DetailHeader.Actions>
                 <DetailHeader.InfoGrid>
@@ -342,6 +490,7 @@ export function LoadBalancerDetailPage() {
                     <TabList>
                       <Tab value="details">Details</Tab>
                       <Tab value="listeners">Listeners</Tab>
+                      <Tab value="pools">Pools</Tab>
                     </TabList>
 
                     {/* Details Tab Panel */}
@@ -382,7 +531,6 @@ export function LoadBalancerDetailPage() {
                                     className="flex items-center gap-1.5 text-[12px] font-medium leading-4 text-[var(--color-action-primary)] hover:underline"
                                   >
                                     {loadBalancer.ownedNetwork.name}
-                                    <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
                                   </Link>
                                 ) : (
                                   <span className="text-[12px] leading-4 text-[var(--color-text-default)]">-</span>
@@ -401,7 +549,6 @@ export function LoadBalancerDetailPage() {
                                     className="flex items-center gap-1.5 text-[12px] font-medium leading-4 text-[var(--color-action-primary)] hover:underline"
                                   >
                                     {loadBalancer.subnet.name}
-                                    <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
                                   </Link>
                                 ) : (
                                   <span className="text-[12px] leading-4 text-[var(--color-text-default)]">-</span>
@@ -420,7 +567,6 @@ export function LoadBalancerDetailPage() {
                                     className="flex items-center gap-1.5 text-[12px] font-medium leading-4 text-[var(--color-action-primary)] hover:underline"
                                   >
                                     {loadBalancer.floatingIp.name}
-                                    <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
                                   </Link>
                                 ) : (
                                   <span className="text-[12px] leading-4 text-[var(--color-text-default)]">-</span>
@@ -487,8 +633,69 @@ export function LoadBalancerDetailPage() {
                           data={paginatedListeners}
                           rowKey="id"
                           selectable
-                          selectedRows={selectedListeners}
+                          selectedKeys={selectedListeners}
                           onSelectionChange={setSelectedListeners}
+                        />
+                      </VStack>
+                    </TabPanel>
+
+                    {/* Pools Tab Panel */}
+                    <TabPanel value="pools">
+                      <VStack gap={3} className="pt-6">
+                        {/* Header */}
+                        <div className="flex items-center justify-between">
+                          <h3 className="text-[16px] font-semibold text-[var(--color-text-default)]">
+                            Pools
+                          </h3>
+                          <Button variant="secondary" size="sm" leftIcon={<IconCirclePlus size={12} />}>
+                            Create Pool
+                          </Button>
+                        </div>
+
+                        {/* Action Bar */}
+                        <div className="flex items-center gap-2">
+                          <div className="w-[280px]">
+                            <SearchInput
+                              value={poolSearchTerm}
+                              onChange={(e) => {
+                                setPoolSearchTerm(e.target.value);
+                                setPoolCurrentPage(1);
+                              }}
+                              placeholder="Find Pool with filters"
+                            />
+                          </div>
+                          <div className="h-4 w-px bg-[var(--color-border-default)]" />
+                          <Button
+                            variant="secondary"
+                            size="sm"
+                            leftIcon={<IconTrash size={12} />}
+                            disabled={selectedPools.length === 0}
+                          >
+                            Delete
+                          </Button>
+                        </div>
+
+                        {/* Pagination */}
+                        <div className="flex items-center gap-2">
+                          <Pagination
+                            currentPage={poolCurrentPage}
+                            totalPages={totalPoolPages}
+                            onPageChange={setPoolCurrentPage}
+                            totalItems={filteredPools.length}
+                            selectedCount={selectedPools.length}
+                            showSettings
+                            onSettingsClick={() => setIsPreferencesOpen(true)}
+                          />
+                        </div>
+
+                        {/* Table */}
+                        <Table
+                          columns={poolColumns}
+                          data={paginatedPools}
+                          rowKey="id"
+                          selectable
+                          selectedKeys={selectedPools}
+                          onSelectionChange={setSelectedPools}
                         />
                       </VStack>
                     </TabPanel>

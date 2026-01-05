@@ -27,7 +27,6 @@ import {
   IconTrash,
   IconBell,
   IconChevronDown,
-  IconExternalLink,
   IconCirclePlus,
   IconDotsCircleHorizontal,
   IconPool,
@@ -87,7 +86,7 @@ interface L7Policy {
 }
 
 type CertificateStatus = 'active' | 'error' | 'pending';
-type CertificateType = 'Server' | 'CA';
+type CertificateType = 'Server' | 'CA' | 'SNI';
 
 interface Certificate {
   id: string;
@@ -155,15 +154,20 @@ const mockL7Policies: L7Policy[] = Array.from({ length: 115 }, (_, i) => ({
    Mock Certificates Data
    ---------------------------------------- */
 
-const mockCertificates: Certificate[] = Array.from({ length: 115 }, (_, i) => ({
-  id: `cert-${String(i + 1).padStart(3, '0')}`,
-  name: i % 2 === 0 ? `server-cert-${String(i + 1).padStart(2, '0')}` : `ca-cert-${String(i + 1).padStart(2, '0')}`,
-  status: ['active', 'active', 'active', 'error', 'pending'][i % 5] as CertificateStatus,
-  type: i % 2 === 0 ? 'Server' : 'CA',
-  domain: i % 2 === 0 ? `*.domain${i}.com` : 'N/A',
-  issuer: ['DigiCert', 'Let\'s Encrypt', 'Comodo', 'GlobalSign', 'Sectigo'][i % 5],
-  expiresAt: `2026-${String((i % 12) + 1).padStart(2, '0')}-${String((i % 28) + 1).padStart(2, '0')}`,
-}));
+const mockCertificates: Certificate[] = Array.from({ length: 115 }, (_, i) => {
+  const types: CertificateType[] = ['Server', 'CA', 'SNI'];
+  const type = types[i % 3];
+  const namePrefix = type === 'Server' ? 'server-cert' : type === 'CA' ? 'ca-cert' : 'sni-cert';
+  return {
+    id: `cert-${String(i + 1).padStart(3, '0')}`,
+    name: `${namePrefix}-${String(i + 1).padStart(2, '0')}`,
+    status: ['active', 'active', 'active', 'error', 'pending'][i % 5] as CertificateStatus,
+    type,
+    domain: type === 'CA' ? 'N/A' : `*.domain${i}.com`,
+    issuer: ['DigiCert', 'Let\'s Encrypt', 'Comodo', 'GlobalSign', 'Sectigo'][i % 5],
+    expiresAt: `2026-${String((i % 12) + 1).padStart(2, '0')}-${String((i % 28) + 1).padStart(2, '0')}`,
+  };
+});
 
 /* ----------------------------------------
    Status Mapping
@@ -325,7 +329,6 @@ export default function ListenerDetailPage() {
             onClick={(e) => e.stopPropagation()}
           >
             {row.name}
-            <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
           </Link>
           <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
             ID : {row.id}
@@ -402,7 +405,6 @@ export default function ListenerDetailPage() {
             onClick={(e) => e.stopPropagation()}
           >
             {row.name}
-            <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
           </Link>
           <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
             ID : {row.id}
@@ -414,7 +416,6 @@ export default function ListenerDetailPage() {
       key: 'behavior',
       label: 'Behavior',
       flex: 1,
-      sortable: true,
     },
     {
       key: 'position',
@@ -475,7 +476,6 @@ export default function ListenerDetailPage() {
             onClick={(e) => e.stopPropagation()}
           >
             {row.name}
-            <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
           </Link>
           <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
             ID : {row.id}
@@ -487,12 +487,12 @@ export default function ListenerDetailPage() {
       key: 'type',
       label: 'Type',
       flex: 1,
+      sortable: true,
     },
     {
       key: 'domain',
       label: 'SAN',
       flex: 1,
-      sortable: true,
     },
     {
       key: 'issuer',
@@ -512,13 +512,19 @@ export default function ListenerDetailPage() {
       width: '72px',
       align: 'center',
       render: (_: unknown, row: Certificate) => {
-        const certMenuItems: ContextMenuItem[] = row.type === 'Server' 
-          ? [
-              { id: 'change-server-cert', label: 'Change Server Certificate', icon: <IconCertificate size={14} stroke={1.5} />, onClick: () => console.log('Change server certificate', row.id) },
-            ]
-          : [
-              { id: 'change-ca-cert', label: 'Change CA Certificate', icon: <IconCertificate size={14} stroke={1.5} />, onClick: () => console.log('Change CA certificate', row.id) },
-            ];
+        const getCertMenuItems = (): ContextMenuItem[] => {
+          switch (row.type) {
+            case 'Server':
+              return [{ id: 'change-server-cert', label: 'Change Server Certificate', icon: <IconCertificate size={14} stroke={1.5} />, onClick: () => console.log('Change server certificate', row.id) }];
+            case 'CA':
+              return [{ id: 'change-ca-cert', label: 'Change CA Certificate', icon: <IconCertificate size={14} stroke={1.5} />, onClick: () => console.log('Change CA certificate', row.id) }];
+            case 'SNI':
+              return [{ id: 'remove-sni-cert', label: 'Remove', status: 'danger', onClick: () => console.log('Remove SNI certificate', row.id) }];
+            default:
+              return [];
+          }
+        };
+        const certMenuItems = getCertMenuItems();
         return (
           <div onClick={(e) => e.stopPropagation()}>
             <ContextMenu items={certMenuItems} trigger="click">
@@ -645,13 +651,13 @@ export default function ListenerDetailPage() {
                       },
                     ]}
                   >
-                    <Button
-                      variant="secondary"
-                      size="sm"
-                      rightIcon={<IconChevronDown size={12} />}
-                    >
-                      More Actions
-                    </Button>
+                  <Button
+                    variant="secondary"
+                    size="sm"
+                    rightIcon={<IconChevronDown size={12} />}
+                  >
+                    More Actions
+                  </Button>
                   </ContextMenu>
                 </DetailHeader.Actions>
 
@@ -734,7 +740,6 @@ export default function ListenerDetailPage() {
                                   className="flex items-center gap-1.5 text-[12px] font-medium leading-4 text-[var(--color-action-primary)] hover:underline"
                                 >
                                   {listener.loadBalancer.name}
-                                  <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
                                 </Link>
                               ) : (
                                 <span className="text-[12px] leading-4 text-[var(--color-text-default)]">-</span>
@@ -757,10 +762,10 @@ export default function ListenerDetailPage() {
                             <>
                               <Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />}>
                                 Edit
-                              </Button>
+                        </Button>
                               <Button variant="secondary" size="sm" leftIcon={<IconTrash size={12} />}>
-                                Delete
-                              </Button>
+                          Delete
+                        </Button>
                             </>
                           }
                         />
@@ -835,7 +840,7 @@ export default function ListenerDetailPage() {
                         data={paginatedL7Policies}
                         rowKey="id"
                         selectable
-                        selectedRows={selectedL7Policies}
+                        selectedKeys={selectedL7Policies}
                         onSelectionChange={setSelectedL7Policies}
                       />
                     </VStack>
@@ -850,13 +855,13 @@ export default function ListenerDetailPage() {
                           Certificates
                         </h3>
                         <div className="flex items-center gap-2">
-                          <Button variant="secondary" size="sm" leftIcon={<IconCertificate size={12} />}>
+                          <Button variant="secondary" size="sm">
                             Change Server Certificate
                           </Button>
-                          <Button variant="secondary" size="sm" leftIcon={<IconCertificate size={12} />}>
+                          <Button variant="secondary" size="sm">
                             Change CA Certificate
                           </Button>
-                          <Button variant="secondary" size="sm" leftIcon={<IconListDetails size={12} />}>
+                          <Button variant="secondary" size="sm">
                             Manage SNI Certificates
                           </Button>
                         </div>

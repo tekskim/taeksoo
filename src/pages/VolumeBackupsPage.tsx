@@ -213,7 +213,7 @@ export function VolumeBackupsPage() {
       key: 'backupMode',
       label: 'Backup Mode',
       flex: 1,
-      sortable: false,
+      sortable: true,
     },
     {
       key: 'createdAt',

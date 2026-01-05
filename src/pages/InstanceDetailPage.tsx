@@ -40,6 +40,7 @@ import {
   IconDownload,
   IconSearch,
   IconCopy,
+  IconSelector,
 } from '@tabler/icons-react';
 
 /* ----------------------------------------
@@ -382,12 +383,31 @@ export function InstanceDetailPage() {
   const [actionLogCurrentPage, setActionLogCurrentPage] = useState(1);
   const [actionLogSearchQuery, setActionLogSearchQuery] = useState('');
   const [expandedLogIds, setExpandedLogIds] = useState<Set<string>>(new Set(['log-001']));
+  const [actionLogSortKey, setActionLogSortKey] = useState<'operationName' | 'requestId' | 'requestedTime' | null>(null);
+  const [actionLogSortDirection, setActionLogSortDirection] = useState<'asc' | 'desc'>('asc');
   const actionLogRowsPerPage = 10;
-  const filteredActionLogs = mockActionLogs.filter(log =>
-    log.operationName.toLowerCase().includes(actionLogSearchQuery.toLowerCase()) ||
-    log.requestId.toLowerCase().includes(actionLogSearchQuery.toLowerCase())
-  );
+  const filteredActionLogs = mockActionLogs
+    .filter(log =>
+      log.operationName.toLowerCase().includes(actionLogSearchQuery.toLowerCase()) ||
+      log.requestId.toLowerCase().includes(actionLogSearchQuery.toLowerCase())
+    )
+    .sort((a, b) => {
+      if (!actionLogSortKey) return 0;
+      const aValue = a[actionLogSortKey];
+      const bValue = b[actionLogSortKey];
+      const comparison = aValue.localeCompare(bValue);
+      return actionLogSortDirection === 'asc' ? comparison : -comparison;
+    });
   const actionLogTotalPages = Math.ceil(filteredActionLogs.length / actionLogRowsPerPage);
+
+  const handleActionLogSort = (key: 'operationName' | 'requestId' | 'requestedTime') => {
+    if (actionLogSortKey === key) {
+      setActionLogSortDirection(prev => prev === 'asc' ? 'desc' : 'asc');
+    } else {
+      setActionLogSortKey(key);
+      setActionLogSortDirection('asc');
+    }
+  };
 
   const toggleLogExpansion = (logId: string) => {
     setExpandedLogIds(prev => {
@@ -487,9 +507,31 @@ export function InstanceDetailPage() {
                 <Button variant="secondary" size="sm" leftIcon={<IconTrash size={12} />}>
                   Delete
                 </Button>
-                <Button variant="secondary" size="sm" rightIcon={<IconChevronDown size={12} />}>
-                  More Actions
-                </Button>
+                <ContextMenu
+                  items={[
+                    {
+                      id: 'instance-status',
+                      label: 'Instance Status',
+                      submenu: [
+                        { id: 'soft-reboot', label: 'Soft reboot', onClick: () => console.log('Soft reboot instance') },
+                        { id: 'pause', label: 'Pause', onClick: () => console.log('Pause instance') },
+                        { id: 'suspend', label: 'Suspend', onClick: () => console.log('Suspend instance') },
+                        { id: 'shelve', label: 'Shelve', onClick: () => console.log('Shelve instance') },
+                        { id: 'unpause', label: 'Unpause', onClick: () => console.log('Unpause instance') },
+                        { id: 'resume', label: 'Resume', onClick: () => console.log('Resume instance') },
+                        { id: 'unshelve', label: 'Unshelve', onClick: () => console.log('Unshelve instance') },
+                      ],
+                    },
+                    { id: 'storage-snapshot', label: 'Storage & Snapshot', onClick: () => console.log('Storage & Snapshot') },
+                    { id: 'network', label: 'Network', onClick: () => console.log('Network') },
+                    { id: 'configuration', label: 'Configuration', onClick: () => console.log('Configuration') },
+                  ]}
+                  trigger="click"
+                >
+                  <Button variant="secondary" size="sm" rightIcon={<IconChevronDown size={12} />}>
+                    More Actions
+                  </Button>
+                </ContextMenu>
               </DetailHeader.Actions>
 
               <DetailHeader.InfoGrid>
@@ -652,14 +694,12 @@ export function InstanceDetailPage() {
                         {
                           key: 'name',
                           label: 'Name',
-                          sortable: true,
                           render: (value: string, row: AttachedVolume) => (
                             <Link
                               to={`/volumes/${row.id}`}
-                              className="flex items-center gap-1.5 text-[var(--color-action-primary)] hover:underline"
+                              className="text-[var(--color-action-primary)] hover:underline"
                             >
                               {value}
-                              <IconExternalLink size={12} />
                             </Link>
                           ),
                         },
@@ -676,7 +716,6 @@ export function InstanceDetailPage() {
                         {
                           key: 'diskTag',
                           label: 'Disk Tag',
-                          sortable: true,
                         },
                         {
                           key: 'bootable',
@@ -686,7 +725,6 @@ export function InstanceDetailPage() {
                         {
                           key: 'access',
                           label: 'Created at',
-                          sortable: true,
                         },
                         {
                           key: 'action',
@@ -901,7 +939,6 @@ export function InstanceDetailPage() {
                         {
                           key: 'floatingIp',
                           label: 'Floating IP',
-                          sortable: true,
                           render: (_value: string, row: FloatingIP) => (
                             <div className="flex flex-col gap-0.5">
                             <Link 
@@ -919,7 +956,6 @@ export function InstanceDetailPage() {
                         {
                           key: 'fixedIp',
                           label: 'Fixed IP',
-                          sortable: true,
                         },
                         {
                           key: 'createdAt',
@@ -1203,7 +1239,7 @@ export function InstanceDetailPage() {
                         <span className="text-[14px] font-medium text-[var(--color-text-default)]">Log Length</span>
                         <div className="flex items-center gap-1">
                           {/* Number Input with Spinner */}
-                          <div className="flex items-center justify-between w-20 h-8 px-2.5 py-1 bg-[var(--color-surface-default)] border border-[var(--color-border-strong)] rounded-md">
+                          <div className="flex items-center justify-between w-20 h-7 px-2.5 py-1 bg-[var(--color-surface-default)] border border-[var(--color-border-strong)] rounded-md">
                             <span className="text-[12px] text-[var(--color-text-default)]">{logLength}</span>
                             <div className="flex flex-col">
                               <button
@@ -1221,8 +1257,8 @@ export function InstanceDetailPage() {
                             </div>
                           </div>
                           {/* Search Button */}
-                          <Button variant="secondary" size="sm" className="!p-2 !w-8 !h-8 !min-w-8 text-[var(--color-text-default)]">
-                            <IconSearch size={16} stroke={1.5} />
+                          <Button variant="secondary" size="sm" className="!p-2 !w-7 !h-7 !min-w-7 text-[var(--color-text-default)]">
+                            <IconSearch size={16} stroke={2} />
                           </Button>
                         </div>
                       </div>
@@ -1233,8 +1269,8 @@ export function InstanceDetailPage() {
                           <IconTerminal2 size={14} stroke={1.5} />
                           View Full Log
                         </Button>
-                        <Button variant="secondary" size="sm" className="!p-2 !w-8 !h-8 !min-w-8 text-[var(--color-text-default)]">
-                          <IconDownload size={18} stroke={1.5} className="w-[14px]" />
+                        <Button variant="secondary" size="sm" className="!p-2 !w-7 !h-7 !min-w-7 text-[var(--color-text-default)]">
+                          <IconDownload size={18} stroke={2} className="w-[14px]" />
                         </Button>
                       </div>
                     </div>
@@ -1279,7 +1315,7 @@ export function InstanceDetailPage() {
                         className="w-[280px]"
                       />
                       <Button variant="secondary" size="sm" className="!p-2 !w-7 !h-7 !min-w-7">
-                        <IconDownload size={12} stroke={1.5} className="w-3 h-3" />
+                        <IconDownload size={12} stroke={2} className="w-3 h-3" />
                       </Button>
                     </div>
 
@@ -1297,19 +1333,55 @@ export function InstanceDetailPage() {
                     <div className="w-full flex flex-col gap-1">
                       {/* Table Header */}
                       <div className="flex items-start bg-[var(--table-header-bg)] border border-[var(--color-border-default)] rounded-md">
-                        <div className="flex-1 flex items-center h-10 px-3">
-                          <div className="flex items-center gap-1.5">
+                        <div 
+                          className="flex-1 flex items-center h-10 px-3 cursor-pointer select-none hover:text-[var(--color-action-primary)] transition-colors"
+                          onClick={() => handleActionLogSort('operationName')}
+                        >
+                          <div className="flex items-center gap-1 w-full">
                             <span className="text-[11px] font-medium text-[var(--color-text-default)]">Action</span>
-                            <IconChevronDown size={12} stroke={1.5} className="text-[var(--color-text-default)]" />
+                            {actionLogSortKey === 'operationName' ? (
+                              actionLogSortDirection === 'asc' ? (
+                                <IconChevronUp size={14} stroke={1.5} className="text-[var(--color-action-primary)]" />
+                              ) : (
+                                <IconChevronDown size={14} stroke={1.5} className="text-[var(--color-action-primary)]" />
+                              )
+                            ) : (
+                              <IconSelector size={14} stroke={1.5} className="text-[var(--color-text-disabled)]" />
+                            )}
                           </div>
                         </div>
-                        <div className="flex-1 flex items-center h-10 px-3 border-l border-[var(--color-border-default)]">
-                          <span className="text-[11px] font-medium text-[var(--color-text-default)]">Request ID</span>
+                        <div 
+                          className="flex-1 flex items-center h-10 px-3 border-l border-[var(--color-border-default)] cursor-pointer select-none hover:text-[var(--color-action-primary)] transition-colors"
+                          onClick={() => handleActionLogSort('requestId')}
+                        >
+                          <div className="flex items-center gap-1 w-full">
+                            <span className="text-[11px] font-medium text-[var(--color-text-default)]">Request ID</span>
+                            {actionLogSortKey === 'requestId' ? (
+                              actionLogSortDirection === 'asc' ? (
+                                <IconChevronUp size={14} stroke={1.5} className="text-[var(--color-action-primary)]" />
+                              ) : (
+                                <IconChevronDown size={14} stroke={1.5} className="text-[var(--color-action-primary)]" />
+                              )
+                            ) : (
+                              <IconSelector size={14} stroke={1.5} className="text-[var(--color-text-disabled)]" />
+                            )}
+                          </div>
                         </div>
-                        <div className="flex-1 flex items-center h-10 px-3 border-l border-[var(--color-border-default)]">
-                          <div className="flex items-center gap-1.5">
+                        <div 
+                          className="flex-1 flex items-center h-10 px-3 border-l border-[var(--color-border-default)] cursor-pointer select-none hover:text-[var(--color-action-primary)] transition-colors"
+                          onClick={() => handleActionLogSort('requestedTime')}
+                        >
+                          <div className="flex items-center gap-1 w-full">
                             <span className="text-[11px] font-medium text-[var(--color-text-default)]">Requested Time</span>
-                            <IconChevronDown size={12} stroke={1.5} className="text-[var(--color-text-default)]" />
+                            {actionLogSortKey === 'requestedTime' ? (
+                              actionLogSortDirection === 'asc' ? (
+                                <IconChevronUp size={14} stroke={1.5} className="text-[var(--color-action-primary)]" />
+                              ) : (
+                                <IconChevronDown size={14} stroke={1.5} className="text-[var(--color-action-primary)]" />
+                              )
+                            ) : (
+                              <IconSelector size={14} stroke={1.5} className="text-[var(--color-text-disabled)]" />
+                            )}
                           </div>
                         </div>
                       </div>

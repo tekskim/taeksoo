@@ -275,11 +275,12 @@ export function Table<T extends Record<string, any>>({
                   key={key}
                   className={`
                     flex items-center
-                    min-h-[var(--table-row-height)]
+                    h-[var(--table-row-height)]
                     rounded-[var(--table-row-radius)]
                     transition-all
                     hover:bg-[var(--table-row-hover-bg)]
                     border border-[var(--color-border-default)]
+                    overflow-hidden
                     ${isSelected 
                       ? 'bg-[var(--color-state-info-bg)] border-[var(--color-action-primary)] shadow-[inset_0_0_0_1px_var(--color-action-primary)]' 
                       : 'bg-[var(--color-surface-default)]'

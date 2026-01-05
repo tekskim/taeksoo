@@ -26,7 +26,6 @@ import {
   IconEdit,
   IconTrash,
   IconBell,
-  IconExternalLink,
   IconCopy,
   IconCirclePlus,
   IconDotsCircleHorizontal,
@@ -381,7 +380,6 @@ export default function L7PolicyDetailPage() {
                                   className="inline-flex items-center gap-1.5 font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
                                 >
                                   {l7Policy.behaviorDetail.name}
-                                  <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
                                 </Link>
                               ) : '-'
                             }
@@ -446,7 +444,7 @@ export default function L7PolicyDetailPage() {
                         data={paginatedL7Rules}
                         rowKey="id"
                         selectable
-                        selectedRows={selectedL7Rules}
+                        selectedKeys={selectedL7Rules}
                         onSelectionChange={setSelectedL7Rules}
                       />
                     </VStack>

@@ -195,6 +195,7 @@ export function VolumesPage() {
       key: 'type',
       label: 'Type',
       flex: 1,
+      sortable: true,
     },
     {
       key: 'diskTag',
@@ -205,6 +206,7 @@ export function VolumesPage() {
       key: 'attachedTo',
       label: 'Attached To',
       flex: 1,
+      sortable: true,
       render: (_, row) => (
         row.attachedTo && row.attachedToId ? (
           <div className="flex flex-col gap-0.5">

@@ -18,13 +18,11 @@ import {
 import { Sidebar } from '@/components/Sidebar';
 import { useTabs } from '@/contexts/TabContext';
 import {
-  IconLink,
-  IconLinkOff,
   IconTrash,
   IconBell,
-  IconExternalLink,
   IconCopy,
   IconEdit,
+  IconLinkOff,
 } from '@tabler/icons-react';
 
 /* ----------------------------------------
@@ -39,6 +37,7 @@ interface FloatingIPDetail {
   status: FloatingIPStatus;
   createdAt: string;
   description: string;
+  network: { name: string; id: string } | null;
   // Association
   resourceType: string | null;
   resource: { name: string; id: string } | null;
@@ -58,11 +57,12 @@ const mockFloatingIPDetail: FloatingIPDetail = {
   status: 'active',
   createdAt: '2025-07-25 09:12:20',
   description: '-',
+  network: { name: 'external-net', id: 'net-001' },
   // Association
   resourceType: 'Instance',
-  resource: { name: 'web-server-10', id: 'inst-001' },
+  resource: { name: 'server-01', id: 'inst-001' },
   fixedIp: '10.0.0.1',
-  router: { name: 'web-server-10', id: 'router-001' },
+  router: { name: 'router-01', id: 'router-001' },
   // DNS
   fqdn: 'my-web.thakicloud.com',
 };
@@ -162,11 +162,11 @@ export default function FloatingIPDetailPage() {
               <DetailHeader>
                 <DetailHeader.Title>{floatingIP.floatingIp}</DetailHeader.Title>
                 <DetailHeader.Actions>
-                  <Button variant="secondary" size="sm" leftIcon={<IconLink size={12} />}>
-                    Associate
-                  </Button>
                   <Button variant="secondary" size="sm" leftIcon={<IconLinkOff size={12} />}>
                     Disassociate
+                  </Button>
+                  <Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />}>
+                    Edit
                   </Button>
                   <Button variant="secondary" size="sm" leftIcon={<IconTrash size={12} />}>
                     Release
@@ -206,6 +206,19 @@ export default function FloatingIPDetailPage() {
                         <SectionCard.Content>
                           <SectionCard.DataRow label="Floating IP" value={floatingIP.floatingIp} />
                           <SectionCard.DataRow label="Description" value={floatingIP.description} />
+                          <SectionCard.DataRow 
+                            label="External Network" 
+                            value={
+                              floatingIP.network ? (
+                                <Link
+                                  to={`/networks/${floatingIP.network.id}`}
+                                  className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
+                                >
+                                  {floatingIP.network.name}
+                                </Link>
+                              ) : '-'
+                            } 
+                          />
                         </SectionCard.Content>
                       </SectionCard>
 
@@ -214,19 +227,14 @@ export default function FloatingIPDetailPage() {
                         <SectionCard.Header title="Association" />
                         <SectionCard.Content>
                           <SectionCard.DataRow 
-                            label="Resource Type" 
-                            value={floatingIP.resourceType || '-'} 
-                          />
-                          <SectionCard.DataRow 
                             label="Resource" 
                             value={
                               floatingIP.resource ? (
                                 <Link
                                   to={`/instances/${floatingIP.resource.id}`}
-                                  className="inline-flex items-center gap-1.5 font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
+                                  className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
                                 >
                                   {floatingIP.resource.name}
-                                  <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
                                 </Link>
                               ) : '-'
                             } 
@@ -241,10 +249,9 @@ export default function FloatingIPDetailPage() {
                               floatingIP.router ? (
                                 <Link
                                   to={`/routers/${floatingIP.router.id}`}
-                                  className="inline-flex items-center gap-1.5 font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
+                                  className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
                                 >
                                   {floatingIP.router.name}
-                                  <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
                                 </Link>
                               ) : '-'
                             } 
@@ -252,29 +259,6 @@ export default function FloatingIPDetailPage() {
                         </SectionCard.Content>
                       </SectionCard>
 
-                      {/* DNS */}
-                      <SectionCard>
-                        <SectionCard.Header title="DNS" />
-                        <SectionCard.Content>
-                          <SectionCard.DataRow 
-                            label="FQDN" 
-                            value={
-                              floatingIP.fqdn ? (
-                                <div className="flex items-center gap-2">
-                                  <span className="text-[var(--color-text-default)]">{floatingIP.fqdn}</span>
-                                  <button
-                                    onClick={handleCopyFqdn}
-                                    className="p-0.5 rounded hover:bg-[var(--color-surface-muted)] transition-colors"
-                                    title={copiedFqdn ? 'Copied!' : 'Copy FQDN'}
-                                  >
-                                    <IconCopy size={12} className="text-[var(--color-text-subtle)]" />
-                                  </button>
-                                </div>
-                              ) : '-'
-                            } 
-                          />
-                        </SectionCard.Content>
-                      </SectionCard>
                     </VStack>
                   </TabPanel>
                 </Tabs>

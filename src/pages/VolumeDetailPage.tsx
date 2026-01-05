@@ -255,6 +255,7 @@ export function VolumeDetailPage() {
       key: 'name',
       label: 'Name',
       flex: 1,
+      sortable: true,
       render: (_, row) => (
         <div className="flex flex-col gap-0.5">
         <Link
@@ -323,6 +324,7 @@ export function VolumeDetailPage() {
       key: 'name',
       label: 'Name',
       flex: 1,
+      sortable: true,
       render: (_, row) => (
         <div className="flex flex-col gap-0.5">
         <Link
@@ -425,9 +427,26 @@ export function VolumeDetailPage() {
                 <Button variant="secondary" size="sm" leftIcon={<IconTrash size={12} />}>
                   Delete
                 </Button>
-                <Button variant="secondary" size="sm" rightIcon={<IconChevronDown size={12} />}>
-                  More Actions
-                </Button>
+                <ContextMenu
+                  items={[
+                    { id: 'data-protection', label: 'Data Protection', onClick: () => console.log('Data Protection') },
+                    { id: 'operate', label: 'Operate', onClick: () => console.log('Operate') },
+                    {
+                      id: 'configuration',
+                      label: 'Configuration',
+                      submenu: [
+                        { id: 'extend-volume', label: 'Extend Volume', onClick: () => console.log('Extend Volume') },
+                        { id: 'change-type', label: 'Change Type', onClick: () => console.log('Change Type') },
+                      ],
+                    },
+                    { id: 'edit', label: 'Edit', onClick: () => console.log('Edit') },
+                  ] as ContextMenuItem[]}
+                  trigger="click"
+                >
+                  <Button variant="secondary" size="sm" rightIcon={<IconChevronDown size={12} />}>
+                    More Actions
+                  </Button>
+                </ContextMenu>
               </DetailHeader.Actions>
               <DetailHeader.InfoGrid>
                 <DetailHeader.InfoCard

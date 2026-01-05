@@ -158,6 +158,7 @@ export function FloatingIPsPage() {
       key: 'floatingIp',
       label: 'Floating IP',
       flex: 1,
+      sortable: true,
       render: (_, row) => (
         <div className="flex flex-col gap-0.5">
           <Link
@@ -209,11 +210,13 @@ export function FloatingIPsPage() {
       key: 'fixedIp',
       label: 'Fixed IP',
       flex: 1,
+      sortable: true,
     },
     {
       key: 'network',
       label: 'Network',
       width: '140px',
+      sortable: true,
       render: (_, row) => (
         <div className="flex flex-col gap-0.5 min-w-0">
           <Tooltip content={row.network} position="top">
@@ -236,6 +239,7 @@ export function FloatingIPsPage() {
       key: 'createdAt',
       label: 'Created At',
       flex: 1,
+      sortable: true,
     },
     {
       key: 'actions',

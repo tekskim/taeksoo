@@ -232,8 +232,10 @@ export function NetworksPage() {
 
     return visibleColumnIds
       .map((id) => columnMap.get(id))
-      .filter((col): col is TableColumn<Network> => col !== undefined);
-  }, [columns, columnConfig]);
+      .filter((col): col is TableColumn<Network> => col !== undefined)
+      // Hide 'external' column when on External tab
+      .filter((col) => !(activeTab === 'external' && col.key === 'external'));
+  }, [columns, columnConfig, activeTab]);
 
   const handleContextMenuSelect = (itemId: string) => {
     if (itemId === 'delete' && networkToDelete) {
@@ -308,7 +310,7 @@ export function NetworksPage() {
             {/* Tabs */}
             <Tabs value={activeTab} onChange={setActiveTab} size="sm">
               <TabList>
-                <Tab value="current">Current Project</Tab>
+                <Tab value="current">Current Tenant</Tab>
                 <Tab value="shared">Shared</Tab>
                 <Tab value="external">External</Tab>
               </TabList>
