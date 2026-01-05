@@ -169,13 +169,13 @@ export function ImagesPage() {
   const getOsIcon = (os: string) => {
     const osLower = os.toLowerCase();
     if (osLower.includes('ubuntu')) {
-      return <IconBrandUbuntu size={16} stroke={1.5} className="text-[#E95420]" />;
+      return <IconBrandUbuntu size={16} stroke={1} className="text-[#E95420]" />;
     } else if (osLower.includes('debian')) {
-      return <IconBrandDebian size={16} stroke={1.5} className="text-[#A81D33]" />;
+      return <IconBrandDebian size={16} stroke={1} className="text-[#A81D33]" />;
     } else if (osLower.includes('windows')) {
-      return <IconBrandWindows size={16} stroke={1.5} className="text-[#0078D6]" />;
+      return <IconBrandWindows size={16} stroke={1} className="text-[#0078D6]" />;
     } else if (osLower.includes('centos') || osLower.includes('rocky') || osLower.includes('fedora') || osLower.includes('oracle')) {
-      return <IconBrandRedhat size={16} stroke={1.5} className="text-[#EE0000]" />;
+      return <IconBrandRedhat size={16} stroke={1} className="text-[#EE0000]" />;
     }
     return <div className="w-4 h-4 rounded-full bg-[var(--color-text-subtle)]" />;
   };
@@ -348,7 +348,7 @@ export function ImagesPage() {
           }
           actions={
             <TopBarAction
-              icon={<IconBell size={16} stroke={1.5} />}
+              icon={<IconBell size={16} stroke={1} />}
               aria-label="Notifications"
               badge={true}
             />

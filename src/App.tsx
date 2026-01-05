@@ -25,6 +25,9 @@ import { LoadBalancersPage } from '@/pages/LoadBalancersPage';
 import { CertificatesPage } from '@/pages/CertificatesPage';
 import { TopologyD3Page } from '@/pages/TopologyD3Page';
 import { ConsolePage } from '@/pages/ConsolePage';
+import { AgentPage } from '@/pages/AgentPage';
+import { ChatPage } from '@/pages/ChatPage';
+import { StoragePage } from '@/pages/StoragePage';
 
 const defaultTabs = [
   { id: 'home', label: 'Home', path: '/', closable: true },
@@ -41,6 +44,13 @@ function AppRoutes() {
         {/* Design System */}
         <Route path="/design-system" element={<DesignSystemPage />} />
         <Route path="/drawers" element={<DrawersPage />} />
+        
+        {/* Agent */}
+        <Route path="/agent" element={<AgentPage />} />
+        <Route path="/chat" element={<ChatPage />} />
+        
+        {/* Storage */}
+        <Route path="/storage" element={<StoragePage />} />
         
         {/* Compute */}
         <Route path="/instances" element={<InstanceListPage />} />

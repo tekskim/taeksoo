@@ -1,199 +1,117 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
   TabBar,
   TopBar,
   TopBarAction,
   Breadcrumb,
+  VStack,
+  HStack,
+  Button,
 } from '@/design-system';
-import { Sidebar } from '@/components/Sidebar';
+import { AgentSidebar } from '@/pages/AgentPage';
 import { useTabs } from '@/contexts/TabContext';
 import {
+  IconMessage,
+  IconMessagePlus,
+  IconRobot,
+  IconRobotFace,
   IconDatabase,
-  IconNetwork,
-  IconRouter,
-  IconPlug,
-  IconWorldWww,
-  IconShieldLock,
-  IconKey,
-  IconServer,
-  IconCopy,
-  IconCheck,
-  IconChevronRight,
+  IconSquarePlus,
+  IconPuzzle,
   IconBell,
+  IconDownload,
+  IconPalette,
 } from '@tabler/icons-react';
-import { Link } from 'react-router-dom';
+import { Icons } from '@/design-system';
 
 /* ----------------------------------------
-   Percentage Badge Component
+   Stat Card Component
    ---------------------------------------- */
-interface PercentageBadgeProps {
-  percentage: number;
-}
-
-function PercentageBadge({ percentage }: PercentageBadgeProps) {
-  const getColors = () => {
-    if (percentage >= 100) return {
-      bg: 'bg-[var(--color-state-danger)]/15',
-      dot: 'bg-[var(--color-state-danger)]',
-      text: 'text-[var(--color-state-danger)]'
-    };
-    if (percentage >= 70) return {
-      bg: 'bg-[var(--color-state-warning)]/15',
-      dot: 'bg-[var(--color-state-warning)]',
-      text: 'text-[var(--color-state-warning)]'
-    };
-    return {
-      bg: 'bg-[var(--color-state-success)]/15',
-      dot: 'bg-[var(--color-state-success)]',
-      text: 'text-[var(--color-state-success)]'
-    };
-  };
-  
-  const colors = getColors();
-  
-  return (
-    <div className={`flex items-center gap-1 px-1.5 py-0.5 rounded-md ${colors.bg}`}>
-      <div className={`w-2 h-2 rounded-full ${colors.dot}`} />
-      <span className={`text-[11px] font-medium ${colors.text}`}>{percentage}%</span>
-    </div>
-  );
-}
-
-/* ----------------------------------------
-   Compute Quota Bar Component
-   ---------------------------------------- */
-interface ComputeQuotaBarProps {
-  label: string;
-  used: number;
-  total: number;
-  unit: string;
-}
-
-function ComputeQuotaBar({ label, used, total, unit }: ComputeQuotaBarProps) {
-  const percentage = Math.round((used / total) * 100);
-  
-  return (
-    <div className="flex flex-col gap-2">
-      <div className="flex items-center justify-between">
-        <span className="text-[12px] font-medium text-[var(--color-text-default)]">{label}</span>
-        <div className="flex items-center gap-2">
-          <span className="text-[11px] text-[var(--color-text-muted)]">{used}/{total} {unit}</span>
-          <PercentageBadge percentage={percentage} />
-        </div>
-      </div>
-      <div className="h-1 rounded-sm bg-[var(--color-surface-muted)] overflow-hidden">
-        <div 
-          className="h-full rounded-sm bg-[var(--color-text-muted)]"
-          style={{ width: `${Math.min(percentage, 100)}%` }}
-        />
-      </div>
-    </div>
-  );
-}
-
-/* ----------------------------------------
-   Summary Stat Box Component
-   ---------------------------------------- */
-interface SummaryStatBoxProps {
+interface StatCardProps {
   value: number;
   label: string;
 }
 
-function SummaryStatBox({ value, label }: SummaryStatBoxProps) {
-  const textColor = value === 0 ? 'text-[var(--color-text-muted)]' : 'text-[var(--color-text-default)]';
-  const isClickable = label !== 'Others';
-  
+function StatCard({ value, label }: StatCardProps) {
   return (
-    <div className={`flex-1 bg-[var(--color-surface-subtle)] rounded-lg p-4 border-2 border-transparent transition-colors ${isClickable ? 'hover:border-[var(--color-action-primary)] cursor-pointer' : ''}`}>
-      <div className={`text-[20px] font-medium ${textColor} pb-1`}>{value}</div>
-      <div className="text-[11px] text-[var(--color-text-subtle)]">{label}</div>
-    </div>
-  );
-}
-
-/* ----------------------------------------
-   Infrastructure Quota Card Component
-   ---------------------------------------- */
-interface InfraQuotaCardProps {
-  icon: React.ReactNode;
-  label: string;
-  used: number;
-  total: number;
-  href: string;
-}
-
-function InfraQuotaCard({ icon, label, used, total, href }: InfraQuotaCardProps) {
-  const percentage = Math.round((used / total) * 100);
-  
-  return (
-    <div className="bg-[var(--color-surface-subtle)] rounded-lg p-4">
-      <div className="flex items-center justify-between mb-3">
-        <Link 
-          to={href}
-          className="flex items-center gap-1 text-[12px] font-medium text-[var(--color-text-default)] hover:text-[var(--color-action-primary)] min-w-0"
-        >
-          <span className="flex-shrink-0">{icon}</span>
-          <span className="truncate">{label}</span>
-          <IconChevronRight size={12} className="text-[var(--color-text-muted)] flex-shrink-0" />
-        </Link>
-        <PercentageBadge percentage={percentage} />
-      </div>
-      <div className="flex items-baseline mb-3">
-        <span className="text-[24px] text-[var(--color-text-default)]">{used}</span>
-        <span className="text-[14px] text-[var(--color-text-muted)] pt-1.5">/{total}</span>
-      </div>
-      <div className="h-1 rounded-sm bg-[var(--color-surface-muted)] overflow-hidden">
-        <div 
-          className="h-full rounded-sm bg-[var(--color-text-muted)]"
-          style={{ width: `${Math.min(percentage, 100)}%` }}
-        />
-      </div>
-    </div>
-  );
-}
-
-/* ----------------------------------------
-   Activity Item Component
-   ---------------------------------------- */
-interface ActivityItemProps {
-  name: string;
-  resourceType: string;
-  action: string;
-  time: string;
-  isLast?: boolean;
-}
-
-function ActivityItem({ name, resourceType, action, time, isLast = false }: ActivityItemProps) {
-  return (
-    <div className={`flex items-center justify-between py-2.5 ${!isLast ? 'border-b border-[var(--color-border-subtle)]' : ''}`}>
-      <div>
-        <div className="text-[12px] font-medium text-[var(--color-action-primary)]">{name}</div>
-        <div className="flex items-center gap-1.5 text-[11px] text-[var(--color-text-muted)]">
-          <span>{resourceType}</span>
-          <span className="text-[var(--color-border-default)]">|</span>
-          <span>{action}</span>
+    <div className="bg-[#fafafa] flex flex-[1_0_0] flex-col items-start justify-center min-h-px min-w-px p-4 rounded-lg">
+      <div className="flex flex-col items-start pb-1 pt-0 px-0 relative shrink-0 w-full">
+        <div className="flex flex-col font-['Mona_Sans:Medium',sans-serif] justify-center leading-[0] not-italic relative shrink-0 text-[20px] text-[var(--color-text-default)] w-full">
+          <p className="leading-[normal] whitespace-pre-wrap">{value}</p>
         </div>
       </div>
-      <span className="text-[11px] text-[var(--color-text-muted)]">{time}</span>
+      <div className="flex flex-col items-start relative shrink-0 w-full">
+        <div className="flex flex-col font-[family-name:var(--fontfamily/sans,'Mona_Sans:Regular',sans-serif)] justify-center leading-[0] not-italic relative shrink-0 text-[color:var(--color-text-muted)] text-[length:var(--fontsize/sm,11px)] w-full">
+          <p className="leading-[var(--lineheight/sm,16px)] whitespace-pre-wrap">{label}</p>
+        </div>
+      </div>
     </div>
   );
 }
 
 /* ----------------------------------------
-   Card Component
+   Quick Action Card Component
    ---------------------------------------- */
-interface CardProps {
-  title: string;
-  children: React.ReactNode;
-  className?: string;
-  bgColor?: string;
+interface QuickActionCardProps {
+  icon: React.ReactNode;
+  label: string;
+  highlighted?: boolean;
+  onClick?: () => void;
 }
 
-function Card({ title, children, className = '', bgColor = 'bg-[var(--color-surface-default)]' }: CardProps) {
+function QuickActionCard({ icon, label, highlighted = false, onClick }: QuickActionCardProps) {
   return (
-    <div className={`p-4 rounded-2xl border border-[var(--color-border-default)] ${bgColor} ${className}`}>
-      <h6 className="text-[length:var(--font-size-12)] leading-[var(--line-height-16)] font-semibold text-[var(--color-text-muted)] mb-4">{title}</h6>
-      {children}
+    <button
+      onClick={onClick}
+      className={`bg-[#fafafa] flex flex-[1_0_0] flex-col items-start justify-center min-h-px min-w-px p-4 rounded-lg transition-colors hover:bg-[var(--color-surface-muted)] ${
+        highlighted ? 'border border-[var(--color-action-primary)]' : ''
+      }`}
+    >
+      <div className="flex flex-col items-start pb-1 pt-0 px-0 relative shrink-0 w-full">
+        <div className="flex items-start justify-start shrink-0">
+          {icon}
+        </div>
+      </div>
+      <div className="flex flex-col items-start relative shrink-0 w-full">
+        <div className="flex flex-col items-start font-[family-name:var(--fontfamily/sans,'Mona_Sans:Regular',sans-serif)] justify-start leading-[0] not-italic relative shrink-0 text-[color:var(--color-text-muted)] text-[length:var(--fontsize/sm,11px)] w-full">
+          <p className="leading-[var(--lineheight/sm,16px)] whitespace-pre-wrap text-left">{label}</p>
+        </div>
+      </div>
+    </button>
+  );
+}
+
+/* ----------------------------------------
+   Chat Item Component
+   ---------------------------------------- */
+interface ChatItemProps {
+  title: string;
+  description: string;
+  createdAt: string;
+}
+
+function ChatItem({ title, description, createdAt, onClick }: ChatItemProps & { onClick?: () => void }) {
+  return (
+    <div 
+      onClick={onClick}
+      className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] flex flex-col gap-3 items-start px-4 py-3 rounded-lg cursor-pointer hover:border-[var(--color-border-focus)] transition-colors"
+    >
+      <div className="flex flex-col gap-1 items-start not-italic relative shrink-0 w-full">
+        <p className="font-[family-name:var(--primitive/fontfamily/sans,'Mona_Sans:Medium',sans-serif)] leading-[var(--primitive/lineheight/md,20px)] relative shrink-0 text-[color:var(--color-text-default)] text-[length:var(--primitive/fontsize/md,14px)]">
+          {title}
+        </p>
+        <p className="font-[family-name:var(--fontfamily/sans,'Mona_Sans:Regular',sans-serif)] leading-[var(--lineheight/sm,16px)] min-w-full relative shrink-0 text-[color:var(--color-text-subtle)] text-[length:var(--fontsize/sm,11px)] w-[min-content] whitespace-pre-wrap line-clamp-2">
+          {description}
+        </p>
+      </div>
+      <div className="flex gap-0 items-center relative shrink-0">
+        <div className="flex gap-1 items-center justify-center px-0 py-0.5 relative rounded-full shrink-0">
+          <div className="flex flex-col font-[family-name:var(--font-family-sans,'Mona_Sans:Medium',sans-serif)] justify-center leading-[0] not-italic relative shrink-0 text-[color:var(--color/text/subtle,#64748b)] text-[length:var(--font-size-11,11px)] whitespace-nowrap">
+            <p className="leading-[var(--line-height-16,16px)]">Created at: {createdAt}</p>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
@@ -204,7 +122,7 @@ function Card({ title, children, className = '', bgColor = 'bg-[var(--color-surf
 export function HomePage() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const { tabs, activeTabId, selectTab, closeTab, addNewTab } = useTabs();
-  const [copied, setCopied] = useState(false);
+  const navigate = useNavigate();
 
   const tabBarTabs = tabs.map((tab) => ({
     id: tab.id,
@@ -212,243 +130,162 @@ export function HomePage() {
     closable: tab.closable,
   }));
 
-  const projectId = '7284d9174e81431e93060a9bbcf2cdfd';
-
-  const handleCopyId = () => {
-    navigator.clipboard.writeText(projectId);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
-  };
-
   return (
-    <div className="min-h-screen bg-[var(--color-surface-subtle)]">
-      <Sidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(false)} />
+    <div className="min-h-screen bg-[var(--color-surface-subtle)] flex items-start" style={{ minWidth: '1440px', width: '1440px', height: '1020px' }}>
+      <AgentSidebar />
 
-      <main className={`min-h-screen bg-[var(--color-surface-default)] transition-[margin] duration-200 overflow-x-auto ${sidebarOpen ? 'ml-[200px]' : 'ml-0'}`}>
-        <div className="min-w-[var(--layout-content-min-width)]">
-        <TabBar
-          tabs={tabBarTabs}
-          activeTab={activeTabId}
-          onTabChange={selectTab}
-          onTabClose={closeTab}
-          onTabAdd={addNewTab}
-          showAddButton={true}
-          showWindowControls={true}
-        />
+      <main className="flex flex-[1_0_0] flex-col h-full items-start min-h-px min-w-px relative shrink-0 bg-[var(--color-surface-default)] ml-[62px]">
+        <div className="min-w-[var(--layout-content-min-width)] w-full">
+          <TabBar
+            tabs={tabBarTabs}
+            activeTab={activeTabId}
+            onTabChange={selectTab}
+            onTabClose={closeTab}
+            onTabAdd={addNewTab}
+            showAddButton={true}
+            showWindowControls={true}
+          />
 
-        <TopBar
-          showSidebarToggle={!sidebarOpen}
-          onSidebarToggle={() => setSidebarOpen(true)}
-          showNavigation={true}
-          onBack={() => window.history.back()}
-          onForward={() => window.history.forward()}
-          breadcrumb={
-            <Breadcrumb
-              items={[
-                { label: 'Proj-1', href: '/project' },
-                { label: 'Home' },
-              ]}
-            />
-          }
-          actions={
-            <TopBarAction
-              icon={<IconBell size={16} stroke={1.5} />}
-              aria-label="Notifications"
-              badge={true}
-            />
-          }
-        />
+          <TopBar
+            showSidebarToggle={false}
+            showNavigation={true}
+            onBack={() => window.history.back()}
+            onForward={() => window.history.forward()}
+            breadcrumb={
+              <Breadcrumb
+                items={[
+                  { label: 'Home' },
+                ]}
+              />
+            }
+            actions={
+              <>
+                <TopBarAction
+                  icon={<IconPalette size={16} stroke={1} />}
+                  aria-label="Design System"
+                  onClick={() => navigate('/design-system')}
+                />
+                <TopBarAction
+                  icon={<IconBell size={16} stroke={1} />}
+                  aria-label="Notifications"
+                  badge={true}
+                />
+              </>
+            }
+          />
 
-        {/* Dashboard Content */}
-        <div className="px-8 py-6">
-          {/* Top Row - 4 Cards */}
-          <div className="grid grid-cols-4 gap-6 mb-6">
-            {/* PROJECT INFO */}
-            <Card title="PROJECT INFO" bgColor="bg-[var(--color-surface-subtle)]" className="flex flex-col justify-between">
-              <div>
-                <h3 className="text-[32px] font-semibold text-[var(--color-text-default)] mb-4">proj-1</h3>
-              </div>
-              <div className="space-y-4">
-                <div>
-                  <div className="text-[10px] text-[var(--color-text-muted)] mb-1">ID</div>
-                  <div className="flex items-center gap-1">
-                    <span className="text-[12px] text-[var(--color-text-default)]">{projectId}</span>
-                    <button 
-                      onClick={handleCopyId}
-                      className="p-1.5 -m-1 rounded-md hover:bg-[var(--color-surface-muted)] active:bg-[var(--color-surface-subtle)] transition-colors"
-                      title={copied ? 'Copied!' : 'Copy ID'}
-                    >
-                      {copied ? (
-                        <IconCheck size={12} className="text-[var(--color-state-success)]" />
-                      ) : (
-                        <IconCopy size={12} className="text-[var(--color-action-primary)]" />
-                      )}
-                    </button>
-                  </div>
-                </div>
-                <div>
-                  <div className="text-[10px] text-[var(--color-text-muted)] mb-1">Description</div>
-                  <p className="text-[12px] text-[var(--color-text-default)]">
-                    Development environment for the 'service' backend services.
+          {/* Main Content */}
+          <div className="bg-[var(--color-surface-default)] flex flex-[1_0_0] flex-col gap-6 items-center min-h-px min-w-px pb-3 pt-6 px-8 relative shrink-0 w-full">
+            <div className="flex flex-col gap-6 items-start min-w-[1176px] relative shrink-0 w-full">
+              {/* Home Header */}
+              <div className="flex flex-col items-start justify-center relative shrink-0">
+                <div className="flex items-center relative shrink-0">
+                  <p className="font-[family-name:var(--fontfamily/sans,'Mona_Sans:SemiBold',sans-serif)] leading-[var(--lineheight/xl,28px)] not-italic relative shrink-0 text-[color:var(--color-text-default)] text-[length:var(--fontsize/xl,18px)]">
+                    Home
                   </p>
                 </div>
               </div>
-            </Card>
 
-            {/* COMPUTE QUOTA */}
-            <Card title="COMPUTE QUOTA">
-              <div className="space-y-[22px]">
-                <ComputeQuotaBar label="vCPU" used={4} total={8} unit="vCPU" />
-                <ComputeQuotaBar label="RAM" used={22} total={32} unit="GiB" />
-                <ComputeQuotaBar label="Disk" used={4} total={6} unit="GiB" />
-                <ComputeQuotaBar label="GPU" used={6} total={8} unit="GPU" />
-                <ComputeQuotaBar label="NPU" used={6} total={8} unit="NPU" />
+              {/* Stats Cards */}
+              <div className="flex gap-2 items-center relative shrink-0 w-full">
+                <StatCard value={10} label="Chat sessions" />
+                <StatCard value={6} label="Agents" />
+                <StatCard value={12} label="Data sources" />
+                <StatCard value={4} label="Tools (My Servers)" />
               </div>
-            </Card>
 
-            {/* INSTANCE SUMMARY */}
-            <Card title="INSTANCE SUMMARY" className="flex flex-col">
-              <div className="mb-4">
-                <div className="text-[24px] leading-[32px] font-semibold text-[var(--color-text-default)]">13</div>
-                <div className="text-[12px] text-[var(--color-text-subtle)]">Total</div>
-              </div>
-              <div className="space-y-2 mt-auto">
-                <div className="flex gap-2">
-                  <SummaryStatBox value={10} label="Active" />
-                  <SummaryStatBox value={0} label="Error" />
+              {/* Quick Action Section */}
+              <div className="flex flex-col gap-6 items-start min-w-[1176px] relative shrink-0 w-full">
+                <div className="flex flex-col items-start justify-center relative shrink-0">
+                  <div className="flex items-center relative shrink-0">
+                    <p className="font-[family-name:var(--fontfamily/sans,'Mona_Sans:SemiBold',sans-serif)] leading-[var(--lineheight/xl,28px)] not-italic relative shrink-0 text-[color:var(--color-text-default)] text-[length:var(--fontsize/xl,18px)]">
+                      Quick action
+                    </p>
+                  </div>
                 </div>
-                <div className="flex gap-2">
-                  <SummaryStatBox value={0} label="Shutoff" />
-                  <SummaryStatBox value={3} label="Others" />
+                <div className="flex gap-2 items-center relative shrink-0 w-full">
+                  <QuickActionCard
+                    icon={<Icons.NewChat size={20} stroke={1} />}
+                    label="New chat"
+                    onClick={() => navigate('/chat')}
+                  />
+                  <QuickActionCard
+                    icon={<Icons.AddRobot size={20} stroke={1} />}
+                    label="New agent"
+                    highlighted
+                  />
+                  <QuickActionCard
+                    icon={<Icons.AddVolume size={20} stroke={1} />}
+                    label="New data source"
+                  />
+                  <QuickActionCard
+                    icon={<Icons.Puzzle size={20} stroke={1} />}
+                    label="Manage tools"
+                  />
                 </div>
               </div>
-            </Card>
 
-            {/* BARE METAL SUMMARY */}
-            <Card title="BARE METAL SUMMARY" className="flex flex-col">
-              <div className="mb-4">
-                <div className="text-[24px] leading-[32px] font-semibold text-[var(--color-text-default)]">8</div>
-                <div className="text-[12px] text-[var(--color-text-subtle)]">Total</div>
-              </div>
-              <div className="space-y-2 mt-auto">
-                <div className="flex gap-2">
-                  <SummaryStatBox value={6} label="Active" />
-                  <SummaryStatBox value={1} label="Error" />
+              {/* Recent Chats Section */}
+              <div className="flex flex-col gap-6 items-start min-w-[1176px] relative shrink-0 w-full">
+                <div className="flex flex-col items-start justify-center relative shrink-0">
+                  <div className="flex items-center relative shrink-0">
+                    <p className="font-[family-name:var(--fontfamily/sans,'Mona_Sans:SemiBold',sans-serif)] leading-[var(--lineheight/xl,28px)] not-italic relative shrink-0 text-[color:var(--color-text-default)] text-[length:var(--fontsize/xl,18px)]">
+                      Recent chats
+                    </p>
+                  </div>
                 </div>
-                <div className="flex gap-2">
-                  <SummaryStatBox value={0} label="Shutoff" />
-                  <SummaryStatBox value={1} label="Others" />
+
+                {/* Today Section */}
+                <div className="flex flex-col gap-2 items-start relative shrink-0 w-full">
+                  <p className="font-[family-name:var(--fontfamily/sans,'Mona_Sans:Regular',sans-serif)] leading-[var(--lineheight/sm,16px)] not-italic relative shrink-0 text-[color:var(--color-text-subtle)] text-[length:var(--fontsize/sm,11px)] w-full whitespace-pre-wrap">
+                    Today
+                  </p>
+                  <VStack gap={2} className="w-full">
+                    <ChatItem
+                      title="New Chat"
+                      description="Analyze SQL queries and recommend optimal indexes"
+                      createdAt="Sep 26, 2025"
+                      onClick={() => navigate('/chat')}
+                    />
+                    <ChatItem
+                      title="New Chat"
+                      description="# 🎬 라따뚜이 등장인물 정리 대본 내용을 바탕으로 주요 등장인물들을 표로 정리해드릴게요! | 캐릭터명 | 종류/직책 | 특징 및 역할 | |---------|----------|----..."
+                      createdAt="Sep 26, 2025"
+                    />
+                  </VStack>
+                </div>
+
+                {/* Last 7 days Section */}
+                <div className="flex flex-col gap-2 items-start relative shrink-0 w-full">
+                  <p className="font-[family-name:var(--fontfamily/sans,'Mona_Sans:Regular',sans-serif)] leading-[var(--lineheight/sm,16px)] not-italic relative shrink-0 text-[color:var(--color-text-subtle)] text-[length:var(--fontsize/sm,11px)] w-full whitespace-pre-wrap">
+                    Last 7 days
+                  </p>
+                  <VStack gap={2} className="w-full">
+                    <ChatItem
+                      title="New Chat"
+                      description="Analyze SQL queries and recommend optimal indexes"
+                      createdAt="Sep 26, 2025"
+                    />
+                    <ChatItem
+                      title="New Chat 222"
+                      description="# 🎬 라따뚜이 등장인물 정리 대본 내용을 바탕으로 주요 등장인물들을 표로 정리해드릴게요! | 캐릭터명 | 종류/직책 | 특징 및 역할 | |---------|----------|----..."
+                      createdAt="Sep 26, 2025"
+                    />
+                    <ChatItem
+                      title="New Chat 222"
+                      description="# 🎬 라따뚜이 등장인물 정리 대본 내용을 바탕으로 주요 등장인물들을 표로 정리해드릴게요! | 캐릭터명 | 종류/직책 | 특징 및 역할 | |---------|----------|----..."
+                      createdAt="Sep 26, 2025"
+                    />
+                    <ChatItem
+                      title="New Chat 222"
+                      description="# 🎬 라따뚜이 등장인물 정리 대본 내용을 바탕으로 주요 등장인물들을 표로 정리해드릴게요! | 캐릭터명 | 종류/직책 | 특징 및 역할 | |---------|----------|----..."
+                      createdAt="Sep 26, 2025"
+                    />
+                  </VStack>
                 </div>
               </div>
-            </Card>
+            </div>
           </div>
-
-          {/* Bottom Row - 2 Cards */}
-          <div className="grid grid-cols-[1fr_396px] gap-6">
-            {/* INFRASTRUCTURE QUOTA */}
-            <Card title="INFRASTRUCTURE QUOTA" className="flex flex-col">
-              <div className="space-y-4 mt-auto">
-                <div className="grid grid-cols-4 gap-4">
-                  <InfraQuotaCard
-                    icon={<IconDatabase size={16} stroke={1.5} />}
-                    label="Volumes"
-                    used={8}
-                    total={10}
-                    href="/volumes"
-                  />
-                  <InfraQuotaCard
-                    icon={<IconNetwork size={16} stroke={1.5} />}
-                    label="Networks"
-                    used={10}
-                    total={100}
-                    href="/networks"
-                  />
-                  <InfraQuotaCard
-                    icon={<IconRouter size={16} stroke={1.5} />}
-                    label="Routers"
-                    used={9}
-                    total={10}
-                    href="/routers"
-                  />
-                  <InfraQuotaCard
-                    icon={<IconPlug size={16} stroke={1.5} />}
-                    label="Ports"
-                    used={500}
-                    total={500}
-                    href="/ports"
-                  />
-                </div>
-                <div className="grid grid-cols-4 gap-4">
-                  <InfraQuotaCard
-                    icon={<IconWorldWww size={16} stroke={1.5} />}
-                    label="Floating IPs"
-                    used={2}
-                    total={50}
-                    href="/floating-ips"
-                  />
-                  <InfraQuotaCard
-                    icon={<IconShieldLock size={16} stroke={1.5} />}
-                    label="Security Groups"
-                    used={85}
-                    total={100}
-                    href="/security-groups"
-                  />
-                  <InfraQuotaCard
-                    icon={<IconKey size={16} stroke={1.5} />}
-                    label="Key Pairs"
-                    used={18}
-                    total={100}
-                    href="/key-pairs"
-                  />
-                  <InfraQuotaCard
-                    icon={<IconServer size={16} stroke={1.5} />}
-                    label="Server Groups"
-                    used={1}
-                    total={10}
-                    href="/server-groups"
-                  />
-                </div>
-              </div>
-            </Card>
-
-            {/* RECENT ACTIVITIES */}
-            <Card title="RECENT ACTIVITIES" className="flex flex-col">
-              <div className="mt-auto">
-                <ActivityItem
-                  name="web-server-01"
-                  resourceType="Instance"
-                  action="create"
-                  time="2m ago"
-                />
-                <ActivityItem
-                  name="data-vol-03"
-                  resourceType="Volume"
-                  action="attach"
-                  time="15m ago"
-                />
-                <ActivityItem
-                  name="private-net"
-                  resourceType="Network"
-                  action="update"
-                  time="1h ago"
-                />
-                <ActivityItem
-                  name="api-server-02"
-                  resourceType="Instance"
-                  action="reboot"
-                  time="3h ago"
-                />
-                <ActivityItem
-                  name="sg-default"
-                  resourceType="Security Group"
-                  action="modify"
-                  time="5h ago"
-                  isLast
-                />
-              </div>
-            </Card>
-          </div>
-        </div>
         </div>
       </main>
     </div>

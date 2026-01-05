@@ -358,7 +358,7 @@ html.theme-transition *::after {
   --button-height-md: 32px;
   --button-height-lg: 40px;
 
-  --button-min-width-sm: 60px;
+  --button-min-width-sm: 68px;
   --button-min-width-md: 80px;
   --button-min-width-lg: 80px;
 
@@ -678,6 +678,42 @@ html.theme-transition *::after {
   /* InlineMessage - Info */
   --inline-message-info-bg: var(--color-blue-50);
   --inline-message-info-icon: var(--color-blue-600);
+
+  /* ----------------------------------------
+     Component - Toast
+     ---------------------------------------- */
+  --toast-width: 360px;
+  --toast-padding: var(--spacing-4);
+  --toast-gap: var(--spacing-3);
+  --toast-radius: var(--radius-lg);
+  --toast-shadow: var(--shadow-lg);
+  --toast-bg: var(--color-surface-default);
+  --toast-font-size: var(--font-size-14);
+  --toast-line-height: var(--line-height-20);
+  --toast-text: var(--color-text-default);
+  --toast-close-color: var(--color-text-subtle);
+  --toast-close-hover: var(--color-text-default);
+  --toast-close-hover-bg: var(--color-surface-muted);
+  --toast-container-offset: var(--spacing-6);
+  --toast-container-gap: var(--spacing-3);
+
+  /* Toast - Project Badge */
+  --toast-project-bg: var(--color-surface-muted);
+  --toast-project-text: var(--color-text-muted);
+
+  /* Toast - Time */
+  --toast-time-color: var(--color-text-disabled);
+
+  /* Toast - Action Button */
+  --toast-action-bg: var(--color-surface-muted);
+  --toast-action-color: var(--color-text-subtle);
+  --toast-action-hover-bg: var(--color-surface-subtle);
+
+  /* Toast - Variant Icons */
+  --toast-success-icon: var(--color-green-500);
+  --toast-warning-icon: var(--color-orange-500);
+  --toast-error-icon: var(--color-red-500);
+  --toast-info-icon: var(--color-blue-500);
 
   /* ----------------------------------------
      Component - Tabs
@@ -1039,6 +1075,23 @@ html.theme-transition *::after {
   --inline-message-info-bg: rgba(59, 130, 246, 0.12);     /* blue-500 12% */
   --inline-message-info-icon: var(--color-blue-400);
 
+  /* Toast (Dark Mode) */
+  --toast-bg: #1C1C1C;
+  --toast-text: #EBEBEB;
+  --toast-close-color: #6B6B6B;
+  --toast-close-hover: #EBEBEB;
+  --toast-close-hover-bg: #2a2a2a;
+  --toast-project-bg: #252525;
+  --toast-project-text: #A0A0A0;
+  --toast-time-color: #4A4A4A;
+  --toast-action-bg: #252525;
+  --toast-action-color: #A0A0A0;
+  --toast-action-hover-bg: #2a2a2a;
+  --toast-success-icon: var(--color-green-400);
+  --toast-warning-icon: var(--color-orange-400);
+  --toast-error-icon: var(--color-red-400);
+  --toast-info-icon: var(--color-blue-400);
+
   /* Breadcrumb (Dark Mode) */
   --breadcrumb-text-color: #A0A0A0;          /* 더 밝은 회색 */
   --breadcrumb-text-hover: #EBEBEB;          /* 거의 흰색 */
@@ -1241,4 +1294,23 @@ input[type="search"]::-webkit-search-cancel-button,
 input[type="search"]::-webkit-search-decoration {
   -webkit-appearance: none;
   appearance: none;
+}
+
+/* ========================================
+   Toast Animation
+   ======================================== */
+
+@keyframes toast-in {
+  from {
+    opacity: 0;
+    transform: translateX(100%);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.animate-toast-in {
+  animation: toast-in 0.2s ease-out forwards;
 }

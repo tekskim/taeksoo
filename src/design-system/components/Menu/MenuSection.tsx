@@ -15,6 +15,8 @@ export interface MenuSectionProps {
   defaultOpen?: boolean;
   /** Collapsible */
   collapsible?: boolean;
+  /** Click handler for title */
+  onTitleClick?: () => void;
 }
 
 /* ----------------------------------------
@@ -26,15 +28,25 @@ export function MenuSection({
   children,
   defaultOpen = true,
   collapsible = true,
+  onTitleClick,
 }: MenuSectionProps) {
   const [isOpen, setIsOpen] = useState(defaultOpen);
+
+  const handleTitleClick = () => {
+    if (collapsible) {
+      setIsOpen(!isOpen);
+    }
+    if (onTitleClick) {
+      onTitleClick();
+    }
+  };
 
   return (
     <VStack gap={2} className="w-full">
       {/* Section Header */}
       {collapsible ? (
         <button
-          onClick={() => setIsOpen(!isOpen)}
+          onClick={handleTitleClick}
           className="flex items-center gap-1 w-full group focus:outline-none px-[var(--menu-section-padding-x)] py-[var(--menu-section-padding-y)]"
         >
           <span className="text-[length:var(--font-size-11)] font-medium text-[var(--color-text-subtle)] group-hover:text-[var(--color-text-muted)] transition-colors duration-[var(--duration-fast)]">
