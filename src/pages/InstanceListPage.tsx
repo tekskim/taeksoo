@@ -930,6 +930,7 @@ export function InstanceListPage() {
         onOpenInNewTab={handleOpenInNewTab}
         initialHeight={350}
         minHeight={300}
+        sidebarOpen={sidebarOpen}
       />
     </div>
   );
