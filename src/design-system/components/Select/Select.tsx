@@ -350,7 +350,7 @@ export function Select({
         </span>
         <IconChevronDown
           size={currentSize.icon}
-          stroke={1.5}
+          stroke={1}
           className={twMerge(
             'shrink-0 transition-transform duration-[var(--duration-fast)]',
             'text-[var(--color-text-default)]',

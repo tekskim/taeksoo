@@ -49,6 +49,7 @@ import {
   DetailHeader,
   SectionCard,
   Drawer,
+  FloatingCard,
   IconExpandOn,
   IconExpandOff,
   IconTimeout,
@@ -151,7 +152,6 @@ import {
   // System - Monitoring & Analytics
   IconTerminal,
   IconTerminal2,
-  IconPower,
   IconActivity,
   IconChartBar,
   IconGauge,
@@ -243,6 +243,7 @@ const navigationItems = [
   { id: 'context-menu', label: 'Context Menu', icon: IconMenu2 },
   { id: 'modal', label: 'Modal', icon: IconLayoutGrid },
   { id: 'drawer', label: 'Drawer', icon: IconLayoutGrid },
+  { id: 'floating-card', label: 'Floating Card', icon: IconLayoutGrid },
 ];
 
 // Feedback
@@ -4157,6 +4158,219 @@ outline: 2px solid var(--color-border-focus);`}
               </VStack>
             </Section>
 
+            {/* FloatingCard Component */}
+            <Section id="floating-card" title="Floating Card" description="Summary sidebar component for multi-step forms with sections, quota, and action buttons">
+              <VStack gap={8}>
+                {/* Preview */}
+                <VStack gap={3}>
+                  <Label>Preview</Label>
+                  <div className="relative h-[600px] border border-[var(--color-border-default)] rounded-md p-4 overflow-hidden bg-[var(--color-surface-subtle)]">
+                    <FloatingCard
+                      position="top-left"
+                      width="320px"
+                      portal={false}
+                      style={{ height: '592px' }}
+                      title="Summary"
+                      sections={[
+                        {
+                          tabTitle: 'Tab title',
+                          items: [
+                            { id: '1', title: 'Section title', status: 'default' },
+                            { id: '2', title: 'Section title', status: 'default' },
+                            { id: '3', title: 'Section title', status: 'default' },
+                            { id: '4', title: 'Section title', status: 'success' },
+                            { id: '5', title: 'Section title', status: 'warning' },
+                          ],
+                        },
+                        {
+                          tabTitle: 'Tab title',
+                          items: [
+                            { id: '6', title: 'Section title', status: 'default' },
+                            { id: '7', title: 'Section title', status: 'default' },
+                            { id: '8', title: 'Section title', status: 'default' },
+                          ],
+                        },
+                      ]}
+                      quota={[
+                        { label: 'Instance', current: 2, total: 10 },
+                        { label: 'vCPU', current: 5, total: 20 },
+                        { label: 'RAM (GiB)', current: 14, total: 50 },
+                        { label: 'Disk', current: 3, total: 10 },
+                        { label: 'Disk Capacity (GiB)', current: 20, total: 1000 },
+                      ]}
+                      instanceCount={1}
+                      onInstanceCountChange={(count) => console.log('Count:', count)}
+                      onCancel={() => console.log('Cancel')}
+                      onAction={() => console.log('Create')}
+                      actionEnabled={true}
+                    />
+                  </div>
+                </VStack>
+
+                {/* Variants */}
+                <VStack gap={3}>
+                  <Label>Variants</Label>
+                  <div className="flex flex-col gap-4">
+                    {/* Status Variants */}
+                    <div>
+                      <h4 className="text-[length:var(--font-size-12)] font-medium text-[var(--color-text-default)] mb-2">Status</h4>
+                      <div className="flex gap-4">
+                        <div className="relative h-[200px] w-[280px] border border-[var(--color-border-default)] rounded-md p-4 overflow-hidden bg-[var(--color-surface-subtle)]">
+                          <FloatingCard
+                            position="top-left"
+                            width="240px"
+                            portal={false}
+                            title="Summary"
+                            sections={[
+                              {
+                                tabTitle: 'Tab title',
+                                items: [{ id: '1', title: 'Section title', status: 'processing' }],
+                              },
+                            ]}
+                          />
+                        </div>
+                        <div className="relative h-[200px] w-[280px] border border-[var(--color-border-default)] rounded-md p-4 overflow-hidden bg-[var(--color-surface-subtle)]">
+                          <FloatingCard
+                            position="top-left"
+                            width="240px"
+                            portal={false}
+                            title="Summary"
+                            sections={[
+                              {
+                                tabTitle: 'Tab title',
+                                items: [{ id: '1', title: 'Section title', status: 'warning' }],
+                              },
+                            ]}
+                          />
+                        </div>
+                        <div className="relative h-[200px] w-[280px] border border-[var(--color-border-default)] rounded-md p-4 overflow-hidden bg-[var(--color-surface-subtle)]">
+                          <FloatingCard
+                            position="top-left"
+                            width="240px"
+                            portal={false}
+                            title="Summary"
+                            sections={[
+                              {
+                                tabTitle: 'Tab title',
+                                items: [{ id: '1', title: 'Section title', status: 'success' }],
+                              },
+                            ]}
+                          />
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Type Variants - Default and Hover */}
+                    <div>
+                      <h4 className="text-[length:var(--font-size-12)] font-medium text-[var(--color-text-default)] mb-2">Type</h4>
+                      <div className="flex gap-4">
+                        <div className="relative h-[200px] w-[280px] border border-[var(--color-border-default)] rounded-md p-4 overflow-hidden bg-[var(--color-surface-subtle)]">
+                          <p className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)] mb-2">default</p>
+                          <FloatingCard
+                            position="top-left"
+                            width="240px"
+                            portal={false}
+                            title="Summary"
+                            sections={[
+                              {
+                                tabTitle: 'Tab title',
+                                items: [{ id: '1', title: 'Section title', status: 'default' }],
+                                collapsible: false,
+                                showChevron: false,
+                              },
+                            ]}
+                          />
+                        </div>
+                        <div className="relative h-[200px] w-[280px] border border-[var(--color-border-default)] rounded-md p-4 overflow-hidden bg-[var(--color-surface-subtle)]">
+                          <p className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)] mb-2">hover</p>
+                          <FloatingCard
+                            position="top-left"
+                            width="240px"
+                            portal={false}
+                            title="Summary"
+                            sections={[
+                              {
+                                tabTitle: 'Tab title',
+                                items: [{ id: '1', title: 'Section title', status: 'default', onClick: () => {} }],
+                                collapsible: true,
+                                showChevron: true,
+                              },
+                            ]}
+                          />
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Title Variants - With and Without Title */}
+                    <div>
+                      <h4 className="text-[length:var(--font-size-12)] font-medium text-[var(--color-text-default)] mb-2">Title</h4>
+                      <div className="flex gap-4">
+                        <div className="relative h-[200px] w-[280px] border border-[var(--color-border-default)] rounded-md p-4 overflow-hidden bg-[var(--color-surface-subtle)]">
+                          <FloatingCard
+                            position="top-left"
+                            width="240px"
+                            portal={false}
+                            title="Summary"
+                            sections={[
+                              {
+                                tabTitle: 'Tab title',
+                                items: [{ id: '1', title: 'Section title', status: 'default' }],
+                              },
+                            ]}
+                          />
+                        </div>
+                        <div className="relative h-[200px] w-[280px] border border-[var(--color-border-default)] rounded-md p-4 overflow-hidden bg-[var(--color-surface-subtle)]">
+                          <FloatingCard
+                            position="top-left"
+                            width="240px"
+                            portal={false}
+                            title="Summary"
+                            sections={[
+                              {
+                                tabTitle: 'Tab title',
+                                items: [{ id: '1', title: 'Section title', status: 'default' }],
+                              },
+                            ]}
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </VStack>
+
+
+                {/* Usage Example */}
+                <VStack gap={3}>
+                  <Label>Usage Example</Label>
+                  <pre className="text-[length:var(--font-size-11)] p-4 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)] overflow-x-auto text-[var(--color-text-muted)]">
+{`<FloatingCard
+  position="top-left"
+  width="320px"
+  title="Summary"
+  sections={[
+    {
+      tabTitle: 'Configuration',
+      items: [
+        { id: '1', title: 'Basic information', status: 'success' },
+        { id: '2', title: 'Model settings', status: 'default' },
+      ],
+    },
+  ]}
+  quota={[
+    { label: 'Instance', current: 2, total: 10 },
+    { label: 'vCPU', current: 5, total: 20 },
+  ]}
+  instanceCount={1}
+  onInstanceCountChange={(count) => setCount(count)}
+  onCancel={() => handleCancel()}
+  onAction={() => handleCreate()}
+  actionEnabled={true}
+/>`}
+                  </pre>
+                </VStack>
+              </VStack>
+            </Section>
+
             {/* SectionCard Component */}
             <Section id="section-card" title="Section Card" description="Container component for grouping related content in detail views">
               <VStack gap={8}>
@@ -4705,7 +4919,7 @@ outline: 2px solid var(--color-border-focus);`}
           className="fixed bottom-6 right-6 w-10 h-10 bg-[var(--color-action-primary)] hover:bg-[var(--color-action-primary-hover)] text-white rounded-full shadow-lg flex items-center justify-center transition-all duration-200 hover:scale-110 z-50"
           aria-label="Scroll to top"
         >
-          <IconChevronUp size={20} stroke={2} />
+          <IconChevronUp size={20} stroke={1} />
         </button>
       )}
 

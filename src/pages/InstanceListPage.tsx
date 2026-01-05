@@ -808,7 +808,7 @@ export function InstanceListPage() {
           className="fixed bottom-6 right-6 w-10 h-10 bg-[var(--color-action-primary)] hover:bg-[var(--color-action-primary-hover)] text-white rounded-full shadow-lg flex items-center justify-center transition-all duration-200 hover:scale-110 z-50"
           aria-label="Scroll to top"
         >
-          <IconArrowUp size={20} stroke={2} />
+          <IconArrowUp size={20} stroke={1} />
         </button>
       )}
 

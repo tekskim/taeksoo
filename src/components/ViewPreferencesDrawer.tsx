@@ -188,7 +188,7 @@ export function ViewPreferencesDrawer({
               onClick={handleResetToDefault}
               className="flex items-center gap-1.5 text-[length:var(--font-size-12)] font-medium text-[var(--color-action-primary)] hover:text-[var(--color-action-primary-hover)] transition-colors"
             >
-              <IconRefresh size={12} stroke={2} />
+              <IconRefresh size={12} stroke={1} />
               <span>Reset to default</span>
             </button>
           </div>
@@ -220,7 +220,7 @@ export function ViewPreferencesDrawer({
                     <IconGripVertical
                       size={12}
                       className="text-[var(--color-text-default)]"
-                      stroke={2}
+                      stroke={1}
                     />
                   )}
                   <span className="text-[length:var(--font-size-12)] font-medium text-[var(--color-text-default)] leading-[var(--line-height-16)]">
@@ -236,9 +236,9 @@ export function ViewPreferencesDrawer({
                     aria-label={column.visible ? 'Hide column' : 'Show column'}
                   >
                     {column.visible ? (
-                      <IconEye size={16} className="text-[var(--color-text-default)]" stroke={1.5} />
+                      <IconEye size={16} className="text-[var(--color-text-default)]" stroke={1} />
                     ) : (
-                      <IconEyeOff size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
+                      <IconEyeOff size={16} className="text-[var(--color-text-muted)]" stroke={1} />
                     )}
                   </button>
                 )}

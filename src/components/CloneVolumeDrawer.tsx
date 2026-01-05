@@ -58,7 +58,7 @@ function QuotaProgressBar({ label, used, total }: QuotaProgressBarProps) {
             {used}/
           </span>
           {isUnlimited ? (
-            <IconInfinity size={16} className="text-[var(--color-text-default)]" stroke={1.5} />
+            <IconInfinity size={16} className="text-[var(--color-text-default)]" stroke={1} />
           ) : (
             <span className="text-[12px] text-[var(--color-text-default)] leading-4">
               {total}
@@ -228,7 +228,7 @@ export function CloneVolumeDrawer({
             <IconAlertCircle 
               size={16} 
               className="text-[var(--color-state-danger)] shrink-0 mt-0.5" 
-              stroke={1.5}
+              stroke={1}
             />
             <p className="text-[11px] text-[var(--color-text-default)] leading-4">
               For data consistency, stop all write operations on the instance before creating a backup.

@@ -40,6 +40,7 @@ export * from './components/ListToolbar';
 export * from './components/Modal';
 export * from './components/DetailHeader';
 export * from './components/SectionCard';
+export * from './components/FloatingCard';
 
 // Layouts
 export * from './layouts';

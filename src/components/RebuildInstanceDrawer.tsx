@@ -82,9 +82,9 @@ function OsIconButton({
   const getIcon = () => {
     switch (osType) {
       case 'ubuntu':
-        return <IconBrandUbuntu size={16} stroke={1.5} />;
+        return <IconBrandUbuntu size={16} stroke={1} />;
       case 'windows':
-        return <IconBrandWindows size={16} stroke={1.5} />;
+        return <IconBrandWindows size={16} stroke={1} />;
       case 'rocky':
         // Using a custom rocky icon representation
         return (
@@ -93,9 +93,9 @@ function OsIconButton({
           </svg>
         );
       case 'other':
-        return <IconDots size={16} stroke={1.5} />;
+        return <IconDots size={16} stroke={1} />;
       default:
-        return <IconDots size={16} stroke={1.5} />;
+        return <IconDots size={16} stroke={1} />;
     }
   };
 

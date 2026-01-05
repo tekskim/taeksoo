@@ -58,7 +58,7 @@ function QuotaProgressBar({ label, used, total }: QuotaProgressBarProps) {
             {used}/
           </span>
           {isUnlimited ? (
-            <IconInfinity size={16} className="text-[var(--color-text-default)]" stroke={1.5} />
+            <IconInfinity size={16} className="text-[var(--color-text-default)]" stroke={1} />
           ) : (
             <span className="text-[12px] text-[var(--color-text-default)] leading-4">
               {total}

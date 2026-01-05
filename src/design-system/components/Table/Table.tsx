@@ -133,12 +133,12 @@ export function Table<T extends Record<string, any>>({
   // Render sort icon
   const renderSortIcon = (columnKey: string) => {
     if (sortKey !== columnKey) {
-      return <IconSelector size={14} stroke={1.5} className="text-[var(--color-text-disabled)]" />;
+      return <IconSelector size={14} stroke={1} className="text-[var(--color-text-disabled)]" />;
     }
     if (sortDirection === 'asc') {
-      return <IconChevronUp size={14} stroke={2} className="text-[var(--color-action-primary)]" />;
+      return <IconChevronUp size={14} stroke={1} className="text-[var(--color-action-primary)]" />;
     }
-    return <IconChevronDown size={14} stroke={2} className="text-[var(--color-action-primary)]" />;
+    return <IconChevronDown size={14} stroke={1} className="text-[var(--color-action-primary)]" />;
   };
 
   const enableStickyHeader = stickyHeader || !!maxHeight;

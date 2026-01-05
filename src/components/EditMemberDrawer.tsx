@@ -191,9 +191,9 @@ export function EditMemberDrawer({
             className="flex items-center gap-1.5 text-[14px] font-medium text-[var(--color-text-default)] leading-5"
           >
             {isAdvancedExpanded ? (
-              <IconChevronDown size={12} stroke={2} />
+              <IconChevronDown size={12} stroke={1} />
             ) : (
-              <IconChevronRight size={12} stroke={2} />
+              <IconChevronRight size={12} stroke={1} />
             )}
             Advanced Options
           </button>

@@ -58,7 +58,7 @@ function QuotaProgressBar({ label, used, total }: QuotaProgressBarProps) {
             {used}/
           </span>
           {isUnlimited ? (
-            <IconInfinity size={16} className="text-[var(--color-text-default)]" stroke={1.5} />
+            <IconInfinity size={16} className="text-[var(--color-text-default)]" stroke={1} />
           ) : (
             <span className="text-[12px] text-[var(--color-text-default)] leading-4">
               {total}
@@ -98,7 +98,7 @@ function PolicyRadioOption({ value, label, tooltip }: PolicyRadioOptionProps) {
       <Radio value={value} label={label} />
       <Tooltip content={tooltip}>
         <button type="button" className="p-0 mt-0.5">
-          <IconHelp size={16} className="text-[var(--color-text-subtle)]" stroke={1.5} />
+          <IconHelp size={16} className="text-[var(--color-text-subtle)]" stroke={1} />
         </button>
       </Tooltip>
     </HStack>

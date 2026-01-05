@@ -5,6 +5,7 @@ import {
   TopBarAction,
   Breadcrumb,
   Button,
+  Tooltip,
 } from '@/design-system';
 import { useTabs } from '@/contexts/TabContext';
 import {
@@ -66,23 +67,23 @@ function StatusCard({ label, count, status }: StatusCardProps) {
   const getStatusIcon = () => {
     if (status === 'completed') {
       return (
-        <IconTarget size={12} stroke={2} className="text-white" />
+        <IconTarget size={12} stroke={1} className="text-white" />
       );
     } else if (status === 'error') {
       return (
-        <IconAlertTriangle size={12} stroke={2} className="text-white" />
+        <IconAlertTriangle size={12} stroke={1} className="text-white" />
       );
     } else if (status === 'processing') {
       return (
-        <IconLoader2 size={12} stroke={2} className="text-white animate-spin" />
+        <IconLoader2 size={12} stroke={1} className="text-white animate-spin" />
       );
     } else if (status === 'pending') {
       return (
-        <IconRefresh size={12} stroke={2} className="text-white" />
+        <IconRefresh size={12} stroke={1} className="text-white" />
       );
     } else if (status === 'draft') {
       return (
-        <IconPencil size={12} stroke={1.5} className="text-white" />
+        <IconPencil size={12} stroke={1} className="text-white" />
       );
     }
   };
@@ -132,75 +133,88 @@ export function AgentSidebar() {
         {/* Top Menu Items */}
         <div className="flex flex-col gap-2 items-start relative shrink-0">
           {/* Chat */}
-          <Link
-            to="/chat"
-            className={`flex flex-col gap-0.5 items-center justify-center px-2 py-1.5 relative rounded-md shrink-0 size-[46px] transition-colors ${
-              location.pathname === '/chat' 
-                ? 'bg-[var(--color-info-weak-bg,#eff6ff)]' 
-                : 'bg-[var(--color-surface-default)] hover:bg-[var(--color-surface-muted)]'
-            }`}
-            title="Chat"
-          >
-            <IconMessage 
-              size={22} 
-              stroke={1} 
-              className={location.pathname === '/chat' ? 'text-[var(--color-action-primary)]' : 'text-[var(--color-text-muted)]'} 
-            />
-          </Link>
+          <Tooltip content="Chat" position="right">
+            <Link
+              to="/chat"
+              className={`flex flex-col gap-0.5 items-center justify-center px-2 py-1.5 relative rounded-md shrink-0 size-[46px] transition-colors ${
+                location.pathname === '/chat' 
+                  ? 'bg-[var(--color-info-weak-bg,#eff6ff)]' 
+                  : 'bg-[var(--color-surface-default)] hover:bg-[var(--color-surface-muted)]'
+              }`}
+            >
+              <IconMessage 
+                size={22} 
+                stroke={1} 
+                className={location.pathname === '/chat' ? 'text-[var(--color-action-primary)]' : 'text-[var(--color-text-muted)]'} 
+              />
+            </Link>
+          </Tooltip>
 
           {/* Robot */}
-          <Link
-            to="/agent"
-            className={`flex flex-col gap-0.5 items-center justify-center px-2 py-1.5 relative rounded-md shrink-0 size-[46px] transition-colors ${
-              location.pathname === '/agent' 
-                ? 'bg-[var(--color-info-weak-bg,#eff6ff)]' 
-                : 'bg-[var(--color-surface-default)] hover:bg-[var(--color-surface-muted)]'
-            }`}
-            title="Agent"
-          >
-            <Icons.Robot 
-              size={22} 
-              stroke={1} 
-              className={location.pathname === '/agent' ? 'text-[var(--color-action-primary)]' : 'text-[var(--color-text-muted)]'} 
-            />
-          </Link>
+          <Tooltip content="Agent" position="right">
+            <Link
+              to="/agent"
+              className={`flex flex-col gap-0.5 items-center justify-center px-2 py-1.5 relative rounded-md shrink-0 size-[46px] transition-colors ${
+                location.pathname === '/agent' 
+                  ? 'bg-[var(--color-info-weak-bg,#eff6ff)]' 
+                  : 'bg-[var(--color-surface-default)] hover:bg-[var(--color-surface-muted)]'
+              }`}
+            >
+              <Icons.Robot 
+                size={22} 
+                stroke={1} 
+                className={location.pathname === '/agent' ? 'text-[var(--color-action-primary)]' : 'text-[var(--color-text-muted)]'} 
+              />
+            </Link>
+          </Tooltip>
 
-          {/* Storage */}
-          <Link
-            to="/storage"
-            className={`flex flex-col gap-0.5 items-center justify-center px-2 py-1.5 relative rounded-md shrink-0 size-[46px] transition-colors ${
-              location.pathname === '/storage' 
-                ? 'bg-[var(--color-info-weak-bg,#eff6ff)]' 
-                : 'bg-[var(--color-surface-default)] hover:bg-[var(--color-surface-muted)]'
-            }`}
-            title="Storage"
-          >
-            <IconDatabase 
-              size={22} 
-              stroke={1} 
-              className={location.pathname === '/storage' ? 'text-[var(--color-action-primary)]' : 'text-[var(--color-text-muted)]'} 
-            />
-          </Link>
+          {/* Data sources */}
+          <Tooltip content="Data sources" position="right">
+            <Link
+              to="/storage"
+              className={`flex flex-col gap-0.5 items-center justify-center px-2 py-1.5 relative rounded-md shrink-0 size-[46px] transition-colors ${
+                location.pathname === '/storage' 
+                  ? 'bg-[var(--color-info-weak-bg,#eff6ff)]' 
+                  : 'bg-[var(--color-surface-default)] hover:bg-[var(--color-surface-muted)]'
+              }`}
+            >
+              <IconDatabase 
+                size={22} 
+                stroke={1} 
+                className={location.pathname === '/storage' ? 'text-[var(--color-action-primary)]' : 'text-[var(--color-text-muted)]'} 
+              />
+            </Link>
+          </Tooltip>
 
-          {/* Puzzle */}
-          <Link
-            to="/agent"
-            className="bg-[var(--color-surface-default)] flex flex-col gap-0.5 items-center justify-center px-2 py-1.5 relative rounded-md shrink-0 size-[46px] hover:bg-[var(--color-surface-muted)] transition-colors"
-            title="Tools"
-          >
-            <IconPuzzle size={22} stroke={1} className="text-[var(--color-text-muted)]" />
-          </Link>
+          {/* MCP tools */}
+          <Tooltip content="MCP tools" position="right">
+            <Link
+              to="/mcp-tools"
+              className={`flex flex-col gap-0.5 items-center justify-center px-2 py-1.5 relative rounded-md shrink-0 size-[46px] transition-colors ${
+                location.pathname === '/mcp-tools' 
+                  ? 'bg-[var(--color-info-weak-bg,#eff6ff)]' 
+                  : 'bg-[var(--color-surface-default)] hover:bg-[var(--color-surface-muted)]'
+              }`}
+            >
+              <IconPuzzle 
+                size={22} 
+                stroke={1} 
+                className={location.pathname === '/mcp-tools' ? 'text-[var(--color-action-primary)]' : 'text-[var(--color-text-muted)]'} 
+              />
+            </Link>
+          </Tooltip>
         </div>
 
         {/* Settings (Bottom) */}
         <div className="flex flex-col gap-0 items-start relative shrink-0">
-          <Link
-            to="/agent"
-            className="bg-[var(--color-surface-default)] flex flex-col gap-0.5 items-center justify-center px-2 py-1.5 relative rounded-md shrink-0 size-[46px] hover:bg-[var(--color-surface-muted)] transition-colors"
-            title="Settings"
-          >
-            <IconSettings size={22} stroke={1} className="text-[var(--color-text-default)]" />
-          </Link>
+          <Tooltip content="Settings" position="right">
+            <Link
+              to="/agent"
+              className="bg-[var(--color-surface-default)] flex flex-col gap-0.5 items-center justify-center px-2 py-1.5 relative rounded-md shrink-0 size-[46px] hover:bg-[var(--color-surface-muted)] transition-colors"
+            >
+              <IconSettings size={22} stroke={1} className="text-[var(--color-text-default)]" />
+            </Link>
+          </Tooltip>
         </div>
       </div>
     </nav>
@@ -318,19 +332,19 @@ export function StoragePage() {
     return (
       <div className={`${iconBg} flex gap-0 items-center justify-center p-1 relative rounded-2xl shrink-0 size-6`}>
         {status === 'completed' && (
-          <IconTarget size={12} stroke={2} className="text-white" />
+          <IconTarget size={12} stroke={1} className="text-white" />
         )}
         {status === 'error' && (
-          <IconAlertTriangle size={12} stroke={2} className="text-white" />
+          <IconAlertTriangle size={12} stroke={1} className="text-white" />
         )}
         {status === 'processing' && (
-          <IconLoader2 size={12} stroke={2} className="text-white animate-spin" />
+          <IconLoader2 size={12} stroke={1} className="text-white animate-spin" />
         )}
         {status === 'pending' && (
-          <IconRefresh size={12} stroke={2} className="text-white" />
+          <IconRefresh size={12} stroke={1} className="text-white" />
         )}
         {status === 'draft' && (
-          <IconPencil size={12} stroke={1.5} className="text-white" />
+          <IconPencil size={12} stroke={1} className="text-white" />
         )}
       </div>
     );
@@ -354,11 +368,14 @@ export function StoragePage() {
 
           <TopBar
             showSidebarToggle={false}
-            showNavigation={false}
+            showNavigation={true}
+            canGoBack={false}
+            canGoForward={false}
+            onBack={() => {}}
+            onForward={() => {}}
             breadcrumb={
               <Breadcrumb
                 items={[
-                  { label: 'Data sources' },
                   { label: 'Data sources' },
                 ]}
               />
@@ -596,7 +613,7 @@ export function StoragePage() {
                               </div>
                               {dataSource.documentsProgress.hasError && (
                                 <div className="size-3 rounded-full bg-[var(--color-danger,#ef4444)] flex items-center justify-center shrink-0">
-                                  <IconAlertTriangle size={8} stroke={2} className="text-white" />
+                                  <IconAlertTriangle size={8} stroke={1} className="text-white" />
                                 </div>
                               )}
                             </div>
