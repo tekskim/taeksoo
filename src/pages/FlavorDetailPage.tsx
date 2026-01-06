@@ -75,25 +75,17 @@ interface FlavorInstance {
    Mock Data
    ---------------------------------------- */
 
-const mockFlavorDetail: FlavorDetail = {
-  id: '7284d9174e81431e93060a9bbcf2cdfd',
-  name: 'c1.large',
-  category: 'Compute Optimized',
-  vcpu: 2,
-  ram: '4GiB',
-  visibility: 'Public',
-  createdAt: '2025-07-25 09:12:20',
-  // Basic Information
-  architecture: 'X86 Architecture',
-  // Specification
-  ephemeralDisk: '0GiB',
-  numaNodes: '0GiB',
-  // Advanced
-  cpuPolicy: 'Dedicated',
-  cpuThreadPolicy: 'Prefer',
-  memoryPage: 'Any',
-  internalNetworkBandwidth: '-',
-  storageIOPS: '-',
+// Flavor data map by ID
+const mockFlavorsMap: Record<string, FlavorDetail> = {
+  'flv-001': { id: 'flv-001', name: 'Small', category: 'General Purpose', vcpu: 2, ram: '4GiB', visibility: 'Public', createdAt: '2025-09-15', architecture: 'X86 Architecture', ephemeralDisk: '0GiB', numaNodes: '0', cpuPolicy: 'Shared', cpuThreadPolicy: 'Prefer', memoryPage: 'Any', internalNetworkBandwidth: '-', storageIOPS: '-' },
+  'flv-002': { id: 'flv-002', name: 'Medium', category: 'General Purpose', vcpu: 4, ram: '8GiB', visibility: 'Public', createdAt: '2025-09-10', architecture: 'X86 Architecture', ephemeralDisk: '0GiB', numaNodes: '0', cpuPolicy: 'Shared', cpuThreadPolicy: 'Prefer', memoryPage: 'Any', internalNetworkBandwidth: '-', storageIOPS: '-' },
+  'flv-003': { id: 'flv-003', name: 'Large', category: 'General Purpose', vcpu: 8, ram: '16GiB', visibility: 'Public', createdAt: '2025-09-05', architecture: 'X86 Architecture', ephemeralDisk: '0GiB', numaNodes: '0', cpuPolicy: 'Dedicated', cpuThreadPolicy: 'Prefer', memoryPage: 'Any', internalNetworkBandwidth: '-', storageIOPS: '-' },
+  'flv-004': { id: 'flv-004', name: 'XLarge', category: 'Memory Optimized', vcpu: 16, ram: '64GiB', visibility: 'Public', createdAt: '2025-09-01', architecture: 'X86 Architecture', ephemeralDisk: '0GiB', numaNodes: '1', cpuPolicy: 'Dedicated', cpuThreadPolicy: 'Isolate', memoryPage: 'Large', internalNetworkBandwidth: '10Gbps', storageIOPS: '3000' },
+  'flv-005': { id: 'flv-005', name: 'GPU Large', category: 'GPU', vcpu: 32, ram: '128GiB', visibility: 'Private', createdAt: '2025-08-30', architecture: 'X86 Architecture', ephemeralDisk: '100GiB', numaNodes: '2', cpuPolicy: 'Dedicated', cpuThreadPolicy: 'Isolate', memoryPage: 'Large', internalNetworkBandwidth: '25Gbps', storageIOPS: '10000' },
+};
+
+const defaultFlavorDetail: FlavorDetail = {
+  id: 'unknown', name: 'Unknown Flavor', category: '-', vcpu: 0, ram: '0GiB', visibility: 'Public', createdAt: '-', architecture: '-', ephemeralDisk: '0GiB', numaNodes: '0', cpuPolicy: '-', cpuThreadPolicy: '-', memoryPage: '-', internalNetworkBandwidth: '-', storageIOPS: '-',
 };
 
 // Mock flavor parameters (raw API response)
@@ -145,7 +137,8 @@ const mockFlavorInstances: FlavorInstance[] = Array.from({ length: 115 }, (_, i)
    ---------------------------------------- */
 
 export function FlavorDetailPage() {
-  const { id: _id } = useParams<{ id: string }>();
+  const { id } = useParams<{ id: string }>();
+  const flavor = id ? (mockFlavorsMap[id] || defaultFlavorDetail) : defaultFlavorDetail;
   const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [activeDetailTab, setActiveDetailTab] = useState('details');
@@ -158,8 +151,7 @@ export function FlavorDetailPage() {
   // Preferences state
   const [isPreferencesOpen, setIsPreferencesOpen] = useState(false);
   
-  // In a real app, you would fetch the flavor data based on the ID
-  const flavor = mockFlavorDetail;
+  // Flavor data is already fetched based on ID above
   const instances = mockFlavorInstances;
 
   const { tabs, activeTabId, closeTab, selectTab } = useTabs();

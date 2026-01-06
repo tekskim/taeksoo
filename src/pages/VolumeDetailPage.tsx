@@ -83,25 +83,17 @@ interface VolumeBackup {
    Mock Data
    ---------------------------------------- */
 
-const mockVolumeDetail: VolumeDetail = {
-  id: '7284d9174e81431e93060a9bbcf2cdfd',
-  name: 'vol-1',
-  status: 'available',
-  size: '1500 GiB',
-  createdAt: '2025-07-25 09:12:20',
-  // Basic Information
-  volumeName: 'Ubuntu-base',
-  availabilityZone: 'nova',
-  description: '-',
-  // Attachments
-  attachedTo: 'web-server-10',
-  attachedToId: 'inst-001',
-  // Source
-  dataSourceType: 'Blank Volume',
-  // Specifications
-  volumeType: '_DEFAULT_',
-  bootable: false,
-  encryption: false,
+// Volume data map by ID
+const mockVolumesMap: Record<string, VolumeDetail> = {
+  'vol-001': { id: 'vol-001', name: 'system-vol-01', status: 'in-use', size: '500 GiB', createdAt: '2025-09-15', volumeName: 'system-vol-01', availabilityZone: 'nova', description: 'System volume', attachedTo: 'web-server-1', attachedToId: 'inst-001', dataSourceType: 'Image', volumeType: 'SSD', bootable: true, encryption: false },
+  'vol-002': { id: 'vol-002', name: 'data-vol-01', status: 'active', size: '1000 GiB', createdAt: '2025-09-10', volumeName: 'data-vol-01', availabilityZone: 'nova', description: 'Data storage', attachedTo: null, attachedToId: null, dataSourceType: 'Blank Volume', volumeType: 'SSD', bootable: false, encryption: false },
+  'vol-003': { id: 'vol-003', name: 'backup-vol', status: 'active', size: '2000 GiB', createdAt: '2025-09-05', volumeName: 'backup-vol', availabilityZone: 'nova', description: 'Backup storage', attachedTo: null, attachedToId: null, dataSourceType: 'Blank Volume', volumeType: 'HDD', bootable: false, encryption: true },
+  'vol-004': { id: 'vol-004', name: 'db-vol-01', status: 'in-use', size: '500 GiB', createdAt: '2025-09-01', volumeName: 'db-vol-01', availabilityZone: 'keystone', description: 'Database volume', attachedTo: 'db-server-1', attachedToId: 'inst-002', dataSourceType: 'Snapshot', volumeType: 'NVMe', bootable: false, encryption: true },
+  'vol-005': { id: 'vol-005', name: 'cache-vol', status: 'in-use', size: '256 GiB', createdAt: '2025-08-30', volumeName: 'cache-vol', availabilityZone: 'nova', description: 'Cache volume', attachedTo: 'cache-01', attachedToId: 'inst-004', dataSourceType: 'Blank Volume', volumeType: 'NVMe', bootable: false, encryption: false },
+};
+
+const defaultVolumeDetail: VolumeDetail = {
+  id: 'unknown', name: 'Unknown Volume', status: 'available', size: '0 GiB', createdAt: '-', volumeName: '-', availabilityZone: '-', description: '-', attachedTo: null, attachedToId: null, dataSourceType: '-', volumeType: '-', bootable: false, encryption: false,
 };
 
 // Mock volume snapshots
@@ -154,7 +146,8 @@ const backupStatusMap: Record<BackupStatus, 'active' | 'building' | 'error' | 'p
    ---------------------------------------- */
 
 export function VolumeDetailPage() {
-  const { id: _id } = useParams<{ id: string }>();
+  const { id } = useParams<{ id: string }>();
+  const volume = id ? (mockVolumesMap[id] || defaultVolumeDetail) : defaultVolumeDetail;
   const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [activeDetailTab, setActiveDetailTab] = useState('details');
@@ -172,8 +165,7 @@ export function VolumeDetailPage() {
   // Preferences state
   const [isPreferencesOpen, setIsPreferencesOpen] = useState(false);
 
-  // In a real app, you would fetch the volume data based on the ID
-  const volume = mockVolumeDetail;
+  // Volume data is already fetched based on ID above
   const snapshots = mockVolumeSnapshots;
   const backups = mockVolumeBackups;
 

@@ -66,46 +66,17 @@ interface ImageDetail {
    Mock Data
    ---------------------------------------- */
 
-const mockImageDetail: ImageDetail = {
-  id: '7284d9174e81431e93060a9bbcf2cdfd',
-  name: 'Ubuntu-base',
-  status: 'active',
-  access: 'Project',
-  createdAt: '2025-07-25 09:12:20',
-  // Basic Information
-  usageType: 'Common Server',
-  protected: false,
-  description: '-',
-  // Specifications
-  size: '700 MiB',
-  os: 'Ubuntu 20.04',
-  diskFormat: 'QCOW2',
-  containerFormat: 'Bare',
-  minDisk: '10 GiB',
-  minRam: '-',
-  // Security
-  owner: 'TK-project',
-  visibility: 'Private',
-  filename: '/v2/images/93c91160-75f8-40e4-899f-372539fb98a6/file',
-  checksum: 'ffc34736c70569953d58a15a52b8a3bd',
-  // Advanced
-  qemuGuestAgent: true,
-  cpuPolicy: 'Not select',
-  cpuThreadPolicy: 'Not select',
-  // Metadata (ordered as per Figma design)
-  metadata: {
-    'hw_qemu_guest_agent': 'yes',
-    'hw_disk_bus': 'scsi',
-    'owner_specified.openstack.object': 'images/ubuntu-24.04-server',
-    'os_version': '24.04',
-    'owner_specified.openstack.md5': '-',
-    'os_require_quiesce': 'yes',
-    'owner_specified.openstack.sha256': '-',
-    'os_distro': 'ubuntu',
-    'image_type': 'image',
-    'hw_scsi_model': 'virtio-scsi',
-    'base_image_ref': '1e568eb7-a277-48f0-97d4-e481f2dd1ef4',
-  },
+// Image data map by ID
+const mockImagesMap: Record<string, ImageDetail> = {
+  'img-001': { id: 'img-001', name: 'Ubuntu 22.04 LTS', status: 'active', access: 'Public', createdAt: '2025-09-15', usageType: 'Common Server', protected: false, description: 'Ubuntu 22.04 LTS Server', size: '2.5 GiB', os: 'Ubuntu 22.04', diskFormat: 'QCOW2', containerFormat: 'Bare', minDisk: '10 GiB', minRam: '1 GiB', owner: 'admin', visibility: 'Public', filename: '/v2/images/img-001/file', checksum: 'abc123', qemuGuestAgent: true, cpuPolicy: 'Not select', cpuThreadPolicy: 'Not select', metadata: {} },
+  'img-002': { id: 'img-002', name: 'CentOS 8', status: 'active', access: 'Public', createdAt: '2025-09-10', usageType: 'Common Server', protected: false, description: 'CentOS 8 Stream', size: '1.8 GiB', os: 'CentOS 8', diskFormat: 'QCOW2', containerFormat: 'Bare', minDisk: '10 GiB', minRam: '1 GiB', owner: 'admin', visibility: 'Public', filename: '/v2/images/img-002/file', checksum: 'def456', qemuGuestAgent: true, cpuPolicy: 'Not select', cpuThreadPolicy: 'Not select', metadata: {} },
+  'img-003': { id: 'img-003', name: 'Windows Server 2022', status: 'active', access: 'Public', createdAt: '2025-09-05', usageType: 'Windows Server', protected: true, description: 'Windows Server 2022 Datacenter', size: '15 GiB', os: 'Windows Server 2022', diskFormat: 'QCOW2', containerFormat: 'Bare', minDisk: '40 GiB', minRam: '4 GiB', owner: 'admin', visibility: 'Public', filename: '/v2/images/img-003/file', checksum: 'ghi789', qemuGuestAgent: false, cpuPolicy: 'Not select', cpuThreadPolicy: 'Not select', metadata: {} },
+  'img-004': { id: 'img-004', name: 'Rocky Linux 9', status: 'active', access: 'Project', createdAt: '2025-09-01', usageType: 'Common Server', protected: false, description: 'Rocky Linux 9', size: '1.5 GiB', os: 'Rocky Linux 9', diskFormat: 'RAW', containerFormat: 'Bare', minDisk: '10 GiB', minRam: '1 GiB', owner: 'TK-project', visibility: 'Private', filename: '/v2/images/img-004/file', checksum: 'jkl012', qemuGuestAgent: true, cpuPolicy: 'Not select', cpuThreadPolicy: 'Not select', metadata: {} },
+  'img-005': { id: 'img-005', name: 'Debian 12', status: 'active', access: 'Public', createdAt: '2025-08-30', usageType: 'Common Server', protected: false, description: 'Debian 12 Bookworm', size: '1.2 GiB', os: 'Debian 12', diskFormat: 'QCOW2', containerFormat: 'Bare', minDisk: '8 GiB', minRam: '512 MiB', owner: 'admin', visibility: 'Public', filename: '/v2/images/img-005/file', checksum: 'mno345', qemuGuestAgent: true, cpuPolicy: 'Not select', cpuThreadPolicy: 'Not select', metadata: {} },
+};
+
+const defaultImageDetail: ImageDetail = {
+  id: 'unknown', name: 'Unknown Image', status: 'active', access: 'Project', createdAt: '-', usageType: '-', protected: false, description: '-', size: '-', os: '-', diskFormat: '-', containerFormat: '-', minDisk: '-', minRam: '-', owner: '-', visibility: 'Private', filename: '-', checksum: '-', qemuGuestAgent: false, cpuPolicy: '-', cpuThreadPolicy: '-', metadata: {},
 };
 
 /* ----------------------------------------
@@ -150,13 +121,11 @@ function CopyableValue({ value }: CopyableValueProps) {
    ---------------------------------------- */
 
 export function ImageDetailPage() {
-  const { id: _id } = useParams<{ id: string }>();
+  const { id } = useParams<{ id: string }>();
+  const image = id ? (mockImagesMap[id] || defaultImageDetail) : defaultImageDetail;
   const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [activeDetailTab, setActiveDetailTab] = useState('details');
-  
-  // In a real app, you would fetch the image data based on the ID
-  const image = mockImageDetail;
 
   // Global tab management
   const { tabs, activeTabId, closeTab, selectTab, addNewTab } = useTabs();
