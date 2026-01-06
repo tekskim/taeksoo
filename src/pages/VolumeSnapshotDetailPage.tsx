@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import {
   Button,
@@ -122,7 +122,14 @@ export function VolumeSnapshotDetailPage() {
   const snapshot = id && mockSnapshotDetails[id] ? mockSnapshotDetails[id] : defaultSnapshot;
 
   // Global tab management
-  const { tabs, activeTabId, closeTab, selectTab, addNewTab } = useTabs();
+  const { tabs, activeTabId, closeTab, selectTab, addNewTab, updateActiveTabLabel } = useTabs();
+
+  // Update tab label when snapshot name changes
+  useEffect(() => {
+    if (snapshot.name) {
+      updateActiveTabLabel(snapshot.name);
+    }
+  }, [snapshot.name, updateActiveTabLabel]);
 
   // Convert tabs to TabBar format
   const tabBarTabs = tabs.map((tab) => ({
