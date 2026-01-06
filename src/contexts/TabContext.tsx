@@ -104,8 +104,11 @@ export function TabProvider({ children, defaultTabs = [] }: TabProviderProps) {
     const currentLabel = getLabelFromPath(currentPath);
     
     setTabs((prevTabs) => {
-      // Find if there's already a tab for this path
-      const existingTab = prevTabs.find((t) => t.path === currentPath);
+      // Find if there's already a tab for this path (compare pathname without query string)
+      const existingTab = prevTabs.find((t) => {
+        const tabPathname = t.path.split('?')[0];
+        return tabPathname === currentPath;
+      });
       
       if (existingTab) {
         // Tab exists, just make sure it's active
