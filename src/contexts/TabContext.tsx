@@ -137,18 +137,37 @@ export function TabProvider({ children, defaultTabs = [] }: TabProviderProps) {
     localStorage.setItem(ACTIVE_TAB_STORAGE_KEY, activeTabId);
   }, [activeTabId]);
 
-  // On initial mount, navigate to the active tab's path if different from current location
+  // On initial mount, sync tabs with current URL (prioritize current URL over stored active tab)
   const initializedRef = useRef(false);
   useEffect(() => {
     if (!initializedRef.current && tabs.length > 0) {
       initializedRef.current = true;
-      const activeTab = tabs.find(t => t.id === activeTabId);
-      if (activeTab && activeTab.path !== location.pathname) {
-        // Navigate to the active tab's path
-        navigate(activeTab.path, { replace: true });
+      const currentPath = location.pathname;
+      
+      // Check if there's a tab matching the current URL
+      const matchingTab = tabs.find((t) => {
+        const tabPathname = t.path.split('?')[0];
+        return tabPathname === currentPath;
+      });
+      
+      if (matchingTab) {
+        // Activate the matching tab
+        setActiveTabId(matchingTab.id);
+      } else {
+        // Create a new tab for the current URL
+        const currentLabel = getLabelFromPath(currentPath);
+        const newTabId = `tab-${Date.now()}`;
+        const newTab: TabItem = {
+          id: newTabId,
+          label: currentLabel,
+          path: currentPath,
+          closable: true,
+        };
+        setTabs((prev) => [...prev, newTab]);
+        setActiveTabId(newTabId);
       }
     }
-  }, [tabs, activeTabId, location.pathname, navigate]);
+  }, [tabs, location.pathname]);
 
   // Sync tab with current route when location changes
   useEffect(() => {
