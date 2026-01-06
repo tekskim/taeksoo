@@ -7,6 +7,7 @@ import {
 import { Select, Button, TabBar } from '@/design-system';
 import { Sidebar } from '@/components/Sidebar';
 import { useTabs } from '@/contexts/TabContext';
+import { useSidebar } from '@/contexts/SidebarContext';
 
 /* ----------------------------------------
    Types
@@ -60,7 +61,7 @@ export function ConsolePage() {
   const [content, setContent] = useState('');
   const [selectedContainer, setSelectedContainer] = useState('container-0');
   const [viewTime, setViewTime] = useState('last-15');
-  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const { isOpen: sidebarOpen, toggle: toggleSidebar } = useSidebar();
   const contentRef = useRef<HTMLDivElement>(null);
   
   // Tab management
@@ -156,7 +157,7 @@ export function ConsolePage() {
 
   return (
     <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
-      <Sidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
+      <Sidebar isOpen={sidebarOpen} onToggle={toggleSidebar} />
       
       <main
         className={`absolute top-0 bottom-0 right-0 flex flex-col bg-[var(--color-surface-default)] transition-[left] duration-200 ${
