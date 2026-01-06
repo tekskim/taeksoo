@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import {
   Button,
@@ -85,19 +85,57 @@ interface HealthMonitor {
    Mock Data
    ---------------------------------------- */
 
-const mockPoolDetail: PoolDetail = {
-  id: '7284d9174e81431e93060a9bbcf2cdfd',
-  name: 'pool-http',
+// Mock data - synchronized with ListenerDetailPage pools
+const mockPoolsMap: Record<string, PoolDetail> = {
+  'pool-001': {
+    id: 'pool-001',
+    name: 'pool-http',
+    status: 'active',
+    adminState: 'Up',
+    createdAt: '2025-07-25 09:12:20',
+    description: '-',
+    algorithm: 'Round Robin',
+    protocol: 'HTTP',
+    sessionPersistence: 'None',
+    listener: { name: 'listener-http-80', id: '29tgj234' },
+  },
+  'pool-002': {
+    id: 'pool-002',
+    name: 'pool-https',
+    status: 'active',
+    adminState: 'Up',
+    createdAt: '2025-07-24 10:30:00',
+    description: 'HTTPS connection pool',
+    algorithm: 'Least Connections',
+    protocol: 'HTTPS',
+    sessionPersistence: 'Source IP',
+    listener: { name: 'listener-https-443', id: '38fk29dk' },
+  },
+  'pool-003': {
+    id: 'pool-003',
+    name: 'pool-tcp',
+    status: 'active',
+    adminState: 'Up',
+    createdAt: '2025-07-23 14:00:00',
+    description: 'TCP connection pool',
+    algorithm: 'Round Robin',
+    protocol: 'TCP',
+    sessionPersistence: 'None',
+    listener: { name: 'listener-tcp-8080', id: '9dk38fj2' },
+  },
+};
+
+const defaultPoolDetail: PoolDetail = {
+  id: 'pool-default',
+  name: 'Unknown Pool',
   status: 'active',
   adminState: 'Up',
-  createdAt: '2025-07-25 09:12:20',
-  // Basic Information
+  createdAt: '-',
   description: '-',
-  algorithm: 'Round Robin',
-  protocol: 'HTTP',
-  sessionPersistence: 'None',
-  // Association
-  listener: { name: 'web-server-10', id: 'listener-001' },
+  algorithm: '-',
+  protocol: '-',
+  sessionPersistence: '-',
+  listener: { name: '-', id: '' },
 };
 
 /* ----------------------------------------
@@ -155,11 +193,21 @@ const memberStatusMap: Record<MemberStatus, 'active' | 'down' | 'error'> = {
 
 export default function PoolDetailPage() {
   const { id } = useParams<{ id: string }>();
-  const { tabs, activeTabId, closeTab, selectTab, addNewTab } = useTabs();
+  const { tabs, activeTabId, closeTab, selectTab, addNewTab, updateActiveTabLabel } = useTabs();
   
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [activeDetailTab, setActiveDetailTab] = useState('details');
   const [copiedId, setCopiedId] = useState(false);
+
+  // Get pool based on URL id
+  const pool = id ? (mockPoolsMap[id] || defaultPoolDetail) : defaultPoolDetail;
+
+  // Update tab label when pool name changes
+  useEffect(() => {
+    if (pool.name) {
+      updateActiveTabLabel(pool.name);
+    }
+  }, [pool.name, updateActiveTabLabel]);
 
   // Members state
   const [memberSearchTerm, setMemberSearchTerm] = useState('');
@@ -168,9 +216,6 @@ export default function PoolDetailPage() {
   
   // Preferences state
   const [isPreferencesOpen, setIsPreferencesOpen] = useState(false);
-
-  // In a real app, fetch based on id
-  const pool = mockPoolDetail;
   const healthMonitor = mockHealthMonitor;
 
   const breadcrumbItems = [
