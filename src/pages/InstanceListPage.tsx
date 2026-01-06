@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useMemo, useEffect, useRef, useLayoutEffect } from 'react';
 import {
   Button,
   SearchInput,
@@ -24,7 +24,6 @@ import {
 import { Sidebar } from '@/components/Sidebar';
 import { useTabs } from '@/contexts/TabContext';
 import {
-  IconPlus,
   IconDotsCircleHorizontal,
   IconPlayerPlay,
   IconPlayerStop,
@@ -172,6 +171,24 @@ export function InstanceListPage() {
   const shellPanel = useShellPanel();
   const navigate = useNavigate();
   const { addTab } = useTabs();
+  
+  // Scroll container ref for maintaining scroll position
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const scrollPositionRef = useRef(0);
+
+  // Preserve scroll position when shell panel opens
+  useLayoutEffect(() => {
+    const container = scrollContainerRef.current;
+    if (!container) return;
+    
+    if (shellPanel.isExpanded) {
+      // When panel opens, restore scroll position
+      container.scrollTop = scrollPositionRef.current;
+    } else {
+      // When panel closes, save current scroll position
+      scrollPositionRef.current = container.scrollTop;
+    }
+  }, [shellPanel.isExpanded]);
 
   // Handle opening shell tab in new browser tab
   const handleOpenInNewTab = (tab: ShellTab) => {
@@ -409,7 +426,7 @@ export function InstanceListPage() {
       align: 'center',
       sortable: false,
       render: (_, row) => row.locked ? (
-        <IconLock size={16} stroke={1} className="text-[var(--color-text-default)]" />
+        <IconLock size={16} stroke={1.5} className="text-[var(--color-text-default)]" />
       ) : null,
     },
     {
@@ -509,12 +526,12 @@ export function InstanceListPage() {
             }}
             title="Open console"
           >
-            <IconTerminal2 size={16} stroke={1} className="text-[var(--color-text-subtle)] group-hover:text-[var(--color-text-default)]" />
+            <IconTerminal2 size={16} stroke={1.5} className="text-[var(--action-icon-color)]" />
           </button>
           <div onClick={(e) => e.stopPropagation()}>
             <ContextMenu items={getInstanceContextMenuItems(row)} trigger="click">
               <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
-                <IconDotsCircleHorizontal size={16} stroke={1} className="text-[var(--color-text-subtle)] group-hover:text-[var(--color-text-default)]" />
+                <IconDotsCircleHorizontal size={16} stroke={1.5} className="text-[var(--action-icon-color)]" />
               </button>
             </ContextMenu>
           </div>
@@ -644,50 +661,84 @@ export function InstanceListPage() {
       flex: 1,
       sortable: true,
     },
+    {
+      key: 'actions',
+      label: 'Action',
+      width: '72px',
+      align: 'center',
+      render: (_, row) => (
+        <HStack gap={1} className="justify-center">
+          <button 
+            className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group"
+            onClick={(e) => {
+              e.stopPropagation();
+              shellPanel.openConsole(row.id, row.name);
+            }}
+            title="Open console"
+          >
+            <IconTerminal2 size={16} stroke={1.5} className="text-[var(--action-icon-color)]" />
+          </button>
+          <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
+            <IconDotsCircleHorizontal size={16} stroke={1.5} className="text-[var(--action-icon-color)]" />
+          </button>
+        </HStack>
+      ),
+    },
   ];
 
   return (
-    <div className="min-h-screen bg-[var(--color-surface-subtle)]">
+    <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
       {/* Sidebar */}
-      <Sidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(false)} />
+      <Sidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(prev => !prev)} />
 
       {/* Main Content */}
-      <main className={`min-h-screen bg-[var(--color-surface-default)] transition-[margin] duration-200 overflow-x-auto ${sidebarOpen ? 'ml-[200px]' : 'ml-0'}`}>
-        <div className="min-w-[var(--layout-content-min-width)]">
-        {/* Tab Bar */}
-        <TabBar
-          tabs={tabBarTabs}
-          activeTab={activeTabId}
-          onTabChange={selectTab}
-          onTabClose={closeTab}
-          onTabAdd={addNewTab}
-          showAddButton={true}
-          showWindowControls={true}
-        />
+      <main 
+        className={`absolute top-0 bottom-0 right-0 flex flex-col bg-[var(--color-surface-default)] transition-[left] duration-200 ${sidebarOpen ? 'left-[200px]' : 'left-0'}`}
+      >
+        {/* Fixed Header Area */}
+        <div className="shrink-0 bg-[var(--color-surface-default)]">
+          {/* Tab Bar */}
+          <TabBar
+            tabs={tabBarTabs}
+            activeTab={activeTabId}
+            onTabChange={selectTab}
+            onTabClose={closeTab}
+            onTabAdd={addNewTab}
+            showAddButton={true}
+            showWindowControls={true}
+          />
 
-        {/* Top Bar with Breadcrumb Navigation */}
-        <TopBar
-          showSidebarToggle={!sidebarOpen}
-          onSidebarToggle={() => setSidebarOpen(true)}
-          showNavigation={true}
-          onBack={() => window.history.back()}
-          onForward={() => window.history.forward()}
-          breadcrumb={
-            <Breadcrumb
-              items={[
-                { label: 'Proj-1', href: '/project' },
-                { label: 'Instances List' },
-              ]}
-            />
-          }
-          actions={
-            <TopBarAction
-              icon={<IconBell size={16} stroke={1} />}
-              aria-label="Notifications"
-              badge={true}
-            />
-          }
-        />
+          {/* Top Bar with Breadcrumb Navigation */}
+          <TopBar
+            showSidebarToggle={!sidebarOpen}
+            onSidebarToggle={() => setSidebarOpen(true)}
+            showNavigation={true}
+            onBack={() => window.history.back()}
+            onForward={() => window.history.forward()}
+            breadcrumb={
+              <Breadcrumb
+                items={[
+                  { label: 'Proj-1', href: '/project' },
+                  { label: 'Instances List' },
+                ]}
+              />
+            }
+            actions={
+              <TopBarAction
+                icon={<IconBell size={16} stroke={1.5} />}
+                aria-label="Notifications"
+                badge={true}
+              />
+            }
+          />
+        </div>
+
+        {/* Scrollable Content Area */}
+        <div 
+          ref={scrollContainerRef}
+          className="flex-1 overflow-auto min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll"
+          style={{ paddingBottom: shellPanel.isExpanded ? '350px' : '0' }}
+        >
 
         {/* Page Content */}
         <div className="pt-4 px-8 pb-6 bg-[var(--color-surface-default)]">
@@ -697,9 +748,11 @@ export function InstanceListPage() {
               <h1 className="text-[length:var(--font-size-16)] font-semibold text-[var(--color-text-default)]">
                 Instances List
               </h1>
-              <Button leftIcon={<IconPlus size={16} />}>
-                Create Instance
-              </Button>
+              <Link to="/compute/instances/create">
+                <Button>
+                  Create Instance
+                </Button>
+              </Link>
             </div>
 
             {/* Type Tabs */}
@@ -767,6 +820,7 @@ export function InstanceListPage() {
                 showSettings
                 onSettingsClick={() => setIsPreferencesOpen(true)}
                 totalItems={mockBareMetalInstances.length}
+                selectedCount={selectedBareMetalInstances.length}
               />
             )}
 
@@ -778,7 +832,7 @@ export function InstanceListPage() {
                 rowKey="id"
                 emptyMessage="No instances found"
                 selectable
-                selectedRows={selectedInstances}
+                selectedKeys={selectedInstances}
                 onSelectionChange={setSelectedInstances}
               />
             )}
@@ -791,14 +845,14 @@ export function InstanceListPage() {
                 rowKey="id"
                 emptyMessage="No bare metal instances found"
                 selectable
-                selectedRows={selectedBareMetalInstances}
+                selectedKeys={selectedBareMetalInstances}
                 onSelectionChange={setSelectedBareMetalInstances}
               />
             )}
 
           </VStack>
         </div>
-        </div>
+      </div>
       </main>
 
       {/* Scroll to Top Button */}
@@ -808,7 +862,7 @@ export function InstanceListPage() {
           className="fixed bottom-6 right-6 w-10 h-10 bg-[var(--color-action-primary)] hover:bg-[var(--color-action-primary-hover)] text-white rounded-full shadow-lg flex items-center justify-center transition-all duration-200 hover:scale-110 z-50"
           aria-label="Scroll to top"
         >
-          <IconArrowUp size={20} stroke={1} />
+          <IconArrowUp size={20} stroke={1.5} />
         </button>
       )}
 
@@ -878,6 +932,7 @@ export function InstanceListPage() {
         onOpenInNewTab={handleOpenInNewTab}
         initialHeight={350}
         minHeight={300}
+        sidebarOpen={sidebarOpen}
       />
     </div>
   );

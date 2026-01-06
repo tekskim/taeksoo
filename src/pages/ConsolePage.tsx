@@ -155,15 +155,16 @@ export function ConsolePage() {
   }, [content, instanceName]);
 
   return (
-    <div className="min-h-screen bg-[var(--color-surface-subtle)]">
+    <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
       <Sidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
       
       <main
-        className={`min-h-screen bg-[var(--color-surface-default)] transition-[margin] duration-200 overflow-x-auto ${
-          sidebarOpen ? 'ml-[200px]' : 'ml-[48px]'
+        className={`absolute top-0 bottom-0 right-0 flex flex-col bg-[var(--color-surface-default)] transition-[left] duration-200 ${
+          sidebarOpen ? 'left-[200px]' : 'left-[48px]'
         }`}
       >
-        <div className="min-w-[var(--layout-content-min-width)]">
+        {/* Fixed Header Area */}
+        <div className="shrink-0 bg-[var(--color-surface-default)]">
           {/* Tab Bar */}
           <TabBar
             tabs={tabBarTabs}
@@ -174,6 +175,7 @@ export function ConsolePage() {
             showAddButton={true}
             showWindowControls={true}
           />
+        </div>
           
           {/* Console Content */}
           <div className="flex flex-col h-[calc(100vh-var(--tabbar-height))]">
@@ -188,7 +190,7 @@ export function ConsolePage() {
             {/* Log Content - Dark background */}
             <div
               ref={contentRef}
-              className="flex-1 overflow-auto p-4 font-mono text-[12px] leading-5 bg-[#0d1117] text-slate-300 [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-slate-600 [&::-webkit-scrollbar-thumb]:rounded-full"
+              className="flex-1 overflow-auto p-4 font-mono text-[12px] leading-5 bg-[#0d1117] text-slate-300 shell-scroll"
             >
               {content ? (
                 <pre className="whitespace-pre-wrap break-all m-0">{content}</pre>
@@ -204,12 +206,10 @@ export function ConsolePage() {
               <div className="flex items-center gap-1">
                 {/* Container Select */}
                 <Select
-                  size="sm"
                   value={selectedContainer}
                   onChange={setSelectedContainer}
                   options={containerOptions}
                   placeholder="Container"
-                  menuPlacement="top"
                 />
 
                 {/* Clear Button */}
@@ -237,24 +237,21 @@ export function ConsolePage() {
               <div className="flex items-center gap-3">
                 {/* View Time Select */}
                 <Select
-                  size="sm"
                   value={viewTime}
                   onChange={setViewTime}
                   options={viewTimeOptions}
                   placeholder="View"
-                  menuPlacement="top"
                 />
               </div>
             </div>
           </div>
-        </div>
       </main>
     </div>
   );
 }
 
 // Generate sample log output
-function generateSampleLogs(instanceName: string): string {
+function generateSampleLogs(_instanceName: string): string {
   const now = new Date();
   const formatDate = (d: Date) => {
     return d.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: '2-digit', year: 'numeric' });

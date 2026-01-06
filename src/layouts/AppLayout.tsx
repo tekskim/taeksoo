@@ -74,40 +74,43 @@ export function AppLayout({ children }: AppLayoutProps) {
         }`}
       >
         <div className="min-w-[var(--layout-content-min-width)]">
-        {/* Tab Bar */}
-        <TabBar
-          tabs={tabBarTabs}
-          activeTab={activeTabId}
-          onTabChange={handleTabChange}
-          onTabClose={handleTabClose}
-          onTabAdd={addNewTab}
-          showAddButton={true}
-          showWindowControls={true}
-        />
+        {/* Fixed Header Area */}
+        <div className="sticky top-0 z-30 bg-[var(--color-surface-default)]">
+          {/* Tab Bar */}
+          <TabBar
+            tabs={tabBarTabs}
+            activeTab={activeTabId}
+            onTabChange={handleTabChange}
+            onTabClose={handleTabClose}
+            onTabAdd={addNewTab}
+            showAddButton={true}
+            showWindowControls={true}
+          />
 
-        {/* Top Bar */}
-        <TopBar
-          showSidebarToggle={!sidebarOpen}
-          onSidebarToggle={() => setSidebarOpen(true)}
-          showNavigation={true}
-          onBack={() => window.history.back()}
-          onForward={() => window.history.forward()}
-          breadcrumb={
-            <Breadcrumb
-              items={[
-                { label: 'Proj-1', href: '/project' },
-                { label: currentLabel },
-              ]}
-            />
-          }
-          actions={
-            <TopBarAction
-              icon={<IconBell size={16} stroke={1} />}
-              aria-label="Notifications"
-              badge={true}
-            />
-          }
-        />
+          {/* Top Bar */}
+          <TopBar
+            showSidebarToggle={!sidebarOpen}
+            onSidebarToggle={() => setSidebarOpen(true)}
+            showNavigation={true}
+            onBack={() => window.history.back()}
+            onForward={() => window.history.forward()}
+            breadcrumb={
+              <Breadcrumb
+                items={[
+                  { label: 'Proj-1', href: '/project' },
+                  { label: currentLabel },
+                ]}
+              />
+            }
+            actions={
+              <TopBarAction
+                icon={<IconBell size={16} stroke={1.5} />}
+                aria-label="Notifications"
+                badge={true}
+              />
+            }
+          />
+        </div>
 
         {/* Page Content */}
         {children || <Outlet />}

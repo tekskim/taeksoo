@@ -50,34 +50,6 @@ import { EditListenerDrawer } from '@/components/EditListenerDrawer';
 import { AllocateIPDrawer } from '@/components/AllocateIPDrawer';
 import { CreateHealthMonitorDrawer } from '@/components/CreateHealthMonitorDrawer';
 import { EditMemberDrawer } from '@/components/EditMemberDrawer';
-import { AttachVolumeDrawer } from '@/components/AttachVolumeDrawer';
-import { DetachVolumeDrawer } from '@/components/DetachVolumeDrawer';
-import { AttachInterfaceDrawer } from '@/components/AttachInterfaceDrawer';
-import { DetachInterfaceDrawer } from '@/components/DetachInterfaceDrawer';
-import { AssociateFloatingIPDrawer } from '@/components/AssociateFloatingIPDrawer';
-import { DisassociateFloatingIPDrawer } from '@/components/DisassociateFloatingIPDrawer';
-import { ManageSecurityGroupsDrawer } from '@/components/ManageSecurityGroupsDrawer';
-import { ManageTagsDrawer } from '@/components/ManageTagsDrawer';
-import { RescueInstanceDrawer } from '@/components/RescueInstanceDrawer';
-import { RebuildInstanceDrawer } from '@/components/RebuildInstanceDrawer';
-import { ResizeInstanceDrawer } from '@/components/ResizeInstanceDrawer';
-import { RestoreFromSnapshotDrawer } from '@/components/RestoreFromSnapshotDrawer';
-import { AttachVolumeToInstanceDrawer } from '@/components/AttachVolumeToInstanceDrawer';
-import { CreateSubnetDrawer } from '@/components/CreateSubnetDrawer';
-import { CreateRouterDrawer } from '@/components/CreateRouterDrawer';
-import { AttachPortToInstanceDrawer } from '@/components/AttachPortToInstanceDrawer';
-import { ManagePortSecurityGroupsDrawer } from '@/components/ManagePortSecurityGroupsDrawer';
-import { AssociateLBFloatingIPDrawer } from '@/components/AssociateLBFloatingIPDrawer';
-import { ChangeServerCertificateDrawer } from '@/components/ChangeServerCertificateDrawer';
-import { ChangeCACertificateDrawer } from '@/components/ChangeCACertificateDrawer';
-import { ManageSNICertificateDrawer } from '@/components/ManageSNICertificateDrawer';
-import { ExternalGatewaySettingDrawer } from '@/components/ExternalGatewaySettingDrawer';
-import { ConnectSubnetDrawer } from '@/components/ConnectSubnetDrawer';
-import { AssociatePortFloatingIPDrawer } from '@/components/AssociatePortFloatingIPDrawer';
-import { DisconnectSubnetDrawer } from '@/components/DisconnectSubnetDrawer';
-import { ManageMembersDrawer } from '@/components/ManageMembersDrawer';
-import { AssociateFloatingIPResourceDrawer } from '@/components/AssociateFloatingIPResourceDrawer';
-import { AllocateFloatingIPDrawer } from '@/components/AllocateFloatingIPDrawer';
 
 /* ----------------------------------------
    Mock Data for Drawers
@@ -229,26 +201,16 @@ interface DrawerListItemProps {
   title: string;
   description: string;
   category?: string;
-  size?: 'S' | 'M';
   onOpen: () => void;
 }
 
-function DrawerListItem({ title, description, category, size, onOpen }: DrawerListItemProps) {
+function DrawerListItem({ title, description, category, onOpen }: DrawerListItemProps) {
   return (
     <div 
       className="flex items-center justify-between px-4 py-3 rounded-lg border border-[var(--color-border-default)] bg-[var(--color-surface-default)] hover:bg-[var(--color-surface-subtle)] hover:border-[var(--color-border-strong)] transition-colors cursor-pointer group"
       onClick={onOpen}
     >
-      <HStack gap={3} className="flex-1 items-center min-w-0">
-        {size && (
-          <Badge 
-            variant={size === 'M' ? 'yellow' : 'gray'} 
-            size="sm" 
-            className="shrink-0 w-[32px] justify-center font-mono"
-          >
-            {size}
-          </Badge>
-        )}
+      <HStack gap={4} className="flex-1 items-center min-w-0">
         {category && (
           <Badge variant="info" size="sm" className="shrink-0 w-[100px] justify-center">
             {category}
@@ -290,34 +252,6 @@ export function DrawersPage() {
   const [isCreateSnapshotOpen, setIsCreateSnapshotOpen] = useState(false);
   const [isEditInstanceOpen, setIsEditInstanceOpen] = useState(false);
   const [isLockSettingOpen, setIsLockSettingOpen] = useState(false);
-  const [isAttachVolumeOpen, setIsAttachVolumeOpen] = useState(false);
-  const [isDetachVolumeOpen, setIsDetachVolumeOpen] = useState(false);
-  const [isAttachInterfaceOpen, setIsAttachInterfaceOpen] = useState(false);
-  const [isDetachInterfaceOpen, setIsDetachInterfaceOpen] = useState(false);
-  const [isAssociateFloatingIPOpen, setIsAssociateFloatingIPOpen] = useState(false);
-  const [isDisassociateFloatingIPOpen, setIsDisassociateFloatingIPOpen] = useState(false);
-  const [isManageSecurityGroupsOpen, setIsManageSecurityGroupsOpen] = useState(false);
-  const [isManageTagsOpen, setIsManageTagsOpen] = useState(false);
-  const [isRescueInstanceOpen, setIsRescueInstanceOpen] = useState(false);
-  const [isRebuildInstanceOpen, setIsRebuildInstanceOpen] = useState(false);
-  const [isResizeInstanceOpen, setIsResizeInstanceOpen] = useState(false);
-  const [isRestoreFromSnapshotOpen, setIsRestoreFromSnapshotOpen] = useState(false);
-  const [isAttachVolumeToInstanceOpen, setIsAttachVolumeToInstanceOpen] = useState(false);
-  const [isCreateSubnetOpen, setIsCreateSubnetOpen] = useState(false);
-  const [isCreateRouterOpen, setIsCreateRouterOpen] = useState(false);
-  const [isAttachPortToInstanceOpen, setIsAttachPortToInstanceOpen] = useState(false);
-  const [isManagePortSecurityGroupsOpen, setIsManagePortSecurityGroupsOpen] = useState(false);
-  const [isAssociateLBFloatingIPOpen, setIsAssociateLBFloatingIPOpen] = useState(false);
-  const [isChangeServerCertificateOpen, setIsChangeServerCertificateOpen] = useState(false);
-  const [isChangeCACertificateOpen, setIsChangeCACertificateOpen] = useState(false);
-  const [isManageSNICertificateOpen, setIsManageSNICertificateOpen] = useState(false);
-  const [isExternalGatewaySettingOpen, setIsExternalGatewaySettingOpen] = useState(false);
-  const [isConnectSubnetOpen, setIsConnectSubnetOpen] = useState(false);
-  const [isAssociatePortFloatingIPOpen, setIsAssociatePortFloatingIPOpen] = useState(false);
-  const [isDisconnectSubnetOpen, setIsDisconnectSubnetOpen] = useState(false);
-  const [isManageMembersOpen, setIsManageMembersOpen] = useState(false);
-  const [isAssociateFloatingIPResourceOpen, setIsAssociateFloatingIPResourceOpen] = useState(false);
-  const [isAllocateFloatingIPOpen, setIsAllocateFloatingIPOpen] = useState(false);
   const [isViewPreferencesOpen, setIsViewPreferencesOpen] = useState(false);
   const [isCreateVolumeSnapshotOpen, setIsCreateVolumeSnapshotOpen] = useState(false);
   const [isCreateVolumeBackupOpen, setIsCreateVolumeBackupOpen] = useState(false);
@@ -365,13 +299,14 @@ export function DrawersPage() {
   const [columns, setColumns] = useState<ColumnConfig[]>(mockViewPreferencesColumns);
 
   return (
-    <div className="min-h-screen bg-[var(--color-surface-subtle)]">
+    <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
       {/* Sidebar */}
       <Sidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
 
       {/* Main Content */}
-      <main className={`min-h-screen bg-[var(--color-surface-default)] transition-[margin] duration-200 overflow-x-auto ${sidebarOpen ? 'ml-[200px]' : 'ml-0'}`}>
-        <div className="min-w-[var(--layout-content-min-width)]">
+      <main className={`absolute top-0 bottom-0 right-0 flex flex-col bg-[var(--color-surface-default)] transition-[left] duration-200 ${sidebarOpen ? 'left-[200px]' : 'left-0'}`}>
+        {/* Fixed Header Area */}
+        <div className="shrink-0 bg-[var(--color-surface-default)]">
           {/* TabBar */}
           <TabBar
             tabs={tabs.map((tab) => ({
@@ -400,7 +335,10 @@ export function DrawersPage() {
               />
             }
           />
+        </div>
 
+        {/* Scrollable Content Area */}
+        <div className="flex-1 overflow-auto min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll">
           {/* Content */}
           <div className="px-8 py-6">
             <VStack gap={8}>
@@ -426,218 +364,19 @@ export function DrawersPage() {
                       title="Create Instance Snapshot"
                       description="Create a snapshot of an instance to capture its current system state as an image."
                       category="Instance"
-                      size="S"
                       onOpen={() => setIsCreateSnapshotOpen(true)}
                     />
                     <DrawerCard
                       title="Edit Instance"
                       description="Edit instance name and description. Allows modification of basic instance metadata."
                       category="Instance"
-                      size="S"
                       onOpen={() => setIsEditInstanceOpen(true)}
                     />
                     <DrawerCard
                       title="Lock Setting"
                       description="Lock or unlock an instance to prevent accidental deletion or modification."
                       category="Instance"
-                      size="S"
                       onOpen={() => setIsLockSettingOpen(true)}
-                    />
-                    <DrawerCard
-                      title="Attach Volume"
-                      description="Attach an existing volume to this instance. Once attached, it will appear as a new block device inside your instance."
-                      category="Instance"
-                      size="M"
-                      onOpen={() => setIsAttachVolumeOpen(true)}
-                    />
-                    <DrawerCard
-                      title="Detach Volume"
-                      description="Detach the selected volume from this instance. Once detached, it will no longer be accessible."
-                      category="Instance"
-                      size="M"
-                      onOpen={() => setIsDetachVolumeOpen(true)}
-                    />
-                    <DrawerCard
-                      title="Attach Interface"
-                      description="Attach a new network interface to this instance. You can connect it to another network or subnet."
-                      category="Instance"
-                      size="M"
-                      onOpen={() => setIsAttachInterfaceOpen(true)}
-                    />
-                    <DrawerCard
-                      title="Detach Interface"
-                      description="Detach a network interface from this instance. This may interrupt connectivity if the selected port is primary."
-                      category="Instance"
-                      size="M"
-                      onOpen={() => setIsDetachInterfaceOpen(true)}
-                    />
-                    <DrawerCard
-                      title="Associate Floating IP"
-                      description="Assign a floating IP to this instance for external network access."
-                      category="Instance"
-                      size="M"
-                      onOpen={() => setIsAssociateFloatingIPOpen(true)}
-                    />
-                    <DrawerCard
-                      title="Disassociate Floating IP"
-                      description="Remove the association between this floating IP and the instance."
-                      category="Instance"
-                      size="M"
-                      onOpen={() => setIsDisassociateFloatingIPOpen(true)}
-                    />
-                    <DrawerCard
-                      title="Manage Security Groups"
-                      description="Attach or detach security groups for the selected interface."
-                      category="Instance"
-                      size="M"
-                      onOpen={() => setIsManageSecurityGroupsOpen(true)}
-                    />
-                    <DrawerCard
-                      title="Manage Tags"
-                      description="Tags are used to categorize and manage resources."
-                      category="Instance"
-                      size="M"
-                      onOpen={() => setIsManageTagsOpen(true)}
-                    />
-                    <DrawerCard
-                      title="Rescue Instance"
-                      description="Create a temporary recovery server using your instance's root disk."
-                      category="Instance"
-                      size="M"
-                      onOpen={() => setIsRescueInstanceOpen(true)}
-                    />
-                    <DrawerCard
-                      title="Rebuild Instance"
-                      description="Rebuilding reinstalls the operating system using a new image."
-                      category="Instance"
-                      size="M"
-                      onOpen={() => setIsRebuildInstanceOpen(true)}
-                    />
-                    <DrawerCard
-                      title="Resize Instance"
-                      description="Change the flavor of this instance to adjust its vCPU, memory, or disk capacity."
-                      category="Instance"
-                      size="M"
-                      onOpen={() => setIsResizeInstanceOpen(true)}
-                    />
-                    <DrawerCard
-                      title="Restore From Snapshot"
-                      description="Create a new image using volume snapshot as the source."
-                      category="Volume"
-                      size="M"
-                      onOpen={() => setIsRestoreFromSnapshotOpen(true)}
-                    />
-                    <DrawerCard
-                      title="Attach Volume to Instance"
-                      description="Attach a volume to an instance as additional storage."
-                      category="Volume"
-                      size="M"
-                      onOpen={() => setIsAttachVolumeToInstanceOpen(true)}
-                    />
-                    <DrawerCard
-                      title="Create Subnet"
-                      description="Create a new subnet within a network with CIDR, gateway, and DHCP settings."
-                      category="Network"
-                      size="M"
-                      onOpen={() => setIsCreateSubnetOpen(true)}
-                    />
-                    <DrawerCard
-                      title="Create Router"
-                      description="Create a virtual router to route traffic between networks with external gateway support."
-                      category="Network"
-                      size="M"
-                      onOpen={() => setIsCreateRouterOpen(true)}
-                    />
-                    <DrawerCard
-                      title="Attach Port to Instance"
-                      description="Attach a port to an instance with status, locked state, and IP information."
-                      category="Network"
-                      size="M"
-                      onOpen={() => setIsAttachPortToInstanceOpen(true)}
-                    />
-                    <DrawerCard
-                      title="Manage Port Security Groups"
-                      description="Manage security groups for a port with port security toggle and multi-select."
-                      category="Network"
-                      size="M"
-                      onOpen={() => setIsManagePortSecurityGroupsOpen(true)}
-                    />
-                    <DrawerCard
-                      title="Associate LB Floating IP"
-                      description="Associate a floating IP to a load balancer with network information."
-                      category="Network"
-                      size="M"
-                      onOpen={() => setIsAssociateLBFloatingIPOpen(true)}
-                    />
-                    <DrawerCard
-                      title="Change Server Certificate"
-                      description="Change the server certificate for a load balancer listener."
-                      category="Network"
-                      size="M"
-                      onOpen={() => setIsChangeServerCertificateOpen(true)}
-                    />
-                    <DrawerCard
-                      title="Change CA Certificate"
-                      description="Change the CA certificate for a load balancer listener."
-                      category="Network"
-                      size="M"
-                      onOpen={() => setIsChangeCACertificateOpen(true)}
-                    />
-                    <DrawerCard
-                      title="Manage SNI Certificate"
-                      description="Manage SNI certificates to host multiple HTTPS websites on a single listener."
-                      category="Network"
-                      size="M"
-                      onOpen={() => setIsManageSNICertificateOpen(true)}
-                    />
-                    <DrawerCard
-                      title="External Gateway Setting"
-                      description="Configure or update the external gateway for a router."
-                      category="Network"
-                      size="M"
-                      onOpen={() => setIsExternalGatewaySettingOpen(true)}
-                    />
-                    <DrawerCard
-                      title="Connect Subnet"
-                      description="Connect a subnet to a router for routing between networks."
-                      category="Network"
-                      size="M"
-                      onOpen={() => setIsConnectSubnetOpen(true)}
-                    />
-                    <DrawerCard
-                      title="Associate Port Floating IP"
-                      description="Associate a floating IP with a port to enable external access."
-                      category="Network"
-                      size="M"
-                      onOpen={() => setIsAssociatePortFloatingIPOpen(true)}
-                    />
-                    <DrawerCard
-                      title="Disconnect Subnet"
-                      description="Disconnect a subnet from a router to remove its routing path."
-                      category="Network"
-                      size="M"
-                      onOpen={() => setIsDisconnectSubnetOpen(true)}
-                    />
-                    <DrawerCard
-                      title="Manage Members"
-                      description="Manage members for a Load Balancer Pool."
-                      category="Load Balancer"
-                      size="M"
-                      onOpen={() => setIsManageMembersOpen(true)}
-                    />
-                    <DrawerCard
-                      title="Associate Floating IP (Resource)"
-                      description="Associate a floating IP with a resource (Instance, Load Balancer, or Virtual Adapter)."
-                      category="Network"
-                      size="M"
-                      onOpen={() => setIsAssociateFloatingIPResourceOpen(true)}
-                    />
-                    <DrawerCard
-                      title="Allocate Floating IP"
-                      description="Allocate a new floating IP from an external network."
-                      category="Network"
-                      size="M"
-                      onOpen={() => setIsAllocateFloatingIPOpen(true)}
                     />
                   </div>
                 </VStack>
@@ -652,14 +391,12 @@ export function DrawersPage() {
                       title="Edit Instance Snapshot"
                       description="Edit the name and description of an instance snapshot."
                       category="Snapshot"
-                      size="S"
                       onOpen={() => setIsEditInstanceSnapshotOpen(true)}
                     />
                     <DrawerCard
                       title="Create Volume from Instance Snapshot"
                       description="Create a new volume from an instance snapshot, containing the same data as the snapshot's system disk."
                       category="Snapshot"
-                      size="S"
                       onOpen={() => setIsCreateVolumeFromSnapshotOpen(true)}
                     />
                   </div>
@@ -675,91 +412,78 @@ export function DrawersPage() {
                       title="Create Volume Snapshot"
                       description="Create a snapshot of a volume to back up its current data state for later restoration."
                       category="Volume"
-                      size="S"
                       onOpen={() => setIsCreateVolumeSnapshotOpen(true)}
                     />
                     <DrawerCard
                       title="Create Volume Backup"
                       description="Create a full backup of a volume and store it in the backup service for disaster recovery."
                       category="Volume"
-                      size="M"
                       onOpen={() => setIsCreateVolumeBackupOpen(true)}
                     />
                     <DrawerCard
                       title="Clone Volume"
                       description="Create an exact copy of a volume for testing, backup, or new instance creation."
                       category="Volume"
-                      size="S"
                       onOpen={() => setIsCloneVolumeOpen(true)}
                     />
                     <DrawerCard
                       title="Extend Volume"
                       description="Increase the size of a volume to expand its storage capacity."
                       category="Volume"
-                      size="S"
                       onOpen={() => setIsExtendVolumeOpen(true)}
                     />
                     <DrawerCard
                       title="Create Image from Volume"
                       description="Create a new image using a volume as the source. The image will contain all data currently stored on the volume."
                       category="Volume"
-                      size="S"
                       onOpen={() => setIsCreateImageFromVolumeOpen(true)}
                     />
                     <DrawerCard
                       title="Edit Volume"
                       description="Edit the name and description of an existing volume."
                       category="Volume"
-                      size="S"
                       onOpen={() => setIsEditVolumeOpen(true)}
                     />
                     <DrawerCard
                       title="Change Volume Type"
                       description="Change the storage type of this volume to another available volume type."
                       category="Volume"
-                      size="S"
                       onOpen={() => setIsChangeVolumeTypeOpen(true)}
                     />
                     <DrawerCard
                       title="Create Transfer"
                       description="Create a transfer request to share this volume with another project."
                       category="Volume"
-                      size="S"
                       onOpen={() => setIsCreateTransferOpen(true)}
                     />
                     <DrawerCard
                       title="Edit Volume Backup"
                       description="Edit the name and description of an existing volume backup."
                       category="Volume"
-                      size="S"
                       onOpen={() => setIsEditVolumeBackupOpen(true)}
                     />
                     <DrawerCard
                       title="Accept Volume Transfer"
                       description="Accept a volume transfer using the provided transfer ID and authorization key."
                       category="Volume"
-                      size="S"
                       onOpen={() => setIsAcceptVolumeTransferOpen(true)}
                     />
                     <DrawerCard
                       title="Edit Volume Snapshot"
                       description="Edit the name and description of an existing volume snapshot."
                       category="Volume"
-                      size="S"
                       onOpen={() => setIsEditVolumeSnapshotOpen(true)}
                     />
                     <DrawerCard
                       title="Create Volume from Snapshot"
                       description="Create a new volume from an existing volume snapshot with customizable capacity and type."
                       category="Volume"
-                      size="S"
                       onOpen={() => setIsCreateVolumeFromVolumeSnapshotOpen(true)}
                     />
                     <DrawerCard
                       title="Create Volume from Backup"
                       description="Create a new volume from an existing volume backup with customizable capacity, type, and availability zone."
                       category="Volume"
-                      size="S"
                       onOpen={() => setIsCreateVolumeFromBackupOpen(true)}
                     />
                   </div>
@@ -775,14 +499,12 @@ export function DrawersPage() {
                       title="Create Volume from Image"
                       description="Create a new volume using the selected image. The new volume will contain an identical copy of the image data."
                       category="Image"
-                      size="S"
                       onOpen={() => setIsCreateVolumeFromImageOpen(true)}
                     />
                     <DrawerCard
                       title="Edit Image"
                       description="Edit image name and description. Allows modification of basic image metadata."
                       category="Image"
-                      size="S"
                       onOpen={() => setIsEditImageOpen(true)}
                     />
                   </div>
@@ -798,14 +520,12 @@ export function DrawersPage() {
                       title="Create Key Pair"
                       description="Create a new SSH key pair or import an existing public key to securely access your instances."
                       category="Key Pair"
-                      size="S"
                       onOpen={() => setIsCreateKeyPairOpen(true)}
                     />
                     <DrawerCard
                       title="Edit Key Pair"
                       description="Edit the name of an existing SSH key pair."
                       category="Key Pair"
-                      size="S"
                       onOpen={() => setIsEditKeyPairOpen(true)}
                     />
                   </div>
@@ -821,14 +541,12 @@ export function DrawersPage() {
                       title="Create Server Group"
                       description="Create a server group to control how instances are placed across compute hosts using affinity/anti-affinity policies."
                       category="Server Group"
-                      size="S"
                       onOpen={() => setIsCreateServerGroupOpen(true)}
                     />
                     <DrawerCard
                       title="Edit Server Group"
                       description="Edit the name of an existing server group."
                       category="Server Group"
-                      size="S"
                       onOpen={() => setIsEditServerGroupOpen(true)}
                     />
                   </div>
@@ -844,49 +562,42 @@ export function DrawersPage() {
                       title="Edit Network"
                       description="Edit network settings including name, description, admin state, and port security."
                       category="Network"
-                      size="S"
                       onOpen={() => setIsEditNetworkOpen(true)}
                     />
                     <DrawerCard
                       title="Edit Router"
                       description="Edit router settings including name, description, and admin state."
                       category="Router"
-                      size="S"
                       onOpen={() => setIsEditRouterOpen(true)}
                     />
                     <DrawerCard
                       title="Create Static Route"
                       description="Add a static route to manually define traffic paths beyond connected subnets."
                       category="Router"
-                      size="S"
                       onOpen={() => setIsCreateStaticRouteOpen(true)}
                     />
                     <DrawerCard
                       title="Edit Port"
                       description="Edit port settings including name and description."
                       category="Port"
-                      size="S"
                       onOpen={() => setIsEditPortOpen(true)}
                     />
                     <DrawerCard
                       title="Create Allowed Address Pair"
                       description="Specify additional IP or MAC addresses that are allowed to pass through this port."
                       category="Port"
-                      size="S"
                       onOpen={() => setIsCreateAllowedAddressPairOpen(true)}
                     />
                     <DrawerCard
                       title="Edit Floating IP"
                       description="Edit floating IP description."
                       category="Floating IP"
-                      size="S"
                       onOpen={() => setIsEditFloatingIPOpen(true)}
                     />
                     <DrawerCard
                       title="Allocate IP"
                       description="Assign an additional fixed IP address to a port from a subnet."
                       category="Port"
-                      size="S"
                       onOpen={() => setIsAllocateIPOpen(true)}
                     />
                   </div>
@@ -902,21 +613,18 @@ export function DrawersPage() {
                       title="Create Security Group Rule"
                       description="Create a rule to define allowed inbound or outbound network traffic for your security group."
                       category="Security Group"
-                      size="S"
                       onOpen={() => setIsCreateSecurityGroupRuleOpen(true)}
                     />
                     <DrawerCard
                       title="Create Security Group"
                       description="Create a security group to define network access rules for your instances."
                       category="Security Group"
-                      size="S"
                       onOpen={() => setIsCreateSecurityGroupOpen(true)}
                     />
                     <DrawerCard
                       title="Edit Security Group"
                       description="Edit security group name and description."
                       category="Security Group"
-                      size="S"
                       onOpen={() => setIsEditSecurityGroupOpen(true)}
                     />
                   </div>
@@ -932,63 +640,54 @@ export function DrawersPage() {
                       title="Add L7 Policy"
                       description="Add an L7 policy to control traffic routing based on layer 7 attributes like URL path or headers."
                       category="Load Balancer"
-                      size="S"
                       onOpen={() => setIsAddL7PolicyOpen(true)}
                     />
                     <DrawerCard
                       title="Register Certificate"
                       description="Register a certificate issued by an external CA for use within Compute resources."
                       category="Certificate"
-                      size="S"
                       onOpen={() => setIsRegisterCertificateOpen(true)}
                     />
                     <DrawerCard
                       title="Edit Certificate"
                       description="Edit certificate name and description."
                       category="Certificate"
-                      size="S"
                       onOpen={() => setIsEditCertificateOpen(true)}
                     />
                     <DrawerCard
                       title="Edit Load Balancer"
                       description="Edit load balancer name, description, and admin state."
                       category="Load Balancer"
-                      size="S"
                       onOpen={() => setIsEditLoadBalancerOpen(true)}
                     />
                     <DrawerCard
                       title="Edit Pool"
                       description="Edit pool settings including algorithm, session persistence, TLS, and admin state."
                       category="Load Balancer"
-                      size="S"
                       onOpen={() => setIsEditPoolOpen(true)}
                     />
                     <DrawerCard
                       title="Add L7 Rule"
                       description="Add an L7 rule to match incoming requests based on headers, paths, or other attributes."
                       category="Load Balancer"
-                      size="S"
                       onOpen={() => setIsAddL7RuleOpen(true)}
                     />
                     <DrawerCard
                       title="Edit Listener"
                       description="Edit listener settings including name, connection limits, timeouts, and allowed CIDRs."
                       category="Load Balancer"
-                      size="S"
                       onOpen={() => setIsEditListenerOpen(true)}
                     />
                     <DrawerCard
                       title="Create Health Monitor"
                       description="Create a health monitor for a pool to check backend member availability."
                       category="Load Balancer"
-                      size="S"
                       onOpen={() => setIsCreateHealthMonitorOpen(true)}
                     />
                     <DrawerCard
                       title="Edit Member"
                       description="Edit pool member settings including weight, monitor address, backup, and admin state."
                       category="Load Balancer"
-                      size="S"
                       onOpen={() => setIsEditMemberOpen(true)}
                     />
                   </div>
@@ -1004,7 +703,6 @@ export function DrawersPage() {
                       title="View Preferences"
                       description="Customize table view by showing/hiding columns, reordering columns, and adjusting rows per page."
                       category="Table"
-                      size="S"
                       onOpen={() => setIsViewPreferencesOpen(true)}
                     />
                   </div>
@@ -1056,281 +754,6 @@ export function DrawersPage() {
         instance={mockLockInstance}
         onSubmit={(isLocked) => {
           console.log('Lock setting:', { isLocked });
-        }}
-      />
-
-      <AttachVolumeDrawer
-        isOpen={isAttachVolumeOpen}
-        onClose={() => setIsAttachVolumeOpen(false)}
-        instanceName="web-server-10"
-        onAttach={(volumeId) => {
-          console.log('Attach volume:', { volumeId });
-        }}
-        onCreateNewVolume={() => {
-          console.log('Create new volume');
-        }}
-      />
-
-      <DetachVolumeDrawer
-        isOpen={isDetachVolumeOpen}
-        onClose={() => setIsDetachVolumeOpen(false)}
-        instanceName="web-server-10"
-        onDetach={(volumeId) => {
-          console.log('Detach volume:', { volumeId });
-        }}
-        onCreateNewNetwork={() => {
-          console.log('Create new network');
-        }}
-      />
-
-      <AttachInterfaceDrawer
-        isOpen={isAttachInterfaceOpen}
-        onClose={() => setIsAttachInterfaceOpen(false)}
-        instanceName="web-server-10"
-        onAttach={(networkId, fixedIp) => {
-          console.log('Attach interface:', { networkId, fixedIp });
-        }}
-      />
-
-      <DetachInterfaceDrawer
-        isOpen={isDetachInterfaceOpen}
-        onClose={() => setIsDetachInterfaceOpen(false)}
-        instanceName="web-server-10"
-        onDetach={(interfaceId) => {
-          console.log('Detach interface:', { interfaceId });
-        }}
-      />
-
-      <AssociateFloatingIPDrawer
-        isOpen={isAssociateFloatingIPOpen}
-        onClose={() => setIsAssociateFloatingIPOpen(false)}
-        instanceName="web-server-10"
-        onAssociate={(fixedIpId, floatingIpId) => {
-          console.log('Associate floating IP:', { fixedIpId, floatingIpId });
-        }}
-      />
-
-      <DisassociateFloatingIPDrawer
-        isOpen={isDisassociateFloatingIPOpen}
-        onClose={() => setIsDisassociateFloatingIPOpen(false)}
-        instanceName="tk-test"
-        onDisassociate={(floatingIpId) => {
-          console.log('Disassociate floating IP:', { floatingIpId });
-        }}
-      />
-
-      <ManageSecurityGroupsDrawer
-        isOpen={isManageSecurityGroupsOpen}
-        onClose={() => setIsManageSecurityGroupsOpen(false)}
-        instanceName="web-server-10"
-        onSave={(interfaceId, securityGroupIds) => {
-          console.log('Manage security groups:', { interfaceId, securityGroupIds });
-        }}
-      />
-
-      <ManageTagsDrawer
-        isOpen={isManageTagsOpen}
-        onClose={() => setIsManageTagsOpen(false)}
-        instanceName="my-web-01"
-        onSave={(tags) => {
-          console.log('Manage tags:', { tags });
-        }}
-      />
-
-      <RescueInstanceDrawer
-        isOpen={isRescueInstanceOpen}
-        onClose={() => setIsRescueInstanceOpen(false)}
-        instanceName="web-server-10"
-        currentImage="ubuntu-24.04"
-        protocol="HTTP"
-        onRescue={(imageOption) => {
-          console.log('Rescue instance:', { imageOption });
-        }}
-      />
-
-      <RebuildInstanceDrawer
-        isOpen={isRebuildInstanceOpen}
-        onClose={() => setIsRebuildInstanceOpen(false)}
-        instanceName="web-server-10"
-        currentImage="ubuntu-24.04"
-        onRebuild={(imageOption) => {
-          console.log('Rebuild instance:', { imageOption });
-        }}
-      />
-
-      <ResizeInstanceDrawer
-        isOpen={isResizeInstanceOpen}
-        onClose={() => setIsResizeInstanceOpen(false)}
-        instanceName="web-server-10"
-        currentFlavor={{
-          id: '90jkl567',
-          name: 'xlarge',
-          vCPU: 2,
-          ram: '2GiB',
-          disk: '50GiB',
-          ephemeralDisk: '0GiB',
-          gpu: 2,
-        }}
-        vcpuQuota={{ used: 5, total: 10 }}
-        ramQuota={{ used: 10, total: 50 }}
-        onResize={(targetFlavorId, approvalMethod) => {
-          console.log('Resize instance:', { targetFlavorId, approvalMethod });
-        }}
-      />
-
-      <RestoreFromSnapshotDrawer
-        isOpen={isRestoreFromSnapshotOpen}
-        onClose={() => setIsRestoreFromSnapshotOpen(false)}
-        volumeName="vol-03"
-        onRestore={(snapshotId) => {
-          console.log('Restore from snapshot:', { snapshotId });
-        }}
-      />
-
-      <AttachVolumeToInstanceDrawer
-        isOpen={isAttachVolumeToInstanceOpen}
-        onClose={() => setIsAttachVolumeToInstanceOpen(false)}
-        volumeName="vol-03"
-        onAttach={(instanceId) => {
-          console.log('Attach volume to instance:', { instanceId });
-        }}
-      />
-
-      <CreateSubnetDrawer
-        isOpen={isCreateSubnetOpen}
-        onClose={() => setIsCreateSubnetOpen(false)}
-        onCreate={(data) => {
-          console.log('Create subnet:', data);
-        }}
-      />
-
-      <CreateRouterDrawer
-        isOpen={isCreateRouterOpen}
-        onClose={() => setIsCreateRouterOpen(false)}
-        onCreate={(data) => {
-          console.log('Create router:', data);
-        }}
-      />
-
-      <AttachPortToInstanceDrawer
-        isOpen={isAttachPortToInstanceOpen}
-        onClose={() => setIsAttachPortToInstanceOpen(false)}
-        portName="port-01"
-        onAttach={(instanceId) => {
-          console.log('Attach port to instance:', { instanceId });
-        }}
-      />
-
-      <ManagePortSecurityGroupsDrawer
-        isOpen={isManagePortSecurityGroupsOpen}
-        onClose={() => setIsManagePortSecurityGroupsOpen(false)}
-        portName="port-01"
-        initialPortSecurity={true}
-        onSave={(data) => {
-          console.log('Save port security groups:', data);
-        }}
-      />
-
-      <AssociateLBFloatingIPDrawer
-        isOpen={isAssociateLBFloatingIPOpen}
-        onClose={() => setIsAssociateLBFloatingIPOpen(false)}
-        loadBalancerName="web-lb-01"
-        ownedNetworkName="private-net"
-        ownedNetworkId="10k20fjn"
-        onAssociate={(floatingIpId) => {
-          console.log('Associate floating IP to LB:', { floatingIpId });
-        }}
-      />
-
-      <ChangeServerCertificateDrawer
-        isOpen={isChangeServerCertificateOpen}
-        onClose={() => setIsChangeServerCertificateOpen(false)}
-        currentCertificateName="server-cert-1"
-        currentCertificateExpiry="2025-10-10"
-        onChange={(certificateId) => {
-          console.log('Change server certificate:', { certificateId });
-        }}
-      />
-
-      <ChangeCACertificateDrawer
-        isOpen={isChangeCACertificateOpen}
-        onClose={() => setIsChangeCACertificateOpen(false)}
-        currentCertificateName="ca-cert-1"
-        currentCertificateExpiry="2025-10-10"
-        onChange={(certificateId) => {
-          console.log('Change CA certificate:', { certificateId });
-        }}
-      />
-
-      <ManageSNICertificateDrawer
-        isOpen={isManageSNICertificateOpen}
-        onClose={() => setIsManageSNICertificateOpen(false)}
-        isSNIEnabled={true}
-        onSave={(enabled, certificateIds) => {
-          console.log('Manage SNI certificates:', { enabled, certificateIds });
-        }}
-      />
-
-      <ExternalGatewaySettingDrawer
-        isOpen={isExternalGatewaySettingOpen}
-        onClose={() => setIsExternalGatewaySettingOpen(false)}
-        routerName="router-01"
-        isGatewayEnabled={true}
-        onSave={(enabled, networkId) => {
-          console.log('External gateway setting:', { enabled, networkId });
-        }}
-      />
-
-      <ConnectSubnetDrawer
-        isOpen={isConnectSubnetOpen}
-        onClose={() => setIsConnectSubnetOpen(false)}
-        routerName="router-01"
-        onConnect={(networkId, subnetId) => {
-          console.log('Connect subnet:', { networkId, subnetId });
-        }}
-      />
-
-      <AssociatePortFloatingIPDrawer
-        isOpen={isAssociatePortFloatingIPOpen}
-        onClose={() => setIsAssociatePortFloatingIPOpen(false)}
-        portName="port-10"
-        onAssociate={(fixedIpId, floatingIpId) => {
-          console.log('Associate port floating IP:', { fixedIpId, floatingIpId });
-        }}
-      />
-
-      <DisconnectSubnetDrawer
-        isOpen={isDisconnectSubnetOpen}
-        onClose={() => setIsDisconnectSubnetOpen(false)}
-        routerName="router-01"
-        onDisconnect={(subnetId) => {
-          console.log('Disconnect subnet:', { subnetId });
-        }}
-      />
-
-      <ManageMembersDrawer
-        isOpen={isManageMembersOpen}
-        onClose={() => setIsManageMembersOpen(false)}
-        poolName="pool-http"
-        onSave={(members) => {
-          console.log('Manage members:', { members });
-        }}
-      />
-
-      <AssociateFloatingIPResourceDrawer
-        isOpen={isAssociateFloatingIPResourceOpen}
-        onClose={() => setIsAssociateFloatingIPResourceOpen(false)}
-        floatingIp="172.244.228"
-        onAssociate={(resourceId, fixedIpId) => {
-          console.log('Associate floating IP:', { resourceId, fixedIpId });
-        }}
-      />
-
-      <AllocateFloatingIPDrawer
-        isOpen={isAllocateFloatingIPOpen}
-        onClose={() => setIsAllocateFloatingIPOpen(false)}
-        onAllocate={(data) => {
-          console.log('Allocate floating IP:', data);
         }}
       />
 

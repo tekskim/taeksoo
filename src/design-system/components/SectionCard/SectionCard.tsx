@@ -52,9 +52,9 @@ function SectionCardHeader({ title, actions, className, ...props }: SectionCardH
       )}
       {...props}
     >
-      <h3 className="text-[14px] font-medium leading-5 text-[var(--color-text-default)]">
+      <h5 className="text-[14px] font-semibold leading-5 text-[var(--color-text-default)]">
         {title}
-      </h3>
+      </h5>
       {actions && (
         <div className="flex items-center gap-2">
           {actions}
@@ -149,5 +149,12 @@ export {
   SectionCardContent,
   SectionCardDataRow,
 };
+
+
+
+
+
+
+
 
 

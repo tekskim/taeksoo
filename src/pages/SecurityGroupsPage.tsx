@@ -20,7 +20,6 @@ import { Sidebar } from '@/components/Sidebar';
 import { useTabs } from '@/contexts/TabContext';
 import { ViewPreferencesDrawer, type ColumnConfig } from '@/components/ViewPreferencesDrawer';
 import {
-  IconPlus,
   IconDotsCircleHorizontal,
   IconTrash,
   IconDownload,
@@ -90,12 +89,11 @@ export function SecurityGroupsPage() {
   const [rowsPerPage, setRowsPerPage] = useState(10);
 
   const defaultColumnConfig: ColumnConfig[] = [
-    { id: 'status', label: 'Status', visible: true, locked: true },
     { id: 'name', label: 'Name', visible: true, locked: true },
     { id: 'description', label: 'Description', visible: true },
     { id: 'ingressRules', label: 'Ingress Rules', visible: true },
     { id: 'egressRules', label: 'Egress Rules', visible: true },
-    { id: 'createdAt', label: 'Created at', visible: true },
+    { id: 'createdAt', label: 'Created At', visible: true },
     { id: 'actions', label: 'Action', visible: true, locked: true },
   ];
 
@@ -139,18 +137,10 @@ export function SecurityGroupsPage() {
   // Table columns
   const columns: TableColumn<SecurityGroup>[] = [
     {
-      key: 'status',
-      label: 'Status',
-      width: '59px',
-      align: 'center',
-      render: (_, row) => (
-        <StatusIndicator status={sgStatusMap[row.status]} layout="icon-only" />
-      ),
-    },
-    {
       key: 'name',
       label: 'Name',
       flex: 1,
+      sortable: true,
       render: (_, row) => (
         <div className="flex flex-col gap-0.5">
           <Link
@@ -170,21 +160,25 @@ export function SecurityGroupsPage() {
       key: 'description',
       label: 'Description',
       flex: 1,
+      sortable: true,
     },
     {
       key: 'ingressRules',
       label: 'Ingress Rules',
-      width: '112px',
+      flex: 1,
+      sortable: true,
     },
     {
       key: 'egressRules',
       label: 'Egress Rules',
-      width: '109px',
+      flex: 1,
+      sortable: true,
     },
     {
       key: 'createdAt',
-      label: 'Created at',
-      width: '120px',
+      label: 'Created At',
+      flex: 1,
+      sortable: true,
     },
     {
       key: 'actions',
@@ -194,8 +188,8 @@ export function SecurityGroupsPage() {
       render: (_, row) => (
         <div onClick={(e) => e.stopPropagation()}>
           <ContextMenu items={getContextMenuItems(row)} trigger="click">
-            <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors">
-              <IconDotsCircleHorizontal size={16} stroke={1} className="text-[var(--color-text-subtle)]" />
+            <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
+              <IconDotsCircleHorizontal size={16} stroke={1.5} className="text-[var(--action-icon-color)]" />
             </button>
           </ContextMenu>
         </div>
@@ -225,15 +219,16 @@ export function SecurityGroupsPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[var(--color-surface-subtle)]">
-      <Sidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(false)} />
+    <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
+      <Sidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(prev => !prev)} />
 
       <main
-        className={`min-h-screen bg-[var(--color-surface-default)] transition-[margin] duration-200 overflow-x-auto ${
-          sidebarOpen ? 'ml-[200px]' : 'ml-0'
+        className={`absolute top-0 bottom-0 right-0 flex flex-col bg-[var(--color-surface-default)] transition-[left] duration-200 ${
+          sidebarOpen ? 'left-[200px]' : 'left-0'
         }`}
       >
-        <div className="min-w-[var(--layout-content-min-width)]">
+        {/* Fixed Header Area */}
+        <div className="shrink-0 bg-[var(--color-surface-default)]">
         {/* Tab Bar */}
         <TabBar
           tabs={tabBarTabs}
@@ -268,7 +263,10 @@ export function SecurityGroupsPage() {
             />
           }
         />
+        </div>
 
+        {/* Scrollable Content Area */}
+        <div className="flex-1 overflow-auto min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll">
         {/* Main Content */}
         <div className="pt-4 px-8 pb-6 bg-[var(--color-surface-default)]">
           <VStack gap={3}>
@@ -277,7 +275,7 @@ export function SecurityGroupsPage() {
               <h1 className="text-[length:var(--font-size-16)] font-semibold text-[var(--color-text-default)]">
                 Security Groups
               </h1>
-              <Button variant="primary" size="md" leftIcon={<IconPlus size={14} />}>
+              <Button variant="primary" size="md">
                 Create Security Group
               </Button>
             </div>
@@ -296,7 +294,7 @@ export function SecurityGroupsPage() {
                       fullWidth
                     />
                   </div>
-                  <Button variant="secondary" size="sm" icon={<IconDownload size={12} />} aria-label="Download" />
+                  <Button variant="secondary" size="sm" iconOnly icon={<IconDownload size={12} />} aria-label="Download" />
                 </ListToolbar.Actions>
               }
               bulkActions={
@@ -318,6 +316,7 @@ export function SecurityGroupsPage() {
               currentPage={currentPage}
               totalPages={totalPages}
               totalItems={filteredGroups.length}
+              selectedCount={selectedGroups.length}
               onPageChange={setCurrentPage}
               showSettings
               onSettingsClick={() => setIsPreferencesOpen(true)}
@@ -328,6 +327,9 @@ export function SecurityGroupsPage() {
               columns={visibleColumns}
               data={paginatedGroups}
               rowKey="id"
+              selectable
+              selectedKeys={selectedGroups}
+              onSelectionChange={setSelectedGroups}
             />
           </VStack>
         </div>

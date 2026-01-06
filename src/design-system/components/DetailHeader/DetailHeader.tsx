@@ -147,21 +147,6 @@ function DetailHeaderInfoCard({
       )}
       {...props}
     >
-      {/* Copy button positioned at top-right */}
-      {copyable && (
-        <button
-          onClick={handleCopy}
-          className="absolute top-2 right-2 p-1 rounded hover:bg-[var(--color-surface-muted)] transition-colors"
-          aria-label="Copy to clipboard"
-        >
-          {copied ? (
-            <IconCheck size={12} className="text-[var(--color-state-success)]" />
-          ) : (
-            <IconCopy size={12} className="text-[var(--color-text-default)]" />
-          )}
-        </button>
-      )}
-      
       {/* Status indicator positioned at top-right - large circular style */}
       {status && (
         <div className="absolute top-1/2 right-3 -translate-y-1/2">
@@ -169,13 +154,32 @@ function DetailHeaderInfoCard({
         </div>
       )}
       
-      <div className="flex flex-col gap-1.5 min-w-0 pr-6">
-        <span className="text-[11px] font-medium leading-4 text-[var(--color-text-subtle)]">
+      <div className={twMerge('flex flex-col gap-1.5 min-w-0', status && 'pr-6')}>
+        <span className="text-[11px] font-medium leading-4 text-[var(--color-text-subtle)] whitespace-nowrap">
           {label}
         </span>
-        <span className="text-[12px] leading-4 text-[var(--color-text-default)] font-normal truncate" title={value}>
-          {value}
-        </span>
+        <div className="flex items-center gap-1.5 min-w-0">
+          <span 
+            className="text-[12px] leading-4 font-normal truncate text-[var(--color-text-default)]"
+            title={value}
+          >
+            {value}
+          </span>
+          {/* Copy button inline next to value */}
+          {copyable && (
+            <button
+              onClick={handleCopy}
+              className="shrink-0 p-0.5 rounded hover:bg-[var(--color-surface-default)] transition-colors"
+              aria-label="Copy to clipboard"
+            >
+              {copied ? (
+                <IconCheck size={12} className="text-[var(--color-state-success)]" />
+              ) : (
+                <IconCopy size={12} className="text-[var(--color-action-primary)]" />
+              )}
+            </button>
+          )}
+        </div>
       </div>
     </div>
   );

@@ -1,0 +1,426 @@
+import { useState, useMemo } from 'react';
+import { useParams, useNavigate, Link } from 'react-router-dom';
+import {
+  Button,
+  VStack,
+  HStack,
+  TabBar,
+  TopBar,
+  TopBarAction,
+  Breadcrumb,
+  Tabs,
+  TabList,
+  Tab,
+  TabPanel,
+  DetailHeader,
+  SearchInput,
+  Table,
+  Pagination,
+  StatusIndicator,
+  ContextMenu,
+  Checkbox,
+  type TableColumn,
+  type ContextMenuItem,
+} from '@/design-system';
+import { Sidebar } from '@/components/Sidebar';
+import { useTabs } from '@/contexts/TabContext';
+import {
+  IconCirclePlus,
+  IconTrash,
+  IconBell,
+  IconDotsCircleHorizontal,
+  IconLock,
+  IconLockOpen,
+  IconCopy,
+  IconCheck,
+  IconTerminal2,
+} from '@tabler/icons-react';
+
+/* ----------------------------------------
+   Types
+   ---------------------------------------- */
+
+type PolicyType = 'Anti-affinity' | 'Affinity' | 'Soft-anti-affinity' | 'Soft-affinity';
+type InstanceStatus = 'active' | 'building' | 'error' | 'shutoff' | 'paused';
+
+interface ServerGroupDetail {
+  id: string;
+  name: string;
+  policy: PolicyType;
+}
+
+interface ServerGroupInstance {
+  id: string;
+  name: string;
+  status: InstanceStatus;
+  locked: boolean;
+  image: string;
+  fixedIP: string;
+  az: string;
+  createdAt: string;
+}
+
+/* ----------------------------------------
+   Mock Data
+   ---------------------------------------- */
+
+const mockServerGroupDetail: ServerGroupDetail = {
+  id: '7284d9174e81431e93060a9bbcf2cdfd',
+  name: 'server-1',
+  policy: 'Affinity',
+};
+
+const mockServerGroupInstances: ServerGroupInstance[] = [
+  { id: '29tgj234', name: 'web-server-01', status: 'active', locked: true, image: 'Ubuntu2404', fixedIP: '10.62.0.30', az: 'zone-o', createdAt: '2025-09-30' },
+  { id: '29tgj235', name: 'web-server-01', status: 'active', locked: true, image: 'Ubuntu2404', fixedIP: '10.62.0.30', az: 'zone-o', createdAt: '2025-09-30' },
+  { id: '29tgj236', name: 'web-server-01', status: 'active', locked: true, image: 'Ubuntu2404', fixedIP: '10.62.0.30', az: 'zone-o', createdAt: '2025-09-30' },
+  { id: '29tgj237', name: 'web-server-01', status: 'error', locked: false, image: 'Ubuntu2404', fixedIP: '10.62.0.30', az: 'zone-o', createdAt: '2025-09-30' },
+  { id: '29tgj238', name: 'web-server-01', status: 'active', locked: true, image: 'Ubuntu2404', fixedIP: '10.62.0.30', az: 'zone-o', createdAt: '2025-09-30' },
+  { id: '29tgj239', name: 'web-server-01', status: 'shutoff', locked: false, image: 'Ubuntu2404', fixedIP: '10.62.0.30', az: 'zone-o', createdAt: '2025-09-30' },
+  { id: '29tgj240', name: 'web-server-01', status: 'active', locked: true, image: 'Ubuntu2404', fixedIP: '10.62.0.30', az: 'zone-o', createdAt: '2025-09-30' },
+  { id: '29tgj241', name: 'web-server-01', status: 'active', locked: false, image: 'Ubuntu2404', fixedIP: '10.62.0.30', az: 'zone-o', createdAt: '2025-09-30' },
+  { id: '29tgj242', name: 'web-server-01', status: 'building', locked: false, image: 'Ubuntu2404', fixedIP: '10.62.0.30', az: 'zone-o', createdAt: '2025-09-30' },
+  { id: '29tgj243', name: 'web-server-01', status: 'active', locked: true, image: 'Ubuntu2404', fixedIP: '10.62.0.30', az: 'zone-o', createdAt: '2025-09-30' },
+  { id: '29tgj244', name: 'web-server-01', status: 'paused', locked: false, image: 'Ubuntu2404', fixedIP: '10.62.0.30', az: 'zone-o', createdAt: '2025-09-30' },
+];
+
+/* ----------------------------------------
+   Copy Button Component
+   ---------------------------------------- */
+
+function CopyButton({ value }: { value: string }) {
+  const [copied, setCopied] = useState(false);
+
+  const handleCopy = () => {
+    navigator.clipboard.writeText(value);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
+  return (
+    <button
+      onClick={handleCopy}
+      className="p-0.5 rounded hover:bg-[var(--color-surface-muted)] transition-colors shrink-0"
+      aria-label="Copy to clipboard"
+    >
+      {copied ? (
+        <IconCheck size={16} className="text-[var(--color-state-success)]" />
+      ) : (
+        <IconCopy size={12} className="text-[var(--color-text-subtle)]" />
+      )}
+    </button>
+  );
+}
+
+/* ----------------------------------------
+   Server Group Detail Page
+   ---------------------------------------- */
+
+export function ServerGroupDetailPage() {
+  const { id: _id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
+  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [activeDetailTab, setActiveDetailTab] = useState('instances');
+  
+  // Instance search and pagination state
+  const [instanceSearchQuery, setInstanceSearchQuery] = useState('');
+  const [instanceCurrentPage, setInstanceCurrentPage] = useState(1);
+  const [selectedInstances, setSelectedInstances] = useState<string[]>([]);
+  const instancesPerPage = 10;
+  
+  // Preferences state
+  const [isPreferencesOpen, setIsPreferencesOpen] = useState(false);
+
+  // In a real app, you would fetch the server group data based on the ID
+  const serverGroup = mockServerGroupDetail;
+
+  // Global tab management
+  const { tabs, activeTabId, closeTab, selectTab, addNewTab } = useTabs();
+
+  // Convert tabs to TabBar format
+  const tabBarTabs = tabs.map((tab) => ({
+    id: tab.id,
+    label: tab.label,
+    closable: tab.closable,
+  }));
+
+  // Breadcrumb items
+  const breadcrumbItems = [
+    { label: 'Proj-1', href: '/' },
+    { label: 'Server Group', href: '/compute/server-groups' },
+    { label: serverGroup.name },
+  ];
+
+  // Filter instances
+  const filteredInstances = useMemo(() => {
+    if (!instanceSearchQuery) return mockServerGroupInstances;
+    const query = instanceSearchQuery.toLowerCase();
+    return mockServerGroupInstances.filter(
+      (inst) =>
+        inst.name.toLowerCase().includes(query) ||
+        inst.id.toLowerCase().includes(query) ||
+        inst.image.toLowerCase().includes(query) ||
+        inst.fixedIP.toLowerCase().includes(query)
+    );
+  }, [instanceSearchQuery]);
+
+  const instanceTotalPages = Math.ceil(filteredInstances.length / instancesPerPage);
+
+  const paginatedInstances = useMemo(() => {
+    const start = (instanceCurrentPage - 1) * instancesPerPage;
+    return filteredInstances.slice(start, start + instancesPerPage);
+  }, [filteredInstances, instanceCurrentPage, instancesPerPage]);
+
+  // Context menu items for instances
+  const getInstanceContextMenuItems = (instance: ServerGroupInstance): ContextMenuItem[] => [
+    { id: 'console', label: 'Console', onClick: () => console.log('Console', instance.id) },
+    { id: 'start', label: 'Start', onClick: () => console.log('Start', instance.id) },
+    { id: 'stop', label: 'Stop', onClick: () => console.log('Stop', instance.id) },
+    { id: 'reboot', label: 'Reboot', onClick: () => console.log('Reboot', instance.id) },
+    { id: 'divider1', type: 'divider' },
+    { id: 'delete', label: 'Delete', status: 'danger', onClick: () => console.log('Delete', instance.id) },
+  ];
+
+  // Instance table columns
+  const instanceColumns: TableColumn<ServerGroupInstance>[] = [
+    {
+      key: 'status',
+      label: 'Status',
+      width: '59px',
+      align: 'center',
+      render: (_, row) => (
+        <StatusIndicator status={row.status} layout="icon-only" />
+      ),
+    },
+    {
+      key: 'name',
+      label: 'Name',
+      flex: 1,
+      render: (_, row) => (
+        <div className="flex flex-col gap-0.5">
+          <Link
+            to={`/instances/${row.id}`}
+            className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {row.name}
+          </Link>
+          <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
+            ID : {row.id}
+          </span>
+        </div>
+      ),
+    },
+    {
+      key: 'locked',
+      label: 'Locked',
+      width: '62px',
+      align: 'center',
+      render: (_, row) => (
+        row.locked ? (
+          <IconLock size={16} stroke={1.5} className="text-[var(--color-text-default)]" />
+        ) : (
+          <IconLockOpen size={16} stroke={1.5} className="text-[var(--color-text-subtle)]" />
+        )
+      ),
+    },
+    {
+      key: 'image',
+      label: 'Image',
+      flex: 1,
+      render: (value) => <span>{value}</span>,
+    },
+    {
+      key: 'fixedIP',
+      label: 'Fixed IP',
+      flex: 1,
+      render: (value) => <span>{value}</span>,
+    },
+    {
+      key: 'az',
+      label: 'AZ',
+      flex: 1,
+      render: (value) => <span>{value}</span>,
+    },
+    {
+      key: 'createdAt',
+      label: 'Created At',
+      flex: 1,
+      sortable: true,
+      render: (value) => <span>{value}</span>,
+    },
+    {
+      key: 'actions',
+      label: 'Action',
+      width: '72px',
+      align: 'center',
+      render: (_, row) => (
+        <HStack gap={1} className="justify-center">
+          <button 
+            className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group"
+            onClick={(e) => {
+              e.stopPropagation();
+              console.log('Open console for', row.id);
+            }}
+            title="Open console"
+          >
+            <IconTerminal2 size={16} stroke={1.5} className="text-[var(--action-icon-color)]" />
+          </button>
+        <ContextMenu
+          items={getInstanceContextMenuItems(row)}
+          trigger={
+            <button
+                className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <IconDotsCircleHorizontal size={16} stroke={1.5} className="text-[var(--action-icon-color)]" />
+            </button>
+          }
+        />
+        </HStack>
+      ),
+    },
+  ];
+
+  return (
+    <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
+      {/* Sidebar */}
+      <Sidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
+
+      {/* Main Content */}
+      <main
+        className={`absolute top-0 bottom-0 right-0 flex flex-col bg-[var(--color-surface-default)] transition-[left] duration-200 ${
+          sidebarOpen ? 'left-[200px]' : 'left-0'
+        }`}
+      >
+        {/* Fixed Header Area */}
+        <div className="shrink-0 bg-[var(--color-surface-default)]">
+          {/* Tab Bar */}
+          <TabBar
+            tabs={tabBarTabs}
+            activeTab={activeTabId}
+            onTabChange={selectTab}
+            onTabClose={closeTab}
+            onTabAdd={addNewTab}
+            showAddButton={true}
+            showWindowControls={true}
+          />
+
+          {/* Top Bar */}
+          <TopBar
+            showSidebarToggle={!sidebarOpen}
+            onSidebarToggle={() => setSidebarOpen(true)}
+            showNavigation={true}
+            onBack={() => navigate(-1)}
+            onForward={() => navigate(1)}
+            breadcrumb={<Breadcrumb items={breadcrumbItems} />}
+            actions={
+              <TopBarAction
+                icon={<IconBell size={16} stroke={1.5} />}
+                aria-label="Notifications"
+                badge={true}
+              />
+            }
+          />
+        </div>
+
+        {/* Scrollable Content Area */}
+        <div className="flex-1 overflow-auto min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll">
+          {/* Page Content */}
+          <div className="pt-4 px-8 pb-20 bg-[var(--color-surface-default)]">
+            <VStack gap={6} className="min-w-[1176px]">
+              {/* Detail Header */}
+              <DetailHeader>
+                <DetailHeader.Title>{serverGroup.name}</DetailHeader.Title>
+                <DetailHeader.Actions>
+                  <Button
+                    variant="secondary"
+                    size="sm"
+                    leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
+                  >
+                    Create Instance
+                  </Button>
+                  <Button
+                    variant="secondary"
+                    size="sm"
+                    leftIcon={<IconTrash size={12} stroke={1.5} />}
+                  >
+                    Delete
+                  </Button>
+                </DetailHeader.Actions>
+                <DetailHeader.InfoGrid>
+                  <DetailHeader.InfoCard label="Policy" value={serverGroup.policy} />
+                  <DetailHeader.InfoCard 
+                    label="ID" 
+                    value={serverGroup.id} 
+                    copyable
+                  />
+                </DetailHeader.InfoGrid>
+              </DetailHeader>
+
+              {/* Tabs Content */}
+              <div className="w-full">
+                <Tabs value={activeDetailTab} onChange={setActiveDetailTab} variant="underline" size="sm">
+                  <TabList>
+                    <Tab value="instances">Instances</Tab>
+                  </TabList>
+
+                  {/* Instances Tab */}
+                  <TabPanel value="instances">
+                    <VStack gap={3} className="pt-6">
+                      {/* Section Header */}
+                      <h2 className="text-[length:var(--font-size-14)] font-semibold text-[var(--color-text-default)]">
+                        Instances
+                      </h2>
+
+                      {/* Search */}
+                      <div className="w-[280px]">
+                        <SearchInput
+                          placeholder="Find instance with filters"
+                          value={instanceSearchQuery}
+                          onChange={(e) => setInstanceSearchQuery(e.target.value)}
+                          onClear={() => setInstanceSearchQuery('')}
+                          size="sm"
+                          fullWidth
+                        />
+                      </div>
+
+                      {/* Pagination */}
+                      <Pagination
+                        currentPage={instanceCurrentPage}
+                        totalPages={instanceTotalPages}
+                        onPageChange={setInstanceCurrentPage}
+                        totalItems={filteredInstances.length}
+                        selectedCount={selectedInstances.length}
+                        showSettings
+                        onSettingsClick={() => setIsPreferencesOpen(true)}
+                      />
+
+                      {/* Instances Table */}
+                      <Table<ServerGroupInstance>
+                        columns={instanceColumns}
+                        data={paginatedInstances}
+                        rowKey="id"
+                        emptyMessage="No instances found"
+                      />
+                    </VStack>
+                  </TabPanel>
+                </Tabs>
+              </div>
+            </VStack>
+          </div>
+        </div>
+      </main>
+    </div>
+  );
+}
+
+export default ServerGroupDetailPage;
+
+
+
+
+
+
+
+

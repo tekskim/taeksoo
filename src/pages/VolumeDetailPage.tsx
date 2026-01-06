@@ -1,0 +1,628 @@
+import { useState, useMemo } from 'react';
+import { useParams, useNavigate, Link } from 'react-router-dom';
+import {
+  Button,
+  VStack,
+  TabBar,
+  TopBar,
+  TopBarAction,
+  Breadcrumb,
+  Tabs,
+  TabList,
+  Tab,
+  TabPanel,
+  DetailHeader,
+  SectionCard,
+  SearchInput,
+  Table,
+  Pagination,
+  StatusIndicator,
+  ContextMenu,
+  type TableColumn,
+  type ContextMenuItem,
+} from '@/design-system';
+import { Sidebar } from '@/components/Sidebar';
+import { useTabs } from '@/contexts/TabContext';
+import {
+  IconCirclePlus,
+  IconBell,
+  IconTrash,
+  IconChevronDown,
+  IconDotsCircleHorizontal,
+  IconExternalLink,
+  IconDownload,
+} from '@tabler/icons-react';
+
+/* ----------------------------------------
+   Types
+   ---------------------------------------- */
+
+type VolumeStatus = 'available' | 'in-use' | 'error' | 'creating' | 'deleting';
+type SnapshotStatus = 'available' | 'creating' | 'deleting' | 'error';
+type BackupStatus = 'available' | 'creating' | 'restoring' | 'error';
+
+interface VolumeDetail {
+  id: string;
+  name: string;
+  status: VolumeStatus;
+  size: string;
+  createdAt: string;
+  // Basic Information
+  volumeName: string;
+  availabilityZone: string;
+  description: string;
+  // Attachments
+  attachedTo: string | null;
+  attachedToId: string | null;
+  // Source
+  dataSourceType: string;
+  // Specifications
+  volumeType: string;
+  bootable: boolean;
+  encryption: boolean;
+}
+
+interface VolumeSnapshot {
+  id: string;
+  name: string;
+  status: SnapshotStatus;
+  size: string;
+  createdAt: string;
+}
+
+interface VolumeBackup {
+  id: string;
+  name: string;
+  status: BackupStatus;
+  backupMode: string;
+  size: string;
+  createdAt: string;
+}
+
+/* ----------------------------------------
+   Mock Data
+   ---------------------------------------- */
+
+const mockVolumeDetail: VolumeDetail = {
+  id: '7284d9174e81431e93060a9bbcf2cdfd',
+  name: 'vol-1',
+  status: 'available',
+  size: '1500 GiB',
+  createdAt: '2025-07-25 09:12:20',
+  // Basic Information
+  volumeName: 'Ubuntu-base',
+  availabilityZone: 'nova',
+  description: '-',
+  // Attachments
+  attachedTo: 'web-server-10',
+  attachedToId: 'inst-001',
+  // Source
+  dataSourceType: 'Blank Volume',
+  // Specifications
+  volumeType: '_DEFAULT_',
+  bootable: false,
+  encryption: false,
+};
+
+// Mock volume snapshots
+const mockVolumeSnapshots: VolumeSnapshot[] = Array.from({ length: 115 }, (_, i) => ({
+  id: `snap-${String(i + 1).padStart(3, '0')}`,
+  name: `vol-snap-${String(34 + i).padStart(2, '0')}`,
+  status: 'available' as SnapshotStatus,
+  size: '1500GiB',
+  createdAt: '2025-09-12',
+}));
+
+// Mock volume backups
+const mockVolumeBackups: VolumeBackup[] = Array.from({ length: 115 }, (_, i) => ({
+  id: `backup-${String(i + 1).padStart(3, '0')}`,
+  name: `vol-backup-${String(34 + i).padStart(2, '0')}`,
+  status: 'available' as BackupStatus,
+  backupMode: 'Full Backup',
+  size: '1500GiB',
+  createdAt: '2025-09-12',
+}));
+
+/* ----------------------------------------
+   Status Mapping
+   ---------------------------------------- */
+
+const volumeStatusDisplayMap: Record<VolumeStatus, string> = {
+  'available': 'Available',
+  'in-use': 'In Use',
+  'error': 'Error',
+  'creating': 'Creating',
+  'deleting': 'Deleting',
+};
+
+const snapshotStatusMap: Record<SnapshotStatus, 'active' | 'building' | 'error' | 'pending'> = {
+  'available': 'active',
+  'creating': 'building',
+  'deleting': 'pending',
+  'error': 'error',
+};
+
+const backupStatusMap: Record<BackupStatus, 'active' | 'building' | 'error' | 'pending'> = {
+  'available': 'active',
+  'creating': 'building',
+  'restoring': 'pending',
+  'error': 'error',
+};
+
+/* ----------------------------------------
+   Volume Detail Page
+   ---------------------------------------- */
+
+export function VolumeDetailPage() {
+  const { id: _id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
+  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [activeDetailTab, setActiveDetailTab] = useState('details');
+
+  // Snapshots tab state
+  const [snapshotSearchQuery, setSnapshotSearchQuery] = useState('');
+  const [snapshotCurrentPage, setSnapshotCurrentPage] = useState(1);
+  const snapshotsPerPage = 10;
+
+  // Backups tab state
+  const [backupSearchQuery, setBackupSearchQuery] = useState('');
+  const [backupCurrentPage, setBackupCurrentPage] = useState(1);
+  const backupsPerPage = 10;
+
+  // Preferences state
+  const [isPreferencesOpen, setIsPreferencesOpen] = useState(false);
+
+  // In a real app, you would fetch the volume data based on the ID
+  const volume = mockVolumeDetail;
+  const snapshots = mockVolumeSnapshots;
+  const backups = mockVolumeBackups;
+
+  const { tabs, activeTabId, closeTab, selectTab } = useTabs();
+
+  const tabBarTabs = tabs.map((tab) => ({
+    id: tab.id,
+    label: tab.label,
+    closable: tab.closable,
+  }));
+
+  const breadcrumbItems = [
+    { label: 'Proj-1', href: '#' },
+    { label: 'Volumes', href: '/compute/volumes' },
+    { label: volume.name, href: `/volumes/${volume.id}` },
+  ];
+
+  // Filter snapshots by search query
+  const filteredSnapshots = useMemo(() => {
+    if (!snapshotSearchQuery) return snapshots;
+    const query = snapshotSearchQuery.toLowerCase();
+    return snapshots.filter(
+      (snap) =>
+        snap.name.toLowerCase().includes(query) ||
+        snap.id.toLowerCase().includes(query)
+    );
+  }, [snapshots, snapshotSearchQuery]);
+
+  const snapshotTotalPages = Math.ceil(filteredSnapshots.length / snapshotsPerPage);
+  const paginatedSnapshots = filteredSnapshots.slice(
+    (snapshotCurrentPage - 1) * snapshotsPerPage,
+    snapshotCurrentPage * snapshotsPerPage
+  );
+
+  // Filter backups by search query
+  const filteredBackups = useMemo(() => {
+    if (!backupSearchQuery) return backups;
+    const query = backupSearchQuery.toLowerCase();
+    return backups.filter(
+      (backup) =>
+        backup.name.toLowerCase().includes(query) ||
+        backup.id.toLowerCase().includes(query)
+    );
+  }, [backups, backupSearchQuery]);
+
+  const backupTotalPages = Math.ceil(filteredBackups.length / backupsPerPage);
+  const paginatedBackups = filteredBackups.slice(
+    (backupCurrentPage - 1) * backupsPerPage,
+    backupCurrentPage * backupsPerPage
+  );
+
+  // Context menu items for snapshot actions
+  const getSnapshotContextMenuItems = (_snapshot: VolumeSnapshot): ContextMenuItem[] => [
+    { id: 'create-volume', label: 'Create Volume', onClick: () => {} },
+    { id: 'edit', label: 'Edit', onClick: () => {} },
+    { id: 'delete', label: 'Delete', onClick: () => {}, status: 'danger' },
+  ];
+
+  // Context menu items for backup actions
+  const getBackupContextMenuItems = (_backup: VolumeBackup): ContextMenuItem[] => [
+    { id: 'create-volume', label: 'Create Volume', onClick: () => {} },
+    { id: 'restore-backup', label: 'Restore Backup', onClick: () => {} },
+    { id: 'edit', label: 'Edit', onClick: () => {} },
+    { id: 'delete', label: 'Delete', onClick: () => {}, status: 'danger' },
+  ];
+
+  // Snapshot table columns
+  const snapshotColumns: TableColumn<VolumeSnapshot>[] = [
+    {
+      key: 'status',
+      label: 'Status',
+      width: '59px',
+      align: 'center',
+      render: (_, row) => (
+        <StatusIndicator status={snapshotStatusMap[row.status]} layout="icon-only" />
+      ),
+    },
+    {
+      key: 'name',
+      label: 'Name',
+      flex: 1,
+      render: (_, row) => (
+        <div className="flex flex-col gap-0.5">
+        <Link
+          to={`/volume-snapshots/${row.id}`}
+          className="inline-flex items-center gap-1.5 font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
+          onClick={(e) => e.stopPropagation()}
+        >
+          {row.name}
+          <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
+        </Link>
+          <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
+            ID : {row.id}
+          </span>
+        </div>
+      ),
+    },
+    {
+      key: 'size',
+      label: 'Size',
+      flex: 1,
+      sortable: true,
+      render: (value) => <span>{value}</span>,
+    },
+    {
+      key: 'createdAt',
+      label: 'Created At',
+      flex: 1,
+      sortable: true,
+      render: (value) => <span>{value}</span>,
+    },
+    {
+      key: 'action',
+      label: 'Action',
+      width: '72px',
+      align: 'center',
+      render: (_, row) => (
+        <div className="flex items-center justify-center">
+          <ContextMenu
+            items={getSnapshotContextMenuItems(row)}
+            trigger="click"
+          >
+            <button
+              className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <IconDotsCircleHorizontal size={16} stroke={1.5} className="text-[var(--action-icon-color)]" />
+            </button>
+          </ContextMenu>
+        </div>
+      ),
+    },
+  ];
+
+  // Backup table columns
+  const backupColumns: TableColumn<VolumeBackup>[] = [
+    {
+      key: 'status',
+      label: 'Status',
+      width: '59px',
+      align: 'center',
+      render: (_, row) => (
+        <StatusIndicator status={backupStatusMap[row.status]} layout="icon-only" />
+      ),
+    },
+    {
+      key: 'name',
+      label: 'Name',
+      flex: 1,
+      render: (_, row) => (
+        <div className="flex flex-col gap-0.5">
+        <Link
+          to={`/volume-backups/${row.id}`}
+          className="inline-flex items-center gap-1.5 font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
+          onClick={(e) => e.stopPropagation()}
+        >
+          {row.name}
+          <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
+        </Link>
+          <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
+            ID : {row.id}
+          </span>
+        </div>
+      ),
+    },
+    {
+      key: 'backupMode',
+      label: 'Backup Mode',
+      flex: 1,
+      render: (value) => <span>{value}</span>,
+    },
+    {
+      key: 'size',
+      label: 'Size',
+      flex: 1,
+      sortable: true,
+      render: (value) => <span>{value}</span>,
+    },
+    {
+      key: 'createdAt',
+      label: 'Created At',
+      flex: 1,
+      sortable: true,
+      render: (value) => <span>{value}</span>,
+    },
+    {
+      key: 'action',
+      label: 'Action',
+      width: '72px',
+      align: 'center',
+      render: (_, row) => (
+        <div className="flex items-center justify-center">
+          <ContextMenu
+            items={getBackupContextMenuItems(row)}
+            trigger="click"
+          >
+            <button
+              className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <IconDotsCircleHorizontal size={16} stroke={1.5} className="text-[var(--action-icon-color)]" />
+            </button>
+          </ContextMenu>
+        </div>
+      ),
+    },
+  ];
+
+  return (
+    <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
+      <Sidebar isOpen={sidebarOpen} setIsOpen={setSidebarOpen} />
+      <main
+        className={`absolute top-0 bottom-0 right-0 flex flex-col bg-[var(--color-surface-default)] transition-[left] duration-200 ${
+          sidebarOpen ? 'left-[200px]' : 'left-[var(--sidebar-collapsed-width)]'
+        }`}
+      >
+        {/* Fixed Header Area */}
+        <div className="shrink-0 bg-[var(--color-surface-default)]">
+        {/* Top Bar */}
+        <TopBar
+          showSidebarToggle={!sidebarOpen}
+          onSidebarToggle={() => setSidebarOpen(true)}
+          showNavigation={true}
+          onBack={() => navigate('/compute/volumes')}
+          onForward={() => window.history.forward()}
+          breadcrumb={<Breadcrumb items={breadcrumbItems} />}
+          actions={
+            <TopBarAction
+              icon={<IconBell size={16} stroke={1.5} />}
+              aria-label="Notifications"
+              badge={true}
+            />
+          }
+        />
+        <TabBar tabs={tabBarTabs} activeTabId={activeTabId} onTabClick={selectTab} onTabClose={closeTab} />
+        </div>
+
+        {/* Scrollable Content Area */}
+        <div className="flex-1 overflow-auto min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll">
+        <div className="pt-4 px-8 pb-20 bg-[var(--color-surface-default)]">
+          <VStack gap={6} className="min-w-[1176px]">
+            {/* Volume Header Card */}
+            <DetailHeader>
+              <DetailHeader.Title>{volume.name}</DetailHeader.Title>
+              <DetailHeader.Actions>
+                <Button variant="secondary" size="sm" leftIcon={<IconCirclePlus size={12} />}>
+                  Create Transfer
+                </Button>
+                <Button variant="secondary" size="sm" leftIcon={<IconTrash size={12} />}>
+                  Delete
+                </Button>
+                <Button variant="secondary" size="sm" rightIcon={<IconChevronDown size={12} />}>
+                  More Actions
+                </Button>
+              </DetailHeader.Actions>
+              <DetailHeader.InfoGrid>
+                <DetailHeader.InfoCard
+                  label="Status"
+                  value={volumeStatusDisplayMap[volume.status]}
+                  status="active"
+                />
+                <DetailHeader.InfoCard label="ID" value={volume.id} copyable />
+                <DetailHeader.InfoCard label="Size" value={volume.size} />
+                <DetailHeader.InfoCard label="Created At" value={volume.createdAt} />
+              </DetailHeader.InfoGrid>
+            </DetailHeader>
+
+            {/* Volume Tabs */}
+            <div className="w-full">
+              <Tabs value={activeDetailTab} onChange={setActiveDetailTab} variant="underline" size="sm">
+                <TabList>
+                  <Tab value="details">Details</Tab>
+                  <Tab value="snapshots">Volume Snapshots</Tab>
+                  <Tab value="backups">Volume Backups</Tab>
+                </TabList>
+
+                {/* Details Tab Panel */}
+                <TabPanel value="details">
+                  <VStack gap={4} className="pt-6">
+                    {/* Basic Information */}
+                    <SectionCard>
+                      <SectionCard.Header title="Basic Infomation" showEditButton onEdit={() => {}} />
+                      <SectionCard.Content>
+                        <SectionCard.DataRow label="Volume Name" value={volume.volumeName} />
+                        <SectionCard.DataRow label="AZ(Availability Zone)" value={volume.availabilityZone} />
+                        <SectionCard.DataRow label="Description" value={volume.description} />
+                      </SectionCard.Content>
+                    </SectionCard>
+
+                    {/* Attachments */}
+                    <SectionCard>
+                      <SectionCard.Header title="Attachments" />
+                      <SectionCard.Content>
+                        <SectionCard.DataRow
+                          label="Attached To"
+                          value={
+                            volume.attachedTo && volume.attachedToId ? (
+                              <Link
+                                to={`/instances/${volume.attachedToId}`}
+                                className="inline-flex items-center gap-1.5 font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
+                              >
+                                {volume.attachedTo}
+                                <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
+                              </Link>
+                            ) : (
+                              '-'
+                            )
+                          }
+                        />
+                      </SectionCard.Content>
+                    </SectionCard>
+
+                    {/* Source */}
+                    <SectionCard>
+                      <SectionCard.Header title="Source" showEditButton onEdit={() => {}} />
+                      <SectionCard.Content>
+                        <SectionCard.DataRow label="Data Source Type" value={volume.dataSourceType} />
+                      </SectionCard.Content>
+                    </SectionCard>
+
+                    {/* Specifications */}
+                    <SectionCard>
+                      <SectionCard.Header title="Specifications" showEditButton onEdit={() => {}} />
+                      <SectionCard.Content>
+                        <SectionCard.DataRow label="Size" value={volume.size} />
+                        <SectionCard.DataRow label="Volume Type" value={volume.volumeType} />
+                        <SectionCard.DataRow label="Bootable" value={volume.bootable ? 'Yes' : 'No'} />
+                        <SectionCard.DataRow label="Encryption" value={volume.encryption ? 'Yes' : 'No'} />
+                      </SectionCard.Content>
+                    </SectionCard>
+                  </VStack>
+                </TabPanel>
+
+                {/* Volume Snapshots Tab Panel */}
+                <TabPanel value="snapshots">
+                  <VStack gap={3} className="pt-6">
+                    {/* Section Header */}
+                    <div className="flex items-center justify-between w-full">
+                      <h2 className="text-[length:var(--font-size-16)] font-semibold text-[var(--color-text-default)]">
+                        Volume Snapshots
+                      </h2>
+                      <Button variant="secondary" size="sm" leftIcon={<IconCirclePlus size={12} />}>
+                        Create Snapshot
+                      </Button>
+                    </div>
+
+                    {/* Search */}
+                    <div className="flex items-center gap-1">
+                      <div className="w-[280px]">
+                        <SearchInput
+                          placeholder="Find Snapshot with filters"
+                          value={snapshotSearchQuery}
+                          onChange={(e) => setSnapshotSearchQuery(e.target.value)}
+                          onClear={() => setSnapshotSearchQuery('')}
+                          size="sm"
+                          fullWidth
+                        />
+                      </div>
+                      <Button
+                        variant="secondary"
+                        size="sm"
+                        iconOnly
+                        icon={<IconDownload size={12} stroke={1.5} />}
+                        aria-label="Download"
+                      />
+                    </div>
+
+                    {/* Pagination */}
+                      <Pagination
+                        currentPage={snapshotCurrentPage}
+                        totalPages={snapshotTotalPages}
+                        onPageChange={setSnapshotCurrentPage}
+                      totalItems={filteredSnapshots.length}
+                      showSettings
+                      onSettingsClick={() => setIsPreferencesOpen(true)}
+                      />
+
+                    {/* Snapshots Table */}
+                    <Table<VolumeSnapshot>
+                      columns={snapshotColumns}
+                      data={paginatedSnapshots}
+                      rowKey="id"
+                      emptyMessage="No volume snapshots found"
+                    />
+                  </VStack>
+                </TabPanel>
+
+                {/* Volume Backups Tab Panel */}
+                <TabPanel value="backups">
+                  <VStack gap={3} className="pt-6">
+                    {/* Section Header */}
+                    <div className="flex items-center justify-between w-full">
+                      <h2 className="text-[length:var(--font-size-16)] font-semibold text-[var(--color-text-default)]">
+                        Volume Backups
+                      </h2>
+                      <Button variant="secondary" size="sm" leftIcon={<IconCirclePlus size={12} />}>
+                        Create Backup
+                      </Button>
+                    </div>
+
+                    {/* Search */}
+                    <div className="flex items-center gap-1">
+                      <div className="w-[280px]">
+                        <SearchInput
+                          placeholder="Find Backup with filters"
+                          value={backupSearchQuery}
+                          onChange={(e) => setBackupSearchQuery(e.target.value)}
+                          onClear={() => setBackupSearchQuery('')}
+                          size="sm"
+                          fullWidth
+                        />
+                      </div>
+                      <Button
+                        variant="secondary"
+                        size="sm"
+                        iconOnly
+                        icon={<IconDownload size={12} stroke={1.5} />}
+                        aria-label="Download"
+                      />
+                    </div>
+
+                    {/* Pagination */}
+                      <Pagination
+                        currentPage={backupCurrentPage}
+                        totalPages={backupTotalPages}
+                        onPageChange={setBackupCurrentPage}
+                      totalItems={filteredBackups.length}
+                      showSettings
+                      onSettingsClick={() => setIsPreferencesOpen(true)}
+                      />
+
+                    {/* Backups Table */}
+                    <Table<VolumeBackup>
+                      columns={backupColumns}
+                      data={paginatedBackups}
+                      rowKey="id"
+                      emptyMessage="No volume backups found"
+                    />
+                  </VStack>
+                </TabPanel>
+              </Tabs>
+            </div>
+          </VStack>
+          </div>
+        </div>
+      </main>
+    </div>
+  );
+}
+
+export default VolumeDetailPage;
+

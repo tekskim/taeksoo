@@ -116,7 +116,7 @@ export function InstanceTemplateDetailPage() {
 
   const breadcrumbItems = [
     { label: 'Proj-1', href: '#' },
-    { label: 'Instance Templates', href: '/instance-templates' },
+    { label: 'Instance Templates', href: '/compute/instance-templates' },
     { label: template.name },
   ];
 
@@ -125,40 +125,45 @@ export function InstanceTemplateDetailPage() {
   };
 
   return (
-    <div className="flex min-h-screen bg-[var(--color-surface-subtle)]">
+    <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
       <Sidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
       <main
-        className={`min-h-screen bg-[var(--color-surface-default)] transition-[margin] duration-200 ${
-          sidebarOpen ? 'ml-[200px]' : 'ml-0'
-        } flex-1`}
+        className={`absolute top-0 bottom-0 right-0 flex flex-col bg-[var(--color-surface-default)] transition-[left] duration-200 ${
+          sidebarOpen ? 'left-[200px]' : 'left-0'
+        }`}
       >
-        {/* Tab Bar */}
-        <TabBar
-          tabs={tabBarTabs}
-          activeTab={activeTabId}
-          onTabChange={selectTab}
-          onTabClose={closeTab}
-          showWindowControls={true}
-        />
+        {/* Fixed Header Area */}
+        <div className="shrink-0 bg-[var(--color-surface-default)]">
+          {/* Tab Bar */}
+          <TabBar
+            tabs={tabBarTabs}
+            activeTab={activeTabId}
+            onTabChange={selectTab}
+            onTabClose={closeTab}
+            showWindowControls={true}
+          />
 
-        {/* Top Bar */}
-        <TopBar
-          showSidebarToggle={!sidebarOpen}
-          onSidebarToggle={() => setSidebarOpen(true)}
-          showNavigation={true}
-          onBack={() => navigate('/instance-templates')}
-          onForward={() => window.history.forward()}
-          breadcrumb={<Breadcrumb items={breadcrumbItems} />}
-          actions={
-            <TopBarAction
-              icon={<IconBell size={16} stroke={1} />}
-              aria-label="Notifications"
-              badge={true}
-            />
-          }
-        />
+          {/* Top Bar */}
+          <TopBar
+            showSidebarToggle={!sidebarOpen}
+            onSidebarToggle={() => setSidebarOpen(true)}
+            showNavigation={true}
+            onBack={() => navigate('/instance-templates')}
+            onForward={() => window.history.forward()}
+            breadcrumb={<Breadcrumb items={breadcrumbItems} />}
+            actions={
+              <TopBarAction
+                icon={<IconBell size={16} stroke={1.5} />}
+                aria-label="Notifications"
+                badge={true}
+              />
+            }
+          />
+        </div>
 
-        <div className="pt-4 px-8 pb-20 bg-[var(--color-surface-default)]">
+        {/* Scrollable Content Area */}
+        <div className="flex-1 overflow-auto min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll">
+          <div className="pt-4 px-8 pb-20 bg-[var(--color-surface-default)]">
           <VStack gap={6} className="min-w-[1176px]">
             {/* Template Header Card */}
             <DetailHeader>
@@ -200,8 +205,8 @@ export function InstanceTemplateDetailPage() {
 
             {/* Template Tabs */}
             <div className="w-full">
-              <Tabs value={activeDetailTab} onChange={setActiveDetailTab} variant="underline" size="md">
-                <TabList className="gap-6">
+              <Tabs value={activeDetailTab} onChange={setActiveDetailTab} variant="underline" size="sm">
+                <TabList>
                   <Tab value="details">Details</Tab>
                   <Tab value="instances">Instances</Tab>
                   <Tab value="history">History</Tab>
@@ -307,6 +312,7 @@ export function InstanceTemplateDetailPage() {
               </Tabs>
             </div>
           </VStack>
+          </div>
         </div>
       </main>
     </div>
@@ -314,5 +320,7 @@ export function InstanceTemplateDetailPage() {
 }
 
 export default InstanceTemplateDetailPage;
+
+
 
 
