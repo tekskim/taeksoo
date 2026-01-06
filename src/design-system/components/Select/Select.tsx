@@ -40,6 +40,8 @@ export interface SelectProps {
   disabled?: boolean;
   /** Full width */
   fullWidth?: boolean;
+  /** Size variant */
+  size?: 'sm' | 'md';
   /** Additional CSS classes */
   className?: string;
 }
@@ -59,6 +61,7 @@ export function Select({
   error,
   disabled = false,
   fullWidth = false,
+  size = 'md',
   className = '',
 }: SelectProps) {
   const id = useId();
@@ -216,12 +219,17 @@ export function Select({
     fullWidth ? 'w-full' : 'w-fit',
   );
 
+  // Size-based styles
+  const sizeStyles = {
+    sm: 'h-[28px] px-2 py-1 text-[11px] leading-4 min-w-[60px]',
+    md: 'px-[var(--select-padding-x)] py-[var(--select-padding-y)] text-[length:var(--select-font-size)] leading-[var(--select-line-height)] min-w-[80px]',
+  };
+
   const triggerClasses = twMerge(
     'flex items-center justify-between',
-    'w-full min-w-[80px]',
-    'px-[var(--select-padding-x)] py-[var(--select-padding-y)]',
+    'w-full',
+    sizeStyles[size],
     'bg-[var(--select-bg)]',
-    'text-[length:var(--select-font-size)] leading-[var(--select-line-height)]',
     'border border-solid rounded-[var(--select-radius)]',
     'transition-colors duration-[var(--duration-fast)]',
     'cursor-pointer',
