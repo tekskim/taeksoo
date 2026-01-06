@@ -447,7 +447,7 @@ export function InstanceDetailPage() {
             <Breadcrumb
               items={[
                 { label: 'Proj-1', href: '/project' },
-                { label: 'Instances List', href: '/instances' },
+                { label: 'Instances List', href: '/compute/instances' },
                 { label: instance.name },
               ]}
             />

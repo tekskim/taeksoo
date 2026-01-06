@@ -122,7 +122,7 @@ export function KeyPairDetailPage() {
   // Breadcrumb items
   const breadcrumbItems = [
     { label: 'Proj-1', href: '/' },
-    { label: 'Key Pairs', href: '/key-pairs' },
+    { label: 'Key Pairs', href: '/compute/key-pairs' },
     { label: keyPair.name },
   ];
 
