@@ -2396,6 +2396,7 @@ export function DesignSystemPage() {
   const [activeSection, setActiveSection] = useState('token-architecture');
   const [searchQuery, setSearchQuery] = useState('');
   const [showScrollTop, setShowScrollTop] = useState(false);
+  const mainRef = useRef<HTMLDivElement>(null);
   
   // Pagination demo states
   const [demoPage1, setDemoPage1] = useState(1);
@@ -2405,20 +2406,25 @@ export function DesignSystemPage() {
 
   // Scroll to top on page load
   useEffect(() => {
-    window.scrollTo(0, 0);
+    if (mainRef.current) {
+      mainRef.current.scrollTo(0, 0);
+    }
   }, []);
 
   // Scroll to top handler
   useEffect(() => {
+    const mainElement = mainRef.current;
+    if (!mainElement) return;
+    
     const handleScroll = () => {
-      setShowScrollTop(window.scrollY > 300);
+      setShowScrollTop(mainElement.scrollTop > 300);
     };
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    mainElement.addEventListener('scroll', handleScroll);
+    return () => mainElement.removeEventListener('scroll', handleScroll);
   }, []);
 
   const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    mainRef.current?.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   // Intersection Observer to track active section
@@ -2691,7 +2697,7 @@ export function DesignSystemPage() {
       </nav>
 
       {/* Main Content */}
-      <main className="ml-[200px] h-screen overflow-y-auto overflow-x-auto sidebar-scroll">
+      <main ref={mainRef} className="ml-[200px] h-screen overflow-y-auto overflow-x-auto sidebar-scroll">
         <div className="min-w-[var(--layout-content-min-width)] py-12 px-8">
         <div className="max-w-[1000px] mx-auto">
           <VStack gap={12} align="stretch">
@@ -3830,22 +3836,8 @@ outline: 2px solid var(--color-border-focus);`}
                   <Label>Size Variants</Label>
                   <div className="flex gap-4 items-end flex-wrap">
                     <VStack gap={1}>
-                      <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">SM</span>
+                      <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">Default</span>
                       <Select
-                        size="sm"
-                        placeholder="Select"
-                        defaultValue="active"
-                        options={[
-                          { value: 'active', label: 'Active' },
-                          { value: 'shutoff', label: 'Shutoff' },
-                          { value: 'building', label: 'Building' },
-                        ]}
-                      />
-                    </VStack>
-                    <VStack gap={1}>
-                      <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">MD (Default)</span>
-                      <Select
-                        size="md"
                         placeholder="Select"
                         defaultValue="active"
                         options={[

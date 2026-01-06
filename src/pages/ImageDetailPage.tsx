@@ -174,7 +174,7 @@ export function ImageDetailPage() {
   // Breadcrumb items
   const breadcrumbItems = [
     { label: 'Home', href: '/' },
-    { label: 'Images', href: '/images' },
+    { label: 'Images', href: '/compute/images' },
     { label: image.name },
   ];
 

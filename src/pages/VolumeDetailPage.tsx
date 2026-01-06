@@ -187,7 +187,7 @@ export function VolumeDetailPage() {
 
   const breadcrumbItems = [
     { label: 'Proj-1', href: '#' },
-    { label: 'Volumes', href: '/volumes' },
+    { label: 'Volumes', href: '/compute/volumes' },
     { label: volume.name, href: `/volumes/${volume.id}` },
   ];
 
@@ -410,7 +410,7 @@ export function VolumeDetailPage() {
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(true)}
           showNavigation={true}
-          onBack={() => navigate('/volumes')}
+          onBack={() => navigate('/compute/volumes')}
           onForward={() => window.history.forward()}
           breadcrumb={<Breadcrumb items={breadcrumbItems} />}
           actions={

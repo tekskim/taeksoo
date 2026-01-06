@@ -116,7 +116,7 @@ export function InstanceTemplateDetailPage() {
 
   const breadcrumbItems = [
     { label: 'Proj-1', href: '#' },
-    { label: 'Instance Templates', href: '/instance-templates' },
+    { label: 'Instance Templates', href: '/compute/instance-templates' },
     { label: template.name },
   ];
 

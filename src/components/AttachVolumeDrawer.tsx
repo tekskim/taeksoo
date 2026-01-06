@@ -250,7 +250,6 @@ export function AttachVolumeDrawer({
               currentPage={currentPage}
               totalPages={totalPages}
               onPageChange={setCurrentPage}
-              size="sm"
             />
             <div className="w-px h-4 bg-[var(--color-border-default)] mx-2" />
             <span className="text-[12px] text-[var(--color-text-muted)]">{totalItems} items</span>

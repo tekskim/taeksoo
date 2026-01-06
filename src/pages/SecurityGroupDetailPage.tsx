@@ -329,7 +329,7 @@ export default function SecurityGroupDetailPage() {
               <Breadcrumb
                 items={[
                   { label: 'Proj-1', href: '/project' },
-                  { label: 'Security Groups', href: '/security-groups' },
+                  { label: 'Security Groups', href: '/compute/security-groups' },
                   { label: securityGroup.name },
                 ]}
               />

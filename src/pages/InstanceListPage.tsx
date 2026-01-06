@@ -748,9 +748,11 @@ export function InstanceListPage() {
               <h1 className="text-[length:var(--font-size-16)] font-semibold text-[var(--color-text-default)]">
                 Instances List
               </h1>
-              <Button>
-                Create Instance
-              </Button>
+              <Link to="/compute/instances/create">
+                <Button>
+                  Create Instance
+                </Button>
+              </Link>
             </div>
 
             {/* Type Tabs */}
@@ -930,6 +932,7 @@ export function InstanceListPage() {
         onOpenInNewTab={handleOpenInNewTab}
         initialHeight={350}
         minHeight={300}
+        sidebarOpen={sidebarOpen}
       />
     </div>
   );

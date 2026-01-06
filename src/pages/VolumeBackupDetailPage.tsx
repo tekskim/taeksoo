@@ -153,7 +153,7 @@ export function VolumeBackupDetailPage() {
   // Breadcrumb items
   const breadcrumbItems = [
     { label: 'Proj-1', href: '/' },
-    { label: 'Volumes', href: '/volume-backups' },
+    { label: 'Volumes', href: '/compute/volume-backups' },
     { label: backup.name },
   ];
 

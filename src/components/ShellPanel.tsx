@@ -47,6 +47,8 @@ export interface ShellPanelProps {
   initialHeight?: number;
   /** Minimum height of the panel */
   minHeight?: number;
+  /** Whether the sidebar is open */
+  sidebarOpen?: boolean;
 }
 
 /* ----------------------------------------
@@ -143,7 +145,7 @@ function ShellTabButton({ tab, isActive, onClick, onClose, onOpenInNewTab }: She
 
 export function ShellPanel({
   isExpanded,
-  onExpandedChange,
+  onExpandedChange: _onExpandedChange,
   tabs,
   activeTabId,
   onActiveTabChange,
@@ -153,6 +155,7 @@ export function ShellPanel({
   onOpenInNewTab,
   initialHeight = 350,
   minHeight = 300,
+  sidebarOpen = true,
 }: ShellPanelProps) {
   const [height, setHeight] = useState(initialHeight);
   const [isResizing, setIsResizing] = useState(false);
@@ -266,8 +269,8 @@ export function ShellPanel({
       className="fixed bottom-0 right-0 z-40 bg-[var(--color-surface-default)] border-t border-l border-[var(--color-border-default)] shadow-lg flex flex-col"
       style={{
         height: `${height}px`,
-        left: '200px',
-        transition: isResizing ? 'none' : 'height 0.1s ease-out',
+        left: sidebarOpen ? '200px' : '0px',
+        transition: isResizing ? 'none' : 'left 0.2s ease-out, height 0.1s ease-out',
       }}
     >
       {/* Resize Handle */}
@@ -316,12 +319,10 @@ export function ShellPanel({
         <div className="flex items-center gap-1">
           {/* Container Select - Using Design System */}
           <Select
-            size="sm"
             value={selectedContainer}
             onChange={setSelectedContainer}
             options={containerOptions}
             placeholder="Container"
-            menuPlacement="top"
           />
 
           {/* Clear Button - Using Design System */}
@@ -351,12 +352,10 @@ export function ShellPanel({
         <div className="flex items-center gap-3">
           {/* View Time Select - Using Design System */}
           <Select
-            size="sm"
             value={viewTime}
             onChange={setViewTime}
             options={viewTimeOptions}
             placeholder="View"
-            menuPlacement="top"
           />
         </div>
       </div>
@@ -453,7 +452,7 @@ export function useShellPanel(options: UseShellPanelOptions = {}) {
 }
 
 // Generate sample log output similar to the screenshot
-function generateSampleLogs(instanceName: string): string {
+function generateSampleLogs(_instanceName: string): string {
   const now = new Date();
   const formatDate = (d: Date) => {
     return d.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: '2-digit', year: 'numeric' });

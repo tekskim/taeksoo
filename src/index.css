@@ -403,7 +403,7 @@ html.theme-transition *::after {
   --input-radius: var(--radius-md);
   --input-radius-code: var(--radius-sm);
   --input-icon-offset: var(--spacing-2);
-  --input-label-gap: var(--spacing-1-5);
+  --input-label-gap: var(--spacing-2);
 
   /* Input - Font */
   --input-font-size: var(--font-size-12);

@@ -161,7 +161,7 @@ export default function SubnetDetailPage() {
 
   const breadcrumbItems = [
     { label: 'Proj-1', href: '/' },
-    { label: 'Networks', href: '/networks' },
+    { label: 'Networks', href: '/compute/networks' },
     { label: subnet.network.name, href: `/networks/${subnet.network.id}` },
     { label: subnet.name },
   ];
