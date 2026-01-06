@@ -59,7 +59,7 @@ interface TemplateRow {
 }
 
 type SectionStep = 'templates' | 'basic-info' | 'image' | 'flavor' | 'network' | 'authentication' | 'advanced';
-type SectionState = 'pre' | 'active' | 'done';
+type SectionState = 'pre' | 'active' | 'done' | 'skipped';
 
 interface SectionStatus {
   templates: SectionState;
@@ -211,6 +211,36 @@ function PreSection({ title }: PreSectionProps) {
       <h5 className="text-[16px] font-semibold leading-6 text-[var(--color-text-default)]">
         {title}
       </h5>
+    </div>
+  );
+}
+
+/* ----------------------------------------
+   SkippedSection Component (Skip된 섹션 - Not configured 표시)
+   ---------------------------------------- */
+
+interface SkippedSectionProps {
+  title: string;
+  onEdit: () => void;
+}
+
+function SkippedSection({ title, onEdit }: SkippedSectionProps) {
+  return (
+    <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-md px-4 py-3">
+      <div className="flex items-center justify-between">
+        <h5 className="text-[16px] font-semibold leading-6 text-[var(--color-text-default)]">
+          {title}
+        </h5>
+        <div className="flex items-center gap-3">
+          <span className="text-[13px] text-[var(--color-text-muted)]">Not configured</span>
+          <button
+            onClick={onEdit}
+            className="px-3 py-1 text-[13px] font-medium text-[var(--color-text-default)] bg-[var(--color-surface-subtle)] hover:bg-[var(--color-surface-muted)] rounded-md transition-colors"
+          >
+            Edit
+          </button>
+        </div>
+      </div>
     </div>
   );
 }
@@ -2296,9 +2326,14 @@ export function CreateInstancePage() {
     
     const nextSection = SECTION_ORDER[currentIndex + 1];
     
+    // Clear selection when skipping
+    if (section === 'templates') {
+      setSelectedTemplateId(null);
+    }
+    
     setSectionStatus(prev => ({
       ...prev,
-      [section]: 'pre', // Templates can be skipped without being "done"
+      [section]: 'skipped',
       [nextSection]: 'active',
     }));
   };
@@ -2463,6 +2498,9 @@ export function CreateInstancePage() {
                     <DoneSection title={SECTION_LABELS.templates} onEdit={() => handleEdit('templates')}>
                       <DoneSectionRow label="Template" value={getTemplateSummary() || 'None selected'} />
                     </DoneSection>
+                  )}
+                  {sectionStatus.templates === 'skipped' && (
+                    <SkippedSection title={SECTION_LABELS.templates} onEdit={() => handleEdit('templates')} />
                   )}
 
                   {/* Basic Information Section */}
