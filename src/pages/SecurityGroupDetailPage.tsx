@@ -367,9 +367,9 @@ export default function SecurityGroupDetailPage() {
         <div className="flex-1 overflow-auto overscroll-contain sidebar-scroll">
           {/* Main Content */}
           <div className="pt-4 px-8 pb-20 bg-[var(--color-surface-default)]">
-            <VStack gap={8} className="min-w-[1176px] max-w-[1320px]">
+            <VStack gap={6} className="min-w-[1176px]">
               {/* Header Card */}
-              <div className="w-full bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg p-4">
+              <div className="w-full bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg px-4 pt-3 pb-4">
                 {/* Title */}
                 <h1 className="text-[length:var(--font-size-16)] font-semibold text-[var(--color-text-default)] mb-3">
                   {securityGroup.name}
