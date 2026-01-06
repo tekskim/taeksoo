@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import {
   Button,
@@ -154,7 +154,14 @@ export function FlavorDetailPage() {
   // Flavor data is already fetched based on ID above
   const instances = mockFlavorInstances;
 
-  const { tabs, activeTabId, closeTab, selectTab } = useTabs();
+  const { tabs, activeTabId, closeTab, selectTab, updateActiveTabLabel } = useTabs();
+
+  // Update tab label to flavor name
+  useEffect(() => {
+    if (flavor.name) {
+      updateActiveTabLabel(flavor.name);
+    }
+  }, [flavor.name, updateActiveTabLabel]);
 
   const tabBarTabs = tabs.map((tab) => ({
     id: tab.id,

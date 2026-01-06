@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import {
   Button,
@@ -128,7 +128,14 @@ export function ImageDetailPage() {
   const [activeDetailTab, setActiveDetailTab] = useState('details');
 
   // Global tab management
-  const { tabs, activeTabId, closeTab, selectTab, addNewTab } = useTabs();
+  const { tabs, activeTabId, closeTab, selectTab, addNewTab, updateActiveTabLabel } = useTabs();
+
+  // Update tab label to image name
+  useEffect(() => {
+    if (image.name) {
+      updateActiveTabLabel(image.name);
+    }
+  }, [image.name, updateActiveTabLabel]);
 
   // Convert tabs to TabBar format
   const tabBarTabs = tabs.map((tab) => ({
