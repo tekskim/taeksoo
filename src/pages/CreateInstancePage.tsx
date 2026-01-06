@@ -33,6 +33,7 @@ import { useTabs } from '@/contexts/TabContext';
 import { useSidebar } from '@/contexts/SidebarContext';
 import {
   IconBell,
+  IconEdit,
   IconExternalLink,
   IconStar,
   IconStarFilled,
@@ -286,12 +287,8 @@ function DoneSection({ title, onEdit, children }: DoneSectionProps) {
           <h5 className="text-[16px] font-semibold leading-6 text-[var(--color-text-default)]">
             {title}
           </h5>
-          <Button variant="outline" size="sm" onClick={onEdit}>
-            <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
-              <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
-            </svg>
-            <span>Edit</span>
+          <Button variant="outline" size="sm" leftIcon={<IconEdit size={12} />} onClick={onEdit}>
+            Edit
           </Button>
         </HStack>
 
