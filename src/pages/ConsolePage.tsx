@@ -4,7 +4,7 @@ import {
   IconDownload,
   IconTerminal2,
 } from '@tabler/icons-react';
-import { Select, Button, TabBar } from '@/design-system';
+import { Select, Button, TabBar, TopBar, Breadcrumb } from '@/design-system';
 import { Sidebar } from '@/components/Sidebar';
 import { useTabs } from '@/contexts/TabContext';
 import { useSidebar } from '@/contexts/SidebarContext';
@@ -176,10 +176,28 @@ export function ConsolePage() {
             showAddButton={true}
             showWindowControls={true}
           />
+
+          {/* Top Bar with Breadcrumb Navigation */}
+          <TopBar
+            showSidebarToggle={!sidebarOpen}
+            onSidebarToggle={toggleSidebar}
+            showNavigation={true}
+            onBack={() => navigate(-1)}
+            onForward={() => navigate(1)}
+            breadcrumb={
+              <Breadcrumb
+                items={[
+                  { label: 'Proj-1', href: '/compute' },
+                  { label: 'Instances', href: '/compute/instances' },
+                  { label: instanceName },
+                ]}
+              />
+            }
+          />
         </div>
           
           {/* Console Content */}
-          <div className="flex flex-col h-[calc(100vh-var(--tabbar-height))]">
+          <div className="flex flex-col h-[calc(100vh-var(--tabbar-height)-var(--topbar-height))]">
             {/* Header - Same style as ShellPanel tab */}
             <div className="flex items-center gap-2 px-6 py-3 border-b border-[var(--color-border-default)] bg-[var(--color-surface-subtle)]">
               <IconTerminal2 size={14} className="text-[var(--color-text-muted)]" stroke={1.5} />
