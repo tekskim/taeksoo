@@ -500,10 +500,10 @@ export default function NetworkDetailPage() {
           {/* Tab Bar */}
           <TabBar
             tabs={tabs}
-            activeTabId={activeTabId}
-            onTabClick={setActiveTab}
+            activeTab={activeTabId}
+            onTabChange={setActiveTab}
             onTabClose={closeTab}
-            onNewTab={() => addTab('New Tab', '/home')}
+            onTabAdd={() => addTab('New Tab', '/home')}
           />
 
           {/* Top Bar with Breadcrumb */}
