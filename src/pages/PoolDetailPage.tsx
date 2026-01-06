@@ -251,7 +251,7 @@ export default function PoolDetailPage() {
       render: (_, row) => (
         <div className="flex flex-col gap-0.5">
           <Link
-            to={`/instances/${row.source.id}`}
+            to={`/compute/instances/${row.source.id}`}
             className="inline-flex items-center gap-1.5 font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
             onClick={(e) => e.stopPropagation()}
           >
@@ -465,7 +465,7 @@ export default function PoolDetailPage() {
                               </span>
                               {pool.listener ? (
                                 <Link
-                                  to={`/listeners/${pool.listener.id}`}
+                                  to={`/compute/listeners/${pool.listener.id}`}
                                   className="flex items-center gap-1.5 text-[12px] font-medium leading-4 text-[var(--color-action-primary)] hover:underline"
                                 >
                                   {pool.listener.name}

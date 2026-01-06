@@ -208,7 +208,7 @@ export function ImagesPage() {
       render: (_, row) => (
         <div className="flex flex-col gap-0.5">
         <Link
-          to={`/images/${row.id}`}
+          to={`/compute/images/${row.id}`}
           className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
           onClick={(e) => e.stopPropagation()}
         >

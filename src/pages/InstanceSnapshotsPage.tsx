@@ -202,7 +202,7 @@ export function InstanceSnapshotsPage() {
       render: (_, row) => (
         <div className="flex flex-col gap-0.5">
         <Link
-          to={`/instance-snapshots/${row.id}`}
+          to={`/compute/instance-snapshots/${row.id}`}
           className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
           onClick={(e) => e.stopPropagation()}
         >
@@ -234,7 +234,7 @@ export function InstanceSnapshotsPage() {
       render: (_, row) => (
         <div className="flex flex-col gap-0.5">
           <Link
-            to={`/instances/${row.sourceInstanceId}`}
+            to={`/compute/instances/${row.sourceInstanceId}`}
             className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
             onClick={(e) => e.stopPropagation()}
           >

@@ -237,7 +237,7 @@ export default function PortDetailPage() {
       render: (_, row) => row.floatingIp ? (
         <div className="flex flex-col gap-0.5">
           <Link
-            to={`/floating-ips/${row.floatingIp.id}`}
+            to={`/compute/floating-ips/${row.floatingIp.id}`}
             className="inline-flex items-center gap-1.5 font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
             onClick={(e) => e.stopPropagation()}
           >
@@ -260,7 +260,7 @@ export default function PortDetailPage() {
       render: (_, row) => (
         <div className="flex flex-col gap-0.5">
           <Link
-            to={`/subnets/${row.ownedSubnet.id}`}
+            to={`/compute/subnets/${row.ownedSubnet.id}`}
             className="inline-flex items-center gap-1.5 font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
             onClick={(e) => e.stopPropagation()}
           >
@@ -347,7 +347,7 @@ export default function PortDetailPage() {
       render: (_, row) => (
         <div className="flex flex-col gap-0.5">
           <Link
-            to={`/security-groups/${row.id}`}
+            to={`/compute/security-groups/${row.id}`}
             className="inline-flex items-center gap-1.5 font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
             onClick={(e) => e.stopPropagation()}
           >
@@ -560,7 +560,7 @@ export default function PortDetailPage() {
                             label="Owned Network"
                             value={
                               <Link
-                                to={`/networks/${port.ownedNetwork.id}`}
+                                to={`/compute/networks/${port.ownedNetwork.id}`}
                                 className="inline-flex items-center gap-1.5 font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
                               >
                                 {port.ownedNetwork.name}
@@ -572,7 +572,7 @@ export default function PortDetailPage() {
                             label="Subnet"
                             value={
                               <Link
-                                to={`/networks/${port.subnet.id}`}
+                                to={`/compute/networks/${port.subnet.id}`}
                                 className="inline-flex items-center gap-1.5 font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
                               >
                                 {port.subnet.name}

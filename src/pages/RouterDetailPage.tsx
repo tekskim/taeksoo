@@ -251,7 +251,7 @@ export default function RouterDetailPage() {
       sortable: true,
       render: (_, row) => (
         <Link
-          to={`/ports/${row.id}`}
+          to={`/compute/ports/${row.id}`}
           className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
           onClick={(e) => e.stopPropagation()}
         >
@@ -446,7 +446,7 @@ export default function RouterDetailPage() {
                             value={
                               router.network ? (
                                 <Link
-                                  to={`/networks/${router.network.id}`}
+                                  to={`/compute/networks/${router.network.id}`}
                                   className="inline-flex items-center gap-1.5 font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
                                 >
                                   {router.network.name}
@@ -461,7 +461,7 @@ export default function RouterDetailPage() {
                             value={
                               router.subnet ? (
                                 <Link
-                                  to={`/subnets/${router.subnet.id}`}
+                                  to={`/compute/subnets/${router.subnet.id}`}
                                   className="inline-flex items-center gap-1.5 font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
                                 >
                                   {router.subnet.name}

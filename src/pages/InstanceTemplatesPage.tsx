@@ -256,7 +256,7 @@ export function InstanceTemplatesPage() {
       sortable: true,
       render: (_, row) => (
         <Link
-          to={`/instance-templates/${row.id}`}
+          to={`/compute/instance-templates/${row.id}`}
           className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
           onClick={(e) => e.stopPropagation()}
         >

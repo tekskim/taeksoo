@@ -166,7 +166,7 @@ export function LoadBalancersPage() {
       render: (_, row) => (
         <div className="flex flex-col gap-0.5">
           <Link
-          to={`/load-balancers/${row.id}`}
+          to={`/compute/load-balancers/${row.id}`}
             className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
             onClick={(e) => e.stopPropagation()}
           >
@@ -191,7 +191,7 @@ export function LoadBalancersPage() {
       render: (_, row) => (
         <div className="flex flex-col gap-0.5">
           <Link
-          to={`/networks/${row.ownedNetworkId}`}
+          to={`/compute/networks/${row.ownedNetworkId}`}
             className="inline-flex items-center gap-1.5 font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
             onClick={(e) => e.stopPropagation()}
           >
@@ -212,7 +212,7 @@ export function LoadBalancersPage() {
         row.floatingIpId ? (
           <div className="flex flex-col gap-0.5">
             <Link
-          to={`/floating-ips/${row.floatingIpId}`}
+          to={`/compute/floating-ips/${row.floatingIpId}`}
               className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
               onClick={(e) => e.stopPropagation()}
             >

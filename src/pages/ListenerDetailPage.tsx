@@ -320,7 +320,7 @@ export default function ListenerDetailPage() {
       render: (_, row) => (
         <div className="flex flex-col gap-0.5">
           <Link
-            to={`/pools/${row.id}`}
+            to={`/compute/pools/${row.id}`}
             className="inline-flex items-center gap-1.5 font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
             onClick={(e) => e.stopPropagation()}
           >
@@ -397,7 +397,7 @@ export default function ListenerDetailPage() {
       render: (_, row) => (
         <div className="flex flex-col gap-0.5">
           <Link
-            to={`/l7-policies/${row.id}`}
+            to={`/compute/l7-policies/${row.id}`}
             className="inline-flex items-center gap-1.5 font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
             onClick={(e) => e.stopPropagation()}
           >
@@ -470,7 +470,7 @@ export default function ListenerDetailPage() {
       render: (_, row) => (
         <div className="flex flex-col gap-0.5">
           <Link
-            to={`/certificates/${row.id}`}
+            to={`/compute/certificates/${row.id}`}
             className="inline-flex items-center gap-1.5 font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
             onClick={(e) => e.stopPropagation()}
           >
@@ -730,7 +730,7 @@ export default function ListenerDetailPage() {
                               </span>
                               {listener.loadBalancer ? (
                                 <Link
-                                  to={`/load-balancers/${listener.loadBalancer.id}`}
+                                  to={`/compute/load-balancers/${listener.loadBalancer.id}`}
                                   className="flex items-center gap-1.5 text-[12px] font-medium leading-4 text-[var(--color-action-primary)] hover:underline"
                                 >
                                   {listener.loadBalancer.name}

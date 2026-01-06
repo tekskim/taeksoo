@@ -242,7 +242,7 @@ export function VolumeSnapshotDetailPage() {
                                 Volume
                               </span>
                               <Link 
-                                to={`/volumes/${snapshot.sourceVolumeId}`}
+                                to={`/compute/volumes/${snapshot.sourceVolumeId}`}
                                 className="inline-flex items-center gap-1.5 text-[12px] font-medium leading-4 text-[var(--color-action-primary)] hover:underline"
                               >
                                 {snapshot.sourceVolume}

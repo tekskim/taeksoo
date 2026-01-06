@@ -174,7 +174,7 @@ export function LoadBalancerDetailPage() {
       render: (_, row) => (
         <div className="flex flex-col gap-0.5">
           <Link
-            to={`/listeners/${row.id}`}
+            to={`/compute/listeners/${row.id}`}
             className="inline-flex items-center gap-1.5 font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
             onClick={(e) => e.stopPropagation()}
           >
@@ -378,7 +378,7 @@ export function LoadBalancerDetailPage() {
                                 </span>
                                 {loadBalancer.ownedNetwork ? (
                                   <Link
-                                    to={`/networks/${loadBalancer.ownedNetwork.id}`}
+                                    to={`/compute/networks/${loadBalancer.ownedNetwork.id}`}
                                     className="flex items-center gap-1.5 text-[12px] font-medium leading-4 text-[var(--color-action-primary)] hover:underline"
                                   >
                                     {loadBalancer.ownedNetwork.name}
@@ -397,7 +397,7 @@ export function LoadBalancerDetailPage() {
                                 </span>
                                 {loadBalancer.subnet ? (
                                   <Link
-                                    to={`/subnets/${loadBalancer.subnet.id}`}
+                                    to={`/compute/subnets/${loadBalancer.subnet.id}`}
                                     className="flex items-center gap-1.5 text-[12px] font-medium leading-4 text-[var(--color-action-primary)] hover:underline"
                                   >
                                     {loadBalancer.subnet.name}
@@ -416,7 +416,7 @@ export function LoadBalancerDetailPage() {
                                 </span>
                                 {loadBalancer.floatingIp ? (
                                   <Link
-                                    to={`/floating-ips/${loadBalancer.floatingIp.id}`}
+                                    to={`/compute/floating-ips/${loadBalancer.floatingIp.id}`}
                                     className="flex items-center gap-1.5 text-[12px] font-medium leading-4 text-[var(--color-action-primary)] hover:underline"
                                   >
                                     {loadBalancer.floatingIp.name}
