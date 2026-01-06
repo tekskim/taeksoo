@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import {
   Button,
@@ -64,10 +64,22 @@ interface ServerGroupInstance {
    Mock Data
    ---------------------------------------- */
 
-const mockServerGroupDetail: ServerGroupDetail = {
-  id: '7284d9174e81431e93060a9bbcf2cdfd',
-  name: 'server-1',
-  policy: 'Affinity',
+// Server group data map by ID - synced with ServerGroupsPage mock data
+const mockServerGroupsMap: Record<string, ServerGroupDetail> = {
+  'sg-001': { id: 'sg-001', name: 'server-1', policy: 'Anti-affinity' },
+  'sg-002': { id: 'sg-002', name: 'web-servers', policy: 'Anti-affinity' },
+  'sg-003': { id: 'sg-003', name: 'db-cluster', policy: 'Affinity' },
+  'sg-004': { id: 'sg-004', name: 'cache-group', policy: 'Soft-anti-affinity' },
+  'sg-005': { id: 'sg-005', name: 'app-servers', policy: 'Anti-affinity' },
+  'sg-006': { id: 'sg-006', name: 'monitoring', policy: 'Soft-affinity' },
+  'sg-007': { id: 'sg-007', name: 'k8s-workers', policy: 'Anti-affinity' },
+  'sg-008': { id: 'sg-008', name: 'k8s-masters', policy: 'Anti-affinity' },
+  'sg-009': { id: 'sg-009', name: 'storage-nodes', policy: 'Affinity' },
+  'sg-010': { id: 'sg-010', name: 'load-balancers', policy: 'Anti-affinity' },
+};
+
+const defaultServerGroupDetail: ServerGroupDetail = {
+  id: 'unknown', name: 'Unknown Server Group', policy: '-',
 };
 
 const mockServerGroupInstances: ServerGroupInstance[] = [
@@ -131,11 +143,18 @@ export function ServerGroupDetailPage() {
   // Preferences state
   const [isPreferencesOpen, setIsPreferencesOpen] = useState(false);
 
-  // In a real app, you would fetch the server group data based on the ID
-  const serverGroup = mockServerGroupDetail;
+  // Get server group data based on URL ID
+  const serverGroup = id ? (mockServerGroupsMap[id] || defaultServerGroupDetail) : defaultServerGroupDetail;
 
   // Global tab management
-  const { tabs, activeTabId, closeTab, selectTab, addNewTab } = useTabs();
+  const { tabs, activeTabId, closeTab, selectTab, addNewTab, updateActiveTabLabel } = useTabs();
+
+  // Update tab label to server group name
+  useEffect(() => {
+    if (serverGroup.name) {
+      updateActiveTabLabel(serverGroup.name);
+    }
+  }, [serverGroup.name, updateActiveTabLabel]);
 
   // Convert tabs to TabBar format
   const tabBarTabs = tabs.map((tab) => ({
