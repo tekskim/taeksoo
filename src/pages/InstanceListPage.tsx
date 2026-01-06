@@ -741,7 +741,7 @@ export function InstanceListPage() {
 
         {/* Page Content */}
         <div className="pt-4 px-8 pb-6 bg-[var(--color-surface-default)]">
-          <VStack gap={3}>
+          <VStack gap={3} className="min-w-[1176px]">
             {/* Page Header */}
             <div className="flex items-center justify-between h-8">
               <h1 className="text-[length:var(--font-size-16)] font-semibold text-[var(--color-text-default)]">
