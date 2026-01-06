@@ -98,11 +98,18 @@ interface Port {
    ---------------------------------------- */
 
 // Network data map by ID
+// Mock data - synchronized with NetworksPage
 const mockNetworksMap: Record<string, NetworkDetail> = {
-  'net-001': { id: 'net-001', name: 'public-network', status: 'active', adminState: 'Up', access: 'Public', external: true, createdAt: '2025-09-15', networkName: 'public-network', availabilityZone: 'nova', availabilityZoneHint: '-', description: 'Public external network', mtu: 1500, portSecurity: true, routerExternal: true, providerNetworkType: 'flat', providerPhysicalNetwork: 'external', segmentationId: '-' },
-  'net-002': { id: 'net-002', name: 'private-network-01', status: 'active', adminState: 'Up', access: 'Project', external: false, createdAt: '2025-09-10', networkName: 'private-network-01', availabilityZone: 'nova', availabilityZoneHint: '-', description: 'Private network for project', mtu: 1450, portSecurity: true, routerExternal: false, providerNetworkType: 'vxlan', providerPhysicalNetwork: '-', segmentationId: '100' },
-  'net-003': { id: 'net-003', name: 'management-network', status: 'active', adminState: 'Up', access: 'Project', external: false, createdAt: '2025-09-05', networkName: 'management-network', availabilityZone: 'keystone', availabilityZoneHint: '-', description: 'Management network', mtu: 1500, portSecurity: false, routerExternal: false, providerNetworkType: 'vlan', providerPhysicalNetwork: 'mgmt', segmentationId: '200' },
-  'net-004': { id: 'net-004', name: 'storage-network', status: 'active', adminState: 'Up', access: 'Project', external: false, createdAt: '2025-09-01', networkName: 'storage-network', availabilityZone: 'nova', availabilityZoneHint: '-', description: 'Storage network for Ceph', mtu: 9000, portSecurity: false, routerExternal: false, providerNetworkType: 'vlan', providerPhysicalNetwork: 'storage', segmentationId: '300' },
+  'net-001': { id: 'net-001', name: 'net-01', status: 'active', adminState: 'Up', access: 'Project', external: true, createdAt: '2025-09-15', networkName: 'net-01', availabilityZone: 'nova', availabilityZoneHint: '-', description: 'Public external network', mtu: 1500, portSecurity: true, routerExternal: true, providerNetworkType: 'flat', providerPhysicalNetwork: 'external', segmentationId: '-' },
+  'net-002': { id: 'net-002', name: 'internal-net', status: 'active', adminState: 'Up', access: 'Project', external: false, createdAt: '2025-09-10', networkName: 'internal-net', availabilityZone: 'nova', availabilityZoneHint: '-', description: 'Private network for project', mtu: 1450, portSecurity: true, routerExternal: false, providerNetworkType: 'vxlan', providerPhysicalNetwork: '-', segmentationId: '100' },
+  'net-003': { id: 'net-003', name: 'dev-network', status: 'active', adminState: 'Up', access: 'Project', external: false, createdAt: '2025-09-05', networkName: 'dev-network', availabilityZone: 'keystone', availabilityZoneHint: '-', description: 'Development network', mtu: 1500, portSecurity: false, routerExternal: false, providerNetworkType: 'vlan', providerPhysicalNetwork: 'mgmt', segmentationId: '200' },
+  'net-004': { id: 'net-004', name: 'prod-net', status: 'building', adminState: 'Up', access: 'Project', external: true, createdAt: '2025-09-01', networkName: 'prod-net', availabilityZone: 'nova', availabilityZoneHint: '-', description: 'Production network', mtu: 9000, portSecurity: false, routerExternal: false, providerNetworkType: 'vlan', providerPhysicalNetwork: 'storage', segmentationId: '300' },
+  'net-005': { id: 'net-005', name: 'test-network', status: 'active', adminState: 'Down', access: 'Project', external: false, createdAt: '2025-08-25', networkName: 'test-network', availabilityZone: 'nova', availabilityZoneHint: '-', description: 'Test network', mtu: 1500, portSecurity: true, routerExternal: false, providerNetworkType: 'vxlan', providerPhysicalNetwork: '-', segmentationId: '400' },
+  'net-006': { id: 'net-006', name: 'dmz-net', status: 'active', adminState: 'Up', access: 'Project', external: true, createdAt: '2025-08-20', networkName: 'dmz-net', availabilityZone: 'nova', availabilityZoneHint: '-', description: 'DMZ network', mtu: 1500, portSecurity: true, routerExternal: true, providerNetworkType: 'flat', providerPhysicalNetwork: 'dmz', segmentationId: '-' },
+  'net-007': { id: 'net-007', name: 'management-net', status: 'error', adminState: 'Down', access: 'Project', external: false, createdAt: '2025-08-15', networkName: 'management-net', availabilityZone: 'nova', availabilityZoneHint: '-', description: 'Management network', mtu: 1500, portSecurity: false, routerExternal: false, providerNetworkType: 'vlan', providerPhysicalNetwork: 'mgmt', segmentationId: '500' },
+  'net-008': { id: 'net-008', name: 'backup-network', status: 'active', adminState: 'Up', access: 'Project', external: false, createdAt: '2025-08-10', networkName: 'backup-network', availabilityZone: 'nova', availabilityZoneHint: '-', description: 'Backup network', mtu: 1500, portSecurity: true, routerExternal: false, providerNetworkType: 'vxlan', providerPhysicalNetwork: '-', segmentationId: '600' },
+  'net-009': { id: 'net-009', name: 'external-gateway', status: 'active', adminState: 'Up', access: 'Shared', external: true, createdAt: '2025-08-05', networkName: 'external-gateway', availabilityZone: 'nova', availabilityZoneHint: '-', description: 'External gateway network', mtu: 1500, portSecurity: true, routerExternal: true, providerNetworkType: 'flat', providerPhysicalNetwork: 'external', segmentationId: '-' },
+  'net-010': { id: 'net-010', name: 'provider-net', status: 'active', adminState: 'Up', access: 'External', external: true, createdAt: '2025-08-01', networkName: 'provider-net', availabilityZone: 'nova', availabilityZoneHint: '-', description: 'Provider network', mtu: 1500, portSecurity: true, routerExternal: true, providerNetworkType: 'flat', providerPhysicalNetwork: 'provider', segmentationId: '-' },
 };
 
 const defaultNetworkDetail: NetworkDetail = {
@@ -164,13 +171,6 @@ export default function NetworkDetailPage() {
   const navigate = useNavigate();
   const { tabs, activeTabId, addTab, closeTab, selectTab: setActiveTab, updateActiveTabLabel } = useTabs();
   
-  // Update tab label to network name
-  useEffect(() => {
-    if (network.name) {
-      updateActiveTabLabel(network.name);
-    }
-  }, [network.name, updateActiveTabLabel]);
-  
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [activeDetailTab, setActiveDetailTab] = useState('details');
   
@@ -199,6 +199,13 @@ export default function NetworkDetailPage() {
   const network = id ? (mockNetworksMap[id] || defaultNetworkDetail) : defaultNetworkDetail;
   const subnets = mockSubnets;
   const ports = mockPorts;
+
+  // Update tab label to network name
+  useEffect(() => {
+    if (network.name) {
+      updateActiveTabLabel(network.name);
+    }
+  }, [network.name, updateActiveTabLabel]);
 
   const breadcrumbItems = [
     { label: 'Proj-1', href: '/' },
