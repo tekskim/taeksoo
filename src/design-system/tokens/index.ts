@@ -328,7 +328,7 @@ export const component = {
     radius: 'var(--input-radius)',            // 6px
     radiusCode: 'var(--input-radius-code)',   // 4px
     iconOffset: 'var(--input-icon-offset)',   // 8px
-    labelGap: 'var(--input-label-gap)',       // 6px
+    labelGap: 'var(--input-label-gap)',       // 8px
     fontSize: 'var(--input-font-size)',       // 12px
     fontSizeSm: 'var(--input-font-size-sm)',  // 11px
     lineHeight: 'var(--input-line-height)',   // 16px
@@ -352,7 +352,7 @@ export const component = {
   },
   searchInput: {
     heightSm: 'var(--search-input-height-sm)', // 28px
-    heightMd: 'var(--search-input-height-md)', // 32px
+    heightMd: 'var(--search-input-height-md)', // 28px
     iconSize: 'var(--search-input-icon-size)', // 12px
   },
   badge: {

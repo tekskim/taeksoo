@@ -83,21 +83,16 @@ export function Drawer({
     [closeOnEscape, onClose]
   );
 
-  // Add/remove event listeners and prevent body scroll
+  // Add/remove event listeners
   useEffect(() => {
     if (isOpen) {
       document.addEventListener('keydown', handleKeyDown);
-      
-      // Calculate scrollbar width to prevent layout shift
-      const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
       document.body.style.overflow = 'hidden';
-      document.body.style.paddingRight = `${scrollbarWidth}px`;
     }
 
     return () => {
       document.removeEventListener('keydown', handleKeyDown);
       document.body.style.overflow = '';
-      document.body.style.paddingRight = '';
     };
   }, [isOpen, handleKeyDown]);
 

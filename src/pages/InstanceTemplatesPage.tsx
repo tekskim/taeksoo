@@ -23,7 +23,6 @@ import { Sidebar } from '@/components/Sidebar';
 import { useTabs } from '@/contexts/TabContext';
 import { ViewPreferencesDrawer, type ColumnConfig } from '@/components/ViewPreferencesDrawer';
 import {
-  IconPlus,
   IconDotsCircleHorizontal,
   IconTrash,
   IconDownload,
@@ -94,7 +93,6 @@ export function InstanceTemplatesPage() {
 
   // Default column config
   const defaultColumnConfig: ColumnConfig[] = [
-    { id: 'selection', label: '', visible: true, locked: true },
     { id: 'favorite', label: '', visible: true, locked: true },
     { id: 'name', label: 'Name', visible: true, locked: true },
     { id: 'image', label: 'Image', visible: true },
@@ -226,32 +224,15 @@ export function InstanceTemplatesPage() {
   // Table columns
   const columns: TableColumn<InstanceTemplate>[] = [
     {
-      key: 'selection',
-      label: '',
-      width: '40px',
-      align: 'center',
-      headerRender: () => (
-        <Checkbox
-          checked={allCurrentPageSelected}
-          indeterminate={someCurrentPageSelected && !allCurrentPageSelected}
-          onChange={toggleAllSelection}
-          aria-label="Select all"
-        />
-      ),
-      render: (_, row) => (
-        <Checkbox
-          checked={selectedTemplates.includes(row.id)}
-          onChange={() => toggleSelection(row.id)}
-          onClick={(e) => e.stopPropagation()}
-          aria-label={`Select ${row.name}`}
-        />
-      ),
-    },
-    {
       key: 'favorite',
       label: '',
       width: '48px',
       align: 'center',
+      headerRender: () => (
+        <div className="flex items-center justify-center w-full">
+          <IconStar size={14} stroke={1.5} className="text-[var(--color-text-muted)]" />
+        </div>
+      ),
       render: (_, row) => (
         <button
           onClick={(e) => {
@@ -263,7 +244,7 @@ export function InstanceTemplatesPage() {
           {row.favorite ? (
             <IconStarFilled size={16} className="text-yellow-400" />
           ) : (
-            <IconStar size={16} stroke={1} className="text-[var(--color-text-muted)]" />
+            <IconStar size={16} stroke={1.5} className="text-[var(--color-text-muted)]" />
           )}
         </button>
       ),
@@ -360,8 +341,8 @@ export function InstanceTemplatesPage() {
         return (
           <div onClick={(e) => e.stopPropagation()}>
             <ContextMenu items={menuItems} trigger="click">
-              <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors">
-                <IconDotsCircleHorizontal size={16} stroke={1} className="text-[var(--color-text-subtle)]" />
+              <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
+                <IconDotsCircleHorizontal size={16} stroke={1.5} className="text-[var(--action-icon-color)]" />
               </button>
             </ContextMenu>
           </div>
@@ -384,15 +365,16 @@ export function InstanceTemplatesPage() {
   }, [columns, columnConfig]);
 
   return (
-    <div className="min-h-screen bg-[var(--color-surface-subtle)]">
-      <Sidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(false)} />
+    <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
+      <Sidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(prev => !prev)} />
 
       <main
-        className={`min-h-screen bg-[var(--color-surface-default)] transition-[margin] duration-200 overflow-x-auto ${
-          sidebarOpen ? 'ml-[200px]' : 'ml-0'
+        className={`absolute top-0 bottom-0 right-0 flex flex-col bg-[var(--color-surface-default)] transition-[left] duration-200 ${
+          sidebarOpen ? 'left-[200px]' : 'left-0'
         }`}
       >
-        <div className="min-w-[var(--layout-content-min-width)]">
+        {/* Fixed Header Area */}
+        <div className="shrink-0 bg-[var(--color-surface-default)]">
         {/* Tab Bar */}
         <TabBar
           tabs={tabBarTabs}
@@ -427,7 +409,10 @@ export function InstanceTemplatesPage() {
             />
           }
         />
+        </div>
 
+        {/* Scrollable Content Area */}
+        <div className="flex-1 overflow-auto min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll">
         {/* Page Content */}
         <div className="pt-4 px-8 pb-6 bg-[var(--color-surface-default)]">
           <VStack gap={3}>
@@ -436,7 +421,7 @@ export function InstanceTemplatesPage() {
               <h1 className="text-[length:var(--font-size-16)] font-semibold text-[var(--color-text-default)]">
                 Instance Templates
               </h1>
-              <Button leftIcon={<IconPlus size={16} />}>
+              <Button>
                 Create Template
               </Button>
             </div>
@@ -493,6 +478,7 @@ export function InstanceTemplatesPage() {
                 showSettings
                 onSettingsClick={() => setIsPreferencesOpen(true)}
                 totalItems={filteredTemplates.length}
+                selectedCount={selectedTemplates.length}
               />
             )}
 
@@ -502,6 +488,9 @@ export function InstanceTemplatesPage() {
               data={filteredTemplates.slice((currentPage - 1) * rowsPerPage, currentPage * rowsPerPage)}
               rowKey="id"
               emptyMessage="No templates found"
+              selectable
+              selectedKeys={selectedTemplates}
+              onSelectionChange={setSelectedTemplates}
             />
           </VStack>
         </div>

@@ -1,105 +1,114 @@
-import { useState, useMemo } from 'react';
-import { 
-  Drawer, 
-  Button, 
-  Radio,
-  RadioGroup,
-  Input,
-  SearchInput,
-  Pagination,
-  Table,
-  StatusIndicator,
-  type TableColumn,
-} from '@/design-system';
+import { useState, useEffect } from 'react';
+import { Drawer, Button, Input } from '@/design-system';
 import { HStack, VStack } from '@/design-system/layouts';
-import { IconExternalLink, IconInfinity } from '@tabler/icons-react';
+import { IconAlertCircle, IconHelp } from '@tabler/icons-react';
+import { Tooltip } from '@/design-system';
 
 /* ----------------------------------------
    Types
    ---------------------------------------- */
 
-export interface VolumeItem {
+export interface VolumeInfo {
   id: string;
   name: string;
-  status: 'active' | 'inactive' | 'error';
-  size: string;
-  attachTo?: string;
-  attachToId?: string;
-  diskTag: string;
+  size: number; // in GiB
 }
+
+export interface QuotaInfo {
+  used: number;
+  total: number;
+}
+
+export type BackupMode = 'full' | 'incremental';
 
 export interface CreateVolumeBackupDrawerProps {
   isOpen: boolean;
   onClose: () => void;
-  volumes?: VolumeItem[];
-  volumeBackupQuota?: { used: number; total: number };
-  defaultTypeBackupQuota?: { used: number; total: number | 'unlimited' };
-  onCreate?: (data: {
-    volumeId: string;
-    backupMode: 'full' | 'incremental';
-    name: string;
-    description?: string;
-  }) => void;
+  volume: VolumeInfo | null;
+  volumeBackupQuota?: QuotaInfo;
+  volumeBackupCapacityQuota?: QuotaInfo;
+  onSubmit?: (backupName: string, mode: BackupMode) => void;
 }
 
 /* ----------------------------------------
-   Mock Data
+   QuotaProgressBar Component
    ---------------------------------------- */
 
-const mockVolumes: VolumeItem[] = Array.from({ length: 15 }, (_, i) => ({
-  id: `vol-${i + 1}`,
-  name: `vol-0${(i % 9) + 1}`,
-  status: 'active',
-  size: '10 GiB',
-  attachTo: 'web-server-1',
-  attachToId: `server-${i + 1}`,
-  diskTag: 'Data Disk',
-}));
+interface QuotaProgressBarProps {
+  label: string;
+  used: number;
+  total: number;
+}
 
-/* ----------------------------------------
-   Quota Bar Component
-   ---------------------------------------- */
+function QuotaProgressBar({ label, used, total }: QuotaProgressBarProps) {
+  const percentage = total > 0 ? (used / total) * 100 : 0;
+  const nextPercentage = total > 0 ? ((used + 1) / total) * 100 : 0;
 
-function QuotaBar({ 
-  label, 
-  used, 
-  total 
-}: { 
-  label: string; 
-  used: number; 
-  total: number | 'unlimited';
-}) {
-  const isUnlimited = total === 'unlimited';
-  const percentage = isUnlimited ? 0 : Math.min((used / (total as number)) * 100, 100);
-  
   return (
     <VStack gap={2} className="w-full">
-      <HStack justifyContent="between" className="w-full">
-        <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+      <HStack className="w-full justify-between items-center">
+        <span className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
           {label}
         </span>
-        <HStack gap={0} alignItems="center">
-          <span className="text-[12px] text-[var(--color-text-default)]">
-            {used}/
-          </span>
-          {isUnlimited ? (
-            <IconInfinity size={16} className="text-[var(--color-text-default)]" />
-          ) : (
-            <span className="text-[12px] text-[var(--color-text-default)]">{total}</span>
-          )}
-        </HStack>
+        <span className="text-[12px] text-[var(--color-text-default)] leading-4">
+          {used}/{total}
+        </span>
       </HStack>
-      <div className="w-full h-1 bg-[var(--color-surface-muted)] rounded-full overflow-hidden flex">
+      <div className="w-full h-1 bg-[var(--color-border-subtle)] rounded-lg relative overflow-hidden">
+        {/* Current usage (darker green) */}
         <div 
-          className="h-full rounded-full bg-[var(--color-state-success)]"
-          style={{ width: isUnlimited ? '5%' : `${percentage}%` }}
+          className="absolute left-0 top-0 h-full bg-[#4ade80] rounded-lg z-[2]"
+          style={{ width: `${Math.min(percentage, 100)}%` }}
         />
+        {/* Next usage preview (lighter green) */}
         <div 
-          className="h-full rounded-full bg-[#bbf7d0] -ml-1"
-          style={{ width: isUnlimited ? '5%' : `${percentage}%` }}
+          className="absolute left-0 top-0 h-full bg-[#bbf7d0] rounded-lg z-[1]"
+          style={{ width: `${Math.min(nextPercentage, 100)}%` }}
         />
       </div>
     </VStack>
+  );
+}
+
+/* ----------------------------------------
+   RadioButton Component
+   ---------------------------------------- */
+
+interface RadioButtonProps {
+  label: string;
+  checked: boolean;
+  onChange: () => void;
+  helpText?: string;
+}
+
+function RadioButton({ label, checked, onChange, helpText }: RadioButtonProps) {
+  return (
+    <label className="flex items-center gap-1.5 cursor-pointer">
+      <div 
+        className={`w-4 h-4 rounded-full border-2 flex items-center justify-center transition-colors ${
+          checked 
+            ? 'border-[#2563eb] bg-white' 
+            : 'border-[#e2e8f0] bg-white'
+        }`}
+        onClick={onChange}
+      >
+        {checked && (
+          <div className="w-2 h-2 rounded-full bg-[#2563eb]" />
+        )}
+      </div>
+      <span className="text-[12px] text-[var(--color-text-default)] leading-4">
+        {label}
+      </span>
+      {helpText && (
+        <Tooltip content={helpText}>
+          <IconHelp 
+            size={16} 
+            className="text-[var(--color-text-default)] cursor-help" 
+            stroke={1.5}
+          />
+        </Tooltip>
+      )}
+    </label>
   );
 }
 
@@ -110,255 +119,158 @@ function QuotaBar({
 export function CreateVolumeBackupDrawer({
   isOpen,
   onClose,
-  volumes = mockVolumes,
-  volumeBackupQuota = { used: 2, total: 10 },
-  defaultTypeBackupQuota = { used: 2, total: 'unlimited' },
-  onCreate,
+  volume,
+  volumeBackupQuota = { used: 1, total: 10 },
+  volumeBackupCapacityQuota = { used: 20, total: 1000 },
+  onSubmit,
 }: CreateVolumeBackupDrawerProps) {
-  const [searchTerm, setSearchTerm] = useState('');
-  const [selectedVolumeId, setSelectedVolumeId] = useState<string | null>(null);
-  const [backupMode, setBackupMode] = useState<'full' | 'incremental'>('full');
   const [backupName, setBackupName] = useState('');
-  const [description, setDescription] = useState('');
-  const [currentPage, setCurrentPage] = useState(1);
+  const [backupMode, setBackupMode] = useState<BackupMode>('full');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const itemsPerPage = 5;
+  // Reset form when drawer opens
+  useEffect(() => {
+    if (isOpen && volume) {
+      // Generate default backup name with date
+      const today = new Date();
+      const dateStr = today.toISOString().slice(0, 10).replace(/-/g, '');
+      setBackupName(`vol-backup-${dateStr}`);
+      setBackupMode('full');
+    }
+  }, [isOpen, volume]);
 
-  // Filter volumes based on search
-  const filteredVolumes = useMemo(() => 
-    volumes.filter(volume =>
-      volume.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      volume.attachTo?.toLowerCase().includes(searchTerm.toLowerCase())
-    ), [volumes, searchTerm]
-  );
-
-  // Paginate
-  const paginatedVolumes = filteredVolumes.slice(
-    (currentPage - 1) * itemsPerPage,
-    currentPage * itemsPerPage
-  );
-
-  const volumeColumns: TableColumn<VolumeItem>[] = [
-    {
-      key: 'select',
-      label: '',
-      width: '40px',
-      align: 'center',
-      render: (_, row) => (
-        <Radio
-          name="volume-backup-select"
-          value={row.id}
-          checked={selectedVolumeId === row.id}
-          onChange={() => setSelectedVolumeId(row.id)}
-        />
-      ),
-    },
-    {
-      key: 'status',
-      label: 'Status',
-      width: '59px',
-      align: 'center',
-      render: (_, item) => (
-        <StatusIndicator status={item.status} layout="icon-only" size="sm" />
-      ),
-    },
-    {
-      key: 'name',
-      label: 'Name',
-      render: (_, item) => (
-        <HStack gap={1.5}>
-          <span className="text-[length:var(--font-size-12)] font-medium text-[var(--color-link)]">
-            {item.name}
-          </span>
-          <IconExternalLink size={12} className="text-[var(--color-link)]" />
-        </HStack>
-      ),
-    },
-    { 
-      key: 'size', 
-      label: 'Size',
-      sortable: true,
-    },
-    {
-      key: 'attachTo',
-      label: 'Attach To',
-      render: (_, item) => item.attachTo ? (
-        <HStack gap={1.5}>
-          <span className="text-[length:var(--font-size-12)] font-medium text-[var(--color-link)]">
-            {item.attachTo}
-          </span>
-          <IconExternalLink size={12} className="text-[var(--color-link)]" />
-        </HStack>
-      ) : (
-        <span className="text-[12px] text-[var(--color-text-muted)]">-</span>
-      ),
-    },
-    { 
-      key: 'diskTag', 
-      label: 'Disk Tag',
-      sortable: true,
-    },
-  ];
-
-  const handleCreate = async () => {
-    if (!selectedVolumeId || !backupName.trim()) return;
+  const handleSubmit = async () => {
+    if (!backupName.trim()) return;
+    
     setIsSubmitting(true);
     try {
-      await onCreate?.({
-        volumeId: selectedVolumeId,
-        backupMode,
-        name: backupName.trim(),
-        description: description.trim() || undefined,
-      });
-      handleClose();
+      await onSubmit?.(backupName, backupMode);
+      onClose();
     } finally {
       setIsSubmitting(false);
     }
   };
 
   const handleClose = () => {
-    setSelectedVolumeId(null);
-    setSearchTerm('');
-    setBackupMode('full');
     setBackupName('');
-    setDescription('');
-    setCurrentPage(1);
+    setBackupMode('full');
     onClose();
   };
-
-  const isFormValid = selectedVolumeId && backupName.trim().length > 0;
 
   return (
     <Drawer
       isOpen={isOpen}
       onClose={handleClose}
-      title="Create Volume Backup"
-      width={696}
+      title=""
+      showCloseButton={false}
+      width={376}
       footer={
-        <HStack gap={2} justifyContent="center" className="w-full">
-          <Button 
-            variant="secondary" 
-            onClick={handleClose}
-            size="md"
-            className="w-[152px]"
-          >
-            Cancel
-          </Button>
-          <Button 
-            variant="primary" 
-            onClick={handleCreate}
-            disabled={isSubmitting || !isFormValid}
-            size="md"
-            className="w-[152px]"
-          >
-            {isSubmitting ? 'Creating...' : 'Create'}
-          </Button>
-        </HStack>
+        <VStack gap={6} className="w-full">
+          {/* Quota Section */}
+          <VStack gap={6} className="w-full border-t border-[var(--color-border-subtle)] pt-4">
+            <QuotaProgressBar
+              label="Volume Backup Quota"
+              used={volumeBackupQuota.used}
+              total={volumeBackupQuota.total}
+            />
+            <QuotaProgressBar
+              label="Volume Backup Capacity Quota(GiB)"
+              used={volumeBackupCapacityQuota.used}
+              total={volumeBackupCapacityQuota.total}
+            />
+          </VStack>
+
+          {/* Buttons */}
+          <HStack gap={2} className="w-full border-t border-[var(--color-border-default)] pt-4">
+            <Button 
+              variant="secondary" 
+              onClick={handleClose}
+              className="flex-1"
+            >
+              Cancel
+            </Button>
+            <Button 
+              variant="primary" 
+              onClick={handleSubmit}
+              disabled={!backupName.trim() || isSubmitting}
+              className="flex-1"
+            >
+              {isSubmitting ? 'Creating...' : 'Create'}
+            </Button>
+          </HStack>
+        </VStack>
       }
     >
-      <VStack gap={6} className="h-full overflow-y-auto">
-        {/* Volumes Section */}
-        <VStack gap={3} className="w-full">
-          <h6 className="text-[14px] font-medium text-[var(--color-text-default)]">
-            Volumes
-          </h6>
+      <VStack gap={6}>
+        {/* Header + Volume Info + Warning Group */}
+        <VStack gap={3}>
+          {/* Header */}
+          <VStack gap={2}>
+            <h2 className="text-[16px] font-semibold text-[var(--color-text-default)] leading-6">
+              Create Volume Backup
+            </h2>
+            <p className="text-[12px] text-[var(--color-text-subtle)] leading-4">
+              Create a full backup of this volume and store it in the backup service. The backup can be used to restore the volume or create new volumes in the future.
+            </p>
+          </VStack>
 
-          {/* Search Input */}
-          <SearchInput
-            placeholder="Find volume with filters"
-            value={searchTerm}
-            onChange={(e) => {
-              setSearchTerm(e.target.value);
-              setCurrentPage(1);
-            }}
-            className="w-[280px]"
-          />
+          {/* Volume Info Box */}
+          <div className="w-full px-4 py-3 bg-[var(--color-surface-subtle)] rounded-lg">
+            <p className="text-[11px] font-medium text-[var(--color-text-subtle)] mb-1.5">
+              Volume
+            </p>
+            <p className="text-[12px] text-[var(--color-text-default)]">
+              {volume ? `${volume.name} (${volume.size}GiB)` : '-'}
+            </p>
+          </div>
 
-          {/* Pagination */}
-          <HStack gap={2} alignItems="center">
-            <Pagination 
-              totalItems={filteredVolumes.length} 
-              itemsPerPage={itemsPerPage} 
-              currentPage={currentPage} 
-              onPageChange={setCurrentPage} 
+          {/* Warning Message */}
+          <div className="w-full flex gap-2 p-3 bg-[var(--color-state-danger-bg)] rounded-lg">
+            <IconAlertCircle 
+              size={16} 
+              className="text-[var(--color-state-danger)] shrink-0 mt-0.5" 
+              stroke={1.5}
             />
-            <div className="w-px h-4 bg-[var(--color-border-default)]" />
-            <span className="text-[11px] text-[var(--color-text-subtle)]">
-              {filteredVolumes.length} items
-            </span>
-          </HStack>
-
-          {/* Volume Table */}
-          <div className="overflow-auto">
-            <Table<VolumeItem>
-              columns={volumeColumns}
-              data={paginatedVolumes}
-              rowKey="id"
-              selectedKeys={selectedVolumeId ? [selectedVolumeId] : []}
-              onRowClick={(row) => setSelectedVolumeId(row.id)}
-              emptyMessage="No volumes available"
-            />
+            <p className="text-[11px] text-[var(--color-text-default)] leading-4">
+              For data consistency, stop all write operations on the instance before creating a backup.
+            </p>
           </div>
         </VStack>
 
-        {/* Divider */}
-        <div className="w-full h-px bg-[var(--color-border-subtle)]" />
-
-        {/* Backup Mode */}
-        <VStack gap={3}>
-          <h6 className="text-[14px] font-medium text-[var(--color-text-default)]">
-            Backup mode
-          </h6>
-          <RadioGroup value={backupMode} onChange={(val) => setBackupMode(val as 'full' | 'incremental')}>
-            <VStack gap={3} alignItems="start">
-              <Radio value="full" label="Full Backup" />
-              <Radio value="incremental" label="Increment Backup" />
-            </VStack>
-          </RadioGroup>
-        </VStack>
-
-        {/* Volume Backup Name */}
-        <VStack gap={2}>
-          <h6 className="text-[14px] font-medium text-[var(--color-text-default)]">
-            Volume Backup name
-          </h6>
+        {/* Backup Name Input */}
+        <VStack gap={2} className="w-full">
+          <label className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+            Volume backup name
+          </label>
           <Input
-            placeholder="e.g. data-backup"
             value={backupName}
             onChange={(e) => setBackupName(e.target.value)}
-            className="w-full"
+            placeholder="Enter backup name"
+            fullWidth
           />
-          <p className="text-[11px] text-[var(--color-text-subtle)]">
-            Allowed: 1-128 characters, letters, numbers, "-", "_", ".", "()", "[]"
+          <p className="text-[11px] text-[var(--color-text-subtle)] leading-4">
+            Allowed: 1–128 characters, letters, numbers, "-", "_", ".", "()", "[]"
           </p>
         </VStack>
 
-        {/* Description (optional) */}
-        <VStack gap={2}>
-          <h6 className="text-[14px] font-medium text-[var(--color-text-default)]">
-            Description (optional)
-          </h6>
-          <Input
-            placeholder="e.g. data-snap"
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            className="w-full"
-          />
-        </VStack>
-
-        {/* Quota Section */}
-        <VStack gap={6} className="w-full pt-4 border-t border-[var(--color-border-subtle)]">
-          <QuotaBar 
-            label="Volume Backup Quota" 
-            used={volumeBackupQuota.used} 
-            total={volumeBackupQuota.total} 
-          />
-          <QuotaBar 
-            label="_DEFAULT_type Backup Quota" 
-            used={defaultTypeBackupQuota.used} 
-            total={defaultTypeBackupQuota.total} 
-          />
+        {/* Backup Mode */}
+        <VStack gap={3} className="w-full">
+          <label className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+            Backup mode
+          </label>
+          <VStack gap={3}>
+            <RadioButton
+              label="Full Backup"
+              checked={backupMode === 'full'}
+              onChange={() => setBackupMode('full')}
+            />
+            <RadioButton
+              label="Increment Backup"
+              checked={backupMode === 'incremental'}
+              onChange={() => setBackupMode('incremental')}
+              helpText="Incremental backup only backs up the data that has changed since the last backup, saving storage space."
+            />
+          </VStack>
         </VStack>
       </VStack>
     </Drawer>
@@ -366,3 +278,4 @@ export function CreateVolumeBackupDrawer({
 }
 
 export default CreateVolumeBackupDrawer;
+

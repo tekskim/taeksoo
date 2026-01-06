@@ -12,3 +12,10 @@ export {
 } from './DetailHeader';
 
 
+
+
+
+
+
+
+

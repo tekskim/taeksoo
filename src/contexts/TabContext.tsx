@@ -1,5 +1,5 @@
-import React, { createContext, useContext, useState, useCallback, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { createContext, useContext, useState, useCallback, useRef, useEffect } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 /* ----------------------------------------
    Types
@@ -20,7 +20,6 @@ interface TabContextValue {
   closeTab: (tabId: string) => void;
   selectTab: (tabId: string) => void;
   openInNewTab: (id: string, label: string, path: string) => void;
-  updateActiveTab: (label: string, path: string) => void;
 }
 
 /* ----------------------------------------
@@ -38,8 +37,59 @@ interface TabProviderProps {
   defaultTabs?: TabItem[];
 }
 
+// Helper function to get label from path
+function getLabelFromPath(path: string): string {
+  const pathLabelMap: Record<string, string> = {
+    '/': 'Home',
+    '/compute': 'Home',
+    '/compute/home': 'Home',
+    '/compute/instances': 'Instances',
+    '/compute/instances/create': 'Create Instance',
+    '/compute/instance-templates': 'Instance Templates',
+    '/compute/instance-snapshots': 'Instance Snapshots',
+    '/compute/images': 'Images',
+    '/compute/flavors': 'Flavors',
+    '/compute/key-pairs': 'Key Pairs',
+    '/compute/server-groups': 'Server Groups',
+    '/compute/volumes': 'Volumes',
+    '/compute/volume-snapshots': 'Volume Snapshots',
+    '/compute/volume-backups': 'Volume Backups',
+    '/compute/networks': 'Networks',
+    '/compute/routers': 'Routers',
+    '/compute/ports': 'Ports',
+    '/compute/floating-ips': 'Floating IPs',
+    '/compute/security-groups': 'Security Groups',
+    '/compute/load-balancers': 'Load Balancers',
+    '/compute/certificates': 'Certificates',
+    '/compute/topology': 'Topology',
+    '/design/components': 'Design System',
+    '/design/drawers': 'Drawers',
+    '/design/modals': 'Modals',
+  };
+  
+  // Check for exact match first
+  if (pathLabelMap[path]) {
+    return pathLabelMap[path];
+  }
+  
+  // Check for detail pages (e.g., /compute/volumes/vol-001)
+  for (const [basePath, label] of Object.entries(pathLabelMap)) {
+    if (basePath !== '/' && path.startsWith(basePath + '/')) {
+      // Extract the ID from the path for detail pages
+      const id = path.split('/').pop();
+      return `${label} - ${id}`;
+    }
+  }
+  
+  // Default: use just the last segment
+  const segments = path.split('/').filter(Boolean);
+  const lastSegment = segments[segments.length - 1] || 'Home';
+  return lastSegment.charAt(0).toUpperCase() + lastSegment.slice(1).replace(/-/g, ' ');
+}
+
 export function TabProvider({ children, defaultTabs = [] }: TabProviderProps) {
   const navigate = useNavigate();
+  const location = useLocation();
   
   const [tabs, setTabs] = useState<TabItem[]>(defaultTabs);
   const [activeTabId, setActiveTabId] = useState<string>(defaultTabs[0]?.id || '');
@@ -47,6 +97,31 @@ export function TabProvider({ children, defaultTabs = [] }: TabProviderProps) {
   // Use ref to access latest tabs without re-creating callbacks
   const tabsRef = useRef(tabs);
   tabsRef.current = tabs;
+
+  // Sync tab with current route when location changes
+  useEffect(() => {
+    const currentPath = location.pathname;
+    const currentLabel = getLabelFromPath(currentPath);
+    
+    setTabs((prevTabs) => {
+      // Find if there's already a tab for this path
+      const existingTab = prevTabs.find((t) => t.path === currentPath);
+      
+      if (existingTab) {
+        // Tab exists, just make sure it's active
+        setActiveTabId(existingTab.id);
+        return prevTabs;
+      }
+      
+      // Update the active tab's path and label
+      return prevTabs.map((tab) => {
+        if (tab.id === tabsRef.current.find((t) => t.id === activeTabId)?.id) {
+          return { ...tab, path: currentPath, label: currentLabel };
+        }
+        return tab;
+      });
+    });
+  }, [location.pathname, activeTabId]);
 
   // Add a new tab
   const addTab = useCallback((tab: TabItem) => {
@@ -119,15 +194,6 @@ export function TabProvider({ children, defaultTabs = [] }: TabProviderProps) {
     navigate('/');
   }, [addTab, navigate]);
 
-  // Update the active tab's label and path (for syncing with navigation)
-  const updateActiveTab = useCallback((label: string, path: string) => {
-    setTabs((prev) =>
-      prev.map((tab) =>
-        tab.id === activeTabId ? { ...tab, label, path } : tab
-      )
-    );
-  }, [activeTabId]);
-
   return (
     <TabContext.Provider
       value={{
@@ -138,7 +204,6 @@ export function TabProvider({ children, defaultTabs = [] }: TabProviderProps) {
         closeTab,
         selectTab,
         openInNewTab,
-        updateActiveTab,
       }}
     >
       {children}

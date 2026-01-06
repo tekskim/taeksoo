@@ -1,12 +1,9 @@
 import React, { type ReactNode } from 'react';
 import {
   IconLayoutSidebar,
-  IconChevronLeft,
-  IconChevronRight,
-  IconSun,
-  IconMoon,
+  IconArrowLeft,
+  IconArrowRight,
 } from '@tabler/icons-react';
-import { useDarkMode } from '@/hooks/useDarkMode';
 
 /* ----------------------------------------
    Types
@@ -51,8 +48,6 @@ export const TopBar: React.FC<TopBarProps> = ({
   showNavigation = true,
   className = '',
 }) => {
-  const { isDark, toggleDarkMode } = useDarkMode();
-  
   const iconButtonClass = `
     inline-flex items-center justify-center
     size-[var(--topbar-button-size)]
@@ -77,6 +72,7 @@ export const TopBar: React.FC<TopBarProps> = ({
         px-[var(--topbar-padding-x)]
         gap-[var(--topbar-gap)]
         bg-[var(--color-surface-default)]
+        border-b border-[var(--color-border-default)]
         ${className}
       `}
     >
@@ -90,57 +86,30 @@ export const TopBar: React.FC<TopBarProps> = ({
             className={iconButtonClass}
             aria-label="Toggle sidebar"
           >
-            <IconLayoutSidebar size={16} stroke={1} />
+            <IconLayoutSidebar size={16} stroke={1.5} />
           </button>
         )}
 
         {/* Navigation Buttons */}
         {showNavigation && (
-          <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] flex items-center relative rounded-md shrink-0">
+          <div className="flex items-center gap-[var(--topbar-nav-gap)]">
             <button
               type="button"
               onClick={onBack}
               disabled={!canGoBack}
-              className={`
-                inline-flex items-center justify-center
-                size-7
-                text-[var(--color-text-default)]
-                transition-colors duration-[var(--duration-fast)]
-                disabled:text-[var(--color-text-disabled)]
-                disabled:cursor-not-allowed
-                hover:bg-[var(--color-surface-subtle)]
-                disabled:hover:bg-transparent
-                focus-visible:outline-none
-                focus-visible:ring-2
-                focus-visible:ring-[var(--color-border-focus)]
-                rounded-l-md
-              `}
+              className={iconButtonClass}
               aria-label="Go back"
             >
-              <IconChevronLeft size={16} stroke={1} />
+              <IconArrowLeft size={12} stroke={1.5} />
             </button>
-            <div className="bg-[var(--color-border-default)] h-4 shrink-0 w-px" />
             <button
               type="button"
               onClick={onForward}
               disabled={!canGoForward}
-              className={`
-                inline-flex items-center justify-center
-                size-7
-                text-[var(--color-text-default)]
-                transition-colors duration-[var(--duration-fast)]
-                disabled:text-[var(--color-text-disabled)]
-                disabled:cursor-not-allowed
-                hover:bg-[var(--color-surface-subtle)]
-                disabled:hover:bg-transparent
-                focus-visible:outline-none
-                focus-visible:ring-2
-                focus-visible:ring-[var(--color-border-focus)]
-                rounded-r-md
-              `}
+              className={iconButtonClass}
               aria-label="Go forward"
             >
-              <IconChevronRight size={16} stroke={1} />
+              <IconArrowRight size={12} stroke={1.5} />
             </button>
           </div>
         )}
@@ -151,24 +120,8 @@ export const TopBar: React.FC<TopBarProps> = ({
         {breadcrumb}
       </div>
 
-      {/* Right Section: Dark Mode Toggle + Actions */}
+      {/* Right Section: Actions */}
       <div className="flex items-center gap-[var(--topbar-action-gap)]">
-        {/* Dark Mode Toggle */}
-        <button
-          type="button"
-          onClick={toggleDarkMode}
-          className={iconButtonClass}
-          aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
-          title={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
-        >
-          {isDark ? (
-            <IconSun size={16} stroke={1} />
-          ) : (
-            <IconMoon size={16} stroke={1} />
-          )}
-        </button>
-        
-        {/* Custom Actions */}
         {actions}
       </div>
     </header>

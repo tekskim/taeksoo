@@ -119,9 +119,9 @@ export function Modal({
   if (!shouldRender) return null;
 
   const sizeClasses = {
-    sm: 'w-[320px]',
-    md: 'w-[400px]',
-    lg: 'w-[560px]',
+    sm: 'w-[344px]',
+    md: 'w-[344px]',
+    lg: 'w-[344px]',
   };
 
   const backdropClasses = twMerge(

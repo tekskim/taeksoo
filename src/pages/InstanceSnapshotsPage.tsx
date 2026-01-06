@@ -13,6 +13,7 @@ import {
   ListToolbar,
   ContextMenu,
   ConfirmModal,
+  Checkbox,
   type TableColumn,
   type ContextMenuItem,
 } from '@/design-system';
@@ -20,7 +21,6 @@ import { Sidebar } from '@/components/Sidebar';
 import { useTabs } from '@/contexts/TabContext';
 import { ViewPreferencesDrawer, type ColumnConfig } from '@/components/ViewPreferencesDrawer';
 import {
-  IconPlus,
   IconDotsCircleHorizontal,
   IconTrash,
   IconDownload,
@@ -33,6 +33,7 @@ import { Link } from 'react-router-dom';
    ---------------------------------------- */
 
 type SnapshotStatus = 'active' | 'creating' | 'error' | 'deleting';
+type AccessType = 'Private' | 'Public';
 
 interface InstanceSnapshot {
   id: string;
@@ -51,116 +52,18 @@ interface InstanceSnapshot {
    ---------------------------------------- */
 
 const mockSnapshots: InstanceSnapshot[] = [
-  {
-    id: '29tgj234',
-    name: 'snapshot',
-    status: 'active',
-    size: '30GiB',
-    diskFormat: 'RAW',
-    sourceInstance: 'web-server-01',
-    sourceInstanceId: '29tgj234',
-    description: '-',
-    createdAt: '2025-09-12',
-  },
-  {
-    id: 'snap-002',
-    name: 'web-server-snapshot',
-    status: 'active',
-    size: '32GiB',
-    diskFormat: 'QCOW2',
-    sourceInstance: 'api-server-01',
-    sourceInstanceId: 'inst-002',
-    description: 'Weekly backup',
-    createdAt: '2025-09-10',
-  },
-  {
-    id: 'snap-003',
-    name: 'db-backup-20250908',
-    status: 'active',
-    size: '64GiB',
-    diskFormat: 'RAW',
-    sourceInstance: 'db-master-01',
-    sourceInstanceId: 'inst-003',
-    description: 'Database backup',
-    createdAt: '2025-09-08',
-  },
-  {
-    id: 'snap-004',
-    name: 'ml-training-checkpoint',
-    status: 'creating',
-    size: '128GiB',
-    diskFormat: 'QCOW2',
-    sourceInstance: 'ml-worker-01',
-    sourceInstanceId: 'inst-004',
-    description: '-',
-    createdAt: '2025-09-07',
-  },
-  {
-    id: 'snap-005',
-    name: 'k8s-node-image',
-    status: 'active',
-    size: '24GiB',
-    diskFormat: 'RAW',
-    sourceInstance: 'k8s-node-01',
-    sourceInstanceId: 'inst-005',
-    description: 'K8s node snapshot',
-    createdAt: '2025-09-05',
-  },
-  {
-    id: 'snap-006',
-    name: 'dev-environment-v2',
-    status: 'active',
-    size: '48GiB',
-    diskFormat: 'QCOW2',
-    sourceInstance: 'dev-server-01',
-    sourceInstanceId: 'inst-006',
-    description: '-',
-    createdAt: '2025-09-03',
-  },
-  {
-    id: 'snap-007',
-    name: 'monitoring-stack',
-    status: 'active',
-    size: '20GiB',
-    diskFormat: 'RAW',
-    sourceInstance: 'monitor-01',
-    sourceInstanceId: 'inst-007',
-    description: 'Monitoring setup',
-    createdAt: '2025-09-01',
-  },
-  {
-    id: 'snap-008',
-    name: 'legacy-app-backup',
-    status: 'error',
-    size: '80GiB',
-    diskFormat: 'RAW',
-    sourceInstance: 'legacy-app-01',
-    sourceInstanceId: 'inst-008',
-    description: '-',
-    createdAt: '2025-08-28',
-  },
-  {
-    id: 'snap-009',
-    name: 'test-environment',
-    status: 'active',
-    size: '16GiB',
-    diskFormat: 'QCOW2',
-    sourceInstance: 'test-server-01',
-    sourceInstanceId: 'inst-009',
-    description: 'Test env snapshot',
-    createdAt: '2025-08-25',
-  },
-  {
-    id: 'snap-010',
-    name: 'production-baseline',
-    status: 'active',
-    size: '40GiB',
-    diskFormat: 'RAW',
-    sourceInstance: 'prod-server-01',
-    sourceInstanceId: 'inst-010',
-    description: '-',
-    createdAt: '2025-08-20',
-  },
+  { id: 'snap-001', name: 'Ubuntu-22.04-base', status: 'active', size: '16GiB', diskFormat: 'RAW', sourceInstance: 'web-server-01', sourceInstanceId: 'vm-001', description: 'Base web server snapshot', createdAt: '2025-09-12' },
+  { id: 'snap-002', name: 'CentOS-8-web', status: 'active', size: '32GiB', diskFormat: 'QCOW2', sourceInstance: 'db-server-01', sourceInstanceId: 'vm-002', description: 'Database server backup', createdAt: '2025-09-10' },
+  { id: 'snap-003', name: 'Debian-12-db', status: 'active', size: '64GiB', diskFormat: 'RAW', sourceInstance: 'app-server-01', sourceInstanceId: 'vm-003', description: 'Application server snapshot', createdAt: '2025-09-08' },
+  { id: 'snap-004', name: 'Rocky-9-ml', status: 'creating', size: '128GiB', diskFormat: 'QCOW2', sourceInstance: 'ml-worker-01', sourceInstanceId: 'vm-004', description: 'ML worker with GPU config', createdAt: '2025-09-07' },
+  { id: 'snap-005', name: 'Ubuntu-22.04-k8s', status: 'active', size: '24GiB', diskFormat: 'RAW', sourceInstance: 'k8s-node-01', sourceInstanceId: 'vm-005', description: 'Kubernetes node snapshot', createdAt: '2025-09-05' },
+  { id: 'snap-006', name: 'Alpine-3.18-minimal', status: 'active', size: '8GiB', diskFormat: 'QCOW2', sourceInstance: 'gateway-01', sourceInstanceId: 'vm-006', description: 'Gateway server backup', createdAt: '2025-09-03' },
+  { id: 'snap-007', name: 'Windows-Server-2022', status: 'active', size: '80GiB', diskFormat: 'RAW', sourceInstance: 'win-server-01', sourceInstanceId: 'vm-007', description: 'Windows server snapshot', createdAt: '2025-09-01' },
+  { id: 'snap-008', name: 'RHEL-8-enterprise', status: 'error', size: '48GiB', diskFormat: 'QCOW2', sourceInstance: 'enterprise-01', sourceInstanceId: 'vm-008', description: 'Enterprise app backup', createdAt: '2025-08-28' },
+  { id: 'snap-009', name: 'Fedora-39-dev', status: 'active', size: '20GiB', diskFormat: 'RAW', sourceInstance: 'dev-server-01', sourceInstanceId: 'vm-009', description: 'Development environment', createdAt: '2025-08-25' },
+  { id: 'snap-010', name: 'Ubuntu-20.04-legacy', status: 'active', size: '40GiB', diskFormat: 'QCOW2', sourceInstance: 'legacy-app-01', sourceInstanceId: 'vm-010', description: 'Legacy application backup', createdAt: '2025-08-20' },
+  { id: 'snap-011', name: 'Arch-Linux-custom', status: 'active', size: '12GiB', diskFormat: 'RAW', sourceInstance: 'custom-build-01', sourceInstanceId: 'vm-011', description: 'Custom build environment', createdAt: '2025-08-18' },
+  { id: 'snap-012', name: 'openSUSE-15-prod', status: 'active', size: '36GiB', diskFormat: 'QCOW2', sourceInstance: 'prod-server-01', sourceInstanceId: 'vm-012', description: 'Production server snapshot', createdAt: '2025-08-15' },
 ];
 
 /* ----------------------------------------
@@ -212,7 +115,7 @@ export function InstanceSnapshotsPage() {
     return snapshots.filter(
       (s) =>
         s.name.toLowerCase().includes(query) ||
-        s.sourceInstance.toLowerCase().includes(query)
+        s.os.toLowerCase().includes(query)
     );
   }, [snapshots, searchQuery]);
 
@@ -236,6 +139,40 @@ export function InstanceSnapshotsPage() {
     setDeleteModalOpen(false);
     setSnapshotToDelete(null);
   };
+
+  // Selection handlers
+  const toggleSelection = (id: string) => {
+    setSelectedSnapshots((prev) =>
+      prev.includes(id) ? prev.filter((i) => i !== id) : [...prev, id]
+    );
+  };
+
+  const toggleAllSelection = () => {
+    const currentPageIds = filteredSnapshots
+      .slice((currentPage - 1) * rowsPerPage, currentPage * rowsPerPage)
+      .map((s) => s.id);
+
+    const allSelected = currentPageIds.every((id) => selectedSnapshots.includes(id));
+
+    if (allSelected) {
+      setSelectedSnapshots((prev) => prev.filter((id) => !currentPageIds.includes(id)));
+    } else {
+      setSelectedSnapshots((prev) => [...new Set([...prev, ...currentPageIds])]);
+    }
+  };
+
+  // Bulk delete handler
+  const handleBulkDelete = () => {
+    setSnapshots((prev) => prev.filter((s) => !selectedSnapshots.includes(s.id)));
+    setSelectedSnapshots([]);
+  };
+
+  // Get current page IDs for "select all" checkbox state
+  const currentPageIds = filteredSnapshots
+    .slice((currentPage - 1) * rowsPerPage, currentPage * rowsPerPage)
+    .map((s) => s.id);
+  const allCurrentPageSelected = currentPageIds.length > 0 && currentPageIds.every((id) => selectedSnapshots.includes(id));
+  const someCurrentPageSelected = currentPageIds.some((id) => selectedSnapshots.includes(id));
 
   // Status mapping
   const statusMap: Record<SnapshotStatus, 'active' | 'building' | 'error' | 'shutoff'> = {
@@ -264,13 +201,13 @@ export function InstanceSnapshotsPage() {
       sortable: true,
       render: (_, row) => (
         <div className="flex flex-col gap-0.5">
-          <Link
+        <Link
           to={`/instance-snapshots/${row.id}`}
-            className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
-            onClick={(e) => e.stopPropagation()}
-          >
-            {row.name}
-          </Link>
+          className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
+          onClick={(e) => e.stopPropagation()}
+        >
+          {row.name}
+        </Link>
           <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
             ID : {row.id}
           </span>
@@ -280,24 +217,24 @@ export function InstanceSnapshotsPage() {
     {
       key: 'size',
       label: 'Size',
-      width: '100px',
+      flex: 1,
       sortable: true,
     },
     {
       key: 'diskFormat',
       label: 'Disk Format',
-      width: '120px',
+      flex: 1,
       sortable: true,
     },
     {
       key: 'sourceInstance',
-      label: 'Source instance',
+      label: 'Source Instance',
       flex: 1,
       sortable: true,
       render: (_, row) => (
         <div className="flex flex-col gap-0.5">
           <Link
-          to={`/instances/${row.sourceInstanceId}`}
+            to={`/instances/${row.sourceInstanceId}`}
             className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
             onClick={(e) => e.stopPropagation()}
           >
@@ -313,12 +250,11 @@ export function InstanceSnapshotsPage() {
       key: 'description',
       label: 'Description',
       flex: 1,
-      sortable: false,
     },
     {
       key: 'createdAt',
       label: 'Created At',
-      width: '120px',
+      flex: 1,
       sortable: true,
     },
     {
@@ -354,8 +290,8 @@ export function InstanceSnapshotsPage() {
         return (
           <div onClick={(e) => e.stopPropagation()}>
             <ContextMenu items={menuItems} trigger="click">
-              <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors">
-                <IconDotsCircleHorizontal size={16} stroke={1} className="text-[var(--color-text-subtle)]" />
+              <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
+                <IconDotsCircleHorizontal size={16} stroke={1.5} className="text-[var(--action-icon-color)]" />
               </button>
             </ContextMenu>
           </div>
@@ -378,17 +314,18 @@ export function InstanceSnapshotsPage() {
   }, [columns, columnConfig]);
 
   return (
-    <div className="min-h-screen bg-[var(--color-surface-subtle)]">
+    <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
       {/* Sidebar */}
       <Sidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
 
       {/* Main Content */}
       <main
-        className={`min-h-screen bg-[var(--color-surface-default)] transition-[margin] duration-200 overflow-x-auto ${
-          sidebarOpen ? 'ml-[200px]' : 'ml-0'
+        className={`absolute top-0 bottom-0 right-0 flex flex-col bg-[var(--color-surface-default)] transition-[left] duration-200 ${
+          sidebarOpen ? 'left-[200px]' : 'left-0'
         }`}
       >
-        <div className="min-w-[var(--layout-content-min-width)]">
+        {/* Fixed Header Area */}
+        <div className="shrink-0 bg-[var(--color-surface-default)]">
         {/* Tab Bar */}
         <TabBar
           tabs={tabBarTabs}
@@ -423,7 +360,10 @@ export function InstanceSnapshotsPage() {
             />
           }
         />
+        </div>
 
+        {/* Scrollable Content Area */}
+        <div className="flex-1 overflow-auto min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll">
         {/* Page Content */}
         <div className="pt-4 px-8 pb-6 bg-[var(--color-surface-default)]">
           <VStack gap={3}>
@@ -432,7 +372,7 @@ export function InstanceSnapshotsPage() {
               <h1 className="text-[length:var(--font-size-16)] font-semibold text-[var(--color-text-default)]">
                 Instance Snapshots
               </h1>
-              <Button leftIcon={<IconPlus size={16} />}>
+              <Button>
                 Create Snapshot
               </Button>
             </div>
@@ -461,6 +401,7 @@ export function InstanceSnapshotsPage() {
                     size="sm"
                     leftIcon={<IconTrash size={12} />}
                     disabled={selectedSnapshots.length === 0}
+                    onClick={handleBulkDelete}
                   >
                     Delete
                   </Button>
@@ -477,6 +418,7 @@ export function InstanceSnapshotsPage() {
                 showSettings
                 onSettingsClick={() => setIsPreferencesOpen(true)}
                 totalItems={filteredSnapshots.length}
+                selectedCount={selectedSnapshots.length}
               />
             )}
 
@@ -486,6 +428,9 @@ export function InstanceSnapshotsPage() {
               data={filteredSnapshots.slice((currentPage - 1) * rowsPerPage, currentPage * rowsPerPage)}
               rowKey="id"
               emptyMessage="No snapshots found"
+              selectable
+              selectedKeys={selectedSnapshots}
+              onSelectionChange={setSelectedSnapshots}
             />
           </VStack>
         </div>

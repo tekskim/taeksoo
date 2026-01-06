@@ -21,6 +21,8 @@ export interface TableColumn<T = any> {
   align?: 'left' | 'center' | 'right';
   /** Whether column is sortable */
   sortable?: boolean;
+  /** Custom header renderer */
+  headerRender?: () => React.ReactNode;
   /** Custom cell renderer */
   render?: (value: any, row: T, rowIndex: number) => React.ReactNode;
 }
@@ -111,17 +113,6 @@ export function Table<T extends Record<string, any>>({
   }, [data, sortKey, sortDirection]);
 
   // Selection handlers
-  const allSelected = data.length > 0 && selectedKeys.length === data.length;
-  const someSelected = selectedKeys.length > 0 && selectedKeys.length < data.length;
-
-  const handleSelectAll = () => {
-    if (allSelected) {
-      onSelectionChange?.([]);
-    } else {
-      onSelectionChange?.(data.map(getRowKey));
-    }
-  };
-
   const handleSelectRow = (key: string) => {
     if (selectedKeys.includes(key)) {
       onSelectionChange?.(selectedKeys.filter((k) => k !== key));
@@ -129,6 +120,18 @@ export function Table<T extends Record<string, any>>({
       onSelectionChange?.([...selectedKeys, key]);
     }
   };
+
+  const handleSelectAll = () => {
+    const allKeys = sortedData.map(getRowKey);
+    if (selectedKeys.length === sortedData.length && sortedData.length > 0) {
+      onSelectionChange?.([]);
+    } else {
+      onSelectionChange?.(allKeys);
+    }
+  };
+
+  const allSelected = sortedData.length > 0 && selectedKeys.length === sortedData.length;
+  const someSelected = selectedKeys.length > 0 && selectedKeys.length < sortedData.length;
 
   // Render sort icon
   const renderSortIcon = (columnKey: string) => {
@@ -171,14 +174,14 @@ export function Table<T extends Record<string, any>>({
           <div
             className={`
               flex items-stretch
-              h-[var(--table-row-height)]
+              min-h-[var(--table-row-height)]
               bg-[var(--table-header-bg)]
               border border-[var(--color-border-default)]
               rounded-[var(--table-row-radius)]
               ${enableStickyHeader ? 'sticky top-0 z-10' : ''}
             `}
           >
-          {/* Selection checkbox */}
+          {/* Selection column with select all checkbox */}
           {selectable && (
             <div
               className="
@@ -186,6 +189,7 @@ export function Table<T extends Record<string, any>>({
                 flex items-center
                 w-[var(--table-checkbox-width)]
                 px-[var(--table-cell-padding-x)]
+                py-[var(--table-header-padding-y)]
               "
             >
               <Checkbox
@@ -199,8 +203,9 @@ export function Table<T extends Record<string, any>>({
 
           {/* Column headers */}
           {columns.map((column, index) => {
-            // First column has divider if there's a checkbox, otherwise no divider
-            const showDivider = selectable ? true : index > 0;
+            // Show divider: first column gets border when selectable (to separate from checkbox), all other columns always get border
+            const isFirstColumn = index === 0;
+            const showDivider = isFirstColumn ? selectable : true;
             
             return (
               <div
@@ -208,6 +213,7 @@ export function Table<T extends Record<string, any>>({
                 className={`
                   flex items-center
                   px-[var(--table-cell-padding-x)]
+                  py-[var(--table-header-padding-y)]
                   text-[length:var(--table-header-font-size)]
                   leading-[var(--table-line-height)]
                   font-medium
@@ -223,16 +229,20 @@ export function Table<T extends Record<string, any>>({
                 }}
                 onClick={column.sortable ? () => handleSort(column.key) : undefined}
               >
-                <div
-                  className={`
-                    flex items-center gap-1 w-full
-                    ${column.align === 'center' ? 'justify-center' : ''}
-                    ${column.align === 'right' ? 'justify-end flex-row-reverse' : ''}
-                  `}
-                >
-                  <span>{column.label}</span>
-                  {column.sortable && renderSortIcon(column.key)}
-                </div>
+                {column.headerRender ? (
+                  column.headerRender()
+                ) : (
+                  <div
+                    className={`
+                      flex items-center gap-1 w-full
+                      ${column.align === 'center' ? 'justify-center' : ''}
+                      ${column.align === 'right' ? 'justify-end flex-row-reverse' : ''}
+                    `}
+                  >
+                    <span>{column.label}</span>
+                    {column.sortable && renderSortIcon(column.key)}
+                  </div>
+                )}
               </div>
             );
           })}
@@ -265,7 +275,7 @@ export function Table<T extends Record<string, any>>({
                   key={key}
                   className={`
                     flex items-center
-                    h-[var(--table-row-height)]
+                    min-h-[var(--table-row-height)]
                     rounded-[var(--table-row-radius)]
                     transition-all
                     hover:bg-[var(--table-row-hover-bg)]
@@ -302,13 +312,14 @@ export function Table<T extends Record<string, any>>({
                     <div
                       key={column.key}
                       className={`
+                        flex items-center
                         px-[var(--table-cell-padding-x)]
                         py-[var(--table-cell-padding-y)]
                         text-[length:var(--table-font-size)]
                         leading-[var(--table-line-height)]
                         text-[var(--color-text-default)]
-                        ${column.align === 'center' ? 'flex items-center justify-center' : ''}
-                        ${column.align === 'right' ? 'text-right' : column.align === 'center' ? '' : 'text-left'}
+                        ${column.align === 'center' ? 'justify-center' : ''}
+                        ${column.align === 'right' ? 'justify-end' : ''}
                       `}
                       style={{ 
                         width: column.width,
