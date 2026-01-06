@@ -10,8 +10,35 @@
  */
 
 // Custom Icons (Figma 디자인에 맞는 비율)
-export { IconExpandOn, IconExpandOff, IconTimeout, IconHistory, IconRobotCustom, IconAddRobotCustom } from './CustomIcons';
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 export type { CustomIconProps } from './CustomIcons';
+
+// Custom Icons (Figma 디자인에 맞는 비율)
+export { IconAction, IconActivity, IconAdd, IconAddRobot, IconAdjustmentsAlt, IconBrain, IconBranch, IconBuilding, IconCahatbot, IconCategory } from './CustomIcons';
+export { IconChat, IconCheckcircle, IconChevrondown, IconChevronleft, IconChevronright, IconChevronup, IconClosesmall, IconCloudComputing, IconCodeConsole } from './CustomIcons';
+export { IconCopy, IconDashboards, IconDelete, IconDeviceDesktopAnalytics, IconDollarSign, IconDot, IconDownload } from './CustomIcons';
+export { IconEdit, IconErrorWarning, IconExpandOff, IconExpandOn, IconExternallink, IconFavoriteoff, IconFlavor, IconHelp, IconHide, IconHome, IconHourglassHigh } from './CustomIcons';
+export { IconInfo, IconKeypairs, IconLayers, IconLink, IconList, IconLoadbalancer, IconLock, IconMicrosoft, IconMoreKebab, IconMoreMeatball } from './CustomIcons';
+export { IconNetworks, IconNewtab, IconNotification, IconOther, IconPaused, IconPlay, IconPlusCircle, IconProgress, IconRefresh, IconRequest } from './CustomIcons';
+export { IconReset1, IconReset2, IconRouters1, IconSchedule, IconSearch, IconSecurity, IconSecurityerror, IconServer, IconSetting, IconShare } from './CustomIcons';
+export { IconShow, IconSidebar, IconSnapshot, IconStop, IconStorage, IconTemplate, IconTimeout, IconTopology, IconUpload } from './CustomIcons';
+export { IconUserCircle, IconZap, IconRobotCustom, IconAddRobotCustom } from './CustomIcons';
+// Newly added icons from SVG files (these replace existing ones)
+export { IconActive, IconAddVolume, IconAlert, IconAttach, IconBackup, IconCertificate, IconChart, IconCheckCircle, IconDeactivated, IconDeleting, IconDrawerClose, IconError, IconFavoriteOn, IconFile, IconFloatingIp, IconHardDrive, IconHostAggregates, IconHypervisor, IconImages, IconInstances, IconInuse, IconKey, IconLoadBalancer, IconMaintenance, IconMorekebab, IconNetwork, IconNotificationnew, IconOrder, IconPlugin, IconPorts, IconPorts2, IconPublish, IconReboot, IconRouters, IconSecurityError, IconSecurityGroup, IconShelved, IconSuspended, IconVerify, IconVolumeSearch, IconVolumeType, IconWarning, IconAffiliate, IconArticlehistory, IconCard, IconCheck, IconCloudcomputing, IconFinetuning, IconHistory, IconLanguage, IconNewchat, IconPending, IconPuzzle, IconReset, IconRetry, IconRocky, IconSpeed, IconStudy, IconTransfer, IconUbuntu, IconUnlink } from './CustomIcons';
+
 
 // Navigation & UI
 export {
@@ -138,7 +165,20 @@ export {
   IconHourglass as HourglassHigh,
   IconArticle as ArticleHistory,
 } from '@tabler/icons-react';
-export { IconHistory as History } from './CustomIcons';
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 // Files & Templates
 export {
@@ -203,15 +243,13 @@ export {
    ---------------------------------------- */
 
 import { type IconProps } from '@tabler/icons-react';
-import { IconExpandOn, IconExpandOff, IconRobotCustom, IconAddRobotCustom } from './CustomIcons';
+import { IconExpandOn, IconExpandOff, IconRobotCustom, IconAddRobotCustom, IconHistory, IconTimeout, IconChat } from './CustomIcons';
 
 export type TDSIconProps = IconProps;
 
 /* ----------------------------------------
    All Icons as Object (for dynamic usage)
    ---------------------------------------- */
-
-import { IconTimeout, IconHistory } from './CustomIcons';
 
 import {
   IconChevronLeft,
@@ -447,9 +485,9 @@ export const Icons = {
 
   // AI & ML
   Brain: IconBrain,
-  Robot: IconRobotCustom,
+  Robot: IconRobotCustom || IconRobot,
   RobotOriginal: IconRobot,
-  AddRobot: IconAddRobotCustom,
+  AddRobot: IconAddRobotCustom || IconRobotFace,
   AddRobotOriginal: IconRobotFace,
   Puzzle: IconPuzzle,
   Chatbot: IconMessageChatbot,
@@ -472,7 +510,8 @@ export const Icons = {
 
   // Communication
   Help: IconHelp,
-  Chat: IconMessage,
+  Chat: IconChat,
+  ChatOriginal: IconMessage,
   NewChat: IconMessagePlus,
   Share: IconShare,
 
