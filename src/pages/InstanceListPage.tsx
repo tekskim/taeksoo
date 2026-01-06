@@ -197,13 +197,13 @@ export function InstanceListPage() {
     addTab({
       id: tabId,
       label: tab.title,
-      path: `/console/${tab.instanceId}?name=${encodeURIComponent(tab.title)}`,
+      path: `/compute/console/${tab.instanceId}?name=${encodeURIComponent(tab.title)}`,
       closable: true,
     });
     // Close the shell panel
     shellPanel.closeTab(tab.id);
     // Navigate to the console page
-    navigate(`/console/${tab.instanceId}?name=${encodeURIComponent(tab.title)}`);
+    navigate(`/compute/console/${tab.instanceId}?name=${encodeURIComponent(tab.title)}`);
   };
 
   // Default column config for VM instances
