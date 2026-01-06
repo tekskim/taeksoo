@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import {
   Button,
@@ -483,7 +483,14 @@ export function InstanceDetailPage() {
   const instance = id ? (mockInstancesMap[id] || defaultInstanceDetail) : defaultInstanceDetail;
 
   // Global tab management
-  const { tabs, activeTabId, closeTab, selectTab } = useTabs();
+  const { tabs, activeTabId, closeTab, selectTab, updateActiveTabLabel } = useTabs();
+
+  // Update tab label to instance name
+  useEffect(() => {
+    if (instance.name) {
+      updateActiveTabLabel(instance.name);
+    }
+  }, [instance.name, updateActiveTabLabel]);
 
   // Convert tabs to TabBar format
   const tabBarTabs = tabs.map((tab) => ({

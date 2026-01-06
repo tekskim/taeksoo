@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import {
   Button,
@@ -169,7 +169,14 @@ export function VolumeDetailPage() {
   const snapshots = mockVolumeSnapshots;
   const backups = mockVolumeBackups;
 
-  const { tabs, activeTabId, closeTab, selectTab } = useTabs();
+  const { tabs, activeTabId, closeTab, selectTab, updateActiveTabLabel } = useTabs();
+
+  // Update tab label to volume name
+  useEffect(() => {
+    if (volume.name) {
+      updateActiveTabLabel(volume.name);
+    }
+  }, [volume.name, updateActiveTabLabel]);
 
   const tabBarTabs = tabs.map((tab) => ({
     id: tab.id,
