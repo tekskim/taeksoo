@@ -23,6 +23,13 @@ interface TabContextValue {
 }
 
 /* ----------------------------------------
+   Constants
+   ---------------------------------------- */
+
+const TABS_STORAGE_KEY = 'tabs-state';
+const ACTIVE_TAB_STORAGE_KEY = 'active-tab-id';
+
+/* ----------------------------------------
    Context
    ---------------------------------------- */
 
@@ -91,15 +98,61 @@ export function TabProvider({ children, defaultTabs = [] }: TabProviderProps) {
   const navigate = useNavigate();
   const location = useLocation();
   
-  const [tabs, setTabs] = useState<TabItem[]>(defaultTabs);
-  const [activeTabId, setActiveTabId] = useState<string>(defaultTabs[0]?.id || '');
+  // Initialize from localStorage or use defaultTabs
+  const [tabs, setTabs] = useState<TabItem[]>(() => {
+    try {
+      const stored = localStorage.getItem(TABS_STORAGE_KEY);
+      if (stored) {
+        const parsed = JSON.parse(stored);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          return parsed;
+        }
+      }
+    } catch {
+      // Ignore parse errors
+    }
+    return defaultTabs;
+  });
+  
+  const [activeTabId, setActiveTabId] = useState<string>(() => {
+    const stored = localStorage.getItem(ACTIVE_TAB_STORAGE_KEY);
+    if (stored) {
+      return stored;
+    }
+    return defaultTabs[0]?.id || '';
+  });
   
   // Use ref to access latest tabs without re-creating callbacks
   const tabsRef = useRef(tabs);
   tabsRef.current = tabs;
 
+  // Persist tabs to localStorage
+  useEffect(() => {
+    localStorage.setItem(TABS_STORAGE_KEY, JSON.stringify(tabs));
+  }, [tabs]);
+
+  // Persist active tab to localStorage
+  useEffect(() => {
+    localStorage.setItem(ACTIVE_TAB_STORAGE_KEY, activeTabId);
+  }, [activeTabId]);
+
+  // On initial mount, navigate to the active tab's path if different from current location
+  const initializedRef = useRef(false);
+  useEffect(() => {
+    if (!initializedRef.current && tabs.length > 0) {
+      initializedRef.current = true;
+      const activeTab = tabs.find(t => t.id === activeTabId);
+      if (activeTab && activeTab.path !== location.pathname) {
+        // Navigate to the active tab's path
+        navigate(activeTab.path, { replace: true });
+      }
+    }
+  }, [tabs, activeTabId, location.pathname, navigate]);
+
   // Sync tab with current route when location changes
   useEffect(() => {
+    if (!initializedRef.current) return;
+    
     const currentPath = location.pathname;
     const currentLabel = getLabelFromPath(currentPath);
     
