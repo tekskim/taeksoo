@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import {
   Button,
@@ -106,7 +106,14 @@ export function InstanceTemplateDetailPage() {
   // In a real app, you would fetch the template data based on the ID
   const template = mockTemplateDetail;
 
-  const { tabs, activeTabId, closeTab, selectTab } = useTabs();
+  const { tabs, activeTabId, closeTab, selectTab, updateActiveTabLabel } = useTabs();
+
+  // Update tab label to template name
+  useEffect(() => {
+    if (template.name) {
+      updateActiveTabLabel(template.name);
+    }
+  }, [template.name, updateActiveTabLabel]);
 
   const tabBarTabs = tabs.map((tab) => ({
     id: tab.id,
