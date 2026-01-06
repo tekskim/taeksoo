@@ -110,7 +110,7 @@ function CopyableDataRow({ label, value }: CopyableValueProps) {
    ---------------------------------------- */
 
 export function KeyPairDetailPage() {
-  const { id: _id } = useParams<{ id: string }>();
+  const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [activeDetailTab, setActiveDetailTab] = useState('details');
