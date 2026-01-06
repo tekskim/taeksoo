@@ -251,14 +251,14 @@ export default function RouterDetailPage() {
       flex: 1,
       render: (_, row) => (
         <div className="flex flex-col gap-0.5 whitespace-nowrap">
-          <Link
-            to={`/ports/${row.id}`}
+        <Link
+          to={`/ports/${row.id}`}
             className="inline-flex items-center gap-1 font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
-            onClick={(e) => e.stopPropagation()}
-          >
-            {row.name}
+          onClick={(e) => e.stopPropagation()}
+        >
+          {row.name}
             <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
-          </Link>
+        </Link>
           <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
             ID : {row.id}
           </span>
@@ -403,9 +403,9 @@ export default function RouterDetailPage() {
                     ]}
                     trigger="click"
                   >
-                    <Button variant="secondary" size="sm" rightIcon={<IconChevronDown size={12} />}>
-                      More Actions
-                    </Button>
+                  <Button variant="secondary" size="sm" rightIcon={<IconChevronDown size={12} />}>
+                    More Actions
+                  </Button>
                   </ContextMenu>
                 </DetailHeader.Actions>
                 <DetailHeader.InfoGrid>

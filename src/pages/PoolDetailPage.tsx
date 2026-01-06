@@ -354,13 +354,13 @@ export default function PoolDetailPage() {
                     ]}
                     trigger="click"
                   >
-                    <Button
-                      variant="secondary"
-                      size="sm"
-                      rightIcon={<IconChevronDown size={12} />}
-                    >
-                      More Actions
-                    </Button>
+                  <Button
+                    variant="secondary"
+                    size="sm"
+                    rightIcon={<IconChevronDown size={12} />}
+                  >
+                    More Actions
+                  </Button>
                   </ContextMenu>
                 </DetailHeader.Actions>
 

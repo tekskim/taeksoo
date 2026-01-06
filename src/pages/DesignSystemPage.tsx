@@ -146,6 +146,7 @@ import {
   IconPower,
   IconActivity,
   IconChartBar,
+  IconChartDonut,
   IconGauge,
   IconDeviceDesktop,
   IconDeviceDesktopAnalytics,
@@ -224,6 +225,7 @@ const dataDisplayItems = [
   { id: 'status-indicator', label: 'Status Indicator', icon: IconActivity },
   { id: 'tooltip', label: 'Tooltip', icon: IconMessage2 },
   { id: 'window-control', label: 'Window Control', icon: IconAppWindow },
+  { id: 'monitoring-toolbar', label: 'Monitoring Toolbar', icon: IconSettings },
 ];
 
 // Navigation
@@ -254,6 +256,7 @@ const graphItems = [
   { id: 'area-chart', label: 'Area Chart', icon: IconChartBar },
   { id: 'pie-chart', label: 'Pie Chart', icon: IconActivity },
   { id: 'half-doughnut-chart', label: 'Half-Doughnut Chart', icon: IconGauge },
+  { id: 'doughnut-chart', label: 'Doughnut Chart', icon: IconChartDonut },
 ];
 
 // Patterns (복합 컴포넌트 패턴)
@@ -1412,12 +1415,14 @@ function QuotaBarDemo({ label, used, total, unit }: { label: string; used: numbe
           </div>
         </div>
       </div>
-      <div className="h-1 rounded-sm bg-[var(--color-surface-muted)] overflow-hidden">
-        <div 
-          className="h-full rounded-sm bg-[var(--color-text-muted)]"
-          style={{ width: `${Math.min(percentage, 100)}%` }}
-        />
-      </div>
+      <Tooltip content={`${used} / ${total} ${unit} (${percentage}%)`} position="top">
+        <div className="h-1 rounded-sm bg-[var(--color-surface-muted)] overflow-hidden w-full cursor-pointer">
+          <div 
+            className="h-full rounded-sm bg-[var(--color-text-muted)]"
+            style={{ width: `${Math.min(percentage, 100)}%` }}
+          />
+        </div>
+      </Tooltip>
     </div>
   );
 }
@@ -1577,7 +1582,7 @@ function PieChartDemo({
    Half-Doughnut Chart Demo (ECharts - from storage-dashboard)
    ---------------------------------------- */
 
-function HalfDoughnutChartDemo({ value, label, status = 'default' }: { value: number; label: string; status?: 'default' | 'success' | 'warning' | 'error' }) {
+function HalfDoughnutChartDemo({ value, label, status = 'default', used, total, unit }: { value: number; label: string; status?: 'default' | 'success' | 'warning' | 'error'; used?: number; total?: number; unit?: string }) {
   // Get color from design system CSS variables
   const getColor = (cssVar: string, fallback: string) => {
     if (typeof window !== 'undefined') {
@@ -1637,13 +1642,252 @@ function HalfDoughnutChartDemo({ value, label, status = 'default' }: { value: nu
     ]
   });
 
+  // Format usage display
+  const usageDisplay = used !== undefined && total !== undefined && unit 
+    ? `${used}/${total}${unit}` 
+    : label;
+
   return (
     <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] p-4 relative">
       <ReactECharts option={getOption()} style={{ height: '160px', width: '180px' }} />
       <div className="absolute inset-0 flex flex-col items-center justify-center pt-8">
         <span className="text-[24px] leading-[28px] font-semibold text-[var(--color-text-default)]">{value}%</span>
-        <span className="text-[12px] text-[var(--color-text-subtle)]">{label}</span>
+        <span className="text-[12px] text-[var(--color-text-subtle)]">{usageDisplay}</span>
       </div>
+    </div>
+  );
+}
+
+/* ----------------------------------------
+   Single Value Doughnut Chart Demo (ECharts)
+   ---------------------------------------- */
+
+function SingleValueDoughnutDemo({ 
+  title, 
+  value,
+  color
+}: { 
+  title: string; 
+  value: number;
+  color?: string;
+}) {
+  const getColor = (cssVar: string, fallback: string) => {
+    if (typeof window !== 'undefined') {
+      const val = getComputedStyle(document.documentElement).getPropertyValue(cssVar).trim();
+      return val || fallback;
+    }
+    return fallback;
+  };
+
+  const mainColor = color || getColor('--color-status-error', '#ef4444');
+  const bgColor = getColor('--color-border-subtle', '#e2e8f0');
+
+  const getOption = () => ({
+    tooltip: {
+      trigger: 'item',
+      formatter: `{b}: {c}%`,
+      backgroundColor: getColor('--tooltip-bg', '#1e293b'),
+      borderColor: 'transparent',
+      textStyle: {
+        color: getColor('--tooltip-text', '#ffffff'),
+        fontSize: 11
+      }
+    },
+    animationDuration: 1000,
+    animationEasing: 'cubicOut' as const,
+    series: [
+      {
+        type: 'pie',
+        radius: ['68%', '80%'],
+        center: ['50%', '50%'],
+        avoidLabelOverlap: false,
+        itemStyle: {
+          borderRadius: 0,
+          borderWidth: 0
+        },
+        label: {
+          show: false
+        },
+        emphasis: {
+          scale: true,
+          scaleSize: 4,
+          itemStyle: {
+            shadowBlur: 10,
+            shadowOffsetX: 0,
+            shadowColor: 'rgba(0, 0, 0, 0.2)'
+          }
+        },
+        labelLine: {
+          show: false
+        },
+        data: [
+          { value: value, name: 'Hits', itemStyle: { color: mainColor } },
+          { value: 100 - value, name: 'Remaining', itemStyle: { color: bgColor } }
+        ]
+      }
+    ],
+    graphic: [
+      {
+        type: 'text',
+        left: 'center',
+        top: '46%',
+        style: {
+          text: `${value}%`,
+          textAlign: 'center',
+          fill: getColor('--color-text-default', '#0f172a'),
+          fontSize: 18,
+          fontWeight: 600
+        }
+      }
+    ]
+  });
+
+  return (
+    <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] p-4">
+      <h4 className="text-[13px] font-medium text-[var(--color-text-default)] mb-2">{title}</h4>
+      <ReactECharts option={getOption()} style={{ height: '180px', width: '200px' }} />
+    </div>
+  );
+}
+
+/* ----------------------------------------
+   Doughnut Chart Demo (ECharts)
+   ---------------------------------------- */
+
+interface DoughnutChartData {
+  name: string;
+  value: number;
+  color?: string;
+}
+
+function DoughnutChartDemo({ 
+  title, 
+  data, 
+  showLegend = true,
+  centerLabel,
+  centerValue 
+}: { 
+  title: string; 
+  data: DoughnutChartData[]; 
+  showLegend?: boolean;
+  centerLabel?: string;
+  centerValue?: string;
+}) {
+  const getColor = (cssVar: string, fallback: string) => {
+    if (typeof window !== 'undefined') {
+      const value = getComputedStyle(document.documentElement).getPropertyValue(cssVar).trim();
+      return value || fallback;
+    }
+    return fallback;
+  };
+
+  const defaultColors = [
+    getColor('--color-status-error', '#ef4444'),
+    primaryChartColors[0],
+    primaryChartColors[1],
+    primaryChartColors[2],
+    primaryChartColors[3],
+    primaryChartColors[4],
+    getColor('--color-status-success', '#22c55e'),
+    getColor('--color-status-warning', '#f97316'),
+  ];
+
+  // For single value charts, add a background segment
+  const processedData = data.length === 1 
+    ? [
+        { ...data[0], itemStyle: { color: data[0].color || defaultColors[0] } },
+        { name: 'Remaining', value: 100 - data[0].value, itemStyle: { color: getColor('--color-border-subtle', '#e2e8f0') } }
+      ]
+    : data.map((item, index) => ({
+        ...item,
+        itemStyle: {
+          color: item.color || defaultColors[index % defaultColors.length]
+        }
+      }));
+
+  const chartData = processedData;
+
+  const getOption = () => ({
+    tooltip: {
+      trigger: 'item',
+      formatter: '{b}: {c} ({d}%)',
+      backgroundColor: getColor('--tooltip-bg', '#1e293b'),
+      borderColor: 'transparent',
+      textStyle: {
+        color: getColor('--tooltip-text', '#ffffff'),
+        fontSize: 11
+      }
+    },
+    legend: showLegend ? {
+      orient: 'horizontal',
+      bottom: 0,
+      left: 'center',
+      itemWidth: 8,
+      itemHeight: 8,
+      itemGap: 12,
+      textStyle: {
+        color: getColor('--color-text-muted', '#64748b'),
+        fontSize: 11
+      }
+    } : undefined,
+    series: [
+      {
+        type: 'pie',
+        radius: ['68%', '80%'],
+        center: ['50%', showLegend ? '45%' : '50%'],
+        avoidLabelOverlap: false,
+        itemStyle: {
+          borderRadius: 6,
+          borderColor: getColor('--color-surface-default', '#ffffff'),
+          borderWidth: 2
+        },
+        label: {
+          show: false
+        },
+        emphasis: {
+          label: {
+            show: false
+          },
+          scale: true,
+          scaleSize: 5
+        },
+        labelLine: {
+          show: false
+        },
+        data: chartData
+      }
+    ],
+    graphic: centerLabel && centerValue ? [
+      {
+        type: 'text',
+        left: 'center',
+        top: showLegend ? '38%' : '43%',
+        style: {
+          text: centerValue,
+          textAlign: 'center',
+          fill: getColor('--color-text-default', '#0f172a'),
+          fontSize: 24,
+          fontWeight: 600
+        }
+      },
+      {
+        type: 'text',
+        left: 'center',
+        top: showLegend ? '50%' : '55%',
+        style: {
+          text: centerLabel,
+          textAlign: 'center',
+          fill: getColor('--color-text-subtle', '#94a3b8'),
+          fontSize: 12
+        }
+      }
+    ] : undefined
+  });
+
+  return (
+    <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] p-4">
+      <h4 className="text-[13px] font-medium text-[var(--color-text-default)] mb-2">{title}</h4>
+      <ReactECharts option={getOption()} style={{ height: '200px', width: '240px' }} />
     </div>
   );
 }
@@ -5065,6 +5309,38 @@ outline: 2px solid var(--color-border-focus);`}
               </VStack>
             </Section>
 
+            {/* Monitoring Toolbar */}
+            <Section id="monitoring-toolbar" title="Monitoring Toolbar" description="Time range controls and refresh actions for monitoring dashboards">
+              <VStack gap={8}>
+                {/* Design Tokens */}
+                <VStack gap={3}>
+                  <Label>Design Tokens</Label>
+                  <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
+                    <code>segment-height: 32px</code> · <code>segment-padding: 8px 12px</code> · <code>border-radius: 6px</code> · <code>font-size: 13px</code>
+                  </div>
+                </VStack>
+
+                {/* Time Controls */}
+                <VStack gap={3}>
+                  <Label>Time Range Controls</Label>
+                  <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] p-4">
+                    <TimeControls />
+                  </div>
+                </VStack>
+
+                {/* Description */}
+                <VStack gap={3}>
+                  <Label>Features</Label>
+                  <div className="text-[length:var(--font-size-12)] text-[var(--color-text-muted)] space-y-2">
+                    <p>• <strong>Quick Time Ranges:</strong> 30m, 1h, 6h, 12h, 24h preset options</p>
+                    <p>• <strong>Custom Period:</strong> Date picker for custom start and end dates</p>
+                    <p>• <strong>Refresh Button:</strong> Manual data refresh action</p>
+                    <p>• <strong>Period Tag:</strong> Shows selected custom period with clear option</p>
+                  </div>
+                </VStack>
+              </VStack>
+            </Section>
+
             {/* DetailHeader Component */}
             <Section id="detail-header" title="Detail Header" description="Page header component for resource detail views with title, actions, and info cards">
               <VStack gap={8}>
@@ -5783,11 +6059,36 @@ outline: 2px solid var(--color-border-focus);`}
                 <VStack gap={3}>
                   <Label>Status Variants</Label>
                   <div className="flex items-center gap-8 flex-wrap">
-                    <HalfDoughnutChartDemo value={35} label="Safe" status="success" />
-                    <HalfDoughnutChartDemo value={85} label="Warning" status="warning" />
-                    <HalfDoughnutChartDemo value={95} label="Danger" status="error" />
+                    <HalfDoughnutChartDemo value={35} label="Safe" status="success" used={3.5} total={10} unit="GB" />
+                    <HalfDoughnutChartDemo value={85} label="Warning" status="warning" used={8.5} total={10} unit="GB" />
+                    <HalfDoughnutChartDemo value={95} label="Danger" status="error" used={9.5} total={10} unit="GB" />
                   </div>
                 </VStack>
+              </VStack>
+            </Section>
+
+            {/* Doughnut Chart */}
+            <Section id="doughnut-chart" title="Doughnut Chart" description="Ring chart for part-to-whole relationships with optional center metrics">
+              <VStack gap={8}>
+                {/* Design Tokens */}
+                <VStack gap={3}>
+                  <Label>Design Tokens</Label>
+                  <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
+                    <code>inner-radius: 68%</code> · <code>outer-radius: 80%</code> · <code>thickness: 12%</code> · <code>border-radius: 6px</code>
+                  </div>
+                </VStack>
+
+                {/* Basic Doughnut */}
+                <VStack gap={3}>
+                  <Label>Basic Doughnut</Label>
+                  <div className="flex items-start gap-6 flex-wrap">
+                    <SingleValueDoughnutDemo 
+                      title="OSD onode Hits Ratio"
+                      value={98.3}
+                    />
+                  </div>
+                </VStack>
+
               </VStack>
             </Section>
 

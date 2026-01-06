@@ -387,8 +387,8 @@ export function InstanceDetailPage() {
   const actionLogRowsPerPage = 10;
   const filteredActionLogs = mockActionLogs
     .filter(log =>
-      log.operationName.toLowerCase().includes(actionLogSearchQuery.toLowerCase()) ||
-      log.requestId.toLowerCase().includes(actionLogSearchQuery.toLowerCase())
+    log.operationName.toLowerCase().includes(actionLogSearchQuery.toLowerCase()) ||
+    log.requestId.toLowerCase().includes(actionLogSearchQuery.toLowerCase())
     )
     .sort((a, b) => {
       if (!actionLogSortKey) return 0;
@@ -527,9 +527,9 @@ export function InstanceDetailPage() {
                   ]}
                   trigger="click"
                 >
-                  <Button variant="secondary" size="sm" rightIcon={<IconChevronDown size={12} />}>
-                    More Actions
-                  </Button>
+                <Button variant="secondary" size="sm" rightIcon={<IconChevronDown size={12} />}>
+                  More Actions
+                </Button>
                 </ContextMenu>
               </DetailHeader.Actions>
 
@@ -639,7 +639,7 @@ export function InstanceDetailPage() {
                         />
                         <SectionCard.DataRow 
                           label="User Data" 
-                          value={instance.userData}
+                          value={instance.userData} 
                         />
                       </SectionCard.Content>
                     </SectionCard>
@@ -693,12 +693,12 @@ export function InstanceDetailPage() {
                           label: 'Name',
                           render: (value: string, row: AttachedVolume) => (
                             <div className="flex flex-col gap-0.5">
-                              <Link
-                                to={`/volumes/${row.id}`}
+                            <Link
+                              to={`/volumes/${row.id}`}
                                 className="font-medium text-[var(--color-action-primary)] hover:underline"
-                              >
-                                {value}
-                              </Link>
+                            >
+                              {value}
+                            </Link>
                               <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
                                 ID : {row.id}
                               </span>
@@ -1112,16 +1112,16 @@ export function InstanceDetailPage() {
                     </div>
 
                     {/* Search */}
-                    <SearchInput
-                      placeholder="Find Instance Snapshot with filters"
-                      value={snapshotSearchQuery}
-                      onChange={(e) => {
-                        setSnapshotSearchQuery(e.target.value);
-                        setSnapshotCurrentPage(1);
-                      }}
+                      <SearchInput
+                        placeholder="Find Instance Snapshot with filters"
+                        value={snapshotSearchQuery}
+                        onChange={(e) => {
+                          setSnapshotSearchQuery(e.target.value);
+                          setSnapshotCurrentPage(1);
+                        }}
                       size="sm"
-                      className="w-[280px]"
-                    />
+                        className="w-[280px]"
+                      />
 
                     {/* Pagination */}
                     <Pagination
@@ -1357,7 +1357,7 @@ export function InstanceDetailPage() {
                           onClick={() => handleActionLogSort('requestId')}
                         >
                           <div className="flex items-center gap-1 w-full">
-                            <span className="text-[11px] font-medium text-[var(--color-text-default)]">Request ID</span>
+                          <span className="text-[11px] font-medium text-[var(--color-text-default)]">Request ID</span>
                             {actionLogSortKey === 'requestId' ? (
                               actionLogSortDirection === 'asc' ? (
                                 <IconChevronUp size={14} stroke={1.5} className="text-[var(--color-action-primary)]" />
@@ -1367,7 +1367,7 @@ export function InstanceDetailPage() {
                             ) : (
                               <IconSelector size={14} stroke={1.5} className="text-[var(--color-text-disabled)]" />
                             )}
-                          </div>
+                        </div>
                         </div>
                         <div 
                           className="flex-1 flex items-center h-10 px-3 border-l border-[var(--color-border-default)] cursor-pointer select-none hover:text-[var(--color-action-primary)] transition-colors"
