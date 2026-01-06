@@ -171,7 +171,7 @@ export function VolumeSnapshotsPage() {
       sortable: true,
       render: (value: string, row) => (
         <Link
-          to={`/volume-snapshots/${row.id}`}
+          to={`/compute/volume-snapshots/${row.id}`}
           className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
           onClick={(e) => e.stopPropagation()}
         >
@@ -193,7 +193,7 @@ export function VolumeSnapshotsPage() {
       render: (_, row) => (
         <div className="flex flex-col gap-0.5">
           <Link
-          to={`/volumes/${row.sourceVolumeId}`}
+          to={`/compute/volumes/${row.sourceVolumeId}`}
             className="inline-flex items-center gap-1.5 font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
             onClick={(e) => e.stopPropagation()}
           >

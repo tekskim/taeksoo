@@ -151,7 +151,7 @@ export function FlavorsPage() {
       sortable: true,
       render: (_, row) => (
         <Link
-          to={`/flavors/${row.id}`}
+          to={`/compute/flavors/${row.id}`}
           className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
           onClick={(e) => e.stopPropagation()}
         >

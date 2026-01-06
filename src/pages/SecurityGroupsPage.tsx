@@ -144,7 +144,7 @@ export function SecurityGroupsPage() {
       render: (_, row) => (
         <div className="flex flex-col gap-0.5">
           <Link
-          to={`/security-groups/${row.id}`}
+          to={`/compute/security-groups/${row.id}`}
             className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
             onClick={(e) => e.stopPropagation()}
           >

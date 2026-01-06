@@ -258,7 +258,7 @@ export function VolumeDetailPage() {
       render: (_, row) => (
         <div className="flex flex-col gap-0.5">
         <Link
-          to={`/volume-snapshots/${row.id}`}
+          to={`/compute/volume-snapshots/${row.id}`}
           className="inline-flex items-center gap-1.5 font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
           onClick={(e) => e.stopPropagation()}
         >
@@ -326,7 +326,7 @@ export function VolumeDetailPage() {
       render: (_, row) => (
         <div className="flex flex-col gap-0.5">
         <Link
-          to={`/volume-backups/${row.id}`}
+          to={`/compute/volume-backups/${row.id}`}
           className="inline-flex items-center gap-1.5 font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
           onClick={(e) => e.stopPropagation()}
         >
@@ -472,7 +472,7 @@ export function VolumeDetailPage() {
                           value={
                             volume.attachedTo && volume.attachedToId ? (
                               <Link
-                                to={`/instances/${volume.attachedToId}`}
+                                to={`/compute/instances/${volume.attachedToId}`}
                                 className="inline-flex items-center gap-1.5 font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
                               >
                                 {volume.attachedTo}

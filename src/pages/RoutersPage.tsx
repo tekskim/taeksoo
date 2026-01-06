@@ -146,7 +146,7 @@ export function RoutersPage() {
       sortable: true,
       render: (_, row) => (
         <Link
-          to={`/routers/${row.id}`}
+          to={`/compute/routers/${row.id}`}
           className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
           onClick={(e) => e.stopPropagation()}
         >
@@ -174,7 +174,7 @@ export function RoutersPage() {
         row.externalNetworkId ? (
           <div className="flex flex-col gap-0.5">
             <Link
-              to={`/networks/${row.externalNetworkId}`}
+              to={`/compute/networks/${row.externalNetworkId}`}
               className="inline-flex items-center gap-1.5 font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
               onClick={(e) => e.stopPropagation()}
             >

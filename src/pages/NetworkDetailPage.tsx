@@ -304,7 +304,7 @@ export default function NetworkDetailPage() {
       render: (_, row) => (
         <div className="flex flex-col gap-0.5">
           <Link
-            to={`/subnets/${row.id}`}
+            to={`/compute/subnets/${row.id}`}
             className="inline-flex items-center gap-1 font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
             onClick={(e) => e.stopPropagation()}
           >
@@ -382,7 +382,7 @@ export default function NetworkDetailPage() {
       render: (_, row) => (
         <div className="flex flex-col gap-0.5">
           <Link
-            to={`/ports/${row.id}`}
+            to={`/compute/ports/${row.id}`}
             className="inline-flex items-center gap-1 font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
             onClick={(e) => e.stopPropagation()}
           >
@@ -436,7 +436,7 @@ export default function NetworkDetailPage() {
       render: (_, row) => (
         <div className="flex flex-col gap-0.5">
           <Link
-            to={`/networks/${row.ownedNetwork.id}`}
+            to={`/compute/networks/${row.ownedNetwork.id}`}
             className="inline-flex items-center gap-1.5 font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
             onClick={(e) => e.stopPropagation()}
           >
