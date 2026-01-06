@@ -142,12 +142,12 @@ export function TabProvider({ children, defaultTabs = [] }: TabProviderProps) {
   // On initial mount, sync tabs with current URL (prioritize current URL over stored active tab)
   const initializedRef = useRef(false);
   useEffect(() => {
-    if (!initializedRef.current && tabs.length > 0) {
+    if (!initializedRef.current) {
       initializedRef.current = true;
       const currentPath = location.pathname;
       
       // Check if there's a tab matching the current URL
-      const matchingTab = tabs.find((t) => {
+      const matchingTab = tabsRef.current.find((t) => {
         const tabPathname = t.path.split('?')[0];
         return tabPathname === currentPath;
       });
@@ -155,21 +155,19 @@ export function TabProvider({ children, defaultTabs = [] }: TabProviderProps) {
       if (matchingTab) {
         // Activate the matching tab
         setActiveTabId(matchingTab.id);
-      } else {
-        // Create a new tab for the current URL
-        const currentLabel = getLabelFromPath(currentPath);
-        const newTabId = `tab-${Date.now()}`;
-        const newTab: TabItem = {
-          id: newTabId,
-          label: currentLabel,
-          path: currentPath,
-          closable: true,
-        };
-        setTabs((prev) => [...prev, newTab]);
-        setActiveTabId(newTabId);
+      } else if (tabsRef.current.length > 0) {
+        // Update the active tab's path instead of creating a new one
+        const activeTab = tabsRef.current.find((t) => t.id === activeTabId);
+        if (activeTab) {
+          const currentLabel = getLabelFromPath(currentPath);
+          setTabs((prev) => prev.map((tab) => 
+            tab.id === activeTab.id ? { ...tab, path: currentPath, label: currentLabel } : tab
+          ));
+        }
       }
     }
-  }, [tabs, location.pathname]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [location.pathname]);
 
   // Sync tab with current route when location changes
   useEffect(() => {
