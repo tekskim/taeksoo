@@ -109,6 +109,9 @@ const mockTemplates: TemplateRow[] = [
   { id: '129jm39s', name: 'th.tiny', description: '-', visibility: 'Private', createdAt: '2025-11-19', isFavorite: true },
   { id: '230km40t', name: 'th.small', description: 'Small instance', visibility: 'Public', createdAt: '2025-11-18', isFavorite: false },
   { id: '331ln51u', name: 'th.medium', description: 'Medium instance', visibility: 'Private', createdAt: '2025-11-17', isFavorite: true },
+  { id: '432mo62v', name: 'th.large', description: 'Large instance', visibility: 'Public', createdAt: '2025-11-16', isFavorite: false },
+  { id: '533np73w', name: 'th.xlarge', description: 'Extra large instance', visibility: 'Private', createdAt: '2025-11-15', isFavorite: true },
+  { id: '634oq84x', name: 'th.2xlarge', description: '2x large instance', visibility: 'Public', createdAt: '2025-11-14', isFavorite: false },
 ];
 
 /* ----------------------------------------
