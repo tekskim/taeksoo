@@ -406,7 +406,7 @@ export function InstanceListPage() {
       render: (_, row) => (
         <div className="flex flex-col gap-0.5">
           <Link 
-            to={`/instances/${row.id}`}
+            to={`/compute/instances/${row.id}`}
             className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
             onClick={(e) => e.stopPropagation()}
           >
@@ -448,7 +448,7 @@ export function InstanceListPage() {
       render: (_, row) => (
         <div className="flex flex-col gap-0.5">
           <Link 
-            to={`/images/${row.id}`}
+            to={`/compute/images/${row.id}`}
             className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
             onClick={(e) => e.stopPropagation()}
           >
@@ -468,7 +468,7 @@ export function InstanceListPage() {
       render: (_, row) => (
         <div className="flex flex-col gap-0.5">
           <Link 
-            to={`/flavors/${row.id}`}
+            to={`/compute/flavors/${row.id}`}
             className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
             onClick={(e) => e.stopPropagation()}
           >
@@ -572,7 +572,7 @@ export function InstanceListPage() {
       render: (_, row) => (
         <div className="flex flex-col gap-0.5">
           <Link 
-            to={`/bare-metal/${row.id}`}
+            to={`/compute/bare-metal/${row.id}`}
             className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
             onClick={(e) => e.stopPropagation()}
           >
@@ -598,7 +598,7 @@ export function InstanceListPage() {
       render: (_, row) => (
         <div className="flex flex-col gap-0.5">
           <Link 
-            to={`/images/${row.id}`}
+            to={`/compute/images/${row.id}`}
             className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
             onClick={(e) => e.stopPropagation()}
           >
@@ -618,7 +618,7 @@ export function InstanceListPage() {
       render: (_, row) => (
         <div className="flex flex-col gap-0.5">
           <Link 
-            to={`/flavors/${row.id}`}
+            to={`/compute/flavors/${row.id}`}
             className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
             onClick={(e) => e.stopPropagation()}
           >
@@ -717,7 +717,7 @@ export function InstanceListPage() {
             breadcrumb={
               <Breadcrumb
                 items={[
-                  { label: 'Proj-1', href: '/project' },
+                  { label: 'Proj-1', href: '/compute' },
                   { label: 'Instances List' },
                 ]}
               />
