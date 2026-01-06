@@ -161,10 +161,9 @@ export function FloatingCard({
     'bg-[var(--color-surface-default)]',
     'border border-[var(--color-border-default)]',
     'rounded-[8px]',
-    'shadow-[var(--shadow-lg)]',
     'overflow-hidden',
     'flex flex-col',
-    'h-full',
+    'h-fit',
     'max-h-[calc(100vh-2rem)]',
     ...(portal ? [positionStyles[safePosition] || positionStyles['top-left']] : []),
   ];
@@ -205,11 +204,11 @@ export function FloatingCard({
         </button>
       )}
       
-      <div className="flex flex-col h-full min-h-0">
+      <div className="flex flex-col h-fit min-h-0 gap-0">
         {/* Summary Section - Scrollable, separated from Quota */}
         {/* Title is required, sections are optional */}
         <div 
-          className="overflow-y-auto flex flex-col gap-6 shrink-0 m-4 rounded-md"
+          className="overflow-y-auto flex flex-col gap-4 shrink-0 m-4 rounded-md"
           style={{
             maxHeight: '340px',
             minHeight: '160px',
@@ -336,7 +335,7 @@ export function FloatingCard({
 
         {/* Number of Instances - Fixed with white background */}
         {onInstanceCountChange && (
-          <div className="px-6 py-4 flex flex-col gap-2 shrink-0 bg-[var(--color-surface-default)] border-t border-[var(--color-border-default)]">
+          <div className="px-6 py-4 flex flex-col gap-2 shrink-0 bg-[var(--color-surface-default)]">
             <label className="font-['Mona_Sans:Medium',sans-serif] text-[12px] text-[var(--color-text-default)]">
               Number of Instances
             </label>
@@ -351,11 +350,11 @@ export function FloatingCard({
 
         {/* Action Buttons - Fixed at bottom with white background, 3:7 ratio */}
         {(onCancel || onAction) && (
-          <div className="px-6 pb-6 pt-4 flex flex-row gap-2 shrink-0 bg-[var(--color-surface-default)] border-t border-[var(--color-border-default)]">
+          <div className="px-6 pb-6 pt-4 flex flex-row gap-2 shrink-0 bg-[var(--color-surface-default)]">
             {onCancel && (
               <Button
                 variant="secondary"
-                size="sm"
+                size="md"
                 onClick={onCancel}
                 className="flex-[0.3]"
               >
@@ -365,7 +364,7 @@ export function FloatingCard({
             {onAction && (
               <Button
                 variant={actionEnabled ? 'primary' : 'secondary'}
-                size="sm"
+                size="md"
                 onClick={onAction}
                 disabled={!actionEnabled}
                 className="flex-[0.7]"

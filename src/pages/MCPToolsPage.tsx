@@ -1,9 +1,5 @@
-import { useState, useRef, useEffect, useCallback } from 'react';
+import { useState, useRef, useEffect, useCallback, useMemo } from 'react';
 import {
-  TabBar,
-  TopBar,
-  TopBarAction,
-  Breadcrumb,
   Button,
   Tooltip,
   Tabs,
@@ -11,8 +7,17 @@ import {
   Tab,
   TabPanel,
   Select,
+  Table,
+  SearchInput,
+  Pagination,
+  ListToolbar,
+  StatusIndicator,
+  ContextMenu,
+  type TableColumn,
+  type ContextMenuItem,
 } from '@/design-system';
-import { useTabs } from '@/contexts/TabContext';
+import { AgentPageLayout } from '@/layouts';
+import { AgentSidebar } from '@/pages/AgentPage';
 import {
   IconMessage,
   IconDatabase,
@@ -26,6 +31,7 @@ import {
   IconChevronLeft,
   IconChevronRight,
   IconDots,
+  IconDotsCircleHorizontal,
   IconStar,
   IconStarFilled,
   IconTarget,
@@ -36,11 +42,10 @@ import {
   IconSquareRounded,
   IconEye,
   IconEyeOff,
+  IconHome,
 } from '@tabler/icons-react';
 import { Icons } from '@/design-system';
-import { Link, useNavigate, useLocation } from 'react-router-dom';
-import ThakiSymbol from '@/assets/thakiSymbol.svg';
-import { useDarkMode } from '@/hooks/useDarkMode';
+import { useNavigate } from 'react-router-dom';
 
 /* ----------------------------------------
    Status Card Component
@@ -100,122 +105,6 @@ function StatusCard({ label, count, status }: StatusCardProps) {
 }
 
 /* ----------------------------------------
-   Agent Sidebar Component (Reused)
-   ---------------------------------------- */
-export function AgentSidebar() {
-  const { isDark } = useDarkMode();
-  const location = useLocation();
-
-  return (
-    <nav className="fixed left-0 top-0 w-[62px] h-screen bg-[var(--color-surface-default)] border-r border-[var(--color-border-default)] flex flex-col items-center pb-3 pt-0 px-0 z-50">
-      {/* Logo */}
-      <Link
-        to="/"
-        className="border-b border-[var(--color-border-default)] flex h-[33px] items-center justify-center px-3 py-0 relative shrink-0 w-full hover:bg-[var(--color-surface-muted)] transition-colors"
-      >
-        <div className="flex items-center relative shrink-0">
-          <img 
-            src={ThakiSymbol} 
-            alt="THAKI" 
-            className="h-[18px] w-[18px]"
-          />
-        </div>
-      </Link>
-
-      {/* Menu Items Container */}
-      <div className="flex flex-[1_0_0] flex-col items-center justify-between min-h-px min-w-px pb-0 pt-1.5 px-2 relative shrink-0">
-        {/* Top Menu Items */}
-        <div className="flex flex-col gap-2 items-start relative shrink-0">
-          {/* Chat */}
-          <Tooltip content="Chat" position="right">
-            <Link
-              to="/chat"
-              className={`flex flex-col gap-0.5 items-center justify-center px-2 py-1.5 relative rounded-md shrink-0 size-[46px] transition-colors ${
-                location.pathname === '/chat' 
-                  ? 'bg-[var(--color-info-weak-bg,#eff6ff)]' 
-                  : 'bg-[var(--color-surface-default)] hover:bg-[var(--color-surface-muted)]'
-              }`}
-            >
-              <IconMessage 
-                size={22} 
-                stroke={1} 
-                className={location.pathname === '/chat' ? 'text-[var(--color-action-primary)]' : 'text-[var(--color-text-muted)]'} 
-              />
-            </Link>
-          </Tooltip>
-
-          {/* Robot */}
-          <Tooltip content="Agent" position="right">
-            <Link
-              to="/agent"
-              className={`flex flex-col gap-0.5 items-center justify-center px-2 py-1.5 relative rounded-md shrink-0 size-[46px] transition-colors ${
-                location.pathname === '/agent' 
-                  ? 'bg-[var(--color-info-weak-bg,#eff6ff)]' 
-                  : 'bg-[var(--color-surface-default)] hover:bg-[var(--color-surface-muted)]'
-              }`}
-            >
-              <Icons.Robot 
-                size={22} 
-                stroke={1} 
-                className={location.pathname === '/agent' ? 'text-[var(--color-action-primary)]' : 'text-[var(--color-text-muted)]'} 
-              />
-            </Link>
-          </Tooltip>
-
-          {/* Data sources */}
-          <Tooltip content="Data sources" position="right">
-            <Link
-              to="/storage"
-              className={`flex flex-col gap-0.5 items-center justify-center px-2 py-1.5 relative rounded-md shrink-0 size-[46px] transition-colors ${
-                location.pathname === '/storage' 
-                  ? 'bg-[var(--color-info-weak-bg,#eff6ff)]' 
-                  : 'bg-[var(--color-surface-default)] hover:bg-[var(--color-surface-muted)]'
-              }`}
-            >
-              <IconDatabase 
-                size={22} 
-                stroke={1} 
-                className={location.pathname === '/storage' ? 'text-[var(--color-action-primary)]' : 'text-[var(--color-text-muted)]'} 
-              />
-            </Link>
-          </Tooltip>
-
-          {/* MCP tools */}
-          <Tooltip content="MCP tools" position="right">
-            <Link
-              to="/mcp-tools"
-              className={`flex flex-col gap-0.5 items-center justify-center px-2 py-1.5 relative rounded-md shrink-0 size-[46px] transition-colors ${
-                location.pathname === '/mcp-tools' 
-                  ? 'bg-[var(--color-info-weak-bg,#eff6ff)]' 
-                  : 'bg-[var(--color-surface-default)] hover:bg-[var(--color-surface-muted)]'
-              }`}
-            >
-              <IconPuzzle 
-                size={22} 
-                stroke={1} 
-                className={location.pathname === '/mcp-tools' ? 'text-[var(--color-action-primary)]' : 'text-[var(--color-text-muted)]'} 
-              />
-            </Link>
-          </Tooltip>
-        </div>
-
-        {/* Settings (Bottom) */}
-        <div className="flex flex-col gap-0 items-start relative shrink-0">
-          <Tooltip content="Settings" position="right">
-            <Link
-              to="/agent"
-              className="bg-[var(--color-surface-default)] flex flex-col gap-0.5 items-center justify-center px-2 py-1.5 relative rounded-md shrink-0 size-[46px] hover:bg-[var(--color-surface-muted)] transition-colors"
-            >
-              <IconSettings size={22} stroke={1} className="text-[var(--color-text-default)]" />
-            </Link>
-          </Tooltip>
-        </div>
-      </div>
-    </nav>
-  );
-}
-
-/* ----------------------------------------
    MCP Tool Table Row Data Type
    ---------------------------------------- */
 interface MCPToolRow {
@@ -256,19 +145,23 @@ interface TemplateRow {
    Main MCPToolsPage Component
    ---------------------------------------- */
 export function MCPToolsPage() {
-  const { tabs, activeTabId, selectTab, closeTab, addNewTab } = useTabs();
   const navigate = useNavigate();
   const [selectedTools, setSelectedTools] = useState<string[]>([]);
   const [selectedTemplates, setSelectedTemplates] = useState<string[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [activeTab, setActiveTab] = useState('my-servers');
   const [templateVisibility, setTemplateVisibility] = useState<Record<string, 'visible' | 'hidden'>>({});
+  const [searchQuery, setSearchQuery] = useState('');
+  const [rowsPerPage, setRowsPerPage] = useState(10);
 
-  const tabBarTabs = tabs.map((tab) => ({
-    id: tab.id,
-    label: tab.label,
-    closable: tab.closable,
-  }));
+  // Status mapping for StatusIndicator
+  const statusMap: Record<MCPToolRow['status'], 'active' | 'error' | 'building' | 'shutoff' | 'pending'> = {
+    'active': 'active',
+    'deactive': 'shutoff',
+    'error': 'error',
+    'processing': 'building',
+    'deleted': 'pending',
+  };
 
   // Templates mock data
   const templates: TemplateRow[] = Array.from({ length: 10 }, (_, i) => ({
@@ -445,120 +338,248 @@ export function MCPToolsPage() {
     },
   ];
 
-  const getStatusIcon = (status: MCPToolRow['status']) => {
-    let iconBg = 'bg-[var(--color-text-muted,#475569)]';
+  // Filter tools by search
+  const filteredTools = useMemo(() => {
+    if (!searchQuery) return mcpTools;
     
-    if (status === 'active') {
-      iconBg = 'bg-[var(--color-success,#4ade80)]';
-    } else if (status === 'deactive') {
-      iconBg = 'bg-[var(--color-info,#3b82f6)]';
-    } else if (status === 'error' || status === 'deleted') {
-      iconBg = 'bg-[var(--color-danger,#ef4444)]';
-    } else if (status === 'processing') {
-      iconBg = 'bg-[var(--color-info,#3b82f6)]';
-    }
+    return mcpTools.filter(
+      (t) =>
+        t.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        t.category.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        t.mcpServer.label.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+  }, [mcpTools, searchQuery]);
 
-    return (
-      <div className={`${iconBg} flex gap-0 items-center justify-center p-1 relative rounded-full shrink-0 size-6`}>
-        {status === 'active' && (
-          <IconTarget size={12} stroke={1} className="text-white" />
-        )}
-        {status === 'deactive' && (
-          <div className="flex flex-col gap-0.5 items-center justify-center">
-            <div className="h-1 w-2 bg-white rounded-sm" />
-            <div className="h-1 w-2 bg-white rounded-sm" />
+  const totalPages = Math.ceil(filteredTools.length / rowsPerPage);
+  const paginatedTools = useMemo(() => {
+    return filteredTools.slice((currentPage - 1) * rowsPerPage, currentPage * rowsPerPage);
+  }, [filteredTools, currentPage, rowsPerPage]);
+
+  // Filter templates by search
+  const filteredTemplates = useMemo(() => {
+    if (!searchQuery) return templates;
+    
+    return templates.filter(
+      (t) =>
+        t.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        t.category.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+  }, [templates, searchQuery]);
+
+  const templateTotalPages = Math.ceil(filteredTemplates.length / rowsPerPage);
+  const paginatedTemplates = useMemo(() => {
+    return filteredTemplates.slice((currentPage - 1) * rowsPerPage, currentPage * rowsPerPage);
+  }, [filteredTemplates, currentPage, rowsPerPage]);
+
+  // MCP Tools Table columns
+  const toolColumns: TableColumn<MCPToolRow>[] = [
+    {
+      key: 'status',
+      label: 'Status',
+      width: '59px',
+      align: 'center',
+      sortable: false,
+      render: (_, row) => (
+        <StatusIndicator status={statusMap[row.status]} layout="icon-only" />
+      ),
+    },
+    {
+      key: 'title',
+      label: 'Title',
+      flex: 1,
+      sortable: true,
+    },
+    {
+      key: 'mcpServer',
+      label: 'MCP server',
+      flex: 1,
+      sortable: false,
+      render: (_, row) => (
+        <div className="flex items-center gap-2">
+          <img src={row.mcpServer.thumbnail} alt={row.mcpServer.label} className="w-4 h-4 rounded" />
+          <span>{row.mcpServer.label}</span>
           </div>
-        )}
-        {status === 'error' && (
-          <IconAlertTriangle size={12} stroke={1} className="text-white" />
-        )}
-        {status === 'processing' && (
-          <IconLoader2 size={12} stroke={1} className="text-white animate-spin" />
-        )}
-        {status === 'deleted' && (
-          <IconTrash size={12} stroke={1} className="text-white" />
+      ),
+    },
+    {
+      key: 'category',
+      label: 'Category',
+      flex: 1,
+      sortable: true,
+    },
+    {
+      key: 'tags',
+      label: 'Tags',
+      flex: 1,
+      sortable: false,
+      render: (_, row) => (
+        <div className="flex flex-wrap gap-1">
+          {row.tags.slice(0, 3).map((tag, idx) => (
+            <span key={idx} className="text-[11px] text-[var(--color-text-subtle)]">
+              {tag}
+            </span>
+          ))}
+          {row.tags.length > 3 && (
+            <span className="text-[11px] text-[var(--color-text-subtle)]">
+              +{row.tags.length - 3}
+            </span>
         )}
       </div>
-    );
-  };
-
-  const getStatusLabel = (status: MCPToolRow['status']) => {
-    switch (status) {
-      case 'active':
-        return 'Official';
-      case 'deactive':
-        return 'Lable';
-      case 'error':
-        return 'Lable';
-      case 'processing':
-        return 'Lable';
-      case 'deleted':
-        return 'Lable';
-      default:
-        return status;
-    }
-  };
+      ),
+    },
+    {
+      key: 'createdAt',
+      label: 'Created at',
+      flex: 1,
+      sortable: true,
+    },
+    {
+      key: 'actions',
+      label: 'Action',
+      width: '72px',
+      align: 'center',
+      render: (_, row) => {
+        const menuItems: ContextMenuItem[] = [
+          {
+            id: 'delete',
+            label: 'Delete',
+            status: 'danger',
+            onClick: () => console.log('Delete:', row.id),
+          },
+        ];
 
   return (
-    <div className="min-h-screen bg-[var(--color-surface-subtle)] flex items-start" style={{ minWidth: '1440px', width: '1440px', height: '1020px' }}>
-      <AgentSidebar />
+          <div onClick={(e) => e.stopPropagation()}>
+            <ContextMenu items={menuItems} trigger="click">
+              <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors">
+                <IconDotsCircleHorizontal size={16} stroke={1.5} className="text-[var(--action-icon-color)]" />
+              </button>
+            </ContextMenu>
+          </div>
+        );
+      },
+    },
+  ];
 
-      <main className="flex flex-[1_0_0] flex-col h-full items-start min-h-px min-w-px relative shrink-0 bg-[var(--color-surface-default)] ml-[62px]">
-        <div className="min-w-[var(--layout-content-min-width)] w-full h-full flex flex-col">
-          <TabBar
-            tabs={tabBarTabs}
-            activeTab={activeTabId}
-            onTabChange={selectTab}
-            onTabClose={closeTab}
-            onTabAdd={addNewTab}
-            showAddButton={true}
-            showWindowControls={true}
-          />
-
-          <TopBar
-            showSidebarToggle={false}
-            showNavigation={true}
-            canGoBack={false}
-            canGoForward={false}
-            onBack={() => {}}
-            onForward={() => {}}
-            breadcrumb={
-              <Breadcrumb
-                items={[
-                  { label: 'MCP tools' },
+  // Templates Table columns
+  const templateColumns: TableColumn<TemplateRow>[] = [
+    {
+      key: 'title',
+      label: 'Title',
+      flex: 1,
+      sortable: true,
+      render: (_, row) => (
+        <div className="flex items-center gap-2">
+          {row.isOfficial && (
+            <span className="text-[10px] px-1.5 py-0.5 bg-[var(--color-info-weak-bg)] text-[var(--color-action-primary)] rounded">
+              Official
+            </span>
+          )}
+          <span>{row.title}</span>
+        </div>
+      ),
+    },
+    {
+      key: 'visibility',
+      label: 'Visibility',
+      flex: 1,
+      sortable: false,
+      render: (_, row) => {
+        const currentVisibility = templateVisibility[row.id] || row.visibility;
+        return (
+          <Tooltip
+            content="When set to visible, this item will appear in the catalog tab."
+            position="top"
+          >
+            <div className="flex items-center">
+              <Select
+                size="sm"
+                value={currentVisibility}
+                onChange={(value) => {
+                  setTemplateVisibility({
+                    ...templateVisibility,
+                    [row.id]: value as 'visible' | 'hidden',
+                  });
+                }}
+                options={[
+                  { value: 'visible', label: 'Visible' },
+                  { value: 'hidden', label: 'Hidden' },
                 ]}
+                menuPlacement="auto"
               />
-            }
-            actions={
-              <>
-                <TopBarAction
-                  icon={<IconBell size={16} stroke={1} />}
-                  aria-label="Notifications"
-                  badge={true}
-                />
-                <TopBarAction
-                  icon={<IconPalette size={16} stroke={1} />}
-                  onClick={() => navigate('/design-system')}
-                  aria-label="Design System"
-                />
-              </>
-            }
-          />
-
-          {/* Main Content */}
-          <div className="bg-[var(--color-surface-default)] flex flex-[1_0_0] flex-col gap-6 items-center min-h-px min-w-px pb-3 pt-6 px-8 relative shrink-0 w-full overflow-y-auto">
-            <div className="flex flex-col gap-6 items-start min-w-[1176px] relative shrink-0 w-full">
-              {/* Header */}
-              <div className="flex items-center justify-between relative shrink-0 w-full">
-                <div className="flex flex-col items-start justify-center relative shrink-0">
-                  <div className="flex items-center relative shrink-0">
-                    <p className="font-['Mona_Sans:SemiBold',sans-serif] leading-7 not-italic relative shrink-0 text-[var(--color-text-default)] text-[18px]">
-                      MCP tools
-                    </p>
+            </div>
+          </Tooltip>
+        );
+      },
+    },
+    {
+      key: 'category',
+      label: 'Category',
+      flex: 1,
+      sortable: true,
+    },
+    {
+      key: 'tools',
+      label: 'Tools',
+      flex: 1,
+      sortable: true,
+    },
+    {
+      key: 'updatedAt',
+      label: 'Updated at',
+      flex: 1,
+      sortable: true,
+    },
+    {
+      key: 'createdAt',
+      label: 'Created at',
+      flex: 1,
+      sortable: true,
+    },
+    {
+      key: 'actions',
+      label: 'Action',
+      width: '72px',
+      align: 'center',
+      render: (_, row) => {
+        const menuItems: ContextMenuItem[] = [
+          {
+            id: 'toggle-visibility',
+            label: templateVisibility[row.id] === 'visible' ? 'Hide' : 'Show',
+            onClick: () => {
+              setTemplateVisibility(prev => ({
+                ...prev,
+                [row.id]: prev[row.id] === 'visible' ? 'hidden' : 'visible',
+              }));
+            },
+          },
+          {
+            id: 'delete',
+            label: 'Delete',
+            status: 'danger',
+            onClick: () => console.log('Delete:', row.id),
+          },
+        ];
+        
+        return (
+          <div onClick={(e) => e.stopPropagation()}>
+            <ContextMenu items={menuItems} trigger="click">
+              <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors">
+                <IconDotsCircleHorizontal size={16} stroke={1.5} className="text-[var(--action-icon-color)]" />
+              </button>
+            </ContextMenu>
                   </div>
-                </div>
-              </div>
+        );
+      },
+    },
+  ];
 
+  return (
+    <AgentPageLayout
+      title="MCP tools"
+      breadcrumbItems={[{ label: 'MCP tools' }]}
+      sidebar={<AgentSidebar />}
+    >
               {/* Tabs and CTA Button */}
               <div className="flex items-center justify-between relative shrink-0 w-full">
                 <div className="flex-1 min-w-0">
@@ -592,245 +613,104 @@ export function MCPToolsPage() {
                 </div>
               )}
 
-              {/* Filters */}
-              <div className="flex gap-2 items-center relative shrink-0 w-full">
-                <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-strong)] flex items-center justify-between min-w-[200px] pl-2.5 pr-2 py-1.5 relative rounded-md shrink-0 w-[280px]">
-                  <p className="font-['Mona_Sans:Regular',sans-serif] leading-4 not-italic relative shrink-0 text-[var(--color-text-subtle)] text-[11px]">
-                    {activeTab === 'templates' ? 'Find templates with filters' : 'Find MCP tools with filters'}
-                  </p>
-                  <IconSearch size={12} stroke={1} className="text-[var(--color-text-muted)] shrink-0" />
-                </div>
+      {/* List Toolbar, Pagination, Table - Grouped with 12px gap */}
                 {activeTab === 'my-servers' && (
-                  <>
-                    <div className="bg-[var(--color-border-default)] h-4 shrink-0 w-px" />
-                    <button className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] flex gap-1.5 items-center justify-center pl-2 pr-2.5 py-1.5 relative rounded-md shrink-0">
-                      <IconTrash size={12} stroke={1} className="text-[var(--color-text-muted,#94a3b8)] shrink-0" />
-                      <p className="font-['Mona_Sans:Medium',sans-serif] leading-4 not-italic relative shrink-0 text-[var(--color-text-muted,#94a3b8)] text-[11px] text-center">
-                        Delete
-                      </p>
-                    </button>
-                  </>
-                )}
+        <div className="flex flex-col gap-3 w-full">
+          {/* List Toolbar */}
+          <ListToolbar
+            primaryActions={
+              <ListToolbar.Actions>
+                <div className="w-[280px]">
+                  <SearchInput
+                    placeholder="Find MCP tools with filters"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    onClear={() => setSearchQuery('')}
+                    size="sm"
+                    fullWidth
+                  />
               </div>
+              </ListToolbar.Actions>
+            }
+            bulkActions={
+              <ListToolbar.Actions>
+                <Button 
+                  variant="muted" 
+                  size="sm" 
+                  leftIcon={<IconTrash size={12} />} 
+                  disabled={selectedTools.length === 0}
+                >
+                  Delete
+                </Button>
+              </ListToolbar.Actions>
+            }
+          />
 
               {/* Pagination */}
-              <div className="flex gap-2 h-6 items-center relative shrink-0 w-full">
-                <div className="flex gap-2 items-center relative shrink-0">
-                  <button className="flex gap-0 items-center justify-center relative shrink-0 size-6" disabled>
-                    <IconChevronLeft size={16} stroke={1} className="text-[var(--color-border-default,#e2e8f0)]" />
-                  </button>
-                  <button className="bg-[var(--color-primary,#2563eb)] flex flex-col gap-0 items-center justify-center relative rounded-md shrink-0 size-6">
-                    <p className="font-['Mona_Sans:Medium',sans-serif] leading-4 not-italic relative shrink-0 text-[var(--color-text-inverted,white)] text-[11px]">
-                      1
-                    </p>
-                  </button>
-                  {[2, 3, 4, 5].map((page) => (
-                    <button
-                      key={page}
-                      className="flex flex-col gap-0 items-center justify-center relative rounded-md shrink-0 size-6"
-                      onClick={() => setCurrentPage(page)}
-                    >
-                      <p className="font-['Mona_Sans:Medium',sans-serif] leading-4 not-italic relative shrink-0 text-[var(--color-text-subtle,#64748b)] text-[11px]">
-                        {page}
-                      </p>
-                    </button>
-                  ))}
-                  <button className="flex gap-0 items-center justify-center relative shrink-0 size-6">
-                    <IconDots size={16} stroke={1} className="text-[var(--color-text-muted)] rotate-90" />
-                  </button>
-                  <button className="flex flex-col gap-0 items-center justify-center relative rounded-md shrink-0 size-6">
-                    <p className="font-['Mona_Sans:Medium',sans-serif] leading-4 not-italic relative shrink-0 text-[var(--color-text-subtle,#64748b)] text-[11px]">
-                      99
-                    </p>
-                  </button>
-                  <button className="flex gap-0 items-center justify-center relative shrink-0 size-6">
-                    <IconChevronRight size={16} stroke={1} className="text-[var(--color-text-default)]" />
-                  </button>
-                  <div className="bg-[var(--color-border-default)] h-4 shrink-0 w-px" />
-                  <div className="flex font-['Mona_Sans:Medium',sans-serif] gap-0.5 h-6 items-center justify-center leading-4 not-italic relative shrink-0 text-[var(--color-text-subtle,#64748b)] text-[11px]">
-                    <p className="relative shrink-0">99</p>
-                    <p className="relative shrink-0">items</p>
-                  </div>
-                </div>
-              </div>
+          {filteredTools.length > 0 && (
+            <Pagination
+              currentPage={currentPage}
+              totalPages={totalPages}
+              onPageChange={setCurrentPage}
+              totalItems={filteredTools.length}
+              selectedCount={selectedTools.length}
+            />
+          )}
 
-              {/* Content based on active tab */}
-              {activeTab === 'my-servers' && (
-                /* Table */
-                <div className="flex flex-col gap-1 items-start relative shrink-0 w-full">
-                {/* Table Header */}
-                <div className="bg-[var(--color-border-subtle,#f1f5f9)] border border-[var(--color-border-default)] flex items-start overflow-clip relative rounded-t-md shrink-0 w-full">
-                  <div className="flex gap-0 items-center justify-center p-3 relative shrink-0">
-                    <input
-                      type="checkbox"
-                      className="size-4 rounded border-[var(--color-border-default)]"
-                      checked={selectedTools.length === mcpTools.length}
-                      onChange={(e) => {
-                        if (e.target.checked) {
-                          setSelectedTools(mcpTools.map(t => t.id));
-                        } else {
-                          setSelectedTools([]);
-                        }
-                      }}
+          {/* Table */}
+          <Table<MCPToolRow>
+            columns={toolColumns}
+            data={paginatedTools}
+            rowKey="id"
+            emptyMessage="No MCP tools found"
+            selectable
+            selectedKeys={selectedTools}
+            onSelectionChange={setSelectedTools}
                     />
                   </div>
-                  <div className="flex h-10 items-center justify-center px-3 py-0 relative shrink-0 w-[59px]">
-                    <div className="flex gap-1.5 items-center relative shrink-0">
-                      <div className="flex flex-col font-['Mona_Sans:Medium',sans-serif] justify-center leading-0 not-italic relative shrink-0 text-[var(--color-text-default)] text-[11px] text-center whitespace-nowrap">
-                        <p className="leading-4">Status</p>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="flex flex-[1_0_0] h-10 items-center min-h-px min-w-px px-3 py-0 relative shrink-0">
-                    <div className="flex gap-1.5 items-center relative shrink-0">
-                      <div className="flex flex-col font-['Mona_Sans:Medium',sans-serif] justify-center leading-0 not-italic relative shrink-0 text-[var(--color-text-default)] text-[11px] whitespace-nowrap">
-                        <p className="leading-4">Title</p>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="flex flex-[1_0_0] h-10 items-center min-h-px min-w-px px-3 py-0 relative shrink-0">
-                    <div className="flex gap-1.5 items-center relative shrink-0">
-                      <div className="flex flex-col font-['Mona_Sans:Medium',sans-serif] justify-center leading-0 not-italic relative shrink-0 text-[var(--color-text-default)] text-[11px] whitespace-nowrap">
-                        <p className="leading-4">MCP server</p>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="flex flex-[1_0_0] h-10 items-center min-h-px min-w-px px-3 py-0 relative shrink-0">
-                    <div className="flex gap-1.5 items-center relative shrink-0">
-                      <div className="flex flex-col font-['Mona_Sans:Medium',sans-serif] justify-center leading-0 not-italic relative shrink-0 text-[var(--color-text-default)] text-[11px] whitespace-nowrap">
-                        <p className="leading-4">Category</p>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="flex flex-[1_0_0] h-10 items-center min-h-px min-w-px px-3 py-0 relative shrink-0">
-                    <div className="flex gap-1.5 items-center relative shrink-0">
-                      <div className="flex flex-col font-['Mona_Sans:Medium',sans-serif] justify-center leading-0 not-italic relative shrink-0 text-[var(--color-text-default)] text-[11px] whitespace-nowrap">
-                        <p className="leading-4">Tags</p>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="flex flex-[1_0_0] h-10 items-center min-h-px min-w-px px-3 py-0 relative shrink-0">
-                    <div className="flex gap-1.5 items-center relative shrink-0">
-                      <div className="flex flex-col font-['Mona_Sans:Medium',sans-serif] justify-center leading-0 not-italic relative shrink-0 text-[var(--color-text-default)] text-[11px] whitespace-nowrap">
-                        <p className="leading-4">Created at</p>
-                      </div>
-                      <IconChevronDown size={12} stroke={1} className="text-[var(--color-text-muted)]" />
-                    </div>
-                  </div>
-                  <div className="flex h-10 items-center justify-center px-3 py-0 relative shrink-0 w-[72px]">
-                    <div className="flex gap-1.5 items-center relative shrink-0">
-                      <div className="flex flex-col font-['Mona_Sans:Medium',sans-serif] justify-center leading-0 not-italic relative shrink-0 text-[var(--color-text-default)] text-[11px] text-center whitespace-nowrap">
-                        <p className="leading-4">Action</p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+      )}
 
-                {/* Table Rows */}
-                {mcpTools.map((tool) => (
-                  <div
-                    key={tool.id}
-                    className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] flex items-center relative rounded-md shrink-0 w-full"
-                  >
-                    <div className="flex gap-0 items-center justify-center p-3 relative shrink-0">
-                      <input
-                        type="checkbox"
-                        className="size-4 rounded border-[var(--color-border-default)]"
-                        checked={selectedTools.includes(tool.id)}
-                        onChange={(e) => {
-                          if (e.target.checked) {
-                            setSelectedTools([...selectedTools, tool.id]);
-                          } else {
-                            setSelectedTools(selectedTools.filter(id => id !== tool.id));
-                          }
-                        }}
+      {activeTab === 'templates' && (
+        <div className="flex flex-col gap-3 w-full">
+          {/* List Toolbar */}
+          <ListToolbar
+            primaryActions={
+              <ListToolbar.Actions>
+                <div className="w-[280px]">
+                  <SearchInput
+                    placeholder="Find templates with filters"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    onClear={() => setSearchQuery('')}
+                    size="sm"
+                    fullWidth
                       />
                     </div>
-                    <div className="flex gap-0 items-center justify-center p-2 relative shrink-0 w-[59px]">
-                      {getStatusIcon(tool.status)}
-                    </div>
-                    <div className="flex flex-[1_0_0] flex-col gap-0.5 items-start justify-center min-h-[40px] min-w-px px-3 py-2 relative shrink-0">
-                      <div className="flex gap-1.5 items-center relative shrink-0">
-                        <div className="flex flex-col font-['Mona_Sans:Regular',sans-serif] justify-center leading-0 not-italic relative shrink-0 text-[var(--color-text-default)] text-[12px] whitespace-nowrap">
-                          <p className="leading-4">{tool.title}</p>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="flex flex-[1_0_0] flex-col gap-0.5 items-start justify-center min-h-[40px] min-w-px px-3 py-2 relative shrink-0">
-                      <div className="flex gap-2 items-center relative shrink-0">
-                        {/* MCP server thumbnail */}
-                        <div className="flex items-center justify-center w-6 h-6 shrink-0 rounded-[6px] border border-[var(--color-border-default)] overflow-hidden bg-[var(--color-surface-subtle)]">
-                          <img 
-                            src={tool.mcpServer.thumbnail} 
-                            alt={tool.mcpServer.label}
-                            className="w-full h-full object-cover"
-                            onError={(e) => {
-                              // Fallback to colored squares if image fails
-                              const target = e.target as HTMLImageElement;
-                              target.style.display = 'none';
-                              const parent = target.parentElement;
-                              if (parent) {
-                                parent.innerHTML = `
-                                  <div class="flex flex-wrap w-full h-full">
-                                    <div class="w-1/2 h-1/2 bg-yellow-400"></div>
-                                    <div class="w-1/2 h-1/2 bg-green-400"></div>
-                                    <div class="w-1/2 h-1/2 bg-blue-400"></div>
-                                    <div class="w-1/2 h-1/2 bg-red-400"></div>
-                                  </div>
-                                `;
-                              }
-                            }}
-                          />
-                        </div>
-                        <div className="flex flex-col font-['Mona_Sans:Regular',sans-serif] justify-center leading-0 not-italic relative shrink-0 text-[var(--color-text-default)] text-[12px] whitespace-nowrap">
-                          <p className="leading-4">{tool.mcpServer.label}</p>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="flex flex-[1_0_0] flex-col gap-0.5 items-start justify-center min-h-[40px] min-w-px px-3 py-2 relative shrink-0">
-                      <div className="flex gap-1.5 items-start relative shrink-0">
-                        <div className="flex flex-col font-['Mona_Sans:Regular',sans-serif] justify-center leading-0 not-italic relative shrink-0 text-[var(--color-text-default)] text-[12px] whitespace-nowrap">
-                          <p className="leading-4">{tool.category}</p>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="flex flex-[1_0_0] flex-col gap-0.5 items-start justify-center min-h-[40px] min-w-px px-3 py-2 relative shrink-0">
-                      <div className="flex gap-1 items-center relative w-full min-w-0 max-w-full overflow-hidden">
-                        {tool.tags.map((tag, idx) => {
-                          // Show first 4 tags, then show +N if there are more
-                          if (idx < 4) {
-                            return (
-                              <div
-                                key={idx}
-                                className="bg-[var(--color-surface-subtle,#f8fafc)] border border-[var(--color-border-default,#e2e8f0)] px-2 py-0.5 rounded-md text-[11px] leading-4 text-[var(--color-text-default)] whitespace-nowrap flex-shrink-0"
-                              >
-                                {tag}
-                              </div>
-                            );
-                          }
-                          return null;
-                        })}
-                        {tool.tags.length > 4 && (
-                          <span className="text-[11px] text-[var(--color-text-default)] whitespace-nowrap flex-shrink-0 ml-1">
-                            +{tool.tags.length - 4}
-                          </span>
-                        )}
-                      </div>
-                    </div>
-                    <div className="flex flex-[1_0_0] flex-col gap-0.5 items-start justify-center min-h-[40px] min-w-px px-3 py-2 relative shrink-0">
-                      <div className="flex gap-1.5 items-start relative shrink-0">
-                        <div className="flex flex-col font-['Mona_Sans:Regular',sans-serif] justify-center leading-0 not-italic relative shrink-0 text-[var(--color-text-default)] text-[12px] whitespace-nowrap">
-                          <p className="leading-4">{tool.createdAt}</p>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="flex gap-1 items-center justify-center p-1.5 relative shrink-0 w-[72px]">
-                      <button className="flex gap-0 items-center justify-center p-1.5 relative shrink-0 hover:bg-[var(--color-surface-muted)] rounded-md">
-                        <IconDotsVertical size={16} stroke={1} className="text-[var(--color-text-muted)]" />
-                      </button>
-                    </div>
-                  </div>
-                ))}
+              </ListToolbar.Actions>
+            }
+          />
+
+          {/* Pagination */}
+          {filteredTemplates.length > 0 && (
+            <Pagination
+              currentPage={currentPage}
+              totalPages={templateTotalPages}
+              onPageChange={setCurrentPage}
+              totalItems={filteredTemplates.length}
+              selectedCount={selectedTemplates.length}
+            />
+          )}
+
+          {/* Table */}
+          <Table<TemplateRow>
+            columns={templateColumns}
+            data={paginatedTemplates}
+            rowKey="id"
+            emptyMessage="No templates found"
+            selectable
+            selectedKeys={selectedTemplates}
+            onSelectionChange={setSelectedTemplates}
+          />
                 </div>
               )}
 
@@ -908,187 +788,7 @@ export function MCPToolsPage() {
                 </div>
               )}
 
-              {activeTab === 'templates' && (
-                /* Templates Table */
-                <div className="flex flex-col gap-1 items-start relative shrink-0 w-full">
-                  {/* Table Header */}
-                  <div className="bg-[var(--color-border-subtle,#f1f5f9)] border border-[var(--color-border-default)] flex items-start overflow-clip relative rounded-t-md shrink-0 w-full">
-                    <div className="flex gap-0 items-center justify-center p-3 relative shrink-0">
-                      <input
-                        type="checkbox"
-                        className="size-4 rounded border-[var(--color-border-default)]"
-                        checked={selectedTemplates.length === templates.length}
-                        onChange={(e) => {
-                          if (e.target.checked) {
-                            setSelectedTemplates(templates.map(t => t.id));
-                          } else {
-                            setSelectedTemplates([]);
-                          }
-                        }}
-                      />
-                    </div>
-                    <div className="flex flex-[1_0_0] h-10 items-center min-h-px min-w-px px-3 py-0 relative shrink-0">
-                      <div className="flex gap-1.5 items-center relative shrink-0">
-                        <div className="flex flex-col font-['Mona_Sans:Medium',sans-serif] justify-center leading-0 not-italic relative shrink-0 text-[var(--color-text-default)] text-[11px] whitespace-nowrap">
-                          <p className="leading-4">Title</p>
-                        </div>
-                        <IconChevronDown size={12} stroke={1} className="text-[var(--color-text-muted)]" />
-                      </div>
-                    </div>
-                    <div className="flex flex-[1_0_0] h-10 items-center min-h-px min-w-px px-3 py-0 relative shrink-0">
-                      <div className="flex gap-1.5 items-center relative shrink-0">
-                        <div className="flex flex-col font-['Mona_Sans:Medium',sans-serif] justify-center leading-0 not-italic relative shrink-0 text-[var(--color-text-default)] text-[11px] whitespace-nowrap">
-                          <p className="leading-4">Visibility</p>
-                        </div>
-                        <IconChevronDown size={12} stroke={1} className="text-[var(--color-text-muted)]" />
-                      </div>
-                    </div>
-                    <div className="flex flex-[1_0_0] h-10 items-center min-h-px min-w-px px-3 py-0 relative shrink-0">
-                      <div className="flex gap-1.5 items-center relative shrink-0">
-                        <div className="flex flex-col font-['Mona_Sans:Medium',sans-serif] justify-center leading-0 not-italic relative shrink-0 text-[var(--color-text-default)] text-[11px] whitespace-nowrap">
-                          <p className="leading-4">Category</p>
-                        </div>
-                        <IconChevronDown size={12} stroke={1} className="text-[var(--color-text-muted)]" />
-                      </div>
-                    </div>
-                    <div className="flex flex-[1_0_0] h-10 items-center min-h-px min-w-px px-3 py-0 relative shrink-0">
-                      <div className="flex gap-1.5 items-center relative shrink-0">
-                        <div className="flex flex-col font-['Mona_Sans:Medium',sans-serif] justify-center leading-0 not-italic relative shrink-0 text-[var(--color-text-default)] text-[11px] whitespace-nowrap">
-                          <p className="leading-4">Tools</p>
-                        </div>
-                        <IconChevronDown size={12} stroke={1} className="text-[var(--color-text-muted)]" />
-                      </div>
-                    </div>
-                    <div className="flex flex-[1_0_0] h-10 items-center min-h-px min-w-px px-3 py-0 relative shrink-0">
-                      <div className="flex gap-1.5 items-center relative shrink-0">
-                        <div className="flex flex-col font-['Mona_Sans:Medium',sans-serif] justify-center leading-0 not-italic relative shrink-0 text-[var(--color-text-default)] text-[11px] whitespace-nowrap">
-                          <p className="leading-4">Updated at</p>
-                        </div>
-                        <IconChevronDown size={12} stroke={1} className="text-[var(--color-text-muted)]" />
-                      </div>
-                    </div>
-                    <div className="flex flex-[1_0_0] h-10 items-center min-h-px min-w-px px-3 py-0 relative shrink-0">
-                      <div className="flex gap-1.5 items-center relative shrink-0">
-                        <div className="flex flex-col font-['Mona_Sans:Medium',sans-serif] justify-center leading-0 not-italic relative shrink-0 text-[var(--color-text-default)] text-[11px] whitespace-nowrap">
-                          <p className="leading-4">Created at</p>
-                        </div>
-                        <IconChevronDown size={12} stroke={1} className="text-[var(--color-text-muted)]" />
-                      </div>
-                    </div>
-                    <div className="flex h-10 items-center justify-center px-3 py-0 relative shrink-0 w-[72px]">
-                      <div className="flex gap-1.5 items-center relative shrink-0">
-                        <div className="flex flex-col font-['Mona_Sans:Medium',sans-serif] justify-center leading-0 not-italic relative shrink-0 text-[var(--color-text-default)] text-[11px] text-center whitespace-nowrap">
-                          <p className="leading-4">Action</p>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Table Rows */}
-                  {templates.map((template) => {
-                    const currentVisibility = templateVisibility[template.id] || template.visibility;
-                    return (
-                      <div
-                        key={template.id}
-                        className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] flex items-center relative rounded-md shrink-0 w-full"
-                      >
-                        <div className="flex gap-0 items-center justify-center p-3 relative shrink-0">
-                          <input
-                            type="checkbox"
-                            className="size-4 rounded border-[var(--color-border-default)]"
-                            checked={selectedTemplates.includes(template.id)}
-                            onChange={(e) => {
-                              if (e.target.checked) {
-                                setSelectedTemplates([...selectedTemplates, template.id]);
-                              } else {
-                                setSelectedTemplates(selectedTemplates.filter(id => id !== template.id));
-                              }
-                            }}
-                          />
-                        </div>
-                        <div className="flex flex-[1_0_0] flex-col gap-0.5 items-start justify-center min-h-[40px] min-w-px px-3 py-2 relative shrink-0">
-                          <div className="flex gap-1.5 items-center relative shrink-0">
-                            {template.isOfficial && (
-                              <div className="bg-[var(--color-state-success-bg,#f0fdf4)] flex flex-col gap-0 items-center justify-center px-1.5 py-0.5 relative rounded shrink-0">
-                                <p className="font-['Mona_Sans:Medium',sans-serif] leading-4 not-italic relative shrink-0 text-[var(--color-success,#4ade80)] text-[11px]">
-                                  Official
-                                </p>
-                              </div>
-                            )}
-                            <div className="flex flex-col font-['Mona_Sans:Regular',sans-serif] justify-center leading-0 not-italic relative shrink-0 text-[var(--color-text-default)] text-[12px] whitespace-nowrap">
-                              <p className="leading-4">{template.title}</p>
-                            </div>
-                          </div>
-                        </div>
-                        <div className="flex flex-[1_0_0] flex-col gap-0.5 items-start justify-center min-h-[40px] min-w-px px-3 py-2 relative shrink-0">
-                          <div className="flex gap-1.5 items-center relative shrink-0">
-                            <Tooltip
-                              content="When set to visible, this item will appear in the catalog tab."
-                              position="top"
-                            >
-                              <div className="flex items-center">
-                                <Select
-                                  size="sm"
-                                  value={currentVisibility}
-                                  onChange={(value) => {
-                                    setTemplateVisibility({
-                                      ...templateVisibility,
-                                      [template.id]: value as 'visible' | 'hidden',
-                                    });
-                                  }}
-                                  options={[
-                                    { value: 'visible', label: 'Visible' },
-                                    { value: 'hidden', label: 'Hidden' },
-                                  ]}
-                                  menuPlacement="auto"
-                                />
-                              </div>
-                            </Tooltip>
-                          </div>
-                        </div>
-                        <div className="flex flex-[1_0_0] flex-col gap-0.5 items-start justify-center min-h-[40px] min-w-px px-3 py-2 relative shrink-0">
-                          <div className="flex gap-1.5 items-start relative shrink-0">
-                            <div className="flex flex-col font-['Mona_Sans:Regular',sans-serif] justify-center leading-0 not-italic relative shrink-0 text-[var(--color-text-default)] text-[12px] whitespace-nowrap">
-                              <p className="leading-4">{template.category}</p>
-                            </div>
-                          </div>
-                        </div>
-                        <div className="flex flex-[1_0_0] flex-col gap-0.5 items-start justify-center min-h-[40px] min-w-px px-3 py-2 relative shrink-0">
-                          <div className="flex gap-1.5 items-start relative shrink-0">
-                            <div className="flex flex-col font-['Mona_Sans:Regular',sans-serif] justify-center leading-0 not-italic relative shrink-0 text-[var(--color-text-default)] text-[12px] whitespace-nowrap">
-                              <p className="leading-4">{template.tools}</p>
-                            </div>
-                          </div>
-                        </div>
-                        <div className="flex flex-[1_0_0] flex-col gap-0.5 items-start justify-center min-h-[40px] min-w-px px-3 py-2 relative shrink-0">
-                          <div className="flex gap-1.5 items-start relative shrink-0">
-                            <div className="flex flex-col font-['Mona_Sans:Regular',sans-serif] justify-center leading-0 not-italic relative shrink-0 text-[var(--color-text-default)] text-[12px] whitespace-nowrap">
-                              <p className="leading-4">{template.updatedAt}</p>
-                            </div>
-                          </div>
-                        </div>
-                        <div className="flex flex-[1_0_0] flex-col gap-0.5 items-start justify-center min-h-[40px] min-w-px px-3 py-2 relative shrink-0">
-                          <div className="flex gap-1.5 items-start relative shrink-0">
-                            <div className="flex flex-col font-['Mona_Sans:Regular',sans-serif] justify-center leading-0 not-italic relative shrink-0 text-[var(--color-text-default)] text-[12px] whitespace-nowrap">
-                              <p className="leading-4">{template.createdAt}</p>
-                            </div>
-                          </div>
-                        </div>
-                        <div className="flex gap-1 items-center justify-center p-1.5 relative shrink-0 w-[72px]">
-                          <button className="flex gap-0 items-center justify-center p-1.5 relative shrink-0 hover:bg-[var(--color-surface-muted)] rounded-md">
-                            <IconDotsVertical size={16} stroke={1} className="text-[var(--color-text-muted)]" />
-                          </button>
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
-      </main>
-    </div>
+    </AgentPageLayout>
   );
 }
 

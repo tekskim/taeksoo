@@ -20,10 +20,9 @@ import {
   IconSquarePlus,
   IconPuzzle,
   IconBell,
-  IconDownload,
   IconPalette,
 } from '@tabler/icons-react';
-import { Icons } from '@/design-system';
+// import { Icons } from '@/design-system'; // Temporarily disabled for debugging
 
 /* ----------------------------------------
    Stat Card Component
@@ -131,11 +130,11 @@ export function HomePage() {
   }));
 
   return (
-    <div className="min-h-screen bg-[var(--color-surface-subtle)] flex items-start" style={{ minWidth: '1440px', width: '1440px', height: '1020px' }}>
+    <div className="min-h-screen bg-[var(--color-surface-subtle)] flex w-full">
       <AgentSidebar />
 
-      <main className="flex flex-[1_0_0] flex-col h-full items-start min-h-px min-w-px relative shrink-0 bg-[var(--color-surface-default)] ml-[62px]">
-        <div className="min-w-[var(--layout-content-min-width)] w-full">
+      <main className="flex flex-1 flex-col min-h-screen bg-[var(--color-surface-default)] ml-[62px]">
+        <div className="w-full flex flex-col min-h-screen">
           <TabBar
             tabs={tabBarTabs}
             activeTab={activeTabId}
@@ -144,6 +143,7 @@ export function HomePage() {
             onTabAdd={addNewTab}
             showAddButton={true}
             showWindowControls={true}
+            onWindowClose={() => navigate('/')}
           />
 
           <TopBar
@@ -175,7 +175,7 @@ export function HomePage() {
           />
 
           {/* Main Content */}
-          <div className="bg-[var(--color-surface-default)] flex flex-[1_0_0] flex-col gap-6 items-center min-h-px min-w-px pb-3 pt-6 px-8 relative shrink-0 w-full">
+          <div className="bg-[var(--color-surface-default)] flex flex-1 flex-col gap-6 items-center pb-3 pt-6 px-8 w-full overflow-y-auto min-h-0">
             <div className="flex flex-col gap-6 items-start min-w-[1176px] relative shrink-0 w-full">
               {/* Home Header */}
               <div className="flex flex-col items-start justify-center relative shrink-0">
@@ -205,21 +205,21 @@ export function HomePage() {
                 </div>
                 <div className="flex gap-2 items-center relative shrink-0 w-full">
                   <QuickActionCard
-                    icon={<Icons.NewChat size={20} stroke={1} />}
+                    icon={<IconMessagePlus size={20} stroke={1} />}
                     label="New chat"
                     onClick={() => navigate('/chat')}
                   />
                   <QuickActionCard
-                    icon={<Icons.AddRobot size={20} stroke={1} />}
+                    icon={<IconRobotFace size={20} stroke={1} />}
                     label="New agent"
                     highlighted
                   />
                   <QuickActionCard
-                    icon={<Icons.AddVolume size={20} stroke={1} />}
+                    icon={<IconSquarePlus size={20} stroke={1} />}
                     label="New data source"
                   />
                   <QuickActionCard
-                    icon={<Icons.Puzzle size={20} stroke={1} />}
+                    icon={<IconPuzzle size={20} stroke={1} />}
                     label="Manage tools"
                   />
                 </div>
