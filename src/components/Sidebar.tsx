@@ -21,9 +21,7 @@ import {
   IconCertificate,
   IconTopologyStar3,
   IconLayoutSidebar,
-  IconPalette,
-  IconLayoutSidebarRight,
-  IconAppWindow,
+  IconArrowLeft,
 } from '@tabler/icons-react';
 import { Link, useLocation } from 'react-router-dom';
 import ThakiLogoLight from '@/assets/thakiLogo_light.svg';
@@ -44,28 +42,25 @@ export function Sidebar({ isOpen = true, onToggle }: SidebarProps) {
   const [selectedProjectId, setSelectedProjectId] = useState(mockProjects[0].id);
   const location = useLocation();
   
-  // Check if current path matches href (also handle root path for instances)
+  // Check if current path matches href
   const isActive = (href: string) => {
-    if (href === '/instances' && (location.pathname === '/' || location.pathname === '/instances')) {
-      return true;
-    }
     // Exact match
     if (location.pathname === href) {
       return true;
     }
-    // Match detail pages (e.g., /volumes/vol-001 matches /volumes)
-    if (href !== '/home' && location.pathname.startsWith(href + '/')) {
+    // Match detail pages (e.g., /compute/volumes/vol-001 matches /compute/volumes)
+    if (href !== '/compute' && location.pathname.startsWith(href + '/')) {
       return true;
     }
     // Match child resources - Subnets are under Networks
-    if (href === '/networks' && location.pathname.startsWith('/subnets')) {
+    if (href === '/compute/networks' && location.pathname.startsWith('/compute/subnets')) {
       return true;
     }
     // Match child resources - Listeners, Pools, and L7 Policies are under Load Balancers
-    if (href === '/load-balancers' && (
-      location.pathname.startsWith('/listeners') ||
-      location.pathname.startsWith('/pools') ||
-      location.pathname.startsWith('/l7-policies')
+    if (href === '/compute/load-balancers' && (
+      location.pathname.startsWith('/compute/listeners') ||
+      location.pathname.startsWith('/compute/pools') ||
+      location.pathname.startsWith('/compute/l7-policies')
     )) {
       return true;
     }
@@ -105,47 +100,21 @@ export function Sidebar({ isOpen = true, onToggle }: SidebarProps) {
       {/* Navigation */}
       <nav className="flex-1 px-3 py-2 overflow-y-auto sidebar-scroll">
         <VStack gap={4}>
-          {/* Design System Link */}
+          {/* Back to Entry */}
           <Link
-            to="/design-system"
-            className="flex items-center gap-2 px-2 py-1.5 rounded-md bg-[var(--color-action-primary)] hover:bg-[var(--color-action-primary-hover)] text-white text-[11px] font-medium transition-colors"
+            to="/"
+            className="flex items-center gap-2 px-2 py-1.5 rounded-md text-[11px] font-medium transition-colors text-[var(--color-text-subtle)] hover:text-[var(--color-text-default)] hover:bg-[var(--color-surface-subtle)]"
           >
-            <IconPalette size={16} stroke={1.5} />
-            <span>Design System</span>
-          </Link>
-
-          {/* Drawers Link */}
-          <Link
-            to="/drawers"
-            className={`flex items-center gap-2 px-2 py-1.5 rounded-md text-[11px] font-medium transition-colors border ${
-              isActive('/drawers')
-                ? 'bg-transparent border-[var(--color-action-primary)] text-[var(--color-action-primary)] hover:bg-[var(--color-action-primary-hover)]/10'
-                : 'bg-[var(--color-action-secondary)] hover:bg-[var(--color-action-secondary-hover)] text-[var(--color-text-default)] border-[var(--color-border-default)]'
-            }`}
-          >
-            <IconLayoutSidebarRight size={16} stroke={1.5} />
-            <span>Drawers</span>
-          </Link>
-
-          {/* Modals Link */}
-          <Link
-            to="/modals"
-            className={`flex items-center gap-2 px-2 py-1.5 rounded-md text-[11px] font-medium transition-colors border ${
-              isActive('/modals')
-                ? 'bg-transparent border-[var(--color-action-primary)] text-[var(--color-action-primary)] hover:bg-[var(--color-action-primary-hover)]/10'
-                : 'bg-[var(--color-action-secondary)] hover:bg-[var(--color-action-secondary-hover)] text-[var(--color-text-default)] border-[var(--color-border-default)]'
-            }`}
-          >
-            <IconAppWindow size={16} stroke={1.5} />
-            <span>Modals</span>
+            <IconArrowLeft size={14} stroke={1.5} />
+            <span>All Services</span>
           </Link>
 
           {/* Home */}
           <MenuItem
             icon={<IconHome size={16} stroke={1.5} />}
             label="Home"
-            href="/home"
-            active={isActive('/home')}
+            href="/compute"
+            active={isActive('/compute')}
           />
 
           {/* Compute Section */}
@@ -153,44 +122,44 @@ export function Sidebar({ isOpen = true, onToggle }: SidebarProps) {
             <MenuItem
               icon={<IconCube size={16} stroke={1.5} />}
               label="Instances"
-              href="/instances"
-              active={isActive('/instances')}
+              href="/compute/instances"
+              active={isActive('/compute/instances')}
             />
             <MenuItem
               icon={<IconTemplate size={16} stroke={1.5} />}
               label="Instance Templates"
-              href="/instance-templates"
-              active={isActive('/instance-templates')}
+              href="/compute/instance-templates"
+              active={isActive('/compute/instance-templates')}
             />
             <MenuItem
               icon={<IconCamera size={16} stroke={1.5} />}
               label="Instance Snapshots"
-              href="/instance-snapshots"
-              active={isActive('/instance-snapshots')}
+              href="/compute/instance-snapshots"
+              active={isActive('/compute/instance-snapshots')}
             />
             <MenuItem
               icon={<IconDisc size={16} stroke={1.5} />}
               label="Images"
-              href="/images"
-              active={isActive('/images')}
+              href="/compute/images"
+              active={isActive('/compute/images')}
             />
             <MenuItem
               icon={<IconCpu size={16} stroke={1.5} />}
               label="Flavors"
-              href="/flavors"
-              active={isActive('/flavors')}
+              href="/compute/flavors"
+              active={isActive('/compute/flavors')}
             />
             <MenuItem
               icon={<IconKey size={16} stroke={1.5} />}
               label="Key Pairs"
-              href="/key-pairs"
-              active={isActive('/key-pairs')}
+              href="/compute/key-pairs"
+              active={isActive('/compute/key-pairs')}
             />
             <MenuItem
               icon={<IconServer size={16} stroke={1.5} />}
               label="Server Groups"
-              href="/server-groups"
-              active={isActive('/server-groups')}
+              href="/compute/server-groups"
+              active={isActive('/compute/server-groups')}
             />
           </MenuSection>
 
@@ -199,20 +168,20 @@ export function Sidebar({ isOpen = true, onToggle }: SidebarProps) {
             <MenuItem
               icon={<IconDatabase size={16} stroke={1.5} />}
               label="Volumes"
-              href="/volumes"
-              active={isActive('/volumes')}
+              href="/compute/volumes"
+              active={isActive('/compute/volumes')}
             />
             <MenuItem
               icon={<IconCamera size={16} stroke={1.5} />}
               label="Volume Snapshots"
-              href="/volume-snapshots"
-              active={isActive('/volume-snapshots')}
+              href="/compute/volume-snapshots"
+              active={isActive('/compute/volume-snapshots')}
             />
             <MenuItem
               icon={<IconDatabaseExport size={16} stroke={1.5} />}
               label="Volume Backups"
-              href="/volume-backups"
-              active={isActive('/volume-backups')}
+              href="/compute/volume-backups"
+              active={isActive('/compute/volume-backups')}
             />
           </MenuSection>
 
@@ -221,50 +190,50 @@ export function Sidebar({ isOpen = true, onToggle }: SidebarProps) {
             <MenuItem
               icon={<IconNetwork size={16} stroke={1.5} />}
               label="Networks"
-              href="/networks"
-              active={isActive('/networks')}
+              href="/compute/networks"
+              active={isActive('/compute/networks')}
             />
             <MenuItem
               icon={<IconRouter size={16} stroke={1.5} />}
               label="Routers"
-              href="/routers"
-              active={isActive('/routers')}
+              href="/compute/routers"
+              active={isActive('/compute/routers')}
             />
             <MenuItem
               icon={<IconPlug size={16} stroke={1.5} />}
               label="Ports"
-              href="/ports"
-              active={isActive('/ports')}
+              href="/compute/ports"
+              active={isActive('/compute/ports')}
             />
             <MenuItem
               icon={<IconWorldWww size={16} stroke={1.5} />}
               label="Floating IPs"
-              href="/floating-ips"
-              active={isActive('/floating-ips')}
+              href="/compute/floating-ips"
+              active={isActive('/compute/floating-ips')}
             />
             <MenuItem
               icon={<IconShieldLock size={16} stroke={1.5} />}
               label="Security Groups"
-              href="/security-groups"
-              active={isActive('/security-groups')}
+              href="/compute/security-groups"
+              active={isActive('/compute/security-groups')}
             />
             <MenuItem
               icon={<IconLoadBalancer size={16} stroke={1.5} />}
               label="Load Balancers"
-              href="/load-balancers"
-              active={isActive('/load-balancers')}
+              href="/compute/load-balancers"
+              active={isActive('/compute/load-balancers')}
             />
             <MenuItem
               icon={<IconCertificate size={16} stroke={1.5} />}
               label="Certificates"
-              href="/certificates"
-              active={isActive('/certificates')}
+              href="/compute/certificates"
+              active={isActive('/compute/certificates')}
             />
             <MenuItem
               icon={<IconTopologyStar3 size={16} stroke={1.5} />}
               label="Topology"
-              href="/topology"
-              active={isActive('/topology')}
+              href="/compute/topology"
+              active={isActive('/compute/topology')}
             />
           </MenuSection>
         </VStack>

@@ -1,4 +1,4 @@
-import type { HTMLAttributes, ReactNode } from 'react';
+import { cloneElement, isValidElement, type HTMLAttributes, type ReactNode } from 'react';
 import { twMerge } from 'tailwind-merge';
 import {
   IconCircleCheck,
@@ -173,7 +173,7 @@ export interface StatusIndicatorProps extends Omit<HTMLAttributes<HTMLSpanElemen
 
 export function StatusIndicator({
   status,
-  layout = 'default',
+  layout = 'icon-only',
   size = 'md',
   label,
   className = '',
@@ -202,8 +202,9 @@ export function StatusIndicator({
     const containerSize = sizeStyles[size];
     
     // Clone the icon with the appropriate size
-    const IconComponent = config.icon.type;
-    const iconProps = { ...config.icon.props, size: iconSize };
+    const clonedIcon = isValidElement(config.icon)
+      ? cloneElement(config.icon, { size: iconSize })
+      : config.icon;
     
     const classes = twMerge(
       'inline-flex items-center justify-center',
@@ -217,7 +218,7 @@ export function StatusIndicator({
     return (
       <span className={classes} role="status" aria-label={displayLabel} {...props}>
         <span className="shrink-0">
-          <IconComponent {...iconProps} />
+          {clonedIcon}
         </span>
       </span>
     );

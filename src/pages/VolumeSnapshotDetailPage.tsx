@@ -134,7 +134,7 @@ export function VolumeSnapshotDetailPage() {
   // Breadcrumb items
   const breadcrumbItems = [
     { label: 'Proj-1', href: '/' },
-    { label: 'Volume Snapshots', href: '/volume-snapshots' },
+    { label: 'Volume Snapshots', href: '/compute/volume-snapshots' },
     { label: snapshot.name },
   ];
 

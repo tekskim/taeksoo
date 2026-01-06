@@ -166,7 +166,7 @@ export default function RouterDetailPage() {
 
   const breadcrumbItems = [
     { label: 'Proj-1', href: '/' },
-    { label: 'Routers', href: '/routers' },
+    { label: 'Routers', href: '/compute/routers' },
     { label: router.name },
   ];
 

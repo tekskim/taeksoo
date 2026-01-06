@@ -328,7 +328,7 @@ export const component = {
     radius: 'var(--input-radius)',            // 6px
     radiusCode: 'var(--input-radius-code)',   // 4px
     iconOffset: 'var(--input-icon-offset)',   // 8px
-    labelGap: 'var(--input-label-gap)',       // 6px
+    labelGap: 'var(--input-label-gap)',       // 8px
     fontSize: 'var(--input-font-size)',       // 12px
     fontSizeSm: 'var(--input-font-size-sm)',  // 11px
     lineHeight: 'var(--input-line-height)',   // 16px

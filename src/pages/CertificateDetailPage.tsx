@@ -211,7 +211,7 @@ export default function CertificateDetailPage() {
 
   const breadcrumbItems = [
     { label: 'Proj-1', href: '/' },
-    { label: 'Certificates', href: '/certificates' },
+    { label: 'Certificates', href: '/compute/certificates' },
     { label: certificate.name },
   ];
 
