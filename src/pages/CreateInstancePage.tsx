@@ -233,12 +233,9 @@ function SkippedSection({ title, onEdit }: SkippedSectionProps) {
         </h5>
         <div className="flex items-center gap-3">
           <span className="text-[13px] text-[var(--color-text-muted)]">Not configured</span>
-          <button
-            onClick={onEdit}
-            className="px-3 py-1 text-[13px] font-medium text-[var(--color-text-default)] bg-[var(--color-surface-subtle)] hover:bg-[var(--color-surface-muted)] rounded-md transition-colors"
-          >
+          <Button variant="outline" size="sm" onClick={onEdit}>
             Edit
-          </button>
+          </Button>
         </div>
       </div>
     </div>
