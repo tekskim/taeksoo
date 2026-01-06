@@ -81,7 +81,9 @@ function getLabelFromPath(path: string): string {
   }
   
   // Check for detail pages (e.g., /compute/volumes/vol-001)
-  for (const [basePath, label] of Object.entries(pathLabelMap)) {
+  // Sort by path length descending to match more specific paths first
+  const sortedEntries = Object.entries(pathLabelMap).sort((a, b) => b[0].length - a[0].length);
+  for (const [basePath, label] of sortedEntries) {
     if (basePath !== '/' && path.startsWith(basePath + '/')) {
       // Extract the ID from the path for detail pages
       const id = path.split('/').pop();
