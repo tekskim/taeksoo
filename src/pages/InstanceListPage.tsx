@@ -735,7 +735,7 @@ export function InstanceListPage() {
         {/* Scrollable Content Area */}
         <div 
           ref={scrollContainerRef}
-          className="flex-1 overflow-auto min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll"
+          className="flex-1 overflow-auto overscroll-contain sidebar-scroll"
           style={{ paddingBottom: shellPanel.isExpanded ? '350px' : '0' }}
         >
 

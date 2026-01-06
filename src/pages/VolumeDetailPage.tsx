@@ -412,7 +412,7 @@ export function VolumeDetailPage() {
         </div>
 
         {/* Scrollable Content Area */}
-        <div className="flex-1 overflow-auto min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll">
+        <div className="flex-1 overflow-auto overscroll-contain sidebar-scroll">
         <div className="pt-4 px-8 pb-20 bg-[var(--color-surface-default)]">
           <VStack gap={6} className="min-w-[1176px]">
             {/* Volume Header Card */}
