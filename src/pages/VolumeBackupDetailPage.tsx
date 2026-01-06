@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import {
   Button,
@@ -50,61 +50,23 @@ interface VolumeBackupDetail {
    Mock Data
    ---------------------------------------- */
 
+// Volume backup data map by ID - synced with VolumeBackupsPage mock data
 const mockBackupDetails: Record<string, VolumeBackupDetail> = {
-  'vbak-001': {
-    id: '7284d9174e81431e93060a9bbcf2cdfd',
-    name: 'db-data-backup',
-    status: 'available',
-    size: '1500 GiB',
-    createdAt: '2025-07-25 09:12:20',
-    description: 'Database data backup for production',
-    sourceVolume: 'vol-1',
-    sourceVolumeId: 'vol-001',
-    backupMode: 'Full Backup',
-    container: 'cinder-backups',
-    availabilityZone: 'nova',
-  },
-  'vbak-002': {
-    id: '8395d0285f92542f04171b0ccd3deafe',
-    name: 'app-storage-backup',
-    status: 'available',
-    size: '500 GiB',
-    createdAt: '2025-09-10 14:30:00',
-    description: 'Application storage backup',
-    sourceVolume: 'app-volume-1',
-    sourceVolumeId: 'vol-002',
-    backupMode: 'Incremental',
-    container: 'cinder-backups',
-    availabilityZone: 'nova',
-  },
-  'vbak-003': {
-    id: '9406e1396g03653g15282c1dde4efbfg',
-    name: 'backup-vol-backup',
-    status: 'available',
-    size: '2000 GiB',
-    createdAt: '2025-09-08 10:15:00',
-    description: 'Backup volume snapshot',
-    sourceVolume: 'backup-storage',
-    sourceVolumeId: 'vol-003',
-    backupMode: 'Full Backup',
-    container: 'cinder-backups',
-    availabilityZone: 'nova',
-  },
+  'vbak-001': { id: 'vbak-001', name: 'db-data-backup', status: 'available', size: '1500GiB', createdAt: '2025-09-12', description: 'Database data backup', sourceVolume: 'vol-1', sourceVolumeId: 'vol-001', backupMode: 'Full Backup', container: 'cinder-backups', availabilityZone: 'nova' },
+  'vbak-002': { id: 'vbak-002', name: 'app-storage-backup', status: 'available', size: '500GiB', createdAt: '2025-09-10', description: 'Application storage backup', sourceVolume: 'vol-2', sourceVolumeId: 'vol-002', backupMode: 'Incremental', container: 'cinder-backups', availabilityZone: 'nova' },
+  'vbak-003': { id: 'vbak-003', name: 'backup-vol-backup', status: 'available', size: '2000GiB', createdAt: '2025-09-08', description: 'Backup volume snapshot', sourceVolume: 'vol-3', sourceVolumeId: 'vol-003', backupMode: 'Full Backup', container: 'cinder-backups', availabilityZone: 'nova' },
+  'vbak-004': { id: 'vbak-004', name: 'log-storage-backup', status: 'creating', size: '100GiB', createdAt: '2025-09-05', description: 'Log storage backup', sourceVolume: 'vol-4', sourceVolumeId: 'vol-004', backupMode: 'Incremental', container: 'cinder-backups', availabilityZone: 'nova' },
+  'vbak-005': { id: 'vbak-005', name: 'cache-vol-backup', status: 'available', size: '256GiB', createdAt: '2025-08-30', description: 'Cache volume backup', sourceVolume: 'vol-5', sourceVolumeId: 'vol-005', backupMode: 'Full Backup', container: 'cinder-backups', availabilityZone: 'nova' },
+  'vbak-006': { id: 'vbak-006', name: 'media-storage-backup', status: 'restoring', size: '5000GiB', createdAt: '2025-08-25', description: 'Media storage backup', sourceVolume: 'vol-6', sourceVolumeId: 'vol-006', backupMode: 'Full Backup', container: 'cinder-backups', availabilityZone: 'nova' },
+  'vbak-007': { id: 'vbak-007', name: 'temp-vol-backup', status: 'error', size: '50GiB', createdAt: '2025-08-20', description: 'Temporary volume backup', sourceVolume: 'vol-7', sourceVolumeId: 'vol-007', backupMode: 'Incremental', container: 'cinder-backups', availabilityZone: 'nova' },
+  'vbak-008': { id: 'vbak-008', name: 'ml-data-backup', status: 'available', size: '1000GiB', createdAt: '2025-08-15', description: 'ML data backup', sourceVolume: 'vol-8', sourceVolumeId: 'vol-008', backupMode: 'Full Backup', container: 'cinder-backups', availabilityZone: 'nova' },
+  'vbak-009': { id: 'vbak-009', name: 'archive-vol-backup', status: 'available', size: '10000GiB', createdAt: '2025-08-10', description: 'Archive volume backup', sourceVolume: 'vol-9', sourceVolumeId: 'vol-009', backupMode: 'Full Backup', container: 'cinder-backups', availabilityZone: 'nova' },
+  'vbak-010': { id: 'vbak-010', name: 'boot-vol-backup', status: 'deleting', size: '100GiB', createdAt: '2025-08-05', description: 'Boot volume backup', sourceVolume: 'vol-10', sourceVolumeId: 'vol-010', backupMode: 'Incremental', container: 'cinder-backups', availabilityZone: 'nova' },
 };
 
 // Default backup for unknown IDs
 const defaultBackup: VolumeBackupDetail = {
-  id: '7284d9174e81431e93060a9bbcf2cdfd',
-  name: 'vol-backup-1',
-  status: 'available',
-  size: '1500 GiB',
-  createdAt: '2025-07-25 09:12:20',
-  description: '-',
-  sourceVolume: 'web-server-10',
-  sourceVolumeId: 'vol-001',
-  backupMode: 'Full Backup',
-  container: 'cinder-backups',
-  availabilityZone: 'nova',
+  id: 'unknown', name: 'Unknown Backup', status: 'available', size: '0 GiB', createdAt: '-', description: '-', sourceVolume: '-', sourceVolumeId: '-', backupMode: '-', container: '-', availabilityZone: '-',
 };
 
 /* ----------------------------------------
@@ -141,7 +103,14 @@ export function VolumeBackupDetailPage() {
   const backup = id && mockBackupDetails[id] ? mockBackupDetails[id] : defaultBackup;
 
   // Global tab management
-  const { tabs, activeTabId, closeTab, selectTab, addNewTab } = useTabs();
+  const { tabs, activeTabId, closeTab, selectTab, addNewTab, updateActiveTabLabel } = useTabs();
+
+  // Update tab label to backup name
+  useEffect(() => {
+    if (backup.name) {
+      updateActiveTabLabel(backup.name);
+    }
+  }, [backup.name, updateActiveTabLabel]);
 
   // Convert tabs to TabBar format
   const tabBarTabs = tabs.map((tab) => ({
