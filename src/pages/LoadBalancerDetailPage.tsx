@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import {
   Button,
@@ -71,21 +71,61 @@ const statusMap: Record<LoadBalancerStatus, 'active' | 'building' | 'error'> = {
   error: 'error',
 };
 
-// Mock data
-const mockLoadBalancer: LoadBalancerDetail = {
-  id: '7284d9174e81431e93060a9bbcf2cdfd',
-  name: 'web-lb-01',
+// Mock data - synchronized with LoadBalancersPage
+const mockLoadBalancersMap: Record<string, LoadBalancerDetail> = {
+  'lb-001': {
+    id: 'lb-001',
+    name: 'web-lb-01',
+    status: 'active',
+    adminState: 'Up',
+    vipAddress: '192.168.10.13',
+    createdAt: '2025-10-03 09:12:20',
+    description: '-',
+    provider: 'ovn',
+    ownedNetwork: { name: 'net-02', id: 'net-002' },
+    subnet: { name: 'subnet-02', id: 'subnet-002' },
+    floatingIp: { name: '192.168.10.13', id: 'fip-001' },
+  },
+  'lb-002': {
+    id: 'lb-002',
+    name: 'api-lb',
+    status: 'active',
+    adminState: 'Up',
+    vipAddress: '192.168.10.14',
+    createdAt: '2025-10-02 09:00:00',
+    description: 'API Load Balancer',
+    provider: 'ovn',
+    ownedNetwork: { name: 'net-01', id: 'net-001' },
+    subnet: { name: 'subnet-01', id: 'subnet-001' },
+    floatingIp: { name: '192.168.10.14', id: 'fip-002' },
+  },
+  'lb-003': {
+    id: 'lb-003',
+    name: 'app-lb',
+    status: 'building',
+    adminState: 'Up',
+    vipAddress: '192.168.10.15',
+    createdAt: '2025-10-01 10:30:00',
+    description: 'Application Load Balancer',
+    provider: 'ovn',
+    ownedNetwork: { name: 'net-03', id: 'net-003' },
+    subnet: { name: 'subnet-03', id: 'subnet-003' },
+    floatingIp: { name: '192.168.10.15', id: 'fip-003' },
+  },
+};
+
+const defaultLoadBalancer: LoadBalancerDetail = {
+  id: 'lb-default',
+  name: 'Unknown',
   status: 'active',
   adminState: 'Up',
-  vipAddress: '192.168.10.13',
-  createdAt: '2025-07-25 09:12:20',
-  // Basic Information
+  vipAddress: '-',
+  createdAt: '-',
   description: '-',
   provider: 'ovn',
-  // Network
-  ownedNetwork: { name: 'web-server-10', id: 'net-001' },
-  subnet: { name: 'web-server-10', id: 'subnet-001' },
-  floatingIp: { name: 'web-server-10', id: 'fip-001' },
+  ownedNetwork: { name: '-', id: '' },
+  subnet: { name: '-', id: '' },
+  floatingIp: { name: '-', id: '' },
 };
 
 // Mock listeners data
@@ -108,7 +148,7 @@ const listenerStatusMap: Record<ListenerStatus, 'active' | 'down' | 'error'> = {
 
 export function LoadBalancerDetailPage() {
   const { id } = useParams<{ id: string }>();
-  const { tabs, activeTabId, closeTab, selectTab, addNewTab } = useTabs();
+  const { tabs, activeTabId, closeTab, selectTab, addNewTab, updateActiveTabLabel } = useTabs();
   const [activeTab, setActiveTab] = useState('details');
   const [isCopied, setIsCopied] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -122,8 +162,15 @@ export function LoadBalancerDetailPage() {
   // Preferences state
   const [isPreferencesOpen, setIsPreferencesOpen] = useState(false);
 
-  // In a real app, you would fetch the load balancer details based on the id
-  const loadBalancer = mockLoadBalancer;
+  // Get load balancer based on URL id
+  const loadBalancer = id ? (mockLoadBalancersMap[id] || defaultLoadBalancer) : defaultLoadBalancer;
+
+  // Update tab label when load balancer name changes
+  useEffect(() => {
+    if (loadBalancer.name) {
+      updateActiveTabLabel(loadBalancer.name);
+    }
+  }, [loadBalancer.name, updateActiveTabLabel]);
 
   const handleCopyId = () => {
     navigator.clipboard.writeText(loadBalancer.id);
