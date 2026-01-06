@@ -50,6 +50,10 @@ import { TopologyD3Page } from '@/pages/TopologyD3Page';
 import { ConsolePage } from '@/pages/ConsolePage';
 import { CreateInstancePage } from '@/pages/CreateInstancePage';
 
+// Pages - Cloud Builder
+import { CloudBuilderConsolePage } from '@/pages/cloudbuilder/CloudBuilderConsolePage';
+import { CloudBuilderDetailPage } from '@/pages/cloudbuilder/CloudBuilderDetailPage';
+
 // Pages - Design System
 import { DesignSystemPage } from '@/pages/DesignSystemPage';
 import { DrawersPage } from '@/pages/DrawersPage';
@@ -67,6 +71,15 @@ function AppRoutes() {
       <Routes>
         {/* Entry Page */}
         <Route path="/" element={<EntryPage />} />
+
+        {/* Cloud Builder Routes */}
+        <Route path="/cloudbuilder" element={<CloudBuilderConsolePage />} />
+        <Route path="/cloudbuilder/:slug" element={<CloudBuilderConsolePage />} />
+        <Route path="/cloudbuilder/:slug/detail/:id" element={<CloudBuilderDetailPage />} />
+        {/* Backward compatible route */}
+        <Route path="/cloud-builder" element={<CloudBuilderConsolePage />} />
+        <Route path="/cloud-builder/:slug" element={<CloudBuilderConsolePage />} />
+        <Route path="/cloud-builder/:slug/detail/:id" element={<CloudBuilderDetailPage />} />
 
         {/* Compute Routes */}
         <Route path="/compute" element={<HomePage />} />
