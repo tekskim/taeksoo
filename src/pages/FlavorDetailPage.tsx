@@ -328,7 +328,7 @@ export function FlavorDetailPage() {
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(true)}
           showNavigation={true}
-          onBack={() => navigate('/compute/flavors')}
+          onBack={() => navigate(-1)}
           onForward={() => window.history.forward()}
           breadcrumb={<Breadcrumb items={breadcrumbItems} />}
           actions={

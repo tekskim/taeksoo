@@ -404,7 +404,7 @@ export function VolumeDetailPage() {
             showSidebarToggle={!sidebarOpen}
             onSidebarToggle={() => setSidebarOpen(true)}
             showNavigation={true}
-            onBack={() => navigate('/compute/volumes')}
+            onBack={() => navigate(-1)}
             onForward={() => window.history.forward()}
             breadcrumb={<Breadcrumb items={breadcrumbItems} />}
             actions={
