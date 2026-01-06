@@ -402,7 +402,7 @@ export default function PortDetailPage() {
 
   const breadcrumbItems = [
     { label: 'Proj-1', href: '/' },
-    { label: 'Ports', href: '/ports' },
+    { label: 'Ports', href: '/compute/ports' },
     { label: port.name },
   ];
 

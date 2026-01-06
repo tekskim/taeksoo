@@ -173,7 +173,7 @@ export function FlavorDetailPage() {
 
   const breadcrumbItems = [
     { label: 'Proj-1', href: '#' },
-    { label: 'Flavors', href: '/flavors' },
+    { label: 'Flavors', href: '/compute/flavors' },
     { label: flavor.name, href: `/flavors/${flavor.id}` },
   ];
 

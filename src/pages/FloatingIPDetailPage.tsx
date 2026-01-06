@@ -94,7 +94,7 @@ export default function FloatingIPDetailPage() {
 
   const breadcrumbItems = [
     { label: 'Proj-1', href: '/' },
-    { label: 'Floating IPs', href: '/floating-ips' },
+    { label: 'Floating IPs', href: '/compute/floating-ips' },
     { label: floatingIP.floatingIp },
   ];
 

@@ -357,28 +357,28 @@ export function HomePage() {
                     label="Volumes"
                     used={8}
                     total={10}
-                    href="/volumes"
+                    href="/compute/volumes"
                   />
                   <InfraQuotaCard
                     icon={<IconNetwork size={16} stroke={1.5} />}
                     label="Networks"
                     used={10}
                     total={100}
-                    href="/networks"
+                    href="/compute/networks"
                   />
                   <InfraQuotaCard
                     icon={<IconRouter size={16} stroke={1.5} />}
                     label="Routers"
                     used={9}
                     total={10}
-                    href="/routers"
+                    href="/compute/routers"
                   />
                   <InfraQuotaCard
                     icon={<IconPlug size={16} stroke={1.5} />}
                     label="Ports"
                     used={500}
                     total={500}
-                    href="/ports"
+                    href="/compute/ports"
                   />
                 </div>
                 <div className="grid grid-cols-4 gap-4">
@@ -387,28 +387,28 @@ export function HomePage() {
                     label="Floating IPs"
                     used={2}
                     total={50}
-                    href="/floating-ips"
+                    href="/compute/floating-ips"
                   />
                   <InfraQuotaCard
                     icon={<IconShieldLock size={16} stroke={1.5} />}
                     label="Security Groups"
                     used={85}
                     total={100}
-                    href="/security-groups"
+                    href="/compute/security-groups"
                   />
                   <InfraQuotaCard
                     icon={<IconKey size={16} stroke={1.5} />}
                     label="Key Pairs"
                     used={18}
                     total={100}
-                    href="/key-pairs"
+                    href="/compute/key-pairs"
                   />
                   <InfraQuotaCard
                     icon={<IconServer size={16} stroke={1.5} />}
                     label="Server Groups"
                     used={1}
                     total={10}
-                    href="/server-groups"
+                    href="/compute/server-groups"
                   />
                 </div>
               </div>

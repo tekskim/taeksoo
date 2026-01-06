@@ -148,7 +148,7 @@ export function ServerGroupDetailPage() {
   // Breadcrumb items
   const breadcrumbItems = [
     { label: 'Proj-1', href: '/' },
-    { label: 'Server Group', href: '/server-groups' },
+    { label: 'Server Group', href: '/compute/server-groups' },
     { label: serverGroup.name },
   ];
 

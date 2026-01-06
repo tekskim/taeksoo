@@ -209,7 +209,7 @@ export default function CertificateDetailPage() {
 
   const breadcrumbItems = [
     { label: 'Proj-1', href: '/' },
-    { label: 'Certificates', href: '/certificates' },
+    { label: 'Certificates', href: '/compute/certificates' },
     { label: certificate.name },
   ];
 
@@ -351,7 +351,7 @@ export default function CertificateDetailPage() {
               <TopBarAction
                 icon={<IconBell size={16} stroke={1.5} />}
                 onClick={() => {}}
-                hasNotification
+                aria-label="Notifications"
               />
             }
           />

@@ -41,28 +41,30 @@ interface TabProviderProps {
 function getLabelFromPath(path: string): string {
   const pathLabelMap: Record<string, string> = {
     '/': 'Home',
-    '/home': 'Home',
-    '/instances': 'Instances',
-    '/instance-templates': 'Instance Templates',
-    '/instance-snapshots': 'Instance Snapshots',
-    '/images': 'Images',
-    '/flavors': 'Flavors',
-    '/key-pairs': 'Key Pairs',
-    '/server-groups': 'Server Groups',
-    '/volumes': 'Volumes',
-    '/volume-snapshots': 'Volume Snapshots',
-    '/volume-backups': 'Volume Backups',
-    '/networks': 'Networks',
-    '/routers': 'Routers',
-    '/ports': 'Ports',
-    '/floating-ips': 'Floating IPs',
-    '/security-groups': 'Security Groups',
-    '/load-balancers': 'Load Balancers',
-    '/certificates': 'Certificates',
-    '/topology': 'Topology',
-    '/design-system': 'Design System',
-    '/drawers': 'Drawers',
-    '/modals': 'Modals',
+    '/compute': 'Home',
+    '/compute/home': 'Home',
+    '/compute/instances': 'Instances',
+    '/compute/instances/create': 'Create Instance',
+    '/compute/instance-templates': 'Instance Templates',
+    '/compute/instance-snapshots': 'Instance Snapshots',
+    '/compute/images': 'Images',
+    '/compute/flavors': 'Flavors',
+    '/compute/key-pairs': 'Key Pairs',
+    '/compute/server-groups': 'Server Groups',
+    '/compute/volumes': 'Volumes',
+    '/compute/volume-snapshots': 'Volume Snapshots',
+    '/compute/volume-backups': 'Volume Backups',
+    '/compute/networks': 'Networks',
+    '/compute/routers': 'Routers',
+    '/compute/ports': 'Ports',
+    '/compute/floating-ips': 'Floating IPs',
+    '/compute/security-groups': 'Security Groups',
+    '/compute/load-balancers': 'Load Balancers',
+    '/compute/certificates': 'Certificates',
+    '/compute/topology': 'Topology',
+    '/design/components': 'Design System',
+    '/design/drawers': 'Drawers',
+    '/design/modals': 'Modals',
   };
   
   // Check for exact match first
@@ -70,7 +72,7 @@ function getLabelFromPath(path: string): string {
     return pathLabelMap[path];
   }
   
-  // Check for detail pages (e.g., /volumes/vol-001)
+  // Check for detail pages (e.g., /compute/volumes/vol-001)
   for (const [basePath, label] of Object.entries(pathLabelMap)) {
     if (basePath !== '/' && path.startsWith(basePath + '/')) {
       // Extract the ID from the path for detail pages
@@ -79,10 +81,10 @@ function getLabelFromPath(path: string): string {
     }
   }
   
-  // Default: capitalize the path
-  return path.split('/').filter(Boolean).map(s => 
-    s.charAt(0).toUpperCase() + s.slice(1).replace(/-/g, ' ')
-  ).join(' > ') || 'Home';
+  // Default: use just the last segment
+  const segments = path.split('/').filter(Boolean);
+  const lastSegment = segments[segments.length - 1] || 'Home';
+  return lastSegment.charAt(0).toUpperCase() + lastSegment.slice(1).replace(/-/g, ' ');
 }
 
 export function TabProvider({ children, defaultTabs = [] }: TabProviderProps) {
