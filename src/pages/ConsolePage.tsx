@@ -161,7 +161,7 @@ export function ConsolePage() {
       
       <main
         className={`absolute top-0 bottom-0 right-0 flex flex-col bg-[var(--color-surface-default)] transition-[left] duration-200 ${
-          sidebarOpen ? 'left-[200px]' : 'left-[48px]'
+          sidebarOpen ? 'left-[200px]' : 'left-0'
         }`}
       >
         {/* Fixed Header Area */}
