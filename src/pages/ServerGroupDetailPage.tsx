@@ -129,7 +129,7 @@ function CopyButton({ value }: { value: string }) {
    ---------------------------------------- */
 
 export function ServerGroupDetailPage() {
-  const { id: _id } = useParams<{ id: string }>();
+  const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [activeDetailTab, setActiveDetailTab] = useState('instances');
