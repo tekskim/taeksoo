@@ -322,7 +322,7 @@ export function FlavorDetailPage() {
         {/* Fixed Header Area */}
         <div className="shrink-0 bg-[var(--color-surface-default)]">
         {/* Tab Bar */}
-        <TabBar tabs={tabBarTabs} activeTabId={activeTabId} onTabClick={selectTab} onTabClose={closeTab} />
+        <TabBar tabs={tabBarTabs} activeTab={activeTabId} onTabChange={selectTab} onTabClose={closeTab} />
         {/* Top Bar */}
         <TopBar
           showSidebarToggle={!sidebarOpen}
