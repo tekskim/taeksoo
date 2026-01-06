@@ -312,11 +312,11 @@ export function DrawersPage() {
             tabs={tabs.map((tab) => ({
               id: tab.id,
               label: tab.label,
-              active: tab.id === activeTabId,
             }))}
-            onTabClick={selectTab}
+            activeTab={activeTabId}
+            onTabChange={selectTab}
             onTabClose={closeTab}
-            onNewTab={addNewTab}
+            onTabAdd={addNewTab}
           />
 
           {/* TopBar */}
