@@ -353,7 +353,7 @@ export default function CertificateDetailPage() {
               <TopBarAction
                 icon={<IconBell size={16} stroke={1.5} />}
                 onClick={() => {}}
-                hasNotification
+                aria-label="Notifications"
               />
             }
           />

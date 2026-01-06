@@ -145,7 +145,7 @@ function ShellTabButton({ tab, isActive, onClick, onClose, onOpenInNewTab }: She
 
 export function ShellPanel({
   isExpanded,
-  onExpandedChange,
+  onExpandedChange: _onExpandedChange,
   tabs,
   activeTabId,
   onActiveTabChange,
@@ -319,12 +319,10 @@ export function ShellPanel({
         <div className="flex items-center gap-1">
           {/* Container Select - Using Design System */}
           <Select
-            size="sm"
             value={selectedContainer}
             onChange={setSelectedContainer}
             options={containerOptions}
             placeholder="Container"
-            menuPlacement="top"
           />
 
           {/* Clear Button - Using Design System */}
@@ -354,12 +352,10 @@ export function ShellPanel({
         <div className="flex items-center gap-3">
           {/* View Time Select - Using Design System */}
           <Select
-            size="sm"
             value={viewTime}
             onChange={setViewTime}
             options={viewTimeOptions}
             placeholder="View"
-            menuPlacement="top"
           />
         </div>
       </div>
@@ -456,7 +452,7 @@ export function useShellPanel(options: UseShellPanelOptions = {}) {
 }
 
 // Generate sample log output similar to the screenshot
-function generateSampleLogs(instanceName: string): string {
+function generateSampleLogs(_instanceName: string): string {
   const now = new Date();
   const formatDate = (d: Date) => {
     return d.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: '2-digit', year: 'numeric' });
