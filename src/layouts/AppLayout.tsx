@@ -65,11 +65,11 @@ export function AppLayout({ children }: AppLayoutProps) {
   const currentLabel = getBreadcrumbLabel(location.pathname);
 
   return (
-    <div className="min-h-screen bg-[var(--color-surface-subtle)]">
+    <div className="h-screen bg-[var(--color-surface-subtle)]">
       <Sidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(false)} />
 
       <main
-        className={`min-h-screen bg-[var(--color-surface-default)] transition-[margin] duration-200 overflow-x-auto ${
+        className={`h-screen bg-[var(--color-surface-default)] transition-[margin] duration-200 overflow-x-auto overflow-y-auto overscroll-contain sidebar-scroll ${
           sidebarOpen ? 'ml-[200px]' : 'ml-0'
         }`}
       >
