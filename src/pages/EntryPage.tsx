@@ -129,7 +129,7 @@ function AppCardComponent({ card, onClick }: AppCardComponentProps) {
       disabled={!isAvailable}
       className={`
         group relative overflow-hidden
-        w-full aspect-[4/3] rounded-2xl
+        w-full min-h-[200px] rounded-2xl
         bg-[var(--color-surface-default)]
         border border-[var(--color-border-default)]
         transition-all duration-300 ease-out
@@ -200,9 +200,9 @@ export function EntryPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[var(--color-surface-subtle)]">
+    <div className="fixed inset-0 overflow-auto bg-[var(--color-surface-subtle)]">
       {/* Header */}
-      <header className="fixed top-0 left-0 right-0 z-50 bg-[var(--color-surface-default)] border-b border-[var(--color-border-default)]">
+      <header className="sticky top-0 left-0 right-0 z-50 bg-[var(--color-surface-default)] border-b border-[var(--color-border-default)]">
         <div className="max-w-7xl mx-auto px-8 h-14 flex items-center justify-between">
           {/* Logo */}
           <div className="flex items-center gap-3">
@@ -232,7 +232,7 @@ export function EntryPage() {
       </header>
 
       {/* Main Content */}
-      <main className="pt-14">
+      <main>
         <div className="max-w-7xl mx-auto px-8 py-16">
           {/* Hero Section */}
           <div className="text-center mb-12">
