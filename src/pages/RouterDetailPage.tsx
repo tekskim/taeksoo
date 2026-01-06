@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import {
   Button,
@@ -80,24 +80,22 @@ interface StaticRoute {
    Mock Data
    ---------------------------------------- */
 
-const mockRouterDetail: RouterDetail = {
-  id: '7284d9174e81431e93060a9bbcf2cdfd',
-  name: 'router-01',
-  status: 'active',
-  adminState: 'Up',
-  access: 'Project',
-  externalGateway: true,
-  createdAt: '2025-07-25 09:12:20',
-  // Basic Information
-  routerName: 'router-01',
-  availabilityZone: 'nova',
-  availabilityZoneHint: 'zone-01 (+3)',
-  description: '-',
-  // External Network
-  network: { name: 'web-server-10', id: 'net-001' },
-  snat: true,
-  subnet: { name: 'web-server-10', id: 'subnet-001' },
-  gatewayIp: '10.0.0.1',
+// Router data map by ID - synced with RoutersPage mock data
+const mockRoutersMap: Record<string, RouterDetail> = {
+  '29tgj234': { id: '29tgj234', name: 'router-01', status: 'active', adminState: 'Up', access: 'Project', externalGateway: true, createdAt: '2025-09-15', routerName: 'router-01', availabilityZone: 'nova', availabilityZoneHint: 'zone-01 (+3)', description: '-', network: { name: 'net-01', id: '29tgj234' }, snat: true, subnet: { name: 'subnet-01', id: 'subnet-001' }, gatewayIp: '10.7.60.91' },
+  'router-002': { id: 'router-002', name: 'main-router', status: 'active', adminState: 'Up', access: 'Project', externalGateway: true, createdAt: '2025-09-10', routerName: 'main-router', availabilityZone: 'nova', availabilityZoneHint: 'zone-01', description: 'Main router', network: { name: 'external-net', id: 'net-002' }, snat: true, subnet: { name: 'subnet-02', id: 'subnet-002' }, gatewayIp: '10.7.60.92' },
+  'router-003': { id: 'router-003', name: 'dev-router', status: 'active', adminState: 'Up', access: 'Project', externalGateway: false, createdAt: '2025-09-08', routerName: 'dev-router', availabilityZone: 'nova', availabilityZoneHint: 'zone-02', description: 'Development router', network: { name: '-', id: '' }, snat: false, subnet: { name: '-', id: '' }, gatewayIp: '-' },
+  'router-004': { id: 'router-004', name: 'prod-router', status: 'building', adminState: 'Up', access: 'Project', externalGateway: true, createdAt: '2025-09-05', routerName: 'prod-router', availabilityZone: 'nova', availabilityZoneHint: 'zone-01', description: 'Production router', network: { name: 'prod-net', id: 'net-003' }, snat: true, subnet: { name: 'subnet-03', id: 'subnet-003' }, gatewayIp: '10.7.60.93' },
+  'router-005': { id: 'router-005', name: 'test-router', status: 'active', adminState: 'Down', access: 'Project', externalGateway: false, createdAt: '2025-09-01', routerName: 'test-router', availabilityZone: 'nova', availabilityZoneHint: 'zone-03', description: 'Test router', network: { name: '-', id: '' }, snat: false, subnet: { name: '-', id: '' }, gatewayIp: '-' },
+  'router-006': { id: 'router-006', name: 'backup-router', status: 'active', adminState: 'Up', access: 'Project', externalGateway: true, createdAt: '2025-08-28', routerName: 'backup-router', availabilityZone: 'nova', availabilityZoneHint: 'zone-01', description: 'Backup router', network: { name: 'backup-net', id: 'net-004' }, snat: true, subnet: { name: 'subnet-04', id: 'subnet-004' }, gatewayIp: '10.7.60.94' },
+  'router-007': { id: 'router-007', name: 'dmz-router', status: 'error', adminState: 'Down', access: 'Project', externalGateway: true, createdAt: '2025-08-25', routerName: 'dmz-router', availabilityZone: 'nova', availabilityZoneHint: 'zone-01', description: 'DMZ router', network: { name: 'dmz-net', id: 'net-005' }, snat: true, subnet: { name: 'subnet-05', id: 'subnet-005' }, gatewayIp: '10.7.60.95' },
+  'router-008': { id: 'router-008', name: 'internal-router', status: 'active', adminState: 'Up', access: 'Project', externalGateway: false, createdAt: '2025-08-20', routerName: 'internal-router', availabilityZone: 'nova', availabilityZoneHint: 'zone-02', description: 'Internal router', network: { name: '-', id: '' }, snat: false, subnet: { name: '-', id: '' }, gatewayIp: '-' },
+  'router-009': { id: 'router-009', name: 'edge-router', status: 'active', adminState: 'Up', access: 'Project', externalGateway: true, createdAt: '2025-08-15', routerName: 'edge-router', availabilityZone: 'nova', availabilityZoneHint: 'zone-01', description: 'Edge router', network: { name: 'edge-net', id: 'net-006' }, snat: true, subnet: { name: 'subnet-06', id: 'subnet-006' }, gatewayIp: '10.7.60.96' },
+  'router-010': { id: 'router-010', name: 'vpn-router', status: 'active', adminState: 'Up', access: 'Project', externalGateway: true, createdAt: '2025-08-10', routerName: 'vpn-router', availabilityZone: 'nova', availabilityZoneHint: 'zone-01', description: 'VPN router', network: { name: 'vpn-net', id: 'net-007' }, snat: true, subnet: { name: 'subnet-07', id: 'subnet-007' }, gatewayIp: '10.7.60.97' },
+};
+
+const defaultRouterDetail: RouterDetail = {
+  id: 'unknown', name: 'Unknown Router', status: 'active', adminState: 'Up', access: 'Project', externalGateway: false, createdAt: '-', routerName: '-', availabilityZone: '-', availabilityZoneHint: '-', description: '-', network: { name: '-', id: '' }, snat: false, subnet: { name: '-', id: '' }, gatewayIp: '-',
 };
 
 const mockPorts: Port[] = Array.from({ length: 115 }, (_, i) => ({
@@ -137,7 +135,7 @@ const portStatusMap: Record<PortStatus, 'active' | 'building' | 'shutoff'> = {
 
 export default function RouterDetailPage() {
   const { id } = useParams<{ id: string }>();
-  const { tabs, activeTabId, closeTab, selectTab, addNewTab } = useTabs();
+  const { tabs, activeTabId, closeTab, selectTab, addNewTab, updateActiveTabLabel } = useTabs();
   
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [activeDetailTab, setActiveDetailTab] = useState('details');
@@ -159,10 +157,17 @@ export default function RouterDetailPage() {
   // Preferences state
   const [isPreferencesOpen, setIsPreferencesOpen] = useState(false);
 
-  // In a real app, fetch based on id
-  const router = mockRouterDetail;
+  // Get router data based on URL ID
+  const router = id ? (mockRoutersMap[id] || defaultRouterDetail) : defaultRouterDetail;
   const ports = mockPorts;
   const staticRoutes = mockStaticRoutes;
+
+  // Update tab label to router name
+  useEffect(() => {
+    if (router.name) {
+      updateActiveTabLabel(router.name);
+    }
+  }, [router.name, updateActiveTabLabel]);
 
   const breadcrumbItems = [
     { label: 'Proj-1', href: '/' },
