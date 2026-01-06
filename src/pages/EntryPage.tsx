@@ -129,7 +129,7 @@ function AppCardComponent({ card, onClick }: AppCardComponentProps) {
       disabled={!isAvailable}
       className={`
         group relative overflow-hidden
-        w-full aspect-[4/3] rounded-2xl
+        w-full min-h-[200px] rounded-2xl
         bg-[var(--color-surface-default)]
         border border-[var(--color-border-default)]
         transition-all duration-300 ease-out
