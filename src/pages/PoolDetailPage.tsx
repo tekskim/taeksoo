@@ -85,10 +85,10 @@ interface HealthMonitor {
    Mock Data
    ---------------------------------------- */
 
-// Mock data - synchronized with ListenerDetailPage pools
+// Mock data - synchronized with ListenerDetailPage pools (id format: 29fg234XX)
 const mockPoolsMap: Record<string, PoolDetail> = {
-  'pool-001': {
-    id: 'pool-001',
+  '29fg23400': {
+    id: '29fg23400',
     name: 'pool-http',
     status: 'active',
     adminState: 'Up',
@@ -99,29 +99,29 @@ const mockPoolsMap: Record<string, PoolDetail> = {
     sessionPersistence: 'None',
     listener: { name: 'listener-http-80', id: '29tgj234' },
   },
-  'pool-002': {
-    id: 'pool-002',
-    name: 'pool-https',
+  '29fg23401': {
+    id: '29fg23401',
+    name: 'pool-http',
     status: 'active',
     adminState: 'Up',
     createdAt: '2025-07-24 10:30:00',
-    description: 'HTTPS connection pool',
-    algorithm: 'Least Connections',
-    protocol: 'HTTPS',
-    sessionPersistence: 'Source IP',
-    listener: { name: 'listener-https-443', id: '38fk29dk' },
+    description: 'HTTP connection pool',
+    algorithm: 'Round Robin',
+    protocol: 'HTTP',
+    sessionPersistence: 'None',
+    listener: { name: 'listener-http-80', id: '29tgj234' },
   },
-  'pool-003': {
-    id: 'pool-003',
-    name: 'pool-tcp',
+  '29fg23402': {
+    id: '29fg23402',
+    name: 'pool-http',
     status: 'active',
     adminState: 'Up',
     createdAt: '2025-07-23 14:00:00',
-    description: 'TCP connection pool',
+    description: 'HTTP connection pool',
     algorithm: 'Round Robin',
-    protocol: 'TCP',
+    protocol: 'HTTP',
     sessionPersistence: 'None',
-    listener: { name: 'listener-tcp-8080', id: '9dk38fj2' },
+    listener: { name: 'listener-http-80', id: '29tgj234' },
   },
 };
 
