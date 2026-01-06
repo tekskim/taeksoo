@@ -234,7 +234,7 @@ function SkippedSection({ title, onEdit }: SkippedSectionProps) {
         </h5>
         <div className="flex items-center gap-3">
           <span className="text-[length:var(--font-size-12)] leading-[var(--line-height-18)] text-[var(--color-text-muted)]">Not configured</span>
-          <Button variant="outline" size="sm" onClick={onEdit}>
+          <Button variant="outline" size="sm" leftIcon={<IconEdit size={12} />} onClick={onEdit}>
             Edit
           </Button>
         </div>
