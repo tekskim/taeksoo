@@ -179,13 +179,13 @@ export function InstanceTemplateDetailPage() {
                   <span>{template.name}</span>
                   <button
                     onClick={handleToggleFavorite}
-                    className="p-1 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                    className="p-0.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
                     aria-label={isFavorite ? 'Remove from favorites' : 'Add to favorites'}
                   >
                     {isFavorite ? (
-                      <IconStarFilled size={20} className="text-yellow-500" />
+                      <IconStarFilled size={16} className="text-yellow-400" />
                     ) : (
-                      <IconStar size={20} className="text-[var(--color-text-muted)]" />
+                      <IconStar size={16} stroke={1.5} className="text-[var(--color-text-muted)]" />
                     )}
                   </button>
                 </div>
