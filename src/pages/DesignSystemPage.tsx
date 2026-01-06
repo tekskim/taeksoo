@@ -3592,22 +3592,8 @@ outline: 2px solid var(--color-border-focus);`}
                   <Label>Size Variants</Label>
                   <div className="flex gap-4 items-end flex-wrap">
                     <VStack gap={1}>
-                      <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">SM</span>
+                      <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">Default</span>
                       <Select
-                        size="sm"
-                        placeholder="Select"
-                        defaultValue="active"
-                        options={[
-                          { value: 'active', label: 'Active' },
-                          { value: 'shutoff', label: 'Shutoff' },
-                          { value: 'building', label: 'Building' },
-                        ]}
-                      />
-                    </VStack>
-                    <VStack gap={1}>
-                      <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">MD (Default)</span>
-                      <Select
-                        size="md"
                         placeholder="Select"
                         defaultValue="active"
                         options={[

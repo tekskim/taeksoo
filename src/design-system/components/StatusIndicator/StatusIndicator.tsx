@@ -203,7 +203,7 @@ export function StatusIndicator({
     
     // Clone the icon with the appropriate size
     const clonedIcon = isValidElement(config.icon)
-      ? cloneElement(config.icon, { size: iconSize })
+      ? cloneElement(config.icon as React.ReactElement<{ size?: number }>, { size: iconSize })
       : config.icon;
     
     const classes = twMerge(

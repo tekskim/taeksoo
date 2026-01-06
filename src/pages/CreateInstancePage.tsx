@@ -222,9 +222,9 @@ interface DoneSectionRowProps {
 
 function DoneSectionRow({ label, value }: DoneSectionRowProps) {
   return (
-    <VStack gap={1.5}>
+    <VStack gap={2}>
       <div className="w-full h-px bg-[var(--color-border-subtle)]" />
-      <VStack gap={1.5} className="pt-3">
+      <VStack gap={2} className="pt-3">
         <span className="text-[11px] font-medium text-[var(--color-text-subtle)]">
           {label}
         </span>
@@ -672,7 +672,6 @@ function ImageSection({ selectedImageId, onSelectImage, onNext }: ImageSectionPr
                   totalPages={Math.ceil(tableContent.totalItems / 5) || 1}
                   totalItems={tableContent.totalItems}
                   onPageChange={setCurrentPage}
-                  size="sm"
                 />
               </HStack>
             </VStack>
@@ -893,7 +892,6 @@ function FlavorSection({ selectedFlavorId, onSelectFlavor, onNext }: FlavorSecti
               totalPages={Math.ceil(filteredFlavors.length / 5) || 1}
               totalItems={filteredFlavors.length}
               onPageChange={setCurrentPage}
-              size="sm"
             />
           </HStack>
 
@@ -1110,7 +1108,7 @@ function NetworkSection({ onNext }: NetworkSectionProps) {
       key: 'status',
       label: 'Status',
       width: '80px',
-      render: (_, row) => <StatusIndicator status={row.status === 'Active' ? 'active' : 'inactive'} />,
+      render: (_, row) => <StatusIndicator status={row.status === 'Active' ? 'active' : 'shutoff'} />,
     },
     { key: 'name', label: 'Name', sortable: true },
     { key: 'allocationPools', label: 'Allocation Pools' },
@@ -1143,7 +1141,7 @@ function NetworkSection({ onNext }: NetworkSectionProps) {
       key: 'status',
       label: 'Status',
       width: '80px',
-      render: (_, row) => <StatusIndicator status={row.status === 'Active' ? 'active' : 'inactive'} />,
+      render: (_, row) => <StatusIndicator status={row.status === 'Active' ? 'active' : 'shutoff'} />,
     },
     {
       key: 'idDesc',
@@ -1226,7 +1224,7 @@ function NetworkSection({ onNext }: NetworkSectionProps) {
       key: 'status',
       label: 'Status',
       width: '80px',
-      render: (_, row) => <StatusIndicator status={row.status === 'Active' ? 'active' : 'inactive'} />,
+      render: (_, row) => <StatusIndicator status={row.status === 'Active' ? 'active' : 'shutoff'} />,
     },
     {
       key: 'idName',
@@ -1278,7 +1276,6 @@ function NetworkSection({ onNext }: NetworkSectionProps) {
               totalPages={Math.ceil(filteredNetworks.length / 5) || 1}
               totalItems={filteredNetworks.length}
               onPageChange={setNetworkPage}
-              size="sm"
             />
 
             {/* Network Table */}
@@ -1383,7 +1380,6 @@ function NetworkSection({ onNext }: NetworkSectionProps) {
                   totalPages={Math.ceil(filteredFloatingPools.length / 5) || 1}
                   totalItems={filteredFloatingPools.length}
                   onPageChange={setFipPage}
-                  size="sm"
                 />
                 <Table
                   columns={floatingPoolColumns}
@@ -1422,7 +1418,6 @@ function NetworkSection({ onNext }: NetworkSectionProps) {
                   totalPages={Math.ceil(filteredExistingFips.length / 5) || 1}
                   totalItems={filteredExistingFips.length}
                   onPageChange={setFipPage}
-                  size="sm"
                 />
                 <Table
                   columns={existingFipColumns}
@@ -1475,7 +1470,6 @@ function NetworkSection({ onNext }: NetworkSectionProps) {
               totalPages={Math.ceil(filteredSecurityGroups.length / 5) || 1}
               totalItems={filteredSecurityGroups.length}
               onPageChange={setSgPage}
-              size="sm"
             />
 
             <Table
@@ -1541,7 +1535,6 @@ function NetworkSection({ onNext }: NetworkSectionProps) {
                   totalPages={Math.ceil(filteredPorts.length / 5) || 1}
                   totalItems={filteredPorts.length}
                   onPageChange={setPortPage}
-                  size="sm"
                 />
                 <Table
                   columns={portColumns}
@@ -1680,7 +1673,6 @@ function AuthenticationSection({ onNext }: AuthenticationSectionProps) {
                   totalPages={Math.ceil(filteredKeyPairs.length / 5) || 1}
                   totalItems={filteredKeyPairs.length}
                   onPageChange={setKeyPairPage}
-                  size="sm"
                 />
 
                 {/* Key Pair Table */}
@@ -1880,7 +1872,6 @@ function AdvancedSection({ onNext }: AdvancedSectionProps) {
                   totalPages={Math.ceil(filteredServerGroups.length / 5) || 1}
                   totalItems={filteredServerGroups.length}
                   onPageChange={setServerGroupPage}
-                  size="sm"
                 />
 
                 {/* Server Group Table */}
@@ -2107,7 +2098,6 @@ function TemplatesSection({ templates, selectedId, onSelect, onSkip, onNext }: T
                   totalPages={Math.max(1, Math.ceil(filteredTemplates.length / 10))}
                   totalItems={filteredTemplates.length}
                   onPageChange={setCurrentPage}
-                  size="sm"
                 />
               </HStack>
 
@@ -2146,7 +2136,6 @@ function TemplatesSection({ templates, selectedId, onSelect, onSkip, onNext }: T
                   totalPages={Math.max(1, Math.ceil(filteredTemplates.length / 10))}
                   totalItems={filteredTemplates.length}
                   onPageChange={setCurrentPage}
-                  size="sm"
                 />
               </HStack>
 
@@ -2185,7 +2174,6 @@ function TemplatesSection({ templates, selectedId, onSelect, onSkip, onNext }: T
                   totalPages={Math.max(1, Math.ceil(filteredTemplates.length / 10))}
                   totalItems={filteredTemplates.length}
                   onPageChange={setCurrentPage}
-                  size="sm"
                 />
               </HStack>
 
