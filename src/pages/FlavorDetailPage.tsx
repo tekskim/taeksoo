@@ -321,12 +321,14 @@ export function FlavorDetailPage() {
       >
         {/* Fixed Header Area */}
         <div className="shrink-0 bg-[var(--color-surface-default)]">
+        {/* Tab Bar */}
+        <TabBar tabs={tabBarTabs} activeTabId={activeTabId} onTabClick={selectTab} onTabClose={closeTab} />
         {/* Top Bar */}
         <TopBar
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(true)}
           showNavigation={true}
-          onBack={() => navigate('/flavors')}
+          onBack={() => navigate('/compute/flavors')}
           onForward={() => window.history.forward()}
           breadcrumb={<Breadcrumb items={breadcrumbItems} />}
           actions={
@@ -337,7 +339,6 @@ export function FlavorDetailPage() {
             />
           }
         />
-        <TabBar tabs={tabBarTabs} activeTabId={activeTabId} onTabClick={selectTab} onTabClose={closeTab} />
         </div>
 
         {/* Scrollable Content Area */}
