@@ -97,26 +97,16 @@ interface Port {
    Mock Data
    ---------------------------------------- */
 
-const mockNetworkDetail: NetworkDetail = {
-  id: '7284d9174e81431e93060a9bbcf2cdfd',
-  name: 'net-1',
-  status: 'active',
-  adminState: 'Up',
-  access: 'Project',
-  external: false,
-  createdAt: '2025-07-25 09:12:20',
-  // Basic Information
-  networkName: 'net-1',
-  availabilityZone: 'nova',
-  availabilityZoneHint: '-',
-  description: '-',
-  // Specification
-  mtu: 1500,
-  portSecurity: true,
-  routerExternal: false,
-  providerNetworkType: '-',
-  providerPhysicalNetwork: '-',
-  segmentationId: '-',
+// Network data map by ID
+const mockNetworksMap: Record<string, NetworkDetail> = {
+  'net-001': { id: 'net-001', name: 'public-network', status: 'active', adminState: 'Up', access: 'Public', external: true, createdAt: '2025-09-15', networkName: 'public-network', availabilityZone: 'nova', availabilityZoneHint: '-', description: 'Public external network', mtu: 1500, portSecurity: true, routerExternal: true, providerNetworkType: 'flat', providerPhysicalNetwork: 'external', segmentationId: '-' },
+  'net-002': { id: 'net-002', name: 'private-network-01', status: 'active', adminState: 'Up', access: 'Project', external: false, createdAt: '2025-09-10', networkName: 'private-network-01', availabilityZone: 'nova', availabilityZoneHint: '-', description: 'Private network for project', mtu: 1450, portSecurity: true, routerExternal: false, providerNetworkType: 'vxlan', providerPhysicalNetwork: '-', segmentationId: '100' },
+  'net-003': { id: 'net-003', name: 'management-network', status: 'active', adminState: 'Up', access: 'Project', external: false, createdAt: '2025-09-05', networkName: 'management-network', availabilityZone: 'keystone', availabilityZoneHint: '-', description: 'Management network', mtu: 1500, portSecurity: false, routerExternal: false, providerNetworkType: 'vlan', providerPhysicalNetwork: 'mgmt', segmentationId: '200' },
+  'net-004': { id: 'net-004', name: 'storage-network', status: 'active', adminState: 'Up', access: 'Project', external: false, createdAt: '2025-09-01', networkName: 'storage-network', availabilityZone: 'nova', availabilityZoneHint: '-', description: 'Storage network for Ceph', mtu: 9000, portSecurity: false, routerExternal: false, providerNetworkType: 'vlan', providerPhysicalNetwork: 'storage', segmentationId: '300' },
+};
+
+const defaultNetworkDetail: NetworkDetail = {
+  id: 'unknown', name: 'Unknown Network', status: 'active', adminState: 'Up', access: 'Project', external: false, createdAt: '-', networkName: '-', availabilityZone: '-', availabilityZoneHint: '-', description: '-', mtu: 1500, portSecurity: true, routerExternal: false, providerNetworkType: '-', providerPhysicalNetwork: '-', segmentationId: '-',
 };
 
 const mockSubnets: Subnet[] = Array.from({ length: 115 }, (_, i) => ({
@@ -198,8 +188,8 @@ export default function NetworkDetailPage() {
   // Preferences state
   const [isPreferencesOpen, setIsPreferencesOpen] = useState(false);
   
-  // In a real app, fetch based on id
-  const network = mockNetworkDetail;
+  // Get network data based on the ID from URL
+  const network = id ? (mockNetworksMap[id] || defaultNetworkDetail) : defaultNetworkDetail;
   const subnets = mockSubnets;
   const ports = mockPorts;
 
