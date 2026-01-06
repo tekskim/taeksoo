@@ -125,7 +125,7 @@ export function ModalsPage() {
         </div>
 
         {/* Scrollable Content Area */}
-        <div className="flex-1 overflow-auto min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll">
+        <div className="flex-1 overflow-auto overscroll-contain sidebar-scroll">
           {/* Content */}
           <div className="px-8 py-6">
             <VStack gap={8}>
