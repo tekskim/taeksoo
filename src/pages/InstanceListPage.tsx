@@ -192,17 +192,15 @@ export function InstanceListPage() {
 
   // Handle opening shell tab in new browser tab
   const handleOpenInNewTab = (tab: ShellTab) => {
-    // Add tab to the tab bar
-    const tabId = `console-${tab.instanceId}`;
+    // Add tab to the tab bar (keeps shell panel tab intact)
+    const tabId = `console-${tab.instanceId}-${Date.now()}`;
     addTab({
       id: tabId,
       label: tab.title,
       path: `/compute/console/${tab.instanceId}?name=${encodeURIComponent(tab.title)}`,
       closable: true,
     });
-    // Close the shell panel
-    shellPanel.closeTab(tab.id);
-    // Navigate to the console page
+    // Navigate to the console page (new tab becomes active)
     navigate(`/compute/console/${tab.instanceId}?name=${encodeURIComponent(tab.title)}`);
   };
 
