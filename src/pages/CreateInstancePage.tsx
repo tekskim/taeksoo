@@ -30,6 +30,7 @@ import {
 import type { TableColumn } from '@/design-system/components/Table/Table';
 import { Sidebar } from '@/components/Sidebar';
 import { useTabs } from '@/contexts/TabContext';
+import { useSidebar } from '@/contexts/SidebarContext';
 import {
   IconBell,
   IconExternalLink,
@@ -2222,11 +2223,8 @@ function TemplatesSection({ templates, selectedId, onSelect, onSkip, onNext }: T
 
 export function CreateInstancePage() {
   const navigate = useNavigate();
-  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const { isOpen: sidebarOpen, toggle: toggleSidebar, open: openSidebar } = useSidebar();
   const { tabs, activeTabId, selectTab, closeTab } = useTabs();
-  
-  const toggleSidebar = useCallback(() => setSidebarOpen(prev => !prev), []);
-  const openSidebar = useCallback(() => setSidebarOpen(true), []);
   
   // Section status management
   const [sectionStatus, setSectionStatus] = useState<SectionStatus>({

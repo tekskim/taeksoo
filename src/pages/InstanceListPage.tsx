@@ -23,6 +23,7 @@ import {
 } from '@/design-system';
 import { Sidebar } from '@/components/Sidebar';
 import { useTabs } from '@/contexts/TabContext';
+import { useSidebar } from '@/contexts/SidebarContext';
 import {
   IconDotsCircleHorizontal,
   IconPlayerPlay,
@@ -128,7 +129,7 @@ const statusMap: Record<InstanceStatus, StatusType> = {
 // Filter type is imported from design-system as FilterItem
 
 export function InstanceListPage() {
-  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const { isOpen: sidebarOpen, toggle: toggleSidebar, open: openSidebar } = useSidebar();
   const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [currentBareMetalPage, setCurrentBareMetalPage] = useState(1);
@@ -687,7 +688,7 @@ export function InstanceListPage() {
   return (
     <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
       {/* Sidebar */}
-      <Sidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(prev => !prev)} />
+      <Sidebar isOpen={sidebarOpen} onToggle={toggleSidebar} />
 
       {/* Main Content */}
       <main 
@@ -709,7 +710,7 @@ export function InstanceListPage() {
           {/* Top Bar with Breadcrumb Navigation */}
           <TopBar
             showSidebarToggle={!sidebarOpen}
-            onSidebarToggle={() => setSidebarOpen(true)}
+            onSidebarToggle={openSidebar}
             showNavigation={true}
             onBack={() => window.history.back()}
             onForward={() => window.history.forward()}
