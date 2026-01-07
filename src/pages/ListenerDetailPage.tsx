@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import {
   Button,
@@ -103,25 +103,81 @@ interface Certificate {
    Mock Data
    ---------------------------------------- */
 
-const mockListenerDetail: ListenerDetail = {
-  id: '7284d9174e81431e93060a9bbcf2cdfd',
-  name: 'listener-http-80',
+// Mock data - synchronized with LoadBalancerDetailPage listeners
+const mockListenersMap: Record<string, ListenerDetail> = {
+  '29tgj234': {
+    id: '29tgj234',
+    name: 'listener-http-80',
+    status: 'active',
+    adminState: 'Up',
+    createdAt: '2025-07-25 09:12:20',
+    description: '-',
+    protocol: 'HTTP',
+    port: 80,
+    connectionLimit: '-',
+    customHeaders: 'X-Forwarded-For : Disabled / X-Forwarded-Port : Disabled',
+    clientDataTimeout: '50000 ms',
+    memberConnectTimeout: '5000 ms',
+    memberDataTimeout: '50000 ms',
+    tcpInspectTimeout: '0 ms',
+    allowedCidrs: '10.62.0.32/24(+3)',
+    loadBalancer: { name: 'web-lb-01', id: 'lb-001' },
+  },
+  '38fk29dk': {
+    id: '38fk29dk',
+    name: 'listener-https-443',
+    status: 'active',
+    adminState: 'Up',
+    createdAt: '2025-07-24 10:30:00',
+    description: 'HTTPS listener for API',
+    protocol: 'HTTPS',
+    port: 443,
+    connectionLimit: '1000',
+    customHeaders: 'X-Forwarded-For : Enabled / X-Forwarded-Port : Enabled',
+    clientDataTimeout: '50000 ms',
+    memberConnectTimeout: '5000 ms',
+    memberDataTimeout: '50000 ms',
+    tcpInspectTimeout: '0 ms',
+    allowedCidrs: '0.0.0.0/0',
+    loadBalancer: { name: 'api-lb', id: 'lb-002' },
+  },
+  '9dk38fj2': {
+    id: '9dk38fj2',
+    name: 'listener-tcp-8080',
+    status: 'active',
+    adminState: 'Up',
+    createdAt: '2025-07-23 14:00:00',
+    description: 'TCP listener for app',
+    protocol: 'TCP',
+    port: 8080,
+    connectionLimit: '500',
+    customHeaders: '-',
+    clientDataTimeout: '60000 ms',
+    memberConnectTimeout: '10000 ms',
+    memberDataTimeout: '60000 ms',
+    tcpInspectTimeout: '5000 ms',
+    allowedCidrs: '10.0.0.0/8',
+    loadBalancer: { name: 'app-lb', id: 'lb-003' },
+  },
+};
+
+const defaultListenerDetail: ListenerDetail = {
+  id: 'listener-default',
+  name: 'Unknown',
   status: 'active',
   adminState: 'Up',
-  createdAt: '2025-07-25 09:12:20',
-  // Basic Information
+  createdAt: '-',
   description: '-',
   protocol: 'HTTP',
   port: 80,
   connectionLimit: '-',
-  customHeaders: 'X-Forwarded-For : Disabled / X-Forwarded-Port : Disabled',
-  clientDataTimeout: '50000 ms',
-  memberConnectTimeout: '5000 ms',
-  memberDataTimeout: '50000 ms',
-  tcpInspectTimeout: '0 ms',
-  allowedCidrs: '10.62.0.32/24(+3)',
-  // Association
-  loadBalancer: { name: 'web-server-10', id: 'lb-001' },
+  customHeaders: '-',
+  clientDataTimeout: '-',
+  memberConnectTimeout: '-',
+  memberDataTimeout: '-',
+  tcpInspectTimeout: '-',
+  allowedCidrs: '-',
+  loadBalancer: { name: '-', id: '' },
 };
 
 /* ----------------------------------------
@@ -199,11 +255,21 @@ const certificateStatusMap: Record<CertificateStatus, 'active' | 'error' | 'pend
 
 export default function ListenerDetailPage() {
   const { id } = useParams<{ id: string }>();
-  const { tabs, activeTabId, closeTab, selectTab, addNewTab } = useTabs();
+  const { tabs, activeTabId, closeTab, selectTab, addNewTab, updateActiveTabLabel } = useTabs();
   
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [activeDetailTab, setActiveDetailTab] = useState('details');
   const [copiedId, setCopiedId] = useState(false);
+
+  // Get listener based on URL id
+  const listener = id ? (mockListenersMap[id] || defaultListenerDetail) : defaultListenerDetail;
+
+  // Update tab label when listener name changes
+  useEffect(() => {
+    if (listener.name) {
+      updateActiveTabLabel(listener.name);
+    }
+  }, [listener.name, updateActiveTabLabel]);
 
   // Pools state
   const [poolSearchTerm, setPoolSearchTerm] = useState('');
@@ -224,9 +290,6 @@ export default function ListenerDetailPage() {
 
   // Preferences state
   const [isPreferencesOpen, setIsPreferencesOpen] = useState(false);
-
-  // In a real app, fetch based on id
-  const listener = mockListenerDetail;
 
   const breadcrumbItems = [
     { label: 'Proj-1', href: '/' },
@@ -320,7 +383,7 @@ export default function ListenerDetailPage() {
       render: (_, row) => (
         <div className="flex flex-col gap-0.5">
           <Link
-            to={`/pools/${row.id}`}
+            to={`/compute/pools/${row.id}`}
             className="inline-flex items-center gap-1.5 font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
             onClick={(e) => e.stopPropagation()}
           >
@@ -397,7 +460,7 @@ export default function ListenerDetailPage() {
       render: (_, row) => (
         <div className="flex flex-col gap-0.5">
           <Link
-            to={`/l7-policies/${row.id}`}
+            to={`/compute/l7-policies/${row.id}`}
             className="inline-flex items-center gap-1.5 font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
             onClick={(e) => e.stopPropagation()}
           >
@@ -470,7 +533,7 @@ export default function ListenerDetailPage() {
       render: (_, row) => (
         <div className="flex flex-col gap-0.5">
           <Link
-            to={`/certificates/${row.id}`}
+            to={`/compute/certificates/${row.id}`}
             className="inline-flex items-center gap-1.5 font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
             onClick={(e) => e.stopPropagation()}
           >
@@ -574,7 +637,7 @@ export default function ListenerDetailPage() {
         </div>
 
         {/* Scrollable Content Area */}
-        <div className="flex-1 overflow-auto min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll">
+        <div className="flex-1 overflow-auto overscroll-contain sidebar-scroll">
           {/* Page Content */}
           <div className="pt-4 px-8 pb-20 bg-[var(--color-surface-default)]">
             <VStack gap={8} className="min-w-[1176px] max-w-[1320px]">
@@ -730,7 +793,7 @@ export default function ListenerDetailPage() {
                               </span>
                               {listener.loadBalancer ? (
                                 <Link
-                                  to={`/load-balancers/${listener.loadBalancer.id}`}
+                                  to={`/compute/load-balancers/${listener.loadBalancer.id}`}
                                   className="flex items-center gap-1.5 text-[12px] font-medium leading-4 text-[var(--color-action-primary)] hover:underline"
                                 >
                                   {listener.loadBalancer.name}

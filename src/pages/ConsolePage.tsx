@@ -4,9 +4,10 @@ import {
   IconDownload,
   IconTerminal2,
 } from '@tabler/icons-react';
-import { Select, Button, TabBar } from '@/design-system';
+import { Select, Button, TabBar, TopBar, Breadcrumb } from '@/design-system';
 import { Sidebar } from '@/components/Sidebar';
 import { useTabs } from '@/contexts/TabContext';
+import { useSidebar } from '@/contexts/SidebarContext';
 
 /* ----------------------------------------
    Types
@@ -60,7 +61,7 @@ export function ConsolePage() {
   const [content, setContent] = useState('');
   const [selectedContainer, setSelectedContainer] = useState('container-0');
   const [viewTime, setViewTime] = useState('last-15');
-  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const { isOpen: sidebarOpen, toggle: toggleSidebar } = useSidebar();
   const contentRef = useRef<HTMLDivElement>(null);
   
   // Tab management
@@ -156,11 +157,11 @@ export function ConsolePage() {
 
   return (
     <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
-      <Sidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
+      <Sidebar isOpen={sidebarOpen} onToggle={toggleSidebar} />
       
       <main
         className={`absolute top-0 bottom-0 right-0 flex flex-col bg-[var(--color-surface-default)] transition-[left] duration-200 ${
-          sidebarOpen ? 'left-[200px]' : 'left-[48px]'
+          sidebarOpen ? 'left-[200px]' : 'left-0'
         }`}
       >
         {/* Fixed Header Area */}
@@ -175,10 +176,28 @@ export function ConsolePage() {
             showAddButton={true}
             showWindowControls={true}
           />
+
+          {/* Top Bar with Breadcrumb Navigation */}
+          <TopBar
+            showSidebarToggle={!sidebarOpen}
+            onSidebarToggle={toggleSidebar}
+            showNavigation={true}
+            onBack={() => navigate(-1)}
+            onForward={() => navigate(1)}
+            breadcrumb={
+              <Breadcrumb
+                items={[
+                  { label: 'Proj-1', href: '/compute' },
+                  { label: 'Instances', href: '/compute/instances' },
+                  { label: instanceName },
+                ]}
+              />
+            }
+          />
         </div>
           
           {/* Console Content */}
-          <div className="flex flex-col h-[calc(100vh-var(--tabbar-height))]">
+          <div className="flex flex-col h-[calc(100vh-var(--tabbar-height)-var(--topbar-height))]">
             {/* Header - Same style as ShellPanel tab */}
             <div className="flex items-center gap-2 px-6 py-3 border-b border-[var(--color-border-default)] bg-[var(--color-surface-subtle)]">
               <IconTerminal2 size={14} className="text-[var(--color-text-muted)]" stroke={1} />

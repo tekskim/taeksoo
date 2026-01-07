@@ -174,14 +174,39 @@ export function HomePage() {
             }
           />
 
-          {/* Main Content */}
-          <div className="bg-[var(--color-surface-default)] flex flex-1 flex-col gap-6 items-center pb-3 pt-6 px-8 w-full overflow-y-auto min-h-0">
-            <div className="flex flex-col gap-6 items-start min-w-[1176px] relative shrink-0 w-full">
-              {/* Home Header */}
-              <div className="flex flex-col items-start justify-center relative shrink-0">
-                <div className="flex items-center relative shrink-0">
-                  <p className="font-[family-name:var(--fontfamily/sans,'Mona_Sans:SemiBold',sans-serif)] leading-[var(--lineheight/xl,28px)] not-italic relative shrink-0 text-[color:var(--color-text-default)] text-[length:var(--fontsize/xl,18px)]">
-                    Home
+        {/* Scrollable Content Area */}
+        <div className="flex-1 overflow-auto overscroll-contain sidebar-scroll">
+          {/* Dashboard Content */}
+          <div className="px-8 py-6">
+          {/* Top Row - 4 Cards */}
+          <div className="grid grid-cols-4 gap-6 mb-6">
+            {/* PROJECT INFO */}
+            <Card title="PROJECT INFO" bgColor="bg-[var(--color-surface-subtle)]" className="flex flex-col justify-between">
+              <div>
+                <h3 className="text-[32px] font-semibold text-[var(--color-text-default)] mb-4">proj-1</h3>
+              </div>
+              <div className="space-y-4">
+                <div>
+                  <div className="text-[10px] text-[var(--color-text-muted)] mb-1">ID</div>
+                  <div className="flex items-center gap-1">
+                    <span className="text-[12px] text-[var(--color-text-default)]">{projectId}</span>
+                    <button 
+                      onClick={handleCopyId}
+                      className="p-1.5 -m-1 rounded-md hover:bg-[var(--color-surface-muted)] active:bg-[var(--color-surface-subtle)] transition-colors"
+                      title={copied ? 'Copied!' : 'Copy ID'}
+                    >
+                      {copied ? (
+                        <IconCheck size={12} className="text-[var(--color-state-success)]" />
+                      ) : (
+                        <IconCopy size={12} className="text-[var(--color-action-primary)]" />
+                      )}
+                    </button>
+                  </div>
+                </div>
+                <div>
+                  <div className="text-[10px] text-[var(--color-text-muted)] mb-1">Description</div>
+                  <p className="text-[12px] text-[var(--color-text-default)]">
+                    Development environment for the 'service' backend services.
                   </p>
                 </div>
               </div>

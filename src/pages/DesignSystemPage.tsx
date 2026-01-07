@@ -40,6 +40,7 @@ import {
   Breadcrumb,
   StatusIndicator,
   VStack,
+  HStack,
   MenuItem,
   MenuSection,
   MenuDivider,
@@ -49,14 +50,7 @@ import {
   DetailHeader,
   SectionCard,
   Drawer,
-  FloatingCard,
-  IconExpandOn,
-  IconExpandOff,
-  IconTimeout,
-  IconHistory,
-  IconRobotCustom,
-  IconAddRobotCustom,
-  IconChat,
+  FormField,
 } from '@/design-system';
 import {
   // Navigation icons (for sidebar)
@@ -189,6 +183,9 @@ import {
   IconBrandDebian,
   IconBrandWindows,
   IconBrandRedhat,
+  // Document Icons
+  IconFileText,
+  IconCode,
 } from '@tabler/icons-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useTabs } from '@/contexts/TabContext';
@@ -221,6 +218,7 @@ const formControlItems = [
   { id: 'checkbox', label: 'Checkbox', icon: IconSquareCheck },
   { id: 'radio', label: 'Radio', icon: IconCircle },
   { id: 'toggle', label: 'Toggle', icon: IconToggleRight },
+  { id: 'formfield', label: 'FormField', icon: IconForms },
 ];
 
 // Data Display
@@ -3117,6 +3115,115 @@ outline: 2px solid var(--color-border-focus);`}
               </VStack>
             </Section>
 
+            {/* FormField Component */}
+            <Section id="formfield" title="FormField" description="Compound component for form field with label, input, and helper text">
+              <VStack gap={8}>
+                {/* Structure */}
+                <VStack gap={3}>
+                  <Label>Structure</Label>
+                  <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
+                    <code>FormField</code> · <code>FormField.Label</code> · <code>FormField.Control</code> · <code>FormField.HelperText</code> · <code>FormField.ErrorMessage</code>
+                  </div>
+                </VStack>
+
+                {/* Basic Usage */}
+                <VStack gap={3}>
+                  <Label>Basic Usage</Label>
+                  <div className="max-w-md">
+                    <FormField>
+                      <FormField.Label>Instance Name</FormField.Label>
+                      <FormField.Control>
+                        <Input placeholder="Enter instance name" fullWidth />
+                      </FormField.Control>
+                      <FormField.HelperText>
+                        The name should start with a letter and be 1-128 characters.
+                      </FormField.HelperText>
+                    </FormField>
+                  </div>
+                </VStack>
+
+                {/* Label Sizes */}
+                <VStack gap={3}>
+                  <Label>Label Sizes</Label>
+                  <div className="flex gap-8 items-start">
+                    <div className="w-64">
+                      <FormField>
+                        <FormField.Label size="md">Medium Label (14px)</FormField.Label>
+                        <FormField.Control>
+                          <Input placeholder="Input" fullWidth />
+                        </FormField.Control>
+                      </FormField>
+                    </div>
+                    <div className="w-64">
+                      <FormField>
+                        <FormField.Label size="sm">Small Label (12px)</FormField.Label>
+                        <FormField.Control>
+                          <Input placeholder="Input" fullWidth />
+                        </FormField.Control>
+                      </FormField>
+                    </div>
+                  </div>
+                </VStack>
+
+                {/* Required Field */}
+                <VStack gap={3}>
+                  <Label>Required Field</Label>
+                  <div className="max-w-md">
+                    <FormField required>
+                      <FormField.Label>Email Address</FormField.Label>
+                      <FormField.Control>
+                        <Input placeholder="Enter email" fullWidth />
+                      </FormField.Control>
+                      <FormField.HelperText>
+                        We'll never share your email with anyone.
+                      </FormField.HelperText>
+                    </FormField>
+                  </div>
+                </VStack>
+
+                {/* Error State */}
+                <VStack gap={3}>
+                  <Label>Error State</Label>
+                  <div className="max-w-md">
+                    <FormField error>
+                      <FormField.Label>Password</FormField.Label>
+                      <FormField.Control>
+                        <Input placeholder="Enter password" fullWidth />
+                      </FormField.Control>
+                      <FormField.ErrorMessage>
+                        Password must be at least 8 characters.
+                      </FormField.ErrorMessage>
+                    </FormField>
+                  </div>
+                </VStack>
+
+                {/* With Select */}
+                <VStack gap={3}>
+                  <Label>With Select</Label>
+                  <div className="max-w-md">
+                    <FormField>
+                      <FormField.Label size="sm">Region</FormField.Label>
+                      <FormField.Control>
+                        <Select
+                          options={[
+                            { value: 'us-east', label: 'US East' },
+                            { value: 'us-west', label: 'US West' },
+                            { value: 'eu-west', label: 'EU West' },
+                          ]}
+                          value="us-east"
+                          onChange={() => {}}
+                          fullWidth
+                        />
+                      </FormField.Control>
+                      <FormField.HelperText>
+                        Select your preferred region.
+                      </FormField.HelperText>
+                    </FormField>
+                  </div>
+                </VStack>
+              </VStack>
+            </Section>
+
             {/* Checkbox Component */}
             <Section id="checkbox" title="Checkbox" description="Selection control for single or multiple options">
               <VStack gap={8}>
@@ -4970,6 +5077,165 @@ outline: 2px solid var(--color-border-focus);`}
                 </div>
               </VStack>
             </Section>
+
+            {/* ============================================
+                GRAPHS SECTION
+                ============================================ */}
+
+            {/* Bar Chart */}
+            <Section id="bar-chart" title="Bar Chart" description="Categorical data comparison with vertical or horizontal bars">
+              <VStack gap={8}>
+                {/* Design Tokens */}
+                <VStack gap={3}>
+                  <Label>Design Tokens</Label>
+                  <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
+                    <code>bar-height: 4px</code> · <code>bar-radius: 2px</code> · <code>row-gap: 22px</code> · <code>status-colors: success/warning/error</code>
+                  </div>
+                </VStack>
+
+                {/* Quota Bar */}
+                <VStack gap={3}>
+                  <Label>Quota Bar</Label>
+                  <div className="w-[288px] p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-2xl">
+                    <div className="text-[11px] font-semibold text-[var(--color-text-muted)] tracking-wide mb-4">COMPUTE QUOTA</div>
+                    <div className="space-y-[22px]">
+                      <QuotaBarDemo label="vCPU" used={4} total={8} unit="vCPU" />
+                      <QuotaBarDemo label="RAM" used={22} total={32} unit="GiB" />
+                      <QuotaBarDemo label="Disk" used={4} total={6} unit="GiB" />
+                      <QuotaBarDemo label="GPU" used={6} total={8} unit="GPU" />
+                      <QuotaBarDemo label="NPU" used={6} total={8} unit="NPU" />
+                    </div>
+                  </div>
+                </VStack>
+              </VStack>
+            </Section>
+
+            {/* Area Chart */}
+            <Section id="area-chart" title="Area Chart" description="Filled area visualization for volume and cumulative data">
+              <VStack gap={8}>
+                {/* Design Tokens */}
+                <VStack gap={3}>
+                  <Label>Design Tokens</Label>
+                  <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
+                    <code>fill-opacity: 0.1</code> · <code>line-width: 1px</code> · <code>smooth: true</code> · <code>symbol-size: 6px</code>
+                  </div>
+                </VStack>
+
+                {/* Basic Area Chart */}
+                <VStack gap={3}>
+                  <Label>Basic Area Chart</Label>
+                  <AreaChartDemo variant="basic" />
+                </VStack>
+
+                {/* Stacked Area Chart */}
+                <VStack gap={3}>
+                  <Label>Stacked Area Chart</Label>
+                  <AreaChartDemo variant="stacked" />
+                </VStack>
+              </VStack>
+            </Section>
+
+            {/* Pie Chart */}
+            <Section id="pie-chart" title="Pie Chart" description="Part-to-whole relationships with percentage labels on slices">
+              <VStack gap={8}>
+                {/* Design Tokens */}
+                <VStack gap={3}>
+                  <Label>Design Tokens</Label>
+                  <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
+                    <code>radius: 90px</code> · <code>label-threshold: 15%</code> · <code>legend: external</code> · <code>legend-scroll: 60px</code>
+                  </div>
+                </VStack>
+
+                {/* Pie Charts Examples */}
+                <VStack gap={3}>
+                  <Label>Examples (from storage-dashboard)</Label>
+                  <div className="flex gap-6 flex-wrap">
+                    <PieChartDemo 
+                      title="OSD Types Summary"
+                      data={[
+                        { name: 'hdd', value: 15 },
+                        { name: 'nvme', value: 25 },
+                        { name: 'ssd', value: 30 },
+                        { name: 'hybrid', value: 10 },
+                        { name: 'sata', value: 5 },
+                        { name: 'sas', value: 5 },
+                        { name: 'pcie', value: 4 },
+                        { name: 'u.2', value: 3 },
+                        { name: 'm.2', value: 3 },
+                        { name: 'scsi', value: 2 },
+                        { name: 'fc', value: 2 },
+                        { name: 'iscsi', value: 1 },
+                      ]}
+                    />
+                    <PieChartDemo 
+                      title="OSD Objectstore Types"
+                      data={[
+                        { name: 'bluestore', value: 70 },
+                        { name: 'filestore', value: 20 },
+                        { name: 'seastore', value: 10 },
+                      ]}
+                    />
+                  </div>
+                </VStack>
+              </VStack>
+            </Section>
+
+            {/* Half-Doughnut Chart */}
+            <Section id="half-doughnut-chart" title="Half-Doughnut Chart" description="Progress and metric visualization with half-circular arc design">
+              <VStack gap={8}>
+                {/* Design Tokens */}
+                <VStack gap={3}>
+                  <Label>Design Tokens</Label>
+                  <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
+                    <code>arc-width: 14px</code> · <code>start-angle: 200°</code> · <code>end-angle: -20°</code> · <code>status-colors: success/warning/error</code>
+                  </div>
+                </VStack>
+
+                {/* Status Variants */}
+                <VStack gap={3}>
+                  <Label>Status Variants</Label>
+                  <div className="flex items-center gap-8 flex-wrap">
+                    <HalfDoughnutChartDemo value={35} label="Safe" status="success" />
+                    <HalfDoughnutChartDemo value={85} label="Warning" status="warning" />
+                    <HalfDoughnutChartDemo value={95} label="Danger" status="error" />
+                  </div>
+                </VStack>
+              </VStack>
+            </Section>
+
+            {/* Reference Document Link */}
+            <div className="p-6 bg-[var(--color-surface-subtle)] rounded-[var(--radius-xl)] border border-[var(--color-border-default)]">
+              <VStack gap={3} align="center">
+                <VStack gap={1} align="center">
+                  <h3 className="text-[length:var(--font-size-16)] font-semibold text-[var(--color-text-default)]">
+                    📚 Design System Reference
+                  </h3>
+                  <p className="text-[length:var(--font-size-12)] text-[var(--color-text-muted)] text-center">
+                    컴포넌트 사용법, 토큰 가이드, 스타일 규칙 등 상세 문서를 확인하세요.
+                  </p>
+                </VStack>
+                <HStack gap={3}>
+                  <a
+                    href="https://github.com/pob-design-system/tds/blob/main/DESIGN_SYSTEM.md"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 px-4 py-2 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-button)] text-[length:var(--font-size-12)] text-[var(--color-text-default)] hover:bg-[var(--color-surface-muted)] transition-colors"
+                  >
+                    <IconFileText size={14} stroke={1.5} />
+                    DESIGN_SYSTEM.md
+                  </a>
+                  <a
+                    href="https://github.com/pob-design-system/tds/blob/main/.cursorrules"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 px-4 py-2 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-button)] text-[length:var(--font-size-12)] text-[var(--color-text-default)] hover:bg-[var(--color-surface-muted)] transition-colors"
+                  >
+                    <IconCode size={14} stroke={1.5} />
+                    .cursorrules
+                  </a>
+                </HStack>
+              </VStack>
+            </div>
 
           </VStack>
         </div>

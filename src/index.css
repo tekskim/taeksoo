@@ -1235,6 +1235,11 @@ html.theme-transition *::after {
   scrollbar-gutter: stable;
 }
 
+/* Content min-width for horizontal scroll */
+.sidebar-scroll > div {
+  min-width: 1176px;
+}
+
 /* Drawer Scrollbar */
 .drawer-scroll::-webkit-scrollbar {
   width: 6px;
