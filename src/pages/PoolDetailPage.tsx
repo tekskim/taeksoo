@@ -432,7 +432,7 @@ export default function PoolDetailPage() {
                               </span>
                               {pool.listener ? (
                                 <Link
-                                  to={`/listeners/${pool.listener.id}`}
+                                  to={`/compute/listeners/${pool.listener.id}`}
                                   className="flex items-center gap-1.5 text-[12px] font-medium leading-4 text-[var(--color-action-primary)] hover:underline"
                                 >
                                   {pool.listener.name}

@@ -1,0 +1,244 @@
+/* Overlay */
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(15, 23, 42, 0.4);
+  z-index: 1000;
+  animation: overlayFadeIn 0.2s ease;
+}
+
+@keyframes overlayFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Drawer */
+.drawer {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 700px;
+  max-width: 90vw;
+  background: white;
+  box-shadow: -4px 0 24px rgba(0, 0, 0, 0.12);
+  z-index: 1001;
+  display: flex;
+  flex-direction: column;
+  animation: slideIn 0.25s cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+/* Drawer Content */
+.drawerContent {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  padding: 24px;
+  gap: 24px;
+}
+
+/* Header */
+.header {
+  flex-shrink: 0;
+}
+
+.title {
+  font-family: 'Mona Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 24px;
+  color: #0f172a;
+  margin: 0;
+}
+
+/* Table Container - enables scrolling */
+.tableContainer {
+  flex: 1;
+  overflow: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+/* Table */
+.table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0 4px;
+  min-width: max-content;
+}
+
+/* Table Header - sticky on vertical scroll */
+.table thead {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+}
+
+.table thead tr {
+  background: #f1f5f9;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+}
+
+.table th {
+  height: 40px;
+  padding: 0 12px;
+  font-family: 'Mona Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 16px;
+  color: #0f172a;
+  text-align: left;
+  white-space: nowrap;
+  background: #f1f5f9;
+  border-top: 1px solid #e2e8f0;
+  border-bottom: 1px solid #e2e8f0;
+  min-width: 120px;
+}
+
+/* First column header - sticky on horizontal scroll */
+.table th:first-child {
+  border-left: 1px solid #e2e8f0;
+  border-top-left-radius: 6px;
+  border-bottom-left-radius: 6px;
+  position: sticky;
+  left: 0;
+  z-index: 3;
+  min-width: 180px;
+}
+
+.table th:last-child {
+  border-right: 1px solid #e2e8f0;
+  border-top-right-radius: 6px;
+  border-bottom-right-radius: 6px;
+}
+
+.table th:not(:first-child) {
+  border-left: 1px solid #e2e8f0;
+}
+
+/* Table Body */
+.table tbody {
+  position: relative;
+}
+
+.table tbody tr {
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+}
+
+.table tbody tr:hover {
+  background: #f8fafc;
+}
+
+.table tbody tr:hover td {
+  background: #f8fafc;
+}
+
+.table td {
+  height: 40px;
+  padding: 8px 12px;
+  font-family: 'Mona Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 16px;
+  color: #0f172a;
+  white-space: nowrap;
+  background: white;
+  border-top: 1px solid #e2e8f0;
+  border-bottom: 1px solid #e2e8f0;
+  min-width: 120px;
+}
+
+/* First column cells - sticky on horizontal scroll */
+.table td:first-child {
+  border-left: 1px solid #e2e8f0;
+  border-top-left-radius: 6px;
+  border-bottom-left-radius: 6px;
+  position: sticky;
+  left: 0;
+  z-index: 1;
+  min-width: 180px;
+}
+
+.table td:last-child {
+  border-right: 1px solid #e2e8f0;
+  border-top-right-radius: 6px;
+  border-bottom-right-radius: 6px;
+}
+
+/* Footer */
+.footer {
+  flex-shrink: 0;
+  display: flex;
+  justify-content: center;
+  padding: 16px 24px;
+  border-top: 1px solid #e2e8f0;
+}
+
+/* Close Button */
+.closeButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 152px;
+  height: 36px;
+  padding: 8px 12px;
+  background: white;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  font-family: 'Mona Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 16px;
+  color: #0f172a;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.closeButton:hover {
+  background: #f8fafc;
+  border-color: #94a3b8;
+}
+
+/* Custom Scrollbar styling */
+.tableContainer::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.tableContainer::-webkit-scrollbar-track {
+  background: #f8fafc;
+}
+
+.tableContainer::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 4px;
+}
+
+.tableContainer::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+.tableContainer::-webkit-scrollbar-corner {
+  background: #f8fafc;
+}

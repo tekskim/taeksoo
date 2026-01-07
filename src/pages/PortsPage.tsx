@@ -188,7 +188,7 @@ export function PortsPage() {
       render: (_, row) => (
         <div className="flex flex-col gap-0.5">
           <Link
-          to={`/ports/${row.id}`}
+          to={`/compute/ports/${row.id}`}
             className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
             onClick={(e) => e.stopPropagation()}
           >
@@ -244,7 +244,7 @@ export function PortsPage() {
         <div className="flex flex-col gap-0.5 min-w-0">
           <Tooltip content={row.ownedNetwork} position="top">
             <Link
-          to={`/networks/${row.ownedNetworkId}`}
+          to={`/compute/networks/${row.ownedNetworkId}`}
               className="inline-flex items-center gap-1 font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
               onClick={(e) => e.stopPropagation()}
             >

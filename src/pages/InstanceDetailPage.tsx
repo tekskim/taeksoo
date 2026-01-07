@@ -694,7 +694,7 @@ export function InstanceDetailPage() {
                           render: (value: string, row: AttachedVolume) => (
                             <div className="flex flex-col gap-0.5">
                             <Link
-                              to={`/volumes/${row.id}`}
+                              to={`/compute/volumes/${row.id}`}
                                 className="font-medium text-[var(--color-action-primary)] hover:underline"
                             >
                               {value}
@@ -822,7 +822,7 @@ export function InstanceDetailPage() {
                           render: (_value: string, iface: AttachedInterface) => (
                             <div className="flex flex-col gap-0.5">
                             <Link 
-                                to={`/ports/${iface.id}`}
+                                to={`/compute/ports/${iface.id}`}
                                 className="font-medium text-[var(--color-action-primary)] hover:underline"
                             >
                                 {iface.name}
@@ -840,7 +840,7 @@ export function InstanceDetailPage() {
                           render: (_value: string, iface: AttachedInterface) => (
                             <div className="flex flex-col gap-0.5">
                             <Link 
-                                to={`/networks/${iface.id}`}
+                                to={`/compute/networks/${iface.id}`}
                                 className="font-medium text-[var(--color-action-primary)] hover:underline"
                             >
                                 {iface.network}
@@ -944,7 +944,7 @@ export function InstanceDetailPage() {
                           render: (_value: string, row: FloatingIP) => (
                             <div className="flex flex-col gap-0.5">
                             <Link 
-                              to={`/floating-ips/${row.id}`}
+                              to={`/compute/floating-ips/${row.id}`}
                                 className="font-medium text-[var(--color-action-primary)] hover:underline"
                             >
                                 {row.floatingIp}
@@ -1048,7 +1048,7 @@ export function InstanceDetailPage() {
                           render: (_value: string, row: SecurityGroup) => (
                             <div className="flex flex-col gap-0.5">
                             <Link 
-                              to={`/security-groups/${row.id}`}
+                              to={`/compute/security-groups/${row.id}`}
                                 className="font-medium text-[var(--color-action-primary)] hover:underline"
                             >
                               {row.name}
@@ -1155,7 +1155,7 @@ export function InstanceDetailPage() {
                           render: (_value: string, row: InstanceSnapshot) => (
                             <div className="flex flex-col gap-0.5">
                             <Link 
-                              to={`/instance-snapshots/${row.id}`}
+                              to={`/compute/instance-snapshots/${row.id}`}
                                 className="font-medium text-[var(--color-action-primary)] hover:underline"
                             >
                               {row.name}

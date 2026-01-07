@@ -263,7 +263,7 @@ export function VolumeBackupDetailPage() {
                                 Volume
                               </span>
                               <Link 
-                                to={`/volumes/${backup.sourceVolumeId}`}
+                                to={`/compute/volumes/${backup.sourceVolumeId}`}
                                 className="inline-flex items-center gap-1.5 text-[12px] font-medium leading-4 text-[var(--color-action-primary)] hover:underline"
                               >
                                 {backup.sourceVolume}

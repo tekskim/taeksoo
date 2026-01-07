@@ -211,7 +211,7 @@ export default function FloatingIPDetailPage() {
                             value={
                               floatingIP.network ? (
                                 <Link
-                                  to={`/networks/${floatingIP.network.id}`}
+                                  to={`/compute/networks/${floatingIP.network.id}`}
                                   className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
                                 >
                                   {floatingIP.network.name}
@@ -231,7 +231,7 @@ export default function FloatingIPDetailPage() {
                             value={
                               floatingIP.resource ? (
                                 <Link
-                                  to={`/instances/${floatingIP.resource.id}`}
+                                  to={`/compute/instances/${floatingIP.resource.id}`}
                                   className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
                                 >
                                   {floatingIP.resource.name}
@@ -248,7 +248,7 @@ export default function FloatingIPDetailPage() {
                             value={
                               floatingIP.router ? (
                                 <Link
-                                  to={`/routers/${floatingIP.router.id}`}
+                                  to={`/compute/routers/${floatingIP.router.id}`}
                                   className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
                                 >
                                   {floatingIP.router.name}

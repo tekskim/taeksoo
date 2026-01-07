@@ -86,11 +86,13 @@ function SectionCardContent({ children, gap = 3, className, ...props }: SectionC
    SectionCard.DataRow
    ---------------------------------------- */
 
-export interface SectionCardDataRowProps extends Omit<HTMLAttributes<HTMLDivElement>, 'children'> {
+export interface SectionCardDataRowProps extends HTMLAttributes<HTMLDivElement> {
   /** Label for the data row */
   label: string;
-  /** Value to display */
-  value: string;
+  /** Value to display (string) - use this or children */
+  value?: string;
+  /** Custom content - use this for complex values like chips */
+  children?: ReactNode;
   /** Render as a link */
   isLink?: boolean;
   /** Link destination (required if isLink is true) */
@@ -102,12 +104,37 @@ export interface SectionCardDataRowProps extends Omit<HTMLAttributes<HTMLDivElem
 function SectionCardDataRow({
   label,
   value,
+  children,
   isLink = false,
   linkHref,
   showDivider = true,
   className,
   ...props
 }: SectionCardDataRowProps) {
+  // Determine what to render: children take precedence over value
+  const renderValue = () => {
+    if (children) {
+      return <div className="text-[12px] leading-4 text-[var(--color-text-default)]">{children}</div>;
+    }
+    
+    if (isLink) {
+      return (
+        <Link
+          to={linkHref || '#'}
+          className="text-[12px] font-medium leading-4 text-[var(--color-action-primary)] hover:underline"
+        >
+          {value}
+        </Link>
+      );
+    }
+    
+    return (
+      <span className="text-[12px] leading-4 text-[var(--color-text-default)]">
+        {value}
+      </span>
+    );
+  };
+
   return (
     <div className={twMerge('flex flex-col gap-3 w-full', className)} {...props}>
       {showDivider && (
@@ -117,18 +144,7 @@ function SectionCardDataRow({
         <span className="text-[11px] font-medium leading-4 text-[var(--color-text-subtle)]">
           {label}
         </span>
-        {isLink ? (
-          <Link
-            to={linkHref || '#'}
-            className="text-[12px] font-medium leading-4 text-[var(--color-action-primary)] hover:underline"
-          >
-            {value}
-          </Link>
-        ) : (
-          <span className="text-[12px] leading-4 text-[var(--color-text-default)]">
-            {value}
-          </span>
-        )}
+        {renderValue()}
       </div>
     </div>
   );

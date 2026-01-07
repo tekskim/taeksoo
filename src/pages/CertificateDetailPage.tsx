@@ -263,7 +263,7 @@ export default function CertificateDetailPage() {
       render: (_, row) => (
         <div className="flex flex-col gap-0.5">
           <Link
-            to={`/listeners/${row.id}`}
+            to={`/compute/listeners/${row.id}`}
             className="inline-flex items-center gap-1.5 font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
             onClick={(e) => e.stopPropagation()}
           >
@@ -296,7 +296,7 @@ export default function CertificateDetailPage() {
       render: (_, row) => (
         <div className="flex flex-col gap-0.5">
           <Link
-            to={`/load-balancers/${row.loadBalancer.id}`}
+            to={`/compute/load-balancers/${row.loadBalancer.id}`}
             className="inline-flex items-center gap-1.5 font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
             onClick={(e) => e.stopPropagation()}
           >
