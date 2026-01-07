@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import {
   Button,
@@ -190,7 +190,7 @@ function isCACertificate(cert: CertificateDetail): cert is CACertificateDetail {
 
 export default function CertificateDetailPage() {
   const { id } = useParams<{ id: string }>();
-  const { tabs, activeTabId, closeTab, selectTab, addNewTab } = useTabs();
+  const { tabs, activeTabId, closeTab, selectTab, addNewTab, updateActiveTabLabel } = useTabs();
   
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [activeDetailTab, setActiveDetailTab] = useState('details');
@@ -206,6 +206,13 @@ export default function CertificateDetailPage() {
 
   // In a real app, fetch based on id
   const certificate = id && mockCertificates[id] ? mockCertificates[id] : mockServerCertificate;
+
+  // Update tab label to certificate name
+  useEffect(() => {
+    if (certificate.name) {
+      updateActiveTabLabel(certificate.name);
+    }
+  }, [certificate.name, updateActiveTabLabel]);
 
   const breadcrumbItems = [
     { label: 'Proj-1', href: '/' },
@@ -358,7 +365,7 @@ export default function CertificateDetailPage() {
         </div>
 
         {/* Scrollable Content Area */}
-        <div className="flex-1 overflow-auto min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll">
+        <div className="flex-1 overflow-auto overscroll-contain sidebar-scroll">
           {/* Page Content */}
           <div className="pt-4 px-8 pb-20 bg-[var(--color-surface-default)]">
             <VStack gap={8} className="min-w-[1176px] max-w-[1320px]">

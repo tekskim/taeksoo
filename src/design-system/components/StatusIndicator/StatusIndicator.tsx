@@ -43,7 +43,7 @@ export type StatusType =
   | 'no-monitor'
   | 'down';
 
-export type StatusLayout = 'default' | 'icon-only';
+export type StatusLayout = 'icon-only' | 'default' | 'badge';
 export type StatusSize = 'sm' | 'md' | 'lg';
 
 export interface StatusConfig {
@@ -224,7 +224,34 @@ export function StatusIndicator({
     );
   }
 
-  // Default layout with label
+  // Badge layout - square-ish with icon and text
+  if (layout === 'badge') {
+    const baseStyles = [
+      'inline-flex items-center',
+      'gap-1.5',
+      'font-medium',
+      'rounded-md',
+      'px-2 py-0.5',
+      'text-[var(--status-text)]',
+      'text-[11px]',
+      'leading-4',
+    ].join(' ');
+
+    const classes = twMerge(
+      baseStyles,
+      config.bgColor,
+      className
+    );
+
+    return (
+      <span className={classes} role="status" aria-label={displayLabel} {...props}>
+        <span className="shrink-0">{config.icon}</span>
+        <span>{displayLabel}</span>
+      </span>
+    );
+  }
+
+  // Default layout with label (rounded pill shape)
   const baseStyles = [
     'inline-flex items-center',
     'gap-[var(--status-gap)]',

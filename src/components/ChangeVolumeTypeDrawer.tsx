@@ -132,7 +132,7 @@ export function ChangeVolumeTypeDrawer({
 
           {/* Warning Box */}
           <div className="w-full bg-[var(--color-status-error-subtle)] rounded-lg p-3 flex gap-2 items-start">
-            <IconAlertCircle size={16} className="text-red-400 flex-shrink-0 mt-0.5" stroke={1.5} />
+            <IconAlertCircle size={16} className="text-red-400 flex-shrink-0 mt-0.5" stroke={1} />
             <p className="text-[11px] text-[var(--color-text-default)] leading-4">
               For data consistency, stop all write operations on the instance before retyping.
             </p>

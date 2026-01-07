@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useCallback } from 'react';
+import React, { createContext, useContext, useState, useCallback, useEffect } from 'react';
 
 /* ----------------------------------------
    Types
@@ -10,6 +10,12 @@ interface SidebarContextValue {
   close: () => void;
   toggle: () => void;
 }
+
+/* ----------------------------------------
+   Constants
+   ---------------------------------------- */
+
+const SIDEBAR_STORAGE_KEY = 'sidebar-open';
 
 /* ----------------------------------------
    Context
@@ -27,7 +33,19 @@ interface SidebarProviderProps {
 }
 
 export function SidebarProvider({ children, defaultOpen = true }: SidebarProviderProps) {
-  const [isOpen, setIsOpen] = useState(defaultOpen);
+  // Initialize from localStorage or use defaultOpen
+  const [isOpen, setIsOpen] = useState(() => {
+    const stored = localStorage.getItem(SIDEBAR_STORAGE_KEY);
+    if (stored !== null) {
+      return stored === 'true';
+    }
+    return defaultOpen;
+  });
+
+  // Persist to localStorage when state changes
+  useEffect(() => {
+    localStorage.setItem(SIDEBAR_STORAGE_KEY, String(isOpen));
+  }, [isOpen]);
 
   const open = useCallback(() => setIsOpen(true), []);
   const close = useCallback(() => setIsOpen(false), []);

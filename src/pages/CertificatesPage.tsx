@@ -267,10 +267,10 @@ export function CertificatesPage() {
           onBack={() => window.history.back()}
           onForward={() => window.history.forward()}
           breadcrumb={<Breadcrumb items={[{ label: 'Proj-1', href: '/project' }, { label: 'Certificates' }]} />}
-          actions={<TopBarAction icon={<IconBell size={16} stroke={1.5} />} aria-label="Notifications" badge={true} />}
+          actions={<TopBarAction icon={<IconBell size={16} stroke={1} />} aria-label="Notifications" badge={true} />}
         />
         </div>
-        <div className="flex-1 overflow-auto min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll">
+        <div className="flex-1 overflow-auto overscroll-contain sidebar-scroll">
         <div className="pt-4 px-8 pb-6 bg-[var(--color-surface-default)]">
           <VStack gap={3}>
             <div className="flex justify-between items-center h-8 w-full">

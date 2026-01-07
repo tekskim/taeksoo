@@ -354,7 +354,7 @@ export function PortsPage() {
           }
           actions={
             <TopBarAction
-              icon={<IconBell size={16} stroke={1.5} />}
+              icon={<IconBell size={16} stroke={1} />}
               aria-label="Notifications"
               badge={true}
             />
@@ -363,7 +363,7 @@ export function PortsPage() {
         </div>
 
         {/* Scrollable Content Area */}
-        <div className="flex-1 overflow-auto min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll">
+        <div className="flex-1 overflow-auto overscroll-contain sidebar-scroll">
         {/* Main Content */}
         <div className="pt-4 px-8 pb-6 bg-[var(--color-surface-default)]">
           <VStack gap={3}>

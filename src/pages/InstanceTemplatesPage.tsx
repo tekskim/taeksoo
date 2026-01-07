@@ -249,18 +249,13 @@ export function InstanceTemplatesPage() {
       flex: 1,
       sortable: true,
       render: (_, row) => (
-        <div className="flex flex-col gap-0.5 whitespace-nowrap">
-          <Link
-            to={`/compute/instance-templates/${row.id}`}
-            className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
-            onClick={(e) => e.stopPropagation()}
-          >
-            {row.name}
-          </Link>
-          <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
-            ID : {row.id}
-          </span>
-        </div>
+        <Link
+          to={`/compute/instance-templates/${row.id}`}
+          className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
+          onClick={(e) => e.stopPropagation()}
+        >
+          {row.name}
+        </Link>
       ),
     },
     {
@@ -365,7 +360,7 @@ export function InstanceTemplatesPage() {
           }
           actions={
             <TopBarAction
-              icon={<IconBell size={16} stroke={1.5} />}
+              icon={<IconBell size={16} stroke={1} />}
               aria-label="Notifications"
               badge={true}
             />
@@ -374,7 +369,7 @@ export function InstanceTemplatesPage() {
         </div>
 
         {/* Scrollable Content Area */}
-        <div className="flex-1 overflow-auto min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll">
+        <div className="flex-1 overflow-auto overscroll-contain sidebar-scroll">
         {/* Page Content */}
         <div className="pt-4 px-8 pb-6 bg-[var(--color-surface-default)]">
           <VStack gap={3}>
