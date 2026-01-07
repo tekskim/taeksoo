@@ -110,9 +110,9 @@ function DetailHeaderInfoGrid({ children, className, ...props }: DetailHeaderInf
 export interface DetailHeaderInfoCardProps extends Omit<HTMLAttributes<HTMLDivElement>, 'children'> {
   /** Label for the info card */
   label: string;
-  /** Value to display */
-  value: string;
-  /** Show copy button for the value */
+  /** Value to display - can be string or ReactNode */
+  value: ReactNode;
+  /** Show copy button for the value (only works with string values) */
   copyable?: boolean;
   /** Show status indicator instead of value */
   status?: StatusType;
@@ -127,11 +127,14 @@ function DetailHeaderInfoCard({
   ...props
 }: DetailHeaderInfoCardProps) {
   const [copied, setCopied] = useState(false);
+  const isStringValue = typeof value === 'string';
 
   const handleCopy = () => {
-    navigator.clipboard.writeText(value);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+    if (isStringValue) {
+      navigator.clipboard.writeText(value);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    }
   };
 
   return (
@@ -158,15 +161,19 @@ function DetailHeaderInfoCard({
         <span className="text-[11px] font-medium leading-4 text-[var(--color-text-subtle)] whitespace-nowrap">
           {label}
         </span>
-        <div className="flex items-center gap-1.5 min-w-0">
-          <span 
-            className="text-[12px] leading-4 font-normal truncate text-[var(--color-text-default)]"
-            title={value}
-          >
-            {value}
-          </span>
-          {/* Copy button inline next to value */}
-          {copyable && (
+        <div className="flex items-center gap-1.5 min-w-0 min-h-[26px]">
+          {isStringValue ? (
+            <span 
+              className="text-[12px] leading-4 font-normal truncate text-[var(--color-text-default)]"
+              title={value}
+            >
+              {value}
+            </span>
+          ) : (
+            value
+          )}
+          {/* Copy button inline next to value (only for string values) */}
+          {copyable && isStringValue && (
             <button
               onClick={handleCopy}
               className="shrink-0 p-0.5 rounded hover:bg-[var(--color-surface-default)] transition-colors"

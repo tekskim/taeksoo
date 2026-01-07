@@ -32,6 +32,7 @@ import {
   IconDotsCircleHorizontal,
   IconCube,
   IconRouter,
+  IconEdit,
 } from '@tabler/icons-react';
 
 /* ----------------------------------------
@@ -330,6 +331,7 @@ export default function NetworkDetailPage() {
       key: 'gatewayIp',
       label: 'Gateway IP',
       flex: 1,
+      sortable: true,
     },
     {
       key: 'portCount',
@@ -482,7 +484,6 @@ export default function NetworkDetailPage() {
       key: 'macAddress',
       label: 'MAC Address',
       flex: 1,
-      sortable: true,
     },
   ];
 
@@ -534,6 +535,9 @@ export default function NetworkDetailPage() {
                   <Button variant="secondary" size="sm" leftIcon={<IconCirclePlus size={12} />}>
                     Create Subnet
                   </Button>
+                  <Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />}>
+                    Edit
+                  </Button>
                   <Button variant="secondary" size="sm" leftIcon={<IconTrash size={12} />}>
                     Delete
                   </Button>
@@ -566,7 +570,14 @@ export default function NetworkDetailPage() {
                     <VStack gap={4} className="pt-6">
                       {/* Basic Information */}
                       <SectionCard>
-                        <SectionCard.Header title="Basic Information" showEditButton onEdit={() => {}} />
+                        <SectionCard.Header 
+                          title="Basic Information" 
+                          actions={
+                            <Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />}>
+                              Edit
+                            </Button>
+                          } 
+                        />
                         <SectionCard.Content>
                           <SectionCard.DataRow label="Network Name" value={network.networkName} />
                           <SectionCard.DataRow label="AZ(Availability Zone)" value={network.availabilityZone} />

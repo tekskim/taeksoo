@@ -27,11 +27,9 @@ import {
   IconTrash,
   IconBell,
   IconChevronDown,
-  IconExternalLink,
   IconCirclePlus,
   IconDotsCircleHorizontal,
   IconUsers,
-  IconCopy,
 } from '@tabler/icons-react';
 
 /* ----------------------------------------
@@ -313,7 +311,6 @@ export default function PoolDetailPage() {
       key: 'ipAddress',
       label: 'IP Address',
       flex: 1,
-      sortable: true,
     },
     {
       key: 'port',
@@ -345,6 +342,7 @@ export default function PoolDetailPage() {
       align: 'center',
       render: (_: unknown, row: Member) => {
         const memberMenuItems: ContextMenuItem[] = [
+          { id: 'edit', label: 'Edit', onClick: () => console.log('Edit member', row.id) },
           { id: 'delete', label: 'Delete', status: 'danger', onClick: () => console.log('Delete member', row.id) },
         ];
         return (
@@ -433,6 +431,14 @@ export default function PoolDetailPage() {
                   >
                     Delete
                   </Button>
+                  <ContextMenu
+                    items={[
+                      { id: 'create-health-monitor', label: 'Create health monitor', onClick: () => console.log('Create health monitor') },
+                      { id: 'edit-health-monitor', label: 'Edit health monitor', onClick: () => console.log('Edit health monitor') },
+                      { id: 'delete-health-monitor', label: 'Delete health monitor', status: 'danger', onClick: () => console.log('Delete health monitor') },
+                    ]}
+                    trigger="click"
+                  >
                   <Button
                     variant="secondary"
                     size="sm"
@@ -440,6 +446,7 @@ export default function PoolDetailPage() {
                   >
                     More Actions
                   </Button>
+                  </ContextMenu>
                 </DetailHeader.Actions>
 
                 <DetailHeader.InfoGrid>
@@ -514,7 +521,6 @@ export default function PoolDetailPage() {
                                   className="flex items-center gap-1.5 text-[12px] font-medium leading-4 text-[var(--color-action-primary)] hover:underline"
                                 >
                                   {pool.listener.name}
-                                  <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
                                 </Link>
                               ) : (
                                 <span className="text-[12px] leading-4 text-[var(--color-text-default)]">-</span>
