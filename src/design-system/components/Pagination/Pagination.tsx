@@ -177,7 +177,7 @@ export const Pagination: React.FC<PaginationProps> = ({
         className={navButtonClass}
         aria-label="Previous page"
       >
-        <IconChevronLeft size={14} stroke={2} />
+        <IconChevronLeft size={14} stroke={1} />
       </button>
 
       {/* Page Numbers */}
@@ -216,7 +216,7 @@ export const Pagination: React.FC<PaginationProps> = ({
         className={navButtonClass}
         aria-label="Next page"
       >
-        <IconChevronRight size={14} stroke={2} />
+        <IconChevronRight size={14} stroke={1} />
       </button>
 
       {/* Settings Button */}
@@ -228,7 +228,7 @@ export const Pagination: React.FC<PaginationProps> = ({
           className={navButtonClass}
           aria-label="Pagination settings"
         >
-          <IconSettings size={16} stroke={1.5} />
+          <IconSettings size={16} stroke={1} />
         </button>
       )}
 

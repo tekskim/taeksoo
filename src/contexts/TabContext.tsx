@@ -20,7 +20,15 @@ interface TabContextValue {
   closeTab: (tabId: string) => void;
   selectTab: (tabId: string) => void;
   openInNewTab: (id: string, label: string, path: string) => void;
+  updateActiveTabLabel: (label: string) => void;
 }
+
+/* ----------------------------------------
+   Constants
+   ---------------------------------------- */
+
+const TABS_STORAGE_KEY = 'tabs-state';
+const ACTIVE_TAB_STORAGE_KEY = 'active-tab-id';
 
 /* ----------------------------------------
    Context
@@ -41,6 +49,7 @@ interface TabProviderProps {
 function getLabelFromPath(path: string): string {
   const pathLabelMap: Record<string, string> = {
     '/': 'Home',
+    '/home': 'Home',
     '/compute': 'Home',
     '/compute/home': 'Home',
     '/compute/instances': 'Instances',
@@ -62,9 +71,17 @@ function getLabelFromPath(path: string): string {
     '/compute/load-balancers': 'Load Balancers',
     '/compute/certificates': 'Certificates',
     '/compute/topology': 'Topology',
+    '/compute/console': 'Console',
+    '/agent': 'Agent',
+    '/agent/create': 'Create Agent',
+    '/chat': 'Chat',
+    '/storage': 'Data sources',
+    '/mcp-tools': 'MCP Tools',
+    '/design': 'Design System',
     '/design/components': 'Design System',
     '/design/drawers': 'Drawers',
     '/design/modals': 'Modals',
+    '/design-system': 'Design System',
   };
   
   // Check for exact match first
@@ -73,7 +90,9 @@ function getLabelFromPath(path: string): string {
   }
   
   // Check for detail pages (e.g., /compute/volumes/vol-001)
-  for (const [basePath, label] of Object.entries(pathLabelMap)) {
+  // Sort by path length descending to match more specific paths first
+  const sortedEntries = Object.entries(pathLabelMap).sort((a, b) => b[0].length - a[0].length);
+  for (const [basePath, label] of sortedEntries) {
     if (basePath !== '/' && path.startsWith(basePath + '/')) {
       // Extract the ID from the path for detail pages
       const id = path.split('/').pop();
@@ -91,35 +110,113 @@ export function TabProvider({ children, defaultTabs = [] }: TabProviderProps) {
   const navigate = useNavigate();
   const location = useLocation();
   
-  const [tabs, setTabs] = useState<TabItem[]>(defaultTabs);
-  const [activeTabId, setActiveTabId] = useState<string>(defaultTabs[0]?.id || '');
+  // Initialize from localStorage or use defaultTabs
+  const [tabs, setTabs] = useState<TabItem[]>(() => {
+    try {
+      const stored = localStorage.getItem(TABS_STORAGE_KEY);
+      if (stored) {
+        const parsed = JSON.parse(stored);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          return parsed;
+        }
+      }
+    } catch {
+      // Ignore parse errors
+    }
+    return defaultTabs;
+  });
+  
+  const [activeTabId, setActiveTabId] = useState<string>(() => {
+    const stored = localStorage.getItem(ACTIVE_TAB_STORAGE_KEY);
+    if (stored) {
+      return stored;
+    }
+    return defaultTabs[0]?.id || '';
+  });
   
   // Use ref to access latest tabs without re-creating callbacks
   const tabsRef = useRef(tabs);
   tabsRef.current = tabs;
 
+  // Persist tabs to localStorage
+  useEffect(() => {
+    localStorage.setItem(TABS_STORAGE_KEY, JSON.stringify(tabs));
+  }, [tabs]);
+
+  // Persist active tab to localStorage
+  useEffect(() => {
+    localStorage.setItem(ACTIVE_TAB_STORAGE_KEY, activeTabId);
+  }, [activeTabId]);
+
+  // On initial mount, sync tabs with current URL (prioritize current URL over stored active tab)
+  const initializedRef = useRef(false);
+  useEffect(() => {
+    if (!initializedRef.current) {
+      initializedRef.current = true;
+      const currentPath = location.pathname;
+      
+      // Check if there's a tab matching the current URL
+      const matchingTab = tabsRef.current.find((t) => {
+        const tabPathname = t.path.split('?')[0];
+        return tabPathname === currentPath;
+      });
+      
+      if (matchingTab) {
+        // Activate the matching tab
+        setActiveTabId(matchingTab.id);
+      } else if (tabsRef.current.length > 0) {
+        // Update the active tab's path instead of creating a new one
+        const activeTab = tabsRef.current.find((t) => t.id === activeTabId);
+        if (activeTab) {
+          const currentLabel = getLabelFromPath(currentPath);
+          setTabs((prev) => prev.map((tab) => 
+            tab.id === activeTab.id ? { ...tab, path: currentPath, label: currentLabel } : tab
+          ));
+        }
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [location.pathname]);
+
   // Sync tab with current route when location changes
   useEffect(() => {
+    if (!initializedRef.current) return;
+    
     const currentPath = location.pathname;
     const currentLabel = getLabelFromPath(currentPath);
     
     setTabs((prevTabs) => {
-      // Find if there's already a tab for this path
-      const existingTab = prevTabs.find((t) => t.path === currentPath);
+      // Find if there's already a tab for this path (compare pathname without query string)
+      const existingTab = prevTabs.find((t) => {
+        const tabPathname = t.path.split('?')[0];
+        return tabPathname === currentPath;
+      });
       
       if (existingTab) {
-        // Tab exists, just make sure it's active
+        // Tab exists, just make sure it's active and label is up to date
         setActiveTabId(existingTab.id);
-        return prevTabs;
+        return prevTabs.map((tab) =>
+          tab.id === existingTab.id ? { ...tab, label: currentLabel } : tab
+        );
       }
       
-      // Update the active tab's path and label
-      return prevTabs.map((tab) => {
-        if (tab.id === tabsRef.current.find((t) => t.id === activeTabId)?.id) {
-          return { ...tab, path: currentPath, label: currentLabel };
-        }
-        return tab;
-      });
+      // Update the active tab's path and label, or create new tab if none exists
+      const activeTab = prevTabs.find((t) => t.id === activeTabId);
+      if (activeTab) {
+        return prevTabs.map((tab) =>
+          tab.id === activeTabId ? { ...tab, path: currentPath, label: currentLabel } : tab
+        );
+      } else {
+        // No active tab, create a new one
+        const newTab: TabItem = {
+          id: `${currentPath.replace(/\//g, '-')}-${Date.now()}`,
+          label: currentLabel,
+          path: currentPath,
+          closable: true,
+        };
+        setActiveTabId(newTab.id);
+        return [...prevTabs, newTab];
+      }
     });
   }, [location.pathname, activeTabId]);
 
@@ -137,26 +234,29 @@ export function TabProvider({ children, defaultTabs = [] }: TabProviderProps) {
 
   // Close a tab
   const closeTab = useCallback((tabId: string) => {
+    // Always navigate to home when closing a tab
+    navigate('/');
+    
     setTabs((prev) => {
       const newTabs = prev.filter((t) => t.id !== tabId);
-      return newTabs;
-    });
-    
-    // Check if we need to switch tabs
-    setActiveTabId((currentActiveId) => {
-      if (currentActiveId === tabId) {
-        const currentTabs = tabsRef.current;
-        const newTabs = currentTabs.filter((t) => t.id !== tabId);
-        if (newTabs.length > 0) {
-          const closedIndex = currentTabs.findIndex((t) => t.id === tabId);
-          const newActiveIndex = Math.min(closedIndex, newTabs.length - 1);
-          const newActiveTab = newTabs[newActiveIndex];
-          // Navigate to the new active tab
-          setTimeout(() => navigate(newActiveTab.path), 0);
-          return newActiveTab.id;
-        }
+      
+      // Find or create home tab
+      let homeTab = newTabs.find((t) => t.path === '/');
+      if (!homeTab) {
+        // If no home tab exists, create one
+        homeTab = {
+          id: 'home',
+          label: 'Home',
+          path: '/',
+          closable: true,
+        };
+        newTabs.push(homeTab);
       }
-      return currentActiveId;
+      
+      // Set active tab to home
+      setActiveTabId(homeTab.id);
+      
+      return newTabs;
     });
   }, [navigate]);
 
@@ -194,6 +294,15 @@ export function TabProvider({ children, defaultTabs = [] }: TabProviderProps) {
     navigate('/');
   }, [addTab, navigate]);
 
+  // Update the label of the active tab
+  const updateActiveTabLabel = useCallback((label: string) => {
+    setTabs((prevTabs) =>
+      prevTabs.map((tab) =>
+        tab.id === activeTabId ? { ...tab, label } : tab
+      )
+    );
+  }, [activeTabId]);
+
   return (
     <TabContext.Provider
       value={{
@@ -204,6 +313,7 @@ export function TabProvider({ children, defaultTabs = [] }: TabProviderProps) {
         closeTab,
         selectTab,
         openInNewTab,
+        updateActiveTabLabel,
       }}
     >
       {children}

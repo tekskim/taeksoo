@@ -146,7 +146,7 @@ export function RoutersPage() {
       sortable: true,
       render: (_, row) => (
         <Link
-          to={`/routers/${row.id}`}
+          to={`/compute/routers/${row.id}`}
           className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
           onClick={(e) => e.stopPropagation()}
         >
@@ -174,7 +174,7 @@ export function RoutersPage() {
         row.externalNetworkId ? (
           <div className="flex flex-col gap-0.5">
             <Link
-              to={`/networks/${row.externalNetworkId}`}
+              to={`/compute/networks/${row.externalNetworkId}`}
               className="inline-flex items-center gap-1.5 font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
               onClick={(e) => e.stopPropagation()}
             >
@@ -254,7 +254,7 @@ export function RoutersPage() {
           }
           actions={
             <TopBarAction
-              icon={<IconBell size={16} stroke={1.5} />}
+              icon={<IconBell size={16} stroke={1} />}
               aria-label="Notifications"
               badge={true}
             />
@@ -263,7 +263,7 @@ export function RoutersPage() {
         </div>
 
         {/* Scrollable Content Area */}
-        <div className="flex-1 overflow-auto min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll">
+        <div className="flex-1 overflow-auto overscroll-contain sidebar-scroll">
         {/* Main Content */}
         <div className="pt-4 px-8 pb-6 bg-[var(--color-surface-default)]">
           <VStack gap={3}>

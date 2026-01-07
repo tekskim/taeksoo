@@ -199,7 +199,7 @@ const ContextMenuItemComponent: React.FC<{
       >
         <span>{item.label}</span>
         {hasSubmenu && (
-          <IconChevronRight size={12} stroke={1.5} className="ml-6 shrink-0" />
+          <IconChevronRight size={12} stroke={1} className="ml-6 shrink-0" />
         )}
       </div>
 

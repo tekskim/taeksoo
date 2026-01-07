@@ -144,7 +144,7 @@ export function SecurityGroupsPage() {
       render: (_, row) => (
         <div className="flex flex-col gap-0.5">
           <Link
-          to={`/security-groups/${row.id}`}
+          to={`/compute/security-groups/${row.id}`}
             className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
             onClick={(e) => e.stopPropagation()}
           >
@@ -257,7 +257,7 @@ export function SecurityGroupsPage() {
           }
           actions={
             <TopBarAction
-              icon={<IconBell size={16} stroke={1.5} />}
+              icon={<IconBell size={16} stroke={1} />}
               aria-label="Notifications"
               badge={true}
             />
@@ -266,7 +266,7 @@ export function SecurityGroupsPage() {
         </div>
 
         {/* Scrollable Content Area */}
-        <div className="flex-1 overflow-auto min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll">
+        <div className="flex-1 overflow-auto overscroll-contain sidebar-scroll">
         {/* Main Content */}
         <div className="pt-4 px-8 pb-6 bg-[var(--color-surface-default)]">
           <VStack gap={3}>

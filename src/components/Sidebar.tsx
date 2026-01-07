@@ -28,9 +28,10 @@ import {
   IconAffiliate,
 } from '@tabler/icons-react';
 import { useLocation } from 'react-router-dom';
+import { useProject } from '@/contexts/ProjectContext';
 import ThakiLogoLight from '@/assets/thakiLogo_light.svg';
 import ThakiLogoDark from '@/assets/thakiLogo-dark.svg';
-// Project selector intentionally hidden in current IA
+import { ProjectSelector } from './ProjectSelector';
 
 /* ----------------------------------------
    Sidebar Component
@@ -43,6 +44,7 @@ interface SidebarProps {
 
 export function Sidebar({ isOpen = true, onToggle }: SidebarProps) {
   const { isDark } = useDarkMode();
+  const { projects, selectedProjectId, setSelectedProjectId } = useProject();
   const location = useLocation();
   const isCloudBuilder = location.pathname.startsWith('/cloudbuilder') || location.pathname.startsWith('/cloud-builder');
   
@@ -90,6 +92,16 @@ export function Sidebar({ isOpen = true, onToggle }: SidebarProps) {
         >
           <IconLayoutSidebar size={16} className="text-[var(--color-text-muted)] pointer-events-none" stroke={1.5} />
         </button>
+      </div>
+
+      {/* Project Selector */}
+      <div className="px-3 py-2">
+        <ProjectSelector
+          projects={projects}
+          selectedProjectId={selectedProjectId}
+          onProjectSelect={setSelectedProjectId}
+          variant="default"
+        />
       </div>
 
       {/* Navigation */}

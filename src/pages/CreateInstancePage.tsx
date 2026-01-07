@@ -26,13 +26,22 @@ import {
   Checkbox,
   StatusIndicator,
   Chip,
+  FormField,
+  Toggle,
 } from '@/design-system';
 import type { TableColumn } from '@/design-system/components/Table/Table';
 import { Sidebar } from '@/components/Sidebar';
 import { useTabs } from '@/contexts/TabContext';
+import { useSidebar } from '@/contexts/SidebarContext';
 import {
   IconBell,
+  IconBrandUbuntu,
+  IconBrandWindows,
+  IconDots,
+  IconEdit,
   IconExternalLink,
+  IconMountain,
+  IconPlus,
   IconStar,
   IconStarFilled,
 } from '@tabler/icons-react';
@@ -58,7 +67,7 @@ interface TemplateRow {
 }
 
 type SectionStep = 'templates' | 'basic-info' | 'image' | 'flavor' | 'network' | 'authentication' | 'advanced';
-type SectionState = 'pre' | 'active' | 'done';
+type SectionState = 'pre' | 'active' | 'done' | 'skipped';
 
 interface SectionStatus {
   templates: SectionState;
@@ -108,6 +117,9 @@ const mockTemplates: TemplateRow[] = [
   { id: '129jm39s', name: 'th.tiny', description: '-', visibility: 'Private', createdAt: '2025-11-19', isFavorite: true },
   { id: '230km40t', name: 'th.small', description: 'Small instance', visibility: 'Public', createdAt: '2025-11-18', isFavorite: false },
   { id: '331ln51u', name: 'th.medium', description: 'Medium instance', visibility: 'Private', createdAt: '2025-11-17', isFavorite: true },
+  { id: '432mo62v', name: 'th.large', description: 'Large instance', visibility: 'Public', createdAt: '2025-11-16', isFavorite: false },
+  { id: '533np73w', name: 'th.xlarge', description: 'Extra large instance', visibility: 'Private', createdAt: '2025-11-15', isFavorite: true },
+  { id: '634oq84x', name: 'th.2xlarge', description: '2x large instance', visibility: 'Public', createdAt: '2025-11-14', isFavorite: false },
 ];
 
 /* ----------------------------------------
@@ -212,6 +224,33 @@ function PreSection({ title }: PreSectionProps) {
 }
 
 /* ----------------------------------------
+   SkippedSection Component (Skip된 섹션 - Not configured 표시)
+   ---------------------------------------- */
+
+interface SkippedSectionProps {
+  title: string;
+  onEdit: () => void;
+}
+
+function SkippedSection({ title, onEdit }: SkippedSectionProps) {
+  return (
+    <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-md px-4 py-3">
+      <div className="flex items-center justify-between">
+        <h5 className="text-[16px] font-semibold leading-6 text-[var(--color-text-default)]">
+          {title}
+        </h5>
+        <div className="flex items-center gap-3">
+          <span className="text-[length:var(--font-size-12)] leading-[var(--line-height-18)] text-[var(--color-text-muted)]">Not configured</span>
+          <Button variant="outline" size="sm" leftIcon={<IconEdit size={12} />} onClick={onEdit}>
+            Edit
+          </Button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ----------------------------------------
    DoneSectionRow Component (Summary 데이터 로우)
    ---------------------------------------- */
 
@@ -255,12 +294,8 @@ function DoneSection({ title, onEdit, children }: DoneSectionProps) {
           <h5 className="text-[16px] font-semibold leading-6 text-[var(--color-text-default)]">
             {title}
           </h5>
-          <Button variant="outline" size="sm" onClick={onEdit}>
-            <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
-              <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
-            </svg>
-            <span>Edit</span>
+          <Button variant="outline" size="sm" leftIcon={<IconEdit size={12} />} onClick={onEdit}>
+            Edit
           </Button>
         </HStack>
 
@@ -280,6 +315,8 @@ interface BasicInformationSectionProps {
   onInstanceNameChange: (value: string) => void;
   availabilityZone: string;
   onAvailabilityZoneChange: (value: string) => void;
+  description: string;
+  onDescriptionChange: (value: string) => void;
   labels: { key: string; value: string }[];
   onLabelsChange: (labels: { key: string; value: string }[]) => void;
   onNext: () => void;
@@ -296,10 +333,10 @@ function BasicInformationSection({
   onInstanceNameChange,
   availabilityZone,
   onAvailabilityZoneChange,
+  description,
+  onDescriptionChange,
   onNext,
 }: BasicInformationSectionProps) {
-  const [labelOpen, setLabelOpen] = useState(false);
-  const [labelDescription, setLabelDescription] = useState('');
 
   return (
     <SectionCard>
@@ -309,7 +346,7 @@ function BasicInformationSection({
           {/* Instance Name */}
           <VStack gap={2} className="py-6">
             <label className="text-[14px] font-medium text-[var(--color-text-default)]">
-              Instance Name
+              Instance Name <span className="text-[var(--color-state-danger)]">*</span>
             </label>
             <Input
               placeholder="Instance Name"
@@ -323,43 +360,46 @@ function BasicInformationSection({
           </VStack>
 
           {/* Divider */}
-          <div className="w-full h-px bg-[var(--color-border-default)]" />
+          <div className="w-full h-px bg-[var(--color-border-subtle)]" />
 
           {/* AZ (Availability Zone) */}
           <VStack gap={2} className="py-6">
             <label className="text-[14px] font-medium text-[var(--color-text-default)]">
-              AZ (Availability Zone)
+              AZ (Availability Zone) <span className="text-[var(--color-state-danger)]">*</span>
             </label>
             <Select
               options={availabilityZoneOptions}
               value={availabilityZone}
               onChange={onAvailabilityZoneChange}
+              placeholder="Select AZ"
               fullWidth
             />
+            <span className="text-[11px] text-[var(--color-text-subtle)]">
+              Select the availability zone for the instance.
+            </span>
           </VStack>
 
           {/* Divider */}
-          <div className="w-full h-px bg-[var(--color-border-default)]" />
+          <div className="w-full h-px bg-[var(--color-border-subtle)]" />
 
-          {/* Label (Disclosure) */}
-          <div className="py-6">
-            <Disclosure open={labelOpen} onChange={setLabelOpen}>
-              <Disclosure.Trigger className="text-[14px] font-medium">
-                Label
-              </Disclosure.Trigger>
-              <Disclosure.Panel className="pt-3">
-                <Input
-                  placeholder="Description"
-                  value={labelDescription}
-                  onChange={(e) => setLabelDescription(e.target.value)}
-                  fullWidth
-                />
-              </Disclosure.Panel>
-            </Disclosure>
-          </div>
+          {/* Description */}
+          <VStack gap={2} className="py-6">
+            <label className="text-[14px] font-medium text-[var(--color-text-default)]">
+              Description
+            </label>
+            <Input
+              placeholder="Enter description"
+              value={description}
+              onChange={(e) => onDescriptionChange(e.target.value)}
+              fullWidth
+            />
+            <span className="text-[11px] text-[var(--color-text-subtle)]">
+              You can use letters, numbers, and special characters (+=.@-_,()[]), and maximum 255 characters.
+            </span>
+          </VStack>
 
           {/* Divider */}
-          <div className="w-full h-px bg-[var(--color-border-default)]" />
+          <div className="w-full h-px bg-[var(--color-border-subtle)]" />
 
           {/* Next Button */}
           <HStack justify="end" className="pt-3">
@@ -379,6 +419,7 @@ function BasicInformationSection({
 
 interface ImageRow {
   id: string;
+  status: 'active' | 'error' | 'building';
   name: string;
   version: string;
   size: string;
@@ -407,14 +448,18 @@ interface BootableVolumeRow {
 }
 
 const mockImages: ImageRow[] = [
-  { id: '1', name: 'ubuntu-24.04-tk-base', version: '24.04', size: '709.98 MiB', minDisk: '10.00 MiB', minRam: '0 MiB', access: 'Public', os: 'ubuntu' },
-  { id: '2', name: 'ubuntu-22.04-tk-base', version: '22.04', size: '650.12 MiB', minDisk: '10.00 MiB', minRam: '0 MiB', access: 'Public', os: 'ubuntu' },
-  { id: '3', name: 'ubuntu-20.04-tk-base', version: '20.04', size: '580.45 MiB', minDisk: '10.00 MiB', minRam: '0 MiB', access: 'Public', os: 'ubuntu' },
-  { id: '4', name: 'windows-server-2022', version: '2022', size: '4.5 GiB', minDisk: '40.00 GiB', minRam: '2 GiB', access: 'Public', os: 'windows' },
-  { id: '5', name: 'windows-server-2019', version: '2019', size: '4.2 GiB', minDisk: '40.00 GiB', minRam: '2 GiB', access: 'Public', os: 'windows' },
-  { id: '6', name: 'rocky-9.3-tk-base', version: '9.3', size: '890.23 MiB', minDisk: '10.00 MiB', minRam: '0 MiB', access: 'Public', os: 'rocky' },
-  { id: '7', name: 'rocky-8.9-tk-base', version: '8.9', size: '850.11 MiB', minDisk: '10.00 MiB', minRam: '0 MiB', access: 'Public', os: 'rocky' },
-  { id: '8', name: 'centos-stream-9', version: '9', size: '920.00 MiB', minDisk: '10.00 MiB', minRam: '0 MiB', access: 'Public', os: 'other' },
+  { id: 'e920j30d', status: 'active', name: 'ubuntu-24.04-tk-base', version: '24.04', size: '709.98 MiB', minDisk: '10.00 MiB', minRam: '0 MiB', access: 'Public', os: 'ubuntu' },
+  { id: 'e920j31d', status: 'active', name: 'ubuntu-24.04-tk-base', version: '24.04', size: '709.98 MiB', minDisk: '10.00 MiB', minRam: '0 MiB', access: 'Public', os: 'ubuntu' },
+  { id: 'e920j32d', status: 'active', name: 'ubuntu-24.04-tk-base', version: '24.04', size: '709.98 MiB', minDisk: '10.00 MiB', minRam: '0 MiB', access: 'Public', os: 'ubuntu' },
+  { id: 'e920j33d', status: 'active', name: 'ubuntu-24.04-tk-base', version: '24.04', size: '709.98 MiB', minDisk: '10.00 MiB', minRam: '0 MiB', access: 'Public', os: 'ubuntu' },
+  { id: 'e920j34d', status: 'error', name: 'ubuntu-24.04-tk-base', version: '24.04', size: '709.98 MiB', minDisk: '10.00 MiB', minRam: '0 MiB', access: 'Public', os: 'ubuntu' },
+  { id: 'e920j35d', status: 'active', name: 'ubuntu-22.04-tk-base', version: '22.04', size: '650.12 MiB', minDisk: '10.00 MiB', minRam: '0 MiB', access: 'Public', os: 'ubuntu' },
+  { id: 'e920j36d', status: 'active', name: 'ubuntu-20.04-tk-base', version: '20.04', size: '580.45 MiB', minDisk: '10.00 MiB', minRam: '0 MiB', access: 'Public', os: 'ubuntu' },
+  { id: 'e920j37d', status: 'active', name: 'windows-server-2022', version: '2022', size: '4.5 GiB', minDisk: '40.00 GiB', minRam: '2 GiB', access: 'Public', os: 'windows' },
+  { id: 'e920j38d', status: 'active', name: 'windows-server-2019', version: '2019', size: '4.2 GiB', minDisk: '40.00 GiB', minRam: '2 GiB', access: 'Public', os: 'windows' },
+  { id: 'e920j39d', status: 'active', name: 'rocky-9.3-tk-base', version: '9.3', size: '890.23 MiB', minDisk: '10.00 MiB', minRam: '0 MiB', access: 'Public', os: 'rocky' },
+  { id: 'e920j40d', status: 'active', name: 'rocky-8.9-tk-base', version: '8.9', size: '850.11 MiB', minDisk: '10.00 MiB', minRam: '0 MiB', access: 'Public', os: 'rocky' },
+  { id: 'e920j41d', status: 'active', name: 'centos-stream-9', version: '9', size: '920.00 MiB', minDisk: '10.00 MiB', minRam: '0 MiB', access: 'Public', os: 'other' },
 ];
 
 const mockSnapshots: SnapshotRow[] = [
@@ -445,22 +490,28 @@ interface ImageSectionProps {
 
 function ImageSection({ selectedImageId, onSelectImage, onNext }: ImageSectionProps) {
   const [sourceTab, setSourceTab] = useState('image');
-  const [osFilter, setOsFilter] = useState<'ubuntu' | 'windows' | 'rocky' | 'other'>('ubuntu');
+  const [osFilter, setOsFilter] = useState<'ubuntu' | 'windows' | 'rocky' | 'other'>('other');
   const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
-  const [storageOption, setStorageOption] = useState('create');
+  const [createSystemDisk, setCreateSystemDisk] = useState(true);
   const [storageType, setStorageType] = useState('_DEFAULT_');
   const [storageSize, setStorageSize] = useState(30);
   const [deleteWithInstance, setDeleteWithInstance] = useState(true);
+  const [_dataDisks, setDataDisks] = useState<{ id: string; type: string; size: number }[]>([]);
+  const itemsPerPage = 5;
 
   // Filter images based on OS filter and search query
   const filteredImages = mockImages.filter(img => {
-    const matchesOs = img.os === osFilter;
+    const matchesOs = osFilter === 'other' || img.os === osFilter;
     const matchesSearch = searchQuery === '' || 
       img.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       img.version.toLowerCase().includes(searchQuery.toLowerCase());
     return matchesOs && matchesSearch;
   });
+
+  // Paginate images
+  const totalImagePages = Math.ceil(filteredImages.length / itemsPerPage) || 1;
+  const paginatedImages = filteredImages.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
 
   // Filter snapshots based on search query
   const filteredSnapshots = mockSnapshots.filter(snap => {
@@ -474,6 +525,20 @@ function ImageSection({ selectedImageId, onSelectImage, onNext }: ImageSectionPr
     return searchQuery === '' || 
       vol.name.toLowerCase().includes(searchQuery.toLowerCase());
   });
+
+  // Get selected image info
+  const selectedImage = mockImages.find(img => img.id === selectedImageId);
+
+  // Handle search change
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchQuery(e.target.value);
+    setCurrentPage(1);
+  };
+
+  // Add data disk
+  const handleAddDataDisk = () => {
+    setDataDisks(prev => [...prev, { id: `dd-${Date.now()}`, type: '_DEFAULT_', size: 10 }]);
+  };
 
   // Image Table columns
   const imageColumns: TableColumn<ImageRow>[] = [
@@ -491,12 +556,35 @@ function ImageSection({ selectedImageId, onSelectImage, onNext }: ImageSectionPr
         </div>
       ),
     },
-    { key: 'name', label: 'Name', sortable: true },
+    {
+      key: 'status',
+      label: 'Status',
+      width: '60px',
+      render: (_, row) => (
+        <StatusIndicator status={row.status as 'active' | 'error' | 'building'} />
+      ),
+    },
+    { 
+      key: 'name', 
+      label: 'Name', 
+      sortable: true,
+      render: (value, row) => (
+        <VStack gap={0}>
+          <HStack gap={1} align="center">
+            <a href="#" className="text-[var(--color-action-primary)] hover:underline text-[12px]">
+              {value}
+            </a>
+            <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
+          </HStack>
+          <span className="text-[11px] text-[var(--color-text-subtle)]">ID: {row.id}</span>
+        </VStack>
+      ),
+    },
     { key: 'version', label: 'Version', sortable: true, width: '80px' },
     { key: 'size', label: 'Size', sortable: true, width: '100px' },
-    { key: 'minDisk', label: 'Min Disk', sortable: true, width: '100px' },
-    { key: 'minRam', label: 'Min RAM', sortable: true, width: '80px' },
-    { key: 'access', label: 'Access', sortable: true, width: '80px' },
+    { key: 'minDisk', label: 'Min disk', sortable: true, width: '90px' },
+    { key: 'minRam', label: 'Min RAM', sortable: true, width: '100px' },
+    { key: 'access', label: 'Visibility', sortable: true, width: '80px' },
   ];
 
   // Snapshot Table columns
@@ -565,122 +653,94 @@ function ImageSection({ selectedImageId, onSelectImage, onNext }: ImageSectionPr
     { key: 'createdAt', label: 'Created At', sortable: true, width: '110px' },
   ];
 
-  const osTabStyle = (active: boolean) => `
-    flex items-center gap-1.5 px-2 py-1.5 rounded cursor-pointer text-[11px] font-medium
+  const osChipStyle = (active: boolean) => `
+    inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full cursor-pointer text-[12px] font-medium border transition-colors
     ${active 
-      ? 'bg-[var(--color-action-primary)] text-white' 
-      : 'text-[var(--color-text-default)] hover:bg-[var(--color-surface-subtle)]'
+      ? 'bg-[var(--color-action-primary)] text-white border-[var(--color-action-primary)]' 
+      : 'bg-[var(--color-surface-default)] text-[var(--color-text-default)] border-[var(--color-border-default)] hover:bg-[var(--color-surface-subtle)]'
     }
   `;
 
-  // Get current table data and columns based on tab
-  const getTableContent = () => {
-    switch (sourceTab) {
-      case 'snapshot':
-        return {
-          data: filteredSnapshots,
-          columns: snapshotColumns,
-          placeholder: 'Find Snapshot with filters',
-          totalItems: filteredSnapshots.length,
-        };
-      case 'volume':
-        return {
-          data: filteredVolumes,
-          columns: volumeColumns,
-          placeholder: 'Find Volume with filters',
-          totalItems: filteredVolumes.length,
-        };
-      default:
-        return {
-          data: filteredImages,
-          columns: imageColumns,
-          placeholder: 'Find Image with filters',
-          totalItems: filteredImages.length,
-        };
-    }
-  };
-
-  const tableContent = getTableContent();
-
   return (
     <SectionCard>
-      <SectionCard.Header title="Image" />
+      <SectionCard.Header title="Source" />
       <SectionCard.Content>
         <VStack gap={0}>
           {/* Start Source */}
-          <VStack gap={2} className="py-6">
+          <VStack gap={2} className="pt-3">
             <span className="text-[14px] font-medium text-[var(--color-text-default)]">
-              Start Source
+              Start source<span className="ml-1 text-[var(--color-state-danger)]">*</span>
+            </span>
+            <span className="text-[12px] text-[var(--color-text-muted)] mb-4">
+              Select a template to launch the instance. You can start from an OS image, a snapshot, or an existing volume.
             </span>
             
             {/* Source Tabs */}
             <Tabs value={sourceTab} onChange={setSourceTab} variant="underline" size="sm">
               <TabList>
                 <Tab value="image">Image</Tab>
-                <Tab value="snapshot">Instance Snapshot</Tab>
-                <Tab value="volume">Bootable Volume</Tab>
+                <Tab value="snapshot">Instance snapshot</Tab>
+                <Tab value="volume">Bootable volume</Tab>
               </TabList>
             </Tabs>
 
-            {/* OS Filter Tabs - Only show for Image tab */}
+            {/* OS Filter Chips - Only show for Image tab */}
             {sourceTab === 'image' && (
-              <HStack gap={1} className="mt-2">
+              <HStack gap={2} className="mt-2">
                 <button 
-                  className={osTabStyle(osFilter === 'ubuntu')}
-                  onClick={() => setOsFilter('ubuntu')}
+                  className={osChipStyle(osFilter === 'other')}
+                  onClick={() => { setOsFilter('other'); setCurrentPage(1); }}
                 >
-                  <span>🐧</span>
+                  <IconDots size={14} />
+                  <span>Other</span>
+                </button>
+                <button 
+                  className={osChipStyle(osFilter === 'ubuntu')}
+                  onClick={() => { setOsFilter('ubuntu'); setCurrentPage(1); }}
+                >
+                  <IconBrandUbuntu size={14} />
                   <span>Ubuntu</span>
                 </button>
                 <button 
-                  className={osTabStyle(osFilter === 'windows')}
-                  onClick={() => setOsFilter('windows')}
+                  className={osChipStyle(osFilter === 'windows')}
+                  onClick={() => { setOsFilter('windows'); setCurrentPage(1); }}
                 >
-                  <span>🪟</span>
+                  <IconBrandWindows size={14} />
                   <span>Windows</span>
                 </button>
                 <button 
-                  className={osTabStyle(osFilter === 'rocky')}
-                  onClick={() => setOsFilter('rocky')}
+                  className={osChipStyle(osFilter === 'rocky')}
+                  onClick={() => { setOsFilter('rocky'); setCurrentPage(1); }}
                 >
-                  <span>🪨</span>
+                  <IconMountain size={14} />
                   <span>Rocky</span>
-                </button>
-                <button 
-                  className={osTabStyle(osFilter === 'other')}
-                  onClick={() => setOsFilter('other')}
-                >
-                  <span>📦</span>
-                  <span>Other</span>
                 </button>
               </HStack>
             )}
 
-            {/* Search & Pagination */}
-            <VStack gap={2} className="mt-2">
-              <SearchInput
-                placeholder={tableContent.placeholder}
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                onClear={() => setSearchQuery('')}
-                size="sm"
-                className="w-[280px]"
-              />
-              <HStack justify="between" align="center" className="w-full">
-                <Pagination
-                  currentPage={currentPage}
-                  totalPages={Math.ceil(tableContent.totalItems / 5) || 1}
-                  totalItems={tableContent.totalItems}
-                  onPageChange={setCurrentPage}
-                />
-              </HStack>
-            </VStack>
+            {/* Search */}
+            <SearchInput
+              placeholder="Search image by attributes"
+              value={searchQuery}
+              onChange={handleSearchChange}
+              onClear={() => { setSearchQuery(''); setCurrentPage(1); }}
+              size="sm"
+              className="w-[280px] mt-2"
+            />
+
+            {/* Pagination */}
+            <Pagination
+              currentPage={currentPage}
+              totalPages={sourceTab === 'image' ? totalImagePages : Math.ceil(filteredSnapshots.length / itemsPerPage) || 1}
+              totalItems={sourceTab === 'image' ? filteredImages.length : filteredSnapshots.length}
+              onPageChange={setCurrentPage}
+            />
 
             {/* Table - Dynamic based on tab */}
             {sourceTab === 'image' && (
               <Table
                 columns={imageColumns}
-                data={filteredImages}
+                data={paginatedImages}
                 rowKey="id"
                 onRowClick={(row) => onSelectImage(row.id)}
               />
@@ -688,7 +748,7 @@ function ImageSection({ selectedImageId, onSelectImage, onNext }: ImageSectionPr
             {sourceTab === 'snapshot' && (
               <Table
                 columns={snapshotColumns}
-                data={filteredSnapshots}
+                data={filteredSnapshots.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage)}
                 rowKey="id"
                 onRowClick={(row) => onSelectImage(row.id)}
               />
@@ -696,51 +756,62 @@ function ImageSection({ selectedImageId, onSelectImage, onNext }: ImageSectionPr
             {sourceTab === 'volume' && (
               <Table
                 columns={volumeColumns}
-                data={filteredVolumes}
+                data={filteredVolumes.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage)}
                 rowKey="id"
                 onRowClick={(row) => onSelectImage(row.id)}
               />
             )}
+
+            {/* Selected */}
+            <HStack justify="between" align="center" className="w-full mt-3 px-3 py-2 bg-[var(--color-surface-subtle)] rounded-[var(--table-row-radius)]">
+              <HStack gap={2} align="center" className="flex-wrap">
+                <span className="text-[12px] text-[var(--color-text-muted)]">Selected</span>
+                {selectedImage && (
+                  <Chip
+                    value={selectedImage.name}
+                    variant="selected"
+                    onRemove={() => onSelectImage('')}
+                  />
+                )}
+              </HStack>
+              {selectedImage && (
+                <button
+                  type="button"
+                  className="text-[12px] text-[var(--color-action-primary)] hover:underline"
+                  onClick={() => onSelectImage('')}
+                >
+                  Clear
+                </button>
+              )}
+            </HStack>
           </VStack>
 
           {/* Divider */}
-          <div className="w-full h-px bg-[var(--color-border-default)]" />
+          <div className="w-full h-px bg-[var(--color-border-subtle)] mt-6" />
 
-          {/* Storage Section */}
+          {/* System disk Section */}
           <VStack gap={3} className="py-6">
-            <span className="text-[14px] font-medium text-[var(--color-text-default)]">
-              Storage
-            </span>
-            
-            {/* Storage Options */}
-            <VStack gap={2}>
-              <label className="flex items-center gap-2 cursor-pointer">
-                <Radio
-                  value="create"
-                  checked={storageOption === 'create'}
-                  onChange={() => setStorageOption('create')}
-                />
-                <span className="text-[12px] text-[var(--color-text-default)]">
-                  Create a new system disk
-                </span>
-              </label>
-              <label className="flex items-center gap-2 cursor-pointer">
-                <Radio
-                  value="no-create"
-                  checked={storageOption === 'no-create'}
-                  onChange={() => setStorageOption('no-create')}
-                />
-                <span className="text-[12px] text-[var(--color-text-default)]">
-                  Do not create a new system disk
-                </span>
-              </label>
+            <VStack gap={1}>
+              <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+                System disk<span className="ml-1 text-[var(--color-state-danger)]">*</span>
+              </span>
+              <span className="text-[12px] text-[var(--color-text-muted)]">
+                Configure whether to create a system disk for booting.
+              </span>
             </VStack>
+            
+            {/* Toggle */}
+            <Toggle
+              checked={createSystemDisk}
+              onChange={setCreateSystemDisk}
+              label="Create a new system disk"
+            />
 
             {/* Storage Type & Size Row */}
-            {storageOption === 'create' && (
+            {createSystemDisk && (
               <HStack gap={4} align="end" className="flex-wrap">
                 <VStack gap={2}>
-                  <label className="text-[14px] font-medium text-[var(--color-text-default)]">
+                  <label className="text-[12px] font-medium text-[var(--color-text-default)]">
                     Type
                   </label>
                   <Select
@@ -751,7 +822,7 @@ function ImageSection({ selectedImageId, onSelectImage, onNext }: ImageSectionPr
                 </VStack>
                 <HStack gap={2} align="end">
                   <VStack gap={2}>
-                    <label className="text-[14px] font-medium text-[var(--color-text-default)]">
+                    <label className="text-[12px] font-medium text-[var(--color-text-default)]">
                       Size
                     </label>
                     <NumberInput
@@ -763,37 +834,43 @@ function ImageSection({ selectedImageId, onSelectImage, onNext }: ImageSectionPr
                   </VStack>
                   <span className="text-[12px] text-[var(--color-text-default)] pb-2">GiB</span>
                 </HStack>
-                <Checkbox
-                  label="Deleted with the instance"
-                  checked={deleteWithInstance}
-                  onChange={(e) => setDeleteWithInstance(e.target.checked)}
-                />
+                <div className="self-end pb-[6px]">
+                  <Checkbox
+                    label="Deleted with the instance"
+                    checked={deleteWithInstance}
+                    onChange={(e) => setDeleteWithInstance(e.target.checked)}
+                  />
+                </div>
               </HStack>
             )}
           </VStack>
 
           {/* Divider */}
-          <div className="w-full h-px bg-[var(--color-border-default)]" />
+          <div className="w-full h-px bg-[var(--color-border-subtle)]" />
 
-          {/* Data Disk (Optional) */}
-          <div className="py-6">
-            <Disclosure>
-              <Disclosure.Trigger>
-                <HStack gap={1} align="center">
-                  <span className="text-[14px] font-medium">Data Disk</span>
-                  <span className="text-[12px] text-[var(--color-text-subtle)]">(Optional)</span>
-                </HStack>
-              </Disclosure.Trigger>
-              <Disclosure.Panel className="pt-3">
-                <span className="text-[12px] text-[var(--color-text-subtle)]">
-                  Add additional data disks here...
-                </span>
-              </Disclosure.Panel>
-            </Disclosure>
-          </div>
+          {/* Data Disk Section */}
+          <VStack gap={3} align="start" className="py-6">
+            <VStack gap={1}>
+              <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+                Data Disk
+              </span>
+              <span className="text-[12px] text-[var(--color-text-muted)]">
+                Attach additional volumes for data storage.
+              </span>
+            </VStack>
+            
+            <Button 
+              variant="outline" 
+              size="sm" 
+              leftIcon={<IconPlus size={12} />}
+              onClick={handleAddDataDisk}
+            >
+              Add Data Disk
+            </Button>
+          </VStack>
 
           {/* Divider */}
-          <div className="w-full h-px bg-[var(--color-border-default)]" />
+          <div className="w-full h-px bg-[var(--color-border-subtle)]" />
 
           {/* Next Button */}
           <HStack justify="end" className="pt-3">
@@ -814,20 +891,23 @@ function ImageSection({ selectedImageId, onSelectImage, onNext }: ImageSectionPr
 interface FlavorRow {
   id: string;
   name: string;
-  cpu: number;
+  vCPU: number;
   ram: string;
   disk: string;
-  gpu: number;
+  ephemeralDisk: string;
   networkBandwidth: string;
+  hasWarning?: boolean;
 }
 
 const mockFlavors: FlavorRow[] = [
-  { id: 'f1', name: 'th.tiny', cpu: 1, ram: '2.00 MiB', disk: '10.00 MiB', gpu: 0, networkBandwidth: '-' },
-  { id: 'f2', name: 'th.small', cpu: 2, ram: '4.00 GiB', disk: '20.00 GiB', gpu: 0, networkBandwidth: '-' },
-  { id: 'f3', name: 'th.medium', cpu: 4, ram: '8.00 GiB', disk: '40.00 GiB', gpu: 0, networkBandwidth: '1 Gbps' },
-  { id: 'f4', name: 'th.large', cpu: 8, ram: '16.00 GiB', disk: '80.00 GiB', gpu: 0, networkBandwidth: '2 Gbps' },
-  { id: 'f5', name: 'th.xlarge', cpu: 16, ram: '32.00 GiB', disk: '160.00 GiB', gpu: 1, networkBandwidth: '5 Gbps' },
-  { id: 'f6', name: 'th.2xlarge', cpu: 32, ram: '64.00 GiB', disk: '320.00 GiB', gpu: 2, networkBandwidth: '10 Gbps' },
+  { id: '17kfj123', name: 'm5.large', vCPU: 2, ram: '2GiB', disk: '50GiB', ephemeralDisk: '0GiB', networkBandwidth: '-' },
+  { id: '45hgf456', name: 't2.micro', vCPU: 2, ram: '2GiB', disk: '50GiB', ephemeralDisk: '0GiB', networkBandwidth: '-' },
+  { id: '23hgf234', name: 'r5.2xlarge', vCPU: 2, ram: '2GiB', disk: '50GiB', ephemeralDisk: '0GiB', networkBandwidth: '-' },
+  { id: '90jkl567', name: 'p3.8xlarge', vCPU: 2, ram: '2GiB', disk: '50GiB', ephemeralDisk: '0GiB', networkBandwidth: '-' },
+  { id: '78kls890', name: 'c5.xlarge', vCPU: 2, ram: '2GiB', disk: '5GiB', ephemeralDisk: '0GiB', networkBandwidth: '-', hasWarning: true },
+  { id: '12abc345', name: 'g4dn.xlarge', vCPU: 4, ram: '16GiB', disk: '125GiB', ephemeralDisk: '0GiB', networkBandwidth: '10 Gbps' },
+  { id: '67def890', name: 'i3.large', vCPU: 2, ram: '15.25GiB', disk: '475GiB', ephemeralDisk: '0GiB', networkBandwidth: '-' },
+  { id: '34ghi567', name: 'x1e.xlarge', vCPU: 4, ram: '122GiB', disk: '120GiB', ephemeralDisk: '0GiB', networkBandwidth: '-' },
 ];
 
 interface FlavorSectionProps {
@@ -837,14 +917,27 @@ interface FlavorSectionProps {
 }
 
 function FlavorSection({ selectedFlavorId, onSelectFlavor, onNext }: FlavorSectionProps) {
+  const [flavorTab, setFlavorTab] = useState('vcpu');
   const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 5;
 
   // Filter flavors based on search query
   const filteredFlavors = mockFlavors.filter(flavor => {
     return searchQuery === '' || 
       flavor.name.toLowerCase().includes(searchQuery.toLowerCase());
   });
+
+  // Paginate filtered flavors
+  const totalPages = Math.ceil(filteredFlavors.length / itemsPerPage) || 1;
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const paginatedFlavors = filteredFlavors.slice(startIndex, startIndex + itemsPerPage);
+
+  // Reset to page 1 when search query changes
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchQuery(e.target.value);
+    setCurrentPage(1);
+  };
 
   // Table columns
   const flavorColumns: TableColumn<FlavorRow>[] = [
@@ -862,49 +955,90 @@ function FlavorSection({ selectedFlavorId, onSelectFlavor, onNext }: FlavorSecti
         </div>
       ),
     },
-    { key: 'name', label: 'Name', sortable: true },
-    { key: 'cpu', label: 'CPU', sortable: true, width: '60px' },
-    { key: 'ram', label: 'RAM', sortable: true, width: '90px' },
-    { key: 'disk', label: 'Disk', sortable: true, width: '100px' },
-    { key: 'gpu', label: 'GPU', sortable: true, width: '60px' },
-    { key: 'networkBandwidth', label: 'Internal Network Bandwidth', sortable: true, width: '180px' },
+    { 
+      key: 'name', 
+      label: 'Name', 
+      sortable: true,
+      render: (value, row) => (
+        <VStack gap={0}>
+          <HStack gap={1} align="center">
+            <a href="#" className="text-[var(--color-action-primary)] hover:underline text-[12px]">
+              {value}
+            </a>
+            <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
+            {row.hasWarning && (
+              <span className="text-[var(--color-state-warning)]">⚠</span>
+            )}
+          </HStack>
+          <span className="text-[11px] text-[var(--color-text-subtle)]">ID : {row.id}</span>
+        </VStack>
+      ),
+    },
+    { key: 'vCPU', label: 'vCPU', sortable: true, width: '70px' },
+    { key: 'ram', label: 'RAM', sortable: true, width: '80px' },
+    { key: 'disk', label: 'Disk', sortable: true, width: '80px' },
+    { key: 'ephemeralDisk', label: 'Ephemeral Disk', sortable: true, width: '100px' },
+    { key: 'networkBandwidth', label: 'Internal Network Bandwidth', sortable: true, width: '120px' },
   ];
 
   return (
     <SectionCard>
       <SectionCard.Header title="Flavor" />
       <SectionCard.Content>
-        <VStack gap={3}>
+        <VStack gap={0}>
+          {/* Flavors Label & Description */}
+          <VStack gap={2} className="pb-4">
+            <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+              Flavors<span className="ml-1 text-[var(--color-state-danger)]">*</span>
+            </span>
+            <span className="text-[12px] text-[var(--color-text-muted)] mb-4">
+              Select the flavor that defines the vCPU, RAM, and disk capacity allocated to the instance.
+            </span>
+
+            {/* Flavor Type Tabs */}
+            <Tabs value={flavorTab} onChange={setFlavorTab} variant="underline" size="sm">
+              <TabList>
+                <Tab value="vcpu">vCPU</Tab>
+                <Tab value="gpu">GPU</Tab>
+                <Tab value="npu">NPU</Tab>
+                <Tab value="custom">Custom</Tab>
+              </TabList>
+            </Tabs>
+          </VStack>
+
           {/* Search */}
           <SearchInput
-            placeholder="Find Flavor with filters"
+            placeholder="Search flavors by attributes"
             value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            onClear={() => setSearchQuery('')}
+            onChange={handleSearchChange}
+            onClear={() => { setSearchQuery(''); setCurrentPage(1); }}
             size="sm"
-            className="w-[280px]"
+            className="w-[280px] mb-2"
           />
 
           {/* Pagination */}
-          <HStack justify="between" align="center" className="w-full">
+          <div className="mb-2">
             <Pagination
               currentPage={currentPage}
-              totalPages={Math.ceil(filteredFlavors.length / 5) || 1}
+              totalPages={totalPages}
               totalItems={filteredFlavors.length}
               onPageChange={setCurrentPage}
             />
-          </HStack>
+          </div>
 
           {/* Flavor Table */}
           <Table
             columns={flavorColumns}
-            data={filteredFlavors}
+            data={paginatedFlavors}
             rowKey="id"
             onRowClick={(row) => onSelectFlavor(row.id)}
           />
 
+          {/* Divider */}
+          <div className="w-full h-px bg-[var(--color-border-subtle)] mt-4" />
+
           {/* Next Button */}
-          <HStack justify="end" className="w-full">
+          <HStack justify="end" className="pt-3">
             <Button variant="primary" onClick={onNext}>
               Next
             </Button>
@@ -2222,11 +2356,8 @@ function TemplatesSection({ templates, selectedId, onSelect, onSkip, onNext }: T
 
 export function CreateInstancePage() {
   const navigate = useNavigate();
-  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const { isOpen: sidebarOpen, toggle: toggleSidebar, open: openSidebar } = useSidebar();
   const { tabs, activeTabId, selectTab, closeTab } = useTabs();
-  
-  const toggleSidebar = useCallback(() => setSidebarOpen(prev => !prev), []);
-  const openSidebar = useCallback(() => setSidebarOpen(true), []);
   
   // Section status management
   const [sectionStatus, setSectionStatus] = useState<SectionStatus>({
@@ -2246,6 +2377,7 @@ export function CreateInstancePage() {
   // Basic Information state
   const [instanceName, setInstanceName] = useState('');
   const [availabilityZone, setAvailabilityZone] = useState('nova');
+  const [description, setDescription] = useState('');
   const [labels, setLabels] = useState<{ key: string; value: string }[]>([]);
   
   // Image state
@@ -2295,9 +2427,14 @@ export function CreateInstancePage() {
     
     const nextSection = SECTION_ORDER[currentIndex + 1];
     
+    // Clear selection when skipping
+    if (section === 'templates') {
+      setSelectedTemplateId(null);
+    }
+    
     setSectionStatus(prev => ({
       ...prev,
-      [section]: 'pre', // Templates can be skipped without being "done"
+      [section]: 'skipped',
       [nextSection]: 'active',
     }));
   };
@@ -2359,7 +2496,7 @@ export function CreateInstancePage() {
   const getFlavorSummary = () => {
     if (!selectedFlavorId) return null;
     const flavor = mockFlavors.find(f => f.id === selectedFlavorId);
-    return flavor ? `${flavor.cpu}vCPU/${flavor.ram}/${flavor.disk}` : null;
+    return flavor ? `${flavor.vCPU}vCPU/${flavor.ram}/${flavor.disk}` : null;
   };
 
   const getStorageSummary = () => {
@@ -2433,7 +2570,7 @@ export function CreateInstancePage() {
         </div>
 
         {/* Scrollable Content Area */}
-        <div className="flex-1 overflow-auto min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll">
+        <div className="flex-1 overflow-auto overscroll-contain sidebar-scroll">
           <div className="pt-4 px-8 pb-20 bg-[var(--color-surface-default)]">
             <VStack gap={6} className="min-w-[1176px]">
               {/* Page Title */}
@@ -2463,6 +2600,9 @@ export function CreateInstancePage() {
                       <DoneSectionRow label="Template" value={getTemplateSummary() || 'None selected'} />
                     </DoneSection>
                   )}
+                  {sectionStatus.templates === 'skipped' && (
+                    <SkippedSection title={SECTION_LABELS.templates} onEdit={() => handleEdit('templates')} />
+                  )}
 
                   {/* Basic Information Section */}
                   {sectionStatus['basic-info'] === 'pre' && (
@@ -2474,6 +2614,8 @@ export function CreateInstancePage() {
                       onInstanceNameChange={setInstanceName}
                       availabilityZone={availabilityZone}
                       onAvailabilityZoneChange={setAvailabilityZone}
+                      description={description}
+                      onDescriptionChange={setDescription}
                       labels={labels}
                       onLabelsChange={setLabels}
                       onNext={() => handleNext('basic-info')}
@@ -2483,6 +2625,7 @@ export function CreateInstancePage() {
                     <DoneSection title={SECTION_LABELS['basic-info']} onEdit={() => handleEdit('basic-info')}>
                       <DoneSectionRow label="Instance Name" value={instanceName || '-'} />
                       <DoneSectionRow label="AZ (Availability Zone)" value={availabilityZone} />
+                      <DoneSectionRow label="Description" value={description || '-'} />
                     </DoneSection>
                   )}
 

@@ -276,7 +276,7 @@ export const component = {
       lg: 'var(--button-height-lg)',   // 40px
     },
     minWidth: {
-      sm: 'var(--button-min-width-sm)', // 60px
+      sm: 'var(--button-min-width-sm)', // 68px
       md: 'var(--button-min-width-md)', // 80px
       lg: 'var(--button-min-width-lg)', // 80px
     },
