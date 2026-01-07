@@ -188,10 +188,11 @@ function GradientCard({ gradient }: { gradient: GradientItem }) {
 
 export function GradientShowcasePage() {
   const [selectedGradient, setSelectedGradient] = useState(GRADIENTS[0]);
+  const [sidebarOpen, setSidebarOpen] = useState(true);
 
   return (
     <div className="flex h-screen bg-[var(--color-surface-default)]">
-      <Sidebar />
+      <Sidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
       
       <div className="flex flex-col items-stretch justify-start gap-4 flex-1 overflow-hidden ml-[200px]">
         

@@ -186,20 +186,20 @@ export function CertificatesPage() {
       sortable: true,
       render: (_, row) => (
         row.listener === '-' ? '-' : (
-          <div className="flex items-center gap-[5px]">
-            <div className="flex flex-col gap-0.5">
+          <div className="flex flex-col gap-0.5">
+            <div className="flex items-center gap-1">
               <span className="text-[length:var(--font-size-12)] text-[var(--color-text-default)]">
                 {row.listener}
               </span>
-              <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
-                ID : {row.listenerId}
-              </span>
+              {row.listenerCount > 0 && (
+                <span className="text-[length:var(--font-size-12)] text-[var(--color-text-subtle)]">
+                  (+{row.listenerCount})
+                </span>
+              )}
             </div>
-            {row.listenerCount > 0 && (
-              <span className="text-[length:var(--font-size-12)] text-[var(--color-text-default)]">
-                (+{row.listenerCount})
-              </span>
-            )}
+            <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
+              ID : {row.listenerId}
+            </span>
           </div>
         )
       ),
