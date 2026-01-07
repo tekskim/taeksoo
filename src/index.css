@@ -1340,8 +1340,16 @@ input[type="search"]::-webkit-search-decoration {
   justify-content: space-between;
   align-items: center;
   margin-bottom: 8px;
-  height: 20px;
+  height: auto;
+  min-height: 20px;
   flex-shrink: 0;
+  gap: 16px;
+}
+
+.chartHeaderCenter {
+  flex: 1;
+  display: flex;
+  justify-content: center;
 }
 
 .chartTitle {
@@ -1618,6 +1626,16 @@ input[type="search"]::-webkit-search-decoration {
 .chartCardFullScreen .chartHeader {
   position: relative;
   margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+.chartCardFullScreen .chartHeaderCenter {
+  flex: 1;
+  display: flex;
+  justify-content: center;
 }
 
 .chartCardFullScreen .chartTitle {

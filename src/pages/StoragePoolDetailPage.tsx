@@ -27,7 +27,6 @@ import {
   IconDotsCircleHorizontal,
   IconArrowsMaximize,
   IconArrowsMinimize,
-  IconActivity,
   IconChevronLeft,
   IconChevronRight,
 } from '@tabler/icons-react';
@@ -950,17 +949,6 @@ export function StoragePoolDetailPage() {
               {/* Pool Header Card */}
               <DetailHeader>
                 <DetailHeader.Title>{pool.name}</DetailHeader.Title>
-                {activeDetailTab === 'performance' && (
-                  <DetailHeader.Actions>
-                    <Button 
-                      variant="secondary" 
-                      size="sm" 
-                      leftIcon={<IconActivity size={12} />}
-                    >
-                      Monitoring
-                    </Button>
-                  </DetailHeader.Actions>
-                )}
                 <DetailHeader.InfoGrid>
                   <DetailHeader.InfoCard label="Data Protection" value={pool.dataProtection} status="active" />
                   <DetailHeader.InfoCard label="Applications" value={pool.applications} copyable />

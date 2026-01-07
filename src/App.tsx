@@ -17,7 +17,9 @@ import { InstanceTemplateDetailPage } from '@/pages/InstanceTemplateDetailPage';
 import { InstanceSnapshotsPage } from '@/pages/InstanceSnapshotsPage';
 import { InstanceSnapshotDetailPage } from '@/pages/InstanceSnapshotDetailPage';
 import { ImagesPage } from '@/pages/ImagesPage';
+import { ComputeImagesPage } from '@/pages/ComputeImagesPage';
 import { ImageDetailPage } from '@/pages/ImageDetailPage';
+import { ComputeImageDetailPage } from '@/pages/ComputeImageDetailPage';
 import { BucketsPage } from '@/pages/BucketsPage';
 import { BucketDetailPage } from '@/pages/BucketDetailPage';
 import { FlavorsPage } from '@/pages/FlavorsPage';
@@ -68,6 +70,7 @@ import HostDetailPage from '@/pages/HostDetailPage';
 import { OSDsPage } from '@/pages/OSDsPage';
 import { OSDDetailPage } from '@/pages/OSDDetailPage';
 import { PhysicalDisksPage } from '@/pages/PhysicalDisksPage';
+import { OverallPerformancePage } from '@/pages/OverallPerformancePage';
 
 // Pages - Cloud Builder
 import { CloudBuilderConsolePage } from '@/pages/cloudbuilder/CloudBuilderConsolePage';
@@ -123,8 +126,8 @@ function AppRoutes() {
         <Route path="/compute/instance-templates/:id" element={<InstanceTemplateDetailPage />} />
         <Route path="/compute/instance-snapshots" element={<InstanceSnapshotsPage />} />
         <Route path="/compute/instance-snapshots/:id" element={<InstanceSnapshotDetailPage />} />
-        <Route path="/compute/images" element={<ImagesPage />} />
-        <Route path="/compute/images/:id" element={<ImageDetailPage />} />
+        <Route path="/compute/images" element={<ComputeImagesPage />} />
+        <Route path="/compute/images/:id" element={<ComputeImageDetailPage />} />
         <Route path="/compute/flavors" element={<FlavorsPage />} />
         <Route path="/compute/flavors/:id" element={<FlavorDetailPage />} />
         <Route path="/compute/key-pairs" element={<KeyPairsPage />} />
@@ -171,6 +174,7 @@ function AppRoutes() {
         <Route path="/storage/images/:id" element={<ImageDetailPage />} />
         <Route path="/storage/buckets" element={<BucketsPage />} />
         <Route path="/storage/buckets/:id" element={<BucketDetailPage />} />
+        <Route path="/storage/performance" element={<OverallPerformancePage />} />
 
         {/* Design System Routes */}
         <Route path="/design" element={<DesignSystemPage />} />
