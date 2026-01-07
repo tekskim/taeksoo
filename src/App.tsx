@@ -53,6 +53,7 @@ import { CreateInstancePage } from '@/pages/CreateInstancePage';
 // Pages - Cloud Builder
 import { CloudBuilderConsolePage } from '@/pages/cloudbuilder/CloudBuilderConsolePage';
 import { CloudBuilderDetailPage } from '@/pages/cloudbuilder/CloudBuilderDetailPage';
+import { CloudBuilderCreatePage } from '@/pages/cloudbuilder/CloudBuilderCreatePage';
 
 // Pages - Design System
 import { DesignSystemPage } from '@/pages/DesignSystemPage';
@@ -75,10 +76,12 @@ function AppRoutes() {
         {/* Cloud Builder Routes */}
         <Route path="/cloudbuilder" element={<CloudBuilderConsolePage />} />
         <Route path="/cloudbuilder/:slug" element={<CloudBuilderConsolePage />} />
+        <Route path="/cloudbuilder/:slug/create" element={<CloudBuilderCreatePage />} />
         <Route path="/cloudbuilder/:slug/detail/:id" element={<CloudBuilderDetailPage />} />
         {/* Backward compatible route */}
         <Route path="/cloud-builder" element={<CloudBuilderConsolePage />} />
         <Route path="/cloud-builder/:slug" element={<CloudBuilderConsolePage />} />
+        <Route path="/cloud-builder/:slug/create" element={<CloudBuilderCreatePage />} />
         <Route path="/cloud-builder/:slug/detail/:id" element={<CloudBuilderDetailPage />} />
 
         {/* Compute Routes */}
