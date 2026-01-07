@@ -6,6 +6,7 @@ import {
   IconMoon,
   IconSun,
 } from '@tabler/icons-react';
+import { Button } from '@/design-system';
 
 // App Icons
 import ComputeIcon from '@/assets/compute.png';
@@ -215,18 +216,13 @@ export function EntryPage() {
 
           {/* Actions */}
           <div className="flex items-center gap-2">
-            <button
-              type="button"
+            <Button
+              variant="secondary"
+              size="md"
+              icon={isDark ? <IconSun size={18} stroke={1.5} /> : <IconMoon size={18} stroke={1.5} />}
               onClick={toggleDarkMode}
-              className="p-2 rounded-lg hover:bg-[var(--color-surface-subtle)] transition-colors"
               aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
-            >
-              {isDark ? (
-                <IconSun size={18} className="text-[var(--color-text-subtle)]" stroke={1.5} />
-              ) : (
-                <IconMoon size={18} className="text-[var(--color-text-subtle)]" stroke={1.5} />
-              )}
-            </button>
+            />
           </div>
         </div>
       </header>
@@ -262,27 +258,27 @@ export function EntryPage() {
                 Developer Resources
               </p>
               <div className="flex items-center justify-center gap-4">
-                <button
-                  type="button"
+                <Button
+                  variant="muted"
+                  size="md"
                   onClick={() => navigate('/design')}
-                  className="px-4 py-2 text-[13px] font-medium text-[var(--color-text-subtle)] hover:text-[var(--color-text-default)] hover:bg-[var(--color-surface-default)] rounded-lg transition-colors"
                 >
                   Design System
-                </button>
-                <button
-                  type="button"
+                </Button>
+                <Button
+                  variant="muted"
+                  size="md"
                   onClick={() => navigate('/design/drawers')}
-                  className="px-4 py-2 text-[13px] font-medium text-[var(--color-text-subtle)] hover:text-[var(--color-text-default)] hover:bg-[var(--color-surface-default)] rounded-lg transition-colors"
                 >
                   Drawers
-                </button>
-                <button
-                  type="button"
+                </Button>
+                <Button
+                  variant="muted"
+                  size="md"
                   onClick={() => navigate('/design/modals')}
-                  className="px-4 py-2 text-[13px] font-medium text-[var(--color-text-subtle)] hover:text-[var(--color-text-default)] hover:bg-[var(--color-surface-default)] rounded-lg transition-colors"
                 >
                   Modals
-                </button>
+                </Button>
               </div>
             </div>
           </div>
