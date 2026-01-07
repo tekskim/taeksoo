@@ -217,8 +217,8 @@ export function InstanceListPage() {
     { id: 'vcpu', label: 'vCPU', visible: true },
     { id: 'ram', label: 'RAM', visible: true },
     { id: 'disk', label: 'Disk', visible: true },
-    { id: 'gpu', label: 'GPU', visible: false },
-    { id: 'az', label: 'AZ', visible: false },
+    { id: 'gpu', label: 'GPU', visible: true },
+    { id: 'az', label: 'AZ', visible: true },
     { id: 'actions', label: 'Action', visible: true, locked: true },
   ];
 
@@ -401,10 +401,10 @@ export function InstanceListPage() {
     {
       key: 'name',
       label: 'Name',
-      flex: 1,
+      width: '160px',
       sortable: true,
       render: (_, row) => (
-        <div className="flex flex-col gap-0.5">
+        <div className="flex flex-col gap-0.5 whitespace-nowrap">
           <Link 
             to={`/compute/instances/${row.id}`}
             className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"

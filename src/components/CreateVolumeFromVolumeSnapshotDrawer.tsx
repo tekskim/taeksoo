@@ -38,7 +38,7 @@ export interface CreateVolumeFromVolumeSnapshotDrawerProps {
 
 function InfoBox({ label, value }: { label: string; value: string }) {
   return (
-    <div className="w-full bg-[var(--color-surface-muted)] rounded-lg px-4 py-3">
+    <div className="w-full bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
       <VStack gap={2}>
         <span className="text-[11px] font-medium text-[var(--color-text-subtle)] leading-4">
           {label}

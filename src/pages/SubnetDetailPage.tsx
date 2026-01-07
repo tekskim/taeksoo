@@ -263,6 +263,7 @@ export default function SubnetDetailPage() {
       key: 'ownedNetwork',
       label: 'Owned Network',
       flex: 1,
+      sortable: true,
       render: (_, row) => (
         <div className="flex flex-col gap-0.5">
           <Link

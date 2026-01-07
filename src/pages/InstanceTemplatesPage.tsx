@@ -57,16 +57,16 @@ interface InstanceTemplate {
    ---------------------------------------- */
 
 const mockTemplates: InstanceTemplate[] = [
-  { id: 'tpl-001', name: 'hj-small', image: 'Ubuntu 22.04 LTS', flavor: 'm1.medium', vcpu: 8, ram: '16GiB', disk: '10GiB', network: 'in-net', floatingIp: 'None', access: 'Personal', favorite: true },
-  { id: 'tpl-002', name: 'web-server-template', image: 'Ubuntu 22.04 LTS', flavor: 'm1.large', vcpu: 16, ram: '32GiB', disk: '50GiB', network: 'public-net', floatingIp: 'Auto', access: 'Project', favorite: true },
-  { id: 'tpl-003', name: 'db-template', image: 'CentOS 8', flavor: 'm1.xlarge', vcpu: 32, ram: '64GiB', disk: '200GiB', network: 'db-net', floatingIp: 'None', access: 'Personal', favorite: false },
-  { id: 'tpl-004', name: 'gpu-ml-template', image: 'Ubuntu 22.04 LTS', flavor: 'g1.xlarge', vcpu: 16, ram: '128GiB', disk: '500GiB', network: 'ml-net', floatingIp: 'Auto', access: 'Public', favorite: true },
-  { id: 'tpl-005', name: 'minimal-template', image: 'Alpine 3.18', flavor: 'm1.small', vcpu: 2, ram: '4GiB', disk: '10GiB', network: 'in-net', floatingIp: 'None', access: 'Personal', favorite: false },
-  { id: 'tpl-006', name: 'k8s-worker', image: 'Rocky Linux 9', flavor: 'm1.large', vcpu: 8, ram: '16GiB', disk: '100GiB', network: 'k8s-net', floatingIp: 'None', access: 'Project', favorite: true },
-  { id: 'tpl-007', name: 'k8s-master', image: 'Rocky Linux 9', flavor: 'm1.medium', vcpu: 4, ram: '8GiB', disk: '50GiB', network: 'k8s-net', floatingIp: 'Auto', access: 'Project', favorite: true },
-  { id: 'tpl-008', name: 'dev-environment', image: 'Ubuntu 22.04 LTS', flavor: 'm1.medium', vcpu: 4, ram: '8GiB', disk: '30GiB', network: 'dev-net', floatingIp: 'Auto', access: 'Personal', favorite: false },
-  { id: 'tpl-009', name: 'monitoring-stack', image: 'Debian 12', flavor: 'm1.large', vcpu: 8, ram: '16GiB', disk: '100GiB', network: 'monitor-net', floatingIp: 'Auto', access: 'Public', favorite: true },
-  { id: 'tpl-010', name: 'cache-server', image: 'Ubuntu 22.04 LTS', flavor: 'm1.medium', vcpu: 4, ram: '32GiB', disk: '20GiB', network: 'cache-net', floatingIp: 'None', access: 'Project', favorite: false },
+  { id: 'tpl-001', name: 'hj-small', image: '-', flavor: '2025-01-03', vcpu: 8, ram: '16GiB', disk: '10GiB', network: 'in-net', floatingIp: 'None', access: 'Personal', favorite: true },
+  { id: 'tpl-002', name: 'web-server-template', image: '-', flavor: '2025-01-02', vcpu: 16, ram: '32GiB', disk: '50GiB', network: 'public-net', floatingIp: 'Auto', access: 'Project', favorite: true },
+  { id: 'tpl-003', name: 'db-template', image: '-', flavor: '2024-12-28', vcpu: 32, ram: '64GiB', disk: '200GiB', network: 'db-net', floatingIp: 'None', access: 'Personal', favorite: false },
+  { id: 'tpl-004', name: 'gpu-ml-template', image: '-', flavor: '2024-12-25', vcpu: 16, ram: '128GiB', disk: '500GiB', network: 'ml-net', floatingIp: 'Auto', access: 'Public', favorite: true },
+  { id: 'tpl-005', name: 'minimal-template', image: '-', flavor: '2024-12-20', vcpu: 2, ram: '4GiB', disk: '10GiB', network: 'in-net', floatingIp: 'None', access: 'Personal', favorite: false },
+  { id: 'tpl-006', name: 'k8s-worker', image: '-', flavor: '2024-12-18', vcpu: 8, ram: '16GiB', disk: '100GiB', network: 'k8s-net', floatingIp: 'None', access: 'Project', favorite: true },
+  { id: 'tpl-007', name: 'k8s-master', image: '-', flavor: '2024-12-18', vcpu: 4, ram: '8GiB', disk: '50GiB', network: 'k8s-net', floatingIp: 'Auto', access: 'Project', favorite: true },
+  { id: 'tpl-008', name: 'dev-environment', image: '-', flavor: '2024-12-15', vcpu: 4, ram: '8GiB', disk: '30GiB', network: 'dev-net', floatingIp: 'Auto', access: 'Personal', favorite: false },
+  { id: 'tpl-009', name: 'monitoring-stack', image: '-', flavor: '2024-12-10', vcpu: 8, ram: '16GiB', disk: '100GiB', network: 'monitor-net', floatingIp: 'Auto', access: 'Public', favorite: true },
+  { id: 'tpl-010', name: 'cache-server', image: '-', flavor: '2024-12-05', vcpu: 4, ram: '32GiB', disk: '20GiB', network: 'cache-net', floatingIp: 'None', access: 'Project', favorite: false },
 ];
 
 /* ----------------------------------------
@@ -95,14 +95,8 @@ export function InstanceTemplatesPage() {
   const defaultColumnConfig: ColumnConfig[] = [
     { id: 'favorite', label: '', visible: true, locked: true },
     { id: 'name', label: 'Name', visible: true, locked: true },
-    { id: 'image', label: 'Image', visible: true },
-    { id: 'flavor', label: 'Flavor', visible: true },
-    { id: 'vcpu', label: 'vCPU', visible: true },
-    { id: 'ram', label: 'RAM', visible: true },
-    { id: 'disk', label: 'Disk', visible: true },
-    { id: 'network', label: 'Network', visible: true },
-    { id: 'floatingIp', label: 'Floating IP', visible: true },
-    { id: 'access', label: 'Access', visible: true },
+    { id: 'image', label: 'Description', visible: true },
+    { id: 'flavor', label: 'Created At', visible: true },
     { id: 'actions', label: 'Action', visible: true, locked: true },
   ];
   const [columnConfig, setColumnConfig] = useState<ColumnConfig[]>(defaultColumnConfig);
@@ -266,52 +260,15 @@ export function InstanceTemplatesPage() {
     },
     {
       key: 'image',
-      label: 'Image',
+      label: 'Description',
       flex: 1,
       sortable: true,
     },
     {
       key: 'flavor',
-      label: 'Flavor',
+      label: 'Created At',
       flex: 1,
       sortable: true,
-    },
-    {
-      key: 'vcpu',
-      label: 'vCPU',
-      width: '80px',
-      align: 'center',
-      sortable: true,
-    },
-    {
-      key: 'ram',
-      label: 'RAM',
-      width: '80px',
-      align: 'center',
-      sortable: true,
-    },
-    {
-      key: 'disk',
-      label: 'Disk',
-      width: '80px',
-      align: 'center',
-      sortable: true,
-    },
-    {
-      key: 'network',
-      label: 'Network',
-      flex: 1,
-      sortable: true,
-    },
-    {
-      key: 'floatingIp',
-      label: 'Floating IP',
-      flex: 1,
-    },
-    {
-      key: 'access',
-      label: 'Access',
-      flex: 1,
     },
     {
       key: 'actions',
@@ -429,11 +386,8 @@ export function InstanceTemplatesPage() {
             {/* Category Tabs */}
             <Tabs value={activeTab} onChange={setActiveTab} variant="underline" size="sm">
               <TabList>
-                <Tab value="favorites">Favorites({tabCounts.favorites})</Tab>
-                <Tab value="personal">Personal({tabCounts.personal})</Tab>
-                <Tab value="project">Project({tabCounts.project})</Tab>
-                <Tab value="public">Public({tabCounts.public})</Tab>
-                <Tab value="all">All({tabCounts.all})</Tab>
+                <Tab value="favorites">Current Tenant</Tab>
+                <Tab value="personal">Public</Tab>
               </TabList>
             </Tabs>
 
