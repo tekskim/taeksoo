@@ -200,54 +200,48 @@ const foundationItems = [
   { id: 'borders', label: 'Borders', icon: IconBorderAll },
   { id: 'shadows', label: 'Shadows', icon: IconBoxMultiple },
   { id: 'icons', label: 'Icons', icon: IconStar },
-  { id: 'layout', label: 'Layout', icon: IconLayoutSidebar },
 ];
 
 // Component items (UI 컴포넌트)
-// Form Controls
+// Form Controls - matches actual content order
 const formControlItems = [
   { id: 'button', label: 'Button', icon: IconClick },
   { id: 'input', label: 'Input', icon: IconForms },
   { id: 'select', label: 'Select', icon: IconSelector },
   { id: 'datepicker', label: 'DatePicker', icon: IconCalendar },
   { id: 'slider', label: 'Slider', icon: IconAdjustments },
-  { id: 'checkbox', label: 'Checkbox', icon: IconSquareCheck },
-  { id: 'radio', label: 'Radio', icon: IconCircle },
-  { id: 'toggle', label: 'Toggle', icon: IconToggleRight },
-];
-
-// Data Display
-const dataDisplayItems = [
-  { id: 'table', label: 'Table', icon: IconList },
-  { id: 'badge', label: 'Badge', icon: IconTag },
   { id: 'chip', label: 'Chip', icon: IconTag },
   { id: 'pagination', label: 'Pagination', icon: IconProgress },
   { id: 'progress-bar', label: 'Progress Bar', icon: IconProgress },
+  { id: 'toggle', label: 'Toggle', icon: IconToggleRight },
+  { id: 'checkbox', label: 'Checkbox', icon: IconSquareCheck },
+  { id: 'radio', label: 'Radio', icon: IconCircle },
+];
+
+// Navigation & Layout - matches actual content order
+const navigationItems = [
+  { id: 'topbar', label: 'TopBar', icon: IconLayoutNavbar },
+  { id: 'tabbar', label: 'TabBar', icon: IconLayoutNavbar },
+  { id: 'tabs', label: 'Tabs', icon: IconLayoutNavbar },
+  { id: 'disclosure', label: 'Disclosure', icon: IconSelector },
+  { id: 'inline-message', label: 'Inline Message', icon: IconInfoCircle },
+  { id: 'table', label: 'Table', icon: IconList },
+  { id: 'badge', label: 'Badge', icon: IconTag },
+  { id: 'breadcrumb', label: 'Breadcrumb', icon: IconChevronRight },
   { id: 'status-indicator', label: 'Status Indicator', icon: IconActivity },
   { id: 'tooltip', label: 'Tooltip', icon: IconMessage2 },
   { id: 'window-control', label: 'Window Control', icon: IconAppWindow },
 ];
 
-// Navigation
-const navigationItems = [
-  { id: 'topbar', label: 'TopBar', icon: IconLayoutNavbar },
-  { id: 'tabbar', label: 'TabBar', icon: IconLayoutNavbar },
-  { id: 'tabs', label: 'Tabs', icon: IconLayoutNavbar },
-  { id: 'breadcrumb', label: 'Breadcrumb', icon: IconChevronRight },
+// Patterns - matches actual content order
+const patternItems = [
+  { id: 'detail-header', label: 'Detail Header', icon: IconLayoutNavbar },
+  { id: 'section-card', label: 'Section Card', icon: IconLayoutGrid },
   { id: 'menu', label: 'Menu', icon: IconMenu2 },
   { id: 'context-menu', label: 'Context Menu', icon: IconMenu2 },
   { id: 'modal', label: 'Modal', icon: IconLayoutGrid },
   { id: 'drawer', label: 'Drawer', icon: IconLayoutGrid },
-];
-
-// Feedback
-const feedbackItems = [
-  { id: 'inline-message', label: 'Inline Message', icon: IconInfoCircle },
-];
-
-// Disclosure
-const disclosureItems = [
-  { id: 'disclosure', label: 'Disclosure', icon: IconSelector },
+  { id: 'layout', label: 'Layout', icon: IconLayoutSidebar },
 ];
 
 // Graphs
@@ -259,21 +253,12 @@ const graphItems = [
   { id: 'doughnut-chart', label: 'Doughnut Chart', icon: IconChartDonut },
 ];
 
-// Patterns (복합 컴포넌트 패턴)
-const patternItems = [
-  { id: 'detail-header', label: 'Detail Header', icon: IconLayoutNavbar },
-  { id: 'section-card', label: 'Section Card', icon: IconLayoutGrid },
-];
-
 // All component items
 const componentItems = [
   ...formControlItems,
-  ...dataDisplayItems,
   ...navigationItems,
-  ...feedbackItems,
-  ...disclosureItems,
-  ...graphItems,
   ...patternItems,
+  ...graphItems,
 ];
 
 // All items for intersection observer
@@ -2253,6 +2238,11 @@ export function DesignSystemPage() {
   const [demoPage3, setDemoPage3] = useState(15);
   const [demoPage4, setDemoPage4] = useState(2);
 
+  // Scroll to top on mount
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   // Scroll to top handler
   useEffect(() => {
     const handleScroll = () => {
@@ -2387,84 +2377,12 @@ export function DesignSystemPage() {
               ))}
             </VStack>
 
-            {/* Data Display */}
+            {/* Navigation & Data Display */}
             <VStack gap={1}>
               <span className="px-3 py-1 text-[length:var(--font-size-10)] font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider">
-                Data Display
-              </span>
-              {dataDisplayItems.map(({ id, label, icon: Icon }) => (
-                <button
-                  key={id}
-                  onClick={() => scrollToSection(id)}
-                  className={`
-                    w-full px-3 py-2 rounded-[var(--radius-button)] flex items-center gap-2
-                    text-[length:var(--font-size-11)] text-left transition-colors
-                    ${activeSection === id
-                      ? 'bg-[var(--color-state-info-bg)] text-[var(--color-action-primary)] font-medium'
-                      : 'text-[var(--color-text-muted)] hover:bg-[var(--color-surface-subtle)]'
-                    }
-                  `}
-                >
-                  <Icon size={16} stroke={1.5} />
-                  {label}
-                </button>
-              ))}
-            </VStack>
-
-            {/* Navigation */}
-            <VStack gap={1}>
-              <span className="px-3 py-1 text-[length:var(--font-size-10)] font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider">
-                Navigation
+                Navigation & Data
               </span>
               {navigationItems.map(({ id, label, icon: Icon }) => (
-                <button
-                  key={id}
-                  onClick={() => scrollToSection(id)}
-                  className={`
-                    w-full px-3 py-2 rounded-[var(--radius-button)] flex items-center gap-2
-                    text-[length:var(--font-size-11)] text-left transition-colors
-                    ${activeSection === id
-                      ? 'bg-[var(--color-state-info-bg)] text-[var(--color-action-primary)] font-medium'
-                      : 'text-[var(--color-text-muted)] hover:bg-[var(--color-surface-subtle)]'
-                    }
-                  `}
-                >
-                  <Icon size={16} stroke={1.5} />
-                  {label}
-                </button>
-              ))}
-            </VStack>
-
-            {/* Feedback */}
-            <VStack gap={1}>
-              <span className="px-3 py-1 text-[length:var(--font-size-10)] font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider">
-                Feedback
-              </span>
-              {feedbackItems.map(({ id, label, icon: Icon }) => (
-                <button
-                  key={id}
-                  onClick={() => scrollToSection(id)}
-                  className={`
-                    w-full px-3 py-2 rounded-[var(--radius-button)] flex items-center gap-2
-                    text-[length:var(--font-size-11)] text-left transition-colors
-                    ${activeSection === id
-                      ? 'bg-[var(--color-state-info-bg)] text-[var(--color-action-primary)] font-medium'
-                      : 'text-[var(--color-text-muted)] hover:bg-[var(--color-surface-subtle)]'
-                    }
-                  `}
-                >
-                  <Icon size={16} stroke={1.5} />
-                  {label}
-                </button>
-              ))}
-            </VStack>
-
-            {/* Disclosure */}
-            <VStack gap={1}>
-              <span className="px-3 py-1 text-[length:var(--font-size-10)] font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider">
-                Disclosure
-              </span>
-              {disclosureItems.map(({ id, label, icon: Icon }) => (
                 <button
                   key={id}
                   onClick={() => scrollToSection(id)}
@@ -5250,7 +5168,7 @@ outline: 2px solid var(--color-border-focus);`}
                   <SectionCard>
                     <SectionCard.Header 
                       title="Basic Information" 
-                      actions={<Button variant="secondary" size="sm" leftIcon={<IconEdit size={16} />}>Edit</Button>}
+                      actions={<Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />}>Edit</Button>}
                     />
                     <SectionCard.Content>
                       <SectionCard.DataRow label="Instance Name" value="web-server-01" />
@@ -5278,7 +5196,7 @@ outline: 2px solid var(--color-border-focus);`}
                     <SectionCard>
                       <SectionCard.Header 
                         title="Basic Information" 
-                        actions={<Button variant="secondary" size="sm" leftIcon={<IconEdit size={16} />}>Edit</Button>}
+                        actions={<Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />}>Edit</Button>}
                       />
                       <SectionCard.Content>
                         <SectionCard.DataRow label="Instance Name" value="tk-test" />
