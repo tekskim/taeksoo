@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { VStack, MenuItem, MenuSection } from '@/design-system';
 import { useDarkMode } from '@/hooks/useDarkMode';
 import {
@@ -21,9 +20,14 @@ import {
   IconCertificate,
   IconTopologyStar3,
   IconLayoutSidebar,
-  IconArrowLeft,
+  IconListSearch,
+  IconServer2,
+  IconSwitch3,
+  IconActivity,
+  IconCpu2,
+  IconAffiliate,
 } from '@tabler/icons-react';
-import { Link, useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import { useProject } from '@/contexts/ProjectContext';
 import ThakiLogoLight from '@/assets/thakiLogo_light.svg';
 import ThakiLogoDark from '@/assets/thakiLogo-dark.svg';
@@ -42,6 +46,7 @@ export function Sidebar({ isOpen = true, onToggle }: SidebarProps) {
   const { isDark } = useDarkMode();
   const { projects, selectedProjectId, setSelectedProjectId } = useProject();
   const location = useLocation();
+  const isCloudBuilder = location.pathname.startsWith('/cloudbuilder') || location.pathname.startsWith('/cloud-builder');
   
   // Check if current path matches href
   const isActive = (href: string) => {
@@ -111,13 +116,78 @@ export function Sidebar({ isOpen = true, onToggle }: SidebarProps) {
             <span>All Services</span>
           </Link>
 
-          {/* Home */}
-          <MenuItem
-            icon={<IconHome size={16} stroke={1.5} />}
-            label="Home"
-            href="/compute"
-            active={isActive('/compute')}
-          />
+              <MenuSection title="Inventory(1.0v)" defaultOpen={true}>
+                <MenuItem
+                  icon={<IconListSearch size={16} stroke={1.5} />}
+                  label="Discovery"
+                  href="/cloudbuilder/discovery"
+                  active={isActive('/cloudbuilder/discovery')}
+                />
+                <MenuItem
+                  icon={<IconServer2 size={16} stroke={1.5} />}
+                  label="Servers"
+                  href="/cloudbuilder/servers"
+                  active={isActive('/cloudbuilder/servers')}
+                />
+                <MenuItem
+                  icon={<IconSwitch3 size={16} stroke={1.5} />}
+                  label="Switch"
+                  href="/cloudbuilder/switch"
+                  active={isActive('/cloudbuilder/switch')}
+                />
+              </MenuSection>
+
+              <MenuSection title="Inventory(0.7v)" defaultOpen={true}>
+                <MenuItem
+                  icon={<IconServer2 size={16} stroke={1.5} />}
+                  label="Severs"
+                  href="/cloudbuilder/severs0.7"
+                  active={isActive('/cloudbuilder/severs0.7')}
+                />
+              </MenuSection>
+
+              <MenuSection title="System Info" defaultOpen={true}>
+                <MenuItem
+                  icon={<IconActivity size={16} stroke={1.5} />}
+                  label="Compute Services"
+                  href="/cloudbuilder/services"
+                  active={isActive('/cloudbuilder/services')}
+                />
+                <MenuItem
+                  icon={<IconCpu2 size={16} stroke={1.5} />}
+                  label="Compute Nodes"
+                  href="/cloudbuilder/compute-services"
+                  active={isActive('/cloudbuilder/compute-services')}
+                />
+                <MenuItem
+                  icon={<IconNetwork size={16} stroke={1.5} />}
+                  label="Network Agents"
+                  href="/cloudbuilder/network-agents"
+                  active={isActive('/cloudbuilder/network-agents')}
+                />
+                <MenuItem
+                  icon={<IconDatabase size={16} stroke={1.5} />}
+                  label="Block Storage Services"
+                  href="/cloudbuilder/block-storage-services"
+                  active={isActive('/cloudbuilder/block-storage-services')}
+                />
+                <MenuItem
+                  icon={<IconAffiliate size={16} stroke={1.5} />}
+                  label="Orchestration Services"
+                  href="/cloudbuilder/orchestration-services"
+                  active={isActive('/cloudbuilder/orchestration-services')}
+                />
+              </MenuSection>
+            </>
+          ) : (
+            <>
+            {/* Home */}
+            <MenuItem
+              icon={<IconHome size={16} stroke={1.5} />}
+              label="Home"
+              href="/compute"
+              active={isActive('/compute')}
+            />
 
           {/* Compute Section */}
           <MenuSection title="Compute" defaultOpen={true}>
@@ -238,6 +308,8 @@ export function Sidebar({ isOpen = true, onToggle }: SidebarProps) {
               active={isActive('/compute/topology')}
             />
           </MenuSection>
+            </>
+          )}
         </VStack>
       </nav>
     </aside>

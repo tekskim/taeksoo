@@ -59,9 +59,9 @@ const appCards: AppCard[] = [
     title: 'Cloud Builder',
     description: 'CI/CD pipelines, build automation, and deployment workflows',
     icon: <img src={CloudBuilderIcon} alt="Cloud Builder" className="w-16 h-16" />,
-    path: '/cloud-builder',
+    path: '/cloudbuilder',
     color: 'from-orange-500 to-amber-500',
-    available: false,
+    available: true,
   },
   {
     id: 'ai-platform',
