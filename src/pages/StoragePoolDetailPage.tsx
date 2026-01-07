@@ -618,7 +618,8 @@ function PerformanceChart({
       axisTick: { show: false },
       axisLabel: {
         color: chartColors.slate400,
-        fontSize: 10
+        fontSize: 10,
+        padding: [0, 0, 0, 15]
       },
       boundaryGap: false
     },
@@ -834,6 +835,7 @@ function ChartWithFullScreen({
                 yAxisUnit={fullScreenChart.yAxisUnit}
                 isFullScreen={true}
                 onExitFullScreen={() => { setFullScreenChart(null); setContainerReady(false); }}
+                timeControls={<MonitoringTimeControls />}
               />
             )}
           </div>

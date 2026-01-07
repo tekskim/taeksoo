@@ -419,6 +419,7 @@ interface HostPerformanceChartProps {
   isFullScreen?: boolean;
   onFullScreen?: () => void;
   onExitFullScreen?: () => void;
+  timeControls?: React.ReactNode;
 }
 
 function HostPerformanceChart({
@@ -429,6 +430,7 @@ function HostPerformanceChart({
   isFullScreen = false,
   onFullScreen,
   onExitFullScreen,
+  timeControls,
 }: HostPerformanceChartProps) {
   const [visibleSeries, setVisibleSeries] = useState<Record<string, boolean>>(
     Object.fromEntries(series.map(s => [s.name, true]))
@@ -506,7 +508,7 @@ function HostPerformanceChart({
       data: timeLabels,
       axisLine: { show: false },
       axisTick: { show: false },
-      axisLabel: { color: chartColors.slate400, fontSize: 10 },
+      axisLabel: { color: chartColors.slate400, fontSize: 10, padding: [0, 0, 0, 15] },
       boundaryGap: false
     },
     yAxis: {
@@ -555,6 +557,9 @@ function HostPerformanceChart({
         {/* Header */}
         <div className="chartHeader">
           <span className="chartTitle">{title}</span>
+          {isFullScreen && timeControls && (
+            <div className="chartHeaderCenter">{timeControls}</div>
+          )}
           <div className="chartControls">
             {/* Toggle Button - only show for multiple series */}
             {series.length > 1 && (
@@ -718,6 +723,7 @@ function HostChartWithFullScreen({
                 yAxisUnit={fullScreenChart.yAxisUnit}
                 isFullScreen={true}
                 onExitFullScreen={() => { setFullScreenChart(null); setContainerReady(false); }}
+                timeControls={<HostMonitoringTimeControls />}
               />
             )}
           </div>
