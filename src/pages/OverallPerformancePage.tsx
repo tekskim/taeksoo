@@ -189,6 +189,47 @@ const hostOverviewData: HostOverviewRow[] = [
   { id: '4', hostname: 'bzfv0rv1-cephadm-cl04', totalMemory: '93.9 GiB', rawCapacity: '93.9 GiB' },
 ];
 
+// ======== OSDs Tab Mock Data ========
+
+// OSD Latency table data
+interface OsdLatencyRow {
+  id: string;
+  osdId: string;
+  latency: string;
+}
+
+const osdReadLatencyData: OsdLatencyRow[] = [
+  { id: '1', osdId: 'osd.13', latency: '8 ms' },
+  { id: '2', osdId: 'osd.3', latency: '6 ms' },
+  { id: '3', osdId: 'osd.1', latency: '4 ms' },
+  { id: '4', osdId: 'osd.7', latency: '3 ms' },
+  { id: '5', osdId: 'osd.9', latency: '3 ms' },
+  { id: '6', osdId: 'osd.15', latency: '2 ms' },
+];
+
+const osdWriteLatencyData: OsdLatencyRow[] = [
+  { id: '1', osdId: 'osd.13', latency: '8 ms' },
+  { id: '2', osdId: 'osd.3', latency: '6 ms' },
+  { id: '3', osdId: 'osd.1', latency: '4 ms' },
+  { id: '4', osdId: 'osd.7', latency: '3 ms' },
+  { id: '5', osdId: 'osd.9', latency: '3 ms' },
+  { id: '6', osdId: 'osd.15', latency: '2 ms' },
+];
+
+// OSD Read Latencies chart series
+const osdReadLatenciesSeries = [
+  { name: '@95%ile', color: chartColors.violet400, data: [0.28, 0.32, 0.38, 0.35, 0.33, 0.30] },
+  { name: 'AVG read', color: chartColors.emerald400, data: [0.18, 0.20, 0.25, 0.28, 0.26, 0.22] },
+  { name: 'MAX read', color: chartColors.amber400, data: [0.22, 0.25, 0.30, 0.32, 0.30, 0.26] },
+];
+
+// OSD Write Latencies chart series
+const osdWriteLatenciesSeries = [
+  { name: '@95%ile write', color: chartColors.cyan400, data: [5.5, 6.0, 7.2, 7.8, 7.5, 7.0] },
+  { name: 'AVG write', color: chartColors.emerald400, data: [4.0, 4.5, 5.5, 6.2, 6.0, 5.5] },
+  { name: 'MAX write', color: chartColors.amber400, data: [4.8, 5.2, 6.2, 7.0, 6.5, 6.0] },
+];
+
 /* ----------------------------------------
    StatCard Component
    ---------------------------------------- */
@@ -506,6 +547,12 @@ export function OverallPerformancePage() {
     },
   ];
 
+  // OSD Latency table columns
+  const osdLatencyColumns: TableColumn<OsdLatencyRow>[] = [
+    { key: 'osdId', label: 'OSD ID', flex: 1, sortable: true },
+    { key: 'latency', label: 'Latency', flex: 1, sortable: true },
+  ];
+
   return (
     <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
       {/* Sidebar */}
@@ -705,9 +752,75 @@ export function OverallPerformancePage() {
 
                   {/* OSDs Tab Panel */}
                   <TabPanel value="osds" className="pt-6">
-                    <div className="flex items-center justify-center h-[400px] text-[var(--color-text-muted)]">
-                      OSDs performance metrics coming soon...
-                    </div>
+                    <VStack gap={6}>
+                      {/* Time Period Selector */}
+                      <div className="flex justify-end">
+                        <MonitoringToolbar
+                          timeRange={timeRange}
+                          onTimeRangeChange={setTimeRange}
+                          onRefresh={() => console.log('Refresh clicked')}
+                          showRefresh={true}
+                        />
+                      </div>
+
+                      {/* Read Latencies Row */}
+                      <div className="flex gap-4">
+                        {/* Highest READ Latencies Table */}
+                        <div className="flex-1">
+                          <SectionCard>
+                            <SectionCard.Header title="Highest READ Latencies" />
+                            <SectionCard.Content gap={0}>
+                              <Table<OsdLatencyRow>
+                                columns={osdLatencyColumns}
+                                data={osdReadLatencyData}
+                                rowKey="id"
+                              />
+                            </SectionCard.Content>
+                          </SectionCard>
+                        </div>
+                        {/* OSD Read Latencies Chart */}
+                        <div className="flex-1">
+                          <ChartCard
+                            title="OSD Read Latencies"
+                            series={osdReadLatenciesSeries}
+                            yAxisFormatter={(v) => `${v}`}
+                            isDarkMode={isDark}
+                            timeRange={timeRange}
+                            onTimeRangeChange={setTimeRange}
+                            onRefresh={() => console.log('Refresh clicked')}
+                          />
+                        </div>
+                      </div>
+
+                      {/* Write Latencies Row */}
+                      <div className="flex gap-4">
+                        {/* Highest WRITE Latencies Table */}
+                        <div className="flex-1">
+                          <SectionCard>
+                            <SectionCard.Header title="Highest WRITE Latencies" />
+                            <SectionCard.Content gap={0}>
+                              <Table<OsdLatencyRow>
+                                columns={osdLatencyColumns}
+                                data={osdWriteLatencyData}
+                                rowKey="id"
+                              />
+                            </SectionCard.Content>
+                          </SectionCard>
+                        </div>
+                        {/* OSD Write Latencies Chart */}
+                        <div className="flex-1">
+                          <ChartCard
+                            title="OSD Write Latencies"
+                            series={osdWriteLatenciesSeries}
+                            yAxisFormatter={(v) => `${v}`}
+                            isDarkMode={isDark}
+                            timeRange={timeRange}
+                            onTimeRangeChange={setTimeRange}
+                            onRefresh={() => console.log('Refresh clicked')}
+                          />
+                        </div>
+                      </div>
+                    </VStack>
                   </TabPanel>
                 </Tabs>
               </div>
