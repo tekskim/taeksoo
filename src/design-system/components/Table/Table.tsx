@@ -165,7 +165,7 @@ export function Table<T extends Record<string, any>>({
     >
       {/* Table container */}
       <div
-        className={`table-scroll-container ${maxHeight ? 'overflow-y-auto' : ''}`}
+        className={`table-scroll-container overflow-x-auto ${maxHeight ? 'overflow-y-auto' : ''}`}
         style={maxHeight ? { maxHeight } : undefined}
       >
         {/* Header */}
@@ -217,14 +217,15 @@ export function Table<T extends Record<string, any>>({
                   leading-[var(--table-line-height)]
                   font-medium
                   text-[var(--color-text-default)]
-                  ${column.align === 'center' ? 'text-center' : ''}
-                  ${column.align === 'right' ? 'text-right' : 'text-left'}
+                  min-w-0
+                  ${column.align === 'center' ? 'text-center' : column.align === 'right' ? 'text-right' : 'text-left'}
                   ${column.sortable ? 'cursor-pointer select-none hover:text-[var(--color-action-primary)] transition-colors' : ''}
                   ${showDivider ? 'border-l border-[var(--color-border-default)]' : ''}
                 `}
                 style={{ 
                   width: column.width,
                   flex: column.flex ?? (column.width ? undefined : 1),
+                  flexShrink: column.width ? 0 : 1,
                 }}
                 onClick={column.sortable ? () => handleSort(column.key) : undefined}
               >
@@ -233,13 +234,12 @@ export function Table<T extends Record<string, any>>({
                 ) : (
                   <div
                     className={`
-                      flex items-center gap-1 w-full
-                      ${column.align === 'center' ? 'justify-center' : ''}
-                      ${column.align === 'right' ? 'justify-end flex-row-reverse' : ''}
+                      flex items-center gap-1 w-full min-w-0
+                      ${column.align === 'center' ? 'justify-center' : column.align === 'right' ? 'justify-end flex-row-reverse' : 'justify-start'}
                     `}
                   >
-                    <span>{column.label}</span>
-                    {column.sortable && renderSortIcon(column.key)}
+                    <span className="truncate">{column.label}</span>
+                    {column.sortable && <span className="flex-shrink-0">{renderSortIcon(column.key)}</span>}
                   </div>
                 )}
               </div>
@@ -315,6 +315,9 @@ export function Table<T extends Record<string, any>>({
                     const isFirstColumn = colIndex === 0;
                     const showCellDivider = isFirstColumn ? selectable : true;
                     
+                    const cellValue = row[column.key];
+                    const cellTitle = typeof cellValue === 'string' || typeof cellValue === 'number' ? String(cellValue) : undefined;
+                    
                     return (
                     <div
                       key={column.key}
@@ -325,18 +328,22 @@ export function Table<T extends Record<string, any>>({
                         text-[length:var(--table-font-size)]
                         leading-[var(--table-line-height)]
                         text-[var(--color-text-default)]
-                        ${column.align === 'center' ? 'justify-center' : ''}
-                        ${column.align === 'right' ? 'justify-end' : ''}
+                        min-w-0
+                        ${column.align === 'center' ? 'justify-center text-center' : column.align === 'right' ? 'justify-end text-right' : 'justify-start text-left'}
                         ${showCellDivider ? 'border-l border-transparent' : ''}
                       `}
                       style={{ 
                         width: column.width,
                         flex: column.flex ?? (column.width ? undefined : 1),
+                        flexShrink: column.width ? 0 : 1,
                       }}
+                      title={cellTitle}
                     >
-                      {column.render
-                        ? column.render(row[column.key], row, rowIndex)
-                        : row[column.key]}
+                      <span className="truncate w-full">
+                        {column.render
+                          ? column.render(row[column.key], row, rowIndex)
+                          : row[column.key]}
+                      </span>
                     </div>
                   );
                   })}

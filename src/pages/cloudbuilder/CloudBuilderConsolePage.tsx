@@ -113,7 +113,7 @@ function buildTableColumns(
     }
 
     if (c.kind === 'mono') {
-      column.render = (value) => <span className="font-mono text-[13px]">{value ?? '-'}</span>;
+      column.render = (value) => <span className="text-[length:var(--font-size-12)] leading-[var(--line-height-18)] text-[var(--color-text-default)]">{value ?? '-'}</span>;
       return column;
     }
 
@@ -136,7 +136,7 @@ function buildTableColumns(
       column.render = (value, row) => (
         <button
           type="button"
-          className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
+          className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2 text-left"
           onClick={(e) => {
             e.stopPropagation();
             onRowAction('open-detail', row);

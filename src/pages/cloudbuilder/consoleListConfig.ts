@@ -762,7 +762,7 @@ export function getCloudBuilderListConfig(slug: CloudBuilderSlug): CloudBuilderL
         { key: 'name', label: 'Name', sortable: true },
         { key: 'engineId', label: 'Engine ID', sortable: true, kind: 'mono' },
         { key: 'host', label: 'Host', sortable: true },
-        { key: 'status', label: 'Status', sortable: true, align: 'center', width: '160px' },
+        { key: 'status', label: 'Status', sortable: true, width: '160px' },
         { key: 'lastUpdated', label: 'Last Updated', sortable: true },
       ],
       rows: makeRows(5, (i) => ({
