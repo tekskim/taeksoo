@@ -26,8 +26,9 @@ import {
   IconActivity,
   IconCpu2,
   IconAffiliate,
+  IconArrowLeft,
 } from '@tabler/icons-react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, Link } from 'react-router-dom';
 import { useProject } from '@/contexts/ProjectContext';
 import ThakiLogoLight from '@/assets/thakiLogo_light.svg';
 import ThakiLogoDark from '@/assets/thakiLogo-dark.svg';
@@ -116,6 +117,8 @@ export function Sidebar({ isOpen = true, onToggle }: SidebarProps) {
             <span>All Services</span>
           </Link>
 
+          {isCloudBuilder ? (
+            <>
               <MenuSection title="Inventory(1.0v)" defaultOpen={true}>
                 <MenuItem
                   icon={<IconListSearch size={16} stroke={1.5} />}

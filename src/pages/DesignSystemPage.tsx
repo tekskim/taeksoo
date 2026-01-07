@@ -2044,7 +2044,7 @@ function TableDemo() {
       flex: 1,
       render: (_: string, row: KeyPairData) => (
         <div className="flex items-center gap-2">
-          <span className="font-mono text-[length:var(--font-size-11)] text-[var(--color-text-default)]">{row.fingerprint}</span>
+          <span className="text-[length:var(--font-size-12)] leading-[var(--line-height-18)] text-[var(--color-text-default)]">{row.fingerprint}</span>
           <button
             onClick={(e) => {
               e.stopPropagation();
@@ -2104,9 +2104,11 @@ function TableDemo() {
     <VStack gap={8}>
       {/* Tokens */}
       <VStack gap={3}>
-        <Label>Design Tokens</Label>
+        <Label>Design Tokens & Features</Label>
         <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
           <code>cell-padding: 12×10px</code> · <code>header-padding: 12×8px</code> · <code>radius: 8px</code> · <code>font: 12px</code>
+          <br />
+          <span className="text-[var(--color-text-muted)]">Features:</span> <code>overflow-x: auto</code> · <code>text-overflow: ellipsis</code> · <code>title tooltip on hover</code>
         </div>
       </VStack>
 
@@ -2182,9 +2184,9 @@ function TableDemo() {
         </p>
       </VStack>
 
-      {/* Horizontal Scroll */}
+      {/* Horizontal Scroll & Text Truncation */}
       <VStack gap={3}>
-        <Label>Horizontal Scroll (max-width: 500px)</Label>
+        <Label>Horizontal Scroll & Text Truncation (max-width: 500px)</Label>
         <div className="max-w-[500px] border border-dashed border-[var(--color-border-default)] rounded-[var(--radius-md)] p-2 overflow-hidden">
           <Table
             columns={compactColumns}
@@ -2193,7 +2195,9 @@ function TableDemo() {
           />
         </div>
         <p className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
-          Shift + Mouse wheel or trackpad swipe to scroll horizontally
+          • Horizontal scroll: Shift + Mouse wheel or trackpad swipe<br />
+          • Long text is truncated with ellipsis (...)<br />
+          • Hover over truncated text to see full content via tooltip
         </p>
       </VStack>
 
@@ -4596,7 +4600,7 @@ outline: 2px solid var(--color-border-focus);`}
             </Section>
 
             {/* Table Component */}
-            <Section id="table" title="Table" description="Data table with sorting, selection, and sticky header">
+            <Section id="table" title="Table" description="Data table with sorting, selection, sticky header, text truncation with tooltip, and horizontal scroll">
               <TableDemo />
             </Section>
 
