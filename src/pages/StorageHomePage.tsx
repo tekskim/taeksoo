@@ -135,7 +135,7 @@ function LineChart({
   series, 
   timeLabels,
   yAxisFormatter = (v: number) => `${v}`,
-  height = '200px'
+  height = '100%'
 }: LineChartProps) {
   const [visibleSeries, setVisibleSeries] = useState<Record<string, boolean>>(
     Object.fromEntries(series.map(s => [s.name, true]))

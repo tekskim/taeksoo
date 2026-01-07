@@ -146,6 +146,8 @@ function AppRoutes() {
         <Route path="/storage/osds" element={<OSDsPage />} />
         <Route path="/storage/osds/:id" element={<OSDDetailPage />} />
         <Route path="/storage/physical-disks" element={<PhysicalDisksPage />} />
+        <Route path="/storage/images" element={<ImagesPage />} />
+        <Route path="/storage/images/:id" element={<ImageDetailPage />} />
 
         {/* Design System Routes */}
         <Route path="/design" element={<DesignSystemPage />} />

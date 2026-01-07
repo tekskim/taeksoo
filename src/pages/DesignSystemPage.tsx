@@ -47,6 +47,7 @@ import {
   DetailHeader,
   SectionCard,
   Drawer,
+  MonitoringToolbar,
 } from '@/design-system';
 import {
   // Navigation icons (for sidebar)
@@ -241,6 +242,7 @@ const patternItems = [
   { id: 'context-menu', label: 'Context Menu', icon: IconMenu2 },
   { id: 'modal', label: 'Modal', icon: IconLayoutGrid },
   { id: 'drawer', label: 'Drawer', icon: IconLayoutGrid },
+  { id: 'monitoring-toolbar', label: 'Monitoring Toolbar', icon: IconRefresh },
   { id: 'layout', label: 'Layout', icon: IconLayoutSidebar },
 ];
 
@@ -1011,77 +1013,28 @@ function TimeControls({
               >
                 <span className="calendarDateLabel">START</span>
                 <span className="calendarDateValue">{formatCalendarDate(tempStartDate)}</span>
-          </div>
+              </div>
               <div className="calendarDateSeparator">~</div>
-          <div 
+              <div 
                 className={`calendarDateBox ${!selectingStart ? 'calendarDateBoxActive' : ''}`}
                 onClick={() => setSelectingStart(false)}
-          >
+              >
                 <span className="calendarDateLabel">END</span>
                 <span className="calendarDateValue">{formatCalendarDate(tempEndDate)}</span>
-          </div>
+              </div>
             </div>
 
-            {/* Month Navigation */}
-            <div className="calendarMonthNav">
-              <button className="calendarNavBtn" onClick={prevMonth}>
-                <IconChevronLeft size={16} stroke={1.5} />
-              </button>
-              <span className="calendarMonthLabel">
-                {viewMonth.getFullYear()}.{(viewMonth.getMonth() + 1).toString().padStart(2, '0')}
-              </span>
-              <button className="calendarNavBtn" onClick={nextMonth}>
-                <IconChevronRight size={16} stroke={1.5} />
-              </button>
-            </div>
-
-            {/* Weekday Headers */}
-            <div className="calendarWeekdays">
-              {weekDays.map(day => (
-                <div key={day} className="calendarWeekday">{day}</div>
-              ))}
-            </div>
-
-            {/* Calendar Grid */}
-            <div className="calendarGrid">
-              {getDaysInMonth(viewMonth).map((day, index) => {
-                const isStart = isStartDate(day.date);
-                const isEnd = isEndDate(day.date);
-                const inRange = isDateInRange(day.date);
-                const colIndex = index % 7;
-                const isFirstCol = colIndex === 0;
-                const isLastCol = colIndex === 6;
-                
-                const wrapperClasses = [
-                  'calendarDayWrapper',
-                  inRange && 'inRange',
-                  isStart && 'rangeStart',
-                  isEnd && 'rangeEnd',
-                  isFirstCol && 'firstCol',
-                  isLastCol && 'lastCol',
-                ].filter(Boolean).join(' ');
-                
-                const dayClasses = [
-                  'calendarDay',
-                  !day.isCurrentMonth && 'calendarDayOther',
-                  (isStart || isEnd) && 'calendarDaySelected',
-                  day.isToday && 'calendarDayToday',
-                ].filter(Boolean).join(' ');
-                
-                return (
-                  <div key={index} className={wrapperClasses}>
-                    {inRange && <div className="rangeBackground" />}
-                    <button
-                      className={dayClasses}
-                      onClick={() => handleDayClick(day.date)}
-                    >
-                      <span>{day.date.getDate()}</span>
-                      {day.isToday && <span className="calendarTodayDot" />}
-                    </button>
-                  </div>
-                );
-              })}
-            </div>
+            {/* DatePicker from Design System */}
+            <DatePicker
+              mode="range"
+              rangeValue={{ start: tempStartDate, end: tempEndDate }}
+              onRangeChange={(range) => {
+                setTempStartDate(range.start);
+                setTempEndDate(range.end);
+                setSelectingStart(!range.start || !!range.end);
+              }}
+              maxDate={new Date()}
+            />
 
             {/* Actions */}
             <div className="calendarActions">
@@ -1104,7 +1057,7 @@ function LineChart({
   title, 
   series, 
   yAxisFormatter = (v: number) => `${v}`,
-  height = '200px',
+  height = '100%',
   onFullScreen,
   isFullScreen = false,
   onExitFullScreen,
@@ -1258,8 +1211,8 @@ function LineChart({
       
       {/* Chart Body */}
       <div className="chartBody">
-        <div className="chartWrapper" style={isFullScreen ? { height: '100%' } : undefined}>
-          <ReactECharts option={option} style={{ height: isFullScreen ? '100%' : height }} notMerge={true} />
+        <div className="chartWrapper">
+          <ReactECharts option={option} style={{ height: '100%', width: '100%' }} notMerge={true} />
         </div>
         <div className="chartLegend">
           {series.map((s, i) => (
@@ -1299,7 +1252,7 @@ function ChartWithFullScreen({
   title,
   series,
   yAxisFormatter = (v: number) => `${v}`,
-  height = '200px'
+  height = '100%'
 }: {
   title: string;
   series: LineChartSeries[];
@@ -5445,6 +5398,104 @@ outline: 2px solid var(--color-border-focus);`}
                           <td className="py-2 pr-4 text-[var(--color-text-muted)]">boolean</td>
                           <td className="py-2 pr-4 text-[var(--color-text-muted)]">true</td>
                           <td className="py-2 text-[var(--color-text-default)]">Whether clicking backdrop closes drawer</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </VStack>
+              </VStack>
+            </Section>
+
+            {/* Monitoring Toolbar */}
+            <Section id="monitoring-toolbar" title="Monitoring Toolbar" description="Time range selection and refresh controls for monitoring dashboards">
+              <VStack gap={8}>
+                {/* Design Tokens */}
+                <VStack gap={3}>
+                  <Label>Design Tokens</Label>
+                  <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
+                    <code>segment-padding: 4px 12px</code> · <code>border-radius: 8px</code> · <code>font-size: 11px</code> · <code>gap: 4px</code>
+                  </div>
+                </VStack>
+
+                {/* Interactive Demo */}
+                <VStack gap={3}>
+                  <Label>Default</Label>
+                  <div className="flex items-center justify-end p-4 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)]">
+                    <MonitoringToolbar 
+                      onTimeRangeChange={(value) => console.log('Time range:', value)}
+                      onCustomPeriodChange={(period) => console.log('Custom period:', period)}
+                      onRefresh={() => console.log('Refresh clicked')}
+                    />
+                  </div>
+                </VStack>
+
+                {/* Specifications */}
+                <VStack gap={3}>
+                  <Label>Specifications</Label>
+                  <div className="overflow-x-auto">
+                    <table className="w-full text-[length:var(--font-size-12)]">
+                      <thead>
+                        <tr className="border-b border-[var(--color-border-default)]">
+                          <th className="text-left py-2 pr-4 font-medium text-[var(--color-text-subtle)]">Property</th>
+                          <th className="text-left py-2 pr-4 font-medium text-[var(--color-text-subtle)]">Type</th>
+                          <th className="text-left py-2 pr-4 font-medium text-[var(--color-text-subtle)]">Default</th>
+                          <th className="text-left py-2 font-medium text-[var(--color-text-subtle)]">Description</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr className="border-b border-[var(--color-border-subtle)]">
+                          <td className="py-2 pr-4 font-mono text-[var(--color-action-primary)]">timeRangeOptions</td>
+                          <td className="py-2 pr-4 text-[var(--color-text-muted)]">TimeRangeOption[]</td>
+                          <td className="py-2 pr-4 text-[var(--color-text-muted)]">30m, 1h, 6h, 12h, 24h</td>
+                          <td className="py-2 text-[var(--color-text-default)]">Time range options to display</td>
+                        </tr>
+                        <tr className="border-b border-[var(--color-border-subtle)]">
+                          <td className="py-2 pr-4 font-mono text-[var(--color-action-primary)]">timeRange</td>
+                          <td className="py-2 pr-4 text-[var(--color-text-muted)]">TimeRangeValue</td>
+                          <td className="py-2 pr-4 text-[var(--color-text-muted)]">-</td>
+                          <td className="py-2 text-[var(--color-text-default)]">Controlled time range value</td>
+                        </tr>
+                        <tr className="border-b border-[var(--color-border-subtle)]">
+                          <td className="py-2 pr-4 font-mono text-[var(--color-action-primary)]">defaultTimeRange</td>
+                          <td className="py-2 pr-4 text-[var(--color-text-muted)]">TimeRangeValue</td>
+                          <td className="py-2 pr-4 text-[var(--color-text-muted)]">'30m'</td>
+                          <td className="py-2 text-[var(--color-text-default)]">Default time range (uncontrolled)</td>
+                        </tr>
+                        <tr className="border-b border-[var(--color-border-subtle)]">
+                          <td className="py-2 pr-4 font-mono text-[var(--color-action-primary)]">onTimeRangeChange</td>
+                          <td className="py-2 pr-4 text-[var(--color-text-muted)]">(value) =&gt; void</td>
+                          <td className="py-2 pr-4 text-[var(--color-text-muted)]">-</td>
+                          <td className="py-2 text-[var(--color-text-default)]">Callback when time range changes</td>
+                        </tr>
+                        <tr className="border-b border-[var(--color-border-subtle)]">
+                          <td className="py-2 pr-4 font-mono text-[var(--color-action-primary)]">customPeriod</td>
+                          <td className="py-2 pr-4 text-[var(--color-text-muted)]">CustomPeriod | null</td>
+                          <td className="py-2 pr-4 text-[var(--color-text-muted)]">-</td>
+                          <td className="py-2 text-[var(--color-text-default)]">Custom date range (start, end)</td>
+                        </tr>
+                        <tr className="border-b border-[var(--color-border-subtle)]">
+                          <td className="py-2 pr-4 font-mono text-[var(--color-action-primary)]">onCustomPeriodChange</td>
+                          <td className="py-2 pr-4 text-[var(--color-text-muted)]">(period) =&gt; void</td>
+                          <td className="py-2 pr-4 text-[var(--color-text-muted)]">-</td>
+                          <td className="py-2 text-[var(--color-text-default)]">Callback when custom period changes</td>
+                        </tr>
+                        <tr className="border-b border-[var(--color-border-subtle)]">
+                          <td className="py-2 pr-4 font-mono text-[var(--color-action-primary)]">onRefresh</td>
+                          <td className="py-2 pr-4 text-[var(--color-text-muted)]">() =&gt; void</td>
+                          <td className="py-2 pr-4 text-[var(--color-text-muted)]">-</td>
+                          <td className="py-2 text-[var(--color-text-default)]">Callback when refresh is clicked</td>
+                        </tr>
+                        <tr className="border-b border-[var(--color-border-subtle)]">
+                          <td className="py-2 pr-4 font-mono text-[var(--color-action-primary)]">showRefresh</td>
+                          <td className="py-2 pr-4 text-[var(--color-text-muted)]">boolean</td>
+                          <td className="py-2 pr-4 text-[var(--color-text-muted)]">true</td>
+                          <td className="py-2 text-[var(--color-text-default)]">Show refresh button</td>
+                        </tr>
+                        <tr className="border-b border-[var(--color-border-subtle)]">
+                          <td className="py-2 pr-4 font-mono text-[var(--color-action-primary)]">maxDate</td>
+                          <td className="py-2 pr-4 text-[var(--color-text-muted)]">Date</td>
+                          <td className="py-2 pr-4 text-[var(--color-text-muted)]">new Date()</td>
+                          <td className="py-2 text-[var(--color-text-default)]">Maximum selectable date</td>
                         </tr>
                       </tbody>
                     </table>
