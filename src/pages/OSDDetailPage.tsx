@@ -427,18 +427,15 @@ export function OSDDetailPage() {
                       </div>
 
                       {/* Search */}
-                      <div className="flex items-center gap-1">
-                        <div className="w-[280px]">
-                          <SearchInput
-                            placeholder="Find instance with filters"
-                            value={deviceSearchQuery}
-                            onChange={(e) => setDeviceSearchQuery(e.target.value)}
-                            onClear={() => setDeviceSearchQuery('')}
-                            size="sm"
-                            fullWidth
-                          />
-                        </div>
-                        <div className="w-px h-4 bg-[var(--color-border-default)]" />
+                      <div className="w-[280px]">
+                        <SearchInput
+                          placeholder="Find instance with filters"
+                          value={deviceSearchQuery}
+                          onChange={(e) => setDeviceSearchQuery(e.target.value)}
+                          onClear={() => setDeviceSearchQuery('')}
+                          size="sm"
+                          fullWidth
+                        />
                       </div>
 
                       {/* Pagination */}
