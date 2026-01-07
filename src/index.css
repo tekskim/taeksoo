@@ -882,7 +882,7 @@ html.theme-transition *::after {
   /* ----------------------------------------
      Component - Tooltip
      ---------------------------------------- */
-  --tooltip-padding-x: var(--spacing-2);
+  --tooltip-padding-x: var(--spacing-1-5);
   --tooltip-padding-y: var(--spacing-1);
   --tooltip-radius: var(--radius-sm);
   --tooltip-font-size: var(--font-size-11);
@@ -1344,29 +1344,33 @@ input[type="search"]::-webkit-search-decoration {
 
 .chartBody {
   display: flex;
-  gap: 4px;
+  flex-direction: row;
+  gap: 16px;
   align-items: flex-start;
 }
 
 .chartWrapper {
   flex: 1;
   min-width: 0;
-  padding-left: 12px;
+  padding-bottom: 12px;
 }
 
 /* ============== Chart Legend ============== */
 .chartLegend {
   display: flex;
   flex-direction: column;
+  justify-content: flex-start;
   gap: 6px;
-  padding-top: 20px;
-  padding-right: 0px;
-  max-height: 200px;
+  padding-top: 24px;
+  padding-right: 8px;
+  min-width: 100px;
+  max-height: 240px;
   overflow-y: auto;
+  flex-shrink: 0;
 }
 
 .chartLegend::-webkit-scrollbar {
-  width: 4px;
+  width: 1px;
 }
 
 .chartLegend::-webkit-scrollbar-track {
@@ -1374,15 +1378,15 @@ input[type="search"]::-webkit-search-decoration {
 }
 
 .chartLegend::-webkit-scrollbar-thumb {
-  background-color: var(--color-border-default);
-  border-radius: 2px;
+  background-color: rgba(148, 163, 184, 0.3);
+  border-radius: 1px;
 }
 
 .legendItem {
   display: flex;
   align-items: center;
   gap: 6px;
-  font-size: 12px;
+  font-size: 11px;
   color: var(--color-text-muted);
   cursor: pointer;
   transition: opacity 0.2s;
@@ -1416,8 +1420,8 @@ input[type="search"]::-webkit-search-decoration {
   align-items: center;
   gap: 6px;
   padding: 4px 8px;
-  font-size: 11px;
-  font-weight: 500;
+  font-size: 10px;
+  font-weight: 400;
   color: var(--color-text-muted);
   background: transparent;
   border: none;
@@ -1523,9 +1527,7 @@ input[type="search"]::-webkit-search-decoration {
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(15, 23, 42, 0.4);
-  backdrop-filter: blur(4px);
-  -webkit-backdrop-filter: blur(4px);
+  background: rgba(0, 0, 0, 0.6);
   z-index: 999;
 }
 
@@ -1535,10 +1537,10 @@ input[type="search"]::-webkit-search-decoration {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: calc(100vw - 120px);
-  max-width: 1400px;
-  height: calc(100vh - 160px);
-  max-height: 800px;
+  width: calc(100vw - 80px);
+  max-width: 1600px;
+  height: calc(100vh - 80px);
+  max-height: 900px;
   z-index: 1000;
   animation: floatIn 0.25s ease-out;
 }
@@ -1569,26 +1571,26 @@ input[type="search"]::-webkit-search-decoration {
 .chartCardFullScreen .chartBody {
   flex: 1;
   display: flex;
+  flex-direction: row;
   min-height: 0;
-  height: 100%;
+  height: calc(100% - 60px);
+  width: 100%;
+  gap: 24px;
 }
 
 .chartCardFullScreen .chartWrapper {
-  flex: 1;
+  flex: 1 1 0%;
   min-width: 0;
+  max-width: none;
   height: 100%;
-  display: flex;
-  flex-direction: column;
-}
-
-.chartCardFullScreen .chartWrapper > div {
-  flex: 1;
-  min-height: 0;
 }
 
 .chartCardFullScreen .chartLegend {
   max-height: none;
   min-width: 160px;
+  flex-shrink: 0;
+  padding-top: 40px;
+  padding-right: 20px;
 }
 
 .chartCardFullScreen .chartHeader {
@@ -1604,7 +1606,7 @@ input[type="search"]::-webkit-search-decoration {
 .fullScreenTimeControls {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 4px;
 }
 
 .chartHeaderCenter {

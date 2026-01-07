@@ -50,6 +50,15 @@ import { TopologyD3Page } from '@/pages/TopologyD3Page';
 import { ConsolePage } from '@/pages/ConsolePage';
 import { CreateInstancePage } from '@/pages/CreateInstancePage';
 
+// Pages - Storage
+import { StorageHomePage } from '@/pages/StorageHomePage';
+import { PoolsPage } from '@/pages/PoolsPage';
+import { StoragePoolDetailPage } from '@/pages/StoragePoolDetailPage';
+import { HostsPage } from '@/pages/HostsPage';
+import HostDetailPage from '@/pages/HostDetailPage';
+import { OSDsPage } from '@/pages/OSDsPage';
+import { OSDDetailPage } from '@/pages/OSDDetailPage';
+
 // Pages - Design System
 import { DesignSystemPage } from '@/pages/DesignSystemPage';
 import { DrawersPage } from '@/pages/DrawersPage';
@@ -111,6 +120,15 @@ function AppRoutes() {
         <Route path="/compute/certificates/:id" element={<CertificateDetailPage />} />
         <Route path="/compute/topology" element={<TopologyD3Page />} />
         <Route path="/compute/console/:instanceId" element={<ConsolePage />} />
+
+        {/* Storage Routes */}
+        <Route path="/storage" element={<StorageHomePage />} />
+        <Route path="/storage/pools" element={<PoolsPage />} />
+        <Route path="/storage/pools/:id" element={<StoragePoolDetailPage />} />
+        <Route path="/storage/hosts" element={<HostsPage />} />
+        <Route path="/storage/hosts/:id" element={<HostDetailPage />} />
+        <Route path="/storage/osds" element={<OSDsPage />} />
+        <Route path="/storage/osds/:id" element={<OSDDetailPage />} />
 
         {/* Design System Routes */}
         <Route path="/design" element={<DesignSystemPage />} />

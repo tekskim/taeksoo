@@ -177,7 +177,7 @@ export function KeyPairsPage() {
       sortable: true,
       render: (_, row) => (
         <Link
-          to={`/key-pairs/${row.id}`}
+          to={`/compute/key-pairs/${row.id}`}
           className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
           onClick={(e) => e.stopPropagation()}
         >

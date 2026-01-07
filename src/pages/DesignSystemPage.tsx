@@ -1,7 +1,9 @@
 import { useState, useEffect, useRef } from 'react';
 import ReactECharts from 'echarts-for-react';
+import type { ECharts } from 'echarts';
 import { DarkModeToggle } from '@/components/DarkModeToggle';
 import { AttachVolumeDrawer } from '@/components/AttachVolumeDrawer';
+import { DataViewDrawer } from '@/components/DataViewDrawer';
 import {
   Button,
   Input,
@@ -603,6 +605,8 @@ const baseChartOptions = {
   },
   yAxis: {
     type: 'value' as const,
+    min: 0,
+    splitNumber: 4,
     axisLine: { show: false },
     axisTick: { show: false },
     splitLine: {
@@ -1138,6 +1142,21 @@ function LineChart({
   );
   const [menuOpen, setMenuOpen] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(false);
+  const [showDataView, setShowDataView] = useState(false);
+  const chartRef = useRef<ReactECharts>(null);
+  const wrapperRef = useRef<HTMLDivElement>(null);
+
+  // Handle chart ready - resize to fill container
+  const handleChartReady = (chartInstance: ECharts) => {
+    // Resize after container is fully rendered
+    setTimeout(() => {
+      try {
+        chartInstance.resize();
+      } catch {
+        // Instance might be disposed
+      }
+    }, 100);
+  };
 
   // Detect dark mode changes
   useEffect(() => {
@@ -1173,6 +1192,26 @@ function LineChart({
   const tooltipBorder = isDarkMode ? '#3a3a3a' : '#e2e8f0';
   const tooltipTextColor = isDarkMode ? '#e5e5e5' : chartColors.slate800;
 
+  // Calculate max value for exactly 5 Y-axis labels (4 intervals) with nice numbers
+  const allData = series.filter(s => visibleSeries[s.name]).flatMap(s => s.data);
+  const dataMax = Math.max(...allData, 0);
+  
+  // Calculate nice interval based on data magnitude
+  const rawInterval = dataMax / 4;
+  const magnitude = Math.pow(10, Math.floor(Math.log10(rawInterval || 1)));
+  const normalizedInterval = rawInterval / magnitude;
+  
+  // Round UP to nice number to ensure interval covers data: 1, 2, 2.5, 5, 10
+  let niceNormalizedInterval;
+  if (normalizedInterval <= 1) niceNormalizedInterval = 1;
+  else if (normalizedInterval <= 2) niceNormalizedInterval = 2;
+  else if (normalizedInterval <= 2.5) niceNormalizedInterval = 2.5;
+  else if (normalizedInterval <= 5) niceNormalizedInterval = 5;
+  else niceNormalizedInterval = 10;
+  
+  const niceInterval = niceNormalizedInterval * magnitude;
+  const niceMax = niceInterval * 4; // Always exactly 4 intervals = 5 labels
+
   const option = {
     animation: false,
     grid: {
@@ -1195,6 +1234,9 @@ function LineChart({
         },
         yAxis: {
       type: 'value' as const,
+      min: 0,
+      max: niceMax,
+      interval: niceInterval,
       axisLine: { show: false },
       axisTick: { show: false },
       splitLine: {
@@ -1268,7 +1310,7 @@ function LineChart({
                 <button className="contextMenuItem" onClick={() => setMenuOpen(false)}>
                   Download CSV
                 </button>
-                <button className="contextMenuItemLast" onClick={() => setMenuOpen(false)}>
+                <button className="contextMenuItemLast" onClick={() => { setMenuOpen(false); setShowDataView(true); }}>
                   Data View
                 </button>
               </div>
@@ -1292,8 +1334,18 @@ function LineChart({
       
       {/* Chart Body */}
       <div className="chartBody">
-        <div className="chartWrapper" style={isFullScreen ? { height: '100%' } : undefined}>
-          <ReactECharts option={option} style={{ height: isFullScreen ? '100%' : height }} notMerge={true} />
+        <div className="chartWrapper" ref={wrapperRef}>
+          <ReactECharts 
+            key={isFullScreen ? 'fullscreen' : 'normal'}
+            ref={chartRef}
+            option={option} 
+            style={{ 
+              height: isFullScreen ? 'calc(100vh - 200px)' : height, 
+              width: isFullScreen ? 'calc(100vw - 300px)' : '100%'
+            }} 
+            notMerge={true}
+            onChartReady={handleChartReady}
+          />
         </div>
         <div className="chartLegend">
           {series.map((s, i) => (
@@ -1308,6 +1360,15 @@ function LineChart({
           ))}
         </div>
       </div>
+
+      {/* Data View Drawer */}
+      <DataViewDrawer
+        isOpen={showDataView}
+        onClose={() => setShowDataView(false)}
+        title={`${title} (RAW)`}
+        series={series}
+        timeLabels={[]}
+      />
     </div>
   );
 }
@@ -1332,16 +1393,33 @@ function ChartWithFullScreen({
   height?: string;
 }) {
   const [fullScreenChart, setFullScreenChart] = useState<FullScreenChartData | null>(null);
+  const fullScreenContainerRef = useRef<HTMLDivElement>(null);
+  const [containerReady, setContainerReady] = useState(false);
 
   // Close on ESC key
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === 'Escape' && fullScreenChart) {
         setFullScreenChart(null);
+        setContainerReady(false);
       }
     };
     document.addEventListener('keydown', handleKeyDown);
     return () => document.removeEventListener('keydown', handleKeyDown);
+  }, [fullScreenChart]);
+
+  // Wait for container to be ready before rendering chart
+  useEffect(() => {
+    if (fullScreenChart && fullScreenContainerRef.current) {
+      // Wait for next frame to ensure container has dimensions
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          setContainerReady(true);
+        });
+      });
+    } else {
+      setContainerReady(false);
+    }
   }, [fullScreenChart]);
 
   const handleEnterFullScreen = () => {
@@ -1350,6 +1428,7 @@ function ChartWithFullScreen({
 
   const handleExitFullScreen = () => {
     setFullScreenChart(null);
+    setContainerReady(false);
   };
 
   return (
@@ -1367,15 +1446,17 @@ function ChartWithFullScreen({
       {fullScreenChart && (
         <>
           <div className="fullScreenOverlay" onClick={handleExitFullScreen} />
-          <div className="fullScreenFloating">
-            <LineChart
-              title={fullScreenChart.title}
-              series={fullScreenChart.series}
-              yAxisFormatter={fullScreenChart.yAxisFormatter}
-              isFullScreen={true}
-              onExitFullScreen={handleExitFullScreen}
-              timeControls={<TimeControls />}
-            />
+          <div className="fullScreenFloating" ref={fullScreenContainerRef}>
+            {containerReady && (
+              <LineChart
+                title={fullScreenChart.title}
+                series={fullScreenChart.series}
+                yAxisFormatter={fullScreenChart.yAxisFormatter}
+                isFullScreen={true}
+                onExitFullScreen={handleExitFullScreen}
+                timeControls={<TimeControls />}
+              />
+            )}
           </div>
         </>
       )}
@@ -1435,12 +1516,14 @@ function AreaChartDemo({ variant }: { variant: 'basic' | 'stacked' }) {
 
   if (variant === 'basic') {
     return (
-      <ChartWithFullScreen 
-        title="Network Traffic"
-        series={networkTrafficSeries}
-        yAxisFormatter={(v) => `${v} MB/s`}
-        height="200px"
-      />
+      <div className="w-[557px]">
+        <ChartWithFullScreen 
+          title="Network Traffic"
+          series={networkTrafficSeries}
+          yAxisFormatter={(v) => `${v} MB/s`}
+          height="268px"
+        />
+      </div>
     );
   }
 
@@ -1450,15 +1533,23 @@ function AreaChartDemo({ variant }: { variant: 'basic' | 'stacked' }) {
     { name: 'osd.1', data: [0.8, 0.95, 1.15, 1.2, 1.0, 1.5], color: chartColors.emerald400 },
     { name: 'osd.2', data: [0.5, 0.7, 0.9, 0.85, 0.75, 1.1], color: chartColors.amber400 },
     { name: 'osd.3', data: [0.3, 0.5, 0.6, 0.55, 0.65, 0.8], color: chartColors.violet400 },
+    { name: 'osd.4', data: [0.4, 0.6, 0.75, 0.7, 0.85, 0.95], color: chartColors.rose400 },
+    { name: 'osd.5', data: [0.55, 0.7, 0.85, 0.9, 0.75, 1.0], color: '#f472b6' },
+    { name: 'osd.6', data: [0.65, 0.8, 0.95, 1.0, 0.85, 1.2], color: '#60a5fa' },
+    { name: 'osd.7', data: [0.45, 0.55, 0.7, 0.75, 0.9, 1.05], color: '#4ade80' },
+    { name: 'osd.8', data: [0.35, 0.5, 0.65, 0.7, 0.6, 0.85], color: '#facc15' },
+    { name: 'osd.9', data: [0.7, 0.85, 1.0, 0.95, 1.1, 1.3], color: '#c084fc' },
   ];
 
   return (
-    <ChartWithFullScreen 
-      title="CPU Utilization"
-      series={cpuUtilizationSeries}
-      yAxisFormatter={(v) => `${v.toFixed(2)}%`}
-      height="200px"
-    />
+    <div className="w-[557px]">
+      <ChartWithFullScreen
+        title="CPU Utilization"
+        series={cpuUtilizationSeries}
+        yAxisFormatter={(v) => `${v.toFixed(2)}%`}
+        height="268px"
+      />
+    </div>
   );
 }
 

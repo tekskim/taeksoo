@@ -151,7 +151,6 @@ export function Tooltip({
                   min-w-[var(--tooltip-min-width)]
                   max-w-[var(--tooltip-max-width)]
                   text-center
-                  whitespace-nowrap
                 "
               >
                 {content}

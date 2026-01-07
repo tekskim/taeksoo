@@ -376,7 +376,7 @@ export default function L7PolicyDetailPage() {
                             value={
                               l7Policy.behaviorDetail ? (
                                 <Link
-                                  to={`/pools/${l7Policy.behaviorDetail.id}`}
+                                  to={`/compute/pools/${l7Policy.behaviorDetail.id}`}
                                   className="inline-flex items-center gap-1.5 font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
                                 >
                                   {l7Policy.behaviorDetail.name}
