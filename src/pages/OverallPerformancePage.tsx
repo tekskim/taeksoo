@@ -230,6 +230,258 @@ const osdWriteLatenciesSeries = [
   { name: 'MAX write', color: chartColors.amber400, data: [4.8, 5.2, 6.2, 7.0, 6.5, 6.0] },
 ];
 
+// OSD Pie Chart Data
+const osdTypesSummaryData = [
+  { name: 'hdd', value: 15 },
+  { name: 'nvme', value: 25 },
+  { name: 'ssd', value: 30 },
+  { name: 'hybrid', value: 10 },
+  { name: 'sata', value: 5 },
+  { name: 'sas', value: 5 },
+  { name: 'pcie', value: 4 },
+  { name: 'u.2', value: 3 },
+  { name: 'm.2', value: 2 },
+  { name: 'scsi', value: 1 },
+];
+
+const osdObjectstoreTypesData = [
+  { name: 'bluestore', value: 70 },
+  { name: 'filestore', value: 20 },
+  { name: 'seastore', value: 10 },
+];
+
+const osdSizeSummaryData = [
+  { name: '<3TB', value: 20 },
+  { name: '3-6TB', value: 30 },
+  { name: '6-12TB', value: 40 },
+  { name: '>12TB', value: 10 },
+];
+
+// Distribution of PGs per OSD chart series
+const pgDistributionSeries = [
+  { name: 'PGs per OSD 1', color: chartColors.cyan400, data: [128, 130, 132, 135, 138, 140] },
+  { name: 'PGs per OSD 2', color: chartColors.emerald400, data: [125, 126, 128, 130, 132, 135] },
+  { name: 'PGs per OSD 3', color: chartColors.amber400, data: [120, 122, 125, 127, 128, 130] },
+  { name: 'PGs per OSD 4', color: chartColors.violet400, data: [118, 120, 122, 124, 126, 128] },
+];
+
+// Read/Write Profile chart series
+const readWriteProfileSeries = [
+  { name: 'Reads', color: chartColors.cyan400, data: [150, 180, 450, 520, 380, 420] },
+  { name: 'Writes', color: chartColors.emerald400, data: [50, 80, 120, 150, 100, 90] },
+];
+
+// Top Slow OSD Ops table data
+interface SlowOsdOpsRow {
+  id: string;
+  osdId: string;
+  slowOps: string;
+}
+
+const slowOsdOpsData: SlowOsdOpsRow[] = [
+  { id: '1', osdId: 'bzfv0rv1-cephadm-cl01', slowOps: '0.00' },
+  { id: '2', osdId: 'bzfv0rv1-cephadm-cl01', slowOps: '0.00' },
+  { id: '3', osdId: 'bzfv0rv1-cephadm-cl01', slowOps: '0.00' },
+  { id: '4', osdId: 'bzfv0rv1-cephadm-cl01', slowOps: '0.00' },
+];
+
+// Extended chart colors for pie charts
+const extendedChartColors = [
+  chartColors.cyan400,
+  chartColors.emerald400,
+  chartColors.amber400,
+  chartColors.violet400,
+  chartColors.pink400,
+  chartColors.red400,
+  chartColors.blue400,
+  chartColors.teal400,
+  chartColors.orange400,
+  chartColors.indigo400,
+  '#94a3b8', // slate400
+  '#a1a1aa', // zinc400
+];
+
+/* ----------------------------------------
+   PieChart Component (from design system)
+   ---------------------------------------- */
+
+interface PieChartData {
+  name: string;
+  value: number;
+}
+
+function PieChartCard({ 
+  title, 
+  data,
+  showPercentOnSlice = true 
+}: { 
+  title: string; 
+  data: PieChartData[];
+  showPercentOnSlice?: boolean;
+}) {
+  const total = data.reduce((sum, item) => sum + item.value, 0);
+  
+  const chartData = data.map((item, index) => ({
+    ...item,
+    itemStyle: { color: extendedChartColors[index % extendedChartColors.length] }
+  }));
+
+  const legendData = data.map((item, index) => ({
+    label: item.name,
+    value: Math.round((item.value / total) * 100),
+    color: extendedChartColors[index % extendedChartColors.length]
+  }));
+
+  const getOption = () => ({
+    tooltip: {
+      show: true,
+      trigger: 'item',
+      backgroundColor: '#ffffff',
+      borderColor: '#e2e8f0',
+      borderWidth: 1,
+      borderRadius: 6,
+      padding: [8, 12],
+      textStyle: {
+        color: '#1e293b',
+        fontSize: 11
+      },
+      formatter: (params: { marker: string; name: string; value: number; percent: number }) => {
+        return `${params.marker} ${params.name}<br/><span style="font-weight: 600; margin-left: 14px;">${params.value} (${params.percent.toFixed(0)}%)</span>`;
+      }
+    },
+    animation: false,
+    series: [
+      {
+        type: 'pie',
+        radius: '80%',
+        center: ['50%', '50%'],
+        avoidLabelOverlap: true,
+        label: showPercentOnSlice ? {
+          show: true,
+          position: 'inside',
+          formatter: (params: { percent: number }) => {
+            return params.percent >= 15 ? `${params.percent.toFixed(0)}%` : '';
+          },
+          fontSize: 12,
+          fontWeight: 600,
+          color: '#ffffff'
+        } : {
+          show: false
+        },
+        emphasis: {
+          scale: true,
+          scaleSize: 5,
+          itemStyle: {
+            shadowBlur: 10,
+            shadowOffsetX: 0,
+            shadowColor: 'rgba(0, 0, 0, 0.2)'
+          }
+        },
+        labelLine: {
+          show: false
+        },
+        data: chartData
+      }
+    ]
+  });
+
+  return (
+    <div className="flex-1 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg p-4">
+      <h4 className="text-[13px] font-medium text-[var(--color-text-default)] mb-3">{title}</h4>
+      <div className="flex items-center gap-4">
+        <ReactECharts option={getOption()} style={{ height: '120px', width: '120px' }} />
+        <div className="flex flex-wrap gap-x-3 gap-y-1 max-h-[100px] overflow-y-auto">
+          {legendData.map((item, i) => (
+            <div key={i} className="flex items-center gap-1.5">
+              <div className="w-2 h-2 rounded-full shrink-0" style={{ backgroundColor: item.color }} />
+              <span className="text-[10px] text-[var(--color-text-muted)] whitespace-nowrap">{item.label}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ----------------------------------------
+   SingleValueDoughnut Component (from design system)
+   ---------------------------------------- */
+
+function SingleValueDoughnutCard({ 
+  title, 
+  value,
+  color
+}: { 
+  title: string; 
+  value: number;
+  color?: string;
+}) {
+  const getColor = (cssVar: string, fallback: string) => {
+    if (typeof window !== 'undefined') {
+      const val = getComputedStyle(document.documentElement).getPropertyValue(cssVar).trim();
+      return val || fallback;
+    }
+    return fallback;
+  };
+
+  const mainColor = color || getColor('--color-status-error', '#ef4444');
+  const bgColor = getColor('--color-border-subtle', '#e2e8f0');
+
+  const getOption = () => ({
+    tooltip: {
+      show: false
+    },
+    animation: false,
+    series: [
+      {
+        type: 'pie',
+        radius: ['68%', '80%'],
+        center: ['50%', '50%'],
+        avoidLabelOverlap: false,
+        silent: true,
+        itemStyle: {
+          borderRadius: 0,
+          borderWidth: 0
+        },
+        label: {
+          show: false
+        },
+        labelLine: {
+          show: false
+        },
+        emphasis: {
+          disabled: true
+        },
+        data: [
+          { value: value, itemStyle: { color: mainColor } },
+          { value: 100 - value, itemStyle: { color: bgColor } }
+        ]
+      }
+    ],
+    graphic: [
+      {
+        type: 'text',
+        left: 'center',
+        top: '42%',
+        style: {
+          text: `${value}%`,
+          textAlign: 'center',
+          fill: getColor('--color-text-default', '#0f172a'),
+          fontSize: 18,
+          fontWeight: 600
+        }
+      }
+    ]
+  });
+
+  return (
+    <div className="flex-1 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg p-4">
+      <h4 className="text-[13px] font-medium text-[var(--color-text-default)] mb-2">{title}</h4>
+      <ReactECharts option={getOption()} style={{ height: '120px', width: '100%' }} />
+    </div>
+  );
+}
+
 /* ----------------------------------------
    StatCard Component
    ---------------------------------------- */
@@ -553,6 +805,33 @@ export function OverallPerformancePage() {
     { key: 'latency', label: 'Latency', flex: 1, sortable: true },
   ];
 
+  // Top Slow OSD Ops table columns
+  const slowOsdOpsColumns: TableColumn<SlowOsdOpsRow>[] = [
+    { 
+      key: 'osdId', 
+      label: 'OSD ID', 
+      flex: 2, 
+      sortable: true,
+      render: (_, row) => (
+        <span className="text-[var(--color-action-primary)] hover:underline cursor-pointer">
+          {row.osdId}
+        </span>
+      )
+    },
+    { key: 'slowOps', label: 'Slow Ops', flex: 2, sortable: true },
+    { 
+      key: 'id', 
+      label: 'Action', 
+      width: '80px',
+      align: 'center' as const,
+      render: () => (
+        <button className="p-1.5 hover:bg-[var(--color-surface-subtle)] rounded transition-colors">
+          <IconTerminal2 size={16} stroke={1.5} className="text-[var(--color-text-muted)]" />
+        </button>
+      )
+    },
+  ];
+
   return (
     <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
       {/* Sidebar */}
@@ -766,10 +1045,10 @@ export function OverallPerformancePage() {
                       {/* Read Latencies Row */}
                       <div className="flex gap-4">
                         {/* Highest READ Latencies Table */}
-                        <div className="flex-1">
-                          <SectionCard>
+                        <div className="flex-1 h-[334px]">
+                          <SectionCard className="h-full">
                             <SectionCard.Header title="Highest READ Latencies" />
-                            <SectionCard.Content gap={0}>
+                            <SectionCard.Content gap={0} className="overflow-auto flex-1">
                               <Table<OsdLatencyRow>
                                 columns={osdLatencyColumns}
                                 data={osdReadLatencyData}
@@ -795,10 +1074,10 @@ export function OverallPerformancePage() {
                       {/* Write Latencies Row */}
                       <div className="flex gap-4">
                         {/* Highest WRITE Latencies Table */}
-                        <div className="flex-1">
-                          <SectionCard>
+                        <div className="flex-1 h-[334px]">
+                          <SectionCard className="h-full">
                             <SectionCard.Header title="Highest WRITE Latencies" />
-                            <SectionCard.Content gap={0}>
+                            <SectionCard.Content gap={0} className="overflow-auto flex-1">
                               <Table<OsdLatencyRow>
                                 columns={osdLatencyColumns}
                                 data={osdWriteLatencyData}
@@ -820,6 +1099,65 @@ export function OverallPerformancePage() {
                           />
                         </div>
                       </div>
+
+                      {/* Pie Charts Row */}
+                      <div className="flex gap-4">
+                        <PieChartCard 
+                          title="OSD Types Summary"
+                          data={osdTypesSummaryData}
+                        />
+                        <PieChartCard 
+                          title="OSD Objectstore Types"
+                          data={osdObjectstoreTypesData}
+                        />
+                        <PieChartCard 
+                          title="OSD Size Summary"
+                          data={osdSizeSummaryData}
+                        />
+                        <SingleValueDoughnutCard 
+                          title="OSD onode Hits Ratio"
+                          value={98.3}
+                          color="#ef4444"
+                        />
+                      </div>
+
+                      {/* Distribution & Read/Write Charts Row */}
+                      <div className="flex gap-4">
+                        <div className="flex-1">
+                          <ChartCard
+                            title="Distribution of PGs per OSD"
+                            series={pgDistributionSeries}
+                            yAxisFormatter={(v) => `${v}`}
+                            isDarkMode={isDark}
+                            timeRange={timeRange}
+                            onTimeRangeChange={setTimeRange}
+                            onRefresh={() => console.log('Refresh clicked')}
+                          />
+                        </div>
+                        <div className="flex-1">
+                          <ChartCard
+                            title="Read/Write Profile"
+                            series={readWriteProfileSeries}
+                            yAxisFormatter={(v) => `${v}`}
+                            isDarkMode={isDark}
+                            timeRange={timeRange}
+                            onTimeRangeChange={setTimeRange}
+                            onRefresh={() => console.log('Refresh clicked')}
+                          />
+                        </div>
+                      </div>
+
+                      {/* Top Slow OSD Ops Table */}
+                      <SectionCard>
+                        <SectionCard.Header title="Top Slow OSD Ops" />
+                        <SectionCard.Content gap={0}>
+                          <Table<SlowOsdOpsRow>
+                            columns={slowOsdOpsColumns}
+                            data={slowOsdOpsData}
+                            rowKey="id"
+                          />
+                        </SectionCard.Content>
+                      </SectionCard>
                     </VStack>
                   </TabPanel>
                 </Tabs>
