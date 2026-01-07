@@ -37,6 +37,7 @@ import {
   Breadcrumb,
   StatusIndicator,
   VStack,
+  HStack,
   MenuItem,
   MenuSection,
   MenuDivider,
@@ -46,6 +47,7 @@ import {
   DetailHeader,
   SectionCard,
   Drawer,
+  FormField,
 } from '@/design-system';
 import {
   // Navigation icons (for sidebar)
@@ -181,6 +183,9 @@ import {
   IconBrandDebian,
   IconBrandWindows,
   IconBrandRedhat,
+  // Document Icons
+  IconFileText,
+  IconCode,
 } from '@tabler/icons-react';
 import { Link } from 'react-router-dom';
 
@@ -212,6 +217,7 @@ const formControlItems = [
   { id: 'checkbox', label: 'Checkbox', icon: IconSquareCheck },
   { id: 'radio', label: 'Radio', icon: IconCircle },
   { id: 'toggle', label: 'Toggle', icon: IconToggleRight },
+  { id: 'formfield', label: 'FormField', icon: IconForms },
 ];
 
 // Data Display
@@ -4049,6 +4055,115 @@ outline: 2px solid var(--color-border-focus);`}
               </VStack>
             </Section>
 
+            {/* FormField Component */}
+            <Section id="formfield" title="FormField" description="Compound component for form field with label, input, and helper text">
+              <VStack gap={8}>
+                {/* Structure */}
+                <VStack gap={3}>
+                  <Label>Structure</Label>
+                  <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
+                    <code>FormField</code> · <code>FormField.Label</code> · <code>FormField.Control</code> · <code>FormField.HelperText</code> · <code>FormField.ErrorMessage</code>
+                  </div>
+                </VStack>
+
+                {/* Basic Usage */}
+                <VStack gap={3}>
+                  <Label>Basic Usage</Label>
+                  <div className="max-w-md">
+                    <FormField>
+                      <FormField.Label>Instance Name</FormField.Label>
+                      <FormField.Control>
+                        <Input placeholder="Enter instance name" fullWidth />
+                      </FormField.Control>
+                      <FormField.HelperText>
+                        The name should start with a letter and be 1-128 characters.
+                      </FormField.HelperText>
+                    </FormField>
+                  </div>
+                </VStack>
+
+                {/* Label Sizes */}
+                <VStack gap={3}>
+                  <Label>Label Sizes</Label>
+                  <div className="flex gap-8 items-start">
+                    <div className="w-64">
+                      <FormField>
+                        <FormField.Label size="md">Medium Label (14px)</FormField.Label>
+                        <FormField.Control>
+                          <Input placeholder="Input" fullWidth />
+                        </FormField.Control>
+                      </FormField>
+                    </div>
+                    <div className="w-64">
+                      <FormField>
+                        <FormField.Label size="sm">Small Label (12px)</FormField.Label>
+                        <FormField.Control>
+                          <Input placeholder="Input" fullWidth />
+                        </FormField.Control>
+                      </FormField>
+                    </div>
+                  </div>
+                </VStack>
+
+                {/* Required Field */}
+                <VStack gap={3}>
+                  <Label>Required Field</Label>
+                  <div className="max-w-md">
+                    <FormField required>
+                      <FormField.Label>Email Address</FormField.Label>
+                      <FormField.Control>
+                        <Input placeholder="Enter email" fullWidth />
+                      </FormField.Control>
+                      <FormField.HelperText>
+                        We'll never share your email with anyone.
+                      </FormField.HelperText>
+                    </FormField>
+                  </div>
+                </VStack>
+
+                {/* Error State */}
+                <VStack gap={3}>
+                  <Label>Error State</Label>
+                  <div className="max-w-md">
+                    <FormField error>
+                      <FormField.Label>Password</FormField.Label>
+                      <FormField.Control>
+                        <Input placeholder="Enter password" fullWidth />
+                      </FormField.Control>
+                      <FormField.ErrorMessage>
+                        Password must be at least 8 characters.
+                      </FormField.ErrorMessage>
+                    </FormField>
+                  </div>
+                </VStack>
+
+                {/* With Select */}
+                <VStack gap={3}>
+                  <Label>With Select</Label>
+                  <div className="max-w-md">
+                    <FormField>
+                      <FormField.Label size="sm">Region</FormField.Label>
+                      <FormField.Control>
+                        <Select
+                          options={[
+                            { value: 'us-east', label: 'US East' },
+                            { value: 'us-west', label: 'US West' },
+                            { value: 'eu-west', label: 'EU West' },
+                          ]}
+                          value="us-east"
+                          onChange={() => {}}
+                          fullWidth
+                        />
+                      </FormField.Control>
+                      <FormField.HelperText>
+                        Select your preferred region.
+                      </FormField.HelperText>
+                    </FormField>
+                  </div>
+                </VStack>
+              </VStack>
+            </Section>
+
             {/* Checkbox Component */}
             <Section id="checkbox" title="Checkbox" description="Selection control for single or multiple options">
               <VStack gap={8}>
@@ -5782,6 +5897,40 @@ outline: 2px solid var(--color-border-focus);`}
                 </VStack>
               </VStack>
             </Section>
+
+            {/* Reference Document Link */}
+            <div className="p-6 bg-[var(--color-surface-subtle)] rounded-[var(--radius-xl)] border border-[var(--color-border-default)]">
+              <VStack gap={3} align="center">
+                <VStack gap={1} align="center">
+                  <h3 className="text-[length:var(--font-size-16)] font-semibold text-[var(--color-text-default)]">
+                    📚 Design System Reference
+                  </h3>
+                  <p className="text-[length:var(--font-size-12)] text-[var(--color-text-muted)] text-center">
+                    컴포넌트 사용법, 토큰 가이드, 스타일 규칙 등 상세 문서를 확인하세요.
+                  </p>
+                </VStack>
+                <HStack gap={3}>
+                  <a
+                    href="https://github.com/pob-design-system/tds/blob/main/DESIGN_SYSTEM.md"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 px-4 py-2 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-button)] text-[length:var(--font-size-12)] text-[var(--color-text-default)] hover:bg-[var(--color-surface-muted)] transition-colors"
+                  >
+                    <IconFileText size={14} stroke={1.5} />
+                    DESIGN_SYSTEM.md
+                  </a>
+                  <a
+                    href="https://github.com/pob-design-system/tds/blob/main/.cursorrules"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 px-4 py-2 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-button)] text-[length:var(--font-size-12)] text-[var(--color-text-default)] hover:bg-[var(--color-surface-muted)] transition-colors"
+                  >
+                    <IconCode size={14} stroke={1.5} />
+                    .cursorrules
+                  </a>
+                </HStack>
+              </VStack>
+            </div>
 
           </VStack>
         </div>

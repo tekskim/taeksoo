@@ -138,7 +138,7 @@ function DetailHeaderInfoCard({
     <div
       className={twMerge(
         'flex-1',
-        'bg-[var(--color-surface-muted)]',
+        'bg-[var(--color-surface-subtle)]',
         'rounded-lg',
         'px-4 py-3',
         'relative',
