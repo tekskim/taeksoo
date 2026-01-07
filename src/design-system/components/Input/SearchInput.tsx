@@ -74,6 +74,19 @@ export const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
       onClear?.();
     }, [value, onClear]);
 
+    // Extract width-related and margin-related classes from className to apply to wrapper only
+    const widthClassRegex = /\bw-\[?[^\s]+\]?/g;
+    const marginClassRegex = /\b(m[tblrxy]?-\[?[^\s]+\]?)/g;
+    const widthClasses = className.match(widthClassRegex) || [];
+    const marginClasses = className.match(marginClassRegex) || [];
+    const hasWidthClass = widthClasses.length > 0;
+    
+    // Remove width and margin classes from input className
+    const inputClassName = className
+      .replace(widthClassRegex, '')
+      .replace(marginClassRegex, '')
+      .trim();
+
     // Base styles - icons are on the right (search icon + optional clear button)
     const inputClasses = twMerge(
       'w-full',
@@ -96,18 +109,14 @@ export const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
       'focus:shadow-[0_0_0_1px_var(--input-border-focus)]',
       disabled ? 'bg-[var(--input-bg-disabled)] text-[var(--input-text-disabled)] cursor-not-allowed' : '',
       sizes[size],
-      className
+      inputClassName
     );
-
-    // Extract width-related classes from className to apply to wrapper
-    const widthClassRegex = /\bw-\[?[^\s]+\]?/g;
-    const widthClasses = className.match(widthClassRegex) || [];
-    const hasWidthClass = widthClasses.length > 0;
     
     const wrapperClasses = twMerge(
       'flex flex-col gap-[var(--input-label-gap)]',
       // Default to w-full so the input fills its container
       fullWidth || !hasWidthClass ? 'w-full' : widthClasses.join(' '),
+      marginClasses.join(' '),
     );
 
     return (
