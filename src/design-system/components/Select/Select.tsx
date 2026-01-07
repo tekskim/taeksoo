@@ -44,6 +44,8 @@ export interface SelectProps {
   size?: 'sm' | 'md';
   /** Additional CSS classes */
   className?: string;
+  /** Required field indicator */
+  required?: boolean;
 }
 
 /* ----------------------------------------
@@ -63,6 +65,7 @@ export function Select({
   fullWidth = false,
   size = 'md',
   className = '',
+  required = false,
 }: SelectProps) {
   const id = useId();
   const triggerId = `select-trigger-${id}`;
@@ -260,10 +263,20 @@ export function Select({
       {label && (
         <label
           htmlFor={triggerId}
-          className="font-medium text-[var(--color-text-default)] text-[length:var(--font-size-11)]"
+          className="font-medium text-[var(--color-text-default)] text-[14px] leading-5"
         >
           {label}
+          {required && (
+            <span className="text-[var(--color-state-danger)] ml-0.5">*</span>
+          )}
         </label>
+      )}
+
+      {/* Helper Text - below label */}
+      {helperText && !error && (
+        <p className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
+          {helperText}
+        </p>
       )}
 
       {/* Trigger */}
@@ -306,13 +319,6 @@ export function Select({
       {error && (
         <p className="text-[length:var(--font-size-11)] text-[var(--color-state-danger)]">
           {error}
-        </p>
-      )}
-
-      {/* Helper Text */}
-      {helperText && !error && (
-        <p className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
-          {helperText}
         </p>
       )}
 

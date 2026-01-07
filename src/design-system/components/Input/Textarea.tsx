@@ -23,6 +23,8 @@ export interface TextareaProps
   showCount?: boolean;
   /** Max character count */
   maxLength?: number;
+  /** Required field indicator */
+  required?: boolean;
 }
 
 /* ----------------------------------------
@@ -45,6 +47,7 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
       readOnly,
       value,
       defaultValue,
+      required = false,
       ...props
     },
     ref
@@ -113,7 +116,7 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
     );
 
     const wrapperClasses = [
-      'flex flex-col gap-[var(--input-label-gap)]',
+      'flex flex-col gap-2',
       fullWidth ? 'w-full' : 'w-fit',
     ].join(' ');
 
@@ -122,13 +125,23 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
         {label && (
           <label
             htmlFor={inputId}
-            className="font-medium text-[var(--color-text-default)] text-[length:var(--font-size-11)]"
+            className="font-medium text-[var(--color-text-default)] text-[14px] leading-5"
           >
             {label}
+            {required && (
+              <span className="text-[var(--color-state-danger)] ml-0.5">*</span>
+            )}
           </label>
         )}
 
-        <div className="relative">
+        {/* Helper Text - below label */}
+        {helperText && !error && (
+          <p id={`${inputId}-helper`} className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
+            {helperText}
+          </p>
+        )}
+
+        <div className="relative h-fit">
           <textarea
             ref={ref}
             id={inputId}
@@ -144,28 +157,6 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
             }
             {...props}
           />
-        </div>
-
-        <div className="flex items-center justify-between">
-          <div>
-            {error && (
-              <p id={`${inputId}-error`} className="text-[length:var(--font-size-11)] text-[var(--color-state-danger)]">
-                {error}
-              </p>
-            )}
-
-            {helperText && !error && (
-              <p id={`${inputId}-helper`} className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
-                {helperText}
-              </p>
-            )}
-          </div>
-
-          {showCount && maxLength && (
-            <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
-              {currentLength}/{maxLength}
-            </span>
-          )}
         </div>
       </div>
     );

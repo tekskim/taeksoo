@@ -24,9 +24,10 @@ import {
   IconArrowLeft,
 } from '@tabler/icons-react';
 import { Link, useLocation } from 'react-router-dom';
+import { useProject } from '@/contexts/ProjectContext';
 import ThakiLogoLight from '@/assets/thakiLogo_light.svg';
 import ThakiLogoDark from '@/assets/thakiLogo-dark.svg';
-import { ProjectSelector, mockProjects } from './ProjectSelector';
+import { ProjectSelector } from './ProjectSelector';
 
 /* ----------------------------------------
    Sidebar Component
@@ -39,7 +40,7 @@ interface SidebarProps {
 
 export function Sidebar({ isOpen = true, onToggle }: SidebarProps) {
   const { isDark } = useDarkMode();
-  const [selectedProjectId, setSelectedProjectId] = useState(mockProjects[0].id);
+  const { projects, selectedProjectId, setSelectedProjectId } = useProject();
   const location = useLocation();
   
   // Check if current path matches href
@@ -91,9 +92,10 @@ export function Sidebar({ isOpen = true, onToggle }: SidebarProps) {
       {/* Project Selector */}
       <div className="px-3 py-2">
         <ProjectSelector
-          projects={mockProjects}
+          projects={projects}
           selectedProjectId={selectedProjectId}
           onProjectSelect={setSelectedProjectId}
+          variant="default"
         />
       </div>
 

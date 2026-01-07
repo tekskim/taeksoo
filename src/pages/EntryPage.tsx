@@ -77,9 +77,9 @@ const appCards: AppCard[] = [
     title: 'AI Agent',
     description: 'Intelligent agents, automation bots, and AI assistants',
     icon: <img src={AIAgentIcon} alt="AI Agent" className="w-16 h-16" />,
-    path: '/ai-agent',
+    path: '/agent',
     color: 'from-emerald-500 to-teal-500',
-    available: false,
+    available: true,
   },
   {
     id: 'storage',

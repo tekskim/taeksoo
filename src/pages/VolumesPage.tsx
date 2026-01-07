@@ -371,7 +371,7 @@ export function VolumesPage() {
               <h1 className="text-[length:var(--font-size-16)] font-semibold text-[var(--color-text-default)]">
                 Volumes
               </h1>
-              <Button>
+              <Button size="md">
                 Create Volume
               </Button>
             </div>

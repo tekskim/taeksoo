@@ -131,7 +131,7 @@ export function CreateAllowedAddressPairDrawer({
                 <Tooltip content="Use the MAC address assigned to this port automatically.">
                   <IconHelp 
                     size={16} 
-                    stroke={1.5} 
+                    stroke={1} 
                     className="text-[var(--color-text-subtle)] cursor-help" 
                   />
                 </Tooltip>

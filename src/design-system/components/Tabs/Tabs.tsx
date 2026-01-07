@@ -100,7 +100,7 @@ export function Tabs({
 
   return (
     <TabsContext.Provider value={{ activeTab, setActiveTab, size, variant }}>
-      <div className={twMerge('flex flex-col', className)}>
+      <div className={twMerge('flex flex-col h-fit', className)}>
         {children}
       </div>
     </TabsContext.Provider>
