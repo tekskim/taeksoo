@@ -66,15 +66,6 @@ import HostDetailPage from '@/pages/HostDetailPage';
 import { OSDsPage } from '@/pages/OSDsPage';
 import { OSDDetailPage } from '@/pages/OSDDetailPage';
 
-// Pages - Storage
-import { StorageHomePage } from '@/pages/StorageHomePage';
-import { StoragePoolDetailPage } from '@/pages/StoragePoolDetailPage';
-import { HostsPage } from '@/pages/HostsPage';
-import HostDetailPage from '@/pages/HostDetailPage';
-import { OSDsPage } from '@/pages/OSDsPage';
-import { OSDDetailPage } from '@/pages/OSDDetailPage';
-import { PoolsPage } from '@/pages/PoolsPage';
-
 // Pages - Design System
 import { DesignSystemPage } from '@/pages/DesignSystemPage';
 import { DrawersPage } from '@/pages/DrawersPage';
