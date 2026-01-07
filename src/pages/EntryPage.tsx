@@ -5,6 +5,9 @@ import ThakiLogoDark from '@/assets/thakiLogo-dark.svg';
 import {
   IconMoon,
   IconSun,
+  IconPalette,
+  IconLayoutSidebar,
+  IconSquare,
 } from '@tabler/icons-react';
 import { Button } from '@/design-system';
 
@@ -60,9 +63,9 @@ const appCards: AppCard[] = [
     title: 'Cloud Builder',
     description: 'CI/CD pipelines, build automation, and deployment workflows',
     icon: <img src={CloudBuilderIcon} alt="Cloud Builder" className="w-16 h-16" />,
-    path: '/cloud-builder',
+    path: '/cloudbuilder',
     color: 'from-orange-500 to-amber-500',
-    available: false,
+    available: true,
   },
   {
     id: 'ai-platform',
@@ -251,10 +254,10 @@ export function EntryPage() {
             ))}
           </div>
 
-          {/* Design System Link */}
+          {/* Developer Resources */}
           <div className="mt-16 pt-8 border-t border-[var(--color-border-default)]">
-            <div className="text-center">
-              <p className="text-[12px] text-[var(--color-text-subtle)] mb-4">
+            <div className="text-center mb-6">
+              <p className="text-[12px] text-[var(--color-text-subtle)]">
                 Developer Resources
               </p>
               <div className="flex items-center justify-center gap-4">

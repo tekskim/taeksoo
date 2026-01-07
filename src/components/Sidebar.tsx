@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { VStack, MenuItem, MenuSection } from '@/design-system';
 import { useDarkMode } from '@/hooks/useDarkMode';
 import {
@@ -21,9 +20,15 @@ import {
   IconCertificate,
   IconTopologyStar3,
   IconLayoutSidebar,
+  IconListSearch,
+  IconServer2,
+  IconSwitch3,
+  IconActivity,
+  IconCpu2,
+  IconAffiliate,
   IconArrowLeft,
 } from '@tabler/icons-react';
-import { Link, useLocation } from 'react-router-dom';
+import { useLocation, Link } from 'react-router-dom';
 import { useProject } from '@/contexts/ProjectContext';
 import ThakiLogoLight from '@/assets/thakiLogo_light.svg';
 import ThakiLogoDark from '@/assets/thakiLogo-dark.svg';
@@ -42,6 +47,7 @@ export function Sidebar({ isOpen = true, onToggle }: SidebarProps) {
   const { isDark } = useDarkMode();
   const { projects, selectedProjectId, setSelectedProjectId } = useProject();
   const location = useLocation();
+  const isCloudBuilder = location.pathname.startsWith('/cloudbuilder') || location.pathname.startsWith('/cloud-builder');
   
   // Check if current path matches href
   const isActive = (href: string) => {
@@ -100,23 +106,90 @@ export function Sidebar({ isOpen = true, onToggle }: SidebarProps) {
       </div>
 
       {/* Navigation */}
-      <nav className="flex-1 px-3 py-2 overflow-y-auto sidebar-scroll">
-        <VStack gap={4}>
+      <nav className="flex-1 px-3 py-2 overflow-y-auto overflow-x-hidden sidebar-scroll">
+        <VStack gap={4} className="w-full min-w-0">
           {/* Back to Entry */}
           <Link
             to="/"
-            className="flex items-center gap-2 px-2 py-1.5 rounded-md text-[11px] font-medium transition-colors text-[var(--color-text-subtle)] hover:text-[var(--color-text-default)] hover:bg-[var(--color-surface-subtle)]"
+            className="w-[175px] px-[var(--menu-item-padding-x)] py-[var(--menu-item-padding-y)] rounded-[var(--menu-item-radius)] flex items-center gap-[var(--menu-item-gap)] text-[length:var(--font-size-11)] transition-colors duration-[var(--duration-fast)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-border-focus)] text-[var(--color-text-subtle)] hover:text-[var(--color-text-default)] hover:bg-[var(--color-surface-subtle)]"
           >
-            <IconArrowLeft size={14} stroke={1.5} />
+            <IconArrowLeft size={16} stroke={1.5} />
             <span>All Services</span>
           </Link>
 
+          {isCloudBuilder ? (
+            <>
+              <MenuSection title="Inventory(1.0v)" defaultOpen={true}>
+                <MenuItem
+                  icon={<IconListSearch size={16} stroke={1.5} />}
+                  label="Discovery"
+                  href="/cloudbuilder/discovery"
+                  active={isActive('/cloudbuilder/discovery')}
+                />
+                <MenuItem
+                  icon={<IconServer2 size={16} stroke={1.5} />}
+                  label="Servers"
+                  href="/cloudbuilder/servers"
+                  active={isActive('/cloudbuilder/servers')}
+                />
+                <MenuItem
+                  icon={<IconSwitch3 size={16} stroke={1.5} />}
+                  label="Switch"
+                  href="/cloudbuilder/switch"
+                  active={isActive('/cloudbuilder/switch')}
+                />
+              </MenuSection>
+
+              <MenuSection title="Inventory(0.7v)" defaultOpen={true}>
+                <MenuItem
+                  icon={<IconServer2 size={16} stroke={1.5} />}
+                  label="Severs"
+                  href="/cloudbuilder/severs0.7"
+                  active={isActive('/cloudbuilder/severs0.7')}
+                />
+              </MenuSection>
+
+              <MenuSection title="System Info" defaultOpen={true}>
+                <MenuItem
+                  icon={<IconActivity size={16} stroke={1.5} />}
+                  label="Compute Services"
+                  href="/cloudbuilder/services"
+                  active={isActive('/cloudbuilder/services')}
+                />
+                <MenuItem
+                  icon={<IconCpu2 size={16} stroke={1.5} />}
+                  label="Compute Nodes"
+                  href="/cloudbuilder/compute-services"
+                  active={isActive('/cloudbuilder/compute-services')}
+                />
+                <MenuItem
+                  icon={<IconNetwork size={16} stroke={1.5} />}
+                  label="Network Agents"
+                  href="/cloudbuilder/network-agents"
+                  active={isActive('/cloudbuilder/network-agents')}
+                />
+                <MenuItem
+                  icon={<IconDatabase size={16} stroke={1.5} />}
+                  label="Block Storage Services"
+                  href="/cloudbuilder/block-storage-services"
+                  active={isActive('/cloudbuilder/block-storage-services')}
+                />
+                <MenuItem
+                  icon={<IconAffiliate size={16} stroke={1.5} />}
+                  label="Orchestration Services"
+                  href="/cloudbuilder/orchestration-services"
+                  active={isActive('/cloudbuilder/orchestration-services')}
+                />
+              </MenuSection>
+            </>
+          ) : (
+            <>
           {/* Home */}
           <MenuItem
             icon={<IconHome size={16} stroke={1.5} />}
             label="Home"
-            href="/compute"
-            active={isActive('/compute')}
+              href="/compute"
+              active={isActive('/compute')}
           />
 
           {/* Compute Section */}
@@ -238,6 +311,8 @@ export function Sidebar({ isOpen = true, onToggle }: SidebarProps) {
               active={isActive('/compute/topology')}
             />
           </MenuSection>
+            </>
+          )}
         </VStack>
       </nav>
     </aside>

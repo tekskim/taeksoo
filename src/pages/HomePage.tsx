@@ -21,6 +21,8 @@ import {
   IconPuzzle,
   IconBell,
   IconPalette,
+  IconCheck,
+  IconCopy,
 } from '@tabler/icons-react';
 // import { Icons } from '@/design-system'; // Temporarily disabled for debugging
 
@@ -143,8 +145,17 @@ function ChatItem({ title, description, createdAt, onClick }: ChatItemProps & { 
    ---------------------------------------- */
 export function HomePage() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [copied, setCopied] = useState(false);
   const { tabs, activeTabId, selectTab, closeTab, addNewTab } = useTabs();
   const navigate = useNavigate();
+  
+  const projectId = 'proj-abc123-def456';
+  
+  const handleCopyId = () => {
+    navigator.clipboard.writeText(projectId);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
 
   const tabBarTabs = tabs.map((tab) => ({
     id: tab.id,
@@ -201,40 +212,40 @@ export function HomePage() {
         <div className="flex-1 overflow-auto overscroll-contain sidebar-scroll">
           {/* EntryPage Content */}
           <div className="px-8 py-6">
-          {/* Top Row - 4 Cards */}
-          <div className="grid grid-cols-4 gap-6 mb-6">
-            {/* PROJECT INFO */}
-            <Card title="PROJECT INFO" bgColor="bg-[var(--color-surface-subtle)]" className="flex flex-col justify-between">
+          {/* PROJECT INFO Card */}
+          <div className="bg-[var(--color-surface-subtle)] rounded-lg p-4 flex flex-col justify-between mb-6">
+            <div className="text-[10px] font-medium text-[var(--color-text-muted)] mb-2 uppercase">PROJECT INFO</div>
+            <div>
+              <h3 className="text-[32px] font-semibold text-[var(--color-text-default)] mb-4">proj-1</h3>
+            </div>
+            <div className="space-y-4">
               <div>
-                <h3 className="text-[32px] font-semibold text-[var(--color-text-default)] mb-4">proj-1</h3>
-              </div>
-              <div className="space-y-4">
-                <div>
-                  <div className="text-[10px] text-[var(--color-text-muted)] mb-1">ID</div>
-                  <div className="flex items-center gap-1">
-                    <span className="text-[12px] text-[var(--color-text-default)]">{projectId}</span>
-                    <button 
-                      onClick={handleCopyId}
-                      className="p-1.5 -m-1 rounded-md hover:bg-[var(--color-surface-muted)] active:bg-[var(--color-surface-subtle)] transition-colors"
-                      title={copied ? 'Copied!' : 'Copy ID'}
-                    >
-                      {copied ? (
-                        <IconCheck size={12} className="text-[var(--color-state-success)]" />
-                      ) : (
-                        <IconCopy size={12} className="text-[var(--color-action-primary)]" />
-                      )}
-                    </button>
-                  </div>
-                </div>
-                <div>
-                  <div className="text-[10px] text-[var(--color-text-muted)] mb-1">Description</div>
-                  <p className="text-[12px] text-[var(--color-text-default)]">
-                    Development environment for the 'service' backend services.
-                  </p>
+                <div className="text-[10px] text-[var(--color-text-muted)] mb-1">ID</div>
+                <div className="flex items-center gap-1">
+                  <span className="text-[12px] text-[var(--color-text-default)]">{projectId}</span>
+                  <button 
+                    onClick={handleCopyId}
+                    className="p-1.5 -m-1 rounded-md hover:bg-[var(--color-surface-muted)] active:bg-[var(--color-surface-subtle)] transition-colors"
+                    title={copied ? 'Copied!' : 'Copy ID'}
+                  >
+                    {copied ? (
+                      <IconCheck size={12} className="text-[var(--color-state-success)]" />
+                    ) : (
+                      <IconCopy size={12} className="text-[var(--color-action-primary)]" />
+                    )}
+                  </button>
                 </div>
               </div>
+              <div>
+                <div className="text-[10px] text-[var(--color-text-muted)] mb-1">Description</div>
+                <p className="text-[12px] text-[var(--color-text-default)]">
+                  Development environment for the 'service' backend services.
+                </p>
+              </div>
+            </div>
+          </div>
 
-              {/* Stats Cards */}
+          {/* Stats Cards */}
               <div className="flex gap-2 items-center relative shrink-0 w-full">
                 <StatCard value={10} label="Chat sessions" />
                 <StatCard value={6} label="Agents" />
@@ -332,8 +343,6 @@ export function HomePage() {
                   </VStack>
                 </div>
               </div>
-            </Card>
-          </div>
           </div>
         </div>
         </div>

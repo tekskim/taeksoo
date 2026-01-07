@@ -42,12 +42,12 @@ export function MenuSection({
   };
 
   return (
-    <VStack gap={2} className="w-full">
+    <VStack gap={2} className="w-[175px]">
       {/* Section Header */}
       {collapsible ? (
         <button
           onClick={handleTitleClick}
-          className="flex items-center gap-1 w-full group focus:outline-none px-[var(--menu-section-padding-x)] py-[var(--menu-section-padding-y)]"
+          className="flex items-center gap-1 w-[175px] group focus:outline-none px-[var(--menu-section-padding-x)] py-[var(--menu-section-padding-y)]"
         >
           <span className="text-[length:var(--font-size-11)] font-medium text-[var(--color-text-subtle)] group-hover:text-[var(--color-text-muted)] transition-colors duration-[var(--duration-fast)]">
             {title}
@@ -59,14 +59,14 @@ export function MenuSection({
           )}
         </button>
       ) : (
-        <span className="text-[length:var(--font-size-11)] font-medium text-[var(--color-text-subtle)] px-[var(--menu-section-padding-x)] py-[var(--menu-section-padding-y)]">
+        <span className="w-[175px] text-[length:var(--font-size-11)] font-medium text-[var(--color-text-subtle)] px-[var(--menu-section-padding-x)] py-[var(--menu-section-padding-y)]">
           {title}
         </span>
       )}
 
       {/* Section Content */}
       {isOpen && (
-        <VStack gap={0} className="w-full">
+        <VStack gap={0} className="w-[175px]">
           {children}
         </VStack>
       )}
