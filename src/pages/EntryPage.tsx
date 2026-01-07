@@ -9,6 +9,7 @@ import {
   IconLayoutSidebar,
   IconSquare,
 } from '@tabler/icons-react';
+import { Button } from '@/design-system';
 
 // App Icons
 import ComputeIcon from '@/assets/compute.png';
@@ -218,18 +219,13 @@ export function EntryPage() {
 
           {/* Actions */}
           <div className="flex items-center gap-2">
-            <button
-              type="button"
+            <Button
+              variant="secondary"
+              size="md"
+              icon={isDark ? <IconSun size={18} stroke={1.5} /> : <IconMoon size={18} stroke={1.5} />}
               onClick={toggleDarkMode}
-              className="p-2 rounded-lg hover:bg-[var(--color-surface-subtle)] transition-colors"
               aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
-            >
-              {isDark ? (
-                <IconSun size={18} className="text-[var(--color-text-subtle)]" stroke={1.5} />
-              ) : (
-                <IconMoon size={18} className="text-[var(--color-text-subtle)]" stroke={1.5} />
-              )}
-            </button>
+            />
           </div>
         </div>
       </header>
@@ -264,85 +260,29 @@ export function EntryPage() {
               <p className="text-[12px] text-[var(--color-text-subtle)]">
                 Developer Resources
               </p>
-            </div>
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 max-w-2xl mx-auto">
-              {/* Design System Card */}
-              <button
-                type="button"
-                onClick={() => navigate('/design')}
-                className="
-                  group relative overflow-hidden
-                  w-full p-4 rounded-xl
-                  bg-[var(--color-surface-default)]
-                  border border-[var(--color-border-default)]
-                  hover:border-[var(--color-border-strong)]
-                  hover:shadow-lg hover:-translate-y-0.5
-                  transition-all duration-300 ease-out
-                  text-left
-                "
-              >
-                <div className="absolute inset-0 bg-gradient-to-br from-violet-500 to-purple-500 opacity-0 group-hover:opacity-10 transition-opacity duration-300" />
-                <div className="relative flex flex-col items-center text-center gap-2">
-                  <div className="w-10 h-10 rounded-lg bg-[var(--color-surface-subtle)] flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                    <IconPalette size={20} className="text-[var(--color-text-muted)]" stroke={1.5} />
-                  </div>
-                  <span className="text-[13px] font-medium text-[var(--color-text-default)]">
-                    Design System
-                  </span>
-                </div>
-              </button>
-
-              {/* Drawers Card */}
-              <button
-                type="button"
-                onClick={() => navigate('/design/drawers')}
-                className="
-                  group relative overflow-hidden
-                  w-full p-4 rounded-xl
-                  bg-[var(--color-surface-default)]
-                  border border-[var(--color-border-default)]
-                  hover:border-[var(--color-border-strong)]
-                  hover:shadow-lg hover:-translate-y-0.5
-                  transition-all duration-300 ease-out
-                  text-left
-                "
-              >
-                <div className="absolute inset-0 bg-gradient-to-br from-blue-500 to-cyan-500 opacity-0 group-hover:opacity-10 transition-opacity duration-300" />
-                <div className="relative flex flex-col items-center text-center gap-2">
-                  <div className="w-10 h-10 rounded-lg bg-[var(--color-surface-subtle)] flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                    <IconLayoutSidebar size={20} className="text-[var(--color-text-muted)]" stroke={1.5} />
-                  </div>
-                  <span className="text-[13px] font-medium text-[var(--color-text-default)]">
-                    Drawers
-                  </span>
-                </div>
-              </button>
-
-              {/* Modals Card */}
-              <button
-                type="button"
-                onClick={() => navigate('/design/modals')}
-                className="
-                  group relative overflow-hidden
-                  w-full p-4 rounded-xl
-                  bg-[var(--color-surface-default)]
-                  border border-[var(--color-border-default)]
-                  hover:border-[var(--color-border-strong)]
-                  hover:shadow-lg hover:-translate-y-0.5
-                  transition-all duration-300 ease-out
-                  text-left
-                "
-              >
-                <div className="absolute inset-0 bg-gradient-to-br from-emerald-500 to-teal-500 opacity-0 group-hover:opacity-10 transition-opacity duration-300" />
-                <div className="relative flex flex-col items-center text-center gap-2">
-                  <div className="w-10 h-10 rounded-lg bg-[var(--color-surface-subtle)] flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                    <IconSquare size={20} className="text-[var(--color-text-muted)]" stroke={1.5} />
-                  </div>
-                  <span className="text-[13px] font-medium text-[var(--color-text-default)]">
-                    Modals
-                  </span>
-                </div>
-              </button>
+              <div className="flex items-center justify-center gap-4">
+                <Button
+                  variant="muted"
+                  size="md"
+                  onClick={() => navigate('/design')}
+                >
+                  Design System
+                </Button>
+                <Button
+                  variant="muted"
+                  size="md"
+                  onClick={() => navigate('/design/drawers')}
+                >
+                  Drawers
+                </Button>
+                <Button
+                  variant="muted"
+                  size="md"
+                  onClick={() => navigate('/design/modals')}
+                >
+                  Modals
+                </Button>
+              </div>
             </div>
           </div>
         </div>

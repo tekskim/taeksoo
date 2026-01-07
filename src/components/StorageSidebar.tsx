@@ -88,10 +88,10 @@ export function StorageSidebar({ isOpen = true, onToggle }: StorageSidebarProps)
             <span>All Services</span>
           </Link>
 
-          {/* Dashboard */}
+          {/* EntryPage */}
           <MenuItem
             icon={<IconHome size={16} stroke={1.5} />}
-            label="Dashboard"
+            label="Entry page"
             href="/storage"
             active={isActive('/storage')}
           />
