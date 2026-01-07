@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
 import {
   TabBar,
@@ -6,9 +6,49 @@ import {
   TopBarAction,
   Breadcrumb,
 } from '@/design-system';
+import { NotificationCenter, type NotificationItem } from '@/design-system/components/NotificationCenter';
 import { Sidebar } from '@/components/Sidebar';
 import { useTabs } from '@/contexts/TabContext';
 import { IconBell } from '@tabler/icons-react';
+
+/* ----------------------------------------
+   Mock Notifications Data
+   ---------------------------------------- */
+
+const mockNotifications: NotificationItem[] = [
+  {
+    id: '1',
+    type: 'success',
+    message: 'Instance "web-server-01" created successfully.',
+    time: '10:23',
+    project: 'Proj1',
+    isRead: false,
+  },
+  {
+    id: '2',
+    type: 'success',
+    message: 'Instance "web-server-01" created successfully.',
+    time: '10:15',
+    project: 'Proj1',
+    isRead: false,
+  },
+  {
+    id: '3',
+    type: 'success',
+    message: 'Instance "web-server-01" created successfully.',
+    time: '09:45',
+    project: 'Proj1',
+    isRead: true,
+  },
+  {
+    id: '4',
+    type: 'error',
+    message: 'Failed to create volume "data-vol-02".',
+    time: '09:30',
+    project: 'Proj1',
+    isRead: false,
+  },
+];
 
 /* ----------------------------------------
    Route to Label Mapping
@@ -43,6 +83,50 @@ export function AppLayout({ children }: AppLayoutProps) {
   const location = useLocation();
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const { tabs, activeTabId, selectTab, closeTab, addNewTab } = useTabs();
+
+  // Notification state
+  const [notificationOpen, setNotificationOpen] = useState(false);
+  const [notifications, setNotifications] = useState<NotificationItem[]>(mockNotifications);
+  const [selectedNotificationId, setSelectedNotificationId] = useState<string | undefined>();
+  const notificationRef = useRef<HTMLDivElement>(null);
+
+  // Close notification panel when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (notificationRef.current && !notificationRef.current.contains(event.target as Node)) {
+        setNotificationOpen(false);
+      }
+    };
+
+    if (notificationOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [notificationOpen]);
+
+  // Handle mark notification as read
+  const handleMarkAsRead = (id: string) => {
+    setNotifications((prev) =>
+      prev.map((n) => (n.id === id ? { ...n, isRead: true } : n))
+    );
+  };
+
+  // Handle mark all as read
+  const handleMarkAllAsRead = () => {
+    setNotifications((prev) => prev.map((n) => ({ ...n, isRead: true })));
+  };
+
+  // Handle notification click
+  const handleNotificationClick = (notification: NotificationItem) => {
+    setSelectedNotificationId(notification.id);
+    handleMarkAsRead(notification.id);
+  };
+
+  // Count unread notifications
+  const unreadCount = notifications.filter((n) => !n.isRead).length;
 
   // Convert tabs to TabBar format
   const tabBarTabs = tabs.map((tab) => ({
@@ -102,11 +186,27 @@ export function AppLayout({ children }: AppLayoutProps) {
               />
             }
             actions={
-              <TopBarAction
-                icon={<IconBell size={16} stroke={1.5} />}
-                aria-label="Notifications"
-                badge={true}
-              />
+              <div className="relative" ref={notificationRef}>
+                <TopBarAction
+                  icon={<IconBell size={16} stroke={1.5} />}
+                  aria-label="Notifications"
+                  badge={unreadCount > 0}
+                  badgeCount={unreadCount}
+                  onClick={() => setNotificationOpen(!notificationOpen)}
+                />
+                {notificationOpen && (
+                  <div className="absolute top-full right-0 mt-2 z-50">
+                    <NotificationCenter
+                      notifications={notifications}
+                      selectedId={selectedNotificationId}
+                      onMarkAsRead={handleMarkAsRead}
+                      onMarkAllAsRead={handleMarkAllAsRead}
+                      onNotificationClick={handleNotificationClick}
+                      onClose={() => setNotificationOpen(false)}
+                    />
+                  </div>
+                )}
+              </div>
             }
           />
         </div>

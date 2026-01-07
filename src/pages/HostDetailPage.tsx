@@ -1331,9 +1331,10 @@ export default function HostDetailPage() {
                     <div className="flex gap-4 pt-4">
                       {/* Left Panel - Device List */}
                       <div className="w-[224px] shrink-0 bg-white border border-[var(--color-border-default)] rounded-lg p-3 flex flex-col gap-3">
-                        <h4 className="text-[14px] font-medium leading-5 text-[#314158]">
+                        <h6 className="text-[length:var(--font-size-14)] font-semibold leading-[var(--line-height-20)] text-[var(--color-text-default)]">
                           Device health
-                        </h4>
+                        </h6>
+                        <div className="w-full h-px bg-[var(--color-border-subtle)]" />
                         <div className="flex flex-col">
                           {host.deviceHealth.map((device) => {
                             const isSelected = (selectedDeviceHealth || host.deviceHealth[0]?.id) === device.id;
@@ -1368,20 +1369,20 @@ export default function HostDetailPage() {
                               <div className="flex gap-2">
                                 <button
                                   onClick={() => setDeviceHealthTab('device-info')}
-                                  className={`flex-1 py-2.5 px-4 text-[14px] font-medium leading-4 rounded-md transition-colors ${
+                                  className={`flex-1 py-2.5 px-4 text-[14px] font-medium leading-4 rounded-md border transition-colors ${
                                     deviceHealthTab === 'device-info'
-                                      ? 'bg-white border border-[var(--color-border-default)] text-[var(--color-action-primary)]'
-                                      : 'text-[var(--color-text-default)]'
+                                      ? 'bg-white border-[var(--color-border-default)] text-[var(--color-action-primary)]'
+                                      : 'border-transparent text-[var(--color-text-default)]'
                                   }`}
                                 >
                                   Device information
                                 </button>
                                 <button
                                   onClick={() => setDeviceHealthTab('smart')}
-                                  className={`flex-1 py-2.5 px-4 text-[14px] font-medium leading-4 rounded-md transition-colors ${
+                                  className={`flex-1 py-2.5 px-4 text-[14px] font-medium leading-4 rounded-md border transition-colors ${
                                     deviceHealthTab === 'smart'
-                                      ? 'bg-white border border-[var(--color-border-default)] text-[var(--color-action-primary)]'
-                                      : 'text-[var(--color-text-default)]'
+                                      ? 'bg-white border-[var(--color-border-default)] text-[var(--color-action-primary)]'
+                                      : 'border-transparent text-[var(--color-text-default)]'
                                   }`}
                                 >
                                   SMART
@@ -1398,9 +1399,9 @@ export default function HostDetailPage() {
                                 
                                 <div className="flex flex-col gap-1.5">
                                   <span className="text-[11px] font-medium leading-4 text-[var(--color-text-subtle)]">
-                                    smartctl output
+                                    Smartctl Output
                                   </span>
-                                  <div className="bg-[var(--color-surface-contrast)] rounded-md p-4 max-h-[280px] overflow-x-auto overflow-y-auto">
+                                  <div className="bg-[var(--color-surface-contrast)] rounded-md p-4 overflow-x-auto">
                                     <pre className="font-[family-name:var(--font-mono)] text-[12px] leading-[18px] text-white whitespace-pre-wrap">
                                       {selectedDeviceData.smartctlOutput}
                                     </pre>

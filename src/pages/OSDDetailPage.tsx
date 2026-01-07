@@ -941,9 +941,10 @@ export function OSDDetailPage() {
                     <div className="flex gap-4 pt-4">
                       {/* Device List Sidebar */}
                       <div className="w-[224px] shrink-0 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg p-3">
-                        <h3 className="text-[14px] font-medium text-[var(--color-text-default)] mb-3">
+                        <h6 className="text-[length:var(--font-size-14)] font-semibold leading-[var(--line-height-20)] text-[var(--color-text-default)]">
                           Device health
-                        </h3>
+                        </h6>
+                        <div className="w-full h-px bg-[var(--color-border-subtle)] my-3" />
                         <div className="flex flex-col">
                           {mockDeviceHealthList.map((device) => (
                             <button
@@ -976,11 +977,11 @@ export function OSDDetailPage() {
                           <button
                             onClick={() => setHealthSubTab('device-info')}
                             className={`
-                              flex-1 py-2.5 px-4 rounded-md text-[14px] font-medium text-center
+                              flex-1 py-2.5 px-4 rounded-md text-[14px] font-medium text-center border
                               transition-colors duration-[var(--duration-fast)]
                               ${healthSubTab === 'device-info'
-                                ? 'bg-[var(--color-surface-default)] border border-[var(--color-border-default)] text-[var(--color-action-primary)]'
-                                : 'text-[var(--color-text-default)] hover:bg-[var(--color-surface-default)]'
+                                ? 'bg-[var(--color-surface-default)] border-[var(--color-border-default)] text-[var(--color-action-primary)]'
+                                : 'border-transparent text-[var(--color-text-default)] hover:bg-[var(--color-surface-default)]'
                               }
                             `}
                           >
@@ -989,11 +990,11 @@ export function OSDDetailPage() {
                           <button
                             onClick={() => setHealthSubTab('smart')}
                             className={`
-                              flex-1 py-2.5 px-4 rounded-md text-[14px] font-medium text-center
+                              flex-1 py-2.5 px-4 rounded-md text-[14px] font-medium text-center border
                               transition-colors duration-[var(--duration-fast)]
                               ${healthSubTab === 'smart'
-                                ? 'bg-[var(--color-surface-default)] border border-[var(--color-border-default)] text-[var(--color-action-primary)]'
-                                : 'text-[var(--color-text-default)] hover:bg-[var(--color-surface-default)]'
+                                ? 'bg-[var(--color-surface-default)] border-[var(--color-border-default)] text-[var(--color-action-primary)]'
+                                : 'border-transparent text-[var(--color-text-default)] hover:bg-[var(--color-surface-default)]'
                               }
                             `}
                           >
@@ -1010,12 +1011,12 @@ export function OSDDetailPage() {
                             <SectionCardDataRow label="Firmware Version" value={selectedHealthDevice.firmwareVersion} />
                             <SectionCardDataRow label="Total Capacity" value={selectedHealthDevice.totalCapacity} />
                             
-                            {/* smartctl output */}
+                            {/* Smartctl Output */}
                             <div className="pt-3 mt-3 border-t border-[var(--color-border-default)]">
                               <p className="text-[11px] font-medium text-[var(--color-text-subtle)] mb-1.5">
-                                smartctl output
+                                Smartctl Output
                               </p>
-                              <div className="bg-[var(--color-surface-contrast)] rounded-md p-4 overflow-x-auto max-h-[280px] overflow-y-auto">
+                              <div className="bg-[var(--color-surface-contrast)] rounded-md p-4 overflow-x-auto">
                                 <pre className="font-[family-name:var(--font-mono)] text-[12px] leading-[18px] text-white whitespace-pre-wrap">
                                   {selectedHealthDevice.smartctlOutput}
                                 </pre>

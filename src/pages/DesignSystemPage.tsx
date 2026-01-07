@@ -48,7 +48,9 @@ import {
   SectionCard,
   Drawer,
   MonitoringToolbar,
+  NotificationCenter,
 } from '@/design-system';
+import type { NotificationItem } from '@/design-system/components/NotificationCenter';
 import {
   // Navigation icons (for sidebar)
   IconPalette,
@@ -243,6 +245,7 @@ const patternItems = [
   { id: 'modal', label: 'Modal', icon: IconLayoutGrid },
   { id: 'drawer', label: 'Drawer', icon: IconLayoutGrid },
   { id: 'monitoring-toolbar', label: 'Monitoring Toolbar', icon: IconRefresh },
+  { id: 'notification-center', label: 'Notification Center', icon: IconBell },
   { id: 'layout', label: 'Layout', icon: IconLayoutSidebar },
 ];
 
@@ -265,6 +268,294 @@ const componentItems = [
 
 // All items for intersection observer
 const navItems = [...foundationItems, ...componentItems];
+
+/* ----------------------------------------
+   Notification Center Section
+   ---------------------------------------- */
+
+function NotificationCenterSection() {
+  const [notifications, setNotifications] = useState<NotificationItem[]>([
+    {
+      id: '1',
+      type: 'success',
+      message: 'Instance "web-server-01" created successfully.',
+      time: '10:23',
+      project: 'Proj1',
+      isRead: false,
+      detail: {
+        code: 200,
+        message: 'Instance created with 4 vCPUs, 8GB RAM, and 100GB storage.',
+      },
+    },
+    {
+      id: '2',
+      type: 'success',
+      message: 'Volume "data-vol-01" attached to instance.',
+      time: '10:15',
+      project: 'Proj1',
+      isRead: false,
+    },
+    {
+      id: '3',
+      type: 'error',
+      message: 'Failed to create volume "data-vol-02".',
+      time: '09:30',
+      project: 'Proj2',
+      isRead: false,
+      detail: {
+        code: 400,
+        message: "Flavor's disk is smaller than the minimum size specified in image metadata. Flavor disk is 1073741824 bytes, minimum size is 10737418240 bytes.",
+      },
+    },
+    {
+      id: '4',
+      type: 'warning',
+      message: 'Instance "db-server" is running low on disk space.',
+      time: '09:15',
+      project: 'Proj1',
+      isRead: true,
+      detail: {
+        code: 'WARN_DISK_LOW',
+        message: 'Disk usage is at 92%. Consider expanding the volume or cleaning up unused files.',
+      },
+    },
+    {
+      id: '5',
+      type: 'info',
+      message: 'System maintenance scheduled for tomorrow.',
+      time: 'Yesterday',
+      isRead: true,
+    },
+  ]);
+
+  const [selectedId, setSelectedId] = useState<string | undefined>();
+
+  const handleMarkAsRead = (id: string) => {
+    setNotifications((prev) =>
+      prev.map((n) => (n.id === id ? { ...n, isRead: true } : n))
+    );
+  };
+
+  const handleMarkAllAsRead = () => {
+    setNotifications((prev) => prev.map((n) => ({ ...n, isRead: true })));
+  };
+
+  return (
+    <Section
+      id="notification-center"
+      title="Notification Center"
+      description="Centralized notification panel with filtering, read/unread states, and real-time updates"
+    >
+      <VStack gap={8}>
+        {/* Design Tokens */}
+        <VStack gap={3}>
+          <Label>Design Tokens</Label>
+          <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
+            <code>width: 360px</code> · <code>padding: 16px</code> · <code>border-radius: 8px</code> · <code>shadow: lg</code>
+          </div>
+        </VStack>
+
+        {/* Live Demo */}
+        <VStack gap={3}>
+          <Label>Live Demo</Label>
+          <div className="flex justify-center p-6 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)]">
+            <NotificationCenter
+              notifications={notifications}
+              onMarkAsRead={handleMarkAsRead}
+              onMarkAllAsRead={handleMarkAllAsRead}
+              onNotificationClick={(n) => setSelectedId(n.id)}
+              selectedId={selectedId}
+            />
+          </div>
+        </VStack>
+
+        {/* Notification Types */}
+        <VStack gap={3}>
+          <Label>Notification Types</Label>
+          <div className="grid grid-cols-4 gap-4">
+            <div className="p-3 bg-[var(--color-surface-default)] rounded-[var(--radius-md)] border border-[var(--color-border-default)]">
+              <div className="flex items-center gap-2 mb-2">
+                <div className="w-5 h-5 rounded-full bg-[var(--color-state-success)] bg-opacity-20 flex items-center justify-center">
+                  <IconCheck size={12} className="text-[var(--color-state-success)]" />
+                </div>
+                <span className="text-[length:var(--font-size-12)] font-medium text-[var(--color-text-default)]">Success</span>
+              </div>
+              <p className="text-[length:var(--font-size-11)] text-[var(--color-text-muted)]">Operation completed</p>
+            </div>
+            <div className="p-3 bg-[var(--color-surface-default)] rounded-[var(--radius-md)] border border-[var(--color-border-default)]">
+              <div className="flex items-center gap-2 mb-2">
+                <div className="w-5 h-5 rounded-full bg-[var(--color-state-danger)] bg-opacity-20 flex items-center justify-center">
+                  <IconX size={12} className="text-[var(--color-state-danger)]" />
+                </div>
+                <span className="text-[length:var(--font-size-12)] font-medium text-[var(--color-text-default)]">Error</span>
+              </div>
+              <p className="text-[length:var(--font-size-11)] text-[var(--color-text-muted)]">Operation failed</p>
+            </div>
+            <div className="p-3 bg-[var(--color-surface-default)] rounded-[var(--radius-md)] border border-[var(--color-border-default)]">
+              <div className="flex items-center gap-2 mb-2">
+                <div className="w-5 h-5 rounded-full bg-[var(--color-state-warning)] bg-opacity-20 flex items-center justify-center">
+                  <IconAlertTriangle size={12} className="text-[var(--color-state-warning)]" />
+                </div>
+                <span className="text-[length:var(--font-size-12)] font-medium text-[var(--color-text-default)]">Warning</span>
+              </div>
+              <p className="text-[length:var(--font-size-11)] text-[var(--color-text-muted)]">Attention needed</p>
+            </div>
+            <div className="p-3 bg-[var(--color-surface-default)] rounded-[var(--radius-md)] border border-[var(--color-border-default)]">
+              <div className="flex items-center gap-2 mb-2">
+                <div className="w-5 h-5 rounded-full bg-[var(--color-state-info)] bg-opacity-20 flex items-center justify-center">
+                  <IconInfoCircle size={12} className="text-[var(--color-state-info)]" />
+                </div>
+                <span className="text-[length:var(--font-size-12)] font-medium text-[var(--color-text-default)]">Info</span>
+              </div>
+              <p className="text-[length:var(--font-size-11)] text-[var(--color-text-muted)]">General information</p>
+            </div>
+          </div>
+        </VStack>
+
+        {/* Features */}
+        <VStack gap={3}>
+          <Label>Features</Label>
+          <div className="grid grid-cols-2 gap-4">
+            <div className="p-4 bg-[var(--color-surface-default)] rounded-[var(--radius-md)] border border-[var(--color-border-default)]">
+              <h4 className="text-[length:var(--font-size-12)] font-medium text-[var(--color-text-default)] mb-2">Tab Filtering</h4>
+              <p className="text-[length:var(--font-size-11)] text-[var(--color-text-muted)]">
+                Filter notifications by All, Unread, or Error status with counts displayed on each tab.
+              </p>
+            </div>
+            <div className="p-4 bg-[var(--color-surface-default)] rounded-[var(--radius-md)] border border-[var(--color-border-default)]">
+              <h4 className="text-[length:var(--font-size-12)] font-medium text-[var(--color-text-default)] mb-2">Mark as Read</h4>
+              <p className="text-[length:var(--font-size-11)] text-[var(--color-text-muted)]">
+                Mark individual notifications or all notifications as read with a single click.
+              </p>
+            </div>
+            <div className="p-4 bg-[var(--color-surface-default)] rounded-[var(--radius-md)] border border-[var(--color-border-default)]">
+              <h4 className="text-[length:var(--font-size-12)] font-medium text-[var(--color-text-default)] mb-2">Project Tags</h4>
+              <p className="text-[length:var(--font-size-11)] text-[var(--color-text-muted)]">
+                Optional project tags help identify which project a notification belongs to.
+              </p>
+            </div>
+            <div className="p-4 bg-[var(--color-surface-default)] rounded-[var(--radius-md)] border border-[var(--color-border-default)]">
+              <h4 className="text-[length:var(--font-size-12)] font-medium text-[var(--color-text-default)] mb-2">Selection State</h4>
+              <p className="text-[length:var(--font-size-11)] text-[var(--color-text-muted)]">
+                Click on a notification to select it and view more details or take actions.
+              </p>
+            </div>
+          </div>
+        </VStack>
+
+        {/* Props */}
+        <VStack gap={3}>
+          <Label>Props</Label>
+          <div className="overflow-x-auto">
+            <table className="w-full text-[length:var(--font-size-12)]">
+              <thead>
+                <tr className="border-b border-[var(--color-border-default)]">
+                  <th className="text-left py-2 pr-4 font-medium text-[var(--color-text-subtle)]">Prop</th>
+                  <th className="text-left py-2 pr-4 font-medium text-[var(--color-text-subtle)]">Type</th>
+                  <th className="text-left py-2 pr-4 font-medium text-[var(--color-text-subtle)]">Default</th>
+                  <th className="text-left py-2 font-medium text-[var(--color-text-subtle)]">Description</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr className="border-b border-[var(--color-border-subtle)]">
+                  <td className="py-2 pr-4 font-mono text-[var(--color-action-primary)]">notifications</td>
+                  <td className="py-2 pr-4 text-[var(--color-text-muted)]">NotificationItem[]</td>
+                  <td className="py-2 pr-4 text-[var(--color-text-muted)]">required</td>
+                  <td className="py-2 text-[var(--color-text-default)]">List of notification items</td>
+                </tr>
+                <tr className="border-b border-[var(--color-border-subtle)]">
+                  <td className="py-2 pr-4 font-mono text-[var(--color-action-primary)]">onMarkAsRead</td>
+                  <td className="py-2 pr-4 text-[var(--color-text-muted)]">(id: string) =&gt; void</td>
+                  <td className="py-2 pr-4 text-[var(--color-text-muted)]">-</td>
+                  <td className="py-2 text-[var(--color-text-default)]">Callback when notification is marked as read</td>
+                </tr>
+                <tr className="border-b border-[var(--color-border-subtle)]">
+                  <td className="py-2 pr-4 font-mono text-[var(--color-action-primary)]">onMarkAllAsRead</td>
+                  <td className="py-2 pr-4 text-[var(--color-text-muted)]">() =&gt; void</td>
+                  <td className="py-2 pr-4 text-[var(--color-text-muted)]">-</td>
+                  <td className="py-2 text-[var(--color-text-default)]">Callback when all marked as read</td>
+                </tr>
+                <tr className="border-b border-[var(--color-border-subtle)]">
+                  <td className="py-2 pr-4 font-mono text-[var(--color-action-primary)]">onNotificationClick</td>
+                  <td className="py-2 pr-4 text-[var(--color-text-muted)]">(n: NotificationItem) =&gt; void</td>
+                  <td className="py-2 pr-4 text-[var(--color-text-muted)]">-</td>
+                  <td className="py-2 text-[var(--color-text-default)]">Callback when notification is clicked</td>
+                </tr>
+                <tr className="border-b border-[var(--color-border-subtle)]">
+                  <td className="py-2 pr-4 font-mono text-[var(--color-action-primary)]">selectedId</td>
+                  <td className="py-2 pr-4 text-[var(--color-text-muted)]">string</td>
+                  <td className="py-2 pr-4 text-[var(--color-text-muted)]">-</td>
+                  <td className="py-2 text-[var(--color-text-default)]">Currently selected notification id</td>
+                </tr>
+                <tr>
+                  <td className="py-2 pr-4 font-mono text-[var(--color-action-primary)]">onClose</td>
+                  <td className="py-2 pr-4 text-[var(--color-text-muted)]">() =&gt; void</td>
+                  <td className="py-2 pr-4 text-[var(--color-text-muted)]">-</td>
+                  <td className="py-2 text-[var(--color-text-default)]">Callback when panel is closed</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </VStack>
+
+        {/* NotificationItem Interface */}
+        <VStack gap={3}>
+          <Label>NotificationItem Interface</Label>
+          <div className="overflow-x-auto">
+            <table className="w-full text-[length:var(--font-size-12)]">
+              <thead>
+                <tr className="border-b border-[var(--color-border-default)]">
+                  <th className="text-left py-2 pr-4 font-medium text-[var(--color-text-subtle)]">Property</th>
+                  <th className="text-left py-2 pr-4 font-medium text-[var(--color-text-subtle)]">Type</th>
+                  <th className="text-left py-2 pr-4 font-medium text-[var(--color-text-subtle)]">Required</th>
+                  <th className="text-left py-2 font-medium text-[var(--color-text-subtle)]">Description</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr className="border-b border-[var(--color-border-subtle)]">
+                  <td className="py-2 pr-4 font-mono text-[var(--color-action-primary)]">id</td>
+                  <td className="py-2 pr-4 text-[var(--color-text-muted)]">string</td>
+                  <td className="py-2 pr-4 text-[var(--color-text-muted)]">Yes</td>
+                  <td className="py-2 text-[var(--color-text-default)]">Unique identifier</td>
+                </tr>
+                <tr className="border-b border-[var(--color-border-subtle)]">
+                  <td className="py-2 pr-4 font-mono text-[var(--color-action-primary)]">type</td>
+                  <td className="py-2 pr-4 text-[var(--color-text-muted)]">'success' | 'error' | 'warning' | 'info'</td>
+                  <td className="py-2 pr-4 text-[var(--color-text-muted)]">Yes</td>
+                  <td className="py-2 text-[var(--color-text-default)]">Notification type</td>
+                </tr>
+                <tr className="border-b border-[var(--color-border-subtle)]">
+                  <td className="py-2 pr-4 font-mono text-[var(--color-action-primary)]">message</td>
+                  <td className="py-2 pr-4 text-[var(--color-text-muted)]">string</td>
+                  <td className="py-2 pr-4 text-[var(--color-text-muted)]">Yes</td>
+                  <td className="py-2 text-[var(--color-text-default)]">Main message text</td>
+                </tr>
+                <tr className="border-b border-[var(--color-border-subtle)]">
+                  <td className="py-2 pr-4 font-mono text-[var(--color-action-primary)]">time</td>
+                  <td className="py-2 pr-4 text-[var(--color-text-muted)]">string</td>
+                  <td className="py-2 pr-4 text-[var(--color-text-muted)]">Yes</td>
+                  <td className="py-2 text-[var(--color-text-default)]">Timestamp string</td>
+                </tr>
+                <tr className="border-b border-[var(--color-border-subtle)]">
+                  <td className="py-2 pr-4 font-mono text-[var(--color-action-primary)]">project</td>
+                  <td className="py-2 pr-4 text-[var(--color-text-muted)]">string</td>
+                  <td className="py-2 pr-4 text-[var(--color-text-muted)]">No</td>
+                  <td className="py-2 text-[var(--color-text-default)]">Project name tag</td>
+                </tr>
+                <tr>
+                  <td className="py-2 pr-4 font-mono text-[var(--color-action-primary)]">isRead</td>
+                  <td className="py-2 pr-4 text-[var(--color-text-muted)]">boolean</td>
+                  <td className="py-2 pr-4 text-[var(--color-text-muted)]">No</td>
+                  <td className="py-2 text-[var(--color-text-default)]">Whether notification has been read</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </VStack>
+      </VStack>
+    </Section>
+  );
+}
 
 /* ----------------------------------------
    DatePicker Section (with state)
@@ -5507,6 +5798,9 @@ outline: 2px solid var(--color-border-focus);`}
                 </VStack>
               </VStack>
             </Section>
+
+            {/* Notification Center */}
+            <NotificationCenterSection />
 
             {/* Layout Section */}
             <Section id="layout" title="Layout" description="Application layout structure with responsive sidebar">
