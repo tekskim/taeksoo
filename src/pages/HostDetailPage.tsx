@@ -36,6 +36,47 @@ import {
 } from '@tabler/icons-react';
 
 /* ----------------------------------------
+   Custom Identify Icon
+   ---------------------------------------- */
+
+interface IdentifyIconProps {
+  size?: number;
+  className?: string;
+}
+
+function IdentifyIcon({ size = 16, className }: IdentifyIconProps) {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 16 16"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      className={className}
+    >
+      <path
+        d="M4.66699 12.0003V8.00033C4.66699 7.11627 5.01818 6.26842 5.6433 5.6433C6.26842 5.01818 7.11627 4.66699 8.00033 4.66699C8.88438 4.66699 9.73223 5.01818 10.3573 5.6433C10.9825 6.26842 11.3337 7.11627 11.3337 8.00033V12.0003"
+        stroke="currentColor"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M3.33301 14C3.33301 14.1768 3.40325 14.3464 3.52827 14.4714C3.65329 14.5964 3.82286 14.6667 3.99967 14.6667H11.9997C12.1765 14.6667 12.3461 14.5964 12.4711 14.4714C12.5961 14.3464 12.6663 14.1768 12.6663 14V13.3333C12.6663 12.9797 12.5259 12.6406 12.2758 12.3905C12.0258 12.1405 11.6866 12 11.333 12H4.66634C4.31272 12 3.97358 12.1405 3.72353 12.3905C3.47348 12.6406 3.33301 12.9797 3.33301 13.3333V14Z"
+        stroke="currentColor"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path d="M13.333 8H13.9997" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M12.3333 3L12 3.33333" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M1.33301 8H1.99967" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M8 1.33301V1.99967" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M3.28613 3.28613L3.75747 3.75747" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M8 8V12" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
+/* ----------------------------------------
    Chart Colors
    ---------------------------------------- */
 
@@ -753,6 +794,7 @@ interface PhysicalDisk {
   model: string;
   size: string;
   osd: string;
+  identifyTimer?: number | null;
 }
 
 interface Daemon {
@@ -826,10 +868,10 @@ const mockHostData: Record<string, HostDetail> = {
       { id: 'dev-5', deviceId: 'LENOVO_MG09SCA14TE_2540A00MF2AJ', deviceName: 'sdd', daemons: ['osd.5'] },
     ],
     physicalDisks: [
-      { id: 'disk-1', devicePath: '/dev/sda', type: 'SSD', available: false, vendor: '', model: 'KIOXIA KCD8DPUG3T20', size: '2.9 TiB', osd: 'osd.2' },
-      { id: 'disk-2', devicePath: '/dev/sda', type: 'SSD', available: false, vendor: '', model: 'KIOXIA KCD8DPUG3T20', size: '2.9 TiB', osd: 'osd.2' },
-      { id: 'disk-3', devicePath: '/dev/sda', type: 'SSD', available: false, vendor: '', model: 'KIOXIA KCD8DPUG3T20', size: '2.9 TiB', osd: 'osd.2' },
-      { id: 'disk-4', devicePath: '/dev/sda', type: 'SSD', available: false, vendor: '', model: 'KIOXIA KCD8DPUG3T20', size: '2.9 TiB', osd: 'osd.2' },
+      { id: 'disk-1', devicePath: '/dev/sda', type: 'SSD', available: false, vendor: '', model: 'KIOXIA KCD8DPUG3T20', size: '2.9 TiB', osd: 'osd.2', identifyTimer: null },
+      { id: 'disk-2', devicePath: '/dev/sdb', type: 'SSD', available: false, vendor: '', model: 'KIOXIA KCD8DPUG3T20', size: '2.9 TiB', osd: 'osd.3', identifyTimer: null },
+      { id: 'disk-3', devicePath: '/dev/sdc', type: 'SSD', available: false, vendor: '', model: 'KIOXIA KCD8DPUG3T20', size: '2.9 TiB', osd: 'osd.4', identifyTimer: null },
+      { id: 'disk-4', devicePath: '/dev/sdd', type: 'SSD', available: false, vendor: '', model: 'KIOXIA KCD8DPUG3T20', size: '2.9 TiB', osd: 'osd.5', identifyTimer: null },
     ],
     daemons: [
       { id: 'daemon-1', status: 'running', daemonName: 'mon.bdv2kr1-cephobj02', version: '19.2.3', lastRefreshed: '5 minutes ago', cpuUsage: 88.17, cpuStatus: 'chunking', memoryUsage: '18.4 GiB', daemonEvents: 'A month ago - daemon:mds.cephfs-test.bdv2kr1-cephobj02.lrphgq' },
@@ -968,6 +1010,38 @@ export default function HostDetailPage() {
       flex: 1, 
       sortable: true,
       render: (_, row) => row.osd ? <Chip value={row.osd} /> : null,
+    },
+    {
+      key: 'identify',
+      label: 'Identify',
+      width: 80,
+      align: 'center',
+      sortable: false,
+      render: (_, row) => {
+        const formatTime = (seconds: number) => {
+          const mins = Math.floor(seconds / 60);
+          const secs = seconds % 60;
+          return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+        };
+        
+        if (row.identifyTimer && row.identifyTimer > 0) {
+          return (
+            <div className="flex items-center gap-1">
+              <IdentifyIcon size={16} className="text-[#ff851a]" />
+              <span className="text-[11px] font-medium text-[#ff851a]">{formatTime(row.identifyTimer)}</span>
+            </div>
+          );
+        }
+        return (
+          <button
+            onClick={() => console.log('Identify disk:', row.id)}
+            className="p-1 hover:bg-[var(--color-surface-subtle)] rounded transition-colors"
+            aria-label="Identify disk"
+          >
+            <IdentifyIcon size={16} className="text-[var(--color-text-subtle)]" />
+          </button>
+        );
+      },
     },
   ];
 
@@ -1374,8 +1448,8 @@ export default function HostDetailPage() {
                                   <span className="text-[11px] font-medium leading-4 text-[var(--color-text-subtle)]">
                                     smartctl output
                                   </span>
-                                  <div className="bg-[#0f172a] rounded-md p-4 h-[281px] overflow-auto">
-                                    <pre className="font-mono text-[12px] leading-[18px] text-white whitespace-pre-wrap">
+                                  <div className="bg-[var(--color-surface-contrast)] rounded-md p-4 max-h-[280px] overflow-x-auto overflow-y-auto">
+                                    <pre className="font-[family-name:var(--font-mono)] text-[12px] leading-[18px] text-white whitespace-pre-wrap">
                                       {selectedDeviceData.smartctlOutput}
                                     </pre>
                                   </div>
