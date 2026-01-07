@@ -1661,14 +1661,7 @@ function SingleValueDoughnutDemo({
 
   const getOption = () => ({
     tooltip: {
-      trigger: 'item',
-      formatter: `{b}: {c}%`,
-      backgroundColor: getColor('--tooltip-bg', '#1e293b'),
-      borderColor: 'transparent',
-      textStyle: {
-        color: getColor('--tooltip-text', '#ffffff'),
-        fontSize: 11
-      }
+      show: false
     },
     animationDuration: 1000,
     animationEasing: 'cubicOut' as const,
@@ -1678,28 +1671,23 @@ function SingleValueDoughnutDemo({
         radius: ['68%', '80%'],
         center: ['50%', '50%'],
         avoidLabelOverlap: false,
+        silent: true,
         itemStyle: {
           borderRadius: 0,
           borderWidth: 0
         },
-        pointer: {
+        label: {
+          show: false
+        },
+        labelLine: {
           show: false
         },
         emphasis: {
-          scale: true,
-          scaleSize: 4,
-          itemStyle: {
-            shadowBlur: 10,
-            shadowOffsetX: 0,
-            shadowColor: 'rgba(0, 0, 0, 0.2)'
-          }
-        },
-        splitLine: {
-          show: false
+          disabled: true
         },
         data: [
-          { value: value, name: 'Hits', itemStyle: { color: mainColor } },
-          { value: 100 - value, name: 'Remaining', itemStyle: { color: bgColor } }
+          { value: value, itemStyle: { color: mainColor } },
+          { value: 100 - value, itemStyle: { color: bgColor } }
         ]
       }
     ],
@@ -5796,9 +5784,21 @@ outline: 2px solid var(--color-border-focus);`}
                 <VStack gap={3}>
                   <Label>Design Tokens</Label>
                   <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
-                    <code>inner-radius: 68%</code> · <code>outer-radius: 80%</code> · <code>thickness: 12%</code> · <code>border-radius: 0</code>
+                    <code>inner-radius: 68%</code> · <code>outer-radius: 80%</code> · <code>thickness: 12%</code> · <code>border-radius: 6px</code>
                   </div>
                 </VStack>
+
+                {/* Basic Doughnut */}
+                <VStack gap={3}>
+                  <Label>Basic Doughnut</Label>
+                  <div className="flex items-start gap-6 flex-wrap">
+                    <SingleValueDoughnutDemo 
+                      title="OSD onode Hits Ratio"
+                      value={98}
+                    />
+                  </div>
+                </VStack>
+
               </VStack>
             </Section>
 
