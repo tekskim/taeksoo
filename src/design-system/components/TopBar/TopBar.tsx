@@ -1,8 +1,8 @@
 import React, { type ReactNode } from 'react';
 import {
   IconLayoutSidebar,
-  IconChevronLeft,
-  IconChevronRight,
+  IconArrowLeft,
+  IconArrowRight,
 } from '@tabler/icons-react';
 
 /* ----------------------------------------
@@ -28,8 +28,6 @@ export interface TopBarProps {
   showSidebarToggle?: boolean;
   /** Show navigation buttons */
   showNavigation?: boolean;
-  /** Project selector component (rendered before breadcrumb) */
-  projectSelector?: ReactNode;
   /** Custom class name */
   className?: string;
 }
@@ -48,7 +46,6 @@ export const TopBar: React.FC<TopBarProps> = ({
   actions,
   showSidebarToggle = true,
   showNavigation = true,
-  projectSelector,
   className = '',
 }) => {
   const iconButtonClass = `
@@ -75,6 +72,7 @@ export const TopBar: React.FC<TopBarProps> = ({
         px-[var(--topbar-padding-x)]
         gap-[var(--topbar-gap)]
         bg-[var(--color-surface-default)]
+        border-b border-[var(--color-border-default)]
         ${className}
       `}
     >
@@ -94,40 +92,32 @@ export const TopBar: React.FC<TopBarProps> = ({
 
         {/* Navigation Buttons */}
         {showNavigation && (
-          <div className="flex items-center border border-[var(--color-border-strong)] rounded-[var(--radius-md)] p-1 gap-1">
+          <div className="flex items-center gap-[var(--topbar-nav-gap)]">
             <button
               type="button"
               onClick={onBack}
               disabled={!canGoBack}
-              className="p-0.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors duration-[var(--duration-fast)] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-transparent"
+              className={iconButtonClass}
               aria-label="Go back"
             >
-              <IconChevronLeft size={16} className="text-[var(--color-text-default)]" strokeWidth={1.5} />
+              <IconArrowLeft size={12} stroke={1.5} />
             </button>
-            <div className="w-px h-2 bg-[var(--color-border-default)]" />
             <button
               type="button"
               onClick={onForward}
               disabled={!canGoForward}
-              className="p-0.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors duration-[var(--duration-fast)] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-transparent"
+              className={iconButtonClass}
               aria-label="Go forward"
             >
-              <IconChevronRight size={16} className="text-[var(--color-text-default)]" strokeWidth={1.5} />
+              <IconArrowRight size={12} stroke={1.5} />
             </button>
           </div>
         )}
       </div>
 
-      {/* Center Section: Project Selector + Breadcrumb */}
-      <div className="flex-1 min-w-0 flex items-center gap-3">
-        {projectSelector && (
-          <div className="shrink-0">
-            {projectSelector}
-          </div>
-        )}
-        <div className="flex-1 min-w-0">
-          {breadcrumb}
-        </div>
+      {/* Center Section: Breadcrumb */}
+      <div className="flex-1 min-w-0">
+        {breadcrumb}
       </div>
 
       {/* Right Section: Actions */}

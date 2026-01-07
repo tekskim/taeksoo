@@ -16,7 +16,8 @@ import {
 import { Link, useLocation } from 'react-router-dom';
 import ThakiLogoLight from '@/assets/thakiLogo_light.svg';
 import ThakiLogoDark from '@/assets/thakiLogo-dark.svg';
-import { ProjectSelector, mockProjects } from './ProjectSelector';
+import { ProjectSelector } from './ProjectSelector';
+import { mockProjects } from '@/contexts/ProjectContext';
 
 /* ----------------------------------------
    Storage Sidebar Component
