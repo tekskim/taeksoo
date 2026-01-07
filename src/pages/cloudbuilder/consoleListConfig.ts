@@ -127,7 +127,7 @@ export const CLOUD_BUILDER_SLUGS = [
   'discovery',
   'servers',
   'switch',
-  'severs',
+  'severs0.7',
   'services',
   'compute-services',
   'network-agents',
@@ -276,29 +276,88 @@ export function getCloudBuilderListConfig(slug: CloudBuilderSlug): CloudBuilderL
     };
   }
 
-  if (slug === 'severs') {
+  if (slug === 'severs0.7') {
+    const observedHealthTones: Record<string, BadgeTone> = {
+      Running: 'success',
+      'Not Running': 'neutral',
+    };
+    const provisionStatusTones: Record<string, BadgeTone> = {
+      Done: 'success',
+      Registered: 'neutral',
+      Provisioning: 'blue',
+    };
+    const roleTones: Record<string, BadgeTone> = {
+      controller: 'blue',
+      'ceph-mon': 'blue',
+      'ceph-mgr': 'blue',
+      'ceph-mds': 'blue',
+      'ceph-osd': 'blue',
+    };
+
     return {
       slug,
-      title: 'Severs',
-      searchPlaceholder: 'Search severs',
+      title: 'Servers',
+      searchPlaceholder: 'Search servers by attributes',
       detailHrefBase,
-      showCheckboxColumn: false,
-      showBulkDelete: false,
-      showActionColumn: false,
+      linkifyColumnKeys: ['serial'],
+      createLabel: 'Create',
+      createHref: '/cloudbuilder/servers/create',
       columns: [
-        { key: 'name', label: 'Name', sortable: true },
-        { key: 'mgmtIp', label: 'Mgmt IP', sortable: true, kind: 'mono' },
+        { key: 'serial', label: 'Serial', sortable: true },
+        { key: 'macPrimary', label: 'MAC (Primary)', sortable: true, kind: 'mono' },
         { key: 'location', label: 'Location', sortable: true },
-        { key: 'status', label: 'Status', sortable: true, kind: 'badge', badgeTones: { Up: 'success', Down: 'neutral' } },
         { key: 'updatedAt', label: 'Updated At', sortable: true },
+        { key: 'nicPrimaryName', label: 'NIC (Primary Name)', sortable: true },
+        { key: 'frontierNet', label: 'Frontier NET', sortable: true, kind: 'badge', badgeTones: frontierTones },
+        { key: 'mgmtIp', label: 'Mgmt IP', sortable: true, kind: 'mono' },
+        {
+          key: 'observedHealth',
+          label: 'Observed Health',
+          sortable: true,
+          kind: 'badge',
+          badgeTones: observedHealthTones,
+        },
+        {
+          key: 'provisionStatus',
+          label: 'Provision Status',
+          sortable: true,
+          kind: 'badge',
+          badgeTones: provisionStatusTones,
+        },
+        { key: 'role', label: 'Role', sortable: true, kind: 'badge', badgeTones: roleTones },
+        { key: 'purpose', label: 'Purpose', sortable: true },
       ],
-      rows: makeRows(COUNT, (i) => ({
-        name: `severs-${String(i).padStart(4, '0')}`,
-        mgmtIp: randIp(i + 100),
-        location: `R${(i % 8) + 1}-U${(i % 42) + 1}`,
-        status: i % 9 === 0 ? 'Down' : 'Up',
-        updatedAt: dateTime(i),
-      })),
+      rows: makeRows(COUNT, (i) => {
+        const frontierNet = i % 11 === 0 ? 'Invalid' : i % 7 === 0 ? 'Missing' : 'OK';
+        const observedHealth = i % 9 === 0 ? 'Not Running' : 'Running';
+        const provisionStatus = i % 13 === 0 ? 'Provisioning' : i % 5 === 0 ? 'Registered' : 'Done';
+        const rolePool = [
+          'controller',
+          ...Array.from({ length: 24 }, (_, idx) => `compute${idx + 1}`),
+          ...Array.from({ length: 3 }, (_, idx) => `master${idx + 1}`),
+          ...Array.from({ length: 24 }, (_, idx) => `worker${idx + 1}`),
+          'ceph-mon',
+          'ceph-mgr',
+          'ceph-mds',
+          'ceph-osd',
+        ];
+        const role = rolePool[(i - 1) % rolePool.length]!;
+        const purpose = i % 3 === 0 ? 'K8s worker' : i % 3 === 1 ? 'Hypervisor' : 'Ceph Storage';
+
+        return {
+          serial: `SN${String(1000 + i).padStart(4, '0')}`,
+          macPrimary: randMac(i),
+          location: `R${(i % 8) + 1}-U${(i % 42) + 1}`,
+          updatedAt: dateTime(i),
+          nicPrimaryName: i % 2 === 0 ? 'eno1' : 'ens3',
+          frontierNet,
+          mgmtIp: randIp(i),
+          observedHealth,
+          provisionStatus,
+          role,
+          purpose,
+        };
+      }),
     };
   }
 
