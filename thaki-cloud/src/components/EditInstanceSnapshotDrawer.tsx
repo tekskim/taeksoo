@@ -1,0 +1,133 @@
+import { useState, useEffect } from 'react';
+import { Drawer, Button, Input } from '@/design-system';
+import { HStack, VStack } from '@/design-system/layouts';
+
+/* ----------------------------------------
+   Types
+   ---------------------------------------- */
+
+export interface InstanceSnapshotInfo {
+  id: string;
+  name: string;
+  description?: string;
+}
+
+export interface EditInstanceSnapshotDrawerProps {
+  isOpen: boolean;
+  onClose: () => void;
+  snapshot: InstanceSnapshotInfo | null;
+  onSubmit?: (name: string, description: string) => void;
+}
+
+/* ----------------------------------------
+   EditInstanceSnapshotDrawer Component
+   ---------------------------------------- */
+
+export function EditInstanceSnapshotDrawer({
+  isOpen,
+  onClose,
+  snapshot,
+  onSubmit,
+}: EditInstanceSnapshotDrawerProps) {
+  const [snapshotName, setSnapshotName] = useState('');
+  const [description, setDescription] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  // Reset form when drawer opens
+  useEffect(() => {
+    if (isOpen && snapshot) {
+      setSnapshotName(snapshot.name);
+      setDescription(snapshot.description ?? '');
+    }
+  }, [isOpen, snapshot]);
+
+  const handleSubmit = async () => {
+    if (!snapshotName.trim()) return;
+    
+    setIsSubmitting(true);
+    try {
+      await onSubmit?.(snapshotName, description);
+      onClose();
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleClose = () => {
+    onClose();
+  };
+
+  return (
+    <Drawer
+      isOpen={isOpen}
+      onClose={handleClose}
+      title=""
+      showCloseButton={false}
+      width={376}
+      footer={
+        <HStack gap={2} className="w-full">
+          <Button 
+            variant="secondary" 
+            onClick={handleClose}
+            className="flex-1"
+          >
+            Cancel
+          </Button>
+          <Button 
+            variant="primary" 
+            onClick={handleSubmit}
+            disabled={!snapshotName.trim() || isSubmitting}
+            className="flex-1"
+          >
+            {isSubmitting ? 'Saving...' : 'Save'}
+          </Button>
+        </HStack>
+      }
+    >
+      <VStack gap={6}>
+        {/* Header */}
+        <h2 className="text-[16px] font-semibold text-[var(--color-text-default)] leading-6">
+          Edit Instance Snapshot
+        </h2>
+
+        {/* Snapshot Name Input */}
+        <VStack gap={2} className="w-full">
+          <label className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+            Instance snapshot name
+          </label>
+          <Input
+            value={snapshotName}
+            onChange={(e) => setSnapshotName(e.target.value)}
+            placeholder="Enter snapshot name"
+            fullWidth
+          />
+          <p className="text-[11px] text-[var(--color-text-subtle)] leading-4">
+            The name should start with upper letter, lower letter or chinese, and be a string of 1 to 128, characters can only contain "0-9, a-z, A-Z, "-'_.".
+          </p>
+        </VStack>
+
+        {/* Description Input */}
+        <VStack gap={2} className="w-full">
+          <HStack gap={1} className="items-center">
+            <label className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+              Description
+            </label>
+            <span className="text-[12px] text-[var(--color-text-subtle)]">
+              (optional)
+            </span>
+          </HStack>
+          <Input
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+            placeholder="e.g. before major update or backup"
+            fullWidth
+          />
+        </VStack>
+      </VStack>
+    </Drawer>
+  );
+}
+
+export default EditInstanceSnapshotDrawer;
+
+
