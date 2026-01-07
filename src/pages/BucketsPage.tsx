@@ -9,7 +9,6 @@ import {
   TopBar,
   TopBarAction,
   Breadcrumb,
-  ProgressBar,
   type TableColumn,
 } from '@/design-system';
 import { StorageSidebar } from '@/components/StorageSidebar';
@@ -18,6 +17,8 @@ import {
   IconRefresh,
   IconBell,
   IconDownload,
+  IconTrash,
+  IconDotsCircleHorizontal,
 } from '@tabler/icons-react';
 import { Link } from 'react-router-dom';
 
@@ -25,171 +26,123 @@ import { Link } from 'react-router-dom';
    Types
    ---------------------------------------- */
 
-interface Image {
+interface Bucket {
   id: string;
   name: string;
-  pool: string;
-  size: string;
-  usage: number; // percentage
-  usageStatus: string; // e.g., "chunking"
-  objects: number;
-  objectSize: string;
-  totalProvisioned: string;
-  parent: string;
+  owner: string;
+  usedCapacity: string;
+  capacityLimit: string;
+  objects: string;
+  objectLimit: string;
+  creationDate: string;
 }
 
 /* ----------------------------------------
    Mock Data
    ---------------------------------------- */
 
-const mockImages: Image[] = [
+const mockBuckets: Bucket[] = [
   {
-    id: 'img-1',
-    name: 'volume-1d325cdb-2b44-4596-9c32-e280184ad2e6.deleted',
-    pool: 'volumes',
-    size: '1 GiB',
-    usage: 88.17,
-    usageStatus: 'chunking',
-    objects: 256,
-    objectSize: '18.4 GiB',
-    totalProvisioned: '67.1 GiB',
-    parent: '-',
+    id: 'bucket-1',
+    name: 'cloud_tech/harbor',
+    owner: 'ai_platform$ai.platform',
+    usedCapacity: '10 MiB',
+    capacityLimit: 'No Limit',
+    objects: '1',
+    objectLimit: 'No Limit',
+    creationDate: '2025-09-19 04:06',
   },
   {
-    id: 'img-2',
-    name: 'volume-2a456cdb-3c55-4687-0d43-f391295be7f7',
-    pool: 'volumes',
-    size: '2 GiB',
-    usage: 45.32,
-    usageStatus: 'active',
-    objects: 512,
-    objectSize: '24.8 GiB',
-    totalProvisioned: '120 GiB',
-    parent: '-',
+    id: 'bucket-2',
+    name: 'ai_platform/ai-platform-hot',
+    owner: 'cloud_tech$harbor',
+    usedCapacity: '11.1 GiB',
+    capacityLimit: 'No Limit',
+    objects: '2.7 k',
+    objectLimit: 'No Limit',
+    creationDate: '2025-09-19 04:06',
   },
   {
-    id: 'img-3',
-    name: 'volume-3b567edc-4d66-5798-1e54-g4a2306cf8g8.deleted',
-    pool: 'images',
-    size: '5 GiB',
-    usage: 72.5,
-    usageStatus: 'chunking',
-    objects: 1024,
-    objectSize: '32.1 GiB',
-    totalProvisioned: '200 GiB',
-    parent: 'base-image-01',
+    id: 'bucket-3',
+    name: 'ai_platform/model-storage',
+    owner: 'cloud_tech$harbor',
+    usedCapacity: '24.5 GiB',
+    capacityLimit: 'No Limit',
+    objects: '5.2 k',
+    objectLimit: 'No Limit',
+    creationDate: '2025-09-18 12:30',
   },
   {
-    id: 'img-4',
-    name: 'volume-4c678fde-5e77-6809-2f65-h5b3417dg9h9',
-    pool: 'volumes',
-    size: '10 GiB',
-    usage: 23.8,
-    usageStatus: 'active',
-    objects: 2048,
-    objectSize: '45.2 GiB',
-    totalProvisioned: '350 GiB',
-    parent: '-',
+    id: 'bucket-4',
+    name: 'data_lake/raw-data',
+    owner: 'data_engineering$admin',
+    usedCapacity: '156.8 GiB',
+    capacityLimit: '500 GiB',
+    objects: '12.4 k',
+    objectLimit: '100 k',
+    creationDate: '2025-09-17 08:15',
   },
   {
-    id: 'img-5',
-    name: 'volume-5d789gef-6f88-7910-3g76-i6c4528ei0i0',
-    pool: 'images',
-    size: '20 GiB',
-    usage: 95.2,
-    usageStatus: 'full',
-    objects: 4096,
-    objectSize: '78.5 GiB',
-    totalProvisioned: '500 GiB',
-    parent: 'base-image-02',
+    id: 'bucket-5',
+    name: 'data_lake/processed-data',
+    owner: 'data_engineering$admin',
+    usedCapacity: '89.2 GiB',
+    capacityLimit: '200 GiB',
+    objects: '8.9 k',
+    objectLimit: '50 k',
+    creationDate: '2025-09-17 08:20',
   },
   {
-    id: 'img-6',
-    name: 'volume-6e890hfg-7g99-8021-4h87-j7d5639fj1j1.deleted',
-    pool: 'volumes',
-    size: '1 GiB',
-    usage: 12.4,
-    usageStatus: 'idle',
-    objects: 128,
-    objectSize: '8.2 GiB',
-    totalProvisioned: '45 GiB',
-    parent: '-',
+    id: 'bucket-6',
+    name: 'backup/daily-snapshots',
+    owner: 'system$backup',
+    usedCapacity: '512.3 GiB',
+    capacityLimit: '1 TiB',
+    objects: '45.6 k',
+    objectLimit: 'No Limit',
+    creationDate: '2025-09-15 00:00',
   },
   {
-    id: 'img-7',
-    name: 'volume-7f901igh-8h00-9132-5i98-k8e6740gk2k2',
-    pool: 'volumes',
-    size: '3 GiB',
-    usage: 56.7,
-    usageStatus: 'active',
-    objects: 768,
-    objectSize: '28.9 GiB',
-    totalProvisioned: '180 GiB',
-    parent: '-',
+    id: 'bucket-7',
+    name: 'logs/application-logs',
+    owner: 'devops$monitoring',
+    usedCapacity: '78.4 GiB',
+    capacityLimit: '100 GiB',
+    objects: '234.5 k',
+    objectLimit: '500 k',
+    creationDate: '2025-09-14 10:00',
   },
   {
-    id: 'img-8',
-    name: 'volume-8g012jhi-9i11-0243-6j09-l9f7851hl3l3',
-    pool: 'images',
-    size: '15 GiB',
-    usage: 81.3,
-    usageStatus: 'chunking',
-    objects: 3072,
-    objectSize: '62.4 GiB',
-    totalProvisioned: '420 GiB',
-    parent: 'base-image-03',
+    id: 'bucket-8',
+    name: 'media/user-uploads',
+    owner: 'app_service$media',
+    usedCapacity: '2.3 TiB',
+    capacityLimit: '5 TiB',
+    objects: '1.2 M',
+    objectLimit: '10 M',
+    creationDate: '2025-09-10 14:30',
   },
   {
-    id: 'img-9',
-    name: 'volume-9h123kij-0j22-1354-7k10-m0g8962im4m4',
-    pool: 'volumes',
-    size: '8 GiB',
-    usage: 34.9,
-    usageStatus: 'active',
-    objects: 1536,
-    objectSize: '38.7 GiB',
-    totalProvisioned: '280 GiB',
-    parent: '-',
+    id: 'bucket-9',
+    name: 'archive/2024-data',
+    owner: 'system$archive',
+    usedCapacity: '4.8 TiB',
+    capacityLimit: 'No Limit',
+    objects: '2.1 M',
+    objectLimit: 'No Limit',
+    creationDate: '2025-01-01 00:00',
   },
   {
-    id: 'img-10',
-    name: 'volume-0i234ljk-1k33-2465-8l21-n1h9073jn5n5.deleted',
-    pool: 'images',
-    size: '25 GiB',
-    usage: 67.8,
-    usageStatus: 'chunking',
-    objects: 5120,
-    objectSize: '98.3 GiB',
-    totalProvisioned: '650 GiB',
-    parent: 'base-image-01',
+    id: 'bucket-10',
+    name: 'temp/scratch-space',
+    owner: 'dev_team$shared',
+    usedCapacity: '45.6 GiB',
+    capacityLimit: '100 GiB',
+    objects: '3.4 k',
+    objectLimit: '10 k',
+    creationDate: '2025-09-20 09:00',
   },
 ];
-
-/* ----------------------------------------
-   Usage Cell Component
-   ---------------------------------------- */
-
-interface UsageCellProps {
-  usage: number;
-}
-
-function UsageCell({ usage }: UsageCellProps) {
-  // Determine status based on usage percentage
-  const getStatus = (): 'success' | 'warning' | 'danger' => {
-    if (usage >= 90) return 'danger';
-    if (usage >= 70) return 'warning';
-    return 'success';
-  };
-
-  return (
-    <div className="flex flex-col gap-1 w-[110px]">
-      <span className="text-[length:var(--font-size-12)] text-[var(--color-text-default)]">
-        {usage.toFixed(2)}%
-      </span>
-      <ProgressBar value={usage} max={100} size="sm" status={getStatus()} />
-    </div>
-  );
-}
 
 /* ----------------------------------------
    Name Cell Component
@@ -203,8 +156,8 @@ interface NameCellProps {
 function NameCell({ id, name }: NameCellProps) {
   return (
     <Link
-      to={`/storage/images/${id}`}
-      className="text-[var(--color-action-primary)] hover:underline truncate block max-w-[220px]"
+      to={`/storage/buckets/${id}`}
+      className="text-[var(--color-action-primary)] hover:underline truncate block max-w-[220px] font-medium"
       title={name}
     >
       {name}
@@ -213,13 +166,14 @@ function NameCell({ id, name }: NameCellProps) {
 }
 
 /* ----------------------------------------
-   Images Page
+   Buckets Page
    ---------------------------------------- */
 
-export function ImagesPage() {
+export function BucketsPage() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
+  const [selectedRows, setSelectedRows] = useState<string[]>([]);
   const rowsPerPage = 10;
 
   // Global tab management
@@ -232,28 +186,27 @@ export function ImagesPage() {
     closable: tab.closable,
   }));
 
-  // Filter images based on search
-  const filteredImages = useMemo(() =>
-    mockImages.filter((image) =>
-      image.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      image.pool.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      image.parent.toLowerCase().includes(searchQuery.toLowerCase())
+  // Filter buckets based on search
+  const filteredBuckets = useMemo(() =>
+    mockBuckets.filter((bucket) =>
+      bucket.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      bucket.owner.toLowerCase().includes(searchQuery.toLowerCase())
     ),
     [searchQuery]
   );
 
   // Calculate pagination
-  const totalItems = filteredImages.length;
+  const totalItems = filteredBuckets.length;
   const totalPages = Math.ceil(totalItems / rowsPerPage);
 
   // Get current page data
-  const paginatedImages = useMemo(() => {
+  const paginatedBuckets = useMemo(() => {
     const start = (currentPage - 1) * rowsPerPage;
-    return filteredImages.slice(start, start + rowsPerPage);
-  }, [filteredImages, currentPage, rowsPerPage]);
+    return filteredBuckets.slice(start, start + rowsPerPage);
+  }, [filteredBuckets, currentPage, rowsPerPage]);
 
   // Table columns definition
-  const columns: TableColumn<Image>[] = [
+  const columns: TableColumn<Bucket>[] = [
     {
       key: 'name',
       label: 'Name',
@@ -262,49 +215,62 @@ export function ImagesPage() {
       render: (_, row) => <NameCell id={row.id} name={row.name} />,
     },
     {
-      key: 'pool',
-      label: 'Pool',
-      flex: 1,
+      key: 'owner',
+      label: 'Owner',
+      width: 180,
       sortable: true,
     },
     {
-      key: 'size',
-      label: 'Size',
-      flex: 1,
+      key: 'usedCapacity',
+      label: 'Used Capacity',
+      width: 120,
       sortable: true,
     },
     {
-      key: 'usage',
-      label: 'Usage',
-      flex: 1,
+      key: 'capacityLimit',
+      label: 'Capacity Limit %',
+      width: 130,
       sortable: true,
-      render: (_, row) => <UsageCell usage={row.usage} />,
     },
     {
       key: 'objects',
       label: 'Objects',
-      flex: 1,
+      width: 100,
       sortable: true,
     },
     {
-      key: 'objectSize',
-      label: 'Object size',
-      flex: 1,
+      key: 'objectLimit',
+      label: 'Object Limit %',
+      width: 120,
       sortable: true,
     },
     {
-      key: 'totalProvisioned',
-      label: 'Total provisioned',
-      flex: 1,
+      key: 'creationDate',
+      label: 'CreationDate',
+      width: 150,
       sortable: true,
     },
     {
-      key: 'parent',
-      label: 'Parent',
-      flex: 1,
-      sortable: true,
+      key: 'action',
+      label: 'Action',
+      width: 100,
+      align: 'center',
+      render: (_, row) => (
+        <button
+          className="p-1.5 rounded-md bg-[var(--color-border-subtle)] hover:bg-[var(--color-surface-muted)] transition-colors"
+          onClick={(e) => {
+            e.stopPropagation();
+            console.log('Action clicked for:', row.name);
+          }}
+          aria-label="More actions"
+        >
+          <IconDotsCircleHorizontal size={16} stroke={1.5} className="text-[var(--color-text-default)]" />
+        </button>
+      ),
     },
   ];
+
+  const hasSelection = selectedRows.length > 0;
 
   return (
     <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
@@ -332,7 +298,7 @@ export function ImagesPage() {
               <Breadcrumb
                 items={[
                   { label: 'Home', href: '/' },
-                  { label: 'Images' },
+                  { label: 'Buckets' },
                 ]}
               />
             }
@@ -350,9 +316,24 @@ export function ImagesPage() {
           <div className="pt-4 px-8 pb-20 bg-[var(--color-surface-default)]">
             <VStack gap={3}>
               {/* Page Header */}
-              <h1 className="text-[length:var(--font-size-16)] font-semibold text-[var(--color-text-default)] leading-[var(--line-height-24)]">
-                Images
-              </h1>
+              <div className="flex items-center justify-between w-full">
+                <h1 className="text-[length:var(--font-size-16)] font-semibold text-[var(--color-text-default)] leading-[var(--line-height-24)]">
+                  Buckets
+                </h1>
+                <div className="flex items-center gap-2">
+                  <Button
+                    variant="secondary"
+                    size="sm"
+                    icon={<IconTrash size={12} stroke={1.5} />}
+                    disabled={!hasSelection}
+                  >
+                    Delete
+                  </Button>
+                  <Button variant="primary" size="sm">
+                    Create
+                  </Button>
+                </div>
+              </div>
 
               {/* Search and Actions */}
               <div className="flex flex-col gap-2">
@@ -384,11 +365,19 @@ export function ImagesPage() {
                     aria-label="Refresh"
                     onClick={() => console.log('Refresh clicked')}
                   />
+                  <Button
+                    variant="secondary"
+                    size="sm"
+                    icon={<IconTrash size={16} stroke={1.5} />}
+                    disabled={!hasSelection}
+                  >
+                    Delete
+                  </Button>
                 </div>
               </div>
 
               {/* Pagination */}
-              {filteredImages.length > 0 && (
+              {filteredBuckets.length > 0 && (
                 <Pagination
                   currentPage={currentPage}
                   totalPages={totalPages}
@@ -402,8 +391,11 @@ export function ImagesPage() {
               {/* Table */}
               <Table
                 columns={columns}
-                data={paginatedImages}
-                getRowId={(row) => row.id}
+                data={paginatedBuckets}
+                rowKey="id"
+                selectable
+                selectedKeys={selectedRows}
+                onSelectionChange={setSelectedRows}
               />
             </VStack>
           </div>
@@ -413,4 +405,5 @@ export function ImagesPage() {
   );
 }
 
-export default ImagesPage;
+export default BucketsPage;
+

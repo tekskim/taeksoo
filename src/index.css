@@ -1337,11 +1337,26 @@ input[type="search"]::-webkit-search-decoration {
 }
 
 /* ============== Chart Card ============== */
+/* Chart height calculation:
+   - Total card: 334px
+   - Padding: 12px top + 4px bottom = 16px
+   - Header: ~28px (with margin-bottom: 8px)
+   - Chart area: 334 - 16 - 28 = 290px
+*/
 .chartCard {
+  --chart-card-height: 334px;
+  --chart-header-height: 28px;
+  --chart-padding-y: 16px;
+  --chart-area-height: calc(var(--chart-card-height) - var(--chart-header-height) - var(--chart-padding-y));
+  
   background: var(--color-surface-default);
   border: 1px solid var(--color-border-default);
   border-radius: 8px;
   padding: 12px 12px 4px 12px;
+  height: var(--chart-card-height);
+  width: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
 .chartHeader {
@@ -1349,6 +1364,8 @@ input[type="search"]::-webkit-search-decoration {
   justify-content: space-between;
   align-items: center;
   margin-bottom: 8px;
+  height: 20px;
+  flex-shrink: 0;
 }
 
 .chartTitle {
@@ -1362,13 +1379,24 @@ input[type="search"]::-webkit-search-decoration {
   display: flex;
   flex-direction: row;
   gap: 16px;
-  align-items: flex-start;
+  align-items: stretch;
+  flex: 1;
+  min-height: 0;
+  height: var(--chart-area-height);
 }
 
 .chartWrapper {
   flex: 1;
   min-width: 0;
-  padding-bottom: 12px;
+  height: 100%;
+}
+
+.chartWrapper > div {
+  height: 100% !important;
+}
+
+.chartWrapper canvas {
+  height: 100% !important;
 }
 
 /* ============== Chart Legend ============== */
@@ -2015,9 +2043,17 @@ input[type="search"]::-webkit-search-decoration {
   border: 1px solid var(--color-border-default);
   border-radius: var(--datepicker-radius);
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-  padding: var(--datepicker-padding);
-  width: 284px;
+  padding: 12px;
   z-index: 100;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* Remove border/padding from DatePicker when inside calendarDropdown */
+.calendarDropdown > [class*="inline-flex"][class*="flex-col"] {
+  border: none;
+  padding: 0;
 }
 
 /* Calendar Header - Start/End Date Boxes */
@@ -2318,5 +2354,275 @@ input[type="search"]::-webkit-search-decoration {
 }
 
 .refreshButton:active {
+  background: var(--color-surface-subtle);
+}
+
+/* ============== Monitoring Toolbar (Design System) ============== */
+.monitoring-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* Time Segments */
+.monitoring-toolbar-segments {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  background: var(--color-surface-default);
+  border: 1px solid var(--color-border-default);
+  border-radius: 8px;
+  padding: 0;
+  height: 30px;
+}
+
+.monitoring-toolbar-segment {
+  padding: 4px 12px;
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--color-text-muted);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  border-radius: 6px;
+  position: relative;
+  margin: 0;
+  height: 28px;
+  line-height: 16px;
+  width: 48px;
+}
+
+.monitoring-toolbar-segment:hover {
+  color: var(--color-text-default);
+  background: var(--color-surface-subtle);
+}
+
+.monitoring-toolbar-segment-active {
+  color: var(--color-action-primary);
+  background: var(--color-surface-default);
+  font-weight: 500;
+  box-shadow: 0 0 0 1px var(--color-action-primary);
+  border-radius: 6px;
+  z-index: 1;
+}
+
+/* Period Container */
+.monitoring-toolbar-period {
+  position: relative;
+}
+
+/* Period Button */
+.monitoring-toolbar-period-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 4px 12px;
+  height: 30px;
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--color-text-muted);
+  background: var(--color-surface-default);
+  border: 1px solid var(--color-border-default);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.monitoring-toolbar-period-btn:hover {
+  border-color: var(--color-border-strong);
+  color: var(--color-text-default);
+}
+
+.monitoring-toolbar-period-btn-active {
+  border-color: var(--color-action-primary);
+  color: var(--color-action-primary);
+}
+
+/* Period Tag (when date range is selected) */
+.monitoring-toolbar-period-tag {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 8px 4px 12px;
+  height: 30px;
+  background: #3b82f6;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 11px;
+  font-weight: 500;
+}
+
+.monitoring-toolbar-period-tag-text {
+  cursor: pointer;
+}
+
+.monitoring-toolbar-period-tag-text:hover {
+  text-decoration: underline;
+}
+
+.monitoring-toolbar-period-tag-divider {
+  margin: 0 4px;
+  opacity: 0.6;
+}
+
+.monitoring-toolbar-period-tag-close {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  background: transparent;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  color: white;
+  transition: background 0.15s ease;
+}
+
+.monitoring-toolbar-period-tag-close:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+/* Dropdown */
+.monitoring-toolbar-dropdown {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  margin-top: 8px;
+  background: var(--color-surface-default);
+  border: 1px solid var(--color-border-default);
+  border-radius: var(--datepicker-radius);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  padding: 12px;
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* Remove border/padding from DatePicker when inside monitoring toolbar dropdown */
+.monitoring-toolbar-dropdown > [class*="inline-flex"][class*="flex-col"] {
+  border: none;
+  padding: 0;
+}
+
+/* Dropdown Header */
+.monitoring-toolbar-dropdown-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 4px;
+}
+
+.monitoring-toolbar-date-box {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 8px 12px;
+  border-radius: 6px;
+  background: var(--color-surface-subtle);
+  cursor: pointer;
+  transition: all 0.15s ease;
+  flex: 1;
+}
+
+.monitoring-toolbar-date-box:hover {
+  background: var(--color-surface-muted);
+}
+
+.monitoring-toolbar-date-box-active {
+  background: rgba(37, 99, 235, 0.1);
+  box-shadow: inset 0 0 0 1px var(--color-action-primary);
+}
+
+.monitoring-toolbar-date-label {
+  font-size: 10px;
+  font-weight: 500;
+  color: var(--color-text-subtle);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.monitoring-toolbar-date-value {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--color-text-default);
+  min-height: 20px;
+}
+
+.monitoring-toolbar-date-separator {
+  padding: 0 8px;
+  color: var(--color-text-subtle);
+  font-size: 14px;
+}
+
+/* Dropdown Actions */
+.monitoring-toolbar-dropdown-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  padding-top: 8px;
+  border-top: 1px solid var(--color-border-subtle);
+}
+
+.monitoring-toolbar-dropdown-cancel,
+.monitoring-toolbar-dropdown-apply {
+  padding: 6px 16px;
+  font-size: 12px;
+  font-weight: 500;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.monitoring-toolbar-dropdown-cancel {
+  background: transparent;
+  border: 1px solid var(--color-border-default);
+  color: var(--color-text-muted);
+}
+
+.monitoring-toolbar-dropdown-cancel:hover {
+  border-color: var(--color-border-strong);
+  color: var(--color-text-default);
+}
+
+.monitoring-toolbar-dropdown-apply {
+  background: var(--color-action-primary);
+  border: 1px solid var(--color-action-primary);
+  color: white;
+}
+
+.monitoring-toolbar-dropdown-apply:hover {
+  background: var(--color-action-primary-hover, #1d4ed8);
+}
+
+.monitoring-toolbar-dropdown-apply:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Refresh Button */
+.monitoring-toolbar-refresh {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  background: var(--color-surface-default);
+  border: 1px solid var(--color-border-default);
+  border-radius: 8px;
+  cursor: pointer;
+  color: var(--color-text-muted);
+  transition: all 0.15s ease;
+}
+
+.monitoring-toolbar-refresh:hover {
+  border-color: var(--color-border-strong);
+  color: var(--color-text-default);
+}
+
+.monitoring-toolbar-refresh:active {
   background: var(--color-surface-subtle);
 }
