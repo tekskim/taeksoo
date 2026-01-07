@@ -1091,6 +1091,12 @@ function LineChart({
     if (onFullScreen) onFullScreen();
   };
 
+  // Calculate y-axis bounds for exactly 5 labels
+  const visibleData = series.filter(s => visibleSeries[s.name]).flatMap(s => s.data);
+  const dataMax = visibleData.length > 0 ? Math.max(...visibleData) : 100;
+  const niceMax = Math.ceil(dataMax / 4) * 4; // Round up to nearest multiple of 4
+  const yInterval = niceMax / 4; // 4 intervals = 5 labels
+
   const option = {
     animation: false,
     grid: {
@@ -1114,6 +1120,9 @@ function LineChart({
         },
         yAxis: {
       type: 'value' as const,
+      min: 0,
+      max: niceMax,
+      interval: yInterval,
       axisLine: { show: false },
       axisTick: { show: false },
       splitLine: {
