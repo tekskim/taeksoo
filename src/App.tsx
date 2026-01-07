@@ -11,6 +11,7 @@ import { EntryPage } from '@/pages/EntryPage';
 import { InstanceListPage } from '@/pages/InstanceListPage';
 import { InstanceDetailPage } from '@/pages/InstanceDetailPage';
 import { HomePage } from '@/pages/HomePage';
+import { ComputeHomePage } from '@/pages/ComputeHomePage';
 import { InstanceTemplatesPage } from '@/pages/InstanceTemplatesPage';
 import { InstanceTemplateDetailPage } from '@/pages/InstanceTemplateDetailPage';
 import { InstanceSnapshotsPage } from '@/pages/InstanceSnapshotsPage';
@@ -57,6 +58,13 @@ import { CreateAgentPage } from '@/pages/CreateAgentPage';
 import { ChatPage } from '@/pages/ChatPage';
 import { StoragePage } from '@/pages/StoragePage';
 import { MCPToolsPage } from '@/pages/MCPToolsPage';
+import { StorageHomePage } from '@/pages/StorageHomePage';
+import { PoolsPage } from '@/pages/PoolsPage';
+import { StoragePoolDetailPage } from '@/pages/StoragePoolDetailPage';
+import { HostsPage } from '@/pages/HostsPage';
+import HostDetailPage from '@/pages/HostDetailPage';
+import { OSDsPage } from '@/pages/OSDsPage';
+import { OSDDetailPage } from '@/pages/OSDDetailPage';
 
 // Pages - Design System
 import { DesignSystemPage } from '@/pages/DesignSystemPage';
@@ -81,11 +89,11 @@ function AppRoutes() {
         <Route path="/agent/list" element={<AgentPage />} />
         <Route path="/agent/create" element={<CreateAgentPage />} />
         <Route path="/chat" element={<ChatPage />} />
-        <Route path="/storage" element={<StoragePage />} />
+        <Route path="/agent/storage" element={<StoragePage />} />
         <Route path="/mcp-tools" element={<MCPToolsPage />} />
 
         {/* Compute Routes */}
-        <Route path="/compute" element={<InstanceListPage />} />
+        <Route path="/compute" element={<ComputeHomePage />} />
         <Route path="/compute/instances" element={<InstanceListPage />} />
         <Route path="/compute/instances/create" element={<CreateInstancePage />} />
         <Route path="/compute/instances/:id" element={<InstanceDetailPage />} />
