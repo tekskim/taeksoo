@@ -45,6 +45,8 @@ export interface ContextMenuContentProps {
   onClose: () => void;
   /** Parent direction (for submenu positioning) */
   parentDirection?: 'left' | 'right';
+  /** Ref to the rendered menu element (for outside click detection) */
+  menuRef?: React.RefObject<HTMLDivElement>;
 }
 
 /* ----------------------------------------
@@ -144,6 +146,19 @@ const ContextMenuItemComponent: React.FC<{
     }
   };
 
+  // Some apps attach document-level outside-click handlers that can run before React's onClick
+  // when portals are involved. Triggering leaf-item actions on mouse down makes the menu
+  // interaction reliable while still feeling instant.
+  const handleMouseDown = (e: React.MouseEvent) => {
+    if (e.button !== 0) return; // left click only
+    if (item.disabled) return;
+    if (!item.submenu) {
+      e.preventDefault();
+      item.onClick?.();
+      onClose();
+    }
+  };
+
   const hasSubmenu = item.submenu && item.submenu.length > 0;
 
   // Cleanup timeout on unmount
@@ -161,6 +176,7 @@ const ContextMenuItemComponent: React.FC<{
         ref={itemRef}
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
+        onMouseDown={handleMouseDown}
         onClick={handleClick}
         className={`
           flex items-center justify-between
@@ -191,6 +207,8 @@ const ContextMenuItemComponent: React.FC<{
       {showSubmenu && item.submenu && createPortal(
         <div
           ref={submenuRef}
+          onMouseDown={(e) => e.stopPropagation()}
+          onClick={(e) => e.stopPropagation()}
           onMouseEnter={handleSubmenuMouseEnter}
           onMouseLeave={handleSubmenuMouseLeave}
           className="
@@ -234,8 +252,10 @@ const ContextMenuContent: React.FC<ContextMenuContentProps> = ({
   position,
   onClose,
   parentDirection = 'right',
+  menuRef: externalMenuRef,
 }) => {
-  const menuRef = useRef<HTMLDivElement>(null);
+  const internalMenuRef = useRef<HTMLDivElement>(null);
+  const menuRef = externalMenuRef ?? internalMenuRef;
   const [adjustedPosition, setAdjustedPosition] = useState<{ x: number; y: number } | null>(null);
 
   useEffect(() => {
@@ -267,6 +287,8 @@ const ContextMenuContent: React.FC<ContextMenuContentProps> = ({
   return createPortal(
     <div
       ref={menuRef}
+      onMouseDown={(e) => e.stopPropagation()}
+      onClick={(e) => e.stopPropagation()}
       className="
         fixed z-[var(--z-popover)]
         flex flex-col
@@ -310,6 +332,7 @@ export const ContextMenu: React.FC<ContextMenuProps> = ({
   const [isOpen, setIsOpen] = useState(false);
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const triggerRef = useRef<HTMLDivElement>(null);
+  const menuRef = useRef<HTMLDivElement>(null);
 
   const handleOpen = useCallback((e: React.MouseEvent) => {
     if (disabled) return;
@@ -342,7 +365,11 @@ export const ContextMenu: React.FC<ContextMenuProps> = ({
     if (!isOpen) return;
 
     const handleClickOutside = (e: MouseEvent) => {
-      if (triggerRef.current && !triggerRef.current.contains(e.target as Node)) {
+      const target = e.target as Node;
+      // Click inside trigger OR inside menu (portal) should NOT close.
+      if (triggerRef.current?.contains(target)) return;
+      if (menuRef.current?.contains(target)) return;
+      if (triggerRef.current) {
         handleClose();
       }
     };
@@ -377,6 +404,7 @@ export const ContextMenu: React.FC<ContextMenuProps> = ({
           items={items}
           position={position}
           onClose={handleClose}
+          menuRef={menuRef}
         />
       )}
     </div>
