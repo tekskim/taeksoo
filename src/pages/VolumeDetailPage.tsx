@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import {
   Button,
@@ -83,25 +83,22 @@ interface VolumeBackup {
    Mock Data
    ---------------------------------------- */
 
-const mockVolumeDetail: VolumeDetail = {
-  id: '7284d9174e81431e93060a9bbcf2cdfd',
-  name: 'vol-1',
-  status: 'available',
-  size: '1500 GiB',
-  createdAt: '2025-07-25 09:12:20',
-  // Basic Information
-  volumeName: 'Ubuntu-base',
-  availabilityZone: 'nova',
-  description: '-',
-  // Attachments
-  attachedTo: 'web-server-10',
-  attachedToId: 'inst-001',
-  // Source
-  dataSourceType: 'Blank Volume',
-  // Specifications
-  volumeType: '_DEFAULT_',
-  bootable: false,
-  encryption: false,
+// Volume data map by ID - synced with VolumesPage mock data
+const mockVolumesMap: Record<string, VolumeDetail> = {
+  'vol-001': { id: 'vol-001', name: 'db-data', status: 'in-use', size: '1500GiB', createdAt: '2025-09-12', volumeName: 'db-data', availabilityZone: 'nova', description: 'Database data volume', attachedTo: 'web-server-1', attachedToId: 'inst-001', dataSourceType: 'Blank Volume', volumeType: '_DEFAULT_', bootable: false, encryption: false },
+  'vol-002': { id: 'vol-002', name: 'app-storage', status: 'in-use', size: '500GiB', createdAt: '2025-09-10', volumeName: 'app-storage', availabilityZone: 'nova', description: 'Application storage', attachedTo: 'app-server-1', attachedToId: 'inst-002', dataSourceType: 'Blank Volume', volumeType: '_DEFAULT_', bootable: false, encryption: false },
+  'vol-003': { id: 'vol-003', name: 'backup-vol', status: 'active', size: '2000GiB', createdAt: '2025-09-08', volumeName: 'backup-vol', availabilityZone: 'nova', description: 'Backup storage', attachedTo: null, attachedToId: null, dataSourceType: 'Blank Volume', volumeType: 'SSD', bootable: false, encryption: true },
+  'vol-004': { id: 'vol-004', name: 'log-storage', status: 'in-use', size: '100GiB', createdAt: '2025-09-05', volumeName: 'log-storage', availabilityZone: 'nova', description: 'Log storage volume', attachedTo: 'log-server', attachedToId: 'inst-003', dataSourceType: 'Blank Volume', volumeType: '_DEFAULT_', bootable: false, encryption: false },
+  'vol-005': { id: 'vol-005', name: 'cache-vol', status: 'in-use', size: '256GiB', createdAt: '2025-08-30', volumeName: 'cache-vol', availabilityZone: 'nova', description: 'Cache volume', attachedTo: 'cache-01', attachedToId: 'inst-004', dataSourceType: 'Blank Volume', volumeType: 'NVMe', bootable: false, encryption: false },
+  'vol-006': { id: 'vol-006', name: 'media-storage', status: 'active', size: '5000GiB', createdAt: '2025-08-25', volumeName: 'media-storage', availabilityZone: 'nova', description: 'Media storage volume', attachedTo: null, attachedToId: null, dataSourceType: 'Blank Volume', volumeType: 'HDD', bootable: false, encryption: false },
+  'vol-007': { id: 'vol-007', name: 'temp-vol', status: 'pending', size: '50GiB', createdAt: '2025-08-20', volumeName: 'temp-vol', availabilityZone: 'nova', description: 'Temporary volume', attachedTo: null, attachedToId: null, dataSourceType: 'Blank Volume', volumeType: '_DEFAULT_', bootable: false, encryption: false },
+  'vol-008': { id: 'vol-008', name: 'ml-data', status: 'in-use', size: '1000GiB', createdAt: '2025-08-15', volumeName: 'ml-data', availabilityZone: 'nova', description: 'ML Dataset volume', attachedTo: 'gpu-server-1', attachedToId: 'inst-005', dataSourceType: 'Blank Volume', volumeType: 'NVMe', bootable: false, encryption: true },
+  'vol-009': { id: 'vol-009', name: 'archive-vol', status: 'active', size: '10000GiB', createdAt: '2025-08-10', volumeName: 'archive-vol', availabilityZone: 'nova', description: 'Archive storage', attachedTo: null, attachedToId: null, dataSourceType: 'Blank Volume', volumeType: 'HDD', bootable: false, encryption: false },
+  'vol-010': { id: 'vol-010', name: 'boot-vol-01', status: 'in-use', size: '100GiB', createdAt: '2025-08-05', volumeName: 'boot-vol-01', availabilityZone: 'nova', description: 'Boot volume', attachedTo: 'web-server-2', attachedToId: 'inst-006', dataSourceType: 'Image', volumeType: 'SSD', bootable: true, encryption: false },
+};
+
+const defaultVolumeDetail: VolumeDetail = {
+  id: 'unknown', name: 'Unknown Volume', status: 'available', size: '0 GiB', createdAt: '-', volumeName: '-', availabilityZone: '-', description: '-', attachedTo: null, attachedToId: null, dataSourceType: '-', volumeType: '-', bootable: false, encryption: false,
 };
 
 // Mock volume snapshots
@@ -154,7 +151,8 @@ const backupStatusMap: Record<BackupStatus, 'active' | 'building' | 'error' | 'p
    ---------------------------------------- */
 
 export function VolumeDetailPage() {
-  const { id: _id } = useParams<{ id: string }>();
+  const { id } = useParams<{ id: string }>();
+  const volume = id ? (mockVolumesMap[id] || defaultVolumeDetail) : defaultVolumeDetail;
   const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [activeDetailTab, setActiveDetailTab] = useState('details');
@@ -172,12 +170,18 @@ export function VolumeDetailPage() {
   // Preferences state
   const [isPreferencesOpen, setIsPreferencesOpen] = useState(false);
 
-  // In a real app, you would fetch the volume data based on the ID
-  const volume = mockVolumeDetail;
+  // Volume data is already fetched based on ID above
   const snapshots = mockVolumeSnapshots;
   const backups = mockVolumeBackups;
 
-  const { tabs, activeTabId, closeTab, selectTab, addNewTab } = useTabs();
+  const { tabs, activeTabId, closeTab, selectTab, updateActiveTabLabel } = useTabs();
+
+  // Update tab label to volume name
+  useEffect(() => {
+    if (volume.name) {
+      updateActiveTabLabel(volume.name);
+    }
+  }, [volume.name, updateActiveTabLabel]);
 
   const tabBarTabs = tabs.map((tab) => ({
     id: tab.id,
@@ -395,36 +399,28 @@ export function VolumeDetailPage() {
         {/* Fixed Header Area */}
         <div className="shrink-0 bg-[var(--color-surface-default)]">
           {/* Tab Bar */}
-          <TabBar
-            tabs={tabBarTabs}
-            activeTab={activeTabId}
-            onTabChange={selectTab}
-            onTabClose={closeTab}
-            onTabAdd={addNewTab}
-            showAddButton={true}
-            showWindowControls={true}
-          />
+          <TabBar tabs={tabBarTabs} activeTab={activeTabId} onTabChange={selectTab} onTabClose={closeTab} />
 
-        {/* Top Bar */}
-        <TopBar
-          showSidebarToggle={!sidebarOpen}
-          onSidebarToggle={() => setSidebarOpen(true)}
-          showNavigation={true}
-          onBack={() => navigate('/compute/volumes')}
-          onForward={() => window.history.forward()}
-          breadcrumb={<Breadcrumb items={breadcrumbItems} />}
-          actions={
-            <TopBarAction
-              icon={<IconBell size={16} stroke={1.5} />}
-              aria-label="Notifications"
-              badge={true}
-            />
-          }
-        />
+          {/* Top Bar */}
+          <TopBar
+            showSidebarToggle={!sidebarOpen}
+            onSidebarToggle={() => setSidebarOpen(true)}
+            showNavigation={true}
+            onBack={() => navigate(-1)}
+            onForward={() => window.history.forward()}
+            breadcrumb={<Breadcrumb items={breadcrumbItems} />}
+            actions={
+              <TopBarAction
+                icon={<IconBell size={16} stroke={1.5} />}
+                aria-label="Notifications"
+                badge={true}
+              />
+            }
+          />
         </div>
 
         {/* Scrollable Content Area */}
-        <div className="flex-1 overflow-auto min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll">
+        <div className="flex-1 overflow-auto overscroll-contain sidebar-scroll">
         <div className="pt-4 px-8 pb-20 bg-[var(--color-surface-default)]">
           <VStack gap={6} className="min-w-[1176px]">
             {/* Volume Header Card */}

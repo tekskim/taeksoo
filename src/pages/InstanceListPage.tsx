@@ -23,6 +23,7 @@ import {
 } from '@/design-system';
 import { Sidebar } from '@/components/Sidebar';
 import { useTabs } from '@/contexts/TabContext';
+import { useSidebar } from '@/contexts/SidebarContext';
 import {
   IconDotsCircleHorizontal,
   IconPlayerPlay,
@@ -128,7 +129,7 @@ const statusMap: Record<InstanceStatus, StatusType> = {
 // Filter type is imported from design-system as FilterItem
 
 export function InstanceListPage() {
-  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const { isOpen: sidebarOpen, toggle: toggleSidebar, open: openSidebar } = useSidebar();
   const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [currentBareMetalPage, setCurrentBareMetalPage] = useState(1);
@@ -192,18 +193,16 @@ export function InstanceListPage() {
 
   // Handle opening shell tab in new browser tab
   const handleOpenInNewTab = (tab: ShellTab) => {
-    // Add tab to the tab bar
-    const tabId = `console-${tab.instanceId}`;
+    // Add tab to the tab bar (keeps shell panel tab intact)
+    const tabId = `console-${tab.instanceId}-${Date.now()}`;
     addTab({
       id: tabId,
       label: tab.title,
-      path: `/console/${tab.instanceId}?name=${encodeURIComponent(tab.title)}`,
+      path: `/compute/console/${tab.instanceId}?name=${encodeURIComponent(tab.title)}`,
       closable: true,
     });
-    // Close the shell panel
-    shellPanel.closeTab(tab.id);
-    // Navigate to the console page
-    navigate(`/console/${tab.instanceId}?name=${encodeURIComponent(tab.title)}`);
+    // Navigate to the console page (new tab becomes active)
+    navigate(`/compute/console/${tab.instanceId}?name=${encodeURIComponent(tab.title)}`);
   };
 
   // Default column config for VM instances
@@ -689,7 +688,7 @@ export function InstanceListPage() {
   return (
     <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
       {/* Sidebar */}
-      <Sidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(prev => !prev)} />
+      <Sidebar isOpen={sidebarOpen} onToggle={toggleSidebar} />
 
       {/* Main Content */}
       <main 
@@ -711,14 +710,14 @@ export function InstanceListPage() {
           {/* Top Bar with Breadcrumb Navigation */}
           <TopBar
             showSidebarToggle={!sidebarOpen}
-            onSidebarToggle={() => setSidebarOpen(true)}
+            onSidebarToggle={openSidebar}
             showNavigation={true}
             onBack={() => window.history.back()}
             onForward={() => window.history.forward()}
             breadcrumb={
               <Breadcrumb
                 items={[
-                  { label: 'Proj-1', href: '/project' },
+                  { label: 'Proj-1', href: '/compute' },
                   { label: 'Instances List' },
                 ]}
               />
@@ -736,7 +735,7 @@ export function InstanceListPage() {
         {/* Scrollable Content Area */}
         <div 
           ref={scrollContainerRef}
-          className="flex-1 overflow-auto min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll"
+          className="flex-1 overflow-auto overscroll-contain sidebar-scroll"
           style={{ paddingBottom: shellPanel.isExpanded ? '350px' : '0' }}
         >
 
@@ -749,7 +748,7 @@ export function InstanceListPage() {
                 Instances List
               </h1>
               <Link to="/compute/instances/create">
-                <Button>
+                <Button size="md">
                   Create Instance
                 </Button>
               </Link>

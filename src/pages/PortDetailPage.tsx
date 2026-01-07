@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import {
   Button,
@@ -84,19 +84,22 @@ interface SecurityGroup {
    Mock Data
    ---------------------------------------- */
 
-const mockPortDetail: PortDetail = {
-  id: '7284d9174e81431e93060a9bbcf2cdfd',
-  name: 'port-01',
-  status: 'active',
-  createdAt: '2025-07-25 09:12:20',
-  description: '-',
-  portSecurity: true,
-  // Network
-  ownedNetwork: { name: 'web-server-10', id: 'network-001' },
-  subnet: { name: 'subnet-01 (+3)', id: 'subnet-001' },
-  macAddress: 'fa:16:3e:60:f8:46',
-  // Attachments
-  attachedTo: { name: 'web-server-10', id: 'inst-001', type: 'instance' },
+// Port data map by ID - synced with PortsPage mock data
+const mockPortsMap: Record<string, PortDetail> = {
+  'port-001': { id: 'port-001', name: 'port-01', status: 'active', createdAt: '2025-09-15', description: '-', portSecurity: true, ownedNetwork: { name: 'net-01', id: 'net-001' }, subnet: { name: 'subnet-01', id: 'subnet-001' }, macAddress: 'fa:16:3e:34:85:32', attachedTo: { name: 'web-01', id: 'inst-001', type: 'instance' } },
+  'port-002': { id: 'port-002', name: 'port-02', status: 'active', createdAt: '2025-09-10', description: '-', portSecurity: true, ownedNetwork: { name: 'net-02', id: 'net-002' }, subnet: { name: 'subnet-02', id: 'subnet-002' }, macAddress: 'fa:16:3e:34:85:33', attachedTo: { name: 'app-server', id: 'inst-002', type: 'instance' } },
+  'port-003': { id: 'port-003', name: 'port-03', status: 'down', createdAt: '2025-09-08', description: '-', portSecurity: true, ownedNetwork: { name: 'net-03', id: 'net-003' }, subnet: { name: 'subnet-03', id: 'subnet-003' }, macAddress: 'fa:16:3e:34:85:34', attachedTo: null },
+  'port-004': { id: 'port-004', name: 'db-port', status: 'active', createdAt: '2025-09-05', description: 'Database port', portSecurity: true, ownedNetwork: { name: 'net-01', id: 'net-001' }, subnet: { name: 'subnet-01', id: 'subnet-001' }, macAddress: 'fa:16:3e:34:85:35', attachedTo: { name: 'db-server', id: 'inst-003', type: 'instance' } },
+  'port-005': { id: 'port-005', name: 'router-port-1', status: 'active', createdAt: '2025-09-01', description: 'Router port', portSecurity: false, ownedNetwork: { name: 'net-01', id: 'net-001' }, subnet: { name: 'subnet-01', id: 'subnet-001' }, macAddress: 'fa:16:3e:34:85:36', attachedTo: { name: 'main-router', id: 'router-001', type: 'router' } },
+  'port-006': { id: 'port-006', name: 'lb-port', status: 'active', createdAt: '2025-08-28', description: 'Load balancer port', portSecurity: true, ownedNetwork: { name: 'net-02', id: 'net-002' }, subnet: { name: 'subnet-02', id: 'subnet-002' }, macAddress: 'fa:16:3e:34:85:37', attachedTo: { name: 'load-balancer-01', id: 'lb-001', type: 'instance' } },
+  'port-007': { id: 'port-007', name: 'cache-port', status: 'active', createdAt: '2025-08-25', description: 'Cache port', portSecurity: true, ownedNetwork: { name: 'net-01', id: 'net-001' }, subnet: { name: 'subnet-01', id: 'subnet-001' }, macAddress: 'fa:16:3e:34:85:38', attachedTo: { name: 'redis-01', id: 'inst-004', type: 'instance' } },
+  'port-008': { id: 'port-008', name: 'monitor-port', status: 'build', createdAt: '2025-08-20', description: 'Monitoring port', portSecurity: true, ownedNetwork: { name: 'net-03', id: 'net-003' }, subnet: { name: 'subnet-03', id: 'subnet-003' }, macAddress: 'fa:16:3e:34:85:39', attachedTo: { name: 'prometheus', id: 'inst-005', type: 'instance' } },
+  'port-009': { id: 'port-009', name: 'test-port', status: 'down', createdAt: '2025-08-15', description: 'Test port', portSecurity: true, ownedNetwork: { name: 'net-04', id: 'net-004' }, subnet: { name: 'subnet-04', id: 'subnet-004' }, macAddress: 'fa:16:3e:34:85:40', attachedTo: null },
+  'port-010': { id: 'port-010', name: 'vpn-port', status: 'active', createdAt: '2025-08-10', description: 'VPN port', portSecurity: true, ownedNetwork: { name: 'net-01', id: 'net-001' }, subnet: { name: 'subnet-01', id: 'subnet-001' }, macAddress: 'fa:16:3e:34:85:41', attachedTo: { name: 'vpn-gateway', id: 'vpn-001', type: 'instance' } },
+};
+
+const defaultPortDetail: PortDetail = {
+  id: 'unknown', name: 'Unknown Port', status: 'active', createdAt: '-', description: '-', portSecurity: false, ownedNetwork: { name: '-', id: '' }, subnet: { name: '-', id: '' }, macAddress: '-', attachedTo: null,
 };
 
 const mockFixedIPs: FixedIP[] = Array.from({ length: 115 }, (_, i) => ({
@@ -136,7 +139,7 @@ const portStatusMap: Record<PortStatus, 'active' | 'shutoff' | 'building'> = {
 
 export default function PortDetailPage() {
   const { id } = useParams<{ id: string }>();
-  const { tabs, activeTabId, closeTab, selectTab, addNewTab } = useTabs();
+  const { tabs, activeTabId, closeTab, selectTab, addNewTab, updateActiveTabLabel } = useTabs();
   
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [activeDetailTab, setActiveDetailTab] = useState('details');
@@ -169,11 +172,18 @@ export default function PortDetailPage() {
   const [detachModalOpen, setDetachModalOpen] = useState(false);
   const [securityGroupToDetach, setSecurityGroupToDetach] = useState<SecurityGroup | null>(null);
 
-  // In a real app, fetch based on id
-  const port = mockPortDetail;
+  // Get port data based on URL ID
+  const port = id ? (mockPortsMap[id] || defaultPortDetail) : defaultPortDetail;
   const fixedIPs = mockFixedIPs;
   const allowedAddressPairs = mockAllowedAddressPairs;
   const securityGroups = mockSecurityGroups;
+
+  // Update tab label to port name
+  useEffect(() => {
+    if (port.name) {
+      updateActiveTabLabel(port.name);
+    }
+  }, [port.name, updateActiveTabLabel]);
 
   // Filter and paginate Fixed IPs
   const filteredFixedIPs = useMemo(() => {
@@ -236,7 +246,7 @@ export default function PortDetailPage() {
         <div className="flex flex-col gap-0.5">
           <Link
             to={`/compute/floating-ips/${row.floatingIp.id}`}
-            className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
+            className="inline-flex items-center gap-1.5 font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
             onClick={(e) => e.stopPropagation()}
           >
             {row.floatingIp.address}
@@ -258,7 +268,7 @@ export default function PortDetailPage() {
         <div className="flex flex-col gap-0.5">
           <Link
             to={`/compute/subnets/${row.ownedSubnet.id}`}
-            className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
+            className="inline-flex items-center gap-1.5 font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
             onClick={(e) => e.stopPropagation()}
           >
             {row.ownedSubnet.name}
@@ -464,7 +474,7 @@ export default function PortDetailPage() {
         </div>
 
         {/* Scrollable Content Area */}
-        <div className="flex-1 overflow-auto min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll">
+        <div className="flex-1 overflow-auto overscroll-contain sidebar-scroll">
           {/* Main Content */}
           <div className="pt-4 px-8 pb-20 bg-[var(--color-surface-default)]">
             <VStack gap={8} className="min-w-[1176px] max-w-[1320px]">
@@ -576,7 +586,15 @@ export default function PortDetailPage() {
                           />
                           <SectionCard.DataRow
                             label="Subnet"
-                            value={port.subnet.name}
+                            value={
+                              <Link
+                                to={`/compute/networks/${port.subnet.id}`}
+                                className="inline-flex items-center gap-1.5 font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
+                              >
+                                {port.subnet.name}
+                                <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
+                              </Link>
+                            }
                           />
                           <SectionCard.DataRow
                             label="MAC Address"

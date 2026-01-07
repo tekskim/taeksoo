@@ -234,7 +234,7 @@ export const TabBar: React.FC<TabBarProps> = ({
                   `}
                   aria-label={`Close ${tab.label}`}
                 >
-                  <IconX size={12} stroke={2} />
+                  <IconX size={12} stroke={1} />
                 </button>
               )}
             </div>
@@ -280,7 +280,7 @@ export const TabBar: React.FC<TabBarProps> = ({
           "
           aria-label="Add new tab"
         >
-          <IconPlus size={14} stroke={2} />
+          <IconPlus size={14} stroke={1} />
         </button>
       )}
 
@@ -304,7 +304,7 @@ export const TabBar: React.FC<TabBarProps> = ({
             "
             aria-label="Minimize"
           >
-            <IconMinus size={12} stroke={1.5} />
+            <IconMinus size={12} stroke={1} />
           </button>
           <button
             type="button"
@@ -320,7 +320,7 @@ export const TabBar: React.FC<TabBarProps> = ({
             "
             aria-label="Maximize"
           >
-            <IconSquare size={12} stroke={1.5} />
+            <IconSquare size={12} stroke={1} />
           </button>
           <button
             type="button"
@@ -336,7 +336,7 @@ export const TabBar: React.FC<TabBarProps> = ({
             "
             aria-label="Close window"
           >
-            <IconX size={12} stroke={1.5} />
+            <IconX size={12} stroke={1} />
           </button>
         </div>
       )}

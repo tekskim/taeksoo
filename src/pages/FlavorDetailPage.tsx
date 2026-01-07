@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import {
   Button,
@@ -76,25 +76,27 @@ interface FlavorInstance {
    Mock Data
    ---------------------------------------- */
 
-const mockFlavorDetail: FlavorDetail = {
-  id: '7284d9174e81431e93060a9bbcf2cdfd',
-  name: 'c1.large',
-  category: 'Compute Optimized',
-  vcpu: 2,
-  ram: '4GiB',
-  visibility: 'Public',
-  createdAt: '2025-07-25 09:12:20',
-  // Basic Information
-  architecture: 'X86 Architecture',
-  // Specification
-  ephemeralDisk: '0GiB',
-  numaNodes: '0GiB',
-  // Advanced
-  cpuPolicy: 'Dedicated',
-  cpuThreadPolicy: 'Prefer',
-  memoryPage: 'Any',
-  internalNetworkBandwidth: '-',
-  storageIOPS: '-',
+// Flavor data map by ID - synced with FlavorsPage mock data
+const mockFlavorsMap: Record<string, FlavorDetail> = {
+  'flv-001': { id: 'flv-001', name: 'c5.large', category: 'Compute Optimized', vcpu: 2, ram: '16GiB', visibility: 'Public', createdAt: '2025-09-15', architecture: 'X86 Architecture', ephemeralDisk: '0GiB', numaNodes: '0', cpuPolicy: 'Shared', cpuThreadPolicy: 'Prefer', memoryPage: 'Any', internalNetworkBandwidth: '-', storageIOPS: '-' },
+  'flv-002': { id: 'flv-002', name: 'c5.xlarge', category: 'Compute Optimized', vcpu: 4, ram: '32GiB', visibility: 'Public', createdAt: '2025-09-10', architecture: 'X86 Architecture', ephemeralDisk: '0GiB', numaNodes: '0', cpuPolicy: 'Shared', cpuThreadPolicy: 'Prefer', memoryPage: 'Any', internalNetworkBandwidth: '10Gbps', storageIOPS: '-' },
+  'flv-003': { id: 'flv-003', name: 'm5.large', category: 'General Purpose', vcpu: 2, ram: '8GiB', visibility: 'Public', createdAt: '2025-09-05', architecture: 'X86 Architecture', ephemeralDisk: '0GiB', numaNodes: '0', cpuPolicy: 'Shared', cpuThreadPolicy: 'Prefer', memoryPage: 'Any', internalNetworkBandwidth: '-', storageIOPS: '-' },
+  'flv-004': { id: 'flv-004', name: 'm5.xlarge', category: 'General Purpose', vcpu: 4, ram: '16GiB', visibility: 'Public', createdAt: '2025-09-01', architecture: 'X86 Architecture', ephemeralDisk: '0GiB', numaNodes: '0', cpuPolicy: 'Shared', cpuThreadPolicy: 'Prefer', memoryPage: 'Any', internalNetworkBandwidth: '10Gbps', storageIOPS: '-' },
+  'flv-005': { id: 'flv-005', name: 'r5.large', category: 'Memory Optimized', vcpu: 2, ram: '16GiB', visibility: 'Public', createdAt: '2025-08-30', architecture: 'X86 Architecture', ephemeralDisk: '0GiB', numaNodes: '0', cpuPolicy: 'Shared', cpuThreadPolicy: 'Prefer', memoryPage: 'Any', internalNetworkBandwidth: '-', storageIOPS: '-' },
+  'flv-006': { id: 'flv-006', name: 'r5.xlarge', category: 'Memory Optimized', vcpu: 4, ram: '32GiB', visibility: 'Public', createdAt: '2025-08-25', architecture: 'X86 Architecture', ephemeralDisk: '0GiB', numaNodes: '0', cpuPolicy: 'Dedicated', cpuThreadPolicy: 'Prefer', memoryPage: 'Any', internalNetworkBandwidth: '10Gbps', storageIOPS: '-' },
+  'flv-007': { id: 'flv-007', name: 't3.micro', category: 'Burstable', vcpu: 2, ram: '1GiB', visibility: 'Public', createdAt: '2025-08-20', architecture: 'X86 Architecture', ephemeralDisk: '0GiB', numaNodes: '0', cpuPolicy: 'Shared', cpuThreadPolicy: 'Prefer', memoryPage: 'Any', internalNetworkBandwidth: '-', storageIOPS: '-' },
+  'flv-008': { id: 'flv-008', name: 't3.small', category: 'Burstable', vcpu: 2, ram: '2GiB', visibility: 'Public', createdAt: '2025-08-15', architecture: 'X86 Architecture', ephemeralDisk: '0GiB', numaNodes: '0', cpuPolicy: 'Shared', cpuThreadPolicy: 'Prefer', memoryPage: 'Any', internalNetworkBandwidth: '-', storageIOPS: '-' },
+  'flv-009': { id: 'flv-009', name: 'g4dn.xlarge', category: 'GPU Accelerated', vcpu: 4, ram: '16GiB', visibility: 'Public', createdAt: '2025-08-10', architecture: 'X86 Architecture', ephemeralDisk: '125GiB', numaNodes: '1', cpuPolicy: 'Dedicated', cpuThreadPolicy: 'Isolate', memoryPage: 'Large', internalNetworkBandwidth: '25Gbps', storageIOPS: '3000' },
+  'flv-010': { id: 'flv-010', name: 'g4dn.2xlarge', category: 'GPU Accelerated', vcpu: 8, ram: '32GiB', visibility: 'Public', createdAt: '2025-08-05', architecture: 'X86 Architecture', ephemeralDisk: '225GiB', numaNodes: '1', cpuPolicy: 'Dedicated', cpuThreadPolicy: 'Isolate', memoryPage: 'Large', internalNetworkBandwidth: '25Gbps', storageIOPS: '5000' },
+  'flv-011': { id: 'flv-011', name: 'p3.2xlarge', category: 'GPU Compute', vcpu: 8, ram: '61GiB', visibility: 'Public', createdAt: '2025-08-01', architecture: 'X86 Architecture', ephemeralDisk: '0GiB', numaNodes: '1', cpuPolicy: 'Dedicated', cpuThreadPolicy: 'Isolate', memoryPage: 'Large', internalNetworkBandwidth: '10Gbps', storageIOPS: '3000' },
+  'flv-012': { id: 'flv-012', name: 'inf1.xlarge', category: 'ML Inference', vcpu: 4, ram: '8GiB', visibility: 'Public', createdAt: '2025-07-28', architecture: 'X86 Architecture', ephemeralDisk: '0GiB', numaNodes: '0', cpuPolicy: 'Dedicated', cpuThreadPolicy: 'Prefer', memoryPage: 'Any', internalNetworkBandwidth: '25Gbps', storageIOPS: '-' },
+  'flv-013': { id: 'flv-013', name: 'inf1.2xlarge', category: 'ML Inference', vcpu: 8, ram: '16GiB', visibility: 'Public', createdAt: '2025-07-25', architecture: 'X86 Architecture', ephemeralDisk: '0GiB', numaNodes: '0', cpuPolicy: 'Dedicated', cpuThreadPolicy: 'Prefer', memoryPage: 'Any', internalNetworkBandwidth: '25Gbps', storageIOPS: '-' },
+  'flv-014': { id: 'flv-014', name: 'custom.small', category: 'Custom', vcpu: 2, ram: '4GiB', visibility: 'Private', createdAt: '2025-07-20', architecture: 'X86 Architecture', ephemeralDisk: '20GiB', numaNodes: '0', cpuPolicy: 'Shared', cpuThreadPolicy: 'Prefer', memoryPage: 'Any', internalNetworkBandwidth: '-', storageIOPS: '-' },
+  'flv-015': { id: 'flv-015', name: 'custom.medium', category: 'Custom', vcpu: 4, ram: '8GiB', visibility: 'Private', createdAt: '2025-07-15', architecture: 'X86 Architecture', ephemeralDisk: '50GiB', numaNodes: '0', cpuPolicy: 'Shared', cpuThreadPolicy: 'Prefer', memoryPage: 'Any', internalNetworkBandwidth: '10Gbps', storageIOPS: '-' },
+};
+
+const defaultFlavorDetail: FlavorDetail = {
+  id: 'unknown', name: 'Unknown Flavor', category: '-', vcpu: 0, ram: '0GiB', visibility: 'Public', createdAt: '-', architecture: '-', ephemeralDisk: '0GiB', numaNodes: '0', cpuPolicy: '-', cpuThreadPolicy: '-', memoryPage: '-', internalNetworkBandwidth: '-', storageIOPS: '-',
 };
 
 // Mock flavor parameters (raw API response)
@@ -146,7 +148,8 @@ const mockFlavorInstances: FlavorInstance[] = Array.from({ length: 115 }, (_, i)
    ---------------------------------------- */
 
 export function FlavorDetailPage() {
-  const { id: _id } = useParams<{ id: string }>();
+  const { id } = useParams<{ id: string }>();
+  const flavor = id ? (mockFlavorsMap[id] || defaultFlavorDetail) : defaultFlavorDetail;
   const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [activeDetailTab, setActiveDetailTab] = useState('details');
@@ -159,11 +162,17 @@ export function FlavorDetailPage() {
   // Preferences state
   const [isPreferencesOpen, setIsPreferencesOpen] = useState(false);
   
-  // In a real app, you would fetch the flavor data based on the ID
-  const flavor = mockFlavorDetail;
+  // Flavor data is already fetched based on ID above
   const instances = mockFlavorInstances;
 
-  const { tabs, activeTabId, closeTab, selectTab, addNewTab } = useTabs();
+  const { tabs, activeTabId, closeTab, selectTab, updateActiveTabLabel } = useTabs();
+
+  // Update tab label to flavor name
+  useEffect(() => {
+    if (flavor.name) {
+      updateActiveTabLabel(flavor.name);
+    }
+  }, [flavor.name, updateActiveTabLabel]);
 
   const tabBarTabs = tabs.map((tab) => ({
     id: tab.id,
@@ -225,7 +234,7 @@ export function FlavorDetailPage() {
         <div className="flex flex-col gap-0.5">
           <Link
             to={`/compute/instances/${row.id}`}
-            className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2 inline-flex items-center gap-1"
+            className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
             onClick={(e) => e.stopPropagation()}
           >
             {row.name}
@@ -317,28 +326,19 @@ export function FlavorDetailPage() {
       >
         {/* Fixed Header Area */}
         <div className="shrink-0 bg-[var(--color-surface-default)]">
-          {/* Tab Bar */}
-          <TabBar
-            tabs={tabBarTabs}
-            activeTab={activeTabId}
-            onTabChange={selectTab}
-            onTabClose={closeTab}
-            onTabAdd={addNewTab}
-            showAddButton={true}
-            showWindowControls={true}
-          />
-
+        {/* Tab Bar */}
+        <TabBar tabs={tabBarTabs} activeTab={activeTabId} onTabChange={selectTab} onTabClose={closeTab} />
         {/* Top Bar */}
         <TopBar
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(true)}
           showNavigation={true}
-          onBack={() => navigate('/flavors')}
+          onBack={() => navigate(-1)}
           onForward={() => window.history.forward()}
           breadcrumb={<Breadcrumb items={breadcrumbItems} />}
           actions={
             <TopBarAction
-              icon={<IconBell size={16} stroke={1.5} />}
+              icon={<IconBell size={16} stroke={1} />}
               aria-label="Notifications"
               badge={true}
             />
@@ -347,7 +347,7 @@ export function FlavorDetailPage() {
         </div>
 
         {/* Scrollable Content Area */}
-        <div className="flex-1 overflow-auto min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll">
+        <div className="flex-1 overflow-auto overscroll-contain sidebar-scroll">
         <div className="pt-4 px-8 pb-20 bg-[var(--color-surface-default)]">
           <VStack gap={6} className="min-w-[1176px]">
             {/* Flavor Header Card */}

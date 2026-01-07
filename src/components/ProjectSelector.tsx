@@ -2,56 +2,20 @@ import { useState, useRef, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { IconSearch, IconCheck } from '@tabler/icons-react';
 import { ArrowRightLeft } from 'lucide-react';
+import { type Project } from '@/contexts/ProjectContext';
+import { Tooltip } from '@/design-system';
 
 /* ----------------------------------------
    Types
    ---------------------------------------- */
 
-export interface Project {
-  id: string;
-  name: string;
-  description: string;
-  createdAt: string;
-  disabled?: boolean;
-}
-
 export interface ProjectSelectorProps {
   projects: Project[];
   selectedProjectId: string;
   onProjectSelect: (projectId: string) => void;
+  /** Variant style: 'default' for sidebar, 'compact' for TopBar, 'sidebar-icon' for AgentSidebar */
+  variant?: 'default' | 'compact' | 'sidebar-icon';
 }
-
-/* ----------------------------------------
-   Mock Data
-   ---------------------------------------- */
-
-export const mockProjects: Project[] = [
-  {
-    id: '04ebfa43',
-    name: 'Project-01',
-    description: "Development environment for the 'service' backend services.",
-    createdAt: '2025-10-22',
-  },
-  {
-    id: '14ebfa44',
-    name: 'Project-02',
-    description: "Development environment for the 'service' backend services.",
-    createdAt: '2025-10-22',
-  },
-  {
-    id: '24ebfa45',
-    name: 'Project-03',
-    description: "Development environment for the 'service' backend services.",
-    createdAt: '2025-10-22',
-  },
-  {
-    id: '34ebfa46',
-    name: 'Project-04',
-    description: "Development environment for the 'service' backend services.",
-    createdAt: '2025-10-22',
-    disabled: true,
-  },
-];
 
 /* ----------------------------------------
    Component
@@ -61,6 +25,7 @@ export function ProjectSelector({
   projects,
   selectedProjectId,
   onProjectSelect,
+  variant = 'default',
 }: ProjectSelectorProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
@@ -115,16 +80,6 @@ export function ProjectSelector({
     };
   }, [isOpen]);
 
-  // Calculate dropdown position
-  const getDropdownPosition = () => {
-    if (!buttonRef.current) return { top: 0, left: 0 };
-    const rect = buttonRef.current.getBoundingClientRect();
-    return {
-      top: rect.bottom + 4,
-      left: rect.left,
-      width: Math.max(rect.width, 280),
-    };
-  };
 
   const handleProjectClick = (project: Project) => {
     if (project.disabled) return;
@@ -133,23 +88,75 @@ export function ProjectSelector({
     setSearchQuery('');
   };
 
+  // Get project initial (first letter of project name)
+  const projectInitial = selectedProject?.name?.charAt(0).toUpperCase() || 'P';
+
+  // Calculate dropdown position - for sidebar-icon, position to the right
+  const getDropdownPosition = () => {
+    if (!buttonRef.current) return { top: 0, left: 0, width: 280 };
+    const rect = buttonRef.current.getBoundingClientRect();
+    if (variant === 'sidebar-icon') {
+      return {
+        top: rect.top,
+        left: rect.right + 4,
+        width: 320,
+      };
+    }
+    return {
+      top: rect.bottom + 4,
+      left: rect.left,
+      width: Math.max(rect.width, 280),
+    };
+  };
+
+  const buttonClass = variant === 'compact'
+    ? "px-2.5 py-1 h-[var(--topbar-button-size)] rounded-md bg-[var(--color-surface-subtle)] hover:bg-[var(--color-surface-muted)] transition-colors flex items-center justify-between gap-2"
+    : variant === 'sidebar-icon'
+    ? "size-[38px] rounded-lg bg-[var(--color-action-primary)] hover:bg-[var(--color-action-primary-hover)] transition-colors flex items-center justify-center shrink-0"
+    : "w-full px-2.5 py-1.5 rounded-md bg-[var(--color-surface-subtle)] hover:bg-[var(--color-surface-muted)] transition-colors flex items-center justify-between";
+
+  const buttonElement = (
+    <button
+      ref={buttonRef}
+      onClick={() => setIsOpen(!isOpen)}
+      className={buttonClass}
+    >
+      {variant === 'sidebar-icon' ? (
+        <span className="text-white font-semibold text-lg">
+          {projectInitial}
+        </span>
+      ) : (
+        <>
+          <span className={`font-medium text-[var(--color-text-default)] ${variant === 'compact' ? 'text-[12px]' : 'text-[11px]'}`}>
+            {selectedProject?.name || 'Select Project'}
+          </span>
+          <ArrowRightLeft
+            size={variant === 'compact' ? 14 : 12}
+            className="text-[var(--color-text-default)] shrink-0"
+            strokeWidth={1.5}
+          />
+        </>
+      )}
+    </button>
+  );
+
   return (
     <>
-      {/* Trigger Button */}
-      <button
-        ref={buttonRef}
-        onClick={() => setIsOpen(!isOpen)}
-        className="w-full px-2.5 py-1.5 rounded-md bg-[var(--color-surface-subtle)] hover:bg-[var(--color-surface-muted)] transition-colors flex items-center justify-between"
-      >
-        <span className="text-[11px] font-medium text-[var(--color-text-default)]">
-          {selectedProject?.name || 'Select Project'}
-        </span>
-        <ArrowRightLeft
-          size={12}
-          className="text-[var(--color-text-default)]"
-          strokeWidth={1.5}
-        />
-      </button>
+      {/* Trigger Button with Tooltip for sidebar-icon variant */}
+      {variant === 'sidebar-icon' && selectedProject ? (
+        <Tooltip
+          content={
+            <div style={{ maxWidth: '300px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+              {selectedProject.name}
+            </div>
+          }
+          position="right"
+        >
+          {buttonElement}
+        </Tooltip>
+      ) : (
+        buttonElement
+      )}
 
       {/* Dropdown Portal */}
       {isOpen &&
@@ -214,7 +221,7 @@ export function ProjectSelector({
                           <IconCheck
                             size={16}
                             className="text-[var(--color-action-primary)]"
-                            stroke={2}
+                            stroke={1}
                           />
                         )}
                         {isDisabled && (
