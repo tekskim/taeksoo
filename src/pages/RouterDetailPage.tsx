@@ -32,6 +32,7 @@ import {
   IconChevronDown,
   IconCirclePlus,
   IconEdit,
+  IconSettings,
 } from '@tabler/icons-react';
 
 /* ----------------------------------------
@@ -65,9 +66,9 @@ interface Port {
   id: string;
   name: string;
   status: PortStatus;
-  subnet: string;
-  dhcp: boolean;
-  access: 'Project' | 'Admin';
+  fixedIp: string;
+  macAddress: string;
+  type: string;
 }
 
 interface StaticRoute {
@@ -100,11 +101,11 @@ const defaultRouterDetail: RouterDetail = {
 
 const mockPorts: Port[] = Array.from({ length: 115 }, (_, i) => ({
   id: `port-${String(i + 1).padStart(3, '0')}`,
-  name: `net-${String(i + 1).padStart(2, '0')}`,
+  name: `port-${String(i + 1).padStart(2, '0')}`,
   status: 'active' as const,
-  subnet: '10.62.0.0/24',
-  dhcp: true,
-  access: 'Project' as const,
+  fixedIp: `10.62.0.${i + 1}`,
+  macAddress: `fa:16:3e:${String(i + 1).padStart(2, '0')}:ab:cd`,
+  type: i % 2 === 0 ? 'Internal Interface' : 'External Interface',
 }));
 
 const mockStaticRoutes: StaticRoute[] = Array.from({ length: 115 }, (_, i) => ({
@@ -253,31 +254,35 @@ export default function RouterDetailPage() {
       key: 'name',
       label: 'Name',
       flex: 1,
-      sortable: true,
       render: (_, row) => (
+        <div className="flex flex-col gap-0.5 whitespace-nowrap">
         <Link
           to={`/compute/ports/${row.id}`}
           className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
           onClick={(e) => e.stopPropagation()}
         >
           {row.name}
+            <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
         </Link>
+          <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
+            ID : {row.id}
+          </span>
+        </div>
       ),
     },
     {
-      key: 'subnet',
-      label: 'Size',
+      key: 'fixedIp',
+      label: 'Fixed IP',
       flex: 1,
     },
     {
-      key: 'dhcp',
-      label: 'Size',
+      key: 'macAddress',
+      label: 'MAC Address',
       flex: 1,
-      render: (_, row) => row.dhcp ? 'Yes' : 'No',
     },
     {
-      key: 'access',
-      label: 'Disk Tag',
+      key: 'type',
+      label: 'Type',
       flex: 1,
     },
     {
@@ -308,7 +313,6 @@ export default function RouterDetailPage() {
       key: 'destination',
       label: 'Destination CIDR',
       flex: 1,
-      sortable: true,
     },
     {
       key: 'nextHop',
@@ -323,7 +327,6 @@ export default function RouterDetailPage() {
       align: 'center',
       render: (_: unknown, row: StaticRoute) => {
         const routeMenuItems: ContextMenuItem[] = [
-          { id: 'edit', label: 'Edit', onClick: () => console.log('Edit route', row.id) },
           { id: 'delete', label: 'Delete', status: 'danger', onClick: () => console.log('Delete route', row.id) },
         ];
         return (
@@ -394,9 +397,21 @@ export default function RouterDetailPage() {
                   <Button variant="secondary" size="sm" leftIcon={<IconTrash size={12} />}>
                     Delete
                   </Button>
+                  <ContextMenu
+                    items={[
+                      { label: 'Disconnect Subnet', onClick: () => {}, variant: 'danger' },
+                      { label: 'External Gateway Setting', onClick: () => {} },
+                      { label: 'Enable SNAT', onClick: () => {} },
+                      { label: 'Disable SNAT', onClick: () => {} },
+                      { label: 'Create Static Route', onClick: () => {} },
+                      { label: 'Edit', onClick: () => {} },
+                    ]}
+                    trigger="click"
+                  >
                   <Button variant="secondary" size="sm" rightIcon={<IconChevronDown size={12} />}>
                     More Actions
                   </Button>
+                  </ContextMenu>
                 </DetailHeader.Actions>
                 <DetailHeader.InfoGrid>
                   <DetailHeader.InfoCard
@@ -444,7 +459,14 @@ export default function RouterDetailPage() {
 
                       {/* External Network */}
                       <SectionCard>
-                        <SectionCard.Header title="External Network" />
+                        <SectionCard.Header 
+                          title="External Network" 
+                          actions={
+                            <Button variant="secondary" size="sm" leftIcon={<IconSettings size={12} />}>
+                              Setting
+                            </Button>
+                          }
+                        />
                         <SectionCard.Content>
                           <SectionCard.DataRow 
                             label="Network" 
@@ -537,7 +559,7 @@ export default function RouterDetailPage() {
                         sortDirection={portSortDirection}
                         onSort={handlePortSort}
                         selectable
-                        selectedRows={selectedPorts}
+                        selectedKeys={selectedPorts}
                         onSelectionChange={setSelectedPorts}
                       />
                     </VStack>
@@ -595,6 +617,9 @@ export default function RouterDetailPage() {
                         columns={staticRouteColumns}
                         data={paginatedRoutes}
                         rowKey="id"
+                        selectable
+                        selectedKeys={selectedRoutes}
+                        onSelectionChange={setSelectedRoutes}
                       />
                     </VStack>
                   </TabPanel>

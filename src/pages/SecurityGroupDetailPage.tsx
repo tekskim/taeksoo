@@ -161,7 +161,6 @@ export default function SecurityGroupDetailPage() {
 
   // Context menu items for rules
   const getRuleContextMenuItems = (rule: SecurityGroupRule): ContextMenuItem[] => [
-    { id: 'edit', label: 'Edit', onClick: () => console.log('Edit rule:', rule.id) },
     { id: 'delete', label: 'Delete', status: 'danger', onClick: () => { setRuleToDelete(rule); setDeleteModalOpen(true); } },
   ];
 
@@ -380,6 +379,9 @@ export default function SecurityGroupDetailPage() {
                   <Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />}>
                     Edit
                   </Button>
+                  <Button variant="secondary" size="sm" leftIcon={<IconCirclePlus size={12} />}>
+                    Create Rule
+                  </Button>
                   <Button variant="secondary" size="sm" leftIcon={<IconTrash size={12} />}>
                     Delete
                   </Button>
@@ -432,7 +434,6 @@ export default function SecurityGroupDetailPage() {
                 <Tabs value={activeTab} onChange={setActiveTab} size="sm">
                   <TabList>
                     <Tab value="rules">Rules</Tab>
-                    <Tab value="ports">Ports</Tab>
                   </TabList>
 
                   <TabPanel value="rules">
@@ -487,63 +488,8 @@ export default function SecurityGroupDetailPage() {
                         data={paginatedRules}
                         rowKey="id"
                         selectable
-                        selectedRows={selectedRules}
+                        selectedKeys={selectedRules}
                         onSelectionChange={setSelectedRules}
-                      />
-                    </VStack>
-                  </TabPanel>
-
-                  <TabPanel value="ports">
-                    <VStack gap={3} className="pt-6">
-                      {/* Header */}
-                      <div className="flex items-center justify-between">
-                        <h3 className="text-[14px] font-medium text-[var(--color-text-default)]">
-                          Ports
-                        </h3>
-                      </div>
-
-                      {/* Toolbar */}
-                      <div className="flex items-center gap-2">
-                        <div className="w-[280px]">
-                          <SearchInput
-                            placeholder="Find ports with filters"
-                            value={portSearchTerm}
-                            onChange={(e) => setPortSearchTerm(e.target.value)}
-                            onClear={() => setPortSearchTerm('')}
-                            size="sm"
-                            fullWidth
-                          />
-                        </div>
-                        <div className="w-px h-4 bg-[var(--color-border-default)]" />
-                        <Button
-                          variant="secondary"
-                          size="sm"
-                          leftIcon={<IconUnlink size={12} />}
-                          disabled={selectedPorts.length === 0}
-                        >
-                          Detach
-                        </Button>
-                      </div>
-
-                      {/* Pagination */}
-                      <Pagination
-                        currentPage={portCurrentPage}
-                        totalPages={Math.ceil(filteredPorts.length / portsPerPage)}
-                        totalItems={filteredPorts.length}
-                        selectedCount={selectedPorts.length}
-                        onPageChange={setPortCurrentPage}
-                        showSettings
-                        onSettingsClick={() => setIsPreferencesOpen(true)}
-                      />
-
-                      {/* Table */}
-                      <Table
-                        columns={portColumns}
-                        data={paginatedPorts}
-                        rowKey="id"
-                        selectable
-                        selectedRows={selectedPorts}
-                        onSelectionChange={setSelectedPorts}
                       />
                     </VStack>
                   </TabPanel>

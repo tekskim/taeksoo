@@ -237,13 +237,11 @@ export default function PortDetailPage() {
       key: 'fixedIp',
       label: 'Fixed IP',
       flex: 1,
-      sortable: true,
     },
     {
       key: 'floatingIp',
       label: 'Floating IP',
       flex: 1,
-      sortable: true,
       render: (_, row) => row.floatingIp ? (
         <div className="flex flex-col gap-0.5">
           <Link
@@ -252,7 +250,6 @@ export default function PortDetailPage() {
             onClick={(e) => e.stopPropagation()}
           >
             {row.floatingIp.address}
-            <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
           </Link>
           <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
             ID : {row.floatingIp.id}
@@ -275,19 +272,12 @@ export default function PortDetailPage() {
             onClick={(e) => e.stopPropagation()}
           >
             {row.ownedSubnet.name}
-            <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
           </Link>
           <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
             ID : {row.ownedSubnet.id}
           </span>
         </div>
       ),
-    },
-    {
-      key: 'createdAt',
-      label: 'Created At',
-      flex: 1,
-      sortable: true,
     },
     {
       key: 'actions',
@@ -318,7 +308,6 @@ export default function PortDetailPage() {
       key: 'ipAddress',
       label: 'IP Address',
       flex: 1,
-      sortable: true,
     },
     {
       key: 'macAddress',
@@ -504,9 +493,22 @@ export default function PortDetailPage() {
                   <Button variant="secondary" size="sm" leftIcon={<IconTrash size={12} />}>
                     Delete
                   </Button>
-                  <Button variant="secondary" size="sm" rightIcon={<IconChevronDown size={12} />}>
-                    More Actions
-                  </Button>
+                  <ContextMenu
+                    items={[
+                      { label: 'Attach instance', onClick: () => {} },
+                      { label: 'Detach instance', onClick: () => {} },
+                      { label: 'Associate floating IP', onClick: () => {} },
+                      { label: 'Disassociate floating IP', onClick: () => {} },
+                      { label: 'Allocate IP', onClick: () => {} },
+                      { label: 'Manage security groups', onClick: () => {} },
+                      { label: 'Create allowed address pair', onClick: () => {} },
+                    ]}
+                    trigger="click"
+                  >
+                    <Button variant="secondary" size="sm" rightIcon={<IconChevronDown size={12} />}>
+                      More Actions
+                    </Button>
+                  </ContextMenu>
                 </div>
 
                 {/* Info Cards */}
@@ -539,8 +541,12 @@ export default function PortDetailPage() {
                   <TabList>
                     <Tab value="details">Details</Tab>
                     <Tab value="fixed-ips">Fixed IPs</Tab>
-                    <Tab value="allowed-address-pairs">Allowed Address Pairs</Tab>
-                    <Tab value="security">Security</Tab>
+                    {port.status === 'active' && (
+                      <Tab value="allowed-address-pairs">Allowed Address Pairs</Tab>
+                    )}
+                    {port.status === 'active' && (
+                      <Tab value="security">Security</Tab>
+                    )}
                   </TabList>
 
                   {/* Details Tab */}
@@ -645,10 +651,10 @@ export default function PortDetailPage() {
                           Fixed IPs
                         </h3>
                         <div className="flex items-center gap-1">
-                          <Button variant="secondary" size="sm" leftIcon={<IconPlug size={12} />}>
+                          <Button variant="secondary" size="sm">
                             Allocate IP
                           </Button>
-                          <Button variant="secondary" size="sm" leftIcon={<IconLink size={12} />}>
+                          <Button variant="secondary" size="sm">
                             Associate Floating IP
                           </Button>
                         </div>
@@ -689,6 +695,7 @@ export default function PortDetailPage() {
                   </TabPanel>
 
                   {/* Allowed Address Pairs Tab */}
+                  {port.status === 'active' && (
                   <TabPanel value="allowed-address-pairs">
                     <VStack gap={3} className="pt-6">
                       {/* Header */}
@@ -734,8 +741,10 @@ export default function PortDetailPage() {
                       />
                     </VStack>
                   </TabPanel>
+                  )}
 
                   {/* Security Tab */}
+                  {port.status === 'active' && (
                   <TabPanel value="security">
                     <VStack gap={3} className="pt-6">
                       {/* Header */}
@@ -743,7 +752,7 @@ export default function PortDetailPage() {
                         <h3 className="text-[16px] font-semibold text-[var(--color-text-default)]">
                           Security Groups
                         </h3>
-                        <Button variant="secondary" size="sm" leftIcon={<IconSettings size={12} />}>
+                        <Button variant="secondary" size="sm">
                           Manage Security Group
                         </Button>
                       </div>
@@ -781,6 +790,7 @@ export default function PortDetailPage() {
                       />
                     </VStack>
                   </TabPanel>
+                  )}
                 </Tabs>
               </div>
             </VStack>

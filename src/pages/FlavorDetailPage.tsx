@@ -30,6 +30,7 @@ import {
   IconLock,
   IconLockOpen,
   IconTerminal2,
+  IconExternalLink,
 } from '@tabler/icons-react';
 
 /* ----------------------------------------
@@ -237,6 +238,7 @@ export function FlavorDetailPage() {
             onClick={(e) => e.stopPropagation()}
           >
             {row.name}
+            <IconExternalLink size={12} stroke={1.5} />
           </Link>
           <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
             ID : {row.id}
@@ -261,6 +263,7 @@ export function FlavorDetailPage() {
       key: 'image',
       label: 'Image',
       flex: 1,
+      sortable: true,
       render: (value) => <span>{value}</span>,
     },
     {
@@ -273,12 +276,14 @@ export function FlavorDetailPage() {
       key: 'az',
       label: 'AZ',
       flex: 1,
+      sortable: true,
       render: (value) => <span>{value}</span>,
     },
     {
       key: 'createdAt',
       label: 'Created At',
       flex: 1,
+      sortable: true,
       render: (value) => <span>{value}</span>,
     },
     {
@@ -313,10 +318,10 @@ export function FlavorDetailPage() {
 
   return (
     <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
-      <Sidebar isOpen={sidebarOpen} setIsOpen={setSidebarOpen} />
+      <Sidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
       <main
         className={`absolute top-0 bottom-0 right-0 flex flex-col bg-[var(--color-surface-default)] transition-[left] duration-200 ${
-          sidebarOpen ? 'left-[200px]' : 'left-[var(--sidebar-collapsed-width)]'
+          sidebarOpen ? 'left-[200px]' : 'left-0'
         }`}
       >
         {/* Fixed Header Area */}
