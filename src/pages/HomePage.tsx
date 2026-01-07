@@ -25,6 +25,29 @@ import {
 // import { Icons } from '@/design-system'; // Temporarily disabled for debugging
 
 /* ----------------------------------------
+   Card Component
+   ---------------------------------------- */
+interface CardProps {
+  title?: string;
+  bgColor?: string;
+  className?: string;
+  children: React.ReactNode;
+}
+
+function Card({ title, bgColor = 'bg-[var(--color-surface-default)]', className = '', children }: CardProps) {
+  return (
+    <div className={`${bgColor} rounded-lg p-6 ${className}`}>
+      {title && (
+        <h4 className="text-[10px] font-medium text-[var(--color-text-muted)] uppercase tracking-wider mb-4">
+          {title}
+        </h4>
+      )}
+      {children}
+    </div>
+  );
+}
+
+/* ----------------------------------------
    Stat Card Component
    ---------------------------------------- */
 interface StatCardProps {
