@@ -9,6 +9,8 @@ import {
   TopBar,
   TopBarAction,
   Breadcrumb,
+  ListToolbar,
+  ContextMenu,
   type TableColumn,
 } from '@/design-system';
 import { StorageSidebar } from '@/components/StorageSidebar';
@@ -210,62 +212,75 @@ export function BucketsPage() {
     {
       key: 'name',
       label: 'Name',
-      width: 250,
+      width: 220,
       sortable: true,
       render: (_, row) => <NameCell id={row.id} name={row.name} />,
     },
     {
       key: 'owner',
       label: 'Owner',
-      width: 180,
+      width: 160,
       sortable: true,
     },
     {
       key: 'usedCapacity',
       label: 'Used Capacity',
-      width: 120,
+      flex: 1,
       sortable: true,
     },
     {
       key: 'capacityLimit',
       label: 'Capacity Limit %',
-      width: 130,
+      flex: 1,
       sortable: true,
     },
     {
       key: 'objects',
       label: 'Objects',
-      width: 100,
+      flex: 1,
       sortable: true,
     },
     {
       key: 'objectLimit',
       label: 'Object Limit %',
-      width: 120,
+      flex: 1,
       sortable: true,
     },
     {
       key: 'creationDate',
       label: 'CreationDate',
-      width: 150,
+      flex: 1,
       sortable: true,
     },
     {
       key: 'action',
       label: 'Action',
-      width: 100,
+      width: 72,
       align: 'center',
       render: (_, row) => (
-        <button
-          className="p-1.5 rounded-md bg-[var(--color-border-subtle)] hover:bg-[var(--color-surface-muted)] transition-colors"
-          onClick={(e) => {
-            e.stopPropagation();
-            console.log('Action clicked for:', row.name);
-          }}
-          aria-label="More actions"
+        <ContextMenu
+          trigger="click"
+          items={[
+            {
+              id: 'delete',
+              label: 'Delete',
+              status: 'danger',
+              onClick: () => console.log('Delete:', row.name),
+            },
+            {
+              id: 'edit',
+              label: 'Edit',
+              onClick: () => console.log('Edit:', row.name),
+            },
+          ]}
         >
-          <IconDotsCircleHorizontal size={16} stroke={1.5} className="text-[var(--color-text-default)]" />
-        </button>
+          <button
+            className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors"
+            aria-label="More actions"
+          >
+            <IconDotsCircleHorizontal size={16} stroke={1.5} className="text-[var(--color-text-default)]" />
+          </button>
+        </ContextMenu>
       ),
     },
   ];
@@ -320,26 +335,15 @@ export function BucketsPage() {
                 <h1 className="text-[length:var(--font-size-16)] font-semibold text-[var(--color-text-default)] leading-[var(--line-height-24)]">
                   Buckets
                 </h1>
-                <div className="flex items-center gap-2">
-                  <Button
-                    variant="secondary"
-                    size="sm"
-                    icon={<IconTrash size={12} stroke={1.5} />}
-                    disabled={!hasSelection}
-                  >
-                    Delete
-                  </Button>
-                  <Button variant="primary" size="sm">
-                    Create
-                  </Button>
-                </div>
+                <Button variant="primary" size="sm">
+                  Create
+                </Button>
               </div>
 
               {/* Search and Actions */}
-              <div className="flex flex-col gap-2">
-                <div className="flex items-center gap-2">
-                  {/* Search */}
-                  <div className="flex items-center gap-1">
+              <ListToolbar
+                primaryActions={
+                  <ListToolbar.Actions>
                     <div className="w-[280px]">
                       <SearchInput
                         placeholder="Search users by attributes"
@@ -356,25 +360,28 @@ export function BucketsPage() {
                       icon={<IconDownload size={12} stroke={1.5} />}
                       aria-label="Download"
                     />
-                  </div>
-                  <div className="w-px h-4 bg-[var(--color-border-default)]" />
-                  <Button
-                    variant="secondary"
-                    size="sm"
-                    icon={<IconRefresh size={16} stroke={1.5} />}
-                    aria-label="Refresh"
-                    onClick={() => console.log('Refresh clicked')}
-                  />
-                  <Button
-                    variant="secondary"
-                    size="sm"
-                    icon={<IconTrash size={16} stroke={1.5} />}
-                    disabled={!hasSelection}
-                  >
-                    Delete
-                  </Button>
-                </div>
-              </div>
+                  </ListToolbar.Actions>
+                }
+                bulkActions={
+                  <ListToolbar.Actions>
+                    <Button
+                      variant="secondary"
+                      size="sm"
+                      icon={<IconRefresh size={14} stroke={1.5} />}
+                      aria-label="Refresh"
+                      onClick={() => console.log('Refresh clicked')}
+                    />
+                    <Button
+                      variant="secondary"
+                      size="sm"
+                      leftIcon={<IconTrash size={14} stroke={1.5} />}
+                      disabled={!hasSelection}
+                    >
+                      Delete
+                    </Button>
+                  </ListToolbar.Actions>
+                }
+              />
 
               {/* Pagination */}
               {filteredBuckets.length > 0 && (
