@@ -5,6 +5,9 @@ import ThakiLogoDark from '@/assets/thakiLogo-dark.svg';
 import {
   IconMoon,
   IconSun,
+  IconPalette,
+  IconLayoutSidebar,
+  IconSquare,
 } from '@tabler/icons-react';
 
 // App Icons
@@ -255,35 +258,91 @@ export function EntryPage() {
             ))}
           </div>
 
-          {/* Design System Link */}
+          {/* Developer Resources */}
           <div className="mt-16 pt-8 border-t border-[var(--color-border-default)]">
-            <div className="text-center">
-              <p className="text-[12px] text-[var(--color-text-subtle)] mb-4">
+            <div className="text-center mb-6">
+              <p className="text-[12px] text-[var(--color-text-subtle)]">
                 Developer Resources
               </p>
-              <div className="flex items-center justify-center gap-4">
-                <button
-                  type="button"
-                  onClick={() => navigate('/design')}
-                  className="px-4 py-2 text-[13px] font-medium text-[var(--color-text-subtle)] hover:text-[var(--color-text-default)] hover:bg-[var(--color-surface-default)] rounded-lg transition-colors"
-                >
-                  Design System
-                </button>
-                <button
-                  type="button"
-                  onClick={() => navigate('/design/drawers')}
-                  className="px-4 py-2 text-[13px] font-medium text-[var(--color-text-subtle)] hover:text-[var(--color-text-default)] hover:bg-[var(--color-surface-default)] rounded-lg transition-colors"
-                >
-                  Drawers
-                </button>
-                <button
-                  type="button"
-                  onClick={() => navigate('/design/modals')}
-                  className="px-4 py-2 text-[13px] font-medium text-[var(--color-text-subtle)] hover:text-[var(--color-text-default)] hover:bg-[var(--color-surface-default)] rounded-lg transition-colors"
-                >
-                  Modals
-                </button>
-              </div>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 max-w-2xl mx-auto">
+              {/* Design System Card */}
+              <button
+                type="button"
+                onClick={() => navigate('/design')}
+                className="
+                  group relative overflow-hidden
+                  w-full p-4 rounded-xl
+                  bg-[var(--color-surface-default)]
+                  border border-[var(--color-border-default)]
+                  hover:border-[var(--color-border-strong)]
+                  hover:shadow-lg hover:-translate-y-0.5
+                  transition-all duration-300 ease-out
+                  text-left
+                "
+              >
+                <div className="absolute inset-0 bg-gradient-to-br from-violet-500 to-purple-500 opacity-0 group-hover:opacity-10 transition-opacity duration-300" />
+                <div className="relative flex flex-col items-center text-center gap-2">
+                  <div className="w-10 h-10 rounded-lg bg-[var(--color-surface-subtle)] flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                    <IconPalette size={20} className="text-[var(--color-text-muted)]" stroke={1.5} />
+                  </div>
+                  <span className="text-[13px] font-medium text-[var(--color-text-default)]">
+                    Design System
+                  </span>
+                </div>
+              </button>
+
+              {/* Drawers Card */}
+              <button
+                type="button"
+                onClick={() => navigate('/design/drawers')}
+                className="
+                  group relative overflow-hidden
+                  w-full p-4 rounded-xl
+                  bg-[var(--color-surface-default)]
+                  border border-[var(--color-border-default)]
+                  hover:border-[var(--color-border-strong)]
+                  hover:shadow-lg hover:-translate-y-0.5
+                  transition-all duration-300 ease-out
+                  text-left
+                "
+              >
+                <div className="absolute inset-0 bg-gradient-to-br from-blue-500 to-cyan-500 opacity-0 group-hover:opacity-10 transition-opacity duration-300" />
+                <div className="relative flex flex-col items-center text-center gap-2">
+                  <div className="w-10 h-10 rounded-lg bg-[var(--color-surface-subtle)] flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                    <IconLayoutSidebar size={20} className="text-[var(--color-text-muted)]" stroke={1.5} />
+                  </div>
+                  <span className="text-[13px] font-medium text-[var(--color-text-default)]">
+                    Drawers
+                  </span>
+                </div>
+              </button>
+
+              {/* Modals Card */}
+              <button
+                type="button"
+                onClick={() => navigate('/design/modals')}
+                className="
+                  group relative overflow-hidden
+                  w-full p-4 rounded-xl
+                  bg-[var(--color-surface-default)]
+                  border border-[var(--color-border-default)]
+                  hover:border-[var(--color-border-strong)]
+                  hover:shadow-lg hover:-translate-y-0.5
+                  transition-all duration-300 ease-out
+                  text-left
+                "
+              >
+                <div className="absolute inset-0 bg-gradient-to-br from-emerald-500 to-teal-500 opacity-0 group-hover:opacity-10 transition-opacity duration-300" />
+                <div className="relative flex flex-col items-center text-center gap-2">
+                  <div className="w-10 h-10 rounded-lg bg-[var(--color-surface-subtle)] flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                    <IconSquare size={20} className="text-[var(--color-text-muted)]" stroke={1.5} />
+                  </div>
+                  <span className="text-[13px] font-medium text-[var(--color-text-default)]">
+                    Modals
+                  </span>
+                </div>
+              </button>
             </div>
           </div>
         </div>
