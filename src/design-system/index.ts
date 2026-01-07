@@ -42,6 +42,7 @@ export * from './components/DetailHeader';
 export * from './components/SectionCard';
 export * from './components/FormField';
 export * from './components/FloatingCard';
+export * from './components/MonitoringToolbar';
 
 // Layouts
 export * from './layouts';
