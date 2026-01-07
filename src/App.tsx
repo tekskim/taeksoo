@@ -65,6 +65,7 @@ import { HostsPage } from '@/pages/HostsPage';
 import HostDetailPage from '@/pages/HostDetailPage';
 import { OSDsPage } from '@/pages/OSDsPage';
 import { OSDDetailPage } from '@/pages/OSDDetailPage';
+import { PhysicalDisksPage } from '@/pages/PhysicalDisksPage';
 
 // Pages - Cloud Builder
 import { CloudBuilderConsolePage } from '@/pages/cloudbuilder/CloudBuilderConsolePage';
@@ -163,6 +164,7 @@ function AppRoutes() {
         <Route path="/storage/hosts/:id" element={<HostDetailPage />} />
         <Route path="/storage/osds" element={<OSDsPage />} />
         <Route path="/storage/osds/:id" element={<OSDDetailPage />} />
+        <Route path="/storage/physical-disks" element={<PhysicalDisksPage />} />
 
         {/* Design System Routes */}
         <Route path="/design" element={<DesignSystemPage />} />
