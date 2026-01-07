@@ -2196,7 +2196,7 @@ function TemplatesSection({ templates, selectedId, onSelect, onSkip, onNext }: T
       <VStack gap={3}>
         {/* Section Header */}
         <HStack justify="between" align="start" className="w-full">
-          <h5 className="text-[14px] font-semibold leading-5 text-[var(--color-text-default)]">
+          <h5 className="text-[14px] font-medium leading-5 text-[var(--color-text-default)]">
             Templates
           </h5>
           <Button variant="outline" size="sm">

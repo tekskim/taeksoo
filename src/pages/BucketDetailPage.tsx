@@ -15,6 +15,9 @@ import {
   TabPanel,
   DetailHeader,
   Checkbox,
+  SectionCard,
+  Table,
+  type TableColumn,
 } from '@/design-system';
 import { StorageSidebar } from '@/components/StorageSidebar';
 import { useTabs } from '@/contexts/TabContext';
@@ -30,6 +33,7 @@ import {
   IconPlus,
   IconCopy,
   IconLayoutSidebar,
+  IconEdit,
 } from '@tabler/icons-react';
 
 /* ----------------------------------------
@@ -410,7 +414,7 @@ function ObjectRow({ object, isExpanded, isSelected, onToggleExpand, onToggleSel
 export function BucketDetailPage() {
   const { id } = useParams<{ id: string }>();
   const [sidebarOpen, setSidebarOpen] = useState(true);
-  const [activeTab, setActiveTab] = useState(2); // Objects tab active
+  const [activeTab, setActiveTab] = useState('details'); // Details tab active
   const [selectedTreeItem, setSelectedTreeItem] = useState<string | null>('folder-yeonii');
   const [objectTree, setObjectTree] = useState<ObjectItem[]>(mockObjectTree);
   const [searchQuery, setSearchQuery] = useState('');
@@ -477,6 +481,18 @@ export function BucketDetailPage() {
       obj.owner?.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
+  // Tags table columns
+  const tagsColumns: TableColumn<{ key: string; value: string }>[] = [
+    { key: 'key', label: 'Key', flex: 1 },
+    { key: 'value', label: 'Value', flex: 1 },
+  ];
+
+  // ACL table columns
+  const aclColumns: TableColumn<{ grantee: string; permissions: string }>[] = [
+    { key: 'grantee', label: 'Grantee', flex: 1 },
+    { key: 'permissions', label: 'Permissions', flex: 1 },
+  ];
+
   return (
     <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
       {/* Sidebar */}
@@ -520,15 +536,15 @@ export function BucketDetailPage() {
             <VStack gap={6} className="min-w-[1176px] max-w-[1320px]">
               {/* Page Header with Info Cards */}
               <DetailHeader>
-                <DetailHeader.Title>
-                  <div className="flex items-center gap-4">
-                    <span>{bucketData.name}</span>
-                    <Button variant="secondary" size="sm">
-                      <IconTrash size={12} stroke={1.5} />
-                      Delete
-                    </Button>
-                  </div>
-                </DetailHeader.Title>
+                <DetailHeader.Title>{bucketData.name}</DetailHeader.Title>
+                <DetailHeader.Actions>
+                  <Button variant="secondary" size="sm" leftIcon={<IconTrash size={12} stroke={1.5} />}>
+                    Delete
+                  </Button>
+                  <Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} stroke={1.5} />}>
+                    Edit
+                  </Button>
+                </DetailHeader.Actions>
                 <DetailHeader.InfoGrid>
                   <DetailHeader.InfoCard label="Owner" value={bucketData.owner} />
                   <DetailHeader.InfoCard label="Used Capacity" value={bucketData.usedCapacity} />
@@ -541,27 +557,64 @@ export function BucketDetailPage() {
               <div className="w-full">
                 <Tabs value={activeTab} onChange={setActiveTab} variant="underline" size="sm">
                   <TabList>
-                    <Tab>Details</Tab>
-                    <Tab>Policies</Tab>
-                    <Tab>Objects</Tab>
+                    <Tab value="details">Details</Tab>
+                    <Tab value="policies">Policies</Tab>
+                    <Tab value="objects">Objects</Tab>
                   </TabList>
 
                   {/* Details Tab Panel */}
-                  <TabPanel value={0} className="pt-4">
-                    <div className="text-[var(--color-text-muted)] text-sm">
-                      Bucket details and configuration information will be displayed here.
-                    </div>
+                  <TabPanel value="details" className="pt-4">
+                    {/* Basic Information Section */}
+                    <SectionCard>
+                      <SectionCard.Header title="Basic Information" />
+                      <SectionCard.Content>
+                        <SectionCard.DataRow label="Region" value="Default" showDivider />
+                        <SectionCard.DataRow label="Versioning" value="Suspended" />
+                        <SectionCard.DataRow label="MFA Delete" value="Disabled" />
+                        <SectionCard.DataRow label="Encryption" value="Disabled" />
+                        <SectionCard.DataRow label="Index type" value="Normal / Indexless" />
+                        <SectionCard.DataRow label="Placement rule" value="hdd" />
+                        <SectionCard.DataRow label="Tags">
+                          <Table<{ key: string; value: string }>
+                            columns={tagsColumns}
+                            data={[{ key: 'test', value: 'test' }]}
+                            rowKey="key"
+                          />
+                        </SectionCard.DataRow>
+                        <SectionCard.DataRow label="Capacity Limit %" value="No Limit" />
+                        <SectionCard.DataRow label="Object Limit %" value="No Limit" />
+                      </SectionCard.Content>
+                    </SectionCard>
                   </TabPanel>
 
                   {/* Policies Tab Panel */}
-                  <TabPanel value={1} className="pt-4">
-                    <div className="text-[var(--color-text-muted)] text-sm">
-                      Bucket policies and access control settings will be displayed here.
-                    </div>
+                  <TabPanel value="policies" className="pt-4">
+                    {/* Policies Section */}
+                    <SectionCard>
+                      <SectionCard.Header title="Policies" />
+                      <SectionCard.Content>
+                        <SectionCard.DataRow label="Bucket policy" value="null" showDivider />
+                        <SectionCard.DataRow label="Lifecycle" value="{}" />
+                        <SectionCard.DataRow label="Replication policy">
+                          <pre className="text-[12px] text-[var(--color-text-default)] whitespace-pre-wrap">
+{`{
+      "Role": ""
+}`}
+                          </pre>
+                        </SectionCard.DataRow>
+                        <SectionCard.DataRow label="ACL">
+                          <Table<{ grantee: string; permissions: string }>
+                            columns={aclColumns}
+                            data={[{ grantee: 'Bucket Owner', permissions: 'FULL_CONTROL' }]}
+                            rowKey="grantee"
+                          />
+                        </SectionCard.DataRow>
+                      </SectionCard.Content>
+                    </SectionCard>
                   </TabPanel>
 
                   {/* Objects Tab Panel */}
-                  <TabPanel value={2} className="pt-4">
+                  <TabPanel value="objects" className="pt-4">
                     <div className="flex gap-4">
                       {/* Left Sidebar - Objects Tree */}
                       {treeSidebarOpen && (
