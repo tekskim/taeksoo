@@ -37,7 +37,7 @@ export function MenuItem({
   disabled = false,
 }: MenuItemProps) {
   const baseStyles = [
-    'w-full',
+    'w-[175px]',
     'px-[var(--menu-item-padding-x)]',
     'py-[var(--menu-item-padding-y)]',
     'rounded-[var(--menu-item-radius)]',
@@ -61,7 +61,7 @@ export function MenuItem({
           {icon}
         </span>
       )}
-      <span className="flex-1 text-left truncate">{label}</span>
+      <span className="text-left truncate">{label}</span>
       {badge && (
         <span className="px-1.5 py-0.5 text-[10px] font-medium bg-[var(--color-state-info-bg)] text-[var(--color-action-primary)] rounded">
           {badge}

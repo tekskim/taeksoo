@@ -13,6 +13,8 @@ import {
   TabPanel,
   DetailHeader,
   SectionCard,
+  ContextMenu,
+  type ContextMenuItem,
 } from '@/design-system';
 import { Sidebar } from '@/components/Sidebar';
 import { useTabs } from '@/contexts/TabContext';
@@ -23,6 +25,7 @@ import {
   IconBell,
   IconCopy,
   IconCheck,
+  IconChevronDown,
 } from '@tabler/icons-react';
 
 /* ----------------------------------------
@@ -216,6 +219,19 @@ export function ImageDetailPage() {
                 <Button variant="secondary" size="sm" leftIcon={<IconTrash size={12} />}>
                   Delete
                 </Button>
+                {activeDetailTab === 'details' && (
+                  <ContextMenu
+                    items={[
+                      { id: 'create-instance-template', label: 'Create Instance Template', onClick: () => console.log('Create Instance Template') },
+                      { id: 'create-volume', label: 'Create Volume', onClick: () => console.log('Create Volume') },
+                    ] as ContextMenuItem[]}
+                    trigger="click"
+                  >
+                    <Button variant="secondary" size="sm" rightIcon={<IconChevronDown size={12} />}>
+                      More Actions
+                    </Button>
+                  </ContextMenu>
+                )}
               </DetailHeader.Actions>
               <DetailHeader.InfoGrid>
                 <DetailHeader.InfoCard label="Status" value="Active" status="active" />
@@ -260,7 +276,7 @@ export function ImageDetailPage() {
                       <SectionCard.Content>
                         <SectionCard.DataRow label="Size" value={image.size} />
                         <SectionCard.DataRow label="OS" value={image.os} />
-                        <SectionCard.DataRow label="Disk Format / Container Format" value={`${image.diskFormat} / ${image.containerFormat}`} />
+                        <SectionCard.DataRow label="Disk Format" value={`${image.diskFormat} / ${image.containerFormat}`} />
                         <SectionCard.DataRow label="Min Disk / Min RAM" value={`${image.minDisk} / ${image.minRam}`} />
                       </SectionCard.Content>
                     </SectionCard>

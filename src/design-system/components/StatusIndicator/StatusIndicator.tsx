@@ -1,7 +1,6 @@
 import { cloneElement, isValidElement, type HTMLAttributes, type ReactNode } from 'react';
 import { twMerge } from 'tailwind-merge';
 import {
-  IconCircleCheck,
   IconAlertTriangle,
   IconBan,
   IconArchiveOff,
@@ -17,6 +16,7 @@ import {
   IconGauge,
   IconEyeOff,
   IconCircleMinus,
+  IconLivePhoto,
 } from '@tabler/icons-react';
 
 /* ----------------------------------------
@@ -52,13 +52,13 @@ export interface StatusConfig {
   bgColor: string;
 }
 
-const ICON_SIZE = 14;
+const ICON_SIZE = 16;
 
 const statusConfig: Record<StatusType, StatusConfig> = {
   // Success (Green) - using semantic color
   active: {
     label: 'Active',
-    icon: <IconCircleCheck size={ICON_SIZE} strokeWidth={2} />,
+    icon: <IconLivePhoto size={ICON_SIZE} strokeWidth={2} />,
     bgColor: 'bg-[var(--status-success-bg)]',
   },
   // Danger (Red) - using semantic color

@@ -168,19 +168,18 @@ export function Table<T extends Record<string, any>>({
         className={`table-scroll-container ${maxHeight ? 'overflow-y-auto' : ''}`}
         style={maxHeight ? { maxHeight } : undefined}
       >
-        {/* Inner container for min-width */}
-        <div style={{ minWidth: `${minWidth}px`, width: '100%' }}>
-          {/* Header */}
-          <div
-            className={`
-              flex items-stretch
-              min-h-[var(--table-row-height)]
-              bg-[var(--table-header-bg)]
-              border border-[var(--color-border-default)]
-              rounded-[var(--table-row-radius)]
-              ${enableStickyHeader ? 'sticky top-0 z-10' : ''}
-            `}
-          >
+        {/* Header */}
+        <div
+          className={`
+            flex items-stretch
+            min-h-[var(--table-row-height)]
+            bg-[var(--table-header-bg)]
+            border border-[var(--color-border-default)]
+            rounded-[var(--table-row-radius)]
+            ${enableStickyHeader ? 'sticky top-0 z-10' : ''}
+          `}
+          style={{ minWidth: `${minWidth}px` }}
+        >
           {/* Selection column with select all checkbox */}
           {selectable && (
             <div
@@ -248,8 +247,10 @@ export function Table<T extends Record<string, any>>({
           })}
         </div>
 
-        {/* Body */}
-        <div className="flex flex-col gap-[var(--table-row-gap)] mt-[var(--table-row-gap)]">
+        {/* Inner container for min-width */}
+        <div style={{ minWidth: `${minWidth}px`, width: '100%' }}>
+          {/* Body */}
+          <div className="flex flex-col gap-[var(--table-row-gap)] mt-[var(--table-row-gap)]">
           {sortedData.length === 0 ? (
             <div
               className="
@@ -275,11 +276,12 @@ export function Table<T extends Record<string, any>>({
                   key={key}
                   className={`
                     flex items-center
-                    min-h-[var(--table-row-height)]
+                    h-[var(--table-row-height)]
                     rounded-[var(--table-row-radius)]
                     transition-all
                     hover:bg-[var(--table-row-hover-bg)]
                     border border-[var(--color-border-default)]
+                    overflow-hidden
                     ${isSelected 
                       ? 'bg-[var(--color-state-info-bg)] border-[var(--color-action-primary)] shadow-[inset_0_0_0_1px_var(--color-action-primary)]' 
                       : 'bg-[var(--color-surface-default)]'
@@ -308,7 +310,12 @@ export function Table<T extends Record<string, any>>({
                   )}
 
                   {/* Data cells */}
-                  {columns.map((column) => (
+                  {columns.map((column, colIndex) => {
+                    // Match divider logic from header
+                    const isFirstColumn = colIndex === 0;
+                    const showCellDivider = isFirstColumn ? selectable : true;
+                    
+                    return (
                     <div
                       key={column.key}
                       className={`
@@ -320,6 +327,7 @@ export function Table<T extends Record<string, any>>({
                         text-[var(--color-text-default)]
                         ${column.align === 'center' ? 'justify-center' : ''}
                         ${column.align === 'right' ? 'justify-end' : ''}
+                        ${showCellDivider ? 'border-l border-transparent' : ''}
                       `}
                       style={{ 
                         width: column.width,
@@ -330,7 +338,8 @@ export function Table<T extends Record<string, any>>({
                         ? column.render(row[column.key], row, rowIndex)
                         : row[column.key]}
                     </div>
-                  ))}
+                  );
+                  })}
                 </div>
               );
             })

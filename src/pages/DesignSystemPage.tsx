@@ -1,6 +1,8 @@
-import React, { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
+import ReactECharts from 'echarts-for-react';
 import { DarkModeToggle } from '@/components/DarkModeToggle';
 import { AttachVolumeDrawer } from '@/components/AttachVolumeDrawer';
+import { DataViewDrawer } from '@/components/DataViewDrawer';
 import {
   Button,
   Input,
@@ -31,16 +33,11 @@ import {
   Tab,
   TabPanel,
   InlineMessage,
-  Toast,
-  ToastContainer,
-  ToastProvider,
-  useToast,
   Disclosure,
   Badge,
   Breadcrumb,
   StatusIndicator,
   VStack,
-  HStack,
   MenuItem,
   MenuSection,
   MenuDivider,
@@ -50,7 +47,6 @@ import {
   DetailHeader,
   SectionCard,
   Drawer,
-  FormField,
 } from '@/design-system';
 import {
   // Navigation icons (for sidebar)
@@ -72,8 +68,7 @@ import {
   IconPlayerStop,
   IconPlayerPause,
   IconRefresh,
-  IconRefreshDot,
-  IconRotateClockwise,
+  IconRotate,
   IconTrash,
   IconEdit,
   IconCopy,
@@ -85,6 +80,7 @@ import {
   IconLink,
   IconUnlink,
   IconExternalLink,
+  IconHistory,
   IconSend,
   // Basic - Navigation
   IconChevronLeft,
@@ -92,6 +88,8 @@ import {
   IconChevronDown,
   IconChevronUp,
   IconArrowRight,
+  IconArrowsMaximize,
+  IconArrowsMinimize,
   IconDotsCircleHorizontal,
   IconDots,
   IconDotsVertical,
@@ -102,7 +100,6 @@ import {
   IconCircleCheck,
   IconBan,
   IconLoader,
-  IconLoader2,
   IconProgress,
   // Basic - UI
   IconSearch,
@@ -147,8 +144,10 @@ import {
   // System - Monitoring & Analytics
   IconTerminal,
   IconTerminal2,
+  IconPower,
   IconActivity,
   IconChartBar,
+  IconChartDonut,
   IconGauge,
   IconDeviceDesktop,
   IconDeviceDesktopAnalytics,
@@ -167,6 +166,7 @@ import {
   IconCloud,
   IconGitBranch,
   IconBrain,
+  IconRobot,
   IconMessageChatbot,
   IconBooks,
   IconTestPipe,
@@ -183,12 +183,8 @@ import {
   IconBrandDebian,
   IconBrandWindows,
   IconBrandRedhat,
-  // Document Icons
-  IconFileText,
-  IconCode,
 } from '@tabler/icons-react';
-import { Link, useNavigate } from 'react-router-dom';
-import { useTabs } from '@/contexts/TabContext';
+import { Link } from 'react-router-dom';
 
 /* ----------------------------------------
    Navigation Items
@@ -204,73 +200,65 @@ const foundationItems = [
   { id: 'borders', label: 'Borders', icon: IconBorderAll },
   { id: 'shadows', label: 'Shadows', icon: IconBoxMultiple },
   { id: 'icons', label: 'Icons', icon: IconStar },
-  { id: 'layout', label: 'Layout', icon: IconLayoutSidebar },
 ];
 
 // Component items (UI 컴포넌트)
-// Form Controls
+// Form Controls - matches actual content order
 const formControlItems = [
   { id: 'button', label: 'Button', icon: IconClick },
   { id: 'input', label: 'Input', icon: IconForms },
   { id: 'select', label: 'Select', icon: IconSelector },
   { id: 'datepicker', label: 'DatePicker', icon: IconCalendar },
   { id: 'slider', label: 'Slider', icon: IconAdjustments },
+  { id: 'chip', label: 'Chip', icon: IconTag },
+  { id: 'pagination', label: 'Pagination', icon: IconProgress },
+  { id: 'progress-bar', label: 'Progress Bar', icon: IconProgress },
+  { id: 'toggle', label: 'Toggle', icon: IconToggleRight },
   { id: 'checkbox', label: 'Checkbox', icon: IconSquareCheck },
   { id: 'radio', label: 'Radio', icon: IconCircle },
-  { id: 'toggle', label: 'Toggle', icon: IconToggleRight },
-  { id: 'formfield', label: 'FormField', icon: IconForms },
 ];
 
-// Data Display
-const dataDisplayItems = [
+// Navigation & Layout - matches actual content order
+const navigationItems = [
+  { id: 'topbar', label: 'TopBar', icon: IconLayoutNavbar },
+  { id: 'tabbar', label: 'TabBar', icon: IconLayoutNavbar },
+  { id: 'tabs', label: 'Tabs', icon: IconLayoutNavbar },
+  { id: 'disclosure', label: 'Disclosure', icon: IconSelector },
+  { id: 'inline-message', label: 'Inline Message', icon: IconInfoCircle },
   { id: 'table', label: 'Table', icon: IconList },
   { id: 'badge', label: 'Badge', icon: IconTag },
-  { id: 'chip', label: 'Chip', icon: IconTag },
-  { id: 'pagination', label: 'Pagination', icon: IconLoader2 },
-  { id: 'progress-bar', label: 'Progress Bar', icon: IconLoader2 },
+  { id: 'breadcrumb', label: 'Breadcrumb', icon: IconChevronRight },
   { id: 'status-indicator', label: 'Status Indicator', icon: IconActivity },
   { id: 'tooltip', label: 'Tooltip', icon: IconMessage2 },
   { id: 'window-control', label: 'Window Control', icon: IconAppWindow },
 ];
 
-// Navigation
-const navigationItems = [
-  { id: 'topbar', label: 'TopBar', icon: IconLayoutNavbar },
-  { id: 'tabbar', label: 'TabBar', icon: IconLayoutNavbar },
-  { id: 'tabs', label: 'Tabs', icon: IconLayoutNavbar },
-  { id: 'breadcrumb', label: 'Breadcrumb', icon: IconChevronRight },
+// Patterns - matches actual content order
+const patternItems = [
+  { id: 'detail-header', label: 'Detail Header', icon: IconLayoutNavbar },
+  { id: 'section-card', label: 'Section Card', icon: IconLayoutGrid },
   { id: 'menu', label: 'Menu', icon: IconMenu2 },
   { id: 'context-menu', label: 'Context Menu', icon: IconMenu2 },
   { id: 'modal', label: 'Modal', icon: IconLayoutGrid },
   { id: 'drawer', label: 'Drawer', icon: IconLayoutGrid },
-  { id: 'floating-card', label: 'Floating Card', icon: IconLayoutGrid },
+  { id: 'layout', label: 'Layout', icon: IconLayoutSidebar },
 ];
 
-// Feedback
-const feedbackItems = [
-  { id: 'inline-message', label: 'Inline Message', icon: IconInfoCircle },
-  { id: 'toast', label: 'Toast', icon: IconBell },
-];
-
-// Disclosure
-const disclosureItems = [
-  { id: 'disclosure', label: 'Disclosure', icon: IconSelector },
-];
-
-// Patterns (복합 컴포넌트 패턴)
-const patternItems = [
-  { id: 'detail-header', label: 'Detail Header', icon: IconLayoutNavbar },
-  { id: 'section-card', label: 'Section Card', icon: IconLayoutGrid },
+// Graphs
+const graphItems = [
+  { id: 'bar-chart', label: 'Bar Chart', icon: IconChartBar },
+  { id: 'area-chart', label: 'Area Chart', icon: IconChartBar },
+  { id: 'pie-chart', label: 'Pie Chart', icon: IconActivity },
+  { id: 'half-doughnut-chart', label: 'Half-Doughnut Chart', icon: IconGauge },
+  { id: 'doughnut-chart', label: 'Doughnut Chart', icon: IconChartDonut },
 ];
 
 // All component items
 const componentItems = [
   ...formControlItems,
-  ...dataDisplayItems,
   ...navigationItems,
-  ...feedbackItems,
-  ...disclosureItems,
   ...patternItems,
+  ...graphItems,
 ];
 
 // All items for intersection observer
@@ -365,143 +353,6 @@ function DatePickerSection() {
         </VStack>
       </VStack>
     </Section>
-  );
-}
-
-/* ----------------------------------------
-   Toast Demo (with state)
-   ---------------------------------------- */
-
-function ToastDemo() {
-  const { toast, success, warning, error, info, dismissAll } = useToast();
-
-  const handleShowSuccess = () => {
-    success('작업이 성공적으로 완료되었습니다.');
-  };
-
-  const handleShowWarning = () => {
-    warning('주의가 필요한 상황입니다.', { title: '경고' });
-  };
-
-  const handleShowError = () => {
-    error('작업 중 오류가 발생했습니다.', { title: '오류 발생' });
-  };
-
-  const handleShowInfo = () => {
-    info('새로운 업데이트가 있습니다.');
-  };
-
-  const handleShowWithTitle = () => {
-    toast({
-      variant: 'success',
-      title: '인스턴스 생성 완료',
-      message: 'web-server-01 인스턴스가 성공적으로 생성되었습니다.',
-    });
-  };
-
-  const handleShowLongDuration = () => {
-    info('이 알림은 10초 후에 사라집니다.', { duration: 10000, title: '긴 지속 시간' });
-  };
-
-  const handleShowNonDismissible = () => {
-    success('자동으로만 닫히는 알림입니다.', { dismissible: false });
-  };
-
-  return (
-    <VStack gap={8}>
-      {/* Design Tokens */}
-      <VStack gap={3}>
-        <Label>Design Tokens</Label>
-        <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
-          <code>width: 360px</code> · <code>padding: 12px</code> · <code>gap: 12px</code> · <code>radius: 8px</code>
-        </div>
-      </VStack>
-
-      {/* Variants */}
-      <VStack gap={3}>
-        <Label>Variants</Label>
-        <div className="flex flex-wrap gap-2">
-          <Button variant="outline" size="sm" onClick={handleShowSuccess}>
-            Success
-          </Button>
-          <Button variant="outline" size="sm" onClick={handleShowWarning}>
-            Warning
-          </Button>
-          <Button variant="outline" size="sm" onClick={handleShowError}>
-            Error
-          </Button>
-          <Button variant="outline" size="sm" onClick={handleShowInfo}>
-            Info
-          </Button>
-        </div>
-      </VStack>
-
-      {/* With Title */}
-      <VStack gap={3}>
-        <Label>With Title</Label>
-        <Button variant="outline" size="sm" onClick={handleShowWithTitle}>
-          Show Toast with Title
-        </Button>
-      </VStack>
-
-      {/* Options */}
-      <VStack gap={3}>
-        <Label>Options</Label>
-        <div className="flex flex-wrap gap-2">
-          <Button variant="outline" size="sm" onClick={handleShowLongDuration}>
-            Long Duration (10s)
-          </Button>
-          <Button variant="outline" size="sm" onClick={handleShowNonDismissible}>
-            Non-dismissible
-          </Button>
-          <Button variant="outline" size="sm" onClick={dismissAll}>
-            Dismiss All
-          </Button>
-        </div>
-      </VStack>
-
-      {/* Static Preview */}
-      <VStack gap={3}>
-        <Label>Static Preview</Label>
-        <div className="flex flex-col gap-3">
-          <Toast
-            toast={{ id: 'preview-success', variant: 'success', message: 'Used for completed or normal operations.' }}
-            onDismiss={() => {}}
-          />
-          <Toast
-            toast={{ id: 'preview-warning', variant: 'warning', title: 'Warning', message: 'Used when attention is needed but not critical.' }}
-            onDismiss={() => {}}
-          />
-          <Toast
-            toast={{ id: 'preview-error', variant: 'error', title: 'Error', message: 'Used for failed actions or system issues.' }}
-            onDismiss={() => {}}
-          />
-          <Toast
-            toast={{ id: 'preview-info', variant: 'info', message: 'Used for general or non-critical updates.' }}
-            onDismiss={() => {}}
-          />
-        </div>
-      </VStack>
-
-      {/* Usage */}
-      <VStack gap={3}>
-        <Label>Usage</Label>
-        <div className="text-[length:var(--font-size-11)] text-[var(--color-text-muted)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)] font-mono whitespace-pre-wrap">
-{`// 1. App을 ToastProvider로 감싸기
-<ToastProvider>
-  <App />
-  <ToastContainer position="top-right" />
-</ToastProvider>
-
-// 2. useToast 훅 사용
-const { success, error, info, warning } = useToast();
-
-// 3. 토스트 표시
-success('작업이 완료되었습니다.');
-error('오류가 발생했습니다.', { title: '에러' });`}
-        </div>
-      </VStack>
-    </VStack>
   );
 }
 
@@ -682,6 +533,1189 @@ function DrawerDemo() {
 }
 
 /* ----------------------------------------
+   Chart Color Palette (from storage-dashboard)
+   ---------------------------------------- */
+
+const chartColors = {
+  // Primary 5-color palette (Tailwind 400 shades)
+  cyan400: '#22d3ee',
+  emerald400: '#34d399',
+  amber400: '#fbbf24',
+  violet400: '#a78bfa',
+  fuchsia400: '#e879f9',
+  // Additional colors
+  rose400: '#fb7185',
+  blue400: '#60a5fa',
+  green400: '#4ade80',
+  yellow400: '#facc15',
+  red400: '#f87171',
+  // Neutral
+  slate400: '#94a3b8',
+  slate100: '#f1f5f9',
+  slate800: '#1e293b',
+};
+
+const primaryChartColors = [
+  chartColors.cyan400,
+  chartColors.emerald400,
+  chartColors.amber400,
+  chartColors.violet400,
+  chartColors.fuchsia400,
+];
+
+/* ----------------------------------------
+   Base Chart Options (from storage-dashboard)
+   ---------------------------------------- */
+
+const baseChartOptions = {
+  animation: false,
+  grid: {
+    left: '0',
+    right: '16px',
+    top: '30px',
+    bottom: '16px',
+    containLabel: true
+  },
+  xAxis: {
+    type: 'category' as const,
+    axisLine: { show: false },
+    axisTick: { show: false },
+    axisLabel: {
+      color: chartColors.slate400,
+      fontSize: 10
+    },
+    boundaryGap: false
+  },
+  yAxis: {
+    type: 'value' as const,
+    axisLine: { show: false },
+    axisTick: { show: false },
+    splitLine: {
+      lineStyle: { color: chartColors.slate100, opacity: 0.5 }
+    },
+    axisLabel: {
+      color: chartColors.slate400,
+      fontSize: 10
+    }
+  },
+  tooltip: {
+    trigger: 'axis' as const,
+    backgroundColor: 'white',
+    borderColor: '#e2e8f0',
+    textStyle: { color: chartColors.slate800, fontSize: 11 },
+    axisPointer: {
+      type: 'line',
+      snap: true,
+      lineStyle: {
+        color: chartColors.slate400,
+        type: 'dashed'
+      }
+    }
+  }
+};
+
+/* ----------------------------------------
+   Bar Chart Demo (ECharts - from storage-dashboard)
+   ---------------------------------------- */
+
+function BarChartDemo({ variant }: { variant: 'vertical' | 'horizontal' | 'grouped' }) {
+  const labels = ['Instances', 'Volumes', 'Networks', 'Snapshots', 'Backups'];
+  const currentData = [45, 72, 28, 56, 33];
+  const previousData = [35, 55, 42, 38, 28];
+
+  const getOption = () => {
+    if (variant === 'horizontal') {
+      return {
+        ...baseChartOptions,
+        grid: { ...baseChartOptions.grid, left: '80px' },
+        xAxis: {
+          type: 'value' as const,
+          min: 0,
+          max: 100,
+          axisLine: { show: false },
+          axisTick: { show: false },
+          splitLine: { lineStyle: { color: chartColors.slate100, opacity: 0.5 } },
+          axisLabel: { color: chartColors.slate400, fontSize: 10 }
+        },
+        yAxis: {
+          type: 'category' as const,
+          data: labels,
+          axisLine: { show: false },
+          axisTick: { show: false },
+          axisLabel: { color: chartColors.slate400, fontSize: 10 }
+        },
+        series: [{
+          type: 'bar',
+          data: currentData,
+          itemStyle: { color: primaryChartColors[0], borderRadius: [0, 4, 4, 0] },
+          barWidth: '50%'
+        }]
+      };
+    }
+
+    if (variant === 'grouped') {
+      return {
+        ...baseChartOptions,
+        xAxis: {
+          type: 'category' as const,
+          data: labels,
+          axisLine: { show: false },
+          axisTick: { show: false },
+          axisLabel: { color: chartColors.slate400, fontSize: 10 }
+        },
+        yAxis: {
+          ...baseChartOptions.yAxis,
+          min: 0,
+          max: 100
+        },
+        series: [
+          {
+            name: 'Current',
+            type: 'bar',
+            data: currentData,
+            itemStyle: { color: primaryChartColors[0], borderRadius: [4, 4, 0, 0] },
+            barGap: '10%'
+          },
+          {
+            name: 'Previous',
+            type: 'bar',
+            data: previousData,
+            itemStyle: { color: primaryChartColors[1], borderRadius: [4, 4, 0, 0] }
+          }
+        ]
+      };
+    }
+
+    // Vertical (default)
+    return {
+      ...baseChartOptions,
+      xAxis: {
+        type: 'category' as const,
+        data: labels,
+        axisLine: { show: false },
+        axisTick: { show: false },
+        axisLabel: { color: chartColors.slate400, fontSize: 10 }
+      },
+      yAxis: {
+        ...baseChartOptions.yAxis,
+        min: 0,
+        max: 100
+      },
+      series: [{
+        type: 'bar',
+        data: currentData,
+        itemStyle: { color: primaryChartColors[0], borderRadius: [4, 4, 0, 0] },
+        barWidth: '50%'
+      }]
+    };
+  };
+
+  return (
+    <div className="w-full bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-md)] p-4">
+      <ReactECharts option={getOption()} style={{ height: variant === 'horizontal' ? '250px' : '200px' }} notMerge={true} />
+      {variant === 'grouped' && (
+        <div className="flex gap-4 mt-2 justify-start">
+          <div className="flex items-center gap-1.5">
+            <div className="w-2 h-2 rounded-sm" style={{ backgroundColor: primaryChartColors[0] }} />
+            <span className="text-[length:var(--font-size-11)] text-[var(--color-text-muted)]">Current</span>
+          </div>
+          <div className="flex items-center gap-1.5">
+            <div className="w-2 h-2 rounded-sm" style={{ backgroundColor: primaryChartColors[1] }} />
+            <span className="text-[length:var(--font-size-11)] text-[var(--color-text-muted)]">Previous</span>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+/* ----------------------------------------
+   Area Chart Demo (ECharts - from storage-dashboard)
+   ---------------------------------------- */
+
+// Generate time labels for charts
+const generateTimeLabels = () => {
+  const labels = [];
+  for (let i = 0; i <= 50; i += 10) {
+    const min = i.toString().padStart(2, '0');
+    labels.push(`13:${min}`);
+  }
+  return labels;
+};
+
+
+// LineChart Component (from storage-dashboard)
+interface LineChartSeries {
+  name: string;
+  data: number[];
+  color: string;
+}
+
+// Time options for full screen mode
+const timeOptions = [
+  { label: '30m', value: '30m' },
+  { label: '1h', value: '1h' },
+  { label: '6h', value: '6h' },
+  { label: '12h', value: '12h' },
+  { label: '24h', value: '24h' },
+];
+
+// Icons for time controls
+const CalendarIcon = () => (
+  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+    <line x1="16" y1="2" x2="16" y2="6" />
+    <line x1="8" y1="2" x2="8" y2="6" />
+    <line x1="3" y1="10" x2="21" y2="10" />
+  </svg>
+);
+
+const CloseIcon = () => (
+  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <line x1="18" y1="6" x2="6" y2="18" />
+    <line x1="6" y1="6" x2="18" y2="18" />
+  </svg>
+);
+
+
+// Helper function for date formatting
+const formatDateForDisplay = (date: Date | null) => {
+  if (!date) return '';
+  const year = date.getFullYear();
+  const month = (date.getMonth() + 1).toString().padStart(2, '0');
+  const day = date.getDate().toString().padStart(2, '0');
+  return `${year}.${month}.${day}`;
+};
+
+// TimeControls Component
+function TimeControls({
+  onTimeRangeChange,
+  onRefresh
+}: {
+  onTimeRangeChange?: (value: string) => void;
+  onRefresh?: () => void;
+}) {
+  const [timeRange, setTimeRange] = useState('30m');
+  const [customPeriod, setCustomPeriod] = useState<{ start: Date; end: Date } | null>(null);
+  const [showDatePicker, setShowDatePicker] = useState(false);
+  const [tempStartDate, setTempStartDate] = useState<Date | null>(null);
+  const [tempEndDate, setTempEndDate] = useState<Date | null>(null);
+  const [selectingStart, setSelectingStart] = useState(true);
+  const [viewMonth, setViewMonth] = useState(new Date());
+  const datePickerRef = useRef<HTMLDivElement>(null);
+
+  // Close date picker when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (datePickerRef.current && !datePickerRef.current.contains(event.target as Node)) {
+        setShowDatePicker(false);
+      }
+    };
+
+    if (showDatePicker) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [showDatePicker]);
+
+  const handleTimeRangeClick = (value: string) => {
+    setTimeRange(value);
+    setCustomPeriod(null);
+    onTimeRangeChange?.(value);
+  };
+
+  const handleCustomPeriodClick = () => {
+    if (customPeriod) {
+      setTempStartDate(customPeriod.start);
+      setTempEndDate(customPeriod.end);
+      setViewMonth(customPeriod.start);
+    } else {
+      const now = new Date();
+      const oneWeekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+      setTempStartDate(oneWeekAgo);
+      setTempEndDate(now);
+      setViewMonth(now);
+    }
+    setSelectingStart(true);
+    setShowDatePicker(true);
+  };
+
+  const handleApplyCustomPeriod = () => {
+    if (tempStartDate && tempEndDate) {
+      const newPeriod = { start: tempStartDate, end: tempEndDate };
+      setCustomPeriod(newPeriod);
+      setTimeRange('');
+      setShowDatePicker(false);
+    }
+  };
+
+  const handleClearCustomPeriod = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setCustomPeriod(null);
+    setTimeRange('30m');
+    onTimeRangeChange?.('30m');
+  };
+
+  const handlePeriodTextClick = () => {
+    if (customPeriod) {
+      setTempStartDate(customPeriod.start);
+      setTempEndDate(customPeriod.end);
+      setViewMonth(customPeriod.start);
+    }
+    setSelectingStart(true);
+    setShowDatePicker(true);
+  };
+
+  // Calendar helpers
+  const formatCalendarDate = (date: Date | null) => {
+    if (!date) return '';
+    const year = date.getFullYear();
+    const month = (date.getMonth() + 1).toString().padStart(2, '0');
+    const day = date.getDate().toString().padStart(2, '0');
+    return `${year}.${month}.${day}`;
+  };
+
+  const getDaysInMonth = (date: Date) => {
+    const year = date.getFullYear();
+    const month = date.getMonth();
+    const firstDay = new Date(year, month, 1);
+    const lastDay = new Date(year, month + 1, 0);
+    const daysInMonth = lastDay.getDate();
+    const startingDay = firstDay.getDay();
+    
+    const days: { date: Date; isCurrentMonth: boolean; isToday: boolean }[] = [];
+    
+    // Previous month days
+    const prevMonth = new Date(year, month, 0);
+    const prevMonthDays = prevMonth.getDate();
+    for (let i = startingDay - 1; i >= 0; i--) {
+      days.push({
+        date: new Date(year, month - 1, prevMonthDays - i),
+        isCurrentMonth: false,
+        isToday: false
+      });
+    }
+    
+    // Current month days
+    const today = new Date();
+    for (let i = 1; i <= daysInMonth; i++) {
+      const d = new Date(year, month, i);
+      days.push({
+        date: d,
+        isCurrentMonth: true,
+        isToday: d.toDateString() === today.toDateString()
+      });
+    }
+    
+    // Next month days
+    const remainingDays = 42 - days.length;
+    for (let i = 1; i <= remainingDays; i++) {
+      days.push({
+        date: new Date(year, month + 1, i),
+        isCurrentMonth: false,
+        isToday: false
+      });
+    }
+    
+    return days;
+  };
+
+  const handleDayClick = (date: Date) => {
+    if (selectingStart) {
+      setTempStartDate(date);
+      if (tempEndDate && date > tempEndDate) {
+        setTempEndDate(null);
+      }
+      setSelectingStart(false);
+    } else {
+      if (tempStartDate && date < tempStartDate) {
+        setTempEndDate(tempStartDate);
+        setTempStartDate(date);
+      } else {
+        setTempEndDate(date);
+      }
+      setSelectingStart(true);
+    }
+  };
+
+  const isDateInRange = (date: Date) => {
+    if (!tempStartDate || !tempEndDate) return false;
+    return date >= tempStartDate && date <= tempEndDate;
+  };
+
+  const isStartDate = (date: Date) => {
+    return tempStartDate?.toDateString() === date.toDateString();
+  };
+
+  const isEndDate = (date: Date) => {
+    return tempEndDate?.toDateString() === date.toDateString();
+  };
+
+  const prevMonth = () => {
+    setViewMonth(new Date(viewMonth.getFullYear(), viewMonth.getMonth() - 1, 1));
+  };
+
+  const nextMonth = () => {
+    setViewMonth(new Date(viewMonth.getFullYear(), viewMonth.getMonth() + 1, 1));
+  };
+
+  const weekDays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+
+  return (
+    <div className="fullScreenTimeControls">
+      {/* Time Range Buttons */}
+      <div className="timeSegments">
+        {timeOptions.map(option => (
+          <button 
+            key={option.value}
+            className={`timeSegment ${timeRange === option.value && !customPeriod ? 'timeSegmentActive' : ''}`}
+            onClick={() => handleTimeRangeClick(option.value)}
+          >
+            {option.label}
+          </button>
+        ))}
+      </div>
+
+      {/* Period Selector */}
+      <div className="datePickerContainer" ref={datePickerRef}>
+        {customPeriod ? (
+          <div className="periodTag">
+            <span className="periodTagText" onClick={handlePeriodTextClick}>
+              {formatDateForDisplay(customPeriod.start)}
+              <span className="periodTagDivider">—</span>
+              {formatDateForDisplay(customPeriod.end)}
+            </span>
+            <button className="periodTagClose" onClick={handleClearCustomPeriod}>
+              <CloseIcon />
+          </button>
+        </div>
+        ) : (
+          <button 
+            className={`customPeriodBtn ${showDatePicker ? 'customPeriodBtnActive' : ''}`}
+            onClick={handleCustomPeriodClick}
+          >
+            <CalendarIcon />
+            Period
+          </button>
+        )}
+
+        {/* Calendar Date Picker Dropdown */}
+        {showDatePicker && (
+          <div className="calendarDropdown">
+            {/* Date Range Header */}
+            <div className="calendarHeader">
+              <div 
+                className={`calendarDateBox ${selectingStart ? 'calendarDateBoxActive' : ''}`}
+                onClick={() => setSelectingStart(true)}
+              >
+                <span className="calendarDateLabel">START</span>
+                <span className="calendarDateValue">{formatCalendarDate(tempStartDate)}</span>
+          </div>
+              <div className="calendarDateSeparator">~</div>
+          <div 
+                className={`calendarDateBox ${!selectingStart ? 'calendarDateBoxActive' : ''}`}
+                onClick={() => setSelectingStart(false)}
+          >
+                <span className="calendarDateLabel">END</span>
+                <span className="calendarDateValue">{formatCalendarDate(tempEndDate)}</span>
+          </div>
+            </div>
+
+            {/* Month Navigation */}
+            <div className="calendarMonthNav">
+              <button className="calendarNavBtn" onClick={prevMonth}>
+                <IconChevronLeft size={16} stroke={1.5} />
+              </button>
+              <span className="calendarMonthLabel">
+                {viewMonth.getFullYear()}.{(viewMonth.getMonth() + 1).toString().padStart(2, '0')}
+              </span>
+              <button className="calendarNavBtn" onClick={nextMonth}>
+                <IconChevronRight size={16} stroke={1.5} />
+              </button>
+            </div>
+
+            {/* Weekday Headers */}
+            <div className="calendarWeekdays">
+              {weekDays.map(day => (
+                <div key={day} className="calendarWeekday">{day}</div>
+              ))}
+            </div>
+
+            {/* Calendar Grid */}
+            <div className="calendarGrid">
+              {getDaysInMonth(viewMonth).map((day, index) => {
+                const isStart = isStartDate(day.date);
+                const isEnd = isEndDate(day.date);
+                const inRange = isDateInRange(day.date);
+                const colIndex = index % 7;
+                const isFirstCol = colIndex === 0;
+                const isLastCol = colIndex === 6;
+                
+                const wrapperClasses = [
+                  'calendarDayWrapper',
+                  inRange && 'inRange',
+                  isStart && 'rangeStart',
+                  isEnd && 'rangeEnd',
+                  isFirstCol && 'firstCol',
+                  isLastCol && 'lastCol',
+                ].filter(Boolean).join(' ');
+                
+                const dayClasses = [
+                  'calendarDay',
+                  !day.isCurrentMonth && 'calendarDayOther',
+                  (isStart || isEnd) && 'calendarDaySelected',
+                  day.isToday && 'calendarDayToday',
+                ].filter(Boolean).join(' ');
+                
+                return (
+                  <div key={index} className={wrapperClasses}>
+                    {inRange && <div className="rangeBackground" />}
+                    <button
+                      className={dayClasses}
+                      onClick={() => handleDayClick(day.date)}
+                    >
+                      <span>{day.date.getDate()}</span>
+                      {day.isToday && <span className="calendarTodayDot" />}
+                    </button>
+                  </div>
+                );
+              })}
+            </div>
+
+            {/* Actions */}
+            <div className="calendarActions">
+              <button className="calendarCancel" onClick={() => setShowDatePicker(false)}>Cancel</button>
+              <button className="calendarApply" onClick={handleApplyCustomPeriod}>Apply</button>
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* Refresh Button */}
+      <button className="refreshButton" onClick={onRefresh}>
+        <IconRefresh size={14} stroke={1.5} />
+      </button>
+    </div>
+  );
+}
+
+function LineChart({ 
+  title, 
+  series, 
+  yAxisFormatter = (v: number) => `${v}`,
+  height = '200px',
+  onFullScreen,
+  isFullScreen = false,
+  onExitFullScreen,
+  timeControls
+}: { 
+  title: string;
+  series: LineChartSeries[];
+  yAxisFormatter?: (value: number) => string;
+  height?: string;
+  onFullScreen?: () => void;
+  isFullScreen?: boolean;
+  onExitFullScreen?: () => void;
+  timeControls?: React.ReactNode;
+}) {
+  const [visibleSeries, setVisibleSeries] = useState<Record<string, boolean>>(
+    Object.fromEntries(series.map(s => [s.name, true]))
+  );
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [showDataView, setShowDataView] = useState(false);
+
+  const timeLabels = generateTimeLabels();
+
+  const allVisible = Object.values(visibleSeries).every(v => v);
+  const toggleAll = () => {
+    const newState = !allVisible;
+    setVisibleSeries(Object.fromEntries(series.map(s => [s.name, newState])));
+  };
+
+  const handleFullScreen = () => {
+    setMenuOpen(false);
+    if (onFullScreen) onFullScreen();
+  };
+
+  const option = {
+    animation: false,
+    grid: {
+      left: '0',
+      right: '16px',
+      top: '20px',
+      bottom: '16px',
+      containLabel: true
+    },
+        xAxis: {
+      type: 'category' as const,
+      data: timeLabels,
+      axisLine: { show: false },
+      axisTick: { show: false },
+      axisLabel: {
+        color: chartColors.slate400,
+        fontSize: 10
+      },
+      boundaryGap: false
+        },
+        yAxis: {
+      type: 'value' as const,
+      axisLine: { show: false },
+      axisTick: { show: false },
+      splitLine: {
+        lineStyle: { color: chartColors.slate100, opacity: 0.5 }
+      },
+      axisLabel: {
+        color: chartColors.slate400,
+        fontSize: 10,
+        formatter: yAxisFormatter
+      }
+    },
+    tooltip: {
+      trigger: 'axis' as const,
+      backgroundColor: 'white',
+      borderColor: '#e2e8f0',
+      textStyle: { 
+        color: chartColors.slate800, 
+        fontSize: 11, 
+        fontFamily: 'Mona Sans, -apple-system, BlinkMacSystemFont, sans-serif' 
+      }
+    },
+    series: series
+      .filter(s => visibleSeries[s.name])
+      .map(s => ({
+        name: s.name,
+        type: 'line',
+        smooth: true,
+        symbol: 'circle',
+        symbolSize: 6,
+        showSymbol: false,
+        lineStyle: { color: s.color, width: 1 },
+        itemStyle: { color: s.color },
+        areaStyle: { color: s.color, opacity: 0.1 },
+        data: s.data
+      }))
+  };
+
+  return (
+    <div className={`chartCard ${isFullScreen ? 'chartCardFullScreen' : ''}`}>
+      {/* Header */}
+      <div className="chartHeader">
+        <span className="chartTitle">{title}</span>
+        {isFullScreen && timeControls && (
+          <div className="chartHeaderCenter">{timeControls}</div>
+        )}
+        <div className="chartControls">
+          {/* Toggle Button - only show for multiple series */}
+          {series.length > 1 && (
+            <>
+              <button className="toggleBtn" onClick={toggleAll}>
+                <span className={`toggleSwitch ${allVisible ? 'toggleSwitchActive' : ''}`} />
+                <span>{allVisible ? 'Hide All' : 'View All'}</span>
+              </button>
+              <span className="toggleDivider">|</span>
+            </>
+          )}
+          
+          {/* Menu Button */}
+          <div className="menuContainer">
+            <button 
+              className="menuTrigger"
+              onClick={(e) => { e.stopPropagation(); setMenuOpen(!menuOpen); }}
+            >
+              <IconDotsCircleHorizontal size={16} stroke={1.5} />
+            </button>
+            {menuOpen && (
+              <div className="contextMenu">
+                <button className="contextMenuItem" onClick={() => setMenuOpen(false)}>
+                  Download Image
+                </button>
+                <button className="contextMenuItem" onClick={() => setMenuOpen(false)}>
+                  Download CSV
+                </button>
+                <button className="contextMenuItemLast" onClick={() => { setMenuOpen(false); setShowDataView(true); }}>
+                  Data View
+                </button>
+              </div>
+            )}
+          </div>
+          
+          {/* Expand/Minimize Button */}
+          <button 
+            className="expandTrigger" 
+            title={isFullScreen ? "Minimize" : "Expand"}
+            onClick={isFullScreen ? onExitFullScreen : handleFullScreen}
+          >
+            {isFullScreen ? (
+              <IconArrowsMinimize size={16} stroke={1.5} />
+            ) : (
+              <IconArrowsMaximize size={16} stroke={1.5} />
+            )}
+          </button>
+        </div>
+      </div>
+      
+      {/* Chart Body */}
+      <div className="chartBody">
+        <div className="chartWrapper" style={isFullScreen ? { height: '100%' } : undefined}>
+          <ReactECharts option={option} style={{ height: isFullScreen ? '100%' : height }} notMerge={true} />
+        </div>
+        <div className="chartLegend">
+          {series.map((s, i) => (
+            <div 
+              key={i}
+              className={`legendItem ${!visibleSeries[s.name] ? 'legendItemHidden' : ''}`}
+              onClick={() => setVisibleSeries(prev => ({ ...prev, [s.name]: !prev[s.name] }))}
+            >
+              <div className="legendDot" style={{ backgroundColor: s.color }} />
+              <span>{s.name}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+      
+      {/* Data View Drawer */}
+      <DataViewDrawer
+        isOpen={showDataView}
+        onClose={() => setShowDataView(false)}
+        title={`${title} (RAW)`}
+        series={series}
+        timeLabels={timeLabels}
+      />
+    </div>
+  );
+}
+
+// Full Screen Chart Data Interface
+interface FullScreenChartData {
+  title: string;
+  series: LineChartSeries[];
+  yAxisFormatter: (value: number) => string;
+}
+
+// ChartWithFullScreen Wrapper Component
+function ChartWithFullScreen({
+  title,
+  series,
+  yAxisFormatter = (v: number) => `${v}`,
+  height = '200px'
+}: {
+  title: string;
+  series: LineChartSeries[];
+  yAxisFormatter?: (value: number) => string;
+  height?: string;
+}) {
+  const [fullScreenChart, setFullScreenChart] = useState<FullScreenChartData | null>(null);
+
+  // Close on ESC key
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape' && fullScreenChart) {
+        setFullScreenChart(null);
+      }
+    };
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, [fullScreenChart]);
+
+  const handleEnterFullScreen = () => {
+    setFullScreenChart({ title, series, yAxisFormatter });
+  };
+
+  const handleExitFullScreen = () => {
+    setFullScreenChart(null);
+  };
+
+  return (
+    <>
+      {/* Regular Chart */}
+      <LineChart
+        title={title}
+        series={series}
+        yAxisFormatter={yAxisFormatter}
+        height={height}
+        onFullScreen={handleEnterFullScreen}
+      />
+
+      {/* Full Screen Overlay & Chart */}
+      {fullScreenChart && (
+        <>
+          <div className="fullScreenOverlay" onClick={handleExitFullScreen} />
+          <div className="fullScreenFloating">
+            <LineChart
+              title={fullScreenChart.title}
+              series={fullScreenChart.series}
+              yAxisFormatter={fullScreenChart.yAxisFormatter}
+              isFullScreen={true}
+              onExitFullScreen={handleExitFullScreen}
+              timeControls={<TimeControls />}
+            />
+          </div>
+        </>
+      )}
+    </>
+  );
+}
+
+// QuotaBarDemo Component
+function QuotaBarDemo({ label, used, total, unit }: { label: string; used: number; total: number; unit: string }) {
+  const percentage = Math.round((used / total) * 100);
+  const remaining = total - used;
+  
+  const getColors = () => {
+    if (percentage >= 100) return {
+      bg: 'bg-[var(--color-status-error)]/15',
+      text: 'text-[var(--color-status-error)]',
+      bar: 'bg-[var(--color-text-default)]'
+    };
+    if (percentage >= 70) return {
+      bg: 'bg-[var(--color-status-warning)]/15',
+      text: 'text-[var(--color-status-warning)]',
+      bar: 'bg-[var(--color-text-default)]'
+    };
+    return {
+      bg: 'bg-[var(--color-status-success)]/15',
+      text: 'text-[var(--color-status-success)]',
+      bar: 'bg-[var(--color-text-default)]'
+    };
+  };
+  
+  const colors = getColors();
+  
+  return (
+    <div className="flex flex-col gap-2">
+      <div className="flex items-center justify-between">
+        <span className="text-[12px] font-medium text-[var(--color-text-default)]">{label}</span>
+        <div className="flex items-center gap-2">
+          <span className="text-[11px] text-[var(--color-text-muted)]">{used}/{total} {unit}</span>
+          <div className={`flex items-center px-1.5 py-0.5 rounded-md ${colors.bg}`}>
+            <span className={`text-[11px] font-medium ${colors.text}`}>{percentage}%</span>
+          </div>
+        </div>
+      </div>
+      <Tooltip 
+        content={`Used: ${used} ${unit}\nRemaining: ${remaining} ${unit}\nTotal: ${total} ${unit}`}
+        position="top"
+      >
+        <div className="w-full">
+          <div className="h-1 rounded-sm bg-[var(--color-surface-muted)] overflow-hidden cursor-pointer">
+            <div 
+              className={`h-full rounded-sm ${colors.bar} transition-all`}
+              style={{ width: `${Math.min(percentage, 100)}%` }}
+            />
+          </div>
+        </div>
+      </Tooltip>
+    </div>
+  );
+}
+
+function AreaChartDemo({ variant }: { variant: 'basic' | 'stacked' }) {
+  // Basic variant - Network Traffic (single series)
+  const networkTrafficSeries: LineChartSeries[] = [
+    { name: 'Traffic', data: [120, 180, 150, 220, 280, 240], color: chartColors.cyan400 },
+  ];
+
+  if (variant === 'basic') {
+    return (
+      <ChartWithFullScreen 
+        title="Network Traffic"
+        series={networkTrafficSeries}
+        yAxisFormatter={(v) => `${v} MB/s`}
+        height="200px"
+      />
+    );
+  }
+
+  // Stacked variant - CPU Utilization
+  const cpuUtilizationSeries: LineChartSeries[] = [
+    { name: 'osd.0', data: [0.3, 0.45, 0.55, 0.6, 0.8, 1.1], color: chartColors.cyan400 },
+    { name: 'osd.1', data: [0.8, 0.95, 1.15, 1.2, 1.0, 1.5], color: chartColors.emerald400 },
+    { name: 'osd.2', data: [0.5, 0.7, 0.9, 0.85, 0.75, 1.1], color: chartColors.amber400 },
+    { name: 'osd.3', data: [0.3, 0.5, 0.6, 0.55, 0.65, 0.8], color: chartColors.violet400 },
+  ];
+
+  return (
+    <ChartWithFullScreen 
+      title="CPU Utilization"
+      series={cpuUtilizationSeries}
+      yAxisFormatter={(v) => `${v.toFixed(2)}%`}
+      height="200px"
+    />
+  );
+}
+
+/* ----------------------------------------
+   Pie Chart Demo (ECharts - from storage-dashboard)
+   ---------------------------------------- */
+
+// Extended color palette for pie charts with many segments
+const extendedChartColors = [
+  chartColors.cyan400,     // cyan
+  chartColors.emerald400,  // emerald/green
+  chartColors.amber400,    // amber/yellow
+  chartColors.violet400,   // violet/purple
+  chartColors.fuchsia400,  // fuchsia/pink
+  chartColors.red400,      // red/coral
+  chartColors.slate400,    // slate/gray
+  '#60a5fa',               // blue-400
+  '#f472b6',               // pink-400
+  '#4ade80',               // green-400
+];
+
+interface PieChartData {
+  name: string;
+  value: number;
+}
+
+function PieChartDemo({ 
+  title, 
+  data,
+  showPercentOnSlice = true 
+}: { 
+  title: string; 
+  data: PieChartData[];
+  showPercentOnSlice?: boolean;
+}) {
+  const total = data.reduce((sum, item) => sum + item.value, 0);
+  
+  const chartData = data.map((item, index) => ({
+    ...item,
+    itemStyle: { color: extendedChartColors[index % extendedChartColors.length] }
+  }));
+
+  const legendData = data.map((item, index) => ({
+    label: item.name,
+    value: Math.round((item.value / total) * 100),
+    color: extendedChartColors[index % extendedChartColors.length]
+  }));
+
+  const getOption = () => ({
+    tooltip: {
+      show: true,
+      trigger: 'item',
+      backgroundColor: '#ffffff',
+      borderColor: '#e2e8f0',
+      borderWidth: 1,
+      borderRadius: 6,
+      padding: [8, 12],
+      textStyle: {
+        color: '#1e293b',
+        fontSize: 11
+      },
+      formatter: (params: { marker: string; name: string; value: number; percent: number }) => {
+        return `${params.marker} ${params.name}<br/><span style="font-weight: 600; margin-left: 14px;">${params.value} (${params.percent.toFixed(0)}%)</span>`;
+      }
+    },
+    animation: false,
+    series: [
+      {
+        type: 'pie',
+        radius: '80%',
+        center: ['50%', '50%'],
+        avoidLabelOverlap: true,
+        label: showPercentOnSlice ? {
+          show: true,
+          position: 'inside',
+          formatter: (params: { percent: number }) => {
+            return params.percent >= 15 ? `${params.percent.toFixed(0)}%` : '';
+          },
+          fontSize: 12,
+          fontWeight: 600,
+          color: '#ffffff'
+        } : {
+          show: false
+        },
+        emphasis: {
+          scale: true,
+          scaleSize: 5,
+          itemStyle: {
+            shadowBlur: 10,
+            shadowOffsetX: 0,
+            shadowColor: 'rgba(0, 0, 0, 0.2)'
+          }
+        },
+        labelLine: {
+          show: false
+        },
+        data: chartData
+      }
+    ]
+  });
+
+  return (
+    <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] p-5 flex flex-col gap-4 w-[280px]">
+      <span className="text-[length:var(--font-size-13)] font-medium text-[var(--color-text-default)]">{title}</span>
+      <div className="flex justify-center">
+        <ReactECharts option={getOption()} style={{ height: '180px', width: '180px' }} />
+      </div>
+      <div className="flex flex-wrap items-center gap-x-4 gap-y-2 justify-center max-h-[60px] overflow-y-auto legend-scroll">
+        {legendData.map((item, i) => (
+          <div key={i} className="flex items-center gap-1.5">
+            <div className="w-2.5 h-2.5 rounded-sm shrink-0" style={{ backgroundColor: item.color }} />
+            <span className="text-[length:var(--font-size-11)] text-[var(--color-text-muted)]">{item.label}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+/* ----------------------------------------
+   Half-Doughnut Chart Demo (ECharts - from storage-dashboard)
+   ---------------------------------------- */
+
+function HalfDoughnutChartDemo({ value, label, status = 'default' }: { value: number; label: string; status?: 'default' | 'success' | 'warning' | 'error' }) {
+  // Get color from design system CSS variables
+  const getColor = (cssVar: string, fallback: string) => {
+    if (typeof window !== 'undefined') {
+      const value = getComputedStyle(document.documentElement).getPropertyValue(cssVar).trim();
+      return value || fallback;
+    }
+    return fallback;
+  };
+
+  const colorMap = {
+    default: primaryChartColors[0],
+    success: getColor('--color-status-success', '#22c55e'),
+    warning: getColor('--color-status-warning', '#f97316'),
+    error: getColor('--color-status-error', '#ef4444'),
+  };
+
+  const color = colorMap[status];
+
+  const getOption = () => ({
+    series: [
+      {
+        type: 'gauge',
+        startAngle: 210,
+        endAngle: -30,
+        center: ['50%', '65%'],
+        radius: '90%',
+        min: 0,
+        max: 100,
+        axisLine: {
+          lineStyle: {
+            width: 14,
+            color: [
+              [value / 100, color],
+              [1, getColor('--color-border-subtle', '#f1f5f9')]
+            ]
+          }
+        },
+        pointer: {
+          show: false
+        },
+        axisTick: {
+          show: false
+        },
+        splitLine: {
+          show: false
+        },
+        axisLabel: {
+          show: false
+        },
+        title: {
+          show: false
+        },
+        detail: {
+          show: false
+        }
+      }
+    ]
+  });
+
+  return (
+    <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] p-4 relative">
+      <ReactECharts option={getOption()} style={{ height: '160px', width: '180px' }} />
+      <div className="absolute inset-0 flex flex-col items-center justify-center pt-8">
+        <span className="text-[24px] leading-[28px] font-semibold text-[var(--color-text-default)]">{value}%</span>
+        <span className="text-[12px] text-[var(--color-text-subtle)]">{label}</span>
+      </div>
+    </div>
+  );
+}
+
+/* ----------------------------------------
+   Single Value Doughnut Chart Demo (ECharts)
+   ---------------------------------------- */
+
+function SingleValueDoughnutDemo({ 
+  title, 
+  value,
+  color
+}: { 
+  title: string; 
+  value: number;
+  color?: string;
+}) {
+  const getColor = (cssVar: string, fallback: string) => {
+    if (typeof window !== 'undefined') {
+      const val = getComputedStyle(document.documentElement).getPropertyValue(cssVar).trim();
+      return val || fallback;
+    }
+    return fallback;
+  };
+
+  const mainColor = color || getColor('--color-status-error', '#ef4444');
+  const bgColor = getColor('--color-border-subtle', '#e2e8f0');
+
+  const getOption = () => ({
+    tooltip: {
+      show: false
+    },
+    animationDuration: 1000,
+    animationEasing: 'cubicOut' as const,
+    series: [
+      {
+        type: 'pie',
+        radius: ['68%', '80%'],
+        center: ['50%', '50%'],
+        avoidLabelOverlap: false,
+        silent: true,
+        itemStyle: {
+          borderRadius: 0,
+          borderWidth: 0
+        },
+        label: {
+          show: false
+        },
+        labelLine: {
+          show: false
+        },
+        emphasis: {
+          disabled: true
+        },
+        data: [
+          { value: value, itemStyle: { color: mainColor } },
+          { value: 100 - value, itemStyle: { color: bgColor } }
+        ]
+      }
+    ],
+    graphic: [
+      {
+        type: 'text',
+        left: 'center',
+        top: '46%',
+        style: {
+          text: `${value}%`,
+          textAlign: 'center',
+          fill: getColor('--color-text-default', '#0f172a'),
+          fontSize: 18,
+          fontWeight: 600
+        }
+      }
+    ]
+  });
+
+  return (
+    <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] p-4">
+      <h4 className="text-[13px] font-medium text-[var(--color-text-default)] mb-2">{title}</h4>
+      <ReactECharts option={getOption()} style={{ height: '180px', width: '200px' }} />
+    </div>
+  );
+}
+
+/* ----------------------------------------
    TabBar Demo (with state)
    ---------------------------------------- */
 
@@ -742,9 +1776,9 @@ function TabBarDemo() {
         <div className="w-full border border-[var(--color-border-default)] rounded-[var(--radius-md)] overflow-hidden">
           <TabBar
             tabs={[
-              { id: 'home', label: 'Home', icon: <IconHome size={14} stroke={1} />, closable: false },
-              { id: 'docs', label: 'Documents', icon: <IconFile size={14} stroke={1} /> },
-              { id: 'settings', label: 'Settings', icon: <IconSettings size={14} stroke={1} /> },
+              { id: 'home', label: 'Home', icon: <IconHome size={14} stroke={1.5} />, closable: false },
+              { id: 'docs', label: 'Documents', icon: <IconFile size={14} stroke={1.5} /> },
+              { id: 'settings', label: 'Settings', icon: <IconSettings size={14} stroke={1.5} /> },
             ]}
             activeTab="docs"
             onTabChange={() => {}}
@@ -769,6 +1803,34 @@ function TabBarDemo() {
             showAddButton={false}
           />
         </div>
+      </VStack>
+
+      {/* Many Tabs (Scroll) */}
+      <VStack gap={3}>
+        <Label>Many Tabs (with scroll navigation)</Label>
+        <div className="w-full border border-[var(--color-border-default)] rounded-[var(--radius-md)] overflow-hidden">
+          <TabBar
+            tabs={[
+              { id: 'tab-1', label: 'Dashboard', closable: true },
+              { id: 'tab-2', label: 'Analytics', closable: true },
+              { id: 'tab-3', label: 'Reports', closable: true },
+              { id: 'tab-4', label: 'Users', closable: true },
+              { id: 'tab-5', label: 'Settings', closable: true },
+              { id: 'tab-6', label: 'Notifications', closable: true },
+              { id: 'tab-7', label: 'Integrations', closable: true },
+              { id: 'tab-8', label: 'Security', closable: true },
+              { id: 'tab-9', label: 'Billing', closable: true },
+              { id: 'tab-10', label: 'Support', closable: true },
+            ]}
+            activeTab="tab-1"
+            onTabChange={() => {}}
+            onTabClose={() => {}}
+            showAddButton={false}
+          />
+        </div>
+        <p className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
+          When tabs overflow, use arrow buttons to scroll left/right
+        </p>
       </VStack>
     </VStack>
   );
@@ -869,7 +1931,7 @@ function TableDemo() {
       width: '70px',
       align: 'center' as const,
       render: (value: boolean) => value ? (
-        <IconLock size={16} stroke={1} className="text-[var(--color-text-default)]" />
+        <IconLock size={16} stroke={1.5} className="text-[var(--color-text-default)]" />
       ) : null
     },
     { key: 'fixedIp', label: 'Fixed IP', sortable: true, width: '120px' },
@@ -904,10 +1966,10 @@ function TableDemo() {
       render: () => (
         <div className="flex items-center gap-1">
           <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors text-[var(--color-text-subtle)] hover:text-[var(--color-text-default)]">
-            <IconTerminal2 size={16} stroke={1} />
+            <IconTerminal2 size={16} stroke={1.5} />
           </button>
           <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors text-[var(--color-text-subtle)] hover:text-[var(--color-text-default)]">
-            <IconDotsVertical size={16} stroke={1} />
+            <IconDotsVertical size={16} stroke={1.5} />
           </button>
         </div>
       )
@@ -935,16 +1997,17 @@ function TableDemo() {
       render: (_: string | null, row: InstanceData) => (
         row.attachedTo && row.attachedToId ? (
           <div className="flex items-center gap-2">
-            <div 
-              className="flex-shrink-0 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[4px] p-1"
-              title={row.attachedType === 'router' ? 'Router' : 'Instance'}
-            >
-              {row.attachedType === 'router' ? (
-                <IconRouter size={12} stroke={1} className="text-[var(--color-text-subtle)]" />
-              ) : (
-                <IconCube size={12} stroke={1} className="text-[var(--color-text-subtle)]" />
-              )}
-            </div>
+            <Tooltip content={row.attachedType === 'router' ? 'Router' : 'Instance'} position="top" delay={0}>
+              <div 
+                className="flex-shrink-0 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[4px] p-1 cursor-pointer hover:bg-[var(--color-surface-muted)] transition-colors"
+              >
+                {row.attachedType === 'router' ? (
+                  <IconRouter size={12} stroke={1.5} className="text-[var(--color-text-subtle)]" />
+                ) : (
+                  <IconCube size={12} stroke={1.5} className="text-[var(--color-text-subtle)]" />
+                )}
+              </div>
+            </Tooltip>
             <div className="flex flex-col gap-0.5 min-w-0">
               <button
                 onClick={(e) => e.stopPropagation()}
@@ -1106,13 +2169,13 @@ function TableDemo() {
       <VStack gap={3}>
         <Label>Sticky Header (scroll to see effect)</Label>
         <div className="overflow-hidden rounded-[var(--radius-md)]">
-          <Table
+        <Table
             columns={compactColumns}
             data={sampleTableData.slice(0, 5)}
             rowKey="id"
             maxHeight="180px"
-            stickyHeader
-          />
+          stickyHeader
+        />
         </div>
         <p className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
           Scroll vertically to see sticky header effect
@@ -1153,30 +2216,10 @@ function TableDemo() {
    ---------------------------------------- */
 
 export function DesignSystemPage() {
-  const navigate = useNavigate();
-  const { tabs, activeTabId, selectTab, closeTab, addNewTab } = useTabs();
   const [activeSection, setActiveSection] = useState('token-architecture');
   const [searchQuery, setSearchQuery] = useState('');
   const [showScrollTop, setShowScrollTop] = useState(false);
-  const [dashboardDropdownOpen, setDashboardDropdownOpen] = useState(false);
-  const dropdownRef = useRef<HTMLDivElement>(null);
-
-  // Convert tabs to TabBar format
-  const tabBarTabs = tabs.map((tab) => ({
-    id: tab.id,
-    label: tab.label,
-    closable: tab.closable,
-  }));
-
-  // Handle tab change
-  const handleTabChange = (tabId: string) => {
-    selectTab(tabId);
-  };
-
-  // Handle tab close
-  const handleTabClose = (tabId: string) => {
-    closeTab(tabId);
-  };
+  const mainRef = useRef<HTMLDivElement>(null);
   
   // Pagination demo states
   const [demoPage1, setDemoPage1] = useState(1);
@@ -1184,17 +2227,25 @@ export function DesignSystemPage() {
   const [demoPage3, setDemoPage3] = useState(15);
   const [demoPage4, setDemoPage4] = useState(2);
 
+  // Scroll to top on mount
+  useEffect(() => {
+    mainRef.current?.scrollTo(0, 0);
+  }, []);
+
   // Scroll to top handler
   useEffect(() => {
+    const mainElement = mainRef.current;
+    if (!mainElement) return;
+    
     const handleScroll = () => {
-      setShowScrollTop(window.scrollY > 300);
+      setShowScrollTop(mainElement.scrollTop > 300);
     };
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    mainElement.addEventListener('scroll', handleScroll);
+    return () => mainElement.removeEventListener('scroll', handleScroll);
   }, []);
 
   const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    mainRef.current?.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   // Intersection Observer to track active section
@@ -1243,26 +2294,10 @@ export function DesignSystemPage() {
     }
   };
 
-  // Close dropdown when clicking outside
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
-        setDashboardDropdownOpen(false);
-      }
-    };
-    if (dashboardDropdownOpen) {
-      document.addEventListener('mousedown', handleClickOutside);
-    }
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, [dashboardDropdownOpen]);
-
   return (
-    <ToastProvider>
-    <div className="fixed inset-0 bg-[var(--color-surface-subtle)] flex w-full">
+    <div className="min-h-screen bg-[var(--color-surface-subtle)]">
       {/* Left Sidebar Navigation */}
-      <nav className="fixed left-0 top-[var(--tabbar-height)] w-[200px] h-[calc(100vh-var(--tabbar-height))] bg-[var(--color-surface-default)] border-r border-[var(--color-border-default)] overflow-y-auto z-30">
+      <nav className="fixed left-0 top-0 w-[200px] h-screen bg-[var(--color-surface-default)] border-r border-[var(--color-border-default)] overflow-y-auto z-50">
         <div className="p-4">
           {/* Logo */}
           <Link to="/" className="flex items-center gap-2 mb-4">
@@ -1274,35 +2309,15 @@ export function DesignSystemPage() {
             </span>
           </Link>
 
-          {/* Dashboard Dropdown */}
-          <div className="relative mb-4" ref={dropdownRef}>
-            <button
-              onClick={() => setDashboardDropdownOpen(!dashboardDropdownOpen)}
-              className="flex items-center gap-2 w-full px-3 py-2 rounded-[var(--radius-button)] bg-[var(--color-action-secondary)] hover:bg-[var(--color-action-secondary-hover)] text-[var(--color-text-default)] text-[length:var(--font-size-11)] font-medium transition-colors border border-[var(--color-border-default)]"
-            >
-              <IconHome size={16} stroke={1} />
-              <span>Dashboard</span>
-              <IconChevronDown size={14} stroke={1} className={`ml-auto transition-transform ${dashboardDropdownOpen ? 'rotate-180' : ''}`} />
-            </button>
-            {dashboardDropdownOpen && (
-              <div className="absolute top-full left-0 right-0 mt-1 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-md)] shadow-lg z-50">
-                <Link
-                  to="/"
-                  onClick={() => setDashboardDropdownOpen(false)}
-                  className="flex items-center gap-2 px-3 py-2 text-[length:var(--font-size-11)] text-[var(--color-text-default)] hover:bg-[var(--color-surface-muted)] transition-colors first:rounded-t-[var(--radius-md)] last:rounded-b-[var(--radius-md)]"
-                >
-                  <span>Compute</span>
-                </Link>
-                <Link
-                  to="/agent"
-                  onClick={() => setDashboardDropdownOpen(false)}
-                  className="flex items-center gap-2 px-3 py-2 text-[length:var(--font-size-11)] text-[var(--color-text-default)] hover:bg-[var(--color-surface-muted)] transition-colors first:rounded-t-[var(--radius-md)] last:rounded-b-[var(--radius-md)]"
-                >
-                  <span>Agent</span>
-                </Link>
-              </div>
-            )}
-          </div>
+          {/* Dashboard Link */}
+          <Link
+            to="/"
+            className="flex items-center gap-2 w-full px-3 py-2 mb-4 rounded-[var(--radius-button)] bg-[var(--color-action-secondary)] hover:bg-[var(--color-action-secondary-hover)] text-[var(--color-text-default)] text-[length:var(--font-size-11)] font-medium transition-colors border border-[var(--color-border-default)]"
+          >
+            <IconHome size={16} stroke={1.5} />
+            <span>Dashboard</span>
+            <IconChevronRight size={14} stroke={1.5} className="ml-auto" />
+          </Link>
 
           {/* Navigation */}
           <VStack gap={4}>
@@ -1324,7 +2339,7 @@ export function DesignSystemPage() {
                     }
                   `}
                 >
-                  <Icon size={16} stroke={1} />
+                  <Icon size={16} stroke={1.5} />
                   {label}
                 </button>
               ))}
@@ -1348,40 +2363,16 @@ export function DesignSystemPage() {
                     }
                   `}
                 >
-                  <Icon size={16} stroke={1} />
+                  <Icon size={16} stroke={1.5} />
                   {label}
                 </button>
               ))}
             </VStack>
 
-            {/* Data Display */}
+            {/* Navigation & Data Display */}
             <VStack gap={1}>
               <span className="px-3 py-1 text-[length:var(--font-size-10)] font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider">
-                Data Display
-              </span>
-              {dataDisplayItems.map(({ id, label, icon: Icon }) => (
-                <button
-                  key={id}
-                  onClick={() => scrollToSection(id)}
-                  className={`
-                    w-full px-3 py-2 rounded-[var(--radius-button)] flex items-center gap-2
-                    text-[length:var(--font-size-11)] text-left transition-colors
-                    ${activeSection === id
-                      ? 'bg-[var(--color-state-info-bg)] text-[var(--color-action-primary)] font-medium'
-                      : 'text-[var(--color-text-muted)] hover:bg-[var(--color-surface-subtle)]'
-                    }
-                  `}
-                >
-                  <Icon size={16} stroke={1} />
-                  {label}
-                </button>
-              ))}
-            </VStack>
-
-            {/* Navigation */}
-            <VStack gap={1}>
-              <span className="px-3 py-1 text-[length:var(--font-size-10)] font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider">
-                Navigation
+                Navigation & Data
               </span>
               {navigationItems.map(({ id, label, icon: Icon }) => (
                 <button
@@ -1396,18 +2387,18 @@ export function DesignSystemPage() {
                     }
                   `}
                 >
-                  <Icon size={16} stroke={1} />
+                  <Icon size={16} stroke={1.5} />
                   {label}
                 </button>
               ))}
             </VStack>
 
-            {/* Feedback */}
+            {/* Graphs */}
             <VStack gap={1}>
               <span className="px-3 py-1 text-[length:var(--font-size-10)] font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider">
-                Feedback
+                Graphs
               </span>
-              {feedbackItems.map(({ id, label, icon: Icon }) => (
+              {graphItems.map(({ id, label, icon: Icon }) => (
                 <button
                   key={id}
                   onClick={() => scrollToSection(id)}
@@ -1420,31 +2411,7 @@ export function DesignSystemPage() {
                     }
                   `}
                 >
-                  <Icon size={16} stroke={1} />
-                  {label}
-                </button>
-              ))}
-            </VStack>
-
-            {/* Disclosure */}
-            <VStack gap={1}>
-              <span className="px-3 py-1 text-[length:var(--font-size-10)] font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider">
-                Disclosure
-              </span>
-              {disclosureItems.map(({ id, label, icon: Icon }) => (
-                <button
-                  key={id}
-                  onClick={() => scrollToSection(id)}
-                  className={`
-                    w-full px-3 py-2 rounded-[var(--radius-button)] flex items-center gap-2
-                    text-[length:var(--font-size-11)] text-left transition-colors
-                    ${activeSection === id
-                      ? 'bg-[var(--color-state-info-bg)] text-[var(--color-action-primary)] font-medium'
-                      : 'text-[var(--color-text-muted)] hover:bg-[var(--color-surface-subtle)]'
-                    }
-                  `}
-                >
-                  <Icon size={16} stroke={1} />
+                  <Icon size={16} stroke={1.5} />
                   {label}
                 </button>
               ))}
@@ -1468,7 +2435,7 @@ export function DesignSystemPage() {
                     }
                   `}
                 >
-                  <Icon size={16} stroke={1} />
+                  <Icon size={16} stroke={1.5} />
                   {label}
                 </button>
               ))}
@@ -1479,22 +2446,8 @@ export function DesignSystemPage() {
       </nav>
 
       {/* Main Content */}
-      <main className="absolute top-0 bottom-0 right-0 left-[200px] flex flex-col bg-[var(--color-surface-default)]">
-        <div className="w-full flex flex-col h-full">
-          <TabBar
-            tabs={tabBarTabs}
-            activeTab={activeTabId}
-            onTabChange={handleTabChange}
-            onTabClose={handleTabClose}
-            onTabAdd={addNewTab}
-            showAddButton={true}
-            showWindowControls={true}
-            onWindowClose={() => navigate('/')}
-          />
-
-          {/* Main Content */}
-          <div className="bg-[var(--color-surface-default)] flex flex-1 flex-col gap-6 items-center pb-3 pt-6 px-8 w-full overflow-y-auto min-h-0">
-            <div className="py-12 px-8 overflow-x-auto w-full">
+      <main ref={mainRef} className="absolute top-0 bottom-0 right-0 left-[200px] overflow-y-auto">
+        <div className="py-12 px-8 overflow-x-auto">
         <div className="min-w-[var(--layout-content-min-width)]">
         <div className="max-w-[1000px] mx-auto">
           <VStack gap={12} align="stretch">
@@ -1521,7 +2474,7 @@ export function DesignSystemPage() {
               <div className="relative">
                 <IconSearch 
                   size={18} 
-                  stroke={1} 
+                  stroke={1.5} 
                   className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--color-text-muted)]" 
                 />
                 <input
@@ -1537,7 +2490,7 @@ export function DesignSystemPage() {
                     onClick={() => setSearchQuery('')}
                     className="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--color-text-muted)] hover:text-[var(--color-text-default)] transition-colors"
                   >
-                    <IconX size={16} stroke={1} />
+                    <IconX size={16} stroke={1.5} />
                   </button>
                 )}
               </div>
@@ -1556,7 +2509,7 @@ export function DesignSystemPage() {
                           }}
                           className="w-full px-3 py-2 rounded-[var(--radius-md)] flex items-center gap-3 text-left hover:bg-[var(--color-surface-muted)] transition-colors"
                         >
-                          <Icon size={16} stroke={1} className="text-[var(--color-text-muted)]" />
+                          <Icon size={16} stroke={1.5} className="text-[var(--color-text-muted)]" />
                           <span className="text-[length:var(--font-size-12)] text-[var(--color-text-default)]">{label}</span>
                         </button>
                       ))}
@@ -1663,7 +2616,7 @@ export function DesignSystemPage() {
                 <VStack gap={2}>
                   <Label>Red (Danger)</Label>
                   <div className="grid grid-cols-5 md:grid-cols-10 gap-2">
-                    {[50, 100, 200, 300, 400, 500, 600, 700, 800, 900].map((shade) => (
+                    {[50, 100, 500, 600, 700, 800].map((shade) => (
                       <ColorSwatch key={shade} name={`${shade}`} color={`var(--color-red-${shade})`} textLight={shade >= 500} />
                     ))}
                   </div>
@@ -1673,7 +2626,7 @@ export function DesignSystemPage() {
                 <VStack gap={2}>
                   <Label>Green (Success)</Label>
                   <div className="grid grid-cols-5 md:grid-cols-10 gap-2">
-                    {[50, 100, 200, 300, 400, 500, 600, 700, 800, 900].map((shade) => (
+                    {[50, 100, 500, 600, 700, 800].map((shade) => (
                       <ColorSwatch key={shade} name={`${shade}`} color={`var(--color-green-${shade})`} textLight={shade >= 500} />
                     ))}
                   </div>
@@ -1683,7 +2636,7 @@ export function DesignSystemPage() {
                 <VStack gap={2}>
                   <Label>Orange (Warning)</Label>
                   <div className="grid grid-cols-5 md:grid-cols-10 gap-2">
-                    {[50, 100, 200, 300, 400, 500, 600, 700, 800, 900].map((shade) => (
+                    {[50, 100, 500, 600, 700, 800].map((shade) => (
                       <ColorSwatch key={shade} name={`${shade}`} color={`var(--color-orange-${shade})`} textLight={shade >= 500} />
                     ))}
                   </div>
@@ -2083,7 +3036,7 @@ outline: 2px solid var(--color-border-focus);`}
                     </div>
                     <div className="flex flex-col gap-1 min-w-0">
                       <div className="text-[length:var(--font-size-12)] text-[var(--color-text-default)] font-medium font-mono">
-                        --shadow-{name}
+                      --shadow-{name}
                       </div>
                       <div className="text-[length:var(--font-size-10)] text-[var(--color-text-muted)] font-mono break-all">
                         {value}
@@ -2095,7 +3048,7 @@ outline: 2px solid var(--color-border-focus);`}
             </Section>
 
             {/* Icons */}
-            <Section id="icons" title="Icons" description="Tabler Icons library - Stroke width 1, Size 16px">
+            <Section id="icons" title="Icons" description="Tabler Icons library - Stroke width 1.5, Size 16-20px">
               <VStack gap={8}>
                 {/* Basic - Actions */}
                 <IconGrid
@@ -2104,6 +3057,8 @@ outline: 2px solid var(--color-border-focus);`}
                     { Icon: IconPlayerPlay, name: 'Play' },
                     { Icon: IconPlayerStop, name: 'Stop' },
                     { Icon: IconPlayerPause, name: 'Pause' },
+                    { Icon: IconRefresh, name: 'Refresh' },
+                    { Icon: IconRotate, name: 'Reboot' },
                     { Icon: IconTrash, name: 'Delete' },
                     { Icon: IconEdit, name: 'Edit' },
                     { Icon: IconCopy, name: 'Copy' },
@@ -2115,6 +3070,7 @@ outline: 2px solid var(--color-border-focus);`}
                     { Icon: IconLink, name: 'Link' },
                     { Icon: IconUnlink, name: 'Unlink' },
                     { Icon: IconExternalLink, name: 'External' },
+                    { Icon: IconHistory, name: 'History' },
                     { Icon: IconSend, name: 'Send' },
                   ]}
                 />
@@ -2128,10 +3084,10 @@ outline: 2px solid var(--color-border-focus);`}
                     { Icon: IconChevronDown, name: 'Down' },
                     { Icon: IconChevronUp, name: 'Up' },
                     { Icon: IconArrowRight, name: 'Arrow' },
+                    { Icon: IconArrowsMaximize, name: 'Expand' },
+                    { Icon: IconArrowsMinimize, name: 'Collapse' },
                     { Icon: IconDotsCircleHorizontal, name: 'Action' },
                     { Icon: IconDots, name: 'Meatball' },
-                    { Icon: IconExpandOn, name: 'ExpandOn' },
-                    { Icon: IconExpandOff, name: 'ExpandOff' },
                   ]}
                 />
 
@@ -2144,6 +3100,8 @@ outline: 2px solid var(--color-border-focus);`}
                     { Icon: IconAlertTriangle, name: 'Warning' },
                     { Icon: IconInfoCircle, name: 'Info' },
                     { Icon: IconBan, name: 'Suspended' },
+                    { Icon: IconLoader, name: 'Loading' },
+                    { Icon: IconProgress, name: 'Progress' },
                   ]}
                 />
 
@@ -2168,7 +3126,6 @@ outline: 2px solid var(--color-border-focus);`}
                     { Icon: IconUser, name: 'User' },
                     { Icon: IconMail, name: 'Mail' },
                     { Icon: IconMessage, name: 'Chat' },
-                    { Icon: IconChat, name: 'Chat-2' },
                     { Icon: IconHelp, name: 'Help' },
                     { Icon: IconList, name: 'List' },
                     { Icon: IconLayoutGrid, name: 'Grid' },
@@ -2237,7 +3194,8 @@ outline: 2px solid var(--color-border-focus);`}
                     { Icon: IconAdjustments, name: 'Adjust' },
                     { Icon: IconBolt, name: 'Action' },
                     { Icon: IconGitBranch, name: 'Branch' },
-                    { Icon: IconHourglass, name: 'Hourglass' },
+                    { Icon: IconClock, name: 'Schedule' },
+                    { Icon: IconHourglass, name: 'Timeout' },
                     { Icon: IconCurrencyDollar, name: 'Billing' },
                     { Icon: IconLanguage, name: 'Language' },
                   ]}
@@ -2248,8 +3206,7 @@ outline: 2px solid var(--color-border-focus);`}
                   title="AI & Advanced"
                   icons={[
                     { Icon: IconBrain, name: 'Brain' },
-                    { Icon: IconRobotCustom, name: 'Robot', stroke: 10.7 },
-                    { Icon: IconAddRobotCustom, name: 'AddRobot' },
+                    { Icon: IconRobot, name: 'Robot' },
                     { Icon: IconMessageChatbot, name: 'Chatbot' },
                     { Icon: IconBooks, name: 'Study' },
                     { Icon: IconTestPipe, name: 'Test' },
@@ -2265,21 +3222,6 @@ outline: 2px solid var(--color-border-focus);`}
                     { Icon: IconBrandWindows, name: 'Windows' },
                     { Icon: IconBrandRedhat, name: 'RedHat' },
                     { Icon: IconHelp, name: 'Rocky Linux', missing: true },
-                  ]}
-                />
-
-                {/* Newly Added Icons */}
-                <IconGrid
-                  title="Newly Added Icons"
-                  icons={[
-                    { Icon: IconRefresh, name: 'Refresh' },
-                    { Icon: IconHistory, name: 'History' },
-                    { Icon: IconLoader, name: 'Loading' },
-                    { Icon: IconClock, name: 'Schedule' },
-                    { Icon: IconRefreshDot, name: 'Reboot' },
-                    { Icon: IconRotateClockwise, name: 'Retry' },
-                    { Icon: IconProgress, name: 'Progress' },
-                    { Icon: IconTimeout, name: 'Timeout' },
                   ]}
                 />
               </VStack>
@@ -2644,22 +3586,8 @@ outline: 2px solid var(--color-border-focus);`}
                   <Label>Size Variants</Label>
                   <div className="flex gap-4 items-end flex-wrap">
                     <VStack gap={1}>
-                      <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">SM</span>
+                      <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">Default</span>
                       <Select
-                        size="sm"
-                        placeholder="Select"
-                        defaultValue="active"
-                        options={[
-                          { value: 'active', label: 'Active' },
-                          { value: 'shutoff', label: 'Shutoff' },
-                          { value: 'building', label: 'Building' },
-                        ]}
-                      />
-                    </VStack>
-                    <VStack gap={1}>
-                      <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">MD (Default)</span>
-                      <Select
-                        size="md"
                         placeholder="Select"
                         defaultValue="active"
                         options={[
@@ -3115,115 +4043,6 @@ outline: 2px solid var(--color-border-focus);`}
               </VStack>
             </Section>
 
-            {/* FormField Component */}
-            <Section id="formfield" title="FormField" description="Compound component for form field with label, input, and helper text">
-              <VStack gap={8}>
-                {/* Structure */}
-                <VStack gap={3}>
-                  <Label>Structure</Label>
-                  <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
-                    <code>FormField</code> · <code>FormField.Label</code> · <code>FormField.Control</code> · <code>FormField.HelperText</code> · <code>FormField.ErrorMessage</code>
-                  </div>
-                </VStack>
-
-                {/* Basic Usage */}
-                <VStack gap={3}>
-                  <Label>Basic Usage</Label>
-                  <div className="max-w-md">
-                    <FormField>
-                      <FormField.Label>Instance Name</FormField.Label>
-                      <FormField.Control>
-                        <Input placeholder="Enter instance name" fullWidth />
-                      </FormField.Control>
-                      <FormField.HelperText>
-                        The name should start with a letter and be 1-128 characters.
-                      </FormField.HelperText>
-                    </FormField>
-                  </div>
-                </VStack>
-
-                {/* Label Sizes */}
-                <VStack gap={3}>
-                  <Label>Label Sizes</Label>
-                  <div className="flex gap-8 items-start">
-                    <div className="w-64">
-                      <FormField>
-                        <FormField.Label size="md">Medium Label (14px)</FormField.Label>
-                        <FormField.Control>
-                          <Input placeholder="Input" fullWidth />
-                        </FormField.Control>
-                      </FormField>
-                    </div>
-                    <div className="w-64">
-                      <FormField>
-                        <FormField.Label size="sm">Small Label (12px)</FormField.Label>
-                        <FormField.Control>
-                          <Input placeholder="Input" fullWidth />
-                        </FormField.Control>
-                      </FormField>
-                    </div>
-                  </div>
-                </VStack>
-
-                {/* Required Field */}
-                <VStack gap={3}>
-                  <Label>Required Field</Label>
-                  <div className="max-w-md">
-                    <FormField required>
-                      <FormField.Label>Email Address</FormField.Label>
-                      <FormField.Control>
-                        <Input placeholder="Enter email" fullWidth />
-                      </FormField.Control>
-                      <FormField.HelperText>
-                        We'll never share your email with anyone.
-                      </FormField.HelperText>
-                    </FormField>
-                  </div>
-                </VStack>
-
-                {/* Error State */}
-                <VStack gap={3}>
-                  <Label>Error State</Label>
-                  <div className="max-w-md">
-                    <FormField error>
-                      <FormField.Label>Password</FormField.Label>
-                      <FormField.Control>
-                        <Input placeholder="Enter password" fullWidth />
-                      </FormField.Control>
-                      <FormField.ErrorMessage>
-                        Password must be at least 8 characters.
-                      </FormField.ErrorMessage>
-                    </FormField>
-                  </div>
-                </VStack>
-
-                {/* With Select */}
-                <VStack gap={3}>
-                  <Label>With Select</Label>
-                  <div className="max-w-md">
-                    <FormField>
-                      <FormField.Label size="sm">Region</FormField.Label>
-                      <FormField.Control>
-                        <Select
-                          options={[
-                            { value: 'us-east', label: 'US East' },
-                            { value: 'us-west', label: 'US West' },
-                            { value: 'eu-west', label: 'EU West' },
-                          ]}
-                          value="us-east"
-                          onChange={() => {}}
-                          fullWidth
-                        />
-                      </FormField.Control>
-                      <FormField.HelperText>
-                        Select your preferred region.
-                      </FormField.HelperText>
-                    </FormField>
-                  </div>
-                </VStack>
-              </VStack>
-            </Section>
-
             {/* Checkbox Component */}
             <Section id="checkbox" title="Checkbox" description="Selection control for single or multiple options">
               <VStack gap={8}>
@@ -3442,12 +4261,12 @@ outline: 2px solid var(--color-border-focus);`}
                       actions={
                         <>
                           <TopBarAction
-                            icon={<IconBell size={16} stroke={1} />}
+                            icon={<IconBell size={16} stroke={1.5} />}
                             aria-label="Notifications"
                             onClick={() => console.log('Notifications')}
                           />
                           <TopBarAction
-                            icon={<IconUser size={16} stroke={1} />}
+                            icon={<IconUser size={16} stroke={1.5} />}
                             aria-label="Profile"
                             onClick={() => console.log('Profile')}
                           />
@@ -3476,17 +4295,17 @@ outline: 2px solid var(--color-border-focus);`}
                       actions={
                         <>
                           <TopBarAction
-                            icon={<IconBell size={16} stroke={1} />}
+                            icon={<IconBell size={16} stroke={1.5} />}
                             aria-label="Notifications"
                             badge
                           />
                           <TopBarAction
-                            icon={<IconBell size={16} stroke={1} />}
+                            icon={<IconBell size={16} stroke={1.5} />}
                             aria-label="Notifications with count"
                             badgeCount={5}
                           />
                           <TopBarAction
-                            icon={<IconSettings size={16} stroke={1} />}
+                            icon={<IconSettings size={16} stroke={1.5} />}
                             aria-label="Settings"
                           />
                         </>
@@ -3510,7 +4329,7 @@ outline: 2px solid var(--color-border-focus);`}
                       }
                       actions={
                         <TopBarAction
-                          icon={<IconHelp size={16} stroke={1} />}
+                          icon={<IconHelp size={16} stroke={1.5} />}
                           aria-label="Help"
                         />
                       }
@@ -3774,11 +4593,6 @@ outline: 2px solid var(--color-border-focus);`}
                   </InlineMessage>
                 </VStack>
               </VStack>
-            </Section>
-
-            {/* Toast Component */}
-            <Section id="toast" title="Toast" description="Temporary notification messages that appear and auto-dismiss">
-              <ToastDemo />
             </Section>
 
             {/* Table Component */}
@@ -4071,33 +4885,6 @@ outline: 2px solid var(--color-border-focus);`}
                   </VStack>
                 </VStack>
 
-                {/* Layout Variants */}
-                <VStack gap={3}>
-                  <Label>Layout Variants</Label>
-                  <VStack gap={4}>
-                    {/* Default Layout (with text, rounded pill) */}
-                    <VStack gap={2}>
-                      <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">Default (Icon + Text, Rounded Pill)</span>
-                      <div className="flex flex-wrap gap-3 items-center">
-                        <StatusIndicator status="active" layout="default" />
-                        <StatusIndicator status="error" layout="default" />
-                        <StatusIndicator status="building" layout="default" />
-                        <StatusIndicator status="pending" layout="default" />
-                      </div>
-                    </VStack>
-                    {/* Badge Layout (with text, square-ish) */}
-                    <VStack gap={2}>
-                      <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">Badge (Icon + Text, Square-ish)</span>
-                      <div className="flex flex-wrap gap-3 items-center">
-                        <StatusIndicator status="active" layout="badge" />
-                        <StatusIndicator status="error" layout="badge" />
-                        <StatusIndicator status="building" layout="badge" />
-                        <StatusIndicator status="pending" layout="badge" />
-                      </div>
-                    </VStack>
-                  </VStack>
-                </VStack>
-
                 {/* Custom Labels */}
                 <VStack gap={3}>
                   <Label>Custom Labels</Label>
@@ -4281,12 +5068,12 @@ outline: 2px solid var(--color-border-focus);`}
                   <DetailHeader>
                     <DetailHeader.Title>tk-test</DetailHeader.Title>
                     <DetailHeader.Actions>
-                      <Button variant="outline" size="sm" leftIcon={<IconTerminal2 size={12} stroke={1} />}>Console</Button>
-                      <Button variant="outline" size="sm" leftIcon={<IconPlayerPlay size={12} stroke={1} />}>Start</Button>
-                      <Button variant="outline" size="sm" leftIcon={<IconPlayerStop size={12} stroke={1} />}>Stop</Button>
-                      <Button variant="outline" size="sm" leftIcon={<IconRefresh size={12} stroke={1} />}>Reboot</Button>
-                      <Button variant="outline" size="sm" leftIcon={<IconTrash size={12} stroke={1} />}>Delete</Button>
-                      <Button variant="outline" size="sm" rightIcon={<IconChevronDown size={12} stroke={1} />}>More Actions</Button>
+                      <Button variant="outline" size="sm" leftIcon={<IconTerminal2 size={12} stroke={1.5} />}>Console</Button>
+                      <Button variant="outline" size="sm" leftIcon={<IconPlayerPlay size={12} stroke={1.5} />}>Start</Button>
+                      <Button variant="outline" size="sm" leftIcon={<IconPlayerStop size={12} stroke={1.5} />}>Stop</Button>
+                      <Button variant="outline" size="sm" leftIcon={<IconRefresh size={12} stroke={1.5} />}>Reboot</Button>
+                      <Button variant="outline" size="sm" leftIcon={<IconTrash size={12} stroke={1.5} />}>Delete</Button>
+                      <Button variant="outline" size="sm" rightIcon={<IconChevronDown size={12} stroke={1.5} />}>More Actions</Button>
                     </DetailHeader.Actions>
                     <DetailHeader.InfoGrid>
                       <DetailHeader.InfoCard label="Status" value="Active" status="active" />
@@ -4321,223 +5108,10 @@ outline: 2px solid var(--color-border-focus);`}
                 <VStack gap={3}>
                   <Label>Info Card - Basic Text</Label>
                   <div className="grid grid-cols-3 gap-2">
-                    <DetailHeader.InfoCard label="Host" value="compute-03" />
-                    <DetailHeader.InfoCard label="Created At" value="2025-07-25 09:12:20" />
+                      <DetailHeader.InfoCard label="Host" value="compute-03" />
+                      <DetailHeader.InfoCard label="Created At" value="2025-07-25 09:12:20" />
                     <DetailHeader.InfoCard label="Availability Zone" value="nova" />
                   </div>
-                </VStack>
-              </VStack>
-            </Section>
-
-            {/* FloatingCard Component */}
-            <Section id="floating-card" title="Floating Card" description="Summary sidebar component for multi-step forms with sections, quota, and action buttons">
-              <VStack gap={8}>
-                {/* Preview */}
-                <VStack gap={3}>
-                  <Label>Preview</Label>
-                  <div className="relative h-fit border border-[var(--color-border-default)] rounded-md p-4 overflow-hidden bg-[var(--color-surface-subtle)]">
-                    <FloatingCard
-                      position="top-left"
-                      width="320px"
-                      portal={false}
-                      style={{ height: 'fit-content' }}
-                      title="Summary"
-                      sections={[
-                        {
-                          tabTitle: 'Tab title',
-                          items: [
-                            { id: '1', title: 'Section title', status: 'default' },
-                            { id: '2', title: 'Section title', status: 'default' },
-                            { id: '3', title: 'Section title', status: 'default' },
-                            { id: '4', title: 'Section title', status: 'success' },
-                            { id: '5', title: 'Section title', status: 'warning' },
-                          ],
-                        },
-                        {
-                          tabTitle: 'Tab title',
-                          items: [
-                            { id: '6', title: 'Section title', status: 'default' },
-                            { id: '7', title: 'Section title', status: 'default' },
-                            { id: '8', title: 'Section title', status: 'default' },
-                          ],
-                        },
-                      ]}
-                      quota={[
-                        { label: 'Instance', current: 2, total: 10 },
-                        { label: 'vCPU', current: 5, total: 20 },
-                        { label: 'RAM (GiB)', current: 14, total: 50 },
-                        { label: 'Disk', current: 3, total: 10 },
-                        { label: 'Disk Capacity (GiB)', current: 20, total: 1000 },
-                      ]}
-                      instanceCount={1}
-                      onInstanceCountChange={(count) => console.log('Count:', count)}
-                      onCancel={() => console.log('Cancel')}
-                      onAction={() => console.log('Create')}
-                      actionEnabled={true}
-                    />
-                  </div>
-                </VStack>
-
-                {/* Variants */}
-                <VStack gap={3}>
-                  <Label>Variants</Label>
-                  <div className="flex flex-col gap-4">
-                    {/* Status Variants */}
-                    <div>
-                      <h4 className="text-[length:var(--font-size-12)] font-medium text-[var(--color-text-default)] mb-2">Status</h4>
-                      <div className="flex gap-4">
-                        <div className="relative h-[200px] w-[280px] border border-[var(--color-border-default)] rounded-md p-4 overflow-hidden bg-[var(--color-surface-subtle)]">
-                          <FloatingCard
-                            position="top-left"
-                            width="240px"
-                            portal={false}
-                            title="Summary"
-                            sections={[
-                              {
-                                tabTitle: 'Tab title',
-                                items: [{ id: '1', title: 'Section title', status: 'processing' }],
-                              },
-                            ]}
-                          />
-                        </div>
-                        <div className="relative h-[200px] w-[280px] border border-[var(--color-border-default)] rounded-md p-4 overflow-hidden bg-[var(--color-surface-subtle)]">
-                          <FloatingCard
-                            position="top-left"
-                            width="240px"
-                            portal={false}
-                            title="Summary"
-                            sections={[
-                              {
-                                tabTitle: 'Tab title',
-                                items: [{ id: '1', title: 'Section title', status: 'warning' }],
-                              },
-                            ]}
-                          />
-                        </div>
-                        <div className="relative h-[200px] w-[280px] border border-[var(--color-border-default)] rounded-md p-4 overflow-hidden bg-[var(--color-surface-subtle)]">
-                          <FloatingCard
-                            position="top-left"
-                            width="240px"
-                            portal={false}
-                            title="Summary"
-                            sections={[
-                              {
-                                tabTitle: 'Tab title',
-                                items: [{ id: '1', title: 'Section title', status: 'success' }],
-                              },
-                            ]}
-                          />
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Type Variants - Default and Hover */}
-                    <div>
-                      <h4 className="text-[length:var(--font-size-12)] font-medium text-[var(--color-text-default)] mb-2">Type</h4>
-                      <div className="flex gap-4">
-                        <div className="relative h-[200px] w-[280px] border border-[var(--color-border-default)] rounded-md p-4 overflow-hidden bg-[var(--color-surface-subtle)]">
-                          <p className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)] mb-2">default</p>
-                          <FloatingCard
-                            position="top-left"
-                            width="240px"
-                            portal={false}
-                            title="Summary"
-                            sections={[
-                              {
-                                tabTitle: 'Tab title',
-                                items: [{ id: '1', title: 'Section title', status: 'default' }],
-                                collapsible: false,
-                                showChevron: false,
-                              },
-                            ]}
-                          />
-                        </div>
-                        <div className="relative h-[200px] w-[280px] border border-[var(--color-border-default)] rounded-md p-4 overflow-hidden bg-[var(--color-surface-subtle)]">
-                          <p className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)] mb-2">hover</p>
-                          <FloatingCard
-                            position="top-left"
-                            width="240px"
-                            portal={false}
-                            title="Summary"
-                            sections={[
-                              {
-                                tabTitle: 'Tab title',
-                                items: [{ id: '1', title: 'Section title', status: 'default', onClick: () => {} }],
-                                collapsible: true,
-                                showChevron: true,
-                              },
-                            ]}
-                          />
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Title Variants - With and Without Title */}
-                    <div>
-                      <h4 className="text-[length:var(--font-size-12)] font-medium text-[var(--color-text-default)] mb-2">Title</h4>
-                      <div className="flex gap-4">
-                        <div className="relative h-[200px] w-[280px] border border-[var(--color-border-default)] rounded-md p-4 overflow-hidden bg-[var(--color-surface-subtle)]">
-                          <FloatingCard
-                            position="top-left"
-                            width="240px"
-                            portal={false}
-                            title="Summary"
-                            sections={[
-                              {
-                                tabTitle: 'Tab title',
-                                items: [{ id: '1', title: 'Section title', status: 'default' }],
-                              },
-                            ]}
-                          />
-                        </div>
-                        <div className="relative h-[200px] w-[280px] border border-[var(--color-border-default)] rounded-md p-4 overflow-hidden bg-[var(--color-surface-subtle)]">
-                          <FloatingCard
-                            position="top-left"
-                            width="240px"
-                            portal={false}
-                            title="Summary"
-                            sections={[
-                              {
-                                tabTitle: 'Tab title',
-                                items: [{ id: '1', title: 'Section title', status: 'default' }],
-                              },
-                            ]}
-                          />
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </VStack>
-
-
-                {/* Usage Example */}
-                <VStack gap={3}>
-                  <Label>Usage Example</Label>
-                  <pre className="text-[length:var(--font-size-11)] p-4 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)] overflow-x-auto text-[var(--color-text-muted)]">
-{`<FloatingCard
-  position="top-left"
-  width="320px"
-  title="Summary"
-  sections={[
-    {
-      tabTitle: 'Configuration',
-      items: [
-        { id: '1', title: 'Basic information', status: 'success' },
-        { id: '2', title: 'Model settings', status: 'default' },
-      ],
-    },
-  ]}
-  quota={[
-    { label: 'Instance', current: 2, total: 10 },
-    { label: 'vCPU', current: 5, total: 20 },
-  ]}
-  instanceCount={1}
-  onInstanceCountChange={(count) => setCount(count)}
-  onCancel={() => handleCancel()}
-  onAction={() => handleCreate()}
-  actionEnabled={true}
-/>`}
-                  </pre>
                 </VStack>
               </VStack>
             </Section>
@@ -4572,7 +5146,7 @@ outline: 2px solid var(--color-border-focus);`}
                   <SectionCard>
                     <SectionCard.Header 
                       title="Basic Information" 
-                      actions={<Button variant="secondary" size="sm" leftIcon={<IconEdit size={16} />}>Edit</Button>}
+                      actions={<Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />}>Edit</Button>}
                     />
                     <SectionCard.Content>
                       <SectionCard.DataRow label="Instance Name" value="web-server-01" />
@@ -4600,7 +5174,7 @@ outline: 2px solid var(--color-border-focus);`}
                     <SectionCard>
                       <SectionCard.Header 
                         title="Basic Information" 
-                        actions={<Button variant="secondary" size="sm" leftIcon={<IconEdit size={16} />}>Edit</Button>}
+                        actions={<Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />}>Edit</Button>}
                       />
                       <SectionCard.Content>
                         <SectionCard.DataRow label="Instance Name" value="tk-test" />
@@ -5196,52 +5770,41 @@ outline: 2px solid var(--color-border-focus);`}
                   <Label>Status Variants</Label>
                   <div className="flex items-center gap-8 flex-wrap">
                     <HalfDoughnutChartDemo value={35} label="Safe" status="success" />
-                    <HalfDoughnutChartDemo value={85} label="Warning" status="warning" />
+                    <HalfDoughnutChartDemo value={75} label="Warning" status="warning" />
                     <HalfDoughnutChartDemo value={95} label="Danger" status="error" />
                   </div>
                 </VStack>
               </VStack>
             </Section>
 
-            {/* Reference Document Link */}
-            <div className="p-6 bg-[var(--color-surface-subtle)] rounded-[var(--radius-xl)] border border-[var(--color-border-default)]">
-              <VStack gap={3} align="center">
-                <VStack gap={1} align="center">
-                  <h3 className="text-[length:var(--font-size-16)] font-semibold text-[var(--color-text-default)]">
-                    📚 Design System Reference
-                  </h3>
-                  <p className="text-[length:var(--font-size-12)] text-[var(--color-text-muted)] text-center">
-                    컴포넌트 사용법, 토큰 가이드, 스타일 규칙 등 상세 문서를 확인하세요.
-                  </p>
+            {/* Doughnut Chart */}
+            <Section id="doughnut-chart" title="Doughnut Chart" description="Ring chart for part-to-whole relationships with optional center metrics">
+              <VStack gap={8}>
+                {/* Design Tokens */}
+                <VStack gap={3}>
+                  <Label>Design Tokens</Label>
+                  <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
+                    <code>inner-radius: 68%</code> · <code>outer-radius: 80%</code> · <code>thickness: 12%</code> · <code>border-radius: 6px</code>
+                  </div>
                 </VStack>
-                <HStack gap={3}>
-                  <a
-                    href="https://github.com/pob-design-system/tds/blob/main/DESIGN_SYSTEM.md"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 px-4 py-2 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-button)] text-[length:var(--font-size-12)] text-[var(--color-text-default)] hover:bg-[var(--color-surface-muted)] transition-colors"
-                  >
-                    <IconFileText size={14} stroke={1.5} />
-                    DESIGN_SYSTEM.md
-                  </a>
-                  <a
-                    href="https://github.com/pob-design-system/tds/blob/main/.cursorrules"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 px-4 py-2 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-button)] text-[length:var(--font-size-12)] text-[var(--color-text-default)] hover:bg-[var(--color-surface-muted)] transition-colors"
-                  >
-                    <IconCode size={14} stroke={1.5} />
-                    .cursorrules
-                  </a>
-                </HStack>
+
+                {/* Basic Doughnut */}
+                <VStack gap={3}>
+                  <Label>Basic Doughnut</Label>
+                  <div className="flex items-start gap-6 flex-wrap">
+                    <SingleValueDoughnutDemo 
+                      title="OSD onode Hits Ratio"
+                      value={98}
+                    />
+                  </div>
+                </VStack>
+
               </VStack>
-            </div>
+            </Section>
 
           </VStack>
         </div>
         </div>
-            </div>
-          </div>
         </div>
       </main>
 
@@ -5252,14 +5815,10 @@ outline: 2px solid var(--color-border-focus);`}
           className="fixed bottom-6 right-6 w-10 h-10 bg-[var(--color-action-primary)] hover:bg-[var(--color-action-primary-hover)] text-white rounded-full shadow-lg flex items-center justify-center transition-all duration-200 hover:scale-110 z-50"
           aria-label="Scroll to top"
         >
-          <IconChevronUp size={20} stroke={1} />
+          <IconChevronUp size={20} stroke={2} />
         </button>
       )}
-
-      {/* Toast Container */}
-      <ToastContainer position="top-right" />
     </div>
-    </ToastProvider>
   );
 }
 
@@ -5311,17 +5870,17 @@ function ColorSwatch({ name, color, textLight = false }: { name: string; color: 
 
   return (
     <Tooltip content={`${color}\n${hexValue}`} position="top">
-      <div 
+    <div 
         ref={ref}
         className="w-full h-12 rounded-[var(--radius-md)] flex flex-col items-center justify-center border border-[var(--color-border-subtle)] cursor-pointer hover:ring-2 hover:ring-[var(--color-border-focus)] transition-shadow" 
-        style={{ backgroundColor: color }}
+      style={{ backgroundColor: color }}
         onClick={handleCopy}
-      >
+    >
         <span className={`text-[10px] font-mono font-medium ${textLight ? 'text-white' : 'text-black'}`}>{name}</span>
         <span className={`text-[8px] font-mono ${textLight ? 'text-white/70' : 'text-black/50'}`}>
           {copied ? 'Copied!' : hexValue}
         </span>
-      </div>
+    </div>
     </Tooltip>
   );
 }
@@ -5353,7 +5912,7 @@ function SemanticColorBox({ name, color, border = false }: { name: string; color
 
   return (
     <Tooltip content={`${color}\n${hexValue}`} position="top">
-      <VStack gap={1} align="center">
+    <VStack gap={1} align="center">
         <div 
           ref={ref}
           className={`w-10 h-10 rounded-[var(--radius-md)] cursor-pointer hover:ring-2 hover:ring-[var(--color-border-focus)] transition-shadow ${border ? 'border border-[var(--color-border-default)]' : ''}`} 
@@ -5363,7 +5922,7 @@ function SemanticColorBox({ name, color, border = false }: { name: string; color
         <span className="text-[8px] font-mono text-[var(--color-text-disabled)] truncate max-w-10">
           {copied ? '✓' : name}
         </span>
-      </VStack>
+    </VStack>
     </Tooltip>
   );
 }
@@ -5393,22 +5952,22 @@ function TokenCard({ title, description, items, color, textColor }: { title: str
   );
 }
 
-function IconGrid({ title, icons }: { title: string; icons: { Icon: React.ComponentType<{ size?: number; stroke?: number; className?: string }>; name: string; missing?: boolean; stroke?: number; size?: number }[] }) {
+function IconGrid({ title, icons }: { title: string; icons: { Icon: React.ComponentType<{ size?: number; stroke?: number; className?: string }>; name: string; missing?: boolean }[] }) {
   return (
     <VStack gap={3}>
       <Label>{title}</Label>
-      <div className="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 lg:grid-cols-10 gap-2 items-stretch">
-        {icons.map(({ Icon, name, missing, stroke: iconStroke, size: iconSize }, i) => (
+      <div className="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 lg:grid-cols-10 gap-2">
+        {icons.map(({ Icon, name, missing }, i) => (
           <div
             key={i}
             title={missing ? `⚠️ ${name} (needs custom icon)` : name}
-            className={`flex flex-col items-center justify-end gap-2 p-3 rounded-[var(--radius-md)] border transition-colors cursor-default group h-full ${
+            className={`flex flex-col items-center gap-2 p-3 rounded-[var(--radius-md)] border transition-colors cursor-default group ${
               missing
                 ? 'bg-[var(--color-state-warning-bg)] border-[var(--color-state-warning)] border-dashed hover:bg-[var(--color-yellow-100)]'
                 : 'bg-[var(--color-surface-subtle)] border-[var(--color-border-subtle)] hover:border-[var(--color-border-focus)] hover:bg-[var(--color-surface-default)]'
             }`}
           >
-            <Icon size={iconSize !== undefined ? iconSize : 16} stroke={iconStroke !== undefined ? iconStroke : 1} className={`shrink-0 transition-colors ${missing ? 'text-[var(--color-state-warning)]' : 'text-[var(--color-text-muted)] group-hover:text-[var(--color-text-default)]'}`} />
+            <Icon size={18} stroke={1.5} className={`shrink-0 transition-colors ${missing ? 'text-[var(--color-state-warning)]' : 'text-[var(--color-text-muted)] group-hover:text-[var(--color-text-default)]'}`} />
             <span className={`text-[length:var(--font-size-10)] transition-colors truncate w-full text-center ${missing ? 'text-[var(--color-state-warning-text)]' : 'text-[var(--color-text-disabled)] group-hover:text-[var(--color-text-subtle)]'}`}>
               {name}
             </span>
