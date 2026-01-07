@@ -33,6 +33,7 @@ import {
   IconLockOpen,
   IconCopy,
   IconCheck,
+  IconExternalLink,
   IconTerminal2,
 } from '@tabler/icons-react';
 
@@ -223,6 +224,7 @@ export function ServerGroupDetailPage() {
             onClick={(e) => e.stopPropagation()}
           >
             {row.name}
+            <IconExternalLink size={12} stroke={1.5} />
           </Link>
           <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
             ID : {row.id}
@@ -253,6 +255,7 @@ export function ServerGroupDetailPage() {
       key: 'fixedIP',
       label: 'Fixed IP',
       flex: 1,
+      sortable: true,
       render: (value) => <span>{value}</span>,
     },
     {

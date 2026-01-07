@@ -88,7 +88,7 @@ const appCards: AppCard[] = [
     icon: <img src={StorageIcon} alt="Storage" className="w-16 h-16" />,
     path: '/storage',
     color: 'from-indigo-500 to-blue-500',
-    available: false,
+    available: true,
   },
   {
     id: 'desktop',
@@ -97,7 +97,7 @@ const appCards: AppCard[] = [
     icon: <img src={DesktopIcon} alt="Desktop" className="w-16 h-16" />,
     path: '/desktop',
     color: 'from-slate-500 to-zinc-500',
-    available: false,
+    available: true,
   },
   {
     id: 'iam',

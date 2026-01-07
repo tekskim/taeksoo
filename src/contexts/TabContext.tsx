@@ -45,7 +45,7 @@ interface TabProviderProps {
   defaultTabs?: TabItem[];
 }
 
-// Helper function to get label from path
+// Helper function to get label from path - returns the most recent breadcrumb item
 function getLabelFromPath(path: string): string {
   const pathLabelMap: Record<string, string> = {
     '/': 'Home',
@@ -75,7 +75,10 @@ function getLabelFromPath(path: string): string {
     '/agent': 'Agent',
     '/agent/create': 'Create Agent',
     '/chat': 'Chat',
-    '/storage': 'Data sources',
+    '/storage': 'Home',
+    '/storage/osds': 'OSDs',
+    '/storage/hosts': 'Hosts',
+    '/storage/pools': 'Pools',
     '/mcp-tools': 'MCP Tools',
     '/design': 'Design System',
     '/design/components': 'Design System',
@@ -89,20 +92,24 @@ function getLabelFromPath(path: string): string {
     return pathLabelMap[path];
   }
   
-  // Check for detail pages (e.g., /compute/volumes/vol-001)
-  // Sort by path length descending to match more specific paths first
-  const sortedEntries = Object.entries(pathLabelMap).sort((a, b) => b[0].length - a[0].length);
-  for (const [basePath, label] of sortedEntries) {
-    if (basePath !== '/' && path.startsWith(basePath + '/')) {
-      // Extract the ID from the path for detail pages
-      const id = path.split('/').pop();
-      return `${label} - ${id}`;
+  // Handle specific detail page patterns with custom formatting
+  const detailPatterns: { pattern: RegExp; format: (id: string) => string }[] = [
+    { pattern: /^\/storage\/osds\/(.+)$/, format: (id) => `OSD.${id}` },
+    { pattern: /^\/storage\/hosts\/(.+)$/, format: (id) => `Host.${id}` },
+    { pattern: /^\/storage\/pools\/(.+)$/, format: (id) => `Pool.${id}` },
+  ];
+  
+  for (const { pattern, format } of detailPatterns) {
+    const match = path.match(pattern);
+    if (match) {
+      return format(match[1]);
     }
   }
   
-  // Default: use just the last segment
+  // For all other paths, use just the last segment (most recent breadcrumb)
   const segments = path.split('/').filter(Boolean);
   const lastSegment = segments[segments.length - 1] || 'Home';
+  // Format: capitalize first letter and replace hyphens with spaces
   return lastSegment.charAt(0).toUpperCase() + lastSegment.slice(1).replace(/-/g, ' ');
 }
 

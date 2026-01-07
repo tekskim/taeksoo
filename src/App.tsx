@@ -11,6 +11,7 @@ import { EntryPage } from '@/pages/EntryPage';
 import { InstanceListPage } from '@/pages/InstanceListPage';
 import { InstanceDetailPage } from '@/pages/InstanceDetailPage';
 import { HomePage } from '@/pages/HomePage';
+import { ComputeHomePage } from '@/pages/ComputeHomePage';
 import { InstanceTemplatesPage } from '@/pages/InstanceTemplatesPage';
 import { InstanceTemplateDetailPage } from '@/pages/InstanceTemplateDetailPage';
 import { InstanceSnapshotsPage } from '@/pages/InstanceSnapshotsPage';
@@ -57,6 +58,13 @@ import { CreateAgentPage } from '@/pages/CreateAgentPage';
 import { ChatPage } from '@/pages/ChatPage';
 import { StoragePage } from '@/pages/StoragePage';
 import { MCPToolsPage } from '@/pages/MCPToolsPage';
+import { StorageHomePage } from '@/pages/StorageHomePage';
+import { PoolsPage } from '@/pages/PoolsPage';
+import { StoragePoolDetailPage } from '@/pages/StoragePoolDetailPage';
+import { HostsPage } from '@/pages/HostsPage';
+import HostDetailPage from '@/pages/HostDetailPage';
+import { OSDsPage } from '@/pages/OSDsPage';
+import { OSDDetailPage } from '@/pages/OSDDetailPage';
 
 // Pages - Cloud Builder
 import { CloudBuilderConsolePage } from '@/pages/cloudbuilder/CloudBuilderConsolePage';
@@ -70,6 +78,9 @@ import { ModalsPage } from '@/pages/ModalsPage';
 import { GradientShowcasePage } from '@/pages/GradientShowcasePage';
 import ColorPalettePage from '@/pages/ColorPalettePage';
 import MetallicPalettePage from '@/pages/MetallicPalettePage';
+
+// Pages - Desktop
+import { DesktopPage } from '@/pages/DesktopPage';
 
 const defaultTabs = [
   { id: 'home', label: 'Home', path: '/compute', closable: true },
@@ -86,7 +97,7 @@ function AppRoutes() {
         <Route path="/agent/list" element={<AgentPage />} />
         <Route path="/agent/create" element={<CreateAgentPage />} />
         <Route path="/chat" element={<ChatPage />} />
-        <Route path="/storage" element={<StoragePage />} />
+        <Route path="/agent/storage" element={<StoragePage />} />
         <Route path="/mcp-tools" element={<MCPToolsPage />} />
 
         {/* Cloud Builder Routes */}
@@ -101,7 +112,7 @@ function AppRoutes() {
         <Route path="/cloud-builder/:slug/detail/:id" element={<CloudBuilderDetailPage />} />
 
         {/* Compute Routes */}
-        <Route path="/compute" element={<InstanceListPage />} />
+        <Route path="/compute" element={<ComputeHomePage />} />
         <Route path="/compute/instances" element={<InstanceListPage />} />
         <Route path="/compute/instances/create" element={<CreateInstancePage />} />
         <Route path="/compute/instances/:id" element={<InstanceDetailPage />} />
@@ -144,6 +155,15 @@ function AppRoutes() {
         <Route path="/compute/topology" element={<TopologyD3Page />} />
         <Route path="/compute/console/:instanceId" element={<ConsolePage />} />
 
+        {/* Storage Routes */}
+        <Route path="/storage" element={<StorageHomePage />} />
+        <Route path="/storage/pools" element={<PoolsPage />} />
+        <Route path="/storage/pools/:id" element={<StoragePoolDetailPage />} />
+        <Route path="/storage/hosts" element={<HostsPage />} />
+        <Route path="/storage/hosts/:id" element={<HostDetailPage />} />
+        <Route path="/storage/osds" element={<OSDsPage />} />
+        <Route path="/storage/osds/:id" element={<OSDDetailPage />} />
+
         {/* Design System Routes */}
         <Route path="/design" element={<DesignSystemPage />} />
         <Route path="/design-system" element={<DesignSystemPage />} />
@@ -153,6 +173,9 @@ function AppRoutes() {
         <Route path="/design/gradients" element={<GradientShowcasePage />} />
         <Route path="/design/colors" element={<ColorPalettePage />} />
         <Route path="/design/metallic" element={<MetallicPalettePage />} />
+
+        {/* Desktop Routes */}
+        <Route path="/desktop" element={<DesktopPage />} />
       </Routes>
   );
 }

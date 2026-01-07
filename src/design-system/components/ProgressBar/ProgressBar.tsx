@@ -28,8 +28,12 @@ export interface ProgressBarProps {
   errorMessage?: string;
   /** Status text (e.g., "chunking") */
   statusText?: string;
+  /** Custom status color (overrides default 'info') */
+  status?: ProgressBarStatus;
   /** Custom class name */
   className?: string;
+  /** Size variant */
+  size?: 'sm' | 'md';
 }
 
 /* ----------------------------------------
@@ -111,7 +115,9 @@ export const ProgressBar: React.FC<ProgressBarProps> = ({
   error = false,
   errorMessage,
   statusText,
+  status,
   className = '',
+  size = 'md',
 }) => {
   const [showTooltip, setShowTooltip] = useState(false);
 
@@ -276,7 +282,7 @@ export const ProgressBar: React.FC<ProgressBarProps> = ({
             width: `${Math.min(totalPercent, 100)}%`,
             backgroundColor: error
               ? getStatusColor('danger')
-              : getStatusColor('info'),
+              : getStatusColor(status || 'info'),
             minWidth: totalPercent > 0 ? 4 : 0,
           }}
         />
