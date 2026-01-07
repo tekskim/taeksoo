@@ -65,17 +65,16 @@ export function AppLayout({ children }: AppLayoutProps) {
   const currentLabel = getBreadcrumbLabel(location.pathname);
 
   return (
-    <div className="h-screen bg-[var(--color-surface-subtle)]">
+    <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
       <Sidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(false)} />
 
       <main
-        className={`h-screen bg-[var(--color-surface-default)] transition-[margin] duration-200 overflow-x-auto overflow-y-auto overscroll-contain sidebar-scroll ${
-          sidebarOpen ? 'ml-[200px]' : 'ml-0'
+        className={`absolute top-0 bottom-0 right-0 flex flex-col bg-[var(--color-surface-default)] transition-[left] duration-200 ${
+          sidebarOpen ? 'left-[200px]' : 'left-0'
         }`}
       >
-        <div className="min-w-[var(--layout-content-min-width)]">
         {/* Fixed Header Area */}
-        <div className="sticky top-0 z-30 bg-[var(--color-surface-default)]">
+        <div className="shrink-0 bg-[var(--color-surface-default)]">
           {/* Tab Bar */}
           <TabBar
             tabs={tabBarTabs}
@@ -112,8 +111,9 @@ export function AppLayout({ children }: AppLayoutProps) {
           />
         </div>
 
-        {/* Page Content */}
-        {children || <Outlet />}
+        {/* Scrollable Content Area */}
+        <div className="flex-1 overflow-auto min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll">
+          {children || <Outlet />}
         </div>
       </main>
     </div>
