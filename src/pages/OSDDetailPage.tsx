@@ -23,6 +23,7 @@ import {
   SearchInput,
   Pagination,
   Table,
+  DatePicker,
   type TableColumn,
 } from '@/design-system';
 import { StorageSidebar } from '@/components/StorageSidebar';
@@ -228,22 +229,37 @@ function OSDMonitoringTimeControls({ onTimeRangeChange, onRefresh }: OSDMonitori
         )}
         {showDatePicker && (
           <div className="calendarDropdown">
+            {/* Date Range Header */}
             <div className="calendarHeader">
-              <button className="calendarNavButton" onClick={prevMonthNav}><IconChevronLeft size={14} /></button>
-              <span className="calendarMonthYear">{viewMonth.toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}</span>
-              <button className="calendarNavButton" onClick={nextMonthNav}><IconChevronRight size={14} /></button>
+              <div 
+                className={`calendarDateBox ${selectingStart ? 'calendarDateBoxActive' : ''}`}
+                onClick={() => setSelectingStart(true)}
+              >
+                <span className="calendarDateLabel">START</span>
+                <span className="calendarDateValue">{formatDateForDisplay(tempStartDate)}</span>
+              </div>
+              <div className="calendarDateSeparator">~</div>
+              <div 
+                className={`calendarDateBox ${!selectingStart ? 'calendarDateBoxActive' : ''}`}
+                onClick={() => setSelectingStart(false)}
+              >
+                <span className="calendarDateLabel">END</span>
+                <span className="calendarDateValue">{formatDateForDisplay(tempEndDate)}</span>
+              </div>
             </div>
-            <div className="calendarWeekDays">{weekDays.map(day => <div key={day} className="calendarWeekDay">{day}</div>)}</div>
-            <div className="calendarDays">
-              {getDaysInMonth(viewMonth).map((day, idx) => (
-                <div key={idx} className={`calendarDayWrapper ${isDateInRange(day.date) ? 'inRange' : ''} ${isStartDate(day.date) ? 'isStart' : ''} ${isEndDate(day.date) ? 'isEnd' : ''}`}>
-                  <button className={`calendarDay ${day.isCurrentMonth ? '' : 'otherMonth'} ${isStartDate(day.date) || isEndDate(day.date) ? 'selected' : ''}`} onClick={() => handleDayClick(day.date)}>
-                    {day.date.getDate()}
-                    {day.isToday && <span className="calendarTodayDot" />}
-                  </button>
-                </div>
-              ))}
-            </div>
+
+            {/* DatePicker from Design System */}
+            <DatePicker
+              mode="range"
+              rangeValue={{ start: tempStartDate, end: tempEndDate }}
+              onRangeChange={(range) => {
+                setTempStartDate(range.start);
+                setTempEndDate(range.end);
+                setSelectingStart(!range.start || !!range.end);
+              }}
+              maxDate={new Date()}
+            />
+
             <div className="calendarActions">
               <button className="calendarCancel" onClick={() => setShowDatePicker(false)}>Cancel</button>
               <button className="calendarApply" onClick={handleApplyCustomPeriod}>Apply</button>
@@ -414,7 +430,7 @@ function OSDPerformanceChart({
               key={isFullScreen ? 'fullscreen' : 'normal'}
               ref={chartRef}
               option={option}
-              style={{ height: isFullScreen ? 'calc(100vh - 200px)' : '214px', width: isFullScreen ? 'calc(100vw - 300px)' : '100%' }}
+              style={{ height: isFullScreen ? 'calc(100vh - 200px)' : '100%', width: isFullScreen ? 'calc(100vw - 300px)' : '100%' }}
               notMerge={true}
               onChartReady={handleChartReady}
             />
