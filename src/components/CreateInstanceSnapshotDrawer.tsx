@@ -120,7 +120,7 @@ export function CreateInstanceSnapshotDrawer({
             <IconAlertCircle 
               size={16} 
               className="text-[var(--color-state-danger)] shrink-0 mt-0.5" 
-              stroke={1.5}
+              stroke={1}
             />
             <p className="text-[11px] text-[var(--color-text-default)] leading-4">
               For data consistency, stop all write operations on the instance before creating a snapshot.

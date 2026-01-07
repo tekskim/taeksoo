@@ -26,6 +26,8 @@ export interface InputProps
   leftElement?: ReactNode;
   /** Right icon/element */
   rightElement?: ReactNode;
+  /** Required field indicator */
+  required?: boolean;
 }
 
 /* ----------------------------------------
@@ -38,8 +40,8 @@ const sizes: Record<InputSize, string> = {
 };
 
 const labelSizes: Record<InputSize, string> = {
-  sm: 'text-[length:var(--font-size-10)]',
-  md: 'text-[length:var(--font-size-11)]',
+  sm: 'text-[14px] leading-5',
+  md: 'text-[14px] leading-5',
 };
 
 /* ----------------------------------------
@@ -61,6 +63,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
       id,
       disabled,
       readOnly,
+      required = false,
       ...props
     },
     ref
@@ -127,7 +130,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
     );
 
     const wrapperClasses = [
-      'flex flex-col gap-[var(--input-label-gap)]',
+      'flex flex-col gap-2',
       fullWidth ? 'w-full' : 'w-fit',
     ].join(' ');
 
@@ -136,9 +139,12 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
         {label && (
           <label
             htmlFor={inputId}
-            className={`font-medium text-[var(--color-text-default)] ${labelSizes[size]}`}
+            className={`font-medium text-[var(--color-text-default)] text-[14px] leading-5`}
           >
             {label}
+            {required && (
+              <span className="text-[var(--color-state-danger)] ml-0.5">*</span>
+            )}
           </label>
         )}
 
@@ -169,15 +175,16 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
           )}
         </div>
 
-        {error && (
-          <p id={`${inputId}-error`} className="text-[length:var(--font-size-11)] text-[var(--color-state-danger)]">
-            {error}
-          </p>
-        )}
-
+        {/* Helper Text - below input */}
         {helperText && !error && (
           <p id={`${inputId}-helper`} className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
             {helperText}
+          </p>
+        )}
+
+        {error && (
+          <p id={`${inputId}-error`} className="text-[length:var(--font-size-11)] text-[var(--color-state-danger)]">
+            {error}
           </p>
         )}
       </div>

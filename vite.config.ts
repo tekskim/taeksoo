@@ -20,4 +20,12 @@ export default defineConfig(({ command }) => ({
     },
   },
   appType: 'spa',
+  server: {
+    hmr: {
+      overlay: true,
+    },
+    watch: {
+      usePolling: false,
+    },
+  },
 }))

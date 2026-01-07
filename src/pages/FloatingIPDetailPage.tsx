@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import {
   Button,
@@ -52,19 +52,22 @@ interface FloatingIPDetail {
    Mock Data
    ---------------------------------------- */
 
-const mockFloatingIPDetail: FloatingIPDetail = {
-  id: '7284d9174e81431e93060a9bbcf2cdfd',
-  floatingIp: '172.24.4.228',
-  status: 'active',
-  createdAt: '2025-07-25 09:12:20',
-  description: '-',
-  // Association
-  resourceType: 'Instance',
-  resource: { name: 'web-server-10', id: 'inst-001' },
-  fixedIp: '10.0.0.1',
-  router: { name: 'web-server-10', id: 'router-001' },
-  // DNS
-  fqdn: 'my-web.thakicloud.com',
+// Floating IP data map by ID - synced with FloatingIPsPage mock data
+const mockFloatingIPsMap: Record<string, FloatingIPDetail> = {
+  'fip-001': { id: 'fip-001', floatingIp: '172.24.4.228', status: 'active', createdAt: '2025-10-01', description: '-', resourceType: 'Instance', resource: { name: 'web-01', id: 'inst-001' }, fixedIp: '10.7.65.39', router: { name: 'main-router', id: 'router-001' }, fqdn: 'web-01.thakicloud.com' },
+  'fip-002': { id: 'fip-002', floatingIp: '172.24.4.229', status: 'active', createdAt: '2025-10-02', description: '-', resourceType: 'Instance', resource: { name: 'app-server', id: 'inst-002' }, fixedIp: '10.7.65.40', router: { name: 'main-router', id: 'router-001' }, fqdn: 'app-server.thakicloud.com' },
+  'fip-003': { id: 'fip-003', floatingIp: '172.24.4.230', status: 'down', createdAt: '2025-10-03', description: 'Unassociated', resourceType: null, resource: null, fixedIp: '-', router: { name: 'main-router', id: 'router-001' }, fqdn: '-' },
+  'fip-004': { id: 'fip-004', floatingIp: '172.24.4.231', status: 'active', createdAt: '2025-09-28', description: '-', resourceType: 'Instance', resource: { name: 'db-server', id: 'inst-003' }, fixedIp: '10.7.65.41', router: { name: 'main-router', id: 'router-001' }, fqdn: 'db-server.thakicloud.com' },
+  'fip-005': { id: 'fip-005', floatingIp: '172.24.4.232', status: 'active', createdAt: '2025-09-25', description: '-', resourceType: 'Load Balancer', resource: { name: 'load-balancer', id: 'lb-001' }, fixedIp: '10.7.65.42', router: { name: 'main-router', id: 'router-001' }, fqdn: 'lb.thakicloud.com' },
+  'fip-006': { id: 'fip-006', floatingIp: '172.24.4.233', status: 'error', createdAt: '2025-09-20', description: 'Error state', resourceType: null, resource: null, fixedIp: '-', router: { name: 'main-router', id: 'router-001' }, fqdn: '-' },
+  'fip-007': { id: 'fip-007', floatingIp: '172.24.4.234', status: 'active', createdAt: '2025-09-15', description: '-', resourceType: 'Instance', resource: { name: 'monitoring', id: 'inst-004' }, fixedIp: '10.7.65.43', router: { name: 'main-router', id: 'router-001' }, fqdn: 'monitoring.thakicloud.com' },
+  'fip-008': { id: 'fip-008', floatingIp: '172.24.4.235', status: 'active', createdAt: '2025-09-10', description: '-', resourceType: 'VPN Gateway', resource: { name: 'vpn-gateway', id: 'vpn-001' }, fixedIp: '10.7.65.44', router: { name: 'vpn-router', id: 'router-002' }, fqdn: 'vpn.thakicloud.com' },
+  'fip-009': { id: 'fip-009', floatingIp: '172.24.4.236', status: 'down', createdAt: '2025-09-05', description: 'Unassociated', resourceType: null, resource: null, fixedIp: '-', router: { name: 'main-router', id: 'router-001' }, fqdn: '-' },
+  'fip-010': { id: 'fip-010', floatingIp: '172.24.4.237', status: 'active', createdAt: '2025-09-01', description: '-', resourceType: 'Instance', resource: { name: 'backup-server', id: 'inst-005' }, fixedIp: '10.7.65.45', router: { name: 'backup-router', id: 'router-003' }, fqdn: 'backup.thakicloud.com' },
+};
+
+const defaultFloatingIPDetail: FloatingIPDetail = {
+  id: 'unknown', floatingIp: 'Unknown', status: 'active', createdAt: '-', description: '-', resourceType: null, resource: null, fixedIp: '-', router: { name: '-', id: '' }, fqdn: '-',
 };
 
 /* ----------------------------------------
@@ -83,14 +86,21 @@ const floatingIPStatusMap: Record<FloatingIPStatus, 'active' | 'shutoff' | 'erro
 
 export default function FloatingIPDetailPage() {
   const { id } = useParams<{ id: string }>();
-  const { tabs, activeTabId, closeTab, selectTab, addNewTab } = useTabs();
+  const { tabs, activeTabId, closeTab, selectTab, addNewTab, updateActiveTabLabel } = useTabs();
   
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [activeDetailTab, setActiveDetailTab] = useState('details');
   const [copiedFqdn, setCopiedFqdn] = useState(false);
 
-  // In a real app, fetch based on id
-  const floatingIP = mockFloatingIPDetail;
+  // Get floating IP data based on URL ID
+  const floatingIP = id ? (mockFloatingIPsMap[id] || defaultFloatingIPDetail) : defaultFloatingIPDetail;
+
+  // Update tab label to floating IP address
+  useEffect(() => {
+    if (floatingIP.floatingIp) {
+      updateActiveTabLabel(floatingIP.floatingIp);
+    }
+  }, [floatingIP.floatingIp, updateActiveTabLabel]);
 
   const breadcrumbItems = [
     { label: 'Proj-1', href: '/' },
@@ -154,7 +164,7 @@ export default function FloatingIPDetailPage() {
         </div>
 
         {/* Scrollable Content Area */}
-        <div className="flex-1 overflow-auto min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll">
+        <div className="flex-1 overflow-auto overscroll-contain sidebar-scroll">
           {/* Main Content */}
           <div className="pt-4 px-8 pb-20 bg-[var(--color-surface-default)]">
             <VStack gap={8} className="min-w-[1176px] max-w-[1320px]">
@@ -222,7 +232,7 @@ export default function FloatingIPDetailPage() {
                             value={
                               floatingIP.resource ? (
                                 <Link
-                                  to={`/instances/${floatingIP.resource.id}`}
+                                  to={`/compute/instances/${floatingIP.resource.id}`}
                                   className="inline-flex items-center gap-1.5 font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
                                 >
                                   {floatingIP.resource.name}
@@ -240,7 +250,7 @@ export default function FloatingIPDetailPage() {
                             value={
                               floatingIP.router ? (
                                 <Link
-                                  to={`/routers/${floatingIP.router.id}`}
+                                  to={`/compute/routers/${floatingIP.router.id}`}
                                   className="inline-flex items-center gap-1.5 font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
                                 >
                                   {floatingIP.router.name}

@@ -111,7 +111,7 @@ function ShellTabButton({ tab, isActive, onClick, onClose, onOpenInNewTab }: She
       {isActive && (
         <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-[var(--color-action-primary)]" />
       )}
-      <IconTerminal2 size={14} className={isActive ? 'text-[var(--color-text-default)]' : 'text-[var(--color-text-muted)]'} stroke={1.5} />
+      <IconTerminal2 size={14} className={isActive ? 'text-[var(--color-text-default)]' : 'text-[var(--color-text-muted)]'} stroke={1} />
       <span className={`flex-1 truncate text-[length:var(--tabbar-font-size)] leading-[var(--tabbar-line-height)] font-medium max-w-[140px] ${isActive ? 'text-[var(--color-text-default)]' : 'text-[var(--color-text-muted)]'}`}>
         {tab.title}
       </span>
@@ -123,7 +123,7 @@ function ShellTabButton({ tab, isActive, onClick, onClose, onOpenInNewTab }: She
         className="p-0.5 rounded hover:bg-[var(--color-surface-muted)] transition-colors text-[var(--color-text-muted)] hover:text-[var(--color-text-default)]"
         title="Open in new tab"
       >
-        <IconExternalLink size={12} stroke={1.5} />
+        <IconExternalLink size={12} stroke={1} />
       </button>
       <button
         onClick={(e) => {
@@ -133,7 +133,7 @@ function ShellTabButton({ tab, isActive, onClick, onClose, onOpenInNewTab }: She
         className="p-0.5 rounded hover:bg-[var(--color-surface-muted)] transition-colors text-[var(--color-text-muted)] hover:text-[var(--color-text-default)]"
         title="Close tab"
       >
-        <IconX size={12} stroke={1.5} />
+        <IconX size={12} stroke={1} />
       </button>
     </div>
   );
@@ -323,6 +323,7 @@ export function ShellPanel({
             onChange={setSelectedContainer}
             options={containerOptions}
             placeholder="Container"
+            size="sm"
           />
 
           {/* Clear Button - Using Design System */}
@@ -340,7 +341,7 @@ export function ShellPanel({
             aria-label="Download"
             className="inline-flex items-center justify-center size-[28px] rounded-[var(--button-radius)] bg-[var(--color-surface-default)] text-[var(--color-text-default)] border border-[var(--color-border-strong)] hover:bg-[var(--button-secondary-hover-bg)] transition-colors"
           >
-            <IconDownload size={14} stroke={1.5} />
+            <IconDownload size={14} stroke={1} />
           </button>
 
           {/* Connection Status */}
@@ -356,6 +357,7 @@ export function ShellPanel({
             onChange={setViewTime}
             options={viewTimeOptions}
             placeholder="View"
+            size="sm"
           />
         </div>
       </div>

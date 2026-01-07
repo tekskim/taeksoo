@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { TabProvider } from '@/contexts/TabContext';
 import { SidebarProvider } from '@/contexts/SidebarContext';
 import { DarkModeProvider } from '@/hooks/useDarkMode';
+import { ProjectProvider } from '@/contexts/ProjectContext';
 
 // Entry Page
 import { EntryPage } from '@/pages/EntryPage';
@@ -50,10 +51,17 @@ import { TopologyD3Page } from '@/pages/TopologyD3Page';
 import { ConsolePage } from '@/pages/ConsolePage';
 import { CreateInstancePage } from '@/pages/CreateInstancePage';
 
+// Pages - Agent
+import { AgentPage } from '@/pages/AgentPage';
+import { CreateAgentPage } from '@/pages/CreateAgentPage';
+import { ChatPage } from '@/pages/ChatPage';
+import { StoragePage } from '@/pages/StoragePage';
+import { MCPToolsPage } from '@/pages/MCPToolsPage';
+
 // Pages - Cloud Builder
 import { CloudBuilderConsolePage } from '@/pages/cloudbuilder/CloudBuilderConsolePage';
-import { CloudBuilderDetailPage } from '@/pages/cloudbuilder/CloudBuilderDetailPage';
 import { CloudBuilderCreatePage } from '@/pages/cloudbuilder/CloudBuilderCreatePage';
+import { CloudBuilderDetailPage } from '@/pages/cloudbuilder/CloudBuilderDetailPage';
 
 // Pages - Design System
 import { DesignSystemPage } from '@/pages/DesignSystemPage';
@@ -73,6 +81,14 @@ function AppRoutes() {
         {/* Entry Page */}
         <Route path="/" element={<EntryPage />} />
 
+        {/* Agent Routes */}
+        <Route path="/agent" element={<HomePage />} />
+        <Route path="/agent/list" element={<AgentPage />} />
+        <Route path="/agent/create" element={<CreateAgentPage />} />
+        <Route path="/chat" element={<ChatPage />} />
+        <Route path="/storage" element={<StoragePage />} />
+        <Route path="/mcp-tools" element={<MCPToolsPage />} />
+
         {/* Cloud Builder Routes */}
         <Route path="/cloudbuilder" element={<CloudBuilderConsolePage />} />
         <Route path="/cloudbuilder/:slug" element={<CloudBuilderConsolePage />} />
@@ -85,7 +101,7 @@ function AppRoutes() {
         <Route path="/cloud-builder/:slug/detail/:id" element={<CloudBuilderDetailPage />} />
 
         {/* Compute Routes */}
-        <Route path="/compute" element={<HomePage />} />
+        <Route path="/compute" element={<InstanceListPage />} />
         <Route path="/compute/instances" element={<InstanceListPage />} />
         <Route path="/compute/instances/create" element={<CreateInstancePage />} />
         <Route path="/compute/instances/:id" element={<InstanceDetailPage />} />
@@ -130,6 +146,7 @@ function AppRoutes() {
 
         {/* Design System Routes */}
         <Route path="/design" element={<DesignSystemPage />} />
+        <Route path="/design-system" element={<DesignSystemPage />} />
         <Route path="/design/components" element={<DesignSystemPage />} />
         <Route path="/design/drawers" element={<DrawersPage />} />
         <Route path="/design/modals" element={<ModalsPage />} />
@@ -144,11 +161,13 @@ function App() {
   return (
     <DarkModeProvider>
       <BrowserRouter basename={import.meta.env.BASE_URL}>
-        <SidebarProvider>
-          <TabProvider defaultTabs={defaultTabs}>
-            <AppRoutes />
-          </TabProvider>
-        </SidebarProvider>
+        <ProjectProvider>
+          <SidebarProvider>
+            <TabProvider defaultTabs={defaultTabs}>
+              <AppRoutes />
+            </TabProvider>
+          </SidebarProvider>
+        </ProjectProvider>
       </BrowserRouter>
     </DarkModeProvider>
   );

@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import {
   Button,
@@ -85,19 +85,57 @@ interface HealthMonitor {
    Mock Data
    ---------------------------------------- */
 
-const mockPoolDetail: PoolDetail = {
-  id: '7284d9174e81431e93060a9bbcf2cdfd',
-  name: 'pool-http',
+// Mock data - synchronized with ListenerDetailPage pools (id format: 29fg234XX)
+const mockPoolsMap: Record<string, PoolDetail> = {
+  '29fg23400': {
+    id: '29fg23400',
+    name: 'pool-http',
+    status: 'active',
+    adminState: 'Up',
+    createdAt: '2025-07-25 09:12:20',
+    description: '-',
+    algorithm: 'Round Robin',
+    protocol: 'HTTP',
+    sessionPersistence: 'None',
+    listener: { name: 'listener-http-80', id: '29tgj234' },
+  },
+  '29fg23401': {
+    id: '29fg23401',
+    name: 'pool-http',
+    status: 'active',
+    adminState: 'Up',
+    createdAt: '2025-07-24 10:30:00',
+    description: 'HTTP connection pool',
+    algorithm: 'Round Robin',
+    protocol: 'HTTP',
+    sessionPersistence: 'None',
+    listener: { name: 'listener-http-80', id: '29tgj234' },
+  },
+  '29fg23402': {
+    id: '29fg23402',
+    name: 'pool-http',
+    status: 'active',
+    adminState: 'Up',
+    createdAt: '2025-07-23 14:00:00',
+    description: 'HTTP connection pool',
+    algorithm: 'Round Robin',
+    protocol: 'HTTP',
+    sessionPersistence: 'None',
+    listener: { name: 'listener-http-80', id: '29tgj234' },
+  },
+};
+
+const defaultPoolDetail: PoolDetail = {
+  id: 'pool-default',
+  name: 'Unknown Pool',
   status: 'active',
   adminState: 'Up',
-  createdAt: '2025-07-25 09:12:20',
-  // Basic Information
+  createdAt: '-',
   description: '-',
-  algorithm: 'Round Robin',
-  protocol: 'HTTP',
-  sessionPersistence: 'None',
-  // Association
-  listener: { name: 'web-server-10', id: 'listener-001' },
+  algorithm: '-',
+  protocol: '-',
+  sessionPersistence: '-',
+  listener: { name: '-', id: '' },
 };
 
 /* ----------------------------------------
@@ -155,11 +193,21 @@ const memberStatusMap: Record<MemberStatus, 'active' | 'down' | 'error'> = {
 
 export default function PoolDetailPage() {
   const { id } = useParams<{ id: string }>();
-  const { tabs, activeTabId, closeTab, selectTab, addNewTab } = useTabs();
+  const { tabs, activeTabId, closeTab, selectTab, addNewTab, updateActiveTabLabel } = useTabs();
   
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [activeDetailTab, setActiveDetailTab] = useState('details');
   const [copiedId, setCopiedId] = useState(false);
+
+  // Get pool based on URL id
+  const pool = id ? (mockPoolsMap[id] || defaultPoolDetail) : defaultPoolDetail;
+
+  // Update tab label when pool name changes
+  useEffect(() => {
+    if (pool.name) {
+      updateActiveTabLabel(pool.name);
+    }
+  }, [pool.name, updateActiveTabLabel]);
 
   // Members state
   const [memberSearchTerm, setMemberSearchTerm] = useState('');
@@ -168,9 +216,6 @@ export default function PoolDetailPage() {
   
   // Preferences state
   const [isPreferencesOpen, setIsPreferencesOpen] = useState(false);
-
-  // In a real app, fetch based on id
-  const pool = mockPoolDetail;
   const healthMonitor = mockHealthMonitor;
 
   const breadcrumbItems = [
@@ -251,7 +296,7 @@ export default function PoolDetailPage() {
       render: (_, row) => (
         <div className="flex flex-col gap-0.5">
           <Link
-            to={`/instances/${row.source.id}`}
+            to={`/compute/instances/${row.source.id}`}
             className="inline-flex items-center gap-1.5 font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
             onClick={(e) => e.stopPropagation()}
           >
@@ -358,7 +403,7 @@ export default function PoolDetailPage() {
         </div>
 
         {/* Scrollable Content Area */}
-        <div className="flex-1 overflow-auto min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll">
+        <div className="flex-1 overflow-auto overscroll-contain sidebar-scroll">
           {/* Page Content */}
           <div className="pt-4 px-8 pb-20 bg-[var(--color-surface-default)]">
             <VStack gap={8} className="min-w-[1176px] max-w-[1320px]">
@@ -465,7 +510,7 @@ export default function PoolDetailPage() {
                               </span>
                               {pool.listener ? (
                                 <Link
-                                  to={`/listeners/${pool.listener.id}`}
+                                  to={`/compute/listeners/${pool.listener.id}`}
                                   className="flex items-center gap-1.5 text-[12px] font-medium leading-4 text-[var(--color-action-primary)] hover:underline"
                                 >
                                   {pool.listener.name}
