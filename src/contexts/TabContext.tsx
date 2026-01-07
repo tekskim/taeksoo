@@ -49,6 +49,7 @@ interface TabProviderProps {
 function getLabelFromPath(path: string): string {
   const pathLabelMap: Record<string, string> = {
     '/': 'Home',
+    '/home': 'Home',
     '/compute': 'Home',
     '/compute/home': 'Home',
     '/compute/instances': 'Instances',
@@ -70,9 +71,17 @@ function getLabelFromPath(path: string): string {
     '/compute/load-balancers': 'Load Balancers',
     '/compute/certificates': 'Certificates',
     '/compute/topology': 'Topology',
+    '/compute/console': 'Console',
+    '/agent': 'Agent',
+    '/agent/create': 'Create Agent',
+    '/chat': 'Chat',
+    '/storage': 'Data sources',
+    '/mcp-tools': 'MCP Tools',
+    '/design': 'Design System',
     '/design/components': 'Design System',
     '/design/drawers': 'Drawers',
     '/design/modals': 'Modals',
+    '/design-system': 'Design System',
   };
   
   // Check for exact match first
@@ -184,18 +193,30 @@ export function TabProvider({ children, defaultTabs = [] }: TabProviderProps) {
       });
       
       if (existingTab) {
-        // Tab exists, just make sure it's active
+        // Tab exists, just make sure it's active and label is up to date
         setActiveTabId(existingTab.id);
-        return prevTabs;
+        return prevTabs.map((tab) =>
+          tab.id === existingTab.id ? { ...tab, label: currentLabel } : tab
+        );
       }
       
-      // Update the active tab's path and label
-      return prevTabs.map((tab) => {
-        if (tab.id === tabsRef.current.find((t) => t.id === activeTabId)?.id) {
-          return { ...tab, path: currentPath, label: currentLabel };
-        }
-        return tab;
-      });
+      // Update the active tab's path and label, or create new tab if none exists
+      const activeTab = prevTabs.find((t) => t.id === activeTabId);
+      if (activeTab) {
+        return prevTabs.map((tab) =>
+          tab.id === activeTabId ? { ...tab, path: currentPath, label: currentLabel } : tab
+        );
+      } else {
+        // No active tab, create a new one
+        const newTab: TabItem = {
+          id: `${currentPath.replace(/\//g, '-')}-${Date.now()}`,
+          label: currentLabel,
+          path: currentPath,
+          closable: true,
+        };
+        setActiveTabId(newTab.id);
+        return [...prevTabs, newTab];
+      }
     });
   }, [location.pathname, activeTabId]);
 
@@ -213,26 +234,29 @@ export function TabProvider({ children, defaultTabs = [] }: TabProviderProps) {
 
   // Close a tab
   const closeTab = useCallback((tabId: string) => {
+    // Always navigate to home when closing a tab
+    navigate('/');
+    
     setTabs((prev) => {
       const newTabs = prev.filter((t) => t.id !== tabId);
-      return newTabs;
-    });
-    
-    // Check if we need to switch tabs
-    setActiveTabId((currentActiveId) => {
-      if (currentActiveId === tabId) {
-        const currentTabs = tabsRef.current;
-        const newTabs = currentTabs.filter((t) => t.id !== tabId);
-        if (newTabs.length > 0) {
-          const closedIndex = currentTabs.findIndex((t) => t.id === tabId);
-          const newActiveIndex = Math.min(closedIndex, newTabs.length - 1);
-          const newActiveTab = newTabs[newActiveIndex];
-          // Navigate to the new active tab
-          setTimeout(() => navigate(newActiveTab.path), 0);
-          return newActiveTab.id;
-        }
+      
+      // Find or create home tab
+      let homeTab = newTabs.find((t) => t.path === '/');
+      if (!homeTab) {
+        // If no home tab exists, create one
+        homeTab = {
+          id: 'home',
+          label: 'Home',
+          path: '/',
+          closable: true,
+        };
+        newTabs.push(homeTab);
       }
-      return currentActiveId;
+      
+      // Set active tab to home
+      setActiveTabId(homeTab.id);
+      
+      return newTabs;
     });
   }, [navigate]);
 

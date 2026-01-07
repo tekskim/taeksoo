@@ -748,7 +748,7 @@ export function InstanceListPage() {
                 Instances List
               </h1>
               <Link to="/compute/instances/create">
-                <Button>
+                <Button size="md">
                   Create Instance
                 </Button>
               </Link>

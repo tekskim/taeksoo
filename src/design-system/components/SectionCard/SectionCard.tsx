@@ -17,10 +17,11 @@ export function SectionCard({ children, className, ...props }: SectionCardProps)
   return (
     <div
       className={twMerge(
+        'flex flex-col items-start',
         'bg-[var(--color-surface-default)]',
         'border border-[var(--color-border-default)]',
-        'rounded-md',
-        'px-4 pt-3 pb-4',
+        'rounded-lg',
+        'px-4 py-3',
         'w-full',
         className
       )}
@@ -75,9 +76,9 @@ export interface SectionCardContentProps extends HTMLAttributes<HTMLDivElement> 
   gap?: 1 | 2 | 3 | 4 | 5 | 6;
 }
 
-function SectionCardContent({ children, gap = 3, className, ...props }: SectionCardContentProps) {
+function SectionCardContent({ children, gap = 6, className, ...props }: SectionCardContentProps) {
   return (
-    <VStack gap={gap} className={className} {...props}>
+    <VStack gap={gap} className={twMerge('w-full', className)} {...props}>
       {children}
     </VStack>
   );

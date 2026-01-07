@@ -3,7 +3,11 @@
  * 
  * 사용법:
  * import { Button, Input, Badge, Container, Stack, MenuItem, MenuSection } from '@/design-system';
+ * import { Icons } from '@/design-system';
  */
+
+// Icons
+export * from './components/Icons';
 
 // Components
 export * from './components/Button';
@@ -24,6 +28,7 @@ export * from './components/TopBar';
 export * from './components/TabBar';
 export * from './components/Table';
 export * from './components/InlineMessage';
+export * from './components/Toast';
 export * from './components/Disclosure';
 export * from './components/Badge';
 export * from './components/Breadcrumb';

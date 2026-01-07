@@ -105,29 +105,38 @@ html.theme-transition *::after {
   /* Red (Danger) */
   --color-red-50: #fef2f2;
   --color-red-100: #fee2e2;
+  --color-red-200: #fecaca;
   --color-red-300: #fca5a5;
+  --color-red-400: #f87171;
   --color-red-500: #ef4444;
   --color-red-600: #dc2626;
   --color-red-700: #b91c1c;
   --color-red-800: #991b1b;
+  --color-red-900: #7f1d1d;
 
   /* Green (Success) */
   --color-green-50: #f0fdf4;
   --color-green-100: #dcfce7;
+  --color-green-200: #bbf7d0;
   --color-green-300: #86efac;
+  --color-green-400: #4ade80;
   --color-green-500: #22c55e;
   --color-green-600: #16a34a;
   --color-green-700: #15803d;
   --color-green-800: #166534;
+  --color-green-900: #14532d;
 
   /* Orange (Warning) */
   --color-orange-50: #fff7ed;
   --color-orange-100: #ffedd5;
+  --color-orange-200: #fed7aa;
   --color-orange-300: #fdba74;
+  --color-orange-400: #fb923c;
   --color-orange-500: #f97316;
   --color-orange-600: #ea580c;
   --color-orange-700: #c2410c;
   --color-orange-800: #9a3412;
+  --color-orange-900: #7c2d12;
 
   /* Yellow */
   --color-yellow-50: #fefce8;
@@ -872,12 +881,12 @@ html.theme-transition *::after {
   --status-line-height: var(--line-height-16);
   --status-text: var(--color-text-inverse);
 
-  /* Status colors - Using semantic state colors */
-  --status-success-bg: var(--color-state-success);
-  --status-danger-bg: var(--color-state-danger);
-  --status-info-bg: var(--color-state-info);
-  --status-warning-bg: var(--color-state-warning);
-  --status-muted-bg: var(--color-text-muted);
+  /* Status colors - Using 400 for colors, 500 for muted */
+  --status-success-bg: var(--color-green-400);
+  --status-danger-bg: var(--color-red-400);
+  --status-info-bg: var(--color-blue-400);
+  --status-warning-bg: var(--color-orange-400);
+  --status-muted-bg: var(--color-slate-500);
 
   /* ----------------------------------------
      Component - Tooltip
