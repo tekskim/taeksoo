@@ -18,6 +18,8 @@ import { InstanceSnapshotsPage } from '@/pages/InstanceSnapshotsPage';
 import { InstanceSnapshotDetailPage } from '@/pages/InstanceSnapshotDetailPage';
 import { ImagesPage } from '@/pages/ImagesPage';
 import { ImageDetailPage } from '@/pages/ImageDetailPage';
+import { BucketsPage } from '@/pages/BucketsPage';
+import { BucketDetailPage } from '@/pages/BucketDetailPage';
 import { FlavorsPage } from '@/pages/FlavorsPage';
 import { FlavorDetailPage } from '@/pages/FlavorDetailPage';
 import { KeyPairsPage } from '@/pages/KeyPairsPage';
@@ -148,6 +150,8 @@ function AppRoutes() {
         <Route path="/storage/physical-disks" element={<PhysicalDisksPage />} />
         <Route path="/storage/images" element={<ImagesPage />} />
         <Route path="/storage/images/:id" element={<ImageDetailPage />} />
+        <Route path="/storage/buckets" element={<BucketsPage />} />
+        <Route path="/storage/buckets/:id" element={<BucketDetailPage />} />
 
         {/* Design System Routes */}
         <Route path="/design" element={<DesignSystemPage />} />
