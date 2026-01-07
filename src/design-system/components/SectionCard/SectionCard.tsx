@@ -53,7 +53,7 @@ function SectionCardHeader({ title, actions, className, ...props }: SectionCardH
       )}
       {...props}
     >
-      <h5 className="text-[16px] font-medium leading-5 text-[var(--color-text-default)]">
+      <h5 className="text-[length:var(--font-size-16)] font-semibold leading-[var(--line-height-24)] text-[var(--color-text-default)]">
         {title}
       </h5>
       {actions && (

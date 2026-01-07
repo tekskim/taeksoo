@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import {
   Button,
@@ -68,11 +68,22 @@ interface Port {
    Mock Data
    ---------------------------------------- */
 
-const mockSecurityGroupDetail: SecurityGroupDetail = {
-  id: '7284d9174e81431e93060a9bbcf2cdfd',
-  name: 'sg-01',
-  description: 'Web server access group',
-  createdAt: '2025-01-25 09:12:20',
+// Security group data map by ID - synced with SecurityGroupsPage mock data
+const mockSecurityGroupsMap: Record<string, SecurityGroupDetail> = {
+  'sg-001': { id: 'sg-001', name: 'sg-01', description: 'Web server access group', createdAt: '2024-01-15' },
+  'sg-002': { id: 'sg-002', name: 'default', description: 'Default security group', createdAt: '2024-01-10' },
+  'sg-003': { id: 'sg-003', name: 'db-sg', description: 'Database access group', createdAt: '2024-02-01' },
+  'sg-004': { id: 'sg-004', name: 'app-sg', description: 'Application server security group', createdAt: '2024-02-15' },
+  'sg-005': { id: 'sg-005', name: 'lb-sg', description: 'Load balancer security group', createdAt: '2024-03-01' },
+  'sg-006': { id: 'sg-006', name: 'cache-sg', description: 'Cache server access group', createdAt: '2024-03-10' },
+  'sg-007': { id: 'sg-007', name: 'monitor-sg', description: 'Monitoring access group', createdAt: '2024-04-01' },
+  'sg-008': { id: 'sg-008', name: 'vpn-sg', description: 'VPN access group', createdAt: '2024-04-15' },
+  'sg-009': { id: 'sg-009', name: 'admin-sg', description: 'Admin access group', createdAt: '2024-05-01' },
+  'sg-010': { id: 'sg-010', name: 'test-sg', description: 'Test environment security group', createdAt: '2024-05-10' },
+};
+
+const defaultSecurityGroupDetail: SecurityGroupDetail = {
+  id: 'unknown', name: 'Unknown Security Group', description: '-', createdAt: '-',
 };
 
 const mockRules: SecurityGroupRule[] = Array.from({ length: 115 }, (_, i) => ({
@@ -122,7 +133,19 @@ export default function SecurityGroupDetailPage() {
   const [isPreferencesOpen, setIsPreferencesOpen] = useState(false);
 
   // Global tab management
-  const { tabs, activeTabId, closeTab, selectTab, addNewTab } = useTabs();
+  const { tabs, activeTabId, closeTab, selectTab, addNewTab, updateActiveTabLabel } = useTabs();
+
+  // Get security group data based on URL ID
+  const securityGroup = id ? (mockSecurityGroupsMap[id] || defaultSecurityGroupDetail) : defaultSecurityGroupDetail;
+  const rules = mockRules;
+  const ports = mockPorts;
+
+  // Update tab label to security group name
+  useEffect(() => {
+    if (securityGroup.name) {
+      updateActiveTabLabel(securityGroup.name);
+    }
+  }, [securityGroup.name, updateActiveTabLabel]);
 
   // Convert tabs to TabBar format
   const tabBarTabs = tabs.map((tab) => ({
@@ -130,11 +153,6 @@ export default function SecurityGroupDetailPage() {
     label: tab.label,
     closable: tab.closable,
   }));
-
-  // Mock security group data
-  const securityGroup = mockSecurityGroupDetail;
-  const rules = mockRules;
-  const ports = mockPorts;
 
   // Copy to clipboard function
   const copyToClipboard = (text: string) => {
@@ -211,7 +229,7 @@ export default function SecurityGroupDetailPage() {
       flex: 1,
       render: (_, row) => (
         <Link
-          to={`/networks/${row.id}`}
+          to={`/compute/networks/${row.id}`}
           className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
           onClick={(e) => e.stopPropagation()}
         >
@@ -346,12 +364,12 @@ export default function SecurityGroupDetailPage() {
         </div>
 
         {/* Scrollable Content Area */}
-        <div className="flex-1 overflow-auto min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll">
+        <div className="flex-1 overflow-auto overscroll-contain sidebar-scroll">
           {/* Main Content */}
           <div className="pt-4 px-8 pb-20 bg-[var(--color-surface-default)]">
-            <VStack gap={8} className="min-w-[1176px] max-w-[1320px]">
+            <VStack gap={6} className="min-w-[1176px]">
               {/* Header Card */}
-              <div className="w-full bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg p-4">
+              <div className="w-full bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg px-4 pt-3 pb-4">
                 {/* Title */}
                 <h1 className="text-[length:var(--font-size-16)] font-semibold text-[var(--color-text-default)] mb-3">
                   {securityGroup.name}

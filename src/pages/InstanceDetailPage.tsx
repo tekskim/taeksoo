@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import {
   Button,
@@ -135,26 +135,100 @@ interface InstanceDetail {
    Mock Data
    ---------------------------------------- */
 
-const mockInstanceDetail: InstanceDetail = {
-  id: '7284d9174e81431e93060a9bbcf2cdfd',
-  name: 'tk-test',
+// Instance data map by ID
+const mockInstancesMap: Record<string, InstanceDetail> = {
+  'vm-001': {
+    id: 'vm-001',
+    name: 'worker-node-01',
+    status: 'active',
+    host: 'compute-03',
+    createdAt: '2025-07-25 09:12:20',
+    availabilityZone: 'keystone',
+    description: '-',
+    flavor: { name: 'Medium', vcpu: 4, ram: '8 GiB', disk: '100 GiB', gpu: 1 },
+    image: 'CentOS 7',
+    interfaces: 5,
+    keyPair: 'default-key',
+    serverGroup: 'worker-group',
+    userData: '-',
+  },
+  'vm-002': {
+    id: 'vm-002',
+    name: 'worker-node-02',
+    status: 'active',
+    host: 'compute-03',
+    createdAt: '2025-07-24 10:30:00',
+    availabilityZone: 'keystone',
+    description: '-',
+    flavor: { name: 'Medium', vcpu: 4, ram: '8 GiB', disk: '100 GiB', gpu: 1 },
+    image: 'CentOS 7',
+    interfaces: 3,
+    keyPair: 'default-key',
+    serverGroup: 'worker-group',
+    userData: '-',
+  },
+  'vm-003': {
+    id: 'vm-003',
+    name: 'master-node-01',
+    status: 'active',
+    host: 'compute-01',
+    createdAt: '2025-07-20 08:00:00',
+    availabilityZone: 'nova',
+    description: 'Kubernetes master node',
+    flavor: { name: 'Large', vcpu: 8, ram: '16 GiB', disk: '200 GiB', gpu: 0 },
+    image: 'Ubuntu 22.04',
+    interfaces: 4,
+    keyPair: 'master-key',
+    serverGroup: 'master-group',
+    userData: '-',
+  },
+  'vm-004': {
+    id: 'vm-004',
+    name: 'db-server-01',
+    status: 'stopped',
+    host: 'compute-02',
+    createdAt: '2025-07-15 14:20:00',
+    availabilityZone: 'keystone',
+    description: 'Database server',
+    flavor: { name: 'XLarge', vcpu: 16, ram: '64 GiB', disk: '500 GiB', gpu: 0 },
+    image: 'CentOS 8',
+    interfaces: 2,
+    keyPair: 'db-key',
+    serverGroup: 'db-group',
+    userData: '-',
+  },
+  'vm-005': {
+    id: 'vm-005',
+    name: 'gpu-node-01',
+    status: 'active',
+    host: 'compute-gpu-01',
+    createdAt: '2025-07-10 09:00:00',
+    availabilityZone: 'nova',
+    description: 'GPU compute node',
+    flavor: { name: 'GPU Large', vcpu: 32, ram: '128 GiB', disk: '1000 GiB', gpu: 4 },
+    image: 'Ubuntu 22.04',
+    interfaces: 2,
+    keyPair: 'gpu-key',
+    serverGroup: 'gpu-group',
+    userData: '-',
+  },
+};
+
+// Default instance detail for unknown IDs
+const defaultInstanceDetail: InstanceDetail = {
+  id: 'unknown',
+  name: 'Unknown Instance',
   status: 'active',
   host: 'compute-03',
   createdAt: '2025-07-25 09:12:20',
   availabilityZone: 'nova',
   description: '-',
-  flavor: {
-    name: 'web-server-10',
-    vcpu: 1,
-    ram: '4 GiB',
-    disk: '40 GiB',
-    gpu: 1,
-  },
-  image: 'web-server-10',
-  interfaces: 5,
-  keyPair: 'web-server-10',
-  serverGroup: 'web-server-10',
-  userData: 'web-server-10',
+  flavor: { name: 'Medium', vcpu: 1, ram: '4 GiB', disk: '40 GiB', gpu: 1 },
+  image: 'Unknown',
+  interfaces: 0,
+  keyPair: '-',
+  serverGroup: '-',
+  userData: '-',
 };
 
 const mockAttachedVolumes: AttachedVolume[] = [
@@ -345,7 +419,7 @@ const mockActionLogs: ActionLog[] = [
    ---------------------------------------- */
 
 export function InstanceDetailPage() {
-  const { id: _id } = useParams<{ id: string }>();
+  const { id } = useParams<{ id: string }>();
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [activeDetailTab, setActiveDetailTab] = useState('details');
   const [selectedNetworkInterface, setSelectedNetworkInterface] = useState(mockNetworkInterfaces[0]?.id || '');
@@ -405,11 +479,18 @@ export function InstanceDetailPage() {
     navigator.clipboard.writeText(text);
   };
   
-  // In a real app, you would fetch the instance data based on the ID
-  const instance = mockInstanceDetail;
+  // Get instance data based on the ID from URL
+  const instance = id ? (mockInstancesMap[id] || defaultInstanceDetail) : defaultInstanceDetail;
 
   // Global tab management
-  const { tabs, activeTabId, closeTab, selectTab } = useTabs();
+  const { tabs, activeTabId, closeTab, selectTab, updateActiveTabLabel } = useTabs();
+
+  // Update tab label to instance name
+  useEffect(() => {
+    if (instance.name) {
+      updateActiveTabLabel(instance.name);
+    }
+  }, [instance.name, updateActiveTabLabel]);
 
   // Convert tabs to TabBar format
   const tabBarTabs = tabs.map((tab) => ({
@@ -463,7 +544,7 @@ export function InstanceDetailPage() {
         </div>
 
         {/* Scrollable Content Area */}
-        <div className="flex-1 overflow-auto min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll">
+        <div className="flex-1 overflow-auto overscroll-contain sidebar-scroll">
         {/* Page Content */}
         <div className="pt-4 px-8 pb-20 bg-[var(--color-surface-default)]">
           <VStack gap={6} className="min-w-[1176px]">
@@ -655,7 +736,7 @@ export function InstanceDetailPage() {
                           sortable: true,
                           render: (value: string, row: AttachedVolume) => (
                             <Link
-                              to={`/volumes/${row.id}`}
+                              to={`/compute/volumes/${row.id}`}
                               className="flex items-center gap-1.5 text-[var(--color-action-primary)] hover:underline"
                             >
                               {value}
@@ -782,7 +863,7 @@ export function InstanceDetailPage() {
                           render: (_value: string, iface: AttachedInterface) => (
                             <div className="flex flex-col gap-0.5">
                             <Link 
-                                to={`/ports/${iface.id}`}
+                                to={`/compute/ports/${iface.id}`}
                                 className="font-medium text-[var(--color-action-primary)] hover:underline"
                             >
                                 {iface.name}
@@ -800,7 +881,7 @@ export function InstanceDetailPage() {
                           render: (_value: string, iface: AttachedInterface) => (
                             <div className="flex flex-col gap-0.5">
                             <Link 
-                                to={`/networks/${iface.id}`}
+                                to={`/compute/networks/${iface.id}`}
                                 className="font-medium text-[var(--color-action-primary)] hover:underline"
                             >
                                 {iface.network}
@@ -905,7 +986,7 @@ export function InstanceDetailPage() {
                           render: (_value: string, row: FloatingIP) => (
                             <div className="flex flex-col gap-0.5">
                             <Link 
-                              to={`/floating-ips/${row.id}`}
+                              to={`/compute/floating-ips/${row.id}`}
                                 className="font-medium text-[var(--color-action-primary)] hover:underline"
                             >
                                 {row.floatingIp}
@@ -1010,7 +1091,7 @@ export function InstanceDetailPage() {
                           render: (_value: string, row: SecurityGroup) => (
                             <div className="flex flex-col gap-0.5">
                             <Link 
-                              to={`/security-groups/${row.id}`}
+                              to={`/compute/security-groups/${row.id}`}
                                 className="font-medium text-[var(--color-action-primary)] hover:underline"
                             >
                               {row.name}
@@ -1117,7 +1198,7 @@ export function InstanceDetailPage() {
                           render: (_value: string, row: InstanceSnapshot) => (
                             <div className="flex flex-col gap-0.5">
                             <Link 
-                              to={`/instance-snapshots/${row.id}`}
+                              to={`/compute/instance-snapshots/${row.id}`}
                                 className="font-medium text-[var(--color-action-primary)] hover:underline"
                             >
                               {row.name}

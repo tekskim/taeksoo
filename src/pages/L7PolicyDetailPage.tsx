@@ -303,7 +303,7 @@ export default function L7PolicyDetailPage() {
         </div>
 
         {/* Scrollable Content Area */}
-        <div className="flex-1 overflow-auto min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll">
+        <div className="flex-1 overflow-auto overscroll-contain sidebar-scroll">
           {/* Page Content */}
           <div className="pt-4 px-8 pb-20 bg-[var(--color-surface-default)]">
             <VStack gap={8} align="stretch" className="min-w-[1176px] max-w-[1320px]">
@@ -377,7 +377,7 @@ export default function L7PolicyDetailPage() {
                             value={
                               l7Policy.behaviorDetail ? (
                                 <Link
-                                  to={`/pools/${l7Policy.behaviorDetail.id}`}
+                                  to={`/compute/pools/${l7Policy.behaviorDetail.id}`}
                                   className="inline-flex items-center gap-1.5 font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
                                 >
                                   {l7Policy.behaviorDetail.name}

@@ -161,7 +161,7 @@ export function FloatingIPsPage() {
       render: (_, row) => (
         <div className="flex flex-col gap-0.5">
           <Link
-          to={`/floating-ips/${row.id}`}
+          to={`/compute/floating-ips/${row.id}`}
             className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
             onClick={(e) => e.stopPropagation()}
           >
@@ -184,7 +184,7 @@ export function FloatingIPsPage() {
             <div className="flex flex-col gap-0.5 min-w-0 text-left">
               <Tooltip content={row.associatedTo} position="top">
                 <Link
-                  to={`/instances/${row.associatedToId}`}
+                  to={`/compute/instances/${row.associatedToId}`}
                   className="inline-flex items-center gap-1 font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
                   onClick={(e) => e.stopPropagation()}
                 >
@@ -218,7 +218,7 @@ export function FloatingIPsPage() {
         <div className="flex flex-col gap-0.5 min-w-0">
           <Tooltip content={row.network} position="top">
             <Link
-          to={`/networks/${row.networkId}`}
+          to={`/compute/networks/${row.networkId}`}
               className="inline-flex items-center gap-1 font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
               onClick={(e) => e.stopPropagation()}
             >
@@ -323,7 +323,7 @@ export function FloatingIPsPage() {
         </div>
 
         {/* Scrollable Content Area */}
-        <div className="flex-1 overflow-auto min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll">
+        <div className="flex-1 overflow-auto overscroll-contain sidebar-scroll">
         {/* Main Content */}
         <div className="pt-4 px-8 pb-6 bg-[var(--color-surface-default)]">
           <VStack gap={3}>

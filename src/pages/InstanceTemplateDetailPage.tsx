@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import {
   Button,
@@ -64,32 +64,113 @@ interface InstanceTemplateDetail {
    Mock Data
    ---------------------------------------- */
 
-const mockTemplateDetail: InstanceTemplateDetail = {
-  id: 'tpl-001',
-  name: 'web-server-template',
-  description: 'Standard web server template for production deployments',
-  image: 'Ubuntu 22.04 LTS',
-  imageId: 'img-ubuntu-2204',
-  flavor: 'm1.large',
-  flavorId: 'flv-m1-large',
-  vcpu: 16,
-  ram: '32GiB',
-  disk: '50GiB',
-  network: 'public-net',
-  networkId: 'net-public-001',
-  subnet: '10.0.0.0/24',
-  subnetId: 'subnet-001',
-  securityGroups: ['default', 'web-servers', 'ssh-access'],
-  floatingIp: 'Auto',
-  keyPair: 'my-keypair',
-  access: 'Project',
-  favorite: true,
-  createdAt: '2025-07-25 09:12:20',
-  createdBy: 'admin@thaki.cloud',
-  // Advanced settings
-  availabilityZone: 'nova',
-  serverGroup: 'web-servers-group',
-  userData: '#!/bin/bash\napt-get update\napt-get install -y nginx',
+// Mock data - synchronized with InstanceTemplatesPage
+const mockTemplatesMap: Record<string, InstanceTemplateDetail> = {
+  'tpl-001': {
+    id: 'tpl-001',
+    name: 'hj-small',
+    description: 'Small instance template',
+    image: 'Ubuntu 22.04 LTS',
+    imageId: 'img-ubuntu-2204',
+    flavor: 'm1.medium',
+    flavorId: 'flv-m1-medium',
+    vcpu: 8,
+    ram: '16GiB',
+    disk: '10GiB',
+    network: 'in-net',
+    networkId: 'net-internal-001',
+    subnet: '10.0.0.0/24',
+    subnetId: 'subnet-001',
+    securityGroups: ['default'],
+    floatingIp: 'None',
+    keyPair: 'my-keypair',
+    access: 'Personal',
+    favorite: true,
+    createdAt: '2025-07-25 09:12:20',
+    createdBy: 'admin@thaki.cloud',
+    availabilityZone: 'nova',
+    serverGroup: '-',
+    userData: '',
+  },
+  'tpl-002': {
+    id: 'tpl-002',
+    name: 'web-server-template',
+    description: 'Standard web server template for production deployments',
+    image: 'Ubuntu 22.04 LTS',
+    imageId: 'img-ubuntu-2204',
+    flavor: 'm1.large',
+    flavorId: 'flv-m1-large',
+    vcpu: 16,
+    ram: '32GiB',
+    disk: '50GiB',
+    network: 'public-net',
+    networkId: 'net-public-001',
+    subnet: '10.0.0.0/24',
+    subnetId: 'subnet-001',
+    securityGroups: ['default', 'web-servers', 'ssh-access'],
+    floatingIp: 'Auto',
+    keyPair: 'my-keypair',
+    access: 'Project',
+    favorite: true,
+    createdAt: '2025-07-24 10:30:00',
+    createdBy: 'admin@thaki.cloud',
+    availabilityZone: 'nova',
+    serverGroup: 'web-servers-group',
+    userData: '#!/bin/bash\napt-get update\napt-get install -y nginx',
+  },
+  'tpl-003': {
+    id: 'tpl-003',
+    name: 'db-template',
+    description: 'Database server template',
+    image: 'CentOS 8',
+    imageId: 'img-centos-8',
+    flavor: 'm1.xlarge',
+    flavorId: 'flv-m1-xlarge',
+    vcpu: 32,
+    ram: '64GiB',
+    disk: '200GiB',
+    network: 'db-net',
+    networkId: 'net-db-001',
+    subnet: '10.0.1.0/24',
+    subnetId: 'subnet-002',
+    securityGroups: ['default', 'db-access'],
+    floatingIp: 'None',
+    keyPair: 'db-keypair',
+    access: 'Personal',
+    favorite: false,
+    createdAt: '2025-07-23 14:00:00',
+    createdBy: 'admin@thaki.cloud',
+    availabilityZone: 'nova',
+    serverGroup: 'db-group',
+    userData: '',
+  },
+};
+
+const defaultTemplateDetail: InstanceTemplateDetail = {
+  id: 'tpl-default',
+  name: 'Unknown Template',
+  description: '-',
+  image: '-',
+  imageId: '',
+  flavor: '-',
+  flavorId: '',
+  vcpu: 0,
+  ram: '-',
+  disk: '-',
+  network: '-',
+  networkId: '',
+  subnet: '-',
+  subnetId: '',
+  securityGroups: [],
+  floatingIp: 'None',
+  keyPair: '-',
+  access: 'Personal',
+  favorite: false,
+  createdAt: '-',
+  createdBy: '-',
+  availabilityZone: '-',
+  serverGroup: '-',
+  userData: '',
 };
 
 /* ----------------------------------------
@@ -97,16 +178,23 @@ const mockTemplateDetail: InstanceTemplateDetail = {
    ---------------------------------------- */
 
 export function InstanceTemplateDetailPage() {
-  const { id: _id } = useParams<{ id: string }>();
+  const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [activeDetailTab, setActiveDetailTab] = useState('details');
-  const [isFavorite, setIsFavorite] = useState(mockTemplateDetail.favorite);
   
-  // In a real app, you would fetch the template data based on the ID
-  const template = mockTemplateDetail;
+  // Get template based on URL id
+  const template = id ? (mockTemplatesMap[id] || defaultTemplateDetail) : defaultTemplateDetail;
+  const [isFavorite, setIsFavorite] = useState(template.favorite);
 
-  const { tabs, activeTabId, closeTab, selectTab } = useTabs();
+  const { tabs, activeTabId, closeTab, selectTab, updateActiveTabLabel } = useTabs();
+
+  // Update tab label to template name
+  useEffect(() => {
+    if (template.name) {
+      updateActiveTabLabel(template.name);
+    }
+  }, [template.name, updateActiveTabLabel]);
 
   const tabBarTabs = tabs.map((tab) => ({
     id: tab.id,
@@ -162,7 +250,7 @@ export function InstanceTemplateDetailPage() {
         </div>
 
         {/* Scrollable Content Area */}
-        <div className="flex-1 overflow-auto min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll">
+        <div className="flex-1 overflow-auto overscroll-contain sidebar-scroll">
           <div className="pt-4 px-8 pb-20 bg-[var(--color-surface-default)]">
           <VStack gap={6} className="min-w-[1176px]">
             {/* Template Header Card */}
@@ -172,13 +260,13 @@ export function InstanceTemplateDetailPage() {
                   <span>{template.name}</span>
                   <button
                     onClick={handleToggleFavorite}
-                    className="p-1 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                    className="p-0.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
                     aria-label={isFavorite ? 'Remove from favorites' : 'Add to favorites'}
                   >
                     {isFavorite ? (
-                      <IconStarFilled size={20} className="text-yellow-500" />
+                      <IconStarFilled size={16} className="text-yellow-400" />
                     ) : (
-                      <IconStar size={20} className="text-[var(--color-text-muted)]" />
+                      <IconStar size={16} stroke={1.5} className="text-[var(--color-text-muted)]" />
                     )}
                   </button>
                 </div>

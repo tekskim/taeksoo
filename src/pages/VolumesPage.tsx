@@ -177,7 +177,7 @@ export function VolumesPage() {
       sortable: true,
       render: (_, row) => (
         <Link
-          to={`/volumes/${row.id}`}
+          to={`/compute/volumes/${row.id}`}
           className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
           onClick={(e) => e.stopPropagation()}
         >
@@ -362,7 +362,7 @@ export function VolumesPage() {
         </div>
 
         {/* Scrollable Content Area */}
-        <div className="flex-1 overflow-auto min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll">
+        <div className="flex-1 overflow-auto overscroll-contain sidebar-scroll">
           {/* Page Content */}
           <div className="pt-4 px-8 pb-6 bg-[var(--color-surface-default)]">
           <VStack gap={3}>
