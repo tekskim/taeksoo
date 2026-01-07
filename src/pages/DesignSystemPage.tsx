@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import ReactECharts from 'echarts-for-react';
 import { DarkModeToggle } from '@/components/DarkModeToggle';
 import { AttachVolumeDrawer } from '@/components/AttachVolumeDrawer';
+import { DataViewDrawer } from '@/components/DataViewDrawer';
 import {
   Button,
   Input,
@@ -146,6 +147,7 @@ import {
   IconPower,
   IconActivity,
   IconChartBar,
+  IconChartDonut,
   IconGauge,
   IconDeviceDesktop,
   IconDeviceDesktopAnalytics,
@@ -2229,6 +2231,7 @@ export function DesignSystemPage() {
   const [activeSection, setActiveSection] = useState('token-architecture');
   const [searchQuery, setSearchQuery] = useState('');
   const [showScrollTop, setShowScrollTop] = useState(false);
+  const mainRef = useRef<HTMLDivElement>(null);
   
   // Pagination demo states
   const [demoPage1, setDemoPage1] = useState(1);
@@ -2238,7 +2241,7 @@ export function DesignSystemPage() {
 
   // Scroll to top on mount
   useEffect(() => {
-    window.scrollTo(0, 0);
+    mainRef.current?.scrollTo(0, 0);
   }, []);
 
   // Scroll to top handler
@@ -2455,7 +2458,7 @@ export function DesignSystemPage() {
       </nav>
 
       {/* Main Content */}
-      <main className="absolute top-0 bottom-0 right-0 left-[200px] overflow-y-auto">
+      <main ref={mainRef} className="absolute top-0 bottom-0 right-0 left-[200px] overflow-y-auto">
         <div className="py-12 px-8 overflow-x-auto">
         <div className="min-w-[var(--layout-content-min-width)]">
         <div className="max-w-[1000px] mx-auto">
