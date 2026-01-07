@@ -16,7 +16,8 @@ import {
 import { Link, useLocation } from 'react-router-dom';
 import ThakiLogoLight from '@/assets/thakiLogo_light.svg';
 import ThakiLogoDark from '@/assets/thakiLogo-dark.svg';
-import { ProjectSelector, mockProjects } from './ProjectSelector';
+import { ProjectSelector } from './ProjectSelector';
+import { mockProjects } from '@/contexts/ProjectContext';
 
 /* ----------------------------------------
    Storage Sidebar Component
@@ -76,8 +77,8 @@ export function StorageSidebar({ isOpen = true, onToggle }: StorageSidebarProps)
       </div>
 
       {/* Navigation */}
-      <nav className="flex-1 px-3 py-2 overflow-y-auto sidebar-scroll">
-        <VStack gap={4}>
+      <nav className="flex-1 px-3 py-2 overflow-y-auto overflow-x-hidden sidebar-scroll">
+        <VStack gap={4} className="w-full min-w-0">
           {/* Back to Entry */}
           <Link
             to="/"
