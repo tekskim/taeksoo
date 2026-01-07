@@ -2,7 +2,6 @@ import { useState, useEffect, useRef } from 'react';
 import ReactECharts from 'echarts-for-react';
 import { DarkModeToggle } from '@/components/DarkModeToggle';
 import { AttachVolumeDrawer } from '@/components/AttachVolumeDrawer';
-import { DataViewDrawer } from '@/components/DataViewDrawer';
 import {
   Button,
   Input,
@@ -147,7 +146,6 @@ import {
   IconPower,
   IconActivity,
   IconChartBar,
-  IconChartDonut,
   IconGauge,
   IconDeviceDesktop,
   IconDeviceDesktopAnalytics,
@@ -1682,7 +1680,7 @@ function SingleValueDoughnutDemo({
           borderRadius: 0,
           borderWidth: 0
         },
-        label: {
+        pointer: {
           show: false
         },
         emphasis: {
@@ -1694,7 +1692,7 @@ function SingleValueDoughnutDemo({
             shadowColor: 'rgba(0, 0, 0, 0.2)'
           }
         },
-        labelLine: {
+        splitLine: {
           show: false
         },
         data: [
@@ -1943,7 +1941,7 @@ function TableDemo() {
       width: '70px',
       align: 'center' as const,
       render: (value: boolean) => value ? (
-        <IconLock size={16} stroke={1} className="text-[var(--color-text-default)]" />
+        <IconLock size={16} stroke={1.5} className="text-[var(--color-text-default)]" />
       ) : null
     },
     { key: 'fixedIp', label: 'Fixed IP', sortable: true, width: '120px' },
@@ -1978,10 +1976,10 @@ function TableDemo() {
       render: () => (
         <div className="flex items-center gap-1">
           <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors text-[var(--color-text-subtle)] hover:text-[var(--color-text-default)]">
-            <IconTerminal2 size={16} stroke={1} />
+            <IconTerminal2 size={16} stroke={1.5} />
           </button>
           <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors text-[var(--color-text-subtle)] hover:text-[var(--color-text-default)]">
-            <IconDotsVertical size={16} stroke={1} />
+            <IconDotsVertical size={16} stroke={1.5} />
           </button>
         </div>
       )
@@ -2245,15 +2243,18 @@ export function DesignSystemPage() {
 
   // Scroll to top handler
   useEffect(() => {
+    const mainElement = mainRef.current;
+    if (!mainElement) return;
+    
     const handleScroll = () => {
-      setShowScrollTop(window.scrollY > 300);
+      setShowScrollTop(mainElement.scrollTop > 300);
     };
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    mainElement.addEventListener('scroll', handleScroll);
+    return () => mainElement.removeEventListener('scroll', handleScroll);
   }, []);
 
   const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    mainRef.current?.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   // Intersection Observer to track active section
@@ -3044,7 +3045,7 @@ outline: 2px solid var(--color-border-focus);`}
                     </div>
                     <div className="flex flex-col gap-1 min-w-0">
                       <div className="text-[length:var(--font-size-12)] text-[var(--color-text-default)] font-medium font-mono">
-                        --shadow-{name}
+                      --shadow-{name}
                       </div>
                       <div className="text-[length:var(--font-size-10)] text-[var(--color-text-muted)] font-mono break-all">
                         {value}
@@ -3594,22 +3595,8 @@ outline: 2px solid var(--color-border-focus);`}
                   <Label>Size Variants</Label>
                   <div className="flex gap-4 items-end flex-wrap">
                     <VStack gap={1}>
-                      <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">SM</span>
+                      <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">Default</span>
                       <Select
-                        size="sm"
-                        placeholder="Select"
-                        defaultValue="active"
-                        options={[
-                          { value: 'active', label: 'Active' },
-                          { value: 'shutoff', label: 'Shutoff' },
-                          { value: 'building', label: 'Building' },
-                        ]}
-                      />
-                    </VStack>
-                    <VStack gap={1}>
-                      <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">MD (Default)</span>
-                      <Select
-                        size="md"
                         placeholder="Select"
                         defaultValue="active"
                         options={[
@@ -5130,8 +5117,8 @@ outline: 2px solid var(--color-border-focus);`}
                 <VStack gap={3}>
                   <Label>Info Card - Basic Text</Label>
                   <div className="grid grid-cols-3 gap-2">
-                    <DetailHeader.InfoCard label="Host" value="compute-03" />
-                    <DetailHeader.InfoCard label="Created At" value="2025-07-25 09:12:20" />
+                      <DetailHeader.InfoCard label="Host" value="compute-03" />
+                      <DetailHeader.InfoCard label="Created At" value="2025-07-25 09:12:20" />
                     <DetailHeader.InfoCard label="Availability Zone" value="nova" />
                   </div>
                 </VStack>
@@ -5809,18 +5796,6 @@ outline: 2px solid var(--color-border-focus);`}
                     <code>inner-radius: 68%</code> · <code>outer-radius: 80%</code> · <code>thickness: 12%</code> · <code>border-radius: 0</code>
                   </div>
                 </VStack>
-
-                {/* Basic Doughnut */}
-                <VStack gap={3}>
-                  <Label>Basic Doughnut</Label>
-                  <div className="flex items-start gap-6 flex-wrap">
-                    <SingleValueDoughnutDemo 
-                      title="OSD onode Hits Ratio"
-                      value={98.3}
-                    />
-                  </div>
-                </VStack>
-
               </VStack>
             </Section>
 
