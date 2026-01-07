@@ -1198,33 +1198,9 @@ html.theme-transition *::after {
    ======================================== */
 
 .table-scroll-container {
-  /* Enable horizontal scrolling for wide tables */
-  overflow-x: auto;
+  /* Disable horizontal scrolling - table should fit within container */
+  overflow-x: hidden;
   overflow-y: visible;
-}
-
-/* WebKit browsers (Chrome, Safari, Edge) */
-.table-scroll-container::-webkit-scrollbar {
-  height: 6px;
-}
-
-.table-scroll-container::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-.table-scroll-container::-webkit-scrollbar-thumb {
-  background: var(--color-border-default);
-  border-radius: 3px;
-}
-
-.table-scroll-container::-webkit-scrollbar-thumb:hover {
-  background: var(--color-border-strong);
-}
-
-/* Firefox */
-.table-scroll-container {
-  scrollbar-width: thin;
-  scrollbar-color: var(--color-border-default) transparent;
 }
 
 /* Sidebar Scrollbar */
