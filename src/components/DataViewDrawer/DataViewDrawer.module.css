@@ -10,6 +10,10 @@
   animation: overlayFadeIn 0.2s ease;
 }
 
+:global(.dark) .overlay {
+  background: rgba(0, 0, 0, 0.6);
+}
+
 @keyframes overlayFadeIn {
   from {
     opacity: 0;
@@ -27,12 +31,16 @@
   bottom: 0;
   width: 700px;
   max-width: 90vw;
-  background: white;
+  background: var(--color-surface-default);
   box-shadow: -4px 0 24px rgba(0, 0, 0, 0.12);
   z-index: 1001;
   display: flex;
   flex-direction: column;
   animation: slideIn 0.25s cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+:global(.dark) .drawer {
+  box-shadow: -4px 0 24px rgba(0, 0, 0, 0.4);
 }
 
 @keyframes slideIn {
@@ -60,11 +68,11 @@
 }
 
 .title {
-  font-family: 'Mona Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family: var(--font-sans);
   font-size: 16px;
   font-weight: 600;
   line-height: 24px;
-  color: #0f172a;
+  color: var(--color-text-default);
   margin: 0;
 }
 
@@ -93,30 +101,30 @@
 }
 
 .table thead tr {
-  background: #f1f5f9;
-  border: 1px solid #e2e8f0;
+  background: var(--color-surface-subtle);
+  border: 1px solid var(--color-border-default);
   border-radius: 6px;
 }
 
 .table th {
   height: 40px;
   padding: 0 12px;
-  font-family: 'Mona Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family: var(--font-sans);
   font-size: 11px;
   font-weight: 500;
   line-height: 16px;
-  color: #0f172a;
+  color: var(--color-text-default);
   text-align: left;
   white-space: nowrap;
-  background: #f1f5f9;
-  border-top: 1px solid #e2e8f0;
-  border-bottom: 1px solid #e2e8f0;
+  background: var(--color-surface-subtle);
+  border-top: 1px solid var(--color-border-default);
+  border-bottom: 1px solid var(--color-border-default);
   min-width: 120px;
 }
 
 /* First column header - sticky on horizontal scroll */
 .table th:first-child {
-  border-left: 1px solid #e2e8f0;
+  border-left: 1px solid var(--color-border-default);
   border-top-left-radius: 6px;
   border-bottom-left-radius: 6px;
   position: sticky;
@@ -126,13 +134,13 @@
 }
 
 .table th:last-child {
-  border-right: 1px solid #e2e8f0;
+  border-right: 1px solid var(--color-border-default);
   border-top-right-radius: 6px;
   border-bottom-right-radius: 6px;
 }
 
 .table th:not(:first-child) {
-  border-left: 1px solid #e2e8f0;
+  border-left: 1px solid var(--color-border-default);
 }
 
 /* Table Body */
@@ -141,37 +149,37 @@
 }
 
 .table tbody tr {
-  background: white;
-  border: 1px solid #e2e8f0;
+  background: var(--color-surface-default);
+  border: 1px solid var(--color-border-default);
   border-radius: 6px;
 }
 
 .table tbody tr:hover {
-  background: #f8fafc;
+  background: var(--table-row-hover-bg);
 }
 
 .table tbody tr:hover td {
-  background: #f8fafc;
+  background: var(--table-row-hover-bg);
 }
 
 .table td {
   height: 40px;
   padding: 8px 12px;
-  font-family: 'Mona Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family: var(--font-sans);
   font-size: 12px;
   font-weight: 400;
   line-height: 16px;
-  color: #0f172a;
+  color: var(--color-text-default);
   white-space: nowrap;
-  background: white;
-  border-top: 1px solid #e2e8f0;
-  border-bottom: 1px solid #e2e8f0;
+  background: var(--color-surface-default);
+  border-top: 1px solid var(--color-border-default);
+  border-bottom: 1px solid var(--color-border-default);
   min-width: 120px;
 }
 
 /* First column cells - sticky on horizontal scroll */
 .table td:first-child {
-  border-left: 1px solid #e2e8f0;
+  border-left: 1px solid var(--color-border-default);
   border-top-left-radius: 6px;
   border-bottom-left-radius: 6px;
   position: sticky;
@@ -181,7 +189,7 @@
 }
 
 .table td:last-child {
-  border-right: 1px solid #e2e8f0;
+  border-right: 1px solid var(--color-border-default);
   border-top-right-radius: 6px;
   border-bottom-right-radius: 6px;
 }
@@ -192,7 +200,7 @@
   display: flex;
   justify-content: center;
   padding: 16px 24px;
-  border-top: 1px solid #e2e8f0;
+  border-top: 1px solid var(--color-border-default);
 }
 
 /* Close Button */
@@ -203,21 +211,21 @@
   min-width: 152px;
   height: 36px;
   padding: 8px 12px;
-  background: white;
-  border: 1px solid #cbd5e1;
+  background: var(--color-surface-default);
+  border: 1px solid var(--color-border-strong);
   border-radius: 6px;
-  font-family: 'Mona Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family: var(--font-sans);
   font-size: 12px;
   font-weight: 500;
   line-height: 16px;
-  color: #0f172a;
+  color: var(--color-text-default);
   cursor: pointer;
   transition: all 0.15s ease;
 }
 
 .closeButton:hover {
-  background: #f8fafc;
-  border-color: #94a3b8;
+  background: var(--button-secondary-hover-bg);
+  border-color: var(--color-border-strong);
 }
 
 /* Custom Scrollbar styling */
@@ -227,18 +235,18 @@
 }
 
 .tableContainer::-webkit-scrollbar-track {
-  background: #f8fafc;
+  background: var(--color-surface-subtle);
 }
 
 .tableContainer::-webkit-scrollbar-thumb {
-  background: #cbd5e1;
+  background: var(--color-border-strong);
   border-radius: 4px;
 }
 
 .tableContainer::-webkit-scrollbar-thumb:hover {
-  background: #94a3b8;
+  background: var(--color-text-subtle);
 }
 
 .tableContainer::-webkit-scrollbar-corner {
-  background: #f8fafc;
+  background: var(--color-surface-subtle);
 }
