@@ -184,13 +184,13 @@ export function Sidebar({ isOpen = true, onToggle }: SidebarProps) {
             </>
           ) : (
             <>
-            {/* Home */}
-            <MenuItem
-              icon={<IconHome size={16} stroke={1.5} />}
-              label="Home"
+          {/* Home */}
+          <MenuItem
+            icon={<IconHome size={16} stroke={1.5} />}
+            label="Home"
               href="/compute"
               active={isActive('/compute')}
-            />
+          />
 
           {/* Compute Section */}
           <MenuSection title="Compute" defaultOpen={true}>

@@ -637,8 +637,8 @@ export function getCloudBuilderListConfig(slug: CloudBuilderSlug): CloudBuilderL
       },
       columns: [
         { key: 'id', label: 'ID', sortable: true, kind: 'mono' },
-        { key: 'name', label: 'Name', sortable: true },
-        { key: 'type', label: 'Type', sortable: true },
+        { key: 'name', label: 'Name', sortable: true, width: '180px' },
+        { key: 'type', label: 'Type', sortable: true, width: '200px' },
         { key: 'host', label: 'Host', sortable: true },
         { key: 'availabilityZone', label: 'Availability Zone', sortable: true },
         { key: 'serviceStatus', label: 'Service Status', sortable: true, kind: 'badge', badgeTones: { Enabled: 'success', Disabled: 'neutral' } },
