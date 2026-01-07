@@ -167,9 +167,9 @@ export function AgentSidebar() {
         {/* Data sources */}
         <Tooltip content="Data sources" position="right">
           <Link
-            to="/storage"
+            to="/agent/storage"
             className={`flex items-center justify-center size-[38px] rounded-lg transition-colors shrink-0 ${
-              location.pathname === '/storage' || (location.pathname.startsWith('/storage/') && location.pathname !== '/storage')
+              location.pathname === '/agent/storage' || location.pathname.startsWith('/agent/storage/')
                 ? 'bg-[var(--color-info-weak-bg,#eff6ff)]' 
                 : 'bg-[var(--color-surface-default)] hover:bg-[var(--color-surface-muted)]'
             }`}
@@ -177,7 +177,7 @@ export function AgentSidebar() {
             <IconDatabase 
               size={22} 
               stroke={1} 
-              className={location.pathname === '/storage' || (location.pathname.startsWith('/storage/') && location.pathname !== '/storage') ? 'text-[var(--color-action-primary)]' : 'text-[var(--color-text-muted)]'} 
+              className={location.pathname === '/agent/storage' || location.pathname.startsWith('/agent/storage/') ? 'text-[var(--color-action-primary)]' : 'text-[var(--color-text-muted)]'} 
             />
           </Link>
         </Tooltip>

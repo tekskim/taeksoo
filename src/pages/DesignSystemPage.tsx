@@ -47,6 +47,7 @@ import {
   DetailHeader,
   SectionCard,
   Drawer,
+  FloatingCard,
 } from '@/design-system';
 import {
   // Navigation icons (for sidebar)
@@ -241,6 +242,7 @@ const patternItems = [
   { id: 'context-menu', label: 'Context Menu', icon: IconMenu2 },
   { id: 'modal', label: 'Modal', icon: IconLayoutGrid },
   { id: 'drawer', label: 'Drawer', icon: IconLayoutGrid },
+  { id: 'floating-card', label: 'Floating Card', icon: IconLayoutGrid },
   { id: 'layout', label: 'Layout', icon: IconLayoutSidebar },
 ];
 
@@ -5443,6 +5445,152 @@ outline: 2px solid var(--color-border-focus);`}
                           <td className="py-2 pr-4 text-[var(--color-text-muted)]">boolean</td>
                           <td className="py-2 pr-4 text-[var(--color-text-muted)]">true</td>
                           <td className="py-2 text-[var(--color-text-default)]">Whether clicking backdrop closes drawer</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </VStack>
+              </VStack>
+            </Section>
+
+            {/* Floating Card Section */}
+            <Section id="floating-card" title="Floating Card" description="Floating summary card for create/edit flows with sections, quota, and actions">
+              <VStack gap={8}>
+                {/* Basic Example */}
+                <VStack gap={4}>
+                  <Label>Basic Example (Non-portal)</Label>
+                  <div className="relative bg-[var(--color-surface-subtle)] p-6 rounded-lg min-h-[500px]">
+                    <FloatingCard
+                      title="Create Instance"
+                      portal={false}
+                      sections={[
+                        {
+                          tabTitle: 'Details',
+                          collapsible: true,
+                          defaultExpanded: true,
+                          showSuccessIcon: true,
+                          items: [
+                            { id: '1', title: 'Instance Name', status: 'success' },
+                            { id: '2', title: 'Description', status: 'success' },
+                            { id: '3', title: 'Availability Zone', status: 'default' },
+                          ],
+                        },
+                        {
+                          tabTitle: 'Source',
+                          collapsible: true,
+                          defaultExpanded: false,
+                          items: [
+                            { id: '4', title: 'Boot Source', status: 'processing' },
+                            { id: '5', title: 'Image', status: 'default' },
+                          ],
+                        },
+                        {
+                          tabTitle: 'Flavor',
+                          collapsible: true,
+                          defaultExpanded: false,
+                          items: [
+                            { id: '6', title: 'Flavor Selection', status: 'warning' },
+                          ],
+                        },
+                      ]}
+                      quota={[
+                        { label: 'Instances', current: 5, total: 10 },
+                        { label: 'vCPUs', current: 12, total: 20 },
+                        { label: 'RAM', current: 32, total: 64, unit: 'GB' },
+                      ]}
+                      cancelLabel="Cancel"
+                      actionLabel="Create Instance"
+                      actionEnabled={false}
+                      onCancel={() => console.log('Cancel clicked')}
+                      onAction={() => console.log('Create clicked')}
+                    />
+                  </div>
+                </VStack>
+
+                {/* Status Icons */}
+                <VStack gap={4}>
+                  <Label>Status Icons</Label>
+                  <div className="flex gap-4 items-center p-4 bg-[var(--color-surface-subtle)] rounded-lg">
+                    <div className="flex items-center gap-2">
+                      <div className="size-4 rounded-full border border-[var(--color-border-default)]" style={{ borderStyle: 'dashed' }} />
+                      <span className="text-[length:var(--font-size-12)] text-[var(--color-text-muted)]">Default</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <div className="size-4 rounded-full border border-[var(--color-text-muted)] flex items-center justify-center" style={{ borderStyle: 'dashed' }}>
+                        <IconRefresh size={10} stroke={2} className="text-[var(--color-text-muted)] animate-spin" />
+                      </div>
+                      <span className="text-[length:var(--font-size-12)] text-[var(--color-text-muted)]">Processing</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <div className="size-4 rounded-full border border-[var(--color-state-danger)] bg-[var(--color-state-danger)] flex items-center justify-center">
+                        <IconAlertTriangle size={10} stroke={2} className="text-white" />
+                      </div>
+                      <span className="text-[length:var(--font-size-12)] text-[var(--color-text-muted)]">Warning</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <div className="size-4 rounded-full border border-[var(--color-state-success)] bg-[var(--color-state-success)] flex items-center justify-center">
+                        <IconCheck size={10} stroke={2} className="text-white" />
+                      </div>
+                      <span className="text-[length:var(--font-size-12)] text-[var(--color-text-muted)]">Success</span>
+                    </div>
+                  </div>
+                </VStack>
+
+                {/* Props Reference */}
+                <VStack gap={4}>
+                  <Label>Props Reference</Label>
+                  <div className="overflow-x-auto">
+                    <table className="w-full text-[length:var(--font-size-12)]">
+                      <thead>
+                        <tr className="border-b border-[var(--color-border-default)]">
+                          <th className="text-left py-3 pr-4 font-medium text-[var(--color-text-subtle)]">Prop</th>
+                          <th className="text-left py-3 pr-4 font-medium text-[var(--color-text-subtle)]">Type</th>
+                          <th className="text-left py-3 pr-4 font-medium text-[var(--color-text-subtle)]">Default</th>
+                          <th className="text-left py-3 font-medium text-[var(--color-text-subtle)]">Description</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr className="border-b border-[var(--color-border-subtle)]">
+                          <td className="py-2 pr-4 font-mono text-[var(--color-action-primary)]">title</td>
+                          <td className="py-2 pr-4 text-[var(--color-text-muted)]">string</td>
+                          <td className="py-2 pr-4 text-[var(--color-text-muted)]">required</td>
+                          <td className="py-2 text-[var(--color-text-default)]">Card title in summary section</td>
+                        </tr>
+                        <tr className="border-b border-[var(--color-border-subtle)]">
+                          <td className="py-2 pr-4 font-mono text-[var(--color-action-primary)]">sections</td>
+                          <td className="py-2 pr-4 text-[var(--color-text-muted)]">FloatingCardSection[]</td>
+                          <td className="py-2 pr-4 text-[var(--color-text-muted)]">[]</td>
+                          <td className="py-2 text-[var(--color-text-default)]">Collapsible sections with items</td>
+                        </tr>
+                        <tr className="border-b border-[var(--color-border-subtle)]">
+                          <td className="py-2 pr-4 font-mono text-[var(--color-action-primary)]">quota</td>
+                          <td className="py-2 pr-4 text-[var(--color-text-muted)]">QuotaItem[]</td>
+                          <td className="py-2 pr-4 text-[var(--color-text-muted)]">[]</td>
+                          <td className="py-2 text-[var(--color-text-default)]">Quota progress bars</td>
+                        </tr>
+                        <tr className="border-b border-[var(--color-border-subtle)]">
+                          <td className="py-2 pr-4 font-mono text-[var(--color-action-primary)]">position</td>
+                          <td className="py-2 pr-4 text-[var(--color-text-muted)]">FloatingCardPosition</td>
+                          <td className="py-2 pr-4 text-[var(--color-text-muted)]">'top-left'</td>
+                          <td className="py-2 text-[var(--color-text-default)]">Position when portal is true</td>
+                        </tr>
+                        <tr className="border-b border-[var(--color-border-subtle)]">
+                          <td className="py-2 pr-4 font-mono text-[var(--color-action-primary)]">portal</td>
+                          <td className="py-2 pr-4 text-[var(--color-text-muted)]">boolean</td>
+                          <td className="py-2 pr-4 text-[var(--color-text-muted)]">true</td>
+                          <td className="py-2 text-[var(--color-text-default)]">Render in portal (fixed position)</td>
+                        </tr>
+                        <tr className="border-b border-[var(--color-border-subtle)]">
+                          <td className="py-2 pr-4 font-mono text-[var(--color-action-primary)]">actionEnabled</td>
+                          <td className="py-2 pr-4 text-[var(--color-text-muted)]">boolean</td>
+                          <td className="py-2 pr-4 text-[var(--color-text-muted)]">false</td>
+                          <td className="py-2 text-[var(--color-text-default)]">Enable primary action button</td>
+                        </tr>
+                        <tr>
+                          <td className="py-2 pr-4 font-mono text-[var(--color-action-primary)]">width</td>
+                          <td className="py-2 pr-4 text-[var(--color-text-muted)]">string</td>
+                          <td className="py-2 pr-4 text-[var(--color-text-muted)]">'320px'</td>
+                          <td className="py-2 text-[var(--color-text-default)]">Card width</td>
                         </tr>
                       </tbody>
                     </table>
