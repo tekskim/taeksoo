@@ -309,8 +309,10 @@ export function HomePage() {
                   </VStack>
                 </div>
               </div>
+            </Card>
             </div>
           </div>
+        </div>
         </div>
       </main>
     </div>
