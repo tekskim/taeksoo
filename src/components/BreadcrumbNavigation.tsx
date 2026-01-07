@@ -44,7 +44,7 @@ export function BreadcrumbNavigation({
         <div className="flex items-center border border-[var(--color-border-strong)] rounded-[var(--radius-md)] p-1 gap-1">
           <button
             onClick={onBack}
-            className="p-0.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors duration-[var(--duration-fast)]"
+            className="p-0.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors duration-[var(--duration-fast)] cursor-pointer"
             aria-label="Go back"
           >
             <IconChevronLeft size={16} className="text-[var(--color-text-default)]" strokeWidth={1.5} />
@@ -52,7 +52,7 @@ export function BreadcrumbNavigation({
           <div className="w-px h-2 bg-[var(--color-border-default)]" />
           <button
             onClick={onForward}
-            className="p-0.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors duration-[var(--duration-fast)]"
+            className="p-0.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors duration-[var(--duration-fast)] cursor-pointer"
             aria-label="Go forward"
           >
             <IconChevronRight size={16} className="text-[var(--color-text-default)]" strokeWidth={1.5} />
@@ -66,7 +66,7 @@ export function BreadcrumbNavigation({
       {/* Right: Notification */}
       <button
         onClick={onNotificationClick}
-        className="p-1 hover:bg-[var(--color-surface-muted)] rounded-[var(--radius-md)] transition-colors duration-[var(--duration-fast)] relative"
+        className="p-1 hover:bg-[var(--color-surface-muted)] rounded-[var(--radius-md)] transition-colors duration-[var(--duration-fast)] relative cursor-pointer"
         aria-label="Notifications"
       >
         <IconBell size={16} className="text-[var(--color-text-default)]" strokeWidth={1.5} />

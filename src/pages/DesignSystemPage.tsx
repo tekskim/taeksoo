@@ -1977,7 +1977,7 @@ function SingleValueDoughnutDemo({
 function TabBarDemo() {
   const { tabs, activeTab, addTab, closeTab, selectTab } = useTabBar({
     initialTabs: [
-      { id: 'tab-1', label: 'Dashboard', closable: true },
+      { id: 'tab-1', label: 'Entry page', closable: true },
       { id: 'tab-2', label: 'Settings', closable: true },
       { id: 'tab-3', label: 'Profile', closable: true },
     ],
@@ -2066,7 +2066,7 @@ function TabBarDemo() {
         <div className="w-full border border-[var(--color-border-default)] rounded-[var(--radius-md)] overflow-hidden">
           <TabBar
             tabs={[
-              { id: 'tab-1', label: 'Dashboard', closable: true },
+              { id: 'tab-1', label: 'Entry page', closable: true },
               { id: 'tab-2', label: 'Analytics', closable: true },
               { id: 'tab-3', label: 'Reports', closable: true },
               { id: 'tab-4', label: 'Users', closable: true },
@@ -2556,8 +2556,8 @@ export function DesignSystemPage() {
   return (
     <div className="min-h-screen bg-[var(--color-surface-subtle)]">
       {/* Left Sidebar Navigation */}
-      <nav className="fixed left-0 top-0 w-[200px] h-screen bg-[var(--color-surface-default)] border-r border-[var(--color-border-default)] overflow-y-auto z-50">
-        <div className="p-4">
+      <nav className="fixed left-0 top-0 w-[200px] h-screen bg-[var(--color-surface-default)] border-r border-[var(--color-border-default)] overflow-y-auto z-50 sidebar-scroll">
+        <div className="p-4 overflow-hidden">
           {/* Logo */}
           <Link to="/" className="flex items-center gap-2 mb-4">
             <div className="w-6 h-6 rounded bg-[var(--color-action-primary)] flex items-center justify-center">
@@ -2568,14 +2568,14 @@ export function DesignSystemPage() {
             </span>
           </Link>
 
-          {/* Dashboard Link */}
+          {/* EntryPage Link */}
           <Link
             to="/"
-            className="flex items-center gap-2 w-full px-3 py-2 mb-4 rounded-[var(--radius-button)] bg-[var(--color-action-secondary)] hover:bg-[var(--color-action-secondary-hover)] text-[var(--color-text-default)] text-[length:var(--font-size-11)] font-medium transition-colors border border-[var(--color-border-default)]"
+            className="flex items-center gap-2 w-[166px] box-border px-3 py-2 mb-4 rounded-[var(--radius-button)] bg-[var(--color-action-secondary)] hover:bg-[var(--color-action-secondary-hover)] text-[var(--color-text-default)] text-[length:var(--font-size-11)] font-medium transition-colors border border-[var(--color-border-default)]"
           >
-            <IconHome size={16} stroke={1.5} />
-            <span>Dashboard</span>
-            <IconChevronRight size={14} stroke={1.5} className="ml-auto" />
+            <IconHome size={16} stroke={1.5} className="shrink-0" />
+            <span className="truncate flex-1 min-w-0">Entry page</span>
+            <IconChevronRight size={14} stroke={1.5} className="shrink-0" />
           </Link>
 
           {/* Navigation */}
@@ -2721,9 +2721,9 @@ export function DesignSystemPage() {
                 </p>
               </VStack>
               <div className="flex items-center gap-3">
-                <DarkModeToggle size="sm" />
+                <DarkModeToggle size="sm" scrollContainerRef={mainRef} />
                 <Link to="/">
-                  <Button variant="outline">Dashboard →</Button>
+                  <Button variant="outline">Entry page →</Button>
                 </Link>
               </div>
             </div>
@@ -3435,7 +3435,7 @@ outline: 2px solid var(--color-border-focus);`}
                     { Icon: IconGauge, name: 'Speed' },
                     { Icon: IconDeviceDesktop, name: 'Desktop' },
                     { Icon: IconDeviceDesktopAnalytics, name: 'Analytics' },
-                    { Icon: IconLayoutDashboard, name: 'Dashboard' },
+                    { Icon: IconLayoutDashboard, name: 'Entry page' },
                   ]}
                 />
 
@@ -4512,7 +4512,7 @@ outline: 2px solid var(--color-border-focus);`}
                         <Breadcrumb
                           items={[
                             { label: 'Home', onClick: () => {} },
-                            { label: 'Dashboard', onClick: () => {} },
+                            { label: 'Entry page', onClick: () => {} },
                             { label: 'Settings' },
                           ]}
                         />
@@ -6147,18 +6147,26 @@ outline: 2px solid var(--color-border-focus);`}
                     <code>inner-radius: 68%</code> · <code>outer-radius: 80%</code> · <code>thickness: 12%</code> · <code>border-radius: 6px</code>
                   </div>
                 </VStack>
-
-                {/* Basic Doughnut */}
-                <VStack gap={3}>
-                  <Label>Basic Doughnut</Label>
-                  <div className="flex items-start gap-6 flex-wrap">
-                    <SingleValueDoughnutDemo 
-                      title="OSD onode Hits Ratio"
-                      value={98}
-                    />
-                  </div>
-                </VStack>
-
+                <HStack gap={3}>
+                  <a
+                    href="https://github.com/pob-design-system/tds/blob/main/DESIGN_SYSTEM.md"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 px-4 py-2 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-button)] text-[length:var(--font-size-12)] text-[var(--color-text-default)] hover:bg-[var(--color-surface-muted)] transition-colors cursor-pointer"
+                  >
+                    <IconFileText size={14} stroke={1.5} />
+                    DESIGN_SYSTEM.md
+                  </a>
+                  <a
+                    href="https://github.com/pob-design-system/tds/blob/main/.cursorrules"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 px-4 py-2 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-button)] text-[length:var(--font-size-12)] text-[var(--color-text-default)] hover:bg-[var(--color-surface-muted)] transition-colors cursor-pointer"
+                  >
+                    <IconCode size={14} stroke={1.5} />
+                    .cursorrules
+                  </a>
+                </HStack>
               </VStack>
             </Section>
 

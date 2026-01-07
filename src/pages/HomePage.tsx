@@ -210,7 +210,7 @@ export function HomePage() {
 
         {/* Scrollable Content Area */}
         <div className="flex-1 overflow-auto overscroll-contain sidebar-scroll">
-          {/* Dashboard Content */}
+          {/* EntryPage Content */}
           <div className="px-8 py-6">
           {/* PROJECT INFO Card */}
           <div className="bg-[var(--color-surface-subtle)] rounded-lg p-4 flex flex-col justify-between mb-6">

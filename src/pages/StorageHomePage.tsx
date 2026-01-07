@@ -501,7 +501,7 @@ export function StorageHomePage() {
               <Breadcrumb
               items={[
                 { label: 'Storage', href: '/storage' },
-                { label: 'Dashboard' },
+                { label: 'Entry page' },
               ]}
             />
             }
@@ -517,7 +517,7 @@ export function StorageHomePage() {
 
         {/* Scrollable Content Area */}
         <div className="flex-1 overflow-auto min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll">
-          {/* Dashboard Content */}
+          {/* EntryPage Content */}
           <div className="px-8 py-6">
           {/* Top Row - 2 Cards: Inventory and Capacity */}
           <div className="grid grid-cols-2 gap-6 mb-6">
