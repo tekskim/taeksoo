@@ -74,6 +74,9 @@ import { GradientShowcasePage } from '@/pages/GradientShowcasePage';
 import ColorPalettePage from '@/pages/ColorPalettePage';
 import MetallicPalettePage from '@/pages/MetallicPalettePage';
 
+// Pages - Desktop
+import { DesktopPage } from '@/pages/DesktopPage';
+
 const defaultTabs = [
   { id: 'home', label: 'Home', path: '/compute', closable: true },
 ];
@@ -154,6 +157,9 @@ function AppRoutes() {
         <Route path="/design/gradients" element={<GradientShowcasePage />} />
         <Route path="/design/colors" element={<ColorPalettePage />} />
         <Route path="/design/metallic" element={<MetallicPalettePage />} />
+
+        {/* Desktop Routes */}
+        <Route path="/desktop" element={<DesktopPage />} />
       </Routes>
   );
 }
