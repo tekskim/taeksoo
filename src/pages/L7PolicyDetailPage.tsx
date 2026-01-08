@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import {
   Button,
@@ -143,7 +143,7 @@ const l7RuleStatusMap: Record<L7RuleStatus, 'active' | 'building' | 'error'> = {
 
 export default function L7PolicyDetailPage() {
   const { id } = useParams<{ id: string }>();
-  const { tabs, activeTabId, closeTab, selectTab, addNewTab } = useTabs();
+  const { tabs, activeTabId, closeTab, selectTab, addNewTab, updateActiveTabLabel } = useTabs();
   
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [activeDetailTab, setActiveDetailTab] = useState('details');
@@ -160,6 +160,13 @@ export default function L7PolicyDetailPage() {
 
   // In a real app, fetch based on id
   const l7Policy = mockL7PolicyDetail;
+
+  // Update tab label to match the policy name (most recent breadcrumb)
+  useEffect(() => {
+    if (l7Policy?.name) {
+      updateActiveTabLabel(l7Policy.name);
+    }
+  }, [l7Policy?.name, updateActiveTabLabel]);
 
   const breadcrumbItems = [
     { label: 'Proj-1', href: '/' },

@@ -44,7 +44,7 @@ export const TopBar: React.FC<TopBarProps> = ({
   canGoForward = true,
   breadcrumb,
   actions,
-  showSidebarToggle = true,
+  showSidebarToggle = false,
   showNavigation = true,
   className = '',
 }) => {
