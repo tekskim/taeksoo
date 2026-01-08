@@ -375,7 +375,15 @@ function OSDPerformanceChart({
       trigger: 'axis' as const,
       backgroundColor: tooltipBg,
       borderColor: tooltipBorder,
-      textStyle: { color: tooltipTextColor, fontSize: 11, fontFamily: 'Mona Sans, -apple-system, BlinkMacSystemFont, sans-serif' }
+      textStyle: { color: tooltipTextColor, fontSize: 11, fontFamily: 'Mona Sans, -apple-system, BlinkMacSystemFont, sans-serif' },
+      formatter: (params: Array<{ marker: string; seriesName: string; value: number; axisValueLabel: string }>) => {
+        if (!Array.isArray(params) || params.length === 0) return '';
+        const time = params[0].axisValueLabel;
+        const items = params.map(p => 
+          `<div style="display: flex; align-items: center; gap: 8px;"><span>${p.marker}</span><span>${p.seriesName}</span><span style="font-weight: 500; margin-left: auto;">${p.value}</span></div>`
+        ).join('');
+        return `<div style="font-size: 11px; font-family: Mona Sans, -apple-system, BlinkMacSystemFont, sans-serif;">${time}<div style="margin-top: 4px;">${items}</div></div>`;
+      }
     },
     series: series.filter(s => visibleSeries[s.name]).map(s => ({
       name: s.name,
@@ -1039,7 +1047,7 @@ export function OSDDetailPage() {
                   <TabPanel value="performance" className="pt-0">
                     <VStack gap={6} className="pt-4">
                       {/* Monitoring Time Controls */}
-                      <div className="flex justify-end w-full">
+                      <div className="flex justify-start w-full">
                         <OSDMonitoringTimeControls 
                           onTimeRangeChange={(value) => console.log('Time range changed:', value)}
                           onRefresh={() => console.log('Refresh clicked')}
