@@ -264,7 +264,7 @@ export function InstanceTemplateDetailPage() {
                     aria-label={isFavorite ? 'Remove from favorites' : 'Add to favorites'}
                   >
                     {isFavorite ? (
-                      <IconStarFilled size={16} className="text-yellow-400" />
+                      <IconStarFilled size={16} className="text-yellow-500" />
                     ) : (
                       <IconStar size={16} stroke={1.5} className="text-[var(--color-text-muted)]" />
                     )}

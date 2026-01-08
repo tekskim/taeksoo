@@ -328,9 +328,9 @@ export function AgentPage() {
       sortable: false,
       render: (_, row) => (
         row.favorite ? (
-          <IconStarFilled size={20} className="text-yellow-500" />
+          <IconStarFilled size={16} className="text-yellow-500" />
         ) : (
-          <IconStar size={20} className="text-[var(--color-border-default)]" />
+          <IconStar size={16} stroke={1.5} className="text-[var(--color-text-muted)]" />
         )
       ),
     },
@@ -403,11 +403,11 @@ export function AgentPage() {
         return (
           <div className="flex gap-1 items-center justify-center" onClick={(e) => e.stopPropagation()}>
             <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors">
-              <IconCode size={20} stroke={1} className="text-[var(--color-text-muted)]" />
+              <IconCode size={16} stroke={1.5} className="text-[var(--color-text-muted)]" />
             </button>
             <ContextMenu items={menuItems} trigger="click">
               <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors">
-                <IconDotsCircleHorizontal size={20} stroke={1.5} className="text-[var(--action-icon-color)]" />
+                <IconDotsCircleHorizontal size={16} stroke={1.5} className="text-[var(--action-icon-color)]" />
               </button>
             </ContextMenu>
           </div>
