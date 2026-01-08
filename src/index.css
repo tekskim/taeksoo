@@ -1433,7 +1433,7 @@ input[type="search"]::-webkit-search-decoration {
 .legendDot {
   width: 8px;
   height: 8px;
-  border-radius: 2px;
+  border-radius: 9999px;
   flex-shrink: 0;
 }
 
@@ -1705,12 +1705,10 @@ input[type="search"]::-webkit-search-decoration {
 
 .timeSegment:hover {
   color: #1e293b;
-  background: #f8fafc;
 }
 
 .dark .timeSegment:hover {
   color: var(--color-text-default);
-  background: var(--color-surface-subtle);
 }
 
 .timeSegmentActive {
@@ -2390,7 +2388,6 @@ input[type="search"]::-webkit-search-decoration {
 
 .monitoring-toolbar-segment:hover {
   color: var(--color-text-default);
-  background: var(--color-surface-subtle);
 }
 
 .monitoring-toolbar-segment-active {
