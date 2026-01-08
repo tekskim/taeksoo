@@ -1530,29 +1530,21 @@ function LineChart({
       
       {/* Chart Body */}
       <div className="chartBody">
-        {series.length === 0 ? (
-          <div className="flex items-center justify-center h-full text-[var(--color-text-muted)] text-[length:var(--font-size-12)]">
-            No data available
-          </div>
-        ) : (
-          <>
-            <div className="chartWrapper">
-              <ReactECharts option={option} style={{ height: '100%', width: '100%' }} notMerge={true} />
+        <div className="chartWrapper">
+          <ReactECharts option={option} style={{ height: '100%', width: '100%' }} notMerge={true} />
+        </div>
+        <div className="chartLegend">
+          {series.map((s, i) => (
+            <div 
+              key={i}
+              className={`legendItem ${!visibleSeries[s.name] ? 'legendItemHidden' : ''}`}
+              onClick={() => setVisibleSeries(prev => ({ ...prev, [s.name]: !prev[s.name] }))}
+            >
+              <div className="legendDot" style={{ backgroundColor: s.color }} />
+              <span>{s.name}</span>
             </div>
-            <div className="chartLegend">
-              {series.map((s, i) => (
-                <div 
-                  key={i}
-                  className={`legendItem ${!visibleSeries[s.name] ? 'legendItemHidden' : ''}`}
-                  onClick={() => setVisibleSeries(prev => ({ ...prev, [s.name]: !prev[s.name] }))}
-                >
-                  <div className="legendDot" style={{ backgroundColor: s.color }} />
-                  <span>{s.name}</span>
-                </div>
-              ))}
-            </div>
-          </>
-        )}
+          ))}
+        </div>
       </div>
       
       {/* Data View Drawer */}
@@ -1710,10 +1702,13 @@ function AreaChartDemo({ variant }: { variant: 'basic' | 'stacked' | 'nodata' })
 
   // No data variant
   if (variant === 'nodata') {
+    const emptySeriesData: LineChartSeries[] = [
+      { name: 'Traffic', data: [], color: chartColors.cyan400 },
+    ];
     return (
       <ChartWithFullScreen 
         title="Network Traffic"
-        series={[]}
+        series={emptySeriesData}
         yAxisFormatter={(v) => `${v} MB/s`}
         height="200px"
       />
@@ -6467,7 +6462,7 @@ outline: 2px solid var(--color-border-focus);`}
                   <AreaChartDemo variant="stacked" />
                 </VStack>
 
-                {/* No Data */}
+                {/* No Data Area Chart */}
                 <VStack gap={3}>
                   <Label>No Data</Label>
                   <AreaChartDemo variant="nodata" />
