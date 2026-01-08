@@ -38,6 +38,7 @@ import {
   Breadcrumb,
   StatusIndicator,
   VStack,
+  HStack,
   MenuItem,
   MenuSection,
   MenuDivider,
@@ -181,6 +182,8 @@ import {
   IconCalendar,
   IconAppWindow,
   IconBorderAll,
+  IconFileText,
+  IconCode,
   // Brand Icons
   IconBrandUbuntu,
   IconBrandDebian,
@@ -3310,7 +3313,7 @@ outline: 2px solid var(--color-border-focus);`}
             <Section id="icons" title="Icons" description="Tabler Icons library - Stroke width 1.5, Size 16-20px">
               <VStack gap={8}>
                 {/* Basic - Actions */}
-                <IconGrid
+                <IconDisplayGrid
                   title="Actions"
                   icons={[
                     { Icon: IconPlayerPlay, name: 'Play' },
@@ -3335,7 +3338,7 @@ outline: 2px solid var(--color-border-focus);`}
                 />
 
                 {/* Basic - Navigation */}
-                <IconGrid
+                <IconDisplayGrid
                   title="Navigation"
                   icons={[
                     { Icon: IconChevronLeft, name: 'Left' },
@@ -3351,7 +3354,7 @@ outline: 2px solid var(--color-border-focus);`}
                 />
 
                 {/* Basic - Status */}
-                <IconGrid
+                <IconDisplayGrid
                   title="Status & Feedback"
                   icons={[
                     { Icon: IconCircleCheck, name: 'Success' },
@@ -3365,7 +3368,7 @@ outline: 2px solid var(--color-border-focus);`}
                 />
 
                 {/* Basic - UI */}
-                <IconGrid
+                <IconDisplayGrid
                   title="UI Elements"
                   icons={[
                     { Icon: IconSearch, name: 'Search' },
@@ -3392,7 +3395,7 @@ outline: 2px solid var(--color-border-focus);`}
                 />
 
                 {/* System - Infrastructure */}
-                <IconGrid
+                <IconDisplayGrid
                   title="Infrastructure"
                   icons={[
                     { Icon: IconServer, name: 'Server' },
@@ -3411,7 +3414,7 @@ outline: 2px solid var(--color-border-focus);`}
                 />
 
                 {/* System - Storage & Files */}
-                <IconGrid
+                <IconDisplayGrid
                   title="Storage & Files"
                   icons={[
                     { Icon: IconDeviceFloppy, name: 'Backup' },
@@ -3425,7 +3428,7 @@ outline: 2px solid var(--color-border-focus);`}
                 />
 
                 {/* System - Monitoring */}
-                <IconGrid
+                <IconDisplayGrid
                   title="Monitoring & Analytics"
                   icons={[
                     { Icon: IconTerminal, name: 'Console' },
@@ -3440,7 +3443,7 @@ outline: 2px solid var(--color-border-focus);`}
                 />
 
                 {/* System - Organization */}
-                <IconGrid
+                <IconDisplayGrid
                   title="Organization"
                   icons={[
                     { Icon: IconTopologyRing, name: 'Topology' },
@@ -3461,7 +3464,7 @@ outline: 2px solid var(--color-border-focus);`}
                 />
 
                 {/* AI & Advanced */}
-                <IconGrid
+                <IconDisplayGrid
                   title="AI & Advanced"
                   icons={[
                     { Icon: IconBrain, name: 'Brain' },
@@ -3473,7 +3476,7 @@ outline: 2px solid var(--color-border-focus);`}
                 />
 
                 {/* OS / Brand Icons */}
-                <IconGrid
+                <IconDisplayGrid
                   title="OS / Brand"
                   icons={[
                     { Icon: IconBrandUbuntu, name: 'Ubuntu' },
@@ -6320,7 +6323,7 @@ function TokenCard({ title, description, items, color, textColor }: { title: str
   );
 }
 
-function IconGrid({ title, icons }: { title: string; icons: { Icon: React.ComponentType<{ size?: number; stroke?: number; className?: string }>; name: string; missing?: boolean }[] }) {
+function IconDisplayGrid({ title, icons }: { title: string; icons: { Icon: React.ComponentType<{ size?: number; stroke?: number; className?: string }>; name: string; missing?: boolean }[] }) {
   return (
     <VStack gap={3}>
       <Label>{title}</Label>
