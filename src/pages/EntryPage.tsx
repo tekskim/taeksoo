@@ -423,7 +423,7 @@ export function EntryPage() {
               <p className="text-[12px] text-[var(--color-text-subtle)] mb-4">
                 Developer Resources
               </p>
-              <div className="flex items-center justify-center gap-4">
+              <div className="flex items-center justify-center gap-4 mt-4">
                 <Button
                   variant="muted"
                   size="md"
