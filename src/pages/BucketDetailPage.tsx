@@ -33,6 +33,7 @@ import {
   IconDotsVertical,
   IconPlus,
   IconCopy,
+  IconCheck,
   IconLayoutSidebar,
   IconEdit,
   IconSelector,
@@ -221,6 +222,13 @@ interface ObjectRowProps {
 
 function ObjectRow({ object, isExpanded, isSelected, onToggleExpand, onToggleSelect }: ObjectRowProps) {
   const isFolder = object.type === 'folder';
+  const [copiedField, setCopiedField] = useState<'s3Uri' | 'objectUrl' | null>(null);
+
+  const handleCopy = (text: string, field: 's3Uri' | 'objectUrl') => {
+    navigator.clipboard.writeText(text);
+    setCopiedField(field);
+    setTimeout(() => setCopiedField(null), 2000);
+  };
 
   return (
     <div
@@ -318,13 +326,13 @@ function ObjectRow({ object, isExpanded, isSelected, onToggleExpand, onToggleSel
                 <span className="text-[11px] text-[var(--color-text-muted)]">S3 URI</span>
                 <button 
                   className="p-1 hover:bg-[var(--color-surface-subtle)] rounded"
-                  onClick={() => {
-                    if (object.s3Uri) {
-                      navigator.clipboard.writeText(object.s3Uri);
-                    }
-                  }}
+                  onClick={() => object.s3Uri && handleCopy(object.s3Uri, 's3Uri')}
                 >
-                  <IconCopy size={14} stroke={1.5} className="text-[var(--color-text-muted)]" />
+                  {copiedField === 's3Uri' ? (
+                    <IconCheck size={14} stroke={1.5} className="text-[var(--color-state-success)]" />
+                  ) : (
+                    <IconCopy size={14} stroke={1.5} className="text-[var(--color-text-muted)]" />
+                  )}
                 </button>
               </div>
               <div className="text-[12px] text-[var(--color-text-default)] break-all">
@@ -337,13 +345,13 @@ function ObjectRow({ object, isExpanded, isSelected, onToggleExpand, onToggleSel
                 <span className="text-[11px] text-[var(--color-text-muted)]">Object URL</span>
                 <button 
                   className="p-1 hover:bg-[var(--color-surface-subtle)] rounded"
-                  onClick={() => {
-                    if (object.objectUrl) {
-                      navigator.clipboard.writeText(object.objectUrl);
-                    }
-                  }}
+                  onClick={() => object.objectUrl && handleCopy(object.objectUrl, 'objectUrl')}
                 >
-                  <IconCopy size={14} stroke={1.5} className="text-[var(--color-text-muted)]" />
+                  {copiedField === 'objectUrl' ? (
+                    <IconCheck size={14} stroke={1.5} className="text-[var(--color-state-success)]" />
+                  ) : (
+                    <IconCopy size={14} stroke={1.5} className="text-[var(--color-text-muted)]" />
+                  )}
                 </button>
               </div>
               <div className="text-[12px] text-[var(--color-text-default)] break-all">
