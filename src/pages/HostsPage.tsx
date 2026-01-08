@@ -257,11 +257,12 @@ export function HostsPage() {
   }, [filteredHosts, currentPage, rowsPerPage]);
 
   // Table columns definition
+  // Using minWidth for headers that need space, flex for expandable columns
   const columns: TableColumn<Host>[] = [
     {
       key: 'status',
       label: 'Status',
-      width: 56,
+      width: '60px',
       sortable: false,
       align: 'center',
       render: (_, row) => <StatusCell status={row.status} />,
@@ -269,7 +270,8 @@ export function HostsPage() {
     {
       key: 'hostname',
       label: 'Hostname',
-      flex: 1.2,
+      flex: 2,
+      minWidth: '150px',
       sortable: true,
       render: (_, row) => (
         <Link
@@ -285,56 +287,66 @@ export function HostsPage() {
       key: 'labels',
       label: 'Labels',
       flex: 1,
+      minWidth: '100px',
+      maxWidth: '200px',
       sortable: false,
       render: (_, row) => <LabelsCell labels={row.labels} />,
     },
     {
       key: 'model',
       label: 'Model',
-      flex: 1.2,
+      flex: 1.5,
+      minWidth: '180px',
       sortable: true,
       render: (_, row) => <ModelCell model={row.model} modelDetail={row.modelDetail} />,
     },
     {
       key: 'cpus',
       label: 'CPUs',
-      width: 70,
+      minWidth: '65px',
+      maxWidth: '75px',
       sortable: true,
     },
     {
       key: 'cores',
       label: 'Cores',
-      width: 70,
+      minWidth: '65px',
+      maxWidth: '75px',
       sortable: true,
     },
     {
       key: 'totalMemory',
       label: 'Total Memory',
-      width: 100,
+      minWidth: '100px',
+      maxWidth: '120px',
       sortable: true,
     },
     {
       key: 'rawCapacity',
       label: 'Raw Capacity',
-      width: 100,
+      minWidth: '100px',
+      maxWidth: '120px',
       sortable: true,
     },
     {
       key: 'hdds',
       label: 'HDDs',
-      width: 70,
+      minWidth: '60px',
+      maxWidth: '75px',
       sortable: true,
     },
     {
       key: 'flash',
       label: 'Flash',
-      width: 70,
+      minWidth: '60px',
+      maxWidth: '75px',
       sortable: true,
     },
     {
       key: 'nics',
       label: 'NICs',
-      width: 70,
+      minWidth: '60px',
+      maxWidth: '75px',
       sortable: true,
     },
   ];
@@ -364,7 +376,8 @@ export function HostsPage() {
           {/* Top Bar with Breadcrumb Navigation */}
           <TopBar
             showSidebarToggle={!sidebarOpen}
-            onSidebarToggle={() => setSidebarOpen(true)}
+            showSidebarToggleAfterBreadcrumb={sidebarOpen}
+            onSidebarToggle={() => setSidebarOpen((prev) => !prev)}
             showNavigation={true}
             onBack={() => window.history.back()}
             onForward={() => window.history.forward()}

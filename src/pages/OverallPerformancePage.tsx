@@ -871,7 +871,8 @@ export function OverallPerformancePage() {
           {/* Top Bar */}
           <TopBar
             showSidebarToggle={!sidebarOpen}
-            onSidebarToggle={() => setSidebarOpen(true)}
+            showSidebarToggleAfterBreadcrumb={sidebarOpen}
+            onSidebarToggle={() => setSidebarOpen((prev) => !prev)}
             showNavigation={true}
             onBack={() => window.history.back()}
             onForward={() => window.history.forward()}
@@ -974,6 +975,31 @@ export function OverallPerformancePage() {
                             onTimeRangeChange={setTimeRange}
                             onRefresh={() => console.log('Refresh clicked')}
                           />
+                        </div>
+                        <div className="w-[calc(50%-12px)]">
+                          <div className="chartCard">
+                            <div className="chartHeader">
+                              <span className="chartTitle">Recovery Rate</span>
+                              <div className="chartControls">
+                                <button className="expandTrigger">
+                                  <IconArrowsMaximize size={14} stroke={1.5} />
+                                </button>
+                              </div>
+                            </div>
+                            <div className="chartBody">
+                              <div className="flex items-center justify-center h-[200px] text-[var(--color-text-muted)]">
+                                <div className="flex flex-col items-center gap-2">
+                                  <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round" className="text-[var(--color-text-subtle)]">
+                                    <path d="M3 3v18h18" />
+                                    <path d="M18 17V9" />
+                                    <path d="M13 17V5" />
+                                    <path d="M8 17v-3" />
+                                  </svg>
+                                  <span className="text-[12px]">No data available</span>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
                         </div>
                       </div>
 

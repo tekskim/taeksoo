@@ -1925,6 +1925,16 @@ function HalfDoughnutChartDemo({ value, label, status = 'default', used, total, 
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const containerRef = useRef<HTMLDivElement>(null);
   
+  // Chart dimensions
+  const chartWidth = 180;
+  const chartHeight = 160;
+  const centerX = chartWidth * 0.5; // 50%
+  const centerY = chartHeight * 0.65; // 65%
+  const radius = Math.min(chartWidth, chartHeight) * 0.45; // 90% of half
+  const arcWidth = 14;
+  const innerRadius = radius - arcWidth;
+  const outerRadius = radius;
+  
   // Get color from design system CSS variables
   const getColor = (cssVar: string, fallback: string) => {
     if (typeof window !== 'undefined') {
@@ -1945,14 +1955,42 @@ function HalfDoughnutChartDemo({ value, label, status = 'default', used, total, 
   const available = total !== undefined && used !== undefined ? total - used : 0;
   const availablePercent = total !== undefined && used !== undefined ? Math.round((available / total) * 100) : 0;
 
+  // Check if mouse is over the gauge arc
+  const isOverGaugeArc = (mx: number, my: number) => {
+    const dx = mx - centerX;
+    const dy = my - centerY;
+    const distance = Math.sqrt(dx * dx + dy * dy);
+    
+    // Check if within the arc ring
+    if (distance < innerRadius - 4 || distance > outerRadius + 4) return false;
+    
+    // Check if within the arc angle range (210° to -30°, which is 210° to 330° in standard coords)
+    // Convert to angle: atan2 gives -PI to PI, we need to convert
+    let angle = Math.atan2(-dy, dx) * (180 / Math.PI); // Negate dy because canvas Y is inverted
+    if (angle < 0) angle += 360;
+    
+    // The gauge goes from 210° (start) to 330° (-30° = 330°) clockwise
+    // In standard math coords: 210° is bottom-left, 330° is bottom-right
+    return angle >= 150 && angle <= 330; // Approximate visible arc range
+  };
+
   const handleMouseMove = (e: React.MouseEvent) => {
     if (containerRef.current) {
       const rect = containerRef.current.getBoundingClientRect();
-      setMousePos({
-        x: e.clientX - rect.left,
-        y: e.clientY - rect.top
-      });
+      const relX = e.clientX - rect.left;
+      const relY = e.clientY - rect.top;
+      
+      // Adjust for padding (p-4 = 16px)
+      const chartX = relX - 16;
+      const chartY = relY - 16;
+      
+      setMousePos({ x: relX, y: relY });
+      setShowTooltip(isOverGaugeArc(chartX, chartY));
     }
+  };
+
+  const handleMouseLeave = () => {
+    setShowTooltip(false);
   };
 
   const getOption = () => ({
@@ -2000,11 +2038,12 @@ function HalfDoughnutChartDemo({ value, label, status = 'default', used, total, 
     <div 
       ref={containerRef}
       className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] p-4 relative"
-      onMouseEnter={() => setShowTooltip(true)}
-      onMouseLeave={() => setShowTooltip(false)}
       onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
     >
-      <ReactECharts option={getOption()} style={{ height: '160px', width: '180px' }} />
+      <div className="relative">
+        <ReactECharts option={getOption()} style={{ height: '160px', width: '180px' }} />
+      </div>
       <div className="absolute inset-0 flex flex-col items-center justify-center pt-8 pointer-events-none">
         <span className="text-[24px] leading-[28px] font-semibold text-[var(--color-text-default)]">{value}%</span>
         {used !== undefined && total !== undefined ? (

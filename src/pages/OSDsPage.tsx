@@ -246,65 +246,65 @@ export function OSDsPage() {
     {
       key: 'id',
       label: 'ID',
-      width: 80,
+      width: '60px',
       sortable: true,
       render: (_, row) => <IDCell id={row.id} />,
     },
     {
       key: 'host',
       label: 'Host',
-      flex: 1,
+      width: '300px',
       sortable: true,
     },
     {
       key: 'status',
       label: 'Status',
-      width: 120,
+      flex: 1,
       sortable: false,
       render: (_, row) => <StatusCell status={row.status} />,
     },
     {
       key: 'deviceClass',
       label: 'Device class',
-      width: 100,
+      flex: 1,
       sortable: true,
       render: (_, row) => <DeviceClassCell deviceClass={row.deviceClass} />,
     },
     {
       key: 'pgs',
       label: 'PGs',
-      width: 80,
+      flex: 1,
       sortable: true,
     },
     {
       key: 'size',
       label: 'Size',
-      width: 100,
+      flex: 1,
       sortable: true,
     },
     {
       key: 'flags',
       label: 'Flags',
-      width: 80,
+      flex: 1,
       sortable: false,
     },
     {
       key: 'usage',
       label: 'Usage',
-      width: 140,
+      flex: 1.5,
       sortable: true,
       render: (_, row) => <UsageCell usage={row.usage} />,
     },
     {
       key: 'readOps',
       label: 'Read ops',
-      width: 100,
+      flex: 1,
       sortable: false,
     },
     {
       key: 'writeOps',
       label: 'Write ops',
-      width: 100,
+      flex: 1,
       sortable: false,
     },
   ];
@@ -334,7 +334,8 @@ export function OSDsPage() {
           {/* Top Bar with Breadcrumb Navigation */}
           <TopBar
             showSidebarToggle={!sidebarOpen}
-            onSidebarToggle={() => setSidebarOpen(true)}
+            showSidebarToggleAfterBreadcrumb={sidebarOpen}
+            onSidebarToggle={() => setSidebarOpen((prev) => !prev)}
             showNavigation={true}
             onBack={() => window.history.back()}
             onForward={() => window.history.forward()}

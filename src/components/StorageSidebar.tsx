@@ -11,6 +11,7 @@ import {
   IconCube,
   IconBrandSpeedtest,
   IconArrowLeft,
+  IconLayoutSidebar,
 } from '@tabler/icons-react';
 import { Link, useLocation } from 'react-router-dom';
 import ThakiLogoLight from '@/assets/thakiLogo_light.svg';
@@ -50,12 +51,20 @@ export function StorageSidebar({ isOpen = true, onToggle }: StorageSidebarProps)
   return (
     <aside className="w-[200px] h-screen bg-[var(--color-surface-default)] border-r border-[var(--color-border-default)] flex flex-col fixed left-0 top-0">
       {/* Logo */}
-      <div className="h-10 px-3 flex items-center">
+      <div className="h-10 px-3 flex items-center justify-between">
         <img 
           src={isDark ? ThakiLogoDark : ThakiLogoLight} 
           alt="THAKI Cloud" 
           className="h-4"
         />
+        <button 
+          type="button"
+          onClick={onToggle}
+          className="p-1 hover:bg-[var(--color-surface-muted)] rounded transition-colors cursor-pointer"
+          aria-label="Toggle sidebar"
+        >
+          <IconLayoutSidebar size={16} className="text-[var(--color-text-muted)] pointer-events-none" stroke={1.5} />
+        </button>
       </div>
 
       {/* Project Selector */}
