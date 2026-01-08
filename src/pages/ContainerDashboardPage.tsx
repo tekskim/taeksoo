@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
   VStack,
   TabBar,
@@ -235,7 +235,12 @@ export function ContainerDashboardPage() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [activeTab, setActiveTab] = useState('events');
   const [currentPage, setCurrentPage] = useState(1);
-  const { tabs, activeTabId, selectTab, closeTab, addNewTab } = useTabs();
+  const { tabs, activeTabId, selectTab, closeTab, addNewTab, updateActiveTabLabel } = useTabs();
+
+  // Update tab label to "Dashboard" on mount
+  useEffect(() => {
+    updateActiveTabLabel('Dashboard');
+  }, [updateActiveTabLabel]);
 
   // Calculate sidebar width (40px icon sidebar + 200px menu sidebar)
   const sidebarWidth = sidebarOpen ? 240 : 0;
