@@ -386,18 +386,18 @@ function PieChartCard({
   });
 
   return (
-    <div className="flex-1 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg p-4">
-      <h4 className="text-[13px] font-medium text-[var(--color-text-default)] mb-3">{title}</h4>
-      <div className="flex items-center gap-4">
-        <ReactECharts option={getOption()} style={{ height: '120px', width: '120px' }} />
-        <div className="flex flex-wrap gap-x-3 gap-y-1 max-h-[100px] overflow-y-auto">
-          {legendData.map((item, i) => (
-            <div key={i} className="flex items-center gap-1.5">
-              <div className="w-2 h-2 rounded-full shrink-0" style={{ backgroundColor: item.color }} />
-              <span className="text-[10px] text-[var(--color-text-muted)] whitespace-nowrap">{item.label}</span>
-            </div>
-          ))}
-        </div>
+    <div className="flex-1 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] p-5 flex flex-col gap-4">
+      <span className="text-[length:var(--font-size-13)] font-medium text-[var(--color-text-default)]">{title}</span>
+      <div className="flex justify-center">
+        <ReactECharts option={getOption()} style={{ height: '180px', width: '180px' }} />
+      </div>
+      <div className="flex flex-wrap items-center gap-x-4 gap-y-2 justify-center max-h-[60px] overflow-y-auto legend-scroll">
+        {legendData.map((item, i) => (
+          <div key={i} className="flex items-center gap-1.5">
+            <div className="w-2.5 h-2.5 rounded-sm shrink-0" style={{ backgroundColor: item.color }} />
+            <span className="text-[length:var(--font-size-11)] text-[var(--color-text-muted)]">{item.label}</span>
+          </div>
+        ))}
       </div>
     </div>
   );
@@ -410,11 +410,13 @@ function PieChartCard({
 function SingleValueDoughnutCard({ 
   title, 
   value,
-  color
+  color,
+  className
 }: { 
   title: string; 
   value: number;
   color?: string;
+  className?: string;
 }) {
   const getColor = (cssVar: string, fallback: string) => {
     if (typeof window !== 'undefined') {
@@ -462,22 +464,25 @@ function SingleValueDoughnutCard({
       {
         type: 'text',
         left: 'center',
-        top: '42%',
+        top: 'middle',
         style: {
           text: `${value}%`,
           textAlign: 'center',
+          textVerticalAlign: 'middle',
           fill: getColor('--color-text-default', '#0f172a'),
           fontSize: 18,
-          fontWeight: 600
+          fontWeight: 500
         }
       }
     ]
   });
 
   return (
-    <div className="flex-1 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg p-4">
-      <h4 className="text-[13px] font-medium text-[var(--color-text-default)] mb-2">{title}</h4>
-      <ReactECharts option={getOption()} style={{ height: '120px', width: '100%' }} />
+    <div className={`bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] p-5 flex flex-col gap-4 ${className || 'flex-1'}`}>
+      <span className="text-[length:var(--font-size-13)] font-medium text-[var(--color-text-default)]">{title}</span>
+      <div className="flex justify-center">
+        <ReactECharts option={getOption()} style={{ height: '180px', width: '180px' }} />
+      </div>
     </div>
   );
 }
@@ -1118,6 +1123,7 @@ export function OverallPerformancePage() {
                           title="OSD onode Hits Ratio"
                           value={98.3}
                           color="#ef4444"
+                          className="flex-1"
                         />
                       </div>
 
