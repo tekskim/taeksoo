@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDarkMode } from '@/hooks/useDarkMode';
 import ThakiLogoLight from '@/assets/thakiLogo_light.svg';
@@ -5,11 +6,12 @@ import ThakiLogoDark from '@/assets/thakiLogo-dark.svg';
 import {
   IconMoon,
   IconSun,
-  IconPalette,
-  IconLayoutSidebar,
-  IconSquare,
+  IconHistory,
+  IconChevronDown,
+  IconChevronUp,
 } from '@tabler/icons-react';
 import { Button } from '@/design-system';
+import changelogData from '@/data/changelog.json';
 
 // App Icons
 import ComputeIcon from '@/assets/compute.png';
@@ -38,6 +40,76 @@ interface AppCard {
 /* ----------------------------------------
    App Cards Data
    ---------------------------------------- */
+
+/* ----------------------------------------
+   Changelog Data
+   ---------------------------------------- */
+
+interface ChangeItem {
+  text: string;
+  author: string;
+}
+
+interface ChangelogItem {
+  id: string;
+  date: string;
+  app: string;
+  appColor: string;
+  changes: ChangeItem[];
+}
+
+// Fallback 데이터 (Git 로그가 없을 때 사용)
+const fallbackChanges: ChangelogItem[] = [
+  {
+    id: '1',
+    date: '2025-01-08',
+    app: 'Design System',
+    appColor: 'from-purple-500 to-fuchsia-500',
+    changes: [
+      { text: 'EntryPage 서브타이틀 문구 수정', author: 'pobae' },
+      { text: 'NotificationCenter 스크롤 스타일 적용', author: 'pobae' },
+    ],
+  },
+  {
+    id: '2',
+    date: '2025-01-07',
+    app: 'Storage',
+    appColor: 'from-indigo-500 to-blue-500',
+    changes: [
+      { text: 'BucketDetailPage Objects 테이블 디자인 시스템 적용', author: 'pobae' },
+      { text: 'Tags/Versions 테이블 헤더 구분선 추가', author: 'pobae' },
+      { text: 'S3 URI 박스 패딩 통일 (16px)', author: 'pobae' },
+    ],
+  },
+  {
+    id: '3',
+    date: '2025-01-07',
+    app: 'Compute',
+    appColor: 'from-blue-500 to-cyan-500',
+    changes: [
+      { text: 'HostDetailPage Device health 탭 지글링 현상 수정', author: 'pobae' },
+      { text: 'OSDDetailPage smartctl output 스크롤 제한 제거', author: 'pobae' },
+      { text: 'Physical Disks Type 컬럼 truncate 수정', author: 'pobae' },
+    ],
+  },
+  {
+    id: '4',
+    date: '2025-01-06',
+    app: 'Cloud Builder',
+    appColor: 'from-orange-500 to-amber-500',
+    changes: [
+      { text: 'ListToolbar Refresh 버튼 위치 조정', author: 'pobae' },
+      { text: 'Table 가로 스크롤 및 텍스트 truncate 적용', author: 'pobae' },
+      { text: 'Network Agents name 컬럼 너비 조정', author: 'pobae' },
+    ],
+  },
+];
+
+// Git에서 생성된 데이터가 있으면 사용, 없으면 fallback 사용
+const recentChanges: ChangelogItem[] = 
+  (changelogData as ChangelogItem[]).length > 0 
+    ? (changelogData as ChangelogItem[]) 
+    : fallbackChanges;
 
 const appCards: AppCard[] = [
   {
@@ -193,15 +265,24 @@ function AppCardComponent({ card, onClick }: AppCardComponentProps) {
    EntryPage
    ---------------------------------------- */
 
+const INITIAL_VISIBLE_COUNT = 3;
+
 export function EntryPage() {
   const navigate = useNavigate();
   const { isDark, toggleDarkMode } = useDarkMode();
+  const [showAllChanges, setShowAllChanges] = useState(false);
 
   const handleCardClick = (card: AppCard) => {
     if (card.available) {
       navigate(card.path);
     }
   };
+
+  const visibleChanges = showAllChanges 
+    ? recentChanges 
+    : recentChanges.slice(0, INITIAL_VISIBLE_COUNT);
+  
+  const hiddenCount = recentChanges.length - INITIAL_VISIBLE_COUNT;
 
   return (
     <div className="fixed inset-0 overflow-auto bg-[var(--color-surface-subtle)]">
@@ -236,10 +317,12 @@ export function EntryPage() {
           {/* Hero Section */}
           <div className="text-center mb-12">
             <h1 className="text-[32px] font-bold text-[var(--color-text-default)] mb-3">
-              Welcome to THAKI Cloud
+              Thaki Design System SSoT
             </h1>
-            <p className="text-[16px] text-[var(--color-text-subtle)] max-w-2xl mx-auto">
-              Select a service to get started. Build, deploy, and scale your applications with our comprehensive cloud platform.
+            <p className="text-[14px] text-[var(--color-text-subtle)] mx-auto leading-relaxed">
+              Thaki Design System SSoT는 디자인 원칙, 컴포넌트, 토큰, 가이드라인을 한 곳에 모은 '단일 기준'입니다.
+              <br />
+              디자이너와 개발자가 동일한 소스를 참고해 의사결정과 구현을 정렬하고, 제품 전반의 일관성과 개발 속도를 함께 높입니다.
             </p>
           </div>
 
@@ -254,10 +337,90 @@ export function EntryPage() {
             ))}
           </div>
 
-          {/* Developer Resources */}
+          {/* Recent Changes */}
           <div className="mt-16 pt-8 border-t border-[var(--color-border-default)]">
+            <div className="flex items-center gap-2 mb-6">
+              <IconHistory size={20} stroke={1.5} className="text-[var(--color-text-muted)]" />
+              <h2 className="text-[16px] font-semibold text-[var(--color-text-default)]">
+                최근 반영사항
+              </h2>
+            </div>
+            
+            <div className="space-y-3">
+              {visibleChanges.map((item) => (
+                <div
+                  key={item.id}
+                  className="group p-4 rounded-lg bg-[var(--color-surface-default)] border border-[var(--color-border-default)] hover:border-[var(--color-border-strong)] transition-colors"
+                >
+                  {/* Header: Badge + Date */}
+                  <div className="flex items-center gap-3 mb-3">
+                    <span className={`
+                      inline-flex items-center
+                      px-[var(--chip-padding-left)] py-[var(--chip-padding-y)]
+                      border border-[var(--chip-border)]
+                      rounded-[var(--chip-radius)]
+                      text-[length:var(--chip-font-size)] leading-[var(--chip-line-height)]
+                      font-medium
+                      text-[var(--color-text-default)]
+                      bg-[var(--chip-bg)]
+                    `}>
+                      {item.app}
+                    </span>
+                    <span className="text-[length:var(--font-size-11)] leading-[var(--line-height-16)] text-[var(--color-text-muted)]">
+                      {item.date}
+                    </span>
+                  </div>
+                  
+                  {/* Changes List */}
+                  <ul className="list-disc list-outside pl-4 space-y-0.5 text-[length:var(--font-size-12)] leading-[var(--line-height-18)] text-[var(--color-text-default)] marker:text-[var(--color-text-muted)]">
+                    {item.changes.map((change, idx) => (
+                      <li key={idx}>
+                        <span>{change.text}</span>
+                        <span className="ml-2 text-[length:var(--font-size-11)] text-[var(--color-text-muted)]">
+                          by {change.author}
+                        </span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
+              
+              {/* 더보기/접기 버튼 */}
+              {hiddenCount > 0 && (
+                <button
+                  type="button"
+                  onClick={() => setShowAllChanges(!showAllChanges)}
+                  className="
+                    w-full py-3 
+                    flex items-center justify-center gap-2
+                    text-[length:var(--font-size-12)] font-medium
+                    text-[var(--color-text-muted)]
+                    hover:text-[var(--color-text-default)]
+                    hover:bg-[var(--color-surface-default)]
+                    rounded-lg border border-dashed border-[var(--color-border-default)]
+                    transition-colors
+                  "
+                >
+                  {showAllChanges ? (
+                    <>
+                      <IconChevronUp size={16} stroke={1.5} />
+                      접기
+                    </>
+                  ) : (
+                    <>
+                      <IconChevronDown size={16} stroke={1.5} />
+                      더보기 ({hiddenCount}개)
+                    </>
+                  )}
+                </button>
+              )}
+            </div>
+          </div>
+
+          {/* Developer Resources */}
+          <div className="mt-12 pt-8 border-t border-[var(--color-border-default)]">
             <div className="text-center mb-6">
-              <p className="text-[12px] text-[var(--color-text-subtle)]">
+              <p className="text-[12px] text-[var(--color-text-subtle)] mb-4">
                 Developer Resources
               </p>
               <div className="flex items-center justify-center gap-4 mt-4">

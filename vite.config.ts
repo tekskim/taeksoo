@@ -2,6 +2,22 @@ import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
 import path from 'path'
+import { execSync } from 'child_process'
+
+// Changelog 생성 플러그인
+function generateChangelogPlugin() {
+  return {
+    name: 'generate-changelog',
+    buildStart() {
+      try {
+        console.log('📝 Generating changelog from git commits...')
+        execSync('node scripts/generate-changelog.cjs', { stdio: 'inherit' })
+      } catch (error) {
+        console.warn('⚠️ Changelog generation failed:', error)
+      }
+    },
+  }
+}
 
 // https://vite.dev/config/
 export default defineConfig(({ command }) => ({
@@ -11,6 +27,7 @@ export default defineConfig(({ command }) => ({
     outDir: 'docs',
   },
   plugins: [
+    generateChangelogPlugin(),
     react(),
     tailwindcss(),
   ],

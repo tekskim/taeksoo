@@ -902,6 +902,7 @@ html.theme-transition *::after {
   --tooltip-bg: var(--color-surface-inverse);
   --tooltip-text: var(--color-text-inverse);
   --tooltip-arrow-size: 4px;
+  --tooltip-value-font-weight: 500;
 
   /* ----------------------------------------
      Component - Action Icon (Table Actions)
@@ -1831,7 +1832,7 @@ input[type="search"]::-webkit-search-decoration {
   width: 74px;
   font-size: 11px;
   font-weight: 500;
-  color: #2563eb;
+  color: var(--color-text-muted);
   background: white;
   border: 1px solid #e2e8f0;
   border-radius: 8px;

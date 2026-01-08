@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import {
   Button,
@@ -309,14 +309,21 @@ function ObjectRow({ object, isExpanded, isSelected, onToggleExpand, onToggleSel
 
       {/* Expanded Details */}
       {isExpanded && !isFolder && (
-        <div className="px-4 pb-4 pt-2 border-t border-[var(--color-border-subtle)]">
+        <div className="p-4 border-t border-[var(--color-border-subtle)]">
           {/* S3 URI & Object URL */}
           <div className="flex gap-4 mb-6">
             {/* S3 URI Box */}
             <div className="flex-1 p-4 border border-[var(--color-border-default)] rounded-lg bg-[var(--color-surface-default)]">
               <div className="flex items-start justify-between mb-2">
                 <span className="text-[11px] text-[var(--color-text-muted)]">S3 URI</span>
-                <button className="p-1 hover:bg-[var(--color-surface-subtle)] rounded">
+                <button 
+                  className="p-1 hover:bg-[var(--color-surface-subtle)] rounded"
+                  onClick={() => {
+                    if (object.s3Uri) {
+                      navigator.clipboard.writeText(object.s3Uri);
+                    }
+                  }}
+                >
                   <IconCopy size={14} stroke={1.5} className="text-[var(--color-text-muted)]" />
                 </button>
               </div>
@@ -328,7 +335,14 @@ function ObjectRow({ object, isExpanded, isSelected, onToggleExpand, onToggleSel
             <div className="flex-1 p-4 border border-[var(--color-border-default)] rounded-lg bg-[var(--color-surface-default)]">
               <div className="flex items-start justify-between mb-2">
                 <span className="text-[11px] text-[var(--color-text-muted)]">Object URL</span>
-                <button className="p-1 hover:bg-[var(--color-surface-subtle)] rounded">
+                <button 
+                  className="p-1 hover:bg-[var(--color-surface-subtle)] rounded"
+                  onClick={() => {
+                    if (object.objectUrl) {
+                      navigator.clipboard.writeText(object.objectUrl);
+                    }
+                  }}
+                >
                   <IconCopy size={14} stroke={1.5} className="text-[var(--color-text-muted)]" />
                 </button>
               </div>
@@ -364,7 +378,7 @@ function ObjectRow({ object, isExpanded, isSelected, onToggleExpand, onToggleSel
           </div>
 
           {/* Versions */}
-          <div className="flex flex-col gap-[var(--table-row-gap)]">
+          <div className="flex flex-col gap-[var(--table-row-gap)] mt-4">
             <div className="text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-muted)]">Versions</div>
             {/* Header */}
             <div className="flex items-stretch min-h-[var(--table-row-height)] bg-[var(--table-header-bg)] border border-[var(--color-border-default)] rounded-[var(--table-row-radius)]">
@@ -428,10 +442,17 @@ export function BucketDetailPage() {
   const [treeSidebarOpen, setTreeSidebarOpen] = useState(true);
 
   // Global tab management
-  const { tabs, activeTabId, closeTab, selectTab, addNewTab } = useTabs();
+  const { tabs, activeTabId, closeTab, selectTab, addNewTab, updateActiveTabLabel } = useTabs();
 
   // Use mock data (in real app, fetch based on id)
   const bucketData = mockBucketDetail;
+
+  // Update tab label to match the bucket name (most recent breadcrumb)
+  useEffect(() => {
+    if (bucketData?.name) {
+      updateActiveTabLabel(bucketData.name);
+    }
+  }, [bucketData?.name, updateActiveTabLabel]);
 
   // Convert tabs to TabBar format
   const tabBarTabs = tabs.map((tab) => ({
@@ -511,10 +532,12 @@ export function BucketDetailPage() {
           {/* Tab Bar */}
           <TabBar
             tabs={tabBarTabs}
-            activeTabId={activeTabId}
+            activeTab={activeTabId}
+            onTabChange={selectTab}
             onTabClose={closeTab}
-            onTabSelect={selectTab}
-            onNewTab={addNewTab}
+            onTabAdd={addNewTab}
+            showAddButton={true}
+            showWindowControls={true}
           />
 
           {/* Top Bar */}
@@ -656,7 +679,7 @@ export function BucketDetailPage() {
                           <div className="flex items-center gap-2">
                             {!treeSidebarOpen && (
                               <button
-                                className="p-1 hover:bg-[var(--color-surface-muted)] rounded"
+                                className="p-1 rounded border border-[var(--color-border-default)] hover:bg-[var(--color-surface-muted)] hover:border-[var(--color-border-strong)] transition-colors"
                                 onClick={() => setTreeSidebarOpen(true)}
                               >
                                 <IconLayoutSidebar size={14} stroke={1.5} className="text-[var(--color-text-muted)]" />

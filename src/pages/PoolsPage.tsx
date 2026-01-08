@@ -161,6 +161,7 @@ export function PoolsPage() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
+  const [selectedPools, setSelectedPools] = useState<string[]>([]);
   const rowsPerPage = 10;
 
   // Global tab management
@@ -321,9 +322,6 @@ export function PoolsPage() {
                 <h1 className="text-[length:var(--font-size-16)] font-semibold text-[var(--color-text-default)]">
                   Pools
                 </h1>
-                <Button>
-                  Create Pools
-                </Button>
               </div>
 
               {/* Search and Actions */}
@@ -358,6 +356,7 @@ export function PoolsPage() {
                   showSettings
                   onSettingsClick={() => console.log('Settings clicked')}
                   totalItems={filteredPools.length}
+                  selectedCount={selectedPools.length}
                 />
               )}
 
@@ -367,6 +366,9 @@ export function PoolsPage() {
                 data={paginatedPools}
                 rowKey="id"
                 emptyMessage="No pools found"
+                selectable
+                selectedKeys={selectedPools}
+                onSelectionChange={setSelectedPools}
               />
             </VStack>
           </div>

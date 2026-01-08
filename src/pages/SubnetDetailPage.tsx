@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import {
   Button,
@@ -141,7 +141,7 @@ const portStatusMap: Record<PortStatus, 'active' | 'error' | 'shutoff' | 'buildi
 
 export default function SubnetDetailPage() {
   const { id } = useParams<{ id: string }>();
-  const { tabs, activeTabId, closeTab, selectTab, addNewTab } = useTabs();
+  const { tabs, activeTabId, closeTab, selectTab, addNewTab, updateActiveTabLabel } = useTabs();
   
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [activeDetailTab, setActiveDetailTab] = useState('details');
@@ -158,6 +158,13 @@ export default function SubnetDetailPage() {
 
   // In a real app, fetch based on id
   const subnet = id && mockSubnets[id] ? mockSubnets[id] : mockSubnetDetail;
+
+  // Update tab label to match the subnet name (most recent breadcrumb)
+  useEffect(() => {
+    if (subnet?.name) {
+      updateActiveTabLabel(subnet.name);
+    }
+  }, [subnet?.name, updateActiveTabLabel]);
 
   const breadcrumbItems = [
     { label: 'Proj-1', href: '/' },

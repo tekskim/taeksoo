@@ -184,6 +184,8 @@ import {
   IconCalendar,
   IconAppWindow,
   IconBorderAll,
+  IconFileText,
+  IconCode,
   // Brand Icons
   IconBrandUbuntu,
   IconBrandDebian,
@@ -900,6 +902,14 @@ const baseChartOptions = {
     backgroundColor: 'white',
     borderColor: '#e2e8f0',
     textStyle: { color: chartColors.slate800, fontSize: 11 },
+    formatter: (params: Array<{ marker: string; seriesName: string; value: number; axisValueLabel: string }>) => {
+      if (!Array.isArray(params) || params.length === 0) return '';
+      const time = params[0].axisValueLabel;
+      const items = params.map(p => 
+        `<div style="display: flex; align-items: center; gap: 8px;"><span>${p.marker}</span><span>${p.seriesName}</span><span style="font-weight: 500; margin-left: auto;">${p.value}</span></div>`
+      ).join('');
+      return `<div style="font-size: 11px;">${time}<div style="margin-top: 4px;">${items}</div></div>`;
+    },
     axisPointer: {
       type: 'line',
       snap: true,
@@ -1436,6 +1446,14 @@ function LineChart({
         color: chartColors.slate800, 
         fontSize: 11, 
         fontFamily: 'Mona Sans, -apple-system, BlinkMacSystemFont, sans-serif' 
+      },
+      formatter: (params: Array<{ marker: string; seriesName: string; value: number; axisValueLabel: string }>) => {
+        if (!Array.isArray(params) || params.length === 0) return '';
+        const time = params[0].axisValueLabel;
+        const items = params.map(p => 
+          `<div style="display: flex; align-items: center; gap: 8px;"><span>${p.marker}</span><span>${p.seriesName}</span><span style="font-weight: 500; margin-left: auto;">${yAxisFormatter(p.value)}</span></div>`
+        ).join('');
+        return `<div style="font-size: 11px;">${time}<div style="margin-top: 4px;">${items}</div></div>`;
       }
     },
     series: series
@@ -1761,7 +1779,7 @@ function PieChartDemo({
         fontSize: 11
       },
       formatter: (params: { marker: string; name: string; value: number; percent: number }) => {
-        return `${params.marker} ${params.name}<br/><span style="font-weight: 600; margin-left: 14px;">${params.value} (${params.percent.toFixed(0)}%)</span>`;
+        return `${params.marker} ${params.name}<br/><span style="font-weight: 500; margin-left: 14px;">${params.value} (${params.percent.toFixed(0)}%)</span>`;
       }
     },
     animation: false,
@@ -1953,13 +1971,14 @@ function SingleValueDoughnutDemo({
       {
         type: 'text',
         left: 'center',
-        top: '46%',
+        top: 'middle',
         style: {
           text: `${value}%`,
           textAlign: 'center',
+          textVerticalAlign: 'middle',
           fill: getColor('--color-text-default', '#0f172a'),
           fontSize: 18,
-          fontWeight: 600
+          fontWeight: 500
         }
       }
     ]
@@ -2323,6 +2342,27 @@ function TableDemo() {
     { key: 'createdAt', label: 'Created At', width: '140px' },
   ];
 
+  // Columns without copy button (40px row height demo)
+  const noCopyColumns = [
+    { 
+      key: 'name', 
+      label: 'Name', 
+      width: '180px',
+      render: (value: string) => (
+        <span className="text-[var(--color-action-primary)] cursor-pointer hover:underline hover:underline-offset-2">{value}</span>
+      )
+    },
+    { 
+      key: 'fingerprint', 
+      label: 'Fingerprint', 
+      flex: 1,
+      render: (_: string, row: KeyPairData) => (
+        <span className="text-[length:var(--font-size-12)] leading-[var(--line-height-18)] text-[var(--color-text-default)]">{row.fingerprint}</span>
+      )
+    },
+    { key: 'createdAt', label: 'Created At', width: '140px' },
+  ];
+
   // Compact columns for horizontal scroll demo
   const compactColumns = [
     { 
@@ -2423,6 +2463,17 @@ function TableDemo() {
         <p className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
           Click copy icon to copy fingerprint. Icon changes to checkmark for 2 seconds after copying.
         </p>
+      </VStack>
+
+      {/* 40px Row Height */}
+      <VStack gap={3}>
+        <Label>40PX</Label>
+        <Table
+          columns={noCopyColumns}
+          data={sampleKeyPairData}
+          rowKey="id"
+          rowHeight="40px"
+        />
       </VStack>
 
       {/* Sticky Header */}
@@ -3458,7 +3509,7 @@ outline: 2px solid var(--color-border-focus);`}
             <Section id="icons" title="Icons" description="Tabler Icons library - Stroke width 1.5, Size 16-20px">
               <VStack gap={8}>
                 {/* Basic - Actions */}
-                <IconGrid
+                <IconDisplayGrid
                   title="Actions"
                   icons={[
                     { Icon: IconPlayerPlay, name: 'Play' },
@@ -3483,7 +3534,7 @@ outline: 2px solid var(--color-border-focus);`}
                 />
 
                 {/* Basic - Navigation */}
-                <IconGrid
+                <IconDisplayGrid
                   title="Navigation"
                   icons={[
                     { Icon: IconChevronLeft, name: 'Left' },
@@ -3499,7 +3550,7 @@ outline: 2px solid var(--color-border-focus);`}
                 />
 
                 {/* Basic - Status */}
-                <IconGrid
+                <IconDisplayGrid
                   title="Status & Feedback"
                   icons={[
                     { Icon: IconCircleCheck, name: 'Success' },
@@ -3513,7 +3564,7 @@ outline: 2px solid var(--color-border-focus);`}
                 />
 
                 {/* Basic - UI */}
-                <IconGrid
+                <IconDisplayGrid
                   title="UI Elements"
                   icons={[
                     { Icon: IconSearch, name: 'Search' },
@@ -3540,7 +3591,7 @@ outline: 2px solid var(--color-border-focus);`}
                 />
 
                 {/* System - Infrastructure */}
-                <IconGrid
+                <IconDisplayGrid
                   title="Infrastructure"
                   icons={[
                     { Icon: IconServer, name: 'Server' },
@@ -3559,7 +3610,7 @@ outline: 2px solid var(--color-border-focus);`}
                 />
 
                 {/* System - Storage & Files */}
-                <IconGrid
+                <IconDisplayGrid
                   title="Storage & Files"
                   icons={[
                     { Icon: IconDeviceFloppy, name: 'Backup' },
@@ -3573,7 +3624,7 @@ outline: 2px solid var(--color-border-focus);`}
                 />
 
                 {/* System - Monitoring */}
-                <IconGrid
+                <IconDisplayGrid
                   title="Monitoring & Analytics"
                   icons={[
                     { Icon: IconTerminal, name: 'Console' },
@@ -3588,7 +3639,7 @@ outline: 2px solid var(--color-border-focus);`}
                 />
 
                 {/* System - Organization */}
-                <IconGrid
+                <IconDisplayGrid
                   title="Organization"
                   icons={[
                     { Icon: IconTopologyRing, name: 'Topology' },
@@ -3609,7 +3660,7 @@ outline: 2px solid var(--color-border-focus);`}
                 />
 
                 {/* AI & Advanced */}
-                <IconGrid
+                <IconDisplayGrid
                   title="AI & Advanced"
                   icons={[
                     { Icon: IconBrain, name: 'Brain' },
@@ -3621,7 +3672,7 @@ outline: 2px solid var(--color-border-focus);`}
                 />
 
                 {/* OS / Brand Icons */}
-                <IconGrid
+                <IconDisplayGrid
                   title="OS / Brand"
                   icons={[
                     { Icon: IconBrandUbuntu, name: 'Ubuntu' },
@@ -6468,7 +6519,7 @@ function TokenCard({ title, description, items, color, textColor }: { title: str
   );
 }
 
-function IconGrid({ title, icons }: { title: string; icons: { Icon: React.ComponentType<{ size?: number; stroke?: number; className?: string }>; name: string; missing?: boolean }[] }) {
+function IconDisplayGrid({ title, icons }: { title: string; icons: { Icon: React.ComponentType<{ size?: number; stroke?: number; className?: string }>; name: string; missing?: boolean }[] }) {
   return (
     <VStack gap={3}>
       <Label>{title}</Label>
