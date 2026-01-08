@@ -175,9 +175,9 @@ function TreeItem({ item, level, selectedId, onSelect, onToggle }: TreeItemProps
         )}
         
         {item.type === 'folder' ? (
-          <IconFolder size={14} stroke={1.5} className={`shrink-0 ${isSelected ? 'text-white' : 'text-[var(--color-text-muted)]'}`} />
+          <IconFolder size={14} stroke={1.5} className={`shrink-0 ${isSelected ? 'text-[var(--color-action-primary)]' : 'text-[var(--color-text-muted)]'}`} />
         ) : (
-          <IconFile size={14} stroke={1.5} className={`shrink-0 ${isSelected ? 'text-white' : 'text-[var(--color-text-muted)]'}`} />
+          <IconFile size={14} stroke={1.5} className={`shrink-0 ${isSelected ? 'text-[var(--color-action-primary)]' : 'text-[var(--color-text-muted)]'}`} />
         )}
         
         <span className="flex-1 truncate ml-1">{item.name}</span>
