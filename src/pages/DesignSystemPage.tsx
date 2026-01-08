@@ -1659,13 +1659,14 @@ function SingleValueDoughnutDemo({
       {
         type: 'text',
         left: 'center',
-        top: '46%',
+        top: 'middle',
         style: {
           text: `${value}%`,
           textAlign: 'center',
+          textVerticalAlign: 'middle',
           fill: getColor('--color-text-default', '#0f172a'),
           fontSize: 18,
-          fontWeight: 600
+          fontWeight: 500
         }
       }
     ]
