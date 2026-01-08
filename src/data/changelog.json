@@ -5,6 +5,7 @@
     "app": "Design System",
     "appColor": "from-purple-500 to-fuchsia-500",
     "changes": [
+      "EntryPage 최근 반영사항 UI 개선 - Chip 스타일 적용, 줄바꿈 추가",
       "빌드 시 Git 커밋 로그 자동 파싱 기능 추가"
     ]
   }
