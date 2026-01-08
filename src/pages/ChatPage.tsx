@@ -65,10 +65,10 @@ function AgentCard({
       {/* Header with title and favorite */}
       <div className="flex items-start justify-between gap-2">
         <div className="flex flex-col gap-1 flex-1 min-w-0">
-          <p className="font-['Mona_Sans:Medium',sans-serif] text-[14px] leading-5 text-[var(--color-text-default)] truncate">
+          <p className="font-medium text-[var(--font-size-14)] leading-[var(--line-height-20)] text-[var(--color-text-default)] truncate">
             {title}
           </p>
-          <p className="font-['Mona_Sans:Regular',sans-serif] text-[12px] leading-4 text-[var(--color-text-subtle)] line-clamp-1">
+          <p className="font-normal text-[var(--font-size-12)] leading-[var(--line-height-18)] text-[var(--color-text-subtle)] line-clamp-1">
             {description}
           </p>
         </div>
@@ -89,7 +89,7 @@ function AgentCard({
       
       {/* Model badge */}
       <div className="flex items-center">
-        <span className="bg-[var(--color-surface-subtle)] text-[var(--color-text-muted)] text-[11px] font-medium px-2 py-1 rounded">
+        <span className="bg-[var(--color-surface-subtle)] text-[var(--color-text-muted)] text-[var(--font-size-11)] font-medium px-2 py-1 rounded">
           {modelName}
         </span>
       </div>
@@ -109,7 +109,7 @@ function ChatSidebar() {
         {/* Header */}
         <div className="flex flex-col gap-1 items-center justify-between px-2 pt-3 pb-2 w-full sticky top-0 bg-[var(--color-surface-subtle)] z-10">
           <div className="flex h-6 items-center justify-between overflow-clip pl-1.5 pr-0 py-0 relative rounded-md shrink-0 w-full">
-            <p className="font-['Mona_Sans:Medium',sans-serif] leading-4 not-italic relative shrink-0 text-[var(--color-text-subtle)] text-[11px]">
+            <p className="font-medium leading-[var(--line-height-16)] relative shrink-0 text-[var(--color-text-subtle)] text-[var(--font-size-11)]">
               Chats
             </p>
             <div className="flex gap-1 items-center justify-end relative shrink-0">
@@ -129,7 +129,7 @@ function ChatSidebar() {
         {/* Chat List */}
         <div className="flex flex-col gap-1 items-start px-2 w-full">
           <div className="flex h-6 items-center justify-between overflow-clip pl-1.5 pr-0 py-0 relative rounded-md shrink-0 w-full hover:bg-[var(--color-surface-muted)] transition-colors cursor-pointer">
-            <p className="font-['Mona_Sans:Regular',sans-serif] leading-4 not-italic relative shrink-0 text-[var(--color-text-default)] text-[12px]">
+            <p className="font-normal leading-[var(--line-height-18)] relative shrink-0 text-[var(--color-text-default)] text-[var(--font-size-12)]">
               label 1
             </p>
             <button className="bg-[var(--color-surface-subtle)] relative rounded-md shrink-0 size-6 hover:bg-[var(--color-surface-muted)] transition-colors flex items-center justify-center">
@@ -137,22 +137,22 @@ function ChatSidebar() {
             </button>
           </div>
           <div className="flex h-6 items-center overflow-clip px-1.5 py-1 relative rounded-md shrink-0 w-full hover:bg-[var(--color-surface-muted)] transition-colors cursor-pointer">
-            <p className="font-['Mona_Sans:Regular',sans-serif] leading-4 not-italic relative shrink-0 text-[var(--color-text-default)] text-[12px]">
+            <p className="font-normal leading-[var(--line-height-18)] relative shrink-0 text-[var(--color-text-default)] text-[var(--font-size-12)]">
               label 2
             </p>
           </div>
           <div className="flex gap-0 h-6 items-center overflow-clip px-1.5 py-1 relative rounded-md shrink-0 w-full hover:bg-[var(--color-surface-muted)] transition-colors cursor-pointer">
-            <p className="font-['Mona_Sans:Regular',sans-serif] leading-4 not-italic relative shrink-0 text-[var(--color-text-default)] text-[12px]">
+            <p className="font-normal leading-[var(--line-height-18)] relative shrink-0 text-[var(--color-text-default)] text-[var(--font-size-12)]">
               label 3
             </p>
           </div>
           <div className="flex gap-0 h-6 items-center overflow-clip px-1.5 py-1 relative rounded-md shrink-0 w-full hover:bg-[var(--color-surface-muted)] transition-colors cursor-pointer">
-            <p className="font-['Mona_Sans:Regular',sans-serif] leading-4 not-italic relative shrink-0 text-[var(--color-text-default)] text-[12px]">
+            <p className="font-normal leading-[var(--line-height-18)] relative shrink-0 text-[var(--color-text-default)] text-[var(--font-size-12)]">
               label 4
             </p>
           </div>
           <div className="flex gap-0 h-6 items-center overflow-clip px-1.5 py-1 relative rounded-md shrink-0 w-full hover:bg-[var(--color-surface-muted)] transition-colors cursor-pointer">
-            <p className="font-['Mona_Sans:Regular',sans-serif] leading-4 not-italic relative shrink-0 text-[var(--color-text-default)] text-[12px]">
+            <p className="font-normal leading-[var(--line-height-18)] relative shrink-0 text-[var(--color-text-default)] text-[var(--font-size-12)]">
               label 5
             </p>
           </div>
@@ -236,10 +236,10 @@ function NewChatDrawer({ isOpen, onClose, agent, onFavoriteToggle, onStartChat }
         {/* Agent Info Card */}
         <div className="border border-[var(--color-border-default)] rounded-md p-4 flex items-start justify-between gap-3">
           <div className="flex flex-col gap-1">
-            <p className="font-['Mona_Sans:SemiBold',sans-serif] text-[14px] leading-5 text-[var(--color-text-default)]">
+            <p className="font-semibold text-[var(--font-size-14)] leading-[var(--line-height-20)] text-[var(--color-text-default)]">
               {agent.title}
             </p>
-            <p className="font-['Mona_Sans:Regular',sans-serif] text-[12px] leading-4 text-[var(--color-text-subtle)]">
+            <p className="font-normal text-[var(--font-size-12)] leading-[var(--line-height-18)] text-[var(--color-text-subtle)]">
               {agent.description}
             </p>
           </div>
@@ -260,43 +260,43 @@ function NewChatDrawer({ isOpen, onClose, agent, onFavoriteToggle, onStartChat }
 
         {/* Model Information */}
         <div className="border border-[var(--color-border-default)] rounded-md p-4 flex flex-col gap-4">
-          <p className="font-['Mona_Sans:SemiBold',sans-serif] text-[14px] leading-5 text-[var(--color-text-default)]">
+          <p className="font-semibold text-[var(--font-size-14)] leading-[var(--line-height-20)] text-[var(--color-text-default)]">
             Model information
           </p>
           
           <div className="flex flex-col gap-3">
             <div className="flex flex-col gap-1 pb-3 border-b border-[var(--color-border-subtle)]">
-              <p className="font-['Mona_Sans:Regular',sans-serif] text-[11px] leading-4 text-[var(--color-action-primary)]">
+              <p className="font-normal text-[var(--font-size-11)] leading-[var(--line-height-16)] text-[var(--color-action-primary)]">
                 Provider
               </p>
-              <p className="font-['Mona_Sans:Regular',sans-serif] text-[12px] leading-4 text-[var(--color-text-default)]">
+              <p className="font-normal text-[var(--font-size-12)] leading-[var(--line-height-18)] text-[var(--color-text-default)]">
                 {agent.provider}
               </p>
             </div>
             
             <div className="flex flex-col gap-1 pb-3 border-b border-[var(--color-border-subtle)]">
-              <p className="font-['Mona_Sans:Regular',sans-serif] text-[11px] leading-4 text-[var(--color-action-primary)]">
+              <p className="font-normal text-[var(--font-size-11)] leading-[var(--line-height-16)] text-[var(--color-action-primary)]">
                 Model Name
               </p>
-              <p className="font-['Mona_Sans:Regular',sans-serif] text-[12px] leading-4 text-[var(--color-text-default)]">
+              <p className="font-normal text-[var(--font-size-12)] leading-[var(--line-height-18)] text-[var(--color-text-default)]">
                 {agent.modelName}
               </p>
             </div>
             
             <div className="flex flex-col gap-1 pb-3 border-b border-[var(--color-border-subtle)]">
-              <p className="font-['Mona_Sans:Regular',sans-serif] text-[11px] leading-4 text-[var(--color-action-primary)]">
+              <p className="font-normal text-[var(--font-size-11)] leading-[var(--line-height-16)] text-[var(--color-action-primary)]">
                 Temperature
               </p>
-              <p className="font-['Mona_Sans:Regular',sans-serif] text-[12px] leading-4 text-[var(--color-text-default)]">
+              <p className="font-normal text-[var(--font-size-12)] leading-[var(--line-height-18)] text-[var(--color-text-default)]">
                 {agent.temperature}
               </p>
             </div>
             
             <div className="flex flex-col gap-1">
-              <p className="font-['Mona_Sans:Regular',sans-serif] text-[11px] leading-4 text-[var(--color-action-primary)]">
+              <p className="font-normal text-[var(--font-size-11)] leading-[var(--line-height-16)] text-[var(--color-action-primary)]">
                 Connected Data Sources
               </p>
-              <p className="font-['Mona_Sans:Regular',sans-serif] text-[12px] leading-4 text-[var(--color-text-default)]">
+              <p className="font-normal text-[var(--font-size-12)] leading-[var(--line-height-18)] text-[var(--color-text-default)]">
                 {agent.connectedDataSources.length > 0 
                   ? agent.connectedDataSources.join(', ')
                   : 'No connected data sources'}
@@ -307,11 +307,11 @@ function NewChatDrawer({ isOpen, onClose, agent, onFavoriteToggle, onStartChat }
 
         {/* System Prompt */}
         <div className="border border-[var(--color-border-default)] rounded-md p-4 flex flex-col gap-3">
-          <p className="font-['Mona_Sans:SemiBold',sans-serif] text-[14px] leading-5 text-[var(--color-text-default)]">
+          <p className="font-semibold text-[var(--font-size-14)] leading-[var(--line-height-20)] text-[var(--color-text-default)]">
             System Prompt
           </p>
           <div className="border-t border-[var(--color-border-subtle)] pt-3">
-            <p className="font-['Mona_Sans:Regular',sans-serif] text-[12px] leading-4 text-[var(--color-text-default)]">
+            <p className="font-normal text-[var(--font-size-12)] leading-[var(--line-height-18)] text-[var(--color-text-default)]">
               {agent.systemPrompt}
             </p>
           </div>
@@ -319,7 +319,7 @@ function NewChatDrawer({ isOpen, onClose, agent, onFavoriteToggle, onStartChat }
 
         {/* Chat Name */}
         <div className="flex flex-col gap-2">
-          <p className="font-['Mona_Sans:SemiBold',sans-serif] text-[14px] leading-5 text-[var(--color-text-default)]">
+          <p className="font-semibold text-[var(--font-size-14)] leading-[var(--line-height-20)] text-[var(--color-text-default)]">
             Chat name
           </p>
           <Input 
@@ -332,7 +332,7 @@ function NewChatDrawer({ isOpen, onClose, agent, onFavoriteToggle, onStartChat }
 
         {/* Additional Instructions */}
         <div className="flex flex-col gap-2">
-          <p className="font-['Mona_Sans:SemiBold',sans-serif] text-[14px] leading-5 text-[var(--color-text-default)]">
+          <p className="font-semibold text-[var(--font-size-14)] leading-[var(--line-height-20)] text-[var(--color-text-default)]">
             Additional instructions
           </p>
           <Textarea 
@@ -341,7 +341,7 @@ function NewChatDrawer({ isOpen, onClose, agent, onFavoriteToggle, onStartChat }
             placeholder="Enter any specific instructions you would like to provide to the agent for this chat session."
             rows={3}
           />
-          <p className="font-['Mona_Sans:Regular',sans-serif] text-[11px] leading-4 text-[var(--color-text-subtle)]">
+          <p className="font-normal text-[var(--font-size-11)] leading-[var(--line-height-16)] text-[var(--color-text-subtle)]">
             These instructions will be applied in addition to the agent's default system prompt.
           </p>
         </div>
@@ -433,10 +433,10 @@ export function ChatPage() {
               <div className="flex-1 flex flex-col gap-4 px-6 pt-4 pb-[120px] overflow-y-auto min-h-0">
             {/* Header */}
             <div className="flex flex-col gap-2">
-              <h4 className="font-['Mona_Sans:SemiBold',sans-serif] leading-7 not-italic relative shrink-0 text-[var(--color-text-default)] text-[18px]">
+              <h4 className="font-semibold leading-[var(--line-height-28)] relative shrink-0 text-[var(--color-text-default)] text-[var(--font-size-18)]">
                 New Chat
               </h4>
-              <p className="font-['Mona_Sans:Regular',sans-serif] text-[12px] leading-4 text-[var(--color-text-subtle)]">
+              <p className="font-normal text-[var(--font-size-12)] leading-[var(--line-height-18)] text-[var(--color-text-subtle)]">
                 Choose an agent and start a new chat.
               </p>
             </div>
@@ -444,7 +444,7 @@ export function ChatPage() {
             {/* Filters */}
             <div className="flex items-center">
               <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-strong)] flex items-center justify-between w-[280px] pl-2.5 pr-2 py-1.5 rounded-md">
-                <p className="font-['Mona_Sans:Regular',sans-serif] text-[11px] leading-4 text-[var(--color-text-subtle)]">
+                <p className="font-normal text-[var(--font-size-11)] leading-[var(--line-height-16)] text-[var(--color-text-subtle)]">
                   Find agent with filters
                 </p>
                 <IconSearch size={12} stroke={1} className="text-[var(--color-text-muted)]" />

@@ -98,10 +98,10 @@ function StatusCard({ label, count, status }: StatusCardProps) {
   return (
     <div className={`${bgColor} flex flex-[1_0_0] items-center justify-between min-h-px min-w-px px-4 py-3 relative rounded-lg shrink-0`}>
       <div className="flex flex-col gap-1.5 items-start leading-4 not-italic relative shrink-0">
-        <p className="font-['Mona_Sans:Medium',sans-serif] relative shrink-0 text-[var(--color-text-subtle,#64748b)] text-[11px]">
+        <p className="font-medium relative shrink-0 text-[var(--color-text-subtle)] text-[var(--font-size-11)] leading-[var(--line-height-16)]">
           {label}
         </p>
-        <p className="font-['Mona_Sans:Regular',sans-serif] relative shrink-0 text-[var(--color-text-default,#0f172a)] text-[12px]">
+        <p className="font-normal relative shrink-0 text-[var(--color-text-default)] text-[var(--font-size-12)] leading-[var(--line-height-18)]">
           {count}
         </p>
       </div>
