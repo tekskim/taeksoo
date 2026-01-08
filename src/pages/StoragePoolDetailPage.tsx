@@ -492,7 +492,7 @@ function CapacityGauge({ percentage, used, total, unit = 'TiB' }: CapacityGaugeP
       {/* Tooltip */}
       {showTooltip && used !== undefined && total !== undefined && (
         <div 
-          className="absolute z-10 backdrop-blur-[40px] bg-[rgba(246,246,246,0.9)] dark:bg-[rgba(30,30,30,0.9)] border border-[rgba(26,26,26,0.15)] dark:border-[rgba(255,255,255,0.15)] rounded-[6px] shadow-[0px_0px_4px_0px_rgba(0,0,0,0.1)] px-2 py-1.5 flex flex-col gap-1 pointer-events-none"
+          className="absolute z-10 backdrop-blur-[40px] bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px] shadow-[0px_0px_4px_0px_rgba(0,0,0,0.1)] px-2 py-1.5 flex flex-col gap-1 pointer-events-none"
           style={{ left: mousePos.x + 12, top: mousePos.y + 12 }}
         >
           <div className="flex items-center gap-1.5">
@@ -502,7 +502,7 @@ function CapacityGauge({ percentage, used, total, unit = 'TiB' }: CapacityGaugeP
             </span>
           </div>
           <div className="flex items-center gap-1.5">
-            <div className="w-[5px] h-[5px] rounded-[1px] bg-[#e5e7eb]" />
+            <div className="w-[5px] h-[5px] rounded-[1px] bg-[var(--color-border-subtle)]" />
             <span className="text-[11px] leading-[14px] text-[var(--color-text-default)] whitespace-nowrap">
               Available: {available.toFixed(1)}{unit} ({availablePercent}%)
             </span>
@@ -1027,8 +1027,7 @@ export function StoragePoolDetailPage() {
           {/* Top Bar */}
           <TopBar
             showSidebarToggle={!sidebarOpen}
-            showSidebarToggleAfterBreadcrumb={sidebarOpen}
-            onSidebarToggle={() => setSidebarOpen((prev) => !prev)}
+            onSidebarToggle={() => setSidebarOpen(true)}
             showNavigation={true}
             onBack={() => window.history.back()}
             onForward={() => window.history.forward()}

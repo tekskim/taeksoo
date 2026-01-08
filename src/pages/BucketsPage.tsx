@@ -312,8 +312,7 @@ export function BucketsPage() {
           {/* Top Bar with Breadcrumb Navigation */}
           <TopBar
             showSidebarToggle={!sidebarOpen}
-            showSidebarToggleAfterBreadcrumb={sidebarOpen}
-            onSidebarToggle={() => setSidebarOpen((prev) => !prev)}
+            onSidebarToggle={() => setSidebarOpen(true)}
             showNavigation={true}
             onBack={() => window.history.back()}
             onForward={() => window.history.forward()}
