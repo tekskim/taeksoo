@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { Outlet, useLocation } from 'react-router-dom';
+import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import {
   TabBar,
   TopBar,
@@ -81,6 +81,7 @@ interface AppLayoutProps {
 
 export function AppLayout({ children }: AppLayoutProps) {
   const location = useLocation();
+  const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const { tabs, activeTabId, selectTab, closeTab, addNewTab } = useTabs();
 
@@ -168,6 +169,7 @@ export function AppLayout({ children }: AppLayoutProps) {
             onTabAdd={addNewTab}
             showAddButton={true}
             showWindowControls={true}
+            onWindowClose={() => navigate('/')}
           />
 
           {/* Top Bar */}
