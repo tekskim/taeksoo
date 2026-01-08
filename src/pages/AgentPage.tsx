@@ -14,6 +14,7 @@ import {
 import { AgentPageLayout } from '@/layouts';
 import {
   IconMessage,
+  IconRobot,
   IconDatabase,
   IconPuzzle,
   IconSettings,
@@ -27,14 +28,13 @@ import {
   IconDots,
   IconStar,
   IconStarFilled,
-  IconPlayerPause,
-  IconPencil,
   IconCode,
   IconDotsVertical,
   IconDotsCircleHorizontal,
   IconHome,
+  IconTarget,
+  IconPencil,
 } from '@tabler/icons-react';
-import { Icons } from '@/design-system';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import ThakiSymbol from '@/assets/thakiSymbol.svg';
 import { useDarkMode } from '@/hooks/useDarkMode';
@@ -51,44 +51,45 @@ interface StatusCardProps {
 }
 
 function StatusCard({ label, count, status }: StatusCardProps) {
-  const bgColor = status === 'active' 
-    ? 'bg-[var(--color-state-success-bg,#f0fdf4)]' 
-    : 'bg-[var(--color-surface-subtle,#f8fafc)]';
+  let bgColor = 'bg-[var(--color-surface-subtle,#f8fafc)]';
+  let iconBg = 'bg-[var(--color-text-muted,#475569)]';
   
-  const iconBg = status === 'active'
-    ? 'bg-[var(--color-success,#4ade80)]'
-    : 'bg-[var(--color-text-muted,#475569)]';
+  if (status === 'active') {
+    bgColor = 'bg-[var(--color-state-success-bg,#f0fdf4)]';
+    iconBg = 'bg-[var(--color-success,#4ade80)]';
+  }
+
+  const getStatusIcon = () => {
+    if (status === 'active') {
+      return (
+        <IconTarget size={12} stroke={1} className="text-white" />
+      );
+    } else if (status === 'inactive') {
+      return (
+        <div className="flex flex-col gap-0.5 items-center justify-center">
+          <div className="h-1 w-2 bg-white rounded-sm" />
+          <div className="h-1 w-2 bg-white rounded-sm" />
+        </div>
+      );
+    } else if (status === 'draft') {
+      return (
+        <IconPencil size={12} stroke={1} className="text-white" />
+      );
+    }
+  };
 
   return (
     <div className={`${bgColor} flex flex-[1_0_0] items-center justify-between min-h-px min-w-px px-4 py-3 relative rounded-lg shrink-0`}>
       <div className="flex flex-col gap-1.5 items-start leading-4 not-italic relative shrink-0">
-        <p className="font-['Mona_Sans:Medium',sans-serif] relative shrink-0 text-[var(--color-text-subtle,#64748b)] text-[11px]">
+        <p className="font-medium text-[length:var(--font-size-11)] leading-[var(--line-height-16)] text-[var(--color-text-subtle)]">
           {label}
         </p>
-        <p className="font-['Mona_Sans:Regular',sans-serif] relative shrink-0 text-[var(--color-text-default,#0f172a)] text-[12px]">
+        <p className="text-[length:var(--font-size-12)] leading-[var(--line-height-18)] text-[var(--color-text-default)]">
           {count}
         </p>
       </div>
       <div className={`${iconBg} flex gap-0 items-center justify-center p-1 relative rounded-2xl shrink-0 size-6`}>
-        {status === 'active' && (
-          <div className="flex-[1_0_0] h-full min-h-px min-w-px overflow-clip relative shrink-0">
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M4 4L12 4L12 12L4 12L4 4Z" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-              <path d="M6 6L10 6" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-              <path d="M6 8L10 8" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-            </svg>
-          </div>
-        )}
-        {status === 'inactive' && (
-          <div className="flex-[1_0_0] h-full min-h-px min-w-px overflow-clip relative shrink-0">
-            <IconPlayerPause size={12} stroke={1} className="text-white" />
-          </div>
-        )}
-        {status === 'draft' && (
-          <div className="flex-[1_0_0] h-full min-h-px min-w-px overflow-clip relative shrink-0">
-            <IconPencil size={12} stroke={1} className="text-white" />
-          </div>
-        )}
+        {getStatusIcon()}
       </div>
     </div>
   );
@@ -107,7 +108,7 @@ export function AgentSidebar() {
       {/* Logo */}
       <Link
         to="/"
-        className="border-b border-[var(--color-border-default)] flex h-[33px] items-center justify-center w-full hover:bg-[var(--color-surface-muted)] transition-colors shrink-0"
+        className="border-b border-[var(--color-border-default)] flex h-[36px] items-center justify-center w-full hover:bg-[var(--color-surface-muted)] transition-colors shrink-0"
       >
         <img 
           src={ThakiSymbol} 
@@ -128,6 +129,24 @@ export function AgentSidebar() {
           />
         </div>
 
+        {/* Home */}
+        <Tooltip content="Home" position="right">
+          <Link
+            to="/agent"
+            className={`flex items-center justify-center size-[38px] rounded-lg transition-colors shrink-0 ${
+              location.pathname === '/agent' 
+                ? 'bg-[var(--color-info-weak-bg,#eff6ff)]' 
+                : 'bg-[var(--color-surface-default)] hover:bg-[var(--color-surface-muted)]'
+            }`}
+          >
+            <IconHome 
+              size={20} 
+              stroke={1.5} 
+              className={location.pathname === '/agent' ? 'text-[var(--color-action-primary)]' : 'text-[var(--color-text-muted)]'} 
+            />
+          </Link>
+        </Tooltip>
+
         {/* Chat */}
         <Tooltip content="Chat" position="right">
           <Link
@@ -138,9 +157,9 @@ export function AgentSidebar() {
                 : 'bg-[var(--color-surface-default)] hover:bg-[var(--color-surface-muted)]'
             }`}
           >
-            <Icons.Chat 
-              size={22} 
-              stroke={1} 
+            <IconMessage 
+              size={20} 
+              stroke={1.5} 
               className={location.pathname === '/chat' ? 'text-[var(--color-action-primary)]' : 'text-[var(--color-text-muted)]'} 
             />
           </Link>
@@ -156,30 +175,27 @@ export function AgentSidebar() {
                 : 'bg-[var(--color-surface-default)] hover:bg-[var(--color-surface-muted)]'
             }`}
           >
-            <Icons.Robot 
-              size={22} 
-              stroke={1} 
+            <IconRobot 
+              size={20} 
+              stroke={1.5} 
               className={location.pathname === '/agent/list' || location.pathname.startsWith('/agent/list') || location.pathname.startsWith('/agent/create') ? 'text-[var(--color-action-primary)]' : 'text-[var(--color-text-muted)]'} 
             />
           </Link>
         </Tooltip>
 
-        {/* Data sources */}
-        <Tooltip content="Data sources" position="right">
-          <Link
-            to="/storage"
-            className={`flex items-center justify-center size-[38px] rounded-lg transition-colors shrink-0 ${
-              location.pathname === '/storage' || (location.pathname.startsWith('/storage/') && location.pathname !== '/storage')
-                ? 'bg-[var(--color-info-weak-bg,#eff6ff)]' 
-                : 'bg-[var(--color-surface-default)] hover:bg-[var(--color-surface-muted)]'
-            }`}
+        {/* Data sources - Coming soon */}
+        <Tooltip content="Data sources (Coming soon)" position="right">
+          <button
+            type="button"
+            disabled
+            className="flex items-center justify-center size-[38px] rounded-lg transition-colors shrink-0 bg-[var(--color-surface-default)] cursor-not-allowed opacity-50"
           >
             <IconDatabase 
-              size={22} 
-              stroke={1} 
-              className={location.pathname === '/storage' || (location.pathname.startsWith('/storage/') && location.pathname !== '/storage') ? 'text-[var(--color-action-primary)]' : 'text-[var(--color-text-muted)]'} 
+              size={20} 
+              stroke={1.5} 
+              className="text-[var(--color-text-disabled)]"
             />
-          </Link>
+          </button>
         </Tooltip>
 
         {/* MCP tools */}
@@ -193,8 +209,8 @@ export function AgentSidebar() {
             }`}
           >
             <IconPuzzle 
-              size={22} 
-              stroke={1} 
+              size={20} 
+              stroke={1.5} 
               className={location.pathname === '/mcp-tools' ? 'text-[var(--color-action-primary)]' : 'text-[var(--color-text-muted)]'} 
             />
           </Link>
@@ -208,7 +224,7 @@ export function AgentSidebar() {
             to="/agent"
             className="flex items-center justify-center size-[38px] rounded-lg bg-[var(--color-surface-default)] hover:bg-[var(--color-surface-muted)] transition-colors shrink-0"
           >
-            <IconSettings size={22} stroke={1} className="text-[var(--color-text-default)]" />
+            <IconSettings size={20} stroke={1.5} className="text-[var(--color-text-default)]" />
           </Link>
         </Tooltip>
       </div>
@@ -314,7 +330,7 @@ export function AgentPage() {
         row.favorite ? (
           <IconStarFilled size={16} className="text-yellow-500" />
         ) : (
-          <IconStar size={16} className="text-[var(--color-border-default)]" />
+          <IconStar size={16} stroke={1.5} className="text-[var(--color-text-muted)]" />
         )
       ),
     },
@@ -387,7 +403,7 @@ export function AgentPage() {
         return (
           <div className="flex gap-1 items-center justify-center" onClick={(e) => e.stopPropagation()}>
             <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors">
-              <IconCode size={16} stroke={1} className="text-[var(--color-text-muted)]" />
+              <IconCode size={16} stroke={1.5} className="text-[var(--color-text-muted)]" />
             </button>
             <ContextMenu items={menuItems} trigger="click">
               <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors">

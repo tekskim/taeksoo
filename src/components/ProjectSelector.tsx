@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { createPortal } from 'react-dom';
-import { IconSearch, IconCheck } from '@tabler/icons-react';
+import { IconSearch, IconCheck, IconFolder } from '@tabler/icons-react';
 import { ArrowRightLeft } from 'lucide-react';
 import { type Project } from '@/contexts/ProjectContext';
 import { Tooltip } from '@/design-system';
@@ -112,7 +112,7 @@ export function ProjectSelector({
   const buttonClass = variant === 'compact'
     ? "px-2.5 py-1 h-[var(--topbar-button-size)] rounded-md bg-[var(--color-surface-subtle)] hover:bg-[var(--color-surface-muted)] transition-colors flex items-center justify-between gap-2"
     : variant === 'sidebar-icon'
-    ? "size-[38px] rounded-lg bg-[var(--color-action-primary)] hover:bg-[var(--color-action-primary-hover)] transition-colors flex items-center justify-center shrink-0"
+    ? "size-[38px] rounded-lg bg-[var(--color-surface-default)] hover:bg-[var(--color-surface-muted)] transition-colors flex items-center justify-center shrink-0"
     : "w-full px-2.5 py-1.5 rounded-md bg-[var(--color-surface-subtle)] hover:bg-[var(--color-surface-muted)] transition-colors flex items-center justify-between";
 
   const buttonElement = (
@@ -122,9 +122,7 @@ export function ProjectSelector({
       className={buttonClass}
     >
       {variant === 'sidebar-icon' ? (
-        <span className="text-white font-semibold text-lg">
-          {projectInitial}
-        </span>
+        <IconFolder size={20} className="text-[var(--color-text-muted)]" stroke={1.5} />
       ) : (
         <>
           <span className={`font-medium text-[var(--color-text-default)] ${variant === 'compact' ? 'text-[12px]' : 'text-[11px]'}`}>
@@ -219,7 +217,7 @@ export function ProjectSelector({
                         </span>
                         {isSelected && !isDisabled && (
                           <IconCheck
-                            size={16}
+                            size={20}
                             className="text-[var(--color-action-primary)]"
                             stroke={1}
                           />

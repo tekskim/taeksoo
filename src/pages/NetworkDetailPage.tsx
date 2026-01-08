@@ -170,7 +170,7 @@ const portStatusMap: Record<Port['status'], 'active' | 'building' | 'shutoff'> =
 export default function NetworkDetailPage() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const { tabs, activeTabId, addTab, closeTab, selectTab, addNewTab, updateActiveTabLabel } = useTabs();
+  const { tabs, activeTabId, addTab, closeTab, selectTab, addNewTab, updateActiveTabLabel, moveTab } = useTabs();
   
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [activeDetailTab, setActiveDetailTab] = useState('details');
@@ -505,6 +505,7 @@ export default function NetworkDetailPage() {
             onTabChange={selectTab}
             onTabClose={closeTab}
             onTabAdd={addNewTab}
+            onTabReorder={moveTab}
             showAddButton={true}
             showWindowControls={true}
           />

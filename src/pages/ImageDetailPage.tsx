@@ -445,7 +445,7 @@ export function ImageDetailPage() {
   const [activeTab, setActiveTab] = useState('performance');
 
   // Global tab management
-  const { tabs, activeTabId, closeTab, selectTab, addNewTab, updateActiveTabLabel } = useTabs();
+  const { tabs, activeTabId, closeTab, selectTab, addNewTab, updateActiveTabLabel, moveTab } = useTabs();
 
   // Use mock data (in real app, fetch based on id)
   const imageData = mockImageDetail;
@@ -497,6 +497,7 @@ export function ImageDetailPage() {
             onTabChange={selectTab}
             onTabClose={closeTab}
             onTabAdd={addNewTab}
+            onTabReorder={moveTab}
             showAddButton={true}
             showWindowControls={true}
           />
@@ -504,8 +505,7 @@ export function ImageDetailPage() {
           {/* Top Bar */}
           <TopBar
             showSidebarToggle={!sidebarOpen}
-            showSidebarToggleAfterBreadcrumb={sidebarOpen}
-            onSidebarToggle={() => setSidebarOpen((prev) => !prev)}
+            onSidebarToggle={() => setSidebarOpen(true)}
             showNavigation={true}
             onBack={() => window.history.back()}
             onForward={() => window.history.forward()}

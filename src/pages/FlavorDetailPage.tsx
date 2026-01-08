@@ -165,7 +165,7 @@ export function FlavorDetailPage() {
   // Flavor data is already fetched based on ID above
   const instances = mockFlavorInstances;
 
-  const { tabs, activeTabId, closeTab, selectTab, updateActiveTabLabel } = useTabs();
+  const { tabs, activeTabId, closeTab, selectTab, updateActiveTabLabel, moveTab } = useTabs();
 
   // Update tab label to flavor name
   useEffect(() => {

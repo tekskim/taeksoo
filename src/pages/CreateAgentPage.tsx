@@ -1,6 +1,5 @@
 import { useState, useMemo } from 'react';
 import {
-  TabBar,
   TopBar,
   TopBarAction,
   Breadcrumb,
@@ -28,21 +27,18 @@ import {
   StatusIndicator,
   type TableColumn,
 } from '@/design-system';
-import { useTabs } from '@/contexts/TabContext';
 import {
   IconBell,
   IconPalette,
   IconX,
 } from '@tabler/icons-react';
 import { useNavigate } from 'react-router-dom';
-import { AgentSidebar } from '@/pages/AgentPage';
 
 /* ----------------------------------------
    Create Agent Page Component
    ---------------------------------------- */
 
 export function CreateAgentPage() {
-  const { tabs, activeTabId, selectTab, closeTab, addNewTab } = useTabs();
   const navigate = useNavigate();
   const [activeStep, setActiveStep] = useState<'configuration' | 'data-mcp'>('configuration');
   
@@ -66,12 +62,6 @@ export function CreateAgentPage() {
   const [dataSourceSearch, setDataSourceSearch] = useState('');
   const [mcpToolSearch, setMcpToolSearch] = useState('');
   const [rowsPerPage] = useState(2);
-
-  const tabBarTabs = tabs.map((tab) => ({
-    id: tab.id,
-    label: tab.label,
-    closable: tab.closable,
-  }));
 
   // Data source types
   interface DataSourceRow {
@@ -342,24 +332,8 @@ export function CreateAgentPage() {
   };
 
   return (
-    <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
-      <AgentSidebar />
-
-      <main className="absolute top-0 bottom-0 right-0 left-[62px] flex flex-col bg-[var(--color-surface-default)]">
-        {/* Fixed Header Area */}
-        <div className="shrink-0 bg-[var(--color-surface-default)]">
-          <TabBar
-            tabs={tabBarTabs}
-            activeTab={activeTabId}
-            onTabChange={selectTab}
-            onTabClose={closeTab}
-            onTabAdd={addNewTab}
-            showAddButton={true}
-            showWindowControls={true}
-            onWindowClose={() => navigate('/')}
-          />
-
-          <TopBar
+    <>
+      <TopBar
             showSidebarToggle={false}
             showNavigation={true}
             canGoBack={false}
@@ -389,17 +363,16 @@ export function CreateAgentPage() {
               </>
             }
           />
-        </div>
 
-        {/* Scrollable Content Area */}
-        <div className="flex-1 overflow-auto min-h-0">
+      {/* Scrollable Content Area */}
+      <div className="flex-1 overflow-auto min-h-0 overscroll-contain sidebar-scroll">
           <div className="bg-[var(--color-surface-default)] flex flex-col gap-6 items-center pb-[120px] pt-6 px-8 w-full min-h-full">
             <div className="flex flex-col gap-6 items-start min-w-[1176px] relative shrink-0 w-full">
               <div className="flex flex-row flex-1 items-start min-h-0 relative w-full gap-6">
                 {/* Left Content */}
                 <div className="flex flex-1 flex-col min-h-0">
                   <div className="flex flex-col gap-6 w-full">
-                <h4 className="font-['Mona_Sans:SemiBold',sans-serif] leading-7 not-italic relative shrink-0 text-[var(--color-text-default)] text-[18px]">
+                <h4 className="font-semibold text-[length:var(--font-size-18)] leading-[var(--line-height-28)] text-[var(--color-text-default)]">
                   Create agent
                 </h4>
 
@@ -924,8 +897,7 @@ export function CreateAgentPage() {
             </div>
           </div>
         </div>
-      </main>
-    </div>
+    </>
   );
 }
 

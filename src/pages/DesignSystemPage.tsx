@@ -1789,7 +1789,8 @@ function PieChartDemo({
       padding: [8, 12],
       textStyle: {
         color: '#1e293b',
-        fontSize: 11
+        fontSize: 11,
+        fontFamily: 'Mona Sans, -apple-system, BlinkMacSystemFont, sans-serif'
       },
       formatter: (params: { marker: string; name: string; value: number; percent: number; color: string }) => {
         return `<span style="display: inline-block; width: 8px; height: 8px; border-radius: 9999px; background-color: ${params.color}; margin-right: 6px;"></span>${params.name}<br/><span style="font-weight: 500; margin-left: 14px;">${params.value} (${params.percent.toFixed(0)}%)</span>`;
@@ -1810,7 +1811,8 @@ function PieChartDemo({
           },
           fontSize: 12,
           fontWeight: 600,
-          color: '#ffffff'
+          color: '#ffffff',
+          fontFamily: 'Mona Sans, -apple-system, BlinkMacSystemFont, sans-serif'
         } : {
           show: false
         },
@@ -1915,7 +1917,8 @@ function DoughnutChartDemo({
           textVerticalAlign: 'middle',
           fill: getColor('--color-text-default', '#0f172a'),
           fontSize: 18,
-          fontWeight: 500
+          fontWeight: 500,
+          fontFamily: 'Mona Sans, -apple-system, BlinkMacSystemFont, sans-serif'
         }
       }
     ]
@@ -2071,7 +2074,7 @@ function HalfDoughnutChartDemo({ value, label, status = 'default', used, total, 
       {/* Tooltip */}
       {showTooltip && used !== undefined && total !== undefined && (
         <div 
-          className="absolute z-10 backdrop-blur-[40px] bg-[rgba(246,246,246,0.9)] dark:bg-[rgba(30,30,30,0.9)] border border-[rgba(26,26,26,0.15)] dark:border-[rgba(255,255,255,0.15)] rounded-[6px] shadow-[0px_0px_4px_0px_rgba(0,0,0,0.1)] px-2 py-1.5 flex flex-col gap-1 pointer-events-none"
+          className="absolute z-10 backdrop-blur-[40px] bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px] shadow-[0px_0px_4px_0px_rgba(0,0,0,0.1)] px-2 py-1.5 flex flex-col gap-1 pointer-events-none"
           style={{ left: mousePos.x + 12, top: mousePos.y + 12 }}
         >
           <div className="flex items-center gap-1.5">
@@ -2081,7 +2084,7 @@ function HalfDoughnutChartDemo({ value, label, status = 'default', used, total, 
             </span>
           </div>
           <div className="flex items-center gap-1.5">
-            <div className="w-[5px] h-[5px] rounded-[1px] bg-[#e5e7eb]" />
+            <div className="w-[5px] h-[5px] rounded-[1px] bg-[var(--color-border-subtle)]" />
             <span className="text-[11px] leading-[14px] text-[var(--color-text-default)] whitespace-nowrap">
               Available: {available.toFixed(1)}{unit} ({availablePercent}%)
             </span>
@@ -2159,7 +2162,8 @@ function SingleValueDoughnutDemo({
           textVerticalAlign: 'middle',
           fill: getColor('--color-text-default', '#0f172a'),
           fontSize: 18,
-          fontWeight: 500
+          fontWeight: 500,
+          fontFamily: 'Mona Sans, -apple-system, BlinkMacSystemFont, sans-serif'
         }
       }
     ]

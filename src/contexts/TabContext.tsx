@@ -21,14 +21,62 @@ interface TabContextValue {
   selectTab: (tabId: string) => void;
   openInNewTab: (id: string, label: string, path: string) => void;
   updateActiveTabLabel: (label: string) => void;
+  moveTab: (fromIndex: number, toIndex: number) => void;
 }
 
 /* ----------------------------------------
    Constants
    ---------------------------------------- */
 
-const TABS_STORAGE_KEY = 'tabs-state';
-const ACTIVE_TAB_STORAGE_KEY = 'active-tab-id';
+// Helper function to get current app from path
+function getAppFromPath(path: string): string {
+  // Agent service routes - all treated as one app
+  const agentServiceRoutes = ['/agent', '/chat', '/mcp-tools'];
+  for (const route of agentServiceRoutes) {
+    if (path.startsWith(route)) {
+      return '/agent'; // All agent service routes share the same app
+    }
+  }
+  
+  const appPrefixes = ['/cloudbuilder', '/compute', '/storage', '/desktop', '/design', '/container'];
+  for (const prefix of appPrefixes) {
+    if (path.startsWith(prefix)) {
+      return prefix;
+    }
+  }
+  return '/'; // default app (home)
+}
+
+// Get app-specific storage keys
+function getStorageKeys(app: string) {
+  const appKey = app === '/' ? 'home' : app.slice(1); // remove leading slash
+  return {
+    tabs: `tabs-state-${appKey}`,
+    activeTab: `active-tab-id-${appKey}`,
+  };
+}
+
+// Get default home tab for an app
+function getDefaultHomeTab(app: string): TabItem {
+  const appHomeMap: Record<string, { path: string; label: string }> = {
+    '/cloudbuilder': { path: '/cloudbuilder', label: 'Home' },
+    '/compute': { path: '/compute', label: 'Home' },
+    '/storage': { path: '/storage', label: 'Home' },
+    '/agent': { path: '/agent', label: 'Home' }, // Agent service home
+    '/desktop': { path: '/desktop', label: 'Home' },
+    '/design': { path: '/design', label: 'Home' },
+    '/container': { path: '/container', label: 'Dashboard' },
+    '/': { path: '/', label: 'Home' },
+  };
+  
+  const homeInfo = appHomeMap[app] || { path: '/', label: 'Home' };
+  return {
+    id: `${app === '/' ? 'home' : app.slice(1)}-home`,
+    label: homeInfo.label,
+    path: homeInfo.path,
+    closable: true,
+  };
+}
 
 /* ----------------------------------------
    Context
@@ -72,9 +120,12 @@ function getLabelFromPath(path: string): string {
     '/compute/certificates': 'Certificates',
     '/compute/topology': 'Topology',
     '/compute/console': 'Console',
-    '/agent': 'Agent',
+    '/agent': 'Home',
+    '/agent/list': 'Agent',
     '/agent/create': 'Create Agent',
+    '/agent/storage': 'Data Sources',
     '/chat': 'Chat',
+    '/mcp-tools': 'MCP Tools',
     '/storage': 'Home',
     '/storage/osds': 'OSDs',
     '/storage/hosts': 'Hosts',
@@ -107,10 +158,15 @@ export function TabProvider({ children, defaultTabs = [] }: TabProviderProps) {
   const navigate = useNavigate();
   const location = useLocation();
   
+  // Track current app
+  const [currentApp, setCurrentApp] = useState<string>(() => getAppFromPath(location.pathname));
+  
   // Initialize from localStorage or use defaultTabs
   const [tabs, setTabs] = useState<TabItem[]>(() => {
+    const app = getAppFromPath(location.pathname);
+    const storageKeys = getStorageKeys(app);
     try {
-      const stored = localStorage.getItem(TABS_STORAGE_KEY);
+      const stored = localStorage.getItem(storageKeys.tabs);
       if (stored) {
         const parsed = JSON.parse(stored);
         if (Array.isArray(parsed) && parsed.length > 0) {
@@ -120,30 +176,74 @@ export function TabProvider({ children, defaultTabs = [] }: TabProviderProps) {
     } catch {
       // Ignore parse errors
     }
-    return defaultTabs;
+    // Return default home tab for the app
+    return [getDefaultHomeTab(app)];
   });
   
   const [activeTabId, setActiveTabId] = useState<string>(() => {
-    const stored = localStorage.getItem(ACTIVE_TAB_STORAGE_KEY);
+    const app = getAppFromPath(location.pathname);
+    const storageKeys = getStorageKeys(app);
+    const stored = localStorage.getItem(storageKeys.activeTab);
     if (stored) {
       return stored;
     }
-    return defaultTabs[0]?.id || '';
+    return getDefaultHomeTab(app).id;
   });
   
   // Use ref to access latest tabs without re-creating callbacks
   const tabsRef = useRef(tabs);
   tabsRef.current = tabs;
 
-  // Persist tabs to localStorage
+  // Detect app change and reset tabs
   useEffect(() => {
-    localStorage.setItem(TABS_STORAGE_KEY, JSON.stringify(tabs));
-  }, [tabs]);
+    const newApp = getAppFromPath(location.pathname);
+    if (newApp !== currentApp) {
+      setCurrentApp(newApp);
+      
+      // Load tabs for the new app from localStorage or create default
+      const storageKeys = getStorageKeys(newApp);
+      let newTabs: TabItem[] = [];
+      let newActiveTabId = '';
+      
+      try {
+        const storedTabs = localStorage.getItem(storageKeys.tabs);
+        if (storedTabs) {
+          const parsed = JSON.parse(storedTabs);
+          if (Array.isArray(parsed) && parsed.length > 0) {
+            newTabs = parsed;
+          }
+        }
+      } catch {
+        // Ignore parse errors
+      }
+      
+      // If no stored tabs, create default home tab
+      if (newTabs.length === 0) {
+        const homeTab = getDefaultHomeTab(newApp);
+        newTabs = [homeTab];
+        newActiveTabId = homeTab.id;
+      } else {
+        // Use stored active tab or first tab
+        const storedActiveTab = localStorage.getItem(storageKeys.activeTab);
+        newActiveTabId = storedActiveTab || newTabs[0].id;
+      }
+      
+      setTabs(newTabs);
+      setActiveTabId(newActiveTabId);
+    }
+  }, [location.pathname, currentApp]);
 
-  // Persist active tab to localStorage
+  // Persist tabs to localStorage (app-specific)
   useEffect(() => {
-    localStorage.setItem(ACTIVE_TAB_STORAGE_KEY, activeTabId);
-  }, [activeTabId]);
+    const storageKeys = getStorageKeys(currentApp);
+    localStorage.setItem(storageKeys.tabs, JSON.stringify(tabs));
+  }, [tabs, currentApp]);
+
+  // Persist active tab to localStorage (app-specific)
+  useEffect(() => {
+    const storageKeys = getStorageKeys(currentApp);
+    localStorage.setItem(storageKeys.activeTab, activeTabId);
+  }, [activeTabId, currentApp]);
 
   // On initial mount, sync tabs with current URL (prioritize current URL over stored active tab)
   const initializedRef = useRef(false);
@@ -177,10 +277,11 @@ export function TabProvider({ children, defaultTabs = [] }: TabProviderProps) {
   }, [location.pathname]);
 
   // Sync tab with current route when location changes
+  // 각 탭은 독립적 - 다른 탭에 같은 경로가 있어도 현재 탭만 업데이트
   useEffect(() => {
     if (!initializedRef.current) return;
     
-    // 새 탭 추가 시 sync 건너뛰기
+    // 새 탭 추가 또는 탭 선택 시 sync 건너뛰기
     if (skipNextLocationSyncRef.current) {
       skipNextLocationSyncRef.current = false;
       return;
@@ -190,23 +291,11 @@ export function TabProvider({ children, defaultTabs = [] }: TabProviderProps) {
     const currentLabel = getLabelFromPath(currentPath);
     
     setTabs((prevTabs) => {
-      // Find if there's already a tab for this path (compare pathname without query string)
-      const existingTab = prevTabs.find((t) => {
-        const tabPathname = t.path.split('?')[0];
-        return tabPathname === currentPath;
-      });
-      
-      if (existingTab) {
-        // Tab exists, just make sure it's active - DON'T update the label
-        // (let page components update it via updateActiveTabLabel)
-        setActiveTabId(existingTab.id);
-        return prevTabs;
-      }
-      
-      // Update the active tab's path, or create new tab if none exists
+      // 현재 활성 탭 찾기
       const activeTab = prevTabs.find((t) => t.id === activeTabId);
+      
       if (activeTab) {
-        // Only update path and label if the path is actually different
+        // 경로가 다르면 현재 탭 업데이트 (다른 탭에 같은 경로가 있어도 무시)
         if (activeTab.path !== currentPath) {
           return prevTabs.map((tab) =>
             tab.id === activeTabId ? { ...tab, path: currentPath, label: currentLabel } : tab
@@ -214,7 +303,7 @@ export function TabProvider({ children, defaultTabs = [] }: TabProviderProps) {
         }
         return prevTabs;
       } else {
-        // No active tab, create a new one
+        // 활성 탭이 없으면 새 탭 생성
         const newTab: TabItem = {
           id: `${currentPath.replace(/\//g, '-')}-${Date.now()}`,
           label: currentLabel,
@@ -245,16 +334,11 @@ export function TabProvider({ children, defaultTabs = [] }: TabProviderProps) {
       const closedIndex = prev.findIndex((t) => t.id === tabId);
       const newTabs = prev.filter((t) => t.id !== tabId);
       
-      // 탭이 모두 닫히면 홈 탭 생성
+      // 탭이 모두 닫히면 현재 앱의 홈 탭 생성
       if (newTabs.length === 0) {
-        const homeTab: TabItem = {
-          id: 'home',
-          label: 'Home',
-          path: '/',
-          closable: true,
-        };
+        const homeTab = getDefaultHomeTab(currentApp);
         setActiveTabId(homeTab.id);
-        navigate('/');
+        navigate(homeTab.path);
         return [homeTab];
       }
       
@@ -269,7 +353,7 @@ export function TabProvider({ children, defaultTabs = [] }: TabProviderProps) {
       
       return newTabs;
     });
-  }, [navigate, activeTabId]);
+  }, [navigate, activeTabId, currentApp]);
 
   // Select a tab - simplified, no location sync needed
   const selectTab = useCallback((tabId: string) => {
@@ -297,12 +381,29 @@ export function TabProvider({ children, defaultTabs = [] }: TabProviderProps) {
   const addNewTab = useCallback(() => {
     const currentPath = location.pathname;
     
+    // Agent service routes - all go to /agent home
+    const agentServiceRoutes = ['/agent', '/chat', '/mcp-tools'];
+    const isAgentService = agentServiceRoutes.some(route => currentPath.startsWith(route));
+    
+    if (isAgentService) {
+      const newTabId = `home-${Date.now()}`;
+      const newTab: TabItem = {
+        id: newTabId,
+        label: 'Home',
+        path: '/agent',
+        closable: true,
+      };
+      addTab(newTab);
+      skipNextLocationSyncRef.current = true;
+      navigate('/agent');
+      return;
+    }
+    
     // 애플리케이션별 홈 페이지 매핑 (라벨은 모두 Home으로 통일)
     const appHomeMap: Record<string, { path: string; label: string }> = {
       '/cloudbuilder': { path: '/cloudbuilder', label: 'Home' },
       '/compute': { path: '/compute', label: 'Home' },
       '/storage': { path: '/storage', label: 'Home' },
-      '/agent': { path: '/agent', label: 'Home' },
       '/desktop': { path: '/desktop', label: 'Home' },
       '/design': { path: '/design', label: 'Home' },
       '/container': { path: '/container', label: 'Dashboard' },
@@ -338,6 +439,20 @@ export function TabProvider({ children, defaultTabs = [] }: TabProviderProps) {
     );
   }, [activeTabId]);
 
+  // Move tab from one position to another (for drag and drop reordering)
+  const moveTab = useCallback((fromIndex: number, toIndex: number) => {
+    setTabs((prevTabs) => {
+      if (fromIndex === toIndex) return prevTabs;
+      if (fromIndex < 0 || fromIndex >= prevTabs.length) return prevTabs;
+      if (toIndex < 0 || toIndex >= prevTabs.length) return prevTabs;
+      
+      const newTabs = [...prevTabs];
+      const [movedTab] = newTabs.splice(fromIndex, 1);
+      newTabs.splice(toIndex, 0, movedTab);
+      return newTabs;
+    });
+  }, []);
+
   return (
     <TabContext.Provider
       value={{
@@ -349,6 +464,7 @@ export function TabProvider({ children, defaultTabs = [] }: TabProviderProps) {
         selectTab,
         openInNewTab,
         updateActiveTabLabel,
+        moveTab,
       }}
     >
       {children}

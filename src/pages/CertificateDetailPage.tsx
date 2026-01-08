@@ -190,7 +190,7 @@ function isCACertificate(cert: CertificateDetail): cert is CACertificateDetail {
 
 export default function CertificateDetailPage() {
   const { id } = useParams<{ id: string }>();
-  const { tabs, activeTabId, closeTab, selectTab, addNewTab, updateActiveTabLabel } = useTabs();
+  const { tabs, activeTabId, closeTab, selectTab, addNewTab, updateActiveTabLabel, moveTab } = useTabs();
   
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [activeDetailTab, setActiveDetailTab] = useState('details');
@@ -343,6 +343,7 @@ export default function CertificateDetailPage() {
             onTabChange={selectTab}
             onTabClose={closeTab}
             onTabAdd={addNewTab}
+            onTabReorder={moveTab}
             showAddButton={true}
             showWindowControls={true}
           />

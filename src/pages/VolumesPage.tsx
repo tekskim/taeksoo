@@ -111,7 +111,7 @@ export function VolumesPage() {
   const [columnConfig, setColumnConfig] = useState<ColumnConfig[]>(defaultColumnConfig);
 
   // Global tab management
-  const { tabs, activeTabId, closeTab, selectTab, openInNewTab, addNewTab } = useTabs();
+  const { tabs, activeTabId, closeTab, selectTab, openInNewTab, addNewTab, moveTab } = useTabs();
 
   // Handle opening instance in new tab
   const handleOpenInNewTab = (instanceId: string, instanceName: string) => {
@@ -334,6 +334,7 @@ export function VolumesPage() {
             onTabChange={selectTab}
             onTabClose={closeTab}
             onTabAdd={addNewTab}
+            onTabReorder={moveTab}
             showAddButton={true}
             showWindowControls={true}
           />

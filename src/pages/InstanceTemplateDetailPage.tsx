@@ -187,7 +187,7 @@ export function InstanceTemplateDetailPage() {
   const template = id ? (mockTemplatesMap[id] || defaultTemplateDetail) : defaultTemplateDetail;
   const [isFavorite, setIsFavorite] = useState(template.favorite);
 
-  const { tabs, activeTabId, closeTab, selectTab, updateActiveTabLabel } = useTabs();
+  const { tabs, activeTabId, closeTab, selectTab, updateActiveTabLabel, moveTab } = useTabs();
 
   // Update tab label to template name
   useEffect(() => {
@@ -264,7 +264,7 @@ export function InstanceTemplateDetailPage() {
                     aria-label={isFavorite ? 'Remove from favorites' : 'Add to favorites'}
                   >
                     {isFavorite ? (
-                      <IconStarFilled size={16} className="text-yellow-400" />
+                      <IconStarFilled size={16} className="text-yellow-500" />
                     ) : (
                       <IconStar size={16} stroke={1.5} className="text-[var(--color-text-muted)]" />
                     )}

@@ -245,7 +245,7 @@ const DrawerCard = DrawerListItem;
    ---------------------------------------- */
 
 export function DrawersPage() {
-  const { tabs, activeTabId, selectTab, closeTab, addNewTab } = useTabs();
+  const { tabs, activeTabId, selectTab, closeTab, addNewTab, moveTab } = useTabs();
   const [sidebarOpen, setSidebarOpen] = useState(true);
 
   // Drawer states
@@ -317,6 +317,7 @@ export function DrawersPage() {
             onTabChange={selectTab}
             onTabClose={closeTab}
             onTabAdd={addNewTab}
+            onTabReorder={moveTab}
           />
 
           {/* TopBar */}
