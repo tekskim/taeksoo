@@ -150,7 +150,7 @@ function TreeItem({ item, level, selectedId, onSelect, onToggle }: TreeItemProps
       <div
         className={`
           group flex items-center gap-1 h-[28px] px-2 rounded cursor-pointer text-[11px]
-          ${isSelected ? 'bg-[var(--color-action-primary)] text-white' : 'hover:bg-[var(--color-surface-subtle)] text-[var(--color-text-default)]'}
+          ${isSelected ? 'bg-[var(--color-state-info-bg)] text-[var(--color-action-primary)] font-medium' : 'hover:bg-[var(--color-surface-subtle)] text-[var(--color-text-default)]'}
         `}
         style={{ paddingLeft: `${8 + level * 20}px` }}
         onClick={() => onSelect(item.id)}
