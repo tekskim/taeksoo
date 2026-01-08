@@ -501,7 +501,7 @@ export function StorageHomePage() {
               <Breadcrumb
               items={[
                 { label: 'Storage', href: '/storage' },
-                { label: 'Entry page' },
+                { label: 'Home' },
               ]}
             />
             }

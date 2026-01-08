@@ -92,19 +92,8 @@ function getLabelFromPath(path: string): string {
     return pathLabelMap[path];
   }
   
-  // Handle specific detail page patterns with custom formatting
-  const detailPatterns: { pattern: RegExp; format: (id: string) => string }[] = [
-    { pattern: /^\/storage\/osds\/(.+)$/, format: (id) => `OSD.${id}` },
-    { pattern: /^\/storage\/hosts\/(.+)$/, format: (id) => `Host.${id}` },
-    { pattern: /^\/storage\/pools\/(.+)$/, format: (id) => `Pool.${id}` },
-  ];
-  
-  for (const { pattern, format } of detailPatterns) {
-    const match = path.match(pattern);
-    if (match) {
-      return format(match[1]);
-    }
-  }
+  // Detail page patterns - use simple ID, page component will update with entity name
+  // The page component should call updateActiveTabLabel() with the actual entity name
   
   // For all other paths, use just the last segment (most recent breadcrumb)
   const segments = path.split('/').filter(Boolean);
@@ -200,19 +189,22 @@ export function TabProvider({ children, defaultTabs = [] }: TabProviderProps) {
       });
       
       if (existingTab) {
-        // Tab exists, just make sure it's active and label is up to date
+        // Tab exists, just make sure it's active - DON'T update the label
+        // (let page components update it via updateActiveTabLabel)
         setActiveTabId(existingTab.id);
-        return prevTabs.map((tab) =>
-          tab.id === existingTab.id ? { ...tab, label: currentLabel } : tab
-        );
+        return prevTabs;
       }
       
-      // Update the active tab's path and label, or create new tab if none exists
+      // Update the active tab's path, or create new tab if none exists
       const activeTab = prevTabs.find((t) => t.id === activeTabId);
       if (activeTab) {
-        return prevTabs.map((tab) =>
-          tab.id === activeTabId ? { ...tab, path: currentPath, label: currentLabel } : tab
-        );
+        // Only update path and label if the path is actually different
+        if (activeTab.path !== currentPath) {
+          return prevTabs.map((tab) =>
+            tab.id === activeTabId ? { ...tab, path: currentPath, label: currentLabel } : tab
+          );
+        }
+        return prevTabs;
       } else {
         // No active tab, create a new one
         const newTab: TabItem = {

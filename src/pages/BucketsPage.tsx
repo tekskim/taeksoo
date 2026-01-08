@@ -301,10 +301,12 @@ export function BucketsPage() {
           {/* Tab Bar */}
           <TabBar
             tabs={tabBarTabs}
-            activeTabId={activeTabId}
+            activeTab={activeTabId}
+            onTabChange={selectTab}
             onTabClose={closeTab}
-            onTabSelect={selectTab}
-            onNewTab={addNewTab}
+            onTabAdd={addNewTab}
+            showAddButton={true}
+            showWindowControls={true}
           />
 
           {/* Top Bar */}
@@ -357,7 +359,7 @@ export function BucketsPage() {
                     <Button
                       variant="secondary"
                       size="sm"
-                      icon={<IconDownload size={12} stroke={1.5} />}
+                      icon={<IconDownload size={14} stroke={1.5} />}
                       aria-label="Download"
                     />
                     <Button

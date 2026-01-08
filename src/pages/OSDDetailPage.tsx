@@ -735,7 +735,14 @@ export function OSDDetailPage() {
   const [healthSubTab, setHealthSubTab] = useState<'device-info' | 'smart'>('device-info');
 
   // Global tab management
-  const { tabs, activeTabId, closeTab, selectTab, addNewTab } = useTabs();
+  const { tabs, activeTabId, closeTab, selectTab, addNewTab, updateActiveTabLabel } = useTabs();
+
+  // Update tab label to match the OSD name (most recent breadcrumb)
+  useEffect(() => {
+    if (osd?.id) {
+      updateActiveTabLabel(`osd.${osd.id}`);
+    }
+  }, [osd?.id, updateActiveTabLabel]);
 
   // Convert tabs to TabBar format
   const tabBarTabs = tabs.map((tab) => ({

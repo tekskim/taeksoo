@@ -3,14 +3,13 @@ import { VStack, MenuItem, MenuSection } from '@/design-system';
 import { useDarkMode } from '@/hooks/useDarkMode';
 import {
   IconHome,
+  IconDatabase,
+  IconTemplate,
+  IconCpu,
   IconServer,
-  IconBuildingWarehouse,
   IconDisc,
-  IconCircuitDiode,
-  IconPhoto,
-  IconBucket,
-  IconChartBar,
-  IconLayoutSidebar,
+  IconCube,
+  IconBrandSpeedtest,
   IconArrowLeft,
 } from '@tabler/icons-react';
 import { Link, useLocation } from 'react-router-dom';
@@ -51,20 +50,12 @@ export function StorageSidebar({ isOpen = true, onToggle }: StorageSidebarProps)
   return (
     <aside className="w-[200px] h-screen bg-[var(--color-surface-default)] border-r border-[var(--color-border-default)] flex flex-col fixed left-0 top-0">
       {/* Logo */}
-      <div className="h-10 px-3 flex items-center justify-between">
+      <div className="h-10 px-3 flex items-center">
         <img 
           src={isDark ? ThakiLogoDark : ThakiLogoLight} 
           alt="THAKI Cloud" 
           className="h-4"
         />
-        <button 
-          type="button"
-          onClick={onToggle}
-          className="p-1 hover:bg-[var(--color-surface-muted)] rounded transition-colors cursor-pointer"
-          aria-label="Toggle sidebar"
-        >
-          <IconLayoutSidebar size={16} className="text-[var(--color-text-muted)] pointer-events-none" stroke={1.5} />
-        </button>
       </div>
 
       {/* Project Selector */}
@@ -88,7 +79,7 @@ export function StorageSidebar({ isOpen = true, onToggle }: StorageSidebarProps)
             <span>All Services</span>
           </Link>
 
-          {/* EntryPage */}
+          {/* Home */}
           <MenuItem
             icon={<IconHome size={16} stroke={1.5} />}
             label="Home"
@@ -99,25 +90,25 @@ export function StorageSidebar({ isOpen = true, onToggle }: StorageSidebarProps)
           {/* Cluster Section */}
           <MenuSection title="Cluster" defaultOpen={true}>
             <MenuItem
-              icon={<IconServer size={16} stroke={1.5} />}
+              icon={<IconDatabase size={16} stroke={1.5} />}
               label="Pools"
               href="/storage/pools"
               active={isActive('/storage/pools')}
             />
             <MenuItem
-              icon={<IconBuildingWarehouse size={16} stroke={1.5} />}
+              icon={<IconTemplate size={16} stroke={1.5} />}
               label="Hosts"
               href="/storage/hosts"
               active={isActive('/storage/hosts')}
             />
             <MenuItem
-              icon={<IconDisc size={16} stroke={1.5} />}
+              icon={<IconCpu size={16} stroke={1.5} />}
               label="OSDs"
               href="/storage/osds"
               active={isActive('/storage/osds')}
             />
             <MenuItem
-              icon={<IconCircuitDiode size={16} stroke={1.5} />}
+              icon={<IconServer size={16} stroke={1.5} />}
               label="Physical Disks"
               href="/storage/physical-disks"
               active={isActive('/storage/physical-disks')}
@@ -127,7 +118,7 @@ export function StorageSidebar({ isOpen = true, onToggle }: StorageSidebarProps)
           {/* Block Section */}
           <MenuSection title="Block" defaultOpen={true}>
             <MenuItem
-              icon={<IconPhoto size={16} stroke={1.5} />}
+              icon={<IconDisc size={16} stroke={1.5} />}
               label="Images"
               href="/storage/images"
               active={isActive('/storage/images')}
@@ -137,7 +128,7 @@ export function StorageSidebar({ isOpen = true, onToggle }: StorageSidebarProps)
           {/* Object Section */}
           <MenuSection title="Object" defaultOpen={true}>
             <MenuItem
-              icon={<IconBucket size={16} stroke={1.5} />}
+              icon={<IconCube size={16} stroke={1.5} />}
               label="Buckets"
               href="/storage/buckets"
               active={isActive('/storage/buckets')}
@@ -147,7 +138,7 @@ export function StorageSidebar({ isOpen = true, onToggle }: StorageSidebarProps)
           {/* Monitoring Section */}
           <MenuSection title="Monitoring" defaultOpen={true}>
             <MenuItem
-              icon={<IconChartBar size={16} stroke={1.5} />}
+              icon={<IconBrandSpeedtest size={16} stroke={1.5} />}
               label="Overall Performance"
               href="/storage/performance"
               active={isActive('/storage/performance')}
