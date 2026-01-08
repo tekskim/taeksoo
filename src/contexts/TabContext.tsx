@@ -146,6 +146,7 @@ export function TabProvider({ children, defaultTabs = [] }: TabProviderProps) {
 
   // On initial mount, sync tabs with current URL (prioritize current URL over stored active tab)
   const initializedRef = useRef(false);
+  const skipNextLocationSyncRef = useRef(false);
   useEffect(() => {
     if (!initializedRef.current) {
       initializedRef.current = true;
@@ -177,6 +178,12 @@ export function TabProvider({ children, defaultTabs = [] }: TabProviderProps) {
   // Sync tab with current route when location changes
   useEffect(() => {
     if (!initializedRef.current) return;
+    
+    // 새 탭 추가 시 sync 건너뛰기
+    if (skipNextLocationSyncRef.current) {
+      skipNextLocationSyncRef.current = false;
+      return;
+    }
     
     const currentPath = location.pathname;
     const currentLabel = getLabelFromPath(currentPath);
@@ -233,31 +240,35 @@ export function TabProvider({ children, defaultTabs = [] }: TabProviderProps) {
 
   // Close a tab
   const closeTab = useCallback((tabId: string) => {
-    // Always navigate to home when closing a tab
-    navigate('/');
-    
     setTabs((prev) => {
+      const closedIndex = prev.findIndex((t) => t.id === tabId);
       const newTabs = prev.filter((t) => t.id !== tabId);
       
-      // Find or create home tab
-      let homeTab = newTabs.find((t) => t.path === '/');
-      if (!homeTab) {
-        // If no home tab exists, create one
-        homeTab = {
+      // 탭이 모두 닫히면 홈 탭 생성
+      if (newTabs.length === 0) {
+        const homeTab: TabItem = {
           id: 'home',
           label: 'Home',
           path: '/',
           closable: true,
         };
-        newTabs.push(homeTab);
+        setActiveTabId(homeTab.id);
+        navigate('/');
+        return [homeTab];
       }
       
-      // Set active tab to home
-      setActiveTabId(homeTab.id);
+      // 닫는 탭이 현재 활성 탭인 경우에만 다른 탭으로 이동
+      if (tabId === activeTabId) {
+        // 인접한 탭으로 이동 (왼쪽 우선, 없으면 오른쪽)
+        const newActiveIndex = Math.min(closedIndex, newTabs.length - 1);
+        const newActiveTab = newTabs[newActiveIndex];
+        setActiveTabId(newActiveTab.id);
+        navigate(newActiveTab.path);
+      }
       
       return newTabs;
     });
-  }, [navigate]);
+  }, [navigate, activeTabId]);
 
   // Select a tab - simplified, no location sync needed
   const selectTab = useCallback((tabId: string) => {
@@ -280,18 +291,40 @@ export function TabProvider({ children, defaultTabs = [] }: TabProviderProps) {
     navigate(path);
   }, [addTab, navigate]);
 
-  // Add a new empty tab (for + button) - opens Home page
+  // Add a new empty tab (for + button) - opens current app's home page
   const addNewTab = useCallback(() => {
-    const newTabId = `home-${Date.now()}`;
+    const currentPath = location.pathname;
+    
+    // 애플리케이션별 홈 페이지 매핑
+    const appHomeMap: Record<string, { path: string; label: string }> = {
+      '/cloudbuilder': { path: '/cloudbuilder', label: 'Cloud Builder' },
+      '/compute': { path: '/compute', label: 'Compute' },
+      '/storage': { path: '/storage', label: 'Storage' },
+      '/agent': { path: '/agent', label: 'AI Agent' },
+      '/desktop': { path: '/desktop', label: 'Desktop' },
+      '/design': { path: '/design', label: 'Design System' },
+    };
+    
+    // 현재 경로에서 애플리케이션 찾기
+    let targetApp = { path: '/', label: 'Home' };
+    for (const [prefix, appInfo] of Object.entries(appHomeMap)) {
+      if (currentPath.startsWith(prefix)) {
+        targetApp = appInfo;
+        break;
+      }
+    }
+    
+    const newTabId = `${targetApp.label.toLowerCase().replace(/\s+/g, '-')}-${Date.now()}`;
     const newTab: TabItem = {
       id: newTabId,
-      label: 'Home',
-      path: '/',
+      label: targetApp.label,
+      path: targetApp.path,
       closable: true,
     };
     addTab(newTab);
-    navigate('/');
-  }, [addTab, navigate]);
+    skipNextLocationSyncRef.current = true; // 새 탭 추가 시 sync 건너뛰기
+    navigate(targetApp.path);
+  }, [addTab, navigate, location.pathname]);
 
   // Update the label of the active tab
   const updateActiveTabLabel = useCallback((label: string) => {

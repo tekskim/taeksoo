@@ -1988,6 +1988,21 @@ function TabBarDemo() {
     initialActiveTab: 'tab-1',
   });
 
+  // Many tabs demo
+  const manyTabsDemo = useTabBar({
+    initialTabs: [
+      { id: 'many-1', label: 'Dashboard', closable: true },
+      { id: 'many-2', label: 'Instance Templates', closable: true },
+      { id: 'many-3', label: 'Virtual Machines', closable: true },
+      { id: 'many-4', label: 'Storage Volumes', closable: true },
+      { id: 'many-5', label: 'Network Settings', closable: true },
+      { id: 'many-6', label: 'Security Groups', closable: true },
+      { id: 'many-7', label: 'Load Balancers', closable: true },
+      { id: 'many-8', label: 'Monitoring', closable: true },
+    ],
+    initialActiveTab: 'many-1',
+  });
+
   let tabCounter = 4;
 
   const handleAddTab = () => {
@@ -2005,13 +2020,24 @@ function TabBarDemo() {
       <VStack gap={3}>
         <Label>Design Tokens</Label>
         <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
-          <code>height: 36px</code> · <code>tab-width: 100-200px</code> · <code>padding-x: 12px</code> · <code>font: 12px</code>
+          <code>height: 36px</code> · <code>max-width: 160px</code> · <code>padding-x: 12px</code> · <code>font: 12px</code>
         </div>
+      </VStack>
+
+      {/* Features */}
+      <VStack gap={3}>
+        <Label>Features</Label>
+        <ul className="list-disc list-outside pl-4 space-y-1 text-[length:var(--font-size-12)] leading-[var(--line-height-18)] text-[var(--color-text-default)]">
+          <li>탭 최대 너비 160px, 긴 타이틀은 truncate 처리</li>
+          <li>탭이 많아지면 비율적으로 너비가 줄어듦 (스크롤 없음)</li>
+          <li>탭 추가/닫기 기능</li>
+          <li>윈도우 컨트롤 (최소화/최대화/닫기)</li>
+        </ul>
       </VStack>
 
       {/* Interactive Demo */}
       <VStack gap={3}>
-        <Label>Interactive Demo</Label>
+        <Label>Interactive Demo (3 tabs)</Label>
         <div className="w-full border border-[var(--color-border-default)] rounded-[var(--radius-md)] overflow-hidden">
           <TabBar
             tabs={tabs}
@@ -2027,6 +2053,23 @@ function TabBarDemo() {
         <p className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
           Click tabs to switch, click × to close, click + to add new tabs
         </p>
+      </VStack>
+
+      {/* Many Tabs Demo */}
+      <VStack gap={3}>
+        <Label>Many Tabs Demo (8 tabs - 비율 축소)</Label>
+        <div className="w-full border border-[var(--color-border-default)] rounded-[var(--radius-md)] overflow-hidden">
+          <TabBar
+            tabs={manyTabsDemo.tabs}
+            activeTab={manyTabsDemo.activeTab}
+            onTabChange={manyTabsDemo.selectTab}
+            onTabClose={manyTabsDemo.closeTab}
+            showAddButton={false}
+          />
+          <div className="h-[80px] flex items-center justify-center bg-[var(--color-surface-default)] text-[var(--color-text-muted)] text-[length:var(--font-size-12)]">
+            탭이 많아지면 모든 탭이 화면에 보이도록 너비가 비율적으로 줄어듭니다.
+          </div>
+        </div>
       </VStack>
 
       {/* With Icons */}
@@ -4603,7 +4646,7 @@ outline: 2px solid var(--color-border-focus);`}
             </Section>
 
             {/* TabBar Component */}
-            <Section id="tabbar" title="TabBar" description="Browser-style tabs with add/close functionality">
+            <Section id="tabbar" title="TabBar" description="Browser-style tabs with responsive width (max 160px, auto-shrink when overflow)">
               <TabBarDemo />
             </Section>
 
