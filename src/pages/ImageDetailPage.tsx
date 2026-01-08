@@ -437,10 +437,17 @@ export function ImageDetailPage() {
   const [activeTab, setActiveTab] = useState(0);
 
   // Global tab management
-  const { tabs, activeTabId, closeTab, selectTab, addNewTab } = useTabs();
+  const { tabs, activeTabId, closeTab, selectTab, addNewTab, updateActiveTabLabel } = useTabs();
 
   // Use mock data (in real app, fetch based on id)
   const imageData = mockImageDetail;
+
+  // Update tab label to match the image name (most recent breadcrumb)
+  useEffect(() => {
+    if (imageData?.name) {
+      updateActiveTabLabel(imageData.name);
+    }
+  }, [imageData?.name, updateActiveTabLabel]);
 
   // Convert tabs to TabBar format
   const tabBarTabs = tabs.map((tab) => ({
@@ -478,10 +485,12 @@ export function ImageDetailPage() {
           {/* Tab Bar */}
           <TabBar
             tabs={tabBarTabs}
-            activeTabId={activeTabId}
+            activeTab={activeTabId}
+            onTabChange={selectTab}
             onTabClose={closeTab}
-            onTabSelect={selectTab}
-            onNewTab={addNewTab}
+            onTabAdd={addNewTab}
+            showAddButton={true}
+            showWindowControls={true}
           />
 
           {/* Top Bar */}
