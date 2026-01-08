@@ -41,11 +41,10 @@ import {
 } from '@tabler/icons-react';
 import { Icons } from '@/design-system';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
-import ThakiSymbol from '@/assets/thakiSymbol.svg';
-import { useDarkMode } from '@/hooks/useDarkMode';
-import { Sidebar } from '@/components/Sidebar';
+import AgentLogo from '@/assets/icons/agent-logo.svg';
 import { useProject } from '@/contexts/ProjectContext';
 import { ProjectSelector } from '@/components/ProjectSelector';
+import { Sidebar } from '@/components/Sidebar';
 
 /* ----------------------------------------
    Status Card Component
@@ -116,119 +115,108 @@ function StatusCard({ label, count, status }: StatusCardProps) {
    Agent Sidebar Component (Reused)
    ---------------------------------------- */
 export function AgentSidebar() {
-  const { isDark } = useDarkMode();
   const location = useLocation();
   const { projects, selectedProjectId, setSelectedProjectId } = useProject();
 
+  // Helper to check if path is active
+  const isActive = (paths: string[]) => {
+    return paths.some(path => 
+      path.endsWith('*') 
+        ? location.pathname.startsWith(path.slice(0, -1))
+        : location.pathname === path
+    );
+  };
+
+  // Unified button style - same for all states, only icon color changes
+  const buttonClass = "flex items-center justify-center size-[37px] rounded-lg hover:bg-[var(--color-surface-muted)] transition-colors";
+
   return (
-    <nav className="fixed left-0 top-0 w-[62px] h-screen bg-[var(--color-surface-default)] border-r border-[var(--color-border-default)] flex flex-col items-center z-50">
-      {/* Logo */}
+    <nav className="fixed left-0 top-0 w-[60px] h-screen bg-[var(--color-surface-default)] border-r border-[var(--color-border-default)] flex flex-col items-center pb-3 z-50">
+      {/* Logo - Home/Dashboard link */}
       <Link
-        to="/"
+        to="/agent"
         className="border-b border-[var(--color-border-default)] flex h-[33px] items-center justify-center w-full hover:bg-[var(--color-surface-muted)] transition-colors shrink-0"
       >
         <img 
-          src={ThakiSymbol} 
-          alt="THAKI" 
-          className="h-[18px] w-[18px]"
+          src={AgentLogo} 
+          alt="Agent" 
+          className="h-6 w-6"
         />
       </Link>
 
-      {/* Menu Items - Project Selector and Navigation */}
-      <div className="flex flex-col gap-2 items-center px-2 pt-3 flex-1 min-h-0 w-full">
-        {/* Project Selector Button */}
-        <div className="w-full flex items-center justify-center shrink-0">
-          <ProjectSelector
-            projects={projects}
-            selectedProjectId={selectedProjectId}
-            onProjectSelect={setSelectedProjectId}
-            variant="sidebar-icon"
-          />
+      {/* Sidebar Container */}
+      <div className="flex flex-col flex-1 items-center justify-between pt-2 w-full min-h-0">
+        {/* Top Section - Project & Navigation */}
+        <div className="flex flex-col gap-2 items-center w-full">
+          {/* Project Selector */}
+          <div className="flex items-center justify-center">
+            <ProjectSelector
+              projects={projects}
+              selectedProjectId={selectedProjectId}
+              onProjectSelect={setSelectedProjectId}
+              variant="sidebar-icon"
+            />
+          </div>
+
+          {/* Divider */}
+          <div className="w-[22px] h-px bg-[var(--color-border-default)]" />
+
+          {/* Navigation Items */}
+          <div className="flex flex-col gap-4 items-center">
+            {/* Chat */}
+            <Tooltip content="Chat" position="right">
+              <Link to="/chat" className={buttonClass}>
+                <Icons.Chat 
+                  size={22} 
+                  stroke={1} 
+                  className={isActive(['/chat', '/chat/*']) ? 'text-[var(--color-action-primary)]' : 'text-[var(--color-text-muted)]'} 
+                />
+              </Link>
+            </Tooltip>
+
+            {/* Agent */}
+            <Tooltip content="Agent" position="right">
+              <Link to="/agent/list" className={buttonClass}>
+                <Icons.Robot 
+                  size={22} 
+                  stroke={1} 
+                  className={isActive(['/agent/list', '/agent/list/*', '/agent/create', '/agent/create/*']) ? 'text-[var(--color-action-primary)]' : 'text-[var(--color-text-muted)]'} 
+                />
+              </Link>
+            </Tooltip>
+
+            {/* Data Sources */}
+            <Tooltip content="Data sources" position="right">
+              <Link to="/storage" className={buttonClass}>
+                <IconDatabase 
+                  size={22} 
+                  stroke={1} 
+                  className={isActive(['/storage', '/storage/*']) ? 'text-[var(--color-action-primary)]' : 'text-[var(--color-text-muted)]'} 
+                />
+              </Link>
+            </Tooltip>
+
+            {/* MCP Tools */}
+            <Tooltip content="MCP tools" position="right">
+              <Link to="/mcp-tools" className={buttonClass}>
+                <IconPuzzle 
+                  size={22} 
+                  stroke={1} 
+                  className={isActive(['/mcp-tools', '/mcp-tools/*']) ? 'text-[var(--color-action-primary)]' : 'text-[var(--color-text-muted)]'} 
+                />
+              </Link>
+            </Tooltip>
+          </div>
         </div>
 
-          {/* Chat */}
-          <Tooltip content="Chat" position="right">
-            <Link
-              to="/chat"
-            className={`flex items-center justify-center size-[38px] rounded-lg transition-colors shrink-0 ${
-                location.pathname === '/chat' 
-                  ? 'bg-[var(--color-info-weak-bg,#eff6ff)]' 
-                  : 'bg-[var(--color-surface-default)] hover:bg-[var(--color-surface-muted)]'
-              }`}
-            >
-            <Icons.Chat 
-                size={22} 
-                stroke={1} 
-                className={location.pathname === '/chat' ? 'text-[var(--color-action-primary)]' : 'text-[var(--color-text-muted)]'} 
-              />
-            </Link>
-          </Tooltip>
-
-          {/* Robot */}
-          <Tooltip content="Agent" position="right">
-            <Link
-            to="/agent/list"
-            className={`flex items-center justify-center size-[38px] rounded-lg transition-colors shrink-0 ${
-              location.pathname === '/agent/list' || location.pathname.startsWith('/agent/list') || location.pathname.startsWith('/agent/create')
-                  ? 'bg-[var(--color-info-weak-bg,#eff6ff)]' 
-                  : 'bg-[var(--color-surface-default)] hover:bg-[var(--color-surface-muted)]'
-              }`}
-            >
-              <Icons.Robot 
-                size={22} 
-                stroke={1} 
-              className={location.pathname === '/agent/list' || location.pathname.startsWith('/agent/list') || location.pathname.startsWith('/agent/create') ? 'text-[var(--color-action-primary)]' : 'text-[var(--color-text-muted)]'} 
-              />
-            </Link>
-          </Tooltip>
-
-          {/* Data sources */}
-          <Tooltip content="Data sources" position="right">
-            <Link
-              to="/storage"
-            className={`flex items-center justify-center size-[38px] rounded-lg transition-colors shrink-0 ${
-              location.pathname === '/storage' || (location.pathname.startsWith('/storage/') && location.pathname !== '/storage')
-                  ? 'bg-[var(--color-info-weak-bg,#eff6ff)]' 
-                  : 'bg-[var(--color-surface-default)] hover:bg-[var(--color-surface-muted)]'
-              }`}
-            >
-              <IconDatabase 
-                size={22} 
-                stroke={1} 
-              className={location.pathname === '/storage' || (location.pathname.startsWith('/storage/') && location.pathname !== '/storage') ? 'text-[var(--color-action-primary)]' : 'text-[var(--color-text-muted)]'} 
-              />
-            </Link>
-          </Tooltip>
-
-          {/* MCP tools */}
-          <Tooltip content="MCP tools" position="right">
-            <Link
-              to="/mcp-tools"
-            className={`flex items-center justify-center size-[38px] rounded-lg transition-colors shrink-0 ${
-                location.pathname === '/mcp-tools' 
-                  ? 'bg-[var(--color-info-weak-bg,#eff6ff)]' 
-                  : 'bg-[var(--color-surface-default)] hover:bg-[var(--color-surface-muted)]'
-              }`}
-            >
-              <IconPuzzle 
-                size={22} 
-                stroke={1} 
-                className={location.pathname === '/mcp-tools' ? 'text-[var(--color-action-primary)]' : 'text-[var(--color-text-muted)]'} 
-              />
-            </Link>
-          </Tooltip>
-        </div>
-
-        {/* Settings (Bottom) */}
-      <div className="px-2 pb-3 w-full flex items-center justify-center shrink-0">
+        {/* Bottom Section - Settings */}
+        <div className="flex items-center justify-center">
           <Tooltip content="Settings" position="right">
-            <Link
-              to="/agent"
-            className="flex items-center justify-center size-[38px] rounded-lg bg-[var(--color-surface-default)] hover:bg-[var(--color-surface-muted)] transition-colors shrink-0"
-            >
-              <IconSettings size={22} stroke={1} className="text-[var(--color-text-default)]" />
+            <Link to="/settings" className={buttonClass}>
+              <IconSettings size={22} stroke={1} className="text-[var(--color-text-muted)]" />
             </Link>
           </Tooltip>
+        </div>
       </div>
     </nav>
   );
