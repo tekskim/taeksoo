@@ -119,7 +119,7 @@ export function AgentPageLayout({
           <div className="flex items-center justify-between w-full">
             <div className="flex flex-col items-start justify-center">
               <div className="flex items-center">
-                <h4 className="font-['Mona_Sans:SemiBold',sans-serif] leading-7 not-italic text-[var(--color-text-default)] text-[18px]">
+                <h4 className="text-[18px] leading-7 font-semibold text-[var(--color-text-default)]">
                   {title}
                 </h4>
               </div>
