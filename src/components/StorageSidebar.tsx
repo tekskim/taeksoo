@@ -3,15 +3,15 @@ import { VStack, MenuItem, MenuSection } from '@/design-system';
 import { useDarkMode } from '@/hooks/useDarkMode';
 import {
   IconHome,
+  IconDatabase,
+  IconTemplate,
+  IconCpu,
   IconServer,
-  IconBuildingWarehouse,
   IconDisc,
-  IconCircuitDiode,
-  IconPhoto,
-  IconBucket,
-  IconChartBar,
-  IconLayoutSidebar,
+  IconCube,
+  IconBrandSpeedtest,
   IconArrowLeft,
+  IconLayoutSidebar,
 } from '@tabler/icons-react';
 import { Link, useLocation } from 'react-router-dom';
 import ThakiLogoLight from '@/assets/thakiLogo_light.svg';
@@ -88,10 +88,10 @@ export function StorageSidebar({ isOpen = true, onToggle }: StorageSidebarProps)
             <span>All Services</span>
           </Link>
 
-          {/* Dashboard */}
+          {/* Home */}
           <MenuItem
             icon={<IconHome size={16} stroke={1.5} />}
-            label="Dashboard"
+            label="Home"
             href="/storage"
             active={isActive('/storage')}
           />
@@ -99,25 +99,25 @@ export function StorageSidebar({ isOpen = true, onToggle }: StorageSidebarProps)
           {/* Cluster Section */}
           <MenuSection title="Cluster" defaultOpen={true}>
             <MenuItem
-              icon={<IconServer size={16} stroke={1.5} />}
+              icon={<IconDatabase size={16} stroke={1.5} />}
               label="Pools"
               href="/storage/pools"
               active={isActive('/storage/pools')}
             />
             <MenuItem
-              icon={<IconBuildingWarehouse size={16} stroke={1.5} />}
+              icon={<IconTemplate size={16} stroke={1.5} />}
               label="Hosts"
               href="/storage/hosts"
               active={isActive('/storage/hosts')}
             />
             <MenuItem
-              icon={<IconDisc size={16} stroke={1.5} />}
+              icon={<IconCpu size={16} stroke={1.5} />}
               label="OSDs"
               href="/storage/osds"
               active={isActive('/storage/osds')}
             />
             <MenuItem
-              icon={<IconCircuitDiode size={16} stroke={1.5} />}
+              icon={<IconServer size={16} stroke={1.5} />}
               label="Physical Disks"
               href="/storage/physical-disks"
               active={isActive('/storage/physical-disks')}
@@ -127,7 +127,7 @@ export function StorageSidebar({ isOpen = true, onToggle }: StorageSidebarProps)
           {/* Block Section */}
           <MenuSection title="Block" defaultOpen={true}>
             <MenuItem
-              icon={<IconPhoto size={16} stroke={1.5} />}
+              icon={<IconDisc size={16} stroke={1.5} />}
               label="Images"
               href="/storage/images"
               active={isActive('/storage/images')}
@@ -137,7 +137,7 @@ export function StorageSidebar({ isOpen = true, onToggle }: StorageSidebarProps)
           {/* Object Section */}
           <MenuSection title="Object" defaultOpen={true}>
             <MenuItem
-              icon={<IconBucket size={16} stroke={1.5} />}
+              icon={<IconCube size={16} stroke={1.5} />}
               label="Buckets"
               href="/storage/buckets"
               active={isActive('/storage/buckets')}
@@ -147,7 +147,7 @@ export function StorageSidebar({ isOpen = true, onToggle }: StorageSidebarProps)
           {/* Monitoring Section */}
           <MenuSection title="Monitoring" defaultOpen={true}>
             <MenuItem
-              icon={<IconChartBar size={16} stroke={1.5} />}
+              icon={<IconBrandSpeedtest size={16} stroke={1.5} />}
               label="Overall Performance"
               href="/storage/performance"
               active={isActive('/storage/performance')}

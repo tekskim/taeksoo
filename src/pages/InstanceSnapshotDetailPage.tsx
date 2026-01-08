@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, Link } from 'react-router-dom';
 import {
   Button,
   VStack,
@@ -212,7 +212,7 @@ export function InstanceSnapshotDetailPage() {
   const snapshot = id ? (mockSnapshotsMap[id] || defaultSnapshotDetail) : defaultSnapshotDetail;
 
   // Global tab management
-  const { tabs, activeTabId, closeTab, selectTab, addNewTab, updateActiveTabLabel } = useTabs();
+  const { tabs, activeTabId, closeTab, selectTab, addNewTab, updateActiveTabLabel, moveTab } = useTabs();
 
   // Update tab label when snapshot name changes
   useEffect(() => {
@@ -255,6 +255,7 @@ export function InstanceSnapshotDetailPage() {
             onTabChange={selectTab}
             onTabClose={closeTab}
             onTabAdd={addNewTab}
+            onTabReorder={moveTab}
             showAddButton={true}
             showWindowControls={true}
           />
@@ -280,7 +281,7 @@ export function InstanceSnapshotDetailPage() {
         {/* Scrollable Content Area */}
         <div className="flex-1 overflow-auto overscroll-contain sidebar-scroll">
           {/* Page Content */}
-          <div className="pt-4 px-8 pb-20 bg-[var(--color-surface-default)]">
+          <div className="pt-4 px-8 pb-20 bg-[var(--color-surface-default)] min-h-full">
           <VStack gap={6} className="min-w-[1176px]">
             {/* Snapshot Header Card */}
             <DetailHeader>

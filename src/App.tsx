@@ -17,7 +17,11 @@ import { InstanceTemplateDetailPage } from '@/pages/InstanceTemplateDetailPage';
 import { InstanceSnapshotsPage } from '@/pages/InstanceSnapshotsPage';
 import { InstanceSnapshotDetailPage } from '@/pages/InstanceSnapshotDetailPage';
 import { ImagesPage } from '@/pages/ImagesPage';
+import { ComputeImagesPage } from '@/pages/ComputeImagesPage';
 import { ImageDetailPage } from '@/pages/ImageDetailPage';
+import { ComputeImageDetailPage } from '@/pages/ComputeImageDetailPage';
+import { BucketsPage } from '@/pages/BucketsPage';
+import { BucketDetailPage } from '@/pages/BucketDetailPage';
 import { FlavorsPage } from '@/pages/FlavorsPage';
 import { FlavorDetailPage } from '@/pages/FlavorDetailPage';
 import { KeyPairsPage } from '@/pages/KeyPairsPage';
@@ -65,6 +69,16 @@ import { HostsPage } from '@/pages/HostsPage';
 import HostDetailPage from '@/pages/HostDetailPage';
 import { OSDsPage } from '@/pages/OSDsPage';
 import { OSDDetailPage } from '@/pages/OSDDetailPage';
+import { PhysicalDisksPage } from '@/pages/PhysicalDisksPage';
+import { OverallPerformancePage } from '@/pages/OverallPerformancePage';
+
+// Pages - Container
+import { ContainerDashboardPage } from '@/pages/ContainerDashboardPage';
+
+// Pages - Cloud Builder
+import { CloudBuilderConsolePage } from '@/pages/cloudbuilder/CloudBuilderConsolePage';
+import { CloudBuilderCreatePage } from '@/pages/cloudbuilder/CloudBuilderCreatePage';
+import { CloudBuilderDetailPage } from '@/pages/cloudbuilder/CloudBuilderDetailPage';
 
 // Pages - Design System
 import { DesignSystemPage } from '@/pages/DesignSystemPage';
@@ -77,6 +91,9 @@ import MetallicPalettePage from '@/pages/MetallicPalettePage';
 // Pages - Desktop
 import { DesktopPage } from '@/pages/DesktopPage';
 
+// Layouts
+import { AgentAppLayout } from '@/layouts';
+
 const defaultTabs = [
   { id: 'home', label: 'Home', path: '/compute', closable: true },
 ];
@@ -87,13 +104,26 @@ function AppRoutes() {
         {/* Entry Page */}
         <Route path="/" element={<EntryPage />} />
 
-        {/* Agent Routes */}
-        <Route path="/agent" element={<HomePage />} />
-        <Route path="/agent/list" element={<AgentPage />} />
-        <Route path="/agent/create" element={<CreateAgentPage />} />
-        <Route path="/chat" element={<ChatPage />} />
-        <Route path="/agent/storage" element={<StoragePage />} />
-        <Route path="/mcp-tools" element={<MCPToolsPage />} />
+        {/* Agent Routes - Shared TabBar via AgentAppLayout */}
+        <Route element={<AgentAppLayout />}>
+          <Route path="/agent" element={<HomePage />} />
+          <Route path="/agent/list" element={<AgentPage />} />
+          <Route path="/agent/create" element={<CreateAgentPage />} />
+          <Route path="/chat" element={<ChatPage />} />
+          <Route path="/agent/storage" element={<StoragePage />} />
+          <Route path="/mcp-tools" element={<MCPToolsPage />} />
+        </Route>
+
+        {/* Cloud Builder Routes */}
+        <Route path="/cloudbuilder" element={<CloudBuilderConsolePage />} />
+        <Route path="/cloudbuilder/:slug" element={<CloudBuilderConsolePage />} />
+        <Route path="/cloudbuilder/:slug/create" element={<CloudBuilderCreatePage />} />
+        <Route path="/cloudbuilder/:slug/detail/:id" element={<CloudBuilderDetailPage />} />
+        {/* Backward compatible route */}
+        <Route path="/cloud-builder" element={<CloudBuilderConsolePage />} />
+        <Route path="/cloud-builder/:slug" element={<CloudBuilderConsolePage />} />
+        <Route path="/cloud-builder/:slug/create" element={<CloudBuilderCreatePage />} />
+        <Route path="/cloud-builder/:slug/detail/:id" element={<CloudBuilderDetailPage />} />
 
         {/* Compute Routes */}
         <Route path="/compute" element={<ComputeHomePage />} />
@@ -104,8 +134,8 @@ function AppRoutes() {
         <Route path="/compute/instance-templates/:id" element={<InstanceTemplateDetailPage />} />
         <Route path="/compute/instance-snapshots" element={<InstanceSnapshotsPage />} />
         <Route path="/compute/instance-snapshots/:id" element={<InstanceSnapshotDetailPage />} />
-        <Route path="/compute/images" element={<ImagesPage />} />
-        <Route path="/compute/images/:id" element={<ImageDetailPage />} />
+        <Route path="/compute/images" element={<ComputeImagesPage />} />
+        <Route path="/compute/images/:id" element={<ComputeImageDetailPage />} />
         <Route path="/compute/flavors" element={<FlavorsPage />} />
         <Route path="/compute/flavors/:id" element={<FlavorDetailPage />} />
         <Route path="/compute/key-pairs" element={<KeyPairsPage />} />
@@ -147,6 +177,16 @@ function AppRoutes() {
         <Route path="/storage/hosts/:id" element={<HostDetailPage />} />
         <Route path="/storage/osds" element={<OSDsPage />} />
         <Route path="/storage/osds/:id" element={<OSDDetailPage />} />
+        <Route path="/storage/physical-disks" element={<PhysicalDisksPage />} />
+        <Route path="/storage/images" element={<ImagesPage />} />
+        <Route path="/storage/images/:id" element={<ImageDetailPage />} />
+        <Route path="/storage/buckets" element={<BucketsPage />} />
+        <Route path="/storage/buckets/:id" element={<BucketDetailPage />} />
+        <Route path="/storage/performance" element={<OverallPerformancePage />} />
+
+        {/* Container Routes */}
+        <Route path="/container" element={<ContainerDashboardPage />} />
+        <Route path="/container/*" element={<ContainerDashboardPage />} />
 
         {/* Design System Routes */}
         <Route path="/design" element={<DesignSystemPage />} />

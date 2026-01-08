@@ -20,6 +20,10 @@ import {
   StatusIndicator,
   SearchInput,
   Pagination,
+  DatePicker,
+  Drawer,
+  Select,
+  FormField,
   type TableColumn,
 } from '@/design-system';
 import { StorageSidebar } from '@/components/StorageSidebar';
@@ -34,6 +38,20 @@ import {
   IconArrowsMaximize,
   IconArrowsMinimize,
 } from '@tabler/icons-react';
+import { Siren } from 'lucide-react';
+
+/* ----------------------------------------
+   Custom Identify Icon (now using Siren from lucide-react)
+   ---------------------------------------- */
+
+interface IdentifyIconProps {
+  size?: number;
+  className?: string;
+}
+
+function IdentifyIcon({ size = 16, className }: IdentifyIconProps) {
+  return <Siren size={size} className={className} strokeWidth={1.5} />;
+}
 
 /* ----------------------------------------
    Chart Colors
@@ -323,66 +341,17 @@ function HostMonitoringTimeControls({ onTimeRangeChange, onRefresh }: HostMonito
               </div>
             </div>
 
-            {/* Month Navigation */}
-            <div className="calendarMonthNav">
-              <button className="calendarNavBtn" onClick={prevMonthNav}>
-                <IconChevronLeft size={16} stroke={1.5} />
-              </button>
-              <span className="calendarMonthLabel">
-                {viewMonth.getFullYear()}.{(viewMonth.getMonth() + 1).toString().padStart(2, '0')}
-              </span>
-              <button className="calendarNavBtn" onClick={nextMonthNav}>
-                <IconChevronRight size={16} stroke={1.5} />
-              </button>
-            </div>
-
-            {/* Weekday Headers */}
-            <div className="calendarWeekdays">
-              {weekDays.map(day => (
-                <div key={day} className="calendarWeekday">{day}</div>
-              ))}
-            </div>
-
-            {/* Calendar Grid */}
-            <div className="calendarGrid">
-              {getDaysInMonth(viewMonth).map((day, index) => {
-                const isStart = isStartDate(day.date);
-                const isEnd = isEndDate(day.date);
-                const inRange = isDateInRange(day.date);
-                const colIndex = index % 7;
-                const isFirstCol = colIndex === 0;
-                const isLastCol = colIndex === 6;
-                
-                const wrapperClasses = [
-                  'calendarDayWrapper',
-                  inRange && 'inRange',
-                  isStart && 'rangeStart',
-                  isEnd && 'rangeEnd',
-                  isFirstCol && 'firstCol',
-                  isLastCol && 'lastCol',
-                ].filter(Boolean).join(' ');
-                
-                const dayClasses = [
-                  'calendarDay',
-                  !day.isCurrentMonth && 'calendarDayOther',
-                  (isStart || isEnd) && 'calendarDaySelected',
-                  day.isToday && 'calendarDayToday',
-                ].filter(Boolean).join(' ');
-                
-                return (
-                  <div key={index} className={wrapperClasses}>
-                    {inRange && <div className="rangeBackground" />}
-                    <button
-                      className={dayClasses}
-                      onClick={() => handleDayClick(day.date)}
-                    >
-                      <span>{day.date.getDate()}</span>
-                      {day.isToday && <span className="calendarTodayDot" />}
-                    </button>
-                  </div>
-                );
-              })}
-            </div>
+            {/* DatePicker from Design System */}
+            <DatePicker
+              mode="range"
+              rangeValue={{ start: tempStartDate, end: tempEndDate }}
+              onRangeChange={(range) => {
+                setTempStartDate(range.start);
+                setTempEndDate(range.end);
+                setSelectingStart(!range.start || !!range.end);
+              }}
+              maxDate={new Date()}
+            />
 
             {/* Actions */}
             <div className="calendarActions">
@@ -419,6 +388,7 @@ interface HostPerformanceChartProps {
   isFullScreen?: boolean;
   onFullScreen?: () => void;
   onExitFullScreen?: () => void;
+  timeControls?: React.ReactNode;
 }
 
 function HostPerformanceChart({
@@ -429,6 +399,7 @@ function HostPerformanceChart({
   isFullScreen = false,
   onFullScreen,
   onExitFullScreen,
+  timeControls,
 }: HostPerformanceChartProps) {
   const [visibleSeries, setVisibleSeries] = useState<Record<string, boolean>>(
     Object.fromEntries(series.map(s => [s.name, true]))
@@ -506,7 +477,7 @@ function HostPerformanceChart({
       data: timeLabels,
       axisLine: { show: false },
       axisTick: { show: false },
-      axisLabel: { color: chartColors.slate400, fontSize: 10 },
+      axisLabel: { color: chartColors.slate400, fontSize: 10, padding: [0, 0, 0, 15] },
       boundaryGap: false
     },
     yAxis: {
@@ -531,6 +502,14 @@ function HostPerformanceChart({
         color: tooltipTextColor, 
         fontSize: 11, 
         fontFamily: 'Mona Sans, -apple-system, BlinkMacSystemFont, sans-serif' 
+      },
+      formatter: (params: Array<{ marker: string; seriesName: string; value: number; axisValueLabel: string }>) => {
+        if (!Array.isArray(params) || params.length === 0) return '';
+        const time = params[0].axisValueLabel;
+        const items = params.map(p => 
+          `<div style="display: flex; align-items: center; gap: 8px;"><span style="display: inline-block; width: 8px; height: 8px; border-radius: 9999px; background-color: ${p.color};"></span><span>${p.seriesName}</span><span style="font-weight: 500; margin-left: auto;">${p.value}</span></div>`
+        ).join('');
+        return `<div style="font-size: 11px; font-family: Mona Sans, -apple-system, BlinkMacSystemFont, sans-serif;">${time}<div style="margin-top: 4px;">${items}</div></div>`;
       }
     },
     series: series
@@ -555,6 +534,9 @@ function HostPerformanceChart({
         {/* Header */}
         <div className="chartHeader">
           <span className="chartTitle">{title}</span>
+          {isFullScreen && timeControls && (
+            <div className="chartHeaderCenter">{timeControls}</div>
+          )}
           <div className="chartControls">
             {/* Toggle Button - only show for multiple series */}
             {series.length > 1 && (
@@ -613,7 +595,7 @@ function HostPerformanceChart({
               ref={chartRef}
               option={option}
               style={{ 
-                height: isFullScreen ? 'calc(100vh - 200px)' : '214px', 
+                height: isFullScreen ? 'calc(100vh - 200px)' : '100%', 
                 width: isFullScreen ? 'calc(100vw - 300px)' : '100%'
               }}
               notMerge={true}
@@ -718,6 +700,7 @@ function HostChartWithFullScreen({
                 yAxisUnit={fullScreenChart.yAxisUnit}
                 isFullScreen={true}
                 onExitFullScreen={() => { setFullScreenChart(null); setContainerReady(false); }}
+                timeControls={<HostMonitoringTimeControls />}
               />
             )}
           </div>
@@ -747,6 +730,7 @@ interface PhysicalDisk {
   model: string;
   size: string;
   osd: string;
+  identifyTimer?: number | null;
 }
 
 interface Daemon {
@@ -820,10 +804,10 @@ const mockHostData: Record<string, HostDetail> = {
       { id: 'dev-5', deviceId: 'LENOVO_MG09SCA14TE_2540A00MF2AJ', deviceName: 'sdd', daemons: ['osd.5'] },
     ],
     physicalDisks: [
-      { id: 'disk-1', devicePath: '/dev/sda', type: 'SSD', available: false, vendor: '', model: 'KIOXIA KCD8DPUG3T20', size: '2.9 TiB', osd: 'osd.2' },
-      { id: 'disk-2', devicePath: '/dev/sda', type: 'SSD', available: false, vendor: '', model: 'KIOXIA KCD8DPUG3T20', size: '2.9 TiB', osd: 'osd.2' },
-      { id: 'disk-3', devicePath: '/dev/sda', type: 'SSD', available: false, vendor: '', model: 'KIOXIA KCD8DPUG3T20', size: '2.9 TiB', osd: 'osd.2' },
-      { id: 'disk-4', devicePath: '/dev/sda', type: 'SSD', available: false, vendor: '', model: 'KIOXIA KCD8DPUG3T20', size: '2.9 TiB', osd: 'osd.2' },
+      { id: 'disk-1', devicePath: '/dev/sda', type: 'SSD', available: false, vendor: '', model: 'KIOXIA KCD8DPUG3T20', size: '2.9 TiB', osd: 'osd.2', identifyTimer: null },
+      { id: 'disk-2', devicePath: '/dev/sdb', type: 'SSD', available: false, vendor: '', model: 'KIOXIA KCD8DPUG3T20', size: '2.9 TiB', osd: 'osd.3', identifyTimer: null },
+      { id: 'disk-3', devicePath: '/dev/sdc', type: 'SSD', available: false, vendor: '', model: 'KIOXIA KCD8DPUG3T20', size: '2.9 TiB', osd: 'osd.4', identifyTimer: null },
+      { id: 'disk-4', devicePath: '/dev/sdd', type: 'SSD', available: false, vendor: '', model: 'KIOXIA KCD8DPUG3T20', size: '2.9 TiB', osd: 'osd.5', identifyTimer: null },
     ],
     daemons: [
       { id: 'daemon-1', status: 'running', daemonName: 'mon.bdv2kr1-cephobj02', version: '19.2.3', lastRefreshed: '5 minutes ago', cpuUsage: 88.17, cpuStatus: 'chunking', memoryUsage: '18.4 GiB', daemonEvents: 'A month ago - daemon:mds.cephfs-test.bdv2kr1-cephobj02.lrphgq' },
@@ -919,11 +903,85 @@ export default function HostDetailPage() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [activeDetailTab, setActiveDetailTab] = useState('details');
 
+  // Identify drawer state
+  const [isIdentifyDrawerOpen, setIsIdentifyDrawerOpen] = useState(false);
+  const [selectedDiskId, setSelectedDiskId] = useState<string | null>(null);
+  const [identifyDuration, setIdentifyDuration] = useState('1');
+  
+  // Timer state for each disk (in seconds)
+  const [diskTimers, setDiskTimers] = useState<Record<string, number>>({});
+
+  // Duration options for identify
+  const durationOptions = [
+    { value: '1', label: '1 minute' },
+    { value: '2', label: '2 minutes' },
+    { value: '5', label: '5 minutes' },
+    { value: '10', label: '10 minutes' },
+    { value: '15', label: '15 minutes' },
+  ];
+
   // Global tab management
-  const { tabs, activeTabId, closeTab, selectTab, addNewTab } = useTabs();
+  const { tabs, activeTabId, closeTab, selectTab, addNewTab, updateActiveTabLabel, moveTab } = useTabs();
 
   // Get host data
   const host = id ? mockHostData[id] : null;
+
+  // Update tab label to match the host name (most recent breadcrumb)
+  useEffect(() => {
+    if (host?.hostname) {
+      updateActiveTabLabel(host.hostname);
+    }
+  }, [host?.hostname, updateActiveTabLabel]);
+
+  // Countdown effect for disk timers
+  useEffect(() => {
+    const activeTimers = Object.entries(diskTimers).filter(([, time]) => time > 0);
+    if (activeTimers.length === 0) return;
+
+    const interval = setInterval(() => {
+      setDiskTimers((prev) => {
+        const updated = { ...prev };
+        for (const [diskId, time] of Object.entries(updated)) {
+          if (time > 0) {
+            updated[diskId] = time - 1;
+          }
+          // Remove timer when it reaches 0
+          if (updated[diskId] <= 0) {
+            delete updated[diskId];
+          }
+        }
+        return updated;
+      });
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [diskTimers]);
+
+  // Handle identify disk - open drawer
+  const handleIdentify = (diskId: string) => {
+    setSelectedDiskId(diskId);
+    setIdentifyDuration('1'); // Reset to default
+    setIsIdentifyDrawerOpen(true);
+  };
+
+  // Handle execute identify
+  const handleExecuteIdentify = () => {
+    if (selectedDiskId) {
+      // Convert minutes to seconds
+      const durationInSeconds = parseInt(identifyDuration, 10) * 60;
+      setDiskTimers((prev) => ({
+        ...prev,
+        [selectedDiskId]: durationInSeconds,
+      }));
+    }
+    setIsIdentifyDrawerOpen(false);
+  };
+
+  // Handle close identify drawer
+  const handleCloseIdentifyDrawer = () => {
+    setIsIdentifyDrawerOpen(false);
+    setSelectedDiskId(null);
+  };
 
   // Table column definitions
   const deviceColumns: TableColumn<Device>[] = [
@@ -963,13 +1021,44 @@ export default function HostDetailPage() {
       sortable: true,
       render: (_, row) => row.osd ? <Chip value={row.osd} /> : null,
     },
+    {
+      key: 'identify',
+      label: 'Identify',
+      width: 80,
+      align: 'center',
+      sortable: false,
+      render: (_, row) => {
+        const formatTime = (seconds: number) => {
+          const mins = Math.floor(seconds / 60);
+          const secs = seconds % 60;
+          return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+        };
+        
+        const timer = diskTimers[row.id] ?? row.identifyTimer;
+        
+        if (timer && timer > 0) {
+          return (
+            <span className="text-[11px] font-medium text-[#ff851a]">{formatTime(timer)}</span>
+          );
+        }
+        return (
+          <button
+            onClick={() => handleIdentify(row.id)}
+            className="p-1 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+            aria-label="Identify disk"
+          >
+            <IdentifyIcon size={16} className="text-[var(--color-text-default)]" />
+          </button>
+        );
+      },
+    },
   ];
 
   const daemonColumns: TableColumn<Daemon>[] = [
     {
       key: 'status',
       label: 'Status',
-      width: 56,
+      width: '60px',
       align: 'center',
       render: (_, row) => {
         const statusMap: Record<string, 'active' | 'maintenance' | 'down'> = {
@@ -1068,11 +1157,14 @@ export default function HostDetailPage() {
       >
         {/* Tab Bar */}
         <TabBar
-          tabs={tabs}
-          activeTabId={activeTabId}
-          onTabClick={selectTab}
+          tabs={tabs.map(tab => ({ id: tab.id, label: tab.label, closable: tab.closable }))}
+          activeTab={activeTabId}
+          onTabChange={selectTab}
           onTabClose={closeTab}
-          onNewTab={addNewTab}
+          onTabAdd={addNewTab}
+            onTabReorder={moveTab}
+          showAddButton={true}
+          showWindowControls={true}
         />
 
         {/* Top Bar */}
@@ -1103,8 +1195,8 @@ export default function HostDetailPage() {
         {/* Scrollable Content Area */}
         <div className="flex-1 overflow-auto min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll">
           {/* Page Content */}
-          <div className="pt-4 px-8 pb-20 bg-[var(--color-surface-default)]">
-            <VStack gap={6} className="min-w-[1176px] max-w-[1320px]">
+          <div className="pt-4 px-8 pb-20 bg-[var(--color-surface-default)] min-h-full">
+            <VStack gap={6} className="min-w-[1176px]">
               {/* Detail Header */}
               <DetailHeader>
                 <DetailHeader.Title>{host.hostname}</DetailHeader.Title>
@@ -1220,7 +1312,7 @@ export default function HostDetailPage() {
                   <TabPanel value="physical-disks" className="pt-0">
                     <VStack gap={3} className="pt-4">
                       {/* Header */}
-                      <div className="flex items-center justify-between w-full">
+                      <div className="flex items-center h-7">
                         <h3 className="text-[length:var(--font-size-16)] font-semibold leading-6 text-[var(--color-text-default)]">
                           Physical Disks
                         </h3>
@@ -1259,7 +1351,7 @@ export default function HostDetailPage() {
                   <TabPanel value="daemon" className="pt-0">
                     <VStack gap={3} className="pt-4">
                       {/* Header */}
-                      <div className="flex items-center justify-between w-full">
+                      <div className="flex items-center h-7">
                         <h3 className="text-[length:var(--font-size-16)] font-semibold leading-6 text-[var(--color-text-default)]">
                           Daemon
                         </h3>
@@ -1298,10 +1390,11 @@ export default function HostDetailPage() {
                   <TabPanel value="device-health" className="pt-0">
                     <div className="flex gap-4 pt-4">
                       {/* Left Panel - Device List */}
-                      <div className="w-[224px] shrink-0 bg-white border border-[var(--color-border-default)] rounded-lg p-3 flex flex-col gap-3">
-                        <h4 className="text-[14px] font-medium leading-5 text-[#314158]">
+                      <div className="w-[224px] shrink-0 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg p-3 flex flex-col gap-3">
+                        <h6 className="text-[length:var(--font-size-14)] font-semibold leading-[var(--line-height-20)] text-[var(--color-text-default)]">
                           Device health
-                        </h4>
+                        </h6>
+                        <div className="w-full h-px bg-[var(--color-border-subtle)]" />
                         <div className="flex flex-col">
                           {host.deviceHealth.map((device) => {
                             const isSelected = (selectedDeviceHealth || host.deviceHealth[0]?.id) === device.id;
@@ -1336,20 +1429,20 @@ export default function HostDetailPage() {
                               <div className="flex gap-2">
                                 <button
                                   onClick={() => setDeviceHealthTab('device-info')}
-                                  className={`flex-1 py-2.5 px-4 text-[14px] font-medium leading-4 rounded-md transition-colors ${
+                                  className={`flex-1 py-2.5 px-4 text-[14px] font-medium leading-4 rounded-md border transition-colors ${
                                     deviceHealthTab === 'device-info'
-                                      ? 'bg-white border border-[var(--color-border-default)] text-[var(--color-action-primary)]'
-                                      : 'text-[var(--color-text-default)]'
+                                      ? 'bg-[var(--color-surface-default)] border-[var(--color-border-default)] text-[var(--color-action-primary)]'
+                                      : 'border-transparent text-[var(--color-text-default)]'
                                   }`}
                                 >
                                   Device information
                                 </button>
                                 <button
                                   onClick={() => setDeviceHealthTab('smart')}
-                                  className={`flex-1 py-2.5 px-4 text-[14px] font-medium leading-4 rounded-md transition-colors ${
+                                  className={`flex-1 py-2.5 px-4 text-[14px] font-medium leading-4 rounded-md border transition-colors ${
                                     deviceHealthTab === 'smart'
-                                      ? 'bg-white border border-[var(--color-border-default)] text-[var(--color-action-primary)]'
-                                      : 'text-[var(--color-text-default)]'
+                                      ? 'bg-[var(--color-surface-default)] border-[var(--color-border-default)] text-[var(--color-action-primary)]'
+                                      : 'border-transparent text-[var(--color-text-default)]'
                                   }`}
                                 >
                                   SMART
@@ -1359,17 +1452,17 @@ export default function HostDetailPage() {
                             
                             {/* Content */}
                             {deviceHealthTab === 'device-info' && (
-                              <div className="bg-white border border-[var(--color-border-default)] rounded-md p-4 flex flex-col gap-3">
+                              <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-md p-4 flex flex-col gap-3">
                                 <h4 className="text-[14px] font-medium leading-5 text-[var(--color-text-default)]">
                                   Device Information
                                 </h4>
                                 
                                 <div className="flex flex-col gap-1.5">
                                   <span className="text-[11px] font-medium leading-4 text-[var(--color-text-subtle)]">
-                                    smartctl output
+                                    Smartctl Output
                                   </span>
-                                  <div className="bg-[#0f172a] rounded-md p-4 h-[281px] overflow-auto">
-                                    <pre className="font-mono text-[12px] leading-[18px] text-white whitespace-pre-wrap">
+                                  <div className="bg-[var(--color-surface-contrast)] rounded-md p-4 overflow-x-auto">
+                                    <pre className="font-[family-name:var(--font-mono)] text-[12px] leading-[18px] text-white whitespace-pre-wrap">
                                       {selectedDeviceData.smartctlOutput}
                                     </pre>
                                   </div>
@@ -1381,55 +1474,55 @@ export default function HostDetailPage() {
                               <>
                                 {/* Info/Status Message based on SMART status */}
                                 {selectedDeviceData?.smartStatus === 'passed' && (
-                                  <div className="bg-[#f0fdf4] rounded-md p-3 flex items-start gap-2">
+                                  <div className="bg-[var(--color-state-success-bg)] rounded-md p-3 flex items-start gap-2">
                                     <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" className="shrink-0 mt-0.5">
-                                      <path d="M8 14C11.3137 14 14 11.3137 14 8C14 4.68629 11.3137 2 8 2C4.68629 2 2 4.68629 2 8C2 11.3137 4.68629 14 8 14Z" stroke="#16a34a" strokeLinecap="round" strokeLinejoin="round"/>
-                                      <path d="M5.5 8L7.16667 9.66667L10.5 6.33333" stroke="#16a34a" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                                      <path d="M8 14C11.3137 14 14 11.3137 14 8C14 4.68629 11.3137 2 8 2C4.68629 2 2 4.68629 2 8C2 11.3137 4.68629 14 8 14Z" stroke="var(--color-state-success)" strokeLinecap="round" strokeLinejoin="round"/>
+                                      <path d="M5.5 8L7.16667 9.66667L10.5 6.33333" stroke="var(--color-state-success)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
                                     </svg>
-                                    <span className="text-[12px] leading-4 text-[#0f172a]">
+                                    <span className="text-[12px] leading-4 text-[var(--color-text-default)]">
                                       SMART overall-health self-assessment test result: <strong>passed</strong>
                                     </span>
                                   </div>
                                 )}
                                 {selectedDeviceData?.smartStatus === 'unavailable' && (
-                                  <div className="bg-[#eff6ff] rounded-md p-3 flex items-start gap-2">
+                                  <div className="bg-[var(--color-state-info-bg)] rounded-md p-3 flex items-start gap-2">
                                     <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" className="shrink-0 mt-0.5">
-                                      <path d="M8 14C11.3137 14 14 11.3137 14 8C14 4.68629 11.3137 2 8 2C4.68629 2 2 4.68629 2 8C2 11.3137 4.68629 14 8 14Z" stroke="#2563eb" strokeLinecap="round" strokeLinejoin="round"/>
-                                      <path d="M8 10.6667V8" stroke="#2563eb" strokeLinecap="round" strokeLinejoin="round"/>
-                                      <path d="M8 5.33333H8.00667" stroke="#2563eb" strokeLinecap="round" strokeLinejoin="round"/>
+                                      <path d="M8 14C11.3137 14 14 11.3137 14 8C14 4.68629 11.3137 2 8 2C4.68629 2 2 4.68629 2 8C2 11.3137 4.68629 14 8 14Z" stroke="var(--color-state-info)" strokeLinecap="round" strokeLinejoin="round"/>
+                                      <path d="M8 10.6667V8" stroke="var(--color-state-info)" strokeLinecap="round" strokeLinejoin="round"/>
+                                      <path d="M8 5.33333H8.00667" stroke="var(--color-state-info)" strokeLinecap="round" strokeLinejoin="round"/>
                                     </svg>
-                                    <span className="text-[12px] leading-4 text-[#0f172a]">
+                                    <span className="text-[12px] leading-4 text-[var(--color-text-default)]">
                                       No SMART data available for this device.
                                     </span>
                                   </div>
                                 )}
                                 {selectedDeviceData?.smartStatus === 'loading' && (
-                                  <div className="bg-[#eff6ff] rounded-md p-3 flex items-start gap-2">
+                                  <div className="bg-[var(--color-state-info-bg)] rounded-md p-3 flex items-start gap-2">
                                     <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" className="shrink-0 mt-0.5">
-                                      <path d="M8 14C11.3137 14 14 11.3137 14 8C14 4.68629 11.3137 2 8 2C4.68629 2 2 4.68629 2 8C2 11.3137 4.68629 14 8 14Z" stroke="#2563eb" strokeLinecap="round" strokeLinejoin="round"/>
-                                      <path d="M8 10.6667V8" stroke="#2563eb" strokeLinecap="round" strokeLinejoin="round"/>
-                                      <path d="M8 5.33333H8.00667" stroke="#2563eb" strokeLinecap="round" strokeLinejoin="round"/>
+                                      <path d="M8 14C11.3137 14 14 11.3137 14 8C14 4.68629 11.3137 2 8 2C4.68629 2 2 4.68629 2 8C2 11.3137 4.68629 14 8 14Z" stroke="var(--color-state-info)" strokeLinecap="round" strokeLinejoin="round"/>
+                                      <path d="M8 10.6667V8" stroke="var(--color-state-info)" strokeLinecap="round" strokeLinejoin="round"/>
+                                      <path d="M8 5.33333H8.00667" stroke="var(--color-state-info)" strokeLinecap="round" strokeLinejoin="round"/>
                                     </svg>
-                                    <span className="text-[12px] leading-4 text-[#0f172a]">
+                                    <span className="text-[12px] leading-4 text-[var(--color-text-default)]">
                                       SMART data is loading.
                                     </span>
                                   </div>
                                 )}
                                 {selectedDeviceData?.smartStatus === 'failed' && (
-                                  <div className="bg-[#fef2f2] rounded-md p-3 flex items-start gap-2">
+                                  <div className="bg-[var(--color-state-danger-bg)] rounded-md p-3 flex items-start gap-2">
                                     <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" className="shrink-0 mt-0.5">
-                                      <path d="M8 14C11.3137 14 14 11.3137 14 8C14 4.68629 11.3137 2 8 2C4.68629 2 2 4.68629 2 8C2 11.3137 4.68629 14 8 14Z" stroke="#dc2626" strokeLinecap="round" strokeLinejoin="round"/>
-                                      <path d="M10 6L6 10" stroke="#dc2626" strokeLinecap="round" strokeLinejoin="round"/>
-                                      <path d="M6 6L10 10" stroke="#dc2626" strokeLinecap="round" strokeLinejoin="round"/>
+                                      <path d="M8 14C11.3137 14 14 11.3137 14 8C14 4.68629 11.3137 2 8 2C4.68629 2 2 4.68629 2 8C2 11.3137 4.68629 14 8 14Z" stroke="var(--color-state-danger)" strokeLinecap="round" strokeLinejoin="round"/>
+                                      <path d="M10 6L6 10" stroke="var(--color-state-danger)" strokeLinecap="round" strokeLinejoin="round"/>
+                                      <path d="M6 6L10 10" stroke="var(--color-state-danger)" strokeLinecap="round" strokeLinejoin="round"/>
                                     </svg>
-                                    <span className="text-[12px] leading-4 text-[#0f172a]">
+                                    <span className="text-[12px] leading-4 text-[var(--color-text-default)]">
                                       SMART overall-health self-assessment test result: <strong>failed</strong>
                                     </span>
                                   </div>
                                 )}
 
                                 {/* SMART Card */}
-                                <div className="bg-white border border-[var(--color-border-default)] rounded-md p-4 flex flex-col gap-3">
+                                <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-md p-4 flex flex-col gap-3">
                                   <h4 className="text-[14px] font-medium leading-5 text-[var(--color-text-default)]">
                                     SMART
                                   </h4>
@@ -1463,7 +1556,7 @@ export default function HostDetailPage() {
                   <TabPanel value="performance" className="pt-0">
                     <VStack gap={4} className="pt-4">
                       {/* Monitoring Time Controls */}
-                      <div className="flex justify-end w-full">
+                      <div className="flex justify-start w-full">
                         <HostMonitoringTimeControls
                           onTimeRangeChange={(value) => console.log('Time range changed:', value)}
                           onRefresh={() => console.log('Refresh clicked')}
@@ -1642,6 +1735,49 @@ export default function HostDetailPage() {
           </div>
         </div>
       </main>
+
+      {/* Identify Drawer */}
+      <Drawer
+        isOpen={isIdentifyDrawerOpen}
+        onClose={handleCloseIdentifyDrawer}
+        title="Identify device"
+        width={360}
+        footer={
+          <div className="flex gap-2 w-full">
+            <Button
+              variant="secondary"
+              onClick={handleCloseIdentifyDrawer}
+              className="flex-1"
+            >
+              Cancel
+            </Button>
+            <Button
+              variant="primary"
+              onClick={handleExecuteIdentify}
+              className="flex-1"
+            >
+              Execute
+            </Button>
+          </div>
+        }
+      >
+        <div className="flex flex-col gap-6">
+          <p className="text-[length:var(--font-size-12)] leading-[var(--line-height-16)] text-[var(--color-text-subtle)]">
+            Please enter the duration how long to indicate the LED.
+          </p>
+          <FormField>
+            <FormField.Label>Duration</FormField.Label>
+            <FormField.Control>
+              <Select
+                options={durationOptions}
+                value={identifyDuration}
+                onChange={(value) => setIdentifyDuration(value)}
+                fullWidth
+              />
+            </FormField.Control>
+          </FormField>
+        </div>
+      </Drawer>
     </div>
   );
 }

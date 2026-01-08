@@ -202,7 +202,7 @@ function Card({ title, children, className = '', bgColor = 'bg-[var(--color-surf
    ---------------------------------------- */
 export function ComputeHomePage() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
-  const { tabs, activeTabId, selectTab, closeTab, addNewTab } = useTabs();
+  const { tabs, activeTabId, selectTab, closeTab, addNewTab, moveTab } = useTabs();
   const [copied, setCopied] = useState(false);
   const navigate = useNavigate();
 
@@ -233,6 +233,7 @@ export function ComputeHomePage() {
             onTabChange={selectTab}
             onTabClose={closeTab}
             onTabAdd={addNewTab}
+            onTabReorder={moveTab}
             showAddButton={true}
             showWindowControls={true}
             onWindowClose={() => navigate('/')}
@@ -461,4 +462,5 @@ export function ComputeHomePage() {
 }
 
 export default ComputeHomePage;
+
 

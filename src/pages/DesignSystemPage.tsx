@@ -38,6 +38,7 @@ import {
   Breadcrumb,
   StatusIndicator,
   VStack,
+  HStack,
   MenuItem,
   MenuSection,
   MenuDivider,
@@ -47,7 +48,10 @@ import {
   DetailHeader,
   SectionCard,
   Drawer,
+  MonitoringToolbar,
+  NotificationCenter,
 } from '@/design-system';
+import type { NotificationItem } from '@/design-system/components/NotificationCenter';
 import {
   // Navigation icons (for sidebar)
   IconPalette,
@@ -139,8 +143,10 @@ import {
   IconCamera,
   IconPhoto,
   IconFile,
+  IconFileText,
   IconArchive,
   IconTemplate,
+  IconCode,
   // System - Monitoring & Analytics
   IconTerminal,
   IconTerminal2,
@@ -241,6 +247,8 @@ const patternItems = [
   { id: 'context-menu', label: 'Context Menu', icon: IconMenu2 },
   { id: 'modal', label: 'Modal', icon: IconLayoutGrid },
   { id: 'drawer', label: 'Drawer', icon: IconLayoutGrid },
+  { id: 'monitoring-toolbar', label: 'Monitoring Toolbar', icon: IconRefresh },
+  { id: 'notification-center', label: 'Notification Center', icon: IconBell },
   { id: 'layout', label: 'Layout', icon: IconLayoutSidebar },
 ];
 
@@ -263,6 +271,294 @@ const componentItems = [
 
 // All items for intersection observer
 const navItems = [...foundationItems, ...componentItems];
+
+/* ----------------------------------------
+   Notification Center Section
+   ---------------------------------------- */
+
+function NotificationCenterSection() {
+  const [notifications, setNotifications] = useState<NotificationItem[]>([
+    {
+      id: '1',
+      type: 'success',
+      message: 'Instance "web-server-01" created successfully.',
+      time: '10:23',
+      project: 'Proj1',
+      isRead: false,
+      detail: {
+        code: 200,
+        message: 'Instance created with 4 vCPUs, 8GB RAM, and 100GB storage.',
+      },
+    },
+    {
+      id: '2',
+      type: 'success',
+      message: 'Volume "data-vol-01" attached to instance.',
+      time: '10:15',
+      project: 'Proj1',
+      isRead: false,
+    },
+    {
+      id: '3',
+      type: 'error',
+      message: 'Failed to create volume "data-vol-02".',
+      time: '09:30',
+      project: 'Proj2',
+      isRead: false,
+      detail: {
+        code: 400,
+        message: "Flavor's disk is smaller than the minimum size specified in image metadata. Flavor disk is 1073741824 bytes, minimum size is 10737418240 bytes.",
+      },
+    },
+    {
+      id: '4',
+      type: 'warning',
+      message: 'Instance "db-server" is running low on disk space.',
+      time: '09:15',
+      project: 'Proj1',
+      isRead: true,
+      detail: {
+        code: 'WARN_DISK_LOW',
+        message: 'Disk usage is at 92%. Consider expanding the volume or cleaning up unused files.',
+      },
+    },
+    {
+      id: '5',
+      type: 'info',
+      message: 'System maintenance scheduled for tomorrow.',
+      time: 'Yesterday',
+      isRead: true,
+    },
+  ]);
+
+  const [selectedId, setSelectedId] = useState<string | undefined>();
+
+  const handleMarkAsRead = (id: string) => {
+    setNotifications((prev) =>
+      prev.map((n) => (n.id === id ? { ...n, isRead: true } : n))
+    );
+  };
+
+  const handleMarkAllAsRead = () => {
+    setNotifications((prev) => prev.map((n) => ({ ...n, isRead: true })));
+  };
+
+  return (
+    <Section
+      id="notification-center"
+      title="Notification Center"
+      description="Centralized notification panel with filtering, read/unread states, and real-time updates"
+    >
+      <VStack gap={8}>
+        {/* Design Tokens */}
+        <VStack gap={3}>
+          <Label>Design Tokens</Label>
+          <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
+            <code>width: 360px</code> · <code>padding: 16px</code> · <code>border-radius: 8px</code> · <code>shadow: lg</code>
+          </div>
+        </VStack>
+
+        {/* Live Demo */}
+        <VStack gap={3}>
+          <Label>Live Demo</Label>
+          <div className="flex justify-center p-6 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)]">
+            <NotificationCenter
+              notifications={notifications}
+              onMarkAsRead={handleMarkAsRead}
+              onMarkAllAsRead={handleMarkAllAsRead}
+              onNotificationClick={(n) => setSelectedId(n.id)}
+              selectedId={selectedId}
+            />
+          </div>
+        </VStack>
+
+        {/* Notification Types */}
+        <VStack gap={3}>
+          <Label>Notification Types</Label>
+          <div className="grid grid-cols-4 gap-4">
+            <div className="p-3 bg-[var(--color-surface-default)] rounded-[var(--radius-md)] border border-[var(--color-border-default)]">
+              <div className="flex items-center gap-2 mb-2">
+                <div className="w-5 h-5 rounded-full bg-[var(--color-state-success)] bg-opacity-20 flex items-center justify-center">
+                  <IconCheck size={12} className="text-[var(--color-state-success)]" />
+                </div>
+                <span className="text-[length:var(--font-size-12)] font-medium text-[var(--color-text-default)]">Success</span>
+              </div>
+              <p className="text-[length:var(--font-size-11)] text-[var(--color-text-muted)]">Operation completed</p>
+            </div>
+            <div className="p-3 bg-[var(--color-surface-default)] rounded-[var(--radius-md)] border border-[var(--color-border-default)]">
+              <div className="flex items-center gap-2 mb-2">
+                <div className="w-5 h-5 rounded-full bg-[var(--color-state-danger)] bg-opacity-20 flex items-center justify-center">
+                  <IconX size={12} className="text-[var(--color-state-danger)]" />
+                </div>
+                <span className="text-[length:var(--font-size-12)] font-medium text-[var(--color-text-default)]">Error</span>
+              </div>
+              <p className="text-[length:var(--font-size-11)] text-[var(--color-text-muted)]">Operation failed</p>
+            </div>
+            <div className="p-3 bg-[var(--color-surface-default)] rounded-[var(--radius-md)] border border-[var(--color-border-default)]">
+              <div className="flex items-center gap-2 mb-2">
+                <div className="w-5 h-5 rounded-full bg-[var(--color-state-warning)] bg-opacity-20 flex items-center justify-center">
+                  <IconAlertTriangle size={12} className="text-[var(--color-state-warning)]" />
+                </div>
+                <span className="text-[length:var(--font-size-12)] font-medium text-[var(--color-text-default)]">Warning</span>
+              </div>
+              <p className="text-[length:var(--font-size-11)] text-[var(--color-text-muted)]">Attention needed</p>
+            </div>
+            <div className="p-3 bg-[var(--color-surface-default)] rounded-[var(--radius-md)] border border-[var(--color-border-default)]">
+              <div className="flex items-center gap-2 mb-2">
+                <div className="w-5 h-5 rounded-full bg-[var(--color-state-info)] bg-opacity-20 flex items-center justify-center">
+                  <IconInfoCircle size={12} className="text-[var(--color-state-info)]" />
+                </div>
+                <span className="text-[length:var(--font-size-12)] font-medium text-[var(--color-text-default)]">Info</span>
+              </div>
+              <p className="text-[length:var(--font-size-11)] text-[var(--color-text-muted)]">General information</p>
+            </div>
+          </div>
+        </VStack>
+
+        {/* Features */}
+        <VStack gap={3}>
+          <Label>Features</Label>
+          <div className="grid grid-cols-2 gap-4">
+            <div className="p-4 bg-[var(--color-surface-default)] rounded-[var(--radius-md)] border border-[var(--color-border-default)]">
+              <h4 className="text-[length:var(--font-size-12)] font-medium text-[var(--color-text-default)] mb-2">Tab Filtering</h4>
+              <p className="text-[length:var(--font-size-11)] text-[var(--color-text-muted)]">
+                Filter notifications by All, Unread, or Error status with counts displayed on each tab.
+              </p>
+            </div>
+            <div className="p-4 bg-[var(--color-surface-default)] rounded-[var(--radius-md)] border border-[var(--color-border-default)]">
+              <h4 className="text-[length:var(--font-size-12)] font-medium text-[var(--color-text-default)] mb-2">Mark as Read</h4>
+              <p className="text-[length:var(--font-size-11)] text-[var(--color-text-muted)]">
+                Mark individual notifications or all notifications as read with a single click.
+              </p>
+            </div>
+            <div className="p-4 bg-[var(--color-surface-default)] rounded-[var(--radius-md)] border border-[var(--color-border-default)]">
+              <h4 className="text-[length:var(--font-size-12)] font-medium text-[var(--color-text-default)] mb-2">Project Tags</h4>
+              <p className="text-[length:var(--font-size-11)] text-[var(--color-text-muted)]">
+                Optional project tags help identify which project a notification belongs to.
+              </p>
+            </div>
+            <div className="p-4 bg-[var(--color-surface-default)] rounded-[var(--radius-md)] border border-[var(--color-border-default)]">
+              <h4 className="text-[length:var(--font-size-12)] font-medium text-[var(--color-text-default)] mb-2">Selection State</h4>
+              <p className="text-[length:var(--font-size-11)] text-[var(--color-text-muted)]">
+                Click on a notification to select it and view more details or take actions.
+              </p>
+            </div>
+          </div>
+        </VStack>
+
+        {/* Props */}
+        <VStack gap={3}>
+          <Label>Props</Label>
+          <div className="overflow-x-auto">
+            <table className="w-full text-[length:var(--font-size-12)]">
+              <thead>
+                <tr className="border-b border-[var(--color-border-default)]">
+                  <th className="text-left py-2 pr-4 font-medium text-[var(--color-text-subtle)]">Prop</th>
+                  <th className="text-left py-2 pr-4 font-medium text-[var(--color-text-subtle)]">Type</th>
+                  <th className="text-left py-2 pr-4 font-medium text-[var(--color-text-subtle)]">Default</th>
+                  <th className="text-left py-2 font-medium text-[var(--color-text-subtle)]">Description</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr className="border-b border-[var(--color-border-subtle)]">
+                  <td className="py-2 pr-4 font-mono text-[var(--color-action-primary)]">notifications</td>
+                  <td className="py-2 pr-4 text-[var(--color-text-muted)]">NotificationItem[]</td>
+                  <td className="py-2 pr-4 text-[var(--color-text-muted)]">required</td>
+                  <td className="py-2 text-[var(--color-text-default)]">List of notification items</td>
+                </tr>
+                <tr className="border-b border-[var(--color-border-subtle)]">
+                  <td className="py-2 pr-4 font-mono text-[var(--color-action-primary)]">onMarkAsRead</td>
+                  <td className="py-2 pr-4 text-[var(--color-text-muted)]">(id: string) =&gt; void</td>
+                  <td className="py-2 pr-4 text-[var(--color-text-muted)]">-</td>
+                  <td className="py-2 text-[var(--color-text-default)]">Callback when notification is marked as read</td>
+                </tr>
+                <tr className="border-b border-[var(--color-border-subtle)]">
+                  <td className="py-2 pr-4 font-mono text-[var(--color-action-primary)]">onMarkAllAsRead</td>
+                  <td className="py-2 pr-4 text-[var(--color-text-muted)]">() =&gt; void</td>
+                  <td className="py-2 pr-4 text-[var(--color-text-muted)]">-</td>
+                  <td className="py-2 text-[var(--color-text-default)]">Callback when all marked as read</td>
+                </tr>
+                <tr className="border-b border-[var(--color-border-subtle)]">
+                  <td className="py-2 pr-4 font-mono text-[var(--color-action-primary)]">onNotificationClick</td>
+                  <td className="py-2 pr-4 text-[var(--color-text-muted)]">(n: NotificationItem) =&gt; void</td>
+                  <td className="py-2 pr-4 text-[var(--color-text-muted)]">-</td>
+                  <td className="py-2 text-[var(--color-text-default)]">Callback when notification is clicked</td>
+                </tr>
+                <tr className="border-b border-[var(--color-border-subtle)]">
+                  <td className="py-2 pr-4 font-mono text-[var(--color-action-primary)]">selectedId</td>
+                  <td className="py-2 pr-4 text-[var(--color-text-muted)]">string</td>
+                  <td className="py-2 pr-4 text-[var(--color-text-muted)]">-</td>
+                  <td className="py-2 text-[var(--color-text-default)]">Currently selected notification id</td>
+                </tr>
+                <tr>
+                  <td className="py-2 pr-4 font-mono text-[var(--color-action-primary)]">onClose</td>
+                  <td className="py-2 pr-4 text-[var(--color-text-muted)]">() =&gt; void</td>
+                  <td className="py-2 pr-4 text-[var(--color-text-muted)]">-</td>
+                  <td className="py-2 text-[var(--color-text-default)]">Callback when panel is closed</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </VStack>
+
+        {/* NotificationItem Interface */}
+        <VStack gap={3}>
+          <Label>NotificationItem Interface</Label>
+          <div className="overflow-x-auto">
+            <table className="w-full text-[length:var(--font-size-12)]">
+              <thead>
+                <tr className="border-b border-[var(--color-border-default)]">
+                  <th className="text-left py-2 pr-4 font-medium text-[var(--color-text-subtle)]">Property</th>
+                  <th className="text-left py-2 pr-4 font-medium text-[var(--color-text-subtle)]">Type</th>
+                  <th className="text-left py-2 pr-4 font-medium text-[var(--color-text-subtle)]">Required</th>
+                  <th className="text-left py-2 font-medium text-[var(--color-text-subtle)]">Description</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr className="border-b border-[var(--color-border-subtle)]">
+                  <td className="py-2 pr-4 font-mono text-[var(--color-action-primary)]">id</td>
+                  <td className="py-2 pr-4 text-[var(--color-text-muted)]">string</td>
+                  <td className="py-2 pr-4 text-[var(--color-text-muted)]">Yes</td>
+                  <td className="py-2 text-[var(--color-text-default)]">Unique identifier</td>
+                </tr>
+                <tr className="border-b border-[var(--color-border-subtle)]">
+                  <td className="py-2 pr-4 font-mono text-[var(--color-action-primary)]">type</td>
+                  <td className="py-2 pr-4 text-[var(--color-text-muted)]">'success' | 'error' | 'warning' | 'info'</td>
+                  <td className="py-2 pr-4 text-[var(--color-text-muted)]">Yes</td>
+                  <td className="py-2 text-[var(--color-text-default)]">Notification type</td>
+                </tr>
+                <tr className="border-b border-[var(--color-border-subtle)]">
+                  <td className="py-2 pr-4 font-mono text-[var(--color-action-primary)]">message</td>
+                  <td className="py-2 pr-4 text-[var(--color-text-muted)]">string</td>
+                  <td className="py-2 pr-4 text-[var(--color-text-muted)]">Yes</td>
+                  <td className="py-2 text-[var(--color-text-default)]">Main message text</td>
+                </tr>
+                <tr className="border-b border-[var(--color-border-subtle)]">
+                  <td className="py-2 pr-4 font-mono text-[var(--color-action-primary)]">time</td>
+                  <td className="py-2 pr-4 text-[var(--color-text-muted)]">string</td>
+                  <td className="py-2 pr-4 text-[var(--color-text-muted)]">Yes</td>
+                  <td className="py-2 text-[var(--color-text-default)]">Timestamp string</td>
+                </tr>
+                <tr className="border-b border-[var(--color-border-subtle)]">
+                  <td className="py-2 pr-4 font-mono text-[var(--color-action-primary)]">project</td>
+                  <td className="py-2 pr-4 text-[var(--color-text-muted)]">string</td>
+                  <td className="py-2 pr-4 text-[var(--color-text-muted)]">No</td>
+                  <td className="py-2 text-[var(--color-text-default)]">Project name tag</td>
+                </tr>
+                <tr>
+                  <td className="py-2 pr-4 font-mono text-[var(--color-action-primary)]">isRead</td>
+                  <td className="py-2 pr-4 text-[var(--color-text-muted)]">boolean</td>
+                  <td className="py-2 pr-4 text-[var(--color-text-muted)]">No</td>
+                  <td className="py-2 text-[var(--color-text-default)]">Whether notification has been read</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </VStack>
+      </VStack>
+    </Section>
+  );
+}
 
 /* ----------------------------------------
    DatePicker Section (with state)
@@ -582,7 +878,8 @@ const baseChartOptions = {
     axisTick: { show: false },
     axisLabel: {
       color: chartColors.slate400,
-      fontSize: 10
+      fontSize: 10,
+      padding: [0, 0, 0, 15]
     },
     boundaryGap: false
   },
@@ -603,6 +900,14 @@ const baseChartOptions = {
     backgroundColor: 'white',
     borderColor: '#e2e8f0',
     textStyle: { color: chartColors.slate800, fontSize: 11 },
+    formatter: (params: Array<{ marker: string; seriesName: string; value: number; axisValueLabel: string }>) => {
+      if (!Array.isArray(params) || params.length === 0) return '';
+      const time = params[0].axisValueLabel;
+      const items = params.map(p => 
+        `<div style="display: flex; align-items: center; gap: 8px;"><span style="display: inline-block; width: 8px; height: 8px; border-radius: 9999px; background-color: ${p.color};"></span><span>${p.seriesName}</span><span style="font-weight: 500; margin-left: auto;">${p.value}</span></div>`
+      ).join('');
+      return `<div style="font-size: 11px;">${time}<div style="margin-top: 4px;">${items}</div></div>`;
+    },
     axisPointer: {
       type: 'line',
       snap: true,
@@ -1010,77 +1315,28 @@ function TimeControls({
               >
                 <span className="calendarDateLabel">START</span>
                 <span className="calendarDateValue">{formatCalendarDate(tempStartDate)}</span>
-          </div>
+              </div>
               <div className="calendarDateSeparator">~</div>
-          <div 
+              <div 
                 className={`calendarDateBox ${!selectingStart ? 'calendarDateBoxActive' : ''}`}
                 onClick={() => setSelectingStart(false)}
-          >
+              >
                 <span className="calendarDateLabel">END</span>
                 <span className="calendarDateValue">{formatCalendarDate(tempEndDate)}</span>
-          </div>
+              </div>
             </div>
 
-            {/* Month Navigation */}
-            <div className="calendarMonthNav">
-              <button className="calendarNavBtn" onClick={prevMonth}>
-                <IconChevronLeft size={16} stroke={1.5} />
-              </button>
-              <span className="calendarMonthLabel">
-                {viewMonth.getFullYear()}.{(viewMonth.getMonth() + 1).toString().padStart(2, '0')}
-              </span>
-              <button className="calendarNavBtn" onClick={nextMonth}>
-                <IconChevronRight size={16} stroke={1.5} />
-              </button>
-            </div>
-
-            {/* Weekday Headers */}
-            <div className="calendarWeekdays">
-              {weekDays.map(day => (
-                <div key={day} className="calendarWeekday">{day}</div>
-              ))}
-            </div>
-
-            {/* Calendar Grid */}
-            <div className="calendarGrid">
-              {getDaysInMonth(viewMonth).map((day, index) => {
-                const isStart = isStartDate(day.date);
-                const isEnd = isEndDate(day.date);
-                const inRange = isDateInRange(day.date);
-                const colIndex = index % 7;
-                const isFirstCol = colIndex === 0;
-                const isLastCol = colIndex === 6;
-                
-                const wrapperClasses = [
-                  'calendarDayWrapper',
-                  inRange && 'inRange',
-                  isStart && 'rangeStart',
-                  isEnd && 'rangeEnd',
-                  isFirstCol && 'firstCol',
-                  isLastCol && 'lastCol',
-                ].filter(Boolean).join(' ');
-                
-                const dayClasses = [
-                  'calendarDay',
-                  !day.isCurrentMonth && 'calendarDayOther',
-                  (isStart || isEnd) && 'calendarDaySelected',
-                  day.isToday && 'calendarDayToday',
-                ].filter(Boolean).join(' ');
-                
-                return (
-                  <div key={index} className={wrapperClasses}>
-                    {inRange && <div className="rangeBackground" />}
-                    <button
-                      className={dayClasses}
-                      onClick={() => handleDayClick(day.date)}
-                    >
-                      <span>{day.date.getDate()}</span>
-                      {day.isToday && <span className="calendarTodayDot" />}
-                    </button>
-                  </div>
-                );
-              })}
-            </div>
+            {/* DatePicker from Design System */}
+            <DatePicker
+              mode="range"
+              rangeValue={{ start: tempStartDate, end: tempEndDate }}
+              onRangeChange={(range) => {
+                setTempStartDate(range.start);
+                setTempEndDate(range.end);
+                setSelectingStart(!range.start || !!range.end);
+              }}
+              maxDate={new Date()}
+            />
 
             {/* Actions */}
             <div className="calendarActions">
@@ -1103,7 +1359,7 @@ function LineChart({
   title, 
   series, 
   yAxisFormatter = (v: number) => `${v}`,
-  height = '200px',
+  height = '100%',
   onFullScreen,
   isFullScreen = false,
   onExitFullScreen,
@@ -1137,6 +1393,12 @@ function LineChart({
     if (onFullScreen) onFullScreen();
   };
 
+  // Calculate y-axis bounds for exactly 5 labels
+  const visibleData = series.filter(s => visibleSeries[s.name]).flatMap(s => s.data);
+  const dataMax = visibleData.length > 0 ? Math.max(...visibleData) : 100;
+  const niceMax = Math.ceil(dataMax / 4) * 4; // Round up to nearest multiple of 4
+  const yInterval = niceMax / 4; // 4 intervals = 5 labels
+
   const option = {
     animation: false,
     grid: {
@@ -1153,12 +1415,16 @@ function LineChart({
       axisTick: { show: false },
       axisLabel: {
         color: chartColors.slate400,
-        fontSize: 10
+        fontSize: 10,
+        padding: [0, 0, 0, 15]
       },
       boundaryGap: false
         },
         yAxis: {
       type: 'value' as const,
+      min: 0,
+      max: niceMax,
+      interval: yInterval,
       axisLine: { show: false },
       axisTick: { show: false },
       splitLine: {
@@ -1178,6 +1444,14 @@ function LineChart({
         color: chartColors.slate800, 
         fontSize: 11, 
         fontFamily: 'Mona Sans, -apple-system, BlinkMacSystemFont, sans-serif' 
+      },
+      formatter: (params: Array<{ marker: string; seriesName: string; value: number; axisValueLabel: string; color: string }>) => {
+        if (!Array.isArray(params) || params.length === 0) return '';
+        const time = params[0].axisValueLabel;
+        const items = params.map(p => 
+          `<div style="display: flex; align-items: center; gap: 8px;"><span style="display: inline-block; width: 8px; height: 8px; border-radius: 9999px; background-color: ${p.color};"></span><span>${p.seriesName}</span><span style="font-weight: 500; margin-left: auto;">${yAxisFormatter(p.value)}</span></div>`
+        ).join('');
+        return `<div style="font-size: 11px;">${time}<div style="margin-top: 4px;">${items}</div></div>`;
       }
     },
     series: series
@@ -1256,8 +1530,8 @@ function LineChart({
       
       {/* Chart Body */}
       <div className="chartBody">
-        <div className="chartWrapper" style={isFullScreen ? { height: '100%' } : undefined}>
-          <ReactECharts option={option} style={{ height: isFullScreen ? '100%' : height }} notMerge={true} />
+        <div className="chartWrapper">
+          <ReactECharts option={option} style={{ height: '100%', width: '100%' }} notMerge={true} />
         </div>
         <div className="chartLegend">
           {series.map((s, i) => (
@@ -1297,7 +1571,7 @@ function ChartWithFullScreen({
   title,
   series,
   yAxisFormatter = (v: number) => `${v}`,
-  height = '200px'
+  height = '100%'
 }: {
   title: string;
   series: LineChartSeries[];
@@ -1409,7 +1683,7 @@ function QuotaBarDemo({ label, used, total, unit }: { label: string; used: numbe
   );
 }
 
-function AreaChartDemo({ variant }: { variant: 'basic' | 'stacked' }) {
+function AreaChartDemo({ variant }: { variant: 'basic' | 'stacked' | 'nodata' }) {
   // Basic variant - Network Traffic (single series)
   const networkTrafficSeries: LineChartSeries[] = [
     { name: 'Traffic', data: [120, 180, 150, 220, 280, 240], color: chartColors.cyan400 },
@@ -1420,6 +1694,21 @@ function AreaChartDemo({ variant }: { variant: 'basic' | 'stacked' }) {
       <ChartWithFullScreen 
         title="Network Traffic"
         series={networkTrafficSeries}
+        yAxisFormatter={(v) => `${v} MB/s`}
+        height="200px"
+      />
+    );
+  }
+
+  // No data variant
+  if (variant === 'nodata') {
+    const emptySeriesData: LineChartSeries[] = [
+      { name: 'Traffic', data: [], color: chartColors.cyan400 },
+    ];
+    return (
+      <ChartWithFullScreen 
+        title="Network Traffic"
+        series={emptySeriesData}
         yAxisFormatter={(v) => `${v} MB/s`}
         height="200px"
       />
@@ -1500,10 +1789,11 @@ function PieChartDemo({
       padding: [8, 12],
       textStyle: {
         color: '#1e293b',
-        fontSize: 11
+        fontSize: 11,
+        fontFamily: 'Mona Sans, -apple-system, BlinkMacSystemFont, sans-serif'
       },
-      formatter: (params: { marker: string; name: string; value: number; percent: number }) => {
-        return `${params.marker} ${params.name}<br/><span style="font-weight: 600; margin-left: 14px;">${params.value} (${params.percent.toFixed(0)}%)</span>`;
+      formatter: (params: { marker: string; name: string; value: number; percent: number; color: string }) => {
+        return `<span style="display: inline-block; width: 8px; height: 8px; border-radius: 9999px; background-color: ${params.color}; margin-right: 6px;"></span>${params.name}<br/><span style="font-weight: 500; margin-left: 14px;">${params.value} (${params.percent.toFixed(0)}%)</span>`;
       }
     },
     animation: false,
@@ -1521,7 +1811,8 @@ function PieChartDemo({
           },
           fontSize: 12,
           fontWeight: 600,
-          color: '#ffffff'
+          color: '#ffffff',
+          fontFamily: 'Mona Sans, -apple-system, BlinkMacSystemFont, sans-serif'
         } : {
           show: false
         },
@@ -1561,10 +1852,107 @@ function PieChartDemo({
 }
 
 /* ----------------------------------------
+   Doughnut Chart Demo (ECharts - matches SingleValueDoughnutCard from storage)
+   ---------------------------------------- */
+
+function DoughnutChartDemo({ 
+  title, 
+  value,
+  color
+}: { 
+  title: string; 
+  value: number;
+  color?: string;
+}) {
+  const getColor = (cssVar: string, fallback: string) => {
+    if (typeof window !== 'undefined') {
+      const val = getComputedStyle(document.documentElement).getPropertyValue(cssVar).trim();
+      return val || fallback;
+    }
+    return fallback;
+  };
+
+  const mainColor = color || getColor('--color-status-error', '#ef4444');
+  const bgColor = getColor('--color-border-subtle', '#e2e8f0');
+
+  const getOption = () => ({
+    tooltip: {
+      show: false
+    },
+    animation: false,
+    series: [
+      {
+        type: 'pie',
+        radius: ['68%', '80%'],
+        center: ['50%', '50%'],
+        avoidLabelOverlap: false,
+        silent: true,
+        itemStyle: {
+          borderRadius: 0,
+          borderWidth: 0
+        },
+        label: {
+          show: false
+        },
+        labelLine: {
+          show: false
+        },
+        emphasis: {
+          disabled: true
+        },
+        data: [
+          { value: value, itemStyle: { color: mainColor } },
+          { value: 100 - value, itemStyle: { color: bgColor } }
+        ]
+      }
+    ],
+    graphic: [
+      {
+        type: 'text',
+        left: 'center',
+        top: 'middle',
+        style: {
+          text: `${value}%`,
+          textAlign: 'center',
+          textVerticalAlign: 'middle',
+          fill: getColor('--color-text-default', '#0f172a'),
+          fontSize: 18,
+          fontWeight: 500,
+          fontFamily: 'Mona Sans, -apple-system, BlinkMacSystemFont, sans-serif'
+        }
+      }
+    ]
+  });
+
+  return (
+    <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] p-5 flex flex-col gap-4 w-[280px]">
+      <span className="text-[length:var(--font-size-13)] font-medium text-[var(--color-text-default)]">{title}</span>
+      <div className="flex justify-center">
+        <ReactECharts option={getOption()} style={{ height: '180px', width: '180px' }} />
+      </div>
+    </div>
+  );
+}
+
+/* ----------------------------------------
    Half-Doughnut Chart Demo (ECharts - from storage-dashboard)
    ---------------------------------------- */
 
-function HalfDoughnutChartDemo({ value, label, status = 'default' }: { value: number; label: string; status?: 'default' | 'success' | 'warning' | 'error' }) {
+function HalfDoughnutChartDemo({ value, label, status = 'default', used, total, unit }: { value: number; label: string; status?: 'default' | 'success' | 'warning' | 'error'; used?: number; total?: number; unit?: string }) {
+  const [showTooltip, setShowTooltip] = useState(false);
+  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+  const containerRef = useRef<HTMLDivElement>(null);
+  
+  // Chart dimensions
+  const chartWidth = 180;
+  const chartHeight = 160;
+  const centerX = chartWidth * 0.5; // 50%
+  const centerY = chartHeight * 0.65; // 65%
+  const radius = Math.min(chartWidth, chartHeight) * 0.45; // 90% of half
+  const arcWidth = 14;
+  const innerRadius = radius - arcWidth;
+  const outerRadius = radius;
+  
   // Get color from design system CSS variables
   const getColor = (cssVar: string, fallback: string) => {
     if (typeof window !== 'undefined') {
@@ -1582,6 +1970,46 @@ function HalfDoughnutChartDemo({ value, label, status = 'default' }: { value: nu
   };
 
   const color = colorMap[status];
+  const available = total !== undefined && used !== undefined ? total - used : 0;
+  const availablePercent = total !== undefined && used !== undefined ? Math.round((available / total) * 100) : 0;
+
+  // Check if mouse is over the gauge arc
+  const isOverGaugeArc = (mx: number, my: number) => {
+    const dx = mx - centerX;
+    const dy = my - centerY;
+    const distance = Math.sqrt(dx * dx + dy * dy);
+    
+    // Check if within the arc ring
+    if (distance < innerRadius - 4 || distance > outerRadius + 4) return false;
+    
+    // Check if within the arc angle range (210° to -30°, which is 210° to 330° in standard coords)
+    // Convert to angle: atan2 gives -PI to PI, we need to convert
+    let angle = Math.atan2(-dy, dx) * (180 / Math.PI); // Negate dy because canvas Y is inverted
+    if (angle < 0) angle += 360;
+    
+    // The gauge goes from 210° (start) to 330° (-30° = 330°) clockwise
+    // In standard math coords: 210° is bottom-left, 330° is bottom-right
+    return angle >= 150 && angle <= 330; // Approximate visible arc range
+  };
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (containerRef.current) {
+      const rect = containerRef.current.getBoundingClientRect();
+      const relX = e.clientX - rect.left;
+      const relY = e.clientY - rect.top;
+      
+      // Adjust for padding (p-4 = 16px)
+      const chartX = relX - 16;
+      const chartY = relY - 16;
+      
+      setMousePos({ x: relX, y: relY });
+      setShowTooltip(isOverGaugeArc(chartX, chartY));
+    }
+  };
+
+  const handleMouseLeave = () => {
+    setShowTooltip(false);
+  };
 
   const getOption = () => ({
     series: [
@@ -1625,12 +2053,44 @@ function HalfDoughnutChartDemo({ value, label, status = 'default' }: { value: nu
   });
 
   return (
-    <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] p-4 relative">
-      <ReactECharts option={getOption()} style={{ height: '160px', width: '180px' }} />
-      <div className="absolute inset-0 flex flex-col items-center justify-center pt-8">
-        <span className="text-[24px] leading-[28px] font-semibold text-[var(--color-text-default)]">{value}%</span>
-        <span className="text-[12px] text-[var(--color-text-subtle)]">{label}</span>
+    <div 
+      ref={containerRef}
+      className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] p-4 relative"
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
+    >
+      <div className="relative">
+        <ReactECharts option={getOption()} style={{ height: '160px', width: '180px' }} />
       </div>
+      <div className="absolute inset-0 flex flex-col items-center justify-center pt-8 pointer-events-none">
+        <span className="text-[24px] leading-[28px] font-semibold text-[var(--color-text-default)]">{value}%</span>
+        {used !== undefined && total !== undefined ? (
+          <span className="text-[12px] text-[var(--color-text-subtle)]">{used}{unit}/{total}{unit}</span>
+        ) : (
+          <span className="text-[12px] text-[var(--color-text-subtle)]">{label}</span>
+        )}
+      </div>
+      
+      {/* Tooltip */}
+      {showTooltip && used !== undefined && total !== undefined && (
+        <div 
+          className="absolute z-10 backdrop-blur-[40px] bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px] shadow-[0px_0px_4px_0px_rgba(0,0,0,0.1)] px-2 py-1.5 flex flex-col gap-1 pointer-events-none"
+          style={{ left: mousePos.x + 12, top: mousePos.y + 12 }}
+        >
+          <div className="flex items-center gap-1.5">
+            <div className="w-[5px] h-[5px] rounded-[1px]" style={{ backgroundColor: color }} />
+            <span className="text-[11px] leading-[14px] text-[var(--color-text-default)] whitespace-nowrap">
+              Used: {used}{unit} ({value}%)
+            </span>
+          </div>
+          <div className="flex items-center gap-1.5">
+            <div className="w-[5px] h-[5px] rounded-[1px] bg-[var(--color-border-subtle)]" />
+            <span className="text-[11px] leading-[14px] text-[var(--color-text-default)] whitespace-nowrap">
+              Available: {available.toFixed(1)}{unit} ({availablePercent}%)
+            </span>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
@@ -1695,13 +2155,15 @@ function SingleValueDoughnutDemo({
       {
         type: 'text',
         left: 'center',
-        top: '46%',
+        top: 'middle',
         style: {
           text: `${value}%`,
           textAlign: 'center',
+          textVerticalAlign: 'middle',
           fill: getColor('--color-text-default', '#0f172a'),
           fontSize: 18,
-          fontWeight: 600
+          fontWeight: 500,
+          fontFamily: 'Mona Sans, -apple-system, BlinkMacSystemFont, sans-serif'
         }
       }
     ]
@@ -1720,24 +2182,49 @@ function SingleValueDoughnutDemo({
    ---------------------------------------- */
 
 function TabBarDemo() {
+  const tabCounterRef = useRef(4);
+  
   const { tabs, activeTab, addTab, closeTab, selectTab } = useTabBar({
     initialTabs: [
-      { id: 'tab-1', label: 'Dashboard', closable: true },
+      { id: 'tab-1', label: 'Entry page', closable: true },
       { id: 'tab-2', label: 'Settings', closable: true },
       { id: 'tab-3', label: 'Profile', closable: true },
     ],
     initialActiveTab: 'tab-1',
   });
 
-  let tabCounter = 4;
+  // Many tabs demo
+  const manyTabsDemo = useTabBar({
+    initialTabs: [
+      { id: 'many-1', label: 'Dashboard', closable: true },
+      { id: 'many-2', label: 'Instance Templates', closable: true },
+      { id: 'many-3', label: 'Virtual Machines', closable: true },
+      { id: 'many-4', label: 'Storage Volumes', closable: true },
+      { id: 'many-5', label: 'Network Settings', closable: true },
+      { id: 'many-6', label: 'Security Groups', closable: true },
+      { id: 'many-7', label: 'Load Balancers', closable: true },
+      { id: 'many-8', label: 'Monitoring', closable: true },
+    ],
+    initialActiveTab: 'many-1',
+  });
 
   const handleAddTab = () => {
+    const counter = tabCounterRef.current;
     addTab({
-      id: `tab-${tabCounter}`,
-      label: `New Tab ${tabCounter}`,
+      id: `tab-${counter}-${Date.now()}`,
+      label: `New Tab ${counter}`,
       closable: true,
     });
-    tabCounter++;
+    tabCounterRef.current++;
+  };
+
+  const handleAddManyTab = () => {
+    const counter = manyTabsDemo.tabs.length + 1;
+    manyTabsDemo.addTab({
+      id: `many-${counter}-${Date.now()}`,
+      label: `New Tab ${counter}`,
+      closable: true,
+    });
   };
 
   return (
@@ -1746,13 +2233,24 @@ function TabBarDemo() {
       <VStack gap={3}>
         <Label>Design Tokens</Label>
         <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
-          <code>height: 36px</code> · <code>tab-width: 100-200px</code> · <code>padding-x: 12px</code> · <code>font: 12px</code>
+          <code>height: 36px</code> · <code>max-width: 160px</code> · <code>padding-x: 12px</code> · <code>font: 12px</code>
         </div>
+      </VStack>
+
+      {/* Features */}
+      <VStack gap={3}>
+        <Label>Features</Label>
+        <ul className="list-disc list-outside pl-4 space-y-1 text-[length:var(--font-size-12)] leading-[var(--line-height-18)] text-[var(--color-text-default)]">
+          <li>탭 최대 너비 160px, 긴 타이틀은 truncate 처리</li>
+          <li>탭이 많아지면 비율적으로 너비가 줄어듦 (스크롤 없음)</li>
+          <li>탭 추가/닫기 기능</li>
+          <li>윈도우 컨트롤 (최소화/최대화/닫기)</li>
+        </ul>
       </VStack>
 
       {/* Interactive Demo */}
       <VStack gap={3}>
-        <Label>Interactive Demo</Label>
+        <Label>Interactive Demo (3 tabs)</Label>
         <div className="w-full border border-[var(--color-border-default)] rounded-[var(--radius-md)] overflow-hidden">
           <TabBar
             tabs={tabs}
@@ -1768,6 +2266,24 @@ function TabBarDemo() {
         <p className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
           Click tabs to switch, click × to close, click + to add new tabs
         </p>
+      </VStack>
+
+      {/* Many Tabs Demo */}
+      <VStack gap={3}>
+        <Label>Many Tabs Demo (8 tabs - 비율 축소)</Label>
+        <div className="w-full border border-[var(--color-border-default)] rounded-[var(--radius-md)] overflow-hidden">
+          <TabBar
+            tabs={manyTabsDemo.tabs}
+            activeTab={manyTabsDemo.activeTab}
+            onTabChange={manyTabsDemo.selectTab}
+            onTabClose={manyTabsDemo.closeTab}
+            onTabAdd={handleAddManyTab}
+            showAddButton={true}
+          />
+          <div className="h-[80px] flex items-center justify-center bg-[var(--color-surface-default)] text-[var(--color-text-muted)] text-[length:var(--font-size-12)]">
+            탭이 많아지면 모든 탭이 화면에 보이도록 너비가 비율적으로 줄어듭니다.
+          </div>
+        </div>
       </VStack>
 
       {/* With Icons */}
@@ -1811,7 +2327,7 @@ function TabBarDemo() {
         <div className="w-full border border-[var(--color-border-default)] rounded-[var(--radius-md)] overflow-hidden">
           <TabBar
             tabs={[
-              { id: 'tab-1', label: 'Dashboard', closable: true },
+              { id: 'tab-1', label: 'Entry page', closable: true },
               { id: 'tab-2', label: 'Analytics', closable: true },
               { id: 'tab-3', label: 'Reports', closable: true },
               { id: 'tab-4', label: 'Users', closable: true },
@@ -2044,7 +2560,7 @@ function TableDemo() {
       flex: 1,
       render: (_: string, row: KeyPairData) => (
         <div className="flex items-center gap-2">
-          <span className="font-mono text-[length:var(--font-size-11)] text-[var(--color-text-default)]">{row.fingerprint}</span>
+          <span className="text-[length:var(--font-size-12)] leading-[var(--line-height-18)] text-[var(--color-text-default)]">{row.fingerprint}</span>
           <button
             onClick={(e) => {
               e.stopPropagation();
@@ -2060,6 +2576,27 @@ function TableDemo() {
             )}
           </button>
         </div>
+      )
+    },
+    { key: 'createdAt', label: 'Created At', width: '140px' },
+  ];
+
+  // Columns without copy button (40px row height demo)
+  const noCopyColumns = [
+    { 
+      key: 'name', 
+      label: 'Name', 
+      width: '180px',
+      render: (value: string) => (
+        <span className="text-[var(--color-action-primary)] cursor-pointer hover:underline hover:underline-offset-2">{value}</span>
+      )
+    },
+    { 
+      key: 'fingerprint', 
+      label: 'Fingerprint', 
+      flex: 1,
+      render: (_: string, row: KeyPairData) => (
+        <span className="text-[length:var(--font-size-12)] leading-[var(--line-height-18)] text-[var(--color-text-default)]">{row.fingerprint}</span>
       )
     },
     { key: 'createdAt', label: 'Created At', width: '140px' },
@@ -2104,9 +2641,11 @@ function TableDemo() {
     <VStack gap={8}>
       {/* Tokens */}
       <VStack gap={3}>
-        <Label>Design Tokens</Label>
+        <Label>Design Tokens & Features</Label>
         <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
           <code>cell-padding: 12×10px</code> · <code>header-padding: 12×8px</code> · <code>radius: 8px</code> · <code>font: 12px</code>
+          <br />
+          <span className="text-[var(--color-text-muted)]">Features:</span> <code>overflow-x: auto</code> · <code>text-overflow: ellipsis</code> · <code>title tooltip on hover</code>
         </div>
       </VStack>
 
@@ -2165,6 +2704,17 @@ function TableDemo() {
         </p>
       </VStack>
 
+      {/* 40px Row Height */}
+      <VStack gap={3}>
+        <Label>40PX</Label>
+        <Table
+          columns={noCopyColumns}
+          data={sampleKeyPairData}
+          rowKey="id"
+          rowHeight="40px"
+        />
+      </VStack>
+
       {/* Sticky Header */}
       <VStack gap={3}>
         <Label>Sticky Header (scroll to see effect)</Label>
@@ -2182,9 +2732,9 @@ function TableDemo() {
         </p>
       </VStack>
 
-      {/* Horizontal Scroll */}
+      {/* Horizontal Scroll & Text Truncation */}
       <VStack gap={3}>
-        <Label>Horizontal Scroll (max-width: 500px)</Label>
+        <Label>Horizontal Scroll & Text Truncation (max-width: 500px)</Label>
         <div className="max-w-[500px] border border-dashed border-[var(--color-border-default)] rounded-[var(--radius-md)] p-2 overflow-hidden">
           <Table
             columns={compactColumns}
@@ -2193,7 +2743,9 @@ function TableDemo() {
           />
         </div>
         <p className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
-          Shift + Mouse wheel or trackpad swipe to scroll horizontally
+          • Horizontal scroll: Shift + Mouse wheel or trackpad swipe<br />
+          • Long text is truncated with ellipsis (...)<br />
+          • Hover over truncated text to see full content via tooltip
         </p>
       </VStack>
 
@@ -2217,7 +2769,10 @@ function TableDemo() {
 
 export function DesignSystemPage() {
   const [activeSection, setActiveSection] = useState('token-architecture');
-  const [searchQuery, setSearchQuery] = useState('');
+  const [sidebarSearchQuery, setSidebarSearchQuery] = useState('');
+  const [mainSearchQuery, setMainSearchQuery] = useState('');
+  const [isSidebarSearchFocused, setIsSidebarSearchFocused] = useState(false);
+  const [isMainSearchFocused, setIsMainSearchFocused] = useState(false);
   const [showScrollTop, setShowScrollTop] = useState(false);
   const mainRef = useRef<HTMLDivElement>(null);
   
@@ -2250,6 +2805,8 @@ export function DesignSystemPage() {
 
   // Intersection Observer to track active section
   useEffect(() => {
+    if (!mainRef.current) return;
+    
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
@@ -2258,7 +2815,10 @@ export function DesignSystemPage() {
           }
         });
       },
-      { rootMargin: '-20% 0px -60% 0px' }
+      { 
+        root: mainRef.current,
+        rootMargin: '-20% 0px -60% 0px' 
+      }
     );
 
     navItems.forEach(({ id }) => {
@@ -2271,34 +2831,94 @@ export function DesignSystemPage() {
 
   const scrollToSection = (id: string) => {
     const element = document.getElementById(id);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    const container = mainRef.current;
+    
+    if (!element || !container) {
+      return;
     }
+    
+    // Small delay to ensure state updates are processed
+    setTimeout(() => {
+      if (!container || !element) return;
+      
+      // Calculate target position relative to the scroll container
+      const containerRect = container.getBoundingClientRect();
+      const elementRect = element.getBoundingClientRect();
+      const scrollTop = container.scrollTop;
+      const targetScrollTop = scrollTop + elementRect.top - containerRect.top - 20; // 20px offset from top
+      
+      // Fast smooth scroll
+      const startScrollTop = scrollTop;
+      const distance = targetScrollTop - startScrollTop;
+      const duration = 400;
+      let startTime: number | null = null;
+      
+      // Smooth easing function (easeOutCubic - starts fast, ends slow)
+      const easeOutCubic = (t: number): number => {
+        return 1 - Math.pow(1 - t, 3);
+      };
+      
+      const animateScroll = (currentTime: number) => {
+        if (startTime === null) startTime = currentTime;
+        const timeElapsed = currentTime - startTime;
+        const progress = Math.min(timeElapsed / duration, 1);
+        const easedProgress = easeOutCubic(progress);
+        
+        if (container) {
+          const currentScrollTop = startScrollTop + distance * easedProgress;
+          container.scrollTop = currentScrollTop;
+          
+          if (progress < 1) {
+            requestAnimationFrame(animateScroll);
+          }
+        }
+      };
+      
+      requestAnimationFrame(animateScroll);
+    }, 50);
   };
 
-  // Filter nav items based on search query
-  const filteredNavItems = searchQuery.trim()
+  // Filter nav items based on search query (for sidebar)
+  const filteredSidebarNavItems = sidebarSearchQuery.trim()
     ? navItems.filter(item => 
-        item.label.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        item.id.toLowerCase().includes(searchQuery.toLowerCase())
+        item.label.toLowerCase().includes(sidebarSearchQuery.toLowerCase()) ||
+        item.id.toLowerCase().includes(sidebarSearchQuery.toLowerCase())
       )
     : [];
 
-  const handleSearchKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter' && filteredNavItems.length > 0) {
-      scrollToSection(filteredNavItems[0].id);
-      setSearchQuery('');
+  // Filter nav items based on search query (for main content)
+  const filteredMainNavItems = mainSearchQuery.trim()
+    ? navItems.filter(item => 
+        item.label.toLowerCase().includes(mainSearchQuery.toLowerCase()) ||
+        item.id.toLowerCase().includes(mainSearchQuery.toLowerCase())
+      )
+    : [];
+
+  const handleSidebarSearchKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter' && filteredSidebarNavItems.length > 0) {
+      scrollToSection(filteredSidebarNavItems[0].id);
+      setSidebarSearchQuery('');
     }
     if (e.key === 'Escape') {
-      setSearchQuery('');
+      setSidebarSearchQuery('');
+    }
+  };
+
+  const handleMainSearchKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter' && filteredMainNavItems.length > 0) {
+      scrollToSection(filteredMainNavItems[0].id);
+      setMainSearchQuery('');
+    }
+    if (e.key === 'Escape') {
+      setMainSearchQuery('');
     }
   };
 
   return (
     <div className="min-h-screen bg-[var(--color-surface-subtle)]">
       {/* Left Sidebar Navigation */}
-      <nav className="fixed left-0 top-0 w-[200px] h-screen bg-[var(--color-surface-default)] border-r border-[var(--color-border-default)] overflow-y-auto z-50">
-        <div className="p-4">
+      <nav className="fixed left-0 top-0 w-[200px] h-screen bg-[var(--color-surface-default)] border-r border-[var(--color-border-default)] overflow-y-auto z-50 sidebar-scroll">
+        <div className="p-4 overflow-hidden">
           {/* Logo */}
           <Link to="/" className="flex items-center gap-2 mb-4">
             <div className="w-6 h-6 rounded bg-[var(--color-action-primary)] flex items-center justify-center">
@@ -2309,15 +2929,78 @@ export function DesignSystemPage() {
             </span>
           </Link>
 
-          {/* Dashboard Link */}
+          {/* EntryPage Link */}
           <Link
             to="/"
-            className="flex items-center gap-2 w-full px-3 py-2 mb-4 rounded-[var(--radius-button)] bg-[var(--color-action-secondary)] hover:bg-[var(--color-action-secondary-hover)] text-[var(--color-text-default)] text-[length:var(--font-size-11)] font-medium transition-colors border border-[var(--color-border-default)]"
+            className="flex items-center gap-2 w-[166px] box-border px-3 py-2 mb-2 rounded-[var(--radius-button)] bg-[var(--color-action-secondary)] hover:bg-[var(--color-action-secondary-hover)] text-[var(--color-text-default)] text-[length:var(--font-size-11)] font-medium transition-colors border border-[var(--color-border-default)]"
           >
-            <IconHome size={16} stroke={1.5} />
-            <span>Dashboard</span>
-            <IconChevronRight size={14} stroke={1.5} className="ml-auto" />
+            <IconHome size={16} stroke={1.5} className="shrink-0" />
+            <span className="truncate flex-1 min-w-0">Entry page</span>
+            <IconChevronRight size={14} stroke={1.5} className="shrink-0" />
           </Link>
+
+          {/* Search Bar */}
+          <div className="relative mb-4">
+            <div className="relative">
+              <IconSearch 
+                size={16} 
+                stroke={1.5} 
+                className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--color-text-muted)]" 
+              />
+              <input
+                type="text"
+                value={sidebarSearchQuery}
+                onChange={(e) => setSidebarSearchQuery(e.target.value)}
+                onKeyDown={handleSidebarSearchKeyDown}
+                onFocus={() => setIsSidebarSearchFocused(true)}
+                onBlur={() => setIsSidebarSearchFocused(false)}
+                placeholder="Search"
+                className="w-[166px] pl-9 pr-8 py-2 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] text-[length:var(--font-size-11)] text-[var(--color-text-default)] placeholder:text-[var(--color-text-muted)] focus:outline-none focus:border-[var(--color-border-focus)] focus:ring-2 focus:ring-[var(--color-border-focus)] focus:ring-opacity-20 transition-colors"
+              />
+              {sidebarSearchQuery && (
+                <button
+                  onClick={() => setSidebarSearchQuery('')}
+                  className="absolute right-2 top-1/2 -translate-y-1/2 text-[var(--color-text-muted)] hover:text-[var(--color-text-default)] transition-colors"
+                >
+                  <IconX size={14} stroke={1.5} />
+                </button>
+              )}
+            </div>
+            
+            {/* Search Results Dropdown */}
+            {sidebarSearchQuery.trim() && isSidebarSearchFocused && (
+              <div className="absolute top-full left-0 w-[166px] mt-2 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] shadow-[var(--shadow-lg)] z-50 max-h-[300px] overflow-y-auto sidebar-scroll">
+                {filteredSidebarNavItems.length > 0 ? (
+                  <div className="p-2">
+                    {filteredSidebarNavItems.map(({ id, label, icon: Icon }, index) => (
+                      <button
+                        key={id}
+                        onMouseDown={(e) => {
+                          e.preventDefault(); // Prevent input blur
+                        }}
+                        onClick={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          scrollToSection(id);
+                          setSidebarSearchQuery('');
+                          setIsSidebarSearchFocused(false);
+                        }}
+                        data-cursor-element-id={`sidebar-search-result-${id}-${index}`}
+                        className="w-full px-3 py-2 rounded-[var(--radius-md)] flex items-center gap-2 text-left hover:bg-[var(--color-surface-muted)] transition-colors cursor-pointer"
+                      >
+                        <Icon size={14} stroke={1.5} className="text-[var(--color-text-muted)] shrink-0" />
+                        <span className="text-[length:var(--font-size-11)] text-[var(--color-text-default)] truncate">{label}</span>
+                      </button>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="p-3 text-center text-[length:var(--font-size-11)] text-[var(--color-text-muted)]">
+                    No results found
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
 
           {/* Navigation */}
           <VStack gap={4}>
@@ -2330,9 +3013,10 @@ export function DesignSystemPage() {
                 <button
                   key={id}
                   onClick={() => scrollToSection(id)}
+                  data-cursor-element-id={`sidebar-nav-${id}`}
                   className={`
                     w-full px-3 py-2 rounded-[var(--radius-button)] flex items-center gap-2
-                    text-[length:var(--font-size-11)] text-left transition-colors
+                    text-[length:var(--font-size-11)] text-left transition-colors cursor-pointer
                     ${activeSection === id
                       ? 'bg-[var(--color-state-info-bg)] text-[var(--color-action-primary)] font-medium'
                       : 'text-[var(--color-text-muted)] hover:bg-[var(--color-surface-subtle)]'
@@ -2354,9 +3038,10 @@ export function DesignSystemPage() {
                 <button
                   key={id}
                   onClick={() => scrollToSection(id)}
+                  data-cursor-element-id={`sidebar-nav-${id}`}
                   className={`
                     w-full px-3 py-2 rounded-[var(--radius-button)] flex items-center gap-2
-                    text-[length:var(--font-size-11)] text-left transition-colors
+                    text-[length:var(--font-size-11)] text-left transition-colors cursor-pointer
                     ${activeSection === id
                       ? 'bg-[var(--color-state-info-bg)] text-[var(--color-action-primary)] font-medium'
                       : 'text-[var(--color-text-muted)] hover:bg-[var(--color-surface-subtle)]'
@@ -2378,9 +3063,10 @@ export function DesignSystemPage() {
                 <button
                   key={id}
                   onClick={() => scrollToSection(id)}
+                  data-cursor-element-id={`sidebar-nav-${id}`}
                   className={`
                     w-full px-3 py-2 rounded-[var(--radius-button)] flex items-center gap-2
-                    text-[length:var(--font-size-11)] text-left transition-colors
+                    text-[length:var(--font-size-11)] text-left transition-colors cursor-pointer
                     ${activeSection === id
                       ? 'bg-[var(--color-state-info-bg)] text-[var(--color-action-primary)] font-medium'
                       : 'text-[var(--color-text-muted)] hover:bg-[var(--color-surface-subtle)]'
@@ -2402,9 +3088,10 @@ export function DesignSystemPage() {
                 <button
                   key={id}
                   onClick={() => scrollToSection(id)}
+                  data-cursor-element-id={`sidebar-nav-${id}`}
                   className={`
                     w-full px-3 py-2 rounded-[var(--radius-button)] flex items-center gap-2
-                    text-[length:var(--font-size-11)] text-left transition-colors
+                    text-[length:var(--font-size-11)] text-left transition-colors cursor-pointer
                     ${activeSection === id
                       ? 'bg-[var(--color-state-info-bg)] text-[var(--color-action-primary)] font-medium'
                       : 'text-[var(--color-text-muted)] hover:bg-[var(--color-surface-subtle)]'
@@ -2426,9 +3113,10 @@ export function DesignSystemPage() {
                 <button
                   key={id}
                   onClick={() => scrollToSection(id)}
+                  data-cursor-element-id={`sidebar-nav-${id}`}
                   className={`
                     w-full px-3 py-2 rounded-[var(--radius-button)] flex items-center gap-2
-                    text-[length:var(--font-size-11)] text-left transition-colors
+                    text-[length:var(--font-size-11)] text-left transition-colors cursor-pointer
                     ${activeSection === id
                       ? 'bg-[var(--color-state-info-bg)] text-[var(--color-action-primary)] font-medium'
                       : 'text-[var(--color-text-muted)] hover:bg-[var(--color-surface-subtle)]'
@@ -2462,9 +3150,9 @@ export function DesignSystemPage() {
                 </p>
               </VStack>
               <div className="flex items-center gap-3">
-                <DarkModeToggle size="sm" />
+                <DarkModeToggle size="sm" scrollContainerRef={mainRef} />
                 <Link to="/">
-                  <Button variant="outline">Dashboard →</Button>
+                  <Button variant="outline">Entry page →</Button>
                 </Link>
               </div>
             </div>
@@ -2479,15 +3167,17 @@ export function DesignSystemPage() {
                 />
                 <input
                   type="text"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  onKeyDown={handleSearchKeyDown}
+                  value={mainSearchQuery}
+                  onChange={(e) => setMainSearchQuery(e.target.value)}
+                  onKeyDown={handleMainSearchKeyDown}
+                  onFocus={() => setIsMainSearchFocused(true)}
+                  onBlur={() => setIsMainSearchFocused(false)}
                   placeholder="Search components, tokens... (Enter to go, Esc to clear)"
                   className="w-full pl-10 pr-4 py-3 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] text-[length:var(--font-size-14)] text-[var(--color-text-default)] placeholder:text-[var(--color-text-muted)] focus:outline-none focus:border-[var(--color-border-focus)] focus:ring-2 focus:ring-[var(--color-border-focus)] focus:ring-opacity-20 transition-colors"
                 />
-                {searchQuery && (
+                {mainSearchQuery && (
                   <button
-                    onClick={() => setSearchQuery('')}
+                    onClick={() => setMainSearchQuery('')}
                     className="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--color-text-muted)] hover:text-[var(--color-text-default)] transition-colors"
                   >
                     <IconX size={16} stroke={1.5} />
@@ -2496,18 +3186,25 @@ export function DesignSystemPage() {
               </div>
               
               {/* Search Results Dropdown */}
-              {searchQuery.trim() && (
-                <div className="absolute top-full left-0 right-0 mt-2 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] shadow-[var(--shadow-lg)] z-50 max-h-[300px] overflow-y-auto">
-                  {filteredNavItems.length > 0 ? (
+              {mainSearchQuery.trim() && isMainSearchFocused && (
+                <div className="absolute top-full left-0 right-0 mt-2 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] shadow-[var(--shadow-lg)] z-50 max-h-[300px] overflow-y-auto sidebar-scroll">
+                  {filteredMainNavItems.length > 0 ? (
                     <div className="p-2">
-                      {filteredNavItems.map(({ id, label, icon: Icon }) => (
+                      {filteredMainNavItems.map(({ id, label, icon: Icon }, index) => (
                         <button
                           key={id}
-                          onClick={() => {
-                            scrollToSection(id);
-                            setSearchQuery('');
+                          onMouseDown={(e) => {
+                            e.preventDefault(); // Prevent input blur
                           }}
-                          className="w-full px-3 py-2 rounded-[var(--radius-md)] flex items-center gap-3 text-left hover:bg-[var(--color-surface-muted)] transition-colors"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            scrollToSection(id);
+                            setMainSearchQuery('');
+                            setIsMainSearchFocused(false);
+                          }}
+                          data-cursor-element-id={`main-search-result-${id}-${index}`}
+                          className="w-full px-3 py-2 rounded-[var(--radius-md)] flex items-center gap-3 text-left hover:bg-[var(--color-surface-muted)] transition-colors cursor-pointer"
                         >
                           <Icon size={16} stroke={1.5} className="text-[var(--color-text-muted)]" />
                           <span className="text-[length:var(--font-size-12)] text-[var(--color-text-default)]">{label}</span>
@@ -2516,7 +3213,7 @@ export function DesignSystemPage() {
                     </div>
                   ) : (
                     <div className="p-4 text-center text-[length:var(--font-size-12)] text-[var(--color-text-muted)]">
-                      No results found for "{searchQuery}"
+                      No results found for "{mainSearchQuery}"
                     </div>
                   )}
                 </div>
@@ -3051,7 +3748,7 @@ outline: 2px solid var(--color-border-focus);`}
             <Section id="icons" title="Icons" description="Tabler Icons library - Stroke width 1.5, Size 16-20px">
               <VStack gap={8}>
                 {/* Basic - Actions */}
-                <IconGrid
+                <IconDisplayGrid
                   title="Actions"
                   icons={[
                     { Icon: IconPlayerPlay, name: 'Play' },
@@ -3076,7 +3773,7 @@ outline: 2px solid var(--color-border-focus);`}
                 />
 
                 {/* Basic - Navigation */}
-                <IconGrid
+                <IconDisplayGrid
                   title="Navigation"
                   icons={[
                     { Icon: IconChevronLeft, name: 'Left' },
@@ -3092,7 +3789,7 @@ outline: 2px solid var(--color-border-focus);`}
                 />
 
                 {/* Basic - Status */}
-                <IconGrid
+                <IconDisplayGrid
                   title="Status & Feedback"
                   icons={[
                     { Icon: IconCircleCheck, name: 'Success' },
@@ -3106,7 +3803,7 @@ outline: 2px solid var(--color-border-focus);`}
                 />
 
                 {/* Basic - UI */}
-                <IconGrid
+                <IconDisplayGrid
                   title="UI Elements"
                   icons={[
                     { Icon: IconSearch, name: 'Search' },
@@ -3133,7 +3830,7 @@ outline: 2px solid var(--color-border-focus);`}
                 />
 
                 {/* System - Infrastructure */}
-                <IconGrid
+                <IconDisplayGrid
                   title="Infrastructure"
                   icons={[
                     { Icon: IconServer, name: 'Server' },
@@ -3152,7 +3849,7 @@ outline: 2px solid var(--color-border-focus);`}
                 />
 
                 {/* System - Storage & Files */}
-                <IconGrid
+                <IconDisplayGrid
                   title="Storage & Files"
                   icons={[
                     { Icon: IconDeviceFloppy, name: 'Backup' },
@@ -3166,7 +3863,7 @@ outline: 2px solid var(--color-border-focus);`}
                 />
 
                 {/* System - Monitoring */}
-                <IconGrid
+                <IconDisplayGrid
                   title="Monitoring & Analytics"
                   icons={[
                     { Icon: IconTerminal, name: 'Console' },
@@ -3176,12 +3873,12 @@ outline: 2px solid var(--color-border-focus);`}
                     { Icon: IconGauge, name: 'Speed' },
                     { Icon: IconDeviceDesktop, name: 'Desktop' },
                     { Icon: IconDeviceDesktopAnalytics, name: 'Analytics' },
-                    { Icon: IconLayoutDashboard, name: 'Dashboard' },
+                    { Icon: IconLayoutDashboard, name: 'Entry page' },
                   ]}
                 />
 
                 {/* System - Organization */}
-                <IconGrid
+                <IconDisplayGrid
                   title="Organization"
                   icons={[
                     { Icon: IconTopologyRing, name: 'Topology' },
@@ -3202,7 +3899,7 @@ outline: 2px solid var(--color-border-focus);`}
                 />
 
                 {/* AI & Advanced */}
-                <IconGrid
+                <IconDisplayGrid
                   title="AI & Advanced"
                   icons={[
                     { Icon: IconBrain, name: 'Brain' },
@@ -3214,7 +3911,7 @@ outline: 2px solid var(--color-border-focus);`}
                 />
 
                 {/* OS / Brand Icons */}
-                <IconGrid
+                <IconDisplayGrid
                   title="OS / Brand"
                   icons={[
                     { Icon: IconBrandUbuntu, name: 'Ubuntu' },
@@ -4253,7 +4950,7 @@ outline: 2px solid var(--color-border-focus);`}
                         <Breadcrumb
                           items={[
                             { label: 'Home', onClick: () => {} },
-                            { label: 'Dashboard', onClick: () => {} },
+                            { label: 'Entry page', onClick: () => {} },
                             { label: 'Settings' },
                           ]}
                         />
@@ -4340,7 +5037,7 @@ outline: 2px solid var(--color-border-focus);`}
             </Section>
 
             {/* TabBar Component */}
-            <Section id="tabbar" title="TabBar" description="Browser-style tabs with add/close functionality">
+            <Section id="tabbar" title="TabBar" description="Browser-style tabs with responsive width (max 160px, auto-shrink when overflow)">
               <TabBarDemo />
             </Section>
 
@@ -4596,7 +5293,7 @@ outline: 2px solid var(--color-border-focus);`}
             </Section>
 
             {/* Table Component */}
-            <Section id="table" title="Table" description="Data table with sorting, selection, and sticky header">
+            <Section id="table" title="Table" description="Data table with sorting, selection, sticky header, text truncation with tooltip, and horizontal scroll">
               <TableDemo />
             </Section>
 
@@ -5451,6 +6148,107 @@ outline: 2px solid var(--color-border-focus);`}
               </VStack>
             </Section>
 
+            {/* Monitoring Toolbar */}
+            <Section id="monitoring-toolbar" title="Monitoring Toolbar" description="Time range selection and refresh controls for monitoring dashboards">
+              <VStack gap={8}>
+                {/* Design Tokens */}
+                <VStack gap={3}>
+                  <Label>Design Tokens</Label>
+                  <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
+                    <code>segment-padding: 4px 12px</code> · <code>border-radius: 8px</code> · <code>font-size: 11px</code> · <code>gap: 4px</code>
+                  </div>
+                </VStack>
+
+                {/* Interactive Demo */}
+                <VStack gap={3}>
+                  <Label>Default</Label>
+                  <div className="flex items-center justify-end p-4 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)]">
+                    <MonitoringToolbar 
+                      onTimeRangeChange={(value) => console.log('Time range:', value)}
+                      onCustomPeriodChange={(period) => console.log('Custom period:', period)}
+                      onRefresh={() => console.log('Refresh clicked')}
+                    />
+                  </div>
+                </VStack>
+
+                {/* Specifications */}
+                <VStack gap={3}>
+                  <Label>Specifications</Label>
+                  <div className="overflow-x-auto">
+                    <table className="w-full text-[length:var(--font-size-12)]">
+                      <thead>
+                        <tr className="border-b border-[var(--color-border-default)]">
+                          <th className="text-left py-2 pr-4 font-medium text-[var(--color-text-subtle)]">Property</th>
+                          <th className="text-left py-2 pr-4 font-medium text-[var(--color-text-subtle)]">Type</th>
+                          <th className="text-left py-2 pr-4 font-medium text-[var(--color-text-subtle)]">Default</th>
+                          <th className="text-left py-2 font-medium text-[var(--color-text-subtle)]">Description</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr className="border-b border-[var(--color-border-subtle)]">
+                          <td className="py-2 pr-4 font-mono text-[var(--color-action-primary)]">timeRangeOptions</td>
+                          <td className="py-2 pr-4 text-[var(--color-text-muted)]">TimeRangeOption[]</td>
+                          <td className="py-2 pr-4 text-[var(--color-text-muted)]">30m, 1h, 6h, 12h, 24h</td>
+                          <td className="py-2 text-[var(--color-text-default)]">Time range options to display</td>
+                        </tr>
+                        <tr className="border-b border-[var(--color-border-subtle)]">
+                          <td className="py-2 pr-4 font-mono text-[var(--color-action-primary)]">timeRange</td>
+                          <td className="py-2 pr-4 text-[var(--color-text-muted)]">TimeRangeValue</td>
+                          <td className="py-2 pr-4 text-[var(--color-text-muted)]">-</td>
+                          <td className="py-2 text-[var(--color-text-default)]">Controlled time range value</td>
+                        </tr>
+                        <tr className="border-b border-[var(--color-border-subtle)]">
+                          <td className="py-2 pr-4 font-mono text-[var(--color-action-primary)]">defaultTimeRange</td>
+                          <td className="py-2 pr-4 text-[var(--color-text-muted)]">TimeRangeValue</td>
+                          <td className="py-2 pr-4 text-[var(--color-text-muted)]">'30m'</td>
+                          <td className="py-2 text-[var(--color-text-default)]">Default time range (uncontrolled)</td>
+                        </tr>
+                        <tr className="border-b border-[var(--color-border-subtle)]">
+                          <td className="py-2 pr-4 font-mono text-[var(--color-action-primary)]">onTimeRangeChange</td>
+                          <td className="py-2 pr-4 text-[var(--color-text-muted)]">(value) =&gt; void</td>
+                          <td className="py-2 pr-4 text-[var(--color-text-muted)]">-</td>
+                          <td className="py-2 text-[var(--color-text-default)]">Callback when time range changes</td>
+                        </tr>
+                        <tr className="border-b border-[var(--color-border-subtle)]">
+                          <td className="py-2 pr-4 font-mono text-[var(--color-action-primary)]">customPeriod</td>
+                          <td className="py-2 pr-4 text-[var(--color-text-muted)]">CustomPeriod | null</td>
+                          <td className="py-2 pr-4 text-[var(--color-text-muted)]">-</td>
+                          <td className="py-2 text-[var(--color-text-default)]">Custom date range (start, end)</td>
+                        </tr>
+                        <tr className="border-b border-[var(--color-border-subtle)]">
+                          <td className="py-2 pr-4 font-mono text-[var(--color-action-primary)]">onCustomPeriodChange</td>
+                          <td className="py-2 pr-4 text-[var(--color-text-muted)]">(period) =&gt; void</td>
+                          <td className="py-2 pr-4 text-[var(--color-text-muted)]">-</td>
+                          <td className="py-2 text-[var(--color-text-default)]">Callback when custom period changes</td>
+                        </tr>
+                        <tr className="border-b border-[var(--color-border-subtle)]">
+                          <td className="py-2 pr-4 font-mono text-[var(--color-action-primary)]">onRefresh</td>
+                          <td className="py-2 pr-4 text-[var(--color-text-muted)]">() =&gt; void</td>
+                          <td className="py-2 pr-4 text-[var(--color-text-muted)]">-</td>
+                          <td className="py-2 text-[var(--color-text-default)]">Callback when refresh is clicked</td>
+                        </tr>
+                        <tr className="border-b border-[var(--color-border-subtle)]">
+                          <td className="py-2 pr-4 font-mono text-[var(--color-action-primary)]">showRefresh</td>
+                          <td className="py-2 pr-4 text-[var(--color-text-muted)]">boolean</td>
+                          <td className="py-2 pr-4 text-[var(--color-text-muted)]">true</td>
+                          <td className="py-2 text-[var(--color-text-default)]">Show refresh button</td>
+                        </tr>
+                        <tr className="border-b border-[var(--color-border-subtle)]">
+                          <td className="py-2 pr-4 font-mono text-[var(--color-action-primary)]">maxDate</td>
+                          <td className="py-2 pr-4 text-[var(--color-text-muted)]">Date</td>
+                          <td className="py-2 pr-4 text-[var(--color-text-muted)]">new Date()</td>
+                          <td className="py-2 text-[var(--color-text-default)]">Maximum selectable date</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </VStack>
+              </VStack>
+            </Section>
+
+            {/* Notification Center */}
+            <NotificationCenterSection />
+
             {/* Layout Section */}
             <Section id="layout" title="Layout" description="Application layout structure with responsive sidebar">
               <VStack gap={8}>
@@ -5706,6 +6504,12 @@ outline: 2px solid var(--color-border-focus);`}
                   <Label>Stacked Area Chart</Label>
                   <AreaChartDemo variant="stacked" />
                 </VStack>
+
+                {/* No Data Area Chart */}
+                <VStack gap={3}>
+                  <Label>No Data</Label>
+                  <AreaChartDemo variant="nodata" />
+                </VStack>
               </VStack>
             </Section>
 
@@ -5769,9 +6573,9 @@ outline: 2px solid var(--color-border-focus);`}
                 <VStack gap={3}>
                   <Label>Status Variants</Label>
                   <div className="flex items-center gap-8 flex-wrap">
-                    <HalfDoughnutChartDemo value={35} label="Safe" status="success" />
-                    <HalfDoughnutChartDemo value={75} label="Warning" status="warning" />
-                    <HalfDoughnutChartDemo value={95} label="Danger" status="error" />
+                    <HalfDoughnutChartDemo value={35} label="Safe" status="success" used={66.5} total={189.9} unit="TiB" />
+                    <HalfDoughnutChartDemo value={75} label="Warning" status="warning" used={142.4} total={189.9} unit="TiB" />
+                    <HalfDoughnutChartDemo value={95} label="Danger" status="error" used={180.4} total={189.9} unit="TiB" />
                   </div>
                 </VStack>
               </VStack>
@@ -5788,17 +6592,14 @@ outline: 2px solid var(--color-border-focus);`}
                   </div>
                 </VStack>
 
-                {/* Basic Doughnut */}
-                <VStack gap={3}>
-                  <Label>Basic Doughnut</Label>
-                  <div className="flex items-start gap-6 flex-wrap">
-                    <SingleValueDoughnutDemo 
-                      title="OSD onode Hits Ratio"
-                      value={98}
-                    />
-                  </div>
-                </VStack>
-
+                {/* Doughnut Chart Example */}
+                <div className="flex gap-6 flex-wrap">
+                  <DoughnutChartDemo 
+                    title="OSD onode Hits Ratio"
+                    value={98.3}
+                    color="#ef4444"
+                  />
+                </div>
               </VStack>
             </Section>
 
@@ -5952,7 +6753,7 @@ function TokenCard({ title, description, items, color, textColor }: { title: str
   );
 }
 
-function IconGrid({ title, icons }: { title: string; icons: { Icon: React.ComponentType<{ size?: number; stroke?: number; className?: string }>; name: string; missing?: boolean }[] }) {
+function IconDisplayGrid({ title, icons }: { title: string; icons: { Icon: React.ComponentType<{ size?: number; stroke?: number; className?: string }>; name: string; missing?: boolean }[] }) {
   return (
     <VStack gap={3}>
       <Label>{title}</Label>

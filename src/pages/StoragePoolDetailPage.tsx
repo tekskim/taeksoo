@@ -15,6 +15,7 @@ import {
   TabPanel,
   SectionCard,
   DetailHeader,
+  DatePicker,
 } from '@/design-system';
 import { StorageSidebar } from '@/components/StorageSidebar';
 import { useTabs } from '@/contexts/TabContext';
@@ -26,7 +27,6 @@ import {
   IconDotsCircleHorizontal,
   IconArrowsMaximize,
   IconArrowsMinimize,
-  IconActivity,
   IconChevronLeft,
   IconChevronRight,
 } from '@tabler/icons-react';
@@ -320,66 +320,17 @@ function MonitoringTimeControls({
               </div>
             </div>
 
-            {/* Month Navigation */}
-            <div className="calendarMonthNav">
-              <button className="calendarNavBtn" onClick={prevMonthNav}>
-                <IconChevronLeft size={16} stroke={1.5} />
-              </button>
-              <span className="calendarMonthLabel">
-                {viewMonth.getFullYear()}.{(viewMonth.getMonth() + 1).toString().padStart(2, '0')}
-              </span>
-              <button className="calendarNavBtn" onClick={nextMonthNav}>
-                <IconChevronRight size={16} stroke={1.5} />
-              </button>
-            </div>
-
-            {/* Weekday Headers */}
-            <div className="calendarWeekdays">
-              {weekDays.map(day => (
-                <div key={day} className="calendarWeekday">{day}</div>
-              ))}
-            </div>
-
-            {/* Calendar Grid */}
-            <div className="calendarGrid">
-              {getDaysInMonth(viewMonth).map((day, index) => {
-                const isStart = isStartDate(day.date);
-                const isEnd = isEndDate(day.date);
-                const inRange = isDateInRange(day.date);
-                const colIndex = index % 7;
-                const isFirstCol = colIndex === 0;
-                const isLastCol = colIndex === 6;
-                
-                const wrapperClasses = [
-                  'calendarDayWrapper',
-                  inRange && 'inRange',
-                  isStart && 'rangeStart',
-                  isEnd && 'rangeEnd',
-                  isFirstCol && 'firstCol',
-                  isLastCol && 'lastCol',
-                ].filter(Boolean).join(' ');
-                
-                const dayClasses = [
-                  'calendarDay',
-                  !day.isCurrentMonth && 'calendarDayOther',
-                  (isStart || isEnd) && 'calendarDaySelected',
-                  day.isToday && 'calendarDayToday',
-                ].filter(Boolean).join(' ');
-                
-                return (
-                  <div key={index} className={wrapperClasses}>
-                    {inRange && <div className="rangeBackground" />}
-                    <button
-                      className={dayClasses}
-                      onClick={() => handleDayClick(day.date)}
-                    >
-                      <span>{day.date.getDate()}</span>
-                      {day.isToday && <span className="calendarTodayDot" />}
-                    </button>
-                  </div>
-                );
-              })}
-            </div>
+            {/* DatePicker from Design System */}
+            <DatePicker
+              mode="range"
+              rangeValue={{ start: tempStartDate, end: tempEndDate }}
+              onRangeChange={(range) => {
+                setTempStartDate(range.start);
+                setTempEndDate(range.end);
+                setSelectingStart(!range.start || !!range.end);
+              }}
+              maxDate={new Date()}
+            />
 
             {/* Actions */}
             <div className="calendarActions">
@@ -407,9 +358,26 @@ type GaugeStatus = 'success' | 'warning' | 'error';
 
 interface CapacityGaugeProps {
   percentage: number;
+  used?: number;
+  total?: number;
+  unit?: string;
 }
 
-function CapacityGauge({ percentage }: CapacityGaugeProps) {
+function CapacityGauge({ percentage, used, total, unit = 'TiB' }: CapacityGaugeProps) {
+  const [showTooltip, setShowTooltip] = useState(false);
+  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  // Chart dimensions for arc detection
+  const chartWidth = 220;
+  const chartHeight = 180;
+  const centerX = chartWidth * 0.5; // 50%
+  const centerY = chartHeight * 0.65; // 65%
+  const radius = Math.min(chartWidth, chartHeight) * 0.45; // 90% of half
+  const arcWidth = 20;
+  const innerRadius = radius - arcWidth;
+  const outerRadius = radius;
+
   // Get color from design system CSS variables
   const getColor = (cssVar: string, fallback: string) => {
     if (typeof window !== 'undefined') {
@@ -435,6 +403,45 @@ function CapacityGauge({ percentage }: CapacityGaugeProps) {
   };
 
   const color = colorMap[status];
+  const available = total !== undefined && used !== undefined ? total - used : 0;
+  const availablePercent = total !== undefined && used !== undefined ? Math.round((available / total) * 100) : 0;
+
+  // Check if mouse is over the gauge arc
+  const isOverGaugeArc = (mx: number, my: number) => {
+    const dx = mx - centerX;
+    const dy = my - centerY;
+    const distance = Math.sqrt(dx * dx + dy * dy);
+    
+    // Check if within the arc ring
+    if (distance < innerRadius - 4 || distance > outerRadius + 4) return false;
+    
+    // Check if within the arc angle range (210° to -30°)
+    let angle = Math.atan2(-dy, dx) * (180 / Math.PI);
+    if (angle < 0) angle += 360;
+    
+    return angle >= 150 && angle <= 330;
+  };
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (containerRef.current) {
+      const rect = containerRef.current.getBoundingClientRect();
+      const relX = e.clientX - rect.left;
+      const relY = e.clientY - rect.top;
+      
+      // Calculate chart position within container
+      const containerWidth = rect.width;
+      const containerHeight = rect.height;
+      const chartX = relX - (containerWidth - chartWidth) / 2;
+      const chartY = relY - (containerHeight - chartHeight) / 2;
+      
+      setMousePos({ x: relX, y: relY });
+      setShowTooltip(isOverGaugeArc(chartX, chartY));
+    }
+  };
+
+  const handleMouseLeave = () => {
+    setShowTooltip(false);
+  };
 
   const option = {
     series: [
@@ -466,13 +473,42 @@ function CapacityGauge({ percentage }: CapacityGaugeProps) {
   };
 
   return (
-    <div className="relative h-[180px] flex items-center justify-center">
+    <div 
+      ref={containerRef}
+      className="relative h-[180px] flex items-center justify-center"
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
+    >
       <ReactECharts option={option} style={{ height: '180px', width: '220px' }} />
-      <div className="absolute inset-0 flex flex-col items-center justify-center pt-6">
+      <div className="absolute inset-0 flex flex-col items-center justify-center pt-6 pointer-events-none">
         <span className="text-[24px] leading-[32px] font-semibold" style={{ color }}>
           {percentage.toFixed(1)}%
         </span>
+        {used !== undefined && total !== undefined && (
+          <span className="text-[12px] text-[var(--color-text-subtle)]">{used}{unit}/{total}{unit}</span>
+        )}
       </div>
+      
+      {/* Tooltip */}
+      {showTooltip && used !== undefined && total !== undefined && (
+        <div 
+          className="absolute z-10 backdrop-blur-[40px] bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px] shadow-[0px_0px_4px_0px_rgba(0,0,0,0.1)] px-2 py-1.5 flex flex-col gap-1 pointer-events-none"
+          style={{ left: mousePos.x + 12, top: mousePos.y + 12 }}
+        >
+          <div className="flex items-center gap-1.5">
+            <div className="w-[5px] h-[5px] rounded-[1px]" style={{ backgroundColor: color }} />
+            <span className="text-[11px] leading-[14px] text-[var(--color-text-default)] whitespace-nowrap">
+              Used: {used}{unit} ({Math.round(percentage)}%)
+            </span>
+          </div>
+          <div className="flex items-center gap-1.5">
+            <div className="w-[5px] h-[5px] rounded-[1px] bg-[var(--color-border-subtle)]" />
+            <span className="text-[11px] leading-[14px] text-[var(--color-text-default)] whitespace-nowrap">
+              Available: {available.toFixed(1)}{unit} ({availablePercent}%)
+            </span>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
@@ -618,7 +654,8 @@ function PerformanceChart({
       axisTick: { show: false },
       axisLabel: {
         color: chartColors.slate400,
-        fontSize: 10
+        fontSize: 10,
+        padding: [0, 0, 0, 15]
       },
       boundaryGap: false
     },
@@ -646,6 +683,14 @@ function PerformanceChart({
         color: tooltipTextColor,
         fontSize: 11,
         fontFamily: 'Mona Sans, -apple-system, BlinkMacSystemFont, sans-serif'
+      },
+      formatter: (params: Array<{ marker: string; seriesName: string; value: number; axisValueLabel: string }>) => {
+        if (!Array.isArray(params) || params.length === 0) return '';
+        const time = params[0].axisValueLabel;
+        const items = params.map(p => 
+          `<div style="display: flex; align-items: center; gap: 8px;"><span style="display: inline-block; width: 8px; height: 8px; border-radius: 9999px; background-color: ${p.color};"></span><span>${p.seriesName}</span><span style="font-weight: 500; margin-left: auto;">${p.value}</span></div>`
+        ).join('');
+        return `<div style="font-size: 11px; font-family: Mona Sans, -apple-system, BlinkMacSystemFont, sans-serif;">${time}<div style="margin-top: 4px;">${items}</div></div>`;
       }
     },
     series: series
@@ -730,7 +775,7 @@ function PerformanceChart({
             ref={chartRef}
             option={option} 
             style={{ 
-              height: isFullScreen ? 'calc(100vh - 200px)' : '268px',
+              height: isFullScreen ? 'calc(100vh - 200px)' : '100%',
               width: isFullScreen ? 'calc(100vw - 300px)' : '100%'
             }} 
             notMerge={true}
@@ -834,6 +879,7 @@ function ChartWithFullScreen({
                 yAxisUnit={fullScreenChart.yAxisUnit}
                 isFullScreen={true}
                 onExitFullScreen={() => { setFullScreenChart(null); setContainerReady(false); }}
+                timeControls={<MonitoringTimeControls />}
               />
             )}
           </div>
@@ -923,7 +969,7 @@ const mockStoragePoolDetail: StoragePoolDetail = {
 
 export function StoragePoolDetailPage() {
   const { id } = useParams<{ id: string }>();
-  const { tabs, activeTabId, closeTab, selectTab, addNewTab } = useTabs();
+  const { tabs, activeTabId, closeTab, selectTab, addNewTab, updateActiveTabLabel, moveTab } = useTabs();
   
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [activeDetailTab, setActiveDetailTab] = useState('details');
@@ -933,6 +979,13 @@ export function StoragePoolDetailPage() {
 
   // In a real app, fetch based on id
   const pool = mockStoragePoolDetail;
+
+  // Update tab label to match the pool name (most recent breadcrumb)
+  useEffect(() => {
+    if (pool?.name) {
+      updateActiveTabLabel(pool.name);
+    }
+  }, [pool?.name, updateActiveTabLabel]);
 
   const breadcrumbItems = [
     { label: 'Home', href: '/storage' },
@@ -967,6 +1020,7 @@ export function StoragePoolDetailPage() {
             onTabChange={selectTab}
             onTabClose={closeTab}
             onTabAdd={addNewTab}
+            onTabReorder={moveTab}
             showAddButton={true}
             showWindowControls={true}
           />
@@ -991,22 +1045,11 @@ export function StoragePoolDetailPage() {
         {/* Scrollable Content Area */}
         <div className="flex-1 overflow-auto min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll">
           {/* Page Content */}
-          <div className="pt-4 px-8 pb-20 bg-[var(--color-surface-default)]">
-            <VStack gap={6} className="min-w-[1176px] max-w-[1320px]">
+          <div className="pt-4 px-8 pb-20 bg-[var(--color-surface-default)] min-h-full">
+            <VStack gap={6} className="min-w-[1176px]">
               {/* Pool Header Card */}
               <DetailHeader>
                 <DetailHeader.Title>{pool.name}</DetailHeader.Title>
-                {activeDetailTab === 'performance' && (
-                  <DetailHeader.Actions>
-                    <Button 
-                      variant="secondary" 
-                      size="sm" 
-                      leftIcon={<IconActivity size={12} />}
-                    >
-                      Monitoring
-                    </Button>
-                  </DetailHeader.Actions>
-                )}
                 <DetailHeader.InfoGrid>
                   <DetailHeader.InfoCard label="Data Protection" value={pool.dataProtection} status="active" />
                   <DetailHeader.InfoCard label="Applications" value={pool.applications} copyable />
@@ -1105,7 +1148,7 @@ export function StoragePoolDetailPage() {
                   <TabPanel value="performance" className="pt-0">
                     <VStack gap={4} className="pt-6">
                       {/* Monitoring Time Controls */}
-                      <div className="flex justify-end w-full">
+                      <div className="flex justify-start w-full">
                         <MonitoringTimeControls 
                           onTimeRangeChange={(value) => console.log('Time range changed:', value)}
                           onRefresh={() => console.log('Refresh clicked')}
@@ -1117,7 +1160,7 @@ export function StoragePoolDetailPage() {
                         {/* Capacity Used */}
                         <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg p-4">
                           <h4 className="text-[14px] font-medium text-[var(--color-text-default)] mb-4">Capacity used</h4>
-                          <CapacityGauge percentage={88.2} />
+                          <CapacityGauge percentage={88.2} used={167.6} total={190.0} unit="TiB" />
                         </div>
                         {/* Time Till Full */}
                         <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg p-4">

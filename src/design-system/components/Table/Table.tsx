@@ -15,6 +15,10 @@ export interface TableColumn<T = any> {
   label: string;
   /** Column width (e.g., '100px', '20%', 'auto') */
   width?: string;
+  /** Minimum column width (e.g., '80px') - prevents column from shrinking below this */
+  minWidth?: string;
+  /** Maximum column width (e.g., '200px') - prevents column from growing beyond this */
+  maxWidth?: string;
   /** Flex grow for column */
   flex?: number;
   /** Text alignment */
@@ -50,6 +54,8 @@ export interface TableProps<T = any> {
   emptyMessage?: string;
   /** Custom class name */
   className?: string;
+  /** Custom row height (overrides --table-row-height) */
+  rowHeight?: string;
 }
 
 /* ----------------------------------------
@@ -68,6 +74,7 @@ export function Table<T extends Record<string, any>>({
   onRowClick,
   emptyMessage = 'No data',
   className = '',
+  rowHeight,
 }: TableProps<T>) {
   const [sortKey, setSortKey] = useState<string | null>(null);
   const [sortDirection, setSortDirection] = useState<SortDirection>(null);
@@ -147,10 +154,15 @@ export function Table<T extends Record<string, any>>({
   const enableStickyHeader = stickyHeader || !!maxHeight;
 
   // Calculate min-width based on columns
-  const minWidth = useMemo(() => {
+  const tableMinWidth = useMemo(() => {
     const widths = columns.map((col) => {
+      // Priority: width > minWidth > default
       if (col.width) {
         const parsed = parseInt(col.width, 10);
+        return isNaN(parsed) ? 100 : parsed;
+      }
+      if (col.minWidth) {
+        const parsed = parseInt(col.minWidth, 10);
         return isNaN(parsed) ? 100 : parsed;
       }
       return 100; // default width
@@ -159,13 +171,37 @@ export function Table<T extends Record<string, any>>({
     return widths.reduce((sum, w) => sum + w, checkboxWidth);
   }, [columns, selectable]);
 
+  // Helper to get column style
+  const getColumnStyle = (column: TableColumn<T>): React.CSSProperties => {
+    const style: React.CSSProperties = {};
+    
+    if (column.width) {
+      style.width = column.width;
+      style.flexShrink = 0;
+    } else {
+      style.flex = column.flex ?? 1;
+      style.flexShrink = 1;
+    }
+    
+    if (column.minWidth) {
+      style.minWidth = column.minWidth;
+    }
+    
+    if (column.maxWidth) {
+      style.maxWidth = column.maxWidth;
+    }
+    
+    return style;
+  };
+
   return (
     <div
       className={`flex flex-col gap-[var(--table-row-gap)] ${className}`}
+      style={rowHeight ? { '--table-row-height': rowHeight } as React.CSSProperties : undefined}
     >
       {/* Table container */}
       <div
-        className={`table-scroll-container ${maxHeight ? 'overflow-y-auto' : ''}`}
+        className={`table-scroll-container overflow-x-auto ${maxHeight ? 'overflow-y-auto' : ''}`}
         style={maxHeight ? { maxHeight } : undefined}
       >
         {/* Header */}
@@ -178,7 +214,7 @@ export function Table<T extends Record<string, any>>({
             rounded-[var(--table-row-radius)]
             ${enableStickyHeader ? 'sticky top-0 z-10' : ''}
           `}
-          style={{ minWidth: `${minWidth}px` }}
+          style={{ minWidth: `${tableMinWidth}px` }}
         >
           {/* Selection column with select all checkbox */}
           {selectable && (
@@ -217,29 +253,26 @@ export function Table<T extends Record<string, any>>({
                   leading-[var(--table-line-height)]
                   font-medium
                   text-[var(--color-text-default)]
-                  ${column.align === 'center' ? 'text-center' : ''}
-                  ${column.align === 'right' ? 'text-right' : 'text-left'}
+                  min-w-0
+                  ${column.align === 'center' ? 'text-center' : column.align === 'right' ? 'text-right' : 'text-left'}
                   ${column.sortable ? 'cursor-pointer select-none hover:text-[var(--color-action-primary)] transition-colors' : ''}
                   ${showDivider ? 'border-l border-[var(--color-border-default)]' : ''}
                 `}
-                style={{ 
-                  width: column.width,
-                  flex: column.flex ?? (column.width ? undefined : 1),
-                }}
+                style={getColumnStyle(column)}
                 onClick={column.sortable ? () => handleSort(column.key) : undefined}
+                title={column.label}
               >
                 {column.headerRender ? (
                   column.headerRender()
                 ) : (
                   <div
                     className={`
-                      flex items-center gap-1 w-full
-                      ${column.align === 'center' ? 'justify-center' : ''}
-                      ${column.align === 'right' ? 'justify-end flex-row-reverse' : ''}
+                      flex items-center gap-1 w-full min-w-0
+                      ${column.align === 'center' ? 'justify-center' : column.align === 'right' ? 'justify-end flex-row-reverse' : 'justify-start'}
                     `}
                   >
-                    <span>{column.label}</span>
-                    {column.sortable && renderSortIcon(column.key)}
+                    <span className="truncate" title={column.label}>{column.label}</span>
+                    {column.sortable && <span className="flex-shrink-0">{renderSortIcon(column.key)}</span>}
                   </div>
                 )}
               </div>
@@ -248,7 +281,7 @@ export function Table<T extends Record<string, any>>({
         </div>
 
         {/* Inner container for min-width */}
-        <div style={{ minWidth: `${minWidth}px`, width: '100%' }}>
+        <div style={{ minWidth: `${tableMinWidth}px`, width: '100%' }}>
           {/* Body */}
           <div className="flex flex-col gap-[var(--table-row-gap)] mt-[var(--table-row-gap)]">
           {sortedData.length === 0 ? (
@@ -315,6 +348,9 @@ export function Table<T extends Record<string, any>>({
                     const isFirstColumn = colIndex === 0;
                     const showCellDivider = isFirstColumn ? selectable : true;
                     
+                    const cellValue = row[column.key];
+                    const cellTitle = typeof cellValue === 'string' || typeof cellValue === 'number' ? String(cellValue) : undefined;
+                    
                     return (
                     <div
                       key={column.key}
@@ -325,18 +361,18 @@ export function Table<T extends Record<string, any>>({
                         text-[length:var(--table-font-size)]
                         leading-[var(--table-line-height)]
                         text-[var(--color-text-default)]
-                        ${column.align === 'center' ? 'justify-center' : ''}
-                        ${column.align === 'right' ? 'justify-end' : ''}
+                        min-w-0
+                        ${column.align === 'center' ? 'justify-center text-center' : column.align === 'right' ? 'justify-end text-right' : 'justify-start text-left'}
                         ${showCellDivider ? 'border-l border-transparent' : ''}
                       `}
-                      style={{ 
-                        width: column.width,
-                        flex: column.flex ?? (column.width ? undefined : 1),
-                      }}
+                      style={getColumnStyle(column)}
+                      title={cellTitle}
                     >
-                      {column.render
-                        ? column.render(row[column.key], row, rowIndex)
-                        : row[column.key]}
+                      <span className="truncate w-full">
+                        {column.render
+                          ? column.render(row[column.key], row, rowIndex)
+                          : row[column.key]}
+                      </span>
                     </div>
                   );
                   })}

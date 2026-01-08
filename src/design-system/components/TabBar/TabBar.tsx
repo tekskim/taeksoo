@@ -1,5 +1,5 @@
-import React, { useState, useRef, useEffect, useCallback } from 'react';
-import { IconPlus, IconX, IconMinus, IconSquare, IconChevronLeft, IconChevronRight } from '@tabler/icons-react';
+import React, { useState } from 'react';
+import { IconPlus, IconX, IconMinus, IconSquare } from '@tabler/icons-react';
 
 /* ----------------------------------------
    Types
@@ -27,6 +27,8 @@ export interface TabBarProps {
   onTabClose?: (tabId: string) => void;
   /** Callback when add button is clicked */
   onTabAdd?: () => void;
+  /** Callback when tabs are reordered via drag and drop */
+  onTabReorder?: (fromIndex: number, toIndex: number) => void;
   /** Show add button */
   showAddButton?: boolean;
   /** Show window controls (minimize, maximize, close) */
@@ -51,6 +53,7 @@ export const TabBar: React.FC<TabBarProps> = ({
   onTabChange,
   onTabClose,
   onTabAdd,
+  onTabReorder,
   showAddButton = true,
   showWindowControls = true,
   onMinimize,
@@ -58,52 +61,9 @@ export const TabBar: React.FC<TabBarProps> = ({
   onWindowClose,
   className = '',
 }) => {
-  const tabsRef = useRef<HTMLDivElement>(null);
-  const [canScrollLeft, setCanScrollLeft] = useState(false);
-  const [canScrollRight, setCanScrollRight] = useState(false);
-
-  const checkScrollability = useCallback(() => {
-    if (tabsRef.current) {
-      const { scrollLeft, scrollWidth, clientWidth } = tabsRef.current;
-      setCanScrollLeft(scrollLeft > 0);
-      setCanScrollRight(scrollLeft + clientWidth < scrollWidth - 1);
-    }
-  }, []);
-
-  useEffect(() => {
-    checkScrollability();
-    const tabsEl = tabsRef.current;
-    if (tabsEl) {
-      tabsEl.addEventListener('scroll', checkScrollability);
-      window.addEventListener('resize', checkScrollability);
-    }
-    return () => {
-      if (tabsEl) {
-        tabsEl.removeEventListener('scroll', checkScrollability);
-      }
-      window.removeEventListener('resize', checkScrollability);
-    };
-  }, [checkScrollability, tabs]);
-
-  // Scroll to active tab when it changes
-  useEffect(() => {
-    if (tabsRef.current && activeTab) {
-      const activeTabEl = tabsRef.current.querySelector(`[data-tab-id="${activeTab}"]`) as HTMLElement;
-      if (activeTabEl) {
-        activeTabEl.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
-      }
-    }
-  }, [activeTab]);
-
-  const scrollTabs = (direction: 'left' | 'right') => {
-    if (tabsRef.current) {
-      const scrollAmount = 200;
-      tabsRef.current.scrollBy({
-        left: direction === 'left' ? -scrollAmount : scrollAmount,
-        behavior: 'smooth',
-      });
-    }
-  };
+  // Drag and drop state
+  const [draggedTabId, setDraggedTabId] = useState<string | null>(null);
+  const [dragOverTabId, setDragOverTabId] = useState<string | null>(null);
 
   const handleTabClick = (tabId: string) => {
     onTabChange(tabId);
@@ -114,64 +74,97 @@ export const TabBar: React.FC<TabBarProps> = ({
     onTabClose?.(tabId);
   };
 
+  // Drag and drop handlers
+  const handleDragStart = (e: React.DragEvent, tabId: string) => {
+    setDraggedTabId(tabId);
+    e.dataTransfer.effectAllowed = 'move';
+    e.dataTransfer.setData('text/plain', tabId);
+    // Add a slight delay to show the drag effect
+    requestAnimationFrame(() => {
+      (e.target as HTMLElement).style.opacity = '0.5';
+    });
+  };
+
+  const handleDragEnd = (e: React.DragEvent) => {
+    setDraggedTabId(null);
+    setDragOverTabId(null);
+    (e.target as HTMLElement).style.opacity = '1';
+  };
+
+  const handleDragOver = (e: React.DragEvent, tabId: string) => {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'move';
+    if (draggedTabId && draggedTabId !== tabId) {
+      setDragOverTabId(tabId);
+    }
+  };
+
+  const handleDragLeave = () => {
+    setDragOverTabId(null);
+  };
+
+  const handleDrop = (e: React.DragEvent, targetTabId: string) => {
+    e.preventDefault();
+    setDragOverTabId(null);
+    
+    if (!draggedTabId || !onTabReorder) return;
+    
+    const fromIndex = tabs.findIndex(t => t.id === draggedTabId);
+    const toIndex = tabs.findIndex(t => t.id === targetTabId);
+    
+    if (fromIndex !== -1 && toIndex !== -1 && fromIndex !== toIndex) {
+      onTabReorder(fromIndex, toIndex);
+    }
+    
+    setDraggedTabId(null);
+  };
+
   return (
     <div
       className={`
         relative
         flex items-center
+        w-full
         h-[var(--tabbar-height)]
         bg-[var(--color-surface-default)]
         after:absolute after:bottom-0 after:left-0 after:right-0 after:h-px after:bg-[var(--color-border-default)] after:pointer-events-none after:z-10
         ${className}
       `}
     >
-      {/* Left Scroll Button */}
-      {canScrollLeft && (
-        <button
-          type="button"
-          onClick={() => scrollTabs('left')}
-          className="
-            shrink-0
-            flex items-center justify-center
-            size-[28px]
-            text-[var(--color-text-muted)]
-            hover:text-[var(--color-text-default)]
-            hover:bg-[var(--color-surface-subtle)]
-            transition-colors
-          "
-          aria-label="Scroll tabs left"
-        >
-          <IconChevronLeft size={16} stroke={2} />
-        </button>
-      )}
-
       {/* Tabs Container */}
       <div
-        ref={tabsRef}
         className="
           flex items-end
-          overflow-x-auto
-          scrollbar-none
+          overflow-hidden
           h-full
+          min-w-0
         "
-        style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
       >
         {tabs.map((tab) => {
           const isActive = tab.id === activeTab;
           const closable = tab.closable !== false;
+          const isDragging = draggedTabId === tab.id;
+          const isDragOver = dragOverTabId === tab.id;
 
           return (
             <div
               key={tab.id}
               data-tab-id={tab.id}
               onClick={() => handleTabClick(tab.id)}
+              draggable={!!onTabReorder}
+              onDragStart={(e) => handleDragStart(e, tab.id)}
+              onDragEnd={handleDragEnd}
+              onDragOver={(e) => handleDragOver(e, tab.id)}
+              onDragLeave={handleDragLeave}
+              onDrop={(e) => handleDrop(e, tab.id)}
               className={`
                 group
                 relative
                 flex items-center
                 h-full
-                min-w-[var(--tabbar-tab-min-width)]
-                max-w-[var(--tabbar-tab-max-width)]
+                w-[160px]
+                min-w-0
+                shrink
                 px-[var(--tabbar-tab-padding-x)]
                 gap-[var(--tabbar-tab-gap)]
                 cursor-pointer
@@ -181,6 +174,8 @@ export const TabBar: React.FC<TabBarProps> = ({
                   ? 'bg-[var(--color-surface-default)]'
                   : 'bg-[var(--color-surface-subtle)] hover:bg-[var(--color-surface-muted)]'
                 }
+                ${isDragging ? 'opacity-50' : ''}
+                ${isDragOver ? 'border-l-2 border-l-[var(--color-action-primary)]' : ''}
               `}
             >
               {/* Active indicator */}
@@ -241,26 +236,6 @@ export const TabBar: React.FC<TabBarProps> = ({
           );
         })}
       </div>
-
-      {/* Right Scroll Button */}
-      {canScrollRight && (
-        <button
-          type="button"
-          onClick={() => scrollTabs('right')}
-          className="
-            shrink-0
-            flex items-center justify-center
-            size-[28px]
-            text-[var(--color-text-muted)]
-            hover:text-[var(--color-text-default)]
-            hover:bg-[var(--color-surface-subtle)]
-            transition-colors
-          "
-          aria-label="Scroll tabs right"
-        >
-          <IconChevronRight size={16} stroke={2} />
-        </button>
-      )}
 
       {/* Add Button */}
       {showAddButton && onTabAdd && (

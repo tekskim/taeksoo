@@ -187,7 +187,7 @@ export function InstanceTemplateDetailPage() {
   const template = id ? (mockTemplatesMap[id] || defaultTemplateDetail) : defaultTemplateDetail;
   const [isFavorite, setIsFavorite] = useState(template.favorite);
 
-  const { tabs, activeTabId, closeTab, selectTab, updateActiveTabLabel } = useTabs();
+  const { tabs, activeTabId, closeTab, selectTab, updateActiveTabLabel, moveTab } = useTabs();
 
   // Update tab label to template name
   useEffect(() => {
@@ -251,7 +251,7 @@ export function InstanceTemplateDetailPage() {
 
         {/* Scrollable Content Area */}
         <div className="flex-1 overflow-auto overscroll-contain sidebar-scroll">
-          <div className="pt-4 px-8 pb-20 bg-[var(--color-surface-default)]">
+          <div className="pt-4 px-8 pb-20 bg-[var(--color-surface-default)] min-h-full">
           <VStack gap={6} className="min-w-[1176px]">
             {/* Template Header Card */}
             <DetailHeader>
@@ -264,7 +264,7 @@ export function InstanceTemplateDetailPage() {
                     aria-label={isFavorite ? 'Remove from favorites' : 'Add to favorites'}
                   >
                     {isFavorite ? (
-                      <IconStarFilled size={16} className="text-yellow-400" />
+                      <IconStarFilled size={16} className="text-yellow-500" />
                     ) : (
                       <IconStar size={16} stroke={1.5} className="text-[var(--color-text-muted)]" />
                     )}
