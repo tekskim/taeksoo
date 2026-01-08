@@ -72,6 +72,9 @@ import { OSDDetailPage } from '@/pages/OSDDetailPage';
 import { PhysicalDisksPage } from '@/pages/PhysicalDisksPage';
 import { OverallPerformancePage } from '@/pages/OverallPerformancePage';
 
+// Pages - Container
+import { ContainerDashboardPage } from '@/pages/ContainerDashboardPage';
+
 // Pages - Cloud Builder
 import { CloudBuilderConsolePage } from '@/pages/cloudbuilder/CloudBuilderConsolePage';
 import { CloudBuilderCreatePage } from '@/pages/cloudbuilder/CloudBuilderCreatePage';
@@ -175,6 +178,10 @@ function AppRoutes() {
         <Route path="/storage/buckets" element={<BucketsPage />} />
         <Route path="/storage/buckets/:id" element={<BucketDetailPage />} />
         <Route path="/storage/performance" element={<OverallPerformancePage />} />
+
+        {/* Container Routes */}
+        <Route path="/container" element={<ContainerDashboardPage />} />
+        <Route path="/container/*" element={<ContainerDashboardPage />} />
 
         {/* Design System Routes */}
         <Route path="/design" element={<DesignSystemPage />} />
