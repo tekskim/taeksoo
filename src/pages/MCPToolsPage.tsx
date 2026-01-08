@@ -583,7 +583,7 @@ export function MCPToolsPage() {
               {/* Tabs and CTA Button */}
               <div className="flex items-center justify-between relative shrink-0 w-full">
                 <div className="flex-1 min-w-0">
-                  <Tabs value={activeTab} onChange={setActiveTab} variant="underline" size="sm">
+                  <Tabs value={activeTab} onChange={setActiveTab} variant="underline" size="md">
                     <TabList>
                       <Tab value="my-servers">My servers</Tab>
                       <Tab value="catalog">Catalog</Tab>

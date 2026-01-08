@@ -404,7 +404,7 @@ export function CreateAgentPage() {
                 </h4>
 
                 {/* Tabs */}
-                <Tabs value={activeStep} onChange={(value) => setActiveStep(value as 'configuration' | 'data-mcp')} variant="underline" size="sm">
+                <Tabs value={activeStep} onChange={(value) => setActiveStep(value as 'configuration' | 'data-mcp')} variant="underline" size="md">
                   <TabList className="w-full">
                     <Tab value="configuration">Configuration</Tab>
                     <Tab value="data-mcp">Data & MCP Connection</Tab>

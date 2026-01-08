@@ -49,7 +49,7 @@ function DesktopIcon({ icon, label, onClick }: DesktopIconProps) {
           className="w-16 h-16 object-cover object-center"
         />
       </div>
-      <span className="text-[length:var(--font-size-12)] leading-[var(--line-height-18)] font-medium text-white text-center whitespace-nowrap font-[Mona_Sans,sans-serif]">
+      <span className="text-[length:var(--font-size-12)] leading-[var(--line-height-18)] font-medium text-white text-center whitespace-nowrap ">
         {label}
       </span>
     </button>
@@ -83,7 +83,7 @@ function AdminCenterIcon({ onClick, iconRef }: AdminCenterIconProps) {
           <img src={imgCloud} alt="" className="w-[22px] h-[22px] object-cover" />
         </div>
       </div>
-      <span className="text-[length:var(--font-size-12)] leading-[var(--line-height-18)] font-medium text-white text-center whitespace-nowrap font-[Mona_Sans,sans-serif]">
+      <span className="text-[length:var(--font-size-12)] leading-[var(--line-height-18)] font-medium text-white text-center whitespace-nowrap ">
         Admin Center
       </span>
     </button>
@@ -106,7 +106,7 @@ function DesktopTopBar({ onChatbotToggle }: TopBarProps) {
         {/* Domain Selector - Figma style */}
         <div className="flex items-center gap-1.5 bg-[#ddddda] px-2.5 py-0.5 rounded-lg">
           <img src={imgSymbol} alt="" className="w-4 h-4" />
-          <span className="text-lg font-semibold text-black font-[Mona_Sans,sans-serif] leading-7">Domain A</span>
+          <span className="text-lg font-semibold text-black  leading-7">Domain A</span>
         </div>
         
         {/* Separator */}
@@ -204,15 +204,15 @@ function AdminCenterPanel({ isOpen, onClose, anchorRef }: AdminPanelProps) {
       >
         <div className="flex flex-col items-center gap-2 w-16">
           <img src={imgStorageAdmin} alt="Storage Admin" className="w-16 h-16 object-cover" />
-          <span className="text-[length:var(--font-size-12)] leading-[var(--line-height-18)] font-medium text-white text-center font-[Mona_Sans,sans-serif]">Storage Admin</span>
+          <span className="text-[length:var(--font-size-12)] leading-[var(--line-height-18)] font-medium text-white text-center ">Storage Admin</span>
         </div>
         <div className="flex flex-col items-center gap-2 w-16">
           <img src={imgComputeAdmin} alt="Compute Admin" className="w-16 h-16 object-cover" />
-          <span className="text-[length:var(--font-size-12)] leading-[var(--line-height-18)] font-medium text-white text-center font-[Mona_Sans,sans-serif]">Compute Admin</span>
+          <span className="text-[length:var(--font-size-12)] leading-[var(--line-height-18)] font-medium text-white text-center ">Compute Admin</span>
         </div>
         <div className="flex flex-col items-center gap-2 w-16">
           <img src={imgCloud} alt="Cloud Builder" className="w-16 h-16 object-cover" />
-          <span className="text-[length:var(--font-size-12)] leading-[var(--line-height-18)] font-medium text-white text-center font-[Mona_Sans,sans-serif]">Cloud Builder</span>
+          <span className="text-[length:var(--font-size-12)] leading-[var(--line-height-18)] font-medium text-white text-center ">Cloud Builder</span>
         </div>
       </div>
     </>
