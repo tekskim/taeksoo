@@ -51,6 +51,8 @@ import {
   MonitoringToolbar,
   NotificationCenter,
   FloatingCard,
+  Loading,
+  SNBMenuItem,
 } from '@/design-system';
 import type { NotificationItem } from '@/design-system/components/NotificationCenter';
 import {
@@ -105,6 +107,7 @@ import {
   IconCircleCheck,
   IconBan,
   IconLoader,
+  IconLoader2,
   IconProgress,
   // Basic - UI
   IconSearch,
@@ -220,6 +223,8 @@ const formControlItems = [
   { id: 'chip', label: 'Chip', icon: IconTag },
   { id: 'pagination', label: 'Pagination', icon: IconProgress },
   { id: 'progress-bar', label: 'Progress Bar', icon: IconProgress },
+  { id: 'loading', label: 'Loading', icon: IconLoader2 },
+  { id: 'snb-menu-item', label: 'SNBMenuItem', icon: IconLayoutNavbar },
   { id: 'toggle', label: 'Toggle', icon: IconToggleRight },
   { id: 'checkbox', label: 'Checkbox', icon: IconSquareCheck },
   { id: 'radio', label: 'Radio', icon: IconCircle },
@@ -4231,6 +4236,136 @@ outline: 2px solid var(--color-border-focus);`}
                       <div className="w-4 h-4 rounded bg-[var(--color-border-default)]" />
                       <span className="text-[length:var(--font-size-11)] text-[var(--color-text-muted)]">Unlimited: Neutral</span>
                     </div>
+                  </div>
+                </VStack>
+              </VStack>
+            </Section>
+
+            {/* Loading Component */}
+            <Section id="loading" title="Loading" description="Loading indicators for various states">
+              <VStack gap={8}>
+                {/* Tokens */}
+                <VStack gap={3}>
+                  <Label>Design Tokens</Label>
+                  <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
+                    <code>spinner: 16/22/32px</code> · <code>progress: h-1</code> · <code>button: min-w-80px</code>
+                  </div>
+                </VStack>
+
+                {/* Spinner Variant */}
+                <VStack gap={3}>
+                  <Label>Spinner Variant</Label>
+                  <div className="flex gap-8 items-end p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-subtle)] rounded-[var(--radius-lg)]">
+                    <VStack gap={2} align="center">
+                      <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">Small</span>
+                      <Loading variant="spinner" size="sm" text="Loading" />
+                    </VStack>
+                    <VStack gap={2} align="center">
+                      <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">Medium</span>
+                      <Loading variant="spinner" size="md" text="Loading" />
+                    </VStack>
+                    <VStack gap={2} align="center">
+                      <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">Large</span>
+                      <Loading variant="spinner" size="lg" text="Loading" />
+                    </VStack>
+                  </div>
+                </VStack>
+
+                {/* Progress Variant */}
+                <VStack gap={3}>
+                  <Label>Progress Variant</Label>
+                  <div className="flex flex-col gap-4 p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-subtle)] rounded-[var(--radius-lg)]">
+                    <Loading 
+                      variant="progress" 
+                      text="Loading.."
+                      description="Create an instance to start using compute resources."
+                      progress={68}
+                      statusText="Status: parsing"
+                    />
+                  </div>
+                </VStack>
+
+                {/* Button Variant */}
+                <VStack gap={3}>
+                  <Label>Button Variant (Disabled Loading State)</Label>
+                  <div className="flex gap-4 p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-subtle)] rounded-[var(--radius-lg)]">
+                    <Loading variant="button" buttonLabel="Loading" />
+                    <Loading variant="button" buttonLabel="Saving" />
+                    <Loading variant="button" buttonLabel="Processing" />
+                  </div>
+                </VStack>
+              </VStack>
+            </Section>
+
+            {/* SNBMenuItem Component */}
+            <Section id="snb-menu-item" title="SNBMenuItem" description="Side Navigation Bar Menu Item with default, hover, and selected states">
+              <VStack gap={8}>
+                {/* Design Tokens */}
+                <VStack gap={3}>
+                  <Label>Design Tokens</Label>
+                  <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
+                    <code>size: 38×38px</code> · <code>padding: 8px 6px</code> · <code>radius: 8px</code> · <code>icon: 22px</code>
+                  </div>
+                </VStack>
+
+                {/* Status Variants */}
+                <VStack gap={3}>
+                  <Label>Status Variants</Label>
+                  <div className="flex gap-8 items-center p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-subtle)] rounded-[var(--radius-lg)]">
+                    <VStack gap={2} align="center">
+                      <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">Default</span>
+                      <SNBMenuItem status="default">
+                        <IconBoxMultiple size={22} stroke={1} />
+                      </SNBMenuItem>
+                    </VStack>
+                    <VStack gap={2} align="center">
+                      <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">Hover</span>
+                      <SNBMenuItem status="hover">
+                        <IconBoxMultiple size={22} stroke={1} />
+                      </SNBMenuItem>
+                    </VStack>
+                    <VStack gap={2} align="center">
+                      <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">Selected</span>
+                      <SNBMenuItem status="selected">
+                        <IconBoxMultiple size={22} stroke={1} />
+                      </SNBMenuItem>
+                    </VStack>
+                  </div>
+                </VStack>
+
+                {/* Type Variants */}
+                <VStack gap={3}>
+                  <Label>Type Variants</Label>
+                  <div className="flex gap-8 items-center p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-subtle)] rounded-[var(--radius-lg)]">
+                    <VStack gap={2} align="center">
+                      <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">Icon (Default)</span>
+                      <SNBMenuItem isSelected>
+                        <IconBoxMultiple size={22} stroke={1} />
+                      </SNBMenuItem>
+                    </VStack>
+                    <VStack gap={2} align="center">
+                      <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">Icon (Selected)</span>
+                      <SNBMenuItem type="text" text="P" status="selected" />
+                    </VStack>
+                  </div>
+                </VStack>
+
+                {/* Interactive Demo */}
+                <VStack gap={3}>
+                  <Label>Interactive Demo (Hover to see effect)</Label>
+                  <div className="flex gap-2 p-4 bg-[var(--color-surface-subtle)] border border-[var(--color-border-subtle)] rounded-[var(--radius-lg)]">
+                    <SNBMenuItem>
+                      <IconHome size={22} stroke={1} />
+                    </SNBMenuItem>
+                    <SNBMenuItem isSelected>
+                      <IconBoxMultiple size={22} stroke={1} />
+                    </SNBMenuItem>
+                    <SNBMenuItem>
+                      <IconDatabase size={22} stroke={1} />
+                    </SNBMenuItem>
+                    <SNBMenuItem>
+                      <IconSettings size={22} stroke={1} />
+                    </SNBMenuItem>
                   </div>
                 </VStack>
               </VStack>

@@ -98,10 +98,86 @@ function AgentCard({
 }
 
 /* ----------------------------------------
+   Chat Menu Item Component
+   ---------------------------------------- */
+interface ChatMenuItemProps {
+  label: string;
+  status?: 'default' | 'selected' | 'selected-alert';
+  onClick?: () => void;
+  onMoreClick?: (e: React.MouseEvent) => void;
+}
+
+function ChatMenuItem({ 
+  label, 
+  status = 'default', 
+  onClick,
+  onMoreClick,
+}: ChatMenuItemProps) {
+  const [isHovered, setIsHovered] = useState(false);
+  const [isMoreHovered, setIsMoreHovered] = useState(false);
+
+  const isSelected = status === 'selected' || status === 'selected-alert';
+  const showMoreButton = isHovered || isSelected;
+
+  // Base container styles
+  const containerBaseClass = "flex overflow-clip relative rounded-md w-full cursor-pointer transition-colors";
+  
+  // Status-based styles
+  const containerStatusClass = isSelected
+    ? "bg-[var(--color-border-default)] items-center justify-between pl-1.5 pr-0 py-0 h-6"
+    : isHovered
+      ? "bg-[var(--color-surface-muted)] items-center justify-between pl-1.5 pr-0 py-0 h-6"
+      : "items-center gap-0 px-1.5 py-1 h-6";
+
+  // More button styles
+  const moreButtonClass = isMoreHovered
+    ? "bg-[var(--color-surface-subtle)] relative rounded-md shrink-0 size-6 flex items-center justify-center"
+    : "relative shrink-0 size-6 flex items-center justify-center";
+
+  return (
+    <div
+      className={`${containerBaseClass} ${containerStatusClass}`}
+      onClick={onClick}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => {
+        setIsHovered(false);
+        setIsMoreHovered(false);
+      }}
+    >
+      <p className="font-normal leading-[length:var(--line-height-16)] relative shrink-0 text-[var(--color-text-default)] text-[length:var(--font-size-12)] truncate flex-1">
+        {label}
+      </p>
+      {showMoreButton && (
+        <button
+          className={moreButtonClass}
+          onClick={(e) => {
+            e.stopPropagation();
+            onMoreClick?.(e);
+          }}
+          onMouseEnter={() => setIsMoreHovered(true)}
+          onMouseLeave={() => setIsMoreHovered(false)}
+        >
+          <IconDots size={16} stroke={1} className="text-[var(--color-text-default)]" />
+        </button>
+      )}
+    </div>
+  );
+}
+
+/* ----------------------------------------
    Chat Sidebar Component
    ---------------------------------------- */
 function ChatSidebar() {
   const navigate = useNavigate();
+  const [selectedChatId, setSelectedChatId] = useState<string | null>('1');
+
+  const chatItems = [
+    { id: '1', label: 'New chat' },
+    { id: '2', label: 'SQL Query Optimization' },
+    { id: '3', label: 'Code Review Session' },
+    { id: '4', label: 'API Design Discussion' },
+    { id: '5', label: 'Bug Analysis' },
+  ];
   
   return (
     <div className="bg-[var(--color-surface-subtle)] border-r border-[var(--color-border-default)] flex flex-col h-full w-[200px] shrink-0">
@@ -128,34 +204,17 @@ function ChatSidebar() {
 
         {/* Chat List */}
         <div className="flex flex-col gap-1 items-start px-2 w-full">
-          <div className="flex h-6 items-center justify-between overflow-clip pl-1.5 pr-0 py-0 relative rounded-md shrink-0 w-full hover:bg-[var(--color-surface-muted)] transition-colors cursor-pointer">
-            <p className="font-normal leading-[length:var(--line-height-18)] relative shrink-0 text-[var(--color-text-default)] text-[length:var(--font-size-12)]">
-              label 1
-            </p>
-            <button className="bg-[var(--color-surface-subtle)] relative rounded-md shrink-0 size-6 hover:bg-[var(--color-surface-muted)] transition-colors flex items-center justify-center">
-              <IconDots size={12} stroke={1} className="text-[var(--color-text-muted)]" />
-            </button>
-          </div>
-          <div className="flex h-6 items-center overflow-clip px-1.5 py-1 relative rounded-md shrink-0 w-full hover:bg-[var(--color-surface-muted)] transition-colors cursor-pointer">
-            <p className="font-normal leading-[length:var(--line-height-18)] relative shrink-0 text-[var(--color-text-default)] text-[length:var(--font-size-12)]">
-              label 2
-            </p>
-          </div>
-          <div className="flex gap-0 h-6 items-center overflow-clip px-1.5 py-1 relative rounded-md shrink-0 w-full hover:bg-[var(--color-surface-muted)] transition-colors cursor-pointer">
-            <p className="font-normal leading-[length:var(--line-height-18)] relative shrink-0 text-[var(--color-text-default)] text-[length:var(--font-size-12)]">
-              label 3
-            </p>
-          </div>
-          <div className="flex gap-0 h-6 items-center overflow-clip px-1.5 py-1 relative rounded-md shrink-0 w-full hover:bg-[var(--color-surface-muted)] transition-colors cursor-pointer">
-            <p className="font-normal leading-[length:var(--line-height-18)] relative shrink-0 text-[var(--color-text-default)] text-[length:var(--font-size-12)]">
-              label 4
-            </p>
-          </div>
-          <div className="flex gap-0 h-6 items-center overflow-clip px-1.5 py-1 relative rounded-md shrink-0 w-full hover:bg-[var(--color-surface-muted)] transition-colors cursor-pointer">
-            <p className="font-normal leading-[length:var(--line-height-18)] relative shrink-0 text-[var(--color-text-default)] text-[length:var(--font-size-12)]">
-              label 5
-            </p>
-          </div>
+          {chatItems.map((chat) => (
+            <ChatMenuItem
+              key={chat.id}
+              label={chat.label}
+              status={selectedChatId === chat.id ? 'selected' : 'default'}
+              onClick={() => setSelectedChatId(chat.id)}
+              onMoreClick={(e) => {
+                console.log('More clicked for:', chat.label);
+              }}
+            />
+          ))}
         </div>
       </div>
     </div>
@@ -390,7 +449,7 @@ export function ChatPage() {
     <div className="min-h-screen bg-[var(--color-surface-subtle)] flex w-full">
       <AgentSidebar />
 
-      <main className="flex flex-1 flex-col min-h-screen bg-[var(--color-surface-default)] ml-[62px]">
+      <main className="flex flex-1 flex-col min-h-screen bg-[var(--color-surface-default)] ml-[60px]">
         <div className="w-full flex flex-col min-h-screen">
           <TabBar
             tabs={tabBarTabs}

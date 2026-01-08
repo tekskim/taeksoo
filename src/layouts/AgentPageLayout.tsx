@@ -143,7 +143,7 @@ export function AgentPageLayout({
     <div className="min-h-screen bg-[var(--color-surface-subtle)] flex w-full">
       {sidebar || defaultSidebar}
 
-      <main className="flex flex-1 flex-col min-h-screen bg-[var(--color-surface-default)] ml-[62px]">
+      <main className="flex flex-1 flex-col min-h-screen bg-[var(--color-surface-default)] ml-[60px]">
         <div className="w-full flex flex-col min-h-screen">
           <TabBar
             tabs={tabBarTabs}
