@@ -900,6 +900,14 @@ const baseChartOptions = {
     backgroundColor: 'white',
     borderColor: '#e2e8f0',
     textStyle: { color: chartColors.slate800, fontSize: 11 },
+    formatter: (params: Array<{ marker: string; seriesName: string; value: number; axisValueLabel: string }>) => {
+      if (!Array.isArray(params) || params.length === 0) return '';
+      const time = params[0].axisValueLabel;
+      const items = params.map(p => 
+        `<div style="display: flex; align-items: center; gap: 8px;"><span>${p.marker}</span><span>${p.seriesName}</span><span style="font-weight: 500; margin-left: auto;">${p.value}</span></div>`
+      ).join('');
+      return `<div style="font-size: 11px;">${time}<div style="margin-top: 4px;">${items}</div></div>`;
+    },
     axisPointer: {
       type: 'line',
       snap: true,
@@ -1436,6 +1444,14 @@ function LineChart({
         color: chartColors.slate800, 
         fontSize: 11, 
         fontFamily: 'Mona Sans, -apple-system, BlinkMacSystemFont, sans-serif' 
+      },
+      formatter: (params: Array<{ marker: string; seriesName: string; value: number; axisValueLabel: string }>) => {
+        if (!Array.isArray(params) || params.length === 0) return '';
+        const time = params[0].axisValueLabel;
+        const items = params.map(p => 
+          `<div style="display: flex; align-items: center; gap: 8px;"><span>${p.marker}</span><span>${p.seriesName}</span><span style="font-weight: 500; margin-left: auto;">${yAxisFormatter(p.value)}</span></div>`
+        ).join('');
+        return `<div style="font-size: 11px;">${time}<div style="margin-top: 4px;">${items}</div></div>`;
       }
     },
     series: series
@@ -1761,7 +1777,7 @@ function PieChartDemo({
         fontSize: 11
       },
       formatter: (params: { marker: string; name: string; value: number; percent: number }) => {
-        return `${params.marker} ${params.name}<br/><span style="font-weight: 600; margin-left: 14px;">${params.value} (${params.percent.toFixed(0)}%)</span>`;
+        return `${params.marker} ${params.name}<br/><span style="font-weight: 500; margin-left: 14px;">${params.value} (${params.percent.toFixed(0)}%)</span>`;
       }
     },
     animation: false,
@@ -2324,6 +2340,27 @@ function TableDemo() {
     { key: 'createdAt', label: 'Created At', width: '140px' },
   ];
 
+  // Columns without copy button (40px row height demo)
+  const noCopyColumns = [
+    { 
+      key: 'name', 
+      label: 'Name', 
+      width: '180px',
+      render: (value: string) => (
+        <span className="text-[var(--color-action-primary)] cursor-pointer hover:underline hover:underline-offset-2">{value}</span>
+      )
+    },
+    { 
+      key: 'fingerprint', 
+      label: 'Fingerprint', 
+      flex: 1,
+      render: (_: string, row: KeyPairData) => (
+        <span className="text-[length:var(--font-size-12)] leading-[var(--line-height-18)] text-[var(--color-text-default)]">{row.fingerprint}</span>
+      )
+    },
+    { key: 'createdAt', label: 'Created At', width: '140px' },
+  ];
+
   // Compact columns for horizontal scroll demo
   const compactColumns = [
     { 
@@ -2424,6 +2461,17 @@ function TableDemo() {
         <p className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
           Click copy icon to copy fingerprint. Icon changes to checkmark for 2 seconds after copying.
         </p>
+      </VStack>
+
+      {/* 40px Row Height */}
+      <VStack gap={3}>
+        <Label>40PX</Label>
+        <Table
+          columns={noCopyColumns}
+          data={sampleKeyPairData}
+          rowKey="id"
+          rowHeight="40px"
+        />
       </VStack>
 
       {/* Sticky Header */}
