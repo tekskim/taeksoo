@@ -2515,6 +2515,8 @@ export function DesignSystemPage() {
 
   // Intersection Observer to track active section
   useEffect(() => {
+    if (!mainRef.current) return;
+    
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
@@ -2523,7 +2525,10 @@ export function DesignSystemPage() {
           }
         });
       },
-      { rootMargin: '-20% 0px -60% 0px' }
+      { 
+        root: mainRef.current,
+        rootMargin: '-20% 0px -60% 0px' 
+      }
     );
 
     navItems.forEach(({ id }) => {
@@ -2536,9 +2541,51 @@ export function DesignSystemPage() {
 
   const scrollToSection = (id: string) => {
     const element = document.getElementById(id);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    const container = mainRef.current;
+    
+    if (!element || !container) {
+      return;
     }
+    
+    // Small delay to ensure state updates are processed
+    setTimeout(() => {
+      if (!container || !element) return;
+      
+      // Calculate target position relative to the scroll container
+      const containerRect = container.getBoundingClientRect();
+      const elementRect = element.getBoundingClientRect();
+      const scrollTop = container.scrollTop;
+      const targetScrollTop = scrollTop + elementRect.top - containerRect.top - 20; // 20px offset from top
+      
+      // Fast smooth scroll
+      const startScrollTop = scrollTop;
+      const distance = targetScrollTop - startScrollTop;
+      const duration = 400;
+      let startTime: number | null = null;
+      
+      // Smooth easing function (easeOutCubic - starts fast, ends slow)
+      const easeOutCubic = (t: number): number => {
+        return 1 - Math.pow(1 - t, 3);
+      };
+      
+      const animateScroll = (currentTime: number) => {
+        if (startTime === null) startTime = currentTime;
+        const timeElapsed = currentTime - startTime;
+        const progress = Math.min(timeElapsed / duration, 1);
+        const easedProgress = easeOutCubic(progress);
+        
+        if (container) {
+          const currentScrollTop = startScrollTop + distance * easedProgress;
+          container.scrollTop = currentScrollTop;
+          
+          if (progress < 1) {
+            requestAnimationFrame(animateScroll);
+          }
+        }
+      };
+      
+      requestAnimationFrame(animateScroll);
+    }, 50);
   };
 
   // Filter nav items based on search query (for sidebar)
@@ -2632,15 +2679,21 @@ export function DesignSystemPage() {
             
             {/* Search Results Dropdown */}
             {sidebarSearchQuery.trim() && isSidebarSearchFocused && (
-              <div className="absolute top-full left-0 w-[166px] mt-2 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] shadow-[var(--shadow-lg)] z-50 max-h-[300px] overflow-y-auto">
+              <div className="absolute top-full left-0 w-[166px] mt-2 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] shadow-[var(--shadow-lg)] z-50 max-h-[300px] overflow-y-auto sidebar-scroll">
                 {filteredSidebarNavItems.length > 0 ? (
                   <div className="p-2">
                     {filteredSidebarNavItems.map(({ id, label, icon: Icon }, index) => (
                       <button
                         key={id}
-                        onClick={() => {
+                        onMouseDown={(e) => {
+                          e.preventDefault(); // Prevent input blur
+                        }}
+                        onClick={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
                           scrollToSection(id);
                           setSidebarSearchQuery('');
+                          setIsSidebarSearchFocused(false);
                         }}
                         data-cursor-element-id={`sidebar-search-result-${id}-${index}`}
                         className="w-full px-3 py-2 rounded-[var(--radius-md)] flex items-center gap-2 text-left hover:bg-[var(--color-surface-muted)] transition-colors cursor-pointer"
@@ -2844,15 +2897,21 @@ export function DesignSystemPage() {
               
               {/* Search Results Dropdown */}
               {mainSearchQuery.trim() && isMainSearchFocused && (
-                <div className="absolute top-full left-0 right-0 mt-2 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] shadow-[var(--shadow-lg)] z-50 max-h-[300px] overflow-y-auto">
+                <div className="absolute top-full left-0 right-0 mt-2 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] shadow-[var(--shadow-lg)] z-50 max-h-[300px] overflow-y-auto sidebar-scroll">
                   {filteredMainNavItems.length > 0 ? (
                     <div className="p-2">
                       {filteredMainNavItems.map(({ id, label, icon: Icon }, index) => (
                         <button
                           key={id}
-                          onClick={() => {
+                          onMouseDown={(e) => {
+                            e.preventDefault(); // Prevent input blur
+                          }}
+                          onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
                             scrollToSection(id);
                             setMainSearchQuery('');
+                            setIsMainSearchFocused(false);
                           }}
                           data-cursor-element-id={`main-search-result-${id}-${index}`}
                           className="w-full px-3 py-2 rounded-[var(--radius-md)] flex items-center gap-3 text-left hover:bg-[var(--color-surface-muted)] transition-colors cursor-pointer"
