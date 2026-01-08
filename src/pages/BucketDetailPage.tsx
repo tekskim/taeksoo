@@ -271,7 +271,7 @@ function ObjectRow({ object, isExpanded, isSelected, onToggleExpand, onToggleSel
           )}
           <Link
             to={isFolder ? `/storage/buckets/${object.id}` : '#'}
-            className="text-[var(--color-action-primary)] hover:underline text-[length:var(--table-font-size)] leading-[var(--table-line-height)] truncate"
+            className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2 text-[length:var(--table-font-size)] leading-[var(--table-line-height)] truncate"
           >
             {object.name}
           </Link>
