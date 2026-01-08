@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import {
   Button,
@@ -424,10 +424,17 @@ export function BucketDetailPage() {
   const [treeSidebarOpen, setTreeSidebarOpen] = useState(true);
 
   // Global tab management
-  const { tabs, activeTabId, closeTab, selectTab, addNewTab } = useTabs();
+  const { tabs, activeTabId, closeTab, selectTab, addNewTab, updateActiveTabLabel } = useTabs();
 
   // Use mock data (in real app, fetch based on id)
   const bucketData = mockBucketDetail;
+
+  // Update tab label to match the bucket name (most recent breadcrumb)
+  useEffect(() => {
+    if (bucketData?.name) {
+      updateActiveTabLabel(bucketData.name);
+    }
+  }, [bucketData?.name, updateActiveTabLabel]);
 
   // Convert tabs to TabBar format
   const tabBarTabs = tabs.map((tab) => ({
@@ -507,10 +514,12 @@ export function BucketDetailPage() {
           {/* Tab Bar */}
           <TabBar
             tabs={tabBarTabs}
-            activeTabId={activeTabId}
+            activeTab={activeTabId}
+            onTabChange={selectTab}
             onTabClose={closeTab}
-            onTabSelect={selectTab}
-            onNewTab={addNewTab}
+            onTabAdd={addNewTab}
+            showAddButton={true}
+            showWindowControls={true}
           />
 
           {/* Top Bar */}
@@ -677,7 +686,7 @@ export function BucketDetailPage() {
                             Delete
                           </Button>
                           <Button variant="secondary" size="sm">
-                            <IconDownload size={12} stroke={1.5} />
+                            <IconDownload size={14} stroke={1.5} />
                             Download
                           </Button>
                         </div>

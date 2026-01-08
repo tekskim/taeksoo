@@ -377,7 +377,7 @@ function IdentifyCell({ timer, onIdentify }: IdentifyCellProps) {
   return (
     <button
       onClick={onIdentify}
-      className="p-1 hover:bg-[var(--color-surface-subtle)] rounded transition-colors"
+      className="p-1 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
       aria-label="Identify disk"
     >
       <IdentifyIcon size={16} className="text-[var(--color-text-default)]" />
@@ -637,7 +637,7 @@ export function PhysicalDisksPage() {
                     <Button
                       variant="secondary"
                       size="sm"
-                      icon={<IconDownload size={12} stroke={1.5} />}
+                      icon={<IconDownload size={14} stroke={1.5} />}
                       aria-label="Download"
                     />
                   </div>
@@ -645,7 +645,7 @@ export function PhysicalDisksPage() {
                   <Button
                     variant="secondary"
                     size="sm"
-                    icon={<IconRefresh size={16} stroke={1.5} />}
+                    icon={<IconRefresh size={14} stroke={1.5} />}
                     aria-label="Refresh"
                     onClick={() => console.log('Refresh clicked')}
                   />

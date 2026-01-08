@@ -204,7 +204,7 @@ function NameCell({ id, name }: NameCellProps) {
   return (
     <Link
       to={`/storage/images/${id}`}
-      className="text-[var(--color-action-primary)] hover:underline truncate block max-w-[220px]"
+      className="font-medium text-[var(--color-action-primary)] hover:underline truncate block max-w-[220px]"
       title={name}
     >
       {name}
@@ -320,10 +320,12 @@ export function ImagesPage() {
           {/* Tab Bar */}
           <TabBar
             tabs={tabBarTabs}
-            activeTabId={activeTabId}
+            activeTab={activeTabId}
+            onTabChange={selectTab}
             onTabClose={closeTab}
-            onTabSelect={selectTab}
-            onNewTab={addNewTab}
+            onTabAdd={addNewTab}
+            showAddButton={true}
+            showWindowControls={true}
           />
 
           {/* Top Bar */}
@@ -372,7 +374,7 @@ export function ImagesPage() {
                     <Button
                       variant="secondary"
                       size="sm"
-                      icon={<IconDownload size={12} stroke={1.5} />}
+                      icon={<IconDownload size={14} stroke={1.5} />}
                       aria-label="Download"
                     />
                   </div>
@@ -380,7 +382,7 @@ export function ImagesPage() {
                   <Button
                     variant="secondary"
                     size="sm"
-                    icon={<IconRefresh size={16} stroke={1.5} />}
+                    icon={<IconRefresh size={14} stroke={1.5} />}
                     aria-label="Refresh"
                     onClick={() => console.log('Refresh clicked')}
                   />
