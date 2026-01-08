@@ -2395,7 +2395,7 @@ input[type="search"]::-webkit-search-decoration {
 
 .monitoring-toolbar-segment-active {
   color: var(--color-action-primary);
-  background: var(--color-surface-default);
+  background: var(--color-state-info-bg);
   font-weight: 500;
   box-shadow: 0 0 0 1px var(--color-action-primary);
   border-radius: 6px;
