@@ -550,6 +550,12 @@ export function BucketDetailPage() {
 
           {/* Top Bar */}
           <TopBar
+            showSidebarToggle={!sidebarOpen}
+            showSidebarToggleAfterBreadcrumb={sidebarOpen}
+            onSidebarToggle={() => setSidebarOpen((prev) => !prev)}
+            showNavigation={true}
+            onBack={() => window.history.back()}
+            onForward={() => window.history.forward()}
             breadcrumb={
               <Breadcrumb
                 items={[
@@ -560,7 +566,7 @@ export function BucketDetailPage() {
               />
             }
             actions={
-              <TopBarAction icon={<IconBell size={16} stroke={1.5} />} label="Notifications" />
+              <TopBarAction icon={<IconBell size={16} stroke={1.5} />} aria-label="Notifications" />
             }
           />
         </div>

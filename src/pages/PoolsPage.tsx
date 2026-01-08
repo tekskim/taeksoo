@@ -291,7 +291,8 @@ export function PoolsPage() {
           {/* Top Bar with Breadcrumb Navigation */}
           <TopBar
             showSidebarToggle={!sidebarOpen}
-            onSidebarToggle={() => setSidebarOpen(true)}
+            showSidebarToggleAfterBreadcrumb={sidebarOpen}
+            onSidebarToggle={() => setSidebarOpen((prev) => !prev)}
             showNavigation={true}
             onBack={() => window.history.back()}
             onForward={() => window.history.forward()}

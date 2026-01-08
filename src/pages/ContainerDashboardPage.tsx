@@ -3,8 +3,8 @@ import {
   VStack,
   TabBar,
   TopBar,
-  TopBarAction,
   Breadcrumb,
+  DetailHeader,
   Tabs,
   TabList,
   Tab,
@@ -265,22 +265,26 @@ export function ContainerDashboardPage() {
         />
 
         {/* Top Bar */}
-        <TopBar>
-          <Breadcrumb
-            items={[
-              { label: 'clusterName', href: '/container' },
-              { label: 'Dashboard' },
-            ]}
-          />
-          <TopBarAction>
-            <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-              <IconRefresh size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-            </button>
-            <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-              <IconBell size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-            </button>
-          </TopBarAction>
-        </TopBar>
+        <TopBar
+          breadcrumb={
+            <Breadcrumb
+              items={[
+                { label: 'default-cluster', href: '/container' },
+                { label: 'Dashboard' },
+              ]}
+            />
+          }
+          actions={
+            <>
+              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
+                <IconRefresh size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
+              </button>
+              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
+                <IconBell size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
+              </button>
+            </>
+          }
+        />
 
         {/* Content Area */}
         <div className="flex-1 overflow-auto min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll">
@@ -353,23 +357,33 @@ export function ContainerDashboardPage() {
               </div>
 
               {/* Control Plane Components */}
-              <SectionCard>
-                <SectionCard.Header title="Control Plane Components" />
-                <SectionCard.Content>
-                  <div className="flex gap-1">
-                    <ControlPlaneCard name="Etcd" uptime="15d 4h 23m" />
-                    <ControlPlaneCard name="Scheduler" uptime="15d 4h 23m" />
-                    <ControlPlaneCard name="Controller Manager" uptime="15d 4h 23m" />
-                  </div>
-                </SectionCard.Content>
-              </SectionCard>
+              <DetailHeader>
+                <DetailHeader.Title>Control Plane Components</DetailHeader.Title>
+                <DetailHeader.InfoGrid>
+                  <DetailHeader.InfoCard 
+                    label="Etcd" 
+                    value="Uptime: 15d 4h 23m" 
+                    status="active"
+                  />
+                  <DetailHeader.InfoCard 
+                    label="Scheduler" 
+                    value="Uptime: 15d 4h 23m" 
+                    status="active"
+                  />
+                  <DetailHeader.InfoCard 
+                    label="Controller Manager" 
+                    value="Uptime: 15d 4h 23m" 
+                    status="active"
+                  />
+                </DetailHeader.InfoGrid>
+              </DetailHeader>
 
               {/* Events & Secrets */}
               <SectionCard>
                 <SectionCard.Content gap={0}>
                   <div className="w-full">
                     <Tabs value={activeTab} onChange={setActiveTab} variant="underline" size="md">
-                      <div className="flex items-center justify-between border-b border-[var(--color-border-default)] mb-4">
+                      <div className="flex items-center justify-between mb-3">
                         <TabList>
                           <Tab value="events">Events</Tab>
                           <Tab value="secrets">Secrets</Tab>
@@ -381,19 +395,21 @@ export function ContainerDashboardPage() {
 
                       <TabPanel value="events" className="pt-0">
                         <VStack gap={3}>
+                          <div className="flex justify-start">
+                            <Pagination
+                              currentPage={currentPage}
+                              totalPages={1}
+                              onPageChange={setCurrentPage}
+                              showSettings
+                              onSettingsClick={() => {}}
+                            />
+                          </div>
                           <Table<EventRow>
                             columns={eventsColumns}
                             data={eventsData}
                             rowKey="id"
                             rowHeight="40px"
                           />
-                          <div className="flex items-center gap-2">
-                            <Pagination
-                              currentPage={currentPage}
-                              totalPages={1}
-                              onPageChange={setCurrentPage}
-                            />
-                          </div>
                         </VStack>
                       </TabPanel>
 

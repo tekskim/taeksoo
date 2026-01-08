@@ -25,9 +25,10 @@ import {
   IconTrash,
   IconDownload,
 } from '@tabler/icons-react';
+import { Siren } from 'lucide-react';
 
 /* ----------------------------------------
-   Custom Identify Icon
+   Custom Identify Icon (using Siren from lucide-react)
    ---------------------------------------- */
 
 interface IdentifyIconProps {
@@ -36,35 +37,7 @@ interface IdentifyIconProps {
 }
 
 function IdentifyIcon({ size = 16, className }: IdentifyIconProps) {
-  return (
-    <svg
-      width={size}
-      height={size}
-      viewBox="0 0 16 16"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-      className={className}
-    >
-      <path
-        d="M4.66699 12.0003V8.00033C4.66699 7.11627 5.01818 6.26842 5.6433 5.6433C6.26842 5.01818 7.11627 4.66699 8.00033 4.66699C8.88438 4.66699 9.73223 5.01818 10.3573 5.6433C10.9825 6.26842 11.3337 7.11627 11.3337 8.00033V12.0003"
-        stroke="currentColor"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-      <path
-        d="M3.33301 14C3.33301 14.1768 3.40325 14.3464 3.52827 14.4714C3.65329 14.5964 3.82286 14.6667 3.99967 14.6667H11.9997C12.1765 14.6667 12.3461 14.5964 12.4711 14.4714C12.5961 14.3464 12.6663 14.1768 12.6663 14V13.3333C12.6663 12.9797 12.5259 12.6406 12.2758 12.3905C12.0258 12.1405 11.6866 12 11.333 12H4.66634C4.31272 12 3.97358 12.1405 3.72353 12.3905C3.47348 12.6406 3.33301 12.9797 3.33301 13.3333V14Z"
-        stroke="currentColor"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-      <path d="M13.333 8H13.9997" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" />
-      <path d="M12.3333 3L12 3.33333" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" />
-      <path d="M1.33301 8H1.99967" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" />
-      <path d="M8 1.33301V1.99967" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" />
-      <path d="M3.28613 3.28613L3.75747 3.75747" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" />
-      <path d="M8 8V12" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
-  );
+  return <Siren size={size} className={className} strokeWidth={1.5} />;
 }
 
 /* ----------------------------------------
@@ -586,7 +559,8 @@ export function PhysicalDisksPage() {
           {/* Top Bar with Breadcrumb Navigation */}
           <TopBar
             showSidebarToggle={!sidebarOpen}
-            onSidebarToggle={() => setSidebarOpen(true)}
+            showSidebarToggleAfterBreadcrumb={sidebarOpen}
+            onSidebarToggle={() => setSidebarOpen((prev) => !prev)}
             showNavigation={true}
             onBack={() => window.history.back()}
             onForward={() => window.history.forward()}
