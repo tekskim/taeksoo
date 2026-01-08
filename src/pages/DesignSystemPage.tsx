@@ -184,8 +184,6 @@ import {
   IconCalendar,
   IconAppWindow,
   IconBorderAll,
-  IconFileText,
-  IconCode,
   // Brand Icons
   IconBrandUbuntu,
   IconBrandDebian,
@@ -906,7 +904,7 @@ const baseChartOptions = {
       if (!Array.isArray(params) || params.length === 0) return '';
       const time = params[0].axisValueLabel;
       const items = params.map(p => 
-        `<div style="display: flex; align-items: center; gap: 8px;"><span>${p.marker}</span><span>${p.seriesName}</span><span style="font-weight: 500; margin-left: auto;">${p.value}</span></div>`
+        `<div style="display: flex; align-items: center; gap: 8px;"><span style="display: inline-block; width: 8px; height: 8px; border-radius: 9999px; background-color: ${p.color};"></span><span>${p.seriesName}</span><span style="font-weight: 500; margin-left: auto;">${p.value}</span></div>`
       ).join('');
       return `<div style="font-size: 11px;">${time}<div style="margin-top: 4px;">${items}</div></div>`;
     },
@@ -1447,11 +1445,11 @@ function LineChart({
         fontSize: 11, 
         fontFamily: 'Mona Sans, -apple-system, BlinkMacSystemFont, sans-serif' 
       },
-      formatter: (params: Array<{ marker: string; seriesName: string; value: number; axisValueLabel: string }>) => {
+      formatter: (params: Array<{ marker: string; seriesName: string; value: number; axisValueLabel: string; color: string }>) => {
         if (!Array.isArray(params) || params.length === 0) return '';
         const time = params[0].axisValueLabel;
         const items = params.map(p => 
-          `<div style="display: flex; align-items: center; gap: 8px;"><span>${p.marker}</span><span>${p.seriesName}</span><span style="font-weight: 500; margin-left: auto;">${yAxisFormatter(p.value)}</span></div>`
+          `<div style="display: flex; align-items: center; gap: 8px;"><span style="display: inline-block; width: 8px; height: 8px; border-radius: 9999px; background-color: ${p.color};"></span><span>${p.seriesName}</span><span style="font-weight: 500; margin-left: auto;">${yAxisFormatter(p.value)}</span></div>`
         ).join('');
         return `<div style="font-size: 11px;">${time}<div style="margin-top: 4px;">${items}</div></div>`;
       }
@@ -1778,8 +1776,8 @@ function PieChartDemo({
         color: '#1e293b',
         fontSize: 11
       },
-      formatter: (params: { marker: string; name: string; value: number; percent: number }) => {
-        return `${params.marker} ${params.name}<br/><span style="font-weight: 500; margin-left: 14px;">${params.value} (${params.percent.toFixed(0)}%)</span>`;
+      formatter: (params: { marker: string; name: string; value: number; percent: number; color: string }) => {
+        return `<span style="display: inline-block; width: 8px; height: 8px; border-radius: 9999px; background-color: ${params.color}; margin-right: 6px;"></span>${params.name}<br/><span style="font-weight: 500; margin-left: 14px;">${params.value} (${params.percent.toFixed(0)}%)</span>`;
       }
     },
     animation: false,
@@ -1837,10 +1835,96 @@ function PieChartDemo({
 }
 
 /* ----------------------------------------
+   Doughnut Chart Demo (ECharts - matches SingleValueDoughnutCard from storage)
+   ---------------------------------------- */
+
+function DoughnutChartDemo({ 
+  title, 
+  value,
+  color
+}: { 
+  title: string; 
+  value: number;
+  color?: string;
+}) {
+  const getColor = (cssVar: string, fallback: string) => {
+    if (typeof window !== 'undefined') {
+      const val = getComputedStyle(document.documentElement).getPropertyValue(cssVar).trim();
+      return val || fallback;
+    }
+    return fallback;
+  };
+
+  const mainColor = color || getColor('--color-status-error', '#ef4444');
+  const bgColor = getColor('--color-border-subtle', '#e2e8f0');
+
+  const getOption = () => ({
+    tooltip: {
+      show: false
+    },
+    animation: false,
+    series: [
+      {
+        type: 'pie',
+        radius: ['68%', '80%'],
+        center: ['50%', '50%'],
+        avoidLabelOverlap: false,
+        silent: true,
+        itemStyle: {
+          borderRadius: 0,
+          borderWidth: 0
+        },
+        label: {
+          show: false
+        },
+        labelLine: {
+          show: false
+        },
+        emphasis: {
+          disabled: true
+        },
+        data: [
+          { value: value, itemStyle: { color: mainColor } },
+          { value: 100 - value, itemStyle: { color: bgColor } }
+        ]
+      }
+    ],
+    graphic: [
+      {
+        type: 'text',
+        left: 'center',
+        top: 'middle',
+        style: {
+          text: `${value}%`,
+          textAlign: 'center',
+          textVerticalAlign: 'middle',
+          fill: getColor('--color-text-default', '#0f172a'),
+          fontSize: 18,
+          fontWeight: 500
+        }
+      }
+    ]
+  });
+
+  return (
+    <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] p-5 flex flex-col gap-4 w-[280px]">
+      <span className="text-[length:var(--font-size-13)] font-medium text-[var(--color-text-default)]">{title}</span>
+      <div className="flex justify-center">
+        <ReactECharts option={getOption()} style={{ height: '180px', width: '180px' }} />
+      </div>
+    </div>
+  );
+}
+
+/* ----------------------------------------
    Half-Doughnut Chart Demo (ECharts - from storage-dashboard)
    ---------------------------------------- */
 
-function HalfDoughnutChartDemo({ value, label, status = 'default' }: { value: number; label: string; status?: 'default' | 'success' | 'warning' | 'error' }) {
+function HalfDoughnutChartDemo({ value, label, status = 'default', used, total, unit }: { value: number; label: string; status?: 'default' | 'success' | 'warning' | 'error'; used?: number; total?: number; unit?: string }) {
+  const [showTooltip, setShowTooltip] = useState(false);
+  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+  const containerRef = useRef<HTMLDivElement>(null);
+  
   // Get color from design system CSS variables
   const getColor = (cssVar: string, fallback: string) => {
     if (typeof window !== 'undefined') {
@@ -1858,6 +1942,18 @@ function HalfDoughnutChartDemo({ value, label, status = 'default' }: { value: nu
   };
 
   const color = colorMap[status];
+  const available = total !== undefined && used !== undefined ? total - used : 0;
+  const availablePercent = total !== undefined && used !== undefined ? Math.round((available / total) * 100) : 0;
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (containerRef.current) {
+      const rect = containerRef.current.getBoundingClientRect();
+      setMousePos({
+        x: e.clientX - rect.left,
+        y: e.clientY - rect.top
+      });
+    }
+  };
 
   const getOption = () => ({
     series: [
@@ -1901,12 +1997,43 @@ function HalfDoughnutChartDemo({ value, label, status = 'default' }: { value: nu
   });
 
   return (
-    <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] p-4 relative">
+    <div 
+      ref={containerRef}
+      className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] p-4 relative"
+      onMouseEnter={() => setShowTooltip(true)}
+      onMouseLeave={() => setShowTooltip(false)}
+      onMouseMove={handleMouseMove}
+    >
       <ReactECharts option={getOption()} style={{ height: '160px', width: '180px' }} />
-      <div className="absolute inset-0 flex flex-col items-center justify-center pt-8">
+      <div className="absolute inset-0 flex flex-col items-center justify-center pt-8 pointer-events-none">
         <span className="text-[24px] leading-[28px] font-semibold text-[var(--color-text-default)]">{value}%</span>
-        <span className="text-[12px] text-[var(--color-text-subtle)]">{label}</span>
+        {used !== undefined && total !== undefined ? (
+          <span className="text-[12px] text-[var(--color-text-subtle)]">{used}{unit}/{total}{unit}</span>
+        ) : (
+          <span className="text-[12px] text-[var(--color-text-subtle)]">{label}</span>
+        )}
       </div>
+      
+      {/* Tooltip */}
+      {showTooltip && used !== undefined && total !== undefined && (
+        <div 
+          className="absolute z-10 backdrop-blur-[40px] bg-[rgba(246,246,246,0.9)] dark:bg-[rgba(30,30,30,0.9)] border border-[rgba(26,26,26,0.15)] dark:border-[rgba(255,255,255,0.15)] rounded-[6px] shadow-[0px_0px_4px_0px_rgba(0,0,0,0.1)] px-2 py-1.5 flex flex-col gap-1 pointer-events-none"
+          style={{ left: mousePos.x + 12, top: mousePos.y + 12 }}
+        >
+          <div className="flex items-center gap-1.5">
+            <div className="w-[5px] h-[5px] rounded-[1px]" style={{ backgroundColor: color }} />
+            <span className="text-[11px] leading-[14px] text-[var(--color-text-default)] whitespace-nowrap">
+              Used: {used}{unit} ({value}%)
+            </span>
+          </div>
+          <div className="flex items-center gap-1.5">
+            <div className="w-[5px] h-[5px] rounded-[1px] bg-[#e5e7eb]" />
+            <span className="text-[11px] leading-[14px] text-[var(--color-text-default)] whitespace-nowrap">
+              Available: {available.toFixed(1)}{unit} ({availablePercent}%)
+            </span>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
@@ -6382,9 +6509,9 @@ outline: 2px solid var(--color-border-focus);`}
                 <VStack gap={3}>
                   <Label>Status Variants</Label>
                   <div className="flex items-center gap-8 flex-wrap">
-                    <HalfDoughnutChartDemo value={35} label="Safe" status="success" />
-                    <HalfDoughnutChartDemo value={75} label="Warning" status="warning" />
-                    <HalfDoughnutChartDemo value={95} label="Danger" status="error" />
+                    <HalfDoughnutChartDemo value={35} label="Safe" status="success" used={66.5} total={189.9} unit="TiB" />
+                    <HalfDoughnutChartDemo value={75} label="Warning" status="warning" used={142.4} total={189.9} unit="TiB" />
+                    <HalfDoughnutChartDemo value={95} label="Danger" status="error" used={180.4} total={189.9} unit="TiB" />
                   </div>
                 </VStack>
               </VStack>
@@ -6400,26 +6527,15 @@ outline: 2px solid var(--color-border-focus);`}
                     <code>inner-radius: 68%</code> · <code>outer-radius: 80%</code> · <code>thickness: 12%</code> · <code>border-radius: 6px</code>
                   </div>
                 </VStack>
-                <HStack gap={3}>
-                  <a
-                    href="https://github.com/pob-design-system/tds/blob/main/DESIGN_SYSTEM.md"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 px-4 py-2 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-button)] text-[length:var(--font-size-12)] text-[var(--color-text-default)] hover:bg-[var(--color-surface-muted)] transition-colors cursor-pointer"
-                  >
-                    <IconFileText size={14} stroke={1.5} />
-                    DESIGN_SYSTEM.md
-                  </a>
-                  <a
-                    href="https://github.com/pob-design-system/tds/blob/main/.cursorrules"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 px-4 py-2 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-button)] text-[length:var(--font-size-12)] text-[var(--color-text-default)] hover:bg-[var(--color-surface-muted)] transition-colors cursor-pointer"
-                  >
-                    <IconCode size={14} stroke={1.5} />
-                    .cursorrules
-                  </a>
-                </HStack>
+
+                {/* Doughnut Chart Example */}
+                <div className="flex gap-6 flex-wrap">
+                  <DoughnutChartDemo 
+                    title="OSD onode Hits Ratio"
+                    value={98.3}
+                    color="#ef4444"
+                  />
+                </div>
               </VStack>
             </Section>
 

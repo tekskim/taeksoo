@@ -385,8 +385,8 @@ export default function RouterDetailPage() {
         {/* Scrollable Content Area */}
         <div className="flex-1 overflow-auto overscroll-contain sidebar-scroll">
           {/* Main Content */}
-          <div className="pt-4 px-8 pb-20 bg-[var(--color-surface-default)]">
-            <VStack gap={8} className="min-w-[1176px] max-w-[1320px]">
+          <div className="pt-4 px-8 pb-20 bg-[var(--color-surface-default)] min-h-full">
+            <VStack gap={8} className="min-w-[1176px]">
               {/* Router Header Card */}
               <DetailHeader>
                 <DetailHeader.Title>{router.name}</DetailHeader.Title>

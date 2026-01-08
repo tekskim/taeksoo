@@ -128,7 +128,7 @@ const appCards: AppCard[] = [
     icon: <img src={ContainerIcon} alt="Container" className="w-16 h-16" />,
     path: '/container',
     color: 'from-violet-500 to-purple-500',
-    available: false,
+    available: true,
   },
   {
     id: 'cloud-builder',
