@@ -9,8 +9,7 @@ import {
   IconServer,
   IconDisc,
   IconCube,
-  IconDeviceAnalytics,
-  IconLayoutSidebar,
+  IconBrandSpeedtest,
   IconArrowLeft,
 } from '@tabler/icons-react';
 import { Link, useLocation } from 'react-router-dom';
@@ -51,20 +50,12 @@ export function StorageSidebar({ isOpen = true, onToggle }: StorageSidebarProps)
   return (
     <aside className="w-[200px] h-screen bg-[var(--color-surface-default)] border-r border-[var(--color-border-default)] flex flex-col fixed left-0 top-0">
       {/* Logo */}
-      <div className="h-10 px-3 flex items-center justify-between">
+      <div className="h-10 px-3 flex items-center">
         <img 
           src={isDark ? ThakiLogoDark : ThakiLogoLight} 
           alt="THAKI Cloud" 
           className="h-4"
         />
-        <button 
-          type="button"
-          onClick={onToggle}
-          className="p-1 hover:bg-[var(--color-surface-muted)] rounded transition-colors cursor-pointer"
-          aria-label="Toggle sidebar"
-        >
-          <IconLayoutSidebar size={16} className="text-[var(--color-text-muted)] pointer-events-none" stroke={1.5} />
-        </button>
       </div>
 
       {/* Project Selector */}
@@ -147,7 +138,7 @@ export function StorageSidebar({ isOpen = true, onToggle }: StorageSidebarProps)
           {/* Monitoring Section */}
           <MenuSection title="Monitoring" defaultOpen={true}>
             <MenuItem
-              icon={<IconDeviceAnalytics size={16} stroke={1.5} />}
+              icon={<IconBrandSpeedtest size={16} stroke={1.5} />}
               label="Overall Performance"
               href="/storage/performance"
               active={isActive('/storage/performance')}
