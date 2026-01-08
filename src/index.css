@@ -1484,13 +1484,13 @@ input[type="search"]::-webkit-search-decoration {
 }
 
 .toggleSwitchActive {
-  background: var(--color-action-primary);
+  background: transparent;
   border-color: var(--color-action-primary);
 }
 
 .toggleSwitchActive::after {
   transform: translateX(14px);
-  background: white;
+  background: var(--color-action-primary);
 }
 
 .toggleDivider {
