@@ -295,14 +295,14 @@ export function TabProvider({ children, defaultTabs = [] }: TabProviderProps) {
   const addNewTab = useCallback(() => {
     const currentPath = location.pathname;
     
-    // 애플리케이션별 홈 페이지 매핑
+    // 애플리케이션별 홈 페이지 매핑 (라벨은 모두 Home으로 통일)
     const appHomeMap: Record<string, { path: string; label: string }> = {
-      '/cloudbuilder': { path: '/cloudbuilder', label: 'Cloud Builder' },
-      '/compute': { path: '/compute', label: 'Compute' },
-      '/storage': { path: '/storage', label: 'Storage' },
-      '/agent': { path: '/agent', label: 'AI Agent' },
-      '/desktop': { path: '/desktop', label: 'Desktop' },
-      '/design': { path: '/design', label: 'Design System' },
+      '/cloudbuilder': { path: '/cloudbuilder', label: 'Home' },
+      '/compute': { path: '/compute', label: 'Home' },
+      '/storage': { path: '/storage', label: 'Home' },
+      '/agent': { path: '/agent', label: 'Home' },
+      '/desktop': { path: '/desktop', label: 'Home' },
+      '/design': { path: '/design', label: 'Home' },
     };
     
     // 현재 경로에서 애플리케이션 찾기
