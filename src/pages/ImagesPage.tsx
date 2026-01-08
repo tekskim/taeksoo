@@ -328,12 +328,17 @@ export function ImagesPage() {
             showWindowControls={true}
           />
 
-          {/* Top Bar */}
+          {/* Top Bar with Breadcrumb Navigation */}
           <TopBar
+            showSidebarToggle={!sidebarOpen}
+            onSidebarToggle={() => setSidebarOpen(true)}
+            showNavigation={true}
+            onBack={() => window.history.back()}
+            onForward={() => window.history.forward()}
             breadcrumb={
               <Breadcrumb
                 items={[
-                  { label: 'Home', href: '/' },
+                  { label: 'Home', href: '/storage' },
                   { label: 'Images' },
                 ]}
               />
@@ -341,7 +346,7 @@ export function ImagesPage() {
             actions={
               <TopBarAction
                 icon={<IconBell size={16} stroke={1.5} />}
-                label="Notifications"
+                aria-label="Notifications"
               />
             }
           />
@@ -352,9 +357,11 @@ export function ImagesPage() {
           <div className="pt-4 px-8 pb-20 bg-[var(--color-surface-default)]">
             <VStack gap={3}>
               {/* Page Header */}
-              <h1 className="text-[length:var(--font-size-16)] font-semibold text-[var(--color-text-default)] leading-[var(--line-height-24)]">
-                Images
-              </h1>
+              <div className="flex items-center justify-between h-8">
+                <h1 className="text-[length:var(--font-size-16)] font-semibold text-[var(--color-text-default)]">
+                  Images
+                </h1>
+              </div>
 
               {/* Search and Actions */}
               <div className="flex flex-col gap-2">
