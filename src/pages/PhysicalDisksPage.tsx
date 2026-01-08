@@ -517,7 +517,7 @@ export function PhysicalDisksPage() {
     {
       key: 'type',
       label: 'Type',
-      flex: 0.5,
+      width: '120px',
       sortable: true,
       render: (_, row) => <TypeCell type={row.type} />,
     },
@@ -640,15 +640,15 @@ export function PhysicalDisksPage() {
                       icon={<IconDownload size={14} stroke={1.5} />}
                       aria-label="Download"
                     />
+                    <Button
+                      variant="secondary"
+                      size="sm"
+                      icon={<IconRefresh size={14} stroke={1.5} />}
+                      aria-label="Refresh"
+                      onClick={() => console.log('Refresh clicked')}
+                    />
                   </div>
                   <div className="w-px h-4 bg-[var(--color-border-default)]" />
-                  <Button
-                    variant="secondary"
-                    size="sm"
-                    icon={<IconRefresh size={14} stroke={1.5} />}
-                    aria-label="Refresh"
-                    onClick={() => console.log('Refresh clicked')}
-                  />
                   {/* Actions */}
                   <div className="flex items-center gap-1">
                     <Button

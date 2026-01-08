@@ -72,6 +72,11 @@ import { OSDDetailPage } from '@/pages/OSDDetailPage';
 import { PhysicalDisksPage } from '@/pages/PhysicalDisksPage';
 import { OverallPerformancePage } from '@/pages/OverallPerformancePage';
 
+// Pages - Cloud Builder
+import { CloudBuilderConsolePage } from '@/pages/cloudbuilder/CloudBuilderConsolePage';
+import { CloudBuilderCreatePage } from '@/pages/cloudbuilder/CloudBuilderCreatePage';
+import { CloudBuilderDetailPage } from '@/pages/cloudbuilder/CloudBuilderDetailPage';
+
 // Pages - Design System
 import { DesignSystemPage } from '@/pages/DesignSystemPage';
 import { DrawersPage } from '@/pages/DrawersPage';
@@ -79,6 +84,9 @@ import { ModalsPage } from '@/pages/ModalsPage';
 import { GradientShowcasePage } from '@/pages/GradientShowcasePage';
 import ColorPalettePage from '@/pages/ColorPalettePage';
 import MetallicPalettePage from '@/pages/MetallicPalettePage';
+
+// Pages - Desktop
+import { DesktopPage } from '@/pages/DesktopPage';
 
 const defaultTabs = [
   { id: 'home', label: 'Home', path: '/compute', closable: true },
@@ -97,6 +105,17 @@ function AppRoutes() {
         <Route path="/chat" element={<ChatPage />} />
         <Route path="/agent/storage" element={<StoragePage />} />
         <Route path="/mcp-tools" element={<MCPToolsPage />} />
+
+        {/* Cloud Builder Routes */}
+        <Route path="/cloudbuilder" element={<CloudBuilderConsolePage />} />
+        <Route path="/cloudbuilder/:slug" element={<CloudBuilderConsolePage />} />
+        <Route path="/cloudbuilder/:slug/create" element={<CloudBuilderCreatePage />} />
+        <Route path="/cloudbuilder/:slug/detail/:id" element={<CloudBuilderDetailPage />} />
+        {/* Backward compatible route */}
+        <Route path="/cloud-builder" element={<CloudBuilderConsolePage />} />
+        <Route path="/cloud-builder/:slug" element={<CloudBuilderConsolePage />} />
+        <Route path="/cloud-builder/:slug/create" element={<CloudBuilderCreatePage />} />
+        <Route path="/cloud-builder/:slug/detail/:id" element={<CloudBuilderDetailPage />} />
 
         {/* Compute Routes */}
         <Route path="/compute" element={<ComputeHomePage />} />
@@ -166,6 +185,9 @@ function AppRoutes() {
         <Route path="/design/gradients" element={<GradientShowcasePage />} />
         <Route path="/design/colors" element={<ColorPalettePage />} />
         <Route path="/design/metallic" element={<MetallicPalettePage />} />
+
+        {/* Desktop Routes */}
+        <Route path="/desktop" element={<DesktopPage />} />
       </Routes>
   );
 }

@@ -47,7 +47,7 @@ export function TabBar({ tabs, onTabClose, onTabClick, onNewTab }: TabBarProps) 
                 e.stopPropagation();
                 onTabClose?.(tab.id);
               }}
-              className="p-0.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+              className="p-0.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors cursor-pointer"
             >
               <IconX size={12} className="text-[var(--color-text-default)]" stroke={1} />
             </button>
@@ -57,7 +57,7 @@ export function TabBar({ tabs, onTabClose, onTabClick, onNewTab }: TabBarProps) 
         {/* New Tab Button */}
         <button
           onClick={onNewTab}
-          className="p-2 hover:bg-[var(--color-surface-muted)] rounded-md transition-colors"
+          className="p-2 hover:bg-[var(--color-surface-muted)] rounded-md transition-colors cursor-pointer"
         >
           <IconPlus size={16} className="text-[var(--color-text-default)]" stroke={1} />
         </button>
@@ -79,7 +79,7 @@ export function TabBar({ tabs, onTabClose, onTabClick, onNewTab }: TabBarProps) 
 
 function WindowControl({ type }: { type: 'minimize' | 'maximize' | 'close' }) {
   return (
-    <button className="w-4 h-4 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors">
+    <button className="w-4 h-4 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors cursor-pointer">
       {type === 'minimize' && (
         <IconMinus size={10} className="text-[var(--color-text-default)]" stroke={1} />
       )}

@@ -362,10 +362,6 @@ export function BucketsPage() {
                       icon={<IconDownload size={14} stroke={1.5} />}
                       aria-label="Download"
                     />
-                  </ListToolbar.Actions>
-                }
-                bulkActions={
-                  <ListToolbar.Actions>
                     <Button
                       variant="secondary"
                       size="sm"
@@ -373,6 +369,10 @@ export function BucketsPage() {
                       aria-label="Refresh"
                       onClick={() => console.log('Refresh clicked')}
                     />
+                  </ListToolbar.Actions>
+                }
+                bulkActions={
+                  <ListToolbar.Actions>
                     <Button
                       variant="secondary"
                       size="sm"
