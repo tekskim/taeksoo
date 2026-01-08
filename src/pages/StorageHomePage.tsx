@@ -135,7 +135,7 @@ function LineChart({
   series, 
   timeLabels,
   yAxisFormatter = (v: number) => `${v}`,
-  height = '200px'
+  height = '100%'
 }: LineChartProps) {
   const [visibleSeries, setVisibleSeries] = useState<Record<string, boolean>>(
     Object.fromEntries(series.map(s => [s.name, true]))
@@ -204,7 +204,8 @@ function LineChart({
       axisTick: { show: false },
       axisLabel: {
         color: chartColors.slate400,
-        fontSize: 10
+        fontSize: 10,
+        padding: [0, 0, 0, 15]
       },
       boundaryGap: false
     },
@@ -500,7 +501,7 @@ export function StorageHomePage() {
               <Breadcrumb
               items={[
                 { label: 'Storage', href: '/storage' },
-                { label: 'Dashboard' },
+                { label: 'Entry page' },
               ]}
             />
             }
@@ -516,7 +517,7 @@ export function StorageHomePage() {
 
         {/* Scrollable Content Area */}
         <div className="flex-1 overflow-auto min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll">
-          {/* Dashboard Content */}
+          {/* EntryPage Content */}
           <div className="px-8 py-6">
           {/* Top Row - 2 Cards: Inventory and Capacity */}
           <div className="grid grid-cols-2 gap-6 mb-6">
