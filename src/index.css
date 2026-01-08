@@ -570,7 +570,7 @@ html.theme-transition *::after {
      ---------------------------------------- */
   --tabbar-height: 36px;
   --tabbar-tab-min-width: 100px;
-  --tabbar-tab-max-width: 200px;
+  --tabbar-tab-max-width: 160px;
   --tabbar-tab-padding-x: var(--spacing-3);
   --tabbar-tab-gap: var(--spacing-2);
   --tabbar-font-size: var(--font-size-12);
