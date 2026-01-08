@@ -119,6 +119,7 @@ export const TabBar: React.FC<TabBarProps> = ({
       className={`
         relative
         flex items-center
+        w-full
         h-[var(--tabbar-height)]
         bg-[var(--color-surface-default)]
         after:absolute after:bottom-0 after:left-0 after:right-0 after:h-px after:bg-[var(--color-border-default)] after:pointer-events-none after:z-10

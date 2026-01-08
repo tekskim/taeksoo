@@ -15,6 +15,7 @@ import {
   TabPanel,
   SectionCard,
   DetailHeader,
+  DatePicker,
 } from '@/design-system';
 import { StorageSidebar } from '@/components/StorageSidebar';
 import { useTabs } from '@/contexts/TabContext';
@@ -26,7 +27,6 @@ import {
   IconDotsCircleHorizontal,
   IconArrowsMaximize,
   IconArrowsMinimize,
-  IconActivity,
   IconChevronLeft,
   IconChevronRight,
 } from '@tabler/icons-react';
@@ -320,66 +320,17 @@ function MonitoringTimeControls({
               </div>
             </div>
 
-            {/* Month Navigation */}
-            <div className="calendarMonthNav">
-              <button className="calendarNavBtn" onClick={prevMonthNav}>
-                <IconChevronLeft size={16} stroke={1.5} />
-              </button>
-              <span className="calendarMonthLabel">
-                {viewMonth.getFullYear()}.{(viewMonth.getMonth() + 1).toString().padStart(2, '0')}
-              </span>
-              <button className="calendarNavBtn" onClick={nextMonthNav}>
-                <IconChevronRight size={16} stroke={1.5} />
-              </button>
-            </div>
-
-            {/* Weekday Headers */}
-            <div className="calendarWeekdays">
-              {weekDays.map(day => (
-                <div key={day} className="calendarWeekday">{day}</div>
-              ))}
-            </div>
-
-            {/* Calendar Grid */}
-            <div className="calendarGrid">
-              {getDaysInMonth(viewMonth).map((day, index) => {
-                const isStart = isStartDate(day.date);
-                const isEnd = isEndDate(day.date);
-                const inRange = isDateInRange(day.date);
-                const colIndex = index % 7;
-                const isFirstCol = colIndex === 0;
-                const isLastCol = colIndex === 6;
-                
-                const wrapperClasses = [
-                  'calendarDayWrapper',
-                  inRange && 'inRange',
-                  isStart && 'rangeStart',
-                  isEnd && 'rangeEnd',
-                  isFirstCol && 'firstCol',
-                  isLastCol && 'lastCol',
-                ].filter(Boolean).join(' ');
-                
-                const dayClasses = [
-                  'calendarDay',
-                  !day.isCurrentMonth && 'calendarDayOther',
-                  (isStart || isEnd) && 'calendarDaySelected',
-                  day.isToday && 'calendarDayToday',
-                ].filter(Boolean).join(' ');
-                
-                return (
-                  <div key={index} className={wrapperClasses}>
-                    {inRange && <div className="rangeBackground" />}
-                    <button
-                      className={dayClasses}
-                      onClick={() => handleDayClick(day.date)}
-                    >
-                      <span>{day.date.getDate()}</span>
-                      {day.isToday && <span className="calendarTodayDot" />}
-                    </button>
-                  </div>
-                );
-              })}
-            </div>
+            {/* DatePicker from Design System */}
+            <DatePicker
+              mode="range"
+              rangeValue={{ start: tempStartDate, end: tempEndDate }}
+              onRangeChange={(range) => {
+                setTempStartDate(range.start);
+                setTempEndDate(range.end);
+                setSelectingStart(!range.start || !!range.end);
+              }}
+              maxDate={new Date()}
+            />
 
             {/* Actions */}
             <div className="calendarActions">
@@ -618,7 +569,8 @@ function PerformanceChart({
       axisTick: { show: false },
       axisLabel: {
         color: chartColors.slate400,
-        fontSize: 10
+        fontSize: 10,
+        padding: [0, 0, 0, 15]
       },
       boundaryGap: false
     },
@@ -730,7 +682,7 @@ function PerformanceChart({
             ref={chartRef}
             option={option} 
             style={{ 
-              height: isFullScreen ? 'calc(100vh - 200px)' : '268px',
+              height: isFullScreen ? 'calc(100vh - 200px)' : '100%',
               width: isFullScreen ? 'calc(100vw - 300px)' : '100%'
             }} 
             notMerge={true}
@@ -834,6 +786,7 @@ function ChartWithFullScreen({
                 yAxisUnit={fullScreenChart.yAxisUnit}
                 isFullScreen={true}
                 onExitFullScreen={() => { setFullScreenChart(null); setContainerReady(false); }}
+                timeControls={<MonitoringTimeControls />}
               />
             )}
           </div>
@@ -996,17 +949,6 @@ export function StoragePoolDetailPage() {
               {/* Pool Header Card */}
               <DetailHeader>
                 <DetailHeader.Title>{pool.name}</DetailHeader.Title>
-                {activeDetailTab === 'performance' && (
-                  <DetailHeader.Actions>
-                    <Button 
-                      variant="secondary" 
-                      size="sm" 
-                      leftIcon={<IconActivity size={12} />}
-                    >
-                      Monitoring
-                    </Button>
-                  </DetailHeader.Actions>
-                )}
                 <DetailHeader.InfoGrid>
                   <DetailHeader.InfoCard label="Data Protection" value={pool.dataProtection} status="active" />
                   <DetailHeader.InfoCard label="Applications" value={pool.applications} copyable />
