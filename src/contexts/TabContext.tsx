@@ -30,7 +30,15 @@ interface TabContextValue {
 
 // Helper function to get current app from path
 function getAppFromPath(path: string): string {
-  const appPrefixes = ['/cloudbuilder', '/compute', '/storage', '/agent', '/desktop', '/design', '/container', '/chat'];
+  // Agent service routes - all treated as one app
+  const agentServiceRoutes = ['/agent', '/chat', '/mcp-tools'];
+  for (const route of agentServiceRoutes) {
+    if (path.startsWith(route)) {
+      return '/agent'; // All agent service routes share the same app
+    }
+  }
+  
+  const appPrefixes = ['/cloudbuilder', '/compute', '/storage', '/desktop', '/design', '/container'];
   for (const prefix of appPrefixes) {
     if (path.startsWith(prefix)) {
       return prefix;
@@ -54,11 +62,10 @@ function getDefaultHomeTab(app: string): TabItem {
     '/cloudbuilder': { path: '/cloudbuilder', label: 'Home' },
     '/compute': { path: '/compute', label: 'Home' },
     '/storage': { path: '/storage', label: 'Home' },
-    '/agent': { path: '/agent', label: 'Home' },
+    '/agent': { path: '/agent', label: 'Home' }, // Agent service home
     '/desktop': { path: '/desktop', label: 'Home' },
     '/design': { path: '/design', label: 'Home' },
     '/container': { path: '/container', label: 'Dashboard' },
-    '/chat': { path: '/chat', label: 'Chat' },
     '/': { path: '/', label: 'Home' },
   };
   
@@ -113,9 +120,12 @@ function getLabelFromPath(path: string): string {
     '/compute/certificates': 'Certificates',
     '/compute/topology': 'Topology',
     '/compute/console': 'Console',
-    '/agent': 'Agent',
+    '/agent': 'Home',
+    '/agent/list': 'Agent',
     '/agent/create': 'Create Agent',
+    '/agent/storage': 'Data Sources',
     '/chat': 'Chat',
+    '/mcp-tools': 'MCP Tools',
     '/storage': 'Home',
     '/storage/osds': 'OSDs',
     '/storage/hosts': 'Hosts',
@@ -371,12 +381,29 @@ export function TabProvider({ children, defaultTabs = [] }: TabProviderProps) {
   const addNewTab = useCallback(() => {
     const currentPath = location.pathname;
     
+    // Agent service routes - all go to /agent home
+    const agentServiceRoutes = ['/agent', '/chat', '/mcp-tools'];
+    const isAgentService = agentServiceRoutes.some(route => currentPath.startsWith(route));
+    
+    if (isAgentService) {
+      const newTabId = `home-${Date.now()}`;
+      const newTab: TabItem = {
+        id: newTabId,
+        label: 'Home',
+        path: '/agent',
+        closable: true,
+      };
+      addTab(newTab);
+      skipNextLocationSyncRef.current = true;
+      navigate('/agent');
+      return;
+    }
+    
     // 애플리케이션별 홈 페이지 매핑 (라벨은 모두 Home으로 통일)
     const appHomeMap: Record<string, { path: string; label: string }> = {
       '/cloudbuilder': { path: '/cloudbuilder', label: 'Home' },
       '/compute': { path: '/compute', label: 'Home' },
       '/storage': { path: '/storage', label: 'Home' },
-      '/agent': { path: '/agent', label: 'Home' },
       '/desktop': { path: '/desktop', label: 'Home' },
       '/design': { path: '/design', label: 'Home' },
       '/container': { path: '/container', label: 'Dashboard' },

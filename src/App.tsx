@@ -91,6 +91,9 @@ import MetallicPalettePage from '@/pages/MetallicPalettePage';
 // Pages - Desktop
 import { DesktopPage } from '@/pages/DesktopPage';
 
+// Layouts
+import { AgentAppLayout } from '@/layouts';
+
 const defaultTabs = [
   { id: 'home', label: 'Home', path: '/compute', closable: true },
 ];
@@ -101,13 +104,15 @@ function AppRoutes() {
         {/* Entry Page */}
         <Route path="/" element={<EntryPage />} />
 
-        {/* Agent Routes */}
-        <Route path="/agent" element={<HomePage />} />
-        <Route path="/agent/list" element={<AgentPage />} />
-        <Route path="/agent/create" element={<CreateAgentPage />} />
-        <Route path="/chat" element={<ChatPage />} />
-        <Route path="/agent/storage" element={<StoragePage />} />
-        <Route path="/mcp-tools" element={<MCPToolsPage />} />
+        {/* Agent Routes - Shared TabBar via AgentAppLayout */}
+        <Route element={<AgentAppLayout />}>
+          <Route path="/agent" element={<HomePage />} />
+          <Route path="/agent/list" element={<AgentPage />} />
+          <Route path="/agent/create" element={<CreateAgentPage />} />
+          <Route path="/chat" element={<ChatPage />} />
+          <Route path="/agent/storage" element={<StoragePage />} />
+          <Route path="/mcp-tools" element={<MCPToolsPage />} />
+        </Route>
 
         {/* Cloud Builder Routes */}
         <Route path="/cloudbuilder" element={<CloudBuilderConsolePage />} />

@@ -138,7 +138,6 @@ export const TabBar: React.FC<TabBarProps> = ({
           overflow-hidden
           h-full
           min-w-0
-          shrink
         "
       >
         {tabs.map((tab) => {
@@ -260,7 +259,7 @@ export const TabBar: React.FC<TabBarProps> = ({
         </button>
       )}
 
-      {/* Spacer */}
+      {/* Spacer to push window controls to the right */}
       <div className="flex-1" />
 
       {/* Window Controls */}
