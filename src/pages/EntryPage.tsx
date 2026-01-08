@@ -303,7 +303,9 @@ export function EntryPage() {
               Thaki Design System SSoT
             </h1>
             <p className="text-[14px] text-[var(--color-text-subtle)] mx-auto leading-relaxed">
-              Thaki Design System SSoT는 디자인 원칙, 컴포넌트, 토큰, 가이드라인을 한 곳에 모은 '단일 기준'입니다. 디자이너와 개발자가 동일한 소스를 참고해 의사결정과 구현을 정렬하고, 제품 전반의 일관성과 개발 속도를 함께 높입니다.
+              Thaki Design System SSoT는 디자인 원칙, 컴포넌트, 토큰, 가이드라인을 한 곳에 모은 '단일 기준'입니다.
+              <br />
+              디자이너와 개발자가 동일한 소스를 참고해 의사결정과 구현을 정렬하고, 제품 전반의 일관성과 개발 속도를 함께 높입니다.
             </p>
           </div>
 
@@ -327,37 +329,37 @@ export function EntryPage() {
               </h2>
             </div>
             
-            <div className="space-y-4">
+            <div className="space-y-3">
               {recentChanges.map((item) => (
                 <div
                   key={item.id}
-                  className="group p-4 rounded-xl bg-[var(--color-surface-default)] border border-[var(--color-border-default)] hover:border-[var(--color-border-strong)] transition-colors"
+                  className="group p-4 rounded-lg bg-[var(--color-surface-default)] border border-[var(--color-border-default)] hover:border-[var(--color-border-strong)] transition-colors"
                 >
-                  <div className="flex items-start gap-4">
-                    {/* App Badge */}
-                    <div className={`shrink-0 px-3 py-1.5 rounded-lg bg-gradient-to-r ${item.appColor} bg-opacity-10`}>
-                      <span className="text-[12px] font-medium text-white">
-                        {item.app}
-                      </span>
-                    </div>
-                    
-                    {/* Content */}
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-2 mb-2">
-                        <span className="text-[12px] text-[var(--color-text-muted)]">
-                          {item.date}
-                        </span>
-                      </div>
-                      <ul className="space-y-1">
-                        {item.changes.map((change, idx) => (
-                          <li key={idx} className="flex items-start gap-2 text-[13px] text-[var(--color-text-default)]">
-                            <span className="text-[var(--color-text-muted)] mt-1.5">•</span>
-                            <span>{change}</span>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
+                  {/* Header: Badge + Date */}
+                  <div className="flex items-center gap-3 mb-3">
+                    <span className={`
+                      inline-flex items-center
+                      px-[var(--chip-padding-left)] py-[var(--chip-padding-y)]
+                      border border-[var(--chip-border)]
+                      rounded-[var(--chip-radius)]
+                      text-[length:var(--chip-font-size)] leading-[var(--chip-line-height)]
+                      font-medium
+                      text-[var(--color-text-default)]
+                      bg-[var(--chip-bg)]
+                    `}>
+                      {item.app}
+                    </span>
+                    <span className="text-[length:var(--font-size-11)] leading-[var(--line-height-16)] text-[var(--color-text-muted)]">
+                      {item.date}
+                    </span>
                   </div>
+                  
+                  {/* Changes List */}
+                  <ul className="list-disc list-outside pl-4 space-y-0.5 text-[length:var(--font-size-12)] leading-[var(--line-height-18)] text-[var(--color-text-default)] marker:text-[var(--color-text-muted)]">
+                    {item.changes.map((change, idx) => (
+                      <li key={idx}>{change}</li>
+                    ))}
+                  </ul>
                 </div>
               ))}
             </div>
