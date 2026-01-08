@@ -68,6 +68,7 @@ export const TopBar: React.FC<TopBarProps> = ({
     <header
       className={`
         flex items-center
+        w-full
         h-[var(--topbar-height)]
         px-[var(--topbar-padding-x)]
         gap-[var(--topbar-gap)]

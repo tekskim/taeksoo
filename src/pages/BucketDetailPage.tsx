@@ -18,6 +18,7 @@ import {
   SectionCard,
   Table,
   type TableColumn,
+  ListToolbar,
 } from '@/design-system';
 import { StorageSidebar } from '@/components/StorageSidebar';
 import { useTabs } from '@/contexts/TabContext';
@@ -34,6 +35,8 @@ import {
   IconCopy,
   IconLayoutSidebar,
   IconEdit,
+  IconSelector,
+  IconRefresh,
 } from '@tabler/icons-react';
 
 /* ----------------------------------------
@@ -220,22 +223,27 @@ function ObjectRow({ object, isExpanded, isSelected, onToggleExpand, onToggleSel
   const isFolder = object.type === 'folder';
 
   return (
-    <>
+    <div
+      className={`
+        rounded-[var(--table-row-radius)]
+        border border-[var(--color-border-default)] bg-[var(--color-surface-default)]
+        transition-colors overflow-hidden
+      `}
+    >
       {/* Main Row */}
       <div
         className={`
-          flex items-center h-[var(--table-row-height)] rounded-[var(--table-row-radius)]
-          border border-[var(--color-border-default)] bg-[var(--color-surface-default)]
+          flex items-stretch min-h-[var(--table-row-height)]
           hover:bg-[var(--table-row-hover-bg)] transition-colors
         `}
       >
         {/* Checkbox */}
-        <div className="w-10 flex items-center justify-center shrink-0">
+        <div className="w-[var(--table-checkbox-width)] flex items-center justify-center shrink-0 px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)]">
           <Checkbox checked={isSelected} onChange={onToggleSelect} />
         </div>
 
         {/* Name */}
-        <div className="flex-1 min-w-[140px] px-3 flex items-center gap-2">
+        <div className="flex-1 min-w-[140px] px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] flex items-center gap-2">
           {!isFolder && (
             <button
               className="p-0.5 hover:bg-[var(--color-surface-muted)] rounded shrink-0"
@@ -255,44 +263,44 @@ function ObjectRow({ object, isExpanded, isSelected, onToggleExpand, onToggleSel
           )}
           <Link
             to={isFolder ? `/storage/buckets/${object.id}` : '#'}
-            className="text-[var(--color-action-primary)] hover:underline text-[11px] truncate"
+            className="text-[var(--color-action-primary)] hover:underline text-[length:var(--table-font-size)] leading-[var(--table-line-height)] truncate"
           >
             {object.name}
           </Link>
         </div>
 
         {/* Owner */}
-        <div className="w-[120px] px-3 text-[11px] text-[var(--color-text-default)] truncate">
+        <div className="w-[120px] px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)] flex items-center truncate">
           {object.owner || '-'}
         </div>
 
         {/* Type */}
-        <div className="w-[80px] px-3 text-[11px] text-[var(--color-text-default)]">
+        <div className="w-[80px] px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)] flex items-center">
           {object.objectType || '-'}
         </div>
 
         {/* Size */}
-        <div className="w-[80px] px-3 text-[11px] text-[var(--color-text-default)]">
+        <div className="w-[80px] px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)] flex items-center">
           {object.size || '-'}
         </div>
 
         {/* StorageClass */}
-        <div className="w-[100px] px-3 text-[11px] text-[var(--color-text-default)]">
+        <div className="w-[100px] px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)] flex items-center">
           {object.storageClass || '-'}
         </div>
 
         {/* ETag */}
-        <div className="w-[140px] px-3 text-[11px] text-[var(--color-text-default)] truncate">
+        <div className="w-[140px] px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)] flex items-center truncate">
           {object.etag || '-'}
         </div>
 
         {/* LastModified */}
-        <div className="w-[130px] px-3 text-[11px] text-[var(--color-text-default)]">
+        <div className="w-[130px] px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)] flex items-center">
           {object.lastModified || '-'}
         </div>
 
         {/* Action */}
-        <div className="w-[60px] px-3 flex items-center justify-center">
+        <div className="w-[60px] px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] flex items-center justify-center">
           <button className="p-1 hover:bg-[var(--color-surface-muted)] rounded">
             <IconDotsVertical size={14} stroke={1.5} className="text-[var(--color-text-muted)]" />
           </button>
@@ -301,7 +309,7 @@ function ObjectRow({ object, isExpanded, isSelected, onToggleExpand, onToggleSel
 
       {/* Expanded Details */}
       {isExpanded && !isFolder && (
-        <div className="ml-10 mr-4 mb-2">
+        <div className="p-4 border-t border-[var(--color-border-subtle)]">
           {/* S3 URI & Object URL */}
           <div className="flex gap-4 mb-6">
             {/* S3 URI Box */}
@@ -331,79 +339,75 @@ function ObjectRow({ object, isExpanded, isSelected, onToggleExpand, onToggleSel
           </div>
 
           {/* Tags */}
-          <div className="mb-6">
-            <div className="text-[12px] text-[var(--color-text-muted)] mb-3">Tags</div>
-            <div className="border border-[var(--color-border-default)] rounded-lg overflow-hidden">
-              {/* Header */}
-              <div className="flex bg-[var(--color-surface-subtle)]">
-                <div className="flex-1 px-4 py-3 text-[12px] font-medium text-[var(--color-text-default)]">
-                  Key
+          <div className="flex flex-col gap-[var(--table-row-gap)]">
+            <div className="text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-muted)]">Tags</div>
+            {/* Header */}
+            <div className="flex items-stretch min-h-[var(--table-row-height)] bg-[var(--table-header-bg)] border border-[var(--color-border-default)] rounded-[var(--table-row-radius)]">
+              <div className="flex-1 px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] flex items-center">
+                Key
+              </div>
+              <div className="flex-1 px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] flex items-center border-l border-[var(--color-border-default)]">
+                Value
+              </div>
+            </div>
+            {/* Rows */}
+            {object.tags?.map((tag, idx) => (
+              <div key={idx} className="flex items-stretch min-h-[var(--table-row-height)] bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--table-row-radius)]">
+                <div className="flex-1 px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)] flex items-center">
+                  {tag.key}
                 </div>
-                <div className="flex-1 px-4 py-3 text-[12px] font-medium text-[var(--color-text-default)]">
-                  Value
+                <div className="flex-1 px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)] flex items-center">
+                  {tag.value}
                 </div>
               </div>
-              {/* Rows */}
-              {object.tags?.map((tag, idx) => (
-                <div key={idx} className="flex bg-[var(--color-surface-default)] border-t border-[var(--color-border-subtle)]">
-                  <div className="flex-1 px-4 py-3 text-[12px] text-[var(--color-text-default)]">
-                    {tag.key}
-                  </div>
-                  <div className="flex-1 px-4 py-3 text-[12px] text-[var(--color-text-default)]">
-                    {tag.value}
-                  </div>
-                </div>
-              ))}
-            </div>
+            ))}
           </div>
 
           {/* Versions */}
-          <div>
-            <div className="text-[12px] text-[var(--color-text-muted)] mb-3">Versions</div>
-            <div className="border border-[var(--color-border-default)] rounded-lg overflow-hidden">
-              {/* Header */}
-              <div className="flex bg-[var(--color-surface-subtle)]">
-                <div className="w-[180px] px-4 py-3 text-[12px] font-medium text-[var(--color-text-default)]">
-                  VersionID
+          <div className="flex flex-col gap-[var(--table-row-gap)] mt-4">
+            <div className="text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-muted)]">Versions</div>
+            {/* Header */}
+            <div className="flex items-stretch min-h-[var(--table-row-height)] bg-[var(--table-header-bg)] border border-[var(--color-border-default)] rounded-[var(--table-row-radius)]">
+              <div className="w-[180px] px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] flex items-center">
+                VersionID
+              </div>
+              <div className="w-[180px] px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] flex items-center border-l border-[var(--color-border-default)]">
+                Storage Class
+              </div>
+              <div className="w-[140px] px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] flex items-center border-l border-[var(--color-border-default)]">
+                Type
+              </div>
+              <div className="w-[140px] px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] flex items-center border-l border-[var(--color-border-default)]">
+                Size
+              </div>
+              <div className="flex-1 px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] flex items-center border-l border-[var(--color-border-default)]">
+                Last modified
+              </div>
+            </div>
+            {/* Rows */}
+            {object.versions?.map((version, idx) => (
+              <div key={idx} className="flex items-stretch min-h-[var(--table-row-height)] bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--table-row-radius)]">
+                <div className="w-[180px] px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)] flex items-center">
+                  {version.versionId}
                 </div>
-                <div className="w-[180px] px-4 py-3 text-[12px] font-medium text-[var(--color-text-default)]">
-                  Storage Class
+                <div className="w-[180px] px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)] flex items-center">
+                  {version.storageClass}
                 </div>
-                <div className="w-[140px] px-4 py-3 text-[12px] font-medium text-[var(--color-text-default)]">
-                  Type
+                <div className="w-[140px] px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)] flex items-center">
+                  {version.type}
                 </div>
-                <div className="w-[140px] px-4 py-3 text-[12px] font-medium text-[var(--color-text-default)]">
-                  Size
+                <div className="w-[140px] px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)] flex items-center">
+                  {version.size}
                 </div>
-                <div className="flex-1 px-4 py-3 text-[12px] font-medium text-[var(--color-text-default)]">
-                  Last modified
+                <div className="flex-1 px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)] flex items-center">
+                  {version.lastModified}
                 </div>
               </div>
-              {/* Rows */}
-              {object.versions?.map((version, idx) => (
-                <div key={idx} className="flex bg-[var(--color-surface-default)] border-t border-[var(--color-border-subtle)]">
-                  <div className="w-[180px] px-4 py-3 text-[12px] text-[var(--color-text-default)]">
-                    {version.versionId}
-                  </div>
-                  <div className="w-[180px] px-4 py-3 text-[12px] text-[var(--color-text-default)]">
-                    {version.storageClass}
-                  </div>
-                  <div className="w-[140px] px-4 py-3 text-[12px] text-[var(--color-text-default)]">
-                    {version.type}
-                  </div>
-                  <div className="w-[140px] px-4 py-3 text-[12px] text-[var(--color-text-default)]">
-                    {version.size}
-                  </div>
-                  <div className="flex-1 px-4 py-3 text-[12px] text-[var(--color-text-default)]">
-                    {version.lastModified}
-                  </div>
-                </div>
-              ))}
-            </div>
+            ))}
           </div>
         </div>
       )}
-    </>
+    </div>
   );
 }
 
@@ -420,7 +424,7 @@ export function BucketDetailPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedRows, setSelectedRows] = useState<string[]>([]);
-  const [expandedRows, setExpandedRows] = useState<string[]>(['object-343da87798e1c6356b47236f21099b63']);
+  const [expandedRows, setExpandedRows] = useState<string[]>([]);
   const [treeSidebarOpen, setTreeSidebarOpen] = useState(true);
 
   // Global tab management
@@ -629,7 +633,7 @@ export function BucketDetailPage() {
                       {treeSidebarOpen && (
                         <div className="w-[224px] shrink-0 border border-[var(--color-border-default)] rounded-lg bg-[var(--color-surface-default)]">
                           <div className="flex items-center justify-between px-3 py-2 border-b border-[var(--color-border-subtle)]">
-                            <span className="text-[12px] font-medium text-[var(--color-action-primary)]">
+                            <span className="text-[12px] font-medium text-[var(--color-text-default)]">
                               Objects
                             </span>
                             <button 
@@ -655,12 +659,22 @@ export function BucketDetailPage() {
                       )}
 
                       {/* Right Content - Object List */}
-                      <div className="flex-1 min-w-0">
+                      <VStack gap={3} className="flex-1 min-w-0">
                         {/* Header Row */}
-                        <div className="flex items-center justify-between mb-4">
-                          <span className="text-[14px] font-semibold text-[var(--color-text-default)]">
-                            Objects
-                          </span>
+                        <div className="flex items-center justify-between h-7">
+                          <div className="flex items-center gap-2">
+                            {!treeSidebarOpen && (
+                              <button
+                                className="p-1 rounded border border-[var(--color-border-default)] hover:bg-[var(--color-surface-muted)] hover:border-[var(--color-border-strong)] transition-colors"
+                                onClick={() => setTreeSidebarOpen(true)}
+                              >
+                                <IconLayoutSidebar size={14} stroke={1.5} className="text-[var(--color-text-muted)]" />
+                              </button>
+                            )}
+                            <h2 className="text-[16px] font-semibold text-[var(--color-text-default)]">
+                              Objects
+                            </h2>
+                          </div>
                           <div className="flex items-center gap-2">
                             <Button variant="secondary" size="sm">
                               <IconPlus size={12} stroke={1.5} />
@@ -674,71 +688,93 @@ export function BucketDetailPage() {
                         </div>
 
                         {/* Search and Actions Row */}
-                        <div className="flex items-center gap-3 mb-4">
-                          <SearchInput
-                            placeholder="Find object with filters"
-                            value={searchQuery}
-                            onChange={(e) => setSearchQuery(e.target.value)}
-                            className="w-[280px]"
-                          />
-                          <Button variant="secondary" size="sm">
-                            <IconTrash size={12} stroke={1.5} />
-                            Delete
-                          </Button>
-                          <Button variant="secondary" size="sm">
-                            <IconDownload size={14} stroke={1.5} />
-                            Download
-                          </Button>
-                        </div>
+                        <ListToolbar
+                          primaryActions={
+                            <ListToolbar.Actions>
+                              <div className="w-[280px]">
+                                <SearchInput
+                                  placeholder="Find object with filters"
+                                  value={searchQuery}
+                                  onChange={(e) => setSearchQuery(e.target.value)}
+                                  onClear={() => setSearchQuery('')}
+                                  size="sm"
+                                  fullWidth
+                                />
+                              </div>
+                              <Button
+                                variant="secondary"
+                                size="sm"
+                                icon={<IconDownload size={12} stroke={1.5} />}
+                                aria-label="Download"
+                              />
+                              <Button
+                                variant="secondary"
+                                size="sm"
+                                icon={<IconRefresh size={14} stroke={1.5} />}
+                                aria-label="Refresh"
+                              />
+                            </ListToolbar.Actions>
+                          }
+                          bulkActions={
+                            <ListToolbar.Actions>
+                              <Button
+                                variant="secondary"
+                                size="sm"
+                                leftIcon={<IconTrash size={14} stroke={1.5} />}
+                              >
+                                Delete
+                              </Button>
+                            </ListToolbar.Actions>
+                          }
+                        />
 
                         {/* Pagination */}
-                        <div className="mb-4">
-                          <Pagination
-                            currentPage={currentPage}
-                            totalPages={1}
-                            onPageChange={setCurrentPage}
-                            totalItems={2}
-                          />
-                        </div>
+                        <Pagination
+                          currentPage={currentPage}
+                          totalPages={1}
+                          onPageChange={setCurrentPage}
+                          totalItems={2}
+                        />
 
-                        {/* Table Header */}
-                        <div className="flex items-center h-[40px] bg-[var(--color-surface-subtle)] rounded-t-lg border border-[var(--color-border-default)]">
-                          <div className="w-10 flex items-center justify-center shrink-0">
-                            <Checkbox 
-                              checked={selectedRows.length === filteredObjects.length && filteredObjects.length > 0}
-                              onChange={() => {
-                                if (selectedRows.length === filteredObjects.length) {
-                                  setSelectedRows([]);
-                                } else {
-                                  setSelectedRows(filteredObjects.map(o => o.id));
-                                }
-                              }}
-                            />
+                        {/* Table */}
+                        <div className="flex flex-col gap-[var(--table-row-gap)]">
+                          {/* Table Header */}
+                          <div className="flex items-stretch min-h-[var(--table-row-height)] bg-[var(--table-header-bg)] border border-[var(--color-border-default)] rounded-[var(--table-row-radius)]">
+                            <div className="w-[var(--table-checkbox-width)] flex items-center justify-center shrink-0 px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)]">
+                              <Checkbox 
+                                checked={selectedRows.length === filteredObjects.length && filteredObjects.length > 0}
+                                onChange={() => {
+                                  if (selectedRows.length === filteredObjects.length) {
+                                    setSelectedRows([]);
+                                  } else {
+                                    setSelectedRows(filteredObjects.map(o => o.id));
+                                  }
+                                }}
+                              />
+                            </div>
+                            <div className="flex-1 min-w-[140px] px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] flex items-center gap-1 border-l border-[var(--color-border-default)]">
+                              Name (= Key)
+                              <IconSelector size={14} stroke={1} className="text-[var(--color-text-disabled)]" />
+                            </div>
+                            <div className="w-[120px] px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] flex items-center border-l border-[var(--color-border-default)]">Owner</div>
+                            <div className="w-[80px] px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] flex items-center gap-1 border-l border-[var(--color-border-default)]">
+                              Type
+                              <IconSelector size={14} stroke={1} className="text-[var(--color-text-disabled)]" />
+                            </div>
+                            <div className="w-[80px] px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] flex items-center gap-1 border-l border-[var(--color-border-default)]">
+                              Size
+                              <IconSelector size={14} stroke={1} className="text-[var(--color-text-disabled)]" />
+                            </div>
+                            <div className="w-[100px] px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] flex items-center border-l border-[var(--color-border-default)]">StorageClass</div>
+                            <div className="w-[140px] px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] flex items-center border-l border-[var(--color-border-default)]">ETag</div>
+                            <div className="w-[130px] px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] flex items-center gap-1 border-l border-[var(--color-border-default)]">
+                              LastModified
+                              <IconSelector size={14} stroke={1} className="text-[var(--color-text-disabled)]" />
+                            </div>
+                            <div className="w-[60px] px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] flex items-center border-l border-[var(--color-border-default)]">Action</div>
                           </div>
-                          <div className="flex-1 min-w-[140px] px-3 text-[11px] font-medium text-[var(--color-text-default)] flex items-center gap-1">
-                            Name (= Key)
-                            <IconChevronDown size={12} stroke={1.5} className="text-[var(--color-text-muted)]" />
-                          </div>
-                          <div className="w-[120px] px-3 text-[11px] font-medium text-[var(--color-text-default)]">Owner</div>
-                          <div className="w-[80px] px-3 text-[11px] font-medium text-[var(--color-text-default)] flex items-center gap-1">
-                            Type
-                            <IconChevronDown size={12} stroke={1.5} className="text-[var(--color-text-muted)]" />
-                          </div>
-                          <div className="w-[80px] px-3 text-[11px] font-medium text-[var(--color-text-default)] flex items-center gap-1">
-                            Size
-                            <IconChevronDown size={12} stroke={1.5} className="text-[var(--color-text-muted)]" />
-                          </div>
-                          <div className="w-[100px] px-3 text-[11px] font-medium text-[var(--color-text-default)]">StorageClass</div>
-                          <div className="w-[140px] px-3 text-[11px] font-medium text-[var(--color-text-default)]">ETag</div>
-                          <div className="w-[130px] px-3 text-[11px] font-medium text-[var(--color-text-default)] flex items-center gap-1">
-                            LastModified
-                            <IconChevronDown size={12} stroke={1.5} className="text-[var(--color-text-muted)]" />
-                          </div>
-                          <div className="w-[60px] px-3 text-[11px] font-medium text-[var(--color-text-default)]">Action</div>
-                        </div>
 
-                        {/* Table Body */}
-                        <div className="flex flex-col gap-1 mt-1">
+                          {/* Table Body */}
                           {filteredObjects.map((object) => (
                             <ObjectRow
                               key={object.id}
@@ -750,7 +786,7 @@ export function BucketDetailPage() {
                             />
                           ))}
                         </div>
-                      </div>
+                      </VStack>
                     </div>
                   </TabPanel>
                 </Tabs>

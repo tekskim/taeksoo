@@ -43,6 +43,7 @@ export * from './components/SectionCard';
 export * from './components/FormField';
 export * from './components/FloatingCard';
 export * from './components/MonitoringToolbar';
+export * from './components/NotificationCenter';
 
 // Layouts
 export * from './layouts';

@@ -377,15 +377,14 @@ export function ImagesPage() {
                       icon={<IconDownload size={14} stroke={1.5} />}
                       aria-label="Download"
                     />
+                    <Button
+                      variant="secondary"
+                      size="sm"
+                      icon={<IconRefresh size={14} stroke={1.5} />}
+                      aria-label="Refresh"
+                      onClick={() => console.log('Refresh clicked')}
+                    />
                   </div>
-                  <div className="w-px h-4 bg-[var(--color-border-default)]" />
-                  <Button
-                    variant="secondary"
-                    size="sm"
-                    icon={<IconRefresh size={14} stroke={1.5} />}
-                    aria-label="Refresh"
-                    onClick={() => console.log('Refresh clicked')}
-                  />
                 </div>
               </div>
 

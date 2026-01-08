@@ -120,7 +120,7 @@ function ShellTabButton({ tab, isActive, onClick, onClose, onOpenInNewTab }: She
           e.stopPropagation();
           onOpenInNewTab?.();
         }}
-        className="p-0.5 rounded hover:bg-[var(--color-surface-muted)] transition-colors text-[var(--color-text-muted)] hover:text-[var(--color-text-default)]"
+        className="p-0.5 rounded hover:bg-[var(--color-surface-muted)] transition-colors text-[var(--color-text-muted)] hover:text-[var(--color-text-default)] cursor-pointer"
         title="Open in new tab"
       >
         <IconExternalLink size={12} stroke={1} />
@@ -130,7 +130,7 @@ function ShellTabButton({ tab, isActive, onClick, onClose, onOpenInNewTab }: She
           e.stopPropagation();
           onClose();
         }}
-        className="p-0.5 rounded hover:bg-[var(--color-surface-muted)] transition-colors text-[var(--color-text-muted)] hover:text-[var(--color-text-default)]"
+        className="p-0.5 rounded hover:bg-[var(--color-surface-muted)] transition-colors text-[var(--color-text-muted)] hover:text-[var(--color-text-default)] cursor-pointer"
         title="Close tab"
       >
         <IconX size={12} stroke={1} />

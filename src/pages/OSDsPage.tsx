@@ -259,7 +259,7 @@ export function OSDsPage() {
     {
       key: 'status',
       label: 'Status',
-      width: 100,
+      width: 120,
       sortable: false,
       render: (_, row) => <StatusCell status={row.status} />,
     },
@@ -369,24 +369,25 @@ export function OSDsPage() {
 
               {/* Search and Actions */}
               <div className="flex items-center gap-2">
-                <div className="w-[280px]">
-                  <SearchInput
-                    placeholder="Search users by attributes"
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    onClear={() => setSearchQuery('')}
+                <div className="flex items-center gap-1">
+                  <div className="w-[280px]">
+                    <SearchInput
+                      placeholder="Search users by attributes"
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      onClear={() => setSearchQuery('')}
+                      size="sm"
+                      fullWidth
+                    />
+                  </div>
+                  <Button
+                    variant="secondary"
                     size="sm"
-                    fullWidth
+                    icon={<IconRefresh size={14} stroke={1.5} />}
+                    aria-label="Refresh"
+                    onClick={() => console.log('Refresh clicked')}
                   />
                 </div>
-                <div className="w-px h-4 bg-[var(--color-border-default)]" />
-                <Button
-                  variant="secondary"
-                  size="sm"
-                  icon={<IconRefresh size={14} stroke={1.5} />}
-                  aria-label="Refresh"
-                  onClick={() => console.log('Refresh clicked')}
-                />
               </div>
 
               {/* Pagination */}

@@ -21,6 +21,7 @@ const buttonVariants = cva(
     'focus-visible:ring-2',
     'focus-visible:ring-[var(--color-border-focus)]',
     'focus-visible:ring-offset-2',
+    'cursor-pointer',
     'disabled:cursor-not-allowed',
     'rounded-[var(--button-radius)]',
   ],
