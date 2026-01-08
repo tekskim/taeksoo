@@ -59,12 +59,12 @@ function StatCard({ value, label }: StatCardProps) {
   return (
     <div className="bg-[var(--color-surface-subtle)] flex flex-[1_0_0] flex-col items-start justify-center min-h-px min-w-px p-4 rounded-lg">
       <div className="flex flex-col items-start pb-1 pt-0 px-0 relative shrink-0 w-full">
-        <div className="flex flex-col font-medium justify-center relative shrink-0 text-[var(--font-size-18)] leading-[var(--line-height-28)] text-[var(--color-text-default)] w-full">
+        <div className="flex flex-col font-medium justify-center relative shrink-0 text-[length:var(--font-size-18)] leading-[length:var(--line-height-28)] text-[var(--color-text-default)] w-full">
           <p>{value}</p>
         </div>
       </div>
       <div className="flex flex-col items-start relative shrink-0 w-full">
-        <div className="flex flex-col font-normal justify-center relative shrink-0 text-[var(--color-text-muted)] text-[var(--font-size-11)] leading-[var(--line-height-16)] w-full">
+        <div className="flex flex-col font-normal justify-center relative shrink-0 text-[var(--color-text-muted)] text-[length:var(--font-size-11)] leading-[length:var(--line-height-16)] w-full">
           <p>{label}</p>
         </div>
       </div>
@@ -96,7 +96,7 @@ function QuickActionCard({ icon, label, highlighted = false, onClick }: QuickAct
         </div>
       </div>
       <div className="flex flex-col items-start relative shrink-0 w-full">
-        <div className="flex flex-col items-start font-normal justify-start relative shrink-0 text-[var(--color-text-muted)] text-[var(--font-size-11)] leading-[var(--line-height-16)] w-full">
+        <div className="flex flex-col items-start font-normal justify-start relative shrink-0 text-[var(--color-text-muted)] text-[length:var(--font-size-11)] leading-[length:var(--line-height-16)] w-full">
           <p className="text-left">{label}</p>
         </div>
       </div>
@@ -120,16 +120,16 @@ function ChatItem({ title, description, createdAt, onClick }: ChatItemProps & { 
       className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] flex flex-col gap-3 items-start px-4 py-3 rounded-lg cursor-pointer hover:border-[var(--color-border-focus)] transition-colors"
     >
       <div className="flex flex-col gap-1 items-start relative shrink-0 w-full">
-        <p className="font-medium leading-[var(--line-height-20)] relative shrink-0 text-[var(--color-text-default)] text-[var(--font-size-14)]">
+        <p className="font-medium leading-[length:var(--line-height-20)] relative shrink-0 text-[var(--color-text-default)] text-[length:var(--font-size-14)]">
           {title}
         </p>
-        <p className="font-normal leading-[var(--line-height-16)] min-w-full relative shrink-0 text-[var(--color-text-subtle)] text-[var(--font-size-11)] w-[min-content] whitespace-pre-wrap line-clamp-2">
+        <p className="font-normal leading-[length:var(--line-height-16)] min-w-full relative shrink-0 text-[var(--color-text-subtle)] text-[length:var(--font-size-11)] w-[min-content] whitespace-pre-wrap line-clamp-2">
           {description}
         </p>
       </div>
       <div className="flex gap-0 items-center relative shrink-0">
         <div className="flex gap-1 items-center justify-center px-0 py-0.5 relative rounded-full shrink-0">
-          <div className="flex flex-col font-medium justify-center relative shrink-0 text-[var(--color-text-subtle)] text-[var(--font-size-11)] leading-[var(--line-height-16)] whitespace-nowrap">
+          <div className="flex flex-col font-medium justify-center relative shrink-0 text-[var(--color-text-subtle)] text-[length:var(--font-size-11)] leading-[length:var(--line-height-16)] whitespace-nowrap">
             <p>Created at: {createdAt}</p>
           </div>
         </div>
@@ -213,7 +213,7 @@ export function HomePage() {
               <div className="flex flex-col gap-2 items-start min-w-[1176px] relative shrink-0 w-full">
                 <div className="flex flex-col items-start justify-center relative shrink-0">
                   <div className="flex items-center relative shrink-0">
-                    <p className="font-semibold leading-[var(--line-height-28)] relative shrink-0 text-[var(--color-text-default)] text-[var(--font-size-18)]">
+                    <p className="font-semibold leading-[length:var(--line-height-28)] relative shrink-0 text-[var(--color-text-default)] text-[length:var(--font-size-18)]">
                       Quick action
                     </p>
                   </div>
@@ -244,7 +244,7 @@ export function HomePage() {
               <div className="flex flex-col gap-6 items-start min-w-[1176px] relative shrink-0 w-full">
                 <div className="flex flex-col items-start justify-center relative shrink-0">
                   <div className="flex items-center relative shrink-0">
-                    <p className="font-semibold leading-[var(--line-height-28)] relative shrink-0 text-[var(--color-text-default)] text-[var(--font-size-18)]">
+                    <p className="font-semibold leading-[length:var(--line-height-28)] relative shrink-0 text-[var(--color-text-default)] text-[length:var(--font-size-18)]">
                       Recent chats
                     </p>
                   </div>
@@ -252,7 +252,7 @@ export function HomePage() {
 
                 {/* Today Section */}
                 <div className="flex flex-col gap-2 items-start relative shrink-0 w-full">
-                  <p className="font-normal leading-[var(--line-height-16)] relative shrink-0 text-[var(--color-text-subtle)] text-[var(--font-size-11)] w-full">
+                  <p className="font-normal leading-[length:var(--line-height-16)] relative shrink-0 text-[var(--color-text-subtle)] text-[length:var(--font-size-11)] w-full">
                     Today
                   </p>
                   <VStack gap={2} className="w-full">
@@ -272,7 +272,7 @@ export function HomePage() {
 
                 {/* Last 7 days Section */}
                 <div className="flex flex-col gap-2 items-start relative shrink-0 w-full">
-                  <p className="font-normal leading-[var(--line-height-16)] relative shrink-0 text-[var(--color-text-subtle)] text-[var(--font-size-11)] w-full">
+                  <p className="font-normal leading-[length:var(--line-height-16)] relative shrink-0 text-[var(--color-text-subtle)] text-[length:var(--font-size-11)] w-full">
                     Last 7 days
                   </p>
                   <VStack gap={2} className="w-full">

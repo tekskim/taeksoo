@@ -399,7 +399,7 @@ export function CreateAgentPage() {
                 {/* Left Content */}
                 <div className="flex flex-1 flex-col min-h-0">
                   <div className="flex flex-col gap-6 w-full">
-                <h4 className="font-semibold leading-[var(--line-height-28)] relative shrink-0 text-[var(--color-text-default)] text-[var(--font-size-18)]">
+                <h4 className="font-semibold leading-[length:var(--line-height-28)] relative shrink-0 text-[var(--color-text-default)] text-[length:var(--font-size-18)]">
                   Create agent
                 </h4>
 
