@@ -143,8 +143,10 @@ import {
   IconCamera,
   IconPhoto,
   IconFile,
+  IconFileText,
   IconArchive,
   IconTemplate,
+  IconCode,
   // System - Monitoring & Analytics
   IconTerminal,
   IconTerminal2,
@@ -2124,6 +2126,8 @@ function SingleValueDoughnutDemo({
    ---------------------------------------- */
 
 function TabBarDemo() {
+  const tabCounterRef = useRef(4);
+  
   const { tabs, activeTab, addTab, closeTab, selectTab } = useTabBar({
     initialTabs: [
       { id: 'tab-1', label: 'Entry page', closable: true },
@@ -2133,15 +2137,38 @@ function TabBarDemo() {
     initialActiveTab: 'tab-1',
   });
 
-  let tabCounter = 4;
+  // Many tabs demo
+  const manyTabsDemo = useTabBar({
+    initialTabs: [
+      { id: 'many-1', label: 'Dashboard', closable: true },
+      { id: 'many-2', label: 'Instance Templates', closable: true },
+      { id: 'many-3', label: 'Virtual Machines', closable: true },
+      { id: 'many-4', label: 'Storage Volumes', closable: true },
+      { id: 'many-5', label: 'Network Settings', closable: true },
+      { id: 'many-6', label: 'Security Groups', closable: true },
+      { id: 'many-7', label: 'Load Balancers', closable: true },
+      { id: 'many-8', label: 'Monitoring', closable: true },
+    ],
+    initialActiveTab: 'many-1',
+  });
 
   const handleAddTab = () => {
+    const counter = tabCounterRef.current;
     addTab({
-      id: `tab-${tabCounter}`,
-      label: `New Tab ${tabCounter}`,
+      id: `tab-${counter}-${Date.now()}`,
+      label: `New Tab ${counter}`,
       closable: true,
     });
-    tabCounter++;
+    tabCounterRef.current++;
+  };
+
+  const handleAddManyTab = () => {
+    const counter = manyTabsDemo.tabs.length + 1;
+    manyTabsDemo.addTab({
+      id: `many-${counter}-${Date.now()}`,
+      label: `New Tab ${counter}`,
+      closable: true,
+    });
   };
 
   return (
@@ -2150,13 +2177,24 @@ function TabBarDemo() {
       <VStack gap={3}>
         <Label>Design Tokens</Label>
         <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
-          <code>height: 36px</code> · <code>tab-width: 100-200px</code> · <code>padding-x: 12px</code> · <code>font: 12px</code>
+          <code>height: 36px</code> · <code>max-width: 160px</code> · <code>padding-x: 12px</code> · <code>font: 12px</code>
         </div>
+      </VStack>
+
+      {/* Features */}
+      <VStack gap={3}>
+        <Label>Features</Label>
+        <ul className="list-disc list-outside pl-4 space-y-1 text-[length:var(--font-size-12)] leading-[var(--line-height-18)] text-[var(--color-text-default)]">
+          <li>탭 최대 너비 160px, 긴 타이틀은 truncate 처리</li>
+          <li>탭이 많아지면 비율적으로 너비가 줄어듦 (스크롤 없음)</li>
+          <li>탭 추가/닫기 기능</li>
+          <li>윈도우 컨트롤 (최소화/최대화/닫기)</li>
+        </ul>
       </VStack>
 
       {/* Interactive Demo */}
       <VStack gap={3}>
-        <Label>Interactive Demo</Label>
+        <Label>Interactive Demo (3 tabs)</Label>
         <div className="w-full border border-[var(--color-border-default)] rounded-[var(--radius-md)] overflow-hidden">
           <TabBar
             tabs={tabs}
@@ -2172,6 +2210,24 @@ function TabBarDemo() {
         <p className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
           Click tabs to switch, click × to close, click + to add new tabs
         </p>
+      </VStack>
+
+      {/* Many Tabs Demo */}
+      <VStack gap={3}>
+        <Label>Many Tabs Demo (8 tabs - 비율 축소)</Label>
+        <div className="w-full border border-[var(--color-border-default)] rounded-[var(--radius-md)] overflow-hidden">
+          <TabBar
+            tabs={manyTabsDemo.tabs}
+            activeTab={manyTabsDemo.activeTab}
+            onTabChange={manyTabsDemo.selectTab}
+            onTabClose={manyTabsDemo.closeTab}
+            onTabAdd={handleAddManyTab}
+            showAddButton={true}
+          />
+          <div className="h-[80px] flex items-center justify-center bg-[var(--color-surface-default)] text-[var(--color-text-muted)] text-[length:var(--font-size-12)]">
+            탭이 많아지면 모든 탭이 화면에 보이도록 너비가 비율적으로 줄어듭니다.
+          </div>
+        </div>
       </VStack>
 
       {/* With Icons */}
@@ -2657,7 +2713,10 @@ function TableDemo() {
 
 export function DesignSystemPage() {
   const [activeSection, setActiveSection] = useState('token-architecture');
-  const [searchQuery, setSearchQuery] = useState('');
+  const [sidebarSearchQuery, setSidebarSearchQuery] = useState('');
+  const [mainSearchQuery, setMainSearchQuery] = useState('');
+  const [isSidebarSearchFocused, setIsSidebarSearchFocused] = useState(false);
+  const [isMainSearchFocused, setIsMainSearchFocused] = useState(false);
   const [showScrollTop, setShowScrollTop] = useState(false);
   const mainRef = useRef<HTMLDivElement>(null);
   
@@ -2690,6 +2749,8 @@ export function DesignSystemPage() {
 
   // Intersection Observer to track active section
   useEffect(() => {
+    if (!mainRef.current) return;
+    
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
@@ -2698,7 +2759,10 @@ export function DesignSystemPage() {
           }
         });
       },
-      { rootMargin: '-20% 0px -60% 0px' }
+      { 
+        root: mainRef.current,
+        rootMargin: '-20% 0px -60% 0px' 
+      }
     );
 
     navItems.forEach(({ id }) => {
@@ -2711,26 +2775,86 @@ export function DesignSystemPage() {
 
   const scrollToSection = (id: string) => {
     const element = document.getElementById(id);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    const container = mainRef.current;
+    
+    if (!element || !container) {
+      return;
     }
+    
+    // Small delay to ensure state updates are processed
+    setTimeout(() => {
+      if (!container || !element) return;
+      
+      // Calculate target position relative to the scroll container
+      const containerRect = container.getBoundingClientRect();
+      const elementRect = element.getBoundingClientRect();
+      const scrollTop = container.scrollTop;
+      const targetScrollTop = scrollTop + elementRect.top - containerRect.top - 20; // 20px offset from top
+      
+      // Fast smooth scroll
+      const startScrollTop = scrollTop;
+      const distance = targetScrollTop - startScrollTop;
+      const duration = 400;
+      let startTime: number | null = null;
+      
+      // Smooth easing function (easeOutCubic - starts fast, ends slow)
+      const easeOutCubic = (t: number): number => {
+        return 1 - Math.pow(1 - t, 3);
+      };
+      
+      const animateScroll = (currentTime: number) => {
+        if (startTime === null) startTime = currentTime;
+        const timeElapsed = currentTime - startTime;
+        const progress = Math.min(timeElapsed / duration, 1);
+        const easedProgress = easeOutCubic(progress);
+        
+        if (container) {
+          const currentScrollTop = startScrollTop + distance * easedProgress;
+          container.scrollTop = currentScrollTop;
+          
+          if (progress < 1) {
+            requestAnimationFrame(animateScroll);
+          }
+        }
+      };
+      
+      requestAnimationFrame(animateScroll);
+    }, 50);
   };
 
-  // Filter nav items based on search query
-  const filteredNavItems = searchQuery.trim()
+  // Filter nav items based on search query (for sidebar)
+  const filteredSidebarNavItems = sidebarSearchQuery.trim()
     ? navItems.filter(item => 
-        item.label.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        item.id.toLowerCase().includes(searchQuery.toLowerCase())
+        item.label.toLowerCase().includes(sidebarSearchQuery.toLowerCase()) ||
+        item.id.toLowerCase().includes(sidebarSearchQuery.toLowerCase())
       )
     : [];
 
-  const handleSearchKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter' && filteredNavItems.length > 0) {
-      scrollToSection(filteredNavItems[0].id);
-      setSearchQuery('');
+  // Filter nav items based on search query (for main content)
+  const filteredMainNavItems = mainSearchQuery.trim()
+    ? navItems.filter(item => 
+        item.label.toLowerCase().includes(mainSearchQuery.toLowerCase()) ||
+        item.id.toLowerCase().includes(mainSearchQuery.toLowerCase())
+      )
+    : [];
+
+  const handleSidebarSearchKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter' && filteredSidebarNavItems.length > 0) {
+      scrollToSection(filteredSidebarNavItems[0].id);
+      setSidebarSearchQuery('');
     }
     if (e.key === 'Escape') {
-      setSearchQuery('');
+      setSidebarSearchQuery('');
+    }
+  };
+
+  const handleMainSearchKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter' && filteredMainNavItems.length > 0) {
+      scrollToSection(filteredMainNavItems[0].id);
+      setMainSearchQuery('');
+    }
+    if (e.key === 'Escape') {
+      setMainSearchQuery('');
     }
   };
 
@@ -2752,12 +2876,75 @@ export function DesignSystemPage() {
           {/* EntryPage Link */}
           <Link
             to="/"
-            className="flex items-center gap-2 w-[166px] box-border px-3 py-2 mb-4 rounded-[var(--radius-button)] bg-[var(--color-action-secondary)] hover:bg-[var(--color-action-secondary-hover)] text-[var(--color-text-default)] text-[length:var(--font-size-11)] font-medium transition-colors border border-[var(--color-border-default)]"
+            className="flex items-center gap-2 w-[166px] box-border px-3 py-2 mb-2 rounded-[var(--radius-button)] bg-[var(--color-action-secondary)] hover:bg-[var(--color-action-secondary-hover)] text-[var(--color-text-default)] text-[length:var(--font-size-11)] font-medium transition-colors border border-[var(--color-border-default)]"
           >
             <IconHome size={16} stroke={1.5} className="shrink-0" />
             <span className="truncate flex-1 min-w-0">Entry page</span>
             <IconChevronRight size={14} stroke={1.5} className="shrink-0" />
           </Link>
+
+          {/* Search Bar */}
+          <div className="relative mb-4">
+            <div className="relative">
+              <IconSearch 
+                size={16} 
+                stroke={1.5} 
+                className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--color-text-muted)]" 
+              />
+              <input
+                type="text"
+                value={sidebarSearchQuery}
+                onChange={(e) => setSidebarSearchQuery(e.target.value)}
+                onKeyDown={handleSidebarSearchKeyDown}
+                onFocus={() => setIsSidebarSearchFocused(true)}
+                onBlur={() => setIsSidebarSearchFocused(false)}
+                placeholder="Search"
+                className="w-[166px] pl-9 pr-8 py-2 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] text-[length:var(--font-size-11)] text-[var(--color-text-default)] placeholder:text-[var(--color-text-muted)] focus:outline-none focus:border-[var(--color-border-focus)] focus:ring-2 focus:ring-[var(--color-border-focus)] focus:ring-opacity-20 transition-colors"
+              />
+              {sidebarSearchQuery && (
+                <button
+                  onClick={() => setSidebarSearchQuery('')}
+                  className="absolute right-2 top-1/2 -translate-y-1/2 text-[var(--color-text-muted)] hover:text-[var(--color-text-default)] transition-colors"
+                >
+                  <IconX size={14} stroke={1.5} />
+                </button>
+              )}
+            </div>
+            
+            {/* Search Results Dropdown */}
+            {sidebarSearchQuery.trim() && isSidebarSearchFocused && (
+              <div className="absolute top-full left-0 w-[166px] mt-2 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] shadow-[var(--shadow-lg)] z-50 max-h-[300px] overflow-y-auto sidebar-scroll">
+                {filteredSidebarNavItems.length > 0 ? (
+                  <div className="p-2">
+                    {filteredSidebarNavItems.map(({ id, label, icon: Icon }, index) => (
+                      <button
+                        key={id}
+                        onMouseDown={(e) => {
+                          e.preventDefault(); // Prevent input blur
+                        }}
+                        onClick={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          scrollToSection(id);
+                          setSidebarSearchQuery('');
+                          setIsSidebarSearchFocused(false);
+                        }}
+                        data-cursor-element-id={`sidebar-search-result-${id}-${index}`}
+                        className="w-full px-3 py-2 rounded-[var(--radius-md)] flex items-center gap-2 text-left hover:bg-[var(--color-surface-muted)] transition-colors cursor-pointer"
+                      >
+                        <Icon size={14} stroke={1.5} className="text-[var(--color-text-muted)] shrink-0" />
+                        <span className="text-[length:var(--font-size-11)] text-[var(--color-text-default)] truncate">{label}</span>
+                      </button>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="p-3 text-center text-[length:var(--font-size-11)] text-[var(--color-text-muted)]">
+                    No results found
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
 
           {/* Navigation */}
           <VStack gap={4}>
@@ -2770,9 +2957,10 @@ export function DesignSystemPage() {
                 <button
                   key={id}
                   onClick={() => scrollToSection(id)}
+                  data-cursor-element-id={`sidebar-nav-${id}`}
                   className={`
                     w-full px-3 py-2 rounded-[var(--radius-button)] flex items-center gap-2
-                    text-[length:var(--font-size-11)] text-left transition-colors
+                    text-[length:var(--font-size-11)] text-left transition-colors cursor-pointer
                     ${activeSection === id
                       ? 'bg-[var(--color-state-info-bg)] text-[var(--color-action-primary)] font-medium'
                       : 'text-[var(--color-text-muted)] hover:bg-[var(--color-surface-subtle)]'
@@ -2794,9 +2982,10 @@ export function DesignSystemPage() {
                 <button
                   key={id}
                   onClick={() => scrollToSection(id)}
+                  data-cursor-element-id={`sidebar-nav-${id}`}
                   className={`
                     w-full px-3 py-2 rounded-[var(--radius-button)] flex items-center gap-2
-                    text-[length:var(--font-size-11)] text-left transition-colors
+                    text-[length:var(--font-size-11)] text-left transition-colors cursor-pointer
                     ${activeSection === id
                       ? 'bg-[var(--color-state-info-bg)] text-[var(--color-action-primary)] font-medium'
                       : 'text-[var(--color-text-muted)] hover:bg-[var(--color-surface-subtle)]'
@@ -2818,9 +3007,10 @@ export function DesignSystemPage() {
                 <button
                   key={id}
                   onClick={() => scrollToSection(id)}
+                  data-cursor-element-id={`sidebar-nav-${id}`}
                   className={`
                     w-full px-3 py-2 rounded-[var(--radius-button)] flex items-center gap-2
-                    text-[length:var(--font-size-11)] text-left transition-colors
+                    text-[length:var(--font-size-11)] text-left transition-colors cursor-pointer
                     ${activeSection === id
                       ? 'bg-[var(--color-state-info-bg)] text-[var(--color-action-primary)] font-medium'
                       : 'text-[var(--color-text-muted)] hover:bg-[var(--color-surface-subtle)]'
@@ -2842,9 +3032,10 @@ export function DesignSystemPage() {
                 <button
                   key={id}
                   onClick={() => scrollToSection(id)}
+                  data-cursor-element-id={`sidebar-nav-${id}`}
                   className={`
                     w-full px-3 py-2 rounded-[var(--radius-button)] flex items-center gap-2
-                    text-[length:var(--font-size-11)] text-left transition-colors
+                    text-[length:var(--font-size-11)] text-left transition-colors cursor-pointer
                     ${activeSection === id
                       ? 'bg-[var(--color-state-info-bg)] text-[var(--color-action-primary)] font-medium'
                       : 'text-[var(--color-text-muted)] hover:bg-[var(--color-surface-subtle)]'
@@ -2866,9 +3057,10 @@ export function DesignSystemPage() {
                 <button
                   key={id}
                   onClick={() => scrollToSection(id)}
+                  data-cursor-element-id={`sidebar-nav-${id}`}
                   className={`
                     w-full px-3 py-2 rounded-[var(--radius-button)] flex items-center gap-2
-                    text-[length:var(--font-size-11)] text-left transition-colors
+                    text-[length:var(--font-size-11)] text-left transition-colors cursor-pointer
                     ${activeSection === id
                       ? 'bg-[var(--color-state-info-bg)] text-[var(--color-action-primary)] font-medium'
                       : 'text-[var(--color-text-muted)] hover:bg-[var(--color-surface-subtle)]'
@@ -2919,15 +3111,17 @@ export function DesignSystemPage() {
                 />
                 <input
                   type="text"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  onKeyDown={handleSearchKeyDown}
+                  value={mainSearchQuery}
+                  onChange={(e) => setMainSearchQuery(e.target.value)}
+                  onKeyDown={handleMainSearchKeyDown}
+                  onFocus={() => setIsMainSearchFocused(true)}
+                  onBlur={() => setIsMainSearchFocused(false)}
                   placeholder="Search components, tokens... (Enter to go, Esc to clear)"
                   className="w-full pl-10 pr-4 py-3 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] text-[length:var(--font-size-14)] text-[var(--color-text-default)] placeholder:text-[var(--color-text-muted)] focus:outline-none focus:border-[var(--color-border-focus)] focus:ring-2 focus:ring-[var(--color-border-focus)] focus:ring-opacity-20 transition-colors"
                 />
-                {searchQuery && (
+                {mainSearchQuery && (
                   <button
-                    onClick={() => setSearchQuery('')}
+                    onClick={() => setMainSearchQuery('')}
                     className="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--color-text-muted)] hover:text-[var(--color-text-default)] transition-colors"
                   >
                     <IconX size={16} stroke={1.5} />
@@ -2936,18 +3130,25 @@ export function DesignSystemPage() {
               </div>
               
               {/* Search Results Dropdown */}
-              {searchQuery.trim() && (
-                <div className="absolute top-full left-0 right-0 mt-2 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] shadow-[var(--shadow-lg)] z-50 max-h-[300px] overflow-y-auto">
-                  {filteredNavItems.length > 0 ? (
+              {mainSearchQuery.trim() && isMainSearchFocused && (
+                <div className="absolute top-full left-0 right-0 mt-2 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] shadow-[var(--shadow-lg)] z-50 max-h-[300px] overflow-y-auto sidebar-scroll">
+                  {filteredMainNavItems.length > 0 ? (
                     <div className="p-2">
-                      {filteredNavItems.map(({ id, label, icon: Icon }) => (
+                      {filteredMainNavItems.map(({ id, label, icon: Icon }, index) => (
                         <button
                           key={id}
-                          onClick={() => {
-                            scrollToSection(id);
-                            setSearchQuery('');
+                          onMouseDown={(e) => {
+                            e.preventDefault(); // Prevent input blur
                           }}
-                          className="w-full px-3 py-2 rounded-[var(--radius-md)] flex items-center gap-3 text-left hover:bg-[var(--color-surface-muted)] transition-colors"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            scrollToSection(id);
+                            setMainSearchQuery('');
+                            setIsMainSearchFocused(false);
+                          }}
+                          data-cursor-element-id={`main-search-result-${id}-${index}`}
+                          className="w-full px-3 py-2 rounded-[var(--radius-md)] flex items-center gap-3 text-left hover:bg-[var(--color-surface-muted)] transition-colors cursor-pointer"
                         >
                           <Icon size={16} stroke={1.5} className="text-[var(--color-text-muted)]" />
                           <span className="text-[length:var(--font-size-12)] text-[var(--color-text-default)]">{label}</span>
@@ -2956,7 +3157,7 @@ export function DesignSystemPage() {
                     </div>
                   ) : (
                     <div className="p-4 text-center text-[length:var(--font-size-12)] text-[var(--color-text-muted)]">
-                      No results found for "{searchQuery}"
+                      No results found for "{mainSearchQuery}"
                     </div>
                   )}
                 </div>
@@ -4780,7 +4981,7 @@ outline: 2px solid var(--color-border-focus);`}
             </Section>
 
             {/* TabBar Component */}
-            <Section id="tabbar" title="TabBar" description="Browser-style tabs with add/close functionality">
+            <Section id="tabbar" title="TabBar" description="Browser-style tabs with responsive width (max 160px, auto-shrink when overflow)">
               <TabBarDemo />
             </Section>
 

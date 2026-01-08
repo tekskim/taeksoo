@@ -35,9 +35,9 @@ const DEFAULT_COLOR = 'from-gray-500 to-slate-500';
 
 function getGitLog() {
   try {
-    // 최근 100개 커밋 가져오기 (날짜, 해시, 메시지)
+    // 최근 100개 커밋 가져오기 (날짜, 해시, author, 메시지)
     const log = execSync(
-      'git log --pretty=format:"%ad|%h|%s" --date=short -100',
+      'git log --pretty=format:"%ad|%h|%an|%s" --date=short -100',
       { encoding: 'utf-8' }
     );
     return log.trim().split('\n').filter(Boolean);
@@ -64,7 +64,7 @@ function generateChangelog() {
   const changesByDate = new Map();
 
   for (const line of logLines) {
-    const [date, hash, ...messageParts] = line.split('|');
+    const [date, hash, author, ...messageParts] = line.split('|');
     const message = messageParts.join('|'); // 메시지에 | 있을 수 있음
     
     const parsed = parseCommitMessage(message);
@@ -81,9 +81,14 @@ function generateChangelog() {
       });
     }
     
-    // 중복 변경사항 방지
-    if (!changesByDate.get(key).changes.includes(parsed.change)) {
-      changesByDate.get(key).changes.push(parsed.change);
+    // 중복 변경사항 방지 (change + author 조합으로 체크)
+    const existingChanges = changesByDate.get(key).changes;
+    const isDuplicate = existingChanges.some(c => c.text === parsed.change && c.author === author);
+    if (!isDuplicate) {
+      existingChanges.push({
+        text: parsed.change,
+        author: author,
+      });
     }
   }
 
