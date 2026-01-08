@@ -2147,7 +2147,7 @@ function TemplatesSection({ templates, selectedId, onSelect, onSkip, onNext }: T
       render: (_, row) => (
         <div className="flex items-center justify-center">
           {row.isFavorite ? (
-            <IconStarFilled size={14} className="text-yellow-400" />
+            <IconStarFilled size={14} className="text-yellow-500" />
           ) : (
             <IconStar size={14} stroke={1.5} className="text-[var(--color-text-subtle)]" />
           )}
@@ -2196,7 +2196,7 @@ function TemplatesSection({ templates, selectedId, onSelect, onSkip, onNext }: T
       <VStack gap={3}>
         {/* Section Header */}
         <HStack justify="between" align="start" className="w-full">
-          <h5 className="text-[14px] font-semibold leading-5 text-[var(--color-text-default)]">
+          <h5 className="text-[14px] font-medium leading-5 text-[var(--color-text-default)]">
             Templates
           </h5>
           <Button variant="outline" size="sm">
@@ -2571,7 +2571,7 @@ export function CreateInstancePage() {
 
         {/* Scrollable Content Area */}
         <div className="flex-1 overflow-auto overscroll-contain sidebar-scroll">
-          <div className="pt-4 px-8 pb-20 bg-[var(--color-surface-default)]">
+          <div className="pt-4 px-8 pb-20 bg-[var(--color-surface-default)] min-h-full">
             <VStack gap={6} className="min-w-[1176px]">
               {/* Page Title */}
               <h1 className="text-[18px] font-semibold leading-7 text-[var(--color-text-default)]">

@@ -170,7 +170,7 @@ const portStatusMap: Record<Port['status'], 'active' | 'building' | 'shutoff'> =
 export default function NetworkDetailPage() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const { tabs, activeTabId, addTab, closeTab, selectTab: setActiveTab, updateActiveTabLabel } = useTabs();
+  const { tabs, activeTabId, addTab, closeTab, selectTab, addNewTab, updateActiveTabLabel, moveTab } = useTabs();
   
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [activeDetailTab, setActiveDetailTab] = useState('details');
@@ -500,11 +500,14 @@ export default function NetworkDetailPage() {
         <div className="shrink-0 bg-[var(--color-surface-default)]">
           {/* Tab Bar */}
           <TabBar
-            tabs={tabs}
+            tabs={tabs.map(tab => ({ id: tab.id, label: tab.label, closable: tab.closable }))}
             activeTab={activeTabId}
-            onTabChange={setActiveTab}
+            onTabChange={selectTab}
             onTabClose={closeTab}
-            onTabAdd={() => addTab('New Tab', '/home')}
+            onTabAdd={addNewTab}
+            onTabReorder={moveTab}
+            showAddButton={true}
+            showWindowControls={true}
           />
 
           {/* Top Bar with Breadcrumb */}
@@ -526,8 +529,8 @@ export default function NetworkDetailPage() {
         {/* Scrollable Content Area */}
         <div className="flex-1 overflow-auto overscroll-contain sidebar-scroll">
           {/* Main Content */}
-          <div className="pt-4 px-8 pb-20 bg-[var(--color-surface-default)]">
-            <VStack gap={8} className="min-w-[1176px] max-w-[1320px]">
+          <div className="pt-4 px-8 pb-20 bg-[var(--color-surface-default)] min-h-full">
+            <VStack gap={8} className="min-w-[1176px]">
               {/* Network Header Card */}
               <DetailHeader>
                 <DetailHeader.Title>{network.name}</DetailHeader.Title>

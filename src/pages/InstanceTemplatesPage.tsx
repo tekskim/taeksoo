@@ -102,7 +102,7 @@ export function InstanceTemplatesPage() {
   const [columnConfig, setColumnConfig] = useState<ColumnConfig[]>(defaultColumnConfig);
 
   // Global tab management
-  const { tabs, activeTabId, closeTab, selectTab, addNewTab } = useTabs();
+  const { tabs, activeTabId, closeTab, selectTab, addNewTab, moveTab } = useTabs();
 
   // Convert tabs to TabBar format
   const tabBarTabs = tabs.map((tab) => ({
@@ -236,7 +236,7 @@ export function InstanceTemplatesPage() {
           className="p-1 rounded hover:bg-[var(--color-surface-subtle)] transition-colors"
         >
           {row.favorite ? (
-            <IconStarFilled size={16} className="text-yellow-400" />
+            <IconStarFilled size={16} className="text-yellow-500" />
           ) : (
             <IconStar size={16} stroke={1.5} className="text-[var(--color-text-muted)]" />
           )}
@@ -339,6 +339,7 @@ export function InstanceTemplatesPage() {
           onTabChange={selectTab}
           onTabClose={closeTab}
           onTabAdd={addNewTab}
+            onTabReorder={moveTab}
           showAddButton={true}
           showWindowControls={true}
         />

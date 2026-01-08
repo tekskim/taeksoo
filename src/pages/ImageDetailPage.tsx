@@ -1,7 +1,8 @@
-import { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useState, useEffect, useRef } from 'react';
+import { useParams } from 'react-router-dom';
+import ReactECharts from 'echarts-for-react';
+import type { ECharts } from 'echarts';
 import {
-  Button,
   VStack,
   TabBar,
   TopBar,
@@ -12,117 +13,427 @@ import {
   Tab,
   TabPanel,
   DetailHeader,
-  SectionCard,
-  ContextMenu,
-  type ContextMenuItem,
+  MonitoringToolbar,
 } from '@/design-system';
-import { Sidebar } from '@/components/Sidebar';
+import { StorageSidebar } from '@/components/StorageSidebar';
 import { useTabs } from '@/contexts/TabContext';
+import { DataViewDrawer } from '@/components/DataViewDrawer';
 import {
-  IconCirclePlus,
-  IconTrash,
-  IconEdit,
   IconBell,
-  IconCopy,
-  IconCheck,
-  IconChevronDown,
+  IconRefresh,
+  IconChevronLeft,
+  IconChevronRight,
+  IconDotsCircleHorizontal,
+  IconArrowsMaximize,
+  IconArrowsMinimize,
 } from '@tabler/icons-react';
+
+/* ----------------------------------------
+   Chart Colors
+   ---------------------------------------- */
+
+const chartColors = {
+  emerald500: '#10b981',
+  amber500: '#f59e0b',
+  slate400: '#94a3b8',
+  slate100: '#f1f5f9',
+  slate800: '#1e293b',
+};
+
+
+/* ----------------------------------------
+   Performance Line Chart Component
+   ---------------------------------------- */
+
+interface ChartSeries {
+  name: string;
+  data: number[];
+  color: string;
+}
+
+interface PerformanceChartProps {
+  title: string;
+  series: ChartSeries[];
+  timeLabels: string[];
+  yAxisUnit?: string;
+  isFullScreen?: boolean;
+  onFullScreen?: () => void;
+  onExitFullScreen?: () => void;
+  timeControls?: React.ReactNode;
+}
+
+function PerformanceChart({ 
+  title, 
+  series, 
+  timeLabels, 
+  yAxisUnit = '',
+  isFullScreen = false,
+  onFullScreen,
+  onExitFullScreen,
+  timeControls
+}: PerformanceChartProps) {
+  const [visibleSeries, setVisibleSeries] = useState<Record<string, boolean>>(
+    Object.fromEntries(series.map(s => [s.name, true]))
+  );
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [isDarkMode, setIsDarkMode] = useState(false);
+  const [showDataView, setShowDataView] = useState(false);
+  const chartRef = useRef<ReactECharts>(null);
+  const wrapperRef = useRef<HTMLDivElement>(null);
+
+  // Handle chart ready - resize to fill container
+  const handleChartReady = (chartInstance: ECharts) => {
+    setTimeout(() => {
+      try {
+        chartInstance.resize();
+      } catch {
+        // Instance might be disposed
+      }
+    }, 100);
+  };
+
+  // Detect dark mode changes
+  useEffect(() => {
+    const checkDarkMode = () => {
+      setIsDarkMode(document.documentElement.classList.contains('dark'));
+    };
+    checkDarkMode();
+    const observer = new MutationObserver(checkDarkMode);
+    observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
+    return () => observer.disconnect();
+  }, []);
+
+  const allVisible = Object.values(visibleSeries).every(v => v);
+  const toggleAll = () => {
+    const newState = !allVisible;
+    setVisibleSeries(Object.fromEntries(series.map(s => [s.name, newState])));
+  };
+
+  const handleFullScreen = () => {
+    setMenuOpen(false);
+    if (onFullScreen) onFullScreen();
+  };
+
+  // Get theme-aware colors
+  const splitLineColor = isDarkMode ? 'rgba(255, 255, 255, 0.08)' : chartColors.slate100;
+  const splitLineOpacity = isDarkMode ? 1 : 0.5;
+  const tooltipBg = isDarkMode ? '#1C1C1C' : 'white';
+  const tooltipBorder = isDarkMode ? '#3a3a3a' : '#e2e8f0';
+  const tooltipTextColor = isDarkMode ? '#e5e5e5' : chartColors.slate800;
+
+  // Calculate max value for exactly 5 Y-axis labels
+  const allData = series.filter(s => visibleSeries[s.name]).flatMap(s => s.data);
+  const dataMax = Math.max(...allData, 0);
+  
+  const rawInterval = dataMax / 4;
+  const magnitude = Math.pow(10, Math.floor(Math.log10(rawInterval || 1)));
+  const normalizedInterval = rawInterval / magnitude;
+  
+  let niceNormalizedInterval;
+  if (normalizedInterval <= 1) niceNormalizedInterval = 1;
+  else if (normalizedInterval <= 2) niceNormalizedInterval = 2;
+  else if (normalizedInterval <= 2.5) niceNormalizedInterval = 2.5;
+  else if (normalizedInterval <= 5) niceNormalizedInterval = 5;
+  else niceNormalizedInterval = 10;
+  
+  const niceInterval = niceNormalizedInterval * magnitude;
+  const niceMax = niceInterval * 4;
+
+  const option = {
+    animation: false,
+    grid: {
+      left: '40px',
+      right: '16px',
+      top: '20px',
+      bottom: '16px',
+      containLabel: false
+    },
+    xAxis: {
+      type: 'category' as const,
+      data: timeLabels,
+      axisLine: { show: false },
+      axisTick: { show: false },
+      axisLabel: {
+        color: chartColors.slate400,
+        fontSize: 10,
+        padding: [0, 0, 0, 15]
+      },
+      boundaryGap: false
+    },
+    yAxis: {
+      type: 'value' as const,
+      min: 0,
+      max: niceMax || 1,
+      interval: niceInterval || 0.25,
+      axisLine: { show: false },
+      axisTick: { show: false },
+      splitLine: {
+        lineStyle: { color: splitLineColor, opacity: splitLineOpacity }
+      },
+      axisLabel: {
+        color: chartColors.slate400,
+        fontSize: 10,
+        formatter: (v: number) => `${v}${yAxisUnit}`
+      }
+    },
+    tooltip: {
+      trigger: 'axis' as const,
+      backgroundColor: tooltipBg,
+      borderColor: tooltipBorder,
+      textStyle: {
+        color: tooltipTextColor,
+        fontSize: 11,
+        fontFamily: 'Mona Sans, -apple-system, BlinkMacSystemFont, sans-serif'
+      },
+      formatter: (params: Array<{ marker: string; seriesName: string; value: number; axisValueLabel: string }>) => {
+        if (!Array.isArray(params) || params.length === 0) return '';
+        const time = params[0].axisValueLabel;
+        const items = params.map(p => 
+          `<div style="display: flex; align-items: center; gap: 8px;"><span style="display: inline-block; width: 8px; height: 8px; border-radius: 9999px; background-color: ${p.color};"></span><span>${p.seriesName}</span><span style="font-weight: 500; margin-left: auto;">${p.value}</span></div>`
+        ).join('');
+        return `<div style="font-size: 11px; font-family: Mona Sans, -apple-system, BlinkMacSystemFont, sans-serif;">${time}<div style="margin-top: 4px;">${items}</div></div>`;
+      }
+    },
+    series: series
+      .filter(s => visibleSeries[s.name])
+      .map(s => ({
+        name: s.name,
+        type: 'line',
+        smooth: true,
+        symbol: 'circle',
+        symbolSize: 6,
+        showSymbol: false,
+        lineStyle: { color: s.color, width: 1 },
+        itemStyle: { color: s.color },
+        areaStyle: { color: s.color, opacity: 0.1 },
+        data: s.data
+      }))
+  };
+
+  return (
+    <div className={`chartCard ${isFullScreen ? 'chartCardFullScreen' : ''}`}>
+      {/* Header */}
+      <div className="chartHeader">
+        <span className="chartTitle">{title}</span>
+        {isFullScreen && timeControls && (
+          <div className="chartHeaderCenter">{timeControls}</div>
+        )}
+        <div className="chartControls">
+          {/* Toggle Button - only show for multiple series */}
+          {series.length > 1 && (
+            <>
+              <button className="toggleBtn" onClick={toggleAll}>
+                <span className={`toggleSwitch ${allVisible ? 'toggleSwitchActive' : ''}`} />
+                <span>{allVisible ? 'Hide All' : 'View All'}</span>
+              </button>
+              <span className="toggleDivider">|</span>
+            </>
+          )}
+          
+          {/* Menu Button */}
+          <div className="menuContainer">
+            <button 
+              className="menuTrigger"
+              onClick={(e) => { e.stopPropagation(); setMenuOpen(!menuOpen); }}
+            >
+              <IconDotsCircleHorizontal size={16} stroke={1.5} />
+            </button>
+            {menuOpen && (
+              <div className="contextMenu">
+                <button className="contextMenuItem" onClick={() => setMenuOpen(false)}>
+                  Download Image
+                </button>
+                <button className="contextMenuItem" onClick={() => setMenuOpen(false)}>
+                  Download CSV
+                </button>
+                <button className="contextMenuItemLast" onClick={() => { setMenuOpen(false); setShowDataView(true); }}>
+                  Data View
+                </button>
+              </div>
+            )}
+          </div>
+          
+          {/* Expand/Minimize Button */}
+          <button 
+            className="expandTrigger" 
+            title={isFullScreen ? "Minimize" : "Expand"}
+            onClick={isFullScreen ? onExitFullScreen : handleFullScreen}
+          >
+            {isFullScreen ? (
+              <IconArrowsMinimize size={16} stroke={1.5} />
+            ) : (
+              <IconArrowsMaximize size={16} stroke={1.5} />
+            )}
+          </button>
+        </div>
+      </div>
+      
+      {/* Chart Body */}
+      <div className="chartBody">
+        <div className="chartWrapper" ref={wrapperRef}>
+          <ReactECharts 
+            key={isFullScreen ? 'fullscreen' : 'normal'}
+            ref={chartRef}
+            option={option} 
+            style={{ 
+              height: isFullScreen ? 'calc(100vh - 200px)' : '100%',
+              width: isFullScreen ? 'calc(100vw - 300px)' : '100%'
+            }} 
+            notMerge={true}
+            onChartReady={handleChartReady}
+          />
+        </div>
+        <div className="chartLegend">
+          {series.map((s, i) => (
+            <div 
+              key={i}
+              className={`legendItem ${!visibleSeries[s.name] ? 'legendItemHidden' : ''}`}
+              onClick={() => setVisibleSeries(prev => ({ ...prev, [s.name]: !prev[s.name] }))}
+            >
+              <div className="legendDot" style={{ backgroundColor: s.color }} />
+              <span>{s.name}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Data View Drawer */}
+      <DataViewDrawer
+        isOpen={showDataView}
+        onClose={() => setShowDataView(false)}
+        title={`${title} (RAW)`}
+        series={series}
+        timeLabels={timeLabels}
+      />
+    </div>
+  );
+}
+
+// Full Screen Chart Data Interface
+interface FullScreenChartData {
+  title: string;
+  series: ChartSeries[];
+  timeLabels: string[];
+  yAxisUnit?: string;
+}
+
+// ChartWithFullScreen Wrapper Component
+function ImageChartWithFullScreen({
+  title,
+  series,
+  timeLabels,
+  yAxisUnit = ''
+}: {
+  title: string;
+  series: ChartSeries[];
+  timeLabels: string[];
+  yAxisUnit?: string;
+}) {
+  const [fullScreenChart, setFullScreenChart] = useState<FullScreenChartData | null>(null);
+  const fullScreenContainerRef = useRef<HTMLDivElement>(null);
+  const [containerReady, setContainerReady] = useState(false);
+
+  // Close on ESC key
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape' && fullScreenChart) {
+        setFullScreenChart(null);
+        setContainerReady(false);
+      }
+    };
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, [fullScreenChart]);
+
+  // Wait for container to be ready before rendering chart
+  useEffect(() => {
+    if (fullScreenChart && fullScreenContainerRef.current) {
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          setContainerReady(true);
+        });
+      });
+    } else {
+      setContainerReady(false);
+    }
+  }, [fullScreenChart]);
+
+  return (
+    <>
+      <PerformanceChart
+        title={title}
+        series={series}
+        timeLabels={timeLabels}
+        yAxisUnit={yAxisUnit}
+        onFullScreen={() => setFullScreenChart({ title, series, timeLabels, yAxisUnit })}
+      />
+      
+      {fullScreenChart && (
+        <>
+          <div className="fullScreenOverlay" onClick={() => { setFullScreenChart(null); setContainerReady(false); }} />
+          <div className="fullScreenFloating" ref={fullScreenContainerRef}>
+            {containerReady && (
+              <PerformanceChart
+                title={fullScreenChart.title}
+                series={fullScreenChart.series}
+                timeLabels={fullScreenChart.timeLabels}
+                yAxisUnit={fullScreenChart.yAxisUnit}
+                isFullScreen={true}
+                onExitFullScreen={() => { setFullScreenChart(null); setContainerReady(false); }}
+                timeControls={<MonitoringToolbar />}
+              />
+            )}
+          </div>
+        </>
+      )}
+    </>
+  );
+}
 
 /* ----------------------------------------
    Types
    ---------------------------------------- */
 
-type ImageStatus = 'active' | 'queued' | 'saving' | 'error' | 'deleting';
-type AccessType = 'Private' | 'Project' | 'Public';
-
 interface ImageDetail {
   id: string;
   name: string;
-  status: ImageStatus;
-  access: AccessType;
-  createdAt: string;
-  // Basic Information
-  usageType: string;
-  protected: boolean;
-  description: string;
-  // Specifications
+  pool: string;
   size: string;
-  os: string;
-  diskFormat: string;
-  containerFormat: string;
-  minDisk: string;
-  minRam: string;
-  // Security
-  owner: string;
-  visibility: AccessType;
-  filename: string;
-  checksum: string;
-  // Advanced
-  qemuGuestAgent: boolean;
-  cpuPolicy: string;
-  cpuThreadPolicy: string;
-  // Metadata
-  metadata: Record<string, string>;
+  objects: number;
+  objectSize: string;
+  totalProvisioned: string;
 }
 
 /* ----------------------------------------
    Mock Data
    ---------------------------------------- */
 
-// Image data map by ID - synced with ImagesPage mock data
-const mockImagesMap: Record<string, ImageDetail> = {
-  '29tgj234': { id: '29tgj234', name: 'Ubuntu-22.04-base', status: 'active', access: 'Private', createdAt: '2025-09-12', usageType: 'Common Server', protected: true, description: 'Base Ubuntu 22.04 image', size: '16GiB', os: 'Ubuntu24.04', diskFormat: 'RAW', containerFormat: 'Bare', minDisk: '10 GiB', minRam: '1 GiB', owner: 'admin', visibility: 'Private', filename: '/v2/images/29tgj234/file', checksum: 'abc123', qemuGuestAgent: true, cpuPolicy: 'Not select', cpuThreadPolicy: 'Not select', metadata: {} },
-  'img-002': { id: 'img-002', name: 'CentOS-8-minimal', status: 'active', access: 'Private', createdAt: '2025-09-10', usageType: 'Common Server', protected: false, description: 'Minimal CentOS 8 installation', size: '8GiB', os: 'CentOS8', diskFormat: 'QCOW2', containerFormat: 'Bare', minDisk: '10 GiB', minRam: '1 GiB', owner: 'admin', visibility: 'Private', filename: '/v2/images/img-002/file', checksum: 'def456', qemuGuestAgent: true, cpuPolicy: 'Not select', cpuThreadPolicy: 'Not select', metadata: {} },
-  'img-003': { id: 'img-003', name: 'Rocky-Linux-9', status: 'active', access: 'Shared', createdAt: '2025-09-08', usageType: 'Common Server', protected: true, description: 'Rocky Linux 9 server image', size: '12GiB', os: 'Rocky Linux 9', diskFormat: 'RAW', containerFormat: 'Bare', minDisk: '10 GiB', minRam: '1 GiB', owner: 'TK-project', visibility: 'Shared', filename: '/v2/images/img-003/file', checksum: 'ghi789', qemuGuestAgent: true, cpuPolicy: 'Not select', cpuThreadPolicy: 'Not select', metadata: {} },
-  'img-004': { id: 'img-004', name: 'Debian-12-standard', status: 'active', access: 'Public', createdAt: '2025-09-05', usageType: 'Common Server', protected: false, description: 'Standard Debian 12 image', size: '10GiB', os: 'Debian 12', diskFormat: 'QCOW2', containerFormat: 'Bare', minDisk: '8 GiB', minRam: '512 MiB', owner: 'admin', visibility: 'Public', filename: '/v2/images/img-004/file', checksum: 'jkl012', qemuGuestAgent: true, cpuPolicy: 'Not select', cpuThreadPolicy: 'Not select', metadata: {} },
-  'img-005': { id: 'img-005', name: 'Ubuntu-20.04-LTS', status: 'active', access: 'Private', createdAt: '2025-08-28', usageType: 'Common Server', protected: true, description: 'Ubuntu 20.04 LTS server', size: '14GiB', os: 'Ubuntu20.04', diskFormat: 'RAW', containerFormat: 'Bare', minDisk: '10 GiB', minRam: '1 GiB', owner: 'admin', visibility: 'Private', filename: '/v2/images/img-005/file', checksum: 'mno345', qemuGuestAgent: true, cpuPolicy: 'Not select', cpuThreadPolicy: 'Not select', metadata: {} },
-  'img-006': { id: 'img-006', name: 'Windows-Server-2022', status: 'pending', access: 'Shared', createdAt: '2025-08-25', usageType: 'Windows Server', protected: false, description: 'Windows Server 2022 Datacenter', size: '32GiB', os: 'Windows Server 2022', diskFormat: 'QCOW2', containerFormat: 'Bare', minDisk: '40 GiB', minRam: '4 GiB', owner: 'admin', visibility: 'Shared', filename: '/v2/images/img-006/file', checksum: 'pqr678', qemuGuestAgent: false, cpuPolicy: 'Not select', cpuThreadPolicy: 'Not select', metadata: {} },
-  'img-007': { id: 'img-007', name: 'Alpine-3.18-minimal', status: 'active', access: 'Public', createdAt: '2025-08-20', usageType: 'Common Server', protected: false, description: 'Lightweight Alpine Linux', size: '256MiB', os: 'Alpine 3.18', diskFormat: 'RAW', containerFormat: 'Bare', minDisk: '1 GiB', minRam: '256 MiB', owner: 'admin', visibility: 'Public', filename: '/v2/images/img-007/file', checksum: 'stu901', qemuGuestAgent: true, cpuPolicy: 'Not select', cpuThreadPolicy: 'Not select', metadata: {} },
-  'img-008': { id: 'img-008', name: 'Fedora-39-workstation', status: 'active', access: 'Private', createdAt: '2025-08-15', usageType: 'Common Server', protected: true, description: 'Fedora 39 workstation image', size: '20GiB', os: 'Fedora 39', diskFormat: 'RAW', containerFormat: 'Bare', minDisk: '15 GiB', minRam: '2 GiB', owner: 'admin', visibility: 'Private', filename: '/v2/images/img-008/file', checksum: 'vwx234', qemuGuestAgent: true, cpuPolicy: 'Not select', cpuThreadPolicy: 'Not select', metadata: {} },
-  'img-009': { id: 'img-009', name: 'Oracle-Linux-8', status: 'deactivated', access: 'Shared', createdAt: '2025-08-10', usageType: 'Common Server', protected: false, description: 'Oracle Linux 8 for databases', size: '18GiB', os: 'Oracle Linux 8', diskFormat: 'QCOW2', containerFormat: 'Bare', minDisk: '12 GiB', minRam: '2 GiB', owner: 'admin', visibility: 'Shared', filename: '/v2/images/img-009/file', checksum: 'yza567', qemuGuestAgent: true, cpuPolicy: 'Not select', cpuThreadPolicy: 'Not select', metadata: {} },
-  'img-010': { id: 'img-010', name: 'Ubuntu-22.04-GPU', status: 'active', access: 'Private', createdAt: '2025-08-05', usageType: 'GPU Server', protected: true, description: 'Ubuntu with GPU drivers', size: '24GiB', os: 'Ubuntu22.04', diskFormat: 'RAW', containerFormat: 'Bare', minDisk: '20 GiB', minRam: '4 GiB', owner: 'admin', visibility: 'Private', filename: '/v2/images/img-010/file', checksum: 'bcd890', qemuGuestAgent: true, cpuPolicy: 'Not select', cpuThreadPolicy: 'Not select', metadata: {} },
+const mockImageDetail: ImageDetail = {
+  id: 'img-1',
+  name: 'volume-1d325cdb-2b44-4596-9c32-e280184ad2e6.deleted',
+  pool: 'volumes',
+  size: '18.4 GiB',
+  objects: 256,
+  objectSize: '18.4 GiB',
+  totalProvisioned: '18.4 GiB',
 };
 
-const defaultImageDetail: ImageDetail = {
-  id: 'unknown', name: 'Unknown Image', status: 'active', access: 'Project', createdAt: '-', usageType: '-', protected: false, description: '-', size: '-', os: '-', diskFormat: '-', containerFormat: '-', minDisk: '-', minRam: '-', owner: '-', visibility: 'Private', filename: '-', checksum: '-', qemuGuestAgent: false, cpuPolicy: '-', cpuThreadPolicy: '-', metadata: {},
+// Mock chart data
+const timeLabels = ['13:00', '13:10', '13:20', '13:30', '13:40', '13:50'];
+
+const iopsData = {
+  reads: [125, 128, 130, 127, 132, 135],
+  writes: [122, 125, 128, 124, 129, 131],
 };
 
-/* ----------------------------------------
-   Copyable Value Component
-   ---------------------------------------- */
+const throughputData = {
+  reads: [350, 380, 420, 390, 450, 480],
+  writes: [150, 160, 180, 170, 200, 220],
+};
 
-interface CopyableValueProps {
-  value: string;
-}
-
-function CopyableValue({ value }: CopyableValueProps) {
-  const [copied, setCopied] = useState(false);
-
-  const handleCopy = () => {
-    navigator.clipboard.writeText(value);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
-  };
-
-  return (
-    <div className="flex items-center gap-2">
-      <span className="text-[12px] leading-4 text-[var(--color-text-default)]">
-        {value}
-      </span>
-      <button
-        onClick={handleCopy}
-        className="p-1 rounded hover:bg-[var(--color-surface-muted)] transition-colors"
-        aria-label="Copy to clipboard"
-      >
-        {copied ? (
-          <IconCheck size={16} className="text-[var(--color-state-success)]" />
-        ) : (
-          <IconCopy size={12} className="text-[var(--color-action-primary)]" />
-        )}
-      </button>
-    </div>
-  );
-}
+const latencyData = {
+  average: [125, 128, 130, 127, 132, 135],
+};
 
 /* ----------------------------------------
    Image Detail Page
@@ -130,20 +441,21 @@ function CopyableValue({ value }: CopyableValueProps) {
 
 export function ImageDetailPage() {
   const { id } = useParams<{ id: string }>();
-  const image = id ? (mockImagesMap[id] || defaultImageDetail) : defaultImageDetail;
-  const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(true);
-  const [activeDetailTab, setActiveDetailTab] = useState('details');
+  const [activeTab, setActiveTab] = useState('performance');
 
   // Global tab management
-  const { tabs, activeTabId, closeTab, selectTab, addNewTab, updateActiveTabLabel } = useTabs();
+  const { tabs, activeTabId, closeTab, selectTab, addNewTab, updateActiveTabLabel, moveTab } = useTabs();
 
-  // Update tab label to image name
+  // Use mock data (in real app, fetch based on id)
+  const imageData = mockImageDetail;
+
+  // Update tab label to match the image name (most recent breadcrumb)
   useEffect(() => {
-    if (image.name) {
-      updateActiveTabLabel(image.name);
+    if (imageData?.name) {
+      updateActiveTabLabel(imageData.name);
     }
-  }, [image.name, updateActiveTabLabel]);
+  }, [imageData?.name, updateActiveTabLabel]);
 
   // Convert tabs to TabBar format
   const tabBarTabs = tabs.map((tab) => ({
@@ -152,23 +464,29 @@ export function ImageDetailPage() {
     closable: tab.closable,
   }));
 
-  // Breadcrumb items
-  const breadcrumbItems = [
-    { label: 'Home', href: '/' },
-    { label: 'Images', href: '/compute/images' },
-    { label: image.name },
+  // Chart series
+  const iopsSeries: ChartSeries[] = [
+    { name: 'Reads', data: iopsData.reads, color: chartColors.emerald500 },
+    { name: 'Writes', data: iopsData.writes, color: chartColors.amber500 },
+  ];
+
+  const throughputSeries: ChartSeries[] = [
+    { name: 'Reads', data: throughputData.reads, color: chartColors.emerald500 },
+    { name: 'Writes', data: throughputData.writes, color: chartColors.amber500 },
+  ];
+
+  const latencySeries: ChartSeries[] = [
+    { name: 'Average latency', data: latencyData.average, color: chartColors.emerald500 },
   ];
 
   return (
     <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
       {/* Sidebar */}
-      <Sidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
+      <StorageSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(prev => !prev)} />
 
       {/* Main Content */}
       <main
-        className={`absolute top-0 bottom-0 right-0 flex flex-col bg-[var(--color-surface-default)] transition-[left] duration-200 ${
-          sidebarOpen ? 'left-[200px]' : 'left-0'
-        }`}
+        className={`absolute top-0 bottom-0 right-0 flex flex-col bg-[var(--color-surface-default)] transition-[left] duration-200 ${sidebarOpen ? 'left-[200px]' : 'left-0'}`}
       >
         {/* Fixed Header Area */}
         <div className="shrink-0 bg-[var(--color-surface-default)]">
@@ -179,6 +497,7 @@ export function ImageDetailPage() {
             onTabChange={selectTab}
             onTabClose={closeTab}
             onTabAdd={addNewTab}
+            onTabReorder={moveTab}
             showAddButton={true}
             showWindowControls={true}
           />
@@ -188,171 +507,113 @@ export function ImageDetailPage() {
             showSidebarToggle={!sidebarOpen}
             onSidebarToggle={() => setSidebarOpen(true)}
             showNavigation={true}
-            onBack={() => navigate('/images')}
+            onBack={() => window.history.back()}
             onForward={() => window.history.forward()}
-            breadcrumb={<Breadcrumb items={breadcrumbItems} />}
+            breadcrumb={
+              <Breadcrumb
+                items={[
+                  { label: 'Home', href: '/' },
+                  { label: 'Images', href: '/storage/images' },
+                  { label: imageData.name },
+                ]}
+              />
+            }
             actions={
               <TopBarAction
                 icon={<IconBell size={16} stroke={1.5} />}
                 aria-label="Notifications"
-                badge={true}
               />
             }
           />
         </div>
 
         {/* Scrollable Content Area */}
-        <div className="flex-1 overflow-auto overscroll-contain sidebar-scroll">
-          {/* Page Content */}
-          <div className="pt-4 px-8 pb-20 bg-[var(--color-surface-default)]">
-          <VStack gap={6} className="min-w-[1176px]">
-            {/* Image Header Card */}
-            <DetailHeader>
-              <DetailHeader.Title>{image.name}</DetailHeader.Title>
-              <DetailHeader.Actions>
-                <Button variant="secondary" size="sm" leftIcon={<IconCirclePlus size={12} />}>
-                  Create Instance
-                </Button>
-                <Button variant="secondary" size="sm" leftIcon={<IconCirclePlus size={12} />}>
-                  Create Volume
-                </Button>
-                <Button variant="secondary" size="sm" leftIcon={<IconTrash size={12} />}>
-                  Delete
-                </Button>
-                {activeDetailTab === 'details' && (
-                  <ContextMenu
-                    items={[
-                      { id: 'create-instance-template', label: 'Create Instance Template', onClick: () => console.log('Create Instance Template') },
-                      { id: 'create-volume', label: 'Create Volume', onClick: () => console.log('Create Volume') },
-                    ] as ContextMenuItem[]}
-                    trigger="click"
-                  >
-                    <Button variant="secondary" size="sm" rightIcon={<IconChevronDown size={12} />}>
-                      More Actions
-                    </Button>
-                  </ContextMenu>
-                )}
-              </DetailHeader.Actions>
-              <DetailHeader.InfoGrid>
-                <DetailHeader.InfoCard label="Status" value="Active" status="active" />
-                <DetailHeader.InfoCard label="ID" value={image.id} copyable />
-                <DetailHeader.InfoCard label="Access" value={image.access} />
-                <DetailHeader.InfoCard label="Created At" value={image.createdAt} />
-              </DetailHeader.InfoGrid>
-            </DetailHeader>
+        <div className="flex-1 overflow-auto min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll">
+          <div className="pt-4 px-8 pb-20 bg-[var(--color-surface-default)] min-h-full">
+            <VStack gap={6} className="min-w-[1176px]">
+              {/* Page Header with Info Cards */}
+              <DetailHeader>
+                <DetailHeader.Title>{imageData.name}</DetailHeader.Title>
+                <DetailHeader.InfoGrid>
+                  <DetailHeader.InfoCard
+                    label="Pool"
+                    value={imageData.pool}
+                    status="active"
+                  />
+                  <DetailHeader.InfoCard
+                    label="Size"
+                    value={imageData.size}
+                  />
+                  <DetailHeader.InfoCard
+                    label="Objects"
+                    value={String(imageData.objects)}
+                  />
+                  <DetailHeader.InfoCard
+                    label="Object size"
+                    value={imageData.objectSize}
+                  />
+                  <DetailHeader.InfoCard
+                    label="Total provisioned"
+                    value={imageData.totalProvisioned}
+                  />
+                </DetailHeader.InfoGrid>
+              </DetailHeader>
 
-            {/* Image Tabs */}
-            <div className="w-full">
-              <Tabs value={activeDetailTab} onChange={setActiveDetailTab} variant="underline" size="sm">
-                <TabList>
-                  <Tab value="details">Details</Tab>
-                  <Tab value="metadata">Metadata</Tab>
-                </TabList>
+              {/* Tabs */}
+              <div className="w-full">
+                <Tabs value={activeTab} onChange={setActiveTab} variant="underline" size="sm">
+                  <TabList>
+                    <Tab value="performance">Performance</Tab>
+                  </TabList>
 
-                {/* Details Tab Panel */}
-                <TabPanel value="details">
-                  <VStack gap={4} className="pt-6">
-                    {/* Basic Information */}
-                    <SectionCard>
-                      <SectionCard.Header 
-                        title="Basic Information" 
-                        actions={
-                          <Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />}>
-                            Edit
-                          </Button>
-                        } 
-                      />
-                      <SectionCard.Content>
-                        <SectionCard.DataRow label="Image Name" value={image.name} />
-                        <SectionCard.DataRow label="Usage Type" value={image.usageType} />
-                        <SectionCard.DataRow label="Protected" value={image.protected ? 'Enabled' : 'Disabled'} />
-                        <SectionCard.DataRow label="Description" value={image.description} />
-                      </SectionCard.Content>
-                    </SectionCard>
+                  {/* Performance Tab Panel */}
+                  <TabPanel value="performance" className="pt-0">
+                    <VStack gap={6} className="pt-4">
+                      {/* Monitoring Time Controls */}
+                      <div className="flex justify-start w-full">
+                        <MonitoringToolbar />
+                      </div>
 
-                    {/* Specifications */}
-                    <SectionCard>
-                      <SectionCard.Header title="Specifications" />
-                      <SectionCard.Content>
-                        <SectionCard.DataRow label="Size" value={image.size} />
-                        <SectionCard.DataRow label="OS" value={image.os} />
-                        <SectionCard.DataRow label="Disk Format" value={`${image.diskFormat} / ${image.containerFormat}`} />
-                        <SectionCard.DataRow label="Min Disk / Min RAM" value={`${image.minDisk} / ${image.minRam}`} />
-                      </SectionCard.Content>
-                    </SectionCard>
-
-                    {/* Security */}
-                    <SectionCard>
-                      <SectionCard.Header title="Security" />
-                      <SectionCard.Content>
-                        <SectionCard.DataRow label="Owner" value={image.owner} />
-                        <SectionCard.DataRow label="Visibility" value={image.visibility} />
-                        {/* Filename with copy */}
-                        <div className="flex flex-col gap-3 w-full">
-                          <div className="h-px w-full bg-[var(--color-border-subtle)]" />
-                          <div className="flex flex-col gap-1.5">
-                            <span className="text-[11px] font-medium leading-4 text-[var(--color-text-subtle)]">
-                              Filename
-                            </span>
-                            <CopyableValue value={image.filename} />
-                          </div>
-                        </div>
-                        {/* Checksum with copy */}
-                        <div className="flex flex-col gap-3 w-full">
-                          <div className="h-px w-full bg-[var(--color-border-subtle)]" />
-                          <div className="flex flex-col gap-1.5">
-                            <span className="text-[11px] font-medium leading-4 text-[var(--color-text-subtle)]">
-                              Checksum
-                            </span>
-                            <CopyableValue value={image.checksum} />
-                          </div>
-                        </div>
-                      </SectionCard.Content>
-                    </SectionCard>
-
-                    {/* Advanced */}
-                    <SectionCard>
-                      <SectionCard.Header 
-                        title="Advanced" 
-                        actions={
-                          <Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />}>
-                            Edit
-                          </Button>
-                        } 
-                      />
-                      <SectionCard.Content>
-                        <SectionCard.DataRow label="QEMU Guest Agent" value={image.qemuGuestAgent ? 'Enabled' : 'Disabled'} />
-                        <SectionCard.DataRow label="CPU Policy" value={image.cpuPolicy} />
-                        <SectionCard.DataRow label="CPU Thread Policy" value={image.cpuThreadPolicy} />
-                      </SectionCard.Content>
-                    </SectionCard>
-                  </VStack>
-                </TabPanel>
-
-                {/* Metadata Tab Panel */}
-                <TabPanel value="metadata">
-                  <VStack gap={4} className="pt-6">
-                    <SectionCard>
-                      <SectionCard.Header title="Metadata" />
-                      <SectionCard.Content>
-                        {Object.entries(image.metadata).map(([key, value]) => (
-                          <SectionCard.DataRow
-                            key={key}
-                            label={key}
-                            value={value}
+                      {/* Charts - Two on top row, one below */}
+                      <div className="flex gap-4 w-full">
+                        <div className="flex-1">
+                          <ImageChartWithFullScreen
+                            title="IOPS"
+                            series={iopsSeries}
+                            timeLabels={timeLabels}
                           />
-                        ))}
-                      </SectionCard.Content>
-                    </SectionCard>
-                  </VStack>
-                </TabPanel>
-              </Tabs>
-            </div>
-          </VStack>
-        </div>
+                        </div>
+                        <div className="flex-1">
+                          <ImageChartWithFullScreen
+                            title="Throughput"
+                            series={throughputSeries}
+                            timeLabels={timeLabels}
+                          />
+                        </div>
+                      </div>
+
+                      {/* Average Latency Chart - Half width below */}
+                      <div className="flex gap-4 w-full">
+                        <div className="flex-1">
+                          <ImageChartWithFullScreen
+                            title="Average Latency"
+                            series={latencySeries}
+                            timeLabels={timeLabels}
+                            yAxisUnit="ms"
+                          />
+                        </div>
+                        <div className="flex-1" />
+                      </div>
+                    </VStack>
+                  </TabPanel>
+                </Tabs>
+              </div>
+            </VStack>
+          </div>
         </div>
       </main>
     </div>
   );
 }
 
+export default ImageDetailPage;

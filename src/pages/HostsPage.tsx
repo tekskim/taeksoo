@@ -229,7 +229,7 @@ export function HostsPage() {
   const rowsPerPage = 10;
 
   // Global tab management
-  const { tabs, activeTabId, closeTab, selectTab, addNewTab } = useTabs();
+  const { tabs, activeTabId, closeTab, selectTab, addNewTab, moveTab } = useTabs();
 
   // Convert tabs to TabBar format
   const tabBarTabs = tabs.map((tab) => ({
@@ -257,11 +257,12 @@ export function HostsPage() {
   }, [filteredHosts, currentPage, rowsPerPage]);
 
   // Table columns definition
+  // Using minWidth for headers that need space, flex for expandable columns
   const columns: TableColumn<Host>[] = [
     {
       key: 'status',
       label: 'Status',
-      width: 56,
+      width: '60px',
       sortable: false,
       align: 'center',
       render: (_, row) => <StatusCell status={row.status} />,
@@ -269,7 +270,8 @@ export function HostsPage() {
     {
       key: 'hostname',
       label: 'Hostname',
-      flex: 1.2,
+      flex: 2,
+      minWidth: '150px',
       sortable: true,
       render: (_, row) => (
         <Link
@@ -285,56 +287,66 @@ export function HostsPage() {
       key: 'labels',
       label: 'Labels',
       flex: 1,
+      minWidth: '100px',
+      maxWidth: '200px',
       sortable: false,
       render: (_, row) => <LabelsCell labels={row.labels} />,
     },
     {
       key: 'model',
       label: 'Model',
-      flex: 1.2,
+      flex: 1.5,
+      minWidth: '180px',
       sortable: true,
       render: (_, row) => <ModelCell model={row.model} modelDetail={row.modelDetail} />,
     },
     {
       key: 'cpus',
       label: 'CPUs',
-      width: 70,
+      minWidth: '65px',
+      maxWidth: '75px',
       sortable: true,
     },
     {
       key: 'cores',
       label: 'Cores',
-      width: 70,
+      minWidth: '65px',
+      maxWidth: '75px',
       sortable: true,
     },
     {
       key: 'totalMemory',
       label: 'Total Memory',
-      width: 100,
+      minWidth: '100px',
+      maxWidth: '120px',
       sortable: true,
     },
     {
       key: 'rawCapacity',
       label: 'Raw Capacity',
-      width: 100,
+      minWidth: '100px',
+      maxWidth: '120px',
       sortable: true,
     },
     {
       key: 'hdds',
       label: 'HDDs',
-      width: 70,
+      minWidth: '60px',
+      maxWidth: '75px',
       sortable: true,
     },
     {
       key: 'flash',
       label: 'Flash',
-      width: 70,
+      minWidth: '60px',
+      maxWidth: '75px',
       sortable: true,
     },
     {
       key: 'nics',
       label: 'NICs',
-      width: 70,
+      minWidth: '60px',
+      maxWidth: '75px',
       sortable: true,
     },
   ];
@@ -357,6 +369,7 @@ export function HostsPage() {
             onTabChange={selectTab}
             onTabClose={closeTab}
             onTabAdd={addNewTab}
+            onTabReorder={moveTab}
             showAddButton={true}
             showWindowControls={true}
           />
@@ -388,7 +401,7 @@ export function HostsPage() {
         {/* Scrollable Content Area */}
         <div className="flex-1 overflow-auto min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll">
           {/* Page Content */}
-          <div className="pt-4 px-8 pb-20 bg-[var(--color-surface-default)]">
+          <div className="pt-4 px-8 pb-20 bg-[var(--color-surface-default)] min-h-full">
             <VStack gap={3}>
               {/* Page Header */}
               <div className="flex items-center justify-between h-8">
@@ -399,31 +412,33 @@ export function HostsPage() {
 
               {/* Search and Actions */}
               <div className="flex items-center gap-2">
-                <div className="w-[280px]">
-                  <SearchInput
-                    placeholder="Search users by attributes"
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    onClear={() => setSearchQuery('')}
+                <div className="flex items-center gap-1">
+                  <div className="w-[280px]">
+                    <SearchInput
+                      placeholder="Search users by attributes"
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      onClear={() => setSearchQuery('')}
+                      size="sm"
+                      fullWidth
+                    />
+                  </div>
+                  <Button
+                    variant="secondary"
                     size="sm"
-                    fullWidth
+                    icon={<IconDownload size={14} stroke={1.5} />}
+                    aria-label="Download"
+                    onClick={() => console.log('Download clicked')}
+                  />
+                  <Button
+                    variant="secondary"
+                    size="sm"
+                    icon={<IconRefresh size={14} stroke={1.5} />}
+                    aria-label="Refresh"
+                    onClick={() => console.log('Refresh clicked')}
                   />
                 </div>
-                <Button
-                  variant="secondary"
-                  size="sm"
-                  icon={<IconDownload size={14} stroke={1.5} />}
-                  aria-label="Download"
-                  onClick={() => console.log('Download clicked')}
-                />
                 <div className="w-px h-4 bg-[var(--color-border-default)]" />
-                <Button
-                  variant="secondary"
-                  size="sm"
-                  icon={<IconRefresh size={14} stroke={1.5} />}
-                  aria-label="Refresh"
-                  onClick={() => console.log('Refresh clicked')}
-                />
                 <Button
                   variant="secondary"
                   size="sm"
