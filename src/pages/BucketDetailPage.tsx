@@ -559,8 +559,8 @@ export function BucketDetailPage() {
 
         {/* Scrollable Content Area */}
         <div className="flex-1 overflow-auto min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll">
-          <div className="pt-4 px-8 pb-20 bg-[var(--color-surface-default)]">
-            <VStack gap={6} className="min-w-[1176px] max-w-[1320px]">
+          <div className="pt-4 px-8 pb-20 bg-[var(--color-surface-default)] min-h-full">
+            <VStack gap={6} className="min-w-[1176px]">
               {/* Page Header with Info Cards */}
               <DetailHeader>
                 <DetailHeader.Title>{bucketData.name}</DetailHeader.Title>

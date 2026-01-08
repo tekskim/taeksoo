@@ -280,7 +280,7 @@ export function InstanceSnapshotDetailPage() {
         {/* Scrollable Content Area */}
         <div className="flex-1 overflow-auto overscroll-contain sidebar-scroll">
           {/* Page Content */}
-          <div className="pt-4 px-8 pb-20 bg-[var(--color-surface-default)]">
+          <div className="pt-4 px-8 pb-20 bg-[var(--color-surface-default)] min-h-full">
           <VStack gap={6} className="min-w-[1176px]">
             {/* Snapshot Header Card */}
             <DetailHeader>

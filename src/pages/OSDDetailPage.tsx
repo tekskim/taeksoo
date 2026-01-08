@@ -380,7 +380,7 @@ function OSDPerformanceChart({
         if (!Array.isArray(params) || params.length === 0) return '';
         const time = params[0].axisValueLabel;
         const items = params.map(p => 
-          `<div style="display: flex; align-items: center; gap: 8px;"><span>${p.marker}</span><span>${p.seriesName}</span><span style="font-weight: 500; margin-left: auto;">${p.value}</span></div>`
+          `<div style="display: flex; align-items: center; gap: 8px;"><span style="display: inline-block; width: 8px; height: 8px; border-radius: 9999px; background-color: ${p.color};"></span><span>${p.seriesName}</span><span style="font-weight: 500; margin-left: auto;">${p.value}</span></div>`
         ).join('');
         return `<div style="font-size: 11px; font-family: Mona Sans, -apple-system, BlinkMacSystemFont, sans-serif;">${time}<div style="margin-top: 4px;">${items}</div></div>`;
       }
@@ -849,8 +849,8 @@ export function OSDDetailPage() {
         {/* Scrollable Content Area */}
         <div className="flex-1 overflow-auto min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll">
           {/* Page Content */}
-          <div className="pt-4 px-8 pb-20 bg-[var(--color-surface-default)]">
-            <div className="flex flex-col items-stretch justify-start gap-6 min-w-[1176px] max-w-[1320px]">
+          <div className="pt-4 px-8 pb-20 bg-[var(--color-surface-default)] min-h-full">
+            <div className="flex flex-col items-stretch justify-start gap-6 min-w-[1176px]">
               {/* OSD Header Card */}
               <DetailHeader>
                 <DetailHeaderTitle>{osd.host}</DetailHeaderTitle>

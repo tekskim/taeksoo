@@ -358,9 +358,16 @@ type GaugeStatus = 'success' | 'warning' | 'error';
 
 interface CapacityGaugeProps {
   percentage: number;
+  used?: number;
+  total?: number;
+  unit?: string;
 }
 
-function CapacityGauge({ percentage }: CapacityGaugeProps) {
+function CapacityGauge({ percentage, used, total, unit = 'TiB' }: CapacityGaugeProps) {
+  const [showTooltip, setShowTooltip] = useState(false);
+  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+  const containerRef = useRef<HTMLDivElement>(null);
+
   // Get color from design system CSS variables
   const getColor = (cssVar: string, fallback: string) => {
     if (typeof window !== 'undefined') {
@@ -386,6 +393,18 @@ function CapacityGauge({ percentage }: CapacityGaugeProps) {
   };
 
   const color = colorMap[status];
+  const available = total !== undefined && used !== undefined ? total - used : 0;
+  const availablePercent = total !== undefined && used !== undefined ? Math.round((available / total) * 100) : 0;
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (containerRef.current) {
+      const rect = containerRef.current.getBoundingClientRect();
+      setMousePos({
+        x: e.clientX - rect.left,
+        y: e.clientY - rect.top
+      });
+    }
+  };
 
   const option = {
     series: [
@@ -417,13 +436,43 @@ function CapacityGauge({ percentage }: CapacityGaugeProps) {
   };
 
   return (
-    <div className="relative h-[180px] flex items-center justify-center">
+    <div 
+      ref={containerRef}
+      className="relative h-[180px] flex items-center justify-center"
+      onMouseEnter={() => setShowTooltip(true)}
+      onMouseLeave={() => setShowTooltip(false)}
+      onMouseMove={handleMouseMove}
+    >
       <ReactECharts option={option} style={{ height: '180px', width: '220px' }} />
-      <div className="absolute inset-0 flex flex-col items-center justify-center pt-6">
+      <div className="absolute inset-0 flex flex-col items-center justify-center pt-6 pointer-events-none">
         <span className="text-[24px] leading-[32px] font-semibold" style={{ color }}>
           {percentage.toFixed(1)}%
         </span>
+        {used !== undefined && total !== undefined && (
+          <span className="text-[12px] text-[var(--color-text-subtle)]">{used}{unit}/{total}{unit}</span>
+        )}
       </div>
+      
+      {/* Tooltip */}
+      {showTooltip && used !== undefined && total !== undefined && (
+        <div 
+          className="absolute z-10 backdrop-blur-[40px] bg-[rgba(246,246,246,0.9)] dark:bg-[rgba(30,30,30,0.9)] border border-[rgba(26,26,26,0.15)] dark:border-[rgba(255,255,255,0.15)] rounded-[6px] shadow-[0px_0px_4px_0px_rgba(0,0,0,0.1)] px-2 py-1.5 flex flex-col gap-1 pointer-events-none"
+          style={{ left: mousePos.x + 12, top: mousePos.y + 12 }}
+        >
+          <div className="flex items-center gap-1.5">
+            <div className="w-[5px] h-[5px] rounded-[1px]" style={{ backgroundColor: color }} />
+            <span className="text-[11px] leading-[14px] text-[var(--color-text-default)] whitespace-nowrap">
+              Used: {used}{unit} ({Math.round(percentage)}%)
+            </span>
+          </div>
+          <div className="flex items-center gap-1.5">
+            <div className="w-[5px] h-[5px] rounded-[1px] bg-[#e5e7eb]" />
+            <span className="text-[11px] leading-[14px] text-[var(--color-text-default)] whitespace-nowrap">
+              Available: {available.toFixed(1)}{unit} ({availablePercent}%)
+            </span>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
@@ -603,7 +652,7 @@ function PerformanceChart({
         if (!Array.isArray(params) || params.length === 0) return '';
         const time = params[0].axisValueLabel;
         const items = params.map(p => 
-          `<div style="display: flex; align-items: center; gap: 8px;"><span>${p.marker}</span><span>${p.seriesName}</span><span style="font-weight: 500; margin-left: auto;">${p.value}</span></div>`
+          `<div style="display: flex; align-items: center; gap: 8px;"><span style="display: inline-block; width: 8px; height: 8px; border-radius: 9999px; background-color: ${p.color};"></span><span>${p.seriesName}</span><span style="font-weight: 500; margin-left: auto;">${p.value}</span></div>`
         ).join('');
         return `<div style="font-size: 11px; font-family: Mona Sans, -apple-system, BlinkMacSystemFont, sans-serif;">${time}<div style="margin-top: 4px;">${items}</div></div>`;
       }
@@ -959,8 +1008,8 @@ export function StoragePoolDetailPage() {
         {/* Scrollable Content Area */}
         <div className="flex-1 overflow-auto min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll">
           {/* Page Content */}
-          <div className="pt-4 px-8 pb-20 bg-[var(--color-surface-default)]">
-            <VStack gap={6} className="min-w-[1176px] max-w-[1320px]">
+          <div className="pt-4 px-8 pb-20 bg-[var(--color-surface-default)] min-h-full">
+            <VStack gap={6} className="min-w-[1176px]">
               {/* Pool Header Card */}
               <DetailHeader>
                 <DetailHeader.Title>{pool.name}</DetailHeader.Title>
@@ -1074,7 +1123,7 @@ export function StoragePoolDetailPage() {
                         {/* Capacity Used */}
                         <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg p-4">
                           <h4 className="text-[14px] font-medium text-[var(--color-text-default)] mb-4">Capacity used</h4>
-                          <CapacityGauge percentage={88.2} />
+                          <CapacityGauge percentage={88.2} used={167.6} total={190.0} unit="TiB" />
                         </div>
                         {/* Time Till Full */}
                         <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg p-4">
