@@ -184,8 +184,6 @@ import {
   IconCalendar,
   IconAppWindow,
   IconBorderAll,
-  IconFileText,
-  IconCode,
   // Brand Icons
   IconBrandUbuntu,
   IconBrandDebian,
