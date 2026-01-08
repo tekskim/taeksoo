@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import AppLayout from '@/layouts/AppLayout';
 import {
   Button,
@@ -110,18 +110,6 @@ export function CloudBuilderDetailPage() {
     <AppLayout>
       <div className="pt-4 px-8 pb-20 bg-[var(--color-surface-default)]">
         <VStack gap={6} className="min-w-[1176px] max-w-[1320px]">
-          <div className="flex items-center justify-between h-8">
-            <h1 className="text-[length:var(--font-size-16)] font-semibold text-[var(--color-text-default)]">
-              {config.title}
-            </h1>
-            <Link
-              to={`/cloudbuilder/${slug}`}
-              className="text-[length:var(--font-size-12)] text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
-            >
-              Back
-            </Link>
-          </div>
-
           {isNetworkAgent ? (
             <DetailHeader>
               <DetailHeader.Title>{row?.name ?? `Network Agent #${id}`}</DetailHeader.Title>
@@ -272,23 +260,23 @@ export function CloudBuilderDetailPage() {
           ) : (
             <SectionCard>
               <SectionCard.Header title="Details" />
-              <SectionCard.Content gap={3}>
-              {row ? (
-                <div className="grid grid-cols-12 gap-3">
-                  {Object.entries(row)
+              <SectionCard.Content>
+                {row ? (
+                  Object.entries(row)
                     .filter(([k]) => k !== 'id')
-                    .map(([k, v]) => (
-                      <div key={k} className="col-span-12 grid grid-cols-12 gap-3">
-                        <div className="col-span-4 text-[12px] text-[var(--color-text-subtle)]">{k}</div>
-                        <div className="col-span-8 rounded-md border border-[var(--color-border-default)] bg-[var(--color-surface-subtle)] px-3 py-2 text-[12px] text-[var(--color-text-default)]">
-                          {String(v ?? '-') || '-'}
-                        </div>
-                      </div>
-                    ))}
-                </div>
-              ) : (
-                <div className="py-10 text-center text-[12px] text-[var(--color-text-subtle)]">데이터를 찾을 수 없습니다.</div>
-              )}
+                    .map(([k, v], idx, arr) => (
+                      <SectionCard.DataRow
+                        key={k}
+                        label={k}
+                        value={String(v ?? '-') || '-'}
+                        showDivider={idx < arr.length - 1}
+                      />
+                    ))
+                ) : (
+                  <div className="py-10 text-center text-[12px] text-[var(--color-text-subtle)]">
+                    데이터를 찾을 수 없습니다.
+                  </div>
+                )}
               </SectionCard.Content>
             </SectionCard>
           )}

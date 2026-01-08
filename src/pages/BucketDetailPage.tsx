@@ -316,7 +316,14 @@ function ObjectRow({ object, isExpanded, isSelected, onToggleExpand, onToggleSel
             <div className="flex-1 p-4 border border-[var(--color-border-default)] rounded-lg bg-[var(--color-surface-default)]">
               <div className="flex items-start justify-between mb-2">
                 <span className="text-[11px] text-[var(--color-text-muted)]">S3 URI</span>
-                <button className="p-1 hover:bg-[var(--color-surface-subtle)] rounded">
+                <button 
+                  className="p-1 hover:bg-[var(--color-surface-subtle)] rounded"
+                  onClick={() => {
+                    if (object.s3Uri) {
+                      navigator.clipboard.writeText(object.s3Uri);
+                    }
+                  }}
+                >
                   <IconCopy size={14} stroke={1.5} className="text-[var(--color-text-muted)]" />
                 </button>
               </div>
@@ -328,7 +335,14 @@ function ObjectRow({ object, isExpanded, isSelected, onToggleExpand, onToggleSel
             <div className="flex-1 p-4 border border-[var(--color-border-default)] rounded-lg bg-[var(--color-surface-default)]">
               <div className="flex items-start justify-between mb-2">
                 <span className="text-[11px] text-[var(--color-text-muted)]">Object URL</span>
-                <button className="p-1 hover:bg-[var(--color-surface-subtle)] rounded">
+                <button 
+                  className="p-1 hover:bg-[var(--color-surface-subtle)] rounded"
+                  onClick={() => {
+                    if (object.objectUrl) {
+                      navigator.clipboard.writeText(object.objectUrl);
+                    }
+                  }}
+                >
                   <IconCopy size={14} stroke={1.5} className="text-[var(--color-text-muted)]" />
                 </button>
               </div>
