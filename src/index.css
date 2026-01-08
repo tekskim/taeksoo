@@ -1462,11 +1462,11 @@ input[type="search"]::-webkit-search-decoration {
 }
 
 .toggleSwitch {
-  width: 28px;
-  height: 14px;
+  width: 24px;
+  height: 12px;
   background: transparent;
   border: 1px solid var(--color-border-default);
-  border-radius: 7px;
+  border-radius: 6px;
   position: relative;
   transition: background 0.2s, border-color 0.2s;
 }
@@ -1474,8 +1474,8 @@ input[type="search"]::-webkit-search-decoration {
 .toggleSwitch::after {
   content: '';
   position: absolute;
-  width: 10px;
-  height: 10px;
+  width: 8px;
+  height: 8px;
   background: var(--color-text-muted);
   border-radius: 50%;
   top: 1px;
@@ -1489,7 +1489,7 @@ input[type="search"]::-webkit-search-decoration {
 }
 
 .toggleSwitchActive::after {
-  transform: translateX(14px);
+  transform: translateX(12px);
   background: var(--color-action-primary);
 }
 
