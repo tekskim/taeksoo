@@ -259,7 +259,7 @@ export function OSDsPage() {
     {
       key: 'status',
       label: 'Status',
-      width: 100,
+      width: 120,
       sortable: false,
       render: (_, row) => <StatusCell status={row.status} />,
     },

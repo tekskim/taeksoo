@@ -517,7 +517,7 @@ export function PhysicalDisksPage() {
     {
       key: 'type',
       label: 'Type',
-      flex: 0.5,
+      width: '120px',
       sortable: true,
       render: (_, row) => <TypeCell type={row.type} />,
     },

@@ -309,7 +309,7 @@ function ObjectRow({ object, isExpanded, isSelected, onToggleExpand, onToggleSel
 
       {/* Expanded Details */}
       {isExpanded && !isFolder && (
-        <div className="px-4 pb-4 pt-2 border-t border-[var(--color-border-subtle)]">
+        <div className="p-4 border-t border-[var(--color-border-subtle)]">
           {/* S3 URI & Object URL */}
           <div className="flex gap-4 mb-6">
             {/* S3 URI Box */}
@@ -364,7 +364,7 @@ function ObjectRow({ object, isExpanded, isSelected, onToggleExpand, onToggleSel
           </div>
 
           {/* Versions */}
-          <div className="flex flex-col gap-[var(--table-row-gap)]">
+          <div className="flex flex-col gap-[var(--table-row-gap)] mt-4">
             <div className="text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-muted)]">Versions</div>
             {/* Header */}
             <div className="flex items-stretch min-h-[var(--table-row-height)] bg-[var(--table-header-bg)] border border-[var(--color-border-default)] rounded-[var(--table-row-radius)]">
@@ -656,7 +656,7 @@ export function BucketDetailPage() {
                           <div className="flex items-center gap-2">
                             {!treeSidebarOpen && (
                               <button
-                                className="p-1 hover:bg-[var(--color-surface-muted)] rounded"
+                                className="p-1 rounded border border-[var(--color-border-default)] hover:bg-[var(--color-surface-muted)] hover:border-[var(--color-border-strong)] transition-colors"
                                 onClick={() => setTreeSidebarOpen(true)}
                               >
                                 <IconLayoutSidebar size={14} stroke={1.5} className="text-[var(--color-text-muted)]" />
