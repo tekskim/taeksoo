@@ -743,7 +743,7 @@ export function OSDDetailPage() {
   const [healthSubTab, setHealthSubTab] = useState<'device-info' | 'smart'>('device-info');
 
   // Global tab management
-  const { tabs, activeTabId, closeTab, selectTab, addNewTab, updateActiveTabLabel } = useTabs();
+  const { tabs, activeTabId, closeTab, selectTab, addNewTab, updateActiveTabLabel, moveTab } = useTabs();
 
   // Update tab label to match the OSD name (most recent breadcrumb)
   useEffect(() => {
@@ -817,6 +817,7 @@ export function OSDDetailPage() {
             onTabChange={selectTab}
             onTabClose={closeTab}
             onTabAdd={addNewTab}
+            onTabReorder={moveTab}
             showAddButton={true}
             showWindowControls={true}
           />

@@ -235,7 +235,7 @@ export function ContainerDashboardPage() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [activeTab, setActiveTab] = useState('events');
   const [currentPage, setCurrentPage] = useState(1);
-  const { tabs, activeTabId, selectTab, closeTab, addNewTab, updateActiveTabLabel } = useTabs();
+  const { tabs, activeTabId, selectTab, closeTab, addNewTab, updateActiveTabLabel, moveTab } = useTabs();
 
   // Update tab label to "Dashboard" on mount
   useEffect(() => {
@@ -261,7 +261,8 @@ export function ContainerDashboardPage() {
           activeTab={activeTabId}
           onTabChange={selectTab}
           onTabClose={closeTab}
-          onTabAdd={addNewTab}
+onTabAdd={addNewTab}
+            onTabReorder={moveTab}
         />
 
         {/* Top Bar */}

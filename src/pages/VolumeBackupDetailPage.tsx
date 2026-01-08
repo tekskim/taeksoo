@@ -103,7 +103,7 @@ export function VolumeBackupDetailPage() {
   const backup = id && mockBackupDetails[id] ? mockBackupDetails[id] : defaultBackup;
 
   // Global tab management
-  const { tabs, activeTabId, closeTab, selectTab, addNewTab, updateActiveTabLabel } = useTabs();
+  const { tabs, activeTabId, closeTab, selectTab, addNewTab, updateActiveTabLabel, moveTab } = useTabs();
 
   // Update tab label to backup name
   useEffect(() => {
@@ -146,6 +146,7 @@ export function VolumeBackupDetailPage() {
             onTabChange={selectTab}
             onTabClose={closeTab}
             onTabAdd={addNewTab}
+            onTabReorder={moveTab}
             showAddButton={true}
             showWindowControls={true}
           />

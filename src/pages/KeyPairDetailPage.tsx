@@ -119,7 +119,7 @@ export function KeyPairDetailPage() {
   const keyPair = id ? (mockKeyPairsMap[id] || defaultKeyPairDetail) : defaultKeyPairDetail;
 
   // Global tab management
-  const { tabs, activeTabId, closeTab, selectTab, addNewTab, updateActiveTabLabel } = useTabs();
+  const { tabs, activeTabId, closeTab, selectTab, addNewTab, updateActiveTabLabel, moveTab } = useTabs();
 
   // Update tab label to key pair name
   useEffect(() => {
@@ -162,6 +162,7 @@ export function KeyPairDetailPage() {
             onTabChange={selectTab}
             onTabClose={closeTab}
             onTabAdd={addNewTab}
+            onTabReorder={moveTab}
             showAddButton={true}
             showWindowControls={true}
           />

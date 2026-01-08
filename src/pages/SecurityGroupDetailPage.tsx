@@ -133,7 +133,7 @@ export default function SecurityGroupDetailPage() {
   const [isPreferencesOpen, setIsPreferencesOpen] = useState(false);
 
   // Global tab management
-  const { tabs, activeTabId, closeTab, selectTab, addNewTab, updateActiveTabLabel } = useTabs();
+  const { tabs, activeTabId, closeTab, selectTab, addNewTab, updateActiveTabLabel, moveTab } = useTabs();
 
   // Get security group data based on URL ID
   const securityGroup = id ? (mockSecurityGroupsMap[id] || defaultSecurityGroupDetail) : defaultSecurityGroupDetail;
@@ -332,6 +332,7 @@ export default function SecurityGroupDetailPage() {
             onTabChange={selectTab}
             onTabClose={closeTab}
             onTabAdd={addNewTab}
+            onTabReorder={moveTab}
             showAddButton={true}
             showWindowControls={true}
           />

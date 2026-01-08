@@ -136,7 +136,7 @@ export function ComputeImageDetailPage() {
   const [activeDetailTab, setActiveDetailTab] = useState('details');
 
   // Global tab management
-  const { tabs, activeTabId, closeTab, selectTab, addNewTab, updateActiveTabLabel } = useTabs();
+  const { tabs, activeTabId, closeTab, selectTab, addNewTab, updateActiveTabLabel, moveTab } = useTabs();
 
   // Update tab label to image name
   useEffect(() => {
@@ -179,6 +179,7 @@ export function ComputeImageDetailPage() {
             onTabChange={selectTab}
             onTabClose={closeTab}
             onTabAdd={addNewTab}
+            onTabReorder={moveTab}
             showAddButton={true}
             showWindowControls={true}
           />

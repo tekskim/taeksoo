@@ -65,7 +65,7 @@ function ModalListItem({ title, description, category, size, onOpen }: ModalList
    ---------------------------------------- */
 
 export function ModalsPage() {
-  const { tabs, activeTabId, selectTab, closeTab, addNewTab } = useTabs();
+  const { tabs, activeTabId, selectTab, closeTab, addNewTab, moveTab } = useTabs();
   const [sidebarOpen, setSidebarOpen] = useState(true);
 
   // Modal states
@@ -104,6 +104,7 @@ export function ModalsPage() {
             onTabChange={selectTab}
             onTabClose={closeTab}
             onTabAdd={addNewTab}
+            onTabReorder={moveTab}
           />
 
           {/* TopBar */}

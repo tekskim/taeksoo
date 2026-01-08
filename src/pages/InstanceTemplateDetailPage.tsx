@@ -187,7 +187,7 @@ export function InstanceTemplateDetailPage() {
   const template = id ? (mockTemplatesMap[id] || defaultTemplateDetail) : defaultTemplateDetail;
   const [isFavorite, setIsFavorite] = useState(template.favorite);
 
-  const { tabs, activeTabId, closeTab, selectTab, updateActiveTabLabel } = useTabs();
+  const { tabs, activeTabId, closeTab, selectTab, updateActiveTabLabel, moveTab } = useTabs();
 
   // Update tab label to template name
   useEffect(() => {
