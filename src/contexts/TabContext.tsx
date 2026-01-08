@@ -275,6 +275,7 @@ export function TabProvider({ children, defaultTabs = [] }: TabProviderProps) {
     const tab = tabsRef.current.find((t) => t.id === tabId);
     if (tab) {
       setActiveTabId(tabId);
+      skipNextLocationSyncRef.current = true; // 탭 선택 시 sync 건너뛰기
       navigate(tab.path);
     }
   }, [navigate]);
