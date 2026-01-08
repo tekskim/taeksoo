@@ -38,6 +38,7 @@ import {
   Breadcrumb,
   StatusIndicator,
   VStack,
+  HStack,
   MenuItem,
   MenuSection,
   MenuDivider,
@@ -47,8 +48,10 @@ import {
   DetailHeader,
   SectionCard,
   Drawer,
-  FloatingCard,
+  MonitoringToolbar,
+  NotificationCenter,
 } from '@/design-system';
+import type { NotificationItem } from '@/design-system/components/NotificationCenter';
 import {
   // Navigation icons (for sidebar)
   IconPalette,
@@ -179,6 +182,8 @@ import {
   IconCalendar,
   IconAppWindow,
   IconBorderAll,
+  IconFileText,
+  IconCode,
   // Brand Icons
   IconBrandUbuntu,
   IconBrandDebian,
@@ -242,7 +247,8 @@ const patternItems = [
   { id: 'context-menu', label: 'Context Menu', icon: IconMenu2 },
   { id: 'modal', label: 'Modal', icon: IconLayoutGrid },
   { id: 'drawer', label: 'Drawer', icon: IconLayoutGrid },
-  { id: 'floating-card', label: 'Floating Card', icon: IconLayoutGrid },
+  { id: 'monitoring-toolbar', label: 'Monitoring Toolbar', icon: IconRefresh },
+  { id: 'notification-center', label: 'Notification Center', icon: IconBell },
   { id: 'layout', label: 'Layout', icon: IconLayoutSidebar },
 ];
 
@@ -265,6 +271,294 @@ const componentItems = [
 
 // All items for intersection observer
 const navItems = [...foundationItems, ...componentItems];
+
+/* ----------------------------------------
+   Notification Center Section
+   ---------------------------------------- */
+
+function NotificationCenterSection() {
+  const [notifications, setNotifications] = useState<NotificationItem[]>([
+    {
+      id: '1',
+      type: 'success',
+      message: 'Instance "web-server-01" created successfully.',
+      time: '10:23',
+      project: 'Proj1',
+      isRead: false,
+      detail: {
+        code: 200,
+        message: 'Instance created with 4 vCPUs, 8GB RAM, and 100GB storage.',
+      },
+    },
+    {
+      id: '2',
+      type: 'success',
+      message: 'Volume "data-vol-01" attached to instance.',
+      time: '10:15',
+      project: 'Proj1',
+      isRead: false,
+    },
+    {
+      id: '3',
+      type: 'error',
+      message: 'Failed to create volume "data-vol-02".',
+      time: '09:30',
+      project: 'Proj2',
+      isRead: false,
+      detail: {
+        code: 400,
+        message: "Flavor's disk is smaller than the minimum size specified in image metadata. Flavor disk is 1073741824 bytes, minimum size is 10737418240 bytes.",
+      },
+    },
+    {
+      id: '4',
+      type: 'warning',
+      message: 'Instance "db-server" is running low on disk space.',
+      time: '09:15',
+      project: 'Proj1',
+      isRead: true,
+      detail: {
+        code: 'WARN_DISK_LOW',
+        message: 'Disk usage is at 92%. Consider expanding the volume or cleaning up unused files.',
+      },
+    },
+    {
+      id: '5',
+      type: 'info',
+      message: 'System maintenance scheduled for tomorrow.',
+      time: 'Yesterday',
+      isRead: true,
+    },
+  ]);
+
+  const [selectedId, setSelectedId] = useState<string | undefined>();
+
+  const handleMarkAsRead = (id: string) => {
+    setNotifications((prev) =>
+      prev.map((n) => (n.id === id ? { ...n, isRead: true } : n))
+    );
+  };
+
+  const handleMarkAllAsRead = () => {
+    setNotifications((prev) => prev.map((n) => ({ ...n, isRead: true })));
+  };
+
+  return (
+    <Section
+      id="notification-center"
+      title="Notification Center"
+      description="Centralized notification panel with filtering, read/unread states, and real-time updates"
+    >
+      <VStack gap={8}>
+        {/* Design Tokens */}
+        <VStack gap={3}>
+          <Label>Design Tokens</Label>
+          <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
+            <code>width: 360px</code> · <code>padding: 16px</code> · <code>border-radius: 8px</code> · <code>shadow: lg</code>
+          </div>
+        </VStack>
+
+        {/* Live Demo */}
+        <VStack gap={3}>
+          <Label>Live Demo</Label>
+          <div className="flex justify-center p-6 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)]">
+            <NotificationCenter
+              notifications={notifications}
+              onMarkAsRead={handleMarkAsRead}
+              onMarkAllAsRead={handleMarkAllAsRead}
+              onNotificationClick={(n) => setSelectedId(n.id)}
+              selectedId={selectedId}
+            />
+          </div>
+        </VStack>
+
+        {/* Notification Types */}
+        <VStack gap={3}>
+          <Label>Notification Types</Label>
+          <div className="grid grid-cols-4 gap-4">
+            <div className="p-3 bg-[var(--color-surface-default)] rounded-[var(--radius-md)] border border-[var(--color-border-default)]">
+              <div className="flex items-center gap-2 mb-2">
+                <div className="w-5 h-5 rounded-full bg-[var(--color-state-success)] bg-opacity-20 flex items-center justify-center">
+                  <IconCheck size={12} className="text-[var(--color-state-success)]" />
+                </div>
+                <span className="text-[length:var(--font-size-12)] font-medium text-[var(--color-text-default)]">Success</span>
+              </div>
+              <p className="text-[length:var(--font-size-11)] text-[var(--color-text-muted)]">Operation completed</p>
+            </div>
+            <div className="p-3 bg-[var(--color-surface-default)] rounded-[var(--radius-md)] border border-[var(--color-border-default)]">
+              <div className="flex items-center gap-2 mb-2">
+                <div className="w-5 h-5 rounded-full bg-[var(--color-state-danger)] bg-opacity-20 flex items-center justify-center">
+                  <IconX size={12} className="text-[var(--color-state-danger)]" />
+                </div>
+                <span className="text-[length:var(--font-size-12)] font-medium text-[var(--color-text-default)]">Error</span>
+              </div>
+              <p className="text-[length:var(--font-size-11)] text-[var(--color-text-muted)]">Operation failed</p>
+            </div>
+            <div className="p-3 bg-[var(--color-surface-default)] rounded-[var(--radius-md)] border border-[var(--color-border-default)]">
+              <div className="flex items-center gap-2 mb-2">
+                <div className="w-5 h-5 rounded-full bg-[var(--color-state-warning)] bg-opacity-20 flex items-center justify-center">
+                  <IconAlertTriangle size={12} className="text-[var(--color-state-warning)]" />
+                </div>
+                <span className="text-[length:var(--font-size-12)] font-medium text-[var(--color-text-default)]">Warning</span>
+              </div>
+              <p className="text-[length:var(--font-size-11)] text-[var(--color-text-muted)]">Attention needed</p>
+            </div>
+            <div className="p-3 bg-[var(--color-surface-default)] rounded-[var(--radius-md)] border border-[var(--color-border-default)]">
+              <div className="flex items-center gap-2 mb-2">
+                <div className="w-5 h-5 rounded-full bg-[var(--color-state-info)] bg-opacity-20 flex items-center justify-center">
+                  <IconInfoCircle size={12} className="text-[var(--color-state-info)]" />
+                </div>
+                <span className="text-[length:var(--font-size-12)] font-medium text-[var(--color-text-default)]">Info</span>
+              </div>
+              <p className="text-[length:var(--font-size-11)] text-[var(--color-text-muted)]">General information</p>
+            </div>
+          </div>
+        </VStack>
+
+        {/* Features */}
+        <VStack gap={3}>
+          <Label>Features</Label>
+          <div className="grid grid-cols-2 gap-4">
+            <div className="p-4 bg-[var(--color-surface-default)] rounded-[var(--radius-md)] border border-[var(--color-border-default)]">
+              <h4 className="text-[length:var(--font-size-12)] font-medium text-[var(--color-text-default)] mb-2">Tab Filtering</h4>
+              <p className="text-[length:var(--font-size-11)] text-[var(--color-text-muted)]">
+                Filter notifications by All, Unread, or Error status with counts displayed on each tab.
+              </p>
+            </div>
+            <div className="p-4 bg-[var(--color-surface-default)] rounded-[var(--radius-md)] border border-[var(--color-border-default)]">
+              <h4 className="text-[length:var(--font-size-12)] font-medium text-[var(--color-text-default)] mb-2">Mark as Read</h4>
+              <p className="text-[length:var(--font-size-11)] text-[var(--color-text-muted)]">
+                Mark individual notifications or all notifications as read with a single click.
+              </p>
+            </div>
+            <div className="p-4 bg-[var(--color-surface-default)] rounded-[var(--radius-md)] border border-[var(--color-border-default)]">
+              <h4 className="text-[length:var(--font-size-12)] font-medium text-[var(--color-text-default)] mb-2">Project Tags</h4>
+              <p className="text-[length:var(--font-size-11)] text-[var(--color-text-muted)]">
+                Optional project tags help identify which project a notification belongs to.
+              </p>
+            </div>
+            <div className="p-4 bg-[var(--color-surface-default)] rounded-[var(--radius-md)] border border-[var(--color-border-default)]">
+              <h4 className="text-[length:var(--font-size-12)] font-medium text-[var(--color-text-default)] mb-2">Selection State</h4>
+              <p className="text-[length:var(--font-size-11)] text-[var(--color-text-muted)]">
+                Click on a notification to select it and view more details or take actions.
+              </p>
+            </div>
+          </div>
+        </VStack>
+
+        {/* Props */}
+        <VStack gap={3}>
+          <Label>Props</Label>
+          <div className="overflow-x-auto">
+            <table className="w-full text-[length:var(--font-size-12)]">
+              <thead>
+                <tr className="border-b border-[var(--color-border-default)]">
+                  <th className="text-left py-2 pr-4 font-medium text-[var(--color-text-subtle)]">Prop</th>
+                  <th className="text-left py-2 pr-4 font-medium text-[var(--color-text-subtle)]">Type</th>
+                  <th className="text-left py-2 pr-4 font-medium text-[var(--color-text-subtle)]">Default</th>
+                  <th className="text-left py-2 font-medium text-[var(--color-text-subtle)]">Description</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr className="border-b border-[var(--color-border-subtle)]">
+                  <td className="py-2 pr-4 font-mono text-[var(--color-action-primary)]">notifications</td>
+                  <td className="py-2 pr-4 text-[var(--color-text-muted)]">NotificationItem[]</td>
+                  <td className="py-2 pr-4 text-[var(--color-text-muted)]">required</td>
+                  <td className="py-2 text-[var(--color-text-default)]">List of notification items</td>
+                </tr>
+                <tr className="border-b border-[var(--color-border-subtle)]">
+                  <td className="py-2 pr-4 font-mono text-[var(--color-action-primary)]">onMarkAsRead</td>
+                  <td className="py-2 pr-4 text-[var(--color-text-muted)]">(id: string) =&gt; void</td>
+                  <td className="py-2 pr-4 text-[var(--color-text-muted)]">-</td>
+                  <td className="py-2 text-[var(--color-text-default)]">Callback when notification is marked as read</td>
+                </tr>
+                <tr className="border-b border-[var(--color-border-subtle)]">
+                  <td className="py-2 pr-4 font-mono text-[var(--color-action-primary)]">onMarkAllAsRead</td>
+                  <td className="py-2 pr-4 text-[var(--color-text-muted)]">() =&gt; void</td>
+                  <td className="py-2 pr-4 text-[var(--color-text-muted)]">-</td>
+                  <td className="py-2 text-[var(--color-text-default)]">Callback when all marked as read</td>
+                </tr>
+                <tr className="border-b border-[var(--color-border-subtle)]">
+                  <td className="py-2 pr-4 font-mono text-[var(--color-action-primary)]">onNotificationClick</td>
+                  <td className="py-2 pr-4 text-[var(--color-text-muted)]">(n: NotificationItem) =&gt; void</td>
+                  <td className="py-2 pr-4 text-[var(--color-text-muted)]">-</td>
+                  <td className="py-2 text-[var(--color-text-default)]">Callback when notification is clicked</td>
+                </tr>
+                <tr className="border-b border-[var(--color-border-subtle)]">
+                  <td className="py-2 pr-4 font-mono text-[var(--color-action-primary)]">selectedId</td>
+                  <td className="py-2 pr-4 text-[var(--color-text-muted)]">string</td>
+                  <td className="py-2 pr-4 text-[var(--color-text-muted)]">-</td>
+                  <td className="py-2 text-[var(--color-text-default)]">Currently selected notification id</td>
+                </tr>
+                <tr>
+                  <td className="py-2 pr-4 font-mono text-[var(--color-action-primary)]">onClose</td>
+                  <td className="py-2 pr-4 text-[var(--color-text-muted)]">() =&gt; void</td>
+                  <td className="py-2 pr-4 text-[var(--color-text-muted)]">-</td>
+                  <td className="py-2 text-[var(--color-text-default)]">Callback when panel is closed</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </VStack>
+
+        {/* NotificationItem Interface */}
+        <VStack gap={3}>
+          <Label>NotificationItem Interface</Label>
+          <div className="overflow-x-auto">
+            <table className="w-full text-[length:var(--font-size-12)]">
+              <thead>
+                <tr className="border-b border-[var(--color-border-default)]">
+                  <th className="text-left py-2 pr-4 font-medium text-[var(--color-text-subtle)]">Property</th>
+                  <th className="text-left py-2 pr-4 font-medium text-[var(--color-text-subtle)]">Type</th>
+                  <th className="text-left py-2 pr-4 font-medium text-[var(--color-text-subtle)]">Required</th>
+                  <th className="text-left py-2 font-medium text-[var(--color-text-subtle)]">Description</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr className="border-b border-[var(--color-border-subtle)]">
+                  <td className="py-2 pr-4 font-mono text-[var(--color-action-primary)]">id</td>
+                  <td className="py-2 pr-4 text-[var(--color-text-muted)]">string</td>
+                  <td className="py-2 pr-4 text-[var(--color-text-muted)]">Yes</td>
+                  <td className="py-2 text-[var(--color-text-default)]">Unique identifier</td>
+                </tr>
+                <tr className="border-b border-[var(--color-border-subtle)]">
+                  <td className="py-2 pr-4 font-mono text-[var(--color-action-primary)]">type</td>
+                  <td className="py-2 pr-4 text-[var(--color-text-muted)]">'success' | 'error' | 'warning' | 'info'</td>
+                  <td className="py-2 pr-4 text-[var(--color-text-muted)]">Yes</td>
+                  <td className="py-2 text-[var(--color-text-default)]">Notification type</td>
+                </tr>
+                <tr className="border-b border-[var(--color-border-subtle)]">
+                  <td className="py-2 pr-4 font-mono text-[var(--color-action-primary)]">message</td>
+                  <td className="py-2 pr-4 text-[var(--color-text-muted)]">string</td>
+                  <td className="py-2 pr-4 text-[var(--color-text-muted)]">Yes</td>
+                  <td className="py-2 text-[var(--color-text-default)]">Main message text</td>
+                </tr>
+                <tr className="border-b border-[var(--color-border-subtle)]">
+                  <td className="py-2 pr-4 font-mono text-[var(--color-action-primary)]">time</td>
+                  <td className="py-2 pr-4 text-[var(--color-text-muted)]">string</td>
+                  <td className="py-2 pr-4 text-[var(--color-text-muted)]">Yes</td>
+                  <td className="py-2 text-[var(--color-text-default)]">Timestamp string</td>
+                </tr>
+                <tr className="border-b border-[var(--color-border-subtle)]">
+                  <td className="py-2 pr-4 font-mono text-[var(--color-action-primary)]">project</td>
+                  <td className="py-2 pr-4 text-[var(--color-text-muted)]">string</td>
+                  <td className="py-2 pr-4 text-[var(--color-text-muted)]">No</td>
+                  <td className="py-2 text-[var(--color-text-default)]">Project name tag</td>
+                </tr>
+                <tr>
+                  <td className="py-2 pr-4 font-mono text-[var(--color-action-primary)]">isRead</td>
+                  <td className="py-2 pr-4 text-[var(--color-text-muted)]">boolean</td>
+                  <td className="py-2 pr-4 text-[var(--color-text-muted)]">No</td>
+                  <td className="py-2 text-[var(--color-text-default)]">Whether notification has been read</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </VStack>
+      </VStack>
+    </Section>
+  );
+}
 
 /* ----------------------------------------
    DatePicker Section (with state)
@@ -584,7 +878,8 @@ const baseChartOptions = {
     axisTick: { show: false },
     axisLabel: {
       color: chartColors.slate400,
-      fontSize: 10
+      fontSize: 10,
+      padding: [0, 0, 0, 15]
     },
     boundaryGap: false
   },
@@ -1012,77 +1307,28 @@ function TimeControls({
               >
                 <span className="calendarDateLabel">START</span>
                 <span className="calendarDateValue">{formatCalendarDate(tempStartDate)}</span>
-          </div>
+              </div>
               <div className="calendarDateSeparator">~</div>
-          <div 
+              <div 
                 className={`calendarDateBox ${!selectingStart ? 'calendarDateBoxActive' : ''}`}
                 onClick={() => setSelectingStart(false)}
-          >
+              >
                 <span className="calendarDateLabel">END</span>
                 <span className="calendarDateValue">{formatCalendarDate(tempEndDate)}</span>
-          </div>
+              </div>
             </div>
 
-            {/* Month Navigation */}
-            <div className="calendarMonthNav">
-              <button className="calendarNavBtn" onClick={prevMonth}>
-                <IconChevronLeft size={16} stroke={1.5} />
-              </button>
-              <span className="calendarMonthLabel">
-                {viewMonth.getFullYear()}.{(viewMonth.getMonth() + 1).toString().padStart(2, '0')}
-              </span>
-              <button className="calendarNavBtn" onClick={nextMonth}>
-                <IconChevronRight size={16} stroke={1.5} />
-              </button>
-            </div>
-
-            {/* Weekday Headers */}
-            <div className="calendarWeekdays">
-              {weekDays.map(day => (
-                <div key={day} className="calendarWeekday">{day}</div>
-              ))}
-            </div>
-
-            {/* Calendar Grid */}
-            <div className="calendarGrid">
-              {getDaysInMonth(viewMonth).map((day, index) => {
-                const isStart = isStartDate(day.date);
-                const isEnd = isEndDate(day.date);
-                const inRange = isDateInRange(day.date);
-                const colIndex = index % 7;
-                const isFirstCol = colIndex === 0;
-                const isLastCol = colIndex === 6;
-                
-                const wrapperClasses = [
-                  'calendarDayWrapper',
-                  inRange && 'inRange',
-                  isStart && 'rangeStart',
-                  isEnd && 'rangeEnd',
-                  isFirstCol && 'firstCol',
-                  isLastCol && 'lastCol',
-                ].filter(Boolean).join(' ');
-                
-                const dayClasses = [
-                  'calendarDay',
-                  !day.isCurrentMonth && 'calendarDayOther',
-                  (isStart || isEnd) && 'calendarDaySelected',
-                  day.isToday && 'calendarDayToday',
-                ].filter(Boolean).join(' ');
-                
-                return (
-                  <div key={index} className={wrapperClasses}>
-                    {inRange && <div className="rangeBackground" />}
-                    <button
-                      className={dayClasses}
-                      onClick={() => handleDayClick(day.date)}
-                    >
-                      <span>{day.date.getDate()}</span>
-                      {day.isToday && <span className="calendarTodayDot" />}
-                    </button>
-                  </div>
-                );
-              })}
-            </div>
+            {/* DatePicker from Design System */}
+            <DatePicker
+              mode="range"
+              rangeValue={{ start: tempStartDate, end: tempEndDate }}
+              onRangeChange={(range) => {
+                setTempStartDate(range.start);
+                setTempEndDate(range.end);
+                setSelectingStart(!range.start || !!range.end);
+              }}
+              maxDate={new Date()}
+            />
 
             {/* Actions */}
             <div className="calendarActions">
@@ -1105,7 +1351,7 @@ function LineChart({
   title, 
   series, 
   yAxisFormatter = (v: number) => `${v}`,
-  height = '200px',
+  height = '100%',
   onFullScreen,
   isFullScreen = false,
   onExitFullScreen,
@@ -1139,6 +1385,12 @@ function LineChart({
     if (onFullScreen) onFullScreen();
   };
 
+  // Calculate y-axis bounds for exactly 5 labels
+  const visibleData = series.filter(s => visibleSeries[s.name]).flatMap(s => s.data);
+  const dataMax = visibleData.length > 0 ? Math.max(...visibleData) : 100;
+  const niceMax = Math.ceil(dataMax / 4) * 4; // Round up to nearest multiple of 4
+  const yInterval = niceMax / 4; // 4 intervals = 5 labels
+
   const option = {
     animation: false,
     grid: {
@@ -1155,12 +1407,16 @@ function LineChart({
       axisTick: { show: false },
       axisLabel: {
         color: chartColors.slate400,
-        fontSize: 10
+        fontSize: 10,
+        padding: [0, 0, 0, 15]
       },
       boundaryGap: false
         },
         yAxis: {
       type: 'value' as const,
+      min: 0,
+      max: niceMax,
+      interval: yInterval,
       axisLine: { show: false },
       axisTick: { show: false },
       splitLine: {
@@ -1258,8 +1514,8 @@ function LineChart({
       
       {/* Chart Body */}
       <div className="chartBody">
-        <div className="chartWrapper" style={isFullScreen ? { height: '100%' } : undefined}>
-          <ReactECharts option={option} style={{ height: isFullScreen ? '100%' : height }} notMerge={true} />
+        <div className="chartWrapper">
+          <ReactECharts option={option} style={{ height: '100%', width: '100%' }} notMerge={true} />
         </div>
         <div className="chartLegend">
           {series.map((s, i) => (
@@ -1299,7 +1555,7 @@ function ChartWithFullScreen({
   title,
   series,
   yAxisFormatter = (v: number) => `${v}`,
-  height = '200px'
+  height = '100%'
 }: {
   title: string;
   series: LineChartSeries[];
@@ -1724,7 +1980,7 @@ function SingleValueDoughnutDemo({
 function TabBarDemo() {
   const { tabs, activeTab, addTab, closeTab, selectTab } = useTabBar({
     initialTabs: [
-      { id: 'tab-1', label: 'Dashboard', closable: true },
+      { id: 'tab-1', label: 'Entry page', closable: true },
       { id: 'tab-2', label: 'Settings', closable: true },
       { id: 'tab-3', label: 'Profile', closable: true },
     ],
@@ -1813,7 +2069,7 @@ function TabBarDemo() {
         <div className="w-full border border-[var(--color-border-default)] rounded-[var(--radius-md)] overflow-hidden">
           <TabBar
             tabs={[
-              { id: 'tab-1', label: 'Dashboard', closable: true },
+              { id: 'tab-1', label: 'Entry page', closable: true },
               { id: 'tab-2', label: 'Analytics', closable: true },
               { id: 'tab-3', label: 'Reports', closable: true },
               { id: 'tab-4', label: 'Users', closable: true },
@@ -2046,7 +2302,7 @@ function TableDemo() {
       flex: 1,
       render: (_: string, row: KeyPairData) => (
         <div className="flex items-center gap-2">
-          <span className="font-mono text-[length:var(--font-size-11)] text-[var(--color-text-default)]">{row.fingerprint}</span>
+          <span className="text-[length:var(--font-size-12)] leading-[var(--line-height-18)] text-[var(--color-text-default)]">{row.fingerprint}</span>
           <button
             onClick={(e) => {
               e.stopPropagation();
@@ -2106,9 +2362,11 @@ function TableDemo() {
     <VStack gap={8}>
       {/* Tokens */}
       <VStack gap={3}>
-        <Label>Design Tokens</Label>
+        <Label>Design Tokens & Features</Label>
         <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
           <code>cell-padding: 12×10px</code> · <code>header-padding: 12×8px</code> · <code>radius: 8px</code> · <code>font: 12px</code>
+          <br />
+          <span className="text-[var(--color-text-muted)]">Features:</span> <code>overflow-x: auto</code> · <code>text-overflow: ellipsis</code> · <code>title tooltip on hover</code>
         </div>
       </VStack>
 
@@ -2184,9 +2442,9 @@ function TableDemo() {
         </p>
       </VStack>
 
-      {/* Horizontal Scroll */}
+      {/* Horizontal Scroll & Text Truncation */}
       <VStack gap={3}>
-        <Label>Horizontal Scroll (max-width: 500px)</Label>
+        <Label>Horizontal Scroll & Text Truncation (max-width: 500px)</Label>
         <div className="max-w-[500px] border border-dashed border-[var(--color-border-default)] rounded-[var(--radius-md)] p-2 overflow-hidden">
           <Table
             columns={compactColumns}
@@ -2195,7 +2453,9 @@ function TableDemo() {
           />
         </div>
         <p className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
-          Shift + Mouse wheel or trackpad swipe to scroll horizontally
+          • Horizontal scroll: Shift + Mouse wheel or trackpad swipe<br />
+          • Long text is truncated with ellipsis (...)<br />
+          • Hover over truncated text to see full content via tooltip
         </p>
       </VStack>
 
@@ -2299,8 +2559,8 @@ export function DesignSystemPage() {
   return (
     <div className="min-h-screen bg-[var(--color-surface-subtle)]">
       {/* Left Sidebar Navigation */}
-      <nav className="fixed left-0 top-0 w-[200px] h-screen bg-[var(--color-surface-default)] border-r border-[var(--color-border-default)] overflow-y-auto z-50">
-        <div className="p-4">
+      <nav className="fixed left-0 top-0 w-[200px] h-screen bg-[var(--color-surface-default)] border-r border-[var(--color-border-default)] overflow-y-auto z-50 sidebar-scroll">
+        <div className="p-4 overflow-hidden">
           {/* Logo */}
           <Link to="/" className="flex items-center gap-2 mb-4">
             <div className="w-6 h-6 rounded bg-[var(--color-action-primary)] flex items-center justify-center">
@@ -2311,14 +2571,14 @@ export function DesignSystemPage() {
             </span>
           </Link>
 
-          {/* Dashboard Link */}
+          {/* EntryPage Link */}
           <Link
             to="/"
-            className="flex items-center gap-2 w-full px-3 py-2 mb-4 rounded-[var(--radius-button)] bg-[var(--color-action-secondary)] hover:bg-[var(--color-action-secondary-hover)] text-[var(--color-text-default)] text-[length:var(--font-size-11)] font-medium transition-colors border border-[var(--color-border-default)]"
+            className="flex items-center gap-2 w-[166px] box-border px-3 py-2 mb-4 rounded-[var(--radius-button)] bg-[var(--color-action-secondary)] hover:bg-[var(--color-action-secondary-hover)] text-[var(--color-text-default)] text-[length:var(--font-size-11)] font-medium transition-colors border border-[var(--color-border-default)]"
           >
-            <IconHome size={16} stroke={1.5} />
-            <span>Dashboard</span>
-            <IconChevronRight size={14} stroke={1.5} className="ml-auto" />
+            <IconHome size={16} stroke={1.5} className="shrink-0" />
+            <span className="truncate flex-1 min-w-0">Entry page</span>
+            <IconChevronRight size={14} stroke={1.5} className="shrink-0" />
           </Link>
 
           {/* Navigation */}
@@ -2464,9 +2724,9 @@ export function DesignSystemPage() {
                 </p>
               </VStack>
               <div className="flex items-center gap-3">
-                <DarkModeToggle size="sm" />
+                <DarkModeToggle size="sm" scrollContainerRef={mainRef} />
                 <Link to="/">
-                  <Button variant="outline">Dashboard →</Button>
+                  <Button variant="outline">Entry page →</Button>
                 </Link>
               </div>
             </div>
@@ -3053,7 +3313,7 @@ outline: 2px solid var(--color-border-focus);`}
             <Section id="icons" title="Icons" description="Tabler Icons library - Stroke width 1.5, Size 16-20px">
               <VStack gap={8}>
                 {/* Basic - Actions */}
-                <IconGrid
+                <IconDisplayGrid
                   title="Actions"
                   icons={[
                     { Icon: IconPlayerPlay, name: 'Play' },
@@ -3078,7 +3338,7 @@ outline: 2px solid var(--color-border-focus);`}
                 />
 
                 {/* Basic - Navigation */}
-                <IconGrid
+                <IconDisplayGrid
                   title="Navigation"
                   icons={[
                     { Icon: IconChevronLeft, name: 'Left' },
@@ -3094,7 +3354,7 @@ outline: 2px solid var(--color-border-focus);`}
                 />
 
                 {/* Basic - Status */}
-                <IconGrid
+                <IconDisplayGrid
                   title="Status & Feedback"
                   icons={[
                     { Icon: IconCircleCheck, name: 'Success' },
@@ -3108,7 +3368,7 @@ outline: 2px solid var(--color-border-focus);`}
                 />
 
                 {/* Basic - UI */}
-                <IconGrid
+                <IconDisplayGrid
                   title="UI Elements"
                   icons={[
                     { Icon: IconSearch, name: 'Search' },
@@ -3135,7 +3395,7 @@ outline: 2px solid var(--color-border-focus);`}
                 />
 
                 {/* System - Infrastructure */}
-                <IconGrid
+                <IconDisplayGrid
                   title="Infrastructure"
                   icons={[
                     { Icon: IconServer, name: 'Server' },
@@ -3154,7 +3414,7 @@ outline: 2px solid var(--color-border-focus);`}
                 />
 
                 {/* System - Storage & Files */}
-                <IconGrid
+                <IconDisplayGrid
                   title="Storage & Files"
                   icons={[
                     { Icon: IconDeviceFloppy, name: 'Backup' },
@@ -3168,7 +3428,7 @@ outline: 2px solid var(--color-border-focus);`}
                 />
 
                 {/* System - Monitoring */}
-                <IconGrid
+                <IconDisplayGrid
                   title="Monitoring & Analytics"
                   icons={[
                     { Icon: IconTerminal, name: 'Console' },
@@ -3178,12 +3438,12 @@ outline: 2px solid var(--color-border-focus);`}
                     { Icon: IconGauge, name: 'Speed' },
                     { Icon: IconDeviceDesktop, name: 'Desktop' },
                     { Icon: IconDeviceDesktopAnalytics, name: 'Analytics' },
-                    { Icon: IconLayoutDashboard, name: 'Dashboard' },
+                    { Icon: IconLayoutDashboard, name: 'Entry page' },
                   ]}
                 />
 
                 {/* System - Organization */}
-                <IconGrid
+                <IconDisplayGrid
                   title="Organization"
                   icons={[
                     { Icon: IconTopologyRing, name: 'Topology' },
@@ -3204,7 +3464,7 @@ outline: 2px solid var(--color-border-focus);`}
                 />
 
                 {/* AI & Advanced */}
-                <IconGrid
+                <IconDisplayGrid
                   title="AI & Advanced"
                   icons={[
                     { Icon: IconBrain, name: 'Brain' },
@@ -3216,7 +3476,7 @@ outline: 2px solid var(--color-border-focus);`}
                 />
 
                 {/* OS / Brand Icons */}
-                <IconGrid
+                <IconDisplayGrid
                   title="OS / Brand"
                   icons={[
                     { Icon: IconBrandUbuntu, name: 'Ubuntu' },
@@ -4255,7 +4515,7 @@ outline: 2px solid var(--color-border-focus);`}
                         <Breadcrumb
                           items={[
                             { label: 'Home', onClick: () => {} },
-                            { label: 'Dashboard', onClick: () => {} },
+                            { label: 'Entry page', onClick: () => {} },
                             { label: 'Settings' },
                           ]}
                         />
@@ -4598,7 +4858,7 @@ outline: 2px solid var(--color-border-focus);`}
             </Section>
 
             {/* Table Component */}
-            <Section id="table" title="Table" description="Data table with sorting, selection, and sticky header">
+            <Section id="table" title="Table" description="Data table with sorting, selection, sticky header, text truncation with tooltip, and horizontal scroll">
               <TableDemo />
             </Section>
 
@@ -5453,144 +5713,96 @@ outline: 2px solid var(--color-border-focus);`}
               </VStack>
             </Section>
 
-            {/* Floating Card Section */}
-            <Section id="floating-card" title="Floating Card" description="Floating summary card for create/edit flows with sections, quota, and actions">
+            {/* Monitoring Toolbar */}
+            <Section id="monitoring-toolbar" title="Monitoring Toolbar" description="Time range selection and refresh controls for monitoring dashboards">
               <VStack gap={8}>
-                {/* Basic Example */}
-                <VStack gap={4}>
-                  <Label>Basic Example (Non-portal)</Label>
-                  <div className="relative bg-[var(--color-surface-subtle)] p-6 rounded-lg min-h-[500px]">
-                    <FloatingCard
-                      title="Create Instance"
-                      portal={false}
-                      sections={[
-                        {
-                          tabTitle: 'Details',
-                          collapsible: true,
-                          defaultExpanded: true,
-                          showSuccessIcon: true,
-                          items: [
-                            { id: '1', title: 'Instance Name', status: 'success' },
-                            { id: '2', title: 'Description', status: 'success' },
-                            { id: '3', title: 'Availability Zone', status: 'default' },
-                          ],
-                        },
-                        {
-                          tabTitle: 'Source',
-                          collapsible: true,
-                          defaultExpanded: false,
-                          items: [
-                            { id: '4', title: 'Boot Source', status: 'processing' },
-                            { id: '5', title: 'Image', status: 'default' },
-                          ],
-                        },
-                        {
-                          tabTitle: 'Flavor',
-                          collapsible: true,
-                          defaultExpanded: false,
-                          items: [
-                            { id: '6', title: 'Flavor Selection', status: 'warning' },
-                          ],
-                        },
-                      ]}
-                      quota={[
-                        { label: 'Instances', current: 5, total: 10 },
-                        { label: 'vCPUs', current: 12, total: 20 },
-                        { label: 'RAM', current: 32, total: 64, unit: 'GB' },
-                      ]}
-                      cancelLabel="Cancel"
-                      actionLabel="Create Instance"
-                      actionEnabled={false}
-                      onCancel={() => console.log('Cancel clicked')}
-                      onAction={() => console.log('Create clicked')}
+                {/* Design Tokens */}
+                <VStack gap={3}>
+                  <Label>Design Tokens</Label>
+                  <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
+                    <code>segment-padding: 4px 12px</code> · <code>border-radius: 8px</code> · <code>font-size: 11px</code> · <code>gap: 4px</code>
+                  </div>
+                </VStack>
+
+                {/* Interactive Demo */}
+                <VStack gap={3}>
+                  <Label>Default</Label>
+                  <div className="flex items-center justify-end p-4 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)]">
+                    <MonitoringToolbar 
+                      onTimeRangeChange={(value) => console.log('Time range:', value)}
+                      onCustomPeriodChange={(period) => console.log('Custom period:', period)}
+                      onRefresh={() => console.log('Refresh clicked')}
                     />
                   </div>
                 </VStack>
 
-                {/* Status Icons */}
-                <VStack gap={4}>
-                  <Label>Status Icons</Label>
-                  <div className="flex gap-4 items-center p-4 bg-[var(--color-surface-subtle)] rounded-lg">
-                    <div className="flex items-center gap-2">
-                      <div className="size-4 rounded-full border border-[var(--color-border-default)]" style={{ borderStyle: 'dashed' }} />
-                      <span className="text-[length:var(--font-size-12)] text-[var(--color-text-muted)]">Default</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <div className="size-4 rounded-full border border-[var(--color-text-muted)] flex items-center justify-center" style={{ borderStyle: 'dashed' }}>
-                        <IconRefresh size={10} stroke={2} className="text-[var(--color-text-muted)] animate-spin" />
-                      </div>
-                      <span className="text-[length:var(--font-size-12)] text-[var(--color-text-muted)]">Processing</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <div className="size-4 rounded-full border border-[var(--color-state-danger)] bg-[var(--color-state-danger)] flex items-center justify-center">
-                        <IconAlertTriangle size={10} stroke={2} className="text-white" />
-                      </div>
-                      <span className="text-[length:var(--font-size-12)] text-[var(--color-text-muted)]">Warning</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <div className="size-4 rounded-full border border-[var(--color-state-success)] bg-[var(--color-state-success)] flex items-center justify-center">
-                        <IconCheck size={10} stroke={2} className="text-white" />
-                      </div>
-                      <span className="text-[length:var(--font-size-12)] text-[var(--color-text-muted)]">Success</span>
-                    </div>
-                  </div>
-                </VStack>
-
-                {/* Props Reference */}
-                <VStack gap={4}>
-                  <Label>Props Reference</Label>
+                {/* Specifications */}
+                <VStack gap={3}>
+                  <Label>Specifications</Label>
                   <div className="overflow-x-auto">
                     <table className="w-full text-[length:var(--font-size-12)]">
                       <thead>
                         <tr className="border-b border-[var(--color-border-default)]">
-                          <th className="text-left py-3 pr-4 font-medium text-[var(--color-text-subtle)]">Prop</th>
-                          <th className="text-left py-3 pr-4 font-medium text-[var(--color-text-subtle)]">Type</th>
-                          <th className="text-left py-3 pr-4 font-medium text-[var(--color-text-subtle)]">Default</th>
-                          <th className="text-left py-3 font-medium text-[var(--color-text-subtle)]">Description</th>
+                          <th className="text-left py-2 pr-4 font-medium text-[var(--color-text-subtle)]">Property</th>
+                          <th className="text-left py-2 pr-4 font-medium text-[var(--color-text-subtle)]">Type</th>
+                          <th className="text-left py-2 pr-4 font-medium text-[var(--color-text-subtle)]">Default</th>
+                          <th className="text-left py-2 font-medium text-[var(--color-text-subtle)]">Description</th>
                         </tr>
                       </thead>
                       <tbody>
                         <tr className="border-b border-[var(--color-border-subtle)]">
-                          <td className="py-2 pr-4 font-mono text-[var(--color-action-primary)]">title</td>
-                          <td className="py-2 pr-4 text-[var(--color-text-muted)]">string</td>
-                          <td className="py-2 pr-4 text-[var(--color-text-muted)]">required</td>
-                          <td className="py-2 text-[var(--color-text-default)]">Card title in summary section</td>
+                          <td className="py-2 pr-4 font-mono text-[var(--color-action-primary)]">timeRangeOptions</td>
+                          <td className="py-2 pr-4 text-[var(--color-text-muted)]">TimeRangeOption[]</td>
+                          <td className="py-2 pr-4 text-[var(--color-text-muted)]">30m, 1h, 6h, 12h, 24h</td>
+                          <td className="py-2 text-[var(--color-text-default)]">Time range options to display</td>
                         </tr>
                         <tr className="border-b border-[var(--color-border-subtle)]">
-                          <td className="py-2 pr-4 font-mono text-[var(--color-action-primary)]">sections</td>
-                          <td className="py-2 pr-4 text-[var(--color-text-muted)]">FloatingCardSection[]</td>
-                          <td className="py-2 pr-4 text-[var(--color-text-muted)]">[]</td>
-                          <td className="py-2 text-[var(--color-text-default)]">Collapsible sections with items</td>
+                          <td className="py-2 pr-4 font-mono text-[var(--color-action-primary)]">timeRange</td>
+                          <td className="py-2 pr-4 text-[var(--color-text-muted)]">TimeRangeValue</td>
+                          <td className="py-2 pr-4 text-[var(--color-text-muted)]">-</td>
+                          <td className="py-2 text-[var(--color-text-default)]">Controlled time range value</td>
                         </tr>
                         <tr className="border-b border-[var(--color-border-subtle)]">
-                          <td className="py-2 pr-4 font-mono text-[var(--color-action-primary)]">quota</td>
-                          <td className="py-2 pr-4 text-[var(--color-text-muted)]">QuotaItem[]</td>
-                          <td className="py-2 pr-4 text-[var(--color-text-muted)]">[]</td>
-                          <td className="py-2 text-[var(--color-text-default)]">Quota progress bars</td>
+                          <td className="py-2 pr-4 font-mono text-[var(--color-action-primary)]">defaultTimeRange</td>
+                          <td className="py-2 pr-4 text-[var(--color-text-muted)]">TimeRangeValue</td>
+                          <td className="py-2 pr-4 text-[var(--color-text-muted)]">'30m'</td>
+                          <td className="py-2 text-[var(--color-text-default)]">Default time range (uncontrolled)</td>
                         </tr>
                         <tr className="border-b border-[var(--color-border-subtle)]">
-                          <td className="py-2 pr-4 font-mono text-[var(--color-action-primary)]">position</td>
-                          <td className="py-2 pr-4 text-[var(--color-text-muted)]">FloatingCardPosition</td>
-                          <td className="py-2 pr-4 text-[var(--color-text-muted)]">'top-left'</td>
-                          <td className="py-2 text-[var(--color-text-default)]">Position when portal is true</td>
+                          <td className="py-2 pr-4 font-mono text-[var(--color-action-primary)]">onTimeRangeChange</td>
+                          <td className="py-2 pr-4 text-[var(--color-text-muted)]">(value) =&gt; void</td>
+                          <td className="py-2 pr-4 text-[var(--color-text-muted)]">-</td>
+                          <td className="py-2 text-[var(--color-text-default)]">Callback when time range changes</td>
                         </tr>
                         <tr className="border-b border-[var(--color-border-subtle)]">
-                          <td className="py-2 pr-4 font-mono text-[var(--color-action-primary)]">portal</td>
+                          <td className="py-2 pr-4 font-mono text-[var(--color-action-primary)]">customPeriod</td>
+                          <td className="py-2 pr-4 text-[var(--color-text-muted)]">CustomPeriod | null</td>
+                          <td className="py-2 pr-4 text-[var(--color-text-muted)]">-</td>
+                          <td className="py-2 text-[var(--color-text-default)]">Custom date range (start, end)</td>
+                        </tr>
+                        <tr className="border-b border-[var(--color-border-subtle)]">
+                          <td className="py-2 pr-4 font-mono text-[var(--color-action-primary)]">onCustomPeriodChange</td>
+                          <td className="py-2 pr-4 text-[var(--color-text-muted)]">(period) =&gt; void</td>
+                          <td className="py-2 pr-4 text-[var(--color-text-muted)]">-</td>
+                          <td className="py-2 text-[var(--color-text-default)]">Callback when custom period changes</td>
+                        </tr>
+                        <tr className="border-b border-[var(--color-border-subtle)]">
+                          <td className="py-2 pr-4 font-mono text-[var(--color-action-primary)]">onRefresh</td>
+                          <td className="py-2 pr-4 text-[var(--color-text-muted)]">() =&gt; void</td>
+                          <td className="py-2 pr-4 text-[var(--color-text-muted)]">-</td>
+                          <td className="py-2 text-[var(--color-text-default)]">Callback when refresh is clicked</td>
+                        </tr>
+                        <tr className="border-b border-[var(--color-border-subtle)]">
+                          <td className="py-2 pr-4 font-mono text-[var(--color-action-primary)]">showRefresh</td>
                           <td className="py-2 pr-4 text-[var(--color-text-muted)]">boolean</td>
                           <td className="py-2 pr-4 text-[var(--color-text-muted)]">true</td>
-                          <td className="py-2 text-[var(--color-text-default)]">Render in portal (fixed position)</td>
+                          <td className="py-2 text-[var(--color-text-default)]">Show refresh button</td>
                         </tr>
                         <tr className="border-b border-[var(--color-border-subtle)]">
-                          <td className="py-2 pr-4 font-mono text-[var(--color-action-primary)]">actionEnabled</td>
-                          <td className="py-2 pr-4 text-[var(--color-text-muted)]">boolean</td>
-                          <td className="py-2 pr-4 text-[var(--color-text-muted)]">false</td>
-                          <td className="py-2 text-[var(--color-text-default)]">Enable primary action button</td>
-                        </tr>
-                        <tr>
-                          <td className="py-2 pr-4 font-mono text-[var(--color-action-primary)]">width</td>
-                          <td className="py-2 pr-4 text-[var(--color-text-muted)]">string</td>
-                          <td className="py-2 pr-4 text-[var(--color-text-muted)]">'320px'</td>
-                          <td className="py-2 text-[var(--color-text-default)]">Card width</td>
+                          <td className="py-2 pr-4 font-mono text-[var(--color-action-primary)]">maxDate</td>
+                          <td className="py-2 pr-4 text-[var(--color-text-muted)]">Date</td>
+                          <td className="py-2 pr-4 text-[var(--color-text-muted)]">new Date()</td>
+                          <td className="py-2 text-[var(--color-text-default)]">Maximum selectable date</td>
                         </tr>
                       </tbody>
                     </table>
@@ -5598,6 +5810,9 @@ outline: 2px solid var(--color-border-focus);`}
                 </VStack>
               </VStack>
             </Section>
+
+            {/* Notification Center */}
+            <NotificationCenterSection />
 
             {/* Layout Section */}
             <Section id="layout" title="Layout" description="Application layout structure with responsive sidebar">
@@ -5935,18 +6150,26 @@ outline: 2px solid var(--color-border-focus);`}
                     <code>inner-radius: 68%</code> · <code>outer-radius: 80%</code> · <code>thickness: 12%</code> · <code>border-radius: 6px</code>
                   </div>
                 </VStack>
-
-                {/* Basic Doughnut */}
-                <VStack gap={3}>
-                  <Label>Basic Doughnut</Label>
-                  <div className="flex items-start gap-6 flex-wrap">
-                    <SingleValueDoughnutDemo 
-                      title="OSD onode Hits Ratio"
-                      value={98}
-                    />
-                  </div>
-                </VStack>
-
+                <HStack gap={3}>
+                  <a
+                    href="https://github.com/pob-design-system/tds/blob/main/DESIGN_SYSTEM.md"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 px-4 py-2 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-button)] text-[length:var(--font-size-12)] text-[var(--color-text-default)] hover:bg-[var(--color-surface-muted)] transition-colors cursor-pointer"
+                  >
+                    <IconFileText size={14} stroke={1.5} />
+                    DESIGN_SYSTEM.md
+                  </a>
+                  <a
+                    href="https://github.com/pob-design-system/tds/blob/main/.cursorrules"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 px-4 py-2 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-button)] text-[length:var(--font-size-12)] text-[var(--color-text-default)] hover:bg-[var(--color-surface-muted)] transition-colors cursor-pointer"
+                  >
+                    <IconCode size={14} stroke={1.5} />
+                    .cursorrules
+                  </a>
+                </HStack>
               </VStack>
             </Section>
 
@@ -6100,7 +6323,7 @@ function TokenCard({ title, description, items, color, textColor }: { title: str
   );
 }
 
-function IconGrid({ title, icons }: { title: string; icons: { Icon: React.ComponentType<{ size?: number; stroke?: number; className?: string }>; name: string; missing?: boolean }[] }) {
+function IconDisplayGrid({ title, icons }: { title: string; icons: { Icon: React.ComponentType<{ size?: number; stroke?: number; className?: string }>; name: string; missing?: boolean }[] }) {
   return (
     <VStack gap={3}>
       <Label>{title}</Label>

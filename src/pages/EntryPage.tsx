@@ -5,7 +5,11 @@ import ThakiLogoDark from '@/assets/thakiLogo-dark.svg';
 import {
   IconMoon,
   IconSun,
+  IconPalette,
+  IconLayoutSidebar,
+  IconSquare,
 } from '@tabler/icons-react';
+import { Button } from '@/design-system';
 
 // App Icons
 import ComputeIcon from '@/assets/compute.png';
@@ -59,9 +63,9 @@ const appCards: AppCard[] = [
     title: 'Cloud Builder',
     description: 'CI/CD pipelines, build automation, and deployment workflows',
     icon: <img src={CloudBuilderIcon} alt="Cloud Builder" className="w-16 h-16" />,
-    path: '/cloud-builder',
+    path: '/cloudbuilder',
     color: 'from-orange-500 to-amber-500',
-    available: false,
+    available: true,
   },
   {
     id: 'ai-platform',
@@ -215,18 +219,13 @@ export function EntryPage() {
 
           {/* Actions */}
           <div className="flex items-center gap-2">
-            <button
-              type="button"
+            <Button
+              variant="secondary"
+              size="md"
+              icon={isDark ? <IconSun size={18} stroke={1.5} /> : <IconMoon size={18} stroke={1.5} />}
               onClick={toggleDarkMode}
-              className="p-2 rounded-lg hover:bg-[var(--color-surface-subtle)] transition-colors"
               aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
-            >
-              {isDark ? (
-                <IconSun size={18} className="text-[var(--color-text-subtle)]" stroke={1.5} />
-              ) : (
-                <IconMoon size={18} className="text-[var(--color-text-subtle)]" stroke={1.5} />
-              )}
-            </button>
+            />
           </div>
         </div>
       </header>
@@ -255,34 +254,34 @@ export function EntryPage() {
             ))}
           </div>
 
-          {/* Design System Link */}
+          {/* Developer Resources */}
           <div className="mt-16 pt-8 border-t border-[var(--color-border-default)]">
-            <div className="text-center">
-              <p className="text-[12px] text-[var(--color-text-subtle)] mb-4">
+            <div className="text-center mb-6">
+              <p className="text-[12px] text-[var(--color-text-subtle)]">
                 Developer Resources
               </p>
               <div className="flex items-center justify-center gap-4">
-                <button
-                  type="button"
+                <Button
+                  variant="muted"
+                  size="md"
                   onClick={() => navigate('/design')}
-                  className="px-4 py-2 text-[13px] font-medium text-[var(--color-text-subtle)] hover:text-[var(--color-text-default)] hover:bg-[var(--color-surface-default)] rounded-lg transition-colors"
                 >
                   Design System
-                </button>
-                <button
-                  type="button"
+                </Button>
+                <Button
+                  variant="muted"
+                  size="md"
                   onClick={() => navigate('/design/drawers')}
-                  className="px-4 py-2 text-[13px] font-medium text-[var(--color-text-subtle)] hover:text-[var(--color-text-default)] hover:bg-[var(--color-surface-default)] rounded-lg transition-colors"
                 >
                   Drawers
-                </button>
-                <button
-                  type="button"
+                </Button>
+                <Button
+                  variant="muted"
+                  size="md"
                   onClick={() => navigate('/design/modals')}
-                  className="px-4 py-2 text-[13px] font-medium text-[var(--color-text-subtle)] hover:text-[var(--color-text-default)] hover:bg-[var(--color-surface-default)] rounded-lg transition-colors"
                 >
                   Modals
-                </button>
+                </Button>
               </div>
             </div>
           </div>

@@ -347,7 +347,7 @@ export default function ColorPalettePage() {
           className="inline-flex items-center gap-2 text-neutral-400 hover:text-white transition-colors"
         >
           <IconArrowLeft size={16} />
-          <span className="text-sm">Back to Dashboard</span>
+          <span className="text-sm">Back to Entry page</span>
         </Link>
       </div>
 
