@@ -38,6 +38,7 @@ import {
   Breadcrumb,
   StatusIndicator,
   VStack,
+  HStack,
   MenuItem,
   MenuSection,
   MenuDivider,
@@ -142,8 +143,10 @@ import {
   IconCamera,
   IconPhoto,
   IconFile,
+  IconFileText,
   IconArchive,
   IconTemplate,
+  IconCode,
   // System - Monitoring & Analytics
   IconTerminal,
   IconTerminal2,
