@@ -50,6 +50,8 @@ export interface TableProps<T = any> {
   emptyMessage?: string;
   /** Custom class name */
   className?: string;
+  /** Custom row height (overrides --table-row-height) */
+  rowHeight?: string;
 }
 
 /* ----------------------------------------
@@ -68,6 +70,7 @@ export function Table<T extends Record<string, any>>({
   onRowClick,
   emptyMessage = 'No data',
   className = '',
+  rowHeight,
 }: TableProps<T>) {
   const [sortKey, setSortKey] = useState<string | null>(null);
   const [sortDirection, setSortDirection] = useState<SortDirection>(null);
@@ -162,6 +165,7 @@ export function Table<T extends Record<string, any>>({
   return (
     <div
       className={`flex flex-col gap-[var(--table-row-gap)] ${className}`}
+      style={rowHeight ? { '--table-row-height': rowHeight } as React.CSSProperties : undefined}
     >
       {/* Table container */}
       <div

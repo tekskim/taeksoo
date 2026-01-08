@@ -607,6 +607,14 @@ function ChartCard({ title, series, yAxisFormatter = (v: number) => `${v}`, isDa
         color: tooltipTextColor, 
         fontSize: 11, 
         fontFamily: 'Mona Sans, -apple-system, BlinkMacSystemFont, sans-serif' 
+      },
+      formatter: (params: Array<{ marker: string; seriesName: string; value: number; axisValueLabel: string }>) => {
+        if (!Array.isArray(params) || params.length === 0) return '';
+        const time = params[0].axisValueLabel;
+        const items = params.map(p => 
+          `<div style="display: flex; align-items: center; gap: 8px;"><span>${p.marker}</span><span>${p.seriesName}</span><span style="font-weight: 500; margin-left: auto;">${p.value}</span></div>`
+        ).join('');
+        return `<div style="font-size: 11px; font-family: Mona Sans, -apple-system, BlinkMacSystemFont, sans-serif;">${time}<div style="margin-top: 4px;">${items}</div></div>`;
       }
     },
     series: series
@@ -885,6 +893,13 @@ export function OverallPerformancePage() {
         <div className="flex-1 overflow-auto min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll">
           <div className="pt-4 px-8 pb-20 bg-[var(--color-surface-default)]">
             <VStack gap={6} className="min-w-[1176px] max-w-[1400px]">
+              {/* Page Header */}
+              <div className="flex items-center justify-between h-8">
+                <h1 className="text-[length:var(--font-size-16)] font-semibold text-[var(--color-text-default)]">
+                  Overall Performance
+                </h1>
+              </div>
+
               {/* Page Tabs */}
               <div className="w-full">
                 <Tabs value={activeTab} onChange={setActiveTab} variant="underline" size="sm">
@@ -899,7 +914,7 @@ export function OverallPerformancePage() {
                   <TabPanel value="pools" className="pt-6">
                     <VStack gap={6}>
                       {/* Time Period Selector */}
-                      <div className="flex justify-end">
+                      <div className="flex justify-start">
                         <MonitoringToolbar
                           timeRange={timeRange}
                           onTimeRangeChange={setTimeRange}
@@ -909,21 +924,21 @@ export function OverallPerformancePage() {
                       </div>
 
                       {/* Stats Cards - Row 1 */}
-                      <div className="flex gap-4">
+                      <div className="flex gap-6">
                         {poolsStats.slice(0, 4).map((stat) => (
                           <StatCardItem key={stat.label} {...stat} />
                         ))}
                       </div>
 
                       {/* Stats Cards - Row 2 */}
-                      <div className="flex gap-4">
+                      <div className="flex gap-6">
                         {poolsStats.slice(4, 8).map((stat) => (
                           <StatCardItem key={stat.label} {...stat} />
                         ))}
                       </div>
 
                       {/* Charts - Row 1 */}
-                      <div className="flex gap-4">
+                      <div className="flex gap-6">
                         <div className="flex-1">
                           <ChartCard
                             title="Pool Capacity Usage (RAW)"
@@ -948,8 +963,8 @@ export function OverallPerformancePage() {
                       </div>
 
                       {/* Charts - Row 2 */}
-                      <div className="flex gap-4">
-                        <div className="w-[calc(50%-8px)]">
+                      <div className="flex gap-6">
+                        <div className="w-[calc(50%-12px)]">
                           <ChartCard
                             title="Client Bandwidth by Pool"
                             series={bandwidthSeries}
@@ -980,7 +995,7 @@ export function OverallPerformancePage() {
                   <TabPanel value="hosts" className="pt-6">
                     <VStack gap={6}>
                       {/* Time Period Selector */}
-                      <div className="flex justify-end">
+                      <div className="flex justify-start">
                         <MonitoringToolbar
                           timeRange={timeRange}
                           onTimeRangeChange={setTimeRange}
@@ -990,14 +1005,14 @@ export function OverallPerformancePage() {
                       </div>
 
                       {/* Stats Cards Row */}
-                      <div className="flex gap-4">
+                      <div className="flex gap-6">
                         {hostsStats.map((stat) => (
                           <StatCardItem key={stat.label} {...stat} />
                         ))}
                       </div>
 
                       {/* Charts Row */}
-                      <div className="flex gap-4">
+                      <div className="flex gap-6">
                         <div className="flex-1">
                           <ChartCard
                             title="CPU Busy"
@@ -1040,7 +1055,7 @@ export function OverallPerformancePage() {
                   <TabPanel value="osds" className="pt-6">
                     <VStack gap={6}>
                       {/* Time Period Selector */}
-                      <div className="flex justify-end">
+                      <div className="flex justify-start">
                         <MonitoringToolbar
                           timeRange={timeRange}
                           onTimeRangeChange={setTimeRange}
@@ -1050,7 +1065,7 @@ export function OverallPerformancePage() {
                       </div>
 
                       {/* Read Latencies Row */}
-                      <div className="flex gap-4">
+                      <div className="flex gap-6">
                         {/* Highest READ Latencies Table */}
                         <div className="flex-1 h-[334px]">
                           <SectionCard className="h-full">
@@ -1060,6 +1075,7 @@ export function OverallPerformancePage() {
                                 columns={osdLatencyColumns}
                                 data={osdReadLatencyData}
                                 rowKey="id"
+                                rowHeight="40px"
                               />
                             </SectionCard.Content>
                           </SectionCard>
@@ -1079,7 +1095,7 @@ export function OverallPerformancePage() {
                       </div>
 
                       {/* Write Latencies Row */}
-                      <div className="flex gap-4">
+                      <div className="flex gap-6">
                         {/* Highest WRITE Latencies Table */}
                         <div className="flex-1 h-[334px]">
                           <SectionCard className="h-full">
@@ -1089,6 +1105,7 @@ export function OverallPerformancePage() {
                                 columns={osdLatencyColumns}
                                 data={osdWriteLatencyData}
                                 rowKey="id"
+                                rowHeight="40px"
                               />
                             </SectionCard.Content>
                           </SectionCard>
@@ -1108,7 +1125,7 @@ export function OverallPerformancePage() {
                       </div>
 
                       {/* Pie Charts Row */}
-                      <div className="flex gap-4">
+                      <div className="flex gap-6">
                         <PieChartCard 
                           title="OSD Types Summary"
                           data={osdTypesSummaryData}
@@ -1130,7 +1147,7 @@ export function OverallPerformancePage() {
                       </div>
 
                       {/* Distribution & Read/Write Charts Row */}
-                      <div className="flex gap-4">
+                      <div className="flex gap-6">
                         <div className="flex-1">
                           <ChartCard
                             title="Distribution of PGs per OSD"
@@ -1173,7 +1190,7 @@ export function OverallPerformancePage() {
                   <TabPanel value="images" className="pt-6">
                     <VStack gap={6}>
                       {/* Time Period Selector */}
-                      <div className="flex justify-end">
+                      <div className="flex justify-start">
                         <MonitoringToolbar
                           timeRange={timeRange}
                           onTimeRangeChange={setTimeRange}
@@ -1183,8 +1200,8 @@ export function OverallPerformancePage() {
                       </div>
 
                       {/* Highest Throughput & Highest Latencies Tables */}
-                      <div className="flex gap-4">
-                        <div className="flex-1 h-[221px]">
+                      <div className="flex gap-6">
+                        <div className="flex-1 h-[334px]">
                           <SectionCard className="h-full">
                             <SectionCard.Header title="Highest Throughput" />
                             <SectionCard.Content gap={0} className="overflow-auto flex-1">
@@ -1197,13 +1214,19 @@ export function OverallPerformancePage() {
                                   { id: '1', imageName: 'ubuntu-22.04-base', throughput: '125 MB/s' },
                                   { id: '2', imageName: 'centos-8-minimal', throughput: '98 MB/s' },
                                   { id: '3', imageName: 'debian-11-server', throughput: '87 MB/s' },
+                                  { id: '4', imageName: 'rocky-linux-9', throughput: '82 MB/s' },
+                                  { id: '5', imageName: 'fedora-38-workstation', throughput: '76 MB/s' },
+                                  { id: '6', imageName: 'alpine-3.18', throughput: '71 MB/s' },
+                                  { id: '7', imageName: 'arch-linux-2024', throughput: '68 MB/s' },
+                                  { id: '8', imageName: 'opensuse-leap-15', throughput: '65 MB/s' },
                                 ]}
                                 rowKey="id"
+                                rowHeight="40px"
                               />
                             </SectionCard.Content>
                           </SectionCard>
                         </div>
-                        <div className="flex-1 h-[221px]">
+                        <div className="flex-1 h-[334px]">
                           <SectionCard className="h-full">
                             <SectionCard.Header title="Highest Latencies" />
                             <SectionCard.Content gap={0} className="overflow-auto flex-1">
@@ -1216,8 +1239,14 @@ export function OverallPerformancePage() {
                                   { id: '1', imageName: 'windows-server-2019', latency: '45 ms' },
                                   { id: '2', imageName: 'rhel-8-enterprise', latency: '32 ms' },
                                   { id: '3', imageName: 'ubuntu-20.04-lts', latency: '28 ms' },
+                                  { id: '4', imageName: 'oracle-linux-8', latency: '24 ms' },
+                                  { id: '5', imageName: 'sles-15-sp4', latency: '21 ms' },
+                                  { id: '6', imageName: 'amazon-linux-2023', latency: '18 ms' },
+                                  { id: '7', imageName: 'kali-linux-2024', latency: '15 ms' },
+                                  { id: '8', imageName: 'nixos-23.11', latency: '12 ms' },
                                 ]}
                                 rowKey="id"
+                                rowHeight="40px"
                               />
                             </SectionCard.Content>
                           </SectionCard>
@@ -1225,7 +1254,7 @@ export function OverallPerformancePage() {
                       </div>
 
                       {/* IOPS & Throughput Charts */}
-                      <div className="flex gap-4">
+                      <div className="flex gap-6">
                         <div className="flex-1">
                           <ChartCard
                             title="IOPS"
@@ -1259,7 +1288,7 @@ export function OverallPerformancePage() {
                       </div>
 
                       {/* Average Latency & Highest IOPS Charts */}
-                      <div className="flex gap-4">
+                      <div className="flex gap-6">
                         <div className="flex-1">
                           <ChartCard
                             title="Average Latency"
