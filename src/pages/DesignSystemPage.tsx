@@ -1683,7 +1683,7 @@ function QuotaBarDemo({ label, used, total, unit }: { label: string; used: numbe
   );
 }
 
-function AreaChartDemo({ variant }: { variant: 'basic' | 'stacked' }) {
+function AreaChartDemo({ variant }: { variant: 'basic' | 'stacked' | 'nodata' }) {
   // Basic variant - Network Traffic (single series)
   const networkTrafficSeries: LineChartSeries[] = [
     { name: 'Traffic', data: [120, 180, 150, 220, 280, 240], color: chartColors.cyan400 },
@@ -1694,6 +1694,21 @@ function AreaChartDemo({ variant }: { variant: 'basic' | 'stacked' }) {
       <ChartWithFullScreen 
         title="Network Traffic"
         series={networkTrafficSeries}
+        yAxisFormatter={(v) => `${v} MB/s`}
+        height="200px"
+      />
+    );
+  }
+
+  // No data variant
+  if (variant === 'nodata') {
+    const emptySeriesData: LineChartSeries[] = [
+      { name: 'Traffic', data: [], color: chartColors.cyan400 },
+    ];
+    return (
+      <ChartWithFullScreen 
+        title="Network Traffic"
+        series={emptySeriesData}
         yAxisFormatter={(v) => `${v} MB/s`}
         height="200px"
       />
@@ -6484,6 +6499,12 @@ outline: 2px solid var(--color-border-focus);`}
                 <VStack gap={3}>
                   <Label>Stacked Area Chart</Label>
                   <AreaChartDemo variant="stacked" />
+                </VStack>
+
+                {/* No Data Area Chart */}
+                <VStack gap={3}>
+                  <Label>No Data</Label>
+                  <AreaChartDemo variant="nodata" />
                 </VStack>
               </VStack>
             </Section>

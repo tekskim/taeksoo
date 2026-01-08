@@ -30,11 +30,27 @@
         "author": "remy"
       },
       {
-        "text": "EntryPage 최근 반영사항 UI 개선 - Chip 스타일 적용, 줄바꿈 추가",
+        "text": "ObjectRow 테이블 링크 스타일 적용",
         "author": "remy"
       },
       {
-        "text": "빌드 시 Git 커밋 로그 자동 파싱 기능 추가",
+        "text": "ObjectRow 복사 버튼에 시각적 피드백 추가",
+        "author": "remy"
+      },
+      {
+        "text": "TreeItem 선택 스타일을 사이드바 메뉴 스타일로 변경",
+        "author": "remy"
+      }
+    ]
+  },
+  {
+    "id": "3",
+    "date": "2026-01-08",
+    "app": "Cloud Builder",
+    "appColor": "from-orange-500 to-amber-500",
+    "changes": [
+      {
+        "text": "SectionCard DataRow 적용, Copy 버튼 기능 추가, 헤더 정리",
         "author": "remy"
       }
     ]
