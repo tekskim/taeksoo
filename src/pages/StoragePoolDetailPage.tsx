@@ -368,6 +368,16 @@ function CapacityGauge({ percentage, used, total, unit = 'TiB' }: CapacityGaugeP
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const containerRef = useRef<HTMLDivElement>(null);
 
+  // Chart dimensions for arc detection
+  const chartWidth = 220;
+  const chartHeight = 180;
+  const centerX = chartWidth * 0.5; // 50%
+  const centerY = chartHeight * 0.65; // 65%
+  const radius = Math.min(chartWidth, chartHeight) * 0.45; // 90% of half
+  const arcWidth = 20;
+  const innerRadius = radius - arcWidth;
+  const outerRadius = radius;
+
   // Get color from design system CSS variables
   const getColor = (cssVar: string, fallback: string) => {
     if (typeof window !== 'undefined') {
@@ -396,14 +406,41 @@ function CapacityGauge({ percentage, used, total, unit = 'TiB' }: CapacityGaugeP
   const available = total !== undefined && used !== undefined ? total - used : 0;
   const availablePercent = total !== undefined && used !== undefined ? Math.round((available / total) * 100) : 0;
 
+  // Check if mouse is over the gauge arc
+  const isOverGaugeArc = (mx: number, my: number) => {
+    const dx = mx - centerX;
+    const dy = my - centerY;
+    const distance = Math.sqrt(dx * dx + dy * dy);
+    
+    // Check if within the arc ring
+    if (distance < innerRadius - 4 || distance > outerRadius + 4) return false;
+    
+    // Check if within the arc angle range (210° to -30°)
+    let angle = Math.atan2(-dy, dx) * (180 / Math.PI);
+    if (angle < 0) angle += 360;
+    
+    return angle >= 150 && angle <= 330;
+  };
+
   const handleMouseMove = (e: React.MouseEvent) => {
     if (containerRef.current) {
       const rect = containerRef.current.getBoundingClientRect();
-      setMousePos({
-        x: e.clientX - rect.left,
-        y: e.clientY - rect.top
-      });
+      const relX = e.clientX - rect.left;
+      const relY = e.clientY - rect.top;
+      
+      // Calculate chart position within container
+      const containerWidth = rect.width;
+      const containerHeight = rect.height;
+      const chartX = relX - (containerWidth - chartWidth) / 2;
+      const chartY = relY - (containerHeight - chartHeight) / 2;
+      
+      setMousePos({ x: relX, y: relY });
+      setShowTooltip(isOverGaugeArc(chartX, chartY));
     }
+  };
+
+  const handleMouseLeave = () => {
+    setShowTooltip(false);
   };
 
   const option = {
@@ -439,9 +476,8 @@ function CapacityGauge({ percentage, used, total, unit = 'TiB' }: CapacityGaugeP
     <div 
       ref={containerRef}
       className="relative h-[180px] flex items-center justify-center"
-      onMouseEnter={() => setShowTooltip(true)}
-      onMouseLeave={() => setShowTooltip(false)}
       onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
     >
       <ReactECharts option={option} style={{ height: '180px', width: '220px' }} />
       <div className="absolute inset-0 flex flex-col items-center justify-center pt-6 pointer-events-none">
@@ -991,7 +1027,8 @@ export function StoragePoolDetailPage() {
           {/* Top Bar */}
           <TopBar
             showSidebarToggle={!sidebarOpen}
-            onSidebarToggle={() => setSidebarOpen(true)}
+            showSidebarToggleAfterBreadcrumb={sidebarOpen}
+            onSidebarToggle={() => setSidebarOpen((prev) => !prev)}
             showNavigation={true}
             onBack={() => window.history.back()}
             onForward={() => window.history.forward()}

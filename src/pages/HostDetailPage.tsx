@@ -38,9 +38,10 @@ import {
   IconArrowsMaximize,
   IconArrowsMinimize,
 } from '@tabler/icons-react';
+import { Siren } from 'lucide-react';
 
 /* ----------------------------------------
-   Custom Identify Icon
+   Custom Identify Icon (now using Siren from lucide-react)
    ---------------------------------------- */
 
 interface IdentifyIconProps {
@@ -49,35 +50,7 @@ interface IdentifyIconProps {
 }
 
 function IdentifyIcon({ size = 16, className }: IdentifyIconProps) {
-  return (
-    <svg
-      width={size}
-      height={size}
-      viewBox="0 0 16 16"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-      className={className}
-    >
-      <path
-        d="M4.66699 12.0003V8.00033C4.66699 7.11627 5.01818 6.26842 5.6433 5.6433C6.26842 5.01818 7.11627 4.66699 8.00033 4.66699C8.88438 4.66699 9.73223 5.01818 10.3573 5.6433C10.9825 6.26842 11.3337 7.11627 11.3337 8.00033V12.0003"
-        stroke="currentColor"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-      <path
-        d="M3.33301 14C3.33301 14.1768 3.40325 14.3464 3.52827 14.4714C3.65329 14.5964 3.82286 14.6667 3.99967 14.6667H11.9997C12.1765 14.6667 12.3461 14.5964 12.4711 14.4714C12.5961 14.3464 12.6663 14.1768 12.6663 14V13.3333C12.6663 12.9797 12.5259 12.6406 12.2758 12.3905C12.0258 12.1405 11.6866 12 11.333 12H4.66634C4.31272 12 3.97358 12.1405 3.72353 12.3905C3.47348 12.6406 3.33301 12.9797 3.33301 13.3333V14Z"
-        stroke="currentColor"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-      <path d="M13.333 8H13.9997" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" />
-      <path d="M12.3333 3L12 3.33333" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" />
-      <path d="M1.33301 8H1.99967" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" />
-      <path d="M8 1.33301V1.99967" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" />
-      <path d="M3.28613 3.28613L3.75747 3.75747" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" />
-      <path d="M8 8V12" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
-  );
+  return <Siren size={size} className={className} strokeWidth={1.5} />;
 }
 
 /* ----------------------------------------
@@ -1085,7 +1058,7 @@ export default function HostDetailPage() {
     {
       key: 'status',
       label: 'Status',
-      width: 56,
+      width: '60px',
       align: 'center',
       render: (_, row) => {
         const statusMap: Record<string, 'active' | 'maintenance' | 'down'> = {
@@ -1196,7 +1169,8 @@ export default function HostDetailPage() {
         {/* Top Bar */}
         <TopBar
           showSidebarToggle={!sidebarOpen}
-          onSidebarToggle={() => setSidebarOpen(true)}
+          showSidebarToggleAfterBreadcrumb={sidebarOpen}
+          onSidebarToggle={() => setSidebarOpen((prev) => !prev)}
           showNavigation={true}
           onBack={() => window.history.back()}
           onForward={() => window.history.forward()}
@@ -1416,7 +1390,7 @@ export default function HostDetailPage() {
                   <TabPanel value="device-health" className="pt-0">
                     <div className="flex gap-4 pt-4">
                       {/* Left Panel - Device List */}
-                      <div className="w-[224px] shrink-0 bg-white border border-[var(--color-border-default)] rounded-lg p-3 flex flex-col gap-3">
+                      <div className="w-[224px] shrink-0 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg p-3 flex flex-col gap-3">
                         <h6 className="text-[length:var(--font-size-14)] font-semibold leading-[var(--line-height-20)] text-[var(--color-text-default)]">
                           Device health
                         </h6>
@@ -1457,7 +1431,7 @@ export default function HostDetailPage() {
                                   onClick={() => setDeviceHealthTab('device-info')}
                                   className={`flex-1 py-2.5 px-4 text-[14px] font-medium leading-4 rounded-md border transition-colors ${
                                     deviceHealthTab === 'device-info'
-                                      ? 'bg-white border-[var(--color-border-default)] text-[var(--color-action-primary)]'
+                                      ? 'bg-[var(--color-surface-default)] border-[var(--color-border-default)] text-[var(--color-action-primary)]'
                                       : 'border-transparent text-[var(--color-text-default)]'
                                   }`}
                                 >
@@ -1467,7 +1441,7 @@ export default function HostDetailPage() {
                                   onClick={() => setDeviceHealthTab('smart')}
                                   className={`flex-1 py-2.5 px-4 text-[14px] font-medium leading-4 rounded-md border transition-colors ${
                                     deviceHealthTab === 'smart'
-                                      ? 'bg-white border-[var(--color-border-default)] text-[var(--color-action-primary)]'
+                                      ? 'bg-[var(--color-surface-default)] border-[var(--color-border-default)] text-[var(--color-action-primary)]'
                                       : 'border-transparent text-[var(--color-text-default)]'
                                   }`}
                                 >
@@ -1478,7 +1452,7 @@ export default function HostDetailPage() {
                             
                             {/* Content */}
                             {deviceHealthTab === 'device-info' && (
-                              <div className="bg-white border border-[var(--color-border-default)] rounded-md p-4 flex flex-col gap-3">
+                              <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-md p-4 flex flex-col gap-3">
                                 <h4 className="text-[14px] font-medium leading-5 text-[var(--color-text-default)]">
                                   Device Information
                                 </h4>
@@ -1500,55 +1474,55 @@ export default function HostDetailPage() {
                               <>
                                 {/* Info/Status Message based on SMART status */}
                                 {selectedDeviceData?.smartStatus === 'passed' && (
-                                  <div className="bg-[#f0fdf4] rounded-md p-3 flex items-start gap-2">
+                                  <div className="bg-[var(--color-state-success-bg)] rounded-md p-3 flex items-start gap-2">
                                     <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" className="shrink-0 mt-0.5">
-                                      <path d="M8 14C11.3137 14 14 11.3137 14 8C14 4.68629 11.3137 2 8 2C4.68629 2 2 4.68629 2 8C2 11.3137 4.68629 14 8 14Z" stroke="#16a34a" strokeLinecap="round" strokeLinejoin="round"/>
-                                      <path d="M5.5 8L7.16667 9.66667L10.5 6.33333" stroke="#16a34a" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                                      <path d="M8 14C11.3137 14 14 11.3137 14 8C14 4.68629 11.3137 2 8 2C4.68629 2 2 4.68629 2 8C2 11.3137 4.68629 14 8 14Z" stroke="var(--color-state-success)" strokeLinecap="round" strokeLinejoin="round"/>
+                                      <path d="M5.5 8L7.16667 9.66667L10.5 6.33333" stroke="var(--color-state-success)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
                                     </svg>
-                                    <span className="text-[12px] leading-4 text-[#0f172a]">
+                                    <span className="text-[12px] leading-4 text-[var(--color-text-default)]">
                                       SMART overall-health self-assessment test result: <strong>passed</strong>
                                     </span>
                                   </div>
                                 )}
                                 {selectedDeviceData?.smartStatus === 'unavailable' && (
-                                  <div className="bg-[#eff6ff] rounded-md p-3 flex items-start gap-2">
+                                  <div className="bg-[var(--color-state-info-bg)] rounded-md p-3 flex items-start gap-2">
                                     <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" className="shrink-0 mt-0.5">
-                                      <path d="M8 14C11.3137 14 14 11.3137 14 8C14 4.68629 11.3137 2 8 2C4.68629 2 2 4.68629 2 8C2 11.3137 4.68629 14 8 14Z" stroke="#2563eb" strokeLinecap="round" strokeLinejoin="round"/>
-                                      <path d="M8 10.6667V8" stroke="#2563eb" strokeLinecap="round" strokeLinejoin="round"/>
-                                      <path d="M8 5.33333H8.00667" stroke="#2563eb" strokeLinecap="round" strokeLinejoin="round"/>
+                                      <path d="M8 14C11.3137 14 14 11.3137 14 8C14 4.68629 11.3137 2 8 2C4.68629 2 2 4.68629 2 8C2 11.3137 4.68629 14 8 14Z" stroke="var(--color-state-info)" strokeLinecap="round" strokeLinejoin="round"/>
+                                      <path d="M8 10.6667V8" stroke="var(--color-state-info)" strokeLinecap="round" strokeLinejoin="round"/>
+                                      <path d="M8 5.33333H8.00667" stroke="var(--color-state-info)" strokeLinecap="round" strokeLinejoin="round"/>
                                     </svg>
-                                    <span className="text-[12px] leading-4 text-[#0f172a]">
+                                    <span className="text-[12px] leading-4 text-[var(--color-text-default)]">
                                       No SMART data available for this device.
                                     </span>
                                   </div>
                                 )}
                                 {selectedDeviceData?.smartStatus === 'loading' && (
-                                  <div className="bg-[#eff6ff] rounded-md p-3 flex items-start gap-2">
+                                  <div className="bg-[var(--color-state-info-bg)] rounded-md p-3 flex items-start gap-2">
                                     <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" className="shrink-0 mt-0.5">
-                                      <path d="M8 14C11.3137 14 14 11.3137 14 8C14 4.68629 11.3137 2 8 2C4.68629 2 2 4.68629 2 8C2 11.3137 4.68629 14 8 14Z" stroke="#2563eb" strokeLinecap="round" strokeLinejoin="round"/>
-                                      <path d="M8 10.6667V8" stroke="#2563eb" strokeLinecap="round" strokeLinejoin="round"/>
-                                      <path d="M8 5.33333H8.00667" stroke="#2563eb" strokeLinecap="round" strokeLinejoin="round"/>
+                                      <path d="M8 14C11.3137 14 14 11.3137 14 8C14 4.68629 11.3137 2 8 2C4.68629 2 2 4.68629 2 8C2 11.3137 4.68629 14 8 14Z" stroke="var(--color-state-info)" strokeLinecap="round" strokeLinejoin="round"/>
+                                      <path d="M8 10.6667V8" stroke="var(--color-state-info)" strokeLinecap="round" strokeLinejoin="round"/>
+                                      <path d="M8 5.33333H8.00667" stroke="var(--color-state-info)" strokeLinecap="round" strokeLinejoin="round"/>
                                     </svg>
-                                    <span className="text-[12px] leading-4 text-[#0f172a]">
+                                    <span className="text-[12px] leading-4 text-[var(--color-text-default)]">
                                       SMART data is loading.
                                     </span>
                                   </div>
                                 )}
                                 {selectedDeviceData?.smartStatus === 'failed' && (
-                                  <div className="bg-[#fef2f2] rounded-md p-3 flex items-start gap-2">
+                                  <div className="bg-[var(--color-state-danger-bg)] rounded-md p-3 flex items-start gap-2">
                                     <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" className="shrink-0 mt-0.5">
-                                      <path d="M8 14C11.3137 14 14 11.3137 14 8C14 4.68629 11.3137 2 8 2C4.68629 2 2 4.68629 2 8C2 11.3137 4.68629 14 8 14Z" stroke="#dc2626" strokeLinecap="round" strokeLinejoin="round"/>
-                                      <path d="M10 6L6 10" stroke="#dc2626" strokeLinecap="round" strokeLinejoin="round"/>
-                                      <path d="M6 6L10 10" stroke="#dc2626" strokeLinecap="round" strokeLinejoin="round"/>
+                                      <path d="M8 14C11.3137 14 14 11.3137 14 8C14 4.68629 11.3137 2 8 2C4.68629 2 2 4.68629 2 8C2 11.3137 4.68629 14 8 14Z" stroke="var(--color-state-danger)" strokeLinecap="round" strokeLinejoin="round"/>
+                                      <path d="M10 6L6 10" stroke="var(--color-state-danger)" strokeLinecap="round" strokeLinejoin="round"/>
+                                      <path d="M6 6L10 10" stroke="var(--color-state-danger)" strokeLinecap="round" strokeLinejoin="round"/>
                                     </svg>
-                                    <span className="text-[12px] leading-4 text-[#0f172a]">
+                                    <span className="text-[12px] leading-4 text-[var(--color-text-default)]">
                                       SMART overall-health self-assessment test result: <strong>failed</strong>
                                     </span>
                                   </div>
                                 )}
 
                                 {/* SMART Card */}
-                                <div className="bg-white border border-[var(--color-border-default)] rounded-md p-4 flex flex-col gap-3">
+                                <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-md p-4 flex flex-col gap-3">
                                   <h4 className="text-[14px] font-medium leading-5 text-[var(--color-text-default)]">
                                     SMART
                                   </h4>

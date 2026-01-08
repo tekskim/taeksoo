@@ -89,7 +89,7 @@ function SectionCardContent({ children, gap = 0, className, ...props }: SectionC
 
 export interface SectionCardDataRowProps extends HTMLAttributes<HTMLDivElement> {
   /** Label for the data row */
-  label: string;
+  label: ReactNode;
   /** Value to display (string) - use this or children */
   value?: string;
   /** Custom content - use this for complex values like chips */
