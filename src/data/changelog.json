@@ -2,6 +2,18 @@
   {
     "id": "1",
     "date": "2026-01-08",
+    "app": "Cloud Builder",
+    "appColor": "from-orange-500 to-amber-500",
+    "changes": [
+      {
+        "text": "SectionCard DataRow 적용, Copy 버튼 기능 추가, 헤더 정리",
+        "author": "remy"
+      }
+    ]
+  },
+  {
+    "id": "2",
+    "date": "2026-01-08",
     "app": "Design System",
     "appColor": "from-purple-500 to-fuchsia-500",
     "changes": [
