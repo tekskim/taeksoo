@@ -148,7 +148,7 @@ export function ServerGroupDetailPage() {
   const serverGroup = id ? (mockServerGroupsMap[id] || defaultServerGroupDetail) : defaultServerGroupDetail;
 
   // Global tab management
-  const { tabs, activeTabId, closeTab, selectTab, addNewTab, updateActiveTabLabel } = useTabs();
+  const { tabs, activeTabId, closeTab, selectTab, addNewTab, updateActiveTabLabel, moveTab } = useTabs();
 
   // Update tab label to server group name
   useEffect(() => {
@@ -324,6 +324,7 @@ export function ServerGroupDetailPage() {
             onTabChange={selectTab}
             onTabClose={closeTab}
             onTabAdd={addNewTab}
+            onTabReorder={moveTab}
             showAddButton={true}
             showWindowControls={true}
           />

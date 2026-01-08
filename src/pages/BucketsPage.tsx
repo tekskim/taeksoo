@@ -179,7 +179,7 @@ export function BucketsPage() {
   const rowsPerPage = 10;
 
   // Global tab management
-  const { tabs, activeTabId, closeTab, selectTab, addNewTab } = useTabs();
+  const { tabs, activeTabId, closeTab, selectTab, addNewTab, moveTab } = useTabs();
 
   // Convert tabs to TabBar format
   const tabBarTabs = tabs.map((tab) => ({
@@ -305,6 +305,7 @@ export function BucketsPage() {
             onTabChange={selectTab}
             onTabClose={closeTab}
             onTabAdd={addNewTab}
+            onTabReorder={moveTab}
             showAddButton={true}
             showWindowControls={true}
           />
@@ -312,8 +313,7 @@ export function BucketsPage() {
           {/* Top Bar with Breadcrumb Navigation */}
           <TopBar
             showSidebarToggle={!sidebarOpen}
-            showSidebarToggleAfterBreadcrumb={sidebarOpen}
-            onSidebarToggle={() => setSidebarOpen((prev) => !prev)}
+            onSidebarToggle={() => setSidebarOpen(true)}
             showNavigation={true}
             onBack={() => window.history.back()}
             onForward={() => window.history.forward()}

@@ -177,7 +177,7 @@ const poolStatusMap: Record<PoolStatus, 'active' | 'down' | 'error'> = {
 
 export function LoadBalancerDetailPage() {
   const { id } = useParams<{ id: string }>();
-  const { tabs, activeTabId, closeTab, selectTab, addNewTab, updateActiveTabLabel } = useTabs();
+  const { tabs, activeTabId, closeTab, selectTab, addNewTab, updateActiveTabLabel, moveTab } = useTabs();
   const [activeTab, setActiveTab] = useState('details');
   const [isCopied, setIsCopied] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -444,6 +444,7 @@ export function LoadBalancerDetailPage() {
             onTabChange={selectTab}
             onTabClose={closeTab}
             onTabAdd={addNewTab}
+            onTabReorder={moveTab}
             showAddButton={true}
             showWindowControls={true}
           />

@@ -6,6 +6,26 @@
     "appColor": "from-purple-500 to-fuchsia-500",
     "changes": [
       {
+        "text": "Area Chart No Data 케이스 추가 및 Monitoring Toolbar 스타일 개선",
+        "author": "remy"
+      },
+      {
+        "text": "Area Chart에 No Data 케이스 추가",
+        "author": "remy"
+      },
+      {
+        "text": "토글 스위치 크기 조정 (24x12, radius 6)",
+        "author": "remy"
+      },
+      {
+        "text": "토글 스위치 활성 상태도 아웃라인 스타일로 통일",
+        "author": "remy"
+      },
+      {
+        "text": "토글 스위치 비활성 상태 아웃라인 스타일로 변경",
+        "author": "remy"
+      },
+      {
         "text": "Many Tabs Demo에 탭 추가 버튼 추가",
         "author": "remy"
       },
@@ -30,6 +50,26 @@
         "author": "remy"
       },
       {
+        "text": "EntryPage 최근 반영사항 UI 개선 - Chip 스타일 적용, 줄바꿈 추가",
+        "author": "remy"
+      },
+      {
+        "text": "빌드 시 Git 커밋 로그 자동 파싱 기능 추가",
+        "author": "remy"
+      }
+    ]
+  },
+  {
+    "id": "2",
+    "date": "2026-01-08",
+    "app": "Storage",
+    "appColor": "from-indigo-500 to-blue-500",
+    "changes": [
+      {
+        "text": "TreeItem 선택 상태 아이콘 색상 수정",
+        "author": "remy"
+      },
+      {
         "text": "ObjectRow 테이블 링크 스타일 적용",
         "author": "remy"
       },
@@ -45,18 +85,6 @@
   },
   {
     "id": "3",
-    "date": "2026-01-08",
-    "app": "Cloud Builder",
-    "appColor": "from-orange-500 to-amber-500",
-    "changes": [
-      {
-        "text": "SectionCard DataRow 적용, Copy 버튼 기능 추가, 헤더 정리",
-        "author": "remy"
-      }
-    ]
-  },
-  {
-    "id": "2",
     "date": "2026-01-08",
     "app": "Cloud Builder",
     "appColor": "from-orange-500 to-amber-500",

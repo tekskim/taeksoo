@@ -1715,18 +1715,12 @@ input[type="search"]::-webkit-search-decoration {
 }
 
 .timeSegmentActive {
-  color: #2563eb;
-  background: white;
+  color: var(--color-action-primary);
+  background: var(--color-state-info-bg);
   font-weight: 500;
-  box-shadow: 0 0 0 1px #2563eb;
+  box-shadow: 0 0 0 1px var(--color-action-primary);
   border-radius: 6px;
   z-index: 1;
-}
-
-.dark .timeSegmentActive {
-  color: var(--color-action-primary);
-  background: var(--color-surface-default);
-  box-shadow: 0 0 0 1px var(--color-action-primary);
 }
 
 /* ============== Period Selector ============== */
