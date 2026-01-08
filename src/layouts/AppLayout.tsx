@@ -173,8 +173,7 @@ export function AppLayout({ children }: AppLayoutProps) {
           {/* Top Bar */}
           <TopBar
             showSidebarToggle={!sidebarOpen}
-            showSidebarToggleAfterBreadcrumb={sidebarOpen}
-            onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
+            onSidebarToggle={() => setSidebarOpen(true)}
             showNavigation={true}
             onBack={() => window.history.back()}
             onForward={() => window.history.forward()}
