@@ -1979,6 +1979,8 @@ function SingleValueDoughnutDemo({
    ---------------------------------------- */
 
 function TabBarDemo() {
+  const tabCounterRef = useRef(4);
+  
   const { tabs, activeTab, addTab, closeTab, selectTab } = useTabBar({
     initialTabs: [
       { id: 'tab-1', label: 'Entry page', closable: true },
@@ -2003,15 +2005,14 @@ function TabBarDemo() {
     initialActiveTab: 'many-1',
   });
 
-  let tabCounter = 4;
-
   const handleAddTab = () => {
+    const counter = tabCounterRef.current;
     addTab({
-      id: `tab-${tabCounter}`,
-      label: `New Tab ${tabCounter}`,
+      id: `tab-${counter}-${Date.now()}`,
+      label: `New Tab ${counter}`,
       closable: true,
     });
-    tabCounter++;
+    tabCounterRef.current++;
   };
 
   return (
