@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import {
   VStack,
   TabBar,
@@ -891,6 +892,7 @@ export function OverallPerformancePage() {
                     <Tab value="pools">Pools</Tab>
                     <Tab value="hosts">Hosts</Tab>
                     <Tab value="osds">OSDs</Tab>
+                    <Tab value="images">Images</Tab>
                   </TabList>
 
                   {/* Pools Tab Panel */}
@@ -1160,6 +1162,177 @@ export function OverallPerformancePage() {
                           <Table<SlowOsdOpsRow>
                             columns={slowOsdOpsColumns}
                             data={slowOsdOpsData}
+                            rowKey="id"
+                          />
+                        </SectionCard.Content>
+                      </SectionCard>
+                    </VStack>
+                  </TabPanel>
+
+                  {/* Images Tab Panel */}
+                  <TabPanel value="images" className="pt-6">
+                    <VStack gap={6}>
+                      {/* Time Period Selector */}
+                      <div className="flex justify-end">
+                        <MonitoringToolbar
+                          timeRange={timeRange}
+                          onTimeRangeChange={setTimeRange}
+                          onRefresh={() => console.log('Refresh clicked')}
+                          showRefresh={true}
+                        />
+                      </div>
+
+                      {/* Highest Throughput & Highest Latencies Tables */}
+                      <div className="flex gap-4">
+                        <div className="flex-1 h-[221px]">
+                          <SectionCard className="h-full">
+                            <SectionCard.Header title="Highest Throughput" />
+                            <SectionCard.Content gap={0} className="overflow-auto flex-1">
+                              <Table<{ id: string; imageName: string; throughput: string }>
+                                columns={[
+                                  { key: 'imageName', label: 'Image Name', flex: 1, sortable: true },
+                                  { key: 'throughput', label: 'Throughput', flex: 1, sortable: true },
+                                ]}
+                                data={[
+                                  { id: '1', imageName: 'ubuntu-22.04-base', throughput: '125 MB/s' },
+                                  { id: '2', imageName: 'centos-8-minimal', throughput: '98 MB/s' },
+                                  { id: '3', imageName: 'debian-11-server', throughput: '87 MB/s' },
+                                ]}
+                                rowKey="id"
+                              />
+                            </SectionCard.Content>
+                          </SectionCard>
+                        </div>
+                        <div className="flex-1 h-[221px]">
+                          <SectionCard className="h-full">
+                            <SectionCard.Header title="Highest Latencies" />
+                            <SectionCard.Content gap={0} className="overflow-auto flex-1">
+                              <Table<{ id: string; imageName: string; latency: string }>
+                                columns={[
+                                  { key: 'imageName', label: 'Image Name', flex: 1, sortable: true },
+                                  { key: 'latency', label: 'Latency', flex: 1, sortable: true },
+                                ]}
+                                data={[
+                                  { id: '1', imageName: 'windows-server-2019', latency: '45 ms' },
+                                  { id: '2', imageName: 'rhel-8-enterprise', latency: '32 ms' },
+                                  { id: '3', imageName: 'ubuntu-20.04-lts', latency: '28 ms' },
+                                ]}
+                                rowKey="id"
+                              />
+                            </SectionCard.Content>
+                          </SectionCard>
+                        </div>
+                      </div>
+
+                      {/* IOPS & Throughput Charts */}
+                      <div className="flex gap-4">
+                        <div className="flex-1">
+                          <ChartCard
+                            title="IOPS"
+                            series={[
+                              { name: 'image-001', color: chartColors.cyan400, data: [120, 125, 130, 128, 135, 140, 138, 142, 145, 140] },
+                              { name: 'image-002', color: chartColors.emerald400, data: [100, 105, 110, 108, 115, 120, 118, 122, 125, 120] },
+                              { name: 'image-003', color: chartColors.amber400, data: [80, 85, 90, 88, 95, 100, 98, 102, 105, 100] },
+                              { name: 'image-004', color: chartColors.violet400, data: [60, 65, 70, 68, 75, 80, 78, 82, 85, 80] },
+                            ]}
+                            yAxisFormatter={(v) => `${v}`}
+                            isDarkMode={isDark}
+                            timeRange={timeRange}
+                            onTimeRangeChange={setTimeRange}
+                            onRefresh={() => console.log('Refresh clicked')}
+                          />
+                        </div>
+                        <div className="flex-1">
+                          <ChartCard
+                            title="Throughput"
+                            series={[
+                              { name: 'read', color: chartColors.cyan400, data: [450, 480, 520, 490, 550, 580, 540, 600, 580, 560] },
+                              { name: 'write', color: chartColors.emerald400, data: [120, 150, 180, 160, 200, 220, 190, 250, 230, 210] },
+                            ]}
+                            yAxisFormatter={(v) => `${v}`}
+                            isDarkMode={isDark}
+                            timeRange={timeRange}
+                            onTimeRangeChange={setTimeRange}
+                            onRefresh={() => console.log('Refresh clicked')}
+                          />
+                        </div>
+                      </div>
+
+                      {/* Average Latency & Highest IOPS Charts */}
+                      <div className="flex gap-4">
+                        <div className="flex-1">
+                          <ChartCard
+                            title="Average Latency"
+                            series={[
+                              { name: 'image-001', color: chartColors.cyan400, data: [12, 14, 13, 15, 14, 16, 15, 17, 16, 15] },
+                              { name: 'image-002', color: chartColors.emerald400, data: [18, 20, 19, 21, 20, 22, 21, 23, 22, 21] },
+                              { name: 'image-003', color: chartColors.amber400, data: [8, 10, 9, 11, 10, 12, 11, 13, 12, 11] },
+                              { name: 'image-004', color: chartColors.violet400, data: [22, 24, 23, 25, 24, 26, 25, 27, 26, 25] },
+                            ]}
+                            yAxisFormatter={(v) => `${v} ms`}
+                            isDarkMode={isDark}
+                            timeRange={timeRange}
+                            onTimeRangeChange={setTimeRange}
+                            onRefresh={() => console.log('Refresh clicked')}
+                          />
+                        </div>
+                        <div className="flex-1">
+                          <ChartCard
+                            title="Highest IOPS"
+                            series={[
+                              { name: 'read', color: chartColors.cyan400, data: [500, 520, 540, 530, 560, 580, 570, 600, 590, 580] },
+                              { name: 'write', color: chartColors.emerald400, data: [150, 160, 170, 165, 180, 190, 185, 200, 195, 190] },
+                            ]}
+                            yAxisFormatter={(v) => `${v}`}
+                            isDarkMode={isDark}
+                            timeRange={timeRange}
+                            onTimeRangeChange={setTimeRange}
+                            onRefresh={() => console.log('Refresh clicked')}
+                          />
+                        </div>
+                      </div>
+
+                      {/* Images Overview Table */}
+                      <SectionCard>
+                        <SectionCard.Header title="Images Overview" />
+                        <SectionCard.Content gap={0}>
+                          <Table<{ id: string; imageName: string; iops: string; throughput: string }>
+                            columns={[
+                              { 
+                                key: 'imageName', 
+                                label: 'Image Name', 
+                                flex: 1, 
+                                sortable: true,
+                                render: (_, row) => (
+                                  <Link
+                                    to={`/storage/images/${row.id}`}
+                                    className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
+                                    onClick={(e) => e.stopPropagation()}
+                                  >
+                                    {row.imageName}
+                                  </Link>
+                                ),
+                              },
+                              { key: 'iops', label: 'IOPS', flex: 1, sortable: true },
+                              { key: 'throughput', label: 'Throughput', flex: 1, sortable: true },
+                              {
+                                key: 'actions',
+                                label: 'Action',
+                                width: '100px',
+                                align: 'center' as const,
+                                render: () => (
+                                  <button className="p-1.5 hover:bg-[var(--color-surface-subtle)] rounded transition-colors">
+                                    <IconTerminal2 size={16} stroke={1.5} className="text-[var(--color-text-muted)]" />
+                                  </button>
+                                )
+                              },
+                            ]}
+                            data={[
+                              { id: 'img-001', imageName: 'ubuntu-22.04-base', iops: '1,250', throughput: '125 MB/s' },
+                              { id: 'img-002', imageName: 'centos-8-minimal', iops: '980', throughput: '98 MB/s' },
+                              { id: 'img-003', imageName: 'debian-11-server', iops: '870', throughput: '87 MB/s' },
+                              { id: 'img-004', imageName: 'windows-server-2019', iops: '650', throughput: '65 MB/s' },
+                            ]}
                             rowKey="id"
                           />
                         </SectionCard.Content>
