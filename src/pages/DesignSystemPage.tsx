@@ -2015,6 +2015,15 @@ function TabBarDemo() {
     tabCounterRef.current++;
   };
 
+  const handleAddManyTab = () => {
+    const counter = manyTabsDemo.tabs.length + 1;
+    manyTabsDemo.addTab({
+      id: `many-${counter}-${Date.now()}`,
+      label: `New Tab ${counter}`,
+      closable: true,
+    });
+  };
+
   return (
     <VStack gap={8}>
       {/* Tokens */}
@@ -2065,7 +2074,8 @@ function TabBarDemo() {
             activeTab={manyTabsDemo.activeTab}
             onTabChange={manyTabsDemo.selectTab}
             onTabClose={manyTabsDemo.closeTab}
-            showAddButton={false}
+            onTabAdd={handleAddManyTab}
+            showAddButton={true}
           />
           <div className="h-[80px] flex items-center justify-center bg-[var(--color-surface-default)] text-[var(--color-text-muted)] text-[length:var(--font-size-12)]">
             탭이 많아지면 모든 탭이 화면에 보이도록 너비가 비율적으로 줄어듭니다.
