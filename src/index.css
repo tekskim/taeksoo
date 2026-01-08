@@ -1464,10 +1464,11 @@ input[type="search"]::-webkit-search-decoration {
 .toggleSwitch {
   width: 28px;
   height: 14px;
-  background: var(--color-border-default);
+  background: transparent;
+  border: 1px solid var(--color-border-default);
   border-radius: 7px;
   position: relative;
-  transition: background 0.2s;
+  transition: background 0.2s, border-color 0.2s;
 }
 
 .toggleSwitch::after {
@@ -1475,19 +1476,21 @@ input[type="search"]::-webkit-search-decoration {
   position: absolute;
   width: 10px;
   height: 10px;
-  background: white;
+  background: var(--color-text-muted);
   border-radius: 50%;
-  top: 2px;
-  left: 2px;
-  transition: transform 0.2s;
+  top: 1px;
+  left: 1px;
+  transition: transform 0.2s, background 0.2s;
 }
 
 .toggleSwitchActive {
   background: var(--color-action-primary);
+  border-color: var(--color-action-primary);
 }
 
 .toggleSwitchActive::after {
   transform: translateX(14px);
+  background: white;
 }
 
 .toggleDivider {
