@@ -651,6 +651,7 @@ export const component = {
     bg: 'var(--tooltip-bg)',                // slate-900
     text: 'var(--tooltip-text)',            // white
     arrowSize: 'var(--tooltip-arrow-size)', // 4px
+    valueFontWeight: 'var(--tooltip-value-font-weight)', // 500
   },
 } as const;
 

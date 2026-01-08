@@ -233,6 +233,14 @@ function LineChart({
         color: tooltipTextColor, 
         fontSize: 11, 
         fontFamily: 'Mona Sans, -apple-system, BlinkMacSystemFont, sans-serif' 
+      },
+      formatter: (params: Array<{ marker: string; seriesName: string; value: number; axisValueLabel: string }>) => {
+        if (!Array.isArray(params) || params.length === 0) return '';
+        const time = params[0].axisValueLabel;
+        const items = params.map(p => 
+          `<div style="display: flex; align-items: center; gap: 8px;"><span>${p.marker}</span><span>${p.seriesName}</span><span style="font-weight: 500; margin-left: auto;">${p.value}</span></div>`
+        ).join('');
+        return `<div style="font-size: 11px; font-family: Mona Sans, -apple-system, BlinkMacSystemFont, sans-serif;">${time}<div style="margin-top: 4px;">${items}</div></div>`;
       }
     },
     series: series
