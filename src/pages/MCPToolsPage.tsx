@@ -371,8 +371,40 @@ export function MCPToolsPage() {
     return filteredTemplates.slice((currentPage - 1) * rowsPerPage, currentPage * rowsPerPage);
   }, [filteredTemplates, currentPage, rowsPerPage]);
 
+  // Toggle favorite
+  const toggleFavorite = (id: string) => {
+    // In a real app, this would update the state
+    console.log('Toggle favorite:', id);
+  };
+
   // MCP Tools Table columns
   const toolColumns: TableColumn<MCPToolRow>[] = [
+    {
+      key: 'favorite',
+      label: '',
+      width: '48px',
+      align: 'center',
+      headerRender: () => (
+        <div className="flex items-center justify-center w-full">
+          <IconStar size={14} stroke={1.5} className="text-[var(--color-text-muted)]" />
+        </div>
+      ),
+      render: (_, row) => (
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            toggleFavorite(row.id);
+          }}
+          className="p-1 rounded hover:bg-[var(--color-surface-subtle)] transition-colors"
+        >
+          {row.favorite ? (
+            <IconStarFilled size={16} className="text-yellow-500" />
+          ) : (
+            <IconStar size={16} stroke={1.5} className="text-[var(--color-text-muted)]" />
+          )}
+        </button>
+      ),
+    },
     {
       key: 'status',
       label: 'Status',
@@ -396,9 +428,23 @@ export function MCPToolsPage() {
       sortable: false,
       render: (_, row) => (
         <div className="flex items-center gap-2">
-          <img src={row.mcpServer.thumbnail} alt={row.mcpServer.label} className="w-4 h-4 rounded" />
-          <span>{row.mcpServer.label}</span>
+          <div className="w-4 h-4 rounded bg-[var(--color-surface-subtle)] flex items-center justify-center overflow-hidden shrink-0">
+            <img 
+              src={row.mcpServer.thumbnail} 
+              alt={row.mcpServer.label} 
+              className="w-full h-full object-cover"
+              onError={(e) => {
+                const target = e.target as HTMLImageElement;
+                target.style.display = 'none';
+                const parent = target.parentElement;
+                if (parent) {
+                  parent.innerHTML = `<span class="text-[10px] font-medium text-[var(--color-text-muted)]">${row.mcpServer.label.charAt(0).toUpperCase()}</span>`;
+                }
+              }}
+            />
           </div>
+          <span>{row.mcpServer.label}</span>
+        </div>
       ),
     },
     {
@@ -436,7 +482,7 @@ export function MCPToolsPage() {
     {
       key: 'actions',
       label: 'Action',
-      width: '72px',
+      width: '80px',
       align: 'center',
       render: (_, row) => {
         const menuItems: ContextMenuItem[] = [
@@ -539,7 +585,7 @@ export function MCPToolsPage() {
     {
       key: 'actions',
       label: 'Action',
-      width: '72px',
+      width: '80px',
       align: 'center',
       render: (_, row) => {
         const menuItems: ContextMenuItem[] = [

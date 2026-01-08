@@ -74,7 +74,7 @@ function AgentCard({
           className="shrink-0 p-1 -m-1 rounded hover:bg-[var(--color-surface-muted)] transition-colors"
         >
           {isFavorite ? (
-            <IconStarFilled size={16} className="text-[#EAB308]" />
+            <IconStarFilled size={16} className="text-yellow-500" />
           ) : (
             <IconStar size={16} stroke={1.5} className="text-[var(--color-text-disabled)]" />
           )}
@@ -245,7 +245,7 @@ function NewChatDrawer({ isOpen, onClose, agent, onFavoriteToggle, onStartChat }
             className="shrink-0 p-1 rounded hover:bg-[var(--color-surface-muted)] transition-colors"
           >
             {agent.isFavorite ? (
-              <IconStarFilled size={18} className="text-[#EAB308]" />
+              <IconStarFilled size={18} className="text-yellow-500" />
             ) : (
               <IconStar size={18} stroke={1.5} className="text-[var(--color-text-disabled)]" />
             )}
@@ -334,6 +334,7 @@ function NewChatDrawer({ isOpen, onClose, agent, onFavoriteToggle, onStartChat }
             onChange={(e) => setAdditionalInstructions(e.target.value)}
             placeholder="Enter any specific instructions you would like to provide to the agent for this chat session."
             rows={3}
+            fullWidth
           />
           <p className="text-[length:var(--font-size-11)] leading-[var(--line-height-16)] text-[var(--color-text-subtle)]">
             These instructions will be applied in addition to the agent's default system prompt.
