@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import ReactECharts from 'echarts-for-react';
 import { DarkModeToggle } from '@/components/DarkModeToggle';
 import { AttachVolumeDrawer } from '@/components/AttachVolumeDrawer';
+import { DataViewDrawer } from '@/components/DataViewDrawer';
 import {
   Button,
   Input,
@@ -37,7 +38,6 @@ import {
   Breadcrumb,
   StatusIndicator,
   VStack,
-  HStack,
   MenuItem,
   MenuSection,
   MenuDivider,
@@ -47,8 +47,10 @@ import {
   DetailHeader,
   SectionCard,
   Drawer,
-  FormField,
+  MonitoringToolbar,
+  NotificationCenter,
 } from '@/design-system';
+import type { NotificationItem } from '@/design-system/components/NotificationCenter';
 import {
   // Navigation icons (for sidebar)
   IconPalette,
@@ -148,6 +150,7 @@ import {
   IconPower,
   IconActivity,
   IconChartBar,
+  IconChartDonut,
   IconGauge,
   IconDeviceDesktop,
   IconDeviceDesktopAnalytics,
@@ -183,9 +186,6 @@ import {
   IconBrandDebian,
   IconBrandWindows,
   IconBrandRedhat,
-  // Document Icons
-  IconFileText,
-  IconCode,
 } from '@tabler/icons-react';
 import { Link } from 'react-router-dom';
 
@@ -203,55 +203,50 @@ const foundationItems = [
   { id: 'borders', label: 'Borders', icon: IconBorderAll },
   { id: 'shadows', label: 'Shadows', icon: IconBoxMultiple },
   { id: 'icons', label: 'Icons', icon: IconStar },
-  { id: 'layout', label: 'Layout', icon: IconLayoutSidebar },
 ];
 
 // Component items (UI 컴포넌트)
-// Form Controls
+// Form Controls - matches actual content order
 const formControlItems = [
   { id: 'button', label: 'Button', icon: IconClick },
   { id: 'input', label: 'Input', icon: IconForms },
   { id: 'select', label: 'Select', icon: IconSelector },
   { id: 'datepicker', label: 'DatePicker', icon: IconCalendar },
   { id: 'slider', label: 'Slider', icon: IconAdjustments },
-  { id: 'checkbox', label: 'Checkbox', icon: IconSquareCheck },
-  { id: 'radio', label: 'Radio', icon: IconCircle },
-  { id: 'toggle', label: 'Toggle', icon: IconToggleRight },
-  { id: 'formfield', label: 'FormField', icon: IconForms },
-];
-
-// Data Display
-const dataDisplayItems = [
-  { id: 'table', label: 'Table', icon: IconList },
-  { id: 'badge', label: 'Badge', icon: IconTag },
   { id: 'chip', label: 'Chip', icon: IconTag },
   { id: 'pagination', label: 'Pagination', icon: IconProgress },
   { id: 'progress-bar', label: 'Progress Bar', icon: IconProgress },
+  { id: 'toggle', label: 'Toggle', icon: IconToggleRight },
+  { id: 'checkbox', label: 'Checkbox', icon: IconSquareCheck },
+  { id: 'radio', label: 'Radio', icon: IconCircle },
+];
+
+// Navigation & Layout - matches actual content order
+const navigationItems = [
+  { id: 'topbar', label: 'TopBar', icon: IconLayoutNavbar },
+  { id: 'tabbar', label: 'TabBar', icon: IconLayoutNavbar },
+  { id: 'tabs', label: 'Tabs', icon: IconLayoutNavbar },
+  { id: 'disclosure', label: 'Disclosure', icon: IconSelector },
+  { id: 'inline-message', label: 'Inline Message', icon: IconInfoCircle },
+  { id: 'table', label: 'Table', icon: IconList },
+  { id: 'badge', label: 'Badge', icon: IconTag },
+  { id: 'breadcrumb', label: 'Breadcrumb', icon: IconChevronRight },
   { id: 'status-indicator', label: 'Status Indicator', icon: IconActivity },
   { id: 'tooltip', label: 'Tooltip', icon: IconMessage2 },
   { id: 'window-control', label: 'Window Control', icon: IconAppWindow },
 ];
 
-// Navigation
-const navigationItems = [
-  { id: 'topbar', label: 'TopBar', icon: IconLayoutNavbar },
-  { id: 'tabbar', label: 'TabBar', icon: IconLayoutNavbar },
-  { id: 'tabs', label: 'Tabs', icon: IconLayoutNavbar },
-  { id: 'breadcrumb', label: 'Breadcrumb', icon: IconChevronRight },
+// Patterns - matches actual content order
+const patternItems = [
+  { id: 'detail-header', label: 'Detail Header', icon: IconLayoutNavbar },
+  { id: 'section-card', label: 'Section Card', icon: IconLayoutGrid },
   { id: 'menu', label: 'Menu', icon: IconMenu2 },
   { id: 'context-menu', label: 'Context Menu', icon: IconMenu2 },
   { id: 'modal', label: 'Modal', icon: IconLayoutGrid },
   { id: 'drawer', label: 'Drawer', icon: IconLayoutGrid },
-];
-
-// Feedback
-const feedbackItems = [
-  { id: 'inline-message', label: 'Inline Message', icon: IconInfoCircle },
-];
-
-// Disclosure
-const disclosureItems = [
-  { id: 'disclosure', label: 'Disclosure', icon: IconSelector },
+  { id: 'monitoring-toolbar', label: 'Monitoring Toolbar', icon: IconRefresh },
+  { id: 'notification-center', label: 'Notification Center', icon: IconBell },
+  { id: 'layout', label: 'Layout', icon: IconLayoutSidebar },
 ];
 
 // Graphs
@@ -260,27 +255,307 @@ const graphItems = [
   { id: 'area-chart', label: 'Area Chart', icon: IconChartBar },
   { id: 'pie-chart', label: 'Pie Chart', icon: IconActivity },
   { id: 'half-doughnut-chart', label: 'Half-Doughnut Chart', icon: IconGauge },
-];
-
-// Patterns (복합 컴포넌트 패턴)
-const patternItems = [
-  { id: 'detail-header', label: 'Detail Header', icon: IconLayoutNavbar },
-  { id: 'section-card', label: 'Section Card', icon: IconLayoutGrid },
+  { id: 'doughnut-chart', label: 'Doughnut Chart', icon: IconChartDonut },
 ];
 
 // All component items
 const componentItems = [
   ...formControlItems,
-  ...dataDisplayItems,
   ...navigationItems,
-  ...feedbackItems,
-  ...disclosureItems,
-  ...graphItems,
   ...patternItems,
+  ...graphItems,
 ];
 
 // All items for intersection observer
 const navItems = [...foundationItems, ...componentItems];
+
+/* ----------------------------------------
+   Notification Center Section
+   ---------------------------------------- */
+
+function NotificationCenterSection() {
+  const [notifications, setNotifications] = useState<NotificationItem[]>([
+    {
+      id: '1',
+      type: 'success',
+      message: 'Instance "web-server-01" created successfully.',
+      time: '10:23',
+      project: 'Proj1',
+      isRead: false,
+      detail: {
+        code: 200,
+        message: 'Instance created with 4 vCPUs, 8GB RAM, and 100GB storage.',
+      },
+    },
+    {
+      id: '2',
+      type: 'success',
+      message: 'Volume "data-vol-01" attached to instance.',
+      time: '10:15',
+      project: 'Proj1',
+      isRead: false,
+    },
+    {
+      id: '3',
+      type: 'error',
+      message: 'Failed to create volume "data-vol-02".',
+      time: '09:30',
+      project: 'Proj2',
+      isRead: false,
+      detail: {
+        code: 400,
+        message: "Flavor's disk is smaller than the minimum size specified in image metadata. Flavor disk is 1073741824 bytes, minimum size is 10737418240 bytes.",
+      },
+    },
+    {
+      id: '4',
+      type: 'warning',
+      message: 'Instance "db-server" is running low on disk space.',
+      time: '09:15',
+      project: 'Proj1',
+      isRead: true,
+      detail: {
+        code: 'WARN_DISK_LOW',
+        message: 'Disk usage is at 92%. Consider expanding the volume or cleaning up unused files.',
+      },
+    },
+    {
+      id: '5',
+      type: 'info',
+      message: 'System maintenance scheduled for tomorrow.',
+      time: 'Yesterday',
+      isRead: true,
+    },
+  ]);
+
+  const [selectedId, setSelectedId] = useState<string | undefined>();
+
+  const handleMarkAsRead = (id: string) => {
+    setNotifications((prev) =>
+      prev.map((n) => (n.id === id ? { ...n, isRead: true } : n))
+    );
+  };
+
+  const handleMarkAllAsRead = () => {
+    setNotifications((prev) => prev.map((n) => ({ ...n, isRead: true })));
+  };
+
+  return (
+    <Section
+      id="notification-center"
+      title="Notification Center"
+      description="Centralized notification panel with filtering, read/unread states, and real-time updates"
+    >
+      <VStack gap={8}>
+        {/* Design Tokens */}
+        <VStack gap={3}>
+          <Label>Design Tokens</Label>
+          <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
+            <code>width: 360px</code> · <code>padding: 16px</code> · <code>border-radius: 8px</code> · <code>shadow: lg</code>
+          </div>
+        </VStack>
+
+        {/* Live Demo */}
+        <VStack gap={3}>
+          <Label>Live Demo</Label>
+          <div className="flex justify-center p-6 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)]">
+            <NotificationCenter
+              notifications={notifications}
+              onMarkAsRead={handleMarkAsRead}
+              onMarkAllAsRead={handleMarkAllAsRead}
+              onNotificationClick={(n) => setSelectedId(n.id)}
+              selectedId={selectedId}
+            />
+          </div>
+        </VStack>
+
+        {/* Notification Types */}
+        <VStack gap={3}>
+          <Label>Notification Types</Label>
+          <div className="grid grid-cols-4 gap-4">
+            <div className="p-3 bg-[var(--color-surface-default)] rounded-[var(--radius-md)] border border-[var(--color-border-default)]">
+              <div className="flex items-center gap-2 mb-2">
+                <div className="w-5 h-5 rounded-full bg-[var(--color-state-success)] bg-opacity-20 flex items-center justify-center">
+                  <IconCheck size={12} className="text-[var(--color-state-success)]" />
+                </div>
+                <span className="text-[length:var(--font-size-12)] font-medium text-[var(--color-text-default)]">Success</span>
+              </div>
+              <p className="text-[length:var(--font-size-11)] text-[var(--color-text-muted)]">Operation completed</p>
+            </div>
+            <div className="p-3 bg-[var(--color-surface-default)] rounded-[var(--radius-md)] border border-[var(--color-border-default)]">
+              <div className="flex items-center gap-2 mb-2">
+                <div className="w-5 h-5 rounded-full bg-[var(--color-state-danger)] bg-opacity-20 flex items-center justify-center">
+                  <IconX size={12} className="text-[var(--color-state-danger)]" />
+                </div>
+                <span className="text-[length:var(--font-size-12)] font-medium text-[var(--color-text-default)]">Error</span>
+              </div>
+              <p className="text-[length:var(--font-size-11)] text-[var(--color-text-muted)]">Operation failed</p>
+            </div>
+            <div className="p-3 bg-[var(--color-surface-default)] rounded-[var(--radius-md)] border border-[var(--color-border-default)]">
+              <div className="flex items-center gap-2 mb-2">
+                <div className="w-5 h-5 rounded-full bg-[var(--color-state-warning)] bg-opacity-20 flex items-center justify-center">
+                  <IconAlertTriangle size={12} className="text-[var(--color-state-warning)]" />
+                </div>
+                <span className="text-[length:var(--font-size-12)] font-medium text-[var(--color-text-default)]">Warning</span>
+              </div>
+              <p className="text-[length:var(--font-size-11)] text-[var(--color-text-muted)]">Attention needed</p>
+            </div>
+            <div className="p-3 bg-[var(--color-surface-default)] rounded-[var(--radius-md)] border border-[var(--color-border-default)]">
+              <div className="flex items-center gap-2 mb-2">
+                <div className="w-5 h-5 rounded-full bg-[var(--color-state-info)] bg-opacity-20 flex items-center justify-center">
+                  <IconInfoCircle size={12} className="text-[var(--color-state-info)]" />
+                </div>
+                <span className="text-[length:var(--font-size-12)] font-medium text-[var(--color-text-default)]">Info</span>
+              </div>
+              <p className="text-[length:var(--font-size-11)] text-[var(--color-text-muted)]">General information</p>
+            </div>
+          </div>
+        </VStack>
+
+        {/* Features */}
+        <VStack gap={3}>
+          <Label>Features</Label>
+          <div className="grid grid-cols-2 gap-4">
+            <div className="p-4 bg-[var(--color-surface-default)] rounded-[var(--radius-md)] border border-[var(--color-border-default)]">
+              <h4 className="text-[length:var(--font-size-12)] font-medium text-[var(--color-text-default)] mb-2">Tab Filtering</h4>
+              <p className="text-[length:var(--font-size-11)] text-[var(--color-text-muted)]">
+                Filter notifications by All, Unread, or Error status with counts displayed on each tab.
+              </p>
+            </div>
+            <div className="p-4 bg-[var(--color-surface-default)] rounded-[var(--radius-md)] border border-[var(--color-border-default)]">
+              <h4 className="text-[length:var(--font-size-12)] font-medium text-[var(--color-text-default)] mb-2">Mark as Read</h4>
+              <p className="text-[length:var(--font-size-11)] text-[var(--color-text-muted)]">
+                Mark individual notifications or all notifications as read with a single click.
+              </p>
+            </div>
+            <div className="p-4 bg-[var(--color-surface-default)] rounded-[var(--radius-md)] border border-[var(--color-border-default)]">
+              <h4 className="text-[length:var(--font-size-12)] font-medium text-[var(--color-text-default)] mb-2">Project Tags</h4>
+              <p className="text-[length:var(--font-size-11)] text-[var(--color-text-muted)]">
+                Optional project tags help identify which project a notification belongs to.
+              </p>
+            </div>
+            <div className="p-4 bg-[var(--color-surface-default)] rounded-[var(--radius-md)] border border-[var(--color-border-default)]">
+              <h4 className="text-[length:var(--font-size-12)] font-medium text-[var(--color-text-default)] mb-2">Selection State</h4>
+              <p className="text-[length:var(--font-size-11)] text-[var(--color-text-muted)]">
+                Click on a notification to select it and view more details or take actions.
+              </p>
+            </div>
+          </div>
+        </VStack>
+
+        {/* Props */}
+        <VStack gap={3}>
+          <Label>Props</Label>
+          <div className="overflow-x-auto">
+            <table className="w-full text-[length:var(--font-size-12)]">
+              <thead>
+                <tr className="border-b border-[var(--color-border-default)]">
+                  <th className="text-left py-2 pr-4 font-medium text-[var(--color-text-subtle)]">Prop</th>
+                  <th className="text-left py-2 pr-4 font-medium text-[var(--color-text-subtle)]">Type</th>
+                  <th className="text-left py-2 pr-4 font-medium text-[var(--color-text-subtle)]">Default</th>
+                  <th className="text-left py-2 font-medium text-[var(--color-text-subtle)]">Description</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr className="border-b border-[var(--color-border-subtle)]">
+                  <td className="py-2 pr-4 font-mono text-[var(--color-action-primary)]">notifications</td>
+                  <td className="py-2 pr-4 text-[var(--color-text-muted)]">NotificationItem[]</td>
+                  <td className="py-2 pr-4 text-[var(--color-text-muted)]">required</td>
+                  <td className="py-2 text-[var(--color-text-default)]">List of notification items</td>
+                </tr>
+                <tr className="border-b border-[var(--color-border-subtle)]">
+                  <td className="py-2 pr-4 font-mono text-[var(--color-action-primary)]">onMarkAsRead</td>
+                  <td className="py-2 pr-4 text-[var(--color-text-muted)]">(id: string) =&gt; void</td>
+                  <td className="py-2 pr-4 text-[var(--color-text-muted)]">-</td>
+                  <td className="py-2 text-[var(--color-text-default)]">Callback when notification is marked as read</td>
+                </tr>
+                <tr className="border-b border-[var(--color-border-subtle)]">
+                  <td className="py-2 pr-4 font-mono text-[var(--color-action-primary)]">onMarkAllAsRead</td>
+                  <td className="py-2 pr-4 text-[var(--color-text-muted)]">() =&gt; void</td>
+                  <td className="py-2 pr-4 text-[var(--color-text-muted)]">-</td>
+                  <td className="py-2 text-[var(--color-text-default)]">Callback when all marked as read</td>
+                </tr>
+                <tr className="border-b border-[var(--color-border-subtle)]">
+                  <td className="py-2 pr-4 font-mono text-[var(--color-action-primary)]">onNotificationClick</td>
+                  <td className="py-2 pr-4 text-[var(--color-text-muted)]">(n: NotificationItem) =&gt; void</td>
+                  <td className="py-2 pr-4 text-[var(--color-text-muted)]">-</td>
+                  <td className="py-2 text-[var(--color-text-default)]">Callback when notification is clicked</td>
+                </tr>
+                <tr className="border-b border-[var(--color-border-subtle)]">
+                  <td className="py-2 pr-4 font-mono text-[var(--color-action-primary)]">selectedId</td>
+                  <td className="py-2 pr-4 text-[var(--color-text-muted)]">string</td>
+                  <td className="py-2 pr-4 text-[var(--color-text-muted)]">-</td>
+                  <td className="py-2 text-[var(--color-text-default)]">Currently selected notification id</td>
+                </tr>
+                <tr>
+                  <td className="py-2 pr-4 font-mono text-[var(--color-action-primary)]">onClose</td>
+                  <td className="py-2 pr-4 text-[var(--color-text-muted)]">() =&gt; void</td>
+                  <td className="py-2 pr-4 text-[var(--color-text-muted)]">-</td>
+                  <td className="py-2 text-[var(--color-text-default)]">Callback when panel is closed</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </VStack>
+
+        {/* NotificationItem Interface */}
+        <VStack gap={3}>
+          <Label>NotificationItem Interface</Label>
+          <div className="overflow-x-auto">
+            <table className="w-full text-[length:var(--font-size-12)]">
+              <thead>
+                <tr className="border-b border-[var(--color-border-default)]">
+                  <th className="text-left py-2 pr-4 font-medium text-[var(--color-text-subtle)]">Property</th>
+                  <th className="text-left py-2 pr-4 font-medium text-[var(--color-text-subtle)]">Type</th>
+                  <th className="text-left py-2 pr-4 font-medium text-[var(--color-text-subtle)]">Required</th>
+                  <th className="text-left py-2 font-medium text-[var(--color-text-subtle)]">Description</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr className="border-b border-[var(--color-border-subtle)]">
+                  <td className="py-2 pr-4 font-mono text-[var(--color-action-primary)]">id</td>
+                  <td className="py-2 pr-4 text-[var(--color-text-muted)]">string</td>
+                  <td className="py-2 pr-4 text-[var(--color-text-muted)]">Yes</td>
+                  <td className="py-2 text-[var(--color-text-default)]">Unique identifier</td>
+                </tr>
+                <tr className="border-b border-[var(--color-border-subtle)]">
+                  <td className="py-2 pr-4 font-mono text-[var(--color-action-primary)]">type</td>
+                  <td className="py-2 pr-4 text-[var(--color-text-muted)]">'success' | 'error' | 'warning' | 'info'</td>
+                  <td className="py-2 pr-4 text-[var(--color-text-muted)]">Yes</td>
+                  <td className="py-2 text-[var(--color-text-default)]">Notification type</td>
+                </tr>
+                <tr className="border-b border-[var(--color-border-subtle)]">
+                  <td className="py-2 pr-4 font-mono text-[var(--color-action-primary)]">message</td>
+                  <td className="py-2 pr-4 text-[var(--color-text-muted)]">string</td>
+                  <td className="py-2 pr-4 text-[var(--color-text-muted)]">Yes</td>
+                  <td className="py-2 text-[var(--color-text-default)]">Main message text</td>
+                </tr>
+                <tr className="border-b border-[var(--color-border-subtle)]">
+                  <td className="py-2 pr-4 font-mono text-[var(--color-action-primary)]">time</td>
+                  <td className="py-2 pr-4 text-[var(--color-text-muted)]">string</td>
+                  <td className="py-2 pr-4 text-[var(--color-text-muted)]">Yes</td>
+                  <td className="py-2 text-[var(--color-text-default)]">Timestamp string</td>
+                </tr>
+                <tr className="border-b border-[var(--color-border-subtle)]">
+                  <td className="py-2 pr-4 font-mono text-[var(--color-action-primary)]">project</td>
+                  <td className="py-2 pr-4 text-[var(--color-text-muted)]">string</td>
+                  <td className="py-2 pr-4 text-[var(--color-text-muted)]">No</td>
+                  <td className="py-2 text-[var(--color-text-default)]">Project name tag</td>
+                </tr>
+                <tr>
+                  <td className="py-2 pr-4 font-mono text-[var(--color-action-primary)]">isRead</td>
+                  <td className="py-2 pr-4 text-[var(--color-text-muted)]">boolean</td>
+                  <td className="py-2 pr-4 text-[var(--color-text-muted)]">No</td>
+                  <td className="py-2 text-[var(--color-text-default)]">Whether notification has been read</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </VStack>
+      </VStack>
+    </Section>
+  );
+}
 
 /* ----------------------------------------
    DatePicker Section (with state)
@@ -600,7 +875,8 @@ const baseChartOptions = {
     axisTick: { show: false },
     axisLabel: {
       color: chartColors.slate400,
-      fontSize: 10
+      fontSize: 10,
+      padding: [0, 0, 0, 15]
     },
     boundaryGap: false
   },
@@ -652,7 +928,7 @@ function BarChartDemo({ variant }: { variant: 'vertical' | 'horizontal' | 'group
           max: 100,
           axisLine: { show: false },
           axisTick: { show: false },
-          splitLine: { lineStyle: { color: chartColors.slate100, opacity: 0.2 } },
+          splitLine: { lineStyle: { color: chartColors.slate100, opacity: 0.5 } },
           axisLabel: { color: chartColors.slate400, fontSize: 10 }
         },
         yAxis: {
@@ -1028,77 +1304,28 @@ function TimeControls({
               >
                 <span className="calendarDateLabel">START</span>
                 <span className="calendarDateValue">{formatCalendarDate(tempStartDate)}</span>
-          </div>
+              </div>
               <div className="calendarDateSeparator">~</div>
-          <div 
+              <div 
                 className={`calendarDateBox ${!selectingStart ? 'calendarDateBoxActive' : ''}`}
                 onClick={() => setSelectingStart(false)}
-          >
+              >
                 <span className="calendarDateLabel">END</span>
                 <span className="calendarDateValue">{formatCalendarDate(tempEndDate)}</span>
-          </div>
+              </div>
             </div>
 
-            {/* Month Navigation */}
-            <div className="calendarMonthNav">
-              <button className="calendarNavBtn" onClick={prevMonth}>
-                <IconChevronLeft size={16} stroke={1.5} />
-              </button>
-              <span className="calendarMonthLabel">
-                {viewMonth.getFullYear()}.{(viewMonth.getMonth() + 1).toString().padStart(2, '0')}
-              </span>
-              <button className="calendarNavBtn" onClick={nextMonth}>
-                <IconChevronRight size={16} stroke={1.5} />
-              </button>
-            </div>
-
-            {/* Weekday Headers */}
-            <div className="calendarWeekdays">
-              {weekDays.map(day => (
-                <div key={day} className="calendarWeekday">{day}</div>
-              ))}
-            </div>
-
-            {/* Calendar Grid */}
-            <div className="calendarGrid">
-              {getDaysInMonth(viewMonth).map((day, index) => {
-                const isStart = isStartDate(day.date);
-                const isEnd = isEndDate(day.date);
-                const inRange = isDateInRange(day.date);
-                const colIndex = index % 7;
-                const isFirstCol = colIndex === 0;
-                const isLastCol = colIndex === 6;
-                
-                const wrapperClasses = [
-                  'calendarDayWrapper',
-                  inRange && 'inRange',
-                  isStart && 'rangeStart',
-                  isEnd && 'rangeEnd',
-                  isFirstCol && 'firstCol',
-                  isLastCol && 'lastCol',
-                ].filter(Boolean).join(' ');
-                
-                const dayClasses = [
-                  'calendarDay',
-                  !day.isCurrentMonth && 'calendarDayOther',
-                  (isStart || isEnd) && 'calendarDaySelected',
-                  day.isToday && 'calendarDayToday',
-                ].filter(Boolean).join(' ');
-                
-                return (
-                  <div key={index} className={wrapperClasses}>
-                    {inRange && <div className="rangeBackground" />}
-                    <button
-                      className={dayClasses}
-                      onClick={() => handleDayClick(day.date)}
-                    >
-                      <span>{day.date.getDate()}</span>
-                      {day.isToday && <span className="calendarTodayDot" />}
-                    </button>
-                  </div>
-                );
-              })}
-            </div>
+            {/* DatePicker from Design System */}
+            <DatePicker
+              mode="range"
+              rangeValue={{ start: tempStartDate, end: tempEndDate }}
+              onRangeChange={(range) => {
+                setTempStartDate(range.start);
+                setTempEndDate(range.end);
+                setSelectingStart(!range.start || !!range.end);
+              }}
+              maxDate={new Date()}
+            />
 
             {/* Actions */}
             <div className="calendarActions">
@@ -1121,7 +1348,7 @@ function LineChart({
   title, 
   series, 
   yAxisFormatter = (v: number) => `${v}`,
-  height = '200px',
+  height = '100%',
   onFullScreen,
   isFullScreen = false,
   onExitFullScreen,
@@ -1140,21 +1367,7 @@ function LineChart({
     Object.fromEntries(series.map(s => [s.name, true]))
   );
   const [menuOpen, setMenuOpen] = useState(false);
-  const [isDarkMode, setIsDarkMode] = useState(false);
-
-  // Detect dark mode changes
-  useEffect(() => {
-    const checkDarkMode = () => {
-      setIsDarkMode(document.documentElement.classList.contains('dark'));
-    };
-    checkDarkMode();
-    
-    // Observe class changes on html element
-    const observer = new MutationObserver(checkDarkMode);
-    observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
-    
-    return () => observer.disconnect();
-  }, []);
+  const [showDataView, setShowDataView] = useState(false);
 
   const timeLabels = generateTimeLabels();
 
@@ -1169,21 +1382,20 @@ function LineChart({
     if (onFullScreen) onFullScreen();
   };
 
-  // Get theme-aware colors
-  const splitLineColor = isDarkMode ? 'rgba(255, 255, 255, 0.08)' : chartColors.slate100;
-  const splitLineOpacity = isDarkMode ? 1 : 0.5;
-  const tooltipBg = isDarkMode ? '#1C1C1C' : 'white';
-  const tooltipBorder = isDarkMode ? '#3a3a3a' : '#e2e8f0';
-  const tooltipTextColor = isDarkMode ? '#e5e5e5' : chartColors.slate800;
+  // Calculate y-axis bounds for exactly 5 labels
+  const visibleData = series.filter(s => visibleSeries[s.name]).flatMap(s => s.data);
+  const dataMax = visibleData.length > 0 ? Math.max(...visibleData) : 100;
+  const niceMax = Math.ceil(dataMax / 4) * 4; // Round up to nearest multiple of 4
+  const yInterval = niceMax / 4; // 4 intervals = 5 labels
 
   const option = {
     animation: false,
     grid: {
-      left: '60px',
+      left: '0',
       right: '16px',
       top: '20px',
       bottom: '16px',
-      containLabel: false
+      containLabel: true
     },
         xAxis: {
       type: 'category' as const,
@@ -1192,16 +1404,20 @@ function LineChart({
       axisTick: { show: false },
       axisLabel: {
         color: chartColors.slate400,
-        fontSize: 10
+        fontSize: 10,
+        padding: [0, 0, 0, 15]
       },
       boundaryGap: false
         },
         yAxis: {
       type: 'value' as const,
+      min: 0,
+      max: niceMax,
+      interval: yInterval,
       axisLine: { show: false },
       axisTick: { show: false },
       splitLine: {
-        lineStyle: { color: splitLineColor, opacity: splitLineOpacity }
+        lineStyle: { color: chartColors.slate100, opacity: 0.5 }
       },
       axisLabel: {
         color: chartColors.slate400,
@@ -1211,10 +1427,10 @@ function LineChart({
     },
     tooltip: {
       trigger: 'axis' as const,
-      backgroundColor: tooltipBg,
-      borderColor: tooltipBorder,
+      backgroundColor: 'white',
+      borderColor: '#e2e8f0',
       textStyle: { 
-        color: tooltipTextColor, 
+        color: chartColors.slate800, 
         fontSize: 11, 
         fontFamily: 'Mona Sans, -apple-system, BlinkMacSystemFont, sans-serif' 
       }
@@ -1271,7 +1487,7 @@ function LineChart({
                 <button className="contextMenuItem" onClick={() => setMenuOpen(false)}>
                   Download CSV
                 </button>
-                <button className="contextMenuItemLast" onClick={() => setMenuOpen(false)}>
+                <button className="contextMenuItemLast" onClick={() => { setMenuOpen(false); setShowDataView(true); }}>
                   Data View
                 </button>
               </div>
@@ -1295,8 +1511,8 @@ function LineChart({
       
       {/* Chart Body */}
       <div className="chartBody">
-        <div className="chartWrapper" style={isFullScreen ? { height: '100%' } : undefined}>
-          <ReactECharts option={option} style={{ height: isFullScreen ? '100%' : height }} notMerge={true} />
+        <div className="chartWrapper">
+          <ReactECharts option={option} style={{ height: '100%', width: '100%' }} notMerge={true} />
         </div>
         <div className="chartLegend">
           {series.map((s, i) => (
@@ -1307,10 +1523,19 @@ function LineChart({
             >
               <div className="legendDot" style={{ backgroundColor: s.color }} />
               <span>{s.name}</span>
-          </div>
+            </div>
           ))}
         </div>
       </div>
+      
+      {/* Data View Drawer */}
+      <DataViewDrawer
+        isOpen={showDataView}
+        onClose={() => setShowDataView(false)}
+        title={`${title} (RAW)`}
+        series={series}
+        timeLabels={timeLabels}
+      />
     </div>
   );
 }
@@ -1327,7 +1552,7 @@ function ChartWithFullScreen({
   title,
   series,
   yAxisFormatter = (v: number) => `${v}`,
-  height = '200px'
+  height = '100%'
 }: {
   title: string;
   series: LineChartSeries[];
@@ -1389,19 +1614,23 @@ function ChartWithFullScreen({
 // QuotaBarDemo Component
 function QuotaBarDemo({ label, used, total, unit }: { label: string; used: number; total: number; unit: string }) {
   const percentage = Math.round((used / total) * 100);
+  const remaining = total - used;
   
   const getColors = () => {
     if (percentage >= 100) return {
       bg: 'bg-[var(--color-status-error)]/15',
-      text: 'text-[var(--color-status-error)]'
+      text: 'text-[var(--color-status-error)]',
+      bar: 'bg-[var(--color-text-default)]'
     };
     if (percentage >= 70) return {
       bg: 'bg-[var(--color-status-warning)]/15',
-      text: 'text-[var(--color-status-warning)]'
+      text: 'text-[var(--color-status-warning)]',
+      bar: 'bg-[var(--color-text-default)]'
     };
     return {
       bg: 'bg-[var(--color-status-success)]/15',
-      text: 'text-[var(--color-status-success)]'
+      text: 'text-[var(--color-status-success)]',
+      bar: 'bg-[var(--color-text-default)]'
     };
   };
   
@@ -1413,17 +1642,24 @@ function QuotaBarDemo({ label, used, total, unit }: { label: string; used: numbe
         <span className="text-[12px] font-medium text-[var(--color-text-default)]">{label}</span>
         <div className="flex items-center gap-2">
           <span className="text-[11px] text-[var(--color-text-muted)]">{used}/{total} {unit}</span>
-          <div className={`flex items-center gap-1 px-1.5 py-0.5 rounded-md ${colors.bg}`}>
+          <div className={`flex items-center px-1.5 py-0.5 rounded-md ${colors.bg}`}>
             <span className={`text-[11px] font-medium ${colors.text}`}>{percentage}%</span>
           </div>
         </div>
       </div>
-      <div className="h-1 rounded-sm bg-[var(--color-surface-muted)] overflow-hidden">
-        <div 
-          className="h-full rounded-sm bg-[var(--color-text-muted)]"
-          style={{ width: `${Math.min(percentage, 100)}%` }}
-        />
-      </div>
+      <Tooltip 
+        content={`Used: ${used} ${unit}\nRemaining: ${remaining} ${unit}\nTotal: ${total} ${unit}`}
+        position="top"
+      >
+        <div className="w-full">
+          <div className="h-1 rounded-sm bg-[var(--color-surface-muted)] overflow-hidden cursor-pointer">
+            <div 
+              className={`h-full rounded-sm ${colors.bar} transition-all`}
+              style={{ width: `${Math.min(percentage, 100)}%` }}
+            />
+          </div>
+        </div>
+      </Tooltip>
     </div>
   );
 }
@@ -1650,6 +1886,86 @@ function HalfDoughnutChartDemo({ value, label, status = 'default' }: { value: nu
         <span className="text-[24px] leading-[28px] font-semibold text-[var(--color-text-default)]">{value}%</span>
         <span className="text-[12px] text-[var(--color-text-subtle)]">{label}</span>
       </div>
+    </div>
+  );
+}
+
+/* ----------------------------------------
+   Single Value Doughnut Chart Demo (ECharts)
+   ---------------------------------------- */
+
+function SingleValueDoughnutDemo({ 
+  title, 
+  value,
+  color
+}: { 
+  title: string; 
+  value: number;
+  color?: string;
+}) {
+  const getColor = (cssVar: string, fallback: string) => {
+    if (typeof window !== 'undefined') {
+      const val = getComputedStyle(document.documentElement).getPropertyValue(cssVar).trim();
+      return val || fallback;
+    }
+    return fallback;
+  };
+
+  const mainColor = color || getColor('--color-status-error', '#ef4444');
+  const bgColor = getColor('--color-border-subtle', '#e2e8f0');
+
+  const getOption = () => ({
+    tooltip: {
+      show: false
+    },
+    animationDuration: 1000,
+    animationEasing: 'cubicOut' as const,
+    series: [
+      {
+        type: 'pie',
+        radius: ['68%', '80%'],
+        center: ['50%', '50%'],
+        avoidLabelOverlap: false,
+        silent: true,
+        itemStyle: {
+          borderRadius: 0,
+          borderWidth: 0
+        },
+        label: {
+          show: false
+        },
+        labelLine: {
+          show: false
+        },
+        emphasis: {
+          disabled: true
+        },
+        data: [
+          { value: value, itemStyle: { color: mainColor } },
+          { value: 100 - value, itemStyle: { color: bgColor } }
+        ]
+      }
+    ],
+    graphic: [
+      {
+        type: 'text',
+        left: 'center',
+        top: '46%',
+        style: {
+          text: `${value}%`,
+          textAlign: 'center',
+          fill: getColor('--color-text-default', '#0f172a'),
+          fontSize: 18,
+          fontWeight: 600
+        }
+      }
+    ]
+  });
+
+  return (
+    <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] p-4">
+      <h4 className="text-[13px] font-medium text-[var(--color-text-default)] mb-2">{title}</h4>
+      <ReactECharts option={getOption()} style={{ height: '180px', width: '200px' }} />
     </div>
   );
 }
@@ -1937,15 +2253,15 @@ function TableDemo() {
         row.attachedTo && row.attachedToId ? (
           <div className="flex items-center gap-2">
             <Tooltip content={row.attachedType === 'router' ? 'Router' : 'Instance'} position="top" delay={0}>
-            <div 
+              <div 
                 className="flex-shrink-0 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[4px] p-1 cursor-pointer hover:bg-[var(--color-surface-muted)] transition-colors"
-            >
-              {row.attachedType === 'router' ? (
-                <IconRouter size={12} stroke={1.5} className="text-[var(--color-text-subtle)]" />
-              ) : (
-                <IconCube size={12} stroke={1.5} className="text-[var(--color-text-subtle)]" />
-              )}
-            </div>
+              >
+                {row.attachedType === 'router' ? (
+                  <IconRouter size={12} stroke={1.5} className="text-[var(--color-text-subtle)]" />
+                ) : (
+                  <IconCube size={12} stroke={1.5} className="text-[var(--color-text-subtle)]" />
+                )}
+              </div>
             </Tooltip>
             <div className="flex flex-col gap-0.5 min-w-0">
               <button
@@ -1983,7 +2299,7 @@ function TableDemo() {
       flex: 1,
       render: (_: string, row: KeyPairData) => (
         <div className="flex items-center gap-2">
-          <span className="font-mono text-[length:var(--font-size-11)] text-[var(--color-text-default)]">{row.fingerprint}</span>
+          <span className="text-[length:var(--font-size-12)] leading-[var(--line-height-18)] text-[var(--color-text-default)]">{row.fingerprint}</span>
           <button
             onClick={(e) => {
               e.stopPropagation();
@@ -2043,9 +2359,11 @@ function TableDemo() {
     <VStack gap={8}>
       {/* Tokens */}
       <VStack gap={3}>
-        <Label>Design Tokens</Label>
+        <Label>Design Tokens & Features</Label>
         <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
           <code>cell-padding: 12×10px</code> · <code>header-padding: 12×8px</code> · <code>radius: 8px</code> · <code>font: 12px</code>
+          <br />
+          <span className="text-[var(--color-text-muted)]">Features:</span> <code>overflow-x: auto</code> · <code>text-overflow: ellipsis</code> · <code>title tooltip on hover</code>
         </div>
       </VStack>
 
@@ -2121,9 +2439,9 @@ function TableDemo() {
         </p>
       </VStack>
 
-      {/* Horizontal Scroll */}
+      {/* Horizontal Scroll & Text Truncation */}
       <VStack gap={3}>
-        <Label>Horizontal Scroll (max-width: 500px)</Label>
+        <Label>Horizontal Scroll & Text Truncation (max-width: 500px)</Label>
         <div className="max-w-[500px] border border-dashed border-[var(--color-border-default)] rounded-[var(--radius-md)] p-2 overflow-hidden">
           <Table
             columns={compactColumns}
@@ -2132,7 +2450,9 @@ function TableDemo() {
           />
         </div>
         <p className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
-          Shift + Mouse wheel or trackpad swipe to scroll horizontally
+          • Horizontal scroll: Shift + Mouse wheel or trackpad swipe<br />
+          • Long text is truncated with ellipsis (...)<br />
+          • Hover over truncated text to see full content via tooltip
         </p>
       </VStack>
 
@@ -2166,11 +2486,9 @@ export function DesignSystemPage() {
   const [demoPage3, setDemoPage3] = useState(15);
   const [demoPage4, setDemoPage4] = useState(2);
 
-  // Scroll to top on page load
+  // Scroll to top on mount
   useEffect(() => {
-    if (mainRef.current) {
-      mainRef.current.scrollTo(0, 0);
-    }
+    mainRef.current?.scrollTo(0, 0);
   }, []);
 
   // Scroll to top handler
@@ -2236,7 +2554,7 @@ export function DesignSystemPage() {
   };
 
   return (
-    <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
+    <div className="min-h-screen bg-[var(--color-surface-subtle)]">
       {/* Left Sidebar Navigation */}
       <nav className="fixed left-0 top-0 w-[200px] h-screen bg-[var(--color-surface-default)] border-r border-[var(--color-border-default)] overflow-y-auto z-50 sidebar-scroll">
         <div className="p-4 overflow-hidden">
@@ -2310,84 +2628,12 @@ export function DesignSystemPage() {
               ))}
             </VStack>
 
-            {/* Data Display */}
+            {/* Navigation & Data Display */}
             <VStack gap={1}>
               <span className="px-3 py-1 text-[length:var(--font-size-10)] font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider">
-                Data Display
-              </span>
-              {dataDisplayItems.map(({ id, label, icon: Icon }) => (
-                <button
-                  key={id}
-                  onClick={() => scrollToSection(id)}
-                  className={`
-                    w-full px-3 py-2 rounded-[var(--radius-button)] flex items-center gap-2
-                    text-[length:var(--font-size-11)] text-left transition-colors
-                    ${activeSection === id
-                      ? 'bg-[var(--color-state-info-bg)] text-[var(--color-action-primary)] font-medium'
-                      : 'text-[var(--color-text-muted)] hover:bg-[var(--color-surface-subtle)]'
-                    }
-                  `}
-                >
-                  <Icon size={16} stroke={1.5} />
-                  {label}
-                </button>
-              ))}
-            </VStack>
-
-            {/* Navigation */}
-            <VStack gap={1}>
-              <span className="px-3 py-1 text-[length:var(--font-size-10)] font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider">
-                Navigation
+                Navigation & Data
               </span>
               {navigationItems.map(({ id, label, icon: Icon }) => (
-                <button
-                  key={id}
-                  onClick={() => scrollToSection(id)}
-                  className={`
-                    w-full px-3 py-2 rounded-[var(--radius-button)] flex items-center gap-2
-                    text-[length:var(--font-size-11)] text-left transition-colors
-                    ${activeSection === id
-                      ? 'bg-[var(--color-state-info-bg)] text-[var(--color-action-primary)] font-medium'
-                      : 'text-[var(--color-text-muted)] hover:bg-[var(--color-surface-subtle)]'
-                    }
-                  `}
-                >
-                  <Icon size={16} stroke={1.5} />
-                  {label}
-                </button>
-              ))}
-            </VStack>
-
-            {/* Feedback */}
-            <VStack gap={1}>
-              <span className="px-3 py-1 text-[length:var(--font-size-10)] font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider">
-                Feedback
-              </span>
-              {feedbackItems.map(({ id, label, icon: Icon }) => (
-                <button
-                  key={id}
-                  onClick={() => scrollToSection(id)}
-                  className={`
-                    w-full px-3 py-2 rounded-[var(--radius-button)] flex items-center gap-2
-                    text-[length:var(--font-size-11)] text-left transition-colors
-                    ${activeSection === id
-                      ? 'bg-[var(--color-state-info-bg)] text-[var(--color-action-primary)] font-medium'
-                      : 'text-[var(--color-text-muted)] hover:bg-[var(--color-surface-subtle)]'
-                    }
-                  `}
-                >
-                  <Icon size={16} stroke={1.5} />
-                  {label}
-                </button>
-              ))}
-            </VStack>
-
-            {/* Disclosure */}
-            <VStack gap={1}>
-              <span className="px-3 py-1 text-[length:var(--font-size-10)] font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider">
-                Disclosure
-              </span>
-              {disclosureItems.map(({ id, label, icon: Icon }) => (
                 <button
                   key={id}
                   onClick={() => scrollToSection(id)}
@@ -2459,8 +2705,9 @@ export function DesignSystemPage() {
       </nav>
 
       {/* Main Content */}
-      <main ref={mainRef} className="ml-[200px] h-screen overflow-y-auto overflow-x-auto sidebar-scroll">
-        <div className="min-w-[var(--layout-content-min-width)] py-12 px-8">
+      <main ref={mainRef} className="absolute top-0 bottom-0 right-0 left-[200px] overflow-y-auto">
+        <div className="py-12 px-8 overflow-x-auto">
+        <div className="min-w-[var(--layout-content-min-width)]">
         <div className="max-w-[1000px] mx-auto">
           <VStack gap={12} align="stretch">
             {/* Header */}
@@ -4055,115 +4302,6 @@ outline: 2px solid var(--color-border-focus);`}
               </VStack>
             </Section>
 
-            {/* FormField Component */}
-            <Section id="formfield" title="FormField" description="Compound component for form field with label, input, and helper text">
-              <VStack gap={8}>
-                {/* Structure */}
-                <VStack gap={3}>
-                  <Label>Structure</Label>
-                  <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
-                    <code>FormField</code> · <code>FormField.Label</code> · <code>FormField.Control</code> · <code>FormField.HelperText</code> · <code>FormField.ErrorMessage</code>
-                  </div>
-                </VStack>
-
-                {/* Basic Usage */}
-                <VStack gap={3}>
-                  <Label>Basic Usage</Label>
-                  <div className="max-w-md">
-                    <FormField>
-                      <FormField.Label>Instance Name</FormField.Label>
-                      <FormField.Control>
-                        <Input placeholder="Enter instance name" fullWidth />
-                      </FormField.Control>
-                      <FormField.HelperText>
-                        The name should start with a letter and be 1-128 characters.
-                      </FormField.HelperText>
-                    </FormField>
-                  </div>
-                </VStack>
-
-                {/* Label Sizes */}
-                <VStack gap={3}>
-                  <Label>Label Sizes</Label>
-                  <div className="flex gap-8 items-start">
-                    <div className="w-64">
-                      <FormField>
-                        <FormField.Label size="md">Medium Label (14px)</FormField.Label>
-                        <FormField.Control>
-                          <Input placeholder="Input" fullWidth />
-                        </FormField.Control>
-                      </FormField>
-                    </div>
-                    <div className="w-64">
-                      <FormField>
-                        <FormField.Label size="sm">Small Label (12px)</FormField.Label>
-                        <FormField.Control>
-                          <Input placeholder="Input" fullWidth />
-                        </FormField.Control>
-                      </FormField>
-                    </div>
-                  </div>
-                </VStack>
-
-                {/* Required Field */}
-                <VStack gap={3}>
-                  <Label>Required Field</Label>
-                  <div className="max-w-md">
-                    <FormField required>
-                      <FormField.Label>Email Address</FormField.Label>
-                      <FormField.Control>
-                        <Input placeholder="Enter email" fullWidth />
-                      </FormField.Control>
-                      <FormField.HelperText>
-                        We'll never share your email with anyone.
-                      </FormField.HelperText>
-                    </FormField>
-                  </div>
-                </VStack>
-
-                {/* Error State */}
-                <VStack gap={3}>
-                  <Label>Error State</Label>
-                  <div className="max-w-md">
-                    <FormField error>
-                      <FormField.Label>Password</FormField.Label>
-                      <FormField.Control>
-                        <Input placeholder="Enter password" fullWidth />
-                      </FormField.Control>
-                      <FormField.ErrorMessage>
-                        Password must be at least 8 characters.
-                      </FormField.ErrorMessage>
-                    </FormField>
-                  </div>
-                </VStack>
-
-                {/* With Select */}
-                <VStack gap={3}>
-                  <Label>With Select</Label>
-                  <div className="max-w-md">
-                    <FormField>
-                      <FormField.Label size="sm">Region</FormField.Label>
-                      <FormField.Control>
-                        <Select
-                          options={[
-                            { value: 'us-east', label: 'US East' },
-                            { value: 'us-west', label: 'US West' },
-                            { value: 'eu-west', label: 'EU West' },
-                          ]}
-                          value="us-east"
-                          onChange={() => {}}
-                          fullWidth
-                        />
-                      </FormField.Control>
-                      <FormField.HelperText>
-                        Select your preferred region.
-                      </FormField.HelperText>
-                    </FormField>
-                  </div>
-                </VStack>
-              </VStack>
-            </Section>
-
             {/* Checkbox Component */}
             <Section id="checkbox" title="Checkbox" description="Selection control for single or multiple options">
               <VStack gap={8}>
@@ -4717,7 +4855,7 @@ outline: 2px solid var(--color-border-focus);`}
             </Section>
 
             {/* Table Component */}
-            <Section id="table" title="Table" description="Data table with sorting, selection, and sticky header">
+            <Section id="table" title="Table" description="Data table with sorting, selection, sticky header, text truncation with tooltip, and horizontal scroll">
               <TableDemo />
             </Section>
 
@@ -5572,6 +5710,107 @@ outline: 2px solid var(--color-border-focus);`}
               </VStack>
             </Section>
 
+            {/* Monitoring Toolbar */}
+            <Section id="monitoring-toolbar" title="Monitoring Toolbar" description="Time range selection and refresh controls for monitoring dashboards">
+              <VStack gap={8}>
+                {/* Design Tokens */}
+                <VStack gap={3}>
+                  <Label>Design Tokens</Label>
+                  <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
+                    <code>segment-padding: 4px 12px</code> · <code>border-radius: 8px</code> · <code>font-size: 11px</code> · <code>gap: 4px</code>
+                  </div>
+                </VStack>
+
+                {/* Interactive Demo */}
+                <VStack gap={3}>
+                  <Label>Default</Label>
+                  <div className="flex items-center justify-end p-4 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)]">
+                    <MonitoringToolbar 
+                      onTimeRangeChange={(value) => console.log('Time range:', value)}
+                      onCustomPeriodChange={(period) => console.log('Custom period:', period)}
+                      onRefresh={() => console.log('Refresh clicked')}
+                    />
+                  </div>
+                </VStack>
+
+                {/* Specifications */}
+                <VStack gap={3}>
+                  <Label>Specifications</Label>
+                  <div className="overflow-x-auto">
+                    <table className="w-full text-[length:var(--font-size-12)]">
+                      <thead>
+                        <tr className="border-b border-[var(--color-border-default)]">
+                          <th className="text-left py-2 pr-4 font-medium text-[var(--color-text-subtle)]">Property</th>
+                          <th className="text-left py-2 pr-4 font-medium text-[var(--color-text-subtle)]">Type</th>
+                          <th className="text-left py-2 pr-4 font-medium text-[var(--color-text-subtle)]">Default</th>
+                          <th className="text-left py-2 font-medium text-[var(--color-text-subtle)]">Description</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr className="border-b border-[var(--color-border-subtle)]">
+                          <td className="py-2 pr-4 font-mono text-[var(--color-action-primary)]">timeRangeOptions</td>
+                          <td className="py-2 pr-4 text-[var(--color-text-muted)]">TimeRangeOption[]</td>
+                          <td className="py-2 pr-4 text-[var(--color-text-muted)]">30m, 1h, 6h, 12h, 24h</td>
+                          <td className="py-2 text-[var(--color-text-default)]">Time range options to display</td>
+                        </tr>
+                        <tr className="border-b border-[var(--color-border-subtle)]">
+                          <td className="py-2 pr-4 font-mono text-[var(--color-action-primary)]">timeRange</td>
+                          <td className="py-2 pr-4 text-[var(--color-text-muted)]">TimeRangeValue</td>
+                          <td className="py-2 pr-4 text-[var(--color-text-muted)]">-</td>
+                          <td className="py-2 text-[var(--color-text-default)]">Controlled time range value</td>
+                        </tr>
+                        <tr className="border-b border-[var(--color-border-subtle)]">
+                          <td className="py-2 pr-4 font-mono text-[var(--color-action-primary)]">defaultTimeRange</td>
+                          <td className="py-2 pr-4 text-[var(--color-text-muted)]">TimeRangeValue</td>
+                          <td className="py-2 pr-4 text-[var(--color-text-muted)]">'30m'</td>
+                          <td className="py-2 text-[var(--color-text-default)]">Default time range (uncontrolled)</td>
+                        </tr>
+                        <tr className="border-b border-[var(--color-border-subtle)]">
+                          <td className="py-2 pr-4 font-mono text-[var(--color-action-primary)]">onTimeRangeChange</td>
+                          <td className="py-2 pr-4 text-[var(--color-text-muted)]">(value) =&gt; void</td>
+                          <td className="py-2 pr-4 text-[var(--color-text-muted)]">-</td>
+                          <td className="py-2 text-[var(--color-text-default)]">Callback when time range changes</td>
+                        </tr>
+                        <tr className="border-b border-[var(--color-border-subtle)]">
+                          <td className="py-2 pr-4 font-mono text-[var(--color-action-primary)]">customPeriod</td>
+                          <td className="py-2 pr-4 text-[var(--color-text-muted)]">CustomPeriod | null</td>
+                          <td className="py-2 pr-4 text-[var(--color-text-muted)]">-</td>
+                          <td className="py-2 text-[var(--color-text-default)]">Custom date range (start, end)</td>
+                        </tr>
+                        <tr className="border-b border-[var(--color-border-subtle)]">
+                          <td className="py-2 pr-4 font-mono text-[var(--color-action-primary)]">onCustomPeriodChange</td>
+                          <td className="py-2 pr-4 text-[var(--color-text-muted)]">(period) =&gt; void</td>
+                          <td className="py-2 pr-4 text-[var(--color-text-muted)]">-</td>
+                          <td className="py-2 text-[var(--color-text-default)]">Callback when custom period changes</td>
+                        </tr>
+                        <tr className="border-b border-[var(--color-border-subtle)]">
+                          <td className="py-2 pr-4 font-mono text-[var(--color-action-primary)]">onRefresh</td>
+                          <td className="py-2 pr-4 text-[var(--color-text-muted)]">() =&gt; void</td>
+                          <td className="py-2 pr-4 text-[var(--color-text-muted)]">-</td>
+                          <td className="py-2 text-[var(--color-text-default)]">Callback when refresh is clicked</td>
+                        </tr>
+                        <tr className="border-b border-[var(--color-border-subtle)]">
+                          <td className="py-2 pr-4 font-mono text-[var(--color-action-primary)]">showRefresh</td>
+                          <td className="py-2 pr-4 text-[var(--color-text-muted)]">boolean</td>
+                          <td className="py-2 pr-4 text-[var(--color-text-muted)]">true</td>
+                          <td className="py-2 text-[var(--color-text-default)]">Show refresh button</td>
+                        </tr>
+                        <tr className="border-b border-[var(--color-border-subtle)]">
+                          <td className="py-2 pr-4 font-mono text-[var(--color-action-primary)]">maxDate</td>
+                          <td className="py-2 pr-4 text-[var(--color-text-muted)]">Date</td>
+                          <td className="py-2 pr-4 text-[var(--color-text-muted)]">new Date()</td>
+                          <td className="py-2 text-[var(--color-text-default)]">Maximum selectable date</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </VStack>
+              </VStack>
+            </Section>
+
+            {/* Notification Center */}
+            <NotificationCenterSection />
+
             {/* Layout Section */}
             <Section id="layout" title="Layout" description="Application layout structure with responsive sidebar">
               <VStack gap={8}>
@@ -5891,23 +6130,22 @@ outline: 2px solid var(--color-border-focus);`}
                   <Label>Status Variants</Label>
                   <div className="flex items-center gap-8 flex-wrap">
                     <HalfDoughnutChartDemo value={35} label="Safe" status="success" />
-                    <HalfDoughnutChartDemo value={85} label="Warning" status="warning" />
+                    <HalfDoughnutChartDemo value={75} label="Warning" status="warning" />
                     <HalfDoughnutChartDemo value={95} label="Danger" status="error" />
                   </div>
                 </VStack>
               </VStack>
             </Section>
 
-            {/* Reference Document Link */}
-            <div className="p-6 bg-[var(--color-surface-subtle)] rounded-[var(--radius-xl)] border border-[var(--color-border-default)]">
-              <VStack gap={3} align="center">
-                <VStack gap={1} align="center">
-                  <h3 className="text-[length:var(--font-size-16)] font-semibold text-[var(--color-text-default)]">
-                    📚 Design System Reference
-                  </h3>
-                  <p className="text-[length:var(--font-size-12)] text-[var(--color-text-muted)] text-center">
-                    컴포넌트 사용법, 토큰 가이드, 스타일 규칙 등 상세 문서를 확인하세요.
-                  </p>
+            {/* Doughnut Chart */}
+            <Section id="doughnut-chart" title="Doughnut Chart" description="Ring chart for part-to-whole relationships with optional center metrics">
+              <VStack gap={8}>
+                {/* Design Tokens */}
+                <VStack gap={3}>
+                  <Label>Design Tokens</Label>
+                  <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
+                    <code>inner-radius: 68%</code> · <code>outer-radius: 80%</code> · <code>thickness: 12%</code> · <code>border-radius: 6px</code>
+                  </div>
                 </VStack>
                 <HStack gap={3}>
                   <a
@@ -5930,9 +6168,10 @@ outline: 2px solid var(--color-border-focus);`}
                   </a>
                 </HStack>
               </VStack>
-            </div>
+            </Section>
 
           </VStack>
+        </div>
         </div>
         </div>
       </main>
@@ -5944,7 +6183,7 @@ outline: 2px solid var(--color-border-focus);`}
           className="fixed bottom-6 right-6 w-10 h-10 bg-[var(--color-action-primary)] hover:bg-[var(--color-action-primary-hover)] text-white rounded-full shadow-lg flex items-center justify-center transition-all duration-200 hover:scale-110 z-50"
           aria-label="Scroll to top"
         >
-          <IconChevronUp size={20} stroke={1.5} />
+          <IconChevronUp size={20} stroke={2} />
         </button>
       )}
     </div>

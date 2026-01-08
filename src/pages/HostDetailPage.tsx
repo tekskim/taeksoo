@@ -20,6 +20,7 @@ import {
   StatusIndicator,
   SearchInput,
   Pagination,
+  DatePicker,
   type TableColumn,
 } from '@/design-system';
 import { StorageSidebar } from '@/components/StorageSidebar';
@@ -34,6 +35,47 @@ import {
   IconArrowsMaximize,
   IconArrowsMinimize,
 } from '@tabler/icons-react';
+
+/* ----------------------------------------
+   Custom Identify Icon
+   ---------------------------------------- */
+
+interface IdentifyIconProps {
+  size?: number;
+  className?: string;
+}
+
+function IdentifyIcon({ size = 16, className }: IdentifyIconProps) {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 16 16"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      className={className}
+    >
+      <path
+        d="M4.66699 12.0003V8.00033C4.66699 7.11627 5.01818 6.26842 5.6433 5.6433C6.26842 5.01818 7.11627 4.66699 8.00033 4.66699C8.88438 4.66699 9.73223 5.01818 10.3573 5.6433C10.9825 6.26842 11.3337 7.11627 11.3337 8.00033V12.0003"
+        stroke="currentColor"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M3.33301 14C3.33301 14.1768 3.40325 14.3464 3.52827 14.4714C3.65329 14.5964 3.82286 14.6667 3.99967 14.6667H11.9997C12.1765 14.6667 12.3461 14.5964 12.4711 14.4714C12.5961 14.3464 12.6663 14.1768 12.6663 14V13.3333C12.6663 12.9797 12.5259 12.6406 12.2758 12.3905C12.0258 12.1405 11.6866 12 11.333 12H4.66634C4.31272 12 3.97358 12.1405 3.72353 12.3905C3.47348 12.6406 3.33301 12.9797 3.33301 13.3333V14Z"
+        stroke="currentColor"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path d="M13.333 8H13.9997" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M12.3333 3L12 3.33333" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M1.33301 8H1.99967" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M8 1.33301V1.99967" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M3.28613 3.28613L3.75747 3.75747" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M8 8V12" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
 
 /* ----------------------------------------
    Chart Colors
@@ -323,66 +365,17 @@ function HostMonitoringTimeControls({ onTimeRangeChange, onRefresh }: HostMonito
               </div>
             </div>
 
-            {/* Month Navigation */}
-            <div className="calendarMonthNav">
-              <button className="calendarNavBtn" onClick={prevMonthNav}>
-                <IconChevronLeft size={16} stroke={1.5} />
-              </button>
-              <span className="calendarMonthLabel">
-                {viewMonth.getFullYear()}.{(viewMonth.getMonth() + 1).toString().padStart(2, '0')}
-              </span>
-              <button className="calendarNavBtn" onClick={nextMonthNav}>
-                <IconChevronRight size={16} stroke={1.5} />
-              </button>
-            </div>
-
-            {/* Weekday Headers */}
-            <div className="calendarWeekdays">
-              {weekDays.map(day => (
-                <div key={day} className="calendarWeekday">{day}</div>
-              ))}
-            </div>
-
-            {/* Calendar Grid */}
-            <div className="calendarGrid">
-              {getDaysInMonth(viewMonth).map((day, index) => {
-                const isStart = isStartDate(day.date);
-                const isEnd = isEndDate(day.date);
-                const inRange = isDateInRange(day.date);
-                const colIndex = index % 7;
-                const isFirstCol = colIndex === 0;
-                const isLastCol = colIndex === 6;
-                
-                const wrapperClasses = [
-                  'calendarDayWrapper',
-                  inRange && 'inRange',
-                  isStart && 'rangeStart',
-                  isEnd && 'rangeEnd',
-                  isFirstCol && 'firstCol',
-                  isLastCol && 'lastCol',
-                ].filter(Boolean).join(' ');
-                
-                const dayClasses = [
-                  'calendarDay',
-                  !day.isCurrentMonth && 'calendarDayOther',
-                  (isStart || isEnd) && 'calendarDaySelected',
-                  day.isToday && 'calendarDayToday',
-                ].filter(Boolean).join(' ');
-                
-                return (
-                  <div key={index} className={wrapperClasses}>
-                    {inRange && <div className="rangeBackground" />}
-                    <button
-                      className={dayClasses}
-                      onClick={() => handleDayClick(day.date)}
-                    >
-                      <span>{day.date.getDate()}</span>
-                      {day.isToday && <span className="calendarTodayDot" />}
-                    </button>
-                  </div>
-                );
-              })}
-            </div>
+            {/* DatePicker from Design System */}
+            <DatePicker
+              mode="range"
+              rangeValue={{ start: tempStartDate, end: tempEndDate }}
+              onRangeChange={(range) => {
+                setTempStartDate(range.start);
+                setTempEndDate(range.end);
+                setSelectingStart(!range.start || !!range.end);
+              }}
+              maxDate={new Date()}
+            />
 
             {/* Actions */}
             <div className="calendarActions">
@@ -419,6 +412,7 @@ interface HostPerformanceChartProps {
   isFullScreen?: boolean;
   onFullScreen?: () => void;
   onExitFullScreen?: () => void;
+  timeControls?: React.ReactNode;
 }
 
 function HostPerformanceChart({
@@ -429,6 +423,7 @@ function HostPerformanceChart({
   isFullScreen = false,
   onFullScreen,
   onExitFullScreen,
+  timeControls,
 }: HostPerformanceChartProps) {
   const [visibleSeries, setVisibleSeries] = useState<Record<string, boolean>>(
     Object.fromEntries(series.map(s => [s.name, true]))
@@ -506,7 +501,7 @@ function HostPerformanceChart({
       data: timeLabels,
       axisLine: { show: false },
       axisTick: { show: false },
-      axisLabel: { color: chartColors.slate400, fontSize: 10 },
+      axisLabel: { color: chartColors.slate400, fontSize: 10, padding: [0, 0, 0, 15] },
       boundaryGap: false
     },
     yAxis: {
@@ -555,6 +550,9 @@ function HostPerformanceChart({
         {/* Header */}
         <div className="chartHeader">
           <span className="chartTitle">{title}</span>
+          {isFullScreen && timeControls && (
+            <div className="chartHeaderCenter">{timeControls}</div>
+          )}
           <div className="chartControls">
             {/* Toggle Button - only show for multiple series */}
             {series.length > 1 && (
@@ -613,7 +611,7 @@ function HostPerformanceChart({
               ref={chartRef}
               option={option}
               style={{ 
-                height: isFullScreen ? 'calc(100vh - 200px)' : '214px', 
+                height: isFullScreen ? 'calc(100vh - 200px)' : '100%', 
                 width: isFullScreen ? 'calc(100vw - 300px)' : '100%'
               }}
               notMerge={true}
@@ -718,6 +716,7 @@ function HostChartWithFullScreen({
                 yAxisUnit={fullScreenChart.yAxisUnit}
                 isFullScreen={true}
                 onExitFullScreen={() => { setFullScreenChart(null); setContainerReady(false); }}
+                timeControls={<HostMonitoringTimeControls />}
               />
             )}
           </div>
@@ -747,6 +746,7 @@ interface PhysicalDisk {
   model: string;
   size: string;
   osd: string;
+  identifyTimer?: number | null;
 }
 
 interface Daemon {
@@ -820,10 +820,10 @@ const mockHostData: Record<string, HostDetail> = {
       { id: 'dev-5', deviceId: 'LENOVO_MG09SCA14TE_2540A00MF2AJ', deviceName: 'sdd', daemons: ['osd.5'] },
     ],
     physicalDisks: [
-      { id: 'disk-1', devicePath: '/dev/sda', type: 'SSD', available: false, vendor: '', model: 'KIOXIA KCD8DPUG3T20', size: '2.9 TiB', osd: 'osd.2' },
-      { id: 'disk-2', devicePath: '/dev/sda', type: 'SSD', available: false, vendor: '', model: 'KIOXIA KCD8DPUG3T20', size: '2.9 TiB', osd: 'osd.2' },
-      { id: 'disk-3', devicePath: '/dev/sda', type: 'SSD', available: false, vendor: '', model: 'KIOXIA KCD8DPUG3T20', size: '2.9 TiB', osd: 'osd.2' },
-      { id: 'disk-4', devicePath: '/dev/sda', type: 'SSD', available: false, vendor: '', model: 'KIOXIA KCD8DPUG3T20', size: '2.9 TiB', osd: 'osd.2' },
+      { id: 'disk-1', devicePath: '/dev/sda', type: 'SSD', available: false, vendor: '', model: 'KIOXIA KCD8DPUG3T20', size: '2.9 TiB', osd: 'osd.2', identifyTimer: null },
+      { id: 'disk-2', devicePath: '/dev/sdb', type: 'SSD', available: false, vendor: '', model: 'KIOXIA KCD8DPUG3T20', size: '2.9 TiB', osd: 'osd.3', identifyTimer: null },
+      { id: 'disk-3', devicePath: '/dev/sdc', type: 'SSD', available: false, vendor: '', model: 'KIOXIA KCD8DPUG3T20', size: '2.9 TiB', osd: 'osd.4', identifyTimer: null },
+      { id: 'disk-4', devicePath: '/dev/sdd', type: 'SSD', available: false, vendor: '', model: 'KIOXIA KCD8DPUG3T20', size: '2.9 TiB', osd: 'osd.5', identifyTimer: null },
     ],
     daemons: [
       { id: 'daemon-1', status: 'running', daemonName: 'mon.bdv2kr1-cephobj02', version: '19.2.3', lastRefreshed: '5 minutes ago', cpuUsage: 88.17, cpuStatus: 'chunking', memoryUsage: '18.4 GiB', daemonEvents: 'A month ago - daemon:mds.cephfs-test.bdv2kr1-cephobj02.lrphgq' },
@@ -962,6 +962,38 @@ export default function HostDetailPage() {
       flex: 1, 
       sortable: true,
       render: (_, row) => row.osd ? <Chip value={row.osd} /> : null,
+    },
+    {
+      key: 'identify',
+      label: 'Identify',
+      width: 80,
+      align: 'center',
+      sortable: false,
+      render: (_, row) => {
+        const formatTime = (seconds: number) => {
+          const mins = Math.floor(seconds / 60);
+          const secs = seconds % 60;
+          return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+        };
+        
+        if (row.identifyTimer && row.identifyTimer > 0) {
+          return (
+            <div className="flex items-center gap-1">
+              <IdentifyIcon size={16} className="text-[#ff851a]" />
+              <span className="text-[11px] font-medium text-[#ff851a]">{formatTime(row.identifyTimer)}</span>
+            </div>
+          );
+        }
+        return (
+          <button
+            onClick={() => console.log('Identify disk:', row.id)}
+            className="p-1 hover:bg-[var(--color-surface-subtle)] rounded transition-colors"
+            aria-label="Identify disk"
+          >
+            <IdentifyIcon size={16} className="text-[var(--color-text-subtle)]" />
+          </button>
+        );
+      },
     },
   ];
 
@@ -1299,9 +1331,10 @@ export default function HostDetailPage() {
                     <div className="flex gap-4 pt-4">
                       {/* Left Panel - Device List */}
                       <div className="w-[224px] shrink-0 bg-white border border-[var(--color-border-default)] rounded-lg p-3 flex flex-col gap-3">
-                        <h4 className="text-[14px] font-medium leading-5 text-[#314158]">
+                        <h6 className="text-[length:var(--font-size-14)] font-semibold leading-[var(--line-height-20)] text-[var(--color-text-default)]">
                           Device health
-                        </h4>
+                        </h6>
+                        <div className="w-full h-px bg-[var(--color-border-subtle)]" />
                         <div className="flex flex-col">
                           {host.deviceHealth.map((device) => {
                             const isSelected = (selectedDeviceHealth || host.deviceHealth[0]?.id) === device.id;
@@ -1336,20 +1369,20 @@ export default function HostDetailPage() {
                               <div className="flex gap-2">
                                 <button
                                   onClick={() => setDeviceHealthTab('device-info')}
-                                  className={`flex-1 py-2.5 px-4 text-[14px] font-medium leading-4 rounded-md transition-colors ${
+                                  className={`flex-1 py-2.5 px-4 text-[14px] font-medium leading-4 rounded-md border transition-colors ${
                                     deviceHealthTab === 'device-info'
-                                      ? 'bg-white border border-[var(--color-border-default)] text-[var(--color-action-primary)]'
-                                      : 'text-[var(--color-text-default)]'
+                                      ? 'bg-white border-[var(--color-border-default)] text-[var(--color-action-primary)]'
+                                      : 'border-transparent text-[var(--color-text-default)]'
                                   }`}
                                 >
                                   Device information
                                 </button>
                                 <button
                                   onClick={() => setDeviceHealthTab('smart')}
-                                  className={`flex-1 py-2.5 px-4 text-[14px] font-medium leading-4 rounded-md transition-colors ${
+                                  className={`flex-1 py-2.5 px-4 text-[14px] font-medium leading-4 rounded-md border transition-colors ${
                                     deviceHealthTab === 'smart'
-                                      ? 'bg-white border border-[var(--color-border-default)] text-[var(--color-action-primary)]'
-                                      : 'text-[var(--color-text-default)]'
+                                      ? 'bg-white border-[var(--color-border-default)] text-[var(--color-action-primary)]'
+                                      : 'border-transparent text-[var(--color-text-default)]'
                                   }`}
                                 >
                                   SMART
@@ -1366,10 +1399,10 @@ export default function HostDetailPage() {
                                 
                                 <div className="flex flex-col gap-1.5">
                                   <span className="text-[11px] font-medium leading-4 text-[var(--color-text-subtle)]">
-                                    smartctl output
+                                    Smartctl Output
                                   </span>
-                                  <div className="bg-[#0f172a] rounded-md p-4 h-[281px] overflow-auto">
-                                    <pre className="font-mono text-[12px] leading-[18px] text-white whitespace-pre-wrap">
+                                  <div className="bg-[var(--color-surface-contrast)] rounded-md p-4 overflow-x-auto">
+                                    <pre className="font-[family-name:var(--font-mono)] text-[12px] leading-[18px] text-white whitespace-pre-wrap">
                                       {selectedDeviceData.smartctlOutput}
                                     </pre>
                                   </div>
