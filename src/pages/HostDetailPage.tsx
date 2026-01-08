@@ -21,6 +21,9 @@ import {
   SearchInput,
   Pagination,
   DatePicker,
+  Drawer,
+  Select,
+  FormField,
   type TableColumn,
 } from '@/design-system';
 import { StorageSidebar } from '@/components/StorageSidebar';
@@ -919,11 +922,85 @@ export default function HostDetailPage() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [activeDetailTab, setActiveDetailTab] = useState('details');
 
+  // Identify drawer state
+  const [isIdentifyDrawerOpen, setIsIdentifyDrawerOpen] = useState(false);
+  const [selectedDiskId, setSelectedDiskId] = useState<string | null>(null);
+  const [identifyDuration, setIdentifyDuration] = useState('1');
+  
+  // Timer state for each disk (in seconds)
+  const [diskTimers, setDiskTimers] = useState<Record<string, number>>({});
+
+  // Duration options for identify
+  const durationOptions = [
+    { value: '1', label: '1 minute' },
+    { value: '2', label: '2 minutes' },
+    { value: '5', label: '5 minutes' },
+    { value: '10', label: '10 minutes' },
+    { value: '15', label: '15 minutes' },
+  ];
+
   // Global tab management
-  const { tabs, activeTabId, closeTab, selectTab, addNewTab } = useTabs();
+  const { tabs, activeTabId, closeTab, selectTab, addNewTab, updateActiveTabLabel } = useTabs();
 
   // Get host data
   const host = id ? mockHostData[id] : null;
+
+  // Update tab label to match the host name (most recent breadcrumb)
+  useEffect(() => {
+    if (host?.hostname) {
+      updateActiveTabLabel(host.hostname);
+    }
+  }, [host?.hostname, updateActiveTabLabel]);
+
+  // Countdown effect for disk timers
+  useEffect(() => {
+    const activeTimers = Object.entries(diskTimers).filter(([, time]) => time > 0);
+    if (activeTimers.length === 0) return;
+
+    const interval = setInterval(() => {
+      setDiskTimers((prev) => {
+        const updated = { ...prev };
+        for (const [diskId, time] of Object.entries(updated)) {
+          if (time > 0) {
+            updated[diskId] = time - 1;
+          }
+          // Remove timer when it reaches 0
+          if (updated[diskId] <= 0) {
+            delete updated[diskId];
+          }
+        }
+        return updated;
+      });
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [diskTimers]);
+
+  // Handle identify disk - open drawer
+  const handleIdentify = (diskId: string) => {
+    setSelectedDiskId(diskId);
+    setIdentifyDuration('1'); // Reset to default
+    setIsIdentifyDrawerOpen(true);
+  };
+
+  // Handle execute identify
+  const handleExecuteIdentify = () => {
+    if (selectedDiskId) {
+      // Convert minutes to seconds
+      const durationInSeconds = parseInt(identifyDuration, 10) * 60;
+      setDiskTimers((prev) => ({
+        ...prev,
+        [selectedDiskId]: durationInSeconds,
+      }));
+    }
+    setIsIdentifyDrawerOpen(false);
+  };
+
+  // Handle close identify drawer
+  const handleCloseIdentifyDrawer = () => {
+    setIsIdentifyDrawerOpen(false);
+    setSelectedDiskId(null);
+  };
 
   // Table column definitions
   const deviceColumns: TableColumn<Device>[] = [
@@ -976,21 +1053,20 @@ export default function HostDetailPage() {
           return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
         };
         
-        if (row.identifyTimer && row.identifyTimer > 0) {
+        const timer = diskTimers[row.id] ?? row.identifyTimer;
+        
+        if (timer && timer > 0) {
           return (
-            <div className="flex items-center gap-1">
-              <IdentifyIcon size={16} className="text-[#ff851a]" />
-              <span className="text-[11px] font-medium text-[#ff851a]">{formatTime(row.identifyTimer)}</span>
-            </div>
+            <span className="text-[11px] font-medium text-[#ff851a]">{formatTime(timer)}</span>
           );
         }
         return (
           <button
-            onClick={() => console.log('Identify disk:', row.id)}
-            className="p-1 hover:bg-[var(--color-surface-subtle)] rounded transition-colors"
+            onClick={() => handleIdentify(row.id)}
+            className="p-1 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
             aria-label="Identify disk"
           >
-            <IdentifyIcon size={16} className="text-[var(--color-text-subtle)]" />
+            <IdentifyIcon size={16} className="text-[var(--color-text-default)]" />
           </button>
         );
       },
@@ -1100,11 +1176,13 @@ export default function HostDetailPage() {
       >
         {/* Tab Bar */}
         <TabBar
-          tabs={tabs}
-          activeTabId={activeTabId}
-          onTabClick={selectTab}
+          tabs={tabs.map(tab => ({ id: tab.id, label: tab.label, closable: tab.closable }))}
+          activeTab={activeTabId}
+          onTabChange={selectTab}
           onTabClose={closeTab}
-          onNewTab={addNewTab}
+          onTabAdd={addNewTab}
+          showAddButton={true}
+          showWindowControls={true}
         />
 
         {/* Top Bar */}
@@ -1252,7 +1330,7 @@ export default function HostDetailPage() {
                   <TabPanel value="physical-disks" className="pt-0">
                     <VStack gap={3} className="pt-4">
                       {/* Header */}
-                      <div className="flex items-center justify-between w-full">
+                      <div className="flex items-center h-7">
                         <h3 className="text-[length:var(--font-size-16)] font-semibold leading-6 text-[var(--color-text-default)]">
                           Physical Disks
                         </h3>
@@ -1291,7 +1369,7 @@ export default function HostDetailPage() {
                   <TabPanel value="daemon" className="pt-0">
                     <VStack gap={3} className="pt-4">
                       {/* Header */}
-                      <div className="flex items-center justify-between w-full">
+                      <div className="flex items-center h-7">
                         <h3 className="text-[length:var(--font-size-16)] font-semibold leading-6 text-[var(--color-text-default)]">
                           Daemon
                         </h3>
@@ -1675,6 +1753,49 @@ export default function HostDetailPage() {
           </div>
         </div>
       </main>
+
+      {/* Identify Drawer */}
+      <Drawer
+        isOpen={isIdentifyDrawerOpen}
+        onClose={handleCloseIdentifyDrawer}
+        title="Identify device"
+        width={360}
+        footer={
+          <div className="flex gap-2 w-full">
+            <Button
+              variant="secondary"
+              onClick={handleCloseIdentifyDrawer}
+              className="flex-1"
+            >
+              Cancel
+            </Button>
+            <Button
+              variant="primary"
+              onClick={handleExecuteIdentify}
+              className="flex-1"
+            >
+              Execute
+            </Button>
+          </div>
+        }
+      >
+        <div className="flex flex-col gap-6">
+          <p className="text-[length:var(--font-size-12)] leading-[var(--line-height-16)] text-[var(--color-text-subtle)]">
+            Please enter the duration how long to indicate the LED.
+          </p>
+          <FormField>
+            <FormField.Label>Duration</FormField.Label>
+            <FormField.Control>
+              <Select
+                options={durationOptions}
+                value={identifyDuration}
+                onChange={(value) => setIdentifyDuration(value)}
+                fullWidth
+              />
+            </FormField.Control>
+          </FormField>
+        </div>
+      </Drawer>
     </div>
   );
 }

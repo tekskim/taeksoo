@@ -876,7 +876,7 @@ const mockStoragePoolDetail: StoragePoolDetail = {
 
 export function StoragePoolDetailPage() {
   const { id } = useParams<{ id: string }>();
-  const { tabs, activeTabId, closeTab, selectTab, addNewTab } = useTabs();
+  const { tabs, activeTabId, closeTab, selectTab, addNewTab, updateActiveTabLabel } = useTabs();
   
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [activeDetailTab, setActiveDetailTab] = useState('details');
@@ -886,6 +886,13 @@ export function StoragePoolDetailPage() {
 
   // In a real app, fetch based on id
   const pool = mockStoragePoolDetail;
+
+  // Update tab label to match the pool name (most recent breadcrumb)
+  useEffect(() => {
+    if (pool?.name) {
+      updateActiveTabLabel(pool.name);
+    }
+  }, [pool?.name, updateActiveTabLabel]);
 
   const breadcrumbItems = [
     { label: 'Home', href: '/storage' },
