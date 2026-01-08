@@ -1,22 +1,14 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
-  TabBar,
   TopBar,
   TopBarAction,
   Breadcrumb,
   VStack,
-  HStack,
-  Button,
 } from '@/design-system';
-import { AgentSidebar } from '@/pages/AgentPage';
-import { useTabs } from '@/contexts/TabContext';
 import {
-  IconMessage,
   IconMessagePlus,
-  IconRobot,
   IconRobotFace,
-  IconDatabase,
   IconSquarePlus,
   IconPuzzle,
   IconBell,
@@ -24,7 +16,6 @@ import {
   IconCheck,
   IconCopy,
 } from '@tabler/icons-react';
-// import { Icons } from '@/design-system'; // Temporarily disabled for debugging
 
 /* ----------------------------------------
    Card Component
@@ -59,16 +50,12 @@ interface StatCardProps {
 
 function StatCard({ value, label }: StatCardProps) {
   return (
-    <div className="bg-[#fafafa] flex flex-[1_0_0] flex-col items-start justify-center min-h-px min-w-px p-4 rounded-lg">
+    <div className="bg-[var(--color-surface-subtle)] flex flex-[1_0_0] flex-col items-start justify-center min-h-px min-w-px p-4 rounded-lg">
       <div className="flex flex-col items-start pb-1 pt-0 px-0 relative shrink-0 w-full">
-        <div className="flex flex-col font-['Mona_Sans:Medium',sans-serif] justify-center leading-[0] not-italic relative shrink-0 text-[20px] text-[var(--color-text-default)] w-full">
-          <p className="leading-[normal] whitespace-pre-wrap">{value}</p>
-        </div>
+        <p className="font-medium text-[20px] leading-normal text-[var(--color-text-default)]">{value}</p>
       </div>
       <div className="flex flex-col items-start relative shrink-0 w-full">
-        <div className="flex flex-col font-[family-name:var(--fontfamily/sans,'Mona_Sans:Regular',sans-serif)] justify-center leading-[0] not-italic relative shrink-0 text-[color:var(--color-text-muted)] text-[length:var(--fontsize/sm,11px)] w-full">
-          <p className="leading-[var(--lineheight/sm,16px)] whitespace-pre-wrap">{label}</p>
-        </div>
+        <p className="text-[length:var(--font-size-11)] leading-[var(--line-height-16)] text-[var(--color-text-muted)]">{label}</p>
       </div>
     </div>
   );
@@ -88,7 +75,7 @@ function QuickActionCard({ icon, label, highlighted = false, onClick }: QuickAct
   return (
     <button
       onClick={onClick}
-      className={`bg-[#fafafa] flex flex-[1_0_0] flex-col items-start justify-center min-h-px min-w-px p-4 rounded-lg transition-colors hover:bg-[var(--color-surface-muted)] ${
+      className={`bg-[var(--color-surface-subtle)] flex flex-[1_0_0] flex-col items-start justify-center min-h-px min-w-px p-4 rounded-lg transition-colors hover:bg-[var(--color-surface-muted)] ${
         highlighted ? 'border border-[var(--color-action-primary)]' : ''
       }`}
     >
@@ -98,9 +85,7 @@ function QuickActionCard({ icon, label, highlighted = false, onClick }: QuickAct
         </div>
       </div>
       <div className="flex flex-col items-start relative shrink-0 w-full">
-        <div className="flex flex-col items-start font-[family-name:var(--fontfamily/sans,'Mona_Sans:Regular',sans-serif)] justify-start leading-[0] not-italic relative shrink-0 text-[color:var(--color-text-muted)] text-[length:var(--fontsize/sm,11px)] w-full">
-          <p className="leading-[var(--lineheight/sm,16px)] whitespace-pre-wrap text-left">{label}</p>
-        </div>
+        <p className="text-[length:var(--font-size-11)] leading-[var(--line-height-16)] text-[var(--color-text-muted)] text-left">{label}</p>
       </div>
     </button>
   );
@@ -121,20 +106,16 @@ function ChatItem({ title, description, createdAt, onClick }: ChatItemProps & { 
       onClick={onClick}
       className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] flex flex-col gap-3 items-start px-4 py-3 rounded-lg cursor-pointer hover:border-[var(--color-border-focus)] transition-colors"
     >
-      <div className="flex flex-col gap-1 items-start not-italic relative shrink-0 w-full">
-        <p className="font-[family-name:var(--primitive/fontfamily/sans,'Mona_Sans:Medium',sans-serif)] leading-[var(--primitive/lineheight/md,20px)] relative shrink-0 text-[color:var(--color-text-default)] text-[length:var(--primitive/fontsize/md,14px)]">
+      <div className="flex flex-col gap-1 items-start relative shrink-0 w-full">
+        <p className="font-medium text-[length:var(--font-size-14)] leading-[var(--line-height-20)] text-[var(--color-text-default)]">
           {title}
         </p>
-        <p className="font-[family-name:var(--fontfamily/sans,'Mona_Sans:Regular',sans-serif)] leading-[var(--lineheight/sm,16px)] min-w-full relative shrink-0 text-[color:var(--color-text-subtle)] text-[length:var(--fontsize/sm,11px)] w-[min-content] whitespace-pre-wrap line-clamp-2">
+        <p className="text-[length:var(--font-size-11)] leading-[var(--line-height-16)] text-[var(--color-text-subtle)] line-clamp-2">
           {description}
         </p>
       </div>
       <div className="flex gap-0 items-center relative shrink-0">
-        <div className="flex gap-1 items-center justify-center px-0 py-0.5 relative rounded-full shrink-0">
-          <div className="flex flex-col font-[family-name:var(--font-family-sans,'Mona_Sans:Medium',sans-serif)] justify-center leading-[0] not-italic relative shrink-0 text-[color:var(--color/text/subtle,#64748b)] text-[length:var(--font-size-11,11px)] whitespace-nowrap">
-            <p className="leading-[var(--line-height-16,16px)]">Created at: {createdAt}</p>
-          </div>
-        </div>
+        <p className="font-medium text-[length:var(--font-size-11)] leading-[var(--line-height-16)] text-[var(--color-text-subtle)]">Created at: {createdAt}</p>
       </div>
     </div>
   );
@@ -144,9 +125,7 @@ function ChatItem({ title, description, createdAt, onClick }: ChatItemProps & { 
    Main HomePage Component
    ---------------------------------------- */
 export function HomePage() {
-  const [sidebarOpen, setSidebarOpen] = useState(true);
   const [copied, setCopied] = useState(false);
-  const { tabs, activeTabId, selectTab, closeTab, addNewTab, moveTab } = useTabs();
   const navigate = useNavigate();
   
   const projectId = 'proj-abc123-def456';
@@ -157,31 +136,9 @@ export function HomePage() {
     setTimeout(() => setCopied(false), 2000);
   };
 
-  const tabBarTabs = tabs.map((tab) => ({
-    id: tab.id,
-    label: tab.label,
-    closable: tab.closable,
-  }));
-
   return (
-    <div className="min-h-screen bg-[var(--color-surface-subtle)] flex w-full">
-      <AgentSidebar />
-
-      <main className="flex flex-1 flex-col min-h-screen bg-[var(--color-surface-default)] ml-[62px]">
-        <div className="w-full flex flex-col min-h-screen">
-          <TabBar
-            tabs={tabBarTabs}
-            activeTab={activeTabId}
-            onTabChange={selectTab}
-            onTabClose={closeTab}
-            onTabAdd={addNewTab}
-            onTabReorder={moveTab}
-            showAddButton={true}
-            showWindowControls={true}
-            onWindowClose={() => navigate('/')}
-          />
-
-          <TopBar
+    <>
+      <TopBar
             showSidebarToggle={false}
             showNavigation={true}
             onBack={() => window.history.back()}
@@ -210,7 +167,7 @@ export function HomePage() {
           />
 
         {/* Scrollable Content Area */}
-        <div className="flex-1 overflow-auto overscroll-contain sidebar-scroll">
+        <div className="flex-1 overflow-auto min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll">
           {/* EntryPage Content */}
           <div className="px-8 py-6">
           {/* PROJECT INFO Card */}
@@ -255,10 +212,10 @@ export function HomePage() {
               </div>
 
               {/* Quick Action Section */}
-              <div className="flex flex-col gap-6 items-start min-w-[1176px] relative shrink-0 w-full">
+              <div className="flex flex-col gap-4 items-start min-w-[1176px] relative shrink-0 w-full mt-4">
                 <div className="flex flex-col items-start justify-center relative shrink-0">
                   <div className="flex items-center relative shrink-0">
-                    <p className="font-[family-name:var(--fontfamily/sans,'Mona_Sans:SemiBold',sans-serif)] leading-[var(--lineheight/xl,28px)] not-italic relative shrink-0 text-[color:var(--color-text-default)] text-[length:var(--fontsize/xl,18px)]">
+                    <p className="font-semibold text-[length:var(--font-size-18)] leading-[var(--line-height-28)] text-[var(--color-text-default)]">
                       Quick action
                     </p>
                   </div>
@@ -286,10 +243,10 @@ export function HomePage() {
               </div>
 
               {/* Recent Chats Section */}
-              <div className="flex flex-col gap-6 items-start min-w-[1176px] relative shrink-0 w-full">
+              <div className="flex flex-col gap-4 items-start min-w-[1176px] relative shrink-0 w-full mt-4">
                 <div className="flex flex-col items-start justify-center relative shrink-0">
                   <div className="flex items-center relative shrink-0">
-                    <p className="font-[family-name:var(--fontfamily/sans,'Mona_Sans:SemiBold',sans-serif)] leading-[var(--lineheight/xl,28px)] not-italic relative shrink-0 text-[color:var(--color-text-default)] text-[length:var(--fontsize/xl,18px)]">
+                    <p className="font-semibold text-[length:var(--font-size-18)] leading-[var(--line-height-28)] text-[var(--color-text-default)]">
                       Recent chats
                     </p>
                   </div>
@@ -297,7 +254,7 @@ export function HomePage() {
 
                 {/* Today Section */}
                 <div className="flex flex-col gap-2 items-start relative shrink-0 w-full">
-                  <p className="font-[family-name:var(--fontfamily/sans,'Mona_Sans:Regular',sans-serif)] leading-[var(--lineheight/sm,16px)] not-italic relative shrink-0 text-[color:var(--color-text-subtle)] text-[length:var(--fontsize/sm,11px)] w-full whitespace-pre-wrap">
+                  <p className="text-[length:var(--font-size-11)] leading-[var(--line-height-16)] text-[var(--color-text-subtle)]">
                     Today
                   </p>
                   <VStack gap={2} className="w-full">
@@ -317,7 +274,7 @@ export function HomePage() {
 
                 {/* Last 7 days Section */}
                 <div className="flex flex-col gap-2 items-start relative shrink-0 w-full">
-                  <p className="font-[family-name:var(--fontfamily/sans,'Mona_Sans:Regular',sans-serif)] leading-[var(--lineheight/sm,16px)] not-italic relative shrink-0 text-[color:var(--color-text-subtle)] text-[length:var(--fontsize/sm,11px)] w-full whitespace-pre-wrap">
+                  <p className="text-[length:var(--font-size-11)] leading-[var(--line-height-16)] text-[var(--color-text-subtle)]">
                     Last 7 days
                   </p>
                   <VStack gap={2} className="w-full">
@@ -346,9 +303,7 @@ export function HomePage() {
               </div>
           </div>
         </div>
-        </div>
-      </main>
-    </div>
+    </>
   );
 }
 

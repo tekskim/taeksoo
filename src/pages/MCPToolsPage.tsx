@@ -90,10 +90,10 @@ function StatusCard({ label, count, status }: StatusCardProps) {
   return (
     <div className={`${bgColor} flex flex-[1_0_0] items-center justify-between min-h-px min-w-px px-4 py-3 relative rounded-lg shrink-0`}>
       <div className="flex flex-col gap-1.5 items-start leading-4 not-italic relative shrink-0">
-        <p className="font-['Mona_Sans:Medium',sans-serif] relative shrink-0 text-[var(--color-text-subtle,#64748b)] text-[11px]">
+        <p className="font-medium text-[length:var(--font-size-11)] leading-[var(--line-height-16)] text-[var(--color-text-subtle)]">
           {label}
         </p>
-        <p className="font-['Mona_Sans:Regular',sans-serif] relative shrink-0 text-[var(--color-text-default,#0f172a)] text-[12px]">
+        <p className="text-[length:var(--font-size-12)] leading-[var(--line-height-18)] text-[var(--color-text-default)]">
           {count}
         </p>
       </div>
@@ -580,28 +580,15 @@ export function MCPToolsPage() {
       breadcrumbItems={[{ label: 'MCP tools' }]}
       sidebar={<AgentSidebar />}
     >
-              {/* Tabs and CTA Button */}
-              <div className="flex items-center justify-between relative shrink-0 w-full">
-                <div className="flex-1 min-w-0">
-                  <Tabs value={activeTab} onChange={setActiveTab} variant="underline" size="sm">
-                    <TabList>
-                      <Tab value="my-servers">My servers</Tab>
-                      <Tab value="catalog">Catalog</Tab>
-                      <Tab value="templates">Templates</Tab>
-                    </TabList>
-                  </Tabs>
-                </div>
-                {activeTab === 'templates' && (
-                  <div className="ml-4 shrink-0">
-                    <Button
-                      size="sm"
-                      variant="primary"
-                      onClick={() => {}}
-                    >
-                      Create template
-                    </Button>
-                  </div>
-                )}
+              {/* Tabs */}
+              <div className="w-full">
+                <Tabs value={activeTab} onChange={setActiveTab} variant="underline" size="sm">
+                  <TabList>
+                    <Tab value="my-servers">My servers</Tab>
+                    <Tab value="catalog">Catalog</Tab>
+                    <Tab value="templates">Templates</Tab>
+                  </TabList>
+                </Tabs>
               </div>
 
               {/* Status Cards - Only for My servers tab */}
@@ -672,23 +659,32 @@ export function MCPToolsPage() {
 
       {activeTab === 'templates' && (
         <div className="flex flex-col gap-3 w-full">
-          {/* List Toolbar */}
-          <ListToolbar
-            primaryActions={
-              <ListToolbar.Actions>
-                <div className="w-[280px]">
-                  <SearchInput
-                    placeholder="Find templates with filters"
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    onClear={() => setSearchQuery('')}
-                    size="sm"
-                    fullWidth
-                      />
-                    </div>
-              </ListToolbar.Actions>
-            }
-          />
+          {/* List Toolbar with Create Button */}
+          <div className="flex items-center justify-between w-full">
+            <ListToolbar
+              primaryActions={
+                <ListToolbar.Actions>
+                  <div className="w-[280px]">
+                    <SearchInput
+                      placeholder="Find templates with filters"
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      onClear={() => setSearchQuery('')}
+                      size="sm"
+                      fullWidth
+                    />
+                  </div>
+                </ListToolbar.Actions>
+              }
+            />
+            <Button
+              size="sm"
+              variant="primary"
+              onClick={() => {}}
+            >
+              Create template
+            </Button>
+          </div>
 
           {/* Pagination */}
           {filteredTemplates.length > 0 && (
@@ -748,21 +744,21 @@ export function MCPToolsPage() {
 
                       {/* Title */}
                       <div className="flex flex-col items-start justify-center relative shrink-0 w-full">
-                        <p className="font-['Mona_Sans:Medium',sans-serif] leading-5 not-italic relative shrink-0 text-[var(--color-text-default)] text-[14px]">
+                        <p className="font-medium text-[length:var(--font-size-14)] leading-[var(--line-height-20)] text-[var(--color-text-default)]">
                           {tool.title}
                         </p>
                       </div>
 
                       {/* Category */}
                       <div className="flex flex-col items-start justify-center relative shrink-0">
-                        <p className="font-['Mona_Sans:Regular',sans-serif] leading-4 not-italic relative shrink-0 text-[var(--color-action-primary)] text-[12px]">
+                        <p className="text-[length:var(--font-size-12)] leading-[var(--line-height-16)] text-[var(--color-action-primary)]">
                           {tool.category}
                         </p>
                       </div>
 
                       {/* Description */}
                       <div className="flex flex-col items-start justify-center relative shrink-0 w-full">
-                        <p className="font-['Mona_Sans:Regular',sans-serif] leading-5 not-italic relative shrink-0 text-[var(--color-text-subtle)] text-[12px] line-clamp-3">
+                        <p className="text-[length:var(--font-size-12)] leading-[var(--line-height-20)] text-[var(--color-text-subtle)] line-clamp-3">
                           {tool.description}
                         </p>
                       </div>
