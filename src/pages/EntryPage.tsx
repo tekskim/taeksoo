@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDarkMode } from '@/hooks/useDarkMode';
 import ThakiLogoLight from '@/assets/thakiLogo_light.svg';
@@ -6,6 +7,8 @@ import {
   IconMoon,
   IconSun,
   IconHistory,
+  IconChevronDown,
+  IconChevronUp,
 } from '@tabler/icons-react';
 import { Button } from '@/design-system';
 import changelogData from '@/data/changelog.json';
@@ -42,12 +45,17 @@ interface AppCard {
    Changelog Data
    ---------------------------------------- */
 
+interface ChangeItem {
+  text: string;
+  author: string;
+}
+
 interface ChangelogItem {
   id: string;
   date: string;
   app: string;
   appColor: string;
-  changes: string[];
+  changes: ChangeItem[];
 }
 
 // Fallback 데이터 (Git 로그가 없을 때 사용)
@@ -58,8 +66,8 @@ const fallbackChanges: ChangelogItem[] = [
     app: 'Design System',
     appColor: 'from-purple-500 to-fuchsia-500',
     changes: [
-      'EntryPage 서브타이틀 문구 수정',
-      'NotificationCenter 스크롤 스타일 적용',
+      { text: 'EntryPage 서브타이틀 문구 수정', author: 'pobae' },
+      { text: 'NotificationCenter 스크롤 스타일 적용', author: 'pobae' },
     ],
   },
   {
@@ -68,9 +76,9 @@ const fallbackChanges: ChangelogItem[] = [
     app: 'Storage',
     appColor: 'from-indigo-500 to-blue-500',
     changes: [
-      'BucketDetailPage Objects 테이블 디자인 시스템 적용',
-      'Tags/Versions 테이블 헤더 구분선 추가',
-      'S3 URI 박스 패딩 통일 (16px)',
+      { text: 'BucketDetailPage Objects 테이블 디자인 시스템 적용', author: 'pobae' },
+      { text: 'Tags/Versions 테이블 헤더 구분선 추가', author: 'pobae' },
+      { text: 'S3 URI 박스 패딩 통일 (16px)', author: 'pobae' },
     ],
   },
   {
@@ -79,9 +87,9 @@ const fallbackChanges: ChangelogItem[] = [
     app: 'Compute',
     appColor: 'from-blue-500 to-cyan-500',
     changes: [
-      'HostDetailPage Device health 탭 지글링 현상 수정',
-      'OSDDetailPage smartctl output 스크롤 제한 제거',
-      'Physical Disks Type 컬럼 truncate 수정',
+      { text: 'HostDetailPage Device health 탭 지글링 현상 수정', author: 'pobae' },
+      { text: 'OSDDetailPage smartctl output 스크롤 제한 제거', author: 'pobae' },
+      { text: 'Physical Disks Type 컬럼 truncate 수정', author: 'pobae' },
     ],
   },
   {
@@ -90,9 +98,9 @@ const fallbackChanges: ChangelogItem[] = [
     app: 'Cloud Builder',
     appColor: 'from-orange-500 to-amber-500',
     changes: [
-      'ListToolbar Refresh 버튼 위치 조정',
-      'Table 가로 스크롤 및 텍스트 truncate 적용',
-      'Network Agents name 컬럼 너비 조정',
+      { text: 'ListToolbar Refresh 버튼 위치 조정', author: 'pobae' },
+      { text: 'Table 가로 스크롤 및 텍스트 truncate 적용', author: 'pobae' },
+      { text: 'Network Agents name 컬럼 너비 조정', author: 'pobae' },
     ],
   },
 ];
@@ -257,15 +265,24 @@ function AppCardComponent({ card, onClick }: AppCardComponentProps) {
    EntryPage
    ---------------------------------------- */
 
+const INITIAL_VISIBLE_COUNT = 3;
+
 export function EntryPage() {
   const navigate = useNavigate();
   const { isDark, toggleDarkMode } = useDarkMode();
+  const [showAllChanges, setShowAllChanges] = useState(false);
 
   const handleCardClick = (card: AppCard) => {
     if (card.available) {
       navigate(card.path);
     }
   };
+
+  const visibleChanges = showAllChanges 
+    ? recentChanges 
+    : recentChanges.slice(0, INITIAL_VISIBLE_COUNT);
+  
+  const hiddenCount = recentChanges.length - INITIAL_VISIBLE_COUNT;
 
   return (
     <div className="fixed inset-0 overflow-auto bg-[var(--color-surface-subtle)]">
@@ -330,7 +347,7 @@ export function EntryPage() {
             </div>
             
             <div className="space-y-3">
-              {recentChanges.map((item) => (
+              {visibleChanges.map((item) => (
                 <div
                   key={item.id}
                   className="group p-4 rounded-lg bg-[var(--color-surface-default)] border border-[var(--color-border-default)] hover:border-[var(--color-border-strong)] transition-colors"
@@ -357,11 +374,46 @@ export function EntryPage() {
                   {/* Changes List */}
                   <ul className="list-disc list-outside pl-4 space-y-0.5 text-[length:var(--font-size-12)] leading-[var(--line-height-18)] text-[var(--color-text-default)] marker:text-[var(--color-text-muted)]">
                     {item.changes.map((change, idx) => (
-                      <li key={idx}>{change}</li>
+                      <li key={idx}>
+                        <span>{change.text}</span>
+                        <span className="ml-2 text-[length:var(--font-size-11)] text-[var(--color-text-muted)]">
+                          by {change.author}
+                        </span>
+                      </li>
                     ))}
                   </ul>
                 </div>
               ))}
+              
+              {/* 더보기/접기 버튼 */}
+              {hiddenCount > 0 && (
+                <button
+                  type="button"
+                  onClick={() => setShowAllChanges(!showAllChanges)}
+                  className="
+                    w-full py-3 
+                    flex items-center justify-center gap-2
+                    text-[length:var(--font-size-12)] font-medium
+                    text-[var(--color-text-muted)]
+                    hover:text-[var(--color-text-default)]
+                    hover:bg-[var(--color-surface-default)]
+                    rounded-lg border border-dashed border-[var(--color-border-default)]
+                    transition-colors
+                  "
+                >
+                  {showAllChanges ? (
+                    <>
+                      <IconChevronUp size={16} stroke={1.5} />
+                      접기
+                    </>
+                  ) : (
+                    <>
+                      <IconChevronDown size={16} stroke={1.5} />
+                      더보기 ({hiddenCount}개)
+                    </>
+                  )}
+                </button>
+              )}
             </div>
           </div>
 
