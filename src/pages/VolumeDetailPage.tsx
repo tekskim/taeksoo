@@ -174,7 +174,7 @@ export function VolumeDetailPage() {
   const snapshots = mockVolumeSnapshots;
   const backups = mockVolumeBackups;
 
-  const { tabs, activeTabId, closeTab, selectTab, updateActiveTabLabel } = useTabs();
+  const { tabs, activeTabId, closeTab, selectTab, updateActiveTabLabel, moveTab } = useTabs();
 
   // Update tab label to volume name
   useEffect(() => {

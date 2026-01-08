@@ -27,6 +27,8 @@ export interface TabBarProps {
   onTabClose?: (tabId: string) => void;
   /** Callback when add button is clicked */
   onTabAdd?: () => void;
+  /** Callback when tabs are reordered via drag and drop */
+  onTabReorder?: (fromIndex: number, toIndex: number) => void;
   /** Show add button */
   showAddButton?: boolean;
   /** Show window controls (minimize, maximize, close) */
@@ -51,6 +53,7 @@ export const TabBar: React.FC<TabBarProps> = ({
   onTabChange,
   onTabClose,
   onTabAdd,
+  onTabReorder,
   showAddButton = true,
   showWindowControls = true,
   onMinimize,
@@ -58,6 +61,10 @@ export const TabBar: React.FC<TabBarProps> = ({
   onWindowClose,
   className = '',
 }) => {
+  // Drag and drop state
+  const [draggedTabId, setDraggedTabId] = useState<string | null>(null);
+  const [dragOverTabId, setDragOverTabId] = useState<string | null>(null);
+
   const handleTabClick = (tabId: string) => {
     onTabChange(tabId);
   };
@@ -65,6 +72,51 @@ export const TabBar: React.FC<TabBarProps> = ({
   const handleTabClose = (e: React.MouseEvent, tabId: string) => {
     e.stopPropagation();
     onTabClose?.(tabId);
+  };
+
+  // Drag and drop handlers
+  const handleDragStart = (e: React.DragEvent, tabId: string) => {
+    setDraggedTabId(tabId);
+    e.dataTransfer.effectAllowed = 'move';
+    e.dataTransfer.setData('text/plain', tabId);
+    // Add a slight delay to show the drag effect
+    requestAnimationFrame(() => {
+      (e.target as HTMLElement).style.opacity = '0.5';
+    });
+  };
+
+  const handleDragEnd = (e: React.DragEvent) => {
+    setDraggedTabId(null);
+    setDragOverTabId(null);
+    (e.target as HTMLElement).style.opacity = '1';
+  };
+
+  const handleDragOver = (e: React.DragEvent, tabId: string) => {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'move';
+    if (draggedTabId && draggedTabId !== tabId) {
+      setDragOverTabId(tabId);
+    }
+  };
+
+  const handleDragLeave = () => {
+    setDragOverTabId(null);
+  };
+
+  const handleDrop = (e: React.DragEvent, targetTabId: string) => {
+    e.preventDefault();
+    setDragOverTabId(null);
+    
+    if (!draggedTabId || !onTabReorder) return;
+    
+    const fromIndex = tabs.findIndex(t => t.id === draggedTabId);
+    const toIndex = tabs.findIndex(t => t.id === targetTabId);
+    
+    if (fromIndex !== -1 && toIndex !== -1 && fromIndex !== toIndex) {
+      onTabReorder(fromIndex, toIndex);
+    }
+    
+    setDraggedTabId(null);
   };
 
   return (
@@ -92,12 +144,20 @@ export const TabBar: React.FC<TabBarProps> = ({
         {tabs.map((tab) => {
           const isActive = tab.id === activeTab;
           const closable = tab.closable !== false;
+          const isDragging = draggedTabId === tab.id;
+          const isDragOver = dragOverTabId === tab.id;
 
           return (
             <div
               key={tab.id}
               data-tab-id={tab.id}
               onClick={() => handleTabClick(tab.id)}
+              draggable={!!onTabReorder}
+              onDragStart={(e) => handleDragStart(e, tab.id)}
+              onDragEnd={handleDragEnd}
+              onDragOver={(e) => handleDragOver(e, tab.id)}
+              onDragLeave={handleDragLeave}
+              onDrop={(e) => handleDrop(e, tab.id)}
               className={`
                 group
                 relative
@@ -115,6 +175,8 @@ export const TabBar: React.FC<TabBarProps> = ({
                   ? 'bg-[var(--color-surface-default)]'
                   : 'bg-[var(--color-surface-subtle)] hover:bg-[var(--color-surface-muted)]'
                 }
+                ${isDragging ? 'opacity-50' : ''}
+                ${isDragOver ? 'border-l-2 border-l-[var(--color-action-primary)]' : ''}
               `}
             >
               {/* Active indicator */}

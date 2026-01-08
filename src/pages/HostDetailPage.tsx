@@ -921,7 +921,7 @@ export default function HostDetailPage() {
   ];
 
   // Global tab management
-  const { tabs, activeTabId, closeTab, selectTab, addNewTab, updateActiveTabLabel } = useTabs();
+  const { tabs, activeTabId, closeTab, selectTab, addNewTab, updateActiveTabLabel, moveTab } = useTabs();
 
   // Get host data
   const host = id ? mockHostData[id] : null;
@@ -1162,6 +1162,7 @@ export default function HostDetailPage() {
           onTabChange={selectTab}
           onTabClose={closeTab}
           onTabAdd={addNewTab}
+            onTabReorder={moveTab}
           showAddButton={true}
           showWindowControls={true}
         />

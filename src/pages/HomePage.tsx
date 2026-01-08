@@ -146,7 +146,7 @@ function ChatItem({ title, description, createdAt, onClick }: ChatItemProps & { 
 export function HomePage() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [copied, setCopied] = useState(false);
-  const { tabs, activeTabId, selectTab, closeTab, addNewTab } = useTabs();
+  const { tabs, activeTabId, selectTab, closeTab, addNewTab, moveTab } = useTabs();
   const navigate = useNavigate();
   
   const projectId = 'proj-abc123-def456';
@@ -175,6 +175,7 @@ export function HomePage() {
             onTabChange={selectTab}
             onTabClose={closeTab}
             onTabAdd={addNewTab}
+            onTabReorder={moveTab}
             showAddButton={true}
             showWindowControls={true}
             onWindowClose={() => navigate('/')}

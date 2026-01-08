@@ -42,7 +42,7 @@ import { AgentSidebar } from '@/pages/AgentPage';
    ---------------------------------------- */
 
 export function CreateAgentPage() {
-  const { tabs, activeTabId, selectTab, closeTab, addNewTab } = useTabs();
+  const { tabs, activeTabId, selectTab, closeTab, addNewTab, moveTab } = useTabs();
   const navigate = useNavigate();
   const [activeStep, setActiveStep] = useState<'configuration' | 'data-mcp'>('configuration');
   
@@ -354,6 +354,7 @@ export function CreateAgentPage() {
             onTabChange={selectTab}
             onTabClose={closeTab}
             onTabAdd={addNewTab}
+            onTabReorder={moveTab}
             showAddButton={true}
             showWindowControls={true}
             onWindowClose={() => navigate('/')}

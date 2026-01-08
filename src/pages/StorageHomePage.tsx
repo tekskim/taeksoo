@@ -707,7 +707,7 @@ interface FullScreenChartData {
 export function StorageHomePage() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [timeRange, setTimeRange] = useState<TimeRange>('30m');
-  const { tabs, activeTabId, selectTab, closeTab, addNewTab } = useTabs();
+  const { tabs, activeTabId, selectTab, closeTab, addNewTab, moveTab } = useTabs();
   
   // Fullscreen chart state
   const [fullScreenChart, setFullScreenChart] = useState<FullScreenChartData | null>(null);
@@ -768,6 +768,7 @@ export function StorageHomePage() {
             onTabChange={selectTab}
             onTabClose={closeTab}
             onTabAdd={addNewTab}
+            onTabReorder={moveTab}
             showAddButton={true}
             showWindowControls={true}
           />

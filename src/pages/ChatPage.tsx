@@ -354,7 +354,7 @@ function NewChatDrawer({ isOpen, onClose, agent, onFavoriteToggle, onStartChat }
    Main ChatPage Component
    ---------------------------------------- */
 export function ChatPage() {
-  const { tabs, activeTabId, selectTab, closeTab, addNewTab } = useTabs();
+  const { tabs, activeTabId, selectTab, closeTab, addNewTab, moveTab } = useTabs();
   const navigate = useNavigate();
   const [selectedAgentId, setSelectedAgentId] = useState<string | null>(null);
   const [agents, setAgents] = useState(mockAgents);
@@ -398,6 +398,7 @@ export function ChatPage() {
             onTabChange={selectTab}
             onTabClose={closeTab}
             onTabAdd={addNewTab}
+            onTabReorder={moveTab}
             showAddButton={true}
             showWindowControls={true}
             onWindowClose={() => navigate('/')}

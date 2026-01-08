@@ -472,7 +472,8 @@ function SingleValueDoughnutCard({
           textVerticalAlign: 'middle',
           fill: getColor('--color-text-default', '#0f172a'),
           fontSize: 18,
-          fontWeight: 500
+          fontWeight: 500,
+          fontFamily: 'Mona Sans, -apple-system, BlinkMacSystemFont, sans-serif'
         }
       }
     ]
@@ -753,7 +754,7 @@ export function OverallPerformancePage() {
   const { isDark } = useDarkMode();
 
   // Global tab management
-  const { tabs, activeTabId, closeTab, selectTab, addNewTab } = useTabs();
+  const { tabs, activeTabId, closeTab, selectTab, addNewTab, moveTab } = useTabs();
 
   // Convert tabs to TabBar format
   const tabBarTabs = tabs.map((tab) => ({
@@ -864,6 +865,7 @@ export function OverallPerformancePage() {
             onTabChange={selectTab}
             onTabClose={closeTab}
             onTabAdd={addNewTab}
+            onTabReorder={moveTab}
             showAddButton={true}
             showWindowControls={true}
           />

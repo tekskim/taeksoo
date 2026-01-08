@@ -450,7 +450,7 @@ export function BucketDetailPage() {
   const [treeSidebarOpen, setTreeSidebarOpen] = useState(true);
 
   // Global tab management
-  const { tabs, activeTabId, closeTab, selectTab, addNewTab, updateActiveTabLabel } = useTabs();
+  const { tabs, activeTabId, closeTab, selectTab, addNewTab, updateActiveTabLabel, moveTab } = useTabs();
 
   // Use mock data (in real app, fetch based on id)
   const bucketData = mockBucketDetail;
@@ -544,6 +544,7 @@ export function BucketDetailPage() {
             onTabChange={selectTab}
             onTabClose={closeTab}
             onTabAdd={addNewTab}
+            onTabReorder={moveTab}
             showAddButton={true}
             showWindowControls={true}
           />

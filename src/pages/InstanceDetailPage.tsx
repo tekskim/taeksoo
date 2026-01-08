@@ -502,7 +502,7 @@ export function InstanceDetailPage() {
   const instance = id ? (mockInstancesMap[id] || defaultInstanceDetail) : defaultInstanceDetail;
 
   // Global tab management
-  const { tabs, activeTabId, closeTab, selectTab, updateActiveTabLabel } = useTabs();
+  const { tabs, activeTabId, closeTab, selectTab, updateActiveTabLabel, moveTab } = useTabs();
 
   // Update tab label to instance name
   useEffect(() => {

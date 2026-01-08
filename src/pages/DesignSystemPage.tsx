@@ -1789,7 +1789,8 @@ function PieChartDemo({
       padding: [8, 12],
       textStyle: {
         color: '#1e293b',
-        fontSize: 11
+        fontSize: 11,
+        fontFamily: 'Mona Sans, -apple-system, BlinkMacSystemFont, sans-serif'
       },
       formatter: (params: { marker: string; name: string; value: number; percent: number; color: string }) => {
         return `<span style="display: inline-block; width: 8px; height: 8px; border-radius: 9999px; background-color: ${params.color}; margin-right: 6px;"></span>${params.name}<br/><span style="font-weight: 500; margin-left: 14px;">${params.value} (${params.percent.toFixed(0)}%)</span>`;
@@ -1810,7 +1811,8 @@ function PieChartDemo({
           },
           fontSize: 12,
           fontWeight: 600,
-          color: '#ffffff'
+          color: '#ffffff',
+          fontFamily: 'Mona Sans, -apple-system, BlinkMacSystemFont, sans-serif'
         } : {
           show: false
         },
@@ -1915,7 +1917,8 @@ function DoughnutChartDemo({
           textVerticalAlign: 'middle',
           fill: getColor('--color-text-default', '#0f172a'),
           fontSize: 18,
-          fontWeight: 500
+          fontWeight: 500,
+          fontFamily: 'Mona Sans, -apple-system, BlinkMacSystemFont, sans-serif'
         }
       }
     ]
@@ -2159,7 +2162,8 @@ function SingleValueDoughnutDemo({
           textVerticalAlign: 'middle',
           fill: getColor('--color-text-default', '#0f172a'),
           fontSize: 18,
-          fontWeight: 500
+          fontWeight: 500,
+          fontFamily: 'Mona Sans, -apple-system, BlinkMacSystemFont, sans-serif'
         }
       }
     ]
