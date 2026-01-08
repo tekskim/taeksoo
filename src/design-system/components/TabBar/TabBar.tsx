@@ -1,5 +1,5 @@
-import React, { useState, useRef, useEffect, useCallback } from 'react';
-import { IconPlus, IconX, IconMinus, IconSquare, IconChevronLeft, IconChevronRight } from '@tabler/icons-react';
+import React, { useState } from 'react';
+import { IconPlus, IconX, IconMinus, IconSquare } from '@tabler/icons-react';
 
 /* ----------------------------------------
    Types
@@ -58,53 +58,6 @@ export const TabBar: React.FC<TabBarProps> = ({
   onWindowClose,
   className = '',
 }) => {
-  const tabsRef = useRef<HTMLDivElement>(null);
-  const [canScrollLeft, setCanScrollLeft] = useState(false);
-  const [canScrollRight, setCanScrollRight] = useState(false);
-
-  const checkScrollability = useCallback(() => {
-    if (tabsRef.current) {
-      const { scrollLeft, scrollWidth, clientWidth } = tabsRef.current;
-      setCanScrollLeft(scrollLeft > 0);
-      setCanScrollRight(scrollLeft + clientWidth < scrollWidth - 1);
-    }
-  }, []);
-
-  useEffect(() => {
-    checkScrollability();
-    const tabsEl = tabsRef.current;
-    if (tabsEl) {
-      tabsEl.addEventListener('scroll', checkScrollability);
-      window.addEventListener('resize', checkScrollability);
-    }
-    return () => {
-      if (tabsEl) {
-        tabsEl.removeEventListener('scroll', checkScrollability);
-      }
-      window.removeEventListener('resize', checkScrollability);
-    };
-  }, [checkScrollability, tabs]);
-
-  // Scroll to active tab when it changes
-  useEffect(() => {
-    if (tabsRef.current && activeTab) {
-      const activeTabEl = tabsRef.current.querySelector(`[data-tab-id="${activeTab}"]`) as HTMLElement;
-      if (activeTabEl) {
-        activeTabEl.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
-      }
-    }
-  }, [activeTab]);
-
-  const scrollTabs = (direction: 'left' | 'right') => {
-    if (tabsRef.current) {
-      const scrollAmount = 200;
-      tabsRef.current.scrollBy({
-        left: direction === 'left' ? -scrollAmount : scrollAmount,
-        behavior: 'smooth',
-      });
-    }
-  };
-
   const handleTabClick = (tabId: string) => {
     onTabChange(tabId);
   };
@@ -126,36 +79,15 @@ export const TabBar: React.FC<TabBarProps> = ({
         ${className}
       `}
     >
-      {/* Left Scroll Button */}
-      {canScrollLeft && (
-        <button
-          type="button"
-          onClick={() => scrollTabs('left')}
-          className="
-            shrink-0
-            flex items-center justify-center
-            size-[28px]
-            text-[var(--color-text-muted)]
-            hover:text-[var(--color-text-default)]
-            hover:bg-[var(--color-surface-subtle)]
-            transition-colors
-          "
-          aria-label="Scroll tabs left"
-        >
-          <IconChevronLeft size={16} stroke={2} />
-        </button>
-      )}
-
       {/* Tabs Container */}
       <div
-        ref={tabsRef}
         className="
           flex items-end
-          overflow-x-auto
-          scrollbar-none
+          overflow-hidden
           h-full
+          min-w-0
+          shrink
         "
-        style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
       >
         {tabs.map((tab) => {
           const isActive = tab.id === activeTab;
@@ -171,8 +103,9 @@ export const TabBar: React.FC<TabBarProps> = ({
                 relative
                 flex items-center
                 h-full
-                min-w-[var(--tabbar-tab-min-width)]
-                max-w-[var(--tabbar-tab-max-width)]
+                w-[160px]
+                min-w-0
+                shrink
                 px-[var(--tabbar-tab-padding-x)]
                 gap-[var(--tabbar-tab-gap)]
                 cursor-pointer
@@ -243,26 +176,6 @@ export const TabBar: React.FC<TabBarProps> = ({
         })}
       </div>
 
-      {/* Right Scroll Button */}
-      {canScrollRight && (
-        <button
-          type="button"
-          onClick={() => scrollTabs('right')}
-          className="
-            shrink-0
-            flex items-center justify-center
-            size-[28px]
-            text-[var(--color-text-muted)]
-            hover:text-[var(--color-text-default)]
-            hover:bg-[var(--color-surface-subtle)]
-            transition-colors
-          "
-          aria-label="Scroll tabs right"
-        >
-          <IconChevronRight size={16} stroke={2} />
-        </button>
-      )}
-
       {/* Add Button */}
       {showAddButton && onTabAdd && (
         <button
@@ -285,7 +198,7 @@ export const TabBar: React.FC<TabBarProps> = ({
         </button>
       )}
 
-      {/* Spacer to push window controls to the right */}
+      {/* Spacer */}
       <div className="flex-1" />
 
       {/* Window Controls */}
