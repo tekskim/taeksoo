@@ -5,11 +5,10 @@ import ThakiLogoDark from '@/assets/thakiLogo-dark.svg';
 import {
   IconMoon,
   IconSun,
-  IconPalette,
-  IconLayoutSidebar,
-  IconSquare,
+  IconHistory,
 } from '@tabler/icons-react';
 import { Button } from '@/design-system';
+import changelogData from '@/data/changelog.json';
 
 // App Icons
 import ComputeIcon from '@/assets/compute.png';
@@ -38,6 +37,71 @@ interface AppCard {
 /* ----------------------------------------
    App Cards Data
    ---------------------------------------- */
+
+/* ----------------------------------------
+   Changelog Data
+   ---------------------------------------- */
+
+interface ChangelogItem {
+  id: string;
+  date: string;
+  app: string;
+  appColor: string;
+  changes: string[];
+}
+
+// Fallback 데이터 (Git 로그가 없을 때 사용)
+const fallbackChanges: ChangelogItem[] = [
+  {
+    id: '1',
+    date: '2025-01-08',
+    app: 'Design System',
+    appColor: 'from-purple-500 to-fuchsia-500',
+    changes: [
+      'EntryPage 서브타이틀 문구 수정',
+      'NotificationCenter 스크롤 스타일 적용',
+    ],
+  },
+  {
+    id: '2',
+    date: '2025-01-07',
+    app: 'Storage',
+    appColor: 'from-indigo-500 to-blue-500',
+    changes: [
+      'BucketDetailPage Objects 테이블 디자인 시스템 적용',
+      'Tags/Versions 테이블 헤더 구분선 추가',
+      'S3 URI 박스 패딩 통일 (16px)',
+    ],
+  },
+  {
+    id: '3',
+    date: '2025-01-07',
+    app: 'Compute',
+    appColor: 'from-blue-500 to-cyan-500',
+    changes: [
+      'HostDetailPage Device health 탭 지글링 현상 수정',
+      'OSDDetailPage smartctl output 스크롤 제한 제거',
+      'Physical Disks Type 컬럼 truncate 수정',
+    ],
+  },
+  {
+    id: '4',
+    date: '2025-01-06',
+    app: 'Cloud Builder',
+    appColor: 'from-orange-500 to-amber-500',
+    changes: [
+      'ListToolbar Refresh 버튼 위치 조정',
+      'Table 가로 스크롤 및 텍스트 truncate 적용',
+      'Network Agents name 컬럼 너비 조정',
+    ],
+  },
+];
+
+// Git에서 생성된 데이터가 있으면 사용, 없으면 fallback 사용
+const recentChanges: ChangelogItem[] = 
+  (changelogData as ChangelogItem[]).length > 0 
+    ? (changelogData as ChangelogItem[]) 
+    : fallbackChanges;
 
 const appCards: AppCard[] = [
   {
@@ -236,10 +300,10 @@ export function EntryPage() {
           {/* Hero Section */}
           <div className="text-center mb-12">
             <h1 className="text-[32px] font-bold text-[var(--color-text-default)] mb-3">
-              Welcome to THAKI Cloud
+              Thaki Design System SSoT
             </h1>
-            <p className="text-[16px] text-[var(--color-text-subtle)] max-w-2xl mx-auto">
-              Select a service to get started. Build, deploy, and scale your applications with our comprehensive cloud platform.
+            <p className="text-[14px] text-[var(--color-text-subtle)] mx-auto leading-relaxed">
+              Thaki Design System SSoT는 디자인 원칙, 컴포넌트, 토큰, 가이드라인을 한 곳에 모은 '단일 기준'입니다. 디자이너와 개발자가 동일한 소스를 참고해 의사결정과 구현을 정렬하고, 제품 전반의 일관성과 개발 속도를 함께 높입니다.
             </p>
           </div>
 
@@ -254,10 +318,55 @@ export function EntryPage() {
             ))}
           </div>
 
-          {/* Developer Resources */}
+          {/* Recent Changes */}
           <div className="mt-16 pt-8 border-t border-[var(--color-border-default)]">
+            <div className="flex items-center gap-2 mb-6">
+              <IconHistory size={20} stroke={1.5} className="text-[var(--color-text-muted)]" />
+              <h2 className="text-[16px] font-semibold text-[var(--color-text-default)]">
+                최근 반영사항
+              </h2>
+            </div>
+            
+            <div className="space-y-4">
+              {recentChanges.map((item) => (
+                <div
+                  key={item.id}
+                  className="group p-4 rounded-xl bg-[var(--color-surface-default)] border border-[var(--color-border-default)] hover:border-[var(--color-border-strong)] transition-colors"
+                >
+                  <div className="flex items-start gap-4">
+                    {/* App Badge */}
+                    <div className={`shrink-0 px-3 py-1.5 rounded-lg bg-gradient-to-r ${item.appColor} bg-opacity-10`}>
+                      <span className="text-[12px] font-medium text-white">
+                        {item.app}
+                      </span>
+                    </div>
+                    
+                    {/* Content */}
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2 mb-2">
+                        <span className="text-[12px] text-[var(--color-text-muted)]">
+                          {item.date}
+                        </span>
+                      </div>
+                      <ul className="space-y-1">
+                        {item.changes.map((change, idx) => (
+                          <li key={idx} className="flex items-start gap-2 text-[13px] text-[var(--color-text-default)]">
+                            <span className="text-[var(--color-text-muted)] mt-1.5">•</span>
+                            <span>{change}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Developer Resources */}
+          <div className="mt-12 pt-8 border-t border-[var(--color-border-default)]">
             <div className="text-center mb-6">
-              <p className="text-[12px] text-[var(--color-text-subtle)]">
+              <p className="text-[12px] text-[var(--color-text-subtle)] mb-4">
                 Developer Resources
               </p>
               <div className="flex items-center justify-center gap-4">

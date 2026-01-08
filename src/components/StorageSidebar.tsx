@@ -91,7 +91,7 @@ export function StorageSidebar({ isOpen = true, onToggle }: StorageSidebarProps)
           {/* EntryPage */}
           <MenuItem
             icon={<IconHome size={16} stroke={1.5} />}
-            label="Entry page"
+            label="Home"
             href="/storage"
             active={isActive('/storage')}
           />

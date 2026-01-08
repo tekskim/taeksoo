@@ -1,0 +1,11 @@
+[
+  {
+    "id": "1",
+    "date": "2026-01-08",
+    "app": "Design System",
+    "appColor": "from-purple-500 to-fuchsia-500",
+    "changes": [
+      "빌드 시 Git 커밋 로그 자동 파싱 기능 추가"
+    ]
+  }
+]
