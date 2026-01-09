@@ -9,6 +9,7 @@ import {
   StatusIndicator,
   ContextMenu,
   SNBMenuItem,
+  Icons,
   type TableColumn,
   type ContextMenuItem,
 } from '@/design-system';
@@ -116,7 +117,7 @@ export function AgentSidebar() {
     <nav className="fixed left-0 top-0 w-[60px] h-screen bg-[var(--color-surface-default)] border-r border-[var(--color-border-default)] flex flex-col items-center pb-3 z-50">
       {/* Logo - Home/Dashboard link */}
       <Link
-        to="/"
+        to="/agent"
         className="border-b border-[var(--color-border-default)] flex h-[36px] items-center justify-center w-full hover:bg-[var(--color-surface-muted)] transition-colors shrink-0"
       >
         <img 
