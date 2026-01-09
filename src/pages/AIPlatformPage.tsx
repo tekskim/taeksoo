@@ -10,7 +10,7 @@ import {
   Breadcrumb,
   Button,
   Table,
-  TableColumn,
+  type TableColumn,
   Pagination,
   SearchInput,
   Select,
@@ -967,7 +967,7 @@ function WorkloadsContent() {
   const columns: TableColumn<Workload>[] = [
     {
       key: 'name',
-      header: 'Name',
+      label: 'Name',
       width: '280px',
       render: (_, row) => (
         <div className="flex items-center gap-3">
@@ -990,7 +990,7 @@ function WorkloadsContent() {
     },
     {
       key: 'utilization',
-      header: 'Utilization',
+      label: 'Utilization',
       width: '100px',
       align: 'center' as const,
       render: (_, row) => (
@@ -1003,7 +1003,7 @@ function WorkloadsContent() {
     },
     {
       key: 'memory',
-      header: 'Memory',
+      label: 'Memory',
       width: '100px',
       align: 'center' as const,
       render: (_, row) => (
@@ -1019,7 +1019,7 @@ function WorkloadsContent() {
     },
     {
       key: 'disk',
-      header: 'Disk',
+      label: 'Disk',
       width: '100px',
       align: 'center' as const,
       render: (_, row) => (
@@ -1032,7 +1032,7 @@ function WorkloadsContent() {
     },
     {
       key: 'computeType',
-      header: 'Compute Type',
+      label: 'Compute Type',
       width: '120px',
       render: (_, row) => (
         row.computeType !== '-' ? (
@@ -1047,7 +1047,7 @@ function WorkloadsContent() {
     },
     {
       key: 'cost',
-      header: 'Cost',
+      label: 'Cost',
       width: '100px',
       render: (_, row) => (
         <div className="flex items-center gap-1">
@@ -1058,7 +1058,7 @@ function WorkloadsContent() {
     },
     {
       key: 'actions',
-      header: '',
+      label: '',
       width: '40px',
       align: 'center' as const,
       render: () => (
