@@ -14,7 +14,7 @@ import {
 import { AgentPageLayout } from '@/layouts';
 import {
   IconMessage,
-  IconRobot,
+  IconRobotFace,
   IconDatabase,
   IconPuzzle,
   IconSettings,
@@ -175,7 +175,7 @@ export function AgentSidebar() {
                 : 'bg-[var(--color-surface-default)] hover:bg-[var(--color-surface-muted)]'
             }`}
           >
-            <IconRobot 
+            <IconRobotFace 
               size={20} 
               stroke={1.5} 
               className={location.pathname === '/agent/list' || location.pathname.startsWith('/agent/list') || location.pathname.startsWith('/agent/create') ? 'text-[var(--color-action-primary)]' : 'text-[var(--color-text-muted)]'} 
