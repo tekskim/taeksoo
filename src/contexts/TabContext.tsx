@@ -130,7 +130,6 @@ function getLabelFromPath(path: string): string {
     '/storage/osds': 'OSDs',
     '/storage/hosts': 'Hosts',
     '/storage/pools': 'Pools',
-    '/mcp-tools': 'MCP Tools',
     '/design': 'Design System',
     '/design/components': 'Design System',
     '/design/drawers': 'Drawers',
