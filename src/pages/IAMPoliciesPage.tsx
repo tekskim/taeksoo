@@ -201,7 +201,7 @@ interface PolicyDetailsProps {
 
 function PolicyDetails({ permissions }: PolicyDetailsProps) {
   return (
-    <div className="border-t border-[var(--color-border-subtle)] p-4 bg-white">
+    <div className="border-t border-[var(--color-border-subtle)] p-4 bg-[var(--color-surface-default)]">
       <div className="flex flex-col gap-[var(--table-row-gap)]">
         {/* Table Header */}
         <div className="flex items-stretch min-h-[var(--table-row-height)] bg-[var(--table-header-bg)] border border-[var(--color-border-default)] rounded-[var(--table-row-radius)]">

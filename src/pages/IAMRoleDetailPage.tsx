@@ -194,7 +194,7 @@ interface PolicyDetailsProps {
 
 function PolicyDetails({ permissions }: PolicyDetailsProps) {
   return (
-    <div className="border-t border-[var(--color-border-subtle)] p-4 bg-white">
+    <div className="border-t border-[var(--color-border-subtle)] p-4 bg-[var(--color-surface-default)]">
       <div className="flex flex-col gap-[var(--table-row-gap)]">
         {/* Table Header */}
         <div className="flex items-stretch min-h-[var(--table-row-height)] bg-[var(--table-header-bg)] border border-[var(--color-border-default)] rounded-[var(--table-row-radius)]">
@@ -515,7 +515,7 @@ export default function IAMRoleDetailPage() {
           <div className="pt-4 px-8 pb-6 bg-[var(--color-surface-default)]">
             <VStack gap={8}>
               {/* Header Card */}
-              <div className="w-full bg-white border border-[var(--color-border-default)] rounded-lg p-4">
+              <div className="w-full bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg p-4">
                 <VStack gap={3}>
                   {/* Title */}
                   <h1 className="text-[16px] font-semibold leading-6 text-[var(--color-text-default)]">
@@ -685,7 +685,7 @@ export default function IAMRoleDetailPage() {
                             }}
                             className={`flex-1 min-w-[80px] py-2.5 px-2.5 rounded-md text-[14px] font-medium text-center transition-colors ${
                               entitiesSubTab === 'user-groups'
-                                ? 'bg-white border border-[var(--color-border-default)] text-[var(--color-action-primary)]'
+                                ? 'bg-[var(--color-surface-default)] border border-[var(--color-border-default)] text-[var(--color-action-primary)]'
                                 : 'text-[var(--color-text-default)]'
                             }`}
                           >
@@ -700,7 +700,7 @@ export default function IAMRoleDetailPage() {
                             }}
                             className={`flex-1 min-w-[80px] py-2.5 px-2.5 rounded-md text-[14px] font-medium text-center transition-colors ${
                               entitiesSubTab === 'users'
-                                ? 'bg-white border border-[var(--color-border-default)] text-[var(--color-action-primary)]'
+                                ? 'bg-[var(--color-surface-default)] border border-[var(--color-border-default)] text-[var(--color-action-primary)]'
                                 : 'text-[var(--color-text-default)]'
                             }`}
                           >

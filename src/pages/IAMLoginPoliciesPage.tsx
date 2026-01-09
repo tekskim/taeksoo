@@ -219,7 +219,7 @@ export default function IAMLoginPoliciesPage() {
                               </p>
                             </VStack>
                             <VStack gap={2}>
-                              <div className="flex items-center gap-2 w-1/2 bg-white border border-[var(--color-border-default)] rounded-md px-4 py-2">
+                              <div className="flex items-center gap-2 w-1/2 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-md px-4 py-2">
                                 <NumberInput
                                   value={minLength}
                                   onChange={(val) => {
@@ -387,7 +387,7 @@ export default function IAMLoginPoliciesPage() {
                               label={preventReuseEnabled ? 'On' : 'Off'}
                             />
                             <VStack gap={2}>
-                              <div className="flex items-center gap-6 w-full bg-white border border-[var(--color-border-default)] rounded-md px-4 py-2">
+                              <div className="flex items-center gap-6 w-full bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-md px-4 py-2">
                                 <HStack className="gap-[6px]" align="center">
                                   <span className="text-[14px] font-medium leading-5 text-[var(--color-text-default)]">
                                     By resent history
