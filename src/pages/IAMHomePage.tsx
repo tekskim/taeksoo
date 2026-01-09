@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useState, useEffect, useRef } from 'react';
+import ReactECharts from 'echarts-for-react';
 import {
   VStack,
   HStack,
@@ -7,11 +7,7 @@ import {
   TopBar,
   Breadcrumb,
   Table,
-  Button,
   SectionCard,
-  SearchInput,
-  Pagination,
-  Chip,
   type TableColumn,
 } from '@/design-system';
 import { IAMSidebar } from '@/components/IAMSidebar';
@@ -19,52 +15,219 @@ import { useTabs } from '@/contexts/TabContext';
 import {
   IconBell,
   IconSearch,
-  IconUserPlus,
-  IconShieldPlus,
 } from '@tabler/icons-react';
 
 /* ----------------------------------------
    Types
    ---------------------------------------- */
 
-interface UserRow {
+interface EventRow {
   id: string;
-  username: string;
-  email: string;
-  groups: string[];
-  lastLogin: string;
-  status: 'Active' | 'Inactive' | 'Pending';
-  mfaEnabled: boolean;
-}
-
-interface RoleRow {
-  id: string;
-  name: string;
-  description: string;
-  usersCount: number;
-  createdAt: string;
+  time: string;
+  event: string;
+  user: string;
+  target: string;
+  result: 'Success' | 'Failure';
+  ipAddress: string;
 }
 
 /* ----------------------------------------
    Mock Data
    ---------------------------------------- */
 
-const usersData: UserRow[] = [
-  { id: '1', username: 'admin', email: 'admin@thaki.cloud', groups: ['Administrators'], lastLogin: '2025-01-09 10:30', status: 'Active', mfaEnabled: true },
-  { id: '2', username: 'john.doe', email: 'john.doe@thaki.cloud', groups: ['Developers', 'DevOps'], lastLogin: '2025-01-09 09:15', status: 'Active', mfaEnabled: true },
-  { id: '3', username: 'jane.smith', email: 'jane.smith@thaki.cloud', groups: ['Developers'], lastLogin: '2025-01-08 16:45', status: 'Active', mfaEnabled: false },
-  { id: '4', username: 'bob.wilson', email: 'bob.wilson@thaki.cloud', groups: ['Viewers'], lastLogin: '2025-01-07 11:20', status: 'Active', mfaEnabled: false },
-  { id: '5', username: 'alice.johnson', email: 'alice.johnson@thaki.cloud', groups: ['DevOps'], lastLogin: '2025-01-06 14:00', status: 'Inactive', mfaEnabled: true },
-  { id: '6', username: 'new.user', email: 'new.user@thaki.cloud', groups: [], lastLogin: '-', status: 'Pending', mfaEnabled: false },
+const eventsData: EventRow[] = [
+  { id: '1', time: 'Dec 12, 25 18:30:39', event: 'Sign-in', user: 'thaki.kim', target: '-', result: 'Success', ipAddress: '192.168.1.100' },
+  { id: '2', time: 'Dec 12, 25 18:30:39', event: 'Sign-in', user: 'thaki.kim', target: '-', result: 'Success', ipAddress: '192.168.1.100' },
+  { id: '3', time: 'Dec 12, 25 18:31:10', event: 'Sign-in', user: 'alex.johnson', target: '-', result: 'Success', ipAddress: '192.168.1.101' },
+  { id: '4', time: 'Dec 12, 25 18:32:25', event: 'Sign-in', user: 'sara.connor', target: '-', result: 'Success', ipAddress: '192.168.1.102' },
+  { id: '5', time: 'Dec 12, 25 18:32:25', event: 'Sign-in', user: 'sara.connor', target: '-', result: 'Success', ipAddress: '192.168.1.102' },
 ];
 
-const rolesData: RoleRow[] = [
-  { id: '1', name: 'Administrator', description: 'Full access to all resources', usersCount: 3, createdAt: '2025-01-01' },
-  { id: '2', name: 'Developer', description: 'Access to development resources', usersCount: 12, createdAt: '2025-01-01' },
-  { id: '3', name: 'Viewer', description: 'Read-only access', usersCount: 8, createdAt: '2025-01-01' },
-  { id: '4', name: 'DevOps Engineer', description: 'Infrastructure and deployment access', usersCount: 5, createdAt: '2025-01-02' },
-  { id: '5', name: 'Security Auditor', description: 'Security and compliance access', usersCount: 2, createdAt: '2025-01-03' },
-];
+/* ----------------------------------------
+   Half Donut Chart Component (ECharts Gauge - from design system)
+   ---------------------------------------- */
+
+interface HalfDonutChartProps {
+  percentage: number;
+  primaryColor?: string;
+  secondaryColor?: string;
+  label?: string;
+  value?: string;
+}
+
+// Get color from design system CSS variables
+const getColor = (cssVar: string, fallback: string) => {
+  if (typeof window !== 'undefined') {
+    const value = getComputedStyle(document.documentElement).getPropertyValue(cssVar).trim();
+    return value || fallback;
+  }
+  return fallback;
+};
+
+function HalfDonutChart({ 
+  percentage, 
+  primaryColor = '#4ade80',
+  secondaryColor,
+  label,
+  value,
+}: HalfDonutChartProps) {
+  const [showTooltip, setShowTooltip] = useState(false);
+  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+  const containerRef = useRef<HTMLDivElement>(null);
+  
+  // Chart dimensions
+  const chartWidth = 120;
+  const chartHeight = 100;
+  const centerX = chartWidth * 0.5;
+  const centerY = chartHeight * 0.65;
+  const radius = Math.min(chartWidth, chartHeight) * 0.45;
+  const arcWidth = 14;
+  const innerRadius = radius - arcWidth;
+  const outerRadius = radius;
+  
+  const bgColor = secondaryColor || getColor('--color-border-subtle', '#f1f5f9');
+
+  // Check if mouse is over the gauge arc
+  const isOverGaugeArc = (mx: number, my: number) => {
+    const dx = mx - centerX;
+    const dy = my - centerY;
+    const distance = Math.sqrt(dx * dx + dy * dy);
+    
+    if (distance < innerRadius - 4 || distance > outerRadius + 4) return false;
+    
+    let angle = Math.atan2(-dy, dx) * (180 / Math.PI);
+    if (angle < 0) angle += 360;
+    
+    return angle >= 150 && angle <= 330;
+  };
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (containerRef.current) {
+      const rect = containerRef.current.getBoundingClientRect();
+      const relX = e.clientX - rect.left;
+      const relY = e.clientY - rect.top;
+      
+      setMousePos({ x: relX, y: relY });
+      setShowTooltip(isOverGaugeArc(relX, relY));
+    }
+  };
+
+  const handleMouseLeave = () => {
+    setShowTooltip(false);
+  };
+
+  const getOption = () => ({
+    series: [
+      {
+        type: 'gauge',
+        startAngle: 210,
+        endAngle: -30,
+        center: ['50%', '65%'],
+        radius: '90%',
+        min: 0,
+        max: 100,
+        axisLine: {
+          lineStyle: {
+            width: 14,
+            color: [
+              [percentage / 100, primaryColor],
+              [1, bgColor]
+            ]
+          }
+        },
+        pointer: {
+          show: false
+        },
+        axisTick: {
+          show: false
+        },
+        splitLine: {
+          show: false
+        },
+        axisLabel: {
+          show: false
+        },
+        title: {
+          show: false
+        },
+        detail: {
+          show: false
+        }
+      }
+    ]
+  });
+
+  return (
+    <div 
+      ref={containerRef}
+      className="relative"
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
+    >
+      <ReactECharts option={getOption()} style={{ height: `${chartHeight}px`, width: `${chartWidth}px` }} />
+      <div className="absolute inset-0 flex flex-col items-center justify-center pt-4 pointer-events-none">
+        {label && <span className="text-[10px] text-[var(--color-text-subtle)]">{label}</span>}
+        {value && <span className="text-[16px] font-semibold text-[var(--color-text-default)]">{value}</span>}
+      </div>
+      
+      {/* Tooltip */}
+      {showTooltip && (
+        <div 
+          className="absolute z-10 backdrop-blur-[40px] bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px] shadow-[0px_0px_4px_0px_rgba(0,0,0,0.1)] px-2 py-1.5 pointer-events-none whitespace-nowrap"
+          style={{ left: mousePos.x + 12, top: mousePos.y + 12 }}
+        >
+          <span className="text-[11px] leading-[14px] text-[var(--color-text-default)]">
+            {percentage}%
+          </span>
+        </div>
+      )}
+    </div>
+  );
+}
+
+/* ----------------------------------------
+   Stat Card Component
+   ---------------------------------------- */
+
+interface StatCardProps {
+  label: string;
+  value: string | number;
+  variant?: 'default' | 'success' | 'warning' | 'danger';
+}
+
+function StatCard({ label, value, variant = 'default' }: StatCardProps) {
+  const bgColors = {
+    default: 'bg-[var(--color-surface-subtle)]',
+    success: 'bg-[#f0fdf4]',
+    warning: 'bg-[#fefce8]',
+    danger: 'bg-[#fef2f2]',
+  };
+
+  return (
+    <div className={`flex-1 ${bgColors[variant]} rounded-lg px-4 py-3 flex flex-col gap-1.5`}>
+      <p className="text-[11px] leading-[16px] font-medium text-[var(--color-text-subtle)]">{label}</p>
+      <p className="text-[18px] font-semibold text-[var(--color-text-default)]">{value}</p>
+    </div>
+  );
+}
+
+/* ----------------------------------------
+   Resource Card Component
+   ---------------------------------------- */
+
+interface ResourceCardProps {
+  label: string;
+  value: string | number;
+}
+
+function ResourceCard({ label, value }: ResourceCardProps) {
+  return (
+    <div className="bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3 flex flex-col gap-1.5">
+      <p className="text-[11px] leading-[16px] font-medium text-[var(--color-text-subtle)]">{label}</p>
+      <p className="text-[18px] font-semibold text-[var(--color-text-default)]">{value}</p>
+    </div>
+  );
+}
 
 /* ----------------------------------------
    IAM Home Page
@@ -72,9 +235,6 @@ const rolesData: RoleRow[] = [
 
 export function IAMHomePage() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
-  const [usersPage, setUsersPage] = useState(1);
-  const [rolesPage, setRolesPage] = useState(1);
-  const navigate = useNavigate();
   const { tabs, activeTabId, selectTab, closeTab, addNewTab, updateActiveTabLabel, moveTab } = useTabs();
 
   // Update tab label on mount
@@ -85,90 +245,22 @@ export function IAMHomePage() {
   // Sidebar width
   const sidebarWidth = sidebarOpen ? 200 : 0;
 
-  // User table columns
-  const userColumns: TableColumn<UserRow>[] = [
+  // Events table columns
+  const eventsColumns: TableColumn<EventRow>[] = [
+    { key: 'time', label: 'Time', flex: 1, sortable: true },
+    { key: 'event', label: 'Event', flex: 1, sortable: true },
+    { key: 'user', label: 'User', flex: 1, sortable: true },
+    { key: 'target', label: 'Target', flex: 1, sortable: true },
     { 
-      key: 'username', 
-      label: 'Username', 
+      key: 'result', 
+      label: 'Result', 
       flex: 1, 
       sortable: true,
       render: (value: string) => (
-        <span 
-          className="text-[var(--color-action-primary)] font-medium cursor-pointer hover:underline"
-          onClick={() => navigate(`/iam/users/${value}`)}
-        >
-          {value}
-        </span>
+        <span className="text-[var(--color-action-primary)]">{value}</span>
       )
     },
-    { key: 'email', label: 'Email', flex: 1, sortable: true },
-    { 
-      key: 'groups', 
-      label: 'Groups', 
-      width: '200px', 
-      sortable: false,
-      render: (value: string[]) => (
-        <HStack gap={1}>
-          {value.length > 0 ? (
-            value.slice(0, 2).map((group, idx) => (
-              <Chip key={idx} size="sm">{group}</Chip>
-            ))
-          ) : (
-            <span className="text-[var(--color-text-muted)]">-</span>
-          )}
-          {value.length > 2 && (
-            <Chip size="sm">+{value.length - 2}</Chip>
-          )}
-        </HStack>
-      )
-    },
-    { key: 'lastLogin', label: 'Last Login', width: '140px', sortable: true },
-    { 
-      key: 'status', 
-      label: 'Status', 
-      width: '100px', 
-      sortable: true,
-      render: (value: string) => (
-        <Chip 
-          size="sm" 
-          variant={value === 'Active' ? 'success' : value === 'Inactive' ? 'danger' : 'warning'}
-        >
-          {value}
-        </Chip>
-      )
-    },
-    { 
-      key: 'mfaEnabled', 
-      label: 'MFA', 
-      width: '80px', 
-      align: 'center',
-      render: (value: boolean) => (
-        <span className={value ? 'text-[var(--color-state-success)]' : 'text-[var(--color-text-muted)]'}>
-          {value ? '✓' : '-'}
-        </span>
-      )
-    },
-  ];
-
-  // Role table columns
-  const roleColumns: TableColumn<RoleRow>[] = [
-    { 
-      key: 'name', 
-      label: 'Role Name', 
-      flex: 1, 
-      sortable: true,
-      render: (value: string) => (
-        <span 
-          className="text-[var(--color-action-primary)] font-medium cursor-pointer hover:underline"
-          onClick={() => navigate(`/iam/roles/${value.toLowerCase().replace(/\s+/g, '-')}`)}
-        >
-          {value}
-        </span>
-      )
-    },
-    { key: 'description', label: 'Description', flex: 2, sortable: false },
-    { key: 'usersCount', label: 'Users', width: '80px', sortable: true, align: 'center' },
-    { key: 'createdAt', label: 'Created', width: '120px', sortable: true },
+    { key: 'ipAddress', label: 'IP address', flex: 1, sortable: true },
   ];
 
   return (
@@ -217,131 +309,114 @@ export function IAMHomePage() {
 
         {/* Content Area */}
         <div className="flex-1 overflow-auto min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll">
-          <div className="pt-6 px-8 pb-20 bg-[var(--color-surface-default)] min-h-full">
-            <VStack gap={6} className="min-w-[1176px]">
-              {/* Welcome Header */}
-              <SectionCard className="bg-[var(--color-surface-subtle)]">
-                <SectionCard.Content>
+          <div className="pt-3 px-8 pb-20 bg-[var(--color-surface-subtle)] min-h-full">
+            <VStack gap={3}>
+              
+              {/* Row 1: Domain Info + Authentication Summary */}
+              <HStack gap={3} align="stretch">
+                {/* Domain Info Card */}
+                <div className="w-[312px] shrink-0 bg-white rounded-lg p-4 flex flex-col gap-6">
+                  <h2 className="text-[24px] font-semibold text-[var(--color-text-default)]">DomainA</h2>
                   <VStack gap={2}>
-                    <h1 className="text-[24px] font-semibold text-[var(--color-text-default)]">Identity & Access Management</h1>
-                    <p className="text-[14px] text-[var(--color-text-muted)]">
-                      Manage users, groups, roles, and policies to control access to your cloud resources securely.
-                    </p>
+                    <HStack gap={2}>
+                      <span className="text-[12px] font-medium text-[var(--color-text-default)]">Created at</span>
+                      <span className="text-[12px] text-[var(--color-text-default)]">Dec 12, 2025</span>
+                    </HStack>
+                    <HStack gap={2}>
+                      <span className="text-[12px] font-medium text-[var(--color-text-default)]">Description</span>
+                      <span className="text-[12px] text-[var(--color-text-default)]">-</span>
+                    </HStack>
                   </VStack>
-                </SectionCard.Content>
-              </SectionCard>
+                </div>
 
-              {/* Users and Quick Actions Row */}
-              <HStack gap={6} align="start">
-                {/* Users Table */}
-                <SectionCard className="flex-1">
-                  <SectionCard.Header 
-                    title="Users" 
-                    actions={
-                      <Button 
-                        variant="primary" 
-                        size="sm" 
-                        leftIcon={<IconUserPlus size={14} stroke={1.5} />}
-                        onClick={() => navigate('/iam/users/create')}
-                      >
-                        Add User
-                      </Button>
-                    }
-                  />
-                  <SectionCard.Content>
-                    <VStack gap={4}>
-                      <HStack justify="between" align="center">
-                        <SearchInput 
-                          placeholder="Search users..." 
-                          size="sm" 
-                          className="w-[280px]"
-                        />
-                        <Pagination
-                          currentPage={usersPage}
-                          totalPages={Math.ceil(usersData.length / 5)}
-                          onPageChange={setUsersPage}
-                          totalItems={usersData.length}
-                        />
-                      </HStack>
-                      <Table<UserRow>
-                        columns={userColumns}
-                        data={usersData.slice((usersPage - 1) * 5, usersPage * 5)}
-                        rowKey="id"
+                {/* Authentication Summary Card */}
+                <div className="flex-1 bg-white rounded-lg pt-3 pb-4 px-4 flex flex-col gap-3">
+                  <h3 className="text-[14px] font-semibold text-[var(--color-text-default)]">Authentication summary</h3>
+                  
+                  <HStack gap={3}>
+                    {/* Today's Sign-ins */}
+                    <div className="flex-1 bg-[var(--color-surface-subtle)] rounded-lg p-4 flex items-start justify-between">
+                      <VStack gap={3}>
+                        <p className="text-[14px] font-medium text-[var(--color-text-default)]">Today's Sign-ins</p>
+                        <VStack gap={2}>
+                          <HStack gap={1} align="center">
+                            <div className="w-[3px] h-[3px] rounded-full bg-[#4ade80]" />
+                            <span className="text-[11px] font-medium text-[var(--color-text-subtle)]">Success: 1,234 (96%)</span>
+                          </HStack>
+                          <HStack gap={1} align="center">
+                            <div className="w-[3px] h-[3px] rounded-full bg-[#f87171]" />
+                            <span className="text-[11px] font-medium text-[var(--color-text-subtle)]">Failure: 45 (4%)</span>
+                          </HStack>
+                        </VStack>
+                      </VStack>
+                      <HalfDonutChart 
+                        percentage={96} 
+                        primaryColor="#4ade80"
+                        secondaryColor="#f87171"
+                        label="Total"
+                        value="1,279"
                       />
-                    </VStack>
-                  </SectionCard.Content>
-                </SectionCard>
+                    </div>
 
-                {/* Quick Actions Card */}
-                <SectionCard className="w-[280px] shrink-0">
-                  <SectionCard.Header title="Quick Actions" />
-                  <SectionCard.Content>
-                    <VStack gap={3}>
-                      <Button 
-                        variant="secondary" 
-                        size="sm" 
-                        fullWidth
-                        leftIcon={<IconUserPlus size={14} stroke={1.5} />}
-                        onClick={() => navigate('/iam/users/create')}
-                      >
-                        Add User
-                      </Button>
-                      <Button 
-                        variant="secondary" 
-                        size="sm" 
-                        fullWidth
-                        leftIcon={<IconShieldPlus size={14} stroke={1.5} />}
-                        onClick={() => navigate('/iam/roles/create')}
-                      >
-                        Create Role
-                      </Button>
-                      <div className="h-px bg-[var(--color-border-default)]" />
-                      <p className="text-[11px] text-[var(--color-text-muted)] leading-relaxed">
-                        Quickly add users or create new roles to manage access to your cloud resources.
-                      </p>
-                    </VStack>
-                  </SectionCard.Content>
-                </SectionCard>
+                    {/* MFA Adoption */}
+                    <div className="flex-1 bg-[var(--color-surface-subtle)] rounded-lg p-4 flex items-start justify-between">
+                      <VStack gap={3}>
+                        <p className="text-[14px] font-medium text-[var(--color-text-default)]">MFA adoption</p>
+                        <VStack gap={2}>
+                          <HStack gap={1} align="center">
+                            <div className="w-[3px] h-[3px] rounded-full bg-[#4ade80]" />
+                            <span className="text-[11px] font-medium text-[var(--color-text-subtle)]">Enabled: 117 (78%)</span>
+                          </HStack>
+                          <HStack gap={1} align="center">
+                            <div className="w-[3px] h-[3px] rounded-full bg-[#e2e8f0]" />
+                            <span className="text-[11px] font-medium text-[var(--color-text-subtle)]">Disabled: 33 (22%)</span>
+                          </HStack>
+                        </VStack>
+                      </VStack>
+                      <HalfDonutChart 
+                        percentage={78} 
+                        primaryColor="#4ade80"
+                        secondaryColor="#e2e8f0"
+                        value="78%"
+                      />
+                    </div>
+                  </HStack>
+                </div>
               </HStack>
 
-              {/* Roles Section */}
-              <SectionCard>
-                <SectionCard.Header 
-                  title="Roles" 
-                  actions={
-                    <Button 
-                      variant="secondary" 
-                      size="sm" 
-                      leftIcon={<IconShieldPlus size={14} stroke={1.5} />}
-                      onClick={() => navigate('/iam/roles/create')}
-                    >
-                      Create Role
-                    </Button>
-                  }
-                />
-                <SectionCard.Content>
-                  <VStack gap={4}>
-                    <HStack justify="between" align="center">
-                      <SearchInput 
-                        placeholder="Search roles..." 
-                        size="sm" 
-                        className="w-[280px]"
-                      />
-                      <Pagination
-                        currentPage={rolesPage}
-                        totalPages={Math.ceil(rolesData.length / 5)}
-                        onPageChange={setRolesPage}
-                        totalItems={rolesData.length}
-                      />
-                    </HStack>
-                    <Table<RoleRow>
-                      columns={roleColumns}
-                      data={rolesData.slice((rolesPage - 1) * 5, rolesPage * 5)}
-                      rowKey="id"
-                    />
+              {/* Row 2: User Status */}
+              <div className="bg-white rounded-lg pt-3 pb-4 px-4 flex flex-col gap-3">
+                <h3 className="text-[14px] font-semibold text-[var(--color-text-default)]">User status</h3>
+                <HStack gap={2}>
+                  <StatCard label="Total" value="150" variant="default" />
+                  <StatCard label="Online" value="50" variant="success" />
+                  <StatCard label="Disabled" value="27" variant="warning" />
+                  <StatCard label="Locked" value="3" variant="danger" />
+                </HStack>
+              </div>
+
+              {/* Row 3: IAM Resources + Recent Events */}
+              <HStack gap={3} align="start">
+                {/* IAM Resources */}
+                <div className="w-[312px] shrink-0 bg-white rounded-lg pt-3 pb-4 px-4 flex flex-col gap-3">
+                  <h3 className="text-[14px] font-semibold text-[var(--color-text-default)]">IAM resources</h3>
+                  <VStack gap={2}>
+                    <ResourceCard label="User group" value="13" />
+                    <ResourceCard label="Roles" value="13" />
+                    <ResourceCard label="Policies" value="13" />
                   </VStack>
-                </SectionCard.Content>
-              </SectionCard>
+                </div>
+
+                {/* Recent Events */}
+                <div className="flex-1 bg-white rounded-lg p-4 flex flex-col gap-3">
+                  <h3 className="text-[14px] font-semibold text-[var(--color-text-default)]">Recent events</h3>
+                  <Table<EventRow>
+                    columns={eventsColumns}
+                    data={eventsData}
+                    rowKey="id"
+                  />
+                </div>
+              </HStack>
             </VStack>
           </div>
         </div>
@@ -351,4 +426,3 @@ export function IAMHomePage() {
 }
 
 export default IAMHomePage;
-
