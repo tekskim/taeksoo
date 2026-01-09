@@ -10,15 +10,18 @@ import { VStack } from '../../layouts';
 export interface SectionCardProps extends HTMLAttributes<HTMLDivElement> {
   /** Child components */
   children: ReactNode;
+  /** Active state - shows blue border */
+  isActive?: boolean;
 }
 
-export function SectionCard({ children, className, ...props }: SectionCardProps) {
+export function SectionCard({ children, isActive = false, className, ...props }: SectionCardProps) {
   return (
     <div
       className={twMerge(
         'flex flex-col items-start',
         'bg-[var(--color-surface-default)]',
         'border border-[var(--color-border-default)]',
+        isActive && 'ring-2 ring-[var(--color-action-primary)]',
         'rounded-lg',
         'px-4 py-3',
         'w-full',
