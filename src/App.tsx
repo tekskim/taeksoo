@@ -88,6 +88,9 @@ import MetallicPalettePage from '@/pages/MetallicPalettePage';
 // Pages - Desktop
 import { DesktopPage } from '@/pages/DesktopPage';
 
+// Pages - AI Platform
+import { AIPlatformPage } from '@/pages/AIPlatformPage';
+
 const defaultTabs = [
   { id: 'home', label: 'Home', path: '/compute', closable: true },
 ];
@@ -188,6 +191,10 @@ function AppRoutes() {
 
         {/* Desktop Routes */}
         <Route path="/desktop" element={<DesktopPage />} />
+
+        {/* AI Platform Routes */}
+        <Route path="/ai-platform" element={<AIPlatformPage />} />
+        <Route path="/ai-platform/*" element={<AIPlatformPage />} />
       </Routes>
   );
 }
