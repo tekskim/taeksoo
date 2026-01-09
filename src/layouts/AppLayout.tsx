@@ -83,7 +83,7 @@ export function AppLayout({ children }: AppLayoutProps) {
   const location = useLocation();
   const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(true);
-  const { tabs, activeTabId, selectTab, closeTab, addNewTab } = useTabs();
+  const { tabs, activeTabId, selectTab, closeTab, addNewTab, moveTab } = useTabs();
 
   // Notification state
   const [notificationOpen, setNotificationOpen] = useState(false);
@@ -167,6 +167,7 @@ export function AppLayout({ children }: AppLayoutProps) {
             onTabChange={handleTabChange}
             onTabClose={handleTabClose}
             onTabAdd={addNewTab}
+            onTabReorder={moveTab}
             showAddButton={true}
             showWindowControls={true}
             onWindowClose={() => navigate('/')}

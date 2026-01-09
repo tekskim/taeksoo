@@ -15,6 +15,7 @@ import {
 import { AgentPageLayout } from '@/layouts';
 import {
   IconMessage,
+  IconRobotFace,
   IconDatabase,
   IconPuzzle,
   IconSettings,
@@ -28,14 +29,13 @@ import {
   IconDots,
   IconStar,
   IconStarFilled,
-  IconPlayerPause,
-  IconPencil,
   IconCode,
   IconDotsVertical,
   IconDotsCircleHorizontal,
   IconHome,
+  IconTarget,
+  IconPencil,
 } from '@tabler/icons-react';
-import { Icons } from '@/design-system';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import AgentLogo from '@/assets/icons/agent-logo.svg';
 import { useProject } from '@/contexts/ProjectContext';
@@ -51,44 +51,45 @@ interface StatusCardProps {
 }
 
 function StatusCard({ label, count, status }: StatusCardProps) {
-  const bgColor = status === 'active' 
-    ? 'bg-[var(--color-state-success-bg,#f0fdf4)]' 
-    : 'bg-[var(--color-surface-subtle,#f8fafc)]';
+  let bgColor = 'bg-[var(--color-surface-subtle,#f8fafc)]';
+  let iconBg = 'bg-[var(--color-text-muted,#475569)]';
   
-  const iconBg = status === 'active'
-    ? 'bg-[var(--color-success,#4ade80)]'
-    : 'bg-[var(--color-text-muted,#475569)]';
+  if (status === 'active') {
+    bgColor = 'bg-[var(--color-state-success-bg,#f0fdf4)]';
+    iconBg = 'bg-[var(--color-success,#4ade80)]';
+  }
+
+  const getStatusIcon = () => {
+    if (status === 'active') {
+      return (
+        <IconTarget size={12} stroke={1} className="text-white" />
+      );
+    } else if (status === 'inactive') {
+      return (
+        <div className="flex flex-col gap-0.5 items-center justify-center">
+          <div className="h-1 w-2 bg-white rounded-sm" />
+          <div className="h-1 w-2 bg-white rounded-sm" />
+        </div>
+      );
+    } else if (status === 'draft') {
+      return (
+        <IconPencil size={12} stroke={1} className="text-white" />
+      );
+    }
+  };
 
   return (
     <div className={`${bgColor} flex flex-[1_0_0] items-center justify-between min-h-px min-w-px px-4 py-3 relative rounded-lg shrink-0`}>
       <div className="flex flex-col gap-1.5 items-start leading-4 not-italic relative shrink-0">
-        <p className="font-medium relative shrink-0 text-[var(--color-text-subtle)] text-[length:var(--font-size-11)] leading-[length:var(--line-height-16)]">
+        <p className="font-medium text-[length:var(--font-size-11)] leading-[var(--line-height-16)] text-[var(--color-text-subtle)]">
           {label}
         </p>
-        <p className="font-normal relative shrink-0 text-[var(--color-text-default)] text-[length:var(--font-size-12)] leading-[length:var(--line-height-18)]">
+        <p className="text-[length:var(--font-size-12)] leading-[var(--line-height-18)] text-[var(--color-text-default)]">
           {count}
         </p>
       </div>
       <div className={`${iconBg} flex gap-0 items-center justify-center p-1 relative rounded-2xl shrink-0 size-6`}>
-        {status === 'active' && (
-          <div className="flex-[1_0_0] h-full min-h-px min-w-px overflow-clip relative shrink-0">
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M4 4L12 4L12 12L4 12L4 4Z" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-              <path d="M6 6L10 6" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-              <path d="M6 8L10 8" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-            </svg>
-          </div>
-        )}
-        {status === 'inactive' && (
-          <div className="flex-[1_0_0] h-full min-h-px min-w-px overflow-clip relative shrink-0">
-            <IconPlayerPause size={12} stroke={1} className="text-white" />
-          </div>
-        )}
-        {status === 'draft' && (
-          <div className="flex-[1_0_0] h-full min-h-px min-w-px overflow-clip relative shrink-0">
-            <IconPencil size={12} stroke={1} className="text-white" />
-          </div>
-        )}
+        {getStatusIcon()}
       </div>
     </div>
   );
@@ -115,8 +116,8 @@ export function AgentSidebar() {
     <nav className="fixed left-0 top-0 w-[60px] h-screen bg-[var(--color-surface-default)] border-r border-[var(--color-border-default)] flex flex-col items-center pb-3 z-50">
       {/* Logo - Home/Dashboard link */}
       <Link
-        to="/agent"
-        className="border-b border-[var(--color-border-default)] flex h-[33px] items-center justify-center w-full hover:bg-[var(--color-surface-muted)] transition-colors shrink-0"
+        to="/"
+        className="border-b border-[var(--color-border-default)] flex h-[36px] items-center justify-center w-full hover:bg-[var(--color-surface-muted)] transition-colors shrink-0"
       >
         <img 
           src={AgentLogo} 
@@ -297,7 +298,7 @@ export function AgentPage() {
         row.favorite ? (
           <IconStarFilled size={16} className="text-yellow-500" />
         ) : (
-          <IconStar size={16} className="text-[var(--color-border-default)]" />
+          <IconStar size={16} stroke={1.5} className="text-[var(--color-text-muted)]" />
         )
       ),
     },
@@ -370,7 +371,7 @@ export function AgentPage() {
         return (
           <div className="flex gap-1 items-center justify-center" onClick={(e) => e.stopPropagation()}>
             <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors">
-              <IconCode size={16} stroke={1} className="text-[var(--color-text-muted)]" />
+              <IconCode size={16} stroke={1.5} className="text-[var(--color-text-muted)]" />
             </button>
             <ContextMenu items={menuItems} trigger="click">
               <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors">

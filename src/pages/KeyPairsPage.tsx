@@ -89,7 +89,7 @@ export function KeyPairsPage() {
   const [columnConfig, setColumnConfig] = useState<ColumnConfig[]>(defaultColumnConfig);
 
   // Global tab management
-  const { tabs, activeTabId, closeTab, selectTab, addNewTab } = useTabs();
+  const { tabs, activeTabId, closeTab, selectTab, addNewTab, moveTab } = useTabs();
 
   // Convert tabs to TabBar format
   const tabBarTabs = tabs.map((tab) => ({
@@ -274,6 +274,7 @@ export function KeyPairsPage() {
           onTabChange={selectTab}
           onTabClose={closeTab}
           onTabAdd={addNewTab}
+            onTabReorder={moveTab}
           showAddButton={true}
           showWindowControls={true}
         />

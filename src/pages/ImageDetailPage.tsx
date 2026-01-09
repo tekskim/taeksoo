@@ -184,6 +184,14 @@ function PerformanceChart({
         color: tooltipTextColor,
         fontSize: 11,
         fontFamily: 'Mona Sans, -apple-system, BlinkMacSystemFont, sans-serif'
+      },
+      formatter: (params: Array<{ marker: string; seriesName: string; value: number; axisValueLabel: string }>) => {
+        if (!Array.isArray(params) || params.length === 0) return '';
+        const time = params[0].axisValueLabel;
+        const items = params.map(p => 
+          `<div style="display: flex; align-items: center; gap: 8px;"><span style="display: inline-block; width: 8px; height: 8px; border-radius: 9999px; background-color: ${p.color};"></span><span>${p.seriesName}</span><span style="font-weight: 500; margin-left: auto;">${p.value}</span></div>`
+        ).join('');
+        return `<div style="font-size: 11px; font-family: Mona Sans, -apple-system, BlinkMacSystemFont, sans-serif;">${time}<div style="margin-top: 4px;">${items}</div></div>`;
       }
     },
     series: series
@@ -434,13 +442,20 @@ const latencyData = {
 export function ImageDetailPage() {
   const { id } = useParams<{ id: string }>();
   const [sidebarOpen, setSidebarOpen] = useState(true);
-  const [activeTab, setActiveTab] = useState(0);
+  const [activeTab, setActiveTab] = useState('performance');
 
   // Global tab management
-  const { tabs, activeTabId, closeTab, selectTab, addNewTab } = useTabs();
+  const { tabs, activeTabId, closeTab, selectTab, addNewTab, updateActiveTabLabel, moveTab } = useTabs();
 
   // Use mock data (in real app, fetch based on id)
   const imageData = mockImageDetail;
+
+  // Update tab label to match the image name (most recent breadcrumb)
+  useEffect(() => {
+    if (imageData?.name) {
+      updateActiveTabLabel(imageData.name);
+    }
+  }, [imageData?.name, updateActiveTabLabel]);
 
   // Convert tabs to TabBar format
   const tabBarTabs = tabs.map((tab) => ({
@@ -478,14 +493,22 @@ export function ImageDetailPage() {
           {/* Tab Bar */}
           <TabBar
             tabs={tabBarTabs}
-            activeTabId={activeTabId}
+            activeTab={activeTabId}
+            onTabChange={selectTab}
             onTabClose={closeTab}
-            onTabSelect={selectTab}
-            onNewTab={addNewTab}
+            onTabAdd={addNewTab}
+            onTabReorder={moveTab}
+            showAddButton={true}
+            showWindowControls={true}
           />
 
           {/* Top Bar */}
           <TopBar
+            showSidebarToggle={!sidebarOpen}
+            onSidebarToggle={() => setSidebarOpen(true)}
+            showNavigation={true}
+            onBack={() => window.history.back()}
+            onForward={() => window.history.forward()}
             breadcrumb={
               <Breadcrumb
                 items={[
@@ -498,7 +521,7 @@ export function ImageDetailPage() {
             actions={
               <TopBarAction
                 icon={<IconBell size={16} stroke={1.5} />}
-                label="Notifications"
+                aria-label="Notifications"
               />
             }
           />
@@ -506,8 +529,8 @@ export function ImageDetailPage() {
 
         {/* Scrollable Content Area */}
         <div className="flex-1 overflow-auto min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll">
-          <div className="pt-4 px-8 pb-20 bg-[var(--color-surface-default)]">
-            <VStack gap={6} className="min-w-[1176px] max-w-[1320px]">
+          <div className="pt-4 px-8 pb-20 bg-[var(--color-surface-default)] min-h-full">
+            <VStack gap={6} className="min-w-[1176px]">
               {/* Page Header with Info Cards */}
               <DetailHeader>
                 <DetailHeader.Title>{imageData.name}</DetailHeader.Title>
@@ -540,14 +563,14 @@ export function ImageDetailPage() {
               <div className="w-full">
                 <Tabs value={activeTab} onChange={setActiveTab} variant="underline" size="sm">
                   <TabList>
-                    <Tab>Performance</Tab>
+                    <Tab value="performance">Performance</Tab>
                   </TabList>
 
                   {/* Performance Tab Panel */}
-                  <TabPanel value={0} className="pt-0">
+                  <TabPanel value="performance" className="pt-0">
                     <VStack gap={6} className="pt-4">
                       {/* Monitoring Time Controls */}
-                      <div className="flex justify-end w-full">
+                      <div className="flex justify-start w-full">
                         <MonitoringToolbar />
                       </div>
 

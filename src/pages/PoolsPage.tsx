@@ -161,10 +161,11 @@ export function PoolsPage() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
+  const [selectedPools, setSelectedPools] = useState<string[]>([]);
   const rowsPerPage = 10;
 
   // Global tab management
-  const { tabs, activeTabId, closeTab, selectTab, addNewTab } = useTabs();
+  const { tabs, activeTabId, closeTab, selectTab, addNewTab, moveTab } = useTabs();
 
   // Convert tabs to TabBar format
   const tabBarTabs = tabs.map((tab) => ({
@@ -283,6 +284,7 @@ export function PoolsPage() {
             onTabChange={selectTab}
             onTabClose={closeTab}
             onTabAdd={addNewTab}
+            onTabReorder={moveTab}
             showAddButton={true}
             showWindowControls={true}
           />
@@ -314,16 +316,13 @@ export function PoolsPage() {
         {/* Scrollable Content Area */}
         <div className="flex-1 overflow-auto min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll">
           {/* Page Content */}
-          <div className="pt-4 px-8 pb-20 bg-[var(--color-surface-default)]">
+          <div className="pt-4 px-8 pb-20 bg-[var(--color-surface-default)] min-h-full">
             <VStack gap={3}>
               {/* Page Header */}
               <div className="flex items-center justify-between h-8">
                 <h1 className="text-[length:var(--font-size-16)] font-semibold text-[var(--color-text-default)]">
                   Pools
                 </h1>
-                <Button>
-                  Create Pools
-                </Button>
               </div>
 
               {/* Search and Actions */}
@@ -358,6 +357,7 @@ export function PoolsPage() {
                   showSettings
                   onSettingsClick={() => console.log('Settings clicked')}
                   totalItems={filteredPools.length}
+                  selectedCount={selectedPools.length}
                 />
               )}
 
@@ -367,6 +367,9 @@ export function PoolsPage() {
                 data={paginatedPools}
                 rowKey="id"
                 emptyMessage="No pools found"
+                selectable
+                selectedKeys={selectedPools}
+                onSelectionChange={setSelectedPools}
               />
             </VStack>
           </div>

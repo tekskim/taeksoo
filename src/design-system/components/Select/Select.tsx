@@ -243,23 +243,23 @@ export function Select({
 
   // Size-based styles
   const sizeStyles = {
-    sm: 'h-[28px] px-2 py-1 text-[11px] leading-4 min-w-[60px]',
+    sm: 'h-[28px] px-2 py-1 text-[11px] leading-4 min-w-[80px]',
     md: 'px-[var(--select-padding-x)] py-[var(--select-padding-y)] text-[length:var(--select-font-size)] leading-[var(--select-line-height)] min-w-[80px]',
   };
 
   const triggerClasses = twMerge(
-    'flex items-center justify-between',
+    'flex items-center justify-between gap-2',
     'w-full',
     sizeStyles[size],
     'bg-[var(--select-bg)]',
     'border border-solid rounded-[var(--select-radius)]',
     'transition-colors duration-[var(--duration-fast)]',
     'cursor-pointer',
-    // Border & ring for focus (prevents size change)
+    // Border color based on state
     error
       ? 'border-[var(--input-border-error)]'
       : isOpen
-        ? 'border-[var(--select-border-focus)] ring-1 ring-[var(--select-border-focus)]'
+        ? 'border-[var(--select-border-focus)]'
         : 'border-[var(--select-border)]',
     // Disabled
     disabled && 'bg-[var(--select-bg-disabled)] border-[var(--color-border-default)] cursor-not-allowed',
