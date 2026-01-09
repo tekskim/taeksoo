@@ -9,6 +9,9 @@ import {
   Textarea,
   NumberInput,
   SearchInput,
+  FilterSearchInput,
+  type FilterField,
+  type AppliedFilter,
   Select,
   Slider,
   Chip,
@@ -280,6 +283,67 @@ const componentItems = [
 
 // All items for intersection observer
 const navItems = [...foundationItems, ...componentItems];
+
+/* ----------------------------------------
+   Filter Search Input Demo
+   ---------------------------------------- */
+
+function FilterSearchInputDemo() {
+  const [appliedFilters, setAppliedFilters] = useState<AppliedFilter[]>([]);
+
+  // Define available filter fields
+  const filterFields: FilterField[] = [
+    {
+      id: 'name',
+      label: 'Name',
+      type: 'text',
+      placeholder: 'Enter name...',
+    },
+    {
+      id: 'status',
+      label: 'Status',
+      type: 'select',
+      options: [
+        { value: 'active', label: 'Active' },
+        { value: 'shutoff', label: 'Shutoff' },
+        { value: 'building', label: 'Building' },
+        { value: 'error', label: 'Error' },
+      ],
+    },
+    {
+      id: 'image',
+      label: 'Image',
+      type: 'text',
+      placeholder: 'Enter image name...',
+    },
+    {
+      id: 'flavor',
+      label: 'Flavor',
+      type: 'select',
+      options: [
+        { value: 'small', label: 'Small' },
+        { value: 'medium', label: 'Medium' },
+        { value: 'large', label: 'Large' },
+      ],
+    },
+  ];
+
+  return (
+    <div className="flex flex-col gap-4">
+      <FilterSearchInput
+        filters={filterFields}
+        appliedFilters={appliedFilters}
+        onFiltersChange={setAppliedFilters}
+        placeholder="Find Instance with filters"
+        className="w-[400px]"
+      />
+      <div className="text-[11px] text-[var(--color-text-subtle)] bg-[var(--color-surface-muted)] p-3 rounded-md">
+        <strong>Usage:</strong> Click the input to see available filters. Select a filter type, then enter a value (text) or choose from options (select).
+        Applied filters appear as removable tags below the input.
+      </div>
+    </div>
+  );
+}
 
 /* ----------------------------------------
    Notification Center Section
@@ -3751,6 +3815,15 @@ outline: 2px solid var(--color-border-focus);`}
                       <SearchInput defaultValue="Search value" className="w-[200px]" />
                     </VStack>
                   </div>
+                </VStack>
+
+                {/* FilterSearchInput */}
+                <VStack gap={3}>
+                  <Label>Filter Search Input</Label>
+                  <p className="text-[length:var(--font-size-11)] text-[var(--color-text-muted)]">
+                    Search input with filter dropdown. Click to select filter field, then enter value or select option.
+                  </p>
+                  <FilterSearchInputDemo />
                 </VStack>
               </VStack>
             </Section>
