@@ -41,8 +41,8 @@ export function CloudBuilderCreatePage() {
 
   return (
     <AppLayout>
-      <div className="pt-4 px-8 pb-20 bg-[var(--color-surface-default)]">
-        <VStack gap={6} className="min-w-[1176px] max-w-[1320px]">
+      <div className="pt-4 px-8 pb-20 bg-[var(--color-surface-default)] min-h-full">
+        <VStack gap={6} className="min-w-[1176px]">
           <DetailHeader>
             <div className="text-[12px] text-[var(--color-text-subtle)]">
               <span className="text-[var(--color-text-subtle)]">Discovery</span>

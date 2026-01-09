@@ -218,7 +218,7 @@ export function FloatingCard({
           }}
         >
           {/* Title - Always required */}
-          <h2 className="font-medium text-[14px] leading-5 text-[var(--color-text-default)] shrink-0">
+          <h2 className="font-medium text-[length:var(--font-size-14)] leading-[var(--line-height-20)] text-[var(--color-text-default)] shrink-0">
             {title}
           </h2>
 
@@ -248,7 +248,7 @@ export function FloatingCard({
                           ) : (
                             <IconChevronRight size={12} stroke={1} className="text-[var(--color-text-muted)] group-hover:text-[var(--color-text-default)] transition-colors" />
                           )}
-                          <span className="font-medium text-[12px] text-[var(--color-text-default)]">
+                          <span className="font-medium text-[length:var(--font-size-12)] leading-[var(--line-height-18)] text-[var(--color-text-default)]">
                             {section.tabTitle}
                           </span>
                         </div>
@@ -260,7 +260,7 @@ export function FloatingCard({
                       </button>
                     ) : (
                       <div className="flex items-center justify-between w-full">
-                        <span className="font-medium text-[12px] text-[var(--color-text-default)]">
+                        <span className="font-medium text-[length:var(--font-size-12)] leading-[var(--line-height-18)] text-[var(--color-text-default)]">
                           {section.tabTitle}
                         </span>
                         {showIcon && (
@@ -282,7 +282,7 @@ export function FloatingCard({
                             onClick={item.onClick}
                             disabled={!item.onClick}
                           >
-                            <span className="font-normal text-[11px] text-[var(--color-text-subtle)] group-hover:text-[var(--color-text-default)] transition-colors">
+                            <span className="text-[length:var(--font-size-11)] leading-[var(--line-height-16)] text-[var(--color-text-subtle)] group-hover:text-[var(--color-text-default)] transition-colors">
                               {item.title}
                             </span>
                             <StatusIcon status={item.status} />
@@ -305,17 +305,17 @@ export function FloatingCard({
             background: 'var(--color-surface-default, #FFF)',
           }}>
             <div className="flex flex-col items-start gap-3 w-full">
-              <h3 className="font-medium text-[12px] text-[var(--color-text-default)]">
+              <h3 className="font-medium text-[length:var(--font-size-12)] leading-[var(--line-height-18)] text-[var(--color-text-default)]">
                 Quota
               </h3>
               <div className="flex flex-col gap-3 w-full">
                 {quota.map((item, index) => (
                   <div key={index} className="flex flex-col gap-1 w-full">
                     <div className="flex items-center justify-between">
-                      <span className="font-normal text-[12px] text-[var(--color-text-default)]">
+                      <span className="text-[length:var(--font-size-12)] leading-[var(--line-height-18)] text-[var(--color-text-default)]">
                         {item.label}
                       </span>
-                      <span className="font-normal text-[12px] text-[var(--color-text-muted)]">
+                      <span className="text-[length:var(--font-size-12)] leading-[var(--line-height-18)] text-[var(--color-text-muted)]">
                         {item.current}/{item.total}{item.unit ? ` ${item.unit}` : ''}
                       </span>
                     </div>
@@ -336,7 +336,7 @@ export function FloatingCard({
         {/* Number of Instances - Fixed with white background */}
         {onInstanceCountChange && (
           <div className="px-6 py-4 flex flex-col gap-2 shrink-0 bg-[var(--color-surface-default)]">
-            <label className="font-medium text-[12px] text-[var(--color-text-default)]">
+            <label className="font-medium text-[length:var(--font-size-12)] leading-[var(--line-height-18)] text-[var(--color-text-default)]">
               Number of Instances
             </label>
             <NumberInput

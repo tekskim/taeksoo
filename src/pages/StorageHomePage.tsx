@@ -5,6 +5,7 @@ import {
   TopBar,
   TopBarAction,
   Breadcrumb,
+  DatePicker,
 } from '@/design-system';
 import { StorageSidebar } from '@/components/StorageSidebar';
 import { useTabs } from '@/contexts/TabContext';
@@ -13,7 +14,11 @@ import {
   IconBell,
   IconChevronLeft,
   IconChevronRight,
+  IconDotsCircleHorizontal,
+  IconArrowsMaximize,
+  IconArrowsMinimize,
 } from '@tabler/icons-react';
+import { DataViewDrawer } from '@/components/DataViewDrawer';
 
 /* ----------------------------------------
    Time Controls Component (Design System Style)
@@ -61,8 +66,74 @@ interface TimeControlsProps {
 }
 
 function TimeControls({ value, onChange, onRefresh }: TimeControlsProps) {
+  const [customPeriod, setCustomPeriod] = useState<{ start: Date; end: Date } | null>(null);
+  const [showDatePicker, setShowDatePicker] = useState(false);
+  const [tempStartDate, setTempStartDate] = useState<Date | null>(null);
+  const [tempEndDate, setTempEndDate] = useState<Date | null>(null);
+  const [selectingStart, setSelectingStart] = useState(true);
+  const datePickerRef = useRef<HTMLDivElement>(null);
+
+  // Close date picker when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (datePickerRef.current && !datePickerRef.current.contains(event.target as Node)) {
+        setShowDatePicker(false);
+      }
+    };
+
+    if (showDatePicker) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [showDatePicker]);
+
   const handleTimeRangeClick = (newValue: TimeRange) => {
+    setCustomPeriod(null);
     onChange(newValue);
+  };
+
+  const handleCustomPeriodClick = () => {
+    if (customPeriod) {
+      setTempStartDate(customPeriod.start);
+      setTempEndDate(customPeriod.end);
+    } else {
+      const now = new Date();
+      const oneWeekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+      setTempStartDate(oneWeekAgo);
+      setTempEndDate(now);
+    }
+    setSelectingStart(true);
+    setShowDatePicker(true);
+  };
+
+  const handleApplyCustomPeriod = () => {
+    if (tempStartDate && tempEndDate) {
+      setCustomPeriod({ start: tempStartDate, end: tempEndDate });
+      setShowDatePicker(false);
+    }
+  };
+
+  const handleClearCustomPeriod = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setCustomPeriod(null);
+    onChange('30m');
+  };
+
+  const handlePeriodTextClick = () => {
+    if (customPeriod) {
+      setTempStartDate(customPeriod.start);
+      setTempEndDate(customPeriod.end);
+    }
+    setSelectingStart(true);
+    setShowDatePicker(true);
+  };
+
+  const formatCalendarDate = (date: Date | null) => {
+    if (!date) return '';
+    const year = date.getFullYear();
+    const month = (date.getMonth() + 1).toString().padStart(2, '0');
+    const day = date.getDate().toString().padStart(2, '0');
+    return `${year}.${month}.${day}`;
   };
 
   return (
@@ -72,12 +143,78 @@ function TimeControls({ value, onChange, onRefresh }: TimeControlsProps) {
         {timeOptions.map(option => (
           <button 
             key={option.value}
-            className={`timeSegment ${value === option.value ? 'timeSegmentActive' : ''}`}
+            className={`timeSegment ${value === option.value && !customPeriod ? 'timeSegmentActive' : ''}`}
             onClick={() => handleTimeRangeClick(option.value)}
           >
             {option.label}
           </button>
         ))}
+      </div>
+
+      {/* Period Selector */}
+      <div className="datePickerContainer" ref={datePickerRef}>
+        {customPeriod ? (
+          <div className="periodTag">
+            <span className="periodTagText" onClick={handlePeriodTextClick}>
+              {formatDateForDisplay(customPeriod.start)}
+              <span className="periodTagDivider">—</span>
+              {formatDateForDisplay(customPeriod.end)}
+            </span>
+            <button className="periodTagClose" onClick={handleClearCustomPeriod}>
+              <CloseIcon />
+            </button>
+          </div>
+        ) : (
+          <button 
+            className={`customPeriodBtn ${showDatePicker ? 'customPeriodBtnActive' : ''}`}
+            onClick={handleCustomPeriodClick}
+          >
+            <CalendarIcon />
+            Period
+          </button>
+        )}
+
+        {/* Calendar Date Picker Dropdown */}
+        {showDatePicker && (
+          <div className="calendarDropdown">
+            {/* Date Range Header */}
+            <div className="calendarHeader">
+              <div 
+                className={`calendarDateBox ${selectingStart ? 'calendarDateBoxActive' : ''}`}
+                onClick={() => setSelectingStart(true)}
+              >
+                <span className="calendarDateLabel">START</span>
+                <span className="calendarDateValue">{formatCalendarDate(tempStartDate)}</span>
+              </div>
+              <div className="calendarDateSeparator">~</div>
+              <div 
+                className={`calendarDateBox ${!selectingStart ? 'calendarDateBoxActive' : ''}`}
+                onClick={() => setSelectingStart(false)}
+              >
+                <span className="calendarDateLabel">END</span>
+                <span className="calendarDateValue">{formatCalendarDate(tempEndDate)}</span>
+              </div>
+            </div>
+
+            {/* DatePicker from Design System */}
+            <DatePicker
+              mode="range"
+              rangeValue={{ start: tempStartDate, end: tempEndDate }}
+              onRangeChange={(range) => {
+                setTempStartDate(range.start);
+                setTempEndDate(range.end);
+                setSelectingStart(!range.start || !!range.end);
+              }}
+              maxDate={new Date()}
+            />
+
+            {/* Actions */}
+            <div className="calendarActions">
+              <button className="calendarCancel" onClick={() => setShowDatePicker(false)}>Cancel</button>
+              <button className="calendarApply" onClick={handleApplyCustomPeriod}>Apply</button>
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Refresh Button */}
@@ -128,6 +265,10 @@ interface LineChartProps {
   timeLabels: string[];
   yAxisFormatter?: (value: number) => string;
   height?: string;
+  isFullScreen?: boolean;
+  timeControls?: React.ReactNode;
+  onExpandClick?: () => void;
+  onExitFullScreen?: () => void;
 }
 
 function LineChart({ 
@@ -135,12 +276,18 @@ function LineChart({
   series, 
   timeLabels,
   yAxisFormatter = (v: number) => `${v}`,
-  height = '100%'
+  height = '100%',
+  isFullScreen = false,
+  timeControls,
+  onExpandClick,
+  onExitFullScreen
 }: LineChartProps) {
   const [visibleSeries, setVisibleSeries] = useState<Record<string, boolean>>(
     Object.fromEntries(series.map(s => [s.name, true]))
   );
   const [isDarkMode, setIsDarkMode] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [showDataView, setShowDataView] = useState(false);
 
   // Detect dark mode changes
   useState(() => {
@@ -233,6 +380,14 @@ function LineChart({
         color: tooltipTextColor, 
         fontSize: 11, 
         fontFamily: 'Mona Sans, -apple-system, BlinkMacSystemFont, sans-serif' 
+      },
+      formatter: (params: Array<{ marker: string; seriesName: string; value: number; axisValueLabel: string; color: string }>) => {
+        if (!Array.isArray(params) || params.length === 0) return '';
+        const time = params[0].axisValueLabel;
+        const items = params.map(p => 
+          `<div style="display: flex; align-items: center; gap: 8px;"><span style="display: inline-block; width: 8px; height: 8px; border-radius: 9999px; background-color: ${p.color};"></span><span>${p.seriesName}</span><span style="font-weight: 500; margin-left: auto;">${p.value}</span></div>`
+        ).join('');
+        return `<div style="font-size: 11px; font-family: Mona Sans, -apple-system, BlinkMacSystemFont, sans-serif;">${time}<div style="margin-top: 4px;">${items}</div></div>`;
       }
     },
     series: series
@@ -252,25 +407,67 @@ function LineChart({
   };
 
   return (
-    <div className="chartCard">
+    <div className={`chartCard ${isFullScreen ? 'chartCardFullScreen' : ''}`}>
       {/* Header */}
       <div className="chartHeader">
         <span className="chartTitle">{title}</span>
+        {isFullScreen && timeControls && (
+          <div className="chartHeaderCenter">{timeControls}</div>
+        )}
         <div className="chartControls">
-          {/* Toggle Button */}
+          {/* Toggle Button - only show for multiple series */}
           {series.length > 1 && (
-            <button className="toggleBtn" onClick={toggleAll}>
-              <span className={`toggleSwitch ${allVisible ? 'toggleSwitchActive' : ''}`} />
-              <span>{allVisible ? 'Hide All' : 'View All'}</span>
-            </button>
+            <>
+              <button className="toggleBtn" onClick={toggleAll}>
+                <span className={`toggleSwitch ${allVisible ? 'toggleSwitchActive' : ''}`} />
+                <span>{allVisible ? 'Hide All' : 'View All'}</span>
+              </button>
+              <span className="toggleDivider">|</span>
+            </>
           )}
+          
+          {/* Menu Button */}
+          <div className="menuContainer">
+            <button 
+              className="menuTrigger"
+              onClick={(e) => { e.stopPropagation(); setMenuOpen(!menuOpen); }}
+            >
+              <IconDotsCircleHorizontal size={16} stroke={1.5} />
+            </button>
+            {menuOpen && (
+              <div className="contextMenu">
+                <button className="contextMenuItem" onClick={() => setMenuOpen(false)}>
+                  Download Image
+                </button>
+                <button className="contextMenuItem" onClick={() => setMenuOpen(false)}>
+                  Download CSV
+                </button>
+                <button className="contextMenuItemLast" onClick={() => { setMenuOpen(false); setShowDataView(true); }}>
+                  Data View
+                </button>
+              </div>
+            )}
+          </div>
+          
+          {/* Expand/Minimize Button */}
+          <button 
+            className="expandTrigger" 
+            title={isFullScreen ? "Minimize" : "Expand"}
+            onClick={isFullScreen ? onExitFullScreen : onExpandClick}
+          >
+            {isFullScreen ? (
+              <IconArrowsMinimize size={16} stroke={1.5} />
+            ) : (
+              <IconArrowsMaximize size={16} stroke={1.5} />
+            )}
+          </button>
         </div>
       </div>
       
       {/* Chart Body */}
       <div className="chartBody">
         <div className="chartWrapper">
-          <ReactECharts option={option} style={{ height }} notMerge={true} />
+          <ReactECharts option={option} style={{ height: isFullScreen ? '100%' : height }} notMerge={true} />
         </div>
         <div className="chartLegend">
           {series.map((s, i) => (
@@ -285,6 +482,15 @@ function LineChart({
           ))}
         </div>
       </div>
+      
+      {/* Data View Drawer */}
+      <DataViewDrawer
+        isOpen={showDataView}
+        onClose={() => setShowDataView(false)}
+        title={`${title} (RAW)`}
+        series={series}
+        timeLabels={timeLabels}
+      />
     </div>
   );
 }
@@ -319,6 +525,20 @@ interface CapacityGaugeProps {
 }
 
 function CapacityGauge({ percentage, used, total, unit }: CapacityGaugeProps) {
+  const [showTooltip, setShowTooltip] = useState(false);
+  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  // Chart dimensions for arc detection
+  const chartWidth = 210;
+  const chartHeight = 180;
+  const centerX = chartWidth * 0.5; // 50%
+  const centerY = chartHeight * 0.6; // 60%
+  const radius = Math.min(chartWidth, chartHeight) * 0.475; // 95% of half
+  const arcWidth = 20;
+  const innerRadius = radius - arcWidth;
+  const outerRadius = radius;
+
   // Get color from design system CSS variables
   const getColor = (cssVar: string, fallback: string) => {
     if (typeof window !== 'undefined') {
@@ -336,6 +556,45 @@ function CapacityGauge({ percentage, used, total, unit }: CapacityGaugeProps) {
   };
 
   const color = getStatusColor();
+  const available = total - used;
+  const availablePercent = Math.round((available / total) * 100);
+
+  // Check if mouse is over the gauge arc
+  const isOverGaugeArc = (mx: number, my: number) => {
+    const dx = mx - centerX;
+    const dy = my - centerY;
+    const distance = Math.sqrt(dx * dx + dy * dy);
+    
+    // Check if within the arc ring
+    if (distance < innerRadius - 4 || distance > outerRadius + 4) return false;
+    
+    // Check if within the arc angle range (210° to -30°)
+    let angle = Math.atan2(-dy, dx) * (180 / Math.PI);
+    if (angle < 0) angle += 360;
+    
+    return angle >= 150 && angle <= 330;
+  };
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (containerRef.current) {
+      const rect = containerRef.current.getBoundingClientRect();
+      const relX = e.clientX - rect.left;
+      const relY = e.clientY - rect.top;
+      
+      // Calculate chart position within container
+      const containerWidth = rect.width;
+      const containerHeight = rect.height;
+      const chartX = relX - (containerWidth - chartWidth) / 2;
+      const chartY = relY - (containerHeight - chartHeight) / 2;
+      
+      setMousePos({ x: relX, y: relY });
+      setShowTooltip(isOverGaugeArc(chartX, chartY));
+    }
+  };
+
+  const handleMouseLeave = () => {
+    setShowTooltip(false);
+  };
 
   const getOption = () => ({
     series: [
@@ -379,12 +638,38 @@ function CapacityGauge({ percentage, used, total, unit }: CapacityGaugeProps) {
   });
 
   return (
-    <div className="flex flex-col items-center justify-center h-full relative">
+    <div 
+      ref={containerRef}
+      className="flex flex-col items-center justify-center h-full relative"
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
+    >
       <ReactECharts option={getOption()} style={{ height: '180px', width: '210px' }} />
-      <div className="absolute inset-0 flex flex-col items-center justify-center pt-8">
+      <div className="absolute inset-0 flex flex-col items-center justify-center pt-8 pointer-events-none">
         <span className="text-[24px] leading-[28px] font-semibold text-[var(--color-text-default)]">{percentage.toFixed(2)}%</span>
         <span className="text-[12px] text-[var(--color-text-subtle)]">{used}{unit}/{total}{unit}</span>
       </div>
+      
+      {/* Tooltip */}
+      {showTooltip && (
+        <div 
+          className="absolute z-10 backdrop-blur-[40px] bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px] shadow-[0px_0px_4px_0px_rgba(0,0,0,0.1)] px-2 py-1.5 flex flex-col gap-1 pointer-events-none"
+          style={{ left: mousePos.x + 12, top: mousePos.y + 12 }}
+        >
+          <div className="flex items-center gap-1.5">
+            <div className="w-[5px] h-[5px] rounded-[1px]" style={{ backgroundColor: color }} />
+            <span className="text-[11px] leading-[14px] text-[var(--color-text-default)] whitespace-nowrap">
+              Used: {used}{unit} ({Math.round(percentage)}%)
+            </span>
+          </div>
+          <div className="flex items-center gap-1.5">
+            <div className="w-[5px] h-[5px] rounded-[1px] bg-[var(--color-border-subtle)]" />
+            <span className="text-[11px] leading-[14px] text-[var(--color-text-default)] whitespace-nowrap">
+              Available: {available.toFixed(1)}{unit} ({availablePercent}%)
+            </span>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
@@ -411,10 +696,21 @@ function Card({ title, children, className = '', bgColor = 'bg-[var(--color-surf
 /* ----------------------------------------
    Main StorageHomePage Component
    ---------------------------------------- */
+// Full Screen Chart Data Interface
+interface FullScreenChartData {
+  title: string;
+  series: LineChartSeries[];
+  yAxisFormatter?: (value: number) => string;
+  timeLabels: string[];
+}
+
 export function StorageHomePage() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [timeRange, setTimeRange] = useState<TimeRange>('30m');
-  const { tabs, activeTabId, selectTab, closeTab, addNewTab } = useTabs();
+  const { tabs, activeTabId, selectTab, closeTab, addNewTab, moveTab } = useTabs();
+  
+  // Fullscreen chart state
+  const [fullScreenChart, setFullScreenChart] = useState<FullScreenChartData | null>(null);
 
   const tabBarTabs = tabs.map((tab) => ({
     id: tab.id,
@@ -441,18 +737,6 @@ export function StorageHomePage() {
   const clientThroughputSeries: LineChartSeries[] = [
     { name: 'Reads', data: [0.1, 0.8, 2.5, 4.2, 5.8, 6.2], color: chartColors.cyan400 },
     { name: 'Writes', data: [0.1, 0.6, 2.0, 3.8, 5.2, 5.8], color: chartColors.emerald400 },
-    { name: 'Metadata', data: [0.05, 0.4, 1.5, 2.8, 4.0, 4.5], color: chartColors.amber400 },
-    { name: 'Recovery', data: [0.02, 0.3, 1.2, 2.2, 3.2, 3.8], color: chartColors.violet400 },
-    { name: 'Replication', data: [0.02, 0.25, 1.0, 1.8, 2.8, 3.2], color: chartColors.pink400 },
-    { name: 'Backup', data: [0.01, 0.2, 0.8, 1.5, 2.2, 2.6], color: chartColors.rose400 },
-    { name: 'Sync', data: [0.01, 0.15, 0.6, 1.2, 1.8, 2.2], color: chartColors.blue400 },
-    { name: 'Cache', data: [0.01, 0.1, 0.5, 1.0, 1.5, 1.8], color: chartColors.teal400 },
-    { name: 'Streaming', data: [0.01, 0.08, 0.4, 0.8, 1.2, 1.5], color: chartColors.orange400 },
-    { name: 'Archive', data: [0.01, 0.05, 0.3, 0.6, 0.9, 1.1], color: chartColors.red400 },
-    { name: 'Scrub', data: [0.02, 0.12, 0.45, 0.9, 1.3, 1.6], color: chartColors.indigo400 },
-    { name: 'Repair', data: [0.01, 0.09, 0.35, 0.7, 1.1, 1.3], color: chartColors.lime400 },
-    { name: 'Snapshot', data: [0.02, 0.11, 0.42, 0.85, 1.25, 1.5], color: chartColors.sky400 },
-    { name: 'Clone', data: [0.01, 0.07, 0.28, 0.55, 0.82, 1.0], color: chartColors.yellow400 },
   ];
 
   // Mock data for Requests/sec chart
@@ -464,9 +748,6 @@ export function StorageHomePage() {
   const latencyDetailSeries: LineChartSeries[] = [
     { name: 'GET', data: [0, 0.5, 2.0, 3.5, 4.2, 4.8], color: chartColors.cyan400 },
     { name: 'PUT', data: [0, 0.4, 1.8, 3.2, 3.8, 4.2], color: chartColors.emerald400 },
-    { name: 'DELETE', data: [0, 0.3, 1.5, 2.8, 3.2, 3.6], color: chartColors.amber400 },
-    { name: 'POST', data: [0, 0.25, 1.2, 2.4, 2.8, 3.2], color: chartColors.violet400 },
-    { name: 'PATCH', data: [0, 0.2, 1.0, 2.0, 2.4, 2.8], color: chartColors.pink400 },
   ];
 
   // Mock data for Recovery Throughput chart
@@ -487,6 +768,7 @@ export function StorageHomePage() {
             onTabChange={selectTab}
             onTabClose={closeTab}
             onTabAdd={addNewTab}
+            onTabReorder={moveTab}
             showAddButton={true}
             showWindowControls={true}
           />
@@ -501,7 +783,7 @@ export function StorageHomePage() {
               <Breadcrumb
               items={[
                 { label: 'Storage', href: '/storage' },
-                { label: 'Entry page' },
+                { label: 'Home' },
               ]}
             />
             }
@@ -573,6 +855,7 @@ export function StorageHomePage() {
                 series={iopsSeries}
                 timeLabels={timeLabels}
                 height="280px"
+                onExpandClick={() => setFullScreenChart({ title: 'IOPS', series: iopsSeries, timeLabels })}
               />
               
               {/* OSD Latencies Chart */}
@@ -582,6 +865,7 @@ export function StorageHomePage() {
                 timeLabels={timeLabels}
                 yAxisFormatter={(v) => `${v} ms`}
                 height="280px"
+                onExpandClick={() => setFullScreenChart({ title: 'OSD Latencies', series: latencySeries, yAxisFormatter: (v) => `${v} ms`, timeLabels })}
               />
 
               {/* Client Throughput Chart */}
@@ -591,6 +875,7 @@ export function StorageHomePage() {
                 timeLabels={timeLabels}
                 yAxisFormatter={(v) => `${v} MiB/s`}
                 height="280px"
+                onExpandClick={() => setFullScreenChart({ title: 'Client Throughput', series: clientThroughputSeries, yAxisFormatter: (v) => `${v} MiB/s`, timeLabels })}
               />
 
               {/* Requests/sec Chart */}
@@ -599,6 +884,7 @@ export function StorageHomePage() {
                 series={requestsSeries}
                 timeLabels={timeLabels}
                 height="280px"
+                onExpandClick={() => setFullScreenChart({ title: 'Requests/sec', series: requestsSeries, timeLabels })}
               />
 
               {/* Latency Chart */}
@@ -608,6 +894,7 @@ export function StorageHomePage() {
                 timeLabels={timeLabels}
                 yAxisFormatter={(v) => `${v} ms`}
                 height="280px"
+                onExpandClick={() => setFullScreenChart({ title: 'Latency', series: latencyDetailSeries, yAxisFormatter: (v) => `${v} ms`, timeLabels })}
               />
 
               {/* Recovery Throughput Chart */}
@@ -617,12 +904,35 @@ export function StorageHomePage() {
                 timeLabels={timeLabels}
                 yAxisFormatter={(v) => `${v} B/s`}
                 height="280px"
+                onExpandClick={() => setFullScreenChart({ title: 'Recovery Throughput', series: recoveryThroughputSeries, yAxisFormatter: (v) => `${v} B/s`, timeLabels })}
               />
             </div>
           </div>
         </div>
         </div>
       </main>
+      
+      {/* Full Screen Chart Overlay */}
+      {fullScreenChart && (
+        <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-8">
+          <div className="w-full h-full max-w-[90vw] max-h-[90vh]">
+            <LineChart
+              title={fullScreenChart.title}
+              series={fullScreenChart.series}
+              timeLabels={fullScreenChart.timeLabels}
+              yAxisFormatter={fullScreenChart.yAxisFormatter}
+              isFullScreen={true}
+              timeControls={
+                <TimeControls 
+                  value={timeRange} 
+                  onChange={setTimeRange}
+                />
+              }
+              onExitFullScreen={() => setFullScreenChart(null)}
+            />
+          </div>
+        </div>
+      )}
     </div>
   );
 }

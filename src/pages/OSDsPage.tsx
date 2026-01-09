@@ -215,7 +215,7 @@ export function OSDsPage() {
   const rowsPerPage = 10;
 
   // Global tab management
-  const { tabs, activeTabId, closeTab, selectTab, addNewTab } = useTabs();
+  const { tabs, activeTabId, closeTab, selectTab, addNewTab, moveTab } = useTabs();
 
   // Convert tabs to TabBar format
   const tabBarTabs = tabs.map((tab) => ({
@@ -246,65 +246,65 @@ export function OSDsPage() {
     {
       key: 'id',
       label: 'ID',
-      width: 80,
+      width: '60px',
       sortable: true,
       render: (_, row) => <IDCell id={row.id} />,
     },
     {
       key: 'host',
       label: 'Host',
-      flex: 1,
+      width: '300px',
       sortable: true,
     },
     {
       key: 'status',
       label: 'Status',
-      width: 100,
+      flex: 1,
       sortable: false,
       render: (_, row) => <StatusCell status={row.status} />,
     },
     {
       key: 'deviceClass',
       label: 'Device class',
-      width: 100,
+      flex: 1,
       sortable: true,
       render: (_, row) => <DeviceClassCell deviceClass={row.deviceClass} />,
     },
     {
       key: 'pgs',
       label: 'PGs',
-      width: 80,
+      flex: 1,
       sortable: true,
     },
     {
       key: 'size',
       label: 'Size',
-      width: 100,
+      flex: 1,
       sortable: true,
     },
     {
       key: 'flags',
       label: 'Flags',
-      width: 80,
+      flex: 1,
       sortable: false,
     },
     {
       key: 'usage',
       label: 'Usage',
-      width: 140,
+      flex: 1.5,
       sortable: true,
       render: (_, row) => <UsageCell usage={row.usage} />,
     },
     {
       key: 'readOps',
       label: 'Read ops',
-      width: 100,
+      flex: 1,
       sortable: false,
     },
     {
       key: 'writeOps',
       label: 'Write ops',
-      width: 100,
+      flex: 1,
       sortable: false,
     },
   ];
@@ -327,6 +327,7 @@ export function OSDsPage() {
             onTabChange={selectTab}
             onTabClose={closeTab}
             onTabAdd={addNewTab}
+            onTabReorder={moveTab}
             showAddButton={true}
             showWindowControls={true}
           />
@@ -358,7 +359,7 @@ export function OSDsPage() {
         {/* Scrollable Content Area */}
         <div className="flex-1 overflow-auto min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll">
           {/* Page Content */}
-          <div className="pt-4 px-8 pb-20 bg-[var(--color-surface-default)]">
+          <div className="pt-4 px-8 pb-20 bg-[var(--color-surface-default)] min-h-full">
             <VStack gap={3}>
               {/* Page Header */}
               <div className="flex items-center justify-between h-8">

@@ -151,8 +151,10 @@ import {
   IconCamera,
   IconPhoto,
   IconFile,
+  IconFileText,
   IconArchive,
   IconTemplate,
+  IconCode,
   // System - Monitoring & Analytics
   IconTerminal,
   IconTerminal2,
@@ -190,8 +192,6 @@ import {
   IconCalendar,
   IconAppWindow,
   IconBorderAll,
-  IconFileText,
-  IconCode,
   // Brand Icons
   IconBrandUbuntu,
   IconBrandDebian,
@@ -973,6 +973,14 @@ const baseChartOptions = {
     backgroundColor: 'white',
     borderColor: '#e2e8f0',
     textStyle: { color: chartColors.slate800, fontSize: 11 },
+    formatter: (params: Array<{ marker: string; seriesName: string; value: number; axisValueLabel: string }>) => {
+      if (!Array.isArray(params) || params.length === 0) return '';
+      const time = params[0].axisValueLabel;
+      const items = params.map(p => 
+        `<div style="display: flex; align-items: center; gap: 8px;"><span style="display: inline-block; width: 8px; height: 8px; border-radius: 9999px; background-color: ${p.color};"></span><span>${p.seriesName}</span><span style="font-weight: 500; margin-left: auto;">${p.value}</span></div>`
+      ).join('');
+      return `<div style="font-size: 11px;">${time}<div style="margin-top: 4px;">${items}</div></div>`;
+    },
     axisPointer: {
       type: 'line',
       snap: true,
@@ -1509,6 +1517,14 @@ function LineChart({
         color: chartColors.slate800, 
         fontSize: 11, 
         fontFamily: 'Mona Sans, -apple-system, BlinkMacSystemFont, sans-serif' 
+      },
+      formatter: (params: Array<{ marker: string; seriesName: string; value: number; axisValueLabel: string; color: string }>) => {
+        if (!Array.isArray(params) || params.length === 0) return '';
+        const time = params[0].axisValueLabel;
+        const items = params.map(p => 
+          `<div style="display: flex; align-items: center; gap: 8px;"><span style="display: inline-block; width: 8px; height: 8px; border-radius: 9999px; background-color: ${p.color};"></span><span>${p.seriesName}</span><span style="font-weight: 500; margin-left: auto;">${yAxisFormatter(p.value)}</span></div>`
+        ).join('');
+        return `<div style="font-size: 11px;">${time}<div style="margin-top: 4px;">${items}</div></div>`;
       }
     },
     series: series
@@ -1740,7 +1756,7 @@ function QuotaBarDemo({ label, used, total, unit }: { label: string; used: numbe
   );
 }
 
-function AreaChartDemo({ variant }: { variant: 'basic' | 'stacked' }) {
+function AreaChartDemo({ variant }: { variant: 'basic' | 'stacked' | 'nodata' }) {
   // Basic variant - Network Traffic (single series)
   const networkTrafficSeries: LineChartSeries[] = [
     { name: 'Traffic', data: [120, 180, 150, 220, 280, 240], color: chartColors.cyan400 },
@@ -1751,6 +1767,21 @@ function AreaChartDemo({ variant }: { variant: 'basic' | 'stacked' }) {
       <ChartWithFullScreen 
         title="Network Traffic"
         series={networkTrafficSeries}
+        yAxisFormatter={(v) => `${v} MB/s`}
+        height="200px"
+      />
+    );
+  }
+
+  // No data variant
+  if (variant === 'nodata') {
+    const emptySeriesData: LineChartSeries[] = [
+      { name: 'Traffic', data: [], color: chartColors.cyan400 },
+    ];
+    return (
+      <ChartWithFullScreen 
+        title="Network Traffic"
+        series={emptySeriesData}
         yAxisFormatter={(v) => `${v} MB/s`}
         height="200px"
       />
@@ -1831,10 +1862,11 @@ function PieChartDemo({
       padding: [8, 12],
       textStyle: {
         color: '#1e293b',
-        fontSize: 11
+        fontSize: 11,
+        fontFamily: 'Mona Sans, -apple-system, BlinkMacSystemFont, sans-serif'
       },
-      formatter: (params: { marker: string; name: string; value: number; percent: number }) => {
-        return `${params.marker} ${params.name}<br/><span style="font-weight: 600; margin-left: 14px;">${params.value} (${params.percent.toFixed(0)}%)</span>`;
+      formatter: (params: { marker: string; name: string; value: number; percent: number; color: string }) => {
+        return `<span style="display: inline-block; width: 8px; height: 8px; border-radius: 9999px; background-color: ${params.color}; margin-right: 6px;"></span>${params.name}<br/><span style="font-weight: 500; margin-left: 14px;">${params.value} (${params.percent.toFixed(0)}%)</span>`;
       }
     },
     animation: false,
@@ -1852,7 +1884,8 @@ function PieChartDemo({
           },
           fontSize: 12,
           fontWeight: 600,
-          color: '#ffffff'
+          color: '#ffffff',
+          fontFamily: 'Mona Sans, -apple-system, BlinkMacSystemFont, sans-serif'
         } : {
           show: false
         },
@@ -1892,10 +1925,107 @@ function PieChartDemo({
 }
 
 /* ----------------------------------------
+   Doughnut Chart Demo (ECharts - matches SingleValueDoughnutCard from storage)
+   ---------------------------------------- */
+
+function DoughnutChartDemo({ 
+  title, 
+  value,
+  color
+}: { 
+  title: string; 
+  value: number;
+  color?: string;
+}) {
+  const getColor = (cssVar: string, fallback: string) => {
+    if (typeof window !== 'undefined') {
+      const val = getComputedStyle(document.documentElement).getPropertyValue(cssVar).trim();
+      return val || fallback;
+    }
+    return fallback;
+  };
+
+  const mainColor = color || getColor('--color-status-error', '#ef4444');
+  const bgColor = getColor('--color-border-subtle', '#e2e8f0');
+
+  const getOption = () => ({
+    tooltip: {
+      show: false
+    },
+    animation: false,
+    series: [
+      {
+        type: 'pie',
+        radius: ['68%', '80%'],
+        center: ['50%', '50%'],
+        avoidLabelOverlap: false,
+        silent: true,
+        itemStyle: {
+          borderRadius: 0,
+          borderWidth: 0
+        },
+        label: {
+          show: false
+        },
+        labelLine: {
+          show: false
+        },
+        emphasis: {
+          disabled: true
+        },
+        data: [
+          { value: value, itemStyle: { color: mainColor } },
+          { value: 100 - value, itemStyle: { color: bgColor } }
+        ]
+      }
+    ],
+    graphic: [
+      {
+        type: 'text',
+        left: 'center',
+        top: 'middle',
+        style: {
+          text: `${value}%`,
+          textAlign: 'center',
+          textVerticalAlign: 'middle',
+          fill: getColor('--color-text-default', '#0f172a'),
+          fontSize: 18,
+          fontWeight: 500,
+          fontFamily: 'Mona Sans, -apple-system, BlinkMacSystemFont, sans-serif'
+        }
+      }
+    ]
+  });
+
+  return (
+    <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] p-5 flex flex-col gap-4 w-[280px]">
+      <span className="text-[length:var(--font-size-13)] font-medium text-[var(--color-text-default)]">{title}</span>
+      <div className="flex justify-center">
+        <ReactECharts option={getOption()} style={{ height: '180px', width: '180px' }} />
+      </div>
+    </div>
+  );
+}
+
+/* ----------------------------------------
    Half-Doughnut Chart Demo (ECharts - from storage-dashboard)
    ---------------------------------------- */
 
-function HalfDoughnutChartDemo({ value, label, status = 'default' }: { value: number; label: string; status?: 'default' | 'success' | 'warning' | 'error' }) {
+function HalfDoughnutChartDemo({ value, label, status = 'default', used, total, unit }: { value: number; label: string; status?: 'default' | 'success' | 'warning' | 'error'; used?: number; total?: number; unit?: string }) {
+  const [showTooltip, setShowTooltip] = useState(false);
+  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+  const containerRef = useRef<HTMLDivElement>(null);
+  
+  // Chart dimensions
+  const chartWidth = 180;
+  const chartHeight = 160;
+  const centerX = chartWidth * 0.5; // 50%
+  const centerY = chartHeight * 0.65; // 65%
+  const radius = Math.min(chartWidth, chartHeight) * 0.45; // 90% of half
+  const arcWidth = 14;
+  const innerRadius = radius - arcWidth;
+  const outerRadius = radius;
+  
   // Get color from design system CSS variables
   const getColor = (cssVar: string, fallback: string) => {
     if (typeof window !== 'undefined') {
@@ -1913,6 +2043,46 @@ function HalfDoughnutChartDemo({ value, label, status = 'default' }: { value: nu
   };
 
   const color = colorMap[status];
+  const available = total !== undefined && used !== undefined ? total - used : 0;
+  const availablePercent = total !== undefined && used !== undefined ? Math.round((available / total) * 100) : 0;
+
+  // Check if mouse is over the gauge arc
+  const isOverGaugeArc = (mx: number, my: number) => {
+    const dx = mx - centerX;
+    const dy = my - centerY;
+    const distance = Math.sqrt(dx * dx + dy * dy);
+    
+    // Check if within the arc ring
+    if (distance < innerRadius - 4 || distance > outerRadius + 4) return false;
+    
+    // Check if within the arc angle range (210° to -30°, which is 210° to 330° in standard coords)
+    // Convert to angle: atan2 gives -PI to PI, we need to convert
+    let angle = Math.atan2(-dy, dx) * (180 / Math.PI); // Negate dy because canvas Y is inverted
+    if (angle < 0) angle += 360;
+    
+    // The gauge goes from 210° (start) to 330° (-30° = 330°) clockwise
+    // In standard math coords: 210° is bottom-left, 330° is bottom-right
+    return angle >= 150 && angle <= 330; // Approximate visible arc range
+  };
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (containerRef.current) {
+      const rect = containerRef.current.getBoundingClientRect();
+      const relX = e.clientX - rect.left;
+      const relY = e.clientY - rect.top;
+      
+      // Adjust for padding (p-4 = 16px)
+      const chartX = relX - 16;
+      const chartY = relY - 16;
+      
+      setMousePos({ x: relX, y: relY });
+      setShowTooltip(isOverGaugeArc(chartX, chartY));
+    }
+  };
+
+  const handleMouseLeave = () => {
+    setShowTooltip(false);
+  };
 
   const getOption = () => ({
     series: [
@@ -1956,12 +2126,44 @@ function HalfDoughnutChartDemo({ value, label, status = 'default' }: { value: nu
   });
 
   return (
-    <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] p-4 relative">
-      <ReactECharts option={getOption()} style={{ height: '160px', width: '180px' }} />
-      <div className="absolute inset-0 flex flex-col items-center justify-center pt-8">
-        <span className="text-[24px] leading-[28px] font-semibold text-[var(--color-text-default)]">{value}%</span>
-        <span className="text-[12px] text-[var(--color-text-subtle)]">{label}</span>
+    <div 
+      ref={containerRef}
+      className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] p-4 relative"
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
+    >
+      <div className="relative">
+        <ReactECharts option={getOption()} style={{ height: '160px', width: '180px' }} />
       </div>
+      <div className="absolute inset-0 flex flex-col items-center justify-center pt-8 pointer-events-none">
+        <span className="text-[24px] leading-[28px] font-semibold text-[var(--color-text-default)]">{value}%</span>
+        {used !== undefined && total !== undefined ? (
+          <span className="text-[12px] text-[var(--color-text-subtle)]">{used}{unit}/{total}{unit}</span>
+        ) : (
+          <span className="text-[12px] text-[var(--color-text-subtle)]">{label}</span>
+        )}
+      </div>
+      
+      {/* Tooltip */}
+      {showTooltip && used !== undefined && total !== undefined && (
+        <div 
+          className="absolute z-10 backdrop-blur-[40px] bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px] shadow-[0px_0px_4px_0px_rgba(0,0,0,0.1)] px-2 py-1.5 flex flex-col gap-1 pointer-events-none"
+          style={{ left: mousePos.x + 12, top: mousePos.y + 12 }}
+        >
+          <div className="flex items-center gap-1.5">
+            <div className="w-[5px] h-[5px] rounded-[1px]" style={{ backgroundColor: color }} />
+            <span className="text-[11px] leading-[14px] text-[var(--color-text-default)] whitespace-nowrap">
+              Used: {used}{unit} ({value}%)
+            </span>
+          </div>
+          <div className="flex items-center gap-1.5">
+            <div className="w-[5px] h-[5px] rounded-[1px] bg-[var(--color-border-subtle)]" />
+            <span className="text-[11px] leading-[14px] text-[var(--color-text-default)] whitespace-nowrap">
+              Available: {available.toFixed(1)}{unit} ({availablePercent}%)
+            </span>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
@@ -2026,13 +2228,15 @@ function SingleValueDoughnutDemo({
       {
         type: 'text',
         left: 'center',
-        top: '46%',
+        top: 'middle',
         style: {
           text: `${value}%`,
           textAlign: 'center',
+          textVerticalAlign: 'middle',
           fill: getColor('--color-text-default', '#0f172a'),
           fontSize: 18,
-          fontWeight: 600
+          fontWeight: 500,
+          fontFamily: 'Mona Sans, -apple-system, BlinkMacSystemFont, sans-serif'
         }
       }
     ]
@@ -2051,6 +2255,8 @@ function SingleValueDoughnutDemo({
    ---------------------------------------- */
 
 function TabBarDemo() {
+  const tabCounterRef = useRef(4);
+  
   const { tabs, activeTab, addTab, closeTab, selectTab } = useTabBar({
     initialTabs: [
       { id: 'tab-1', label: 'Entry page', closable: true },
@@ -2060,15 +2266,38 @@ function TabBarDemo() {
     initialActiveTab: 'tab-1',
   });
 
-  let tabCounter = 4;
+  // Many tabs demo
+  const manyTabsDemo = useTabBar({
+    initialTabs: [
+      { id: 'many-1', label: 'Dashboard', closable: true },
+      { id: 'many-2', label: 'Instance Templates', closable: true },
+      { id: 'many-3', label: 'Virtual Machines', closable: true },
+      { id: 'many-4', label: 'Storage Volumes', closable: true },
+      { id: 'many-5', label: 'Network Settings', closable: true },
+      { id: 'many-6', label: 'Security Groups', closable: true },
+      { id: 'many-7', label: 'Load Balancers', closable: true },
+      { id: 'many-8', label: 'Monitoring', closable: true },
+    ],
+    initialActiveTab: 'many-1',
+  });
 
   const handleAddTab = () => {
+    const counter = tabCounterRef.current;
     addTab({
-      id: `tab-${tabCounter}`,
-      label: `New Tab ${tabCounter}`,
+      id: `tab-${counter}-${Date.now()}`,
+      label: `New Tab ${counter}`,
       closable: true,
     });
-    tabCounter++;
+    tabCounterRef.current++;
+  };
+
+  const handleAddManyTab = () => {
+    const counter = manyTabsDemo.tabs.length + 1;
+    manyTabsDemo.addTab({
+      id: `many-${counter}-${Date.now()}`,
+      label: `New Tab ${counter}`,
+      closable: true,
+    });
   };
 
   return (
@@ -2077,13 +2306,24 @@ function TabBarDemo() {
       <VStack gap={3}>
         <Label>Design Tokens</Label>
         <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
-          <code>height: 36px</code> · <code>tab-width: 100-200px</code> · <code>padding-x: 12px</code> · <code>font: 12px</code>
+          <code>height: 36px</code> · <code>max-width: 160px</code> · <code>padding-x: 12px</code> · <code>font: 12px</code>
         </div>
+      </VStack>
+
+      {/* Features */}
+      <VStack gap={3}>
+        <Label>Features</Label>
+        <ul className="list-disc list-outside pl-4 space-y-1 text-[length:var(--font-size-12)] leading-[var(--line-height-18)] text-[var(--color-text-default)]">
+          <li>탭 최대 너비 160px, 긴 타이틀은 truncate 처리</li>
+          <li>탭이 많아지면 비율적으로 너비가 줄어듦 (스크롤 없음)</li>
+          <li>탭 추가/닫기 기능</li>
+          <li>윈도우 컨트롤 (최소화/최대화/닫기)</li>
+        </ul>
       </VStack>
 
       {/* Interactive Demo */}
       <VStack gap={3}>
-        <Label>Interactive Demo</Label>
+        <Label>Interactive Demo (3 tabs)</Label>
         <div className="w-full border border-[var(--color-border-default)] rounded-[var(--radius-md)] overflow-hidden">
           <TabBar
             tabs={tabs}
@@ -2099,6 +2339,24 @@ function TabBarDemo() {
         <p className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
           Click tabs to switch, click × to close, click + to add new tabs
         </p>
+      </VStack>
+
+      {/* Many Tabs Demo */}
+      <VStack gap={3}>
+        <Label>Many Tabs Demo (8 tabs - 비율 축소)</Label>
+        <div className="w-full border border-[var(--color-border-default)] rounded-[var(--radius-md)] overflow-hidden">
+          <TabBar
+            tabs={manyTabsDemo.tabs}
+            activeTab={manyTabsDemo.activeTab}
+            onTabChange={manyTabsDemo.selectTab}
+            onTabClose={manyTabsDemo.closeTab}
+            onTabAdd={handleAddManyTab}
+            showAddButton={true}
+          />
+          <div className="h-[80px] flex items-center justify-center bg-[var(--color-surface-default)] text-[var(--color-text-muted)] text-[length:var(--font-size-12)]">
+            탭이 많아지면 모든 탭이 화면에 보이도록 너비가 비율적으로 줄어듭니다.
+          </div>
+        </div>
       </VStack>
 
       {/* With Icons */}
@@ -2396,6 +2654,27 @@ function TableDemo() {
     { key: 'createdAt', label: 'Created At', width: '140px' },
   ];
 
+  // Columns without copy button (40px row height demo)
+  const noCopyColumns = [
+    { 
+      key: 'name', 
+      label: 'Name', 
+      width: '180px',
+      render: (value: string) => (
+        <span className="text-[var(--color-action-primary)] cursor-pointer hover:underline hover:underline-offset-2">{value}</span>
+      )
+    },
+    { 
+      key: 'fingerprint', 
+      label: 'Fingerprint', 
+      flex: 1,
+      render: (_: string, row: KeyPairData) => (
+        <span className="text-[length:var(--font-size-12)] leading-[var(--line-height-18)] text-[var(--color-text-default)]">{row.fingerprint}</span>
+      )
+    },
+    { key: 'createdAt', label: 'Created At', width: '140px' },
+  ];
+
   // Compact columns for horizontal scroll demo
   const compactColumns = [
     { 
@@ -2498,6 +2777,17 @@ function TableDemo() {
         </p>
       </VStack>
 
+      {/* 40px Row Height */}
+      <VStack gap={3}>
+        <Label>40PX</Label>
+        <Table
+          columns={noCopyColumns}
+          data={sampleKeyPairData}
+          rowKey="id"
+          rowHeight="40px"
+        />
+      </VStack>
+
       {/* Sticky Header */}
       <VStack gap={3}>
         <Label>Sticky Header (scroll to see effect)</Label>
@@ -2552,7 +2842,10 @@ function TableDemo() {
 
 export function DesignSystemPage() {
   const [activeSection, setActiveSection] = useState('token-architecture');
-  const [searchQuery, setSearchQuery] = useState('');
+  const [sidebarSearchQuery, setSidebarSearchQuery] = useState('');
+  const [mainSearchQuery, setMainSearchQuery] = useState('');
+  const [isSidebarSearchFocused, setIsSidebarSearchFocused] = useState(false);
+  const [isMainSearchFocused, setIsMainSearchFocused] = useState(false);
   const [showScrollTop, setShowScrollTop] = useState(false);
   const mainRef = useRef<HTMLDivElement>(null);
   
@@ -2585,6 +2878,8 @@ export function DesignSystemPage() {
 
   // Intersection Observer to track active section
   useEffect(() => {
+    if (!mainRef.current) return;
+    
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
@@ -2593,7 +2888,10 @@ export function DesignSystemPage() {
           }
         });
       },
-      { rootMargin: '-20% 0px -60% 0px' }
+      { 
+        root: mainRef.current,
+        rootMargin: '-20% 0px -60% 0px' 
+      }
     );
 
     navItems.forEach(({ id }) => {
@@ -2606,26 +2904,86 @@ export function DesignSystemPage() {
 
   const scrollToSection = (id: string) => {
     const element = document.getElementById(id);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    const container = mainRef.current;
+    
+    if (!element || !container) {
+      return;
     }
+    
+    // Small delay to ensure state updates are processed
+    setTimeout(() => {
+      if (!container || !element) return;
+      
+      // Calculate target position relative to the scroll container
+      const containerRect = container.getBoundingClientRect();
+      const elementRect = element.getBoundingClientRect();
+      const scrollTop = container.scrollTop;
+      const targetScrollTop = scrollTop + elementRect.top - containerRect.top - 20; // 20px offset from top
+      
+      // Fast smooth scroll
+      const startScrollTop = scrollTop;
+      const distance = targetScrollTop - startScrollTop;
+      const duration = 400;
+      let startTime: number | null = null;
+      
+      // Smooth easing function (easeOutCubic - starts fast, ends slow)
+      const easeOutCubic = (t: number): number => {
+        return 1 - Math.pow(1 - t, 3);
+      };
+      
+      const animateScroll = (currentTime: number) => {
+        if (startTime === null) startTime = currentTime;
+        const timeElapsed = currentTime - startTime;
+        const progress = Math.min(timeElapsed / duration, 1);
+        const easedProgress = easeOutCubic(progress);
+        
+        if (container) {
+          const currentScrollTop = startScrollTop + distance * easedProgress;
+          container.scrollTop = currentScrollTop;
+          
+          if (progress < 1) {
+            requestAnimationFrame(animateScroll);
+          }
+        }
+      };
+      
+      requestAnimationFrame(animateScroll);
+    }, 50);
   };
 
-  // Filter nav items based on search query
-  const filteredNavItems = searchQuery.trim()
+  // Filter nav items based on search query (for sidebar)
+  const filteredSidebarNavItems = sidebarSearchQuery.trim()
     ? navItems.filter(item => 
-        item.label.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        item.id.toLowerCase().includes(searchQuery.toLowerCase())
+        item.label.toLowerCase().includes(sidebarSearchQuery.toLowerCase()) ||
+        item.id.toLowerCase().includes(sidebarSearchQuery.toLowerCase())
       )
     : [];
 
-  const handleSearchKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter' && filteredNavItems.length > 0) {
-      scrollToSection(filteredNavItems[0].id);
-      setSearchQuery('');
+  // Filter nav items based on search query (for main content)
+  const filteredMainNavItems = mainSearchQuery.trim()
+    ? navItems.filter(item => 
+        item.label.toLowerCase().includes(mainSearchQuery.toLowerCase()) ||
+        item.id.toLowerCase().includes(mainSearchQuery.toLowerCase())
+      )
+    : [];
+
+  const handleSidebarSearchKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter' && filteredSidebarNavItems.length > 0) {
+      scrollToSection(filteredSidebarNavItems[0].id);
+      setSidebarSearchQuery('');
     }
     if (e.key === 'Escape') {
-      setSearchQuery('');
+      setSidebarSearchQuery('');
+    }
+  };
+
+  const handleMainSearchKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter' && filteredMainNavItems.length > 0) {
+      scrollToSection(filteredMainNavItems[0].id);
+      setMainSearchQuery('');
+    }
+    if (e.key === 'Escape') {
+      setMainSearchQuery('');
     }
   };
 
@@ -2647,12 +3005,75 @@ export function DesignSystemPage() {
           {/* EntryPage Link */}
           <Link
             to="/"
-            className="flex items-center gap-2 w-[166px] box-border px-3 py-2 mb-4 rounded-[var(--radius-button)] bg-[var(--color-action-secondary)] hover:bg-[var(--color-action-secondary-hover)] text-[var(--color-text-default)] text-[length:var(--font-size-11)] font-medium transition-colors border border-[var(--color-border-default)]"
+            className="flex items-center gap-2 w-[166px] box-border px-3 py-2 mb-2 rounded-[var(--radius-button)] bg-[var(--color-action-secondary)] hover:bg-[var(--color-action-secondary-hover)] text-[var(--color-text-default)] text-[length:var(--font-size-11)] font-medium transition-colors border border-[var(--color-border-default)]"
           >
             <IconHome size={16} stroke={1.5} className="shrink-0" />
             <span className="truncate flex-1 min-w-0">Entry page</span>
             <IconChevronRight size={14} stroke={1.5} className="shrink-0" />
           </Link>
+
+          {/* Search Bar */}
+          <div className="relative mb-4">
+            <div className="relative">
+              <IconSearch 
+                size={16} 
+                stroke={1.5} 
+                className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--color-text-muted)]" 
+              />
+              <input
+                type="text"
+                value={sidebarSearchQuery}
+                onChange={(e) => setSidebarSearchQuery(e.target.value)}
+                onKeyDown={handleSidebarSearchKeyDown}
+                onFocus={() => setIsSidebarSearchFocused(true)}
+                onBlur={() => setIsSidebarSearchFocused(false)}
+                placeholder="Search"
+                className="w-[166px] pl-9 pr-8 py-2 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] text-[length:var(--font-size-11)] text-[var(--color-text-default)] placeholder:text-[var(--color-text-muted)] focus:outline-none focus:border-[var(--color-border-focus)] focus:ring-2 focus:ring-[var(--color-border-focus)] focus:ring-opacity-20 transition-colors"
+              />
+              {sidebarSearchQuery && (
+                <button
+                  onClick={() => setSidebarSearchQuery('')}
+                  className="absolute right-2 top-1/2 -translate-y-1/2 text-[var(--color-text-muted)] hover:text-[var(--color-text-default)] transition-colors"
+                >
+                  <IconX size={14} stroke={1.5} />
+                </button>
+              )}
+            </div>
+            
+            {/* Search Results Dropdown */}
+            {sidebarSearchQuery.trim() && isSidebarSearchFocused && (
+              <div className="absolute top-full left-0 w-[166px] mt-2 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] shadow-[var(--shadow-lg)] z-50 max-h-[300px] overflow-y-auto sidebar-scroll">
+                {filteredSidebarNavItems.length > 0 ? (
+                  <div className="p-2">
+                    {filteredSidebarNavItems.map(({ id, label, icon: Icon }, index) => (
+                      <button
+                        key={id}
+                        onMouseDown={(e) => {
+                          e.preventDefault(); // Prevent input blur
+                        }}
+                        onClick={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          scrollToSection(id);
+                          setSidebarSearchQuery('');
+                          setIsSidebarSearchFocused(false);
+                        }}
+                        data-cursor-element-id={`sidebar-search-result-${id}-${index}`}
+                        className="w-full px-3 py-2 rounded-[var(--radius-md)] flex items-center gap-2 text-left hover:bg-[var(--color-surface-muted)] transition-colors cursor-pointer"
+                      >
+                        <Icon size={14} stroke={1.5} className="text-[var(--color-text-muted)] shrink-0" />
+                        <span className="text-[length:var(--font-size-11)] text-[var(--color-text-default)] truncate">{label}</span>
+                      </button>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="p-3 text-center text-[length:var(--font-size-11)] text-[var(--color-text-muted)]">
+                    No results found
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
 
           {/* Navigation */}
           <VStack gap={4}>
@@ -2665,9 +3086,10 @@ export function DesignSystemPage() {
                 <button
                   key={id}
                   onClick={() => scrollToSection(id)}
+                  data-cursor-element-id={`sidebar-nav-${id}`}
                   className={`
                     w-full px-3 py-2 rounded-[var(--radius-button)] flex items-center gap-2
-                    text-[length:var(--font-size-11)] text-left transition-colors
+                    text-[length:var(--font-size-11)] text-left transition-colors cursor-pointer
                     ${activeSection === id
                       ? 'bg-[var(--color-state-info-bg)] text-[var(--color-action-primary)] font-medium'
                       : 'text-[var(--color-text-muted)] hover:bg-[var(--color-surface-subtle)]'
@@ -2689,9 +3111,10 @@ export function DesignSystemPage() {
                 <button
                   key={id}
                   onClick={() => scrollToSection(id)}
+                  data-cursor-element-id={`sidebar-nav-${id}`}
                   className={`
                     w-full px-3 py-2 rounded-[var(--radius-button)] flex items-center gap-2
-                    text-[length:var(--font-size-11)] text-left transition-colors
+                    text-[length:var(--font-size-11)] text-left transition-colors cursor-pointer
                     ${activeSection === id
                       ? 'bg-[var(--color-state-info-bg)] text-[var(--color-action-primary)] font-medium'
                       : 'text-[var(--color-text-muted)] hover:bg-[var(--color-surface-subtle)]'
@@ -2713,9 +3136,10 @@ export function DesignSystemPage() {
                 <button
                   key={id}
                   onClick={() => scrollToSection(id)}
+                  data-cursor-element-id={`sidebar-nav-${id}`}
                   className={`
                     w-full px-3 py-2 rounded-[var(--radius-button)] flex items-center gap-2
-                    text-[length:var(--font-size-11)] text-left transition-colors
+                    text-[length:var(--font-size-11)] text-left transition-colors cursor-pointer
                     ${activeSection === id
                       ? 'bg-[var(--color-state-info-bg)] text-[var(--color-action-primary)] font-medium'
                       : 'text-[var(--color-text-muted)] hover:bg-[var(--color-surface-subtle)]'
@@ -2737,9 +3161,10 @@ export function DesignSystemPage() {
                 <button
                   key={id}
                   onClick={() => scrollToSection(id)}
+                  data-cursor-element-id={`sidebar-nav-${id}`}
                   className={`
                     w-full px-3 py-2 rounded-[var(--radius-button)] flex items-center gap-2
-                    text-[length:var(--font-size-11)] text-left transition-colors
+                    text-[length:var(--font-size-11)] text-left transition-colors cursor-pointer
                     ${activeSection === id
                       ? 'bg-[var(--color-state-info-bg)] text-[var(--color-action-primary)] font-medium'
                       : 'text-[var(--color-text-muted)] hover:bg-[var(--color-surface-subtle)]'
@@ -2761,9 +3186,10 @@ export function DesignSystemPage() {
                 <button
                   key={id}
                   onClick={() => scrollToSection(id)}
+                  data-cursor-element-id={`sidebar-nav-${id}`}
                   className={`
                     w-full px-3 py-2 rounded-[var(--radius-button)] flex items-center gap-2
-                    text-[length:var(--font-size-11)] text-left transition-colors
+                    text-[length:var(--font-size-11)] text-left transition-colors cursor-pointer
                     ${activeSection === id
                       ? 'bg-[var(--color-state-info-bg)] text-[var(--color-action-primary)] font-medium'
                       : 'text-[var(--color-text-muted)] hover:bg-[var(--color-surface-subtle)]'
@@ -2814,15 +3240,17 @@ export function DesignSystemPage() {
                 />
                 <input
                   type="text"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  onKeyDown={handleSearchKeyDown}
+                  value={mainSearchQuery}
+                  onChange={(e) => setMainSearchQuery(e.target.value)}
+                  onKeyDown={handleMainSearchKeyDown}
+                  onFocus={() => setIsMainSearchFocused(true)}
+                  onBlur={() => setIsMainSearchFocused(false)}
                   placeholder="Search components, tokens... (Enter to go, Esc to clear)"
                   className="w-full pl-10 pr-4 py-3 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] text-[length:var(--font-size-14)] text-[var(--color-text-default)] placeholder:text-[var(--color-text-muted)] focus:outline-none focus:border-[var(--color-border-focus)] focus:ring-2 focus:ring-[var(--color-border-focus)] focus:ring-opacity-20 transition-colors"
                 />
-                {searchQuery && (
+                {mainSearchQuery && (
                   <button
-                    onClick={() => setSearchQuery('')}
+                    onClick={() => setMainSearchQuery('')}
                     className="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--color-text-muted)] hover:text-[var(--color-text-default)] transition-colors"
                   >
                     <IconX size={16} stroke={1.5} />
@@ -2831,18 +3259,25 @@ export function DesignSystemPage() {
               </div>
               
               {/* Search Results Dropdown */}
-              {searchQuery.trim() && (
-                <div className="absolute top-full left-0 right-0 mt-2 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] shadow-[var(--shadow-lg)] z-50 max-h-[300px] overflow-y-auto">
-                  {filteredNavItems.length > 0 ? (
+              {mainSearchQuery.trim() && isMainSearchFocused && (
+                <div className="absolute top-full left-0 right-0 mt-2 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] shadow-[var(--shadow-lg)] z-50 max-h-[300px] overflow-y-auto sidebar-scroll">
+                  {filteredMainNavItems.length > 0 ? (
                     <div className="p-2">
-                      {filteredNavItems.map(({ id, label, icon: Icon }) => (
+                      {filteredMainNavItems.map(({ id, label, icon: Icon }, index) => (
                         <button
                           key={id}
-                          onClick={() => {
-                            scrollToSection(id);
-                            setSearchQuery('');
+                          onMouseDown={(e) => {
+                            e.preventDefault(); // Prevent input blur
                           }}
-                          className="w-full px-3 py-2 rounded-[var(--radius-md)] flex items-center gap-3 text-left hover:bg-[var(--color-surface-muted)] transition-colors"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            scrollToSection(id);
+                            setMainSearchQuery('');
+                            setIsMainSearchFocused(false);
+                          }}
+                          data-cursor-element-id={`main-search-result-${id}-${index}`}
+                          className="w-full px-3 py-2 rounded-[var(--radius-md)] flex items-center gap-3 text-left hover:bg-[var(--color-surface-muted)] transition-colors cursor-pointer"
                         >
                           <Icon size={16} stroke={1.5} className="text-[var(--color-text-muted)]" />
                           <span className="text-[length:var(--font-size-12)] text-[var(--color-text-default)]">{label}</span>
@@ -2851,7 +3286,7 @@ export function DesignSystemPage() {
                     </div>
                   ) : (
                     <div className="p-4 text-center text-[length:var(--font-size-12)] text-[var(--color-text-muted)]">
-                      No results found for "{searchQuery}"
+                      No results found for "{mainSearchQuery}"
                     </div>
                   )}
                 </div>
@@ -4853,7 +5288,7 @@ outline: 2px solid var(--color-border-focus);`}
             </Section>
 
             {/* TabBar Component */}
-            <Section id="tabbar" title="TabBar" description="Browser-style tabs with add/close functionality">
+            <Section id="tabbar" title="TabBar" description="Browser-style tabs with responsive width (max 160px, auto-shrink when overflow)">
               <TabBarDemo />
             </Section>
 
@@ -6593,6 +7028,12 @@ outline: 2px solid var(--color-border-focus);`}
                   <Label>Stacked Area Chart</Label>
                   <AreaChartDemo variant="stacked" />
                 </VStack>
+
+                {/* No Data Area Chart */}
+                <VStack gap={3}>
+                  <Label>No Data</Label>
+                  <AreaChartDemo variant="nodata" />
+                </VStack>
               </VStack>
             </Section>
 
@@ -6656,9 +7097,9 @@ outline: 2px solid var(--color-border-focus);`}
                 <VStack gap={3}>
                   <Label>Status Variants</Label>
                   <div className="flex items-center gap-8 flex-wrap">
-                    <HalfDoughnutChartDemo value={35} label="Safe" status="success" />
-                    <HalfDoughnutChartDemo value={75} label="Warning" status="warning" />
-                    <HalfDoughnutChartDemo value={95} label="Danger" status="error" />
+                    <HalfDoughnutChartDemo value={35} label="Safe" status="success" used={66.5} total={189.9} unit="TiB" />
+                    <HalfDoughnutChartDemo value={75} label="Warning" status="warning" used={142.4} total={189.9} unit="TiB" />
+                    <HalfDoughnutChartDemo value={95} label="Danger" status="error" used={180.4} total={189.9} unit="TiB" />
                   </div>
                 </VStack>
               </VStack>
@@ -6674,26 +7115,15 @@ outline: 2px solid var(--color-border-focus);`}
                     <code>inner-radius: 68%</code> · <code>outer-radius: 80%</code> · <code>thickness: 12%</code> · <code>border-radius: 6px</code>
                   </div>
                 </VStack>
-                <HStack gap={3}>
-                  <a
-                    href="https://github.com/pob-design-system/tds/blob/main/DESIGN_SYSTEM.md"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 px-4 py-2 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-button)] text-[length:var(--font-size-12)] text-[var(--color-text-default)] hover:bg-[var(--color-surface-muted)] transition-colors cursor-pointer"
-                  >
-                    <IconFileText size={14} stroke={1.5} />
-                    DESIGN_SYSTEM.md
-                  </a>
-                  <a
-                    href="https://github.com/pob-design-system/tds/blob/main/.cursorrules"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 px-4 py-2 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-button)] text-[length:var(--font-size-12)] text-[var(--color-text-default)] hover:bg-[var(--color-surface-muted)] transition-colors cursor-pointer"
-                  >
-                    <IconCode size={14} stroke={1.5} />
-                    .cursorrules
-                  </a>
-                </HStack>
+
+                {/* Doughnut Chart Example */}
+                <div className="flex gap-6 flex-wrap">
+                  <DoughnutChartDemo 
+                    title="OSD onode Hits Ratio"
+                    value={98.3}
+                    color="#ef4444"
+                  />
+                </div>
               </VStack>
             </Section>
 

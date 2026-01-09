@@ -204,7 +204,7 @@ function NameCell({ id, name }: NameCellProps) {
   return (
     <Link
       to={`/storage/images/${id}`}
-      className="text-[var(--color-action-primary)] hover:underline truncate block max-w-[220px]"
+      className="font-medium text-[var(--color-action-primary)] hover:underline truncate block max-w-[220px]"
       title={name}
     >
       {name}
@@ -223,7 +223,7 @@ export function ImagesPage() {
   const rowsPerPage = 10;
 
   // Global tab management
-  const { tabs, activeTabId, closeTab, selectTab, addNewTab } = useTabs();
+  const { tabs, activeTabId, closeTab, selectTab, addNewTab, moveTab } = useTabs();
 
   // Convert tabs to TabBar format
   const tabBarTabs = tabs.map((tab) => ({
@@ -320,18 +320,26 @@ export function ImagesPage() {
           {/* Tab Bar */}
           <TabBar
             tabs={tabBarTabs}
-            activeTabId={activeTabId}
+            activeTab={activeTabId}
+            onTabChange={selectTab}
             onTabClose={closeTab}
-            onTabSelect={selectTab}
-            onNewTab={addNewTab}
+            onTabAdd={addNewTab}
+            onTabReorder={moveTab}
+            showAddButton={true}
+            showWindowControls={true}
           />
 
-          {/* Top Bar */}
+          {/* Top Bar with Breadcrumb Navigation */}
           <TopBar
+            showSidebarToggle={!sidebarOpen}
+            onSidebarToggle={() => setSidebarOpen(true)}
+            showNavigation={true}
+            onBack={() => window.history.back()}
+            onForward={() => window.history.forward()}
             breadcrumb={
               <Breadcrumb
                 items={[
-                  { label: 'Home', href: '/' },
+                  { label: 'Home', href: '/storage' },
                   { label: 'Images' },
                 ]}
               />
@@ -339,7 +347,7 @@ export function ImagesPage() {
             actions={
               <TopBarAction
                 icon={<IconBell size={16} stroke={1.5} />}
-                label="Notifications"
+                aria-label="Notifications"
               />
             }
           />
@@ -347,12 +355,14 @@ export function ImagesPage() {
 
         {/* Scrollable Content Area */}
         <div className="flex-1 overflow-auto min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll">
-          <div className="pt-4 px-8 pb-20 bg-[var(--color-surface-default)]">
+          <div className="pt-4 px-8 pb-20 bg-[var(--color-surface-default)] min-h-full">
             <VStack gap={3}>
               {/* Page Header */}
-              <h1 className="text-[length:var(--font-size-16)] font-semibold text-[var(--color-text-default)] leading-[var(--line-height-24)]">
-                Images
-              </h1>
+              <div className="flex items-center justify-between h-8">
+                <h1 className="text-[length:var(--font-size-16)] font-semibold text-[var(--color-text-default)]">
+                  Images
+                </h1>
+              </div>
 
               {/* Search and Actions */}
               <div className="flex flex-col gap-2">
@@ -372,7 +382,7 @@ export function ImagesPage() {
                     <Button
                       variant="secondary"
                       size="sm"
-                      icon={<IconDownload size={12} stroke={1.5} />}
+                      icon={<IconDownload size={14} stroke={1.5} />}
                       aria-label="Download"
                     />
                     <Button

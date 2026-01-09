@@ -24,8 +24,10 @@ export interface TopBarProps {
   breadcrumb?: ReactNode;
   /** Right side actions (icons, buttons) */
   actions?: ReactNode;
-  /** Show sidebar toggle button */
+  /** Show sidebar toggle button on the left */
   showSidebarToggle?: boolean;
+  /** Show sidebar toggle button after breadcrumbs */
+  showSidebarToggleAfterBreadcrumb?: boolean;
   /** Show navigation buttons */
   showNavigation?: boolean;
   /** Custom class name */
@@ -44,7 +46,8 @@ export const TopBar: React.FC<TopBarProps> = ({
   canGoForward = true,
   breadcrumb,
   actions,
-  showSidebarToggle = true,
+  showSidebarToggle = false,
+  showSidebarToggleAfterBreadcrumb = false,
   showNavigation = true,
   className = '',
 }) => {
@@ -79,8 +82,8 @@ export const TopBar: React.FC<TopBarProps> = ({
     >
       {/* Left Section: Sidebar Toggle + Navigation */}
       <div className="flex items-center gap-[var(--topbar-section-gap)]">
-        {/* Sidebar Toggle */}
-        {showSidebarToggle && (
+        {/* Sidebar Toggle - Always on the very left when shown */}
+        {(showSidebarToggle || showSidebarToggleAfterBreadcrumb) && (
           <button
             type="button"
             onClick={onSidebarToggle}
@@ -117,7 +120,7 @@ export const TopBar: React.FC<TopBarProps> = ({
       </div>
 
       {/* Center Section: Breadcrumb */}
-      <div className="flex-1 min-w-0">
+      <div className="flex-1 min-w-0 flex items-center gap-[var(--topbar-section-gap)]">
         {breadcrumb}
       </div>
 

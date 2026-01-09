@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import {
   Button,
@@ -33,6 +33,7 @@ import {
   IconDotsVertical,
   IconPlus,
   IconCopy,
+  IconCheck,
   IconLayoutSidebar,
   IconEdit,
   IconSelector,
@@ -150,7 +151,7 @@ function TreeItem({ item, level, selectedId, onSelect, onToggle }: TreeItemProps
       <div
         className={`
           group flex items-center gap-1 h-[28px] px-2 rounded cursor-pointer text-[11px]
-          ${isSelected ? 'bg-[var(--color-action-primary)] text-white' : 'hover:bg-[var(--color-surface-subtle)] text-[var(--color-text-default)]'}
+          ${isSelected ? 'bg-[var(--color-state-info-bg)] text-[var(--color-action-primary)] font-medium' : 'hover:bg-[var(--color-surface-subtle)] text-[var(--color-text-default)]'}
         `}
         style={{ paddingLeft: `${8 + level * 20}px` }}
         onClick={() => onSelect(item.id)}
@@ -174,9 +175,9 @@ function TreeItem({ item, level, selectedId, onSelect, onToggle }: TreeItemProps
         )}
         
         {item.type === 'folder' ? (
-          <IconFolder size={14} stroke={1.5} className={`shrink-0 ${isSelected ? 'text-white' : 'text-[var(--color-text-muted)]'}`} />
+          <IconFolder size={14} stroke={1.5} className={`shrink-0 ${isSelected ? 'text-[var(--color-action-primary)]' : 'text-[var(--color-text-muted)]'}`} />
         ) : (
-          <IconFile size={14} stroke={1.5} className={`shrink-0 ${isSelected ? 'text-white' : 'text-[var(--color-text-muted)]'}`} />
+          <IconFile size={14} stroke={1.5} className={`shrink-0 ${isSelected ? 'text-[var(--color-action-primary)]' : 'text-[var(--color-text-muted)]'}`} />
         )}
         
         <span className="flex-1 truncate ml-1">{item.name}</span>
@@ -221,6 +222,13 @@ interface ObjectRowProps {
 
 function ObjectRow({ object, isExpanded, isSelected, onToggleExpand, onToggleSelect }: ObjectRowProps) {
   const isFolder = object.type === 'folder';
+  const [copiedField, setCopiedField] = useState<'s3Uri' | 'objectUrl' | null>(null);
+
+  const handleCopy = (text: string, field: 's3Uri' | 'objectUrl') => {
+    navigator.clipboard.writeText(text);
+    setCopiedField(field);
+    setTimeout(() => setCopiedField(null), 2000);
+  };
 
   return (
     <div
@@ -263,7 +271,7 @@ function ObjectRow({ object, isExpanded, isSelected, onToggleExpand, onToggleSel
           )}
           <Link
             to={isFolder ? `/storage/buckets/${object.id}` : '#'}
-            className="text-[var(--color-action-primary)] hover:underline text-[length:var(--table-font-size)] leading-[var(--table-line-height)] truncate"
+            className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2 text-[length:var(--table-font-size)] leading-[var(--table-line-height)] truncate"
           >
             {object.name}
           </Link>
@@ -309,15 +317,22 @@ function ObjectRow({ object, isExpanded, isSelected, onToggleExpand, onToggleSel
 
       {/* Expanded Details */}
       {isExpanded && !isFolder && (
-        <div className="px-4 pb-4 pt-2 border-t border-[var(--color-border-subtle)]">
+        <div className="p-4 border-t border-[var(--color-border-subtle)]">
           {/* S3 URI & Object URL */}
           <div className="flex gap-4 mb-6">
             {/* S3 URI Box */}
             <div className="flex-1 p-4 border border-[var(--color-border-default)] rounded-lg bg-[var(--color-surface-default)]">
               <div className="flex items-start justify-between mb-2">
                 <span className="text-[11px] text-[var(--color-text-muted)]">S3 URI</span>
-                <button className="p-1 hover:bg-[var(--color-surface-subtle)] rounded">
-                  <IconCopy size={14} stroke={1.5} className="text-[var(--color-text-muted)]" />
+                <button 
+                  className="p-1 hover:bg-[var(--color-surface-subtle)] rounded"
+                  onClick={() => object.s3Uri && handleCopy(object.s3Uri, 's3Uri')}
+                >
+                  {copiedField === 's3Uri' ? (
+                    <IconCheck size={14} stroke={1.5} className="text-[var(--color-state-success)]" />
+                  ) : (
+                    <IconCopy size={14} stroke={1.5} className="text-[var(--color-text-muted)]" />
+                  )}
                 </button>
               </div>
               <div className="text-[12px] text-[var(--color-text-default)] break-all">
@@ -328,8 +343,15 @@ function ObjectRow({ object, isExpanded, isSelected, onToggleExpand, onToggleSel
             <div className="flex-1 p-4 border border-[var(--color-border-default)] rounded-lg bg-[var(--color-surface-default)]">
               <div className="flex items-start justify-between mb-2">
                 <span className="text-[11px] text-[var(--color-text-muted)]">Object URL</span>
-                <button className="p-1 hover:bg-[var(--color-surface-subtle)] rounded">
-                  <IconCopy size={14} stroke={1.5} className="text-[var(--color-text-muted)]" />
+                <button 
+                  className="p-1 hover:bg-[var(--color-surface-subtle)] rounded"
+                  onClick={() => object.objectUrl && handleCopy(object.objectUrl, 'objectUrl')}
+                >
+                  {copiedField === 'objectUrl' ? (
+                    <IconCheck size={14} stroke={1.5} className="text-[var(--color-state-success)]" />
+                  ) : (
+                    <IconCopy size={14} stroke={1.5} className="text-[var(--color-text-muted)]" />
+                  )}
                 </button>
               </div>
               <div className="text-[12px] text-[var(--color-text-default)] break-all">
@@ -364,7 +386,7 @@ function ObjectRow({ object, isExpanded, isSelected, onToggleExpand, onToggleSel
           </div>
 
           {/* Versions */}
-          <div className="flex flex-col gap-[var(--table-row-gap)]">
+          <div className="flex flex-col gap-[var(--table-row-gap)] mt-4">
             <div className="text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-muted)]">Versions</div>
             {/* Header */}
             <div className="flex items-stretch min-h-[var(--table-row-height)] bg-[var(--table-header-bg)] border border-[var(--color-border-default)] rounded-[var(--table-row-radius)]">
@@ -428,10 +450,17 @@ export function BucketDetailPage() {
   const [treeSidebarOpen, setTreeSidebarOpen] = useState(true);
 
   // Global tab management
-  const { tabs, activeTabId, closeTab, selectTab, addNewTab } = useTabs();
+  const { tabs, activeTabId, closeTab, selectTab, addNewTab, updateActiveTabLabel, moveTab } = useTabs();
 
   // Use mock data (in real app, fetch based on id)
   const bucketData = mockBucketDetail;
+
+  // Update tab label to match the bucket name (most recent breadcrumb)
+  useEffect(() => {
+    if (bucketData?.name) {
+      updateActiveTabLabel(bucketData.name);
+    }
+  }, [bucketData?.name, updateActiveTabLabel]);
 
   // Convert tabs to TabBar format
   const tabBarTabs = tabs.map((tab) => ({
@@ -511,14 +540,22 @@ export function BucketDetailPage() {
           {/* Tab Bar */}
           <TabBar
             tabs={tabBarTabs}
-            activeTabId={activeTabId}
+            activeTab={activeTabId}
+            onTabChange={selectTab}
             onTabClose={closeTab}
-            onTabSelect={selectTab}
-            onNewTab={addNewTab}
+            onTabAdd={addNewTab}
+            onTabReorder={moveTab}
+            showAddButton={true}
+            showWindowControls={true}
           />
 
           {/* Top Bar */}
           <TopBar
+            showSidebarToggle={!sidebarOpen}
+            onSidebarToggle={() => setSidebarOpen(true)}
+            showNavigation={true}
+            onBack={() => window.history.back()}
+            onForward={() => window.history.forward()}
             breadcrumb={
               <Breadcrumb
                 items={[
@@ -529,15 +566,15 @@ export function BucketDetailPage() {
               />
             }
             actions={
-              <TopBarAction icon={<IconBell size={16} stroke={1.5} />} label="Notifications" />
+              <TopBarAction icon={<IconBell size={16} stroke={1.5} />} aria-label="Notifications" />
             }
           />
         </div>
 
         {/* Scrollable Content Area */}
         <div className="flex-1 overflow-auto min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll">
-          <div className="pt-4 px-8 pb-20 bg-[var(--color-surface-default)]">
-            <VStack gap={6} className="min-w-[1176px] max-w-[1320px]">
+          <div className="pt-4 px-8 pb-20 bg-[var(--color-surface-default)] min-h-full">
+            <VStack gap={6} className="min-w-[1176px]">
               {/* Page Header with Info Cards */}
               <DetailHeader>
                 <DetailHeader.Title>{bucketData.name}</DetailHeader.Title>
@@ -656,7 +693,7 @@ export function BucketDetailPage() {
                           <div className="flex items-center gap-2">
                             {!treeSidebarOpen && (
                               <button
-                                className="p-1 hover:bg-[var(--color-surface-muted)] rounded"
+                                className="p-1 rounded border border-[var(--color-border-default)] hover:bg-[var(--color-surface-muted)] hover:border-[var(--color-border-strong)] transition-colors"
                                 onClick={() => setTreeSidebarOpen(true)}
                               >
                                 <IconLayoutSidebar size={14} stroke={1.5} className="text-[var(--color-text-muted)]" />

@@ -72,6 +72,9 @@ import { OSDDetailPage } from '@/pages/OSDDetailPage';
 import { PhysicalDisksPage } from '@/pages/PhysicalDisksPage';
 import { OverallPerformancePage } from '@/pages/OverallPerformancePage';
 
+// Pages - Container
+import { ContainerDashboardPage } from '@/pages/ContainerDashboardPage';
+
 // Pages - Cloud Builder
 import { CloudBuilderConsolePage } from '@/pages/cloudbuilder/CloudBuilderConsolePage';
 import { CloudBuilderCreatePage } from '@/pages/cloudbuilder/CloudBuilderCreatePage';
@@ -91,6 +94,9 @@ import { DesktopPage } from '@/pages/DesktopPage';
 // Pages - AI Platform
 import { AIPlatformPage } from '@/pages/AIPlatformPage';
 
+// Layouts
+import { AgentAppLayout } from '@/layouts';
+
 const defaultTabs = [
   { id: 'home', label: 'Home', path: '/compute', closable: true },
 ];
@@ -101,13 +107,15 @@ function AppRoutes() {
         {/* Entry Page */}
         <Route path="/" element={<EntryPage />} />
 
-        {/* Agent Routes */}
-        <Route path="/agent" element={<HomePage />} />
-        <Route path="/agent/list" element={<AgentPage />} />
-        <Route path="/agent/create" element={<CreateAgentPage />} />
-        <Route path="/chat" element={<ChatPage />} />
-        <Route path="/agent/storage" element={<StoragePage />} />
-        <Route path="/mcp-tools" element={<MCPToolsPage />} />
+        {/* Agent Routes - Shared TabBar via AgentAppLayout */}
+        <Route element={<AgentAppLayout />}>
+          <Route path="/agent" element={<HomePage />} />
+          <Route path="/agent/list" element={<AgentPage />} />
+          <Route path="/agent/create" element={<CreateAgentPage />} />
+          <Route path="/chat" element={<ChatPage />} />
+          <Route path="/agent/storage" element={<StoragePage />} />
+          <Route path="/mcp-tools" element={<MCPToolsPage />} />
+        </Route>
 
         {/* Cloud Builder Routes */}
         <Route path="/cloudbuilder" element={<CloudBuilderConsolePage />} />
@@ -178,6 +186,10 @@ function AppRoutes() {
         <Route path="/storage/buckets" element={<BucketsPage />} />
         <Route path="/storage/buckets/:id" element={<BucketDetailPage />} />
         <Route path="/storage/performance" element={<OverallPerformancePage />} />
+
+        {/* Container Routes */}
+        <Route path="/container" element={<ContainerDashboardPage />} />
+        <Route path="/container/*" element={<ContainerDashboardPage />} />
 
         {/* Design System Routes */}
         <Route path="/design" element={<DesignSystemPage />} />
