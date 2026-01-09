@@ -13,9 +13,8 @@ import {
   type TableColumn,
   Pagination,
   SearchInput,
-  Select,
   Badge,
-  StatusIndicator,
+  ListToolbar,
 } from '@/design-system';
 import { useTabs } from '@/contexts/TabContext';
 import {
@@ -44,15 +43,7 @@ import {
   IconBell,
   IconPalette,
   IconRefresh,
-  IconPlus,
-  IconCircleCheck,
-  IconClock,
-  IconAlertCircle,
-  IconCube,
-  IconHexagon,
   IconDotsVertical,
-  IconCpu,
-  IconCurrencyDollar,
 } from '@tabler/icons-react';
 
 /* ----------------------------------------
@@ -869,87 +860,66 @@ const mockWorkloads: Workload[] = [
   },
 ];
 
-// Mini Gauge Component for utilization display
-function MiniGauge({ value, color = 'blue' }: { value: number; color?: 'blue' | 'green' | 'red' }) {
-  const colorClasses = {
-    blue: 'text-blue-500',
-    green: 'text-emerald-500',
-    red: 'text-red-500',
+// Linear Usage Cell Component (matches existing PoolsPage pattern)
+interface UsageCellProps {
+  percent: number;
+}
+
+function UsageCell({ percent }: UsageCellProps) {
+  // Determine color based on percentage thresholds
+  const getStatusColor = (value: number): string => {
+    if (value >= 95) return 'var(--color-state-danger)';
+    if (value >= 85) return 'var(--color-state-warning)';
+    return 'var(--color-state-success)';
   };
-  
+
   return (
-    <div className="flex flex-col items-center gap-0.5">
-      <div className="relative w-10 h-10">
-        <svg className="w-10 h-10 transform -rotate-90" viewBox="0 0 36 36">
-          <path
-            className="text-[var(--color-border-subtle)]"
-            stroke="currentColor"
-            strokeWidth="3"
-            fill="none"
-            d="M18 2.0845
-              a 15.9155 15.9155 0 0 1 0 31.831
-              a 15.9155 15.9155 0 0 1 0 -31.831"
-          />
-          <path
-            className={colorClasses[color]}
-            stroke="currentColor"
-            strokeWidth="3"
-            fill="none"
-            strokeDasharray={`${value}, 100`}
-            d="M18 2.0845
-              a 15.9155 15.9155 0 0 1 0 31.831
-              a 15.9155 15.9155 0 0 1 0 -31.831"
-          />
-        </svg>
-        <div className="absolute inset-0 flex items-center justify-center">
-          <IconCpu size={14} stroke={1.5} className="text-[var(--color-text-muted)]" />
-        </div>
+    <div className="flex flex-col gap-[var(--spacing-1)] w-full">
+      <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)]">
+        {percent.toFixed(0)}%
+      </span>
+      <div className="h-1 w-full bg-[var(--color-border-subtle)] rounded-full overflow-hidden">
+        <div
+          className="h-full rounded-full transition-all duration-300"
+          style={{ 
+            width: `${Math.min(percent, 100)}%`,
+            backgroundColor: getStatusColor(percent),
+          }}
+        />
       </div>
-      <span className="text-[10px] text-[var(--color-text-subtle)]">{value}%</span>
     </div>
   );
 }
 
-// Workload Stats Card
+// Simple Workload Stat Card (matches HomePage pattern - no icons)
 interface WorkloadStatCardProps {
-  icon: ReactNode;
   value: number;
   label: string;
-  iconColor?: string;
-  iconBgColor?: string;
 }
 
-function WorkloadStatCard({ icon, value, label, iconColor = 'text-[var(--color-text-muted)]', iconBgColor = 'bg-[var(--color-surface-subtle)]' }: WorkloadStatCardProps) {
+function WorkloadStatCard({ value, label }: WorkloadStatCardProps) {
+  const textColor = value === 0 ? 'text-[var(--color-text-muted)]' : 'text-[var(--color-text-default)]';
+  
   return (
-    <div className="flex items-center gap-3 p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg">
-      <div className={`w-10 h-10 rounded-lg ${iconBgColor} flex items-center justify-center shrink-0`}>
-        <div className={iconColor}>{icon}</div>
-      </div>
-      <div>
-        <p className="text-[20px] font-semibold text-[var(--color-text-default)]">{value}</p>
-        <p className="text-[11px] text-[var(--color-text-subtle)]">{label}</p>
-      </div>
+    <div className="flex-1 bg-[var(--color-surface-subtle)] rounded-lg p-4 border-2 border-transparent transition-colors hover:border-[var(--color-action-primary)] cursor-pointer">
+      <div className={`text-[20px] font-medium ${textColor} pb-1`}>{value}</div>
+      <div className="text-[11px] text-[var(--color-text-subtle)]">{label}</div>
     </div>
   );
 }
 
 function WorkloadsContent() {
-  const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState('');
-  const [statusFilter, setStatusFilter] = useState('all');
-  const [resourceFilter, setResourceFilter] = useState('all');
-  const [sortBy, setSortBy] = useState('newest');
   const [currentPage, setCurrentPage] = useState(1);
   const rowsPerPage = 10;
 
-  // Filter workloads
+  // Filter workloads by search
   const filteredWorkloads = useMemo(() => {
     return mockWorkloads.filter((workload) => {
-      const matchesSearch = workload.name.toLowerCase().includes(searchQuery.toLowerCase());
-      const matchesStatus = statusFilter === 'all' || workload.status === statusFilter;
-      return matchesSearch && matchesStatus;
+      return workload.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        workload.namespace.toLowerCase().includes(searchQuery.toLowerCase());
     });
-  }, [searchQuery, statusFilter]);
+  }, [searchQuery]);
 
   const totalPages = Math.ceil(filteredWorkloads.length / rowsPerPage);
 
@@ -991,11 +961,10 @@ function WorkloadsContent() {
     {
       key: 'utilization',
       label: 'Utilization',
-      width: '100px',
-      align: 'center' as const,
+      width: '120px',
       render: (_, row) => (
         row.utilization !== null ? (
-          <MiniGauge value={row.utilization} color="blue" />
+          <UsageCell percent={row.utilization} />
         ) : (
           <span className="text-[var(--color-text-subtle)]">-</span>
         )
@@ -1004,27 +973,22 @@ function WorkloadsContent() {
     {
       key: 'memory',
       label: 'Memory',
-      width: '100px',
-      align: 'center' as const,
+      width: '120px',
       render: (_, row) => (
         row.memoryPercent !== null ? (
-          <MiniGauge value={row.memoryPercent} color="green" />
+          <UsageCell percent={row.memoryPercent} />
         ) : (
-          <div className="flex items-center gap-1.5">
-            <IconCpu size={14} stroke={1.5} className="text-[var(--color-text-muted)]" />
-            <span className="text-[12px] text-[var(--color-text-default)]">{row.memory}</span>
-          </div>
+          <span className="text-[var(--color-text-default)]">{row.memory}</span>
         )
       ),
     },
     {
       key: 'disk',
       label: 'Disk',
-      width: '100px',
-      align: 'center' as const,
+      width: '120px',
       render: (_, row) => (
         row.diskPercent !== null ? (
-          <MiniGauge value={row.diskPercent} color={row.diskPercent > 90 ? 'red' : 'green'} />
+          <UsageCell percent={row.diskPercent} />
         ) : (
           <span className="text-[var(--color-text-subtle)]">{row.disk}</span>
         )
@@ -1035,14 +999,9 @@ function WorkloadsContent() {
       label: 'Compute Type',
       width: '120px',
       render: (_, row) => (
-        row.computeType !== '-' ? (
-          <div className="flex items-center gap-1.5">
-            <IconCpu size={14} stroke={1.5} className="text-amber-500" />
-            <span className="text-[12px] text-[var(--color-text-default)]">{row.computeType}</span>
-          </div>
-        ) : (
-          <span className="text-[var(--color-text-subtle)]">-</span>
-        )
+        <span className={row.computeType !== '-' ? 'text-[var(--color-text-default)]' : 'text-[var(--color-text-subtle)]'}>
+          {row.computeType}
+        </span>
       ),
     },
     {
@@ -1050,10 +1009,7 @@ function WorkloadsContent() {
       label: 'Cost',
       width: '100px',
       render: (_, row) => (
-        <div className="flex items-center gap-1">
-          <IconCurrencyDollar size={14} stroke={1.5} className="text-emerald-500" />
-          <span className="text-[12px] text-[var(--color-text-default)]">{row.cost.replace('$', '')}</span>
-        </div>
+        <span className="text-[var(--color-text-default)]">{row.cost}</span>
       ),
     },
     {
@@ -1069,143 +1025,62 @@ function WorkloadsContent() {
     },
   ];
 
-  // Status options for filter
-  const statusOptions = [
-    { value: 'all', label: 'All Statuses' },
-    { value: 'running', label: 'Running' },
-    { value: 'pending', label: 'Pending' },
-    { value: 'failed', label: 'Failed' },
-    { value: 'stopped', label: 'Stopped' },
-  ];
-
-  const resourceOptions = [
-    { value: 'all', label: 'All Resources' },
-    { value: 'pod', label: 'Pods' },
-    { value: 'helm', label: 'Helm Charts' },
-  ];
-
-  const sortOptions = [
-    { value: 'newest', label: 'Sort by Newest' },
-    { value: 'oldest', label: 'Sort by Oldest' },
-    { value: 'name', label: 'Sort by Name' },
-    { value: 'cost', label: 'Sort by Cost' },
-  ];
-
   return (
     <div className="flex flex-col gap-6">
-      {/* Stats Cards */}
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-        <WorkloadStatCard
-          icon={<IconStack2 size={20} stroke={1.5} />}
-          value={stats.total}
-          label="Total"
-          iconColor="text-[var(--color-action-primary)]"
-          iconBgColor="bg-blue-50"
-        />
-        <WorkloadStatCard
-          icon={<IconCircleCheck size={20} stroke={1.5} />}
-          value={stats.running}
-          label="Running"
-          iconColor="text-emerald-600"
-          iconBgColor="bg-emerald-50"
-        />
-        <WorkloadStatCard
-          icon={<IconClock size={20} stroke={1.5} />}
-          value={stats.pending}
-          label="Pending"
-          iconColor="text-amber-600"
-          iconBgColor="bg-amber-50"
-        />
-        <WorkloadStatCard
-          icon={<IconAlertCircle size={20} stroke={1.5} />}
-          value={stats.failed}
-          label="Failed"
-          iconColor="text-red-600"
-          iconBgColor="bg-red-50"
-        />
-        <WorkloadStatCard
-          icon={<IconCube size={20} stroke={1.5} />}
-          value={stats.pods}
-          label="Pods"
-          iconColor="text-[var(--color-action-primary)]"
-          iconBgColor="bg-blue-50"
-        />
-        <WorkloadStatCard
-          icon={<IconHexagon size={20} stroke={1.5} />}
-          value={stats.helmCharts}
-          label="Helm Charts"
-          iconColor="text-violet-600"
-          iconBgColor="bg-violet-50"
-        />
+      {/* Stats Cards - Simple pattern like HomePage */}
+      <div className="flex gap-2 items-center w-full">
+        <WorkloadStatCard value={stats.total} label="Total" />
+        <WorkloadStatCard value={stats.running} label="Running" />
+        <WorkloadStatCard value={stats.pending} label="Pending" />
+        <WorkloadStatCard value={stats.failed} label="Failed" />
+        <WorkloadStatCard value={stats.pods} label="Pods" />
+        <WorkloadStatCard value={stats.helmCharts} label="Helm Charts" />
       </div>
 
-      {/* Filters Section */}
-      <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg p-4">
-        <div className="flex items-center gap-2 mb-3">
-          <IconSearch size={16} stroke={1.5} className="text-[var(--color-text-muted)]" />
-          <span className="text-[13px] font-medium text-[var(--color-text-default)]">Filters</span>
-        </div>
-        <div className="flex flex-wrap items-center gap-3">
-          <div className="w-[280px]">
-            <SearchInput
-              placeholder="Search workload name..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              onClear={() => setSearchQuery('')}
+      {/* List Toolbar - Search and actions (no grouping) */}
+      <ListToolbar
+        primaryActions={
+          <ListToolbar.Actions>
+            <div className="w-[280px]">
+              <SearchInput
+                placeholder="Find workloads with filters"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                onClear={() => setSearchQuery('')}
+                size="sm"
+                fullWidth
+              />
+            </div>
+            <Button
+              variant="secondary"
               size="sm"
-              fullWidth
+              icon={<IconRefresh size={14} stroke={1.5} />}
+              aria-label="Refresh"
+              onClick={() => window.location.reload()}
             />
-          </div>
-          <div className="w-[160px]">
-            <Select
-              options={statusOptions}
-              value={statusFilter}
-              onChange={setStatusFilter}
-              size="sm"
-              fullWidth
-            />
-          </div>
-          <div className="w-[160px]">
-            <Select
-              options={resourceOptions}
-              value={resourceFilter}
-              onChange={setResourceFilter}
-              size="sm"
-              fullWidth
-            />
-          </div>
-          <div className="w-[160px]">
-            <Select
-              options={sortOptions}
-              value={sortBy}
-              onChange={setSortBy}
-              size="sm"
-              fullWidth
-            />
-          </div>
-        </div>
-      </div>
+          </ListToolbar.Actions>
+        }
+      />
 
-      {/* Table Section */}
-      <div className="flex flex-col gap-3">
-        {/* Pagination */}
-        {filteredWorkloads.length > 0 && (
-          <Pagination
-            currentPage={currentPage}
-            totalPages={totalPages}
-            onPageChange={setCurrentPage}
-            totalItems={filteredWorkloads.length}
-          />
-        )}
-
-        {/* Table */}
-        <Table<Workload>
-          columns={columns}
-          data={filteredWorkloads.slice((currentPage - 1) * rowsPerPage, currentPage * rowsPerPage)}
-          rowKey="id"
-          emptyMessage="No workloads found"
+      {/* Pagination */}
+      {filteredWorkloads.length > 0 && (
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={setCurrentPage}
+          totalItems={filteredWorkloads.length}
+          showSettings
+          onSettingsClick={() => console.log('Settings clicked')}
         />
-      </div>
+      )}
+
+      {/* Table */}
+      <Table<Workload>
+        columns={columns}
+        data={filteredWorkloads.slice((currentPage - 1) * rowsPerPage, currentPage * rowsPerPage)}
+        rowKey="id"
+        emptyMessage="No workloads found"
+      />
     </div>
   );
 }
@@ -1256,23 +1131,9 @@ export function AIPlatformPage() {
     }
     if (location.pathname === '/ai-platform/workloads') {
       return (
-        <div className="flex items-center gap-2">
-          <Button
-            variant="secondary"
-            size="md"
-            leftIcon={<IconRefresh size={14} stroke={1.5} />}
-            onClick={() => window.location.reload()}
-          >
-            Refresh Workloads
-          </Button>
-          <Button
-            variant="primary"
-            size="md"
-            leftIcon={<IconPlus size={14} stroke={1.5} />}
-          >
-            Deploy New Workload
-          </Button>
-        </div>
+        <Button variant="primary" size="md">
+          Deploy Workload
+        </Button>
       );
     }
     return null;
