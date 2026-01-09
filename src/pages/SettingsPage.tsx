@@ -43,6 +43,7 @@ interface WindowSize {
 interface SettingsPageProps {
   isOpen: boolean;
   onClose: () => void;
+  initialTab?: SettingsTab;
 }
 
 /* ----------------------------------------
@@ -107,8 +108,15 @@ function NavItem({ icon, label, active, onClick }: NavItemProps) {
    Settings Page Component
    ---------------------------------------- */
 
-export function SettingsPage({ isOpen, onClose }: SettingsPageProps) {
-  const [activeTab, setActiveTab] = useState<SettingsTab>('general');
+export function SettingsPage({ isOpen, onClose, initialTab = 'general' }: SettingsPageProps) {
+  const [activeTab, setActiveTab] = useState<SettingsTab>(initialTab);
+  
+  // Update activeTab when initialTab changes
+  useEffect(() => {
+    if (isOpen) {
+      setActiveTab(initialTab);
+    }
+  }, [isOpen, initialTab]);
   const [isMaximized, setIsMaximized] = useState(false);
   // Center the window: 50% of screen size, centered position
   const [size, setSize] = useState<WindowSize>(() => ({
@@ -127,7 +135,12 @@ export function SettingsPage({ isOpen, onClose }: SettingsPageProps) {
 
   // Settings State - Theme from useDarkMode hook
   const { theme, setTheme } = useDarkMode();
-  const [language, setLanguage] = useState('en');
+  const [language, setLanguage] = useState(() => {
+    if (typeof window !== 'undefined') {
+      return localStorage.getItem('tds-language') || 'en';
+    }
+    return 'en';
+  });
   const [timezone, setTimezone] = useState('Asia/Seoul');
   const [useLocationTimezone, setUseLocationTimezone] = useState(false);
   
@@ -316,6 +329,9 @@ export function SettingsPage({ isOpen, onClose }: SettingsPageProps) {
     
     if (pendingChange.type === 'language') {
       setLanguage(pendingChange.value);
+      localStorage.setItem('tds-language', pendingChange.value);
+      // DesktopPage와 동기화를 위한 커스텀 이벤트 발생
+      window.dispatchEvent(new CustomEvent('language-changed'));
     }
     setShowConfirmModal(false);
     setPendingChange(null);
@@ -420,7 +436,7 @@ export function SettingsPage({ isOpen, onClose }: SettingsPageProps) {
           </aside>
 
           {/* Content Area */}
-          <main className="flex-1 overflow-y-auto settings-scroll p-6">
+          <main className="flex-1 overflow-y-auto settings-scroll p-6 bg-[var(--color-surface-default)]">
             <div className="max-w-[1000px]">
               {/* General Tab */}
               {activeTab === 'general' && (

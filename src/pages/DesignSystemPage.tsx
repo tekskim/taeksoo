@@ -2969,9 +2969,9 @@ export function DesignSystemPage() {
             
             {/* Search Results Dropdown */}
             {sidebarSearchQuery.trim() && isSidebarSearchFocused && (
-              <div className="absolute top-full left-0 w-[166px] mt-2 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] shadow-[var(--shadow-lg)] z-50 max-h-[300px] overflow-y-auto sidebar-scroll">
+              <div className="absolute top-full left-0 w-[166px] max-w-[166px] mt-2 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] shadow-[var(--shadow-lg)] z-50 max-h-[300px] overflow-y-auto overflow-x-hidden sidebar-scroll">
                 {filteredSidebarNavItems.length > 0 ? (
-                  <div className="p-2">
+                  <div className="p-2 min-w-0">
                     {filteredSidebarNavItems.map(({ id, label, icon: Icon }, index) => (
                       <button
                         key={id}
@@ -2986,15 +2986,15 @@ export function DesignSystemPage() {
                           setIsSidebarSearchFocused(false);
                         }}
                         data-cursor-element-id={`sidebar-search-result-${id}-${index}`}
-                        className="w-full px-3 py-2 rounded-[var(--radius-md)] flex items-center gap-2 text-left hover:bg-[var(--color-surface-muted)] transition-colors cursor-pointer"
+                        className="w-full min-w-0 px-3 py-2 rounded-[var(--radius-md)] flex items-center gap-2 text-left hover:bg-[var(--color-surface-muted)] transition-colors cursor-pointer"
                       >
                         <Icon size={14} stroke={1.5} className="text-[var(--color-text-muted)] shrink-0" />
-                        <span className="text-[length:var(--font-size-11)] text-[var(--color-text-default)] truncate">{label}</span>
+                        <span className="text-[length:var(--font-size-11)] text-[var(--color-text-default)] truncate min-w-0">{label}</span>
                       </button>
                     ))}
                   </div>
                 ) : (
-                  <div className="p-3 text-center text-[length:var(--font-size-11)] text-[var(--color-text-muted)]">
+                  <div className="p-3 text-left text-[length:var(--font-size-11)] text-[var(--color-text-muted)] w-full max-w-full min-w-0 break-words" style={{ wordBreak: 'break-word', overflowWrap: 'anywhere' }}>
                     No results found
                   </div>
                 )}
@@ -3187,9 +3187,9 @@ export function DesignSystemPage() {
               
               {/* Search Results Dropdown */}
               {mainSearchQuery.trim() && isMainSearchFocused && (
-                <div className="absolute top-full left-0 right-0 mt-2 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] shadow-[var(--shadow-lg)] z-50 max-h-[300px] overflow-y-auto sidebar-scroll">
+                <div className="absolute top-full left-0 w-[166px] max-w-[166px] mt-2 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] shadow-[var(--shadow-lg)] z-50 max-h-[300px] overflow-y-auto overflow-x-hidden sidebar-scroll">
                   {filteredMainNavItems.length > 0 ? (
-                    <div className="p-2">
+                    <div className="p-2 min-w-0">
                       {filteredMainNavItems.map(({ id, label, icon: Icon }, index) => (
                         <button
                           key={id}
@@ -3204,15 +3204,15 @@ export function DesignSystemPage() {
                             setIsMainSearchFocused(false);
                           }}
                           data-cursor-element-id={`main-search-result-${id}-${index}`}
-                          className="w-full px-3 py-2 rounded-[var(--radius-md)] flex items-center gap-3 text-left hover:bg-[var(--color-surface-muted)] transition-colors cursor-pointer"
+                          className="w-full min-w-0 px-3 py-2 rounded-[var(--radius-md)] flex items-center gap-2 text-left hover:bg-[var(--color-surface-muted)] transition-colors cursor-pointer"
                         >
-                          <Icon size={16} stroke={1.5} className="text-[var(--color-text-muted)]" />
-                          <span className="text-[length:var(--font-size-12)] text-[var(--color-text-default)]">{label}</span>
+                          <Icon size={16} stroke={1.5} className="text-[var(--color-text-muted)] shrink-0" />
+                          <span className="text-[length:var(--font-size-12)] text-[var(--color-text-default)] truncate min-w-0">{label}</span>
                         </button>
                       ))}
                     </div>
                   ) : (
-                    <div className="p-4 text-center text-[length:var(--font-size-12)] text-[var(--color-text-muted)]">
+                    <div className="p-4 text-left text-[length:var(--font-size-12)] text-[var(--color-text-muted)] w-full max-w-full min-w-0 break-words" style={{ wordBreak: 'break-word', overflowWrap: 'anywhere' }}>
                       No results found for "{mainSearchQuery}"
                     </div>
                   )}
