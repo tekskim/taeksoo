@@ -435,9 +435,11 @@ export default function IAMEventLogsPage() {
           <div className="pt-4 px-8 pb-6 bg-[var(--color-surface-default)]">
             <VStack gap={3}>
               {/* Header */}
-              <h1 className="text-[16px] font-semibold leading-6 text-[var(--color-text-default)]">
-                Event logs
-              </h1>
+              <HStack justify="between" align="center" className="w-full min-h-[28px]">
+                <h1 className="text-[16px] font-semibold leading-6 text-[var(--color-text-default)]">
+                  Event logs
+                </h1>
+              </HStack>
 
               {/* Table Content */}
               <VStack gap={3} className="w-full">
