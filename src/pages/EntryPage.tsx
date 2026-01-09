@@ -182,7 +182,7 @@ const appCards: AppCard[] = [
     icon: <img src={IAMIcon} alt="IAM" className="w-16 h-16" />,
     path: '/iam',
     color: 'from-amber-500 to-yellow-500',
-    available: false,
+    available: true,
   },
 ];
 
