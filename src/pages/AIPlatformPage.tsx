@@ -12,8 +12,9 @@ import {
   Table,
   type TableColumn,
   Pagination,
-  SearchInput,
-  Select,
+  FilterSearchInput,
+  type FilterField,
+  type AppliedFilter,
   Badge,
   ListToolbar,
 } from '@/design-system';
@@ -910,45 +911,75 @@ function WorkloadStatCard({ value, label }: WorkloadStatCardProps) {
 }
 
 function WorkloadsContent() {
-  const [searchQuery, setSearchQuery] = useState('');
-  const [statusFilter, setStatusFilter] = useState('all');
-  const [resourceFilter, setResourceFilter] = useState('all');
+  const [appliedFilters, setAppliedFilters] = useState<AppliedFilter[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const rowsPerPage = 10;
 
-  // Filter options
-  const statusOptions = [
-    { value: 'all', label: 'All Statuses' },
-    { value: 'running', label: 'Running' },
-    { value: 'pending', label: 'Pending' },
-    { value: 'failed', label: 'Failed' },
+  // Define filter fields for FilterSearchInput
+  const filterFields: FilterField[] = [
+    {
+      id: 'name',
+      label: 'Name',
+      type: 'text',
+      placeholder: 'Enter workload name...',
+    },
+    {
+      id: 'status',
+      label: 'Status',
+      type: 'select',
+      options: [
+        { value: 'running', label: 'Running' },
+        { value: 'pending', label: 'Pending' },
+        { value: 'failed', label: 'Failed' },
+        { value: 'stopped', label: 'Stopped' },
+      ],
+    },
+    {
+      id: 'resource',
+      label: 'Resource',
+      type: 'select',
+      options: [
+        { value: 'gpu', label: 'GPU Usage' },
+        { value: 'cpu', label: 'CPU Only' },
+      ],
+    },
+    {
+      id: 'namespace',
+      label: 'Namespace',
+      type: 'text',
+      placeholder: 'Enter namespace...',
+    },
   ];
 
-  const resourceOptions = [
-    { value: 'all', label: 'All Resources' },
-    { value: 'gpu', label: 'GPU Usage' },
-    { value: 'cpu', label: 'CPU Only' },
-  ];
-
-  // Filter workloads
+  // Filter workloads based on applied filters
   const filteredWorkloads = useMemo(() => {
     return mockWorkloads.filter((workload) => {
-      // Search filter
-      const matchesSearch = workload.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        workload.namespace.toLowerCase().includes(searchQuery.toLowerCase());
-      
-      // Status filter (empty string or 'all' means no filter)
-      const matchesStatus = !statusFilter || statusFilter === 'all' || workload.status === statusFilter;
-      
-      // Resource filter (GPU vs CPU) - empty string or 'all' means no filter
-      const hasGPU = workload.computeType.toLowerCase().includes('gpu');
-      const matchesResource = !resourceFilter || resourceFilter === 'all' || 
-        (resourceFilter === 'gpu' && hasGPU) ||
-        (resourceFilter === 'cpu' && !hasGPU);
-      
-      return matchesSearch && matchesStatus && matchesResource;
+      // Check each applied filter
+      for (const filter of appliedFilters) {
+        if (filter.fieldId === 'name') {
+          if (!workload.name.toLowerCase().includes(filter.value.toLowerCase())) {
+            return false;
+          }
+        }
+        if (filter.fieldId === 'status') {
+          if (workload.status !== filter.value) {
+            return false;
+          }
+        }
+        if (filter.fieldId === 'resource') {
+          const hasGPU = workload.computeType.toLowerCase().includes('gpu');
+          if (filter.value === 'gpu' && !hasGPU) return false;
+          if (filter.value === 'cpu' && hasGPU) return false;
+        }
+        if (filter.fieldId === 'namespace') {
+          if (!workload.namespace.toLowerCase().includes(filter.value.toLowerCase())) {
+            return false;
+          }
+        }
+      }
+      return true;
     });
-  }, [searchQuery, statusFilter, resourceFilter]);
+  }, [appliedFilters]);
 
   const totalPages = Math.ceil(filteredWorkloads.length / rowsPerPage);
 
@@ -1066,36 +1097,20 @@ function WorkloadsContent() {
         <WorkloadStatCard value={stats.helmCharts} label="Helm Charts" />
       </div>
 
-      {/* List Toolbar - Search, filters, and actions */}
+      {/* Filter Search Input */}
+      <FilterSearchInput
+        filters={filterFields}
+        appliedFilters={appliedFilters}
+        onFiltersChange={setAppliedFilters}
+        placeholder="Find workloads with filters"
+        size="sm"
+        className="w-[400px]"
+      />
+
+      {/* List Toolbar - Actions only */}
       <ListToolbar
         primaryActions={
           <ListToolbar.Actions>
-            <div className="w-[280px]">
-              <SearchInput
-                placeholder="Find workloads with filters"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                onClear={() => setSearchQuery('')}
-                size="sm"
-                fullWidth
-              />
-            </div>
-            <Select
-              options={statusOptions}
-              value={statusFilter}
-              onChange={setStatusFilter}
-              size="sm"
-              clearable
-              className="w-[160px]"
-            />
-            <Select
-              options={resourceOptions}
-              value={resourceFilter}
-              onChange={setResourceFilter}
-              size="sm"
-              clearable
-              className="w-[160px]"
-            />
             <Button
               variant="secondary"
               size="sm"
