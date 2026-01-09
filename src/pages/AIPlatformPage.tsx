@@ -13,6 +13,7 @@ import {
   type TableColumn,
   Pagination,
   SearchInput,
+  Select,
   Badge,
   ListToolbar,
 } from '@/design-system';
@@ -910,16 +911,44 @@ function WorkloadStatCard({ value, label }: WorkloadStatCardProps) {
 
 function WorkloadsContent() {
   const [searchQuery, setSearchQuery] = useState('');
+  const [statusFilter, setStatusFilter] = useState('all');
+  const [resourceFilter, setResourceFilter] = useState('all');
   const [currentPage, setCurrentPage] = useState(1);
   const rowsPerPage = 10;
 
-  // Filter workloads by search
+  // Filter options
+  const statusOptions = [
+    { value: 'all', label: 'All Statuses' },
+    { value: 'running', label: 'Running' },
+    { value: 'pending', label: 'Pending' },
+    { value: 'failed', label: 'Failed' },
+  ];
+
+  const resourceOptions = [
+    { value: 'all', label: 'All Resources' },
+    { value: 'gpu', label: 'GPU Usage' },
+    { value: 'cpu', label: 'CPU Only' },
+  ];
+
+  // Filter workloads
   const filteredWorkloads = useMemo(() => {
     return mockWorkloads.filter((workload) => {
-      return workload.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      // Search filter
+      const matchesSearch = workload.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
         workload.namespace.toLowerCase().includes(searchQuery.toLowerCase());
+      
+      // Status filter (empty string or 'all' means no filter)
+      const matchesStatus = !statusFilter || statusFilter === 'all' || workload.status === statusFilter;
+      
+      // Resource filter (GPU vs CPU) - empty string or 'all' means no filter
+      const hasGPU = workload.computeType.toLowerCase().includes('gpu');
+      const matchesResource = !resourceFilter || resourceFilter === 'all' || 
+        (resourceFilter === 'gpu' && hasGPU) ||
+        (resourceFilter === 'cpu' && !hasGPU);
+      
+      return matchesSearch && matchesStatus && matchesResource;
     });
-  }, [searchQuery]);
+  }, [searchQuery, statusFilter, resourceFilter]);
 
   const totalPages = Math.ceil(filteredWorkloads.length / rowsPerPage);
 
@@ -1037,7 +1066,7 @@ function WorkloadsContent() {
         <WorkloadStatCard value={stats.helmCharts} label="Helm Charts" />
       </div>
 
-      {/* List Toolbar - Search and actions (no grouping) */}
+      {/* List Toolbar - Search, filters, and actions */}
       <ListToolbar
         primaryActions={
           <ListToolbar.Actions>
@@ -1051,6 +1080,22 @@ function WorkloadsContent() {
                 fullWidth
               />
             </div>
+            <Select
+              options={statusOptions}
+              value={statusFilter}
+              onChange={setStatusFilter}
+              size="sm"
+              clearable
+              className="w-[160px]"
+            />
+            <Select
+              options={resourceOptions}
+              value={resourceFilter}
+              onChange={setResourceFilter}
+              size="sm"
+              clearable
+              className="w-[160px]"
+            />
             <Button
               variant="secondary"
               size="sm"
