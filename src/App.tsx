@@ -74,6 +74,12 @@ import { OverallPerformancePage } from '@/pages/OverallPerformancePage';
 
 // Pages - Container
 import { ContainerDashboardPage } from '@/pages/ContainerDashboardPage';
+import { ContainerHomePage } from '@/pages/ContainerHomePage';
+import { ContainerNamespacesPage } from '@/pages/ContainerNamespacesPage';
+import { ContainerConsolePage } from '@/pages/ContainerConsolePage';
+
+// Pages - IAM
+import { IAMHomePage } from '@/pages/IAMHomePage';
 
 // Pages - Cloud Builder
 import { CloudBuilderConsolePage } from '@/pages/cloudbuilder/CloudBuilderConsolePage';
@@ -185,8 +191,15 @@ function AppRoutes() {
         <Route path="/storage/performance" element={<OverallPerformancePage />} />
 
         {/* Container Routes */}
-        <Route path="/container" element={<ContainerDashboardPage />} />
+        <Route path="/container" element={<ContainerHomePage />} />
+        <Route path="/container/dashboard" element={<ContainerDashboardPage />} />
+        <Route path="/container/namespaces" element={<ContainerNamespacesPage />} />
+        <Route path="/container/console/:instanceId" element={<ContainerConsolePage />} />
         <Route path="/container/*" element={<ContainerDashboardPage />} />
+
+        {/* IAM Routes */}
+        <Route path="/iam" element={<IAMHomePage />} />
+        <Route path="/iam/*" element={<IAMHomePage />} />
 
         {/* Design System Routes */}
         <Route path="/design" element={<DesignSystemPage />} />

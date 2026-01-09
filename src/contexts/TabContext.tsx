@@ -65,7 +65,7 @@ function getDefaultHomeTab(app: string): TabItem {
     '/agent': { path: '/agent', label: 'Home' }, // Agent service home
     '/desktop': { path: '/desktop', label: 'Home' },
     '/design': { path: '/design', label: 'Home' },
-    '/container': { path: '/container', label: 'Dashboard' },
+    '/container': { path: '/container', label: 'Home' },
     '/': { path: '/', label: 'Home' },
   };
   
@@ -136,7 +136,8 @@ function getLabelFromPath(path: string): string {
     '/design/drawers': 'Drawers',
     '/design/modals': 'Modals',
     '/design-system': 'Design System',
-    '/container': 'Dashboard',
+    '/container': 'Home',
+    '/container/dashboard': 'Dashboard',
   };
   
   // Check for exact match first
@@ -415,7 +416,7 @@ export function TabProvider({ children, defaultTabs = [] }: TabProviderProps) {
       '/storage': { path: '/storage', label: 'Home' },
       '/desktop': { path: '/desktop', label: 'Home' },
       '/design': { path: '/design', label: 'Home' },
-      '/container': { path: '/container', label: 'Dashboard' },
+      '/container': { path: '/container', label: 'Home' },
     };
     
     // 현재 경로에서 애플리케이션 찾기

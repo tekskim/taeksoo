@@ -4512,6 +4512,17 @@ outline: 2px solid var(--color-border-focus);`}
                   />
                 </VStack>
 
+                {/* With Total Items Only */}
+                <VStack gap={3}>
+                  <Label>With Total Items</Label>
+                  <Pagination
+                    currentPage={demoPage1}
+                    totalPages={10}
+                    onPageChange={setDemoPage1}
+                    totalItems={115}
+                  />
+                </VStack>
+
                 {/* With Settings & Total Items */}
                 <VStack gap={3}>
                   <Label>With Settings & Total Items</Label>
