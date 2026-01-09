@@ -106,15 +106,6 @@ export function IAMUsersPage() {
   // Selection state
   const hasSelection = selectedRows.length > 0;
 
-  // Context menu items
-  const contextMenuItems: ContextMenuItem[] = [
-    { id: 'view', label: 'View details' },
-    { id: 'edit', label: 'Edit user' },
-    { type: 'divider' },
-    { id: 'disable', label: 'Disable user' },
-    { id: 'delete', label: 'Delete user', danger: true },
-  ];
-
   // Table columns
   const columns: TableColumn<User>[] = [
     {
@@ -172,16 +163,27 @@ export function IAMUsersPage() {
       label: 'Action',
       width: 72,
       align: 'center',
-      render: (_value, row) => (
-        <ContextMenu items={contextMenuItems} onSelect={(itemId) => console.log(itemId, row.id)}>
-          <button
-            type="button"
-            className="p-1.5 rounded-md hover:bg-[var(--color-surface-subtle)] transition-colors"
-          >
-            <IconAction size={16} stroke={1} className="text-[var(--color-text-default)]" />
-          </button>
-        </ContextMenu>
-      ),
+      render: (_value, row) => {
+        const isDisabled = row.status === 'disabled';
+        const menuItems: ContextMenuItem[] = [
+          { id: 'manage-user-groups', label: 'Manage user groups', disabled: isDisabled, onClick: () => console.log('Manage user groups', row.id) },
+          { id: 'manage-roles', label: 'Manage roles', disabled: isDisabled, onClick: () => console.log('Manage roles', row.id) },
+          { id: 'reset-password', label: 'Reset password', disabled: isDisabled, onClick: () => console.log('Reset password', row.id) },
+          { id: 'lock-setting', label: 'Lock setting', onClick: () => console.log('Lock setting', row.id) },
+          { id: 'edit', label: 'Edit', disabled: isDisabled, onClick: () => console.log('Edit', row.id) },
+          { id: 'delete', label: 'Delete', status: isDisabled ? undefined : 'danger', disabled: isDisabled, onClick: () => console.log('Delete', row.id) },
+        ];
+        return (
+          <ContextMenu items={menuItems} trigger="click">
+            <button
+              type="button"
+              className="flex items-center justify-center w-7 h-7 rounded-md bg-transparent hover:bg-[var(--color-surface-muted)] active:bg-[var(--color-border-subtle)] transition-colors cursor-pointer"
+            >
+              <IconAction size={16} stroke={1} className="text-[var(--color-text-default)]" />
+            </button>
+          </ContextMenu>
+        );
+      },
     },
   ];
 
