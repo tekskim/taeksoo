@@ -80,6 +80,18 @@ import { ContainerConsolePage } from '@/pages/ContainerConsolePage';
 
 // Pages - IAM
 import { IAMHomePage } from '@/pages/IAMHomePage';
+import { IAMUsersPage } from '@/pages/IAMUsersPage';
+import { IAMUserDetailPage } from '@/pages/IAMUserDetailPage';
+import { IAMUserGroupsPage } from '@/pages/IAMUserGroupsPage';
+import IAMUserGroupDetailPage from '@/pages/IAMUserGroupDetailPage';
+import IAMRolesPage from '@/pages/IAMRolesPage';
+import IAMRoleDetailPage from '@/pages/IAMRoleDetailPage';
+import IAMPoliciesPage from '@/pages/IAMPoliciesPage';
+import IAMPolicyDetailPage from '@/pages/IAMPolicyDetailPage';
+import IAMActiveSessionsPage from '@/pages/IAMActiveSessionsPage';
+import IAMDomainsPage from '@/pages/IAMDomainsPage';
+import IAMSystemAdministratorsPage from '@/pages/IAMSystemAdministratorsPage';
+import IAMEventLogsPage from '@/pages/IAMEventLogsPage';
 
 // Pages - Cloud Builder
 import { CloudBuilderConsolePage } from '@/pages/cloudbuilder/CloudBuilderConsolePage';
@@ -199,6 +211,18 @@ function AppRoutes() {
 
         {/* IAM Routes */}
         <Route path="/iam" element={<IAMHomePage />} />
+        <Route path="/iam/users" element={<IAMUsersPage />} />
+        <Route path="/iam/users/:username" element={<IAMUserDetailPage />} />
+        <Route path="/iam/user-groups" element={<IAMUserGroupsPage />} />
+        <Route path="/iam/user-groups/:groupName" element={<IAMUserGroupDetailPage />} />
+        <Route path="/iam/roles" element={<IAMRolesPage />} />
+        <Route path="/iam/roles/:roleName" element={<IAMRoleDetailPage />} />
+        <Route path="/iam/policies" element={<IAMPoliciesPage />} />
+        <Route path="/iam/policies/:policyId" element={<IAMPolicyDetailPage />} />
+        <Route path="/iam/active-sessions" element={<IAMActiveSessionsPage />} />
+        <Route path="/iam/domains" element={<IAMDomainsPage />} />
+        <Route path="/iam/system-administrators" element={<IAMSystemAdministratorsPage />} />
+        <Route path="/iam/event-logs" element={<IAMEventLogsPage />} />
         <Route path="/iam/*" element={<IAMHomePage />} />
 
         {/* Design System Routes */}
