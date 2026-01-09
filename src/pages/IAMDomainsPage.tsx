@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { IconDownload, IconExternalLink } from '@tabler/icons-react';
+import { IconDownload } from '@tabler/icons-react';
+import { ArrowRightLeft } from 'lucide-react';
 import {
   Button,
   Pagination,
@@ -133,7 +134,7 @@ export default function IAMDomainsPage() {
             className="p-1.5 rounded-md hover:bg-[var(--color-surface-subtle)] transition-colors"
             title="Open console"
           >
-            <IconExternalLink size={16} stroke={1.5} className="text-[var(--color-text-default)]" />
+            <ArrowRightLeft size={16} strokeWidth={1.5} className="text-[var(--color-text-default)]" />
           </button>
           <ContextMenu items={contextMenuItems} onSelect={(itemId) => console.log(itemId, row.id)}>
             <button

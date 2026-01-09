@@ -237,7 +237,7 @@ export default function IAMMFAPoliciesPage() {
                           onClick={() => setActiveMethodTab('otp')}
                           className={`flex items-center justify-center min-w-[200px] px-[24px] text-[14px] font-medium leading-5 text-center rounded-md transition-colors ${
                             activeMethodTab === 'otp'
-                              ? 'bg-white border border-[var(--color-border-default)] text-[var(--color-action-primary)]'
+                              ? 'bg-[var(--color-surface-default)] border border-[var(--color-border-default)] text-[var(--color-action-primary)]'
                               : 'bg-transparent text-[var(--color-text-default)]'
                           }`}
                         >
@@ -248,7 +248,7 @@ export default function IAMMFAPoliciesPage() {
                           onClick={() => setActiveMethodTab('email')}
                           className={`flex items-center justify-center min-w-[200px] px-[24px] text-[14px] font-medium leading-5 text-center rounded-md transition-colors ${
                             activeMethodTab === 'email'
-                              ? 'bg-white border border-[var(--color-border-default)] text-[var(--color-action-primary)]'
+                              ? 'bg-[var(--color-surface-default)] border border-[var(--color-border-default)] text-[var(--color-action-primary)]'
                               : 'bg-transparent text-[var(--color-text-default)]'
                           }`}
                         >
@@ -470,7 +470,7 @@ export default function IAMMFAPoliciesPage() {
                                 </p>
                               </VStack>
                               <VStack gap={2}>
-                                <div className="flex items-center gap-6 px-4 py-2 border border-[var(--color-border-default)] rounded-md w-full bg-white">
+                                <div className="flex items-center gap-6 px-4 py-2 border border-[var(--color-border-default)] rounded-md w-full bg-[var(--color-surface-default)]">
                                   <HStack align="center" className="gap-[6px]">
                                     <span className="text-[14px] font-medium leading-5 text-[var(--color-text-default)]">
                                       Time window

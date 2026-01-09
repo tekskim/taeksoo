@@ -462,7 +462,7 @@ export default function IAMUserGroupDetailPage() {
           <div className="pt-4 px-8 pb-6 bg-[var(--color-surface-default)]">
             <VStack gap={8}>
               {/* Header Card */}
-              <div className="w-full bg-white border border-[var(--color-border-default)] rounded-lg p-4">
+              <div className="w-full bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg p-4">
                 <VStack gap={3}>
                   {/* Title */}
                   <h1 className="text-[16px] font-semibold leading-6 text-[var(--color-text-default)]">

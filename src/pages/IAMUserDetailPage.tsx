@@ -42,6 +42,7 @@ interface UserDetail {
   displayName: string;
   email: string;
   status: 'online' | 'offline';
+  locked?: boolean;
   createdAt: string;
 }
 
@@ -89,6 +90,7 @@ const mockUsersMap: Record<string, UserDetail> = {
     displayName: 'thaki.kim',
     email: 'thaki.kim@example.com',
     status: 'online',
+    locked: false,
     createdAt: '2025-07-25 09:12:20',
   },
   'alex.johnson': {
@@ -96,6 +98,7 @@ const mockUsersMap: Record<string, UserDetail> = {
     displayName: 'Alex Johnson',
     email: 'alex.johnson@example.com',
     status: 'online',
+    locked: true, // This user is locked
     createdAt: '2025-08-15 14:30:00',
   },
   'sara.connor': {
@@ -325,30 +328,37 @@ export function IAMUserDetailPage() {
     sessionsCurrentPage * itemsPerPage
   );
 
-  // Context menu items for user groups
-  const groupContextMenuItems: ContextMenuItem[] = [
-    { id: 'view', label: 'View details' },
-    { type: 'divider' },
-    { id: 'remove', label: 'Remove from group', danger: true },
+  // Check if user account is locked
+  const isUserLocked = user.locked === true;
+
+  // Context menu items factory functions (to include row-specific onClick handlers)
+  const getGroupContextMenuItems = (rowId: string): ContextMenuItem[] => [
+    { 
+      id: 'detach', 
+      label: 'Detach', 
+      status: isUserLocked ? undefined : 'danger', 
+      disabled: isUserLocked,
+      onClick: () => console.log('Detach group', rowId) 
+    },
   ];
 
-  // Context menu items for roles
-  const roleContextMenuItems: ContextMenuItem[] = [
-    { id: 'view', label: 'View details' },
-    { type: 'divider' },
-    { id: 'remove', label: 'Remove role', danger: true },
+  const getRoleContextMenuItems = (rowId: string): ContextMenuItem[] => [
+    { 
+      id: 'detach', 
+      label: 'Detach', 
+      status: isUserLocked ? undefined : 'danger', 
+      disabled: isUserLocked,
+      onClick: () => console.log('Detach role', rowId) 
+    },
   ];
 
-  // Context menu items for access keys
-  const accessKeyContextMenuItems: ContextMenuItem[] = [
-    { id: 'deactivate', label: 'Deactivate' },
-    { type: 'divider' },
-    { id: 'delete', label: 'Delete', danger: true },
+  const getAccessKeyContextMenuItems = (rowId: string): ContextMenuItem[] => [
+    { id: 'deactivate', label: 'Deactivate', onClick: () => console.log('Deactivate', rowId) },
+    { id: 'delete', label: 'Delete', status: 'danger', divider: true, onClick: () => console.log('Delete', rowId) },
   ];
 
-  // Context menu items for sessions
-  const sessionContextMenuItems: ContextMenuItem[] = [
-    { id: 'terminate', label: 'Terminate session', danger: true },
+  const getSessionContextMenuItems = (rowId: string): ContextMenuItem[] => [
+    { id: 'terminate', label: 'Terminate', status: 'danger', onClick: () => console.log('Terminate', rowId) },
   ];
 
   // Table columns for sessions
@@ -382,10 +392,10 @@ export function IAMUserDetailPage() {
       width: 72,
       align: 'center',
       render: (_value, row) => (
-        <ContextMenu items={sessionContextMenuItems} onSelect={(itemId) => console.log(itemId, row.id)}>
+        <ContextMenu items={getSessionContextMenuItems(row.id)} trigger="click">
           <button
             type="button"
-            className="p-1.5 rounded-md hover:bg-[var(--color-surface-subtle)] transition-colors"
+            className="flex items-center justify-center w-7 h-7 rounded-md bg-transparent hover:bg-[var(--color-surface-muted)] active:bg-[var(--color-border-subtle)] transition-colors cursor-pointer"
           >
             <IconAction size={16} stroke={1} className="text-[var(--color-text-default)]" />
           </button>
@@ -435,10 +445,10 @@ export function IAMUserDetailPage() {
       width: 72,
       align: 'center',
       render: (_value, row) => (
-        <ContextMenu items={accessKeyContextMenuItems} onSelect={(itemId) => console.log(itemId, row.id)}>
+        <ContextMenu items={getAccessKeyContextMenuItems(row.id)} trigger="click">
           <button
             type="button"
-            className="p-1.5 rounded-md hover:bg-[var(--color-surface-subtle)] transition-colors"
+            className="flex items-center justify-center w-7 h-7 rounded-md bg-transparent hover:bg-[var(--color-surface-muted)] active:bg-[var(--color-border-subtle)] transition-colors cursor-pointer"
           >
             <IconAction size={16} stroke={1} className="text-[var(--color-text-default)]" />
           </button>
@@ -490,10 +500,10 @@ export function IAMUserDetailPage() {
       width: 72,
       align: 'center',
       render: (_value, row) => (
-        <ContextMenu items={roleContextMenuItems} onSelect={(itemId) => console.log(itemId, row.id)}>
+        <ContextMenu items={getRoleContextMenuItems(row.id)} trigger="click">
           <button
             type="button"
-            className="p-1.5 rounded-md hover:bg-[var(--color-surface-subtle)] transition-colors"
+            className="flex items-center justify-center w-7 h-7 rounded-md bg-transparent hover:bg-[var(--color-surface-muted)] active:bg-[var(--color-border-subtle)] transition-colors cursor-pointer"
           >
             <IconAction size={16} stroke={1} className="text-[var(--color-text-default)]" />
           </button>
@@ -542,10 +552,10 @@ export function IAMUserDetailPage() {
       width: 72,
       align: 'center',
       render: (_value, row) => (
-        <ContextMenu items={groupContextMenuItems} onSelect={(itemId) => console.log(itemId, row.id)}>
+        <ContextMenu items={getGroupContextMenuItems(row.id)} trigger="click">
           <button
             type="button"
-            className="p-1.5 rounded-md hover:bg-[var(--color-surface-subtle)] transition-colors"
+            className="flex items-center justify-center w-7 h-7 rounded-md bg-transparent hover:bg-[var(--color-surface-muted)] active:bg-[var(--color-border-subtle)] transition-colors cursor-pointer"
           >
             <IconAction size={16} stroke={1} className="text-[var(--color-text-default)]" />
           </button>
@@ -601,7 +611,7 @@ export function IAMUserDetailPage() {
           <div className="pt-4 px-8 pb-6 bg-[var(--color-surface-default)]">
             <VStack gap={8}>
               {/* User Header Card */}
-              <div className="w-full bg-white border border-[var(--color-border-default)] rounded-lg px-4 pt-3 pb-4">
+              <div className="w-full bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg px-4 pt-3 pb-4">
                 {/* Username */}
                 <h1 className="text-[16px] font-semibold leading-6 text-[var(--color-text-default)] mb-3">
                   {user.username}
