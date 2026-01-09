@@ -8,6 +8,14 @@ import {
   TopBar,
   TopBarAction,
   Breadcrumb,
+  Button,
+  Table,
+  TableColumn,
+  Pagination,
+  SearchInput,
+  Select,
+  Badge,
+  StatusIndicator,
 } from '@/design-system';
 import { useTabs } from '@/contexts/TabContext';
 import {
@@ -36,8 +44,16 @@ import {
   IconBell,
   IconPalette,
   IconRefresh,
+  IconPlus,
+  IconCircleCheck,
+  IconClock,
+  IconAlertCircle,
+  IconCube,
+  IconHexagon,
+  IconDotsVertical,
+  IconCpu,
+  IconCurrencyDollar,
 } from '@tabler/icons-react';
-import { Button } from '@/design-system';
 
 /* ----------------------------------------
    AI Platform Logo Component
@@ -404,6 +420,7 @@ const routeConfigs: Record<string, RouteConfig> = {
   // Infrastructure
   '/ai-platform/workloads': {
     title: 'Workloads',
+    subtitle: 'Pod and Helm Chart management',
     breadcrumbs: [{ label: 'AI Platform', href: '/ai-platform' }, { label: 'Infrastructure' }, { label: 'Workloads' }],
     section: 'Infrastructure',
   },
@@ -778,6 +795,421 @@ function DashboardContent() {
   );
 }
 
+/* ----------------------------------------
+   Workloads Page Content
+   ---------------------------------------- */
+
+// Mock workload data
+interface Workload {
+  id: string;
+  name: string;
+  status: 'running' | 'pending' | 'failed' | 'stopped';
+  namespace: string;
+  utilization: number | null;
+  memory: string;
+  memoryPercent: number | null;
+  disk: string;
+  diskPercent: number | null;
+  computeType: string;
+  cost: string;
+}
+
+const mockWorkloads: Workload[] = [
+  {
+    id: '1',
+    name: 'presidio-pii-deid-eb9502cc',
+    status: 'running',
+    namespace: 'default',
+    utilization: null,
+    memory: '40960Mi',
+    memoryPercent: null,
+    disk: '-',
+    diskPercent: null,
+    computeType: 'gpu × 1',
+    cost: '$0.89/hr',
+  },
+  {
+    id: '2',
+    name: 'audiocraft-f6c7d9c6',
+    status: 'running',
+    namespace: 'default',
+    utilization: null,
+    memory: '40960Mi',
+    memoryPercent: null,
+    disk: '-',
+    diskPercent: null,
+    computeType: 'gpu × 1',
+    cost: '$0.89/hr',
+  },
+  {
+    id: '3',
+    name: 'llm-interview-eval-agent-78acdf18',
+    status: 'running',
+    namespace: 'default',
+    utilization: 0,
+    memory: '-',
+    memoryPercent: 3,
+    disk: '-',
+    diskPercent: 100,
+    computeType: '-',
+    cost: '$0.1/hr',
+  },
+  {
+    id: '4',
+    name: 'prompt-optimizer-7a1cd6a9',
+    status: 'running',
+    namespace: 'default',
+    utilization: 0,
+    memory: '-',
+    memoryPercent: 7,
+    disk: '-',
+    diskPercent: 100,
+    computeType: '-',
+    cost: '$0.1/hr',
+  },
+];
+
+// Mini Gauge Component for utilization display
+function MiniGauge({ value, color = 'blue' }: { value: number; color?: 'blue' | 'green' | 'red' }) {
+  const colorClasses = {
+    blue: 'text-blue-500',
+    green: 'text-emerald-500',
+    red: 'text-red-500',
+  };
+  
+  return (
+    <div className="flex flex-col items-center gap-0.5">
+      <div className="relative w-10 h-10">
+        <svg className="w-10 h-10 transform -rotate-90" viewBox="0 0 36 36">
+          <path
+            className="text-[var(--color-border-subtle)]"
+            stroke="currentColor"
+            strokeWidth="3"
+            fill="none"
+            d="M18 2.0845
+              a 15.9155 15.9155 0 0 1 0 31.831
+              a 15.9155 15.9155 0 0 1 0 -31.831"
+          />
+          <path
+            className={colorClasses[color]}
+            stroke="currentColor"
+            strokeWidth="3"
+            fill="none"
+            strokeDasharray={`${value}, 100`}
+            d="M18 2.0845
+              a 15.9155 15.9155 0 0 1 0 31.831
+              a 15.9155 15.9155 0 0 1 0 -31.831"
+          />
+        </svg>
+        <div className="absolute inset-0 flex items-center justify-center">
+          <IconCpu size={14} stroke={1.5} className="text-[var(--color-text-muted)]" />
+        </div>
+      </div>
+      <span className="text-[10px] text-[var(--color-text-subtle)]">{value}%</span>
+    </div>
+  );
+}
+
+// Workload Stats Card
+interface WorkloadStatCardProps {
+  icon: ReactNode;
+  value: number;
+  label: string;
+  iconColor?: string;
+  iconBgColor?: string;
+}
+
+function WorkloadStatCard({ icon, value, label, iconColor = 'text-[var(--color-text-muted)]', iconBgColor = 'bg-[var(--color-surface-subtle)]' }: WorkloadStatCardProps) {
+  return (
+    <div className="flex items-center gap-3 p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg">
+      <div className={`w-10 h-10 rounded-lg ${iconBgColor} flex items-center justify-center shrink-0`}>
+        <div className={iconColor}>{icon}</div>
+      </div>
+      <div>
+        <p className="text-[20px] font-semibold text-[var(--color-text-default)]">{value}</p>
+        <p className="text-[11px] text-[var(--color-text-subtle)]">{label}</p>
+      </div>
+    </div>
+  );
+}
+
+function WorkloadsContent() {
+  const navigate = useNavigate();
+  const [searchQuery, setSearchQuery] = useState('');
+  const [statusFilter, setStatusFilter] = useState('all');
+  const [resourceFilter, setResourceFilter] = useState('all');
+  const [sortBy, setSortBy] = useState('newest');
+  const [currentPage, setCurrentPage] = useState(1);
+  const rowsPerPage = 10;
+
+  // Filter workloads
+  const filteredWorkloads = useMemo(() => {
+    return mockWorkloads.filter((workload) => {
+      const matchesSearch = workload.name.toLowerCase().includes(searchQuery.toLowerCase());
+      const matchesStatus = statusFilter === 'all' || workload.status === statusFilter;
+      return matchesSearch && matchesStatus;
+    });
+  }, [searchQuery, statusFilter]);
+
+  const totalPages = Math.ceil(filteredWorkloads.length / rowsPerPage);
+
+  // Stats
+  const stats = useMemo(() => ({
+    total: mockWorkloads.length,
+    running: mockWorkloads.filter(w => w.status === 'running').length,
+    pending: mockWorkloads.filter(w => w.status === 'pending').length,
+    failed: mockWorkloads.filter(w => w.status === 'failed').length,
+    pods: mockWorkloads.length,
+    helmCharts: 0,
+  }), []);
+
+  // Table columns
+  const columns: TableColumn<Workload>[] = [
+    {
+      key: 'name',
+      header: 'Name',
+      width: '280px',
+      render: (_, row) => (
+        <div className="flex items-center gap-3">
+          <div className={`w-2 h-2 rounded-full ${
+            row.status === 'running' ? 'bg-emerald-500' :
+            row.status === 'pending' ? 'bg-amber-500' :
+            row.status === 'failed' ? 'bg-red-500' : 'bg-gray-400'
+          }`} />
+          <div className="flex flex-col">
+            <span className="text-[13px] font-medium text-[var(--color-text-default)]">{row.name}</span>
+            <div className="flex items-center gap-2">
+              <Badge variant={row.status === 'running' ? 'success' : row.status === 'failed' ? 'danger' : 'default'} size="sm">
+                {row.status.charAt(0).toUpperCase() + row.status.slice(1)}
+              </Badge>
+              <span className="text-[11px] text-[var(--color-text-subtle)]">{row.namespace}</span>
+            </div>
+          </div>
+        </div>
+      ),
+    },
+    {
+      key: 'utilization',
+      header: 'Utilization',
+      width: '100px',
+      align: 'center' as const,
+      render: (_, row) => (
+        row.utilization !== null ? (
+          <MiniGauge value={row.utilization} color="blue" />
+        ) : (
+          <span className="text-[var(--color-text-subtle)]">-</span>
+        )
+      ),
+    },
+    {
+      key: 'memory',
+      header: 'Memory',
+      width: '100px',
+      align: 'center' as const,
+      render: (_, row) => (
+        row.memoryPercent !== null ? (
+          <MiniGauge value={row.memoryPercent} color="green" />
+        ) : (
+          <div className="flex items-center gap-1.5">
+            <IconCpu size={14} stroke={1.5} className="text-[var(--color-text-muted)]" />
+            <span className="text-[12px] text-[var(--color-text-default)]">{row.memory}</span>
+          </div>
+        )
+      ),
+    },
+    {
+      key: 'disk',
+      header: 'Disk',
+      width: '100px',
+      align: 'center' as const,
+      render: (_, row) => (
+        row.diskPercent !== null ? (
+          <MiniGauge value={row.diskPercent} color={row.diskPercent > 90 ? 'red' : 'green'} />
+        ) : (
+          <span className="text-[var(--color-text-subtle)]">{row.disk}</span>
+        )
+      ),
+    },
+    {
+      key: 'computeType',
+      header: 'Compute Type',
+      width: '120px',
+      render: (_, row) => (
+        row.computeType !== '-' ? (
+          <div className="flex items-center gap-1.5">
+            <IconCpu size={14} stroke={1.5} className="text-amber-500" />
+            <span className="text-[12px] text-[var(--color-text-default)]">{row.computeType}</span>
+          </div>
+        ) : (
+          <span className="text-[var(--color-text-subtle)]">-</span>
+        )
+      ),
+    },
+    {
+      key: 'cost',
+      header: 'Cost',
+      width: '100px',
+      render: (_, row) => (
+        <div className="flex items-center gap-1">
+          <IconCurrencyDollar size={14} stroke={1.5} className="text-emerald-500" />
+          <span className="text-[12px] text-[var(--color-text-default)]">{row.cost.replace('$', '')}</span>
+        </div>
+      ),
+    },
+    {
+      key: 'actions',
+      header: '',
+      width: '40px',
+      align: 'center' as const,
+      render: () => (
+        <button className="p-1 rounded hover:bg-[var(--color-surface-subtle)] transition-colors">
+          <IconDotsVertical size={16} stroke={1.5} className="text-[var(--color-text-muted)]" />
+        </button>
+      ),
+    },
+  ];
+
+  // Status options for filter
+  const statusOptions = [
+    { value: 'all', label: 'All Statuses' },
+    { value: 'running', label: 'Running' },
+    { value: 'pending', label: 'Pending' },
+    { value: 'failed', label: 'Failed' },
+    { value: 'stopped', label: 'Stopped' },
+  ];
+
+  const resourceOptions = [
+    { value: 'all', label: 'All Resources' },
+    { value: 'pod', label: 'Pods' },
+    { value: 'helm', label: 'Helm Charts' },
+  ];
+
+  const sortOptions = [
+    { value: 'newest', label: 'Sort by Newest' },
+    { value: 'oldest', label: 'Sort by Oldest' },
+    { value: 'name', label: 'Sort by Name' },
+    { value: 'cost', label: 'Sort by Cost' },
+  ];
+
+  return (
+    <div className="flex flex-col gap-6">
+      {/* Stats Cards */}
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+        <WorkloadStatCard
+          icon={<IconStack2 size={20} stroke={1.5} />}
+          value={stats.total}
+          label="Total"
+          iconColor="text-[var(--color-action-primary)]"
+          iconBgColor="bg-blue-50"
+        />
+        <WorkloadStatCard
+          icon={<IconCircleCheck size={20} stroke={1.5} />}
+          value={stats.running}
+          label="Running"
+          iconColor="text-emerald-600"
+          iconBgColor="bg-emerald-50"
+        />
+        <WorkloadStatCard
+          icon={<IconClock size={20} stroke={1.5} />}
+          value={stats.pending}
+          label="Pending"
+          iconColor="text-amber-600"
+          iconBgColor="bg-amber-50"
+        />
+        <WorkloadStatCard
+          icon={<IconAlertCircle size={20} stroke={1.5} />}
+          value={stats.failed}
+          label="Failed"
+          iconColor="text-red-600"
+          iconBgColor="bg-red-50"
+        />
+        <WorkloadStatCard
+          icon={<IconCube size={20} stroke={1.5} />}
+          value={stats.pods}
+          label="Pods"
+          iconColor="text-[var(--color-action-primary)]"
+          iconBgColor="bg-blue-50"
+        />
+        <WorkloadStatCard
+          icon={<IconHexagon size={20} stroke={1.5} />}
+          value={stats.helmCharts}
+          label="Helm Charts"
+          iconColor="text-violet-600"
+          iconBgColor="bg-violet-50"
+        />
+      </div>
+
+      {/* Filters Section */}
+      <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg p-4">
+        <div className="flex items-center gap-2 mb-3">
+          <IconSearch size={16} stroke={1.5} className="text-[var(--color-text-muted)]" />
+          <span className="text-[13px] font-medium text-[var(--color-text-default)]">Filters</span>
+        </div>
+        <div className="flex flex-wrap items-center gap-3">
+          <div className="w-[280px]">
+            <SearchInput
+              placeholder="Search workload name..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              onClear={() => setSearchQuery('')}
+              size="sm"
+              fullWidth
+            />
+          </div>
+          <div className="w-[160px]">
+            <Select
+              options={statusOptions}
+              value={statusFilter}
+              onChange={setStatusFilter}
+              size="sm"
+              fullWidth
+            />
+          </div>
+          <div className="w-[160px]">
+            <Select
+              options={resourceOptions}
+              value={resourceFilter}
+              onChange={setResourceFilter}
+              size="sm"
+              fullWidth
+            />
+          </div>
+          <div className="w-[160px]">
+            <Select
+              options={sortOptions}
+              value={sortBy}
+              onChange={setSortBy}
+              size="sm"
+              fullWidth
+            />
+          </div>
+        </div>
+      </div>
+
+      {/* Table Section */}
+      <div className="flex flex-col gap-3">
+        {/* Pagination */}
+        {filteredWorkloads.length > 0 && (
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={setCurrentPage}
+            totalItems={filteredWorkloads.length}
+          />
+        )}
+
+        {/* Table */}
+        <Table<Workload>
+          columns={columns}
+          data={filteredWorkloads.slice((currentPage - 1) * rowsPerPage, currentPage * rowsPerPage)}
+          rowKey="id"
+          emptyMessage="No workloads found"
+        />
+      </div>
+    </div>
+  );
+}
+
 function PlaceholderContent({ title }: { title: string }) {
   return (
     <div className="flex flex-col items-center justify-center py-20">
@@ -802,6 +1234,9 @@ export function AIPlatformPage() {
     if (location.pathname === '/ai-platform') {
       return <DashboardContent />;
     }
+    if (location.pathname === '/ai-platform/workloads') {
+      return <WorkloadsContent />;
+    }
     return <PlaceholderContent title={routeConfig.title} />;
   };
 
@@ -817,6 +1252,27 @@ export function AIPlatformPage() {
         >
           Refresh
         </Button>
+      );
+    }
+    if (location.pathname === '/ai-platform/workloads') {
+      return (
+        <div className="flex items-center gap-2">
+          <Button
+            variant="secondary"
+            size="md"
+            leftIcon={<IconRefresh size={14} stroke={1.5} />}
+            onClick={() => window.location.reload()}
+          >
+            Refresh Workloads
+          </Button>
+          <Button
+            variant="primary"
+            size="md"
+            leftIcon={<IconPlus size={14} stroke={1.5} />}
+          >
+            Deploy New Workload
+          </Button>
+        </div>
       );
     }
     return null;
