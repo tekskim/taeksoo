@@ -198,9 +198,9 @@ interface StatCardProps {
 function StatCard({ label, value, variant = 'default' }: StatCardProps) {
   const bgColors = {
     default: 'bg-[var(--color-surface-subtle)]',
-    success: 'bg-[#f0fdf4]',
-    warning: 'bg-[#fefce8]',
-    danger: 'bg-[#fef2f2]',
+    success: 'bg-[var(--inline-message-success-bg)]',
+    warning: 'bg-[var(--inline-message-warning-bg)]',
+    danger: 'bg-[var(--inline-message-error-bg)]',
   };
 
   return (
@@ -315,7 +315,7 @@ export function IAMHomePage() {
               {/* Row 1: Domain Info + Authentication Summary */}
               <HStack gap={3} align="stretch">
                 {/* Domain Info Card */}
-                <div className="w-[312px] shrink-0 bg-white rounded-lg p-4 flex flex-col gap-6">
+                <div className="w-[312px] shrink-0 bg-[var(--color-surface-default)] rounded-lg p-4 flex flex-col gap-6">
                   <h2 className="text-[24px] font-semibold text-[var(--color-text-default)]">DomainA</h2>
                   <VStack gap={2}>
                     <HStack gap={2}>
@@ -330,7 +330,7 @@ export function IAMHomePage() {
                 </div>
 
                 {/* Authentication Summary Card */}
-                <div className="flex-1 bg-white rounded-lg pt-3 pb-4 px-4 flex flex-col gap-3">
+                <div className="flex-1 bg-[var(--color-surface-default)] rounded-lg pt-3 pb-4 px-4 flex flex-col gap-3">
                   <h3 className="text-[14px] font-semibold text-[var(--color-text-default)]">Authentication summary</h3>
                   
                   <HStack gap={3}>
@@ -385,20 +385,20 @@ export function IAMHomePage() {
               </HStack>
 
               {/* Row 2: User Status */}
-              <div className="bg-white rounded-lg pt-3 pb-4 px-4 flex flex-col gap-3">
+              <div className="bg-[var(--color-surface-default)] rounded-lg pt-3 pb-4 px-4 flex flex-col gap-3">
                 <h3 className="text-[14px] font-semibold text-[var(--color-text-default)]">User status</h3>
                 <HStack gap={2}>
                   <StatCard label="Total" value="150" variant="default" />
                   <StatCard label="Online" value="50" variant="success" />
-                  <StatCard label="Disabled" value="27" variant="warning" />
-                  <StatCard label="Locked" value="3" variant="danger" />
+                  <StatCard label="Disabled" value="27" variant="danger" />
+                  <StatCard label="Locked" value="3" variant="warning" />
                 </HStack>
               </div>
 
               {/* Row 3: IAM Resources + Recent Events */}
               <HStack gap={3} align="start">
                 {/* IAM Resources */}
-                <div className="w-[312px] shrink-0 bg-white rounded-lg pt-3 pb-4 px-4 flex flex-col gap-3">
+                <div className="w-[312px] shrink-0 bg-[var(--color-surface-default)] rounded-lg pt-3 pb-4 px-4 flex flex-col gap-3">
                   <h3 className="text-[14px] font-semibold text-[var(--color-text-default)]">IAM resources</h3>
                   <VStack gap={2}>
                     <ResourceCard label="User group" value="13" />
@@ -408,7 +408,7 @@ export function IAMHomePage() {
                 </div>
 
                 {/* Recent Events */}
-                <div className="flex-1 bg-white rounded-lg p-4 flex flex-col gap-3">
+                <div className="flex-1 bg-[var(--color-surface-default)] rounded-lg p-4 flex flex-col gap-3">
                   <h3 className="text-[14px] font-semibold text-[var(--color-text-default)]">Recent events</h3>
                   <Table<EventRow>
                     columns={eventsColumns}
