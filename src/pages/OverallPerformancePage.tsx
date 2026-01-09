@@ -744,6 +744,85 @@ function ChartCard({ title, series, yAxisFormatter = (v: number) => `${v}`, isDa
 }
 
 /* ----------------------------------------
+   EmptyStateChartCard Component (No Data Area Chart)
+   ---------------------------------------- */
+
+interface EmptyStateChartCardProps {
+  title: string;
+  yAxisFormatter?: (value: number) => string;
+  isDarkMode: boolean;
+}
+
+function EmptyStateChartCard({ title, yAxisFormatter = (v: number) => `${v}`, isDarkMode }: EmptyStateChartCardProps) {
+  const timeLabels = generateTimeLabels();
+  
+  // Theme-aware colors
+  const splitLineColor = isDarkMode ? 'rgba(255, 255, 255, 0.08)' : chartColors.slate100;
+  const splitLineOpacity = isDarkMode ? 1 : 0.5;
+
+  const option = {
+    animation: false,
+    grid: {
+      left: '0',
+      right: '16px',
+      top: '20px',
+      bottom: '16px',
+      containLabel: true
+    },
+    xAxis: {
+      type: 'category' as const,
+      data: timeLabels,
+      axisLine: { show: false },
+      axisTick: { show: false },
+      axisLabel: {
+        color: chartColors.slate400,
+        fontSize: 10,
+        padding: [0, 0, 0, 15]
+      },
+      boundaryGap: false
+    },
+    yAxis: {
+      type: 'value' as const,
+      min: 0,
+      max: 100,
+      interval: 25,
+      axisLine: { show: false },
+      axisTick: { show: false },
+      splitLine: {
+        lineStyle: { color: splitLineColor, opacity: splitLineOpacity }
+      },
+      axisLabel: {
+        color: chartColors.slate400,
+        fontSize: 10,
+        formatter: yAxisFormatter
+      }
+    },
+    series: []
+  };
+
+  return (
+    <div className="chartCard">
+      {/* Header */}
+      <div className="chartHeader">
+        <span className="chartTitle">{title}</span>
+        <div className="chartControls">
+          <button className="expandTrigger" title="Expand">
+            <IconArrowsMaximize size={16} stroke={1.5} />
+          </button>
+        </div>
+      </div>
+      
+      {/* Chart Body */}
+      <div className="chartBody">
+        <div className="chartWrapper">
+          <ReactECharts option={option} style={{ height: '100%', width: '100%' }} notMerge={true} />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ----------------------------------------
    Overall Performance Page
    ---------------------------------------- */
 
@@ -978,29 +1057,11 @@ export function OverallPerformancePage() {
                           />
                         </div>
                         <div className="w-[calc(50%-12px)]">
-                          <div className="chartCard">
-                            <div className="chartHeader">
-                              <span className="chartTitle">Recovery Rate</span>
-                              <div className="chartControls">
-                                <button className="expandTrigger">
-                                  <IconArrowsMaximize size={14} stroke={1.5} />
-                                </button>
-                              </div>
-                            </div>
-                            <div className="chartBody">
-                              <div className="flex items-center justify-center h-[200px] text-[var(--color-text-muted)]">
-                                <div className="flex flex-col items-center gap-2">
-                                  <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round" className="text-[var(--color-text-subtle)]">
-                                    <path d="M3 3v18h18" />
-                                    <path d="M18 17V9" />
-                                    <path d="M13 17V5" />
-                                    <path d="M8 17v-3" />
-                                  </svg>
-                                  <span className="text-[12px]">No data available</span>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
+                          <EmptyStateChartCard
+                            title="Recovery Rate"
+                            yAxisFormatter={(v) => `${v} MB/s`}
+                            isDarkMode={isDark}
+                          />
                         </div>
                       </div>
 
