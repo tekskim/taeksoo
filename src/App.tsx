@@ -91,7 +91,12 @@ import IAMPolicyDetailPage from '@/pages/IAMPolicyDetailPage';
 import IAMActiveSessionsPage from '@/pages/IAMActiveSessionsPage';
 import IAMDomainsPage from '@/pages/IAMDomainsPage';
 import IAMSystemAdministratorsPage from '@/pages/IAMSystemAdministratorsPage';
+import IAMSystemAdminDetailPage from '@/pages/IAMSystemAdminDetailPage';
 import IAMEventLogsPage from '@/pages/IAMEventLogsPage';
+import IAMMFAPoliciesPage from '@/pages/IAMMFAPoliciesPage';
+import IAMSessionPoliciesPage from '@/pages/IAMSessionPoliciesPage';
+import IAMTokenPoliciesPage from '@/pages/IAMTokenPoliciesPage';
+import IAMLoginPoliciesPage from '@/pages/IAMLoginPoliciesPage';
 
 // Pages - Cloud Builder
 import { CloudBuilderConsolePage } from '@/pages/cloudbuilder/CloudBuilderConsolePage';
@@ -222,7 +227,12 @@ function AppRoutes() {
         <Route path="/iam/active-sessions" element={<IAMActiveSessionsPage />} />
         <Route path="/iam/domains" element={<IAMDomainsPage />} />
         <Route path="/iam/system-administrators" element={<IAMSystemAdministratorsPage />} />
+        <Route path="/iam/system-administrators/:username" element={<IAMSystemAdminDetailPage />} />
         <Route path="/iam/event-logs" element={<IAMEventLogsPage />} />
+        <Route path="/iam/mfa-policies" element={<IAMMFAPoliciesPage />} />
+        <Route path="/iam/session-policies" element={<IAMSessionPoliciesPage />} />
+        <Route path="/iam/token-policies" element={<IAMTokenPoliciesPage />} />
+        <Route path="/iam/login-policies" element={<IAMLoginPoliciesPage />} />
         <Route path="/iam/*" element={<IAMHomePage />} />
 
         {/* Design System Routes */}
