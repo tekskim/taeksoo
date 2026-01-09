@@ -237,10 +237,9 @@ export function IAMUserGroupsPage() {
                     variant="secondary" 
                     size="sm"
                     disabled={!hasSelection}
-                    className={!hasSelection ? 'opacity-50' : ''}
+                    leftIcon={<IconTrash size={12} />}
                   >
-                    <IconTrash size={12} stroke={1.5} className={hasSelection ? 'text-[var(--color-text-default)]' : 'text-[var(--color-text-muted)]'} />
-                    <span className={hasSelection ? 'text-[var(--color-text-default)]' : 'text-[var(--color-text-muted)]'}>Delete</span>
+                    Delete
                   </Button>
                 </HStack>
 

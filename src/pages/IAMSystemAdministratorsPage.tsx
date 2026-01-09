@@ -121,10 +121,12 @@ export default function IAMSystemAdministratorsPage() {
     {
       key: 'locked',
       label: 'Locked',
-      width: 80,
+      width: 70,
       align: 'center',
       render: (value) => (
-        value ? <IconLock size={16} stroke={1.5} className="text-[var(--color-text-default)]" /> : null
+        <div className="flex items-center justify-center w-full">
+          {value ? <IconLock size={16} stroke={1.5} className="text-[var(--color-text-default)]" /> : null}
+        </div>
       ),
     },
     {
