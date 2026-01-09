@@ -3960,6 +3960,45 @@ outline: 2px solid var(--color-border-focus);`}
                     className="w-[240px]"
                   />
                 </VStack>
+
+                {/* Clearable Select */}
+                <VStack gap={3}>
+                  <Label>Clearable Select</Label>
+                  <p className="text-[length:var(--font-size-11)] text-[var(--color-text-muted)]">
+                    Select with clear button (✕) and "Clear" option in dropdown. Useful for filter dropdowns.
+                  </p>
+                  <div className="flex gap-4 items-start">
+                    <VStack gap={1}>
+                      <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">All Statuses</span>
+                      <Select
+                        placeholder="All Statuses"
+                        defaultValue="all"
+                        clearable
+                        options={[
+                          { value: 'all', label: 'All Statuses' },
+                          { value: 'running', label: 'Running' },
+                          { value: 'pending', label: 'Pending' },
+                          { value: 'failed', label: 'Failed' },
+                        ]}
+                        className="w-[180px]"
+                      />
+                    </VStack>
+                    <VStack gap={1}>
+                      <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">All Resources</span>
+                      <Select
+                        placeholder="All Resources"
+                        defaultValue="all"
+                        clearable
+                        options={[
+                          { value: 'all', label: 'All Resources' },
+                          { value: 'gpu', label: 'GPU Usage' },
+                          { value: 'cpu', label: 'CPU Only' },
+                        ]}
+                        className="w-[180px]"
+                      />
+                    </VStack>
+                  </div>
+                </VStack>
               </VStack>
             </Section>
 
