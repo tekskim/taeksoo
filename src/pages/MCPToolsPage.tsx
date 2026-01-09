@@ -43,6 +43,7 @@ import {
   IconEye,
   IconEyeOff,
   IconHome,
+  IconCircleX,
 } from '@tabler/icons-react';
 import { Icons } from '@/design-system';
 import { useNavigate } from 'react-router-dom';
@@ -75,10 +76,7 @@ function StatusCard({ label, count, status }: StatusCardProps) {
       );
     } else if (status === 'deactive') {
       return (
-        <div className="flex flex-col gap-0.5 items-center justify-center">
-          <div className="h-1 w-2 bg-white rounded-sm" />
-          <div className="h-1 w-2 bg-white rounded-sm" />
-        </div>
+        <IconCircleX size={12} stroke={1.5} className="text-white" />
       );
     } else if (status === 'error') {
       return (
@@ -155,9 +153,9 @@ export function MCPToolsPage() {
   const [rowsPerPage, setRowsPerPage] = useState(10);
 
   // Status mapping for StatusIndicator
-  const statusMap: Record<MCPToolRow['status'], 'active' | 'error' | 'building' | 'shutoff' | 'pending'> = {
+  const statusMap: Record<MCPToolRow['status'], 'active' | 'error' | 'building' | 'deactivated' | 'pending'> = {
     'active': 'active',
-    'deactive': 'shutoff',
+    'deactive': 'deactivated',
     'error': 'error',
     'processing': 'building',
     'deleted': 'pending',
@@ -428,11 +426,11 @@ export function MCPToolsPage() {
       sortable: false,
       render: (_, row) => (
         <div className="flex items-center gap-2">
-          <div className="w-4 h-4 rounded bg-[var(--color-surface-subtle)] flex items-center justify-center overflow-hidden shrink-0">
+          <div className="w-5 h-5 rounded bg-[var(--color-surface-subtle)] flex items-center justify-center overflow-hidden shrink-0 p-0.5">
             <img 
               src={row.mcpServer.thumbnail} 
               alt={row.mcpServer.label} 
-              className="w-full h-full object-cover"
+              className="w-full h-full object-contain"
               onError={(e) => {
                 const target = e.target as HTMLImageElement;
                 target.style.display = 'none';
