@@ -194,11 +194,18 @@ export function TabProvider({ children, defaultTabs = [] }: TabProviderProps) {
   const tabsRef = useRef(tabs);
   tabsRef.current = tabs;
 
+  // Refs for controlling location sync behavior
+  const initializedRef = useRef(false);
+  const skipNextLocationSyncRef = useRef(false);
+
   // Detect app change and reset tabs
   useEffect(() => {
     const newApp = getAppFromPath(location.pathname);
     if (newApp !== currentApp) {
       setCurrentApp(newApp);
+      
+      // Skip location sync when switching apps to prevent duplicate tab creation
+      skipNextLocationSyncRef.current = true;
       
       // Load tabs for the new app from localStorage or create default
       const storageKeys = getStorageKeys(newApp);
@@ -223,9 +230,13 @@ export function TabProvider({ children, defaultTabs = [] }: TabProviderProps) {
         newTabs = [homeTab];
         newActiveTabId = homeTab.id;
       } else {
-        // Use stored active tab or first tab
+        // Use stored active tab if it exists in tabs, otherwise use first tab
         const storedActiveTab = localStorage.getItem(storageKeys.activeTab);
-        newActiveTabId = storedActiveTab || newTabs[0].id;
+        if (storedActiveTab && newTabs.some(t => t.id === storedActiveTab)) {
+          newActiveTabId = storedActiveTab;
+        } else {
+          newActiveTabId = newTabs[0].id;
+        }
       }
       
       setTabs(newTabs);
@@ -246,8 +257,6 @@ export function TabProvider({ children, defaultTabs = [] }: TabProviderProps) {
   }, [activeTabId, currentApp]);
 
   // On initial mount, sync tabs with current URL (prioritize current URL over stored active tab)
-  const initializedRef = useRef(false);
-  const skipNextLocationSyncRef = useRef(false);
   useEffect(() => {
     if (!initializedRef.current) {
       initializedRef.current = true;
