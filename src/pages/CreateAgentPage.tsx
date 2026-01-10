@@ -333,7 +333,7 @@ export function CreateAgentPage() {
 
   return (
     <>
-      <TopBar
+          <TopBar
             showSidebarToggle={false}
             showNavigation={true}
             canGoBack={false}
@@ -364,7 +364,7 @@ export function CreateAgentPage() {
             }
           />
 
-      {/* Scrollable Content Area */}
+        {/* Scrollable Content Area */}
       <div className="flex-1 overflow-auto min-h-0 overscroll-contain sidebar-scroll">
           <div className="bg-[var(--color-surface-default)] flex flex-col gap-6 items-center pb-[120px] pt-6 px-8 w-full min-h-full">
             <div className="flex flex-col gap-6 items-start min-w-[1176px] relative shrink-0 w-full">

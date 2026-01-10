@@ -9,7 +9,6 @@ import {
   IconNetwork,
   IconDatabase,
   IconShieldLock,
-  IconSettings,
   IconPlus,
   IconArrowLeft,
   IconChevronDown,
@@ -21,8 +20,8 @@ import {
   IconCheck,
   IconLayoutSidebar,
 } from '@tabler/icons-react';
-import { ArrowRightLeft } from 'lucide-react';
-import { Link, useLocation } from 'react-router-dom';
+import { ArrowRightLeft, FolderCog } from 'lucide-react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import ThakiLogoLight from '@/assets/thakiLogo_light.svg';
 import ThakiLogoDark from '@/assets/thakiLogo-dark.svg';
 import containerIcon from '@/assets/container.png';
@@ -313,11 +312,12 @@ function NamespaceSelector() {
 export function ContainerSidebar({ isOpen = true, onToggle }: ContainerSidebarProps) {
   const { isDark } = useDarkMode();
   const location = useLocation();
+  const navigate = useNavigate();
   
   // Check if current path matches href
   const isActive = (href: string) => {
     if (location.pathname === href) return true;
-    if (href !== '/container' && location.pathname.startsWith(href + '/')) return true;
+    if (href !== '/container' && href !== '/container/dashboard' && location.pathname.startsWith(href + '/')) return true;
     return false;
   };
 
@@ -325,8 +325,13 @@ export function ContainerSidebar({ isOpen = true, onToggle }: ContainerSidebarPr
   const getActiveIconSection = () => {
     const path = location.pathname;
     
+    // Home - exact match for /container
+    if (path === '/container') {
+      return 'home';
+    }
+    
     // Cluster section: Dashboard, Namespaces, Nodes, Events
-    if (path === '/container' || 
+    if (path === '/container/dashboard' || 
         path.startsWith('/container/namespaces') || 
         path.startsWith('/container/nodes') || 
         path.startsWith('/container/events')) {
@@ -343,16 +348,14 @@ export function ContainerSidebar({ isOpen = true, onToggle }: ContainerSidebarPr
       return 'workloads';
     }
     
-    return 'home';
+    return 'cluster';
   };
 
   const activeIconSection = getActiveIconSection();
-  
-  if (!isOpen) return null;
 
   return (
     <div className="flex h-screen fixed left-0 top-0">
-      {/* Icon Sidebar (40px) */}
+      {/* Icon Sidebar (40px) - Always visible */}
       <aside className="w-10 h-full bg-[var(--color-surface-default)] border-r border-[var(--color-border-subtle)] flex flex-col">
         {/* App Icon */}
         <div className="h-[33px] flex items-center justify-center border-b border-[var(--color-border-subtle)]">
@@ -364,16 +367,19 @@ export function ContainerSidebar({ isOpen = true, onToggle }: ContainerSidebarPr
           <IconSidebarItem
             icon={<IconHome size={16} stroke={1.5} />}
             active={activeIconSection === 'home'}
+            onClick={() => navigate('/container')}
             tooltip="Home"
           />
           <IconSidebarItem
             icon={<IconAffiliate size={16} stroke={1.5} />}
             active={activeIconSection === 'cluster'}
+            onClick={() => navigate('/container/dashboard')}
             tooltip="Cluster"
           />
           <IconSidebarItem
             icon={<IconAffiliate size={16} stroke={1.5} />}
             active={activeIconSection === 'workloads'}
+            onClick={() => navigate('/container/deployments')}
             tooltip="Workloads"
           />
           <IconSidebarItem
@@ -383,10 +389,24 @@ export function ContainerSidebar({ isOpen = true, onToggle }: ContainerSidebarPr
           />
         </div>
 
+        {/* Toggle button at bottom when menu sidebar is closed */}
+        {!isOpen && (
+          <div className="border-t border-[var(--color-border-subtle)] py-1 flex items-center justify-center">
+            <button 
+              type="button"
+              onClick={onToggle}
+              className="w-8 h-8 flex items-center justify-center rounded-[var(--radius-md)] transition-colors duration-[var(--duration-fast)] text-[var(--color-text-default)] hover:bg-[var(--color-surface-muted)]"
+              aria-label="Toggle sidebar"
+            >
+              <IconLayoutSidebar size={16} stroke={1.5} />
+            </button>
+          </div>
+        )}
+
         {/* Settings at bottom */}
         <div className="border-t border-[var(--color-border-subtle)] py-1 flex items-center justify-center">
           <IconSidebarItem
-            icon={<IconSettings size={16} stroke={1.5} />}
+            icon={<FolderCog size={16} strokeWidth={1.5} />}
             active={false}
             onClick={() => {}}
             tooltip="Settings"
@@ -394,24 +414,25 @@ export function ContainerSidebar({ isOpen = true, onToggle }: ContainerSidebarPr
         </div>
       </aside>
 
-      {/* Menu Sidebar (200px) */}
-      <aside className="w-[200px] h-full bg-[var(--color-surface-default)] border-r border-[var(--color-border-default)] flex flex-col">
-        {/* Logo */}
-        <div className="h-[33px] px-3 flex items-center justify-between">
-          <img 
-            src={isDark ? ThakiLogoDark : ThakiLogoLight} 
-            alt="THAKI Cloud" 
-            className="h-4"
-          />
-          <button 
-            type="button"
-            onClick={onToggle}
-            className="p-1 hover:bg-[var(--color-surface-muted)] rounded transition-colors cursor-pointer"
-            aria-label="Toggle sidebar"
-          >
-            <IconLayoutSidebar size={16} className="text-[var(--color-text-muted)] pointer-events-none" stroke={1.5} />
-          </button>
-        </div>
+      {/* Menu Sidebar (200px) - Toggleable */}
+      {isOpen && (
+        <aside className="w-[200px] h-full bg-[var(--color-surface-default)] border-r border-[var(--color-border-default)] flex flex-col">
+          {/* Logo */}
+          <div className="h-[33px] px-3 flex items-center justify-between">
+            <img 
+              src={isDark ? ThakiLogoDark : ThakiLogoLight} 
+              alt="THAKI Cloud" 
+              className="h-4"
+            />
+            <button 
+              type="button"
+              onClick={onToggle}
+              className="p-1 hover:bg-[var(--color-surface-muted)] rounded transition-colors cursor-pointer"
+              aria-label="Toggle sidebar"
+            >
+              <IconLayoutSidebar size={16} className="text-[var(--color-text-muted)] pointer-events-none" stroke={1.5} />
+            </button>
+          </div>
 
         {/* Namespace Selector */}
         <NamespaceSelector />
@@ -441,8 +462,8 @@ export function ContainerSidebar({ isOpen = true, onToggle }: ContainerSidebarPr
               <MenuItem
                 icon={<IconHome size={16} stroke={1.5} />}
                 label="Dashboard"
-                href="/container"
-                active={isActive('/container')}
+                href="/container/dashboard"
+                active={isActive('/container/dashboard')}
               />
               <MenuItem
                 icon={<IconServer size={16} stroke={1.5} />}
@@ -590,7 +611,8 @@ export function ContainerSidebar({ isOpen = true, onToggle }: ContainerSidebarPr
           </VStack>
         </nav>
 
-      </aside>
+        </aside>
+      )}
     </div>
   );
 }

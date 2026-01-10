@@ -376,8 +376,8 @@ export function ChatPage() {
 
   return (
     <>
-      {/* TopBar - Full width */}
-      <TopBar
+          {/* TopBar - Full width */}
+          <TopBar
             showSidebarToggle={false}
             showNavigation={true}
             canGoBack={false}

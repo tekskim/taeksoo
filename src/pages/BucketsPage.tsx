@@ -400,6 +400,7 @@ export function BucketsPage() {
                   showSettings
                   onSettingsClick={() => console.log('Settings clicked')}
                   totalItems={totalItems}
+                  selectedCount={selectedRows.length}
                 />
               )}
 
