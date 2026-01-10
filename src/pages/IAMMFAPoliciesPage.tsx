@@ -187,7 +187,7 @@ export default function IAMMFAPoliciesPage() {
                           </p>
 
                           {/* Radio Options */}
-                          <VStack gap={6}>
+                          <VStack gap={3}>
                             <HStack align="center" className="gap-[6px]">
                               <Radio
                                 checked={mfaEnforcement === 'voluntary'}
@@ -204,6 +204,9 @@ export default function IAMMFAPoliciesPage() {
                               label="Required for all users"
                             />
                           </VStack>
+
+                          {/* Divider */}
+                          <div className="h-px w-full bg-[var(--color-border-subtle)]" />
 
                           {/* Action Buttons */}
                           <HStack gap={2} justify="end" className="w-full">
@@ -235,7 +238,7 @@ export default function IAMMFAPoliciesPage() {
                         <button
                           type="button"
                           onClick={() => setActiveMethodTab('otp')}
-                          className={`flex items-center justify-center min-w-[200px] px-[24px] text-[14px] font-medium leading-5 text-center rounded-md transition-colors ${
+                          className={`flex items-center justify-center min-w-[200px] px-[24px] text-[14px] font-medium leading-5 text-center rounded-md transition-colors cursor-pointer ${
                             activeMethodTab === 'otp'
                               ? 'bg-[var(--color-surface-default)] border border-[var(--color-border-default)] text-[var(--color-action-primary)]'
                               : 'bg-transparent text-[var(--color-text-default)]'
@@ -246,7 +249,7 @@ export default function IAMMFAPoliciesPage() {
                         <button
                           type="button"
                           onClick={() => setActiveMethodTab('email')}
-                          className={`flex items-center justify-center min-w-[200px] px-[24px] text-[14px] font-medium leading-5 text-center rounded-md transition-colors ${
+                          className={`flex items-center justify-center min-w-[200px] px-[24px] text-[14px] font-medium leading-5 text-center rounded-md transition-colors cursor-pointer ${
                             activeMethodTab === 'email'
                               ? 'bg-[var(--color-surface-default)] border border-[var(--color-border-default)] text-[var(--color-action-primary)]'
                               : 'bg-transparent text-[var(--color-text-default)]'
@@ -278,7 +281,7 @@ export default function IAMMFAPoliciesPage() {
                                   <span className="text-[14px] font-medium leading-5 text-[var(--color-text-default)]">
                                     Look around window
                                   </span>
-                                  <span className="text-[var(--color-state-danger)]">*</span>
+                                  <span className="ml-1 text-[var(--color-state-danger)]">*</span>
                                 </HStack>
                                 <p className="text-[11px] leading-4 text-[var(--color-text-subtle)]">
                                   Allows for slight time differences between the server and the user's device to prevent login failures. 1 is recommended.
@@ -346,6 +349,9 @@ export default function IAMMFAPoliciesPage() {
                               </HStack>
                             </VStack>
 
+                            {/* Divider */}
+                            <div className="h-px w-full bg-[var(--color-border-subtle)]" />
+
                             {/* Action Buttons */}
                             <HStack gap={2} justify="end" className="w-full">
                               <button
@@ -389,7 +395,7 @@ export default function IAMMFAPoliciesPage() {
                                   <span className="text-[14px] font-medium leading-5 text-[var(--color-text-default)]">
                                     Code validity period
                                   </span>
-                                  <span className="text-[var(--color-state-danger)]">*</span>
+                                  <span className="ml-1 text-[var(--color-state-danger)]">*</span>
                                 </HStack>
                                 <p className="text-[11px] leading-4 text-[var(--color-text-subtle)]">
                                   Set the time limit within which the user must enter the email code.
@@ -426,7 +432,7 @@ export default function IAMMFAPoliciesPage() {
                                   <span className="text-[14px] font-medium leading-5 text-[var(--color-text-default)]">
                                     Resend cooldown
                                   </span>
-                                  <span className="text-[var(--color-state-danger)]">*</span>
+                                  <span className="ml-1 text-[var(--color-state-danger)]">*</span>
                                 </HStack>
                                 <p className="text-[11px] leading-4 text-[var(--color-text-subtle)]">
                                   The minimum time a user must wait before requesting a new authentication code.
@@ -463,7 +469,7 @@ export default function IAMMFAPoliciesPage() {
                                   <span className="text-[14px] font-medium leading-5 text-[var(--color-text-default)]">
                                     Verification attempts
                                   </span>
-                                  <span className="text-[var(--color-state-danger)]">*</span>
+                                  <span className="ml-1 text-[var(--color-state-danger)]">*</span>
                                 </HStack>
                                 <p className="text-[11px] leading-4 text-[var(--color-text-subtle)]">
                                   Protect user accounts from unusual activities by limiting the number of verification attempts allowed within a time frame.
@@ -511,6 +517,9 @@ export default function IAMMFAPoliciesPage() {
                                 </p>
                               </VStack>
                             </VStack>
+
+                            {/* Divider */}
+                            <div className="h-px w-full bg-[var(--color-border-subtle)]" />
 
                             {/* Action Buttons */}
                             <HStack gap={2} justify="end" className="w-full">

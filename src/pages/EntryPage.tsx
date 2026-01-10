@@ -17,6 +17,7 @@ import AIAgentIcon from '@/assets/agentops.png';
 import StorageIcon from '@/assets/storage.png';
 import IAMIcon from '@/assets/iam.png';
 import DesktopIcon from '@/assets/settings.png';
+import SettingsIcon from '@/assets/appIcon/settings.png';
 
 /* ----------------------------------------
    Types
@@ -107,6 +108,15 @@ const appCards: AppCard[] = [
     icon: <img src={IAMIcon} alt="IAM" className="w-16 h-16" />,
     path: '/iam',
     color: 'from-amber-500 to-yellow-500',
+    available: true,
+  },
+  {
+    id: 'settings',
+    title: 'Settings',
+    description: 'Application settings, preferences, and configuration',
+    icon: <img src={SettingsIcon} alt="Settings" className="w-16 h-16" />,
+    path: '/settings',
+    color: 'from-gray-500 to-slate-500',
     available: true,
   },
 ];

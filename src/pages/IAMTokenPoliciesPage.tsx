@@ -138,7 +138,7 @@ export default function IAMTokenPoliciesPage() {
                                 <span className="text-[14px] font-medium leading-5 text-[var(--color-text-default)]">
                                   Access token lifespan
                                 </span>
-                                <span className="text-[var(--color-state-danger)]">*</span>
+                                <span className="ml-1 text-[var(--color-state-danger)]">*</span>
                               </HStack>
                               <p className="text-[12px] leading-4 text-[var(--color-text-subtle)]">
                                 Defines how long an access token remains valid before it needs to be renewed.
@@ -164,6 +164,9 @@ export default function IAMTokenPoliciesPage() {
                             </VStack>
                           </VStack>
 
+                          {/* Divider */}
+                          <div className="h-px w-full bg-[var(--color-border-subtle)]" />
+
                           {/* Refresh Token Lifespan */}
                           <VStack gap={4}>
                             <VStack gap={2}>
@@ -171,7 +174,7 @@ export default function IAMTokenPoliciesPage() {
                                 <span className="text-[14px] font-medium leading-5 text-[var(--color-text-default)]">
                                   Refresh token lifespan
                                 </span>
-                                <span className="text-[var(--color-state-danger)]">*</span>
+                                <span className="ml-1 text-[var(--color-state-danger)]">*</span>
                               </HStack>
                               <p className="text-[12px] leading-4 text-[var(--color-text-subtle)]">
                                 Defines how long a user can stay signed in using a refresh token.

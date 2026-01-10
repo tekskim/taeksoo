@@ -33,6 +33,8 @@ export interface TabBarProps {
   showAddButton?: boolean;
   /** Show window controls (minimize, maximize, close) */
   showWindowControls?: boolean;
+  /** Show bottom border (default: true) */
+  showBottomBorder?: boolean;
   /** Callback when minimize button is clicked */
   onMinimize?: () => void;
   /** Callback when maximize button is clicked */
@@ -56,6 +58,7 @@ export const TabBar: React.FC<TabBarProps> = ({
   onTabReorder,
   showAddButton = true,
   showWindowControls = true,
+  showBottomBorder = true,
   onMinimize,
   onMaximize,
   onWindowClose,
@@ -127,7 +130,7 @@ export const TabBar: React.FC<TabBarProps> = ({
         w-full
         h-[var(--tabbar-height)]
         bg-[var(--color-surface-default)]
-        after:absolute after:bottom-0 after:left-0 after:right-0 after:h-px after:bg-[var(--color-border-default)] after:pointer-events-none after:z-10
+        ${showBottomBorder ? 'after:absolute after:bottom-0 after:left-0 after:right-0 after:h-px after:bg-[var(--color-border-default)] after:pointer-events-none after:z-10' : ''}
         ${className}
       `}
     >
