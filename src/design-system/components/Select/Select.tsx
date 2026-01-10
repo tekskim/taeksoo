@@ -296,6 +296,7 @@ export function Select({
       >
         <span
           className={twMerge(
+            'text-[length:var(--font-size-14)] leading-[var(--line-height-20)]',
             selectedOption
               ? 'text-[var(--color-text-default)]'
               : 'text-[var(--color-text-muted)]',

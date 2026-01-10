@@ -6,6 +6,10 @@ yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
+# Auto-pull script logs
+scripts/auto-pull-main.log
+scripts/auto-pull-main.out.log
+scripts/auto-pull-main.err.log
 
 node_modules
 dist
