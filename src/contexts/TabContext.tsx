@@ -38,7 +38,7 @@ function getAppFromPath(path: string): string {
     }
   }
   
-  const appPrefixes = ['/cloudbuilder', '/compute', '/storage', '/desktop', '/design', '/container'];
+  const appPrefixes = ['/cloudbuilder', '/compute', '/storage', '/desktop', '/design', '/container', '/iam', '/settings'];
   for (const prefix of appPrefixes) {
     if (path.startsWith(prefix)) {
       return prefix;
@@ -65,7 +65,9 @@ function getDefaultHomeTab(app: string): TabItem {
     '/agent': { path: '/agent', label: 'Home' }, // Agent service home
     '/desktop': { path: '/desktop', label: 'Home' },
     '/design': { path: '/design', label: 'Home' },
-    '/container': { path: '/container', label: 'Dashboard' },
+    '/container': { path: '/container', label: 'Home' },
+    '/iam': { path: '/iam/home', label: 'Home' },
+    '/settings': { path: '/settings/general', label: 'General' },
     '/': { path: '/', label: 'Home' },
   };
   
@@ -130,13 +132,32 @@ function getLabelFromPath(path: string): string {
     '/storage/osds': 'OSDs',
     '/storage/hosts': 'Hosts',
     '/storage/pools': 'Pools',
-    '/mcp-tools': 'MCP Tools',
     '/design': 'Design System',
     '/design/components': 'Design System',
     '/design/drawers': 'Drawers',
     '/design/modals': 'Modals',
     '/design-system': 'Design System',
-    '/container': 'Dashboard',
+    '/container': 'Home',
+    '/container/dashboard': 'Dashboard',
+    '/iam': 'Home',
+    '/iam/home': 'Home',
+    '/iam/users': 'Users',
+    '/iam/user-groups': 'User Groups',
+    '/iam/roles': 'Roles',
+    '/iam/policies': 'Policies',
+    '/iam/domains': 'Domains',
+    '/iam/system-administrators': 'System Administrators',
+    '/iam/login-policies': 'Login Policies',
+    '/iam/mfa-policies': 'MFA Policies',
+    '/iam/session-policies': 'Session Policies',
+    '/iam/token-policies': 'Token Policies',
+    '/iam/active-sessions': 'Active Sessions',
+    '/iam/event-logs': 'Event Logs',
+    '/settings': 'General',
+    '/settings/general': 'General',
+    '/settings/account': 'Account',
+    '/settings/notifications': 'Notifications',
+    '/settings/information': 'Information',
   };
   
   // Check for exact match first
@@ -194,42 +215,23 @@ export function TabProvider({ children, defaultTabs = [] }: TabProviderProps) {
   const tabsRef = useRef(tabs);
   tabsRef.current = tabs;
 
-  // Detect app change and reset tabs
+  // Refs for controlling location sync behavior
+  const initializedRef = useRef(false);
+  const skipNextLocationSyncRef = useRef(false);
+
+  // Detect app change and reset tabs to default
   useEffect(() => {
     const newApp = getAppFromPath(location.pathname);
     if (newApp !== currentApp) {
       setCurrentApp(newApp);
       
-      // Load tabs for the new app from localStorage or create default
-      const storageKeys = getStorageKeys(newApp);
-      let newTabs: TabItem[] = [];
-      let newActiveTabId = '';
+      // Skip location sync when switching apps to prevent duplicate tab creation
+      skipNextLocationSyncRef.current = true;
       
-      try {
-        const storedTabs = localStorage.getItem(storageKeys.tabs);
-        if (storedTabs) {
-          const parsed = JSON.parse(storedTabs);
-          if (Array.isArray(parsed) && parsed.length > 0) {
-            newTabs = parsed;
-          }
-        }
-      } catch {
-        // Ignore parse errors
-      }
-      
-      // If no stored tabs, create default home tab
-      if (newTabs.length === 0) {
-        const homeTab = getDefaultHomeTab(newApp);
-        newTabs = [homeTab];
-        newActiveTabId = homeTab.id;
-      } else {
-        // Use stored active tab or first tab
-        const storedActiveTab = localStorage.getItem(storageKeys.activeTab);
-        newActiveTabId = storedActiveTab || newTabs[0].id;
-      }
-      
-      setTabs(newTabs);
-      setActiveTabId(newActiveTabId);
+      // Always reset to default home tab when entering a new app
+      const homeTab = getDefaultHomeTab(newApp);
+      setTabs([homeTab]);
+      setActiveTabId(homeTab.id);
     }
   }, [location.pathname, currentApp]);
 
@@ -246,8 +248,6 @@ export function TabProvider({ children, defaultTabs = [] }: TabProviderProps) {
   }, [activeTabId, currentApp]);
 
   // On initial mount, sync tabs with current URL (prioritize current URL over stored active tab)
-  const initializedRef = useRef(false);
-  const skipNextLocationSyncRef = useRef(false);
   useEffect(() => {
     if (!initializedRef.current) {
       initializedRef.current = true;
@@ -406,7 +406,9 @@ export function TabProvider({ children, defaultTabs = [] }: TabProviderProps) {
       '/storage': { path: '/storage', label: 'Home' },
       '/desktop': { path: '/desktop', label: 'Home' },
       '/design': { path: '/design', label: 'Home' },
-      '/container': { path: '/container', label: 'Dashboard' },
+      '/container': { path: '/container', label: 'Home' },
+      '/iam': { path: '/iam/home', label: 'Home' },
+      '/settings': { path: '/settings/general', label: 'General' },
     };
     
     // 현재 경로에서 애플리케이션 찾기

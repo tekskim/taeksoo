@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import {
   VStack,
   TabBar,
@@ -13,128 +13,152 @@ import {
   Table,
   Button,
   Pagination,
+  type TableColumn,
 } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
 import { useTabs } from '@/contexts/TabContext';
 import {
   IconBell,
-  IconRefresh,
+  IconTerminal2,
   IconHelp,
   IconExternalLink,
   IconCheck,
+  IconFile,
+  IconCopy,
+  IconSearch,
 } from '@tabler/icons-react';
 
 /* ----------------------------------------
-   Capacity Gauge Chart Component
+   Capacity Progress Bar Component
+   Uses design system tokens for consistent styling
    ---------------------------------------- */
 
-interface GaugeChartProps {
-  title: string;
-  subtitle?: string;
-  usedValue: string;
-  usedPercent: number;
-  reservedValue?: string;
-  reservedPercent?: number;
-  maxValue: string;
-  usedColor?: string;
-  reservedColor?: string;
+type CapacityStatus = 'success' | 'warning' | 'danger';
+
+interface CapacityProgressBarProps {
+  label: string;
+  used: number;
+  total: number;
+  unit: string;
+  percentage: number;
 }
 
-function GaugeChart({
-  title,
-  subtitle,
-  usedValue,
-  usedPercent,
-  reservedValue,
-  reservedPercent,
-  maxValue,
-  usedColor = '#f87171',
-  reservedColor = '#22c55e',
-}: GaugeChartProps) {
-  const size = 120;
-  const strokeWidth = 12;
-  const radius = (size - strokeWidth) / 2;
-  const circumference = 2 * Math.PI * radius;
-  
-  // Calculate stroke offsets for the arcs
-  const usedOffset = circumference * (1 - usedPercent / 100);
-  const reservedOffset = reservedPercent ? circumference * (1 - reservedPercent / 100) : circumference;
-  
+function CapacityProgressBar({ label, used, total, unit, percentage }: CapacityProgressBarProps) {
+  const [showTooltip, setShowTooltip] = useState(false);
+  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  // Determine status based on percentage thresholds
+  const getStatus = (pct: number): CapacityStatus => {
+    if (pct >= 90) return 'danger';
+    if (pct >= 70) return 'warning';
+    return 'success';
+  };
+
+  const status = getStatus(percentage);
+
+  // Design system color tokens
+  const statusColors: Record<CapacityStatus, { bg: string; fill: string; text: string }> = {
+    success: {
+      bg: 'var(--color-green-100)',
+      fill: 'var(--color-state-success)',
+      text: 'var(--color-green-600)',
+    },
+    warning: {
+      bg: 'var(--color-orange-100)',
+      fill: 'var(--color-state-warning)',
+      text: 'var(--color-orange-600)',
+    },
+    danger: {
+      bg: 'var(--color-red-100)',
+      fill: 'var(--color-state-danger)',
+      text: 'var(--color-red-600)',
+    },
+  };
+
+  const colors = statusColors[status];
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (containerRef.current) {
+      const rect = containerRef.current.getBoundingClientRect();
+      setMousePos({
+        x: e.clientX - rect.left,
+        y: e.clientY - rect.top,
+      });
+    }
+  };
+
   return (
-    <div className="flex flex-col items-center">
-      {/* Title */}
-      <div className="text-center mb-2">
-        <p className="text-[12px] font-medium text-[var(--color-text-default)]">{title}</p>
-        {subtitle && <p className="text-[12px] font-medium text-[var(--color-text-default)]">{subtitle}</p>}
-      </div>
-      
-      {/* Gauge */}
-      <div className="relative" style={{ width: size, height: size }}>
-        <svg width={size} height={size} className="transform -rotate-90">
-          {/* Background circle */}
-          <circle
-            cx={size / 2}
-            cy={size / 2}
-            r={radius}
-            fill="none"
-            stroke="var(--color-border-default)"
-            strokeWidth={strokeWidth}
-          />
-          {/* Reserved arc (if exists) */}
-          {reservedPercent && (
-            <circle
-              cx={size / 2}
-              cy={size / 2}
-              r={radius}
-              fill="none"
-              stroke={reservedColor}
-              strokeWidth={strokeWidth}
-              strokeDasharray={circumference}
-              strokeDashoffset={reservedOffset}
-              strokeLinecap="round"
-              opacity={0.7}
-            />
-          )}
-          {/* Used arc */}
-          <circle
-            cx={size / 2}
-            cy={size / 2}
-            r={radius}
-            fill="none"
-            stroke={usedColor}
-            strokeWidth={strokeWidth}
-            strokeDasharray={circumference}
-            strokeDashoffset={usedOffset}
-            strokeLinecap="round"
-          />
-        </svg>
-      </div>
-      
-      {/* Legend */}
-      <div className="mt-4 space-y-1 w-full">
-        <div className="flex items-center justify-between text-[11px]">
-          <div className="flex items-center gap-2">
-            <div className="w-2 h-2 rounded-sm" style={{ backgroundColor: usedColor }} />
-            <span className="font-medium text-[var(--color-text-default)]">Used</span>
+    <div className="flex flex-col gap-[var(--spacing-2)] w-full">
+      {/* Header Row */}
+      <div className="flex items-center justify-between w-full">
+        {/* Label */}
+        <span className="text-[length:var(--font-size-12)] leading-[var(--line-height-16)] font-medium text-[var(--color-text-default)]">
+          {label}
+        </span>
+        
+        {/* Value and Badge */}
+        <div className="flex items-center gap-[var(--spacing-2)]">
+          <span className="text-[length:var(--font-size-11)] leading-[var(--line-height-16)] text-[var(--color-text-subtle)]">
+            {used} / {total} {unit}
+          </span>
+          <div 
+            className="flex items-center px-1.5 py-0.5 rounded-[var(--radius-md)]"
+            style={{ backgroundColor: colors.bg }}
+          >
+            <span 
+              className="text-[length:var(--font-size-11)] leading-[var(--line-height-16)] font-medium"
+              style={{ color: colors.text }}
+            >
+              {percentage}%
+            </span>
           </div>
-          <span className="text-[12px] text-[var(--color-text-default)]">{usedValue}</span>
         </div>
-        {reservedValue && (
-          <div className="flex items-center justify-between text-[11px]">
-            <div className="flex items-center gap-2">
-              <div className="w-2 h-2 rounded-sm opacity-70" style={{ backgroundColor: reservedColor }} />
-              <span className="font-medium text-[var(--color-text-default)]">Reserved</span>
+      </div>
+      
+      {/* Progress Bar - using design system tokens */}
+      <div 
+        ref={containerRef}
+        className="relative h-[var(--progress-bar-height)] w-full cursor-pointer"
+        onMouseEnter={() => setShowTooltip(true)}
+        onMouseLeave={() => setShowTooltip(false)}
+        onMouseMove={handleMouseMove}
+      >
+        {/* Background */}
+        <div 
+          className="absolute inset-0 rounded-[var(--progress-bar-radius)]"
+          style={{ backgroundColor: 'var(--color-border-subtle)' }}
+        />
+        {/* Filled segment */}
+        <div 
+          className="absolute inset-y-0 left-0 rounded-[var(--progress-bar-radius)] transition-all"
+          style={{ 
+            width: `${Math.min(percentage, 100)}%`,
+            backgroundColor: '#0F172A',
+            minWidth: percentage > 0 ? 4 : 0,
+          }}
+        />
+        
+        {/* Tooltip - follows cursor */}
+        {showTooltip && (
+          <div 
+            className="absolute z-10 backdrop-blur-[40px] bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px] shadow-[0px_0px_4px_0px_rgba(0,0,0,0.1)] px-2 py-1.5 flex flex-col gap-1 pointer-events-none"
+            style={{ left: mousePos.x + 12, top: mousePos.y - 40 }}
+          >
+            <div className="flex items-center gap-1.5">
+              <div className="w-[5px] h-[5px] rounded-[1px]" style={{ backgroundColor: '#0F172A' }} />
+              <span className="text-[11px] leading-[14px] text-[var(--color-text-default)] whitespace-nowrap">
+                Used: {used} {unit} ({percentage}%)
+              </span>
             </div>
-            <span className="text-[12px] text-[var(--color-text-default)]">{reservedValue}</span>
+            <div className="flex items-center gap-1.5">
+              <div className="w-[5px] h-[5px] rounded-[1px] bg-[var(--color-border-subtle)]" />
+              <span className="text-[11px] leading-[14px] text-[var(--color-text-default)] whitespace-nowrap">
+                Total: {total} {unit}
+              </span>
+            </div>
           </div>
         )}
-        <div className="flex items-center justify-between text-[11px]">
-          <div className="flex items-center gap-2">
-            <div className="w-2 h-2 rounded-sm bg-black opacity-50" />
-            <span className="font-medium text-[var(--color-text-default)]">Maximum</span>
-          </div>
-          <span className="text-[12px] text-[var(--color-text-default)]">{maxValue}</span>
-        </div>
       </div>
     </div>
   );
@@ -201,12 +225,12 @@ const eventsData: EventRow[] = [
   { id: '5', reason: 'Failed', object: 'Pod object', message: 'Error: ImagePullBackOff', name: 'testpod.1872cb5180493d50', firstSeen: '2d8h', lastSeen: '4s', count: 14495 },
 ];
 
-const eventsColumns = [
-  { key: 'reason', label: 'Reason', width: '160px', sortable: true },
+const eventsColumns: TableColumn<EventRow>[] = [
+  { key: 'reason', label: 'Reason', width: '120px', sortable: true },
   { 
     key: 'object', 
     label: 'Object', 
-    width: '160px', 
+    width: '120px', 
     sortable: true,
     render: (value: string) => (
       <span className="text-[var(--color-action-primary)] font-medium cursor-pointer hover:underline">{value}</span>
@@ -216,15 +240,15 @@ const eventsColumns = [
   { 
     key: 'name', 
     label: 'Name', 
-    flex: 1, 
+    width: '180px', 
     sortable: true,
     render: (value: string) => (
       <span className="text-[var(--color-action-primary)] font-medium cursor-pointer hover:underline">{value}</span>
     )
   },
-  { key: 'firstSeen', label: 'First Seen', width: '120px', sortable: true },
-  { key: 'lastSeen', label: 'Last Seen', width: '120px', sortable: true },
-  { key: 'count', label: 'Count', width: '120px', sortable: true },
+  { key: 'firstSeen', label: 'First Seen', width: '100px', sortable: true },
+  { key: 'lastSeen', label: 'Last Seen', width: '100px', sortable: true },
+  { key: 'count', label: 'Count', width: '80px', sortable: true },
 ];
 
 /* ----------------------------------------
@@ -242,8 +266,8 @@ export function ContainerDashboardPage() {
     updateActiveTabLabel('Dashboard');
   }, [updateActiveTabLabel]);
 
-  // Calculate sidebar width (40px icon sidebar + 200px menu sidebar)
-  const sidebarWidth = sidebarOpen ? 240 : 0;
+  // Calculate sidebar width (40px icon sidebar always visible + 200px menu sidebar when open)
+  const sidebarWidth = sidebarOpen ? 240 : 40;
 
   return (
     <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
@@ -267,6 +291,8 @@ onTabAdd={addNewTab}
 
         {/* Top Bar */}
         <TopBar
+          showSidebarToggle={!sidebarOpen}
+          onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
           breadcrumb={
             <Breadcrumb
               items={[
@@ -278,7 +304,16 @@ onTabAdd={addNewTab}
           actions={
             <>
               <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconRefresh size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
+                <IconTerminal2 size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
+              </button>
+              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
+                <IconFile size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
+              </button>
+              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
+                <IconCopy size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
+              </button>
+              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
+                <IconSearch size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
               </button>
               <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
                 <IconBell size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
@@ -326,33 +361,43 @@ onTabAdd={addNewTab}
                 <SectionCard>
                   <SectionCard.Header title="Capacity" />
                   <SectionCard.Content>
-                    <div className="grid grid-cols-3 gap-6 py-4">
-                      <GaugeChart
-                        title="CPU"
-                        subtitle="(cores)"
-                        usedValue="0.26 cores (3.3%)"
-                        usedPercent={3.3}
-                        reservedValue="4.21 cores (50.2%)"
-                        reservedPercent={50.2}
-                        maxValue="8 cores"
+                    <VStack gap={5}>
+                      <CapacityProgressBar
+                        label="CPU (Used)"
+                        used={0.26}
+                        total={8}
+                        unit="cores"
+                        percentage={3.3}
                       />
-                      <GaugeChart
-                        title="Memory"
-                        subtitle="(GiB)"
-                        usedValue="3.6 GiB (22.5%)"
-                        usedPercent={22.5}
-                        reservedValue="4.0 GiB (25.0%)"
-                        reservedPercent={25}
-                        maxValue="16.0 GiB"
+                      <CapacityProgressBar
+                        label="CPU (Reserved)"
+                        used={3.6}
+                        total={16.0}
+                        unit="GiB"
+                        percentage={50.2}
                       />
-                      <GaugeChart
-                        title="Pods"
-                        usedValue="51 (46.4%)"
-                        usedPercent={46.4}
-                        maxValue="110"
-                        usedColor="#000000"
+                      <CapacityProgressBar
+                        label="Memory (Used)"
+                        used={12.0}
+                        total={16.0}
+                        unit="GiB"
+                        percentage={75}
                       />
-                    </div>
+                      <CapacityProgressBar
+                        label="Memory (Reserved)"
+                        used={15}
+                        total={16}
+                        unit="GiB"
+                        percentage={93.8}
+                      />
+                      <CapacityProgressBar
+                        label="Pods"
+                        used={51}
+                        total={110}
+                        unit=""
+                        percentage={46.4}
+                      />
+                    </VStack>
                   </SectionCard.Content>
                 </SectionCard>
               </div>
@@ -409,7 +454,6 @@ onTabAdd={addNewTab}
                             columns={eventsColumns}
                             data={eventsData}
                             rowKey="id"
-                            rowHeight="40px"
                           />
                         </VStack>
                       </TabPanel>

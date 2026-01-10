@@ -1,6 +1,19 @@
 import { useState, useEffect, useRef } from 'react';
 import ReactECharts from 'echarts-for-react';
 import { DarkModeToggle } from '@/components/DarkModeToggle';
+
+// App Icons
+import AppIconAdminCenter from '@/assets/appIcon/admincenter.png';
+import AppIconAgentOps from '@/assets/appIcon/agentops.png';
+import AppIconAIPlatform from '@/assets/appIcon/aiplatform.png';
+import AppIconCloudBuilder from '@/assets/appIcon/cloudbuilder.png';
+import AppIconCompute from '@/assets/appIcon/compute.png';
+import AppIconComputeAdmin from '@/assets/appIcon/computeadmin.png';
+import AppIconContainer from '@/assets/appIcon/container.png';
+import AppIconIAM from '@/assets/appIcon/iam.png';
+import AppIconSettings from '@/assets/appIcon/settings.png';
+import AppIconStorage from '@/assets/appIcon/storage.png';
+import AppIconStorageAdmin from '@/assets/appIcon/storageadmin.png';
 import { AttachVolumeDrawer } from '@/components/AttachVolumeDrawer';
 import { DataViewDrawer } from '@/components/DataViewDrawer';
 import {
@@ -189,6 +202,7 @@ import {
   IconBrandDebian,
   IconBrandWindows,
   IconBrandRedhat,
+  IconApps,
 } from '@tabler/icons-react';
 import { Link } from 'react-router-dom';
 
@@ -206,6 +220,7 @@ const foundationItems = [
   { id: 'borders', label: 'Borders', icon: IconBorderAll },
   { id: 'shadows', label: 'Shadows', icon: IconBoxMultiple },
   { id: 'icons', label: 'Icons', icon: IconStar },
+  { id: 'app-icons', label: 'App Icons', icon: IconApps },
 ];
 
 // Component items (UI 컴포넌트)
@@ -2969,9 +2984,9 @@ export function DesignSystemPage() {
             
             {/* Search Results Dropdown */}
             {sidebarSearchQuery.trim() && isSidebarSearchFocused && (
-              <div className="absolute top-full left-0 w-[166px] mt-2 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] shadow-[var(--shadow-lg)] z-50 max-h-[300px] overflow-y-auto sidebar-scroll">
+              <div className="absolute top-full left-0 w-[166px] max-w-[166px] mt-2 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] shadow-[var(--shadow-lg)] z-50 max-h-[300px] overflow-y-auto overflow-x-hidden sidebar-scroll">
                 {filteredSidebarNavItems.length > 0 ? (
-                  <div className="p-2">
+                  <div className="p-2 min-w-0">
                     {filteredSidebarNavItems.map(({ id, label, icon: Icon }, index) => (
                       <button
                         key={id}
@@ -2986,15 +3001,15 @@ export function DesignSystemPage() {
                           setIsSidebarSearchFocused(false);
                         }}
                         data-cursor-element-id={`sidebar-search-result-${id}-${index}`}
-                        className="w-full px-3 py-2 rounded-[var(--radius-md)] flex items-center gap-2 text-left hover:bg-[var(--color-surface-muted)] transition-colors cursor-pointer"
+                        className="w-full min-w-0 px-3 py-2 rounded-[var(--radius-md)] flex items-center gap-2 text-left hover:bg-[var(--color-surface-muted)] transition-colors cursor-pointer"
                       >
                         <Icon size={14} stroke={1.5} className="text-[var(--color-text-muted)] shrink-0" />
-                        <span className="text-[length:var(--font-size-11)] text-[var(--color-text-default)] truncate">{label}</span>
+                        <span className="text-[length:var(--font-size-11)] text-[var(--color-text-default)] truncate min-w-0">{label}</span>
                       </button>
                     ))}
                   </div>
                 ) : (
-                  <div className="p-3 text-center text-[length:var(--font-size-11)] text-[var(--color-text-muted)]">
+                  <div className="p-3 text-left text-[length:var(--font-size-11)] text-[var(--color-text-muted)] w-full max-w-full min-w-0 break-words" style={{ wordBreak: 'break-word', overflowWrap: 'anywhere' }}>
                     No results found
                   </div>
                 )}
@@ -3187,9 +3202,9 @@ export function DesignSystemPage() {
               
               {/* Search Results Dropdown */}
               {mainSearchQuery.trim() && isMainSearchFocused && (
-                <div className="absolute top-full left-0 right-0 mt-2 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] shadow-[var(--shadow-lg)] z-50 max-h-[300px] overflow-y-auto sidebar-scroll">
+                <div className="absolute top-full left-0 w-[166px] max-w-[166px] mt-2 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] shadow-[var(--shadow-lg)] z-50 max-h-[300px] overflow-y-auto overflow-x-hidden sidebar-scroll">
                   {filteredMainNavItems.length > 0 ? (
-                    <div className="p-2">
+                    <div className="p-2 min-w-0">
                       {filteredMainNavItems.map(({ id, label, icon: Icon }, index) => (
                         <button
                           key={id}
@@ -3204,15 +3219,15 @@ export function DesignSystemPage() {
                             setIsMainSearchFocused(false);
                           }}
                           data-cursor-element-id={`main-search-result-${id}-${index}`}
-                          className="w-full px-3 py-2 rounded-[var(--radius-md)] flex items-center gap-3 text-left hover:bg-[var(--color-surface-muted)] transition-colors cursor-pointer"
+                          className="w-full min-w-0 px-3 py-2 rounded-[var(--radius-md)] flex items-center gap-2 text-left hover:bg-[var(--color-surface-muted)] transition-colors cursor-pointer"
                         >
-                          <Icon size={16} stroke={1.5} className="text-[var(--color-text-muted)]" />
-                          <span className="text-[length:var(--font-size-12)] text-[var(--color-text-default)]">{label}</span>
+                          <Icon size={16} stroke={1.5} className="text-[var(--color-text-muted)] shrink-0" />
+                          <span className="text-[length:var(--font-size-12)] text-[var(--color-text-default)] truncate min-w-0">{label}</span>
                         </button>
                       ))}
                     </div>
                   ) : (
-                    <div className="p-4 text-center text-[length:var(--font-size-12)] text-[var(--color-text-muted)]">
+                    <div className="p-4 text-left text-[length:var(--font-size-12)] text-[var(--color-text-muted)] w-full max-w-full min-w-0 break-words" style={{ wordBreak: 'break-word', overflowWrap: 'anywhere' }}>
                       No results found for "{mainSearchQuery}"
                     </div>
                   )}
@@ -3924,6 +3939,37 @@ outline: 2px solid var(--color-border-focus);`}
               </VStack>
             </Section>
 
+            {/* App Icons */}
+            <Section id="app-icons" title="App Icons" description="Application icons for THAKI Cloud services - Size 64x64">
+              <VStack gap={8}>
+                <VStack gap={3}>
+                  <Label>Service Icons</Label>
+                  <div className="flex flex-wrap gap-6">
+                    {[
+                      { src: AppIconCompute, name: 'Compute' },
+                      { src: AppIconComputeAdmin, name: 'Compute Admin' },
+                      { src: AppIconStorage, name: 'Storage' },
+                      { src: AppIconStorageAdmin, name: 'Storage Admin' },
+                      { src: AppIconContainer, name: 'Container' },
+                      { src: AppIconCloudBuilder, name: 'Cloud Builder' },
+                      { src: AppIconAIPlatform, name: 'AI Platform' },
+                      { src: AppIconAgentOps, name: 'Agent Ops' },
+                      { src: AppIconIAM, name: 'IAM' },
+                      { src: AppIconSettings, name: 'Settings' },
+                      { src: AppIconAdminCenter, name: 'Admin Center' },
+                    ].map(({ src, name }) => (
+                      <div key={name} className="flex flex-col items-center gap-2">
+                        <div className="w-16 h-16 rounded-xl border border-[var(--color-border-default)] bg-[var(--color-surface-default)] flex items-center justify-center overflow-hidden">
+                          <img src={src} alt={name} className="w-16 h-16 object-contain" />
+                        </div>
+                        <span className="text-[length:var(--font-size-11)] text-[var(--color-text-muted)]">{name}</span>
+                      </div>
+                    ))}
+                  </div>
+                </VStack>
+              </VStack>
+            </Section>
+
             {/* ============================================
                 COMPONENTS
                 ============================================ */}
@@ -4509,6 +4555,17 @@ outline: 2px solid var(--color-border-focus);`}
                     totalPages={10}
                     onPageChange={(page) => console.log('Page:', page)}
                     disabled
+                  />
+                </VStack>
+
+                {/* With Total Items Only */}
+                <VStack gap={3}>
+                  <Label>With Total Items</Label>
+                  <Pagination
+                    currentPage={demoPage1}
+                    totalPages={10}
+                    onPageChange={setDemoPage1}
+                    totalItems={115}
                   />
                 </VStack>
 

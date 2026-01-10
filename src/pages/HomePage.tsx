@@ -67,17 +67,14 @@ function StatCard({ value, label }: StatCardProps) {
 interface QuickActionCardProps {
   icon: React.ReactNode;
   label: string;
-  highlighted?: boolean;
   onClick?: () => void;
 }
 
-function QuickActionCard({ icon, label, highlighted = false, onClick }: QuickActionCardProps) {
+function QuickActionCard({ icon, label, onClick }: QuickActionCardProps) {
   return (
     <button
       onClick={onClick}
-      className={`bg-[var(--color-surface-subtle)] flex flex-[1_0_0] flex-col items-start justify-center min-h-px min-w-px p-4 rounded-lg transition-colors hover:bg-[var(--color-surface-muted)] ${
-        highlighted ? 'border border-[var(--color-action-primary)]' : ''
-      }`}
+      className="bg-[var(--color-surface-subtle)] flex flex-[1_0_0] flex-col items-start justify-center min-h-px min-w-px p-4 rounded-lg transition-colors hover:bg-[var(--color-surface-muted)] border-2 border-transparent hover:border-[var(--color-action-primary)]"
     >
       <div className="flex flex-col items-start pb-1 pt-0 px-0 relative shrink-0 w-full">
         <div className="flex items-start justify-start shrink-0">
@@ -222,21 +219,20 @@ export function HomePage() {
                 </div>
                 <div className="flex gap-2 items-center relative shrink-0 w-full">
                   <QuickActionCard
-                    icon={<IconMessagePlus size={20} stroke={1} />}
+                    icon={<IconMessagePlus size={20} stroke={1.5} />}
                     label="New chat"
                     onClick={() => navigate('/chat')}
                   />
                   <QuickActionCard
-                    icon={<IconRobotFace size={20} stroke={1} />}
+                    icon={<IconRobotFace size={20} stroke={1.5} />}
                     label="New agent"
-                    highlighted
                   />
                   <QuickActionCard
-                    icon={<IconSquarePlus size={20} stroke={1} />}
+                    icon={<IconSquarePlus size={20} stroke={1.5} />}
                     label="New data source"
                   />
                   <QuickActionCard
-                    icon={<IconPuzzle size={20} stroke={1} />}
+                    icon={<IconPuzzle size={20} stroke={1.5} />}
                     label="Manage tools"
                   />
                 </div>
@@ -259,15 +255,15 @@ export function HomePage() {
                   </p>
                   <VStack gap={2} className="w-full">
                     <ChatItem
-                      title="New Chat"
-                      description="Analyze SQL queries and recommend optimal indexes"
-                      createdAt="Sep 26, 2025"
+                      title="Kubernetes 클러스터 모니터링 설정"
+                      description="Prometheus와 Grafana를 활용한 K8s 클러스터 모니터링 대시보드 구성 방법에 대해 논의했습니다. 메트릭 수집, 알림 설정, 커스텀 대시보드 생성 등을 다뤘습니다."
+                      createdAt="Jan 8, 2026"
                       onClick={() => navigate('/chat')}
                     />
                     <ChatItem
-                      title="New Chat"
-                      description="# 🎬 라따뚜이 등장인물 정리 대본 내용을 바탕으로 주요 등장인물들을 표로 정리해드릴게요! | 캐릭터명 | 종류/직책 | 특징 및 역할 | |---------|----------|----..."
-                      createdAt="Sep 26, 2025"
+                      title="React Query vs SWR 비교 분석"
+                      description="서버 상태 관리 라이브러리 선택을 위한 비교 분석입니다. 캐싱 전략, 자동 재검증, 에러 핸들링 등 주요 기능을 비교하고 프로젝트에 적합한 선택을 도출했습니다."
+                      createdAt="Jan 8, 2026"
                     />
                   </VStack>
                 </div>
@@ -279,24 +275,24 @@ export function HomePage() {
                   </p>
                   <VStack gap={2} className="w-full">
                     <ChatItem
-                      title="New Chat"
-                      description="Analyze SQL queries and recommend optimal indexes"
-                      createdAt="Sep 26, 2025"
+                      title="PostgreSQL 인덱스 최적화"
+                      description="대용량 테이블의 쿼리 성능 개선을 위한 인덱스 전략을 분석했습니다. EXPLAIN ANALYZE를 통한 실행 계획 분석과 복합 인덱스 설계 방안을 검토했습니다."
+                      createdAt="Jan 5, 2026"
                     />
                     <ChatItem
-                      title="New Chat 222"
-                      description="# 🎬 라따뚜이 등장인물 정리 대본 내용을 바탕으로 주요 등장인물들을 표로 정리해드릴게요! | 캐릭터명 | 종류/직책 | 특징 및 역할 | |---------|----------|----..."
-                      createdAt="Sep 26, 2025"
+                      title="CI/CD 파이프라인 구축 가이드"
+                      description="GitHub Actions를 활용한 자동화된 빌드, 테스트, 배포 파이프라인 구성입니다. Docker 이미지 빌드, AWS ECS 배포, 슬랙 알림 연동까지 전체 워크플로우를 설정했습니다."
+                      createdAt="Jan 4, 2026"
                     />
                     <ChatItem
-                      title="New Chat 222"
-                      description="# 🎬 라따뚜이 등장인물 정리 대본 내용을 바탕으로 주요 등장인물들을 표로 정리해드릴게요! | 캐릭터명 | 종류/직책 | 특징 및 역할 | |---------|----------|----..."
-                      createdAt="Sep 26, 2025"
+                      title="TypeScript 5.0 새로운 기능 정리"
+                      description="데코레이터 표준화, const 타입 파라미터, satisfies 연산자 개선 등 TypeScript 5.0의 주요 변경사항과 마이그레이션 가이드를 정리했습니다."
+                      createdAt="Jan 3, 2026"
                     />
                     <ChatItem
-                      title="New Chat 222"
-                      description="# 🎬 라따뚜이 등장인물 정리 대본 내용을 바탕으로 주요 등장인물들을 표로 정리해드릴게요! | 캐릭터명 | 종류/직책 | 특징 및 역할 | |---------|----------|----..."
-                      createdAt="Sep 26, 2025"
+                      title="API 보안 취약점 점검 결과"
+                      description="OWASP Top 10 기준 보안 점검 결과입니다. SQL Injection, XSS, CSRF 등 주요 취약점 분석과 수정 권고사항을 포함합니다."
+                      createdAt="Jan 2, 2026"
                     />
                   </VStack>
                 </div>

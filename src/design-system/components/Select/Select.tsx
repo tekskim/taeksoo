@@ -40,8 +40,10 @@ export interface SelectProps {
   disabled?: boolean;
   /** Full width */
   fullWidth?: boolean;
-  /** Size variant */
+  /** Size variant (height) */
   size?: 'sm' | 'md';
+  /** Width variant: sm (160px), md (240px), lg (320px) */
+  width?: 'sm' | 'md' | 'lg';
   /** Additional CSS classes */
   className?: string;
   /** Required field indicator */
@@ -64,6 +66,7 @@ export function Select({
   disabled = false,
   fullWidth = false,
   size = 'md',
+  width = 'md',
   className = '',
   required = false,
 }: SelectProps) {
@@ -216,31 +219,38 @@ export function Select({
     }
   }, [isOpen]);
 
+  // Width-based styles: sm (160px), md (240px), lg (320px)
+  const widthStyles = {
+    sm: 'w-[160px]',
+    md: 'w-[240px]',
+    lg: 'w-[320px]',
+  };
+
   // Styles
   const wrapperClasses = twMerge(
     'flex flex-col gap-[var(--input-label-gap)]',
-    fullWidth ? 'w-full' : 'w-fit',
+    fullWidth ? 'w-full' : widthStyles[width],
   );
 
-  // Size-based styles
+  // Size-based styles (height)
   const sizeStyles = {
-    sm: 'h-[28px] px-2 py-1 text-[11px] leading-4 min-w-[60px]',
-    md: 'px-[var(--select-padding-x)] py-[var(--select-padding-y)] text-[length:var(--select-font-size)] leading-[var(--select-line-height)] min-w-[80px]',
+    sm: 'h-[28px] px-2 py-1 text-[11px] leading-4',
+    md: 'px-[var(--select-padding-x)] py-[var(--select-padding-y)] text-[length:var(--select-font-size)] leading-[var(--select-line-height)]',
   };
 
   const triggerClasses = twMerge(
-    'flex items-center justify-between',
+    'flex items-center justify-between gap-2',
     'w-full',
     sizeStyles[size],
     'bg-[var(--select-bg)]',
     'border border-solid rounded-[var(--select-radius)]',
     'transition-colors duration-[var(--duration-fast)]',
     'cursor-pointer',
-    // Border & ring for focus (prevents size change)
+    // Border color based on state
     error
       ? 'border-[var(--input-border-error)]'
       : isOpen
-        ? 'border-[var(--select-border-focus)] ring-1 ring-[var(--select-border-focus)]'
+        ? 'border-[var(--select-border-focus)]'
         : 'border-[var(--select-border)]',
     // Disabled
     disabled && 'bg-[var(--select-bg-disabled)] border-[var(--color-border-default)] cursor-not-allowed',
@@ -296,6 +306,7 @@ export function Select({
       >
         <span
           className={twMerge(
+            'text-[length:var(--font-size-14)] leading-[var(--line-height-20)]',
             selectedOption
               ? 'text-[var(--color-text-default)]'
               : 'text-[var(--color-text-muted)]',
