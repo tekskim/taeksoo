@@ -426,7 +426,7 @@ html.theme-transition *::after {
   --input-border-focus: var(--color-action-primary);
   --input-border-readonly: var(--color-border-subtle);
   --input-border-error: var(--color-state-danger);
-  --input-bg-disabled: var(--color-slate-200);
+  --input-bg-disabled: var(--color-slate-100);
   --input-text-disabled: var(--color-text-muted);
 
   /* Input - Border Width */

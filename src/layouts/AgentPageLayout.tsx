@@ -119,26 +119,26 @@ export function AgentPageLayout({
 
   return (
     <>
-      <TopBar
-        showSidebarToggle={false}
-        showNavigation={showNavigation}
-        canGoBack={false}
-        canGoForward={false}
-        onBack={() => {}}
-        onForward={() => {}}
-        breadcrumb={
-          <Breadcrumb 
-            items={[
-              { label: 'Home', href: '/agent' },
-              ...breadcrumbItems
-            ]} 
+          <TopBar
+            showSidebarToggle={false}
+            showNavigation={showNavigation}
+            canGoBack={false}
+            canGoForward={false}
+            onBack={() => {}}
+            onForward={() => {}}
+            breadcrumb={
+              <Breadcrumb 
+                items={[
+                  { label: 'Home', href: '/agent' },
+                  ...breadcrumbItems
+                ]} 
+              />
+            }
+            actions={topBarActions || defaultTopBarActions}
           />
-        }
-        actions={topBarActions || defaultTopBarActions}
-      />
 
-      {/* Main Content */}
-      {contentWrapper ? contentWrapper(mainContent) : mainContent}
+          {/* Main Content */}
+          {contentWrapper ? contentWrapper(mainContent) : mainContent}
     </>
   );
 }

@@ -23,7 +23,7 @@ export function SectionCard({ children, isActive = false, className, ...props }:
         'border border-[var(--color-border-default)]',
         isActive && 'ring-2 ring-[var(--color-action-primary)]',
         'rounded-lg',
-        'px-4 py-3',
+        'px-4 py-4',
         'w-full',
         className
       )}
@@ -50,7 +50,7 @@ function SectionCardHeader({ title, actions, className, ...props }: SectionCardH
     <div
       className={twMerge(
         'flex items-center justify-between',
-        'w-full h-8 mb-2',
+        'w-full h-8 mb-4',
         className
       )}
       {...props}
