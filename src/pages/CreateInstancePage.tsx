@@ -621,7 +621,7 @@ function BasicInformationSection({
           {/* Instance Name */}
           <VStack gap={2} className="py-6">
             <label className="text-[14px] font-medium text-[var(--color-text-default)]">
-              Instance Name <span className="text-[var(--color-state-danger)]">*</span>
+              Instance Name <span className="ml-1 text-[var(--color-state-danger)]">*</span>
             </label>
             <Input
               placeholder="Instance Name"
@@ -640,7 +640,7 @@ function BasicInformationSection({
           {/* AZ (Availability Zone) */}
           <VStack gap={2} className="py-6">
             <label className="text-[14px] font-medium text-[var(--color-text-default)]">
-              AZ (Availability Zone) <span className="text-[var(--color-state-danger)]">*</span>
+              AZ (Availability Zone) <span className="ml-1 text-[var(--color-state-danger)]">*</span>
             </label>
             <Select
               options={availabilityZoneOptions}
@@ -2557,7 +2557,7 @@ function TemplatesSection({ templates, selectedId, onSelect, onSkip, onNext, isE
 
         {/* Templates Label */}
         <span className="text-[14px] font-medium text-[var(--color-text-default)]">
-          Templates <span className="text-[var(--color-state-danger)]">*</span>
+          Templates <span className="ml-1 text-[var(--color-state-danger)]">*</span>
         </span>
 
         {/* Tabs */}
