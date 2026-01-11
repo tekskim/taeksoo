@@ -168,7 +168,7 @@ export function AgentSidebar() {
           <Tooltip content="Chat" position="right">
             <Link
               to="/chat"
-              className={`flex items-center justify-center size-[38px] rounded-lg transition-colors shrink-0 ${
+            className={`flex items-center justify-center size-[38px] rounded-lg transition-colors shrink-0 ${
                 location.pathname === '/chat' 
                   ? 'bg-[var(--color-info-weak-bg,#eff6ff)]' 
                   : 'bg-[var(--color-surface-default)] hover:bg-[var(--color-surface-muted)]'
