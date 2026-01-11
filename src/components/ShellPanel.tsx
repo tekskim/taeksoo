@@ -3,7 +3,6 @@ import {
   IconX,
   IconExternalLink,
   IconTerminal2,
-  IconDownload,
 } from '@tabler/icons-react';
 import { Select, Button } from '@/design-system';
 
@@ -49,6 +48,8 @@ export interface ShellPanelProps {
   minHeight?: number;
   /** Whether the sidebar is open */
   sidebarOpen?: boolean;
+  /** Width of the sidebar in pixels (used for positioning) */
+  sidebarWidth?: number;
 }
 
 /* ----------------------------------------
@@ -111,7 +112,7 @@ function ShellTabButton({ tab, isActive, onClick, onClose, onOpenInNewTab }: She
       {isActive && (
         <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-[var(--color-action-primary)]" />
       )}
-      <IconTerminal2 size={14} className={isActive ? 'text-[var(--color-text-default)]' : 'text-[var(--color-text-muted)]'} stroke={1} />
+      <IconTerminal2 size={14} className={isActive ? 'text-[var(--color-text-default)]' : 'text-[var(--color-text-muted)]'} stroke={1.5} />
       <span className={`flex-1 truncate text-[length:var(--tabbar-font-size)] leading-[var(--tabbar-line-height)] font-medium max-w-[140px] ${isActive ? 'text-[var(--color-text-default)]' : 'text-[var(--color-text-muted)]'}`}>
         {tab.title}
       </span>
@@ -123,7 +124,7 @@ function ShellTabButton({ tab, isActive, onClick, onClose, onOpenInNewTab }: She
         className="p-0.5 rounded hover:bg-[var(--color-surface-muted)] transition-colors text-[var(--color-text-muted)] hover:text-[var(--color-text-default)] cursor-pointer"
         title="Open in new tab"
       >
-        <IconExternalLink size={12} stroke={1} />
+        <IconExternalLink size={12} stroke={1.5} />
       </button>
       <button
         onClick={(e) => {
@@ -156,32 +157,22 @@ export function ShellPanel({
   initialHeight = 350,
   minHeight = 300,
   sidebarOpen = true,
+  sidebarWidth,
 }: ShellPanelProps) {
   const [height, setHeight] = useState(initialHeight);
   const [isResizing, setIsResizing] = useState(false);
   const [selectedContainer, setSelectedContainer] = useState('container-0');
-  const [viewTime, setViewTime] = useState('last-15');
   const contentRef = useRef<HTMLDivElement>(null);
 
   const activeTab = tabs.find(t => t.id === activeTabId);
   
   // Container options for Select
   const containerOptions = [
-    { value: 'container-0', label: 'container-0' },
-    { value: 'container-1', label: 'container-1' },
-    { value: 'container-2', label: 'container-2' },
+    { value: 'container-0', label: 'Container: container-0' },
+    { value: 'container-1', label: 'Container: container-1' },
+    { value: 'container-2', label: 'Container: container-2' },
   ];
 
-  // View time options for Select
-  const viewTimeOptions = [
-    { value: 'last-15', label: 'Last 15 minutes' },
-    { value: 'last-30', label: 'Last 30 minutes' },
-    { value: 'last-1h', label: 'Last 1 hour' },
-    { value: 'last-3h', label: 'Last 3 hours' },
-    { value: 'last-6h', label: 'Last 6 hours' },
-    { value: 'last-12h', label: 'Last 12 hours' },
-    { value: 'last-24h', label: 'Last 24 hours' },
-  ];
 
   // Calculate max height (content area height - 100px)
   const getMaxHeight = useCallback(() => {
@@ -244,20 +235,6 @@ export function ShellPanel({
     }
   }, [activeTabId, onContentChange, onClear]);
 
-  // Handle download
-  const handleDownload = useCallback(() => {
-    if (activeTab?.content) {
-      const blob = new Blob([activeTab.content], { type: 'text/plain' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `${activeTab.title}-logs.txt`;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
-    }
-  }, [activeTab]);
 
   // Don't render anything if no tabs or not expanded
   if (!isExpanded || tabs.length === 0) {
@@ -269,7 +246,7 @@ export function ShellPanel({
       className="fixed bottom-0 right-0 z-40 bg-[var(--color-surface-default)] border-t border-l border-[var(--color-border-default)] shadow-lg flex flex-col"
       style={{
         height: `${height}px`,
-        left: sidebarOpen ? '200px' : '0px',
+        left: sidebarWidth !== undefined ? `${sidebarWidth}px` : (sidebarOpen ? '200px' : '0px'),
         transition: isResizing ? 'none' : 'left 0.2s ease-out, height 0.1s ease-out',
       }}
     >
@@ -335,30 +312,10 @@ export function ShellPanel({
             Clear
           </Button>
 
-          {/* Download Button */}
-          <button
-            onClick={handleDownload}
-            aria-label="Download"
-            className="inline-flex items-center justify-center size-[28px] rounded-[var(--button-radius)] bg-[var(--color-surface-default)] text-[var(--color-text-default)] border border-[var(--color-border-strong)] hover:bg-[var(--button-secondary-hover-bg)] transition-colors"
-          >
-            <IconDownload size={14} stroke={1} />
-          </button>
-
           {/* Connection Status */}
           {activeTab && (
             <ConnectionStatusIndicator status={activeTab.connectionStatus} />
           )}
-        </div>
-
-        <div className="flex items-center gap-3">
-          {/* View Time Select - Using Design System */}
-          <Select
-            value={viewTime}
-            onChange={setViewTime}
-            options={viewTimeOptions}
-            placeholder="View"
-            size="sm"
-          />
         </div>
       </div>
     </div>
