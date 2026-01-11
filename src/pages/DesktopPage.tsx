@@ -374,7 +374,7 @@ function DesktopTopBar({ onChatbotToggle, onOpenSettings, onNotificationToggle, 
       submenu: [
         {
           id: 'system',
-          label: theme === 'system' ? '✓ System theme' : 'System theme',
+          label: theme === 'system' ? '✓ System' : 'System',
           onClick: () => handleThemeChange('system'),
         },
         {
