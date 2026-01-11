@@ -6,6 +6,7 @@ import {
   SectionCard,
   Input,
   WindowControls,
+  Pagination,
 } from '@/design-system';
 import { 
   IconShieldCheck,
@@ -39,8 +40,61 @@ interface SettingsPageProps {
    Settings Page Component
    ---------------------------------------- */
 
+// Generate 100 mock activity sessions
+const generateActivitySessions = () => {
+  const sessions = [];
+  const devices = ['Chrome on macOS', 'Safari on iOS', 'Firefox on Windows', 'Edge on Windows', 'Chrome on Android', 'Safari on macOS', 'Chrome on Windows', 'Firefox on macOS'];
+  const ipRanges = [
+    { base: '211.234.56', suffix: 78 },
+    { base: '175.192.44', suffix: 123 },
+    { base: '121.167.88', suffix: 45 },
+    { base: '58.123.201', suffix: 67 },
+    { base: '192.168.1', suffix: 100 },
+    { base: '10.0.0', suffix: 50 },
+  ];
+
+  for (let i = 0; i < 100; i++) {
+    const now = new Date();
+    now.setDate(now.getDate() - Math.floor(i / 5));
+    now.setHours(now.getHours() - (i % 24));
+    now.setMinutes(now.getMinutes() - (i % 60));
+    
+    const ipRange = ipRanges[i % ipRanges.length];
+    const ip = `${ipRange.base}.${(ipRange.suffix + i) % 255}`;
+    const device = devices[i % devices.length];
+    
+    const timestamp = now.toLocaleDateString('en-CA') + ' ' + 
+      now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false }) + ' +0900';
+    
+    sessions.push({
+      id: `session-${i + 1}`,
+      ipAddress: ip,
+      device: device,
+      timestamp: timestamp,
+    });
+  }
+  
+  return sessions;
+};
+
 export function SettingsPage({ isOpen, onClose, initialTab = 'account' }: SettingsPageProps) {
+  const [isFocused, setIsFocused] = useState(true);
   const [isMaximized, setIsMaximized] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const rowsPerPage = 10;
+  const [activitySessions] = useState(generateActivitySessions());
+  
+  const totalPages = Math.ceil(activitySessions.length / rowsPerPage);
+  const startIndex = (currentPage - 1) * rowsPerPage;
+  const endIndex = startIndex + rowsPerPage;
+  const paginatedSessions = activitySessions.slice(startIndex, endIndex);
+  
+  // Reset focus when window opens
+  useEffect(() => {
+    if (isOpen) {
+      setIsFocused(true);
+    }
+  }, [isOpen]);
   // Center the window: 50% of screen size, centered position
   const [size, setSize] = useState<WindowSize>(() => ({
     width: typeof window !== 'undefined' ? window.innerWidth * 0.5 : 960,
@@ -65,6 +119,24 @@ export function SettingsPage({ isOpen, onClose, initialTab = 'account' }: Settin
   useEffect(() => {
     setLocalName(name);
   }, [name]);
+
+  // Handle click outside window to unfocus (but don't close)
+  useEffect(() => {
+    if (!isOpen) return;
+
+    const handleClickOutside = (e: MouseEvent) => {
+      if (windowRef.current && !windowRef.current.contains(e.target as Node)) {
+        setIsFocused(false);
+      }
+    };
+
+    // Use capture phase to catch clicks before they reach other elements
+    document.addEventListener('mousedown', handleClickOutside, true);
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside, true);
+    };
+  }, [isOpen]);
   const [isEditingPassword, setIsEditingPassword] = useState(false);
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -212,18 +284,19 @@ export function SettingsPage({ isOpen, onClose, initialTab = 'account' }: Settin
 
   return (
     <>
-      {/* Backdrop */}
-      <div 
-        className="fixed inset-0 z-[2000] pointer-events-auto"
-        onClick={onClose}
-      />
-      
       {/* Settings Window */}
       <div
         ref={windowRef}
         className="fixed z-[2001] bg-[var(--color-surface-default)] rounded-xl shadow-2xl flex flex-col overflow-hidden animate-in zoom-in-95 duration-200"
         style={windowStyle}
-        onClick={(e) => e.stopPropagation()}
+        onClick={(e) => {
+          e.stopPropagation();
+          setIsFocused(true);
+        }}
+        onMouseDown={(e) => {
+          e.stopPropagation();
+          setIsFocused(true);
+        }}
       >
         {/* Resize Handles */}
         {!isMaximized && (
@@ -355,121 +428,92 @@ export function SettingsPage({ isOpen, onClose, initialTab = 'account' }: Settin
                           </div>
                         )}
                       </div>
-                      {/* 2-Step Verification */}
+                      {/* MFA Setting */}
                       <div className="space-y-4 pt-4 border-t border-[var(--color-border-default)]">
-                        <div className="flex items-center justify-between">
-                          <div>
-                            <label className="block text-[length:var(--font-size-12)] leading-[var(--line-height-16)] font-medium text-[var(--color-text-default)] mb-1">2-Step Verification</label>
-                            <p className="text-[length:var(--font-size-12)] leading-[var(--line-height-16)] text-[var(--color-text-muted)] max-w-[400px]">
-                              Add an extra layer of security to your account.
-                            </p>
-                          </div>
-                          <Toggle 
-                            checked={twoStepEnabled}
-                            onChange={(e) => {
-                              if (e.target.checked) {
-                                setTwoStepEnabled(true);
-                              } else {
-                                // Disable requires password re-entry
-                                setCurrentSetupMethod(null);
-                                setShowPasswordModal(true);
-                              }
-                            }}
-                          />
+                        <div>
+                          <label className="block text-[length:var(--font-size-12)] leading-[var(--line-height-16)] font-medium text-[var(--color-text-default)] mb-1">MFA Setting</label>
+                          <p className="text-[length:var(--font-size-12)] leading-[var(--line-height-16)] text-[var(--color-text-muted)] max-w-[400px]">
+                            Add an extra layer of security to your account.
+                          </p>
                         </div>
 
-                        {/* Verification Methods - Only show when toggle is ON */}
-                        {twoStepEnabled && (
-                          <div className="space-y-3 mt-4 animate-in fade-in slide-in-from-top-2 duration-200">
-                            <span className="text-[length:var(--font-size-12)] leading-[var(--line-height-16)] font-medium text-[var(--color-text-muted)]">Verification Methods</span>
-                            
-                            {/* Authenticator App */}
-                            <div className="flex items-center justify-between p-4 border border-[var(--color-border-default)] rounded-lg bg-[var(--color-surface-subtle)]">
-                              <div className="flex items-center gap-3">
-                                <div className="w-10 h-10 rounded-lg bg-[var(--color-action-primary-subtle)] flex items-center justify-center">
-                                  <IconShieldCheck size={20} className="text-[var(--color-action-primary)]" />
-                                </div>
-                                <div>
-                                  <div className="text-[length:var(--font-size-12)] leading-[var(--line-height-16)] font-medium text-[var(--color-text-default)]">
-                                    Authenticator App
-                                  </div>
-                                  {authenticatorSetup.configured ? (
-                                    <div className="flex items-center gap-1.5 text-[length:var(--font-size-12)] leading-[var(--line-height-14)] text-[var(--color-state-success)]">
-                                      <IconCheck size={12} />
-                                      <span>Added {authenticatorSetup.addedAt}</span>
-                                    </div>
-                                  ) : (
-                                    <div className="text-[length:var(--font-size-12)] leading-[var(--line-height-14)] text-[var(--color-text-muted)]">
-                                      Use Google Authenticator, Authy, etc.
-                                    </div>
-                                  )}
-                                </div>
+                        {/* Verification Methods - Always visible */}
+                        <div className="space-y-3 mt-4">
+                          <span className="text-[length:var(--font-size-12)] leading-[var(--line-height-16)] font-medium text-[var(--color-text-muted)]">Verification Methods</span>
+                          
+                          {/* Authenticator App */}
+                          <div className="flex items-center justify-between p-4 border border-[var(--color-border-default)] rounded-lg bg-[var(--color-surface-subtle)]">
+                            <div className="flex items-center gap-3">
+                              <div className="w-10 h-10 rounded-lg bg-[var(--color-action-primary-subtle)] flex items-center justify-center">
+                                <IconShieldCheck size={20} className="text-[var(--color-action-primary)]" />
                               </div>
-                              <Button 
-                                variant={authenticatorSetup.configured ? "secondary" : "primary"} 
-                                size="sm"
-                                onClick={() => {
-                                  setCurrentSetupMethod('authenticator');
-                                  setSetupStep(1);
-                                  setShowPasswordModal(true);
-                                }}
-                              >
-                                {authenticatorSetup.configured ? 'Remove' : 'Set up'}
-                              </Button>
+                              <div>
+                                <div className="text-[length:var(--font-size-12)] leading-[var(--line-height-16)] font-medium text-[var(--color-text-default)]">
+                                  Authenticator App
+                                </div>
+                                {authenticatorSetup.configured ? (
+                                  <div className="flex items-center gap-1.5 text-[length:var(--font-size-12)] leading-[var(--line-height-14)] text-[var(--color-state-success)]">
+                                    <IconCheck size={12} />
+                                    <span>Added {authenticatorSetup.addedAt}</span>
+                                  </div>
+                                ) : (
+                                  <div className="text-[length:var(--font-size-12)] leading-[var(--line-height-14)] text-[var(--color-text-muted)]">
+                                    Use Google Authenticator, Authy, etc.
+                                  </div>
+                                )}
+                              </div>
                             </div>
-
+                            <Button 
+                              variant={authenticatorSetup.configured ? "secondary" : "primary"} 
+                              size="sm"
+                              onClick={() => {
+                                setCurrentSetupMethod('authenticator');
+                                setSetupStep(1);
+                                setShowPasswordModal(true);
+                              }}
+                            >
+                              {authenticatorSetup.configured ? 'Remove' : 'Set up'}
+                            </Button>
                           </div>
-                        )}
+
+                        </div>
                       </div>
                     </SectionCard.Content>
                   </SectionCard>
 
                   {/* Sessions */}
                   <SectionCard className="mb-6">
-                    <SectionCard.Header title="Sessions" />
+                    <SectionCard.Header title="Activity" />
                     <SectionCard.Content>
-                      <p className="text-[length:var(--font-size-12)] leading-[var(--line-height-18)] text-[var(--color-text-muted)] mb-4">View your recent login sessions.</p>
+                      <p className="text-[length:var(--font-size-12)] leading-[var(--line-height-18)] text-[var(--color-text-muted)] mb-4">Displaying your latest account activity.</p>
+                      
+                      {/* Pagination */}
+                      <div className="mb-4">
+                        <Pagination
+                          currentPage={currentPage}
+                          totalPages={totalPages}
+                          onPageChange={setCurrentPage}
+                          totalItems={activitySessions.length}
+                        />
+                      </div>
+                      
                       <div className="border border-[var(--color-border-default)] rounded-lg overflow-hidden">
                         <table className="w-full">
                           <thead className="bg-[var(--color-surface-subtle)]">
                             <tr>
-                              <th className="px-4 py-3 text-left text-[length:var(--font-size-12)] leading-[var(--line-height-16)] font-semibold text-[var(--color-text-muted)]">Location</th>
                               <th className="px-4 py-3 text-left text-[length:var(--font-size-12)] leading-[var(--line-height-16)] font-semibold text-[var(--color-text-muted)]">IP Address</th>
                               <th className="px-4 py-3 text-left text-[length:var(--font-size-12)] leading-[var(--line-height-16)] font-semibold text-[var(--color-text-muted)]">Device</th>
                               <th className="px-4 py-3 text-left text-[length:var(--font-size-12)] leading-[var(--line-height-16)] font-semibold text-[var(--color-text-muted)]">Timestamp</th>
                             </tr>
                           </thead>
                           <tbody>
-                            <tr className="border-t border-[var(--color-border-default)]">
-                              <td className="px-4 py-3 text-[length:var(--font-size-12)] leading-[var(--line-height-18)] text-[var(--color-text-default)]">Gangnam-gu, Seoul, South Korea</td>
-                              <td className="px-4 py-3 text-[length:var(--font-size-12)] leading-[var(--line-height-18)] text-[var(--color-text-default)]">211.234.56.78</td>
-                              <td className="px-4 py-3 text-[length:var(--font-size-12)] leading-[var(--line-height-18)] text-[var(--color-text-default)]">Chrome on macOS</td>
-                              <td className="px-4 py-3 text-[length:var(--font-size-12)] leading-[var(--line-height-18)] text-[var(--color-text-default)]">2026-01-06 14:32:18 +0900</td>
-                            </tr>
-                            <tr className="border-t border-[var(--color-border-default)]">
-                              <td className="px-4 py-3 text-[length:var(--font-size-12)] leading-[var(--line-height-18)] text-[var(--color-text-default)]">Gangnam-gu, Seoul, South Korea</td>
-                              <td className="px-4 py-3 text-[length:var(--font-size-12)] leading-[var(--line-height-18)] text-[var(--color-text-default)]">211.234.56.78</td>
-                              <td className="px-4 py-3 text-[length:var(--font-size-12)] leading-[var(--line-height-18)] text-[var(--color-text-default)]">Safari on iOS</td>
-                              <td className="px-4 py-3 text-[length:var(--font-size-12)] leading-[var(--line-height-18)] text-[var(--color-text-default)]">2026-01-05 09:15:42 +0900</td>
-                            </tr>
-                            <tr className="border-t border-[var(--color-border-default)]">
-                              <td className="px-4 py-3 text-[length:var(--font-size-12)] leading-[var(--line-height-18)] text-[var(--color-text-default)]">Mapo-gu, Seoul, South Korea</td>
-                              <td className="px-4 py-3 text-[length:var(--font-size-12)] leading-[var(--line-height-18)] text-[var(--color-text-default)]">175.192.44.123</td>
-                              <td className="px-4 py-3 text-[length:var(--font-size-12)] leading-[var(--line-height-18)] text-[var(--color-text-default)]">Firefox on Windows</td>
-                              <td className="px-4 py-3 text-[length:var(--font-size-12)] leading-[var(--line-height-18)] text-[var(--color-text-default)]">2026-01-04 18:22:05 +0900</td>
-                            </tr>
-                            <tr className="border-t border-[var(--color-border-default)]">
-                              <td className="px-4 py-3 text-[length:var(--font-size-12)] leading-[var(--line-height-18)] text-[var(--color-text-default)]">Seocho-gu, Seoul, South Korea</td>
-                              <td className="px-4 py-3 text-[length:var(--font-size-12)] leading-[var(--line-height-18)] text-[var(--color-text-default)]">121.167.88.45</td>
-                              <td className="px-4 py-3 text-[length:var(--font-size-12)] leading-[var(--line-height-18)] text-[var(--color-text-default)]">Edge on Windows</td>
-                              <td className="px-4 py-3 text-[length:var(--font-size-12)] leading-[var(--line-height-18)] text-[var(--color-text-default)]">2026-01-03 11:45:33 +0900</td>
-                            </tr>
-                            <tr className="border-t border-[var(--color-border-default)]">
-                              <td className="px-4 py-3 text-[length:var(--font-size-12)] leading-[var(--line-height-18)] text-[var(--color-text-default)]">Bundang-gu, Seongnam, South Korea</td>
-                              <td className="px-4 py-3 text-[length:var(--font-size-12)] leading-[var(--line-height-18)] text-[var(--color-text-default)]">58.123.201.67</td>
-                              <td className="px-4 py-3 text-[length:var(--font-size-12)] leading-[var(--line-height-18)] text-[var(--color-text-default)]">Chrome on Android</td>
-                              <td className="px-4 py-3 text-[length:var(--font-size-12)] leading-[var(--line-height-18)] text-[var(--color-text-default)]">2026-01-02 08:10:22 +0900</td>
-                            </tr>
+                            {paginatedSessions.map((session) => (
+                              <tr key={session.id} className="border-t border-[var(--color-border-default)]">
+                                <td className="px-4 py-3 text-[length:var(--font-size-12)] leading-[var(--line-height-18)] text-[var(--color-text-default)]">{session.ipAddress}</td>
+                                <td className="px-4 py-3 text-[length:var(--font-size-12)] leading-[var(--line-height-18)] text-[var(--color-text-default)]">{session.device}</td>
+                                <td className="px-4 py-3 text-[length:var(--font-size-12)] leading-[var(--line-height-18)] text-[var(--color-text-default)]">{session.timestamp}</td>
+                              </tr>
+                            ))}
                           </tbody>
                         </table>
                       </div>
