@@ -371,7 +371,7 @@ export function VolumesPage() {
           <VStack gap={3}>
             {/* Page Header */}
             <div className="flex items-center justify-between h-8">
-              <h1 className="text-[length:var(--font-size-16)] font-semibold text-[var(--color-text-default)]">
+              <h1 className="text-[length:var(--font-size-16)] font-semibold leading-6 text-[var(--color-text-default)]">
                 Volumes
               </h1>
               <Button size="md" as={Link} to="/compute/volumes/create">

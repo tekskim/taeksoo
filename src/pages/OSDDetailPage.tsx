@@ -913,7 +913,7 @@ export function OSDDetailPage() {
                     <VStack gap={3} className="pt-4">
                       {/* Section Header */}
                       <div className="flex items-center h-7">
-                        <h2 className="text-[length:var(--font-size-16)] font-semibold text-[var(--color-text-default)]">
+                        <h2 className="text-[length:var(--font-size-16)] font-semibold leading-6 text-[var(--color-text-default)]">
                           Devices
                         </h2>
                       </div>

@@ -69,7 +69,6 @@ import {
   FloatingCard,
   Loading,
   SNBMenuItem,
-  CardTitle,
   WizardSection,
   WizardSummary,
   WizardSectionStatusIcon,
@@ -271,7 +270,6 @@ const navigationItems = [
   { id: 'badge', label: 'Badge', icon: IconTag },
   { id: 'breadcrumb', label: 'Breadcrumb', icon: IconChevronRight },
   { id: 'status-indicator', label: 'Status indicator', icon: IconActivity },
-  { id: 'card-title', label: 'Card title', icon: IconLayoutGrid },
   { id: 'tooltip', label: 'Tooltip', icon: IconMessage2 },
   { id: 'window-control', label: 'Window control', icon: IconAppWindow },
 ];
@@ -380,7 +378,7 @@ function WizardPatternSection() {
   const [sectionStatus, setSectionStatus] = useState<Record<string, WizardSectionState>>({
     'launch-type': 'done',
     'basic-info': 'active',
-    'image': 'done',
+    'source': 'writing',
     'flavor': 'pre',
     'network': 'pre',
     'advanced': 'skipped',
@@ -389,7 +387,7 @@ function WizardPatternSection() {
   const summaryItems: WizardSummaryItem[] = [
     { key: 'launch-type', label: 'Launch type', status: sectionStatus['launch-type'] },
     { key: 'basic-info', label: 'Basic information', status: sectionStatus['basic-info'] },
-    { key: 'image', label: 'Image', status: sectionStatus['image'] },
+    { key: 'source', label: 'Source', status: sectionStatus['source'] },
     { key: 'flavor', label: 'Flavor', status: sectionStatus['flavor'] },
     { key: 'network', label: 'Network', status: sectionStatus['network'] },
     { key: 'advanced', label: 'Advanced', status: sectionStatus['advanced'] },
@@ -455,13 +453,13 @@ function WizardPatternSection() {
           {/* PreSection */}
           <VStack gap={1}>
             <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">PreSection (대기 중)</span>
-            <PreSection title="Flavor" />
+            <PreSection title="Source" />
           </VStack>
 
           {/* WritingSection */}
           <VStack gap={1}>
             <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">WritingSection (작성 중)</span>
-            <WritingSection title="Image" />
+            <WritingSection title="Source" />
           </VStack>
 
           {/* SkippedSection */}
@@ -6174,133 +6172,6 @@ outline: 2px solid var(--color-border-focus);`}
               </VStack>
             </Section>
 
-            {/* CardTitle Component */}
-            <Section id="card-title" title="Card title" description="Flexible card header with status, description, badges, and side content">
-              <VStack gap={8}>
-                {/* Design Tokens */}
-                <VStack gap={3}>
-                  <Label>Design tokens</Label>
-                  <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
-                    <code>title: 16px semibold</code> · <code>description: 12px</code> · <code>gap: 12px</code> · <code>status-dot: 24px</code> · <code>badge: 11px medium</code>
-                  </div>
-                </VStack>
-
-                {/* Basic Usage */}
-                <VStack gap={3}>
-                  <Label>Basic usage</Label>
-                  <div className="flex flex-col gap-4 p-4 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)] border border-[var(--color-border-default)]">
-                    <CardTitle title="lively-sunset-6041" />
-                    <CardTitle 
-                      title="lively-sunset-6041" 
-                      description="PyTorch GPU-enabled template for AI/ML workloads" 
-                    />
-                  </div>
-                </VStack>
-
-                {/* With Status indicator */}
-                <VStack gap={3}>
-                  <Label>With Status indicator</Label>
-                  <div className="flex flex-col gap-4 p-4 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)] border border-[var(--color-border-default)]">
-                    <CardTitle 
-                      title="lively-sunset-6041" 
-                      description="Running instance with GPU support"
-                      showStatus
-                      statusColor="success"
-                    />
-                    <CardTitle 
-                      title="failed-instance-1234" 
-                      description="Instance failed to start"
-                      showStatus
-                      statusColor="error"
-                    />
-                    <CardTitle 
-                      title="building-instance-5678" 
-                      description="Instance is being provisioned"
-                      showStatus
-                      statusColor="info"
-                    />
-                  </div>
-                </VStack>
-
-                {/* With Badges */}
-                <VStack gap={3}>
-                  <Label>With badges</Label>
-                  <div className="flex flex-col gap-4 p-4 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)] border border-[var(--color-border-default)]">
-                    <CardTitle 
-                      title="lively-sunset-6041" 
-                      description="PyTorch GPU-enabled template for AI/ML workloads"
-                      showStatus
-                      statusColor="success"
-                      badges={[
-                        { label: 'Public', variant: 'success' },
-                        { label: 'ai-ml', variant: 'info' },
-                        { label: 'PyTorch', variant: 'muted' },
-                        { label: 'GPU', variant: 'muted' },
-                      ]}
-                    />
-                  </div>
-                </VStack>
-
-                {/* With Side Content - Gauge */}
-                <VStack gap={3}>
-                  <Label>With Gauge Side Content</Label>
-                  <div className="flex flex-col gap-4 p-4 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)] border border-[var(--color-border-default)]">
-                    <CardTitle 
-                      title="lively-sunset-6041" 
-                      description="CPU utilization monitoring"
-                      showStatus
-                      statusColor="success"
-                      side="gauge"
-                      gaugeValue="78.5%"
-                      gaugeLabel="Utilization"
-                    />
-                    <CardTitle 
-                      title="idle-server-9999" 
-                      side="gauge"
-                      gaugeValue="0.0%"
-                      gaugeLabel="Utilization"
-                    />
-                  </div>
-                </VStack>
-
-                {/* With Side Content - Icon */}
-                <VStack gap={3}>
-                  <Label>With Icon Side Content</Label>
-                  <div className="flex flex-col gap-4 p-4 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)] border border-[var(--color-border-default)]">
-                    <CardTitle 
-                      title="lively-sunset-6041" 
-                      description="PyTorch GPU-enabled template"
-                      showStatus
-                      statusColor="success"
-                      side="icon"
-                      sideIcon={<IconServer size={22} stroke={1.5} className="text-[var(--color-text-muted)]" />}
-                    />
-                  </div>
-                </VStack>
-
-                {/* All Props Combined */}
-                <VStack gap={3}>
-                  <Label>Full example</Label>
-                  <div className="flex flex-col gap-4 p-4 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)] border border-[var(--color-border-default)]">
-                    <CardTitle 
-                      title="production-ml-server" 
-                      description="High-performance ML inference server with NVIDIA A100 GPU"
-                      showStatus
-                      statusColor="success"
-                      badges={[
-                        { label: 'Production', variant: 'success' },
-                        { label: 'ml-inference', variant: 'info' },
-                        { label: 'A100', variant: 'warning' },
-                      ]}
-                      side="gauge"
-                      gaugeValue="92.3%"
-                      gaugeLabel="GPU Load"
-                    />
-                  </div>
-                </VStack>
-              </VStack>
-            </Section>
-
             {/* Tooltip Component */}
             <Section id="tooltip" title="Tooltip" description="Contextual information on hover">
               <VStack gap={8}>
@@ -6601,7 +6472,7 @@ outline: 2px solid var(--color-border-focus);`}
                     <Label>Menu items</Label>
                     <div className="w-full max-w-[200px] p-2 bg-[var(--color-surface-default)] rounded-[var(--radius-card)] border border-[var(--color-border-default)]">
                       <MenuItem icon={<IconHome size={16} />} label="Home" />
-                      <MenuItem icon={<IconServer size={16} />} label="Instances" active badge="6" />
+                      <MenuItem icon={<IconServer size={16} />} label="Instances" active />
                       <MenuItem icon={<IconSettings size={16} />} label="Settings" />
                       <MenuDivider />
                       <MenuItem icon={<IconUser size={16} />} label="Profile" />
