@@ -128,7 +128,7 @@ export default function IAMSessionPoliciesPage() {
               <div className="w-full">
                 <Tabs value={activeTab} onChange={setActiveTab} variant="underline" size="sm">
                   <TabList>
-                    <Tab value="general">General Policy</Tab>
+                    <Tab value="general">General policy</Tab>
                   </TabList>
 
                   {/* General Policy Tab */}

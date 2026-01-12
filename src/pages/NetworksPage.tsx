@@ -313,7 +313,7 @@ export function NetworksPage() {
             {/* Tabs */}
             <Tabs value={activeTab} onChange={setActiveTab} size="sm">
               <TabList>
-                <Tab value="current">Current Tenant</Tab>
+                <Tab value="current">Current tenant</Tab>
                 <Tab value="shared">Shared</Tab>
                 <Tab value="external">External</Tab>
               </TabList>

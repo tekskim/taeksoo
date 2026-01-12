@@ -480,7 +480,7 @@ export default function PoolDetailPage() {
                   <TabList>
                     <Tab value="details">Details</Tab>
                     <Tab value="members">Members</Tab>
-                    <Tab value="health-monitor">Health Monitor</Tab>
+                    <Tab value="health-monitor">Health monitor</Tab>
                   </TabList>
 
                   {/* Details Tab */}

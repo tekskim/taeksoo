@@ -67,7 +67,7 @@ export function StoragePage() {
                 </VStack>
                 <HStack gap={2}>
                   <Button variant="secondary" size="sm" icon={<IconRefresh size={14} stroke={1.5} />}>Refresh</Button>
-                  <Button variant="primary" size="sm" icon={<IconPlus size={14} stroke={1.5} />}>Create Storage</Button>
+                  <Button variant="primary" size="sm" icon={<IconPlus size={14} stroke={1.5} />}>Create storage</Button>
                 </HStack>
               </HStack>
               <EmptyState icon={<IconBox size={48} stroke={1} />} title="No storage volumes found" description="Create your first storage volume to get started." />

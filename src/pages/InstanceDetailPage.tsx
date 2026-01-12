@@ -633,9 +633,9 @@ export function InstanceDetailPage() {
                   <Tab value="security">Security</Tab>
                   <Tab value="snapshots">Instance snapshots</Tab>
                   <Tab value="monitoring">Monitoring</Tab>
-                  <Tab value="resource-map">Resource Map</Tab>
+                  <Tab value="resource-map">Resource map</Tab>
                   <Tab value="logs">Logs</Tab>
-                  <Tab value="action-logs">Action Logs</Tab>
+                  <Tab value="action-logs">Action logs</Tab>
                 </TabList>
 
                 {/* Details Tab Panel */}
@@ -1383,7 +1383,7 @@ export function InstanceDetailPage() {
                   <VStack gap={3} className="pt-6">
                     {/* Header */}
                     <div className="flex items-center h-7">
-                      <h2 className="text-[16px] font-semibold text-[var(--color-text-default)]">Action Logs</h2>
+                      <h2 className="text-[16px] font-semibold text-[var(--color-text-default)]">Action logs</h2>
                     </div>
 
                     {/* Search and Download */}

@@ -67,7 +67,7 @@ export function BenchmarksPage() {
                 </VStack>
                 <HStack gap={2}>
                   <Button variant="secondary" size="sm" icon={<IconRefresh size={14} stroke={1.5} />}>Refresh</Button>
-                  <Button variant="primary" size="sm" icon={<IconPlus size={14} stroke={1.5} />}>Create Benchmark</Button>
+                  <Button variant="primary" size="sm" icon={<IconPlus size={14} stroke={1.5} />}>Create benchmark</Button>
                 </HStack>
               </HStack>
               <EmptyState icon={<IconChartBar size={48} stroke={1} />} title="No benchmarks found" description="Create your first benchmark to get started." />

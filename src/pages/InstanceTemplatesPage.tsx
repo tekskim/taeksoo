@@ -388,7 +388,7 @@ export function InstanceTemplatesPage() {
             {/* Category Tabs */}
             <Tabs value={activeTab} onChange={setActiveTab} variant="underline" size="sm">
               <TabList>
-                <Tab value="favorites">Current Tenant</Tab>
+                <Tab value="favorites">Current tenant</Tab>
                 <Tab value="personal">Public</Tab>
               </TabList>
             </Tabs>

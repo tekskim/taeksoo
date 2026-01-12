@@ -355,9 +355,9 @@ export function DatasetsPage() {
               {/* Tabs */}
               <Tabs value={activeTab} onChange={setActiveTab} variant="underline">
                 <TabList>
-                  <Tab value="all">All Datasets</Tab>
-                  <Tab value="thaki">Thaki Datasets</Tab>
-                  <Tab value="custom">Custom Datasets</Tab>
+                  <Tab value="all">All datasets</Tab>
+                  <Tab value="thaki">Thaki datasets</Tab>
+                  <Tab value="custom">Custom datasets</Tab>
                 </TabList>
               </Tabs>
 

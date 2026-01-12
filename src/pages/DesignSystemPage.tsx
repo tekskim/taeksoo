@@ -450,7 +450,7 @@ function WizardPatternSection() {
 
       {/* Section Components */}
       <VStack gap={3}>
-        <Label>Section Components</Label>
+        <Label>Section components</Label>
         <VStack gap={4} className="max-w-[600px]">
           {/* PreSection */}
           <VStack gap={1}>
@@ -484,7 +484,7 @@ function WizardPatternSection() {
 
       {/* Interactive Demo */}
       <VStack gap={3}>
-        <Label>Interactive Demo</Label>
+        <Label>Interactive demo</Label>
         <HStack gap={4} align="start">
           {/* Status Controls */}
           <VStack gap={2} className="w-[200px]">
@@ -637,7 +637,7 @@ function NotificationCenterSection() {
       <VStack gap={8}>
         {/* Design Tokens */}
         <VStack gap={3}>
-          <Label>Design Tokens</Label>
+          <Label>Design tokens</Label>
           <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
             <code>width: 360px</code> · <code>padding: 16px</code> · <code>border-radius: 8px</code> · <code>shadow: lg</code>
           </div>
@@ -645,7 +645,7 @@ function NotificationCenterSection() {
 
         {/* Live Demo */}
         <VStack gap={3}>
-          <Label>Live Demo</Label>
+          <Label>Live demo</Label>
           <div className="flex justify-center p-6 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)]">
             <NotificationCenter
               notifications={notifications}
@@ -659,7 +659,7 @@ function NotificationCenterSection() {
 
         {/* Notification Types */}
         <VStack gap={3}>
-          <Label>Notification Types</Label>
+          <Label>Notification types</Label>
           <div className="grid grid-cols-4 gap-4">
             <div className="p-3 bg-[var(--color-surface-default)] rounded-[var(--radius-md)] border border-[var(--color-border-default)]">
               <div className="flex items-center gap-2 mb-2">
@@ -863,7 +863,7 @@ function DatePickerSection() {
       <VStack gap={8}>
         {/* Tokens */}
         <VStack gap={3}>
-          <Label>Design Tokens</Label>
+          <Label>Design tokens</Label>
           <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
             <code>padding: 12px</code> · <code>gap: 12px</code> · <code>radius: 8px</code> · <code>cell: 32×32px</code>
           </div>
@@ -1045,7 +1045,7 @@ function DrawerDemo() {
             </p>
           </div>
           <VStack gap={2}>
-            <Label>Example Content</Label>
+            <Label>Example content</Label>
             <p className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
               You can put any content inside a drawer, including forms, lists, or details.
             </p>
@@ -2516,7 +2516,7 @@ function TabBarDemo() {
     <VStack gap={8}>
       {/* Tokens */}
       <VStack gap={3}>
-        <Label>Design Tokens</Label>
+        <Label>Design tokens</Label>
         <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
           <code>height: 36px</code> · <code>max-width: 160px</code> · <code>padding-x: 12px</code> · <code>font: 12px</code>
         </div>
@@ -2573,7 +2573,7 @@ function TabBarDemo() {
 
       {/* With Icons */}
       <VStack gap={3}>
-        <Label>With Icons</Label>
+        <Label>With icons</Label>
         <div className="w-full border border-[var(--color-border-default)] rounded-[var(--radius-md)] overflow-hidden">
           <TabBar
             tabs={[
@@ -2949,7 +2949,7 @@ function TableDemo() {
 
       {/* Selectable Table */}
       <VStack gap={3}>
-        <Label>Selectable Table</Label>
+        <Label>Selectable table</Label>
         <Table
           columns={basicColumns}
           data={sampleTableData}
@@ -3036,7 +3036,7 @@ function TableDemo() {
 
       {/* Empty State */}
       <VStack gap={3}>
-        <Label>Empty State</Label>
+        <Label>Empty state</Label>
         <Table
           columns={emptyColumns}
           data={[]}
@@ -3865,7 +3865,7 @@ export function DesignSystemPage() {
                   </div>
                 </VStack>
                 <VStack gap={4}>
-                  <Label>Border Radius</Label>
+                  <Label>Border radius</Label>
                   <div className="flex gap-4 flex-wrap">
                     {[
                       { name: 'none', value: '0px' },
@@ -3890,7 +3890,7 @@ export function DesignSystemPage() {
               <VStack gap={8}>
                 {/* Border Colors */}
                 <VStack gap={4}>
-                  <Label>Border Colors</Label>
+                  <Label>Border colors</Label>
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                     {[
                       { name: 'default', token: '--color-border-default', desc: '기본 보더' },
@@ -3916,7 +3916,7 @@ export function DesignSystemPage() {
 
                 {/* Border Widths */}
                 <VStack gap={4}>
-                  <Label>Border Widths</Label>
+                  <Label>Border widths</Label>
                   <div className="grid grid-cols-4 gap-4">
                     {[
                       { name: '0', value: '0px' },
@@ -3939,7 +3939,7 @@ export function DesignSystemPage() {
 
                 {/* Border Styles */}
                 <VStack gap={4}>
-                  <Label>Border Styles</Label>
+                  <Label>Border styles</Label>
                   <div className="grid grid-cols-3 md:grid-cols-5 gap-4">
                     {['solid', 'dashed', 'dotted', 'double', 'none'].map((style) => (
                       <div key={style} className="flex flex-col gap-2 items-center">
@@ -3957,7 +3957,7 @@ export function DesignSystemPage() {
 
                 {/* Border Usage Examples */}
                 <VStack gap={4}>
-                  <Label>Usage Examples</Label>
+                  <Label>Usage examples</Label>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div className="p-4 rounded-[var(--radius-lg)] border border-[var(--color-border-default)] bg-[var(--color-surface-default)]">
                       <p className="text-[length:var(--font-size-12)] text-[var(--color-text-default)] mb-2">Card with default border</p>
@@ -4213,7 +4213,7 @@ outline: 2px solid var(--color-border-focus);`}
             <Section id="app-icons" title="App icons" description="Application icons for THAKI Cloud services - Size 64x64">
               <VStack gap={8}>
                 <VStack gap={3}>
-                  <Label>Service Icons</Label>
+                  <Label>Service icons</Label>
                   <div className="flex flex-wrap gap-6">
                     {[
                       { src: AppIconCompute, name: 'Compute' },
@@ -4249,7 +4249,7 @@ outline: 2px solid var(--color-border-focus);`}
               <VStack gap={8}>
                 {/* Token Table */}
                 <VStack gap={3}>
-                  <Label>Design Tokens</Label>
+                  <Label>Design tokens</Label>
                   <div className="overflow-x-auto">
                     <table className="w-full text-[length:var(--font-size-11)]">
                       <thead>
@@ -4311,10 +4311,10 @@ outline: 2px solid var(--color-border-focus);`}
 
                 {/* With Icons */}
                 <VStack gap={3}>
-                  <Label>With Icons</Label>
+                  <Label>With icons</Label>
                   <div className="flex flex-wrap gap-3">
-                    <Button size="sm" leftIcon={<IconPlus size={14} />}>Left Icon</Button>
-                    <Button size="sm" rightIcon={<IconArrowRight size={14} />}>Right Icon</Button>
+                    <Button size="sm" leftIcon={<IconPlus size={14} />}>Left icon</Button>
+                    <Button size="sm" rightIcon={<IconArrowRight size={14} />}>Right icon</Button>
                     <Button size="sm" icon={<IconHeart size={14} />} aria-label="Like" />
                     <Button size="sm" variant="secondary" icon={<IconStar size={14} />} aria-label="Star" />
                   </div>
@@ -4347,8 +4347,8 @@ outline: 2px solid var(--color-border-focus);`}
                 <VStack gap={3}>
                   <Label>Polymorphic (as prop)</Label>
                   <div className="flex flex-wrap gap-3">
-                    <Button size="sm" as="a" href="#" target="_blank">As Anchor</Button>
-                    <Button size="sm" as={Link} to="/">As Router Link</Button>
+                    <Button size="sm" as="a" href="#" target="_blank">As anchor</Button>
+                    <Button size="sm" as={Link} to="/">As router link</Button>
                   </div>
                 </VStack>
               </VStack>
@@ -4359,7 +4359,7 @@ outline: 2px solid var(--color-border-focus);`}
               <VStack gap={8}>
                 {/* Design Tokens */}
                 <VStack gap={3}>
-                  <Label>Design Tokens</Label>
+                  <Label>Design tokens</Label>
                   <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
                     <code>height: 28/32px</code> · <code>padding: 10×8px</code> · <code>radius: 6px</code> · <code>font: 11-12px</code> · <code>border: 1px → 2px focus</code>
                   </div>
@@ -4419,7 +4419,7 @@ outline: 2px solid var(--color-border-focus);`}
 
                 {/* With Icons */}
                 <VStack gap={3}>
-                  <Label>With Icons</Label>
+                  <Label>With icons</Label>
                   <div className="flex gap-4">
                     <Input placeholder="Search..." leftElement={<IconSearch size={14} />} className="w-[200px]" />
                     <Input placeholder="Email" rightElement={<IconMail size={14} />} className="w-[200px]" />
@@ -4467,7 +4467,7 @@ outline: 2px solid var(--color-border-focus);`}
 
                 {/* SearchInput */}
                 <VStack gap={3}>
-                  <Label>Search Input</Label>
+                  <Label>Search input</Label>
                   <div className="flex gap-4 items-start">
                     <VStack gap={1}>
                       <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">SM (28px)</span>
@@ -4503,7 +4503,7 @@ outline: 2px solid var(--color-border-focus);`}
               <VStack gap={8}>
                 {/* Design Tokens */}
                 <VStack gap={3}>
-                  <Label>Design Tokens</Label>
+                  <Label>Design tokens</Label>
                   <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
                     <code>height: 32px (sm) / 36px (md)</code> · <code>padding: 8×12px</code> · <code>radius: 6px</code> · <code>font: 12px</code> · <code>chip-gap: 4px</code>
                   </div>
@@ -4523,7 +4523,7 @@ outline: 2px solid var(--color-border-focus);`}
 
                 {/* Interactive Demo */}
                 <VStack gap={3}>
-                  <Label>Interactive Demo</Label>
+                  <Label>Interactive demo</Label>
                   <p className="text-[length:var(--font-size-11)] text-[var(--color-text-muted)]">
                     Click the input below to see available filters. Select a filter, enter a value, and see it appear as a tag.
                   </p>
@@ -4532,7 +4532,7 @@ outline: 2px solid var(--color-border-focus);`}
 
                 {/* Usage Example */}
                 <VStack gap={3}>
-                  <Label>Usage Example</Label>
+                  <Label>Usage example</Label>
                   <div className="text-[length:var(--font-size-11)] text-[var(--color-text-muted)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)] font-mono whitespace-pre-wrap">
 {`const filterFields: FilterField[] = [
   { id: 'name', label: 'Name', type: 'text', placeholder: 'Enter name...' },
@@ -4559,7 +4559,7 @@ outline: 2px solid var(--color-border-focus);`}
               <VStack gap={8}>
                 {/* Tokens */}
                 <VStack gap={3}>
-                  <Label>Design Tokens</Label>
+                  <Label>Design tokens</Label>
                   <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
                     <code>padding: 10×8px</code> · <code>radius: 6px</code> · <code>font: 12px</code> · <code>item: 10×6px, 11px</code> · <code>border: 1px → 2px focus</code>
                   </div>
@@ -4653,7 +4653,7 @@ outline: 2px solid var(--color-border-focus);`}
 
                 {/* Size Variants */}
                 <VStack gap={3}>
-                  <Label>Size Variants</Label>
+                  <Label>Size variants</Label>
                   <div className="flex gap-4 items-end flex-wrap">
                     <VStack gap={1}>
                       <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">Default</span>
@@ -4689,7 +4689,7 @@ outline: 2px solid var(--color-border-focus);`}
 
                 {/* Clearable Select */}
                 <VStack gap={3}>
-                  <Label>Clearable Select</Label>
+                  <Label>Clearable select</Label>
                   <p className="text-[length:var(--font-size-11)] text-[var(--color-text-muted)]">
                     Select with clear button (✕) and "Clear" option in dropdown. Useful for filter dropdowns.
                   </p>
@@ -4736,7 +4736,7 @@ outline: 2px solid var(--color-border-focus);`}
               <VStack gap={8}>
                 {/* Tokens */}
                 <VStack gap={3}>
-                  <Label>Design Tokens</Label>
+                  <Label>Design tokens</Label>
                   <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
                     <code>track: 6px height</code> · <code>thumb: 16px, 3px border</code> · <code>fill: primary</code>
                   </div>
@@ -4799,7 +4799,7 @@ outline: 2px solid var(--color-border-focus);`}
               <VStack gap={8}>
                 {/* Tokens */}
                 <VStack gap={3}>
-                  <Label>Design Tokens</Label>
+                  <Label>Design tokens</Label>
                   <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
                     <code>padding: 8×4px</code> · <code>gap: 6px</code> · <code>radius: 6px</code> · <code>font: 11px</code>
                   </div>
@@ -4867,7 +4867,7 @@ outline: 2px solid var(--color-border-focus);`}
               <VStack gap={8}>
                 {/* Tokens */}
                 <VStack gap={3}>
-                  <Label>Design Tokens</Label>
+                  <Label>Design tokens</Label>
                   <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
                     <code>item-size: 24px</code> · <code>gap: 4px</code> · <code>radius: 4px</code> · <code>font: 11px</code>
                   </div>
@@ -4895,7 +4895,7 @@ outline: 2px solid var(--color-border-focus);`}
 
                 {/* Many Pages */}
                 <VStack gap={3}>
-                  <Label>Many Pages</Label>
+                  <Label>Many pages</Label>
                   <Pagination
                     currentPage={demoPage3}
                     totalPages={50}
@@ -4972,7 +4972,7 @@ outline: 2px solid var(--color-border-focus);`}
               <VStack gap={8}>
                 {/* Tokens */}
                 <VStack gap={3}>
-                  <Label>Design Tokens</Label>
+                  <Label>Design tokens</Label>
                   <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
                     <code>height: 4px</code> · <code>radius: pill</code>
                   </div>
@@ -5053,7 +5053,7 @@ outline: 2px solid var(--color-border-focus);`}
 
                 {/* Error State */}
                 <VStack gap={3}>
-                  <Label>Error State</Label>
+                  <Label>Error state</Label>
                   <div className="w-[280px] flex flex-col gap-4 p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-md)]">
                     <ProgressBar
                       label="60 MB (75%)"
@@ -5069,7 +5069,7 @@ outline: 2px solid var(--color-border-focus);`}
 
                 {/* Color Legend */}
                 <VStack gap={3}>
-                  <Label>Status Colors</Label>
+                  <Label>Status colors</Label>
                   <div className="flex flex-wrap gap-4">
                     <div className="flex items-center gap-2">
                       <div className="w-4 h-4 rounded bg-[var(--color-state-success-default)]" />
@@ -5097,7 +5097,7 @@ outline: 2px solid var(--color-border-focus);`}
               <VStack gap={8}>
                 {/* Tokens */}
                 <VStack gap={3}>
-                  <Label>Design Tokens</Label>
+                  <Label>Design tokens</Label>
                   <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
                     <code>spinner: 16/22/32px</code> · <code>progress: h-1</code> · <code>button: min-w-80px</code>
                   </div>
@@ -5105,7 +5105,7 @@ outline: 2px solid var(--color-border-focus);`}
 
                 {/* Spinner Variant */}
                 <VStack gap={3}>
-                  <Label>Spinner Variant</Label>
+                  <Label>Spinner variant</Label>
                   <div className="flex gap-8 items-end p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-subtle)] rounded-[var(--radius-lg)]">
                     <VStack gap={2} align="center">
                       <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">Small</span>
@@ -5124,7 +5124,7 @@ outline: 2px solid var(--color-border-focus);`}
 
                 {/* Progress Variant */}
                 <VStack gap={3}>
-                  <Label>Progress Variant</Label>
+                  <Label>Progress variant</Label>
                   <div className="flex flex-col gap-4 p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-subtle)] rounded-[var(--radius-lg)]">
                     <Loading 
                       variant="progress" 
@@ -5153,7 +5153,7 @@ outline: 2px solid var(--color-border-focus);`}
               <VStack gap={8}>
                 {/* Design Tokens */}
                 <VStack gap={3}>
-                  <Label>Design Tokens</Label>
+                  <Label>Design tokens</Label>
                   <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
                     <code>size: 38×38px</code> · <code>padding: 8px 6px</code> · <code>radius: 8px</code> · <code>icon: 22px</code>
                   </div>
@@ -5161,7 +5161,7 @@ outline: 2px solid var(--color-border-focus);`}
 
                 {/* Status Variants */}
                 <VStack gap={3}>
-                  <Label>Status Variants</Label>
+                  <Label>Status variants</Label>
                   <div className="flex gap-8 items-center p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-subtle)] rounded-[var(--radius-lg)]">
                     <VStack gap={2} align="center">
                       <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">Default</span>
@@ -5186,7 +5186,7 @@ outline: 2px solid var(--color-border-focus);`}
 
                 {/* Type Variants */}
                 <VStack gap={3}>
-                  <Label>Type Variants</Label>
+                  <Label>Type variants</Label>
                   <div className="flex gap-8 items-center p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-subtle)] rounded-[var(--radius-lg)]">
                     <VStack gap={2} align="center">
                       <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">Icon (Default)</span>
@@ -5227,7 +5227,7 @@ outline: 2px solid var(--color-border-focus);`}
               <VStack gap={8}>
                 {/* Tokens */}
                 <VStack gap={3}>
-                  <Label>Design Tokens</Label>
+                  <Label>Design tokens</Label>
                   <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
                     <code>track: 48×24px</code> · <code>thumb: 16×16px</code> · <code>padding: 4px</code> · <code>radius: pill</code> · <code>gap: 8px</code>
                   </div>
@@ -5273,7 +5273,7 @@ outline: 2px solid var(--color-border-focus);`}
 
                 {/* Interactive */}
                 <VStack gap={3}>
-                  <Label>Interactive Examples</Label>
+                  <Label>Interactive examples</Label>
                   <div className="flex flex-col gap-3">
                     <Toggle label="Enable dark mode" defaultChecked />
                     <Toggle label="Receive notifications" />
@@ -5283,7 +5283,7 @@ outline: 2px solid var(--color-border-focus);`}
 
                 {/* With Description */}
                 <VStack gap={3}>
-                  <Label>With Description</Label>
+                  <Label>With description</Label>
                   <Toggle
                     label="Auto-scaling"
                     description="Automatically scale instances based on demand"
@@ -5298,7 +5298,7 @@ outline: 2px solid var(--color-border-focus);`}
               <VStack gap={8}>
                 {/* Tokens */}
                 <VStack gap={3}>
-                  <Label>Design Tokens</Label>
+                  <Label>Design tokens</Label>
                   <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
                     <code>size: 16×16px</code> · <code>radius: 4px</code> · <code>gap: 6px</code> · <code>icon: 12px</code>
                   </div>
@@ -5348,7 +5348,7 @@ outline: 2px solid var(--color-border-focus);`}
 
                 {/* Error State */}
                 <VStack gap={3}>
-                  <Label>Error State</Label>
+                  <Label>Error state</Label>
                   <div className="flex gap-8 items-start">
                     <Checkbox label="Unchecked with error" error errorMessage="This field is required" />
                     <Checkbox label="Checked with error" defaultChecked error />
@@ -5357,7 +5357,7 @@ outline: 2px solid var(--color-border-focus);`}
 
                 {/* With Description */}
                 <VStack gap={3}>
-                  <Label>With Description</Label>
+                  <Label>With description</Label>
                   <Checkbox
                     label="Email notifications"
                     description="Receive email notifications for important updates"
@@ -5367,7 +5367,7 @@ outline: 2px solid var(--color-border-focus);`}
 
                 {/* Checkbox Group */}
                 <VStack gap={3}>
-                  <Label>Checkbox Group</Label>
+                  <Label>Checkbox group</Label>
                   <div className="flex gap-8 items-start">
                     <CheckboxGroup label="Select options" direction="vertical">
                       <Checkbox label="Option 1" defaultChecked />
@@ -5403,7 +5403,7 @@ outline: 2px solid var(--color-border-focus);`}
               <VStack gap={8}>
                 {/* Tokens */}
                 <VStack gap={3}>
-                  <Label>Design Tokens</Label>
+                  <Label>Design tokens</Label>
                   <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
                     <code>size: 16×16px</code> · <code>dot: 6px</code> · <code>border: 2px</code> · <code>gap: 6px</code>
                   </div>
@@ -5449,7 +5449,7 @@ outline: 2px solid var(--color-border-focus);`}
 
                 {/* Radio Group */}
                 <VStack gap={3}>
-                  <Label>Radio Group</Label>
+                  <Label>Radio group</Label>
                   <div className="flex gap-8 items-start">
                     <RadioGroup label="Select one option" defaultValue="option1" direction="vertical">
                       <Radio label="Option 1" value="option1" />
@@ -5485,7 +5485,7 @@ outline: 2px solid var(--color-border-focus);`}
               <VStack gap={8}>
                 {/* Tokens */}
                 <VStack gap={3}>
-                  <Label>Design Tokens</Label>
+                  <Label>Design tokens</Label>
                   <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
                     <code>height: 40px</code> · <code>padding-x: 12px</code> · <code>button-size: 28px</code> · <code>radius: 4px</code>
                   </div>
@@ -5599,7 +5599,7 @@ outline: 2px solid var(--color-border-focus);`}
               <VStack gap={8}>
                 {/* Tokens */}
                 <VStack gap={3}>
-                  <Label>Design Tokens</Label>
+                  <Label>Design tokens</Label>
                   <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
                     <code>gap: 24px</code> · <code>min-width: 80px</code> · <code>padding-x: 12px</code> · <code>indicator: 2px</code> · <code>boxed-padding: 24×8px</code>
                   </div>
@@ -5682,7 +5682,7 @@ outline: 2px solid var(--color-border-focus);`}
 
                 {/* Interactive Example */}
                 <VStack gap={3}>
-                  <Label>Interactive Example</Label>
+                  <Label>Interactive example</Label>
                   <Tabs defaultValue="overview" size="sm">
                     <TabList>
                       <Tab value="overview">Overview</Tab>
@@ -5721,7 +5721,7 @@ outline: 2px solid var(--color-border-focus);`}
               <VStack gap={8}>
                 {/* Tokens */}
                 <VStack gap={3}>
-                  <Label>Design Tokens</Label>
+                  <Label>Design tokens</Label>
                   <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
                     <code>gap: 6px</code> · <code>icon: 12px</code> · <code>font: 14px / 20px / medium</code>
                   </div>
@@ -5742,10 +5742,10 @@ outline: 2px solid var(--color-border-focus);`}
 
                 {/* With Content */}
                 <VStack gap={3}>
-                  <Label>With Content</Label>
+                  <Label>With content</Label>
                   <div className="border border-[var(--color-border-default)] rounded-[var(--radius-md)] p-4">
                     <Disclosure defaultOpen>
-                      <Disclosure.Trigger>Volume Details</Disclosure.Trigger>
+                      <Disclosure.Trigger>Volume details</Disclosure.Trigger>
                       <Disclosure.Panel>
                         <div className="mt-3 pl-[18px] text-[length:var(--font-size-12)] text-[var(--color-text-subtle)]">
                           <p>Name: vol-12345</p>
@@ -5759,7 +5759,7 @@ outline: 2px solid var(--color-border-focus);`}
 
                 {/* Multiple */}
                 <VStack gap={3}>
-                  <Label>Multiple Disclosures</Label>
+                  <Label>Multiple disclosures</Label>
                   <div className="border border-[var(--color-border-default)] rounded-[var(--radius-md)] divide-y divide-[var(--color-border-default)]">
                     <div className="p-4">
                       <Disclosure>
@@ -5801,7 +5801,7 @@ outline: 2px solid var(--color-border-focus);`}
               <VStack gap={8}>
                 {/* Tokens */}
                 <VStack gap={3}>
-                  <Label>Design Tokens</Label>
+                  <Label>Design tokens</Label>
                   <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
                     <code>padding: 12px</code> · <code>gap: 8px</code> · <code>radius: 6px</code> · <code>icon: 16px</code> · <code>font: 12px</code>
                   </div>
@@ -5828,7 +5828,7 @@ outline: 2px solid var(--color-border-focus);`}
 
                 {/* Without Icon */}
                 <VStack gap={3}>
-                  <Label>Without Icon</Label>
+                  <Label>Without icon</Label>
                   <InlineMessage variant="info" hideIcon>
                     This message has no icon.
                   </InlineMessage>
@@ -5836,7 +5836,7 @@ outline: 2px solid var(--color-border-focus);`}
 
                 {/* Long Content */}
                 <VStack gap={3}>
-                  <Label>Long Content</Label>
+                  <Label>Long content</Label>
                   <InlineMessage variant="warning">
                     This is a longer message that demonstrates how the component handles multi-line content. 
                     The text will wrap naturally and the icon stays aligned to the top.
@@ -5855,7 +5855,7 @@ outline: 2px solid var(--color-border-focus);`}
               <VStack gap={8}>
                 {/* Tokens */}
                 <VStack gap={3}>
-                  <Label>Design Tokens</Label>
+                  <Label>Design tokens</Label>
                   <div className="overflow-x-auto">
                     <table className="w-full text-[length:var(--font-size-11)]">
                       <thead>
@@ -5934,9 +5934,9 @@ outline: 2px solid var(--color-border-focus);`}
                 <VStack gap={3}>
                   <Label>Layout (with Icons)</Label>
                   <div className="flex gap-3 items-center">
-                    <Badge size="sm" theme="blue">Text Only</Badge>
-                    <Badge size="sm" theme="blue" leftIcon={<IconCheck size={10} />}>Left Icon</Badge>
-                    <Badge size="sm" theme="blue" rightIcon={<IconArrowRight size={10} />}>Right Icon</Badge>
+                    <Badge size="sm" theme="blue">Text only</Badge>
+                    <Badge size="sm" theme="blue" leftIcon={<IconCheck size={10} />}>Left icon</Badge>
+                    <Badge size="sm" theme="blue" rightIcon={<IconArrowRight size={10} />}>Right icon</Badge>
                   </div>
                 </VStack>
 
@@ -5964,7 +5964,7 @@ outline: 2px solid var(--color-border-focus);`}
               <VStack gap={8}>
                 {/* Tokens */}
                 <VStack gap={3}>
-                  <Label>Design Tokens</Label>
+                  <Label>Design tokens</Label>
                   <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
                     <code>gap: 4px</code> · <code>font-size: 11px</code> · <code>line-height: 16px</code> · <code>font-weight: medium</code>
                   </div>
@@ -5972,7 +5972,7 @@ outline: 2px solid var(--color-border-focus);`}
 
                 {/* Basic Usage */}
                 <VStack gap={3}>
-                  <Label>Basic Usage</Label>
+                  <Label>Basic usage</Label>
                   <div className="p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-md)]">
                     <Breadcrumb
                       items={[
@@ -5987,7 +5987,7 @@ outline: 2px solid var(--color-border-focus);`}
 
                 {/* Long Path */}
                 <VStack gap={3}>
-                  <Label>Long Path</Label>
+                  <Label>Long path</Label>
                   <div className="p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-md)]">
                     <Breadcrumb
                       items={[
@@ -6027,7 +6027,7 @@ outline: 2px solid var(--color-border-focus);`}
               <VStack gap={8}>
                 {/* Tokens */}
                 <VStack gap={3}>
-                  <Label>Design Tokens</Label>
+                  <Label>Design tokens</Label>
                   <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
                     <code>padding: 6×4px</code> · <code>gap: 4px</code> · <code>radius: pill (16px)</code> · <code>font-size: 11px</code> · <code>icon: 14px</code>
                   </div>
@@ -6137,7 +6137,7 @@ outline: 2px solid var(--color-border-focus);`}
 
                 {/* Custom Labels */}
                 <VStack gap={3}>
-                  <Label>Custom Labels</Label>
+                  <Label>Custom labels</Label>
                   <div className="flex gap-3 items-center">
                     <StatusIndicator status="active" label="Running" />
                     <StatusIndicator status="error" label="Failed" />
@@ -6179,7 +6179,7 @@ outline: 2px solid var(--color-border-focus);`}
               <VStack gap={8}>
                 {/* Design Tokens */}
                 <VStack gap={3}>
-                  <Label>Design Tokens</Label>
+                  <Label>Design tokens</Label>
                   <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
                     <code>title: 16px semibold</code> · <code>description: 12px</code> · <code>gap: 12px</code> · <code>status-dot: 24px</code> · <code>badge: 11px medium</code>
                   </div>
@@ -6187,7 +6187,7 @@ outline: 2px solid var(--color-border-focus);`}
 
                 {/* Basic Usage */}
                 <VStack gap={3}>
-                  <Label>Basic Usage</Label>
+                  <Label>Basic usage</Label>
                   <div className="flex flex-col gap-4 p-4 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)] border border-[var(--color-border-default)]">
                     <CardTitle title="lively-sunset-6041" />
                     <CardTitle 
@@ -6224,7 +6224,7 @@ outline: 2px solid var(--color-border-focus);`}
 
                 {/* With Badges */}
                 <VStack gap={3}>
-                  <Label>With Badges</Label>
+                  <Label>With badges</Label>
                   <div className="flex flex-col gap-4 p-4 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)] border border-[var(--color-border-default)]">
                     <CardTitle 
                       title="lively-sunset-6041" 
@@ -6280,7 +6280,7 @@ outline: 2px solid var(--color-border-focus);`}
 
                 {/* All Props Combined */}
                 <VStack gap={3}>
-                  <Label>Full Example</Label>
+                  <Label>Full example</Label>
                   <div className="flex flex-col gap-4 p-4 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)] border border-[var(--color-border-default)]">
                     <CardTitle 
                       title="production-ml-server" 
@@ -6306,7 +6306,7 @@ outline: 2px solid var(--color-border-focus);`}
               <VStack gap={8}>
                 {/* Tokens */}
                 <VStack gap={3}>
-                  <Label>Design Tokens</Label>
+                  <Label>Design tokens</Label>
                   <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
                     <code>padding: 8×4px</code> · <code>radius: 4px</code> · <code>font-size: 11px</code> · <code>min-width: 60px</code> · <code>max-width: 230px</code> · <code>arrow: 4px</code>
                   </div>
@@ -6333,7 +6333,7 @@ outline: 2px solid var(--color-border-focus);`}
 
                 {/* Examples */}
                 <VStack gap={3}>
-                  <Label>Use Cases</Label>
+                  <Label>Use cases</Label>
                   <div className="flex gap-4 items-center">
                     <Tooltip content="Delete this item permanently">
                       <Button variant="danger" icon={<IconTrash size={16} />} aria-label="Delete" />
@@ -6352,7 +6352,7 @@ outline: 2px solid var(--color-border-focus);`}
 
                 {/* With Delay */}
                 <VStack gap={3}>
-                  <Label>Custom Delay</Label>
+                  <Label>Custom delay</Label>
                   <div className="flex gap-4 items-center">
                     <Tooltip content="Instant (0ms)" delay={0}>
                       <Button variant="outline" size="sm">0ms</Button>
@@ -6373,7 +6373,7 @@ outline: 2px solid var(--color-border-focus);`}
               <VStack gap={8}>
                 {/* Tokens */}
                 <VStack gap={3}>
-                  <Label>Design Tokens</Label>
+                  <Label>Design tokens</Label>
                   <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
                     <code>size: 16×16px</code> · <code>radius: 4px</code> · <code>gap: 4px</code>
                   </div>
@@ -6381,7 +6381,7 @@ outline: 2px solid var(--color-border-focus);`}
 
                 {/* Individual Controls */}
                 <VStack gap={3}>
-                  <Label>Individual Controls</Label>
+                  <Label>Individual controls</Label>
                   <div className="flex gap-6 items-center">
                     <VStack gap={1}>
                       <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">Minimize</span>
@@ -6400,7 +6400,7 @@ outline: 2px solid var(--color-border-focus);`}
 
                 {/* Controls Group */}
                 <VStack gap={3}>
-                  <Label>Controls Group</Label>
+                  <Label>Controls group</Label>
                   <div className="flex gap-6 items-center">
                     <VStack gap={1}>
                       <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">All Controls</span>
@@ -6433,7 +6433,7 @@ outline: 2px solid var(--color-border-focus);`}
               <VStack gap={8}>
                 {/* Tokens */}
                 <VStack gap={3}>
-                  <Label>Design Tokens</Label>
+                  <Label>Design tokens</Label>
                   <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
                     <code>container.padding: 16×12px</code> · <code>container.radius: 8px</code> · <code>container.gap: 12px</code> · <code>title: 16px semibold</code> · <code>actions.gap: 4px</code> · <code>info-grid.gap: 8px</code> · <code>info-card.padding: 16×12px</code> · <code>info-card.radius: 8px</code> · <code>info-card.gap: 6px</code>
                   </div>
@@ -6450,7 +6450,7 @@ outline: 2px solid var(--color-border-focus);`}
                       <Button variant="outline" size="sm" leftIcon={<IconPlayerStop size={12} stroke={1.5} />}>Stop</Button>
                       <Button variant="outline" size="sm" leftIcon={<IconRefresh size={12} stroke={1.5} />}>Reboot</Button>
                       <Button variant="outline" size="sm" leftIcon={<IconTrash size={12} stroke={1.5} />}>Delete</Button>
-                      <Button variant="outline" size="sm" rightIcon={<IconChevronDown size={12} stroke={1.5} />}>More Actions</Button>
+                      <Button variant="outline" size="sm" rightIcon={<IconChevronDown size={12} stroke={1.5} />}>More actions</Button>
                     </DetailHeader.Actions>
                     <DetailHeader.InfoGrid>
                       <DetailHeader.InfoCard label="Status" value="Active" status="active" />
@@ -6498,7 +6498,7 @@ outline: 2px solid var(--color-border-focus);`}
               <VStack gap={8}>
                 {/* Tokens */}
                 <VStack gap={3}>
-                  <Label>Design Tokens</Label>
+                  <Label>Design tokens</Label>
                   <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
                     <code>padding: 16×12px</code> · <code>radius: 6px (md)</code> · <code>header.height: 32px</code> · <code>title: 14px medium</code> · <code>label: 11px medium</code> · <code>value: 12px</code>
                   </div>
@@ -6506,7 +6506,7 @@ outline: 2px solid var(--color-border-focus);`}
 
                 {/* Basic Example */}
                 <VStack gap={3}>
-                  <Label>Basic Usage</Label>
+                  <Label>Basic usage</Label>
                   <SectionCard>
                     <SectionCard.Header title="Basic information" />
                     <SectionCard.Content>
@@ -6589,7 +6589,7 @@ outline: 2px solid var(--color-border-focus);`}
               <VStack gap={8}>
                 {/* Tokens */}
                 <VStack gap={3}>
-                  <Label>Design Tokens</Label>
+                  <Label>Design tokens</Label>
                   <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
                     <code>item.padding: 8×6px</code> · <code>item.gap: 6px</code> · <code>item.radius: 6px (md)</code> · <code>section.padding: 8×4px</code> · <code>divider.margin: 8px</code>
                   </div>
@@ -6598,7 +6598,7 @@ outline: 2px solid var(--color-border-focus);`}
                 {/* Example */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <VStack gap={3}>
-                    <Label>Menu Items</Label>
+                    <Label>Menu items</Label>
                     <div className="w-full max-w-[200px] p-2 bg-[var(--color-surface-default)] rounded-[var(--radius-card)] border border-[var(--color-border-default)]">
                       <MenuItem icon={<IconHome size={16} />} label="Home" />
                       <MenuItem icon={<IconServer size={16} />} label="Instances" active badge="6" />
@@ -6609,7 +6609,7 @@ outline: 2px solid var(--color-border-focus);`}
                   </VStack>
 
                   <VStack gap={3}>
-                    <Label>Collapsible Section</Label>
+                    <Label>Collapsible section</Label>
                     <div className="w-full max-w-[200px] p-2 bg-[var(--color-surface-default)] rounded-[var(--radius-card)] border border-[var(--color-border-default)]">
                       <MenuSection title="Storage">
                         <MenuItem label="Volumes" />
@@ -6631,7 +6631,7 @@ outline: 2px solid var(--color-border-focus);`}
               <VStack gap={8}>
                 {/* Tokens */}
                 <VStack gap={3}>
-                  <Label>Design Tokens</Label>
+                  <Label>Design tokens</Label>
                   <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
                     <code>min-width: 80px</code> · <code>padding: 12×6px</code> · <code>radius: 6px</code> · <code>shadow: md</code>
                   </div>
@@ -6657,7 +6657,7 @@ outline: 2px solid var(--color-border-focus);`}
 
                 {/* Click Trigger */}
                 <VStack gap={3}>
-                  <Label>Click Trigger</Label>
+                  <Label>Click trigger</Label>
                   <ContextMenu
                     trigger="click"
                     items={[
@@ -6673,7 +6673,7 @@ outline: 2px solid var(--color-border-focus);`}
 
                 {/* With Submenu */}
                 <VStack gap={3}>
-                  <Label>With Submenu</Label>
+                  <Label>With submenu</Label>
                   <ContextMenu
                     trigger="click"
                     items={[
@@ -6696,7 +6696,7 @@ outline: 2px solid var(--color-border-focus);`}
 
                 {/* Status Variants */}
                 <VStack gap={3}>
-                  <Label>Status Variants</Label>
+                  <Label>Status variants</Label>
                   <ContextMenu
                     trigger="click"
                     items={[
@@ -6706,7 +6706,7 @@ outline: 2px solid var(--color-border-focus);`}
                       { id: 'danger2', label: 'Delete forever', status: 'danger', onClick: () => {} },
                     ]}
                   >
-                    <Button variant="outline" size="sm">Show Status Variants</Button>
+                    <Button variant="outline" size="sm">Show status variants</Button>
                   </ContextMenu>
                 </VStack>
               </VStack>
@@ -6717,7 +6717,7 @@ outline: 2px solid var(--color-border-focus);`}
               <VStack gap={8}>
                 {/* Tokens */}
                 <VStack gap={3}>
-                  <Label>Design Tokens</Label>
+                  <Label>Design tokens</Label>
                   <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
                     <code>padding: 16px</code> · <code>gap: 24px</code> · <code>radius: 16px</code> · <code>backdrop: black/60</code>
                   </div>
@@ -6725,7 +6725,7 @@ outline: 2px solid var(--color-border-focus);`}
 
                 {/* Basic Modal */}
                 <VStack gap={3}>
-                  <Label>Basic Modal</Label>
+                  <Label>Basic modal</Label>
                   <ModalDemo variant="basic" />
                 </VStack>
 
@@ -6752,7 +6752,7 @@ outline: 2px solid var(--color-border-focus);`}
               <VStack gap={8}>
                 {/* Design Tokens */}
                 <VStack gap={3}>
-                  <Label>Design Tokens</Label>
+                  <Label>Design tokens</Label>
                   <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
                     <code>width: 376px (default)</code> · <code>padding-x: 24px</code> · <code>padding-y: 16px</code> · <code>animation: 300ms ease-out</code>
                   </div>
@@ -6760,7 +6760,7 @@ outline: 2px solid var(--color-border-focus);`}
 
                 {/* Interactive Demo */}
                 <VStack gap={3}>
-                  <Label>Interactive Demo</Label>
+                  <Label>Interactive demo</Label>
                   <DrawerDemo />
                 </VStack>
 
@@ -6838,7 +6838,7 @@ outline: 2px solid var(--color-border-focus);`}
               <VStack gap={8}>
                 {/* Design Tokens */}
                 <VStack gap={3}>
-                  <Label>Design Tokens</Label>
+                  <Label>Design tokens</Label>
                   <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
                     <code>segment-padding: 4px 12px</code> · <code>border-radius: 8px</code> · <code>font-size: 11px</code> · <code>gap: 4px</code>
                   </div>
@@ -6990,7 +6990,7 @@ outline: 2px solid var(--color-border-focus);`}
 
                 {/* Status Icons */}
                 <VStack gap={4}>
-                  <Label>Status Icons</Label>
+                  <Label>Status icons</Label>
                   <div className="flex gap-4 items-center p-4 bg-[var(--color-surface-subtle)] rounded-lg">
                     <div className="flex items-center gap-2">
                       <div className="size-4 rounded-full border border-[var(--color-border-default)]" style={{ borderStyle: 'dashed' }} />
@@ -7019,7 +7019,7 @@ outline: 2px solid var(--color-border-focus);`}
 
                 {/* Props Reference */}
                 <VStack gap={4}>
-                  <Label>Props Reference</Label>
+                  <Label>Props reference</Label>
                   <div className="overflow-x-auto">
                     <table className="w-full text-[length:var(--font-size-12)]">
                       <thead>
@@ -7085,7 +7085,7 @@ outline: 2px solid var(--color-border-focus);`}
               <VStack gap={8}>
                 {/* Layout Specs */}
                 <VStack gap={4}>
-                  <Label>Layout Specifications</Label>
+                  <Label>Layout specifications</Label>
                   <div className="overflow-x-auto">
                     <table className="w-full text-[length:var(--font-size-12)]">
                       <thead>
@@ -7206,7 +7206,7 @@ outline: 2px solid var(--color-border-focus);`}
 
                 {/* Sidebar Toggle States */}
                 <VStack gap={4}>
-                  <Label>Sidebar States</Label>
+                  <Label>Sidebar states</Label>
                   <div className="grid grid-cols-2 gap-4">
                     {/* Expanded */}
                     <div className="border border-[var(--color-border-default)] rounded-[var(--radius-lg)] overflow-hidden">
@@ -7247,7 +7247,7 @@ outline: 2px solid var(--color-border-focus);`}
 
                 {/* CSS Variables */}
                 <VStack gap={3}>
-                  <Label>Layout Tokens</Label>
+                  <Label>Layout tokens</Label>
                   <pre className="text-[length:var(--font-size-11)] p-4 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)] overflow-x-auto text-[var(--color-text-muted)]">
 {`/* Layout Variables */
 --layout-max-width: 1920px;      /* Maximum viewport */
@@ -7290,7 +7290,7 @@ outline: 2px solid var(--color-border-focus);`}
               <VStack gap={8}>
                 {/* Design Tokens */}
                 <VStack gap={3}>
-                  <Label>Design Tokens</Label>
+                  <Label>Design tokens</Label>
                   <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
                     <code>bar-height: 4px</code> · <code>bar-radius: 2px</code> · <code>row-gap: 22px</code> · <code>status-colors: success/warning/error</code>
                   </div>
@@ -7298,7 +7298,7 @@ outline: 2px solid var(--color-border-focus);`}
 
                 {/* Quota Bar */}
                 <VStack gap={3}>
-                  <Label>Quota Bar</Label>
+                  <Label>Quota bar</Label>
                   <div className="w-[288px] p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-2xl">
                     <div className="text-[11px] font-semibold text-[var(--color-text-muted)] tracking-wide mb-4">COMPUTE QUOTA</div>
                     <div className="space-y-[22px]">
@@ -7318,7 +7318,7 @@ outline: 2px solid var(--color-border-focus);`}
               <VStack gap={8}>
                 {/* Design Tokens */}
                 <VStack gap={3}>
-                  <Label>Design Tokens</Label>
+                  <Label>Design tokens</Label>
                   <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
                     <code>fill-opacity: 0.1</code> · <code>line-width: 1px</code> · <code>smooth: true</code> · <code>symbol-size: 6px</code>
                   </div>
@@ -7338,7 +7338,7 @@ outline: 2px solid var(--color-border-focus);`}
 
                 {/* No Data Area chart */}
                 <VStack gap={3}>
-                  <Label>No Data</Label>
+                  <Label>No data</Label>
                   <AreaChartDemo variant="nodata" />
                 </VStack>
               </VStack>
@@ -7349,7 +7349,7 @@ outline: 2px solid var(--color-border-focus);`}
               <VStack gap={8}>
                 {/* Design Tokens */}
                 <VStack gap={3}>
-                  <Label>Design Tokens</Label>
+                  <Label>Design tokens</Label>
                   <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
                     <code>radius: 90px</code> · <code>label-threshold: 15%</code> · <code>legend: external</code> · <code>legend-scroll: 60px</code>
                   </div>
@@ -7394,7 +7394,7 @@ outline: 2px solid var(--color-border-focus);`}
               <VStack gap={8}>
                 {/* Design Tokens */}
                 <VStack gap={3}>
-                  <Label>Design Tokens</Label>
+                  <Label>Design tokens</Label>
                   <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
                     <code>arc-width: 14px</code> · <code>start-angle: 200°</code> · <code>end-angle: -20°</code> · <code>status-colors: success/warning/error</code>
                   </div>
@@ -7402,7 +7402,7 @@ outline: 2px solid var(--color-border-focus);`}
 
                 {/* Status Variants */}
                 <VStack gap={3}>
-                  <Label>Status Variants</Label>
+                  <Label>Status variants</Label>
                   <div className="flex items-center gap-8 flex-wrap">
                     <HalfDoughnutChartDemo value={35} label="Safe" status="success" used={66.5} total={189.9} unit="TiB" />
                     <HalfDoughnutChartDemo value={75} label="Warning" status="warning" used={142.4} total={189.9} unit="TiB" />
@@ -7417,7 +7417,7 @@ outline: 2px solid var(--color-border-focus);`}
               <VStack gap={8}>
                 {/* Design Tokens */}
                 <VStack gap={3}>
-                  <Label>Design Tokens</Label>
+                  <Label>Design tokens</Label>
                   <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
                     <code>inner-radius: 68%</code> · <code>outer-radius: 80%</code> · <code>thickness: 12%</code> · <code>border-radius: 6px</code>
                   </div>

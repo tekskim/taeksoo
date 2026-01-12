@@ -67,7 +67,7 @@ export function MyTemplatesPage() {
                 </VStack>
                 <HStack gap={2}>
                   <Button variant="secondary" size="sm" icon={<IconRefresh size={14} stroke={1.5} />}>Refresh</Button>
-                  <Button variant="primary" size="sm" icon={<IconPlus size={14} stroke={1.5} />}>Create Template</Button>
+                  <Button variant="primary" size="sm" icon={<IconPlus size={14} stroke={1.5} />}>Create template</Button>
                 </HStack>
               </HStack>
               <EmptyState icon={<IconTemplate size={48} stroke={1} />} title="No templates found" description="Create your first template to get started." />
