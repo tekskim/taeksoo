@@ -112,7 +112,7 @@ interface SectionStatus {
 const SECTION_LABELS: Record<SectionStep, string> = {
   templates: 'Launch type',
   'basic-info': 'Basic information',
-  image: 'Image',
+  image: 'Source',
   flavor: 'Flavor',
   network: 'Network',
   authentication: 'Authentication',
@@ -2416,12 +2416,13 @@ interface TemplatesSectionProps {
   onSelect: (id: string) => void;
   onSkip: () => void;
   onNext: () => void;
+  isActive?: boolean;
   isEditing?: boolean;
   onEditCancel?: () => void;
   onEditDone?: () => void;
 }
 
-function TemplatesSection({ templates, selectedId, onSelect, onSkip, onNext, isEditing, onEditCancel, onEditDone }: TemplatesSectionProps) {
+function TemplatesSection({ templates, selectedId, onSelect, onSkip, onNext, isActive = false, isEditing = false, onEditCancel, onEditDone }: TemplatesSectionProps) {
   const [activeTab, setActiveTab] = useState('favorites');
   const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
@@ -2522,15 +2523,18 @@ function TemplatesSection({ templates, selectedId, onSelect, onSkip, onNext, isE
   ];
 
   return (
-    <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] ring-2 ring-[var(--color-action-primary)] rounded-lg px-4 py-3">
-      <VStack gap={6}>
-        {/* Section Header - h-8 matches other sections */}
-        <HStack justify="between" align="center" className="w-full h-8">
-          <h5 className="text-[length:var(--font-size-14)] font-semibold leading-[var(--line-height-20)] text-[var(--color-text-default)]">
-            Launch type
-          </h5>
-        </HStack>
-
+    <SectionCard isActive={isActive}>
+      <SectionCard.Header 
+        title="Launch type" 
+        showDivider
+        actions={isEditing ? (
+          <HStack gap={2}>
+            <Button variant="secondary" size="sm" onClick={onEditCancel}>Skip</Button>
+            <Button variant="primary" size="sm" onClick={onEditDone}>Apply</Button>
+          </HStack>
+        ) : undefined}
+      />
+      <SectionCard.Content gap={6}>
         {/* Resource type */}
         <VStack gap={2} align="start">
           <span className="text-[14px] font-medium text-[var(--color-text-default)]">
@@ -2704,46 +2708,27 @@ function TemplatesSection({ templates, selectedId, onSelect, onSkip, onNext, isE
           </Tabs>
         </VStack>
 
-        {/* Action Buttons */}
-        <HStack gap={2} justify="end" className="pt-2 w-full">
-          {isEditing ? (
-            <>
-              <Button
-                variant="secondary"
-                size="sm"
-                onClick={onEditCancel}
-              >
-                Skip
-              </Button>
-              <Button
-                variant="primary"
-                size="sm"
-                onClick={onEditDone}
-              >
-                Apply
-              </Button>
-            </>
-          ) : (
-            <>
-              <Button
-                variant="outline"
-                onClick={onSkip}
-                className="min-w-[80px]"
-              >
-                Skip
-              </Button>
-              <Button
-                variant="primary"
-                onClick={onNext}
-                className="min-w-[80px]"
-              >
-                Next
-              </Button>
-            </>
-          )}
-        </HStack>
-      </VStack>
-    </div>
+        {/* Action Buttons - only show when not editing */}
+        {!isEditing && (
+          <HStack gap={2} justify="end" className="pt-2 w-full">
+            <Button
+              variant="outline"
+              onClick={onSkip}
+              className="min-w-[80px]"
+            >
+              Skip
+            </Button>
+            <Button
+              variant="primary"
+              onClick={onNext}
+              className="min-w-[80px]"
+            >
+              Next
+            </Button>
+          </HStack>
+        )}
+      </SectionCard.Content>
+    </SectionCard>
   );
 }
 
@@ -3147,6 +3132,7 @@ export function CreateInstancePage() {
                       onSelect={setSelectedTemplateId}
                       onSkip={() => handleSkip('templates')}
                       onNext={() => handleNext('templates')}
+                      isActive
                       isEditing={editingSection === 'templates'}
                       onEditCancel={handleEditCancel}
                       onEditDone={handleEditDone}

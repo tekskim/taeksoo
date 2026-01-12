@@ -340,7 +340,7 @@ export function LoadBalancersPage() {
           <VStack gap={3}>
             {/* Page Header */}
             <div className="flex justify-between items-center h-8 w-full">
-              <h1 className="text-[length:var(--font-size-16)] font-semibold text-[var(--color-text-default)]">
+              <h1 className="text-[length:var(--font-size-16)] font-semibold leading-6 text-[var(--color-text-default)]">
                 Load balancers
               </h1>
               <Button variant="primary" size="md" onClick={() => navigate('/compute/load-balancers/create')}>
