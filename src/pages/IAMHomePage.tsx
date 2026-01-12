@@ -53,6 +53,10 @@ interface HalfDonutChartProps {
   secondaryColor?: string;
   label?: string;
   value?: string;
+  /** Tooltip data for primary segment (e.g., Success) */
+  primaryTooltip?: { label: string; value: string; percent: number };
+  /** Tooltip data for secondary segment (e.g., Failure) */
+  secondaryTooltip?: { label: string; value: string; percent: number };
 }
 
 // Get color from design system CSS variables
@@ -70,6 +74,8 @@ function HalfDonutChart({
   secondaryColor,
   label,
   value,
+  primaryTooltip,
+  secondaryTooltip,
 }: HalfDonutChartProps) {
   const [showTooltip, setShowTooltip] = useState(false);
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
@@ -176,9 +182,26 @@ function HalfDonutChart({
           className="absolute z-10 backdrop-blur-[40px] bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px] shadow-[0px_0px_4px_0px_rgba(0,0,0,0.1)] px-2 py-1.5 pointer-events-none whitespace-nowrap"
           style={{ left: mousePos.x + 12, top: mousePos.y + 12 }}
         >
-          <span className="text-[11px] leading-[14px] text-[var(--color-text-default)]">
-            {percentage}%
-          </span>
+          {primaryTooltip && secondaryTooltip ? (
+            <div className="flex flex-col gap-1">
+              <div className="flex items-center gap-1.5">
+                <div className="w-2 h-2 rounded-sm" style={{ backgroundColor: primaryColor }} />
+                <span className="text-[11px] leading-[14px] text-[var(--color-text-default)]">
+                  {primaryTooltip.label}: {primaryTooltip.value} ({primaryTooltip.percent}%)
+                </span>
+              </div>
+              <div className="flex items-center gap-1.5">
+                <div className="w-2 h-2 rounded-sm" style={{ backgroundColor: secondaryColor || bgColor }} />
+                <span className="text-[11px] leading-[14px] text-[var(--color-text-default)]">
+                  {secondaryTooltip.label}: {secondaryTooltip.value} ({secondaryTooltip.percent}%)
+                </span>
+              </div>
+            </div>
+          ) : (
+            <span className="text-[11px] leading-[14px] text-[var(--color-text-default)]">
+              {percentage}%
+            </span>
+          )}
         </div>
       )}
     </div>
@@ -355,6 +378,8 @@ export function IAMHomePage() {
                         secondaryColor="#f87171"
                         label="Total"
                         value="1,279"
+                        primaryTooltip={{ label: 'Success', value: '1,234', percent: 96 }}
+                        secondaryTooltip={{ label: 'Failure', value: '45', percent: 4 }}
                       />
                     </div>
 
@@ -378,6 +403,8 @@ export function IAMHomePage() {
                         primaryColor="#4ade80"
                         secondaryColor="#e2e8f0"
                         value="78%"
+                        primaryTooltip={{ label: 'Enabled', value: '117', percent: 78 }}
+                        secondaryTooltip={{ label: 'Disabled', value: '33', percent: 22 }}
                       />
                     </div>
                   </HStack>
