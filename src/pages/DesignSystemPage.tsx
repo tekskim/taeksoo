@@ -72,8 +72,10 @@ import {
   CardTitle,
   WizardSection,
   WizardSummary,
+  WizardSectionStatusIcon,
   PreSection,
   WritingSection,
+  SkippedSection,
   DoneSection,
   DoneSectionRow,
 } from '@/design-system';
@@ -367,6 +369,191 @@ function FilterSearchInputDemo() {
         Applied filters appear as removable tags below the input.
       </div>
     </div>
+  );
+}
+
+/* ----------------------------------------
+   Wizard Pattern Section
+   ---------------------------------------- */
+
+function WizardPatternSection() {
+  const [sectionStatus, setSectionStatus] = useState<Record<string, WizardSectionState>>({
+    'launch-type': 'done',
+    'basic-info': 'active',
+    'image': 'done',
+    'flavor': 'pre',
+    'network': 'pre',
+    'advanced': 'skipped',
+  });
+
+  const summaryItems: WizardSummaryItem[] = [
+    { key: 'launch-type', label: 'Launch Type', status: sectionStatus['launch-type'] },
+    { key: 'basic-info', label: 'Basic Information', status: sectionStatus['basic-info'] },
+    { key: 'image', label: 'Image', status: sectionStatus['image'] },
+    { key: 'flavor', label: 'Flavor', status: sectionStatus['flavor'] },
+    { key: 'network', label: 'Network', status: sectionStatus['network'] },
+    { key: 'advanced', label: 'Advanced', status: sectionStatus['advanced'] },
+  ];
+
+  const handleStatusChange = (key: string, status: WizardSectionState) => {
+    setSectionStatus(prev => ({ ...prev, [key]: status }));
+  };
+
+  return (
+    <VStack gap={8}>
+      {/* Design Tokens */}
+      <VStack gap={3}>
+        <Label>Section States (WizardSectionState)</Label>
+        <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
+          <code>'pre' | 'active' | 'done' | 'skipped' | 'writing'</code>
+        </div>
+      </VStack>
+
+      {/* Status Icons */}
+      <VStack gap={3}>
+        <Label>WizardSectionStatusIcon</Label>
+        <HStack gap={6}>
+          <HStack gap={2} align="center">
+            <WizardSectionStatusIcon status="pre" />
+            <span className="text-[length:var(--font-size-12)] text-[var(--color-text-muted)]">pre (대기)</span>
+          </HStack>
+          <HStack gap={2} align="center">
+            <WizardSectionStatusIcon status="active" />
+            <span className="text-[length:var(--font-size-12)] text-[var(--color-text-muted)]">active (진행 중)</span>
+          </HStack>
+          <HStack gap={2} align="center">
+            <WizardSectionStatusIcon status="done" />
+            <span className="text-[length:var(--font-size-12)] text-[var(--color-text-muted)]">done (완료)</span>
+          </HStack>
+          <HStack gap={2} align="center">
+            <WizardSectionStatusIcon status="skipped" />
+            <span className="text-[length:var(--font-size-12)] text-[var(--color-text-muted)]">skipped (건너뜀)</span>
+          </HStack>
+          <HStack gap={2} align="center">
+            <WizardSectionStatusIcon status="writing" />
+            <span className="text-[length:var(--font-size-12)] text-[var(--color-text-muted)]">writing (작성 중)</span>
+          </HStack>
+        </HStack>
+      </VStack>
+
+      {/* WizardSummary */}
+      <VStack gap={3}>
+        <Label>WizardSummary</Label>
+        <div className="w-[312px]">
+          <WizardSummary 
+            title="Summary" 
+            items={summaryItems}
+            onItemClick={(key) => console.log('Clicked:', key)}
+          />
+        </div>
+      </VStack>
+
+      {/* Section Components */}
+      <VStack gap={3}>
+        <Label>Section Components</Label>
+        <VStack gap={4} className="max-w-[600px]">
+          {/* PreSection */}
+          <VStack gap={1}>
+            <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">PreSection (대기 중)</span>
+            <PreSection title="Flavor" />
+          </VStack>
+
+          {/* WritingSection */}
+          <VStack gap={1}>
+            <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">WritingSection (작성 중)</span>
+            <WritingSection title="Image" />
+          </VStack>
+
+          {/* SkippedSection */}
+          <VStack gap={1}>
+            <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">SkippedSection (건너뜀)</span>
+            <SkippedSection title="Advanced" onEdit={() => console.log('Edit clicked')} />
+          </VStack>
+
+          {/* DoneSection */}
+          <VStack gap={1}>
+            <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">DoneSection (완료)</span>
+            <DoneSection title="Basic Information" onEdit={() => console.log('Edit clicked')}>
+              <DoneSectionRow label="Instance Name" value="my-instance-01" />
+              <DoneSectionRow label="AZ" value="nova (Default)" />
+              <DoneSectionRow label="Description" value="Test instance for development" />
+            </DoneSection>
+          </VStack>
+        </VStack>
+      </VStack>
+
+      {/* Interactive Demo */}
+      <VStack gap={3}>
+        <Label>Interactive Demo</Label>
+        <HStack gap={4} align="start">
+          {/* Status Controls */}
+          <VStack gap={2} className="w-[200px]">
+            <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">Change Status:</span>
+            {Object.keys(sectionStatus).map(key => (
+              <HStack key={key} gap={2} align="center" className="w-full">
+                <span className="text-[length:var(--font-size-11)] w-[100px] truncate">{key}</span>
+                <Select
+                  size="sm"
+                  value={sectionStatus[key]}
+                  onChange={(value) => handleStatusChange(key, value as WizardSectionState)}
+                  options={[
+                    { value: 'pre', label: 'pre' },
+                    { value: 'active', label: 'active' },
+                    { value: 'done', label: 'done' },
+                    { value: 'skipped', label: 'skipped' },
+                    { value: 'writing', label: 'writing' },
+                  ]}
+                  fullWidth
+                />
+              </HStack>
+            ))}
+          </VStack>
+
+          {/* Summary Preview */}
+          <div className="w-[312px]">
+            <WizardSummary 
+              title="Summary" 
+              items={summaryItems}
+            />
+          </div>
+        </HStack>
+      </VStack>
+
+      {/* Usage Code */}
+      <VStack gap={3}>
+        <Label>Usage</Label>
+        <div className="text-[length:var(--font-size-11)] font-mono p-4 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)] overflow-x-auto">
+          <pre className="whitespace-pre-wrap">{`import { 
+  WizardSummary, 
+  DoneSection, DoneSectionRow,
+  PreSection, WritingSection, SkippedSection,
+} from '@/design-system';
+import type { WizardSectionState, WizardSummaryItem } from '@/design-system';
+
+// 섹션 상태 관리
+const [sectionStatus, setSectionStatus] = useState<Record<string, WizardSectionState>>({
+  'basic-info': 'active',
+  'image': 'pre',
+  'flavor': 'pre',
+});
+
+// Summary 아이템
+const summaryItems: WizardSummaryItem[] = [
+  { key: 'basic-info', label: 'Basic Information', status: sectionStatus['basic-info'] },
+  { key: 'image', label: 'Image', status: sectionStatus['image'] },
+  { key: 'flavor', label: 'Flavor', status: sectionStatus['flavor'] },
+];
+
+// 렌더링
+<WizardSummary title="Summary" items={summaryItems} />
+
+<DoneSection title="Basic Information" onEdit={() => handleEdit('basic-info')}>
+  <DoneSectionRow label="Instance Name" value={instanceName} />
+  <DoneSectionRow label="AZ" value={az} />
+</DoneSection>`}</pre>
+        </div>
+      </VStack>
+    </VStack>
   );
 }
 
@@ -6394,97 +6581,7 @@ outline: 2px solid var(--color-border-focus);`}
 
             {/* Wizard (Create Flow) Component */}
             <Section id="wizard" title="Wizard (Create Flow)" description="Multi-step wizard pattern for resource creation with section status management">
-              <VStack gap={8}>
-                {/* Design Tokens */}
-                <VStack gap={3}>
-                  <Label>Design Tokens</Label>
-                  <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
-                    <code>WizardSection</code>, <code>WizardSummary</code>, <code>PreSection</code>, <code>WritingSection</code>, <code>DoneSection</code>, <code>DoneSectionRow</code>
-                  </div>
-                </VStack>
-
-                {/* Section States */}
-                <VStack gap={3}>
-                  <Label>Section States</Label>
-                  <div className="grid grid-cols-2 gap-4">
-                    {/* Pre State */}
-                    <VStack gap={2}>
-                      <span className="text-[11px] text-[var(--color-text-muted)]">Pre (Waiting)</span>
-                      <PreSection title="Basic Information" />
-                    </VStack>
-                    
-                    {/* Writing State */}
-                    <VStack gap={2}>
-                      <span className="text-[11px] text-[var(--color-text-muted)]">Writing (In Progress)</span>
-                      <WritingSection title="Network Configuration" />
-                    </VStack>
-                  </div>
-                </VStack>
-
-                {/* Done Section Example */}
-                <VStack gap={3}>
-                  <Label>Done Section (Completed)</Label>
-                  <DoneSection title="Instance Settings" onEdit={() => {}}>
-                    <DoneSectionRow label="Instance Name" value="web-server-01" />
-                    <DoneSectionRow label="Instance Type" value="m5.large (2 vCPU, 8 GB RAM)" />
-                    <DoneSectionRow label="Region" value="ap-northeast-2 (Seoul)" />
-                  </DoneSection>
-                </VStack>
-
-                {/* Wizard Summary Example */}
-                <VStack gap={3}>
-                  <Label>Wizard Summary</Label>
-                  <div className="max-w-[300px]">
-                    <WizardSummary
-                      items={[
-                        { key: 'basic', label: 'Basic Information', status: 'done' as WizardSectionState },
-                        { key: 'network', label: 'Network', status: 'done' as WizardSectionState },
-                        { key: 'storage', label: 'Storage', status: 'writing' as WizardSectionState },
-                        { key: 'security', label: 'Security', status: 'pre' as WizardSectionState },
-                        { key: 'review', label: 'Review', status: 'pre' as WizardSectionState },
-                      ]}
-                    />
-                  </div>
-                </VStack>
-
-                {/* Full Wizard Example */}
-                <VStack gap={3}>
-                  <Label>Full Wizard Example</Label>
-                  <div className="flex gap-6">
-                    {/* Sections */}
-                    <VStack gap={4} className="flex-1">
-                      <DoneSection title="1. Basic Information" onEdit={() => {}}>
-                        <DoneSectionRow label="Instance Name" value="production-api-01" />
-                        <DoneSectionRow label="Description" value="Production API server" />
-                      </DoneSection>
-                      
-                      <DoneSection title="2. Network Configuration" onEdit={() => {}}>
-                        <DoneSectionRow label="VPC" value="vpc-production" />
-                        <DoneSectionRow label="Subnet" value="subnet-private-1a" />
-                      </DoneSection>
-                      
-                      <WritingSection title="3. Storage Configuration" />
-                      
-                      <PreSection title="4. Security Groups" />
-                      
-                      <PreSection title="5. Review & Create" />
-                    </VStack>
-
-                    {/* Summary */}
-                    <div className="w-[280px] shrink-0">
-                      <WizardSummary
-                        items={[
-                          { key: 'basic', label: 'Basic Information', status: 'done' as WizardSectionState },
-                          { key: 'network', label: 'Network Configuration', status: 'done' as WizardSectionState },
-                          { key: 'storage', label: 'Storage Configuration', status: 'writing' as WizardSectionState },
-                          { key: 'security', label: 'Security Groups', status: 'pre' as WizardSectionState },
-                          { key: 'review', label: 'Review & Create', status: 'pre' as WizardSectionState },
-                        ]}
-                      />
-                    </div>
-                  </div>
-                </VStack>
-              </VStack>
+              <WizardPatternSection />
             </Section>
 
             {/* Menu Component */}
