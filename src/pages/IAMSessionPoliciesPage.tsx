@@ -144,7 +144,7 @@ export default function IAMSessionPoliciesPage() {
                                 <span className="text-[14px] font-medium leading-5 text-[var(--color-text-default)]">
                                   Session idle timeout
                                 </span>
-                                <span className="text-[var(--color-state-danger)]">*</span>
+                                <span className="ml-1 text-[var(--color-state-danger)]">*</span>
                               </HStack>
                               <p className="text-[12px] leading-4 text-[var(--color-text-subtle)]">
                                 Defines how long a user session can remain idle before expiring.
@@ -180,7 +180,7 @@ export default function IAMSessionPoliciesPage() {
                                 <span className="text-[14px] font-medium leading-5 text-[var(--color-text-default)]">
                                   Session max lifespan
                                 </span>
-                                <span className="text-[var(--color-state-danger)]">*</span>
+                                <span className="ml-1 text-[var(--color-state-danger)]">*</span>
                               </HStack>
                               <p className="text-[12px] leading-4 text-[var(--color-text-subtle)]">
                                 Defines the absolute maximum duration a session can remain active, regardless of user activity.
@@ -216,7 +216,7 @@ export default function IAMSessionPoliciesPage() {
                                 <span className="text-[14px] font-medium leading-5 text-[var(--color-text-default)]">
                                   Login timeout
                                 </span>
-                                <span className="text-[var(--color-state-danger)]">*</span>
+                                <span className="ml-1 text-[var(--color-state-danger)]">*</span>
                               </HStack>
                               <p className="text-[12px] leading-4 text-[var(--color-text-subtle)]">
                                 Defines the maximum time allowed for a login request to complete.
@@ -252,7 +252,7 @@ export default function IAMSessionPoliciesPage() {
                                 <span className="text-[14px] font-medium leading-5 text-[var(--color-text-default)]">
                                   Login action timeout
                                 </span>
-                                <span className="text-[var(--color-state-danger)]">*</span>
+                                <span className="ml-1 text-[var(--color-state-danger)]">*</span>
                               </HStack>
                               <p className="text-[12px] leading-4 text-[var(--color-text-subtle)]">
                                 Defines how long additional authentication steps during login remain valid.
@@ -277,6 +277,9 @@ export default function IAMSessionPoliciesPage() {
                               </p>
                             </VStack>
                           </VStack>
+
+                          {/* Divider */}
+                          <div className="h-px w-full bg-[var(--color-border-subtle)]" />
 
                           {/* Action Buttons */}
                           <HStack gap={2} justify="end" className="w-full">
