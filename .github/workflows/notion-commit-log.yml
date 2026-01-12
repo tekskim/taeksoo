@@ -36,7 +36,7 @@ jobs:
           # 환경 변수로 설정
           echo "hash=$(git log -1 --pretty=format:'%h')" >> $GITHUB_OUTPUT
           echo "author=$(git log -1 --pretty=format:'%an')" >> $GITHUB_OUTPUT
-          echo "date=$(git log -1 --pretty=format:'%Y-%m-%d')" >> $GITHUB_OUTPUT
+          echo "date=$(git log -1 --pretty=format:'%aI')" >> $GITHUB_OUTPUT
           echo "type=$TYPE" >> $GITHUB_OUTPUT
           echo "message=$MESSAGE" >> $GITHUB_OUTPUT
           
