@@ -7,6 +7,12 @@ import { ProjectProvider } from '@/contexts/ProjectContext';
 // Entry Page
 import { EntryPage } from '@/pages/EntryPage';
 
+// Pages - Settings
+import { SettingsPageWrapper } from '@/pages/SettingsPageWrapper';
+
+// Pages - Mail Template
+import { MailTemplatePage } from '@/pages/MailTemplatePage';
+
 // Pages - Compute
 import { InstanceListPage } from '@/pages/InstanceListPage';
 import { InstanceDetailPage } from '@/pages/InstanceDetailPage';
@@ -152,6 +158,10 @@ function AppRoutes() {
       <Routes>
         {/* Entry Page */}
         <Route path="/" element={<EntryPage />} />
+
+        {/* Settings & Mail Template Routes */}
+        <Route path="/settings" element={<SettingsPageWrapper />} />
+        <Route path="/mail-template" element={<MailTemplatePage />} />
 
         {/* Agent Routes - Shared TabBar via AgentAppLayout */}
         <Route element={<AgentAppLayout />}>
