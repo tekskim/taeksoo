@@ -30,7 +30,7 @@ import {
   IconStar,
   IconStarFilled,
 } from '@tabler/icons-react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 /* ----------------------------------------
    Types
@@ -74,6 +74,7 @@ const mockTemplates: InstanceTemplate[] = [
    ---------------------------------------- */
 
 export function InstanceTemplatesPage() {
+  const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
@@ -379,7 +380,7 @@ export function InstanceTemplatesPage() {
               <h1 className="text-[length:var(--font-size-16)] font-semibold text-[var(--color-text-default)]">
                 Instance Templates
               </h1>
-              <Button>
+              <Button onClick={() => navigate('/compute/instance-templates/create')}>
                 Create Template
               </Button>
             </div>

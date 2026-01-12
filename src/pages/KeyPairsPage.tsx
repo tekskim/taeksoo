@@ -314,9 +314,6 @@ export function KeyPairsPage() {
               <h1 className="text-[length:var(--font-size-16)] font-semibold text-[var(--color-text-default)]">
                 Key Pairs
               </h1>
-              <Button>
-                Create Key Pair
-              </Button>
             </div>
 
             {/* List Toolbar */}

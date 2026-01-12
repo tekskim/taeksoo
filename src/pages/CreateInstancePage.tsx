@@ -510,31 +510,6 @@ function SkippedSection({ title, onEdit }: SkippedSectionProps) {
 }
 
 /* ----------------------------------------
-   DoneSectionRow Component (Summary 데이터 로우)
-   ---------------------------------------- */
-
-interface DoneSectionRowProps {
-  label: string;
-  value: string | React.ReactNode;
-}
-
-function DoneSectionRow({ label, value }: DoneSectionRowProps) {
-  return (
-    <VStack gap={2}>
-      <div className="w-full h-px bg-[var(--color-border-subtle)]" />
-      <VStack gap={2} className="pt-3">
-        <span className="text-[11px] font-medium text-[var(--color-text-subtle)]">
-          {label}
-        </span>
-        <span className="text-[12px] text-[var(--color-text-default)]">
-          {value || '-'}
-        </span>
-      </VStack>
-    </VStack>
-  );
-}
-
-/* ----------------------------------------
    DoneSection Component (작성 완료 - Summary 형태)
    ---------------------------------------- */
 
@@ -546,22 +521,20 @@ interface DoneSectionProps {
 
 function DoneSection({ title, onEdit, children }: DoneSectionProps) {
   return (
-    <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg px-4 py-3">
-      <VStack gap={3}>
-        {/* Header - h-8 mb-3 matches SectionCard.Header */}
-        <HStack justify="between" align="center" className="w-full h-8">
-          <h5 className="text-[length:var(--font-size-14)] font-semibold leading-[var(--line-height-20)] text-[var(--color-text-default)]">
-            {title}
-          </h5>
-          <Button variant="outline" size="sm" leftIcon={<IconEdit size={12} />} onClick={onEdit}>
+    <SectionCard>
+      <SectionCard.Header 
+        title={title} 
+        showDivider
+        actions={
+          <Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />} onClick={onEdit}>
             Edit
           </Button>
-        </HStack>
-
-        {/* Data Rows */}
+        }
+      />
+      <SectionCard.Content>
         {children}
-      </VStack>
-    </div>
+      </SectionCard.Content>
+    </SectionCard>
   );
 }
 
@@ -609,6 +582,7 @@ function BasicInformationSection({
     <SectionCard isActive={isActive}>
       <SectionCard.Header 
         title="Basic Information" 
+        showDivider
         actions={isEditing ? (
           <HStack gap={2}>
             <Button variant="secondary" size="sm" onClick={onEditCancel}>Cancel</Button>
@@ -946,6 +920,7 @@ function ImageSection({ selectedImageId, onSelectImage, onNext, isActive = false
     <SectionCard isActive={isActive}>
       <SectionCard.Header 
         title="Source" 
+        showDivider
         actions={isEditing ? (
           <HStack gap={2}>
             <Button variant="secondary" size="sm" onClick={onEditCancel}>Cancel</Button>
@@ -1280,6 +1255,7 @@ function FlavorSection({ selectedFlavorId, onSelectFlavor, onNext, isActive = fa
     <SectionCard isActive={isActive}>
       <SectionCard.Header 
         title="Flavor" 
+        showDivider
         actions={isEditing ? (
           <HStack gap={2}>
             <Button variant="secondary" size="sm" onClick={onEditCancel}>Cancel</Button>
@@ -1698,6 +1674,7 @@ function NetworkSection({ onNext, isActive = false, isEditing = false, onEditCan
     <SectionCard isActive={isActive}>
       <SectionCard.Header 
         title="Network" 
+        showDivider
         actions={isEditing ? (
           <HStack gap={2}>
             <Button variant="secondary" size="sm" onClick={onEditCancel}>Cancel</Button>
@@ -2090,6 +2067,7 @@ function AuthenticationSection({ onNext, isActive = false, isEditing = false, on
     <SectionCard isActive={isActive}>
       <SectionCard.Header 
         title="Authentication"
+        showDivider
         actions={isEditing ? (
           <HStack gap={2}>
             <Button variant="secondary" size="sm" onClick={onEditCancel}>Cancel</Button>
@@ -2316,6 +2294,7 @@ function AdvancedSection({ onNext, isActive = false, isEditing = false, onEditCa
     <SectionCard isActive={isActive}>
       <SectionCard.Header 
         title="Advanced" 
+        showDivider
         actions={isEditing ? (
           <HStack gap={2}>
             <Button variant="secondary" size="sm" onClick={onEditCancel}>Cancel</Button>
@@ -3175,8 +3154,8 @@ export function CreateInstancePage() {
                   )}
                   {sectionStatus.templates === 'done' && (
                     <DoneSection title={SECTION_LABELS.templates} onEdit={() => handleEdit('templates')}>
-                      <DoneSectionRow label="Resource Type" value="Virtual Machine" />
-                      <DoneSectionRow label="Template" value={getTemplateSummary() || 'None selected'} />
+                      <SectionCard.DataRow label="Resource Type" value="Virtual Machine" showDivider={false} />
+                      <SectionCard.DataRow label="Template" value={getTemplateSummary() || 'None selected'} />
                     </DoneSection>
                   )}
                   {sectionStatus.templates === 'skipped' && (
@@ -3209,9 +3188,9 @@ export function CreateInstancePage() {
                   )}
                   {sectionStatus['basic-info'] === 'done' && (
                     <DoneSection title={SECTION_LABELS['basic-info']} onEdit={() => handleEdit('basic-info')}>
-                      <DoneSectionRow label="Instance Name" value={instanceName || '-'} />
-                      <DoneSectionRow label="AZ (Availability Zone)" value={availabilityZone} />
-                      <DoneSectionRow label="Description" value={description || '-'} />
+                      <SectionCard.DataRow label="Instance Name" value={instanceName || '-'} showDivider={false} />
+                      <SectionCard.DataRow label="AZ (Availability Zone)" value={availabilityZone} />
+                      <SectionCard.DataRow label="Description" value={description || '-'} />
                     </DoneSection>
                   )}
 
@@ -3235,8 +3214,8 @@ export function CreateInstancePage() {
                   )}
                   {sectionStatus.image === 'done' && (
                     <DoneSection title={SECTION_LABELS.image} onEdit={() => handleEdit('image')}>
-                      <DoneSectionRow label="Image" value={getImageSummary() || '-'} />
-                      <DoneSectionRow label="System Disk" value={getStorageSummary()} />
+                      <SectionCard.DataRow label="Image" value={getImageSummary() || '-'} showDivider={false} />
+                      <SectionCard.DataRow label="System Disk" value={getStorageSummary()} />
                     </DoneSection>
                   )}
 
@@ -3260,7 +3239,7 @@ export function CreateInstancePage() {
                   )}
                   {sectionStatus.flavor === 'done' && (
                     <DoneSection title={SECTION_LABELS.flavor} onEdit={() => handleEdit('flavor')}>
-                      <DoneSectionRow label="Flavor" value={getFlavorSummary() || '-'} />
+                      <SectionCard.DataRow label="Flavor" value={getFlavorSummary() || '-'} showDivider={false} />
                     </DoneSection>
                   )}
 
@@ -3282,8 +3261,8 @@ export function CreateInstancePage() {
                   )}
                   {sectionStatus.network === 'done' && (
                     <DoneSection title={SECTION_LABELS.network} onEdit={() => handleEdit('network')}>
-                      <DoneSectionRow label="Network" value={getNetworkSummary()} />
-                      <DoneSectionRow label="Security Groups" value={getSecurityGroupSummary()} />
+                      <SectionCard.DataRow label="Network" value={getNetworkSummary()} showDivider={false} />
+                      <SectionCard.DataRow label="Security Groups" value={getSecurityGroupSummary()} />
                     </DoneSection>
                   )}
 
@@ -3305,7 +3284,7 @@ export function CreateInstancePage() {
                   )}
                   {sectionStatus.authentication === 'done' && (
                     <DoneSection title={SECTION_LABELS.authentication} onEdit={() => handleEdit('authentication')}>
-                      <DoneSectionRow label="Login Type" value={getAuthSummary()} />
+                      <SectionCard.DataRow label="Login Type" value={getAuthSummary()} showDivider={false} />
                     </DoneSection>
                   )}
 
@@ -3327,11 +3306,12 @@ export function CreateInstancePage() {
                   )}
                   {sectionStatus.advanced === 'done' && (
                     <DoneSection title={SECTION_LABELS.advanced} onEdit={() => handleEdit('advanced')}>
-                      <DoneSectionRow 
+                      <SectionCard.DataRow 
                         label="Server Group" 
                         value={selectedServerGroupId ? mockServerGroups.find(sg => sg.id === selectedServerGroupId)?.name : '-'} 
+                        showDivider={false}
                       />
-                      <DoneSectionRow 
+                      <SectionCard.DataRow 
                         label="User Data" 
                         value={userData ? 'Configured' : '-'} 
                       />

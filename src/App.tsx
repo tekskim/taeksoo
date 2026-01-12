@@ -37,12 +37,15 @@ import { ServerGroupsPage } from '@/pages/ServerGroupsPage';
 import { ServerGroupDetailPage } from '@/pages/ServerGroupDetailPage';
 import { VolumesPage } from '@/pages/VolumesPage';
 import { VolumeDetailPage } from '@/pages/VolumeDetailPage';
+import { CreateVolumePage } from '@/pages/CreateVolumePage';
 import { VolumeSnapshotsPage } from '@/pages/VolumeSnapshotsPage';
 import { VolumeSnapshotDetailPage } from '@/pages/VolumeSnapshotDetailPage';
 import { VolumeBackupsPage } from '@/pages/VolumeBackupsPage';
 import { VolumeBackupDetailPage } from '@/pages/VolumeBackupDetailPage';
 import { NetworksPage } from '@/pages/NetworksPage';
 import NetworkDetailPage from '@/pages/NetworkDetailPage';
+import CreateNetworkPage from '@/pages/CreateNetworkPage';
+import CreateVirtualAdapterPage from '@/pages/CreateVirtualAdapterPage';
 import { RoutersPage } from '@/pages/RoutersPage';
 import RouterDetailPage from '@/pages/RouterDetailPage';
 import { PortsPage } from '@/pages/PortsPage';
@@ -62,6 +65,8 @@ import L7PolicyDetailPage from '@/pages/L7PolicyDetailPage';
 import { TopologyD3Page } from '@/pages/TopologyD3Page';
 import { ConsolePage } from '@/pages/ConsolePage';
 import { CreateInstancePage } from '@/pages/CreateInstancePage';
+import CreateTemplatePage from '@/pages/CreateTemplatePage';
+import { CreateImagePage } from '@/pages/CreateImagePage';
 
 // Pages - Agent
 import { AgentPage } from '@/pages/AgentPage';
@@ -192,10 +197,12 @@ function AppRoutes() {
         <Route path="/compute/instances/create" element={<CreateInstancePage />} />
         <Route path="/compute/instances/:id" element={<InstanceDetailPage />} />
         <Route path="/compute/instance-templates" element={<InstanceTemplatesPage />} />
+        <Route path="/compute/instance-templates/create" element={<CreateTemplatePage />} />
         <Route path="/compute/instance-templates/:id" element={<InstanceTemplateDetailPage />} />
         <Route path="/compute/instance-snapshots" element={<InstanceSnapshotsPage />} />
         <Route path="/compute/instance-snapshots/:id" element={<InstanceSnapshotDetailPage />} />
         <Route path="/compute/images" element={<ComputeImagesPage />} />
+        <Route path="/compute/images/create" element={<CreateImagePage />} />
         <Route path="/compute/images/:id" element={<ComputeImageDetailPage />} />
         <Route path="/compute/flavors" element={<FlavorsPage />} />
         <Route path="/compute/flavors/:id" element={<FlavorDetailPage />} />
@@ -204,13 +211,16 @@ function AppRoutes() {
         <Route path="/compute/server-groups" element={<ServerGroupsPage />} />
         <Route path="/compute/server-groups/:id" element={<ServerGroupDetailPage />} />
         <Route path="/compute/volumes" element={<VolumesPage />} />
+        <Route path="/compute/volumes/create" element={<CreateVolumePage />} />
         <Route path="/compute/volumes/:id" element={<VolumeDetailPage />} />
         <Route path="/compute/volume-snapshots" element={<VolumeSnapshotsPage />} />
         <Route path="/compute/volume-snapshots/:id" element={<VolumeSnapshotDetailPage />} />
         <Route path="/compute/volume-backups" element={<VolumeBackupsPage />} />
         <Route path="/compute/volume-backups/:id" element={<VolumeBackupDetailPage />} />
         <Route path="/compute/networks" element={<NetworksPage />} />
+        <Route path="/compute/networks/create" element={<CreateNetworkPage />} />
         <Route path="/compute/networks/:id" element={<NetworkDetailPage />} />
+        <Route path="/compute/ports/create" element={<CreateVirtualAdapterPage />} />
         <Route path="/compute/subnets/:id" element={<SubnetDetailPage />} />
         <Route path="/compute/routers" element={<RoutersPage />} />
         <Route path="/compute/routers/:id" element={<RouterDetailPage />} />
