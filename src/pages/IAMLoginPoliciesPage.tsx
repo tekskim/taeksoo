@@ -32,7 +32,7 @@ const lockoutTypeOptions = [
 ];
 
 /* ----------------------------------------
-   Login Policies Page
+   Login policies Page
    ---------------------------------------- */
 
 export default function IAMLoginPoliciesPage() {
@@ -68,13 +68,13 @@ export default function IAMLoginPoliciesPage() {
 
   // Update tab label on mount
   useEffect(() => {
-    updateActiveTabLabel('Login Policies');
+    updateActiveTabLabel('Login policies');
   }, [updateActiveTabLabel]);
 
   // Sidebar width
   const sidebarWidth = sidebarOpen ? 200 : 0;
 
-  // Tab bar tabs
+  // Tab Bar tabs
   const tabBarTabs = tabs.map(tab => ({
     id: tab.id,
     label: tab.label,

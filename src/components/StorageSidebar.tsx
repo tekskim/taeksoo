@@ -118,7 +118,7 @@ export function StorageSidebar({ isOpen = true, onToggle }: StorageSidebarProps)
             />
             <MenuItem
               icon={<IconServer size={16} stroke={1.5} />}
-              label="Physical Disks"
+              label="Physical disks"
               href="/storage/physical-disks"
               active={isActive('/storage/physical-disks')}
             />
@@ -148,7 +148,7 @@ export function StorageSidebar({ isOpen = true, onToggle }: StorageSidebarProps)
           <MenuSection title="Monitoring" defaultOpen={true}>
             <MenuItem
               icon={<IconBrandSpeedtest size={16} stroke={1.5} />}
-              label="Overall Performance"
+              label="Overall performance"
               href="/storage/performance"
               active={isActive('/storage/performance')}
             />

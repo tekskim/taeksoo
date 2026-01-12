@@ -16,8 +16,8 @@ import {
   Table, Pagination, Badge, Chip, StatusIndicator,
   Modal, Drawer, Tooltip, ContextMenu,
   FormField, SectionCard, DetailHeader,
-  Tabs, TabBar, TopBar, Breadcrumb,
-  InlineMessage, Disclosure, ProgressBar,
+  Tabs, TabBar, TopBar, Breadcrumb, SNBMenuItem,
+  InlineMessage, Disclosure, ProgressBar, Loading,
   VStack, HStack, Container
 } from '@/design-system';
 ```
@@ -61,6 +61,7 @@ import {
 - **TabBar**: 브라우저 스타일 탭바
 - **TopBar**: 상단 네비게이션 바
 - **Breadcrumb**: 경로 표시
+- **SNBMenuItem**: 좁은 사이드바 메뉴 아이템 (`status="default|hover|selected"`, `type="icon|text"`)
 
 ### Feedback
 - **Modal**: 모달 다이얼로그 (Header, Content, Footer)

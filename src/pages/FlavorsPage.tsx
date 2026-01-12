@@ -96,8 +96,8 @@ export function FlavorsPage() {
     { id: 'category', label: 'Category', visible: true },
     { id: 'vcpu', label: 'vCPU', visible: true },
     { id: 'ram', label: 'RAM', visible: true },
-    { id: 'ephemeralDisk', label: 'Ephemeral Disk', visible: true },
-    { id: 'internalNetworkBandwidth', label: 'Internal Network Bandwidth', visible: true },
+    { id: 'ephemeralDisk', label: 'Ephemeral disk', visible: true },
+    { id: 'internalNetworkBandwidth', label: 'Internal network Bandwidth', visible: true },
     { id: 'access', label: 'Access', visible: true },
     { id: 'actions', label: 'Action', visible: true, locked: true },
   ];
@@ -184,13 +184,13 @@ export function FlavorsPage() {
     },
     {
       key: 'ephemeralDisk',
-      label: 'Ephemeral Disk',
+      label: 'Ephemeral disk',
       flex: 1,
       sortable: true,
     },
     {
       key: 'internalNetworkBandwidth',
-      label: 'Internal Network Bandwidth',
+      label: 'Internal network Bandwidth',
       flex: 1,
       sortable: true,
     },
@@ -238,12 +238,12 @@ export function FlavorsPage() {
         const menuItems: ContextMenuItem[] = [
           {
             id: 'create-instance',
-            label: 'Create Instance',
+            label: 'Create instance',
             onClick: () => console.log('Create instance with flavor:', row.id),
           },
           {
             id: 'create-instance-template',
-            label: 'Create Instance template',
+            label: 'Create instance template',
             onClick: () => console.log('Create instance template with flavor:', row.id),
           },
         ];
@@ -349,7 +349,7 @@ export function FlavorsPage() {
           <VStack gap={3}>
             {/* Page Header */}
             <div className="flex items-center justify-between h-8">
-              <h1 className="text-[length:var(--font-size-16)] font-semibold text-[var(--color-text-default)]">
+              <h1 className="text-[length:var(--font-size-16)] font-semibold leading-6 text-[var(--color-text-default)]">
                 Flavors
               </h1>
             </div>
@@ -370,7 +370,7 @@ export function FlavorsPage() {
                 <ListToolbar.Actions>
                   <div className="w-[280px]">
                     <SearchInput
-                      placeholder="Find Flavor with filters"
+                      placeholder="Search flavor by attributes"
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
                       onClear={() => setSearchQuery('')}

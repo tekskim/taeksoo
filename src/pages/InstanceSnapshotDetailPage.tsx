@@ -231,7 +231,7 @@ export function InstanceSnapshotDetailPage() {
   // Breadcrumb items
   const breadcrumbItems = [
     { label: 'Proj-1', href: '/' },
-    { label: 'Instance Snapshots', href: '/compute/instance-snapshots' },
+    { label: 'Instance snapshots', href: '/compute/instance-snapshots' },
     { label: snapshot.name },
   ];
 
@@ -288,14 +288,14 @@ export function InstanceSnapshotDetailPage() {
               <DetailHeader.Title>{snapshot.name}</DetailHeader.Title>
               <DetailHeader.Actions>
                 <Button variant="secondary" size="sm" leftIcon={<IconCirclePlus size={12} />}>
-                  Create Instance
+                  Create instance
                 </Button>
                 <Button variant="secondary" size="sm" leftIcon={<IconTrash size={12} />}>
                   Delete
                 </Button>
                 <ContextMenu
                   items={[
-                    { id: 'create-volume', label: 'Create Volume', onClick: () => console.log('Create Volume') },
+                    { id: 'create-volume', label: 'Create volume', onClick: () => console.log('Create volume') },
                     { id: 'edit', label: 'Edit', onClick: () => console.log('Edit') },
                   ] as ContextMenuItem[]}
                   trigger="click"
@@ -309,7 +309,7 @@ export function InstanceSnapshotDetailPage() {
                 <DetailHeader.InfoCard label="Status" value="Active" status="active" />
                 <DetailHeader.InfoCard label="ID" value={snapshot.id} copyable />
                 <DetailHeader.InfoCard label="Size" value={snapshot.size} />
-                <DetailHeader.InfoCard label="Created At" value={snapshot.createdAt} />
+                <DetailHeader.InfoCard label="Created at" value={snapshot.createdAt} />
               </DetailHeader.InfoGrid>
             </DetailHeader>
 
@@ -324,14 +324,14 @@ export function InstanceSnapshotDetailPage() {
                 {/* Details Tab Panel */}
                 <TabPanel value="details">
                   <VStack gap={4} className="pt-6">
-                    {/* Basic Information */}
+                    {/* Basic information */}
                     <SectionCard>
                       <SectionCard.Header 
-                        title="Basic Information" 
+                        title="Basic information" 
                         actions={<Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />}>Edit</Button>}
                       />
                       <SectionCard.Content>
-                        <SectionCard.DataRow label="Snapshot Name" value={snapshot.name} />
+                        <SectionCard.DataRow label="Snapshot name" value={snapshot.name} />
                         <SectionCard.DataRow label="Description" value={snapshot.description} />
                       </SectionCard.Content>
                     </SectionCard>
@@ -361,8 +361,8 @@ export function InstanceSnapshotDetailPage() {
                       <SectionCard.Content>
                         <SectionCard.DataRow label="Size" value={snapshot.size} />
                         <SectionCard.DataRow label="OS" value={snapshot.os} />
-                        <SectionCard.DataRow label="Min Disk / Min RAM" value={`${snapshot.minDisk} / ${snapshot.minRam}`} />
-                        <SectionCard.DataRow label="Disk Format / Container Format" value={`${snapshot.diskFormat} / ${snapshot.containerFormat}`} />
+                        <SectionCard.DataRow label="Min disk / Min RAM" value={`${snapshot.minDisk} / ${snapshot.minRam}`} />
+                        <SectionCard.DataRow label="Disk format / Container Format" value={`${snapshot.diskFormat} / ${snapshot.containerFormat}`} />
                       </SectionCard.Content>
                     </SectionCard>
 

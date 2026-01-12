@@ -79,11 +79,11 @@ export function KeyPairsPage() {
   const [isPreferencesOpen, setIsPreferencesOpen] = useState(false);
   const [rowsPerPage, setRowsPerPage] = useState(10);
 
-  // Default column config (matching Figma: Selection, Name, Fingerprint, Created At, Action)
+  // Default column config (matching Figma: Selection, Name, Fingerprint, Created at, Action)
   const defaultColumnConfig: ColumnConfig[] = [
     { id: 'name', label: 'Name', visible: true, locked: true },
     { id: 'fingerprint', label: 'Fingerprint', visible: true },
-    { id: 'createdAt', label: 'Created At', visible: true },
+    { id: 'createdAt', label: 'Created at', visible: true },
     { id: 'actions', label: 'Action', visible: true, locked: true },
   ];
   const [columnConfig, setColumnConfig] = useState<ColumnConfig[]>(defaultColumnConfig);
@@ -168,7 +168,7 @@ export function KeyPairsPage() {
     setSelectedKeyPairs([]);
   };
 
-  // Table columns (matching Figma design: Selection, Name, Fingerprint, Created At, Action)
+  // Table columns (matching Figma design: Selection, Name, Fingerprint, Created at, Action)
   const columns: TableColumn<KeyPair>[] = [
     {
       key: 'name',
@@ -211,7 +211,7 @@ export function KeyPairsPage() {
     },
     {
       key: 'createdAt',
-      label: 'Created At',
+      label: 'Created at',
       width: '150px',
       sortable: true,
     },
@@ -290,7 +290,7 @@ export function KeyPairsPage() {
             <Breadcrumb
               items={[
                 { label: 'Proj-1', href: '/project' },
-                { label: 'Key Pairs' },
+                { label: 'Key pairs' },
               ]}
             />
           }
@@ -311,12 +311,9 @@ export function KeyPairsPage() {
           <VStack gap={3}>
             {/* Page Header */}
             <div className="flex items-center justify-between h-8">
-              <h1 className="text-[length:var(--font-size-16)] font-semibold text-[var(--color-text-default)]">
-                Key Pairs
+              <h1 className="text-[length:var(--font-size-16)] font-semibold leading-6 text-[var(--color-text-default)]">
+                Key pairs
               </h1>
-              <Button>
-                Create Key Pair
-              </Button>
             </div>
 
             {/* List Toolbar */}
@@ -325,7 +322,7 @@ export function KeyPairsPage() {
                 <ListToolbar.Actions>
                   <div className="w-[280px]">
                     <SearchInput
-                      placeholder="Find key pair with filters"
+                      placeholder="Search key pair by attributes"
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
                       onClear={() => setSearchQuery('')}
@@ -364,7 +361,7 @@ export function KeyPairsPage() {
               />
             )}
 
-            {/* Key Pairs Table */}
+            {/* Key pairs Table */}
             <Table<KeyPair>
               columns={visibleColumns}
               data={paginatedKeyPairs}
@@ -384,7 +381,7 @@ export function KeyPairsPage() {
         isOpen={deleteModalOpen}
         onClose={handleDeleteCancel}
         onConfirm={handleDeleteConfirm}
-        title="Delete Key Pair"
+        title="Delete Key pair"
         description="Are you sure you want to delete this key pair? This action cannot be undone."
         confirmText="Delete"
         cancelText="Cancel"

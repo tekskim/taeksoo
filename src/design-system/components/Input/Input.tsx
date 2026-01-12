@@ -75,7 +75,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
       'w-full',
       'px-[var(--input-padding-x)]',
       'py-[var(--input-padding-y)]',
-      'leading-[var(--input-line-height)]',
+      'leading-[var(--line-height-20)]',
       'bg-[var(--input-bg)]',
       'text-[var(--color-text-default)]',
       'border-[length:var(--input-border-width)]',

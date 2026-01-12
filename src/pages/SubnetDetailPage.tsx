@@ -45,7 +45,7 @@ interface SubnetDetail {
   cidr: string;
   gatewayIp: string;
   createdAt: string;
-  // Basic Information
+  // Basic information
   allocationPools: string;
   dhcp: boolean;
   dns: string;
@@ -86,7 +86,7 @@ const mockSubnetDetail: SubnetDetail = {
   cidr: '192.168.2.0/24',
   gatewayIp: '192.168.2.1',
   createdAt: '2025-07-25 09:12:20',
-  // Basic Information
+  // Basic information
   allocationPools: '192.168.2.2 - 192.168.2.254',
   dhcp: true,
   dns: '-',
@@ -235,7 +235,7 @@ export default function SubnetDetailPage() {
     },
     {
       key: 'attachedTo',
-      label: 'Attached To',
+      label: 'Attached to',
       flex: 1,
       render: (_, row) => row.attachedTo ? (
         <div className="flex items-center justify-between w-full">
@@ -268,7 +268,7 @@ export default function SubnetDetailPage() {
     },
     {
       key: 'ownedNetwork',
-      label: 'Owned Network',
+      label: 'Owned network',
       flex: 1,
       sortable: true,
       render: (_, row) => (
@@ -364,7 +364,7 @@ export default function SubnetDetailPage() {
           {/* Page Content */}
           <div className="pt-4 px-8 pb-20 bg-[var(--color-surface-default)] min-h-full">
             <VStack gap={8} className="min-w-[1176px]">
-              {/* Detail Header */}
+              {/* Detail header */}
               <DetailHeader>
                 <DetailHeader.Title>{subnet.name}</DetailHeader.Title>
 
@@ -399,12 +399,12 @@ export default function SubnetDetailPage() {
                     className="flex-1"
                   />
                   <DetailHeader.InfoCard
-                    label="Gateway IP"
+                    label="Gateway IPP"
                     value={subnet.gatewayIp}
                     className="flex-1"
                   />
                   <DetailHeader.InfoCard
-                    label="Created At"
+                    label="Created at"
                     value={subnet.createdAt}
                     className="flex-1"
                   />
@@ -422,10 +422,10 @@ export default function SubnetDetailPage() {
                   {/* Details Tab */}
                   <TabPanel value="details">
                     <VStack gap={4} className="pt-6">
-                      {/* Basic Information */}
+                      {/* Basic information */}
                       <SectionCard>
                         <SectionCard.Header
-                          title="Basic Information"
+                          title="Basic information"
                           actions={
                             <Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />}>
                               Edit
@@ -433,13 +433,13 @@ export default function SubnetDetailPage() {
                           }
                         />
                         <SectionCard.Content>
-                          <SectionCard.DataRow label="Subnet Name" value={subnet.name} />
+                          <SectionCard.DataRow label="Subnet name" value={subnet.name} />
                           <SectionCard.DataRow label="CIDR" value={subnet.cidr} />
-                          <SectionCard.DataRow label="Gateway IP" value={subnet.gatewayIp} />
-                          <SectionCard.DataRow label="Allocation Pools" value={subnet.allocationPools} />
+                          <SectionCard.DataRow label="Gateway IPP" value={subnet.gatewayIp} />
+                          <SectionCard.DataRow label="Allocation pools" value={subnet.allocationPools} />
                           <SectionCard.DataRow label="DHCP" value={subnet.dhcp ? 'On' : 'Off'} />
                           <SectionCard.DataRow label="DNS" value={subnet.dns} />
-                          <SectionCard.DataRow label="Host Routes" value={subnet.hostRoutes} />
+                          <SectionCard.DataRow label="Host routes" value={subnet.hostRoutes} />
                         </SectionCard.Content>
                       </SectionCard>
 
@@ -482,7 +482,7 @@ export default function SubnetDetailPage() {
                             setPortSearchTerm(e.target.value);
                             setPortCurrentPage(1);
                           }}
-                          placeholder="Find port with filters"
+                          placeholder="Search port by attributes"
                         />
                       </div>
 

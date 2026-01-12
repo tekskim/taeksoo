@@ -8,7 +8,9 @@ import {
   Input,
   Toggle,
   Modal,
+  Table,
 } from '@/design-system';
+import type { TableColumn } from '@/design-system/components/Table/Table';
 import { SettingsSidebar } from '@/components/SettingsSidebar';
 import { useDarkMode } from '@/hooks/useDarkMode';
 import { IconShieldCheck, IconCheck } from '@tabler/icons-react';
@@ -45,16 +47,24 @@ export default function SettingsAccountPage() {
 
   // Session data
   const sessions = [
-    { location: 'Gangnam-gu, Seoul, South Korea', ip: '211.234.56.78', device: 'Chrome on macOS', timestamp: '2026-01-06 14:32:18 +0900' },
-    { location: 'Gangnam-gu, Seoul, South Korea', ip: '211.234.56.78', device: 'Safari on iOS', timestamp: '2026-01-05 09:15:42 +0900' },
-    { location: 'Mapo-gu, Seoul, South Korea', ip: '175.192.44.123', device: 'Firefox on Windows', timestamp: '2026-01-04 18:22:05 +0900' },
-    { location: 'Seocho-gu, Seoul, South Korea', ip: '121.167.88.45', device: 'Edge on Windows', timestamp: '2026-01-03 11:45:33 +0900' },
-    { location: 'Bundang-gu, Seongnam, South Korea', ip: '58.123.201.67', device: 'Chrome on Android', timestamp: '2026-01-02 08:10:22 +0900' },
+    { id: '1', location: 'Gangnam-gu, Seoul, South Korea', ip: '211.234.56.78', device: 'Chrome on macOS', timestamp: '2026-01-06 14:32:18 +0900' },
+    { id: '2', location: 'Gangnam-gu, Seoul, South Korea', ip: '211.234.56.78', device: 'Safari on iOS', timestamp: '2026-01-05 09:15:42 +0900' },
+    { id: '3', location: 'Mapo-gu, Seoul, South Korea', ip: '175.192.44.123', device: 'Firefox on Windows', timestamp: '2026-01-04 18:22:05 +0900' },
+    { id: '4', location: 'Seocho-gu, Seoul, South Korea', ip: '121.167.88.45', device: 'Edge on Windows', timestamp: '2026-01-03 11:45:33 +0900' },
+    { id: '5', location: 'Bundang-gu, Seongnam, South Korea', ip: '58.123.201.67', device: 'Chrome on Android', timestamp: '2026-01-02 08:10:22 +0900' },
+  ];
+
+  // Session table columns
+  const sessionColumns: TableColumn[] = [
+    { key: 'location', label: 'Location', minWidth: '180px' },
+    { key: 'ip', label: 'IP Address', width: '140px' },
+    { key: 'device', label: 'Device', minWidth: '140px' },
+    { key: 'timestamp', label: 'Timestamp', width: '180px' },
   ];
 
   return (
     <div className="fixed inset-0 flex flex-col bg-[var(--color-surface-subtle)]">
-      {/* Top Bar with Logo and Window Controls */}
+      {/* Top Bar with Logo and Window controls */}
       <div className="relative flex items-center w-full h-[var(--tabbar-height)] bg-[var(--color-surface-default)] shrink-0 after:absolute after:bottom-0 after:left-0 after:right-0 after:h-px after:bg-[var(--color-border-default)]">
         {/* Logo Area */}
         <div className="w-[200px] h-full px-3 flex items-center">
@@ -65,7 +75,7 @@ export default function SettingsAccountPage() {
           />
         </div>
         
-        {/* TabBar (Window Controls only) */}
+        {/* TabBar (Window controls only) */}
         <div className="flex-1">
           <TabBar
             tabs={[]}
@@ -281,28 +291,12 @@ export default function SettingsAccountPage() {
                   <SectionCard.Header title="Sessions" />
                   <SectionCard.Content>
                     <p className="text-[12px] leading-[18px] text-[var(--color-text-muted)] mb-4">View your recent login sessions.</p>
-                    <div className="border border-[var(--color-border-default)] rounded-lg overflow-hidden">
-                      <table className="w-full">
-                        <thead className="bg-[var(--color-surface-subtle)]">
-                          <tr>
-                            <th className="px-4 py-3 text-left text-[12px] font-semibold text-[var(--color-text-muted)]">Location</th>
-                            <th className="px-4 py-3 text-left text-[12px] font-semibold text-[var(--color-text-muted)]">IP Address</th>
-                            <th className="px-4 py-3 text-left text-[12px] font-semibold text-[var(--color-text-muted)]">Device</th>
-                            <th className="px-4 py-3 text-left text-[12px] font-semibold text-[var(--color-text-muted)]">Timestamp</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {sessions.map((session, index) => (
-                            <tr key={index} className="border-t border-[var(--color-border-default)]">
-                              <td className="px-4 py-3 text-[12px] text-[var(--color-text-default)]">{session.location}</td>
-                              <td className="px-4 py-3 text-[12px] text-[var(--color-text-default)]">{session.ip}</td>
-                              <td className="px-4 py-3 text-[12px] text-[var(--color-text-default)]">{session.device}</td>
-                              <td className="px-4 py-3 text-[12px] text-[var(--color-text-default)]">{session.timestamp}</td>
-                            </tr>
-                          ))}
-                        </tbody>
-                      </table>
-                    </div>
+                    <Table
+                      columns={sessionColumns}
+                      data={sessions}
+                      rowKey="id"
+                      emptyMessage="No sessions found"
+                    />
                   </SectionCard.Content>
                 </SectionCard>
 

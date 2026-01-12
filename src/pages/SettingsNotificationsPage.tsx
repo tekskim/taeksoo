@@ -66,12 +66,12 @@ export default function SettingsNotificationsPage() {
     { key: 'storage', label: 'Storage' },
     { key: 'container', label: 'Container' },
     { key: 'aiPlatform', label: 'AI Platform' },
-    { key: 'agentOps', label: 'Agent Ops' },
+    { key: 'agentOps', label: 'Agent ops' },
   ];
 
   return (
     <div className="fixed inset-0 flex flex-col bg-[var(--color-surface-subtle)]">
-      {/* Top Bar with Logo and Window Controls */}
+      {/* Top Bar with Logo and Window controls */}
       <div className="relative flex items-center w-full h-[var(--tabbar-height)] bg-[var(--color-surface-default)] shrink-0 after:absolute after:bottom-0 after:left-0 after:right-0 after:h-px after:bg-[var(--color-border-default)]">
         {/* Logo Area */}
         <div className="w-[200px] h-full px-3 flex items-center">
@@ -82,7 +82,7 @@ export default function SettingsNotificationsPage() {
           />
         </div>
         
-        {/* TabBar (Window Controls only) */}
+        {/* TabBar (Window controls only) */}
         <div className="flex-1">
           <TabBar
             tabs={[]}

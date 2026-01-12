@@ -489,7 +489,7 @@ export default function IAMSystemAdminDetailPage() {
                     <HStack gap={2} align="center">
                       <HStack gap={1} align="center">
                         <SearchInput
-                          placeholder="Find session with filters"
+                          placeholder="Search session by attributes"
                           value={sessionsSearchQuery}
                           onChange={(e) => setSessionsSearchQuery(e.target.value)}
                           className="w-[280px]"

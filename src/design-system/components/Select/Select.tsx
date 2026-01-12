@@ -7,7 +7,7 @@ import {
 } from 'react';
 import { createPortal } from 'react-dom';
 import { twMerge } from 'tailwind-merge';
-import { IconChevronDown, IconCheck } from '@tabler/icons-react';
+import { IconChevronDown, IconCheck, IconX } from '@tabler/icons-react';
 
 /* ----------------------------------------
    Types
@@ -48,6 +48,10 @@ export interface SelectProps {
   className?: string;
   /** Required field indicator */
   required?: boolean;
+  /** Show clear button when has value */
+  clearable?: boolean;
+  /** Text for clear option in dropdown */
+  clearLabel?: string;
 }
 
 /* ----------------------------------------
@@ -69,6 +73,8 @@ export function Select({
   width = 'md',
   className = '',
   required = false,
+  clearable = false,
+  clearLabel = 'Clear',
 }: SelectProps) {
   const id = useId();
   const triggerId = `select-trigger-${id}`;
@@ -130,6 +136,19 @@ export function Select({
     onChange?.(option.value);
     closeDropdown();
   }, [isControlled, onChange, closeDropdown]);
+
+  // Handle clear
+  const handleClear = useCallback((e?: React.MouseEvent) => {
+    e?.stopPropagation();
+    if (!isControlled) {
+      setInternalValue('');
+    }
+    onChange?.('');
+    closeDropdown();
+  }, [isControlled, onChange, closeDropdown]);
+
+  // Check if has value for clearable
+  const hasValue = !!currentValue;
 
   // Keyboard navigation
   const handleTriggerKeyDown = useCallback((e: React.KeyboardEvent) => {
@@ -232,10 +251,10 @@ export function Select({
     fullWidth ? 'w-full' : widthStyles[width],
   );
 
-  // Size-based styles (height)
+  // Size-based styles (height) - aligned with Input component
   const sizeStyles = {
-    sm: 'h-[28px] px-2 py-1 text-[11px] leading-4',
-    md: 'px-[var(--select-padding-x)] py-[var(--select-padding-y)] text-[length:var(--select-font-size)] leading-[var(--select-line-height)]',
+    sm: 'h-[var(--input-height-sm)] px-2 text-[11px] leading-4',
+    md: 'h-[var(--input-height-md)] px-[var(--select-padding-x)] text-[length:var(--select-font-size)] leading-[var(--select-line-height)]',
   };
 
   const triggerClasses = twMerge(
@@ -306,7 +325,7 @@ export function Select({
       >
         <span
           className={twMerge(
-            'text-[length:var(--font-size-14)] leading-[var(--line-height-20)]',
+            'text-[length:var(--font-size-12)] leading-[var(--line-height-18)]',
             selectedOption
               ? 'text-[var(--color-text-default)]'
               : 'text-[var(--color-text-muted)]',
@@ -315,15 +334,28 @@ export function Select({
         >
           {selectedOption?.label ?? placeholder}
         </span>
-        <IconChevronDown
-          size={16}
-          className={twMerge(
-            'shrink-0 transition-transform duration-[var(--duration-fast)]',
-            'text-[var(--color-text-default)]',
-            isOpen && 'rotate-180',
-            disabled && 'text-[var(--color-text-subtle)]'
+        <div className="flex items-center gap-1 shrink-0">
+          {/* Clear button */}
+          {clearable && hasValue && !disabled && (
+            <button
+              type="button"
+              onClick={handleClear}
+              className="p-0.5 rounded hover:bg-[var(--color-surface-subtle)] text-[var(--color-text-muted)] hover:text-[var(--color-text-default)] transition-colors"
+              aria-label="Clear selection"
+            >
+              <IconX size={12} strokeWidth={2} />
+            </button>
           )}
-        />
+          <IconChevronDown
+            size={16}
+            className={twMerge(
+              'transition-transform duration-[var(--duration-fast)]',
+              'text-[var(--color-text-default)]',
+              isOpen && 'rotate-180',
+              disabled && 'text-[var(--color-text-subtle)]'
+            )}
+          />
+        </div>
       </button>
 
       {/* Error */}
@@ -350,6 +382,24 @@ export function Select({
               width: dropdownPosition.width,
             }}
           >
+            {/* Clear option */}
+            {clearable && (
+              <div
+                role="option"
+                aria-selected={false}
+                onClick={() => handleClear()}
+                className={twMerge(
+                  'flex items-center justify-between',
+                  'px-[var(--select-item-padding-x)] py-[var(--select-item-padding-y)]',
+                  'text-[length:var(--select-item-font-size)] leading-[var(--select-item-line-height)]',
+                  'cursor-pointer transition-colors duration-[var(--duration-fast)]',
+                  'border-b border-[var(--color-border-subtle)]',
+                  'text-[var(--color-text-muted)] hover:bg-[var(--select-item-hover-bg)] hover:text-[var(--color-text-default)]',
+                )}
+              >
+                <span>{clearLabel}</span>
+              </div>
+            )}
             {options.map((option, index) => {
               const isSelected = option.value === currentValue;
               const isFocused = enabledOptions[focusedIndex]?.value === option.value;

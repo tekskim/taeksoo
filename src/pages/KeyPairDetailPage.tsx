@@ -56,7 +56,7 @@ const mockKeyPairsMap: Record<string, KeyPairDetail> = {
 };
 
 const defaultKeyPairDetail: KeyPairDetail = {
-  id: 'unknown', name: 'Unknown Key Pair', userId: '-', fingerprint: '-', publicKey: '-', createdAt: '-',
+  id: 'unknown', name: 'Unknown Key pair', userId: '-', fingerprint: '-', publicKey: '-', createdAt: '-',
 };
 
 /* ----------------------------------------
@@ -106,7 +106,7 @@ function CopyableDataRow({ label, value }: CopyableValueProps) {
 }
 
 /* ----------------------------------------
-   Key Pair Detail Page
+   Key pair Detail Page
    ---------------------------------------- */
 
 export function KeyPairDetailPage() {
@@ -138,7 +138,7 @@ export function KeyPairDetailPage() {
   // Breadcrumb items
   const breadcrumbItems = [
     { label: 'Proj-1', href: '/' },
-    { label: 'Key Pairs', href: '/compute/key-pairs' },
+    { label: 'Key pairs', href: '/compute/key-pairs' },
     { label: keyPair.name },
   ];
 
@@ -190,7 +190,7 @@ export function KeyPairDetailPage() {
           {/* Page Content */}
           <div className="pt-4 px-8 pb-20 bg-[var(--color-surface-default)] min-h-full">
           <VStack gap={6} className="min-w-[1176px]">
-            {/* Detail Header */}
+            {/* Detail header */}
             <DetailHeader>
               <DetailHeader.Title>{keyPair.name}</DetailHeader.Title>
               <DetailHeader.Actions>
@@ -203,7 +203,7 @@ export function KeyPairDetailPage() {
                 </Button>
               </DetailHeader.Actions>
               <DetailHeader.InfoGrid>
-                <DetailHeader.InfoCard label="Created At" value={keyPair.createdAt} />
+                <DetailHeader.InfoCard label="Created at" value={keyPair.createdAt} />
               </DetailHeader.InfoGrid>
             </DetailHeader>
 
@@ -217,10 +217,10 @@ export function KeyPairDetailPage() {
                 {/* Details Tab */}
                 <TabPanel value="details">
                   <VStack gap={4} className="pt-6">
-                    {/* Basic Information */}
+                    {/* Basic information */}
                     <SectionCard>
                       <SectionCard.Header 
-                        title="Basic Information" 
+                        title="Basic information" 
                         actions={
                           <Button
                             variant="secondary"
@@ -232,7 +232,7 @@ export function KeyPairDetailPage() {
                         }
                       />
                       <SectionCard.Content>
-                        <SectionCard.DataRow label="Key Pair Name" value={keyPair.name} />
+                        <SectionCard.DataRow label="Key pair Name" value={keyPair.name} />
                         <CopyableDataRow label="User ID" value={keyPair.userId} />
                       </SectionCard.Content>
                     </SectionCard>
@@ -242,7 +242,7 @@ export function KeyPairDetailPage() {
                       <SectionCard.Header title="Key Identity" />
                       <SectionCard.Content>
                         <CopyableDataRow label="Fingerprint" value={keyPair.fingerprint} />
-                        <CopyableDataRow label="Public Key" value={keyPair.publicKey} />
+                        <CopyableDataRow label="Public key" value={keyPair.publicKey} />
                       </SectionCard.Content>
                     </SectionCard>
                   </VStack>

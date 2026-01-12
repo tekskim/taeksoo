@@ -297,7 +297,7 @@ export default function CertificateDetailPage() {
     },
     {
       key: 'loadBalancer',
-      label: 'Load Balancer',
+      label: 'Load balancer',
       flex: 1,
       sortable: true,
       render: (_, row) => (
@@ -318,7 +318,7 @@ export default function CertificateDetailPage() {
     },
     {
       key: 'adminState',
-      label: 'Admin State',
+      label: 'Admin state',
       flex: 1,
     },
   ];
@@ -370,7 +370,7 @@ export default function CertificateDetailPage() {
           {/* Page Content */}
           <div className="pt-4 px-8 pb-20 bg-[var(--color-surface-default)] min-h-full">
             <VStack gap={8} className="min-w-[1176px]">
-              {/* Detail Header */}
+              {/* Detail header */}
               <DetailHeader>
                 <DetailHeader.Title>{certificate.name}</DetailHeader.Title>
 
@@ -443,12 +443,12 @@ export default function CertificateDetailPage() {
                       />
                   )}
                   <DetailHeader.InfoCard
-                    label="Expires At"
+                    label="Expires at"
                     value={certificate.expiresAt}
                     className="flex-1"
                   />
                   <DetailHeader.InfoCard
-                    label="Created At"
+                    label="Created at"
                     value={certificate.createdAt}
                     className="flex-1"
                   />
@@ -466,11 +466,11 @@ export default function CertificateDetailPage() {
                   {/* Details Tab */}
                   <TabPanel value="details">
                     <VStack gap={4} className="pt-6">
-                      {/* Basic Information */}
+                      {/* Basic information */}
                       <SectionCard>
-                        <SectionCard.Header title="Basic Information" />
+                        <SectionCard.Header title="Basic information" />
                         <SectionCard.Content>
-                          <SectionCard.DataRow label="Certificate Name" value={certificate.name} />
+                          <SectionCard.DataRow label="Certificate name" value={certificate.name} />
                         </SectionCard.Content>
                       </SectionCard>
 
@@ -486,8 +486,8 @@ export default function CertificateDetailPage() {
                               <SectionCard.DataRow label="Type" value={certificate.type} />
                               <SectionCard.DataRow label="CN" value={certificate.domain} />
                               <SectionCard.DataRow label="SAN" value={certificate.san} />
-                              <SectionCard.DataRow label="Signature Type" value={certificate.signatureType} />
-                              <SectionCard.DataRow label="Valid From / To" value={`${certificate.validFrom} ~ ${certificate.validTo}`} />
+                              <SectionCard.DataRow label="Signature type" value={certificate.signatureType} />
+                              <SectionCard.DataRow label="Valid from / To" value={`${certificate.validFrom} ~ ${certificate.validTo}`} />
                             </SectionCard.Content>
                           </>
                         ) : (
@@ -498,8 +498,8 @@ export default function CertificateDetailPage() {
                               <SectionCard.DataRow label="Classification" value={certificate.classification} />
                               <SectionCard.DataRow label="Authority" value={certificate.authority} />
                               <SectionCard.DataRow label="Issuer" value={certificate.issuer} />
-                              <SectionCard.DataRow label="Signature Type" value={certificate.signatureType} />
-                              <SectionCard.DataRow label="Valid From / To" value={`${certificate.validFrom} ~ ${certificate.validTo}`} />
+                              <SectionCard.DataRow label="Signature type" value={certificate.signatureType} />
+                              <SectionCard.DataRow label="Valid from / To" value={`${certificate.validFrom} ~ ${certificate.validTo}`} />
                             </SectionCard.Content>
                           </>
                         )}
@@ -525,7 +525,7 @@ export default function CertificateDetailPage() {
                             setListenerSearchTerm(e.target.value);
                             setListenerCurrentPage(1);
                           }}
-                          placeholder="Find Listener with filters"
+                          placeholder="Search listener by attributes"
                         />
                       </div>
 

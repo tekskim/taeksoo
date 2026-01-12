@@ -48,7 +48,7 @@ interface FlavorDetail {
   ram: string;
   visibility: VisibilityType;
   createdAt: string;
-  // Basic Information
+  // Basic information
   architecture: string;
   // Specification
   ephemeralDisk: string;
@@ -207,7 +207,7 @@ export function FlavorDetailPage() {
 
   // Context menu items for instance actions
   const getInstanceContextMenuItems = (_instance: FlavorInstance): ContextMenuItem[] => [
-    { id: 'view-details', label: 'View Details', onClick: () => {} },
+    { id: 'view-details', label: 'View details', onClick: () => {} },
     { id: 'start', label: 'Start', onClick: () => {} },
     { id: 'stop', label: 'Stop', onClick: () => {} },
     { id: 'restart', label: 'Restart', onClick: () => {} },
@@ -281,7 +281,7 @@ export function FlavorDetailPage() {
     },
     {
       key: 'createdAt',
-      label: 'Created At',
+      label: 'Created at',
       flex: 1,
       sortable: true,
       render: (value) => <span>{value}</span>,
@@ -355,10 +355,10 @@ export function FlavorDetailPage() {
               <DetailHeader.Title>{flavor.name}</DetailHeader.Title>
               <DetailHeader.Actions>
                 <Button variant="secondary" size="sm" leftIcon={<IconCirclePlus size={12} />}>
-                  Create Instance
+                  Create instance
                 </Button>
                 <Button variant="secondary" size="sm" leftIcon={<IconCirclePlus size={12} />}>
-                  Create Volume
+                  Create volume
                 </Button>
               </DetailHeader.Actions>
               <DetailHeader.InfoGrid>
@@ -367,7 +367,7 @@ export function FlavorDetailPage() {
                 <DetailHeader.InfoCard label="vCPU" value={String(flavor.vcpu)} />
                 <DetailHeader.InfoCard label="RAM" value={flavor.ram} />
                 <DetailHeader.InfoCard label="Visibility" value={flavor.visibility} />
-                <DetailHeader.InfoCard label="Created At" value={flavor.createdAt} />
+                <DetailHeader.InfoCard label="Created at" value={flavor.createdAt} />
               </DetailHeader.InfoGrid>
             </DetailHeader>
 
@@ -383,11 +383,11 @@ export function FlavorDetailPage() {
                 {/* Details Tab Panel */}
                 <TabPanel value="details">
                   <VStack gap={4} className="pt-6">
-                    {/* Basic Information */}
+                    {/* Basic information */}
                     <SectionCard>
-                      <SectionCard.Header title="Basic Information" />
+                      <SectionCard.Header title="Basic information" />
                       <SectionCard.Content>
-                        <SectionCard.DataRow label="Flavor Name" value={flavor.name} />
+                        <SectionCard.DataRow label="Flavor name" value={flavor.name} />
                         <SectionCard.DataRow label="Architecture" value={flavor.architecture} />
                         <SectionCard.DataRow label="Category" value={flavor.category} />
                       </SectionCard.Content>
@@ -399,7 +399,7 @@ export function FlavorDetailPage() {
                       <SectionCard.Content>
                         <SectionCard.DataRow label="vCPU" value={String(flavor.vcpu)} />
                         <SectionCard.DataRow label="RAM" value={flavor.ram} />
-                        <SectionCard.DataRow label="Ephemeral Disk" value={flavor.ephemeralDisk} />
+                        <SectionCard.DataRow label="Ephemeral disk" value={flavor.ephemeralDisk} />
                         <SectionCard.DataRow label="NUMA Nodes" value={flavor.numaNodes} />
                       </SectionCard.Content>
                     </SectionCard>
@@ -410,8 +410,8 @@ export function FlavorDetailPage() {
                       <SectionCard.Content>
                         <SectionCard.DataRow label="CPU Policy" value={flavor.cpuPolicy} />
                         <SectionCard.DataRow label="CPU Thread Policy" value={flavor.cpuThreadPolicy} />
-                        <SectionCard.DataRow label="Memory Page" value={flavor.memoryPage} />
-                        <SectionCard.DataRow label="Internal Network Bandwidth" value={flavor.internalNetworkBandwidth} />
+                        <SectionCard.DataRow label="Memory page" value={flavor.memoryPage} />
+                        <SectionCard.DataRow label="Internal network Bandwidth" value={flavor.internalNetworkBandwidth} />
                         <SectionCard.DataRow label="Storage IOPS" value={flavor.storageIOPS} />
                       </SectionCard.Content>
                     </SectionCard>
@@ -437,7 +437,7 @@ export function FlavorDetailPage() {
                     {/* Search */}
                     <div className="w-[280px]">
                       <SearchInput
-                        placeholder="Find instance with filters"
+                        placeholder="Search instance by attributes"
                         value={instanceSearchQuery}
                         onChange={(e) => setInstanceSearchQuery(e.target.value)}
                         onClear={() => setInstanceSearchQuery('')}

@@ -190,7 +190,7 @@ export function ServerGroupsPage() {
         const menuItems: ContextMenuItem[] = [
           {
             id: 'create-instance',
-            label: 'Create Instance',
+            label: 'Create instance',
             onClick: () => console.log('Create instance in server group:', row.id),
           },
           {
@@ -261,7 +261,7 @@ export function ServerGroupsPage() {
             <Breadcrumb
               items={[
                 { label: 'Proj-1', href: '/project' },
-                { label: 'Server Groups' },
+                { label: 'Server groups' },
               ]}
             />
           }
@@ -282,12 +282,9 @@ export function ServerGroupsPage() {
           <VStack gap={3}>
             {/* Page Header */}
             <div className="flex items-center justify-between h-8">
-              <h1 className="text-[length:var(--font-size-16)] font-semibold text-[var(--color-text-default)]">
-                Server Group
+              <h1 className="text-[length:var(--font-size-16)] font-semibold leading-6 text-[var(--color-text-default)]">
+                Server group
               </h1>
-              <Button>
-                Create Server Group
-              </Button>
             </div>
 
             {/* List Toolbar */}
@@ -296,7 +293,7 @@ export function ServerGroupsPage() {
                 <ListToolbar.Actions>
                   <div className="w-[280px]">
                     <SearchInput
-                      placeholder="Find server group with filters"
+                      placeholder="Search server group by attributes"
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
                       onClear={() => setSearchQuery('')}
@@ -335,7 +332,7 @@ export function ServerGroupsPage() {
               />
             )}
 
-            {/* Server Groups Table */}
+            {/* Server groups Table */}
             <Table<ServerGroup>
               columns={visibleColumns}
               data={paginatedServerGroups}
@@ -355,7 +352,7 @@ export function ServerGroupsPage() {
         isOpen={deleteModalOpen}
         onClose={handleDeleteCancel}
         onConfirm={handleDeleteConfirm}
-        title="Delete Server Group"
+        title="Delete Server group"
         description="Are you sure you want to delete this server group? This action cannot be undone."
         confirmText="Delete"
         cancelText="Cancel"

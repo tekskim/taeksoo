@@ -189,6 +189,14 @@ const mockAttachedRoles: AttachedRole[] = [
     policies: 'ReadOnly (+1)',
     createdAt: '2025-07-01',
   },
+  {
+    id: 'role-004',
+    name: 'network-admin',
+    type: 'Custom',
+    userGroupCount: 4,
+    policies: 'NetworkAccess (+1)',
+    createdAt: '2025-08-10',
+  },
 ];
 
 const mockVersionHistory: PolicyVersion[] = [
@@ -449,6 +457,12 @@ export default function IAMPolicyDetailPage() {
     });
   };
 
+  // More Actions menu items
+  const moreActionsItems: ContextMenuItem[] = [
+    { id: 'manage-roles', label: 'Manage roles', onClick: () => console.log('Manage roles') },
+    { id: 'duplicate', label: 'Duplicate', onClick: () => console.log('Duplicate') },
+  ];
+
   // Breadcrumb items
   const breadcrumbItems = [
     { label: 'IAM', href: '/iam' },
@@ -499,33 +513,50 @@ export default function IAMPolicyDetailPage() {
       label: 'Action',
       width: 80,
       align: 'center',
-      render: () => (
-        <ContextMenu
-          items={roleContextMenuItems}
-          onSelect={(id) => console.log('Role action:', id)}
-        >
-          <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-subtle)] transition-colors">
-            <IconAction size={16} className="text-[var(--color-text-default)]" />
-          </button>
-        </ContextMenu>
-      ),
+      render: (_, row) => {
+        const isBuiltIn = row.type === 'Built-in';
+        const menuItems: ContextMenuItem[] = [
+          {
+            id: 'detach',
+            label: 'Detach',
+            status: isBuiltIn ? undefined : 'danger',
+            disabled: isBuiltIn,
+            onClick: () => console.log('Detach role', row.id),
+          },
+        ];
+        return (
+          <ContextMenu items={menuItems} trigger="click">
+            <button
+              type="button"
+              className="flex items-center justify-center w-7 h-7 rounded-md bg-transparent hover:bg-[var(--color-surface-muted)] active:bg-[var(--color-border-subtle)] transition-colors cursor-pointer"
+            >
+              <IconAction size={16} stroke={1} className="text-[var(--color-text-default)]" />
+            </button>
+          </ContextMenu>
+        );
+      },
     },
   ];
 
-  const roleContextMenuItems: ContextMenuItem[] = [
-    { id: 'view', label: 'View details' },
-    { id: 'detach', label: 'Detach from policy' },
-    { type: 'divider' },
-    { id: 'delete', label: 'Delete role', danger: true },
-  ];
-
-  const versionContextMenuItems: ContextMenuItem[] = [
-    { id: 'view', label: 'View details' },
-    { id: 'set-active', label: 'Set as active' },
-    { id: 'compare', label: 'Compare with active' },
-    { type: 'divider' },
-    { id: 'delete', label: 'Delete version', danger: true },
-  ];
+  // Version context menu items factory based on active status
+  const getVersionContextMenuItems = (version: PolicyVersion): ContextMenuItem[] => {
+    const isActive = version.isActive;
+    return [
+      {
+        id: 'revert',
+        label: 'Revert',
+        disabled: isActive,
+        onClick: () => console.log('Revert version', version.id),
+      },
+      {
+        id: 'delete',
+        label: 'Delete',
+        status: isActive ? undefined : 'danger',
+        disabled: isActive,
+        onClick: () => console.log('Delete version', version.id),
+      },
+    ];
+  };
 
   if (!policy) {
     return (
@@ -601,9 +632,11 @@ export default function IAMPolicyDetailPage() {
                     <Button variant="secondary" size="sm" leftIcon={<IconTrash size={12} />}>
                       Delete
                     </Button>
-                    <Button variant="secondary" size="sm" rightIcon={<IconChevronDown size={12} />}>
-                      More Actions
-                    </Button>
+                    <ContextMenu items={moreActionsItems} trigger="click">
+                      <Button variant="secondary" size="sm" rightIcon={<IconChevronDown size={12} />}>
+                        More Actions
+                      </Button>
+                    </ContextMenu>
                   </HStack>
 
                   {/* Info Cards */}
@@ -817,8 +850,7 @@ export default function IAMPolicyDetailPage() {
                             key={version.id}
                             className={`
                               rounded-[var(--table-row-radius)]
-                              ${expandedVersions.has(version.id) ? '' : 'border border-[var(--color-border-default)]'}
-                              bg-[var(--color-surface-default)]
+                              border border-[var(--color-border-default)] bg-[var(--color-surface-default)]
                               transition-colors overflow-hidden
                             `}
                           >
@@ -826,7 +858,7 @@ export default function IAMPolicyDetailPage() {
                             <div
                               className={`
                                 flex items-stretch min-h-[var(--table-row-height)]
-                                ${expandedVersions.has(version.id) ? 'border border-b-0 border-[var(--color-border-default)] rounded-t-md' : 'rounded-md'}
+                                ${expandedVersions.has(version.id) ? 'rounded-t-md' : 'rounded-md'}
                                 hover:bg-[var(--table-row-hover-bg)] transition-colors
                               `}
                             >
@@ -867,11 +899,14 @@ export default function IAMPolicyDetailPage() {
                               {/* Action */}
                               <div className="w-[72px] flex items-center justify-center px-1.5 py-1.5">
                                 <ContextMenu
-                                  items={versionContextMenuItems}
-                                  onSelect={(id) => console.log('Version action:', id, version.id)}
+                                  items={getVersionContextMenuItems(version)}
+                                  trigger="click"
                                 >
-                                  <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-subtle)] transition-colors">
-                                    <IconAction size={16} className="text-[var(--color-text-default)]" />
+                                  <button
+                                    type="button"
+                                    className="flex items-center justify-center w-7 h-7 rounded-md bg-transparent hover:bg-[var(--color-surface-muted)] active:bg-[var(--color-border-subtle)] transition-colors cursor-pointer"
+                                  >
+                                    <IconAction size={16} stroke={1} className="text-[var(--color-text-default)]" />
                                   </button>
                                 </ContextMenu>
                               </div>

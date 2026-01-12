@@ -44,7 +44,7 @@ interface LoadBalancerDetail {
   adminState: 'Up' | 'Down';
   vipAddress: string;
   createdAt: string;
-  // Basic Information
+  // Basic information
   description: string;
   provider: string;
   // Network
@@ -103,7 +103,7 @@ const mockLoadBalancersMap: Record<string, LoadBalancerDetail> = {
     adminState: 'Up',
     vipAddress: '192.168.10.14',
     createdAt: '2025-10-02 09:00:00',
-    description: 'API Load Balancer',
+    description: 'API Load balancer',
     provider: 'ovn',
     ownedNetwork: { name: 'net-01', id: 'net-001' },
     subnet: { name: 'subnet-01', id: 'subnet-001' },
@@ -116,7 +116,7 @@ const mockLoadBalancersMap: Record<string, LoadBalancerDetail> = {
     adminState: 'Up',
     vipAddress: '192.168.10.15',
     createdAt: '2025-10-01 10:30:00',
-    description: 'Application Load Balancer',
+    description: 'Application Load balancer',
     provider: 'ovn',
     ownedNetwork: { name: 'net-03', id: 'net-003' },
     subnet: { name: 'subnet-03', id: 'subnet-003' },
@@ -300,13 +300,13 @@ export function LoadBalancerDetailPage() {
     },
     {
       key: 'connectionLimit',
-      label: 'Connection Limit',
+      label: 'Connection limit',
       flex: 1,
       sortable: true,
     },
     {
       key: 'adminState',
-      label: 'Admin State',
+      label: 'Admin state',
       flex: 1,
     },
     {
@@ -404,7 +404,7 @@ export function LoadBalancerDetailPage() {
     },
     {
       key: 'adminState',
-      label: 'Admin State',
+      label: 'Admin state',
       width: '103px',
       align: 'center',
     },
@@ -460,7 +460,7 @@ export function LoadBalancerDetailPage() {
               <Breadcrumb
                 items={[
                   { label: 'Proj-1', href: '/' },
-                  { label: 'Load Balancers', href: '/compute/load-balancers' },
+                  { label: 'Load balancers', href: '/compute/load-balancers' },
                   { label: loadBalancer.name },
                 ]}
               />
@@ -480,7 +480,7 @@ export function LoadBalancerDetailPage() {
           {/* Main Content */}
           <div className="pt-4 px-8 pb-20 bg-[var(--color-surface-default)] min-h-full">
             <VStack gap={8} className="min-w-[1176px]">
-              {/* Detail Header */}
+              {/* Detail header */}
               <DetailHeader>
                 <DetailHeader.Title>{loadBalancer.name}</DetailHeader.Title>
                 <DetailHeader.Actions>
@@ -501,9 +501,9 @@ export function LoadBalancerDetailPage() {
                       },
                       {
                         id: 'create-listener',
-                        label: 'Create Listener',
+                        label: 'Create listener',
                         icon: <IconCirclePlus size={14} stroke={1.5} />,
-                        onClick: () => console.log('Create Listener clicked'),
+                        onClick: () => console.log('Create listener clicked'),
                       },
                     ]}
                   >
@@ -525,9 +525,9 @@ export function LoadBalancerDetailPage() {
                     copyable
                     onCopy={handleCopyId}
                   />
-                  <DetailHeader.InfoCard label="Admin State" value={loadBalancer.adminState} />
+                  <DetailHeader.InfoCard label="Admin state" value={loadBalancer.adminState} />
                   <DetailHeader.InfoCard label="VIP Address" value={loadBalancer.vipAddress} />
-                  <DetailHeader.InfoCard label="Created At" value={loadBalancer.createdAt} />
+                  <DetailHeader.InfoCard label="Created at" value={loadBalancer.createdAt} />
                 </DetailHeader.InfoGrid>
               </DetailHeader>
 
@@ -544,10 +544,10 @@ export function LoadBalancerDetailPage() {
                     {/* Details Tab Panel */}
                     <TabPanel value="details">
                       <VStack gap={4} className="pt-6">
-                        {/* Basic Information */}
+                        {/* Basic information */}
                         <SectionCard>
                           <SectionCard.Header
-                            title="Basic Information"
+                            title="Basic information"
                             actions={
                               <Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />}>
                                 Edit
@@ -557,7 +557,7 @@ export function LoadBalancerDetailPage() {
                           <SectionCard.Content>
                             <SectionCard.DataRow label="Name" value={loadBalancer.name} />
                             <SectionCard.DataRow label="Description" value={loadBalancer.description} />
-                            <SectionCard.DataRow label="Admin State" value={loadBalancer.adminState} />
+                            <SectionCard.DataRow label="Admin state" value={loadBalancer.adminState} />
                             <SectionCard.DataRow label="Provider" value={loadBalancer.provider} />
                           </SectionCard.Content>
                         </SectionCard>
@@ -571,7 +571,7 @@ export function LoadBalancerDetailPage() {
                               <div className="h-px w-full bg-[var(--color-border-subtle)]" />
                               <div className="flex flex-col gap-1.5">
                                 <span className="text-[11px] font-medium leading-4 text-[var(--color-text-subtle)]">
-                                  Owned Network
+                                  Owned network
                                 </span>
                                 {loadBalancer.ownedNetwork ? (
                                   <Link
@@ -635,7 +635,7 @@ export function LoadBalancerDetailPage() {
                             Listener
                           </h3>
                           <Button variant="secondary" size="sm" leftIcon={<IconCirclePlus size={12} />}>
-                            Create Listener
+                            Create listener
                           </Button>
                         </div>
 
@@ -648,7 +648,7 @@ export function LoadBalancerDetailPage() {
                                 setListenerSearchTerm(e.target.value);
                                 setListenerCurrentPage(1);
                               }}
-                              placeholder="Find Listener with filters"
+                              placeholder="Search listener by attributes"
                             />
                           </div>
                           <div className="h-4 w-px bg-[var(--color-border-default)]" />
@@ -709,7 +709,7 @@ export function LoadBalancerDetailPage() {
                                 setPoolSearchTerm(e.target.value);
                                 setPoolCurrentPage(1);
                               }}
-                              placeholder="Find Pool with filters"
+                              placeholder="Search pool by attributes"
                             />
                           </div>
                           <div className="h-4 w-px bg-[var(--color-border-default)]" />
