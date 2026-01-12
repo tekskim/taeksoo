@@ -44,7 +44,9 @@ export * from './components/FormField';
 export * from './components/FloatingCard';
 export * from './components/MonitoringToolbar';
 export * from './components/NotificationCenter';
-export * from './components/Wizard';
+export * from './components/Loading';
+export * from './components/SNBMenuItem';
+export * from './components/CardTitle';
 
 // Layouts
 export * from './layouts';

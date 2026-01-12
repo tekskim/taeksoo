@@ -38,7 +38,7 @@ function getAppFromPath(path: string): string {
     }
   }
   
-  const appPrefixes = ['/cloudbuilder', '/compute', '/storage', '/desktop', '/design', '/container', '/iam', '/settings'];
+  const appPrefixes = ['/cloudbuilder', '/compute', '/storage', '/desktop', '/design', '/container', '/ai-platform'];
   for (const prefix of appPrefixes) {
     if (path.startsWith(prefix)) {
       return prefix;
@@ -65,9 +65,8 @@ function getDefaultHomeTab(app: string): TabItem {
     '/agent': { path: '/agent', label: 'Home' }, // Agent service home
     '/desktop': { path: '/desktop', label: 'Home' },
     '/design': { path: '/design', label: 'Home' },
-    '/container': { path: '/container', label: 'Home' },
-    '/iam': { path: '/iam/home', label: 'Home' },
-    '/settings': { path: '/settings/general', label: 'General' },
+    '/container': { path: '/container', label: 'Dashboard' },
+    '/ai-platform': { path: '/ai-platform', label: 'Dashboard' },
     '/': { path: '/', label: 'Home' },
   };
   
@@ -137,27 +136,9 @@ function getLabelFromPath(path: string): string {
     '/design/drawers': 'Drawers',
     '/design/modals': 'Modals',
     '/design-system': 'Design System',
-    '/container': 'Home',
-    '/container/dashboard': 'Dashboard',
-    '/iam': 'Home',
-    '/iam/home': 'Home',
-    '/iam/users': 'Users',
-    '/iam/user-groups': 'User Groups',
-    '/iam/roles': 'Roles',
-    '/iam/policies': 'Policies',
-    '/iam/domains': 'Domains',
-    '/iam/system-administrators': 'System Administrators',
-    '/iam/login-policies': 'Login Policies',
-    '/iam/mfa-policies': 'MFA Policies',
-    '/iam/session-policies': 'Session Policies',
-    '/iam/token-policies': 'Token Policies',
-    '/iam/active-sessions': 'Active Sessions',
-    '/iam/event-logs': 'Event Logs',
-    '/settings': 'General',
-    '/settings/general': 'General',
-    '/settings/account': 'Account',
-    '/settings/notifications': 'Notifications',
-    '/settings/information': 'Information',
+    '/container': 'Dashboard',
+    '/ai-platform': 'Dashboard',
+    '/ai-platform/workloads': 'Workloads',
   };
   
   // Check for exact match first
@@ -406,9 +387,8 @@ export function TabProvider({ children, defaultTabs = [] }: TabProviderProps) {
       '/storage': { path: '/storage', label: 'Home' },
       '/desktop': { path: '/desktop', label: 'Home' },
       '/design': { path: '/design', label: 'Home' },
-      '/container': { path: '/container', label: 'Home' },
-      '/iam': { path: '/iam/home', label: 'Home' },
-      '/settings': { path: '/settings/general', label: 'General' },
+      '/container': { path: '/container', label: 'Dashboard' },
+      '/ai-platform': { path: '/ai-platform', label: 'Dashboard' },
     };
     
     // 현재 경로에서 애플리케이션 찾기
