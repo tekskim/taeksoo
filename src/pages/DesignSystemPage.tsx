@@ -5252,8 +5252,8 @@ outline: 2px solid var(--color-border-focus);`}
                           />
                           <TopBarAction
                             icon={<IconBell size={16} stroke={1.5} />}
-                            aria-label="Notifications with count"
-                            badgeCount={5}
+                            aria-label="Notifications"
+                            badge
                           />
                           <TopBarAction
                             icon={<IconSettings size={16} stroke={1.5} />}

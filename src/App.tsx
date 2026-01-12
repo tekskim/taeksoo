@@ -120,6 +120,10 @@ import SettingsAccountPage from '@/pages/SettingsAccountPage';
 import SettingsNotificationsPage from '@/pages/SettingsNotificationsPage';
 import SettingsInformationPage from '@/pages/SettingsInformationPage';
 
+// Pages - Mail Template
+import { MailTemplatePage } from '@/pages/MailTemplatePage';
+import { MailTemplatePreviewPage } from '@/pages/MailTemplatePreviewPage';
+
 // Layouts
 import { AgentAppLayout } from '@/layouts';
 
@@ -260,6 +264,10 @@ function AppRoutes() {
         <Route path="/settings/account" element={<SettingsAccountPage />} />
         <Route path="/settings/notifications" element={<SettingsNotificationsPage />} />
         <Route path="/settings/information" element={<SettingsInformationPage />} />
+
+        {/* Mail Template Routes */}
+        <Route path="/mail-template" element={<MailTemplatePage />} />
+        <Route path="/mail-template/:templateId" element={<MailTemplatePreviewPage />} />
       </Routes>
   );
 }
