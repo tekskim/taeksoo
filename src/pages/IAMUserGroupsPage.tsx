@@ -27,11 +27,13 @@ import { Link } from 'react-router-dom';
    ---------------------------------------- */
 
 type GroupType = 'Built-in' | 'Custom';
+type GroupStatus = 'active' | 'inactive';
 
 interface UserGroup {
   id: string;
   name: string;
   type: GroupType;
+  status: GroupStatus;
   roles: string;
   userCount: number;
   description: string;
@@ -43,16 +45,16 @@ interface UserGroup {
    ---------------------------------------- */
 
 const mockUserGroups: UserGroup[] = [
-  { id: 'ug-001', name: 'dev-admin-group', type: 'Custom', roles: 'admin (+3)', userCount: 100, description: 'Development team administrators', createdAt: '2025-09-12' },
-  { id: 'ug-002', name: 'ops-team', type: 'Custom', roles: 'network-admin (+1)', userCount: 25, description: 'Operations team', createdAt: '2025-09-10' },
-  { id: 'ug-003', name: 'qa-team', type: 'Custom', roles: 'qa-lead (+2)', userCount: 15, description: 'Quality assurance team', createdAt: '2025-09-08' },
-  { id: 'ug-004', name: 'viewers', type: 'Built-in', roles: 'Viewer (+3)', userCount: 130, description: '-', createdAt: '2025-09-12' },
-  { id: 'ug-005', name: 'administrators', type: 'Built-in', roles: 'super-admin', userCount: 5, description: 'System administrators', createdAt: '2025-08-01' },
-  { id: 'ug-006', name: 'developers', type: 'Custom', roles: 'developer (+2)', userCount: 45, description: 'Development team', createdAt: '2025-08-15' },
-  { id: 'ug-007', name: 'security-team', type: 'Custom', roles: 'security-admin', userCount: 8, description: 'Security operations', createdAt: '2025-07-20' },
-  { id: 'ug-008', name: 'support-team', type: 'Custom', roles: 'support (+1)', userCount: 20, description: 'Customer support team', createdAt: '2025-07-10' },
-  { id: 'ug-009', name: 'data-analysts', type: 'Custom', roles: 'analyst', userCount: 12, description: 'Data analysis team', createdAt: '2025-06-25' },
-  { id: 'ug-010', name: 'external-users', type: 'Custom', roles: 'viewer', userCount: 50, description: 'External partners', createdAt: '2025-06-01' },
+  { id: 'ug-001', name: 'dev-admin-group', type: 'Custom', status: 'active', roles: 'admin (+3)', userCount: 100, description: 'Development team administrators', createdAt: '2025-09-12' },
+  { id: 'ug-002', name: 'ops-team', type: 'Custom', status: 'inactive', roles: 'network-admin (+1)', userCount: 25, description: 'Operations team', createdAt: '2025-09-10' },
+  { id: 'ug-003', name: 'qa-team', type: 'Custom', status: 'active', roles: 'qa-lead (+2)', userCount: 15, description: 'Quality assurance team', createdAt: '2025-09-08' },
+  { id: 'ug-004', name: 'viewers', type: 'Built-in', status: 'active', roles: 'Viewer (+3)', userCount: 130, description: '-', createdAt: '2025-09-12' },
+  { id: 'ug-005', name: 'administrators', type: 'Built-in', status: 'active', roles: 'super-admin', userCount: 5, description: 'System administrators', createdAt: '2025-08-01' },
+  { id: 'ug-006', name: 'developers', type: 'Custom', status: 'active', roles: 'developer (+2)', userCount: 45, description: 'Development team', createdAt: '2025-08-15' },
+  { id: 'ug-007', name: 'security-team', type: 'Custom', status: 'inactive', roles: 'security-admin', userCount: 8, description: 'Security operations', createdAt: '2025-07-20' },
+  { id: 'ug-008', name: 'support-team', type: 'Custom', status: 'active', roles: 'support (+1)', userCount: 20, description: 'Customer support team', createdAt: '2025-07-10' },
+  { id: 'ug-009', name: 'data-analysts', type: 'Custom', status: 'active', roles: 'analyst', userCount: 12, description: 'Data analysis team', createdAt: '2025-06-25' },
+  { id: 'ug-010', name: 'external-users', type: 'Custom', status: 'inactive', roles: 'viewer', userCount: 50, description: 'External partners', createdAt: '2025-06-01' },
 ];
 
 /* ----------------------------------------
@@ -92,13 +94,26 @@ export function IAMUserGroupsPage() {
   // Selection state
   const hasSelection = selectedRows.length > 0;
 
-  // Context menu items
-  const contextMenuItems: ContextMenuItem[] = [
-    { id: 'view', label: 'View details' },
-    { id: 'edit', label: 'Edit group' },
-    { type: 'divider' },
-    { id: 'delete', label: 'Delete group', danger: true },
-  ];
+  // Context menu items factory
+  const getContextMenuItems = (rowId: string, isInactive: boolean): ContextMenuItem[] => {
+    if (isInactive) {
+      // Inactive group: Manage roles, Edit, Delete disabled; Duplicate not shown
+      return [
+        { id: 'manage-roles', label: 'Manage roles', disabled: true, onClick: () => console.log('Manage roles', rowId) },
+        { id: 'manage-users', label: 'Manage users', onClick: () => console.log('Manage users', rowId) },
+        { id: 'edit', label: 'Edit', disabled: true, onClick: () => console.log('Edit', rowId) },
+        { id: 'delete', label: 'Delete', disabled: true, onClick: () => console.log('Delete', rowId) },
+      ];
+    }
+    // Active group: all items enabled
+    return [
+      { id: 'manage-roles', label: 'Manage roles', onClick: () => console.log('Manage roles', rowId) },
+      { id: 'manage-users', label: 'Manage users', onClick: () => console.log('Manage users', rowId) },
+      { id: 'duplicate', label: 'Duplicate', onClick: () => console.log('Duplicate', rowId) },
+      { id: 'edit', label: 'Edit', onClick: () => console.log('Edit', rowId) },
+      { id: 'delete', label: 'Delete', status: 'danger', onClick: () => console.log('Delete', rowId) },
+    ];
+  };
 
   // Table columns
   const columns: TableColumn<UserGroup>[] = [
@@ -151,10 +166,10 @@ export function IAMUserGroupsPage() {
       width: 72,
       align: 'center',
       render: (_value, row) => (
-        <ContextMenu items={contextMenuItems} onSelect={(itemId) => console.log(itemId, row.id)}>
+        <ContextMenu items={getContextMenuItems(row.id, row.status === 'inactive')} trigger="click">
           <button
             type="button"
-            className="p-1.5 rounded-md hover:bg-[var(--color-surface-subtle)] transition-colors"
+            className="flex items-center justify-center w-7 h-7 rounded-md bg-transparent hover:bg-[var(--color-surface-muted)] active:bg-[var(--color-border-subtle)] transition-colors cursor-pointer"
           >
             <IconAction size={16} stroke={1} className="text-[var(--color-text-default)]" />
           </button>
