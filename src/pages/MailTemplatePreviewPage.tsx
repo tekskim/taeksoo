@@ -76,39 +76,33 @@ function AccountInvitationTemplate({
     <div className="flex flex-col gap-3 items-start w-full max-w-[600px]">
       <div className="bg-white rounded-lg p-6 w-full flex flex-col gap-6">
         <ThakiLogo />
-        <div className="text-[12px] leading-[18px] text-[#0f172a] mt-4">
-          <p className="mb-4">Hello <span className="text-[12px] font-medium text-[#0f172a]">{displayName}</span>,</p>
+        <div className="text-[12px] leading-[18px] mt-4" style={{ color: '#64748b' }}>
+          <p className="mb-4">Hello <span className="text-[12px] font-medium" style={{ color: '#0f172a' }}>{displayName}</span>,</p>
           <p className="mb-0">
-            Your administrator from <span className="text-[12px] font-medium text-[#0f172a]">{domainName}</span> in Thaki Cloud has created a new account for you.
+            Your administrator from <span className="text-[12px] font-medium" style={{ color: '#0f172a' }}>{domainName}</span> in Thaki Cloud has created a new account for you.
             <br />
             To get started, please set your password using the secure link below.
           </p>
         </div>
-        <div className="bg-[#f9fafb] rounded-lg px-4 py-3 flex flex-col gap-1.5 w-full">
-          <span className="text-[11px] font-medium text-[#64748b] leading-4">Your username</span>
-          <span className="text-[14px] font-medium text-[#0f172a] leading-5">{username}</span>
+        <div className="rounded-lg px-4 py-3 flex flex-col gap-1.5 w-full" style={{ backgroundColor: '#f8fafc' }}>
+          <span className="text-[11px] font-medium leading-4" style={{ color: '#64748b' }}>Your username</span>
+          <span className="text-[14px] font-medium leading-5" style={{ color: '#0f172a' }}>{username}</span>
         </div>
-        <Button
-          as="a"
-          href={actionUrl}
-          variant="primary"
-          size="md"
-          className="self-start"
-        >
+        <Button as="a" href={actionUrl} variant="primary" size="lg" className="self-start">
           Get Started
         </Button>
-        <div className="flex items-start gap-2 p-3 rounded-md bg-[#fff7ed] w-full">
+        <div className="flex items-start gap-2 p-3 rounded-md w-full" style={{ backgroundColor: '#fff7ed' }}>
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#ea580c" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="flex-shrink-0 mt-0.5">
             <path d="M10.24 3.957l-8.424 14.566a1.998 1.998 0 0 0 1.735 2.917h16.848a1.998 1.998 0 0 0 1.735 -2.917l-8.424 -14.566a1.998 1.998 0 0 0 -3.47 0z" />
             <path d="M12 9v4" />
             <path d="M12 17h.01" />
           </svg>
-          <span className="text-[11px] leading-4 text-[#475569]">
-            This link will expire in <span className="font-medium text-[#0f172a]">{expiryDays} days.</span>
+          <span className="text-[11px] leading-4" style={{ color: '#475569' }}>
+            This link will expire in <span className="font-medium" style={{ color: '#0f172a' }}>{expiryDays} days.</span>
           </span>
         </div>
       </div>
-      <span className="text-[11px] text-[#64748b] leading-4 text-center w-full">© Thaki Cloud, All rights reserved.</span>
+      <span className="text-[11px] leading-4 text-center w-full" style={{ color: '#64748b' }}>© Thaki Cloud, All rights reserved.</span>
     </div>
   );
 }
@@ -136,39 +130,33 @@ function ResetPasswordTemplate({
     <div className="flex flex-col gap-3 items-start w-full max-w-[600px]">
       <div className="bg-white rounded-lg p-6 w-full flex flex-col gap-6">
         <ThakiLogo />
-        <div className="text-[12px] leading-[18px] text-[#0f172a] mt-4">
-          <p className="mb-4">Hello <span className="text-[12px] font-medium text-[#0f172a]">{displayName}</span>,</p>
+        <div className="text-[12px] leading-[18px] mt-4" style={{ color: '#0f172a' }}>
+          <p className="mb-4">Hello <span className="text-[12px] font-medium" style={{ color: '#0f172a' }}>{displayName}</span>,</p>
           <p className="mb-0">
-            Your administrator from <span className="text-[12px] font-medium text-[#0f172a]">{domainName}</span> in Thaki Cloud has reset your password.
+            Your administrator from <span className="text-[12px] font-medium" style={{ color: '#0f172a' }}>{domainName}</span> in Thaki Cloud has reset your password.
             <br />
             To regain access to your account, please create a new password using the secure link below.
           </p>
         </div>
-        <div className="bg-[#f9fafb] rounded-lg px-4 py-3 flex flex-col gap-1.5 w-full">
-          <span className="text-[11px] font-medium text-[#64748b] leading-4">Your username</span>
-          <span className="text-[14px] font-medium text-[#0f172a] leading-5">{username}</span>
+        <div className="rounded-lg px-4 py-3 flex flex-col gap-1.5 w-full" style={{ backgroundColor: '#f8fafc' }}>
+          <span className="text-[11px] font-medium leading-4" style={{ color: '#64748b' }}>Your username</span>
+          <span className="text-[14px] font-medium leading-5" style={{ color: '#0f172a' }}>{username}</span>
         </div>
-        <Button
-          as="a"
-          href={actionUrl}
-          variant="primary"
-          size="md"
-          className="self-start"
-        >
+        <Button as="a" href={actionUrl} variant="primary" size="lg" className="self-start">
           Reset password
         </Button>
-        <div className="flex items-start gap-2 p-3 rounded-md bg-[#fff7ed] w-full">
+        <div className="flex items-start gap-2 p-3 rounded-md w-full" style={{ backgroundColor: '#fff7ed' }}>
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#ea580c" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="flex-shrink-0 mt-0.5">
             <path d="M10.24 3.957l-8.424 14.566a1.998 1.998 0 0 0 1.735 2.917h16.848a1.998 1.998 0 0 0 1.735 -2.917l-8.424 -14.566a1.998 1.998 0 0 0 -3.47 0z" />
             <path d="M12 9v4" />
             <path d="M12 17h.01" />
           </svg>
-          <span className="text-[11px] leading-4 text-[#475569]">
-            This temporary password will expire in <span className="font-medium text-[#0f172a]">{expiryHours} hour.</span>
+          <span className="text-[11px] leading-4" style={{ color: '#475569' }}>
+            This temporary password will expire in <span className="font-medium" style={{ color: '#0f172a' }}>{expiryHours} hour.</span>
           </span>
         </div>
       </div>
-      <span className="text-[11px] text-[#64748b] leading-4 text-center w-full">© Thaki Cloud, All rights reserved.</span>
+      <span className="text-[11px] leading-4 text-center w-full" style={{ color: '#64748b' }}>© Thaki Cloud, All rights reserved.</span>
     </div>
   );
 }
@@ -199,32 +187,32 @@ function EmailMFATemplate({
     <div className="flex flex-col gap-3 items-start w-full max-w-[600px]">
       <div className="bg-white rounded-lg p-6 w-full flex flex-col gap-6">
         <ThakiLogo />
-        <div className="text-[12px] leading-[18px] text-[#0f172a] mt-4">
-          <p className="mb-4">Hello <span className="text-[12px] font-medium text-[#0f172a]">{displayName}</span>,</p>
+        <div className="text-[12px] leading-[18px] mt-4" style={{ color: '#0f172a' }}>
+          <p className="mb-4">Hello <span className="text-[12px] font-medium" style={{ color: '#0f172a' }}>{displayName}</span>,</p>
           <p className="mb-0">
-            To complete your sign-in to <span className="text-[12px] font-medium text-[#0f172a]">{domainName}</span> in Thaki Cloud, we need to verify your identity.
+            To complete your sign-in to <span className="text-[12px] font-medium" style={{ color: '#0f172a' }}>{domainName}</span> in Thaki Cloud, we need to verify your identity.
             <br />
             Please enter the verification code below into the sign-in screen.
           </p>
         </div>
-        <div className="bg-[#f9fafb] rounded-lg px-4 py-3 flex flex-col gap-1.5 w-full">
-          <span className="text-[11px] font-medium text-[#64748b] leading-4">Verification code</span>
-          <span className="text-[14px] font-medium text-[#0f172a] leading-5">
+        <div className="rounded-lg px-4 py-3 flex flex-col gap-1.5 w-full" style={{ backgroundColor: '#f8fafc' }}>
+          <span className="text-[11px] font-medium leading-4" style={{ color: '#64748b' }}>Verification code</span>
+          <span className="text-[14px] font-medium leading-5" style={{ color: '#0f172a' }}>
             {formattedCode}
           </span>
         </div>
-        <div className="flex items-start gap-2 p-3 rounded-md bg-[#fff7ed] w-full">
+        <div className="flex items-start gap-2 p-3 rounded-md w-full" style={{ backgroundColor: '#fff7ed' }}>
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#ea580c" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="flex-shrink-0 mt-0.5">
             <path d="M10.24 3.957l-8.424 14.566a1.998 1.998 0 0 0 1.735 2.917h16.848a1.998 1.998 0 0 0 1.735 -2.917l-8.424 -14.566a1.998 1.998 0 0 0 -3.47 0z" />
             <path d="M12 9v4" />
             <path d="M12 17h.01" />
           </svg>
-          <span className="text-[11px] leading-4 text-[#475569]">
-            This temporary password will expire in <span className="font-medium text-[#0f172a]">{expirySeconds} seconds.</span>
+          <span className="text-[11px] leading-4" style={{ color: '#475569' }}>
+            This temporary password will expire in <span className="font-medium" style={{ color: '#0f172a' }}>{expirySeconds} seconds.</span>
           </span>
         </div>
       </div>
-      <span className="text-[11px] text-[#64748b] leading-4 text-center w-full">© Thaki Cloud, All rights reserved.</span>
+      <span className="text-[11px] leading-4 text-center w-full" style={{ color: '#64748b' }}>© Thaki Cloud, All rights reserved.</span>
     </div>
   );
 }
@@ -602,14 +590,14 @@ export function MailTemplatePreviewPage() {
             </div>
           </div>
 
-          <div className="flex-1 min-w-[700px]">
+          <div className="flex-1 min-w-[700px]" style={{ colorScheme: 'light' }}>
             {viewMode === 'preview' ? (
-              <div className="bg-[#f8fafc] rounded-lg p-8 min-h-[600px] flex justify-center items-start pt-12">
+              <div className="rounded-lg p-8 min-h-[600px] flex justify-center items-start pt-12" style={{ backgroundColor: '#f8fafc' }}>
                 {renderPreview()}
               </div>
             ) : (
-              <div className="bg-[#1e293b] rounded-lg p-4 min-h-[600px] overflow-auto">
-                <pre className="text-[12px] text-[#e2e8f0] font-mono whitespace-pre-wrap break-all">
+              <div className="bg-slate-800 rounded-lg p-4 min-h-[600px] overflow-auto">
+                <pre className="text-[12px] text-slate-200 font-mono whitespace-pre-wrap break-all">
                   {getHtmlCode()}
                 </pre>
               </div>
