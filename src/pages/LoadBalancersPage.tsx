@@ -25,7 +25,7 @@ import {
   IconDownload,
   IconBell,
 } from '@tabler/icons-react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 /* ----------------------------------------
    Types
@@ -81,6 +81,7 @@ const lbStatusMap: Record<LoadBalancerStatus, 'active' | 'error' | 'building' | 
    ---------------------------------------- */
 
 export function LoadBalancersPage() {
+  const navigate = useNavigate();
   const [selectedLBs, setSelectedLBs] = useState<string[]>([]);
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
@@ -342,7 +343,7 @@ export function LoadBalancersPage() {
               <h1 className="text-[length:var(--font-size-16)] font-semibold text-[var(--color-text-default)]">
                 Load Balancers
               </h1>
-              <Button variant="primary" size="md">
+              <Button variant="primary" size="md" onClick={() => navigate('/compute/load-balancers/create')}>
                 Create Load Balancer
               </Button>
             </div>
