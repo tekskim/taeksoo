@@ -1,6 +1,7 @@
 import React from 'react';
 import { VStack, HStack } from '../../layouts';
-import { WizardSectionState, WizardSectionStatusIcon } from './WizardSection';
+import type { WizardSectionState } from './WizardSection';
+import { WizardSectionStatusIcon } from './WizardSection';
 
 /* ----------------------------------------
    WizardSummary Types
