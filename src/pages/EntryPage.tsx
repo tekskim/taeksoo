@@ -5,6 +5,7 @@ import ThakiLogoDark from '@/assets/thakiLogo-dark.svg';
 import {
   IconMoon,
   IconSun,
+  IconMail,
 } from '@tabler/icons-react';
 import { Button } from '@/design-system';
 
@@ -117,6 +118,15 @@ const appCards: AppCard[] = [
     icon: <img src={SettingsIcon} alt="Settings" className="w-16 h-16" />,
     path: '/settings',
     color: 'from-gray-500 to-slate-500',
+    available: true,
+  },
+  {
+    id: 'mail-template',
+    title: 'Mail Template',
+    description: 'Email templates for authentication, notifications, and marketing',
+    icon: <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-rose-500 to-pink-500 flex items-center justify-center"><IconMail size={32} className="text-white" stroke={1.5} /></div>,
+    path: '/mail-template',
+    color: 'from-rose-500 to-pink-500',
     available: true,
   },
 ];
