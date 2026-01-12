@@ -351,6 +351,53 @@ const columns = [
 />
 ```
 
+#### SNBMenuItem
+
+Side Navigation Bar Menu Item - 좁은 사이드바용 메뉴 아이템
+
+```tsx
+// Icon type (기본)
+<SNBMenuItem isSelected={false}>
+  <IconHome size={22} stroke={1} />
+</SNBMenuItem>
+
+// Selected state
+<SNBMenuItem isSelected={true}>
+  <IconHome size={22} stroke={1} />
+</SNBMenuItem>
+
+// Text type (프로젝트 이니셜)
+<SNBMenuItem type="text" text="P" status="selected" />
+
+// With onClick handler
+<SNBMenuItem
+  isSelected={currentPath === '/home'}
+  onClick={() => navigate('/home')}
+>
+  <IconHome size={22} stroke={1} />
+</SNBMenuItem>
+```
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `status` | `'default' \| 'hover' \| 'selected'` | - | 상태 직접 지정 |
+| `isSelected` | `boolean` | `false` | 선택 상태 (status 대신 사용) |
+| `type` | `'icon' \| 'text'` | `'icon'` | 아이콘 또는 텍스트 |
+| `text` | `string` | - | type="text"일 때 표시할 텍스트 |
+| `onClick` | `() => void` | - | 클릭 핸들러 |
+| `children` | `ReactNode` | - | 아이콘 요소 |
+
+**스타일:**
+- Size: 38×38px
+- Padding: 8px 6px
+- Border radius: 8px
+- Icon size: 22px
+
+**상태별 색상:**
+- Default: 흰색 배경, 회색 아이콘 (`#64748b`)
+- Hover: 연한 배경 (`#f8fafc`), 진한 회색 아이콘 (`#334155`)
+- Selected: 파란 배경 (`#eff6ff`), 파란 아이콘 (`#2563eb`)
+
 ---
 
 ### Feedback
@@ -410,6 +457,35 @@ const columns = [
   <Button>Hover me</Button>
 </Tooltip>
 ```
+
+#### Loading
+
+```tsx
+// Spinner (기본)
+<Loading variant="spinner" text="Loading" size="md" />
+
+// Progress bar
+<Loading 
+  variant="progress" 
+  text="Loading.."
+  description="Create an instance to start using compute resources."
+  progress={68}
+  statusText="Status: parsing"
+/>
+
+// Button (disabled loading state)
+<Loading variant="button" buttonLabel="Loading" />
+```
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `variant` | `'spinner' \| 'progress' \| 'button'` | `'spinner'` | 로딩 스타일 |
+| `size` | `'sm' \| 'md' \| 'lg'` | `'md'` | 스피너 크기 |
+| `text` | `string` | `'Loading'` | 로딩 텍스트 |
+| `description` | `string` | - | 설명 텍스트 (progress) |
+| `progress` | `number` | `0` | 진행률 0-100 (progress) |
+| `statusText` | `string` | - | 상태 텍스트 (progress) |
+| `buttonLabel` | `string` | `'Loading'` | 버튼 라벨 (button) |
 
 ---
 
