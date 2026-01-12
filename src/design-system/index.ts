@@ -47,6 +47,7 @@ export * from './components/NotificationCenter';
 export * from './components/Loading';
 export * from './components/SNBMenuItem';
 export * from './components/CardTitle';
+export * from './components/Wizard';
 
 // Layouts
 export * from './layouts';
