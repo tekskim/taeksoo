@@ -139,7 +139,7 @@ interface DoneSectionRowProps {
 
 export function DoneSectionRow({ label, value }: DoneSectionRowProps) {
   return (
-    <VStack gap={2}>
+    <VStack gap={0} className="pt-3">
       <div className="w-full h-px bg-[var(--color-border-subtle)]" />
       <VStack gap={2} className="pt-3">
         <span className="text-[11px] font-medium text-[var(--color-text-subtle)]">
@@ -166,7 +166,7 @@ interface DoneSectionProps {
 export function DoneSection({ title, onEdit, children }: DoneSectionProps) {
   return (
     <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg px-4 py-3">
-      <VStack gap={3}>
+      <VStack gap={0}>
         {/* Header */}
         <HStack justify="between" align="center" className="w-full h-8">
           <h5 className="text-[length:var(--font-size-14)] font-semibold leading-[var(--line-height-20)] text-[var(--color-text-default)]">
