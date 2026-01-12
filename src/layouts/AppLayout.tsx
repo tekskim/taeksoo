@@ -194,7 +194,6 @@ export function AppLayout({ children }: AppLayoutProps) {
                   icon={<IconBell size={16} stroke={1.5} />}
                   aria-label="Notifications"
                   badge={unreadCount > 0}
-                  badgeCount={unreadCount}
                   onClick={() => setNotificationOpen(!notificationOpen)}
                 />
                 {notificationOpen && (

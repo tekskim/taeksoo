@@ -96,10 +96,7 @@ function generateMockResponse(userMessage: string): { content: string; actions: 
    ---------------------------------------- */
 
 const suggestions = [
-  'Open the Compute app.',
-  'How do I create a GPU instance?',
-  'Which project is using the most resources?',
-  'I want to edit dev-server-01 instance configurations.',
+  'Hello world',
   'What AI workloads are currently running?',
 ];
 
@@ -363,7 +360,7 @@ export function ChatbotPanel({ isOpen, onClose }: ChatbotPanelProps) {
       className={`
         fixed top-14 right-0 bottom-0 w-[400px]
         bg-[var(--color-surface-default)] 
-        shadow-lg border-l border-[var(--color-border-default)] 
+        shadow-lg border border-[var(--color-border-subtle)] 
         overflow-hidden z-[3000] flex flex-col
         transition-all duration-300 ease-out
         ${isAnimating 

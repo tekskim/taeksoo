@@ -145,10 +145,8 @@ export interface TopBarActionProps {
   'aria-label': string;
   /** Disabled state */
   disabled?: boolean;
-  /** Show notification badge */
+  /** Show notification indicator (red dot) */
   badge?: boolean;
-  /** Badge count (if > 0, shows count) */
-  badgeCount?: number;
   /** Custom class name */
   className?: string;
 }
@@ -159,11 +157,8 @@ export const TopBarAction: React.FC<TopBarActionProps> = ({
   'aria-label': ariaLabel,
   disabled = false,
   badge = false,
-  badgeCount,
   className = '',
 }) => {
-  const showBadge = badge || (badgeCount !== undefined && badgeCount > 0);
-
   return (
     <button
       type="button"
@@ -189,27 +184,16 @@ export const TopBarAction: React.FC<TopBarActionProps> = ({
       aria-label={ariaLabel}
     >
       {icon}
-      {showBadge && (
+      {badge && (
         <span
-          className={`
+          className="
             absolute
             top-1 right-1
-            min-w-[6px] h-[6px]
-            ${badgeCount !== undefined && badgeCount > 0 
-              ? 'min-w-[14px] h-[14px] text-[9px] font-medium text-white flex items-center justify-center' 
-              : ''
-            }
+            size-[6px]
             bg-[var(--color-state-danger)]
             rounded-full
-          `}
-        >
-          {badgeCount !== undefined && badgeCount > 0 && badgeCount <= 99 
-            ? badgeCount 
-            : badgeCount !== undefined && badgeCount > 99 
-              ? '99+' 
-              : null
-          }
-        </span>
+          "
+        />
       )}
     </button>
   );

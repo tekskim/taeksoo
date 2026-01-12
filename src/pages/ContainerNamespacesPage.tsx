@@ -1,0 +1,382 @@
+import { useState } from 'react';
+import {
+  VStack,
+  HStack,
+  TabBar,
+  TopBar,
+  Breadcrumb,
+  Table,
+  Button,
+  StatusIndicator,
+  SearchInput,
+  Pagination,
+  Chip,
+  ContextMenu,
+  type TableColumn,
+  type ContextMenuItem,
+} from '@/design-system';
+import { ContainerSidebar } from '@/components/ContainerSidebar';
+import { ShellPanel, useShellPanel, type ShellTab } from '@/components/ShellPanel';
+import { useTabs } from '@/contexts/TabContext';
+import { useNavigate } from 'react-router-dom';
+import {
+  IconBell,
+  IconTerminal2,
+  IconFile,
+  IconCopy,
+  IconSearch,
+  IconStar,
+  IconDownload,
+  IconTrash,
+  IconChevronUp,
+  IconX,
+  IconDotsCircleHorizontal,
+  IconEdit,
+  IconExternalLink,
+} from '@tabler/icons-react';
+
+/* ----------------------------------------
+   Types
+   ---------------------------------------- */
+
+interface NamespaceRow {
+  id: string;
+  status: 'Active' | 'Terminating' | 'Pending';
+  name: string;
+  description: string;
+  createdAt: string;
+}
+
+/* ----------------------------------------
+   Mock Data
+   ---------------------------------------- */
+
+const namespacesData: NamespaceRow[] = [
+  { id: '1', status: 'Active', name: 'cattle-clusters-system', description: 'description text', createdAt: '2025-11-10 12:57' },
+  { id: '2', status: 'Active', name: 'cattle-local-system', description: 'description text', createdAt: '2025-11-10 12:57' },
+  { id: '3', status: 'Active', name: 'cattle-system', description: 'description text', createdAt: '2025-11-10 12:57' },
+  { id: '4', status: 'Active', name: 'cattle-global-data', description: 'description text', createdAt: '2025-11-10 12:57' },
+  { id: '5', status: 'Active', name: 'cattle-impersonation-system', description: 'description text', createdAt: '2025-11-10 12:57' },
+  { id: '6', status: 'Active', name: 'cattle-provisioning-capi-system', description: 'description text', createdAt: '2025-11-10 12:57' },
+  { id: '7', status: 'Active', name: 'cattle-system', description: 'description text', createdAt: '2025-11-10 12:57' },
+  { id: '8', status: 'Active', name: 'default', description: 'description text', createdAt: '2025-11-10 12:57' },
+  { id: '9', status: 'Active', name: 'kube-public', description: 'description text', createdAt: '2025-11-10 12:57' },
+  { id: '10', status: 'Active', name: 'kube-system', description: 'description text', createdAt: '2025-11-10 12:57' },
+  { id: '11', status: 'Active', name: 'local', description: 'description text', createdAt: '2025-11-10 12:57' },
+  { id: '12', status: 'Active', name: 'kube-node-lease', description: 'description text', createdAt: '2025-11-10 12:57' },
+];
+
+/* ----------------------------------------
+   Component
+   ---------------------------------------- */
+
+export function ContainerNamespacesPage() {
+  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const { tabs, activeTabId, selectTab, closeTab, addNewTab, moveTab, addTab } = useTabs();
+  const [currentPage, setCurrentPage] = useState(1);
+  const [selectedRows, setSelectedRows] = useState<string[]>([]);
+  const [filters, setFilters] = useState<{ key: string; value: string }[]>([
+    { key: 'Name', value: 'a' }
+  ]);
+  const navigate = useNavigate();
+
+  // Shell Panel state
+  const shellPanel = useShellPanel();
+
+  // Handle opening shell tab in new browser tab
+  const handleOpenInNewTab = (tab: ShellTab) => {
+    const tabId = `console-${tab.instanceId}-${Date.now()}`;
+    addTab({
+      id: tabId,
+      label: tab.title,
+      path: `/container/console/${tab.instanceId}?name=${encodeURIComponent(tab.title)}`,
+      closable: true,
+    });
+    navigate(`/container/console/${tab.instanceId}?name=${encodeURIComponent(tab.title)}`);
+  };
+
+  // Pagination
+  const rowsPerPage = 10;
+  const totalPages = Math.ceil(namespacesData.length / rowsPerPage);
+  const paginatedData = namespacesData.slice(
+    (currentPage - 1) * rowsPerPage,
+    currentPage * rowsPerPage
+  );
+
+  // Sidebar width calculation: 40px icon sidebar + 200px menu sidebar when open
+  const sidebarWidth = sidebarOpen ? 240 : 40;
+
+  // Table columns configuration
+  const columns: TableColumn<NamespaceRow>[] = [
+    {
+      key: 'status',
+      label: 'Status',
+      width: '70px',
+      sortable: true,
+      align: 'center',
+      render: (value: string) => (
+        <StatusIndicator
+          status={value === 'Active' ? 'active' : value === 'Terminating' ? 'error' : 'muted'}
+        />
+      )
+    },
+    {
+      key: 'name',
+      label: 'Name',
+      flex: 1,
+      sortable: true,
+      render: (value: string) => (
+        <span className="text-[var(--color-action-primary)] font-medium cursor-pointer hover:underline">
+          {value}
+        </span>
+      )
+    },
+    {
+      key: 'description',
+      label: 'Description',
+      flex: 1,
+    },
+    {
+      key: 'createdAt',
+      label: 'Created At',
+      flex: 1,
+      sortable: true,
+    },
+    {
+      key: 'actions',
+      label: 'Action',
+      width: '72px',
+      align: 'center',
+      render: (_, row) => {
+        const menuItems: ContextMenuItem[] = [
+          {
+            id: 'view-details',
+            label: 'View Details',
+            icon: <IconExternalLink size={14} stroke={1.5} />,
+            onClick: () => console.log('View details:', row.id),
+          },
+          {
+            id: 'edit',
+            label: 'Edit',
+            icon: <IconEdit size={14} stroke={1.5} />,
+            onClick: () => console.log('Edit:', row.id),
+          },
+          { id: 'divider-1', type: 'divider' },
+          {
+            id: 'download-yaml',
+            label: 'Download YAML',
+            icon: <IconDownload size={14} stroke={1.5} />,
+            onClick: () => console.log('Download YAML:', row.id),
+          },
+          { id: 'divider-2', type: 'divider' },
+          {
+            id: 'delete',
+            label: 'Delete',
+            icon: <IconTrash size={14} stroke={1.5} />,
+            onClick: () => console.log('Delete:', row.id),
+            variant: 'danger',
+          },
+        ];
+
+        return (
+          <div onClick={(e) => e.stopPropagation()}>
+            <ContextMenu items={menuItems} trigger="click">
+              <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
+                <IconDotsCircleHorizontal size={16} stroke={1.5} className="text-[var(--action-icon-color)]" />
+              </button>
+            </ContextMenu>
+          </div>
+        );
+      },
+    },
+  ];
+
+  const handleRemoveFilter = (index: number) => {
+    setFilters(filters.filter((_, i) => i !== index));
+  };
+
+  const handleClearFilters = () => {
+    setFilters([]);
+  };
+
+  return (
+    <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
+      {/* Sidebar */}
+      <ContainerSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
+
+      {/* Main Content */}
+      <main
+        className="absolute top-0 bottom-0 right-0 flex flex-col bg-[var(--color-surface-default)] transition-[left] duration-200"
+        style={{ left: `${sidebarWidth}px` }}
+      >
+        {/* Tab Bar */}
+        <TabBar
+          tabs={tabs.map(tab => ({ id: tab.id, label: tab.label, closable: tab.closable }))}
+          activeTab={activeTabId}
+          onTabChange={selectTab}
+          onTabClose={closeTab}
+          onTabAdd={addNewTab}
+          onTabReorder={moveTab}
+        />
+
+        {/* Top Bar */}
+        <TopBar
+          showSidebarToggle={!sidebarOpen}
+          onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
+          breadcrumb={
+            <Breadcrumb
+              items={[
+                { label: 'clusterName', href: '/container' },
+                { label: 'Namespaces' },
+              ]}
+            />
+          }
+          actions={
+            <>
+              <button 
+                className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                onClick={() => {
+                  if (shellPanel.isExpanded) {
+                    shellPanel.setIsExpanded(false);
+                  } else {
+                    // Open console with a default kubectl session
+                    shellPanel.openConsole('kubectl-namespaces', 'Kubectl: ClusterName');
+                  }
+                }}
+              >
+                <IconTerminal2 size={16} className={shellPanel.isExpanded ? "text-[var(--color-action-primary)]" : "text-[var(--color-text-muted)]"} stroke={1.5} />
+              </button>
+              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
+                <IconFile size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
+              </button>
+              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
+                <IconCopy size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
+              </button>
+              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
+                <IconSearch size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
+              </button>
+              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
+                <IconBell size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
+              </button>
+            </>
+          }
+        />
+
+        {/* Content Area */}
+        <div 
+          className="flex-1 overflow-auto min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll"
+          style={{ paddingBottom: shellPanel.isExpanded ? '350px' : '0' }}
+        >
+          <div className="py-4 px-8 bg-[var(--color-surface-default)] min-h-full">
+            <VStack gap={4}>
+              {/* Header */}
+              <HStack justify="between" align="center" className="w-full">
+                <HStack gap={2} align="center">
+                  <h1 className="text-[18px] font-semibold text-[var(--color-text-default)]">
+                    Namespaces({namespacesData.length})
+                  </h1>
+                  <button className="p-1 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
+                    <IconStar size={16} className="text-[#FBBF24] fill-[#FBBF24]" stroke={1.5} />
+                  </button>
+                </HStack>
+                <Button variant="primary" size="md" rightIcon={<IconChevronUp size={16} stroke={1.5} />}>
+                  Create Namespace
+                </Button>
+              </HStack>
+
+              {/* Action Bar */}
+              <HStack gap={2} align="center" className="w-full">
+                {/* Search */}
+                <HStack gap={1} align="center">
+                  <SearchInput
+                    placeholder="Find Namespaces with filters"
+                    size="sm"
+                    className="w-[280px]"
+                  />
+                  <Button variant="secondary" size="sm" className="!p-2 !w-7 !h-7 !min-w-7">
+                    <IconDownload size={12} stroke={2} />
+                  </Button>
+                </HStack>
+
+                {/* Divider */}
+                <div className="w-px h-4 bg-[var(--color-border-default)]" />
+
+                {/* Actions */}
+                <HStack gap={1} align="center">
+                  <Button variant="secondary" size="sm" leftIcon={<IconDownload size={12} stroke={1.5} />} disabled={selectedRows.length === 0}>
+                    Download YAML
+                  </Button>
+                  <Button variant="secondary" size="sm" leftIcon={<IconTrash size={12} stroke={1.5} />} disabled={selectedRows.length === 0}>
+                    Delete
+                  </Button>
+                </HStack>
+              </HStack>
+
+              {/* Filter Bar */}
+              {filters.length > 0 && (
+                <HStack justify="between" align="center" className="w-full pl-2 pr-4 py-2 bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)]">
+                  <HStack gap={1} align="center">
+                    {filters.map((filter, index) => (
+                      <Chip
+                        key={index}
+                        label={filter.key}
+                        value={filter.value}
+                        onRemove={() => handleRemoveFilter(index)}
+                      />
+                    ))}
+                  </HStack>
+                  <button
+                    onClick={handleClearFilters}
+                    className="text-[11px] font-medium text-[var(--color-action-primary)] hover:underline"
+                  >
+                    Clear Filters
+                  </button>
+                </HStack>
+              )}
+
+              {/* Pagination */}
+              <Pagination
+                currentPage={currentPage}
+                totalPages={totalPages}
+                onPageChange={setCurrentPage}
+                totalItems={namespacesData.length}
+                selectedCount={selectedRows.length}
+                showSettings
+                onSettingsClick={() => {}}
+              />
+
+              {/* Table */}
+              <Table<NamespaceRow>
+                columns={columns}
+                data={paginatedData}
+                rowKey="id"
+                selectable
+                selectedKeys={selectedRows}
+                onSelectionChange={setSelectedRows}
+              />
+            </VStack>
+          </div>
+        </div>
+      </main>
+
+      {/* Shell Panel */}
+      <ShellPanel
+        isExpanded={shellPanel.isExpanded}
+        onExpandedChange={shellPanel.setIsExpanded}
+        tabs={shellPanel.tabs}
+        activeTabId={shellPanel.activeTabId}
+        onActiveTabChange={shellPanel.setActiveTabId}
+        onCloseTab={shellPanel.closeTab}
+        onContentChange={shellPanel.updateContent}
+        onClear={shellPanel.clearContent}
+        onOpenInNewTab={handleOpenInNewTab}
+        initialHeight={350}
+        minHeight={300}
+        sidebarOpen={sidebarOpen}
+        sidebarWidth={sidebarWidth}
+      />
+    </div>
+  );
+}
+
+export default ContainerNamespacesPage;
