@@ -348,7 +348,7 @@ export default function SecurityGroupDetailPage() {
               <Breadcrumb
                 items={[
                   { label: 'Proj-1', href: '/project' },
-                  { label: 'Security Groups', href: '/compute/security-groups' },
+                  { label: 'Security groups', href: '/compute/security-groups' },
                   { label: securityGroup.name },
                 ]}
               />
@@ -381,7 +381,7 @@ export default function SecurityGroupDetailPage() {
                     Edit
                   </Button>
                   <Button variant="secondary" size="sm" leftIcon={<IconCirclePlus size={12} />}>
-                    Create Rule
+                    Create rule
                   </Button>
                   <Button variant="secondary" size="sm" leftIcon={<IconTrash size={12} />}>
                     Delete
@@ -445,7 +445,7 @@ export default function SecurityGroupDetailPage() {
                           Rules
                         </h3>
                         <Button variant="secondary" size="sm" leftIcon={<IconCirclePlus size={12} />}>
-                          Create Rule
+                          Create rule
                         </Button>
                       </div>
 

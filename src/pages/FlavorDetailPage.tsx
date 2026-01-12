@@ -355,10 +355,10 @@ export function FlavorDetailPage() {
               <DetailHeader.Title>{flavor.name}</DetailHeader.Title>
               <DetailHeader.Actions>
                 <Button variant="secondary" size="sm" leftIcon={<IconCirclePlus size={12} />}>
-                  Create Instance
+                  Create instance
                 </Button>
                 <Button variant="secondary" size="sm" leftIcon={<IconCirclePlus size={12} />}>
-                  Create Volume
+                  Create volume
                 </Button>
               </DetailHeader.Actions>
               <DetailHeader.InfoGrid>

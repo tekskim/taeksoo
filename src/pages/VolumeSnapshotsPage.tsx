@@ -221,7 +221,7 @@ export function VolumeSnapshotsPage() {
         const menuItems: ContextMenuItem[] = [
           {
             id: 'create-volume',
-            label: 'Create Volume',
+            label: 'Create volume',
             onClick: () => console.log('Create volume from', row.name),
           },
           {

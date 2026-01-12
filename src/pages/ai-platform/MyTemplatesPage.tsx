@@ -36,7 +36,7 @@ export function MyTemplatesPage() {
   const { tabs, activeTabId, selectTab, closeTab, addNewTab, updateActiveTabLabel, moveTab } = useTabs();
 
   useEffect(() => {
-    updateActiveTabLabel('My Templates');
+    updateActiveTabLabel('My templates');
   }, [updateActiveTabLabel]);
 
   const sidebarWidth = sidebarOpen ? 200 : 0;
@@ -49,7 +49,7 @@ export function MyTemplatesPage() {
         <TopBar
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
-          breadcrumb={<Breadcrumb items={[{ label: 'AI Platform' }, { label: 'Infrastructure' }, { label: 'My Templates' }]} />}
+          breadcrumb={<Breadcrumb items={[{ label: 'AI Platform' }, { label: 'Infrastructure' }, { label: 'My templates' }]} />}
           actions={
             <>
               <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"><IconSearch size={16} className="text-[var(--color-text-muted)]" stroke={1.5} /></button>
@@ -62,7 +62,7 @@ export function MyTemplatesPage() {
             <VStack gap={6}>
               <HStack justify="between" align="center">
                 <VStack gap={1}>
-                  <h1 className="text-[24px] font-semibold text-[var(--color-text-default)]">My Templates</h1>
+                  <h1 className="text-[24px] font-semibold text-[var(--color-text-default)]">My templates</h1>
                   <p className="text-[14px] text-[var(--color-text-subtle)]">Create and manage reusable deployment templates.</p>
                 </VStack>
                 <HStack gap={2}>

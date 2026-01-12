@@ -179,10 +179,10 @@ export function VolumeBackupDetailPage() {
                 <DetailHeader.Title>{backup.name}</DetailHeader.Title>
                 <DetailHeader.Actions>
                   <Button variant="secondary" size="sm" leftIcon={<IconCirclePlus size={12} />}>
-                    Create Volume
+                    Create volume
                   </Button>
                   <Button variant="secondary" size="sm" leftIcon={<IconRestore size={12} />}>
-                    Restore Backup
+                    Restore backup
                   </Button>
                   <Button variant="secondary" size="sm" leftIcon={<IconTrash size={12} />}>
                     Delete

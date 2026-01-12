@@ -197,7 +197,7 @@ export default function CreateNetworkPage() {
                 items={[
                   { label: 'Proj-1', href: '/compute' },
                   { label: 'Networks', href: '/compute/networks' },
-                  { label: 'Create Network' },
+                  { label: 'Create network' },
                 ]}
               />
             }
@@ -215,7 +215,7 @@ export default function CreateNetworkPage() {
             <VStack gap={6} className="min-w-[1176px]">
               {/* Page Title */}
               <h1 className="text-[18px] font-semibold leading-7 text-[var(--color-text-default)]">
-                Create Network
+                Create network
               </h1>
 
               {/* Content Area */}
@@ -409,10 +409,10 @@ export default function CreateNetworkPage() {
                     />
                     {sectionStatus['subnet'] === 'active' && (
                       <SectionCard.Content gap={6}>
-                        {/* Create Subnet Toggle */}
+                        {/* Create subnet Toggle */}
                         <VStack gap={2} align="start">
                           <span className="text-[14px] font-medium text-[var(--color-text-default)] leading-[20px]">
-                            Create Subnet
+                            Create subnet
                           </span>
                           <Toggle
                             checked={createSubnet}
@@ -565,7 +565,7 @@ export default function CreateNetworkPage() {
                     {sectionStatus['subnet'] === 'done' && (
                       <SectionCard.Content>
                         <SectionCard.DataRow 
-                          label="Create Subnet" 
+                          label="Create subnet" 
                           value={createSubnet ? 'Yes' : 'No'} 
                           showDivider 
                         />

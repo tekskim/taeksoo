@@ -250,17 +250,17 @@ export function ComputeImagesPage() {
         const menuItems: ContextMenuItem[] = [
           {
             id: 'create-instance',
-            label: 'Create Instance',
+            label: 'Create instance',
             onClick: () => console.log('Create instance from image:', row.id),
           },
           {
             id: 'create-instance-template',
-            label: 'Create Instance Template',
+            label: 'Create instance Template',
             onClick: () => console.log('Create instance template from image:', row.id),
           },
           {
             id: 'create-volume',
-            label: 'Create Volume',
+            label: 'Create volume',
             onClick: () => console.log('Create volume from image:', row.id),
           },
           {
@@ -362,7 +362,7 @@ export function ComputeImagesPage() {
                 Images
               </h1>
               <Button onClick={() => navigate('/compute/images/create')}>
-                Create Image
+                Create image
               </Button>
             </div>
 

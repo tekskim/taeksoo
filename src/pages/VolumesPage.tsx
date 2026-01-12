@@ -246,9 +246,9 @@ export function VolumesPage() {
             id: 'data-protection',
             label: 'Data Protection',
             submenu: [
-              { id: 'create-snapshot', label: 'Create Volume Snapshot', onClick: () => console.log('Create snapshot:', row.id) },
-              { id: 'create-backup', label: 'Create Volume Backup', onClick: () => console.log('Create backup:', row.id) },
-              { id: 'clone-volume', label: 'Clone Volume', onClick: () => console.log('Clone volume:', row.id) },
+              { id: 'create-snapshot', label: 'Create volume snapshot', onClick: () => console.log('Create snapshot:', row.id) },
+              { id: 'create-backup', label: 'Create volume backup', onClick: () => console.log('Create backup:', row.id) },
+              { id: 'clone-volume', label: 'Clone volume', onClick: () => console.log('Clone volume:', row.id) },
               { id: 'restore-snapshot', label: 'Restore from Snapshot', onClick: () => console.log('Restore from snapshot:', row.id) },
             ],
           },
@@ -256,10 +256,10 @@ export function VolumesPage() {
             id: 'operate',
             label: 'Operate',
             submenu: [
-              { id: 'create-instance', label: 'Create Instance', onClick: () => console.log('Create instance:', row.id) },
-              { id: 'create-image', label: 'Create Image', onClick: () => console.log('Create image:', row.id) },
-              { id: 'attach-instance', label: 'Attach Instance', onClick: () => console.log('Attach instance:', row.id) },
-              { id: 'detach-instance', label: 'Detach Instance', onClick: () => console.log('Detach instance:', row.id) },
+              { id: 'create-instance', label: 'Create instance', onClick: () => console.log('Create instance:', row.id) },
+              { id: 'create-image', label: 'Create image', onClick: () => console.log('Create image:', row.id) },
+              { id: 'attach-instance', label: 'Attach instance', onClick: () => console.log('Attach instance:', row.id) },
+              { id: 'detach-instance', label: 'Detach instance', onClick: () => console.log('Detach instance:', row.id) },
               { id: 'boot-setting', label: 'Boot Setting', onClick: () => console.log('Boot setting:', row.id) },
             ],
           },
@@ -268,18 +268,18 @@ export function VolumesPage() {
             label: 'Configuration',
             submenu: [
               { id: 'edit', label: 'Edit', onClick: () => console.log('Edit:', row.id) },
-              { id: 'extend-volume', label: 'Extend Volume', onClick: () => console.log('Extend volume:', row.id) },
+              { id: 'extend-volume', label: 'Extend volume', onClick: () => console.log('Extend volume:', row.id) },
               { id: 'change-volume-type', label: 'Change Volume Type', onClick: () => console.log('Change volume type:', row.id) },
             ],
           },
           {
             id: 'create-transfer',
-            label: 'Create Transfer',
+            label: 'Create transfer',
             onClick: () => console.log('Create transfer:', row.id),
           },
           {
             id: 'cancel-transfer',
-            label: 'Cancel Transfer',
+            label: 'Cancel transfer',
             onClick: () => console.log('Cancel transfer:', row.id),
           },
           {
@@ -375,7 +375,7 @@ export function VolumesPage() {
                 Volumes
               </h1>
               <Button size="md" as={Link} to="/compute/volumes/create">
-                Create Volume
+                Create volume
               </Button>
             </div>
 

@@ -122,7 +122,7 @@ export function LoadBalancersPage() {
   const getContextMenuItems = (lb: LoadBalancer): ContextMenuItem[] => [
     { id: 'associate-floating-ip', label: 'Associate Floating IP', onClick: () => console.log('Associate floating IP:', lb.id) },
     { id: 'disassociate-floating-ip', label: 'Disassociate Floating IP', onClick: () => console.log('Disassociate floating IP:', lb.id) },
-    { id: 'create-listener', label: 'Create Listener', onClick: () => console.log('Create listener:', lb.id) },
+    { id: 'create-listener', label: 'Create listener', onClick: () => console.log('Create listener:', lb.id) },
     { id: 'edit', label: 'Edit', onClick: () => console.log('Edit:', lb.id) },
     { id: 'delete', label: 'Delete', status: 'danger', onClick: () => { setLbToDelete(lb); setDeleteModalOpen(true); } },
   ];
@@ -318,7 +318,7 @@ export function LoadBalancersPage() {
             <Breadcrumb
               items={[
                 { label: 'Proj-1', href: '/project' },
-                { label: 'Load Balancers' },
+                { label: 'Load balancers' },
               ]}
             />
           }
@@ -340,7 +340,7 @@ export function LoadBalancersPage() {
             {/* Page Header */}
             <div className="flex justify-between items-center h-8 w-full">
               <h1 className="text-[length:var(--font-size-16)] font-semibold text-[var(--color-text-default)]">
-                Load Balancers
+                Load balancers
               </h1>
               <Button variant="primary" size="md">
                 Create Load Balancer

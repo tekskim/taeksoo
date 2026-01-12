@@ -190,7 +190,7 @@ export function ServerGroupsPage() {
         const menuItems: ContextMenuItem[] = [
           {
             id: 'create-instance',
-            label: 'Create Instance',
+            label: 'Create instance',
             onClick: () => console.log('Create instance in server group:', row.id),
           },
           {
@@ -261,7 +261,7 @@ export function ServerGroupsPage() {
             <Breadcrumb
               items={[
                 { label: 'Proj-1', href: '/project' },
-                { label: 'Server Groups' },
+                { label: 'Server groups' },
               ]}
             />
           }
@@ -283,7 +283,7 @@ export function ServerGroupsPage() {
             {/* Page Header */}
             <div className="flex items-center justify-between h-8">
               <h1 className="text-[length:var(--font-size-16)] font-semibold text-[var(--color-text-default)]">
-                Server Group
+                Server group
               </h1>
             </div>
 
@@ -332,7 +332,7 @@ export function ServerGroupsPage() {
               />
             )}
 
-            {/* Server Groups Table */}
+            {/* Server groups Table */}
             <Table<ServerGroup>
               columns={visibleColumns}
               data={paginatedServerGroups}
@@ -352,7 +352,7 @@ export function ServerGroupsPage() {
         isOpen={deleteModalOpen}
         onClose={handleDeleteCancel}
         onConfirm={handleDeleteConfirm}
-        title="Delete Server Group"
+        title="Delete Server group"
         description="Are you sure you want to delete this server group? This action cannot be undone."
         confirmText="Delete"
         cancelText="Cancel"

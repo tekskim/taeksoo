@@ -123,7 +123,7 @@ const statusMap: Record<InstanceStatus, StatusType> = {
 };
 
 /* ----------------------------------------
-   Instances List Page
+   Instances list Page
    ---------------------------------------- */
 
 // Filter type is imported from design-system as FilterItem
@@ -152,7 +152,7 @@ export function InstanceListPage() {
   const [isPreferencesOpen, setIsPreferencesOpen] = useState(false);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   
-  // Create Instance Snapshot Drawer state
+  // Create instance snapshot Drawer state
   const [isSnapshotDrawerOpen, setIsSnapshotDrawerOpen] = useState(false);
   const [selectedInstanceForSnapshot, setSelectedInstanceForSnapshot] = useState<InstanceInfo | null>(null);
 
@@ -160,7 +160,7 @@ export function InstanceListPage() {
   const [isLockDrawerOpen, setIsLockDrawerOpen] = useState(false);
   const [selectedInstanceForLock, setSelectedInstanceForLock] = useState<LockInstanceInfo | null>(null);
 
-  // Edit Instance Drawer state
+  // Edit instance Drawer state
   const [isEditDrawerOpen, setIsEditDrawerOpen] = useState(false);
   const [selectedInstanceForEdit, setSelectedInstanceForEdit] = useState<EditInstanceInfo | null>(null);
 
@@ -342,11 +342,11 @@ export function InstanceListPage() {
       id: 'storage-snapshot',
       label: 'Storage&Snapshot',
       submenu: [
-        { id: 'attach-volume', label: 'Attach Volume' },
-        { id: 'detach-volume', label: 'Detach Volume', status: 'danger' },
+        { id: 'attach-volume', label: 'Attach volume' },
+        { id: 'detach-volume', label: 'Detach volume', status: 'danger' },
         { 
           id: 'create-snapshot', 
-          label: 'Create Instance Snapshot',
+          label: 'Create instance snapshot',
           onClick: () => handleCreateSnapshot(instance),
         },
       ],
@@ -355,11 +355,11 @@ export function InstanceListPage() {
       id: 'network',
       label: 'Network',
       submenu: [
-        { id: 'attach-interface', label: 'Attach Interface' },
-        { id: 'detach-interface', label: 'Detach Interface', status: 'danger' },
+        { id: 'attach-interface', label: 'Attach interface' },
+        { id: 'detach-interface', label: 'Detach interface', status: 'danger' },
         { id: 'associate-floating-ip', label: 'Associate Floating IP' },
         { id: 'disassociate-floating-ip', label: 'Disassociate Floating IP', status: 'danger' },
-        { id: 'manage-security-groups', label: 'Manage Security Groups' },
+        { id: 'manage-security-groups', label: 'Manage Security groups' },
       ],
     },
     {
@@ -381,8 +381,8 @@ export function InstanceListPage() {
         },
       ],
     },
-    { id: 'confirm-resize', label: 'Confirm Resize' },
-    { id: 'revert-resize', label: 'Revert Resize', divider: true },
+    { id: 'confirm-resize', label: 'Confirm resize' },
+    { id: 'revert-resize', label: 'Revert resize', divider: true },
     { id: 'delete', label: 'Delete', status: 'danger' },
   ];
 
@@ -719,7 +719,7 @@ export function InstanceListPage() {
               <Breadcrumb
                 items={[
                   { label: 'Proj-1', href: '/compute' },
-                  { label: 'Instances List' },
+                  { label: 'Instances list' },
                 ]}
               />
             }
@@ -746,11 +746,11 @@ export function InstanceListPage() {
             {/* Page Header */}
             <div className="flex items-center justify-between h-8">
               <h1 className="text-[length:var(--font-size-16)] font-semibold text-[var(--color-text-default)]">
-                Instances List
+                Instances list
               </h1>
               <Link to="/compute/instances/create">
                 <Button size="md">
-                  Create Instance
+                  Create instance
                 </Button>
               </Link>
             </div>
@@ -877,7 +877,7 @@ export function InstanceListPage() {
         onColumnsChange={setColumnConfig}
       />
 
-      {/* Create Instance Snapshot Drawer */}
+      {/* Create instance snapshot Drawer */}
       <CreateInstanceSnapshotDrawer
         isOpen={isSnapshotDrawerOpen}
         onClose={() => {
@@ -905,7 +905,7 @@ export function InstanceListPage() {
         }}
       />
 
-      {/* Edit Instance Drawer */}
+      {/* Edit instance Drawer */}
       <EditInstanceDrawer
         isOpen={isEditDrawerOpen}
         onClose={() => {

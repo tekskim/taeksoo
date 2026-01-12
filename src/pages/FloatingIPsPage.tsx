@@ -405,7 +405,7 @@ export function FloatingIPsPage() {
           setDeleteModalOpen(false);
           setFloatingIPToDelete(null);
         }}
-        title="Release Floating IP"
+        title="Release floating IP"
         description={`Are you sure you want to release "${floatingIPToDelete?.floatingIp}"? This action cannot be undone.`}
         confirmText="Release"
         cancelText="Cancel"

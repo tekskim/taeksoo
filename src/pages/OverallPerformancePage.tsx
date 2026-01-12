@@ -823,7 +823,7 @@ function EmptyStateChartCard({ title, yAxisFormatter = (v: number) => `${v}`, is
 }
 
 /* ----------------------------------------
-   Overall Performance Page
+   Overall performance Page
    ---------------------------------------- */
 
 export function OverallPerformancePage() {
@@ -960,7 +960,7 @@ export function OverallPerformancePage() {
               <Breadcrumb
                 items={[
                   { label: 'Home', href: '/storage' },
-                  { label: 'Overall Performance' },
+                  { label: 'Overall performance' },
                 ]}
               />
             }
@@ -977,7 +977,7 @@ export function OverallPerformancePage() {
               {/* Page Header */}
               <div className="flex items-center justify-between h-8">
                 <h1 className="text-[length:var(--font-size-16)] font-semibold text-[var(--color-text-default)]">
-                  Overall Performance
+                  Overall performance
                 </h1>
               </div>
 

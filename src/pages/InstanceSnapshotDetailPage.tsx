@@ -231,7 +231,7 @@ export function InstanceSnapshotDetailPage() {
   // Breadcrumb items
   const breadcrumbItems = [
     { label: 'Proj-1', href: '/' },
-    { label: 'Instance Snapshots', href: '/compute/instance-snapshots' },
+    { label: 'Instance snapshots', href: '/compute/instance-snapshots' },
     { label: snapshot.name },
   ];
 
@@ -288,14 +288,14 @@ export function InstanceSnapshotDetailPage() {
               <DetailHeader.Title>{snapshot.name}</DetailHeader.Title>
               <DetailHeader.Actions>
                 <Button variant="secondary" size="sm" leftIcon={<IconCirclePlus size={12} />}>
-                  Create Instance
+                  Create instance
                 </Button>
                 <Button variant="secondary" size="sm" leftIcon={<IconTrash size={12} />}>
                   Delete
                 </Button>
                 <ContextMenu
                   items={[
-                    { id: 'create-volume', label: 'Create Volume', onClick: () => console.log('Create Volume') },
+                    { id: 'create-volume', label: 'Create volume', onClick: () => console.log('Create volume') },
                     { id: 'edit', label: 'Edit', onClick: () => console.log('Edit') },
                   ] as ContextMenuItem[]}
                   trigger="click"

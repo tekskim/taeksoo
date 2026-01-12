@@ -1093,9 +1093,9 @@ function DrawerDemo() {
         </VStack>
       </Drawer>
 
-      {/* Attach Volume Drawer */}
+      {/* Attach volume Drawer */}
       <Button variant="outline" size="sm" onClick={() => setIsAttachVolumeOpen(true)}>
-        Attach Volume
+        Attach volume
       </Button>
       <AttachVolumeDrawer
         isOpen={isAttachVolumeOpen}
@@ -2482,12 +2482,12 @@ function TabBarDemo() {
   const manyTabsDemo = useTabBar({
     initialTabs: [
       { id: 'many-1', label: 'Dashboard', closable: true },
-      { id: 'many-2', label: 'Instance Templates', closable: true },
+      { id: 'many-2', label: 'Instance templates', closable: true },
       { id: 'many-3', label: 'Virtual Machines', closable: true },
       { id: 'many-4', label: 'Storage Volumes', closable: true },
       { id: 'many-5', label: 'Network Settings', closable: true },
-      { id: 'many-6', label: 'Security Groups', closable: true },
-      { id: 'many-7', label: 'Load Balancers', closable: true },
+      { id: 'many-6', label: 'Security groups', closable: true },
+      { id: 'many-7', label: 'Load balancers', closable: true },
       { id: 'many-8', label: 'Monitoring', closable: true },
     ],
     initialActiveTab: 'many-1',
@@ -2829,7 +2829,7 @@ function TableDemo() {
     },
   ];
 
-  // Columns with copy functionality (Key Pairs style)
+  // Columns with copy functionality (Key pairs style)
   const copyColumns = [
     { 
       key: 'name', 
@@ -5992,9 +5992,9 @@ outline: 2px solid var(--color-border-focus);`}
                     <Breadcrumb
                       items={[
                         { label: 'Home', onClick: () => {} },
-                        { label: 'Instance Snapshots', onClick: () => {} },
-                        { label: 'Instance Snapshots', onClick: () => {} },
-                        { label: 'Instance Snapshots', onClick: () => {} },
+                        { label: 'Instance snapshots', onClick: () => {} },
+                        { label: 'Instance snapshots', onClick: () => {} },
+                        { label: 'Instance snapshots', onClick: () => {} },
                         { label: 'web-large' },
                       ]}
                     />
@@ -6617,7 +6617,7 @@ outline: 2px solid var(--color-border-focus);`}
                         <MenuItem label="Backups" />
                       </MenuSection>
                       <MenuSection title="Network">
-                        <MenuItem label="Security Groups" />
+                        <MenuItem label="Security groups" />
                         <MenuItem label="Floating IPs" />
                       </MenuSection>
                     </div>
@@ -6703,7 +6703,7 @@ outline: 2px solid var(--color-border-focus);`}
                       { id: 'item1', label: 'Default Item', onClick: () => {} },
                       { id: 'item2', label: 'Another Item', onClick: () => {}, divider: true },
                       { id: 'danger1', label: 'Warning Action', status: 'danger', onClick: () => {} },
-                      { id: 'danger2', label: 'Delete Forever', status: 'danger', onClick: () => {} },
+                      { id: 'danger2', label: 'Delete forever', status: 'danger', onClick: () => {} },
                     ]}
                   >
                     <Button variant="outline" size="sm">Show Status Variants</Button>
@@ -6942,7 +6942,7 @@ outline: 2px solid var(--color-border-focus);`}
                   <Label>Basic Example (Non-portal)</Label>
                   <div className="relative bg-[var(--color-surface-subtle)] p-6 rounded-lg min-h-[500px]">
                     <FloatingCard
-                      title="Create Instance"
+                      title="Create instance"
                       portal={false}
                       sections={[
                         {
@@ -6980,7 +6980,7 @@ outline: 2px solid var(--color-border-focus);`}
                         { label: 'RAM', current: 32, total: 64, unit: 'GB' },
                       ]}
                       cancelLabel="Cancel"
-                      actionLabel="Create Instance"
+                      actionLabel="Create instance"
                       actionEnabled={false}
                       onCancel={() => console.log('Cancel clicked')}
                       onAction={() => console.log('Create clicked')}

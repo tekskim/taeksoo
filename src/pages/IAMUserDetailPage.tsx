@@ -673,7 +673,7 @@ export function IAMUserDetailPage() {
                     <Tab value="sessions">Sessions</Tab>
                   </TabList>
 
-                  {/* User Groups Tab */}
+                  {/* User groups Tab */}
                   <TabPanel value="user-groups">
                     <VStack gap={3} className="pt-6">
                       {/* Section Header */}

@@ -230,12 +230,12 @@ export function VolumeBackupsPage() {
         const menuItems: ContextMenuItem[] = [
           {
             id: 'create-volume',
-            label: 'Create Volume',
+            label: 'Create volume',
             onClick: () => console.log('Create volume from', row.name),
           },
           {
             id: 'restore',
-            label: 'Restore Backup',
+            label: 'Restore backup',
             onClick: () => console.log('Restore', row.name),
           },
           {

@@ -118,7 +118,7 @@ export function TextGenerationPage() {
               {/* Header */}
               <VStack gap={1}>
                 <h1 className="text-[24px] font-semibold text-[var(--color-text-default)]">
-                  Text Generation Experiments
+                  Text generation experiments
                 </h1>
                 <p className="text-[14px] text-[var(--color-text-subtle)]">
                   Customize text generation models through LLM fine-tuning.

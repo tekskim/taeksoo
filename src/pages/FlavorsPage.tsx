@@ -238,12 +238,12 @@ export function FlavorsPage() {
         const menuItems: ContextMenuItem[] = [
           {
             id: 'create-instance',
-            label: 'Create Instance',
+            label: 'Create instance',
             onClick: () => console.log('Create instance with flavor:', row.id),
           },
           {
             id: 'create-instance-template',
-            label: 'Create Instance template',
+            label: 'Create instance template',
             onClick: () => console.log('Create instance template with flavor:', row.id),
           },
         ];

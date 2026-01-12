@@ -290,7 +290,7 @@ export default function CreateVirtualAdapterPage() {
                 items={[
                   { label: 'Proj-1', href: '/compute' },
                   { label: 'Ports', href: '/compute/ports' },
-                  { label: 'Create Virtual Adapter' },
+                  { label: 'Create virtual adapter' },
                 ]}
               />
             }
@@ -308,7 +308,7 @@ export default function CreateVirtualAdapterPage() {
             <VStack gap={6} className="min-w-[1176px]">
               {/* Page Title */}
               <h1 className="text-[18px] font-semibold leading-7 text-[var(--color-text-default)]">
-                Create Virtual Adapter
+                Create virtual adapter
               </h1>
 
               {/* Content Area */}

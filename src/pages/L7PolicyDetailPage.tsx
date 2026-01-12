@@ -170,7 +170,7 @@ export default function L7PolicyDetailPage() {
 
   const breadcrumbItems = [
     { label: 'Proj-1', href: '/' },
-    { label: 'Load Balancers', href: '/compute/load-balancers' },
+    { label: 'Load balancers', href: '/compute/load-balancers' },
     { label: l7Policy.listener?.loadBalancer?.name || 'Unknown', href: `/load-balancers/${l7Policy.listener?.loadBalancer?.id}` },
     { label: l7Policy.listener?.name || 'Unknown', href: `/listeners/${l7Policy.listener?.id}` },
     { label: l7Policy.name },

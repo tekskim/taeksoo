@@ -297,7 +297,7 @@ export default function ListenerDetailPage() {
 
   const breadcrumbItems = [
     { label: 'Proj-1', href: '/' },
-    { label: 'Load Balancers', href: '/compute/load-balancers' },
+    { label: 'Load balancers', href: '/compute/load-balancers' },
     { label: listener.loadBalancer?.name || 'Unknown', href: `/load-balancers/${listener.loadBalancer?.id}` },
     { label: listener.name },
   ];

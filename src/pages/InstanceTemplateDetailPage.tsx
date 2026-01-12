@@ -394,9 +394,9 @@ export function InstanceTemplateDetailPage() {
 
   const { tabs, activeTabId, closeTab, selectTab, updateActiveTabLabel } = useTabs();
 
-  // Update tab label to "Edit Template"
+  // Update tab label to "Edit template"
   useEffect(() => {
-    updateActiveTabLabel('Edit Template');
+    updateActiveTabLabel('Edit template');
   }, [updateActiveTabLabel]);
 
   const tabBarTabs = tabs.map((tab) => ({
@@ -407,8 +407,8 @@ export function InstanceTemplateDetailPage() {
 
   const breadcrumbItems = [
     { label: 'Proj-1', href: '#' },
-    { label: 'Instance Templates', href: '/compute/instance-templates' },
-    { label: 'Edit Template' },
+    { label: 'Instance templates', href: '/compute/instance-templates' },
+    { label: 'Edit template' },
   ];
 
   const handleCancel = () => {
@@ -532,7 +532,7 @@ export function InstanceTemplateDetailPage() {
             <div className="max-w-[1320px] mx-auto mb-4">
               <HStack gap={1} align="center">
                 <h1 className="text-[length:var(--font-size-18)] font-semibold leading-[var(--line-height-28)] text-[var(--color-text-default)]">
-                  Edit Template
+                  Edit template
                 </h1>
                 <span className="text-[length:var(--font-size-14)] font-medium leading-[var(--line-height-20)] text-[var(--color-text-subtle)]">
                   (ID: {formData.id})
@@ -730,7 +730,7 @@ export function InstanceTemplateDetailPage() {
                           </FormField.Control>
                         </FormField>
                         <FormField>
-                          <FormField.Label>Security Groups</FormField.Label>
+                          <FormField.Label>Security groups</FormField.Label>
                           <FormField.Control>
                             <Input 
                               value={formData.securityGroups.join(', ')} 

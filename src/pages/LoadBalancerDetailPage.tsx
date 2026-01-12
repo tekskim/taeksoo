@@ -460,7 +460,7 @@ export function LoadBalancerDetailPage() {
               <Breadcrumb
                 items={[
                   { label: 'Proj-1', href: '/' },
-                  { label: 'Load Balancers', href: '/compute/load-balancers' },
+                  { label: 'Load balancers', href: '/compute/load-balancers' },
                   { label: loadBalancer.name },
                 ]}
               />
@@ -501,9 +501,9 @@ export function LoadBalancerDetailPage() {
                       },
                       {
                         id: 'create-listener',
-                        label: 'Create Listener',
+                        label: 'Create listener',
                         icon: <IconCirclePlus size={14} stroke={1.5} />,
-                        onClick: () => console.log('Create Listener clicked'),
+                        onClick: () => console.log('Create listener clicked'),
                       },
                     ]}
                   >
@@ -635,7 +635,7 @@ export function LoadBalancerDetailPage() {
                             Listener
                           </h3>
                           <Button variant="secondary" size="sm" leftIcon={<IconCirclePlus size={12} />}>
-                            Create Listener
+                            Create listener
                           </Button>
                         </div>
 

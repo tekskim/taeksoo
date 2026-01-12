@@ -280,7 +280,7 @@ export function InstanceTemplatesPage() {
         const menuItems: ContextMenuItem[] = [
           {
             id: 'create-instance',
-            label: 'Create Instance',
+            label: 'Create instance',
             onClick: () => console.log('Create instance from template:', row.id),
           },
           {
@@ -356,7 +356,7 @@ export function InstanceTemplatesPage() {
             <Breadcrumb
               items={[
                 { label: 'Proj-1', href: '/project' },
-                { label: 'Instance Templates' },
+                { label: 'Instance templates' },
               ]}
             />
           }
@@ -378,10 +378,10 @@ export function InstanceTemplatesPage() {
             {/* Page Header */}
             <div className="flex items-center justify-between h-8">
               <h1 className="text-[length:var(--font-size-16)] font-semibold text-[var(--color-text-default)]">
-                Instance Templates
+                Instance templates
               </h1>
               <Button onClick={() => navigate('/compute/instance-templates/create')}>
-                Create Template
+                Create template
               </Button>
             </div>
 

@@ -36,7 +36,7 @@ export function PipelineBuilderPage() {
   const { tabs, activeTabId, selectTab, closeTab, addNewTab, updateActiveTabLabel, moveTab } = useTabs();
 
   useEffect(() => {
-    updateActiveTabLabel('Pipeline Builder');
+    updateActiveTabLabel('Pipeline builder');
   }, [updateActiveTabLabel]);
 
   const sidebarWidth = sidebarOpen ? 200 : 0;
@@ -49,7 +49,7 @@ export function PipelineBuilderPage() {
         <TopBar
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
-          breadcrumb={<Breadcrumb items={[{ label: 'AI Platform' }, { label: 'MLOps' }, { label: 'Pipeline Builder' }]} />}
+          breadcrumb={<Breadcrumb items={[{ label: 'AI Platform' }, { label: 'MLOps' }, { label: 'Pipeline builder' }]} />}
           actions={
             <>
               <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"><IconSearch size={16} className="text-[var(--color-text-muted)]" stroke={1.5} /></button>
@@ -62,7 +62,7 @@ export function PipelineBuilderPage() {
             <VStack gap={6}>
               <HStack justify="between" align="center">
                 <VStack gap={1}>
-                  <h1 className="text-[24px] font-semibold text-[var(--color-text-default)]">Pipeline Builder</h1>
+                  <h1 className="text-[24px] font-semibold text-[var(--color-text-default)]">Pipeline builder</h1>
                   <p className="text-[14px] text-[var(--color-text-subtle)]">Build and manage ML training pipelines.</p>
                 </VStack>
                 <HStack gap={2}>
