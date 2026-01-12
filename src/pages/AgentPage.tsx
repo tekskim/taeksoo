@@ -415,7 +415,7 @@ export function AgentPage() {
             <ListToolbar.Actions>
               <div className="w-[280px]">
                 <SearchInput
-                  placeholder="Find agent with filters"
+                  placeholder="Search agent by attributes"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   onClear={() => setSearchQuery('')}

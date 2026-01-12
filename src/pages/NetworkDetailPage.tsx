@@ -625,7 +625,7 @@ export default function NetworkDetailPage() {
                             setSubnetSearchTerm(e.target.value);
                             setSubnetCurrentPage(1);
                           }}
-                          placeholder="Find Subnet with filters"
+                          placeholder="Search subnet by attributes"
                         />
                       </div>
 
@@ -675,7 +675,7 @@ export default function NetworkDetailPage() {
                             setPortSearchTerm(e.target.value);
                             setPortCurrentPage(1);
                           }}
-                          placeholder="Find port with filters"
+                          placeholder="Search port by attributes"
                         />
                       </div>
 

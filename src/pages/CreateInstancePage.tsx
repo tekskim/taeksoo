@@ -1690,7 +1690,7 @@ function NetworkSection({ onNext, isActive = false, isEditing = false, onEditCan
             
             {/* Search */}
             <SearchInput
-              placeholder="Find Network with filters"
+              placeholder="Search network by attributes"
               value={networkSearch}
               onChange={(e) => setNetworkSearch(e.target.value)}
               onClear={() => setNetworkSearch('')}
@@ -1796,7 +1796,7 @@ function NetworkSection({ onNext, isActive = false, isEditing = false, onEditCan
             {floatingIpOption === 'auto' && (
               <VStack gap={3} className="mt-2">
                 <SearchInput
-                  placeholder="Find Network with filters"
+                  placeholder="Search network by attributes"
                   value={fipSearch}
                   onChange={(e) => setFipSearch(e.target.value)}
                   onClear={() => setFipSearch('')}
@@ -1823,7 +1823,7 @@ function NetworkSection({ onNext, isActive = false, isEditing = false, onEditCan
               <VStack gap={3} className="mt-2">
                 <HStack justify="between" align="center" className="w-full">
                   <SearchInput
-                    placeholder="Find Floating IP with filters"
+                    placeholder="Search floating IP by attributes"
                     value={fipSearch}
                     onChange={(e) => setFipSearch(e.target.value)}
                     onClear={() => setFipSearch('')}
@@ -1874,7 +1874,7 @@ function NetworkSection({ onNext, isActive = false, isEditing = false, onEditCan
             
             <HStack justify="between" align="center" className="w-full">
               <SearchInput
-                placeholder="Find Security group with filters"
+                placeholder="Search security group by attributes"
                 value={sgSearch}
                 onChange={(e) => setSgSearch(e.target.value)}
                 onClear={() => setSgSearch('')}
@@ -1951,7 +1951,7 @@ function NetworkSection({ onNext, isActive = false, isEditing = false, onEditCan
             <Disclosure.Panel>
               <VStack gap={3} className="pt-3">
                 <SearchInput
-                  placeholder="Find Floating IP with filters"
+                  placeholder="Search floating IP by attributes"
                   value={portSearch}
                   onChange={(e) => setPortSearch(e.target.value)}
                   onClear={() => setPortSearch('')}
@@ -2102,7 +2102,7 @@ function AuthenticationSection({ onNext, isActive = false, isEditing = false, on
               <VStack gap={3}>
                 {/* Search */}
                 <SearchInput
-                  placeholder="Find Key pair with filters"
+                  placeholder="Search key pair by attributes"
                   value={keyPairSearch}
                   onChange={(e) => setKeyPairSearch(e.target.value)}
                   onClear={() => setKeyPairSearch('')}
@@ -2316,7 +2316,7 @@ function AdvancedSection({ onNext, isActive = false, isEditing = false, onEditCa
               <VStack gap={3} className="pt-3">
                 {/* Search */}
                 <SearchInput
-                  placeholder="Find Server group with filters"
+                  placeholder="Search server group by attributes"
                   value={serverGroupSearch}
                   onChange={(e) => setServerGroupSearch(e.target.value)}
                   onClear={() => setServerGroupSearch('')}

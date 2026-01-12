@@ -42,17 +42,5 @@
         "author": "remy"
       }
     ]
-  },
-  {
-    "id": "3",
-    "date": "2026-01-08",
-    "app": "Storage",
-    "appColor": "from-indigo-500 to-blue-500",
-    "changes": [
-      {
-        "text": "TreeItem 선택 상태 아이콘 색상 수정",
-        "author": "remy"
-      }
-    ]
   }
 ]

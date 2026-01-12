@@ -742,7 +742,7 @@ export function InstanceDetailPage() {
 
                     {/* Search */}
                     <SearchInput
-                      placeholder="Find volume with filters"
+                      placeholder="Search volume by attributes"
                       size="sm"
                       className="w-[280px]"
                     />
@@ -861,7 +861,7 @@ export function InstanceDetailPage() {
                     </div>
 
                     {/* Search */}
-                    <SearchInput placeholder="Find Interface with filters" size="sm" className="w-[280px]" />
+                    <SearchInput placeholder="Search interface by attributes" size="sm" className="w-[280px]" />
 
                     {/* Pagination */}
                     <Pagination
@@ -995,7 +995,7 @@ export function InstanceDetailPage() {
                     </div>
 
                     {/* Search */}
-                    <SearchInput placeholder="Find Floating IP with filters" size="sm" className="w-[280px]" />
+                    <SearchInput placeholder="Search floating IP by attributes" size="sm" className="w-[280px]" />
 
                     {/* Pagination */}
                     <Pagination
@@ -1107,7 +1107,7 @@ export function InstanceDetailPage() {
                     </div>
 
                     {/* Search */}
-                    <SearchInput placeholder="Find Security group with filters" size="sm" className="w-[280px]" />
+                    <SearchInput placeholder="Search security group by attributes" size="sm" className="w-[280px]" />
 
                     {/* Pagination */}
                     <Pagination
@@ -1194,7 +1194,7 @@ export function InstanceDetailPage() {
 
                     {/* Search */}
                       <SearchInput
-                        placeholder="Find Instance Snapshot with filters"
+                        placeholder="Search instance snapshot by attributes"
                         value={snapshotSearchQuery}
                         onChange={(e) => {
                           setSnapshotSearchQuery(e.target.value);
@@ -1389,7 +1389,7 @@ export function InstanceDetailPage() {
                     {/* Search and Download */}
                     <div className="flex items-center gap-1">
                       <SearchInput
-                        placeholder="Find Action Logs with filters"
+                        placeholder="Search action logs by attributes"
                         value={actionLogSearchQuery}
                         onChange={(e) => {
                           setActionLogSearchQuery(e.target.value);

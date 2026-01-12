@@ -361,7 +361,7 @@ function FilterSearchInputDemo() {
         filters={filterFields}
         appliedFilters={appliedFilters}
         onFiltersChange={setAppliedFilters}
-        placeholder="Find Instance with filters"
+        placeholder="Search instance by attributes"
         className="w-[400px]"
       />
       <div className="text-[11px] text-[var(--color-text-subtle)] bg-[var(--color-surface-muted)] p-3 rounded-md">

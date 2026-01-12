@@ -183,7 +183,7 @@ export function ContainerHomePage() {
                   <SectionCard.Content>
                     <VStack gap={4}>
                       <SearchInput 
-                        placeholder="Find Clusters with filters" 
+                        placeholder="Search clusters by attributes" 
                         size="sm" 
                         className="w-[280px]"
                       />

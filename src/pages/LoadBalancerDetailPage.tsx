@@ -648,7 +648,7 @@ export function LoadBalancerDetailPage() {
                                 setListenerSearchTerm(e.target.value);
                                 setListenerCurrentPage(1);
                               }}
-                              placeholder="Find Listener with filters"
+                              placeholder="Search listener by attributes"
                             />
                           </div>
                           <div className="h-4 w-px bg-[var(--color-border-default)]" />
@@ -709,7 +709,7 @@ export function LoadBalancerDetailPage() {
                                 setPoolSearchTerm(e.target.value);
                                 setPoolCurrentPage(1);
                               }}
-                              placeholder="Find Pool with filters"
+                              placeholder="Search pool by attributes"
                             />
                           </div>
                           <div className="h-4 w-px bg-[var(--color-border-default)]" />

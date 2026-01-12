@@ -421,7 +421,7 @@ export default function L7PolicyDetailPage() {
                               setL7RuleSearchTerm(e.target.value);
                               setL7RuleCurrentPage(1);
                             }}
-                            placeholder="Find L7 rules with filters"
+                            placeholder="Search L7 rules by attributes"
                           />
                         </div>
                         <div className="h-4 w-px bg-[var(--color-border-default)]" />

@@ -238,7 +238,7 @@ export function AttachVolumeDrawer({
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               onClear={() => setSearchQuery('')}
-              placeholder="Find volume with filters"
+              placeholder="Search volume by attributes"
               size="sm"
               fullWidth
             />

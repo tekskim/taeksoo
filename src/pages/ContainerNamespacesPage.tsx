@@ -289,7 +289,7 @@ export function ContainerNamespacesPage() {
                 {/* Search */}
                 <HStack gap={1} align="center">
                   <SearchInput
-                    placeholder="Find Namespaces with filters"
+                    placeholder="Search namespaces by attributes"
                     size="sm"
                     className="w-[280px]"
                   />

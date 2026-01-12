@@ -652,7 +652,7 @@ export function CreateAgentPage() {
                         </p>
                       
                       <SearchInput
-                        placeholder="Find data with filters"
+                        placeholder="Search data by attributes"
                         size="sm"
                         className="w-[280px]"
                           value={dataSourceSearch}
@@ -716,7 +716,7 @@ export function CreateAgentPage() {
                         </p>
                       
                       <SearchInput
-                        placeholder="Find MCP tools with filters"
+                        placeholder="Search MCP tools by attributes"
                         size="sm"
                         className="w-[280px]"
                           value={mcpToolSearch}

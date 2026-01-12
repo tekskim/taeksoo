@@ -669,7 +669,7 @@ export default function PortDetailPage() {
                             setFixedIpSearchTerm(e.target.value);
                             setFixedIpCurrentPage(1);
                           }}
-                          placeholder="Find fixed IP with filters"
+                          placeholder="Search fixed IP by attributes"
                         />
                       </div>
 
@@ -717,7 +717,7 @@ export default function PortDetailPage() {
                             setAapSearchTerm(e.target.value);
                             setAapCurrentPage(1);
                           }}
-                          placeholder="Find address pair with filters"
+                          placeholder="Search address pair by attributes"
                         />
                       </div>
 
@@ -766,7 +766,7 @@ export default function PortDetailPage() {
                             setSgSearchTerm(e.target.value);
                             setSgCurrentPage(1);
                           }}
-                          placeholder="Find security group with filters"
+                          placeholder="Search security group by attributes"
                         />
                       </div>
 

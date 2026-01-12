@@ -549,7 +549,7 @@ export function VolumeDetailPage() {
                     <div className="flex items-center gap-1">
                       <div className="w-[280px]">
                         <SearchInput
-                          placeholder="Find Snapshot with filters"
+                          placeholder="Search snapshot by attributes"
                           value={snapshotSearchQuery}
                           onChange={(e) => setSnapshotSearchQuery(e.target.value)}
                           onClear={() => setSnapshotSearchQuery('')}
@@ -603,7 +603,7 @@ export function VolumeDetailPage() {
                     <div className="flex items-center gap-1">
                       <div className="w-[280px]">
                         <SearchInput
-                          placeholder="Find Backup with filters"
+                          placeholder="Search backup by attributes"
                           value={backupSearchQuery}
                           onChange={(e) => setBackupSearchQuery(e.target.value)}
                           onClear={() => setBackupSearchQuery('')}

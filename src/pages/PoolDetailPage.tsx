@@ -555,7 +555,7 @@ export default function PoolDetailPage() {
                               setMemberSearchTerm(e.target.value);
                               setMemberCurrentPage(1);
                             }}
-                            placeholder="Find member with filters"
+                            placeholder="Search member by attributes"
                           />
                         </div>
                       </div>
