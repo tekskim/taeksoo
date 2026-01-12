@@ -163,7 +163,7 @@ function AppRoutes() {
         {/* Settings & Mail Template Routes */}
         <Route path="/settings" element={<SettingsPageWrapper />} />
         <Route path="/mail-template" element={<MailTemplatePage />} />
-        <Route path="/mail-template/:id" element={<MailTemplatePreviewPage />} />
+        <Route path="/mail-template/:templateId" element={<MailTemplatePreviewPage />} />
 
         {/* Agent Routes - Shared TabBar via AgentAppLayout */}
         <Route element={<AgentAppLayout />}>
