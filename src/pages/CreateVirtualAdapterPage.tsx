@@ -9,19 +9,24 @@ import {
   TopBar,
   TopBarAction,
   Input,
+  Select,
   SectionCard,
   FormField,
   WizardSummary,
   ProgressBar,
   Tabs,
+  TabList,
+  Tab,
   Table,
   SearchInput,
   Pagination,
   StatusIndicator,
   RadioGroup,
   Radio,
+  Toggle,
+  Checkbox,
 } from '@/design-system';
-import type { WizardSummaryItem, WizardSectionState, Column } from '@/design-system';
+import type { WizardSummaryItem, WizardSectionState, TableColumn } from '@/design-system';
 import { Sidebar } from '@/components/Sidebar';
 import { useTabs } from '@/contexts/TabContext';
 import { useSidebar } from '@/contexts/SidebarContext';
@@ -30,6 +35,7 @@ import {
   IconEdit,
   IconExternalLink,
   IconPlus,
+  IconX,
 } from '@tabler/icons-react';
 
 /* ----------------------------------------
@@ -157,22 +163,86 @@ export default function CreateVirtualAdapterPage() {
   const [networkSearch, setNetworkSearch] = useState('');
   const [networkPage, setNetworkPage] = useState(1);
   const [macAddressMode, setMacAddressMode] = useState<'auto' | 'manual'>('auto');
+  const [manualMacAddress, setManualMacAddress] = useState('');
 
-  // Form state - Security (placeholder for future implementation)
-  const [securityGroupId, setSecurityGroupId] = useState('');
+  // Fixed IP entries
+  interface FixedIPEntry {
+    id: string;
+    subnet: string;
+    ipMode: 'auto' | 'manual';
+    ipAddress: string;
+  }
+  const [fixedIPs, setFixedIPs] = useState<FixedIPEntry[]>([]);
+
+  const addFixedIP = () => {
+    if (!selectedNetwork) return;
+    const network = mockNetworks.find(n => n.id === selectedNetwork);
+    setFixedIPs(prev => [...prev, {
+      id: `fixed-ip-${Date.now()}`,
+      subnet: network?.subnetCidr || '',
+      ipMode: 'auto',
+      ipAddress: '',
+    }]);
+  };
+
+  const removeFixedIP = (id: string) => {
+    setFixedIPs(prev => prev.filter(ip => ip.id !== id));
+  };
+
+  const updateFixedIP = (id: string, updates: Partial<FixedIPEntry>) => {
+    setFixedIPs(prev => prev.map(ip => ip.id === id ? { ...ip, ...updates } : ip));
+  };
+
+  // Form state - Security
+  const [portSecurityEnabled, setPortSecurityEnabled] = useState(true);
+  const [securityGroupSearch, setSecurityGroupSearch] = useState('');
+  const [securityGroupPage, setSecurityGroupPage] = useState(1);
+  const [selectedSecurityGroups, setSelectedSecurityGroups] = useState<string[]>([]);
+
+  // Mock security groups data
+  const mockSecurityGroups = [
+    { id: 'sg-01', name: 'default-sg', description: '-', createdAt: '2025-08-23', subtitle: 'internal-02' },
+    { id: 'sg-02', name: 'web-sg', description: 'Web server security group', createdAt: '2025-08-22', subtitle: 'web-tier' },
+    { id: 'sg-03', name: 'db-sg', description: 'Database security group', createdAt: '2025-08-21', subtitle: 'db-tier' },
+    { id: 'sg-04', name: 'app-sg', description: 'Application security group', createdAt: '2025-08-20', subtitle: 'app-tier' },
+    { id: 'sg-05', name: 'internal-sg', description: '-', createdAt: '2025-08-19', subtitle: 'internal-01' },
+  ];
+
+  // Security group table interface
+  interface SecurityGroupRow {
+    id: string;
+    name: string;
+    description: string;
+    createdAt: string;
+    subtitle: string;
+  }
 
   // Network table columns
-  const networkColumns: Column<NetworkRow>[] = useMemo(() => [
+  const networkColumns: TableColumn<NetworkRow>[] = useMemo(() => [
+    {
+      key: 'select',
+      label: '',
+      width: '40px',
+      render: (_value, row) => (
+        <div className="flex items-center justify-center" onClick={(e) => e.stopPropagation()}>
+          <Radio
+            value={row.id}
+            checked={selectedNetwork === row.id}
+            onChange={() => setSelectedNetwork(row.id)}
+          />
+        </div>
+      ),
+    },
     {
       key: 'status',
-      header: 'Status',
+      label: 'Status',
       width: '70px',
       align: 'center' as const,
       render: (_value, row) => <StatusIndicator status={row.status} />,
     },
     {
       key: 'name',
-      header: 'Name',
+      label: 'Name',
       flex: 1,
       sortable: true,
       render: (_value, row) => (
@@ -191,25 +261,78 @@ export default function CreateVirtualAdapterPage() {
     },
     {
       key: 'external',
-      header: 'External',
+      label: 'External',
       flex: 1,
     },
     {
       key: 'shared',
-      header: 'Shared',
+      label: 'Shared',
       flex: 1,
     },
     {
       key: 'subnetCidr',
-      header: 'Subnet CIDR',
+      label: 'Subnet CIDR',
       flex: 1,
     },
-  ], []);
+  ], [selectedNetwork]);
 
   // Get selected network details for summary
   const selectedNetworkDetails = useMemo(() => {
     return mockNetworks.find(n => n.id === selectedNetwork);
   }, [selectedNetwork]);
+
+  // Security group table columns
+  const securityGroupColumns: TableColumn<SecurityGroupRow>[] = useMemo(() => [
+    {
+      key: 'select',
+      label: '',
+      width: '40px',
+      render: (_value, row) => (
+        <div className="flex items-center justify-center" onClick={(e) => e.stopPropagation()}>
+          <Checkbox
+            checked={selectedSecurityGroups.includes(row.id)}
+            onChange={() => {
+              setSelectedSecurityGroups(prev => 
+                prev.includes(row.id) 
+                  ? prev.filter(id => id !== row.id)
+                  : [...prev, row.id]
+              );
+            }}
+          />
+        </div>
+      ),
+    },
+    {
+      key: 'name',
+      label: 'Name',
+      flex: 1,
+      render: (_value, row) => (
+        <VStack gap={0.5} align="start">
+          <HStack gap={1.5} align="center">
+            <span className="text-[var(--color-action-primary)] text-[12px] font-medium">
+              {row.name}
+            </span>
+            <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
+          </HStack>
+          <span className="text-[11px] text-[var(--color-text-subtle)]">
+            {row.subtitle}
+          </span>
+        </VStack>
+      ),
+    },
+    {
+      key: 'description',
+      label: 'Description',
+      flex: 1,
+      sortable: true,
+    },
+    {
+      key: 'createdAt',
+      label: 'Created At',
+      flex: 1,
+      sortable: true,
+    },
+  ], [selectedSecurityGroups]);
 
   // Computed states
   const isCreateDisabled = !adapterName.trim() || sectionStatus['security'] !== 'done';
@@ -254,8 +377,13 @@ export default function CreateVirtualAdapterPage() {
     console.log('Creating virtual adapter:', {
       adapterName,
       description,
-      networkId,
-      securityGroupId,
+      networkId: selectedNetwork,
+      networkName: selectedNetworkDetails?.name,
+      macAddressMode,
+      macAddress: macAddressMode === 'manual' ? manualMacAddress : 'auto',
+      fixedIPs,
+      portSecurityEnabled,
+      selectedSecurityGroups,
     });
     navigate('/compute/ports');
   };
@@ -437,11 +565,11 @@ export default function CreateVirtualAdapterPage() {
                             onChange={(value) => setNetworkTab(value as 'current' | 'shared' | 'external')}
                             variant="underline"
                           >
-                            <Tabs.List>
-                              <Tabs.Tab value="current">Current tenant</Tabs.Tab>
-                              <Tabs.Tab value="shared">Shared</Tabs.Tab>
-                              <Tabs.Tab value="external">External</Tabs.Tab>
-                            </Tabs.List>
+                            <TabList>
+                              <Tab value="current">Current tenant</Tab>
+                              <Tab value="shared">Shared</Tab>
+                              <Tab value="external">External</Tab>
+                            </TabList>
                           </Tabs>
 
                           {/* Network Table Body */}
@@ -471,13 +599,7 @@ export default function CreateVirtualAdapterPage() {
                             <Table
                               columns={networkColumns}
                               data={mockNetworks}
-                              selectable
-                              selectionMode="single"
-                              selectedRows={selectedNetwork ? [selectedNetwork] : []}
-                              onSelectionChange={(selected) => {
-                                setSelectedNetwork(selected.length > 0 ? selected[0] : null);
-                              }}
-                              getRowId={(row) => row.id}
+                              rowKey="id"
                             />
                           </VStack>
                         </VStack>
@@ -490,11 +612,78 @@ export default function CreateVirtualAdapterPage() {
                               Select a subnet and choose whether to auto-allocate fixed IP or enter one manually.
                             </FormField.HelperText>
                           </FormField>
+
+                          {/* Fixed IP Entries */}
+                          {fixedIPs.length > 0 && (
+                            <VStack gap={2} align="stretch">
+                              {fixedIPs.map((entry) => (
+                                <div 
+                                  key={entry.id}
+                                  className="flex items-center justify-between px-4 py-2 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-md"
+                                >
+                                  <div className="flex items-center gap-2">
+                                    {/* Subnet Label + Dropdown */}
+                                    <div className="flex items-center gap-1.5">
+                                      <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+                                        Subnet
+                                      </span>
+                                      <Select
+                                        value={entry.subnet}
+                                        onChange={(value) => updateFixedIP(entry.id, { subnet: value })}
+                                        options={[
+                                          { value: entry.subnet, label: entry.subnet },
+                                        ]}
+                                        placeholder="Select"
+                                        style={{ width: '120px' }}
+                                      />
+                                    </div>
+
+                                    {/* IP Allocation Dropdown */}
+                                    <Select
+                                      value={entry.ipMode}
+                                      onChange={(value) => updateFixedIP(entry.id, { ipMode: value as 'auto' | 'manual' })}
+                                      options={[
+                                        { value: 'auto', label: 'Auto-allocate' },
+                                        { value: 'manual', label: 'Manual' },
+                                      ]}
+                                      style={{ width: '200px' }}
+                                    />
+
+                                    {/* IP Range Info or Manual Input */}
+                                    {entry.ipMode === 'auto' ? (
+                                      <span className="text-[11px] text-[var(--color-text-subtle)]">
+                                        192.168.1.100 - 192.168.1.200
+                                      </span>
+                                    ) : (
+                                      <Input
+                                        placeholder="Enter IP address"
+                                        value={entry.ipAddress}
+                                        onChange={(e) => updateFixedIP(entry.id, { ipAddress: e.target.value })}
+                                        style={{ width: '180px' }}
+                                      />
+                                    )}
+                                  </div>
+
+                                  {/* Close Button */}
+                                  <button
+                                    type="button"
+                                    onClick={() => removeFixedIP(entry.id)}
+                                    className="p-1 text-[var(--color-text-subtle)] hover:text-[var(--color-text-default)] transition-colors"
+                                  >
+                                    <IconX size={16} />
+                                  </button>
+                                </div>
+                              ))}
+                            </VStack>
+                          )}
+
                           <Button
                             variant="secondary"
                             size="sm"
                             leftIcon={<IconPlus size={12} />}
-                            disabled
+                            disabled={!selectedNetwork}
+                            onClick={addFixedIP}
+                            style={{ width: '110px', height: '32px' }}
                           >
                             Add fixed IP
                           </Button>
@@ -515,6 +704,14 @@ export default function CreateVirtualAdapterPage() {
                             <Radio value="auto" label="Auto-allocate" />
                             <Radio value="manual" label="Manual" />
                           </RadioGroup>
+                          {macAddressMode === 'manual' && (
+                            <Input
+                              placeholder="Enter MAC address (e.g. fa:16:3e:d7:f2:6c)"
+                              value={manualMacAddress}
+                              onChange={(e) => setManualMacAddress(e.target.value)}
+                              fullWidth
+                            />
+                          )}
                         </VStack>
 
                         {/* Next Button */}
@@ -549,7 +746,7 @@ export default function CreateVirtualAdapterPage() {
                         />
                         <SectionCard.DataRow 
                           label="MAC address" 
-                          value={macAddressMode === 'auto' ? 'Auto-allocate' : 'Manual'} 
+                          value={macAddressMode === 'auto' ? 'Auto-allocate' : (manualMacAddress || 'Manual')} 
                         />
                       </SectionCard.Content>
                     )}
@@ -575,23 +772,73 @@ export default function CreateVirtualAdapterPage() {
                     />
                     {sectionStatus['security'] === 'active' && (
                       <SectionCard.Content gap={6}>
-                        {/* Security group Selection - Placeholder */}
-                        <FormField>
-                          <FormField.Label>Security group</FormField.Label>
-                          <FormField.Control>
-                            <Input
-                              placeholder="Select security group"
-                              value={securityGroupId}
-                              onChange={(e) => setSecurityGroupId(e.target.value)}
-                              fullWidth
+                        {/* Port Security Toggle */}
+                        <VStack gap={3} align="stretch">
+                          <FormField required>
+                            <FormField.Label>Port security</FormField.Label>
+                            <FormField.HelperText>
+                              Indicates whether to enable security features on the port, including security groups.
+                            </FormField.HelperText>
+                          </FormField>
+                          <HStack gap={2} align="center">
+                            <Toggle
+                              checked={portSecurityEnabled}
+                              onChange={(e) => setPortSecurityEnabled(e.target.checked)}
                             />
-                          </FormField.Control>
-                          <FormField.HelperText>
-                            Select security groups to apply to the virtual adapter.
-                          </FormField.HelperText>
-                        </FormField>
+                            <span className="text-[12px] text-[var(--color-text-default)]">
+                              {portSecurityEnabled ? 'On' : 'Off'}
+                            </span>
+                          </HStack>
+                        </VStack>
 
-                        {/* Done Button */}
+                        {/* Security Groups Section */}
+                        {portSecurityEnabled && (
+                          <VStack gap={3} align="stretch">
+                            <VStack gap={1.5} align="stretch">
+                              <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+                                Security groups
+                              </span>
+                              <span className="text-[12px] text-[var(--color-text-subtle)]">
+                                Select the security groups to apply to the port.
+                              </span>
+                            </VStack>
+
+                            {/* Search + Create Button Row */}
+                            <HStack justify="between" align="center">
+                              <div style={{ width: '280px' }}>
+                                <SearchInput
+                                  placeholder="Search fixed IPs by attributes"
+                                  value={securityGroupSearch}
+                                  onChange={(e) => setSecurityGroupSearch(e.target.value)}
+                                />
+                              </div>
+                              <Button
+                                variant="secondary"
+                                size="sm"
+                                leftIcon={<IconEdit size={12} />}
+                              >
+                                Create a new security group
+                              </Button>
+                            </HStack>
+
+                            {/* Pagination */}
+                            <Pagination
+                              currentPage={securityGroupPage}
+                              totalPages={5}
+                              totalItems={115}
+                              onPageChange={setSecurityGroupPage}
+                            />
+
+                            {/* Security Groups Table */}
+                            <Table
+                              columns={securityGroupColumns}
+                              data={mockSecurityGroups}
+                              getRowId={(row) => row.id}
+                            />
+                          </VStack>
+                        )}
+
+                        {/* Next Button */}
                         <div className="flex items-center justify-end w-full">
                           <Button 
                             variant="primary" 
@@ -602,7 +849,7 @@ export default function CreateVirtualAdapterPage() {
                               }));
                             }}
                           >
-                            Done
+                            Next
                           </Button>
                         </div>
                       </SectionCard.Content>
@@ -610,8 +857,19 @@ export default function CreateVirtualAdapterPage() {
                     {sectionStatus['security'] === 'done' && (
                       <SectionCard.Content>
                         <SectionCard.DataRow 
-                          label="Security group" 
-                          value={securityGroupId || 'Default'} 
+                          label="Port Security" 
+                          value={portSecurityEnabled ? 'Enabled' : 'Disabled'} 
+                          showDivider
+                        />
+                        <SectionCard.DataRow 
+                          label="Security Groups" 
+                          value={selectedSecurityGroups.length > 0 
+                            ? mockSecurityGroups
+                                .filter(sg => selectedSecurityGroups.includes(sg.id))
+                                .map(sg => sg.name)
+                                .join(', ')
+                            : 'None'
+                          } 
                         />
                       </SectionCard.Content>
                     )}

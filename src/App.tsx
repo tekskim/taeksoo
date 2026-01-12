@@ -56,6 +56,7 @@ import { SecurityGroupsPage } from '@/pages/SecurityGroupsPage';
 import SecurityGroupDetailPage from '@/pages/SecurityGroupDetailPage';
 import { LoadBalancersPage } from '@/pages/LoadBalancersPage';
 import LoadBalancerDetailPage from '@/pages/LoadBalancerDetailPage';
+import CreateLoadBalancerPage from '@/pages/CreateLoadBalancerPage';
 import { CertificatesPage } from '@/pages/CertificatesPage';
 import CertificateDetailPage from '@/pages/CertificateDetailPage';
 import SubnetDetailPage from '@/pages/SubnetDetailPage';
@@ -231,6 +232,7 @@ function AppRoutes() {
         <Route path="/compute/security-groups" element={<SecurityGroupsPage />} />
         <Route path="/compute/security-groups/:id" element={<SecurityGroupDetailPage />} />
         <Route path="/compute/load-balancers" element={<LoadBalancersPage />} />
+        <Route path="/compute/load-balancers/create" element={<CreateLoadBalancerPage />} />
         <Route path="/compute/load-balancers/:id" element={<LoadBalancerDetailPage />} />
         <Route path="/compute/listeners/:id" element={<ListenerDetailPage />} />
         <Route path="/compute/pools/:id" element={<PoolDetailPage />} />
