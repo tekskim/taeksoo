@@ -434,7 +434,7 @@ export default function RouterDetailPage() {
                   <TabList>
                     <Tab value="details">Details</Tab>
                     <Tab value="ports">Ports</Tab>
-                    <Tab value="static-routes">Static Routes</Tab>
+                    <Tab value="static-routes">Static routes</Tab>
                   </TabList>
 
                   {/* Details Tab Panel */}

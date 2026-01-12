@@ -388,7 +388,7 @@ export function PortsPage() {
             <Tabs value={activeTab} onChange={setActiveTab} size="sm">
               <TabList>
                 <Tab value="all">All</Tab>
-                <Tab value="instance">Instance Ports</Tab>
+                <Tab value="instance">Instance ports</Tab>
               </TabList>
             </Tabs>
 

@@ -395,7 +395,7 @@ export function CreateImagePage() {
                               size="sm"
                             >
                               <TabList>
-                                <Tab value="file">Upload File</Tab>
+                                <Tab value="file">Upload file</Tab>
                                 <Tab value="url">File URL</Tab>
                               </TabList>
                             </Tabs>

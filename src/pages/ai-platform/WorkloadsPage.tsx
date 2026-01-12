@@ -67,7 +67,7 @@ export function WorkloadsPage() {
                 </VStack>
                 <HStack gap={2}>
                   <Button variant="secondary" size="sm" icon={<IconRefresh size={14} stroke={1.5} />}>Refresh</Button>
-                  <Button variant="primary" size="sm" icon={<IconPlus size={14} stroke={1.5} />}>Deploy Workload</Button>
+                  <Button variant="primary" size="sm" icon={<IconPlus size={14} stroke={1.5} />}>Deploy workload</Button>
                 </HStack>
               </HStack>
               <EmptyState icon={<IconServer size={48} stroke={1} />} title="No workloads found" description="Deploy your first workload to get started." />

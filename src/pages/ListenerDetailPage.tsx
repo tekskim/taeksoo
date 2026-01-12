@@ -754,7 +754,7 @@ export default function ListenerDetailPage() {
                 <Tabs value={activeDetailTab} onChange={setActiveDetailTab} size="sm">
                   <TabList>
                     <Tab value="details">Details</Tab>
-                    <Tab value="pools">Default Pool</Tab>
+                    <Tab value="pools">Default pool</Tab>
                     <Tab value="l7-policies">L7 Policies</Tab>
                     <Tab value="certificates">Certificates</Tab>
                   </TabList>

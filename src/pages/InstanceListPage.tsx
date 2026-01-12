@@ -759,7 +759,7 @@ export function InstanceListPage() {
             <Tabs value={activeTab} onChange={setActiveTab} variant="underline" size="sm">
               <TabList>
                 <Tab value="vm">VM</Tab>
-                <Tab value="bare-metal">Bare Metal</Tab>
+                <Tab value="bare-metal">Bare metal</Tab>
               </TabList>
             </Tabs>
 

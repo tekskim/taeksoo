@@ -67,7 +67,7 @@ export function PipelineBuilderPage() {
                 </VStack>
                 <HStack gap={2}>
                   <Button variant="secondary" size="sm" icon={<IconRefresh size={14} stroke={1.5} />}>Refresh</Button>
-                  <Button variant="primary" size="sm" icon={<IconPlus size={14} stroke={1.5} />}>Create Pipeline</Button>
+                  <Button variant="primary" size="sm" icon={<IconPlus size={14} stroke={1.5} />}>Create pipeline</Button>
                 </HStack>
               </HStack>
               <EmptyState icon={<IconRoute size={48} stroke={1} />} title="No pipelines found" description="Create your first pipeline to get started." />

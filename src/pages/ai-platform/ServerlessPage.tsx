@@ -67,7 +67,7 @@ export function ServerlessPage() {
                 </VStack>
                 <HStack gap={2}>
                   <Button variant="secondary" size="sm" icon={<IconRefresh size={14} stroke={1.5} />}>Refresh</Button>
-                  <Button variant="primary" size="sm" icon={<IconPlus size={14} stroke={1.5} />}>Create Endpoint</Button>
+                  <Button variant="primary" size="sm" icon={<IconPlus size={14} stroke={1.5} />}>Create endpoint</Button>
                 </HStack>
               </HStack>
               <EmptyState icon={<IconBolt size={48} stroke={1} />} title="No serverless endpoints found" description="Create your first serverless endpoint to get started." />

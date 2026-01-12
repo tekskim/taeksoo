@@ -2554,7 +2554,7 @@ function TemplatesSection({ templates, selectedId, onSelect, onSkip, onNext, isE
                 checked={resourceType === 'baremetal'}
                 onChange={() => setResourceType('baremetal')}
               />
-              <span className="text-[12px] text-[var(--color-text-default)]">Bare Metal</span>
+              <span className="text-[12px] text-[var(--color-text-default)]">Bare metal</span>
             </label>
           </VStack>
         </VStack>
