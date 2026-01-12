@@ -50,7 +50,7 @@ function SectionCardHeader({ title, actions, className, ...props }: SectionCardH
     <div
       className={twMerge(
         'flex items-center justify-between',
-        'w-full h-8 mb-4',
+        'w-full h-8',
         className
       )}
       {...props}
