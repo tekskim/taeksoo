@@ -316,14 +316,14 @@ export function HostsPage() {
     },
     {
       key: 'totalMemory',
-      label: 'Total Memory',
+      label: 'Total memory',
       minWidth: '100px',
       maxWidth: '120px',
       sortable: true,
     },
     {
       key: 'rawCapacity',
-      label: 'Raw Capacity',
+      label: 'Raw capacity',
       minWidth: '100px',
       maxWidth: '120px',
       sortable: true,

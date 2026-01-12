@@ -61,7 +61,7 @@ interface QuotaItem {
 }
 
 interface TemplateConfig {
-  // Basic Information
+  // Basic information
   instanceNamePrefix?: string;
   availabilityZone?: string;
   description?: string;
@@ -110,8 +110,8 @@ interface SectionStatus {
 
 // Section labels for display
 const SECTION_LABELS: Record<SectionStep, string> = {
-  templates: 'Launch Type',
-  'basic-info': 'Basic Information',
+  templates: 'Launch type',
+  'basic-info': 'Basic information',
   image: 'Image',
   flavor: 'Flavor',
   network: 'Network',
@@ -139,7 +139,7 @@ const mockQuota: QuotaItem[] = [
   { label: 'vCPU', used: 5, max: 20, newValue: 2 },
   { label: 'RAM (GiB)', used: 14, max: 50, newValue: 4 },
   { label: 'Disk', used: 2, max: 10, newValue: 1 },
-  { label: 'Disk Capacity (GiB)', used: 20, max: 1000, newValue: 50 },
+  { label: 'Disk capacity (GiB)', used: 20, max: 1000, newValue: 50 },
 ];
 
 const mockTemplates: TemplateRow[] = [
@@ -581,7 +581,7 @@ function BasicInformationSection({
   return (
     <SectionCard isActive={isActive}>
       <SectionCard.Header 
-        title="Basic Information" 
+        title="Basic information" 
         showDivider
         actions={isEditing ? (
           <HStack gap={2}>
@@ -592,13 +592,13 @@ function BasicInformationSection({
       />
       <SectionCard.Content>
         <VStack gap={0}>
-          {/* Instance Name */}
+          {/* Instance name */}
           <VStack gap={2} className="py-6">
             <label className="text-[14px] font-medium text-[var(--color-text-default)]">
-              Instance Name <span className="ml-1 text-[var(--color-state-danger)]">*</span>
+              Instance name <span className="ml-1 text-[var(--color-state-danger)]">*</span>
             </label>
             <Input
-              placeholder="Instance Name"
+              placeholder="Instance name"
               value={instanceName}
               onChange={(e) => onInstanceNameChange(e.target.value)}
               fullWidth
@@ -611,10 +611,10 @@ function BasicInformationSection({
           {/* Divider */}
           <div className="w-full h-px bg-[var(--color-border-subtle)]" />
 
-          {/* AZ (Availability Zone) */}
+          {/* AZ (Availability zone) */}
           <VStack gap={2} className="py-6">
             <label className="text-[14px] font-medium text-[var(--color-text-default)]">
-              AZ (Availability Zone) <span className="ml-1 text-[var(--color-state-danger)]">*</span>
+              AZ (Availability zone) <span className="ml-1 text-[var(--color-state-danger)]">*</span>
             </label>
             <Select
               options={availabilityZoneOptions}
@@ -868,8 +868,8 @@ function ImageSection({ selectedImageId, onSelectImage, onNext, isActive = false
     },
     { key: 'name', label: 'Name', sortable: true },
     { key: 'size', label: 'Size', sortable: true, width: '100px' },
-    { key: 'sourceInstance', label: 'Source Instance', sortable: true, width: '140px' },
-    { key: 'createdAt', label: 'Created At', sortable: true, width: '110px' },
+    { key: 'sourceInstance', label: 'Source instance', sortable: true, width: '140px' },
+    { key: 'createdAt', label: 'Created at', sortable: true, width: '110px' },
   ];
 
   // Bootable Volume Table columns
@@ -905,7 +905,7 @@ function ImageSection({ selectedImageId, onSelectImage, onNext, isActive = false
     { key: 'name', label: 'Name', sortable: true },
     { key: 'size', label: 'Size', sortable: true, width: '80px' },
     { key: 'type', label: 'Type', sortable: true, width: '80px' },
-    { key: 'createdAt', label: 'Created At', sortable: true, width: '110px' },
+    { key: 'createdAt', label: 'Created at', sortable: true, width: '110px' },
   ];
 
   const osChipStyle = (active: boolean) => `
@@ -1112,11 +1112,11 @@ function ImageSection({ selectedImageId, onSelectImage, onNext, isActive = false
           {/* Divider */}
           <div className="w-full h-px bg-[var(--color-border-subtle)]" />
 
-          {/* Data Disk Section */}
+          {/* Data disk Section */}
           <VStack gap={3} align="start" className="py-6">
             <VStack gap={1}>
               <span className="text-[14px] font-medium text-[var(--color-text-default)]">
-                Data Disk
+                Data disk
               </span>
               <span className="text-[12px] text-[var(--color-text-muted)]">
                 Attach additional volumes for data storage.
@@ -1129,7 +1129,7 @@ function ImageSection({ selectedImageId, onSelectImage, onNext, isActive = false
               leftIcon={<IconPlus size={12} />}
               onClick={handleAddDataDisk}
             >
-              Add Data Disk
+              Add Data disk
             </Button>
           </VStack>
 
@@ -1247,8 +1247,8 @@ function FlavorSection({ selectedFlavorId, onSelectFlavor, onNext, isActive = fa
     { key: 'vCPU', label: 'vCPU', sortable: true, width: '70px' },
     { key: 'ram', label: 'RAM', sortable: true, width: '80px' },
     { key: 'disk', label: 'Disk', sortable: true, width: '80px' },
-    { key: 'ephemeralDisk', label: 'Ephemeral Disk', sortable: true, width: '100px' },
-    { key: 'networkBandwidth', label: 'Internal Network Bandwidth', sortable: true, width: '120px' },
+    { key: 'ephemeralDisk', label: 'Ephemeral disk', sortable: true, width: '100px' },
+    { key: 'networkBandwidth', label: 'Internal network Bandwidth', sortable: true, width: '120px' },
   ];
 
   return (
@@ -1530,7 +1530,7 @@ function NetworkSection({ onNext, isActive = false, isEditing = false, onEditCan
       render: (_, row) => <StatusIndicator status={row.status === 'Active' ? 'active' : 'shutoff'} />,
     },
     { key: 'name', label: 'Name', sortable: true },
-    { key: 'allocationPools', label: 'Allocation Pools' },
+    { key: 'allocationPools', label: 'Allocation pools' },
   ];
 
   // Existing Floating IP columns
@@ -1574,10 +1574,10 @@ function NetworkSection({ onNext, isActive = false, isEditing = false, onEditCan
       ),
     },
     { key: 'ipAddress', label: 'IP Address', sortable: true },
-    { key: 'networkName', label: 'Network Name', sortable: true },
+    { key: 'networkName', label: 'Network name', sortable: true },
   ];
 
-  // Security Group columns
+  // Security group columns
   const securityGroupColumns: TableColumn<SecurityGroupRow>[] = [
     {
       key: 'select',
@@ -1620,7 +1620,7 @@ function NetworkSection({ onNext, isActive = false, isEditing = false, onEditCan
       ),
     },
     { key: 'description', label: 'Description', sortable: true },
-    { key: 'createdAt', label: 'Created At', sortable: true },
+    { key: 'createdAt', label: 'Created at', sortable: true },
   ];
 
   // Port columns
@@ -1656,7 +1656,7 @@ function NetworkSection({ onNext, isActive = false, isEditing = false, onEditCan
         </VStack>
       ),
     },
-    { key: 'ownedNetwork', label: 'Owned Network', sortable: true },
+    { key: 'ownedNetwork', label: 'Owned network', sortable: true },
     { key: 'fixedIp', label: 'Fixed IP' },
     { key: 'macAddress', label: 'MAC Address' },
   ];
@@ -1874,7 +1874,7 @@ function NetworkSection({ onNext, isActive = false, isEditing = false, onEditCan
             
             <HStack justify="between" align="center" className="w-full">
               <SearchInput
-                placeholder="Find Security Group with filters"
+                placeholder="Find Security group with filters"
                 value={sgSearch}
                 onChange={(e) => setSgSearch(e.target.value)}
                 onClear={() => setSgSearch('')}
@@ -2043,7 +2043,7 @@ function AuthenticationSection({ onNext, isActive = false, isEditing = false, on
     keyPairSearch === '' || kp.name.toLowerCase().includes(keyPairSearch.toLowerCase())
   );
 
-  // Key Pair columns
+  // Key pair columns
   const keyPairColumns: TableColumn<KeyPairRow>[] = [
     {
       key: 'select',
@@ -2087,22 +2087,22 @@ function AuthenticationSection({ onNext, isActive = false, isEditing = false, on
       </SectionCard.Header>
       <SectionCard.Content>
         <VStack gap={4}>
-          {/* Login Type Header */}
+          {/* Login type Header */}
           <span className="text-[14px] font-medium">Login type</span>
 
-          {/* Login Type Tabs */}
+          {/* Login type Tabs */}
           <Tabs value={loginType} onChange={(v) => setLoginType(v as 'keypair' | 'password')}>
             <TabList>
-              <Tab value="keypair">Key Pair</Tab>
+              <Tab value="keypair">Key pair</Tab>
               <Tab value="password">Password</Tab>
             </TabList>
 
-            {/* Key Pair Tab Content */}
+            {/* Key pair Tab Content */}
             <TabPanel value="keypair" className="pt-4">
               <VStack gap={3}>
                 {/* Search */}
                 <SearchInput
-                  placeholder="Find Key Pair with filters"
+                  placeholder="Find Key pair with filters"
                   value={keyPairSearch}
                   onChange={(e) => setKeyPairSearch(e.target.value)}
                   onClear={() => setKeyPairSearch('')}
@@ -2118,7 +2118,7 @@ function AuthenticationSection({ onNext, isActive = false, isEditing = false, on
                   onPageChange={setKeyPairPage}
                 />
 
-                {/* Key Pair Table */}
+                {/* Key pair Table */}
                 <Table
                   columns={keyPairColumns}
                   data={filteredKeyPairs}
@@ -2247,7 +2247,7 @@ function AdvancedSection({ onNext, isActive = false, isEditing = false, onEditCa
   const [serverGroupSearch, setServerGroupSearch] = useState('');
   const [serverGroupPage, setServerGroupPage] = useState(1);
 
-  // User Data
+  // User data
   const [userDataOpen, setUserDataOpen] = useState(false);
   const [userData, setUserData] = useState('');
 
@@ -2273,7 +2273,7 @@ function AdvancedSection({ onNext, isActive = false, isEditing = false, onEditCa
       ),
     },
     { key: 'name', label: 'Name', sortable: true },
-    { key: 'memberCount', label: 'Member Count', sortable: true, width: '120px' },
+    { key: 'memberCount', label: 'Member count', sortable: true, width: '120px' },
     { key: 'policy', label: 'Policy', sortable: true },
   ];
 
@@ -2346,11 +2346,11 @@ function AdvancedSection({ onNext, isActive = false, isEditing = false, onEditCa
           {/* Divider */}
           <div className="h-px bg-[var(--color-border-subtle)]" />
 
-          {/* User Data Disclosure */}
+          {/* User data Disclosure */}
           <Disclosure open={userDataOpen} onChange={setUserDataOpen}>
             <Disclosure.Trigger>
               <HStack gap={2} align="center">
-                <span className="text-[14px] font-medium">User Data</span>
+                <span className="text-[14px] font-medium">User data</span>
                 <span className="text-[12px] text-[var(--color-text-subtle)]">(Optional)</span>
               </HStack>
             </Disclosure.Trigger>
@@ -2379,7 +2379,7 @@ function AdvancedSection({ onNext, isActive = false, isEditing = false, onEditCa
                   </label>
                 </div>
 
-                {/* User Data Textarea */}
+                {/* User data Textarea */}
                 <Textarea
                   value={userData}
                   onChange={(e) => setUserData(e.target.value)}
@@ -2527,14 +2527,14 @@ function TemplatesSection({ templates, selectedId, onSelect, onSkip, onNext, isE
         {/* Section Header - h-8 matches other sections */}
         <HStack justify="between" align="center" className="w-full h-8">
           <h5 className="text-[length:var(--font-size-14)] font-semibold leading-[var(--line-height-20)] text-[var(--color-text-default)]">
-            Launch Type
+            Launch type
           </h5>
         </HStack>
 
-        {/* Resource Type */}
+        {/* Resource type */}
         <VStack gap={2} align="start">
           <span className="text-[14px] font-medium text-[var(--color-text-default)]">
-            Resource Type <span className="text-[var(--color-state-danger)]">*</span>
+            Resource type <span className="text-[var(--color-state-danger)]">*</span>
           </span>
           <span className="text-[12px] text-[var(--color-text-subtle)]">
             Choose the resource category to apply to the flavor.
@@ -2777,7 +2777,7 @@ export function CreateInstancePage() {
   const [numberOfInstances, setNumberOfInstances] = useState(1);
   const [selectedTemplateId, setSelectedTemplateId] = useState<string | null>(null);
   
-  // Basic Information state
+  // Basic information state
   const [instanceName, setInstanceName] = useState('');
   const [availabilityZone, setAvailabilityZone] = useState('nova');
   const [description, setDescription] = useState('');
@@ -2850,7 +2850,7 @@ export function CreateInstancePage() {
     
     const config = template.config;
     
-    // Basic Information
+    // Basic information
     if (config.instanceNamePrefix) setInstanceName(config.instanceNamePrefix);
     if (config.availabilityZone) setAvailabilityZone(config.availabilityZone);
     if (config.description) setDescription(config.description);
@@ -2881,7 +2881,7 @@ export function CreateInstancePage() {
     // Mark all sections as done except the next one (basic-info will be active)
     setSectionStatus({
       templates: 'done',
-      'basic-info': 'active', // User needs to set Instance Name
+      'basic-info': 'active', // User needs to set Instance name
       image: 'done',
       flavor: 'done',
       network: 'done',
@@ -2900,7 +2900,7 @@ export function CreateInstancePage() {
       return;
     }
     
-    // If Basic Information after template applied, just mark as done (don't go to next section)
+    // If Basic information after template applied, just mark as done (don't go to next section)
     // All other sections are already done from template
     if (section === 'basic-info' && selectedTemplateId) {
       setSectionStatus(prev => ({
@@ -3068,7 +3068,7 @@ export function CreateInstancePage() {
   const getAuthSummary = () => {
     if (loginType === 'keypair') {
       const kp = mockKeyPairs.find(k => k.id === selectedKeyPairId);
-      return kp ? `Key Pair: ${kp.name}` : 'Key Pair: -';
+      return kp ? `Key pair: ${kp.name}` : 'Key pair: -';
     }
     return 'Password';
   };
@@ -3154,7 +3154,7 @@ export function CreateInstancePage() {
                   )}
                   {sectionStatus.templates === 'done' && (
                     <DoneSection title={SECTION_LABELS.templates} onEdit={() => handleEdit('templates')}>
-                      <SectionCard.DataRow label="Resource Type" value="Virtual Machine" showDivider={false} />
+                      <SectionCard.DataRow label="Resource type" value="Virtual Machine" showDivider={false} />
                       <SectionCard.DataRow label="Template" value={getTemplateSummary() || 'None selected'} />
                     </DoneSection>
                   )}
@@ -3162,7 +3162,7 @@ export function CreateInstancePage() {
                     <SkippedSection title={SECTION_LABELS.templates} onEdit={() => handleEdit('templates')} />
                   )}
 
-                  {/* Basic Information Section */}
+                  {/* Basic information Section */}
                   {sectionStatus['basic-info'] === 'pre' && (
                     <PreSection title={SECTION_LABELS['basic-info']} />
                   )}
@@ -3188,8 +3188,8 @@ export function CreateInstancePage() {
                   )}
                   {sectionStatus['basic-info'] === 'done' && (
                     <DoneSection title={SECTION_LABELS['basic-info']} onEdit={() => handleEdit('basic-info')}>
-                      <SectionCard.DataRow label="Instance Name" value={instanceName || '-'} showDivider={false} />
-                      <SectionCard.DataRow label="AZ (Availability Zone)" value={availabilityZone} />
+                      <SectionCard.DataRow label="Instance name" value={instanceName || '-'} showDivider={false} />
+                      <SectionCard.DataRow label="AZ (Availability zone)" value={availabilityZone} />
                       <SectionCard.DataRow label="Description" value={description || '-'} />
                     </DoneSection>
                   )}
@@ -3215,7 +3215,7 @@ export function CreateInstancePage() {
                   {sectionStatus.image === 'done' && (
                     <DoneSection title={SECTION_LABELS.image} onEdit={() => handleEdit('image')}>
                       <SectionCard.DataRow label="Image" value={getImageSummary() || '-'} showDivider={false} />
-                      <SectionCard.DataRow label="System Disk" value={getStorageSummary()} />
+                      <SectionCard.DataRow label="System disk" value={getStorageSummary()} />
                     </DoneSection>
                   )}
 
@@ -3284,7 +3284,7 @@ export function CreateInstancePage() {
                   )}
                   {sectionStatus.authentication === 'done' && (
                     <DoneSection title={SECTION_LABELS.authentication} onEdit={() => handleEdit('authentication')}>
-                      <SectionCard.DataRow label="Login Type" value={getAuthSummary()} showDivider={false} />
+                      <SectionCard.DataRow label="Login type" value={getAuthSummary()} showDivider={false} />
                     </DoneSection>
                   )}
 
@@ -3312,7 +3312,7 @@ export function CreateInstancePage() {
                         showDivider={false}
                       />
                       <SectionCard.DataRow 
-                        label="User Data" 
+                        label="User data" 
                         value={userData ? 'Configured' : '-'} 
                       />
                     </DoneSection>

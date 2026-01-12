@@ -97,10 +97,10 @@ export function FloatingIPsPage() {
   const defaultColumnConfig: ColumnConfig[] = [
     { id: 'status', label: 'Status', visible: true, locked: true },
     { id: 'floatingIp', label: 'Floating IP', visible: true, locked: true },
-    { id: 'associatedTo', label: 'Associated To', visible: true },
+    { id: 'associatedTo', label: 'Associated to', visible: true },
     { id: 'fixedIp', label: 'Fixed IP', visible: true },
     { id: 'network', label: 'Network', visible: true },
-    { id: 'createdAt', label: 'Created At', visible: true },
+    { id: 'createdAt', label: 'Created at', visible: true },
     { id: 'actions', label: 'Action', visible: true, locked: true },
   ];
 
@@ -176,7 +176,7 @@ export function FloatingIPsPage() {
     },
     {
       key: 'associatedTo',
-      label: 'Associated To',
+      label: 'Associated to',
       width: '160px',
       align: 'right',
       render: (_, row) => (
@@ -237,7 +237,7 @@ export function FloatingIPsPage() {
     },
     {
       key: 'createdAt',
-      label: 'Created At',
+      label: 'Created at',
       flex: 1,
       sortable: true,
     },

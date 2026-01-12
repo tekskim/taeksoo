@@ -59,7 +59,7 @@ const mockNetworks: NetworkRow[] = [
 
 // Section labels for display
 const SECTION_LABELS: Record<SectionStep, string> = {
-  'basic-info': 'Basic Information',
+  'basic-info': 'Basic information',
   'network': 'Network',
   'security': 'Security',
 };
@@ -238,7 +238,7 @@ export default function CreateVirtualAdapterPage() {
     return null;
   };
 
-  // Tab bar data
+  // Tab Bar data
   const tabBarTabs = tabs.map((tab) => ({
     id: tab.id,
     label: tab.label,
@@ -315,7 +315,7 @@ export default function CreateVirtualAdapterPage() {
               <HStack gap={6} align="start" className="w-full">
                 {/* Left Column - Form Sections */}
                 <VStack gap={4} className="flex-1">
-                  {/* Basic Information Section */}
+                  {/* Basic information Section */}
                   <SectionCard isActive={sectionStatus['basic-info'] === 'active'}>
                     <SectionCard.Header 
                       title={SECTION_LABELS['basic-info']}
@@ -335,9 +335,9 @@ export default function CreateVirtualAdapterPage() {
                     />
                     {sectionStatus['basic-info'] === 'active' && (
                       <SectionCard.Content gap={6}>
-                        {/* Virtual Adapter Name */}
+                        {/* Virtual adapter Name */}
                         <FormField required>
-                          <FormField.Label>Virtual Adapter Name</FormField.Label>
+                          <FormField.Label>Virtual adapter Name</FormField.Label>
                           <FormField.Control>
                             <Input
                               placeholder="Enter name"
@@ -388,7 +388,7 @@ export default function CreateVirtualAdapterPage() {
                     {sectionStatus['basic-info'] === 'done' && (
                       <SectionCard.Content>
                         <SectionCard.DataRow 
-                          label="Virtual Adapter Name" 
+                          label="Virtual adapter Name" 
                           value={adapterName} 
                           showDivider 
                         />
@@ -575,9 +575,9 @@ export default function CreateVirtualAdapterPage() {
                     />
                     {sectionStatus['security'] === 'active' && (
                       <SectionCard.Content gap={6}>
-                        {/* Security Group Selection - Placeholder */}
+                        {/* Security group Selection - Placeholder */}
                         <FormField>
-                          <FormField.Label>Security Group</FormField.Label>
+                          <FormField.Label>Security group</FormField.Label>
                           <FormField.Control>
                             <Input
                               placeholder="Select security group"
@@ -610,7 +610,7 @@ export default function CreateVirtualAdapterPage() {
                     {sectionStatus['security'] === 'done' && (
                       <SectionCard.Content>
                         <SectionCard.DataRow 
-                          label="Security Group" 
+                          label="Security group" 
                           value={securityGroupId || 'Default'} 
                         />
                       </SectionCard.Content>

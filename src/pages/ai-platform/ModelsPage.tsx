@@ -182,7 +182,7 @@ export function ModelsPage() {
 
   const tabItems = [
     { id: 'all', label: 'All' },
-    { id: 'base', label: 'Base Models' },
+    { id: 'base', label: 'Base models' },
     { id: 'fine-tuned', label: 'Fine-tuned Models' },
   ];
 

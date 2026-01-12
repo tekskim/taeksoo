@@ -288,7 +288,7 @@ function NewChatDrawer({ isOpen, onClose, agent, onFavoriteToggle, onStartChat }
             
             <div className="flex flex-col gap-1">
               <p className="text-[length:var(--font-size-11)] leading-[var(--line-height-16)] text-[var(--color-action-primary)]">
-                Connected Data Sources
+                Connected Data sources
               </p>
               <p className="text-[length:var(--font-size-12)] leading-[var(--line-height-16)] text-[var(--color-text-default)]">
                 {agent.connectedDataSources.length > 0 
@@ -396,7 +396,7 @@ export function ChatPage() {
               <>
                 <TopBarAction
                   icon={<IconPalette size={16} stroke={1} />}
-                  aria-label="Design System"
+                  aria-label="Design system"
                   onClick={() => navigate('/design-system')}
                 />
                 <TopBarAction

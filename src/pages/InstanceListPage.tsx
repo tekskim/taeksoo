@@ -156,7 +156,7 @@ export function InstanceListPage() {
   const [isSnapshotDrawerOpen, setIsSnapshotDrawerOpen] = useState(false);
   const [selectedInstanceForSnapshot, setSelectedInstanceForSnapshot] = useState<InstanceInfo | null>(null);
 
-  // Lock Setting Drawer state
+  // Lock setting Drawer state
   const [isLockDrawerOpen, setIsLockDrawerOpen] = useState(false);
   const [selectedInstanceForLock, setSelectedInstanceForLock] = useState<LockInstanceInfo | null>(null);
 
@@ -322,7 +322,7 @@ export function InstanceListPage() {
     { id: 'unrescue', label: 'Unrescue', divider: true },
     {
       id: 'instance-status',
-      label: 'Instance Status',
+      label: 'Instance status',
       submenu: [
         { id: 'start-sub', label: 'Start' },
         { id: 'stop-sub', label: 'Stop', status: 'danger' },
@@ -357,9 +357,9 @@ export function InstanceListPage() {
       submenu: [
         { id: 'attach-interface', label: 'Attach interface' },
         { id: 'detach-interface', label: 'Detach interface', status: 'danger' },
-        { id: 'associate-floating-ip', label: 'Associate Floating IP' },
-        { id: 'disassociate-floating-ip', label: 'Disassociate Floating IP', status: 'danger' },
-        { id: 'manage-security-groups', label: 'Manage Security groups' },
+        { id: 'associate-floating-ip', label: 'Associate floating IP' },
+        { id: 'disassociate-floating-ip', label: 'Disassociate floating IP', status: 'danger' },
+        { id: 'manage-security-groups', label: 'Manage security groups' },
       ],
     },
     {
@@ -368,12 +368,12 @@ export function InstanceListPage() {
       submenu: [
         { 
           id: 'lock-setting', 
-          label: 'Lock Setting',
+          label: 'Lock setting',
           onClick: () => handleLockSetting(instance),
         },
         { id: 'rebuild', label: 'Rebuild', status: 'danger' },
         { id: 'resize', label: 'Resize' },
-        { id: 'manage-tags', label: 'Manage Tags' },
+        { id: 'manage-tags', label: 'Manage tags' },
         { 
           id: 'edit', 
           label: 'Edit',
@@ -891,7 +891,7 @@ export function InstanceListPage() {
         }}
       />
 
-      {/* Lock Setting Drawer */}
+      {/* Lock setting Drawer */}
       <LockSettingDrawer
         isOpen={isLockDrawerOpen}
         onClose={() => {

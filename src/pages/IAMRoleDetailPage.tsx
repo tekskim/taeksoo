@@ -482,7 +482,7 @@ export default function IAMRoleDetailPage() {
     },
     {
       key: 'lastSignIn',
-      label: 'Last Sign-in',
+      label: 'Last sign-in',
       flex: 1,
       sortable: true,
     },
@@ -561,7 +561,7 @@ export default function IAMRoleDetailPage() {
                   <HStack gap={2} className="w-full">
                     <InfoCard label="Description" value={role.description} />
                     <InfoCard label="Type" value={role.type} />
-                    <InfoCard label="Created At" value={role.createdAt} />
+                    <InfoCard label="Created at" value={role.createdAt} />
                   </HStack>
                 </VStack>
               </div>

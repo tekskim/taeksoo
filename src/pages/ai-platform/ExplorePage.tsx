@@ -144,7 +144,7 @@ const sampleTemplates: TemplateCardProps[] = [
   {
     name: 'presidio-pii-deid',
     imageUrl: 'ghcr.io/thakicloud/presidio-pii-deid:1.2.0',
-    tags: ['Web Services', 'GPU'],
+    tags: ['Web services', 'GPU'],
     cpu: '2 CPU',
     memory: '40 GB',
     gpu: '40 GB GPU',
@@ -155,7 +155,7 @@ const sampleTemplates: TemplateCardProps[] = [
   {
     name: 'prompt-optimizer',
     imageUrl: 'ghcr.io/thakicloud/prompt-optimizer:latest',
-    tags: ['Web Services'],
+    tags: ['Web services'],
     cpu: '1 CPU',
     memory: '1 GB',
     downloads: 3,
@@ -164,7 +164,7 @@ const sampleTemplates: TemplateCardProps[] = [
   {
     name: 'llm-interview-eval-agent',
     imageUrl: 'ghcr.io/thakicloud/llm-interview-eval-agent:latest',
-    tags: ['Web Services'],
+    tags: ['Web services'],
     cpu: '1 CPU',
     memory: '2 GB',
     disk: '10 GB Disk',
@@ -174,7 +174,7 @@ const sampleTemplates: TemplateCardProps[] = [
   {
     name: 'vibevoice-app',
     imageUrl: 'ghcr.io/thakicloud/vibevoice-app:gpu',
-    tags: ['Web Services', 'GPU'],
+    tags: ['Web services', 'GPU'],
     cpu: '2 CPU',
     memory: '40 GB',
     gpu: '40 GB GPU',
@@ -185,7 +185,7 @@ const sampleTemplates: TemplateCardProps[] = [
   {
     name: 'audiocraft',
     imageUrl: 'ghcr.io/thakicloud/audiocraft:gpu',
-    tags: ['Web Services', 'GPU'],
+    tags: ['Web services', 'GPU'],
     cpu: '4 CPU',
     memory: '40 GB',
     gpu: '40 GB GPU',
@@ -196,7 +196,7 @@ const sampleTemplates: TemplateCardProps[] = [
   {
     name: 'eager-delta-2161',
     imageUrl: '—',
-    tags: ['Web Services'],
+    tags: ['Web services'],
     cpu: '1 CPU',
     memory: '1 GB',
     downloads: 0,
@@ -220,7 +220,7 @@ export function ExplorePage() {
 
   const categoryOptions = [
     { value: 'all', label: 'All categories' },
-    { value: 'web-services', label: 'Web Services' },
+    { value: 'web-services', label: 'Web services' },
     { value: 'gpu', label: 'GPU' },
     { value: 'ml-models', label: 'ML Models' },
   ];
@@ -228,7 +228,7 @@ export function ExplorePage() {
   const sortOptions = [
     { value: 'newest', label: 'Newest' },
     { value: 'oldest', label: 'Oldest' },
-    { value: 'popular', label: 'Most Popular' },
+    { value: 'popular', label: 'Most popular' },
     { value: 'name', label: 'Name' },
   ];
 

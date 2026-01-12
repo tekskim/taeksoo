@@ -446,7 +446,7 @@ export function ComputeHomePage() {
                 />
                 <ActivityItem
                   name="sg-default"
-                  resourceType="Security Group"
+                  resourceType="Security group"
                   action="modify"
                   time="5h ago"
                   isLast

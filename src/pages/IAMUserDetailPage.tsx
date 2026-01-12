@@ -371,7 +371,7 @@ export function IAMUserDetailPage() {
     },
     {
       key: 'lastAccess',
-      label: 'Last Access',
+      label: 'Last access',
       flex: 1,
       sortable: true,
     },

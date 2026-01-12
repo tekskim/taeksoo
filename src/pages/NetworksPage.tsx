@@ -102,7 +102,7 @@ export function NetworksPage() {
     { id: 'subnetCidr', label: 'Subnet CIDR', visible: true },
     { id: 'external', label: 'External', visible: true },
     { id: 'diskTag', label: 'Shared / Is Current Tenant', visible: true },
-    { id: 'adminState', label: 'Admin State', visible: true },
+    { id: 'adminState', label: 'Admin state', visible: true },
     { id: 'actions', label: 'Action', visible: true, locked: true },
   ];
 
@@ -204,7 +204,7 @@ export function NetworksPage() {
     },
     {
       key: 'adminState',
-      label: 'Admin State',
+      label: 'Admin state',
       flex: 1,
     },
     {

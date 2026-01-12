@@ -44,7 +44,7 @@ function EmptyState({ icon, title, description }: EmptyStateProps) {
 }
 
 /* ----------------------------------------
-   Text Generation Page
+   Text generation Page
    ---------------------------------------- */
 
 export function TextGenerationPage() {
@@ -54,7 +54,7 @@ export function TextGenerationPage() {
 
   // Update tab label on mount
   useEffect(() => {
-    updateActiveTabLabel('Text Generation');
+    updateActiveTabLabel('Text generation');
   }, [updateActiveTabLabel]);
 
   // Sidebar width
@@ -62,7 +62,7 @@ export function TextGenerationPage() {
 
   const tabItems = [
     { id: 'experiments', label: 'Experiments' },
-    { id: 'new-experiment', label: 'New Experiment', disabled: true },
+    { id: 'new-experiment', label: 'New experiment', disabled: true },
     { id: 'monitoring', label: 'Monitoring', disabled: true },
   ];
 
@@ -95,7 +95,7 @@ export function TextGenerationPage() {
               items={[
                 { label: 'AI Platform' },
                 { label: 'ML Studio' },
-                { label: 'Text Generation' },
+                { label: 'Text generation' },
               ]}
             />
           }
@@ -143,14 +143,14 @@ export function TextGenerationPage() {
                 <EmptyState
                   icon={<IconFileDescription size={48} stroke={1} />}
                   title="No experiments found"
-                  description="Create a new experiment to start training Text Generation models."
+                  description="Create a new experiment to start training Text generation models."
                 />
               )}
 
               {activeTab === 'new-experiment' && (
                 <EmptyState
                   icon={<IconFileDescription size={48} stroke={1} />}
-                  title="New Experiment"
+                  title="New experiment"
                   description="Configure and start a new text generation experiment."
                 />
               )}

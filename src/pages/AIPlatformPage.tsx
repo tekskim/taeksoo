@@ -322,7 +322,7 @@ export function AIPlatformPageLayout({
         <TopBarAction
           icon={<IconPalette size={16} stroke={1} />}
           onClick={() => navigate('/design-system')}
-          aria-label="Design System"
+          aria-label="Design system"
         />
         <TopBarAction
           icon={<IconBell size={16} stroke={1} />}
@@ -655,8 +655,8 @@ function DashboardContent() {
           title="My Resource Usage"
         >
           <div className="space-y-1">
-            <DataRow label="Running Jobs:" value={0} />
-            <DataRow label="Pending Jobs:" value={0} />
+            <DataRow label="Running jobs:" value={0} />
+            <DataRow label="Pending jobs:" value={0} />
             <DataRow label="Queue:" value="default" />
           </div>
         </ResourceCard>
@@ -666,8 +666,8 @@ function DashboardContent() {
           title="Queue Status"
         >
           <div className="space-y-1">
-            <DataRow label="My Pending Jobs:" value={0} />
-            <DataRow label="My Running Jobs:" value={0} />
+            <DataRow label="My pending Jobs:" value={0} />
+            <DataRow label="My running Jobs:" value={0} />
             <p className="text-[12px] font-medium text-[var(--color-text-default)] mt-2">No active jobs</p>
             <p className="text-[11px] text-[var(--color-text-subtle)]">You can start a new job now</p>
           </div>
@@ -679,7 +679,7 @@ function DashboardContent() {
         <StatCard
           icon={<IconServer size={20} stroke={1.5} className="text-[var(--color-action-primary)]" />}
           value="15 / 15"
-          label="Active Nodes"
+          label="Active nodes"
           iconBgColor="bg-blue-50"
         />
         <StatCard
@@ -1053,8 +1053,8 @@ function WorkloadsContent() {
 
   // Context menu items for workloads
   const getWorkloadContextMenuItems = (workload: Workload): ContextMenuItem[] => [
-    { id: 'view-logs', label: 'View Logs', onClick: () => console.log('View logs:', workload.id) },
-    { id: 'view-metrics', label: 'View Metrics', onClick: () => console.log('View metrics:', workload.id) },
+    { id: 'view-logs', label: 'View logs', onClick: () => console.log('View logs:', workload.id) },
+    { id: 'view-metrics', label: 'View metrics', onClick: () => console.log('View metrics:', workload.id) },
     { id: 'restart', label: 'Restart', onClick: () => console.log('Restart:', workload.id) },
     { id: 'stop', label: 'Stop', status: 'danger', onClick: () => console.log('Stop:', workload.id) },
     { id: 'delete', label: 'Delete', status: 'danger', onClick: () => console.log('Delete:', workload.id) },
@@ -1126,7 +1126,7 @@ function WorkloadsContent() {
     },
     {
       key: 'computeType',
-      label: 'Compute Type',
+      label: 'Compute type',
       flex: 1,
       render: (_, row) => (
         <span className={row.computeType !== '-' ? 'text-[var(--color-text-default)]' : 'text-[var(--color-text-subtle)]'}>
@@ -1169,7 +1169,7 @@ function WorkloadsContent() {
         <StatusCard label="Stopped" count={stats.stopped} status="stopped" />
       </div>
 
-      {/* Filter Search Input */}
+      {/* Filter search Input */}
       <FilterSearchInput
         filters={filterFields}
         appliedFilters={appliedFilters}

@@ -109,7 +109,7 @@ const statusIndicatorMap: Record<SnapshotStatus, 'active' | 'building' | 'error'
 };
 
 /* ----------------------------------------
-   Volume Snapshot Detail Page
+   Volume snapshot Detail Page
    ---------------------------------------- */
 
 export function VolumeSnapshotDetailPage() {
@@ -141,7 +141,7 @@ export function VolumeSnapshotDetailPage() {
   // Breadcrumb items
   const breadcrumbItems = [
     { label: 'Proj-1', href: '/' },
-    { label: 'Volume Snapshots', href: '/compute/volume-snapshots' },
+    { label: 'Volume snapshots', href: '/compute/volume-snapshots' },
     { label: snapshot.name },
   ];
 
@@ -213,7 +213,7 @@ export function VolumeSnapshotDetailPage() {
                   />
                   <DetailHeader.InfoCard label="ID" value={snapshot.id} copyable />
                   <DetailHeader.InfoCard label="Size" value={snapshot.size} />
-                  <DetailHeader.InfoCard label="Created At" value={snapshot.createdAt} />
+                  <DetailHeader.InfoCard label="Created at" value={snapshot.createdAt} />
                 </DetailHeader.InfoGrid>
               </DetailHeader>
 
@@ -227,14 +227,14 @@ export function VolumeSnapshotDetailPage() {
                   {/* Details Tab Panel */}
                   <TabPanel value="details">
                     <VStack gap={4} className="pt-6">
-                      {/* Basic Information */}
+                      {/* Basic information */}
                       <SectionCard>
                         <SectionCard.Header 
-                          title="Basic Information" 
+                          title="Basic information" 
                           actions={<Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />}>Edit</Button>}
                         />
                         <SectionCard.Content>
-                          <SectionCard.DataRow label="Volume Snapshot Name" value={snapshot.name} />
+                          <SectionCard.DataRow label="Volume snapshot name" value={snapshot.name} />
                           <SectionCard.DataRow label="Description" value={snapshot.description} />
                         </SectionCard.Content>
                       </SectionCard>

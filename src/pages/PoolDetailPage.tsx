@@ -45,7 +45,7 @@ interface PoolDetail {
   status: PoolStatus;
   adminState: 'Up' | 'Down';
   createdAt: string;
-  // Basic Information
+  // Basic information
   description: string;
   algorithm: string;
   protocol: string;
@@ -332,7 +332,7 @@ export default function PoolDetailPage() {
     },
     {
       key: 'adminState',
-      label: 'Admin State',
+      label: 'Admin state',
       flex: 1,
     },
     {
@@ -406,7 +406,7 @@ export default function PoolDetailPage() {
           {/* Page Content */}
           <div className="pt-4 px-8 pb-20 bg-[var(--color-surface-default)] min-h-full">
             <VStack gap={8} className="min-w-[1176px]">
-              {/* Detail Header */}
+              {/* Detail header */}
               <DetailHeader>
                 <DetailHeader.Title>{pool.name}</DetailHeader.Title>
 
@@ -464,11 +464,11 @@ export default function PoolDetailPage() {
                     className="flex-1"
                   />
                   <DetailHeader.InfoCard
-                    label="Admin State"
+                    label="Admin state"
                     value={pool.adminState}
                   />
                   <DetailHeader.InfoCard
-                    label="Created At"
+                    label="Created at"
                     value={pool.createdAt}
                   />
                 </DetailHeader.InfoGrid>
@@ -486,10 +486,10 @@ export default function PoolDetailPage() {
                   {/* Details Tab */}
                   <TabPanel value="details">
                     <VStack gap={4} className="pt-6">
-                      {/* Basic Information */}
+                      {/* Basic information */}
                       <SectionCard>
                         <SectionCard.Header
-                          title="Basic Information"
+                          title="Basic information"
                           actions={
                             <Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />}>
                               Edit
@@ -501,8 +501,8 @@ export default function PoolDetailPage() {
                           <SectionCard.DataRow label="Description" value={pool.description} />
                           <SectionCard.DataRow label="Algorithm" value={pool.algorithm} />
                           <SectionCard.DataRow label="Protocol" value={pool.protocol} />
-                          <SectionCard.DataRow label="Session Persistence" value={pool.sessionPersistence} />
-                          <SectionCard.DataRow label="Admin State" value={pool.adminState} />
+                          <SectionCard.DataRow label="Session persistence" value={pool.sessionPersistence} />
+                          <SectionCard.DataRow label="Admin state" value={pool.adminState} />
                         </SectionCard.Content>
                       </SectionCard>
 
@@ -602,8 +602,8 @@ export default function PoolDetailPage() {
                           <SectionCard.DataRow label="Type" value={healthMonitor.type} />
                           <SectionCard.DataRow label="Interval" value={`${healthMonitor.interval} sec`} />
                           <SectionCard.DataRow label="Timeout" value={`${healthMonitor.timeout} sec`} />
-                          <SectionCard.DataRow label="Max Retries" value={String(healthMonitor.maxRetries)} />
-                          <SectionCard.DataRow label="Admin State" value={healthMonitor.adminState} />
+                          <SectionCard.DataRow label="Max retries" value={String(healthMonitor.maxRetries)} />
+                          <SectionCard.DataRow label="Admin state" value={healthMonitor.adminState} />
                         </SectionCard.Content>
                       </SectionCard>
                     </VStack>

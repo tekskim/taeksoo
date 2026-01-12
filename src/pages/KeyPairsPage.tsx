@@ -79,11 +79,11 @@ export function KeyPairsPage() {
   const [isPreferencesOpen, setIsPreferencesOpen] = useState(false);
   const [rowsPerPage, setRowsPerPage] = useState(10);
 
-  // Default column config (matching Figma: Selection, Name, Fingerprint, Created At, Action)
+  // Default column config (matching Figma: Selection, Name, Fingerprint, Created at, Action)
   const defaultColumnConfig: ColumnConfig[] = [
     { id: 'name', label: 'Name', visible: true, locked: true },
     { id: 'fingerprint', label: 'Fingerprint', visible: true },
-    { id: 'createdAt', label: 'Created At', visible: true },
+    { id: 'createdAt', label: 'Created at', visible: true },
     { id: 'actions', label: 'Action', visible: true, locked: true },
   ];
   const [columnConfig, setColumnConfig] = useState<ColumnConfig[]>(defaultColumnConfig);
@@ -168,7 +168,7 @@ export function KeyPairsPage() {
     setSelectedKeyPairs([]);
   };
 
-  // Table columns (matching Figma design: Selection, Name, Fingerprint, Created At, Action)
+  // Table columns (matching Figma design: Selection, Name, Fingerprint, Created at, Action)
   const columns: TableColumn<KeyPair>[] = [
     {
       key: 'name',
@@ -211,7 +211,7 @@ export function KeyPairsPage() {
     },
     {
       key: 'createdAt',
-      label: 'Created At',
+      label: 'Created at',
       width: '150px',
       sortable: true,
     },
@@ -381,7 +381,7 @@ export function KeyPairsPage() {
         isOpen={deleteModalOpen}
         onClose={handleDeleteCancel}
         onConfirm={handleDeleteConfirm}
-        title="Delete Key Pair"
+        title="Delete Key pair"
         description="Are you sure you want to delete this key pair? This action cannot be undone."
         confirmText="Delete"
         cancelText="Cancel"

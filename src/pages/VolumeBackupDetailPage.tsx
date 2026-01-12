@@ -90,7 +90,7 @@ const statusIndicatorMap: Record<BackupStatus, 'active' | 'building' | 'error' |
 };
 
 /* ----------------------------------------
-   Volume Backup Detail Page
+   Volume backup Detail Page
    ---------------------------------------- */
 
 export function VolumeBackupDetailPage() {
@@ -196,7 +196,7 @@ export function VolumeBackupDetailPage() {
                   />
                   <DetailHeader.InfoCard label="ID" value={backup.id} copyable />
                   <DetailHeader.InfoCard label="Size" value={backup.size} />
-                  <DetailHeader.InfoCard label="Created At" value={backup.createdAt} />
+                  <DetailHeader.InfoCard label="Created at" value={backup.createdAt} />
                 </DetailHeader.InfoGrid>
               </DetailHeader>
 
@@ -210,14 +210,14 @@ export function VolumeBackupDetailPage() {
                   {/* Details Tab Panel */}
                   <TabPanel value="details">
                     <VStack gap={4} className="pt-6">
-                      {/* Basic Information */}
+                      {/* Basic information */}
                       <SectionCard>
                         <SectionCard.Header 
                           title="Basic Infomation" 
                           actions={<Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />}>Edit</Button>}
                         />
                         <SectionCard.Content>
-                          <SectionCard.DataRow label="Volume Backup Name" value={backup.name} />
+                          <SectionCard.DataRow label="Volume backup Name" value={backup.name} />
                           <SectionCard.DataRow label="Description" value={backup.description} />
                         </SectionCard.Content>
                       </SectionCard>

@@ -201,7 +201,7 @@ export function HomePage() {
           <>
             <TopBarAction
               icon={<IconPalette size={16} stroke={1.5} />}
-              aria-label="Design System"
+              aria-label="Design system"
               onClick={() => navigate('/design-system')}
             />
             <TopBarAction

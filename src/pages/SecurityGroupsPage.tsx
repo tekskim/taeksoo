@@ -91,9 +91,9 @@ export function SecurityGroupsPage() {
   const defaultColumnConfig: ColumnConfig[] = [
     { id: 'name', label: 'Name', visible: true, locked: true },
     { id: 'description', label: 'Description', visible: true },
-    { id: 'ingressRules', label: 'Ingress Rules', visible: true },
-    { id: 'egressRules', label: 'Egress Rules', visible: true },
-    { id: 'createdAt', label: 'Created At', visible: true },
+    { id: 'ingressRules', label: 'Ingress rules', visible: true },
+    { id: 'egressRules', label: 'Egress rules', visible: true },
+    { id: 'createdAt', label: 'Created at', visible: true },
     { id: 'actions', label: 'Action', visible: true, locked: true },
   ];
 
@@ -164,19 +164,19 @@ export function SecurityGroupsPage() {
     },
     {
       key: 'ingressRules',
-      label: 'Ingress Rules',
+      label: 'Ingress rules',
       flex: 1,
       sortable: true,
     },
     {
       key: 'egressRules',
-      label: 'Egress Rules',
+      label: 'Egress rules',
       flex: 1,
       sortable: true,
     },
     {
       key: 'createdAt',
-      label: 'Created At',
+      label: 'Created at',
       flex: 1,
       sortable: true,
     },
@@ -277,7 +277,7 @@ export function SecurityGroupsPage() {
                 Security groups
               </h1>
               <Button variant="primary" size="md">
-                Create Security Group
+                Create Security group
               </Button>
             </div>
 
@@ -344,7 +344,7 @@ export function SecurityGroupsPage() {
           setDeleteModalOpen(false);
           setGroupToDelete(null);
         }}
-        title="Delete Security Group"
+        title="Delete Security group"
         description={`Are you sure you want to delete "${groupToDelete?.name}"? This action cannot be undone.`}
         confirmText="Delete"
         cancelText="Cancel"

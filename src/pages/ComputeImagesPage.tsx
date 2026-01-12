@@ -89,15 +89,15 @@ export function ComputeImagesPage() {
   const [isPreferencesOpen, setIsPreferencesOpen] = useState(false);
   const [rowsPerPage, setRowsPerPage] = useState(10);
 
-  // Default column config (matching Figma: Selection, Status, Name, OS, Size, Access, Created At, Action)
+  // Default column config (matching Figma: Selection, Status, Name, OS, Size, Access, Created at, Action)
   const defaultColumnConfig: ColumnConfig[] = [
     { id: 'status', label: 'Status', visible: true, locked: true },
     { id: 'name', label: 'Name', visible: true, locked: true },
     { id: 'os', label: 'OS', visible: true },
     { id: 'size', label: 'Size', visible: true },
-    { id: 'diskFormat', label: 'Disk Format', visible: true },
+    { id: 'diskFormat', label: 'Disk format', visible: true },
     { id: 'protected', label: 'Protected', visible: true },
-    { id: 'createdAt', label: 'Created At', visible: true },
+    { id: 'createdAt', label: 'Created at', visible: true },
     { id: 'actions', label: 'Action', visible: true, locked: true },
   ];
   const [columnConfig, setColumnConfig] = useState<ColumnConfig[]>(defaultColumnConfig);
@@ -180,7 +180,7 @@ export function ComputeImagesPage() {
     setSelectedImages([]);
   };
 
-  // Table columns (matching Figma design: Selection, Status, Name, OS, Size, Access, Created At, Action)
+  // Table columns (matching Figma design: Selection, Status, Name, OS, Size, Access, Created at, Action)
   const columns: TableColumn<Image>[] = [
     {
       key: 'status',
@@ -224,7 +224,7 @@ export function ComputeImagesPage() {
     },
     {
       key: 'diskFormat',
-      label: 'Disk Format',
+      label: 'Disk format',
       flex: 1,
       sortable: true,
     },
@@ -237,7 +237,7 @@ export function ComputeImagesPage() {
     },
     {
       key: 'createdAt',
-      label: 'Created At',
+      label: 'Created at',
       flex: 1,
       sortable: true,
     },

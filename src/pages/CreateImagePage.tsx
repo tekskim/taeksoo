@@ -40,7 +40,7 @@ type SectionStep = 'basic-info' | 'source' | 'specification' | 'advanced';
 
 // Section labels for display
 const SECTION_LABELS: Record<SectionStep, string> = {
-  'basic-info': 'Basic Information',
+  'basic-info': 'Basic information',
   source: 'Source',
   specification: 'Specification',
   advanced: 'Advanced',
@@ -263,7 +263,7 @@ export function CreateImagePage() {
                 {/* Left Column - Main Content */}
                 <div className="flex-1 min-w-0">
                   <VStack gap={4} align="stretch">
-                    {/* Basic Information Section */}
+                    {/* Basic information Section */}
                     <SectionCard isActive={sectionStatus['basic-info'] === 'active'}>
                       <SectionCard.Header 
                         title={SECTION_LABELS['basic-info']}
@@ -346,7 +346,7 @@ export function CreateImagePage() {
                       )}
                       {sectionStatus['basic-info'] === 'done' && (
                         <SectionCard.Content>
-                          <SectionCard.DataRow label="Image Name" value={imageName || '-'} showDivider />
+                          <SectionCard.DataRow label="Image name" value={imageName || '-'} showDivider />
                           <SectionCard.DataRow label="Description" value={description || '-'} showDivider />
                           <SectionCard.DataRow label="Protected" value={isProtected ? 'Yes' : 'No'} showDivider />
                         </SectionCard.Content>
@@ -373,11 +373,11 @@ export function CreateImagePage() {
                       />
                       {sectionStatus['source'] === 'active' && (
                         <SectionCard.Content gap={6}>
-                          {/* Upload Type Label */}
+                          {/* Upload type Label */}
                           <div className="flex flex-col gap-2 w-full">
                             <div className="flex items-center gap-1.5">
                               <span className="text-[14px] font-medium leading-[var(--line-height-20)] text-[var(--color-text-default)]">
-                                Upload Type
+                                Upload type
                               </span>
                               <span className="text-[var(--color-state-danger)]">*</span>
                             </div>
@@ -386,7 +386,7 @@ export function CreateImagePage() {
                             </span>
                           </div>
 
-                          {/* Upload Type Tabs */}
+                          {/* Upload type Tabs */}
                           <div className="flex flex-col gap-3 w-full">
                             <Tabs 
                               value={sourceType} 
@@ -449,7 +449,7 @@ export function CreateImagePage() {
                       {sectionStatus['source'] === 'done' && (
                         <SectionCard.Content>
                           <SectionCard.DataRow 
-                            label="Upload Type" 
+                            label="Upload type" 
                             value={sourceType === 'file' ? 'Upload File' : 'File URL'} 
                             showDivider 
                           />
@@ -483,7 +483,7 @@ export function CreateImagePage() {
                       />
                       {sectionStatus['specification'] === 'active' && (
                         <SectionCard.Content gap={6}>
-                          {/* Disk Format */}
+                          {/* Disk format */}
                           <FormField required>
                             <FormField.Label>Disk format</FormField.Label>
                             <FormField.HelperText>
@@ -572,7 +572,7 @@ export function CreateImagePage() {
                             <DisclosureTrigger>Advanced</DisclosureTrigger>
                             <DisclosurePanel>
                               <VStack gap={4} align="stretch" className="pt-3">
-                                {/* Min System Disk */}
+                                {/* Min system Disk */}
                                 <div className="flex flex-col gap-2">
                                   <span className="text-[14px] font-medium leading-[var(--line-height-20)] text-[var(--color-text-default)]">
                                     Min system disk
@@ -634,12 +634,12 @@ export function CreateImagePage() {
                       )}
                       {sectionStatus['specification'] === 'done' && (
                         <SectionCard.Content>
-                          <SectionCard.DataRow label="Disk Format" value={diskFormat.toUpperCase()} showDivider />
+                          <SectionCard.DataRow label="Disk format" value={diskFormat.toUpperCase()} showDivider />
                           <SectionCard.DataRow label="OS" value={os || '-'} showDivider />
                           <SectionCard.DataRow label="OS Version" value={osVersion || '-'} showDivider />
                           <SectionCard.DataRow label="OS Admin" value={osAdmin || '-'} showDivider />
                           <SectionCard.DataRow 
-                            label="Min System Disk" 
+                            label="Min system Disk" 
                             value={minDisk !== undefined ? `${minDisk} GiB` : '-'} 
                             showDivider 
                           />

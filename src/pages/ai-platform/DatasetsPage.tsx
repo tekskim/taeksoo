@@ -107,7 +107,7 @@ function DatasetCard({
               leftIcon={<IconExternalLink size={14} stroke={1.5} />}
               onClick={onViewDetails}
             >
-              View Details
+              View details
             </Button>
             <Button
               variant="primary"

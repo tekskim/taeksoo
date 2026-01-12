@@ -34,7 +34,7 @@ type SectionStep = 'basic-info' | 'subnet';
 
 // Section labels for display
 const SECTION_LABELS: Record<SectionStep, string> = {
-  'basic-info': 'Basic Information',
+  'basic-info': 'Basic information',
   'subnet': 'Subnet',
 };
 
@@ -222,7 +222,7 @@ export default function CreateNetworkPage() {
               <HStack gap={6} align="start" className="w-full">
                 {/* Left Column - Form Sections */}
                 <VStack gap={4} className="flex-1">
-                  {/* Basic Information Section */}
+                  {/* Basic information Section */}
                   <SectionCard isActive={sectionStatus['basic-info'] === 'active'}>
                     <SectionCard.Header 
                       title={SECTION_LABELS['basic-info']}
@@ -242,9 +242,9 @@ export default function CreateNetworkPage() {
                     />
                     {sectionStatus['basic-info'] === 'active' && (
                       <SectionCard.Content gap={6}>
-                        {/* Network Name */}
+                        {/* Network name */}
                         <FormField required>
-                          <FormField.Label>Network Name</FormField.Label>
+                          <FormField.Label>Network name</FormField.Label>
                           <FormField.Control>
                             <Input
                               placeholder="e.g. private-net"
@@ -263,10 +263,10 @@ export default function CreateNetworkPage() {
                           <Disclosure.Trigger>Advanced (optional)</Disclosure.Trigger>
                           <Disclosure.Panel>
                             <VStack gap={6} align="stretch" className="mt-4">
-                              {/* Admin State */}
+                              {/* Admin state */}
                               <VStack gap={2} align="start">
                                 <span className="text-[14px] font-medium text-[var(--color-text-default)] leading-[20px]">
-                                  Admin State
+                                  Admin state
                                 </span>
                                 <span className="text-[12px] text-[var(--color-text-subtle)] leading-[16px]">
                                   Setting it to "Down" disables all related network or control operations, regardless of runtime status.
@@ -278,10 +278,10 @@ export default function CreateNetworkPage() {
                                 />
                               </VStack>
 
-                              {/* Port Security */}
+                              {/* Port security */}
                               <VStack gap={2} align="start">
                                 <span className="text-[14px] font-medium text-[var(--color-text-default)] leading-[20px]">
-                                  Port Security
+                                  Port security
                                 </span>
                                 <span className="text-[12px] text-[var(--color-text-subtle)] leading-[16px]">
                                   Enhances security by allowing only permitted devices to access this network. It is recommended to keep this enabled in most cases.
@@ -358,17 +358,17 @@ export default function CreateNetworkPage() {
                     {sectionStatus['basic-info'] === 'done' && (
                       <SectionCard.Content>
                         <SectionCard.DataRow 
-                          label="Network Name" 
+                          label="Network name" 
                           value={networkName} 
                           showDivider 
                         />
                         <SectionCard.DataRow 
-                          label="Admin State" 
+                          label="Admin state" 
                           value={adminState ? 'Up' : 'Down'} 
                           showDivider 
                         />
                         <SectionCard.DataRow 
-                          label="Port Security" 
+                          label="Port security" 
                           value={portSecurity ? 'On' : 'Off'} 
                           showDivider 
                         />
@@ -423,9 +423,9 @@ export default function CreateNetworkPage() {
 
                         {createSubnet && (
                           <>
-                            {/* Subnet Name (optional) */}
+                            {/* Subnet name (optional) */}
                             <FormField>
-                              <FormField.Label>Subnet Name (optional)</FormField.Label>
+                              <FormField.Label>Subnet name (optional)</FormField.Label>
                               <FormField.Control>
                                 <Input
                                   placeholder="e.g. private-net-subnet-001"
@@ -500,9 +500,9 @@ export default function CreateNetworkPage() {
                                     />
                                   </VStack>
 
-                                  {/* Allocation Pools */}
+                                  {/* Allocation pools */}
                                   <FormField>
-                                    <FormField.Label>Allocation Pools</FormField.Label>
+                                    <FormField.Label>Allocation pools</FormField.Label>
                                     <span className="text-[12px] text-[var(--color-text-subtle)] leading-[16px]">
                                       Manually define the range of IP addresses to be automatically allocated by DHCP. IPs outside this range will not be allocated, which is useful for reserving static IPs.
                                     </span>
@@ -520,9 +520,9 @@ export default function CreateNetworkPage() {
                                     </FormField.HelperText>
                                   </FormField>
 
-                                  {/* Host Routes */}
+                                  {/* Host routes */}
                                   <FormField>
-                                    <FormField.Label>Host Routes</FormField.Label>
+                                    <FormField.Label>Host routes</FormField.Label>
                                     <span className="text-[12px] text-[var(--color-text-subtle)] leading-[16px]">
                                       An advanced feature for manually specifying a route to a specific network destination.
                                     </span>
@@ -573,7 +573,7 @@ export default function CreateNetworkPage() {
                           <>
                             {subnetName && (
                               <SectionCard.DataRow 
-                                label="Subnet Name" 
+                                label="Subnet name" 
                                 value={subnetName} 
                                 showDivider 
                               />

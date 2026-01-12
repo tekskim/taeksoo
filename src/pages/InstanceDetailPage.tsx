@@ -248,7 +248,7 @@ const mockAttachedVolumes: AttachedVolume[] = [
     status: 'active',
     size: '500GiB',
     type: 'SSD',
-    diskTag: 'Data Disk',
+    diskTag: 'Data disk',
     bootable: false,
     access: '2025-11-10',
   },
@@ -591,7 +591,7 @@ export function InstanceDetailPage() {
                   items={[
                     {
                       id: 'instance-status',
-                      label: 'Instance Status',
+                      label: 'Instance status',
                       submenu: [
                         { id: 'soft-reboot', label: 'Soft reboot', onClick: () => console.log('Soft reboot instance') },
                         { id: 'pause', label: 'Pause', onClick: () => console.log('Pause instance') },
@@ -618,7 +618,7 @@ export function InstanceDetailPage() {
                 <DetailHeader.InfoCard label="Status" value="Active" status="active" />
                 <DetailHeader.InfoCard label="ID" value={instance.id} copyable />
                 <DetailHeader.InfoCard label="Host" value={instance.host} />
-                <DetailHeader.InfoCard label="Created At" value={instance.createdAt} />
+                <DetailHeader.InfoCard label="Created at" value={instance.createdAt} />
               </DetailHeader.InfoGrid>
             </DetailHeader>
 
@@ -641,15 +641,15 @@ export function InstanceDetailPage() {
                 {/* Details Tab Panel */}
                 <TabPanel value="details" className="pt-0">
                   <VStack gap={4} className="pt-6">
-                    {/* Basic Information */}
+                    {/* Basic information */}
                     <SectionCard>
                       <SectionCard.Header 
-                        title="Basic Information" 
+                        title="Basic information" 
                         actions={<Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />}>Edit</Button>}
                       />
                       <SectionCard.Content>
-                        <SectionCard.DataRow label="Instance Name" value={instance.name} />
-                        <SectionCard.DataRow label="Availability Zone" value={instance.availabilityZone} />
+                        <SectionCard.DataRow label="Instance name" value={instance.name} />
+                        <SectionCard.DataRow label="Availability zone" value={instance.availabilityZone} />
                         <SectionCard.DataRow label="Description" value={instance.description} />
                       </SectionCard.Content>
                     </SectionCard>
@@ -659,7 +659,7 @@ export function InstanceDetailPage() {
                       <SectionCard.Header title="Flavor" />
                       <SectionCard.Content>
                         <SectionCard.DataRow 
-                          label="Flavor Name" 
+                          label="Flavor name" 
                           value={instance.flavor.name} 
                           isLink 
                           linkHref="/flavors" 
@@ -689,7 +689,7 @@ export function InstanceDetailPage() {
                       <SectionCard.Header title="Authentication" />
                       <SectionCard.Content>
                         <SectionCard.DataRow 
-                          label="Key Pair" 
+                          label="Key pair" 
                           value={instance.keyPair} 
                           isLink 
                           linkHref="/key-pairs" 
@@ -703,7 +703,7 @@ export function InstanceDetailPage() {
                         title="Advanced" 
                         actions={
                           <Button variant="secondary" size="sm">
-                            Manage Tags
+                            Manage tags
                           </Button>
                         }
                       />
@@ -719,7 +719,7 @@ export function InstanceDetailPage() {
                           linkHref="/server-groups" 
                         />
                         <SectionCard.DataRow 
-                          label="User Data" 
+                          label="User data" 
                           value={instance.userData} 
                         />
                       </SectionCard.Content>
@@ -798,7 +798,7 @@ export function InstanceDetailPage() {
                         },
                         {
                           key: 'diskTag',
-                          label: 'Disk Tag',
+                          label: 'Disk tag',
                         },
                         {
                           key: 'bootable',
@@ -818,7 +818,7 @@ export function InstanceDetailPage() {
                             const volumeMenuItems: ContextMenuItem[] = [
                               {
                                 id: 'data-protection',
-                                label: 'Data Protection',
+                                label: 'Data protection',
                                 submenu: [
                                   { id: 'create-snapshot', label: 'Create volume snapshot', onClick: () => console.log('Create snapshot', row.id) },
                                   { id: 'create-backup', label: 'Create volume backup', onClick: () => console.log('Create backup', row.id) },
@@ -941,14 +941,14 @@ export function InstanceDetailPage() {
                         },
                         {
                           key: 'macAddress',
-                          label: 'Mac Address',
+                          label: 'Mac address',
                           render: (_value: string, iface: AttachedInterface) => (
                             <span className="text-[var(--color-text-default)]">{iface.macAddress}</span>
                           ),
                         },
                         {
                           key: 'createdAt',
-                          label: 'Created At',
+                          label: 'Created at',
                           sortable: true,
                           render: (_value: string, iface: AttachedInterface) => (
                             <span className="text-[var(--color-text-default)]">{iface.createdAt}</span>
@@ -990,7 +990,7 @@ export function InstanceDetailPage() {
                         Floating IPs
                       </h2>
                       <Button variant="secondary" size="sm" leftIcon={<IconCirclePlus size={12} />}>
-                        Associate Floating IP
+                        Associate floating IP
                       </Button>
                     </div>
 
@@ -1042,7 +1042,7 @@ export function InstanceDetailPage() {
                         },
                         {
                           key: 'createdAt',
-                          label: 'Created At',
+                          label: 'Created at',
                           sortable: true,
                         },
                         {
@@ -1081,7 +1081,7 @@ export function InstanceDetailPage() {
                         Security groups
                       </h2>
                       <Button variant="secondary" size="sm" leftIcon={<IconCirclePlus size={12} />}>
-                        Attach Security Group
+                        Attach Security group
                       </Button>
                     </div>
 
@@ -1107,7 +1107,7 @@ export function InstanceDetailPage() {
                     </div>
 
                     {/* Search */}
-                    <SearchInput placeholder="Find Security Group with filters" size="sm" className="w-[280px]" />
+                    <SearchInput placeholder="Find Security group with filters" size="sm" className="w-[280px]" />
 
                     {/* Pagination */}
                     <Pagination
@@ -1147,7 +1147,7 @@ export function InstanceDetailPage() {
                         },
                         {
                           key: 'createdAt',
-                          label: 'Created At',
+                          label: 'Created at',
                           sortable: true,
                           render: (_value: string, row: SecurityGroup) => (
                             <span className="text-[var(--color-text-default)]">{row.createdAt}</span>
@@ -1254,12 +1254,12 @@ export function InstanceDetailPage() {
                         },
                         {
                           key: 'diskFormat',
-                          label: 'Disk Format',
+                          label: 'Disk format',
                           sortable: true,
                         },
                         {
                           key: 'createdAt',
-                          label: 'Created At',
+                          label: 'Created at',
                           sortable: true,
                         },
                         {

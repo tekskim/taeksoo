@@ -16,7 +16,7 @@ import { useTabs } from '@/contexts/TabContext';
 type ConnectionStatus = 'connected' | 'connecting' | 'disconnected';
 
 /* ----------------------------------------
-   Connection Status Indicator
+   Connection Status indicator
    ---------------------------------------- */
 
 function ConnectionStatusIndicator({ status }: { status: ConnectionStatus }) {
@@ -251,7 +251,7 @@ export function ContainerConsolePage() {
               Clear
             </Button>
 
-            {/* Connection Status Indicator */}
+            {/* Connection Status indicator */}
             <ConnectionStatusIndicator status={connectionStatus} />
           </div>
         </div>
