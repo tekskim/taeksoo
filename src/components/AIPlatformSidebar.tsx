@@ -136,7 +136,7 @@ export function AIPlatformSidebar({ isOpen = true, onToggle }: AIPlatformSidebar
             />
             <MenuItem
               icon={<IconTemplate size={16} stroke={1.5} />}
-              label="My Templates"
+              label="My templates"
               href="/ai-platform/my-templates"
               active={isActive('/ai-platform/my-templates')}
             />
@@ -158,7 +158,7 @@ export function AIPlatformSidebar({ isOpen = true, onToggle }: AIPlatformSidebar
           <MenuSection title="ML Studio" defaultOpen={true}>
             <MenuItem
               icon={<IconMessageCircle size={16} stroke={1.5} />}
-              label="Text Generation"
+              label="Text generation"
               href="/ai-platform/text-generation"
               active={isActive('/ai-platform/text-generation')}
             />
@@ -174,7 +174,7 @@ export function AIPlatformSidebar({ isOpen = true, onToggle }: AIPlatformSidebar
             />
             <MenuItem
               icon={<IconRoute size={16} stroke={1.5} />}
-              label="Pipeline Builder"
+              label="Pipeline builder"
               href="/ai-platform/pipeline-builder"
               active={isActive('/ai-platform/pipeline-builder')}
             />
@@ -236,7 +236,7 @@ export function AIPlatformSidebar({ isOpen = true, onToggle }: AIPlatformSidebar
             />
             <MenuItem
               icon={<IconUserCog size={16} stroke={1.5} />}
-              label="System Administration"
+              label="System administration"
               href="/ai-platform/system-admin"
               active={isActive('/ai-platform/system-admin')}
             />
