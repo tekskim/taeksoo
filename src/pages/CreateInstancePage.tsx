@@ -37,11 +37,14 @@ import {
   IconBell,
   IconBrandUbuntu,
   IconBrandWindows,
+  IconCheck,
   IconDots,
   IconEdit,
+  IconExclamationMark,
   IconExternalLink,
   IconMountain,
   IconPlus,
+  IconProgress,
   IconStar,
   IconStarFilled,
 } from '@tabler/icons-react';
@@ -57,6 +60,31 @@ interface QuotaItem {
   newValue?: number;
 }
 
+interface TemplateConfig {
+  // Basic Information
+  instanceNamePrefix?: string;
+  availabilityZone?: string;
+  description?: string;
+  // Image
+  imageId?: string;
+  storageOption?: 'create' | 'no-create';
+  storageType?: string;
+  storageSize?: number;
+  deleteWithInstance?: boolean;
+  // Flavor
+  flavorId?: string;
+  // Network
+  networkIds?: string[];
+  securityGroupIds?: string[];
+  floatingIpOption?: 'none' | 'auto' | 'existing';
+  // Authentication
+  loginType?: 'keypair' | 'password';
+  keyPairId?: string;
+  // Advanced
+  serverGroupId?: string;
+  userData?: string;
+}
+
 interface TemplateRow {
   id: string;
   name: string;
@@ -64,10 +92,11 @@ interface TemplateRow {
   visibility: string;
   createdAt: string;
   isFavorite: boolean;
+  config?: TemplateConfig;
 }
 
 type SectionStep = 'templates' | 'basic-info' | 'image' | 'flavor' | 'network' | 'authentication' | 'advanced';
-type SectionState = 'pre' | 'active' | 'done' | 'skipped';
+type SectionState = 'pre' | 'active' | 'done' | 'skipped' | 'writing';
 
 interface SectionStatus {
   templates: SectionState;
@@ -114,12 +143,150 @@ const mockQuota: QuotaItem[] = [
 ];
 
 const mockTemplates: TemplateRow[] = [
-  { id: '129jm39s', name: 'th.tiny', description: '-', visibility: 'Private', createdAt: '2025-11-19', isFavorite: true },
-  { id: '230km40t', name: 'th.small', description: 'Small instance', visibility: 'Public', createdAt: '2025-11-18', isFavorite: false },
-  { id: '331ln51u', name: 'th.medium', description: 'Medium instance', visibility: 'Private', createdAt: '2025-11-17', isFavorite: true },
-  { id: '432mo62v', name: 'th.large', description: 'Large instance', visibility: 'Public', createdAt: '2025-11-16', isFavorite: false },
-  { id: '533np73w', name: 'th.xlarge', description: 'Extra large instance', visibility: 'Private', createdAt: '2025-11-15', isFavorite: true },
-  { id: '634oq84x', name: 'th.2xlarge', description: '2x large instance', visibility: 'Public', createdAt: '2025-11-14', isFavorite: false },
+  { 
+    id: '129jm39s', 
+    name: 'th.tiny', 
+    description: '-', 
+    visibility: 'Private', 
+    createdAt: '2025-11-19', 
+    isFavorite: true,
+    config: {
+      instanceNamePrefix: 'tiny-instance',
+      availabilityZone: 'nova',
+      description: 'Tiny instance for testing',
+      imageId: 'e920j30d', // ubuntu-24.04
+      storageOption: 'create',
+      storageType: '_DEFAULT_',
+      storageSize: 20,
+      deleteWithInstance: true,
+      flavorId: '45hgf456', // t2.micro
+      networkIds: ['d32059d1'], // internal-01
+      securityGroupIds: ['sg1'], // default
+      floatingIpOption: 'none',
+      loginType: 'keypair',
+      keyPairId: 'kp1', // dev-keypair
+    }
+  },
+  { 
+    id: '230km40t', 
+    name: 'th.small', 
+    description: 'Small instance', 
+    visibility: 'Public', 
+    createdAt: '2025-11-18', 
+    isFavorite: false,
+    config: {
+      instanceNamePrefix: 'small-instance',
+      availabilityZone: 'nova',
+      description: 'Small development instance',
+      imageId: 'e920j35d', // ubuntu-22.04
+      storageOption: 'create',
+      storageType: '_DEFAULT_',
+      storageSize: 30,
+      deleteWithInstance: true,
+      flavorId: '17kfj123', // m5.large
+      networkIds: ['d32059d1', 'd32059d3'], // internal-01, internal-03
+      securityGroupIds: ['sg2'], // suite-default
+      floatingIpOption: 'none',
+      loginType: 'keypair',
+      keyPairId: 'kp2', // prod-keypair
+    }
+  },
+  { 
+    id: '331ln51u', 
+    name: 'th.medium', 
+    description: 'Medium instance', 
+    visibility: 'Private', 
+    createdAt: '2025-11-17', 
+    isFavorite: true,
+    config: {
+      instanceNamePrefix: 'medium-instance',
+      availabilityZone: 'nova',
+      description: 'Medium production instance',
+      imageId: 'e920j30d', // ubuntu-24.04
+      storageOption: 'create',
+      storageType: '_DEFAULT_',
+      storageSize: 50,
+      deleteWithInstance: false,
+      flavorId: '23hgf234', // r5.2xlarge
+      networkIds: ['d32059d1'], // internal-01
+      securityGroupIds: ['sg2', 'sg3'], // suite-default, web-sg
+      floatingIpOption: 'auto',
+      loginType: 'keypair',
+      keyPairId: 'kp2', // prod-keypair
+    }
+  },
+  { 
+    id: '432mo62v', 
+    name: 'th.large', 
+    description: 'Large instance', 
+    visibility: 'Public', 
+    createdAt: '2025-11-16', 
+    isFavorite: false,
+    config: {
+      instanceNamePrefix: 'large-instance',
+      availabilityZone: 'nova',
+      description: 'Large workload instance',
+      imageId: 'e920j37d', // windows-server-2022
+      storageOption: 'create',
+      storageType: '_DEFAULT_',
+      storageSize: 100,
+      deleteWithInstance: false,
+      flavorId: '12abc345', // g4dn.xlarge
+      networkIds: ['d32059d1', 'd32059d4'], // internal-01, external-net
+      securityGroupIds: ['sg1', 'sg3'], // default, web-sg
+      floatingIpOption: 'auto',
+      loginType: 'password',
+    }
+  },
+  { 
+    id: '533np73w', 
+    name: 'th.xlarge', 
+    description: 'Extra large instance', 
+    visibility: 'Private', 
+    createdAt: '2025-11-15', 
+    isFavorite: true,
+    config: {
+      instanceNamePrefix: 'xlarge-instance',
+      availabilityZone: 'nova',
+      description: 'Extra large high-performance instance',
+      imageId: 'e920j39d', // rocky-9.3
+      storageOption: 'create',
+      storageType: '_DEFAULT_',
+      storageSize: 200,
+      deleteWithInstance: false,
+      flavorId: '34ghi567', // x1e.xlarge
+      networkIds: ['d32059d1', 'd32059d3', 'd32059d4'], // internal-01, internal-03, external-net
+      securityGroupIds: ['sg1', 'sg2', 'sg4'], // default, suite-default, db-sg
+      floatingIpOption: 'auto',
+      loginType: 'keypair',
+      keyPairId: 'kp3', // staging-keypair
+    }
+  },
+  { 
+    id: '634oq84x', 
+    name: 'th.2xlarge', 
+    description: '2x large instance', 
+    visibility: 'Public', 
+    createdAt: '2025-11-14', 
+    isFavorite: false,
+    config: {
+      instanceNamePrefix: '2xlarge-instance',
+      availabilityZone: 'nova',
+      description: 'Maximum performance instance',
+      imageId: 'e920j30d', // ubuntu-24.04
+      storageOption: 'create',
+      storageType: '_DEFAULT_',
+      storageSize: 500,
+      deleteWithInstance: false,
+      flavorId: '34ghi567', // x1e.xlarge
+      networkIds: ['d32059d4'], // external-net
+      securityGroupIds: ['sg1', 'sg2', 'sg3', 'sg4'], // all
+      floatingIpOption: 'auto',
+      loginType: 'keypair',
+      keyPairId: 'kp2', // prod-keypair
+      userData: '#!/bin/bash\necho "Hello from template"',
+    }
+  },
 ];
 
 /* ----------------------------------------
@@ -131,21 +298,112 @@ interface QuotaSidebarProps {
   onNumberOfInstancesChange: (value: number) => void;
   quota: QuotaItem[];
   onCancel: () => void;
+  sectionStatus: SectionStatus;
+  editingSection: SectionStep | null;
 }
 
-function QuotaSidebar({ numberOfInstances, onNumberOfInstancesChange, quota, onCancel }: QuotaSidebarProps) {
+// Status icon component for summary sections
+// Maps SectionState to visual icon
+function SectionStatusIcon({ status }: { status: SectionState }) {
+  // done → success (green check)
+  if (status === 'done') {
+    return (
+      <div className="w-4 h-4 shrink-0 rounded-full bg-[var(--color-state-success)] flex items-center justify-center">
+        <IconCheck size={10} stroke={2.5} className="text-white" />
+      </div>
+    );
+  }
+  
+  // active → spinning progress (currently working)
+  if (status === 'active') {
+    return (
+      <div className="w-4 h-4 shrink-0">
+        <IconProgress size={16} stroke={1.5} className="text-[var(--color-text-subtle)] animate-spin" />
+      </div>
+    );
+  }
+  
+  // writing → no icon, show "Writing..." text instead (handled in parent)
+  if (status === 'writing') {
+    return null;
+  }
+  
+  // pre → empty circle (waiting)
+  if (status === 'pre') {
+    return (
+      <div className="w-4 h-4 shrink-0 rounded-full border border-[var(--color-border-default)]" />
+    );
+  }
+  
+  // skipped → dash or empty
   return (
-    <div className="w-[312px] shrink-0 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg p-4">
-      <VStack gap={6}>
-        {/* Title & Description */}
-        <VStack gap={2}>
-          <h5 className="text-[14px] font-semibold leading-5 text-[var(--color-text-default)]">
-            Create Instance
-          </h5>
-          <p className="text-[12px] leading-4 text-[var(--color-text-subtle)]">
-            When disabled, no security groups will be applied, and anti-spoofing checks are turned off.
-          </p>
-        </VStack>
+    <div className="w-4 h-4 shrink-0 rounded-full border border-[var(--color-border-default)] flex items-center justify-center">
+      <div className="w-2 h-0.5 bg-[var(--color-text-subtle)]" />
+    </div>
+  );
+}
+
+function QuotaSidebar({ numberOfInstances, onNumberOfInstancesChange, quota, onCancel, sectionStatus, editingSection }: QuotaSidebarProps) {
+  // Check if all sections are completed (done or skipped)
+  const isAllCompleted = SECTION_ORDER.every(
+    (section) => sectionStatus[section] === 'done' || sectionStatus[section] === 'skipped'
+  );
+
+  return (
+    <div className="w-[312px] shrink-0 sticky top-4 self-start">
+      <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg p-4 flex flex-col gap-4">
+        {/* Summary Card */}
+        <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-lg p-4">
+          <VStack gap={3}>
+            <h5 className="text-[16px] font-semibold leading-6 text-[var(--color-text-default)]">
+              Summary
+            </h5>
+            <div className="flex flex-col">
+              {SECTION_ORDER.map((sectionKey) => {
+                // Show "Writing..." for sections in 'writing' state
+                const isWriting = sectionStatus[sectionKey] === 'writing';
+                
+                return (
+                  <div
+                    key={sectionKey}
+                    className="flex items-center justify-between py-1"
+                  >
+                    <span className="text-[12px] leading-5 text-[var(--color-text-default)]">
+                      {SECTION_LABELS[sectionKey]}
+                    </span>
+                    {isWriting ? (
+                      <span className="text-[11px] text-[var(--color-text-subtle)]">Writing...</span>
+                    ) : (
+                      <SectionStatusIcon status={sectionStatus[sectionKey]} />
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          </VStack>
+        </div>
+
+        {/* Quota Card */}
+        <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg p-4">
+          <VStack gap={3}>
+            <h5 className="text-[16px] font-semibold leading-6 text-[var(--color-text-default)]">
+              Quota
+            </h5>
+            <VStack gap={3}>
+              {quota.map((item) => (
+                <ProgressBar
+                  key={item.label}
+                  variant="quota"
+                  label={item.label}
+                  value={item.used}
+                  max={item.max}
+                  newValue={item.newValue}
+                  showValue
+                />
+              ))}
+            </VStack>
+          </VStack>
+        </div>
 
         {/* Number of Instances */}
         <VStack gap={2}>
@@ -161,46 +419,24 @@ function QuotaSidebar({ numberOfInstances, onNumberOfInstancesChange, quota, onC
           />
         </VStack>
 
-        {/* Quota Section */}
-        <VStack gap={2}>
-          <label className="text-[14px] font-medium leading-5 text-[var(--color-text-default)]">
-            Quota
-          </label>
-          <div className="border border-[var(--color-border-subtle)] rounded-lg p-4">
-            <VStack gap={4}>
-              {quota.map((item) => (
-                <ProgressBar
-                  key={item.label}
-                  variant="quota"
-                  label={item.label}
-                  value={item.used}
-                  max={item.max}
-                  newValue={item.newValue}
-                  showValue
-                />
-              ))}
-            </VStack>
-          </div>
-        </VStack>
-
         {/* Action Buttons */}
-        <HStack gap={2} justify="end">
+        <HStack gap={2}>
           <Button
             variant="outline"
             onClick={onCancel}
-            className="min-w-[80px]"
+            className="w-[80px]"
           >
             Cancel
           </Button>
           <Button
             variant="primary"
-            disabled
+            disabled={!isAllCompleted}
             className="flex-1"
           >
-            Create Instance
+            Create
           </Button>
         </HStack>
-      </VStack>
+      </div>
     </div>
   );
 }
@@ -215,10 +451,33 @@ interface PreSectionProps {
 
 function PreSection({ title }: PreSectionProps) {
   return (
-    <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-md px-4 py-3">
-      <h5 className="text-[16px] font-semibold leading-6 text-[var(--color-text-default)]">
-        {title}
-      </h5>
+    <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg px-4 py-3">
+      <div className="h-8 flex items-center">
+        <h5 className="text-[length:var(--font-size-14)] font-semibold leading-[var(--line-height-20)] text-[var(--color-text-default)]">
+          {title}
+        </h5>
+      </div>
+    </div>
+  );
+}
+
+/* ----------------------------------------
+   WritingSection Component (작업 중인 섹션 - Writing... 표시)
+   ---------------------------------------- */
+
+interface WritingSectionProps {
+  title: string;
+}
+
+function WritingSection({ title }: WritingSectionProps) {
+  return (
+    <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg px-4 py-3">
+      <div className="h-8 flex items-center justify-between">
+        <h5 className="text-[length:var(--font-size-14)] font-semibold leading-[var(--line-height-20)] text-[var(--color-text-default)]">
+          {title}
+        </h5>
+        <span className="text-[11px] text-[var(--color-text-subtle)]">Writing...</span>
+      </div>
     </div>
   );
 }
@@ -234,9 +493,9 @@ interface SkippedSectionProps {
 
 function SkippedSection({ title, onEdit }: SkippedSectionProps) {
   return (
-    <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-md px-4 py-3">
-      <div className="flex items-center justify-between">
-        <h5 className="text-[16px] font-semibold leading-6 text-[var(--color-text-default)]">
+    <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg px-4 py-3">
+      <div className="flex items-center justify-between h-8">
+        <h5 className="text-[length:var(--font-size-14)] font-semibold leading-[var(--line-height-20)] text-[var(--color-text-default)]">
           {title}
         </h5>
         <div className="flex items-center gap-3">
@@ -287,11 +546,11 @@ interface DoneSectionProps {
 
 function DoneSection({ title, onEdit, children }: DoneSectionProps) {
   return (
-    <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-md px-4 pt-3 pb-4">
+    <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg px-4 py-3">
       <VStack gap={3}>
-        {/* Header */}
-        <HStack justify="between" align="center" className="w-full">
-          <h5 className="text-[16px] font-semibold leading-6 text-[var(--color-text-default)]">
+        {/* Header - h-8 mb-3 matches SectionCard.Header */}
+        <HStack justify="between" align="center" className="w-full h-8">
+          <h5 className="text-[length:var(--font-size-14)] font-semibold leading-[var(--line-height-20)] text-[var(--color-text-default)]">
             {title}
           </h5>
           <Button variant="outline" size="sm" leftIcon={<IconEdit size={12} />} onClick={onEdit}>
@@ -320,6 +579,10 @@ interface BasicInformationSectionProps {
   labels: { key: string; value: string }[];
   onLabelsChange: (labels: { key: string; value: string }[]) => void;
   onNext: () => void;
+  isActive?: boolean;
+  isEditing?: boolean;
+  onEditCancel?: () => void;
+  onEditDone?: () => void;
 }
 
 const availabilityZoneOptions = [
@@ -336,17 +599,29 @@ function BasicInformationSection({
   description,
   onDescriptionChange,
   onNext,
+  isActive = false,
+  isEditing = false,
+  onEditCancel,
+  onEditDone,
 }: BasicInformationSectionProps) {
 
   return (
-    <SectionCard>
-      <SectionCard.Header title="Basic Information" />
+    <SectionCard isActive={isActive}>
+      <SectionCard.Header 
+        title="Basic Information" 
+        actions={isEditing ? (
+          <HStack gap={2}>
+            <Button variant="secondary" size="sm" onClick={onEditCancel}>Cancel</Button>
+            <Button variant="primary" size="sm" onClick={onEditDone}>Done</Button>
+          </HStack>
+        ) : undefined}
+      />
       <SectionCard.Content>
         <VStack gap={0}>
           {/* Instance Name */}
           <VStack gap={2} className="py-6">
             <label className="text-[14px] font-medium text-[var(--color-text-default)]">
-              Instance Name <span className="text-[var(--color-state-danger)]">*</span>
+              Instance Name <span className="ml-1 text-[var(--color-state-danger)]">*</span>
             </label>
             <Input
               placeholder="Instance Name"
@@ -365,7 +640,7 @@ function BasicInformationSection({
           {/* AZ (Availability Zone) */}
           <VStack gap={2} className="py-6">
             <label className="text-[14px] font-medium text-[var(--color-text-default)]">
-              AZ (Availability Zone) <span className="text-[var(--color-state-danger)]">*</span>
+              AZ (Availability Zone) <span className="ml-1 text-[var(--color-state-danger)]">*</span>
             </label>
             <Select
               options={availabilityZoneOptions}
@@ -398,15 +673,17 @@ function BasicInformationSection({
             </span>
           </VStack>
 
-          {/* Divider */}
-          <div className="w-full h-px bg-[var(--color-border-subtle)]" />
-
-          {/* Next Button */}
-          <HStack justify="end" className="pt-3">
-            <Button variant="primary" onClick={onNext}>
-              Next
-            </Button>
-          </HStack>
+          {/* Divider + Next Button - hidden in edit mode */}
+          {!isEditing && (
+            <>
+              <div className="w-full h-px bg-[var(--color-border-subtle)]" />
+              <HStack justify="end" className="pt-3">
+                <Button variant="primary" onClick={onNext}>
+                  Next
+                </Button>
+              </HStack>
+            </>
+          )}
         </VStack>
       </SectionCard.Content>
     </SectionCard>
@@ -486,9 +763,13 @@ interface ImageSectionProps {
   selectedImageId: string | null;
   onSelectImage: (id: string) => void;
   onNext: () => void;
+  isActive?: boolean;
+  isEditing?: boolean;
+  onEditCancel?: () => void;
+  onEditDone?: () => void;
 }
 
-function ImageSection({ selectedImageId, onSelectImage, onNext }: ImageSectionProps) {
+function ImageSection({ selectedImageId, onSelectImage, onNext, isActive = false, isEditing = false, onEditCancel, onEditDone }: ImageSectionProps) {
   const [sourceTab, setSourceTab] = useState('image');
   const [osFilter, setOsFilter] = useState<'ubuntu' | 'windows' | 'rocky' | 'other'>('other');
   const [searchQuery, setSearchQuery] = useState('');
@@ -571,7 +852,7 @@ function ImageSection({ selectedImageId, onSelectImage, onNext }: ImageSectionPr
       render: (value, row) => (
         <VStack gap={0}>
           <HStack gap={1} align="center">
-            <a href="#" className="text-[var(--color-action-primary)] hover:underline text-[12px]">
+            <a href="#" className="text-[var(--color-action-primary)] hover:underline text-[length:var(--font-size-12)] leading-[var(--line-height-18)] font-medium">
               {value}
             </a>
             <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
@@ -662,8 +943,16 @@ function ImageSection({ selectedImageId, onSelectImage, onNext }: ImageSectionPr
   `;
 
   return (
-    <SectionCard>
-      <SectionCard.Header title="Source" />
+    <SectionCard isActive={isActive}>
+      <SectionCard.Header 
+        title="Source" 
+        actions={isEditing ? (
+          <HStack gap={2}>
+            <Button variant="secondary" size="sm" onClick={onEditCancel}>Cancel</Button>
+            <Button variant="primary" size="sm" onClick={onEditDone}>Done</Button>
+          </HStack>
+        ) : undefined}
+      />
       <SectionCard.Content>
         <VStack gap={0}>
           {/* Start Source */}
@@ -869,15 +1158,17 @@ function ImageSection({ selectedImageId, onSelectImage, onNext }: ImageSectionPr
             </Button>
           </VStack>
 
-          {/* Divider */}
-          <div className="w-full h-px bg-[var(--color-border-subtle)]" />
-
-          {/* Next Button */}
-          <HStack justify="end" className="pt-3">
-            <Button variant="primary" onClick={onNext}>
-              Next
-            </Button>
-          </HStack>
+          {/* Divider + Next Button - hidden in edit mode */}
+          {!isEditing && (
+            <>
+              <div className="w-full h-px bg-[var(--color-border-subtle)]" />
+              <HStack justify="end" className="pt-3">
+                <Button variant="primary" onClick={onNext}>
+                  Next
+                </Button>
+              </HStack>
+            </>
+          )}
         </VStack>
       </SectionCard.Content>
     </SectionCard>
@@ -914,9 +1205,13 @@ interface FlavorSectionProps {
   selectedFlavorId: string | null;
   onSelectFlavor: (id: string) => void;
   onNext: () => void;
+  isActive?: boolean;
+  isEditing?: boolean;
+  onEditCancel?: () => void;
+  onEditDone?: () => void;
 }
 
-function FlavorSection({ selectedFlavorId, onSelectFlavor, onNext }: FlavorSectionProps) {
+function FlavorSection({ selectedFlavorId, onSelectFlavor, onNext, isActive = false, isEditing = false, onEditCancel, onEditDone }: FlavorSectionProps) {
   const [flavorTab, setFlavorTab] = useState('vcpu');
   const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
@@ -962,7 +1257,7 @@ function FlavorSection({ selectedFlavorId, onSelectFlavor, onNext }: FlavorSecti
       render: (value, row) => (
         <VStack gap={0}>
           <HStack gap={1} align="center">
-            <a href="#" className="text-[var(--color-action-primary)] hover:underline text-[12px]">
+            <a href="#" className="text-[var(--color-action-primary)] hover:underline text-[length:var(--font-size-12)] leading-[var(--line-height-18)] font-medium">
               {value}
             </a>
             <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
@@ -982,8 +1277,16 @@ function FlavorSection({ selectedFlavorId, onSelectFlavor, onNext }: FlavorSecti
   ];
 
   return (
-    <SectionCard>
-      <SectionCard.Header title="Flavor" />
+    <SectionCard isActive={isActive}>
+      <SectionCard.Header 
+        title="Flavor" 
+        actions={isEditing ? (
+          <HStack gap={2}>
+            <Button variant="secondary" size="sm" onClick={onEditCancel}>Cancel</Button>
+            <Button variant="primary" size="sm" onClick={onEditDone}>Done</Button>
+          </HStack>
+        ) : undefined}
+      />
       <SectionCard.Content>
         <VStack gap={0}>
           {/* Flavors Label & Description */}
@@ -1034,15 +1337,17 @@ function FlavorSection({ selectedFlavorId, onSelectFlavor, onNext }: FlavorSecti
             onRowClick={(row) => onSelectFlavor(row.id)}
           />
 
-          {/* Divider */}
-          <div className="w-full h-px bg-[var(--color-border-subtle)] mt-4" />
-
-          {/* Next Button */}
-          <HStack justify="end" className="pt-3">
-            <Button variant="primary" onClick={onNext}>
-              Next
-            </Button>
-          </HStack>
+          {/* Divider + Next Button - hidden in edit mode */}
+          {!isEditing && (
+            <>
+              <div className="w-full h-px bg-[var(--color-border-subtle)] mt-4" />
+              <HStack justify="end" className="pt-3">
+                <Button variant="primary" onClick={onNext}>
+                  Next
+                </Button>
+              </HStack>
+            </>
+          )}
         </VStack>
       </SectionCard.Content>
     </SectionCard>
@@ -1128,9 +1433,13 @@ const mockPorts: PortRow[] = [
 
 interface NetworkSectionProps {
   onNext: () => void;
+  isActive?: boolean;
+  isEditing?: boolean;
+  onEditCancel?: () => void;
+  onEditDone?: () => void;
 }
 
-function NetworkSection({ onNext }: NetworkSectionProps) {
+function NetworkSection({ onNext, isActive = false, isEditing = false, onEditCancel, onEditDone }: NetworkSectionProps) {
   // Network selection
   const [selectedNetworkIds, setSelectedNetworkIds] = useState<Set<string>>(new Set());
   const [networkSearch, setNetworkSearch] = useState('');
@@ -1386,8 +1695,16 @@ function NetworkSection({ onNext }: NetworkSectionProps) {
     .map(sg => sg.name);
 
   return (
-    <SectionCard>
-      <SectionCard.Header title="Network" />
+    <SectionCard isActive={isActive}>
+      <SectionCard.Header 
+        title="Network" 
+        actions={isEditing ? (
+          <HStack gap={2}>
+            <Button variant="secondary" size="sm" onClick={onEditCancel}>Cancel</Button>
+            <Button variant="primary" size="sm" onClick={onEditDone}>Done</Button>
+          </HStack>
+        ) : undefined}
+      />
       <SectionCard.Content>
         <VStack gap={4}>
           {/* Network Sub-section */}
@@ -1691,12 +2008,14 @@ function NetworkSection({ onNext }: NetworkSectionProps) {
             </Disclosure.Panel>
           </Disclosure>
 
-          {/* Next Button */}
-          <HStack justify="end" className="w-full pt-2">
-            <Button variant="primary" onClick={onNext}>
-              Next
-            </Button>
-          </HStack>
+          {/* Next Button - hidden in edit mode */}
+          {!isEditing && (
+            <HStack justify="end" className="w-full pt-2">
+              <Button variant="primary" onClick={onNext}>
+                Next
+              </Button>
+            </HStack>
+          )}
         </VStack>
       </SectionCard.Content>
     </SectionCard>
@@ -1723,9 +2042,13 @@ const mockKeyPairs: KeyPairRow[] = [
 
 interface AuthenticationSectionProps {
   onNext: () => void;
+  isActive?: boolean;
+  isEditing?: boolean;
+  onEditCancel?: () => void;
+  onEditDone?: () => void;
 }
 
-function AuthenticationSection({ onNext }: AuthenticationSectionProps) {
+function AuthenticationSection({ onNext, isActive = false, isEditing = false, onEditCancel, onEditDone }: AuthenticationSectionProps) {
   const [loginType, setLoginType] = useState<'keypair' | 'password'>('keypair');
   const [selectedKeyPairId, setSelectedKeyPairId] = useState<string | null>(null);
   const [keyPairSearch, setKeyPairSearch] = useState('');
@@ -1764,8 +2087,16 @@ function AuthenticationSection({ onNext }: AuthenticationSectionProps) {
   ];
 
   return (
-    <SectionCard>
-      <SectionCard.Header title="Authentication">
+    <SectionCard isActive={isActive}>
+      <SectionCard.Header 
+        title="Authentication"
+        actions={isEditing ? (
+          <HStack gap={2}>
+            <Button variant="secondary" size="sm" onClick={onEditCancel}>Cancel</Button>
+            <Button variant="primary" size="sm" onClick={onEditDone}>Done</Button>
+          </HStack>
+        ) : undefined}
+      >
         <Button variant="secondary" size="sm">
           <HStack gap={1} align="center">
             <svg className="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -1890,12 +2221,14 @@ function AuthenticationSection({ onNext }: AuthenticationSectionProps) {
             </TabPanel>
           </Tabs>
 
-          {/* Next Button */}
-          <HStack justify="end" className="w-full pt-2">
-            <Button variant="primary" onClick={onNext}>
-              Next
-            </Button>
-          </HStack>
+          {/* Next Button - hidden in edit mode */}
+          {!isEditing && (
+            <HStack justify="end" className="w-full pt-2">
+              <Button variant="primary" onClick={onNext}>
+                Next
+              </Button>
+            </HStack>
+          )}
         </VStack>
       </SectionCard.Content>
     </SectionCard>
@@ -1923,9 +2256,13 @@ const mockServerGroups: ServerGroupRow[] = [
 
 interface AdvancedSectionProps {
   onNext: () => void;
+  isActive?: boolean;
+  isEditing?: boolean;
+  onEditCancel?: () => void;
+  onEditDone?: () => void;
 }
 
-function AdvancedSection({ onNext }: AdvancedSectionProps) {
+function AdvancedSection({ onNext, isActive = false, isEditing = false, onEditCancel, onEditDone }: AdvancedSectionProps) {
   // Server Group
   const [serverGroupOpen, setServerGroupOpen] = useState(false);
   const [selectedServerGroupId, setSelectedServerGroupId] = useState<string | null>(null);
@@ -1976,8 +2313,16 @@ function AdvancedSection({ onNext }: AdvancedSectionProps) {
   };
 
   return (
-    <SectionCard>
-      <SectionCard.Header title="Advanced" />
+    <SectionCard isActive={isActive}>
+      <SectionCard.Header 
+        title="Advanced" 
+        actions={isEditing ? (
+          <HStack gap={2}>
+            <Button variant="secondary" size="sm" onClick={onEditCancel}>Cancel</Button>
+            <Button variant="primary" size="sm" onClick={onEditDone}>Done</Button>
+          </HStack>
+        ) : undefined}
+      />
       <SectionCard.Content>
         <VStack gap={4}>
           {/* Server Group Disclosure */}
@@ -2068,12 +2413,14 @@ function AdvancedSection({ onNext }: AdvancedSectionProps) {
             </Disclosure.Panel>
           </Disclosure>
 
-          {/* Next Button */}
-          <HStack justify="end" className="w-full pt-2">
-            <Button variant="primary" onClick={onNext}>
-              Next
-            </Button>
-          </HStack>
+          {/* Next Button - hidden in edit mode */}
+          {!isEditing && (
+            <HStack justify="end" className="w-full pt-2">
+              <Button variant="primary" onClick={onNext}>
+                Next
+              </Button>
+            </HStack>
+          )}
         </VStack>
       </SectionCard.Content>
     </SectionCard>
@@ -2090,9 +2437,12 @@ interface TemplatesSectionProps {
   onSelect: (id: string) => void;
   onSkip: () => void;
   onNext: () => void;
+  isEditing?: boolean;
+  onEditCancel?: () => void;
+  onEditDone?: () => void;
 }
 
-function TemplatesSection({ templates, selectedId, onSelect, onSkip, onNext }: TemplatesSectionProps) {
+function TemplatesSection({ templates, selectedId, onSelect, onSkip, onNext, isEditing, onEditCancel, onEditDone }: TemplatesSectionProps) {
   const [activeTab, setActiveTab] = useState('favorites');
   const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
@@ -2192,11 +2542,11 @@ function TemplatesSection({ templates, selectedId, onSelect, onSkip, onNext }: T
   ];
 
   return (
-    <div className="bg-[var(--color-surface-default)] border-2 border-[var(--color-action-primary)] rounded-lg p-4">
+    <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] ring-2 ring-[var(--color-action-primary)] rounded-lg px-4 py-3">
       <VStack gap={3}>
-        {/* Section Header */}
-        <HStack justify="between" align="start" className="w-full">
-          <h5 className="text-[14px] font-medium leading-5 text-[var(--color-text-default)]">
+        {/* Section Header - h-8 matches other sections */}
+        <HStack justify="between" align="center" className="w-full h-8">
+          <h5 className="text-[length:var(--font-size-14)] font-semibold leading-[var(--line-height-20)] text-[var(--color-text-default)]">
             Templates
           </h5>
           <Button variant="outline" size="sm">
@@ -2204,6 +2554,11 @@ function TemplatesSection({ templates, selectedId, onSelect, onSkip, onNext }: T
             <IconExternalLink size={12} stroke={1.5} />
           </Button>
         </HStack>
+
+        {/* Templates Label */}
+        <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+          Templates <span className="ml-1 text-[var(--color-state-danger)]">*</span>
+        </span>
 
         {/* Tabs */}
         <Tabs value={activeTab} onChange={setActiveTab} size="sm" variant="underline">
@@ -2330,20 +2685,41 @@ function TemplatesSection({ templates, selectedId, onSelect, onSkip, onNext }: T
 
         {/* Action Buttons */}
         <HStack gap={2} justify="end" className="pt-2 w-full">
-          <Button
-            variant="outline"
-            onClick={onSkip}
-            className="min-w-[80px]"
-          >
-            Skip
-          </Button>
-          <Button
-            variant="primary"
-            onClick={onNext}
-            className="min-w-[80px]"
-          >
-            Next
-          </Button>
+          {isEditing ? (
+            <>
+              <Button
+                variant="secondary"
+                size="sm"
+                onClick={onEditCancel}
+              >
+                Skip
+              </Button>
+              <Button
+                variant="primary"
+                size="sm"
+                onClick={onEditDone}
+              >
+                Apply
+              </Button>
+            </>
+          ) : (
+            <>
+              <Button
+                variant="outline"
+                onClick={onSkip}
+                className="min-w-[80px]"
+              >
+                Skip
+              </Button>
+              <Button
+                variant="primary"
+                onClick={onNext}
+                className="min-w-[80px]"
+              >
+                Next
+              </Button>
+            </>
+          )}
         </HStack>
       </VStack>
     </div>
@@ -2369,6 +2745,12 @@ export function CreateInstancePage() {
     authentication: 'pre',
     advanced: 'pre',
   });
+  
+  // Editing mode - tracks which section is being edited (null = not editing, creating new)
+  const [editingSection, setEditingSection] = useState<SectionStep | null>(null);
+  
+  // Tracks sections that were in editing mode before becoming 'writing' state
+  const [editingWritingSections, setEditingWritingSections] = useState<SectionStep[]>([]);
   
   // Form state
   const [numberOfInstances, setNumberOfInstances] = useState(1);
@@ -2440,9 +2822,62 @@ export function CreateInstancePage() {
   };
 
   // Handle Next (complete current section, activate next)
+  // Apply template configuration to all sections
+  const applyTemplate = (templateId: string) => {
+    const template = mockTemplates.find(t => t.id === templateId);
+    if (!template?.config) return;
+    
+    const config = template.config;
+    
+    // Basic Information
+    if (config.instanceNamePrefix) setInstanceName(config.instanceNamePrefix);
+    if (config.availabilityZone) setAvailabilityZone(config.availabilityZone);
+    if (config.description) setDescription(config.description);
+    
+    // Image
+    if (config.imageId) setSelectedImageId(config.imageId);
+    if (config.storageOption) setStorageOption(config.storageOption);
+    if (config.storageType) setStorageType(config.storageType);
+    if (config.storageSize !== undefined) setStorageSize(config.storageSize);
+    if (config.deleteWithInstance !== undefined) setDeleteWithInstance(config.deleteWithInstance);
+    
+    // Flavor
+    if (config.flavorId) setSelectedFlavorId(config.flavorId);
+    
+    // Network
+    if (config.networkIds) setSelectedNetworkIds(new Set(config.networkIds));
+    if (config.securityGroupIds) setSelectedSecurityGroups(new Set(config.securityGroupIds));
+    if (config.floatingIpOption) setFloatingIpOption(config.floatingIpOption);
+    
+    // Authentication
+    if (config.loginType) setLoginType(config.loginType);
+    if (config.keyPairId) setSelectedKeyPairId(config.keyPairId);
+    
+    // Advanced
+    if (config.serverGroupId) setSelectedServerGroupId(config.serverGroupId);
+    if (config.userData) setUserData(config.userData);
+    
+    // Mark all sections as done except the next one (basic-info will be active)
+    setSectionStatus({
+      templates: 'done',
+      'basic-info': 'done',
+      image: 'done',
+      flavor: 'done',
+      network: 'done',
+      authentication: 'done',
+      advanced: 'active', // Last section active for review
+    });
+  };
+
   const handleNext = (section: SectionStep) => {
     const currentIndex = SECTION_ORDER.indexOf(section);
     if (currentIndex === -1) return;
+    
+    // If templates section and a template is selected, apply the template
+    if (section === 'templates' && selectedTemplateId) {
+      applyTemplate(selectedTemplateId);
+      return;
+    }
     
     const nextSection = SECTION_ORDER[currentIndex + 1];
     
@@ -2461,23 +2896,108 @@ export function CreateInstancePage() {
     }
   };
 
-  // Handle Edit (reactivate a completed section)
+  // Handle Edit (reactivate a completed section - only one active section at a time)
   const handleEdit = (section: SectionStep) => {
-    // Mark all sections after this one as 'pre'
-    const sectionIndex = SECTION_ORDER.indexOf(section);
-    
-    setSectionStatus(prev => {
-      const newStatus = { ...prev };
-      // Set clicked section as active
-      newStatus[section] = 'active';
+    // If already in edit mode, set current editing section to 'writing'
+    if (editingSection) {
+      // Track that this section was in editing mode before becoming 'writing'
+      setEditingWritingSections(prev => [...prev, editingSection]);
       
-      // Set all sections after as 'pre'
-      for (let i = sectionIndex + 1; i < SECTION_ORDER.length; i++) {
-        newStatus[SECTION_ORDER[i]] = 'pre';
+      setSectionStatus(prev => {
+        const newStatus = { ...prev };
+        // Current editing section becomes 'writing' (preserving work)
+        newStatus[editingSection] = 'writing';
+        // New section becomes active (edit mode)
+        newStatus[section] = 'active';
+        return newStatus;
+      });
+      setEditingSection(section);
+    } else {
+      // Not in edit mode - set current active section to 'writing'
+      setEditingSection(section);
+      
+      setSectionStatus(prev => {
+        const newStatus = { ...prev };
+        
+        // Find and set currently active section to 'writing'
+        for (const key of SECTION_ORDER) {
+          if (newStatus[key] === 'active' && key !== section) {
+            newStatus[key] = 'writing';
+          }
+        }
+        
+        // Activate the edited section
+        newStatus[section] = 'active';
+        
+        return newStatus;
+      });
+    }
+  };
+
+  // Handle Edit Cancel (restore section to done state and reactivate previous section)
+  const handleEditCancel = () => {
+    if (editingSection) {
+      // Find the topmost 'writing' section
+      const topmostWriting = SECTION_ORDER.find(key => sectionStatus[key] === 'writing');
+      
+      // Check if topmostWriting was in editing mode
+      const wasEditing = topmostWriting && editingWritingSections.includes(topmostWriting);
+      
+      setSectionStatus(prev => {
+        const newStatus = { ...prev };
+        // Mark current editing section as done
+        newStatus[editingSection] = 'done';
+        
+        // Make topmost writing section active
+        if (topmostWriting) {
+          newStatus[topmostWriting] = 'active';
+        }
+        
+        return newStatus;
+      });
+      
+      if (wasEditing && topmostWriting) {
+        // Restore editing mode for this section
+        setEditingSection(topmostWriting);
+        setEditingWritingSections(prev => prev.filter(s => s !== topmostWriting));
+      } else {
+        // Not in editing mode, just activate
+        setEditingSection(null);
       }
+    }
+  };
+
+  // Handle Edit Done (complete editing, mark section as done and activate topmost writing section)
+  const handleEditDone = () => {
+    if (editingSection) {
+      // Find the topmost 'writing' section
+      const topmostWriting = SECTION_ORDER.find(key => sectionStatus[key] === 'writing');
       
-      return newStatus;
-    });
+      // Check if topmostWriting was in editing mode
+      const wasEditing = topmostWriting && editingWritingSections.includes(topmostWriting);
+      
+      setSectionStatus(prev => {
+        const newStatus = { ...prev };
+        // Mark current editing section as done
+        newStatus[editingSection] = 'done';
+        
+        // Make topmost writing section active
+        if (topmostWriting) {
+          newStatus[topmostWriting] = 'active';
+        }
+        
+        return newStatus;
+      });
+      
+      if (wasEditing && topmostWriting) {
+        // Restore editing mode for this section
+        setEditingSection(topmostWriting);
+        setEditingWritingSections(prev => prev.filter(s => s !== topmostWriting));
+      } else {
+        // Not in editing mode, just activate
+        setEditingSection(null);
+      }
+    }
   };
 
   // Get summary data for done sections
@@ -2586,6 +3106,9 @@ export function CreateInstancePage() {
                   {sectionStatus.templates === 'pre' && (
                     <PreSection title={SECTION_LABELS.templates} />
                   )}
+                  {sectionStatus.templates === 'writing' && (
+                    <WritingSection title={SECTION_LABELS.templates} />
+                  )}
                   {sectionStatus.templates === 'active' && (
                     <TemplatesSection
                       templates={mockTemplates}
@@ -2593,6 +3116,9 @@ export function CreateInstancePage() {
                       onSelect={setSelectedTemplateId}
                       onSkip={() => handleSkip('templates')}
                       onNext={() => handleNext('templates')}
+                      isEditing={editingSection === 'templates'}
+                      onEditCancel={handleEditCancel}
+                      onEditDone={handleEditDone}
                     />
                   )}
                   {sectionStatus.templates === 'done' && (
@@ -2608,6 +3134,9 @@ export function CreateInstancePage() {
                   {sectionStatus['basic-info'] === 'pre' && (
                     <PreSection title={SECTION_LABELS['basic-info']} />
                   )}
+                  {sectionStatus['basic-info'] === 'writing' && (
+                    <WritingSection title={SECTION_LABELS['basic-info']} />
+                  )}
                   {sectionStatus['basic-info'] === 'active' && (
                     <BasicInformationSection
                       instanceName={instanceName}
@@ -2619,6 +3148,10 @@ export function CreateInstancePage() {
                       labels={labels}
                       onLabelsChange={setLabels}
                       onNext={() => handleNext('basic-info')}
+                      isActive
+                      isEditing={editingSection === 'basic-info'}
+                      onEditCancel={handleEditCancel}
+                      onEditDone={handleEditDone}
                     />
                   )}
                   {sectionStatus['basic-info'] === 'done' && (
@@ -2633,11 +3166,18 @@ export function CreateInstancePage() {
                   {sectionStatus.image === 'pre' && (
                     <PreSection title={SECTION_LABELS.image} />
                   )}
+                  {sectionStatus.image === 'writing' && (
+                    <WritingSection title={SECTION_LABELS.image} />
+                  )}
                   {sectionStatus.image === 'active' && (
                     <ImageSection
                       selectedImageId={selectedImageId}
                       onSelectImage={setSelectedImageId}
                       onNext={() => handleNext('image')}
+                      isActive
+                      isEditing={editingSection === 'image'}
+                      onEditCancel={handleEditCancel}
+                      onEditDone={handleEditDone}
                     />
                   )}
                   {sectionStatus.image === 'done' && (
@@ -2651,11 +3191,18 @@ export function CreateInstancePage() {
                   {sectionStatus.flavor === 'pre' && (
                     <PreSection title={SECTION_LABELS.flavor} />
                   )}
+                  {sectionStatus.flavor === 'writing' && (
+                    <WritingSection title={SECTION_LABELS.flavor} />
+                  )}
                   {sectionStatus.flavor === 'active' && (
                     <FlavorSection
                       selectedFlavorId={selectedFlavorId}
                       onSelectFlavor={setSelectedFlavorId}
                       onNext={() => handleNext('flavor')}
+                      isActive
+                      isEditing={editingSection === 'flavor'}
+                      onEditCancel={handleEditCancel}
+                      onEditDone={handleEditDone}
                     />
                   )}
                   {sectionStatus.flavor === 'done' && (
@@ -2668,8 +3215,17 @@ export function CreateInstancePage() {
                   {sectionStatus.network === 'pre' && (
                     <PreSection title={SECTION_LABELS.network} />
                   )}
+                  {sectionStatus.network === 'writing' && (
+                    <WritingSection title={SECTION_LABELS.network} />
+                  )}
                   {sectionStatus.network === 'active' && (
-                    <NetworkSection onNext={() => handleNext('network')} />
+                    <NetworkSection 
+                      onNext={() => handleNext('network')} 
+                      isActive 
+                      isEditing={editingSection === 'network'}
+                      onEditCancel={handleEditCancel}
+                      onEditDone={handleEditDone}
+                    />
                   )}
                   {sectionStatus.network === 'done' && (
                     <DoneSection title={SECTION_LABELS.network} onEdit={() => handleEdit('network')}>
@@ -2682,8 +3238,17 @@ export function CreateInstancePage() {
                   {sectionStatus.authentication === 'pre' && (
                     <PreSection title={SECTION_LABELS.authentication} />
                   )}
+                  {sectionStatus.authentication === 'writing' && (
+                    <WritingSection title={SECTION_LABELS.authentication} />
+                  )}
                   {sectionStatus.authentication === 'active' && (
-                    <AuthenticationSection onNext={() => handleNext('authentication')} />
+                    <AuthenticationSection 
+                      onNext={() => handleNext('authentication')} 
+                      isActive 
+                      isEditing={editingSection === 'authentication'}
+                      onEditCancel={handleEditCancel}
+                      onEditDone={handleEditDone}
+                    />
                   )}
                   {sectionStatus.authentication === 'done' && (
                     <DoneSection title={SECTION_LABELS.authentication} onEdit={() => handleEdit('authentication')}>
@@ -2695,8 +3260,17 @@ export function CreateInstancePage() {
                   {sectionStatus.advanced === 'pre' && (
                     <PreSection title={SECTION_LABELS.advanced} />
                   )}
+                  {sectionStatus.advanced === 'writing' && (
+                    <WritingSection title={SECTION_LABELS.advanced} />
+                  )}
                   {sectionStatus.advanced === 'active' && (
-                    <AdvancedSection onNext={() => handleNext('advanced')} />
+                    <AdvancedSection 
+                      onNext={() => handleNext('advanced')} 
+                      isActive 
+                      isEditing={editingSection === 'advanced'}
+                      onEditCancel={handleEditCancel}
+                      onEditDone={handleEditDone}
+                    />
                   )}
                   {sectionStatus.advanced === 'done' && (
                     <DoneSection title={SECTION_LABELS.advanced} onEdit={() => handleEdit('advanced')}>
@@ -2718,6 +3292,8 @@ export function CreateInstancePage() {
                   onNumberOfInstancesChange={setNumberOfInstances}
                   quota={mockQuota}
                   onCancel={handleCancel}
+                  sectionStatus={sectionStatus}
+                  editingSection={editingSection}
                 />
               </HStack>
             </VStack>

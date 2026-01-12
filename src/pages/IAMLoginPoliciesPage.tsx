@@ -212,7 +212,7 @@ export default function IAMLoginPoliciesPage() {
                                 <span className="text-[14px] font-medium leading-5 text-[var(--color-text-default)]">
                                   Length
                                 </span>
-                                <span className="text-[var(--color-state-danger)]">*</span>
+                                <span className="ml-1 text-[var(--color-state-danger)]">*</span>
                               </HStack>
                               <p className="text-[12px] leading-4 text-[var(--color-text-subtle)]">
                                 Defines the minimum length required for passwords.
@@ -265,6 +265,9 @@ export default function IAMLoginPoliciesPage() {
                             </VStack>
                           </VStack>
 
+                          {/* Divider */}
+                          <div className="h-px w-full bg-[var(--color-border-subtle)]" />
+
                           {/* Requirements */}
                           <VStack gap={4}>
                             <VStack gap={2}>
@@ -272,7 +275,7 @@ export default function IAMLoginPoliciesPage() {
                                 <span className="text-[14px] font-medium leading-5 text-[var(--color-text-default)]">
                                   Requirements
                                 </span>
-                                <span className="text-[var(--color-state-danger)]">*</span>
+                                <span className="ml-1 text-[var(--color-state-danger)]">*</span>
                               </HStack>
                               <p className="text-[12px] leading-4 text-[var(--color-text-subtle)]">
                                 Specifies the character types that must be included in the password.
@@ -302,6 +305,9 @@ export default function IAMLoginPoliciesPage() {
                             </VStack>
                           </VStack>
 
+                          {/* Divider */}
+                          <div className="h-px w-full bg-[var(--color-border-subtle)]" />
+
                           {/* Exclusion rules */}
                           <VStack gap={4}>
                             <VStack gap={2}>
@@ -309,7 +315,7 @@ export default function IAMLoginPoliciesPage() {
                                 <span className="text-[14px] font-medium leading-5 text-[var(--color-text-default)]">
                                   Exclusion rules
                                 </span>
-                                <span className="text-[var(--color-state-danger)]">*</span>
+                                <span className="ml-1 text-[var(--color-state-danger)]">*</span>
                               </HStack>
                               <p className="text-[12px] leading-4 text-[var(--color-text-subtle)]">
                                 Defines words or patterns that cannot be used in passwords.
@@ -329,6 +335,9 @@ export default function IAMLoginPoliciesPage() {
                             </VStack>
                           </VStack>
 
+                          {/* Divider */}
+                          <div className="h-px w-full bg-[var(--color-border-subtle)]" />
+
                           {/* Password expiration */}
                           <VStack gap={4}>
                             <VStack gap={2}>
@@ -336,7 +345,7 @@ export default function IAMLoginPoliciesPage() {
                                 <span className="text-[14px] font-medium leading-5 text-[var(--color-text-default)]">
                                   Password expiration
                                 </span>
-                                <span className="text-[var(--color-state-danger)]">*</span>
+                                <span className="ml-1 text-[var(--color-state-danger)]">*</span>
                               </HStack>
                               <p className="text-[12px] leading-4 text-[var(--color-text-subtle)]">
                                 Sets the validity period for passwords. After the specified duration, users are required to create a new password.
@@ -368,6 +377,9 @@ export default function IAMLoginPoliciesPage() {
                             </VStack>
                           </VStack>
 
+                          {/* Divider */}
+                          <div className="h-px w-full bg-[var(--color-border-subtle)]" />
+
                           {/* Prevent password reuse */}
                           <VStack gap={4}>
                             <VStack gap={2}>
@@ -375,7 +387,7 @@ export default function IAMLoginPoliciesPage() {
                                 <span className="text-[14px] font-medium leading-5 text-[var(--color-text-default)]">
                                   Prevent password reuse
                                 </span>
-                                <span className="text-[var(--color-state-danger)]">*</span>
+                                <span className="ml-1 text-[var(--color-state-danger)]">*</span>
                               </HStack>
                               <p className="text-[12px] leading-4 text-[var(--color-text-subtle)]">
                                 Prevents users from reusing previously used passwords.
@@ -432,6 +444,9 @@ export default function IAMLoginPoliciesPage() {
                             </VStack>
                           </VStack>
 
+                          {/* Divider */}
+                          <div className="h-px w-full bg-[var(--color-border-subtle)]" />
+
                           {/* Action Buttons */}
                           <HStack gap={2} justify="end" className="w-full">
                             <button
@@ -467,6 +482,9 @@ export default function IAMLoginPoliciesPage() {
                             label={lockoutEnabled ? 'On' : 'Off'}
                           />
 
+                          {/* Divider */}
+                          <div className="h-px w-full bg-[var(--color-border-subtle)]" />
+
                           {/* Lockout Type */}
                           <VStack gap={4}>
                             <VStack gap={2}>
@@ -474,7 +492,7 @@ export default function IAMLoginPoliciesPage() {
                                 <span className="text-[14px] font-medium leading-5 text-[var(--color-text-default)]">
                                   Lockout Type
                                 </span>
-                                <span className="text-[var(--color-state-danger)]">*</span>
+                                <span className="ml-1 text-[var(--color-state-danger)]">*</span>
                               </HStack>
                               <p className="text-[11px] leading-4 text-[var(--color-text-subtle)]">
                                 Choose how the account is locked after login failures.
@@ -489,6 +507,9 @@ export default function IAMLoginPoliciesPage() {
                             />
                           </VStack>
 
+                          {/* Divider */}
+                          <div className="h-px w-full bg-[var(--color-border-subtle)]" />
+
                           {/* Max login failures */}
                           <VStack gap={4}>
                             <VStack gap={2}>
@@ -496,7 +517,7 @@ export default function IAMLoginPoliciesPage() {
                                 <span className="text-[14px] font-medium leading-5 text-[var(--color-text-default)]">
                                   Max Login Failures
                                 </span>
-                                <span className="text-[var(--color-state-danger)]">*</span>
+                                <span className="ml-1 text-[var(--color-state-danger)]">*</span>
                               </HStack>
                               <p className="text-[11px] leading-4 text-[var(--color-text-subtle)]">
                                 The maximum number of failed login attempts allowed before the account is locked.
@@ -518,6 +539,9 @@ export default function IAMLoginPoliciesPage() {
                             </VStack>
                           </VStack>
 
+                          {/* Divider */}
+                          <div className="h-px w-full bg-[var(--color-border-subtle)]" />
+
                           {/* Maximum Temporary Lockouts - only for permanent_after_temporary */}
                           {lockoutType === 'permanent_after_temporary' && (
                             <VStack gap={4}>
@@ -526,7 +550,7 @@ export default function IAMLoginPoliciesPage() {
                                   <span className="text-[14px] font-medium leading-5 text-[var(--color-text-default)]">
                                     Maximum Temporary Lockouts
                                   </span>
-                                  <span className="text-[var(--color-state-danger)]">*</span>
+                                  <span className="ml-1 text-[var(--color-state-danger)]">*</span>
                                 </HStack>
                                 <p className="text-[11px] leading-4 text-[var(--color-text-subtle)]">
                                   The total number of temporary lockouts allowed before the account is permanently locked.
@@ -552,6 +576,9 @@ export default function IAMLoginPoliciesPage() {
                           {/* Only show these sections when lockout type has temporary behavior */}
                           {(lockoutType === 'temporary' || lockoutType === 'permanent_after_temporary') && (
                             <>
+                              {/* Divider */}
+                              <div className="h-px w-full bg-[var(--color-border-subtle)]" />
+
                               {/* Strategy to increase wait time */}
                               <VStack gap={4}>
                                 <VStack gap={2}>
@@ -559,7 +586,7 @@ export default function IAMLoginPoliciesPage() {
                                     <span className="text-[14px] font-medium leading-5 text-[var(--color-text-default)]">
                                       Strategy to increase wait time
                                     </span>
-                                    <span className="text-[var(--color-state-danger)]">*</span>
+                                    <span className="ml-1 text-[var(--color-state-danger)]">*</span>
                                   </HStack>
                                   <p className="text-[11px] leading-4 text-[var(--color-text-subtle)]">
                                     Defines how the wait time increases after repeated failed login attempts.
@@ -595,6 +622,9 @@ export default function IAMLoginPoliciesPage() {
                                 </VStack>
                               </VStack>
 
+                              {/* Divider */}
+                              <div className="h-px w-full bg-[var(--color-border-subtle)]" />
+
                               {/* Wait increment */}
                               <VStack gap={4}>
                                 <VStack gap={2}>
@@ -602,7 +632,7 @@ export default function IAMLoginPoliciesPage() {
                                     <span className="text-[14px] font-medium leading-5 text-[var(--color-text-default)]">
                                       Wait increment
                                     </span>
-                                    <span className="text-[var(--color-state-danger)]">*</span>
+                                    <span className="ml-1 text-[var(--color-state-danger)]">*</span>
                                   </HStack>
                                   <p className="text-[11px] leading-4 text-[var(--color-text-subtle)]">
                                     Amount of time added to the wait time for each additional failed login attempt.
@@ -624,6 +654,9 @@ export default function IAMLoginPoliciesPage() {
                                 </HStack>
                               </VStack>
 
+                              {/* Divider */}
+                              <div className="h-px w-full bg-[var(--color-border-subtle)]" />
+
                               {/* Max wait time */}
                               <VStack gap={4}>
                                 <VStack gap={2}>
@@ -631,7 +664,7 @@ export default function IAMLoginPoliciesPage() {
                                     <span className="text-[14px] font-medium leading-5 text-[var(--color-text-default)]">
                                       Max wait time
                                     </span>
-                                    <span className="text-[var(--color-state-danger)]">*</span>
+                                    <span className="ml-1 text-[var(--color-state-danger)]">*</span>
                                   </HStack>
                                   <p className="text-[11px] leading-4 text-[var(--color-text-subtle)]">
                                     The maximum time a user must wait before retrying, regardless of failure count.
@@ -653,6 +686,9 @@ export default function IAMLoginPoliciesPage() {
                                 </HStack>
                               </VStack>
 
+                              {/* Divider */}
+                              <div className="h-px w-full bg-[var(--color-border-subtle)]" />
+
                               {/* Failure reset time */}
                               <VStack gap={4}>
                                 <VStack gap={2}>
@@ -660,7 +696,7 @@ export default function IAMLoginPoliciesPage() {
                                     <span className="text-[14px] font-medium leading-5 text-[var(--color-text-default)]">
                                       Failure reset time
                                     </span>
-                                    <span className="text-[var(--color-state-danger)]">*</span>
+                                    <span className="ml-1 text-[var(--color-state-danger)]">*</span>
                                   </HStack>
                                   <p className="text-[11px] leading-4 text-[var(--color-text-subtle)]">
                                     Set the time limit within which the user must enter the email code.
@@ -683,6 +719,9 @@ export default function IAMLoginPoliciesPage() {
                               </VStack>
                             </>
                           )}
+
+                          {/* Divider */}
+                          <div className="h-px w-full bg-[var(--color-border-subtle)]" />
 
                           {/* Action Buttons */}
                           <HStack gap={2} justify="end" className="w-full">

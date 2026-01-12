@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { createPortal } from 'react-dom';
 import { IconChevronRight } from '@tabler/icons-react';
+import { Tooltip } from '../Tooltip';
 
 /* ----------------------------------------
    Types
@@ -21,6 +22,12 @@ export interface ContextMenuItem {
   disabled?: boolean;
   /** Divider after this item */
   divider?: boolean;
+  /** Tooltip content (shown on hover) */
+  tooltip?: string;
+  /** Tooltip position */
+  tooltipPosition?: 'top' | 'bottom' | 'left' | 'right';
+  /** Submenu direction (left or right) */
+  submenuDirection?: 'left' | 'right';
 }
 
 export interface ContextMenuProps {
@@ -47,6 +54,8 @@ export interface ContextMenuContentProps {
   parentDirection?: 'left' | 'right';
   /** Ref to the rendered menu element (for outside click detection) */
   menuRef?: React.RefObject<HTMLDivElement>;
+  /** Trigger element ref (for positioning relative to trigger) */
+  triggerRef?: React.RefObject<HTMLElement>;
 }
 
 /* ----------------------------------------
@@ -57,7 +66,8 @@ const ContextMenuItemComponent: React.FC<{
   item: ContextMenuItem;
   onClose: () => void;
   parentDirection?: 'left' | 'right';
-}> = ({ item, onClose, parentDirection: _parentDirection = 'right' }) => {
+  itemId?: string;
+}> = ({ item, onClose, parentDirection: _parentDirection = 'right', itemId }) => {
   const [showSubmenu, setShowSubmenu] = useState(false);
   const [submenuPosition, setSubmenuPosition] = useState({ x: 0, y: 0 });
   const [submenuDirection, setSubmenuDirection] = useState<'left' | 'right'>('right');
@@ -73,25 +83,41 @@ const ContextMenuItemComponent: React.FC<{
       const viewportWidth = window.innerWidth;
       const viewportHeight = window.innerHeight;
       
+      const preferredDirection = item.submenuDirection || 'right';
       let newX = submenuPosition.x;
       let newY = submenuPosition.y;
-      let newDirection: 'left' | 'right' = 'right';
+      let newDirection: 'left' | 'right' = preferredDirection;
       
-      // Check if submenu overflows right edge
-      if (submenuPosition.x + submenuRect.width > viewportWidth - 8) {
+      if (preferredDirection === 'left') {
         // Position to the left of the parent item
         newX = itemRect.left - submenuRect.width - 4;
         newDirection = 'left';
+        
+        // Check if submenu overflows left edge
+        if (newX < 8) {
+          newX = 8;
+        }
+      } else {
+        // Position to the right (default)
+        newX = itemRect.right + 4;
+        newDirection = 'right';
+        
+        // Check if submenu overflows right edge
+        if (newX + submenuRect.width > viewportWidth - 8) {
+          // Fallback to left if right doesn't fit
+          newX = itemRect.left - submenuRect.width - 4;
+          newDirection = 'left';
+          
+          // Check if left also overflows
+          if (newX < 8) {
+            newX = 8;
+          }
+        }
       }
       
       // Check if submenu overflows bottom edge
-      if (submenuPosition.y + submenuRect.height > viewportHeight - 8) {
+      if (newY + submenuRect.height > viewportHeight - 8) {
         newY = Math.max(8, viewportHeight - submenuRect.height - 8);
-      }
-      
-      // Check if submenu overflows left edge (when positioned left)
-      if (newX < 8) {
-        newX = 8;
       }
       
       if (newX !== submenuPosition.x || newY !== submenuPosition.y) {
@@ -99,7 +125,27 @@ const ContextMenuItemComponent: React.FC<{
       }
       setSubmenuDirection(newDirection);
     }
-  }, [showSubmenu, submenuPosition.x, submenuPosition.y]);
+  }, [showSubmenu, submenuPosition.x, submenuPosition.y, item.submenuDirection]);
+
+  // Close other submenus when this one opens
+  useEffect(() => {
+    if (!item.submenu) return;
+
+    const handleCloseOtherSubmenus = (e: CustomEvent) => {
+      // Don't close if this is the item that triggered the event
+      if (e.detail?.itemId === itemId) return;
+      setShowSubmenu(false);
+      if (closeTimeoutRef.current) {
+        clearTimeout(closeTimeoutRef.current);
+        closeTimeoutRef.current = null;
+      }
+    };
+
+    window.addEventListener('close-context-submenus', handleCloseOtherSubmenus as EventListener);
+    return () => {
+      window.removeEventListener('close-context-submenus', handleCloseOtherSubmenus as EventListener);
+    };
+  }, [item.submenu, itemId]);
 
   const handleMouseEnter = () => {
     // Cancel any pending close
@@ -109,12 +155,28 @@ const ContextMenuItemComponent: React.FC<{
     }
 
     if (item.submenu && itemRef.current) {
+      // Close other submenus before opening this one
+      window.dispatchEvent(new CustomEvent('close-context-submenus', { detail: { itemId } }));
+      
       const rect = itemRef.current.getBoundingClientRect();
-      // Initially position to the right
-      setSubmenuPosition({
-        x: rect.right + 4,
-        y: rect.top - 1, // Offset for border alignment
-      });
+      const direction = item.submenuDirection || 'right';
+      
+      // Position based on submenuDirection
+      if (direction === 'left') {
+        // Position to the left - we'll calculate exact position after render
+        setSubmenuPosition({
+          x: rect.left - 4, // Temporary, will be adjusted
+          y: rect.top - 1,
+        });
+        setSubmenuDirection('left');
+      } else {
+        // Position to the right (default)
+        setSubmenuPosition({
+          x: rect.right + 4,
+          y: rect.top - 1,
+        });
+        setSubmenuDirection('right');
+      }
       setShowSubmenu(true);
     }
   };
@@ -170,38 +232,48 @@ const ContextMenuItemComponent: React.FC<{
     };
   }, []);
 
+  const menuItem = (
+    <div
+      ref={itemRef}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+      onMouseDown={handleMouseDown}
+      onClick={handleClick}
+      className={`
+        flex items-center justify-between
+        min-w-[var(--context-menu-min-width)]
+        px-[var(--context-menu-padding-x)]
+        py-[var(--context-menu-padding-y)]
+        text-[length:var(--font-size-11)]
+        leading-[var(--line-height-16)]
+        whitespace-nowrap
+        cursor-pointer
+        transition-colors duration-[var(--duration-fast)]
+        ${item.divider ? 'border-b border-[var(--color-border-subtle)]' : ''}
+        ${item.status === 'danger'
+          ? 'text-[var(--color-state-danger-text)] hover:bg-[var(--color-state-danger-bg)]'
+          : 'text-[var(--color-text-default)] hover:bg-[var(--context-menu-hover-bg)]'
+        }
+        ${item.disabled ? 'opacity-50 cursor-not-allowed' : ''}
+        ${showSubmenu ? 'bg-[var(--context-menu-hover-bg)]' : ''}
+      `}
+    >
+      <span>{item.label}</span>
+      {hasSubmenu && (
+        <IconChevronRight size={12} stroke={1} className="ml-6 shrink-0" />
+      )}
+    </div>
+  );
+
   return (
     <>
-      <div
-        ref={itemRef}
-        onMouseEnter={handleMouseEnter}
-        onMouseLeave={handleMouseLeave}
-        onMouseDown={handleMouseDown}
-        onClick={handleClick}
-        className={`
-          flex items-center justify-between
-          min-w-[var(--context-menu-min-width)]
-          px-[var(--context-menu-padding-x)]
-          py-[var(--context-menu-padding-y)]
-          text-[length:var(--font-size-11)]
-          leading-[var(--line-height-16)]
-          whitespace-nowrap
-          cursor-pointer
-          transition-colors duration-[var(--duration-fast)]
-          ${item.divider ? 'border-b border-[var(--color-border-subtle)]' : ''}
-          ${item.status === 'danger'
-            ? 'text-[var(--color-state-danger-text)] hover:bg-[var(--color-state-danger-bg)]'
-            : 'text-[var(--color-text-default)] hover:bg-[var(--context-menu-hover-bg)]'
-          }
-          ${item.disabled ? 'opacity-50 cursor-not-allowed' : ''}
-          ${showSubmenu ? 'bg-[var(--context-menu-hover-bg)]' : ''}
-        `}
-      >
-        <span>{item.label}</span>
-        {hasSubmenu && (
-          <IconChevronRight size={12} stroke={1} className="ml-6 shrink-0" />
-        )}
-      </div>
+      {item.tooltip ? (
+        <Tooltip content={item.tooltip} position={item.tooltipPosition || 'left'}>
+          {menuItem}
+        </Tooltip>
+      ) : (
+        menuItem
+      )}
 
       {/* Submenu - rendered via portal */}
       {showSubmenu && item.submenu && createPortal(
@@ -219,7 +291,7 @@ const ContextMenuItemComponent: React.FC<{
             rounded-[var(--context-menu-radius)]
             shadow-[var(--shadow-md)]
             overflow-hidden
-            z-[calc(var(--z-popover)+1)]
+            z-[5001]
             max-h-[calc(100vh-16px)]
             overflow-y-auto
           "
@@ -234,6 +306,7 @@ const ContextMenuItemComponent: React.FC<{
               item={subItem}
               onClose={onClose}
               parentDirection={submenuDirection}
+              itemId={subItem.id}
             />
           ))}
         </div>,
@@ -253,6 +326,7 @@ const ContextMenuContent: React.FC<ContextMenuContentProps> = ({
   onClose,
   parentDirection = 'right',
   menuRef: externalMenuRef,
+  triggerRef,
 }) => {
   const internalMenuRef = useRef<HTMLDivElement>(null);
   const menuRef = externalMenuRef ?? internalMenuRef;
@@ -266,12 +340,18 @@ const ContextMenuContent: React.FC<ContextMenuContentProps> = ({
         const viewportWidth = window.innerWidth;
         const viewportHeight = window.innerHeight;
 
-        let newX = position.x;
+        // position.x is the button center X
+        // Calculate menu position so its center aligns with button center
+        let newX = position.x - rect.width / 2;
         let newY = position.y;
 
-        // Adjust horizontal position - flip to left if overflows
-        if (position.x + rect.width > viewportWidth - 8) {
-          newX = Math.max(8, position.x - rect.width - 8);
+        // Adjust horizontal position if menu overflows viewport
+        if (newX < 8) {
+          // Menu would overflow left edge, align to left edge
+          newX = 8;
+        } else if (newX + rect.width > viewportWidth - 8) {
+          // Menu would overflow right edge, align to right edge
+          newX = viewportWidth - rect.width - 8;
         }
 
         // Adjust vertical position
@@ -282,7 +362,7 @@ const ContextMenuContent: React.FC<ContextMenuContentProps> = ({
         setAdjustedPosition({ x: newX, y: newY });
       }
     });
-  }, [position]);
+  }, [position, triggerRef]);
 
   return createPortal(
     <div
@@ -290,7 +370,7 @@ const ContextMenuContent: React.FC<ContextMenuContentProps> = ({
       onMouseDown={(e) => e.stopPropagation()}
       onClick={(e) => e.stopPropagation()}
       className="
-        fixed z-[var(--z-popover)]
+        fixed z-[5000]
         flex flex-col
         bg-[var(--color-surface-default)]
         border border-[var(--color-border-strong)]
@@ -311,6 +391,7 @@ const ContextMenuContent: React.FC<ContextMenuContentProps> = ({
           item={item}
           onClose={onClose}
           parentDirection={parentDirection}
+          itemId={item.id}
         />
       ))}
     </div>,
@@ -350,7 +431,12 @@ export const ContextMenu: React.FC<ContextMenuProps> = ({
       
       if (triggerRef.current) {
         const rect = triggerRef.current.getBoundingClientRect();
-        setPosition({ x: rect.right + 4, y: rect.top });
+        // Position menu directly below the button, center-aligned
+        // We'll calculate the exact center position in ContextMenuContent
+        setPosition({ 
+          x: rect.left + rect.width / 2, // Button center X
+          y: rect.bottom + 4 
+        });
       }
       setIsOpen(true);
     }
@@ -405,6 +491,7 @@ export const ContextMenu: React.FC<ContextMenuProps> = ({
           position={position}
           onClose={handleClose}
           menuRef={menuRef}
+          triggerRef={triggerRef}
         />
       )}
     </div>

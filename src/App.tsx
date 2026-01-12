@@ -114,6 +114,12 @@ import MetallicPalettePage from '@/pages/MetallicPalettePage';
 // Pages - Desktop
 import { DesktopPage } from '@/pages/DesktopPage';
 
+// Pages - Settings
+import SettingsGeneralPage from '@/pages/SettingsGeneralPage';
+import SettingsAccountPage from '@/pages/SettingsAccountPage';
+import SettingsNotificationsPage from '@/pages/SettingsNotificationsPage';
+import SettingsInformationPage from '@/pages/SettingsInformationPage';
+
 // Layouts
 import { AgentAppLayout } from '@/layouts';
 
@@ -247,6 +253,13 @@ function AppRoutes() {
 
         {/* Desktop Routes */}
         <Route path="/desktop" element={<DesktopPage />} />
+
+        {/* Settings Routes */}
+        <Route path="/settings" element={<SettingsGeneralPage />} />
+        <Route path="/settings/general" element={<SettingsGeneralPage />} />
+        <Route path="/settings/account" element={<SettingsAccountPage />} />
+        <Route path="/settings/notifications" element={<SettingsNotificationsPage />} />
+        <Route path="/settings/information" element={<SettingsInformationPage />} />
       </Routes>
   );
 }

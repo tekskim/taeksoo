@@ -415,9 +415,11 @@ const columns = [
 
 ```tsx
 <label>
-  Field Name <span className="text-[var(--color-state-danger)]">*</span>
+  Field Name<span className="ml-1 text-[var(--color-state-danger)]">*</span>
 </label>
 ```
+
+> **Note**: `ml-1` (4px)로 별표 앞에 공백을 추가합니다.
 
 ### Helper Text
 

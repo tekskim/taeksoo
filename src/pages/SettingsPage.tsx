@@ -1,24 +1,13 @@
-import { useState, useCallback, useRef, useEffect, type ReactNode } from 'react';
+import { useState, useCallback, useRef, useEffect } from 'react';
 import { 
   Toggle, 
   Button, 
-  Select, 
   Modal,
   SectionCard,
   Input,
   WindowControls,
-  Radio,
-  RadioGroup,
-  DetailHeader,
-  Disclosure,
 } from '@/design-system';
-import { useDarkMode } from '@/hooks/useDarkMode';
 import { 
-  IconSettings, 
-  IconUser, 
-  IconBell, 
-  IconInfoCircle,
-  IconExternalLink,
   IconShieldCheck,
   IconCheck,
   IconCopy,
@@ -28,7 +17,7 @@ import {
    Types
    ---------------------------------------- */
 
-type SettingsTab = 'general' | 'account' | 'notifications' | 'information';
+type SettingsTab = 'account';
 
 interface WindowPosition {
   x: number;
@@ -43,72 +32,14 @@ interface WindowSize {
 interface SettingsPageProps {
   isOpen: boolean;
   onClose: () => void;
-}
-
-/* ----------------------------------------
-   Timezone Data
-   ---------------------------------------- */
-
-const timezoneOptions = [
-  { value: 'Pacific/Honolulu', label: '(GMT-10:00) Pacific/Honolulu' },
-  { value: 'America/Los_Angeles', label: '(GMT-8:00) America/Los_Angeles' },
-  { value: 'America/Denver', label: '(GMT-7:00) America/Denver' },
-  { value: 'America/Chicago', label: '(GMT-6:00) America/Chicago' },
-  { value: 'America/New_York', label: '(GMT-5:00) America/New_York' },
-  { value: 'UTC', label: '(GMT+0:00) UTC' },
-  { value: 'Europe/London', label: '(GMT+0:00) Europe/London' },
-  { value: 'Europe/Paris', label: '(GMT+1:00) Europe/Paris' },
-  { value: 'Asia/Dubai', label: '(GMT+4:00) Asia/Dubai' },
-  { value: 'Asia/Singapore', label: '(GMT+8:00) Asia/Singapore' },
-  { value: 'Asia/Tokyo', label: '(GMT+9:00) Asia/Tokyo' },
-  { value: 'Asia/Seoul', label: '(GMT+9:00) Asia/Seoul' },
-  { value: 'Australia/Sydney', label: '(GMT+10:00) Australia/Sydney' },
-];
-
-/* ----------------------------------------
-   Navigation Item Component
-   ---------------------------------------- */
-
-interface NavItemProps {
-  icon: ReactNode;
-  label: string;
-  active?: boolean;
-  onClick: () => void;
-}
-
-function NavItem({ icon, label, active, onClick }: NavItemProps) {
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      className={`
-        w-full flex items-center
-        px-[var(--menu-item-padding-x)] py-[var(--menu-item-padding-y)]
-        rounded-[var(--menu-item-radius)]
-        gap-[var(--menu-item-gap)]
-        text-[length:var(--font-size-12)]
-        transition-colors duration-[var(--duration-fast)]
-        cursor-pointer text-left
-        ${active 
-          ? 'bg-[var(--color-state-info-bg)] text-[var(--color-action-primary)] font-medium' 
-          : 'text-[var(--color-text-default)] hover:bg-[var(--color-surface-subtle)] font-normal'
-        }
-      `}
-    >
-      <span className={`shrink-0 ${active ? 'text-[var(--color-action-primary)]' : 'text-[var(--color-text-default)]'}`}>
-        {icon}
-      </span>
-      <span className="flex-1 text-left truncate">{label}</span>
-    </button>
-  );
+  initialTab?: SettingsTab;
 }
 
 /* ----------------------------------------
    Settings Page Component
    ---------------------------------------- */
 
-export function SettingsPage({ isOpen, onClose }: SettingsPageProps) {
-  const [activeTab, setActiveTab] = useState<SettingsTab>('general');
+export function SettingsPage({ isOpen, onClose, initialTab = 'account' }: SettingsPageProps) {
   const [isMaximized, setIsMaximized] = useState(false);
   // Center the window: 50% of screen size, centered position
   const [size, setSize] = useState<WindowSize>(() => ({
@@ -125,15 +56,15 @@ export function SettingsPage({ isOpen, onClose }: SettingsPageProps) {
   const [resizeStart, setResizeStart] = useState({ x: 0, y: 0, width: 0, height: 0, posX: 0, posY: 0 });
   const windowRef = useRef<HTMLDivElement>(null);
 
-  // Settings State - Theme from useDarkMode hook
-  const { theme, setTheme } = useDarkMode();
-  const [language, setLanguage] = useState('en');
-  const [timezone, setTimezone] = useState('Asia/Seoul');
-  const [useLocationTimezone, setUseLocationTimezone] = useState(false);
-  
   // Account State
   const [name, setName] = useState('John Doe');
+  const [localName, setLocalName] = useState('John Doe');
   const [email, setEmail] = useState('taeksoo.kim@thakicloud.co.kr');
+
+  // Sync localName with name when name changes externally
+  useEffect(() => {
+    setLocalName(name);
+  }, [name]);
   const [isEditingPassword, setIsEditingPassword] = useState(false);
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -147,28 +78,6 @@ export function SettingsPage({ isOpen, onClose }: SettingsPageProps) {
   const [newEmail, setNewEmail] = useState('');
   const [emailVerificationCode, setEmailVerificationCode] = useState('');
   const [emailVerificationSent, setEmailVerificationSent] = useState(false);
-
-  // Notifications State - Global
-  const [globalWhatToNotify, setGlobalWhatToNotify] = useState('all');
-  const [globalSound, setGlobalSound] = useState(true);
-  const [globalDuration, setGlobalDuration] = useState('3s');
-  
-  // Notifications State - Per Service
-  const [serviceNotifications, setServiceNotifications] = useState<Record<string, { whatToNotify: string; duration: string; sound: boolean }>>({
-    compute: { whatToNotify: 'all', duration: '3s', sound: true },
-    iam: { whatToNotify: 'all', duration: '3s', sound: true },
-    storage: { whatToNotify: 'all', duration: '3s', sound: true },
-    container: { whatToNotify: 'all', duration: '3s', sound: true },
-    aiPlatform: { whatToNotify: 'all', duration: '3s', sound: true },
-    agentOps: { whatToNotify: 'all', duration: '3s', sound: true },
-  });
-
-  const updateServiceNotification = (service: string, field: 'whatToNotify' | 'duration' | 'sound', value: string | boolean) => {
-    setServiceNotifications(prev => ({
-      ...prev,
-      [service]: { ...prev[service], [field]: value }
-    }));
-  };
 
   // 2-Step Verification State
   const [twoStepEnabled, setTwoStepEnabled] = useState(false);
@@ -190,12 +99,6 @@ export function SettingsPage({ isOpen, onClose }: SettingsPageProps) {
 
   // Modal State
   const [showLogoutModal, setShowLogoutModal] = useState(false);
-  const [showConfirmModal, setShowConfirmModal] = useState(false);
-  const [pendingChange, setPendingChange] = useState<{
-    type: 'language';
-    value: string;
-    label: string;
-  } | null>(null);
 
   // Drag handlers
   const handleMouseDown = useCallback((e: React.MouseEvent) => {
@@ -294,37 +197,6 @@ export function SettingsPage({ isOpen, onClose }: SettingsPageProps) {
     };
   }, [isDragging, dragOffset, isResizing, resizeStart]);
 
-  const handleThemeChange = (value: string) => {
-    setTheme(value as 'light' | 'dark' | 'system');
-  };
-
-  const handleLanguageChange = (value: string) => {
-    // Skip confirmation if selecting the same value
-    if (value === language) return;
-    
-    const labels: Record<string, string> = { en: 'English', ko: 'Korean' };
-    setPendingChange({ type: 'language', value, label: labels[value] });
-    setShowConfirmModal(true);
-  };
-
-  const handleTimezoneChange = (value: string) => {
-    setTimezone(value);
-  };
-
-  const confirmChange = () => {
-    if (!pendingChange) return;
-    
-    if (pendingChange.type === 'language') {
-      setLanguage(pendingChange.value);
-    }
-    setShowConfirmModal(false);
-    setPendingChange(null);
-  };
-
-  const cancelChange = () => {
-    setShowConfirmModal(false);
-    setPendingChange(null);
-  };
 
   if (!isOpen) return null;
 
@@ -389,120 +261,12 @@ export function SettingsPage({ isOpen, onClose }: SettingsPageProps) {
 
         {/* Main Content */}
         <div className="flex flex-1 overflow-hidden">
-          {/* Sidebar */}
-          <aside className="w-[168px] bg-[var(--color-surface-default)] border-r border-[var(--color-border-default)] overflow-y-auto settings-scroll shrink-0">
-            <nav className="p-2 flex flex-col gap-0">
-              <NavItem 
-                icon={<IconSettings size={16} stroke={1.5} />}
-                label="General"
-                active={activeTab === 'general'}
-                onClick={() => setActiveTab('general')}
-              />
-              <NavItem 
-                icon={<IconUser size={16} stroke={1.5} />}
-                label="Account"
-                active={activeTab === 'account'}
-                onClick={() => setActiveTab('account')}
-              />
-              <NavItem 
-                icon={<IconBell size={16} stroke={1.5} />}
-                label="Notifications"
-                active={activeTab === 'notifications'}
-                onClick={() => setActiveTab('notifications')}
-              />
-              <NavItem 
-                icon={<IconInfoCircle size={16} stroke={1.5} />}
-                label="Information"
-                active={activeTab === 'information'}
-                onClick={() => setActiveTab('information')}
-              />
-            </nav>
-          </aside>
-
           {/* Content Area */}
-          <main className="flex-1 overflow-y-auto settings-scroll p-6">
+          <main className="flex-1 overflow-y-auto settings-scroll p-6 bg-[var(--color-surface-default)]">
             <div className="max-w-[1000px]">
-              {/* General Tab */}
-              {activeTab === 'general' && (
-                <div className="animate-in fade-in slide-in-from-bottom-2 duration-200">
-                  <h5 className="text-[length:var(--font-size-16)] leading-[var(--line-height-24)] font-semibold text-[var(--color-text-default)]">General</h5>
-                  <p className="text-[length:var(--font-size-12)] leading-[var(--line-height-18)] text-[var(--color-text-muted)] mb-6">Configure your display and localization preferences.</p>
-                  
-                  <SectionCard className="mb-6">
-                    <SectionCard.Header title="Preferences" />
-                    <SectionCard.Content gap={5}>
-                      {/* Theme */}
-                      <div>
-                        <label className="block text-[length:var(--font-size-12)] leading-[var(--line-height-16)] font-medium text-[var(--color-text-default)] mb-1">Theme</label>
-                        <p className="text-[length:var(--font-size-12)] leading-[var(--line-height-18)] text-[var(--color-text-muted)] mb-3">Choose your preferred color theme.</p>
-                        <Select
-                          value={theme}
-                          onChange={handleThemeChange}
-                          options={[
-                            { value: 'system', label: 'System' },
-                            { value: 'light', label: 'Light' },
-                            { value: 'dark', label: 'Dark' },
-                          ]}
-                          className="w-[200px]"
-                        />
-                      </div>
-
-                      {/* Language */}
-                      <div>
-                        <label className="block text-[length:var(--font-size-12)] leading-[var(--line-height-16)] font-medium text-[var(--color-text-default)] mb-1">Language</label>
-                        <p className="text-[length:var(--font-size-12)] leading-[var(--line-height-18)] text-[var(--color-text-muted)] mb-3">Select your preferred language for the interface.</p>
-                        <Select
-                          value={language}
-                          onChange={handleLanguageChange}
-                          options={[
-                            { value: 'en', label: 'English' },
-                            { value: 'ko', label: 'Korean' },
-                          ]}
-                          className="w-[200px]"
-                        />
-                      </div>
-
-                      {/* Timezone */}
-                      <div>
-                        <label className="block text-[length:var(--font-size-12)] leading-[var(--line-height-16)] font-medium text-[var(--color-text-default)] mb-1">Time Zone</label>
-                        <p className="text-[length:var(--font-size-12)] leading-[var(--line-height-18)] text-[var(--color-text-muted)] mb-3">Select your time zone. This affects timestamps globally.</p>
-                        <Select
-                          value={timezone}
-                          onChange={handleTimezoneChange}
-                          options={timezoneOptions}
-                          className="w-[300px]"
-                          disabled={useLocationTimezone}
-                        />
-                        <div className="mt-4 ml-4">
-                          <Toggle 
-                            label="Set current time zone"
-                            checked={useLocationTimezone}
-                            onChange={(e) => {
-                              const checked = e.target.checked;
-                              setUseLocationTimezone(checked);
-                              if (checked) {
-                                // Get timezone from browser's Intl API
-                                const detectedTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-                                // Check if detected timezone exists in our options
-                                const matchingOption = timezoneOptions.find(opt => opt.value === detectedTimezone);
-                                if (matchingOption) {
-                                  setTimezone(detectedTimezone);
-                                }
-                              }
-                            }}
-                          />
-                          <p className="text-[length:var(--font-size-12)] leading-[var(--line-height-14)] text-[var(--color-text-muted)] mt-0.5 mb-2">Automatically set time zone based on your location</p>
-                        </div>
-                      </div>
-                    </SectionCard.Content>
-                  </SectionCard>
-                </div>
-              )}
-
-              {/* Account Tab */}
-              {activeTab === 'account' && (
-                <div className="animate-in fade-in slide-in-from-bottom-2 duration-200">
-                  <h5 className="text-[length:var(--font-size-16)] leading-[var(--line-height-24)] font-semibold text-[var(--color-text-default)]">Account</h5>
+              {/* Account Content */}
+              <div className="animate-in fade-in slide-in-from-bottom-2 duration-200">
+                <h5 className="text-[length:var(--font-size-16)] leading-[var(--line-height-24)] font-semibold text-[var(--color-text-default)]">Account</h5>
                   <p className="text-[length:var(--font-size-12)] leading-[var(--line-height-18)] text-[var(--color-text-muted)] mb-6">Manage your account information and security settings.</p>
                   
                   {/* Account Information */}
@@ -514,36 +278,20 @@ export function SettingsPage({ isOpen, onClose }: SettingsPageProps) {
                         <label className="block text-[length:var(--font-size-12)] leading-[var(--line-height-16)] font-medium text-[var(--color-text-default)] mb-2">ID</label>
                         <Input value="john.doe" disabled className="min-w-[300px] max-w-[750px]" />
                       </div>
+                      {/* Email - Read only */}
+                      <div>
+                        <label className="block text-[length:var(--font-size-12)] leading-[var(--line-height-16)] font-medium text-[var(--color-text-default)] mb-2">Email</label>
+                        <Input value={email} disabled className="min-w-[300px] max-w-[750px]" />
+                      </div>
                       {/* Name - Always editable */}
                       <div>
                         <label className="block text-[length:var(--font-size-12)] leading-[var(--line-height-16)] font-medium text-[var(--color-text-default)] mb-2">Name</label>
                         <Input 
-                          value={name}
-                          onChange={(e) => setName(e.target.value)}
+                          value={localName}
+                          onChange={(e) => setLocalName(e.target.value)}
+                          onBlur={() => setName(localName)}
                           className="min-w-[300px] max-w-[750px]"
                         />
-                      </div>
-                      {/* Email - With change button */}
-                      <div>
-                        <label className="block text-[length:var(--font-size-12)] leading-[var(--line-height-16)] font-medium text-[var(--color-text-default)] mb-2">Email</label>
-                        <div className="flex items-center gap-3 max-w-[750px]">
-                          <Input value={email} disabled className="flex-1 min-w-[300px]" />
-                          <Button 
-                            variant="primary" 
-                            size="sm" 
-                            onClick={() => {
-                              setShowEmailChangeModal(true);
-                              setEmailChangeStep(1);
-                              setEmailChangePassword('');
-                              setEmailChangePasswordError('');
-                              setNewEmail('');
-                              setEmailVerificationCode('');
-                              setEmailVerificationSent(false);
-                            }}
-                          >
-                            Change email
-                          </Button>
-                        </div>
                       </div>
                     </SectionCard.Content>
                   </SectionCard>
@@ -734,166 +482,7 @@ export function SettingsPage({ isOpen, onClose }: SettingsPageProps) {
                       Logout
                     </Button>
                   </div>
-                </div>
-              )}
-
-              {/* Notifications Tab */}
-              {activeTab === 'notifications' && (
-                <div className="animate-in fade-in slide-in-from-bottom-2 duration-200">
-                  <h5 className="text-[length:var(--font-size-16)] leading-[var(--line-height-24)] font-semibold text-[var(--color-text-default)] mb-6">Notifications</h5>
-                  
-                  <SectionCard>
-                    <SectionCard.Header title="Notification Preferences" />
-                    <SectionCard.Content gap={6}>
-                      {/* Global Notification Setting */}
-                      <div className="space-y-4">
-                        <h6 className="text-[length:var(--font-size-12)] leading-[var(--line-height-16)] font-semibold text-[var(--color-text-default)]">Global Notification Setting</h6>
-                        <div className="space-y-3 pl-2">
-                          <div>
-                            <span className="text-[length:var(--font-size-12)] leading-[var(--line-height-16)] font-medium text-[var(--color-text-default)] block mb-2">What to Notify</span>
-                            <RadioGroup value={globalWhatToNotify} onChange={setGlobalWhatToNotify} direction="horizontal">
-                              <Radio value="all" label="All" />
-                              <Radio value="errors" label="Errors only" />
-                              <Radio value="off" label="Off" />
-                            </RadioGroup>
-                          </div>
-                          <div className={globalWhatToNotify === 'off' ? 'opacity-50' : ''}>
-                            <span className="text-[length:var(--font-size-12)] leading-[var(--line-height-16)] font-medium text-[var(--color-text-default)] block mb-2">Duration</span>
-                            <Select
-                              value={globalDuration}
-                              onChange={(value) => setGlobalDuration(value)}
-                              options={[
-                                { value: '1s', label: '1s' },
-                                { value: '2s', label: '2s' },
-                                { value: '3s', label: '3s' },
-                                { value: '5s', label: '5s' },
-                                { value: 'keep', label: 'Keep visible' },
-                              ]}
-                              className="w-[160px]"
-                              disabled={globalWhatToNotify === 'off'}
-                            />
-                          </div>
-                          <div className={globalWhatToNotify === 'off' ? 'opacity-50' : ''}>
-                            <span className="text-[length:var(--font-size-12)] leading-[var(--line-height-16)] font-medium text-[var(--color-text-default)] block mb-2">Sound</span>
-                            <Toggle checked={globalSound} onChange={(e) => setGlobalSound(e.target.checked)} disabled={globalWhatToNotify === 'off'} />
-                          </div>
-                        </div>
-                      </div>
-
-                      {/* In-app Notification Setting */}
-                      <div className="space-y-3">
-                        <h6 className="text-[length:var(--font-size-12)] leading-[var(--line-height-16)] font-semibold text-[var(--color-text-default)] mb-3">In-app Notification Setting</h6>
-                        
-                        {/* Service-specific settings with Disclosure */}
-                        {[
-                          { key: 'compute', label: 'Compute' },
-                          { key: 'iam', label: 'IAM' },
-                          { key: 'storage', label: 'Storage' },
-                          { key: 'container', label: 'Container' },
-                          { key: 'aiPlatform', label: 'AI Platform' },
-                          { key: 'agentOps', label: 'Agent Ops' },
-                        ].map(({ key, label }) => (
-                          <Disclosure key={key} className="border border-[var(--color-border-default)] rounded-lg overflow-hidden">
-                            <Disclosure.Trigger className="w-full py-3 px-4 bg-[var(--color-surface-subtle)]">
-                              <span className="text-[length:var(--font-size-12)] leading-[var(--line-height-16)] font-medium text-[var(--color-text-default)]">
-                                {label}
-                              </span>
-                            </Disclosure.Trigger>
-                            <Disclosure.Panel className="space-y-3 px-4 py-3 border-t border-[var(--color-border-default)]">
-                              <div>
-                                <span className="text-[length:var(--font-size-12)] leading-[var(--line-height-16)] font-medium text-[var(--color-text-default)] block mb-2">What to Notify</span>
-                                <RadioGroup 
-                                  value={serviceNotifications[key].whatToNotify} 
-                                  onChange={(value) => updateServiceNotification(key, 'whatToNotify', value)} 
-                                  direction="horizontal"
-                                >
-                                  <Radio value="all" label="All" />
-                                  <Radio value="errors" label="Errors only" />
-                                  <Radio value="off" label="Off" />
-                                </RadioGroup>
-                              </div>
-                              <div className={serviceNotifications[key].whatToNotify === 'off' ? 'opacity-50' : ''}>
-                                <span className="text-[length:var(--font-size-12)] leading-[var(--line-height-16)] font-medium text-[var(--color-text-default)] block mb-2">Duration</span>
-                                <Select
-                                  value={serviceNotifications[key].duration}
-                                  onChange={(value) => updateServiceNotification(key, 'duration', value)}
-                                  options={[
-                                    { value: '1s', label: '1s' },
-                                    { value: '2s', label: '2s' },
-                                    { value: '3s', label: '3s' },
-                                    { value: '5s', label: '5s' },
-                                    { value: 'keep', label: 'Keep visible' },
-                                  ]}
-                                  className="w-[160px]"
-                                  disabled={serviceNotifications[key].whatToNotify === 'off'}
-                                />
-                              </div>
-                              <div className={serviceNotifications[key].whatToNotify === 'off' ? 'opacity-50' : ''}>
-                                <span className="text-[length:var(--font-size-12)] leading-[var(--line-height-16)] font-medium text-[var(--color-text-default)] block mb-2">Sound</span>
-                                <Toggle 
-                                  checked={serviceNotifications[key].sound} 
-                                  onChange={(e) => updateServiceNotification(key, 'sound', e.target.checked)}
-                                  disabled={serviceNotifications[key].whatToNotify === 'off'}
-                                />
-                              </div>
-                            </Disclosure.Panel>
-                          </Disclosure>
-                        ))}
-                      </div>
-                    </SectionCard.Content>
-                  </SectionCard>
-                </div>
-              )}
-
-              {/* Information Tab */}
-              {activeTab === 'information' && (
-                <div className="animate-in fade-in slide-in-from-bottom-2 duration-200">
-                  <h5 className="text-[length:var(--font-size-16)] leading-[var(--line-height-24)] font-semibold text-[var(--color-text-default)]">Information</h5>
-                  <p className="text-[length:var(--font-size-12)] leading-[var(--line-height-18)] text-[var(--color-text-muted)] mb-6">View application version and related resources.</p>
-                  
-                  <SectionCard className="mb-6">
-                    <SectionCard.Header title="Version" />
-                    <SectionCard.Content>
-                      <div className="flex gap-4">
-                        <DetailHeader.InfoCard label="Product Name" value="Thaki Cloud Suite" />
-                        <DetailHeader.InfoCard label="Version" value="0.7.0" />
-                      </div>
-                    </SectionCard.Content>
-                  </SectionCard>
-
-                  <SectionCard className="mb-6">
-                    <SectionCard.Header title="Terms" />
-                    <SectionCard.Content>
-                      <div className="flex flex-col gap-3">
-                        <a href="https://thaki.cloud/terms" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 text-sm text-[var(--color-action-primary)] hover:underline">
-                          Terms of Service
-                          <IconExternalLink size={14} stroke={1.5} />
-                        </a>
-                        <a href="https://thaki.cloud/privacy" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 text-sm text-[var(--color-action-primary)] hover:underline">
-                          Privacy Policy
-                          <IconExternalLink size={14} stroke={1.5} />
-                        </a>
-                      </div>
-                    </SectionCard.Content>
-                  </SectionCard>
-
-                  <SectionCard>
-                    <SectionCard.Header title="Support" />
-                    <SectionCard.Content>
-                      <div className="flex flex-col gap-3">
-                        <a href="https://thaki.cloud" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 text-sm text-[var(--color-action-primary)] hover:underline">
-                          Official Website
-                          <IconExternalLink size={14} stroke={1.5} />
-                        </a>
-                        <a href="https://support.thaki.cloud" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 text-sm text-[var(--color-action-primary)] hover:underline">
-                          Support Center
-                          <IconExternalLink size={14} stroke={1.5} />
-                        </a>
-                      </div>
-                    </SectionCard.Content>
-                  </SectionCard>
-                </div>
-              )}
+              </div>
             </div>
           </main>
         </div>
@@ -1035,23 +624,6 @@ export function SettingsPage({ isOpen, onClose }: SettingsPageProps) {
             {emailChangeStep === 2 && 'Send verification code'}
             {emailChangeStep === 3 && 'Change email'}
           </Button>
-        </div>
-      </Modal>
-
-      {/* Settings Change Confirmation Modal */}
-      <Modal
-        isOpen={showConfirmModal}
-        onClose={cancelChange}
-        title={pendingChange ? `Confirm ${pendingChange.type.charAt(0).toUpperCase() + pendingChange.type.slice(1)} Change` : 'Confirm Change'}
-      >
-        <p className="text-[length:var(--font-size-12)] leading-[var(--line-height-18)] text-[var(--color-text-default)] mb-6">
-          {pendingChange && (
-            <>Are you sure you want to change the {pendingChange.type} to <strong>{pendingChange.label}</strong>?</>
-          )}
-        </p>
-        <div className="flex justify-end gap-3">
-          <Button variant="secondary" onClick={cancelChange}>Cancel</Button>
-          <Button variant="primary" onClick={confirmChange}>Apply</Button>
         </div>
       </Modal>
 
