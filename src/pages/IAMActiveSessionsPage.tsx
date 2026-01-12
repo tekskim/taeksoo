@@ -154,10 +154,18 @@ export default function IAMActiveSessionsPage() {
     currentPage * itemsPerPage
   );
 
-  // Context menu items
-  const contextMenuItems: ContextMenuItem[] = [
-    { id: 'terminate', label: 'Terminate session', danger: true },
-    { id: 'view-details', label: 'View details' },
+  // Context menu items factory
+  const getContextMenuItems = (row: ActiveSession): ContextMenuItem[] => [
+    {
+      id: 'terminate-session',
+      label: 'Terminate this session',
+      onClick: () => console.log('Terminate session', row.id),
+    },
+    {
+      id: 'terminate-all',
+      label: 'Terminate all sessions of this user',
+      onClick: () => console.log('Terminate all sessions of user', row.user),
+    },
   ];
 
   // Breadcrumb items
@@ -211,12 +219,12 @@ export default function IAMActiveSessionsPage() {
       width: 72,
       align: 'center',
       render: (_, row) => (
-        <ContextMenu items={contextMenuItems} onSelect={(itemId) => console.log(itemId, row.id)}>
+        <ContextMenu items={getContextMenuItems(row)} trigger="click">
           <button
             type="button"
-            className="p-1.5 rounded-md hover:bg-[var(--color-surface-subtle)] transition-colors"
+            className="flex items-center justify-center w-7 h-7 rounded-md bg-transparent hover:bg-[var(--color-surface-muted)] active:bg-[var(--color-border-subtle)] transition-colors cursor-pointer"
           >
-            <IconAction size={16} stroke={1} />
+            <IconAction size={16} stroke={1} className="text-[var(--color-text-default)]" />
           </button>
         </ContextMenu>
       ),

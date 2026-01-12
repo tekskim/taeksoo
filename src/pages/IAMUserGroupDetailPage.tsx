@@ -252,13 +252,25 @@ export default function IAMUserGroupDetailPage() {
     rolesCurrentPage * itemsPerPage
   );
 
-  // Context menu items
-  const userContextMenuItems: ContextMenuItem[] = [
-    { id: 'remove', label: 'Remove from group', danger: true },
+  // Context menu items factory
+  const getUserContextMenuItems = (rowId: string, isInactive: boolean): ContextMenuItem[] => [
+    { 
+      id: 'remove', 
+      label: 'Remove', 
+      status: isInactive ? undefined : 'danger',
+      disabled: isInactive,
+      onClick: () => console.log('Remove', rowId) 
+    },
   ];
 
-  const roleContextMenuItems: ContextMenuItem[] = [
-    { id: 'detach', label: 'Detach role', danger: true },
+  const getRoleContextMenuItems = (rowId: string, isBuiltIn: boolean): ContextMenuItem[] => [
+    { 
+      id: 'detach', 
+      label: 'Detach', 
+      status: isBuiltIn ? undefined : 'danger',
+      disabled: isBuiltIn,
+      onClick: () => console.log('Detach', rowId) 
+    },
   ];
 
   // Table columns for users
@@ -309,10 +321,10 @@ export default function IAMUserGroupDetailPage() {
       width: 72,
       align: 'center',
       render: (_value, row) => (
-        <ContextMenu items={userContextMenuItems} onSelect={(itemId) => console.log(itemId, row.id)}>
+        <ContextMenu items={getUserContextMenuItems(row.id, row.status !== 'active')} trigger="click">
           <button
             type="button"
-            className="p-1.5 rounded-md hover:bg-[var(--color-surface-subtle)] transition-colors"
+            className="flex items-center justify-center w-7 h-7 rounded-md bg-transparent hover:bg-[var(--color-surface-muted)] active:bg-[var(--color-border-subtle)] transition-colors cursor-pointer"
           >
             <IconAction size={16} stroke={1} className="text-[var(--color-text-default)]" />
           </button>
@@ -341,7 +353,6 @@ export default function IAMUserGroupDetailPage() {
       key: 'type',
       label: 'Type',
       flex: 1,
-      align: 'center',
     },
     {
       key: 'policies',
@@ -352,7 +363,6 @@ export default function IAMUserGroupDetailPage() {
       key: 'userGroupCount',
       label: 'User group count',
       flex: 1,
-      align: 'center',
       sortable: true,
     },
     {
@@ -373,10 +383,10 @@ export default function IAMUserGroupDetailPage() {
       width: 72,
       align: 'center',
       render: (_value, row) => (
-        <ContextMenu items={roleContextMenuItems} onSelect={(itemId) => console.log(itemId, row.id)}>
+        <ContextMenu items={getRoleContextMenuItems(row.id, row.type === 'Built-in')} trigger="click">
           <button
             type="button"
-            className="p-1.5 rounded-md hover:bg-[var(--color-surface-subtle)] transition-colors"
+            className="flex items-center justify-center w-7 h-7 rounded-md bg-transparent hover:bg-[var(--color-surface-muted)] active:bg-[var(--color-border-subtle)] transition-colors cursor-pointer"
           >
             <IconAction size={16} stroke={1} className="text-[var(--color-text-default)]" />
           </button>
@@ -560,17 +570,21 @@ export default function IAMUserGroupDetailPage() {
                       </HStack>
 
                       {/* Action Bar */}
-                      <HStack gap={2} className="items-center">
+                      <HStack gap={2} align="center">
                         {/* Search */}
-                        <SearchInput
-                          placeholder="Search roles by attributes"
-                          value={rolesSearchQuery}
-                          onChange={(e) => setRolesSearchQuery(e.target.value)}
-                          className="w-[280px]"
-                        />
+                        <HStack gap={1} align="center">
+                          <SearchInput
+                            placeholder="Search roles by attributes"
+                            value={rolesSearchQuery}
+                            onChange={(e) => setRolesSearchQuery(e.target.value)}
+                            className="w-[280px]"
+                          />
+                        </HStack>
 
                         {/* Divider */}
-                        <div className="w-px h-4 bg-[var(--color-border-default)]" />
+                        <HStack align="center">
+                          <div className="w-px h-4 bg-[var(--color-border-subtle)]" />
+                        </HStack>
 
                         {/* Actions */}
                         <Button variant="secondary" size="sm" disabled>
