@@ -57,14 +57,14 @@ const mockNotifications: NotificationItem[] = [
 const routeLabels: Record<string, string> = {
   '/': 'Home',
   '/instances': 'Instances',
-  '/instance-templates': 'Instance Templates',
-  '/instance-snapshots': 'Instance Snapshots',
+  '/instance-templates': 'Instance templates',
+  '/instance-snapshots': 'Instance snapshots',
   '/images': 'Images',
   '/flavors': 'Flavors',
-  '/key-pairs': 'Key Pairs',
-  '/server-groups': 'Server Groups',
+  '/key-pairs': 'Key pairs',
+  '/server-groups': 'Server groups',
   '/volumes': 'Volumes',
-  '/design-system': 'Design System',
+  '/design-system': 'Design system',
 };
 
 function getBreadcrumbLabel(path: string): string {
