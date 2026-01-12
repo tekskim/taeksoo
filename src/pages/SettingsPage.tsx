@@ -1,24 +1,14 @@
-import { useState, useCallback, useRef, useEffect, type ReactNode } from 'react';
+import { useState, useCallback, useRef, useEffect } from 'react';
 import { 
   Toggle, 
   Button, 
-  Select, 
   Modal,
   SectionCard,
   Input,
   WindowControls,
-  Radio,
-  RadioGroup,
-  DetailHeader,
-  Disclosure,
+  Pagination,
 } from '@/design-system';
-import { useDarkMode } from '@/hooks/useDarkMode';
 import { 
-  IconSettings, 
-  IconUser, 
-  IconBell, 
-  IconInfoCircle,
-  IconExternalLink,
   IconShieldCheck,
   IconCheck,
   IconCopy,
@@ -28,7 +18,7 @@ import {
    Types
    ---------------------------------------- */
 
-type SettingsTab = 'general' | 'account' | 'notifications' | 'information';
+type SettingsTab = 'account';
 
 interface WindowPosition {
   x: number;
@@ -43,73 +33,68 @@ interface WindowSize {
 interface SettingsPageProps {
   isOpen: boolean;
   onClose: () => void;
-}
-
-/* ----------------------------------------
-   Timezone Data
-   ---------------------------------------- */
-
-const timezoneOptions = [
-  { value: 'Pacific/Honolulu', label: '(GMT-10:00) Pacific/Honolulu' },
-  { value: 'America/Los_Angeles', label: '(GMT-8:00) America/Los_Angeles' },
-  { value: 'America/Denver', label: '(GMT-7:00) America/Denver' },
-  { value: 'America/Chicago', label: '(GMT-6:00) America/Chicago' },
-  { value: 'America/New_York', label: '(GMT-5:00) America/New_York' },
-  { value: 'UTC', label: '(GMT+0:00) UTC' },
-  { value: 'Europe/London', label: '(GMT+0:00) Europe/London' },
-  { value: 'Europe/Paris', label: '(GMT+1:00) Europe/Paris' },
-  { value: 'Asia/Dubai', label: '(GMT+4:00) Asia/Dubai' },
-  { value: 'Asia/Singapore', label: '(GMT+8:00) Asia/Singapore' },
-  { value: 'Asia/Tokyo', label: '(GMT+9:00) Asia/Tokyo' },
-  { value: 'Asia/Seoul', label: '(GMT+9:00) Asia/Seoul' },
-  { value: 'Australia/Sydney', label: '(GMT+10:00) Australia/Sydney' },
-];
-
-/* ----------------------------------------
-   Navigation Item Component
-   ---------------------------------------- */
-
-interface NavItemProps {
-  icon: ReactNode;
-  label: string;
-  active?: boolean;
-  onClick: () => void;
-}
-
-function NavItem({ icon, label, active, onClick }: NavItemProps) {
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      className={`
-        w-full flex items-center
-        px-[var(--menu-item-padding-x)] py-[var(--menu-item-padding-y)]
-        rounded-[var(--menu-item-radius)]
-        gap-[var(--menu-item-gap)]
-        text-[length:var(--font-size-12)]
-        transition-colors duration-[var(--duration-fast)]
-        cursor-pointer text-left
-        ${active 
-          ? 'bg-[var(--color-state-info-bg)] text-[var(--color-action-primary)] font-medium' 
-          : 'text-[var(--color-text-default)] hover:bg-[var(--color-surface-subtle)] font-normal'
-        }
-      `}
-    >
-      <span className={`shrink-0 ${active ? 'text-[var(--color-action-primary)]' : 'text-[var(--color-text-default)]'}`}>
-        {icon}
-      </span>
-      <span className="flex-1 text-left truncate">{label}</span>
-    </button>
-  );
+  initialTab?: SettingsTab;
 }
 
 /* ----------------------------------------
    Settings Page Component
    ---------------------------------------- */
 
-export function SettingsPage({ isOpen, onClose }: SettingsPageProps) {
-  const [activeTab, setActiveTab] = useState<SettingsTab>('general');
+// Generate 100 mock activity sessions
+const generateActivitySessions = () => {
+  const sessions = [];
+  const devices = ['Chrome on macOS', 'Safari on iOS', 'Firefox on Windows', 'Edge on Windows', 'Chrome on Android', 'Safari on macOS', 'Chrome on Windows', 'Firefox on macOS'];
+  const ipRanges = [
+    { base: '211.234.56', suffix: 78 },
+    { base: '175.192.44', suffix: 123 },
+    { base: '121.167.88', suffix: 45 },
+    { base: '58.123.201', suffix: 67 },
+    { base: '192.168.1', suffix: 100 },
+    { base: '10.0.0', suffix: 50 },
+  ];
+
+  for (let i = 0; i < 100; i++) {
+    const now = new Date();
+    now.setDate(now.getDate() - Math.floor(i / 5));
+    now.setHours(now.getHours() - (i % 24));
+    now.setMinutes(now.getMinutes() - (i % 60));
+    
+    const ipRange = ipRanges[i % ipRanges.length];
+    const ip = `${ipRange.base}.${(ipRange.suffix + i) % 255}`;
+    const device = devices[i % devices.length];
+    
+    const timestamp = now.toLocaleDateString('en-CA') + ' ' + 
+      now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false }) + ' +0900';
+    
+    sessions.push({
+      id: `session-${i + 1}`,
+      ipAddress: ip,
+      device: device,
+      timestamp: timestamp,
+    });
+  }
+  
+  return sessions;
+};
+
+export function SettingsPage({ isOpen, onClose, initialTab = 'account' }: SettingsPageProps) {
+  const [isFocused, setIsFocused] = useState(true);
   const [isMaximized, setIsMaximized] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const rowsPerPage = 10;
+  const [activitySessions] = useState(generateActivitySessions());
+  
+  const totalPages = Math.ceil(activitySessions.length / rowsPerPage);
+  const startIndex = (currentPage - 1) * rowsPerPage;
+  const endIndex = startIndex + rowsPerPage;
+  const paginatedSessions = activitySessions.slice(startIndex, endIndex);
+  
+  // Reset focus when window opens
+  useEffect(() => {
+    if (isOpen) {
+      setIsFocused(true);
+    }
+  }, [isOpen]);
   // Center the window: 50% of screen size, centered position
   const [size, setSize] = useState<WindowSize>(() => ({
     width: typeof window !== 'undefined' ? window.innerWidth * 0.5 : 960,
@@ -125,15 +110,33 @@ export function SettingsPage({ isOpen, onClose }: SettingsPageProps) {
   const [resizeStart, setResizeStart] = useState({ x: 0, y: 0, width: 0, height: 0, posX: 0, posY: 0 });
   const windowRef = useRef<HTMLDivElement>(null);
 
-  // Settings State - Theme from useDarkMode hook
-  const { theme, setTheme } = useDarkMode();
-  const [language, setLanguage] = useState('en');
-  const [timezone, setTimezone] = useState('Asia/Seoul');
-  const [useLocationTimezone, setUseLocationTimezone] = useState(false);
-  
   // Account State
   const [name, setName] = useState('John Doe');
+  const [localName, setLocalName] = useState('John Doe');
   const [email, setEmail] = useState('taeksoo.kim@thakicloud.co.kr');
+
+  // Sync localName with name when name changes externally
+  useEffect(() => {
+    setLocalName(name);
+  }, [name]);
+
+  // Handle click outside window to unfocus (but don't close)
+  useEffect(() => {
+    if (!isOpen) return;
+
+    const handleClickOutside = (e: MouseEvent) => {
+      if (windowRef.current && !windowRef.current.contains(e.target as Node)) {
+        setIsFocused(false);
+      }
+    };
+
+    // Use capture phase to catch clicks before they reach other elements
+    document.addEventListener('mousedown', handleClickOutside, true);
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside, true);
+    };
+  }, [isOpen]);
   const [isEditingPassword, setIsEditingPassword] = useState(false);
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -147,28 +150,6 @@ export function SettingsPage({ isOpen, onClose }: SettingsPageProps) {
   const [newEmail, setNewEmail] = useState('');
   const [emailVerificationCode, setEmailVerificationCode] = useState('');
   const [emailVerificationSent, setEmailVerificationSent] = useState(false);
-
-  // Notifications State - Global
-  const [globalWhatToNotify, setGlobalWhatToNotify] = useState('all');
-  const [globalSound, setGlobalSound] = useState(true);
-  const [globalDuration, setGlobalDuration] = useState('3s');
-  
-  // Notifications State - Per Service
-  const [serviceNotifications, setServiceNotifications] = useState<Record<string, { whatToNotify: string; duration: string; sound: boolean }>>({
-    compute: { whatToNotify: 'all', duration: '3s', sound: true },
-    iam: { whatToNotify: 'all', duration: '3s', sound: true },
-    storage: { whatToNotify: 'all', duration: '3s', sound: true },
-    container: { whatToNotify: 'all', duration: '3s', sound: true },
-    aiPlatform: { whatToNotify: 'all', duration: '3s', sound: true },
-    agentOps: { whatToNotify: 'all', duration: '3s', sound: true },
-  });
-
-  const updateServiceNotification = (service: string, field: 'whatToNotify' | 'duration' | 'sound', value: string | boolean) => {
-    setServiceNotifications(prev => ({
-      ...prev,
-      [service]: { ...prev[service], [field]: value }
-    }));
-  };
 
   // 2-Step Verification State
   const [twoStepEnabled, setTwoStepEnabled] = useState(false);
@@ -190,12 +171,6 @@ export function SettingsPage({ isOpen, onClose }: SettingsPageProps) {
 
   // Modal State
   const [showLogoutModal, setShowLogoutModal] = useState(false);
-  const [showConfirmModal, setShowConfirmModal] = useState(false);
-  const [pendingChange, setPendingChange] = useState<{
-    type: 'language';
-    value: string;
-    label: string;
-  } | null>(null);
 
   // Drag handlers
   const handleMouseDown = useCallback((e: React.MouseEvent) => {
@@ -294,37 +269,6 @@ export function SettingsPage({ isOpen, onClose }: SettingsPageProps) {
     };
   }, [isDragging, dragOffset, isResizing, resizeStart]);
 
-  const handleThemeChange = (value: string) => {
-    setTheme(value as 'light' | 'dark' | 'system');
-  };
-
-  const handleLanguageChange = (value: string) => {
-    // Skip confirmation if selecting the same value
-    if (value === language) return;
-    
-    const labels: Record<string, string> = { en: 'English', ko: 'Korean' };
-    setPendingChange({ type: 'language', value, label: labels[value] });
-    setShowConfirmModal(true);
-  };
-
-  const handleTimezoneChange = (value: string) => {
-    setTimezone(value);
-  };
-
-  const confirmChange = () => {
-    if (!pendingChange) return;
-    
-    if (pendingChange.type === 'language') {
-      setLanguage(pendingChange.value);
-    }
-    setShowConfirmModal(false);
-    setPendingChange(null);
-  };
-
-  const cancelChange = () => {
-    setShowConfirmModal(false);
-    setPendingChange(null);
-  };
 
   if (!isOpen) return null;
 
@@ -340,18 +284,19 @@ export function SettingsPage({ isOpen, onClose }: SettingsPageProps) {
 
   return (
     <>
-      {/* Backdrop */}
-      <div 
-        className="fixed inset-0 z-[2000] pointer-events-auto"
-        onClick={onClose}
-      />
-      
       {/* Settings Window */}
       <div
         ref={windowRef}
         className="fixed z-[2001] bg-[var(--color-surface-default)] rounded-xl shadow-2xl flex flex-col overflow-hidden animate-in zoom-in-95 duration-200"
         style={windowStyle}
-        onClick={(e) => e.stopPropagation()}
+        onClick={(e) => {
+          e.stopPropagation();
+          setIsFocused(true);
+        }}
+        onMouseDown={(e) => {
+          e.stopPropagation();
+          setIsFocused(true);
+        }}
       >
         {/* Resize Handles */}
         {!isMaximized && (
@@ -389,120 +334,12 @@ export function SettingsPage({ isOpen, onClose }: SettingsPageProps) {
 
         {/* Main Content */}
         <div className="flex flex-1 overflow-hidden">
-          {/* Sidebar */}
-          <aside className="w-[168px] bg-[var(--color-surface-default)] border-r border-[var(--color-border-default)] overflow-y-auto settings-scroll shrink-0">
-            <nav className="p-2 flex flex-col gap-0">
-              <NavItem 
-                icon={<IconSettings size={16} stroke={1.5} />}
-                label="General"
-                active={activeTab === 'general'}
-                onClick={() => setActiveTab('general')}
-              />
-              <NavItem 
-                icon={<IconUser size={16} stroke={1.5} />}
-                label="Account"
-                active={activeTab === 'account'}
-                onClick={() => setActiveTab('account')}
-              />
-              <NavItem 
-                icon={<IconBell size={16} stroke={1.5} />}
-                label="Notifications"
-                active={activeTab === 'notifications'}
-                onClick={() => setActiveTab('notifications')}
-              />
-              <NavItem 
-                icon={<IconInfoCircle size={16} stroke={1.5} />}
-                label="Information"
-                active={activeTab === 'information'}
-                onClick={() => setActiveTab('information')}
-              />
-            </nav>
-          </aside>
-
           {/* Content Area */}
-          <main className="flex-1 overflow-y-auto settings-scroll p-6">
+          <main className="flex-1 overflow-y-auto settings-scroll p-6 bg-[var(--color-surface-default)]">
             <div className="max-w-[1000px]">
-              {/* General Tab */}
-              {activeTab === 'general' && (
-                <div className="animate-in fade-in slide-in-from-bottom-2 duration-200">
-                  <h5 className="text-[length:var(--font-size-16)] leading-[var(--line-height-24)] font-semibold text-[var(--color-text-default)]">General</h5>
-                  <p className="text-[length:var(--font-size-12)] leading-[var(--line-height-18)] text-[var(--color-text-muted)] mb-6">Configure your display and localization preferences.</p>
-                  
-                  <SectionCard className="mb-6">
-                    <SectionCard.Header title="Preferences" />
-                    <SectionCard.Content gap={5}>
-                      {/* Theme */}
-                      <div>
-                        <label className="block text-[length:var(--font-size-12)] leading-[var(--line-height-16)] font-medium text-[var(--color-text-default)] mb-1">Theme</label>
-                        <p className="text-[length:var(--font-size-12)] leading-[var(--line-height-18)] text-[var(--color-text-muted)] mb-3">Choose your preferred color theme.</p>
-                        <Select
-                          value={theme}
-                          onChange={handleThemeChange}
-                          options={[
-                            { value: 'system', label: 'System' },
-                            { value: 'light', label: 'Light' },
-                            { value: 'dark', label: 'Dark' },
-                          ]}
-                          className="w-[200px]"
-                        />
-                      </div>
-
-                      {/* Language */}
-                      <div>
-                        <label className="block text-[length:var(--font-size-12)] leading-[var(--line-height-16)] font-medium text-[var(--color-text-default)] mb-1">Language</label>
-                        <p className="text-[length:var(--font-size-12)] leading-[var(--line-height-18)] text-[var(--color-text-muted)] mb-3">Select your preferred language for the interface.</p>
-                        <Select
-                          value={language}
-                          onChange={handleLanguageChange}
-                          options={[
-                            { value: 'en', label: 'English' },
-                            { value: 'ko', label: 'Korean' },
-                          ]}
-                          className="w-[200px]"
-                        />
-                      </div>
-
-                      {/* Timezone */}
-                      <div>
-                        <label className="block text-[length:var(--font-size-12)] leading-[var(--line-height-16)] font-medium text-[var(--color-text-default)] mb-1">Time Zone</label>
-                        <p className="text-[length:var(--font-size-12)] leading-[var(--line-height-18)] text-[var(--color-text-muted)] mb-3">Select your time zone. This affects timestamps globally.</p>
-                        <Select
-                          value={timezone}
-                          onChange={handleTimezoneChange}
-                          options={timezoneOptions}
-                          className="w-[300px]"
-                          disabled={useLocationTimezone}
-                        />
-                        <div className="mt-4 ml-4">
-                          <Toggle 
-                            label="Set current time zone"
-                            checked={useLocationTimezone}
-                            onChange={(e) => {
-                              const checked = e.target.checked;
-                              setUseLocationTimezone(checked);
-                              if (checked) {
-                                // Get timezone from browser's Intl API
-                                const detectedTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-                                // Check if detected timezone exists in our options
-                                const matchingOption = timezoneOptions.find(opt => opt.value === detectedTimezone);
-                                if (matchingOption) {
-                                  setTimezone(detectedTimezone);
-                                }
-                              }
-                            }}
-                          />
-                          <p className="text-[length:var(--font-size-12)] leading-[var(--line-height-14)] text-[var(--color-text-muted)] mt-0.5 mb-2">Automatically set time zone based on your location</p>
-                        </div>
-                      </div>
-                    </SectionCard.Content>
-                  </SectionCard>
-                </div>
-              )}
-
-              {/* Account Tab */}
-              {activeTab === 'account' && (
-                <div className="animate-in fade-in slide-in-from-bottom-2 duration-200">
-                  <h5 className="text-[length:var(--font-size-16)] leading-[var(--line-height-24)] font-semibold text-[var(--color-text-default)]">Account</h5>
+              {/* Account Content */}
+              <div className="animate-in fade-in slide-in-from-bottom-2 duration-200">
+                <h5 className="text-[length:var(--font-size-16)] leading-[var(--line-height-24)] font-semibold text-[var(--color-text-default)]">Account</h5>
                   <p className="text-[length:var(--font-size-12)] leading-[var(--line-height-18)] text-[var(--color-text-muted)] mb-6">Manage your account information and security settings.</p>
                   
                   {/* Account Information */}
@@ -514,36 +351,20 @@ export function SettingsPage({ isOpen, onClose }: SettingsPageProps) {
                         <label className="block text-[length:var(--font-size-12)] leading-[var(--line-height-16)] font-medium text-[var(--color-text-default)] mb-2">ID</label>
                         <Input value="john.doe" disabled className="min-w-[300px] max-w-[750px]" />
                       </div>
+                      {/* Email - Read only */}
+                      <div>
+                        <label className="block text-[length:var(--font-size-12)] leading-[var(--line-height-16)] font-medium text-[var(--color-text-default)] mb-2">Email</label>
+                        <Input value={email} disabled className="min-w-[300px] max-w-[750px]" />
+                      </div>
                       {/* Name - Always editable */}
                       <div>
                         <label className="block text-[length:var(--font-size-12)] leading-[var(--line-height-16)] font-medium text-[var(--color-text-default)] mb-2">Name</label>
                         <Input 
-                          value={name}
-                          onChange={(e) => setName(e.target.value)}
+                          value={localName}
+                          onChange={(e) => setLocalName(e.target.value)}
+                          onBlur={() => setName(localName)}
                           className="min-w-[300px] max-w-[750px]"
                         />
-                      </div>
-                      {/* Email - With change button */}
-                      <div>
-                        <label className="block text-[length:var(--font-size-12)] leading-[var(--line-height-16)] font-medium text-[var(--color-text-default)] mb-2">Email</label>
-                        <div className="flex items-center gap-3 max-w-[750px]">
-                          <Input value={email} disabled className="flex-1 min-w-[300px]" />
-                          <Button 
-                            variant="primary" 
-                            size="sm" 
-                            onClick={() => {
-                              setShowEmailChangeModal(true);
-                              setEmailChangeStep(1);
-                              setEmailChangePassword('');
-                              setEmailChangePasswordError('');
-                              setNewEmail('');
-                              setEmailVerificationCode('');
-                              setEmailVerificationSent(false);
-                            }}
-                          >
-                            Change email
-                          </Button>
-                        </div>
                       </div>
                     </SectionCard.Content>
                   </SectionCard>
@@ -607,121 +428,92 @@ export function SettingsPage({ isOpen, onClose }: SettingsPageProps) {
                           </div>
                         )}
                       </div>
-                      {/* 2-Step Verification */}
+                      {/* MFA Setting */}
                       <div className="space-y-4 pt-4 border-t border-[var(--color-border-default)]">
-                        <div className="flex items-center justify-between">
-                          <div>
-                            <label className="block text-[length:var(--font-size-12)] leading-[var(--line-height-16)] font-medium text-[var(--color-text-default)] mb-1">2-Step Verification</label>
-                            <p className="text-[length:var(--font-size-12)] leading-[var(--line-height-16)] text-[var(--color-text-muted)] max-w-[400px]">
-                              Add an extra layer of security to your account.
-                            </p>
-                          </div>
-                          <Toggle 
-                            checked={twoStepEnabled}
-                            onChange={(e) => {
-                              if (e.target.checked) {
-                                setTwoStepEnabled(true);
-                              } else {
-                                // Disable requires password re-entry
-                                setCurrentSetupMethod(null);
-                                setShowPasswordModal(true);
-                              }
-                            }}
-                          />
+                        <div>
+                          <label className="block text-[length:var(--font-size-12)] leading-[var(--line-height-16)] font-medium text-[var(--color-text-default)] mb-1">MFA Setting</label>
+                          <p className="text-[length:var(--font-size-12)] leading-[var(--line-height-16)] text-[var(--color-text-muted)] max-w-[400px]">
+                            Add an extra layer of security to your account.
+                          </p>
                         </div>
 
-                        {/* Verification Methods - Only show when toggle is ON */}
-                        {twoStepEnabled && (
-                          <div className="space-y-3 mt-4 animate-in fade-in slide-in-from-top-2 duration-200">
-                            <span className="text-[length:var(--font-size-12)] leading-[var(--line-height-16)] font-medium text-[var(--color-text-muted)]">Verification Methods</span>
-                            
-                            {/* Authenticator App */}
-                            <div className="flex items-center justify-between p-4 border border-[var(--color-border-default)] rounded-lg bg-[var(--color-surface-subtle)]">
-                              <div className="flex items-center gap-3">
-                                <div className="w-10 h-10 rounded-lg bg-[var(--color-action-primary-subtle)] flex items-center justify-center">
-                                  <IconShieldCheck size={20} className="text-[var(--color-action-primary)]" />
-                                </div>
-                                <div>
-                                  <div className="text-[length:var(--font-size-12)] leading-[var(--line-height-16)] font-medium text-[var(--color-text-default)]">
-                                    Authenticator App
-                                  </div>
-                                  {authenticatorSetup.configured ? (
-                                    <div className="flex items-center gap-1.5 text-[length:var(--font-size-12)] leading-[var(--line-height-14)] text-[var(--color-state-success)]">
-                                      <IconCheck size={12} />
-                                      <span>Added {authenticatorSetup.addedAt}</span>
-                                    </div>
-                                  ) : (
-                                    <div className="text-[length:var(--font-size-12)] leading-[var(--line-height-14)] text-[var(--color-text-muted)]">
-                                      Use Google Authenticator, Authy, etc.
-                                    </div>
-                                  )}
-                                </div>
+                        {/* Verification Methods - Always visible */}
+                        <div className="space-y-3 mt-4">
+                          <span className="text-[length:var(--font-size-12)] leading-[var(--line-height-16)] font-medium text-[var(--color-text-muted)]">Verification Methods</span>
+                          
+                          {/* Authenticator App */}
+                          <div className="flex items-center justify-between p-4 border border-[var(--color-border-default)] rounded-lg bg-[var(--color-surface-subtle)]">
+                            <div className="flex items-center gap-3">
+                              <div className="w-10 h-10 rounded-lg bg-[var(--color-action-primary-subtle)] flex items-center justify-center">
+                                <IconShieldCheck size={20} className="text-[var(--color-action-primary)]" />
                               </div>
-                              <Button 
-                                variant={authenticatorSetup.configured ? "secondary" : "primary"} 
-                                size="sm"
-                                onClick={() => {
-                                  setCurrentSetupMethod('authenticator');
-                                  setSetupStep(1);
-                                  setShowPasswordModal(true);
-                                }}
-                              >
-                                {authenticatorSetup.configured ? 'Remove' : 'Set up'}
-                              </Button>
+                              <div>
+                                <div className="text-[length:var(--font-size-12)] leading-[var(--line-height-16)] font-medium text-[var(--color-text-default)]">
+                                  Authenticator App
+                                </div>
+                                {authenticatorSetup.configured ? (
+                                  <div className="flex items-center gap-1.5 text-[length:var(--font-size-12)] leading-[var(--line-height-14)] text-[var(--color-state-success)]">
+                                    <IconCheck size={12} />
+                                    <span>Added {authenticatorSetup.addedAt}</span>
+                                  </div>
+                                ) : (
+                                  <div className="text-[length:var(--font-size-12)] leading-[var(--line-height-14)] text-[var(--color-text-muted)]">
+                                    Use Google Authenticator, Authy, etc.
+                                  </div>
+                                )}
+                              </div>
                             </div>
-
+                            <Button 
+                              variant={authenticatorSetup.configured ? "secondary" : "primary"} 
+                              size="sm"
+                              onClick={() => {
+                                setCurrentSetupMethod('authenticator');
+                                setSetupStep(1);
+                                setShowPasswordModal(true);
+                              }}
+                            >
+                              {authenticatorSetup.configured ? 'Remove' : 'Set up'}
+                            </Button>
                           </div>
-                        )}
+
+                        </div>
                       </div>
                     </SectionCard.Content>
                   </SectionCard>
 
                   {/* Sessions */}
                   <SectionCard className="mb-6">
-                    <SectionCard.Header title="Sessions" />
+                    <SectionCard.Header title="Activity" />
                     <SectionCard.Content>
-                      <p className="text-[length:var(--font-size-12)] leading-[var(--line-height-18)] text-[var(--color-text-muted)] mb-4">View your recent login sessions.</p>
+                      <p className="text-[length:var(--font-size-12)] leading-[var(--line-height-18)] text-[var(--color-text-muted)] mb-4">Displaying your latest account activity.</p>
+                      
+                      {/* Pagination */}
+                      <div className="mb-4">
+                        <Pagination
+                          currentPage={currentPage}
+                          totalPages={totalPages}
+                          onPageChange={setCurrentPage}
+                          totalItems={activitySessions.length}
+                        />
+                      </div>
+                      
                       <div className="border border-[var(--color-border-default)] rounded-lg overflow-hidden">
                         <table className="w-full">
                           <thead className="bg-[var(--color-surface-subtle)]">
                             <tr>
-                              <th className="px-4 py-3 text-left text-[length:var(--font-size-12)] leading-[var(--line-height-16)] font-semibold text-[var(--color-text-muted)]">Location</th>
                               <th className="px-4 py-3 text-left text-[length:var(--font-size-12)] leading-[var(--line-height-16)] font-semibold text-[var(--color-text-muted)]">IP Address</th>
                               <th className="px-4 py-3 text-left text-[length:var(--font-size-12)] leading-[var(--line-height-16)] font-semibold text-[var(--color-text-muted)]">Device</th>
                               <th className="px-4 py-3 text-left text-[length:var(--font-size-12)] leading-[var(--line-height-16)] font-semibold text-[var(--color-text-muted)]">Timestamp</th>
                             </tr>
                           </thead>
                           <tbody>
-                            <tr className="border-t border-[var(--color-border-default)]">
-                              <td className="px-4 py-3 text-[length:var(--font-size-12)] leading-[var(--line-height-18)] text-[var(--color-text-default)]">Gangnam-gu, Seoul, South Korea</td>
-                              <td className="px-4 py-3 text-[length:var(--font-size-12)] leading-[var(--line-height-18)] text-[var(--color-text-default)]">211.234.56.78</td>
-                              <td className="px-4 py-3 text-[length:var(--font-size-12)] leading-[var(--line-height-18)] text-[var(--color-text-default)]">Chrome on macOS</td>
-                              <td className="px-4 py-3 text-[length:var(--font-size-12)] leading-[var(--line-height-18)] text-[var(--color-text-default)]">2026-01-06 14:32:18 +0900</td>
-                            </tr>
-                            <tr className="border-t border-[var(--color-border-default)]">
-                              <td className="px-4 py-3 text-[length:var(--font-size-12)] leading-[var(--line-height-18)] text-[var(--color-text-default)]">Gangnam-gu, Seoul, South Korea</td>
-                              <td className="px-4 py-3 text-[length:var(--font-size-12)] leading-[var(--line-height-18)] text-[var(--color-text-default)]">211.234.56.78</td>
-                              <td className="px-4 py-3 text-[length:var(--font-size-12)] leading-[var(--line-height-18)] text-[var(--color-text-default)]">Safari on iOS</td>
-                              <td className="px-4 py-3 text-[length:var(--font-size-12)] leading-[var(--line-height-18)] text-[var(--color-text-default)]">2026-01-05 09:15:42 +0900</td>
-                            </tr>
-                            <tr className="border-t border-[var(--color-border-default)]">
-                              <td className="px-4 py-3 text-[length:var(--font-size-12)] leading-[var(--line-height-18)] text-[var(--color-text-default)]">Mapo-gu, Seoul, South Korea</td>
-                              <td className="px-4 py-3 text-[length:var(--font-size-12)] leading-[var(--line-height-18)] text-[var(--color-text-default)]">175.192.44.123</td>
-                              <td className="px-4 py-3 text-[length:var(--font-size-12)] leading-[var(--line-height-18)] text-[var(--color-text-default)]">Firefox on Windows</td>
-                              <td className="px-4 py-3 text-[length:var(--font-size-12)] leading-[var(--line-height-18)] text-[var(--color-text-default)]">2026-01-04 18:22:05 +0900</td>
-                            </tr>
-                            <tr className="border-t border-[var(--color-border-default)]">
-                              <td className="px-4 py-3 text-[length:var(--font-size-12)] leading-[var(--line-height-18)] text-[var(--color-text-default)]">Seocho-gu, Seoul, South Korea</td>
-                              <td className="px-4 py-3 text-[length:var(--font-size-12)] leading-[var(--line-height-18)] text-[var(--color-text-default)]">121.167.88.45</td>
-                              <td className="px-4 py-3 text-[length:var(--font-size-12)] leading-[var(--line-height-18)] text-[var(--color-text-default)]">Edge on Windows</td>
-                              <td className="px-4 py-3 text-[length:var(--font-size-12)] leading-[var(--line-height-18)] text-[var(--color-text-default)]">2026-01-03 11:45:33 +0900</td>
-                            </tr>
-                            <tr className="border-t border-[var(--color-border-default)]">
-                              <td className="px-4 py-3 text-[length:var(--font-size-12)] leading-[var(--line-height-18)] text-[var(--color-text-default)]">Bundang-gu, Seongnam, South Korea</td>
-                              <td className="px-4 py-3 text-[length:var(--font-size-12)] leading-[var(--line-height-18)] text-[var(--color-text-default)]">58.123.201.67</td>
-                              <td className="px-4 py-3 text-[length:var(--font-size-12)] leading-[var(--line-height-18)] text-[var(--color-text-default)]">Chrome on Android</td>
-                              <td className="px-4 py-3 text-[length:var(--font-size-12)] leading-[var(--line-height-18)] text-[var(--color-text-default)]">2026-01-02 08:10:22 +0900</td>
-                            </tr>
+                            {paginatedSessions.map((session) => (
+                              <tr key={session.id} className="border-t border-[var(--color-border-default)]">
+                                <td className="px-4 py-3 text-[length:var(--font-size-12)] leading-[var(--line-height-18)] text-[var(--color-text-default)]">{session.ipAddress}</td>
+                                <td className="px-4 py-3 text-[length:var(--font-size-12)] leading-[var(--line-height-18)] text-[var(--color-text-default)]">{session.device}</td>
+                                <td className="px-4 py-3 text-[length:var(--font-size-12)] leading-[var(--line-height-18)] text-[var(--color-text-default)]">{session.timestamp}</td>
+                              </tr>
+                            ))}
                           </tbody>
                         </table>
                       </div>
@@ -734,166 +526,7 @@ export function SettingsPage({ isOpen, onClose }: SettingsPageProps) {
                       Logout
                     </Button>
                   </div>
-                </div>
-              )}
-
-              {/* Notifications Tab */}
-              {activeTab === 'notifications' && (
-                <div className="animate-in fade-in slide-in-from-bottom-2 duration-200">
-                  <h5 className="text-[length:var(--font-size-16)] leading-[var(--line-height-24)] font-semibold text-[var(--color-text-default)] mb-6">Notifications</h5>
-                  
-                  <SectionCard>
-                    <SectionCard.Header title="Notification Preferences" />
-                    <SectionCard.Content gap={6}>
-                      {/* Global Notification Setting */}
-                      <div className="space-y-4">
-                        <h6 className="text-[length:var(--font-size-12)] leading-[var(--line-height-16)] font-semibold text-[var(--color-text-default)]">Global Notification Setting</h6>
-                        <div className="space-y-3 pl-2">
-                          <div>
-                            <span className="text-[length:var(--font-size-12)] leading-[var(--line-height-16)] font-medium text-[var(--color-text-default)] block mb-2">What to Notify</span>
-                            <RadioGroup value={globalWhatToNotify} onChange={setGlobalWhatToNotify} direction="horizontal">
-                              <Radio value="all" label="All" />
-                              <Radio value="errors" label="Errors only" />
-                              <Radio value="off" label="Off" />
-                            </RadioGroup>
-                          </div>
-                          <div className={globalWhatToNotify === 'off' ? 'opacity-50' : ''}>
-                            <span className="text-[length:var(--font-size-12)] leading-[var(--line-height-16)] font-medium text-[var(--color-text-default)] block mb-2">Duration</span>
-                            <Select
-                              value={globalDuration}
-                              onChange={(value) => setGlobalDuration(value)}
-                              options={[
-                                { value: '1s', label: '1s' },
-                                { value: '2s', label: '2s' },
-                                { value: '3s', label: '3s' },
-                                { value: '5s', label: '5s' },
-                                { value: 'keep', label: 'Keep visible' },
-                              ]}
-                              className="w-[160px]"
-                              disabled={globalWhatToNotify === 'off'}
-                            />
-                          </div>
-                          <div className={globalWhatToNotify === 'off' ? 'opacity-50' : ''}>
-                            <span className="text-[length:var(--font-size-12)] leading-[var(--line-height-16)] font-medium text-[var(--color-text-default)] block mb-2">Sound</span>
-                            <Toggle checked={globalSound} onChange={(e) => setGlobalSound(e.target.checked)} disabled={globalWhatToNotify === 'off'} />
-                          </div>
-                        </div>
-                      </div>
-
-                      {/* In-app Notification Setting */}
-                      <div className="space-y-3">
-                        <h6 className="text-[length:var(--font-size-12)] leading-[var(--line-height-16)] font-semibold text-[var(--color-text-default)] mb-3">In-app Notification Setting</h6>
-                        
-                        {/* Service-specific settings with Disclosure */}
-                        {[
-                          { key: 'compute', label: 'Compute' },
-                          { key: 'iam', label: 'IAM' },
-                          { key: 'storage', label: 'Storage' },
-                          { key: 'container', label: 'Container' },
-                          { key: 'aiPlatform', label: 'AI Platform' },
-                          { key: 'agentOps', label: 'Agent Ops' },
-                        ].map(({ key, label }) => (
-                          <Disclosure key={key} className="border border-[var(--color-border-default)] rounded-lg overflow-hidden">
-                            <Disclosure.Trigger className="w-full py-3 px-4 bg-[var(--color-surface-subtle)]">
-                              <span className="text-[length:var(--font-size-12)] leading-[var(--line-height-16)] font-medium text-[var(--color-text-default)]">
-                                {label}
-                              </span>
-                            </Disclosure.Trigger>
-                            <Disclosure.Panel className="space-y-3 px-4 py-3 border-t border-[var(--color-border-default)]">
-                              <div>
-                                <span className="text-[length:var(--font-size-12)] leading-[var(--line-height-16)] font-medium text-[var(--color-text-default)] block mb-2">What to Notify</span>
-                                <RadioGroup 
-                                  value={serviceNotifications[key].whatToNotify} 
-                                  onChange={(value) => updateServiceNotification(key, 'whatToNotify', value)} 
-                                  direction="horizontal"
-                                >
-                                  <Radio value="all" label="All" />
-                                  <Radio value="errors" label="Errors only" />
-                                  <Radio value="off" label="Off" />
-                                </RadioGroup>
-                              </div>
-                              <div className={serviceNotifications[key].whatToNotify === 'off' ? 'opacity-50' : ''}>
-                                <span className="text-[length:var(--font-size-12)] leading-[var(--line-height-16)] font-medium text-[var(--color-text-default)] block mb-2">Duration</span>
-                                <Select
-                                  value={serviceNotifications[key].duration}
-                                  onChange={(value) => updateServiceNotification(key, 'duration', value)}
-                                  options={[
-                                    { value: '1s', label: '1s' },
-                                    { value: '2s', label: '2s' },
-                                    { value: '3s', label: '3s' },
-                                    { value: '5s', label: '5s' },
-                                    { value: 'keep', label: 'Keep visible' },
-                                  ]}
-                                  className="w-[160px]"
-                                  disabled={serviceNotifications[key].whatToNotify === 'off'}
-                                />
-                              </div>
-                              <div className={serviceNotifications[key].whatToNotify === 'off' ? 'opacity-50' : ''}>
-                                <span className="text-[length:var(--font-size-12)] leading-[var(--line-height-16)] font-medium text-[var(--color-text-default)] block mb-2">Sound</span>
-                                <Toggle 
-                                  checked={serviceNotifications[key].sound} 
-                                  onChange={(e) => updateServiceNotification(key, 'sound', e.target.checked)}
-                                  disabled={serviceNotifications[key].whatToNotify === 'off'}
-                                />
-                              </div>
-                            </Disclosure.Panel>
-                          </Disclosure>
-                        ))}
-                      </div>
-                    </SectionCard.Content>
-                  </SectionCard>
-                </div>
-              )}
-
-              {/* Information Tab */}
-              {activeTab === 'information' && (
-                <div className="animate-in fade-in slide-in-from-bottom-2 duration-200">
-                  <h5 className="text-[length:var(--font-size-16)] leading-[var(--line-height-24)] font-semibold text-[var(--color-text-default)]">Information</h5>
-                  <p className="text-[length:var(--font-size-12)] leading-[var(--line-height-18)] text-[var(--color-text-muted)] mb-6">View application version and related resources.</p>
-                  
-                  <SectionCard className="mb-6">
-                    <SectionCard.Header title="Version" />
-                    <SectionCard.Content>
-                      <div className="flex gap-4">
-                        <DetailHeader.InfoCard label="Product Name" value="Thaki Cloud Suite" />
-                        <DetailHeader.InfoCard label="Version" value="0.7.0" />
-                      </div>
-                    </SectionCard.Content>
-                  </SectionCard>
-
-                  <SectionCard className="mb-6">
-                    <SectionCard.Header title="Terms" />
-                    <SectionCard.Content>
-                      <div className="flex flex-col gap-3">
-                        <a href="https://thaki.cloud/terms" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 text-sm text-[var(--color-action-primary)] hover:underline">
-                          Terms of Service
-                          <IconExternalLink size={14} stroke={1.5} />
-                        </a>
-                        <a href="https://thaki.cloud/privacy" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 text-sm text-[var(--color-action-primary)] hover:underline">
-                          Privacy Policy
-                          <IconExternalLink size={14} stroke={1.5} />
-                        </a>
-                      </div>
-                    </SectionCard.Content>
-                  </SectionCard>
-
-                  <SectionCard>
-                    <SectionCard.Header title="Support" />
-                    <SectionCard.Content>
-                      <div className="flex flex-col gap-3">
-                        <a href="https://thaki.cloud" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 text-sm text-[var(--color-action-primary)] hover:underline">
-                          Official Website
-                          <IconExternalLink size={14} stroke={1.5} />
-                        </a>
-                        <a href="https://support.thaki.cloud" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 text-sm text-[var(--color-action-primary)] hover:underline">
-                          Support Center
-                          <IconExternalLink size={14} stroke={1.5} />
-                        </a>
-                      </div>
-                    </SectionCard.Content>
-                  </SectionCard>
-                </div>
-              )}
+              </div>
             </div>
           </main>
         </div>
@@ -1035,23 +668,6 @@ export function SettingsPage({ isOpen, onClose }: SettingsPageProps) {
             {emailChangeStep === 2 && 'Send verification code'}
             {emailChangeStep === 3 && 'Change email'}
           </Button>
-        </div>
-      </Modal>
-
-      {/* Settings Change Confirmation Modal */}
-      <Modal
-        isOpen={showConfirmModal}
-        onClose={cancelChange}
-        title={pendingChange ? `Confirm ${pendingChange.type.charAt(0).toUpperCase() + pendingChange.type.slice(1)} Change` : 'Confirm Change'}
-      >
-        <p className="text-[length:var(--font-size-12)] leading-[var(--line-height-18)] text-[var(--color-text-default)] mb-6">
-          {pendingChange && (
-            <>Are you sure you want to change the {pendingChange.type} to <strong>{pendingChange.label}</strong>?</>
-          )}
-        </p>
-        <div className="flex justify-end gap-3">
-          <Button variant="secondary" onClick={cancelChange}>Cancel</Button>
-          <Button variant="primary" onClick={confirmChange}>Apply</Button>
         </div>
       </Modal>
 

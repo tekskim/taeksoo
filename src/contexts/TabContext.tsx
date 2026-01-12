@@ -200,7 +200,7 @@ export function TabProvider({ children, defaultTabs = [] }: TabProviderProps) {
   const initializedRef = useRef(false);
   const skipNextLocationSyncRef = useRef(false);
 
-  // Detect app change and reset tabs
+  // Detect app change and reset tabs to default
   useEffect(() => {
     const newApp = getAppFromPath(location.pathname);
     if (newApp !== currentApp) {
@@ -209,40 +209,10 @@ export function TabProvider({ children, defaultTabs = [] }: TabProviderProps) {
       // Skip location sync when switching apps to prevent duplicate tab creation
       skipNextLocationSyncRef.current = true;
       
-      // Load tabs for the new app from localStorage or create default
-      const storageKeys = getStorageKeys(newApp);
-      let newTabs: TabItem[] = [];
-      let newActiveTabId = '';
-      
-      try {
-        const storedTabs = localStorage.getItem(storageKeys.tabs);
-        if (storedTabs) {
-          const parsed = JSON.parse(storedTabs);
-          if (Array.isArray(parsed) && parsed.length > 0) {
-            newTabs = parsed;
-          }
-        }
-      } catch {
-        // Ignore parse errors
-      }
-      
-      // If no stored tabs, create default home tab
-      if (newTabs.length === 0) {
-        const homeTab = getDefaultHomeTab(newApp);
-        newTabs = [homeTab];
-        newActiveTabId = homeTab.id;
-      } else {
-        // Use stored active tab if it exists in tabs, otherwise use first tab
-        const storedActiveTab = localStorage.getItem(storageKeys.activeTab);
-        if (storedActiveTab && newTabs.some(t => t.id === storedActiveTab)) {
-          newActiveTabId = storedActiveTab;
-        } else {
-          newActiveTabId = newTabs[0].id;
-        }
-      }
-      
-      setTabs(newTabs);
-      setActiveTabId(newActiveTabId);
+      // Always reset to default home tab when entering a new app
+      const homeTab = getDefaultHomeTab(newApp);
+      setTabs([homeTab]);
+      setActiveTabId(homeTab.id);
     }
   }, [location.pathname, currentApp]);
 

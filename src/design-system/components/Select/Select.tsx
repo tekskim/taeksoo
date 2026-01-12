@@ -40,8 +40,10 @@ export interface SelectProps {
   disabled?: boolean;
   /** Full width */
   fullWidth?: boolean;
-  /** Size variant */
+  /** Size variant (height) */
   size?: 'sm' | 'md';
+  /** Width variant: sm (160px), md (240px), lg (320px) */
+  width?: 'sm' | 'md' | 'lg';
   /** Additional CSS classes */
   className?: string;
   /** Required field indicator */
@@ -68,6 +70,7 @@ export function Select({
   disabled = false,
   fullWidth = false,
   size = 'md',
+  width = 'md',
   className = '',
   required = false,
   clearable = false,
@@ -235,16 +238,23 @@ export function Select({
     }
   }, [isOpen]);
 
+  // Width-based styles: sm (160px), md (240px), lg (320px)
+  const widthStyles = {
+    sm: 'w-[160px]',
+    md: 'w-[240px]',
+    lg: 'w-[320px]',
+  };
+
   // Styles
   const wrapperClasses = twMerge(
     'flex flex-col gap-[var(--input-label-gap)]',
-    fullWidth ? 'w-full' : 'w-fit',
+    fullWidth ? 'w-full' : widthStyles[width],
   );
 
-  // Size-based styles
+  // Size-based styles (height) - aligned with Input component
   const sizeStyles = {
-    sm: 'h-[28px] px-2 py-1 text-[11px] leading-4 min-w-[80px]',
-    md: 'px-[var(--select-padding-x)] py-[var(--select-padding-y)] text-[length:var(--select-font-size)] leading-[var(--select-line-height)] min-w-[80px]',
+    sm: 'h-[var(--input-height-sm)] px-2 text-[11px] leading-4',
+    md: 'h-[var(--input-height-md)] px-[var(--select-padding-x)] text-[length:var(--select-font-size)] leading-[var(--select-line-height)]',
   };
 
   const triggerClasses = twMerge(
@@ -315,6 +325,7 @@ export function Select({
       >
         <span
           className={twMerge(
+            'text-[length:var(--font-size-14)] leading-[var(--line-height-20)]',
             selectedOption
               ? 'text-[var(--color-text-default)]'
               : 'text-[var(--color-text-muted)]',

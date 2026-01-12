@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import AppLayout from '@/layouts/AppLayout';
 import {
   Button,
@@ -227,7 +227,7 @@ export function CloudBuilderDetailPage() {
                       <div className="grid grid-cols-12 gap-6 items-start">
                         <div className="col-span-12 md:col-span-4 text-[14px] text-[var(--color-text-default)]">
                           <span>Reason</span>{' '}
-                          <span className="text-[var(--color-state-danger)]">*</span>
+                          <span className="ml-1 text-[var(--color-state-danger)]">*</span>
                         </div>
                         <div className="col-span-12 md:col-span-8">
                           <Textarea

@@ -143,7 +143,7 @@ export const ProgressBar: React.FC<ProgressBarProps> = ({
         {/* Header */}
         <div className="flex items-center justify-between">
           {label && (
-            <span className="text-[length:var(--font-size-14)] leading-[var(--line-height-20)] font-medium text-[var(--color-text-default)]">
+            <span className="text-[length:var(--font-size-12)] leading-[var(--line-height-18)] font-medium text-[var(--color-text-default)]">
               {label}
             </span>
           )}

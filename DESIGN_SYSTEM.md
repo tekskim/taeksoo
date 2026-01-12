@@ -12,6 +12,7 @@ THAKI Design System (TDS)은 THAKI Cloud 플랫폼을 위한 디자인 시스템
   - [Layout](#layout)
   - [Navigation](#navigation)
   - [Feedback](#feedback)
+  - [Patterns](#patterns)
 - [스타일 가이드](#스타일-가이드)
 
 ---
@@ -25,7 +26,10 @@ import {
   Button, Input, Select, Checkbox, Radio, Toggle,
   Table, Badge, StatusIndicator,
   Modal, Drawer, FormField, SectionCard,
-  VStack, HStack, Container
+  VStack, HStack, Container,
+  // Wizard Pattern
+  WizardSection, WizardSummary, DoneSection, DoneSectionRow,
+  PreSection, WritingSection, SkippedSection,
 } from '@/design-system';
 ```
 
@@ -485,15 +489,233 @@ Side Navigation Bar Menu Item - 좁은 사이드바용 메뉴 아이템
 
 ---
 
+### Patterns
+
+#### Wizard (Create Flow)
+
+리소스 생성 마법사 패턴입니다. 여러 단계를 순차적으로 진행하며, 각 섹션의 상태를 관리합니다.
+
+**Import:**
+```tsx
+import { 
+  WizardSection,
+  WizardSummary,
+  WizardSectionStatusIcon,
+  PreSection,
+  WritingSection,
+  SkippedSection,
+  DoneSection,
+  DoneSectionRow,
+} from '@/design-system';
+import type { WizardSectionState, WizardSummaryItem } from '@/design-system';
+```
+
+**섹션 상태 (WizardSectionState):**
+| 상태 | 설명 | 아이콘 |
+|------|------|--------|
+| `pre` | 대기 중 | 빈 원 |
+| `active` | 현재 편집 중 | 회전 아이콘 |
+| `done` | 완료됨 | 녹색 체크 |
+| `skipped` | 건너뜀 | 마이너스 |
+| `writing` | 작성 중 (임시 저장) | "Writing..." 텍스트 |
+
+**WizardSummary - 진행 상태 요약:**
+```tsx
+const sections: WizardSummaryItem[] = [
+  { key: 'basic-info', label: 'Basic Information', status: 'done' },
+  { key: 'image', label: 'Image', status: 'active' },
+  { key: 'flavor', label: 'Flavor', status: 'pre' },
+  { key: 'network', label: 'Network', status: 'pre' },
+];
+
+<WizardSummary 
+  title="Summary" 
+  items={sections}
+  onItemClick={(key) => scrollToSection(key)}
+/>
+```
+
+**PreSection - 대기 중인 섹션:**
+```tsx
+<PreSection title="Network" />
+```
+
+**WritingSection - 작성 중인 섹션:**
+```tsx
+<WritingSection title="Image" />
+```
+
+**SkippedSection - 건너뛴 섹션:**
+```tsx
+<SkippedSection 
+  title="Advanced" 
+  onEdit={() => handleEdit('advanced')} 
+/>
+```
+
+**DoneSection - 완료된 섹션:**
+```tsx
+<DoneSection title="Basic Information" onEdit={() => handleEdit('basic-info')}>
+  <DoneSectionRow label="Instance Name" value="my-instance" />
+  <DoneSectionRow label="AZ" value="nova (Default)" />
+  <DoneSectionRow label="Description" value="My test instance" />
+</DoneSection>
+```
+
+**WizardSection - 통합 컴포넌트:**
+```tsx
+<WizardSection
+  title="Basic Information"
+  status={sectionStatus['basic-info']}
+  onEdit={() => handleEdit('basic-info')}
+  summaryContent={
+    <>
+      <DoneSectionRow label="Instance Name" value={instanceName} />
+      <DoneSectionRow label="AZ" value={az} />
+    </>
+  }
+>
+  {/* Active 상태일 때 렌더링되는 폼 */}
+  <SectionCard isActive>
+    <SectionCard.Header title="Basic Information" />
+    <SectionCard.Content>
+      <FormField>
+        <FormField.Label>Instance Name</FormField.Label>
+        <FormField.Control>
+          <Input value={instanceName} onChange={setInstanceName} />
+        </FormField.Control>
+      </FormField>
+    </SectionCard.Content>
+  </SectionCard>
+</WizardSection>
+```
+
+**전체 Create Flow 구조:**
+```tsx
+function CreateResourcePage() {
+  // 섹션 상태 관리
+  const [sectionStatus, setSectionStatus] = useState<Record<string, WizardSectionState>>({
+    'basic-info': 'active',
+    'config': 'pre',
+    'advanced': 'pre',
+  });
+  
+  // 편집 모드 관리
+  const [editingSection, setEditingSection] = useState<string | null>(null);
+  
+  // 다음 섹션으로 이동
+  const handleNext = (currentSection: string) => {
+    const nextSection = getNextSection(currentSection);
+    setSectionStatus(prev => ({
+      ...prev,
+      [currentSection]: 'done',
+      [nextSection]: 'active',
+    }));
+  };
+  
+  // 섹션 건너뛰기
+  const handleSkip = (section: string) => {
+    const nextSection = getNextSection(section);
+    setSectionStatus(prev => ({
+      ...prev,
+      [section]: 'skipped',
+      [nextSection]: 'active',
+    }));
+  };
+  
+  // 섹션 편집
+  const handleEdit = (section: string) => {
+    // 현재 활성 섹션을 'writing' 상태로 변경
+    setSectionStatus(prev => {
+      const newStatus = { ...prev };
+      for (const key of Object.keys(newStatus)) {
+        if (newStatus[key] === 'active') {
+          newStatus[key] = 'writing';
+        }
+      }
+      newStatus[section] = 'active';
+      return newStatus;
+    });
+    setEditingSection(section);
+  };
+  
+  return (
+    <HStack gap={6} align="start">
+      {/* 메인 콘텐츠 */}
+      <VStack gap={4} className="flex-1">
+        {/* 각 섹션 렌더링 */}
+        {SECTIONS.map(section => (
+          <WizardSection
+            key={section.key}
+            title={section.label}
+            status={sectionStatus[section.key]}
+            onEdit={() => handleEdit(section.key)}
+            summaryContent={renderSummary(section.key)}
+          >
+            {renderActiveSection(section.key)}
+          </WizardSection>
+        ))}
+      </VStack>
+      
+      {/* 사이드바 */}
+      <div className="w-[312px] sticky top-4">
+        <WizardSummary
+          items={SECTIONS.map(s => ({
+            key: s.key,
+            label: s.label,
+            status: sectionStatus[s.key],
+          }))}
+        />
+        
+        {/* Create 버튼 */}
+        <HStack justify="end" className="mt-4">
+          <Button variant="secondary">Cancel</Button>
+          <Button 
+            variant="primary" 
+            disabled={!isAllCompleted}
+          >
+            Create
+          </Button>
+        </HStack>
+      </div>
+    </HStack>
+  );
+}
+```
+
+**템플릿 적용 패턴:**
+```tsx
+// 템플릿 선택 시 모든 섹션 자동 완료
+const applyTemplate = (template: Template) => {
+  // 템플릿 값으로 폼 데이터 설정
+  setInstanceName(template.config.instanceName);
+  setImage(template.config.image);
+  // ...
+  
+  // 첫 번째 섹션만 active, 나머지는 done
+  setSectionStatus({
+    'basic-info': 'active',  // 이름만 확인/수정
+    'image': 'done',
+    'flavor': 'done',
+    'network': 'done',
+    'advanced': 'done',
+  });
+};
+```
+
+---
+
 ## 스타일 가이드
 
 ### 필수 필드 표시
 
 ```tsx
 <label>
-  Field Name <span className="text-[var(--color-state-danger)]">*</span>
+  Field Name<span className="ml-1 text-[var(--color-state-danger)]">*</span>
 </label>
 ```
+
+> **Note**: `ml-1` (4px)로 별표 앞에 공백을 추가합니다.
 
 ### Helper Text
 
@@ -555,7 +777,8 @@ className="text-[var(--color-action-primary)]"  // 링크/액션
 
 ## 버전
 
-- **Current Version**: 1.0.0
-- **Last Updated**: 2026-01-06
+- **Current Version**: 1.1.0
+- **Last Updated**: 2026-01-12
+- **Changes**: Wizard Pattern 추가 (Create Flow)
 
 
