@@ -320,7 +320,7 @@ function MonitoringTimeControls({
               </div>
             </div>
 
-            {/* DatePicker from Design System */}
+            {/* DatePicker from Design system */}
             <DatePicker
               mode="range"
               rangeValue={{ start: tempStartDate, end: tempEndDate }}
@@ -350,7 +350,7 @@ function MonitoringTimeControls({
 }
 
 /* ----------------------------------------
-   Capacity Used Gauge Component (Half-Doughnut Chart)
+   Capacity Used Gauge Component (Half-Doughnut chart)
    Following design system pattern from DesignSystemPage
    ---------------------------------------- */
 
@@ -538,7 +538,7 @@ function TimeTillFull({ value, unit }: TimeTillFullProps) {
 }
 
 /* ----------------------------------------
-   Performance Line Chart Component (Design System)
+   Performance Line Chart Component (Design system)
    Uses CSS classes from index.css: chartCard, chartHeader, chartTitle, etc.
    ---------------------------------------- */
 
@@ -900,7 +900,7 @@ interface StoragePoolDetail {
   applications: string;
   pgStatus: string;
   crushRuleset: string;
-  // Basic Information
+  // Basic information
   description: string;
   // Cache & Tiering
   cacheMode: string;
@@ -937,7 +937,7 @@ const mockStoragePoolDetail: StoragePoolDetail = {
   applications: 'rbd',
   pgStatus: '128 active+clean',
   crushRuleset: 'rule_nvme',
-  // Basic Information
+  // Basic information
   description: '-',
   // Cache & Tiering
   cacheMode: 'none',
@@ -1051,10 +1051,10 @@ export function StoragePoolDetailPage() {
               <DetailHeader>
                 <DetailHeader.Title>{pool.name}</DetailHeader.Title>
                 <DetailHeader.InfoGrid>
-                  <DetailHeader.InfoCard label="Data Protection" value={pool.dataProtection} status="active" />
+                  <DetailHeader.InfoCard label="Data protection" value={pool.dataProtection} status="active" />
                   <DetailHeader.InfoCard label="Applications" value={pool.applications} copyable />
                   <DetailHeader.InfoCard label="PG Status" value={pool.pgStatus} />
-                  <DetailHeader.InfoCard label="Crush Ruleset" value={pool.crushRuleset} />
+                  <DetailHeader.InfoCard label="Crush ruleset" value={pool.crushRuleset} />
                 </DetailHeader.InfoGrid>
               </DetailHeader>
 
@@ -1069,10 +1069,10 @@ export function StoragePoolDetailPage() {
                   {/* Details Tab */}
                   <TabPanel value="details" className="pt-0">
                     <VStack gap={4} className="pt-6">
-                      {/* Basic Information */}
+                      {/* Basic information */}
                       <SectionCard>
                         <SectionCard.Header
-                          title="Basic Information"
+                          title="Basic information"
                           actions={
                             <Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />}>
                               Edit
@@ -1088,8 +1088,8 @@ export function StoragePoolDetailPage() {
                       <SectionCard>
                         <SectionCard.Header title="Cache & tiering" />
                         <SectionCard.Content>
-                          <SectionCard.DataRow label="Cache Mode" value={pool.cacheMode} />
-                          <SectionCard.DataRow label="Tier Pool" value={pool.tierPool} />
+                          <SectionCard.DataRow label="Cache mode" value={pool.cacheMode} />
+                          <SectionCard.DataRow label="Tier pool" value={pool.tierPool} />
                         </SectionCard.Content>
                       </SectionCard>
 
@@ -1099,8 +1099,8 @@ export function StoragePoolDetailPage() {
                         <SectionCard.Content>
                           <SectionCard.DataRow label="No Scrub" value={pool.noScrub ? 'Enabled' : 'Disabled'} />
                           <SectionCard.DataRow label="No Deep Scrub" value={pool.noDeepScrub ? 'Enabled' : 'Disabled'} />
-                          <SectionCard.DataRow label="Max Objects" value={pool.maxObjects === 0 ? 'unlimited' : String(pool.maxObjects)} />
-                          <SectionCard.DataRow label="Max Bytes" value={pool.maxBytes} />
+                          <SectionCard.DataRow label="Max objects" value={pool.maxObjects === 0 ? 'unlimited' : String(pool.maxObjects)} />
+                          <SectionCard.DataRow label="Max bytes" value={pool.maxBytes} />
                         </SectionCard.Content>
                       </SectionCard>
 
@@ -1109,7 +1109,7 @@ export function StoragePoolDetailPage() {
                         <SectionCard.Header title="Load balancing" />
                         <SectionCard.Content>
                           <SectionCard.DataRow label="PG Autoscale Mode" value={pool.pgAutoscaleMode} />
-                          <SectionCard.DataRow label="Target Size Ratio" value={String(pool.targetSizeRatio)} />
+                          <SectionCard.DataRow label="Target size Ratio" value={String(pool.targetSizeRatio)} />
                         </SectionCard.Content>
                       </SectionCard>
 
@@ -1118,7 +1118,7 @@ export function StoragePoolDetailPage() {
                         <SectionCard.Header title="Snapshots & history" />
                         <SectionCard.Content>
                           <SectionCard.DataRow label="Snapshots" value={String(pool.snapshots)} />
-                          <SectionCard.DataRow label="Last Snapshot Date" value={pool.lastSnapshotDate} />
+                          <SectionCard.DataRow label="Last snapshot Date" value={pool.lastSnapshotDate} />
                         </SectionCard.Content>
                       </SectionCard>
 
@@ -1128,7 +1128,7 @@ export function StoragePoolDetailPage() {
                         <SectionCard.Content>
                           <SectionCard.DataRow label="PG Num" value={String(pool.pgNum)} />
                           <SectionCard.DataRow label="PGP Num" value={String(pool.pgpNum)} />
-                          <SectionCard.DataRow label="Min Size" value={String(pool.minSize)} />
+                          <SectionCard.DataRow label="Min size" value={String(pool.minSize)} />
                           <SectionCard.DataRow label="Size" value={String(pool.size)} />
                         </SectionCard.Content>
                       </SectionCard>
@@ -1137,8 +1137,8 @@ export function StoragePoolDetailPage() {
                       <SectionCard>
                         <SectionCard.Header title="Advanced" />
                         <SectionCard.Content>
-                          <SectionCard.DataRow label="Compression Mode" value={pool.compressionMode} />
-                          <SectionCard.DataRow label="Compression Algorithm" value={pool.compressionAlgorithm} />
+                          <SectionCard.DataRow label="Compression mode" value={pool.compressionMode} />
+                          <SectionCard.DataRow label="Compression algorithm" value={pool.compressionAlgorithm} />
                         </SectionCard.Content>
                       </SectionCard>
                     </VStack>

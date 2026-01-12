@@ -262,7 +262,7 @@ export function IAMHomePage() {
 
   // Update tab label on mount
   useEffect(() => {
-    updateActiveTabLabel('IAM Home');
+    updateActiveTabLabel('IAM home');
   }, [updateActiveTabLabel]);
 
   // Sidebar width

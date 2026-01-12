@@ -58,7 +58,7 @@ function DesktopIcon({ icon, label, onClick }: DesktopIconProps) {
           className="w-16 h-16 object-cover object-center"
         />
       </div>
-      <span className="text-[length:var(--font-size-12)] leading-[var(--line-height-18)] font-medium text-white text-center whitespace-nowrap font-[Mona_Sans,sans-serif]">
+      <span className="text-[length:var(--font-size-12)] leading-[var(--line-height-18)] font-medium text-white text-center whitespace-nowrap ">
         {label}
       </span>
     </button>
@@ -231,7 +231,7 @@ function DockIcons({
 }
 
 /* ----------------------------------------
-   Admin Center Icon Component (Multi-icon)
+   Admin center Icon Component (Multi-icon)
    ---------------------------------------- */
 
 interface AdminCenterIconProps {
@@ -246,7 +246,7 @@ function AdminCenterIcon({ onClick, iconRef }: AdminCenterIconProps) {
       type="button"
       className="flex flex-col items-center gap-2 w-16 cursor-pointer transition-transform hover:-translate-y-0.5 bg-transparent border-none p-0"
       onClick={onClick}
-      aria-label="Admin Center"
+      aria-label="Admin center"
     >
       <div className="bg-white/10 rounded-2xl p-2 flex flex-col gap-1">
         <div className="flex gap-1 items-center">
@@ -257,8 +257,8 @@ function AdminCenterIcon({ onClick, iconRef }: AdminCenterIconProps) {
           <img src={imgCloud} alt="" className="w-[22px] h-[22px] object-cover" />
         </div>
       </div>
-      <span className="text-[length:var(--font-size-12)] leading-[var(--line-height-18)] font-medium text-white text-center whitespace-nowrap font-[Mona_Sans,sans-serif]">
-        Admin Center
+      <span className="text-[length:var(--font-size-12)] leading-[var(--line-height-18)] font-medium text-white text-center whitespace-nowrap ">
+        Admin center
       </span>
     </button>
   );
@@ -394,14 +394,11 @@ function DesktopTopBar({ onChatbotToggle, onOpenSettings, onNotificationToggle, 
   return (
     <div className="fixed top-0 left-0 right-0 h-14 bg-white flex items-center justify-between px-4 z-[1000] shadow-[2px_4px_4px_0px_rgba(0,0,0,0.11)]">
       {/* Left Section */}
-      <div className="flex items-center gap-4">
-        {/* THAKI Cloud Logo */}
-        <div className="flex items-center gap-2">
-          <img 
-            src={ThakiLogoLight} 
-            alt="THAKI Cloud" 
-            className="h-5"
-          />
+      <div className="flex items-center gap-3">
+        {/* Domain Selector - Figma style */}
+        <div className="flex items-center gap-1.5 bg-[#ddddda] px-2.5 py-0.5 rounded-lg">
+          <img src={imgSymbol} alt="" className="w-4 h-4" />
+          <span className="text-lg font-semibold text-black  leading-7">Domain A</span>
         </div>
         
         {/* Divider */}
@@ -519,7 +516,7 @@ function DesktopTopBar({ onChatbotToggle, onOpenSettings, onNotificationToggle, 
 }
 
 /* ----------------------------------------
-   Admin Center Popup Panel (Figma Style)
+   Admin center Popup Panel (Figma Style)
    ---------------------------------------- */
 
 interface AdminPanelProps {
@@ -546,22 +543,22 @@ function AdminCenterPanel({ isOpen, onClose, anchorRef }: AdminPanelProps) {
         className="fixed inset-0 z-[500]" 
         onClick={onClose}
       />
-      {/* Panel - positioned below Admin Center icon */}
+      {/* Panel - positioned below Admin center icon */}
       <div 
         className="fixed bg-white/10 rounded-2xl px-10 py-[22px] flex gap-[50px] items-center z-[501]"
         style={{ top: `${top}px`, left: `${left}px` }}
       >
         <div className="flex flex-col items-center gap-2 w-16">
           <img src={imgStorageAdmin} alt="Storage Admin" className="w-16 h-16 object-cover" />
-          <span className="text-[length:var(--font-size-12)] leading-[var(--line-height-18)] font-medium text-white text-center font-[Mona_Sans,sans-serif]">Storage Admin</span>
+          <span className="text-[length:var(--font-size-12)] leading-[var(--line-height-18)] font-medium text-white text-center ">Storage Admin</span>
         </div>
         <div className="flex flex-col items-center gap-2 w-16">
           <img src={imgComputeAdmin} alt="Compute Admin" className="w-16 h-16 object-cover" />
-          <span className="text-[length:var(--font-size-12)] leading-[var(--line-height-18)] font-medium text-white text-center font-[Mona_Sans,sans-serif]">Compute Admin</span>
+          <span className="text-[length:var(--font-size-12)] leading-[var(--line-height-18)] font-medium text-white text-center ">Compute Admin</span>
         </div>
         <div className="flex flex-col items-center gap-2 w-16">
           <img src={imgCloud} alt="Cloud Builder" className="w-16 h-16 object-cover" />
-          <span className="text-[length:var(--font-size-12)] leading-[var(--line-height-18)] font-medium text-white text-center font-[Mona_Sans,sans-serif]">Cloud Builder</span>
+          <span className="text-[length:var(--font-size-12)] leading-[var(--line-height-18)] font-medium text-white text-center ">Cloud Builder</span>
         </div>
       </div>
     </>
@@ -714,7 +711,7 @@ export function DesktopPage() {
     'compute': { name: 'Compute', icon: imgCompute, component: <ComputeHomePage /> },
     'storage': { name: 'Storage', icon: imgStorage, component: <StorageHomePage /> },
     'container': { name: 'Container', icon: imgContainer, component: <ContainerDashboardPage /> },
-    'agent': { name: 'Agent Ops', icon: imgAgent, component: <HomePage /> },
+    'agent': { name: 'Agent ops', icon: imgAgent, component: <HomePage /> },
     'ai-platform': { name: 'AI Platform', icon: imgAi, component: null },
     'iam': { name: 'IAM', icon: imgIam, component: null },
   });
@@ -905,7 +902,7 @@ export function DesktopPage() {
         />
         <DesktopIcon 
           icon={imgAgent}
-          label="Agent Ops"
+          label="Agent ops"
           onClick={() => setShowAgent(true)}
         />
         <DesktopIcon 
@@ -919,7 +916,7 @@ export function DesktopPage() {
         />
       </div>
 
-      {/* Admin Center Panel */}
+      {/* Admin center Panel */}
       <AdminCenterPanel 
         isOpen={showAdminCenter}
         onClose={() => setShowAdminCenter(false)}
@@ -939,7 +936,7 @@ export function DesktopPage() {
         onClose={() => setShowChatbot(false)} 
       />
 
-      {/* Notification Center */}
+      {/* Notification center */}
       {showNotifications && notificationButtonRef.current && (() => {
         const rect = notificationButtonRef.current.getBoundingClientRect();
         const notificationWidth = 360; // NotificationCenter width

@@ -102,7 +102,7 @@ export function NetworksPage() {
     { id: 'subnetCidr', label: 'Subnet CIDR', visible: true },
     { id: 'external', label: 'External', visible: true },
     { id: 'diskTag', label: 'Shared / Is Current Tenant', visible: true },
-    { id: 'adminState', label: 'Admin State', visible: true },
+    { id: 'adminState', label: 'Admin state', visible: true },
     { id: 'actions', label: 'Action', visible: true, locked: true },
   ];
 
@@ -120,7 +120,7 @@ export function NetworksPage() {
 
   // Context menu items
   const getContextMenuItems = (network: Network): ContextMenuItem[] => [
-    { id: 'create-subnet', label: 'Create Subnet', onClick: () => console.log('Create subnet:', network.id) },
+    { id: 'create-subnet', label: 'Create subnet', onClick: () => console.log('Create subnet:', network.id) },
     { id: 'edit', label: 'Edit', onClick: () => console.log('Edit:', network.id) },
     { id: 'delete', label: 'Delete', status: 'danger', onClick: () => { setNetworkToDelete(network); setDeleteModalOpen(true); } },
   ];
@@ -204,7 +204,7 @@ export function NetworksPage() {
     },
     {
       key: 'adminState',
-      label: 'Admin State',
+      label: 'Admin state',
       flex: 1,
     },
     {
@@ -306,14 +306,14 @@ export function NetworksPage() {
                 Networks
               </h1>
               <Button variant="primary" size="md" onClick={() => navigate('/compute/networks/create')}>
-                Create Network
+                Create network
               </Button>
             </div>
 
             {/* Tabs */}
             <Tabs value={activeTab} onChange={setActiveTab} size="sm">
               <TabList>
-                <Tab value="current">Current Tenant</Tab>
+                <Tab value="current">Current tenant</Tab>
                 <Tab value="shared">Shared</Tab>
                 <Tab value="external">External</Tab>
               </TabList>
@@ -325,7 +325,7 @@ export function NetworksPage() {
                 <ListToolbar.Actions>
                   <div className="w-[280px]">
                     <SearchInput
-                      placeholder="Find network with filters"
+                      placeholder="Search network by attributes"
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
                       onClear={() => setSearchQuery('')}

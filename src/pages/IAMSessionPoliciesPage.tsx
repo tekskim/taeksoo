@@ -19,7 +19,7 @@ import { useTabs } from '@/contexts/TabContext';
 import { IconRefresh } from '@tabler/icons-react';
 
 /* ----------------------------------------
-   Session Policies Page
+   Session policies Page
    ---------------------------------------- */
 
 export default function IAMSessionPoliciesPage() {
@@ -36,13 +36,13 @@ export default function IAMSessionPoliciesPage() {
 
   // Update tab label on mount
   useEffect(() => {
-    updateActiveTabLabel('Session Policies');
+    updateActiveTabLabel('Session policies');
   }, [updateActiveTabLabel]);
 
   // Sidebar width
   const sidebarWidth = sidebarOpen ? 200 : 0;
 
-  // Tab bar tabs
+  // Tab Bar tabs
   const tabBarTabs = tabs.map(tab => ({
     id: tab.id,
     label: tab.label,
@@ -120,7 +120,7 @@ export default function IAMSessionPoliciesPage() {
               {/* Header */}
               <HStack justify="between" align="center" className="w-full min-h-[28px]">
                 <h1 className="text-[16px] font-semibold leading-6 text-[var(--color-text-default)]">
-                  Session Policies
+                  Session policies
                 </h1>
               </HStack>
 
@@ -128,7 +128,7 @@ export default function IAMSessionPoliciesPage() {
               <div className="w-full">
                 <Tabs value={activeTab} onChange={setActiveTab} variant="underline" size="sm">
                   <TabList>
-                    <Tab value="general">General Policy</Tab>
+                    <Tab value="general">General policy</Tab>
                   </TabList>
 
                   {/* General Policy Tab */}

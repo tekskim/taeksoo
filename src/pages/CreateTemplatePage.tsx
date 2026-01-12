@@ -74,7 +74,7 @@ interface SectionStatus {
 // Section labels for display
 const SECTION_LABELS: Record<SectionStep, string> = {
   'template-info': 'Template Information',
-  'basic-info': 'Basic Information',
+  'basic-info': 'Basic information',
   image: 'Source',
   flavor: 'Flavor',
   network: 'Network',
@@ -488,7 +488,7 @@ function TemplateInformationSection({
         ) : undefined}
       />
       <SectionCard.Content gap={6}>
-        {/* Template Name */}
+        {/* Template name */}
         <VStack gap={2}>
           <span className="text-[length:var(--font-size-14)] font-medium leading-[var(--line-height-20)] text-[var(--color-text-default)]">
             Template name <span className="text-[var(--color-state-danger)]">*</span>
@@ -576,7 +576,7 @@ function BasicInformationSection({
   return (
     <SectionCard isActive={isActive}>
       <SectionCard.Header 
-        title="Basic Information" 
+        title="Basic information" 
         showDivider
         actions={isEditing ? (
           <HStack gap={2}>
@@ -586,10 +586,10 @@ function BasicInformationSection({
         ) : undefined}
       />
       <SectionCard.Content gap={6}>
-        {/* AZ (Availability Zone) */}
+        {/* AZ (Availability zone) */}
         <VStack gap={2}>
           <span className="text-[length:var(--font-size-14)] font-medium leading-[var(--line-height-20)] text-[var(--color-text-default)]">
-            AZ (Availability Zone)
+            AZ (Availability zone)
           </span>
           <span className="text-[length:var(--font-size-12)] leading-[var(--line-height-16)] text-[var(--color-text-subtle)]">
             Select the availability zone for the instance.
@@ -902,10 +902,10 @@ function ImageSection({
             )}
           </VStack>
 
-          {/* Data Disk Section */}
+          {/* Data disk Section */}
           <VStack gap={3} align="start">
             <span className="text-[14px] font-medium text-[var(--color-text-default)]">
-              Data Disk
+              Data disk
             </span>
             <span className="text-[12px] text-[var(--color-text-subtle)]">
               Attach additional volumes for data storage.
@@ -917,7 +917,7 @@ function ImageSection({
               leftIcon={<IconPlus size={12} />}
               onClick={handleAddDataDisk}
             >
-              Add Data Disk
+              Add Data disk
             </Button>
           </VStack>
 
@@ -1021,7 +1021,7 @@ function FlavorSection({
     },
     { key: 'vCPU', label: 'vCPU', sortable: true },
     { key: 'ram', label: 'RAM', sortable: true },
-    { key: 'disk', label: 'Root Disk', sortable: true },
+    { key: 'disk', label: 'Root disk', sortable: true },
     { 
       key: 'isPublic', 
       label: 'Public',
@@ -1158,7 +1158,7 @@ function NetworkSection({
   const [networkSearch, setNetworkSearch] = useState('');
   const [networkPage, setNetworkPage] = useState(1);
   
-  // Security Group state
+  // Security group state
   const [sgSearch, setSgSearch] = useState('');
   const [sgPage, setSgPage] = useState(1);
   
@@ -1289,7 +1289,7 @@ function NetworkSection({
     { key: 'shared', label: 'Shared' },
   ];
 
-  // Security Group table columns
+  // Security group table columns
   const sgColumns: TableColumn<SecurityGroupRow>[] = [
     {
       key: 'select',
@@ -1321,7 +1321,7 @@ function NetworkSection({
       ),
     },
     { key: 'description', label: 'Description', sortable: true },
-    { key: 'createdAt', label: 'Created At', sortable: true },
+    { key: 'createdAt', label: 'Created at', sortable: true },
   ];
 
   // Port table columns
@@ -1364,7 +1364,7 @@ function NetworkSection({
     },
     { 
       key: 'ownedNetwork', 
-      label: 'Owned Network', 
+      label: 'Owned network', 
       sortable: true,
       render: (value, row) => (
         <VStack gap={0} align="start">
@@ -1520,18 +1520,18 @@ function NetworkSection({
             </button>
           </VStack>
 
-          {/* Security Groups Section */}
+          {/* Security groups Section */}
           <VStack gap={4} align="stretch">
             <VStack gap={2} align="start">
               <span className="text-[14px] font-medium text-[var(--color-text-default)] leading-[20px]">
-                Security Groups<span className="ml-[3px] text-[var(--color-state-danger)]">*</span>
+                Security groups<span className="ml-[3px] text-[var(--color-state-danger)]">*</span>
               </span>
               <span className="text-[12px] text-[var(--color-text-subtle)] leading-[16px]">
                 Security groups apply to all networks except ports with security disabled.
               </span>
             </VStack>
 
-            {/* Security Group Search & Create Button */}
+            {/* Security group Search & Create Button */}
             <HStack justify="between" align="center">
               <SearchInput
                 placeholder="Search security groups by attributes"
@@ -1546,7 +1546,7 @@ function NetworkSection({
               </Button>
             </HStack>
 
-            {/* Security Group Pagination */}
+            {/* Security group Pagination */}
             <Pagination
               currentPage={sgPage}
               totalPages={sgTotalPages}
@@ -1554,7 +1554,7 @@ function NetworkSection({
               onPageChange={setSgPage}
             />
 
-            {/* Security Group Table */}
+            {/* Security group Table */}
             <Table
               columns={sgColumns}
               data={paginatedSGs}
@@ -1562,7 +1562,7 @@ function NetworkSection({
               onRowClick={(row) => onSecurityGroupToggle(row.id)}
             />
 
-            {/* Selected Security Groups Chips */}
+            {/* Selected Security groups Chips */}
             {selectedSGs.length > 0 && (
               <HStack gap={2} className="flex-wrap">
                 {selectedSGs.map(sg => (
@@ -1688,7 +1688,7 @@ function AuthenticationSection({
     },
     { key: 'name', label: 'Name', sortable: true },
     { key: 'fingerprint', label: 'Fingerprint' },
-    { key: 'createdAt', label: 'Created At', sortable: true, width: '120px' },
+    { key: 'createdAt', label: 'Created at', sortable: true, width: '120px' },
   ];
 
   return (
@@ -1707,14 +1707,14 @@ function AuthenticationSection({
         <VStack gap={0}>
           <VStack gap={2} className="pt-3">
             <span className="text-[14px] font-medium text-[var(--color-text-default)]">
-              Login Type<span className="ml-1 text-[var(--color-state-danger)]">*</span>
+              Login type<span className="ml-1 text-[var(--color-state-danger)]">*</span>
             </span>
             <HStack gap={4} className="mt-2">
               <Radio
                 value="keypair"
                 checked={loginType === 'keypair'}
                 onChange={() => onLoginTypeChange('keypair')}
-                label="Key Pair"
+                label="Key pair"
               />
               <Radio
                 value="password"
@@ -1730,7 +1730,7 @@ function AuthenticationSection({
               <div className="w-full h-px bg-[var(--color-border-subtle)] my-6" />
               <VStack gap={2}>
                 <span className="text-[14px] font-medium text-[var(--color-text-default)]">
-                  Key Pair<span className="ml-1 text-[var(--color-state-danger)]">*</span>
+                  Key pair<span className="ml-1 text-[var(--color-state-danger)]">*</span>
                 </span>
                 <span className="text-[12px] text-[var(--color-text-muted)] mb-4">
                   Select the key pair for SSH access.
@@ -1906,11 +1906,11 @@ function AdvancedSection({
             </HStack>
           </VStack>
 
-          {/* User Data Section */}
+          {/* User data Section */}
           <VStack gap={3} align="stretch">
             <VStack gap={2} align="stretch">
               <span className="text-[14px] font-medium text-[var(--color-text-default)]">
-                User Data
+                User data
               </span>
               <span className="text-[12px] text-[var(--color-text-subtle)]">
                 Enter a script or cloud-init configuration to run when the instance first boots.
@@ -1985,7 +1985,7 @@ export function CreateTemplatePage() {
   const [templateDescription, setTemplateDescription] = useState('');
   const [isFavorite, setIsFavorite] = useState(false);
 
-  // Basic Information state
+  // Basic information state
   const [availabilityZone, setAvailabilityZone] = useState('nova');
 
   // Image state
@@ -2180,7 +2180,7 @@ export function CreateTemplatePage() {
   const getAuthSummary = () => {
     if (loginType === 'keypair') {
       const kp = mockKeyPairs.find(k => k.id === selectedKeyPairId);
-      return kp ? `Key Pair: ${kp.name}` : 'Key Pair: -';
+      return kp ? `Key pair: ${kp.name}` : 'Key pair: -';
     }
     return 'Password';
   };
@@ -2217,8 +2217,8 @@ export function CreateTemplatePage() {
               <Breadcrumb
                 items={[
                   { label: 'Proj-1', href: '/project' },
-                  { label: 'Instance Templates', href: '/compute/instance-templates' },
-                  { label: 'Create Template' },
+                  { label: 'Instance templates', href: '/compute/instance-templates' },
+                  { label: 'Create template' },
                 ]}
               />
             }
@@ -2238,7 +2238,7 @@ export function CreateTemplatePage() {
             <VStack gap={6} className="min-w-[1176px]">
               {/* Page Title */}
               <h1 className="text-[18px] font-semibold leading-7 text-[var(--color-text-default)]">
-                Create Template
+                Create template
               </h1>
 
               {/* Content Area */}
@@ -2269,13 +2269,13 @@ export function CreateTemplatePage() {
                   )}
                   {sectionStatus['template-info'] === 'done' && (
                     <DoneSection title={SECTION_LABELS['template-info']} onEdit={() => handleEdit('template-info')}>
-                      <SectionCard.DataRow label="Template Name" value={templateName || '-'} showDivider={false} />
+                      <SectionCard.DataRow label="Template name" value={templateName || '-'} showDivider={false} />
                       <SectionCard.DataRow label="Description" value={templateDescription || '-'} />
                       <SectionCard.DataRow label="Favorite" value={isFavorite ? 'Yes' : 'No'} />
                     </DoneSection>
                   )}
 
-                  {/* Basic Information Section */}
+                  {/* Basic information Section */}
                   {sectionStatus['basic-info'] === 'pre' && (
                     <PreSection title={SECTION_LABELS['basic-info']} />
                   )}
@@ -2295,7 +2295,7 @@ export function CreateTemplatePage() {
                   )}
                   {sectionStatus['basic-info'] === 'done' && (
                     <DoneSection title={SECTION_LABELS['basic-info']} onEdit={() => handleEdit('basic-info')}>
-                      <SectionCard.DataRow label="AZ (Availability Zone)" value={azOptions.find(az => az.value === availabilityZone)?.label || availabilityZone} showDivider={false} />
+                      <SectionCard.DataRow label="AZ (Availability zone)" value={azOptions.find(az => az.value === availabilityZone)?.label || availabilityZone} showDivider={false} />
                     </DoneSection>
                   )}
 
@@ -2326,7 +2326,7 @@ export function CreateTemplatePage() {
                   {sectionStatus.image === 'done' && (
                     <DoneSection title={SECTION_LABELS.image} onEdit={() => handleEdit('image')}>
                       <SectionCard.DataRow label="Image" value={getImageSummary() || '-'} showDivider={false} />
-                      <SectionCard.DataRow label="System Disk" value={getStorageSummary()} />
+                      <SectionCard.DataRow label="System disk" value={getStorageSummary()} />
                     </DoneSection>
                   )}
 
@@ -2377,7 +2377,7 @@ export function CreateTemplatePage() {
                   {sectionStatus.network === 'done' && (
                     <DoneSection title={SECTION_LABELS.network} onEdit={() => handleEdit('network')}>
                       <SectionCard.DataRow label="Network" value={getNetworkSummary()} showDivider={false} />
-                      <SectionCard.DataRow label="Security Groups" value={getSecurityGroupSummary()} />
+                      <SectionCard.DataRow label="Security groups" value={getSecurityGroupSummary()} />
                     </DoneSection>
                   )}
 
@@ -2409,7 +2409,7 @@ export function CreateTemplatePage() {
                         showDivider={false}
                       />
                       <SectionCard.DataRow 
-                        label="User Data" 
+                        label="User data" 
                         value={userData ? 'Configured' : '-'} 
                       />
                     </DoneSection>

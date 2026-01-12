@@ -353,7 +353,7 @@ export function CreateAgentPage() {
                 <TopBarAction
                   icon={<IconPalette size={16} stroke={1} />}
                   onClick={() => navigate('/design-system')}
-                  aria-label="Design System"
+                  aria-label="Design system"
                 />
                 <TopBarAction
                   icon={<IconBell size={16} stroke={1} />}
@@ -652,7 +652,7 @@ export function CreateAgentPage() {
                         </p>
                       
                       <SearchInput
-                        placeholder="Find data with filters"
+                        placeholder="Search data by attributes"
                         size="sm"
                         className="w-[280px]"
                           value={dataSourceSearch}
@@ -671,7 +671,7 @@ export function CreateAgentPage() {
                           onPageChange={setDataSourcePage}
                         />
                       
-                      {/* Data Sources Table */}
+                      {/* Data sources Table */}
                         <Table
                           columns={dataSourceColumns}
                           data={paginatedDataSources}
@@ -716,7 +716,7 @@ export function CreateAgentPage() {
                         </p>
                       
                       <SearchInput
-                        placeholder="Find MCP tools with filters"
+                        placeholder="Search MCP tools by attributes"
                         size="sm"
                         className="w-[280px]"
                           value={mcpToolSearch}

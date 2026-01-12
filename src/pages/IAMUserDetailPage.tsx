@@ -371,7 +371,7 @@ export function IAMUserDetailPage() {
     },
     {
       key: 'lastAccess',
-      label: 'Last Access',
+      label: 'Last access',
       flex: 1,
       sortable: true,
     },
@@ -673,7 +673,7 @@ export function IAMUserDetailPage() {
                     <Tab value="sessions">Sessions</Tab>
                   </TabList>
 
-                  {/* User Groups Tab */}
+                  {/* User groups Tab */}
                   <TabPanel value="user-groups">
                     <VStack gap={3} className="pt-6">
                       {/* Section Header */}
@@ -824,7 +824,7 @@ export function IAMUserDetailPage() {
                       {/* Action Bar */}
                       <HStack gap={2} align="center">
                         <SearchInput
-                          placeholder="Find session with filters"
+                          placeholder="Search session by attributes"
                           value={sessionsSearchQuery}
                           onChange={setSessionsSearchQuery}
                           className="w-[280px]"

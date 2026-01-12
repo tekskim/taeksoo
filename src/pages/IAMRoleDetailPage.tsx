@@ -282,7 +282,7 @@ export default function IAMRoleDetailPage() {
   const role = roleName ? mockRolesMap[roleName] : null;
 
   useEffect(() => {
-    updateActiveTabLabel(role?.name || 'Role Details');
+    updateActiveTabLabel(role?.name || 'Role details');
   }, [role?.name, updateActiveTabLabel]);
 
   const sidebarWidth = sidebarOpen ? 200 : 0;
@@ -349,7 +349,7 @@ export default function IAMRoleDetailPage() {
   const breadcrumbItems = [
     { label: 'IAM', href: '/iam' },
     { label: 'Roles', href: '/iam/roles' },
-    { label: role?.name || 'Role Details' },
+    { label: role?.name || 'Role details' },
   ];
 
   // Table columns for policies
@@ -482,7 +482,7 @@ export default function IAMRoleDetailPage() {
     },
     {
       key: 'lastSignIn',
-      label: 'Last Sign-in',
+      label: 'Last sign-in',
       flex: 1,
       sortable: true,
     },
@@ -561,7 +561,7 @@ export default function IAMRoleDetailPage() {
                   <HStack gap={2} className="w-full">
                     <InfoCard label="Description" value={role.description} />
                     <InfoCard label="Type" value={role.type} />
-                    <InfoCard label="Created At" value={role.createdAt} />
+                    <InfoCard label="Created at" value={role.createdAt} />
                   </HStack>
                 </VStack>
               </div>

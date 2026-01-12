@@ -305,7 +305,7 @@ export default function IAMUserGroupDetailPage() {
     },
     {
       key: 'lastSignIn',
-      label: 'Last Sign-in',
+      label: 'Last sign-in',
       flex: 1,
       sortable: true,
     },
@@ -503,7 +503,7 @@ export default function IAMUserGroupDetailPage() {
                       value={userGroup.type}
                     />
                     <InfoCard
-                      label="Created At"
+                      label="Created at"
                       value={userGroup.createdAt}
                     />
                   </HStack>

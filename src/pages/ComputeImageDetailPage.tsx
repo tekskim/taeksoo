@@ -41,7 +41,7 @@ interface ImageDetail {
   status: ImageStatus;
   access: AccessType;
   createdAt: string;
-  // Basic Information
+  // Basic information
   usageType: string;
   protected: boolean;
   description: string;
@@ -212,10 +212,10 @@ export function ComputeImageDetailPage() {
               <DetailHeader.Title>{image.name}</DetailHeader.Title>
               <DetailHeader.Actions>
                 <Button variant="secondary" size="sm" leftIcon={<IconCirclePlus size={12} />}>
-                  Create Instance
+                  Create instance
                 </Button>
                 <Button variant="secondary" size="sm" leftIcon={<IconCirclePlus size={12} />}>
-                  Create Volume
+                  Create volume
                 </Button>
                 <Button variant="secondary" size="sm" leftIcon={<IconTrash size={12} />}>
                   Delete
@@ -223,8 +223,8 @@ export function ComputeImageDetailPage() {
                 {activeDetailTab === 'details' && (
                   <ContextMenu
                     items={[
-                      { id: 'create-instance-template', label: 'Create Instance Template', onClick: () => console.log('Create Instance Template') },
-                      { id: 'create-volume', label: 'Create Volume', onClick: () => console.log('Create Volume') },
+                      { id: 'create-instance-template', label: 'Create instance Template', onClick: () => console.log('Create instance Template') },
+                      { id: 'create-volume', label: 'Create volume', onClick: () => console.log('Create volume') },
                     ] as ContextMenuItem[]}
                     trigger="click"
                   >
@@ -238,7 +238,7 @@ export function ComputeImageDetailPage() {
                 <DetailHeader.InfoCard label="Status" value="Active" status="active" />
                 <DetailHeader.InfoCard label="ID" value={image.id} copyable />
                 <DetailHeader.InfoCard label="Access" value={image.access} />
-                <DetailHeader.InfoCard label="Created At" value={image.createdAt} />
+                <DetailHeader.InfoCard label="Created at" value={image.createdAt} />
               </DetailHeader.InfoGrid>
             </DetailHeader>
 
@@ -253,10 +253,10 @@ export function ComputeImageDetailPage() {
                 {/* Details Tab Panel */}
                 <TabPanel value="details">
                   <VStack gap={4} className="pt-6">
-                    {/* Basic Information */}
+                    {/* Basic information */}
                     <SectionCard>
                       <SectionCard.Header 
-                        title="Basic Information" 
+                        title="Basic information" 
                         actions={
                           <Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />}>
                             Edit
@@ -264,8 +264,8 @@ export function ComputeImageDetailPage() {
                         } 
                       />
                       <SectionCard.Content>
-                        <SectionCard.DataRow label="Image Name" value={image.name} />
-                        <SectionCard.DataRow label="Usage Type" value={image.usageType} />
+                        <SectionCard.DataRow label="Image name" value={image.name} />
+                        <SectionCard.DataRow label="Usage type" value={image.usageType} />
                         <SectionCard.DataRow label="Protected" value={image.protected ? 'Enabled' : 'Disabled'} />
                         <SectionCard.DataRow label="Description" value={image.description} />
                       </SectionCard.Content>
@@ -277,8 +277,8 @@ export function ComputeImageDetailPage() {
                       <SectionCard.Content>
                         <SectionCard.DataRow label="Size" value={image.size} />
                         <SectionCard.DataRow label="OS" value={image.os} />
-                        <SectionCard.DataRow label="Disk Format" value={`${image.diskFormat} / ${image.containerFormat}`} />
-                        <SectionCard.DataRow label="Min Disk / Min RAM" value={`${image.minDisk} / ${image.minRam}`} />
+                        <SectionCard.DataRow label="Disk format" value={`${image.diskFormat} / ${image.containerFormat}`} />
+                        <SectionCard.DataRow label="Min disk / Min RAM" value={`${image.minDisk} / ${image.minRam}`} />
                       </SectionCard.Content>
                     </SectionCard>
 

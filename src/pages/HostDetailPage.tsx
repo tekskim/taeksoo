@@ -341,7 +341,7 @@ function HostMonitoringTimeControls({ onTimeRangeChange, onRefresh }: HostMonito
               </div>
             </div>
 
-            {/* DatePicker from Design System */}
+            {/* DatePicker from Design system */}
             <DatePicker
               mode="range"
               rangeValue={{ start: tempStartDate, end: tempEndDate }}
@@ -820,9 +820,9 @@ const mockHostData: Record<string, HostDetail> = {
             "Copyright (C) 2002-20, Bruce Allen, Christian Franke, www.smartmontools.org",
             "",
             "=== START OF INFORMATION SECTION ===",
-            "Model Number:                       KIOXIA KCD8DPUG3T20",
-            "Serial Number:                      9ET0A01K0AN6",
-            "Firmware Version:                   1XET7105",
+            "Model number:                       KIOXIA KCD8DPUG3T20",
+            "Serial number:                      9ET0A01K0AN6",
+            "Firmware version:                   1XET7105",
             "PCI Vendor/Subsystem ID:            0x1e0f",
             "IEEE OUI Identifier:                0x8ce38e",
             "Total NVM Capacity:                 3,200,631,791,616 [3.20 TB]",
@@ -843,9 +843,9 @@ const mockHostData: Record<string, HostDetail> = {
             "Copyright (C) 2002-20, Bruce Allen, Christian Franke, www.smartmontools.org",
             "",
             "=== START OF INFORMATION SECTION ===",
-            "Model Number:                       Samsung PM983",
-            "Serial Number:                      2540A00MF2AJ",
-            "Firmware Version:                   EDA5102Q"
+            "Model number:                       Samsung PM983",
+            "Serial number:                      2540A00MF2AJ",
+            "Firmware version:                   EDA5102Q"
         ]` },
       { id: 'dh-3', device: '/dev/sdb', serialId: '2540A00MF3AK', smartStatus: 'passed', smartctlOutput: `"smartctl_output": []` },
       { id: 'dh-4', device: '/dev/sdc', serialId: '2540A00MF4AL', smartStatus: 'loading', smartctlOutput: `"smartctl_output": []` },
@@ -986,7 +986,7 @@ export default function HostDetailPage() {
   // Table column definitions
   const deviceColumns: TableColumn<Device>[] = [
     { key: 'deviceId', label: 'Device ID', flex: 1, sortable: true },
-    { key: 'deviceName', label: 'Device Name', flex: 1, sortable: true },
+    { key: 'deviceName', label: 'Device name', flex: 1, sortable: true },
     { 
       key: 'daemons', 
       label: 'Daemons', 
@@ -1071,7 +1071,7 @@ export default function HostDetailPage() {
     },
     { key: 'daemonName', label: 'Daemon name', flex: 1.5, sortable: true },
     { key: 'version', label: 'Version', flex: 1, sortable: true },
-    { key: 'lastRefreshed', label: 'Last Refreshed', flex: 1 },
+    { key: 'lastRefreshed', label: 'Last refreshed', flex: 1 },
     {
       key: 'cpuUsage',
       label: 'CPU Usage',
@@ -1093,10 +1093,10 @@ export default function HostDetailPage() {
         </div>
       ),
     },
-    { key: 'memoryUsage', label: 'Memory Usage', flex: 1, sortable: true },
+    { key: 'memoryUsage', label: 'Memory usage', flex: 1, sortable: true },
     {
       key: 'daemonEvents',
-      label: 'Daemon Events',
+      label: 'Daemon events',
       flex: 1.5,
       render: (_, row) => (
         <div
@@ -1197,7 +1197,7 @@ export default function HostDetailPage() {
           {/* Page Content */}
           <div className="pt-4 px-8 pb-20 bg-[var(--color-surface-default)] min-h-full">
             <VStack gap={6} className="min-w-[1176px]">
-              {/* Detail Header */}
+              {/* Detail header */}
               <DetailHeader>
                 <DetailHeader.Title>{host.hostname}</DetailHeader.Title>
                 <DetailHeader.InfoGrid>
@@ -1219,7 +1219,7 @@ export default function HostDetailPage() {
                   <TabList>
                     <Tab value="details">Details</Tab>
                     <Tab value="devices">Devices</Tab>
-                    <Tab value="physical-disks">Physical Disks</Tab>
+                    <Tab value="physical-disks">Physical disks</Tab>
                     <Tab value="daemon">Daemon</Tab>
                     <Tab value="device-health">Device health</Tab>
                     <Tab value="performance">Performance</Tab>
@@ -1229,12 +1229,12 @@ export default function HostDetailPage() {
                   <TabPanel value="details" className="pt-0">
                     <VStack gap={4} className="pt-4">
                       <SectionCard>
-                        <SectionCard.Header title="Basic Information" />
+                        <SectionCard.Header title="Basic information" />
                         <SectionCard.Content>
                           <SectionCard.DataRow label="Model">
                             {host.model} ({host.modelDetail})
                           </SectionCard.DataRow>
-                          <SectionCard.DataRow label="Service Instances">
+                          <SectionCard.DataRow label="Service instances">
                             <div className="flex flex-wrap gap-1">
                               {host.serviceInstances.map((instance, index) => (
                                 <Chip key={index} value={instance} />
@@ -1247,10 +1247,10 @@ export default function HostDetailPage() {
                           <SectionCard.DataRow label="Cores">
                             {host.cores}
                           </SectionCard.DataRow>
-                          <SectionCard.DataRow label="Total Memory">
+                          <SectionCard.DataRow label="Total memory">
                             {host.totalMemory}
                           </SectionCard.DataRow>
-                          <SectionCard.DataRow label="Raw Capacity">
+                          <SectionCard.DataRow label="Raw capacity">
                             {host.rawCapacity}
                           </SectionCard.DataRow>
                           <SectionCard.DataRow label="HDDs">
@@ -1281,7 +1281,7 @@ export default function HostDetailPage() {
                       <div className="flex items-center gap-4">
                         <div className="w-[280px]">
                           <SearchInput 
-                            placeholder="Find instance with filters"
+                            placeholder="Search instance by attributes"
                             size="sm"
                             fullWidth
                           />
@@ -1308,20 +1308,20 @@ export default function HostDetailPage() {
                     </VStack>
                   </TabPanel>
 
-                  {/* Physical Disks Tab */}
+                  {/* Physical disks Tab */}
                   <TabPanel value="physical-disks" className="pt-0">
                     <VStack gap={3} className="pt-4">
                       {/* Header */}
                       <div className="flex items-center h-7">
                         <h3 className="text-[length:var(--font-size-16)] font-semibold leading-6 text-[var(--color-text-default)]">
-                          Physical Disks
+                          Physical disks
                         </h3>
                       </div>
                       
                       {/* Search */}
                       <div className="w-[280px]">
                         <SearchInput 
-                          placeholder="Find instance with filters"
+                          placeholder="Search instance by attributes"
                           size="sm"
                           fullWidth
                         />
@@ -1360,7 +1360,7 @@ export default function HostDetailPage() {
                       {/* Search */}
                       <div className="w-[280px]">
                         <SearchInput 
-                          placeholder="Find instance with filters"
+                          placeholder="Search instance by attributes"
                           size="sm"
                           fullWidth
                         />
@@ -1579,9 +1579,9 @@ export default function HostDetailPage() {
                             </div>
                           </div>
                           
-                          {/* Raw Capacity Card */}
+                          {/* Raw capacity Card */}
                           <div className="bg-[var(--color-surface-subtle)] rounded-lg p-4">
-                            <span className="text-[12px] text-[var(--color-text-muted)]">Raw Capacity</span>
+                            <span className="text-[12px] text-[var(--color-text-muted)]">Raw capacity</span>
                             <div className="text-[24px] leading-[28px] font-semibold text-[var(--color-text-default)] mt-1">
                               {host.rawCapacity || '11.6 TiB'}
                             </div>
@@ -1643,10 +1643,10 @@ export default function HostDetailPage() {
                             />
                           </div>
 
-                          {/* Network Load Chart */}
+                          {/* Network load Chart */}
                           <div className="grid grid-cols-2 gap-4">
                             <HostChartWithFullScreen
-                              title="Network Load"
+                              title="Network load"
                               series={[
                                 { name: 'eth0 Rx', data: [2.2, 2.5, 2.8, 3.0, 3.2, 3.5], color: chartColors.cyan400 },
                                 { name: 'eth0 Tx', data: [1.5, 1.8, 2.0, 2.2, 2.5, 2.8], color: chartColors.emerald400 },

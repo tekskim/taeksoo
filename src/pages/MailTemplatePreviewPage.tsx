@@ -262,7 +262,7 @@ function generateAccountInvitationHTML(props: AccountInvitationProps): string {
           </tr>
           <tr>
             <td style="padding-bottom: 24px;">
-              <a href="${props.actionUrl}" style="display: inline-block; background-color: #2563eb; color: #ffffff; font-size: 14px; font-weight: 500; line-height: 16px; padding: 10px 12px; border-radius: 6px; text-decoration: none; min-width: 80px; text-align: center;">Get Started</a>
+              <a href="${props.actionUrl}" style="display: inline-block; background-color: #2563eb; color: #ffffff; font-size: 14px; font-weight: 500; line-height: 16px; padding: 10px 12px; border-radius: 6px; text-decoration: none; min-width: 80px; text-align: center;">Get started</a>
             </td>
           </tr>
           <tr>

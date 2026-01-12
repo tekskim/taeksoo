@@ -117,7 +117,7 @@ export function ModalsPage() {
             breadcrumb={
               <Breadcrumb
                 items={[
-                  { label: 'Design System', href: '/design-system' },
+                  { label: 'Design system', href: '/design-system' },
                   { label: 'Modals' },
                 ]}
               />
@@ -133,7 +133,7 @@ export function ModalsPage() {
               {/* Header */}
               <VStack gap={2}>
                 <h1 className="text-[24px] font-semibold text-[var(--color-text-default)]">
-                  Modal Components
+                  Modal components
                 </h1>
                 <p className="text-[14px] text-[var(--color-text-subtle)]">
                   Collection of modal components used across the application. Click to preview each modal.
@@ -156,14 +156,14 @@ export function ModalsPage() {
                       onOpen={() => setIsConfirmDeleteOpen(true)}
                     />
                     <ModalListItem
-                      title="Delete Security Group"
+                      title="Delete Security group"
                       description="Confirm deletion of a single security group with warning."
                       category="Confirm"
                       size="sm"
                       onOpen={() => setIsDeleteSecurityGroupOpen(true)}
                     />
                     <ModalListItem
-                      title="Delete Security Groups (Multiple)"
+                      title="Delete Security groups (Multiple)"
                       description="Confirm deletion of multiple security groups with scrollable list."
                       category="Confirm"
                       size="md"
@@ -193,7 +193,7 @@ export function ModalsPage() {
                   </h2>
                   <div className="flex flex-col gap-2">
                     <ModalListItem
-                      title="Detach Volume"
+                      title="Detach volume"
                       description="Confirm detachment of a volume with warning about data corruption."
                       category="Volume"
                       size="sm"
@@ -209,21 +209,21 @@ export function ModalsPage() {
                   </h2>
                   <div className="flex flex-col gap-2">
                     <ModalListItem
-                      title="Restore Backup"
+                      title="Restore backup"
                       description="Simple restore backup confirmation with volume info."
                       category="Backup"
                       size="sm"
                       onOpen={() => setIsRestoreBackupSmallOpen(true)}
                     />
                     <ModalListItem
-                      title="Restore Backup (with instance name)"
+                      title="Restore backup (with instance name)"
                       description="Restore backup with volume and instance list information."
                       category="Backup"
                       size="md"
                       onOpen={() => setIsRestoreBackupMediumOpen(true)}
                     />
                     <ModalListItem
-                      title="Restore Backup (with instance name and warning)"
+                      title="Restore backup (with instance name and warning)"
                       description="Restore backup with warning alert and disabled action button."
                       category="Backup"
                       size="lg"
@@ -239,28 +239,28 @@ export function ModalsPage() {
                   </h2>
                   <div className="flex flex-col gap-2">
                     <ModalListItem
-                      title="Disassociate Floating IP"
+                      title="Disassociate floating IP"
                       description="Confirm disassociation of a floating IP from a resource."
                       category="Network"
                       size="sm"
                       onOpen={() => setIsDisassociateFloatingIPOpen(true)}
                     />
                     <ModalListItem
-                      title="Disassociate Floating IP (Load Balancer)"
+                      title="Disassociate floating IP (Load balancer)"
                       description="Disassociate a floating IP from a load balancer."
                       category="Network"
                       size="sm"
                       onOpen={() => setIsDisassociateFloatingIPLBOpen(true)}
                     />
                     <ModalListItem
-                      title="Release Floating IP"
+                      title="Release floating IP"
                       description="Release a single floating IP with warning about permanent action."
                       category="Network"
                       size="sm"
                       onOpen={() => setIsReleaseFloatingIPSmallOpen(true)}
                     />
                     <ModalListItem
-                      title="Release Floating IP (Associated to)"
+                      title="Release floating IP (Associated to)"
                       description="Release multiple floating IPs with scrollable list."
                       category="Network"
                       size="md"
@@ -269,21 +269,21 @@ export function ModalsPage() {
                   </div>
                 </VStack>
 
-                {/* Load Balancers */}
+                {/* Load balancers */}
                 <VStack gap={2}>
                   <h2 className="text-[14px] font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
-                    Load Balancers
+                    Load balancers
                   </h2>
                   <div className="flex flex-col gap-2">
                     <ModalListItem
-                      title="Delete Load Balancer"
+                      title="Delete Load balancer"
                       description="Delete a single load balancer with warning about associated resources."
                       category="Network"
                       size="sm"
                       onOpen={() => setIsDeleteLoadBalancerOpen(true)}
                     />
                     <ModalListItem
-                      title="Release Load Balancers"
+                      title="Release Load balancers"
                       description="Delete multiple load balancers with scrollable list and warning."
                       category="Network"
                       size="md"
@@ -313,7 +313,7 @@ export function ModalsPage() {
         </div>
       </main>
 
-      {/* Modal Components */}
+      {/* Modal components */}
 
       {/* Delete Snapshot Modal */}
       <Modal
@@ -362,19 +362,19 @@ export function ModalsPage() {
         </div>
       </Modal>
 
-      {/* Delete Security Group Modal (Single) */}
+      {/* Delete Security group Modal (Single) */}
       <Modal
         isOpen={isDeleteSecurityGroupOpen}
         onClose={() => setIsDeleteSecurityGroupOpen(false)}
-        title="Delete Security Group"
+        title="Delete Security group"
         description="Are you sure you want to delete this security group? This action cannot be undone."
         size="sm"
       >
         <div className="flex flex-col gap-2">
-          {/* Security Group Info Box */}
+          {/* Security group Info Box */}
           <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
             <span className="text-[11px] text-[var(--color-text-subtle)] font-medium leading-4">
-              Security Group
+              Security group
             </span>
             <span className="text-[12px] text-[var(--color-text-default)] leading-4">
               sg-01
@@ -411,19 +411,19 @@ export function ModalsPage() {
         </div>
       </Modal>
 
-      {/* Delete Security Groups Modal (Multiple) */}
+      {/* Delete Security groups Modal (Multiple) */}
       <Modal
         isOpen={isDeleteSecurityGroupsMultipleOpen}
         onClose={() => setIsDeleteSecurityGroupsMultipleOpen(false)}
-        title="Delete Security Groups"
+        title="Delete Security groups"
         description="Are you sure you want to delete the selected security groups? This action cannot be undone."
         size="md"
       >
         <div className="flex flex-col gap-2">
-          {/* Security Groups Info Box with Scrollable List */}
+          {/* Security groups Info Box with Scrollable List */}
           <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5 max-h-[96px] overflow-y-auto sidebar-scroll">
             <span className="text-[11px] text-[var(--color-text-subtle)] font-medium leading-4">
-              Security Groups(10)
+              Security groups(10)
             </span>
             <ul className="text-[12px] text-[var(--color-text-default)] leading-4 list-disc pl-4 space-y-0.5">
               <li>sg-01</li>
@@ -566,11 +566,11 @@ export function ModalsPage() {
         </div>
       </Modal>
 
-      {/* Detach Volume Modal */}
+      {/* Detach volume Modal */}
       <Modal
         isOpen={isDetachVolumeOpen}
         onClose={() => setIsDetachVolumeOpen(false)}
-        title="Detach Volume"
+        title="Detach volume"
         description="Are you sure you want to detach this volume?"
         size="sm"
       >
@@ -613,11 +613,11 @@ export function ModalsPage() {
         </div>
       </Modal>
 
-      {/* Restore Backup (Small) Modal */}
+      {/* Restore backup (Small) Modal */}
       <Modal
         isOpen={isRestoreBackupSmallOpen}
         onClose={() => setIsRestoreBackupSmallOpen(false)}
-        title="Restore Backup"
+        title="Restore backup"
         description="Are you sure you want to delete this template? Large volume backups may impact performance and network throughput."
         size="sm"
       >
@@ -652,11 +652,11 @@ export function ModalsPage() {
         </div>
       </Modal>
 
-      {/* Restore Backup (Medium) Modal */}
+      {/* Restore backup (Medium) Modal */}
       <Modal
         isOpen={isRestoreBackupMediumOpen}
         onClose={() => setIsRestoreBackupMediumOpen(false)}
-        title="Restore Backup"
+        title="Restore backup"
         description="Are you sure you want to delete this template? Large volume backups may impact performance and network throughput."
         size="md"
       >
@@ -704,11 +704,11 @@ export function ModalsPage() {
         </div>
       </Modal>
 
-      {/* Restore Backup (Large) Modal */}
+      {/* Restore backup (Large) Modal */}
       <Modal
         isOpen={isRestoreBackupLargeOpen}
         onClose={() => setIsRestoreBackupLargeOpen(false)}
-        title="Restore Backup"
+        title="Restore backup"
         description="Are you sure you want to delete this template? Large volume backups may impact performance and network throughput."
         size="lg"
       >
@@ -761,11 +761,11 @@ export function ModalsPage() {
         </div>
       </Modal>
 
-      {/* Disassociate Floating IP Modal */}
+      {/* Disassociate floating IP Modal */}
       <Modal
         isOpen={isDisassociateFloatingIPOpen}
         onClose={() => setIsDisassociateFloatingIPOpen(false)}
-        title="Disassociate Floating IP"
+        title="Disassociate floating IP"
         description="Disassociating will detach the floating IP from the selected resource. External access via this IP will stop immediately. The IP will remain in your project and can be re-associated later."
         size="sm"
       >
@@ -780,10 +780,10 @@ export function ModalsPage() {
             </span>
           </div>
 
-          {/* Associated To Info Box */}
+          {/* Associated to Info Box */}
           <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
             <span className="text-[11px] text-[var(--color-text-subtle)] font-medium leading-4">
-              Associated To
+              Associated to
             </span>
             <ul className="text-[12px] text-[var(--color-text-default)] leading-4 list-disc pl-4 space-y-0.5">
               <li>Type : Instance</li>
@@ -812,19 +812,19 @@ export function ModalsPage() {
         </div>
       </Modal>
 
-      {/* Disassociate Floating IP (Load Balancer) Modal */}
+      {/* Disassociate floating IP (Load balancer) Modal */}
       <Modal
         isOpen={isDisassociateFloatingIPLBOpen}
         onClose={() => setIsDisassociateFloatingIPLBOpen(false)}
-        title="Disassociate Floating IP"
+        title="Disassociate floating IP"
         description="Disassociating will detach the floating IP from this load balancer. External access to the load balancer will be interrupted."
         size="sm"
       >
         <div className="flex flex-col gap-2">
-          {/* Load Balancer Info Box */}
+          {/* Load balancer Info Box */}
           <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
             <span className="text-[11px] text-[var(--color-text-subtle)] font-medium leading-4">
-              Load Balancer
+              Load balancer
             </span>
             <span className="text-[12px] text-[var(--color-text-default)] leading-4">
               web-lb-01(10.0.0.10)
@@ -861,11 +861,11 @@ export function ModalsPage() {
         </div>
       </Modal>
 
-      {/* Release Floating IP (Small) Modal */}
+      {/* Release floating IP (Small) Modal */}
       <Modal
         isOpen={isReleaseFloatingIPSmallOpen}
         onClose={() => setIsReleaseFloatingIPSmallOpen(false)}
-        title="Release Floating IP"
+        title="Release floating IP"
         description="Are you sure you want to release this floating IP? This action cannot be undone."
         size="sm"
       >
@@ -908,19 +908,19 @@ export function ModalsPage() {
         </div>
       </Modal>
 
-      {/* Release Floating IP (Medium) Modal */}
+      {/* Release floating IP (Medium) Modal */}
       <Modal
         isOpen={isReleaseFloatingIPMediumOpen}
         onClose={() => setIsReleaseFloatingIPMediumOpen(false)}
-        title="Release Floating IP"
+        title="Release floating IP"
         description="Are you sure you want to release this floating IP? This action cannot be undone."
         size="md"
       >
         <div className="flex flex-col gap-2">
-          {/* Associated To Info Box with Scrollable List */}
+          {/* Associated to Info Box with Scrollable List */}
           <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5 max-h-[96px] overflow-y-auto sidebar-scroll">
             <span className="text-[11px] text-[var(--color-text-subtle)] font-medium leading-4">
-              Associated To
+              Associated to
             </span>
             <ul className="text-[12px] text-[var(--color-text-default)] leading-4 list-disc pl-4 space-y-0.5">
               <li>123.45.67.8</li>
@@ -960,19 +960,19 @@ export function ModalsPage() {
         </div>
       </Modal>
 
-      {/* Delete Load Balancer Modal (Single) */}
+      {/* Delete Load balancer Modal (Single) */}
       <Modal
         isOpen={isDeleteLoadBalancerOpen}
         onClose={() => setIsDeleteLoadBalancerOpen(false)}
-        title="Delete Load Balancer"
+        title="Delete Load balancer"
         description="Are you sure you want to delete this load balancer? This action cannot be undone."
         size="sm"
       >
         <div className="flex flex-col gap-2">
-          {/* Load Balancer Info Box */}
+          {/* Load balancer Info Box */}
           <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
             <span className="text-[11px] text-[var(--color-text-subtle)] font-medium leading-4">
-              Load Balancer
+              Load balancer
             </span>
             <span className="text-[12px] text-[var(--color-text-default)] leading-4">
               web-lb-01
@@ -1007,19 +1007,19 @@ export function ModalsPage() {
         </div>
       </Modal>
 
-      {/* Release Load Balancers Modal (Multiple) */}
+      {/* Release Load balancers Modal (Multiple) */}
       <Modal
         isOpen={isDeleteLoadBalancersMultipleOpen}
         onClose={() => setIsDeleteLoadBalancersMultipleOpen(false)}
-        title="Release Load Balancers"
+        title="Release Load balancers"
         description="Are you sure you want to delete the selected load balancers? This action cannot be undone."
         size="md"
       >
         <div className="flex flex-col gap-2">
-          {/* Load Balancers Info Box with Scrollable List */}
+          {/* Load balancers Info Box with Scrollable List */}
           <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5 max-h-[96px] overflow-y-auto sidebar-scroll">
             <span className="text-[11px] text-[var(--color-text-subtle)] font-medium leading-4">
-              Load Balancers
+              Load balancers
             </span>
             <ul className="text-[12px] text-[var(--color-text-default)] leading-4 list-disc pl-4 space-y-0.5">
               <li>web-lb-01</li>

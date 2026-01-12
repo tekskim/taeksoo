@@ -248,7 +248,7 @@ function OSDMonitoringTimeControls({ onTimeRangeChange, onRefresh }: OSDMonitori
               </div>
             </div>
 
-            {/* DatePicker from Design System */}
+            {/* DatePicker from Design system */}
             <DatePicker
               mode="range"
               rangeValue={{ start: tempStartDate, end: tempEndDate }}
@@ -662,9 +662,9 @@ const mockDeviceHealthList: DeviceHealth[] = [
             "Copyright (C) 2002-20, Bruce Allen, Christian Franke, www.smartmontools.org",
             "",
             "=== START OF INFORMATION SECTION ===",
-            "Model Number:                       KIOXIA KCD8DPUG3T20",
-            "Serial Number:                      9ET0A01K0AN6",
-            "Firmware Version:                   1XET7105",
+            "Model number:                       KIOXIA KCD8DPUG3T20",
+            "Serial number:                      9ET0A01K0AN6",
+            "Firmware version:                   1XET7105",
             "PCI Vendor/Subsystem ID:            0x1e0f",
             "IEEE OUI Identifier:                0x8ce38e",
             "Total NVM Capacity:                 3,200,631,791,616 [3.20 TB]",
@@ -691,8 +691,8 @@ const mockDeviceHealthList: DeviceHealth[] = [
             "Copyright (C) 2002-20, Bruce Allen, Christian Franke, www.smartmontools.org",
             "",
             "=== START OF INFORMATION SECTION ===",
-            "Model Number:                       LENOVO MG09SCA14TE",
-            "Serial Number:                      2540A00MF2AJ"`,
+            "Model number:                       LENOVO MG09SCA14TE",
+            "Serial number:                      2540A00MF2AJ"`,
   },
   {
     id: '3',
@@ -786,7 +786,7 @@ export function OSDDetailPage() {
     },
     {
       key: 'deviceName',
-      label: 'Device Name',
+      label: 'Device name',
       flex: 1,
       sortable: true,
     },
@@ -890,10 +890,10 @@ export function OSDDetailPage() {
                   {/* Details Tab */}
                   <TabPanel value="details" className="pt-0">
                     <VStack gap={4} className="pt-4">
-                      {/* Basic Information */}
+                      {/* Basic information */}
                       <SectionCard>
                         <SectionCardHeader
-                          title="Basic Information"
+                          title="Basic information"
                         />
                         <SectionCardContent>
                           <SectionCardDataRow label="Device class" showDivider={false}>
@@ -921,7 +921,7 @@ export function OSDDetailPage() {
                       {/* Search */}
                       <div className="w-[280px]">
                         <SearchInput
-                          placeholder="Find instance with filters"
+                          placeholder="Search instance by attributes"
                           value={deviceSearchQuery}
                           onChange={(e) => setDeviceSearchQuery(e.target.value)}
                           onClear={() => setDeviceSearchQuery('')}
@@ -1022,10 +1022,10 @@ export function OSDDetailPage() {
                         <SectionCard>
                           <SectionCardHeader title="Device Information" />
                           <SectionCardContent>
-                            <SectionCardDataRow label="Model Number" value={selectedHealthDevice.modelNumber} showDivider={false} />
-                            <SectionCardDataRow label="Serial Number" value={selectedHealthDevice.serialNumber} />
-                            <SectionCardDataRow label="Firmware Version" value={selectedHealthDevice.firmwareVersion} />
-                            <SectionCardDataRow label="Total Capacity" value={selectedHealthDevice.totalCapacity} />
+                            <SectionCardDataRow label="Model number" value={selectedHealthDevice.modelNumber} showDivider={false} />
+                            <SectionCardDataRow label="Serial number" value={selectedHealthDevice.serialNumber} />
+                            <SectionCardDataRow label="Firmware version" value={selectedHealthDevice.firmwareVersion} />
+                            <SectionCardDataRow label="Total capacity" value={selectedHealthDevice.totalCapacity} />
                             
                             {/* Smartctl Output */}
                             <div className="pt-3 mt-3 border-t border-[var(--color-border-default)]">

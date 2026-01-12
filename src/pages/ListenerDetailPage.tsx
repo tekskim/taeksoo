@@ -49,7 +49,7 @@ interface ListenerDetail {
   status: ListenerStatus;
   adminState: 'Up' | 'Down';
   createdAt: string;
-  // Basic Information
+  // Basic information
   description: string;
   protocol: string;
   port: number;
@@ -297,7 +297,7 @@ export default function ListenerDetailPage() {
 
   const breadcrumbItems = [
     { label: 'Proj-1', href: '/' },
-    { label: 'Load Balancers', href: '/compute/load-balancers' },
+    { label: 'Load balancers', href: '/compute/load-balancers' },
     { label: listener.loadBalancer?.name || 'Unknown', href: `/load-balancers/${listener.loadBalancer?.id}` },
     { label: listener.name },
   ];
@@ -419,7 +419,7 @@ export default function ListenerDetailPage() {
     },
     {
       key: 'adminState',
-      label: 'Admin State',
+      label: 'Admin state',
       flex: 1,
     },
     {
@@ -489,7 +489,7 @@ export default function ListenerDetailPage() {
     },
     {
       key: 'adminState',
-      label: 'Admin State',
+      label: 'Admin state',
       flex: 1,
     },
     {
@@ -565,7 +565,7 @@ export default function ListenerDetailPage() {
     },
     {
       key: 'expiresAt',
-      label: 'Expires At',
+      label: 'Expires at',
       flex: 1,
       sortable: true,
     },
@@ -578,7 +578,7 @@ export default function ListenerDetailPage() {
         const getCertMenuItems = (): ContextMenuItem[] => {
           switch (row.type) {
             case 'Server':
-              return [{ id: 'change-server-cert', label: 'Change Server Certificate', icon: <IconCertificate size={14} stroke={1.5} />, onClick: () => console.log('Change server certificate', row.id) }];
+              return [{ id: 'change-server-cert', label: 'Change server Certificate', icon: <IconCertificate size={14} stroke={1.5} />, onClick: () => console.log('Change server certificate', row.id) }];
             case 'CA':
               return [{ id: 'change-ca-cert', label: 'Change CA Certificate', icon: <IconCertificate size={14} stroke={1.5} />, onClick: () => console.log('Change CA certificate', row.id) }];
             case 'SNI':
@@ -648,7 +648,7 @@ export default function ListenerDetailPage() {
           {/* Page Content */}
           <div className="pt-4 px-8 pb-20 bg-[var(--color-surface-default)] min-h-full">
             <VStack gap={8} className="min-w-[1176px]">
-              {/* Detail Header */}
+              {/* Detail header */}
               <DetailHeader>
                 <DetailHeader.Title>{listener.name}</DetailHeader.Title>
 
@@ -739,11 +739,11 @@ export default function ListenerDetailPage() {
                     className="flex-1"
                   />
                   <DetailHeader.InfoCard
-                    label="Admin State"
+                    label="Admin state"
                     value={listener.adminState}
                   />
                   <DetailHeader.InfoCard
-                    label="Created At"
+                    label="Created at"
                     value={listener.createdAt}
                   />
                 </DetailHeader.InfoGrid>
@@ -754,7 +754,7 @@ export default function ListenerDetailPage() {
                 <Tabs value={activeDetailTab} onChange={setActiveDetailTab} size="sm">
                   <TabList>
                     <Tab value="details">Details</Tab>
-                    <Tab value="pools">Default Pool</Tab>
+                    <Tab value="pools">Default pool</Tab>
                     <Tab value="l7-policies">L7 Policies</Tab>
                     <Tab value="certificates">Certificates</Tab>
                   </TabList>
@@ -762,10 +762,10 @@ export default function ListenerDetailPage() {
                   {/* Details Tab */}
                   <TabPanel value="details">
                     <VStack gap={4} className="pt-6">
-                      {/* Basic Information */}
+                      {/* Basic information */}
                       <SectionCard>
                         <SectionCard.Header
-                          title="Basic Information"
+                          title="Basic information"
                           actions={
                             <Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />}>
                               Edit
@@ -777,14 +777,14 @@ export default function ListenerDetailPage() {
                           <SectionCard.DataRow label="Description" value={listener.description} />
                           <SectionCard.DataRow label="Protocol" value={listener.protocol} />
                           <SectionCard.DataRow label="Port" value={String(listener.port)} />
-                          <SectionCard.DataRow label="Connection Limit" value={listener.connectionLimit} />
-                          <SectionCard.DataRow label="Custom Headers" value={listener.customHeaders} />
-                          <SectionCard.DataRow label="Client Data Timeout" value={listener.clientDataTimeout} />
-                          <SectionCard.DataRow label="Member Connect Timeout" value={listener.memberConnectTimeout} />
-                          <SectionCard.DataRow label="Member Data Timeout" value={listener.memberDataTimeout} />
+                          <SectionCard.DataRow label="Connection limit" value={listener.connectionLimit} />
+                          <SectionCard.DataRow label="Custom headers" value={listener.customHeaders} />
+                          <SectionCard.DataRow label="Client data Timeout" value={listener.clientDataTimeout} />
+                          <SectionCard.DataRow label="Member connect Timeout" value={listener.memberConnectTimeout} />
+                          <SectionCard.DataRow label="Member data Timeout" value={listener.memberDataTimeout} />
                           <SectionCard.DataRow label="TCP Inspect Timeout" value={listener.tcpInspectTimeout} />
                           <SectionCard.DataRow label="Allowed CIDRs" value={listener.allowedCidrs} />
-                          <SectionCard.DataRow label="Admin State" value={listener.adminState} />
+                          <SectionCard.DataRow label="Admin state" value={listener.adminState} />
                         </SectionCard.Content>
                       </SectionCard>
 
@@ -796,7 +796,7 @@ export default function ListenerDetailPage() {
                             <div className="h-px w-full bg-[var(--color-border-subtle)]" />
                             <div className="flex flex-col gap-1.5">
                               <span className="text-[11px] font-medium leading-4 text-[var(--color-text-subtle)]">
-                                Load Balancer
+                                Load balancer
                               </span>
                               {listener.loadBalancer ? (
                                 <Link
@@ -844,8 +844,8 @@ export default function ListenerDetailPage() {
                           <SectionCard.DataRow label="Description" value="-" />
                           <SectionCard.DataRow label="Algorithm" value={mockPools[0]?.algorithm || '-'} />
                           <SectionCard.DataRow label="Protocol" value={mockPools[0]?.protocol || '-'} />
-                          <SectionCard.DataRow label="Session Persistence" value="-" />
-                          <SectionCard.DataRow label="Admin State" value={mockPools[0]?.adminState || '-'} />
+                          <SectionCard.DataRow label="Session persistence" value="-" />
+                          <SectionCard.DataRow label="Admin state" value={mockPools[0]?.adminState || '-'} />
                         </SectionCard.Content>
                       </SectionCard>
                     </VStack>
@@ -873,7 +873,7 @@ export default function ListenerDetailPage() {
                               setL7PolicySearchTerm(e.target.value);
                               setL7PolicyCurrentPage(1);
                             }}
-                            placeholder="Find policies with filters"
+                            placeholder="Search policies by attributes"
                           />
                         </div>
                         <div className="h-4 w-px bg-[var(--color-border-default)]" />
@@ -920,7 +920,7 @@ export default function ListenerDetailPage() {
                         </h3>
                         <div className="flex items-center gap-2">
                           <Button variant="secondary" size="sm">
-                            Change Server Certificate
+                            Change server Certificate
                           </Button>
                           <Button variant="secondary" size="sm">
                             Change CA Certificate
@@ -940,7 +940,7 @@ export default function ListenerDetailPage() {
                               setCertificateSearchTerm(e.target.value);
                               setCertificateCurrentPage(1);
                             }}
-                            placeholder="Find certificates with filters"
+                            placeholder="Search certificates by attributes"
                           />
                         </div>
                         <div className="h-4 w-px bg-[var(--color-border-default)]" />

@@ -100,9 +100,9 @@ export function VolumeBackupsPage() {
     { id: 'status', label: 'Status', visible: true, locked: true },
     { id: 'name', label: 'Name', visible: true, locked: true },
     { id: 'size', label: 'Size', visible: true },
-    { id: 'sourceVolume', label: 'Source Volume', visible: true },
-    { id: 'backupMode', label: 'Backup Mode', visible: true },
-    { id: 'createdAt', label: 'Created At', visible: true },
+    { id: 'sourceVolume', label: 'Source volume', visible: true },
+    { id: 'backupMode', label: 'Backup mode', visible: true },
+    { id: 'createdAt', label: 'Created at', visible: true },
     { id: 'actions', label: 'Action', visible: true, locked: true },
   ];
   const [columnConfig, setColumnConfig] = useState<ColumnConfig[]>(defaultColumnConfig);
@@ -190,7 +190,7 @@ export function VolumeBackupsPage() {
     },
     {
       key: 'sourceVolume',
-      label: 'Source Volume',
+      label: 'Source volume',
       flex: 1,
       sortable: true,
       render: (_, row) => (
@@ -211,13 +211,13 @@ export function VolumeBackupsPage() {
     },
     {
       key: 'backupMode',
-      label: 'Backup Mode',
+      label: 'Backup mode',
       flex: 1,
       sortable: true,
     },
     {
       key: 'createdAt',
-      label: 'Created At',
+      label: 'Created at',
       flex: 1,
       sortable: true,
     },
@@ -230,12 +230,12 @@ export function VolumeBackupsPage() {
         const menuItems: ContextMenuItem[] = [
           {
             id: 'create-volume',
-            label: 'Create Volume',
+            label: 'Create volume',
             onClick: () => console.log('Create volume from', row.name),
           },
           {
             id: 'restore',
-            label: 'Restore Backup',
+            label: 'Restore backup',
             onClick: () => console.log('Restore', row.name),
           },
           {
@@ -311,7 +311,7 @@ export function VolumeBackupsPage() {
             <Breadcrumb
               items={[
                 { label: 'Proj-1', href: '/project' },
-                { label: 'Volume Backups' },
+                { label: 'Volume backups' },
               ]}
             />
           }
@@ -332,7 +332,7 @@ export function VolumeBackupsPage() {
             {/* Page Header */}
             <div className="flex items-center justify-between h-8">
               <h1 className="text-[length:var(--font-size-16)] font-semibold text-[var(--color-text-default)]">
-                Volume Backups
+                Volume backups
               </h1>
               <Button>
                 Create Backup
@@ -345,7 +345,7 @@ export function VolumeBackupsPage() {
                 <ListToolbar.Actions>
                   <div className="w-[280px]">
                     <SearchInput
-                      placeholder="Find backup with filters"
+                      placeholder="Search backup by attributes"
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
                       onClear={() => setSearchQuery('')}
@@ -399,7 +399,7 @@ export function VolumeBackupsPage() {
       <ConfirmModal
         isOpen={deleteModalOpen}
         onClose={handleDeleteCancel}
-        title="Delete Volume Backup"
+        title="Delete Volume backup"
         description={`Are you sure you want to delete "${backupToDelete?.name}"? This action cannot be undone.`}
         confirmText="Delete"
         cancelText="Cancel"

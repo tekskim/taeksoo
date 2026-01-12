@@ -1,4 +1,5 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
   Button,
   SearchInput,
@@ -28,7 +29,7 @@ import {
   IconDownload,
   IconBell,
 } from '@tabler/icons-react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 /* ----------------------------------------
    Types
@@ -88,21 +89,26 @@ export function ComputeImagesPage() {
   const [isPreferencesOpen, setIsPreferencesOpen] = useState(false);
   const [rowsPerPage, setRowsPerPage] = useState(10);
 
-  // Default column config (matching Figma: Selection, Status, Name, OS, Size, Access, Created At, Action)
+  // Default column config (matching Figma: Selection, Status, Name, OS, Size, Access, Created at, Action)
   const defaultColumnConfig: ColumnConfig[] = [
     { id: 'status', label: 'Status', visible: true, locked: true },
     { id: 'name', label: 'Name', visible: true, locked: true },
     { id: 'os', label: 'OS', visible: true },
     { id: 'size', label: 'Size', visible: true },
-    { id: 'diskFormat', label: 'Disk Format', visible: true },
+    { id: 'diskFormat', label: 'Disk format', visible: true },
     { id: 'protected', label: 'Protected', visible: true },
-    { id: 'createdAt', label: 'Created At', visible: true },
+    { id: 'createdAt', label: 'Created at', visible: true },
     { id: 'actions', label: 'Action', visible: true, locked: true },
   ];
   const [columnConfig, setColumnConfig] = useState<ColumnConfig[]>(defaultColumnConfig);
 
   // Global tab management
   const { tabs, activeTabId, closeTab, selectTab, addNewTab, moveTab } = useTabs();
+
+  // Handle window close - navigate to root
+  const handleWindowClose = useCallback(() => {
+    navigate('/');
+  }, [navigate]);
 
   // Convert tabs to TabBar format
   const tabBarTabs = tabs.map((tab) => ({
@@ -174,7 +180,7 @@ export function ComputeImagesPage() {
     setSelectedImages([]);
   };
 
-  // Table columns (matching Figma design: Selection, Status, Name, OS, Size, Access, Created At, Action)
+  // Table columns (matching Figma design: Selection, Status, Name, OS, Size, Access, Created at, Action)
   const columns: TableColumn<Image>[] = [
     {
       key: 'status',
@@ -218,7 +224,7 @@ export function ComputeImagesPage() {
     },
     {
       key: 'diskFormat',
-      label: 'Disk Format',
+      label: 'Disk format',
       flex: 1,
       sortable: true,
     },
@@ -231,7 +237,7 @@ export function ComputeImagesPage() {
     },
     {
       key: 'createdAt',
-      label: 'Created At',
+      label: 'Created at',
       flex: 1,
       sortable: true,
     },
@@ -244,17 +250,17 @@ export function ComputeImagesPage() {
         const menuItems: ContextMenuItem[] = [
           {
             id: 'create-instance',
-            label: 'Create Instance',
+            label: 'Create instance',
             onClick: () => console.log('Create instance from image:', row.id),
           },
           {
             id: 'create-instance-template',
-            label: 'Create Instance Template',
+            label: 'Create instance Template',
             onClick: () => console.log('Create instance template from image:', row.id),
           },
           {
             id: 'create-volume',
-            label: 'Create Volume',
+            label: 'Create volume',
             onClick: () => console.log('Create volume from image:', row.id),
           },
           {
@@ -313,10 +319,11 @@ export function ComputeImagesPage() {
           activeTab={activeTabId}
           onTabChange={selectTab}
           onTabClose={closeTab}
-onTabAdd={addNewTab}
-            onTabReorder={moveTab}
+          onTabAdd={addNewTab}
+          onTabReorder={moveTab}
           showAddButton={true}
           showWindowControls={true}
+          onWindowClose={handleWindowClose}
         />
 
         {/* Top Bar */}
@@ -355,14 +362,14 @@ onTabAdd={addNewTab}
                 Images
               </h1>
               <Button onClick={() => navigate('/compute/images/create')}>
-                Create Image
+                Create image
               </Button>
             </div>
 
             {/* Category Tabs */}
             <Tabs value={activeTab} onChange={setActiveTab} variant="underline" size="sm">
               <TabList>
-                <Tab value="current">Current Tenant</Tab>
+                <Tab value="current">Current tenant</Tab>
                 <Tab value="shared">Shared</Tab>
                 <Tab value="public">Public</Tab>
                 <Tab value="all">All</Tab>
@@ -375,7 +382,7 @@ onTabAdd={addNewTab}
                 <ListToolbar.Actions>
                   <div className="w-[280px]">
                     <SearchInput
-                      placeholder="Find Image with filters"
+                      placeholder="Search image by attributes"
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
                       onClear={() => setSearchQuery('')}

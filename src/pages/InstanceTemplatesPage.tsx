@@ -97,7 +97,7 @@ export function InstanceTemplatesPage() {
     { id: 'favorite', label: '', visible: true, locked: true },
     { id: 'name', label: 'Name', visible: true, locked: true },
     { id: 'image', label: 'Description', visible: true },
-    { id: 'flavor', label: 'Created At', visible: true },
+    { id: 'flavor', label: 'Created at', visible: true },
     { id: 'actions', label: 'Action', visible: true, locked: true },
   ];
   const [columnConfig, setColumnConfig] = useState<ColumnConfig[]>(defaultColumnConfig);
@@ -267,7 +267,7 @@ export function InstanceTemplatesPage() {
     },
     {
       key: 'flavor',
-      label: 'Created At',
+      label: 'Created at',
       flex: 1,
       sortable: true,
     },
@@ -280,7 +280,7 @@ export function InstanceTemplatesPage() {
         const menuItems: ContextMenuItem[] = [
           {
             id: 'create-instance',
-            label: 'Create Instance',
+            label: 'Create instance',
             onClick: () => console.log('Create instance from template:', row.id),
           },
           {
@@ -356,7 +356,7 @@ export function InstanceTemplatesPage() {
             <Breadcrumb
               items={[
                 { label: 'Proj-1', href: '/project' },
-                { label: 'Instance Templates' },
+                { label: 'Instance templates' },
               ]}
             />
           }
@@ -378,17 +378,17 @@ export function InstanceTemplatesPage() {
             {/* Page Header */}
             <div className="flex items-center justify-between h-8">
               <h1 className="text-[length:var(--font-size-16)] font-semibold text-[var(--color-text-default)]">
-                Instance Templates
+                Instance templates
               </h1>
               <Button onClick={() => navigate('/compute/instance-templates/create')}>
-                Create Template
+                Create template
               </Button>
             </div>
 
             {/* Category Tabs */}
             <Tabs value={activeTab} onChange={setActiveTab} variant="underline" size="sm">
               <TabList>
-                <Tab value="favorites">Current Tenant</Tab>
+                <Tab value="favorites">Current tenant</Tab>
                 <Tab value="personal">Public</Tab>
               </TabList>
             </Tabs>
@@ -399,7 +399,7 @@ export function InstanceTemplatesPage() {
                 <ListToolbar.Actions>
                   <div className="w-[280px]">
                     <SearchInput
-                      placeholder="Find Template with filters"
+                      placeholder="Search template by attributes"
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
                       onClear={() => setSearchQuery('')}
