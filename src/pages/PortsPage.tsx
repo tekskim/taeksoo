@@ -1,4 +1,5 @@
 import { useState, useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
   Button,
   SearchInput,
@@ -88,6 +89,7 @@ const portStatusMap: Record<PortStatus, 'active' | 'error' | 'building' | 'down'
    ---------------------------------------- */
 
 export function PortsPage() {
+  const navigate = useNavigate();
   const [selectedPorts, setSelectedPorts] = useState<string[]>([]);
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
@@ -373,7 +375,11 @@ export function PortsPage() {
               <h1 className="text-[length:var(--font-size-16)] font-semibold text-[var(--color-text-default)]">
                 Ports
               </h1>
-              <Button variant="primary" size="md">
+              <Button 
+                variant="primary" 
+                size="md"
+                onClick={() => navigate('/compute/ports/create')}
+              >
                 Create Virtual Adapter
               </Button>
             </div>

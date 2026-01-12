@@ -19,6 +19,7 @@ export function SectionCard({ children, isActive = false, className, ...props }:
     <div
       className={twMerge(
         'flex flex-col items-start',
+        isActive ? 'gap-6' : 'gap-2',
         'bg-[var(--color-surface-default)]',
         'border border-[var(--color-border-default)]',
         isActive && 'ring-2 ring-[var(--color-action-primary)]',
@@ -43,25 +44,25 @@ export interface SectionCardHeaderProps extends HTMLAttributes<HTMLDivElement> {
   title: string;
   /** Optional action buttons (e.g., Edit button) */
   actions?: ReactNode;
+  /** Show divider below header (default: false) */
+  showDivider?: boolean;
 }
 
-function SectionCardHeader({ title, actions, className, ...props }: SectionCardHeaderProps) {
+function SectionCardHeader({ title, actions, showDivider = false, className, ...props }: SectionCardHeaderProps) {
   return (
-    <div
-      className={twMerge(
-        'flex items-center justify-between',
-        'w-full h-8',
-        className
-      )}
-      {...props}
-    >
-      <h5 className="text-[length:var(--font-size-14)] font-semibold leading-[var(--line-height-20)] text-[var(--color-text-default)]">
-        {title}
-      </h5>
-      {actions && (
-        <div className="flex items-center gap-2">
-          {actions}
-        </div>
+    <div className={twMerge('flex flex-col w-full', className)} {...props}>
+      <div className="flex items-center justify-between w-full h-8">
+        <h5 className="text-[length:var(--font-size-14)] font-semibold leading-[var(--line-height-20)] text-[var(--color-text-default)]">
+          {title}
+        </h5>
+        {actions && (
+          <div className="flex items-center gap-2">
+            {actions}
+          </div>
+        )}
+      </div>
+      {showDivider && (
+        <div className="h-px w-full bg-[var(--color-border-subtle)] mt-2" />
       )}
     </div>
   );

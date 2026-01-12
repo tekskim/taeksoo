@@ -285,9 +285,6 @@ export function ServerGroupsPage() {
               <h1 className="text-[length:var(--font-size-16)] font-semibold text-[var(--color-text-default)]">
                 Server Group
               </h1>
-              <Button>
-                Create Server Group
-              </Button>
             </div>
 
             {/* List Toolbar */}

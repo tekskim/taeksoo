@@ -373,9 +373,6 @@ export function InstanceSnapshotsPage() {
               <h1 className="text-[length:var(--font-size-16)] font-semibold text-[var(--color-text-default)]">
                 Instance Snapshots
               </h1>
-              <Button>
-                Create Snapshot
-              </Button>
             </div>
 
             {/* Toolbar */}

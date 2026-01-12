@@ -8,6 +8,7 @@ const InstanceDetailPage = lazy(() => import('@/pages/InstanceDetailPage'));
 const CreateInstancePage = lazy(() => import('@/pages/CreateInstancePage'));
 const InstanceTemplatesPage = lazy(() => import('@/pages/InstanceTemplatesPage'));
 const InstanceTemplateDetailPage = lazy(() => import('@/pages/InstanceTemplateDetailPage'));
+const CreateTemplatePage = lazy(() => import('@/pages/CreateTemplatePage'));
 const InstanceSnapshotsPage = lazy(() => import('@/pages/InstanceSnapshotsPage'));
 const InstanceSnapshotDetailPage = lazy(() => import('@/pages/InstanceSnapshotDetailPage'));
 const ImagesPage = lazy(() => import('@/pages/ImagesPage'));
@@ -26,6 +27,7 @@ const VolumeBackupsPage = lazy(() => import('@/pages/VolumeBackupsPage'));
 const VolumeBackupDetailPage = lazy(() => import('@/pages/VolumeBackupDetailPage'));
 const NetworksPage = lazy(() => import('@/pages/NetworksPage'));
 const NetworkDetailPage = lazy(() => import('@/pages/NetworkDetailPage'));
+const CreateNetworkPage = lazy(() => import('@/pages/CreateNetworkPage'));
 const RoutersPage = lazy(() => import('@/pages/RoutersPage'));
 const RouterDetailPage = lazy(() => import('@/pages/RouterDetailPage'));
 const PortsPage = lazy(() => import('@/pages/PortsPage'));
@@ -53,6 +55,7 @@ export const computeRoutes = (
     <Route path="/compute/instances/create" element={<CreateInstancePage />} />
     <Route path="/compute/instances/:id" element={<InstanceDetailPage />} />
     <Route path="/compute/instance-templates" element={<InstanceTemplatesPage />} />
+    <Route path="/compute/instance-templates/create" element={<CreateTemplatePage />} />
     <Route path="/compute/instance-templates/:id" element={<InstanceTemplateDetailPage />} />
     <Route path="/compute/instance-snapshots" element={<InstanceSnapshotsPage />} />
     <Route path="/compute/instance-snapshots/:id" element={<InstanceSnapshotDetailPage />} />
@@ -71,6 +74,7 @@ export const computeRoutes = (
     <Route path="/compute/volume-backups" element={<VolumeBackupsPage />} />
     <Route path="/compute/volume-backups/:id" element={<VolumeBackupDetailPage />} />
     <Route path="/compute/networks" element={<NetworksPage />} />
+    <Route path="/compute/networks/create" element={<CreateNetworkPage />} />
     <Route path="/compute/networks/:id" element={<NetworkDetailPage />} />
     <Route path="/compute/subnets/:id" element={<SubnetDetailPage />} />
     <Route path="/compute/routers" element={<RoutersPage />} />
