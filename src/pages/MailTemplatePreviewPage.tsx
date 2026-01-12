@@ -5,7 +5,6 @@ import {
   VStack, 
   HStack,
   Input,
-  InlineMessage,
 } from '@/design-system';
 import { 
   IconArrowLeft,
@@ -77,10 +76,10 @@ function AccountInvitationTemplate({
     <div className="flex flex-col gap-3 items-start w-full max-w-[600px]">
       <div className="bg-white rounded-lg p-6 w-full flex flex-col gap-6">
         <ThakiLogo />
-        <div className="text-[12px] leading-4 text-[#0f172a] mt-4">
-          <p className="mb-4">Hello <span className="text-[12px] font-medium text-[var(--color-text-default)]">{displayName}</span>,</p>
+        <div className="text-[12px] leading-[18px] text-[#0f172a] mt-4">
+          <p className="mb-4">Hello <span className="text-[12px] font-medium text-[#0f172a]">{displayName}</span>,</p>
           <p className="mb-0">
-            Your administrator from <span className="text-[12px] font-medium text-[var(--color-text-default)]">{domainName}</span> in Thaki Cloud has created a new account for you.
+            Your administrator from <span className="text-[12px] font-medium text-[#0f172a]">{domainName}</span> in Thaki Cloud has created a new account for you.
             <br />
             To get started, please set your password using the secure link below.
           </p>
@@ -98,9 +97,16 @@ function AccountInvitationTemplate({
         >
           Get Started
         </Button>
-        <InlineMessage variant="warning" className="w-full">
-          This link will expire in <span className="font-medium">{expiryDays} days.</span>
-        </InlineMessage>
+        <div className="flex items-start gap-2 p-3 rounded-md bg-[#fff7ed] w-full">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#ea580c" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="flex-shrink-0 mt-0.5">
+            <path d="M10.24 3.957l-8.424 14.566a1.998 1.998 0 0 0 1.735 2.917h16.848a1.998 1.998 0 0 0 1.735 -2.917l-8.424 -14.566a1.998 1.998 0 0 0 -3.47 0z" />
+            <path d="M12 9v4" />
+            <path d="M12 17h.01" />
+          </svg>
+          <span className="text-[11px] leading-4 text-[#475569]">
+            This link will expire in <span className="font-medium text-[#0f172a]">{expiryDays} days.</span>
+          </span>
+        </div>
       </div>
       <span className="text-[11px] text-[#64748b] leading-4 text-center w-full">© Thaki Cloud, All rights reserved.</span>
     </div>
@@ -130,10 +136,10 @@ function ResetPasswordTemplate({
     <div className="flex flex-col gap-3 items-start w-full max-w-[600px]">
       <div className="bg-white rounded-lg p-6 w-full flex flex-col gap-6">
         <ThakiLogo />
-        <div className="text-[12px] leading-4 text-[#0f172a] mt-4">
-          <p className="mb-4">Hello <span className="text-[12px] font-medium text-[var(--color-text-default)]">{displayName}</span>,</p>
+        <div className="text-[12px] leading-[18px] text-[#0f172a] mt-4">
+          <p className="mb-4">Hello <span className="text-[12px] font-medium text-[#0f172a]">{displayName}</span>,</p>
           <p className="mb-0">
-            Your administrator from <span className="text-[12px] font-medium text-[var(--color-text-default)]">{domainName}</span> in Thaki Cloud has reset your password.
+            Your administrator from <span className="text-[12px] font-medium text-[#0f172a]">{domainName}</span> in Thaki Cloud has reset your password.
             <br />
             To regain access to your account, please create a new password using the secure link below.
           </p>
@@ -151,9 +157,16 @@ function ResetPasswordTemplate({
         >
           Reset password
         </Button>
-        <InlineMessage variant="warning" className="w-full">
-          This temporary password will expire in <span className="font-medium">{expiryHours} hour.</span>
-        </InlineMessage>
+        <div className="flex items-start gap-2 p-3 rounded-md bg-[#fff7ed] w-full">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#ea580c" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="flex-shrink-0 mt-0.5">
+            <path d="M10.24 3.957l-8.424 14.566a1.998 1.998 0 0 0 1.735 2.917h16.848a1.998 1.998 0 0 0 1.735 -2.917l-8.424 -14.566a1.998 1.998 0 0 0 -3.47 0z" />
+            <path d="M12 9v4" />
+            <path d="M12 17h.01" />
+          </svg>
+          <span className="text-[11px] leading-4 text-[#475569]">
+            This temporary password will expire in <span className="font-medium text-[#0f172a]">{expiryHours} hour.</span>
+          </span>
+        </div>
       </div>
       <span className="text-[11px] text-[#64748b] leading-4 text-center w-full">© Thaki Cloud, All rights reserved.</span>
     </div>
@@ -186,10 +199,10 @@ function EmailMFATemplate({
     <div className="flex flex-col gap-3 items-start w-full max-w-[600px]">
       <div className="bg-white rounded-lg p-6 w-full flex flex-col gap-6">
         <ThakiLogo />
-        <div className="text-[12px] leading-4 text-[#0f172a] mt-4">
-          <p className="mb-4">Hello <span className="text-[12px] font-medium text-[var(--color-text-default)]">{displayName}</span>,</p>
+        <div className="text-[12px] leading-[18px] text-[#0f172a] mt-4">
+          <p className="mb-4">Hello <span className="text-[12px] font-medium text-[#0f172a]">{displayName}</span>,</p>
           <p className="mb-0">
-            To complete your sign-in to <span className="text-[12px] font-medium text-[var(--color-text-default)]">{domainName}</span> in Thaki Cloud, we need to verify your identity.
+            To complete your sign-in to <span className="text-[12px] font-medium text-[#0f172a]">{domainName}</span> in Thaki Cloud, we need to verify your identity.
             <br />
             Please enter the verification code below into the sign-in screen.
           </p>
@@ -200,9 +213,16 @@ function EmailMFATemplate({
             {formattedCode}
           </span>
         </div>
-        <InlineMessage variant="warning" className="w-full">
-          This temporary password will expire in <span className="font-medium">{expirySeconds} seconds.</span>
-        </InlineMessage>
+        <div className="flex items-start gap-2 p-3 rounded-md bg-[#fff7ed] w-full">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#ea580c" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="flex-shrink-0 mt-0.5">
+            <path d="M10.24 3.957l-8.424 14.566a1.998 1.998 0 0 0 1.735 2.917h16.848a1.998 1.998 0 0 0 1.735 -2.917l-8.424 -14.566a1.998 1.998 0 0 0 -3.47 0z" />
+            <path d="M12 9v4" />
+            <path d="M12 17h.01" />
+          </svg>
+          <span className="text-[11px] leading-4 text-[#475569]">
+            This temporary password will expire in <span className="font-medium text-[#0f172a]">{expirySeconds} seconds.</span>
+          </span>
+        </div>
       </div>
       <span className="text-[11px] text-[#64748b] leading-4 text-center w-full">© Thaki Cloud, All rights reserved.</span>
     </div>
@@ -233,8 +253,8 @@ function generateAccountInvitationHTML(props: AccountInvitationProps): string {
           </tr>
           <tr>
             <td style="padding-bottom: 24px;">
-              <p style="margin: 0; font-size: 12px; line-height: 16px; color: #0f172a;">Hello <span style="font-weight: 500; color: #0f172a;">${props.displayName}</span>,</p>
-              <p style="margin: 16px 0 0 0; font-size: 12px; line-height: 16px; color: #0f172a;">
+              <p style="margin: 0; font-size: 12px; line-height: 18px; color: #0f172a;">Hello <span style="font-weight: 500; color: #0f172a;">${props.displayName}</span>,</p>
+              <p style="margin: 16px 0 0 0; font-size: 12px; line-height: 18px; color: #0f172a;">
                 Your administrator from <span style="font-weight: 500; color: #0f172a;">${props.domainName}</span> in Thaki Cloud has created a new account for you.<br />
                 To get started, please set your password using the secure link below.
               </p>
@@ -302,8 +322,8 @@ function generateResetPasswordHTML(props: ResetPasswordProps): string {
           </tr>
           <tr>
             <td style="padding-bottom: 24px;">
-              <p style="margin: 0; font-size: 12px; line-height: 16px; color: #0f172a;">Hello <span style="font-weight: 500; color: #0f172a;">${props.displayName}</span>,</p>
-              <p style="margin: 16px 0 0 0; font-size: 12px; line-height: 16px; color: #0f172a;">
+              <p style="margin: 0; font-size: 12px; line-height: 18px; color: #0f172a;">Hello <span style="font-weight: 500; color: #0f172a;">${props.displayName}</span>,</p>
+              <p style="margin: 16px 0 0 0; font-size: 12px; line-height: 18px; color: #0f172a;">
                 Your administrator from <span style="font-weight: 500; color: #0f172a;">${props.domainName}</span> in Thaki Cloud has reset your password.<br />
                 To regain access to your account, please create a new password using the secure link below.
               </p>
@@ -376,8 +396,8 @@ function generateEmailMFAHTML(props: EmailMFAProps): string {
           </tr>
           <tr>
             <td style="padding-bottom: 24px;">
-              <p style="margin: 0; font-size: 12px; line-height: 16px; color: #0f172a;">Hello <span style="font-weight: 500; color: #0f172a;">${props.displayName}</span>,</p>
-              <p style="margin: 16px 0 0 0; font-size: 12px; line-height: 16px; color: #0f172a;">
+              <p style="margin: 0; font-size: 12px; line-height: 18px; color: #0f172a;">Hello <span style="font-weight: 500; color: #0f172a;">${props.displayName}</span>,</p>
+              <p style="margin: 16px 0 0 0; font-size: 12px; line-height: 18px; color: #0f172a;">
                 To complete your sign-in to <span style="font-weight: 500; color: #0f172a;">${props.domainName}</span> in Thaki Cloud, we need to verify your identity.<br />
                 Please enter the verification code below into the sign-in screen.
               </p>
