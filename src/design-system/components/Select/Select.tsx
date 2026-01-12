@@ -232,10 +232,10 @@ export function Select({
     fullWidth ? 'w-full' : widthStyles[width],
   );
 
-  // Size-based styles (height)
+  // Size-based styles (height) - aligned with Input component
   const sizeStyles = {
-    sm: 'h-[28px] px-2 py-1 text-[11px] leading-4',
-    md: 'px-[var(--select-padding-x)] py-[var(--select-padding-y)] text-[length:var(--select-font-size)] leading-[var(--select-line-height)]',
+    sm: 'h-[var(--input-height-sm)] px-2 text-[11px] leading-4',
+    md: 'h-[var(--input-height-md)] px-[var(--select-padding-x)] text-[length:var(--select-font-size)] leading-[var(--select-line-height)]',
   };
 
   const triggerClasses = twMerge(
