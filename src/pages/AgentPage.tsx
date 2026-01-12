@@ -375,10 +375,10 @@ export function AgentPage() {
               <IconCode size={16} stroke={1.5} className="text-[var(--color-text-muted)]" />
             </button>
             <ContextMenu items={menuItems} trigger="click">
-              <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors">
-                <IconDotsCircleHorizontal size={16} stroke={1.5} className="text-[var(--action-icon-color)]" />
-              </button>
-            </ContextMenu>
+                              <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors">
+                                <IconDotsVertical size={16} stroke={1.5} className="text-[var(--color-text-muted)]" />
+                              </button>
+                            </ContextMenu>
           </div>
         );
       },

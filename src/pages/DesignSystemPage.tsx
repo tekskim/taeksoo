@@ -221,6 +221,7 @@ const foundationItems = [
 const formControlItems = [
   { id: 'button', label: 'Button', icon: IconClick },
   { id: 'input', label: 'Input', icon: IconForms },
+  { id: 'filter-search-input', label: 'Filter Search Input', icon: IconSearch },
   { id: 'select', label: 'Select', icon: IconSelector },
   { id: 'datepicker', label: 'DatePicker', icon: IconCalendar },
   { id: 'slider', label: 'Slider', icon: IconAdjustments },
@@ -4252,13 +4253,61 @@ outline: 2px solid var(--color-border-focus);`}
                   </div>
                 </VStack>
 
-                {/* FilterSearchInput */}
+              </VStack>
+            </Section>
+
+            {/* Filter Search Input Component */}
+            <Section id="filter-search-input" title="Filter Search Input" description="Combined search and filter input with tag display for applied filters">
+              <VStack gap={8}>
+                {/* Design Tokens */}
                 <VStack gap={3}>
-                  <Label>Filter Search Input</Label>
+                  <Label>Design Tokens</Label>
+                  <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
+                    <code>height: 32px (sm) / 36px (md)</code> · <code>padding: 8×12px</code> · <code>radius: 6px</code> · <code>font: 12px</code> · <code>chip-gap: 4px</code>
+                  </div>
+                </VStack>
+
+                {/* Features */}
+                <VStack gap={3}>
+                  <Label>Features</Label>
+                  <ul className="text-[length:var(--font-size-11)] text-[var(--color-text-muted)] list-disc list-inside space-y-1">
+                    <li>Click input to show available filter options</li>
+                    <li>Select filter field, then enter value (text) or select option (select type)</li>
+                    <li>Applied filters displayed as removable chips/tags</li>
+                    <li>Supports text and select filter types</li>
+                    <li>Clear all filters button when filters are applied</li>
+                  </ul>
+                </VStack>
+
+                {/* Interactive Demo */}
+                <VStack gap={3}>
+                  <Label>Interactive Demo</Label>
                   <p className="text-[length:var(--font-size-11)] text-[var(--color-text-muted)]">
-                    Search input with filter dropdown. Click to select filter field, then enter value or select option.
+                    Click the input below to see available filters. Select a filter, enter a value, and see it appear as a tag.
                   </p>
                   <FilterSearchInputDemo />
+                </VStack>
+
+                {/* Usage Example */}
+                <VStack gap={3}>
+                  <Label>Usage Example</Label>
+                  <div className="text-[length:var(--font-size-11)] text-[var(--color-text-muted)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)] font-mono whitespace-pre-wrap">
+{`const filterFields: FilterField[] = [
+  { id: 'name', label: 'Name', type: 'text', placeholder: 'Enter name...' },
+  { id: 'status', label: 'Status', type: 'select', options: [
+    { value: 'running', label: 'Running' },
+    { value: 'stopped', label: 'Stopped' },
+  ]},
+];
+
+<FilterSearchInput
+  filters={filterFields}
+  appliedFilters={appliedFilters}
+  onFiltersChange={setAppliedFilters}
+  placeholder="Search with filters..."
+  size="sm"
+/>`}
+                  </div>
                 </VStack>
               </VStack>
             </Section>

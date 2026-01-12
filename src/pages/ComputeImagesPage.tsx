@@ -1,4 +1,5 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
   Button,
   SearchInput,
@@ -72,6 +73,7 @@ const mockImages: Image[] = [
    ---------------------------------------- */
 
 export function ComputeImagesPage() {
+  const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
@@ -102,6 +104,11 @@ export function ComputeImagesPage() {
 
   // Global tab management
   const { tabs, activeTabId, closeTab, selectTab, addNewTab, moveTab } = useTabs();
+
+  // Handle window close - navigate to root
+  const handleWindowClose = useCallback(() => {
+    navigate('/');
+  }, [navigate]);
 
   // Convert tabs to TabBar format
   const tabBarTabs = tabs.map((tab) => ({
@@ -312,10 +319,11 @@ export function ComputeImagesPage() {
           activeTab={activeTabId}
           onTabChange={selectTab}
           onTabClose={closeTab}
-onTabAdd={addNewTab}
-            onTabReorder={moveTab}
+          onTabAdd={addNewTab}
+          onTabReorder={moveTab}
           showAddButton={true}
           showWindowControls={true}
+          onWindowClose={handleWindowClose}
         />
 
         {/* Top Bar */}
