@@ -93,6 +93,7 @@ import { DesktopPage } from '@/pages/DesktopPage';
 
 // Pages - AI Platform
 import { AIPlatformPage } from '@/pages/AIPlatformPage';
+import { WorkloadDetailPage } from '@/pages/WorkloadDetailPage';
 
 // Layouts
 import { AgentAppLayout } from '@/layouts';
@@ -206,6 +207,7 @@ function AppRoutes() {
 
         {/* AI Platform Routes */}
         <Route path="/ai-platform" element={<AIPlatformPage />} />
+        <Route path="/ai-platform/workloads/:id" element={<WorkloadDetailPage />} />
         <Route path="/ai-platform/*" element={<AIPlatformPage />} />
       </Routes>
   );

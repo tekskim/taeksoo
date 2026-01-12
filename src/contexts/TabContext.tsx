@@ -38,7 +38,7 @@ function getAppFromPath(path: string): string {
     }
   }
   
-  const appPrefixes = ['/cloudbuilder', '/compute', '/storage', '/desktop', '/design', '/container'];
+  const appPrefixes = ['/cloudbuilder', '/compute', '/storage', '/desktop', '/design', '/container', '/ai-platform'];
   for (const prefix of appPrefixes) {
     if (path.startsWith(prefix)) {
       return prefix;
@@ -66,6 +66,7 @@ function getDefaultHomeTab(app: string): TabItem {
     '/desktop': { path: '/desktop', label: 'Home' },
     '/design': { path: '/design', label: 'Home' },
     '/container': { path: '/container', label: 'Dashboard' },
+    '/ai-platform': { path: '/ai-platform', label: 'Dashboard' },
     '/': { path: '/', label: 'Home' },
   };
   
@@ -136,6 +137,8 @@ function getLabelFromPath(path: string): string {
     '/design/modals': 'Modals',
     '/design-system': 'Design System',
     '/container': 'Dashboard',
+    '/ai-platform': 'Dashboard',
+    '/ai-platform/workloads': 'Workloads',
   };
   
   // Check for exact match first
@@ -415,6 +418,7 @@ export function TabProvider({ children, defaultTabs = [] }: TabProviderProps) {
       '/desktop': { path: '/desktop', label: 'Home' },
       '/design': { path: '/design', label: 'Home' },
       '/container': { path: '/container', label: 'Dashboard' },
+      '/ai-platform': { path: '/ai-platform', label: 'Dashboard' },
     };
     
     // 현재 경로에서 애플리케이션 찾기

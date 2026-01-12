@@ -15,10 +15,14 @@ import {
   FilterSearchInput,
   type FilterField,
   type AppliedFilter,
-  Badge,
   ListToolbar,
+  ContextMenu,
+  type ContextMenuItem,
+  StatusIndicator,
 } from '@/design-system';
 import { useTabs } from '@/contexts/TabContext';
+import { useProject } from '@/contexts/ProjectContext';
+import { ProjectSelector } from '@/components/ProjectSelector';
 import {
   IconLayoutDashboard,
   IconSearch,
@@ -45,7 +49,10 @@ import {
   IconBell,
   IconPalette,
   IconRefresh,
-  IconDotsVertical,
+  IconDotsCircleHorizontal,
+  IconTarget,
+  IconPlayerPause,
+  IconAlertCircle,
 } from '@tabler/icons-react';
 
 /* ----------------------------------------
@@ -72,6 +79,7 @@ function AIPlatformLogo() {
 export function AIPlatformSidebar() {
   const location = useLocation();
   const navigate = useNavigate();
+  const { projects, selectedProjectId, setSelectedProjectId } = useProject();
 
   // Check if current path matches href
   const isActive = (href: string) => {
@@ -91,6 +99,16 @@ export function AIPlatformSidebar() {
         <button className="p-1.5 rounded-md border border-[var(--color-border-default)] hover:bg-[var(--color-surface-subtle)] transition-colors">
           <IconApps size={14} stroke={1.5} className="text-[var(--color-text-muted)]" />
         </button>
+      </div>
+
+      {/* Project Selector */}
+      <div className="px-3 py-2">
+        <ProjectSelector
+          projects={projects}
+          selectedProjectId={selectedProjectId}
+          onProjectSelect={setSelectedProjectId}
+          variant="default"
+        />
       </div>
 
       {/* Navigation */}
@@ -893,19 +911,53 @@ function UsageCell({ percent }: UsageCellProps) {
   );
 }
 
-// Simple Workload Stat Card (matches HomePage pattern - no icons)
-interface WorkloadStatCardProps {
-  value: number;
+// Status Card Component (matches Data sources pattern)
+interface StatusCardProps {
   label: string;
+  count: number;
+  status: 'running' | 'pending' | 'failed' | 'stopped';
 }
 
-function WorkloadStatCard({ value, label }: WorkloadStatCardProps) {
-  const textColor = value === 0 ? 'text-[var(--color-text-muted)]' : 'text-[var(--color-text-default)]';
+function StatusCard({ label, count, status }: StatusCardProps) {
+  let bgColor = 'bg-[var(--color-surface-subtle,#f8fafc)]';
+  let iconBg = 'bg-[var(--color-text-muted,#475569)]';
   
+  if (status === 'running') {
+    bgColor = 'bg-[var(--color-state-success-bg,#f0fdf4)]';
+    iconBg = 'bg-[var(--color-success,#4ade80)]';
+  } else if (status === 'failed') {
+    bgColor = 'bg-[var(--color-state-danger-bg,#fef2f2)]';
+    iconBg = 'bg-[var(--color-danger,#ef4444)]';
+  } else if (status === 'pending') {
+    bgColor = 'bg-[var(--color-info-weak-bg,#eff6ff)]';
+    iconBg = 'bg-[var(--color-info,#3b82f6)]';
+  }
+
+  const getStatusIcon = () => {
+    if (status === 'running') {
+      return <IconTarget size={12} stroke={1} className="text-white" />;
+    } else if (status === 'failed') {
+      return <IconAlertCircle size={12} stroke={1} className="text-white" />;
+    } else if (status === 'pending') {
+      return <IconRefresh size={12} stroke={1} className="text-white" />;
+    } else {
+      return <IconPlayerPause size={12} stroke={1} className="text-white" />;
+    }
+  };
+
   return (
-    <div className="flex-1 bg-[var(--color-surface-subtle)] rounded-lg p-4 border-2 border-transparent transition-colors hover:border-[var(--color-action-primary)] cursor-pointer">
-      <div className={`text-[20px] font-medium ${textColor} pb-1`}>{value}</div>
-      <div className="text-[11px] text-[var(--color-text-subtle)]">{label}</div>
+    <div className={`${bgColor} flex flex-[1_0_0] items-center justify-between min-h-px min-w-px px-4 py-3 relative rounded-lg shrink-0`}>
+      <div className="flex flex-col gap-1.5 items-start leading-4 not-italic relative shrink-0">
+        <p className="font-medium text-[length:var(--font-size-11)] leading-[var(--line-height-16)] text-[var(--color-text-subtle)]">
+          {label}
+        </p>
+        <p className="text-[length:var(--font-size-12)] leading-[var(--line-height-18)] text-[var(--color-text-default)]">
+          {count}
+        </p>
+      </div>
+      <div className={`${iconBg} flex gap-0 items-center justify-center p-1 relative rounded-2xl shrink-0 size-6`}>
+        {getStatusIcon()}
+      </div>
     </div>
   );
 }
@@ -985,43 +1037,61 @@ function WorkloadsContent() {
 
   // Stats
   const stats = useMemo(() => ({
-    total: mockWorkloads.length,
     running: mockWorkloads.filter(w => w.status === 'running').length,
     pending: mockWorkloads.filter(w => w.status === 'pending').length,
     failed: mockWorkloads.filter(w => w.status === 'failed').length,
-    pods: mockWorkloads.length,
-    helmCharts: 0,
+    stopped: mockWorkloads.filter(w => w.status === 'stopped').length,
   }), []);
+
+  // Status mapping for StatusIndicator
+  const statusMap: Record<Workload['status'], 'active' | 'error' | 'building' | 'muted'> = {
+    'running': 'active',
+    'pending': 'building',
+    'failed': 'error',
+    'stopped': 'muted',
+  };
+
+  // Context menu items for workloads
+  const getWorkloadContextMenuItems = (workload: Workload): ContextMenuItem[] => [
+    { id: 'view-logs', label: 'View Logs', onClick: () => console.log('View logs:', workload.id) },
+    { id: 'view-metrics', label: 'View Metrics', onClick: () => console.log('View metrics:', workload.id) },
+    { id: 'restart', label: 'Restart', onClick: () => console.log('Restart:', workload.id) },
+    { id: 'stop', label: 'Stop', status: 'danger', onClick: () => console.log('Stop:', workload.id) },
+    { id: 'delete', label: 'Delete', status: 'danger', onClick: () => console.log('Delete:', workload.id) },
+  ];
 
   // Table columns
   const columns: TableColumn<Workload>[] = [
     {
+      key: 'status',
+      label: 'Status',
+      width: '59px',
+      align: 'center' as const,
+      render: (_, row) => (
+        <StatusIndicator status={statusMap[row.status]} layout="icon-only" />
+      ),
+    },
+    {
       key: 'name',
       label: 'Name',
-      width: '280px',
+      flex: 2,
       render: (_, row) => (
-        <div className="flex items-center gap-3">
-          <div className={`w-2 h-2 rounded-full ${
-            row.status === 'running' ? 'bg-emerald-500' :
-            row.status === 'pending' ? 'bg-amber-500' :
-            row.status === 'failed' ? 'bg-red-500' : 'bg-gray-400'
-          }`} />
-          <div className="flex flex-col">
-            <span className="text-[13px] font-medium text-[var(--color-text-default)]">{row.name}</span>
-            <div className="flex items-center gap-2">
-              <Badge variant={row.status === 'running' ? 'success' : row.status === 'failed' ? 'danger' : 'default'} size="sm">
-                {row.status.charAt(0).toUpperCase() + row.status.slice(1)}
-              </Badge>
-              <span className="text-[11px] text-[var(--color-text-subtle)]">{row.namespace}</span>
-            </div>
-          </div>
+        <div className="flex flex-col">
+          <Link
+            to={`/ai-platform/workloads/${row.id}`}
+            className="text-[13px] font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {row.name}
+          </Link>
+          <span className="text-[11px] text-[var(--color-text-subtle)]">{row.namespace}</span>
         </div>
       ),
     },
     {
       key: 'utilization',
       label: 'Utilization',
-      width: '120px',
+      flex: 1,
       render: (_, row) => (
         row.utilization !== null ? (
           <UsageCell percent={row.utilization} />
@@ -1033,7 +1103,7 @@ function WorkloadsContent() {
     {
       key: 'memory',
       label: 'Memory',
-      width: '120px',
+      flex: 1,
       render: (_, row) => (
         row.memoryPercent !== null ? (
           <UsageCell percent={row.memoryPercent} />
@@ -1045,7 +1115,7 @@ function WorkloadsContent() {
     {
       key: 'disk',
       label: 'Disk',
-      width: '120px',
+      flex: 1,
       render: (_, row) => (
         row.diskPercent !== null ? (
           <UsageCell percent={row.diskPercent} />
@@ -1057,7 +1127,7 @@ function WorkloadsContent() {
     {
       key: 'computeType',
       label: 'Compute Type',
-      width: '120px',
+      flex: 1,
       render: (_, row) => (
         <span className={row.computeType !== '-' ? 'text-[var(--color-text-default)]' : 'text-[var(--color-text-subtle)]'}>
           {row.computeType}
@@ -1067,34 +1137,36 @@ function WorkloadsContent() {
     {
       key: 'cost',
       label: 'Cost',
-      width: '100px',
+      flex: 1,
       render: (_, row) => (
         <span className="text-[var(--color-text-default)]">{row.cost}</span>
       ),
     },
     {
       key: 'actions',
-      label: '',
-      width: '40px',
+      label: 'Action',
+      width: '72px',
       align: 'center' as const,
-      render: () => (
-        <button className="p-1 rounded hover:bg-[var(--color-surface-subtle)] transition-colors">
-          <IconDotsVertical size={16} stroke={1.5} className="text-[var(--color-text-muted)]" />
-        </button>
+      render: (_, row) => (
+        <div onClick={(e) => e.stopPropagation()}>
+          <ContextMenu items={getWorkloadContextMenuItems(row)} trigger="click">
+            <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
+              <IconDotsCircleHorizontal size={16} stroke={1.5} className="text-[var(--action-icon-color)]" />
+            </button>
+          </ContextMenu>
+        </div>
       ),
     },
   ];
 
   return (
     <div className="flex flex-col gap-6">
-      {/* Stats Cards - Simple pattern like HomePage */}
-      <div className="flex gap-2 items-center w-full">
-        <WorkloadStatCard value={stats.total} label="Total" />
-        <WorkloadStatCard value={stats.running} label="Running" />
-        <WorkloadStatCard value={stats.pending} label="Pending" />
-        <WorkloadStatCard value={stats.failed} label="Failed" />
-        <WorkloadStatCard value={stats.pods} label="Pods" />
-        <WorkloadStatCard value={stats.helmCharts} label="Helm Charts" />
+      {/* Status Cards - Data sources pattern */}
+      <div className="flex gap-2 items-center relative shrink-0 w-full">
+        <StatusCard label="Running" count={stats.running} status="running" />
+        <StatusCard label="Failed" count={stats.failed} status="failed" />
+        <StatusCard label="Pending" count={stats.pending} status="pending" />
+        <StatusCard label="Stopped" count={stats.stopped} status="stopped" />
       </div>
 
       {/* Filter Search Input */}
