@@ -12,6 +12,7 @@ import { SettingsPageWrapper } from '@/pages/SettingsPageWrapper';
 
 // Pages - Mail Template
 import { MailTemplatePage } from '@/pages/MailTemplatePage';
+import { MailTemplatePreviewPage } from '@/pages/MailTemplatePreviewPage';
 
 // Pages - Compute
 import { InstanceListPage } from '@/pages/InstanceListPage';
@@ -162,6 +163,7 @@ function AppRoutes() {
         {/* Settings & Mail Template Routes */}
         <Route path="/settings" element={<SettingsPageWrapper />} />
         <Route path="/mail-template" element={<MailTemplatePage />} />
+        <Route path="/mail-template/:id" element={<MailTemplatePreviewPage />} />
 
         {/* Agent Routes - Shared TabBar via AgentAppLayout */}
         <Route element={<AgentAppLayout />}>
