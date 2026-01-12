@@ -332,7 +332,7 @@ export const FilterSearchInput = forwardRef<HTMLInputElement, FilterSearchInputP
       if (selectedFilter) {
         return selectedFilter.placeholder || `Enter ${selectedFilter.label.toLowerCase()}...`;
       }
-      return placeholder || (filters.length > 0 ? 'Find with filters' : 'Search...');
+      return placeholder || (filters.length > 0 ? 'Search by attributes' : 'Search...');
     };
 
     // Build input display value

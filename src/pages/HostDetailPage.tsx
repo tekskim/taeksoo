@@ -1281,7 +1281,7 @@ export default function HostDetailPage() {
                       <div className="flex items-center gap-4">
                         <div className="w-[280px]">
                           <SearchInput 
-                            placeholder="Find instance with filters"
+                            placeholder="Search instance by attributes"
                             size="sm"
                             fullWidth
                           />
@@ -1321,7 +1321,7 @@ export default function HostDetailPage() {
                       {/* Search */}
                       <div className="w-[280px]">
                         <SearchInput 
-                          placeholder="Find instance with filters"
+                          placeholder="Search instance by attributes"
                           size="sm"
                           fullWidth
                         />
@@ -1360,7 +1360,7 @@ export default function HostDetailPage() {
                       {/* Search */}
                       <div className="w-[280px]">
                         <SearchInput 
-                          placeholder="Find instance with filters"
+                          placeholder="Search instance by attributes"
                           size="sm"
                           fullWidth
                         />

@@ -429,7 +429,7 @@ export function ChatPage() {
             <div className="flex items-center">
               <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-strong)] flex items-center justify-between w-[280px] pl-2.5 pr-2 py-1.5 rounded-md">
                 <p className="text-[length:var(--font-size-11)] leading-[var(--line-height-16)] text-[var(--color-text-subtle)]">
-                  Find agent with filters
+                  Search agent by attributes
                 </p>
                 <IconSearch size={12} stroke={1} className="text-[var(--color-text-muted)]" />
               </div>

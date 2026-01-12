@@ -314,7 +314,7 @@ export function RoutersPage() {
                 <ListToolbar.Actions>
                   <div className="w-[280px]">
                     <SearchInput
-                      placeholder="Find Router with filters"
+                      placeholder="Search router by attributes"
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
                       onClear={() => setSearchQuery('')}

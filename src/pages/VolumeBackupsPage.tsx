@@ -345,7 +345,7 @@ export function VolumeBackupsPage() {
                 <ListToolbar.Actions>
                   <div className="w-[280px]">
                     <SearchInput
-                      placeholder="Find backup with filters"
+                      placeholder="Search backup by attributes"
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
                       onClear={() => setSearchQuery('')}

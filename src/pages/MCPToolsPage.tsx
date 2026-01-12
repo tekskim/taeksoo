@@ -653,7 +653,7 @@ export function MCPToolsPage() {
               <ListToolbar.Actions>
                 <div className="w-[280px]">
                   <SearchInput
-                    placeholder="Find MCP tools with filters"
+                    placeholder="Search MCP tools by attributes"
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                     onClear={() => setSearchQuery('')}
@@ -710,7 +710,7 @@ export function MCPToolsPage() {
                 <ListToolbar.Actions>
                   <div className="w-[280px]">
                     <SearchInput
-                      placeholder="Find templates with filters"
+                      placeholder="Search templates by attributes"
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
                       onClear={() => setSearchQuery('')}

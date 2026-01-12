@@ -437,7 +437,7 @@ export function FlavorDetailPage() {
                     {/* Search */}
                     <div className="w-[280px]">
                       <SearchInput
-                        placeholder="Find instance with filters"
+                        placeholder="Search instance by attributes"
                         value={instanceSearchQuery}
                         onChange={(e) => setInstanceSearchQuery(e.target.value)}
                         onClear={() => setInstanceSearchQuery('')}

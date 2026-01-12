@@ -328,7 +328,7 @@ export function VolumeSnapshotsPage() {
                 <ListToolbar.Actions>
                   <div className="w-[280px]">
                     <SearchInput
-                      placeholder="Find snapshot with filters"
+                      placeholder="Search snapshot by attributes"
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
                       onClear={() => setSearchQuery('')}

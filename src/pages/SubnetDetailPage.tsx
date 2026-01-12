@@ -482,7 +482,7 @@ export default function SubnetDetailPage() {
                             setPortSearchTerm(e.target.value);
                             setPortCurrentPage(1);
                           }}
-                          placeholder="Find port with filters"
+                          placeholder="Search port by attributes"
                         />
                       </div>
 

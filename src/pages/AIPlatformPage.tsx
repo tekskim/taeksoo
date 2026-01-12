@@ -1174,7 +1174,7 @@ function WorkloadsContent() {
         filters={filterFields}
         appliedFilters={appliedFilters}
         onFiltersChange={setAppliedFilters}
-        placeholder="Find workloads with filters"
+        placeholder="Search workloads by attributes"
         size="sm"
         className="w-[400px]"
       />

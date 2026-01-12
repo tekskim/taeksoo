@@ -721,7 +721,7 @@ export function BucketDetailPage() {
                             <ListToolbar.Actions>
                               <div className="w-[280px]">
                                 <SearchInput
-                                  placeholder="Find object with filters"
+                                  placeholder="Search object by attributes"
                                   value={searchQuery}
                                   onChange={(e) => setSearchQuery(e.target.value)}
                                   onClear={() => setSearchQuery('')}

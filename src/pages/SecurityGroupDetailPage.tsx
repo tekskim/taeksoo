@@ -453,7 +453,7 @@ export default function SecurityGroupDetailPage() {
                       <div className="flex items-center gap-2">
                         <div className="w-[280px]">
                           <SearchInput
-                            placeholder="Find rules with filters"
+                            placeholder="Search rules by attributes"
                             value={ruleSearchTerm}
                             onChange={(e) => setRuleSearchTerm(e.target.value)}
                             onClear={() => setRuleSearchTerm('')}

@@ -381,7 +381,7 @@ export function InstanceSnapshotsPage() {
                 <ListToolbar.Actions>
                   <div className="w-[280px]">
                     <SearchInput
-                      placeholder="Find Snapshot with filters"
+                      placeholder="Search snapshot by attributes"
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
                       onClear={() => setSearchQuery('')}

@@ -526,7 +526,7 @@ export default function RouterDetailPage() {
                               setPortSearchTerm(e.target.value);
                               setPortCurrentPage(1);
                             }}
-                            placeholder="Find interface with filters"
+                            placeholder="Search interface by attributes"
                           />
                         </div>
                         <div className="h-4 w-px bg-[var(--color-border-default)]" />
@@ -588,7 +588,7 @@ export default function RouterDetailPage() {
                               setRouteSearchTerm(e.target.value);
                               setRouteCurrentPage(1);
                             }}
-                            placeholder="Find static route with filters"
+                            placeholder="Search static route by attributes"
                           />
                         </div>
                         <div className="h-4 w-px bg-[var(--color-border-default)]" />

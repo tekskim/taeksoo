@@ -270,7 +270,7 @@ export default function IAMActiveSessionsPage() {
                   {/* Search */}
                   <HStack gap={1} align="center">
                     <SearchInput
-                      placeholder="Find session with filters"
+                      placeholder="Search session by attributes"
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
                       className="w-[280px]"

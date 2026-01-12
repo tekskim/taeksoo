@@ -921,7 +921,7 @@ export function OSDDetailPage() {
                       {/* Search */}
                       <div className="w-[280px]">
                         <SearchInput
-                          placeholder="Find instance with filters"
+                          placeholder="Search instance by attributes"
                           value={deviceSearchQuery}
                           onChange={(e) => setDeviceSearchQuery(e.target.value)}
                           onClear={() => setDeviceSearchQuery('')}

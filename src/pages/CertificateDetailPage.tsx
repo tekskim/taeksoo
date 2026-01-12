@@ -525,7 +525,7 @@ export default function CertificateDetailPage() {
                             setListenerSearchTerm(e.target.value);
                             setListenerCurrentPage(1);
                           }}
-                          placeholder="Find Listener with filters"
+                          placeholder="Search listener by attributes"
                         />
                       </div>
 

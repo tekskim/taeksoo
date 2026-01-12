@@ -873,7 +873,7 @@ export default function ListenerDetailPage() {
                               setL7PolicySearchTerm(e.target.value);
                               setL7PolicyCurrentPage(1);
                             }}
-                            placeholder="Find policies with filters"
+                            placeholder="Search policies by attributes"
                           />
                         </div>
                         <div className="h-4 w-px bg-[var(--color-border-default)]" />
@@ -940,7 +940,7 @@ export default function ListenerDetailPage() {
                               setCertificateSearchTerm(e.target.value);
                               setCertificateCurrentPage(1);
                             }}
-                            placeholder="Find certificates with filters"
+                            placeholder="Search certificates by attributes"
                           />
                         </div>
                         <div className="h-4 w-px bg-[var(--color-border-default)]" />

@@ -518,7 +518,7 @@ export function StoragePage() {
             <ListToolbar.Actions>
               <div className="w-[280px]">
                 <SearchInput
-                  placeholder="Find data sources with filters"
+                  placeholder="Search data sources by attributes"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   onClear={() => setSearchQuery('')}
