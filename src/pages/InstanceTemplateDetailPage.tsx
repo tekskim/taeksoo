@@ -71,7 +71,7 @@ type SectionStep = 'template-info' | 'basic-info' | 'source' | 'flavor' | 'netwo
 
 const SECTION_LABELS: Record<SectionStep, string> = {
   'template-info': 'Template Information',
-  'basic-info': 'Basic Information',
+  'basic-info': 'Basic information',
   source: 'Source',
   flavor: 'Flavor',
   network: 'Network',
@@ -394,9 +394,9 @@ export function InstanceTemplateDetailPage() {
 
   const { tabs, activeTabId, closeTab, selectTab, updateActiveTabLabel } = useTabs();
 
-  // Update tab label to "Edit Template"
+  // Update tab label to "Edit template"
   useEffect(() => {
-    updateActiveTabLabel('Edit Template');
+    updateActiveTabLabel('Edit template');
   }, [updateActiveTabLabel]);
 
   const tabBarTabs = tabs.map((tab) => ({
@@ -407,8 +407,8 @@ export function InstanceTemplateDetailPage() {
 
   const breadcrumbItems = [
     { label: 'Proj-1', href: '#' },
-    { label: 'Instance Templates', href: '/compute/instance-templates' },
-    { label: 'Edit Template' },
+    { label: 'Instance templates', href: '/compute/instance-templates' },
+    { label: 'Edit template' },
   ];
 
   const handleCancel = () => {
@@ -532,7 +532,7 @@ export function InstanceTemplateDetailPage() {
             <div className="max-w-[1320px] mx-auto mb-4">
               <HStack gap={1} align="center">
                 <h1 className="text-[length:var(--font-size-18)] font-semibold leading-[var(--line-height-28)] text-[var(--color-text-default)]">
-                  Edit Template
+                  Edit template
                 </h1>
                 <span className="text-[length:var(--font-size-14)] font-medium leading-[var(--line-height-20)] text-[var(--color-text-subtle)]">
                   (ID: {formData.id})
@@ -553,7 +553,7 @@ export function InstanceTemplateDetailPage() {
                     >
                       <VStack gap={4} align="stretch">
                         <FormField>
-                          <FormField.Label>Template Name</FormField.Label>
+                          <FormField.Label>Template name</FormField.Label>
                           <FormField.Control>
                             <Input 
                               value={formData.name} 
@@ -585,13 +585,13 @@ export function InstanceTemplateDetailPage() {
                     </ActiveSection>
                   ) : (
                     <DoneSection title={SECTION_LABELS['template-info']} onEdit={() => handleEdit('template-info')}>
-                      <SectionCard.DataRow label="Template Name" value={formData.name} showDivider={false} />
+                      <SectionCard.DataRow label="Template name" value={formData.name} showDivider={false} />
                       <SectionCard.DataRow label="Favorite" value={formData.favorite ? 'Yes' : '-'} />
                       <SectionCard.DataRow label="Description" value={formData.description} />
                     </DoneSection>
                   )}
 
-                  {/* Basic Information */}
+                  {/* Basic information */}
                   {editingSection === 'basic-info' ? (
                     <ActiveSection 
                       title={SECTION_LABELS['basic-info']} 
@@ -600,7 +600,7 @@ export function InstanceTemplateDetailPage() {
                     >
                       <VStack gap={4} align="stretch">
                         <FormField>
-                          <FormField.Label>Availability Zone</FormField.Label>
+                          <FormField.Label>Availability zone</FormField.Label>
                           <FormField.Control>
                             <Select 
                               options={availabilityZoneOptions}
@@ -614,7 +614,7 @@ export function InstanceTemplateDetailPage() {
                     </ActiveSection>
                   ) : (
                     <DoneSection title={SECTION_LABELS['basic-info']} onEdit={() => handleEdit('basic-info')}>
-                      <SectionCard.DataRow label="Availability Zone" value={formData.availabilityZone} showDivider={false} />
+                      <SectionCard.DataRow label="Availability zone" value={formData.availabilityZone} showDivider={false} />
                     </DoneSection>
                   )}
 
@@ -638,7 +638,7 @@ export function InstanceTemplateDetailPage() {
                           </FormField.Control>
                         </FormField>
                         <FormField>
-                          <FormField.Label>System Disk</FormField.Label>
+                          <FormField.Label>System disk</FormField.Label>
                           <FormField.Control>
                             <Input 
                               value={formData.systemDisk} 
@@ -648,7 +648,7 @@ export function InstanceTemplateDetailPage() {
                           </FormField.Control>
                         </FormField>
                         <FormField>
-                          <FormField.Label>Data Disk</FormField.Label>
+                          <FormField.Label>Data disk</FormField.Label>
                           <FormField.Control>
                             <Input 
                               value={formData.dataDisk === '-' ? '' : formData.dataDisk} 
@@ -663,8 +663,8 @@ export function InstanceTemplateDetailPage() {
                   ) : (
                     <DoneSection title={SECTION_LABELS.source} onEdit={() => handleEdit('source')}>
                       <SectionCard.DataRow label="Image" value={formData.image} showDivider={false} />
-                      <SectionCard.DataRow label="System Disk" value={formData.systemDisk} />
-                      <SectionCard.DataRow label="Data Disk" value={formData.dataDisk} />
+                      <SectionCard.DataRow label="System disk" value={formData.systemDisk} />
+                      <SectionCard.DataRow label="Data disk" value={formData.dataDisk} />
                     </DoneSection>
                   )}
 
@@ -730,7 +730,7 @@ export function InstanceTemplateDetailPage() {
                           </FormField.Control>
                         </FormField>
                         <FormField>
-                          <FormField.Label>Security Groups</FormField.Label>
+                          <FormField.Label>Security groups</FormField.Label>
                           <FormField.Control>
                             <Input 
                               value={formData.securityGroups.join(', ')} 
@@ -758,7 +758,7 @@ export function InstanceTemplateDetailPage() {
                       <SectionCard.DataRow label="Network" value={formData.network} showDivider={false} />
                       <SectionCard.DataRow label="Floating IP" value={formData.floatingIp} />
                       <SectionCard.DataRow 
-                        label="Security Group" 
+                        label="Security group" 
                         value={formData.securityGroups.length > 0 ? formData.securityGroups.join(', ') : '-'} 
                       />
                       <SectionCard.DataRow label="Port" value={formData.port} />
@@ -792,7 +792,7 @@ export function InstanceTemplateDetailPage() {
                           <FormField.HelperText>Enter tags as key:value pairs, separated by commas</FormField.HelperText>
                         </FormField>
                         <FormField>
-                          <FormField.Label>User Data</FormField.Label>
+                          <FormField.Label>User data</FormField.Label>
                           <FormField.Control>
                             <Textarea 
                               value={formData.userData === '-' ? '' : formData.userData} 
@@ -811,7 +811,7 @@ export function InstanceTemplateDetailPage() {
                         value={formData.tags.length > 0 ? formData.tags.map(t => `${t.key}: ${t.value}`).join(', ') : '-'} 
                         showDivider={false}
                       />
-                      <SectionCard.DataRow label="User Data" value={formData.userData || '-'} />
+                      <SectionCard.DataRow label="User data" value={formData.userData || '-'} />
                     </DoneSection>
                   )}
                 </VStack>

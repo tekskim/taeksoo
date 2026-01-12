@@ -47,7 +47,7 @@ interface VolumeDetail {
   status: VolumeStatus;
   size: string;
   createdAt: string;
-  // Basic Information
+  // Basic information
   volumeName: string;
   availabilityZone: string;
   description: string;
@@ -231,15 +231,15 @@ export function VolumeDetailPage() {
 
   // Context menu items for snapshot actions
   const getSnapshotContextMenuItems = (_snapshot: VolumeSnapshot): ContextMenuItem[] => [
-    { id: 'create-volume', label: 'Create Volume', onClick: () => {} },
+    { id: 'create-volume', label: 'Create volume', onClick: () => {} },
     { id: 'edit', label: 'Edit', onClick: () => {} },
     { id: 'delete', label: 'Delete', onClick: () => {}, status: 'danger' },
   ];
 
   // Context menu items for backup actions
   const getBackupContextMenuItems = (_backup: VolumeBackup): ContextMenuItem[] => [
-    { id: 'create-volume', label: 'Create Volume', onClick: () => {} },
-    { id: 'restore-backup', label: 'Restore Backup', onClick: () => {} },
+    { id: 'create-volume', label: 'Create volume', onClick: () => {} },
+    { id: 'restore-backup', label: 'Restore backup', onClick: () => {} },
     { id: 'edit', label: 'Edit', onClick: () => {} },
     { id: 'delete', label: 'Delete', onClick: () => {}, status: 'danger' },
   ];
@@ -285,7 +285,7 @@ export function VolumeDetailPage() {
     },
     {
       key: 'createdAt',
-      label: 'Created At',
+      label: 'Created at',
       flex: 1,
       sortable: true,
       render: (value) => <span>{value}</span>,
@@ -347,7 +347,7 @@ export function VolumeDetailPage() {
     },
     {
       key: 'backupMode',
-      label: 'Backup Mode',
+      label: 'Backup mode',
       flex: 1,
       render: (value) => <span>{value}</span>,
     },
@@ -360,7 +360,7 @@ export function VolumeDetailPage() {
     },
     {
       key: 'createdAt',
-      label: 'Created At',
+      label: 'Created at',
       flex: 1,
       sortable: true,
       render: (value) => <span>{value}</span>,
@@ -428,21 +428,21 @@ export function VolumeDetailPage() {
               <DetailHeader.Title>{volume.name}</DetailHeader.Title>
               <DetailHeader.Actions>
                 <Button variant="secondary" size="sm" leftIcon={<IconCirclePlus size={12} />}>
-                  Create Transfer
+                  Create transfer
                 </Button>
                 <Button variant="secondary" size="sm" leftIcon={<IconTrash size={12} />}>
                   Delete
                 </Button>
                 <ContextMenu
                   items={[
-                    { id: 'data-protection', label: 'Data Protection', onClick: () => console.log('Data Protection') },
+                    { id: 'data-protection', label: 'Data protection', onClick: () => console.log('Data protection') },
                     { id: 'operate', label: 'Operate', onClick: () => console.log('Operate') },
                     {
                       id: 'configuration',
                       label: 'Configuration',
                       submenu: [
-                        { id: 'extend-volume', label: 'Extend Volume', onClick: () => console.log('Extend Volume') },
-                        { id: 'change-type', label: 'Change Type', onClick: () => console.log('Change Type') },
+                        { id: 'extend-volume', label: 'Extend volume', onClick: () => console.log('Extend volume') },
+                        { id: 'change-type', label: 'Change type', onClick: () => console.log('Change type') },
                       ],
                     },
                     { id: 'edit', label: 'Edit', onClick: () => console.log('Edit') },
@@ -462,7 +462,7 @@ export function VolumeDetailPage() {
                 />
                 <DetailHeader.InfoCard label="ID" value={volume.id} copyable />
                 <DetailHeader.InfoCard label="Size" value={volume.size} />
-                <DetailHeader.InfoCard label="Created At" value={volume.createdAt} />
+                <DetailHeader.InfoCard label="Created at" value={volume.createdAt} />
               </DetailHeader.InfoGrid>
             </DetailHeader>
 
@@ -471,19 +471,19 @@ export function VolumeDetailPage() {
               <Tabs value={activeDetailTab} onChange={setActiveDetailTab} variant="underline" size="sm">
                 <TabList>
                   <Tab value="details">Details</Tab>
-                  <Tab value="snapshots">Volume Snapshots</Tab>
-                  <Tab value="backups">Volume Backups</Tab>
+                  <Tab value="snapshots">Volume snapshots</Tab>
+                  <Tab value="backups">Volume backups</Tab>
                 </TabList>
 
                 {/* Details Tab Panel */}
                 <TabPanel value="details">
                   <VStack gap={4} className="pt-6">
-                    {/* Basic Information */}
+                    {/* Basic information */}
                     <SectionCard>
                       <SectionCard.Header title="Basic Infomation" showEditButton onEdit={() => {}} />
                       <SectionCard.Content>
-                        <SectionCard.DataRow label="Volume Name" value={volume.volumeName} />
-                        <SectionCard.DataRow label="AZ(Availability Zone)" value={volume.availabilityZone} />
+                        <SectionCard.DataRow label="Volume name" value={volume.volumeName} />
+                        <SectionCard.DataRow label="AZ(Availability zone)" value={volume.availabilityZone} />
                         <SectionCard.DataRow label="Description" value={volume.description} />
                       </SectionCard.Content>
                     </SectionCard>
@@ -493,7 +493,7 @@ export function VolumeDetailPage() {
                       <SectionCard.Header title="Attachments" />
                       <SectionCard.Content>
                         <SectionCard.DataRow
-                          label="Attached To"
+                          label="Attached to"
                           value={
                             volume.attachedTo && volume.attachedToId ? (
                               <Link
@@ -515,7 +515,7 @@ export function VolumeDetailPage() {
                     <SectionCard>
                       <SectionCard.Header title="Source" showEditButton onEdit={() => {}} />
                       <SectionCard.Content>
-                        <SectionCard.DataRow label="Data Source Type" value={volume.dataSourceType} />
+                        <SectionCard.DataRow label="Data source Type" value={volume.dataSourceType} />
                       </SectionCard.Content>
                     </SectionCard>
 
@@ -524,7 +524,7 @@ export function VolumeDetailPage() {
                       <SectionCard.Header title="Specifications" showEditButton onEdit={() => {}} />
                       <SectionCard.Content>
                         <SectionCard.DataRow label="Size" value={volume.size} />
-                        <SectionCard.DataRow label="Volume Type" value={volume.volumeType} />
+                        <SectionCard.DataRow label="Volume type" value={volume.volumeType} />
                         <SectionCard.DataRow label="Bootable" value={volume.bootable ? 'Yes' : 'No'} />
                         <SectionCard.DataRow label="Encryption" value={volume.encryption ? 'Yes' : 'No'} />
                       </SectionCard.Content>
@@ -532,13 +532,13 @@ export function VolumeDetailPage() {
                   </VStack>
                 </TabPanel>
 
-                {/* Volume Snapshots Tab Panel */}
+                {/* Volume snapshots Tab Panel */}
                 <TabPanel value="snapshots">
                   <VStack gap={3} className="pt-6">
                     {/* Section Header */}
                     <div className="flex items-center justify-between w-full">
                       <h2 className="text-[length:var(--font-size-16)] font-semibold text-[var(--color-text-default)]">
-                        Volume Snapshots
+                        Volume snapshots
                       </h2>
                       <Button variant="secondary" size="sm" leftIcon={<IconCirclePlus size={12} />}>
                         Create Snapshot
@@ -549,7 +549,7 @@ export function VolumeDetailPage() {
                     <div className="flex items-center gap-1">
                       <div className="w-[280px]">
                         <SearchInput
-                          placeholder="Find Snapshot with filters"
+                          placeholder="Search snapshot by attributes"
                           value={snapshotSearchQuery}
                           onChange={(e) => setSnapshotSearchQuery(e.target.value)}
                           onClear={() => setSnapshotSearchQuery('')}
@@ -586,13 +586,13 @@ export function VolumeDetailPage() {
                   </VStack>
                 </TabPanel>
 
-                {/* Volume Backups Tab Panel */}
+                {/* Volume backups Tab Panel */}
                 <TabPanel value="backups">
                   <VStack gap={3} className="pt-6">
                     {/* Section Header */}
                     <div className="flex items-center justify-between w-full">
                       <h2 className="text-[length:var(--font-size-16)] font-semibold text-[var(--color-text-default)]">
-                        Volume Backups
+                        Volume backups
                       </h2>
                       <Button variant="secondary" size="sm" leftIcon={<IconCirclePlus size={12} />}>
                         Create Backup
@@ -603,7 +603,7 @@ export function VolumeDetailPage() {
                     <div className="flex items-center gap-1">
                       <div className="w-[280px]">
                         <SearchInput
-                          placeholder="Find Backup with filters"
+                          placeholder="Search backup by attributes"
                           value={backupSearchQuery}
                           onChange={(e) => setBackupSearchQuery(e.target.value)}
                           onClear={() => setBackupSearchQuery('')}

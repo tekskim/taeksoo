@@ -224,13 +224,13 @@ export function BucketsPage() {
     },
     {
       key: 'usedCapacity',
-      label: 'Used Capacity',
+      label: 'Used capacity',
       flex: 1,
       sortable: true,
     },
     {
       key: 'capacityLimit',
-      label: 'Capacity Limit %',
+      label: 'Capacity limit %',
       flex: 1,
       sortable: true,
     },
@@ -242,7 +242,7 @@ export function BucketsPage() {
     },
     {
       key: 'objectLimit',
-      label: 'Object Limit %',
+      label: 'Object limit %',
       flex: 1,
       sortable: true,
     },

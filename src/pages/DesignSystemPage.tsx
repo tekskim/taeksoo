@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import ReactECharts from 'echarts-for-react';
 import { DarkModeToggle } from '@/components/DarkModeToggle';
 
-// App Icons
+// App icons
 import AppIconAdminCenter from '@/assets/appIcon/admincenter.png';
 import AppIconAgentOps from '@/assets/appIcon/agentops.png';
 import AppIconAIPlatform from '@/assets/appIcon/aiplatform.png';
@@ -22,6 +22,9 @@ import {
   Textarea,
   NumberInput,
   SearchInput,
+  FilterSearchInput,
+  type FilterField,
+  type AppliedFilter,
   Select,
   Slider,
   Chip,
@@ -63,7 +66,10 @@ import {
   Drawer,
   MonitoringToolbar,
   NotificationCenter,
-  // Wizard Pattern
+  FloatingCard,
+  Loading,
+  SNBMenuItem,
+  CardTitle,
   WizardSection,
   WizardSummary,
   WizardSectionStatusIcon,
@@ -127,6 +133,7 @@ import {
   IconCircleCheck,
   IconBan,
   IconLoader,
+  IconLoader2,
   IconProgress,
   // Basic - UI
   IconSearch,
@@ -223,15 +230,15 @@ import { Link } from 'react-router-dom';
 
 // Foundation items (기초 토큰/스타일)
 const foundationItems = [
-  { id: 'token-architecture', label: 'Token Architecture', icon: IconLayoutGrid },
-  { id: 'primitive-colors', label: 'Primitive Colors', icon: IconPalette },
-  { id: 'semantic-colors', label: 'Semantic Colors', icon: IconPalette },
+  { id: 'token-architecture', label: 'Token architecture', icon: IconLayoutGrid },
+  { id: 'primitive-colors', label: 'Primitive colors', icon: IconPalette },
+  { id: 'semantic-colors', label: 'Semantic colors', icon: IconPalette },
   { id: 'typography', label: 'Typography', icon: IconTypography },
   { id: 'spacing-radius', label: 'Spacing & Radius', icon: IconBoxMultiple },
   { id: 'borders', label: 'Borders', icon: IconBorderAll },
   { id: 'shadows', label: 'Shadows', icon: IconBoxMultiple },
   { id: 'icons', label: 'Icons', icon: IconStar },
-  { id: 'app-icons', label: 'App Icons', icon: IconApps },
+  { id: 'app-icons', label: 'App icons', icon: IconApps },
 ];
 
 // Component items (UI 컴포넌트)
@@ -239,12 +246,15 @@ const foundationItems = [
 const formControlItems = [
   { id: 'button', label: 'Button', icon: IconClick },
   { id: 'input', label: 'Input', icon: IconForms },
+  { id: 'filter-search-input', label: 'Filter search Input', icon: IconSearch },
   { id: 'select', label: 'Select', icon: IconSelector },
   { id: 'datepicker', label: 'DatePicker', icon: IconCalendar },
   { id: 'slider', label: 'Slider', icon: IconAdjustments },
   { id: 'chip', label: 'Chip', icon: IconTag },
   { id: 'pagination', label: 'Pagination', icon: IconProgress },
-  { id: 'progress-bar', label: 'Progress Bar', icon: IconProgress },
+  { id: 'progress-bar', label: 'Progress bar', icon: IconProgress },
+  { id: 'loading', label: 'Loading', icon: IconLoader2 },
+  { id: 'snb-menu-item', label: 'SNBMenuItem', icon: IconLayoutNavbar },
   { id: 'toggle', label: 'Toggle', icon: IconToggleRight },
   { id: 'checkbox', label: 'Checkbox', icon: IconSquareCheck },
   { id: 'radio', label: 'Radio', icon: IconCircle },
@@ -256,36 +266,38 @@ const navigationItems = [
   { id: 'tabbar', label: 'TabBar', icon: IconLayoutNavbar },
   { id: 'tabs', label: 'Tabs', icon: IconLayoutNavbar },
   { id: 'disclosure', label: 'Disclosure', icon: IconSelector },
-  { id: 'inline-message', label: 'Inline Message', icon: IconInfoCircle },
+  { id: 'inline-message', label: 'Inline message', icon: IconInfoCircle },
   { id: 'table', label: 'Table', icon: IconList },
   { id: 'badge', label: 'Badge', icon: IconTag },
   { id: 'breadcrumb', label: 'Breadcrumb', icon: IconChevronRight },
-  { id: 'status-indicator', label: 'Status Indicator', icon: IconActivity },
+  { id: 'status-indicator', label: 'Status indicator', icon: IconActivity },
+  { id: 'card-title', label: 'Card title', icon: IconLayoutGrid },
   { id: 'tooltip', label: 'Tooltip', icon: IconMessage2 },
-  { id: 'window-control', label: 'Window Control', icon: IconAppWindow },
+  { id: 'window-control', label: 'Window control', icon: IconAppWindow },
 ];
 
 // Patterns - matches actual content order
 const patternItems = [
-  { id: 'detail-header', label: 'Detail Header', icon: IconLayoutNavbar },
-  { id: 'section-card', label: 'Section Card', icon: IconLayoutGrid },
+  { id: 'detail-header', label: 'Detail header', icon: IconLayoutNavbar },
+  { id: 'section-card', label: 'Section card', icon: IconLayoutGrid },
   { id: 'wizard', label: 'Wizard (Create Flow)', icon: IconListNumbers },
   { id: 'menu', label: 'Menu', icon: IconMenu2 },
-  { id: 'context-menu', label: 'Context Menu', icon: IconMenu2 },
+  { id: 'context-menu', label: 'Context menu', icon: IconMenu2 },
   { id: 'modal', label: 'Modal', icon: IconLayoutGrid },
   { id: 'drawer', label: 'Drawer', icon: IconLayoutGrid },
-  { id: 'monitoring-toolbar', label: 'Monitoring Toolbar', icon: IconRefresh },
-  { id: 'notification-center', label: 'Notification Center', icon: IconBell },
+  { id: 'monitoring-toolbar', label: 'Monitoring toolbar', icon: IconRefresh },
+  { id: 'notification-center', label: 'Notification center', icon: IconBell },
+  { id: 'floating-card', label: 'Floating card', icon: IconLayoutGrid },
   { id: 'layout', label: 'Layout', icon: IconLayoutSidebar },
 ];
 
 // Graphs
 const graphItems = [
-  { id: 'bar-chart', label: 'Bar Chart', icon: IconChartBar },
-  { id: 'area-chart', label: 'Area Chart', icon: IconChartBar },
-  { id: 'pie-chart', label: 'Pie Chart', icon: IconActivity },
-  { id: 'half-doughnut-chart', label: 'Half-Doughnut Chart', icon: IconGauge },
-  { id: 'doughnut-chart', label: 'Doughnut Chart', icon: IconChartDonut },
+  { id: 'bar-chart', label: 'Bar chart', icon: IconChartBar },
+  { id: 'area-chart', label: 'Area chart', icon: IconChartBar },
+  { id: 'pie-chart', label: 'Pie chart', icon: IconActivity },
+  { id: 'half-doughnut-chart', label: 'Half-Doughnut chart', icon: IconGauge },
+  { id: 'doughnut-chart', label: 'Doughnut chart', icon: IconChartDonut },
 ];
 
 // All component items
@@ -298,6 +310,67 @@ const componentItems = [
 
 // All items for intersection observer
 const navItems = [...foundationItems, ...componentItems];
+
+/* ----------------------------------------
+   Filter search Input Demo
+   ---------------------------------------- */
+
+function FilterSearchInputDemo() {
+  const [appliedFilters, setAppliedFilters] = useState<AppliedFilter[]>([]);
+
+  // Define available filter fields
+  const filterFields: FilterField[] = [
+    {
+      id: 'name',
+      label: 'Name',
+      type: 'text',
+      placeholder: 'Enter name...',
+    },
+    {
+      id: 'status',
+      label: 'Status',
+      type: 'select',
+      options: [
+        { value: 'active', label: 'Active' },
+        { value: 'shutoff', label: 'Shutoff' },
+        { value: 'building', label: 'Building' },
+        { value: 'error', label: 'Error' },
+      ],
+    },
+    {
+      id: 'image',
+      label: 'Image',
+      type: 'text',
+      placeholder: 'Enter image name...',
+    },
+    {
+      id: 'flavor',
+      label: 'Flavor',
+      type: 'select',
+      options: [
+        { value: 'small', label: 'Small' },
+        { value: 'medium', label: 'Medium' },
+        { value: 'large', label: 'Large' },
+      ],
+    },
+  ];
+
+  return (
+    <div className="flex flex-col gap-4">
+      <FilterSearchInput
+        filters={filterFields}
+        appliedFilters={appliedFilters}
+        onFiltersChange={setAppliedFilters}
+        placeholder="Search instance by attributes"
+        className="w-[400px]"
+      />
+      <div className="text-[11px] text-[var(--color-text-subtle)] bg-[var(--color-surface-muted)] p-3 rounded-md">
+        <strong>Usage:</strong> Click the input to see available filters. Select a filter type, then enter a value (text) or choose from options (select).
+        Applied filters appear as removable tags below the input.
+      </div>
+    </div>
+  );
+}
 
 /* ----------------------------------------
    Wizard Pattern Section
@@ -314,8 +387,8 @@ function WizardPatternSection() {
   });
 
   const summaryItems: WizardSummaryItem[] = [
-    { key: 'launch-type', label: 'Launch Type', status: sectionStatus['launch-type'] },
-    { key: 'basic-info', label: 'Basic Information', status: sectionStatus['basic-info'] },
+    { key: 'launch-type', label: 'Launch type', status: sectionStatus['launch-type'] },
+    { key: 'basic-info', label: 'Basic information', status: sectionStatus['basic-info'] },
     { key: 'image', label: 'Image', status: sectionStatus['image'] },
     { key: 'flavor', label: 'Flavor', status: sectionStatus['flavor'] },
     { key: 'network', label: 'Network', status: sectionStatus['network'] },
@@ -377,7 +450,7 @@ function WizardPatternSection() {
 
       {/* Section Components */}
       <VStack gap={3}>
-        <Label>Section Components</Label>
+        <Label>Section components</Label>
         <VStack gap={4} className="max-w-[600px]">
           {/* PreSection */}
           <VStack gap={1}>
@@ -400,8 +473,8 @@ function WizardPatternSection() {
           {/* DoneSection */}
           <VStack gap={1}>
             <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">DoneSection (완료)</span>
-            <DoneSection title="Basic Information" onEdit={() => console.log('Edit clicked')}>
-              <DoneSectionRow label="Instance Name" value="my-instance-01" />
+            <DoneSection title="Basic information" onEdit={() => console.log('Edit clicked')}>
+              <DoneSectionRow label="Instance name" value="my-instance-01" />
               <DoneSectionRow label="AZ" value="nova (Default)" />
               <DoneSectionRow label="Description" value="Test instance for development" />
             </DoneSection>
@@ -411,7 +484,7 @@ function WizardPatternSection() {
 
       {/* Interactive Demo */}
       <VStack gap={3}>
-        <Label>Interactive Demo</Label>
+        <Label>Interactive demo</Label>
         <HStack gap={4} align="start">
           {/* Status Controls */}
           <VStack gap={2} className="w-[200px]">
@@ -466,7 +539,7 @@ const [sectionStatus, setSectionStatus] = useState<Record<string, WizardSectionS
 
 // Summary 아이템
 const summaryItems: WizardSummaryItem[] = [
-  { key: 'basic-info', label: 'Basic Information', status: sectionStatus['basic-info'] },
+  { key: 'basic-info', label: 'Basic information', status: sectionStatus['basic-info'] },
   { key: 'image', label: 'Image', status: sectionStatus['image'] },
   { key: 'flavor', label: 'Flavor', status: sectionStatus['flavor'] },
 ];
@@ -474,8 +547,8 @@ const summaryItems: WizardSummaryItem[] = [
 // 렌더링
 <WizardSummary title="Summary" items={summaryItems} />
 
-<DoneSection title="Basic Information" onEdit={() => handleEdit('basic-info')}>
-  <DoneSectionRow label="Instance Name" value={instanceName} />
+<DoneSection title="Basic information" onEdit={() => handleEdit('basic-info')}>
+  <DoneSectionRow label="Instance name" value={instanceName} />
   <DoneSectionRow label="AZ" value={az} />
 </DoneSection>`}</pre>
         </div>
@@ -485,7 +558,7 @@ const summaryItems: WizardSummaryItem[] = [
 }
 
 /* ----------------------------------------
-   Notification Center Section
+   Notification center Section
    ---------------------------------------- */
 
 function NotificationCenterSection() {
@@ -558,13 +631,13 @@ function NotificationCenterSection() {
   return (
     <Section
       id="notification-center"
-      title="Notification Center"
+      title="Notification center"
       description="Centralized notification panel with filtering, read/unread states, and real-time updates"
     >
       <VStack gap={8}>
         {/* Design Tokens */}
         <VStack gap={3}>
-          <Label>Design Tokens</Label>
+          <Label>Design tokens</Label>
           <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
             <code>width: 360px</code> · <code>padding: 16px</code> · <code>border-radius: 8px</code> · <code>shadow: lg</code>
           </div>
@@ -572,7 +645,7 @@ function NotificationCenterSection() {
 
         {/* Live Demo */}
         <VStack gap={3}>
-          <Label>Live Demo</Label>
+          <Label>Live demo</Label>
           <div className="flex justify-center p-6 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)]">
             <NotificationCenter
               notifications={notifications}
@@ -586,7 +659,7 @@ function NotificationCenterSection() {
 
         {/* Notification Types */}
         <VStack gap={3}>
-          <Label>Notification Types</Label>
+          <Label>Notification types</Label>
           <div className="grid grid-cols-4 gap-4">
             <div className="p-3 bg-[var(--color-surface-default)] rounded-[var(--radius-md)] border border-[var(--color-border-default)]">
               <div className="flex items-center gap-2 mb-2">
@@ -790,7 +863,7 @@ function DatePickerSection() {
       <VStack gap={8}>
         {/* Tokens */}
         <VStack gap={3}>
-          <Label>Design Tokens</Label>
+          <Label>Design tokens</Label>
           <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
             <code>padding: 12px</code> · <code>gap: 12px</code> · <code>radius: 8px</code> · <code>cell: 32×32px</code>
           </div>
@@ -972,7 +1045,7 @@ function DrawerDemo() {
             </p>
           </div>
           <VStack gap={2}>
-            <Label>Example Content</Label>
+            <Label>Example content</Label>
             <p className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
               You can put any content inside a drawer, including forms, lists, or details.
             </p>
@@ -1020,9 +1093,9 @@ function DrawerDemo() {
         </VStack>
       </Drawer>
 
-      {/* Attach Volume Drawer */}
+      {/* Attach volume Drawer */}
       <Button variant="outline" size="sm" onClick={() => setIsAttachVolumeOpen(true)}>
-        Attach Volume
+        Attach volume
       </Button>
       <AttachVolumeDrawer
         isOpen={isAttachVolumeOpen}
@@ -1132,7 +1205,7 @@ const baseChartOptions = {
 };
 
 /* ----------------------------------------
-   Bar Chart Demo (ECharts - from storage-dashboard)
+   Bar chart Demo (ECharts - from storage-dashboard)
    ---------------------------------------- */
 
 function BarChartDemo({ variant }: { variant: 'vertical' | 'horizontal' | 'grouped' }) {
@@ -1247,7 +1320,7 @@ function BarChartDemo({ variant }: { variant: 'vertical' | 'horizontal' | 'group
 }
 
 /* ----------------------------------------
-   Area Chart Demo (ECharts - from storage-dashboard)
+   Area chart Demo (ECharts - from storage-dashboard)
    ---------------------------------------- */
 
 // Generate time labels for charts
@@ -1538,7 +1611,7 @@ function TimeControls({
               </div>
             </div>
 
-            {/* DatePicker from Design System */}
+            {/* DatePicker from Design system */}
             <DatePicker
               mode="range"
               rangeValue={{ start: tempStartDate, end: tempEndDate }}
@@ -1946,7 +2019,7 @@ function AreaChartDemo({ variant }: { variant: 'basic' | 'stacked' | 'nodata' })
 }
 
 /* ----------------------------------------
-   Pie Chart Demo (ECharts - from storage-dashboard)
+   Pie chart Demo (ECharts - from storage-dashboard)
    ---------------------------------------- */
 
 // Extended color palette for pie charts with many segments
@@ -2064,7 +2137,7 @@ function PieChartDemo({
 }
 
 /* ----------------------------------------
-   Doughnut Chart Demo (ECharts - matches SingleValueDoughnutCard from storage)
+   Doughnut chart Demo (ECharts - matches SingleValueDoughnutCard from storage)
    ---------------------------------------- */
 
 function DoughnutChartDemo({ 
@@ -2147,7 +2220,7 @@ function DoughnutChartDemo({
 }
 
 /* ----------------------------------------
-   Half-Doughnut Chart Demo (ECharts - from storage-dashboard)
+   Half-Doughnut chart Demo (ECharts - from storage-dashboard)
    ---------------------------------------- */
 
 function HalfDoughnutChartDemo({ value, label, status = 'default', used, total, unit }: { value: number; label: string; status?: 'default' | 'success' | 'warning' | 'error'; used?: number; total?: number; unit?: string }) {
@@ -2308,7 +2381,7 @@ function HalfDoughnutChartDemo({ value, label, status = 'default', used, total, 
 }
 
 /* ----------------------------------------
-   Single Value Doughnut Chart Demo (ECharts)
+   Single Value Doughnut chart Demo (ECharts)
    ---------------------------------------- */
 
 function SingleValueDoughnutDemo({ 
@@ -2409,12 +2482,12 @@ function TabBarDemo() {
   const manyTabsDemo = useTabBar({
     initialTabs: [
       { id: 'many-1', label: 'Dashboard', closable: true },
-      { id: 'many-2', label: 'Instance Templates', closable: true },
-      { id: 'many-3', label: 'Virtual Machines', closable: true },
-      { id: 'many-4', label: 'Storage Volumes', closable: true },
-      { id: 'many-5', label: 'Network Settings', closable: true },
-      { id: 'many-6', label: 'Security Groups', closable: true },
-      { id: 'many-7', label: 'Load Balancers', closable: true },
+      { id: 'many-2', label: 'Instance templates', closable: true },
+      { id: 'many-3', label: 'Virtual machines', closable: true },
+      { id: 'many-4', label: 'Storage volumes', closable: true },
+      { id: 'many-5', label: 'Network settings', closable: true },
+      { id: 'many-6', label: 'Security groups', closable: true },
+      { id: 'many-7', label: 'Load balancers', closable: true },
       { id: 'many-8', label: 'Monitoring', closable: true },
     ],
     initialActiveTab: 'many-1',
@@ -2424,7 +2497,7 @@ function TabBarDemo() {
     const counter = tabCounterRef.current;
     addTab({
       id: `tab-${counter}-${Date.now()}`,
-      label: `New Tab ${counter}`,
+      label: `New tab ${counter}`,
       closable: true,
     });
     tabCounterRef.current++;
@@ -2434,7 +2507,7 @@ function TabBarDemo() {
     const counter = manyTabsDemo.tabs.length + 1;
     manyTabsDemo.addTab({
       id: `many-${counter}-${Date.now()}`,
-      label: `New Tab ${counter}`,
+      label: `New tab ${counter}`,
       closable: true,
     });
   };
@@ -2443,7 +2516,7 @@ function TabBarDemo() {
     <VStack gap={8}>
       {/* Tokens */}
       <VStack gap={3}>
-        <Label>Design Tokens</Label>
+        <Label>Design tokens</Label>
         <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
           <code>height: 36px</code> · <code>max-width: 160px</code> · <code>padding-x: 12px</code> · <code>font: 12px</code>
         </div>
@@ -2500,7 +2573,7 @@ function TabBarDemo() {
 
       {/* With Icons */}
       <VStack gap={3}>
-        <Label>With Icons</Label>
+        <Label>With icons</Label>
         <div className="w-full border border-[var(--color-border-default)] rounded-[var(--radius-md)] overflow-hidden">
           <TabBar
             tabs={[
@@ -2597,7 +2670,7 @@ const sampleTableData: InstanceData[] = [
   { id: 'vm-006', name: 'ml-worker', status: 'Building', locked: false, fixedIp: '-', floatingIp: '-', image: 'Ubuntu 22.04', imageId: 'img-002', flavor: 'GPU Large', flavorId: 'flv-005', attachedTo: 'gpu-server-1', attachedToId: 'inst-005', attachedType: 'instance', fingerprint: 'ab:cd:ef:01:23:45:67:89', vCPU: 8, ram: '64GB', disk: '1TB' },
 ];
 
-// Sample Key Pair data for copy demo
+// Sample Key pair data for copy demo
 interface KeyPairData {
   id: string;
   name: string;
@@ -2704,7 +2777,7 @@ function TableDemo() {
     },
   ];
 
-  // Columns with Attached To (external link + resource icon)
+  // Columns with Attached to (external link + resource icon)
   const attachedToColumns = [
     { 
       key: 'name', 
@@ -2720,7 +2793,7 @@ function TableDemo() {
     { key: 'fixedIp', label: 'Fixed IP', width: '120px' },
     { 
       key: 'attachedTo', 
-      label: 'Attached To', 
+      label: 'Attached to', 
       flex: 1,
       render: (_: string | null, row: InstanceData) => (
         row.attachedTo && row.attachedToId ? (
@@ -2756,7 +2829,7 @@ function TableDemo() {
     },
   ];
 
-  // Columns with copy functionality (Key Pairs style)
+  // Columns with copy functionality (Key pairs style)
   const copyColumns = [
     { 
       key: 'name', 
@@ -2790,7 +2863,7 @@ function TableDemo() {
         </div>
       )
     },
-    { key: 'createdAt', label: 'Created At', width: '140px' },
+    { key: 'createdAt', label: 'Created at', width: '140px' },
   ];
 
   // Columns without copy button (40px row height demo)
@@ -2811,7 +2884,7 @@ function TableDemo() {
         <span className="text-[length:var(--font-size-12)] leading-[var(--line-height-18)] text-[var(--color-text-default)]">{row.fingerprint}</span>
       )
     },
-    { key: 'createdAt', label: 'Created At', width: '140px' },
+    { key: 'createdAt', label: 'Created at', width: '140px' },
   ];
 
   // Compact columns for horizontal scroll demo
@@ -2876,7 +2949,7 @@ function TableDemo() {
 
       {/* Selectable Table */}
       <VStack gap={3}>
-        <Label>Selectable Table</Label>
+        <Label>Selectable table</Label>
         <Table
           columns={basicColumns}
           data={sampleTableData}
@@ -2899,7 +2972,7 @@ function TableDemo() {
           rowKey="id"
         />
         <p className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
-          Attached To column shows resource type icon (Instance/Router), clickable link opens in new window
+          Attached to column shows resource type icon (Instance/Router), clickable link opens in new window
         </p>
       </VStack>
 
@@ -2963,7 +3036,7 @@ function TableDemo() {
 
       {/* Empty State */}
       <VStack gap={3}>
-        <Label>Empty State</Label>
+        <Label>Empty state</Label>
         <Table
           columns={emptyColumns}
           data={[]}
@@ -2976,7 +3049,7 @@ function TableDemo() {
 }
 
 /* ----------------------------------------
-   Design System Page
+   Design system Page
    ---------------------------------------- */
 
 export function DesignSystemPage() {
@@ -3137,7 +3210,7 @@ export function DesignSystemPage() {
               <span className="text-[10px] font-bold text-white">TDS</span>
             </div>
             <span className="text-[length:var(--font-size-14)] font-semibold text-[var(--color-text-default)]">
-              Design System
+              Design system
             </span>
           </Link>
 
@@ -3355,7 +3428,7 @@ export function DesignSystemPage() {
             <div className="flex items-center justify-between w-full">
               <VStack gap={2} align="start">
                 <h1 className="text-[length:var(--font-size-40)] font-semibold text-[var(--color-text-default)]">
-                  TDS Design System
+                  TDS Design system
                 </h1>
                 <p className="text-[length:var(--font-size-16)] text-[var(--color-text-muted)]">
                   Design tokens and components built with a 3-tier token architecture
@@ -3432,8 +3505,8 @@ export function DesignSystemPage() {
               )}
             </div>
 
-            {/* Token Architecture Overview */}
-            <Section id="token-architecture" title="Token Architecture" description="3-tier design token structure: Primitive → Semantic → Component">
+            {/* Token architecture Overview */}
+            <Section id="token-architecture" title="Token architecture" description="3-tier design token structure: Primitive → Semantic → Component">
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <TokenCard
                   title="Primitive"
@@ -3459,8 +3532,8 @@ export function DesignSystemPage() {
               </div>
             </Section>
 
-            {/* Primitive Colors */}
-            <Section id="primitive-colors" title="Primitive Colors" description="Core color palette used as building blocks">
+            {/* Primitive colors */}
+            <Section id="primitive-colors" title="Primitive colors" description="Core color palette used as building blocks">
               <VStack gap={6}>
                 {/* Base Colors */}
                 <VStack gap={2}>
@@ -3563,8 +3636,8 @@ export function DesignSystemPage() {
               </VStack>
             </Section>
 
-            {/* Semantic Colors */}
-            <Section id="semantic-colors" title="Semantic Colors" description="Purpose-driven color tokens with light/dark theme support">
+            {/* Semantic colors */}
+            <Section id="semantic-colors" title="Semantic colors" description="Purpose-driven color tokens with light/dark theme support">
               <VStack gap={6}>
                 {/* Action, Text, Surface, Border */}
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
@@ -3792,7 +3865,7 @@ export function DesignSystemPage() {
                   </div>
                 </VStack>
                 <VStack gap={4}>
-                  <Label>Border Radius</Label>
+                  <Label>Border radius</Label>
                   <div className="flex gap-4 flex-wrap">
                     {[
                       { name: 'none', value: '0px' },
@@ -3817,7 +3890,7 @@ export function DesignSystemPage() {
               <VStack gap={8}>
                 {/* Border Colors */}
                 <VStack gap={4}>
-                  <Label>Border Colors</Label>
+                  <Label>Border colors</Label>
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                     {[
                       { name: 'default', token: '--color-border-default', desc: '기본 보더' },
@@ -3843,7 +3916,7 @@ export function DesignSystemPage() {
 
                 {/* Border Widths */}
                 <VStack gap={4}>
-                  <Label>Border Widths</Label>
+                  <Label>Border widths</Label>
                   <div className="grid grid-cols-4 gap-4">
                     {[
                       { name: '0', value: '0px' },
@@ -3866,7 +3939,7 @@ export function DesignSystemPage() {
 
                 {/* Border Styles */}
                 <VStack gap={4}>
-                  <Label>Border Styles</Label>
+                  <Label>Border styles</Label>
                   <div className="grid grid-cols-3 md:grid-cols-5 gap-4">
                     {['solid', 'dashed', 'dotted', 'double', 'none'].map((style) => (
                       <div key={style} className="flex flex-col gap-2 items-center">
@@ -3884,7 +3957,7 @@ export function DesignSystemPage() {
 
                 {/* Border Usage Examples */}
                 <VStack gap={4}>
-                  <Label>Usage Examples</Label>
+                  <Label>Usage examples</Label>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div className="p-4 rounded-[var(--radius-lg)] border border-[var(--color-border-default)] bg-[var(--color-surface-default)]">
                       <p className="text-[length:var(--font-size-12)] text-[var(--color-text-default)] mb-2">Card with default border</p>
@@ -4053,7 +4126,7 @@ outline: 2px solid var(--color-border-focus);`}
                     { Icon: IconScale, name: 'LB' },
                     { Icon: IconWorldWww, name: 'Float IP' },
                     { Icon: IconShield, name: 'Security' },
-                    { Icon: IconKey, name: 'Key Pair' },
+                    { Icon: IconKey, name: 'Key pair' },
                     { Icon: IconCpu, name: 'Flavor' },
                     { Icon: IconPlug, name: 'Port' },
                     { Icon: IconCloud, name: 'Cloud' },
@@ -4136,11 +4209,11 @@ outline: 2px solid var(--color-border-focus);`}
               </VStack>
             </Section>
 
-            {/* App Icons */}
-            <Section id="app-icons" title="App Icons" description="Application icons for THAKI Cloud services - Size 64x64">
+            {/* App icons */}
+            <Section id="app-icons" title="App icons" description="Application icons for THAKI Cloud services - Size 64x64">
               <VStack gap={8}>
                 <VStack gap={3}>
-                  <Label>Service Icons</Label>
+                  <Label>Service icons</Label>
                   <div className="flex flex-wrap gap-6">
                     {[
                       { src: AppIconCompute, name: 'Compute' },
@@ -4150,10 +4223,10 @@ outline: 2px solid var(--color-border-focus);`}
                       { src: AppIconContainer, name: 'Container' },
                       { src: AppIconCloudBuilder, name: 'Cloud Builder' },
                       { src: AppIconAIPlatform, name: 'AI Platform' },
-                      { src: AppIconAgentOps, name: 'Agent Ops' },
+                      { src: AppIconAgentOps, name: 'Agent ops' },
                       { src: AppIconIAM, name: 'IAM' },
                       { src: AppIconSettings, name: 'Settings' },
-                      { src: AppIconAdminCenter, name: 'Admin Center' },
+                      { src: AppIconAdminCenter, name: 'Admin center' },
                     ].map(({ src, name }) => (
                       <div key={name} className="flex flex-col items-center gap-2">
                         <div className="w-16 h-16 rounded-xl border border-[var(--color-border-default)] bg-[var(--color-surface-default)] flex items-center justify-center overflow-hidden">
@@ -4176,7 +4249,7 @@ outline: 2px solid var(--color-border-focus);`}
               <VStack gap={8}>
                 {/* Token Table */}
                 <VStack gap={3}>
-                  <Label>Design Tokens</Label>
+                  <Label>Design tokens</Label>
                   <div className="overflow-x-auto">
                     <table className="w-full text-[length:var(--font-size-11)]">
                       <thead>
@@ -4238,10 +4311,10 @@ outline: 2px solid var(--color-border-focus);`}
 
                 {/* With Icons */}
                 <VStack gap={3}>
-                  <Label>With Icons</Label>
+                  <Label>With icons</Label>
                   <div className="flex flex-wrap gap-3">
-                    <Button size="sm" leftIcon={<IconPlus size={14} />}>Left Icon</Button>
-                    <Button size="sm" rightIcon={<IconArrowRight size={14} />}>Right Icon</Button>
+                    <Button size="sm" leftIcon={<IconPlus size={14} />}>Left icon</Button>
+                    <Button size="sm" rightIcon={<IconArrowRight size={14} />}>Right icon</Button>
                     <Button size="sm" icon={<IconHeart size={14} />} aria-label="Like" />
                     <Button size="sm" variant="secondary" icon={<IconStar size={14} />} aria-label="Star" />
                   </div>
@@ -4274,8 +4347,8 @@ outline: 2px solid var(--color-border-focus);`}
                 <VStack gap={3}>
                   <Label>Polymorphic (as prop)</Label>
                   <div className="flex flex-wrap gap-3">
-                    <Button size="sm" as="a" href="#" target="_blank">As Anchor</Button>
-                    <Button size="sm" as={Link} to="/">As Router Link</Button>
+                    <Button size="sm" as="a" href="#" target="_blank">As anchor</Button>
+                    <Button size="sm" as={Link} to="/">As router link</Button>
                   </div>
                 </VStack>
               </VStack>
@@ -4286,7 +4359,7 @@ outline: 2px solid var(--color-border-focus);`}
               <VStack gap={8}>
                 {/* Design Tokens */}
                 <VStack gap={3}>
-                  <Label>Design Tokens</Label>
+                  <Label>Design tokens</Label>
                   <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
                     <code>height: 28/32px</code> · <code>padding: 10×8px</code> · <code>radius: 6px</code> · <code>font: 11-12px</code> · <code>border: 1px → 2px focus</code>
                   </div>
@@ -4339,14 +4412,14 @@ outline: 2px solid var(--color-border-focus);`}
                   <Label>Labels & Validation</Label>
                   <div className="flex flex-wrap gap-4 items-start">
                     <Input label="Label" placeholder="Enter text..." className="w-[200px]" />
-                    <Input label="With Helper" placeholder="Email" helperText="We'll never share your email" className="w-[200px]" />
-                    <Input label="With Error" placeholder="Username" error="Username is required" className="w-[200px]" />
+                    <Input label="With helper" placeholder="Email" helperText="We'll never share your email" className="w-[200px]" />
+                    <Input label="With error" placeholder="Username" error="Username is required" className="w-[200px]" />
                   </div>
                 </VStack>
 
                 {/* With Icons */}
                 <VStack gap={3}>
-                  <Label>With Icons</Label>
+                  <Label>With icons</Label>
                   <div className="flex gap-4">
                     <Input placeholder="Search..." leftElement={<IconSearch size={14} />} className="w-[200px]" />
                     <Input placeholder="Email" rightElement={<IconMail size={14} />} className="w-[200px]" />
@@ -4394,7 +4467,7 @@ outline: 2px solid var(--color-border-focus);`}
 
                 {/* SearchInput */}
                 <VStack gap={3}>
-                  <Label>Search Input</Label>
+                  <Label>Search input</Label>
                   <div className="flex gap-4 items-start">
                     <VStack gap={1}>
                       <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">SM (28px)</span>
@@ -4421,6 +4494,63 @@ outline: 2px solid var(--color-border-focus);`}
                     </VStack>
                   </div>
                 </VStack>
+
+              </VStack>
+            </Section>
+
+            {/* Filter search Input Component */}
+            <Section id="filter-search-input" title="Filter search Input" description="Combined search and filter input with tag display for applied filters">
+              <VStack gap={8}>
+                {/* Design Tokens */}
+                <VStack gap={3}>
+                  <Label>Design tokens</Label>
+                  <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
+                    <code>height: 32px (sm) / 36px (md)</code> · <code>padding: 8×12px</code> · <code>radius: 6px</code> · <code>font: 12px</code> · <code>chip-gap: 4px</code>
+                  </div>
+                </VStack>
+
+                {/* Features */}
+                <VStack gap={3}>
+                  <Label>Features</Label>
+                  <ul className="text-[length:var(--font-size-11)] text-[var(--color-text-muted)] list-disc list-inside space-y-1">
+                    <li>Click input to show available filter options</li>
+                    <li>Select filter field, then enter value (text) or select option (select type)</li>
+                    <li>Applied filters displayed as removable chips/tags</li>
+                    <li>Supports text and select filter types</li>
+                    <li>Clear all filters button when filters are applied</li>
+                  </ul>
+                </VStack>
+
+                {/* Interactive Demo */}
+                <VStack gap={3}>
+                  <Label>Interactive demo</Label>
+                  <p className="text-[length:var(--font-size-11)] text-[var(--color-text-muted)]">
+                    Click the input below to see available filters. Select a filter, enter a value, and see it appear as a tag.
+                  </p>
+                  <FilterSearchInputDemo />
+                </VStack>
+
+                {/* Usage Example */}
+                <VStack gap={3}>
+                  <Label>Usage example</Label>
+                  <div className="text-[length:var(--font-size-11)] text-[var(--color-text-muted)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)] font-mono whitespace-pre-wrap">
+{`const filterFields: FilterField[] = [
+  { id: 'name', label: 'Name', type: 'text', placeholder: 'Enter name...' },
+  { id: 'status', label: 'Status', type: 'select', options: [
+    { value: 'running', label: 'Running' },
+    { value: 'stopped', label: 'Stopped' },
+  ]},
+];
+
+<FilterSearchInput
+  filters={filterFields}
+  appliedFilters={appliedFilters}
+  onFiltersChange={setAppliedFilters}
+  placeholder="Search with filters..."
+  size="sm"
+/>`}
+                  </div>
+                </VStack>
               </VStack>
             </Section>
 
@@ -4429,7 +4559,7 @@ outline: 2px solid var(--color-border-focus);`}
               <VStack gap={8}>
                 {/* Tokens */}
                 <VStack gap={3}>
-                  <Label>Design Tokens</Label>
+                  <Label>Design tokens</Label>
                   <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
                     <code>padding: 10×8px</code> · <code>radius: 6px</code> · <code>font: 12px</code> · <code>item: 10×6px, 11px</code> · <code>border: 1px → 2px focus</code>
                   </div>
@@ -4523,7 +4653,7 @@ outline: 2px solid var(--color-border-focus);`}
 
                 {/* Size Variants */}
                 <VStack gap={3}>
-                  <Label>Size Variants</Label>
+                  <Label>Size variants</Label>
                   <div className="flex gap-4 items-end flex-wrap">
                     <VStack gap={1}>
                       <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">Default</span>
@@ -4544,7 +4674,7 @@ outline: 2px solid var(--color-border-focus);`}
                 <VStack gap={3}>
                   <Label>With Disabled Options</Label>
                   <Select
-                    label="Instance Type"
+                    label="Instance type"
                     placeholder="Select type"
                     defaultValue="medium"
                     options={[
@@ -4555,6 +4685,45 @@ outline: 2px solid var(--color-border-focus);`}
                     ]}
                     className="w-[240px]"
                   />
+                </VStack>
+
+                {/* Clearable Select */}
+                <VStack gap={3}>
+                  <Label>Clearable select</Label>
+                  <p className="text-[length:var(--font-size-11)] text-[var(--color-text-muted)]">
+                    Select with clear button (✕) and "Clear" option in dropdown. Useful for filter dropdowns.
+                  </p>
+                  <div className="flex gap-4 items-start">
+                    <VStack gap={1}>
+                      <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">All statuses</span>
+                      <Select
+                        placeholder="All statuses"
+                        defaultValue="all"
+                        clearable
+                        options={[
+                          { value: 'all', label: 'All statuses' },
+                          { value: 'running', label: 'Running' },
+                          { value: 'pending', label: 'Pending' },
+                          { value: 'failed', label: 'Failed' },
+                        ]}
+                        className="w-[180px]"
+                      />
+                    </VStack>
+                    <VStack gap={1}>
+                      <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">All resources</span>
+                      <Select
+                        placeholder="All resources"
+                        defaultValue="all"
+                        clearable
+                        options={[
+                          { value: 'all', label: 'All resources' },
+                          { value: 'gpu', label: 'GPU Usage' },
+                          { value: 'cpu', label: 'CPU Only' },
+                        ]}
+                        className="w-[180px]"
+                      />
+                    </VStack>
+                  </div>
                 </VStack>
               </VStack>
             </Section>
@@ -4567,7 +4736,7 @@ outline: 2px solid var(--color-border-focus);`}
               <VStack gap={8}>
                 {/* Tokens */}
                 <VStack gap={3}>
-                  <Label>Design Tokens</Label>
+                  <Label>Design tokens</Label>
                   <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
                     <code>track: 6px height</code> · <code>thumb: 16px, 3px border</code> · <code>fill: primary</code>
                   </div>
@@ -4630,7 +4799,7 @@ outline: 2px solid var(--color-border-focus);`}
               <VStack gap={8}>
                 {/* Tokens */}
                 <VStack gap={3}>
-                  <Label>Design Tokens</Label>
+                  <Label>Design tokens</Label>
                   <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
                     <code>padding: 8×4px</code> · <code>gap: 6px</code> · <code>radius: 6px</code> · <code>font: 11px</code>
                   </div>
@@ -4698,7 +4867,7 @@ outline: 2px solid var(--color-border-focus);`}
               <VStack gap={8}>
                 {/* Tokens */}
                 <VStack gap={3}>
-                  <Label>Design Tokens</Label>
+                  <Label>Design tokens</Label>
                   <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
                     <code>item-size: 24px</code> · <code>gap: 4px</code> · <code>radius: 4px</code> · <code>font: 11px</code>
                   </div>
@@ -4726,7 +4895,7 @@ outline: 2px solid var(--color-border-focus);`}
 
                 {/* Many Pages */}
                 <VStack gap={3}>
-                  <Label>Many Pages</Label>
+                  <Label>Many pages</Label>
                   <Pagination
                     currentPage={demoPage3}
                     totalPages={50}
@@ -4799,11 +4968,11 @@ outline: 2px solid var(--color-border-focus);`}
             </Section>
 
             {/* ProgressBar Component */}
-            <Section id="progress-bar" title="Progress Bar" description="Visual indicator for quota usage and progress with status-based colors">
+            <Section id="progress-bar" title="Progress bar" description="Visual indicator for quota usage and progress with status-based colors">
               <VStack gap={8}>
                 {/* Tokens */}
                 <VStack gap={3}>
-                  <Label>Design Tokens</Label>
+                  <Label>Design tokens</Label>
                   <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
                     <code>height: 4px</code> · <code>radius: pill</code>
                   </div>
@@ -4884,7 +5053,7 @@ outline: 2px solid var(--color-border-focus);`}
 
                 {/* Error State */}
                 <VStack gap={3}>
-                  <Label>Error State</Label>
+                  <Label>Error state</Label>
                   <div className="w-[280px] flex flex-col gap-4 p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-md)]">
                     <ProgressBar
                       label="60 MB (75%)"
@@ -4900,7 +5069,7 @@ outline: 2px solid var(--color-border-focus);`}
 
                 {/* Color Legend */}
                 <VStack gap={3}>
-                  <Label>Status Colors</Label>
+                  <Label>Status colors</Label>
                   <div className="flex flex-wrap gap-4">
                     <div className="flex items-center gap-2">
                       <div className="w-4 h-4 rounded bg-[var(--color-state-success-default)]" />
@@ -4923,12 +5092,142 @@ outline: 2px solid var(--color-border-focus);`}
               </VStack>
             </Section>
 
+            {/* Loading Component */}
+            <Section id="loading" title="Loading" description="Loading indicators for various states">
+              <VStack gap={8}>
+                {/* Tokens */}
+                <VStack gap={3}>
+                  <Label>Design tokens</Label>
+                  <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
+                    <code>spinner: 16/22/32px</code> · <code>progress: h-1</code> · <code>button: min-w-80px</code>
+                  </div>
+                </VStack>
+
+                {/* Spinner Variant */}
+                <VStack gap={3}>
+                  <Label>Spinner variant</Label>
+                  <div className="flex gap-8 items-end p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-subtle)] rounded-[var(--radius-lg)]">
+                    <VStack gap={2} align="center">
+                      <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">Small</span>
+                      <Loading variant="spinner" size="sm" text="Loading" />
+                    </VStack>
+                    <VStack gap={2} align="center">
+                      <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">Medium</span>
+                      <Loading variant="spinner" size="md" text="Loading" />
+                    </VStack>
+                    <VStack gap={2} align="center">
+                      <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">Large</span>
+                      <Loading variant="spinner" size="lg" text="Loading" />
+                    </VStack>
+                  </div>
+                </VStack>
+
+                {/* Progress Variant */}
+                <VStack gap={3}>
+                  <Label>Progress variant</Label>
+                  <div className="flex flex-col gap-4 p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-subtle)] rounded-[var(--radius-lg)]">
+                    <Loading 
+                      variant="progress" 
+                      text="Loading.."
+                      description="Create an instance to start using compute resources."
+                      progress={68}
+                      statusText="Status: parsing"
+                    />
+                  </div>
+                </VStack>
+
+                {/* Button Variant */}
+                <VStack gap={3}>
+                  <Label>Button Variant (Disabled Loading State)</Label>
+                  <div className="flex gap-4 p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-subtle)] rounded-[var(--radius-lg)]">
+                    <Loading variant="button" buttonLabel="Loading" />
+                    <Loading variant="button" buttonLabel="Saving" />
+                    <Loading variant="button" buttonLabel="Processing" />
+                  </div>
+                </VStack>
+              </VStack>
+            </Section>
+
+            {/* SNBMenuItem Component */}
+            <Section id="snb-menu-item" title="SNBMenuItem" description="Side Navigation Bar Menu Item with default, hover, and selected states">
+              <VStack gap={8}>
+                {/* Design Tokens */}
+                <VStack gap={3}>
+                  <Label>Design tokens</Label>
+                  <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
+                    <code>size: 38×38px</code> · <code>padding: 8px 6px</code> · <code>radius: 8px</code> · <code>icon: 22px</code>
+                  </div>
+                </VStack>
+
+                {/* Status Variants */}
+                <VStack gap={3}>
+                  <Label>Status variants</Label>
+                  <div className="flex gap-8 items-center p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-subtle)] rounded-[var(--radius-lg)]">
+                    <VStack gap={2} align="center">
+                      <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">Default</span>
+                      <SNBMenuItem status="default">
+                        <IconBoxMultiple size={22} stroke={1} />
+                      </SNBMenuItem>
+                    </VStack>
+                    <VStack gap={2} align="center">
+                      <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">Hover</span>
+                      <SNBMenuItem status="hover">
+                        <IconBoxMultiple size={22} stroke={1} />
+                      </SNBMenuItem>
+                    </VStack>
+                    <VStack gap={2} align="center">
+                      <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">Selected</span>
+                      <SNBMenuItem status="selected">
+                        <IconBoxMultiple size={22} stroke={1} />
+                      </SNBMenuItem>
+                    </VStack>
+                  </div>
+                </VStack>
+
+                {/* Type Variants */}
+                <VStack gap={3}>
+                  <Label>Type variants</Label>
+                  <div className="flex gap-8 items-center p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-subtle)] rounded-[var(--radius-lg)]">
+                    <VStack gap={2} align="center">
+                      <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">Icon (Default)</span>
+                      <SNBMenuItem isSelected>
+                        <IconBoxMultiple size={22} stroke={1} />
+                      </SNBMenuItem>
+                    </VStack>
+                    <VStack gap={2} align="center">
+                      <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">Icon (Selected)</span>
+                      <SNBMenuItem type="text" text="P" status="selected" />
+                    </VStack>
+                  </div>
+                </VStack>
+
+                {/* Interactive Demo */}
+                <VStack gap={3}>
+                  <Label>Interactive Demo (Hover to see effect)</Label>
+                  <div className="flex gap-2 p-4 bg-[var(--color-surface-subtle)] border border-[var(--color-border-subtle)] rounded-[var(--radius-lg)]">
+                    <SNBMenuItem>
+                      <IconHome size={22} stroke={1} />
+                    </SNBMenuItem>
+                    <SNBMenuItem isSelected>
+                      <IconBoxMultiple size={22} stroke={1} />
+                    </SNBMenuItem>
+                    <SNBMenuItem>
+                      <IconDatabase size={22} stroke={1} />
+                    </SNBMenuItem>
+                    <SNBMenuItem>
+                      <IconSettings size={22} stroke={1} />
+                    </SNBMenuItem>
+                  </div>
+                </VStack>
+              </VStack>
+            </Section>
+
             {/* Toggle Component */}
             <Section id="toggle" title="Toggle" description="On/Off switch control for binary settings">
               <VStack gap={8}>
                 {/* Tokens */}
                 <VStack gap={3}>
-                  <Label>Design Tokens</Label>
+                  <Label>Design tokens</Label>
                   <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
                     <code>track: 48×24px</code> · <code>thumb: 16×16px</code> · <code>padding: 4px</code> · <code>radius: pill</code> · <code>gap: 8px</code>
                   </div>
@@ -4974,7 +5273,7 @@ outline: 2px solid var(--color-border-focus);`}
 
                 {/* Interactive */}
                 <VStack gap={3}>
-                  <Label>Interactive Examples</Label>
+                  <Label>Interactive examples</Label>
                   <div className="flex flex-col gap-3">
                     <Toggle label="Enable dark mode" defaultChecked />
                     <Toggle label="Receive notifications" />
@@ -4984,7 +5283,7 @@ outline: 2px solid var(--color-border-focus);`}
 
                 {/* With Description */}
                 <VStack gap={3}>
-                  <Label>With Description</Label>
+                  <Label>With description</Label>
                   <Toggle
                     label="Auto-scaling"
                     description="Automatically scale instances based on demand"
@@ -4999,7 +5298,7 @@ outline: 2px solid var(--color-border-focus);`}
               <VStack gap={8}>
                 {/* Tokens */}
                 <VStack gap={3}>
-                  <Label>Design Tokens</Label>
+                  <Label>Design tokens</Label>
                   <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
                     <code>size: 16×16px</code> · <code>radius: 4px</code> · <code>gap: 6px</code> · <code>icon: 12px</code>
                   </div>
@@ -5049,7 +5348,7 @@ outline: 2px solid var(--color-border-focus);`}
 
                 {/* Error State */}
                 <VStack gap={3}>
-                  <Label>Error State</Label>
+                  <Label>Error state</Label>
                   <div className="flex gap-8 items-start">
                     <Checkbox label="Unchecked with error" error errorMessage="This field is required" />
                     <Checkbox label="Checked with error" defaultChecked error />
@@ -5058,7 +5357,7 @@ outline: 2px solid var(--color-border-focus);`}
 
                 {/* With Description */}
                 <VStack gap={3}>
-                  <Label>With Description</Label>
+                  <Label>With description</Label>
                   <Checkbox
                     label="Email notifications"
                     description="Receive email notifications for important updates"
@@ -5068,7 +5367,7 @@ outline: 2px solid var(--color-border-focus);`}
 
                 {/* Checkbox Group */}
                 <VStack gap={3}>
-                  <Label>Checkbox Group</Label>
+                  <Label>Checkbox group</Label>
                   <div className="flex gap-8 items-start">
                     <CheckboxGroup label="Select options" direction="vertical">
                       <Checkbox label="Option 1" defaultChecked />
@@ -5104,7 +5403,7 @@ outline: 2px solid var(--color-border-focus);`}
               <VStack gap={8}>
                 {/* Tokens */}
                 <VStack gap={3}>
-                  <Label>Design Tokens</Label>
+                  <Label>Design tokens</Label>
                   <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
                     <code>size: 16×16px</code> · <code>dot: 6px</code> · <code>border: 2px</code> · <code>gap: 6px</code>
                   </div>
@@ -5150,7 +5449,7 @@ outline: 2px solid var(--color-border-focus);`}
 
                 {/* Radio Group */}
                 <VStack gap={3}>
-                  <Label>Radio Group</Label>
+                  <Label>Radio group</Label>
                   <div className="flex gap-8 items-start">
                     <RadioGroup label="Select one option" defaultValue="option1" direction="vertical">
                       <Radio label="Option 1" value="option1" />
@@ -5186,7 +5485,7 @@ outline: 2px solid var(--color-border-focus);`}
               <VStack gap={8}>
                 {/* Tokens */}
                 <VStack gap={3}>
-                  <Label>Design Tokens</Label>
+                  <Label>Design tokens</Label>
                   <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
                     <code>height: 40px</code> · <code>padding-x: 12px</code> · <code>button-size: 28px</code> · <code>radius: 4px</code>
                   </div>
@@ -5239,7 +5538,7 @@ outline: 2px solid var(--color-border-focus);`}
                         <Breadcrumb
                           items={[
                             { label: 'Projects', onClick: () => {} },
-                            { label: 'My Project' },
+                            { label: 'My project' },
                           ]}
                         />
                       }
@@ -5300,7 +5599,7 @@ outline: 2px solid var(--color-border-focus);`}
               <VStack gap={8}>
                 {/* Tokens */}
                 <VStack gap={3}>
-                  <Label>Design Tokens</Label>
+                  <Label>Design tokens</Label>
                   <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
                     <code>gap: 24px</code> · <code>min-width: 80px</code> · <code>padding-x: 12px</code> · <code>indicator: 2px</code> · <code>boxed-padding: 24×8px</code>
                   </div>
@@ -5383,7 +5682,7 @@ outline: 2px solid var(--color-border-focus);`}
 
                 {/* Interactive Example */}
                 <VStack gap={3}>
-                  <Label>Interactive Example</Label>
+                  <Label>Interactive example</Label>
                   <Tabs defaultValue="overview" size="sm">
                     <TabList>
                       <Tab value="overview">Overview</Tab>
@@ -5422,7 +5721,7 @@ outline: 2px solid var(--color-border-focus);`}
               <VStack gap={8}>
                 {/* Tokens */}
                 <VStack gap={3}>
-                  <Label>Design Tokens</Label>
+                  <Label>Design tokens</Label>
                   <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
                     <code>gap: 6px</code> · <code>icon: 12px</code> · <code>font: 14px / 20px / medium</code>
                   </div>
@@ -5443,10 +5742,10 @@ outline: 2px solid var(--color-border-focus);`}
 
                 {/* With Content */}
                 <VStack gap={3}>
-                  <Label>With Content</Label>
+                  <Label>With content</Label>
                   <div className="border border-[var(--color-border-default)] rounded-[var(--radius-md)] p-4">
                     <Disclosure defaultOpen>
-                      <Disclosure.Trigger>Volume Details</Disclosure.Trigger>
+                      <Disclosure.Trigger>Volume details</Disclosure.Trigger>
                       <Disclosure.Panel>
                         <div className="mt-3 pl-[18px] text-[length:var(--font-size-12)] text-[var(--color-text-subtle)]">
                           <p>Name: vol-12345</p>
@@ -5460,7 +5759,7 @@ outline: 2px solid var(--color-border-focus);`}
 
                 {/* Multiple */}
                 <VStack gap={3}>
-                  <Label>Multiple Disclosures</Label>
+                  <Label>Multiple disclosures</Label>
                   <div className="border border-[var(--color-border-default)] rounded-[var(--radius-md)] divide-y divide-[var(--color-border-default)]">
                     <div className="p-4">
                       <Disclosure>
@@ -5498,11 +5797,11 @@ outline: 2px solid var(--color-border-focus);`}
             </Section>
 
             {/* InlineMessage Component */}
-            <Section id="inline-message" title="Inline Message" description="Contextual feedback messages for different states">
+            <Section id="inline-message" title="Inline message" description="Contextual feedback messages for different states">
               <VStack gap={8}>
                 {/* Tokens */}
                 <VStack gap={3}>
-                  <Label>Design Tokens</Label>
+                  <Label>Design tokens</Label>
                   <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
                     <code>padding: 12px</code> · <code>gap: 8px</code> · <code>radius: 6px</code> · <code>icon: 16px</code> · <code>font: 12px</code>
                   </div>
@@ -5529,7 +5828,7 @@ outline: 2px solid var(--color-border-focus);`}
 
                 {/* Without Icon */}
                 <VStack gap={3}>
-                  <Label>Without Icon</Label>
+                  <Label>Without icon</Label>
                   <InlineMessage variant="info" hideIcon>
                     This message has no icon.
                   </InlineMessage>
@@ -5537,7 +5836,7 @@ outline: 2px solid var(--color-border-focus);`}
 
                 {/* Long Content */}
                 <VStack gap={3}>
-                  <Label>Long Content</Label>
+                  <Label>Long content</Label>
                   <InlineMessage variant="warning">
                     This is a longer message that demonstrates how the component handles multi-line content. 
                     The text will wrap naturally and the icon stays aligned to the top.
@@ -5556,7 +5855,7 @@ outline: 2px solid var(--color-border-focus);`}
               <VStack gap={8}>
                 {/* Tokens */}
                 <VStack gap={3}>
-                  <Label>Design Tokens</Label>
+                  <Label>Design tokens</Label>
                   <div className="overflow-x-auto">
                     <table className="w-full text-[length:var(--font-size-11)]">
                       <thead>
@@ -5635,9 +5934,9 @@ outline: 2px solid var(--color-border-focus);`}
                 <VStack gap={3}>
                   <Label>Layout (with Icons)</Label>
                   <div className="flex gap-3 items-center">
-                    <Badge size="sm" theme="blue">Text Only</Badge>
-                    <Badge size="sm" theme="blue" leftIcon={<IconCheck size={10} />}>Left Icon</Badge>
-                    <Badge size="sm" theme="blue" rightIcon={<IconArrowRight size={10} />}>Right Icon</Badge>
+                    <Badge size="sm" theme="blue">Text only</Badge>
+                    <Badge size="sm" theme="blue" leftIcon={<IconCheck size={10} />}>Left icon</Badge>
+                    <Badge size="sm" theme="blue" rightIcon={<IconArrowRight size={10} />}>Right icon</Badge>
                   </div>
                 </VStack>
 
@@ -5665,7 +5964,7 @@ outline: 2px solid var(--color-border-focus);`}
               <VStack gap={8}>
                 {/* Tokens */}
                 <VStack gap={3}>
-                  <Label>Design Tokens</Label>
+                  <Label>Design tokens</Label>
                   <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
                     <code>gap: 4px</code> · <code>font-size: 11px</code> · <code>line-height: 16px</code> · <code>font-weight: medium</code>
                   </div>
@@ -5673,7 +5972,7 @@ outline: 2px solid var(--color-border-focus);`}
 
                 {/* Basic Usage */}
                 <VStack gap={3}>
-                  <Label>Basic Usage</Label>
+                  <Label>Basic usage</Label>
                   <div className="p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-md)]">
                     <Breadcrumb
                       items={[
@@ -5688,14 +5987,14 @@ outline: 2px solid var(--color-border-focus);`}
 
                 {/* Long Path */}
                 <VStack gap={3}>
-                  <Label>Long Path</Label>
+                  <Label>Long path</Label>
                   <div className="p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-md)]">
                     <Breadcrumb
                       items={[
                         { label: 'Home', onClick: () => {} },
-                        { label: 'Instance Snapshots', onClick: () => {} },
-                        { label: 'Instance Snapshots', onClick: () => {} },
-                        { label: 'Instance Snapshots', onClick: () => {} },
+                        { label: 'Instance snapshots', onClick: () => {} },
+                        { label: 'Instance snapshots', onClick: () => {} },
+                        { label: 'Instance snapshots', onClick: () => {} },
                         { label: 'web-large' },
                       ]}
                     />
@@ -5723,18 +6022,18 @@ outline: 2px solid var(--color-border-focus);`}
               </VStack>
             </Section>
 
-            {/* Status Indicator Component */}
-            <Section id="status-indicator" title="Status Indicator" description="Server/instance status indicators with predefined states">
+            {/* Status indicator Component */}
+            <Section id="status-indicator" title="Status indicator" description="Server/instance status indicators with predefined states">
               <VStack gap={8}>
                 {/* Tokens */}
                 <VStack gap={3}>
-                  <Label>Design Tokens</Label>
+                  <Label>Design tokens</Label>
                   <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
                     <code>padding: 6×4px</code> · <code>gap: 4px</code> · <code>radius: pill (16px)</code> · <code>font-size: 11px</code> · <code>icon: 14px</code>
                   </div>
                 </VStack>
 
-                {/* All Status Types by Category */}
+                {/* All status Types by Category */}
                 <VStack gap={3}>
                   <Label>Success (Green)</Label>
                   <div className="flex flex-wrap gap-3 items-center">
@@ -5784,7 +6083,7 @@ outline: 2px solid var(--color-border-focus);`}
 
                 {/* Layout Variants - Icon Only (All Cases) */}
                 <VStack gap={3}>
-                  <Label>Icon Only - All Status Types</Label>
+                  <Label>Icon Only - All status Types</Label>
                   <VStack gap={4}>
                     {/* Success */}
                     <VStack gap={2}>
@@ -5838,7 +6137,7 @@ outline: 2px solid var(--color-border-focus);`}
 
                 {/* Custom Labels */}
                 <VStack gap={3}>
-                  <Label>Custom Labels</Label>
+                  <Label>Custom labels</Label>
                   <div className="flex gap-3 items-center">
                     <StatusIndicator status="active" label="Running" />
                     <StatusIndicator status="error" label="Failed" />
@@ -5875,12 +6174,139 @@ outline: 2px solid var(--color-border-focus);`}
               </VStack>
             </Section>
 
+            {/* CardTitle Component */}
+            <Section id="card-title" title="Card title" description="Flexible card header with status, description, badges, and side content">
+              <VStack gap={8}>
+                {/* Design Tokens */}
+                <VStack gap={3}>
+                  <Label>Design tokens</Label>
+                  <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
+                    <code>title: 16px semibold</code> · <code>description: 12px</code> · <code>gap: 12px</code> · <code>status-dot: 24px</code> · <code>badge: 11px medium</code>
+                  </div>
+                </VStack>
+
+                {/* Basic Usage */}
+                <VStack gap={3}>
+                  <Label>Basic usage</Label>
+                  <div className="flex flex-col gap-4 p-4 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)] border border-[var(--color-border-default)]">
+                    <CardTitle title="lively-sunset-6041" />
+                    <CardTitle 
+                      title="lively-sunset-6041" 
+                      description="PyTorch GPU-enabled template for AI/ML workloads" 
+                    />
+                  </div>
+                </VStack>
+
+                {/* With Status indicator */}
+                <VStack gap={3}>
+                  <Label>With Status indicator</Label>
+                  <div className="flex flex-col gap-4 p-4 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)] border border-[var(--color-border-default)]">
+                    <CardTitle 
+                      title="lively-sunset-6041" 
+                      description="Running instance with GPU support"
+                      showStatus
+                      statusColor="success"
+                    />
+                    <CardTitle 
+                      title="failed-instance-1234" 
+                      description="Instance failed to start"
+                      showStatus
+                      statusColor="error"
+                    />
+                    <CardTitle 
+                      title="building-instance-5678" 
+                      description="Instance is being provisioned"
+                      showStatus
+                      statusColor="info"
+                    />
+                  </div>
+                </VStack>
+
+                {/* With Badges */}
+                <VStack gap={3}>
+                  <Label>With badges</Label>
+                  <div className="flex flex-col gap-4 p-4 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)] border border-[var(--color-border-default)]">
+                    <CardTitle 
+                      title="lively-sunset-6041" 
+                      description="PyTorch GPU-enabled template for AI/ML workloads"
+                      showStatus
+                      statusColor="success"
+                      badges={[
+                        { label: 'Public', variant: 'success' },
+                        { label: 'ai-ml', variant: 'info' },
+                        { label: 'PyTorch', variant: 'muted' },
+                        { label: 'GPU', variant: 'muted' },
+                      ]}
+                    />
+                  </div>
+                </VStack>
+
+                {/* With Side Content - Gauge */}
+                <VStack gap={3}>
+                  <Label>With Gauge Side Content</Label>
+                  <div className="flex flex-col gap-4 p-4 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)] border border-[var(--color-border-default)]">
+                    <CardTitle 
+                      title="lively-sunset-6041" 
+                      description="CPU utilization monitoring"
+                      showStatus
+                      statusColor="success"
+                      side="gauge"
+                      gaugeValue="78.5%"
+                      gaugeLabel="Utilization"
+                    />
+                    <CardTitle 
+                      title="idle-server-9999" 
+                      side="gauge"
+                      gaugeValue="0.0%"
+                      gaugeLabel="Utilization"
+                    />
+                  </div>
+                </VStack>
+
+                {/* With Side Content - Icon */}
+                <VStack gap={3}>
+                  <Label>With Icon Side Content</Label>
+                  <div className="flex flex-col gap-4 p-4 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)] border border-[var(--color-border-default)]">
+                    <CardTitle 
+                      title="lively-sunset-6041" 
+                      description="PyTorch GPU-enabled template"
+                      showStatus
+                      statusColor="success"
+                      side="icon"
+                      sideIcon={<IconServer size={22} stroke={1.5} className="text-[var(--color-text-muted)]" />}
+                    />
+                  </div>
+                </VStack>
+
+                {/* All Props Combined */}
+                <VStack gap={3}>
+                  <Label>Full example</Label>
+                  <div className="flex flex-col gap-4 p-4 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)] border border-[var(--color-border-default)]">
+                    <CardTitle 
+                      title="production-ml-server" 
+                      description="High-performance ML inference server with NVIDIA A100 GPU"
+                      showStatus
+                      statusColor="success"
+                      badges={[
+                        { label: 'Production', variant: 'success' },
+                        { label: 'ml-inference', variant: 'info' },
+                        { label: 'A100', variant: 'warning' },
+                      ]}
+                      side="gauge"
+                      gaugeValue="92.3%"
+                      gaugeLabel="GPU Load"
+                    />
+                  </div>
+                </VStack>
+              </VStack>
+            </Section>
+
             {/* Tooltip Component */}
             <Section id="tooltip" title="Tooltip" description="Contextual information on hover">
               <VStack gap={8}>
                 {/* Tokens */}
                 <VStack gap={3}>
-                  <Label>Design Tokens</Label>
+                  <Label>Design tokens</Label>
                   <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
                     <code>padding: 8×4px</code> · <code>radius: 4px</code> · <code>font-size: 11px</code> · <code>min-width: 60px</code> · <code>max-width: 230px</code> · <code>arrow: 4px</code>
                   </div>
@@ -5907,7 +6333,7 @@ outline: 2px solid var(--color-border-focus);`}
 
                 {/* Examples */}
                 <VStack gap={3}>
-                  <Label>Use Cases</Label>
+                  <Label>Use cases</Label>
                   <div className="flex gap-4 items-center">
                     <Tooltip content="Delete this item permanently">
                       <Button variant="danger" icon={<IconTrash size={16} />} aria-label="Delete" />
@@ -5926,7 +6352,7 @@ outline: 2px solid var(--color-border-focus);`}
 
                 {/* With Delay */}
                 <VStack gap={3}>
-                  <Label>Custom Delay</Label>
+                  <Label>Custom delay</Label>
                   <div className="flex gap-4 items-center">
                     <Tooltip content="Instant (0ms)" delay={0}>
                       <Button variant="outline" size="sm">0ms</Button>
@@ -5943,11 +6369,11 @@ outline: 2px solid var(--color-border-focus);`}
             </Section>
 
             {/* WindowControl Component */}
-            <Section id="window-control" title="Window Control" description="Window control buttons for minimize, maximize, and close actions">
+            <Section id="window-control" title="Window control" description="Window control buttons for minimize, maximize, and close actions">
               <VStack gap={8}>
                 {/* Tokens */}
                 <VStack gap={3}>
-                  <Label>Design Tokens</Label>
+                  <Label>Design tokens</Label>
                   <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
                     <code>size: 16×16px</code> · <code>radius: 4px</code> · <code>gap: 4px</code>
                   </div>
@@ -5955,7 +6381,7 @@ outline: 2px solid var(--color-border-focus);`}
 
                 {/* Individual Controls */}
                 <VStack gap={3}>
-                  <Label>Individual Controls</Label>
+                  <Label>Individual controls</Label>
                   <div className="flex gap-6 items-center">
                     <VStack gap={1}>
                       <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">Minimize</span>
@@ -5974,7 +6400,7 @@ outline: 2px solid var(--color-border-focus);`}
 
                 {/* Controls Group */}
                 <VStack gap={3}>
-                  <Label>Controls Group</Label>
+                  <Label>Controls group</Label>
                   <div className="flex gap-6 items-center">
                     <VStack gap={1}>
                       <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">All Controls</span>
@@ -6003,11 +6429,11 @@ outline: 2px solid var(--color-border-focus);`}
             </Section>
 
             {/* DetailHeader Component */}
-            <Section id="detail-header" title="Detail Header" description="Page header component for resource detail views with title, actions, and info cards">
+            <Section id="detail-header" title="Detail header" description="Page header component for resource detail views with title, actions, and info cards">
               <VStack gap={8}>
                 {/* Tokens */}
                 <VStack gap={3}>
-                  <Label>Design Tokens</Label>
+                  <Label>Design tokens</Label>
                   <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
                     <code>container.padding: 16×12px</code> · <code>container.radius: 8px</code> · <code>container.gap: 12px</code> · <code>title: 16px semibold</code> · <code>actions.gap: 4px</code> · <code>info-grid.gap: 8px</code> · <code>info-card.padding: 16×12px</code> · <code>info-card.radius: 8px</code> · <code>info-card.gap: 6px</code>
                   </div>
@@ -6015,7 +6441,7 @@ outline: 2px solid var(--color-border-focus);`}
 
                 {/* Full Example - Figma Reference */}
                 <VStack gap={3}>
-                  <Label>Instance Detail Header (Figma Reference)</Label>
+                  <Label>Instance Detail header (Figma Reference)</Label>
                   <DetailHeader>
                     <DetailHeader.Title>tk-test</DetailHeader.Title>
                     <DetailHeader.Actions>
@@ -6024,20 +6450,20 @@ outline: 2px solid var(--color-border-focus);`}
                       <Button variant="outline" size="sm" leftIcon={<IconPlayerStop size={12} stroke={1.5} />}>Stop</Button>
                       <Button variant="outline" size="sm" leftIcon={<IconRefresh size={12} stroke={1.5} />}>Reboot</Button>
                       <Button variant="outline" size="sm" leftIcon={<IconTrash size={12} stroke={1.5} />}>Delete</Button>
-                      <Button variant="outline" size="sm" rightIcon={<IconChevronDown size={12} stroke={1.5} />}>More Actions</Button>
+                      <Button variant="outline" size="sm" rightIcon={<IconChevronDown size={12} stroke={1.5} />}>More actions</Button>
                     </DetailHeader.Actions>
                     <DetailHeader.InfoGrid>
                       <DetailHeader.InfoCard label="Status" value="Active" status="active" />
                       <DetailHeader.InfoCard label="ID" value="7284d9174e81431e93060a9bbcf2cdfd" copyable />
                       <DetailHeader.InfoCard label="Host" value="compute-03" />
-                      <DetailHeader.InfoCard label="Created At" value="2025-07-25 09:12:20" />
+                      <DetailHeader.InfoCard label="Created at" value="2025-07-25 09:12:20" />
                     </DetailHeader.InfoGrid>
                   </DetailHeader>
                 </VStack>
 
                 {/* Info Card Status States */}
                 <VStack gap={3}>
-                  <Label>Info Card - Status Indicator States</Label>
+                  <Label>Info Card - Status indicator States</Label>
                   <div className="grid grid-cols-4 gap-2">
                     <DetailHeader.InfoCard label="Status" value="Active" status="active" />
                     <DetailHeader.InfoCard label="Status" value="Shutoff" status="shutoff" />
@@ -6060,19 +6486,19 @@ outline: 2px solid var(--color-border-focus);`}
                   <Label>Info Card - Basic Text</Label>
                   <div className="grid grid-cols-3 gap-2">
                       <DetailHeader.InfoCard label="Host" value="compute-03" />
-                      <DetailHeader.InfoCard label="Created At" value="2025-07-25 09:12:20" />
-                    <DetailHeader.InfoCard label="Availability Zone" value="nova" />
+                      <DetailHeader.InfoCard label="Created at" value="2025-07-25 09:12:20" />
+                    <DetailHeader.InfoCard label="Availability zone" value="nova" />
                   </div>
                 </VStack>
               </VStack>
             </Section>
 
             {/* SectionCard Component */}
-            <Section id="section-card" title="Section Card" description="Container component for grouping related content in detail views">
+            <Section id="section-card" title="Section card" description="Container component for grouping related content in detail views">
               <VStack gap={8}>
                 {/* Tokens */}
                 <VStack gap={3}>
-                  <Label>Design Tokens</Label>
+                  <Label>Design tokens</Label>
                   <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
                     <code>padding: 16×12px</code> · <code>radius: 6px (md)</code> · <code>header.height: 32px</code> · <code>title: 14px medium</code> · <code>label: 11px medium</code> · <code>value: 12px</code>
                   </div>
@@ -6080,12 +6506,12 @@ outline: 2px solid var(--color-border-focus);`}
 
                 {/* Basic Example */}
                 <VStack gap={3}>
-                  <Label>Basic Usage</Label>
+                  <Label>Basic usage</Label>
                   <SectionCard>
-                    <SectionCard.Header title="Basic Information" />
+                    <SectionCard.Header title="Basic information" />
                     <SectionCard.Content>
-                      <SectionCard.DataRow label="Instance Name" value="web-server-01" />
-                      <SectionCard.DataRow label="Availability Zone" value="nova" />
+                      <SectionCard.DataRow label="Instance name" value="web-server-01" />
+                      <SectionCard.DataRow label="Availability zone" value="nova" />
                       <SectionCard.DataRow label="Description" value="Production web server" />
                     </SectionCard.Content>
                   </SectionCard>
@@ -6096,12 +6522,12 @@ outline: 2px solid var(--color-border-focus);`}
                   <Label>With Action Buttons</Label>
                   <SectionCard>
                     <SectionCard.Header 
-                      title="Basic Information" 
+                      title="Basic information" 
                       actions={<Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />}>Edit</Button>}
                     />
                     <SectionCard.Content>
-                      <SectionCard.DataRow label="Instance Name" value="web-server-01" />
-                      <SectionCard.DataRow label="Availability Zone" value="nova" />
+                      <SectionCard.DataRow label="Instance name" value="web-server-01" />
+                      <SectionCard.DataRow label="Availability zone" value="nova" />
                     </SectionCard.Content>
                   </SectionCard>
                 </VStack>
@@ -6112,7 +6538,7 @@ outline: 2px solid var(--color-border-focus);`}
                   <SectionCard>
                     <SectionCard.Header title="Flavor" />
                     <SectionCard.Content>
-                      <SectionCard.DataRow label="Flavor Name" value="m1.large" isLink linkHref="/flavors" />
+                      <SectionCard.DataRow label="Flavor name" value="m1.large" isLink linkHref="/flavors" />
                       <SectionCard.DataRow label="Spec" value="vCPU: 4 / RAM: 8 GiB / Disk: 80 GiB" />
                     </SectionCard.Content>
                   </SectionCard>
@@ -6124,12 +6550,12 @@ outline: 2px solid var(--color-border-focus);`}
                   <VStack gap={4}>
                     <SectionCard>
                       <SectionCard.Header 
-                        title="Basic Information" 
+                        title="Basic information" 
                         actions={<Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />}>Edit</Button>}
                       />
                       <SectionCard.Content>
-                        <SectionCard.DataRow label="Instance Name" value="tk-test" />
-                        <SectionCard.DataRow label="Availability Zone" value="nova" />
+                        <SectionCard.DataRow label="Instance name" value="tk-test" />
+                        <SectionCard.DataRow label="Availability zone" value="nova" />
                         <SectionCard.DataRow label="Description" value="-" />
                       </SectionCard.Content>
                     </SectionCard>
@@ -6137,7 +6563,7 @@ outline: 2px solid var(--color-border-focus);`}
                     <SectionCard>
                       <SectionCard.Header title="Flavor" />
                       <SectionCard.Content>
-                        <SectionCard.DataRow label="Flavor Name" value="web-server-10" isLink linkHref="/flavors" />
+                        <SectionCard.DataRow label="Flavor name" value="web-server-10" isLink linkHref="/flavors" />
                         <SectionCard.DataRow label="Spec" value="vCPU: 1 / RAM: 4 GiB / Disk: 40 GiB / GPU: 1" />
                       </SectionCard.Content>
                     </SectionCard>
@@ -6163,7 +6589,7 @@ outline: 2px solid var(--color-border-focus);`}
               <VStack gap={8}>
                 {/* Tokens */}
                 <VStack gap={3}>
-                  <Label>Design Tokens</Label>
+                  <Label>Design tokens</Label>
                   <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
                     <code>item.padding: 8×6px</code> · <code>item.gap: 6px</code> · <code>item.radius: 6px (md)</code> · <code>section.padding: 8×4px</code> · <code>divider.margin: 8px</code>
                   </div>
@@ -6172,7 +6598,7 @@ outline: 2px solid var(--color-border-focus);`}
                 {/* Example */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <VStack gap={3}>
-                    <Label>Menu Items</Label>
+                    <Label>Menu items</Label>
                     <div className="w-full max-w-[200px] p-2 bg-[var(--color-surface-default)] rounded-[var(--radius-card)] border border-[var(--color-border-default)]">
                       <MenuItem icon={<IconHome size={16} />} label="Home" />
                       <MenuItem icon={<IconServer size={16} />} label="Instances" active badge="6" />
@@ -6183,7 +6609,7 @@ outline: 2px solid var(--color-border-focus);`}
                   </VStack>
 
                   <VStack gap={3}>
-                    <Label>Collapsible Section</Label>
+                    <Label>Collapsible section</Label>
                     <div className="w-full max-w-[200px] p-2 bg-[var(--color-surface-default)] rounded-[var(--radius-card)] border border-[var(--color-border-default)]">
                       <MenuSection title="Storage">
                         <MenuItem label="Volumes" />
@@ -6191,7 +6617,7 @@ outline: 2px solid var(--color-border-focus);`}
                         <MenuItem label="Backups" />
                       </MenuSection>
                       <MenuSection title="Network">
-                        <MenuItem label="Security Groups" />
+                        <MenuItem label="Security groups" />
                         <MenuItem label="Floating IPs" />
                       </MenuSection>
                     </div>
@@ -6201,11 +6627,11 @@ outline: 2px solid var(--color-border-focus);`}
             </Section>
 
             {/* ContextMenu Component */}
-            <Section id="context-menu" title="Context Menu" description="Popup menu triggered by right-click or click with submenu support">
+            <Section id="context-menu" title="Context menu" description="Popup menu triggered by right-click or click with submenu support">
               <VStack gap={8}>
                 {/* Tokens */}
                 <VStack gap={3}>
-                  <Label>Design Tokens</Label>
+                  <Label>Design tokens</Label>
                   <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
                     <code>min-width: 80px</code> · <code>padding: 12×6px</code> · <code>radius: 6px</code> · <code>shadow: md</code>
                   </div>
@@ -6231,11 +6657,11 @@ outline: 2px solid var(--color-border-focus);`}
 
                 {/* Click Trigger */}
                 <VStack gap={3}>
-                  <Label>Click Trigger</Label>
+                  <Label>Click trigger</Label>
                   <ContextMenu
                     trigger="click"
                     items={[
-                      { id: 'view', label: 'View Details', onClick: () => {} },
+                      { id: 'view', label: 'View details', onClick: () => {} },
                       { id: 'edit', label: 'Edit', onClick: () => {} },
                       { id: 'share', label: 'Share', onClick: () => {}, divider: true },
                       { id: 'delete', label: 'Delete', status: 'danger', onClick: () => {} },
@@ -6247,7 +6673,7 @@ outline: 2px solid var(--color-border-focus);`}
 
                 {/* With Submenu */}
                 <VStack gap={3}>
-                  <Label>With Submenu</Label>
+                  <Label>With submenu</Label>
                   <ContextMenu
                     trigger="click"
                     items={[
@@ -6270,17 +6696,17 @@ outline: 2px solid var(--color-border-focus);`}
 
                 {/* Status Variants */}
                 <VStack gap={3}>
-                  <Label>Status Variants</Label>
+                  <Label>Status variants</Label>
                   <ContextMenu
                     trigger="click"
                     items={[
-                      { id: 'item1', label: 'Default Item', onClick: () => {} },
-                      { id: 'item2', label: 'Another Item', onClick: () => {}, divider: true },
-                      { id: 'danger1', label: 'Warning Action', status: 'danger', onClick: () => {} },
-                      { id: 'danger2', label: 'Delete Forever', status: 'danger', onClick: () => {} },
+                      { id: 'item1', label: 'Default item', onClick: () => {} },
+                      { id: 'item2', label: 'Another item', onClick: () => {}, divider: true },
+                      { id: 'danger1', label: 'Warning action', status: 'danger', onClick: () => {} },
+                      { id: 'danger2', label: 'Delete forever', status: 'danger', onClick: () => {} },
                     ]}
                   >
-                    <Button variant="outline" size="sm">Show Status Variants</Button>
+                    <Button variant="outline" size="sm">Show status variants</Button>
                   </ContextMenu>
                 </VStack>
               </VStack>
@@ -6291,7 +6717,7 @@ outline: 2px solid var(--color-border-focus);`}
               <VStack gap={8}>
                 {/* Tokens */}
                 <VStack gap={3}>
-                  <Label>Design Tokens</Label>
+                  <Label>Design tokens</Label>
                   <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
                     <code>padding: 16px</code> · <code>gap: 24px</code> · <code>radius: 16px</code> · <code>backdrop: black/60</code>
                   </div>
@@ -6299,7 +6725,7 @@ outline: 2px solid var(--color-border-focus);`}
 
                 {/* Basic Modal */}
                 <VStack gap={3}>
-                  <Label>Basic Modal</Label>
+                  <Label>Basic modal</Label>
                   <ModalDemo variant="basic" />
                 </VStack>
 
@@ -6326,7 +6752,7 @@ outline: 2px solid var(--color-border-focus);`}
               <VStack gap={8}>
                 {/* Design Tokens */}
                 <VStack gap={3}>
-                  <Label>Design Tokens</Label>
+                  <Label>Design tokens</Label>
                   <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
                     <code>width: 376px (default)</code> · <code>padding-x: 24px</code> · <code>padding-y: 16px</code> · <code>animation: 300ms ease-out</code>
                   </div>
@@ -6334,7 +6760,7 @@ outline: 2px solid var(--color-border-focus);`}
 
                 {/* Interactive Demo */}
                 <VStack gap={3}>
-                  <Label>Interactive Demo</Label>
+                  <Label>Interactive demo</Label>
                   <DrawerDemo />
                 </VStack>
 
@@ -6407,12 +6833,12 @@ outline: 2px solid var(--color-border-focus);`}
               </VStack>
             </Section>
 
-            {/* Monitoring Toolbar */}
-            <Section id="monitoring-toolbar" title="Monitoring Toolbar" description="Time range selection and refresh controls for monitoring dashboards">
+            {/* Monitoring toolbar */}
+            <Section id="monitoring-toolbar" title="Monitoring toolbar" description="Time range selection and refresh controls for monitoring dashboards">
               <VStack gap={8}>
                 {/* Design Tokens */}
                 <VStack gap={3}>
-                  <Label>Design Tokens</Label>
+                  <Label>Design tokens</Label>
                   <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
                     <code>segment-padding: 4px 12px</code> · <code>border-radius: 8px</code> · <code>font-size: 11px</code> · <code>gap: 4px</code>
                   </div>
@@ -6505,15 +6931,161 @@ outline: 2px solid var(--color-border-focus);`}
               </VStack>
             </Section>
 
-            {/* Notification Center */}
+            {/* Notification center */}
             <NotificationCenterSection />
+
+            {/* Floating card Section */}
+            <Section id="floating-card" title="Floating card" description="Floating summary card for create/edit flows with sections, quota, and actions">
+              <VStack gap={8}>
+                {/* Basic Example */}
+                <VStack gap={4}>
+                  <Label>Basic Example (Non-portal)</Label>
+                  <div className="relative bg-[var(--color-surface-subtle)] p-6 rounded-lg min-h-[500px]">
+                    <FloatingCard
+                      title="Create instance"
+                      portal={false}
+                      sections={[
+                        {
+                          tabTitle: 'Details',
+                          collapsible: true,
+                          defaultExpanded: true,
+                          showSuccessIcon: true,
+                          items: [
+                            { id: '1', title: 'Instance name', status: 'success' },
+                            { id: '2', title: 'Description', status: 'success' },
+                            { id: '3', title: 'Availability zone', status: 'default' },
+                          ],
+                        },
+                        {
+                          tabTitle: 'Source',
+                          collapsible: true,
+                          defaultExpanded: false,
+                          items: [
+                            { id: '4', title: 'Boot Source', status: 'processing' },
+                            { id: '5', title: 'Image', status: 'default' },
+                          ],
+                        },
+                        {
+                          tabTitle: 'Flavor',
+                          collapsible: true,
+                          defaultExpanded: false,
+                          items: [
+                            { id: '6', title: 'Flavor Selection', status: 'warning' },
+                          ],
+                        },
+                      ]}
+                      quota={[
+                        { label: 'Instances', current: 5, total: 10 },
+                        { label: 'vCPUs', current: 12, total: 20 },
+                        { label: 'RAM', current: 32, total: 64, unit: 'GB' },
+                      ]}
+                      cancelLabel="Cancel"
+                      actionLabel="Create instance"
+                      actionEnabled={false}
+                      onCancel={() => console.log('Cancel clicked')}
+                      onAction={() => console.log('Create clicked')}
+                    />
+                  </div>
+                </VStack>
+
+                {/* Status Icons */}
+                <VStack gap={4}>
+                  <Label>Status icons</Label>
+                  <div className="flex gap-4 items-center p-4 bg-[var(--color-surface-subtle)] rounded-lg">
+                    <div className="flex items-center gap-2">
+                      <div className="size-4 rounded-full border border-[var(--color-border-default)]" style={{ borderStyle: 'dashed' }} />
+                      <span className="text-[length:var(--font-size-12)] text-[var(--color-text-muted)]">Default</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <div className="size-4 rounded-full border border-[var(--color-text-muted)] flex items-center justify-center" style={{ borderStyle: 'dashed' }}>
+                        <IconRefresh size={10} stroke={2} className="text-[var(--color-text-muted)] animate-spin" />
+                      </div>
+                      <span className="text-[length:var(--font-size-12)] text-[var(--color-text-muted)]">Processing</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <div className="size-4 rounded-full border border-[var(--color-state-danger)] bg-[var(--color-state-danger)] flex items-center justify-center">
+                        <IconAlertTriangle size={10} stroke={2} className="text-white" />
+                      </div>
+                      <span className="text-[length:var(--font-size-12)] text-[var(--color-text-muted)]">Warning</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <div className="size-4 rounded-full border border-[var(--color-state-success)] bg-[var(--color-state-success)] flex items-center justify-center">
+                        <IconCheck size={10} stroke={2} className="text-white" />
+                      </div>
+                      <span className="text-[length:var(--font-size-12)] text-[var(--color-text-muted)]">Success</span>
+                    </div>
+                  </div>
+                </VStack>
+
+                {/* Props Reference */}
+                <VStack gap={4}>
+                  <Label>Props reference</Label>
+                  <div className="overflow-x-auto">
+                    <table className="w-full text-[length:var(--font-size-12)]">
+                      <thead>
+                        <tr className="border-b border-[var(--color-border-default)]">
+                          <th className="text-left py-3 pr-4 font-medium text-[var(--color-text-subtle)]">Prop</th>
+                          <th className="text-left py-3 pr-4 font-medium text-[var(--color-text-subtle)]">Type</th>
+                          <th className="text-left py-3 pr-4 font-medium text-[var(--color-text-subtle)]">Default</th>
+                          <th className="text-left py-3 font-medium text-[var(--color-text-subtle)]">Description</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr className="border-b border-[var(--color-border-subtle)]">
+                          <td className="py-2 pr-4 font-mono text-[var(--color-action-primary)]">title</td>
+                          <td className="py-2 pr-4 text-[var(--color-text-muted)]">string</td>
+                          <td className="py-2 pr-4 text-[var(--color-text-muted)]">required</td>
+                          <td className="py-2 text-[var(--color-text-default)]">Card title in summary section</td>
+                        </tr>
+                        <tr className="border-b border-[var(--color-border-subtle)]">
+                          <td className="py-2 pr-4 font-mono text-[var(--color-action-primary)]">sections</td>
+                          <td className="py-2 pr-4 text-[var(--color-text-muted)]">FloatingCardSection[]</td>
+                          <td className="py-2 pr-4 text-[var(--color-text-muted)]">[]</td>
+                          <td className="py-2 text-[var(--color-text-default)]">Collapsible sections with items</td>
+                        </tr>
+                        <tr className="border-b border-[var(--color-border-subtle)]">
+                          <td className="py-2 pr-4 font-mono text-[var(--color-action-primary)]">quota</td>
+                          <td className="py-2 pr-4 text-[var(--color-text-muted)]">QuotaItem[]</td>
+                          <td className="py-2 pr-4 text-[var(--color-text-muted)]">[]</td>
+                          <td className="py-2 text-[var(--color-text-default)]">Quota progress bars</td>
+                        </tr>
+                        <tr className="border-b border-[var(--color-border-subtle)]">
+                          <td className="py-2 pr-4 font-mono text-[var(--color-action-primary)]">position</td>
+                          <td className="py-2 pr-4 text-[var(--color-text-muted)]">FloatingCardPosition</td>
+                          <td className="py-2 pr-4 text-[var(--color-text-muted)]">'top-left'</td>
+                          <td className="py-2 text-[var(--color-text-default)]">Position when portal is true</td>
+                        </tr>
+                        <tr className="border-b border-[var(--color-border-subtle)]">
+                          <td className="py-2 pr-4 font-mono text-[var(--color-action-primary)]">portal</td>
+                          <td className="py-2 pr-4 text-[var(--color-text-muted)]">boolean</td>
+                          <td className="py-2 pr-4 text-[var(--color-text-muted)]">true</td>
+                          <td className="py-2 text-[var(--color-text-default)]">Render in portal (fixed position)</td>
+                        </tr>
+                        <tr className="border-b border-[var(--color-border-subtle)]">
+                          <td className="py-2 pr-4 font-mono text-[var(--color-action-primary)]">actionEnabled</td>
+                          <td className="py-2 pr-4 text-[var(--color-text-muted)]">boolean</td>
+                          <td className="py-2 pr-4 text-[var(--color-text-muted)]">false</td>
+                          <td className="py-2 text-[var(--color-text-default)]">Enable primary action button</td>
+                        </tr>
+                        <tr>
+                          <td className="py-2 pr-4 font-mono text-[var(--color-action-primary)]">width</td>
+                          <td className="py-2 pr-4 text-[var(--color-text-muted)]">string</td>
+                          <td className="py-2 pr-4 text-[var(--color-text-muted)]">'320px'</td>
+                          <td className="py-2 text-[var(--color-text-default)]">Card width</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </VStack>
+              </VStack>
+            </Section>
 
             {/* Layout Section */}
             <Section id="layout" title="Layout" description="Application layout structure with responsive sidebar">
               <VStack gap={8}>
                 {/* Layout Specs */}
                 <VStack gap={4}>
-                  <Label>Layout Specifications</Label>
+                  <Label>Layout specifications</Label>
                   <div className="overflow-x-auto">
                     <table className="w-full text-[length:var(--font-size-12)]">
                       <thead>
@@ -6634,7 +7206,7 @@ outline: 2px solid var(--color-border-focus);`}
 
                 {/* Sidebar Toggle States */}
                 <VStack gap={4}>
-                  <Label>Sidebar States</Label>
+                  <Label>Sidebar states</Label>
                   <div className="grid grid-cols-2 gap-4">
                     {/* Expanded */}
                     <div className="border border-[var(--color-border-default)] rounded-[var(--radius-lg)] overflow-hidden">
@@ -6675,7 +7247,7 @@ outline: 2px solid var(--color-border-focus);`}
 
                 {/* CSS Variables */}
                 <VStack gap={3}>
-                  <Label>Layout Tokens</Label>
+                  <Label>Layout tokens</Label>
                   <pre className="text-[length:var(--font-size-11)] p-4 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)] overflow-x-auto text-[var(--color-text-muted)]">
 {`/* Layout Variables */
 --layout-max-width: 1920px;      /* Maximum viewport */
@@ -6713,12 +7285,12 @@ outline: 2px solid var(--color-border-focus);`}
                 GRAPHS SECTION
                 ============================================ */}
 
-            {/* Bar Chart */}
-            <Section id="bar-chart" title="Bar Chart" description="Categorical data comparison with vertical or horizontal bars">
+            {/* Bar chart */}
+            <Section id="bar-chart" title="Bar chart" description="Categorical data comparison with vertical or horizontal bars">
               <VStack gap={8}>
                 {/* Design Tokens */}
                 <VStack gap={3}>
-                  <Label>Design Tokens</Label>
+                  <Label>Design tokens</Label>
                   <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
                     <code>bar-height: 4px</code> · <code>bar-radius: 2px</code> · <code>row-gap: 22px</code> · <code>status-colors: success/warning/error</code>
                   </div>
@@ -6726,7 +7298,7 @@ outline: 2px solid var(--color-border-focus);`}
 
                 {/* Quota Bar */}
                 <VStack gap={3}>
-                  <Label>Quota Bar</Label>
+                  <Label>Quota bar</Label>
                   <div className="w-[288px] p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-2xl">
                     <div className="text-[11px] font-semibold text-[var(--color-text-muted)] tracking-wide mb-4">COMPUTE QUOTA</div>
                     <div className="space-y-[22px]">
@@ -6741,49 +7313,49 @@ outline: 2px solid var(--color-border-focus);`}
               </VStack>
             </Section>
 
-            {/* Area Chart */}
-            <Section id="area-chart" title="Area Chart" description="Filled area visualization for volume and cumulative data">
+            {/* Area chart */}
+            <Section id="area-chart" title="Area chart" description="Filled area visualization for volume and cumulative data">
               <VStack gap={8}>
                 {/* Design Tokens */}
                 <VStack gap={3}>
-                  <Label>Design Tokens</Label>
+                  <Label>Design tokens</Label>
                   <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
                     <code>fill-opacity: 0.1</code> · <code>line-width: 1px</code> · <code>smooth: true</code> · <code>symbol-size: 6px</code>
                   </div>
                 </VStack>
 
-                {/* Basic Area Chart */}
+                {/* Basic Area chart */}
                 <VStack gap={3}>
-                  <Label>Basic Area Chart</Label>
+                  <Label>Basic Area chart</Label>
                   <AreaChartDemo variant="basic" />
                 </VStack>
 
-                {/* Stacked Area Chart */}
+                {/* Stacked Area chart */}
                 <VStack gap={3}>
-                  <Label>Stacked Area Chart</Label>
+                  <Label>Stacked Area chart</Label>
                   <AreaChartDemo variant="stacked" />
                 </VStack>
 
-                {/* No Data Area Chart */}
+                {/* No Data Area chart */}
                 <VStack gap={3}>
-                  <Label>No Data</Label>
+                  <Label>No data</Label>
                   <AreaChartDemo variant="nodata" />
                 </VStack>
               </VStack>
             </Section>
 
-            {/* Pie Chart */}
-            <Section id="pie-chart" title="Pie Chart" description="Part-to-whole relationships with percentage labels on slices">
+            {/* Pie chart */}
+            <Section id="pie-chart" title="Pie chart" description="Part-to-whole relationships with percentage labels on slices">
               <VStack gap={8}>
                 {/* Design Tokens */}
                 <VStack gap={3}>
-                  <Label>Design Tokens</Label>
+                  <Label>Design tokens</Label>
                   <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
                     <code>radius: 90px</code> · <code>label-threshold: 15%</code> · <code>legend: external</code> · <code>legend-scroll: 60px</code>
                   </div>
                 </VStack>
 
-                {/* Pie Charts Examples */}
+                {/* Pie charts Examples */}
                 <VStack gap={3}>
                   <Label>Examples (from storage-dashboard)</Label>
                   <div className="flex gap-6 flex-wrap">
@@ -6817,12 +7389,12 @@ outline: 2px solid var(--color-border-focus);`}
               </VStack>
             </Section>
 
-            {/* Half-Doughnut Chart */}
-            <Section id="half-doughnut-chart" title="Half-Doughnut Chart" description="Progress and metric visualization with half-circular arc design">
+            {/* Half-Doughnut chart */}
+            <Section id="half-doughnut-chart" title="Half-Doughnut chart" description="Progress and metric visualization with half-circular arc design">
               <VStack gap={8}>
                 {/* Design Tokens */}
                 <VStack gap={3}>
-                  <Label>Design Tokens</Label>
+                  <Label>Design tokens</Label>
                   <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
                     <code>arc-width: 14px</code> · <code>start-angle: 200°</code> · <code>end-angle: -20°</code> · <code>status-colors: success/warning/error</code>
                   </div>
@@ -6830,7 +7402,7 @@ outline: 2px solid var(--color-border-focus);`}
 
                 {/* Status Variants */}
                 <VStack gap={3}>
-                  <Label>Status Variants</Label>
+                  <Label>Status variants</Label>
                   <div className="flex items-center gap-8 flex-wrap">
                     <HalfDoughnutChartDemo value={35} label="Safe" status="success" used={66.5} total={189.9} unit="TiB" />
                     <HalfDoughnutChartDemo value={75} label="Warning" status="warning" used={142.4} total={189.9} unit="TiB" />
@@ -6840,18 +7412,18 @@ outline: 2px solid var(--color-border-focus);`}
               </VStack>
             </Section>
 
-            {/* Doughnut Chart */}
-            <Section id="doughnut-chart" title="Doughnut Chart" description="Ring chart for part-to-whole relationships with optional center metrics">
+            {/* Doughnut chart */}
+            <Section id="doughnut-chart" title="Doughnut chart" description="Ring chart for part-to-whole relationships with optional center metrics">
               <VStack gap={8}>
                 {/* Design Tokens */}
                 <VStack gap={3}>
-                  <Label>Design Tokens</Label>
+                  <Label>Design tokens</Label>
                   <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
                     <code>inner-radius: 68%</code> · <code>outer-radius: 80%</code> · <code>thickness: 12%</code> · <code>border-radius: 6px</code>
                   </div>
                 </VStack>
 
-                {/* Doughnut Chart Example */}
+                {/* Doughnut chart Example */}
                 <div className="flex gap-6 flex-wrap">
                   <DoughnutChartDemo 
                     title="OSD onode Hits Ratio"

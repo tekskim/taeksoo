@@ -29,7 +29,7 @@ import {
 } from '@tabler/icons-react';
 
 /* ----------------------------------------
-   Capacity Progress Bar Component
+   Capacity Progress bar Component
    Uses design system tokens for consistent styling
    ---------------------------------------- */
 
@@ -116,7 +116,7 @@ function CapacityProgressBar({ label, used, total, unit, percentage }: CapacityP
         </div>
       </div>
       
-      {/* Progress Bar - using design system tokens */}
+      {/* Progress bar - using design system tokens */}
       <div 
         ref={containerRef}
         className="relative h-[var(--progress-bar-height)] w-full cursor-pointer"
@@ -246,8 +246,8 @@ const eventsColumns: TableColumn<EventRow>[] = [
       <span className="text-[var(--color-action-primary)] font-medium cursor-pointer hover:underline">{value}</span>
     )
   },
-  { key: 'firstSeen', label: 'First Seen', width: '100px', sortable: true },
-  { key: 'lastSeen', label: 'Last Seen', width: '100px', sortable: true },
+  { key: 'firstSeen', label: 'First seen', width: '100px', sortable: true },
+  { key: 'lastSeen', label: 'Last seen', width: '100px', sortable: true },
   { key: 'count', label: 'Count', width: '80px', sortable: true },
 ];
 
@@ -326,17 +326,17 @@ onTabAdd={addNewTab}
         <div className="flex-1 overflow-auto min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll">
           <div className="pt-4 px-8 pb-20 bg-[var(--color-surface-default)] min-h-full">
             <VStack gap={6} className="min-w-[1176px]">
-              {/* Basic Information & Capacity */}
+              {/* Basic information & Capacity */}
               <div className="grid grid-cols-2 gap-6">
-                {/* Basic Information Card */}
+                {/* Basic information Card */}
                 <SectionCard>
-                  <SectionCard.Header title="Basic Information" />
+                  <SectionCard.Header title="Basic information" />
                   <SectionCard.Content>
                     <div className="grid grid-cols-2 gap-4">
                       <SectionCard.DataRow label="Architecture">amd64</SectionCard.DataRow>
-                      <SectionCard.DataRow label="Kubernetes Version">v1.33.4+k3s1</SectionCard.DataRow>
-                      <SectionCard.DataRow label="Total Resources">295</SectionCard.DataRow>
-                      <SectionCard.DataRow label="Created At">2025-11-09 12:57</SectionCard.DataRow>
+                      <SectionCard.DataRow label="Kubernetes version">v1.33.4+k3s1</SectionCard.DataRow>
+                      <SectionCard.DataRow label="Total resources">295</SectionCard.DataRow>
+                      <SectionCard.DataRow label="Created at">2025-11-09 12:57</SectionCard.DataRow>
                       <SectionCard.DataRow label={
                         <span className="flex items-center gap-1">
                           Deployments
@@ -417,7 +417,7 @@ onTabAdd={addNewTab}
                     status="active"
                   />
                   <DetailHeader.InfoCard 
-                    label="Controller Manager" 
+                    label="Controller manager" 
                     value="Uptime: 15d 4h 23m" 
                     status="active"
                   />

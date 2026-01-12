@@ -45,7 +45,7 @@ type SectionStep = 'basic-info' | 'source' | 'configuration';
 
 // Section labels for display
 const SECTION_LABELS: Record<SectionStep, string> = {
-  'basic-info': 'Basic Information',
+  'basic-info': 'Basic information',
   source: 'Source',
   configuration: 'Configuration',
 };
@@ -175,7 +175,7 @@ export function CreateVolumePage() {
   const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(true);
 
-  // Basic Information state
+  // Basic information state
   const [volumeName, setVolumeName] = useState('');
   const [availabilityZone, setAvailabilityZone] = useState('');
   const [description, setDescription] = useState('');
@@ -208,7 +208,7 @@ export function CreateVolumePage() {
 
   // Update tab label
   useState(() => {
-    updateActiveTabLabel('Create Volume');
+    updateActiveTabLabel('Create volume');
   });
 
   const tabBarTabs = tabs.map((tab) => ({
@@ -320,7 +320,7 @@ export function CreateVolumePage() {
     },
     { key: 'version', label: 'Version', width: '100px', sortable: true },
     { key: 'size', label: 'Size', width: '120px', sortable: true },
-    { key: 'minDisk', label: 'Min Disk', width: '120px', sortable: true },
+    { key: 'minDisk', label: 'Min disk', width: '120px', sortable: true },
     { key: 'minRAM', label: 'Min RAM', width: '100px', sortable: true },
     { key: 'visibility', label: 'Visibility', width: '100px', sortable: true },
   ];
@@ -396,7 +396,7 @@ export function CreateVolumePage() {
               <Breadcrumb
                 items={[
                   { label: 'Volumes', href: '/compute/volumes' },
-                  { label: 'Create Volume' },
+                  { label: 'Create volume' },
                 ]}
               />
             }
@@ -415,7 +415,7 @@ export function CreateVolumePage() {
           <div className="pt-4 px-8 pb-20 bg-[var(--color-surface-default)] min-h-full">
             {/* Page Title */}
             <h1 className="text-[length:var(--font-size-18)] font-semibold leading-[var(--line-height-28)] text-[var(--color-text-default)] max-w-[1320px] mx-auto mb-4">
-              Create Volume
+              Create volume
             </h1>
             
             <div className="flex gap-6 max-w-[1320px] mx-auto items-start">
@@ -423,7 +423,7 @@ export function CreateVolumePage() {
               <div className="flex-1 min-w-0">
                 <VStack gap={4} align="stretch">
                   
-                  {/* Basic Information Section */}
+                  {/* Basic information Section */}
                   <SectionCard isActive={sectionStatus['basic-info'] === 'active'}>
                     <SectionCard.Header 
                       title={SECTION_LABELS['basic-info']}
@@ -461,7 +461,7 @@ export function CreateVolumePage() {
                         <div className="w-full h-px bg-[var(--color-border-subtle)]" />
 
                         <FormField required>
-                          <FormField.Label>AZ (Availability Zone)</FormField.Label>
+                          <FormField.Label>AZ (Availability zone)</FormField.Label>
                           <FormField.HelperText>
                             Select the availability zone for the volume.
                           </FormField.HelperText>
@@ -506,7 +506,7 @@ export function CreateVolumePage() {
                     )}
                     {sectionStatus['basic-info'] === 'done' && (
                       <SectionCard.Content>
-                        <SectionCard.DataRow label="Volume Name" value={volumeName} showDivider />
+                        <SectionCard.DataRow label="Volume name" value={volumeName} showDivider />
                         <SectionCard.DataRow label="AZ" value={availabilityZone} showDivider />
                         <SectionCard.DataRow label="Description" value={description || '-'} showDivider />
                       </SectionCard.Content>
@@ -700,7 +700,7 @@ export function CreateVolumePage() {
                     {sectionStatus['source'] === 'done' && (
                       <SectionCard.Content>
                         <SectionCard.DataRow 
-                          label="Source Type" 
+                          label="Source type" 
                           value={sourceType === 'blank' ? 'Blank volume' : sourceType === 'image' ? 'Image' : 'Volume snapshot'} 
                           showDivider 
                         />
@@ -745,11 +745,11 @@ export function CreateVolumePage() {
                         {/* Different content for snapshot vs other sources */}
                         {sourceType === 'snapshot' ? (
                           <>
-                            {/* Volume Type - Read-only for snapshot */}
+                            {/* Volume type - Read-only for snapshot */}
                             <VStack gap={4} align="stretch">
                               <VStack gap={3} align="start">
                                 <span className="text-[14px] font-medium text-[var(--color-text-default)] leading-[20px]">
-                                  Volume Type <span className="text-[var(--color-state-danger)]">*</span>
+                                  Volume type <span className="text-[var(--color-state-danger)]">*</span>
                                 </span>
                                 <span className="text-[12px] text-[var(--color-text-subtle)] leading-[16px]">
                                   Automatically set to the volume type of the source volume used to create the snapshot.
@@ -813,9 +813,9 @@ export function CreateVolumePage() {
                           </>
                         ) : (
                           <>
-                            {/* Standard Volume Type selection for blank/image sources */}
+                            {/* Standard Volume type selection for blank/image sources */}
                             <FormField required>
-                              <FormField.Label>Volume Type</FormField.Label>
+                              <FormField.Label>Volume type</FormField.Label>
                               <FormField.HelperText>
                                 Select the volume type that determines performance characteristics for the volume.
                               </FormField.HelperText>
@@ -905,7 +905,7 @@ export function CreateVolumePage() {
                     {sectionStatus['configuration'] === 'done' && (
                       <SectionCard.Content>
                         <SectionCard.DataRow 
-                          label="Volume Type" 
+                          label="Volume type" 
                           value={mockVolumeTypes.find(v => v.id === selectedVolumeType[0])?.name || '-'} 
                           showDivider 
                         />

@@ -7,6 +7,13 @@ import { ProjectProvider } from '@/contexts/ProjectContext';
 // Entry Page
 import { EntryPage } from '@/pages/EntryPage';
 
+// Pages - Settings
+import { SettingsPageWrapper } from '@/pages/SettingsPageWrapper';
+
+// Pages - Mail Template
+import { MailTemplatePage } from '@/pages/MailTemplatePage';
+import { MailTemplatePreviewPage } from '@/pages/MailTemplatePreviewPage';
+
 // Pages - Compute
 import { InstanceListPage } from '@/pages/InstanceListPage';
 import { InstanceDetailPage } from '@/pages/InstanceDetailPage';
@@ -120,15 +127,31 @@ import MetallicPalettePage from '@/pages/MetallicPalettePage';
 // Pages - Desktop
 import { DesktopPage } from '@/pages/DesktopPage';
 
-// Pages - Settings
-import SettingsGeneralPage from '@/pages/SettingsGeneralPage';
-import SettingsAccountPage from '@/pages/SettingsAccountPage';
-import SettingsNotificationsPage from '@/pages/SettingsNotificationsPage';
-import SettingsInformationPage from '@/pages/SettingsInformationPage';
+// Pages - AI Platform
+import { WorkloadDetailPage } from '@/pages/WorkloadDetailPage';
 
-// Pages - Mail Template
-import { MailTemplatePage } from '@/pages/MailTemplatePage';
-import { MailTemplatePreviewPage } from '@/pages/MailTemplatePreviewPage';
+// Pages - AI Platform
+import { AIPlatformPage } from '@/pages/AIPlatformPage';
+import { TextGenerationPage } from '@/pages/ai-platform/TextGenerationPage';
+import { ExplorePage } from '@/pages/ai-platform/ExplorePage';
+import { PackagesPage } from '@/pages/ai-platform/PackagesPage';
+import { ModelsPage } from '@/pages/ai-platform/ModelsPage';
+import { DatasetsPage } from '@/pages/ai-platform/DatasetsPage';
+import { WorkloadsPage } from '@/pages/ai-platform/WorkloadsPage';
+import { MyTemplatesPage } from '@/pages/ai-platform/MyTemplatesPage';
+import { StoragePage as AIPlatformStoragePage } from '@/pages/ai-platform/StoragePage';
+import { ServerlessPage } from '@/pages/ai-platform/ServerlessPage';
+import { DevSpacePage } from '@/pages/ai-platform/DevSpacePage';
+import { PipelineBuilderPage } from '@/pages/ai-platform/PipelineBuilderPage';
+import { BenchmarksPage } from '@/pages/ai-platform/BenchmarksPage';
+import { KubeflowPage } from '@/pages/ai-platform/KubeflowPage';
+import { MLflowPage } from '@/pages/ai-platform/MLflowPage';
+import { SettingsPage as AIPlatformSettingsPage } from '@/pages/ai-platform/SettingsPage';
+import { FAQPage } from '@/pages/ai-platform/FAQPage';
+import { KueuePage } from '@/pages/ai-platform/KueuePage';
+import { MonitoringPage } from '@/pages/ai-platform/MonitoringPage';
+import { DependenciesPage } from '@/pages/ai-platform/DependenciesPage';
+import { SystemAdminPage } from '@/pages/ai-platform/SystemAdminPage';
 
 // Layouts
 import { AgentAppLayout } from '@/layouts';
@@ -142,6 +165,11 @@ function AppRoutes() {
       <Routes>
         {/* Entry Page */}
         <Route path="/" element={<EntryPage />} />
+
+        {/* Settings & Mail Template Routes */}
+        <Route path="/settings" element={<SettingsPageWrapper />} />
+        <Route path="/mail-template" element={<MailTemplatePage />} />
+        <Route path="/mail-template/:templateId" element={<MailTemplatePreviewPage />} />
 
         {/* Agent Routes - Shared TabBar via AgentAppLayout */}
         <Route element={<AgentAppLayout />}>
@@ -257,6 +285,30 @@ function AppRoutes() {
         <Route path="/iam/login-policies" element={<IAMLoginPoliciesPage />} />
         <Route path="/iam/*" element={<IAMHomePage />} />
 
+        {/* AI Platform Routes */}
+        <Route path="/ai-platform" element={<AIPlatformPage />} />
+        <Route path="/ai-platform/explore" element={<ExplorePage />} />
+        <Route path="/ai-platform/packages" element={<PackagesPage />} />
+        <Route path="/ai-platform/models" element={<ModelsPage />} />
+        <Route path="/ai-platform/datasets" element={<DatasetsPage />} />
+        <Route path="/ai-platform/workloads" element={<WorkloadsPage />} />
+        <Route path="/ai-platform/my-templates" element={<MyTemplatesPage />} />
+        <Route path="/ai-platform/storage" element={<AIPlatformStoragePage />} />
+        <Route path="/ai-platform/serverless" element={<ServerlessPage />} />
+        <Route path="/ai-platform/text-generation" element={<TextGenerationPage />} />
+        <Route path="/ai-platform/devspace" element={<DevSpacePage />} />
+        <Route path="/ai-platform/pipeline-builder" element={<PipelineBuilderPage />} />
+        <Route path="/ai-platform/benchmarks" element={<BenchmarksPage />} />
+        <Route path="/ai-platform/kubeflow" element={<KubeflowPage />} />
+        <Route path="/ai-platform/mlflow" element={<MLflowPage />} />
+        <Route path="/ai-platform/settings" element={<AIPlatformSettingsPage />} />
+        <Route path="/ai-platform/faq" element={<FAQPage />} />
+        <Route path="/ai-platform/kueue" element={<KueuePage />} />
+        <Route path="/ai-platform/monitoring" element={<MonitoringPage />} />
+        <Route path="/ai-platform/dependencies" element={<DependenciesPage />} />
+        <Route path="/ai-platform/system-admin" element={<SystemAdminPage />} />
+        <Route path="/ai-platform/*" element={<AIPlatformPage />} />
+
         {/* Design System Routes */}
         <Route path="/design" element={<DesignSystemPage />} />
         <Route path="/design-system" element={<DesignSystemPage />} />
@@ -270,16 +322,10 @@ function AppRoutes() {
         {/* Desktop Routes */}
         <Route path="/desktop" element={<DesktopPage />} />
 
-        {/* Settings Routes */}
-        <Route path="/settings" element={<SettingsGeneralPage />} />
-        <Route path="/settings/general" element={<SettingsGeneralPage />} />
-        <Route path="/settings/account" element={<SettingsAccountPage />} />
-        <Route path="/settings/notifications" element={<SettingsNotificationsPage />} />
-        <Route path="/settings/information" element={<SettingsInformationPage />} />
-
-        {/* Mail Template Routes */}
-        <Route path="/mail-template" element={<MailTemplatePage />} />
-        <Route path="/mail-template/:templateId" element={<MailTemplatePreviewPage />} />
+        {/* AI Platform Routes */}
+        <Route path="/ai-platform" element={<AIPlatformPage />} />
+        <Route path="/ai-platform/workloads/:id" element={<WorkloadDetailPage />} />
+        <Route path="/ai-platform/*" element={<AIPlatformPage />} />
       </Routes>
   );
 }

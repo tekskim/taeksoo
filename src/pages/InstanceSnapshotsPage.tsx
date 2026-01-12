@@ -90,10 +90,10 @@ export function InstanceSnapshotsPage() {
     { id: 'status', label: 'Status', visible: true, locked: true },
     { id: 'name', label: 'Name', visible: true, locked: true },
     { id: 'size', label: 'Size', visible: true },
-    { id: 'diskFormat', label: 'Disk Format', visible: true },
-    { id: 'sourceInstance', label: 'Source Instance', visible: true },
+    { id: 'diskFormat', label: 'Disk format', visible: true },
+    { id: 'sourceInstance', label: 'Source instance', visible: true },
     { id: 'description', label: 'Description', visible: true },
-    { id: 'createdAt', label: 'Created At', visible: true },
+    { id: 'createdAt', label: 'Created at', visible: true },
     { id: 'actions', label: 'Action', visible: true, locked: true },
   ];
   const [columnConfig, setColumnConfig] = useState<ColumnConfig[]>(defaultColumnConfig);
@@ -222,13 +222,13 @@ export function InstanceSnapshotsPage() {
     },
     {
       key: 'diskFormat',
-      label: 'Disk Format',
+      label: 'Disk format',
       flex: 1,
       sortable: true,
     },
     {
       key: 'sourceInstance',
-      label: 'Source Instance',
+      label: 'Source instance',
       flex: 1,
       sortable: true,
       render: (_, row) => (
@@ -253,7 +253,7 @@ export function InstanceSnapshotsPage() {
     },
     {
       key: 'createdAt',
-      label: 'Created At',
+      label: 'Created at',
       flex: 1,
       sortable: true,
     },
@@ -266,12 +266,12 @@ export function InstanceSnapshotsPage() {
         const menuItems: ContextMenuItem[] = [
           {
             id: 'create-instance',
-            label: 'Create Instance',
+            label: 'Create instance',
             onClick: () => console.log('Create instance from snapshot:', row.id),
           },
           {
             id: 'create-volume',
-            label: 'Create Volume',
+            label: 'Create volume',
             onClick: () => console.log('Create volume from snapshot:', row.id),
           },
           {
@@ -349,7 +349,7 @@ export function InstanceSnapshotsPage() {
             <Breadcrumb
               items={[
                 { label: 'Proj-1', href: '/project' },
-                { label: 'Instance Snapshots' },
+                { label: 'Instance snapshots' },
               ]}
             />
           }
@@ -371,7 +371,7 @@ export function InstanceSnapshotsPage() {
             {/* Page Header */}
             <div className="flex items-center justify-between h-8">
               <h1 className="text-[length:var(--font-size-16)] font-semibold text-[var(--color-text-default)]">
-                Instance Snapshots
+                Instance snapshots
               </h1>
             </div>
 
@@ -381,7 +381,7 @@ export function InstanceSnapshotsPage() {
                 <ListToolbar.Actions>
                   <div className="w-[280px]">
                     <SearchInput
-                      placeholder="Find Snapshot with filters"
+                      placeholder="Search snapshot by attributes"
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
                       onClear={() => setSearchQuery('')}

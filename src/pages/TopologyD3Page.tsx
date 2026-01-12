@@ -107,7 +107,7 @@ interface NetworkGroup {
    - usw2: US West 2 (Oregon)
    ---------------------------------------- */
 
-// External Networks - 외부 네트워크 (ISP/Cloud Provider 연결)
+// External networks - 외부 네트워크 (ISP/Cloud Provider 연결)
 const externalNetworks: ExternalNetwork[] = [
   { id: 'extnet-apne2-pub-001', name: 'extnet-apne2-public', status: 'active', description: 'Seoul Region Public Internet' },
   { id: 'extnet-usw2-pub-001', name: 'extnet-usw2-public', status: 'active', description: 'Oregon Region Public Internet' },
@@ -248,7 +248,7 @@ const subnets: Subnet[] = [
   { id: 'snet-dmz-apne2-b2b-001', name: 'b2b-api', cidr: '10.252.2.0/24', status: 'active', networkId: 'vpc-dmz-apne2-001', routerId: 'rtr-prod-apne2-edge-001' },
 ];
 
-// Load Balancers - 네이밍: [env]-[region]-[type]-[purpose]-[seq]
+// Load balancers - 네이밍: [env]-[region]-[type]-[purpose]-[seq]
 const loadBalancers: LoadBalancer[] = [
   // ============================================
   // Production Korea - Web Tier
@@ -364,7 +364,7 @@ interface PopoverProps {
     // Extended fields for specific types
     id?: string;
     adminState?: string;
-    // External Network
+    // External network
     routerCount?: number;
     routerList?: RouterItem[]; // Detailed router list
     // VPC
@@ -383,7 +383,7 @@ interface PopoverProps {
     instanceList?: InstanceItem[]; // Detailed instance list
     loadBalancerCount?: number;
     loadBalancerList?: LoadBalancerItem[]; // Detailed LB list
-    // Load Balancer
+    // Load balancer
     vip?: string;
     floatingIp?: string;
     listenerCount?: number;
@@ -550,7 +550,7 @@ function ListenersSection({ listeners }: {
   );
 }
 
-// Routers Section Component (for External Network)
+// Routers Section Component (for External network)
 function RoutersSection({ routers }: { 
   routers: RouterItem[];
 }) {
@@ -740,10 +740,10 @@ function Popover({ data, position, onClose }: PopoverProps) {
           </div>
         )}
         
-        {/* Admin State */}
+        {/* Admin state */}
         {data.adminState && (
           <div className="flex justify-between">
-            <span className="text-slate-500">Admin State:</span>
+            <span className="text-slate-500">Admin state:</span>
             <span className="font-medium">{data.adminState}</span>
           </div>
         )}
@@ -813,7 +813,7 @@ function Popover({ data, position, onClose }: PopoverProps) {
             )}
             {data.externalGateway && (
               <div className="flex justify-between">
-                <span className="text-slate-500">External Gateway:</span>
+                <span className="text-slate-500">External gateway:</span>
                 <LinkText value={data.externalGateway} />
               </div>
             )}
@@ -825,7 +825,7 @@ function Popover({ data, position, onClose }: PopoverProps) {
           <>
             {data.gatewayIp && (
               <div className="flex justify-between">
-                <span className="text-slate-500">Gateway IP:</span>
+                <span className="text-slate-500">Gateway IPP:</span>
                 <CopyableText value={data.gatewayIp} />
               </div>
             )}
@@ -890,11 +890,11 @@ function Popover({ data, position, onClose }: PopoverProps) {
               </div>
             )}
             
-            {/* Load Balancers Section */}
+            {/* Load balancers Section */}
             {data.loadBalancerList && data.loadBalancerList.length > 0 && (
               <div className="mt-3 pt-3 border-t border-slate-100">
                 <div className="flex items-center justify-between mb-2">
-                  <span className="text-slate-500 font-medium">Load Balancers ({data.loadBalancerList.length})</span>
+                  <span className="text-slate-500 font-medium">Load balancers ({data.loadBalancerList.length})</span>
                   <Link
           to="#" className="text-blue-500 hover:underline text-xs">View detail</Link>
                 </div>
@@ -919,7 +919,7 @@ function Popover({ data, position, onClose }: PopoverProps) {
           </>
         )}
         
-        {/* Load Balancer specific */}
+        {/* Load balancer specific */}
         {data.type === 'loadBalancer' && (
           <>
             {data.vip && (
@@ -951,7 +951,7 @@ function Popover({ data, position, onClose }: PopoverProps) {
           </div>
         )}
         
-        {/* Routers Section (External Network) */}
+        {/* Routers Section (External network) */}
         {data.routerList && data.routerList.length > 0 && data.type === 'externalNetwork' && (
           <RoutersSection routers={data.routerList} />
         )}
@@ -968,7 +968,7 @@ function Popover({ data, position, onClose }: PopoverProps) {
         )}
         {data.loadBalancerCount !== undefined && data.loadBalancerCount > 0 && !data.loadBalancerList && (
           <div className="flex justify-between">
-            <span className="text-slate-500">Load Balancer:</span>
+            <span className="text-slate-500">Load balancer:</span>
             <ViewDetailLink count={data.loadBalancerCount} />
           </div>
         )}
@@ -979,12 +979,12 @@ function Popover({ data, position, onClose }: PopoverProps) {
           </div>
         )}
         
-        {/* Listeners Section (Load Balancer) */}
+        {/* Listeners Section (Load balancer) */}
         {data.listenerList && data.listenerList.length > 0 && (
           <ListenersSection listeners={data.listenerList} />
         )}
         
-        {/* Health Monitor (Load Balancer) */}
+        {/* Health Monitor (Load balancer) */}
         {data.healthMonitor && (
           <HealthMonitorSection healthMonitor={data.healthMonitor} />
         )}
@@ -1321,7 +1321,7 @@ export function TopologyD3Page() {
 
     let currentX = startX;
 
-    // Process network groups (External Network -> Routers)
+    // Process network groups (External network -> Routers)
     currentNetworkGroups.forEach((group) => {
       const groupStartX = currentX;
       let groupWidth = 0;
@@ -1332,7 +1332,7 @@ export function TopologyD3Page() {
       });
       groupWidth = Math.max(groupWidth, nodeGap);
 
-      // External Network
+      // External network
       const extNetX = groupStartX + groupWidth / 2;
       const extNetY = startY;
       const extNetStatus = group.extNet.status || 'active';
@@ -1359,7 +1359,7 @@ export function TopologyD3Page() {
           data: router,
         });
 
-        // Edge: External Network -> Router (use router status for edge color)
+        // Edge: External network -> Router (use router status for edge color)
         edges.push({
           source: { x: extNetX, y: extNetY + NODE_SIZES.externalNetwork.node / 2 },
           target: { x: rx, y: ry - NODE_SIZES.router.node / 2 },
@@ -1438,7 +1438,7 @@ export function TopologyD3Page() {
             
             subnetPositions[subnet.id] = { x: sx, y: sy };
 
-            // Load Balancers for this subnet
+            // Load balancers for this subnet
             const subnetLbs = lbsBySubnet[subnet.id] || [];
             const lbStartX = sx - (subnetLbs.length - 1) * lbGap / 2;
 
@@ -1889,10 +1889,10 @@ export function TopologyD3Page() {
           d3.select(this).select('circle').transition().duration(150).attr('r', size.node / 2 * 1.08);
           
           const typeLabels: Record<string, string> = {
-            externalNetwork: 'External Network',
+            externalNetwork: 'External network',
             router: 'Router',
             subnet: 'Subnet',
-            loadBalancer: 'Load Balancer',
+            loadBalancer: 'Load balancer',
           };
           
           setTooltip({
@@ -1983,7 +1983,7 @@ export function TopologyD3Page() {
               }] : [],
               // Instance list
               instanceList: sampleInstances,
-              // Load Balancer list
+              // Load balancer list
               loadBalancerList: connectedLbs.map(lb => ({
                 name: lb.name,
                 status: lb.status,
@@ -2309,9 +2309,9 @@ export function TopologyD3Page() {
             <Select
               value={filterStatus}
               onChange={setFilterStatus}
-              placeholder="All Status"
+              placeholder="All status"
               options={[
-                { value: 'all', label: 'All Status' },
+                { value: 'all', label: 'All status' },
                 { value: 'active', label: 'Active' },
                 { value: 'inactive', label: 'Inactive' },
                 { value: 'error', label: 'Error' },
@@ -2391,7 +2391,7 @@ export function TopologyD3Page() {
               <span className="text-sm font-medium text-slate-600">Legend:</span>
               <div className="flex items-center gap-2">
                 <div className="w-3 h-3 rounded-full" style={{ backgroundColor: COLORS.externalNetwork.active }} />
-                <span className="text-xs text-slate-600">External Network</span>
+                <span className="text-xs text-slate-600">External network</span>
               </div>
               <div className="flex items-center gap-2">
                 <div className="w-3 h-3 rounded-full" style={{ backgroundColor: COLORS.router.active }} />
@@ -2403,7 +2403,7 @@ export function TopologyD3Page() {
               </div>
               <div className="flex items-center gap-2">
                 <div className="w-3 h-3 rounded-full" style={{ backgroundColor: COLORS.loadBalancer.active }} />
-                <span className="text-xs text-slate-600">Load Balancer</span>
+                <span className="text-xs text-slate-600">Load balancer</span>
               </div>
             </div>
           </div>

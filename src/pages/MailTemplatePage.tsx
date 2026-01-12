@@ -100,7 +100,7 @@ export function MailTemplatePage() {
                 <IconMail size={18} className="text-white" stroke={1.5} />
               </div>
               <h1 className="text-[16px] font-semibold text-[var(--color-text-default)]">
-                Mail Templates
+                Mail templates
               </h1>
             </div>
           </HStack>
@@ -109,7 +109,7 @@ export function MailTemplatePage() {
             size="sm"
             icon={<IconPlus size={14} stroke={1.5} />}
           >
-            Create Template
+            Create template
           </Button>
         </div>
       </header>

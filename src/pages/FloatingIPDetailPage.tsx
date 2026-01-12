@@ -57,7 +57,7 @@ const mockFloatingIPsMap: Record<string, FloatingIPDetail> = {
   'fip-002': { id: 'fip-002', floatingIp: '172.24.4.229', status: 'active', createdAt: '2025-10-02', description: '-', resourceType: 'Instance', resource: { name: 'app-server', id: 'inst-002' }, fixedIp: '10.7.65.40', router: { name: 'main-router', id: 'router-001' }, fqdn: 'app-server.thakicloud.com' },
   'fip-003': { id: 'fip-003', floatingIp: '172.24.4.230', status: 'down', createdAt: '2025-10-03', description: 'Unassociated', resourceType: null, resource: null, fixedIp: '-', router: { name: 'main-router', id: 'router-001' }, fqdn: '-' },
   'fip-004': { id: 'fip-004', floatingIp: '172.24.4.231', status: 'active', createdAt: '2025-09-28', description: '-', resourceType: 'Instance', resource: { name: 'db-server', id: 'inst-003' }, fixedIp: '10.7.65.41', router: { name: 'main-router', id: 'router-001' }, fqdn: 'db-server.thakicloud.com' },
-  'fip-005': { id: 'fip-005', floatingIp: '172.24.4.232', status: 'active', createdAt: '2025-09-25', description: '-', resourceType: 'Load Balancer', resource: { name: 'load-balancer', id: 'lb-001' }, fixedIp: '10.7.65.42', router: { name: 'main-router', id: 'router-001' }, fqdn: 'lb.thakicloud.com' },
+  'fip-005': { id: 'fip-005', floatingIp: '172.24.4.232', status: 'active', createdAt: '2025-09-25', description: '-', resourceType: 'Load balancer', resource: { name: 'load-balancer', id: 'lb-001' }, fixedIp: '10.7.65.42', router: { name: 'main-router', id: 'router-001' }, fqdn: 'lb.thakicloud.com' },
   'fip-006': { id: 'fip-006', floatingIp: '172.24.4.233', status: 'error', createdAt: '2025-09-20', description: 'Error state', resourceType: null, resource: null, fixedIp: '-', router: { name: 'main-router', id: 'router-001' }, fqdn: '-' },
   'fip-007': { id: 'fip-007', floatingIp: '172.24.4.234', status: 'active', createdAt: '2025-09-15', description: '-', resourceType: 'Instance', resource: { name: 'monitoring', id: 'inst-004' }, fixedIp: '10.7.65.43', router: { name: 'main-router', id: 'router-001' }, fqdn: 'monitoring.thakicloud.com' },
   'fip-008': { id: 'fip-008', floatingIp: '172.24.4.235', status: 'active', createdAt: '2025-09-10', description: '-', resourceType: 'VPN Gateway', resource: { name: 'vpn-gateway', id: 'vpn-001' }, fixedIp: '10.7.65.44', router: { name: 'vpn-router', id: 'router-002' }, fqdn: 'vpn.thakicloud.com' },
@@ -189,7 +189,7 @@ export default function FloatingIPDetailPage() {
                     status={floatingIPStatusMap[floatingIP.status]}
                   />
                   <DetailHeader.InfoCard label="ID" value={floatingIP.id} copyable />
-                  <DetailHeader.InfoCard label="Created At" value={floatingIP.createdAt} />
+                  <DetailHeader.InfoCard label="Created at" value={floatingIP.createdAt} />
                 </DetailHeader.InfoGrid>
               </DetailHeader>
 
@@ -203,10 +203,10 @@ export default function FloatingIPDetailPage() {
                   {/* Details Tab Panel */}
                   <TabPanel value="details">
                     <VStack gap={4} className="pt-6">
-                      {/* Basic Information */}
+                      {/* Basic information */}
                       <SectionCard>
                         <SectionCard.Header
-                          title="Basic Information"
+                          title="Basic information"
                           actions={
                             <Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />}>
                               Edit
@@ -217,7 +217,7 @@ export default function FloatingIPDetailPage() {
                           <SectionCard.DataRow label="Floating IP" value={floatingIP.floatingIp} />
                           <SectionCard.DataRow label="Description" value={floatingIP.description} />
                           <SectionCard.DataRow 
-                            label="External Network" 
+                            label="External network" 
                             value={
                               floatingIP.network ? (
                                 <Link

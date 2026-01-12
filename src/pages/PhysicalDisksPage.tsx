@@ -359,7 +359,7 @@ function IdentifyCell({ timer, onIdentify }: IdentifyCellProps) {
 }
 
 /* ----------------------------------------
-   Physical Disks Page
+   Physical disks Page
    ---------------------------------------- */
 
 export function PhysicalDisksPage() {
@@ -568,7 +568,7 @@ export function PhysicalDisksPage() {
               <Breadcrumb
                 items={[
                   { label: 'Home', href: '/storage' },
-                  { label: 'Physical Disks' },
+                  { label: 'Physical disks' },
                 ]}
               />
             }
@@ -589,7 +589,7 @@ export function PhysicalDisksPage() {
               {/* Page Header */}
               <div className="flex items-center justify-between h-8">
                 <h1 className="text-[length:var(--font-size-16)] font-semibold text-[var(--color-text-default)]">
-                  Physical Disks
+                  Physical disks
                 </h1>
               </div>
 

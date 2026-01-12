@@ -102,8 +102,8 @@ export function CertificatesPage() {
     { id: 'name', label: 'Name', visible: true, locked: true },
     { id: 'domain', label: 'SAN', visible: true },
     { id: 'listener', label: 'Listener', visible: true },
-    { id: 'expiresAt', label: 'Expires At', visible: true },
-    { id: 'createdAt', label: 'Created At', visible: true },
+    { id: 'expiresAt', label: 'Expires at', visible: true },
+    { id: 'createdAt', label: 'Created at', visible: true },
     { id: 'actions', label: 'Action', visible: true, locked: true },
   ];
 
@@ -206,7 +206,7 @@ export function CertificatesPage() {
     },
     {
       key: 'expiresAt',
-      label: 'Expires At',
+      label: 'Expires at',
       flex: 1,
       sortable: true,
       render: (value: string) => {
@@ -218,7 +218,7 @@ export function CertificatesPage() {
         );
       },
     },
-    { key: 'createdAt', label: 'Created At', flex: 1, sortable: true },
+    { key: 'createdAt', label: 'Created at', flex: 1, sortable: true },
     {
       key: 'actions',
       label: 'Action',
@@ -276,13 +276,13 @@ export function CertificatesPage() {
           <VStack gap={3}>
             <div className="flex justify-between items-center h-8 w-full">
               <h1 className="text-[length:var(--font-size-16)] font-semibold text-[var(--color-text-default)]">Certificates</h1>
-              <Button variant="primary" size="md">Register Certificate</Button>
+              <Button variant="primary" size="md">Register certificate</Button>
             </div>
             <Tabs value={activeTab} onChange={setActiveTab} size="sm">
               <TabList><Tab value="server">Server</Tab><Tab value="ca">CA</Tab></TabList>
             </Tabs>
             <ListToolbar
-              primaryActions={<ListToolbar.Actions><div className="w-[280px]"><SearchInput placeholder="Find certificate with filters" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} onClear={() => setSearchQuery('')} size="sm" fullWidth /></div><Button variant="secondary" size="sm" iconOnly icon={<IconDownload size={12} />} aria-label="Download" /></ListToolbar.Actions>}
+              primaryActions={<ListToolbar.Actions><div className="w-[280px]"><SearchInput placeholder="Search certificate by attributes" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} onClear={() => setSearchQuery('')} size="sm" fullWidth /></div><Button variant="secondary" size="sm" iconOnly icon={<IconDownload size={12} />} aria-label="Download" /></ListToolbar.Actions>}
               bulkActions={<ListToolbar.Actions><Button variant="muted" size="sm" leftIcon={<IconTrash size={12} />} disabled={selectedCerts.length === 0}>Delete</Button></ListToolbar.Actions>}
             />
             <Pagination currentPage={currentPage} totalPages={totalPages} totalItems={filteredCerts.length} selectedCount={selectedCerts.length} onPageChange={setCurrentPage} showSettings onSettingsClick={() => setIsPreferencesOpen(true)} />

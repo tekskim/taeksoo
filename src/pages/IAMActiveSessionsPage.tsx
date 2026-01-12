@@ -135,7 +135,7 @@ export default function IAMActiveSessionsPage() {
   const itemsPerPage = 10;
 
   useEffect(() => {
-    updateActiveTabLabel('Active Sessions');
+    updateActiveTabLabel('Active sessions');
   }, [updateActiveTabLabel]);
 
   const sidebarWidth = sidebarOpen ? 200 : 0;
@@ -171,7 +171,7 @@ export default function IAMActiveSessionsPage() {
   // Breadcrumb items
   const breadcrumbItems = [
     { label: 'IAM', href: '/iam' },
-    { label: 'Active Sessions' },
+    { label: 'Active sessions' },
   ];
 
   // Table columns
@@ -260,7 +260,7 @@ export default function IAMActiveSessionsPage() {
               {/* Header */}
               <HStack justify="between" align="center" className="w-full min-h-[28px]">
                 <h1 className="text-[16px] font-semibold leading-6 text-[var(--color-text-default)]">
-                  Active Sessions
+                  Active sessions
                 </h1>
               </HStack>
 
@@ -270,7 +270,7 @@ export default function IAMActiveSessionsPage() {
                   {/* Search */}
                   <HStack gap={1} align="center">
                     <SearchInput
-                      placeholder="Find session with filters"
+                      placeholder="Search session by attributes"
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
                       className="w-[280px]"

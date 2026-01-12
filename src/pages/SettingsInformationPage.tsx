@@ -26,7 +26,7 @@ export default function SettingsInformationPage() {
 
   return (
     <div className="fixed inset-0 flex flex-col bg-[var(--color-surface-subtle)]">
-      {/* Top Bar with Logo and Window Controls */}
+      {/* Top Bar with Logo and Window controls */}
       <div className="relative flex items-center w-full h-[var(--tabbar-height)] bg-[var(--color-surface-default)] shrink-0 after:absolute after:bottom-0 after:left-0 after:right-0 after:h-px after:bg-[var(--color-border-default)]">
         {/* Logo Area */}
         <div className="w-[200px] h-full px-3 flex items-center">
@@ -37,7 +37,7 @@ export default function SettingsInformationPage() {
           />
         </div>
         
-        {/* TabBar (Window Controls only) */}
+        {/* TabBar (Window controls only) */}
         <div className="flex-1">
           <TabBar
             tabs={[]}
@@ -77,7 +77,7 @@ export default function SettingsInformationPage() {
                   <SectionCard.Header title="Version" />
                   <SectionCard.Content>
                     <div className="flex gap-4">
-                      <DetailHeader.InfoCard label="Product Name" value="Thaki Cloud Suite" />
+                      <DetailHeader.InfoCard label="Product name" value="Thaki Cloud Suite" />
                       <DetailHeader.InfoCard label="Version" value="0.7.0" />
                     </div>
                   </SectionCard.Content>

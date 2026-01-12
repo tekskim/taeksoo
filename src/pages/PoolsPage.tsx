@@ -210,7 +210,7 @@ export function PoolsPage() {
     },
     {
       key: 'dataProtection',
-      label: 'Data Protection',
+      label: 'Data protection',
       flex: 1,
       sortable: false,
     },
@@ -239,7 +239,7 @@ export function PoolsPage() {
     },
     {
       key: 'crushRuleset',
-      label: 'Crush Ruleset',
+      label: 'Crush ruleset',
       flex: 1,
       sortable: true,
     },

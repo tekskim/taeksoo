@@ -65,7 +65,7 @@ const mockNetworks: NetworkRow[] = [
 
 // Section labels for display
 const SECTION_LABELS: Record<SectionStep, string> = {
-  'basic-info': 'Basic Information',
+  'basic-info': 'Basic information',
   'network': 'Network',
   'security': 'Security',
 };
@@ -361,7 +361,7 @@ export default function CreateVirtualAdapterPage() {
     return null;
   };
 
-  // Tab bar data
+  // Tab Bar data
   const tabBarTabs = tabs.map((tab) => ({
     id: tab.id,
     label: tab.label,
@@ -418,7 +418,7 @@ export default function CreateVirtualAdapterPage() {
                 items={[
                   { label: 'Proj-1', href: '/compute' },
                   { label: 'Ports', href: '/compute/ports' },
-                  { label: 'Create Virtual Adapter' },
+                  { label: 'Create virtual adapter' },
                 ]}
               />
             }
@@ -436,14 +436,14 @@ export default function CreateVirtualAdapterPage() {
             <VStack gap={6} className="min-w-[1176px]">
               {/* Page Title */}
               <h1 className="text-[18px] font-semibold leading-7 text-[var(--color-text-default)]">
-                Create Virtual Adapter
+                Create virtual adapter
               </h1>
 
               {/* Content Area */}
               <HStack gap={6} align="start" className="w-full">
                 {/* Left Column - Form Sections */}
                 <VStack gap={4} className="flex-1">
-                  {/* Basic Information Section */}
+                  {/* Basic information Section */}
                   <SectionCard isActive={sectionStatus['basic-info'] === 'active'}>
                     <SectionCard.Header 
                       title={SECTION_LABELS['basic-info']}
@@ -463,9 +463,9 @@ export default function CreateVirtualAdapterPage() {
                     />
                     {sectionStatus['basic-info'] === 'active' && (
                       <SectionCard.Content gap={6}>
-                        {/* Virtual Adapter Name */}
+                        {/* Virtual adapter Name */}
                         <FormField required>
-                          <FormField.Label>Virtual Adapter Name</FormField.Label>
+                          <FormField.Label>Virtual adapter Name</FormField.Label>
                           <FormField.Control>
                             <Input
                               placeholder="Enter name"
@@ -516,7 +516,7 @@ export default function CreateVirtualAdapterPage() {
                     {sectionStatus['basic-info'] === 'done' && (
                       <SectionCard.Content>
                         <SectionCard.DataRow 
-                          label="Virtual Adapter Name" 
+                          label="Virtual adapter Name" 
                           value={adapterName} 
                           showDivider 
                         />
