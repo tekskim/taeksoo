@@ -97,10 +97,10 @@ export function FloatingIPsPage() {
   const defaultColumnConfig: ColumnConfig[] = [
     { id: 'status', label: 'Status', visible: true, locked: true },
     { id: 'floatingIp', label: 'Floating IP', visible: true, locked: true },
-    { id: 'associatedTo', label: 'Associated To', visible: true },
+    { id: 'associatedTo', label: 'Associated to', visible: true },
     { id: 'fixedIp', label: 'Fixed IP', visible: true },
     { id: 'network', label: 'Network', visible: true },
-    { id: 'createdAt', label: 'Created At', visible: true },
+    { id: 'createdAt', label: 'Created at', visible: true },
     { id: 'actions', label: 'Action', visible: true, locked: true },
   ];
 
@@ -176,7 +176,7 @@ export function FloatingIPsPage() {
     },
     {
       key: 'associatedTo',
-      label: 'Associated To',
+      label: 'Associated to',
       width: '160px',
       align: 'right',
       render: (_, row) => (
@@ -237,7 +237,7 @@ export function FloatingIPsPage() {
     },
     {
       key: 'createdAt',
-      label: 'Created At',
+      label: 'Created at',
       flex: 1,
       sortable: true,
     },
@@ -334,7 +334,7 @@ export function FloatingIPsPage() {
           <VStack gap={3}>
             {/* Page Header */}
             <div className="flex justify-between items-center h-8 w-full">
-              <h1 className="text-[length:var(--font-size-16)] font-semibold text-[var(--color-text-default)]">
+              <h1 className="text-[length:var(--font-size-16)] font-semibold leading-6 text-[var(--color-text-default)]">
                 Floating IPs
               </h1>
               <Button variant="primary" size="md">
@@ -348,7 +348,7 @@ export function FloatingIPsPage() {
                 <ListToolbar.Actions>
                   <div className="w-[280px]">
                     <SearchInput
-                      placeholder="Find floating IP with filters"
+                      placeholder="Search floating IP by attributes"
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
                       onClear={() => setSearchQuery('')}
@@ -405,7 +405,7 @@ export function FloatingIPsPage() {
           setDeleteModalOpen(false);
           setFloatingIPToDelete(null);
         }}
-        title="Release Floating IP"
+        title="Release floating IP"
         description={`Are you sure you want to release "${floatingIPToDelete?.floatingIp}"? This action cannot be undone.`}
         confirmText="Release"
         cancelText="Cancel"

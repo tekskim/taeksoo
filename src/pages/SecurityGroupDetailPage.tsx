@@ -83,7 +83,7 @@ const mockSecurityGroupsMap: Record<string, SecurityGroupDetail> = {
 };
 
 const defaultSecurityGroupDetail: SecurityGroupDetail = {
-  id: 'unknown', name: 'Unknown Security Group', description: '-', createdAt: '-',
+  id: 'unknown', name: 'Unknown Security group', description: '-', createdAt: '-',
 };
 
 const mockRules: SecurityGroupRule[] = Array.from({ length: 115 }, (_, i) => ({
@@ -166,7 +166,7 @@ export default function SecurityGroupDetailPage() {
 
   // Context menu items for ports
   const getPortContextMenuItems = (port: Port): ContextMenuItem[] => [
-    { id: 'view', label: 'View Details', onClick: () => console.log('View port:', port.id) },
+    { id: 'view', label: 'View details', onClick: () => console.log('View port:', port.id) },
     { id: 'detach', label: 'Detach', status: 'danger', onClick: () => console.log('Detach port:', port.id) },
   ];
 
@@ -284,7 +284,7 @@ export default function SecurityGroupDetailPage() {
     },
     {
       key: 'portRange',
-      label: 'Port Range',
+      label: 'Port range',
       flex: 1,
     },
     {
@@ -348,7 +348,7 @@ export default function SecurityGroupDetailPage() {
               <Breadcrumb
                 items={[
                   { label: 'Proj-1', href: '/project' },
-                  { label: 'Security Groups', href: '/compute/security-groups' },
+                  { label: 'Security groups', href: '/compute/security-groups' },
                   { label: securityGroup.name },
                 ]}
               />
@@ -371,7 +371,7 @@ export default function SecurityGroupDetailPage() {
               {/* Header Card */}
               <div className="w-full bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg px-4 pt-3 pb-4">
                 {/* Title */}
-                <h1 className="text-[length:var(--font-size-16)] font-semibold text-[var(--color-text-default)] mb-3">
+                <h1 className="text-[length:var(--font-size-16)] font-semibold leading-6 text-[var(--color-text-default)] mb-3">
                   {securityGroup.name}
                 </h1>
 
@@ -381,7 +381,7 @@ export default function SecurityGroupDetailPage() {
                     Edit
                   </Button>
                   <Button variant="secondary" size="sm" leftIcon={<IconCirclePlus size={12} />}>
-                    Create Rule
+                    Create rule
                   </Button>
                   <Button variant="secondary" size="sm" leftIcon={<IconTrash size={12} />}>
                     Delete
@@ -418,10 +418,10 @@ export default function SecurityGroupDetailPage() {
                     </p>
                   </div>
 
-                  {/* Created At */}
+                  {/* Created at */}
                   <div className="flex-1 bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
                     <span className="text-[length:var(--font-size-11)] font-medium text-[var(--color-text-subtle)]">
-                      Created At
+                      Created at
                     </span>
                     <p className="text-[length:var(--font-size-12)] text-[var(--color-text-default)] mt-1.5">
                       {securityGroup.createdAt}
@@ -445,7 +445,7 @@ export default function SecurityGroupDetailPage() {
                           Rules
                         </h3>
                         <Button variant="secondary" size="sm" leftIcon={<IconCirclePlus size={12} />}>
-                          Create Rule
+                          Create rule
                         </Button>
                       </div>
 
@@ -453,7 +453,7 @@ export default function SecurityGroupDetailPage() {
                       <div className="flex items-center gap-2">
                         <div className="w-[280px]">
                           <SearchInput
-                            placeholder="Find rules with filters"
+                            placeholder="Search rules by attributes"
                             value={ruleSearchTerm}
                             onChange={(e) => setRuleSearchTerm(e.target.value)}
                             onClear={() => setRuleSearchTerm('')}

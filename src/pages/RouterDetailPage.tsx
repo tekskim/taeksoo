@@ -50,12 +50,12 @@ interface RouterDetail {
   access: string;
   externalGateway: boolean;
   createdAt: string;
-  // Basic Information
+  // Basic information
   routerName: string;
   availabilityZone: string;
   availabilityZoneHint: string;
   description: string;
-  // External Network
+  // External network
   network: { name: string; id: string } | null;
   snat: boolean;
   subnet: { name: string; id: string } | null;
@@ -316,7 +316,7 @@ export default function RouterDetailPage() {
     },
     {
       key: 'nextHop',
-      label: 'Next Hop',
+      label: 'Next hop',
       flex: 1,
       sortable: true,
     },
@@ -393,18 +393,18 @@ export default function RouterDetailPage() {
                 <DetailHeader.Title>{router.name}</DetailHeader.Title>
                 <DetailHeader.Actions>
                   <Button variant="secondary" size="sm" leftIcon={<IconLink size={12} />}>
-                    Connect Subnet
+                    Connect subnet
                   </Button>
                   <Button variant="secondary" size="sm" leftIcon={<IconTrash size={12} />}>
                     Delete
                   </Button>
                   <ContextMenu
                     items={[
-                      { label: 'Disconnect Subnet', onClick: () => {}, variant: 'danger' },
-                      { label: 'External Gateway Setting', onClick: () => {} },
+                      { label: 'Disconnect subnet', onClick: () => {}, variant: 'danger' },
+                      { label: 'External gateway Setting', onClick: () => {} },
                       { label: 'Enable SNAT', onClick: () => {} },
                       { label: 'Disable SNAT', onClick: () => {} },
-                      { label: 'Create Static Route', onClick: () => {} },
+                      { label: 'Create static Route', onClick: () => {} },
                       { label: 'Edit', onClick: () => {} },
                     ]}
                     trigger="click"
@@ -421,10 +421,10 @@ export default function RouterDetailPage() {
                     status={routerStatusMap[router.status]}
                   />
                   <DetailHeader.InfoCard label="ID" value={router.id} copyable />
-                  <DetailHeader.InfoCard label="Admin State" value={router.adminState} />
+                  <DetailHeader.InfoCard label="Admin state" value={router.adminState} />
                   <DetailHeader.InfoCard label="Access" value={router.access} />
-                  <DetailHeader.InfoCard label="External Gateway" value={router.externalGateway ? 'Yes' : 'No'} />
-                  <DetailHeader.InfoCard label="Created At" value={router.createdAt} />
+                  <DetailHeader.InfoCard label="External gateway" value={router.externalGateway ? 'Yes' : 'No'} />
+                  <DetailHeader.InfoCard label="Created at" value={router.createdAt} />
                 </DetailHeader.InfoGrid>
               </DetailHeader>
 
@@ -434,16 +434,16 @@ export default function RouterDetailPage() {
                   <TabList>
                     <Tab value="details">Details</Tab>
                     <Tab value="ports">Ports</Tab>
-                    <Tab value="static-routes">Static Routes</Tab>
+                    <Tab value="static-routes">Static routes</Tab>
                   </TabList>
 
                   {/* Details Tab Panel */}
                   <TabPanel value="details">
                     <VStack gap={4} className="pt-6">
-                      {/* Basic Information */}
+                      {/* Basic information */}
                       <SectionCard>
                         <SectionCard.Header 
-                          title="Basic Information" 
+                          title="Basic information" 
                           actions={
                             <Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />}>
                               Edit
@@ -451,17 +451,17 @@ export default function RouterDetailPage() {
                           }
                         />
                         <SectionCard.Content>
-                          <SectionCard.DataRow label="Router Name" value={router.routerName} />
-                          <SectionCard.DataRow label="AZ(Availability Zone)" value={router.availabilityZone} />
-                          <SectionCard.DataRow label="AZ(Availability Zone) Hint" value={router.availabilityZoneHint} />
+                          <SectionCard.DataRow label="Router name" value={router.routerName} />
+                          <SectionCard.DataRow label="AZ(Availability zone)" value={router.availabilityZone} />
+                          <SectionCard.DataRow label="AZ(Availability zone) Hint" value={router.availabilityZoneHint} />
                           <SectionCard.DataRow label="Description" value={router.description} />
                         </SectionCard.Content>
                       </SectionCard>
 
-                      {/* External Network */}
+                      {/* External network */}
                       <SectionCard>
                         <SectionCard.Header 
-                          title="External Network" 
+                          title="External network" 
                           actions={
                             <Button variant="secondary" size="sm" leftIcon={<IconSettings size={12} />}>
                               Setting
@@ -498,7 +498,7 @@ export default function RouterDetailPage() {
                               ) : '-'
                             } 
                           />
-                          <SectionCard.DataRow label="Gateway IP" value={router.gatewayIp} />
+                          <SectionCard.DataRow label="Gateway IPP" value={router.gatewayIp} />
                         </SectionCard.Content>
                       </SectionCard>
                     </VStack>
@@ -513,7 +513,7 @@ export default function RouterDetailPage() {
                           Ports
                         </h3>
                         <Button variant="secondary" size="sm" leftIcon={<IconCirclePlus size={12} />}>
-                          Connect Subnet
+                          Connect subnet
                         </Button>
                       </div>
 
@@ -526,7 +526,7 @@ export default function RouterDetailPage() {
                               setPortSearchTerm(e.target.value);
                               setPortCurrentPage(1);
                             }}
-                            placeholder="Find interface with filters"
+                            placeholder="Search interface by attributes"
                           />
                         </div>
                         <div className="h-4 w-px bg-[var(--color-border-default)]" />
@@ -575,7 +575,7 @@ export default function RouterDetailPage() {
                           Static Route
                         </h3>
                         <Button variant="secondary" size="sm" leftIcon={<IconCirclePlus size={12} />}>
-                          Create Static Route
+                          Create static Route
                         </Button>
                       </div>
 
@@ -588,7 +588,7 @@ export default function RouterDetailPage() {
                               setRouteSearchTerm(e.target.value);
                               setRouteCurrentPage(1);
                             }}
-                            placeholder="Find static route with filters"
+                            placeholder="Search static route by attributes"
                           />
                         </div>
                         <div className="h-4 w-px bg-[var(--color-border-default)]" />

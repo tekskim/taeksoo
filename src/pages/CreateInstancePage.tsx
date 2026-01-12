@@ -61,7 +61,7 @@ interface QuotaItem {
 }
 
 interface TemplateConfig {
-  // Basic Information
+  // Basic information
   instanceNamePrefix?: string;
   availabilityZone?: string;
   description?: string;
@@ -110,9 +110,9 @@ interface SectionStatus {
 
 // Section labels for display
 const SECTION_LABELS: Record<SectionStep, string> = {
-  templates: 'Templates',
-  'basic-info': 'Basic Information',
-  image: 'Image',
+  templates: 'Launch type',
+  'basic-info': 'Basic information',
+  image: 'Source',
   flavor: 'Flavor',
   network: 'Network',
   authentication: 'Authentication',
@@ -139,7 +139,7 @@ const mockQuota: QuotaItem[] = [
   { label: 'vCPU', used: 5, max: 20, newValue: 2 },
   { label: 'RAM (GiB)', used: 14, max: 50, newValue: 4 },
   { label: 'Disk', used: 2, max: 10, newValue: 1 },
-  { label: 'Disk Capacity (GiB)', used: 20, max: 1000, newValue: 50 },
+  { label: 'Disk capacity (GiB)', used: 20, max: 1000, newValue: 50 },
 ];
 
 const mockTemplates: TemplateRow[] = [
@@ -510,31 +510,6 @@ function SkippedSection({ title, onEdit }: SkippedSectionProps) {
 }
 
 /* ----------------------------------------
-   DoneSectionRow Component (Summary 데이터 로우)
-   ---------------------------------------- */
-
-interface DoneSectionRowProps {
-  label: string;
-  value: string | React.ReactNode;
-}
-
-function DoneSectionRow({ label, value }: DoneSectionRowProps) {
-  return (
-    <VStack gap={2}>
-      <div className="w-full h-px bg-[var(--color-border-subtle)]" />
-      <VStack gap={2} className="pt-3">
-        <span className="text-[11px] font-medium text-[var(--color-text-subtle)]">
-          {label}
-        </span>
-        <span className="text-[12px] text-[var(--color-text-default)]">
-          {value || '-'}
-        </span>
-      </VStack>
-    </VStack>
-  );
-}
-
-/* ----------------------------------------
    DoneSection Component (작성 완료 - Summary 형태)
    ---------------------------------------- */
 
@@ -546,22 +521,20 @@ interface DoneSectionProps {
 
 function DoneSection({ title, onEdit, children }: DoneSectionProps) {
   return (
-    <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg px-4 py-3">
-      <VStack gap={3}>
-        {/* Header - h-8 mb-3 matches SectionCard.Header */}
-        <HStack justify="between" align="center" className="w-full h-8">
-          <h5 className="text-[length:var(--font-size-14)] font-semibold leading-[var(--line-height-20)] text-[var(--color-text-default)]">
-            {title}
-          </h5>
-          <Button variant="outline" size="sm" leftIcon={<IconEdit size={12} />} onClick={onEdit}>
+    <SectionCard>
+      <SectionCard.Header 
+        title={title} 
+        showDivider
+        actions={
+          <Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />} onClick={onEdit}>
             Edit
           </Button>
-        </HStack>
-
-        {/* Data Rows */}
+        }
+      />
+      <SectionCard.Content>
         {children}
-      </VStack>
-    </div>
+      </SectionCard.Content>
+    </SectionCard>
   );
 }
 
@@ -608,7 +581,8 @@ function BasicInformationSection({
   return (
     <SectionCard isActive={isActive}>
       <SectionCard.Header 
-        title="Basic Information" 
+        title="Basic information" 
+        showDivider
         actions={isEditing ? (
           <HStack gap={2}>
             <Button variant="secondary" size="sm" onClick={onEditCancel}>Cancel</Button>
@@ -618,13 +592,13 @@ function BasicInformationSection({
       />
       <SectionCard.Content>
         <VStack gap={0}>
-          {/* Instance Name */}
+          {/* Instance name */}
           <VStack gap={2} className="py-6">
             <label className="text-[14px] font-medium text-[var(--color-text-default)]">
-              Instance Name <span className="ml-1 text-[var(--color-state-danger)]">*</span>
+              Instance name <span className="ml-1 text-[var(--color-state-danger)]">*</span>
             </label>
             <Input
-              placeholder="Instance Name"
+              placeholder="Instance name"
               value={instanceName}
               onChange={(e) => onInstanceNameChange(e.target.value)}
               fullWidth
@@ -637,10 +611,10 @@ function BasicInformationSection({
           {/* Divider */}
           <div className="w-full h-px bg-[var(--color-border-subtle)]" />
 
-          {/* AZ (Availability Zone) */}
+          {/* AZ (Availability zone) */}
           <VStack gap={2} className="py-6">
             <label className="text-[14px] font-medium text-[var(--color-text-default)]">
-              AZ (Availability Zone) <span className="ml-1 text-[var(--color-state-danger)]">*</span>
+              AZ (Availability zone) <span className="ml-1 text-[var(--color-state-danger)]">*</span>
             </label>
             <Select
               options={availabilityZoneOptions}
@@ -894,8 +868,8 @@ function ImageSection({ selectedImageId, onSelectImage, onNext, isActive = false
     },
     { key: 'name', label: 'Name', sortable: true },
     { key: 'size', label: 'Size', sortable: true, width: '100px' },
-    { key: 'sourceInstance', label: 'Source Instance', sortable: true, width: '140px' },
-    { key: 'createdAt', label: 'Created At', sortable: true, width: '110px' },
+    { key: 'sourceInstance', label: 'Source instance', sortable: true, width: '140px' },
+    { key: 'createdAt', label: 'Created at', sortable: true, width: '110px' },
   ];
 
   // Bootable Volume Table columns
@@ -931,7 +905,7 @@ function ImageSection({ selectedImageId, onSelectImage, onNext, isActive = false
     { key: 'name', label: 'Name', sortable: true },
     { key: 'size', label: 'Size', sortable: true, width: '80px' },
     { key: 'type', label: 'Type', sortable: true, width: '80px' },
-    { key: 'createdAt', label: 'Created At', sortable: true, width: '110px' },
+    { key: 'createdAt', label: 'Created at', sortable: true, width: '110px' },
   ];
 
   const osChipStyle = (active: boolean) => `
@@ -946,6 +920,7 @@ function ImageSection({ selectedImageId, onSelectImage, onNext, isActive = false
     <SectionCard isActive={isActive}>
       <SectionCard.Header 
         title="Source" 
+        showDivider
         actions={isEditing ? (
           <HStack gap={2}>
             <Button variant="secondary" size="sm" onClick={onEditCancel}>Cancel</Button>
@@ -1137,11 +1112,11 @@ function ImageSection({ selectedImageId, onSelectImage, onNext, isActive = false
           {/* Divider */}
           <div className="w-full h-px bg-[var(--color-border-subtle)]" />
 
-          {/* Data Disk Section */}
+          {/* Data disk Section */}
           <VStack gap={3} align="start" className="py-6">
             <VStack gap={1}>
               <span className="text-[14px] font-medium text-[var(--color-text-default)]">
-                Data Disk
+                Data disk
               </span>
               <span className="text-[12px] text-[var(--color-text-muted)]">
                 Attach additional volumes for data storage.
@@ -1154,7 +1129,7 @@ function ImageSection({ selectedImageId, onSelectImage, onNext, isActive = false
               leftIcon={<IconPlus size={12} />}
               onClick={handleAddDataDisk}
             >
-              Add Data Disk
+              Add Data disk
             </Button>
           </VStack>
 
@@ -1272,14 +1247,15 @@ function FlavorSection({ selectedFlavorId, onSelectFlavor, onNext, isActive = fa
     { key: 'vCPU', label: 'vCPU', sortable: true, width: '70px' },
     { key: 'ram', label: 'RAM', sortable: true, width: '80px' },
     { key: 'disk', label: 'Disk', sortable: true, width: '80px' },
-    { key: 'ephemeralDisk', label: 'Ephemeral Disk', sortable: true, width: '100px' },
-    { key: 'networkBandwidth', label: 'Internal Network Bandwidth', sortable: true, width: '120px' },
+    { key: 'ephemeralDisk', label: 'Ephemeral disk', sortable: true, width: '100px' },
+    { key: 'networkBandwidth', label: 'Internal network Bandwidth', sortable: true, width: '120px' },
   ];
 
   return (
     <SectionCard isActive={isActive}>
       <SectionCard.Header 
         title="Flavor" 
+        showDivider
         actions={isEditing ? (
           <HStack gap={2}>
             <Button variant="secondary" size="sm" onClick={onEditCancel}>Cancel</Button>
@@ -1455,7 +1431,7 @@ function NetworkSection({ onNext, isActive = false, isEditing = false, onEditCan
   const [fipSearch, setFipSearch] = useState('');
   const [fipPage, setFipPage] = useState(1);
 
-  // Security Groups
+  // Security groups
   const [selectedSecurityGroups, setSelectedSecurityGroups] = useState<Set<string>>(new Set(['sg2']));
   const [sgSearch, setSgSearch] = useState('');
   const [sgPage, setSgPage] = useState(1);
@@ -1554,7 +1530,7 @@ function NetworkSection({ onNext, isActive = false, isEditing = false, onEditCan
       render: (_, row) => <StatusIndicator status={row.status === 'Active' ? 'active' : 'shutoff'} />,
     },
     { key: 'name', label: 'Name', sortable: true },
-    { key: 'allocationPools', label: 'Allocation Pools' },
+    { key: 'allocationPools', label: 'Allocation pools' },
   ];
 
   // Existing Floating IP columns
@@ -1598,10 +1574,10 @@ function NetworkSection({ onNext, isActive = false, isEditing = false, onEditCan
       ),
     },
     { key: 'ipAddress', label: 'IP Address', sortable: true },
-    { key: 'networkName', label: 'Network Name', sortable: true },
+    { key: 'networkName', label: 'Network name', sortable: true },
   ];
 
-  // Security Group columns
+  // Security group columns
   const securityGroupColumns: TableColumn<SecurityGroupRow>[] = [
     {
       key: 'select',
@@ -1644,7 +1620,7 @@ function NetworkSection({ onNext, isActive = false, isEditing = false, onEditCan
       ),
     },
     { key: 'description', label: 'Description', sortable: true },
-    { key: 'createdAt', label: 'Created At', sortable: true },
+    { key: 'createdAt', label: 'Created at', sortable: true },
   ];
 
   // Port columns
@@ -1680,7 +1656,7 @@ function NetworkSection({ onNext, isActive = false, isEditing = false, onEditCan
         </VStack>
       ),
     },
-    { key: 'ownedNetwork', label: 'Owned Network', sortable: true },
+    { key: 'ownedNetwork', label: 'Owned network', sortable: true },
     { key: 'fixedIp', label: 'Fixed IP' },
     { key: 'macAddress', label: 'MAC Address' },
   ];
@@ -1698,6 +1674,7 @@ function NetworkSection({ onNext, isActive = false, isEditing = false, onEditCan
     <SectionCard isActive={isActive}>
       <SectionCard.Header 
         title="Network" 
+        showDivider
         actions={isEditing ? (
           <HStack gap={2}>
             <Button variant="secondary" size="sm" onClick={onEditCancel}>Cancel</Button>
@@ -1713,7 +1690,7 @@ function NetworkSection({ onNext, isActive = false, isEditing = false, onEditCan
             
             {/* Search */}
             <SearchInput
-              placeholder="Find Network with filters"
+              placeholder="Search network by attributes"
               value={networkSearch}
               onChange={(e) => setNetworkSearch(e.target.value)}
               onClear={() => setNetworkSearch('')}
@@ -1819,7 +1796,7 @@ function NetworkSection({ onNext, isActive = false, isEditing = false, onEditCan
             {floatingIpOption === 'auto' && (
               <VStack gap={3} className="mt-2">
                 <SearchInput
-                  placeholder="Find Network with filters"
+                  placeholder="Search network by attributes"
                   value={fipSearch}
                   onChange={(e) => setFipSearch(e.target.value)}
                   onClear={() => setFipSearch('')}
@@ -1846,7 +1823,7 @@ function NetworkSection({ onNext, isActive = false, isEditing = false, onEditCan
               <VStack gap={3} className="mt-2">
                 <HStack justify="between" align="center" className="w-full">
                   <SearchInput
-                    placeholder="Find Floating IP with filters"
+                    placeholder="Search floating IP by attributes"
                     value={fipSearch}
                     onChange={(e) => setFipSearch(e.target.value)}
                     onClear={() => setFipSearch('')}
@@ -1891,13 +1868,13 @@ function NetworkSection({ onNext, isActive = false, isEditing = false, onEditCan
           {/* Divider */}
           <div className="h-px bg-[var(--color-border-subtle)]" />
 
-          {/* Security Groups Section */}
+          {/* Security groups Section */}
           <VStack gap={3}>
-            <span className="text-[14px] font-medium">Security Groups</span>
+            <span className="text-[14px] font-medium">Security groups</span>
             
             <HStack justify="between" align="center" className="w-full">
               <SearchInput
-                placeholder="Find Security Group with filters"
+                placeholder="Search security group by attributes"
                 value={sgSearch}
                 onChange={(e) => setSgSearch(e.target.value)}
                 onClear={() => setSgSearch('')}
@@ -1938,7 +1915,7 @@ function NetworkSection({ onNext, isActive = false, isEditing = false, onEditCan
               }}
             />
 
-            {/* Selected Security Groups Tags */}
+            {/* Selected Security groups Tags */}
             {selectedSgNames.length > 0 && (
               <HStack gap={2} className="flex-wrap">
                 {selectedSgNames.map((name, idx) => (
@@ -1974,7 +1951,7 @@ function NetworkSection({ onNext, isActive = false, isEditing = false, onEditCan
             <Disclosure.Panel>
               <VStack gap={3} className="pt-3">
                 <SearchInput
-                  placeholder="Find Floating IP with filters"
+                  placeholder="Search floating IP by attributes"
                   value={portSearch}
                   onChange={(e) => setPortSearch(e.target.value)}
                   onClear={() => setPortSearch('')}
@@ -2066,7 +2043,7 @@ function AuthenticationSection({ onNext, isActive = false, isEditing = false, on
     keyPairSearch === '' || kp.name.toLowerCase().includes(keyPairSearch.toLowerCase())
   );
 
-  // Key Pair columns
+  // Key pair columns
   const keyPairColumns: TableColumn<KeyPairRow>[] = [
     {
       key: 'select',
@@ -2090,6 +2067,7 @@ function AuthenticationSection({ onNext, isActive = false, isEditing = false, on
     <SectionCard isActive={isActive}>
       <SectionCard.Header 
         title="Authentication"
+        showDivider
         actions={isEditing ? (
           <HStack gap={2}>
             <Button variant="secondary" size="sm" onClick={onEditCancel}>Cancel</Button>
@@ -2109,22 +2087,22 @@ function AuthenticationSection({ onNext, isActive = false, isEditing = false, on
       </SectionCard.Header>
       <SectionCard.Content>
         <VStack gap={4}>
-          {/* Login Type Header */}
+          {/* Login type Header */}
           <span className="text-[14px] font-medium">Login type</span>
 
-          {/* Login Type Tabs */}
+          {/* Login type Tabs */}
           <Tabs value={loginType} onChange={(v) => setLoginType(v as 'keypair' | 'password')}>
             <TabList>
-              <Tab value="keypair">Key Pair</Tab>
+              <Tab value="keypair">Key pair</Tab>
               <Tab value="password">Password</Tab>
             </TabList>
 
-            {/* Key Pair Tab Content */}
+            {/* Key pair Tab Content */}
             <TabPanel value="keypair" className="pt-4">
               <VStack gap={3}>
                 {/* Search */}
                 <SearchInput
-                  placeholder="Find Key Pair with filters"
+                  placeholder="Search key pair by attributes"
                   value={keyPairSearch}
                   onChange={(e) => setKeyPairSearch(e.target.value)}
                   onClear={() => setKeyPairSearch('')}
@@ -2140,7 +2118,7 @@ function AuthenticationSection({ onNext, isActive = false, isEditing = false, on
                   onPageChange={setKeyPairPage}
                 />
 
-                {/* Key Pair Table */}
+                {/* Key pair Table */}
                 <Table
                   columns={keyPairColumns}
                   data={filteredKeyPairs}
@@ -2263,13 +2241,13 @@ interface AdvancedSectionProps {
 }
 
 function AdvancedSection({ onNext, isActive = false, isEditing = false, onEditCancel, onEditDone }: AdvancedSectionProps) {
-  // Server Group
+  // Server group
   const [serverGroupOpen, setServerGroupOpen] = useState(false);
   const [selectedServerGroupId, setSelectedServerGroupId] = useState<string | null>(null);
   const [serverGroupSearch, setServerGroupSearch] = useState('');
   const [serverGroupPage, setServerGroupPage] = useState(1);
 
-  // User Data
+  // User data
   const [userDataOpen, setUserDataOpen] = useState(false);
   const [userData, setUserData] = useState('');
 
@@ -2278,7 +2256,7 @@ function AdvancedSection({ onNext, isActive = false, isEditing = false, onEditCa
     serverGroupSearch === '' || sg.name.toLowerCase().includes(serverGroupSearch.toLowerCase())
   );
 
-  // Server Group columns
+  // Server group columns
   const serverGroupColumns: TableColumn<ServerGroupRow>[] = [
     {
       key: 'select',
@@ -2295,7 +2273,7 @@ function AdvancedSection({ onNext, isActive = false, isEditing = false, onEditCa
       ),
     },
     { key: 'name', label: 'Name', sortable: true },
-    { key: 'memberCount', label: 'Member Count', sortable: true, width: '120px' },
+    { key: 'memberCount', label: 'Member count', sortable: true, width: '120px' },
     { key: 'policy', label: 'Policy', sortable: true },
   ];
 
@@ -2316,6 +2294,7 @@ function AdvancedSection({ onNext, isActive = false, isEditing = false, onEditCa
     <SectionCard isActive={isActive}>
       <SectionCard.Header 
         title="Advanced" 
+        showDivider
         actions={isEditing ? (
           <HStack gap={2}>
             <Button variant="secondary" size="sm" onClick={onEditCancel}>Cancel</Button>
@@ -2325,11 +2304,11 @@ function AdvancedSection({ onNext, isActive = false, isEditing = false, onEditCa
       />
       <SectionCard.Content>
         <VStack gap={4}>
-          {/* Server Group Disclosure */}
+          {/* Server group Disclosure */}
           <Disclosure open={serverGroupOpen} onChange={setServerGroupOpen}>
             <Disclosure.Trigger>
               <HStack gap={2} align="center">
-                <span className="text-[14px] font-medium">Server Group</span>
+                <span className="text-[14px] font-medium">Server group</span>
                 <span className="text-[12px] text-[var(--color-text-subtle)]">(Optional)</span>
               </HStack>
             </Disclosure.Trigger>
@@ -2337,7 +2316,7 @@ function AdvancedSection({ onNext, isActive = false, isEditing = false, onEditCa
               <VStack gap={3} className="pt-3">
                 {/* Search */}
                 <SearchInput
-                  placeholder="Find Server Group with filters"
+                  placeholder="Search server group by attributes"
                   value={serverGroupSearch}
                   onChange={(e) => setServerGroupSearch(e.target.value)}
                   onClear={() => setServerGroupSearch('')}
@@ -2353,7 +2332,7 @@ function AdvancedSection({ onNext, isActive = false, isEditing = false, onEditCa
                   onPageChange={setServerGroupPage}
                 />
 
-                {/* Server Group Table */}
+                {/* Server group Table */}
                 <Table
                   columns={serverGroupColumns}
                   data={filteredServerGroups}
@@ -2367,11 +2346,11 @@ function AdvancedSection({ onNext, isActive = false, isEditing = false, onEditCa
           {/* Divider */}
           <div className="h-px bg-[var(--color-border-subtle)]" />
 
-          {/* User Data Disclosure */}
+          {/* User data Disclosure */}
           <Disclosure open={userDataOpen} onChange={setUserDataOpen}>
             <Disclosure.Trigger>
               <HStack gap={2} align="center">
-                <span className="text-[14px] font-medium">User Data</span>
+                <span className="text-[14px] font-medium">User data</span>
                 <span className="text-[12px] text-[var(--color-text-subtle)]">(Optional)</span>
               </HStack>
             </Disclosure.Trigger>
@@ -2400,7 +2379,7 @@ function AdvancedSection({ onNext, isActive = false, isEditing = false, onEditCa
                   </label>
                 </div>
 
-                {/* User Data Textarea */}
+                {/* User data Textarea */}
                 <Textarea
                   value={userData}
                   onChange={(e) => setUserData(e.target.value)}
@@ -2437,15 +2416,17 @@ interface TemplatesSectionProps {
   onSelect: (id: string) => void;
   onSkip: () => void;
   onNext: () => void;
+  isActive?: boolean;
   isEditing?: boolean;
   onEditCancel?: () => void;
   onEditDone?: () => void;
 }
 
-function TemplatesSection({ templates, selectedId, onSelect, onSkip, onNext, isEditing, onEditCancel, onEditDone }: TemplatesSectionProps) {
+function TemplatesSection({ templates, selectedId, onSelect, onSkip, onNext, isActive = false, isEditing = false, onEditCancel, onEditDone }: TemplatesSectionProps) {
   const [activeTab, setActiveTab] = useState('favorites');
   const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
+  const [resourceType, setResourceType] = useState<'vm' | 'baremetal'>('vm');
 
   // Filter templates based on active tab
   const getFilteredTemplates = () => {
@@ -2542,53 +2523,88 @@ function TemplatesSection({ templates, selectedId, onSelect, onSkip, onNext, isE
   ];
 
   return (
-    <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] ring-2 ring-[var(--color-action-primary)] rounded-lg px-4 py-3">
-      <VStack gap={3}>
-        {/* Section Header - h-8 matches other sections */}
-        <HStack justify="between" align="center" className="w-full h-8">
-          <h5 className="text-[length:var(--font-size-14)] font-semibold leading-[var(--line-height-20)] text-[var(--color-text-default)]">
-            Templates
-          </h5>
-          <Button variant="outline" size="sm">
-            <span>Create a new template</span>
-            <IconExternalLink size={12} stroke={1.5} />
-          </Button>
-        </HStack>
-
-        {/* Templates Label */}
-        <span className="text-[14px] font-medium text-[var(--color-text-default)]">
-          Templates <span className="ml-1 text-[var(--color-state-danger)]">*</span>
-        </span>
-
-        {/* Tabs */}
-        <Tabs value={activeTab} onChange={setActiveTab} size="sm" variant="underline">
-          <TabList>
-            <Tab value="favorites">Favorites</Tab>
-            <Tab value="current-tenant">Current tenant</Tab>
-            <Tab value="public">Public</Tab>
-          </TabList>
-
-          <TabPanel value="favorites" className="pt-3">
-            <VStack gap={3}>
-              {/* Search */}
-              <SearchInput
-                placeholder="Find template with filters"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                onClear={() => setSearchQuery('')}
-                size="sm"
-                className="w-[280px]"
+    <SectionCard isActive={isActive}>
+      <SectionCard.Header 
+        title="Launch type" 
+        showDivider
+        actions={isEditing ? (
+          <HStack gap={2}>
+            <Button variant="secondary" size="sm" onClick={onEditCancel}>Skip</Button>
+            <Button variant="primary" size="sm" onClick={onEditDone}>Apply</Button>
+          </HStack>
+        ) : undefined}
+      />
+      <SectionCard.Content gap={6}>
+        {/* Resource type */}
+        <VStack gap={2} align="start">
+          <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+            Resource type <span className="text-[var(--color-state-danger)]">*</span>
+          </span>
+          <span className="text-[12px] text-[var(--color-text-subtle)]">
+            Choose the resource category to apply to the flavor.
+          </span>
+          <VStack gap={2} align="start">
+            <label className="flex items-center gap-1.5 cursor-pointer">
+              <Radio
+                value="vm"
+                checked={resourceType === 'vm'}
+                onChange={() => setResourceType('vm')}
               />
+              <span className="text-[12px] text-[var(--color-text-default)]">Virtual Machine</span>
+            </label>
+            <label className="flex items-center gap-1.5 cursor-pointer">
+              <Radio
+                value="baremetal"
+                checked={resourceType === 'baremetal'}
+                onChange={() => setResourceType('baremetal')}
+              />
+              <span className="text-[12px] text-[var(--color-text-default)]">Bare metal</span>
+            </label>
+          </VStack>
+        </VStack>
 
-              {/* Pagination */}
-              <HStack justify="between" align="center" className="w-full">
+        {/* Templates Sub-section */}
+        <VStack gap={3} align="start" className="w-full">
+          <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+            Templates
+          </span>
+          <span className="text-[12px] text-[var(--color-text-subtle)]">
+            Select the template to use for creating the instance. A template includes predefined settings such as the image, flavor, and network configuration required for the instance.
+          </span>
+
+          {/* Tabs */}
+          <Tabs value={activeTab} onChange={setActiveTab} size="sm" variant="underline" className="w-full">
+            <TabList>
+              <Tab value="favorites">Favorites</Tab>
+              <Tab value="current-tenant">Current tenant</Tab>
+              <Tab value="public">Public</Tab>
+            </TabList>
+
+            <TabPanel value="favorites" className="pt-3">
+              <VStack gap={2} className="w-full">
+                {/* Action Bar - Search + Create Button */}
+                <HStack justify="between" align="center" className="w-full">
+                  <SearchInput
+                    placeholder="Search templates by attributes"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    onClear={() => setSearchQuery('')}
+                    size="sm"
+                    className="w-[280px]"
+                  />
+                  <Button variant="outline" size="sm">
+                    <span>Create a new template</span>
+                    <IconExternalLink size={12} stroke={1.5} />
+                  </Button>
+                </HStack>
+
+                {/* Pagination */}
                 <Pagination
                   currentPage={currentPage}
                   totalPages={Math.max(1, Math.ceil(filteredTemplates.length / 10))}
                   totalItems={filteredTemplates.length}
                   onPageChange={setCurrentPage}
                 />
-              </HStack>
 
               {/* Table with Selection */}
               {filteredTemplates.length > 0 ? (
@@ -2606,123 +2622,113 @@ function TemplatesSection({ templates, selectedId, onSelect, onSkip, onNext, isE
             </VStack>
           </TabPanel>
 
-          <TabPanel value="current-tenant" className="pt-3">
-            <VStack gap={3}>
-              {/* Search */}
-              <SearchInput
-                placeholder="Find template with filters"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                onClear={() => setSearchQuery('')}
-                size="sm"
-                className="w-[280px]"
-              />
+            <TabPanel value="current-tenant" className="pt-3">
+              <VStack gap={2} className="w-full">
+                {/* Action Bar - Search + Create Button */}
+                <HStack justify="between" align="center" className="w-full">
+                  <SearchInput
+                    placeholder="Search templates by attributes"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    onClear={() => setSearchQuery('')}
+                    size="sm"
+                    className="w-[280px]"
+                  />
+                  <Button variant="outline" size="sm">
+                    <span>Create a new template</span>
+                    <IconExternalLink size={12} stroke={1.5} />
+                  </Button>
+                </HStack>
 
-              {/* Pagination */}
-              <HStack justify="between" align="center" className="w-full">
+                {/* Pagination */}
                 <Pagination
                   currentPage={currentPage}
                   totalPages={Math.max(1, Math.ceil(filteredTemplates.length / 10))}
                   totalItems={filteredTemplates.length}
                   onPageChange={setCurrentPage}
                 />
-              </HStack>
 
-              {/* Table with Selection */}
-              {filteredTemplates.length > 0 ? (
-                <Table
-                  columns={columns}
-                  data={filteredTemplates}
-                  rowKey="id"
-                  onRowClick={(row) => onSelect(row.id)}
-                />
-              ) : (
-                <div className="text-[12px] text-[var(--color-text-subtle)] py-8 text-center border border-[var(--color-border-default)] rounded-md">
-                  No templates in current tenant
-                </div>
-              )}
-            </VStack>
-          </TabPanel>
+                {/* Table with Selection */}
+                {filteredTemplates.length > 0 ? (
+                  <Table
+                    columns={columns}
+                    data={filteredTemplates}
+                    rowKey="id"
+                    onRowClick={(row) => onSelect(row.id)}
+                  />
+                ) : (
+                  <div className="text-[12px] text-[var(--color-text-subtle)] py-8 text-center border border-[var(--color-border-default)] rounded-md">
+                    No templates in current tenant
+                  </div>
+                )}
+              </VStack>
+            </TabPanel>
 
-          <TabPanel value="public" className="pt-3">
-            <VStack gap={3}>
-              {/* Search */}
-              <SearchInput
-                placeholder="Find template with filters"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                onClear={() => setSearchQuery('')}
-                size="sm"
-                className="w-[280px]"
-              />
+            <TabPanel value="public" className="pt-3">
+              <VStack gap={2} className="w-full">
+                {/* Action Bar - Search + Create Button */}
+                <HStack justify="between" align="center" className="w-full">
+                  <SearchInput
+                    placeholder="Search templates by attributes"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    onClear={() => setSearchQuery('')}
+                    size="sm"
+                    className="w-[280px]"
+                  />
+                  <Button variant="outline" size="sm">
+                    <span>Create a new template</span>
+                    <IconExternalLink size={12} stroke={1.5} />
+                  </Button>
+                </HStack>
 
-              {/* Pagination */}
-              <HStack justify="between" align="center" className="w-full">
+                {/* Pagination */}
                 <Pagination
                   currentPage={currentPage}
                   totalPages={Math.max(1, Math.ceil(filteredTemplates.length / 10))}
                   totalItems={filteredTemplates.length}
                   onPageChange={setCurrentPage}
                 />
-              </HStack>
 
-              {/* Table with Selection */}
-              {filteredTemplates.length > 0 ? (
-                <Table
-                  columns={columns}
-                  data={filteredTemplates}
-                  rowKey="id"
-                  onRowClick={(row) => onSelect(row.id)}
-                />
-              ) : (
-                <div className="text-[12px] text-[var(--color-text-subtle)] py-8 text-center border border-[var(--color-border-default)] rounded-md">
-                  No public templates available
-                </div>
-              )}
-            </VStack>
-          </TabPanel>
-        </Tabs>
+                {/* Table with Selection */}
+                {filteredTemplates.length > 0 ? (
+                  <Table
+                    columns={columns}
+                    data={filteredTemplates}
+                    rowKey="id"
+                    onRowClick={(row) => onSelect(row.id)}
+                  />
+                ) : (
+                  <div className="text-[12px] text-[var(--color-text-subtle)] py-8 text-center border border-[var(--color-border-default)] rounded-md">
+                    No public templates available
+                  </div>
+                )}
+              </VStack>
+            </TabPanel>
+          </Tabs>
+        </VStack>
 
-        {/* Action Buttons */}
-        <HStack gap={2} justify="end" className="pt-2 w-full">
-          {isEditing ? (
-            <>
-              <Button
-                variant="secondary"
-                size="sm"
-                onClick={onEditCancel}
-              >
-                Skip
-              </Button>
-              <Button
-                variant="primary"
-                size="sm"
-                onClick={onEditDone}
-              >
-                Apply
-              </Button>
-            </>
-          ) : (
-            <>
-              <Button
-                variant="outline"
-                onClick={onSkip}
-                className="min-w-[80px]"
-              >
-                Skip
-              </Button>
-              <Button
-                variant="primary"
-                onClick={onNext}
-                className="min-w-[80px]"
-              >
-                Next
-              </Button>
-            </>
-          )}
-        </HStack>
-      </VStack>
-    </div>
+        {/* Action Buttons - only show when not editing */}
+        {!isEditing && (
+          <HStack gap={2} justify="end" className="pt-2 w-full">
+            <Button
+              variant="outline"
+              onClick={onSkip}
+              className="min-w-[80px]"
+            >
+              Skip
+            </Button>
+            <Button
+              variant="primary"
+              onClick={onNext}
+              className="min-w-[80px]"
+            >
+              Next
+            </Button>
+          </HStack>
+        )}
+      </SectionCard.Content>
+    </SectionCard>
   );
 }
 
@@ -2756,7 +2762,7 @@ export function CreateInstancePage() {
   const [numberOfInstances, setNumberOfInstances] = useState(1);
   const [selectedTemplateId, setSelectedTemplateId] = useState<string | null>(null);
   
-  // Basic Information state
+  // Basic information state
   const [instanceName, setInstanceName] = useState('');
   const [availabilityZone, setAvailabilityZone] = useState('nova');
   const [description, setDescription] = useState('');
@@ -2829,7 +2835,7 @@ export function CreateInstancePage() {
     
     const config = template.config;
     
-    // Basic Information
+    // Basic information
     if (config.instanceNamePrefix) setInstanceName(config.instanceNamePrefix);
     if (config.availabilityZone) setAvailabilityZone(config.availabilityZone);
     if (config.description) setDescription(config.description);
@@ -2860,12 +2866,12 @@ export function CreateInstancePage() {
     // Mark all sections as done except the next one (basic-info will be active)
     setSectionStatus({
       templates: 'done',
-      'basic-info': 'done',
+      'basic-info': 'active', // User needs to set Instance name
       image: 'done',
       flavor: 'done',
       network: 'done',
       authentication: 'done',
-      advanced: 'active', // Last section active for review
+      advanced: 'done',
     });
   };
 
@@ -2876,6 +2882,16 @@ export function CreateInstancePage() {
     // If templates section and a template is selected, apply the template
     if (section === 'templates' && selectedTemplateId) {
       applyTemplate(selectedTemplateId);
+      return;
+    }
+    
+    // If Basic information after template applied, just mark as done (don't go to next section)
+    // All other sections are already done from template
+    if (section === 'basic-info' && selectedTemplateId) {
+      setSectionStatus(prev => ({
+        ...prev,
+        [section]: 'done',
+      }));
       return;
     }
     
@@ -3037,7 +3053,7 @@ export function CreateInstancePage() {
   const getAuthSummary = () => {
     if (loginType === 'keypair') {
       const kp = mockKeyPairs.find(k => k.id === selectedKeyPairId);
-      return kp ? `Key Pair: ${kp.name}` : 'Key Pair: -';
+      return kp ? `Key pair: ${kp.name}` : 'Key pair: -';
     }
     return 'Password';
   };
@@ -3074,8 +3090,8 @@ export function CreateInstancePage() {
               <Breadcrumb
                 items={[
                   { label: 'Proj-1', href: '/project' },
-                  { label: 'Instances List', href: '/compute/instances' },
-                  { label: 'Create Instance' },
+                  { label: 'Instances list', href: '/compute/instances' },
+                  { label: 'Create instance' },
                 ]}
               />
             }
@@ -3095,7 +3111,7 @@ export function CreateInstancePage() {
             <VStack gap={6} className="min-w-[1176px]">
               {/* Page Title */}
               <h1 className="text-[18px] font-semibold leading-7 text-[var(--color-text-default)]">
-                Create Instance
+                Create instance
               </h1>
 
               {/* Content Area */}
@@ -3116,6 +3132,7 @@ export function CreateInstancePage() {
                       onSelect={setSelectedTemplateId}
                       onSkip={() => handleSkip('templates')}
                       onNext={() => handleNext('templates')}
+                      isActive
                       isEditing={editingSection === 'templates'}
                       onEditCancel={handleEditCancel}
                       onEditDone={handleEditDone}
@@ -3123,14 +3140,15 @@ export function CreateInstancePage() {
                   )}
                   {sectionStatus.templates === 'done' && (
                     <DoneSection title={SECTION_LABELS.templates} onEdit={() => handleEdit('templates')}>
-                      <DoneSectionRow label="Template" value={getTemplateSummary() || 'None selected'} />
+                      <SectionCard.DataRow label="Resource type" value="Virtual Machine" showDivider={false} />
+                      <SectionCard.DataRow label="Template" value={getTemplateSummary() || 'None selected'} />
                     </DoneSection>
                   )}
                   {sectionStatus.templates === 'skipped' && (
                     <SkippedSection title={SECTION_LABELS.templates} onEdit={() => handleEdit('templates')} />
                   )}
 
-                  {/* Basic Information Section */}
+                  {/* Basic information Section */}
                   {sectionStatus['basic-info'] === 'pre' && (
                     <PreSection title={SECTION_LABELS['basic-info']} />
                   )}
@@ -3156,9 +3174,9 @@ export function CreateInstancePage() {
                   )}
                   {sectionStatus['basic-info'] === 'done' && (
                     <DoneSection title={SECTION_LABELS['basic-info']} onEdit={() => handleEdit('basic-info')}>
-                      <DoneSectionRow label="Instance Name" value={instanceName || '-'} />
-                      <DoneSectionRow label="AZ (Availability Zone)" value={availabilityZone} />
-                      <DoneSectionRow label="Description" value={description || '-'} />
+                      <SectionCard.DataRow label="Instance name" value={instanceName || '-'} showDivider={false} />
+                      <SectionCard.DataRow label="AZ (Availability zone)" value={availabilityZone} />
+                      <SectionCard.DataRow label="Description" value={description || '-'} />
                     </DoneSection>
                   )}
 
@@ -3182,8 +3200,8 @@ export function CreateInstancePage() {
                   )}
                   {sectionStatus.image === 'done' && (
                     <DoneSection title={SECTION_LABELS.image} onEdit={() => handleEdit('image')}>
-                      <DoneSectionRow label="Image" value={getImageSummary() || '-'} />
-                      <DoneSectionRow label="System Disk" value={getStorageSummary()} />
+                      <SectionCard.DataRow label="Image" value={getImageSummary() || '-'} showDivider={false} />
+                      <SectionCard.DataRow label="System disk" value={getStorageSummary()} />
                     </DoneSection>
                   )}
 
@@ -3207,7 +3225,7 @@ export function CreateInstancePage() {
                   )}
                   {sectionStatus.flavor === 'done' && (
                     <DoneSection title={SECTION_LABELS.flavor} onEdit={() => handleEdit('flavor')}>
-                      <DoneSectionRow label="Flavor" value={getFlavorSummary() || '-'} />
+                      <SectionCard.DataRow label="Flavor" value={getFlavorSummary() || '-'} showDivider={false} />
                     </DoneSection>
                   )}
 
@@ -3229,8 +3247,8 @@ export function CreateInstancePage() {
                   )}
                   {sectionStatus.network === 'done' && (
                     <DoneSection title={SECTION_LABELS.network} onEdit={() => handleEdit('network')}>
-                      <DoneSectionRow label="Network" value={getNetworkSummary()} />
-                      <DoneSectionRow label="Security Groups" value={getSecurityGroupSummary()} />
+                      <SectionCard.DataRow label="Network" value={getNetworkSummary()} showDivider={false} />
+                      <SectionCard.DataRow label="Security groups" value={getSecurityGroupSummary()} />
                     </DoneSection>
                   )}
 
@@ -3252,7 +3270,7 @@ export function CreateInstancePage() {
                   )}
                   {sectionStatus.authentication === 'done' && (
                     <DoneSection title={SECTION_LABELS.authentication} onEdit={() => handleEdit('authentication')}>
-                      <DoneSectionRow label="Login Type" value={getAuthSummary()} />
+                      <SectionCard.DataRow label="Login type" value={getAuthSummary()} showDivider={false} />
                     </DoneSection>
                   )}
 
@@ -3274,12 +3292,13 @@ export function CreateInstancePage() {
                   )}
                   {sectionStatus.advanced === 'done' && (
                     <DoneSection title={SECTION_LABELS.advanced} onEdit={() => handleEdit('advanced')}>
-                      <DoneSectionRow 
-                        label="Server Group" 
+                      <SectionCard.DataRow 
+                        label="Server group" 
                         value={selectedServerGroupId ? mockServerGroups.find(sg => sg.id === selectedServerGroupId)?.name : '-'} 
+                        showDivider={false}
                       />
-                      <DoneSectionRow 
-                        label="User Data" 
+                      <SectionCard.DataRow 
+                        label="User data" 
                         value={userData ? 'Configured' : '-'} 
                       />
                     </DoneSection>

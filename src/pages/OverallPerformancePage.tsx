@@ -82,12 +82,12 @@ interface StatCard {
 const poolsStats: StatCard[] = [
   { label: 'Pools', value: '21' },
   { label: 'Pools with Compression', value: 'N/A' },
-  { label: 'Total Raw Capacity', value: '11.6', unit: 'TiB' },
-  { label: 'Raw Capacity Consumed', value: '47.4', unit: 'TiB' },
-  { label: 'Logical Stored', value: '15.8', unit: 'TiB' },
-  { label: 'Compression Savings', value: '0', unit: 'B' },
-  { label: 'Compression Eligibility', value: 'N/A' },
-  { label: 'Compression Factor', value: 'N/A' },
+  { label: 'Total raw capacity', value: '11.6', unit: 'TiB' },
+  { label: 'Raw capacity Consumed', value: '47.4', unit: 'TiB' },
+  { label: 'Logical stored', value: '15.8', unit: 'TiB' },
+  { label: 'Compression savings', value: '0', unit: 'B' },
+  { label: 'Compression eligibility', value: 'N/A' },
+  { label: 'Compression factor', value: 'N/A' },
 ];
 
 // Generate mock series data
@@ -154,7 +154,7 @@ const hostsStats: StatCard[] = [
   { label: 'AVG RAM Utilization', value: '33.8', unit: '%' },
   { label: 'Physical IOPS', value: '9256' },
   { label: 'AVG Disk Utilization', value: '19', unit: '%' },
-  { label: 'Network Load', value: '57.5', unit: 'MiB' },
+  { label: 'Network load', value: '57.5', unit: 'MiB' },
 ];
 
 // CPU Busy chart series
@@ -166,7 +166,7 @@ const cpuBusySeries = [
   { name: 'b0x/2e1-ceph0dg002', color: chartColors.pink400, data: [0.15, 0.2, 0.18, 0.22, 0.25, 0.3] },
 ];
 
-// Network Load chart series
+// Network load chart series
 const networkLoadSeries = [
   { name: 'b0x/2e1-ceph0dg-c01', color: chartColors.cyan400, data: [8, 10, 12, 15, 18, 22] },
   { name: 'b0x/2e1-ceph0dg-c02', color: chartColors.emerald400, data: [12, 15, 18, 22, 28, 35] },
@@ -231,7 +231,7 @@ const osdWriteLatenciesSeries = [
   { name: 'MAX write', color: chartColors.amber400, data: [4.8, 5.2, 6.2, 7.0, 6.5, 6.0] },
 ];
 
-// OSD Pie Chart Data
+// OSD Pie chart Data
 const osdTypesSummaryData = [
   { name: 'hdd', value: 15 },
   { name: 'nvme', value: 25 },
@@ -744,7 +744,7 @@ function ChartCard({ title, series, yAxisFormatter = (v: number) => `${v}`, isDa
 }
 
 /* ----------------------------------------
-   EmptyStateChartCard Component (No Data Area Chart)
+   EmptyStateChartCard Component (No Data Area chart)
    ---------------------------------------- */
 
 interface EmptyStateChartCardProps {
@@ -823,7 +823,7 @@ function EmptyStateChartCard({ title, yAxisFormatter = (v: number) => `${v}`, is
 }
 
 /* ----------------------------------------
-   Overall Performance Page
+   Overall performance Page
    ---------------------------------------- */
 
 export function OverallPerformancePage() {
@@ -844,9 +844,9 @@ export function OverallPerformancePage() {
 
   // Pool Overview table columns
   const poolOverviewColumns: TableColumn<PoolOverviewRow>[] = [
-    { key: 'poolName', label: 'Pool Name', flex: 1, sortable: true },
+    { key: 'poolName', label: 'Pool name', flex: 1, sortable: true },
     { key: 'type', label: 'Type', flex: 1, sortable: false },
-    { key: 'usableFree', label: 'Usable Free', flex: 1, sortable: true },
+    { key: 'usableFree', label: 'Usable free', flex: 1, sortable: true },
     { key: 'percentUsed', label: '% Used', flex: 1, sortable: true },
     { 
       key: 'growth5d', 
@@ -864,7 +864,7 @@ export function OverallPerformancePage() {
     { key: 'stored', label: 'Stored', flex: 1, sortable: true },
     { 
       key: 'id', 
-      label: 'Detail Performance', 
+      label: 'Detail performance', 
       width: '140px',
       align: 'center' as const,
       render: () => (
@@ -878,11 +878,11 @@ export function OverallPerformancePage() {
   // Host Overview table columns
   const hostOverviewColumns: TableColumn<HostOverviewRow>[] = [
     { key: 'hostname', label: 'Hostname', flex: 2, sortable: true },
-    { key: 'totalMemory', label: 'Total Memory', flex: 1, sortable: true },
-    { key: 'rawCapacity', label: 'Raw Capacity', flex: 1, sortable: true },
+    { key: 'totalMemory', label: 'Total memory', flex: 1, sortable: true },
+    { key: 'rawCapacity', label: 'Raw capacity', flex: 1, sortable: true },
     { 
       key: 'id', 
-      label: 'Detail Performance', 
+      label: 'Detail performance', 
       width: '140px',
       align: 'center' as const,
       render: () => (
@@ -912,7 +912,7 @@ export function OverallPerformancePage() {
         </span>
       )
     },
-    { key: 'slowOps', label: 'Slow Ops', flex: 2, sortable: true },
+    { key: 'slowOps', label: 'Slow ops', flex: 2, sortable: true },
     { 
       key: 'id', 
       label: 'Action', 
@@ -960,7 +960,7 @@ export function OverallPerformancePage() {
               <Breadcrumb
                 items={[
                   { label: 'Home', href: '/storage' },
-                  { label: 'Overall Performance' },
+                  { label: 'Overall performance' },
                 ]}
               />
             }
@@ -976,8 +976,8 @@ export function OverallPerformancePage() {
             <VStack gap={6} className="min-w-[1176px]">
               {/* Page Header */}
               <div className="flex items-center justify-between h-8">
-                <h1 className="text-[length:var(--font-size-16)] font-semibold text-[var(--color-text-default)]">
-                  Overall Performance
+                <h1 className="text-[length:var(--font-size-16)] font-semibold leading-6 text-[var(--color-text-default)]">
+                  Overall performance
                 </h1>
               </div>
 
@@ -1114,7 +1114,7 @@ export function OverallPerformancePage() {
                         </div>
                         <div className="flex-1">
                           <ChartCard
-                            title="Network Load"
+                            title="Network load"
                             series={networkLoadSeries}
                             yAxisFormatter={(v) => `${v} MiB/s`}
                             isDarkMode={isDark}
@@ -1212,7 +1212,7 @@ export function OverallPerformancePage() {
                         </div>
                       </div>
 
-                      {/* Pie Charts Row */}
+                      {/* Pie charts Row */}
                       <div className="flex gap-6">
                         <PieChartCard 
                           title="OSD Types Summary"
@@ -1295,7 +1295,7 @@ export function OverallPerformancePage() {
                             <SectionCard.Content gap={0} className="overflow-auto flex-1">
                               <Table<{ id: string; imageName: string; throughput: string }>
                                 columns={[
-                                  { key: 'imageName', label: 'Image Name', flex: 1, sortable: true },
+                                  { key: 'imageName', label: 'Image name', flex: 1, sortable: true },
                                   { key: 'throughput', label: 'Throughput', flex: 1, sortable: true },
                                 ]}
                                 data={[
@@ -1320,7 +1320,7 @@ export function OverallPerformancePage() {
                             <SectionCard.Content gap={0} className="overflow-auto flex-1">
                               <Table<{ id: string; imageName: string; latency: string }>
                                 columns={[
-                                  { key: 'imageName', label: 'Image Name', flex: 1, sortable: true },
+                                  { key: 'imageName', label: 'Image name', flex: 1, sortable: true },
                                   { key: 'latency', label: 'Latency', flex: 1, sortable: true },
                                 ]}
                                 data={[
@@ -1417,7 +1417,7 @@ export function OverallPerformancePage() {
                             columns={[
                               { 
                                 key: 'imageName', 
-                                label: 'Image Name', 
+                                label: 'Image name', 
                                 flex: 1, 
                                 sortable: true,
                                 render: (_, row) => (

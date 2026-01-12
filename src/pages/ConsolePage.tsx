@@ -16,7 +16,7 @@ import { useSidebar } from '@/contexts/SidebarContext';
 type ConnectionStatus = 'connected' | 'connecting' | 'disconnected';
 
 /* ----------------------------------------
-   Connection Status Indicator
+   Connection Status indicator
    ---------------------------------------- */
 
 function ConnectionStatusIndicator({ status }: { status: ConnectionStatus }) {
@@ -93,7 +93,7 @@ export function ConsolePage() {
     const newTabId = `tab-${Date.now()}`;
     addTab({
       id: newTabId,
-      label: 'New Tab',
+      label: 'New tab',
       path: '/',
       closable: true,
     });
@@ -249,7 +249,7 @@ export function ConsolePage() {
                   <IconDownload size={14} stroke={1} />
                 </button>
 
-                {/* Connection Status Indicator */}
+                {/* Connection Status indicator */}
                 <ConnectionStatusIndicator status={connectionStatus} />
               </div>
 

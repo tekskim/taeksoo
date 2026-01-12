@@ -135,7 +135,7 @@ export default function IAMActiveSessionsPage() {
   const itemsPerPage = 10;
 
   useEffect(() => {
-    updateActiveTabLabel('Active Sessions');
+    updateActiveTabLabel('Active sessions');
   }, [updateActiveTabLabel]);
 
   const sidebarWidth = sidebarOpen ? 200 : 0;
@@ -154,16 +154,24 @@ export default function IAMActiveSessionsPage() {
     currentPage * itemsPerPage
   );
 
-  // Context menu items
-  const contextMenuItems: ContextMenuItem[] = [
-    { id: 'terminate', label: 'Terminate session', danger: true },
-    { id: 'view-details', label: 'View details' },
+  // Context menu items factory
+  const getContextMenuItems = (row: ActiveSession): ContextMenuItem[] => [
+    {
+      id: 'terminate-session',
+      label: 'Terminate this session',
+      onClick: () => console.log('Terminate session', row.id),
+    },
+    {
+      id: 'terminate-all',
+      label: 'Terminate all sessions of this user',
+      onClick: () => console.log('Terminate all sessions of user', row.user),
+    },
   ];
 
   // Breadcrumb items
   const breadcrumbItems = [
     { label: 'IAM', href: '/iam' },
-    { label: 'Active Sessions' },
+    { label: 'Active sessions' },
   ];
 
   // Table columns
@@ -211,12 +219,12 @@ export default function IAMActiveSessionsPage() {
       width: 72,
       align: 'center',
       render: (_, row) => (
-        <ContextMenu items={contextMenuItems} onSelect={(itemId) => console.log(itemId, row.id)}>
+        <ContextMenu items={getContextMenuItems(row)} trigger="click">
           <button
             type="button"
-            className="p-1.5 rounded-md hover:bg-[var(--color-surface-subtle)] transition-colors"
+            className="flex items-center justify-center w-7 h-7 rounded-md bg-transparent hover:bg-[var(--color-surface-muted)] active:bg-[var(--color-border-subtle)] transition-colors cursor-pointer"
           >
-            <IconAction size={16} stroke={1} />
+            <IconAction size={16} stroke={1} className="text-[var(--color-text-default)]" />
           </button>
         </ContextMenu>
       ),
@@ -252,7 +260,7 @@ export default function IAMActiveSessionsPage() {
               {/* Header */}
               <HStack justify="between" align="center" className="w-full min-h-[28px]">
                 <h1 className="text-[16px] font-semibold leading-6 text-[var(--color-text-default)]">
-                  Active Sessions
+                  Active sessions
                 </h1>
               </HStack>
 
@@ -262,7 +270,7 @@ export default function IAMActiveSessionsPage() {
                   {/* Search */}
                   <HStack gap={1} align="center">
                     <SearchInput
-                      placeholder="Find session with filters"
+                      placeholder="Search session by attributes"
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
                       className="w-[280px]"

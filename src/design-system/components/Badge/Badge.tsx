@@ -47,19 +47,19 @@ export interface BadgeProps extends HTMLAttributes<HTMLSpanElement> {
 const themeStyles = {
   // Solid variants (colored bg + light text)
   solid: {
-    blue: 'bg-[var(--color-blue-500)] text-[var(--color-blue-50)]',
-    red: 'bg-[var(--color-red-500)] text-[var(--color-red-50)]',
-    green: 'bg-[var(--color-green-500)] text-[var(--color-green-50)]',
-    yellow: 'bg-[var(--color-orange-500)] text-white',
-    gray: 'bg-[var(--color-slate-500)] text-[var(--color-slate-50)]',
+    blue: 'bg-[var(--color-state-info)] text-white',
+    red: 'bg-[var(--color-state-danger)] text-white',
+    green: 'bg-[var(--color-state-success)] text-white',
+    yellow: 'bg-[var(--color-state-warning)] text-white',
+    gray: 'bg-[var(--color-text-subtle)] text-white',
   },
-  // Subtle variants (light bg + colored text)
+  // Subtle variants (light bg + colored text) - uses semantic tokens for dark mode support
   subtle: {
-    blue: 'bg-[var(--color-blue-50)] text-[var(--color-blue-600)]',
-    red: 'bg-[var(--color-red-50)] text-[var(--color-red-600)]',
-    green: 'bg-[var(--color-green-50)] text-[var(--color-green-600)]',
-    yellow: 'bg-[var(--color-yellow-50)] text-[var(--color-orange-600)]',
-    gray: 'bg-[var(--color-slate-100)] text-[var(--color-slate-600)]',
+    blue: 'bg-[var(--color-state-info-bg)] text-[var(--color-state-info-text)]',
+    red: 'bg-[var(--color-state-danger-bg)] text-[var(--color-state-danger-text)]',
+    green: 'bg-[var(--color-state-success-bg)] text-[var(--color-state-success-text)]',
+    yellow: 'bg-[var(--color-state-warning-bg)] text-[var(--color-state-warning-text)]',
+    gray: 'bg-[var(--color-surface-muted)] text-[var(--color-text-muted)]',
   },
 } as const;
 
@@ -120,11 +120,11 @@ export function Badge({
   );
 
   const dotColors: Record<BadgeTheme, string> = {
-    blue: resolvedType === 'solid' ? 'bg-[var(--color-blue-200)]' : 'bg-[var(--color-blue-500)]',
-    red: resolvedType === 'solid' ? 'bg-[var(--color-red-200)]' : 'bg-[var(--color-red-500)]',
-    green: resolvedType === 'solid' ? 'bg-[var(--color-green-200)]' : 'bg-[var(--color-green-500)]',
-    yellow: resolvedType === 'solid' ? 'bg-white' : 'bg-[var(--color-orange-500)]',
-    gray: resolvedType === 'solid' ? 'bg-[var(--color-slate-200)]' : 'bg-[var(--color-slate-500)]',
+    blue: resolvedType === 'solid' ? 'bg-white/50' : 'bg-[var(--color-state-info)]',
+    red: resolvedType === 'solid' ? 'bg-white/50' : 'bg-[var(--color-state-danger)]',
+    green: resolvedType === 'solid' ? 'bg-white/50' : 'bg-[var(--color-state-success)]',
+    yellow: resolvedType === 'solid' ? 'bg-white/50' : 'bg-[var(--color-state-warning)]',
+    gray: resolvedType === 'solid' ? 'bg-white/50' : 'bg-[var(--color-text-subtle)]',
   };
 
   return (

@@ -83,7 +83,7 @@ const mockViewPreferencesColumns: ColumnConfig[] = [
   { id: 'vcpu', label: 'vCPU', visible: true },
   { id: 'ram', label: 'RAM', visible: true },
   { id: 'network', label: 'Network', visible: true },
-  { id: 'createdAt', label: 'Created At', visible: false },
+  { id: 'createdAt', label: 'Created at', visible: false },
   { id: 'actions', label: 'Action', visible: true, locked: true },
 ];
 
@@ -330,7 +330,7 @@ export function DrawersPage() {
             breadcrumb={
               <Breadcrumb
                 items={[
-                  { label: 'Design System', href: '/design-system' },
+                  { label: 'Design system', href: '/design-system' },
                   { label: 'Drawers' },
                 ]}
               />
@@ -346,7 +346,7 @@ export function DrawersPage() {
               {/* Header */}
               <VStack gap={2}>
                 <h1 className="text-[24px] font-semibold text-[var(--color-text-default)]">
-                  Drawer Components
+                  Drawer components
                 </h1>
                 <p className="text-[14px] text-[var(--color-text-subtle)]">
                   Collection of drawer components used across the application. Click to preview each drawer.
@@ -362,19 +362,19 @@ export function DrawersPage() {
                   </h2>
                   <div className="flex flex-col gap-2">
                     <DrawerCard
-                      title="Create Instance Snapshot"
+                      title="Create instance snapshot"
                       description="Create a snapshot of an instance to capture its current system state as an image."
                       category="Instance"
                       onOpen={() => setIsCreateSnapshotOpen(true)}
                     />
                     <DrawerCard
-                      title="Edit Instance"
+                      title="Edit instance"
                       description="Edit instance name and description. Allows modification of basic instance metadata."
                       category="Instance"
                       onOpen={() => setIsEditInstanceOpen(true)}
                     />
                     <DrawerCard
-                      title="Lock Setting"
+                      title="Lock setting"
                       description="Lock or unlock an instance to prevent accidental deletion or modification."
                       category="Instance"
                       onOpen={() => setIsLockSettingOpen(true)}
@@ -389,13 +389,13 @@ export function DrawersPage() {
                   </h2>
                   <div className="flex flex-col gap-2">
                     <DrawerCard
-                      title="Edit Instance Snapshot"
+                      title="Edit instance Snapshot"
                       description="Edit the name and description of an instance snapshot."
                       category="Snapshot"
                       onOpen={() => setIsEditInstanceSnapshotOpen(true)}
                     />
                     <DrawerCard
-                      title="Create Volume from Instance Snapshot"
+                      title="Create volume from Instance Snapshot"
                       description="Create a new volume from an instance snapshot, containing the same data as the snapshot's system disk."
                       category="Snapshot"
                       onOpen={() => setIsCreateVolumeFromSnapshotOpen(true)}
@@ -410,31 +410,31 @@ export function DrawersPage() {
                   </h2>
                   <div className="flex flex-col gap-2">
                     <DrawerCard
-                      title="Create Volume Snapshot"
+                      title="Create volume snapshot"
                       description="Create a snapshot of a volume to back up its current data state for later restoration."
                       category="Volume"
                       onOpen={() => setIsCreateVolumeSnapshotOpen(true)}
                     />
                     <DrawerCard
-                      title="Create Volume Backup"
+                      title="Create volume backup"
                       description="Create a full backup of a volume and store it in the backup service for disaster recovery."
                       category="Volume"
                       onOpen={() => setIsCreateVolumeBackupOpen(true)}
                     />
                     <DrawerCard
-                      title="Clone Volume"
+                      title="Clone volume"
                       description="Create an exact copy of a volume for testing, backup, or new instance creation."
                       category="Volume"
                       onOpen={() => setIsCloneVolumeOpen(true)}
                     />
                     <DrawerCard
-                      title="Extend Volume"
+                      title="Extend volume"
                       description="Increase the size of a volume to expand its storage capacity."
                       category="Volume"
                       onOpen={() => setIsExtendVolumeOpen(true)}
                     />
                     <DrawerCard
-                      title="Create Image from Volume"
+                      title="Create image from Volume"
                       description="Create a new image using a volume as the source. The image will contain all data currently stored on the volume."
                       category="Volume"
                       onOpen={() => setIsCreateImageFromVolumeOpen(true)}
@@ -446,19 +446,19 @@ export function DrawersPage() {
                       onOpen={() => setIsEditVolumeOpen(true)}
                     />
                     <DrawerCard
-                      title="Change Volume Type"
+                      title="Change volume Type"
                       description="Change the storage type of this volume to another available volume type."
                       category="Volume"
                       onOpen={() => setIsChangeVolumeTypeOpen(true)}
                     />
                     <DrawerCard
-                      title="Create Transfer"
+                      title="Create transfer"
                       description="Create a transfer request to share this volume with another project."
                       category="Volume"
                       onOpen={() => setIsCreateTransferOpen(true)}
                     />
                     <DrawerCard
-                      title="Edit Volume Backup"
+                      title="Edit Volume backup"
                       description="Edit the name and description of an existing volume backup."
                       category="Volume"
                       onOpen={() => setIsEditVolumeBackupOpen(true)}
@@ -470,19 +470,19 @@ export function DrawersPage() {
                       onOpen={() => setIsAcceptVolumeTransferOpen(true)}
                     />
                     <DrawerCard
-                      title="Edit Volume Snapshot"
+                      title="Edit Volume snapshot"
                       description="Edit the name and description of an existing volume snapshot."
                       category="Volume"
                       onOpen={() => setIsEditVolumeSnapshotOpen(true)}
                     />
                     <DrawerCard
-                      title="Create Volume from Snapshot"
+                      title="Create volume from Snapshot"
                       description="Create a new volume from an existing volume snapshot with customizable capacity and type."
                       category="Volume"
                       onOpen={() => setIsCreateVolumeFromVolumeSnapshotOpen(true)}
                     />
                     <DrawerCard
-                      title="Create Volume from Backup"
+                      title="Create volume from Backup"
                       description="Create a new volume from an existing volume backup with customizable capacity, type, and availability zone."
                       category="Volume"
                       onOpen={() => setIsCreateVolumeFromBackupOpen(true)}
@@ -497,7 +497,7 @@ export function DrawersPage() {
                   </h2>
                   <div className="flex flex-col gap-2">
                     <DrawerCard
-                      title="Create Volume from Image"
+                      title="Create volume from Image"
                       description="Create a new volume using the selected image. The new volume will contain an identical copy of the image data."
                       category="Image"
                       onOpen={() => setIsCreateVolumeFromImageOpen(true)}
@@ -511,43 +511,43 @@ export function DrawersPage() {
                   </div>
                 </VStack>
 
-                {/* Key Pair Actions */}
+                {/* Key pair Actions */}
                 <VStack gap={2}>
                   <h2 className="text-[14px] font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
-                    Key Pair Actions
+                    Key pair Actions
                   </h2>
                   <div className="flex flex-col gap-2">
                     <DrawerCard
-                      title="Create Key Pair"
+                      title="Create Key pair"
                       description="Create a new SSH key pair or import an existing public key to securely access your instances."
-                      category="Key Pair"
+                      category="Key pair"
                       onOpen={() => setIsCreateKeyPairOpen(true)}
                     />
                     <DrawerCard
-                      title="Edit Key Pair"
+                      title="Edit Key pair"
                       description="Edit the name of an existing SSH key pair."
-                      category="Key Pair"
+                      category="Key pair"
                       onOpen={() => setIsEditKeyPairOpen(true)}
                     />
                   </div>
                 </VStack>
 
-                {/* Server Group Actions */}
+                {/* Server group Actions */}
                 <VStack gap={2}>
                   <h2 className="text-[14px] font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
-                    Server Group Actions
+                    Server group Actions
                   </h2>
                   <div className="flex flex-col gap-2">
                     <DrawerCard
-                      title="Create Server Group"
+                      title="Create Server group"
                       description="Create a server group to control how instances are placed across compute hosts using affinity/anti-affinity policies."
-                      category="Server Group"
+                      category="Server group"
                       onOpen={() => setIsCreateServerGroupOpen(true)}
                     />
                     <DrawerCard
-                      title="Edit Server Group"
+                      title="Edit Server group"
                       description="Edit the name of an existing server group."
-                      category="Server Group"
+                      category="Server group"
                       onOpen={() => setIsEditServerGroupOpen(true)}
                     />
                   </div>
@@ -572,7 +572,7 @@ export function DrawersPage() {
                       onOpen={() => setIsEditRouterOpen(true)}
                     />
                     <DrawerCard
-                      title="Create Static Route"
+                      title="Create static Route"
                       description="Add a static route to manually define traffic paths beyond connected subnets."
                       category="Router"
                       onOpen={() => setIsCreateStaticRouteOpen(true)}
@@ -604,47 +604,47 @@ export function DrawersPage() {
                   </div>
                 </VStack>
 
-                {/* Security Group Actions */}
+                {/* Security group Actions */}
                 <VStack gap={2}>
                   <h2 className="text-[14px] font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
-                    Security Group Actions
+                    Security group Actions
                   </h2>
                   <div className="flex flex-col gap-2">
                     <DrawerCard
-                      title="Create Security Group Rule"
+                      title="Create Security group Rule"
                       description="Create a rule to define allowed inbound or outbound network traffic for your security group."
-                      category="Security Group"
+                      category="Security group"
                       onOpen={() => setIsCreateSecurityGroupRuleOpen(true)}
                     />
                     <DrawerCard
-                      title="Create Security Group"
+                      title="Create Security group"
                       description="Create a security group to define network access rules for your instances."
-                      category="Security Group"
+                      category="Security group"
                       onOpen={() => setIsCreateSecurityGroupOpen(true)}
                     />
                     <DrawerCard
-                      title="Edit Security Group"
+                      title="Edit Security group"
                       description="Edit security group name and description."
-                      category="Security Group"
+                      category="Security group"
                       onOpen={() => setIsEditSecurityGroupOpen(true)}
                     />
                   </div>
                 </VStack>
 
-                {/* Load Balancer Actions */}
+                {/* Load balancer Actions */}
                 <VStack gap={2}>
                   <h2 className="text-[14px] font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
-                    Load Balancer Actions
+                    Load balancer Actions
                   </h2>
                   <div className="flex flex-col gap-2">
                     <DrawerCard
                       title="Add L7 Policy"
                       description="Add an L7 policy to control traffic routing based on layer 7 attributes like URL path or headers."
-                      category="Load Balancer"
+                      category="Load balancer"
                       onOpen={() => setIsAddL7PolicyOpen(true)}
                     />
                     <DrawerCard
-                      title="Register Certificate"
+                      title="Register certificate"
                       description="Register a certificate issued by an external CA for use within Compute resources."
                       category="Certificate"
                       onOpen={() => setIsRegisterCertificateOpen(true)}
@@ -656,39 +656,39 @@ export function DrawersPage() {
                       onOpen={() => setIsEditCertificateOpen(true)}
                     />
                     <DrawerCard
-                      title="Edit Load Balancer"
+                      title="Edit Load balancer"
                       description="Edit load balancer name, description, and admin state."
-                      category="Load Balancer"
+                      category="Load balancer"
                       onOpen={() => setIsEditLoadBalancerOpen(true)}
                     />
                     <DrawerCard
                       title="Edit Pool"
                       description="Edit pool settings including algorithm, session persistence, TLS, and admin state."
-                      category="Load Balancer"
+                      category="Load balancer"
                       onOpen={() => setIsEditPoolOpen(true)}
                     />
                     <DrawerCard
                       title="Add L7 Rule"
                       description="Add an L7 rule to match incoming requests based on headers, paths, or other attributes."
-                      category="Load Balancer"
+                      category="Load balancer"
                       onOpen={() => setIsAddL7RuleOpen(true)}
                     />
                     <DrawerCard
                       title="Edit Listener"
                       description="Edit listener settings including name, connection limits, timeouts, and allowed CIDRs."
-                      category="Load Balancer"
+                      category="Load balancer"
                       onOpen={() => setIsEditListenerOpen(true)}
                     />
                     <DrawerCard
                       title="Create Health Monitor"
                       description="Create a health monitor for a pool to check backend member availability."
-                      category="Load Balancer"
+                      category="Load balancer"
                       onOpen={() => setIsCreateHealthMonitorOpen(true)}
                     />
                     <DrawerCard
                       title="Edit Member"
                       description="Edit pool member settings including weight, monitor address, backup, and admin state."
-                      category="Load Balancer"
+                      category="Load balancer"
                       onOpen={() => setIsEditMemberOpen(true)}
                     />
                   </div>
@@ -730,7 +730,7 @@ export function DrawersPage() {
         </div>
       </main>
 
-      {/* Drawer Components */}
+      {/* Drawer components */}
       <CreateInstanceSnapshotDrawer
         isOpen={isCreateSnapshotOpen}
         onClose={() => setIsCreateSnapshotOpen(false)}

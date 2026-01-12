@@ -248,7 +248,7 @@ const mockAttachedVolumes: AttachedVolume[] = [
     status: 'active',
     size: '500GiB',
     type: 'SSD',
-    diskTag: 'Data Disk',
+    diskTag: 'Data disk',
     bootable: false,
     access: '2025-11-10',
   },
@@ -440,7 +440,7 @@ export function InstanceDetailPage() {
   const securityRowsPerPage = 10;
   const securityTotalPages = Math.ceil(mockSecurityGroups.length / securityRowsPerPage);
   
-  // Instance Snapshots tab pagination state
+  // Instance snapshots tab pagination state
   const [snapshotCurrentPage, setSnapshotCurrentPage] = useState(1);
   const [snapshotSearchQuery, setSnapshotSearchQuery] = useState('');
   const snapshotRowsPerPage = 10;
@@ -547,7 +547,7 @@ export function InstanceDetailPage() {
             <Breadcrumb
               items={[
                 { label: 'Proj-1', href: '/project' },
-                { label: 'Instances List', href: '/compute/instances' },
+                { label: 'Instances list', href: '/compute/instances' },
                 { label: instance.name },
               ]}
             />
@@ -591,7 +591,7 @@ export function InstanceDetailPage() {
                   items={[
                     {
                       id: 'instance-status',
-                      label: 'Instance Status',
+                      label: 'Instance status',
                       submenu: [
                         { id: 'soft-reboot', label: 'Soft reboot', onClick: () => console.log('Soft reboot instance') },
                         { id: 'pause', label: 'Pause', onClick: () => console.log('Pause instance') },
@@ -618,7 +618,7 @@ export function InstanceDetailPage() {
                 <DetailHeader.InfoCard label="Status" value="Active" status="active" />
                 <DetailHeader.InfoCard label="ID" value={instance.id} copyable />
                 <DetailHeader.InfoCard label="Host" value={instance.host} />
-                <DetailHeader.InfoCard label="Created At" value={instance.createdAt} />
+                <DetailHeader.InfoCard label="Created at" value={instance.createdAt} />
               </DetailHeader.InfoGrid>
             </DetailHeader>
 
@@ -631,25 +631,25 @@ export function InstanceDetailPage() {
                   <Tab value="interfaces">Interfaces</Tab>
                   <Tab value="floating-ips">Floating IPs</Tab>
                   <Tab value="security">Security</Tab>
-                  <Tab value="snapshots">Instance Snapshots</Tab>
+                  <Tab value="snapshots">Instance snapshots</Tab>
                   <Tab value="monitoring">Monitoring</Tab>
-                  <Tab value="resource-map">Resource Map</Tab>
+                  <Tab value="resource-map">Resource map</Tab>
                   <Tab value="logs">Logs</Tab>
-                  <Tab value="action-logs">Action Logs</Tab>
+                  <Tab value="action-logs">Action logs</Tab>
                 </TabList>
 
                 {/* Details Tab Panel */}
                 <TabPanel value="details" className="pt-0">
                   <VStack gap={4} className="pt-6">
-                    {/* Basic Information */}
+                    {/* Basic information */}
                     <SectionCard>
                       <SectionCard.Header 
-                        title="Basic Information" 
+                        title="Basic information" 
                         actions={<Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />}>Edit</Button>}
                       />
                       <SectionCard.Content>
-                        <SectionCard.DataRow label="Instance Name" value={instance.name} />
-                        <SectionCard.DataRow label="Availability Zone" value={instance.availabilityZone} />
+                        <SectionCard.DataRow label="Instance name" value={instance.name} />
+                        <SectionCard.DataRow label="Availability zone" value={instance.availabilityZone} />
                         <SectionCard.DataRow label="Description" value={instance.description} />
                       </SectionCard.Content>
                     </SectionCard>
@@ -659,7 +659,7 @@ export function InstanceDetailPage() {
                       <SectionCard.Header title="Flavor" />
                       <SectionCard.Content>
                         <SectionCard.DataRow 
-                          label="Flavor Name" 
+                          label="Flavor name" 
                           value={instance.flavor.name} 
                           isLink 
                           linkHref="/flavors" 
@@ -689,7 +689,7 @@ export function InstanceDetailPage() {
                       <SectionCard.Header title="Authentication" />
                       <SectionCard.Content>
                         <SectionCard.DataRow 
-                          label="Key Pair" 
+                          label="Key pair" 
                           value={instance.keyPair} 
                           isLink 
                           linkHref="/key-pairs" 
@@ -703,7 +703,7 @@ export function InstanceDetailPage() {
                         title="Advanced" 
                         actions={
                           <Button variant="secondary" size="sm">
-                            Manage Tags
+                            Manage tags
                           </Button>
                         }
                       />
@@ -713,13 +713,13 @@ export function InstanceDetailPage() {
                           value="Team: Backend"
                         />
                         <SectionCard.DataRow 
-                          label="Server Group" 
+                          label="Server group" 
                           value={instance.serverGroup} 
                           isLink 
                           linkHref="/server-groups" 
                         />
                         <SectionCard.DataRow 
-                          label="User Data" 
+                          label="User data" 
                           value={instance.userData} 
                         />
                       </SectionCard.Content>
@@ -736,13 +736,13 @@ export function InstanceDetailPage() {
                         Volumes
                       </h2>
                       <Button variant="secondary" size="sm" leftIcon={<IconCirclePlus size={12} />}>
-                        Attach Volume
+                        Attach volume
                       </Button>
                     </div>
 
                     {/* Search */}
                     <SearchInput
-                      placeholder="Find volume with filters"
+                      placeholder="Search volume by attributes"
                       size="sm"
                       className="w-[280px]"
                     />
@@ -798,7 +798,7 @@ export function InstanceDetailPage() {
                         },
                         {
                           key: 'diskTag',
-                          label: 'Disk Tag',
+                          label: 'Disk tag',
                         },
                         {
                           key: 'bootable',
@@ -818,14 +818,14 @@ export function InstanceDetailPage() {
                             const volumeMenuItems: ContextMenuItem[] = [
                               {
                                 id: 'data-protection',
-                                label: 'Data Protection',
+                                label: 'Data protection',
                                 submenu: [
-                                  { id: 'create-snapshot', label: 'Create Volume Snapshot', onClick: () => console.log('Create snapshot', row.id) },
-                                  { id: 'create-backup', label: 'Create Volume Backup', onClick: () => console.log('Create backup', row.id) },
-                                  { id: 'clone-volume', label: 'Clone Volume', onClick: () => console.log('Clone volume', row.id) },
+                                  { id: 'create-snapshot', label: 'Create volume snapshot', onClick: () => console.log('Create snapshot', row.id) },
+                                  { id: 'create-backup', label: 'Create volume backup', onClick: () => console.log('Create backup', row.id) },
+                                  { id: 'clone-volume', label: 'Clone volume', onClick: () => console.log('Clone volume', row.id) },
                                 ],
                               },
-                              { id: 'extend-volume', label: 'Extend Volume', onClick: () => console.log('Extend volume', row.id) },
+                              { id: 'extend-volume', label: 'Extend volume', onClick: () => console.log('Extend volume', row.id) },
                               { id: 'bootable', label: 'Bootable', onClick: () => console.log('Toggle bootable', row.id) },
                               { id: 'detach', label: 'Detach', status: 'danger', onClick: () => console.log('Detach volume', row.id) },
                             ];
@@ -856,12 +856,12 @@ export function InstanceDetailPage() {
                         Interfaces
                       </h2>
                       <Button variant="secondary" size="sm" leftIcon={<IconCirclePlus size={12} />}>
-                        Attach Interface
+                        Attach interface
                       </Button>
                     </div>
 
                     {/* Search */}
-                    <SearchInput placeholder="Find Interface with filters" size="sm" className="w-[280px]" />
+                    <SearchInput placeholder="Search interface by attributes" size="sm" className="w-[280px]" />
 
                     {/* Pagination */}
                     <Pagination
@@ -941,14 +941,14 @@ export function InstanceDetailPage() {
                         },
                         {
                           key: 'macAddress',
-                          label: 'Mac Address',
+                          label: 'Mac address',
                           render: (_value: string, iface: AttachedInterface) => (
                             <span className="text-[var(--color-text-default)]">{iface.macAddress}</span>
                           ),
                         },
                         {
                           key: 'createdAt',
-                          label: 'Created At',
+                          label: 'Created at',
                           sortable: true,
                           render: (_value: string, iface: AttachedInterface) => (
                             <span className="text-[var(--color-text-default)]">{iface.createdAt}</span>
@@ -990,12 +990,12 @@ export function InstanceDetailPage() {
                         Floating IPs
                       </h2>
                       <Button variant="secondary" size="sm" leftIcon={<IconCirclePlus size={12} />}>
-                        Associate Floating IP
+                        Associate floating IP
                       </Button>
                     </div>
 
                     {/* Search */}
-                    <SearchInput placeholder="Find Floating IP with filters" size="sm" className="w-[280px]" />
+                    <SearchInput placeholder="Search floating IP by attributes" size="sm" className="w-[280px]" />
 
                     {/* Pagination */}
                     <Pagination
@@ -1042,7 +1042,7 @@ export function InstanceDetailPage() {
                         },
                         {
                           key: 'createdAt',
-                          label: 'Created At',
+                          label: 'Created at',
                           sortable: true,
                         },
                         {
@@ -1078,10 +1078,10 @@ export function InstanceDetailPage() {
                     {/* Header */}
                     <div className="flex items-center justify-between w-full">
                       <h2 className="text-[16px] font-semibold leading-6 text-[var(--color-text-default)]">
-                        Security Groups
+                        Security groups
                       </h2>
                       <Button variant="secondary" size="sm" leftIcon={<IconCirclePlus size={12} />}>
-                        Attach Security Group
+                        Attach Security group
                       </Button>
                     </div>
 
@@ -1107,7 +1107,7 @@ export function InstanceDetailPage() {
                     </div>
 
                     {/* Search */}
-                    <SearchInput placeholder="Find Security Group with filters" size="sm" className="w-[280px]" />
+                    <SearchInput placeholder="Search security group by attributes" size="sm" className="w-[280px]" />
 
                     {/* Pagination */}
                     <Pagination
@@ -1147,7 +1147,7 @@ export function InstanceDetailPage() {
                         },
                         {
                           key: 'createdAt',
-                          label: 'Created At',
+                          label: 'Created at',
                           sortable: true,
                           render: (_value: string, row: SecurityGroup) => (
                             <span className="text-[var(--color-text-default)]">{row.createdAt}</span>
@@ -1180,12 +1180,12 @@ export function InstanceDetailPage() {
                   </VStack>
                 </TabPanel>
 
-                {/* Instance Snapshots Tab Panel */}
+                {/* Instance snapshots Tab Panel */}
                 <TabPanel value="snapshots" className="pt-0">
                   <VStack gap={3} className="pt-6">
                     {/* Header */}
                     <div className="flex items-center justify-between w-full">
-                      <h2 className="text-[16px] font-semibold leading-6 text-[var(--color-text-default)]">Instance Snapshots</h2>
+                      <h2 className="text-[16px] font-semibold leading-6 text-[var(--color-text-default)]">Instance snapshots</h2>
                       <Button variant="secondary" size="sm">
                         <IconCirclePlus size={12} />
                         Create Snapshot
@@ -1194,7 +1194,7 @@ export function InstanceDetailPage() {
 
                     {/* Search */}
                       <SearchInput
-                        placeholder="Find Instance Snapshot with filters"
+                        placeholder="Search instance snapshot by attributes"
                         value={snapshotSearchQuery}
                         onChange={(e) => {
                           setSnapshotSearchQuery(e.target.value);
@@ -1254,12 +1254,12 @@ export function InstanceDetailPage() {
                         },
                         {
                           key: 'diskFormat',
-                          label: 'Disk Format',
+                          label: 'Disk format',
                           sortable: true,
                         },
                         {
                           key: 'createdAt',
-                          label: 'Created At',
+                          label: 'Created at',
                           sortable: true,
                         },
                         {
@@ -1270,8 +1270,8 @@ export function InstanceDetailPage() {
                           render: (_: unknown, row: InstanceSnapshot) => {
                             const snapshotMenuItems: ContextMenuItem[] = [
                               { id: 'edit', label: 'Edit', onClick: () => console.log('Edit snapshot', row.id) },
-                              { id: 'create-instance', label: 'Create Instance', onClick: () => console.log('Create instance from', row.id) },
-                              { id: 'create-volume', label: 'Create Volume', onClick: () => console.log('Create volume from', row.id) },
+                              { id: 'create-instance', label: 'Create instance', onClick: () => console.log('Create instance from', row.id) },
+                              { id: 'create-volume', label: 'Create volume', onClick: () => console.log('Create volume from', row.id) },
                               { id: 'delete', label: 'Delete', status: 'danger', onClick: () => console.log('Delete snapshot', row.id) },
                             ];
                             return (
@@ -1383,13 +1383,13 @@ export function InstanceDetailPage() {
                   <VStack gap={3} className="pt-6">
                     {/* Header */}
                     <div className="flex items-center h-7">
-                      <h2 className="text-[16px] font-semibold text-[var(--color-text-default)]">Action Logs</h2>
+                      <h2 className="text-[16px] font-semibold text-[var(--color-text-default)]">Action logs</h2>
                     </div>
 
                     {/* Search and Download */}
                     <div className="flex items-center gap-1">
                       <SearchInput
-                        placeholder="Find Action Logs with filters"
+                        placeholder="Search action logs by attributes"
                         value={actionLogSearchQuery}
                         onChange={(e) => {
                           setActionLogSearchQuery(e.target.value);

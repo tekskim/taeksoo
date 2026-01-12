@@ -50,7 +50,7 @@ interface NetworkDetail {
   access: string;
   external: boolean;
   createdAt: string;
-  // Basic Information
+  // Basic information
   networkName: string;
   availabilityZone: string;
   availabilityZoneHint: string;
@@ -329,20 +329,20 @@ export default function NetworkDetailPage() {
     },
     {
       key: 'gatewayIp',
-      label: 'Gateway IP',
+      label: 'Gateway IPP',
       flex: 1,
       sortable: true,
     },
     {
       key: 'portCount',
-      label: 'Port Count',
+      label: 'Port count',
       flex: 1,
       sortable: true,
       align: 'left',
     },
     {
       key: 'createdAt',
-      label: 'Created At',
+      label: 'Created at',
       flex: 1,
       sortable: true,
     },
@@ -403,7 +403,7 @@ export default function NetworkDetailPage() {
     },
     {
       key: 'attachedTo',
-      label: 'Attached To',
+      label: 'Attached to',
       flex: 1,
       render: (_, row) => row.attachedTo ? (
         <div className="flex items-center justify-between w-full">
@@ -436,7 +436,7 @@ export default function NetworkDetailPage() {
     },
     {
       key: 'ownedNetwork',
-      label: 'Owned Network',
+      label: 'Owned network',
       flex: 1,
       sortable: true,
       render: (_, row) => (
@@ -536,7 +536,7 @@ export default function NetworkDetailPage() {
                 <DetailHeader.Title>{network.name}</DetailHeader.Title>
                 <DetailHeader.Actions>
                   <Button variant="secondary" size="sm" leftIcon={<IconCirclePlus size={12} />}>
-                    Create Subnet
+                    Create subnet
                   </Button>
                   <Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />}>
                     Edit
@@ -552,10 +552,10 @@ export default function NetworkDetailPage() {
                     status="active"
                   />
                   <DetailHeader.InfoCard label="ID" value={network.id} copyable />
-                  <DetailHeader.InfoCard label="Admin State" value={network.adminState} />
+                  <DetailHeader.InfoCard label="Admin state" value={network.adminState} />
                   <DetailHeader.InfoCard label="Access" value={network.access} />
                   <DetailHeader.InfoCard label="External" value={network.external ? 'Yes' : 'No'} />
-                  <DetailHeader.InfoCard label="Created At" value={network.createdAt} />
+                  <DetailHeader.InfoCard label="Created at" value={network.createdAt} />
                 </DetailHeader.InfoGrid>
               </DetailHeader>
 
@@ -571,10 +571,10 @@ export default function NetworkDetailPage() {
                   {/* Details Tab Panel */}
                   <TabPanel value="details">
                     <VStack gap={4} className="pt-6">
-                      {/* Basic Information */}
+                      {/* Basic information */}
                       <SectionCard>
                         <SectionCard.Header 
-                          title="Basic Information" 
+                          title="Basic information" 
                           actions={
                             <Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />}>
                               Edit
@@ -582,9 +582,9 @@ export default function NetworkDetailPage() {
                           } 
                         />
                         <SectionCard.Content>
-                          <SectionCard.DataRow label="Network Name" value={network.networkName} />
-                          <SectionCard.DataRow label="AZ(Availability Zone)" value={network.availabilityZone} />
-                          <SectionCard.DataRow label="AZ(Availability Zone) Hint" value={network.availabilityZoneHint} />
+                          <SectionCard.DataRow label="Network name" value={network.networkName} />
+                          <SectionCard.DataRow label="AZ(Availability zone)" value={network.availabilityZone} />
+                          <SectionCard.DataRow label="AZ(Availability zone) Hint" value={network.availabilityZoneHint} />
                           <SectionCard.DataRow label="Description" value={network.description} />
                         </SectionCard.Content>
                       </SectionCard>
@@ -594,10 +594,10 @@ export default function NetworkDetailPage() {
                         <SectionCard.Header title="Specification" />
                         <SectionCard.Content>
                           <SectionCard.DataRow label="MTU" value={String(network.mtu)} />
-                          <SectionCard.DataRow label="Port Security" value={network.portSecurity ? 'Yes' : 'No'} />
-                          <SectionCard.DataRow label="Router External" value={network.routerExternal ? 'Yes' : 'No'} />
-                          <SectionCard.DataRow label="Provider Network Type" value={network.providerNetworkType} />
-                          <SectionCard.DataRow label="Provider Physical Network" value={network.providerPhysicalNetwork} />
+                          <SectionCard.DataRow label="Port security" value={network.portSecurity ? 'Yes' : 'No'} />
+                          <SectionCard.DataRow label="Router external" value={network.routerExternal ? 'Yes' : 'No'} />
+                          <SectionCard.DataRow label="Provider network Type" value={network.providerNetworkType} />
+                          <SectionCard.DataRow label="Provider physical Network" value={network.providerPhysicalNetwork} />
                           <SectionCard.DataRow label="Segmentation ID" value={network.segmentationId} />
                         </SectionCard.Content>
                       </SectionCard>
@@ -613,7 +613,7 @@ export default function NetworkDetailPage() {
                           Subnets
                         </h3>
                         <Button variant="secondary" size="sm" leftIcon={<IconCirclePlus size={12} />}>
-                          Create Subnet
+                          Create subnet
                         </Button>
                       </div>
 
@@ -625,7 +625,7 @@ export default function NetworkDetailPage() {
                             setSubnetSearchTerm(e.target.value);
                             setSubnetCurrentPage(1);
                           }}
-                          placeholder="Find Subnet with filters"
+                          placeholder="Search subnet by attributes"
                         />
                       </div>
 
@@ -675,7 +675,7 @@ export default function NetworkDetailPage() {
                             setPortSearchTerm(e.target.value);
                             setPortCurrentPage(1);
                           }}
-                          placeholder="Find port with filters"
+                          placeholder="Search port by attributes"
                         />
                       </div>
 
