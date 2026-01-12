@@ -163,8 +163,8 @@ export function AIPlatformSidebar() {
             <MenuItem
               icon={<IconTemplate size={18} stroke={1.5} />}
               label="My Templates"
-              href="/ai-platform/templates"
-              active={isActive('/ai-platform/templates')}
+              href="/ai-platform/my-templates"
+              active={isActive('/ai-platform/my-templates')}
             />
             <MenuItem
               icon={<IconBox size={18} stroke={1.5} />}
@@ -435,7 +435,7 @@ const routeConfigs: Record<string, RouteConfig> = {
     breadcrumbs: [{ label: 'AI Platform', href: '/ai-platform' }, { label: 'Infrastructure' }, { label: 'Workloads' }],
     section: 'Infrastructure',
   },
-  '/ai-platform/templates': {
+  '/ai-platform/my-templates': {
     title: 'My Templates',
     breadcrumbs: [{ label: 'AI Platform', href: '/ai-platform' }, { label: 'Infrastructure' }, { label: 'My Templates' }],
     section: 'Infrastructure',
@@ -747,7 +747,7 @@ function DashboardContent() {
             icon={<IconTemplate size={28} stroke={1.5} className="text-[var(--color-action-primary)]" />}
             count={20}
             label="My Templates"
-            onClick={() => navigate('/ai-platform/templates')}
+            onClick={() => navigate('/ai-platform/my-templates')}
           />
           <ServiceOverviewCard
             icon={<IconBox size={28} stroke={1.5} className="text-[var(--color-action-primary)]" />}
