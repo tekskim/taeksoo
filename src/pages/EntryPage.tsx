@@ -73,7 +73,7 @@ const appCards: AppCard[] = [
     icon: <img src={AIPlatformIcon} alt="AI Platform" className="w-16 h-16" />,
     path: '/ai-platform',
     color: 'from-pink-500 to-rose-500',
-    available: false,
+    available: true,
   },
   {
     id: 'ai-agent',
