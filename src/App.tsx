@@ -114,15 +114,9 @@ import MetallicPalettePage from '@/pages/MetallicPalettePage';
 // Pages - Desktop
 import { DesktopPage } from '@/pages/DesktopPage';
 
-// Pages - Settings
-import SettingsGeneralPage from '@/pages/SettingsGeneralPage';
-import SettingsAccountPage from '@/pages/SettingsAccountPage';
-import SettingsNotificationsPage from '@/pages/SettingsNotificationsPage';
-import SettingsInformationPage from '@/pages/SettingsInformationPage';
-
-// Pages - Mail Template
-import { MailTemplatePage } from '@/pages/MailTemplatePage';
-import { MailTemplatePreviewPage } from '@/pages/MailTemplatePreviewPage';
+// Pages - AI Platform
+import { AIPlatformPage } from '@/pages/AIPlatformPage';
+import { WorkloadDetailPage } from '@/pages/WorkloadDetailPage';
 
 // Layouts
 import { AgentAppLayout } from '@/layouts';
@@ -258,16 +252,10 @@ function AppRoutes() {
         {/* Desktop Routes */}
         <Route path="/desktop" element={<DesktopPage />} />
 
-        {/* Settings Routes */}
-        <Route path="/settings" element={<SettingsGeneralPage />} />
-        <Route path="/settings/general" element={<SettingsGeneralPage />} />
-        <Route path="/settings/account" element={<SettingsAccountPage />} />
-        <Route path="/settings/notifications" element={<SettingsNotificationsPage />} />
-        <Route path="/settings/information" element={<SettingsInformationPage />} />
-
-        {/* Mail Template Routes */}
-        <Route path="/mail-template" element={<MailTemplatePage />} />
-        <Route path="/mail-template/:templateId" element={<MailTemplatePreviewPage />} />
+        {/* AI Platform Routes */}
+        <Route path="/ai-platform" element={<AIPlatformPage />} />
+        <Route path="/ai-platform/workloads/:id" element={<WorkloadDetailPage />} />
+        <Route path="/ai-platform/*" element={<AIPlatformPage />} />
       </Routes>
   );
 }

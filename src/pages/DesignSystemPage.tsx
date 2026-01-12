@@ -22,6 +22,9 @@ import {
   Textarea,
   NumberInput,
   SearchInput,
+  FilterSearchInput,
+  type FilterField,
+  type AppliedFilter,
   Select,
   Slider,
   Chip,
@@ -63,15 +66,10 @@ import {
   Drawer,
   MonitoringToolbar,
   NotificationCenter,
-  // Wizard Pattern
-  WizardSection,
-  WizardSummary,
-  WizardSectionStatusIcon,
-  PreSection,
-  WritingSection,
-  SkippedSection,
-  DoneSection,
-  DoneSectionRow,
+  FloatingCard,
+  Loading,
+  SNBMenuItem,
+  CardTitle,
 } from '@/design-system';
 import type { WizardSectionState, WizardSummaryItem } from '@/design-system';
 import type { NotificationItem } from '@/design-system/components/NotificationCenter';
@@ -127,6 +125,7 @@ import {
   IconCircleCheck,
   IconBan,
   IconLoader,
+  IconLoader2,
   IconProgress,
   // Basic - UI
   IconSearch,
@@ -239,12 +238,15 @@ const foundationItems = [
 const formControlItems = [
   { id: 'button', label: 'Button', icon: IconClick },
   { id: 'input', label: 'Input', icon: IconForms },
+  { id: 'filter-search-input', label: 'Filter Search Input', icon: IconSearch },
   { id: 'select', label: 'Select', icon: IconSelector },
   { id: 'datepicker', label: 'DatePicker', icon: IconCalendar },
   { id: 'slider', label: 'Slider', icon: IconAdjustments },
   { id: 'chip', label: 'Chip', icon: IconTag },
   { id: 'pagination', label: 'Pagination', icon: IconProgress },
   { id: 'progress-bar', label: 'Progress Bar', icon: IconProgress },
+  { id: 'loading', label: 'Loading', icon: IconLoader2 },
+  { id: 'snb-menu-item', label: 'SNBMenuItem', icon: IconLayoutNavbar },
   { id: 'toggle', label: 'Toggle', icon: IconToggleRight },
   { id: 'checkbox', label: 'Checkbox', icon: IconSquareCheck },
   { id: 'radio', label: 'Radio', icon: IconCircle },
@@ -261,6 +263,7 @@ const navigationItems = [
   { id: 'badge', label: 'Badge', icon: IconTag },
   { id: 'breadcrumb', label: 'Breadcrumb', icon: IconChevronRight },
   { id: 'status-indicator', label: 'Status Indicator', icon: IconActivity },
+  { id: 'card-title', label: 'Card Title', icon: IconLayoutGrid },
   { id: 'tooltip', label: 'Tooltip', icon: IconMessage2 },
   { id: 'window-control', label: 'Window Control', icon: IconAppWindow },
 ];
@@ -276,6 +279,7 @@ const patternItems = [
   { id: 'drawer', label: 'Drawer', icon: IconLayoutGrid },
   { id: 'monitoring-toolbar', label: 'Monitoring Toolbar', icon: IconRefresh },
   { id: 'notification-center', label: 'Notification Center', icon: IconBell },
+  { id: 'floating-card', label: 'Floating Card', icon: IconLayoutGrid },
   { id: 'layout', label: 'Layout', icon: IconLayoutSidebar },
 ];
 
@@ -300,187 +304,63 @@ const componentItems = [
 const navItems = [...foundationItems, ...componentItems];
 
 /* ----------------------------------------
-   Wizard Pattern Section
+   Filter Search Input Demo
    ---------------------------------------- */
 
-function WizardPatternSection() {
-  const [sectionStatus, setSectionStatus] = useState<Record<string, WizardSectionState>>({
-    'launch-type': 'done',
-    'basic-info': 'active',
-    'image': 'done',
-    'flavor': 'pre',
-    'network': 'pre',
-    'advanced': 'skipped',
-  });
+function FilterSearchInputDemo() {
+  const [appliedFilters, setAppliedFilters] = useState<AppliedFilter[]>([]);
 
-  const summaryItems: WizardSummaryItem[] = [
-    { key: 'launch-type', label: 'Launch Type', status: sectionStatus['launch-type'] },
-    { key: 'basic-info', label: 'Basic Information', status: sectionStatus['basic-info'] },
-    { key: 'image', label: 'Image', status: sectionStatus['image'] },
-    { key: 'flavor', label: 'Flavor', status: sectionStatus['flavor'] },
-    { key: 'network', label: 'Network', status: sectionStatus['network'] },
-    { key: 'advanced', label: 'Advanced', status: sectionStatus['advanced'] },
+  // Define available filter fields
+  const filterFields: FilterField[] = [
+    {
+      id: 'name',
+      label: 'Name',
+      type: 'text',
+      placeholder: 'Enter name...',
+    },
+    {
+      id: 'status',
+      label: 'Status',
+      type: 'select',
+      options: [
+        { value: 'active', label: 'Active' },
+        { value: 'shutoff', label: 'Shutoff' },
+        { value: 'building', label: 'Building' },
+        { value: 'error', label: 'Error' },
+      ],
+    },
+    {
+      id: 'image',
+      label: 'Image',
+      type: 'text',
+      placeholder: 'Enter image name...',
+    },
+    {
+      id: 'flavor',
+      label: 'Flavor',
+      type: 'select',
+      options: [
+        { value: 'small', label: 'Small' },
+        { value: 'medium', label: 'Medium' },
+        { value: 'large', label: 'Large' },
+      ],
+    },
   ];
 
-  const handleStatusChange = (key: string, status: WizardSectionState) => {
-    setSectionStatus(prev => ({ ...prev, [key]: status }));
-  };
-
   return (
-    <VStack gap={8}>
-      {/* Design Tokens */}
-      <VStack gap={3}>
-        <Label>Section States (WizardSectionState)</Label>
-        <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
-          <code>'pre' | 'active' | 'done' | 'skipped' | 'writing'</code>
-        </div>
-      </VStack>
-
-      {/* Status Icons */}
-      <VStack gap={3}>
-        <Label>WizardSectionStatusIcon</Label>
-        <HStack gap={6}>
-          <HStack gap={2} align="center">
-            <WizardSectionStatusIcon status="pre" />
-            <span className="text-[length:var(--font-size-12)] text-[var(--color-text-muted)]">pre (대기)</span>
-          </HStack>
-          <HStack gap={2} align="center">
-            <WizardSectionStatusIcon status="active" />
-            <span className="text-[length:var(--font-size-12)] text-[var(--color-text-muted)]">active (진행 중)</span>
-          </HStack>
-          <HStack gap={2} align="center">
-            <WizardSectionStatusIcon status="done" />
-            <span className="text-[length:var(--font-size-12)] text-[var(--color-text-muted)]">done (완료)</span>
-          </HStack>
-          <HStack gap={2} align="center">
-            <WizardSectionStatusIcon status="skipped" />
-            <span className="text-[length:var(--font-size-12)] text-[var(--color-text-muted)]">skipped (건너뜀)</span>
-          </HStack>
-          <HStack gap={2} align="center">
-            <WizardSectionStatusIcon status="writing" />
-            <span className="text-[length:var(--font-size-12)] text-[var(--color-text-muted)]">writing (작성 중)</span>
-          </HStack>
-        </HStack>
-      </VStack>
-
-      {/* WizardSummary */}
-      <VStack gap={3}>
-        <Label>WizardSummary</Label>
-        <div className="w-[312px]">
-          <WizardSummary 
-            title="Summary" 
-            items={summaryItems}
-            onItemClick={(key) => console.log('Clicked:', key)}
-          />
-        </div>
-      </VStack>
-
-      {/* Section Components */}
-      <VStack gap={3}>
-        <Label>Section Components</Label>
-        <VStack gap={4} className="max-w-[600px]">
-          {/* PreSection */}
-          <VStack gap={1}>
-            <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">PreSection (대기 중)</span>
-            <PreSection title="Flavor" />
-          </VStack>
-
-          {/* WritingSection */}
-          <VStack gap={1}>
-            <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">WritingSection (작성 중)</span>
-            <WritingSection title="Image" />
-          </VStack>
-
-          {/* SkippedSection */}
-          <VStack gap={1}>
-            <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">SkippedSection (건너뜀)</span>
-            <SkippedSection title="Advanced" onEdit={() => console.log('Edit clicked')} />
-          </VStack>
-
-          {/* DoneSection */}
-          <VStack gap={1}>
-            <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">DoneSection (완료)</span>
-            <DoneSection title="Basic Information" onEdit={() => console.log('Edit clicked')}>
-              <DoneSectionRow label="Instance Name" value="my-instance-01" />
-              <DoneSectionRow label="AZ" value="nova (Default)" />
-              <DoneSectionRow label="Description" value="Test instance for development" />
-            </DoneSection>
-          </VStack>
-        </VStack>
-      </VStack>
-
-      {/* Interactive Demo */}
-      <VStack gap={3}>
-        <Label>Interactive Demo</Label>
-        <HStack gap={4} align="start">
-          {/* Status Controls */}
-          <VStack gap={2} className="w-[200px]">
-            <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">Change Status:</span>
-            {Object.keys(sectionStatus).map(key => (
-              <HStack key={key} gap={2} align="center" className="w-full">
-                <span className="text-[length:var(--font-size-11)] w-[100px] truncate">{key}</span>
-                <Select
-                  size="sm"
-                  value={sectionStatus[key]}
-                  onChange={(value) => handleStatusChange(key, value as WizardSectionState)}
-                  options={[
-                    { value: 'pre', label: 'pre' },
-                    { value: 'active', label: 'active' },
-                    { value: 'done', label: 'done' },
-                    { value: 'skipped', label: 'skipped' },
-                    { value: 'writing', label: 'writing' },
-                  ]}
-                  fullWidth
-                />
-              </HStack>
-            ))}
-          </VStack>
-
-          {/* Summary Preview */}
-          <div className="w-[312px]">
-            <WizardSummary 
-              title="Summary" 
-              items={summaryItems}
-            />
-          </div>
-        </HStack>
-      </VStack>
-
-      {/* Usage Code */}
-      <VStack gap={3}>
-        <Label>Usage</Label>
-        <div className="text-[length:var(--font-size-11)] font-mono p-4 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)] overflow-x-auto">
-          <pre className="whitespace-pre-wrap">{`import { 
-  WizardSummary, 
-  DoneSection, DoneSectionRow,
-  PreSection, WritingSection, SkippedSection,
-} from '@/design-system';
-import type { WizardSectionState, WizardSummaryItem } from '@/design-system';
-
-// 섹션 상태 관리
-const [sectionStatus, setSectionStatus] = useState<Record<string, WizardSectionState>>({
-  'basic-info': 'active',
-  'image': 'pre',
-  'flavor': 'pre',
-});
-
-// Summary 아이템
-const summaryItems: WizardSummaryItem[] = [
-  { key: 'basic-info', label: 'Basic Information', status: sectionStatus['basic-info'] },
-  { key: 'image', label: 'Image', status: sectionStatus['image'] },
-  { key: 'flavor', label: 'Flavor', status: sectionStatus['flavor'] },
-];
-
-// 렌더링
-<WizardSummary title="Summary" items={summaryItems} />
-
-<DoneSection title="Basic Information" onEdit={() => handleEdit('basic-info')}>
-  <DoneSectionRow label="Instance Name" value={instanceName} />
-  <DoneSectionRow label="AZ" value={az} />
-</DoneSection>`}</pre>
-        </div>
-      </VStack>
-    </VStack>
+    <div className="flex flex-col gap-4">
+      <FilterSearchInput
+        filters={filterFields}
+        appliedFilters={appliedFilters}
+        onFiltersChange={setAppliedFilters}
+        placeholder="Find Instance with filters"
+        className="w-[400px]"
+      />
+      <div className="text-[11px] text-[var(--color-text-subtle)] bg-[var(--color-surface-muted)] p-3 rounded-md">
+        <strong>Usage:</strong> Click the input to see available filters. Select a filter type, then enter a value (text) or choose from options (select).
+        Applied filters appear as removable tags below the input.
+      </div>
+    </div>
   );
 }
 
@@ -4421,6 +4301,63 @@ outline: 2px solid var(--color-border-focus);`}
                     </VStack>
                   </div>
                 </VStack>
+
+              </VStack>
+            </Section>
+
+            {/* Filter Search Input Component */}
+            <Section id="filter-search-input" title="Filter Search Input" description="Combined search and filter input with tag display for applied filters">
+              <VStack gap={8}>
+                {/* Design Tokens */}
+                <VStack gap={3}>
+                  <Label>Design Tokens</Label>
+                  <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
+                    <code>height: 32px (sm) / 36px (md)</code> · <code>padding: 8×12px</code> · <code>radius: 6px</code> · <code>font: 12px</code> · <code>chip-gap: 4px</code>
+                  </div>
+                </VStack>
+
+                {/* Features */}
+                <VStack gap={3}>
+                  <Label>Features</Label>
+                  <ul className="text-[length:var(--font-size-11)] text-[var(--color-text-muted)] list-disc list-inside space-y-1">
+                    <li>Click input to show available filter options</li>
+                    <li>Select filter field, then enter value (text) or select option (select type)</li>
+                    <li>Applied filters displayed as removable chips/tags</li>
+                    <li>Supports text and select filter types</li>
+                    <li>Clear all filters button when filters are applied</li>
+                  </ul>
+                </VStack>
+
+                {/* Interactive Demo */}
+                <VStack gap={3}>
+                  <Label>Interactive Demo</Label>
+                  <p className="text-[length:var(--font-size-11)] text-[var(--color-text-muted)]">
+                    Click the input below to see available filters. Select a filter, enter a value, and see it appear as a tag.
+                  </p>
+                  <FilterSearchInputDemo />
+                </VStack>
+
+                {/* Usage Example */}
+                <VStack gap={3}>
+                  <Label>Usage Example</Label>
+                  <div className="text-[length:var(--font-size-11)] text-[var(--color-text-muted)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)] font-mono whitespace-pre-wrap">
+{`const filterFields: FilterField[] = [
+  { id: 'name', label: 'Name', type: 'text', placeholder: 'Enter name...' },
+  { id: 'status', label: 'Status', type: 'select', options: [
+    { value: 'running', label: 'Running' },
+    { value: 'stopped', label: 'Stopped' },
+  ]},
+];
+
+<FilterSearchInput
+  filters={filterFields}
+  appliedFilters={appliedFilters}
+  onFiltersChange={setAppliedFilters}
+  placeholder="Search with filters..."
+  size="sm"
+/>`}
+                  </div>
+                </VStack>
               </VStack>
             </Section>
 
@@ -4555,6 +4492,45 @@ outline: 2px solid var(--color-border-focus);`}
                     ]}
                     className="w-[240px]"
                   />
+                </VStack>
+
+                {/* Clearable Select */}
+                <VStack gap={3}>
+                  <Label>Clearable Select</Label>
+                  <p className="text-[length:var(--font-size-11)] text-[var(--color-text-muted)]">
+                    Select with clear button (✕) and "Clear" option in dropdown. Useful for filter dropdowns.
+                  </p>
+                  <div className="flex gap-4 items-start">
+                    <VStack gap={1}>
+                      <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">All Statuses</span>
+                      <Select
+                        placeholder="All Statuses"
+                        defaultValue="all"
+                        clearable
+                        options={[
+                          { value: 'all', label: 'All Statuses' },
+                          { value: 'running', label: 'Running' },
+                          { value: 'pending', label: 'Pending' },
+                          { value: 'failed', label: 'Failed' },
+                        ]}
+                        className="w-[180px]"
+                      />
+                    </VStack>
+                    <VStack gap={1}>
+                      <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">All Resources</span>
+                      <Select
+                        placeholder="All Resources"
+                        defaultValue="all"
+                        clearable
+                        options={[
+                          { value: 'all', label: 'All Resources' },
+                          { value: 'gpu', label: 'GPU Usage' },
+                          { value: 'cpu', label: 'CPU Only' },
+                        ]}
+                        className="w-[180px]"
+                      />
+                    </VStack>
+                  </div>
                 </VStack>
               </VStack>
             </Section>
@@ -4918,6 +4894,136 @@ outline: 2px solid var(--color-border-focus);`}
                       <div className="w-4 h-4 rounded bg-[var(--color-border-default)]" />
                       <span className="text-[length:var(--font-size-11)] text-[var(--color-text-muted)]">Unlimited: Neutral</span>
                     </div>
+                  </div>
+                </VStack>
+              </VStack>
+            </Section>
+
+            {/* Loading Component */}
+            <Section id="loading" title="Loading" description="Loading indicators for various states">
+              <VStack gap={8}>
+                {/* Tokens */}
+                <VStack gap={3}>
+                  <Label>Design Tokens</Label>
+                  <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
+                    <code>spinner: 16/22/32px</code> · <code>progress: h-1</code> · <code>button: min-w-80px</code>
+                  </div>
+                </VStack>
+
+                {/* Spinner Variant */}
+                <VStack gap={3}>
+                  <Label>Spinner Variant</Label>
+                  <div className="flex gap-8 items-end p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-subtle)] rounded-[var(--radius-lg)]">
+                    <VStack gap={2} align="center">
+                      <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">Small</span>
+                      <Loading variant="spinner" size="sm" text="Loading" />
+                    </VStack>
+                    <VStack gap={2} align="center">
+                      <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">Medium</span>
+                      <Loading variant="spinner" size="md" text="Loading" />
+                    </VStack>
+                    <VStack gap={2} align="center">
+                      <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">Large</span>
+                      <Loading variant="spinner" size="lg" text="Loading" />
+                    </VStack>
+                  </div>
+                </VStack>
+
+                {/* Progress Variant */}
+                <VStack gap={3}>
+                  <Label>Progress Variant</Label>
+                  <div className="flex flex-col gap-4 p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-subtle)] rounded-[var(--radius-lg)]">
+                    <Loading 
+                      variant="progress" 
+                      text="Loading.."
+                      description="Create an instance to start using compute resources."
+                      progress={68}
+                      statusText="Status: parsing"
+                    />
+                  </div>
+                </VStack>
+
+                {/* Button Variant */}
+                <VStack gap={3}>
+                  <Label>Button Variant (Disabled Loading State)</Label>
+                  <div className="flex gap-4 p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-subtle)] rounded-[var(--radius-lg)]">
+                    <Loading variant="button" buttonLabel="Loading" />
+                    <Loading variant="button" buttonLabel="Saving" />
+                    <Loading variant="button" buttonLabel="Processing" />
+                  </div>
+                </VStack>
+              </VStack>
+            </Section>
+
+            {/* SNBMenuItem Component */}
+            <Section id="snb-menu-item" title="SNBMenuItem" description="Side Navigation Bar Menu Item with default, hover, and selected states">
+              <VStack gap={8}>
+                {/* Design Tokens */}
+                <VStack gap={3}>
+                  <Label>Design Tokens</Label>
+                  <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
+                    <code>size: 38×38px</code> · <code>padding: 8px 6px</code> · <code>radius: 8px</code> · <code>icon: 22px</code>
+                  </div>
+                </VStack>
+
+                {/* Status Variants */}
+                <VStack gap={3}>
+                  <Label>Status Variants</Label>
+                  <div className="flex gap-8 items-center p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-subtle)] rounded-[var(--radius-lg)]">
+                    <VStack gap={2} align="center">
+                      <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">Default</span>
+                      <SNBMenuItem status="default">
+                        <IconBoxMultiple size={22} stroke={1} />
+                      </SNBMenuItem>
+                    </VStack>
+                    <VStack gap={2} align="center">
+                      <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">Hover</span>
+                      <SNBMenuItem status="hover">
+                        <IconBoxMultiple size={22} stroke={1} />
+                      </SNBMenuItem>
+                    </VStack>
+                    <VStack gap={2} align="center">
+                      <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">Selected</span>
+                      <SNBMenuItem status="selected">
+                        <IconBoxMultiple size={22} stroke={1} />
+                      </SNBMenuItem>
+                    </VStack>
+                  </div>
+                </VStack>
+
+                {/* Type Variants */}
+                <VStack gap={3}>
+                  <Label>Type Variants</Label>
+                  <div className="flex gap-8 items-center p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-subtle)] rounded-[var(--radius-lg)]">
+                    <VStack gap={2} align="center">
+                      <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">Icon (Default)</span>
+                      <SNBMenuItem isSelected>
+                        <IconBoxMultiple size={22} stroke={1} />
+                      </SNBMenuItem>
+                    </VStack>
+                    <VStack gap={2} align="center">
+                      <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">Icon (Selected)</span>
+                      <SNBMenuItem type="text" text="P" status="selected" />
+                    </VStack>
+                  </div>
+                </VStack>
+
+                {/* Interactive Demo */}
+                <VStack gap={3}>
+                  <Label>Interactive Demo (Hover to see effect)</Label>
+                  <div className="flex gap-2 p-4 bg-[var(--color-surface-subtle)] border border-[var(--color-border-subtle)] rounded-[var(--radius-lg)]">
+                    <SNBMenuItem>
+                      <IconHome size={22} stroke={1} />
+                    </SNBMenuItem>
+                    <SNBMenuItem isSelected>
+                      <IconBoxMultiple size={22} stroke={1} />
+                    </SNBMenuItem>
+                    <SNBMenuItem>
+                      <IconDatabase size={22} stroke={1} />
+                    </SNBMenuItem>
+                    <SNBMenuItem>
+                      <IconSettings size={22} stroke={1} />
+                    </SNBMenuItem>
                   </div>
                 </VStack>
               </VStack>
@@ -5875,6 +5981,133 @@ outline: 2px solid var(--color-border-focus);`}
               </VStack>
             </Section>
 
+            {/* CardTitle Component */}
+            <Section id="card-title" title="Card Title" description="Flexible card header with status, description, badges, and side content">
+              <VStack gap={8}>
+                {/* Design Tokens */}
+                <VStack gap={3}>
+                  <Label>Design Tokens</Label>
+                  <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
+                    <code>title: 16px semibold</code> · <code>description: 12px</code> · <code>gap: 12px</code> · <code>status-dot: 24px</code> · <code>badge: 11px medium</code>
+                  </div>
+                </VStack>
+
+                {/* Basic Usage */}
+                <VStack gap={3}>
+                  <Label>Basic Usage</Label>
+                  <div className="flex flex-col gap-4 p-4 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)] border border-[var(--color-border-default)]">
+                    <CardTitle title="lively-sunset-6041" />
+                    <CardTitle 
+                      title="lively-sunset-6041" 
+                      description="PyTorch GPU-enabled template for AI/ML workloads" 
+                    />
+                  </div>
+                </VStack>
+
+                {/* With Status Indicator */}
+                <VStack gap={3}>
+                  <Label>With Status Indicator</Label>
+                  <div className="flex flex-col gap-4 p-4 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)] border border-[var(--color-border-default)]">
+                    <CardTitle 
+                      title="lively-sunset-6041" 
+                      description="Running instance with GPU support"
+                      showStatus
+                      statusColor="success"
+                    />
+                    <CardTitle 
+                      title="failed-instance-1234" 
+                      description="Instance failed to start"
+                      showStatus
+                      statusColor="error"
+                    />
+                    <CardTitle 
+                      title="building-instance-5678" 
+                      description="Instance is being provisioned"
+                      showStatus
+                      statusColor="info"
+                    />
+                  </div>
+                </VStack>
+
+                {/* With Badges */}
+                <VStack gap={3}>
+                  <Label>With Badges</Label>
+                  <div className="flex flex-col gap-4 p-4 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)] border border-[var(--color-border-default)]">
+                    <CardTitle 
+                      title="lively-sunset-6041" 
+                      description="PyTorch GPU-enabled template for AI/ML workloads"
+                      showStatus
+                      statusColor="success"
+                      badges={[
+                        { label: 'Public', variant: 'success' },
+                        { label: 'ai-ml', variant: 'info' },
+                        { label: 'PyTorch', variant: 'muted' },
+                        { label: 'GPU', variant: 'muted' },
+                      ]}
+                    />
+                  </div>
+                </VStack>
+
+                {/* With Side Content - Gauge */}
+                <VStack gap={3}>
+                  <Label>With Gauge Side Content</Label>
+                  <div className="flex flex-col gap-4 p-4 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)] border border-[var(--color-border-default)]">
+                    <CardTitle 
+                      title="lively-sunset-6041" 
+                      description="CPU utilization monitoring"
+                      showStatus
+                      statusColor="success"
+                      side="gauge"
+                      gaugeValue="78.5%"
+                      gaugeLabel="Utilization"
+                    />
+                    <CardTitle 
+                      title="idle-server-9999" 
+                      side="gauge"
+                      gaugeValue="0.0%"
+                      gaugeLabel="Utilization"
+                    />
+                  </div>
+                </VStack>
+
+                {/* With Side Content - Icon */}
+                <VStack gap={3}>
+                  <Label>With Icon Side Content</Label>
+                  <div className="flex flex-col gap-4 p-4 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)] border border-[var(--color-border-default)]">
+                    <CardTitle 
+                      title="lively-sunset-6041" 
+                      description="PyTorch GPU-enabled template"
+                      showStatus
+                      statusColor="success"
+                      side="icon"
+                      sideIcon={<IconServer size={22} stroke={1.5} className="text-[var(--color-text-muted)]" />}
+                    />
+                  </div>
+                </VStack>
+
+                {/* All Props Combined */}
+                <VStack gap={3}>
+                  <Label>Full Example</Label>
+                  <div className="flex flex-col gap-4 p-4 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)] border border-[var(--color-border-default)]">
+                    <CardTitle 
+                      title="production-ml-server" 
+                      description="High-performance ML inference server with NVIDIA A100 GPU"
+                      showStatus
+                      statusColor="success"
+                      badges={[
+                        { label: 'Production', variant: 'success' },
+                        { label: 'ml-inference', variant: 'info' },
+                        { label: 'A100', variant: 'warning' },
+                      ]}
+                      side="gauge"
+                      gaugeValue="92.3%"
+                      gaugeLabel="GPU Load"
+                    />
+                  </div>
+                </VStack>
+              </VStack>
+            </Section>
+
             {/* Tooltip Component */}
             <Section id="tooltip" title="Tooltip" description="Contextual information on hover">
               <VStack gap={8}>
@@ -6507,6 +6740,152 @@ outline: 2px solid var(--color-border-focus);`}
 
             {/* Notification Center */}
             <NotificationCenterSection />
+
+            {/* Floating Card Section */}
+            <Section id="floating-card" title="Floating Card" description="Floating summary card for create/edit flows with sections, quota, and actions">
+              <VStack gap={8}>
+                {/* Basic Example */}
+                <VStack gap={4}>
+                  <Label>Basic Example (Non-portal)</Label>
+                  <div className="relative bg-[var(--color-surface-subtle)] p-6 rounded-lg min-h-[500px]">
+                    <FloatingCard
+                      title="Create Instance"
+                      portal={false}
+                      sections={[
+                        {
+                          tabTitle: 'Details',
+                          collapsible: true,
+                          defaultExpanded: true,
+                          showSuccessIcon: true,
+                          items: [
+                            { id: '1', title: 'Instance Name', status: 'success' },
+                            { id: '2', title: 'Description', status: 'success' },
+                            { id: '3', title: 'Availability Zone', status: 'default' },
+                          ],
+                        },
+                        {
+                          tabTitle: 'Source',
+                          collapsible: true,
+                          defaultExpanded: false,
+                          items: [
+                            { id: '4', title: 'Boot Source', status: 'processing' },
+                            { id: '5', title: 'Image', status: 'default' },
+                          ],
+                        },
+                        {
+                          tabTitle: 'Flavor',
+                          collapsible: true,
+                          defaultExpanded: false,
+                          items: [
+                            { id: '6', title: 'Flavor Selection', status: 'warning' },
+                          ],
+                        },
+                      ]}
+                      quota={[
+                        { label: 'Instances', current: 5, total: 10 },
+                        { label: 'vCPUs', current: 12, total: 20 },
+                        { label: 'RAM', current: 32, total: 64, unit: 'GB' },
+                      ]}
+                      cancelLabel="Cancel"
+                      actionLabel="Create Instance"
+                      actionEnabled={false}
+                      onCancel={() => console.log('Cancel clicked')}
+                      onAction={() => console.log('Create clicked')}
+                    />
+                  </div>
+                </VStack>
+
+                {/* Status Icons */}
+                <VStack gap={4}>
+                  <Label>Status Icons</Label>
+                  <div className="flex gap-4 items-center p-4 bg-[var(--color-surface-subtle)] rounded-lg">
+                    <div className="flex items-center gap-2">
+                      <div className="size-4 rounded-full border border-[var(--color-border-default)]" style={{ borderStyle: 'dashed' }} />
+                      <span className="text-[length:var(--font-size-12)] text-[var(--color-text-muted)]">Default</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <div className="size-4 rounded-full border border-[var(--color-text-muted)] flex items-center justify-center" style={{ borderStyle: 'dashed' }}>
+                        <IconRefresh size={10} stroke={2} className="text-[var(--color-text-muted)] animate-spin" />
+                      </div>
+                      <span className="text-[length:var(--font-size-12)] text-[var(--color-text-muted)]">Processing</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <div className="size-4 rounded-full border border-[var(--color-state-danger)] bg-[var(--color-state-danger)] flex items-center justify-center">
+                        <IconAlertTriangle size={10} stroke={2} className="text-white" />
+                      </div>
+                      <span className="text-[length:var(--font-size-12)] text-[var(--color-text-muted)]">Warning</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <div className="size-4 rounded-full border border-[var(--color-state-success)] bg-[var(--color-state-success)] flex items-center justify-center">
+                        <IconCheck size={10} stroke={2} className="text-white" />
+                      </div>
+                      <span className="text-[length:var(--font-size-12)] text-[var(--color-text-muted)]">Success</span>
+                    </div>
+                  </div>
+                </VStack>
+
+                {/* Props Reference */}
+                <VStack gap={4}>
+                  <Label>Props Reference</Label>
+                  <div className="overflow-x-auto">
+                    <table className="w-full text-[length:var(--font-size-12)]">
+                      <thead>
+                        <tr className="border-b border-[var(--color-border-default)]">
+                          <th className="text-left py-3 pr-4 font-medium text-[var(--color-text-subtle)]">Prop</th>
+                          <th className="text-left py-3 pr-4 font-medium text-[var(--color-text-subtle)]">Type</th>
+                          <th className="text-left py-3 pr-4 font-medium text-[var(--color-text-subtle)]">Default</th>
+                          <th className="text-left py-3 font-medium text-[var(--color-text-subtle)]">Description</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr className="border-b border-[var(--color-border-subtle)]">
+                          <td className="py-2 pr-4 font-mono text-[var(--color-action-primary)]">title</td>
+                          <td className="py-2 pr-4 text-[var(--color-text-muted)]">string</td>
+                          <td className="py-2 pr-4 text-[var(--color-text-muted)]">required</td>
+                          <td className="py-2 text-[var(--color-text-default)]">Card title in summary section</td>
+                        </tr>
+                        <tr className="border-b border-[var(--color-border-subtle)]">
+                          <td className="py-2 pr-4 font-mono text-[var(--color-action-primary)]">sections</td>
+                          <td className="py-2 pr-4 text-[var(--color-text-muted)]">FloatingCardSection[]</td>
+                          <td className="py-2 pr-4 text-[var(--color-text-muted)]">[]</td>
+                          <td className="py-2 text-[var(--color-text-default)]">Collapsible sections with items</td>
+                        </tr>
+                        <tr className="border-b border-[var(--color-border-subtle)]">
+                          <td className="py-2 pr-4 font-mono text-[var(--color-action-primary)]">quota</td>
+                          <td className="py-2 pr-4 text-[var(--color-text-muted)]">QuotaItem[]</td>
+                          <td className="py-2 pr-4 text-[var(--color-text-muted)]">[]</td>
+                          <td className="py-2 text-[var(--color-text-default)]">Quota progress bars</td>
+                        </tr>
+                        <tr className="border-b border-[var(--color-border-subtle)]">
+                          <td className="py-2 pr-4 font-mono text-[var(--color-action-primary)]">position</td>
+                          <td className="py-2 pr-4 text-[var(--color-text-muted)]">FloatingCardPosition</td>
+                          <td className="py-2 pr-4 text-[var(--color-text-muted)]">'top-left'</td>
+                          <td className="py-2 text-[var(--color-text-default)]">Position when portal is true</td>
+                        </tr>
+                        <tr className="border-b border-[var(--color-border-subtle)]">
+                          <td className="py-2 pr-4 font-mono text-[var(--color-action-primary)]">portal</td>
+                          <td className="py-2 pr-4 text-[var(--color-text-muted)]">boolean</td>
+                          <td className="py-2 pr-4 text-[var(--color-text-muted)]">true</td>
+                          <td className="py-2 text-[var(--color-text-default)]">Render in portal (fixed position)</td>
+                        </tr>
+                        <tr className="border-b border-[var(--color-border-subtle)]">
+                          <td className="py-2 pr-4 font-mono text-[var(--color-action-primary)]">actionEnabled</td>
+                          <td className="py-2 pr-4 text-[var(--color-text-muted)]">boolean</td>
+                          <td className="py-2 pr-4 text-[var(--color-text-muted)]">false</td>
+                          <td className="py-2 text-[var(--color-text-default)]">Enable primary action button</td>
+                        </tr>
+                        <tr>
+                          <td className="py-2 pr-4 font-mono text-[var(--color-action-primary)]">width</td>
+                          <td className="py-2 pr-4 text-[var(--color-text-muted)]">string</td>
+                          <td className="py-2 pr-4 text-[var(--color-text-muted)]">'320px'</td>
+                          <td className="py-2 text-[var(--color-text-default)]">Card width</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </VStack>
+              </VStack>
+            </Section>
 
             {/* Layout Section */}
             <Section id="layout" title="Layout" description="Application layout structure with responsive sidebar">
