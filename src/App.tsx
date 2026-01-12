@@ -115,7 +115,6 @@ import MetallicPalettePage from '@/pages/MetallicPalettePage';
 import { DesktopPage } from '@/pages/DesktopPage';
 
 // Pages - AI Platform
-import { AIPlatformPage } from '@/pages/AIPlatformPage';
 import { WorkloadDetailPage } from '@/pages/WorkloadDetailPage';
 
 // Pages - AI Platform
