@@ -97,7 +97,7 @@ export function InstanceTemplatesPage() {
     { id: 'favorite', label: '', visible: true, locked: true },
     { id: 'name', label: 'Name', visible: true, locked: true },
     { id: 'image', label: 'Description', visible: true },
-    { id: 'flavor', label: 'Created At', visible: true },
+    { id: 'flavor', label: 'Created at', visible: true },
     { id: 'actions', label: 'Action', visible: true, locked: true },
   ];
   const [columnConfig, setColumnConfig] = useState<ColumnConfig[]>(defaultColumnConfig);
@@ -267,7 +267,7 @@ export function InstanceTemplatesPage() {
     },
     {
       key: 'flavor',
-      label: 'Created At',
+      label: 'Created at',
       flex: 1,
       sortable: true,
     },

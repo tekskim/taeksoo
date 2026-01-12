@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import ReactECharts from 'echarts-for-react';
 import { DarkModeToggle } from '@/components/DarkModeToggle';
 
-// App Icons
+// App icons
 import AppIconAdminCenter from '@/assets/appIcon/admincenter.png';
 import AppIconAgentOps from '@/assets/appIcon/agentops.png';
 import AppIconAIPlatform from '@/assets/appIcon/aiplatform.png';
@@ -230,15 +230,15 @@ import { Link } from 'react-router-dom';
 
 // Foundation items (기초 토큰/스타일)
 const foundationItems = [
-  { id: 'token-architecture', label: 'Token Architecture', icon: IconLayoutGrid },
-  { id: 'primitive-colors', label: 'Primitive Colors', icon: IconPalette },
-  { id: 'semantic-colors', label: 'Semantic Colors', icon: IconPalette },
+  { id: 'token-architecture', label: 'Token architecture', icon: IconLayoutGrid },
+  { id: 'primitive-colors', label: 'Primitive colors', icon: IconPalette },
+  { id: 'semantic-colors', label: 'Semantic colors', icon: IconPalette },
   { id: 'typography', label: 'Typography', icon: IconTypography },
   { id: 'spacing-radius', label: 'Spacing & Radius', icon: IconBoxMultiple },
   { id: 'borders', label: 'Borders', icon: IconBorderAll },
   { id: 'shadows', label: 'Shadows', icon: IconBoxMultiple },
   { id: 'icons', label: 'Icons', icon: IconStar },
-  { id: 'app-icons', label: 'App Icons', icon: IconApps },
+  { id: 'app-icons', label: 'App icons', icon: IconApps },
 ];
 
 // Component items (UI 컴포넌트)
@@ -246,13 +246,13 @@ const foundationItems = [
 const formControlItems = [
   { id: 'button', label: 'Button', icon: IconClick },
   { id: 'input', label: 'Input', icon: IconForms },
-  { id: 'filter-search-input', label: 'Filter Search Input', icon: IconSearch },
+  { id: 'filter-search-input', label: 'Filter search Input', icon: IconSearch },
   { id: 'select', label: 'Select', icon: IconSelector },
   { id: 'datepicker', label: 'DatePicker', icon: IconCalendar },
   { id: 'slider', label: 'Slider', icon: IconAdjustments },
   { id: 'chip', label: 'Chip', icon: IconTag },
   { id: 'pagination', label: 'Pagination', icon: IconProgress },
-  { id: 'progress-bar', label: 'Progress Bar', icon: IconProgress },
+  { id: 'progress-bar', label: 'Progress bar', icon: IconProgress },
   { id: 'loading', label: 'Loading', icon: IconLoader2 },
   { id: 'snb-menu-item', label: 'SNBMenuItem', icon: IconLayoutNavbar },
   { id: 'toggle', label: 'Toggle', icon: IconToggleRight },
@@ -266,38 +266,38 @@ const navigationItems = [
   { id: 'tabbar', label: 'TabBar', icon: IconLayoutNavbar },
   { id: 'tabs', label: 'Tabs', icon: IconLayoutNavbar },
   { id: 'disclosure', label: 'Disclosure', icon: IconSelector },
-  { id: 'inline-message', label: 'Inline Message', icon: IconInfoCircle },
+  { id: 'inline-message', label: 'Inline message', icon: IconInfoCircle },
   { id: 'table', label: 'Table', icon: IconList },
   { id: 'badge', label: 'Badge', icon: IconTag },
   { id: 'breadcrumb', label: 'Breadcrumb', icon: IconChevronRight },
-  { id: 'status-indicator', label: 'Status Indicator', icon: IconActivity },
-  { id: 'card-title', label: 'Card Title', icon: IconLayoutGrid },
+  { id: 'status-indicator', label: 'Status indicator', icon: IconActivity },
+  { id: 'card-title', label: 'Card title', icon: IconLayoutGrid },
   { id: 'tooltip', label: 'Tooltip', icon: IconMessage2 },
-  { id: 'window-control', label: 'Window Control', icon: IconAppWindow },
+  { id: 'window-control', label: 'Window control', icon: IconAppWindow },
 ];
 
 // Patterns - matches actual content order
 const patternItems = [
-  { id: 'detail-header', label: 'Detail Header', icon: IconLayoutNavbar },
-  { id: 'section-card', label: 'Section Card', icon: IconLayoutGrid },
+  { id: 'detail-header', label: 'Detail header', icon: IconLayoutNavbar },
+  { id: 'section-card', label: 'Section card', icon: IconLayoutGrid },
   { id: 'wizard', label: 'Wizard (Create Flow)', icon: IconListNumbers },
   { id: 'menu', label: 'Menu', icon: IconMenu2 },
-  { id: 'context-menu', label: 'Context Menu', icon: IconMenu2 },
+  { id: 'context-menu', label: 'Context menu', icon: IconMenu2 },
   { id: 'modal', label: 'Modal', icon: IconLayoutGrid },
   { id: 'drawer', label: 'Drawer', icon: IconLayoutGrid },
-  { id: 'monitoring-toolbar', label: 'Monitoring Toolbar', icon: IconRefresh },
-  { id: 'notification-center', label: 'Notification Center', icon: IconBell },
-  { id: 'floating-card', label: 'Floating Card', icon: IconLayoutGrid },
+  { id: 'monitoring-toolbar', label: 'Monitoring toolbar', icon: IconRefresh },
+  { id: 'notification-center', label: 'Notification center', icon: IconBell },
+  { id: 'floating-card', label: 'Floating card', icon: IconLayoutGrid },
   { id: 'layout', label: 'Layout', icon: IconLayoutSidebar },
 ];
 
 // Graphs
 const graphItems = [
-  { id: 'bar-chart', label: 'Bar Chart', icon: IconChartBar },
-  { id: 'area-chart', label: 'Area Chart', icon: IconChartBar },
-  { id: 'pie-chart', label: 'Pie Chart', icon: IconActivity },
-  { id: 'half-doughnut-chart', label: 'Half-Doughnut Chart', icon: IconGauge },
-  { id: 'doughnut-chart', label: 'Doughnut Chart', icon: IconChartDonut },
+  { id: 'bar-chart', label: 'Bar chart', icon: IconChartBar },
+  { id: 'area-chart', label: 'Area chart', icon: IconChartBar },
+  { id: 'pie-chart', label: 'Pie chart', icon: IconActivity },
+  { id: 'half-doughnut-chart', label: 'Half-Doughnut chart', icon: IconGauge },
+  { id: 'doughnut-chart', label: 'Doughnut chart', icon: IconChartDonut },
 ];
 
 // All component items
@@ -312,7 +312,7 @@ const componentItems = [
 const navItems = [...foundationItems, ...componentItems];
 
 /* ----------------------------------------
-   Filter Search Input Demo
+   Filter search Input Demo
    ---------------------------------------- */
 
 function FilterSearchInputDemo() {
@@ -387,8 +387,8 @@ function WizardPatternSection() {
   });
 
   const summaryItems: WizardSummaryItem[] = [
-    { key: 'launch-type', label: 'Launch Type', status: sectionStatus['launch-type'] },
-    { key: 'basic-info', label: 'Basic Information', status: sectionStatus['basic-info'] },
+    { key: 'launch-type', label: 'Launch type', status: sectionStatus['launch-type'] },
+    { key: 'basic-info', label: 'Basic information', status: sectionStatus['basic-info'] },
     { key: 'image', label: 'Image', status: sectionStatus['image'] },
     { key: 'flavor', label: 'Flavor', status: sectionStatus['flavor'] },
     { key: 'network', label: 'Network', status: sectionStatus['network'] },
@@ -473,8 +473,8 @@ function WizardPatternSection() {
           {/* DoneSection */}
           <VStack gap={1}>
             <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">DoneSection (완료)</span>
-            <DoneSection title="Basic Information" onEdit={() => console.log('Edit clicked')}>
-              <DoneSectionRow label="Instance Name" value="my-instance-01" />
+            <DoneSection title="Basic information" onEdit={() => console.log('Edit clicked')}>
+              <DoneSectionRow label="Instance name" value="my-instance-01" />
               <DoneSectionRow label="AZ" value="nova (Default)" />
               <DoneSectionRow label="Description" value="Test instance for development" />
             </DoneSection>
@@ -539,7 +539,7 @@ const [sectionStatus, setSectionStatus] = useState<Record<string, WizardSectionS
 
 // Summary 아이템
 const summaryItems: WizardSummaryItem[] = [
-  { key: 'basic-info', label: 'Basic Information', status: sectionStatus['basic-info'] },
+  { key: 'basic-info', label: 'Basic information', status: sectionStatus['basic-info'] },
   { key: 'image', label: 'Image', status: sectionStatus['image'] },
   { key: 'flavor', label: 'Flavor', status: sectionStatus['flavor'] },
 ];
@@ -547,8 +547,8 @@ const summaryItems: WizardSummaryItem[] = [
 // 렌더링
 <WizardSummary title="Summary" items={summaryItems} />
 
-<DoneSection title="Basic Information" onEdit={() => handleEdit('basic-info')}>
-  <DoneSectionRow label="Instance Name" value={instanceName} />
+<DoneSection title="Basic information" onEdit={() => handleEdit('basic-info')}>
+  <DoneSectionRow label="Instance name" value={instanceName} />
   <DoneSectionRow label="AZ" value={az} />
 </DoneSection>`}</pre>
         </div>
@@ -558,7 +558,7 @@ const summaryItems: WizardSummaryItem[] = [
 }
 
 /* ----------------------------------------
-   Notification Center Section
+   Notification center Section
    ---------------------------------------- */
 
 function NotificationCenterSection() {
@@ -631,7 +631,7 @@ function NotificationCenterSection() {
   return (
     <Section
       id="notification-center"
-      title="Notification Center"
+      title="Notification center"
       description="Centralized notification panel with filtering, read/unread states, and real-time updates"
     >
       <VStack gap={8}>
@@ -1205,7 +1205,7 @@ const baseChartOptions = {
 };
 
 /* ----------------------------------------
-   Bar Chart Demo (ECharts - from storage-dashboard)
+   Bar chart Demo (ECharts - from storage-dashboard)
    ---------------------------------------- */
 
 function BarChartDemo({ variant }: { variant: 'vertical' | 'horizontal' | 'grouped' }) {
@@ -1320,7 +1320,7 @@ function BarChartDemo({ variant }: { variant: 'vertical' | 'horizontal' | 'group
 }
 
 /* ----------------------------------------
-   Area Chart Demo (ECharts - from storage-dashboard)
+   Area chart Demo (ECharts - from storage-dashboard)
    ---------------------------------------- */
 
 // Generate time labels for charts
@@ -1611,7 +1611,7 @@ function TimeControls({
               </div>
             </div>
 
-            {/* DatePicker from Design System */}
+            {/* DatePicker from Design system */}
             <DatePicker
               mode="range"
               rangeValue={{ start: tempStartDate, end: tempEndDate }}
@@ -2019,7 +2019,7 @@ function AreaChartDemo({ variant }: { variant: 'basic' | 'stacked' | 'nodata' })
 }
 
 /* ----------------------------------------
-   Pie Chart Demo (ECharts - from storage-dashboard)
+   Pie chart Demo (ECharts - from storage-dashboard)
    ---------------------------------------- */
 
 // Extended color palette for pie charts with many segments
@@ -2137,7 +2137,7 @@ function PieChartDemo({
 }
 
 /* ----------------------------------------
-   Doughnut Chart Demo (ECharts - matches SingleValueDoughnutCard from storage)
+   Doughnut chart Demo (ECharts - matches SingleValueDoughnutCard from storage)
    ---------------------------------------- */
 
 function DoughnutChartDemo({ 
@@ -2220,7 +2220,7 @@ function DoughnutChartDemo({
 }
 
 /* ----------------------------------------
-   Half-Doughnut Chart Demo (ECharts - from storage-dashboard)
+   Half-Doughnut chart Demo (ECharts - from storage-dashboard)
    ---------------------------------------- */
 
 function HalfDoughnutChartDemo({ value, label, status = 'default', used, total, unit }: { value: number; label: string; status?: 'default' | 'success' | 'warning' | 'error'; used?: number; total?: number; unit?: string }) {
@@ -2381,7 +2381,7 @@ function HalfDoughnutChartDemo({ value, label, status = 'default', used, total, 
 }
 
 /* ----------------------------------------
-   Single Value Doughnut Chart Demo (ECharts)
+   Single Value Doughnut chart Demo (ECharts)
    ---------------------------------------- */
 
 function SingleValueDoughnutDemo({ 
@@ -2483,9 +2483,9 @@ function TabBarDemo() {
     initialTabs: [
       { id: 'many-1', label: 'Dashboard', closable: true },
       { id: 'many-2', label: 'Instance templates', closable: true },
-      { id: 'many-3', label: 'Virtual Machines', closable: true },
-      { id: 'many-4', label: 'Storage Volumes', closable: true },
-      { id: 'many-5', label: 'Network Settings', closable: true },
+      { id: 'many-3', label: 'Virtual machines', closable: true },
+      { id: 'many-4', label: 'Storage volumes', closable: true },
+      { id: 'many-5', label: 'Network settings', closable: true },
       { id: 'many-6', label: 'Security groups', closable: true },
       { id: 'many-7', label: 'Load balancers', closable: true },
       { id: 'many-8', label: 'Monitoring', closable: true },
@@ -2497,7 +2497,7 @@ function TabBarDemo() {
     const counter = tabCounterRef.current;
     addTab({
       id: `tab-${counter}-${Date.now()}`,
-      label: `New Tab ${counter}`,
+      label: `New tab ${counter}`,
       closable: true,
     });
     tabCounterRef.current++;
@@ -2507,7 +2507,7 @@ function TabBarDemo() {
     const counter = manyTabsDemo.tabs.length + 1;
     manyTabsDemo.addTab({
       id: `many-${counter}-${Date.now()}`,
-      label: `New Tab ${counter}`,
+      label: `New tab ${counter}`,
       closable: true,
     });
   };
@@ -2670,7 +2670,7 @@ const sampleTableData: InstanceData[] = [
   { id: 'vm-006', name: 'ml-worker', status: 'Building', locked: false, fixedIp: '-', floatingIp: '-', image: 'Ubuntu 22.04', imageId: 'img-002', flavor: 'GPU Large', flavorId: 'flv-005', attachedTo: 'gpu-server-1', attachedToId: 'inst-005', attachedType: 'instance', fingerprint: 'ab:cd:ef:01:23:45:67:89', vCPU: 8, ram: '64GB', disk: '1TB' },
 ];
 
-// Sample Key Pair data for copy demo
+// Sample Key pair data for copy demo
 interface KeyPairData {
   id: string;
   name: string;
@@ -2777,7 +2777,7 @@ function TableDemo() {
     },
   ];
 
-  // Columns with Attached To (external link + resource icon)
+  // Columns with Attached to (external link + resource icon)
   const attachedToColumns = [
     { 
       key: 'name', 
@@ -2793,7 +2793,7 @@ function TableDemo() {
     { key: 'fixedIp', label: 'Fixed IP', width: '120px' },
     { 
       key: 'attachedTo', 
-      label: 'Attached To', 
+      label: 'Attached to', 
       flex: 1,
       render: (_: string | null, row: InstanceData) => (
         row.attachedTo && row.attachedToId ? (
@@ -2863,7 +2863,7 @@ function TableDemo() {
         </div>
       )
     },
-    { key: 'createdAt', label: 'Created At', width: '140px' },
+    { key: 'createdAt', label: 'Created at', width: '140px' },
   ];
 
   // Columns without copy button (40px row height demo)
@@ -2884,7 +2884,7 @@ function TableDemo() {
         <span className="text-[length:var(--font-size-12)] leading-[var(--line-height-18)] text-[var(--color-text-default)]">{row.fingerprint}</span>
       )
     },
-    { key: 'createdAt', label: 'Created At', width: '140px' },
+    { key: 'createdAt', label: 'Created at', width: '140px' },
   ];
 
   // Compact columns for horizontal scroll demo
@@ -2972,7 +2972,7 @@ function TableDemo() {
           rowKey="id"
         />
         <p className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
-          Attached To column shows resource type icon (Instance/Router), clickable link opens in new window
+          Attached to column shows resource type icon (Instance/Router), clickable link opens in new window
         </p>
       </VStack>
 
@@ -3049,7 +3049,7 @@ function TableDemo() {
 }
 
 /* ----------------------------------------
-   Design System Page
+   Design system Page
    ---------------------------------------- */
 
 export function DesignSystemPage() {
@@ -3210,7 +3210,7 @@ export function DesignSystemPage() {
               <span className="text-[10px] font-bold text-white">TDS</span>
             </div>
             <span className="text-[length:var(--font-size-14)] font-semibold text-[var(--color-text-default)]">
-              Design System
+              Design system
             </span>
           </Link>
 
@@ -3428,7 +3428,7 @@ export function DesignSystemPage() {
             <div className="flex items-center justify-between w-full">
               <VStack gap={2} align="start">
                 <h1 className="text-[length:var(--font-size-40)] font-semibold text-[var(--color-text-default)]">
-                  TDS Design System
+                  TDS Design system
                 </h1>
                 <p className="text-[length:var(--font-size-16)] text-[var(--color-text-muted)]">
                   Design tokens and components built with a 3-tier token architecture
@@ -3505,8 +3505,8 @@ export function DesignSystemPage() {
               )}
             </div>
 
-            {/* Token Architecture Overview */}
-            <Section id="token-architecture" title="Token Architecture" description="3-tier design token structure: Primitive → Semantic → Component">
+            {/* Token architecture Overview */}
+            <Section id="token-architecture" title="Token architecture" description="3-tier design token structure: Primitive → Semantic → Component">
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <TokenCard
                   title="Primitive"
@@ -3532,8 +3532,8 @@ export function DesignSystemPage() {
               </div>
             </Section>
 
-            {/* Primitive Colors */}
-            <Section id="primitive-colors" title="Primitive Colors" description="Core color palette used as building blocks">
+            {/* Primitive colors */}
+            <Section id="primitive-colors" title="Primitive colors" description="Core color palette used as building blocks">
               <VStack gap={6}>
                 {/* Base Colors */}
                 <VStack gap={2}>
@@ -3636,8 +3636,8 @@ export function DesignSystemPage() {
               </VStack>
             </Section>
 
-            {/* Semantic Colors */}
-            <Section id="semantic-colors" title="Semantic Colors" description="Purpose-driven color tokens with light/dark theme support">
+            {/* Semantic colors */}
+            <Section id="semantic-colors" title="Semantic colors" description="Purpose-driven color tokens with light/dark theme support">
               <VStack gap={6}>
                 {/* Action, Text, Surface, Border */}
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
@@ -4126,7 +4126,7 @@ outline: 2px solid var(--color-border-focus);`}
                     { Icon: IconScale, name: 'LB' },
                     { Icon: IconWorldWww, name: 'Float IP' },
                     { Icon: IconShield, name: 'Security' },
-                    { Icon: IconKey, name: 'Key Pair' },
+                    { Icon: IconKey, name: 'Key pair' },
                     { Icon: IconCpu, name: 'Flavor' },
                     { Icon: IconPlug, name: 'Port' },
                     { Icon: IconCloud, name: 'Cloud' },
@@ -4209,8 +4209,8 @@ outline: 2px solid var(--color-border-focus);`}
               </VStack>
             </Section>
 
-            {/* App Icons */}
-            <Section id="app-icons" title="App Icons" description="Application icons for THAKI Cloud services - Size 64x64">
+            {/* App icons */}
+            <Section id="app-icons" title="App icons" description="Application icons for THAKI Cloud services - Size 64x64">
               <VStack gap={8}>
                 <VStack gap={3}>
                   <Label>Service Icons</Label>
@@ -4223,10 +4223,10 @@ outline: 2px solid var(--color-border-focus);`}
                       { src: AppIconContainer, name: 'Container' },
                       { src: AppIconCloudBuilder, name: 'Cloud Builder' },
                       { src: AppIconAIPlatform, name: 'AI Platform' },
-                      { src: AppIconAgentOps, name: 'Agent Ops' },
+                      { src: AppIconAgentOps, name: 'Agent ops' },
                       { src: AppIconIAM, name: 'IAM' },
                       { src: AppIconSettings, name: 'Settings' },
-                      { src: AppIconAdminCenter, name: 'Admin Center' },
+                      { src: AppIconAdminCenter, name: 'Admin center' },
                     ].map(({ src, name }) => (
                       <div key={name} className="flex flex-col items-center gap-2">
                         <div className="w-16 h-16 rounded-xl border border-[var(--color-border-default)] bg-[var(--color-surface-default)] flex items-center justify-center overflow-hidden">
@@ -4412,8 +4412,8 @@ outline: 2px solid var(--color-border-focus);`}
                   <Label>Labels & Validation</Label>
                   <div className="flex flex-wrap gap-4 items-start">
                     <Input label="Label" placeholder="Enter text..." className="w-[200px]" />
-                    <Input label="With Helper" placeholder="Email" helperText="We'll never share your email" className="w-[200px]" />
-                    <Input label="With Error" placeholder="Username" error="Username is required" className="w-[200px]" />
+                    <Input label="With helper" placeholder="Email" helperText="We'll never share your email" className="w-[200px]" />
+                    <Input label="With error" placeholder="Username" error="Username is required" className="w-[200px]" />
                   </div>
                 </VStack>
 
@@ -4498,8 +4498,8 @@ outline: 2px solid var(--color-border-focus);`}
               </VStack>
             </Section>
 
-            {/* Filter Search Input Component */}
-            <Section id="filter-search-input" title="Filter Search Input" description="Combined search and filter input with tag display for applied filters">
+            {/* Filter search Input Component */}
+            <Section id="filter-search-input" title="Filter search Input" description="Combined search and filter input with tag display for applied filters">
               <VStack gap={8}>
                 {/* Design Tokens */}
                 <VStack gap={3}>
@@ -4674,7 +4674,7 @@ outline: 2px solid var(--color-border-focus);`}
                 <VStack gap={3}>
                   <Label>With Disabled Options</Label>
                   <Select
-                    label="Instance Type"
+                    label="Instance type"
                     placeholder="Select type"
                     defaultValue="medium"
                     options={[
@@ -4695,13 +4695,13 @@ outline: 2px solid var(--color-border-focus);`}
                   </p>
                   <div className="flex gap-4 items-start">
                     <VStack gap={1}>
-                      <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">All Statuses</span>
+                      <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">All statuses</span>
                       <Select
-                        placeholder="All Statuses"
+                        placeholder="All statuses"
                         defaultValue="all"
                         clearable
                         options={[
-                          { value: 'all', label: 'All Statuses' },
+                          { value: 'all', label: 'All statuses' },
                           { value: 'running', label: 'Running' },
                           { value: 'pending', label: 'Pending' },
                           { value: 'failed', label: 'Failed' },
@@ -4710,13 +4710,13 @@ outline: 2px solid var(--color-border-focus);`}
                       />
                     </VStack>
                     <VStack gap={1}>
-                      <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">All Resources</span>
+                      <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">All resources</span>
                       <Select
-                        placeholder="All Resources"
+                        placeholder="All resources"
                         defaultValue="all"
                         clearable
                         options={[
-                          { value: 'all', label: 'All Resources' },
+                          { value: 'all', label: 'All resources' },
                           { value: 'gpu', label: 'GPU Usage' },
                           { value: 'cpu', label: 'CPU Only' },
                         ]}
@@ -4968,7 +4968,7 @@ outline: 2px solid var(--color-border-focus);`}
             </Section>
 
             {/* ProgressBar Component */}
-            <Section id="progress-bar" title="Progress Bar" description="Visual indicator for quota usage and progress with status-based colors">
+            <Section id="progress-bar" title="Progress bar" description="Visual indicator for quota usage and progress with status-based colors">
               <VStack gap={8}>
                 {/* Tokens */}
                 <VStack gap={3}>
@@ -5538,7 +5538,7 @@ outline: 2px solid var(--color-border-focus);`}
                         <Breadcrumb
                           items={[
                             { label: 'Projects', onClick: () => {} },
-                            { label: 'My Project' },
+                            { label: 'My project' },
                           ]}
                         />
                       }
@@ -5797,7 +5797,7 @@ outline: 2px solid var(--color-border-focus);`}
             </Section>
 
             {/* InlineMessage Component */}
-            <Section id="inline-message" title="Inline Message" description="Contextual feedback messages for different states">
+            <Section id="inline-message" title="Inline message" description="Contextual feedback messages for different states">
               <VStack gap={8}>
                 {/* Tokens */}
                 <VStack gap={3}>
@@ -6022,8 +6022,8 @@ outline: 2px solid var(--color-border-focus);`}
               </VStack>
             </Section>
 
-            {/* Status Indicator Component */}
-            <Section id="status-indicator" title="Status Indicator" description="Server/instance status indicators with predefined states">
+            {/* Status indicator Component */}
+            <Section id="status-indicator" title="Status indicator" description="Server/instance status indicators with predefined states">
               <VStack gap={8}>
                 {/* Tokens */}
                 <VStack gap={3}>
@@ -6033,7 +6033,7 @@ outline: 2px solid var(--color-border-focus);`}
                   </div>
                 </VStack>
 
-                {/* All Status Types by Category */}
+                {/* All status Types by Category */}
                 <VStack gap={3}>
                   <Label>Success (Green)</Label>
                   <div className="flex flex-wrap gap-3 items-center">
@@ -6083,7 +6083,7 @@ outline: 2px solid var(--color-border-focus);`}
 
                 {/* Layout Variants - Icon Only (All Cases) */}
                 <VStack gap={3}>
-                  <Label>Icon Only - All Status Types</Label>
+                  <Label>Icon Only - All status Types</Label>
                   <VStack gap={4}>
                     {/* Success */}
                     <VStack gap={2}>
@@ -6175,7 +6175,7 @@ outline: 2px solid var(--color-border-focus);`}
             </Section>
 
             {/* CardTitle Component */}
-            <Section id="card-title" title="Card Title" description="Flexible card header with status, description, badges, and side content">
+            <Section id="card-title" title="Card title" description="Flexible card header with status, description, badges, and side content">
               <VStack gap={8}>
                 {/* Design Tokens */}
                 <VStack gap={3}>
@@ -6197,9 +6197,9 @@ outline: 2px solid var(--color-border-focus);`}
                   </div>
                 </VStack>
 
-                {/* With Status Indicator */}
+                {/* With Status indicator */}
                 <VStack gap={3}>
-                  <Label>With Status Indicator</Label>
+                  <Label>With Status indicator</Label>
                   <div className="flex flex-col gap-4 p-4 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)] border border-[var(--color-border-default)]">
                     <CardTitle 
                       title="lively-sunset-6041" 
@@ -6369,7 +6369,7 @@ outline: 2px solid var(--color-border-focus);`}
             </Section>
 
             {/* WindowControl Component */}
-            <Section id="window-control" title="Window Control" description="Window control buttons for minimize, maximize, and close actions">
+            <Section id="window-control" title="Window control" description="Window control buttons for minimize, maximize, and close actions">
               <VStack gap={8}>
                 {/* Tokens */}
                 <VStack gap={3}>
@@ -6429,7 +6429,7 @@ outline: 2px solid var(--color-border-focus);`}
             </Section>
 
             {/* DetailHeader Component */}
-            <Section id="detail-header" title="Detail Header" description="Page header component for resource detail views with title, actions, and info cards">
+            <Section id="detail-header" title="Detail header" description="Page header component for resource detail views with title, actions, and info cards">
               <VStack gap={8}>
                 {/* Tokens */}
                 <VStack gap={3}>
@@ -6441,7 +6441,7 @@ outline: 2px solid var(--color-border-focus);`}
 
                 {/* Full Example - Figma Reference */}
                 <VStack gap={3}>
-                  <Label>Instance Detail Header (Figma Reference)</Label>
+                  <Label>Instance Detail header (Figma Reference)</Label>
                   <DetailHeader>
                     <DetailHeader.Title>tk-test</DetailHeader.Title>
                     <DetailHeader.Actions>
@@ -6456,14 +6456,14 @@ outline: 2px solid var(--color-border-focus);`}
                       <DetailHeader.InfoCard label="Status" value="Active" status="active" />
                       <DetailHeader.InfoCard label="ID" value="7284d9174e81431e93060a9bbcf2cdfd" copyable />
                       <DetailHeader.InfoCard label="Host" value="compute-03" />
-                      <DetailHeader.InfoCard label="Created At" value="2025-07-25 09:12:20" />
+                      <DetailHeader.InfoCard label="Created at" value="2025-07-25 09:12:20" />
                     </DetailHeader.InfoGrid>
                   </DetailHeader>
                 </VStack>
 
                 {/* Info Card Status States */}
                 <VStack gap={3}>
-                  <Label>Info Card - Status Indicator States</Label>
+                  <Label>Info Card - Status indicator States</Label>
                   <div className="grid grid-cols-4 gap-2">
                     <DetailHeader.InfoCard label="Status" value="Active" status="active" />
                     <DetailHeader.InfoCard label="Status" value="Shutoff" status="shutoff" />
@@ -6486,15 +6486,15 @@ outline: 2px solid var(--color-border-focus);`}
                   <Label>Info Card - Basic Text</Label>
                   <div className="grid grid-cols-3 gap-2">
                       <DetailHeader.InfoCard label="Host" value="compute-03" />
-                      <DetailHeader.InfoCard label="Created At" value="2025-07-25 09:12:20" />
-                    <DetailHeader.InfoCard label="Availability Zone" value="nova" />
+                      <DetailHeader.InfoCard label="Created at" value="2025-07-25 09:12:20" />
+                    <DetailHeader.InfoCard label="Availability zone" value="nova" />
                   </div>
                 </VStack>
               </VStack>
             </Section>
 
             {/* SectionCard Component */}
-            <Section id="section-card" title="Section Card" description="Container component for grouping related content in detail views">
+            <Section id="section-card" title="Section card" description="Container component for grouping related content in detail views">
               <VStack gap={8}>
                 {/* Tokens */}
                 <VStack gap={3}>
@@ -6508,10 +6508,10 @@ outline: 2px solid var(--color-border-focus);`}
                 <VStack gap={3}>
                   <Label>Basic Usage</Label>
                   <SectionCard>
-                    <SectionCard.Header title="Basic Information" />
+                    <SectionCard.Header title="Basic information" />
                     <SectionCard.Content>
-                      <SectionCard.DataRow label="Instance Name" value="web-server-01" />
-                      <SectionCard.DataRow label="Availability Zone" value="nova" />
+                      <SectionCard.DataRow label="Instance name" value="web-server-01" />
+                      <SectionCard.DataRow label="Availability zone" value="nova" />
                       <SectionCard.DataRow label="Description" value="Production web server" />
                     </SectionCard.Content>
                   </SectionCard>
@@ -6522,12 +6522,12 @@ outline: 2px solid var(--color-border-focus);`}
                   <Label>With Action Buttons</Label>
                   <SectionCard>
                     <SectionCard.Header 
-                      title="Basic Information" 
+                      title="Basic information" 
                       actions={<Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />}>Edit</Button>}
                     />
                     <SectionCard.Content>
-                      <SectionCard.DataRow label="Instance Name" value="web-server-01" />
-                      <SectionCard.DataRow label="Availability Zone" value="nova" />
+                      <SectionCard.DataRow label="Instance name" value="web-server-01" />
+                      <SectionCard.DataRow label="Availability zone" value="nova" />
                     </SectionCard.Content>
                   </SectionCard>
                 </VStack>
@@ -6538,7 +6538,7 @@ outline: 2px solid var(--color-border-focus);`}
                   <SectionCard>
                     <SectionCard.Header title="Flavor" />
                     <SectionCard.Content>
-                      <SectionCard.DataRow label="Flavor Name" value="m1.large" isLink linkHref="/flavors" />
+                      <SectionCard.DataRow label="Flavor name" value="m1.large" isLink linkHref="/flavors" />
                       <SectionCard.DataRow label="Spec" value="vCPU: 4 / RAM: 8 GiB / Disk: 80 GiB" />
                     </SectionCard.Content>
                   </SectionCard>
@@ -6550,12 +6550,12 @@ outline: 2px solid var(--color-border-focus);`}
                   <VStack gap={4}>
                     <SectionCard>
                       <SectionCard.Header 
-                        title="Basic Information" 
+                        title="Basic information" 
                         actions={<Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />}>Edit</Button>}
                       />
                       <SectionCard.Content>
-                        <SectionCard.DataRow label="Instance Name" value="tk-test" />
-                        <SectionCard.DataRow label="Availability Zone" value="nova" />
+                        <SectionCard.DataRow label="Instance name" value="tk-test" />
+                        <SectionCard.DataRow label="Availability zone" value="nova" />
                         <SectionCard.DataRow label="Description" value="-" />
                       </SectionCard.Content>
                     </SectionCard>
@@ -6563,7 +6563,7 @@ outline: 2px solid var(--color-border-focus);`}
                     <SectionCard>
                       <SectionCard.Header title="Flavor" />
                       <SectionCard.Content>
-                        <SectionCard.DataRow label="Flavor Name" value="web-server-10" isLink linkHref="/flavors" />
+                        <SectionCard.DataRow label="Flavor name" value="web-server-10" isLink linkHref="/flavors" />
                         <SectionCard.DataRow label="Spec" value="vCPU: 1 / RAM: 4 GiB / Disk: 40 GiB / GPU: 1" />
                       </SectionCard.Content>
                     </SectionCard>
@@ -6627,7 +6627,7 @@ outline: 2px solid var(--color-border-focus);`}
             </Section>
 
             {/* ContextMenu Component */}
-            <Section id="context-menu" title="Context Menu" description="Popup menu triggered by right-click or click with submenu support">
+            <Section id="context-menu" title="Context menu" description="Popup menu triggered by right-click or click with submenu support">
               <VStack gap={8}>
                 {/* Tokens */}
                 <VStack gap={3}>
@@ -6661,7 +6661,7 @@ outline: 2px solid var(--color-border-focus);`}
                   <ContextMenu
                     trigger="click"
                     items={[
-                      { id: 'view', label: 'View Details', onClick: () => {} },
+                      { id: 'view', label: 'View details', onClick: () => {} },
                       { id: 'edit', label: 'Edit', onClick: () => {} },
                       { id: 'share', label: 'Share', onClick: () => {}, divider: true },
                       { id: 'delete', label: 'Delete', status: 'danger', onClick: () => {} },
@@ -6700,9 +6700,9 @@ outline: 2px solid var(--color-border-focus);`}
                   <ContextMenu
                     trigger="click"
                     items={[
-                      { id: 'item1', label: 'Default Item', onClick: () => {} },
-                      { id: 'item2', label: 'Another Item', onClick: () => {}, divider: true },
-                      { id: 'danger1', label: 'Warning Action', status: 'danger', onClick: () => {} },
+                      { id: 'item1', label: 'Default item', onClick: () => {} },
+                      { id: 'item2', label: 'Another item', onClick: () => {}, divider: true },
+                      { id: 'danger1', label: 'Warning action', status: 'danger', onClick: () => {} },
                       { id: 'danger2', label: 'Delete forever', status: 'danger', onClick: () => {} },
                     ]}
                   >
@@ -6833,8 +6833,8 @@ outline: 2px solid var(--color-border-focus);`}
               </VStack>
             </Section>
 
-            {/* Monitoring Toolbar */}
-            <Section id="monitoring-toolbar" title="Monitoring Toolbar" description="Time range selection and refresh controls for monitoring dashboards">
+            {/* Monitoring toolbar */}
+            <Section id="monitoring-toolbar" title="Monitoring toolbar" description="Time range selection and refresh controls for monitoring dashboards">
               <VStack gap={8}>
                 {/* Design Tokens */}
                 <VStack gap={3}>
@@ -6931,11 +6931,11 @@ outline: 2px solid var(--color-border-focus);`}
               </VStack>
             </Section>
 
-            {/* Notification Center */}
+            {/* Notification center */}
             <NotificationCenterSection />
 
-            {/* Floating Card Section */}
-            <Section id="floating-card" title="Floating Card" description="Floating summary card for create/edit flows with sections, quota, and actions">
+            {/* Floating card Section */}
+            <Section id="floating-card" title="Floating card" description="Floating summary card for create/edit flows with sections, quota, and actions">
               <VStack gap={8}>
                 {/* Basic Example */}
                 <VStack gap={4}>
@@ -6951,9 +6951,9 @@ outline: 2px solid var(--color-border-focus);`}
                           defaultExpanded: true,
                           showSuccessIcon: true,
                           items: [
-                            { id: '1', title: 'Instance Name', status: 'success' },
+                            { id: '1', title: 'Instance name', status: 'success' },
                             { id: '2', title: 'Description', status: 'success' },
-                            { id: '3', title: 'Availability Zone', status: 'default' },
+                            { id: '3', title: 'Availability zone', status: 'default' },
                           ],
                         },
                         {
@@ -7285,8 +7285,8 @@ outline: 2px solid var(--color-border-focus);`}
                 GRAPHS SECTION
                 ============================================ */}
 
-            {/* Bar Chart */}
-            <Section id="bar-chart" title="Bar Chart" description="Categorical data comparison with vertical or horizontal bars">
+            {/* Bar chart */}
+            <Section id="bar-chart" title="Bar chart" description="Categorical data comparison with vertical or horizontal bars">
               <VStack gap={8}>
                 {/* Design Tokens */}
                 <VStack gap={3}>
@@ -7313,8 +7313,8 @@ outline: 2px solid var(--color-border-focus);`}
               </VStack>
             </Section>
 
-            {/* Area Chart */}
-            <Section id="area-chart" title="Area Chart" description="Filled area visualization for volume and cumulative data">
+            {/* Area chart */}
+            <Section id="area-chart" title="Area chart" description="Filled area visualization for volume and cumulative data">
               <VStack gap={8}>
                 {/* Design Tokens */}
                 <VStack gap={3}>
@@ -7324,19 +7324,19 @@ outline: 2px solid var(--color-border-focus);`}
                   </div>
                 </VStack>
 
-                {/* Basic Area Chart */}
+                {/* Basic Area chart */}
                 <VStack gap={3}>
-                  <Label>Basic Area Chart</Label>
+                  <Label>Basic Area chart</Label>
                   <AreaChartDemo variant="basic" />
                 </VStack>
 
-                {/* Stacked Area Chart */}
+                {/* Stacked Area chart */}
                 <VStack gap={3}>
-                  <Label>Stacked Area Chart</Label>
+                  <Label>Stacked Area chart</Label>
                   <AreaChartDemo variant="stacked" />
                 </VStack>
 
-                {/* No Data Area Chart */}
+                {/* No Data Area chart */}
                 <VStack gap={3}>
                   <Label>No Data</Label>
                   <AreaChartDemo variant="nodata" />
@@ -7344,8 +7344,8 @@ outline: 2px solid var(--color-border-focus);`}
               </VStack>
             </Section>
 
-            {/* Pie Chart */}
-            <Section id="pie-chart" title="Pie Chart" description="Part-to-whole relationships with percentage labels on slices">
+            {/* Pie chart */}
+            <Section id="pie-chart" title="Pie chart" description="Part-to-whole relationships with percentage labels on slices">
               <VStack gap={8}>
                 {/* Design Tokens */}
                 <VStack gap={3}>
@@ -7355,7 +7355,7 @@ outline: 2px solid var(--color-border-focus);`}
                   </div>
                 </VStack>
 
-                {/* Pie Charts Examples */}
+                {/* Pie charts Examples */}
                 <VStack gap={3}>
                   <Label>Examples (from storage-dashboard)</Label>
                   <div className="flex gap-6 flex-wrap">
@@ -7389,8 +7389,8 @@ outline: 2px solid var(--color-border-focus);`}
               </VStack>
             </Section>
 
-            {/* Half-Doughnut Chart */}
-            <Section id="half-doughnut-chart" title="Half-Doughnut Chart" description="Progress and metric visualization with half-circular arc design">
+            {/* Half-Doughnut chart */}
+            <Section id="half-doughnut-chart" title="Half-Doughnut chart" description="Progress and metric visualization with half-circular arc design">
               <VStack gap={8}>
                 {/* Design Tokens */}
                 <VStack gap={3}>
@@ -7412,8 +7412,8 @@ outline: 2px solid var(--color-border-focus);`}
               </VStack>
             </Section>
 
-            {/* Doughnut Chart */}
-            <Section id="doughnut-chart" title="Doughnut Chart" description="Ring chart for part-to-whole relationships with optional center metrics">
+            {/* Doughnut chart */}
+            <Section id="doughnut-chart" title="Doughnut chart" description="Ring chart for part-to-whole relationships with optional center metrics">
               <VStack gap={8}>
                 {/* Design Tokens */}
                 <VStack gap={3}>
@@ -7423,7 +7423,7 @@ outline: 2px solid var(--color-border-focus);`}
                   </div>
                 </VStack>
 
-                {/* Doughnut Chart Example */}
+                {/* Doughnut chart Example */}
                 <div className="flex gap-6 flex-wrap">
                   <DoughnutChartDemo 
                     title="OSD onode Hits Ratio"

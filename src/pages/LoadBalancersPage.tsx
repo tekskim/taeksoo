@@ -99,10 +99,10 @@ export function LoadBalancersPage() {
     { id: 'status', label: 'Status', visible: true, locked: true },
     { id: 'name', label: 'Name', visible: true, locked: true },
     { id: 'vipAddress', label: 'VIP Address', visible: true },
-    { id: 'ownedNetwork', label: 'Owned Network', visible: true },
+    { id: 'ownedNetwork', label: 'Owned network', visible: true },
     { id: 'floatingIp', label: 'Floating IP', visible: true },
     { id: 'listeners', label: 'Listeners', visible: true },
-    { id: 'createdAt', label: 'Created At', visible: true },
+    { id: 'createdAt', label: 'Created at', visible: true },
     { id: 'actions', label: 'Action', visible: true, locked: true },
   ];
 
@@ -120,8 +120,8 @@ export function LoadBalancersPage() {
 
   // Context menu items
   const getContextMenuItems = (lb: LoadBalancer): ContextMenuItem[] => [
-    { id: 'associate-floating-ip', label: 'Associate Floating IP', onClick: () => console.log('Associate floating IP:', lb.id) },
-    { id: 'disassociate-floating-ip', label: 'Disassociate Floating IP', onClick: () => console.log('Disassociate floating IP:', lb.id) },
+    { id: 'associate-floating-ip', label: 'Associate floating IP', onClick: () => console.log('Associate floating IP:', lb.id) },
+    { id: 'disassociate-floating-ip', label: 'Disassociate floating IP', onClick: () => console.log('Disassociate floating IP:', lb.id) },
     { id: 'create-listener', label: 'Create listener', onClick: () => console.log('Create listener:', lb.id) },
     { id: 'edit', label: 'Edit', onClick: () => console.log('Edit:', lb.id) },
     { id: 'delete', label: 'Delete', status: 'danger', onClick: () => { setLbToDelete(lb); setDeleteModalOpen(true); } },
@@ -184,7 +184,7 @@ export function LoadBalancersPage() {
     },
     {
       key: 'ownedNetwork',
-      label: 'Owned Network',
+      label: 'Owned network',
       flex: 1,
       sortable: true,
       render: (_, row) => (
@@ -242,7 +242,7 @@ export function LoadBalancersPage() {
     },
     {
       key: 'createdAt',
-      label: 'Created At',
+      label: 'Created at',
       flex: 1,
       sortable: true,
     },
@@ -343,7 +343,7 @@ export function LoadBalancersPage() {
                 Load balancers
               </h1>
               <Button variant="primary" size="md">
-                Create Load Balancer
+                Create Load balancer
               </Button>
             </div>
 
@@ -410,7 +410,7 @@ export function LoadBalancersPage() {
           setDeleteModalOpen(false);
           setLbToDelete(null);
         }}
-        title="Delete Load Balancer"
+        title="Delete Load balancer"
         description={`Are you sure you want to delete "${lbToDelete?.name}"? This action cannot be undone.`}
         confirmText="Delete"
         cancelText="Cancel"

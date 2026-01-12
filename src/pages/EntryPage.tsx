@@ -9,7 +9,7 @@ import {
 } from '@tabler/icons-react';
 import { Button } from '@/design-system';
 
-// App Icons
+// App icons
 import ComputeIcon from '@/assets/compute.png';
 import ContainerIcon from '@/assets/container.png';
 import CloudBuilderIcon from '@/assets/cloudbuilder.png';
@@ -241,7 +241,7 @@ export function EntryPage() {
               size="sm"
               onClick={() => navigate('/design')}
             >
-              Design System
+              Design system
             </Button>
             <Button
               variant="secondary"
@@ -260,10 +260,10 @@ export function EntryPage() {
           {/* Hero Section */}
           <div className="text-center mb-12">
             <h1 className="text-[32px] font-bold text-[var(--color-text-default)] mb-3">
-              Thaki Design System SSoT
+              Thaki Design system SSoT
             </h1>
             <p className="text-[14px] text-[var(--color-text-subtle)] mx-auto leading-relaxed">
-              Thaki Design System SSoT는 디자인 원칙, 컴포넌트, 토큰, 가이드라인을 한 곳에 모은 '단일 기준'입니다.
+              Thaki Design system SSoT는 디자인 원칙, 컴포넌트, 토큰, 가이드라인을 한 곳에 모은 '단일 기준'입니다.
               <br />
               디자이너와 개발자가 동일한 소스를 참고해 의사결정과 구현을 정렬하고, 제품 전반의 일관성과 개발 속도를 함께 높입니다.
             </p>

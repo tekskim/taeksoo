@@ -83,7 +83,7 @@ const mockSecurityGroupsMap: Record<string, SecurityGroupDetail> = {
 };
 
 const defaultSecurityGroupDetail: SecurityGroupDetail = {
-  id: 'unknown', name: 'Unknown Security Group', description: '-', createdAt: '-',
+  id: 'unknown', name: 'Unknown Security group', description: '-', createdAt: '-',
 };
 
 const mockRules: SecurityGroupRule[] = Array.from({ length: 115 }, (_, i) => ({
@@ -166,7 +166,7 @@ export default function SecurityGroupDetailPage() {
 
   // Context menu items for ports
   const getPortContextMenuItems = (port: Port): ContextMenuItem[] => [
-    { id: 'view', label: 'View Details', onClick: () => console.log('View port:', port.id) },
+    { id: 'view', label: 'View details', onClick: () => console.log('View port:', port.id) },
     { id: 'detach', label: 'Detach', status: 'danger', onClick: () => console.log('Detach port:', port.id) },
   ];
 
@@ -284,7 +284,7 @@ export default function SecurityGroupDetailPage() {
     },
     {
       key: 'portRange',
-      label: 'Port Range',
+      label: 'Port range',
       flex: 1,
     },
     {
@@ -418,10 +418,10 @@ export default function SecurityGroupDetailPage() {
                     </p>
                   </div>
 
-                  {/* Created At */}
+                  {/* Created at */}
                   <div className="flex-1 bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
                     <span className="text-[length:var(--font-size-11)] font-medium text-[var(--color-text-subtle)]">
-                      Created At
+                      Created at
                     </span>
                     <p className="text-[length:var(--font-size-12)] text-[var(--color-text-default)] mt-1.5">
                       {securityGroup.createdAt}

@@ -353,7 +353,7 @@ export function CreateAgentPage() {
                 <TopBarAction
                   icon={<IconPalette size={16} stroke={1} />}
                   onClick={() => navigate('/design-system')}
-                  aria-label="Design System"
+                  aria-label="Design system"
                 />
                 <TopBarAction
                   icon={<IconBell size={16} stroke={1} />}
@@ -671,7 +671,7 @@ export function CreateAgentPage() {
                           onPageChange={setDataSourcePage}
                         />
                       
-                      {/* Data Sources Table */}
+                      {/* Data sources Table */}
                         <Table
                           columns={dataSourceColumns}
                           data={paginatedDataSources}

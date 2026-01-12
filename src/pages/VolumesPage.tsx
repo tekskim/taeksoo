@@ -53,8 +53,8 @@ interface Volume {
    ---------------------------------------- */
 
 const mockVolumes: Volume[] = [
-  { id: 'vol-001', name: 'db-data', size: '1500GiB', type: '_DEFAULT_', diskTag: 'Data Disk', attachedTo: 'web-server-1', attachedToId: 'inst-001', createdAt: '2025-09-12', status: 'in-use' },
-  { id: 'vol-002', name: 'app-storage', size: '500GiB', type: '_DEFAULT_', diskTag: 'Data Disk', attachedTo: 'app-server-1', attachedToId: 'inst-002', createdAt: '2025-09-10', status: 'in-use' },
+  { id: 'vol-001', name: 'db-data', size: '1500GiB', type: '_DEFAULT_', diskTag: 'Data disk', attachedTo: 'web-server-1', attachedToId: 'inst-001', createdAt: '2025-09-12', status: 'in-use' },
+  { id: 'vol-002', name: 'app-storage', size: '500GiB', type: '_DEFAULT_', diskTag: 'Data disk', attachedTo: 'app-server-1', attachedToId: 'inst-002', createdAt: '2025-09-10', status: 'in-use' },
   { id: 'vol-003', name: 'backup-vol', size: '2000GiB', type: 'SSD', diskTag: 'Backup', attachedTo: null, attachedToId: null, createdAt: '2025-09-08', status: 'active' },
   { id: 'vol-004', name: 'log-storage', size: '100GiB', type: '_DEFAULT_', diskTag: 'Logs', attachedTo: 'log-server', attachedToId: 'inst-003', createdAt: '2025-09-05', status: 'in-use' },
   { id: 'vol-005', name: 'cache-vol', size: '256GiB', type: 'NVMe', diskTag: 'Cache', attachedTo: 'cache-01', attachedToId: 'inst-004', createdAt: '2025-08-30', status: 'in-use' },
@@ -103,9 +103,9 @@ export function VolumesPage() {
     { id: 'name', label: 'Name', visible: true, locked: true },
     { id: 'size', label: 'Size', visible: true },
     { id: 'type', label: 'Type', visible: true },
-    { id: 'diskTag', label: 'Disk Tag', visible: true },
-    { id: 'attachedTo', label: 'Attached To', visible: true },
-    { id: 'createdAt', label: 'Created At', visible: true },
+    { id: 'diskTag', label: 'Disk tag', visible: true },
+    { id: 'attachedTo', label: 'Attached to', visible: true },
+    { id: 'createdAt', label: 'Created at', visible: true },
     { id: 'actions', label: 'Action', visible: true, locked: true },
   ];
   const [columnConfig, setColumnConfig] = useState<ColumnConfig[]>(defaultColumnConfig);
@@ -199,12 +199,12 @@ export function VolumesPage() {
     },
     {
       key: 'diskTag',
-      label: 'Disk Tag',
+      label: 'Disk tag',
       flex: 1,
     },
     {
       key: 'attachedTo',
-      label: 'Attached To',
+      label: 'Attached to',
       flex: 1,
       sortable: true,
       render: (_, row) => (
@@ -231,7 +231,7 @@ export function VolumesPage() {
     },
     {
       key: 'createdAt',
-      label: 'Created At',
+      label: 'Created at',
       flex: 1,
       sortable: true,
     },
@@ -244,7 +244,7 @@ export function VolumesPage() {
         const menuItems: ContextMenuItem[] = [
           {
             id: 'data-protection',
-            label: 'Data Protection',
+            label: 'Data protection',
             submenu: [
               { id: 'create-snapshot', label: 'Create volume snapshot', onClick: () => console.log('Create snapshot:', row.id) },
               { id: 'create-backup', label: 'Create volume backup', onClick: () => console.log('Create backup:', row.id) },
@@ -260,7 +260,7 @@ export function VolumesPage() {
               { id: 'create-image', label: 'Create image', onClick: () => console.log('Create image:', row.id) },
               { id: 'attach-instance', label: 'Attach instance', onClick: () => console.log('Attach instance:', row.id) },
               { id: 'detach-instance', label: 'Detach instance', onClick: () => console.log('Detach instance:', row.id) },
-              { id: 'boot-setting', label: 'Boot Setting', onClick: () => console.log('Boot setting:', row.id) },
+              { id: 'boot-setting', label: 'Boot setting', onClick: () => console.log('Boot setting:', row.id) },
             ],
           },
           {
@@ -269,7 +269,7 @@ export function VolumesPage() {
             submenu: [
               { id: 'edit', label: 'Edit', onClick: () => console.log('Edit:', row.id) },
               { id: 'extend-volume', label: 'Extend volume', onClick: () => console.log('Extend volume:', row.id) },
-              { id: 'change-volume-type', label: 'Change Volume Type', onClick: () => console.log('Change volume type:', row.id) },
+              { id: 'change-volume-type', label: 'Change volume Type', onClick: () => console.log('Change volume type:', row.id) },
             ],
           },
           {

@@ -377,8 +377,8 @@ export function WorkloadDetailPage() {
                   <ContextMenu
                     items={[
                       { id: 'restart', label: 'Restart', onClick: () => console.log('Restart') },
-                      { id: 'view-logs', label: 'View Logs', onClick: () => console.log('View Logs') },
-                      { id: 'view-metrics', label: 'View Metrics', onClick: () => console.log('View Metrics') },
+                      { id: 'view-logs', label: 'View logs', onClick: () => console.log('View logs') },
+                      { id: 'view-metrics', label: 'View metrics', onClick: () => console.log('View metrics') },
                     ]}
                     trigger="click"
                   >
@@ -392,7 +392,7 @@ export function WorkloadDetailPage() {
                   <DetailHeader.InfoCard label="Status" value={workload.status.charAt(0).toUpperCase() + workload.status.slice(1)} status={getStatusType()} />
                   <DetailHeader.InfoCard label="ID" value={workload.id} copyable />
                   <DetailHeader.InfoCard label="Namespace" value={workload.namespace} />
-                  <DetailHeader.InfoCard label="Created At" value={workload.createdAt} />
+                  <DetailHeader.InfoCard label="Created at" value={workload.createdAt} />
                 </DetailHeader.InfoGrid>
               </DetailHeader>
 
@@ -509,15 +509,15 @@ export function WorkloadDetailPage() {
                   {/* Details Tab Panel */}
                   <TabPanel value="details" className="pt-0">
                     <VStack gap={4} className="pt-6">
-                      {/* Basic Information */}
+                      {/* Basic information */}
                       <SectionCard>
-                        <SectionCard.Header title="Basic Information" />
+                        <SectionCard.Header title="Basic information" />
                         <SectionCard.Content>
                           <SectionCard.DataRow label="Name" value={workload.name} />
                           <SectionCard.DataRow label="ID" value={workload.id} />
                           <SectionCard.DataRow label="Namespace" value={workload.namespace} />
                           <SectionCard.DataRow label="Status" value={workload.status.charAt(0).toUpperCase() + workload.status.slice(1)} />
-                          <SectionCard.DataRow label="Created At" value={workload.createdAt} />
+                          <SectionCard.DataRow label="Created at" value={workload.createdAt} />
                         </SectionCard.Content>
                       </SectionCard>
 
@@ -525,7 +525,7 @@ export function WorkloadDetailPage() {
                       <SectionCard>
                         <SectionCard.Header title="Resources" />
                         <SectionCard.Content>
-                          <SectionCard.DataRow label="Compute Type" value={workload.computeType} />
+                          <SectionCard.DataRow label="Compute type" value={workload.computeType} />
                           <SectionCard.DataRow label="Memory" value={workload.memory} />
                           <SectionCard.DataRow label="GPU" value={workload.gpu} />
                           <SectionCard.DataRow label="Image" value={workload.image} />

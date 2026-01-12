@@ -90,10 +90,10 @@ export function InstanceSnapshotsPage() {
     { id: 'status', label: 'Status', visible: true, locked: true },
     { id: 'name', label: 'Name', visible: true, locked: true },
     { id: 'size', label: 'Size', visible: true },
-    { id: 'diskFormat', label: 'Disk Format', visible: true },
-    { id: 'sourceInstance', label: 'Source Instance', visible: true },
+    { id: 'diskFormat', label: 'Disk format', visible: true },
+    { id: 'sourceInstance', label: 'Source instance', visible: true },
     { id: 'description', label: 'Description', visible: true },
-    { id: 'createdAt', label: 'Created At', visible: true },
+    { id: 'createdAt', label: 'Created at', visible: true },
     { id: 'actions', label: 'Action', visible: true, locked: true },
   ];
   const [columnConfig, setColumnConfig] = useState<ColumnConfig[]>(defaultColumnConfig);
@@ -222,13 +222,13 @@ export function InstanceSnapshotsPage() {
     },
     {
       key: 'diskFormat',
-      label: 'Disk Format',
+      label: 'Disk format',
       flex: 1,
       sortable: true,
     },
     {
       key: 'sourceInstance',
-      label: 'Source Instance',
+      label: 'Source instance',
       flex: 1,
       sortable: true,
       render: (_, row) => (
@@ -253,7 +253,7 @@ export function InstanceSnapshotsPage() {
     },
     {
       key: 'createdAt',
-      label: 'Created At',
+      label: 'Created at',
       flex: 1,
       sortable: true,
     },

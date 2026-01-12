@@ -102,8 +102,8 @@ export function CertificatesPage() {
     { id: 'name', label: 'Name', visible: true, locked: true },
     { id: 'domain', label: 'SAN', visible: true },
     { id: 'listener', label: 'Listener', visible: true },
-    { id: 'expiresAt', label: 'Expires At', visible: true },
-    { id: 'createdAt', label: 'Created At', visible: true },
+    { id: 'expiresAt', label: 'Expires at', visible: true },
+    { id: 'createdAt', label: 'Created at', visible: true },
     { id: 'actions', label: 'Action', visible: true, locked: true },
   ];
 
@@ -206,7 +206,7 @@ export function CertificatesPage() {
     },
     {
       key: 'expiresAt',
-      label: 'Expires At',
+      label: 'Expires at',
       flex: 1,
       sortable: true,
       render: (value: string) => {
@@ -218,7 +218,7 @@ export function CertificatesPage() {
         );
       },
     },
-    { key: 'createdAt', label: 'Created At', flex: 1, sortable: true },
+    { key: 'createdAt', label: 'Created at', flex: 1, sortable: true },
     {
       key: 'actions',
       label: 'Action',

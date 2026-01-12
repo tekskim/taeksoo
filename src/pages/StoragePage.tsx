@@ -250,7 +250,7 @@ export function AgentSidebar() {
 }
 
 /* ----------------------------------------
-   Data Source Table Row Data Type
+   Data source Table Row Data Type
    ---------------------------------------- */
 interface DataSourceRow {
   id: string;

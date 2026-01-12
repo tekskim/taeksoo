@@ -97,8 +97,8 @@ export function VolumeSnapshotsPage() {
     { id: 'status', label: 'Status', visible: true, locked: true },
     { id: 'name', label: 'Name', visible: true, locked: true },
     { id: 'size', label: 'Size', visible: true },
-    { id: 'sourceVolume', label: 'Source Volume', visible: true },
-    { id: 'createdAt', label: 'Created At', visible: true },
+    { id: 'sourceVolume', label: 'Source volume', visible: true },
+    { id: 'createdAt', label: 'Created at', visible: true },
     { id: 'actions', label: 'Action', visible: true, locked: true },
   ];
   const [columnConfig, setColumnConfig] = useState<ColumnConfig[]>(defaultColumnConfig);
@@ -187,7 +187,7 @@ export function VolumeSnapshotsPage() {
     },
     {
       key: 'sourceVolume',
-      label: 'Source Volume',
+      label: 'Source volume',
       flex: 1,
       sortable: false,
       render: (_, row) => (
@@ -208,7 +208,7 @@ export function VolumeSnapshotsPage() {
     },
     {
       key: 'createdAt',
-      label: 'Created At',
+      label: 'Created at',
       flex: 1,
       sortable: true,
     },
@@ -297,7 +297,7 @@ export function VolumeSnapshotsPage() {
               <Breadcrumb
                 items={[
                   { label: 'Proj-1', href: '/project' },
-                  { label: 'Volume Snapshots' },
+                  { label: 'Volume snapshots' },
                 ]}
               />
             }
@@ -318,7 +318,7 @@ export function VolumeSnapshotsPage() {
             {/* Page Header */}
             <div className="flex items-center justify-between h-8">
               <h1 className="text-[length:var(--font-size-16)] font-semibold text-[var(--color-text-default)]">
-                Volume Snapshots
+                Volume snapshots
               </h1>
             </div>
 
@@ -382,7 +382,7 @@ export function VolumeSnapshotsPage() {
       <ConfirmModal
         isOpen={deleteModalOpen}
         onClose={handleDeleteCancel}
-        title="Delete Volume Snapshot"
+        title="Delete Volume snapshot"
         description={`Are you sure you want to delete "${snapshotToDelete?.name}"? This action cannot be undone.`}
         confirmText="Delete"
         cancelText="Cancel"

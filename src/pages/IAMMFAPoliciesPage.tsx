@@ -56,7 +56,7 @@ export default function IAMMFAPoliciesPage() {
   // Sidebar width
   const sidebarWidth = sidebarOpen ? 200 : 0;
 
-  // Tab bar tabs
+  // Tab Bar tabs
   const tabBarTabs = tabs.map(tab => ({
     id: tab.id,
     label: tab.label,

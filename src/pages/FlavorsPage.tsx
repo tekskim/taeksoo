@@ -96,8 +96,8 @@ export function FlavorsPage() {
     { id: 'category', label: 'Category', visible: true },
     { id: 'vcpu', label: 'vCPU', visible: true },
     { id: 'ram', label: 'RAM', visible: true },
-    { id: 'ephemeralDisk', label: 'Ephemeral Disk', visible: true },
-    { id: 'internalNetworkBandwidth', label: 'Internal Network Bandwidth', visible: true },
+    { id: 'ephemeralDisk', label: 'Ephemeral disk', visible: true },
+    { id: 'internalNetworkBandwidth', label: 'Internal network Bandwidth', visible: true },
     { id: 'access', label: 'Access', visible: true },
     { id: 'actions', label: 'Action', visible: true, locked: true },
   ];
@@ -184,13 +184,13 @@ export function FlavorsPage() {
     },
     {
       key: 'ephemeralDisk',
-      label: 'Ephemeral Disk',
+      label: 'Ephemeral disk',
       flex: 1,
       sortable: true,
     },
     {
       key: 'internalNetworkBandwidth',
-      label: 'Internal Network Bandwidth',
+      label: 'Internal network Bandwidth',
       flex: 1,
       sortable: true,
     },

@@ -166,7 +166,7 @@ export function AgentSidebar() {
               </SNBMenuItem>
             </Tooltip>
 
-            {/* Data Sources */}
+            {/* Data sources */}
             <Tooltip content="Data sources" position="right">
               <SNBMenuItem
                 isSelected={isActive(['/agent/storage', '/agent/storage/*'])}
@@ -358,7 +358,7 @@ export function AgentPage() {
         const menuItems: ContextMenuItem[] = [
           {
             id: 'view-code',
-            label: 'View Code',
+            label: 'View code',
             onClick: () => console.log('View code:', row.id),
           },
           {

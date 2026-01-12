@@ -266,7 +266,7 @@ export function ServerGroupDetailPage() {
     },
     {
       key: 'createdAt',
-      label: 'Created At',
+      label: 'Created at',
       flex: 1,
       sortable: true,
       render: (value) => <span>{value}</span>,
@@ -352,7 +352,7 @@ export function ServerGroupDetailPage() {
           {/* Page Content */}
           <div className="pt-4 px-8 pb-20 bg-[var(--color-surface-default)] min-h-full">
             <VStack gap={6} className="min-w-[1176px]">
-              {/* Detail Header */}
+              {/* Detail header */}
               <DetailHeader>
                 <DetailHeader.Title>{serverGroup.name}</DetailHeader.Title>
                 <DetailHeader.Actions>

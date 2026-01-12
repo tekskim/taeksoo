@@ -108,12 +108,12 @@ export function PortsPage() {
   const defaultColumnConfig: ColumnConfig[] = [
     { id: 'status', label: 'Status', visible: true, locked: true },
     { id: 'name', label: 'Name', visible: true, locked: true },
-    { id: 'attachedTo', label: 'Attached To', visible: true },
-    { id: 'ownedNetwork', label: 'Owned Network', visible: true },
+    { id: 'attachedTo', label: 'Attached to', visible: true },
+    { id: 'ownedNetwork', label: 'Owned network', visible: true },
     { id: 'securityGroups', label: 'SG', visible: true },
     { id: 'fixedIp', label: 'Fixed IP', visible: true },
     { id: 'floatingIp', label: 'Floating IP', visible: true },
-    { id: 'macAddress', label: 'Mac Address', visible: true },
+    { id: 'macAddress', label: 'Mac address', visible: true },
     { id: 'actions', label: 'Action', visible: true, locked: true },
   ];
 
@@ -133,10 +133,10 @@ export function PortsPage() {
   const getContextMenuItems = (port: Port): ContextMenuItem[] => [
     { id: 'attach-instance', label: 'Attach instance', onClick: () => console.log('Attach instance:', port.id) },
     { id: 'detach-instance', label: 'Detach instance', onClick: () => console.log('Detach instance:', port.id) },
-    { id: 'associate-floating-ip', label: 'Associate Floating IP', onClick: () => console.log('Associate floating IP:', port.id) },
-    { id: 'disassociate-floating-ip', label: 'Disassociate Floating IP', onClick: () => console.log('Disassociate floating IP:', port.id) },
+    { id: 'associate-floating-ip', label: 'Associate floating IP', onClick: () => console.log('Associate floating IP:', port.id) },
+    { id: 'disassociate-floating-ip', label: 'Disassociate floating IP', onClick: () => console.log('Disassociate floating IP:', port.id) },
     { id: 'allocate-ip', label: 'Allocate IP', onClick: () => console.log('Allocate IP:', port.id) },
-    { id: 'manage-security-groups', label: 'Manage Security groups', onClick: () => console.log('Manage security groups:', port.id) },
+    { id: 'manage-security-groups', label: 'Manage security groups', onClick: () => console.log('Manage security groups:', port.id) },
     { id: 'edit', label: 'Edit', onClick: () => console.log('Edit:', port.id) },
     { id: 'delete', label: 'Delete', status: 'danger', onClick: () => { setPortToDelete(port); setDeleteModalOpen(true); } },
   ];
@@ -204,7 +204,7 @@ export function PortsPage() {
     },
     {
       key: 'attachedTo',
-      label: 'Attached To',
+      label: 'Attached to',
       width: '160px',
       align: 'right',
       render: (_, row) => (
@@ -239,7 +239,7 @@ export function PortsPage() {
     },
     {
       key: 'ownedNetwork',
-      label: 'Owned Network',
+      label: 'Owned network',
       width: '140px',
       sortable: true,
       render: (_, row) => (

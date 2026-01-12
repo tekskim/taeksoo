@@ -325,13 +325,13 @@ export function MCPToolsPage() {
       id: '10',
       favorite: false,
       status: 'active',
-      title: 'Figma Design System',
+      title: 'Figma Design system',
       mcpServer: {
         thumbnail: 'https://www.figma.com/favicon.ico',
         label: 'figma',
       },
       category: 'Design',
-      tags: ['UI/UX', 'Prototype', 'Collaboration', 'Design System', 'Components'],
+      tags: ['UI/UX', 'Prototype', 'Collaboration', 'Design system', 'Components'],
       createdAt: 'Nov 2, 2025, 5:45 PM',
     },
   ];
