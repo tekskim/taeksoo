@@ -1,4 +1,5 @@
 import { useState, useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
   Button,
   SearchInput,
@@ -79,6 +80,7 @@ const networkStatusMap: Record<NetworkStatus, 'active' | 'error' | 'building'> =
    ---------------------------------------- */
 
 export function NetworksPage() {
+  const navigate = useNavigate();
   const [selectedNetworks, setSelectedNetworks] = useState<string[]>([]);
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
@@ -303,7 +305,7 @@ export function NetworksPage() {
               <h1 className="text-[length:var(--font-size-16)] font-semibold text-[var(--color-text-default)]">
                 Networks
               </h1>
-              <Button variant="primary" size="md">
+              <Button variant="primary" size="md" onClick={() => navigate('/compute/networks/create')}>
                 Create Network
               </Button>
             </div>

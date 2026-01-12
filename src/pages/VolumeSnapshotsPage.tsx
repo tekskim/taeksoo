@@ -320,9 +320,6 @@ export function VolumeSnapshotsPage() {
               <h1 className="text-[length:var(--font-size-16)] font-semibold text-[var(--color-text-default)]">
                 Volume Snapshots
               </h1>
-              <Button>
-                Create Snapshot
-              </Button>
             </div>
 
             {/* List Toolbar */}

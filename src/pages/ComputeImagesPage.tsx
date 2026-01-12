@@ -28,7 +28,7 @@ import {
   IconDownload,
   IconBell,
 } from '@tabler/icons-react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 /* ----------------------------------------
    Types
@@ -72,6 +72,7 @@ const mockImages: Image[] = [
    ---------------------------------------- */
 
 export function ComputeImagesPage() {
+  const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
@@ -353,7 +354,7 @@ onTabAdd={addNewTab}
               <h1 className="text-[length:var(--font-size-16)] font-semibold text-[var(--color-text-default)]">
                 Images
               </h1>
-              <Button>
+              <Button onClick={() => navigate('/compute/images/create')}>
                 Create Image
               </Button>
             </div>
