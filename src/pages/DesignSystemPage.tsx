@@ -70,6 +70,12 @@ import {
   Loading,
   SNBMenuItem,
   CardTitle,
+  WizardSection,
+  WizardSummary,
+  PreSection,
+  WritingSection,
+  DoneSection,
+  DoneSectionRow,
 } from '@/design-system';
 import type { WizardSectionState, WizardSummaryItem } from '@/design-system';
 import type { NotificationItem } from '@/design-system/components/NotificationCenter';
@@ -6389,29 +6395,94 @@ outline: 2px solid var(--color-border-focus);`}
             {/* Wizard (Create Flow) Component */}
             <Section id="wizard" title="Wizard (Create Flow)" description="Multi-step wizard pattern for resource creation with section status management">
               <VStack gap={8}>
-                {/* Description */}
+                {/* Design Tokens */}
                 <VStack gap={3}>
-                  <Label>Description</Label>
-                  <p className="text-[length:var(--font-size-12)] text-[var(--color-text-subtle)]">
-                    Wizard 컴포넌트는 리소스 생성 등의 다단계 작업 흐름에서 사용됩니다. 
-                    WizardSection, WizardSummary 등의 컴포넌트를 조합하여 구현합니다.
-                  </p>
-                </VStack>
-
-                {/* Components List */}
-                <VStack gap={3}>
-                  <Label>Available Components</Label>
+                  <Label>Design Tokens</Label>
                   <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
                     <code>WizardSection</code>, <code>WizardSummary</code>, <code>PreSection</code>, <code>WritingSection</code>, <code>DoneSection</code>, <code>DoneSectionRow</code>
                   </div>
                 </VStack>
 
-                {/* Usage Example */}
+                {/* Section States */}
                 <VStack gap={3}>
-                  <Label>Usage</Label>
-                  <p className="text-[length:var(--font-size-12)] text-[var(--color-text-subtle)]">
-                    Create Instance, Create Image 등의 페이지에서 Wizard 패턴 사용 예시를 확인할 수 있습니다.
-                  </p>
+                  <Label>Section States</Label>
+                  <div className="grid grid-cols-2 gap-4">
+                    {/* Pre State */}
+                    <VStack gap={2}>
+                      <span className="text-[11px] text-[var(--color-text-muted)]">Pre (Waiting)</span>
+                      <PreSection title="Basic Information" />
+                    </VStack>
+                    
+                    {/* Writing State */}
+                    <VStack gap={2}>
+                      <span className="text-[11px] text-[var(--color-text-muted)]">Writing (In Progress)</span>
+                      <WritingSection title="Network Configuration" />
+                    </VStack>
+                  </div>
+                </VStack>
+
+                {/* Done Section Example */}
+                <VStack gap={3}>
+                  <Label>Done Section (Completed)</Label>
+                  <DoneSection title="Instance Settings" onEdit={() => {}}>
+                    <DoneSectionRow label="Instance Name" value="web-server-01" />
+                    <DoneSectionRow label="Instance Type" value="m5.large (2 vCPU, 8 GB RAM)" />
+                    <DoneSectionRow label="Region" value="ap-northeast-2 (Seoul)" />
+                  </DoneSection>
+                </VStack>
+
+                {/* Wizard Summary Example */}
+                <VStack gap={3}>
+                  <Label>Wizard Summary</Label>
+                  <div className="max-w-[300px]">
+                    <WizardSummary
+                      items={[
+                        { key: 'basic', label: 'Basic Information', status: 'done' as WizardSectionState },
+                        { key: 'network', label: 'Network', status: 'done' as WizardSectionState },
+                        { key: 'storage', label: 'Storage', status: 'writing' as WizardSectionState },
+                        { key: 'security', label: 'Security', status: 'pre' as WizardSectionState },
+                        { key: 'review', label: 'Review', status: 'pre' as WizardSectionState },
+                      ]}
+                    />
+                  </div>
+                </VStack>
+
+                {/* Full Wizard Example */}
+                <VStack gap={3}>
+                  <Label>Full Wizard Example</Label>
+                  <div className="flex gap-6">
+                    {/* Sections */}
+                    <VStack gap={4} className="flex-1">
+                      <DoneSection title="1. Basic Information" onEdit={() => {}}>
+                        <DoneSectionRow label="Instance Name" value="production-api-01" />
+                        <DoneSectionRow label="Description" value="Production API server" />
+                      </DoneSection>
+                      
+                      <DoneSection title="2. Network Configuration" onEdit={() => {}}>
+                        <DoneSectionRow label="VPC" value="vpc-production" />
+                        <DoneSectionRow label="Subnet" value="subnet-private-1a" />
+                      </DoneSection>
+                      
+                      <WritingSection title="3. Storage Configuration" />
+                      
+                      <PreSection title="4. Security Groups" />
+                      
+                      <PreSection title="5. Review & Create" />
+                    </VStack>
+
+                    {/* Summary */}
+                    <div className="w-[280px] shrink-0">
+                      <WizardSummary
+                        items={[
+                          { key: 'basic', label: 'Basic Information', status: 'done' as WizardSectionState },
+                          { key: 'network', label: 'Network Configuration', status: 'done' as WizardSectionState },
+                          { key: 'storage', label: 'Storage Configuration', status: 'writing' as WizardSectionState },
+                          { key: 'security', label: 'Security Groups', status: 'pre' as WizardSectionState },
+                          { key: 'review', label: 'Review & Create', status: 'pre' as WizardSectionState },
+                        ]}
+                      />
+                    </div>
+                  </div>
                 </VStack>
               </VStack>
             </Section>
