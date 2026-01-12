@@ -131,12 +131,12 @@ export function PortsPage() {
 
   // Context menu items
   const getContextMenuItems = (port: Port): ContextMenuItem[] => [
-    { id: 'attach-instance', label: 'Attach Instance', onClick: () => console.log('Attach instance:', port.id) },
-    { id: 'detach-instance', label: 'Detach Instance', onClick: () => console.log('Detach instance:', port.id) },
+    { id: 'attach-instance', label: 'Attach instance', onClick: () => console.log('Attach instance:', port.id) },
+    { id: 'detach-instance', label: 'Detach instance', onClick: () => console.log('Detach instance:', port.id) },
     { id: 'associate-floating-ip', label: 'Associate Floating IP', onClick: () => console.log('Associate floating IP:', port.id) },
     { id: 'disassociate-floating-ip', label: 'Disassociate Floating IP', onClick: () => console.log('Disassociate floating IP:', port.id) },
     { id: 'allocate-ip', label: 'Allocate IP', onClick: () => console.log('Allocate IP:', port.id) },
-    { id: 'manage-security-groups', label: 'Manage Security Groups', onClick: () => console.log('Manage security groups:', port.id) },
+    { id: 'manage-security-groups', label: 'Manage Security groups', onClick: () => console.log('Manage security groups:', port.id) },
     { id: 'edit', label: 'Edit', onClick: () => console.log('Edit:', port.id) },
     { id: 'delete', label: 'Delete', status: 'danger', onClick: () => { setPortToDelete(port); setDeleteModalOpen(true); } },
   ];
@@ -380,7 +380,7 @@ export function PortsPage() {
                 size="md"
                 onClick={() => navigate('/compute/ports/create')}
               >
-                Create Virtual Adapter
+                Create virtual adapter
               </Button>
             </div>
 

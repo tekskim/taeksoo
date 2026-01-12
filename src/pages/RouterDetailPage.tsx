@@ -393,14 +393,14 @@ export default function RouterDetailPage() {
                 <DetailHeader.Title>{router.name}</DetailHeader.Title>
                 <DetailHeader.Actions>
                   <Button variant="secondary" size="sm" leftIcon={<IconLink size={12} />}>
-                    Connect Subnet
+                    Connect subnet
                   </Button>
                   <Button variant="secondary" size="sm" leftIcon={<IconTrash size={12} />}>
                     Delete
                   </Button>
                   <ContextMenu
                     items={[
-                      { label: 'Disconnect Subnet', onClick: () => {}, variant: 'danger' },
+                      { label: 'Disconnect subnet', onClick: () => {}, variant: 'danger' },
                       { label: 'External Gateway Setting', onClick: () => {} },
                       { label: 'Enable SNAT', onClick: () => {} },
                       { label: 'Disable SNAT', onClick: () => {} },
@@ -513,7 +513,7 @@ export default function RouterDetailPage() {
                           Ports
                         </h3>
                         <Button variant="secondary" size="sm" leftIcon={<IconCirclePlus size={12} />}>
-                          Connect Subnet
+                          Connect subnet
                         </Button>
                       </div>
 

@@ -27,7 +27,7 @@ import {
 } from '@tabler/icons-react';
 
 /* ----------------------------------------
-   MFA Policies Page
+   MFA policies Page
    ---------------------------------------- */
 
 export default function IAMMFAPoliciesPage() {
@@ -50,7 +50,7 @@ export default function IAMMFAPoliciesPage() {
 
   // Update tab label on mount
   useEffect(() => {
-    updateActiveTabLabel('MFA Policies');
+    updateActiveTabLabel('MFA policies');
   }, [updateActiveTabLabel]);
 
   // Sidebar width

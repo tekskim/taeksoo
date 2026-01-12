@@ -216,7 +216,7 @@ export default function PortDetailPage() {
     return filteredAaps.slice(start, start + aapPerPage);
   }, [filteredAaps, aapCurrentPage, aapPerPage]);
 
-  // Filter and paginate Security Groups
+  // Filter and paginate Security groups
   const filteredSgs = useMemo(() => {
     return securityGroups.filter((sg) =>
       sg.name.toLowerCase().includes(sgSearchTerm.toLowerCase()) ||
@@ -336,7 +336,7 @@ export default function PortDetailPage() {
     },
   ];
 
-  // Security Groups columns
+  // Security groups columns
   const sgColumns: TableColumn<SecurityGroup>[] = [
     {
       key: 'name',
@@ -751,7 +751,7 @@ export default function PortDetailPage() {
                       {/* Header */}
                       <div className="flex items-center justify-between">
                         <h3 className="text-[16px] font-semibold text-[var(--color-text-default)]">
-                          Security Groups
+                          Security groups
                         </h3>
                         <Button variant="secondary" size="sm">
                           Manage Security Group

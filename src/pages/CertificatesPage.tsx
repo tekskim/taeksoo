@@ -276,7 +276,7 @@ export function CertificatesPage() {
           <VStack gap={3}>
             <div className="flex justify-between items-center h-8 w-full">
               <h1 className="text-[length:var(--font-size-16)] font-semibold text-[var(--color-text-default)]">Certificates</h1>
-              <Button variant="primary" size="md">Register Certificate</Button>
+              <Button variant="primary" size="md">Register certificate</Button>
             </div>
             <Tabs value={activeTab} onChange={setActiveTab} size="sm">
               <TabList><Tab value="server">Server</Tab><Tab value="ca">CA</Tab></TabList>

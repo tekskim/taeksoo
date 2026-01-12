@@ -1520,11 +1520,11 @@ function NetworkSection({
             </button>
           </VStack>
 
-          {/* Security Groups Section */}
+          {/* Security groups Section */}
           <VStack gap={4} align="stretch">
             <VStack gap={2} align="start">
               <span className="text-[14px] font-medium text-[var(--color-text-default)] leading-[20px]">
-                Security Groups<span className="ml-[3px] text-[var(--color-state-danger)]">*</span>
+                Security groups<span className="ml-[3px] text-[var(--color-state-danger)]">*</span>
               </span>
               <span className="text-[12px] text-[var(--color-text-subtle)] leading-[16px]">
                 Security groups apply to all networks except ports with security disabled.
@@ -1562,7 +1562,7 @@ function NetworkSection({
               onRowClick={(row) => onSecurityGroupToggle(row.id)}
             />
 
-            {/* Selected Security Groups Chips */}
+            {/* Selected Security groups Chips */}
             {selectedSGs.length > 0 && (
               <HStack gap={2} className="flex-wrap">
                 {selectedSGs.map(sg => (
@@ -2217,8 +2217,8 @@ export function CreateTemplatePage() {
               <Breadcrumb
                 items={[
                   { label: 'Proj-1', href: '/project' },
-                  { label: 'Instance Templates', href: '/compute/instance-templates' },
-                  { label: 'Create Template' },
+                  { label: 'Instance templates', href: '/compute/instance-templates' },
+                  { label: 'Create template' },
                 ]}
               />
             }
@@ -2238,7 +2238,7 @@ export function CreateTemplatePage() {
             <VStack gap={6} className="min-w-[1176px]">
               {/* Page Title */}
               <h1 className="text-[18px] font-semibold leading-7 text-[var(--color-text-default)]">
-                Create Template
+                Create template
               </h1>
 
               {/* Content Area */}
@@ -2377,7 +2377,7 @@ export function CreateTemplatePage() {
                   {sectionStatus.network === 'done' && (
                     <DoneSection title={SECTION_LABELS.network} onEdit={() => handleEdit('network')}>
                       <SectionCard.DataRow label="Network" value={getNetworkSummary()} showDivider={false} />
-                      <SectionCard.DataRow label="Security Groups" value={getSecurityGroupSummary()} />
+                      <SectionCard.DataRow label="Security groups" value={getSecurityGroupSummary()} />
                     </DoneSection>
                   )}
 

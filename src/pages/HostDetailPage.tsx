@@ -1219,7 +1219,7 @@ export default function HostDetailPage() {
                   <TabList>
                     <Tab value="details">Details</Tab>
                     <Tab value="devices">Devices</Tab>
-                    <Tab value="physical-disks">Physical Disks</Tab>
+                    <Tab value="physical-disks">Physical disks</Tab>
                     <Tab value="daemon">Daemon</Tab>
                     <Tab value="device-health">Device health</Tab>
                     <Tab value="performance">Performance</Tab>
@@ -1308,13 +1308,13 @@ export default function HostDetailPage() {
                     </VStack>
                   </TabPanel>
 
-                  {/* Physical Disks Tab */}
+                  {/* Physical disks Tab */}
                   <TabPanel value="physical-disks" className="pt-0">
                     <VStack gap={3} className="pt-4">
                       {/* Header */}
                       <div className="flex items-center h-7">
                         <h3 className="text-[length:var(--font-size-16)] font-semibold leading-6 text-[var(--color-text-default)]">
-                          Physical Disks
+                          Physical disks
                         </h3>
                       </div>
                       

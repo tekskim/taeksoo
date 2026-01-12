@@ -120,7 +120,7 @@ export function NetworksPage() {
 
   // Context menu items
   const getContextMenuItems = (network: Network): ContextMenuItem[] => [
-    { id: 'create-subnet', label: 'Create Subnet', onClick: () => console.log('Create subnet:', network.id) },
+    { id: 'create-subnet', label: 'Create subnet', onClick: () => console.log('Create subnet:', network.id) },
     { id: 'edit', label: 'Edit', onClick: () => console.log('Edit:', network.id) },
     { id: 'delete', label: 'Delete', status: 'danger', onClick: () => { setNetworkToDelete(network); setDeleteModalOpen(true); } },
   ];
@@ -306,7 +306,7 @@ export function NetworksPage() {
                 Networks
               </h1>
               <Button variant="primary" size="md" onClick={() => navigate('/compute/networks/create')}>
-                Create Network
+                Create network
               </Button>
             </div>
 

@@ -58,7 +58,7 @@ const mockUserGroups: UserGroup[] = [
 ];
 
 /* ----------------------------------------
-   IAM User Groups Page
+   IAM User groups Page
    ---------------------------------------- */
 
 export function IAMUserGroupsPage() {

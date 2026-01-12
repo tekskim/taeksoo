@@ -80,7 +80,7 @@ const mockServerGroupsMap: Record<string, ServerGroupDetail> = {
 };
 
 const defaultServerGroupDetail: ServerGroupDetail = {
-  id: 'unknown', name: 'Unknown Server Group', policy: '-',
+  id: 'unknown', name: 'Unknown Server group', policy: '-',
 };
 
 const mockServerGroupInstances: ServerGroupInstance[] = [
@@ -126,7 +126,7 @@ function CopyButton({ value }: { value: string }) {
 }
 
 /* ----------------------------------------
-   Server Group Detail Page
+   Server group Detail Page
    ---------------------------------------- */
 
 export function ServerGroupDetailPage() {
@@ -167,7 +167,7 @@ export function ServerGroupDetailPage() {
   // Breadcrumb items
   const breadcrumbItems = [
     { label: 'Proj-1', href: '/' },
-    { label: 'Server Group', href: '/compute/server-groups' },
+    { label: 'Server group', href: '/compute/server-groups' },
     { label: serverGroup.name },
   ];
 
@@ -361,7 +361,7 @@ export function ServerGroupDetailPage() {
                     size="sm"
                     leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
                   >
-                    Create Instance
+                    Create instance
                   </Button>
                   <Button
                     variant="secondary"

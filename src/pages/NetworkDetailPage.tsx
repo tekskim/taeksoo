@@ -536,7 +536,7 @@ export default function NetworkDetailPage() {
                 <DetailHeader.Title>{network.name}</DetailHeader.Title>
                 <DetailHeader.Actions>
                   <Button variant="secondary" size="sm" leftIcon={<IconCirclePlus size={12} />}>
-                    Create Subnet
+                    Create subnet
                   </Button>
                   <Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />}>
                     Edit
@@ -613,7 +613,7 @@ export default function NetworkDetailPage() {
                           Subnets
                         </h3>
                         <Button variant="secondary" size="sm" leftIcon={<IconCirclePlus size={12} />}>
-                          Create Subnet
+                          Create subnet
                         </Button>
                       </div>
 

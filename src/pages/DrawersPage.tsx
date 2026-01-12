@@ -346,7 +346,7 @@ export function DrawersPage() {
               {/* Header */}
               <VStack gap={2}>
                 <h1 className="text-[24px] font-semibold text-[var(--color-text-default)]">
-                  Drawer Components
+                  Drawer components
                 </h1>
                 <p className="text-[14px] text-[var(--color-text-subtle)]">
                   Collection of drawer components used across the application. Click to preview each drawer.
@@ -362,13 +362,13 @@ export function DrawersPage() {
                   </h2>
                   <div className="flex flex-col gap-2">
                     <DrawerCard
-                      title="Create Instance Snapshot"
+                      title="Create instance snapshot"
                       description="Create a snapshot of an instance to capture its current system state as an image."
                       category="Instance"
                       onOpen={() => setIsCreateSnapshotOpen(true)}
                     />
                     <DrawerCard
-                      title="Edit Instance"
+                      title="Edit instance"
                       description="Edit instance name and description. Allows modification of basic instance metadata."
                       category="Instance"
                       onOpen={() => setIsEditInstanceOpen(true)}
@@ -389,13 +389,13 @@ export function DrawersPage() {
                   </h2>
                   <div className="flex flex-col gap-2">
                     <DrawerCard
-                      title="Edit Instance Snapshot"
+                      title="Edit instance Snapshot"
                       description="Edit the name and description of an instance snapshot."
                       category="Snapshot"
                       onOpen={() => setIsEditInstanceSnapshotOpen(true)}
                     />
                     <DrawerCard
-                      title="Create Volume from Instance Snapshot"
+                      title="Create volume from Instance Snapshot"
                       description="Create a new volume from an instance snapshot, containing the same data as the snapshot's system disk."
                       category="Snapshot"
                       onOpen={() => setIsCreateVolumeFromSnapshotOpen(true)}
@@ -410,31 +410,31 @@ export function DrawersPage() {
                   </h2>
                   <div className="flex flex-col gap-2">
                     <DrawerCard
-                      title="Create Volume Snapshot"
+                      title="Create volume snapshot"
                       description="Create a snapshot of a volume to back up its current data state for later restoration."
                       category="Volume"
                       onOpen={() => setIsCreateVolumeSnapshotOpen(true)}
                     />
                     <DrawerCard
-                      title="Create Volume Backup"
+                      title="Create volume backup"
                       description="Create a full backup of a volume and store it in the backup service for disaster recovery."
                       category="Volume"
                       onOpen={() => setIsCreateVolumeBackupOpen(true)}
                     />
                     <DrawerCard
-                      title="Clone Volume"
+                      title="Clone volume"
                       description="Create an exact copy of a volume for testing, backup, or new instance creation."
                       category="Volume"
                       onOpen={() => setIsCloneVolumeOpen(true)}
                     />
                     <DrawerCard
-                      title="Extend Volume"
+                      title="Extend volume"
                       description="Increase the size of a volume to expand its storage capacity."
                       category="Volume"
                       onOpen={() => setIsExtendVolumeOpen(true)}
                     />
                     <DrawerCard
-                      title="Create Image from Volume"
+                      title="Create image from Volume"
                       description="Create a new image using a volume as the source. The image will contain all data currently stored on the volume."
                       category="Volume"
                       onOpen={() => setIsCreateImageFromVolumeOpen(true)}
@@ -452,7 +452,7 @@ export function DrawersPage() {
                       onOpen={() => setIsChangeVolumeTypeOpen(true)}
                     />
                     <DrawerCard
-                      title="Create Transfer"
+                      title="Create transfer"
                       description="Create a transfer request to share this volume with another project."
                       category="Volume"
                       onOpen={() => setIsCreateTransferOpen(true)}
@@ -476,13 +476,13 @@ export function DrawersPage() {
                       onOpen={() => setIsEditVolumeSnapshotOpen(true)}
                     />
                     <DrawerCard
-                      title="Create Volume from Snapshot"
+                      title="Create volume from Snapshot"
                       description="Create a new volume from an existing volume snapshot with customizable capacity and type."
                       category="Volume"
                       onOpen={() => setIsCreateVolumeFromVolumeSnapshotOpen(true)}
                     />
                     <DrawerCard
-                      title="Create Volume from Backup"
+                      title="Create volume from Backup"
                       description="Create a new volume from an existing volume backup with customizable capacity, type, and availability zone."
                       category="Volume"
                       onOpen={() => setIsCreateVolumeFromBackupOpen(true)}
@@ -497,7 +497,7 @@ export function DrawersPage() {
                   </h2>
                   <div className="flex flex-col gap-2">
                     <DrawerCard
-                      title="Create Volume from Image"
+                      title="Create volume from Image"
                       description="Create a new volume using the selected image. The new volume will contain an identical copy of the image data."
                       category="Image"
                       onOpen={() => setIsCreateVolumeFromImageOpen(true)}
@@ -532,22 +532,22 @@ export function DrawersPage() {
                   </div>
                 </VStack>
 
-                {/* Server Group Actions */}
+                {/* Server group Actions */}
                 <VStack gap={2}>
                   <h2 className="text-[14px] font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
-                    Server Group Actions
+                    Server group Actions
                   </h2>
                   <div className="flex flex-col gap-2">
                     <DrawerCard
-                      title="Create Server Group"
+                      title="Create Server group"
                       description="Create a server group to control how instances are placed across compute hosts using affinity/anti-affinity policies."
-                      category="Server Group"
+                      category="Server group"
                       onOpen={() => setIsCreateServerGroupOpen(true)}
                     />
                     <DrawerCard
-                      title="Edit Server Group"
+                      title="Edit Server group"
                       description="Edit the name of an existing server group."
-                      category="Server Group"
+                      category="Server group"
                       onOpen={() => setIsEditServerGroupOpen(true)}
                     />
                   </div>
@@ -644,7 +644,7 @@ export function DrawersPage() {
                       onOpen={() => setIsAddL7PolicyOpen(true)}
                     />
                     <DrawerCard
-                      title="Register Certificate"
+                      title="Register certificate"
                       description="Register a certificate issued by an external CA for use within Compute resources."
                       category="Certificate"
                       onOpen={() => setIsRegisterCertificateOpen(true)}
@@ -730,7 +730,7 @@ export function DrawersPage() {
         </div>
       </main>
 
-      {/* Drawer Components */}
+      {/* Drawer components */}
       <CreateInstanceSnapshotDrawer
         isOpen={isCreateSnapshotOpen}
         onClose={() => setIsCreateSnapshotOpen(false)}

@@ -440,7 +440,7 @@ export function InstanceDetailPage() {
   const securityRowsPerPage = 10;
   const securityTotalPages = Math.ceil(mockSecurityGroups.length / securityRowsPerPage);
   
-  // Instance Snapshots tab pagination state
+  // Instance snapshots tab pagination state
   const [snapshotCurrentPage, setSnapshotCurrentPage] = useState(1);
   const [snapshotSearchQuery, setSnapshotSearchQuery] = useState('');
   const snapshotRowsPerPage = 10;
@@ -547,7 +547,7 @@ export function InstanceDetailPage() {
             <Breadcrumb
               items={[
                 { label: 'Proj-1', href: '/project' },
-                { label: 'Instances List', href: '/compute/instances' },
+                { label: 'Instances list', href: '/compute/instances' },
                 { label: instance.name },
               ]}
             />
@@ -631,7 +631,7 @@ export function InstanceDetailPage() {
                   <Tab value="interfaces">Interfaces</Tab>
                   <Tab value="floating-ips">Floating IPs</Tab>
                   <Tab value="security">Security</Tab>
-                  <Tab value="snapshots">Instance Snapshots</Tab>
+                  <Tab value="snapshots">Instance snapshots</Tab>
                   <Tab value="monitoring">Monitoring</Tab>
                   <Tab value="resource-map">Resource Map</Tab>
                   <Tab value="logs">Logs</Tab>
@@ -713,7 +713,7 @@ export function InstanceDetailPage() {
                           value="Team: Backend"
                         />
                         <SectionCard.DataRow 
-                          label="Server Group" 
+                          label="Server group" 
                           value={instance.serverGroup} 
                           isLink 
                           linkHref="/server-groups" 
@@ -736,7 +736,7 @@ export function InstanceDetailPage() {
                         Volumes
                       </h2>
                       <Button variant="secondary" size="sm" leftIcon={<IconCirclePlus size={12} />}>
-                        Attach Volume
+                        Attach volume
                       </Button>
                     </div>
 
@@ -820,12 +820,12 @@ export function InstanceDetailPage() {
                                 id: 'data-protection',
                                 label: 'Data Protection',
                                 submenu: [
-                                  { id: 'create-snapshot', label: 'Create Volume Snapshot', onClick: () => console.log('Create snapshot', row.id) },
-                                  { id: 'create-backup', label: 'Create Volume Backup', onClick: () => console.log('Create backup', row.id) },
-                                  { id: 'clone-volume', label: 'Clone Volume', onClick: () => console.log('Clone volume', row.id) },
+                                  { id: 'create-snapshot', label: 'Create volume snapshot', onClick: () => console.log('Create snapshot', row.id) },
+                                  { id: 'create-backup', label: 'Create volume backup', onClick: () => console.log('Create backup', row.id) },
+                                  { id: 'clone-volume', label: 'Clone volume', onClick: () => console.log('Clone volume', row.id) },
                                 ],
                               },
-                              { id: 'extend-volume', label: 'Extend Volume', onClick: () => console.log('Extend volume', row.id) },
+                              { id: 'extend-volume', label: 'Extend volume', onClick: () => console.log('Extend volume', row.id) },
                               { id: 'bootable', label: 'Bootable', onClick: () => console.log('Toggle bootable', row.id) },
                               { id: 'detach', label: 'Detach', status: 'danger', onClick: () => console.log('Detach volume', row.id) },
                             ];
@@ -856,7 +856,7 @@ export function InstanceDetailPage() {
                         Interfaces
                       </h2>
                       <Button variant="secondary" size="sm" leftIcon={<IconCirclePlus size={12} />}>
-                        Attach Interface
+                        Attach interface
                       </Button>
                     </div>
 
@@ -1078,7 +1078,7 @@ export function InstanceDetailPage() {
                     {/* Header */}
                     <div className="flex items-center justify-between w-full">
                       <h2 className="text-[16px] font-semibold leading-6 text-[var(--color-text-default)]">
-                        Security Groups
+                        Security groups
                       </h2>
                       <Button variant="secondary" size="sm" leftIcon={<IconCirclePlus size={12} />}>
                         Attach Security Group
@@ -1180,12 +1180,12 @@ export function InstanceDetailPage() {
                   </VStack>
                 </TabPanel>
 
-                {/* Instance Snapshots Tab Panel */}
+                {/* Instance snapshots Tab Panel */}
                 <TabPanel value="snapshots" className="pt-0">
                   <VStack gap={3} className="pt-6">
                     {/* Header */}
                     <div className="flex items-center justify-between w-full">
-                      <h2 className="text-[16px] font-semibold leading-6 text-[var(--color-text-default)]">Instance Snapshots</h2>
+                      <h2 className="text-[16px] font-semibold leading-6 text-[var(--color-text-default)]">Instance snapshots</h2>
                       <Button variant="secondary" size="sm">
                         <IconCirclePlus size={12} />
                         Create Snapshot
@@ -1270,8 +1270,8 @@ export function InstanceDetailPage() {
                           render: (_: unknown, row: InstanceSnapshot) => {
                             const snapshotMenuItems: ContextMenuItem[] = [
                               { id: 'edit', label: 'Edit', onClick: () => console.log('Edit snapshot', row.id) },
-                              { id: 'create-instance', label: 'Create Instance', onClick: () => console.log('Create instance from', row.id) },
-                              { id: 'create-volume', label: 'Create Volume', onClick: () => console.log('Create volume from', row.id) },
+                              { id: 'create-instance', label: 'Create instance', onClick: () => console.log('Create instance from', row.id) },
+                              { id: 'create-volume', label: 'Create volume', onClick: () => console.log('Create volume from', row.id) },
                               { id: 'delete', label: 'Delete', status: 'danger', onClick: () => console.log('Delete snapshot', row.id) },
                             ];
                             return (

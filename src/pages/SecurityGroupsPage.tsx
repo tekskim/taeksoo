@@ -111,7 +111,7 @@ export function SecurityGroupsPage() {
 
   // Context menu items
   const getContextMenuItems = (sg: SecurityGroup): ContextMenuItem[] => [
-    { id: 'create-rule', label: 'Create Rule', onClick: () => console.log('Create rule:', sg.id) },
+    { id: 'create-rule', label: 'Create rule', onClick: () => console.log('Create rule:', sg.id) },
     { id: 'edit', label: 'Edit', onClick: () => console.log('Edit:', sg.id) },
     { id: 'delete', label: 'Delete', status: 'danger', onClick: () => { setGroupToDelete(sg); setDeleteModalOpen(true); } },
   ];
@@ -252,7 +252,7 @@ export function SecurityGroupsPage() {
             <Breadcrumb
               items={[
                 { label: 'Proj-1', href: '/project' },
-                { label: 'Security Groups' },
+                { label: 'Security groups' },
               ]}
             />
           }
@@ -274,7 +274,7 @@ export function SecurityGroupsPage() {
             {/* Page Header */}
             <div className="flex justify-between items-center h-8 w-full">
               <h1 className="text-[length:var(--font-size-16)] font-semibold text-[var(--color-text-default)]">
-                Security Groups
+                Security groups
               </h1>
               <Button variant="primary" size="md">
                 Create Security Group

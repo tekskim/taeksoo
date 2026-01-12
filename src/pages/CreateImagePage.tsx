@@ -143,7 +143,7 @@ export function CreateImagePage() {
 
   // Update tab label
   useState(() => {
-    updateActiveTabLabel('Create Image');
+    updateActiveTabLabel('Create image');
   });
 
   const tabBarTabs = tabs.map((tab) => ({
@@ -154,7 +154,7 @@ export function CreateImagePage() {
 
   const breadcrumbItems = [
     { label: 'Images', href: '/compute/images' },
-    { label: 'Create Image' },
+    { label: 'Create image' },
   ];
 
   // Navigation handlers
@@ -255,7 +255,7 @@ export function CreateImagePage() {
               {/* Page Title */}
               <div className="max-w-[1320px] mx-auto mb-4">
                 <h1 className="text-[length:var(--font-size-18)] font-semibold leading-[var(--line-height-28)] text-[var(--color-text-default)]">
-                  Create Image
+                  Create image
                 </h1>
               </div>
 

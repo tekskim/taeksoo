@@ -1431,7 +1431,7 @@ function NetworkSection({ onNext, isActive = false, isEditing = false, onEditCan
   const [fipSearch, setFipSearch] = useState('');
   const [fipPage, setFipPage] = useState(1);
 
-  // Security Groups
+  // Security groups
   const [selectedSecurityGroups, setSelectedSecurityGroups] = useState<Set<string>>(new Set(['sg2']));
   const [sgSearch, setSgSearch] = useState('');
   const [sgPage, setSgPage] = useState(1);
@@ -1868,9 +1868,9 @@ function NetworkSection({ onNext, isActive = false, isEditing = false, onEditCan
           {/* Divider */}
           <div className="h-px bg-[var(--color-border-subtle)]" />
 
-          {/* Security Groups Section */}
+          {/* Security groups Section */}
           <VStack gap={3}>
-            <span className="text-[14px] font-medium">Security Groups</span>
+            <span className="text-[14px] font-medium">Security groups</span>
             
             <HStack justify="between" align="center" className="w-full">
               <SearchInput
@@ -1915,7 +1915,7 @@ function NetworkSection({ onNext, isActive = false, isEditing = false, onEditCan
               }}
             />
 
-            {/* Selected Security Groups Tags */}
+            {/* Selected Security groups Tags */}
             {selectedSgNames.length > 0 && (
               <HStack gap={2} className="flex-wrap">
                 {selectedSgNames.map((name, idx) => (
@@ -2241,7 +2241,7 @@ interface AdvancedSectionProps {
 }
 
 function AdvancedSection({ onNext, isActive = false, isEditing = false, onEditCancel, onEditDone }: AdvancedSectionProps) {
-  // Server Group
+  // Server group
   const [serverGroupOpen, setServerGroupOpen] = useState(false);
   const [selectedServerGroupId, setSelectedServerGroupId] = useState<string | null>(null);
   const [serverGroupSearch, setServerGroupSearch] = useState('');
@@ -2256,7 +2256,7 @@ function AdvancedSection({ onNext, isActive = false, isEditing = false, onEditCa
     serverGroupSearch === '' || sg.name.toLowerCase().includes(serverGroupSearch.toLowerCase())
   );
 
-  // Server Group columns
+  // Server group columns
   const serverGroupColumns: TableColumn<ServerGroupRow>[] = [
     {
       key: 'select',
@@ -2304,11 +2304,11 @@ function AdvancedSection({ onNext, isActive = false, isEditing = false, onEditCa
       />
       <SectionCard.Content>
         <VStack gap={4}>
-          {/* Server Group Disclosure */}
+          {/* Server group Disclosure */}
           <Disclosure open={serverGroupOpen} onChange={setServerGroupOpen}>
             <Disclosure.Trigger>
               <HStack gap={2} align="center">
-                <span className="text-[14px] font-medium">Server Group</span>
+                <span className="text-[14px] font-medium">Server group</span>
                 <span className="text-[12px] text-[var(--color-text-subtle)]">(Optional)</span>
               </HStack>
             </Disclosure.Trigger>
@@ -2316,7 +2316,7 @@ function AdvancedSection({ onNext, isActive = false, isEditing = false, onEditCa
               <VStack gap={3} className="pt-3">
                 {/* Search */}
                 <SearchInput
-                  placeholder="Find Server Group with filters"
+                  placeholder="Find Server group with filters"
                   value={serverGroupSearch}
                   onChange={(e) => setServerGroupSearch(e.target.value)}
                   onClear={() => setServerGroupSearch('')}
@@ -2332,7 +2332,7 @@ function AdvancedSection({ onNext, isActive = false, isEditing = false, onEditCa
                   onPageChange={setServerGroupPage}
                 />
 
-                {/* Server Group Table */}
+                {/* Server group Table */}
                 <Table
                   columns={serverGroupColumns}
                   data={filteredServerGroups}
@@ -3105,8 +3105,8 @@ export function CreateInstancePage() {
               <Breadcrumb
                 items={[
                   { label: 'Proj-1', href: '/project' },
-                  { label: 'Instances List', href: '/compute/instances' },
-                  { label: 'Create Instance' },
+                  { label: 'Instances list', href: '/compute/instances' },
+                  { label: 'Create instance' },
                 ]}
               />
             }
@@ -3126,7 +3126,7 @@ export function CreateInstancePage() {
             <VStack gap={6} className="min-w-[1176px]">
               {/* Page Title */}
               <h1 className="text-[18px] font-semibold leading-7 text-[var(--color-text-default)]">
-                Create Instance
+                Create instance
               </h1>
 
               {/* Content Area */}
@@ -3262,7 +3262,7 @@ export function CreateInstancePage() {
                   {sectionStatus.network === 'done' && (
                     <DoneSection title={SECTION_LABELS.network} onEdit={() => handleEdit('network')}>
                       <SectionCard.DataRow label="Network" value={getNetworkSummary()} showDivider={false} />
-                      <SectionCard.DataRow label="Security Groups" value={getSecurityGroupSummary()} />
+                      <SectionCard.DataRow label="Security groups" value={getSecurityGroupSummary()} />
                     </DoneSection>
                   )}
 
@@ -3307,7 +3307,7 @@ export function CreateInstancePage() {
                   {sectionStatus.advanced === 'done' && (
                     <DoneSection title={SECTION_LABELS.advanced} onEdit={() => handleEdit('advanced')}>
                       <SectionCard.DataRow 
-                        label="Server Group" 
+                        label="Server group" 
                         value={selectedServerGroupId ? mockServerGroups.find(sg => sg.id === selectedServerGroupId)?.name : '-'} 
                         showDivider={false}
                       />

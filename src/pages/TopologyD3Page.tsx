@@ -248,7 +248,7 @@ const subnets: Subnet[] = [
   { id: 'snet-dmz-apne2-b2b-001', name: 'b2b-api', cidr: '10.252.2.0/24', status: 'active', networkId: 'vpc-dmz-apne2-001', routerId: 'rtr-prod-apne2-edge-001' },
 ];
 
-// Load Balancers - 네이밍: [env]-[region]-[type]-[purpose]-[seq]
+// Load balancers - 네이밍: [env]-[region]-[type]-[purpose]-[seq]
 const loadBalancers: LoadBalancer[] = [
   // ============================================
   // Production Korea - Web Tier
@@ -890,11 +890,11 @@ function Popover({ data, position, onClose }: PopoverProps) {
               </div>
             )}
             
-            {/* Load Balancers Section */}
+            {/* Load balancers Section */}
             {data.loadBalancerList && data.loadBalancerList.length > 0 && (
               <div className="mt-3 pt-3 border-t border-slate-100">
                 <div className="flex items-center justify-between mb-2">
-                  <span className="text-slate-500 font-medium">Load Balancers ({data.loadBalancerList.length})</span>
+                  <span className="text-slate-500 font-medium">Load balancers ({data.loadBalancerList.length})</span>
                   <Link
           to="#" className="text-blue-500 hover:underline text-xs">View detail</Link>
                 </div>
@@ -1438,7 +1438,7 @@ export function TopologyD3Page() {
             
             subnetPositions[subnet.id] = { x: sx, y: sy };
 
-            // Load Balancers for this subnet
+            // Load balancers for this subnet
             const subnetLbs = lbsBySubnet[subnet.id] || [];
             const lbStartX = sx - (subnetLbs.length - 1) * lbGap / 2;
 

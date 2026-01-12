@@ -231,15 +231,15 @@ export function VolumeDetailPage() {
 
   // Context menu items for snapshot actions
   const getSnapshotContextMenuItems = (_snapshot: VolumeSnapshot): ContextMenuItem[] => [
-    { id: 'create-volume', label: 'Create Volume', onClick: () => {} },
+    { id: 'create-volume', label: 'Create volume', onClick: () => {} },
     { id: 'edit', label: 'Edit', onClick: () => {} },
     { id: 'delete', label: 'Delete', onClick: () => {}, status: 'danger' },
   ];
 
   // Context menu items for backup actions
   const getBackupContextMenuItems = (_backup: VolumeBackup): ContextMenuItem[] => [
-    { id: 'create-volume', label: 'Create Volume', onClick: () => {} },
-    { id: 'restore-backup', label: 'Restore Backup', onClick: () => {} },
+    { id: 'create-volume', label: 'Create volume', onClick: () => {} },
+    { id: 'restore-backup', label: 'Restore backup', onClick: () => {} },
     { id: 'edit', label: 'Edit', onClick: () => {} },
     { id: 'delete', label: 'Delete', onClick: () => {}, status: 'danger' },
   ];
@@ -428,7 +428,7 @@ export function VolumeDetailPage() {
               <DetailHeader.Title>{volume.name}</DetailHeader.Title>
               <DetailHeader.Actions>
                 <Button variant="secondary" size="sm" leftIcon={<IconCirclePlus size={12} />}>
-                  Create Transfer
+                  Create transfer
                 </Button>
                 <Button variant="secondary" size="sm" leftIcon={<IconTrash size={12} />}>
                   Delete
@@ -441,7 +441,7 @@ export function VolumeDetailPage() {
                       id: 'configuration',
                       label: 'Configuration',
                       submenu: [
-                        { id: 'extend-volume', label: 'Extend Volume', onClick: () => console.log('Extend Volume') },
+                        { id: 'extend-volume', label: 'Extend volume', onClick: () => console.log('Extend volume') },
                         { id: 'change-type', label: 'Change Type', onClick: () => console.log('Change Type') },
                       ],
                     },

@@ -218,7 +218,7 @@ export default function PoolDetailPage() {
 
   const breadcrumbItems = [
     { label: 'Proj-1', href: '/' },
-    { label: 'Load Balancers', href: '/compute/load-balancers' },
+    { label: 'Load balancers', href: '/compute/load-balancers' },
     { label: 'web-lb-01', href: '/compute/load-balancers/lb-001' },
     { label: 'listener-http-80', href: '/listeners/listener-001' },
     { label: pool.name },

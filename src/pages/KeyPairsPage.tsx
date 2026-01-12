@@ -290,7 +290,7 @@ export function KeyPairsPage() {
             <Breadcrumb
               items={[
                 { label: 'Proj-1', href: '/project' },
-                { label: 'Key Pairs' },
+                { label: 'Key pairs' },
               ]}
             />
           }
@@ -312,7 +312,7 @@ export function KeyPairsPage() {
             {/* Page Header */}
             <div className="flex items-center justify-between h-8">
               <h1 className="text-[length:var(--font-size-16)] font-semibold text-[var(--color-text-default)]">
-                Key Pairs
+                Key pairs
               </h1>
             </div>
 
@@ -361,7 +361,7 @@ export function KeyPairsPage() {
               />
             )}
 
-            {/* Key Pairs Table */}
+            {/* Key pairs Table */}
             <Table<KeyPair>
               columns={visibleColumns}
               data={paginatedKeyPairs}

@@ -208,7 +208,7 @@ export function CreateVolumePage() {
 
   // Update tab label
   useState(() => {
-    updateActiveTabLabel('Create Volume');
+    updateActiveTabLabel('Create volume');
   });
 
   const tabBarTabs = tabs.map((tab) => ({
@@ -396,7 +396,7 @@ export function CreateVolumePage() {
               <Breadcrumb
                 items={[
                   { label: 'Volumes', href: '/compute/volumes' },
-                  { label: 'Create Volume' },
+                  { label: 'Create volume' },
                 ]}
               />
             }
@@ -415,7 +415,7 @@ export function CreateVolumePage() {
           <div className="pt-4 px-8 pb-20 bg-[var(--color-surface-default)] min-h-full">
             {/* Page Title */}
             <h1 className="text-[length:var(--font-size-18)] font-semibold leading-[var(--line-height-28)] text-[var(--color-text-default)] max-w-[1320px] mx-auto mb-4">
-              Create Volume
+              Create volume
             </h1>
             
             <div className="flex gap-6 max-w-[1320px] mx-auto items-start">

@@ -35,7 +35,7 @@ export function SystemAdminPage() {
   const { tabs, activeTabId, selectTab, closeTab, addNewTab, updateActiveTabLabel, moveTab } = useTabs();
 
   useEffect(() => {
-    updateActiveTabLabel('System Administration');
+    updateActiveTabLabel('System administration');
   }, [updateActiveTabLabel]);
 
   const sidebarWidth = sidebarOpen ? 200 : 0;
@@ -48,7 +48,7 @@ export function SystemAdminPage() {
         <TopBar
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
-          breadcrumb={<Breadcrumb items={[{ label: 'AI Platform' }, { label: 'Operations' }, { label: 'System Administration' }]} />}
+          breadcrumb={<Breadcrumb items={[{ label: 'AI Platform' }, { label: 'Operations' }, { label: 'System administration' }]} />}
           actions={
             <>
               <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"><IconSearch size={16} className="text-[var(--color-text-muted)]" stroke={1.5} /></button>
@@ -61,12 +61,12 @@ export function SystemAdminPage() {
             <VStack gap={6}>
               <HStack justify="between" align="center">
                 <VStack gap={1}>
-                  <h1 className="text-[24px] font-semibold text-[var(--color-text-default)]">System Administration</h1>
+                  <h1 className="text-[24px] font-semibold text-[var(--color-text-default)]">System administration</h1>
                   <p className="text-[14px] text-[var(--color-text-subtle)]">Platform administration and user management.</p>
                 </VStack>
                 <Button variant="secondary" size="sm" icon={<IconRefresh size={14} stroke={1.5} />}>Refresh</Button>
               </HStack>
-              <EmptyState icon={<IconUserCog size={48} stroke={1} />} title="System Administration" description="Administration settings and user management will appear here." />
+              <EmptyState icon={<IconUserCog size={48} stroke={1} />} title="System administration" description="Administration settings and user management will appear here." />
             </VStack>
           </div>
         </div>
