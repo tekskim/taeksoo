@@ -282,7 +282,7 @@ export default function IAMRoleDetailPage() {
   const role = roleName ? mockRolesMap[roleName] : null;
 
   useEffect(() => {
-    updateActiveTabLabel(role?.name || 'Role Details');
+    updateActiveTabLabel(role?.name || 'Role details');
   }, [role?.name, updateActiveTabLabel]);
 
   const sidebarWidth = sidebarOpen ? 200 : 0;
@@ -349,7 +349,7 @@ export default function IAMRoleDetailPage() {
   const breadcrumbItems = [
     { label: 'IAM', href: '/iam' },
     { label: 'Roles', href: '/iam/roles' },
-    { label: role?.name || 'Role Details' },
+    { label: role?.name || 'Role details' },
   ];
 
   // Table columns for policies
