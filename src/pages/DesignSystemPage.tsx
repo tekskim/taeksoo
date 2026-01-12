@@ -6388,7 +6388,32 @@ outline: 2px solid var(--color-border-focus);`}
 
             {/* Wizard (Create Flow) Component */}
             <Section id="wizard" title="Wizard (Create Flow)" description="Multi-step wizard pattern for resource creation with section status management">
-              <WizardPatternSection />
+              <VStack gap={8}>
+                {/* Description */}
+                <VStack gap={3}>
+                  <Label>Description</Label>
+                  <p className="text-[length:var(--font-size-12)] text-[var(--color-text-subtle)]">
+                    Wizard 컴포넌트는 리소스 생성 등의 다단계 작업 흐름에서 사용됩니다. 
+                    WizardSection, WizardSummary 등의 컴포넌트를 조합하여 구현합니다.
+                  </p>
+                </VStack>
+
+                {/* Components List */}
+                <VStack gap={3}>
+                  <Label>Available Components</Label>
+                  <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
+                    <code>WizardSection</code>, <code>WizardSummary</code>, <code>PreSection</code>, <code>WritingSection</code>, <code>DoneSection</code>, <code>DoneSectionRow</code>
+                  </div>
+                </VStack>
+
+                {/* Usage Example */}
+                <VStack gap={3}>
+                  <Label>Usage</Label>
+                  <p className="text-[length:var(--font-size-12)] text-[var(--color-text-subtle)]">
+                    Create Instance, Create Image 등의 페이지에서 Wizard 패턴 사용 예시를 확인할 수 있습니다.
+                  </p>
+                </VStack>
+              </VStack>
             </Section>
 
             {/* Menu Component */}
