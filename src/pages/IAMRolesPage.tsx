@@ -81,14 +81,25 @@ export default function IAMRolesPage() {
     currentPage * itemsPerPage
   );
 
-  // Context menu items
-  const contextMenuItems: ContextMenuItem[] = [
-    { id: 'view', label: 'View details' },
-    { id: 'edit', label: 'Edit role' },
-    { id: 'duplicate', label: 'Duplicate' },
-    { type: 'divider' },
-    { id: 'delete', label: 'Delete role', danger: true },
-  ];
+  // Context menu items factory
+  const getContextMenuItems = (rowId: string, isBuiltIn: boolean): ContextMenuItem[] => {
+    if (isBuiltIn) {
+      // Built-in roles: Manage policies, Edit, Delete disabled
+      return [
+        { id: 'manage-policies', label: 'Manage policies', disabled: true, onClick: () => console.log('Manage policies', rowId) },
+        { id: 'duplicate', label: 'Duplicate', onClick: () => console.log('Duplicate', rowId) },
+        { id: 'edit', label: 'Edit', disabled: true, onClick: () => console.log('Edit', rowId) },
+        { id: 'delete', label: 'Delete', disabled: true, onClick: () => console.log('Delete', rowId) },
+      ];
+    }
+    // Custom roles: all items enabled
+    return [
+      { id: 'manage-policies', label: 'Manage policies', onClick: () => console.log('Manage policies', rowId) },
+      { id: 'duplicate', label: 'Duplicate', onClick: () => console.log('Duplicate', rowId) },
+      { id: 'edit', label: 'Edit', onClick: () => console.log('Edit', rowId) },
+      { id: 'delete', label: 'Delete', status: 'danger', onClick: () => console.log('Delete', rowId) },
+    ];
+  };
 
   // Table columns
   const columns: TableColumn<Role>[] = [
@@ -137,10 +148,10 @@ export default function IAMRolesPage() {
       width: 72,
       align: 'center',
       render: (_value, row) => (
-        <ContextMenu items={contextMenuItems} onSelect={(itemId) => console.log(itemId, row.id)}>
+        <ContextMenu items={getContextMenuItems(row.id, row.type === 'Built-in')} trigger="click">
           <button
             type="button"
-            className="p-1.5 rounded-md hover:bg-[var(--color-surface-subtle)] transition-colors"
+            className="flex items-center justify-center w-7 h-7 rounded-md bg-transparent hover:bg-[var(--color-surface-muted)] active:bg-[var(--color-border-subtle)] transition-colors cursor-pointer"
           >
             <IconAction size={16} stroke={1} className="text-[var(--color-text-default)]" />
           </button>

@@ -310,12 +310,25 @@ export default function IAMPoliciesPage() {
     });
   };
 
-  // Context menu items
-  const contextMenuItems: ContextMenuItem[] = [
-    { id: 'edit', label: 'Edit' },
-    { id: 'duplicate', label: 'Duplicate' },
-    { id: 'delete', label: 'Delete', danger: true },
-  ];
+  // Context menu items factory
+  const getContextMenuItems = (rowId: string, isBuiltIn: boolean): ContextMenuItem[] => {
+    if (isBuiltIn) {
+      // Built-in policies: Edit and Delete disabled
+      return [
+        { id: 'manage-roles', label: 'Manage roles', onClick: () => console.log('Manage roles', rowId) },
+        { id: 'duplicate', label: 'Duplicate', onClick: () => console.log('Duplicate', rowId) },
+        { id: 'edit', label: 'Edit', disabled: true, onClick: () => console.log('Edit', rowId) },
+        { id: 'delete', label: 'Delete', disabled: true, onClick: () => console.log('Delete', rowId) },
+      ];
+    }
+    // Custom policies: all items enabled
+    return [
+      { id: 'manage-roles', label: 'Manage roles', onClick: () => console.log('Manage roles', rowId) },
+      { id: 'duplicate', label: 'Duplicate', onClick: () => console.log('Duplicate', rowId) },
+      { id: 'edit', label: 'Edit', onClick: () => console.log('Edit', rowId) },
+      { id: 'delete', label: 'Delete', status: 'danger', onClick: () => console.log('Delete', rowId) },
+    ];
+  };
 
   // Breadcrumb items
   const breadcrumbItems = [
@@ -498,12 +511,12 @@ export default function IAMPoliciesPage() {
                         </div>
                         {/* Action */}
                         <div className="w-[72px] flex items-center justify-center px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)]">
-                          <ContextMenu items={contextMenuItems} onSelect={(itemId) => console.log(itemId, policy.id)}>
+                          <ContextMenu items={getContextMenuItems(policy.id, policy.type === 'Built-in')} trigger="click">
                             <button
                               type="button"
-                              className="p-1.5 rounded-md hover:bg-[var(--color-surface-subtle)] transition-colors"
+                              className="flex items-center justify-center w-7 h-7 rounded-md bg-transparent hover:bg-[var(--color-surface-muted)] active:bg-[var(--color-border-subtle)] transition-colors cursor-pointer"
                             >
-                              <IconAction size={16} stroke={1} />
+                              <IconAction size={16} stroke={1} className="text-[var(--color-text-default)]" />
                             </button>
                           </ContextMenu>
                         </div>
