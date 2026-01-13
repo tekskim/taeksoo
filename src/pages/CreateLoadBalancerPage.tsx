@@ -27,6 +27,7 @@ import {
   Checkbox,
   Disclosure,
   Tooltip,
+  InlineMessage,
 } from '@/design-system';
 import type { WizardSummaryItem, WizardSectionState, TableColumn } from '@/design-system';
 import { Sidebar } from '@/components/Sidebar';
@@ -253,9 +254,15 @@ export default function CreateLoadBalancerPage() {
   const [description, setDescription] = useState('');
   const [provider, setProvider] = useState<'ovn' | 'amphora' | ''>('');
 
+  // Validation errors
+  const [lbNameError, setLbNameError] = useState<string | null>(null);
+  const [providerError, setProviderError] = useState<string | null>(null);
+  const [networkError, setNetworkError] = useState<string | null>(null);
+
   // Handler to change provider and reset listener protocol if incompatible
   const handleProviderChange = (newProvider: 'ovn' | 'amphora') => {
     setProvider(newProvider);
+    setProviderError(null);
     // Reset listener protocol if it's not compatible with the new provider
     if (newProvider === 'ovn' && !['TCP', 'UDP'].includes(listenerProtocol)) {
       setListenerProtocol('');
@@ -513,7 +520,7 @@ export default function CreateLoadBalancerPage() {
           <Radio
             value={row.id}
             checked={selectedNetwork === row.id}
-            onChange={() => setSelectedNetwork(row.id)}
+            onChange={() => { setSelectedNetwork(row.id); setNetworkError(null); }}
           />
         </div>
       ),
@@ -828,6 +835,36 @@ export default function CreateLoadBalancerPage() {
     });
   };
 
+  // Validation handler for basic-info section
+  const handleBasicInfoNext = () => {
+    let hasError = false;
+    
+    if (!loadBalancerName.trim()) {
+      setLbNameError('Please enter a load balancer name.');
+      hasError = true;
+    } else {
+      setLbNameError(null);
+    }
+    
+    if (!provider) {
+      setProviderError('Please select a provider.');
+      hasError = true;
+    } else {
+      setProviderError(null);
+    }
+    
+    if (!selectedNetwork) {
+      setNetworkError('Please select a network.');
+      hasError = true;
+    } else {
+      setNetworkError(null);
+    }
+    
+    if (!hasError) {
+      goToNextSection('basic-info');
+    }
+  };
+
   // Edit section - resets subsequent sections to 'pre' state
   const editSection = (section: SectionStep) => {
     setSectionStatus((prev) => {
@@ -944,15 +981,23 @@ export default function CreateLoadBalancerPage() {
                     {activeSection === 'basic-info' && (
                       <SectionCard.Content gap={6}>
                         {/* Load Balancer Name */}
-                        <FormField required>
+                        <FormField required error={!!lbNameError}>
                           <FormField.Label>Load balancer name</FormField.Label>
                           <FormField.Control>
-                            <Input
-                              placeholder="Enter Load balancer name"
-                              value={loadBalancerName}
-                              onChange={(e) => setLoadBalancerName(e.target.value)}
-                              fullWidth
-                            />
+                            <VStack gap={1}>
+                              <Input
+                                placeholder="Enter Load balancer name"
+                                value={loadBalancerName}
+                                onChange={(e) => { setLoadBalancerName(e.target.value); setLbNameError(null); }}
+                                fullWidth
+                                error={!!lbNameError}
+                              />
+                              {lbNameError && (
+                                <span className="text-[11px] leading-[var(--line-height-16)] text-[var(--color-state-danger)]">
+                                  {lbNameError}
+                                </span>
+                              )}
+                            </VStack>
                           </FormField.Control>
                           <FormField.HelperText>
                             You can use letters, numbers, and special characters (+=,.@-_), and the length must be between 2-128 characters.
@@ -976,30 +1021,37 @@ export default function CreateLoadBalancerPage() {
                         </FormField>
 
                         {/* Provider */}
-                        <FormField required>
+                        <FormField required error={!!providerError}>
                           <FormField.Label>Provider</FormField.Label>
                           <FormField.HelperText>
                             Choose the provider to use for the load balancer.
                           </FormField.HelperText>
-                          <VStack gap={3} className="mt-3">
-                            <HStack gap={1.5} align="center">
-                              <Radio
-                                value="ovn"
-                                checked={provider === 'ovn'}
-                                onChange={() => handleProviderChange('ovn')}
-                                label="OVN"
-                              />
-                              <IconInfoCircle size={16} className="text-[var(--color-text-subtle)]" />
-                            </HStack>
-                            <HStack gap={1.5} align="center">
-                              <Radio
-                                value="amphora"
-                                checked={provider === 'amphora'}
-                                onChange={() => handleProviderChange('amphora')}
-                                label="Amphora"
-                              />
-                              <IconInfoCircle size={16} className="text-[var(--color-text-subtle)]" />
-                            </HStack>
+                          <VStack gap={1} className="mt-3">
+                            <VStack gap={3}>
+                              <HStack gap={1.5} align="center">
+                                <Radio
+                                  value="ovn"
+                                  checked={provider === 'ovn'}
+                                  onChange={() => handleProviderChange('ovn')}
+                                  label="OVN"
+                                />
+                                <IconInfoCircle size={16} className="text-[var(--color-text-subtle)]" />
+                              </HStack>
+                              <HStack gap={1.5} align="center">
+                                <Radio
+                                  value="amphora"
+                                  checked={provider === 'amphora'}
+                                  onChange={() => handleProviderChange('amphora')}
+                                  label="Amphora"
+                                />
+                                <IconInfoCircle size={16} className="text-[var(--color-text-subtle)]" />
+                              </HStack>
+                            </VStack>
+                            {providerError && (
+                              <span className="text-[11px] leading-[var(--line-height-16)] text-[var(--color-state-danger)]">
+                                {providerError}
+                              </span>
+                            )}
                           </VStack>
                         </FormField>
 
@@ -1048,10 +1100,20 @@ export default function CreateLoadBalancerPage() {
                               columns={networkColumns}
                               data={mockNetworks}
                               getRowId={(row) => row.id}
+                              onRowClick={(row) => { setSelectedNetwork(row.id); setNetworkError(null); }}
                             />
                           ) : (
                             <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-md p-4 text-center text-[12px] text-[var(--color-text-default)]">
                               Select a provider to view the network list.
+                            </div>
+                          )}
+
+                          {/* Network Error Message */}
+                          {networkError && (
+                            <div className="mt-2">
+                              <InlineMessage variant="error">
+                                {networkError}
+                              </InlineMessage>
                             </div>
                           )}
                         </VStack>
@@ -1064,7 +1126,7 @@ export default function CreateLoadBalancerPage() {
                           </FormField.HelperText>
                           <div className="mt-3 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-md px-4 py-2 flex items-center gap-2">
                             <HStack gap={2} align="center">
-                              <span className="text-[14px] font-medium text-[var(--color-text-default)]">Subnet</span>
+                              <span className="text-[12px] font-medium text-[var(--color-text-default)]">Subnet</span>
                               <Select
                                 options={[
                                   ...(selectedNetworkDetails ? [{ value: selectedNetworkDetails.subnetCidr, label: selectedNetworkDetails.subnetCidr }] : []),
@@ -1121,7 +1183,7 @@ export default function CreateLoadBalancerPage() {
                         <div className="flex items-center justify-end w-full">
                           <Button 
                             variant="primary" 
-                            onClick={() => goToNextSection('basic-info')}
+                            onClick={handleBasicInfoNext}
                           >
                             Next
                           </Button>
