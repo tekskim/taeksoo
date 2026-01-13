@@ -27,6 +27,7 @@ import {
   type AppliedFilter,
   Select,
   Slider,
+  RangeSlider,
   Chip,
   SelectionIndicator,
   DatePicker,
@@ -1272,6 +1273,167 @@ function DatePickerSection() {
 }
 
 /* ----------------------------------------
+   Capsule Tab Demo
+   ---------------------------------------- */
+
+function CapsuleTabDemo() {
+  const [selected, setSelected] = useState<'left' | 'right'>('left');
+
+  return (
+    <div className="inline-flex gap-2 p-1 bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[8px] w-fit">
+      <button
+        onClick={() => setSelected('left')}
+        className={`
+          min-w-[80px] px-[10px] py-[8px] rounded-[6px] text-[14px] font-medium leading-5 text-center transition-all
+          ${selected === 'left'
+            ? 'bg-[var(--color-surface-default)] border border-[var(--color-border-default)] text-[var(--color-action-primary)] shadow-sm'
+            : 'bg-transparent border border-transparent text-[var(--color-text-default)]'
+          }
+        `}
+      >
+        left
+      </button>
+      <button
+        onClick={() => setSelected('right')}
+        className={`
+          min-w-[80px] px-[10px] py-[8px] rounded-[6px] text-[14px] font-medium leading-5 text-center transition-all
+          ${selected === 'right'
+            ? 'bg-[var(--color-surface-default)] border border-[var(--color-border-default)] text-[var(--color-action-primary)] shadow-sm'
+            : 'bg-transparent border border-transparent text-[var(--color-text-default)]'
+          }
+        `}
+      >
+        right
+      </button>
+    </div>
+  );
+}
+
+/* ----------------------------------------
+   Slider with Number Input Demo
+   ---------------------------------------- */
+
+function SliderWithNumberInputDemo() {
+  const [value, setValue] = useState(50);
+
+  return (
+    <VStack gap={3}>
+      <Label>With Value Display</Label>
+      <div className="flex items-center gap-2 w-[312px]">
+        <div className="flex-1">
+          <Slider
+            value={value}
+            onChange={setValue}
+            min={0}
+            max={100}
+            step={1}
+          />
+        </div>
+        <NumberInput
+          value={value}
+          onChange={setValue}
+          min={0}
+          max={100}
+          step={1}
+          className="w-[80px]"
+        />
+      </div>
+    </VStack>
+  );
+}
+
+/* ----------------------------------------
+   Slider with Custom Range Demo
+   ---------------------------------------- */
+
+function SliderWithCustomRangeDemo() {
+  const [value, setValue] = useState(250);
+
+  return (
+    <VStack gap={3}>
+      <Label>Custom Range (0-1000 GB)</Label>
+      <div className="flex items-center gap-2 w-[312px]">
+        <div className="flex-1">
+          <Slider
+            value={value}
+            onChange={setValue}
+            min={0}
+            max={1000}
+            step={50}
+          />
+        </div>
+        <NumberInput
+          value={value}
+          onChange={setValue}
+          min={0}
+          max={1000}
+          step={50}
+          className="w-[80px]"
+        />
+      </div>
+    </VStack>
+  );
+}
+
+/* ----------------------------------------
+   Range Slider Demo (with state)
+   ---------------------------------------- */
+
+function RangeSliderDemo() {
+  const [minLength, setMinLength] = useState(8);
+  const [maxLength, setMaxLength] = useState(64);
+
+  return (
+    <VStack gap={3}>
+      <Label>Range Slider with Number Inputs</Label>
+      <VStack gap={2}>
+        <div className="flex items-center gap-2 w-1/2 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-md px-4 py-2">
+          <NumberInput
+            value={minLength}
+            onChange={(val) => {
+              if (val < maxLength) {
+                setMinLength(val);
+              }
+            }}
+            min={6}
+            max={maxLength - 1}
+            step={1}
+            className="w-[80px]"
+          />
+          <div className="flex-1">
+            <RangeSlider
+              value={[minLength, maxLength]}
+              onChange={([min, max]) => {
+                setMinLength(min);
+                setMaxLength(max);
+              }}
+              min={6}
+              max={128}
+              step={1}
+            />
+          </div>
+          <NumberInput
+            value={maxLength}
+            onChange={(val) => {
+              if (val > minLength) {
+                setMaxLength(val);
+              }
+            }}
+            min={minLength + 1}
+            max={128}
+            step={1}
+            className="w-[80px]"
+          />
+        </div>
+        <p className="text-[11px] leading-4 text-[var(--color-text-subtle)]">
+          6 - 128 / Maximum length must be greater than or equal to the minimum length.
+        </p>
+      </VStack>
+    </VStack>
+  );
+}
+
+/* ----------------------------------------
    Modal Demo (with state)
    ---------------------------------------- */
 
@@ -2286,7 +2448,13 @@ function QuotaBarDemo({ label, used, total, unit }: { label: string; used: numbe
         </div>
       </div>
       <Tooltip 
-        content={`Used: ${used} ${unit}\nRemaining: ${remaining} ${unit}\nTotal: ${total} ${unit}`}
+        content={
+          <div className="flex flex-col gap-0.5">
+            <span>Used: {used} {unit}</span>
+            <span>Remaining: {remaining} {unit}</span>
+            <span>Total: {total} {unit}</span>
+          </div>
+        }
         position="top"
       >
         <div className="w-full">
@@ -5042,27 +5210,10 @@ outline: 2px solid var(--color-border-focus);`}
                 </VStack>
 
                 {/* With Value Display */}
-                <VStack gap={3}>
-                  <Label>With Value Display</Label>
-                  <div className="w-[312px]">
-                    <Slider defaultValue={50} showValue />
-                  </div>
-                </VStack>
+                <SliderWithNumberInputDemo />
 
                 {/* Custom Range */}
-                <VStack gap={3}>
-                  <Label>Custom Range (0-1000 GB)</Label>
-                  <div className="w-[312px]">
-                    <Slider 
-                      min={0} 
-                      max={1000} 
-                      step={50} 
-                      defaultValue={250} 
-                      showValue 
-                      formatValue={(v) => `${v} GB`}
-                    />
-                  </div>
-                </VStack>
+                <SliderWithCustomRangeDemo />
 
                 {/* States */}
                 <VStack gap={3}>
@@ -5082,6 +5233,9 @@ outline: 2px solid var(--color-border-focus);`}
                     </VStack>
                   </div>
                 </VStack>
+
+                {/* Range Slider with Number Inputs */}
+                <RangeSliderDemo />
               </VStack>
             </Section>
 
@@ -5441,6 +5595,21 @@ outline: 2px solid var(--color-border-focus);`}
                     <div className="flex items-center gap-2">
                       <div className="w-4 h-4 rounded bg-[var(--color-border-default)]" />
                       <span className="text-[length:var(--font-size-11)] text-[var(--color-text-muted)]">Unlimited: Neutral</span>
+                    </div>
+                  </div>
+                </VStack>
+
+                {/* Dashboard Only */}
+                <VStack gap={3}>
+                  <Label>Dashboard only</Label>
+                  <div className="w-[288px] p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-2xl">
+                    <div className="text-[11px] font-semibold text-[var(--color-text-muted)] tracking-wide mb-4">COMPUTE QUOTA</div>
+                    <div className="space-y-[22px]">
+                      <QuotaBarDemo label="vCPU" used={4} total={8} unit="vCPU" />
+                      <QuotaBarDemo label="RAM" used={22} total={32} unit="GiB" />
+                      <QuotaBarDemo label="Disk" used={4} total={6} unit="GiB" />
+                      <QuotaBarDemo label="GPU" used={6} total={8} unit="GPU" />
+                      <QuotaBarDemo label="NPU" used={6} total={8} unit="NPU" />
                     </div>
                   </div>
                 </VStack>
@@ -5855,36 +6024,9 @@ outline: 2px solid var(--color-border-focus);`}
                       </Tabs>
                     </VStack>
                     <VStack gap={2}>
-                      <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">Boxed</span>
-                      <Tabs defaultValue="left" variant="boxed" size="sm">
-                        <TabList>
-                          <Tab value="left">left</Tab>
-                          <Tab value="right">right</Tab>
-                        </TabList>
-                      </Tabs>
+                      <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">Capsule tab</span>
+                      <CapsuleTabDemo />
                     </VStack>
-                  </VStack>
-                </VStack>
-
-                {/* Boxed - Multiple Items */}
-                <VStack gap={3}>
-                  <Label>Boxed - Multiple Items</Label>
-                  <VStack gap={4}>
-                    <Tabs defaultValue="tab1" variant="boxed" size="sm">
-                      <TabList>
-                        <Tab value="tab1">Tab 1</Tab>
-                        <Tab value="tab2">Tab 2</Tab>
-                        <Tab value="tab3">Tab 3</Tab>
-                      </TabList>
-                    </Tabs>
-                    <Tabs defaultValue="tab1" variant="boxed" size="sm">
-                      <TabList>
-                        <Tab value="tab1">Tab 1</Tab>
-                        <Tab value="tab2">Tab 2</Tab>
-                        <Tab value="tab3">Tab 3</Tab>
-                        <Tab value="tab4">Tab 4</Tab>
-                      </TabList>
-                    </Tabs>
                   </VStack>
                 </VStack>
 
@@ -6181,14 +6323,14 @@ outline: 2px solid var(--color-border-focus);`}
                   <div className="flex gap-3 items-center">
                     <Badge size="sm" theme="green">Running</Badge>
                     <Badge size="sm" theme="red">Stopped</Badge>
-                    <Badge size="sm" theme="yellow">Pending</Badge>
+                    <Badge size="sm" theme="yellow">Warning</Badge>
                     <Badge size="sm" theme="gray">Unknown</Badge>
                   </div>
                   <div className="flex gap-3 items-center">
-                    <Badge size="sm" type="subtle" theme="green">Running</Badge>
-                    <Badge size="sm" type="subtle" theme="red">Stopped</Badge>
-                    <Badge size="sm" type="subtle" theme="yellow">Pending</Badge>
-                    <Badge size="sm" type="subtle" theme="gray">Unknown</Badge>
+                    <span className="inline-flex items-center px-1.5 py-0.5 rounded-md bg-[var(--color-state-success)]/15 text-[11px] font-medium text-[var(--color-state-success)]">Running</span>
+                    <span className="inline-flex items-center px-1.5 py-0.5 rounded-md bg-[var(--color-state-danger)]/15 text-[11px] font-medium text-[var(--color-state-danger)]">Stopped</span>
+                    <span className="inline-flex items-center px-1.5 py-0.5 rounded-md bg-[var(--color-state-warning)]/15 text-[11px] font-medium text-[var(--color-state-warning)]">Warning</span>
+                    <span className="inline-flex items-center px-1.5 py-0.5 rounded-md bg-[var(--color-text-muted)]/15 text-[11px] font-medium text-[var(--color-text-muted)]">Unknown</span>
                   </div>
                 </VStack>
               </VStack>
@@ -6270,49 +6412,50 @@ outline: 2px solid var(--color-border-focus);`}
 
                 {/* All status Types by Category */}
                 <VStack gap={3}>
-                  <Label>Success (Green)</Label>
+                  <Label>Active</Label>
                   <div className="flex flex-wrap gap-3 items-center">
-                    <StatusIndicator status="active" />
+                    <Tooltip content="active"><StatusIndicator status="active" /></Tooltip>
                   </div>
                 </VStack>
 
                 <VStack gap={3}>
-                  <Label>Danger (Red)</Label>
+                  <Label>Error</Label>
                   <div className="flex flex-wrap gap-3 items-center">
-                    <StatusIndicator status="error" />
+                    <Tooltip content="error"><StatusIndicator status="error" /></Tooltip>
                   </div>
                 </VStack>
 
                 <VStack gap={3}>
-                  <Label>Info (Blue)</Label>
+                  <Label>Action</Label>
                   <div className="flex flex-wrap gap-3 items-center">
-                    <StatusIndicator status="building" />
+                    <Tooltip content="building"><StatusIndicator status="building" /></Tooltip>
+                    <Tooltip content="deleting"><StatusIndicator status="deleting" /></Tooltip>
                   </div>
                 </VStack>
 
                 <VStack gap={3}>
                   <Label>Warning (Orange)</Label>
                   <div className="flex flex-wrap gap-3 items-center">
-                    <StatusIndicator status="verify-resized" />
-                    <StatusIndicator status="degraded" />
-                    <StatusIndicator status="no-monitor" />
+                    <Tooltip content="verify-resized"><StatusIndicator status="verify-resized" /></Tooltip>
+                    <Tooltip content="degraded"><StatusIndicator status="degraded" /></Tooltip>
+                    <Tooltip content="no-monitor"><StatusIndicator status="no-monitor" /></Tooltip>
                   </div>
                 </VStack>
 
                 <VStack gap={3}>
                   <Label>Muted (Gray)</Label>
                   <div className="flex flex-wrap gap-3 items-center">
-                    <StatusIndicator status="suspended" />
-                    <StatusIndicator status="shelved-offloaded" />
-                    <StatusIndicator status="mounted" />
-                    <StatusIndicator status="shutoff" />
-                    <StatusIndicator status="paused" />
-                    <StatusIndicator status="pending" />
-                    <StatusIndicator status="draft" />
-                    <StatusIndicator status="deactivated" />
-                    <StatusIndicator status="in-use" />
-                    <StatusIndicator status="maintenance" />
-                    <StatusIndicator status="down" />
+                    <Tooltip content="suspended"><StatusIndicator status="suspended" /></Tooltip>
+                    <Tooltip content="shelved-offloaded"><StatusIndicator status="shelved-offloaded" /></Tooltip>
+                    <Tooltip content="mounted"><StatusIndicator status="mounted" /></Tooltip>
+                    <Tooltip content="shutoff"><StatusIndicator status="shutoff" /></Tooltip>
+                    <Tooltip content="paused"><StatusIndicator status="paused" /></Tooltip>
+                    <Tooltip content="pending"><StatusIndicator status="pending" /></Tooltip>
+                    <Tooltip content="draft"><StatusIndicator status="draft" /></Tooltip>
+                    <Tooltip content="deactivated"><StatusIndicator status="deactivated" /></Tooltip>
+                    <Tooltip content="in-use"><StatusIndicator status="in-use" /></Tooltip>
+                    <Tooltip content="maintenance"><StatusIndicator status="maintenance" /></Tooltip>
+                    <Tooltip content="down"><StatusIndicator status="down" /></Tooltip>
                   </div>
                 </VStack>
 
