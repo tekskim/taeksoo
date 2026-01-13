@@ -33,6 +33,15 @@ import imgCloud from '@/assets/desktop/cloud.png';
 import imgChatbot from '@/assets/desktop/chatbot.png';
 import imgSymbol from '@/assets/desktop/symbol.svg';
 
+// App Icons for Dock (32x32)
+import appIconCompute from '@/assets/appIcon/compute.png';
+import appIconStorage from '@/assets/appIcon/storage.png';
+import appIconContainer from '@/assets/appIcon/container.png';
+import appIconAgentops from '@/assets/appIcon/agentops.png';
+import appIconAiplatform from '@/assets/appIcon/aiplatform.png';
+import appIconIam from '@/assets/appIcon/iam.png';
+import appIconAIChat from '@/assets/appIcon/AI Chat.png';
+
 /* ----------------------------------------
    Desktop Icon Component
    ---------------------------------------- */
@@ -47,18 +56,18 @@ function DesktopIcon({ icon, label, onClick }: DesktopIconProps) {
   return (
     <button
       type="button"
-      className="flex flex-col items-center gap-2 w-16 cursor-pointer transition-transform hover:-translate-y-0.5 bg-transparent border-none p-0"
+      className="flex flex-col items-center gap-1 w-20 cursor-pointer transition-transform hover:-translate-y-0.5 bg-transparent border-none p-0"
       onClick={onClick}
       aria-label={label}
     >
-      <div className="w-16 h-16 flex items-center justify-center">
+      <div className="w-20 h-20 flex items-center justify-center rounded-lg">
         <img 
           src={icon} 
           alt={label} 
           className="w-16 h-16 object-cover object-center"
         />
       </div>
-      <span className="text-[length:var(--font-size-12)] leading-[var(--line-height-18)] font-medium text-white text-center whitespace-nowrap ">
+      <span className="text-[length:var(--font-size-12)] leading-[var(--line-height-16)] font-medium text-white text-center whitespace-nowrap">
         {label}
       </span>
     </button>
@@ -189,7 +198,7 @@ function DockIcons({
   };
 
   return (
-    <div className="flex items-center gap-2">
+    <div className="flex items-center gap-3 h-full">
       {apps.map((app) => {
         const isRunning = app.hasWindows;
         const isActive = app.hasActiveWindow;
@@ -199,6 +208,7 @@ function DockIcons({
             key={app.id}
             trigger="contextmenu"
             items={getContextMenuItems(app)}
+            className="h-8 flex items-center"
           >
             <Tooltip content={app.name} position="bottom">
               <div
@@ -210,9 +220,9 @@ function DockIcons({
                 onMouseLeave={() => setHoveredAppId(null)}
                 onClick={() => onAppClick(app.id)}
                 className={`
-                  w-6 h-6 cursor-pointer transition-all duration-200
-                  ${isActive ? 'opacity-100 scale-110' : isRunning ? 'opacity-100' : 'opacity-70'}
-                  ${hoveredAppId === app.id ? 'opacity-100 scale-110' : ''}
+                  w-8 h-8 cursor-pointer transition-all duration-200
+                  ${isActive ? 'scale-110' : ''}
+                  ${hoveredAppId === app.id ? 'scale-110' : ''}
                   ${isRunning ? 'ring-2 ring-[var(--color-action-primary)] rounded' : ''}
                 `}
               >
@@ -244,20 +254,22 @@ function AdminCenterIcon({ onClick, iconRef }: AdminCenterIconProps) {
     <button
       ref={iconRef}
       type="button"
-      className="flex flex-col items-center gap-2 w-16 cursor-pointer transition-transform hover:-translate-y-0.5 bg-transparent border-none p-0"
+      className="flex flex-col items-center gap-1 w-20 cursor-pointer transition-transform hover:-translate-y-0.5 bg-transparent border-none p-0"
       onClick={onClick}
       aria-label="Admin center"
     >
-      <div className="bg-white/10 rounded-2xl p-2 flex flex-col gap-1">
-        <div className="flex gap-1 items-center">
-          <img src={imgStorageAdmin} alt="" className="w-[22px] h-[22px] object-cover" />
-          <img src={imgComputeAdmin} alt="" className="w-[22px] h-[22px] object-cover" />
-        </div>
-        <div className="flex items-center">
-          <img src={imgCloud} alt="" className="w-[22px] h-[22px] object-cover" />
+      <div className="w-20 h-20 flex items-center justify-center rounded-lg">
+        <div className="bg-white/10 rounded-2xl p-2 flex flex-col gap-1">
+          <div className="flex gap-1 items-center">
+            <img src={imgStorageAdmin} alt="" className="w-[22px] h-[22px] object-cover" />
+            <img src={imgComputeAdmin} alt="" className="w-[22px] h-[22px] object-cover" />
+          </div>
+          <div className="flex items-center">
+            <img src={imgCloud} alt="" className="w-[22px] h-[22px] object-cover" />
+          </div>
         </div>
       </div>
-      <span className="text-[length:var(--font-size-12)] leading-[var(--line-height-18)] font-medium text-white text-center whitespace-nowrap ">
+      <span className="text-[length:var(--font-size-12)] leading-[var(--line-height-16)] font-medium text-white text-center w-16">
         Admin center
       </span>
     </button>
@@ -392,48 +404,36 @@ function DesktopTopBar({ onChatbotToggle, onOpenSettings, onNotificationToggle, 
   ];
 
   return (
-    <div className="fixed top-0 left-0 right-0 h-14 bg-white flex items-center justify-between px-4 z-[1000] shadow-[2px_4px_4px_0px_rgba(0,0,0,0.11)]">
-      {/* Left Section */}
-      <div className="flex items-center gap-3">
-        {/* Domain Selector - Figma style */}
-        <div className="flex items-center gap-1.5 bg-[#ddddda] px-2.5 py-0.5 rounded-lg">
-          <img src={imgSymbol} alt="" className="w-4 h-4" />
-          <span className="text-lg font-semibold text-black  leading-7">Domain A</span>
-        </div>
+    <div className="fixed top-0 left-0 right-0 h-[52px] bg-[#f8fafc] flex items-center justify-between pl-4 z-[1000] shadow-[0px_1px_0px_0px_rgba(0,0,0,0.15)]">
+      {/* Left Section - Logo + Dock Icons */}
+      <div className="flex items-center gap-8 h-full">
+        {/* THAKI Cloud Logo */}
+        <img src={ThakiLogoLight} alt="THAKI Cloud" className="h-5" />
         
-        {/* Divider */}
-        <div className="h-6 flex items-center">
-          <div className="w-px h-4 bg-[rgba(60,60,67,0.29)]" />
-        </div>
-        
-        {/* Dock Icons - macOS Dock style */}
+        {/* Dock Icons */}
         {dockIcons}
       </div>
 
       {/* Right Section */}
-      <div className="flex items-center gap-3 h-8">
-        {/* Domain Selector - Using Select component */}
+      <div className="flex items-center gap-4">
+        {/* Domain Selector */}
         <Select
           value={selectedDomain}
           onChange={(value) => setSelectedDomain(value)}
           options={domainOptions}
           size="sm"
-          className="min-w-[100px]"
+          width="sm"
         />
-        
-        {/* Separator */}
-        <div className="px-1.5 h-full flex items-center">
-          <div className="w-px h-4 bg-[rgba(60,60,67,0.29)]" />
-        </div>
         
         {/* Right Icons */}
         <div className="flex items-center gap-3">
           <ContextMenu
             items={contextMenuItems}
             trigger="click"
+            minTop={52}
           >
-            <button className="w-6 h-6 flex items-center justify-center text-black/60 hover:text-black cursor-pointer transition-colors">
-              <Icons.Finetuning size={24} stroke={1.5} />
+            <button className="w-5 h-5 flex items-center justify-center text-[#0f172a]/60 hover:text-[#0f172a] cursor-pointer transition-colors">
+              <Icons.Finetuning size={20} stroke={1.5} />
             </button>
           </ContextMenu>
           <ContextMenu
@@ -458,41 +458,35 @@ function DesktopTopBar({ onChatbotToggle, onOpenSettings, onNotificationToggle, 
               },
             ]}
             trigger="click"
+            minTop={52}
           >
-            <button className="w-6 h-6 flex items-center justify-center text-black/60 hover:text-black cursor-pointer transition-colors">
-              <Icons.UserCircle size={24} stroke={1.5} />
+            <button className="w-5 h-5 flex items-center justify-center text-[#0f172a]/60 hover:text-[#0f172a] cursor-pointer transition-colors">
+              <Icons.UserCircle size={20} stroke={1.5} />
             </button>
           </ContextMenu>
           <button 
             ref={notificationButtonRef}
             onClick={onNotificationToggle}
-            className="w-6 h-6 flex items-center justify-center text-black/60 hover:text-black cursor-pointer transition-colors"
+            className="w-5 h-5 flex items-center justify-center text-[#0f172a]/60 hover:text-[#0f172a] cursor-pointer transition-colors"
           >
-            <Icons.Notification size={24} stroke={1.5} />
+            <Icons.Notification size={20} stroke={1.5} />
           </button>
         </div>
 
-        {/* Separator */}
-        <div className="px-1.5 h-full flex items-center">
-          <div className="w-px h-4 bg-[rgba(60,60,67,0.29)]" />
+        {/* Separator + Chatbot */}
+        <div className="flex items-center border-l border-[#e2e8f0] px-[10px]">
+          <button 
+            className="w-8 h-8 flex items-center justify-center cursor-pointer transition-opacity hover:opacity-80"
+            onClick={onChatbotToggle}
+            title="AI Chatbot"
+          >
+            <img 
+              src={appIconAIChat} 
+              alt="AI Chatbot" 
+              className="w-8 h-8 object-contain" 
+            />
+          </button>
         </div>
-        
-        {/* AI Chatbot Toggle - Figma design: 3D purple chat bubble with AI face */}
-        <button 
-          className="w-8 h-8 flex items-center justify-center cursor-pointer transition-opacity hover:opacity-80"
-          onClick={onChatbotToggle}
-          title="AI Chatbot"
-        >
-          <img 
-            src={imgChatbot} 
-            alt="AI Chatbot" 
-            className="w-8 h-8 object-contain" 
-            style={{ 
-              mixBlendMode: 'multiply',
-              filter: 'contrast(1.1)',
-            }}
-          />
-        </button>
       </div>
 
       {/* Language Change Confirmation Modal */}
@@ -525,41 +519,41 @@ interface AdminPanelProps {
   anchorRef: React.RefObject<HTMLButtonElement>;
 }
 
-function AdminCenterPanel({ isOpen, onClose, anchorRef }: AdminPanelProps) {
+function AdminCenterPanel({ isOpen, onClose }: AdminPanelProps) {
   if (!isOpen) return null;
-  
-  // Calculate position based on anchor element
-  const anchorRect = anchorRef.current?.getBoundingClientRect();
-  const panelWidth = 412; // Approximate panel width (3 icons * 64px + 2 gaps * 50px + padding * 2)
-  
-  // Position panel below the icon, centered horizontally
-  const top = anchorRect ? anchorRect.bottom + 12 : 222;
-  const left = anchorRect ? anchorRect.left + (anchorRect.width / 2) - (panelWidth / 2) : 0;
   
   return (
     <>
-      {/* Click outside to close */}
+      {/* Overlay backdrop */}
       <div 
-        className="fixed inset-0 z-[500]" 
+        className="fixed inset-0 z-[500] bg-black/40" 
         onClick={onClose}
       />
-      {/* Panel - positioned below Admin center icon */}
+      {/* Panel - centered on screen */}
       <div 
-        className="fixed bg-white/10 rounded-2xl px-10 py-[22px] flex gap-[50px] items-center z-[501]"
-        style={{ top: `${top}px`, left: `${left}px` }}
+        className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white/15 backdrop-blur-md rounded-2xl px-10 py-6 flex gap-12 items-center z-[501] border border-white/30"
       >
-        <div className="flex flex-col items-center gap-2 w-16">
+        <button 
+          className="flex flex-col items-center gap-2 w-20 cursor-pointer transition-transform hover:-translate-y-0.5 bg-transparent border-none p-0"
+          onClick={() => console.log('Storage Admin clicked')}
+        >
           <img src={imgStorageAdmin} alt="Storage Admin" className="w-16 h-16 object-cover" />
-          <span className="text-[length:var(--font-size-12)] leading-[var(--line-height-18)] font-medium text-white text-center ">Storage Admin</span>
-        </div>
-        <div className="flex flex-col items-center gap-2 w-16">
+          <span className="text-[length:var(--font-size-12)] leading-[var(--line-height-16)] font-medium text-white text-center">Storage Admin</span>
+        </button>
+        <button 
+          className="flex flex-col items-center gap-2 w-20 cursor-pointer transition-transform hover:-translate-y-0.5 bg-transparent border-none p-0"
+          onClick={() => console.log('Compute Admin clicked')}
+        >
           <img src={imgComputeAdmin} alt="Compute Admin" className="w-16 h-16 object-cover" />
-          <span className="text-[length:var(--font-size-12)] leading-[var(--line-height-18)] font-medium text-white text-center ">Compute Admin</span>
-        </div>
-        <div className="flex flex-col items-center gap-2 w-16">
+          <span className="text-[length:var(--font-size-12)] leading-[var(--line-height-16)] font-medium text-white text-center">Compute Admin</span>
+        </button>
+        <button 
+          className="flex flex-col items-center gap-2 w-20 cursor-pointer transition-transform hover:-translate-y-0.5 bg-transparent border-none p-0"
+          onClick={() => console.log('Cloud Builder clicked')}
+        >
           <img src={imgCloud} alt="Cloud Builder" className="w-16 h-16 object-cover" />
-          <span className="text-[length:var(--font-size-12)] leading-[var(--line-height-18)] font-medium text-white text-center ">Cloud Builder</span>
-        </div>
+          <span className="text-[length:var(--font-size-12)] leading-[var(--line-height-16)] font-medium text-white text-center">Cloud Builder</span>
+        </button>
       </div>
     </>
   );
@@ -708,12 +702,12 @@ export function DesktopPage() {
   const [windows, setWindows] = useState<WindowState[]>([]);
   const [nextZIndex, setNextZIndex] = useState(1);
   const [appConfigs] = useState<Record<AppId, { name: string; icon: string; component: React.ReactNode }>>({
-    'compute': { name: 'Compute', icon: imgCompute, component: <ComputeHomePage /> },
-    'storage': { name: 'Storage', icon: imgStorage, component: <StorageHomePage /> },
-    'container': { name: 'Container', icon: imgContainer, component: <ContainerDashboardPage /> },
-    'agent': { name: 'Agent ops', icon: imgAgent, component: <HomePage /> },
-    'ai-platform': { name: 'AI Platform', icon: imgAi, component: null },
-    'iam': { name: 'IAM', icon: imgIam, component: null },
+    'compute': { name: 'Compute', icon: appIconCompute, component: <ComputeHomePage /> },
+    'storage': { name: 'Storage', icon: appIconStorage, component: <StorageHomePage /> },
+    'container': { name: 'Container', icon: appIconContainer, component: <ContainerDashboardPage /> },
+    'agent': { name: 'Agent ops', icon: appIconAgentops, component: <HomePage /> },
+    'ai-platform': { name: 'AI Platform', icon: appIconAiplatform, component: null },
+    'iam': { name: 'IAM', icon: appIconIam, component: null },
   });
   const [pinnedApps, setPinnedApps] = useState<Set<AppId>>(new Set(['compute', 'storage', 'container', 'agent']));
   const [dockAppOrder, setDockAppOrder] = useState<AppId[]>(['storage', 'container', 'ai-platform', 'agent']);
@@ -868,7 +862,7 @@ export function DesktopPage() {
       />
 
       {/* Desktop Icons Row - Positioned like Figma */}
-      <div className="absolute top-[110px] left-[44px] flex flex-row items-start gap-[72px]">
+      <div className="absolute top-[80px] left-[28px] flex flex-row items-start gap-[38px]">
         <DesktopIcon 
           icon={imgIam}
           label="IAM"
@@ -938,11 +932,6 @@ export function DesktopPage() {
 
       {/* Notification center */}
       {showNotifications && notificationButtonRef.current && (() => {
-        const rect = notificationButtonRef.current.getBoundingClientRect();
-        const notificationWidth = 360; // NotificationCenter width
-        const left = rect.right - notificationWidth;
-        const top = rect.bottom + 4;
-        
         return (
           <>
             {/* Click outside to close */}
@@ -951,12 +940,8 @@ export function DesktopPage() {
               onClick={() => setShowNotifications(false)}
             />
             <div
-              className="fixed z-[6001]"
+              className="fixed z-[6001] top-[52px] right-0"
               onClick={(e) => e.stopPropagation()}
-              style={{
-                top: `${top}px`,
-                left: `${Math.max(8, left)}px`, // Ensure it doesn't go off-screen
-              }}
             >
               <NotificationCenter
                 notifications={notifications}
