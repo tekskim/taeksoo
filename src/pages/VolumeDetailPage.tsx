@@ -537,7 +537,7 @@ export function VolumeDetailPage() {
                   <VStack gap={3} className="pt-6">
                     {/* Section Header */}
                     <div className="flex items-center justify-between w-full">
-                      <h2 className="text-[length:var(--font-size-16)] font-semibold text-[var(--color-text-default)]">
+                      <h2 className="text-[length:var(--font-size-16)] font-semibold leading-6 text-[var(--color-text-default)]">
                         Volume snapshots
                       </h2>
                       <Button variant="secondary" size="sm" leftIcon={<IconCirclePlus size={12} />}>
@@ -591,7 +591,7 @@ export function VolumeDetailPage() {
                   <VStack gap={3} className="pt-6">
                     {/* Section Header */}
                     <div className="flex items-center justify-between w-full">
-                      <h2 className="text-[length:var(--font-size-16)] font-semibold text-[var(--color-text-default)]">
+                      <h2 className="text-[length:var(--font-size-16)] font-semibold leading-6 text-[var(--color-text-default)]">
                         Volume backups
                       </h2>
                       <Button variant="secondary" size="sm" leftIcon={<IconCirclePlus size={12} />}>

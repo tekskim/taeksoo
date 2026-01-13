@@ -301,6 +301,13 @@ export function EntryPage() {
                 >
                   Modals
                 </Button>
+                <Button
+                  variant="muted"
+                  size="md"
+                  onClick={() => window.open('https://thakicloud.github.io/404page', '_blank')}
+                >
+                  404 page
+                </Button>
               </div>
             </div>
           </div>
