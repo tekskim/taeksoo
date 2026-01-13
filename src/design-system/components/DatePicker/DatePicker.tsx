@@ -367,33 +367,10 @@ export const DatePicker: React.FC<DatePickerProps> = ({
             const isFirstCol = colIndex === 0;
             const isLastCol = colIndex === 6;
 
-            // Determine range background shape
-            let rangeBgClass = '';
-            if (isInRange) {
-              if (day.isRangeStart) {
-                // Range start: round left, square right (extend to edge)
-                rangeBgClass = 'before:absolute before:inset-y-0 before:left-1/2 before:right-0 before:bg-[var(--datepicker-range-bg)]';
-                if (isLastCol) {
-                  rangeBgClass = 'before:absolute before:inset-y-0 before:left-1/2 before:right-[-3px] before:bg-[var(--datepicker-range-bg)]';
-                }
-              } else if (day.isRangeEnd) {
-                // Range end: square left (extend to edge), round right
-                rangeBgClass = 'before:absolute before:inset-y-0 before:left-0 before:right-1/2 before:bg-[var(--datepicker-range-bg)]';
-                if (isFirstCol) {
-                  rangeBgClass = 'before:absolute before:inset-y-0 before:left-[-3px] before:right-1/2 before:bg-[var(--datepicker-range-bg)]';
-                }
-              } else {
-                // In range: full background, extend to fill gaps
-                let leftExtend = isFirstCol ? '0' : '-3px';
-                let rightExtend = isLastCol ? '0' : '-3px';
-                rangeBgClass = `before:absolute before:inset-y-0 before:left-[${leftExtend}] before:right-[${rightExtend}] before:bg-[var(--datepicker-range-bg)]`;
-              }
-            }
-
             return (
               <div
                 key={index}
-                className={`relative ${rangeBgClass}`}
+                className="relative"
                 style={{
                   // Add gap spacing via padding
                   paddingLeft: isFirstCol ? 0 : 3,
@@ -404,28 +381,34 @@ export const DatePicker: React.FC<DatePickerProps> = ({
                 {/* Range background layer - only when both start and end are selected */}
                 {hasCompleteRange && isInRange && !day.isRangeStart && !day.isRangeEnd && (
                   <div 
-                    className="absolute inset-y-0 bg-[var(--datepicker-range-bg)]"
+                    className="absolute bg-[var(--datepicker-range-bg)]"
                     style={{
+                      top: 0,
+                      bottom: 0,
                       left: isFirstCol ? 0 : -3,
                       right: isLastCol ? 0 : -3,
                     }}
                   />
                 )}
-                {hasCompleteRange && day.isRangeStart && (
+                {hasCompleteRange && day.isRangeStart && !isSameDay(rangeValue.start!, rangeValue.end!) && (
                   <div 
-                    className="absolute inset-y-0 bg-[var(--datepicker-range-bg)]"
+                    className="absolute bg-[var(--datepicker-range-bg)]"
                     style={{
-                      left: '50%',
+                      top: 0,
+                      bottom: 0,
+                      left: 16,
                       right: isLastCol ? 0 : -3,
                     }}
                   />
                 )}
-                {hasCompleteRange && day.isRangeEnd && (
+                {hasCompleteRange && day.isRangeEnd && !isSameDay(rangeValue.start!, rangeValue.end!) && (
                   <div 
-                    className="absolute inset-y-0 bg-[var(--datepicker-range-bg)]"
+                    className="absolute bg-[var(--datepicker-range-bg)]"
                     style={{
+                      top: 0,
+                      bottom: 0,
                       left: isFirstCol ? 0 : -3,
-                      right: '50%',
+                      right: 16,
                     }}
                   />
                 )}

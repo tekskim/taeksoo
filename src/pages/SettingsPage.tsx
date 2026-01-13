@@ -384,10 +384,10 @@ export function SettingsPage({ isOpen, onClose, initialTab = 'account' }: Settin
                       <div>
                         <label className="block text-[length:var(--font-size-12)] leading-[var(--line-height-16)] font-medium text-[var(--color-text-default)] mb-1">
                           Password
-                          <span className="font-normal text-[var(--color-text-muted)] ml-2">Last updated: {passwordLastUpdated}</span>
                         </label>
+                        <span className="block text-[length:var(--font-size-11)] leading-[var(--line-height-16)] text-[var(--color-text-muted)] mb-2">Last updated: {passwordLastUpdated}</span>
                         {!isEditingPassword ? (
-                          <Button variant="primary" size="sm" onClick={() => setIsEditingPassword(true)} className="mt-2">
+                          <Button variant="primary" size="sm" onClick={() => setIsEditingPassword(true)}>
                             Change Password
                           </Button>
                         ) : (
@@ -515,8 +515,8 @@ export function SettingsPage({ isOpen, onClose, initialTab = 'account' }: Settin
                     </SectionCard.Content>
                   </SectionCard>
 
-                  {/* Logout - No boundary stroke as per spec */}
-                  <div className="mt-6 pt-6 border-t border-[var(--color-border-default)]">
+                  {/* Logout */}
+                  <div className="mt-6">
                     <Button variant="danger" size="lg" onClick={() => setShowLogoutModal(true)}>
                       Logout
                     </Button>
