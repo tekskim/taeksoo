@@ -340,18 +340,19 @@ const ContextMenuContent: React.FC<ContextMenuContentProps> = ({
         const viewportWidth = window.innerWidth;
         const viewportHeight = window.innerHeight;
 
-        // position.x is the button center X
-        // Calculate menu position so its center aligns with button center
-        let newX = position.x - rect.width / 2;
+        // position.x is the button left edge
+        // Left-align menu with trigger button
+        let newX = position.x;
         let newY = position.y;
 
         // Adjust horizontal position if menu overflows viewport
+        if (newX + rect.width > viewportWidth - 8) {
+          // Menu would overflow right edge, align to right edge
+          newX = viewportWidth - rect.width - 8;
+        }
         if (newX < 8) {
           // Menu would overflow left edge, align to left edge
           newX = 8;
-        } else if (newX + rect.width > viewportWidth - 8) {
-          // Menu would overflow right edge, align to right edge
-          newX = viewportWidth - rect.width - 8;
         }
 
         // Adjust vertical position
@@ -430,11 +431,12 @@ export const ContextMenu: React.FC<ContextMenuProps> = ({
       }
       
       if (triggerRef.current) {
-        const rect = triggerRef.current.getBoundingClientRect();
-        // Position menu directly below the button, center-aligned
-        // We'll calculate the exact center position in ContextMenuContent
+        // Get the actual trigger element (first child) for accurate positioning
+        const triggerElement = triggerRef.current.firstElementChild as HTMLElement | null;
+        const rect = triggerElement?.getBoundingClientRect() ?? triggerRef.current.getBoundingClientRect();
+        // Position menu directly below the button, left-aligned
         setPosition({ 
-          x: rect.left + rect.width / 2, // Button center X
+          x: rect.left, // Button left edge
           y: rect.bottom + 4 
         });
       }
