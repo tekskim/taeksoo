@@ -41,6 +41,8 @@ export interface ContextMenuProps {
   disabled?: boolean;
   /** Custom class name */
   className?: string;
+  /** Minimum top position for dropdown */
+  minTop?: number;
 }
 
 export interface ContextMenuContentProps {
@@ -56,6 +58,8 @@ export interface ContextMenuContentProps {
   menuRef?: React.RefObject<HTMLDivElement>;
   /** Trigger element ref (for positioning relative to trigger) */
   triggerRef?: React.RefObject<HTMLElement>;
+  /** Minimum top position for dropdown */
+  minTop?: number;
 }
 
 /* ----------------------------------------
@@ -327,6 +331,7 @@ const ContextMenuContent: React.FC<ContextMenuContentProps> = ({
   parentDirection = 'right',
   menuRef: externalMenuRef,
   triggerRef,
+  minTop,
 }) => {
   const internalMenuRef = useRef<HTMLDivElement>(null);
   const menuRef = externalMenuRef ?? internalMenuRef;
@@ -359,10 +364,15 @@ const ContextMenuContent: React.FC<ContextMenuContentProps> = ({
           newY = Math.max(8, viewportHeight - rect.height - 8);
         }
 
+        // Apply minTop if specified
+        if (minTop !== undefined && newY < minTop) {
+          newY = minTop;
+        }
+
         setAdjustedPosition({ x: newX, y: newY });
       }
     });
-  }, [position, triggerRef]);
+  }, [position, triggerRef, minTop]);
 
   return createPortal(
     <div
@@ -409,6 +419,7 @@ export const ContextMenu: React.FC<ContextMenuProps> = ({
   trigger = 'contextmenu',
   disabled = false,
   className = '',
+  minTop,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [position, setPosition] = useState({ x: 0, y: 0 });
@@ -492,6 +503,7 @@ export const ContextMenu: React.FC<ContextMenuProps> = ({
           onClose={handleClose}
           menuRef={menuRef}
           triggerRef={triggerRef}
+          minTop={minTop}
         />
       )}
     </div>

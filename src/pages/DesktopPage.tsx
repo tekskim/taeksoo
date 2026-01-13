@@ -40,6 +40,7 @@ import appIconContainer from '@/assets/appIcon/container.png';
 import appIconAgentops from '@/assets/appIcon/agentops.png';
 import appIconAiplatform from '@/assets/appIcon/aiplatform.png';
 import appIconIam from '@/assets/appIcon/iam.png';
+import appIconAIChat from '@/assets/appIcon/AI Chat.png';
 
 /* ----------------------------------------
    Desktop Icon Component
@@ -197,7 +198,7 @@ function DockIcons({
   };
 
   return (
-    <div className="flex items-center gap-2 h-full">
+    <div className="flex items-center gap-3 h-full">
       {apps.map((app) => {
         const isRunning = app.hasWindows;
         const isActive = app.hasActiveWindow;
@@ -403,7 +404,7 @@ function DesktopTopBar({ onChatbotToggle, onOpenSettings, onNotificationToggle, 
   ];
 
   return (
-    <div className="fixed top-0 left-0 right-0 h-[52px] bg-[#f8fafc] flex items-center justify-between px-4 z-[1000] shadow-[0px_1px_0px_0px_rgba(0,0,0,0.15)]">
+    <div className="fixed top-0 left-0 right-0 h-[52px] bg-[#f8fafc] flex items-center justify-between pl-4 z-[1000] shadow-[0px_1px_0px_0px_rgba(0,0,0,0.15)]">
       {/* Left Section - Logo + Dock Icons */}
       <div className="flex items-center gap-8 h-full">
         {/* THAKI Cloud Logo */}
@@ -429,6 +430,7 @@ function DesktopTopBar({ onChatbotToggle, onOpenSettings, onNotificationToggle, 
           <ContextMenu
             items={contextMenuItems}
             trigger="click"
+            minTop={52}
           >
             <button className="w-5 h-5 flex items-center justify-center text-[#0f172a]/60 hover:text-[#0f172a] cursor-pointer transition-colors">
               <Icons.Finetuning size={20} stroke={1.5} />
@@ -456,6 +458,7 @@ function DesktopTopBar({ onChatbotToggle, onOpenSettings, onNotificationToggle, 
               },
             ]}
             trigger="click"
+            minTop={52}
           >
             <button className="w-5 h-5 flex items-center justify-center text-[#0f172a]/60 hover:text-[#0f172a] cursor-pointer transition-colors">
               <Icons.UserCircle size={20} stroke={1.5} />
@@ -471,14 +474,14 @@ function DesktopTopBar({ onChatbotToggle, onOpenSettings, onNotificationToggle, 
         </div>
 
         {/* Separator + Chatbot */}
-        <div className="flex items-center border-l border-[#e2e8f0] pl-4 h-[52px]">
+        <div className="flex items-center border-l border-[#e2e8f0] px-[10px]">
           <button 
             className="w-8 h-8 flex items-center justify-center cursor-pointer transition-opacity hover:opacity-80"
             onClick={onChatbotToggle}
             title="AI Chatbot"
           >
             <img 
-              src={imgChatbot} 
+              src={appIconAIChat} 
               alt="AI Chatbot" 
               className="w-8 h-8 object-contain" 
             />
@@ -929,11 +932,6 @@ export function DesktopPage() {
 
       {/* Notification center */}
       {showNotifications && notificationButtonRef.current && (() => {
-        const rect = notificationButtonRef.current.getBoundingClientRect();
-        const notificationWidth = 360; // NotificationCenter width
-        const left = rect.right - notificationWidth;
-        const top = rect.bottom + 4;
-        
         return (
           <>
             {/* Click outside to close */}
@@ -942,12 +940,8 @@ export function DesktopPage() {
               onClick={() => setShowNotifications(false)}
             />
             <div
-              className="fixed z-[6001]"
+              className="fixed z-[6001] top-[52px] right-0"
               onClick={(e) => e.stopPropagation()}
-              style={{
-                top: `${top}px`,
-                left: `${Math.max(8, left)}px`, // Ensure it doesn't go off-screen
-              }}
             >
               <NotificationCenter
                 notifications={notifications}
