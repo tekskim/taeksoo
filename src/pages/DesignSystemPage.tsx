@@ -374,6 +374,327 @@ function FilterSearchInputDemo() {
 }
 
 /* ----------------------------------------
+   OpenSection Demo Component (Basic Form)
+   ---------------------------------------- */
+
+function OpenSectionDemo() {
+  const [instanceName, setInstanceName] = useState('');
+  const [instanceNameError, setInstanceNameError] = useState<string | null>(null);
+
+  const handleNextClick = () => {
+    if (!instanceName.trim()) {
+      setInstanceNameError('Instance name is required.');
+      return;
+    }
+    setInstanceNameError(null);
+    console.log('Next clicked - instance name:', instanceName);
+  };
+
+  const handleInstanceNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setInstanceName(e.target.value);
+    if (instanceNameError && e.target.value.trim()) {
+      setInstanceNameError(null);
+    }
+  };
+
+  return (
+    <SectionCard isActive>
+      <SectionCard.Header 
+        title="Basic information" 
+        statusIcon={<WizardSectionStatusIcon status="active" />}
+      />
+      <SectionCard.Content>
+        <VStack gap={0}>
+          {/* Instance name */}
+          <div className="flex flex-col py-6">
+            <label className="text-[14px] font-medium text-[var(--color-text-default)] mb-2">
+              Instance name <span className="ml-1 text-[var(--color-state-danger)]">*</span>
+            </label>
+            <Input 
+              placeholder="Enter instance name" 
+              fullWidth 
+              value={instanceName}
+              onChange={handleInstanceNameChange}
+              error={!!instanceNameError}
+            />
+            <div className="flex flex-col gap-1 mt-1">
+              {instanceNameError && (
+                <span className="text-[11px] text-[var(--color-state-danger)] leading-[16px]">
+                  {instanceNameError}
+                </span>
+              )}
+              <span className="text-[11px] text-[var(--color-text-subtle)] leading-[16px]">
+                You can use letters, numbers, and special characters (+=.@-_).
+              </span>
+            </div>
+          </div>
+
+          {/* Divider */}
+          <div className="w-full h-px bg-[var(--color-border-subtle)]" />
+
+          {/* AZ */}
+          <VStack gap={2} className="py-6">
+            <label className="text-[14px] font-medium text-[var(--color-text-default)]">
+              AZ (Availability zone) <span className="ml-1 text-[var(--color-state-danger)]">*</span>
+            </label>
+            <Select
+              options={[
+                { value: 'nova', label: 'nova (Default)' },
+                { value: 'az-1', label: 'az-1' },
+                { value: 'az-2', label: 'az-2' },
+              ]}
+              value="nova"
+              onChange={() => {}}
+              placeholder="Select AZ"
+              fullWidth
+            />
+            <span className="text-[11px] text-[var(--color-text-subtle)]">
+              Select the availability zone for the instance.
+            </span>
+          </VStack>
+
+          {/* Divider */}
+          <div className="w-full h-px bg-[var(--color-border-subtle)]" />
+
+          {/* Next Button */}
+          <HStack justify="end" className="pt-3">
+            <Button variant="primary" onClick={handleNextClick}>
+              Next
+            </Button>
+          </HStack>
+        </VStack>
+      </SectionCard.Content>
+    </SectionCard>
+  );
+}
+
+/* ----------------------------------------
+   OpenSection Table Demo Component
+   ---------------------------------------- */
+
+interface DemoImageRow {
+  id: string;
+  status: 'active' | 'building' | 'error';
+  name: string;
+  version: string;
+  size: string;
+  minDisk: string;
+  minRam: string;
+  access: string;
+  os: 'ubuntu' | 'windows' | 'rocky' | 'other';
+}
+
+const demoImages: DemoImageRow[] = [
+  { id: 'e920j10d', status: 'active', name: 'ubuntu-22.04-tk-base', version: '22.04', size: '709.98 MiB', minDisk: '10.00 MiB', minRam: '0 MiB', access: 'Public', os: 'ubuntu' },
+  { id: 'e920j20d', status: 'active', name: 'ubuntu-20.04-tk-base', version: '20.04', size: '650.00 MiB', minDisk: '10.00 MiB', minRam: '0 MiB', access: 'Public', os: 'ubuntu' },
+  { id: 'e920j30d', status: 'active', name: 'windows-server-2022', version: '2022', size: '4.5 GiB', minDisk: '40.00 GiB', minRam: '4 GiB', access: 'Public', os: 'windows' },
+  { id: 'e920j40d', status: 'active', name: 'rocky-8.9-tk-base', version: '8.9', size: '850.11 MiB', minDisk: '10.00 MiB', minRam: '0 MiB', access: 'Public', os: 'rocky' },
+  { id: 'e920j50d', status: 'building', name: 'centos-stream-9', version: '9', size: '920.00 MiB', minDisk: '10.00 MiB', minRam: '0 MiB', access: 'Public', os: 'other' },
+];
+
+function OpenSectionTableDemo() {
+  const [sourceTab, setSourceTab] = useState<'image' | 'snapshot' | 'volume'>('image');
+  const [osFilter, setOsFilter] = useState<'ubuntu' | 'windows' | 'rocky' | 'other'>('other');
+  const [searchQuery, setSearchQuery] = useState('');
+  const [selectedImageId, setSelectedImageId] = useState<string | null>(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [sourceError, setSourceError] = useState<string | null>(null);
+
+  // Filter images
+  const filteredImages = demoImages.filter(img => {
+    const matchesOs = osFilter === 'other' || img.os === osFilter;
+    const matchesSearch = searchQuery === '' || 
+      img.name.toLowerCase().includes(searchQuery.toLowerCase());
+    return matchesOs && matchesSearch;
+  });
+
+  const selectedImage = demoImages.find(img => img.id === selectedImageId);
+
+  // Handle image selection - clears error when selecting
+  const handleImageSelect = (id: string) => {
+    setSelectedImageId(id);
+    setSourceError(null);
+  };
+
+  // Handle Next button click - validates selection
+  const handleNextClick = () => {
+    if (!selectedImageId) {
+      setSourceError('Please select a start source.');
+      return;
+    }
+    setSourceError(null);
+    console.log('Next clicked - selected:', selectedImageId);
+  };
+
+  const imageColumns = [
+    {
+      key: 'select',
+      label: '',
+      width: '40px',
+      render: (_: unknown, row: DemoImageRow) => (
+        <div className="flex items-center justify-center" onClick={(e) => e.stopPropagation()}>
+          <Radio
+            value={row.id}
+            checked={selectedImageId === row.id}
+            onChange={() => handleImageSelect(row.id)}
+          />
+        </div>
+      ),
+    },
+    {
+      key: 'status',
+      label: 'Status',
+      width: '60px',
+      render: (_: unknown, row: DemoImageRow) => (
+        <StatusIndicator status={row.status} />
+      ),
+    },
+    { 
+      key: 'name', 
+      label: 'Name', 
+      sortable: true,
+      width: '200px',
+      render: (value: string, row: DemoImageRow) => (
+        <VStack gap={0}>
+          <span className="text-[var(--color-action-primary)] text-[length:var(--font-size-12)] leading-[var(--line-height-18)] font-medium">
+            {value}
+          </span>
+          <span className="text-[11px] text-[var(--color-text-subtle)]">ID: {row.id}</span>
+        </VStack>
+      ),
+    },
+    { key: 'version', label: 'Version', sortable: true, width: '80px' },
+    { key: 'size', label: 'Size', sortable: true, width: '100px' },
+    { key: 'minDisk', label: 'Min disk', sortable: true, width: '90px' },
+    { key: 'access', label: 'Visibility', sortable: true, width: '80px' },
+  ];
+
+  return (
+    <div className="w-[840px]">
+      <SectionCard isActive>
+        <SectionCard.Header 
+          title="Source" 
+          statusIcon={<WizardSectionStatusIcon status="active" />}
+          showDivider
+        />
+      <SectionCard.Content>
+        <VStack gap={0}>
+          {/* Start Source */}
+          <VStack gap={2} className="pt-3">
+            <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+              Start source<span className="ml-1 text-[var(--color-state-danger)]">*</span>
+            </span>
+            <span className="text-[12px] text-[var(--color-text-muted)] mb-4">
+              Select a template to launch the instance. You can start from an OS image, a snapshot, or an existing volume.
+            </span>
+            
+            {/* Source Tabs */}
+            <Tabs value={sourceTab} onChange={(v) => setSourceTab(v as 'image' | 'snapshot' | 'volume')} variant="underline" size="sm">
+              <TabList>
+                <Tab value="image">Image</Tab>
+                <Tab value="snapshot">Instance snapshot</Tab>
+                <Tab value="volume">Bootable volume</Tab>
+              </TabList>
+            </Tabs>
+
+            {/* OS Filter Tabs (Capsule/Boxed) - Only show for Image tab */}
+            {sourceTab === 'image' && (
+              <div className="mt-2">
+                <Tabs 
+                  value={osFilter} 
+                  onChange={(v) => { setOsFilter(v as 'ubuntu' | 'windows' | 'rocky' | 'other'); setCurrentPage(1); }} 
+                  variant="boxed" 
+                  size="sm"
+                >
+                  <TabList>
+                    <Tab value="other">
+                      <span className="flex items-center gap-1">
+                        <IconDots size={14} />
+                        Others
+                      </span>
+                    </Tab>
+                    <Tab value="ubuntu">
+                      <span className="flex items-center gap-1">
+                        <IconUbuntu size={14} />
+                        Ubuntu
+                      </span>
+                    </Tab>
+                    <Tab value="windows">
+                      <span className="flex items-center gap-1">
+                        <IconGrid size={14} />
+                        Windows
+                      </span>
+                    </Tab>
+                    <Tab value="rocky">
+                      <span className="flex items-center gap-1">
+                        <IconRocky size={14} />
+                        Rocky
+                      </span>
+                    </Tab>
+                  </TabList>
+                </Tabs>
+              </div>
+            )}
+
+            {/* Search */}
+            <SearchInput
+              placeholder="Search image by attributes"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              onClear={() => { setSearchQuery(''); setCurrentPage(1); }}
+              size="sm"
+              className="w-[280px] mt-2"
+            />
+
+            {/* Pagination */}
+            <Pagination
+              currentPage={currentPage}
+              totalPages={Math.ceil(filteredImages.length / 5) || 1}
+              totalItems={filteredImages.length}
+              onPageChange={setCurrentPage}
+            />
+
+            {/* Table */}
+            <div className="w-[806px]">
+              <Table
+                columns={imageColumns}
+                data={filteredImages}
+                rowKey="id"
+                onRowClick={(row) => handleImageSelect(row.id)}
+              />
+            </div>
+
+            {/* Error Message or Selection Indicator */}
+            {sourceError && !selectedImage ? (
+              <div className="mt-2">
+                <InlineMessage variant="error">
+                  {sourceError}
+                </InlineMessage>
+              </div>
+            ) : (
+              <SelectionIndicator
+                className="mt-2"
+                selectedItems={selectedImage ? [{ id: selectedImage.id, label: selectedImage.name }] : []}
+                onRemove={() => setSelectedImageId(null)}
+              />
+            )}
+          </VStack>
+
+          {/* Divider + Next Button */}
+          <div className="w-full h-px bg-[var(--color-border-subtle)] mt-6" />
+          <HStack justify="end" className="pt-3">
+            <Button variant="primary" onClick={handleNextClick}>
+              Next
+            </Button>
+          </HStack>
+        </VStack>
+      </SectionCard.Content>
+      </SectionCard>
+    </div>
+  );
+}
+
+/* ----------------------------------------
    Wizard Pattern Section
    ---------------------------------------- */
 
@@ -480,6 +801,18 @@ function WizardPatternSection() {
               <DoneSectionRow label="Description" value="Test instance for development" />
             </DoneSection>
           </VStack>
+
+          {/* OpenSection (Active) */}
+          <VStack gap={1}>
+            <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">OpenSection (열림/활성)</span>
+            <OpenSectionDemo />
+          </VStack>
+        </VStack>
+
+        {/* OpenSection-Table (Active with Table Selection) - Outside max-w container for full table width */}
+        <VStack gap={1}>
+          <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">OpenSection-Table (테이블 선택)</span>
+          <OpenSectionTableDemo />
         </VStack>
       </VStack>
 
@@ -3203,7 +3536,7 @@ export function DesignSystemPage() {
   return (
     <div className="min-h-screen bg-[var(--color-surface-subtle)]">
       {/* Left Sidebar Navigation */}
-      <nav className="fixed left-0 top-0 w-[200px] h-screen bg-[var(--color-surface-default)] border-r border-[var(--color-border-default)] overflow-y-auto z-50 sidebar-scroll">
+      <nav className="fixed left-0 top-0 w-[200px] h-screen bg-[var(--color-surface-default)] border-r border-[var(--color-border-default)] overflow-y-auto overflow-x-hidden z-50 sidebar-scroll">
         <div className="p-4 overflow-hidden">
           {/* Logo */}
           <Link to="/" className="flex items-center gap-2 mb-4">
@@ -3291,7 +3624,7 @@ export function DesignSystemPage() {
           {/* Navigation */}
           <VStack gap={4}>
             {/* Foundation Section */}
-            <VStack gap={1}>
+            <VStack gap={1} className="w-[166px]">
               <span className="px-3 py-1 text-[length:var(--font-size-10)] font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider">
                 Foundation
               </span>
@@ -3316,7 +3649,7 @@ export function DesignSystemPage() {
             </VStack>
 
             {/* Form Controls */}
-            <VStack gap={1}>
+            <VStack gap={1} className="w-[166px]">
               <span className="px-3 py-1 text-[length:var(--font-size-10)] font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider">
                 Form Controls
               </span>
@@ -3341,7 +3674,7 @@ export function DesignSystemPage() {
             </VStack>
 
             {/* Navigation & Data Display */}
-            <VStack gap={1}>
+            <VStack gap={1} className="w-[166px]">
               <span className="px-3 py-1 text-[length:var(--font-size-10)] font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider">
                 Navigation & Data
               </span>
@@ -3366,7 +3699,7 @@ export function DesignSystemPage() {
             </VStack>
 
             {/* Graphs */}
-            <VStack gap={1}>
+            <VStack gap={1} className="w-[166px]">
               <span className="px-3 py-1 text-[length:var(--font-size-10)] font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider">
                 Graphs
               </span>
@@ -3391,7 +3724,7 @@ export function DesignSystemPage() {
             </VStack>
 
             {/* Patterns */}
-            <VStack gap={1}>
+            <VStack gap={1} className="w-[166px]">
               <span className="px-3 py-1 text-[length:var(--font-size-10)] font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider">
                 Patterns
               </span>
@@ -6714,54 +7047,108 @@ outline: 2px solid var(--color-border-focus);`}
             {/* Floating card Section */}
             <Section id="floating-card" title="Floating card" description="Floating summary card for create/edit flows with sections, quota, and actions">
               <VStack gap={8}>
-                {/* Basic Example */}
+                {/* Basic Example - QuotaSidebar Style */}
                 <VStack gap={4}>
-                  <Label>Basic Example (Non-portal)</Label>
-                  <div className="relative bg-[var(--color-surface-subtle)] p-6 rounded-lg min-h-[500px]">
-                    <FloatingCard
-                      title="Create instance"
-                      portal={false}
-                      sections={[
-                        {
-                          tabTitle: 'Details',
-                          collapsible: true,
-                          defaultExpanded: true,
-                          showSuccessIcon: true,
-                          items: [
-                            { id: '1', title: 'Instance name', status: 'success' },
-                            { id: '2', title: 'Description', status: 'success' },
-                            { id: '3', title: 'Availability zone', status: 'default' },
-                          ],
-                        },
-                        {
-                          tabTitle: 'Source',
-                          collapsible: true,
-                          defaultExpanded: false,
-                          items: [
-                            { id: '4', title: 'Boot Source', status: 'processing' },
-                            { id: '5', title: 'Image', status: 'default' },
-                          ],
-                        },
-                        {
-                          tabTitle: 'Flavor',
-                          collapsible: true,
-                          defaultExpanded: false,
-                          items: [
-                            { id: '6', title: 'Flavor Selection', status: 'warning' },
-                          ],
-                        },
-                      ]}
-                      quota={[
-                        { label: 'Instances', current: 5, total: 10 },
-                        { label: 'vCPUs', current: 12, total: 20 },
-                        { label: 'RAM', current: 32, total: 64, unit: 'GB' },
-                      ]}
-                      cancelLabel="Cancel"
-                      actionLabel="Create instance"
-                      actionEnabled={false}
-                      onCancel={() => console.log('Cancel clicked')}
-                      onAction={() => console.log('Create clicked')}
-                    />
+                  <Label>Basic Example (QuotaSidebar from Create Instance)</Label>
+                  <div className="relative bg-[var(--color-surface-subtle)] p-6 rounded-lg">
+                    {/* QuotaSidebar Container */}
+                    <div className="w-[312px] shrink-0">
+                      <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg p-4 flex flex-col gap-4">
+                        {/* Summary Card */}
+                        <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-lg p-4">
+                          <VStack gap={3}>
+                            <h5 className="text-[16px] font-semibold leading-6 text-[var(--color-text-default)]">
+                              Summary
+                            </h5>
+                            <div className="flex flex-col">
+                              {/* Launch type - done */}
+                              <div className="flex items-center justify-between py-1">
+                                <span className="text-[12px] leading-5 text-[var(--color-text-default)]">Launch type</span>
+                                <div className="w-4 h-4 shrink-0 rounded-full bg-[var(--color-state-success)] flex items-center justify-center">
+                                  <IconCheck size={10} stroke={2.5} className="text-white" />
+                                </div>
+                              </div>
+                              {/* Basic information - done */}
+                              <div className="flex items-center justify-between py-1">
+                                <span className="text-[12px] leading-5 text-[var(--color-text-default)]">Basic information</span>
+                                <div className="w-4 h-4 shrink-0 rounded-full bg-[var(--color-state-success)] flex items-center justify-center">
+                                  <IconCheck size={10} stroke={2.5} className="text-white" />
+                                </div>
+                              </div>
+                              {/* Source - done */}
+                              <div className="flex items-center justify-between py-1">
+                                <span className="text-[12px] leading-5 text-[var(--color-text-default)]">Source</span>
+                                <div className="w-4 h-4 shrink-0 rounded-full bg-[var(--color-state-success)] flex items-center justify-center">
+                                  <IconCheck size={10} stroke={2.5} className="text-white" />
+                                </div>
+                              </div>
+                              {/* Flavor - active */}
+                              <div className="flex items-center justify-between py-1">
+                                <span className="text-[12px] leading-5 text-[var(--color-text-default)]">Flavor</span>
+                                <div className="w-4 h-4 shrink-0">
+                                  <IconProgress size={16} stroke={1.5} className="text-[var(--color-text-subtle)] animate-spin" />
+                                </div>
+                              </div>
+                              {/* Network - pre */}
+                              <div className="flex items-center justify-between py-1">
+                                <span className="text-[12px] leading-5 text-[var(--color-text-default)]">Network</span>
+                                <div className="w-4 h-4 shrink-0 rounded-full border border-[var(--color-border-default)]" />
+                              </div>
+                              {/* Authentication - pre */}
+                              <div className="flex items-center justify-between py-1">
+                                <span className="text-[12px] leading-5 text-[var(--color-text-default)]">Authentication</span>
+                                <div className="w-4 h-4 shrink-0 rounded-full border border-[var(--color-border-default)]" />
+                              </div>
+                              {/* Advanced - pre */}
+                              <div className="flex items-center justify-between py-1">
+                                <span className="text-[12px] leading-5 text-[var(--color-text-default)]">Advanced</span>
+                                <div className="w-4 h-4 shrink-0 rounded-full border border-[var(--color-border-default)]" />
+                              </div>
+                            </div>
+                          </VStack>
+                        </div>
+
+                        {/* Quota Card */}
+                        <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg p-4">
+                          <VStack gap={3}>
+                            <h5 className="text-[16px] font-semibold leading-6 text-[var(--color-text-default)]">
+                              Quota
+                            </h5>
+                            <VStack gap={3}>
+                              <ProgressBar variant="quota" label="Instance" value={3} max={10} newValue={1} showValue />
+                              <ProgressBar variant="quota" label="vCPU" value={7} max={20} newValue={2} showValue />
+                              <ProgressBar variant="quota" label="RAM (GiB)" value={18} max={50} newValue={4} showValue />
+                              <ProgressBar variant="quota" label="Disk" value={3} max={10} newValue={1} showValue />
+                              <ProgressBar variant="quota" label="Disk capacity (GiB)" value={70} max={1000} newValue={50} showValue />
+                            </VStack>
+                          </VStack>
+                        </div>
+
+                        {/* Number of Instances */}
+                        <VStack gap={2}>
+                          <label className="text-[14px] font-medium leading-5 text-[var(--color-text-default)]">
+                            Number of Instances
+                          </label>
+                          <NumberInput
+                            value={1}
+                            onChange={() => {}}
+                            min={1}
+                            max={10}
+                            fullWidth
+                          />
+                        </VStack>
+
+                        {/* Action Buttons */}
+                        <HStack gap={2}>
+                          <Button variant="secondary" onClick={() => console.log('Cancel')} className="w-[80px]">
+                            Cancel
+                          </Button>
+                          <Button variant="primary" disabled className="flex-1">
+                            Create
+                          </Button>
+                        </HStack>
+                      </div>
+                    </div>
                   </div>
                 </VStack>
 
