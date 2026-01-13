@@ -94,10 +94,10 @@ export function RoutersPage() {
   const defaultColumnConfig: ColumnConfig[] = [
     { id: 'status', label: 'Status', visible: true, locked: true },
     { id: 'name', label: 'Name', visible: true, locked: true },
-    { id: 'externalGateway', label: 'External Gateway', visible: true },
-    { id: 'externalFixedIp', label: 'External Fixed IP', visible: true },
-    { id: 'externalNetwork', label: 'External Network', visible: true },
-    { id: 'adminState', label: 'Admin State', visible: true },
+    { id: 'externalGateway', label: 'External gateway', visible: true },
+    { id: 'externalFixedIp', label: 'External fixed IP', visible: true },
+    { id: 'externalNetwork', label: 'External network', visible: true },
+    { id: 'adminState', label: 'Admin state', visible: true },
     { id: 'actions', label: 'Action', visible: true, locked: true },
   ];
 
@@ -159,19 +159,19 @@ export function RoutersPage() {
     },
     {
       key: 'externalGateway',
-      label: 'External Gateway',
+      label: 'External gateway',
       flex: 1,
       render: (value: boolean) => value ? 'Yes' : 'No',
     },
     {
       key: 'externalFixedIp',
-      label: 'External Fixed IP',
+      label: 'External fixed IP',
       flex: 1,
       sortable: true,
     },
     {
       key: 'externalNetwork',
-      label: 'External Network',
+      label: 'External network',
       flex: 1,
       sortable: true,
       render: (_, row) => (
@@ -194,7 +194,7 @@ export function RoutersPage() {
     },
     {
       key: 'adminState',
-      label: 'Admin State',
+      label: 'Admin state',
       flex: 1,
       render: (value: boolean) => value ? 'Up' : 'Down',
     },
@@ -207,9 +207,9 @@ export function RoutersPage() {
         <div onClick={(e) => e.stopPropagation()}>
           <ContextMenu
             items={[
-              { label: 'Connect Subnet', onClick: () => {} },
-              { label: 'Disconnect Subnet', onClick: () => {} },
-              { label: 'External Gateway Setting', onClick: () => {} },
+              { label: 'Connect subnet', onClick: () => {} },
+              { label: 'Disconnect subnet', onClick: () => {} },
+              { label: 'External gateway Setting', onClick: () => {} },
               { label: 'Enable SNAT', onClick: () => {} },
               { label: 'Disable SNAT', onClick: () => {} },
               { label: 'Edit', onClick: () => {} },
@@ -300,7 +300,7 @@ export function RoutersPage() {
           <VStack gap={3}>
             {/* Page Header */}
             <div className="flex justify-between items-center h-8 w-full">
-              <h1 className="text-[length:var(--font-size-16)] font-semibold text-[var(--color-text-default)]">
+              <h1 className="text-[length:var(--font-size-16)] font-semibold leading-6 text-[var(--color-text-default)]">
                 Routers
               </h1>
               <Button variant="primary" size="md">
@@ -314,7 +314,7 @@ export function RoutersPage() {
                 <ListToolbar.Actions>
                   <div className="w-[280px]">
                     <SearchInput
-                      placeholder="Find Router with filters"
+                      placeholder="Search router by attributes"
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
                       onClear={() => setSearchQuery('')}

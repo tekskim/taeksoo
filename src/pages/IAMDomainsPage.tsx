@@ -80,12 +80,21 @@ export default function IAMDomainsPage() {
     currentPage * itemsPerPage
   );
 
-  // Context menu items
-  const contextMenuItems: ContextMenuItem[] = [
-    { id: 'view', label: 'View details' },
-    { id: 'edit', label: 'Edit domain' },
-    { type: 'divider' },
-    { id: 'delete', label: 'Delete domain', danger: true },
+  // Context menu items factory
+  const isLastDomain = mockDomains.length === 1;
+  const getContextMenuItems = (row: Domain): ContextMenuItem[] => [
+    {
+      id: 'edit',
+      label: 'Edit',
+      onClick: () => console.log('Edit domain', row.id),
+    },
+    {
+      id: 'delete',
+      label: 'Delete',
+      status: isLastDomain ? undefined : 'danger',
+      disabled: isLastDomain,
+      onClick: () => console.log('Delete domain', row.id),
+    },
   ];
 
   // Table columns
@@ -136,10 +145,10 @@ export default function IAMDomainsPage() {
           >
             <ArrowRightLeft size={16} strokeWidth={1.5} className="text-[var(--color-text-default)]" />
           </button>
-          <ContextMenu items={contextMenuItems} onSelect={(itemId) => console.log(itemId, row.id)}>
+          <ContextMenu items={getContextMenuItems(row)} trigger="click">
             <button
               type="button"
-              className="p-1.5 rounded-md hover:bg-[var(--color-surface-subtle)] transition-colors"
+              className="flex items-center justify-center w-7 h-7 rounded-md bg-transparent hover:bg-[var(--color-surface-muted)] active:bg-[var(--color-border-subtle)] transition-colors cursor-pointer"
             >
               <IconAction size={16} stroke={1} className="text-[var(--color-text-default)]" />
             </button>

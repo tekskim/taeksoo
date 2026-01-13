@@ -394,21 +394,21 @@ export function ComputeHomePage() {
                   />
                   <InfraQuotaCard
                     icon={<IconShieldLock size={16} stroke={1.5} />}
-                    label="Security Groups"
+                    label="Security groups"
                     used={85}
                     total={100}
                     href="/compute/security-groups"
                   />
                   <InfraQuotaCard
                     icon={<IconKey size={16} stroke={1.5} />}
-                    label="Key Pairs"
+                    label="Key pairs"
                     used={18}
                     total={100}
                     href="/compute/key-pairs"
                   />
                   <InfraQuotaCard
                     icon={<IconServer size={16} stroke={1.5} />}
-                    label="Server Groups"
+                    label="Server groups"
                     used={1}
                     total={10}
                     href="/compute/server-groups"
@@ -446,7 +446,7 @@ export function ComputeHomePage() {
                 />
                 <ActivityItem
                   name="sg-default"
-                  resourceType="Security Group"
+                  resourceType="Security group"
                   action="modify"
                   time="5h ago"
                   isLast

@@ -19,7 +19,7 @@ import { useTabs } from '@/contexts/TabContext';
 import { IconRefresh } from '@tabler/icons-react';
 
 /* ----------------------------------------
-   Token Policies Page
+   Token policies Page
    ---------------------------------------- */
 
 export default function IAMTokenPoliciesPage() {
@@ -34,13 +34,13 @@ export default function IAMTokenPoliciesPage() {
 
   // Update tab label on mount
   useEffect(() => {
-    updateActiveTabLabel('Token Policies');
+    updateActiveTabLabel('Token policies');
   }, [updateActiveTabLabel]);
 
   // Sidebar width
   const sidebarWidth = sidebarOpen ? 200 : 0;
 
-  // Tab bar tabs
+  // Tab Bar tabs
   const tabBarTabs = tabs.map(tab => ({
     id: tab.id,
     label: tab.label,
@@ -114,7 +114,7 @@ export default function IAMTokenPoliciesPage() {
               {/* Header */}
               <HStack justify="between" align="center" className="w-full min-h-[28px]">
                 <h1 className="text-[16px] font-semibold leading-6 text-[var(--color-text-default)]">
-                  Token Policies
+                  Token policies
                 </h1>
               </HStack>
 
@@ -122,7 +122,7 @@ export default function IAMTokenPoliciesPage() {
               <div className="w-full">
                 <Tabs value={activeTab} onChange={setActiveTab} variant="underline" size="sm">
                   <TabList>
-                    <Tab value="general">General Policy</Tab>
+                    <Tab value="general">General policy</Tab>
                   </TabList>
 
                   {/* General Policy Tab */}

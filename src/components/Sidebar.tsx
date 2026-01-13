@@ -149,34 +149,34 @@ export function Sidebar({ isOpen = true, onToggle }: SidebarProps) {
                 />
               </MenuSection>
 
-              <MenuSection title="System Info" defaultOpen={true}>
+              <MenuSection title="System info" defaultOpen={true}>
                 <MenuItem
                   icon={<IconActivity size={16} stroke={1.5} />}
-                  label="Compute Services"
+                  label="Compute services"
                   href="/cloudbuilder/services"
                   active={isActive('/cloudbuilder/services')}
                 />
                 <MenuItem
                   icon={<IconCpu2 size={16} stroke={1.5} />}
-                  label="Compute Nodes"
+                  label="Compute nodes"
                   href="/cloudbuilder/compute-services"
                   active={isActive('/cloudbuilder/compute-services')}
                 />
                 <MenuItem
                   icon={<IconNetwork size={16} stroke={1.5} />}
-                  label="Network Agents"
+                  label="Network agents"
                   href="/cloudbuilder/network-agents"
                   active={isActive('/cloudbuilder/network-agents')}
                 />
                 <MenuItem
                   icon={<IconDatabase size={16} stroke={1.5} />}
-                  label="Block Storage Services"
+                  label="Block storage services"
                   href="/cloudbuilder/block-storage-services"
                   active={isActive('/cloudbuilder/block-storage-services')}
                 />
                 <MenuItem
                   icon={<IconAffiliate size={16} stroke={1.5} />}
-                  label="Orchestration Services"
+                  label="Orchestration services"
                   href="/cloudbuilder/orchestration-services"
                   active={isActive('/cloudbuilder/orchestration-services')}
                 />
@@ -202,13 +202,13 @@ export function Sidebar({ isOpen = true, onToggle }: SidebarProps) {
             />
             <MenuItem
               icon={<IconTemplate size={16} stroke={1.5} />}
-              label="Instance Templates"
+              label="Instance templates"
               href="/compute/instance-templates"
               active={isActive('/compute/instance-templates')}
             />
             <MenuItem
               icon={<IconCamera size={16} stroke={1.5} />}
-              label="Instance Snapshots"
+              label="Instance snapshots"
               href="/compute/instance-snapshots"
               active={isActive('/compute/instance-snapshots')}
             />
@@ -226,13 +226,13 @@ export function Sidebar({ isOpen = true, onToggle }: SidebarProps) {
             />
             <MenuItem
               icon={<IconKey size={16} stroke={1.5} />}
-              label="Key Pairs"
+              label="Key pairs"
               href="/compute/key-pairs"
               active={isActive('/compute/key-pairs')}
             />
             <MenuItem
               icon={<IconServer size={16} stroke={1.5} />}
-              label="Server Groups"
+              label="Server groups"
               href="/compute/server-groups"
               active={isActive('/compute/server-groups')}
             />
@@ -248,13 +248,13 @@ export function Sidebar({ isOpen = true, onToggle }: SidebarProps) {
             />
             <MenuItem
               icon={<IconCamera size={16} stroke={1.5} />}
-              label="Volume Snapshots"
+              label="Volume snapshots"
               href="/compute/volume-snapshots"
               active={isActive('/compute/volume-snapshots')}
             />
             <MenuItem
               icon={<IconDatabaseExport size={16} stroke={1.5} />}
-              label="Volume Backups"
+              label="Volume backups"
               href="/compute/volume-backups"
               active={isActive('/compute/volume-backups')}
             />
@@ -288,13 +288,13 @@ export function Sidebar({ isOpen = true, onToggle }: SidebarProps) {
             />
             <MenuItem
               icon={<IconShieldLock size={16} stroke={1.5} />}
-              label="Security Groups"
+              label="Security groups"
               href="/compute/security-groups"
               active={isActive('/compute/security-groups')}
             />
             <MenuItem
               icon={<IconLoadBalancer size={16} stroke={1.5} />}
-              label="Load Balancers"
+              label="Load balancers"
               href="/compute/load-balancers"
               active={isActive('/compute/load-balancers')}
             />

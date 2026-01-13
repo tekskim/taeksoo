@@ -100,8 +100,8 @@ export function ContainerHomePage() {
         </span>
       )
     },
-    { key: 'kubernetesVersion', label: 'Kubernetes Version', width: '160px', sortable: true },
-    { key: 'createdAt', label: 'Created At', width: '160px', sortable: true },
+    { key: 'kubernetesVersion', label: 'Kubernetes version', width: '160px', sortable: true },
+    { key: 'createdAt', label: 'Created at', width: '160px', sortable: true },
     { key: 'cpu', label: 'CPU', width: '100px', sortable: true },
     { key: 'memory', label: 'Memory', width: '100px', sortable: true },
     { key: 'pods', label: 'Pods', width: '100px', sortable: true },
@@ -183,7 +183,7 @@ export function ContainerHomePage() {
                   <SectionCard.Content>
                     <VStack gap={4}>
                       <SearchInput 
-                        placeholder="Find Clusters with filters" 
+                        placeholder="Search clusters by attributes" 
                         size="sm" 
                         className="w-[280px]"
                       />

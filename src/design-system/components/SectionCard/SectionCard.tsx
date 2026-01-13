@@ -19,11 +19,12 @@ export function SectionCard({ children, isActive = false, className, ...props }:
     <div
       className={twMerge(
         'flex flex-col items-start',
+        'gap-4',
         'bg-[var(--color-surface-default)]',
-        'border border-[var(--color-border-default)]',
-        isActive && 'ring-2 ring-[var(--color-action-primary)]',
-        'rounded-lg',
-        'px-4 py-4',
+        'rounded-[6px]',
+        isActive 
+          ? 'border-2 border-[var(--color-action-primary)] px-[15px] py-[15px]' 
+          : 'border border-[var(--color-border-default)] px-4 py-4',
         'w-full',
         className
       )}
@@ -43,25 +44,25 @@ export interface SectionCardHeaderProps extends HTMLAttributes<HTMLDivElement> {
   title: string;
   /** Optional action buttons (e.g., Edit button) */
   actions?: ReactNode;
+  /** Show divider below header (default: false) */
+  showDivider?: boolean;
 }
 
-function SectionCardHeader({ title, actions, className, ...props }: SectionCardHeaderProps) {
+function SectionCardHeader({ title, actions, showDivider = false, className, ...props }: SectionCardHeaderProps) {
   return (
-    <div
-      className={twMerge(
-        'flex items-center justify-between',
-        'w-full h-8 mb-4',
-        className
-      )}
-      {...props}
-    >
-      <h5 className="text-[length:var(--font-size-14)] font-semibold leading-[var(--line-height-20)] text-[var(--color-text-default)]">
-        {title}
-      </h5>
-      {actions && (
-        <div className="flex items-center gap-2">
-          {actions}
-        </div>
+    <div className={twMerge('flex flex-col w-full', className)} {...props}>
+      <div className="flex items-center justify-between w-full">
+        <h5 className="text-[length:var(--font-size-14)] font-semibold leading-[var(--line-height-24)] text-[var(--color-text-default)]">
+          {title}
+        </h5>
+        {actions && (
+          <div className="flex items-center gap-2">
+            {actions}
+          </div>
+        )}
+      </div>
+      {showDivider && (
+        <div className="h-px w-full bg-[var(--color-border-subtle)] mt-4" />
       )}
     </div>
   );
@@ -78,7 +79,7 @@ export interface SectionCardContentProps extends HTMLAttributes<HTMLDivElement> 
   gap?: 1 | 2 | 3 | 4 | 5 | 6;
 }
 
-function SectionCardContent({ children, gap = 0, className, ...props }: SectionCardContentProps) {
+function SectionCardContent({ children, gap = 4, className, ...props }: SectionCardContentProps) {
   return (
     <VStack gap={gap} className={twMerge('w-full', className)} {...props}>
       {children}
@@ -140,11 +141,11 @@ function SectionCardDataRow({
   };
 
   return (
-    <div className={twMerge('flex flex-col w-full', className)} {...props}>
+    <div className={twMerge('flex flex-col gap-4 w-full', className)} {...props}>
       {showDivider && (
         <div className="h-px w-full bg-[var(--color-border-subtle)]" />
       )}
-      <div className="flex flex-col gap-1.5 pt-3 pb-3">
+      <div className="flex flex-col gap-1.5">
         <span className="text-[11px] font-medium leading-4 text-[var(--color-text-subtle)]">
           {label}
         </span>

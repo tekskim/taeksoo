@@ -21,7 +21,7 @@ import {
 import { DataViewDrawer } from '@/components/DataViewDrawer';
 
 /* ----------------------------------------
-   Time Controls Component (Design System Style)
+   Time Controls Component (Design system Style)
    ---------------------------------------- */
 type TimeRange = '30m' | '1h' | '6h' | '12h' | '24h';
 
@@ -196,7 +196,7 @@ function TimeControls({ value, onChange, onRefresh }: TimeControlsProps) {
               </div>
             </div>
 
-            {/* DatePicker from Design System */}
+            {/* DatePicker from Design system */}
             <DatePicker
               mode="range"
               rangeValue={{ start: tempStartDate, end: tempEndDate }}
@@ -251,7 +251,7 @@ const chartColors = {
 };
 
 /* ----------------------------------------
-   Line Chart Component (Design System Style)
+   Line Chart Component (Design system Style)
    ---------------------------------------- */
 interface LineChartSeries {
   name: string;
@@ -515,7 +515,7 @@ function InventoryStatBox({ value, label }: InventoryStatBoxProps) {
 }
 
 /* ----------------------------------------
-   Capacity Gauge Component (Half-Doughnut Chart)
+   Capacity Gauge Component (Half-Doughnut chart)
    ---------------------------------------- */
 interface CapacityGaugeProps {
   percentage: number;

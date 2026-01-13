@@ -7,7 +7,7 @@ import type { HTMLAttributes, ReactNode } from 'react';
 export type StackDirection = 'row' | 'column';
 export type StackAlign = 'start' | 'center' | 'end' | 'stretch' | 'baseline';
 export type StackJustify = 'start' | 'center' | 'end' | 'between' | 'around' | 'evenly';
-export type StackSpacing = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 8 | 10 | 12 | 16 | 20 | 24;
+export type StackSpacing = 0 | 1 | 1.5 | 2 | 3 | 4 | 5 | 6 | 8 | 10 | 12 | 16 | 20 | 24;
 
 export interface StackProps extends HTMLAttributes<HTMLDivElement> {
   /** 방향 */
@@ -53,6 +53,7 @@ const justifyStyles: Record<StackJustify, string> = {
 const gapStyles: Record<StackSpacing, string> = {
   0: 'gap-0',
   1: 'gap-1',
+  1.5: 'gap-1.5',
   2: 'gap-2',
   3: 'gap-3',
   4: 'gap-4',

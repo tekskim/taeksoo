@@ -138,7 +138,7 @@ export function ContainerNamespacesPage() {
     },
     {
       key: 'createdAt',
-      label: 'Created At',
+      label: 'Created at',
       flex: 1,
       sortable: true,
     },
@@ -151,7 +151,7 @@ export function ContainerNamespacesPage() {
         const menuItems: ContextMenuItem[] = [
           {
             id: 'view-details',
-            label: 'View Details',
+            label: 'View details',
             icon: <IconExternalLink size={14} stroke={1.5} />,
             onClick: () => console.log('View details:', row.id),
           },
@@ -289,7 +289,7 @@ export function ContainerNamespacesPage() {
                 {/* Search */}
                 <HStack gap={1} align="center">
                   <SearchInput
-                    placeholder="Find Namespaces with filters"
+                    placeholder="Search namespaces by attributes"
                     size="sm"
                     className="w-[280px]"
                   />

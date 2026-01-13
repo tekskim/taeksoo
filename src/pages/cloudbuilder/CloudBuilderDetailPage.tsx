@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import AppLayout from '@/layouts/AppLayout';
 import {
   Button,
@@ -111,7 +111,7 @@ export function CloudBuilderDetailPage() {
       <div className="pt-4 px-8 pb-20 bg-[var(--color-surface-default)] min-h-full">
         <VStack gap={6} className="min-w-[1176px]">
           <div className="flex items-center justify-between h-8">
-            <h1 className="text-[length:var(--font-size-16)] font-semibold text-[var(--color-text-default)]">
+            <h1 className="text-[length:var(--font-size-16)] font-semibold leading-6 text-[var(--color-text-default)]">
               {config.title}
             </h1>
             <Link
@@ -143,16 +143,16 @@ export function CloudBuilderDetailPage() {
               <DetailHeader.InfoGrid className="flex-wrap">
                 <DetailHeader.InfoCard label="ID" value={row?.id ?? id} copyable />
                 <DetailHeader.InfoCard
-                  label="Service Status"
+                  label="Service status"
                   value={serviceStatus || 'Enabled'}
                   status={(serviceStatus || 'Enabled') === 'Enabled' ? 'active' : 'deactivated'}
                 />
                 <DetailHeader.InfoCard
-                  label="Service State"
+                  label="Service state"
                   value={row?.serviceState ?? 'Up'}
                   status={(row?.serviceState ?? 'Up') === 'Up' ? 'active' : 'down'}
                 />
-                <DetailHeader.InfoCard label="Created At" value={networkAgentMeta?.createdAt ?? '-'} />
+                <DetailHeader.InfoCard label="Created at" value={networkAgentMeta?.createdAt ?? '-'} />
               </DetailHeader.InfoGrid>
             </DetailHeader>
           ) : (
@@ -167,16 +167,16 @@ export function CloudBuilderDetailPage() {
           {isNetworkAgent ? (
             <>
               <SectionCard>
-                <SectionCard.Header title="Basic Information" />
+                <SectionCard.Header title="Basic information" />
                 <SectionCard.Content>
-                  <SectionCard.DataRow label="Agent Name" value={row?.name ?? '-'} showDivider={false} className="hidden" />
+                  <SectionCard.DataRow label="Agent name" value={row?.name ?? '-'} showDivider={false} className="hidden" />
                   <SectionCard.DataRow label="Type" value={row?.type ?? '-'} />
                   <SectionCard.DataRow label="Host" value={row?.host ?? '-'} />
-                  <SectionCard.DataRow label="Availability Zone" value={row?.availabilityZone ?? '-'} />
+                  <SectionCard.DataRow label="Availability zone" value={row?.availabilityZone ?? '-'} />
                   <SectionCard.DataRow label="Topic" value={networkAgentMeta?.topic ?? '-'} />
-                  <SectionCard.DataRow label="Resources Synced" value={networkAgentMeta?.resourcesSynced ?? '-'} />
-                  <SectionCard.DataRow label="Heartbeat Timestamp" value={networkAgentMeta?.heartbeatTimestamp ?? '-'} />
-                  <SectionCard.DataRow label="Started At" value={networkAgentMeta?.startedAt ?? '-'} />
+                  <SectionCard.DataRow label="Resources synced" value={networkAgentMeta?.resourcesSynced ?? '-'} />
+                  <SectionCard.DataRow label="Heartbeat timestamp" value={networkAgentMeta?.heartbeatTimestamp ?? '-'} />
+                  <SectionCard.DataRow label="Started at" value={networkAgentMeta?.startedAt ?? '-'} />
                   <SectionCard.DataRow label="Description" value={networkAgentMeta?.description ?? '-'} />
                 </SectionCard.Content>
               </SectionCard>

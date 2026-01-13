@@ -80,7 +80,7 @@ const mockServerGroupsMap: Record<string, ServerGroupDetail> = {
 };
 
 const defaultServerGroupDetail: ServerGroupDetail = {
-  id: 'unknown', name: 'Unknown Server Group', policy: '-',
+  id: 'unknown', name: 'Unknown Server group', policy: '-',
 };
 
 const mockServerGroupInstances: ServerGroupInstance[] = [
@@ -126,7 +126,7 @@ function CopyButton({ value }: { value: string }) {
 }
 
 /* ----------------------------------------
-   Server Group Detail Page
+   Server group Detail Page
    ---------------------------------------- */
 
 export function ServerGroupDetailPage() {
@@ -167,7 +167,7 @@ export function ServerGroupDetailPage() {
   // Breadcrumb items
   const breadcrumbItems = [
     { label: 'Proj-1', href: '/' },
-    { label: 'Server Group', href: '/compute/server-groups' },
+    { label: 'Server group', href: '/compute/server-groups' },
     { label: serverGroup.name },
   ];
 
@@ -266,7 +266,7 @@ export function ServerGroupDetailPage() {
     },
     {
       key: 'createdAt',
-      label: 'Created At',
+      label: 'Created at',
       flex: 1,
       sortable: true,
       render: (value) => <span>{value}</span>,
@@ -352,7 +352,7 @@ export function ServerGroupDetailPage() {
           {/* Page Content */}
           <div className="pt-4 px-8 pb-20 bg-[var(--color-surface-default)] min-h-full">
             <VStack gap={6} className="min-w-[1176px]">
-              {/* Detail Header */}
+              {/* Detail header */}
               <DetailHeader>
                 <DetailHeader.Title>{serverGroup.name}</DetailHeader.Title>
                 <DetailHeader.Actions>
@@ -361,7 +361,7 @@ export function ServerGroupDetailPage() {
                     size="sm"
                     leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
                   >
-                    Create Instance
+                    Create instance
                   </Button>
                   <Button
                     variant="secondary"
@@ -399,7 +399,7 @@ export function ServerGroupDetailPage() {
                       {/* Search */}
                       <div className="w-[280px]">
                         <SearchInput
-                          placeholder="Find instance with filters"
+                          placeholder="Search instance by attributes"
                           value={instanceSearchQuery}
                           onChange={(e) => setInstanceSearchQuery(e.target.value)}
                           onClear={() => setInstanceSearchQuery('')}

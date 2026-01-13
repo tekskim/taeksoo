@@ -50,7 +50,7 @@ export const NumberInput = forwardRef<HTMLInputElement, NumberInputProps>(
       max,
       step = 1,
       value: controlledValue,
-      defaultValue = 0,
+      defaultValue,
       onChange,
       className = '',
       id,
@@ -62,7 +62,7 @@ export const NumberInput = forwardRef<HTMLInputElement, NumberInputProps>(
     const inputId = id || `number-input-${Math.random().toString(36).substr(2, 9)}`;
 
     const isControlled = controlledValue !== undefined;
-    const [internalValue, setInternalValue] = useState(defaultValue);
+    const [internalValue, setInternalValue] = useState<number | undefined>(defaultValue);
     const currentValue = isControlled ? controlledValue : internalValue;
 
     // Clamp value within min/max bounds
@@ -85,17 +85,24 @@ export const NumberInput = forwardRef<HTMLInputElement, NumberInputProps>(
     // Increment/Decrement handlers
     const increment = () => {
       if (disabled) return;
-      updateValue(currentValue + step);
+      updateValue((currentValue ?? 0) + step);
     };
 
     const decrement = () => {
       if (disabled) return;
-      updateValue(currentValue - step);
+      updateValue((currentValue ?? 0) - step);
     };
 
     // Handle input change
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-      const newValue = parseFloat(e.target.value);
+      const val = e.target.value;
+      if (val === '') {
+        if (!isControlled) {
+          setInternalValue(undefined);
+        }
+        return;
+      }
+      const newValue = parseFloat(val);
       if (!isNaN(newValue)) {
         updateValue(newValue);
       }
@@ -172,7 +179,7 @@ export const NumberInput = forwardRef<HTMLInputElement, NumberInputProps>(
             type="number"
             id={inputId}
             className={inputClasses}
-            value={currentValue}
+            value={currentValue ?? ''}
             onChange={handleInputChange}
             onKeyDown={handleKeyDown}
             disabled={disabled}
@@ -193,7 +200,7 @@ export const NumberInput = forwardRef<HTMLInputElement, NumberInputProps>(
               tabIndex={-1}
               className={buttonClasses}
               onClick={increment}
-              disabled={disabled || (max !== undefined && currentValue >= max)}
+              disabled={disabled || (max !== undefined && currentValue !== undefined && currentValue >= max)}
               aria-label="Increase value"
             >
               <IconChevronUp size={12} strokeWidth={2} />
@@ -203,7 +210,7 @@ export const NumberInput = forwardRef<HTMLInputElement, NumberInputProps>(
               tabIndex={-1}
               className={buttonClasses}
               onClick={decrement}
-              disabled={disabled || (min !== undefined && currentValue <= min)}
+              disabled={disabled || (min !== undefined && currentValue !== undefined && currentValue <= min)}
               aria-label="Decrease value"
             >
               <IconChevronDown size={12} strokeWidth={2} />
