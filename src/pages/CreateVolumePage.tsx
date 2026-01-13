@@ -22,6 +22,10 @@ import {
   NumberInput,
   StatusIndicator,
   Chip,
+  IconUbuntu,
+  IconGrid,
+  IconRocky,
+  InlineMessage,
 } from '@/design-system';
 import type { WizardSummaryItem, WizardSectionState, TableColumn } from '@/design-system';
 import { Sidebar } from '@/components/Sidebar';
@@ -30,9 +34,6 @@ import {
   IconBell,
   IconEdit,
   IconDots,
-  IconBrandUbuntu,
-  IconBrandWindows,
-  IconMountain,
   IconExternalLink,
   IconAlertCircle,
 } from '@tabler/icons-react';
@@ -203,6 +204,11 @@ export function CreateVolumePage() {
     configuration: 'pre',
   });
 
+  // Validation errors
+  const [volumeNameError, setVolumeNameError] = useState<string | null>(null);
+  const [azError, setAzError] = useState<string | null>(null);
+  const [sourceError, setSourceError] = useState<string | null>(null);
+
   // Tab management
   const { tabs, activeTabId, closeTab, selectTab, updateActiveTabLabel } = useTabs();
 
@@ -254,6 +260,48 @@ export function CreateVolumePage() {
         [currentSection]: 'done',
         [nextSection]: 'active',
       }));
+    }
+  };
+
+  // Validation handler for basic-info section
+  const handleBasicInfoNext = () => {
+    let hasError = false;
+    
+    if (!volumeName.trim()) {
+      setVolumeNameError('Please enter a volume name.');
+      hasError = true;
+    } else {
+      setVolumeNameError(null);
+    }
+    
+    if (!availabilityZone) {
+      setAzError('Please select an availability zone.');
+      hasError = true;
+    } else {
+      setAzError(null);
+    }
+    
+    if (!hasError) {
+      goToNextSection('basic-info');
+    }
+  };
+
+  // Validation handler for source section
+  const handleSourceNext = () => {
+    let hasError = false;
+    
+    if (sourceType === 'image' && selectedImage.length === 0) {
+      setSourceError('Please select an image.');
+      hasError = true;
+    } else if (sourceType === 'snapshot' && selectedSnapshot.length === 0) {
+      setSourceError('Please select a snapshot.');
+      hasError = true;
+    } else {
+      setSourceError(null);
+    }
+    
+    if (!hasError) {
+      goToNextSection('source');
     }
   };
 
@@ -443,15 +491,23 @@ export function CreateVolumePage() {
                     />
                     {sectionStatus['basic-info'] === 'active' && (
                       <SectionCard.Content gap={6}>
-                        <FormField required>
+                        <FormField required error={!!volumeNameError}>
                           <FormField.Label>Volume name</FormField.Label>
                           <FormField.Control>
-                            <Input 
-                              value={volumeName} 
-                              onChange={(e) => setVolumeName(e.target.value)}
-                              placeholder="Enter volume name"
-                              fullWidth 
-                            />
+                            <VStack gap={1}>
+                              <Input 
+                                value={volumeName} 
+                                onChange={(e) => { setVolumeName(e.target.value); setVolumeNameError(null); }}
+                                placeholder="Enter volume name"
+                                fullWidth
+                                error={!!volumeNameError}
+                              />
+                              {volumeNameError && (
+                                <span className="text-[11px] leading-[var(--line-height-16)] text-[var(--color-state-danger)]">
+                                  {volumeNameError}
+                                </span>
+                              )}
+                            </VStack>
                           </FormField.Control>
                           <FormField.HelperText>
                             You can use letters, numbers, and special characters (+=,.@-_), and the length must be between 2-64 characters.
@@ -460,19 +516,26 @@ export function CreateVolumePage() {
 
                         <div className="w-full h-px bg-[var(--color-border-subtle)]" />
 
-                        <FormField required>
+                        <FormField required error={!!azError}>
                           <FormField.Label>AZ (Availability zone)</FormField.Label>
                           <FormField.HelperText>
                             Select the availability zone for the volume.
                           </FormField.HelperText>
                           <FormField.Control>
-                            <Select
-                              value={availabilityZone}
-                              onChange={(value) => setAvailabilityZone(value)}
-                              placeholder="Select AZ"
-                              options={azOptions}
-                              fullWidth
-                            />
+                            <VStack gap={1}>
+                              <Select
+                                value={availabilityZone}
+                                onChange={(value) => { setAvailabilityZone(value); setAzError(null); }}
+                                placeholder="Select AZ"
+                                options={azOptions}
+                                fullWidth
+                              />
+                              {azError && (
+                                <span className="text-[11px] leading-[var(--line-height-16)] text-[var(--color-state-danger)]">
+                                  {azError}
+                                </span>
+                              )}
+                            </VStack>
                           </FormField.Control>
                         </FormField>
 
@@ -496,8 +559,7 @@ export function CreateVolumePage() {
                         <div className="flex items-center justify-end w-full">
                           <Button 
                             variant="primary" 
-                            onClick={() => goToNextSection('basic-info')}
-                            disabled={!volumeName.trim() || !availabilityZone}
+                            onClick={handleBasicInfoNext}
                           >
                             Next
                           </Button>
@@ -557,33 +619,31 @@ export function CreateVolumePage() {
                           <VStack gap={4} align="stretch">
                             {/* OS Filter Tabs */}
                             <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-1 inline-flex w-fit">
-                              <HStack gap={2}>
-                                {[
-                                  { id: 'all', label: 'Others', icon: IconDots },
-                                  { id: 'ubuntu', label: 'Ubuntu', icon: IconBrandUbuntu },
-                                  { id: 'windows', label: 'Windows', icon: IconBrandWindows },
-                                  { id: 'rocky', label: 'Rocky', icon: IconMountain },
-                                ].map((tab) => {
-                                  const isSelected = imageOsFilter === tab.id;
-                                  const Icon = tab.icon;
-                                  return (
-                                    <button
-                                      key={tab.id}
-                                      onClick={() => setImageOsFilter(tab.id)}
-                                      className={`
-                                        inline-flex items-center gap-1 justify-center px-0 py-2 rounded-[6px] cursor-pointer text-[11px] font-medium transition-colors w-[100px]
-                                        ${isSelected 
-                                          ? 'bg-white border border-[var(--color-border-default)] text-[var(--color-action-primary)]' 
-                                          : 'text-[var(--color-text-default)] hover:bg-[var(--color-surface-default)]'
-                                        }
-                                      `}
-                                    >
-                                      <Icon size={14} />
-                                      <span>{tab.label}</span>
-                                    </button>
-                                  );
-                                })}
-                              </HStack>
+                              {[
+                                { id: 'all', label: 'Others', icon: IconDots },
+                                { id: 'ubuntu', label: 'Ubuntu', icon: IconUbuntu },
+                                { id: 'windows', label: 'Windows', icon: IconGrid },
+                                { id: 'rocky', label: 'Rocky', icon: IconRocky },
+                              ].map((tab) => {
+                                const isSelected = imageOsFilter === tab.id;
+                                const Icon = tab.icon;
+                                return (
+                                  <button
+                                    key={tab.id}
+                                    onClick={() => setImageOsFilter(tab.id)}
+                                    className={`
+                                      inline-flex items-center gap-1.5 px-3 py-2 rounded-[4px] cursor-pointer text-[12px] font-medium transition-colors
+                                      ${isSelected 
+                                        ? 'bg-[var(--color-surface-default)] text-[var(--color-text-default)] shadow-sm' 
+                                        : 'bg-transparent text-[var(--color-text-muted)] hover:text-[var(--color-text-default)]'
+                                      }
+                                    `}
+                                  >
+                                    <Icon size={14} />
+                                    <span>{tab.label}</span>
+                                  </button>
+                                );
+                              })}
                             </div>
 
                             <div className="w-[280px]">
@@ -612,7 +672,7 @@ export function CreateVolumePage() {
                               selectable
                               hideSelectAll
                               selectedKeys={selectedImage}
-                              onSelectionChange={setSelectedImage}
+                              onSelectionChange={(keys) => { setSelectedImage(keys); setSourceError(null); }}
                             />
 
                             {/* Selected Images Chips */}
@@ -662,7 +722,7 @@ export function CreateVolumePage() {
                               selectable
                               hideSelectAll
                               selectedKeys={selectedSnapshot}
-                              onSelectionChange={setSelectedSnapshot}
+                              onSelectionChange={(keys) => { setSelectedSnapshot(keys); setSourceError(null); }}
                             />
 
                             {/* Selected Snapshots Chips */}
@@ -683,14 +743,19 @@ export function CreateVolumePage() {
                           </VStack>
                         )}
 
+                        {/* Source Error Message */}
+                        {sourceError && (
+                          <div className="mt-2">
+                            <InlineMessage variant="error">
+                              {sourceError}
+                            </InlineMessage>
+                          </div>
+                        )}
+
                         <div className="flex items-center justify-end w-full">
                           <Button 
                             variant="primary" 
-                            onClick={() => goToNextSection('source')}
-                            disabled={
-                              (sourceType === 'image' && selectedImage.length === 0) ||
-                              (sourceType === 'snapshot' && selectedSnapshot.length === 0)
-                            }
+                            onClick={handleSourceNext}
                           >
                             Next
                           </Button>

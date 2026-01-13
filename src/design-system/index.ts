@@ -19,6 +19,7 @@ export * from './components/Tabs';
 export * from './components/Select';
 export * from './components/Slider';
 export * from './components/Chip';
+export * from './components/SelectionIndicator';
 export * from './components/DatePicker';
 export * from './components/WindowControl';
 export * from './components/ContextMenu';
