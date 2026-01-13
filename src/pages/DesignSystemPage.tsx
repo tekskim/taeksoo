@@ -256,7 +256,6 @@ const formControlItems = [
   { id: 'chip', label: 'Chip', icon: IconTag },
   { id: 'selection-indicator', label: 'SelectionIndicator', icon: IconSquareCheck },
   { id: 'pagination', label: 'Pagination', icon: IconProgress },
-  { id: 'progress-bar', label: 'Progress bar', icon: IconProgress },
   { id: 'loading', label: 'Loading', icon: IconLoader2 },
   { id: 'toggle', label: 'Toggle', icon: IconToggleRight },
   { id: 'checkbox', label: 'Checkbox', icon: IconSquareCheck },
@@ -1798,7 +1797,7 @@ function BarChartDemo({ variant }: { variant: 'vertical' | 'horizontal' | 'group
 
   return (
     <div className="w-full bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-md)] p-4">
-      <ReactECharts option={getOption()} style={{ height: variant === 'horizontal' ? '250px' : '200px' }} notMerge={true} />
+      <ReactECharts option={getOption()} style={{ height: variant === 'horizontal' ? '250px' : '200px' }} notMerge={true} opts={{ devicePixelRatio: window.devicePixelRatio }} />
       {variant === 'grouped' && (
         <div className="flex gap-4 mt-2 justify-start">
           <div className="flex items-center gap-1.5">
@@ -2312,7 +2311,7 @@ function LineChart({
       {/* Chart Body */}
       <div className="chartBody">
         <div className="chartWrapper">
-          <ReactECharts option={option} style={{ height: '100%', width: '100%' }} notMerge={true} />
+          <ReactECharts option={option} style={{ height: '100%', width: '100%' }} notMerge={true} opts={{ devicePixelRatio: window.devicePixelRatio }} />
         </div>
         <div className="chartLegend">
           {series.map((s, i) => (
@@ -2414,29 +2413,19 @@ function ChartWithFullScreen({
 // QuotaBarDemo Component
 function QuotaBarDemo({ label, used, total, unit }: { label: string; used: number; total: number; unit: string }) {
   const percentage = Math.round((used / total) * 100);
-  const remaining = total - used;
   
   const getColors = () => {
     if (percentage >= 100) return {
       bg: 'bg-[var(--color-status-error)]/15',
-      text: 'text-[var(--color-status-error)]',
-      bar: 'bg-[var(--color-state-danger)]',
-      barColor: 'var(--color-state-danger)',
-      status: 'Danger'
+      text: 'text-[var(--color-status-error)]'
     };
     if (percentage >= 70) return {
       bg: 'bg-[var(--color-status-warning)]/15',
-      text: 'text-[var(--color-status-warning)]',
-      bar: 'bg-[var(--color-state-warning)]',
-      barColor: 'var(--color-state-warning)',
-      status: 'Warning'
+      text: 'text-[var(--color-status-warning)]'
     };
     return {
       bg: 'bg-[var(--color-status-success)]/15',
-      text: 'text-[var(--color-status-success)]',
-      bar: 'bg-[var(--color-state-success)]',
-      barColor: 'var(--color-state-success)',
-      status: 'Normal'
+      text: 'text-[var(--color-status-success)]'
     };
   };
   
@@ -2457,7 +2446,7 @@ function QuotaBarDemo({ label, used, total, unit }: { label: string; used: numbe
         content={
           <div className="flex flex-col gap-1">
             <div className="flex items-center gap-2">
-              <span className="w-2 h-2 rounded-full" style={{ backgroundColor: colors.barColor }} />
+              <span className="w-2 h-2 rounded-full bg-[var(--color-text-muted)]" />
               <span>Used: {used}</span>
             </div>
           </div>
@@ -2467,7 +2456,7 @@ function QuotaBarDemo({ label, used, total, unit }: { label: string; used: numbe
         <div className="w-full">
           <div className="h-1 rounded-sm bg-[var(--color-surface-muted)] overflow-hidden cursor-pointer">
             <div 
-              className={`h-full rounded-sm ${colors.bar} transition-all`}
+              className="h-full rounded-sm bg-[var(--color-text-muted)] transition-all"
               style={{ width: `${Math.min(percentage, 100)}%` }}
             />
           </div>
@@ -2631,7 +2620,7 @@ function PieChartDemo({
     <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] p-5 flex flex-col gap-4 w-[280px]">
       <span className="text-[length:var(--font-size-13)] font-medium text-[var(--color-text-default)]">{title}</span>
       <div className="flex justify-center">
-        <ReactECharts option={getOption()} style={{ height: '180px', width: '180px' }} />
+        <ReactECharts option={getOption()} style={{ height: '180px', width: '180px' }} opts={{ devicePixelRatio: window.devicePixelRatio }} />
       </div>
       <div className="flex flex-wrap items-center gap-x-4 gap-y-2 justify-center max-h-[60px] overflow-y-auto legend-scroll">
         {legendData.map((item, i) => (
@@ -2722,7 +2711,7 @@ function DoughnutChartDemo({
     <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] p-5 flex flex-col gap-4 w-[280px]">
       <span className="text-[length:var(--font-size-13)] font-medium text-[var(--color-text-default)]">{title}</span>
       <div className="flex justify-center">
-        <ReactECharts option={getOption()} style={{ height: '180px', width: '180px' }} />
+        <ReactECharts option={getOption()} style={{ height: '180px', width: '180px' }} opts={{ devicePixelRatio: window.devicePixelRatio }} />
       </div>
     </div>
   );
@@ -2854,7 +2843,7 @@ function HalfDoughnutChartDemo({ value, label, status = 'default', used, total, 
       onMouseLeave={handleMouseLeave}
     >
       <div className="relative">
-        <ReactECharts option={getOption()} style={{ height: '160px', width: '180px' }} />
+        <ReactECharts option={getOption()} style={{ height: '160px', width: '180px' }} opts={{ devicePixelRatio: window.devicePixelRatio }} />
       </div>
       <div className="absolute inset-0 flex flex-col items-center justify-center pt-8 pointer-events-none">
         <span className="text-[24px] leading-[28px] font-semibold text-[var(--color-text-default)]">{value}%</span>
@@ -2966,7 +2955,7 @@ function SingleValueDoughnutDemo({
   return (
     <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] p-4">
       <h4 className="text-[13px] font-medium text-[var(--color-text-default)] mb-2">{title}</h4>
-      <ReactECharts option={getOption()} style={{ height: '180px', width: '200px' }} />
+      <ReactECharts option={getOption()} style={{ height: '180px', width: '200px' }} opts={{ devicePixelRatio: window.devicePixelRatio }} />
     </div>
   );
 }
@@ -5457,144 +5446,6 @@ outline: 2px solid var(--color-border-focus);`}
               </VStack>
             </Section>
 
-            {/* ProgressBar Component */}
-            <Section id="progress-bar" title="Progress bar" description="Visual indicator for quota usage and progress with status-based colors">
-              <VStack gap={8}>
-                {/* Tokens */}
-                <VStack gap={3}>
-                  <Label>Design tokens</Label>
-                  <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
-                    <code>height: 4px</code> · <code>radius: pill</code>
-                  </div>
-                </VStack>
-
-                {/* Quota Variant - Status Examples */}
-                <VStack gap={3}>
-                  <Label>Quota Variant - Status Based Colors</Label>
-                  <div className="w-[280px] flex flex-col gap-4 p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-subtle)] rounded-[var(--radius-lg)]">
-                    {/* 1. Normal (under 70%) - Green */}
-                    <ProgressBar
-                      variant="quota"
-                      label="Instance"
-                      value={2}
-                      newValue={0}
-                      max={10}
-                    />
-
-                    {/* 2. Warning (70-100%) - Orange */}
-                    <ProgressBar
-                      variant="quota"
-                      label="Instance"
-                      value={8}
-                      newValue={2}
-                      max={10}
-                    />
-
-                    {/* 3. Used < 70% but total >= 70% - Green + Orange */}
-                    <ProgressBar
-                      variant="quota"
-                      label="Instance"
-                      value={5}
-                      newValue={2}
-                      max={10}
-                    />
-
-                    {/* 4. Total exceeds 100% - Red */}
-                    <ProgressBar
-                      variant="quota"
-                      label="Instance"
-                      value={8}
-                      newValue={5}
-                      max={10}
-                    />
-
-                    {/* 5. Already over quota - Red */}
-                    <ProgressBar
-                      variant="quota"
-                      label="Instance"
-                      value={10}
-                      newValue={0}
-                      max={10}
-                    />
-
-                    {/* 6. Unlimited - Gray */}
-                    <ProgressBar
-                      variant="quota"
-                      label="Instance"
-                      value={10}
-                      newValue={0}
-                    />
-                  </div>
-                </VStack>
-
-                {/* Default Variant - Simple Progress */}
-                <VStack gap={3}>
-                  <Label>Default Variant - Simple Progress</Label>
-                  <div className="w-[280px] flex flex-col gap-4 p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-md)]">
-                    <ProgressBar
-                      label="60 MB (75%)"
-                      value={75}
-                      max={100}
-                      showValue={false}
-                    />
-                  </div>
-                </VStack>
-
-                {/* Error State */}
-                <VStack gap={3}>
-                  <Label>Error state</Label>
-                  <div className="w-[280px] flex flex-col gap-4 p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-md)]">
-                    <ProgressBar
-                      label="60 MB (75%)"
-                      value={75}
-                      max={100}
-                      showValue={false}
-                      error
-                      errorMessage="Upload failed: Network error"
-                    />
-                  </div>
-                </VStack>
-
-                {/* Color Legend */}
-                <VStack gap={3}>
-                  <Label>Status colors</Label>
-                  <div className="flex flex-wrap gap-4">
-                    <div className="flex items-center gap-2">
-                      <div className="w-4 h-4 rounded bg-[var(--color-state-success-default)]" />
-                      <span className="text-[length:var(--font-size-11)] text-[var(--color-text-muted)]">0% ~ 70%: Normal</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <div className="w-4 h-4 rounded bg-[var(--color-state-warning-default)]" />
-                      <span className="text-[length:var(--font-size-11)] text-[var(--color-text-muted)]">70% ~ 100%: Warning</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <div className="w-4 h-4 rounded bg-[var(--color-state-error-default)]" />
-                      <span className="text-[length:var(--font-size-11)] text-[var(--color-text-muted)]">&gt;100%: Danger</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <div className="w-4 h-4 rounded bg-[var(--color-border-default)]" />
-                      <span className="text-[length:var(--font-size-11)] text-[var(--color-text-muted)]">Unlimited: Neutral</span>
-                    </div>
-                  </div>
-                </VStack>
-
-                {/* Dashboard Only */}
-                <VStack gap={3}>
-                  <Label>Dashboard only</Label>
-                  <div className="w-[288px] p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-2xl">
-                    <div className="text-[11px] font-semibold text-[var(--color-text-muted)] tracking-wide mb-4">COMPUTE QUOTA</div>
-                    <div className="space-y-[22px]">
-                      <QuotaBarDemo label="vCPU" used={4} total={8} unit="vCPU" />
-                      <QuotaBarDemo label="RAM" used={22} total={32} unit="GiB" />
-                      <QuotaBarDemo label="Disk" used={4} total={6} unit="GiB" />
-                      <QuotaBarDemo label="GPU" used={6} total={8} unit="GPU" />
-                      <QuotaBarDemo label="NPU" used={6} total={8} unit="NPU" />
-                    </div>
-                  </div>
-                </VStack>
-              </VStack>
-            </Section>
-
             {/* Loading Component */}
             <Section id="loading" title="Loading" description="Loading indicators for various states">
               <VStack gap={8}>
@@ -7570,19 +7421,129 @@ outline: 2px solid var(--color-border-focus);`}
                 ============================================ */}
 
             {/* Bar chart */}
-            <Section id="bar-chart" title="Bar chart" description="Categorical data comparison with vertical or horizontal bars">
+            <Section id="bar-chart" title="Bar chart" description="Visual indicator for quota usage and progress with status-based colors">
               <VStack gap={8}>
-                {/* Design Tokens */}
+                {/* Tokens */}
                 <VStack gap={3}>
                   <Label>Design tokens</Label>
                   <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
-                    <code>bar-height: 4px</code> · <code>bar-radius: 2px</code> · <code>row-gap: 22px</code> · <code>status-colors: success/warning/error</code>
+                    <code>height: 4px</code> · <code>radius: pill</code>
                   </div>
                 </VStack>
 
-                {/* Quota Bar */}
+                {/* Quota Variant - Status Examples */}
                 <VStack gap={3}>
-                  <Label>Quota bar</Label>
+                  <Label>Quota Variant - Status Based Colors</Label>
+                  <div className="w-[280px] flex flex-col gap-4 p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-subtle)] rounded-[var(--radius-lg)]">
+                    {/* 1. Normal (under 70%) - Green */}
+                    <ProgressBar
+                      variant="quota"
+                      label="Instance"
+                      value={2}
+                      newValue={0}
+                      max={10}
+                    />
+
+                    {/* 2. Warning (70-100%) - Orange */}
+                    <ProgressBar
+                      variant="quota"
+                      label="Instance"
+                      value={8}
+                      newValue={2}
+                      max={10}
+                    />
+
+                    {/* 3. Used < 70% but total >= 70% - Green + Orange */}
+                    <ProgressBar
+                      variant="quota"
+                      label="Instance"
+                      value={5}
+                      newValue={2}
+                      max={10}
+                    />
+
+                    {/* 4. Total exceeds 100% - Red */}
+                    <ProgressBar
+                      variant="quota"
+                      label="Instance"
+                      value={8}
+                      newValue={5}
+                      max={10}
+                    />
+
+                    {/* 5. Already over quota - Red */}
+                    <ProgressBar
+                      variant="quota"
+                      label="Instance"
+                      value={10}
+                      newValue={0}
+                      max={10}
+                    />
+
+                    {/* 6. Unlimited - Gray */}
+                    <ProgressBar
+                      variant="quota"
+                      label="Instance"
+                      value={10}
+                      newValue={0}
+                    />
+                  </div>
+                </VStack>
+
+                {/* Default Variant - Simple Progress */}
+                <VStack gap={3}>
+                  <Label>Default Variant - Simple Progress</Label>
+                  <div className="w-[280px] flex flex-col gap-4 p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-md)]">
+                    <ProgressBar
+                      label="60 MB (75%)"
+                      value={75}
+                      max={100}
+                      showValue={false}
+                    />
+                  </div>
+                </VStack>
+
+                {/* Error State */}
+                <VStack gap={3}>
+                  <Label>Error state</Label>
+                  <div className="w-[280px] flex flex-col gap-4 p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-md)]">
+                    <ProgressBar
+                      label="60 MB (75%)"
+                      value={75}
+                      max={100}
+                      showValue={false}
+                      error
+                      errorMessage="Upload failed: Network error"
+                    />
+                  </div>
+                </VStack>
+
+                {/* Color Legend */}
+                <VStack gap={3}>
+                  <Label>Status colors</Label>
+                  <div className="flex flex-wrap gap-4">
+                    <div className="flex items-center gap-2">
+                      <div className="w-4 h-4 rounded bg-[var(--color-state-success-default)]" />
+                      <span className="text-[length:var(--font-size-11)] text-[var(--color-text-muted)]">0% ~ 70%: Normal</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <div className="w-4 h-4 rounded bg-[var(--color-state-warning-default)]" />
+                      <span className="text-[length:var(--font-size-11)] text-[var(--color-text-muted)]">70% ~ 100%: Warning</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <div className="w-4 h-4 rounded bg-[var(--color-state-error-default)]" />
+                      <span className="text-[length:var(--font-size-11)] text-[var(--color-text-muted)]">&gt;100%: Danger</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <div className="w-4 h-4 rounded bg-[var(--color-border-default)]" />
+                      <span className="text-[length:var(--font-size-11)] text-[var(--color-text-muted)]">Unlimited: Neutral</span>
+                    </div>
+                  </div>
+                </VStack>
+
+                {/* Dashboard Only */}
+                <VStack gap={3}>
+                  <Label>Dashboard only</Label>
                   <div className="w-[288px] p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-2xl">
                     <div className="text-[11px] font-semibold text-[var(--color-text-muted)] tracking-wide mb-4">COMPUTE QUOTA</div>
                     <div className="space-y-[22px]">
