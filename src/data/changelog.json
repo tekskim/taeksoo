@@ -10,21 +10,5 @@
         "author": "remy"
       }
     ]
-  },
-  {
-    "id": "2",
-    "date": "2026-01-08",
-    "app": "Design System",
-    "appColor": "from-purple-500 to-fuchsia-500",
-    "changes": [
-      {
-        "text": "Half-Doughnut Chart 툴팁 영역 개선",
-        "author": "remy"
-      },
-      {
-        "text": "Area Chart No Data 케이스 추가 및 Monitoring Toolbar 스타일 개선",
-        "author": "remy"
-      }
-    ]
   }
 ]
