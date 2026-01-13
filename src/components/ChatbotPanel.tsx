@@ -358,7 +358,7 @@ export function ChatbotPanel({ isOpen, onClose }: ChatbotPanelProps) {
   return (
     <div 
       className={`
-        fixed top-14 right-0 bottom-0 w-[400px]
+        fixed top-[52px] right-0 bottom-0 w-[400px]
         bg-[var(--color-surface-default)] 
         shadow-lg border border-[var(--color-border-subtle)] 
         overflow-hidden z-[3000] flex flex-col

@@ -4731,7 +4731,7 @@ outline: 2px solid var(--color-border-focus);`}
                       <Input size="sm" placeholder="Input placeholder" className="w-[200px]" />
                     </VStack>
                     <VStack gap={1}>
-                      <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">MD (28px)</span>
+                      <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">MD (32px)</span>
                       <Input size="md" placeholder="Input placeholder" className="w-[200px]" />
                     </VStack>
                   </div>
@@ -4804,7 +4804,7 @@ outline: 2px solid var(--color-border-focus);`}
                       <SearchInput size="sm" placeholder="Search placeholder" className="w-[200px]" />
                     </VStack>
                     <VStack gap={1}>
-                      <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">MD (28px)</span>
+                      <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">MD (32px)</span>
                       <SearchInput size="md" placeholder="Search placeholder" className="w-[200px]" />
                     </VStack>
                   </div>
@@ -5017,44 +5017,6 @@ outline: 2px solid var(--color-border-focus);`}
                   />
                 </VStack>
 
-                {/* Clearable Select */}
-                <VStack gap={3}>
-                  <Label>Clearable select</Label>
-                  <p className="text-[length:var(--font-size-11)] text-[var(--color-text-muted)]">
-                    Select with clear button (✕) and "Clear" option in dropdown. Useful for filter dropdowns.
-                  </p>
-                  <div className="flex gap-4 items-start">
-                    <VStack gap={1}>
-                      <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">All statuses</span>
-                      <Select
-                        placeholder="All statuses"
-                        defaultValue="all"
-                        clearable
-                        options={[
-                          { value: 'all', label: 'All statuses' },
-                          { value: 'running', label: 'Running' },
-                          { value: 'pending', label: 'Pending' },
-                          { value: 'failed', label: 'Failed' },
-                        ]}
-                        className="w-[180px]"
-                      />
-                    </VStack>
-                    <VStack gap={1}>
-                      <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">All resources</span>
-                      <Select
-                        placeholder="All resources"
-                        defaultValue="all"
-                        clearable
-                        options={[
-                          { value: 'all', label: 'All resources' },
-                          { value: 'gpu', label: 'GPU Usage' },
-                          { value: 'cpu', label: 'CPU Only' },
-                        ]}
-                        className="w-[180px]"
-                      />
-                    </VStack>
-                  </div>
-                </VStack>
               </VStack>
             </Section>
 
@@ -5860,18 +5822,11 @@ outline: 2px solid var(--color-border-focus);`}
                         />
                       }
                       actions={
-                        <>
-                          <TopBarAction
-                            icon={<IconBell size={16} stroke={1.5} />}
-                            aria-label="Notifications"
-                            badge
-                          />
-                          <TopBarAction
-                            icon={<IconBell size={16} stroke={1.5} />}
-                            aria-label="Notifications"
-                            badge
-                          />
-                        </>
+                        <TopBarAction
+                          icon={<IconBell size={16} stroke={1.5} />}
+                          aria-label="Notifications"
+                          badge
+                        />
                       }
                     />
                   </div>
