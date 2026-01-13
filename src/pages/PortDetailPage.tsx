@@ -216,7 +216,7 @@ export default function PortDetailPage() {
     return filteredAaps.slice(start, start + aapPerPage);
   }, [filteredAaps, aapCurrentPage, aapPerPage]);
 
-  // Filter and paginate Security Groups
+  // Filter and paginate Security groups
   const filteredSgs = useMemo(() => {
     return securityGroups.filter((sg) =>
       sg.name.toLowerCase().includes(sgSearchTerm.toLowerCase()) ||
@@ -261,7 +261,7 @@ export default function PortDetailPage() {
     },
     {
       key: 'ownedSubnet',
-      label: 'Owned Subnet',
+      label: 'Owned subnet',
       flex: 1,
       sortable: true,
       render: (_, row) => (
@@ -336,11 +336,11 @@ export default function PortDetailPage() {
     },
   ];
 
-  // Security Groups columns
+  // Security groups columns
   const sgColumns: TableColumn<SecurityGroup>[] = [
     {
       key: 'name',
-      label: 'Security Group',
+      label: 'Security group',
       flex: 1,
       sortable: true,
       render: (_, row) => (
@@ -367,7 +367,7 @@ export default function PortDetailPage() {
     },
     {
       key: 'createdAt',
-      label: 'Created At',
+      label: 'Created at',
       flex: 1,
       sortable: true,
     },
@@ -526,11 +526,11 @@ export default function PortDetailPage() {
                     onCopy={handleCopyId}
                   />
                   <DetailHeader.InfoCard
-                    label="Port Security"
+                    label="Port security"
                     value={port.portSecurity ? 'On' : 'Off'}
                   />
                   <DetailHeader.InfoCard
-                    label="Created At"
+                    label="Created at"
                     value={port.createdAt}
                   />
                 </DetailHeader.InfoGrid>
@@ -553,10 +553,10 @@ export default function PortDetailPage() {
                   {/* Details Tab */}
                   <TabPanel value="details">
                     <VStack gap={4} className="pt-6">
-                      {/* Basic Information */}
+                      {/* Basic information */}
                       <SectionCard>
                         <SectionCard.Header
-                          title="Basic Information"
+                          title="Basic information"
                           actions={
                             <Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />}>
                               Edit
@@ -564,7 +564,7 @@ export default function PortDetailPage() {
                           }
                         />
                         <SectionCard.Content>
-                          <SectionCard.DataRow label="Port Name" value={port.name} />
+                          <SectionCard.DataRow label="Port name" value={port.name} />
                           <SectionCard.DataRow label="Description" value={port.description} />
                         </SectionCard.Content>
                       </SectionCard>
@@ -574,7 +574,7 @@ export default function PortDetailPage() {
                         <SectionCard.Header title="Network" />
                         <SectionCard.Content>
                           <SectionCard.DataRow
-                            label="Owned Network"
+                            label="Owned network"
                             value={
                               <Link
                                 to={`/compute/networks/${port.ownedNetwork.id}`}
@@ -620,7 +620,7 @@ export default function PortDetailPage() {
                         <SectionCard.Header title="Attachments" />
                         <SectionCard.Content>
                           <SectionCard.DataRow
-                            label="Attached To"
+                            label="Attached to"
                             value={
                               port.attachedTo ? (
                                 <Link
@@ -656,7 +656,7 @@ export default function PortDetailPage() {
                             Allocate IP
                           </Button>
                           <Button variant="secondary" size="sm">
-                            Associate Floating IP
+                            Associate floating IP
                           </Button>
                         </div>
                       </div>
@@ -669,7 +669,7 @@ export default function PortDetailPage() {
                             setFixedIpSearchTerm(e.target.value);
                             setFixedIpCurrentPage(1);
                           }}
-                          placeholder="Find fixed IP with filters"
+                          placeholder="Search fixed IP by attributes"
                         />
                       </div>
 
@@ -717,7 +717,7 @@ export default function PortDetailPage() {
                             setAapSearchTerm(e.target.value);
                             setAapCurrentPage(1);
                           }}
-                          placeholder="Find address pair with filters"
+                          placeholder="Search address pair by attributes"
                         />
                       </div>
 
@@ -751,10 +751,10 @@ export default function PortDetailPage() {
                       {/* Header */}
                       <div className="flex items-center justify-between">
                         <h3 className="text-[16px] font-semibold text-[var(--color-text-default)]">
-                          Security Groups
+                          Security groups
                         </h3>
                         <Button variant="secondary" size="sm">
-                          Manage Security Group
+                          Manage security Group
                         </Button>
                       </div>
 
@@ -766,7 +766,7 @@ export default function PortDetailPage() {
                             setSgSearchTerm(e.target.value);
                             setSgCurrentPage(1);
                           }}
-                          placeholder="Find security group with filters"
+                          placeholder="Search security group by attributes"
                         />
                       </div>
 
@@ -799,7 +799,7 @@ export default function PortDetailPage() {
         </div>
       </main>
 
-      {/* Detach Security Group Modal */}
+      {/* Detach Security group Modal */}
       <Modal
         isOpen={detachModalOpen}
         onClose={() => {
@@ -821,7 +821,7 @@ export default function PortDetailPage() {
             </span>
           </div>
           
-          {/* Security Group Info */}
+          {/* Security group Info */}
           <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
             <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] font-medium leading-4">
               Security group

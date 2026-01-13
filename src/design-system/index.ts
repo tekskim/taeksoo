@@ -19,6 +19,7 @@ export * from './components/Tabs';
 export * from './components/Select';
 export * from './components/Slider';
 export * from './components/Chip';
+export * from './components/SelectionIndicator';
 export * from './components/DatePicker';
 export * from './components/WindowControl';
 export * from './components/ContextMenu';
@@ -44,6 +45,10 @@ export * from './components/FormField';
 export * from './components/FloatingCard';
 export * from './components/MonitoringToolbar';
 export * from './components/NotificationCenter';
+export * from './components/Loading';
+export * from './components/SNBMenuItem';
+export * from './components/CardTitle';
+export * from './components/Wizard';
 
 // Layouts
 export * from './layouts';

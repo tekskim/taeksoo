@@ -5,10 +5,11 @@ import ThakiLogoDark from '@/assets/thakiLogo-dark.svg';
 import {
   IconMoon,
   IconSun,
+  IconMail,
 } from '@tabler/icons-react';
 import { Button } from '@/design-system';
 
-// App Icons
+// App icons
 import ComputeIcon from '@/assets/compute.png';
 import ContainerIcon from '@/assets/container.png';
 import CloudBuilderIcon from '@/assets/cloudbuilder.png';
@@ -72,7 +73,7 @@ const appCards: AppCard[] = [
     icon: <img src={AIPlatformIcon} alt="AI Platform" className="w-16 h-16" />,
     path: '/ai-platform',
     color: 'from-pink-500 to-rose-500',
-    available: false,
+    available: true,
   },
   {
     id: 'ai-agent',
@@ -117,6 +118,15 @@ const appCards: AppCard[] = [
     icon: <img src={SettingsIcon} alt="Settings" className="w-16 h-16" />,
     path: '/settings',
     color: 'from-gray-500 to-slate-500',
+    available: true,
+  },
+  {
+    id: 'mail-template',
+    title: 'Mail Template',
+    description: 'Email templates for authentication, notifications, and marketing',
+    icon: <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-rose-500 to-pink-500 flex items-center justify-center"><IconMail size={32} className="text-white" stroke={1.5} /></div>,
+    path: '/mail-template',
+    color: 'from-rose-500 to-pink-500',
     available: true,
   },
 ];
@@ -231,7 +241,7 @@ export function EntryPage() {
               size="sm"
               onClick={() => navigate('/design')}
             >
-              Design System
+              Design system
             </Button>
             <Button
               variant="secondary"
@@ -250,10 +260,10 @@ export function EntryPage() {
           {/* Hero Section */}
           <div className="text-center mb-12">
             <h1 className="text-[32px] font-bold text-[var(--color-text-default)] mb-3">
-              Thaki Design System SSoT
+              Thaki Design system SSoT
             </h1>
             <p className="text-[14px] text-[var(--color-text-subtle)] mx-auto leading-relaxed">
-              Thaki Design System SSoT는 디자인 원칙, 컴포넌트, 토큰, 가이드라인을 한 곳에 모은 '단일 기준'입니다.
+              Thaki Design system SSoT는 디자인 원칙, 컴포넌트, 토큰, 가이드라인을 한 곳에 모은 '단일 기준'입니다.
               <br />
               디자이너와 개발자가 동일한 소스를 참고해 의사결정과 구현을 정렬하고, 제품 전반의 일관성과 개발 속도를 함께 높입니다.
             </p>
@@ -290,6 +300,13 @@ export function EntryPage() {
                   onClick={() => navigate('/design/modals')}
                 >
                   Modals
+                </Button>
+                <Button
+                  variant="muted"
+                  size="md"
+                  onClick={() => window.open('https://thakicloud.github.io/404page', '_blank')}
+                >
+                  404 page
                 </Button>
               </div>
             </div>

@@ -44,6 +44,8 @@ export interface TableProps<T = any> {
   selectedKeys?: string[];
   /** Callback when selection changes */
   onSelectionChange?: (keys: string[]) => void;
+  /** Hide the select all checkbox in header (when selectable is true) */
+  hideSelectAll?: boolean;
   /** Enable sticky header */
   stickyHeader?: boolean;
   /** Max height for scrollable table (enables sticky header) */
@@ -69,6 +71,7 @@ export function Table<T extends Record<string, any>>({
   selectable = false,
   selectedKeys = [],
   onSelectionChange,
+  hideSelectAll = false,
   stickyHeader = false,
   maxHeight,
   onRowClick,
@@ -227,12 +230,14 @@ export function Table<T extends Record<string, any>>({
                 py-[var(--table-header-padding-y)]
               "
             >
-              <Checkbox
-                checked={allSelected}
-                indeterminate={someSelected}
-                onChange={handleSelectAll}
-                aria-label="Select all rows"
-              />
+              {!hideSelectAll && (
+                <Checkbox
+                  checked={allSelected}
+                  indeterminate={someSelected}
+                  onChange={handleSelectAll}
+                  aria-label="Select all rows"
+                />
+              )}
             </div>
           )}
 
@@ -368,11 +373,13 @@ export function Table<T extends Record<string, any>>({
                       style={getColumnStyle(column)}
                       title={cellTitle}
                     >
-                      <span className="truncate w-full">
-                        {column.render
-                          ? column.render(row[column.key], row, rowIndex)
-                          : row[column.key]}
-                      </span>
+                      {column.render ? (
+                        column.render(row[column.key], row, rowIndex)
+                      ) : (
+                        <span className={`truncate w-full ${column.align === 'center' ? 'text-center' : column.align === 'right' ? 'text-right' : ''}`}>
+                          {row[column.key]}
+                        </span>
+                      )}
                     </div>
                   );
                   })}

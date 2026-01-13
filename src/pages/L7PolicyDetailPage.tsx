@@ -43,7 +43,7 @@ interface L7PolicyDetail {
   status: L7PolicyStatus;
   adminState: 'Up' | 'Down';
   createdAt: string;
-  // Basic Information
+  // Basic information
   description: string;
   behavior: string;
   behaviorDetail: {
@@ -86,7 +86,7 @@ const mockL7PolicyDetail: L7PolicyDetail = {
   status: 'active',
   adminState: 'Up',
   createdAt: '2025-07-25 09:12:20',
-  // Basic Information
+  // Basic information
   description: '-',
   behavior: 'Forward to Pool',
   behaviorDetail: {
@@ -170,7 +170,7 @@ export default function L7PolicyDetailPage() {
 
   const breadcrumbItems = [
     { label: 'Proj-1', href: '/' },
-    { label: 'Load Balancers', href: '/compute/load-balancers' },
+    { label: 'Load balancers', href: '/compute/load-balancers' },
     { label: l7Policy.listener?.loadBalancer?.name || 'Unknown', href: `/load-balancers/${l7Policy.listener?.loadBalancer?.id}` },
     { label: l7Policy.listener?.name || 'Unknown', href: `/listeners/${l7Policy.listener?.id}` },
     { label: l7Policy.name },
@@ -209,13 +209,13 @@ export default function L7PolicyDetailPage() {
   const l7RuleColumns: TableColumn<L7Rule>[] = [
     {
       key: 'type',
-      label: 'Rule Type',
+      label: 'Rule type',
       flex: 1,
       sortable: true,
     },
     {
       key: 'compareType',
-      label: 'Compare Type',
+      label: 'Compare type',
       flex: 1,
       sortable: true,
     },
@@ -240,7 +240,7 @@ export default function L7PolicyDetailPage() {
     },
     {
       key: 'adminState',
-      label: 'Admin State',
+      label: 'Admin state',
       flex: 1,
     },
     {
@@ -314,7 +314,7 @@ export default function L7PolicyDetailPage() {
           {/* Page Content */}
           <div className="pt-4 px-8 pb-20 bg-[var(--color-surface-default)] min-h-full">
             <VStack gap={8} align="stretch" className="min-w-[1176px]">
-              {/* Detail Header */}
+              {/* Detail header */}
               <DetailHeader>
                 <DetailHeader.Title>
                   <h1 className="text-[16px] font-semibold text-[var(--color-text-default)] leading-6 mb-3">
@@ -345,11 +345,11 @@ export default function L7PolicyDetailPage() {
                     onCopy={handleCopyId}
                   />
                   <DetailHeader.InfoCard
-                    label="Admin State"
+                    label="Admin state"
                     value={l7Policy.adminState}
                   />
                   <DetailHeader.InfoCard
-                    label="Created At"
+                    label="Created at"
                     value={l7Policy.createdAt}
                   />
                 </DetailHeader.InfoGrid>
@@ -368,7 +368,7 @@ export default function L7PolicyDetailPage() {
                     <VStack gap={6} className="pt-6">
                       <SectionCard>
                         <SectionCard.Header
-                          title="Basic Information"
+                          title="Basic information"
                           actions={
                             <Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />}>
                               Edit
@@ -380,7 +380,7 @@ export default function L7PolicyDetailPage() {
                           <SectionCard.DataRow label="Description" value={l7Policy.description} />
                           <SectionCard.DataRow label="Behavior" value={l7Policy.behavior} />
                           <SectionCard.DataRow
-                            label="Behavior Detail"
+                            label="Behavior detail"
                             value={
                               l7Policy.behaviorDetail ? (
                                 <Link
@@ -393,7 +393,7 @@ export default function L7PolicyDetailPage() {
                             }
                           />
                           <SectionCard.DataRow label="Position" value={String(l7Policy.position)} />
-                          <SectionCard.DataRow label="Admin State" value={l7Policy.adminState} />
+                          <SectionCard.DataRow label="Admin state" value={l7Policy.adminState} />
                         </SectionCard.Content>
                       </SectionCard>
                     </VStack>
@@ -421,7 +421,7 @@ export default function L7PolicyDetailPage() {
                               setL7RuleSearchTerm(e.target.value);
                               setL7RuleCurrentPage(1);
                             }}
-                            placeholder="Find L7 rules with filters"
+                            placeholder="Search L7 rules by attributes"
                           />
                         </div>
                         <div className="h-4 w-px bg-[var(--color-border-default)]" />

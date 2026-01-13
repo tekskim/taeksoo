@@ -126,16 +126,16 @@ export function IAMSidebar({ isOpen = true, onToggle }: IAMSidebarProps) {
           </MenuSection>
 
           {/* Session Management Section */}
-          <MenuSection title="Session Management" defaultOpen={true}>
+          <MenuSection title="Session management" defaultOpen={true}>
             <MenuItem
               icon={<IconClock size={16} stroke={1.5} />}
-              label="Session Policies"
+              label="Session policies"
               href="/iam/session-policies"
               active={isActive('/iam/session-policies')}
             />
             <MenuItem
               icon={<IconDeviceDesktop size={16} stroke={1.5} />}
-              label="Active Sessions"
+              label="Active sessions"
               href="/iam/active-sessions"
               active={isActive('/iam/active-sessions')}
             />

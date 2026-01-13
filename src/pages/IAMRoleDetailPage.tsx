@@ -70,6 +70,7 @@ interface AttachedUser {
   id: string;
   name: string;
   type: 'Built-in' | 'Custom';
+  lastSignIn: string;
   createdAt: string;
 }
 
@@ -143,6 +144,19 @@ const mockRolePolicies: RolePolicy[] = [
       { application: 'Storage', partition: '-', resource: 'Host', actions: ['Read'] },
     ],
   },
+  {
+    id: 'p-003',
+    name: 'network-policy',
+    type: 'Custom',
+    apps: 'network (+2)',
+    description: 'Network management policy',
+    editedAt: '2025-09-15',
+    permissions: [
+      { application: 'Network', partition: 'vpcA', resource: 'Subnet', actions: ['Read', 'List', 'Write'] },
+      { application: 'Network', partition: 'vpcA', resource: 'SecurityGroup', actions: ['Read', 'List', 'Write', 'Delete'] },
+      { application: 'Network', partition: '-', resource: 'LoadBalancer', actions: ['Read', 'List'] },
+    ],
+  },
 ];
 
 const mockAttachedUserGroups: AttachedUserGroup[] = [
@@ -153,11 +167,11 @@ const mockAttachedUserGroups: AttachedUserGroup[] = [
 ];
 
 const mockAttachedUsers: AttachedUser[] = [
-  { id: 'u-001', name: 'thaki-kim', type: 'Built-in', createdAt: '2025-09-12' },
-  { id: 'u-002', name: 'alex.johnson', type: 'Custom', createdAt: '2025-08-15' },
-  { id: 'u-003', name: 'maria.garcia', type: 'Built-in', createdAt: '2025-07-20' },
-  { id: 'u-004', name: 'john.doe', type: 'Custom', createdAt: '2025-06-10' },
-  { id: 'u-005', name: 'emma.wilson', type: 'Built-in', createdAt: '2025-05-05' },
+  { id: 'u-001', name: 'thaki-kim', type: 'Built-in', lastSignIn: '2025-12-10 14:30', createdAt: '2025-09-12' },
+  { id: 'u-002', name: 'alex.johnson', type: 'Custom', lastSignIn: '2025-12-09 09:15', createdAt: '2025-08-15' },
+  { id: 'u-003', name: 'maria.garcia', type: 'Built-in', lastSignIn: '2025-12-08 16:45', createdAt: '2025-07-20' },
+  { id: 'u-004', name: 'john.doe', type: 'Custom', lastSignIn: '2025-12-07 11:20', createdAt: '2025-06-10' },
+  { id: 'u-005', name: 'emma.wilson', type: 'Built-in', lastSignIn: '2025-12-05 08:00', createdAt: '2025-05-05' },
 ];
 
 /* ----------------------------------------
@@ -268,7 +282,7 @@ export default function IAMRoleDetailPage() {
   const role = roleName ? mockRolesMap[roleName] : null;
 
   useEffect(() => {
-    updateActiveTabLabel(role?.name || 'Role Details');
+    updateActiveTabLabel(role?.name || 'Role details');
   }, [role?.name, updateActiveTabLabel]);
 
   const sidebarWidth = sidebarOpen ? 200 : 0;
@@ -320,20 +334,22 @@ export default function IAMRoleDetailPage() {
     });
   };
 
-  // Context menu items
-  const policyContextMenuItems: ContextMenuItem[] = [
-    { id: 'detach', label: 'Detach policy', danger: true },
-  ];
-
-  const entityContextMenuItems: ContextMenuItem[] = [
-    { id: 'detach', label: 'Detach entity', danger: true },
+  // Context menu items factory
+  const getPolicyContextMenuItems = (rowId: string, isBuiltIn: boolean): ContextMenuItem[] => [
+    { 
+      id: 'detach', 
+      label: 'Detach', 
+      status: isBuiltIn ? undefined : 'danger',
+      disabled: isBuiltIn,
+      onClick: () => console.log('Detach policy', rowId) 
+    },
   ];
 
   // Breadcrumb items
   const breadcrumbItems = [
     { label: 'IAM', href: '/iam' },
     { label: 'Roles', href: '/iam/roles' },
-    { label: role?.name || 'Role Details' },
+    { label: role?.name || 'Role details' },
   ];
 
   // Table columns for policies
@@ -396,12 +412,12 @@ export default function IAMRoleDetailPage() {
       width: 72,
       align: 'center',
       render: (_value, row) => (
-        <ContextMenu items={policyContextMenuItems} onSelect={(itemId) => console.log(itemId, row.id)}>
+        <ContextMenu items={getPolicyContextMenuItems(row.id, row.type === 'Built-in')} trigger="click">
           <button
             type="button"
-            className="p-1.5 rounded-md hover:bg-[var(--color-surface-subtle)] transition-colors"
+            className="flex items-center justify-center w-7 h-7 rounded-md bg-transparent hover:bg-[var(--color-surface-muted)] active:bg-[var(--color-border-subtle)] transition-colors cursor-pointer"
           >
-            <IconAction size={16} stroke={1} />
+            <IconAction size={16} stroke={1} className="text-[var(--color-text-default)]" />
           </button>
         </ContextMenu>
       ),
@@ -461,8 +477,14 @@ export default function IAMRoleDetailPage() {
     },
     {
       key: 'type',
-      label: 'Type',
+      label: 'User groups',
       flex: 1,
+    },
+    {
+      key: 'lastSignIn',
+      label: 'Last sign-in',
+      flex: 1,
+      sortable: true,
     },
     {
       key: 'createdAt',
@@ -539,7 +561,7 @@ export default function IAMRoleDetailPage() {
                   <HStack gap={2} className="w-full">
                     <InfoCard label="Description" value={role.description} />
                     <InfoCard label="Type" value={role.type} />
-                    <InfoCard label="Created At" value={role.createdAt} />
+                    <InfoCard label="Created at" value={role.createdAt} />
                   </HStack>
                 </VStack>
               </div>
@@ -644,12 +666,12 @@ export default function IAMRoleDetailPage() {
                                 {policy.editedAt}
                               </div>
                               <div className="w-[72px] flex items-center justify-center px-3 py-2 border-l border-transparent">
-                                <ContextMenu items={policyContextMenuItems} onSelect={(itemId) => console.log(itemId, policy.id)}>
+                                <ContextMenu items={getPolicyContextMenuItems(policy.id, policy.type === 'Built-in')} trigger="click">
                                   <button
                                     type="button"
-                                    className="p-1.5 rounded-md hover:bg-[var(--color-surface-subtle)] transition-colors"
+                                    className="flex items-center justify-center w-7 h-7 rounded-md bg-transparent hover:bg-[var(--color-surface-muted)] active:bg-[var(--color-border-subtle)] transition-colors cursor-pointer"
                                   >
-                                    <IconAction size={16} stroke={1} />
+                                    <IconAction size={16} stroke={1} className="text-[var(--color-text-default)]" />
                                   </button>
                                 </ContextMenu>
                               </div>

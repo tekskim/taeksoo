@@ -526,7 +526,7 @@ export function ContainerSidebar({ isOpen = true, onToggle }: ContainerSidebarPr
             </MenuSection>
 
             {/* Service Discovery Section */}
-            <MenuSection title="Service Discovery" defaultOpen={true}>
+            <MenuSection title="Service discovery" defaultOpen={true}>
               <MenuItem
                 icon={<IconNetwork size={16} stroke={1.5} />}
                 label="Services"
@@ -541,7 +541,7 @@ export function ContainerSidebar({ isOpen = true, onToggle }: ContainerSidebarPr
               />
               <MenuItem
                 icon={<IconAffiliate size={16} stroke={1.5} />}
-                label="Horizontal Pod Autoscalers"
+                label="Horizontal pod autoscalers"
                 href="/container/hpa"
                 active={isActive('/container/hpa')}
               />
@@ -551,19 +551,19 @@ export function ContainerSidebar({ isOpen = true, onToggle }: ContainerSidebarPr
             <MenuSection title="Storage" defaultOpen={true}>
               <MenuItem
                 icon={<IconDatabase size={16} stroke={1.5} />}
-                label="Persistent Volumes"
+                label="Persistent volumes"
                 href="/container/persistent-volumes"
                 active={isActive('/container/persistent-volumes')}
               />
               <MenuItem
                 icon={<IconDatabase size={16} stroke={1.5} />}
-                label="Persistent Volume Claims"
+                label="Persistent volume claims"
                 href="/container/pvc"
                 active={isActive('/container/pvc')}
               />
               <MenuItem
                 icon={<IconDatabase size={16} stroke={1.5} />}
-                label="Storage Classes"
+                label="Storage classes"
                 href="/container/storage-classes"
                 active={isActive('/container/storage-classes')}
               />
@@ -585,25 +585,25 @@ export function ContainerSidebar({ isOpen = true, onToggle }: ContainerSidebarPr
             <MenuSection title="Policy" defaultOpen={true}>
               <MenuItem
                 icon={<IconShieldLock size={16} stroke={1.5} />}
-                label="Limit Ranges"
+                label="Limit ranges"
                 href="/container/limit-ranges"
                 active={isActive('/container/limit-ranges')}
               />
               <MenuItem
                 icon={<IconShieldLock size={16} stroke={1.5} />}
-                label="Resource Quotas"
+                label="Resource quotas"
                 href="/container/resource-quotas"
                 active={isActive('/container/resource-quotas')}
               />
               <MenuItem
                 icon={<IconShieldLock size={16} stroke={1.5} />}
-                label="Network Policies"
+                label="Network policies"
                 href="/container/network-policies"
                 active={isActive('/container/network-policies')}
               />
               <MenuItem
                 icon={<IconShieldLock size={16} stroke={1.5} />}
-                label="Pod Disruption Budgets"
+                label="Pod disruption budgets"
                 href="/container/pdb"
                 active={isActive('/container/pdb')}
               />

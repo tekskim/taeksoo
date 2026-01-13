@@ -43,6 +43,8 @@ export interface ContextMenuProps {
   disabled?: boolean;
   /** Custom class name */
   className?: string;
+  /** Minimum top position for dropdown */
+  minTop?: number;
 }
 
 export interface ContextMenuContentProps {
@@ -58,6 +60,8 @@ export interface ContextMenuContentProps {
   menuRef?: React.RefObject<HTMLDivElement>;
   /** Trigger element ref (for positioning relative to trigger) */
   triggerRef?: React.RefObject<HTMLElement>;
+  /** Minimum top position for dropdown */
+  minTop?: number;
 }
 
 /* ----------------------------------------
@@ -336,6 +340,7 @@ const ContextMenuContent: React.FC<ContextMenuContentProps> = ({
   parentDirection = 'right',
   menuRef: externalMenuRef,
   triggerRef,
+  minTop,
 }) => {
   const internalMenuRef = useRef<HTMLDivElement>(null);
   const menuRef = externalMenuRef ?? internalMenuRef;
@@ -349,18 +354,19 @@ const ContextMenuContent: React.FC<ContextMenuContentProps> = ({
         const viewportWidth = window.innerWidth;
         const viewportHeight = window.innerHeight;
 
-        // position.x is the button center X
-        // Calculate menu position so its center aligns with button center
-        let newX = position.x - rect.width / 2;
+        // position.x is the button left edge
+        // Left-align menu with trigger button
+        let newX = position.x;
         let newY = position.y;
 
         // Adjust horizontal position if menu overflows viewport
+        if (newX + rect.width > viewportWidth - 8) {
+          // Menu would overflow right edge, align to right edge
+          newX = viewportWidth - rect.width - 8;
+        }
         if (newX < 8) {
           // Menu would overflow left edge, align to left edge
           newX = 8;
-        } else if (newX + rect.width > viewportWidth - 8) {
-          // Menu would overflow right edge, align to right edge
-          newX = viewportWidth - rect.width - 8;
         }
 
         // Adjust vertical position
@@ -368,10 +374,15 @@ const ContextMenuContent: React.FC<ContextMenuContentProps> = ({
           newY = Math.max(8, viewportHeight - rect.height - 8);
         }
 
+        // Apply minTop if specified
+        if (minTop !== undefined && newY < minTop) {
+          newY = minTop;
+        }
+
         setAdjustedPosition({ x: newX, y: newY });
       }
     });
-  }, [position, triggerRef]);
+  }, [position, triggerRef, minTop]);
 
   return createPortal(
     <div
@@ -418,6 +429,7 @@ export const ContextMenu: React.FC<ContextMenuProps> = ({
   trigger = 'contextmenu',
   disabled = false,
   className = '',
+  minTop,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [position, setPosition] = useState({ x: 0, y: 0 });
@@ -446,11 +458,12 @@ export const ContextMenu: React.FC<ContextMenuProps> = ({
       }
       
       if (triggerRef.current) {
-        const rect = triggerRef.current.getBoundingClientRect();
-        // Position menu directly below the button, center-aligned
-        // We'll calculate the exact center position in ContextMenuContent
+        // Get the actual trigger element (first child) for accurate positioning
+        const triggerElement = triggerRef.current.firstElementChild as HTMLElement | null;
+        const rect = triggerElement?.getBoundingClientRect() ?? triggerRef.current.getBoundingClientRect();
+        // Position menu directly below the button, left-aligned
         setPosition({ 
-          x: rect.left + rect.width / 2, // Button center X
+          x: rect.left, // Button left edge
           y: rect.bottom + 4 
         });
       }
@@ -522,6 +535,7 @@ export const ContextMenu: React.FC<ContextMenuProps> = ({
           onClose={handleClose}
           menuRef={menuRef}
           triggerRef={triggerRef}
+          minTop={minTop}
         />
       )}
     </div>

@@ -183,7 +183,7 @@ export function CloudBuilderCreatePage() {
           ) : isServerLike ? (
             <>
               <SectionCard>
-                <SectionCard.Header title="Basic Information" />
+                <SectionCard.Header title="Basic information" />
                 <SectionCard.Content gap={4}>
                   <div className="grid grid-cols-12 gap-6">
                     <div className="col-span-6">

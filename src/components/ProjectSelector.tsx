@@ -4,6 +4,7 @@ import { IconSearch, IconCheck, IconFolder } from '@tabler/icons-react';
 import { ArrowRightLeft } from 'lucide-react';
 import { type Project } from '@/contexts/ProjectContext';
 import { Tooltip } from '@/design-system';
+import FolderOpenIcon from '@/assets/icons/folder-open.svg';
 
 /* ----------------------------------------
    Types

@@ -588,7 +588,7 @@ export function BucketDetailPage() {
                 </DetailHeader.Actions>
                 <DetailHeader.InfoGrid>
                   <DetailHeader.InfoCard label="Owner" value={bucketData.owner} />
-                  <DetailHeader.InfoCard label="Used Capacity" value={bucketData.usedCapacity} />
+                  <DetailHeader.InfoCard label="Used capacity" value={bucketData.usedCapacity} />
                   <DetailHeader.InfoCard label="Objects" value={String(bucketData.objects)} />
                   <DetailHeader.InfoCard label="CreationDate" value={bucketData.creationDate} />
                 </DetailHeader.InfoGrid>
@@ -605,9 +605,9 @@ export function BucketDetailPage() {
 
                   {/* Details Tab Panel */}
                   <TabPanel value="details" className="pt-4">
-                    {/* Basic Information Section */}
+                    {/* Basic information Section */}
                     <SectionCard>
-                      <SectionCard.Header title="Basic Information" />
+                      <SectionCard.Header title="Basic information" />
                       <SectionCard.Content>
                         <SectionCard.DataRow label="Region" value="Default" showDivider />
                         <SectionCard.DataRow label="Versioning" value="Suspended" />
@@ -622,8 +622,8 @@ export function BucketDetailPage() {
                             rowKey="key"
                           />
                         </SectionCard.DataRow>
-                        <SectionCard.DataRow label="Capacity Limit %" value="No Limit" />
-                        <SectionCard.DataRow label="Object Limit %" value="No Limit" />
+                        <SectionCard.DataRow label="Capacity limit %" value="No Limit" />
+                        <SectionCard.DataRow label="Object limit %" value="No Limit" />
                       </SectionCard.Content>
                     </SectionCard>
                   </TabPanel>
@@ -721,7 +721,7 @@ export function BucketDetailPage() {
                             <ListToolbar.Actions>
                               <div className="w-[280px]">
                                 <SearchInput
-                                  placeholder="Find object with filters"
+                                  placeholder="Search object by attributes"
                                   value={searchQuery}
                                   onChange={(e) => setSearchQuery(e.target.value)}
                                   onClear={() => setSearchQuery('')}

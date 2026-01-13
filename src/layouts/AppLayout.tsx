@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { Outlet, useLocation } from 'react-router-dom';
+import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import {
   TabBar,
   TopBar,
@@ -57,14 +57,14 @@ const mockNotifications: NotificationItem[] = [
 const routeLabels: Record<string, string> = {
   '/': 'Home',
   '/instances': 'Instances',
-  '/instance-templates': 'Instance Templates',
-  '/instance-snapshots': 'Instance Snapshots',
+  '/instance-templates': 'Instance templates',
+  '/instance-snapshots': 'Instance snapshots',
   '/images': 'Images',
   '/flavors': 'Flavors',
-  '/key-pairs': 'Key Pairs',
-  '/server-groups': 'Server Groups',
+  '/key-pairs': 'Key pairs',
+  '/server-groups': 'Server groups',
   '/volumes': 'Volumes',
-  '/design-system': 'Design System',
+  '/design-system': 'Design system',
 };
 
 function getBreadcrumbLabel(path: string): string {
@@ -81,6 +81,7 @@ interface AppLayoutProps {
 
 export function AppLayout({ children }: AppLayoutProps) {
   const location = useLocation();
+  const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const { tabs, activeTabId, selectTab, closeTab, addNewTab, moveTab } = useTabs();
 
@@ -169,6 +170,7 @@ export function AppLayout({ children }: AppLayoutProps) {
             onTabReorder={moveTab}
             showAddButton={true}
             showWindowControls={true}
+            onWindowClose={() => navigate('/')}
           />
 
           {/* Top Bar */}
@@ -192,7 +194,6 @@ export function AppLayout({ children }: AppLayoutProps) {
                   icon={<IconBell size={16} stroke={1.5} />}
                   aria-label="Notifications"
                   badge={unreadCount > 0}
-                  badgeCount={unreadCount}
                   onClick={() => setNotificationOpen(!notificationOpen)}
                 />
                 {notificationOpen && (
