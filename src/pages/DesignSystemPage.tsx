@@ -2420,17 +2420,23 @@ function QuotaBarDemo({ label, used, total, unit }: { label: string; used: numbe
     if (percentage >= 100) return {
       bg: 'bg-[var(--color-status-error)]/15',
       text: 'text-[var(--color-status-error)]',
-      bar: 'bg-[var(--color-text-default)]'
+      bar: 'bg-[var(--color-state-danger)]',
+      barColor: 'var(--color-state-danger)',
+      status: 'Danger'
     };
     if (percentage >= 70) return {
       bg: 'bg-[var(--color-status-warning)]/15',
       text: 'text-[var(--color-status-warning)]',
-      bar: 'bg-[var(--color-text-default)]'
+      bar: 'bg-[var(--color-state-warning)]',
+      barColor: 'var(--color-state-warning)',
+      status: 'Warning'
     };
     return {
       bg: 'bg-[var(--color-status-success)]/15',
       text: 'text-[var(--color-status-success)]',
-      bar: 'bg-[var(--color-text-default)]'
+      bar: 'bg-[var(--color-state-success)]',
+      barColor: 'var(--color-state-success)',
+      status: 'Normal'
     };
   };
   
@@ -2449,10 +2455,11 @@ function QuotaBarDemo({ label, used, total, unit }: { label: string; used: numbe
       </div>
       <Tooltip 
         content={
-          <div className="flex flex-col gap-0.5">
-            <span>Used: {used} {unit}</span>
-            <span>Remaining: {remaining} {unit}</span>
-            <span>Total: {total} {unit}</span>
+          <div className="flex flex-col gap-1">
+            <div className="flex items-center gap-2">
+              <span className="w-2 h-2 rounded-full" style={{ backgroundColor: colors.barColor }} />
+              <span>Used: {used}</span>
+            </div>
           </div>
         }
         position="top"
@@ -3106,34 +3113,6 @@ function TabBarDemo() {
             showAddButton={false}
           />
         </div>
-      </VStack>
-
-      {/* Many Tabs (Scroll) */}
-      <VStack gap={3}>
-        <Label>Many Tabs (with scroll navigation)</Label>
-        <div className="w-full border border-[var(--color-border-default)] rounded-[var(--radius-md)] overflow-hidden">
-          <TabBar
-            tabs={[
-              { id: 'tab-1', label: 'Entry page', closable: true },
-              { id: 'tab-2', label: 'Analytics', closable: true },
-              { id: 'tab-3', label: 'Reports', closable: true },
-              { id: 'tab-4', label: 'Users', closable: true },
-              { id: 'tab-5', label: 'Settings', closable: true },
-              { id: 'tab-6', label: 'Notifications', closable: true },
-              { id: 'tab-7', label: 'Integrations', closable: true },
-              { id: 'tab-8', label: 'Security', closable: true },
-              { id: 'tab-9', label: 'Billing', closable: true },
-              { id: 'tab-10', label: 'Support', closable: true },
-            ]}
-            activeTab="tab-1"
-            onTabChange={() => {}}
-            onTabClose={() => {}}
-            showAddButton={false}
-          />
-        </div>
-        <p className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
-          When tabs overflow, use arrow buttons to scroll left/right
-        </p>
       </VStack>
     </VStack>
   );
@@ -6320,18 +6299,26 @@ outline: 2px solid var(--color-border-focus);`}
                 {/* With Dot */}
                 <VStack gap={3}>
                   <Label>With Dot Indicator</Label>
-                  <div className="flex gap-3 items-center">
-                    <Badge size="sm" theme="green">Running</Badge>
-                    <Badge size="sm" theme="red">Stopped</Badge>
-                    <Badge size="sm" theme="yellow">Warning</Badge>
-                    <Badge size="sm" theme="gray">Unknown</Badge>
-                  </div>
-                  <div className="flex gap-3 items-center">
-                    <span className="inline-flex items-center px-1.5 py-0.5 rounded-md bg-[var(--color-state-success)]/15 text-[11px] font-medium text-[var(--color-state-success)]">Running</span>
-                    <span className="inline-flex items-center px-1.5 py-0.5 rounded-md bg-[var(--color-state-danger)]/15 text-[11px] font-medium text-[var(--color-state-danger)]">Stopped</span>
-                    <span className="inline-flex items-center px-1.5 py-0.5 rounded-md bg-[var(--color-state-warning)]/15 text-[11px] font-medium text-[var(--color-state-warning)]">Warning</span>
-                    <span className="inline-flex items-center px-1.5 py-0.5 rounded-md bg-[var(--color-text-muted)]/15 text-[11px] font-medium text-[var(--color-text-muted)]">Unknown</span>
-                  </div>
+                  <VStack gap={4}>
+                    <VStack gap={2}>
+                      <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">Solid</span>
+                      <div className="flex gap-3 items-center">
+                        <Badge size="sm" theme="green">Running</Badge>
+                        <Badge size="sm" theme="red">Stopped</Badge>
+                        <Badge size="sm" theme="yellow">Warning</Badge>
+                        <Badge size="sm" theme="gray">Unknown</Badge>
+                      </div>
+                    </VStack>
+                    <VStack gap={2}>
+                      <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">Subtle (15% opacity)</span>
+                      <div className="flex gap-3 items-center">
+                        <span className="inline-flex items-center px-1.5 py-0.5 rounded-md bg-[var(--color-state-success)]/15 text-[11px] font-medium text-[var(--color-state-success)]">Running</span>
+                        <span className="inline-flex items-center px-1.5 py-0.5 rounded-md bg-[var(--color-state-danger)]/15 text-[11px] font-medium text-[var(--color-state-danger)]">Stopped</span>
+                        <span className="inline-flex items-center px-1.5 py-0.5 rounded-md bg-[var(--color-state-warning)]/15 text-[11px] font-medium text-[var(--color-state-warning)]">Warning</span>
+                        <span className="inline-flex items-center px-1.5 py-0.5 rounded-md bg-[var(--color-text-muted)]/15 text-[11px] font-medium text-[var(--color-text-muted)]">Unknown</span>
+                      </div>
+                    </VStack>
+                  </VStack>
                 </VStack>
               </VStack>
             </Section>
@@ -6463,51 +6450,52 @@ outline: 2px solid var(--color-border-focus);`}
                 <VStack gap={3}>
                   <Label>Icon Only - All status Types</Label>
                   <VStack gap={4}>
-                    {/* Success */}
+                    {/* Active */}
                     <VStack gap={2}>
-                      <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">Success (Green)</span>
+                      <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">Active</span>
                       <div className="flex flex-wrap gap-2 items-center">
-                        <StatusIndicator status="active" layout="icon-only" />
+                        <Tooltip content="active"><StatusIndicator status="active" layout="icon-only" /></Tooltip>
                       </div>
                     </VStack>
-                    {/* Danger */}
+                    {/* Error */}
                     <VStack gap={2}>
-                      <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">Danger (Red)</span>
+                      <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">Error</span>
                       <div className="flex flex-wrap gap-2 items-center">
-                        <StatusIndicator status="error" layout="icon-only" />
+                        <Tooltip content="error"><StatusIndicator status="error" layout="icon-only" /></Tooltip>
                       </div>
                     </VStack>
-                    {/* Info */}
+                    {/* Action */}
                     <VStack gap={2}>
-                      <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">Info (Blue)</span>
+                      <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">Action</span>
                       <div className="flex flex-wrap gap-2 items-center">
-                        <StatusIndicator status="building" layout="icon-only" />
+                        <Tooltip content="building"><StatusIndicator status="building" layout="icon-only" /></Tooltip>
+                        <Tooltip content="deleting"><StatusIndicator status="deleting" layout="icon-only" /></Tooltip>
                       </div>
                     </VStack>
                     {/* Warning */}
                     <VStack gap={2}>
-                      <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">Warning (Orange)</span>
+                      <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">Warning</span>
                       <div className="flex flex-wrap gap-2 items-center">
-                        <StatusIndicator status="verify-resized" layout="icon-only" />
-                        <StatusIndicator status="degraded" layout="icon-only" />
-                        <StatusIndicator status="no-monitor" layout="icon-only" />
+                        <Tooltip content="verify-resized"><StatusIndicator status="verify-resized" layout="icon-only" /></Tooltip>
+                        <Tooltip content="degraded"><StatusIndicator status="degraded" layout="icon-only" /></Tooltip>
+                        <Tooltip content="no-monitor"><StatusIndicator status="no-monitor" layout="icon-only" /></Tooltip>
                       </div>
                     </VStack>
                     {/* Muted */}
                     <VStack gap={2}>
-                      <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">Muted (Gray)</span>
+                      <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">Muted</span>
                       <div className="flex flex-wrap gap-2 items-center">
-                        <StatusIndicator status="suspended" layout="icon-only" />
-                        <StatusIndicator status="shelved-offloaded" layout="icon-only" />
-                        <StatusIndicator status="mounted" layout="icon-only" />
-                        <StatusIndicator status="shutoff" layout="icon-only" />
-                        <StatusIndicator status="paused" layout="icon-only" />
-                        <StatusIndicator status="pending" layout="icon-only" />
-                        <StatusIndicator status="draft" layout="icon-only" />
-                        <StatusIndicator status="deactivated" layout="icon-only" />
-                        <StatusIndicator status="in-use" layout="icon-only" />
-                        <StatusIndicator status="maintenance" layout="icon-only" />
-                        <StatusIndicator status="down" layout="icon-only" />
+                        <Tooltip content="suspended"><StatusIndicator status="suspended" layout="icon-only" /></Tooltip>
+                        <Tooltip content="shelved-offloaded"><StatusIndicator status="shelved-offloaded" layout="icon-only" /></Tooltip>
+                        <Tooltip content="mounted"><StatusIndicator status="mounted" layout="icon-only" /></Tooltip>
+                        <Tooltip content="shutoff"><StatusIndicator status="shutoff" layout="icon-only" /></Tooltip>
+                        <Tooltip content="paused"><StatusIndicator status="paused" layout="icon-only" /></Tooltip>
+                        <Tooltip content="pending"><StatusIndicator status="pending" layout="icon-only" /></Tooltip>
+                        <Tooltip content="draft"><StatusIndicator status="draft" layout="icon-only" /></Tooltip>
+                        <Tooltip content="deactivated"><StatusIndicator status="deactivated" layout="icon-only" /></Tooltip>
+                        <Tooltip content="in-use"><StatusIndicator status="in-use" layout="icon-only" /></Tooltip>
+                        <Tooltip content="maintenance"><StatusIndicator status="maintenance" layout="icon-only" /></Tooltip>
+                        <Tooltip content="down"><StatusIndicator status="down" layout="icon-only" /></Tooltip>
                       </div>
                     </VStack>
                   </VStack>
