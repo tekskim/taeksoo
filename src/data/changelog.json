@@ -24,18 +24,6 @@
       {
         "text": "Area Chart No Data 케이스 추가 및 Monitoring Toolbar 스타일 개선",
         "author": "remy"
-      },
-      {
-        "text": "Area Chart에 No Data 케이스 추가",
-        "author": "remy"
-      },
-      {
-        "text": "토글 스위치 크기 조정 (24x12, radius 6)",
-        "author": "remy"
-      },
-      {
-        "text": "토글 스위치 활성 상태도 아웃라인 스타일로 통일",
-        "author": "remy"
       }
     ]
   }

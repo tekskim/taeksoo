@@ -28,6 +28,7 @@ import {
   Select,
   Slider,
   Chip,
+  SelectionIndicator,
   DatePicker,
   WindowControl,
   WindowControls,
@@ -78,6 +79,9 @@ import {
   SkippedSection,
   DoneSection,
   DoneSectionRow,
+  IconUbuntu,
+  IconRocky,
+  IconGrid,
 } from '@/design-system';
 import type { WizardSectionState, WizardSummaryItem } from '@/design-system';
 import type { NotificationItem } from '@/design-system/components/NotificationCenter';
@@ -251,6 +255,7 @@ const formControlItems = [
   { id: 'datepicker', label: 'DatePicker', icon: IconCalendar },
   { id: 'slider', label: 'Slider', icon: IconAdjustments },
   { id: 'chip', label: 'Chip', icon: IconTag },
+  { id: 'selection-indicator', label: 'SelectionIndicator', icon: IconSquareCheck },
   { id: 'pagination', label: 'Pagination', icon: IconProgress },
   { id: 'progress-bar', label: 'Progress bar', icon: IconProgress },
   { id: 'loading', label: 'Loading', icon: IconLoader2 },
@@ -2798,17 +2803,6 @@ function TableDemo() {
       render: (_: string | null, row: InstanceData) => (
         row.attachedTo && row.attachedToId ? (
           <div className="flex items-center gap-2">
-            <Tooltip content={row.attachedType === 'router' ? 'Router' : 'Instance'} position="top" delay={0}>
-              <div 
-                className="flex-shrink-0 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[4px] p-1 cursor-pointer hover:bg-[var(--color-surface-muted)] transition-colors"
-              >
-                {row.attachedType === 'router' ? (
-                  <IconRouter size={12} stroke={1.5} className="text-[var(--color-text-subtle)]" />
-                ) : (
-                  <IconCube size={12} stroke={1.5} className="text-[var(--color-text-subtle)]" />
-                )}
-              </div>
-            </Tooltip>
             <div className="flex flex-col gap-0.5 min-w-0">
               <button
                 onClick={(e) => e.stopPropagation()}
@@ -2821,6 +2815,17 @@ function TableDemo() {
                 ID : {row.attachedToId}
               </span>
             </div>
+            <Tooltip content={row.attachedType === 'router' ? 'Router' : 'Instance'} position="top" delay={0}>
+              <div 
+                className="flex-shrink-0 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[4px] p-1 cursor-pointer hover:bg-[var(--color-surface-muted)] transition-colors"
+              >
+                {row.attachedType === 'router' ? (
+                  <IconRouter size={12} stroke={1.5} className="text-[var(--color-text-subtle)]" />
+                ) : (
+                  <IconCube size={12} stroke={1.5} className="text-[var(--color-text-subtle)]" />
+                )}
+              </div>
+            </Tooltip>
           </div>
         ) : (
           <span className="text-[var(--color-text-muted)]">-</span>
@@ -2836,7 +2841,7 @@ function TableDemo() {
       label: 'Name', 
       width: '180px',
       render: (value: string) => (
-        <span className="text-[var(--color-action-primary)] cursor-pointer hover:underline hover:underline-offset-2">{value}</span>
+        <span className="font-medium text-[var(--color-action-primary)] cursor-pointer hover:underline hover:underline-offset-2">{value}</span>
       )
     },
     { 
@@ -2873,7 +2878,7 @@ function TableDemo() {
       label: 'Name', 
       width: '180px',
       render: (value: string) => (
-        <span className="text-[var(--color-action-primary)] cursor-pointer hover:underline hover:underline-offset-2">{value}</span>
+        <span className="font-medium text-[var(--color-action-primary)] cursor-pointer hover:underline hover:underline-offset-2">{value}</span>
       )
     },
     { 
@@ -4199,11 +4204,11 @@ outline: 2px solid var(--color-border-focus);`}
                 <IconDisplayGrid
                   title="OS / Brand"
                   icons={[
-                    { Icon: IconBrandUbuntu, name: 'Ubuntu' },
+                    { Icon: IconUbuntu, name: 'Ubuntu' },
                     { Icon: IconBrandDebian, name: 'Debian' },
-                    { Icon: IconBrandWindows, name: 'Windows' },
+                    { Icon: IconGrid, name: 'Windows' },
                     { Icon: IconBrandRedhat, name: 'RedHat' },
-                    { Icon: IconHelp, name: 'Rocky Linux', missing: true },
+                    { Icon: IconRocky, name: 'Rocky' },
                   ]}
                 />
               </VStack>
@@ -4858,6 +4863,72 @@ outline: 2px solid var(--color-border-focus);`}
                       <Chip label="Name" value="a" disabled />
                     </VStack>
                   </div>
+                </VStack>
+              </VStack>
+            </Section>
+
+            {/* SelectionIndicator Component */}
+            <Section id="selection-indicator" title="SelectionIndicator" description="Display component for showing table selection state. Use InlineMessage for error states.">
+              <VStack gap={8}>
+                {/* Tokens */}
+                <VStack gap={3}>
+                  <Label>Design tokens</Label>
+                  <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
+                    <code>min-height: 42px</code> · <code>padding: 8×12px</code> · <code>radius: table-row-radius</code> · <code>gap: 16px</code>
+                  </div>
+                </VStack>
+
+                {/* Empty State */}
+                <VStack gap={3}>
+                  <Label>Empty State</Label>
+                  <SelectionIndicator />
+                </VStack>
+
+                {/* With Selection */}
+                <VStack gap={3}>
+                  <Label>With Selection</Label>
+                  <SelectionIndicator
+                    selectedItems={[{ id: '1', label: 'ubuntu-24.04-tk-base' }]}
+                    onRemove={() => {}}
+                  />
+                </VStack>
+
+                {/* Multiple Selections */}
+                <VStack gap={3}>
+                  <Label>Multiple Selections</Label>
+                  <SelectionIndicator
+                    selectedItems={[
+                      { id: '1', label: 'default-sg' },
+                      { id: '2', label: 'web-server-sg' },
+                      { id: '3', label: 'database-sg' },
+                    ]}
+                    onRemove={() => {}}
+                  />
+                </VStack>
+
+                {/* Custom Empty Text */}
+                <VStack gap={3}>
+                  <Label>Custom Empty Text</Label>
+                  <SelectionIndicator
+                    emptyText="Select a network to continue"
+                  />
+                </VStack>
+
+                {/* Non-removable */}
+                <VStack gap={3}>
+                  <Label>Non-removable (Read-only)</Label>
+                  <SelectionIndicator
+                    selectedItems={[{ id: '1', label: 'production-network' }]}
+                    removable={false}
+                  />
+                </VStack>
+
+                {/* Usage Note */}
+                <VStack gap={3}>
+                  <Label>Usage Note</Label>
+                  <p className="text-[length:var(--font-size-11)] text-[var(--color-text-muted)]">
+                    For error states (e.g., required selection missing), use <code className="bg-[var(--color-surface-muted)] px-1 rounded">InlineMessage</code> component instead of this component.
+                  </p>
                 </VStack>
               </VStack>
             </Section>

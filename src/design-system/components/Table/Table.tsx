@@ -373,11 +373,13 @@ export function Table<T extends Record<string, any>>({
                       style={getColumnStyle(column)}
                       title={cellTitle}
                     >
-                      <span className="truncate w-full">
-                        {column.render
-                          ? column.render(row[column.key], row, rowIndex)
-                          : row[column.key]}
-                      </span>
+                      {column.render ? (
+                        column.render(row[column.key], row, rowIndex)
+                      ) : (
+                        <span className={`truncate w-full ${column.align === 'center' ? 'text-center' : column.align === 'right' ? 'text-right' : ''}`}>
+                          {row[column.key]}
+                        </span>
+                      )}
                     </div>
                   );
                   })}

@@ -42,6 +42,9 @@ export function CreateAgentPage() {
   const navigate = useNavigate();
   const [activeStep, setActiveStep] = useState<'configuration' | 'data-mcp'>('configuration');
   
+  // Validation error
+  const [agentNameError, setAgentNameError] = useState<string | null>(null);
+
   // Form state
   const [agentName, setAgentName] = useState('');
   const [description, setDescription] = useState('');
@@ -324,6 +327,11 @@ export function CreateAgentPage() {
   };
 
   const handleNext = () => {
+    if (!agentName.trim()) {
+      setAgentNameError('Please enter an agent name.');
+      return;
+    }
+    setAgentNameError(null);
     setActiveStep('data-mcp');
   };
 
@@ -392,15 +400,21 @@ export function CreateAgentPage() {
                       <SectionCard.Header title="Basic information" />
                       <SectionCard.Content>
                         {/* Agent name */}
-                        <VStack gap={2} className="w-full">
+                        <VStack gap={1} className="w-full">
                           <Input
                             label="Agent name"
                             placeholder="Enter a name for this agent."
                             value={agentName}
-                            onChange={(e) => setAgentName(e.target.value)}
+                            onChange={(e) => { setAgentName(e.target.value); setAgentNameError(null); }}
                             fullWidth
                             required
+                            error={!!agentNameError}
                           />
+                          {agentNameError && (
+                            <span className="text-[11px] leading-[var(--line-height-16)] text-[var(--color-state-danger)]">
+                              {agentNameError}
+                            </span>
+                          )}
                         </VStack>
 
                         {/* Description */}
