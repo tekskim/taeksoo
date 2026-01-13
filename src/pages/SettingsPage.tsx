@@ -7,7 +7,9 @@ import {
   Input,
   WindowControls,
   Pagination,
+  Table,
 } from '@/design-system';
+import type { TableColumn } from '@/design-system/components/Table/Table';
 import { 
   IconShieldCheck,
   IconCheck,
@@ -88,6 +90,13 @@ export function SettingsPage({ isOpen, onClose, initialTab = 'account' }: Settin
   const startIndex = (currentPage - 1) * rowsPerPage;
   const endIndex = startIndex + rowsPerPage;
   const paginatedSessions = activitySessions.slice(startIndex, endIndex);
+
+  // Session table columns
+  const sessionColumns: TableColumn[] = [
+    { key: 'ipAddress', label: 'IP Address', width: '140px' },
+    { key: 'device', label: 'Device', flex: 1 },
+    { key: 'timestamp', label: 'Timestamp', width: '180px' },
+  ];
   
   // Reset focus when window opens
   useEffect(() => {
@@ -497,26 +506,13 @@ export function SettingsPage({ isOpen, onClose, initialTab = 'account' }: Settin
                         />
                       </div>
                       
-                      <div className="border border-[var(--color-border-default)] rounded-lg overflow-hidden">
-                        <table className="w-full">
-                          <thead className="bg-[var(--color-surface-subtle)]">
-                            <tr>
-                              <th className="px-4 py-3 text-left text-[length:var(--font-size-12)] leading-[var(--line-height-16)] font-semibold text-[var(--color-text-muted)]">IP Address</th>
-                              <th className="px-4 py-3 text-left text-[length:var(--font-size-12)] leading-[var(--line-height-16)] font-semibold text-[var(--color-text-muted)]">Device</th>
-                              <th className="px-4 py-3 text-left text-[length:var(--font-size-12)] leading-[var(--line-height-16)] font-semibold text-[var(--color-text-muted)]">Timestamp</th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                            {paginatedSessions.map((session) => (
-                              <tr key={session.id} className="border-t border-[var(--color-border-default)]">
-                                <td className="px-4 py-3 text-[length:var(--font-size-12)] leading-[var(--line-height-18)] text-[var(--color-text-default)]">{session.ipAddress}</td>
-                                <td className="px-4 py-3 text-[length:var(--font-size-12)] leading-[var(--line-height-18)] text-[var(--color-text-default)]">{session.device}</td>
-                                <td className="px-4 py-3 text-[length:var(--font-size-12)] leading-[var(--line-height-18)] text-[var(--color-text-default)]">{session.timestamp}</td>
-                              </tr>
-                            ))}
-                          </tbody>
-                        </table>
-                      </div>
+                      <Table
+                        columns={sessionColumns}
+                        data={paginatedSessions}
+                        rowKey="id"
+                        rowHeight="40px"
+                        emptyMessage="No sessions found"
+                      />
                     </SectionCard.Content>
                   </SectionCard>
 
