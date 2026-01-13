@@ -27,6 +27,7 @@ import {
   type AppliedFilter,
   Select,
   Slider,
+  RangeSlider,
   Chip,
   SelectionIndicator,
   DatePicker,
@@ -255,7 +256,6 @@ const formControlItems = [
   { id: 'chip', label: 'Chip', icon: IconTag },
   { id: 'selection-indicator', label: 'SelectionIndicator', icon: IconSquareCheck },
   { id: 'pagination', label: 'Pagination', icon: IconProgress },
-  { id: 'progress-bar', label: 'Progress bar', icon: IconProgress },
   { id: 'loading', label: 'Loading', icon: IconLoader2 },
   { id: 'toggle', label: 'Toggle', icon: IconToggleRight },
   { id: 'checkbox', label: 'Checkbox', icon: IconSquareCheck },
@@ -1272,6 +1272,167 @@ function DatePickerSection() {
 }
 
 /* ----------------------------------------
+   Capsule Tab Demo
+   ---------------------------------------- */
+
+function CapsuleTabDemo() {
+  const [selected, setSelected] = useState<'left' | 'right'>('left');
+
+  return (
+    <div className="inline-flex gap-2 p-1 bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[8px] w-fit">
+      <button
+        onClick={() => setSelected('left')}
+        className={`
+          min-w-[80px] px-[10px] py-[8px] rounded-[6px] text-[14px] font-medium leading-5 text-center transition-all
+          ${selected === 'left'
+            ? 'bg-[var(--color-surface-default)] border border-[var(--color-border-default)] text-[var(--color-action-primary)] shadow-sm'
+            : 'bg-transparent border border-transparent text-[var(--color-text-default)]'
+          }
+        `}
+      >
+        left
+      </button>
+      <button
+        onClick={() => setSelected('right')}
+        className={`
+          min-w-[80px] px-[10px] py-[8px] rounded-[6px] text-[14px] font-medium leading-5 text-center transition-all
+          ${selected === 'right'
+            ? 'bg-[var(--color-surface-default)] border border-[var(--color-border-default)] text-[var(--color-action-primary)] shadow-sm'
+            : 'bg-transparent border border-transparent text-[var(--color-text-default)]'
+          }
+        `}
+      >
+        right
+      </button>
+    </div>
+  );
+}
+
+/* ----------------------------------------
+   Slider with Number Input Demo
+   ---------------------------------------- */
+
+function SliderWithNumberInputDemo() {
+  const [value, setValue] = useState(50);
+
+  return (
+    <VStack gap={3}>
+      <Label>With Value Display</Label>
+      <div className="flex items-center gap-2 w-[312px]">
+        <div className="flex-1">
+          <Slider
+            value={value}
+            onChange={setValue}
+            min={0}
+            max={100}
+            step={1}
+          />
+        </div>
+        <NumberInput
+          value={value}
+          onChange={setValue}
+          min={0}
+          max={100}
+          step={1}
+          className="w-[80px]"
+        />
+      </div>
+    </VStack>
+  );
+}
+
+/* ----------------------------------------
+   Slider with Custom Range Demo
+   ---------------------------------------- */
+
+function SliderWithCustomRangeDemo() {
+  const [value, setValue] = useState(250);
+
+  return (
+    <VStack gap={3}>
+      <Label>Custom Range (0-1000 GB)</Label>
+      <div className="flex items-center gap-2 w-[312px]">
+        <div className="flex-1">
+          <Slider
+            value={value}
+            onChange={setValue}
+            min={0}
+            max={1000}
+            step={50}
+          />
+        </div>
+        <NumberInput
+          value={value}
+          onChange={setValue}
+          min={0}
+          max={1000}
+          step={50}
+          className="w-[80px]"
+        />
+      </div>
+    </VStack>
+  );
+}
+
+/* ----------------------------------------
+   Range Slider Demo (with state)
+   ---------------------------------------- */
+
+function RangeSliderDemo() {
+  const [minLength, setMinLength] = useState(8);
+  const [maxLength, setMaxLength] = useState(64);
+
+  return (
+    <VStack gap={3}>
+      <Label>Range Slider with Number Inputs</Label>
+      <VStack gap={2}>
+        <div className="flex items-center gap-2 w-1/2 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-md px-4 py-2">
+          <NumberInput
+            value={minLength}
+            onChange={(val) => {
+              if (val < maxLength) {
+                setMinLength(val);
+              }
+            }}
+            min={6}
+            max={maxLength - 1}
+            step={1}
+            className="w-[80px]"
+          />
+          <div className="flex-1">
+            <RangeSlider
+              value={[minLength, maxLength]}
+              onChange={([min, max]) => {
+                setMinLength(min);
+                setMaxLength(max);
+              }}
+              min={6}
+              max={128}
+              step={1}
+            />
+          </div>
+          <NumberInput
+            value={maxLength}
+            onChange={(val) => {
+              if (val > minLength) {
+                setMaxLength(val);
+              }
+            }}
+            min={minLength + 1}
+            max={128}
+            step={1}
+            className="w-[80px]"
+          />
+        </div>
+        <p className="text-[11px] leading-4 text-[var(--color-text-subtle)]">
+          6 - 128 / Maximum length must be greater than or equal to the minimum length.
+        </p>
+      </VStack>
+    </VStack>
+  );
+}
+
+/* ----------------------------------------
    Modal Demo (with state)
    ---------------------------------------- */
 
@@ -1636,7 +1797,7 @@ function BarChartDemo({ variant }: { variant: 'vertical' | 'horizontal' | 'group
 
   return (
     <div className="w-full bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-md)] p-4">
-      <ReactECharts option={getOption()} style={{ height: variant === 'horizontal' ? '250px' : '200px' }} notMerge={true} />
+      <ReactECharts option={getOption()} style={{ height: variant === 'horizontal' ? '250px' : '200px' }} notMerge={true} opts={{ devicePixelRatio: window.devicePixelRatio }} />
       {variant === 'grouped' && (
         <div className="flex gap-4 mt-2 justify-start">
           <div className="flex items-center gap-1.5">
@@ -2150,7 +2311,7 @@ function LineChart({
       {/* Chart Body */}
       <div className="chartBody">
         <div className="chartWrapper">
-          <ReactECharts option={option} style={{ height: '100%', width: '100%' }} notMerge={true} />
+          <ReactECharts option={option} style={{ height: '100%', width: '100%' }} notMerge={true} opts={{ devicePixelRatio: window.devicePixelRatio }} />
         </div>
         <div className="chartLegend">
           {series.map((s, i) => (
@@ -2252,23 +2413,19 @@ function ChartWithFullScreen({
 // QuotaBarDemo Component
 function QuotaBarDemo({ label, used, total, unit }: { label: string; used: number; total: number; unit: string }) {
   const percentage = Math.round((used / total) * 100);
-  const remaining = total - used;
   
   const getColors = () => {
     if (percentage >= 100) return {
       bg: 'bg-[var(--color-status-error)]/15',
-      text: 'text-[var(--color-status-error)]',
-      bar: 'bg-[var(--color-text-default)]'
+      text: 'text-[var(--color-status-error)]'
     };
     if (percentage >= 70) return {
       bg: 'bg-[var(--color-status-warning)]/15',
-      text: 'text-[var(--color-status-warning)]',
-      bar: 'bg-[var(--color-text-default)]'
+      text: 'text-[var(--color-status-warning)]'
     };
     return {
       bg: 'bg-[var(--color-status-success)]/15',
-      text: 'text-[var(--color-status-success)]',
-      bar: 'bg-[var(--color-text-default)]'
+      text: 'text-[var(--color-status-success)]'
     };
   };
   
@@ -2286,13 +2443,20 @@ function QuotaBarDemo({ label, used, total, unit }: { label: string; used: numbe
         </div>
       </div>
       <Tooltip 
-        content={`Used: ${used} ${unit}\nRemaining: ${remaining} ${unit}\nTotal: ${total} ${unit}`}
+        content={
+          <div className="flex flex-col gap-1">
+            <div className="flex items-center gap-2">
+              <span className="w-2 h-2 rounded-full bg-[var(--color-text-muted)]" />
+              <span>Used: {used}</span>
+            </div>
+          </div>
+        }
         position="top"
       >
         <div className="w-full">
           <div className="h-1 rounded-sm bg-[var(--color-surface-muted)] overflow-hidden cursor-pointer">
             <div 
-              className={`h-full rounded-sm ${colors.bar} transition-all`}
+              className="h-full rounded-sm bg-[var(--color-text-muted)] transition-all"
               style={{ width: `${Math.min(percentage, 100)}%` }}
             />
           </div>
@@ -2456,7 +2620,7 @@ function PieChartDemo({
     <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] p-5 flex flex-col gap-4 w-[280px]">
       <span className="text-[length:var(--font-size-13)] font-medium text-[var(--color-text-default)]">{title}</span>
       <div className="flex justify-center">
-        <ReactECharts option={getOption()} style={{ height: '180px', width: '180px' }} />
+        <ReactECharts option={getOption()} style={{ height: '180px', width: '180px' }} opts={{ devicePixelRatio: window.devicePixelRatio }} />
       </div>
       <div className="flex flex-wrap items-center gap-x-4 gap-y-2 justify-center max-h-[60px] overflow-y-auto legend-scroll">
         {legendData.map((item, i) => (
@@ -2547,7 +2711,7 @@ function DoughnutChartDemo({
     <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] p-5 flex flex-col gap-4 w-[280px]">
       <span className="text-[length:var(--font-size-13)] font-medium text-[var(--color-text-default)]">{title}</span>
       <div className="flex justify-center">
-        <ReactECharts option={getOption()} style={{ height: '180px', width: '180px' }} />
+        <ReactECharts option={getOption()} style={{ height: '180px', width: '180px' }} opts={{ devicePixelRatio: window.devicePixelRatio }} />
       </div>
     </div>
   );
@@ -2679,7 +2843,7 @@ function HalfDoughnutChartDemo({ value, label, status = 'default', used, total, 
       onMouseLeave={handleMouseLeave}
     >
       <div className="relative">
-        <ReactECharts option={getOption()} style={{ height: '160px', width: '180px' }} />
+        <ReactECharts option={getOption()} style={{ height: '160px', width: '180px' }} opts={{ devicePixelRatio: window.devicePixelRatio }} />
       </div>
       <div className="absolute inset-0 flex flex-col items-center justify-center pt-8 pointer-events-none">
         <span className="text-[24px] leading-[28px] font-semibold text-[var(--color-text-default)]">{value}%</span>
@@ -2791,7 +2955,7 @@ function SingleValueDoughnutDemo({
   return (
     <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] p-4">
       <h4 className="text-[13px] font-medium text-[var(--color-text-default)] mb-2">{title}</h4>
-      <ReactECharts option={getOption()} style={{ height: '180px', width: '200px' }} />
+      <ReactECharts option={getOption()} style={{ height: '180px', width: '200px' }} opts={{ devicePixelRatio: window.devicePixelRatio }} />
     </div>
   );
 }
@@ -2938,34 +3102,6 @@ function TabBarDemo() {
             showAddButton={false}
           />
         </div>
-      </VStack>
-
-      {/* Many Tabs (Scroll) */}
-      <VStack gap={3}>
-        <Label>Many Tabs (with scroll navigation)</Label>
-        <div className="w-full border border-[var(--color-border-default)] rounded-[var(--radius-md)] overflow-hidden">
-          <TabBar
-            tabs={[
-              { id: 'tab-1', label: 'Entry page', closable: true },
-              { id: 'tab-2', label: 'Analytics', closable: true },
-              { id: 'tab-3', label: 'Reports', closable: true },
-              { id: 'tab-4', label: 'Users', closable: true },
-              { id: 'tab-5', label: 'Settings', closable: true },
-              { id: 'tab-6', label: 'Notifications', closable: true },
-              { id: 'tab-7', label: 'Integrations', closable: true },
-              { id: 'tab-8', label: 'Security', closable: true },
-              { id: 'tab-9', label: 'Billing', closable: true },
-              { id: 'tab-10', label: 'Support', closable: true },
-            ]}
-            activeTab="tab-1"
-            onTabChange={() => {}}
-            onTabClose={() => {}}
-            showAddButton={false}
-          />
-        </div>
-        <p className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
-          When tabs overflow, use arrow buttons to scroll left/right
-        </p>
       </VStack>
     </VStack>
   );
@@ -4634,7 +4770,6 @@ outline: 2px solid var(--color-border-focus);`}
                     <Button size="sm" variant="ghost">Ghost</Button>
                     <Button size="sm" variant="muted">Muted</Button>
                     <Button size="sm" variant="danger">Danger</Button>
-                    <Button size="sm" variant="warning">Warning</Button>
                     <Button size="sm" variant="link">Link</Button>
                   </div>
                 </VStack>
@@ -5043,27 +5178,10 @@ outline: 2px solid var(--color-border-focus);`}
                 </VStack>
 
                 {/* With Value Display */}
-                <VStack gap={3}>
-                  <Label>With Value Display</Label>
-                  <div className="w-[312px]">
-                    <Slider defaultValue={50} showValue />
-                  </div>
-                </VStack>
+                <SliderWithNumberInputDemo />
 
                 {/* Custom Range */}
-                <VStack gap={3}>
-                  <Label>Custom Range (0-1000 GB)</Label>
-                  <div className="w-[312px]">
-                    <Slider 
-                      min={0} 
-                      max={1000} 
-                      step={50} 
-                      defaultValue={250} 
-                      showValue 
-                      formatValue={(v) => `${v} GB`}
-                    />
-                  </div>
-                </VStack>
+                <SliderWithCustomRangeDemo />
 
                 {/* States */}
                 <VStack gap={3}>
@@ -5083,6 +5201,9 @@ outline: 2px solid var(--color-border-focus);`}
                     </VStack>
                   </div>
                 </VStack>
+
+                {/* Range Slider with Number Inputs */}
+                <RangeSliderDemo />
               </VStack>
             </Section>
 
@@ -5321,131 +5442,6 @@ outline: 2px solid var(--color-border-focus);`}
                   <p className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
                     When rows are selected in a table, the pagination shows "X selected / Y items" format.
                   </p>
-                </VStack>
-              </VStack>
-            </Section>
-
-            {/* ProgressBar Component */}
-            <Section id="progress-bar" title="Progress bar" description="Visual indicator for quota usage and progress with status-based colors">
-              <VStack gap={8}>
-                {/* Tokens */}
-                <VStack gap={3}>
-                  <Label>Design tokens</Label>
-                  <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
-                    <code>height: 4px</code> · <code>radius: pill</code>
-                  </div>
-                </VStack>
-
-                {/* Quota Variant - Status Examples */}
-                <VStack gap={3}>
-                  <Label>Quota Variant - Status Based Colors</Label>
-                  <div className="w-[280px] flex flex-col gap-4 p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-subtle)] rounded-[var(--radius-lg)]">
-                    {/* 1. Normal (under 70%) - Green */}
-                    <ProgressBar
-                      variant="quota"
-                      label="Instance"
-                      value={2}
-                      newValue={0}
-                      max={10}
-                    />
-
-                    {/* 2. Warning (70-100%) - Orange */}
-                    <ProgressBar
-                      variant="quota"
-                      label="Instance"
-                      value={8}
-                      newValue={2}
-                      max={10}
-                    />
-
-                    {/* 3. Used < 70% but total >= 70% - Green + Orange */}
-                    <ProgressBar
-                      variant="quota"
-                      label="Instance"
-                      value={5}
-                      newValue={2}
-                      max={10}
-                    />
-
-                    {/* 4. Total exceeds 100% - Red */}
-                    <ProgressBar
-                      variant="quota"
-                      label="Instance"
-                      value={8}
-                      newValue={5}
-                      max={10}
-                    />
-
-                    {/* 5. Already over quota - Red */}
-                    <ProgressBar
-                      variant="quota"
-                      label="Instance"
-                      value={10}
-                      newValue={0}
-                      max={10}
-                    />
-
-                    {/* 6. Unlimited - Gray */}
-                    <ProgressBar
-                      variant="quota"
-                      label="Instance"
-                      value={10}
-                      newValue={0}
-                    />
-                  </div>
-                </VStack>
-
-                {/* Default Variant - Simple Progress */}
-                <VStack gap={3}>
-                  <Label>Default Variant - Simple Progress</Label>
-                  <div className="w-[280px] flex flex-col gap-4 p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-md)]">
-                    <ProgressBar
-                      label="60 MB (75%)"
-                      value={75}
-                      max={100}
-                      statusText="chunking"
-                      showValue={false}
-                    />
-                  </div>
-                </VStack>
-
-                {/* Error State */}
-                <VStack gap={3}>
-                  <Label>Error state</Label>
-                  <div className="w-[280px] flex flex-col gap-4 p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-md)]">
-                    <ProgressBar
-                      label="60 MB (75%)"
-                      value={75}
-                      max={100}
-                      statusText="error"
-                      showValue={false}
-                      error
-                      errorMessage="Upload failed: Network error"
-                    />
-                  </div>
-                </VStack>
-
-                {/* Color Legend */}
-                <VStack gap={3}>
-                  <Label>Status colors</Label>
-                  <div className="flex flex-wrap gap-4">
-                    <div className="flex items-center gap-2">
-                      <div className="w-4 h-4 rounded bg-[var(--color-state-success-default)]" />
-                      <span className="text-[length:var(--font-size-11)] text-[var(--color-text-muted)]">0% ~ 70%: Normal</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <div className="w-4 h-4 rounded bg-[var(--color-state-warning-default)]" />
-                      <span className="text-[length:var(--font-size-11)] text-[var(--color-text-muted)]">70% ~ 100%: Warning</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <div className="w-4 h-4 rounded bg-[var(--color-state-error-default)]" />
-                      <span className="text-[length:var(--font-size-11)] text-[var(--color-text-muted)]">&gt;100%: Danger</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <div className="w-4 h-4 rounded bg-[var(--color-border-default)]" />
-                      <span className="text-[length:var(--font-size-11)] text-[var(--color-text-muted)]">Unlimited: Neutral</span>
-                    </div>
-                  </div>
                 </VStack>
               </VStack>
             </Section>
@@ -5792,15 +5788,7 @@ outline: 2px solid var(--color-border-focus);`}
                           ]}
                         />
                       }
-                      actions={
-                        <>
-                          <TopBarAction
-                            icon={<IconBell size={16} stroke={1.5} />}
-                            aria-label="Notifications"
-                            onClick={() => console.log('Notifications')}
-                          />
-                        </>
-                      }
+                      actions={<></>}
                     />
                   </div>
                 </VStack>
@@ -5866,36 +5854,9 @@ outline: 2px solid var(--color-border-focus);`}
                       </Tabs>
                     </VStack>
                     <VStack gap={2}>
-                      <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">Boxed</span>
-                      <Tabs defaultValue="left" variant="boxed" size="sm">
-                        <TabList>
-                          <Tab value="left">left</Tab>
-                          <Tab value="right">right</Tab>
-                        </TabList>
-                      </Tabs>
+                      <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">Capsule tab</span>
+                      <CapsuleTabDemo />
                     </VStack>
-                  </VStack>
-                </VStack>
-
-                {/* Boxed - Multiple Items */}
-                <VStack gap={3}>
-                  <Label>Boxed - Multiple Items</Label>
-                  <VStack gap={4}>
-                    <Tabs defaultValue="tab1" variant="boxed" size="sm">
-                      <TabList>
-                        <Tab value="tab1">Tab 1</Tab>
-                        <Tab value="tab2">Tab 2</Tab>
-                        <Tab value="tab3">Tab 3</Tab>
-                      </TabList>
-                    </Tabs>
-                    <Tabs defaultValue="tab1" variant="boxed" size="sm">
-                      <TabList>
-                        <Tab value="tab1">Tab 1</Tab>
-                        <Tab value="tab2">Tab 2</Tab>
-                        <Tab value="tab3">Tab 3</Tab>
-                        <Tab value="tab4">Tab 4</Tab>
-                      </TabList>
-                    </Tabs>
                   </VStack>
                 </VStack>
 
@@ -6189,18 +6150,26 @@ outline: 2px solid var(--color-border-focus);`}
                 {/* With Dot */}
                 <VStack gap={3}>
                   <Label>With Dot Indicator</Label>
-                  <div className="flex gap-3 items-center">
-                    <Badge size="sm" theme="green" dot>Running</Badge>
-                    <Badge size="sm" theme="red" dot>Stopped</Badge>
-                    <Badge size="sm" theme="yellow" dot>Pending</Badge>
-                    <Badge size="sm" theme="gray" dot>Unknown</Badge>
-                  </div>
-                  <div className="flex gap-3 items-center">
-                    <Badge size="sm" type="subtle" theme="green" dot>Running</Badge>
-                    <Badge size="sm" type="subtle" theme="red" dot>Stopped</Badge>
-                    <Badge size="sm" type="subtle" theme="yellow" dot>Pending</Badge>
-                    <Badge size="sm" type="subtle" theme="gray" dot>Unknown</Badge>
-                  </div>
+                  <VStack gap={4}>
+                    <VStack gap={2}>
+                      <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">Solid</span>
+                      <div className="flex gap-3 items-center">
+                        <Badge size="sm" theme="green">Running</Badge>
+                        <Badge size="sm" theme="red">Stopped</Badge>
+                        <Badge size="sm" theme="yellow">Warning</Badge>
+                        <Badge size="sm" theme="gray">Unknown</Badge>
+                      </div>
+                    </VStack>
+                    <VStack gap={2}>
+                      <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">Subtle (15% opacity)</span>
+                      <div className="flex gap-3 items-center">
+                        <span className="inline-flex items-center px-1.5 py-0.5 rounded-md bg-[var(--color-state-success)]/15 text-[11px] font-medium text-[var(--color-state-success)]">Running</span>
+                        <span className="inline-flex items-center px-1.5 py-0.5 rounded-md bg-[var(--color-state-danger)]/15 text-[11px] font-medium text-[var(--color-state-danger)]">Stopped</span>
+                        <span className="inline-flex items-center px-1.5 py-0.5 rounded-md bg-[var(--color-state-warning)]/15 text-[11px] font-medium text-[var(--color-state-warning)]">Warning</span>
+                        <span className="inline-flex items-center px-1.5 py-0.5 rounded-md bg-[var(--color-text-muted)]/15 text-[11px] font-medium text-[var(--color-text-muted)]">Unknown</span>
+                      </div>
+                    </VStack>
+                  </VStack>
                 </VStack>
               </VStack>
             </Section>
@@ -6281,49 +6250,50 @@ outline: 2px solid var(--color-border-focus);`}
 
                 {/* All status Types by Category */}
                 <VStack gap={3}>
-                  <Label>Success (Green)</Label>
+                  <Label>Active</Label>
                   <div className="flex flex-wrap gap-3 items-center">
-                    <StatusIndicator status="active" />
+                    <Tooltip content="active"><StatusIndicator status="active" /></Tooltip>
                   </div>
                 </VStack>
 
                 <VStack gap={3}>
-                  <Label>Danger (Red)</Label>
+                  <Label>Error</Label>
                   <div className="flex flex-wrap gap-3 items-center">
-                    <StatusIndicator status="error" />
+                    <Tooltip content="error"><StatusIndicator status="error" /></Tooltip>
                   </div>
                 </VStack>
 
                 <VStack gap={3}>
-                  <Label>Info (Blue)</Label>
+                  <Label>Action</Label>
                   <div className="flex flex-wrap gap-3 items-center">
-                    <StatusIndicator status="building" />
+                    <Tooltip content="building"><StatusIndicator status="building" /></Tooltip>
+                    <Tooltip content="deleting"><StatusIndicator status="deleting" /></Tooltip>
                   </div>
                 </VStack>
 
                 <VStack gap={3}>
                   <Label>Warning (Orange)</Label>
                   <div className="flex flex-wrap gap-3 items-center">
-                    <StatusIndicator status="verify-resized" />
-                    <StatusIndicator status="degraded" />
-                    <StatusIndicator status="no-monitor" />
+                    <Tooltip content="verify-resized"><StatusIndicator status="verify-resized" /></Tooltip>
+                    <Tooltip content="degraded"><StatusIndicator status="degraded" /></Tooltip>
+                    <Tooltip content="no-monitor"><StatusIndicator status="no-monitor" /></Tooltip>
                   </div>
                 </VStack>
 
                 <VStack gap={3}>
                   <Label>Muted (Gray)</Label>
                   <div className="flex flex-wrap gap-3 items-center">
-                    <StatusIndicator status="suspended" />
-                    <StatusIndicator status="shelved-offloaded" />
-                    <StatusIndicator status="mounted" />
-                    <StatusIndicator status="shutoff" />
-                    <StatusIndicator status="paused" />
-                    <StatusIndicator status="pending" />
-                    <StatusIndicator status="draft" />
-                    <StatusIndicator status="deactivated" />
-                    <StatusIndicator status="in-use" />
-                    <StatusIndicator status="maintenance" />
-                    <StatusIndicator status="down" />
+                    <Tooltip content="suspended"><StatusIndicator status="suspended" /></Tooltip>
+                    <Tooltip content="shelved-offloaded"><StatusIndicator status="shelved-offloaded" /></Tooltip>
+                    <Tooltip content="mounted"><StatusIndicator status="mounted" /></Tooltip>
+                    <Tooltip content="shutoff"><StatusIndicator status="shutoff" /></Tooltip>
+                    <Tooltip content="paused"><StatusIndicator status="paused" /></Tooltip>
+                    <Tooltip content="pending"><StatusIndicator status="pending" /></Tooltip>
+                    <Tooltip content="draft"><StatusIndicator status="draft" /></Tooltip>
+                    <Tooltip content="deactivated"><StatusIndicator status="deactivated" /></Tooltip>
+                    <Tooltip content="in-use"><StatusIndicator status="in-use" /></Tooltip>
+                    <Tooltip content="maintenance"><StatusIndicator status="maintenance" /></Tooltip>
+                    <Tooltip content="down"><StatusIndicator status="down" /></Tooltip>
                   </div>
                 </VStack>
 
@@ -6331,51 +6301,52 @@ outline: 2px solid var(--color-border-focus);`}
                 <VStack gap={3}>
                   <Label>Icon Only - All status Types</Label>
                   <VStack gap={4}>
-                    {/* Success */}
+                    {/* Active */}
                     <VStack gap={2}>
-                      <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">Success (Green)</span>
+                      <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">Active</span>
                       <div className="flex flex-wrap gap-2 items-center">
-                        <StatusIndicator status="active" layout="icon-only" />
+                        <Tooltip content="active"><StatusIndicator status="active" layout="icon-only" /></Tooltip>
                       </div>
                     </VStack>
-                    {/* Danger */}
+                    {/* Error */}
                     <VStack gap={2}>
-                      <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">Danger (Red)</span>
+                      <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">Error</span>
                       <div className="flex flex-wrap gap-2 items-center">
-                        <StatusIndicator status="error" layout="icon-only" />
+                        <Tooltip content="error"><StatusIndicator status="error" layout="icon-only" /></Tooltip>
                       </div>
                     </VStack>
-                    {/* Info */}
+                    {/* Action */}
                     <VStack gap={2}>
-                      <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">Info (Blue)</span>
+                      <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">Action</span>
                       <div className="flex flex-wrap gap-2 items-center">
-                        <StatusIndicator status="building" layout="icon-only" />
+                        <Tooltip content="building"><StatusIndicator status="building" layout="icon-only" /></Tooltip>
+                        <Tooltip content="deleting"><StatusIndicator status="deleting" layout="icon-only" /></Tooltip>
                       </div>
                     </VStack>
                     {/* Warning */}
                     <VStack gap={2}>
-                      <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">Warning (Orange)</span>
+                      <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">Warning</span>
                       <div className="flex flex-wrap gap-2 items-center">
-                        <StatusIndicator status="verify-resized" layout="icon-only" />
-                        <StatusIndicator status="degraded" layout="icon-only" />
-                        <StatusIndicator status="no-monitor" layout="icon-only" />
+                        <Tooltip content="verify-resized"><StatusIndicator status="verify-resized" layout="icon-only" /></Tooltip>
+                        <Tooltip content="degraded"><StatusIndicator status="degraded" layout="icon-only" /></Tooltip>
+                        <Tooltip content="no-monitor"><StatusIndicator status="no-monitor" layout="icon-only" /></Tooltip>
                       </div>
                     </VStack>
                     {/* Muted */}
                     <VStack gap={2}>
-                      <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">Muted (Gray)</span>
+                      <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">Muted</span>
                       <div className="flex flex-wrap gap-2 items-center">
-                        <StatusIndicator status="suspended" layout="icon-only" />
-                        <StatusIndicator status="shelved-offloaded" layout="icon-only" />
-                        <StatusIndicator status="mounted" layout="icon-only" />
-                        <StatusIndicator status="shutoff" layout="icon-only" />
-                        <StatusIndicator status="paused" layout="icon-only" />
-                        <StatusIndicator status="pending" layout="icon-only" />
-                        <StatusIndicator status="draft" layout="icon-only" />
-                        <StatusIndicator status="deactivated" layout="icon-only" />
-                        <StatusIndicator status="in-use" layout="icon-only" />
-                        <StatusIndicator status="maintenance" layout="icon-only" />
-                        <StatusIndicator status="down" layout="icon-only" />
+                        <Tooltip content="suspended"><StatusIndicator status="suspended" layout="icon-only" /></Tooltip>
+                        <Tooltip content="shelved-offloaded"><StatusIndicator status="shelved-offloaded" layout="icon-only" /></Tooltip>
+                        <Tooltip content="mounted"><StatusIndicator status="mounted" layout="icon-only" /></Tooltip>
+                        <Tooltip content="shutoff"><StatusIndicator status="shutoff" layout="icon-only" /></Tooltip>
+                        <Tooltip content="paused"><StatusIndicator status="paused" layout="icon-only" /></Tooltip>
+                        <Tooltip content="pending"><StatusIndicator status="pending" layout="icon-only" /></Tooltip>
+                        <Tooltip content="draft"><StatusIndicator status="draft" layout="icon-only" /></Tooltip>
+                        <Tooltip content="deactivated"><StatusIndicator status="deactivated" layout="icon-only" /></Tooltip>
+                        <Tooltip content="in-use"><StatusIndicator status="in-use" layout="icon-only" /></Tooltip>
+                        <Tooltip content="maintenance"><StatusIndicator status="maintenance" layout="icon-only" /></Tooltip>
+                        <Tooltip content="down"><StatusIndicator status="down" layout="icon-only" /></Tooltip>
                       </div>
                     </VStack>
                   </VStack>
@@ -7450,19 +7421,129 @@ outline: 2px solid var(--color-border-focus);`}
                 ============================================ */}
 
             {/* Bar chart */}
-            <Section id="bar-chart" title="Bar chart" description="Categorical data comparison with vertical or horizontal bars">
+            <Section id="bar-chart" title="Bar chart" description="Visual indicator for quota usage and progress with status-based colors">
               <VStack gap={8}>
-                {/* Design Tokens */}
+                {/* Tokens */}
                 <VStack gap={3}>
                   <Label>Design tokens</Label>
                   <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
-                    <code>bar-height: 4px</code> · <code>bar-radius: 2px</code> · <code>row-gap: 22px</code> · <code>status-colors: success/warning/error</code>
+                    <code>height: 4px</code> · <code>radius: pill</code>
                   </div>
                 </VStack>
 
-                {/* Quota Bar */}
+                {/* Quota Variant - Status Examples */}
                 <VStack gap={3}>
-                  <Label>Quota bar</Label>
+                  <Label>Quota Variant - Status Based Colors</Label>
+                  <div className="w-[280px] flex flex-col gap-4 p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-subtle)] rounded-[var(--radius-lg)]">
+                    {/* 1. Normal (under 70%) - Green */}
+                    <ProgressBar
+                      variant="quota"
+                      label="Instance"
+                      value={2}
+                      newValue={0}
+                      max={10}
+                    />
+
+                    {/* 2. Warning (70-100%) - Orange */}
+                    <ProgressBar
+                      variant="quota"
+                      label="Instance"
+                      value={8}
+                      newValue={2}
+                      max={10}
+                    />
+
+                    {/* 3. Used < 70% but total >= 70% - Green + Orange */}
+                    <ProgressBar
+                      variant="quota"
+                      label="Instance"
+                      value={5}
+                      newValue={2}
+                      max={10}
+                    />
+
+                    {/* 4. Total exceeds 100% - Red */}
+                    <ProgressBar
+                      variant="quota"
+                      label="Instance"
+                      value={8}
+                      newValue={5}
+                      max={10}
+                    />
+
+                    {/* 5. Already over quota - Red */}
+                    <ProgressBar
+                      variant="quota"
+                      label="Instance"
+                      value={10}
+                      newValue={0}
+                      max={10}
+                    />
+
+                    {/* 6. Unlimited - Gray */}
+                    <ProgressBar
+                      variant="quota"
+                      label="Instance"
+                      value={10}
+                      newValue={0}
+                    />
+                  </div>
+                </VStack>
+
+                {/* Default Variant - Simple Progress */}
+                <VStack gap={3}>
+                  <Label>Default Variant - Simple Progress</Label>
+                  <div className="w-[280px] flex flex-col gap-4 p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-md)]">
+                    <ProgressBar
+                      label="60 MB (75%)"
+                      value={75}
+                      max={100}
+                      showValue={false}
+                    />
+                  </div>
+                </VStack>
+
+                {/* Error State */}
+                <VStack gap={3}>
+                  <Label>Error state</Label>
+                  <div className="w-[280px] flex flex-col gap-4 p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-md)]">
+                    <ProgressBar
+                      label="60 MB (75%)"
+                      value={75}
+                      max={100}
+                      showValue={false}
+                      error
+                      errorMessage="Upload failed: Network error"
+                    />
+                  </div>
+                </VStack>
+
+                {/* Color Legend */}
+                <VStack gap={3}>
+                  <Label>Status colors</Label>
+                  <div className="flex flex-wrap gap-4">
+                    <div className="flex items-center gap-2">
+                      <div className="w-4 h-4 rounded bg-[var(--color-state-success-default)]" />
+                      <span className="text-[length:var(--font-size-11)] text-[var(--color-text-muted)]">0% ~ 70%: Normal</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <div className="w-4 h-4 rounded bg-[var(--color-state-warning-default)]" />
+                      <span className="text-[length:var(--font-size-11)] text-[var(--color-text-muted)]">70% ~ 100%: Warning</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <div className="w-4 h-4 rounded bg-[var(--color-state-error-default)]" />
+                      <span className="text-[length:var(--font-size-11)] text-[var(--color-text-muted)]">&gt;100%: Danger</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <div className="w-4 h-4 rounded bg-[var(--color-border-default)]" />
+                      <span className="text-[length:var(--font-size-11)] text-[var(--color-text-muted)]">Unlimited: Neutral</span>
+                    </div>
+                  </div>
+                </VStack>
+
+                {/* Dashboard Only */}
+                <VStack gap={3}>
+                  <Label>Dashboard only</Label>
                   <div className="w-[288px] p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-2xl">
                     <div className="text-[11px] font-semibold text-[var(--color-text-muted)] tracking-wide mb-4">COMPUTE QUOTA</div>
                     <div className="space-y-[22px]">
