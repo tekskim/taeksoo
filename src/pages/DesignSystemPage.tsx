@@ -69,7 +69,6 @@ import {
   NotificationCenter,
   FloatingCard,
   Loading,
-  SNBMenuItem,
   WizardSection,
   WizardSummary,
   WizardSectionStatusIcon,
@@ -258,7 +257,6 @@ const formControlItems = [
   { id: 'pagination', label: 'Pagination', icon: IconProgress },
   { id: 'progress-bar', label: 'Progress bar', icon: IconProgress },
   { id: 'loading', label: 'Loading', icon: IconLoader2 },
-  { id: 'snb-menu-item', label: 'SNBMenuItem', icon: IconLayoutNavbar },
   { id: 'toggle', label: 'Toggle', icon: IconToggleRight },
   { id: 'checkbox', label: 'Checkbox', icon: IconSquareCheck },
   { id: 'radio', label: 'Radio', icon: IconCircle },
@@ -1058,7 +1056,7 @@ function DrawerDemo() {
 
       {/* Drawer with Footer */}
       <Button variant="outline" size="sm" onClick={() => setIsFormOpen(true)}>
-        With Footer
+        With button
       </Button>
       <Drawer
         isOpen={isFormOpen}
@@ -3943,8 +3941,8 @@ export function DesignSystemPage() {
                 {/* Border Styles */}
                 <VStack gap={4}>
                   <Label>Border styles</Label>
-                  <div className="grid grid-cols-3 md:grid-cols-5 gap-4">
-                    {['solid', 'dashed', 'dotted', 'double', 'none'].map((style) => (
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    {['solid', 'dashed', 'dotted', 'none'].map((style) => (
                       <div key={style} className="flex flex-col gap-2 items-center">
                         <div
                           className="w-full h-12 rounded-[var(--radius-md)] bg-[var(--color-surface-default)]"
@@ -3969,10 +3967,6 @@ export function DesignSystemPage() {
                     <div className="p-4 rounded-[var(--radius-lg)] border-2 border-[var(--color-border-strong)] bg-[var(--color-surface-default)]">
                       <p className="text-[length:var(--font-size-12)] text-[var(--color-text-default)] mb-2">Card with strong border</p>
                       <code className="text-[length:var(--font-size-10)] text-[var(--color-text-muted)]">border-2 border-[var(--color-border-strong)]</code>
-                    </div>
-                    <div className="p-4 rounded-[var(--radius-lg)] border-l-4 border-[var(--color-action-primary)] bg-[var(--color-surface-default)]">
-                      <p className="text-[length:var(--font-size-12)] text-[var(--color-text-default)] mb-2">Accent left border</p>
-                      <code className="text-[length:var(--font-size-10)] text-[var(--color-text-muted)]">border-l-4 border-[var(--color-action-primary)]</code>
                     </div>
                     <div className="p-4 rounded-[var(--radius-lg)] border border-dashed border-[var(--color-border-default)] bg-[var(--color-surface-default)]">
                       <p className="text-[length:var(--font-size-12)] text-[var(--color-text-default)] mb-2">Dashed border (dropzone)</p>
@@ -4404,7 +4398,7 @@ outline: 2px solid var(--color-border-focus);`}
                       <Input size="sm" placeholder="Input placeholder" className="w-[200px]" />
                     </VStack>
                     <VStack gap={1}>
-                      <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">MD (32px)</span>
+                      <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">MD (28px)</span>
                       <Input size="md" placeholder="Input placeholder" className="w-[200px]" />
                     </VStack>
                   </div>
@@ -4477,7 +4471,7 @@ outline: 2px solid var(--color-border-focus);`}
                       <SearchInput size="sm" placeholder="Search placeholder" className="w-[200px]" />
                     </VStack>
                     <VStack gap={1}>
-                      <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">MD (32px)</span>
+                      <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">MD (28px)</span>
                       <SearchInput size="md" placeholder="Search placeholder" className="w-[200px]" />
                     </VStack>
                   </div>
@@ -5217,80 +5211,6 @@ outline: 2px solid var(--color-border-focus);`}
               </VStack>
             </Section>
 
-            {/* SNBMenuItem Component */}
-            <Section id="snb-menu-item" title="SNBMenuItem" description="Side Navigation Bar Menu Item with default, hover, and selected states">
-              <VStack gap={8}>
-                {/* Design Tokens */}
-                <VStack gap={3}>
-                  <Label>Design tokens</Label>
-                  <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
-                    <code>size: 38×38px</code> · <code>padding: 8px 6px</code> · <code>radius: 8px</code> · <code>icon: 22px</code>
-                  </div>
-                </VStack>
-
-                {/* Status Variants */}
-                <VStack gap={3}>
-                  <Label>Status variants</Label>
-                  <div className="flex gap-8 items-center p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-subtle)] rounded-[var(--radius-lg)]">
-                    <VStack gap={2} align="center">
-                      <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">Default</span>
-                      <SNBMenuItem status="default">
-                        <IconBoxMultiple size={22} stroke={1} />
-                      </SNBMenuItem>
-                    </VStack>
-                    <VStack gap={2} align="center">
-                      <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">Hover</span>
-                      <SNBMenuItem status="hover">
-                        <IconBoxMultiple size={22} stroke={1} />
-                      </SNBMenuItem>
-                    </VStack>
-                    <VStack gap={2} align="center">
-                      <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">Selected</span>
-                      <SNBMenuItem status="selected">
-                        <IconBoxMultiple size={22} stroke={1} />
-                      </SNBMenuItem>
-                    </VStack>
-                  </div>
-                </VStack>
-
-                {/* Type Variants */}
-                <VStack gap={3}>
-                  <Label>Type variants</Label>
-                  <div className="flex gap-8 items-center p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-subtle)] rounded-[var(--radius-lg)]">
-                    <VStack gap={2} align="center">
-                      <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">Icon (Default)</span>
-                      <SNBMenuItem isSelected>
-                        <IconBoxMultiple size={22} stroke={1} />
-                      </SNBMenuItem>
-                    </VStack>
-                    <VStack gap={2} align="center">
-                      <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">Icon (Selected)</span>
-                      <SNBMenuItem type="text" text="P" status="selected" />
-                    </VStack>
-                  </div>
-                </VStack>
-
-                {/* Interactive Demo */}
-                <VStack gap={3}>
-                  <Label>Interactive Demo (Hover to see effect)</Label>
-                  <div className="flex gap-2 p-4 bg-[var(--color-surface-subtle)] border border-[var(--color-border-subtle)] rounded-[var(--radius-lg)]">
-                    <SNBMenuItem>
-                      <IconHome size={22} stroke={1} />
-                    </SNBMenuItem>
-                    <SNBMenuItem isSelected>
-                      <IconBoxMultiple size={22} stroke={1} />
-                    </SNBMenuItem>
-                    <SNBMenuItem>
-                      <IconDatabase size={22} stroke={1} />
-                    </SNBMenuItem>
-                    <SNBMenuItem>
-                      <IconSettings size={22} stroke={1} />
-                    </SNBMenuItem>
-                  </div>
-                </VStack>
-              </VStack>
-            </Section>
-
             {/* Toggle Component */}
             <Section id="toggle" title="Toggle" description="On/Off switch control for binary settings">
               <VStack gap={8}>
@@ -5584,11 +5504,6 @@ outline: 2px solid var(--color-border-focus);`}
                             aria-label="Notifications"
                             onClick={() => console.log('Notifications')}
                           />
-                          <TopBarAction
-                            icon={<IconUser size={16} stroke={1.5} />}
-                            aria-label="Profile"
-                            onClick={() => console.log('Profile')}
-                          />
                         </>
                       }
                     />
@@ -5623,38 +5538,12 @@ outline: 2px solid var(--color-border-focus);`}
                             aria-label="Notifications"
                             badge
                           />
-                          <TopBarAction
-                            icon={<IconSettings size={16} stroke={1.5} />}
-                            aria-label="Settings"
-                          />
                         </>
                       }
                     />
                   </div>
                 </VStack>
 
-                {/* Minimal */}
-                <VStack gap={3}>
-                  <Label>Minimal (No Navigation)</Label>
-                  <div className="w-full border border-[var(--color-border-default)] rounded-[var(--radius-md)] overflow-hidden">
-                    <TopBar
-                      showNavigation={false}
-                      breadcrumb={
-                        <Breadcrumb
-                          items={[
-                            { label: 'Settings' },
-                          ]}
-                        />
-                      }
-                      actions={
-                        <TopBarAction
-                          icon={<IconHelp size={16} stroke={1.5} />}
-                          aria-label="Help"
-                        />
-                      }
-                    />
-                  </div>
-                </VStack>
               </VStack>
             </Section>
 
@@ -6677,15 +6566,6 @@ outline: 2px solid var(--color-border-focus);`}
                   <ModalDemo variant="delete" />
                 </VStack>
 
-                {/* Sizes */}
-                <VStack gap={3}>
-                  <Label>Sizes</Label>
-                  <div className="flex gap-2">
-                    <ModalDemo variant="size-sm" />
-                    <ModalDemo variant="size-md" />
-                    <ModalDemo variant="size-lg" />
-                  </div>
-                </VStack>
               </VStack>
             </Section>
 

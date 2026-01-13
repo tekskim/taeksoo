@@ -329,7 +329,6 @@ export function SettingsPage({ isOpen, onClose, initialTab = 'account' }: Settin
           onMouseDown={handleMouseDown}
         >
           <div className="flex items-center gap-2 text-[length:var(--font-size-14)] leading-[var(--line-height-20)] font-medium text-[var(--color-text-default)]">
-            <span>⚙️</span>
             <span>Settings</span>
           </div>
           <div className="window-controls">
@@ -448,7 +447,7 @@ export function SettingsPage({ isOpen, onClose, initialTab = 'account' }: Settin
 
                         {/* Verification Methods - Always visible */}
                         <div className="space-y-3 mt-4">
-                          <span className="text-[length:var(--font-size-12)] leading-[var(--line-height-16)] font-medium text-[var(--color-text-muted)]">Verification Methods</span>
+                          <span className="block text-[length:var(--font-size-12)] leading-[var(--line-height-16)] font-medium text-[var(--color-text-muted)] mb-3">Verification Methods</span>
                           
                           {/* Authenticator App */}
                           <div className="flex items-center justify-between p-4 border border-[var(--color-border-default)] rounded-lg bg-[var(--color-surface-subtle)]">
