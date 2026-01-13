@@ -28,6 +28,10 @@ import {
   Chip,
   FormField,
   Toggle,
+  IconUbuntu,
+  IconGrid,
+  IconRocky,
+  InlineMessage,
 } from '@/design-system';
 import type { TableColumn } from '@/design-system/components/Table/Table';
 import { Sidebar } from '@/components/Sidebar';
@@ -36,8 +40,6 @@ import { useSidebar } from '@/contexts/SidebarContext';
 import {
   IconAlertCircle,
   IconBell,
-  IconBrandUbuntu,
-  IconBrandWindows,
   IconCaretDownFilled,
   IconCaretRightFilled,
   IconCheck,
@@ -46,7 +48,6 @@ import {
   IconEdit,
   IconExclamationMark,
   IconExternalLink,
-  IconMountain,
   IconPlus,
   IconProgress,
   IconStar,
@@ -475,6 +476,31 @@ function TemplateInformationSection({
   onEditCancel,
   onEditDone,
 }: TemplateInformationSectionProps) {
+  const [templateNameError, setTemplateNameError] = useState<string | null>(null);
+
+  const handleNameChange = (value: string) => {
+    onTemplateNameChange(value);
+    if (value.trim()) setTemplateNameError(null);
+  };
+
+  const handleNextClick = () => {
+    if (!templateName.trim()) {
+      setTemplateNameError('Please enter a template name.');
+      return;
+    }
+    setTemplateNameError(null);
+    onNext();
+  };
+
+  const handleEditDone = () => {
+    if (!templateName.trim()) {
+      setTemplateNameError('Please enter a template name.');
+      return;
+    }
+    setTemplateNameError(null);
+    onEditDone?.();
+  };
+
   return (
     <SectionCard isActive={isActive}>
       <SectionCard.Header 
@@ -483,7 +509,7 @@ function TemplateInformationSection({
         actions={isEditing ? (
           <HStack gap={2}>
             <Button variant="secondary" size="sm" onClick={onEditCancel}>Cancel</Button>
-            <Button variant="primary" size="sm" onClick={onEditDone}>Done</Button>
+            <Button variant="primary" size="sm" onClick={handleEditDone}>Done</Button>
           </HStack>
         ) : undefined}
       />
@@ -493,12 +519,20 @@ function TemplateInformationSection({
           <span className="text-[length:var(--font-size-14)] font-medium leading-[var(--line-height-20)] text-[var(--color-text-default)]">
             Template name <span className="text-[var(--color-state-danger)]">*</span>
           </span>
-          <Input
-            placeholder="Enter instance template name"
-            value={templateName}
-            onChange={(e) => onTemplateNameChange(e.target.value)}
-            fullWidth
-          />
+          <VStack gap={1}>
+            <Input
+              placeholder="Enter instance template name"
+              value={templateName}
+              onChange={(e) => handleNameChange(e.target.value)}
+              fullWidth
+              error={!!templateNameError}
+            />
+            {templateNameError && (
+              <span className="text-[11px] leading-[var(--line-height-16)] text-[var(--color-state-danger)]">
+                {templateNameError}
+              </span>
+            )}
+          </VStack>
           <span className="text-[length:var(--font-size-12)] leading-[var(--line-height-16)] text-[var(--color-text-subtle)]">
             You can use letters, numbers, and special characters (+=,.@-_), and the length must be between 2-128 characters.
           </span>
@@ -534,7 +568,7 @@ function TemplateInformationSection({
 
         {!isEditing && (
           <HStack justify="end">
-            <Button variant="primary" onClick={onNext} disabled={!templateName.trim()}>
+            <Button variant="primary" onClick={handleNextClick}>
               Next
             </Button>
           </HStack>
@@ -658,6 +692,32 @@ function ImageSection({
   const [_dataDisks, setDataDisks] = useState<{ id: string; type: string; size: number }[]>([]);
   const itemsPerPage = 5;
 
+  // Validation error
+  const [imageError, setImageError] = useState<string | null>(null);
+
+  const handleSelectImage = (id: string) => {
+    onSelectImage(id);
+    setImageError(null);
+  };
+
+  const handleNextClick = () => {
+    if (!selectedImageId) {
+      setImageError('Please select an image.');
+      return;
+    }
+    setImageError(null);
+    onNext();
+  };
+
+  const handleEditDone = () => {
+    if (!selectedImageId) {
+      setImageError('Please select an image.');
+      return;
+    }
+    setImageError(null);
+    onEditDone?.();
+  };
+
   const filteredImages = mockImages.filter(img => {
     const matchesOs = osFilter === 'other' || img.os === osFilter;
     const matchesSearch = searchQuery === '' || 
@@ -686,7 +746,7 @@ function ImageSection({
           <Radio
             value={row.id}
             checked={selectedImageId === row.id}
-            onChange={() => onSelectImage(row.id)}
+            onChange={() => handleSelectImage(row.id)}
           />
         </div>
       ),
@@ -724,10 +784,10 @@ function ImageSection({
 
   // OS filter chip style - matches Figma design with container
   const osChipStyle = (active: boolean) => `
-    inline-flex items-center gap-1 justify-center px-0 py-2 rounded-[6px] cursor-pointer text-[11px] font-medium transition-colors w-[100px]
+    inline-flex items-center gap-1.5 px-3 py-2 rounded-[4px] cursor-pointer text-[12px] font-medium transition-colors
     ${active 
-      ? 'bg-white border border-[var(--color-border-default)] text-[var(--color-action-primary)]' 
-      : 'text-[var(--color-text-default)] hover:bg-[var(--color-surface-default)]'
+      ? 'bg-[var(--color-surface-default)] text-[var(--color-text-default)] shadow-sm' 
+      : 'bg-transparent text-[var(--color-text-muted)] hover:text-[var(--color-text-default)]'
     }
   `;
 
@@ -739,7 +799,7 @@ function ImageSection({
         actions={isEditing ? (
           <HStack gap={2}>
             <Button variant="secondary" size="sm" onClick={onEditCancel}>Cancel</Button>
-            <Button variant="primary" size="sm" onClick={onEditDone}>Done</Button>
+            <Button variant="primary" size="sm" onClick={handleEditDone}>Done</Button>
           </HStack>
         ) : undefined}
       />
@@ -766,36 +826,34 @@ function ImageSection({
             {/* OS Filter Chips Container - Only for Image tab */}
             {sourceTab === 'image' && (
               <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-1 inline-flex w-fit">
-                <HStack gap={2}>
-                  <button 
-                    className={osChipStyle(osFilter === 'other')}
-                    onClick={() => { setOsFilter('other'); setCurrentPage(1); }}
-                  >
-                    <IconDots size={14} />
-                    <span>Others</span>
-                  </button>
-                  <button 
-                    className={osChipStyle(osFilter === 'ubuntu')}
-                    onClick={() => { setOsFilter('ubuntu'); setCurrentPage(1); }}
-                  >
-                    <IconBrandUbuntu size={14} />
-                    <span>Ubuntu</span>
-                  </button>
-                  <button 
-                    className={osChipStyle(osFilter === 'windows')}
-                    onClick={() => { setOsFilter('windows'); setCurrentPage(1); }}
-                  >
-                    <IconBrandWindows size={14} />
-                    <span>Windows</span>
-                  </button>
-                  <button 
-                    className={osChipStyle(osFilter === 'rocky')}
-                    onClick={() => { setOsFilter('rocky'); setCurrentPage(1); }}
-                  >
-                    <IconMountain size={14} />
-                    <span>Rocky</span>
-                  </button>
-                </HStack>
+                <button 
+                  className={osChipStyle(osFilter === 'other')}
+                  onClick={() => { setOsFilter('other'); setCurrentPage(1); }}
+                >
+                  <IconDots size={14} />
+                  <span>Others</span>
+                </button>
+                <button 
+                  className={osChipStyle(osFilter === 'ubuntu')}
+                  onClick={() => { setOsFilter('ubuntu'); setCurrentPage(1); }}
+                >
+                  <IconUbuntu size={14} />
+                  <span>Ubuntu</span>
+                </button>
+                <button 
+                  className={osChipStyle(osFilter === 'windows')}
+                  onClick={() => { setOsFilter('windows'); setCurrentPage(1); }}
+                >
+                  <IconGrid size={14} />
+                  <span>Windows</span>
+                </button>
+                <button 
+                  className={osChipStyle(osFilter === 'rocky')}
+                  onClick={() => { setOsFilter('rocky'); setCurrentPage(1); }}
+                >
+                  <IconRocky size={14} />
+                  <span>Rocky</span>
+                </button>
               </div>
             )}
 
@@ -822,7 +880,7 @@ function ImageSection({
             <Table
               columns={imageColumns}
               data={paginatedImages}
-              onRowClick={(row) => onSelectImage(row.id)}
+              onRowClick={(row) => handleSelectImage(row.id)}
             />
 
             {/* Selected Bar */}
@@ -921,10 +979,19 @@ function ImageSection({
             </Button>
           </VStack>
 
+          {/* Error Message */}
+          {imageError && (
+            <div className="mt-2">
+              <InlineMessage variant="error">
+                {imageError}
+              </InlineMessage>
+            </div>
+          )}
+
           {/* Next Button */}
           {!isEditing && (
             <HStack justify="end" className="w-full">
-              <Button variant="primary" onClick={onNext} disabled={!selectedImageId}>
+              <Button variant="primary" onClick={handleNextClick}>
                 Next
               </Button>
             </HStack>
@@ -963,6 +1030,32 @@ function FlavorSection({
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
 
+  // Validation error
+  const [flavorError, setFlavorError] = useState<string | null>(null);
+
+  const handleSelectFlavor = (id: string) => {
+    onSelectFlavor(id);
+    setFlavorError(null);
+  };
+
+  const handleNextClick = () => {
+    if (!selectedFlavorId) {
+      setFlavorError('Please select a flavor.');
+      return;
+    }
+    setFlavorError(null);
+    onNext();
+  };
+
+  const handleEditDone = () => {
+    if (!selectedFlavorId) {
+      setFlavorError('Please select a flavor.');
+      return;
+    }
+    setFlavorError(null);
+    onEditDone?.();
+  };
+
   // Filter flavors based on search query
   const filteredFlavors = mockFlavors.filter(flavor => {
     return searchQuery === '' || 
@@ -994,7 +1087,7 @@ function FlavorSection({
           <Radio
             value={row.id}
             checked={selectedFlavorId === row.id}
-            onChange={() => onSelectFlavor(row.id)}
+            onChange={() => handleSelectFlavor(row.id)}
             disabled={row.hasWarning}
           />
         </div>
@@ -1037,7 +1130,7 @@ function FlavorSection({
         actions={isEditing ? (
           <HStack gap={2}>
             <Button variant="secondary" size="sm" onClick={onEditCancel}>Cancel</Button>
-            <Button variant="primary" size="sm" onClick={onEditDone}>Done</Button>
+            <Button variant="primary" size="sm" onClick={handleEditDone}>Done</Button>
           </HStack>
         ) : undefined}
       />
@@ -1095,7 +1188,7 @@ function FlavorSection({
                 columns={flavorColumns}
                 data={paginatedFlavors}
                 rowKey="id"
-                onRowClick={(row) => !row.hasWarning && onSelectFlavor(row.id)}
+                onRowClick={(row) => !row.hasWarning && handleSelectFlavor(row.id)}
               />
 
               {/* Selected Footer */}
@@ -1112,10 +1205,19 @@ function FlavorSection({
             </VStack>
           </VStack>
 
+          {/* Error Message */}
+          {flavorError && (
+            <div className="mt-2">
+              <InlineMessage variant="error">
+                {flavorError}
+              </InlineMessage>
+            </div>
+          )}
+
           {/* Next Button - hidden in edit mode */}
           {!isEditing && (
             <HStack justify="end">
-              <Button variant="primary" onClick={onNext} disabled={!selectedFlavorId}>
+              <Button variant="primary" onClick={handleNextClick}>
                 Next
               </Button>
             </HStack>
@@ -1153,6 +1255,64 @@ function NetworkSection({
   onEditCancel,
   onEditDone,
 }: NetworkSectionProps) {
+  // Validation errors
+  const [networkError, setNetworkError] = useState<string | null>(null);
+  const [sgError, setSgError] = useState<string | null>(null);
+
+  const handleNetworkToggle = (id: string) => {
+    onNetworkToggle(id);
+    setNetworkError(null);
+  };
+
+  const handleSecurityGroupToggle = (id: string) => {
+    onSecurityGroupToggle(id);
+    setSgError(null);
+  };
+
+  const handleNextClick = () => {
+    let hasError = false;
+    
+    if (selectedNetworkIds.size === 0) {
+      setNetworkError('Please select at least one network.');
+      hasError = true;
+    } else {
+      setNetworkError(null);
+    }
+    
+    if (selectedSecurityGroups.size === 0) {
+      setSgError('Please select at least one security group.');
+      hasError = true;
+    } else {
+      setSgError(null);
+    }
+    
+    if (!hasError) {
+      onNext();
+    }
+  };
+
+  const handleEditDone = () => {
+    let hasError = false;
+    
+    if (selectedNetworkIds.size === 0) {
+      setNetworkError('Please select at least one network.');
+      hasError = true;
+    } else {
+      setNetworkError(null);
+    }
+    
+    if (selectedSecurityGroups.size === 0) {
+      setSgError('Please select at least one security group.');
+      hasError = true;
+    } else {
+      setSgError(null);
+    }
+    
+    if (!hasError) {
+      onEditDone?.();
+    }
+  };
+
   // Network state
   const [networkTab, setNetworkTab] = useState('current');
   const [networkSearch, setNetworkSearch] = useState('');
@@ -1253,7 +1413,7 @@ function NetworkSection({
         <div className="flex items-center justify-center" onClick={(e) => e.stopPropagation()}>
           <Checkbox
             checked={selectedNetworkIds.has(row.id)}
-            onChange={() => onNetworkToggle(row.id)}
+            onChange={() => handleNetworkToggle(row.id)}
           />
         </div>
       ),
@@ -1299,7 +1459,7 @@ function NetworkSection({
         <div className="flex items-center justify-center" onClick={(e) => e.stopPropagation()}>
           <Checkbox
             checked={selectedSecurityGroups.has(row.id)}
-            onChange={() => onSecurityGroupToggle(row.id)}
+            onChange={() => handleSecurityGroupToggle(row.id)}
           />
         </div>
       ),
@@ -1390,7 +1550,7 @@ function NetworkSection({
         actions={isEditing ? (
           <HStack gap={2}>
             <Button variant="secondary" size="sm" onClick={onEditCancel}>Cancel</Button>
-            <Button variant="primary" size="sm" onClick={onEditDone}>Done</Button>
+            <Button variant="primary" size="sm" onClick={handleEditDone}>Done</Button>
           </HStack>
         ) : undefined}
       />
@@ -1444,7 +1604,7 @@ function NetworkSection({
               columns={networkColumns}
               data={paginatedNetworks}
               rowKey="id"
-              onRowClick={(row) => onNetworkToggle(row.id)}
+              onRowClick={(row) => handleNetworkToggle(row.id)}
             />
 
             {/* Selected Networks Chips */}
@@ -1454,10 +1614,19 @@ function NetworkSection({
                   <Chip 
                     key={n.id}
                     value={n.name}
-                    onRemove={() => onNetworkToggle(n.id)}
+                    onRemove={() => handleNetworkToggle(n.id)}
                   />
                 ))}
               </HStack>
+            )}
+
+            {/* Network Error Message */}
+            {networkError && (
+              <div className="mt-2">
+                <InlineMessage variant="error">
+                  {networkError}
+                </InlineMessage>
+              </div>
             )}
           </VStack>
 
@@ -1559,7 +1728,7 @@ function NetworkSection({
               columns={sgColumns}
               data={paginatedSGs}
               rowKey="id"
-              onRowClick={(row) => onSecurityGroupToggle(row.id)}
+              onRowClick={(row) => handleSecurityGroupToggle(row.id)}
             />
 
             {/* Selected Security groups Chips */}
@@ -1569,10 +1738,19 @@ function NetworkSection({
                   <Chip 
                     key={sg.id}
                     value={sg.name}
-                    onRemove={() => onSecurityGroupToggle(sg.id)}
+                    onRemove={() => handleSecurityGroupToggle(sg.id)}
                   />
                 ))}
               </HStack>
+            )}
+
+            {/* Security Group Error Message */}
+            {sgError && (
+              <div className="mt-2">
+                <InlineMessage variant="error">
+                  {sgError}
+                </InlineMessage>
+              </div>
             )}
           </VStack>
 
@@ -1633,7 +1811,7 @@ function NetworkSection({
           {/* Next Button - hidden in edit mode */}
           {!isEditing && (
             <HStack justify="end">
-              <Button variant="primary" onClick={onNext} disabled={selectedNetworkIds.size === 0 || selectedSecurityGroups.size === 0}>
+              <Button variant="primary" onClick={handleNextClick}>
                 Next
               </Button>
             </HStack>
@@ -1671,6 +1849,32 @@ function AuthenticationSection({
   onEditCancel,
   onEditDone,
 }: AuthenticationSectionProps) {
+  // Validation error
+  const [authError, setAuthError] = useState<string | null>(null);
+
+  const handleSelectKeyPair = (id: string) => {
+    onSelectKeyPair(id);
+    setAuthError(null);
+  };
+
+  const handleNextClick = () => {
+    if (loginType === 'keypair' && !selectedKeyPairId) {
+      setAuthError('Please select a key pair.');
+      return;
+    }
+    setAuthError(null);
+    onNext();
+  };
+
+  const handleEditDone = () => {
+    if (loginType === 'keypair' && !selectedKeyPairId) {
+      setAuthError('Please select a key pair.');
+      return;
+    }
+    setAuthError(null);
+    onEditDone?.();
+  };
+
   const keyPairColumns: TableColumn<KeyPairRow>[] = [
     {
       key: 'select',
@@ -1681,7 +1885,7 @@ function AuthenticationSection({
           <Radio
             value={row.id}
             checked={selectedKeyPairId === row.id}
-            onChange={() => onSelectKeyPair(row.id)}
+            onChange={() => handleSelectKeyPair(row.id)}
           />
         </div>
       ),
@@ -1699,7 +1903,7 @@ function AuthenticationSection({
         actions={isEditing ? (
           <HStack gap={2}>
             <Button variant="secondary" size="sm" onClick={onEditCancel}>Cancel</Button>
-            <Button variant="primary" size="sm" onClick={onEditDone}>Done</Button>
+            <Button variant="primary" size="sm" onClick={handleEditDone}>Done</Button>
           </HStack>
         ) : undefined}
       />
@@ -1738,10 +1942,19 @@ function AuthenticationSection({
                 <Table
                   columns={keyPairColumns}
                   data={mockKeyPairs}
-                  onRowClick={(row) => onSelectKeyPair(row.id)}
+                  onRowClick={(row) => handleSelectKeyPair(row.id)}
                 />
               </VStack>
             </>
+          )}
+
+          {/* Error Message */}
+          {authError && (
+            <div className="mt-2">
+              <InlineMessage variant="error">
+                {authError}
+              </InlineMessage>
+            </div>
           )}
 
           {!isEditing && (
@@ -1750,8 +1963,7 @@ function AuthenticationSection({
               <HStack justify="end">
                 <Button 
                   variant="primary" 
-                  onClick={onNext} 
-                  disabled={loginType === 'keypair' && !selectedKeyPairId}
+                  onClick={handleNextClick}
                 >
                   Next
                 </Button>

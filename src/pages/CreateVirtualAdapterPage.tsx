@@ -25,6 +25,7 @@ import {
   Radio,
   Toggle,
   Checkbox,
+  InlineMessage,
 } from '@/design-system';
 import type { WizardSummaryItem, WizardSectionState, TableColumn } from '@/design-system';
 import { Sidebar } from '@/components/Sidebar';
@@ -157,6 +158,10 @@ export default function CreateVirtualAdapterPage() {
   const [adapterName, setAdapterName] = useState('');
   const [description, setDescription] = useState('');
 
+  // Validation errors
+  const [adapterNameError, setAdapterNameError] = useState<string | null>(null);
+  const [networkError, setNetworkError] = useState<string | null>(null);
+
   // Form state - Network
   const [selectedNetwork, setSelectedNetwork] = useState<string | null>(null);
   const [networkTab, setNetworkTab] = useState<'current' | 'shared' | 'external'>('current');
@@ -228,7 +233,7 @@ export default function CreateVirtualAdapterPage() {
           <Radio
             value={row.id}
             checked={selectedNetwork === row.id}
-            onChange={() => setSelectedNetwork(row.id)}
+            onChange={() => { setSelectedNetwork(row.id); setNetworkError(null); }}
           />
         </div>
       ),
@@ -467,12 +472,20 @@ export default function CreateVirtualAdapterPage() {
                         <FormField required>
                           <FormField.Label>Virtual adapter Name</FormField.Label>
                           <FormField.Control>
-                            <Input
-                              placeholder="Enter name"
-                              value={adapterName}
-                              onChange={(e) => setAdapterName(e.target.value)}
-                              fullWidth
-                            />
+                            <VStack gap={1}>
+                              <Input
+                                placeholder="Enter name"
+                                value={adapterName}
+                                onChange={(e) => { setAdapterName(e.target.value); setAdapterNameError(null); }}
+                                fullWidth
+                                error={!!adapterNameError}
+                              />
+                              {adapterNameError && (
+                                <span className="text-[11px] leading-[var(--line-height-16)] text-[var(--color-state-danger)]">
+                                  {adapterNameError}
+                                </span>
+                              )}
+                            </VStack>
                           </FormField.Control>
                           <FormField.HelperText>
                             You can use letters, numbers, and special characters (+=,.@-_), and the length must be between 2-128 characters.
@@ -500,13 +513,17 @@ export default function CreateVirtualAdapterPage() {
                           <Button 
                             variant="primary" 
                             onClick={() => {
+                              if (!adapterName.trim()) {
+                                setAdapterNameError('Please enter a virtual adapter name.');
+                                return;
+                              }
+                              setAdapterNameError(null);
                               setSectionStatus((prev) => ({
                                 ...prev,
                                 'basic-info': 'done',
                                 'network': 'active',
                               }));
                             }}
-                            disabled={!adapterName.trim()}
                           >
                             Next
                           </Button>
@@ -714,18 +731,31 @@ export default function CreateVirtualAdapterPage() {
                           )}
                         </VStack>
 
+                        {/* Network Error Message */}
+                        {networkError && (
+                          <div className="mt-2">
+                            <InlineMessage variant="error">
+                              {networkError}
+                            </InlineMessage>
+                          </div>
+                        )}
+
                         {/* Next Button */}
                         <div className="flex items-center justify-end w-full">
                           <Button 
                             variant="primary" 
                             onClick={() => {
+                              if (!selectedNetwork) {
+                                setNetworkError('Please select a network.');
+                                return;
+                              }
+                              setNetworkError(null);
                               setSectionStatus((prev) => ({
                                 ...prev,
                                 'network': 'done',
                                 'security': 'active',
                               }));
                             }}
-                            disabled={!selectedNetwork}
                           >
                             Next
                           </Button>
