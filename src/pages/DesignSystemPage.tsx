@@ -4634,7 +4634,6 @@ outline: 2px solid var(--color-border-focus);`}
                     <Button size="sm" variant="ghost">Ghost</Button>
                     <Button size="sm" variant="muted">Muted</Button>
                     <Button size="sm" variant="danger">Danger</Button>
-                    <Button size="sm" variant="warning">Warning</Button>
                     <Button size="sm" variant="link">Link</Button>
                   </div>
                 </VStack>
@@ -5403,7 +5402,6 @@ outline: 2px solid var(--color-border-focus);`}
                       label="60 MB (75%)"
                       value={75}
                       max={100}
-                      statusText="chunking"
                       showValue={false}
                     />
                   </div>
@@ -5417,7 +5415,6 @@ outline: 2px solid var(--color-border-focus);`}
                       label="60 MB (75%)"
                       value={75}
                       max={100}
-                      statusText="error"
                       showValue={false}
                       error
                       errorMessage="Upload failed: Network error"
@@ -5792,15 +5789,7 @@ outline: 2px solid var(--color-border-focus);`}
                           ]}
                         />
                       }
-                      actions={
-                        <>
-                          <TopBarAction
-                            icon={<IconBell size={16} stroke={1.5} />}
-                            aria-label="Notifications"
-                            onClick={() => console.log('Notifications')}
-                          />
-                        </>
-                      }
+                      actions={<></>}
                     />
                   </div>
                 </VStack>
@@ -6190,16 +6179,16 @@ outline: 2px solid var(--color-border-focus);`}
                 <VStack gap={3}>
                   <Label>With Dot Indicator</Label>
                   <div className="flex gap-3 items-center">
-                    <Badge size="sm" theme="green" dot>Running</Badge>
-                    <Badge size="sm" theme="red" dot>Stopped</Badge>
-                    <Badge size="sm" theme="yellow" dot>Pending</Badge>
-                    <Badge size="sm" theme="gray" dot>Unknown</Badge>
+                    <Badge size="sm" theme="green">Running</Badge>
+                    <Badge size="sm" theme="red">Stopped</Badge>
+                    <Badge size="sm" theme="yellow">Pending</Badge>
+                    <Badge size="sm" theme="gray">Unknown</Badge>
                   </div>
                   <div className="flex gap-3 items-center">
-                    <Badge size="sm" type="subtle" theme="green" dot>Running</Badge>
-                    <Badge size="sm" type="subtle" theme="red" dot>Stopped</Badge>
-                    <Badge size="sm" type="subtle" theme="yellow" dot>Pending</Badge>
-                    <Badge size="sm" type="subtle" theme="gray" dot>Unknown</Badge>
+                    <Badge size="sm" type="subtle" theme="green">Running</Badge>
+                    <Badge size="sm" type="subtle" theme="red">Stopped</Badge>
+                    <Badge size="sm" type="subtle" theme="yellow">Pending</Badge>
+                    <Badge size="sm" type="subtle" theme="gray">Unknown</Badge>
                   </div>
                 </VStack>
               </VStack>
