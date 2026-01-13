@@ -211,26 +211,19 @@ export default function SettingsAccountPage() {
                     {/* Divider */}
                     <div className="h-px w-full bg-[var(--color-border-subtle)]" />
 
-                    {/* 2-Step Verification */}
+                    {/* MFA Setting */}
                     <VStack gap={4}>
-                      <div className="flex items-center justify-between">
-                        <VStack gap={2}>
-                          <span className="text-[14px] font-medium leading-5 text-[var(--color-text-default)]">
-                            2-Step Verification
-                          </span>
-                          <p className="text-[12px] leading-4 text-[var(--color-text-subtle)]">
-                            Add an extra layer of security to your account.
-                          </p>
-                        </VStack>
-                        <Toggle 
-                          checked={twoStepEnabled}
-                          onChange={(e) => setTwoStepEnabled(e.target.checked)}
-                        />
-                      </div>
+                      <VStack gap={2}>
+                        <span className="text-[14px] font-medium leading-5 text-[var(--color-text-default)]">
+                          MFA Setting
+                        </span>
+                        <p className="text-[12px] leading-4 text-[var(--color-text-subtle)]">
+                          Add an extra layer of security to your account.
+                        </p>
+                      </VStack>
 
-                      {/* Verification Methods */}
-                      {twoStepEnabled && (
-                        <div className="flex items-center justify-between p-4 border border-[var(--color-border-default)] rounded-lg bg-[var(--color-surface-subtle)]">
+                      {/* Verification Methods - Always visible */}
+                      <div className="flex items-center justify-between p-4 border border-[var(--color-border-default)] rounded-lg bg-[var(--color-surface-subtle)]">
                           <div className="flex items-center gap-3">
                             <div className="w-10 h-10 rounded-lg bg-[var(--color-action-primary-subtle)] flex items-center justify-center">
                               <IconShieldCheck size={20} className="text-[var(--color-action-primary)]" />
@@ -271,7 +264,6 @@ export default function SettingsAccountPage() {
                             {authenticatorSetup.configured ? 'Remove' : 'Set up'}
                           </Button>
                         </div>
-                      )}
                     </VStack>
                   </SectionCard.Content>
                 </SectionCard>

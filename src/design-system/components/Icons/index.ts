@@ -35,7 +35,7 @@ export { IconInfo, IconKeypairs, IconLayers, IconLink, IconList, IconLoadbalance
 export { IconNetworks, IconNewtab, IconNotification, IconOther, IconPaused, IconPlay, IconPlusCircle, IconProgress, IconRefresh, IconRequest } from './CustomIcons';
 export { IconReset1, IconReset2, IconRouters1, IconSchedule, IconSearch, IconSecurity, IconSecurityerror, IconServer, IconSetting, IconShare } from './CustomIcons';
 export { IconShow, IconSidebar, IconSnapshot, IconStop, IconStorage, IconTemplate, IconTimeout, IconTopology, IconUpload } from './CustomIcons';
-export { IconUserCircle, IconZap, IconRobotCustom, IconAddRobotCustom } from './CustomIcons';
+export { IconUserCircle, IconZap, IconRobotCustom, IconAddRobotCustom, IconWindowActive, IconWindowMinimized } from './CustomIcons';
 // Newly added icons from SVG files (these replace existing ones)
 export { IconActive, IconAddVolume, IconAlert, IconAttach, IconBackup, IconCertificate, IconChart, IconCheckCircle, IconDeactivated, IconDeleting, IconDrawerClose, IconError, IconFavoriteOn, IconFile, IconFloatingIp, IconHardDrive, IconHostAggregates, IconHypervisor, IconImages, IconInstances, IconInuse, IconKey, IconLoadBalancer, IconMaintenance, IconMorekebab, IconNetwork, IconNotificationnew, IconOrder, IconPlugin, IconPorts, IconPorts2, IconPublish, IconReboot, IconRouters, IconSecurityError, IconSecurityGroup, IconShelved, IconSuspended, IconVerify, IconVolumeSearch, IconVolumeType, IconWarning, IconAffiliate, IconArticlehistory, IconCard, IconCheck, IconCloudcomputing, IconFinetuning, IconHistory, IconLanguage, IconNewchat, IconPending, IconPuzzle, IconReset, IconRetry, IconRocky, IconSpeed, IconStudy, IconTransfer, IconUbuntu, IconUnlink } from './CustomIcons';
 
