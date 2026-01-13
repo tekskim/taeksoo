@@ -277,12 +277,17 @@ export function CloudBuilderDetailPage() {
                   Object.entries(row)
                     .filter(([k]) => k !== 'id')
                     .map(([k, v], idx, arr) => (
-                      <SectionCard.DataRow
-                        key={k}
-                        label={k}
-                        value={String(v ?? '-') || '-'}
-                        showDivider={idx < arr.length - 1}
-                      />
+                      <>
+                        {k === 'purpose' && (
+                          <div key={`divider-${k}`} className="w-full h-px bg-[var(--color-border-subtle)]" />
+                        )}
+                        <SectionCard.DataRow
+                          key={k}
+                          label={k}
+                          value={String(v ?? '-') || '-'}
+                          showDivider={idx < arr.length - 1}
+                        />
+                      </>
                     ))
                 ) : (
                   <div className="py-10 text-center text-[12px] text-[var(--color-text-subtle)]">

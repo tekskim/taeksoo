@@ -67,24 +67,6 @@ const appCards: AppCard[] = [
     available: true,
   },
   {
-    id: 'ai-platform',
-    title: 'AI Platform',
-    description: 'Machine learning models, training pipelines, and MLOps',
-    icon: <img src={AIPlatformIcon} alt="AI Platform" className="w-16 h-16" />,
-    path: '/ai-platform',
-    color: 'from-pink-500 to-rose-500',
-    available: true,
-  },
-  {
-    id: 'ai-agent',
-    title: 'AI Agent',
-    description: 'Intelligent agents, automation bots, and AI assistants',
-    icon: <img src={AIAgentIcon} alt="AI Agent" className="w-16 h-16" />,
-    path: '/agent',
-    color: 'from-emerald-500 to-teal-500',
-    available: true,
-  },
-  {
     id: 'storage',
     title: 'Storage',
     description: 'Object storage, file systems, and data management',
@@ -127,6 +109,24 @@ const appCards: AppCard[] = [
     icon: <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-rose-500 to-pink-500 flex items-center justify-center"><IconMail size={32} className="text-white" stroke={1.5} /></div>,
     path: '/mail-template',
     color: 'from-rose-500 to-pink-500',
+    available: true,
+  },
+  {
+    id: 'ai-platform',
+    title: 'AI Platform',
+    description: 'Machine learning models, training pipelines, and MLOps',
+    icon: <img src={AIPlatformIcon} alt="AI Platform" className="w-16 h-16" />,
+    path: '/ai-platform',
+    color: 'from-pink-500 to-rose-500',
+    available: true,
+  },
+  {
+    id: 'ai-agent',
+    title: 'AI Agent',
+    description: 'Intelligent agents, automation bots, and AI assistants',
+    icon: <img src={AIAgentIcon} alt="AI Agent" className="w-16 h-16" />,
+    path: '/agent',
+    color: 'from-emerald-500 to-teal-500',
     available: true,
   },
 ];
@@ -237,7 +237,7 @@ export function EntryPage() {
           {/* Actions */}
           <div className="flex items-center gap-3">
             <Button
-              variant="ghost"
+              variant="secondary"
               size="sm"
               onClick={() => navigate('/design')}
             >
@@ -245,11 +245,12 @@ export function EntryPage() {
             </Button>
             <Button
               variant="secondary"
-              size="md"
-              icon={isDark ? <IconSun size={18} stroke={1.5} /> : <IconMoon size={18} stroke={1.5} />}
+              size="sm"
+              leftIcon={isDark ? <IconSun size={14} stroke={1.5} /> : <IconMoon size={14} stroke={1.5} />}
               onClick={toggleDarkMode}
-              aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
-            />
+            >
+              {isDark ? 'Light mode' : 'Dark mode'}
+            </Button>
           </div>
         </div>
       </header>
