@@ -277,7 +277,7 @@ export const DatePicker: React.FC<DatePickerProps> = ({
       style={{ width: calendarWidth }}
     >
       {/* Header */}
-      <div className="flex items-center gap-[var(--space-2)]">
+      <div className="flex items-center gap-2">
         <button
           type="button"
           onClick={handlePrevMonth}
@@ -296,11 +296,12 @@ export const DatePicker: React.FC<DatePickerProps> = ({
         </button>
 
         <span className="
+          w-[64px]
           text-[length:var(--font-size-16)]
           leading-[var(--line-height-24)]
           font-semibold
           text-[var(--color-text-default)]
-          text-center
+          text-left
           select-none
         ">
           {monthYearText}
