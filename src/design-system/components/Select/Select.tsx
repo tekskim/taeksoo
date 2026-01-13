@@ -348,6 +348,7 @@ export function Select({
           )}
           <IconChevronDown
             size={16}
+            stroke={1.5}
             className={twMerge(
               'transition-transform duration-[var(--duration-fast)]',
               'text-[var(--color-text-default)]',
