@@ -664,9 +664,12 @@ function PolicyEditorSection({
     });
   };
 
-  // Check if application is compute (case insensitive)
-  const isComputeApplication = (application: string) => {
-    return application.toLowerCase() === 'compute';
+  // Check if application is compute AND all fields are filled
+  const shouldShowDetailedActions = (permission: Permission) => {
+    return (
+      permission.application.toLowerCase() === 'compute' &&
+      hasAllFieldsFilled(permission)
+    );
   };
 
   return (
@@ -822,7 +825,7 @@ function PolicyEditorSection({
                   </div>
 
                   {/* Action Cards - Simple view for non-compute applications */}
-                  {!isComputeApplication(permission.application) && (
+                  {!shouldShowDetailedActions(permission) && (
                     <div className="flex gap-3 w-full">
                       {(['read', 'list', 'write', 'delete', 'admin'] as const).map((action) => (
                         <div
@@ -844,8 +847,8 @@ function PolicyEditorSection({
                     </div>
                   )}
 
-                  {/* Detailed Action Tabs - For compute application */}
-                  {isComputeApplication(permission.application) && (
+                  {/* Detailed Action Tabs - For compute application with all fields filled */}
+                  {shouldShowDetailedActions(permission) && (
                     <div className="flex gap-3 w-full h-[320px]">
                       {(['read', 'list', 'write', 'delete', 'admin'] as const).map((category) => {
                         const categoryActions = COMPUTE_ACTIONS[category];
