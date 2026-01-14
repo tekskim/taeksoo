@@ -375,9 +375,77 @@ interface Permission {
     delete: boolean;
     admin: boolean;
   };
+  detailedActions: Record<string, boolean>;
   allActions: boolean;
   mfaRequired: boolean;
 }
+
+/* ----------------------------------------
+   Compute Actions Data
+   ---------------------------------------- */
+
+const COMPUTE_ACTIONS = {
+  read: [
+    'ReadInstance',
+    'ReadImage',
+    'ReadVolume',
+    'ReadInstancesnapshot',
+    'ReadKeypair',
+    'ReadServergroup',
+    'ReadNetwork',
+    'ReadSecuritygroup',
+    'ReadTopology',
+    'ReadDashboard',
+  ],
+  list: [
+    'ListInstance',
+    'ListImage',
+    'ListVolume',
+    'ListInstancesnapshot',
+    'ListKeypair',
+    'ListServergroup',
+    'ListNetwork',
+    'ListSecuritygroup',
+    'ListTopology',
+    'ListDashboard',
+  ],
+  write: [
+    'WriteInstance',
+    'WriteImage',
+    'WriteVolume',
+    'WriteInstancesnapshot',
+    'WriteKeypair',
+    'WriteServergroup',
+    'WriteNetwork',
+    'WriteSecuritygroup',
+    'WriteTopology',
+    'WriteDashboard',
+  ],
+  delete: [
+    'DeleteInstance',
+    'DeleteImage',
+    'DeleteVolume',
+    'DeleteInstancesnapshot',
+    'DeleteKeypair',
+    'DeleteServergroup',
+    'DeleteNetwork',
+    'DeleteSecuritygroup',
+    'DeleteTopology',
+    'DeleteDashboard',
+  ],
+  admin: [
+    'AdminInstance',
+    'AdminImage',
+    'AdminVolume',
+    'AdminInstancesnapshot',
+    'AdminKeypair',
+    'AdminServergroup',
+    'AdminNetwork',
+    'AdminSecuritygroup',
+    'AdminTopology',
+    'AdminDashboard',
+  ],
+};
 
 /* ----------------------------------------
    PolicyEditorSection Component
@@ -407,6 +475,7 @@ const createEmptyPermission = (): Permission => ({
     delete: false,
     admin: false,
   },
+  detailedActions: {},
   allActions: false,
   mfaRequired: false,
 });
@@ -524,8 +593,18 @@ function PolicyEditorSection({
     if (!permission) return;
 
     const newValue = !permission.allActions;
+    
+    // Also toggle all detailed actions if compute
+    const newDetailedActions: Record<string, boolean> = {};
+    if (permission.application.toLowerCase() === 'compute') {
+      Object.values(COMPUTE_ACTIONS).flat().forEach((action) => {
+        newDetailedActions[action] = newValue;
+      });
+    }
+
     updatePermission(permissionId, {
       allActions: newValue,
+      detailedActions: newDetailedActions,
       actions: {
         read: newValue,
         list: newValue,
@@ -534,6 +613,60 @@ function PolicyEditorSection({
         admin: newValue,
       },
     });
+  };
+
+  // Toggle a single detailed action
+  const toggleDetailedAction = (permissionId: string, actionName: string) => {
+    const permission = permissions.find((p) => p.id === permissionId);
+    if (!permission) return;
+
+    const newDetailedActions = {
+      ...permission.detailedActions,
+      [actionName]: !permission.detailedActions[actionName],
+    };
+
+    // Update category action based on detailed actions
+    const category = actionName.replace(/^(Read|List|Write|Delete|Admin).*/, '$1').toLowerCase() as keyof Permission['actions'];
+    const categoryActions = COMPUTE_ACTIONS[category as keyof typeof COMPUTE_ACTIONS] || [];
+    const allCategorySelected = categoryActions.every((a) => newDetailedActions[a]);
+
+    const newActions = { ...permission.actions, [category]: allCategorySelected };
+    const allSelected = Object.values(newActions).every((v) => v);
+
+    updatePermission(permissionId, {
+      detailedActions: newDetailedActions,
+      actions: newActions,
+      allActions: allSelected,
+    });
+  };
+
+  // Toggle all actions in a category (Read, List, Write, Delete, Admin)
+  const toggleCategoryActions = (permissionId: string, category: keyof Permission['actions']) => {
+    const permission = permissions.find((p) => p.id === permissionId);
+    if (!permission) return;
+
+    const categoryActions = COMPUTE_ACTIONS[category as keyof typeof COMPUTE_ACTIONS] || [];
+    const allCurrentlySelected = categoryActions.every((a) => permission.detailedActions[a]);
+    const newValue = !allCurrentlySelected;
+
+    const newDetailedActions = { ...permission.detailedActions };
+    categoryActions.forEach((action) => {
+      newDetailedActions[action] = newValue;
+    });
+
+    const newActions = { ...permission.actions, [category]: newValue };
+    const allSelected = Object.values(newActions).every((v) => v);
+
+    updatePermission(permissionId, {
+      detailedActions: newDetailedActions,
+      actions: newActions,
+      allActions: allSelected,
+    });
+  };
+
+  // Check if application is compute (case insensitive)
+  const isComputeApplication = (application: string) => {
+    return application.toLowerCase() === 'compute';
   };
 
   return (
@@ -688,26 +821,96 @@ function PolicyEditorSection({
                     </label>
                   </div>
 
-                  {/* Action Cards */}
-                  <div className="flex gap-3 w-full">
-                    {(['read', 'list', 'write', 'delete', 'admin'] as const).map((action) => (
-                      <div
-                        key={action}
-                        className="flex-1 bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 cursor-pointer"
-                        onClick={() => toggleAction(permission.id, action)}
-                      >
-                        <label className="flex items-center gap-2.5 cursor-pointer">
-                          <Checkbox
-                            checked={permission.actions[action]}
-                            onChange={() => toggleAction(permission.id, action)}
-                          />
-                          <span className="text-[12px] font-normal text-[var(--color-text-default)] capitalize">
-                            {action}
-                          </span>
-                        </label>
-                      </div>
-                    ))}
-                  </div>
+                  {/* Action Cards - Simple view for non-compute applications */}
+                  {!isComputeApplication(permission.application) && (
+                    <div className="flex gap-3 w-full">
+                      {(['read', 'list', 'write', 'delete', 'admin'] as const).map((action) => (
+                        <div
+                          key={action}
+                          className="flex-1 bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 cursor-pointer"
+                          onClick={() => toggleAction(permission.id, action)}
+                        >
+                          <label className="flex items-center gap-2.5 cursor-pointer">
+                            <Checkbox
+                              checked={permission.actions[action]}
+                              onChange={() => toggleAction(permission.id, action)}
+                            />
+                            <span className="text-[12px] font-normal text-[var(--color-text-default)] capitalize">
+                              {action}
+                            </span>
+                          </label>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+
+                  {/* Detailed Action Tabs - For compute application */}
+                  {isComputeApplication(permission.application) && (
+                    <div className="flex gap-3 w-full h-[320px]">
+                      {(['read', 'list', 'write', 'delete', 'admin'] as const).map((category) => {
+                        const categoryActions = COMPUTE_ACTIONS[category];
+                        const filteredActions = searchQuery
+                          ? categoryActions.filter((a) =>
+                              a.toLowerCase().includes(searchQuery.toLowerCase())
+                            )
+                          : categoryActions;
+                        const selectedCount = categoryActions.filter(
+                          (a) => permission.detailedActions[a]
+                        ).length;
+                        const allCategorySelected = categoryActions.every(
+                          (a) => permission.detailedActions[a]
+                        );
+
+                        return (
+                          <div
+                            key={category}
+                            className="flex-1 bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 flex flex-col min-w-0"
+                          >
+                            {/* Category Header */}
+                            <div className="flex items-center gap-2.5 shrink-0">
+                              <Checkbox
+                                checked={allCategorySelected}
+                                onChange={() => toggleCategoryActions(permission.id, category)}
+                              />
+                              <span className="text-[12px] text-[var(--color-text-default)] capitalize">
+                                {category}
+                              </span>
+                              <div className="h-4 w-px bg-[var(--color-border-default)]" />
+                              <span className="text-[11px] text-[var(--color-text-subtle)]">
+                                {selectedCount > 0 ? `${selectedCount}/${categoryActions.length}` : `${categoryActions.length} items`}
+                              </span>
+                            </div>
+
+                            {/* Actions List */}
+                            <div className="flex flex-col gap-2 mt-6 overflow-y-auto flex-1">
+                              {filteredActions.map((actionName) => {
+                                const isSelected = permission.detailedActions[actionName];
+                                return (
+                                  <div
+                                    key={actionName}
+                                    className={`bg-white border rounded-[6px] p-2 flex items-center gap-1.5 cursor-pointer ${
+                                      isSelected
+                                        ? 'border-[var(--color-action-primary)]'
+                                        : 'border-[var(--color-border-strong)]'
+                                    }`}
+                                    onClick={() => toggleDetailedAction(permission.id, actionName)}
+                                  >
+                                    <Checkbox
+                                      checked={isSelected}
+                                      onChange={() => toggleDetailedAction(permission.id, actionName)}
+                                    />
+                                    <span className="text-[12px] text-[var(--color-text-default)] truncate">
+                                      {actionName}
+                                    </span>
+                                  </div>
+                                );
+                              })}
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  )}
                 </div>
 
                 {/* Conditions */}
