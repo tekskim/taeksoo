@@ -147,7 +147,9 @@ function getLabelFromPath(path: string): string {
     '/iam/user-groups': 'User groups',
     '/iam/user-groups/create': 'Create user group',
     '/iam/roles': 'Roles',
+    '/iam/roles/create': 'Create role',
     '/iam/policies': 'Policies',
+    '/iam/policies/create': 'Create policy',
   };
   
   // Check for exact match first
