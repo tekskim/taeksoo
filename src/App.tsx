@@ -29,6 +29,7 @@ import { ImageDetailPage } from '@/pages/ImageDetailPage';
 import { ComputeImageDetailPage } from '@/pages/ComputeImageDetailPage';
 import { BucketsPage } from '@/pages/BucketsPage';
 import { BucketDetailPage } from '@/pages/BucketDetailPage';
+import CreateBucketPage from '@/pages/CreateBucketPage';
 import { FlavorsPage } from '@/pages/FlavorsPage';
 import { FlavorDetailPage } from '@/pages/FlavorDetailPage';
 import { KeyPairsPage } from '@/pages/KeyPairsPage';
@@ -95,6 +96,8 @@ import { ContainerConsolePage } from '@/pages/ContainerConsolePage';
 import { IAMHomePage } from '@/pages/IAMHomePage';
 import { IAMUsersPage } from '@/pages/IAMUsersPage';
 import { IAMUserDetailPage } from '@/pages/IAMUserDetailPage';
+import CreateUserPage from '@/pages/CreateUserPage';
+import CreateUserGroupPage from '@/pages/CreateUserGroupPage';
 import { IAMUserGroupsPage } from '@/pages/IAMUserGroupsPage';
 import IAMUserGroupDetailPage from '@/pages/IAMUserGroupDetailPage';
 import IAMRolesPage from '@/pages/IAMRolesPage';
@@ -254,6 +257,7 @@ function AppRoutes() {
         <Route path="/storage/images" element={<ImagesPage />} />
         <Route path="/storage/images/:id" element={<ImageDetailPage />} />
         <Route path="/storage/buckets" element={<BucketsPage />} />
+        <Route path="/storage/buckets/create" element={<CreateBucketPage />} />
         <Route path="/storage/buckets/:id" element={<BucketDetailPage />} />
         <Route path="/storage/performance" element={<OverallPerformancePage />} />
 
@@ -267,8 +271,10 @@ function AppRoutes() {
         {/* IAM Routes */}
         <Route path="/iam" element={<IAMHomePage />} />
         <Route path="/iam/users" element={<IAMUsersPage />} />
+        <Route path="/iam/users/create" element={<CreateUserPage />} />
         <Route path="/iam/users/:username" element={<IAMUserDetailPage />} />
         <Route path="/iam/user-groups" element={<IAMUserGroupsPage />} />
+        <Route path="/iam/user-groups/create" element={<CreateUserGroupPage />} />
         <Route path="/iam/user-groups/:groupName" element={<IAMUserGroupDetailPage />} />
         <Route path="/iam/roles" element={<IAMRolesPage />} />
         <Route path="/iam/roles/:roleName" element={<IAMRoleDetailPage />} />

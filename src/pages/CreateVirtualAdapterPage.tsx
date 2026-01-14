@@ -26,6 +26,7 @@ import {
   Toggle,
   Checkbox,
   InlineMessage,
+  SelectionIndicator,
 } from '@/design-system';
 import type { WizardSummaryItem, WizardSectionState, TableColumn } from '@/design-system';
 import { Sidebar } from '@/components/Sidebar';
@@ -467,7 +468,7 @@ export default function CreateVirtualAdapterPage() {
                       }
                     />
                     {sectionStatus['basic-info'] === 'active' && (
-                      <SectionCard.Content gap={6}>
+                      <SectionCard.Content gap={6} className="pt-2">
                         {/* Virtual adapter Name */}
                         <FormField required>
                           <FormField.Label>Virtual adapter Name</FormField.Label>
@@ -566,7 +567,7 @@ export default function CreateVirtualAdapterPage() {
                       }
                     />
                     {sectionStatus['network'] === 'active' && (
-                      <SectionCard.Content gap={6}>
+                      <SectionCard.Content gap={6} className="pt-2">
                         {/* Owned network - Network Table */}
                         <VStack gap={4} align="stretch">
                           <FormField required>
@@ -617,6 +618,16 @@ export default function CreateVirtualAdapterPage() {
                               columns={networkColumns}
                               data={mockNetworks}
                               rowKey="id"
+                            />
+
+                            {/* Selection Indicator for Network */}
+                            <SelectionIndicator
+                              className="mt-2"
+                              selectedItems={selectedNetwork ? [{
+                                id: selectedNetwork,
+                                label: mockNetworks.find(n => n.id === selectedNetwork)?.name || selectedNetwork
+                              }] : []}
+                              onRemove={() => setSelectedNetwork(null)}
                             />
                           </VStack>
                         </VStack>
@@ -801,7 +812,7 @@ export default function CreateVirtualAdapterPage() {
                       }
                     />
                     {sectionStatus['security'] === 'active' && (
-                      <SectionCard.Content gap={6}>
+                      <SectionCard.Content gap={6} className="pt-2">
                         {/* Port Security Toggle */}
                         <VStack gap={3} align="stretch">
                           <FormField required>
@@ -864,6 +875,16 @@ export default function CreateVirtualAdapterPage() {
                               columns={securityGroupColumns}
                               data={mockSecurityGroups}
                               getRowId={(row) => row.id}
+                            />
+
+                            {/* Selection Indicator for Security Groups */}
+                            <SelectionIndicator
+                              className="mt-2"
+                              selectedItems={selectedSecurityGroups.map(id => ({
+                                id,
+                                label: mockSecurityGroups.find(sg => sg.id === id)?.name || id
+                              }))}
+                              onRemove={(id) => setSelectedSecurityGroups(prev => prev.filter(sgId => sgId !== id))}
                             />
                           </VStack>
                         )}
