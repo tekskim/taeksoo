@@ -878,11 +878,13 @@ function PolicyEditorSection({
 
                   {/* Action Cards - Simple view for non-compute applications */}
                   {!shouldShowDetailedActions(permission) && (
-                    <div className={`flex gap-3 w-full h-[44px] ${actionErrors[permission.id] ? 'ring-1 ring-[var(--color-state-danger)] rounded-[6px]' : ''}`}>
+                    <div className="flex gap-3 w-full h-[44px]">
                       {(['read', 'list', 'write', 'delete', 'admin'] as const).map((action) => (
                         <div
                           key={action}
-                          className="flex-1 bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 cursor-pointer h-[44px] flex items-center"
+                          className={`flex-1 bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 cursor-pointer h-[44px] flex items-center ${
+                            actionErrors[permission.id] ? 'ring-1 ring-[var(--color-state-danger)]' : ''
+                          }`}
                           onClick={() => toggleAction(permission.id, action)}
                         >
                           <label className="flex items-center gap-2.5 cursor-pointer">
@@ -901,7 +903,7 @@ function PolicyEditorSection({
 
                   {/* Detailed Action Tabs - For compute application with all fields filled */}
                   {shouldShowDetailedActions(permission) && (
-                    <div className={`flex gap-3 w-full h-[320px] overflow-hidden ${actionErrors[permission.id] ? 'ring-1 ring-[var(--color-state-danger)] rounded-[6px]' : ''}`}>
+                    <div className="flex gap-3 w-full h-[320px] overflow-hidden">
                       {(['read', 'list', 'write', 'delete', 'admin'] as const).map((category) => {
                         const categoryActions = COMPUTE_ACTIONS[category];
                         const filteredActions = searchQuery
@@ -919,7 +921,9 @@ function PolicyEditorSection({
                         return (
                           <div
                             key={category}
-                            className="flex-1 bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 flex flex-col min-w-0 overflow-hidden"
+                            className={`flex-1 bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 flex flex-col min-w-0 overflow-hidden ${
+                              actionErrors[permission.id] ? 'ring-1 ring-[var(--color-state-danger)]' : ''
+                            }`}
                           >
                             {/* Category Header */}
                             <div className="flex items-center gap-2.5 shrink-0">
