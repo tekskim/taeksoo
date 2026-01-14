@@ -443,7 +443,7 @@ html.theme-transition *::after {
 
   /* SearchInput */
   --search-input-height-sm: 28px;
-  --search-input-height-md: 28px;
+  --search-input-height-md: 32px;
   --search-input-icon-size: 12px;
 
   /* ----------------------------------------
@@ -608,7 +608,7 @@ html.theme-transition *::after {
   /* ----------------------------------------
      Component - ProgressBar
      ---------------------------------------- */
-  --progress-bar-height: 4px;
+  --progress-bar-height: 3px;
   --progress-bar-radius: var(--radius-pill);
 
   /* ----------------------------------------
@@ -1205,6 +1205,12 @@ html.theme-transition *::after {
 }
 
 /* Sidebar Scrollbar */
+.sidebar-scroll {
+  scrollbar-gutter: stable;
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-border-default) transparent;
+}
+
 .sidebar-scroll::-webkit-scrollbar {
   width: 6px;
 }
@@ -1222,19 +1228,18 @@ html.theme-transition *::after {
   background: var(--color-border-strong);
 }
 
-/* Firefox */
-.sidebar-scroll {
-  scrollbar-width: thin;
-  scrollbar-color: var(--color-border-default) transparent;
-  scrollbar-gutter: stable;
-}
-
 /* Content min-width for horizontal scroll */
 .sidebar-scroll > div {
   min-width: 1176px;
 }
 
 /* Drawer Scrollbar */
+.drawer-scroll {
+  scrollbar-gutter: stable;
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-border-default) transparent;
+}
+
 .drawer-scroll::-webkit-scrollbar {
   width: 6px;
 }
@@ -1252,15 +1257,9 @@ html.theme-transition *::after {
   background: var(--color-border-strong);
 }
 
-/* Firefox */
-.drawer-scroll {
-  scrollbar-width: thin;
-  scrollbar-color: var(--color-border-default) transparent;
-}
-
 /* Legend Scrollbar (smaller, lighter) */
 .legend-scroll::-webkit-scrollbar {
-  width: 4px;
+  width: 6px;
 }
 
 .legend-scroll::-webkit-scrollbar-track {
@@ -1268,18 +1267,18 @@ html.theme-transition *::after {
 }
 
 .legend-scroll::-webkit-scrollbar-thumb {
-  background: var(--color-border-subtle);
+  background: var(--color-border-default);
   border-radius: var(--radius-full);
 }
 
 .legend-scroll::-webkit-scrollbar-thumb:hover {
-  background: var(--color-border-default);
+  background: var(--color-border-strong);
 }
 
 /* Firefox */
 .legend-scroll {
   scrollbar-width: thin;
-  scrollbar-color: var(--color-border-subtle) transparent;
+  scrollbar-color: var(--color-border-default) transparent;
 }
 
 /* Settings Scrollbar */
@@ -1610,6 +1609,17 @@ input[type="search"]::-webkit-search-decoration {
     opacity: 1;
     transform: translate(-50%, -50%) scale(1);
   }
+}
+
+/* Custom spin animation (1.5s) */
+@keyframes spin-slow {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-spin-slow {
+  animation: spin-slow 1.5s linear infinite;
 }
 
 /* ============== Full Screen Chart Card ============== */

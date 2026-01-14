@@ -108,6 +108,10 @@ export default function CreateNetworkPage() {
   const [portSecurity, setPortSecurity] = useState(true); // true = On
   const [mtu, setMtu] = useState<number | undefined>(undefined);
 
+  // Validation errors
+  const [networkNameError, setNetworkNameError] = useState<string | null>(null);
+  const [cidrError, setCidrError] = useState<string | null>(null);
+
   // Form state - Subnet
   const [createSubnet, setCreateSubnet] = useState(true); // true = Yes
   const [subnetName, setSubnetName] = useState('');
@@ -243,15 +247,23 @@ export default function CreateNetworkPage() {
                     {sectionStatus['basic-info'] === 'active' && (
                       <SectionCard.Content gap={6}>
                         {/* Network name */}
-                        <FormField required>
+                        <FormField required error={!!networkNameError}>
                           <FormField.Label>Network name</FormField.Label>
                           <FormField.Control>
-                            <Input
-                              placeholder="e.g. private-net"
-                              value={networkName}
-                              onChange={(e) => setNetworkName(e.target.value)}
-                              fullWidth
-                            />
+                            <VStack gap={1}>
+                              <Input
+                                placeholder="e.g. private-net"
+                                value={networkName}
+                                onChange={(e) => { setNetworkName(e.target.value); setNetworkNameError(null); }}
+                                fullWidth
+                                error={!!networkNameError}
+                              />
+                              {networkNameError && (
+                                <span className="text-[11px] leading-[var(--line-height-16)] text-[var(--color-state-danger)]">
+                                  {networkNameError}
+                                </span>
+                              )}
+                            </VStack>
                           </FormField.Control>
                           <FormField.HelperText>
                             Allowed: 1–128 characters, letters, numbers, "-", "_", ".", "()", "[]"
@@ -342,13 +354,17 @@ export default function CreateNetworkPage() {
                           <Button 
                             variant="primary" 
                             onClick={() => {
+                              if (!networkName.trim()) {
+                                setNetworkNameError('Please enter a network name.');
+                                return;
+                              }
+                              setNetworkNameError(null);
                               setSectionStatus((prev) => ({
                                 ...prev,
                                 'basic-info': 'done',
                                 'subnet': 'active',
                               }));
                             }}
-                            disabled={!networkName.trim()}
                           >
                             Next
                           </Button>

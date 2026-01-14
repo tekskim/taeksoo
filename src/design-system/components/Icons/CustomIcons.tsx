@@ -5313,21 +5313,21 @@ IconRetry.displayName = 'IconRetry';
  * Rocky - 16x16 프레임
  */
 export const IconRocky = forwardRef<SVGSVGElement, CustomIconProps>(
-  ({ size = 16, color = 'currentColor', stroke = 1, className, style, ...props }, ref) => {
+  ({ size = 16, color = 'currentColor', stroke = 1.5, className, style, ...props }, ref) => {
     return (
       <svg
         ref={ref}
         xmlns="http://www.w3.org/2000/svg"
         width={size}
         height={size}
-        viewBox="0 0 16 16"
+        viewBox="0 0 24 24"
         fill="none"
         className={className}
         style={style}
         {...props}
       >
         <path
-          d="M13.63 10.21L9.68 6.26L3.68 12.25C2.61 11.15 1.94 9.66 1.94 8C1.94 4.65 4.65 1.94 8 1.94C11.35 1.94 14.06 4.65 14.06 8C14.06 8.78 13.91 9.53 13.63 10.21Z"
+          d="M20.445 15.315L14.52 9.39L5.52 18.375C3.915 16.725 2.91 14.49 2.91 12C2.91 6.975 6.975 2.91 12 2.91C17.025 2.91 21.09 6.975 21.09 12C21.09 13.17 20.865 14.295 20.445 15.315Z"
           stroke={color}
           strokeWidth={stroke} 
           strokeLinecap="round"
@@ -5335,7 +5335,7 @@ export const IconRocky = forwardRef<SVGSVGElement, CustomIconProps>(
           fill="none"
         />
         <path
-          d="M12.62 11.92L9.82002 9.12L5.46002 13.49C6.13002 13.9 7.09002 14.06 8.00002 14.06C9.85002 14.06 11.51 13.23 12.62 11.92Z"
+          d="M18.93 17.88L14.73 13.68L8.19 20.235C9.195 20.85 10.635 21.09 12 21.09C14.775 21.09 17.265 19.845 18.93 17.88Z"
           stroke={color}
           strokeWidth={stroke} 
           strokeLinecap="round"
@@ -5445,21 +5445,21 @@ IconTransfer.displayName = 'IconTransfer';
  * Ubuntu - 16x16 프레임
  */
 export const IconUbuntu = forwardRef<SVGSVGElement, CustomIconProps>(
-  ({ size = 16, color = 'currentColor', stroke = 1, className, style, ...props }, ref) => {
+  ({ size = 16, color = 'currentColor', stroke = 1.5, className, style, ...props }, ref) => {
     return (
       <svg
         ref={ref}
         xmlns="http://www.w3.org/2000/svg"
         width={size}
         height={size}
-        viewBox="0 0 16 16"
+        viewBox="0 0 24 24"
         fill="none"
         className={className}
         style={style}
         {...props}
       >
         <path
-          d="M3.42 9.055C4.20424 9.055 4.84 8.41924 4.84 7.635C4.84 6.85075 4.20424 6.215 3.42 6.215C2.63576 6.215 2 6.85075 2 7.635C2 8.41924 2.63576 9.055 3.42 9.055Z"
+          d="M5.13 13.5825C6.30636 13.5825 7.26 12.6289 7.26 11.4525C7.26 10.2761 6.30636 9.3225 5.13 9.3225C3.95364 9.3225 3 10.2761 3 11.4525C3 12.6289 3.95364 13.5825 5.13 13.5825Z"
           stroke={color}
           strokeWidth={stroke} 
           strokeLinecap="round"
@@ -5467,7 +5467,7 @@ export const IconUbuntu = forwardRef<SVGSVGElement, CustomIconProps>(
           fill="none"
         />
         <path
-          d="M11.05 14.075C11.8342 14.075 12.47 13.4392 12.47 12.655C12.47 11.8707 11.8342 11.235 11.05 11.235C10.2658 11.235 9.63 11.8707 9.63 12.655C9.63 13.4392 10.2658 14.075 11.05 14.075Z"
+          d="M16.575 21.1125C17.7513 21.1125 18.705 20.1588 18.705 18.9825C18.705 17.8061 17.7513 16.8525 16.575 16.8525C15.3987 16.8525 14.445 17.8061 14.445 18.9825C14.445 20.1588 15.3987 21.1125 16.575 21.1125Z"
           stroke={color}
           strokeWidth={stroke} 
           strokeLinecap="round"
@@ -5475,7 +5475,7 @@ export const IconUbuntu = forwardRef<SVGSVGElement, CustomIconProps>(
           fill="none"
         />
         <path
-          d="M13.33 5.30499C13.76 6.05499 14 6.93499 14 7.87499C14 8.99499 13.65 10.045 13.05 10.895"
+          d="M19.995 7.9575C20.64 9.0825 21 10.4025 21 11.8125C21 13.4925 20.475 15.0675 19.575 16.3425"
           stroke={color}
           strokeWidth={stroke} 
           strokeLinecap="round"
@@ -5483,7 +5483,7 @@ export const IconUbuntu = forwardRef<SVGSVGElement, CustomIconProps>(
           fill="none"
         />
         <path
-          d="M4.16998 5.06498C5.10998 3.55498 6.76998 2.54498 8.67998 2.54498C8.76998 2.54498 8.86998 2.54498 8.96998 2.56498"
+          d="M6.255 7.5975C7.665 5.3325 10.155 3.8175 13.02 3.8175C13.155 3.8175 13.305 3.8175 13.455 3.8475"
           stroke={color}
           strokeWidth={stroke} 
           strokeLinecap="round"
@@ -5491,7 +5491,7 @@ export const IconUbuntu = forwardRef<SVGSVGElement, CustomIconProps>(
           fill="none"
         />
         <path
-          d="M3.92999 10.265C4.75999 11.945 6.45999 13.105 8.43999 13.185"
+          d="M5.895 15.3975C7.14 17.9175 9.69 19.6575 12.66 19.7775"
           stroke={color}
           strokeWidth={stroke} 
           strokeLinecap="round"
@@ -5499,7 +5499,7 @@ export const IconUbuntu = forwardRef<SVGSVGElement, CustomIconProps>(
           fill="none"
         />
         <path
-          d="M11.52 4.76499C12.3042 4.76499 12.94 4.12923 12.94 3.34499C12.94 2.56074 12.3042 1.92499 11.52 1.92499C10.7357 1.92499 10.1 2.56074 10.1 3.34499C10.1 4.12923 10.7357 4.76499 11.52 4.76499Z"
+          d="M17.28 7.1475C18.4563 7.1475 19.41 6.19386 19.41 5.0175C19.41 3.84114 18.4563 2.8875 17.28 2.8875C16.1036 2.8875 15.15 3.84114 15.15 5.0175C15.15 6.19386 16.1036 7.1475 17.28 7.1475Z"
           stroke={color}
           strokeWidth={stroke} 
           strokeLinecap="round"
@@ -5543,4 +5543,122 @@ export const IconUnlink = forwardRef<SVGSVGElement, CustomIconProps>(
 );
 IconUnlink.displayName = 'IconUnlink';
 
+/**
+ * Window_active - 12x12 프레임
+ * 활성화된 윈도우 아이콘
+ * Figma 디자인 기반
+ */
+export const IconWindowActive = forwardRef<SVGSVGElement, CustomIconProps>(
+  ({ size = 16, color = 'currentColor', stroke = 1, className, style, ...props }, ref) => {
+    return (
+      <svg
+        ref={ref}
+        xmlns="http://www.w3.org/2000/svg"
+        width={size}
+        height={size}
+        viewBox="0 0 12 12"
+        fill="none"
+        className={className}
+        style={style}
+        {...props}
+      >
+        <path
+          d="M0.5 3.16667H11.1667M3.16667 0.5V3.16667M0.5 1.83333C0.5 1.47971 0.640476 1.14057 0.890524 0.890524C1.14057 0.640476 1.47971 0.5 1.83333 0.5H9.83333C10.187 0.5 10.5261 0.640476 10.7761 0.890524C11.0262 1.14057 11.1667 1.47971 11.1667 1.83333V9.83333C11.1667 10.187 11.0262 10.5261 10.7761 10.7761C10.5261 11.0262 10.187 11.1667 9.83333 11.1667H1.83333C1.47971 11.1667 1.14057 11.0262 0.890524 10.7761C0.640476 10.5261 0.5 10.187 0.5 9.83333V1.83333Z"
+          stroke={color}
+          strokeWidth={stroke}
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+      </svg>
+    );
+  }
+);
+IconWindowActive.displayName = 'IconWindowActive';
+
+/**
+ * Window_minimized - 13x12 프레임
+ * 최소화된 윈도우 아이콘
+ * Figma 디자인 기반
+ */
+export const IconWindowMinimized = forwardRef<SVGSVGElement, CustomIconProps>(
+  ({ size = 16, color = 'currentColor', stroke = 1, className, style, ...props }, ref) => {
+    return (
+      <svg
+        ref={ref}
+        xmlns="http://www.w3.org/2000/svg"
+        width={size}
+        height={size}
+        viewBox="0 0 13 12"
+        fill="none"
+        className={className}
+        style={style}
+        {...props}
+      >
+        <path
+          d="M0.5 3.16667H11.1667M5.83333 11.1667H1.83333C1.47971 11.1667 1.14057 11.0262 0.890524 10.7761C0.640476 10.5261 0.5 10.187 0.5 9.83333V1.83333C0.5 1.47971 0.640476 1.14057 0.890524 0.890524C1.14057 0.640476 1.47971 0.5 1.83333 0.5H9.83333C10.187 0.5 10.5261 0.640476 10.7761 0.890524C11.0262 1.14057 11.1667 1.47971 11.1667 1.83333V7.83333M3.16667 0.5V3.16667M8.5 10.5H12.5"
+          stroke={color}
+          strokeWidth={stroke}
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+      </svg>
+    );
+  }
+);
+IconWindowMinimized.displayName = 'IconWindowMinimized';
+
+/**
+ * Grid (Windows) - 16x16 프레임
+ */
+export const IconGrid = forwardRef<SVGSVGElement, CustomIconProps>(
+  ({ size = 16, color = 'currentColor', stroke = 1.5, className, style, ...props }, ref) => {
+    return (
+      <svg
+        ref={ref}
+        xmlns="http://www.w3.org/2000/svg"
+        width={size}
+        height={size}
+        viewBox="0 0 24 24"
+        fill="none"
+        className={className}
+        style={style}
+        {...props}
+      >
+        <path
+          d="M10.3333 4.5H4.5V10.3333H10.3333V4.5Z"
+          stroke={color}
+          strokeWidth={stroke}
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          fill="none"
+        />
+        <path
+          d="M19.5 4.5H13.6667V10.3333H19.5V4.5Z"
+          stroke={color}
+          strokeWidth={stroke}
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          fill="none"
+        />
+        <path
+          d="M19.5 13.6667H13.6667V19.5H19.5V13.6667Z"
+          stroke={color}
+          strokeWidth={stroke}
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          fill="none"
+        />
+        <path
+          d="M10.3333 13.6667H4.5V19.5H10.3333V13.6667Z"
+          stroke={color}
+          strokeWidth={stroke}
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          fill="none"
+        />
+      </svg>
+    );
+  }
+);
+IconGrid.displayName = 'IconGrid';
 
