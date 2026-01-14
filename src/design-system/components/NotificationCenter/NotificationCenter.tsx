@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { IconCheck, IconCircleCheck, IconAlertCircle, IconSquare, IconChevronUp, IconChevronDown } from '@tabler/icons-react';
+import { IconCheck, IconCircleCheck, IconAlertCircle, IconSquare, IconCheckbox, IconChevronUp, IconChevronDown } from '@tabler/icons-react';
 import { Tabs, TabList, Tab } from '../Tabs';
 import { Chip } from '../Chip';
 
@@ -89,24 +89,13 @@ export const NotificationCenter: React.FC<NotificationCenterProps> = ({
       `}
     >
       {/* Header with Tabs */}
-      <div className="flex items-center justify-between px-4 pt-3 pb-0">
-        <Tabs value={activeTab} onChange={setActiveTab} variant="underline" size="sm">
-          <TabList>
-            <Tab value="all">All</Tab>
-            <Tab value="unread">
-              Unread{unreadCount > 0 && <span className="ml-1 text-[var(--color-text-muted)]">({unreadCount})</span>}
-            </Tab>
-            <Tab value="error">
-              Error{errorCount > 0 && <span className="ml-1 text-[var(--color-text-muted)]">({errorCount})</span>}
-            </Tab>
-          </TabList>
-        </Tabs>
-
-        {/* Mark all as read button */}
+      <div className="relative pt-3 pb-0">
+        {/* Mark all as read button - positioned top right, vertically centered */}
         <button
           type="button"
           onClick={onMarkAllAsRead}
           className="
+            absolute right-4 top-1/2 -translate-y-1/2 z-20
             flex items-center justify-center
             size-7
             rounded-md
@@ -115,11 +104,10 @@ export const NotificationCenter: React.FC<NotificationCenterProps> = ({
             hover:text-[var(--color-text-default)]
             transition-colors
             group
-            relative
           "
           aria-label="Mark all as read"
         >
-          <IconCheck size={16} stroke={1.5} />
+          <IconCheckbox size={16} stroke={1.5} />
           {/* Tooltip */}
           <span className="
             absolute top-full right-0 mt-1
@@ -138,6 +126,19 @@ export const NotificationCenter: React.FC<NotificationCenterProps> = ({
             Mark all as read
           </span>
         </button>
+
+        {/* Tabs - full width */}
+        <Tabs value={activeTab} onChange={setActiveTab} variant="underline" size="sm" className="w-full">
+          <TabList className="w-full px-4">
+            <Tab value="all">All</Tab>
+            <Tab value="unread">
+              Unread{unreadCount > 0 && <span className="ml-1 text-[var(--color-text-muted)]">({unreadCount})</span>}
+            </Tab>
+            <Tab value="error">
+              Error{errorCount > 0 && <span className="ml-1 text-[var(--color-text-muted)]">({errorCount})</span>}
+            </Tab>
+          </TabList>
+        </Tabs>
       </div>
 
       {/* Notifications List */}
@@ -206,16 +207,18 @@ const NotificationCard: React.FC<NotificationCardProps> = ({
         rounded-lg
         border
         transition-all
-        ${isSelected
-          ? 'border-[var(--color-action-primary)] bg-[var(--color-surface-default)]'
-          : 'border-[var(--color-border-default)] hover:border-[var(--color-border-strong)]'
-        }
+        border-[var(--color-border-default)] hover:border-[var(--color-border-strong)]
         ${!notification.isRead ? 'bg-[var(--color-surface-subtle)]' : 'bg-[var(--color-surface-default)]'}
       `}
     >
       {/* Main Content */}
       <div
-        onClick={() => onClick?.(notification)}
+        onClick={() => {
+          if (!notification.isRead) {
+            onMarkAsRead?.(notification.id);
+          }
+          onClick?.(notification);
+        }}
         className="flex gap-3 p-3 cursor-pointer"
       >
         {/* Icon */}
@@ -236,51 +239,14 @@ const NotificationCard: React.FC<NotificationCardProps> = ({
           )}
         </div>
 
-        {/* Right side - Mark as read & Time */}
+        {/* Right side - Unread indicator & Time */}
         <div className="shrink-0 flex flex-col items-end gap-1">
-          {/* Mark as read button */}
-          <button
-            type="button"
-            onClick={(e) => {
-              e.stopPropagation();
-              onMarkAsRead?.(notification.id);
-            }}
-            className="
-              flex items-center justify-center
-              size-6
-              rounded
-              text-[var(--color-text-muted)]
-              hover:bg-[var(--color-surface-muted)]
-              hover:text-[var(--color-text-default)]
-              transition-colors
-              group
-              relative
-            "
-            aria-label={notification.isRead ? 'Already read' : 'Mark as read'}
-          >
-            {notification.isRead ? (
-              <IconCheck size={16} stroke={1.5} className="text-[var(--color-action-primary)]" />
-            ) : (
-              <IconSquare size={16} stroke={1.5} />
+          {/* Unread dot indicator */}
+          <div className="size-6 flex items-center justify-center">
+            {!notification.isRead && (
+              <div className="size-2 rounded-full bg-[var(--color-action-primary)]" />
             )}
-            {/* Tooltip */}
-            <span className="
-              absolute top-full right-0 mt-1
-              px-2 py-1
-              bg-[var(--color-text-default)]
-              text-[var(--color-surface-default)]
-              text-[11px]
-              rounded
-              whitespace-nowrap
-              opacity-0
-              group-hover:opacity-100
-              transition-opacity
-              pointer-events-none
-              z-10
-            ">
-              {notification.isRead ? 'Already read' : 'Mark as read'}
-            </span>
-          </button>
+          </div>
 
           {/* Time */}
           <span className="text-[12px] text-[var(--color-text-muted)]">
@@ -321,7 +287,7 @@ const NotificationCard: React.FC<NotificationCardProps> = ({
             <div className="px-3 pb-3">
               <div className="p-3 bg-[var(--color-surface-subtle)] rounded-md">
                 {notification.detail?.code && (
-                  <p className="text-[13px] font-semibold text-[var(--color-text-default)] mb-1">
+                  <p className="text-[length:var(--font-size-12)] leading-[var(--line-height-18)] font-medium text-[var(--color-text-default)] mb-1">
                     code: {notification.detail.code}
                   </p>
                 )}

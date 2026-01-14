@@ -23,7 +23,7 @@ import {
   IconTrash,
 } from '@tabler/icons-react';
 import { IconAction } from '@/design-system';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 /* ----------------------------------------
    Types
@@ -74,6 +74,7 @@ const statusMap: Record<UserStatus, StatusType> = {
    ---------------------------------------- */
 
 export function IAMUsersPage() {
+  const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
@@ -233,7 +234,7 @@ export function IAMUsersPage() {
                 <h1 className="text-[16px] font-semibold leading-6 text-[var(--color-text-default)]">
                   Users
                 </h1>
-                <Button variant="primary" size="sm">
+                <Button variant="primary" size="sm" onClick={() => navigate('/iam/users/create')}>
                   Create user
                 </Button>
               </HStack>

@@ -28,6 +28,7 @@ import {
   Disclosure,
   Tooltip,
   InlineMessage,
+  SelectionIndicator,
 } from '@/design-system';
 import type { WizardSummaryItem, WizardSectionState, TableColumn } from '@/design-system';
 import { Sidebar } from '@/components/Sidebar';
@@ -979,7 +980,7 @@ export default function CreateLoadBalancerPage() {
                       }
                     />
                     {activeSection === 'basic-info' && (
-                      <SectionCard.Content gap={6}>
+                      <SectionCard.Content gap={6} className="pt-2">
                         {/* Load Balancer Name */}
                         <FormField required error={!!lbNameError}>
                           <FormField.Label>Load balancer name</FormField.Label>
@@ -1108,13 +1109,22 @@ export default function CreateLoadBalancerPage() {
                             </div>
                           )}
 
-                          {/* Network Error Message */}
-                          {networkError && (
+                          {/* Error Message or Selection Indicator for Network */}
+                          {networkError && !selectedNetwork ? (
                             <div className="mt-2">
                               <InlineMessage variant="error">
                                 {networkError}
                               </InlineMessage>
                             </div>
+                          ) : (
+                            <SelectionIndicator
+                              className="mt-2"
+                              selectedItems={selectedNetwork ? [{
+                                id: selectedNetwork,
+                                label: mockNetworks.find(n => n.id === selectedNetwork)?.name || selectedNetwork
+                              }] : []}
+                              onRemove={() => setSelectedNetwork('')}
+                            />
                           )}
                         </VStack>
 
@@ -1246,7 +1256,7 @@ export default function CreateLoadBalancerPage() {
                       }
                     />
                     {activeSection === 'listener' && (
-                      <SectionCard.Content gap={6}>
+                      <SectionCard.Content gap={6} className="pt-2">
                         {/* Listener name */}
                         <FormField required>
                           <FormField.Label>Listener name</FormField.Label>
@@ -1364,6 +1374,16 @@ export default function CreateLoadBalancerPage() {
                               data={mockCertificates}
                               getRowId={(row) => row.id}
                             />
+
+                            {/* Selection Indicator for Certificate */}
+                            <SelectionIndicator
+                              className="mt-2"
+                              selectedItems={selectedCertificate ? [{
+                                id: selectedCertificate,
+                                label: mockCertificates.find(c => c.id === selectedCertificate)?.name || selectedCertificate
+                              }] : []}
+                              onRemove={() => setSelectedCertificate('')}
+                            />
                           </VStack>
                         )}
 
@@ -1398,6 +1418,16 @@ export default function CreateLoadBalancerPage() {
                               columns={caCertificateColumns}
                               data={mockCaCertificates}
                               getRowId={(row) => row.id}
+                            />
+
+                            {/* Selection Indicator for CA Certificate */}
+                            <SelectionIndicator
+                              className="mt-2"
+                              selectedItems={selectedCaCertificate ? [{
+                                id: selectedCaCertificate,
+                                label: mockCaCertificates.find(c => c.id === selectedCaCertificate)?.name || selectedCaCertificate
+                              }] : []}
+                              onRemove={() => setSelectedCaCertificate('')}
                             />
                           </VStack>
                         )}
@@ -1449,6 +1479,20 @@ export default function CreateLoadBalancerPage() {
                               columns={sniCertificateColumns}
                               data={mockSniCertificates}
                               getRowId={(row) => row.id}
+                            />
+
+                            {/* Selection Indicator for SNI Certificates */}
+                            <SelectionIndicator
+                              className="mt-2"
+                              selectedItems={Array.from(selectedSniCertificates).map(id => ({
+                                id,
+                                label: mockSniCertificates.find(c => c.id === id)?.name || id
+                              }))}
+                              onRemove={(id) => {
+                                const newSet = new Set(selectedSniCertificates);
+                                newSet.delete(id);
+                                setSelectedSniCertificates(newSet);
+                              }}
                             />
                           </VStack>
                         )}
@@ -1720,7 +1764,7 @@ export default function CreateLoadBalancerPage() {
                       }
                     />
                     {activeSection === 'pool' && (
-                      <SectionCard.Content gap={6}>
+                      <SectionCard.Content gap={6} className="pt-2">
                         {/* Create Pool toggle */}
                         <VStack gap={2} align="start">
                           <span className="text-[14px] font-medium text-[var(--color-text-default)]">Create Pool</span>
@@ -1946,7 +1990,7 @@ export default function CreateLoadBalancerPage() {
                       }
                     />
                     {activeSection === 'member' && (
-                      <SectionCard.Content gap={6}>
+                      <SectionCard.Content gap={6} className="pt-2">
                         {/* Ports Section */}
                         <VStack gap={3} align="stretch">
                           <VStack gap={2} align="start">
@@ -2225,7 +2269,7 @@ export default function CreateLoadBalancerPage() {
                       }
                     />
                     {activeSection === 'health-monitor' && (
-                      <SectionCard.Content gap={6}>
+                      <SectionCard.Content gap={6} className="pt-2">
                         {/* Create Health Monitor toggle */}
                         <VStack gap={2} align="start">
                           <span className="text-[14px] font-medium text-[var(--color-text-default)]">Create Health Monitor</span>
