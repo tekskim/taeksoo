@@ -1,6 +1,7 @@
 import { forwardRef, useState, useCallback, useRef, useEffect, type InputHTMLAttributes, type KeyboardEvent } from 'react';
 import { twMerge } from 'tailwind-merge';
-import { IconSearch, IconX } from '@tabler/icons-react';
+import { IconSearch } from '@tabler/icons-react';
+import { Chip } from '../Chip';
 
 /* ----------------------------------------
    FilterSearchInput Types
@@ -73,35 +74,6 @@ const sizes: Record<FilterSearchInputSize, string> = {
 };
 
 /* ----------------------------------------
-   Filter Tag Component
-   ---------------------------------------- */
-
-interface FilterTagProps {
-  label: string;
-  value: string;
-  onRemove?: () => void;
-}
-
-function FilterTag({ label, value, onRemove }: FilterTagProps) {
-  return (
-    <div className="flex items-center gap-1 h-6 px-2 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded text-[11px]">
-      <span className="text-[var(--color-text-default)] font-medium">{label}</span>
-      <span className="text-[var(--color-text-subtle)]">{value}</span>
-      {onRemove && (
-        <button
-          type="button"
-          onClick={onRemove}
-          className="ml-0.5 text-[var(--color-text-subtle)] hover:text-[var(--color-text-default)] transition-colors"
-          aria-label={`Remove ${label} filter`}
-        >
-          <IconX size={10} strokeWidth={2} />
-        </button>
-      )}
-    </div>
-  );
-}
-
-/* ----------------------------------------
    Filter Dropdown Menu
    ---------------------------------------- */
 
@@ -127,17 +99,17 @@ function FilterDropdown({
   // Show options if a select-type filter is selected
   if (selectedFilter && selectedFilter.type === 'select' && selectedFilter.options) {
     return (
-      <div className="absolute left-0 top-full mt-1 w-[200px] bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg shadow-lg z-50 overflow-hidden">
-        <div className="px-3 py-2 text-[10px] font-medium text-[var(--color-text-subtle)] uppercase tracking-wide border-b border-[var(--color-border-subtle)]">
+      <div className="absolute left-0 top-full mt-1 min-w-[var(--context-menu-min-width)] bg-[var(--color-surface-default)] border border-[var(--color-border-strong)] rounded-[var(--context-menu-radius)] shadow-[var(--shadow-md)] z-50 overflow-hidden">
+        <div className="px-[var(--context-menu-padding-x)] py-[var(--context-menu-padding-y)] text-[length:var(--font-size-10)] font-medium text-[var(--color-text-subtle)] uppercase tracking-wide border-b border-[var(--color-border-subtle)]">
           {selectedFilter.label}
         </div>
-        <div className="py-1">
+        <div>
           {selectedFilter.options.map((option) => (
             <button
               key={option.value}
               type="button"
               onClick={() => onOptionSelect(option)}
-              className="w-full px-3 py-2 text-left text-[13px] text-[var(--color-text-default)] hover:bg-[var(--color-surface-subtle)] transition-colors"
+              className="w-full px-[var(--context-menu-padding-x)] py-[var(--context-menu-padding-y)] text-left text-[length:var(--font-size-11)] text-[var(--color-text-default)] hover:bg-[var(--context-menu-hover-bg)] transition-colors duration-[var(--duration-fast)]"
             >
               {option.label}
             </button>
@@ -147,7 +119,7 @@ function FilterDropdown({
           <button
             type="button"
             onClick={onBack}
-            className="w-full px-3 py-2 text-left text-[12px] text-[var(--color-text-muted)] hover:bg-[var(--color-surface-subtle)] transition-colors"
+            className="w-full px-[var(--context-menu-padding-x)] py-[var(--context-menu-padding-y)] text-left text-[length:var(--font-size-11)] text-[var(--color-text-muted)] hover:bg-[var(--context-menu-hover-bg)] transition-colors duration-[var(--duration-fast)]"
           >
             ← Back to filters
           </button>
@@ -158,17 +130,17 @@ function FilterDropdown({
 
   // Show filter list
   return (
-    <div className="absolute left-0 top-full mt-1 w-[200px] bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg shadow-lg z-50 overflow-hidden">
-      <div className="px-3 py-2 text-[10px] font-medium text-[var(--color-text-subtle)] uppercase tracking-wide border-b border-[var(--color-border-subtle)]">
+    <div className="absolute left-0 top-full mt-1 min-w-[var(--context-menu-min-width)] bg-[var(--color-surface-default)] border border-[var(--color-border-strong)] rounded-[var(--context-menu-radius)] shadow-[var(--shadow-md)] z-50 overflow-hidden">
+      <div className="px-[var(--context-menu-padding-x)] py-[var(--context-menu-padding-y)] text-[length:var(--font-size-10)] font-medium text-[var(--color-text-subtle)] uppercase tracking-wide border-b border-[var(--color-border-subtle)]">
         Filter by
       </div>
-      <div className="py-1">
+      <div>
         {filters.map((filter) => (
           <button
             key={filter.id}
             type="button"
             onClick={() => onFilterSelect(filter)}
-            className="w-full px-3 py-2 text-left text-[13px] text-[var(--color-text-default)] hover:bg-[var(--color-surface-subtle)] transition-colors"
+            className="w-full px-[var(--context-menu-padding-x)] py-[var(--context-menu-padding-y)] text-left text-[length:var(--font-size-11)] text-[var(--color-text-default)] hover:bg-[var(--context-menu-hover-bg)] transition-colors duration-[var(--duration-fast)]"
           >
             {filter.label}
           </button>
@@ -432,10 +404,10 @@ export const FilterSearchInput = forwardRef<HTMLInputElement, FilterSearchInputP
 
         {/* Applied Filters */}
         {appliedFilters.length > 0 && (
-          <div className="flex items-center justify-between gap-2">
-            <div className="flex items-center gap-1.5 flex-wrap">
+          <div className="flex items-center justify-between pl-2 pr-4 py-2 bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)]">
+            <div className="flex items-center gap-1 flex-wrap">
               {appliedFilters.map((filter) => (
-                <FilterTag
+                <Chip
                   key={filter.id}
                   label={filter.fieldLabel}
                   value={filter.valueLabel || filter.value}
@@ -446,7 +418,7 @@ export const FilterSearchInput = forwardRef<HTMLInputElement, FilterSearchInputP
             <button
               type="button"
               onClick={handleClearFilters}
-              className="text-[12px] text-[var(--color-action-primary)] hover:underline whitespace-nowrap"
+              className="text-[length:var(--font-size-11)] leading-[var(--line-height-16)] font-medium text-[var(--color-action-primary)] hover:text-[var(--color-action-primary-hover)] transition-colors whitespace-nowrap"
             >
               {clearFiltersLabel}
             </button>
