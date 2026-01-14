@@ -26,6 +26,7 @@ import {
   IconGrid,
   IconRocky,
   InlineMessage,
+  SelectionIndicator,
 } from '@/design-system';
 import type { WizardSummaryItem, WizardSectionState, TableColumn } from '@/design-system';
 import { Sidebar } from '@/components/Sidebar';
@@ -490,7 +491,7 @@ export function CreateVolumePage() {
                       }
                     />
                     {sectionStatus['basic-info'] === 'active' && (
-                      <SectionCard.Content gap={6}>
+                      <SectionCard.Content gap={6} className="pt-2">
                         <FormField required error={!!volumeNameError}>
                           <FormField.Label>Volume name</FormField.Label>
                           <FormField.Control>
@@ -594,7 +595,7 @@ export function CreateVolumePage() {
                       }
                     />
                     {sectionStatus['source'] === 'active' && (
-                      <SectionCard.Content gap={6}>
+                      <SectionCard.Content gap={6} className="pt-2">
                         <FormField required>
                           <FormField.Label>Volume source type</FormField.Label>
                           <FormField.HelperText>
@@ -675,21 +676,15 @@ export function CreateVolumePage() {
                               onSelectionChange={(keys) => { setSelectedImage(keys); setSourceError(null); }}
                             />
 
-                            {/* Selected Images Chips */}
-                            {selectedImage.length > 0 && (
-                              <HStack gap={2} className="flex-wrap">
-                                {selectedImage.map(id => {
-                                  const image = mockImages.find(img => img.id === id);
-                                  return image ? (
-                                    <Chip 
-                                      key={id}
-                                      value={image.name}
-                                      onRemove={() => setSelectedImage(selectedImage.filter(i => i !== id))}
-                                    />
-                                  ) : null;
-                                })}
-                              </HStack>
-                            )}
+                            {/* Selection Indicator for Images */}
+                            <SelectionIndicator
+                              className="mt-2"
+                              selectedItems={selectedImage.map(id => {
+                                const image = mockImages.find(img => img.id === id);
+                                return { id, label: image?.name || id };
+                              })}
+                              onRemove={(id) => setSelectedImage(selectedImage.filter(i => i !== id))}
+                            />
                           </VStack>
                         )}
 
@@ -725,21 +720,15 @@ export function CreateVolumePage() {
                               onSelectionChange={(keys) => { setSelectedSnapshot(keys); setSourceError(null); }}
                             />
 
-                            {/* Selected Snapshots Chips */}
-                            {selectedSnapshot.length > 0 && (
-                              <HStack gap={2} className="flex-wrap">
-                                {selectedSnapshot.map(id => {
-                                  const snapshot = mockSnapshots.find(s => s.id === id);
-                                  return snapshot ? (
-                                    <Chip 
-                                      key={id}
-                                      value={snapshot.name}
-                                      onRemove={() => setSelectedSnapshot(selectedSnapshot.filter(i => i !== id))}
-                                    />
-                                  ) : null;
-                                })}
-                              </HStack>
-                            )}
+                            {/* Selection Indicator for Snapshots */}
+                            <SelectionIndicator
+                              className="mt-2"
+                              selectedItems={selectedSnapshot.map(id => {
+                                const snapshot = mockSnapshots.find(s => s.id === id);
+                                return { id, label: snapshot?.name || id };
+                              })}
+                              onRemove={(id) => setSelectedSnapshot(selectedSnapshot.filter(i => i !== id))}
+                            />
                           </VStack>
                         )}
 
@@ -806,7 +795,7 @@ export function CreateVolumePage() {
                       }
                     />
                     {sectionStatus['configuration'] === 'active' && (
-                      <SectionCard.Content gap={6}>
+                      <SectionCard.Content gap={6} className="pt-2">
                         {/* Different content for snapshot vs other sources */}
                         {sourceType === 'snapshot' ? (
                           <>
@@ -915,7 +904,15 @@ export function CreateVolumePage() {
                                 onSelectionChange={setSelectedVolumeType}
                               />
 
-                              <span className="text-[12px] text-[var(--color-text-subtle)]">Selected</span>
+                              {/* Selection Indicator for Volume Types */}
+                              <SelectionIndicator
+                                className="mt-2"
+                                selectedItems={selectedVolumeType.map(id => {
+                                  const volumeType = mockVolumeTypes.find(v => v.id === id);
+                                  return { id, label: volumeType?.name || id };
+                                })}
+                                onRemove={(id) => setSelectedVolumeType(selectedVolumeType.filter(i => i !== id))}
+                              />
                             </VStack>
 
                             <FormField required>

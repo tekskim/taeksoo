@@ -459,7 +459,7 @@ function OpenSectionDemo() {
       <SectionCard.Content>
         <VStack gap={0}>
           {/* Instance name */}
-          <div className="flex flex-col py-6">
+          <div className="flex flex-col pt-2 pb-6">
             <label className="text-[14px] font-medium text-[var(--color-text-default)] mb-2">
               Instance name <span className="ml-1 text-[var(--color-state-danger)]">*</span>
             </label>
@@ -633,7 +633,7 @@ function OpenSectionTableDemo() {
       <SectionCard.Content>
         <VStack gap={0}>
           {/* Start Source */}
-          <VStack gap={2} className="pt-3">
+          <VStack gap={2} className="pt-2">
             <span className="text-[14px] font-medium text-[var(--color-text-default)]">
               Start source<span className="ml-1 text-[var(--color-state-danger)]">*</span>
             </span>
@@ -650,42 +650,30 @@ function OpenSectionTableDemo() {
               </TabList>
             </Tabs>
 
-            {/* OS Filter Tabs (Capsule/Boxed) - Only show for Image tab */}
+            {/* OS Filter Tabs (Capsule) - Only show for Image tab */}
             {sourceTab === 'image' && (
               <div className="mt-2">
-                <Tabs 
-                  value={osFilter} 
-                  onChange={(v) => { setOsFilter(v as 'ubuntu' | 'windows' | 'rocky' | 'other'); setCurrentPage(1); }} 
-                  variant="boxed" 
-                  size="sm"
-                >
-                  <TabList>
-                    <Tab value="other">
-                      <span className="flex items-center gap-1">
-                        <IconDots size={14} />
-                        Others
-                      </span>
-                    </Tab>
-                    <Tab value="ubuntu">
-                      <span className="flex items-center gap-1">
-                        <IconUbuntu size={14} />
-                        Ubuntu
-                      </span>
-                    </Tab>
-                    <Tab value="windows">
-                      <span className="flex items-center gap-1">
-                        <IconGrid size={14} />
-                        Windows
-                      </span>
-                    </Tab>
-                    <Tab value="rocky">
-                      <span className="flex items-center gap-1">
-                        <IconRocky size={14} />
-                        Rocky
-                      </span>
-                    </Tab>
-                  </TabList>
-                </Tabs>
+                <div className="inline-flex gap-1 p-1 bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[8px] w-fit">
+                  {(['other', 'ubuntu', 'windows', 'rocky'] as const).map((filter) => (
+                    <button
+                      key={filter}
+                      onClick={() => { setOsFilter(filter); setCurrentPage(1); }}
+                      className={`
+                        flex items-center gap-1 px-[10px] py-[6px] rounded-[6px] text-[12px] font-medium leading-5 text-center transition-all
+                        ${osFilter === filter
+                          ? 'bg-[var(--color-surface-default)] border border-[var(--color-border-default)] text-[var(--color-action-primary)] shadow-sm'
+                          : 'bg-transparent border border-transparent text-[var(--color-text-default)]'
+                        }
+                      `}
+                    >
+                      {filter === 'other' && <IconDots size={14} />}
+                      {filter === 'ubuntu' && <IconUbuntu size={14} />}
+                      {filter === 'windows' && <IconGrid size={14} />}
+                      {filter === 'rocky' && <IconRocky size={14} />}
+                      {filter === 'other' ? 'Others' : filter.charAt(0).toUpperCase() + filter.slice(1)}
+                    </button>
+                  ))}
+                </div>
               </div>
             )}
 
