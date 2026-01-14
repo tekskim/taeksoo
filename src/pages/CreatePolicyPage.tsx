@@ -902,7 +902,10 @@ function PolicyEditorSection({
                                       checked={isSelected}
                                       onChange={() => toggleDetailedAction(permission.id, actionName)}
                                     />
-                                    <span className="text-[12px] text-[var(--color-text-default)] truncate min-w-0">
+                                    <span 
+                                      className="text-[12px] text-[var(--color-text-default)] truncate min-w-0"
+                                      title={actionName}
+                                    >
                                       {actionName}
                                     </span>
                                   </div>
