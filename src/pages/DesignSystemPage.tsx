@@ -1433,9 +1433,10 @@ function RangeSliderDemo() {
 }
 
 /* ----------------------------------------
-   Modal Demo (with state)
+   Modal Demo Components
    ---------------------------------------- */
 
+// Basic Modal Demo
 function ModalDemo({ variant }: { variant: 'basic' | 'delete' | 'size-sm' | 'size-md' | 'size-lg' }) {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -1504,6 +1505,140 @@ function ModalDemo({ variant }: { variant: 'basic' | 'delete' | 'size-sm' | 'siz
           </Button>
           <Button variant="primary" size="md" onClick={() => setIsOpen(false)} className="flex-1">
             Confirm
+          </Button>
+        </div>
+      </Modal>
+    </>
+  );
+}
+
+// Modal Use Case Demos
+function ModalUseCaseDemo({ useCase }: { useCase: 'delete-single' | 'delete-multiple' | 'disassociate' | 'restore-warning' }) {
+  const [isOpen, setIsOpen] = useState(false);
+
+  const config = {
+    'delete-single': {
+      button: 'Delete (Single)',
+      title: 'Delete Security group',
+      description: 'Are you sure you want to delete this security group? This action cannot be undone.',
+      size: 'sm' as const,
+      infoLabel: 'Security group',
+      infoValue: 'sg-01',
+      hasWarning: true,
+      warningText: 'This action will permanently delete the security group and all its rules. If this group is attached to any instances, their network traffic may be affected.',
+      actionText: 'Delete',
+      actionVariant: 'danger' as const,
+    },
+    'delete-multiple': {
+      button: 'Delete (Multiple)',
+      title: 'Delete Security groups',
+      description: 'Are you sure you want to delete the selected security groups?',
+      size: 'md' as const,
+      infoLabel: 'Security groups (5)',
+      infoList: ['sg-01', 'sg-02', 'sg-03', 'sg-04', 'sg-05'],
+      hasWarning: true,
+      warningText: 'This action will permanently delete the security groups and all their rules.',
+      actionText: 'Delete',
+      actionVariant: 'danger' as const,
+    },
+    'disassociate': {
+      button: 'Disassociate',
+      title: 'Disassociate floating IP',
+      description: 'Disassociating will detach the floating IP from the selected resource. External access via this IP will stop immediately.',
+      size: 'sm' as const,
+      infoLabel: 'Floating IP',
+      infoValue: '123.45.67.8',
+      secondInfoLabel: 'Associated to',
+      secondInfoList: ['Type : Instance', 'Name : server-01', 'Fixed IP : 10.0.0.10'],
+      hasWarning: false,
+      actionText: 'Disassociate',
+      actionVariant: 'primary' as const,
+    },
+    'restore-warning': {
+      button: 'Restore (Disabled)',
+      title: 'Restore backup',
+      description: 'Large volume backups may impact performance and network throughput.',
+      size: 'md' as const,
+      infoLabel: 'Volume name',
+      infoValue: 'vol-01 (Available)',
+      secondInfoLabel: 'Instance name',
+      secondInfoList: ['web-server-1 (Running)', 'dev-team (Running)'],
+      hasWarning: true,
+      warningText: 'Restore cannot proceed. Change the backup status to Available or shut down the attached instance.',
+      actionText: 'Restore',
+      actionVariant: 'primary' as const,
+      disabled: true,
+    },
+  };
+
+  const c = config[useCase];
+
+  return (
+    <>
+      <Button variant="outline" size="sm" onClick={() => setIsOpen(true)}>
+        {c.button}
+      </Button>
+      <Modal
+        isOpen={isOpen}
+        onClose={() => setIsOpen(false)}
+        title={c.title}
+        description={c.description}
+        size={c.size}
+      >
+        <div className="flex flex-col gap-2">
+          {/* Info Box */}
+          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
+            <span className="text-[11px] text-[var(--color-text-subtle)] font-medium leading-4">
+              {c.infoLabel}
+            </span>
+            {'infoValue' in c && (
+              <span className="text-[12px] text-[var(--color-text-default)] leading-4">
+                {c.infoValue}
+              </span>
+            )}
+            {'infoList' in c && (
+              <ul className="text-[12px] text-[var(--color-text-default)] leading-4 list-disc pl-4 space-y-0.5 max-h-[72px] overflow-y-auto">
+                {c.infoList?.map((item, i) => <li key={i}>{item}</li>)}
+              </ul>
+            )}
+          </div>
+
+          {/* Second Info Box (if exists) */}
+          {'secondInfoLabel' in c && (
+            <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
+              <span className="text-[11px] text-[var(--color-text-subtle)] font-medium leading-4">
+                {c.secondInfoLabel}
+              </span>
+              <ul className="text-[12px] text-[var(--color-text-default)] leading-4 list-disc pl-4 space-y-0.5">
+                {c.secondInfoList?.map((item, i) => <li key={i}>{item}</li>)}
+              </ul>
+            </div>
+          )}
+
+          {/* Warning Alert */}
+          {c.hasWarning && (
+            <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
+              <IconAlertCircle size={16} className="text-[var(--color-state-danger)] shrink-0 mt-0.5" stroke={1.5} />
+              <p className="text-[11px] text-[var(--color-text-default)] leading-4">
+                {c.warningText}
+              </p>
+            </div>
+          )}
+        </div>
+
+        {/* Button Group */}
+        <div className="flex gap-2 w-full">
+          <Button variant="outline" size="md" onClick={() => setIsOpen(false)} className="flex-1">
+            Cancel
+          </Button>
+          <Button 
+            variant={c.actionVariant} 
+            size="md" 
+            onClick={() => setIsOpen(false)} 
+            className="flex-1"
+            disabled={'disabled' in c && c.disabled}
+          >
+            {c.actionText}
           </Button>
         </div>
       </Modal>
@@ -6690,11 +6825,11 @@ outline: 2px solid var(--color-border-focus);`}
                   <VStack gap={3}>
                     <Label>Menu items</Label>
                     <div className="w-full max-w-[200px] p-2 bg-[var(--color-surface-default)] rounded-[var(--radius-card)] border border-[var(--color-border-default)]">
-                      <MenuItem icon={<IconHome size={16} />} label="Home" />
-                      <MenuItem icon={<IconServer size={16} />} label="Instances" active />
-                      <MenuItem icon={<IconSettings size={16} />} label="Settings" />
+                      <MenuItem icon={<IconHome size={16} stroke={1.5} />} label="Home" />
+                      <MenuItem icon={<IconServer size={16} stroke={1.5} />} label="Instances" active />
+                      <MenuItem icon={<IconSettings size={16} stroke={1.5} />} label="Settings" />
                       <MenuDivider />
-                      <MenuItem icon={<IconUser size={16} />} label="Profile" />
+                      <MenuItem icon={<IconUser size={16} stroke={1.5} />} label="Profile" />
                     </div>
                   </VStack>
 
@@ -6813,15 +6948,92 @@ outline: 2px solid var(--color-border-focus);`}
                   </div>
                 </VStack>
 
-                {/* Basic Modal */}
+                {/* Size Guide */}
                 <VStack gap={3}>
-                  <Label>Basic modal</Label>
-                  <ModalDemo variant="basic" />
+                  <Label>Size</Label>
+                  <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
+                    <code>width: 344px</code> (모든 사이즈 동일)
+                  </div>
                 </VStack>
 
-                {/* Confirm Modal */}
+                {/* Inner Components Pattern */}
                 <VStack gap={3}>
-                  <Label>Confirm Modal (Delete)</Label>
+                  <Label>Inner components</Label>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {/* Info Box */}
+                    <div className="p-4 border border-[var(--color-border-default)] rounded-[var(--radius-md)]">
+                      <span className="text-[11px] font-medium text-[var(--color-text-subtle)] mb-2 block">Info Box (single value)</span>
+                      <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
+                        <span className="text-[11px] text-[var(--color-text-subtle)] font-medium leading-4">
+                          Volume name
+                        </span>
+                        <span className="text-[12px] text-[var(--color-text-default)] leading-4">
+                          vol-01 (Available)
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* Scrollable List */}
+                    <div className="p-4 border border-[var(--color-border-default)] rounded-[var(--radius-md)]">
+                      <span className="text-[11px] font-medium text-[var(--color-text-subtle)] mb-2 block">Scrollable List (max-h: 96px)</span>
+                      <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5 max-h-[96px] overflow-y-auto sidebar-scroll">
+                        <span className="text-[11px] text-[var(--color-text-subtle)] font-medium leading-4">
+                          Security groups (6)
+                        </span>
+                        <ul className="text-[12px] text-[var(--color-text-default)] leading-4 list-disc pl-4 space-y-0.5">
+                          <li>sg-01</li>
+                          <li>sg-02</li>
+                          <li>sg-03</li>
+                          <li>sg-04</li>
+                          <li>sg-05</li>
+                          <li>sg-06</li>
+                        </ul>
+                      </div>
+                    </div>
+
+                    {/* Warning Alert */}
+                    <div className="p-4 border border-[var(--color-border-default)] rounded-[var(--radius-md)]">
+                      <span className="text-[11px] font-medium text-[var(--color-text-subtle)] mb-2 block">Warning Alert</span>
+                      <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
+                        <IconAlertCircle size={16} className="text-[var(--color-state-danger)] shrink-0 mt-0.5" stroke={1.5} />
+                        <p className="text-[11px] text-[var(--color-text-default)] leading-4">
+                          This action will permanently delete the resource. This cannot be undone.
+                        </p>
+                      </div>
+                    </div>
+
+                    {/* Button Group */}
+                    <div className="p-4 border border-[var(--color-border-default)] rounded-[var(--radius-md)]">
+                      <span className="text-[11px] font-medium text-[var(--color-text-subtle)] mb-2 block">Button Group</span>
+                      <div className="flex gap-2 w-full">
+                        <Button variant="outline" size="md" className="flex-1">
+                          Cancel
+                        </Button>
+                        <Button variant="primary" size="md" className="flex-1">
+                          Confirm
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
+                </VStack>
+
+                {/* Use Cases */}
+                <VStack gap={3}>
+                  <Label>Use cases</Label>
+                  <HStack gap={2} className="flex-wrap">
+                    <ModalUseCaseDemo useCase="delete-single" />
+                    <ModalUseCaseDemo useCase="delete-multiple" />
+                    <ModalUseCaseDemo useCase="disassociate" />
+                    <ModalUseCaseDemo useCase="restore-warning" />
+                  </HStack>
+                </VStack>
+
+                {/* ConfirmModal Component */}
+                <VStack gap={3}>
+                  <Label>ConfirmModal component</Label>
+                  <p className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
+                    삭제 확인 등 반복적인 패턴을 위한 전용 컴포넌트. <code>infoLabel</code>, <code>infoValue</code>, <code>confirmVariant</code> props 지원.
+                  </p>
                   <ModalDemo variant="delete" />
                 </VStack>
 

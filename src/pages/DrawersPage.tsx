@@ -1,8 +1,7 @@
 import { useState } from 'react';
 import { useTabs } from '@/contexts/TabContext';
 import { Sidebar } from '@/components/Sidebar';
-import { TabBar } from '@/components/TabBar';
-import { TopBar, Breadcrumb } from '@/design-system';
+import { TopBar, Breadcrumb, TabBar } from '@/design-system';
 import { Button, VStack, HStack, Badge } from '@/design-system';
 
 // Import all drawer components
@@ -312,12 +311,15 @@ export function DrawersPage() {
             tabs={tabs.map((tab) => ({
               id: tab.id,
               label: tab.label,
+              closable: tab.closable,
             }))}
             activeTab={activeTabId}
             onTabChange={selectTab}
             onTabClose={closeTab}
             onTabAdd={addNewTab}
             onTabReorder={moveTab}
+            showAddButton={true}
+            showWindowControls={true}
           />
 
           {/* TopBar */}
