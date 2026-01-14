@@ -1205,6 +1205,12 @@ html.theme-transition *::after {
 }
 
 /* Sidebar Scrollbar */
+.sidebar-scroll {
+  scrollbar-gutter: stable;
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-border-default) transparent;
+}
+
 .sidebar-scroll::-webkit-scrollbar {
   width: 6px;
 }
@@ -1222,19 +1228,18 @@ html.theme-transition *::after {
   background: var(--color-border-strong);
 }
 
-/* Firefox */
-.sidebar-scroll {
-  scrollbar-width: thin;
-  scrollbar-color: var(--color-border-default) transparent;
-  scrollbar-gutter: stable;
-}
-
 /* Content min-width for horizontal scroll */
 .sidebar-scroll > div {
   min-width: 1176px;
 }
 
 /* Drawer Scrollbar */
+.drawer-scroll {
+  scrollbar-gutter: stable;
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-border-default) transparent;
+}
+
 .drawer-scroll::-webkit-scrollbar {
   width: 6px;
 }
@@ -1250,12 +1255,6 @@ html.theme-transition *::after {
 
 .drawer-scroll::-webkit-scrollbar-thumb:hover {
   background: var(--color-border-strong);
-}
-
-/* Firefox */
-.drawer-scroll {
-  scrollbar-width: thin;
-  scrollbar-color: var(--color-border-default) transparent;
 }
 
 /* Legend Scrollbar (smaller, lighter) */
