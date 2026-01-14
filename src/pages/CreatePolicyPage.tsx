@@ -849,7 +849,7 @@ function PolicyEditorSection({
 
                   {/* Detailed Action Tabs - For compute application with all fields filled */}
                   {shouldShowDetailedActions(permission) && (
-                    <div className="flex gap-3 w-full h-[320px]">
+                    <div className="flex gap-3 w-full h-[320px] overflow-hidden">
                       {(['read', 'list', 'write', 'delete', 'admin'] as const).map((category) => {
                         const categoryActions = COMPUTE_ACTIONS[category];
                         const filteredActions = searchQuery
@@ -867,7 +867,7 @@ function PolicyEditorSection({
                         return (
                           <div
                             key={category}
-                            className="flex-1 bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 flex flex-col min-w-0"
+                            className="flex-1 bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 flex flex-col min-w-0 overflow-hidden"
                           >
                             {/* Category Header */}
                             <div className="flex items-center gap-2.5 shrink-0">
@@ -885,13 +885,13 @@ function PolicyEditorSection({
                             </div>
 
                             {/* Actions List */}
-                            <div className="flex flex-col gap-2 mt-6 overflow-y-auto flex-1">
+                            <div className="flex flex-col gap-2 mt-6 overflow-y-auto overflow-x-hidden flex-1 min-h-0">
                               {filteredActions.map((actionName) => {
                                 const isSelected = permission.detailedActions[actionName];
                                 return (
                                   <div
                                     key={actionName}
-                                    className={`bg-white border rounded-[6px] p-2 flex items-center gap-1.5 cursor-pointer ${
+                                    className={`bg-white border rounded-[6px] p-2 flex items-center gap-1.5 cursor-pointer shrink-0 min-w-0 ${
                                       isSelected
                                         ? 'border-[var(--color-action-primary)]'
                                         : 'border-[var(--color-border-strong)]'
@@ -902,7 +902,7 @@ function PolicyEditorSection({
                                       checked={isSelected}
                                       onChange={() => toggleDetailedAction(permission.id, actionName)}
                                     />
-                                    <span className="text-[12px] text-[var(--color-text-default)] truncate">
+                                    <span className="text-[12px] text-[var(--color-text-default)] truncate min-w-0">
                                       {actionName}
                                     </span>
                                   </div>
