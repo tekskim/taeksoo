@@ -941,7 +941,7 @@ function PolicyEditorSection({
                             </div>
 
                             {/* Actions List */}
-                            <div className="flex flex-col gap-2 mt-6 overflow-y-auto overflow-x-hidden flex-1 min-h-0">
+                            <div className="flex flex-col gap-2 mt-6 overflow-y-auto overflow-x-hidden flex-1 min-h-0 legend-scroll">
                               {filteredActions.map((actionName) => {
                                 const isSelected = permission.detailedActions[actionName];
                                 return (
