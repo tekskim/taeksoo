@@ -6492,29 +6492,15 @@ outline: 2px solid var(--color-border-focus);`}
                   </div>
                 </VStack>
 
-                {/* With Dot */}
+                {/* Status Examples */}
                 <VStack gap={3}>
-                  <Label>With Dot Indicator</Label>
-                  <VStack gap={4}>
-                    <VStack gap={2}>
-                      <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">Solid</span>
-                      <div className="flex gap-3 items-center">
-                        <Badge size="sm" theme="green">Running</Badge>
-                        <Badge size="sm" theme="red">Stopped</Badge>
-                        <Badge size="sm" theme="yellow">Warning</Badge>
-                        <Badge size="sm" theme="gray">Unknown</Badge>
-                      </div>
-                    </VStack>
-                    <VStack gap={2}>
-                      <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">Subtle (15% opacity)</span>
-                      <div className="flex gap-3 items-center">
-                        <span className="inline-flex items-center px-1.5 py-0.5 rounded-md bg-[var(--color-state-success)]/15 text-[11px] font-medium text-[var(--color-state-success)]">Running</span>
-                        <span className="inline-flex items-center px-1.5 py-0.5 rounded-md bg-[var(--color-state-danger)]/15 text-[11px] font-medium text-[var(--color-state-danger)]">Stopped</span>
-                        <span className="inline-flex items-center px-1.5 py-0.5 rounded-md bg-[var(--color-state-warning)]/15 text-[11px] font-medium text-[var(--color-state-warning)]">Warning</span>
-                        <span className="inline-flex items-center px-1.5 py-0.5 rounded-md bg-[var(--color-text-muted)]/15 text-[11px] font-medium text-[var(--color-text-muted)]">Unknown</span>
-                      </div>
-                    </VStack>
-                  </VStack>
+                  <Label>Status examples</Label>
+                  <div className="flex gap-3 items-center">
+                    <Badge size="sm" type="solid" theme="green">Running</Badge>
+                    <Badge size="sm" type="solid" theme="red">Stopped</Badge>
+                    <Badge size="sm" type="solid" theme="yellow">Warning</Badge>
+                    <Badge size="sm" type="solid" theme="gray">Unknown</Badge>
+                  </div>
                 </VStack>
               </VStack>
             </Section>
