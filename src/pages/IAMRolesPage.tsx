@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { IconDownload, IconTrash } from '@tabler/icons-react';
 import {
   Button,
@@ -52,6 +52,7 @@ const mockRoles: Role[] = [
    IAM Roles Page
    ---------------------------------------- */
 export default function IAMRolesPage() {
+  const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
@@ -206,7 +207,7 @@ export default function IAMRolesPage() {
                 <h1 className="text-[16px] font-semibold leading-6 text-[var(--color-text-default)]">
                   Roles
                 </h1>
-                <Button variant="primary" size="sm">
+                <Button variant="primary" size="sm" onClick={() => navigate('/iam/roles/create')}>
                   Create role
                 </Button>
               </HStack>

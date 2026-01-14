@@ -102,8 +102,10 @@ import { IAMUserGroupsPage } from '@/pages/IAMUserGroupsPage';
 import IAMUserGroupDetailPage from '@/pages/IAMUserGroupDetailPage';
 import IAMRolesPage from '@/pages/IAMRolesPage';
 import IAMRoleDetailPage from '@/pages/IAMRoleDetailPage';
+import CreateRolePage from '@/pages/CreateRolePage';
 import IAMPoliciesPage from '@/pages/IAMPoliciesPage';
 import IAMPolicyDetailPage from '@/pages/IAMPolicyDetailPage';
+import CreatePolicyPage from '@/pages/CreatePolicyPage';
 import IAMActiveSessionsPage from '@/pages/IAMActiveSessionsPage';
 import IAMDomainsPage from '@/pages/IAMDomainsPage';
 import IAMSystemAdministratorsPage from '@/pages/IAMSystemAdministratorsPage';
@@ -277,8 +279,10 @@ function AppRoutes() {
         <Route path="/iam/user-groups/create" element={<CreateUserGroupPage />} />
         <Route path="/iam/user-groups/:groupName" element={<IAMUserGroupDetailPage />} />
         <Route path="/iam/roles" element={<IAMRolesPage />} />
+        <Route path="/iam/roles/create" element={<CreateRolePage />} />
         <Route path="/iam/roles/:roleName" element={<IAMRoleDetailPage />} />
         <Route path="/iam/policies" element={<IAMPoliciesPage />} />
+        <Route path="/iam/policies/create" element={<CreatePolicyPage />} />
         <Route path="/iam/policies/:policyId" element={<IAMPolicyDetailPage />} />
         <Route path="/iam/active-sessions" element={<IAMActiveSessionsPage />} />
         <Route path="/iam/domains" element={<IAMDomainsPage />} />
