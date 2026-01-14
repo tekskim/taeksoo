@@ -28,6 +28,8 @@ export interface ContextMenuItem {
   tooltipPosition?: 'top' | 'bottom' | 'left' | 'right';
   /** Submenu direction (left or right) */
   submenuDirection?: 'left' | 'right';
+  /** Icon element to display before label */
+  icon?: React.ReactNode;
 }
 
 export interface ContextMenuProps {
@@ -41,6 +43,8 @@ export interface ContextMenuProps {
   disabled?: boolean;
   /** Custom class name */
   className?: string;
+  /** Minimum top position for dropdown */
+  minTop?: number;
 }
 
 export interface ContextMenuContentProps {
@@ -56,6 +60,8 @@ export interface ContextMenuContentProps {
   menuRef?: React.RefObject<HTMLDivElement>;
   /** Trigger element ref (for positioning relative to trigger) */
   triggerRef?: React.RefObject<HTMLElement>;
+  /** Minimum top position for dropdown */
+  minTop?: number;
 }
 
 /* ----------------------------------------
@@ -258,7 +264,14 @@ const ContextMenuItemComponent: React.FC<{
         ${showSubmenu ? 'bg-[var(--context-menu-hover-bg)]' : ''}
       `}
     >
-      <span>{item.label}</span>
+      <div className="flex items-center gap-2 flex-1 min-w-0">
+        {item.icon && (
+          <span className="shrink-0 text-[var(--color-text-muted)] flex items-center">
+            {item.icon}
+          </span>
+        )}
+        <span className="flex-1">{item.label}</span>
+      </div>
       {hasSubmenu && (
         <IconChevronRight size={12} stroke={1} className="ml-6 shrink-0" />
       )}
@@ -327,6 +340,7 @@ const ContextMenuContent: React.FC<ContextMenuContentProps> = ({
   parentDirection = 'right',
   menuRef: externalMenuRef,
   triggerRef,
+  minTop,
 }) => {
   const internalMenuRef = useRef<HTMLDivElement>(null);
   const menuRef = externalMenuRef ?? internalMenuRef;
@@ -340,18 +354,19 @@ const ContextMenuContent: React.FC<ContextMenuContentProps> = ({
         const viewportWidth = window.innerWidth;
         const viewportHeight = window.innerHeight;
 
-        // position.x is the button center X
-        // Calculate menu position so its center aligns with button center
-        let newX = position.x - rect.width / 2;
+        // position.x is the button left edge
+        // Left-align menu with trigger button
+        let newX = position.x;
         let newY = position.y;
 
         // Adjust horizontal position if menu overflows viewport
+        if (newX + rect.width > viewportWidth - 8) {
+          // Menu would overflow right edge, align to right edge
+          newX = viewportWidth - rect.width - 8;
+        }
         if (newX < 8) {
           // Menu would overflow left edge, align to left edge
           newX = 8;
-        } else if (newX + rect.width > viewportWidth - 8) {
-          // Menu would overflow right edge, align to right edge
-          newX = viewportWidth - rect.width - 8;
         }
 
         // Adjust vertical position
@@ -359,10 +374,15 @@ const ContextMenuContent: React.FC<ContextMenuContentProps> = ({
           newY = Math.max(8, viewportHeight - rect.height - 8);
         }
 
+        // Apply minTop if specified
+        if (minTop !== undefined && newY < minTop) {
+          newY = minTop;
+        }
+
         setAdjustedPosition({ x: newX, y: newY });
       }
     });
-  }, [position, triggerRef]);
+  }, [position, triggerRef, minTop]);
 
   return createPortal(
     <div
@@ -409,6 +429,7 @@ export const ContextMenu: React.FC<ContextMenuProps> = ({
   trigger = 'contextmenu',
   disabled = false,
   className = '',
+  minTop,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [position, setPosition] = useState({ x: 0, y: 0 });
@@ -420,6 +441,13 @@ export const ContextMenu: React.FC<ContextMenuProps> = ({
     
     if (trigger === 'contextmenu') {
       e.preventDefault();
+      
+      // 다른 컨텍스트 메뉴가 열릴 때 이전 메뉴를 닫기 위한 커스텀 이벤트 발생
+      const closeEvent = new CustomEvent('contextmenu:close-all');
+      document.dispatchEvent(closeEvent);
+      
+      // 위치 업데이트 및 메뉴 열기
+      // 같은 메뉴인 경우에도 위치를 업데이트하기 위해 먼저 닫고 다시 열기
       setPosition({ x: e.clientX, y: e.clientY });
       setIsOpen(true);
     } else {
@@ -430,11 +458,12 @@ export const ContextMenu: React.FC<ContextMenuProps> = ({
       }
       
       if (triggerRef.current) {
-        const rect = triggerRef.current.getBoundingClientRect();
-        // Position menu directly below the button, center-aligned
-        // We'll calculate the exact center position in ContextMenuContent
+        // Get the actual trigger element (first child) for accurate positioning
+        const triggerElement = triggerRef.current.firstElementChild as HTMLElement | null;
+        const rect = triggerElement?.getBoundingClientRect() ?? triggerRef.current.getBoundingClientRect();
+        // Position menu directly below the button, left-aligned
         setPosition({ 
-          x: rect.left + rect.width / 2, // Button center X
+          x: rect.left, // Button left edge
           y: rect.bottom + 4 
         });
       }
@@ -446,11 +475,11 @@ export const ContextMenu: React.FC<ContextMenuProps> = ({
     setIsOpen(false);
   }, []);
 
-  // Close on click outside
+  // Close on click outside and when other context menu opens
   useEffect(() => {
-    if (!isOpen) return;
-
     const handleClickOutside = (e: MouseEvent) => {
+      if (!isOpen) return;
+      
       const target = e.target as Node;
       // Click inside trigger OR inside menu (portal) should NOT close.
       if (triggerRef.current?.contains(target)) return;
@@ -461,20 +490,34 @@ export const ContextMenu: React.FC<ContextMenuProps> = ({
     };
 
     const handleEscape = (e: KeyboardEvent) => {
+      if (!isOpen) return;
       if (e.key === 'Escape') {
         handleClose();
       }
     };
 
-    // Delay to prevent immediate close
-    setTimeout(() => {
-      document.addEventListener('click', handleClickOutside);
-      document.addEventListener('keydown', handleEscape);
-    }, 0);
+    // 다른 컨텍스트 메뉴가 열릴 때 현재 메뉴 닫기
+    const handleCloseAll = () => {
+      if (isOpen) {
+        handleClose();
+      }
+    };
+
+    if (isOpen) {
+      // Delay to prevent immediate close
+      setTimeout(() => {
+        document.addEventListener('click', handleClickOutside);
+        document.addEventListener('keydown', handleEscape);
+      }, 0);
+    }
+
+    // 전역 이벤트 리스너는 항상 등록
+    document.addEventListener('contextmenu:close-all', handleCloseAll);
 
     return () => {
       document.removeEventListener('click', handleClickOutside);
       document.removeEventListener('keydown', handleEscape);
+      document.removeEventListener('contextmenu:close-all', handleCloseAll);
     };
   }, [isOpen, handleClose]);
 
@@ -492,6 +535,7 @@ export const ContextMenu: React.FC<ContextMenuProps> = ({
           onClose={handleClose}
           menuRef={menuRef}
           triggerRef={triggerRef}
+          minTop={minTop}
         />
       )}
     </div>

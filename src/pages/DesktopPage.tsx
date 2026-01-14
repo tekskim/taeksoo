@@ -9,7 +9,8 @@ import {
   IconWindow,
   IconWindowMinimize,
 } from '@tabler/icons-react';
-import { Icons, ContextMenu, Modal, Button, NotificationCenter, WindowControls, Tooltip } from '@/design-system';
+import { Icons, ContextMenu, Modal, Button, NotificationCenter, WindowControls, Tooltip, IconWindowActive, IconWindowMinimized } from '@/design-system';
+import { motion, Reorder } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { useDarkMode } from '@/hooks/useDarkMode';
 import ThakiLogoLight from '@/assets/thakiLogo_light.svg';
@@ -33,6 +34,15 @@ import imgCloud from '@/assets/desktop/cloud.png';
 import imgChatbot from '@/assets/desktop/chatbot.png';
 import imgSymbol from '@/assets/desktop/symbol.svg';
 
+// App Icons for Dock (32x32)
+import appIconCompute from '@/assets/appIcon/compute.png';
+import appIconStorage from '@/assets/appIcon/storage.png';
+import appIconContainer from '@/assets/appIcon/container.png';
+import appIconAgentops from '@/assets/appIcon/agentops.png';
+import appIconAiplatform from '@/assets/appIcon/aiplatform.png';
+import appIconIam from '@/assets/appIcon/iam.png';
+import appIconAIChat from '@/assets/appIcon/AI Chat.png';
+
 /* ----------------------------------------
    Desktop Icon Component
    ---------------------------------------- */
@@ -47,18 +57,18 @@ function DesktopIcon({ icon, label, onClick }: DesktopIconProps) {
   return (
     <button
       type="button"
-      className="flex flex-col items-center gap-2 w-16 cursor-pointer transition-transform hover:-translate-y-0.5 bg-transparent border-none p-0"
+      className="flex flex-col items-center gap-1 w-20 cursor-pointer transition-transform hover:-translate-y-0.5 bg-transparent border-none p-0"
       onClick={onClick}
       aria-label={label}
     >
-      <div className="w-16 h-16 flex items-center justify-center">
+      <div className="w-20 h-20 flex items-center justify-center rounded-lg">
         <img 
           src={icon} 
           alt={label} 
           className="w-16 h-16 object-cover object-center"
         />
       </div>
-      <span className="text-[length:var(--font-size-12)] leading-[var(--line-height-18)] font-medium text-white text-center whitespace-nowrap ">
+      <span className="text-[length:var(--font-size-12)] leading-[var(--line-height-16)] font-medium text-white text-center whitespace-nowrap">
         {label}
       </span>
     </button>
@@ -90,6 +100,70 @@ interface DockIconsProps {
   onReorderApps: (order: AppId[]) => void;
 }
 
+/* ----------------------------------------
+   DockIcon - Individual Icon with Magnification
+   ---------------------------------------- */
+
+interface DockIconItemProps {
+  app: DockApp;
+  isDragging: boolean;
+  onAppClick: (appId: AppId) => void;
+  getContextMenuItems: (app: DockApp) => any[];
+}
+
+function DockIconItem({
+  app,
+  isDragging,
+  onAppClick,
+  getContextMenuItems,
+}: DockIconItemProps) {
+  const isRunning = app.hasWindows;
+  const isActive = app.hasActiveWindow;
+
+  return (
+    <ContextMenu
+      trigger="contextmenu"
+      items={getContextMenuItems(app)}
+    >
+      <Tooltip content={app.name} position="bottom">
+        <motion.div
+          layoutId={app.id}
+          onClick={() => onAppClick(app.id)}
+          className={`
+            relative cursor-pointer flex items-center justify-center
+            ${isDragging ? 'z-50' : 'z-0'}
+          `}
+          whileDrag={{
+            scale: 1.1,
+            zIndex: 50,
+            boxShadow: '0 10px 30px rgba(0,0,0,0.3)',
+          }}
+          transition={{
+            type: 'spring',
+            stiffness: 400,
+            damping: 25,
+          }}
+        >
+          <div
+            className={`
+              w-7 h-7 rounded-lg overflow-hidden
+              ${isRunning ? 'p-0.5 border-2 border-[var(--color-border-default)] bg-[var(--color-surface-subtle)]' : ''}
+              ${isActive ? 'border-[var(--color-action-primary)]' : ''}
+            `}
+          >
+            <img 
+              src={app.icon} 
+              alt={app.name} 
+              className="w-full h-full object-cover pointer-events-none"
+              draggable={false}
+            />
+          </div>
+        </motion.div>
+      </Tooltip>
+    </ContextMenu>
+  );
+}
+
 function DockIcons({
   apps,
   onAppClick,
@@ -100,36 +174,19 @@ function DockIcons({
   onQuitApp,
   onReorderApps,
 }: DockIconsProps) {
-  const [draggedAppId, setDraggedAppId] = useState<AppId | null>(null);
-  const [hoveredAppId, setHoveredAppId] = useState<AppId | null>(null);
+  const [isDragging, setIsDragging] = useState(false);
+  
+  // 앱 순서를 로컬 상태로 관리 (Reorder용)
+  const [localApps, setLocalApps] = useState(apps);
+  
+  // apps prop이 변경되면 localApps 동기화
+  useEffect(() => {
+    setLocalApps(apps);
+  }, [apps]);
 
-  const handleDragStart = (e: React.DragEvent, appId: AppId) => {
-    setDraggedAppId(appId);
-    e.dataTransfer.effectAllowed = 'move';
-  };
-
-  const handleDragOver = (e: React.DragEvent) => {
-    e.preventDefault();
-    e.dataTransfer.dropEffect = 'move';
-  };
-
-  const handleDrop = (e: React.DragEvent, targetAppId: AppId) => {
-    e.preventDefault();
-    if (!draggedAppId || draggedAppId === targetAppId) {
-      setDraggedAppId(null);
-      return;
-    }
-
-    const currentOrder = apps.map(a => a.id);
-    const draggedIndex = currentOrder.indexOf(draggedAppId);
-    const targetIndex = currentOrder.indexOf(targetAppId);
-
-    const newOrder = [...currentOrder];
-    newOrder.splice(draggedIndex, 1);
-    newOrder.splice(targetIndex, 0, draggedAppId);
-
-    onReorderApps(newOrder);
-    setDraggedAppId(null);
+  const handleReorder = (newOrder: DockApp[]) => {
+    setLocalApps(newOrder);
+    onReorderApps(newOrder.map(app => app.id));
   };
 
   const getContextMenuItems = (app: DockApp) => {
@@ -138,24 +195,33 @@ function DockIcons({
     // Window list
     if (app.windows.length > 0) {
       app.windows.forEach(window => {
+        // 윈도우 상태에 따른 아이콘 결정
+        let windowIcon: React.ReactNode;
+        if (window.isMinimized) {
+          // Minimized 상태: Window_minimized 아이콘
+          windowIcon = <IconWindowMinimized size={16} stroke={1} />;
+        } else if (window.isActive) {
+          // Normal + Focus in 상태: Check + Window_active 아이콘
+          windowIcon = (
+            <span className="flex items-center gap-1">
+              <IconCheck size={16} stroke={1} />
+              <IconWindowActive size={16} stroke={1} />
+            </span>
+          );
+        } else {
+          // Normal + Focus out 상태: Window_active 아이콘
+          windowIcon = <IconWindowActive size={16} stroke={1} />;
+        }
+
         items.push({
           id: `window-${window.id}`,
           label: window.title,
-          icon: window.isMinimized ? <IconWindowMinimize size={14} /> : <IconWindow size={14} />,
+          icon: windowIcon,
           onClick: () => onWindowClick(window.id),
         });
       });
-      items.push({ id: 'divider-1', divider: true });
-    }
-
-    // Navigation items (for Compute app example)
-    if (app.id === 'compute') {
-      items.push(
-        { id: 'instances', label: 'Instances', icon: <IconLayoutDashboard size={14} />, onClick: () => {} },
-        { id: 'images', label: 'Images', onClick: () => {} },
-        { id: 'dashboard', label: 'Dashboard', icon: <IconLayoutDashboard size={14} />, onClick: () => {} },
-        { id: 'divider-2', divider: true }
-      );
+      // Divider after window list
+      items.push({ id: 'divider-windows', label: '', divider: true });
     }
 
     // New window
@@ -167,11 +233,10 @@ function DockIcons({
 
     items.push({ id: 'divider-3', divider: true });
 
-    // Pin to top bar
+    // Pin / Unpin
     items.push({
       id: 'pin',
-      label: 'Pin to top bar',
-      icon: app.isPinned ? <IconCheck size={14} /> : undefined,
+      label: app.isPinned ? 'Unpin' : 'Pin',
       onClick: () => onTogglePin(app.id),
     });
 
@@ -181,7 +246,6 @@ function DockIcons({
     items.push({
       id: 'quit',
       label: 'Quit',
-      status: 'danger' as const,
       onClick: () => onQuitApp(app.id),
     });
 
@@ -189,44 +253,45 @@ function DockIcons({
   };
 
   return (
-    <div className="flex items-center gap-2">
-      {apps.map((app) => {
-        const isRunning = app.hasWindows;
-        const isActive = app.hasActiveWindow;
-
-        return (
-          <ContextMenu
-            key={app.id}
-            trigger="contextmenu"
-            items={getContextMenuItems(app)}
-          >
-            <Tooltip content={app.name} position="bottom">
-              <div
-                draggable
-                onDragStart={(e) => handleDragStart(e, app.id)}
-                onDragOver={handleDragOver}
-                onDrop={(e) => handleDrop(e, app.id)}
-                onMouseEnter={() => setHoveredAppId(app.id)}
-                onMouseLeave={() => setHoveredAppId(null)}
-                onClick={() => onAppClick(app.id)}
-                className={`
-                  w-6 h-6 cursor-pointer transition-all duration-200
-                  ${isActive ? 'opacity-100 scale-110' : isRunning ? 'opacity-100' : 'opacity-70'}
-                  ${hoveredAppId === app.id ? 'opacity-100 scale-110' : ''}
-                  ${isRunning ? 'ring-2 ring-[var(--color-action-primary)] rounded' : ''}
-                `}
-              >
-                <img 
-                  src={app.icon} 
-                  alt={app.name} 
-                  className="w-full h-full object-cover"
-                />
-              </div>
-            </Tooltip>
-          </ContextMenu>
-        );
-      })}
-    </div>
+    <Reorder.Group
+      as="div"
+      axis="x"
+      values={localApps}
+      onReorder={handleReorder}
+      className="flex items-center gap-2"
+    >
+      {localApps.map((app) => (
+        <Reorder.Item
+          key={app.id}
+          value={app}
+          as="div"
+          onDragStart={() => setIsDragging(true)}
+          onDragEnd={() => setIsDragging(false)}
+          dragListener={true}
+          dragConstraints={{ top: 0, bottom: 0 }}
+          dragElastic={0.1}
+          layout
+          transition={{
+            type: 'spring',
+            stiffness: 400,
+            damping: 25,
+          }}
+          whileDrag={{
+            scale: 1.15,
+            zIndex: 50,
+            cursor: 'grabbing',
+          }}
+          className="cursor-grab active:cursor-grabbing"
+        >
+          <DockIconItem
+            app={app}
+            isDragging={isDragging}
+            onAppClick={onAppClick}
+            getContextMenuItems={getContextMenuItems}
+          />
+        </Reorder.Item>
+      ))}
+    </Reorder.Group>
   );
 }
 
@@ -244,20 +309,22 @@ function AdminCenterIcon({ onClick, iconRef }: AdminCenterIconProps) {
     <button
       ref={iconRef}
       type="button"
-      className="flex flex-col items-center gap-2 w-16 cursor-pointer transition-transform hover:-translate-y-0.5 bg-transparent border-none p-0"
+      className="flex flex-col items-center gap-1 w-20 cursor-pointer transition-transform hover:-translate-y-0.5 bg-transparent border-none p-0"
       onClick={onClick}
       aria-label="Admin center"
     >
-      <div className="bg-white/10 rounded-2xl p-2 flex flex-col gap-1">
-        <div className="flex gap-1 items-center">
-          <img src={imgStorageAdmin} alt="" className="w-[22px] h-[22px] object-cover" />
-          <img src={imgComputeAdmin} alt="" className="w-[22px] h-[22px] object-cover" />
-        </div>
-        <div className="flex items-center">
-          <img src={imgCloud} alt="" className="w-[22px] h-[22px] object-cover" />
+      <div className="w-20 h-20 flex items-center justify-center rounded-lg">
+        <div className="bg-white/10 rounded-2xl p-2 flex flex-col gap-1">
+          <div className="flex gap-1 items-center">
+            <img src={imgStorageAdmin} alt="" className="w-[22px] h-[22px] object-cover" />
+            <img src={imgComputeAdmin} alt="" className="w-[22px] h-[22px] object-cover" />
+          </div>
+          <div className="flex items-center">
+            <img src={imgCloud} alt="" className="w-[22px] h-[22px] object-cover" />
+          </div>
         </div>
       </div>
-      <span className="text-[length:var(--font-size-12)] leading-[var(--line-height-18)] font-medium text-white text-center whitespace-nowrap ">
+      <span className="text-[length:var(--font-size-12)] leading-[var(--line-height-16)] font-medium text-white text-center w-16">
         Admin center
       </span>
     </button>
@@ -392,48 +459,36 @@ function DesktopTopBar({ onChatbotToggle, onOpenSettings, onNotificationToggle, 
   ];
 
   return (
-    <div className="fixed top-0 left-0 right-0 h-14 bg-white flex items-center justify-between px-4 z-[1000] shadow-[2px_4px_4px_0px_rgba(0,0,0,0.11)]">
-      {/* Left Section */}
-      <div className="flex items-center gap-3">
-        {/* Domain Selector - Figma style */}
-        <div className="flex items-center gap-1.5 bg-[#ddddda] px-2.5 py-0.5 rounded-lg">
-          <img src={imgSymbol} alt="" className="w-4 h-4" />
-          <span className="text-lg font-semibold text-black  leading-7">Domain A</span>
-        </div>
+    <div className="fixed top-0 left-0 right-0 h-[52px] bg-[#f8fafc] flex items-center justify-between pl-4 z-[1000] shadow-[0px_1px_0px_0px_rgba(0,0,0,0.15)]">
+      {/* Left Section - Logo + Dock Icons */}
+      <div className="flex items-center gap-8 h-full">
+        {/* THAKI Cloud Logo */}
+        <img src={ThakiLogoLight} alt="THAKI Cloud" className="h-5" />
         
-        {/* Divider */}
-        <div className="h-6 flex items-center">
-          <div className="w-px h-4 bg-[rgba(60,60,67,0.29)]" />
-        </div>
-        
-        {/* Dock Icons - macOS Dock style */}
+        {/* Dock Icons */}
         {dockIcons}
       </div>
 
       {/* Right Section */}
-      <div className="flex items-center gap-3 h-8">
-        {/* Domain Selector - Using Select component */}
+      <div className="flex items-center gap-4">
+        {/* Domain Selector */}
         <Select
           value={selectedDomain}
           onChange={(value) => setSelectedDomain(value)}
           options={domainOptions}
           size="sm"
-          className="min-w-[100px]"
+          width="sm"
         />
-        
-        {/* Separator */}
-        <div className="px-1.5 h-full flex items-center">
-          <div className="w-px h-4 bg-[rgba(60,60,67,0.29)]" />
-        </div>
         
         {/* Right Icons */}
         <div className="flex items-center gap-3">
           <ContextMenu
             items={contextMenuItems}
             trigger="click"
+            minTop={52}
           >
-            <button className="w-6 h-6 flex items-center justify-center text-black/60 hover:text-black cursor-pointer transition-colors">
-              <Icons.Finetuning size={24} stroke={1.5} />
+            <button className="w-5 h-5 flex items-center justify-center text-[#0f172a]/60 hover:text-[#0f172a] cursor-pointer transition-colors">
+              <Icons.Finetuning size={20} stroke={1.5} />
             </button>
           </ContextMenu>
           <ContextMenu
@@ -458,41 +513,35 @@ function DesktopTopBar({ onChatbotToggle, onOpenSettings, onNotificationToggle, 
               },
             ]}
             trigger="click"
+            minTop={52}
           >
-            <button className="w-6 h-6 flex items-center justify-center text-black/60 hover:text-black cursor-pointer transition-colors">
-              <Icons.UserCircle size={24} stroke={1.5} />
+            <button className="w-5 h-5 flex items-center justify-center text-[#0f172a]/60 hover:text-[#0f172a] cursor-pointer transition-colors">
+              <Icons.UserCircle size={20} stroke={1.5} />
             </button>
           </ContextMenu>
           <button 
             ref={notificationButtonRef}
             onClick={onNotificationToggle}
-            className="w-6 h-6 flex items-center justify-center text-black/60 hover:text-black cursor-pointer transition-colors"
+            className="w-5 h-5 flex items-center justify-center text-[#0f172a]/60 hover:text-[#0f172a] cursor-pointer transition-colors"
           >
-            <Icons.Notification size={24} stroke={1.5} />
+            <Icons.Notification size={20} stroke={1.5} />
           </button>
         </div>
 
-        {/* Separator */}
-        <div className="px-1.5 h-full flex items-center">
-          <div className="w-px h-4 bg-[rgba(60,60,67,0.29)]" />
+        {/* Separator + Chatbot */}
+        <div className="flex items-center border-l border-[#e2e8f0] px-[10px]">
+          <button 
+            className="w-8 h-8 flex items-center justify-center cursor-pointer transition-opacity hover:opacity-80"
+            onClick={onChatbotToggle}
+            title="AI Chatbot"
+          >
+            <img 
+              src={appIconAIChat} 
+              alt="AI Chatbot" 
+              className="w-8 h-8 object-contain" 
+            />
+          </button>
         </div>
-        
-        {/* AI Chatbot Toggle - Figma design: 3D purple chat bubble with AI face */}
-        <button 
-          className="w-8 h-8 flex items-center justify-center cursor-pointer transition-opacity hover:opacity-80"
-          onClick={onChatbotToggle}
-          title="AI Chatbot"
-        >
-          <img 
-            src={imgChatbot} 
-            alt="AI Chatbot" 
-            className="w-8 h-8 object-contain" 
-            style={{ 
-              mixBlendMode: 'multiply',
-              filter: 'contrast(1.1)',
-            }}
-          />
-        </button>
       </div>
 
       {/* Language Change Confirmation Modal */}
@@ -525,41 +574,41 @@ interface AdminPanelProps {
   anchorRef: React.RefObject<HTMLButtonElement>;
 }
 
-function AdminCenterPanel({ isOpen, onClose, anchorRef }: AdminPanelProps) {
+function AdminCenterPanel({ isOpen, onClose }: AdminPanelProps) {
   if (!isOpen) return null;
-  
-  // Calculate position based on anchor element
-  const anchorRect = anchorRef.current?.getBoundingClientRect();
-  const panelWidth = 412; // Approximate panel width (3 icons * 64px + 2 gaps * 50px + padding * 2)
-  
-  // Position panel below the icon, centered horizontally
-  const top = anchorRect ? anchorRect.bottom + 12 : 222;
-  const left = anchorRect ? anchorRect.left + (anchorRect.width / 2) - (panelWidth / 2) : 0;
   
   return (
     <>
-      {/* Click outside to close */}
+      {/* Overlay backdrop */}
       <div 
-        className="fixed inset-0 z-[500]" 
+        className="fixed inset-0 z-[500] bg-black/40" 
         onClick={onClose}
       />
-      {/* Panel - positioned below Admin center icon */}
+      {/* Panel - centered on screen */}
       <div 
-        className="fixed bg-white/10 rounded-2xl px-10 py-[22px] flex gap-[50px] items-center z-[501]"
-        style={{ top: `${top}px`, left: `${left}px` }}
+        className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white/15 backdrop-blur-md rounded-2xl px-10 py-6 flex gap-12 items-center z-[501] border border-white/30"
       >
-        <div className="flex flex-col items-center gap-2 w-16">
+        <button 
+          className="flex flex-col items-center gap-2 w-20 cursor-pointer transition-transform hover:-translate-y-0.5 bg-transparent border-none p-0"
+          onClick={() => console.log('Storage Admin clicked')}
+        >
           <img src={imgStorageAdmin} alt="Storage Admin" className="w-16 h-16 object-cover" />
-          <span className="text-[length:var(--font-size-12)] leading-[var(--line-height-18)] font-medium text-white text-center ">Storage Admin</span>
-        </div>
-        <div className="flex flex-col items-center gap-2 w-16">
+          <span className="text-[length:var(--font-size-12)] leading-[var(--line-height-16)] font-medium text-white text-center">Storage Admin</span>
+        </button>
+        <button 
+          className="flex flex-col items-center gap-2 w-20 cursor-pointer transition-transform hover:-translate-y-0.5 bg-transparent border-none p-0"
+          onClick={() => console.log('Compute Admin clicked')}
+        >
           <img src={imgComputeAdmin} alt="Compute Admin" className="w-16 h-16 object-cover" />
-          <span className="text-[length:var(--font-size-12)] leading-[var(--line-height-18)] font-medium text-white text-center ">Compute Admin</span>
-        </div>
-        <div className="flex flex-col items-center gap-2 w-16">
+          <span className="text-[length:var(--font-size-12)] leading-[var(--line-height-16)] font-medium text-white text-center">Compute Admin</span>
+        </button>
+        <button 
+          className="flex flex-col items-center gap-2 w-20 cursor-pointer transition-transform hover:-translate-y-0.5 bg-transparent border-none p-0"
+          onClick={() => console.log('Cloud Builder clicked')}
+        >
           <img src={imgCloud} alt="Cloud Builder" className="w-16 h-16 object-cover" />
-          <span className="text-[length:var(--font-size-12)] leading-[var(--line-height-18)] font-medium text-white text-center ">Cloud Builder</span>
-        </div>
+          <span className="text-[length:var(--font-size-12)] leading-[var(--line-height-16)] font-medium text-white text-center">Cloud Builder</span>
+        </button>
       </div>
     </>
   );
@@ -573,7 +622,7 @@ function AdminCenterPanel({ isOpen, onClose, anchorRef }: AdminPanelProps) {
    Window Management Types
    ---------------------------------------- */
 
-type AppId = 'compute' | 'storage' | 'container' | 'agent' | 'ai-platform' | 'iam';
+type AppId = 'compute' | 'storage' | 'container' | 'agent' | 'ai-platform' | 'iam' | 'settings';
 
 interface WindowState {
   id: string;
@@ -705,24 +754,41 @@ export function DesktopPage() {
   const notificationButtonRef = useRef<HTMLButtonElement>(null);
 
   // Window Management System
-  const [windows, setWindows] = useState<WindowState[]>([]);
-  const [nextZIndex, setNextZIndex] = useState(1);
+  // Dock menu 시뮬레이션 모드 - 실제 앱 실행 없이 인터랙션만 테스트
+  const isSimulationMode = true;
+  
+  // Mock up 초기 상태: Compute, Storage, Container는 실행중
+  // Compute 앱의 윈도우들: Instances (Focus in), Images (Focus out), Dashboard (Minimized)
+  const [windows, setWindows] = useState<WindowState[]>(() => {
+    const computeWindows: WindowState[] = [
+      { id: 'compute-instances', appId: 'compute', title: 'Instances', isMinimized: false, isActive: true, zIndex: 3, createdAt: Date.now() - 3000 },
+      { id: 'compute-images', appId: 'compute', title: 'Images', isMinimized: false, isActive: false, zIndex: 2, createdAt: Date.now() - 2000 },
+      { id: 'compute-dashboard', appId: 'compute', title: 'Dashboard', isMinimized: true, isActive: false, zIndex: 1, createdAt: Date.now() - 1000 },
+    ];
+    const storageWindow: WindowState = { id: 'storage-1', appId: 'storage', title: 'Storage', isMinimized: false, isActive: false, zIndex: 1, createdAt: Date.now() - 5000 };
+    const containerWindow: WindowState = { id: 'container-1', appId: 'container', title: 'Container', isMinimized: false, isActive: false, zIndex: 1, createdAt: Date.now() - 4000 };
+    return [...computeWindows, storageWindow, containerWindow];
+  });
+  const [nextZIndex, setNextZIndex] = useState(10);
   const [appConfigs] = useState<Record<AppId, { name: string; icon: string; component: React.ReactNode }>>({
     'compute': { name: 'Compute', icon: imgCompute, component: <ComputeHomePage /> },
     'storage': { name: 'Storage', icon: imgStorage, component: <StorageHomePage /> },
     'container': { name: 'Container', icon: imgContainer, component: <ContainerDashboardPage /> },
-    'agent': { name: 'Agent ops', icon: imgAgent, component: <HomePage /> },
+    'agent': { name: 'Agent Ops', icon: imgAgent, component: <HomePage /> },
     'ai-platform': { name: 'AI Platform', icon: imgAi, component: null },
     'iam': { name: 'IAM', icon: imgIam, component: null },
+    'settings': { name: 'Settings', icon: imgSettings, component: null },
   });
-  const [pinnedApps, setPinnedApps] = useState<Set<AppId>>(new Set(['compute', 'storage', 'container', 'agent']));
-  const [dockAppOrder, setDockAppOrder] = useState<AppId[]>(['storage', 'container', 'ai-platform', 'agent']);
+  // Mock up: Compute, Storage, Container는 실행중, AI Platform, Agent Ops, Settings는 Pin만 되어있음
+  const [pinnedApps, setPinnedApps] = useState<Set<AppId>>(new Set(['ai-platform', 'agent', 'settings']));
+  const [dockAppOrder, setDockAppOrder] = useState<AppId[]>(['compute', 'storage', 'container', 'ai-platform', 'agent', 'settings']);
 
   // Window management functions
   const createWindow = useCallback((appId: AppId) => {
     const config = appConfigs[appId];
-    if (!config || !config.component) return;
-
+    if (!config) return;
+    
+    // 시뮬레이션 모드: 실제 UI 윈도우 없이 상태만 업데이트
     const newWindow: WindowState = {
       id: `${appId}-${Date.now()}`,
       appId,
@@ -735,7 +801,11 @@ export function DesktopPage() {
 
     setWindows(prev => prev.map(w => ({ ...w, isActive: false })).concat(newWindow));
     setNextZIndex(prev => prev + 1);
-  }, [appConfigs, nextZIndex]);
+    
+    if (isSimulationMode) {
+      console.log(`[Simulation] New window created for ${appId}: ${newWindow.title}`);
+    }
+  }, [appConfigs, nextZIndex, isSimulationMode]);
 
   const closeWindow = useCallback((windowId: string) => {
     setWindows(prev => prev.filter(w => w.id !== windowId));
@@ -762,21 +832,44 @@ export function DesktopPage() {
     setNextZIndex(prev => prev + 1);
   }, [nextZIndex]);
 
+  // 모든 윈도우의 포커스를 해제 (Focus out)
+  const blurAllWindows = useCallback(() => {
+    setWindows(prev => prev.map(w => ({ ...w, isActive: false })));
+  }, []);
+
   const focusApp = useCallback((appId: AppId) => {
+    // 시뮬레이션 모드: 왼쪽 클릭 시 실제 앱 실행하지 않음
+    // 우클릭 ContextMenu만 테스트하는 용도
+    if (isSimulationMode) {
+      console.log(`[Simulation] Left-click on ${appId} - no action (use right-click for context menu)`);
+      return;
+    }
+    
     const appWindows = windows.filter(w => w.appId === appId);
+    
+    // 1) 앱이 실행되고 있지 않은 경우 → 실행 (새 창)
     if (appWindows.length === 0) {
       createWindow(appId);
       return;
     }
 
-    // If app has windows, focus the most recent one
-    const mostRecent = appWindows.sort((a, b) => b.createdAt - a.createdAt)[0];
-    if (mostRecent.isMinimized) {
+    // 2) 앱이 실행중이나 Focus Out된 경우 → 가장 마지막에 Focus In 되었던 윈도우로 다시 Focus In
+    const activeWindows = appWindows.filter(w => !w.isMinimized);
+    if (activeWindows.length > 0) {
+      // zIndex가 가장 높은 윈도우 (가장 최근에 포커스된 윈도우)
+      const mostRecent = activeWindows.sort((a, b) => b.zIndex - a.zIndex)[0];
       focusWindow(mostRecent.id);
-    } else {
-      focusWindow(mostRecent.id);
+      return;
     }
-  }, [windows, createWindow, focusWindow]);
+
+    // 3) 앱이 실행중이나 모두 최소화된 경우 → 가장 나중에 최소화된 윈도우를 이전 크기로 복원(Restore)
+    const minimizedWindows = appWindows.filter(w => w.isMinimized);
+    if (minimizedWindows.length > 0) {
+      // 가장 나중에 최소화된 윈도우 (zIndex가 가장 높은 것)
+      const lastMinimized = minimizedWindows.sort((a, b) => b.zIndex - a.zIndex)[0];
+      focusWindow(lastMinimized.id);
+    }
+  }, [windows, createWindow, focusWindow, isSimulationMode]);
 
   const togglePinApp = useCallback((appId: AppId) => {
     setPinnedApps(prev => {
@@ -828,8 +921,19 @@ export function DesktopPage() {
     setNotifications((prev) => prev.map((n) => ({ ...n, isRead: true })));
   };
 
+  // 데스크탑 배경 클릭 시 모든 윈도우 포커스 해제
+  const handleDesktopClick = useCallback((e: React.MouseEvent) => {
+    // 클릭한 대상이 현재 요소 자체인 경우에만 blur (자식 요소 클릭은 무시)
+    if (e.target === e.currentTarget) {
+      blurAllWindows();
+    }
+  }, [blurAllWindows]);
+
   return (
-    <div className="fixed inset-0 bg-[#353535] overflow-hidden">
+    <div 
+      className="fixed inset-0 bg-[#353535] overflow-hidden"
+      onClick={handleDesktopClick}
+    >
       {/* Top Bar */}
       <DesktopTopBar 
         onChatbotToggle={() => setShowChatbot(!showChatbot)}
@@ -857,9 +961,25 @@ export function DesktopPage() {
               // Context menu will be handled by ContextMenu component
             }}
             onTogglePin={togglePinApp}
-            onWindowClick={focusWindow}
-            onNewWindow={createWindow}
+            onWindowClick={(windowId) => {
+              if (isSimulationMode) {
+                console.log(`[Simulation] Window clicked: ${windowId}`);
+                // 시뮬레이션 모드에서는 상태만 업데이트
+                focusWindow(windowId);
+              } else {
+                focusWindow(windowId);
+              }
+            }}
+            onNewWindow={(appId) => {
+              if (isSimulationMode) {
+                console.log(`[Simulation] New window requested for: ${appId}`);
+              }
+              createWindow(appId);
+            }}
             onQuitApp={(appId) => {
+              if (isSimulationMode) {
+                console.log(`[Simulation] Quit app: ${appId}`);
+              }
               setWindows(prev => prev.filter(w => w.appId !== appId));
             }}
             onReorderApps={setDockAppOrder}
@@ -868,41 +988,48 @@ export function DesktopPage() {
       />
 
       {/* Desktop Icons Row - Positioned like Figma */}
-      <div className="absolute top-[110px] left-[44px] flex flex-row items-start gap-[72px]">
+      <div
+        className="absolute top-[110px] left-[44px] flex flex-row items-start gap-[72px]"
+        onClick={handleDesktopClick}
+      >
         <DesktopIcon 
           icon={imgIam}
           label="IAM"
           onClick={() => {
-            // TODO: Implement IAM window
             console.log('IAM clicked - not implemented yet');
           }}
         />
         <DesktopIcon 
           icon={imgCompute}
           label="Compute"
-          onClick={() => setShowCompute(true)}
+          onClick={() => {
+            console.log('Compute clicked');
+          }}
         />
         <DesktopIcon 
           icon={imgStorage}
           label="Storage"
-          onClick={() => setShowStorage(true)}
+          onClick={() => {
+            console.log('Storage clicked');
+          }}
         />
         <DesktopIcon 
           icon={imgContainer}
           label="Container"
-          onClick={() => setShowContainer(true)}
+          onClick={() => {
+            console.log('Container clicked');
+          }}
         />
         <DesktopIcon 
           icon={imgAi}
           label="AI Platform"
           onClick={() => {
-            // TODO: Implement AI Platform window
             console.log('AI Platform clicked - not implemented yet');
           }}
         />
-        <DesktopIcon 
+        <DesktopIcon
           icon={imgAgent}
-          label="Agent ops"
+          label="Agent Ops"
           onClick={() => setShowAgent(true)}
         />
         <DesktopIcon 
@@ -938,11 +1065,6 @@ export function DesktopPage() {
 
       {/* Notification center */}
       {showNotifications && notificationButtonRef.current && (() => {
-        const rect = notificationButtonRef.current.getBoundingClientRect();
-        const notificationWidth = 360; // NotificationCenter width
-        const left = rect.right - notificationWidth;
-        const top = rect.bottom + 4;
-        
         return (
           <>
             {/* Click outside to close */}
@@ -951,12 +1073,8 @@ export function DesktopPage() {
               onClick={() => setShowNotifications(false)}
             />
             <div
-              className="fixed z-[6001]"
+              className="fixed z-[6001] top-[52px] right-0"
               onClick={(e) => e.stopPropagation()}
-              style={{
-                top: `${top}px`,
-                left: `${Math.max(8, left)}px`, // Ensure it doesn't go off-screen
-              }}
             >
               <NotificationCenter
                 notifications={notifications}
@@ -969,8 +1087,8 @@ export function DesktopPage() {
         );
       })()}
 
-      {/* App Windows */}
-      {windows.map((window) => {
+      {/* App Windows - 시뮬레이션 모드에서는 실제 윈도우 UI를 표시하지 않음 */}
+      {!isSimulationMode && windows.map((window) => {
         const config = appConfigs[window.appId];
         if (!config || !config.component) return null;
 

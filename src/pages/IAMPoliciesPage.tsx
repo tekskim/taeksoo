@@ -367,7 +367,7 @@ export default function IAMPoliciesPage() {
                 <h1 className="text-[16px] font-semibold leading-6 text-[var(--color-text-default)]">
                   Policies
                 </h1>
-                <Button variant="primary" size="sm">
+                <Button variant="primary" size="sm" onClick={() => navigate('/iam/policies/create')}>
                   Create policy
                 </Button>
               </HStack>

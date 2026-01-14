@@ -38,7 +38,7 @@ function getAppFromPath(path: string): string {
     }
   }
   
-  const appPrefixes = ['/cloudbuilder', '/compute', '/storage', '/desktop', '/design', '/container', '/ai-platform'];
+  const appPrefixes = ['/cloudbuilder', '/compute', '/storage', '/desktop', '/design', '/container', '/ai-platform', '/iam'];
   for (const prefix of appPrefixes) {
     if (path.startsWith(prefix)) {
       return prefix;
@@ -67,6 +67,7 @@ function getDefaultHomeTab(app: string): TabItem {
     '/design': { path: '/design', label: 'Home' },
     '/container': { path: '/container', label: 'Dashboard' },
     '/ai-platform': { path: '/ai-platform', label: 'Dashboard' },
+    '/iam': { path: '/iam', label: 'Home' },
     '/': { path: '/', label: 'Home' },
   };
   
@@ -139,6 +140,16 @@ function getLabelFromPath(path: string): string {
     '/container': 'Dashboard',
     '/ai-platform': 'Dashboard',
     '/ai-platform/workloads': 'Workloads',
+    '/iam': 'Home',
+    '/iam/users': 'Users',
+    '/iam/users/create': 'Create user',
+    '/iam/groups': 'Groups',
+    '/iam/user-groups': 'User groups',
+    '/iam/user-groups/create': 'Create user group',
+    '/iam/roles': 'Roles',
+    '/iam/roles/create': 'Create role',
+    '/iam/policies': 'Policies',
+    '/iam/policies/create': 'Create policy',
   };
   
   // Check for exact match first
@@ -389,6 +400,7 @@ export function TabProvider({ children, defaultTabs = [] }: TabProviderProps) {
       '/design': { path: '/design', label: 'Home' },
       '/container': { path: '/container', label: 'Dashboard' },
       '/ai-platform': { path: '/ai-platform', label: 'Dashboard' },
+      '/iam': { path: '/iam', label: 'Home' },
     };
     
     // 현재 경로에서 애플리케이션 찾기
