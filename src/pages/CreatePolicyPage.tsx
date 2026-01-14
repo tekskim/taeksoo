@@ -826,11 +826,11 @@ function PolicyEditorSection({
 
                   {/* Action Cards - Simple view for non-compute applications */}
                   {!shouldShowDetailedActions(permission) && (
-                    <div className="flex gap-3 w-full">
+                    <div className="flex gap-3 w-full h-[44px]">
                       {(['read', 'list', 'write', 'delete', 'admin'] as const).map((action) => (
                         <div
                           key={action}
-                          className="flex-1 bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 cursor-pointer"
+                          className="flex-1 bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 cursor-pointer h-[44px] flex items-center"
                           onClick={() => toggleAction(permission.id, action)}
                         >
                           <label className="flex items-center gap-2.5 cursor-pointer">
