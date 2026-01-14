@@ -139,16 +139,16 @@ export const ProgressBar: React.FC<ProgressBarProps> = ({
   // Quota variant
   if (variant === 'quota') {
     return (
-      <div className={`flex flex-col gap-[var(--spacing-2)] w-full ${className}`}>
+      <div className={`flex flex-col gap-1.5 w-full ${className}`}>
         {/* Header */}
         <div className="flex items-center justify-between">
           {label && (
-            <span className="text-[length:var(--font-size-12)] leading-[var(--line-height-18)] font-medium text-[var(--color-text-default)]">
+            <span className="text-[length:var(--font-size-11)] leading-[var(--line-height-16)] font-medium text-[var(--color-text-default)]">
               {label}
             </span>
           )}
           {showValue && (
-            <div className="flex items-center text-[length:var(--font-size-12)] leading-[var(--line-height-16)] text-[var(--color-text-default)]">
+            <div className="flex items-center text-[length:var(--font-size-11)] leading-[var(--line-height-16)] text-[var(--color-text-default)]">
               <span>{value + newValue}/</span>
               {isUnlimited ? (
                 <IconInfinity size={16} stroke={1} />
@@ -230,7 +230,7 @@ export const ProgressBar: React.FC<ProgressBarProps> = ({
 
   // Default variant (simple progress bar or table cell)
   return (
-    <div className={`flex flex-col gap-[var(--spacing-2)] w-full ${className}`}>
+    <div className={`flex flex-col gap-1.5 w-full ${className}`}>
       {/* Header */}
       {(label || statusText || showValue) && (
         <div className="flex items-center justify-between">

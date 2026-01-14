@@ -109,7 +109,7 @@ const statusConfig: Record<StatusType, StatusConfig> = {
   // Info (Blue) - using semantic color
   building: {
     label: 'Building...',
-    icon: <IconLoader size={ICON_SIZE} strokeWidth={2} className="animate-spin" />,
+    icon: <IconLoader size={ICON_SIZE} strokeWidth={2} className="animate-spin-slow" />,
     bgColor: 'bg-[var(--status-info-bg)]',
   },
   deleting: {
