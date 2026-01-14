@@ -13,7 +13,7 @@ import {
   Pagination,
   SelectionIndicator,
   InlineMessage,
-  Textarea,
+  StatusIndicator,
   type TableColumn,
 } from '@/design-system';
 import { IAMSidebar } from '@/components/IAMSidebar';
@@ -41,9 +41,10 @@ interface SectionStatus {
 interface User {
   id: string;
   username: string;
-  email: string;
-  displayName: string;
-  status: 'Enabled' | 'Disabled';
+  userGroups: string;
+  roles: string;
+  lastSignIn: string;
+  status: 'active' | 'inactive';
   createdAt: string;
 }
 
@@ -61,13 +62,31 @@ const SECTION_ORDER: SectionStep[] = ['basic-info', 'add-users'];
    ---------------------------------------- */
 
 const mockUsers: User[] = [
-  { id: 'user-1', username: 'johndoe', email: 'john.doe@example.com', displayName: 'John Doe', status: 'Enabled', createdAt: '2025-09-12' },
-  { id: 'user-2', username: 'janesmith', email: 'jane.smith@example.com', displayName: 'Jane Smith', status: 'Enabled', createdAt: '2025-09-12' },
-  { id: 'user-3', username: 'bobwilson', email: 'bob.wilson@example.com', displayName: 'Bob Wilson', status: 'Enabled', createdAt: '2025-09-12' },
-  { id: 'user-4', username: 'alicebrown', email: 'alice.brown@example.com', displayName: 'Alice Brown', status: 'Disabled', createdAt: '2025-09-12' },
-  { id: 'user-5', username: 'charliedavis', email: 'charlie.davis@example.com', displayName: 'Charlie Davis', status: 'Enabled', createdAt: '2025-08-15' },
-  { id: 'user-6', username: 'evamiller', email: 'eva.miller@example.com', displayName: 'Eva Miller', status: 'Enabled', createdAt: '2025-08-15' },
-  { id: 'user-7', username: 'frankgarcia', email: 'frank.garcia@example.com', displayName: 'Frank Garcia', status: 'Enabled', createdAt: '2025-07-22' },
+  { id: 'user-1', username: 'thaki-kim', userGroups: 'dev-admin-group (+2)', roles: 'compute-admin (+3)', lastSignIn: '2025-09-12', status: 'active', createdAt: '2025-09-12' },
+  { id: 'user-2', username: 'thaki-kim', userGroups: 'dev-admin-group (+2)', roles: 'compute-admin (+3)', lastSignIn: '2025-09-12', status: 'active', createdAt: '2025-09-12' },
+  { id: 'user-3', username: 'thaki-kim', userGroups: 'dev-admin-group (+2)', roles: 'compute-admin (+3)', lastSignIn: '2025-09-12', status: 'active', createdAt: '2025-09-12' },
+  { id: 'user-4', username: 'thaki-kim', userGroups: 'dev-admin-group (+2)', roles: 'compute-admin (+3)', lastSignIn: '2025-09-12', status: 'active', createdAt: '2025-09-12' },
+  { id: 'user-5', username: 'thaki-kim', userGroups: 'dev-admin-group (+2)', roles: 'compute-admin (+3)', lastSignIn: '2025-09-12', status: 'active', createdAt: '2025-09-12' },
+  { id: 'user-6', username: 'thaki-kim', userGroups: 'dev-admin-group (+2)', roles: 'compute-admin (+3)', lastSignIn: '2025-09-12', status: 'active', createdAt: '2025-09-12' },
+  { id: 'user-7', username: 'thaki-kim', userGroups: 'dev-admin-group (+2)', roles: 'compute-admin (+3)', lastSignIn: '2025-09-12', status: 'active', createdAt: '2025-09-12' },
+  { id: 'user-8', username: 'admin-user', userGroups: 'admins (+1)', roles: 'full-access (+5)', lastSignIn: '2025-09-10', status: 'active', createdAt: '2025-09-10' },
+  { id: 'user-9', username: 'dev-user', userGroups: 'developers (+3)', roles: 'write-access (+2)', lastSignIn: '2025-09-08', status: 'active', createdAt: '2025-09-08' },
+  { id: 'user-10', username: 'viewer-user', userGroups: 'viewers', roles: 'read-only', lastSignIn: '2025-09-05', status: 'inactive', createdAt: '2025-09-05' },
+  { id: 'user-11', username: 'test-user-1', userGroups: 'testers (+1)', roles: 'qa-role (+2)', lastSignIn: '2025-09-01', status: 'active', createdAt: '2025-09-01' },
+  { id: 'user-12', username: 'test-user-2', userGroups: 'testers (+1)', roles: 'qa-role (+2)', lastSignIn: '2025-08-28', status: 'active', createdAt: '2025-08-28' },
+  { id: 'user-13', username: 'ops-user', userGroups: 'ops-team (+2)', roles: 'infra-admin (+3)', lastSignIn: '2025-08-25', status: 'active', createdAt: '2025-08-25' },
+  { id: 'user-14', username: 'support-user', userGroups: 'support (+1)', roles: 'support-role', lastSignIn: '2025-08-20', status: 'active', createdAt: '2025-08-20' },
+  { id: 'user-15', username: 'manager-user', userGroups: 'managers (+2)', roles: 'manager-role (+4)', lastSignIn: '2025-08-15', status: 'active', createdAt: '2025-08-15' },
+  { id: 'user-16', username: 'analyst-user', userGroups: 'analysts', roles: 'read-analytics', lastSignIn: '2025-08-10', status: 'active', createdAt: '2025-08-10' },
+  { id: 'user-17', username: 'security-user', userGroups: 'security (+3)', roles: 'security-admin (+5)', lastSignIn: '2025-08-05', status: 'active', createdAt: '2025-08-05' },
+  { id: 'user-18', username: 'finance-user', userGroups: 'finance (+1)', roles: 'finance-role (+2)', lastSignIn: '2025-08-01', status: 'inactive', createdAt: '2025-08-01' },
+  { id: 'user-19', username: 'hr-user', userGroups: 'hr-team (+2)', roles: 'hr-role (+3)', lastSignIn: '2025-07-28', status: 'active', createdAt: '2025-07-28' },
+  { id: 'user-20', username: 'legal-user', userGroups: 'legal', roles: 'legal-role', lastSignIn: '2025-07-25', status: 'active', createdAt: '2025-07-25' },
+  { id: 'user-21', username: 'marketing-user', userGroups: 'marketing (+1)', roles: 'marketing-role (+2)', lastSignIn: '2025-07-20', status: 'active', createdAt: '2025-07-20' },
+  { id: 'user-22', username: 'sales-user', userGroups: 'sales (+2)', roles: 'sales-role (+3)', lastSignIn: '2025-07-15', status: 'active', createdAt: '2025-07-15' },
+  { id: 'user-23', username: 'customer-user', userGroups: 'customers', roles: 'customer-role', lastSignIn: '2025-07-10', status: 'active', createdAt: '2025-07-10' },
+  { id: 'user-24', username: 'partner-user', userGroups: 'partners (+1)', roles: 'partner-role (+2)', lastSignIn: '2025-07-05', status: 'active', createdAt: '2025-07-05' },
+  { id: 'user-25', username: 'vendor-user', userGroups: 'vendors', roles: 'vendor-role', lastSignIn: '2025-07-01', status: 'inactive', createdAt: '2025-07-01' },
 ];
 
 /* ----------------------------------------
@@ -330,20 +349,19 @@ function BasicInformationSection({
           <div className="w-full h-px bg-[var(--color-border-subtle)]" />
 
           {/* Description */}
-          <div className="flex flex-col py-6">
+          <div className="flex flex-col pt-2 pb-6">
             <label className="text-[14px] font-medium text-[var(--color-text-default)] mb-2">
               Description
             </label>
-            <span className="text-[12px] text-[var(--color-text-subtle)] leading-4 mb-2">
-              Provide an optional description for the user group to help identify its purpose.
-            </span>
-            <Textarea
+            <Input
               placeholder="Enter description"
               value={description}
               onChange={(e) => onDescriptionChange(e.target.value)}
-              rows={3}
               fullWidth
             />
+            <span className="text-[11px] text-[var(--color-text-subtle)] leading-[16px] mt-1">
+              You can use letters, numbers, and special characters (+=,.@-_()[]), and maximum 255 characters.
+            </span>
           </div>
 
           {/* Divider + Next Button (only when not editing) */}
@@ -371,6 +389,7 @@ interface AddUsersSectionProps {
   selectedUsers: string[];
   onSelectionChange: (ids: string[]) => void;
   onNext: () => void;
+  onSkip: () => void;
   isEditing: boolean;
   onEditCancel: () => void;
   onEditDone: () => void;
@@ -382,6 +401,7 @@ function AddUsersSection({
   selectedUsers,
   onSelectionChange,
   onNext,
+  onSkip,
   isEditing,
   onEditCancel,
   onEditDone,
@@ -395,8 +415,8 @@ function AddUsersSection({
   const filteredUsers = mockUsers.filter(
     (user) =>
       user.username.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      user.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      user.displayName.toLowerCase().includes(searchQuery.toLowerCase())
+      user.userGroups.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      user.roles.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   const totalPages = Math.ceil(filteredUsers.length / itemsPerPage);
@@ -406,6 +426,15 @@ function AddUsersSection({
   );
 
   const columns: TableColumn<User>[] = [
+    {
+      key: 'status',
+      label: 'Status',
+      width: '60px',
+      align: 'center',
+      render: (_, row) => (
+        <StatusIndicator status={row.status} />
+      ),
+    },
     {
       key: 'username',
       label: 'Username',
@@ -418,26 +447,25 @@ function AddUsersSection({
       ),
     },
     {
-      key: 'email',
-      label: 'Email',
+      key: 'userGroups',
+      label: 'User groups',
       render: (value) => (
         <span className="text-[12px] text-[var(--color-text-default)]">{value}</span>
       ),
     },
     {
-      key: 'displayName',
-      label: 'Display name',
+      key: 'roles',
+      label: 'Roles',
       render: (value) => (
         <span className="text-[12px] text-[var(--color-text-default)]">{value}</span>
       ),
     },
     {
-      key: 'status',
-      label: 'Status',
+      key: 'lastSignIn',
+      label: 'Last Sign-in',
+      sortable: true,
       render: (value) => (
-        <span className={`text-[12px] ${value === 'Enabled' ? 'text-[var(--color-state-success)]' : 'text-[var(--color-text-muted)]'}`}>
-          {value}
-        </span>
+        <span className="text-[12px] text-[var(--color-text-default)]">{value}</span>
       ),
     },
     {
@@ -482,7 +510,7 @@ function AddUsersSection({
               <span className="text-[var(--color-state-danger)]">*</span>
             </div>
             <span className="text-[12px] text-[var(--color-text-subtle)] leading-4">
-              Select the users to add to this group. Users will inherit the permissions assigned to this group.
+              Select users to include in this group. All selected users will receive the group's assigned roles and policies.
             </span>
           </div>
 
@@ -553,11 +581,14 @@ function AddUsersSection({
           </div>
 
         </VStack>
-        {/* Next Button (only when not editing) */}
+        {/* Skip and Next Buttons (only when not editing) */}
         {!isEditing && (
           <>
             <div className="w-full h-px bg-[var(--color-border-subtle)]" />
-            <HStack justify="end" className="pt-3">
+            <HStack justify="end" gap={2} className="pt-3">
+              <Button variant="secondary" onClick={onSkip}>
+                Skip
+              </Button>
               <Button variant="primary" onClick={() => {
                 if (selectedUsers.length === 0) {
                   onUsersErrorChange('Please select at least one user.');
@@ -565,7 +596,7 @@ function AddUsersSection({
                 }
                 onNext();
               }}>
-                Done
+                Next
               </Button>
             </HStack>
           </>
@@ -841,6 +872,7 @@ export default function CreateUserGroupPage() {
                         }
                       }}
                       onNext={() => handleNext('add-users')}
+                      onSkip={() => handleNext('add-users')}
                       isEditing={editingSection === 'add-users'}
                       onEditCancel={handleEditCancel}
                       onEditDone={handleEditDone}

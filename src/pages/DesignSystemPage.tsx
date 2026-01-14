@@ -598,6 +598,7 @@ function OpenSectionTableDemo() {
       key: 'status',
       label: 'Status',
       width: '60px',
+      align: 'center',
       render: (_: unknown, row: DemoImageRow) => (
         <StatusIndicator status={row.status} />
       ),
@@ -616,10 +617,10 @@ function OpenSectionTableDemo() {
         </VStack>
       ),
     },
-    { key: 'version', label: 'Version', sortable: true, width: '80px' },
-    { key: 'size', label: 'Size', sortable: true, width: '100px' },
-    { key: 'minDisk', label: 'Min disk', sortable: true, width: '90px' },
-    { key: 'access', label: 'Visibility', sortable: true, width: '80px' },
+    { key: 'version', label: 'Version', sortable: true },
+    { key: 'size', label: 'Size', sortable: true },
+    { key: 'minDisk', label: 'Min disk', sortable: true },
+    { key: 'access', label: 'Visibility', sortable: true },
   ];
 
   return (
