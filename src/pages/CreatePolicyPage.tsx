@@ -494,6 +494,7 @@ function PolicyEditorSection({
   const [conditionsExpanded, setConditionsExpanded] = useState(false);
   const [targetErrors, setTargetErrors] = useState<Record<string, boolean>>({});
   const [invalidTargetErrors, setInvalidTargetErrors] = useState<Record<string, boolean>>({});
+  const [actionErrors, setActionErrors] = useState<Record<string, boolean>>({});
 
   // Check if a permission has partial fill (some fields filled, but not all)
   const hasPartialFill = (permission: Permission): boolean => {
@@ -545,12 +546,40 @@ function PolicyEditorSection({
     return !hasErrors;
   };
 
+  // Check if at least one action is selected for a permission
+  const hasAnyActionSelected = (permission: Permission): boolean => {
+    // For compute with all fields filled, check detailed actions
+    if (shouldShowDetailedActions(permission)) {
+      return Object.values(permission.detailedActions).some((v) => v);
+    }
+    // For other cases, check basic actions
+    return Object.values(permission.actions).some((v) => v);
+  };
+
+  const validateActions = (): boolean => {
+    const errors: Record<string, boolean> = {};
+    let hasErrors = false;
+
+    permissions.forEach((permission) => {
+      if (!hasAnyActionSelected(permission)) {
+        errors[permission.id] = true;
+        hasErrors = true;
+      }
+    });
+
+    setActionErrors(errors);
+    return !hasErrors;
+  };
+
   const handleNext = () => {
     if (permissions.length === 0) {
       onPermissionsErrorChange('At least one permission is required.');
       return;
     }
     if (!validateTargetFields()) {
+      return;
+    }
+    if (!validateActions()) {
       return;
     }
     onNext();
@@ -562,6 +591,9 @@ function PolicyEditorSection({
       return;
     }
     if (!validateTargetFields()) {
+      return;
+    }
+    if (!validateActions()) {
       return;
     }
     onEditDone();
@@ -586,6 +618,11 @@ function PolicyEditorSection({
     const allSelected = Object.values(newActions).every((v) => v);
     
     updatePermission(permissionId, { actions: newActions, allActions: allSelected });
+
+    // Clear action error if any action is now selected
+    if (actionErrors[permissionId] && Object.values(newActions).some((v) => v)) {
+      setActionErrors((prev) => ({ ...prev, [permissionId]: false }));
+    }
   };
 
   const toggleAllActions = (permissionId: string) => {
@@ -613,6 +650,11 @@ function PolicyEditorSection({
         admin: newValue,
       },
     });
+
+    // Clear action error if any action is now selected
+    if (actionErrors[permissionId] && newValue) {
+      setActionErrors((prev) => ({ ...prev, [permissionId]: false }));
+    }
   };
 
   // Toggle a single detailed action
@@ -638,6 +680,11 @@ function PolicyEditorSection({
       actions: newActions,
       allActions: allSelected,
     });
+
+    // Clear action error if any action is now selected
+    if (actionErrors[permissionId] && Object.values(newDetailedActions).some((v) => v)) {
+      setActionErrors((prev) => ({ ...prev, [permissionId]: false }));
+    }
   };
 
   // Toggle all actions in a category (Read, List, Write, Delete, Admin)
@@ -662,6 +709,11 @@ function PolicyEditorSection({
       actions: newActions,
       allActions: allSelected,
     });
+
+    // Clear action error if any action is now selected
+    if (actionErrors[permissionId] && Object.values(newDetailedActions).some((v) => v)) {
+      setActionErrors((prev) => ({ ...prev, [permissionId]: false }));
+    }
   };
 
   // Check if application is compute AND all fields are filled
@@ -826,7 +878,7 @@ function PolicyEditorSection({
 
                   {/* Action Cards - Simple view for non-compute applications */}
                   {!shouldShowDetailedActions(permission) && (
-                    <div className="flex gap-3 w-full h-[44px]">
+                    <div className={`flex gap-3 w-full h-[44px] ${actionErrors[permission.id] ? 'ring-2 ring-[var(--color-state-danger)] rounded-[6px]' : ''}`}>
                       {(['read', 'list', 'write', 'delete', 'admin'] as const).map((action) => (
                         <div
                           key={action}
@@ -849,7 +901,7 @@ function PolicyEditorSection({
 
                   {/* Detailed Action Tabs - For compute application with all fields filled */}
                   {shouldShowDetailedActions(permission) && (
-                    <div className="flex gap-3 w-full h-[320px] overflow-hidden">
+                    <div className={`flex gap-3 w-full h-[320px] overflow-hidden ${actionErrors[permission.id] ? 'ring-2 ring-[var(--color-state-danger)] rounded-[6px]' : ''}`}>
                       {(['read', 'list', 'write', 'delete', 'admin'] as const).map((category) => {
                         const categoryActions = COMPUTE_ACTIONS[category];
                         const filteredActions = searchQuery
@@ -916,6 +968,13 @@ function PolicyEditorSection({
                         );
                       })}
                     </div>
+                  )}
+
+                  {/* Action Error Message */}
+                  {actionErrors[permission.id] && (
+                    <span className="text-[11px] text-[var(--color-state-danger)] leading-[16px]">
+                      Please select at least one action.
+                    </span>
                   )}
                 </div>
 
