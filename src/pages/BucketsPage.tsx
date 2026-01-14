@@ -22,7 +22,7 @@ import {
   IconTrash,
   IconDotsCircleHorizontal,
 } from '@tabler/icons-react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 /* ----------------------------------------
    Types
@@ -172,6 +172,7 @@ function NameCell({ id, name }: NameCellProps) {
    ---------------------------------------- */
 
 export function BucketsPage() {
+  const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
@@ -343,8 +344,8 @@ export function BucketsPage() {
                 <h1 className="text-[length:var(--font-size-16)] font-semibold leading-6 text-[var(--color-text-default)]">
                   Buckets
                 </h1>
-                <Button variant="primary" size="sm">
-                  Create
+                <Button variant="primary" size="sm" onClick={() => navigate('/storage/buckets/create')}>
+                  Create Bucket
                 </Button>
               </div>
 

@@ -32,6 +32,7 @@ import {
   IconGrid,
   IconRocky,
   InlineMessage,
+  SelectionIndicator,
 } from '@/design-system';
 import type { TableColumn } from '@/design-system/components/Table/Table';
 import { Sidebar } from '@/components/Sidebar';
@@ -513,7 +514,7 @@ function TemplateInformationSection({
           </HStack>
         ) : undefined}
       />
-      <SectionCard.Content gap={6}>
+      <SectionCard.Content gap={6} className="pt-2">
         {/* Template name */}
         <VStack gap={2}>
           <span className="text-[length:var(--font-size-14)] font-medium leading-[var(--line-height-20)] text-[var(--color-text-default)]">
@@ -619,7 +620,7 @@ function BasicInformationSection({
           </HStack>
         ) : undefined}
       />
-      <SectionCard.Content gap={6}>
+      <SectionCard.Content gap={6} className="pt-2">
         {/* AZ (Availability zone) */}
         <VStack gap={2}>
           <span className="text-[length:var(--font-size-14)] font-medium leading-[var(--line-height-20)] text-[var(--color-text-default)]">
@@ -804,7 +805,7 @@ function ImageSection({
         ) : undefined}
       />
       <SectionCard.Content>
-        <VStack gap={4}>
+        <VStack gap={4} className="pt-2">
           {/* Start Source */}
           <VStack gap={3}>
             <span className="text-[14px] font-medium text-[var(--color-text-default)]">
@@ -883,28 +884,12 @@ function ImageSection({
               onRowClick={(row) => handleSelectImage(row.id)}
             />
 
-            {/* Selected Bar */}
-            <HStack justify="between" align="center" className="w-full px-2 py-2 bg-[var(--color-surface-subtle)] rounded-[6px]">
-              <HStack gap={2} align="center" className="flex-wrap">
-                <span className="text-[12px] text-[var(--color-text-subtle)]">Selected</span>
-                {selectedImage && (
-                  <Chip
-                    value={selectedImage.name}
-                    variant="selected"
-                    onRemove={() => onSelectImage('')}
-                  />
-                )}
-              </HStack>
-              {selectedImage && (
-                <button
-                  type="button"
-                  className="text-[12px] text-[var(--color-action-primary)] hover:underline"
-                  onClick={() => onSelectImage('')}
-                >
-                  Clear
-                </button>
-              )}
-            </HStack>
+            {/* Selection Indicator for Image */}
+            <SelectionIndicator
+              className="mt-2"
+              selectedItems={selectedImage ? [{ id: selectedImage.id, label: selectedImage.name }] : []}
+              onRemove={() => onSelectImage('')}
+            />
           </VStack>
 
           {/* Divider */}
@@ -1135,7 +1120,7 @@ function FlavorSection({
         ) : undefined}
       />
       <SectionCard.Content>
-        <VStack gap={6}>
+        <VStack gap={6} className="pt-2">
           {/* Flavors Label & Description */}
           <VStack gap={2} align="start">
             <span className="text-[14px] font-medium text-[var(--color-text-default)] leading-[20px]">
@@ -1183,36 +1168,31 @@ function FlavorSection({
             />
 
             {/* Flavor Table */}
-            <VStack gap={1} align="stretch">
-              <Table
-                columns={flavorColumns}
-                data={paginatedFlavors}
-                rowKey="id"
-                onRowClick={(row) => !row.hasWarning && handleSelectFlavor(row.id)}
-              />
+            <Table
+              columns={flavorColumns}
+              data={paginatedFlavors}
+              rowKey="id"
+              onRowClick={(row) => !row.hasWarning && handleSelectFlavor(row.id)}
+            />
 
-              {/* Selected Footer */}
-              <div className="flex items-center gap-1 px-2 py-2 bg-[var(--color-surface-subtle)] rounded-[6px]">
-                <span className="text-[12px] text-[var(--color-text-subtle)] leading-[16px] w-[42px] h-[24px] flex items-center">
-                  Selected
-                </span>
-                {selectedFlavor && (
-                  <span className="text-[12px] text-[var(--color-text-default)] leading-[16px] ml-2">
-                    {selectedFlavor.name} ({selectedFlavor.vCPU} vCPU, {selectedFlavor.ram}, {selectedFlavor.disk})
-                  </span>
-                )}
+            {/* Error Message or Selection Indicator for Flavor */}
+            {flavorError && !selectedFlavor ? (
+              <div className="mt-2">
+                <InlineMessage variant="error">
+                  {flavorError}
+                </InlineMessage>
               </div>
-            </VStack>
+            ) : (
+              <SelectionIndicator
+                className="mt-2"
+                selectedItems={selectedFlavor ? [{
+                  id: selectedFlavor.id,
+                  label: `${selectedFlavor.name} (${selectedFlavor.vCPU} vCPU, ${selectedFlavor.ram}, ${selectedFlavor.disk})`
+                }] : []}
+                onRemove={() => onSelectFlavor('')}
+              />
+            )}
           </VStack>
-
-          {/* Error Message */}
-          {flavorError && (
-            <div className="mt-2">
-              <InlineMessage variant="error">
-                {flavorError}
-              </InlineMessage>
-            </div>
-          )}
 
           {/* Next Button - hidden in edit mode */}
           {!isEditing && (
@@ -1555,7 +1535,7 @@ function NetworkSection({
         ) : undefined}
       />
       <SectionCard.Content>
-        <VStack gap={6}>
+        <VStack gap={6} className="pt-2">
           {/* Networks Section */}
           <VStack gap={4} align="stretch">
             <VStack gap={2} align="start">
@@ -1607,26 +1587,19 @@ function NetworkSection({
               onRowClick={(row) => handleNetworkToggle(row.id)}
             />
 
-            {/* Selected Networks Chips */}
-            {selectedNetworks.length > 0 && (
-              <HStack gap={2} className="flex-wrap">
-                {selectedNetworks.map(n => (
-                  <Chip 
-                    key={n.id}
-                    value={n.name}
-                    onRemove={() => handleNetworkToggle(n.id)}
-                  />
-                ))}
-              </HStack>
-            )}
-
-            {/* Network Error Message */}
-            {networkError && (
+            {/* Error Message or Selection Indicator for Networks */}
+            {networkError && selectedNetworks.length === 0 ? (
               <div className="mt-2">
                 <InlineMessage variant="error">
                   {networkError}
                 </InlineMessage>
               </div>
+            ) : (
+              <SelectionIndicator
+                className="mt-2"
+                selectedItems={selectedNetworks.map(n => ({ id: n.id, label: n.name }))}
+                onRemove={(id) => handleNetworkToggle(id)}
+              />
             )}
           </VStack>
 
@@ -1731,26 +1704,19 @@ function NetworkSection({
               onRowClick={(row) => handleSecurityGroupToggle(row.id)}
             />
 
-            {/* Selected Security groups Chips */}
-            {selectedSGs.length > 0 && (
-              <HStack gap={2} className="flex-wrap">
-                {selectedSGs.map(sg => (
-                  <Chip 
-                    key={sg.id}
-                    value={sg.name}
-                    onRemove={() => handleSecurityGroupToggle(sg.id)}
-                  />
-                ))}
-              </HStack>
-            )}
-
-            {/* Security Group Error Message */}
-            {sgError && (
+            {/* Error Message or Selection Indicator for Security Groups */}
+            {sgError && selectedSGs.length === 0 ? (
               <div className="mt-2">
                 <InlineMessage variant="error">
                   {sgError}
                 </InlineMessage>
               </div>
+            ) : (
+              <SelectionIndicator
+                className="mt-2"
+                selectedItems={selectedSGs.map(sg => ({ id: sg.id, label: sg.name }))}
+                onRemove={(id) => handleSecurityGroupToggle(id)}
+              />
             )}
           </VStack>
 
@@ -1792,18 +1758,12 @@ function NetworkSection({
                   onRowClick={(row) => handlePortToggle(row.id)}
                 />
 
-                {/* Selected Ports Chips */}
-                {selectedPorts.length > 0 && (
-                  <HStack gap={2} className="flex-wrap">
-                    {selectedPorts.map(p => (
-                      <Chip 
-                        key={p.id}
-                        value={p.id}
-                        onRemove={() => handlePortToggle(p.id)}
-                      />
-                    ))}
-                  </HStack>
-                )}
+                {/* Selection Indicator for Ports */}
+                <SelectionIndicator
+                  className="mt-2"
+                  selectedItems={selectedPorts.map(p => ({ id: p.id, label: p.id }))}
+                  onRemove={(id) => handlePortToggle(id)}
+                />
               </VStack>
             )}
           </VStack>
@@ -1909,7 +1869,7 @@ function AuthenticationSection({
       />
       <SectionCard.Content>
         <VStack gap={0}>
-          <VStack gap={2} className="pt-3">
+          <VStack gap={2} className="pt-2">
             <span className="text-[14px] font-medium text-[var(--color-text-default)]">
               Login type<span className="ml-1 text-[var(--color-state-danger)]">*</span>
             </span>
@@ -1944,17 +1904,26 @@ function AuthenticationSection({
                   data={mockKeyPairs}
                   onRowClick={(row) => handleSelectKeyPair(row.id)}
                 />
+
+                {/* Error Message or Selection Indicator for Key Pair */}
+                {authError && !selectedKeyPairId ? (
+                  <div className="mt-2">
+                    <InlineMessage variant="error">
+                      {authError}
+                    </InlineMessage>
+                  </div>
+                ) : (
+                  <SelectionIndicator
+                    className="mt-2"
+                    selectedItems={selectedKeyPairId ? [{
+                      id: selectedKeyPairId,
+                      label: mockKeyPairs.find(k => k.id === selectedKeyPairId)?.name || selectedKeyPairId
+                    }] : []}
+                    onRemove={() => onSelectKeyPair('')}
+                  />
+                )}
               </VStack>
             </>
-          )}
-
-          {/* Error Message */}
-          {authError && (
-            <div className="mt-2">
-              <InlineMessage variant="error">
-                {authError}
-              </InlineMessage>
-            </div>
           )}
 
           {!isEditing && (
@@ -2063,7 +2032,7 @@ function AdvancedSection({
         ) : undefined}
       />
       <SectionCard.Content>
-        <VStack gap={6}>
+        <VStack gap={6} className="pt-2">
           {/* Tags Section */}
           <VStack gap={3} align="stretch">
             <VStack gap={2} align="stretch">
