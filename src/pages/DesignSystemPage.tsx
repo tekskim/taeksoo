@@ -27,6 +27,7 @@ import {
   type AppliedFilter,
   Select,
   Slider,
+  RangeSlider,
   Chip,
   SelectionIndicator,
   DatePicker,
@@ -223,7 +224,59 @@ import {
   IconBrandWindows,
   IconBrandRedhat,
   IconApps,
+  // Additional Tabler Icons
+  IconArrowLeft,
+  IconArrowUp,
+  IconArrowDown,
+  IconMinus,
+  IconMoon,
+  IconSun,
+  IconFolder,
+  IconFolderOpen,
+  IconInfinity,
+  IconTarget,
+  IconShieldLock,
+  IconShieldCheck,
+  IconPlugConnected,
+  IconCircleOff,
+  IconTool,
+  IconTransfer,
+  IconPencil,
+  IconTrashX,
+  IconRefreshDot,
+  IconRotateClockwise,
+  IconCaretDownFilled,
+  IconCaretRightFilled,
+  IconAlertOctagon,
+  IconHelpCircle,
+  IconPoint,
+  IconSquarePlus,
+  IconDatabaseSearch,
+  IconBoxMultiple2,
+  IconDeviceSdCard,
+  IconServerCog,
+  IconRobotFace,
+  IconBook,
+  IconArticle,
+  IconMessagePlus,
+  IconLinkOff,
+  IconGridDots,
+  IconArrowsSort,
+  IconQuestionMark,
+  IconCircleDot,
+  IconLayoutSidebarLeftCollapse,
+  IconDisc,
+  IconStopwatch,
 } from '@tabler/icons-react';
+
+// Custom Icons from design-system
+import {
+  IconExpandOff,
+  IconExpandOn,
+  IconAction,
+  IconRobotCustom,
+  IconAddRobotCustom,
+} from '@/design-system/components/Icons/CustomIcons';
 import { Link } from 'react-router-dom';
 
 /* ----------------------------------------
@@ -255,7 +308,6 @@ const formControlItems = [
   { id: 'chip', label: 'Chip', icon: IconTag },
   { id: 'selection-indicator', label: 'SelectionIndicator', icon: IconSquareCheck },
   { id: 'pagination', label: 'Pagination', icon: IconProgress },
-  { id: 'progress-bar', label: 'Progress bar', icon: IconProgress },
   { id: 'loading', label: 'Loading', icon: IconLoader2 },
   { id: 'toggle', label: 'Toggle', icon: IconToggleRight },
   { id: 'checkbox', label: 'Checkbox', icon: IconSquareCheck },
@@ -275,6 +327,7 @@ const navigationItems = [
   { id: 'status-indicator', label: 'Status indicator', icon: IconActivity },
   { id: 'tooltip', label: 'Tooltip', icon: IconMessage2 },
   { id: 'window-control', label: 'Window control', icon: IconAppWindow },
+  { id: 'scrollbar', label: 'Scrollbar', icon: IconLayoutSidebar },
 ];
 
 // Patterns - matches actual content order
@@ -406,7 +459,7 @@ function OpenSectionDemo() {
       <SectionCard.Content>
         <VStack gap={0}>
           {/* Instance name */}
-          <div className="flex flex-col py-6">
+          <div className="flex flex-col pt-2 pb-6">
             <label className="text-[14px] font-medium text-[var(--color-text-default)] mb-2">
               Instance name <span className="ml-1 text-[var(--color-state-danger)]">*</span>
             </label>
@@ -545,6 +598,7 @@ function OpenSectionTableDemo() {
       key: 'status',
       label: 'Status',
       width: '60px',
+      align: 'center',
       render: (_: unknown, row: DemoImageRow) => (
         <StatusIndicator status={row.status} />
       ),
@@ -563,10 +617,10 @@ function OpenSectionTableDemo() {
         </VStack>
       ),
     },
-    { key: 'version', label: 'Version', sortable: true, width: '80px' },
-    { key: 'size', label: 'Size', sortable: true, width: '100px' },
-    { key: 'minDisk', label: 'Min disk', sortable: true, width: '90px' },
-    { key: 'access', label: 'Visibility', sortable: true, width: '80px' },
+    { key: 'version', label: 'Version', sortable: true },
+    { key: 'size', label: 'Size', sortable: true },
+    { key: 'minDisk', label: 'Min disk', sortable: true },
+    { key: 'access', label: 'Visibility', sortable: true },
   ];
 
   return (
@@ -580,7 +634,7 @@ function OpenSectionTableDemo() {
       <SectionCard.Content>
         <VStack gap={0}>
           {/* Start Source */}
-          <VStack gap={2} className="pt-3">
+          <VStack gap={2} className="pt-2">
             <span className="text-[14px] font-medium text-[var(--color-text-default)]">
               Start source<span className="ml-1 text-[var(--color-state-danger)]">*</span>
             </span>
@@ -597,42 +651,30 @@ function OpenSectionTableDemo() {
               </TabList>
             </Tabs>
 
-            {/* OS Filter Tabs (Capsule/Boxed) - Only show for Image tab */}
+            {/* OS Filter Tabs (Capsule) - Only show for Image tab */}
             {sourceTab === 'image' && (
               <div className="mt-2">
-                <Tabs 
-                  value={osFilter} 
-                  onChange={(v) => { setOsFilter(v as 'ubuntu' | 'windows' | 'rocky' | 'other'); setCurrentPage(1); }} 
-                  variant="boxed" 
-                  size="sm"
-                >
-                  <TabList>
-                    <Tab value="other">
-                      <span className="flex items-center gap-1">
-                        <IconDots size={14} />
-                        Others
-                      </span>
-                    </Tab>
-                    <Tab value="ubuntu">
-                      <span className="flex items-center gap-1">
-                        <IconUbuntu size={14} />
-                        Ubuntu
-                      </span>
-                    </Tab>
-                    <Tab value="windows">
-                      <span className="flex items-center gap-1">
-                        <IconGrid size={14} />
-                        Windows
-                      </span>
-                    </Tab>
-                    <Tab value="rocky">
-                      <span className="flex items-center gap-1">
-                        <IconRocky size={14} />
-                        Rocky
-                      </span>
-                    </Tab>
-                  </TabList>
-                </Tabs>
+                <div className="inline-flex gap-1 p-1 bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[8px] w-fit">
+                  {(['other', 'ubuntu', 'windows', 'rocky'] as const).map((filter) => (
+                    <button
+                      key={filter}
+                      onClick={() => { setOsFilter(filter); setCurrentPage(1); }}
+                      className={`
+                        flex items-center gap-1 px-[10px] py-[6px] rounded-[6px] text-[12px] font-medium leading-5 text-center transition-all
+                        ${osFilter === filter
+                          ? 'bg-[var(--color-surface-default)] border border-[var(--color-border-default)] text-[var(--color-action-primary)] shadow-sm'
+                          : 'bg-transparent border border-transparent text-[var(--color-text-default)]'
+                        }
+                      `}
+                    >
+                      {filter === 'other' && <IconDots size={14} />}
+                      {filter === 'ubuntu' && <IconUbuntu size={14} />}
+                      {filter === 'windows' && <IconGrid size={14} />}
+                      {filter === 'rocky' && <IconRocky size={14} />}
+                      {filter === 'other' ? 'Others' : filter.charAt(0).toUpperCase() + filter.slice(1)}
+                    </button>
+                  ))}
+                </div>
               </div>
             )}
 
@@ -895,60 +937,62 @@ const summaryItems: WizardSummaryItem[] = [
    Notification center Section
    ---------------------------------------- */
 
+const initialNotifications: NotificationItem[] = [
+  {
+    id: '1',
+    type: 'success',
+    message: 'Instance "web-server-01" created successfully.',
+    time: '10:23',
+    project: 'Proj1',
+    isRead: false,
+    detail: {
+      code: 200,
+      message: 'Instance created with 4 vCPUs, 8GB RAM, and 100GB storage.',
+    },
+  },
+  {
+    id: '2',
+    type: 'success',
+    message: 'Volume "data-vol-01" attached to instance.',
+    time: '10:15',
+    project: 'Proj1',
+    isRead: false,
+  },
+  {
+    id: '3',
+    type: 'error',
+    message: 'Failed to create volume "data-vol-02".',
+    time: '09:30',
+    project: 'Proj2',
+    isRead: false,
+    detail: {
+      code: 400,
+      message: "Flavor's disk is smaller than the minimum size specified in image metadata. Flavor disk is 1073741824 bytes, minimum size is 10737418240 bytes.",
+    },
+  },
+  {
+    id: '4',
+    type: 'warning',
+    message: 'Instance "db-server" is running low on disk space.',
+    time: '09:15',
+    project: 'Proj1',
+    isRead: true,
+    detail: {
+      code: 'WARN_DISK_LOW',
+      message: 'Disk usage is at 92%. Consider expanding the volume or cleaning up unused files.',
+    },
+  },
+  {
+    id: '5',
+    type: 'info',
+    message: 'System maintenance scheduled for tomorrow.',
+    time: 'Yesterday',
+    isRead: true,
+  },
+];
+
 function NotificationCenterSection() {
-  const [notifications, setNotifications] = useState<NotificationItem[]>([
-    {
-      id: '1',
-      type: 'success',
-      message: 'Instance "web-server-01" created successfully.',
-      time: '10:23',
-      project: 'Proj1',
-      isRead: false,
-      detail: {
-        code: 200,
-        message: 'Instance created with 4 vCPUs, 8GB RAM, and 100GB storage.',
-      },
-    },
-    {
-      id: '2',
-      type: 'success',
-      message: 'Volume "data-vol-01" attached to instance.',
-      time: '10:15',
-      project: 'Proj1',
-      isRead: false,
-    },
-    {
-      id: '3',
-      type: 'error',
-      message: 'Failed to create volume "data-vol-02".',
-      time: '09:30',
-      project: 'Proj2',
-      isRead: false,
-      detail: {
-        code: 400,
-        message: "Flavor's disk is smaller than the minimum size specified in image metadata. Flavor disk is 1073741824 bytes, minimum size is 10737418240 bytes.",
-      },
-    },
-    {
-      id: '4',
-      type: 'warning',
-      message: 'Instance "db-server" is running low on disk space.',
-      time: '09:15',
-      project: 'Proj1',
-      isRead: true,
-      detail: {
-        code: 'WARN_DISK_LOW',
-        message: 'Disk usage is at 92%. Consider expanding the volume or cleaning up unused files.',
-      },
-    },
-    {
-      id: '5',
-      type: 'info',
-      message: 'System maintenance scheduled for tomorrow.',
-      time: 'Yesterday',
-      isRead: true,
-    },
-  ]);
+  const [notifications, setNotifications] = useState<NotificationItem[]>(initialNotifications);
 
   const [selectedId, setSelectedId] = useState<string | undefined>();
 
@@ -960,6 +1004,11 @@ function NotificationCenterSection() {
 
   const handleMarkAllAsRead = () => {
     setNotifications((prev) => prev.map((n) => ({ ...n, isRead: true })));
+  };
+
+  const handleReset = () => {
+    setNotifications(initialNotifications);
+    setSelectedId(undefined);
   };
 
   return (
@@ -979,7 +1028,12 @@ function NotificationCenterSection() {
 
         {/* Live Demo */}
         <VStack gap={3}>
-          <Label>Live demo</Label>
+          <div className="flex items-center justify-between">
+            <Label>Live demo</Label>
+            <Button size="sm" variant="secondary" onClick={handleReset} leftIcon={<IconRefresh size={12} />}>
+              Reset
+            </Button>
+          </div>
           <div className="flex justify-center p-6 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)]">
             <NotificationCenter
               notifications={notifications}
@@ -997,8 +1051,8 @@ function NotificationCenterSection() {
           <div className="grid grid-cols-4 gap-4">
             <div className="p-3 bg-[var(--color-surface-default)] rounded-[var(--radius-md)] border border-[var(--color-border-default)]">
               <div className="flex items-center gap-2 mb-2">
-                <div className="w-5 h-5 rounded-full bg-[var(--color-state-success)] bg-opacity-20 flex items-center justify-center">
-                  <IconCheck size={12} className="text-[var(--color-state-success)]" />
+                <div className="w-5 h-5 rounded-full bg-[var(--color-state-success)] flex items-center justify-center">
+                  <IconCheck size={10} stroke={2} className="text-white" />
                 </div>
                 <span className="text-[length:var(--font-size-12)] font-medium text-[var(--color-text-default)]">Success</span>
               </div>
@@ -1006,8 +1060,8 @@ function NotificationCenterSection() {
             </div>
             <div className="p-3 bg-[var(--color-surface-default)] rounded-[var(--radius-md)] border border-[var(--color-border-default)]">
               <div className="flex items-center gap-2 mb-2">
-                <div className="w-5 h-5 rounded-full bg-[var(--color-state-danger)] bg-opacity-20 flex items-center justify-center">
-                  <IconX size={12} className="text-[var(--color-state-danger)]" />
+                <div className="w-5 h-5 rounded-full bg-[var(--color-state-danger)] flex items-center justify-center">
+                  <IconX size={10} stroke={2} className="text-white" />
                 </div>
                 <span className="text-[length:var(--font-size-12)] font-medium text-[var(--color-text-default)]">Error</span>
               </div>
@@ -1015,8 +1069,8 @@ function NotificationCenterSection() {
             </div>
             <div className="p-3 bg-[var(--color-surface-default)] rounded-[var(--radius-md)] border border-[var(--color-border-default)]">
               <div className="flex items-center gap-2 mb-2">
-                <div className="w-5 h-5 rounded-full bg-[var(--color-state-warning)] bg-opacity-20 flex items-center justify-center">
-                  <IconAlertTriangle size={12} className="text-[var(--color-state-warning)]" />
+                <div className="w-5 h-5 rounded-full bg-[var(--color-state-warning)] flex items-center justify-center">
+                  <IconAlertTriangle size={10} stroke={2} className="text-white" />
                 </div>
                 <span className="text-[length:var(--font-size-12)] font-medium text-[var(--color-text-default)]">Warning</span>
               </div>
@@ -1024,8 +1078,8 @@ function NotificationCenterSection() {
             </div>
             <div className="p-3 bg-[var(--color-surface-default)] rounded-[var(--radius-md)] border border-[var(--color-border-default)]">
               <div className="flex items-center gap-2 mb-2">
-                <div className="w-5 h-5 rounded-full bg-[var(--color-state-info)] bg-opacity-20 flex items-center justify-center">
-                  <IconInfoCircle size={12} className="text-[var(--color-state-info)]" />
+                <div className="w-5 h-5 rounded-full bg-[var(--color-state-info)] flex items-center justify-center">
+                  <IconInfoCircle size={10} stroke={2} className="text-white" />
                 </div>
                 <span className="text-[length:var(--font-size-12)] font-medium text-[var(--color-text-default)]">Info</span>
               </div>
@@ -1272,9 +1326,171 @@ function DatePickerSection() {
 }
 
 /* ----------------------------------------
-   Modal Demo (with state)
+   Capsule Tab Demo
    ---------------------------------------- */
 
+function CapsuleTabDemo() {
+  const [selected, setSelected] = useState<'left' | 'right'>('left');
+
+  return (
+    <div className="inline-flex gap-2 p-1 bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[8px] w-fit">
+      <button
+        onClick={() => setSelected('left')}
+        className={`
+          min-w-[80px] px-[10px] py-[6px] rounded-[6px] text-[length:var(--font-size-12)] font-medium leading-[var(--line-height-18)] text-center transition-all
+          ${selected === 'left'
+            ? 'bg-[var(--color-surface-default)] border border-[var(--color-border-default)] text-[var(--color-action-primary)] shadow-sm'
+            : 'bg-transparent border border-transparent text-[var(--color-text-default)]'
+          }
+        `}
+      >
+        left
+      </button>
+      <button
+        onClick={() => setSelected('right')}
+        className={`
+          min-w-[80px] px-[10px] py-[6px] rounded-[6px] text-[length:var(--font-size-12)] font-medium leading-[var(--line-height-18)] text-center transition-all
+          ${selected === 'right'
+            ? 'bg-[var(--color-surface-default)] border border-[var(--color-border-default)] text-[var(--color-action-primary)] shadow-sm'
+            : 'bg-transparent border border-transparent text-[var(--color-text-default)]'
+          }
+        `}
+      >
+        right
+      </button>
+    </div>
+  );
+}
+
+/* ----------------------------------------
+   Slider with Number Input Demo
+   ---------------------------------------- */
+
+function SliderWithNumberInputDemo() {
+  const [value, setValue] = useState(50);
+
+  return (
+    <VStack gap={3}>
+      <Label>With Value Display</Label>
+      <div className="flex items-center gap-4 w-[312px]">
+        <div className="flex-1">
+          <Slider
+            value={value}
+            onChange={setValue}
+            min={0}
+            max={100}
+            step={1}
+          />
+        </div>
+        <NumberInput
+          value={value}
+          onChange={setValue}
+          min={0}
+          max={100}
+          step={1}
+          className="w-[80px]"
+        />
+      </div>
+    </VStack>
+  );
+}
+
+/* ----------------------------------------
+   Slider with Custom Range Demo
+   ---------------------------------------- */
+
+function SliderWithCustomRangeDemo() {
+  const [value, setValue] = useState(250);
+
+  return (
+    <VStack gap={3}>
+      <Label>Custom Range (0-1000 GB)</Label>
+      <div className="flex items-center gap-4 w-[312px]">
+        <div className="flex-1">
+          <Slider
+            value={value}
+            onChange={setValue}
+            min={0}
+            max={1000}
+            step={50}
+          />
+        </div>
+        <NumberInput
+          value={value}
+          onChange={setValue}
+          min={0}
+          max={1000}
+          step={50}
+          className="w-[80px]"
+        />
+      </div>
+    </VStack>
+  );
+}
+
+/* ----------------------------------------
+   Range Slider Demo (with state)
+   ---------------------------------------- */
+
+function RangeSliderDemo() {
+  const [minLength, setMinLength] = useState(8);
+  const [maxLength, setMaxLength] = useState(64);
+
+  return (
+    <VStack gap={3}>
+      <Label>Range Slider with Number Inputs</Label>
+      <VStack gap={2}>
+        <div className="flex items-center gap-4 w-1/2">
+          <NumberInput
+            value={minLength}
+            onChange={(val) => {
+              if (val < maxLength) {
+                setMinLength(val);
+              }
+            }}
+            min={6}
+            max={maxLength - 1}
+            step={1}
+            className="w-[80px]"
+          />
+          <div className="flex-1">
+            <RangeSlider
+              value={[minLength, maxLength]}
+              onChange={([min, max]) => {
+                setMinLength(min);
+                setMaxLength(max);
+              }}
+              min={6}
+              max={128}
+              step={1}
+            />
+          </div>
+          <NumberInput
+            value={maxLength}
+            onChange={(val) => {
+              if (val > minLength) {
+                setMaxLength(val);
+              }
+            }}
+            min={minLength + 1}
+            max={128}
+            step={1}
+            className="w-[80px]"
+          />
+        </div>
+        <p className="text-[11px] leading-4 text-[var(--color-text-subtle)]">
+          6 - 128 / Maximum length must be greater than or equal to the minimum length.
+        </p>
+      </VStack>
+    </VStack>
+  );
+}
+
+/* ----------------------------------------
+   Modal Demo Components
+   ---------------------------------------- */
+
+// Basic Modal Demo
 function ModalDemo({ variant }: { variant: 'basic' | 'delete' | 'size-sm' | 'size-md' | 'size-lg' }) {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -1343,6 +1559,140 @@ function ModalDemo({ variant }: { variant: 'basic' | 'delete' | 'size-sm' | 'siz
           </Button>
           <Button variant="primary" size="md" onClick={() => setIsOpen(false)} className="flex-1">
             Confirm
+          </Button>
+        </div>
+      </Modal>
+    </>
+  );
+}
+
+// Modal Use Case Demos
+function ModalUseCaseDemo({ useCase }: { useCase: 'delete-single' | 'delete-multiple' | 'disassociate' | 'restore-warning' }) {
+  const [isOpen, setIsOpen] = useState(false);
+
+  const config = {
+    'delete-single': {
+      button: 'Delete (Single)',
+      title: 'Delete Security group',
+      description: 'Are you sure you want to delete this security group? This action cannot be undone.',
+      size: 'sm' as const,
+      infoLabel: 'Security group',
+      infoValue: 'sg-01',
+      hasWarning: true,
+      warningText: 'This action will permanently delete the security group and all its rules. If this group is attached to any instances, their network traffic may be affected.',
+      actionText: 'Delete',
+      actionVariant: 'danger' as const,
+    },
+    'delete-multiple': {
+      button: 'Delete (Multiple)',
+      title: 'Delete Security groups',
+      description: 'Are you sure you want to delete the selected security groups?',
+      size: 'md' as const,
+      infoLabel: 'Security groups (5)',
+      infoList: ['sg-01', 'sg-02', 'sg-03', 'sg-04', 'sg-05'],
+      hasWarning: true,
+      warningText: 'This action will permanently delete the security groups and all their rules.',
+      actionText: 'Delete',
+      actionVariant: 'danger' as const,
+    },
+    'disassociate': {
+      button: 'Disassociate',
+      title: 'Disassociate floating IP',
+      description: 'Disassociating will detach the floating IP from the selected resource. External access via this IP will stop immediately.',
+      size: 'sm' as const,
+      infoLabel: 'Floating IP',
+      infoValue: '123.45.67.8',
+      secondInfoLabel: 'Associated to',
+      secondInfoList: ['Type : Instance', 'Name : server-01', 'Fixed IP : 10.0.0.10'],
+      hasWarning: false,
+      actionText: 'Disassociate',
+      actionVariant: 'primary' as const,
+    },
+    'restore-warning': {
+      button: 'Restore (Disabled)',
+      title: 'Restore backup',
+      description: 'Large volume backups may impact performance and network throughput.',
+      size: 'md' as const,
+      infoLabel: 'Volume name',
+      infoValue: 'vol-01 (Available)',
+      secondInfoLabel: 'Instance name',
+      secondInfoList: ['web-server-1 (Running)', 'dev-team (Running)'],
+      hasWarning: true,
+      warningText: 'Restore cannot proceed. Change the backup status to Available or shut down the attached instance.',
+      actionText: 'Restore',
+      actionVariant: 'primary' as const,
+      disabled: true,
+    },
+  };
+
+  const c = config[useCase];
+
+  return (
+    <>
+      <Button variant="outline" size="sm" onClick={() => setIsOpen(true)}>
+        {c.button}
+      </Button>
+      <Modal
+        isOpen={isOpen}
+        onClose={() => setIsOpen(false)}
+        title={c.title}
+        description={c.description}
+        size={c.size}
+      >
+        <div className="flex flex-col gap-2">
+          {/* Info Box */}
+          <div className={`bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5 ${'infoList' in c ? 'max-h-[96px] overflow-y-auto sidebar-scroll' : ''}`}>
+            <span className="text-[11px] text-[var(--color-text-subtle)] font-medium leading-4">
+              {c.infoLabel}
+            </span>
+            {'infoValue' in c && (
+              <span className="text-[12px] text-[var(--color-text-default)] leading-4">
+                {c.infoValue}
+              </span>
+            )}
+            {'infoList' in c && (
+              <ul className="text-[12px] text-[var(--color-text-default)] leading-4 list-disc pl-4 space-y-0.5">
+                {c.infoList?.map((item, i) => <li key={i}>{item}</li>)}
+              </ul>
+            )}
+          </div>
+
+          {/* Second Info Box (if exists) */}
+          {'secondInfoLabel' in c && (
+            <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
+              <span className="text-[11px] text-[var(--color-text-subtle)] font-medium leading-4">
+                {c.secondInfoLabel}
+              </span>
+              <ul className="text-[12px] text-[var(--color-text-default)] leading-4 list-disc pl-4 space-y-0.5">
+                {c.secondInfoList?.map((item, i) => <li key={i}>{item}</li>)}
+              </ul>
+            </div>
+          )}
+
+          {/* Warning Alert */}
+          {c.hasWarning && (
+            <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
+              <IconAlertCircle size={16} className="text-[var(--color-state-danger)] shrink-0 mt-0.5" stroke={1.5} />
+              <p className="text-[11px] text-[var(--color-text-default)] leading-4">
+                {c.warningText}
+              </p>
+            </div>
+          )}
+        </div>
+
+        {/* Button Group */}
+        <div className="flex gap-2 w-full">
+          <Button variant="outline" size="md" onClick={() => setIsOpen(false)} className="flex-1">
+            Cancel
+          </Button>
+          <Button 
+            variant={c.actionVariant} 
+            size="md" 
+            onClick={() => setIsOpen(false)} 
+            className="flex-1"
+            disabled={'disabled' in c && c.disabled}
+          >
+            {c.actionText}
           </Button>
         </div>
       </Modal>
@@ -1636,7 +1986,7 @@ function BarChartDemo({ variant }: { variant: 'vertical' | 'horizontal' | 'group
 
   return (
     <div className="w-full bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-md)] p-4">
-      <ReactECharts option={getOption()} style={{ height: variant === 'horizontal' ? '250px' : '200px' }} notMerge={true} />
+      <ReactECharts option={getOption()} style={{ height: variant === 'horizontal' ? '250px' : '200px' }} notMerge={true} opts={{ devicePixelRatio: window.devicePixelRatio }} />
       {variant === 'grouped' && (
         <div className="flex gap-4 mt-2 justify-start">
           <div className="flex items-center gap-1.5">
@@ -2150,7 +2500,7 @@ function LineChart({
       {/* Chart Body */}
       <div className="chartBody">
         <div className="chartWrapper">
-          <ReactECharts option={option} style={{ height: '100%', width: '100%' }} notMerge={true} />
+          <ReactECharts option={option} style={{ height: '100%', width: '100%' }} notMerge={true} opts={{ devicePixelRatio: window.devicePixelRatio }} />
         </div>
         <div className="chartLegend">
           {series.map((s, i) => (
@@ -2252,47 +2602,50 @@ function ChartWithFullScreen({
 // QuotaBarDemo Component
 function QuotaBarDemo({ label, used, total, unit }: { label: string; used: number; total: number; unit: string }) {
   const percentage = Math.round((used / total) * 100);
-  const remaining = total - used;
   
   const getColors = () => {
     if (percentage >= 100) return {
       bg: 'bg-[var(--color-status-error)]/15',
-      text: 'text-[var(--color-status-error)]',
-      bar: 'bg-[var(--color-text-default)]'
+      text: 'text-[var(--color-status-error)]'
     };
     if (percentage >= 70) return {
       bg: 'bg-[var(--color-status-warning)]/15',
-      text: 'text-[var(--color-status-warning)]',
-      bar: 'bg-[var(--color-text-default)]'
+      text: 'text-[var(--color-status-warning)]'
     };
     return {
       bg: 'bg-[var(--color-status-success)]/15',
-      text: 'text-[var(--color-status-success)]',
-      bar: 'bg-[var(--color-text-default)]'
+      text: 'text-[var(--color-status-success)]'
     };
   };
   
   const colors = getColors();
   
   return (
-    <div className="flex flex-col gap-2">
+    <div className="flex flex-col gap-1.5">
       <div className="flex items-center justify-between">
-        <span className="text-[12px] font-medium text-[var(--color-text-default)]">{label}</span>
+        <span className="text-[length:var(--font-size-11)] leading-[var(--line-height-16)] font-medium text-[var(--color-text-default)]">{label}</span>
         <div className="flex items-center gap-2">
-          <span className="text-[11px] text-[var(--color-text-muted)]">{used}/{total} {unit}</span>
+          <span className="text-[length:var(--font-size-11)] leading-[var(--line-height-16)] text-[var(--color-text-muted)]">{used}/{total} {unit}</span>
           <div className={`flex items-center px-1.5 py-0.5 rounded-md ${colors.bg}`}>
-            <span className={`text-[11px] font-medium ${colors.text}`}>{percentage}%</span>
+            <span className={`text-[length:var(--font-size-11)] leading-[var(--line-height-16)] font-medium ${colors.text}`}>{percentage}%</span>
           </div>
         </div>
       </div>
       <Tooltip 
-        content={`Used: ${used} ${unit}\nRemaining: ${remaining} ${unit}\nTotal: ${total} ${unit}`}
+        content={
+          <div className="flex flex-col gap-1">
+            <div className="flex items-center gap-2">
+              <span className="w-2 h-2 rounded-full bg-[var(--color-text-muted)]" />
+              <span>Used: {used}</span>
+            </div>
+          </div>
+        }
         position="top"
       >
         <div className="w-full">
-          <div className="h-1 rounded-sm bg-[var(--color-surface-muted)] overflow-hidden cursor-pointer">
+          <div className="h-[3px] rounded-sm bg-[var(--color-surface-muted)] overflow-hidden cursor-pointer">
             <div 
-              className={`h-full rounded-sm ${colors.bar} transition-all`}
+              className="h-full rounded-sm bg-[var(--color-text-muted)] transition-all"
               style={{ width: `${Math.min(percentage, 100)}%` }}
             />
           </div>
@@ -2456,7 +2809,7 @@ function PieChartDemo({
     <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] p-5 flex flex-col gap-4 w-[280px]">
       <span className="text-[length:var(--font-size-13)] font-medium text-[var(--color-text-default)]">{title}</span>
       <div className="flex justify-center">
-        <ReactECharts option={getOption()} style={{ height: '180px', width: '180px' }} />
+        <ReactECharts option={getOption()} style={{ height: '180px', width: '180px' }} opts={{ devicePixelRatio: window.devicePixelRatio }} />
       </div>
       <div className="flex flex-wrap items-center gap-x-4 gap-y-2 justify-center max-h-[60px] overflow-y-auto legend-scroll">
         {legendData.map((item, i) => (
@@ -2547,7 +2900,7 @@ function DoughnutChartDemo({
     <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] p-5 flex flex-col gap-4 w-[280px]">
       <span className="text-[length:var(--font-size-13)] font-medium text-[var(--color-text-default)]">{title}</span>
       <div className="flex justify-center">
-        <ReactECharts option={getOption()} style={{ height: '180px', width: '180px' }} />
+        <ReactECharts option={getOption()} style={{ height: '180px', width: '180px' }} opts={{ devicePixelRatio: window.devicePixelRatio }} />
       </div>
     </div>
   );
@@ -2679,7 +3032,7 @@ function HalfDoughnutChartDemo({ value, label, status = 'default', used, total, 
       onMouseLeave={handleMouseLeave}
     >
       <div className="relative">
-        <ReactECharts option={getOption()} style={{ height: '160px', width: '180px' }} />
+        <ReactECharts option={getOption()} style={{ height: '160px', width: '180px' }} opts={{ devicePixelRatio: window.devicePixelRatio }} />
       </div>
       <div className="absolute inset-0 flex flex-col items-center justify-center pt-8 pointer-events-none">
         <span className="text-[24px] leading-[28px] font-semibold text-[var(--color-text-default)]">{value}%</span>
@@ -2791,7 +3144,7 @@ function SingleValueDoughnutDemo({
   return (
     <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] p-4">
       <h4 className="text-[13px] font-medium text-[var(--color-text-default)] mb-2">{title}</h4>
-      <ReactECharts option={getOption()} style={{ height: '180px', width: '200px' }} />
+      <ReactECharts option={getOption()} style={{ height: '180px', width: '200px' }} opts={{ devicePixelRatio: window.devicePixelRatio }} />
     </div>
   );
 }
@@ -2939,34 +3292,6 @@ function TabBarDemo() {
           />
         </div>
       </VStack>
-
-      {/* Many Tabs (Scroll) */}
-      <VStack gap={3}>
-        <Label>Many Tabs (with scroll navigation)</Label>
-        <div className="w-full border border-[var(--color-border-default)] rounded-[var(--radius-md)] overflow-hidden">
-          <TabBar
-            tabs={[
-              { id: 'tab-1', label: 'Entry page', closable: true },
-              { id: 'tab-2', label: 'Analytics', closable: true },
-              { id: 'tab-3', label: 'Reports', closable: true },
-              { id: 'tab-4', label: 'Users', closable: true },
-              { id: 'tab-5', label: 'Settings', closable: true },
-              { id: 'tab-6', label: 'Notifications', closable: true },
-              { id: 'tab-7', label: 'Integrations', closable: true },
-              { id: 'tab-8', label: 'Security', closable: true },
-              { id: 'tab-9', label: 'Billing', closable: true },
-              { id: 'tab-10', label: 'Support', closable: true },
-            ]}
-            activeTab="tab-1"
-            onTabChange={() => {}}
-            onTabClose={() => {}}
-            showAddButton={false}
-          />
-        </div>
-        <p className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
-          When tabs overflow, use arrow buttons to scroll left/right
-        </p>
-      </VStack>
     </VStack>
   );
 }
@@ -3100,10 +3425,10 @@ function TableDemo() {
       width: '80px',
       render: () => (
         <div className="flex items-center gap-1">
-          <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors text-[var(--color-text-subtle)] hover:text-[var(--color-text-default)]">
+          <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors text-[var(--color-text-subtle)] hover:text-[var(--color-text-default)] cursor-pointer">
             <IconTerminal2 size={16} stroke={1.5} />
           </button>
-          <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors text-[var(--color-text-subtle)] hover:text-[var(--color-text-default)]">
+          <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors text-[var(--color-text-subtle)] hover:text-[var(--color-text-default)] cursor-pointer">
             <IconDotsVertical size={16} stroke={1.5} />
           </button>
         </div>
@@ -3146,7 +3471,7 @@ function TableDemo() {
             </div>
             <Tooltip content={row.attachedType === 'router' ? 'Router' : 'Instance'} position="top" delay={0}>
               <div 
-                className="flex-shrink-0 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[4px] p-1 cursor-pointer hover:bg-[var(--color-surface-muted)] transition-colors"
+                className="flex-shrink-0 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[4px] p-1"
               >
                 {row.attachedType === 'router' ? (
                   <IconRouter size={12} stroke={1.5} className="text-[var(--color-text-subtle)]" />
@@ -3185,7 +3510,7 @@ function TableDemo() {
               e.stopPropagation();
               handleCopy(row.id, row.fingerprint);
             }}
-            className="p-1.5 -m-1 rounded-md hover:bg-[var(--color-surface-muted)] active:bg-[var(--color-surface-subtle)] transition-colors flex-shrink-0"
+            className="p-1.5 -m-1 rounded-md hover:bg-[var(--color-surface-muted)] active:bg-[var(--color-surface-subtle)] transition-colors flex-shrink-0 cursor-pointer"
             title={copiedId === row.id ? 'Copied!' : 'Copy fingerprint'}
           >
             {copiedId === row.id ? (
@@ -4360,167 +4685,313 @@ outline: 2px solid var(--color-border-focus);`}
             </Section>
 
             {/* Icons */}
-            <Section id="icons" title="Icons" description="Tabler Icons library - Stroke width 1.5, Size 16-20px">
+            <Section id="icons" title="Icons" description="Tabler Icons & Custom Icons - Stroke width 1.5, Size 16-20px">
               <VStack gap={8}>
-                {/* Basic - Actions */}
+                {/* Actions - Media Controls */}
                 <IconDisplayGrid
-                  title="Actions"
+                  title="Actions - Media Controls"
                   icons={[
                     { Icon: IconPlayerPlay, name: 'Play' },
                     { Icon: IconPlayerStop, name: 'Stop' },
                     { Icon: IconPlayerPause, name: 'Pause' },
                     { Icon: IconRefresh, name: 'Refresh' },
-                    { Icon: IconRotate, name: 'Reboot' },
-                    { Icon: IconTrash, name: 'Delete' },
-                    { Icon: IconEdit, name: 'Edit' },
-                    { Icon: IconCopy, name: 'Copy' },
-                    { Icon: IconShare, name: 'Share' },
-                    { Icon: IconDownload, name: 'Download' },
-                    { Icon: IconUpload, name: 'Upload' },
+                    { Icon: IconRefreshDot, name: 'Reboot' },
+                    { Icon: IconRotate, name: 'Rotate' },
+                    { Icon: IconRotateClockwise, name: 'Retry' },
+                    { Icon: IconPower, name: 'Power' },
+                  ]}
+                />
+
+                {/* Actions - CRUD */}
+                <IconDisplayGrid
+                  title="Actions - CRUD"
+                  icons={[
                     { Icon: IconPlus, name: 'Add' },
                     { Icon: IconCirclePlus, name: 'Add Circle' },
+                    { Icon: IconSquarePlus, name: 'Add Square' },
+                    { Icon: IconMinus, name: 'Remove' },
+                    { Icon: IconPencil, name: 'Edit' },
+                    { Icon: IconTrash, name: 'Delete' },
+                    { Icon: IconTrashX, name: 'Deleting' },
+                    { Icon: IconCopy, name: 'Copy' },
+                  ]}
+                />
+
+                {/* Actions - Transfer */}
+                <IconDisplayGrid
+                  title="Actions - Transfer"
+                  icons={[
+                    { Icon: IconDownload, name: 'Download' },
+                    { Icon: IconUpload, name: 'Upload' },
+                    { Icon: IconShare, name: 'Share' },
+                    { Icon: IconSend, name: 'Send' },
+                    { Icon: IconTransfer, name: 'Transfer' },
                     { Icon: IconLink, name: 'Link' },
                     { Icon: IconUnlink, name: 'Unlink' },
+                    { Icon: IconLinkOff, name: 'Link Off' },
                     { Icon: IconExternalLink, name: 'External' },
-                    { Icon: IconHistory, name: 'History' },
-                    { Icon: IconSend, name: 'Send' },
                   ]}
                 />
 
-                {/* Basic - Navigation */}
+                {/* Navigation - Chevrons & Arrows */}
                 <IconDisplayGrid
-                  title="Navigation"
+                  title="Navigation - Chevrons & Arrows"
                   icons={[
-                    { Icon: IconChevronLeft, name: 'Left' },
-                    { Icon: IconChevronRight, name: 'Right' },
-                    { Icon: IconChevronDown, name: 'Down' },
-                    { Icon: IconChevronUp, name: 'Up' },
-                    { Icon: IconArrowRight, name: 'Arrow' },
-                    { Icon: IconArrowsMaximize, name: 'Expand' },
-                    { Icon: IconArrowsMinimize, name: 'Collapse' },
+                    { Icon: IconChevronLeft, name: 'Chevron L' },
+                    { Icon: IconChevronRight, name: 'Chevron R' },
+                    { Icon: IconChevronDown, name: 'Chevron D' },
+                    { Icon: IconChevronUp, name: 'Chevron U' },
+                    { Icon: IconArrowLeft, name: 'Arrow L' },
+                    { Icon: IconArrowRight, name: 'Arrow R' },
+                    { Icon: IconArrowUp, name: 'Arrow U' },
+                    { Icon: IconArrowDown, name: 'Arrow D' },
+                    { Icon: IconCaretRightFilled, name: 'Caret R' },
+                    { Icon: IconCaretDownFilled, name: 'Caret D' },
+                  ]}
+                />
+
+                {/* Navigation - Expand & Menu */}
+                <IconDisplayGrid
+                  title="Navigation - Expand & Menu"
+                  icons={[
+                    { Icon: IconArrowsMaximize, name: 'Maximize' },
+                    { Icon: IconArrowsMinimize, name: 'Minimize' },
+                    { Icon: IconExpandOff, name: 'Expand Off' },
+                    { Icon: IconExpandOn, name: 'Expand On' },
+                    { Icon: IconLayoutSidebarLeftCollapse, name: 'Collapse' },
                     { Icon: IconDotsCircleHorizontal, name: 'Action' },
                     { Icon: IconDots, name: 'Meatball' },
+                    { Icon: IconDotsVertical, name: 'Kebab' },
                   ]}
                 />
 
-                {/* Basic - Status */}
+                {/* Status - Success & Error */}
                 <IconDisplayGrid
-                  title="Status & Feedback"
+                  title="Status - Success & Error"
                   icons={[
                     { Icon: IconCircleCheck, name: 'Success' },
+                    { Icon: IconCheck, name: 'Check' },
+                    { Icon: IconShieldCheck, name: 'Verified' },
                     { Icon: IconAlertCircle, name: 'Error' },
                     { Icon: IconAlertTriangle, name: 'Warning' },
+                    { Icon: IconAlertOctagon, name: 'Critical' },
                     { Icon: IconInfoCircle, name: 'Info' },
-                    { Icon: IconBan, name: 'Suspended' },
-                    { Icon: IconLoader, name: 'Loading' },
-                    { Icon: IconProgress, name: 'Progress' },
+                    { Icon: IconHelpCircle, name: 'Help' },
                   ]}
                 />
 
-                {/* Basic - UI */}
+                {/* Status - State */}
                 <IconDisplayGrid
-                  title="UI Elements"
+                  title="Status - State"
+                  icons={[
+                    { Icon: IconCircle, name: 'Active' },
+                    { Icon: IconCircleOff, name: 'Inactive' },
+                    { Icon: IconBan, name: 'Suspended' },
+                    { Icon: IconTool, name: 'Maintain' },
+                    { Icon: IconLoader, name: 'Loading' },
+                    { Icon: IconLoader2, name: 'Spinner' },
+                    { Icon: IconProgress, name: 'Progress' },
+                    { Icon: IconInfinity, name: 'Infinity' },
+                  ]}
+                />
+
+                {/* UI - Common */}
+                <IconDisplayGrid
+                  title="UI - Common"
                   icons={[
                     { Icon: IconSearch, name: 'Search' },
                     { Icon: IconFilter, name: 'Filter' },
                     { Icon: IconSettings, name: 'Settings' },
                     { Icon: IconHome, name: 'Home' },
-                    { Icon: IconBell, name: 'Bell' },
-                    { Icon: IconBellRinging, name: 'Bell New' },
-                    { Icon: IconStar, name: 'Star' },
-                    { Icon: IconStarFilled, name: 'Star Fill' },
-                    { Icon: IconHeart, name: 'Heart' },
-                    { Icon: IconEye, name: 'Show' },
-                    { Icon: IconEyeOff, name: 'Hide' },
-                    { Icon: IconLock, name: 'Lock' },
                     { Icon: IconX, name: 'Close' },
-                    { Icon: IconCheck, name: 'Check' },
-                    { Icon: IconUser, name: 'User' },
-                    { Icon: IconMail, name: 'Mail' },
-                    { Icon: IconMessage, name: 'Chat' },
-                    { Icon: IconHelp, name: 'Help' },
                     { Icon: IconList, name: 'List' },
                     { Icon: IconLayoutGrid, name: 'Grid' },
+                    { Icon: IconGridDots, name: 'Grid Dots' },
+                    { Icon: IconArrowsSort, name: 'Sort' },
                   ]}
                 />
 
-                {/* System - Infrastructure */}
+                {/* UI - Notifications & Favorites */}
                 <IconDisplayGrid
-                  title="Infrastructure"
+                  title="UI - Notifications & Favorites"
+                  icons={[
+                    { Icon: IconBell, name: 'Bell' },
+                    { Icon: IconBellRinging, name: 'Bell Ring' },
+                    { Icon: IconStar, name: 'Star' },
+                    { Icon: IconStarFilled, name: 'Star Fill' },
+                    { Icon: IconHeart, name: 'Heart' },
+                    { Icon: IconTarget, name: 'Target' },
+                    { Icon: IconPoint, name: 'Dot' },
+                  ]}
+                />
+
+                {/* UI - Visibility & Security */}
+                <IconDisplayGrid
+                  title="UI - Visibility & Security"
+                  icons={[
+                    { Icon: IconEye, name: 'Show' },
+                    { Icon: IconEyeOff, name: 'Hide' },
+                    { Icon: IconLock, name: 'Lock' },
+                    { Icon: IconShield, name: 'Shield' },
+                    { Icon: IconShieldLock, name: 'Shield Lock' },
+                    { Icon: IconShieldCheck, name: 'Shield OK' },
+                    { Icon: IconKey, name: 'Key' },
+                  ]}
+                />
+
+                {/* UI - User & Communication */}
+                <IconDisplayGrid
+                  title="UI - User & Communication"
+                  icons={[
+                    { Icon: IconUser, name: 'User' },
+                    { Icon: IconUserCircle, name: 'User Circle' },
+                    { Icon: IconMail, name: 'Mail' },
+                    { Icon: IconMessage, name: 'Message' },
+                    { Icon: IconMessagePlus, name: 'New Chat' },
+                    { Icon: IconHelp, name: 'Help' },
+                    { Icon: IconQuestionMark, name: 'Question' },
+                  ]}
+                />
+
+                {/* UI - Theme */}
+                <IconDisplayGrid
+                  title="UI - Theme"
+                  icons={[
+                    { Icon: IconSun, name: 'Light' },
+                    { Icon: IconMoon, name: 'Dark' },
+                  ]}
+                />
+
+                {/* Infrastructure - Compute */}
+                <IconDisplayGrid
+                  title="Infrastructure - Compute"
                   icons={[
                     { Icon: IconServer, name: 'Server' },
                     { Icon: IconServer2, name: 'Instance' },
-                    { Icon: IconDatabase, name: 'Storage' },
-                    { Icon: IconNetwork, name: 'Network' },
-                    { Icon: IconRouter, name: 'Router' },
-                    { Icon: IconScale, name: 'LB' },
-                    { Icon: IconWorldWww, name: 'Float IP' },
-                    { Icon: IconShield, name: 'Security' },
-                    { Icon: IconKey, name: 'Key pair' },
-                    { Icon: IconCpu, name: 'Flavor' },
-                    { Icon: IconPlug, name: 'Port' },
+                    { Icon: IconCube, name: 'Cube' },
+                    { Icon: IconCpu, name: 'CPU' },
+                    { Icon: IconServerCog, name: 'Host Agg' },
                     { Icon: IconCloud, name: 'Cloud' },
                   ]}
                 />
 
-                {/* System - Storage & Files */}
+                {/* Infrastructure - Network */}
                 <IconDisplayGrid
-                  title="Storage & Files"
+                  title="Infrastructure - Network"
                   icons={[
-                    { Icon: IconDeviceFloppy, name: 'Backup' },
-                    { Icon: IconCamera, name: 'Snapshot' },
-                    { Icon: IconPhoto, name: 'Image' },
-                    { Icon: IconFile, name: 'File' },
-                    { Icon: IconArchive, name: 'Archive' },
-                    { Icon: IconTemplate, name: 'Template' },
-                    { Icon: IconStack2, name: 'Layers' },
+                    { Icon: IconNetwork, name: 'Network' },
+                    { Icon: IconRouter, name: 'Router' },
+                    { Icon: IconPlug, name: 'Port' },
+                    { Icon: IconPlugConnected, name: 'Connected' },
+                    { Icon: IconScale, name: 'Load Bal' },
+                    { Icon: IconWorldWww, name: 'Float IP' },
                   ]}
                 />
 
-                {/* System - Monitoring */}
+                {/* Infrastructure - Storage */}
+                <IconDisplayGrid
+                  title="Infrastructure - Storage"
+                  icons={[
+                    { Icon: IconDatabase, name: 'Database' },
+                    { Icon: IconDatabaseSearch, name: 'Vol Search' },
+                    { Icon: IconDeviceFloppy, name: 'Disk' },
+                    { Icon: IconDeviceSdCard, name: 'Backup' },
+                    { Icon: IconBoxMultiple, name: 'Vol Type' },
+                    { Icon: IconSquarePlus, name: 'Add Vol' },
+                  ]}
+                />
+
+                {/* Infrastructure - Security */}
+                <IconDisplayGrid
+                  title="Infrastructure - Security"
+                  icons={[
+                    { Icon: IconShield, name: 'Security' },
+                    { Icon: IconShieldLock, name: 'Sec Group' },
+                    { Icon: IconKey, name: 'Key Pair' },
+                    { Icon: IconCertificate, name: 'Certificate' },
+                  ]}
+                />
+
+                {/* Storage & Files */}
+                <IconDisplayGrid
+                  title="Storage & Files"
+                  icons={[
+                    { Icon: IconCamera, name: 'Snapshot' },
+                    { Icon: IconDisc, name: 'Image' },
+                    { Icon: IconFile, name: 'File' },
+                    { Icon: IconFileText, name: 'Doc' },
+                    { Icon: IconFolder, name: 'Folder' },
+                    { Icon: IconFolderOpen, name: 'Folder Open' },
+                    { Icon: IconArchive, name: 'Archive' },
+                    { Icon: IconTemplate, name: 'Template' },
+                    { Icon: IconStack2, name: 'Layers' },
+                    { Icon: IconCode, name: 'Code' },
+                  ]}
+                />
+
+                {/* Monitoring & Analytics */}
                 <IconDisplayGrid
                   title="Monitoring & Analytics"
                   icons={[
                     { Icon: IconTerminal, name: 'Console' },
                     { Icon: IconTerminal2, name: 'Terminal' },
                     { Icon: IconActivity, name: 'Activity' },
-                    { Icon: IconChartBar, name: 'Chart' },
-                    { Icon: IconGauge, name: 'Speed' },
+                    { Icon: IconChartBar, name: 'Bar Chart' },
+                    { Icon: IconChartDonut, name: 'Donut' },
+                    { Icon: IconGauge, name: 'Gauge' },
                     { Icon: IconDeviceDesktop, name: 'Desktop' },
                     { Icon: IconDeviceDesktopAnalytics, name: 'Analytics' },
-                    { Icon: IconLayoutDashboard, name: 'Entry page' },
+                    { Icon: IconLayoutDashboard, name: 'Dashboard' },
                   ]}
                 />
 
-                {/* System - Organization */}
+                {/* Organization & Structure */}
                 <IconDisplayGrid
-                  title="Organization"
+                  title="Organization & Structure"
                   icons={[
-                    { Icon: IconTopologyRing, name: 'Topology' },
-                    { Icon: IconTopologyStar3, name: 'Star Topo' },
-                    { Icon: IconCertificate, name: 'Cert' },
+                    { Icon: IconTopologyRing, name: 'Topo Ring' },
+                    { Icon: IconTopologyStar3, name: 'Topo Star' },
                     { Icon: IconBuilding, name: 'Building' },
                     { Icon: IconCategory, name: 'Category' },
-                    { Icon: IconUserCircle, name: 'User' },
                     { Icon: IconLayoutSidebar, name: 'Sidebar' },
                     { Icon: IconAdjustments, name: 'Adjust' },
-                    { Icon: IconBolt, name: 'Action' },
+                    { Icon: IconBolt, name: 'Bolt' },
                     { Icon: IconGitBranch, name: 'Branch' },
-                    { Icon: IconClock, name: 'Schedule' },
-                    { Icon: IconHourglass, name: 'Timeout' },
-                    { Icon: IconCurrencyDollar, name: 'Billing' },
+                  ]}
+                />
+
+                {/* Time & Schedule */}
+                <IconDisplayGrid
+                  title="Time & Schedule"
+                  icons={[
+                    { Icon: IconClock, name: 'Clock' },
+                    { Icon: IconHourglass, name: 'Hourglass' },
+                    { Icon: IconStopwatch, name: 'Timeout' },
+                    { Icon: IconHistory, name: 'History' },
+                    { Icon: IconArticle, name: 'Article' },
+                    { Icon: IconCalendar, name: 'Calendar' },
+                  ]}
+                />
+
+                {/* Business & Finance */}
+                <IconDisplayGrid
+                  title="Business & Finance"
+                  icons={[
+                    { Icon: IconCurrencyDollar, name: 'Dollar' },
                     { Icon: IconLanguage, name: 'Language' },
                   ]}
                 />
 
-                {/* AI & Advanced */}
+                {/* AI & ML */}
                 <IconDisplayGrid
-                  title="AI & Advanced"
+                  title="AI & ML"
                   icons={[
                     { Icon: IconBrain, name: 'Brain' },
                     { Icon: IconRobot, name: 'Robot' },
+                    { Icon: IconRobotFace, name: 'Robot Face' },
                     { Icon: IconMessageChatbot, name: 'Chatbot' },
-                    { Icon: IconBooks, name: 'Study' },
+                    { Icon: IconBooks, name: 'Books' },
+                    { Icon: IconBook, name: 'Book' },
                     { Icon: IconTestPipe, name: 'Test' },
                   ]}
                 />
@@ -4531,9 +5002,11 @@ outline: 2px solid var(--color-border-focus);`}
                   icons={[
                     { Icon: IconUbuntu, name: 'Ubuntu' },
                     { Icon: IconBrandDebian, name: 'Debian' },
-                    { Icon: IconGrid, name: 'Windows' },
+                    { Icon: IconBrandWindows, name: 'Windows' },
                     { Icon: IconBrandRedhat, name: 'RedHat' },
                     { Icon: IconRocky, name: 'Rocky' },
+                    { Icon: IconGrid, name: 'Grid' },
+                    { Icon: IconCircleDot, name: 'Other' },
                   ]}
                 />
               </VStack>
@@ -4634,7 +5107,6 @@ outline: 2px solid var(--color-border-focus);`}
                     <Button size="sm" variant="ghost">Ghost</Button>
                     <Button size="sm" variant="muted">Muted</Button>
                     <Button size="sm" variant="danger">Danger</Button>
-                    <Button size="sm" variant="warning">Warning</Button>
                     <Button size="sm" variant="link">Link</Button>
                   </div>
                 </VStack>
@@ -4649,13 +5121,21 @@ outline: 2px solid var(--color-border-focus);`}
                     <Button size="sm" variant="secondary" icon={<IconStar size={14} />} aria-label="Star" />
                   </div>
                   <div className="mt-4"><Label>Icon + Text (Action Buttons)</Label></div>
-                  <div className="flex flex-wrap gap-3">
-                    <Button size="sm" variant="secondary" leftIcon={<IconPlayerPlay size={12} />}>Start</Button>
-                    <Button size="sm" variant="muted" leftIcon={<IconPlayerPlay size={12} />}>Start</Button>
-                    <Button size="sm" variant="secondary" leftIcon={<IconPlus size={12} />}>Create</Button>
-                    <Button size="sm" variant="muted" leftIcon={<IconPlus size={12} />}>Create</Button>
-                    <Button size="sm" variant="secondary" leftIcon={<IconEdit size={12} />}>Edit</Button>
-                    <Button size="sm" variant="muted" leftIcon={<IconEdit size={12} />}>Edit</Button>
+                  <div className="flex flex-col gap-3">
+                    <div className="flex items-center gap-3">
+                      <span className="text-[11px] text-[var(--color-text-subtle)] w-[120px]">No selection</span>
+                      <Button size="sm" variant="secondary" leftIcon={<IconPlayerPlay size={12} />} disabled>Start</Button>
+                      <Button size="sm" variant="secondary" leftIcon={<IconPlus size={12} />} disabled>Create</Button>
+                      <Button size="sm" variant="secondary" leftIcon={<IconEdit size={12} />} disabled>Edit</Button>
+                      <Button size="sm" variant="secondary" leftIcon={<IconTrash size={12} />} disabled>Delete</Button>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <span className="text-[11px] text-[var(--color-text-subtle)] w-[120px]">With selection</span>
+                      <Button size="sm" variant="secondary" leftIcon={<IconPlayerPlay size={12} />}>Start</Button>
+                      <Button size="sm" variant="secondary" leftIcon={<IconPlus size={12} />}>Create</Button>
+                      <Button size="sm" variant="secondary" leftIcon={<IconEdit size={12} />}>Edit</Button>
+                      <Button size="sm" variant="secondary" leftIcon={<IconTrash size={12} />}>Delete</Button>
+                    </div>
                   </div>
                 </VStack>
 
@@ -5043,27 +5523,10 @@ outline: 2px solid var(--color-border-focus);`}
                 </VStack>
 
                 {/* With Value Display */}
-                <VStack gap={3}>
-                  <Label>With Value Display</Label>
-                  <div className="w-[312px]">
-                    <Slider defaultValue={50} showValue />
-                  </div>
-                </VStack>
+                <SliderWithNumberInputDemo />
 
                 {/* Custom Range */}
-                <VStack gap={3}>
-                  <Label>Custom Range (0-1000 GB)</Label>
-                  <div className="w-[312px]">
-                    <Slider 
-                      min={0} 
-                      max={1000} 
-                      step={50} 
-                      defaultValue={250} 
-                      showValue 
-                      formatValue={(v) => `${v} GB`}
-                    />
-                  </div>
-                </VStack>
+                <SliderWithCustomRangeDemo />
 
                 {/* States */}
                 <VStack gap={3}>
@@ -5083,6 +5546,9 @@ outline: 2px solid var(--color-border-focus);`}
                     </VStack>
                   </div>
                 </VStack>
+
+                {/* Range Slider with Number Inputs */}
+                <RangeSliderDemo />
               </VStack>
             </Section>
 
@@ -5321,131 +5787,6 @@ outline: 2px solid var(--color-border-focus);`}
                   <p className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
                     When rows are selected in a table, the pagination shows "X selected / Y items" format.
                   </p>
-                </VStack>
-              </VStack>
-            </Section>
-
-            {/* ProgressBar Component */}
-            <Section id="progress-bar" title="Progress bar" description="Visual indicator for quota usage and progress with status-based colors">
-              <VStack gap={8}>
-                {/* Tokens */}
-                <VStack gap={3}>
-                  <Label>Design tokens</Label>
-                  <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
-                    <code>height: 4px</code> · <code>radius: pill</code>
-                  </div>
-                </VStack>
-
-                {/* Quota Variant - Status Examples */}
-                <VStack gap={3}>
-                  <Label>Quota Variant - Status Based Colors</Label>
-                  <div className="w-[280px] flex flex-col gap-4 p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-subtle)] rounded-[var(--radius-lg)]">
-                    {/* 1. Normal (under 70%) - Green */}
-                    <ProgressBar
-                      variant="quota"
-                      label="Instance"
-                      value={2}
-                      newValue={0}
-                      max={10}
-                    />
-
-                    {/* 2. Warning (70-100%) - Orange */}
-                    <ProgressBar
-                      variant="quota"
-                      label="Instance"
-                      value={8}
-                      newValue={2}
-                      max={10}
-                    />
-
-                    {/* 3. Used < 70% but total >= 70% - Green + Orange */}
-                    <ProgressBar
-                      variant="quota"
-                      label="Instance"
-                      value={5}
-                      newValue={2}
-                      max={10}
-                    />
-
-                    {/* 4. Total exceeds 100% - Red */}
-                    <ProgressBar
-                      variant="quota"
-                      label="Instance"
-                      value={8}
-                      newValue={5}
-                      max={10}
-                    />
-
-                    {/* 5. Already over quota - Red */}
-                    <ProgressBar
-                      variant="quota"
-                      label="Instance"
-                      value={10}
-                      newValue={0}
-                      max={10}
-                    />
-
-                    {/* 6. Unlimited - Gray */}
-                    <ProgressBar
-                      variant="quota"
-                      label="Instance"
-                      value={10}
-                      newValue={0}
-                    />
-                  </div>
-                </VStack>
-
-                {/* Default Variant - Simple Progress */}
-                <VStack gap={3}>
-                  <Label>Default Variant - Simple Progress</Label>
-                  <div className="w-[280px] flex flex-col gap-4 p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-md)]">
-                    <ProgressBar
-                      label="60 MB (75%)"
-                      value={75}
-                      max={100}
-                      statusText="chunking"
-                      showValue={false}
-                    />
-                  </div>
-                </VStack>
-
-                {/* Error State */}
-                <VStack gap={3}>
-                  <Label>Error state</Label>
-                  <div className="w-[280px] flex flex-col gap-4 p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-md)]">
-                    <ProgressBar
-                      label="60 MB (75%)"
-                      value={75}
-                      max={100}
-                      statusText="error"
-                      showValue={false}
-                      error
-                      errorMessage="Upload failed: Network error"
-                    />
-                  </div>
-                </VStack>
-
-                {/* Color Legend */}
-                <VStack gap={3}>
-                  <Label>Status colors</Label>
-                  <div className="flex flex-wrap gap-4">
-                    <div className="flex items-center gap-2">
-                      <div className="w-4 h-4 rounded bg-[var(--color-state-success-default)]" />
-                      <span className="text-[length:var(--font-size-11)] text-[var(--color-text-muted)]">0% ~ 70%: Normal</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <div className="w-4 h-4 rounded bg-[var(--color-state-warning-default)]" />
-                      <span className="text-[length:var(--font-size-11)] text-[var(--color-text-muted)]">70% ~ 100%: Warning</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <div className="w-4 h-4 rounded bg-[var(--color-state-error-default)]" />
-                      <span className="text-[length:var(--font-size-11)] text-[var(--color-text-muted)]">&gt;100%: Danger</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <div className="w-4 h-4 rounded bg-[var(--color-border-default)]" />
-                      <span className="text-[length:var(--font-size-11)] text-[var(--color-text-muted)]">Unlimited: Neutral</span>
-                    </div>
-                  </div>
                 </VStack>
               </VStack>
             </Section>
@@ -5792,15 +6133,7 @@ outline: 2px solid var(--color-border-focus);`}
                           ]}
                         />
                       }
-                      actions={
-                        <>
-                          <TopBarAction
-                            icon={<IconBell size={16} stroke={1.5} />}
-                            aria-label="Notifications"
-                            onClick={() => console.log('Notifications')}
-                          />
-                        </>
-                      }
+                      actions={<></>}
                     />
                   </div>
                 </VStack>
@@ -5866,36 +6199,9 @@ outline: 2px solid var(--color-border-focus);`}
                       </Tabs>
                     </VStack>
                     <VStack gap={2}>
-                      <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">Boxed</span>
-                      <Tabs defaultValue="left" variant="boxed" size="sm">
-                        <TabList>
-                          <Tab value="left">left</Tab>
-                          <Tab value="right">right</Tab>
-                        </TabList>
-                      </Tabs>
+                      <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">Capsule tab</span>
+                      <CapsuleTabDemo />
                     </VStack>
-                  </VStack>
-                </VStack>
-
-                {/* Boxed - Multiple Items */}
-                <VStack gap={3}>
-                  <Label>Boxed - Multiple Items</Label>
-                  <VStack gap={4}>
-                    <Tabs defaultValue="tab1" variant="boxed" size="sm">
-                      <TabList>
-                        <Tab value="tab1">Tab 1</Tab>
-                        <Tab value="tab2">Tab 2</Tab>
-                        <Tab value="tab3">Tab 3</Tab>
-                      </TabList>
-                    </Tabs>
-                    <Tabs defaultValue="tab1" variant="boxed" size="sm">
-                      <TabList>
-                        <Tab value="tab1">Tab 1</Tab>
-                        <Tab value="tab2">Tab 2</Tab>
-                        <Tab value="tab3">Tab 3</Tab>
-                        <Tab value="tab4">Tab 4</Tab>
-                      </TabList>
-                    </Tabs>
                   </VStack>
                 </VStack>
 
@@ -6186,20 +6492,14 @@ outline: 2px solid var(--color-border-focus);`}
                   </div>
                 </VStack>
 
-                {/* With Dot */}
+                {/* Status Examples */}
                 <VStack gap={3}>
-                  <Label>With Dot Indicator</Label>
+                  <Label>Status examples</Label>
                   <div className="flex gap-3 items-center">
-                    <Badge size="sm" theme="green" dot>Running</Badge>
-                    <Badge size="sm" theme="red" dot>Stopped</Badge>
-                    <Badge size="sm" theme="yellow" dot>Pending</Badge>
-                    <Badge size="sm" theme="gray" dot>Unknown</Badge>
-                  </div>
-                  <div className="flex gap-3 items-center">
-                    <Badge size="sm" type="subtle" theme="green" dot>Running</Badge>
-                    <Badge size="sm" type="subtle" theme="red" dot>Stopped</Badge>
-                    <Badge size="sm" type="subtle" theme="yellow" dot>Pending</Badge>
-                    <Badge size="sm" type="subtle" theme="gray" dot>Unknown</Badge>
+                    <Badge size="sm" type="solid" theme="green">Running</Badge>
+                    <Badge size="sm" type="solid" theme="red">Stopped</Badge>
+                    <Badge size="sm" type="solid" theme="yellow">Warning</Badge>
+                    <Badge size="sm" type="solid" theme="gray">Unknown</Badge>
                   </div>
                 </VStack>
               </VStack>
@@ -6281,49 +6581,50 @@ outline: 2px solid var(--color-border-focus);`}
 
                 {/* All status Types by Category */}
                 <VStack gap={3}>
-                  <Label>Success (Green)</Label>
+                  <Label>Active</Label>
                   <div className="flex flex-wrap gap-3 items-center">
-                    <StatusIndicator status="active" />
+                    <Tooltip content="active"><StatusIndicator status="active" /></Tooltip>
                   </div>
                 </VStack>
 
                 <VStack gap={3}>
-                  <Label>Danger (Red)</Label>
+                  <Label>Error</Label>
                   <div className="flex flex-wrap gap-3 items-center">
-                    <StatusIndicator status="error" />
+                    <Tooltip content="error"><StatusIndicator status="error" /></Tooltip>
                   </div>
                 </VStack>
 
                 <VStack gap={3}>
-                  <Label>Info (Blue)</Label>
+                  <Label>Action</Label>
                   <div className="flex flex-wrap gap-3 items-center">
-                    <StatusIndicator status="building" />
+                    <Tooltip content="building"><StatusIndicator status="building" /></Tooltip>
+                    <Tooltip content="deleting"><StatusIndicator status="deleting" /></Tooltip>
                   </div>
                 </VStack>
 
                 <VStack gap={3}>
                   <Label>Warning (Orange)</Label>
                   <div className="flex flex-wrap gap-3 items-center">
-                    <StatusIndicator status="verify-resized" />
-                    <StatusIndicator status="degraded" />
-                    <StatusIndicator status="no-monitor" />
+                    <Tooltip content="verify-resized"><StatusIndicator status="verify-resized" /></Tooltip>
+                    <Tooltip content="degraded"><StatusIndicator status="degraded" /></Tooltip>
+                    <Tooltip content="no-monitor"><StatusIndicator status="no-monitor" /></Tooltip>
                   </div>
                 </VStack>
 
                 <VStack gap={3}>
                   <Label>Muted (Gray)</Label>
                   <div className="flex flex-wrap gap-3 items-center">
-                    <StatusIndicator status="suspended" />
-                    <StatusIndicator status="shelved-offloaded" />
-                    <StatusIndicator status="mounted" />
-                    <StatusIndicator status="shutoff" />
-                    <StatusIndicator status="paused" />
-                    <StatusIndicator status="pending" />
-                    <StatusIndicator status="draft" />
-                    <StatusIndicator status="deactivated" />
-                    <StatusIndicator status="in-use" />
-                    <StatusIndicator status="maintenance" />
-                    <StatusIndicator status="down" />
+                    <Tooltip content="suspended"><StatusIndicator status="suspended" /></Tooltip>
+                    <Tooltip content="shelved-offloaded"><StatusIndicator status="shelved-offloaded" /></Tooltip>
+                    <Tooltip content="mounted"><StatusIndicator status="mounted" /></Tooltip>
+                    <Tooltip content="shutoff"><StatusIndicator status="shutoff" /></Tooltip>
+                    <Tooltip content="paused"><StatusIndicator status="paused" /></Tooltip>
+                    <Tooltip content="pending"><StatusIndicator status="pending" /></Tooltip>
+                    <Tooltip content="draft"><StatusIndicator status="draft" /></Tooltip>
+                    <Tooltip content="deactivated"><StatusIndicator status="deactivated" /></Tooltip>
+                    <Tooltip content="in-use"><StatusIndicator status="in-use" /></Tooltip>
+                    <Tooltip content="maintenance"><StatusIndicator status="maintenance" /></Tooltip>
+                    <Tooltip content="down"><StatusIndicator status="down" /></Tooltip>
                   </div>
                 </VStack>
 
@@ -6331,51 +6632,52 @@ outline: 2px solid var(--color-border-focus);`}
                 <VStack gap={3}>
                   <Label>Icon Only - All status Types</Label>
                   <VStack gap={4}>
-                    {/* Success */}
+                    {/* Active */}
                     <VStack gap={2}>
-                      <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">Success (Green)</span>
+                      <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">Active</span>
                       <div className="flex flex-wrap gap-2 items-center">
-                        <StatusIndicator status="active" layout="icon-only" />
+                        <Tooltip content="active"><StatusIndicator status="active" layout="icon-only" /></Tooltip>
                       </div>
                     </VStack>
-                    {/* Danger */}
+                    {/* Error */}
                     <VStack gap={2}>
-                      <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">Danger (Red)</span>
+                      <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">Error</span>
                       <div className="flex flex-wrap gap-2 items-center">
-                        <StatusIndicator status="error" layout="icon-only" />
+                        <Tooltip content="error"><StatusIndicator status="error" layout="icon-only" /></Tooltip>
                       </div>
                     </VStack>
-                    {/* Info */}
+                    {/* Action */}
                     <VStack gap={2}>
-                      <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">Info (Blue)</span>
+                      <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">Action</span>
                       <div className="flex flex-wrap gap-2 items-center">
-                        <StatusIndicator status="building" layout="icon-only" />
+                        <Tooltip content="building"><StatusIndicator status="building" layout="icon-only" /></Tooltip>
+                        <Tooltip content="deleting"><StatusIndicator status="deleting" layout="icon-only" /></Tooltip>
                       </div>
                     </VStack>
                     {/* Warning */}
                     <VStack gap={2}>
-                      <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">Warning (Orange)</span>
+                      <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">Warning</span>
                       <div className="flex flex-wrap gap-2 items-center">
-                        <StatusIndicator status="verify-resized" layout="icon-only" />
-                        <StatusIndicator status="degraded" layout="icon-only" />
-                        <StatusIndicator status="no-monitor" layout="icon-only" />
+                        <Tooltip content="verify-resized"><StatusIndicator status="verify-resized" layout="icon-only" /></Tooltip>
+                        <Tooltip content="degraded"><StatusIndicator status="degraded" layout="icon-only" /></Tooltip>
+                        <Tooltip content="no-monitor"><StatusIndicator status="no-monitor" layout="icon-only" /></Tooltip>
                       </div>
                     </VStack>
                     {/* Muted */}
                     <VStack gap={2}>
-                      <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">Muted (Gray)</span>
+                      <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">Muted</span>
                       <div className="flex flex-wrap gap-2 items-center">
-                        <StatusIndicator status="suspended" layout="icon-only" />
-                        <StatusIndicator status="shelved-offloaded" layout="icon-only" />
-                        <StatusIndicator status="mounted" layout="icon-only" />
-                        <StatusIndicator status="shutoff" layout="icon-only" />
-                        <StatusIndicator status="paused" layout="icon-only" />
-                        <StatusIndicator status="pending" layout="icon-only" />
-                        <StatusIndicator status="draft" layout="icon-only" />
-                        <StatusIndicator status="deactivated" layout="icon-only" />
-                        <StatusIndicator status="in-use" layout="icon-only" />
-                        <StatusIndicator status="maintenance" layout="icon-only" />
-                        <StatusIndicator status="down" layout="icon-only" />
+                        <Tooltip content="suspended"><StatusIndicator status="suspended" layout="icon-only" /></Tooltip>
+                        <Tooltip content="shelved-offloaded"><StatusIndicator status="shelved-offloaded" layout="icon-only" /></Tooltip>
+                        <Tooltip content="mounted"><StatusIndicator status="mounted" layout="icon-only" /></Tooltip>
+                        <Tooltip content="shutoff"><StatusIndicator status="shutoff" layout="icon-only" /></Tooltip>
+                        <Tooltip content="paused"><StatusIndicator status="paused" layout="icon-only" /></Tooltip>
+                        <Tooltip content="pending"><StatusIndicator status="pending" layout="icon-only" /></Tooltip>
+                        <Tooltip content="draft"><StatusIndicator status="draft" layout="icon-only" /></Tooltip>
+                        <Tooltip content="deactivated"><StatusIndicator status="deactivated" layout="icon-only" /></Tooltip>
+                        <Tooltip content="in-use"><StatusIndicator status="in-use" layout="icon-only" /></Tooltip>
+                        <Tooltip content="maintenance"><StatusIndicator status="maintenance" layout="icon-only" /></Tooltip>
+                        <Tooltip content="down"><StatusIndicator status="down" layout="icon-only" /></Tooltip>
                       </div>
                     </VStack>
                   </VStack>
@@ -6542,6 +6844,115 @@ outline: 2px solid var(--color-border-focus);`}
                   <div className="flex items-center justify-between w-full max-w-[400px] h-10 px-3 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-md)]">
                     <span className="text-[length:var(--font-size-12)] font-medium">Application Title</span>
                     <WindowControls />
+                  </div>
+                </VStack>
+              </VStack>
+            </Section>
+
+            {/* Scrollbar */}
+            <Section id="scrollbar" title="Scrollbar" description="Custom scrollbar styles for various containers">
+              <VStack gap={8}>
+                {/* Design Tokens */}
+                <VStack gap={3}>
+                  <Label>Design tokens</Label>
+                  <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
+                    <code>width: 6px</code> · <code>radius: full</code> · <code>track: transparent</code> · <code>thumb: border-default</code>
+                  </div>
+                </VStack>
+
+                {/* Available Classes */}
+                <VStack gap={3}>
+                  <Label>Available classes</Label>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
+                      <div className="text-[length:var(--font-size-12)] font-medium text-[var(--color-text-default)] mb-2">sidebar-scroll</div>
+                      <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
+                        Main sidebar navigation. Width: 6px, stable gutter.
+                      </div>
+                    </div>
+                    <div className="p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
+                      <div className="text-[length:var(--font-size-12)] font-medium text-[var(--color-text-default)] mb-2">drawer-scroll</div>
+                      <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
+                        Drawer/Panel content. Width: 6px.
+                      </div>
+                    </div>
+                    <div className="p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
+                      <div className="text-[length:var(--font-size-12)] font-medium text-[var(--color-text-default)] mb-2">settings-scroll</div>
+                      <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
+                        Settings page content. Width: 6px.
+                      </div>
+                    </div>
+                    <div className="p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
+                      <div className="text-[length:var(--font-size-12)] font-medium text-[var(--color-text-default)] mb-2">legend-scroll</div>
+                      <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
+                        Chart legend area. Width: 6px.
+                      </div>
+                    </div>
+                    <div className="p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
+                      <div className="text-[length:var(--font-size-12)] font-medium text-[var(--color-text-default)] mb-2">shell-scroll</div>
+                      <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
+                        Terminal/Shell output. Width: 6px, dark thumb (#475569).
+                      </div>
+                    </div>
+                  </div>
+                </VStack>
+
+                {/* Live Examples */}
+                <VStack gap={3}>
+                  <Label>Live examples</Label>
+                  <div className="flex gap-6 items-start">
+                    <div className="flex flex-col gap-2 w-[200px]">
+                      <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">sidebar-scroll (6px)</span>
+                      <div className="w-full h-[150px] overflow-y-auto overflow-x-hidden sidebar-scroll bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-md)] p-3">
+                        <div className="space-y-2 w-full">
+                          {Array.from({ length: 15 }).map((_, i) => (
+                            <div key={i} className="text-[length:var(--font-size-11)] text-[var(--color-text-default)] py-1">
+                              Menu Item {i + 1}
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                    <div className="flex flex-col gap-2 w-[200px]">
+                      <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">legend-scroll (6px)</span>
+                      <div className="w-full h-[150px] overflow-y-auto overflow-x-hidden legend-scroll bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-md)] p-3">
+                        <div className="space-y-2 w-full">
+                          {Array.from({ length: 15 }).map((_, i) => (
+                            <div key={i} className="flex items-center gap-2 text-[length:var(--font-size-11)] text-[var(--color-text-default)]">
+                              <div className="w-3 h-3 rounded-sm" style={{ backgroundColor: `hsl(${i * 24}, 70%, 50%)` }} />
+                              Legend {i + 1}
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                    <div className="flex flex-col gap-2 w-[200px]">
+                      <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">shell-scroll (dark)</span>
+                      <div className="w-full h-[150px] overflow-y-auto overflow-x-hidden shell-scroll bg-[#1e293b] border border-[var(--color-border-default)] rounded-[var(--radius-md)] p-3">
+                        <div className="space-y-1 font-mono w-full">
+                          {Array.from({ length: 15 }).map((_, i) => (
+                            <div key={i} className="text-[length:var(--font-size-11)] text-[#94a3b8]">
+                              $ command --option {i + 1}
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </VStack>
+
+                {/* Usage */}
+                <VStack gap={3}>
+                  <Label>Usage</Label>
+                  <div className="text-[length:var(--font-size-11)] text-[var(--color-text-muted)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)] font-mono whitespace-pre-wrap">
+{`// Add class to scrollable container
+<div className="overflow-y-auto sidebar-scroll">
+  {/* scrollable content */}
+</div>
+
+// CSS supports both Webkit and Firefox
+.sidebar-scroll::-webkit-scrollbar { width: 6px; }
+.sidebar-scroll { scrollbar-width: thin; }`}
                   </div>
                 </VStack>
               </VStack>
@@ -6719,11 +7130,11 @@ outline: 2px solid var(--color-border-focus);`}
                   <VStack gap={3}>
                     <Label>Menu items</Label>
                     <div className="w-full max-w-[200px] p-2 bg-[var(--color-surface-default)] rounded-[var(--radius-card)] border border-[var(--color-border-default)]">
-                      <MenuItem icon={<IconHome size={16} />} label="Home" />
-                      <MenuItem icon={<IconServer size={16} />} label="Instances" active />
-                      <MenuItem icon={<IconSettings size={16} />} label="Settings" />
+                      <MenuItem icon={<IconHome size={16} stroke={1.5} />} label="Home" />
+                      <MenuItem icon={<IconServer size={16} stroke={1.5} />} label="Instances" active />
+                      <MenuItem icon={<IconSettings size={16} stroke={1.5} />} label="Settings" />
                       <MenuDivider />
-                      <MenuItem icon={<IconUser size={16} />} label="Profile" />
+                      <MenuItem icon={<IconUser size={16} stroke={1.5} />} label="Profile" />
                     </div>
                   </VStack>
 
@@ -6842,15 +7253,92 @@ outline: 2px solid var(--color-border-focus);`}
                   </div>
                 </VStack>
 
-                {/* Basic Modal */}
+                {/* Size Guide */}
                 <VStack gap={3}>
-                  <Label>Basic modal</Label>
-                  <ModalDemo variant="basic" />
+                  <Label>Size</Label>
+                  <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
+                    <code>width: 344px</code> (모든 사이즈 동일)
+                  </div>
                 </VStack>
 
-                {/* Confirm Modal */}
+                {/* Inner Components Pattern */}
                 <VStack gap={3}>
-                  <Label>Confirm Modal (Delete)</Label>
+                  <Label>Inner components</Label>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {/* Info Box */}
+                    <div className="p-4 border border-[var(--color-border-default)] rounded-[var(--radius-md)]">
+                      <span className="text-[11px] font-medium text-[var(--color-text-subtle)] mb-2 block">Info Box (single value)</span>
+                      <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
+                        <span className="text-[11px] text-[var(--color-text-subtle)] font-medium leading-4">
+                          Volume name
+                        </span>
+                        <span className="text-[12px] text-[var(--color-text-default)] leading-4">
+                          vol-01 (Available)
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* Scrollable List */}
+                    <div className="p-4 border border-[var(--color-border-default)] rounded-[var(--radius-md)]">
+                      <span className="text-[11px] font-medium text-[var(--color-text-subtle)] mb-2 block">Scrollable List (max-h: 96px)</span>
+                      <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5 max-h-[96px] overflow-y-auto sidebar-scroll">
+                        <span className="text-[11px] text-[var(--color-text-subtle)] font-medium leading-4">
+                          Security groups (6)
+                        </span>
+                        <ul className="text-[12px] text-[var(--color-text-default)] leading-4 list-disc pl-4 space-y-0.5">
+                          <li>sg-01</li>
+                          <li>sg-02</li>
+                          <li>sg-03</li>
+                          <li>sg-04</li>
+                          <li>sg-05</li>
+                          <li>sg-06</li>
+                        </ul>
+                      </div>
+                    </div>
+
+                    {/* Warning Alert */}
+                    <div className="p-4 border border-[var(--color-border-default)] rounded-[var(--radius-md)]">
+                      <span className="text-[11px] font-medium text-[var(--color-text-subtle)] mb-2 block">Warning Alert</span>
+                      <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
+                        <IconAlertCircle size={16} className="text-[var(--color-state-danger)] shrink-0 mt-0.5" stroke={1.5} />
+                        <p className="text-[11px] text-[var(--color-text-default)] leading-4">
+                          This action will permanently delete the resource. This cannot be undone.
+                        </p>
+                      </div>
+                    </div>
+
+                    {/* Button Group */}
+                    <div className="p-4 border border-[var(--color-border-default)] rounded-[var(--radius-md)]">
+                      <span className="text-[11px] font-medium text-[var(--color-text-subtle)] mb-2 block">Button Group</span>
+                      <div className="flex gap-2 w-full">
+                        <Button variant="outline" size="md" className="flex-1">
+                          Cancel
+                        </Button>
+                        <Button variant="primary" size="md" className="flex-1">
+                          Confirm
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
+                </VStack>
+
+                {/* Use Cases */}
+                <VStack gap={3}>
+                  <Label>Use cases</Label>
+                  <HStack gap={2} className="flex-wrap">
+                    <ModalUseCaseDemo useCase="delete-single" />
+                    <ModalUseCaseDemo useCase="delete-multiple" />
+                    <ModalUseCaseDemo useCase="disassociate" />
+                    <ModalUseCaseDemo useCase="restore-warning" />
+                  </HStack>
+                </VStack>
+
+                {/* ConfirmModal Component */}
+                <VStack gap={3}>
+                  <Label>ConfirmModal component</Label>
+                  <p className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
+                    삭제 확인 등 반복적인 패턴을 위한 전용 컴포넌트. <code>infoLabel</code>, <code>infoValue</code>, <code>confirmVariant</code> props 지원.
+                  </p>
                   <ModalDemo variant="delete" />
                 </VStack>
 
@@ -7161,8 +7649,8 @@ outline: 2px solid var(--color-border-focus);`}
                       <span className="text-[length:var(--font-size-12)] text-[var(--color-text-muted)]">Default</span>
                     </div>
                     <div className="flex items-center gap-2">
-                      <div className="size-4 rounded-full border border-[var(--color-text-muted)] flex items-center justify-center" style={{ borderStyle: 'dashed' }}>
-                        <IconRefresh size={10} stroke={2} className="text-[var(--color-text-muted)] animate-spin" />
+                      <div className="size-4 shrink-0">
+                        <IconProgress size={16} stroke={1.5} className="text-[var(--color-text-subtle)] animate-spin" />
                       </div>
                       <span className="text-[length:var(--font-size-12)] text-[var(--color-text-muted)]">Processing</span>
                     </div>
@@ -7450,19 +7938,129 @@ outline: 2px solid var(--color-border-focus);`}
                 ============================================ */}
 
             {/* Bar chart */}
-            <Section id="bar-chart" title="Bar chart" description="Categorical data comparison with vertical or horizontal bars">
+            <Section id="bar-chart" title="Bar chart" description="Visual indicator for quota usage and progress with status-based colors">
               <VStack gap={8}>
-                {/* Design Tokens */}
+                {/* Tokens */}
                 <VStack gap={3}>
                   <Label>Design tokens</Label>
                   <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
-                    <code>bar-height: 4px</code> · <code>bar-radius: 2px</code> · <code>row-gap: 22px</code> · <code>status-colors: success/warning/error</code>
+                    <code>height: 4px</code> · <code>radius: pill</code>
                   </div>
                 </VStack>
 
-                {/* Quota Bar */}
+                {/* Quota Variant - Status Examples */}
                 <VStack gap={3}>
-                  <Label>Quota bar</Label>
+                  <Label>Quota Variant - Status Based Colors</Label>
+                  <div className="w-[280px] flex flex-col gap-4 p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-subtle)] rounded-[var(--radius-lg)]">
+                    {/* 1. Normal (under 70%) - Green */}
+                    <ProgressBar
+                      variant="quota"
+                      label="Instance"
+                      value={2}
+                      newValue={0}
+                      max={10}
+                    />
+
+                    {/* 2. Warning (70-100%) - Orange */}
+                    <ProgressBar
+                      variant="quota"
+                      label="Instance"
+                      value={8}
+                      newValue={2}
+                      max={10}
+                    />
+
+                    {/* 3. Used < 70% but total >= 70% - Green + Orange */}
+                    <ProgressBar
+                      variant="quota"
+                      label="Instance"
+                      value={5}
+                      newValue={2}
+                      max={10}
+                    />
+
+                    {/* 4. Total exceeds 100% - Red */}
+                    <ProgressBar
+                      variant="quota"
+                      label="Instance"
+                      value={8}
+                      newValue={5}
+                      max={10}
+                    />
+
+                    {/* 5. Already over quota - Red */}
+                    <ProgressBar
+                      variant="quota"
+                      label="Instance"
+                      value={10}
+                      newValue={0}
+                      max={10}
+                    />
+
+                    {/* 6. Unlimited - Gray */}
+                    <ProgressBar
+                      variant="quota"
+                      label="Instance"
+                      value={10}
+                      newValue={0}
+                    />
+                  </div>
+                </VStack>
+
+                {/* Default Variant - Simple Progress */}
+                <VStack gap={3}>
+                  <Label>Default Variant - Simple Progress</Label>
+                  <div className="w-[280px] flex flex-col gap-4 p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-md)]">
+                    <ProgressBar
+                      label="60 MB (75%)"
+                      value={75}
+                      max={100}
+                      showValue={false}
+                    />
+                  </div>
+                </VStack>
+
+                {/* Error State */}
+                <VStack gap={3}>
+                  <Label>Error state</Label>
+                  <div className="w-[280px] flex flex-col gap-4 p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-md)]">
+                    <ProgressBar
+                      label="60 MB (75%)"
+                      value={75}
+                      max={100}
+                      showValue={false}
+                      error
+                      errorMessage="Upload failed: Network error"
+                    />
+                  </div>
+                </VStack>
+
+                {/* Color Legend */}
+                <VStack gap={3}>
+                  <Label>Status colors</Label>
+                  <div className="flex flex-wrap gap-4">
+                    <div className="flex items-center gap-2">
+                      <div className="w-4 h-4 rounded bg-[var(--color-state-success-default)]" />
+                      <span className="text-[length:var(--font-size-11)] text-[var(--color-text-muted)]">0% ~ 70%: Normal</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <div className="w-4 h-4 rounded bg-[var(--color-state-warning-default)]" />
+                      <span className="text-[length:var(--font-size-11)] text-[var(--color-text-muted)]">70% ~ 100%: Warning</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <div className="w-4 h-4 rounded bg-[var(--color-state-error-default)]" />
+                      <span className="text-[length:var(--font-size-11)] text-[var(--color-text-muted)]">&gt;100%: Danger</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <div className="w-4 h-4 rounded bg-[var(--color-border-default)]" />
+                      <span className="text-[length:var(--font-size-11)] text-[var(--color-text-muted)]">Unlimited: Neutral</span>
+                    </div>
+                  </div>
+                </VStack>
+
+                {/* Dashboard Only */}
+                <VStack gap={3}>
+                  <Label>Dashboard only</Label>
                   <div className="w-[288px] p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-2xl">
                     <div className="text-[11px] font-semibold text-[var(--color-text-muted)] tracking-wide mb-4">COMPUTE QUOTA</div>
                     <div className="space-y-[22px]">

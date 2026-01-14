@@ -9,6 +9,9 @@ const HostDetailPage = lazy(() => import('@/pages/HostDetailPage'));
 const OSDsPage = lazy(() => import('@/pages/OSDsPage'));
 const OSDDetailPage = lazy(() => import('@/pages/OSDDetailPage'));
 const PoolsPage = lazy(() => import('@/pages/PoolsPage'));
+const BucketsPage = lazy(() => import('@/pages/BucketsPage'));
+const BucketDetailPage = lazy(() => import('@/pages/BucketDetailPage'));
+const CreateBucketPage = lazy(() => import('@/pages/CreateBucketPage'));
 
 export const storageRoutes = (
   <>
@@ -20,6 +23,9 @@ export const storageRoutes = (
     <Route path="/storage/hosts/:id" element={<HostDetailPage />} />
     <Route path="/storage/osds" element={<OSDsPage />} />
     <Route path="/storage/osds/:id" element={<OSDDetailPage />} />
+    <Route path="/storage/buckets" element={<BucketsPage />} />
+    <Route path="/storage/buckets/create" element={<CreateBucketPage />} />
+    <Route path="/storage/buckets/:id" element={<BucketDetailPage />} />
   </>
 );
 

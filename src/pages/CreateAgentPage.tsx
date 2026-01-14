@@ -25,6 +25,7 @@ import {
   VStack,
   HStack,
   StatusIndicator,
+  SelectionIndicator,
   type TableColumn,
 } from '@/design-system';
 import {
@@ -695,29 +696,15 @@ export function CreateAgentPage() {
                           onSelectionChange={setSelectedDataSources}
                         />
                       
-                      {/* Selected Tags */}
-                      {selectedDataSources.length > 0 && (
-                        <div className="flex flex-wrap gap-2">
-                          {selectedDataSources.map((id) => {
-                              const data = filteredDataSources.find(d => d.id === id);
-                            return data ? (
-                              <div
-                                key={id}
-                                className="flex items-center gap-1 bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] px-2 py-0.5 rounded-md"
-                              >
-                                <span className="text-[11px] text-[var(--color-text-default)]">{data.name}</span>
-                                <button
-                                  type="button"
-                                  onClick={() => setSelectedDataSources(selectedDataSources.filter(selectedId => selectedId !== id))}
-                                  className="text-[var(--color-text-muted)] hover:text-[var(--color-text-default)]"
-                                >
-                                  <IconX size={12} stroke={1} />
-                                </button>
-                              </div>
-                            ) : null;
-                          })}
-                        </div>
-                      )}
+                      {/* Selection Indicator for Data Sources */}
+                      <SelectionIndicator
+                        className="mt-2"
+                        selectedItems={selectedDataSources.map(id => {
+                          const data = filteredDataSources.find(d => d.id === id);
+                          return { id, label: data?.name || id };
+                        })}
+                        onRemove={(id) => setSelectedDataSources(selectedDataSources.filter(selectedId => selectedId !== id))}
+                      />
                       </SectionCard.Content>
                     </SectionCard>
 
@@ -759,29 +746,15 @@ export function CreateAgentPage() {
                           onSelectionChange={setSelectedMCPTools}
                         />
                       
-                      {/* Selected Tags */}
-                      {selectedMCPTools.length > 0 && (
-                        <div className="flex flex-wrap gap-2">
-                          {selectedMCPTools.map((id) => {
-                              const tool = filteredMCPTools.find(t => t.id === id);
-                            return tool ? (
-                              <div
-                                key={id}
-                                className="flex items-center gap-1 bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] px-2 py-0.5 rounded-md"
-                              >
-                                  <span className="text-[11px] text-[var(--color-text-default)]">{tool.mcpServer.label}</span>
-                                <button
-                                  type="button"
-                                  onClick={() => setSelectedMCPTools(selectedMCPTools.filter(selectedId => selectedId !== id))}
-                                  className="text-[var(--color-text-muted)] hover:text-[var(--color-text-default)]"
-                                >
-                                  <IconX size={12} stroke={1} />
-                                </button>
-                              </div>
-                            ) : null;
-                          })}
-                        </div>
-                      )}
+                      {/* Selection Indicator for MCP Tools */}
+                      <SelectionIndicator
+                        className="mt-2"
+                        selectedItems={selectedMCPTools.map(id => {
+                          const tool = filteredMCPTools.find(t => t.id === id);
+                          return { id, label: tool?.mcpServer.label || id };
+                        })}
+                        onRemove={(id) => setSelectedMCPTools(selectedMCPTools.filter(selectedId => selectedId !== id))}
+                      />
                       </SectionCard.Content>
                     </SectionCard>
 
