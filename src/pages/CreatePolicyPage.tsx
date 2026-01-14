@@ -878,7 +878,7 @@ function PolicyEditorSection({
 
                   {/* Action Cards - Simple view for non-compute applications */}
                   {!shouldShowDetailedActions(permission) && (
-                    <div className={`flex gap-3 w-full h-[44px] ${actionErrors[permission.id] ? 'ring-2 ring-[var(--color-state-danger)] rounded-[6px]' : ''}`}>
+                    <div className={`flex gap-3 w-full h-[44px] ${actionErrors[permission.id] ? 'ring-1 ring-[var(--color-state-danger)] rounded-[6px]' : ''}`}>
                       {(['read', 'list', 'write', 'delete', 'admin'] as const).map((action) => (
                         <div
                           key={action}
@@ -901,7 +901,7 @@ function PolicyEditorSection({
 
                   {/* Detailed Action Tabs - For compute application with all fields filled */}
                   {shouldShowDetailedActions(permission) && (
-                    <div className={`flex gap-3 w-full h-[320px] overflow-hidden ${actionErrors[permission.id] ? 'ring-2 ring-[var(--color-state-danger)] rounded-[6px]' : ''}`}>
+                    <div className={`flex gap-3 w-full h-[320px] overflow-hidden ${actionErrors[permission.id] ? 'ring-1 ring-[var(--color-state-danger)] rounded-[6px]' : ''}`}>
                       {(['read', 'list', 'write', 'delete', 'admin'] as const).map((category) => {
                         const categoryActions = COMPUTE_ACTIONS[category];
                         const filteredActions = searchQuery
