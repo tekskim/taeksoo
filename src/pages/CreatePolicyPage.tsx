@@ -1202,7 +1202,7 @@ export default function CreatePolicyPage() {
               </h1>
               <HStack gap={6} align="start" className="w-full">
                 {/* Left Column - Form Sections */}
-                <VStack gap={4} className="flex-1">
+                <VStack gap={4} className="flex-1 min-w-0 max-w-[1034px]">
                   {/* Basic Information Section */}
                   {sectionStatus['basic-info'] === 'pre' && (
                     <PreSection title={SECTION_LABELS['basic-info']} />
