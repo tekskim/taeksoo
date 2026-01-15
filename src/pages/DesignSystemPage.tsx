@@ -6829,7 +6829,7 @@ outline: 2px solid var(--color-border-focus);`}
                 <VStack gap={3}>
                   <Label>Design tokens</Label>
                   <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
-                    <code>size: 16×16px</code> · <code>radius: 4px</code> · <code>gap: 4px</code>
+                    <code>size: 24×24px</code> · <code>icon: 12px</code> · <code>radius: 4px</code> · <code>gap: 4px</code>
                   </div>
                 </VStack>
 

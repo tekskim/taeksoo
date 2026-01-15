@@ -452,55 +452,9 @@ export function SettingsPage({ isOpen, onClose, initialTab = 'account' }: Settin
                           Password
                         </label>
                         <span className="block text-[length:var(--font-size-11)] leading-[var(--line-height-16)] text-[var(--color-text-muted)] mb-2">Last updated: {passwordLastUpdated}</span>
-                        {!isEditingPassword ? (
-                          <Button variant="primary" size="sm" onClick={() => setIsEditingPassword(true)}>
-                            Change Password
-                          </Button>
-                        ) : (
-                          <div className="space-y-3 mt-3 max-w-[750px]">
-                            <div>
-                              <label className="block text-[length:var(--font-size-12)] leading-[var(--line-height-16)] font-medium text-[var(--color-text-default)] mb-1">Enter a new password</label>
-                              <Input 
-                                type="password"
-                                value={newPassword}
-                                onChange={(e) => setNewPassword(e.target.value)}
-                                placeholder="New password"
-                                className="w-[300px]"
-                              />
-                            </div>
-                            <div>
-                              <label className="block text-[length:var(--font-size-12)] leading-[var(--line-height-16)] font-medium text-[var(--color-text-default)] mb-1">Confirm your new password</label>
-                              <Input 
-                                type="password"
-                                value={confirmPassword}
-                                onChange={(e) => setConfirmPassword(e.target.value)}
-                                placeholder="Confirm password"
-                                className="w-[300px]"
-                              />
-                            </div>
-                            <div className="flex gap-2">
-                              <Button variant="secondary" size="sm" onClick={() => {
-                                setIsEditingPassword(false);
-                                setNewPassword('');
-                                setConfirmPassword('');
-                              }}>Cancel</Button>
-                              <Button 
-                                variant="primary" 
-                                size="sm" 
-                                onClick={() => {
-                                  const now = new Date();
-                                  const formattedDate = now.toLocaleDateString('en-CA') + ' ' + 
-                                    now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false });
-                                  setPasswordLastUpdated(formattedDate);
-                                  setIsEditingPassword(false);
-                                  setNewPassword('');
-                                  setConfirmPassword('');
-                                }}
-                                disabled={!newPassword || !confirmPassword || newPassword !== confirmPassword}
-                              >Save</Button>
-                            </div>
-                          </div>
-                        )}
+                        <Button variant="primary" size="sm" onClick={() => setShowPasswordChangeModal(true)}>
+                          Change Password
+                        </Button>
                       </div>
                       {/* MFA Setting */}
                       <div className="space-y-4 pt-4 border-t border-[var(--color-border-default)]">

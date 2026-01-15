@@ -47,8 +47,8 @@ export const WindowControl: React.FC<WindowControlProps> = ({
   disabled = false,
   className = '',
 }) => {
-  const iconSize = 10;
-  const strokeWidth = 1.5;
+  const iconSize = 12;
+  const strokeWidth = 1;
 
   const renderIcon = () => {
     switch (type) {

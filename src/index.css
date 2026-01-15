@@ -535,7 +535,7 @@ html.theme-transition *::after {
   /* ----------------------------------------
      Component - WindowControl
      ---------------------------------------- */
-  --window-control-size: 16px;
+  --window-control-size: 24px;
   --window-control-radius: var(--radius-sm);
   --window-control-gap: var(--spacing-1);
 
@@ -1199,9 +1199,30 @@ html.theme-transition *::after {
    ======================================== */
 
 .table-scroll-container {
-  /* Disable horizontal scrolling - table should fit within container */
-  overflow-x: hidden;
+  /* Enable horizontal scrolling when table content exceeds container width */
+  overflow-x: auto;
   overflow-y: visible;
+  /* Thin scrollbar for Firefox */
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-border-default) transparent;
+}
+
+/* Webkit (Chrome, Safari, Edge) horizontal scrollbar */
+.table-scroll-container::-webkit-scrollbar {
+  height: 6px;
+}
+
+.table-scroll-container::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.table-scroll-container::-webkit-scrollbar-thumb {
+  background: var(--color-border-default);
+  border-radius: var(--radius-full);
+}
+
+.table-scroll-container::-webkit-scrollbar-thumb:hover {
+  background: var(--color-border-strong);
 }
 
 /* Sidebar Scrollbar */
