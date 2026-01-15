@@ -885,29 +885,29 @@ function DefaultDomainSection({
           <div className="mt-3">
             <div className="flex flex-col gap-[var(--table-row-gap)]">
               {/* Table Header */}
-              <div className="flex items-center h-[var(--table-header-height)] bg-[var(--table-header-bg)] rounded-[var(--table-row-radius)] border border-[var(--color-border-default)] overflow-hidden">
+              <div className="flex items-stretch min-h-[var(--table-row-height)] bg-[var(--table-header-bg)] rounded-[var(--table-row-radius)] border border-[var(--color-border-default)]">
                 {/* Radio column header */}
-                <div className="shrink-0 w-12 px-3 py-2" />
+                <div className="shrink-0 flex items-center w-[var(--table-checkbox-width)] px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)]" />
                 {/* Status column header */}
-                <div className="w-[80px] px-3 py-2 text-[11px] font-medium text-[var(--color-text-subtle)] border-l border-[var(--color-border-default)]">
+                <div className="flex items-center w-[80px] px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] border-l border-[var(--color-border-default)]">
                   Status
                 </div>
                 {/* Name column header */}
-                <div className="flex-1 px-3 py-2 text-[11px] font-medium text-[var(--color-text-subtle)] border-l border-[var(--color-border-default)]">
+                <div className="flex items-center flex-1 px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] border-l border-[var(--color-border-default)]">
                   Name
                 </div>
                 {/* Description column header */}
-                <div className="flex-1 px-3 py-2 text-[11px] font-medium text-[var(--color-text-subtle)] border-l border-[var(--color-border-default)]">
+                <div className="flex items-center flex-1 px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] border-l border-[var(--color-border-default)]">
                   Description
                 </div>
                 {/* Created at column header */}
-                <div className="w-[120px] px-3 py-2 text-[11px] font-medium text-[var(--color-text-subtle)] border-l border-[var(--color-border-default)]">
+                <div className="flex items-center w-[120px] px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] border-l border-[var(--color-border-default)]">
                   Created at
                 </div>
               </div>
 
               {/* Table Body */}
-              <div className="flex flex-col gap-[var(--table-row-gap)]">
+              <div className="flex flex-col gap-[var(--table-row-gap)] mt-[var(--table-row-gap)]">
                 {paginatedDomains.map((domain) => (
                   <div
                     key={domain.id}
@@ -919,7 +919,7 @@ function DefaultDomainSection({
                     }`}
                   >
                     {/* Radio column */}
-                    <div className="shrink-0 w-12 px-3 py-2 flex items-center justify-center">
+                    <div className="shrink-0 w-[var(--table-checkbox-width)] px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] flex items-center justify-center">
                       <Radio
                         value={domain.id}
                         checked={selectedDomain === domain.id}
@@ -927,19 +927,19 @@ function DefaultDomainSection({
                       />
                     </div>
                     {/* Status column */}
-                    <div className="w-[80px] px-3 py-2 flex items-center justify-center border-l border-transparent">
+                    <div className="w-[80px] px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] flex items-center justify-center border-l border-transparent">
                       <StatusIndicator status="active" layout="icon-only" size="md" />
                     </div>
                     {/* Name column */}
-                    <div className="flex-1 px-3 py-2 text-[12px] text-[var(--color-text-default)] border-l border-transparent">
+                    <div className="flex-1 px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)] border-l border-transparent">
                       {domain.name}
                     </div>
                     {/* Description column */}
-                    <div className="flex-1 px-3 py-2 text-[12px] text-[var(--color-text-default)] border-l border-transparent">
+                    <div className="flex-1 px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)] border-l border-transparent">
                       {domain.description}
                     </div>
                     {/* Created at column */}
-                    <div className="w-[120px] px-3 py-2 text-[12px] text-[var(--color-text-default)] border-l border-transparent">
+                    <div className="w-[120px] px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)] border-l border-transparent">
                       {domain.createdAt}
                     </div>
                   </div>
