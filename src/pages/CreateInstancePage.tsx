@@ -3345,7 +3345,7 @@ export function CreateInstancePage() {
           <div className="pt-4 px-8 pb-20 bg-[var(--color-surface-default)] min-h-full">
             <VStack gap={6} className="min-w-[1176px]">
               {/* Page Title */}
-              <h1 className="text-[18px] font-semibold leading-7 text-[var(--color-text-default)]">
+              <h1 className="text-[length:var(--font-size-16)] font-semibold leading-6 text-[var(--color-text-default)]">
                 Create instance
               </h1>
 
