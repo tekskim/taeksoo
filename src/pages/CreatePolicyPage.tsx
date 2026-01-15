@@ -941,7 +941,7 @@ function PolicyEditorSection({
                             }`}
                           >
                             {/* Category Header */}
-                            <div className="flex items-center gap-2.5 shrink-0">
+                            <label className="flex items-center gap-2.5 shrink-0 cursor-pointer">
                               <Checkbox
                                 checked={allCategorySelected}
                                 onChange={() => toggleCategoryActions(permission.id, category)}
@@ -953,21 +953,20 @@ function PolicyEditorSection({
                               <span className="text-[11px] text-[var(--color-text-subtle)]">
                                 {selectedCount > 0 ? `${selectedCount}/${categoryActions.length}` : `${categoryActions.length} items`}
                               </span>
-                            </div>
+                            </label>
 
                             {/* Actions List */}
                             <div className="flex flex-col gap-2 mt-6 overflow-y-auto overflow-x-hidden flex-1 min-h-0 legend-scroll">
                               {filteredActions.map((actionName) => {
                                 const isSelected = permission.detailedActions[actionName];
                                 return (
-                                  <div
+                                  <label
                                     key={actionName}
                                     className={`bg-white border rounded-[6px] p-2 flex items-center gap-1.5 cursor-pointer shrink-0 min-w-0 ${
                                       isSelected
                                         ? 'border-[var(--color-action-primary)]'
                                         : 'border-[var(--color-border-strong)]'
                                     }`}
-                                    onClick={() => toggleDetailedAction(permission.id, actionName)}
                                   >
                                     <Checkbox
                                       checked={isSelected}
@@ -979,7 +978,7 @@ function PolicyEditorSection({
                                     >
                                       {actionName}
                                     </span>
-                                  </div>
+                                  </label>
                                 );
                               })}
                             </div>
