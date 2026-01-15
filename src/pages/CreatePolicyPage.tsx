@@ -11,6 +11,7 @@ import {
   SectionCard,
   Checkbox,
   InlineMessage,
+  Select,
 } from '@/design-system';
 import { IAMSidebar } from '@/components/IAMSidebar';
 import { useTabs } from '@/contexts/TabContext';
@@ -767,72 +768,80 @@ function PolicyEditorSection({
                   <span className="text-[14px] font-medium text-[var(--color-text-default)]">
                     Target
                   </span>
-                  <div className={`flex items-center gap-1 bg-white border rounded-[6px] p-1 ${
+                  <div className={`flex items-center gap-1 ${
                     targetErrors[permission.id] 
-                      ? 'border-[var(--color-state-danger)]' 
+                      ? '[&_button]:border-[var(--color-state-danger)]' 
                       : hasPartialFill(permission) 
-                        ? 'border-[var(--color-state-danger)]' 
+                        ? '[&_button]:border-[var(--color-state-danger)]' 
                         : isInvalidTargetCombination(permission)
-                          ? 'border-[var(--color-state-danger)]'
-                          : 'border-[var(--color-border-strong)]'
+                          ? '[&_button]:border-[var(--color-state-danger)]'
+                          : ''
                   }`}>
-                    <select
+                    <Select
+                      placeholder="Application"
                       value={permission.application}
-                      onChange={(e) => {
-                        updatePermission(permission.id, { application: e.target.value });
+                      onChange={(value) => {
+                        updatePermission(permission.id, { application: value });
                         if (targetErrors[permission.id]) {
                           setTargetErrors((prev) => ({ ...prev, [permission.id]: false }));
                         }
                       }}
-                      className="flex-1 h-6 px-[5px] py-1 text-[12px] bg-transparent border-0 rounded-[3px] text-[var(--color-text-default)] focus:outline-none cursor-pointer appearance-none"
-                    >
-                      <option value="" disabled className="text-[var(--color-text-muted)]">Application</option>
-                      <option value="*all">*all</option>
-                      <option value="compute">compute</option>
-                      <option value="container">container</option>
-                    </select>
+                      options={[
+                        { value: '*all', label: '*all' },
+                        { value: 'compute', label: 'compute' },
+                        { value: 'container', label: 'container' },
+                      ]}
+                      size="sm"
+                      fullWidth
+                    />
                     <span className="text-[12px] text-[var(--color-text-default)]">:</span>
-                    <select
+                    <Select
+                      placeholder="Partition"
                       value={permission.partition}
-                      onChange={(e) => {
-                        updatePermission(permission.id, { partition: e.target.value });
+                      onChange={(value) => {
+                        updatePermission(permission.id, { partition: value });
                         if (targetErrors[permission.id]) {
                           setTargetErrors((prev) => ({ ...prev, [permission.id]: false }));
                         }
                       }}
-                      className="flex-1 h-6 px-[5px] py-1 text-[12px] bg-transparent border-0 rounded-[3px] text-[var(--color-text-default)] focus:outline-none cursor-pointer appearance-none"
-                    >
-                      <option value="" disabled className="text-[var(--color-text-muted)]">Partition</option>
-                      <option value="*all">*all</option>
-                    </select>
+                      options={[
+                        { value: '*all', label: '*all' },
+                      ]}
+                      size="sm"
+                      fullWidth
+                    />
                     <span className="text-[12px] text-[var(--color-text-default)]">:</span>
-                    <select
+                    <Select
+                      placeholder="Resource"
                       value={permission.resource}
-                      onChange={(e) => {
-                        updatePermission(permission.id, { resource: e.target.value });
+                      onChange={(value) => {
+                        updatePermission(permission.id, { resource: value });
                         if (targetErrors[permission.id]) {
                           setTargetErrors((prev) => ({ ...prev, [permission.id]: false }));
                         }
                       }}
-                      className="flex-1 h-6 px-[5px] py-1 text-[12px] bg-transparent border-0 rounded-[3px] text-[var(--color-text-default)] focus:outline-none cursor-pointer appearance-none"
-                    >
-                      <option value="" disabled className="text-[var(--color-text-muted)]">Resource</option>
-                      <option value="*all">*all</option>
-                    </select>
+                      options={[
+                        { value: '*all', label: '*all' },
+                      ]}
+                      size="sm"
+                      fullWidth
+                    />
                     <span className="text-[12px] text-[var(--color-text-default)]">:</span>
-                    <select
+                    <Select
+                      placeholder="Resource ID"
                       value={permission.resourceId}
-                      onChange={(e) => {
-                        updatePermission(permission.id, { resourceId: e.target.value });
+                      onChange={(value) => {
+                        updatePermission(permission.id, { resourceId: value });
                         if (targetErrors[permission.id]) {
                           setTargetErrors((prev) => ({ ...prev, [permission.id]: false }));
                         }
                       }}
-                      className="flex-1 h-6 px-[5px] py-1 text-[12px] bg-transparent border-0 rounded-[3px] text-[var(--color-text-default)] focus:outline-none cursor-pointer appearance-none"
-                    >
-                      <option value="" disabled className="text-[var(--color-text-muted)]">Resource ID</option>
-                      <option value="*all">*all</option>
-                    </select>
+                      options={[
+                        { value: '*all', label: '*all' },
+                      ]}
+                      size="sm"
+                      fullWidth
+                    />
                   </div>
                   {targetErrors[permission.id] && (
                     <span className="text-[11px] text-[var(--color-state-danger)] leading-[16px]">
