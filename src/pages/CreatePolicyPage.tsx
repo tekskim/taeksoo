@@ -997,40 +997,6 @@ function PolicyEditorSection({
                   )}
                 </div>
 
-                {/* Conditions */}
-                <div className="flex flex-col gap-3 w-full">
-                  <div className="flex flex-col gap-2">
-                    <button
-                      type="button"
-                      className="flex items-center gap-1.5 text-left"
-                      onClick={() => setConditionsExpanded(!conditionsExpanded)}
-                    >
-                      {conditionsExpanded ? (
-                        <IconChevronDown size={12} className="text-[var(--color-text-default)]" />
-                      ) : (
-                        <IconChevronRight size={12} className="text-[var(--color-text-default)]" />
-                      )}
-                      <span className="text-[14px] font-medium text-[var(--color-text-default)]">
-                        Conditions
-                      </span>
-                    </button>
-                    <span className="text-[12px] text-[var(--color-text-subtle)] leading-4">
-                      Select additional conditions required for this policy. All enabled conditions are evaluated using AND logic.
-                    </span>
-                  </div>
-                  
-                  {conditionsExpanded && (
-                    <label className="flex items-center gap-1.5 cursor-pointer">
-                      <Checkbox
-                        checked={permission.mfaRequired}
-                        onChange={() => updatePermission(permission.id, { mfaRequired: !permission.mfaRequired })}
-                      />
-                      <span className="text-[12px] text-[var(--color-text-default)]">
-                        Only applies if the user has completed MFA.
-                      </span>
-                    </label>
-                  )}
-                </div>
               </VStack>
             </div>
           ))}
@@ -1044,6 +1010,46 @@ function PolicyEditorSection({
           >
             Add Permission
           </Button>
+
+          {/* Conditions */}
+          <div className="flex flex-col gap-3 w-full">
+            <div className="flex flex-col gap-2">
+              <button
+                type="button"
+                className="flex items-center gap-1.5 text-left"
+                onClick={() => setConditionsExpanded(!conditionsExpanded)}
+              >
+                {conditionsExpanded ? (
+                  <IconChevronDown size={12} className="text-[var(--color-text-default)]" />
+                ) : (
+                  <IconChevronRight size={12} className="text-[var(--color-text-default)]" />
+                )}
+                <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+                  Conditions
+                </span>
+              </button>
+              <span className="text-[12px] text-[var(--color-text-subtle)] leading-4">
+                Select additional conditions required for this policy. All enabled conditions are evaluated using AND logic.
+              </span>
+            </div>
+            
+            {conditionsExpanded && (
+              <label className="flex items-center gap-1.5 cursor-pointer">
+                <Checkbox
+                  checked={permissions[0]?.mfaRequired || false}
+                  onChange={() => {
+                    // Apply MFA requirement to all permissions
+                    permissions.forEach((p) => {
+                      updatePermission(p.id, { mfaRequired: !permissions[0]?.mfaRequired });
+                    });
+                  }}
+                />
+                <span className="text-[12px] text-[var(--color-text-default)]">
+                  Only applies if the user has completed MFA.
+                </span>
+              </label>
+            )}
+          </div>
 
           {/* Error Message */}
           {permissionsError && (
