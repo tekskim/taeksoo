@@ -103,6 +103,7 @@ export function ModalsPage() {
   const [isRevertPolicyVersionOpen, setIsRevertPolicyVersionOpen] = useState(false);
   const [isDeletePolicyVersionOpen, setIsDeletePolicyVersionOpen] = useState(false);
   const [isUpdateMfaEnforcementOpen, setIsUpdateMfaEnforcementOpen] = useState(false);
+  const [isUpdateOtpPolicyOpen, setIsUpdateOtpPolicyOpen] = useState(false);
   const [usernameCopied, setUsernameCopied] = useState(false);
   const [passwordCopied, setPasswordCopied] = useState(false);
   
@@ -362,7 +363,7 @@ export function ModalsPage() {
                           Modals
                         </span>
                         <span className="text-[12px] text-[var(--color-text-subtle)]">
-                          (18 modals)
+                          (19 modals)
                         </span>
                       </div>
                     </div>
@@ -493,6 +494,13 @@ export function ModalsPage() {
                             category="Security"
                             size="sm"
                             onOpen={() => setIsUpdateMfaEnforcementOpen(true)}
+                          />
+                          <ModalListItem
+                            title="Update OTP policy"
+                            description="Confirm applying OTP policy changes with warning about MFA method availability."
+                            category="Security"
+                            size="sm"
+                            onOpen={() => setIsUpdateOtpPolicyOpen(true)}
                           />
                         </div>
                       </VStack>
@@ -2347,6 +2355,58 @@ export function ModalsPage() {
             onClick={() => {
               console.log('MFA enforcement policy updated');
               setIsUpdateMfaEnforcementOpen(false);
+            }}
+            className="flex-1"
+          >
+            Apply
+          </Button>
+        </div>
+      </Modal>
+
+      {/* Update OTP Policy Modal */}
+      <Modal
+        isOpen={isUpdateOtpPolicyOpen}
+        onClose={() => setIsUpdateOtpPolicyOpen(false)}
+        title="Update OTP policy"
+        description="Are you sure you want to apply these changes?"
+        size="sm"
+      >
+        <div className="flex flex-col gap-2">
+          {/* Changes Info Box */}
+          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
+            <span className="text-[11px] text-[var(--color-text-subtle)] font-medium leading-4">
+              Changes
+            </span>
+            <ul className="list-disc list-inside text-[12px] text-[var(--color-text-default)] leading-4">
+              <li>OTP policy: On → Off</li>
+            </ul>
+          </div>
+
+          {/* Warning Alert Box */}
+          <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
+            <IconAlertCircle size={16} className="text-[var(--color-state-danger)] shrink-0 mt-0.5" stroke={1.5} />
+            <p className="text-[11px] text-[var(--color-text-default)] leading-4">
+              Turning off OTP authentication will remove OTP as an available MFA method for all users.
+            </p>
+          </div>
+        </div>
+
+        {/* Button Group */}
+        <div className="flex gap-2 w-full">
+          <Button 
+            variant="outline" 
+            size="md" 
+            onClick={() => setIsUpdateOtpPolicyOpen(false)}
+            className="flex-1"
+          >
+            Cancel
+          </Button>
+          <Button 
+            variant="primary" 
+            size="md" 
+            onClick={() => {
+              console.log('OTP policy updated');
+              setIsUpdateOtpPolicyOpen(false);
             }}
             className="flex-1"
           >
