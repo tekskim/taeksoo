@@ -22,12 +22,12 @@ import {
   IconLayoutSidebar,
   IconListSearch,
   IconServer2,
-  IconSwitch3,
   IconActivity,
   IconCpu2,
   IconAffiliate,
   IconArrowLeft,
 } from '@tabler/icons-react';
+import { EthernetPort, ChevronsLeftRightEllipsis } from 'lucide-react';
 import { useLocation, Link } from 'react-router-dom';
 import { useProject } from '@/contexts/ProjectContext';
 import ThakiLogoLight from '@/assets/thakiLogo_light.svg';
@@ -133,7 +133,7 @@ export function Sidebar({ isOpen = true, onToggle }: SidebarProps) {
                   active={isActive('/cloudbuilder/servers')}
                 />
                 <MenuItem
-                  icon={<IconSwitch3 size={16} stroke={1.5} />}
+                  icon={<EthernetPort size={16} strokeWidth={1.5} />}
                   label="Switch"
                   href="/cloudbuilder/switch"
                   active={isActive('/cloudbuilder/switch')}
@@ -275,7 +275,7 @@ export function Sidebar({ isOpen = true, onToggle }: SidebarProps) {
               active={isActive('/compute/routers')}
             />
             <MenuItem
-              icon={<IconPlug size={16} stroke={1.5} />}
+              icon={<ChevronsLeftRightEllipsis size={16} strokeWidth={1.5} />}
               label="Ports"
               href="/compute/ports"
               active={isActive('/compute/ports')}

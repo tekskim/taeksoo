@@ -8,6 +8,7 @@ import { designRoutes } from './design.routes';
 // Entry and Desktop pages - loaded eagerly as they're entry points
 const EntryPage = lazy(() => import('@/pages/EntryPage'));
 const DesktopPage = lazy(() => import('@/pages/DesktopPage'));
+const SidebarIconsPage = lazy(() => import('@/pages/SidebarIconsPage'));
 
 // Loading fallback component
 const LoadingFallback = () => (
@@ -25,6 +26,9 @@ export const AppRoutes = () => {
 
         {/* Desktop Route */}
         <Route path="/desktop" element={<DesktopPage />} />
+
+        {/* Sidebar Icons Reference */}
+        <Route path="/sidebar-icons" element={<SidebarIconsPage />} />
 
         {/* Domain-specific routes */}
         {agentRoutes}

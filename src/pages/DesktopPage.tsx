@@ -9,7 +9,8 @@ import {
   IconWindow,
   IconWindowMinimize,
 } from '@tabler/icons-react';
-import { Icons, ContextMenu, Modal, Button, NotificationCenter, WindowControls, Tooltip } from '@/design-system';
+import { Icons, ContextMenu, Modal, Button, NotificationCenter, WindowControls, Tooltip, IconWindowActive, IconWindowMinimized } from '@/design-system';
+import { motion, Reorder } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { useDarkMode } from '@/hooks/useDarkMode';
 import ThakiLogoLight from '@/assets/thakiLogo_light.svg';
@@ -99,6 +100,70 @@ interface DockIconsProps {
   onReorderApps: (order: AppId[]) => void;
 }
 
+/* ----------------------------------------
+   DockIcon - Individual Icon with Magnification
+   ---------------------------------------- */
+
+interface DockIconItemProps {
+  app: DockApp;
+  isDragging: boolean;
+  onAppClick: (appId: AppId) => void;
+  getContextMenuItems: (app: DockApp) => any[];
+}
+
+function DockIconItem({
+  app,
+  isDragging,
+  onAppClick,
+  getContextMenuItems,
+}: DockIconItemProps) {
+  const isRunning = app.hasWindows;
+  const isActive = app.hasActiveWindow;
+
+  return (
+    <ContextMenu
+      trigger="contextmenu"
+      items={getContextMenuItems(app)}
+    >
+      <Tooltip content={app.name} position="bottom">
+        <motion.div
+          layoutId={app.id}
+          onClick={() => onAppClick(app.id)}
+          className={`
+            relative cursor-pointer flex items-center justify-center
+            ${isDragging ? 'z-50' : 'z-0'}
+          `}
+          whileDrag={{
+            scale: 1.1,
+            zIndex: 50,
+            boxShadow: '0 10px 30px rgba(0,0,0,0.3)',
+          }}
+          transition={{
+            type: 'spring',
+            stiffness: 400,
+            damping: 25,
+          }}
+        >
+          <div
+            className={`
+              w-7 h-7 rounded-lg overflow-hidden
+              ${isRunning ? 'p-0.5 border-2 border-[var(--color-border-default)] bg-[var(--color-surface-subtle)]' : ''}
+              ${isActive ? 'border-[var(--color-action-primary)]' : ''}
+            `}
+          >
+            <img 
+              src={app.icon} 
+              alt={app.name} 
+              className="w-full h-full object-cover pointer-events-none"
+              draggable={false}
+            />
+          </div>
+        </motion.div>
+      </Tooltip>
+    </ContextMenu>
+  );
+}
+
 function DockIcons({
   apps,
   onAppClick,
@@ -109,36 +174,19 @@ function DockIcons({
   onQuitApp,
   onReorderApps,
 }: DockIconsProps) {
-  const [draggedAppId, setDraggedAppId] = useState<AppId | null>(null);
-  const [hoveredAppId, setHoveredAppId] = useState<AppId | null>(null);
+  const [isDragging, setIsDragging] = useState(false);
+  
+  // 앱 순서를 로컬 상태로 관리 (Reorder용)
+  const [localApps, setLocalApps] = useState(apps);
+  
+  // apps prop이 변경되면 localApps 동기화
+  useEffect(() => {
+    setLocalApps(apps);
+  }, [apps]);
 
-  const handleDragStart = (e: React.DragEvent, appId: AppId) => {
-    setDraggedAppId(appId);
-    e.dataTransfer.effectAllowed = 'move';
-  };
-
-  const handleDragOver = (e: React.DragEvent) => {
-    e.preventDefault();
-    e.dataTransfer.dropEffect = 'move';
-  };
-
-  const handleDrop = (e: React.DragEvent, targetAppId: AppId) => {
-    e.preventDefault();
-    if (!draggedAppId || draggedAppId === targetAppId) {
-      setDraggedAppId(null);
-      return;
-    }
-
-    const currentOrder = apps.map(a => a.id);
-    const draggedIndex = currentOrder.indexOf(draggedAppId);
-    const targetIndex = currentOrder.indexOf(targetAppId);
-
-    const newOrder = [...currentOrder];
-    newOrder.splice(draggedIndex, 1);
-    newOrder.splice(targetIndex, 0, draggedAppId);
-
-    onReorderApps(newOrder);
-    setDraggedAppId(null);
+  const handleReorder = (newOrder: DockApp[]) => {
+    setLocalApps(newOrder);
+    onReorderApps(newOrder.map(app => app.id));
   };
 
   const getContextMenuItems = (app: DockApp) => {
@@ -147,24 +195,33 @@ function DockIcons({
     // Window list
     if (app.windows.length > 0) {
       app.windows.forEach(window => {
+        // 윈도우 상태에 따른 아이콘 결정
+        let windowIcon: React.ReactNode;
+        if (window.isMinimized) {
+          // Minimized 상태: Window_minimized 아이콘
+          windowIcon = <IconWindowMinimized size={16} stroke={1} />;
+        } else if (window.isActive) {
+          // Normal + Focus in 상태: Check + Window_active 아이콘
+          windowIcon = (
+            <span className="flex items-center gap-1">
+              <IconCheck size={16} stroke={1} />
+              <IconWindowActive size={16} stroke={1} />
+            </span>
+          );
+        } else {
+          // Normal + Focus out 상태: Window_active 아이콘
+          windowIcon = <IconWindowActive size={16} stroke={1} />;
+        }
+
         items.push({
           id: `window-${window.id}`,
           label: window.title,
-          icon: window.isMinimized ? <IconWindowMinimize size={14} /> : <IconWindow size={14} />,
+          icon: windowIcon,
           onClick: () => onWindowClick(window.id),
         });
       });
-      items.push({ id: 'divider-1', divider: true });
-    }
-
-    // Navigation items (for Compute app example)
-    if (app.id === 'compute') {
-      items.push(
-        { id: 'instances', label: 'Instances', icon: <IconLayoutDashboard size={14} />, onClick: () => {} },
-        { id: 'images', label: 'Images', onClick: () => {} },
-        { id: 'dashboard', label: 'Dashboard', icon: <IconLayoutDashboard size={14} />, onClick: () => {} },
-        { id: 'divider-2', divider: true }
-      );
+      // Divider after window list
+      items.push({ id: 'divider-windows', label: '', divider: true });
     }
 
     // New window
@@ -176,11 +233,10 @@ function DockIcons({
 
     items.push({ id: 'divider-3', divider: true });
 
-    // Pin to top bar
+    // Pin / Unpin
     items.push({
       id: 'pin',
-      label: 'Pin to top bar',
-      icon: app.isPinned ? <IconCheck size={14} /> : undefined,
+      label: app.isPinned ? 'Unpin' : 'Pin',
       onClick: () => onTogglePin(app.id),
     });
 
@@ -190,7 +246,6 @@ function DockIcons({
     items.push({
       id: 'quit',
       label: 'Quit',
-      status: 'danger' as const,
       onClick: () => onQuitApp(app.id),
     });
 
@@ -198,45 +253,45 @@ function DockIcons({
   };
 
   return (
-    <div className="flex items-center gap-3 h-full">
-      {apps.map((app) => {
-        const isRunning = app.hasWindows;
-        const isActive = app.hasActiveWindow;
-
-        return (
-          <ContextMenu
-            key={app.id}
-            trigger="contextmenu"
-            items={getContextMenuItems(app)}
-            className="h-8 flex items-center"
-          >
-            <Tooltip content={app.name} position="bottom">
-              <div
-                draggable
-                onDragStart={(e) => handleDragStart(e, app.id)}
-                onDragOver={handleDragOver}
-                onDrop={(e) => handleDrop(e, app.id)}
-                onMouseEnter={() => setHoveredAppId(app.id)}
-                onMouseLeave={() => setHoveredAppId(null)}
-                onClick={() => onAppClick(app.id)}
-                className={`
-                  w-8 h-8 cursor-pointer transition-all duration-200
-                  ${isActive ? 'scale-110' : ''}
-                  ${hoveredAppId === app.id ? 'scale-110' : ''}
-                  ${isRunning ? 'ring-2 ring-[var(--color-action-primary)] rounded' : ''}
-                `}
-              >
-                <img 
-                  src={app.icon} 
-                  alt={app.name} 
-                  className="w-full h-full object-cover"
-                />
-              </div>
-            </Tooltip>
-          </ContextMenu>
-        );
-      })}
-    </div>
+    <Reorder.Group
+      as="div"
+      axis="x"
+      values={localApps}
+      onReorder={handleReorder}
+      className="flex items-center gap-2"
+    >
+      {localApps.map((app) => (
+        <Reorder.Item
+          key={app.id}
+          value={app}
+          as="div"
+          onDragStart={() => setIsDragging(true)}
+          onDragEnd={() => setIsDragging(false)}
+          dragListener={true}
+          dragConstraints={{ top: 0, bottom: 0 }}
+          dragElastic={0.1}
+          layout
+          transition={{
+            type: 'spring',
+            stiffness: 400,
+            damping: 25,
+          }}
+          whileDrag={{
+            scale: 1.15,
+            zIndex: 50,
+            cursor: 'grabbing',
+          }}
+          className="cursor-grab active:cursor-grabbing"
+        >
+          <DockIconItem
+            app={app}
+            isDragging={isDragging}
+            onAppClick={onAppClick}
+            getContextMenuItems={getContextMenuItems}
+          />
+        </Reorder.Item>
+      ))}
+    </Reorder.Group>
   );
 }
 
@@ -567,7 +622,7 @@ function AdminCenterPanel({ isOpen, onClose }: AdminPanelProps) {
    Window Management Types
    ---------------------------------------- */
 
-type AppId = 'compute' | 'storage' | 'container' | 'agent' | 'ai-platform' | 'iam';
+type AppId = 'compute' | 'storage' | 'container' | 'agent' | 'ai-platform' | 'iam' | 'settings';
 
 interface WindowState {
   id: string;
@@ -699,24 +754,41 @@ export function DesktopPage() {
   const notificationButtonRef = useRef<HTMLButtonElement>(null);
 
   // Window Management System
-  const [windows, setWindows] = useState<WindowState[]>([]);
-  const [nextZIndex, setNextZIndex] = useState(1);
-  const [appConfigs] = useState<Record<AppId, { name: string; icon: string; component: React.ReactNode }>>({
-    'compute': { name: 'Compute', icon: appIconCompute, component: <ComputeHomePage /> },
-    'storage': { name: 'Storage', icon: appIconStorage, component: <StorageHomePage /> },
-    'container': { name: 'Container', icon: appIconContainer, component: <ContainerDashboardPage /> },
-    'agent': { name: 'Agent ops', icon: appIconAgentops, component: <HomePage /> },
-    'ai-platform': { name: 'AI Platform', icon: appIconAiplatform, component: null },
-    'iam': { name: 'IAM', icon: appIconIam, component: null },
+  // Dock menu 시뮬레이션 모드 - 실제 앱 실행 없이 인터랙션만 테스트
+  const isSimulationMode = true;
+  
+  // Mock up 초기 상태: Compute, Storage, Container는 실행중
+  // Compute 앱의 윈도우들: Instances (Focus in), Images (Focus out), Dashboard (Minimized)
+  const [windows, setWindows] = useState<WindowState[]>(() => {
+    const computeWindows: WindowState[] = [
+      { id: 'compute-instances', appId: 'compute', title: 'Instances', isMinimized: false, isActive: true, zIndex: 3, createdAt: Date.now() - 3000 },
+      { id: 'compute-images', appId: 'compute', title: 'Images', isMinimized: false, isActive: false, zIndex: 2, createdAt: Date.now() - 2000 },
+      { id: 'compute-dashboard', appId: 'compute', title: 'Dashboard', isMinimized: true, isActive: false, zIndex: 1, createdAt: Date.now() - 1000 },
+    ];
+    const storageWindow: WindowState = { id: 'storage-1', appId: 'storage', title: 'Storage', isMinimized: false, isActive: false, zIndex: 1, createdAt: Date.now() - 5000 };
+    const containerWindow: WindowState = { id: 'container-1', appId: 'container', title: 'Container', isMinimized: false, isActive: false, zIndex: 1, createdAt: Date.now() - 4000 };
+    return [...computeWindows, storageWindow, containerWindow];
   });
-  const [pinnedApps, setPinnedApps] = useState<Set<AppId>>(new Set(['compute', 'storage', 'container', 'agent']));
-  const [dockAppOrder, setDockAppOrder] = useState<AppId[]>(['storage', 'container', 'ai-platform', 'agent']);
+  const [nextZIndex, setNextZIndex] = useState(10);
+  const [appConfigs] = useState<Record<AppId, { name: string; icon: string; component: React.ReactNode }>>({
+    'compute': { name: 'Compute', icon: imgCompute, component: <ComputeHomePage /> },
+    'storage': { name: 'Storage', icon: imgStorage, component: <StorageHomePage /> },
+    'container': { name: 'Container', icon: imgContainer, component: <ContainerDashboardPage /> },
+    'agent': { name: 'Agent Ops', icon: imgAgent, component: <HomePage /> },
+    'ai-platform': { name: 'AI Platform', icon: imgAi, component: null },
+    'iam': { name: 'IAM', icon: imgIam, component: null },
+    'settings': { name: 'Settings', icon: imgSettings, component: null },
+  });
+  // Mock up: Compute, Storage, Container는 실행중, AI Platform, Agent Ops, Settings는 Pin만 되어있음
+  const [pinnedApps, setPinnedApps] = useState<Set<AppId>>(new Set(['ai-platform', 'agent', 'settings']));
+  const [dockAppOrder, setDockAppOrder] = useState<AppId[]>(['compute', 'storage', 'container', 'ai-platform', 'agent', 'settings']);
 
   // Window management functions
   const createWindow = useCallback((appId: AppId) => {
     const config = appConfigs[appId];
-    if (!config || !config.component) return;
-
+    if (!config) return;
+    
+    // 시뮬레이션 모드: 실제 UI 윈도우 없이 상태만 업데이트
     const newWindow: WindowState = {
       id: `${appId}-${Date.now()}`,
       appId,
@@ -729,7 +801,11 @@ export function DesktopPage() {
 
     setWindows(prev => prev.map(w => ({ ...w, isActive: false })).concat(newWindow));
     setNextZIndex(prev => prev + 1);
-  }, [appConfigs, nextZIndex]);
+    
+    if (isSimulationMode) {
+      console.log(`[Simulation] New window created for ${appId}: ${newWindow.title}`);
+    }
+  }, [appConfigs, nextZIndex, isSimulationMode]);
 
   const closeWindow = useCallback((windowId: string) => {
     setWindows(prev => prev.filter(w => w.id !== windowId));
@@ -756,21 +832,44 @@ export function DesktopPage() {
     setNextZIndex(prev => prev + 1);
   }, [nextZIndex]);
 
+  // 모든 윈도우의 포커스를 해제 (Focus out)
+  const blurAllWindows = useCallback(() => {
+    setWindows(prev => prev.map(w => ({ ...w, isActive: false })));
+  }, []);
+
   const focusApp = useCallback((appId: AppId) => {
+    // 시뮬레이션 모드: 왼쪽 클릭 시 실제 앱 실행하지 않음
+    // 우클릭 ContextMenu만 테스트하는 용도
+    if (isSimulationMode) {
+      console.log(`[Simulation] Left-click on ${appId} - no action (use right-click for context menu)`);
+      return;
+    }
+    
     const appWindows = windows.filter(w => w.appId === appId);
+    
+    // 1) 앱이 실행되고 있지 않은 경우 → 실행 (새 창)
     if (appWindows.length === 0) {
       createWindow(appId);
       return;
     }
 
-    // If app has windows, focus the most recent one
-    const mostRecent = appWindows.sort((a, b) => b.createdAt - a.createdAt)[0];
-    if (mostRecent.isMinimized) {
+    // 2) 앱이 실행중이나 Focus Out된 경우 → 가장 마지막에 Focus In 되었던 윈도우로 다시 Focus In
+    const activeWindows = appWindows.filter(w => !w.isMinimized);
+    if (activeWindows.length > 0) {
+      // zIndex가 가장 높은 윈도우 (가장 최근에 포커스된 윈도우)
+      const mostRecent = activeWindows.sort((a, b) => b.zIndex - a.zIndex)[0];
       focusWindow(mostRecent.id);
-    } else {
-      focusWindow(mostRecent.id);
+      return;
     }
-  }, [windows, createWindow, focusWindow]);
+
+    // 3) 앱이 실행중이나 모두 최소화된 경우 → 가장 나중에 최소화된 윈도우를 이전 크기로 복원(Restore)
+    const minimizedWindows = appWindows.filter(w => w.isMinimized);
+    if (minimizedWindows.length > 0) {
+      // 가장 나중에 최소화된 윈도우 (zIndex가 가장 높은 것)
+      const lastMinimized = minimizedWindows.sort((a, b) => b.zIndex - a.zIndex)[0];
+      focusWindow(lastMinimized.id);
+    }
+  }, [windows, createWindow, focusWindow, isSimulationMode]);
 
   const togglePinApp = useCallback((appId: AppId) => {
     setPinnedApps(prev => {
@@ -822,8 +921,19 @@ export function DesktopPage() {
     setNotifications((prev) => prev.map((n) => ({ ...n, isRead: true })));
   };
 
+  // 데스크탑 배경 클릭 시 모든 윈도우 포커스 해제
+  const handleDesktopClick = useCallback((e: React.MouseEvent) => {
+    // 클릭한 대상이 현재 요소 자체인 경우에만 blur (자식 요소 클릭은 무시)
+    if (e.target === e.currentTarget) {
+      blurAllWindows();
+    }
+  }, [blurAllWindows]);
+
   return (
-    <div className="fixed inset-0 bg-[#353535] overflow-hidden">
+    <div 
+      className="fixed inset-0 bg-[#353535] overflow-hidden"
+      onClick={handleDesktopClick}
+    >
       {/* Top Bar */}
       <DesktopTopBar 
         onChatbotToggle={() => setShowChatbot(!showChatbot)}
@@ -851,9 +961,25 @@ export function DesktopPage() {
               // Context menu will be handled by ContextMenu component
             }}
             onTogglePin={togglePinApp}
-            onWindowClick={focusWindow}
-            onNewWindow={createWindow}
+            onWindowClick={(windowId) => {
+              if (isSimulationMode) {
+                console.log(`[Simulation] Window clicked: ${windowId}`);
+                // 시뮬레이션 모드에서는 상태만 업데이트
+                focusWindow(windowId);
+              } else {
+                focusWindow(windowId);
+              }
+            }}
+            onNewWindow={(appId) => {
+              if (isSimulationMode) {
+                console.log(`[Simulation] New window requested for: ${appId}`);
+              }
+              createWindow(appId);
+            }}
             onQuitApp={(appId) => {
+              if (isSimulationMode) {
+                console.log(`[Simulation] Quit app: ${appId}`);
+              }
               setWindows(prev => prev.filter(w => w.appId !== appId));
             }}
             onReorderApps={setDockAppOrder}
@@ -862,41 +988,48 @@ export function DesktopPage() {
       />
 
       {/* Desktop Icons Row - Positioned like Figma */}
-      <div className="absolute top-[80px] left-[28px] flex flex-row items-start gap-[38px]">
+      <div
+        className="absolute top-[110px] left-[44px] flex flex-row items-start gap-[72px]"
+        onClick={handleDesktopClick}
+      >
         <DesktopIcon 
           icon={imgIam}
           label="IAM"
           onClick={() => {
-            // TODO: Implement IAM window
             console.log('IAM clicked - not implemented yet');
           }}
         />
         <DesktopIcon 
           icon={imgCompute}
           label="Compute"
-          onClick={() => setShowCompute(true)}
+          onClick={() => {
+            console.log('Compute clicked');
+          }}
         />
         <DesktopIcon 
           icon={imgStorage}
           label="Storage"
-          onClick={() => setShowStorage(true)}
+          onClick={() => {
+            console.log('Storage clicked');
+          }}
         />
         <DesktopIcon 
           icon={imgContainer}
           label="Container"
-          onClick={() => setShowContainer(true)}
+          onClick={() => {
+            console.log('Container clicked');
+          }}
         />
         <DesktopIcon 
           icon={imgAi}
           label="AI Platform"
           onClick={() => {
-            // TODO: Implement AI Platform window
             console.log('AI Platform clicked - not implemented yet');
           }}
         />
-        <DesktopIcon 
+        <DesktopIcon
           icon={imgAgent}
-          label="Agent ops"
+          label="Agent Ops"
           onClick={() => setShowAgent(true)}
         />
         <DesktopIcon 
@@ -954,8 +1087,8 @@ export function DesktopPage() {
         );
       })()}
 
-      {/* App Windows */}
-      {windows.map((window) => {
+      {/* App Windows - 시뮬레이션 모드에서는 실제 윈도우 UI를 표시하지 않음 */}
+      {!isSimulationMode && windows.map((window) => {
         const config = appConfigs[window.appId];
         if (!config || !config.component) return null;
 

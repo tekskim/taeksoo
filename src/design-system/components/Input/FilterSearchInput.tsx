@@ -62,6 +62,8 @@ export interface FilterSearchInputProps
   fullWidth?: boolean;
   /** Clear filters button label */
   clearFiltersLabel?: string;
+  /** Hide applied filters display (useful when rendering filters externally) */
+  hideAppliedFilters?: boolean;
 }
 
 /* ----------------------------------------
@@ -167,6 +169,7 @@ export const FilterSearchInput = forwardRef<HTMLInputElement, FilterSearchInputP
       onSearchChange,
       fullWidth = false,
       clearFiltersLabel = 'Clear Filters',
+      hideAppliedFilters = false,
       className = '',
       placeholder,
       disabled,
@@ -403,7 +406,7 @@ export const FilterSearchInput = forwardRef<HTMLInputElement, FilterSearchInputP
         </div>
 
         {/* Applied Filters */}
-        {appliedFilters.length > 0 && (
+        {!hideAppliedFilters && appliedFilters.length > 0 && (
           <div className="flex items-center justify-between pl-2 pr-4 py-2 bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)]">
             <div className="flex items-center gap-1 flex-wrap">
               {appliedFilters.map((filter) => (

@@ -287,7 +287,7 @@ export function EntryPage() {
               <p className="text-[12px] text-[var(--color-text-subtle)] mb-4">
                 Developer Resources
               </p>
-              <div className="flex items-center justify-center gap-4 mt-4">
+              <div className="flex items-center justify-center gap-4 mt-4 flex-wrap">
                 <Button
                   variant="muted"
                   size="md"
@@ -301,6 +301,13 @@ export function EntryPage() {
                   onClick={() => navigate('/design/modals')}
                 >
                   Modals
+                </Button>
+                <Button
+                  variant="muted"
+                  size="md"
+                  onClick={() => navigate('/sidebar-icons')}
+                >
+                  Sidebar Icons
                 </Button>
                 <Button
                   variant="muted"
