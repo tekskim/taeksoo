@@ -89,6 +89,7 @@ export function ModalsPage() {
   const [isDeleteUsersMultipleOpen, setIsDeleteUsersMultipleOpen] = useState(false);
   const [isConfirmUserPasswordOpen, setIsConfirmUserPasswordOpen] = useState(false);
   const [isUnsavedChangesOpen, setIsUnsavedChangesOpen] = useState(false);
+  const [isDetachUserGroupOpen, setIsDetachUserGroupOpen] = useState(false);
   const [usernameCopied, setUsernameCopied] = useState(false);
   const [passwordCopied, setPasswordCopied] = useState(false);
   
@@ -348,7 +349,7 @@ export function ModalsPage() {
                           Modals
                         </span>
                         <span className="text-[12px] text-[var(--color-text-subtle)]">
-                          (4 modals)
+                          (5 modals)
                         </span>
                       </div>
                     </div>
@@ -381,6 +382,13 @@ export function ModalsPage() {
                             category="User"
                             size="sm"
                             onOpen={() => setIsConfirmUserPasswordOpen(true)}
+                          />
+                          <ModalListItem
+                            title="Detach user group"
+                            description="Confirm detaching a user from a user group with warning about permission removal."
+                            category="User"
+                            size="sm"
+                            onOpen={() => setIsDetachUserGroupOpen(true)}
                           />
                         </div>
                       </VStack>
@@ -1437,6 +1445,68 @@ export function ModalsPage() {
             className="flex-1"
           >
             Stay
+          </Button>
+        </div>
+      </Modal>
+
+      {/* Detach User Group Modal */}
+      <Modal
+        isOpen={isDetachUserGroupOpen}
+        onClose={() => setIsDetachUserGroupOpen(false)}
+        title="Detach user group"
+        description="Are you sure you want to detach user 'DISPLAY NAME' from this group?"
+        size="sm"
+      >
+        <div className="flex flex-col gap-2">
+          {/* User Info Box */}
+          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
+            <span className="text-[11px] text-[var(--color-text-subtle)] font-medium leading-4">
+              User
+            </span>
+            <span className="text-[12px] text-[var(--color-text-default)] leading-4">
+              DISPLAY NAME
+            </span>
+          </div>
+
+          {/* User Group Info Box */}
+          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
+            <span className="text-[11px] text-[var(--color-text-subtle)] font-medium leading-4">
+              User group
+            </span>
+            <span className="text-[12px] text-[var(--color-text-default)] leading-4">
+              USERGROUP NAME
+            </span>
+          </div>
+
+          {/* Warning Alert Box */}
+          <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
+            <IconAlertCircle size={16} className="text-[var(--color-state-danger)] shrink-0 mt-0.5" stroke={1.5} />
+            <p className="text-[11px] text-[var(--color-text-default)] leading-4">
+              Detaching this user will immediately remove all permissions granted through this group.
+            </p>
+          </div>
+        </div>
+
+        {/* Button Group */}
+        <div className="flex gap-2 w-full">
+          <Button 
+            variant="outline" 
+            size="md" 
+            onClick={() => setIsDetachUserGroupOpen(false)}
+            className="flex-1"
+          >
+            Cancel
+          </Button>
+          <Button 
+            variant="primary" 
+            size="md" 
+            onClick={() => {
+              console.log('User detached from group');
+              setIsDetachUserGroupOpen(false);
+            }}
+            className="flex-1"
+          >
+            Detach
           </Button>
         </div>
       </Modal>
