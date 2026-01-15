@@ -895,7 +895,7 @@ export function CreateNamespacePage() {
 
         {/* Content Area */}
         <div className="flex-1 overflow-auto min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll">
-          <div className="pt-4 px-8 pb-20 bg-[var(--color-surface-default)]">
+          <div className="pt-4 px-8 pb-6 bg-[var(--color-surface-default)]">
             <VStack gap={6}>
               {/* Page Header */}
               <h1 className="text-[18px] font-semibold text-[var(--color-text-default)] leading-[28px]">
