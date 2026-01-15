@@ -100,6 +100,7 @@ export function ModalsPage() {
   const [isDetachPolicyOpen, setIsDetachPolicyOpen] = useState(false);
   const [isDeletePolicyOpen, setIsDeletePolicyOpen] = useState(false);
   const [isDeletePoliciesMultipleOpen, setIsDeletePoliciesMultipleOpen] = useState(false);
+  const [isRevertPolicyVersionOpen, setIsRevertPolicyVersionOpen] = useState(false);
   const [usernameCopied, setUsernameCopied] = useState(false);
   const [passwordCopied, setPasswordCopied] = useState(false);
   
@@ -359,7 +360,7 @@ export function ModalsPage() {
                           Modals
                         </span>
                         <span className="text-[12px] text-[var(--color-text-subtle)]">
-                          (15 modals)
+                          (16 modals)
                         </span>
                       </div>
                     </div>
@@ -469,6 +470,13 @@ export function ModalsPage() {
                             category="Policy"
                             size="md"
                             onOpen={() => setIsDeletePoliciesMultipleOpen(true)}
+                          />
+                          <ModalListItem
+                            title="Revert policy version"
+                            description="Confirm reverting a policy to a previous version with warning about permission changes."
+                            category="Policy"
+                            size="sm"
+                            onOpen={() => setIsRevertPolicyVersionOpen(true)}
                           />
                         </div>
                       </VStack>
@@ -2171,6 +2179,68 @@ export function ModalsPage() {
             className="flex-1"
           >
             Delete
+          </Button>
+        </div>
+      </Modal>
+
+      {/* Revert Policy Version Modal */}
+      <Modal
+        isOpen={isRevertPolicyVersionOpen}
+        onClose={() => setIsRevertPolicyVersionOpen(false)}
+        title="Revert policy version"
+        description="Are you sure you want to revert policy 'POLICYNAME' to 'VERSION'?"
+        size="sm"
+      >
+        <div className="flex flex-col gap-2">
+          {/* Current Version Info Box */}
+          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
+            <span className="text-[11px] text-[var(--color-text-subtle)] font-medium leading-4">
+              Current version
+            </span>
+            <span className="text-[12px] text-[var(--color-text-default)] leading-4">
+              VERSION
+            </span>
+          </div>
+
+          {/* Target Version Info Box */}
+          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
+            <span className="text-[11px] text-[var(--color-text-subtle)] font-medium leading-4">
+              Target version
+            </span>
+            <span className="text-[12px] text-[var(--color-text-default)] leading-4">
+              VERSION
+            </span>
+          </div>
+
+          {/* Warning Alert Box */}
+          <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
+            <IconAlertCircle size={16} className="text-[var(--color-state-danger)] shrink-0 mt-0.5" stroke={1.5} />
+            <p className="text-[11px] text-[var(--color-text-default)] leading-4">
+              Reverting to this version will immediately replace the currently active policy and may change permissions for all roles using it.
+            </p>
+          </div>
+        </div>
+
+        {/* Button Group */}
+        <div className="flex gap-2 w-full">
+          <Button 
+            variant="outline" 
+            size="md" 
+            onClick={() => setIsRevertPolicyVersionOpen(false)}
+            className="flex-1"
+          >
+            Cancel
+          </Button>
+          <Button 
+            variant="primary" 
+            size="md" 
+            onClick={() => {
+              console.log('Policy version reverted');
+              setIsRevertPolicyVersionOpen(false);
+            }}
+            className="flex-1"
+          >
+            Revert
           </Button>
         </div>
       </Modal>
