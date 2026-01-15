@@ -5,7 +5,7 @@
   "rewrites": [
     {
       "source": "/(.*)",
-      "destination": "/tds_ssot/index.html"
+      "destination": "/index.html"
     }
   ]
 }
