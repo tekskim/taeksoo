@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { IconDownload, IconLock } from '@tabler/icons-react';
 import {
   Button,
@@ -53,6 +53,7 @@ const mockSystemAdmins: SystemAdmin[] = [
    IAM System Administrators Page
    ---------------------------------------- */
 export default function IAMSystemAdministratorsPage() {
+  const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
@@ -210,7 +211,7 @@ export default function IAMSystemAdministratorsPage() {
                 <h1 className="text-[16px] font-semibold leading-6 text-[var(--color-text-default)]">
                   System administrators
                 </h1>
-                <Button variant="primary" size="sm">
+                <Button variant="primary" size="sm" onClick={() => navigate('/iam/system-administrators/create')}>
                   Create account
                 </Button>
               </HStack>
