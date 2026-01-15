@@ -83,6 +83,9 @@ export function ModalsPage() {
   const [isReleaseFloatingIPMediumOpen, setIsReleaseFloatingIPMediumOpen] = useState(false);
   const [isDeleteLoadBalancerOpen, setIsDeleteLoadBalancerOpen] = useState(false);
   const [isDeleteLoadBalancersMultipleOpen, setIsDeleteLoadBalancersMultipleOpen] = useState(false);
+  
+  // IAM Modal states
+  const [isDeleteUserOpen, setIsDeleteUserOpen] = useState(false);
 
   return (
     <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
@@ -314,7 +317,7 @@ export function ModalsPage() {
                   </Disclosure.Panel>
                 </Disclosure>
 
-                {/* IAM App Modals - Placeholder for future */}
+                {/* IAM App Modals */}
                 <Disclosure>
                   <Disclosure.Trigger className="w-full">
                     <div className="flex items-center justify-between w-full px-4 py-3 bg-[var(--color-surface-subtle)] rounded-lg border border-[var(--color-border-default)] hover:border-[var(--color-border-strong)] transition-colors">
@@ -324,19 +327,29 @@ export function ModalsPage() {
                           IAM Modals
                         </span>
                         <span className="text-[12px] text-[var(--color-text-subtle)]">
-                          (0 modals)
+                          (1 modal)
                         </span>
                       </div>
                     </div>
                   </Disclosure.Trigger>
                   <Disclosure.Panel>
-                    <div className="p-6 mt-4 rounded-xl border border-dashed border-[var(--color-border-default)] bg-[var(--color-surface-subtle)]">
-                      <VStack gap={2} className="items-center justify-center h-full">
-                        <p className="text-[14px] text-[var(--color-text-muted)]">
-                          IAM modals will be added here...
-                        </p>
+                    <VStack gap={4} className="pt-4">
+                      {/* User Management Modals */}
+                      <VStack gap={2}>
+                        <h2 className="text-[14px] font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
+                          User Management
+                        </h2>
+                        <div className="flex flex-col gap-2">
+                          <ModalListItem
+                            title="Delete user"
+                            description="Confirm deletion of a user with warning about permanent action."
+                            category="User"
+                            size="sm"
+                            onOpen={() => setIsDeleteUserOpen(true)}
+                          />
+                        </div>
                       </VStack>
-                    </div>
+                    </VStack>
                   </Disclosure.Panel>
                 </Disclosure>
 
@@ -1135,6 +1148,57 @@ export function ModalsPage() {
             onClick={() => {
               console.log('Load balancers deleted');
               setIsDeleteLoadBalancersMultipleOpen(false);
+            }} 
+            className="flex-1"
+          >
+            Delete
+          </Button>
+        </div>
+      </Modal>
+
+      {/* ========================================
+          IAM MODALS
+          ======================================== */}
+
+      {/* Delete User Modal */}
+      <Modal
+        isOpen={isDeleteUserOpen}
+        onClose={() => setIsDeleteUserOpen(false)}
+        title="Delete user"
+        description={<>Are you sure you want to delete user "DISPLAY NAME"?<br />Deletes user "DISPLAY NAME" permanently.</>}
+        size="sm"
+      >
+        <div className="flex flex-col gap-2">
+          {/* User Info Box */}
+          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
+            <span className="text-[11px] text-[var(--color-text-subtle)] font-medium leading-4">
+              User
+            </span>
+            <span className="text-[12px] text-[var(--color-text-default)] leading-4">
+              DISPLAY NAME
+            </span>
+          </div>
+
+          {/* Warning Alert Box */}
+          <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
+            <IconAlertCircle size={16} className="text-[var(--color-state-danger)] shrink-0 mt-0.5" stroke={1.5} />
+            <p className="text-[11px] text-[var(--color-text-default)] leading-4">
+              Deleting this user will permanently remove all associated access and sessions. This action cannot be undone.
+            </p>
+          </div>
+        </div>
+
+        {/* Button Group */}
+        <div className="flex gap-2 w-full">
+          <Button variant="outline" size="md" onClick={() => setIsDeleteUserOpen(false)} className="flex-1">
+            Cancel
+          </Button>
+          <Button 
+            variant="primary" 
+            size="md" 
+            onClick={() => {
+              console.log('User deleted');
+              setIsDeleteUserOpen(false);
             }} 
             className="flex-1"
           >
