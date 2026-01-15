@@ -31,8 +31,6 @@ import {
   IconChevronDown,
   IconX,
   IconDotsCircleHorizontal,
-  IconEdit,
-  IconExternalLink,
 } from '@tabler/icons-react';
 
 /* ----------------------------------------
@@ -150,31 +148,24 @@ export function ContainerNamespacesPage() {
       render: (_, row) => {
         const menuItems: ContextMenuItem[] = [
           {
-            id: 'view-details',
-            label: 'View details',
-            icon: <IconExternalLink size={14} stroke={1.5} />,
-            onClick: () => console.log('View details:', row.id),
+            id: 'edit-config',
+            label: 'Edit Config',
+            onClick: () => console.log('Edit Config:', row.id),
           },
           {
-            id: 'edit',
-            label: 'Edit',
-            icon: <IconEdit size={14} stroke={1.5} />,
-            onClick: () => console.log('Edit:', row.id),
+            id: 'edit-yaml',
+            label: 'Edit YAML',
+            onClick: () => console.log('Edit YAML:', row.id),
           },
-          { id: 'divider-1', type: 'divider' },
           {
             id: 'download-yaml',
             label: 'Download YAML',
-            icon: <IconDownload size={14} stroke={1.5} />,
             onClick: () => console.log('Download YAML:', row.id),
           },
-          { id: 'divider-2', type: 'divider' },
           {
             id: 'delete',
             label: 'Delete',
-            icon: <IconTrash size={14} stroke={1.5} />,
             onClick: () => console.log('Delete:', row.id),
-            variant: 'danger',
           },
         ];
 
