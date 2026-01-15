@@ -107,6 +107,7 @@ export function ModalsPage() {
   const [isUpdateOtpPolicySettingsOpen, setIsUpdateOtpPolicySettingsOpen] = useState(false);
   const [isUpdateEmailPolicyOpen, setIsUpdateEmailPolicyOpen] = useState(false);
   const [isUpdateEmailPolicySettingsOpen, setIsUpdateEmailPolicySettingsOpen] = useState(false);
+  const [isUpdateGeneralSessionPolicyOpen, setIsUpdateGeneralSessionPolicyOpen] = useState(false);
   const [usernameCopied, setUsernameCopied] = useState(false);
   const [passwordCopied, setPasswordCopied] = useState(false);
   
@@ -366,7 +367,7 @@ export function ModalsPage() {
                           Modals
                         </span>
                         <span className="text-[12px] text-[var(--color-text-subtle)]">
-                          (22 modals)
+                          (23 modals)
                         </span>
                       </div>
                     </div>
@@ -525,6 +526,13 @@ export function ModalsPage() {
                             category="Security"
                             size="sm"
                             onOpen={() => setIsUpdateEmailPolicySettingsOpen(true)}
+                          />
+                          <ModalListItem
+                            title="Update general session policy"
+                            description="Confirm applying session policy changes for timeout and lifespan settings."
+                            category="Security"
+                            size="sm"
+                            onOpen={() => setIsUpdateGeneralSessionPolicyOpen(true)}
                           />
                         </div>
                       </VStack>
@@ -2575,6 +2583,53 @@ export function ModalsPage() {
             onClick={() => {
               console.log('Email policy settings updated');
               setIsUpdateEmailPolicySettingsOpen(false);
+            }}
+            className="flex-1"
+          >
+            Apply
+          </Button>
+        </div>
+      </Modal>
+
+      {/* Update General Session Policy Modal */}
+      <Modal
+        isOpen={isUpdateGeneralSessionPolicyOpen}
+        onClose={() => setIsUpdateGeneralSessionPolicyOpen(false)}
+        title="Update general session policy"
+        description="Are you sure you want to apply these changes?"
+        size="sm"
+      >
+        <div className="flex flex-col gap-2">
+          {/* Changes Info Box */}
+          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
+            <span className="text-[11px] text-[var(--color-text-subtle)] font-medium leading-4">
+              Changes
+            </span>
+            <ul className="list-disc list-inside text-[12px] text-[var(--color-text-default)] leading-4">
+              <li>Session idle timeout: 30 → 10 minutes</li>
+              <li>Session max lifespan: 8 → 10 hours</li>
+              <li>Login timeout: 30 → 10 minutes</li>
+              <li>Login action timeout: 5 → 3 minutes</li>
+            </ul>
+          </div>
+        </div>
+
+        {/* Button Group */}
+        <div className="flex gap-2 w-full">
+          <Button 
+            variant="outline" 
+            size="md" 
+            onClick={() => setIsUpdateGeneralSessionPolicyOpen(false)}
+            className="flex-1"
+          >
+            Cancel
+          </Button>
+          <Button 
+            variant="primary" 
+            size="md" 
+            onClick={() => {
+              console.log('General session policy updated');
+              setIsUpdateGeneralSessionPolicyOpen(false);
             }}
             className="flex-1"
           >
