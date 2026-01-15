@@ -352,7 +352,7 @@ function PasswordSection({
   return (
     <div className="flex flex-col py-6">
       <label className="text-[14px] font-medium text-[var(--color-text-default)] mb-2">
-        Password <span className="text-[var(--color-state-danger)]">*</span>
+        Temporary Password <span className="text-[var(--color-state-danger)]">*</span>
       </label>
       <span className="text-[12px] text-[var(--color-text-subtle)] leading-4 mb-2">
         Choose how to set the initial password for the user account.
