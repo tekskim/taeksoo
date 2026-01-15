@@ -37,44 +37,60 @@ import {
    Types
    ---------------------------------------- */
 
-type SectionStep = 'basic-info' | 'user-group';
+type SectionStep = 'basic-info' | 'default-domain';
 type SectionState = 'pre' | 'writing' | 'active' | 'done';
 
 interface SectionStatus {
   'basic-info': SectionState;
-  'user-group': SectionState;
+  'default-domain': SectionState;
 }
 
-interface UserGroup {
+interface Domain {
   id: string;
   name: string;
-  type: string;
-  roles: string;
-  userCount: number;
+  description: string;
   createdAt: string;
 }
 
 // Section labels for display
 const SECTION_LABELS: Record<SectionStep, string> = {
   'basic-info': 'Basic Information',
-  'user-group': 'Add user to the group',
+  'default-domain': 'Default domain',
 };
 
 // Section order for navigation
-const SECTION_ORDER: SectionStep[] = ['basic-info', 'user-group'];
+const SECTION_ORDER: SectionStep[] = ['basic-info', 'default-domain'];
 
 /* ----------------------------------------
-   Mock Data - User Groups
+   Mock Data - Domains
    ---------------------------------------- */
 
-const mockUserGroups: UserGroup[] = [
-  { id: 'group-1', name: 'Users', type: 'Built-in', roles: 'ReadCompute (+3)', userCount: 130, createdAt: '2025-09-12' },
-  { id: 'group-2', name: 'Admins', type: 'Built-in', roles: 'ReadCompute (+3)', userCount: 130, createdAt: '2025-09-12' },
-  { id: 'group-3', name: 'Members', type: 'Built-in', roles: 'ReadCompute (+3)', userCount: 130, createdAt: '2025-09-12' },
-  { id: 'group-4', name: 'test', type: 'Built-in', roles: 'ReadCompute (+3)', userCount: 130, createdAt: '2025-09-12' },
-  { id: 'group-5', name: 'MemberGroup', type: 'Built-in', roles: 'ReadCompute (+3)', userCount: 130, createdAt: '2025-09-12' },
-  { id: 'group-6', name: 'Developers', type: 'Custom', roles: 'FullAccess (+2)', userCount: 45, createdAt: '2025-08-15' },
-  { id: 'group-7', name: 'Viewers', type: 'Custom', roles: 'ReadOnly', userCount: 200, createdAt: '2025-07-22' },
+const mockDomains: Domain[] = [
+  { id: 'domain-1', name: 'domain', description: '-', createdAt: '2025-09-12' },
+  { id: 'domain-2', name: 'domain', description: '-', createdAt: '2025-09-12' },
+  { id: 'domain-3', name: 'domain', description: '-', createdAt: '2025-09-12' },
+  { id: 'domain-4', name: 'domain', description: '-', createdAt: '2025-09-12' },
+  { id: 'domain-5', name: 'domain', description: '-', createdAt: '2025-09-12' },
+  { id: 'domain-6', name: 'domain', description: '-', createdAt: '2025-09-12' },
+  { id: 'domain-7', name: 'domain', description: '-', createdAt: '2025-09-12' },
+  { id: 'domain-8', name: 'domain', description: '-', createdAt: '2025-09-12' },
+  { id: 'domain-9', name: 'domain', description: '-', createdAt: '2025-09-12' },
+  { id: 'domain-10', name: 'domain', description: '-', createdAt: '2025-09-12' },
+  { id: 'domain-11', name: 'domain', description: '-', createdAt: '2025-09-12' },
+  { id: 'domain-12', name: 'domain', description: '-', createdAt: '2025-09-12' },
+  { id: 'domain-13', name: 'domain', description: '-', createdAt: '2025-09-12' },
+  { id: 'domain-14', name: 'domain', description: '-', createdAt: '2025-09-12' },
+  { id: 'domain-15', name: 'domain', description: '-', createdAt: '2025-09-12' },
+  { id: 'domain-16', name: 'domain', description: '-', createdAt: '2025-09-12' },
+  { id: 'domain-17', name: 'domain', description: '-', createdAt: '2025-09-12' },
+  { id: 'domain-18', name: 'domain', description: '-', createdAt: '2025-09-12' },
+  { id: 'domain-19', name: 'domain', description: '-', createdAt: '2025-09-12' },
+  { id: 'domain-20', name: 'domain', description: '-', createdAt: '2025-09-12' },
+  { id: 'domain-21', name: 'domain', description: '-', createdAt: '2025-09-12' },
+  { id: 'domain-22', name: 'domain', description: '-', createdAt: '2025-09-12' },
+  { id: 'domain-23', name: 'domain', description: '-', createdAt: '2025-09-12' },
+  { id: 'domain-24', name: 'domain', description: '-', createdAt: '2025-09-12' },
+  { id: 'domain-25', name: 'domain', description: '-', createdAt: '2025-09-12' },
 ];
 
 /* ----------------------------------------
@@ -752,77 +768,69 @@ function BasicInformationSection({
 }
 
 /* ----------------------------------------
-   UserGroupSection Component
+   DefaultDomainSection Component
    ---------------------------------------- */
 
-interface UserGroupSectionProps {
-  selectedGroups: string[];
-  onSelectionChange: (ids: string[]) => void;
+interface DefaultDomainSectionProps {
+  selectedDomain: string | null;
+  onSelectionChange: (id: string | null) => void;
   onNext: () => void;
   isEditing: boolean;
   onEditCancel: () => void;
   onEditDone: () => void;
-  userGroupError: string | null;
-  onUserGroupErrorChange: (error: string | null) => void;
+  domainError: string | null;
+  onDomainErrorChange: (error: string | null) => void;
 }
 
-function UserGroupSection({
-  selectedGroups,
+function DefaultDomainSection({
+  selectedDomain,
   onSelectionChange,
   onNext,
   isEditing,
   onEditCancel,
   onEditDone,
-  userGroupError,
-  onUserGroupErrorChange,
-}: UserGroupSectionProps) {
+  domainError,
+  onDomainErrorChange,
+}: DefaultDomainSectionProps) {
   const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
 
-  const filteredGroups = mockUserGroups.filter(
-    (group) =>
-      group.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      group.type.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      group.roles.toLowerCase().includes(searchQuery.toLowerCase())
+  const filteredDomains = mockDomains.filter(
+    (domain) =>
+      domain.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      domain.description.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  const totalPages = Math.ceil(filteredGroups.length / itemsPerPage);
-  const paginatedGroups = filteredGroups.slice(
+  const totalPages = Math.ceil(filteredDomains.length / itemsPerPage);
+  const paginatedDomains = filteredDomains.slice(
     (currentPage - 1) * itemsPerPage,
     currentPage * itemsPerPage
   );
 
-  const columns: TableColumn<UserGroup>[] = [
+  const columns: TableColumn<Domain>[] = [
+    {
+      key: 'id',
+      label: 'Status',
+      render: () => (
+        <div className="flex items-center justify-center">
+          <div className="w-6 h-6 rounded-full bg-[#E8F5E9] flex items-center justify-center">
+            <div className="w-2.5 h-2.5 rounded-full bg-[#4CAF50]" />
+          </div>
+        </div>
+      ),
+    },
     {
       key: 'name',
-      label: 'User group name',
+      label: 'Name',
       sortable: true,
-      render: (_, row) => (
-        <HStack gap={1.5} align="center">
-          <span className="text-[12px] font-medium text-[var(--color-action-primary)]">{row.name}</span>
-          <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
-        </HStack>
-      ),
-    },
-    {
-      key: 'type',
-      label: 'Type',
       render: (value) => (
         <span className="text-[12px] text-[var(--color-text-default)]">{value}</span>
       ),
     },
     {
-      key: 'roles',
-      label: 'Roles',
-      render: (value) => (
-        <span className="text-[12px] text-[var(--color-text-default)]">{value}</span>
-      ),
-    },
-    {
-      key: 'userCount',
-      label: 'User count',
-      sortable: true,
+      key: 'description',
+      label: 'Description',
       render: (value) => (
         <span className="text-[12px] text-[var(--color-text-default)]">{value}</span>
       ),
@@ -840,7 +848,7 @@ function UserGroupSection({
   return (
     <SectionCard isActive>
       <SectionCard.Header
-        title="Add user to the group"
+        title="Default domain"
         showDivider
         actions={
           isEditing ? (
@@ -849,8 +857,8 @@ function UserGroupSection({
                 Cancel
               </Button>
               <Button variant="primary" size="sm" onClick={() => {
-                if (selectedGroups.length === 0) {
-                  onUserGroupErrorChange('Please select at least one user group.');
+                if (!selectedDomain) {
+                  onDomainErrorChange('Please select a domain.');
                   return;
                 }
                 onEditDone();
@@ -865,11 +873,11 @@ function UserGroupSection({
         <VStack gap={0} className="pt-2 pb-6">
           <div className="flex flex-col gap-2">
             <div className="flex gap-[3px]">
-              <span className="text-[14px] font-medium text-[var(--color-text-default)]">User groups</span>
+              <span className="text-[14px] font-medium text-[var(--color-text-default)]">Domains</span>
               <span className="text-[var(--color-state-danger)]">*</span>
             </div>
             <span className="text-[12px] text-[var(--color-text-subtle)] leading-4">
-              Select the user groups this user will belong to. Users will automatically inherit the permissions assigned to their groups.
+              Defines which domain is opened first when the administrator signs in. The selected domain is used as the initial workspace.
             </span>
           </div>
 
@@ -878,7 +886,7 @@ function UserGroupSection({
             <div className="relative" style={{ width: '280px' }}>
               <input
                 type="text"
-                placeholder="Search user groups by attributes"
+                placeholder="Search domains by attributes"
                 value={searchQuery}
                 onChange={(e) => {
                   setSearchQuery(e.target.value);
@@ -903,39 +911,39 @@ function UserGroupSection({
               />
               <div className="h-4 w-px bg-[var(--color-border-default)]" />
               <span className="text-[11px] text-[var(--color-text-subtle)]">
-                {filteredGroups.length} items
+                {filteredDomains.length} items
               </span>
             </div>
           )}
 
-          {/* Table */}
+          {/* Table with radio selection */}
           <div className="mt-3">
             <Table
               columns={columns}
-              data={paginatedGroups}
+              data={paginatedDomains}
               rowKey="id"
               selectable
-              selectedKeys={selectedGroups}
-              onSelectionChange={onSelectionChange}
+              singleSelect
+              selectedKeys={selectedDomain ? [selectedDomain] : []}
+              onSelectionChange={(ids) => {
+                onSelectionChange(ids.length > 0 ? ids[ids.length - 1] : null);
+                if (ids.length > 0) {
+                  onDomainErrorChange(null);
+                }
+              }}
             />
           </div>
 
           {/* Selection indicator */}
           <div className="mt-3">
-            {userGroupError && selectedGroups.length === 0 ? (
+            {domainError && !selectedDomain ? (
               <InlineMessage variant="error">
-                {userGroupError}
+                {domainError}
               </InlineMessage>
             ) : (
-              <SelectionIndicator
-                selectedItems={selectedGroups.map((groupId) => {
-                  const group = mockUserGroups.find((g) => g.id === groupId);
-                  return { id: groupId, label: group?.name || groupId };
-                })}
-                onRemove={(id) => {
-                  onSelectionChange(selectedGroups.filter((gId) => gId !== id));
-                }}
-              />
+              <span className="text-[12px] text-[var(--color-text-subtle)]">
+                {selectedDomain ? `Selected` : 'Seleted'}
+              </span>
             )}
           </div>
 
@@ -946,13 +954,13 @@ function UserGroupSection({
             <div className="w-full h-px bg-[var(--color-border-subtle)]" />
             <HStack justify="end" className="pt-3">
               <Button variant="primary" onClick={() => {
-                if (selectedGroups.length === 0) {
-                  onUserGroupErrorChange('Please select at least one user group.');
+                if (!selectedDomain) {
+                  onDomainErrorChange('Please select a domain.');
                   return;
                 }
                 onNext();
               }}>
-                Done
+                Next
               </Button>
             </HStack>
           </>
@@ -982,7 +990,7 @@ export default function CreateSystemAdministratorPage() {
   // Section status
   const [sectionStatus, setSectionStatus] = useState<SectionStatus>({
     'basic-info': 'active',
-    'user-group': 'pre',
+    'default-domain': 'pre',
   });
   const [editingSection, setEditingSection] = useState<SectionStep | null>(null);
 
@@ -999,9 +1007,9 @@ export default function CreateSystemAdministratorPage() {
   const [displayName, setDisplayName] = useState('');
   const [status, setStatus] = useState(true);
 
-  // Form state - User Groups
-  const [selectedGroups, setSelectedGroups] = useState<string[]>([]);
-  const [userGroupError, setUserGroupError] = useState<string | null>(null);
+  // Form state - Default Domain
+  const [selectedDomain, setSelectedDomain] = useState<string | null>(null);
+  const [domainError, setDomainError] = useState<string | null>(null);
 
   // Check if all sections are done
   const allSectionsDone = Object.values(sectionStatus).every((s) => s === 'done');
@@ -1122,24 +1130,22 @@ export default function CreateSystemAdministratorPage() {
       email,
       displayName,
       status,
-      selectedGroups,
+      selectedDomain,
     });
     navigate('/iam/system-administrators');
-  }, [navigate, username, passwordOption, email, displayName, status, selectedGroups]);
+  }, [navigate, username, passwordOption, email, displayName, status, selectedDomain]);
 
   // Get display values for done sections
   const getPasswordOptionDisplay = () => {
     return passwordOption === 'temporary'
-      ? 'Temporary password (email sent)'
-      : 'Manual password (no email)';
+      ? 'Auto-generated password'
+      : 'Manually';
   };
 
-  const getSelectedGroupsDisplay = () => {
-    if (selectedGroups.length === 0) return 'No groups selected';
-    const groupNames = selectedGroups
-      .map((id) => mockUserGroups.find((g) => g.id === id)?.name)
-      .filter(Boolean);
-    return groupNames.join(', ');
+  const getSelectedDomainDisplay = () => {
+    if (!selectedDomain) return 'No domain selected';
+    const domain = mockDomains.find((d) => d.id === selectedDomain);
+    return domain?.name || selectedDomain;
   };
 
   return (
@@ -1247,38 +1253,38 @@ export default function CreateSystemAdministratorPage() {
                     </DoneSection>
                   )}
 
-                  {/* User Group Section */}
-                  {sectionStatus['user-group'] === 'pre' && (
-                    <PreSection title={SECTION_LABELS['user-group']} />
+                  {/* Default Domain Section */}
+                  {sectionStatus['default-domain'] === 'pre' && (
+                    <PreSection title={SECTION_LABELS['default-domain']} />
                   )}
-                  {sectionStatus['user-group'] === 'writing' && (
-                    <WritingSection title={SECTION_LABELS['user-group']} />
+                  {sectionStatus['default-domain'] === 'writing' && (
+                    <WritingSection title={SECTION_LABELS['default-domain']} />
                   )}
-                  {sectionStatus['user-group'] === 'active' && (
-                    <UserGroupSection
-                      selectedGroups={selectedGroups}
-                      onSelectionChange={(ids) => {
-                        setSelectedGroups(ids);
-                        if (ids.length > 0) {
-                          setUserGroupError(null);
+                  {sectionStatus['default-domain'] === 'active' && (
+                    <DefaultDomainSection
+                      selectedDomain={selectedDomain}
+                      onSelectionChange={(id) => {
+                        setSelectedDomain(id);
+                        if (id) {
+                          setDomainError(null);
                         }
                       }}
-                      onNext={() => handleNext('user-group')}
-                      isEditing={editingSection === 'user-group'}
+                      onNext={() => handleNext('default-domain')}
+                      isEditing={editingSection === 'default-domain'}
                       onEditCancel={handleEditCancel}
                       onEditDone={handleEditDone}
-                      userGroupError={userGroupError}
-                      onUserGroupErrorChange={setUserGroupError}
+                      domainError={domainError}
+                      onDomainErrorChange={setDomainError}
                     />
                   )}
-                  {sectionStatus['user-group'] === 'done' && (
+                  {sectionStatus['default-domain'] === 'done' && (
                     <DoneSection
-                      title={SECTION_LABELS['user-group']}
-                      onEdit={() => handleEdit('user-group')}
+                      title={SECTION_LABELS['default-domain']}
+                      onEdit={() => handleEdit('default-domain')}
                     >
                       <SectionCard.DataRow
-                        label="Selected groups"
-                        value={getSelectedGroupsDisplay()}
+                        label="Selected domain"
+                        value={getSelectedDomainDisplay()}
                         showDivider={false}
                       />
                     </DoneSection>
