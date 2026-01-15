@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   Button,
@@ -11,7 +11,7 @@ import {
   Checkbox,
   Select,
   WizardSummary,
-  Disclosure,
+  SectionCard,
 } from '@/design-system';
 import type { WizardSummaryItem, WizardSectionState } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
@@ -24,6 +24,7 @@ import {
   IconSearch,
   IconPlus,
   IconX,
+  IconEdit,
 } from '@tabler/icons-react';
 
 /* ----------------------------------------
@@ -31,6 +32,7 @@ import {
    ---------------------------------------- */
 
 type SectionStep = 'basic-info' | 'pod-security' | 'labels-annotations';
+type SectionState = 'pre' | 'active' | 'done';
 
 // Section labels for display
 const SECTION_LABELS: Record<SectionStep, string> = {
@@ -64,21 +66,75 @@ interface Annotation {
 }
 
 /* ----------------------------------------
+   PreSection Component
+   ---------------------------------------- */
+
+interface PreSectionProps {
+  title: string;
+}
+
+function PreSection({ title }: PreSectionProps) {
+  return (
+    <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg px-4 py-3">
+      <div className="h-8 flex items-center">
+        <h5 className="text-[length:var(--font-size-14)] font-semibold leading-[var(--line-height-20)] text-[var(--color-text-default)]">
+          {title}
+        </h5>
+      </div>
+    </div>
+  );
+}
+
+/* ----------------------------------------
+   DoneSection Component
+   ---------------------------------------- */
+
+interface DoneSectionProps {
+  title: string;
+  onEdit: () => void;
+  children: React.ReactNode;
+}
+
+function DoneSection({ title, onEdit, children }: DoneSectionProps) {
+  return (
+    <SectionCard>
+      <SectionCard.Header
+        title={title}
+        showDivider
+        actions={
+          <Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />} onClick={onEdit}>
+            Edit
+          </Button>
+        }
+      />
+      <SectionCard.Content>{children}</SectionCard.Content>
+    </SectionCard>
+  );
+}
+
+/* ----------------------------------------
    Summary Sidebar Component
    ---------------------------------------- */
 
 interface SummarySidebarProps {
-  sectionStatus: Record<SectionStep, WizardSectionState>;
+  sectionStatus: Record<SectionStep, SectionState>;
   onCancel: () => void;
   onCreate: () => void;
   isCreateDisabled: boolean;
 }
 
 function SummarySidebar({ sectionStatus, onCancel, onCreate, isCreateDisabled }: SummarySidebarProps) {
+  // Map SectionState to WizardSectionState
+  const mapState = (state: SectionState): WizardSectionState => {
+    if (state === 'pre') return 'pending';
+    if (state === 'active') return 'active';
+    return 'done';
+  };
+
   const summaryItems: WizardSummaryItem[] = SECTION_ORDER.map((key) => ({
     key,
     label: SECTION_LABELS[key],
-    status: sectionStatus[key],
+    status: mapState(sectionStatus[key]),
   }));
 
   return (
@@ -106,6 +162,454 @@ function SummarySidebar({ sectionStatus, onCancel, onCreate, isCreateDisabled }:
 }
 
 /* ----------------------------------------
+   BasicInfoSection Component
+   ---------------------------------------- */
+
+interface BasicInfoSectionProps {
+  namespaceName: string;
+  onNamespaceNameChange: (value: string) => void;
+  namespaceNameError: string | null;
+  onNamespaceNameErrorChange: (error: string | null) => void;
+  description: string;
+  onDescriptionChange: (value: string) => void;
+  onNext: () => void;
+  isEditing: boolean;
+  onEditCancel: () => void;
+  onEditDone: () => void;
+}
+
+function BasicInfoSection({
+  namespaceName,
+  onNamespaceNameChange,
+  namespaceNameError,
+  onNamespaceNameErrorChange,
+  description,
+  onDescriptionChange,
+  onNext,
+  isEditing,
+  onEditCancel,
+  onEditDone,
+}: BasicInfoSectionProps) {
+  const handleNext = () => {
+    if (!namespaceName.trim()) {
+      onNamespaceNameErrorChange('Namespace name is required.');
+      return;
+    }
+    onNamespaceNameErrorChange(null);
+    onNext();
+  };
+
+  const handleDone = () => {
+    if (!namespaceName.trim()) {
+      onNamespaceNameErrorChange('Namespace name is required.');
+      return;
+    }
+    onNamespaceNameErrorChange(null);
+    onEditDone();
+  };
+
+  return (
+    <SectionCard isActive>
+      <SectionCard.Header
+        title="Basic Information"
+        showDivider
+        actions={
+          isEditing ? (
+            <HStack gap={2}>
+              <Button variant="secondary" size="sm" onClick={onEditCancel}>
+                Cancel
+              </Button>
+              <Button variant="primary" size="sm" onClick={handleDone}>
+                Done
+              </Button>
+            </HStack>
+          ) : undefined
+        }
+      />
+      <SectionCard.Content>
+        <VStack gap={4}>
+          {/* Namespace Name */}
+          <VStack gap={2}>
+            <label className="text-[14px] font-medium text-[var(--color-text-default)] leading-[20px]">
+              Namespace Name<span className="text-[var(--color-state-danger)]"> *</span>
+            </label>
+            <Input
+              placeholder="Enter a unique name"
+              value={namespaceName}
+              onChange={(e) => {
+                onNamespaceNameChange(e.target.value);
+                if (namespaceNameError) onNamespaceNameErrorChange(null);
+              }}
+              error={!!namespaceNameError}
+              fullWidth
+            />
+            {namespaceNameError && (
+              <span className="text-[11px] text-[var(--color-state-danger)] leading-[16px]">
+                {namespaceNameError}
+              </span>
+            )}
+          </VStack>
+
+          {/* Description */}
+          <VStack gap={2}>
+            <label className="text-[14px] font-medium text-[var(--color-text-default)] leading-[20px]">
+              Description
+            </label>
+            <Input
+              placeholder="Enter a description (optional)"
+              value={description}
+              onChange={(e) => onDescriptionChange(e.target.value)}
+              fullWidth
+            />
+          </VStack>
+
+          {/* Next Button */}
+          {!isEditing && (
+            <div className="flex justify-end pt-2">
+              <Button variant="primary" size="sm" onClick={handleNext}>
+                Next
+              </Button>
+            </div>
+          )}
+        </VStack>
+      </SectionCard.Content>
+    </SectionCard>
+  );
+}
+
+/* ----------------------------------------
+   PodSecuritySection Component
+   ---------------------------------------- */
+
+interface PodSecuritySectionProps {
+  enforceEnabled: boolean;
+  onEnforceEnabledChange: (value: boolean) => void;
+  enforceProfile: string;
+  onEnforceProfileChange: (value: string) => void;
+  enforceVersion: string;
+  onEnforceVersionChange: (value: string) => void;
+  auditEnabled: boolean;
+  onAuditEnabledChange: (value: boolean) => void;
+  auditProfile: string;
+  onAuditProfileChange: (value: string) => void;
+  auditVersion: string;
+  onAuditVersionChange: (value: string) => void;
+  warnEnabled: boolean;
+  onWarnEnabledChange: (value: boolean) => void;
+  warnProfile: string;
+  onWarnProfileChange: (value: string) => void;
+  warnVersion: string;
+  onWarnVersionChange: (value: string) => void;
+  onNext: () => void;
+  isEditing: boolean;
+  onEditCancel: () => void;
+  onEditDone: () => void;
+}
+
+function PodSecuritySection({
+  enforceEnabled,
+  onEnforceEnabledChange,
+  enforceProfile,
+  onEnforceProfileChange,
+  enforceVersion,
+  onEnforceVersionChange,
+  auditEnabled,
+  onAuditEnabledChange,
+  auditProfile,
+  onAuditProfileChange,
+  auditVersion,
+  onAuditVersionChange,
+  warnEnabled,
+  onWarnEnabledChange,
+  warnProfile,
+  onWarnProfileChange,
+  warnVersion,
+  onWarnVersionChange,
+  onNext,
+  isEditing,
+  onEditCancel,
+  onEditDone,
+}: PodSecuritySectionProps) {
+  return (
+    <SectionCard isActive>
+      <SectionCard.Header
+        title="Pod Security Admission"
+        showDivider
+        actions={
+          isEditing ? (
+            <HStack gap={2}>
+              <Button variant="secondary" size="sm" onClick={onEditCancel}>
+                Cancel
+              </Button>
+              <Button variant="primary" size="sm" onClick={onEditDone}>
+                Done
+              </Button>
+            </HStack>
+          ) : undefined
+        }
+      />
+      <SectionCard.Content>
+        <VStack gap={4}>
+          {/* Enforce */}
+          <VStack gap={2}>
+            <HStack gap={1} align="center">
+              <Checkbox
+                checked={enforceEnabled}
+                onChange={(e) => onEnforceEnabledChange(e.target.checked)}
+                label="Enforce"
+              />
+            </HStack>
+            <p className="text-[12px] text-[var(--color-text-subtle)] leading-[16px]">
+              Block the creation of pods that violate the policy.
+            </p>
+            <div className="grid grid-cols-2 gap-2">
+              <Select
+                options={PSA_PROFILE_OPTIONS}
+                value={enforceProfile}
+                onChange={(value) => onEnforceProfileChange(value)}
+                disabled={!enforceEnabled}
+                fullWidth
+              />
+              <Input
+                placeholder="Version (default: latest)"
+                value={enforceVersion}
+                onChange={(e) => onEnforceVersionChange(e.target.value)}
+                disabled={!enforceEnabled}
+                fullWidth
+              />
+            </div>
+          </VStack>
+
+          {/* Audit */}
+          <VStack gap={2}>
+            <HStack gap={1} align="center">
+              <Checkbox
+                checked={auditEnabled}
+                onChange={(e) => onAuditEnabledChange(e.target.checked)}
+                label="Audit"
+              />
+            </HStack>
+            <p className="text-[12px] text-[var(--color-text-subtle)] leading-[16px]">
+              Allow policy violations and records them in audit logs.
+            </p>
+            <div className="grid grid-cols-2 gap-2">
+              <Select
+                options={PSA_PROFILE_OPTIONS}
+                value={auditProfile}
+                onChange={(value) => onAuditProfileChange(value)}
+                disabled={!auditEnabled}
+                fullWidth
+              />
+              <Input
+                placeholder="Version (default: latest)"
+                value={auditVersion}
+                onChange={(e) => onAuditVersionChange(e.target.value)}
+                disabled={!auditEnabled}
+                fullWidth
+              />
+            </div>
+          </VStack>
+
+          {/* Warn */}
+          <VStack gap={2}>
+            <HStack gap={1} align="center">
+              <Checkbox
+                checked={warnEnabled}
+                onChange={(e) => onWarnEnabledChange(e.target.checked)}
+                label="Warn"
+              />
+            </HStack>
+            <p className="text-[12px] text-[var(--color-text-subtle)] leading-[16px]">
+              Allow the creation of violating pods but displays a warning message.
+            </p>
+            <div className="grid grid-cols-2 gap-2">
+              <Select
+                options={PSA_PROFILE_OPTIONS}
+                value={warnProfile}
+                onChange={(value) => onWarnProfileChange(value)}
+                disabled={!warnEnabled}
+                fullWidth
+              />
+              <Input
+                placeholder="Version (default: latest)"
+                value={warnVersion}
+                onChange={(e) => onWarnVersionChange(e.target.value)}
+                disabled={!warnEnabled}
+                fullWidth
+              />
+            </div>
+          </VStack>
+
+          {/* Next Button */}
+          {!isEditing && (
+            <div className="flex justify-end pt-2">
+              <Button variant="primary" size="sm" onClick={onNext}>
+                Next
+              </Button>
+            </div>
+          )}
+        </VStack>
+      </SectionCard.Content>
+    </SectionCard>
+  );
+}
+
+/* ----------------------------------------
+   LabelsAnnotationsSection Component
+   ---------------------------------------- */
+
+interface LabelsAnnotationsSectionProps {
+  labels: Label[];
+  onAddLabel: () => void;
+  onRemoveLabel: (index: number) => void;
+  onUpdateLabel: (index: number, field: 'key' | 'value', value: string) => void;
+  annotations: Annotation[];
+  onAddAnnotation: () => void;
+  onRemoveAnnotation: (index: number) => void;
+  onUpdateAnnotation: (index: number, field: 'key' | 'value', value: string) => void;
+  onNext: () => void;
+  isEditing: boolean;
+  onEditCancel: () => void;
+  onEditDone: () => void;
+}
+
+function LabelsAnnotationsSection({
+  labels,
+  onAddLabel,
+  onRemoveLabel,
+  onUpdateLabel,
+  annotations,
+  onAddAnnotation,
+  onRemoveAnnotation,
+  onUpdateAnnotation,
+  onNext,
+  isEditing,
+  onEditCancel,
+  onEditDone,
+}: LabelsAnnotationsSectionProps) {
+  return (
+    <SectionCard isActive>
+      <SectionCard.Header
+        title="Labels & Annotations"
+        showDivider
+        actions={
+          isEditing ? (
+            <HStack gap={2}>
+              <Button variant="secondary" size="sm" onClick={onEditCancel}>
+                Cancel
+              </Button>
+              <Button variant="primary" size="sm" onClick={onEditDone}>
+                Done
+              </Button>
+            </HStack>
+          ) : undefined
+        }
+      />
+      <SectionCard.Content>
+        <VStack gap={4}>
+          {/* Labels */}
+          <VStack gap={4}>
+            <VStack gap={1}>
+              <span className="text-[11px] font-medium text-[var(--color-text-default)] leading-[16px]">
+                Labels
+              </span>
+              <p className="text-[12px] text-[var(--color-text-subtle)] leading-[16px]">
+                Specify the labels used to identify and categorize the resource.
+              </p>
+            </VStack>
+            
+            {labels.map((label, index) => (
+              <HStack gap={2} key={index} className="w-full">
+                <Input
+                  placeholder="Key"
+                  value={label.key}
+                  onChange={(e) => onUpdateLabel(index, 'key', e.target.value)}
+                  className="flex-1"
+                />
+                <Input
+                  placeholder="Value"
+                  value={label.value}
+                  onChange={(e) => onUpdateLabel(index, 'value', e.target.value)}
+                  className="flex-1"
+                />
+                <button
+                  onClick={() => onRemoveLabel(index)}
+                  className="p-2 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                >
+                  <IconX size={14} className="text-[var(--color-text-muted)]" stroke={1.5} />
+                </button>
+              </HStack>
+            ))}
+
+            <Button
+              variant="outline"
+              size="sm"
+              leftIcon={<IconPlus size={12} stroke={1.5} />}
+              onClick={onAddLabel}
+            >
+              Add Label
+            </Button>
+          </VStack>
+
+          {/* Annotations */}
+          <VStack gap={4}>
+            <VStack gap={1}>
+              <span className="text-[11px] font-medium text-[var(--color-text-default)] leading-[16px]">
+                Annotations
+              </span>
+              <p className="text-[12px] text-[var(--color-text-subtle)] leading-[16px]">
+                Specify the annotations used to provide additional metadata for the resource.
+              </p>
+            </VStack>
+            
+            {annotations.map((annotation, index) => (
+              <HStack gap={2} key={index} className="w-full">
+                <Input
+                  placeholder="Key"
+                  value={annotation.key}
+                  onChange={(e) => onUpdateAnnotation(index, 'key', e.target.value)}
+                  className="flex-1"
+                />
+                <Input
+                  placeholder="Value"
+                  value={annotation.value}
+                  onChange={(e) => onUpdateAnnotation(index, 'value', e.target.value)}
+                  className="flex-1"
+                />
+                <button
+                  onClick={() => onRemoveAnnotation(index)}
+                  className="p-2 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                >
+                  <IconX size={14} className="text-[var(--color-text-muted)]" stroke={1.5} />
+                </button>
+              </HStack>
+            ))}
+
+            <Button
+              variant="outline"
+              size="sm"
+              leftIcon={<IconPlus size={12} stroke={1.5} />}
+              onClick={onAddAnnotation}
+            >
+              Add Annotation
+            </Button>
+          </VStack>
+
+          {/* Done Button (last section) */}
+          {!isEditing && (
+            <div className="flex justify-end pt-2">
+              <Button variant="primary" size="sm" onClick={onNext}>
+                Done
+              </Button>
+            </div>
+          )}
+        </VStack>
+      </SectionCard.Content>
+    </SectionCard>
+  );
+}
+
+/* ----------------------------------------
    Main Page Component
    ---------------------------------------- */
 
@@ -116,10 +620,8 @@ export function CreateNamespacePage() {
   // Basic information state
   const [namespaceName, setNamespaceName] = useState('');
   const [description, setDescription] = useState('');
-  const [descriptionOpen, setDescriptionOpen] = useState(true);
 
   // Pod Security Admission state
-  const [psaOpen, setPsaOpen] = useState(true);
   const [enforceEnabled, setEnforceEnabled] = useState(false);
   const [enforceProfile, setEnforceProfile] = useState('privileged');
   const [enforceVersion, setEnforceVersion] = useState('');
@@ -131,27 +633,29 @@ export function CreateNamespacePage() {
   const [warnVersion, setWarnVersion] = useState('');
 
   // Labels & Annotations state
-  const [labelsOpen, setLabelsOpen] = useState(true);
   const [labels, setLabels] = useState<Label[]>([]);
   const [annotations, setAnnotations] = useState<Annotation[]>([]);
 
   // Section states
-  const [sectionStatus, setSectionStatus] = useState<Record<SectionStep, WizardSectionState>>({
+  const [sectionStatus, setSectionStatus] = useState<Record<SectionStep, SectionState>>({
     'basic-info': 'active',
-    'pod-security': 'done',
-    'labels-annotations': 'done',
+    'pod-security': 'pre',
+    'labels-annotations': 'pre',
   });
+
+  // Editing state
+  const [editingSection, setEditingSection] = useState<SectionStep | null>(null);
 
   // Validation errors
   const [namespaceNameError, setNamespaceNameError] = useState<string | null>(null);
 
   // Tab management
-  const { tabs, activeTabId, closeTab, selectTab, updateActiveTabLabel } = useTabs();
+  const { tabs, activeTabId, closeTab, selectTab, updateActiveTabLabel, moveTab } = useTabs();
 
   // Update tab label
-  useState(() => {
+  useEffect(() => {
     updateActiveTabLabel('Create Namespace');
-  });
+  }, [updateActiveTabLabel]);
 
   const tabBarTabs = tabs.map((tab) => ({
     id: tab.id,
@@ -162,41 +666,80 @@ export function CreateNamespacePage() {
   // Sidebar width calculation
   const sidebarWidth = sidebarOpen ? 240 : 40;
 
-  // Navigation functions
-  const goToNextSection = useCallback((currentSection: SectionStep) => {
+  // Handle section navigation
+  const handleNext = useCallback((currentSection: SectionStep) => {
     const currentIndex = SECTION_ORDER.indexOf(currentSection);
     const nextSection = SECTION_ORDER[currentIndex + 1];
 
-    if (nextSection) {
-      setSectionStatus((prev) => ({
-        ...prev,
-        [currentSection]: 'done',
-        [nextSection]: 'active',
-      }));
-    } else {
-      // Last section, mark as done
-      setSectionStatus((prev) => ({
-        ...prev,
-        [currentSection]: 'done',
-      }));
-    }
+    setSectionStatus((prev) => ({
+      ...prev,
+      [currentSection]: 'done',
+      ...(nextSection && { [nextSection]: 'active' }),
+    }));
   }, []);
 
-  // Validation handler for basic-info section
-  const handleBasicInfoNext = useCallback(() => {
-    let hasError = false;
-    
-    if (!namespaceName.trim()) {
-      setNamespaceNameError('Namespace name is required.');
-      hasError = true;
-    } else {
-      setNamespaceNameError(null);
-    }
-    
-    if (!hasError) {
-      goToNextSection('basic-info');
-    }
-  }, [namespaceName, goToNextSection]);
+  // Handle edit
+  const handleEdit = useCallback((section: SectionStep) => {
+    setEditingSection(section);
+    setSectionStatus((prev) => ({
+      ...prev,
+      [section]: 'active',
+    }));
+  }, []);
+
+  // Handle edit cancel
+  const handleEditCancel = useCallback(() => {
+    if (!editingSection) return;
+
+    setSectionStatus((prev) => {
+      const newStatus = { ...prev };
+      newStatus[editingSection] = 'done';
+
+      // Find next section that was active or first pre section
+      let nextActive: SectionStep | null = null;
+      for (const key of SECTION_ORDER) {
+        if (newStatus[key] === 'pre') {
+          nextActive = key;
+          break;
+        }
+      }
+
+      if (nextActive) {
+        newStatus[nextActive] = 'active';
+      }
+
+      return newStatus;
+    });
+
+    setEditingSection(null);
+  }, [editingSection]);
+
+  // Handle edit done
+  const handleEditDone = useCallback(() => {
+    if (!editingSection) return;
+
+    setSectionStatus((prev) => {
+      const newStatus = { ...prev };
+      newStatus[editingSection] = 'done';
+
+      // Find next pre section to activate
+      let nextActive: SectionStep | null = null;
+      for (const key of SECTION_ORDER) {
+        if (newStatus[key] === 'pre') {
+          nextActive = key;
+          break;
+        }
+      }
+
+      if (nextActive) {
+        newStatus[nextActive] = 'active';
+      }
+
+      return newStatus;
+    });
+
+    setEditingSection(null);
+  }, [editingSection]);
 
   const handleCancel = useCallback(() => {
     navigate('/container/namespaces');
@@ -275,6 +818,25 @@ export function CreateNamespacePage() {
   // Check if create button should be disabled
   const isCreateDisabled = !namespaceName.trim();
 
+  // Get display values for done sections
+  const getPodSecurityDisplay = () => {
+    const enabled = [];
+    if (enforceEnabled) enabled.push(`Enforce: ${enforceProfile}`);
+    if (auditEnabled) enabled.push(`Audit: ${auditProfile}`);
+    if (warnEnabled) enabled.push(`Warn: ${warnProfile}`);
+    return enabled.length > 0 ? enabled.join(', ') : 'None configured';
+  };
+
+  const getLabelsDisplay = () => {
+    if (labels.length === 0) return 'None';
+    return labels.map((l) => `${l.key}: ${l.value}`).join(', ');
+  };
+
+  const getAnnotationsDisplay = () => {
+    if (annotations.length === 0) return 'None';
+    return annotations.map((a) => `${a.key}: ${a.value}`).join(', ');
+  };
+
   return (
     <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
       {/* Sidebar */}
@@ -291,12 +853,16 @@ export function CreateNamespacePage() {
           activeTab={activeTabId}
           onTabChange={selectTab}
           onTabClose={closeTab}
+          onTabReorder={moveTab}
         />
 
         {/* Top Bar */}
         <TopBar
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
+          showNavigation={true}
+          onBack={() => window.history.back()}
+          onForward={() => window.history.forward()}
           breadcrumb={
             <Breadcrumb
               items={[
@@ -329,277 +895,113 @@ export function CreateNamespacePage() {
 
         {/* Content Area */}
         <div className="flex-1 overflow-auto min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll">
-          <div className="pt-3 px-8 pb-20 bg-[var(--color-surface-default)]">
+          <div className="pt-4 px-8 pb-20 bg-[var(--color-surface-default)]">
             <VStack gap={6}>
               {/* Page Header */}
-              <VStack gap={2}>
-                <h1 className="text-[18px] font-semibold text-[var(--color-text-default)] leading-[28px]">
-                  Create Namespace
-                </h1>
-                <p className="text-[11px] text-[var(--color-text-subtle)] leading-[16px]">
-                  Namespace is a logical partition within a cluster that isolates and organizes resources for easier management and access control.
-                </p>
-              </VStack>
+              <h1 className="text-[18px] font-semibold text-[var(--color-text-default)] leading-[28px]">
+                Create Namespace
+              </h1>
 
               {/* Main Content with Sidebar */}
-              <div className="flex gap-6">
+              <HStack gap={6} align="start" className="w-full">
                 {/* Form Content */}
-                <VStack gap={3} className="flex-1">
+                <VStack gap={4} className="flex-1">
                   {/* Basic Information Section */}
-                  <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg px-4 py-3">
-                    <VStack gap={6}>
-                      <h2 className="text-[16px] font-semibold text-[var(--color-text-default)] leading-[24px]">
-                        Basic Information
-                      </h2>
-
-                      {/* Namespace Name */}
-                      <VStack gap={2}>
-                        <label className="text-[14px] font-medium text-[var(--color-text-default)] leading-[20px]">
-                          Namespace Name<span className="text-[var(--color-state-danger)]"> *</span>
-                        </label>
-                        <Input
-                          placeholder="Enter a unique name"
-                          value={namespaceName}
-                          onChange={(e) => {
-                            setNamespaceName(e.target.value);
-                            if (namespaceNameError) setNamespaceNameError(null);
-                          }}
-                          error={!!namespaceNameError}
-                          fullWidth
-                        />
-                        {namespaceNameError && (
-                          <span className="text-[11px] text-[var(--color-state-danger)] leading-[16px]">
-                            {namespaceNameError}
-                          </span>
-                        )}
-                      </VStack>
-
-                      {/* Description (Disclosure) */}
-                      <Disclosure open={descriptionOpen} onOpenChange={setDescriptionOpen}>
-                        <Disclosure.Trigger className="flex items-center gap-1.5">
-                          <span className="text-[14px] font-medium text-[var(--color-text-default)] leading-[20px]">
-                            Description
-                          </span>
-                        </Disclosure.Trigger>
-                        <Disclosure.Panel>
-                          <div className="pt-3">
-                            <Input
-                              placeholder="Description"
-                              value={description}
-                              onChange={(e) => setDescription(e.target.value)}
-                              fullWidth
-                            />
-                          </div>
-                        </Disclosure.Panel>
-                      </Disclosure>
-                    </VStack>
-                  </div>
+                  {sectionStatus['basic-info'] === 'pre' && (
+                    <PreSection title={SECTION_LABELS['basic-info']} />
+                  )}
+                  {sectionStatus['basic-info'] === 'active' && (
+                    <BasicInfoSection
+                      namespaceName={namespaceName}
+                      onNamespaceNameChange={setNamespaceName}
+                      namespaceNameError={namespaceNameError}
+                      onNamespaceNameErrorChange={setNamespaceNameError}
+                      description={description}
+                      onDescriptionChange={setDescription}
+                      onNext={() => handleNext('basic-info')}
+                      isEditing={editingSection === 'basic-info'}
+                      onEditCancel={handleEditCancel}
+                      onEditDone={handleEditDone}
+                    />
+                  )}
+                  {sectionStatus['basic-info'] === 'done' && (
+                    <DoneSection
+                      title={SECTION_LABELS['basic-info']}
+                      onEdit={() => handleEdit('basic-info')}
+                    >
+                      <SectionCard.DataRow label="Namespace Name" value={namespaceName} showDivider={false} />
+                      <SectionCard.DataRow label="Description" value={description || '-'} />
+                    </DoneSection>
+                  )}
 
                   {/* Pod Security Admission Section */}
-                  <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg px-4 py-3">
-                    <Disclosure open={psaOpen} onOpenChange={setPsaOpen}>
-                      <Disclosure.Trigger className="flex items-center gap-1.5 w-full">
-                        <span className="text-[14px] font-medium text-[var(--color-text-default)] leading-[20px]">
-                          Pod Security Admission
-                        </span>
-                      </Disclosure.Trigger>
-                      <Disclosure.Panel>
-                        <VStack gap={3} className="pt-3">
-                          {/* Enforce */}
-                          <VStack gap={2}>
-                            <HStack gap={1} align="center">
-                              <Checkbox
-                                checked={enforceEnabled}
-                                onChange={(e) => setEnforceEnabled(e.target.checked)}
-                                label="Enforce"
-                              />
-                            </HStack>
-                            <p className="text-[12px] text-[var(--color-text-subtle)] leading-[16px]">
-                              Block the creation of pods that violate the policy.
-                            </p>
-                            <div className="grid grid-cols-2 gap-2">
-                              <Select
-                                options={PSA_PROFILE_OPTIONS}
-                                value={enforceProfile}
-                                onChange={(value) => setEnforceProfile(value)}
-                                disabled={!enforceEnabled}
-                                fullWidth
-                              />
-                              <Input
-                                placeholder="Version (default: latest)"
-                                value={enforceVersion}
-                                onChange={(e) => setEnforceVersion(e.target.value)}
-                                disabled={!enforceEnabled}
-                                fullWidth
-                              />
-                            </div>
-                          </VStack>
-
-                          {/* Audit */}
-                          <VStack gap={2}>
-                            <HStack gap={1} align="center">
-                              <Checkbox
-                                checked={auditEnabled}
-                                onChange={(e) => setAuditEnabled(e.target.checked)}
-                                label="Audit"
-                              />
-                            </HStack>
-                            <p className="text-[12px] text-[var(--color-text-subtle)] leading-[16px]">
-                              Allow policy violations and records them in audit logs.
-                            </p>
-                            <div className="grid grid-cols-2 gap-2">
-                              <Select
-                                options={PSA_PROFILE_OPTIONS}
-                                value={auditProfile}
-                                onChange={(value) => setAuditProfile(value)}
-                                disabled={!auditEnabled}
-                                fullWidth
-                              />
-                              <Input
-                                placeholder="Version (default: latest)"
-                                value={auditVersion}
-                                onChange={(e) => setAuditVersion(e.target.value)}
-                                disabled={!auditEnabled}
-                                fullWidth
-                              />
-                            </div>
-                          </VStack>
-
-                          {/* Warn */}
-                          <VStack gap={2}>
-                            <HStack gap={1} align="center">
-                              <Checkbox
-                                checked={warnEnabled}
-                                onChange={(e) => setWarnEnabled(e.target.checked)}
-                                label="Warn"
-                              />
-                            </HStack>
-                            <p className="text-[12px] text-[var(--color-text-subtle)] leading-[16px]">
-                              Allow the creation of violating pods but displays a warning message.
-                            </p>
-                            <div className="grid grid-cols-2 gap-2">
-                              <Select
-                                options={PSA_PROFILE_OPTIONS}
-                                value={warnProfile}
-                                onChange={(value) => setWarnProfile(value)}
-                                disabled={!warnEnabled}
-                                fullWidth
-                              />
-                              <Input
-                                placeholder="Version (default: latest)"
-                                value={warnVersion}
-                                onChange={(e) => setWarnVersion(e.target.value)}
-                                disabled={!warnEnabled}
-                                fullWidth
-                              />
-                            </div>
-                          </VStack>
-                        </VStack>
-                      </Disclosure.Panel>
-                    </Disclosure>
-                  </div>
+                  {sectionStatus['pod-security'] === 'pre' && (
+                    <PreSection title={SECTION_LABELS['pod-security']} />
+                  )}
+                  {sectionStatus['pod-security'] === 'active' && (
+                    <PodSecuritySection
+                      enforceEnabled={enforceEnabled}
+                      onEnforceEnabledChange={setEnforceEnabled}
+                      enforceProfile={enforceProfile}
+                      onEnforceProfileChange={setEnforceProfile}
+                      enforceVersion={enforceVersion}
+                      onEnforceVersionChange={setEnforceVersion}
+                      auditEnabled={auditEnabled}
+                      onAuditEnabledChange={setAuditEnabled}
+                      auditProfile={auditProfile}
+                      onAuditProfileChange={setAuditProfile}
+                      auditVersion={auditVersion}
+                      onAuditVersionChange={setAuditVersion}
+                      warnEnabled={warnEnabled}
+                      onWarnEnabledChange={setWarnEnabled}
+                      warnProfile={warnProfile}
+                      onWarnProfileChange={setWarnProfile}
+                      warnVersion={warnVersion}
+                      onWarnVersionChange={setWarnVersion}
+                      onNext={() => handleNext('pod-security')}
+                      isEditing={editingSection === 'pod-security'}
+                      onEditCancel={handleEditCancel}
+                      onEditDone={handleEditDone}
+                    />
+                  )}
+                  {sectionStatus['pod-security'] === 'done' && (
+                    <DoneSection
+                      title={SECTION_LABELS['pod-security']}
+                      onEdit={() => handleEdit('pod-security')}
+                    >
+                      <SectionCard.DataRow label="Configuration" value={getPodSecurityDisplay()} showDivider={false} />
+                    </DoneSection>
+                  )}
 
                   {/* Labels & Annotations Section */}
-                  <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg px-4 py-3">
-                    <Disclosure open={labelsOpen} onOpenChange={setLabelsOpen}>
-                      <Disclosure.Trigger className="flex items-center gap-1.5 w-full">
-                        <span className="text-[14px] font-medium text-[var(--color-text-default)] leading-[20px]">
-                          Labels & Annotations
-                        </span>
-                      </Disclosure.Trigger>
-                      <Disclosure.Panel>
-                        <VStack gap={4} className="pt-3">
-                          {/* Labels */}
-                          <VStack gap={4}>
-                            <VStack gap={1}>
-                              <span className="text-[11px] font-medium text-[var(--color-text-default)] leading-[16px]">
-                                Labels
-                              </span>
-                              <p className="text-[12px] text-[var(--color-text-subtle)] leading-[16px]">
-                                Specify the labels used to identify and categorize the resource.
-                              </p>
-                            </VStack>
-                            
-                            {labels.map((label, index) => (
-                              <HStack gap={2} key={index} className="w-full">
-                                <Input
-                                  placeholder="Key"
-                                  value={label.key}
-                                  onChange={(e) => updateLabel(index, 'key', e.target.value)}
-                                  className="flex-1"
-                                />
-                                <Input
-                                  placeholder="Value"
-                                  value={label.value}
-                                  onChange={(e) => updateLabel(index, 'value', e.target.value)}
-                                  className="flex-1"
-                                />
-                                <button
-                                  onClick={() => removeLabel(index)}
-                                  className="p-2 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-                                >
-                                  <IconX size={14} className="text-[var(--color-text-muted)]" stroke={1.5} />
-                                </button>
-                              </HStack>
-                            ))}
-
-                            <Button
-                              variant="outline"
-                              size="sm"
-                              leftIcon={<IconPlus size={12} stroke={1.5} />}
-                              onClick={addLabel}
-                            >
-                              Add Label
-                            </Button>
-                          </VStack>
-
-                          {/* Annotations */}
-                          <VStack gap={4}>
-                            <VStack gap={1}>
-                              <span className="text-[11px] font-medium text-[var(--color-text-default)] leading-[16px]">
-                                Annotations
-                              </span>
-                              <p className="text-[12px] text-[var(--color-text-subtle)] leading-[16px]">
-                                Specify the annotations used to provide additional metadata for the resource.
-                              </p>
-                            </VStack>
-                            
-                            {annotations.map((annotation, index) => (
-                              <HStack gap={2} key={index} className="w-full">
-                                <Input
-                                  placeholder="Key"
-                                  value={annotation.key}
-                                  onChange={(e) => updateAnnotation(index, 'key', e.target.value)}
-                                  className="flex-1"
-                                />
-                                <Input
-                                  placeholder="Value"
-                                  value={annotation.value}
-                                  onChange={(e) => updateAnnotation(index, 'value', e.target.value)}
-                                  className="flex-1"
-                                />
-                                <button
-                                  onClick={() => removeAnnotation(index)}
-                                  className="p-2 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-                                >
-                                  <IconX size={14} className="text-[var(--color-text-muted)]" stroke={1.5} />
-                                </button>
-                              </HStack>
-                            ))}
-
-                            <Button
-                              variant="outline"
-                              size="sm"
-                              leftIcon={<IconPlus size={12} stroke={1.5} />}
-                              onClick={addAnnotation}
-                            >
-                              Add Annotation
-                            </Button>
-                          </VStack>
-                        </VStack>
-                      </Disclosure.Panel>
-                    </Disclosure>
-                  </div>
+                  {sectionStatus['labels-annotations'] === 'pre' && (
+                    <PreSection title={SECTION_LABELS['labels-annotations']} />
+                  )}
+                  {sectionStatus['labels-annotations'] === 'active' && (
+                    <LabelsAnnotationsSection
+                      labels={labels}
+                      onAddLabel={addLabel}
+                      onRemoveLabel={removeLabel}
+                      onUpdateLabel={updateLabel}
+                      annotations={annotations}
+                      onAddAnnotation={addAnnotation}
+                      onRemoveAnnotation={removeAnnotation}
+                      onUpdateAnnotation={updateAnnotation}
+                      onNext={() => handleNext('labels-annotations')}
+                      isEditing={editingSection === 'labels-annotations'}
+                      onEditCancel={handleEditCancel}
+                      onEditDone={handleEditDone}
+                    />
+                  )}
+                  {sectionStatus['labels-annotations'] === 'done' && (
+                    <DoneSection
+                      title={SECTION_LABELS['labels-annotations']}
+                      onEdit={() => handleEdit('labels-annotations')}
+                    >
+                      <SectionCard.DataRow label="Labels" value={getLabelsDisplay()} showDivider={false} />
+                      <SectionCard.DataRow label="Annotations" value={getAnnotationsDisplay()} />
+                    </DoneSection>
+                  )}
                 </VStack>
 
                 {/* Summary Sidebar */}
@@ -609,7 +1011,7 @@ export function CreateNamespacePage() {
                   onCreate={handleCreate}
                   isCreateDisabled={isCreateDisabled}
                 />
-              </div>
+              </HStack>
             </VStack>
           </div>
         </div>
