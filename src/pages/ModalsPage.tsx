@@ -165,9 +165,9 @@ export function ModalsPage() {
                         ) : (
                           <IconChevronRight size={16} className="text-[var(--color-text-subtle)]" />
                         )}
-                        <Badge variant="info" size="sm">Compute</Badge>
+                        <Badge variant="info" size="sm" className="w-[70px] justify-center">Compute</Badge>
                         <span className="text-[14px] font-semibold text-[var(--color-text-default)]">
-                          Compute Modals
+                          Modals
                         </span>
                         <span className="text-[12px] text-[var(--color-text-subtle)]">
                           (16 modals)
@@ -340,9 +340,9 @@ export function ModalsPage() {
                         ) : (
                           <IconChevronRight size={16} className="text-[var(--color-text-subtle)]" />
                         )}
-                        <Badge variant="info" size="sm">IAM</Badge>
+                        <Badge variant="info" size="sm" className="w-[70px] justify-center">IAM</Badge>
                         <span className="text-[14px] font-semibold text-[var(--color-text-default)]">
-                          IAM Modals
+                          Modals
                         </span>
                         <span className="text-[12px] text-[var(--color-text-subtle)]">
                           (3 modals)
@@ -395,9 +395,9 @@ export function ModalsPage() {
                         ) : (
                           <IconChevronRight size={16} className="text-[var(--color-text-subtle)]" />
                         )}
-                        <Badge variant="info" size="sm">Container</Badge>
+                        <Badge variant="info" size="sm" className="w-[70px] justify-center">Container</Badge>
                         <span className="text-[14px] font-semibold text-[var(--color-text-default)]">
-                          Container Modals
+                          Modals
                         </span>
                         <span className="text-[12px] text-[var(--color-text-subtle)]">
                           (0 modals)
@@ -426,9 +426,9 @@ export function ModalsPage() {
                         ) : (
                           <IconChevronRight size={16} className="text-[var(--color-text-subtle)]" />
                         )}
-                        <Badge variant="info" size="sm">Storage</Badge>
+                        <Badge variant="info" size="sm" className="w-[70px] justify-center">Storage</Badge>
                         <span className="text-[14px] font-semibold text-[var(--color-text-default)]">
-                          Storage Modals
+                          Modals
                         </span>
                         <span className="text-[12px] text-[var(--color-text-subtle)]">
                           (0 modals)
