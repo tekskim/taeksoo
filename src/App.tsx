@@ -110,6 +110,7 @@ import IAMActiveSessionsPage from '@/pages/IAMActiveSessionsPage';
 import IAMDomainsPage from '@/pages/IAMDomainsPage';
 import IAMSystemAdministratorsPage from '@/pages/IAMSystemAdministratorsPage';
 import IAMSystemAdminDetailPage from '@/pages/IAMSystemAdminDetailPage';
+import CreateSystemAdministratorPage from '@/pages/CreateSystemAdministratorPage';
 import IAMEventLogsPage from '@/pages/IAMEventLogsPage';
 import IAMMFAPoliciesPage from '@/pages/IAMMFAPoliciesPage';
 import IAMSessionPoliciesPage from '@/pages/IAMSessionPoliciesPage';
@@ -287,6 +288,7 @@ function AppRoutes() {
         <Route path="/iam/active-sessions" element={<IAMActiveSessionsPage />} />
         <Route path="/iam/domains" element={<IAMDomainsPage />} />
         <Route path="/iam/system-administrators" element={<IAMSystemAdministratorsPage />} />
+        <Route path="/iam/system-administrators/create" element={<CreateSystemAdministratorPage />} />
         <Route path="/iam/system-administrators/:username" element={<IAMSystemAdminDetailPage />} />
         <Route path="/iam/event-logs" element={<IAMEventLogsPage />} />
         <Route path="/iam/mfa-policies" element={<IAMMFAPoliciesPage />} />
