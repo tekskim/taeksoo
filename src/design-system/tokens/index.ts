@@ -352,7 +352,7 @@ export const component = {
   },
   searchInput: {
     heightSm: 'var(--search-input-height-sm)', // 28px
-    heightMd: 'var(--search-input-height-md)', // 32px
+    heightMd: 'var(--search-input-height-md)', // 28px
     iconSize: 'var(--search-input-icon-size)', // 12px
   },
   badge: {
