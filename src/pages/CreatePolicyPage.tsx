@@ -776,9 +776,7 @@ function PolicyEditorSection({
                           ? 'border-[var(--color-state-danger)]'
                           : 'border-[var(--color-border-strong)]'
                   }`}>
-                    <input
-                      type="text"
-                      placeholder="Application"
+                    <select
                       value={permission.application}
                       onChange={(e) => {
                         updatePermission(permission.id, { application: e.target.value });
@@ -786,12 +784,15 @@ function PolicyEditorSection({
                           setTargetErrors((prev) => ({ ...prev, [permission.id]: false }));
                         }
                       }}
-                      className="flex-1 h-6 px-[5px] py-1 text-[12px] bg-transparent border-0 rounded-[3px] placeholder:text-[var(--color-text-muted)] text-[var(--color-text-default)] focus:outline-none"
-                    />
+                      className="flex-1 h-6 px-[5px] py-1 text-[12px] bg-transparent border-0 rounded-[3px] text-[var(--color-text-default)] focus:outline-none cursor-pointer appearance-none"
+                    >
+                      <option value="" disabled className="text-[var(--color-text-muted)]">Application</option>
+                      <option value="*all">*all</option>
+                      <option value="compute">compute</option>
+                      <option value="container">container</option>
+                    </select>
                     <span className="text-[12px] text-[var(--color-text-default)]">:</span>
-                    <input
-                      type="text"
-                      placeholder="Partition"
+                    <select
                       value={permission.partition}
                       onChange={(e) => {
                         updatePermission(permission.id, { partition: e.target.value });
@@ -799,12 +800,13 @@ function PolicyEditorSection({
                           setTargetErrors((prev) => ({ ...prev, [permission.id]: false }));
                         }
                       }}
-                      className="flex-1 h-6 px-[5px] py-1 text-[12px] bg-transparent border-0 rounded-[3px] placeholder:text-[var(--color-text-muted)] text-[var(--color-text-default)] focus:outline-none"
-                    />
+                      className="flex-1 h-6 px-[5px] py-1 text-[12px] bg-transparent border-0 rounded-[3px] text-[var(--color-text-default)] focus:outline-none cursor-pointer appearance-none"
+                    >
+                      <option value="" disabled className="text-[var(--color-text-muted)]">Partition</option>
+                      <option value="*all">*all</option>
+                    </select>
                     <span className="text-[12px] text-[var(--color-text-default)]">:</span>
-                    <input
-                      type="text"
-                      placeholder="Resource"
+                    <select
                       value={permission.resource}
                       onChange={(e) => {
                         updatePermission(permission.id, { resource: e.target.value });
@@ -812,12 +814,13 @@ function PolicyEditorSection({
                           setTargetErrors((prev) => ({ ...prev, [permission.id]: false }));
                         }
                       }}
-                      className="flex-1 h-6 px-[5px] py-1 text-[12px] bg-transparent border-0 rounded-[3px] placeholder:text-[var(--color-text-muted)] text-[var(--color-text-default)] focus:outline-none"
-                    />
+                      className="flex-1 h-6 px-[5px] py-1 text-[12px] bg-transparent border-0 rounded-[3px] text-[var(--color-text-default)] focus:outline-none cursor-pointer appearance-none"
+                    >
+                      <option value="" disabled className="text-[var(--color-text-muted)]">Resource</option>
+                      <option value="*all">*all</option>
+                    </select>
                     <span className="text-[12px] text-[var(--color-text-default)]">:</span>
-                    <input
-                      type="text"
-                      placeholder="Resource ID"
+                    <select
                       value={permission.resourceId}
                       onChange={(e) => {
                         updatePermission(permission.id, { resourceId: e.target.value });
@@ -825,8 +828,11 @@ function PolicyEditorSection({
                           setTargetErrors((prev) => ({ ...prev, [permission.id]: false }));
                         }
                       }}
-                      className="flex-1 h-6 px-[5px] py-1 text-[12px] bg-transparent border-0 rounded-[3px] placeholder:text-[var(--color-text-muted)] text-[var(--color-text-default)] focus:outline-none"
-                    />
+                      className="flex-1 h-6 px-[5px] py-1 text-[12px] bg-transparent border-0 rounded-[3px] text-[var(--color-text-default)] focus:outline-none cursor-pointer appearance-none"
+                    >
+                      <option value="" disabled className="text-[var(--color-text-muted)]">Resource ID</option>
+                      <option value="*all">*all</option>
+                    </select>
                   </div>
                   {targetErrors[permission.id] && (
                     <span className="text-[11px] text-[var(--color-state-danger)] leading-[16px]">
