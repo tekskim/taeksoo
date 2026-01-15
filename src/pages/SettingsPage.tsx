@@ -150,6 +150,7 @@ export function SettingsPage({ isOpen, onClose, initialTab = 'account' }: Settin
   }, [isOpen]);
 
   const [showPasswordChangeModal, setShowPasswordChangeModal] = useState(false);
+  const [isEditingPassword, setIsEditingPassword] = useState(false);
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [showNewPassword, setShowNewPassword] = useState(false);
