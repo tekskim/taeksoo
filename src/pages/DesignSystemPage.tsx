@@ -3693,6 +3693,38 @@ function TableDemo() {
         </p>
       </VStack>
 
+      {/* Horizontal Scroll Layout Requirements */}
+      <VStack gap={3}>
+        <Label>⚠️ Horizontal Scroll Layout Requirements</Label>
+        <div className="p-4 bg-[var(--color-state-warning-bg)] border border-[var(--color-state-warning)] rounded-[var(--radius-md)]">
+          <VStack gap={3}>
+            <p className="text-[length:var(--font-size-12)] font-medium text-[var(--color-text-default)]">
+              테이블 가로 스크롤이 작동하려면 부모 레이아웃 설정이 중요합니다:
+            </p>
+            <div className="text-[length:var(--font-size-11)] text-[var(--color-text-muted)] space-y-2">
+              <div className="flex items-start gap-2">
+                <span className="text-[var(--color-state-danger)]">✗</span>
+                <div>
+                  <code className="text-[var(--color-state-danger)]">overflow: auto</code> (부모)<br/>
+                  <span className="text-[var(--color-text-subtle)]">부모가 가로+세로 스크롤을 모두 처리하려 해서 테이블 가로 스크롤이 작동 안 함</span>
+                </div>
+              </div>
+              <div className="flex items-start gap-2">
+                <span className="text-[var(--color-state-success)]">✓</span>
+                <div>
+                  <code className="text-[var(--color-state-success)]">overflow-y: auto; overflow-x: hidden</code> (부모)<br/>
+                  <span className="text-[var(--color-text-subtle)]">부모는 세로만 스크롤, 테이블은 가로 스크롤 독립적으로 작동</span>
+                </div>
+              </div>
+            </div>
+            <div className="mt-2 p-3 bg-[var(--color-surface-default)] rounded-[var(--radius-sm)] font-mono text-[length:var(--font-size-11)]">
+              <span className="text-[var(--color-text-subtle)]">// AppLayout.tsx (Scrollable Content Area)</span><br/>
+              <span className="text-[var(--color-action-primary)]">className</span>=<span className="text-[var(--color-state-success)]">"flex-1 overflow-y-auto overflow-x-hidden ..."</span>
+            </div>
+          </VStack>
+        </div>
+      </VStack>
+
       {/* Empty State */}
       <VStack gap={3}>
         <Label>Empty state</Label>
@@ -5385,12 +5417,23 @@ outline: 2px solid var(--color-border-focus);`}
   ]},
 ];
 
+// Default: filters displayed inside component
 <FilterSearchInput
   filters={filterFields}
   appliedFilters={appliedFilters}
   onFiltersChange={setAppliedFilters}
   placeholder="Search with filters..."
   size="sm"
+/>
+
+// With hideAppliedFilters: use with ListToolbar for external filter display
+<FilterSearchInput
+  filters={filterFields}
+  appliedFilters={appliedFilters}
+  onFiltersChange={setAppliedFilters}
+  placeholder="Search with filters..."
+  size="sm"
+  hideAppliedFilters  // Filters shown in ListToolbar instead
 />`}
                   </div>
                 </VStack>
@@ -6829,7 +6872,7 @@ outline: 2px solid var(--color-border-focus);`}
                 <VStack gap={3}>
                   <Label>Design tokens</Label>
                   <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
-                    <code>size: 16×16px</code> · <code>radius: 4px</code> · <code>gap: 4px</code>
+                    <code>size: 24×24px</code> · <code>icon: 12px</code> · <code>radius: 4px</code> · <code>gap: 4px</code>
                   </div>
                 </VStack>
 

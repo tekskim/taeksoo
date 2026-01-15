@@ -3,8 +3,8 @@ import { useDarkMode } from '@/hooks/useDarkMode';
 import {
   IconHome,
   IconCompass,
-  IconPackage,
-  IconCube,
+  IconPackages,
+  IconBrain,
   IconDatabase,
   IconServer,
   IconTemplate,
@@ -107,13 +107,13 @@ export function AIPlatformSidebar({ isOpen = true, onToggle }: AIPlatformSidebar
           {/* Hub Section */}
           <MenuSection title="Hub" defaultOpen={true}>
             <MenuItem
-              icon={<IconPackage size={16} stroke={1.5} />}
+              icon={<IconPackages size={16} stroke={1.5} />}
               label="Packages"
               href="/ai-platform/packages"
               active={isActive('/ai-platform/packages')}
             />
             <MenuItem
-              icon={<IconCube size={16} stroke={1.5} />}
+              icon={<IconBrain size={16} stroke={1.5} />}
               label="Models"
               href="/ai-platform/models"
               active={isActive('/ai-platform/models')}

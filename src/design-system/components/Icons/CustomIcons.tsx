@@ -5544,6 +5544,70 @@ export const IconUnlink = forwardRef<SVGSVGElement, CustomIconProps>(
 IconUnlink.displayName = 'IconUnlink';
 
 /**
+ * Window_active - 12x12 프레임
+ * 활성화된 윈도우 아이콘
+ * Figma 디자인 기반
+ */
+export const IconWindowActive = forwardRef<SVGSVGElement, CustomIconProps>(
+  ({ size = 16, color = 'currentColor', stroke = 1, className, style, ...props }, ref) => {
+    return (
+      <svg
+        ref={ref}
+        xmlns="http://www.w3.org/2000/svg"
+        width={size}
+        height={size}
+        viewBox="0 0 12 12"
+        fill="none"
+        className={className}
+        style={style}
+        {...props}
+      >
+        <path
+          d="M0.5 3.16667H11.1667M3.16667 0.5V3.16667M0.5 1.83333C0.5 1.47971 0.640476 1.14057 0.890524 0.890524C1.14057 0.640476 1.47971 0.5 1.83333 0.5H9.83333C10.187 0.5 10.5261 0.640476 10.7761 0.890524C11.0262 1.14057 11.1667 1.47971 11.1667 1.83333V9.83333C11.1667 10.187 11.0262 10.5261 10.7761 10.7761C10.5261 11.0262 10.187 11.1667 9.83333 11.1667H1.83333C1.47971 11.1667 1.14057 11.0262 0.890524 10.7761C0.640476 10.5261 0.5 10.187 0.5 9.83333V1.83333Z"
+          stroke={color}
+          strokeWidth={stroke}
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+      </svg>
+    );
+  }
+);
+IconWindowActive.displayName = 'IconWindowActive';
+
+/**
+ * Window_minimized - 13x12 프레임
+ * 최소화된 윈도우 아이콘
+ * Figma 디자인 기반
+ */
+export const IconWindowMinimized = forwardRef<SVGSVGElement, CustomIconProps>(
+  ({ size = 16, color = 'currentColor', stroke = 1, className, style, ...props }, ref) => {
+    return (
+      <svg
+        ref={ref}
+        xmlns="http://www.w3.org/2000/svg"
+        width={size}
+        height={size}
+        viewBox="0 0 13 12"
+        fill="none"
+        className={className}
+        style={style}
+        {...props}
+      >
+        <path
+          d="M0.5 3.16667H11.1667M5.83333 11.1667H1.83333C1.47971 11.1667 1.14057 11.0262 0.890524 10.7761C0.640476 10.5261 0.5 10.187 0.5 9.83333V1.83333C0.5 1.47971 0.640476 1.14057 0.890524 0.890524C1.14057 0.640476 1.47971 0.5 1.83333 0.5H9.83333C10.187 0.5 10.5261 0.640476 10.7761 0.890524C11.0262 1.14057 11.1667 1.47971 11.1667 1.83333V7.83333M3.16667 0.5V3.16667M8.5 10.5H12.5"
+          stroke={color}
+          strokeWidth={stroke}
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+      </svg>
+    );
+  }
+);
+IconWindowMinimized.displayName = 'IconWindowMinimized';
+
+/**
  * Grid (Windows) - 16x16 프레임
  */
 export const IconGrid = forwardRef<SVGSVGElement, CustomIconProps>(

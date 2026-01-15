@@ -28,6 +28,8 @@ export interface ContextMenuItem {
   tooltipPosition?: 'top' | 'bottom' | 'left' | 'right';
   /** Submenu direction (left or right) */
   submenuDirection?: 'left' | 'right';
+  /** Icon element to display before label */
+  icon?: React.ReactNode;
 }
 
 export interface ContextMenuProps {
@@ -268,7 +270,14 @@ const ContextMenuItemComponent: React.FC<{
         ${showSubmenu ? 'bg-[var(--context-menu-hover-bg)]' : ''}
       `}
     >
-      <span>{item.label}</span>
+      <div className="flex items-center gap-2 flex-1 min-w-0">
+        {item.icon && (
+          <span className="shrink-0 text-[var(--color-text-muted)] flex items-center">
+            {item.icon}
+          </span>
+        )}
+        <span className="flex-1">{item.label}</span>
+      </div>
       {hasSubmenu && (
         <IconChevronRight size={12} stroke={1} className="ml-6 shrink-0" />
       )}
@@ -448,6 +457,13 @@ export const ContextMenu: React.FC<ContextMenuProps> = ({
     
     if (trigger === 'contextmenu') {
       e.preventDefault();
+      
+      // 다른 컨텍스트 메뉴가 열릴 때 이전 메뉴를 닫기 위한 커스텀 이벤트 발생
+      const closeEvent = new CustomEvent('contextmenu:close-all');
+      document.dispatchEvent(closeEvent);
+      
+      // 위치 업데이트 및 메뉴 열기
+      // 같은 메뉴인 경우에도 위치를 업데이트하기 위해 먼저 닫고 다시 열기
       setPosition({ x: e.clientX, y: e.clientY });
       setTriggerWidth(0);
       setIsOpen(true);
@@ -477,11 +493,11 @@ export const ContextMenu: React.FC<ContextMenuProps> = ({
     setIsOpen(false);
   }, []);
 
-  // Close on click outside
+  // Close on click outside and when other context menu opens
   useEffect(() => {
-    if (!isOpen) return;
-
     const handleClickOutside = (e: MouseEvent) => {
+      if (!isOpen) return;
+      
       const target = e.target as Node;
       // Click inside trigger OR inside menu (portal) should NOT close.
       if (triggerRef.current?.contains(target)) return;
@@ -492,20 +508,34 @@ export const ContextMenu: React.FC<ContextMenuProps> = ({
     };
 
     const handleEscape = (e: KeyboardEvent) => {
+      if (!isOpen) return;
       if (e.key === 'Escape') {
         handleClose();
       }
     };
 
-    // Delay to prevent immediate close
-    setTimeout(() => {
-      document.addEventListener('click', handleClickOutside);
-      document.addEventListener('keydown', handleEscape);
-    }, 0);
+    // 다른 컨텍스트 메뉴가 열릴 때 현재 메뉴 닫기
+    const handleCloseAll = () => {
+      if (isOpen) {
+        handleClose();
+      }
+    };
+
+    if (isOpen) {
+      // Delay to prevent immediate close
+      setTimeout(() => {
+        document.addEventListener('click', handleClickOutside);
+        document.addEventListener('keydown', handleEscape);
+      }, 0);
+    }
+
+    // 전역 이벤트 리스너는 항상 등록
+    document.addEventListener('contextmenu:close-all', handleCloseAll);
 
     return () => {
       document.removeEventListener('click', handleClickOutside);
       document.removeEventListener('keydown', handleEscape);
+      document.removeEventListener('contextmenu:close-all', handleCloseAll);
     };
   }, [isOpen, handleClose]);
 

@@ -183,11 +183,16 @@ export function Table<T extends Record<string, any>>({
       style.flexShrink = 0;
     } else {
       style.flex = column.flex ?? 1;
-      style.flexShrink = 1;
+      // Prevent flex columns from shrinking below their content
+      style.flexShrink = 0;
     }
     
+    // Apply minWidth: use explicit minWidth, or default 100px for flex columns
     if (column.minWidth) {
       style.minWidth = column.minWidth;
+    } else if (!column.width) {
+      // Default minWidth for flex columns to enable horizontal scroll
+      style.minWidth = '100px';
     }
     
     if (column.maxWidth) {
@@ -202,11 +207,16 @@ export function Table<T extends Record<string, any>>({
       className={`flex flex-col gap-[var(--table-row-gap)] ${className}`}
       style={rowHeight ? { '--table-row-height': rowHeight } as React.CSSProperties : undefined}
     >
-      {/* Table container */}
+      {/* Table container - overflow-x-auto enables horizontal scrolling */}
       <div
-        className={`table-scroll-container overflow-x-auto ${maxHeight ? 'overflow-y-auto' : ''}`}
-        style={maxHeight ? { maxHeight } : undefined}
+        className={`table-scroll-container ${maxHeight ? 'overflow-y-auto' : ''}`}
+        style={{ 
+          overflowX: 'auto',
+          ...(maxHeight ? { maxHeight } : {})
+        }}
       >
+        {/* Inner wrapper - width 100% fills container, min-width enables horizontal scroll when needed */}
+        <div style={{ width: '100%', minWidth: `${tableMinWidth}px` }}>
         {/* Header */}
         <div
           className={`
@@ -217,7 +227,6 @@ export function Table<T extends Record<string, any>>({
             rounded-[var(--table-row-radius)]
             ${enableStickyHeader ? 'sticky top-0 z-10' : ''}
           `}
-          style={{ minWidth: `${tableMinWidth}px` }}
         >
           {/* Selection column with select all checkbox */}
           {selectable && (
@@ -285,8 +294,6 @@ export function Table<T extends Record<string, any>>({
           })}
         </div>
 
-        {/* Inner container for min-width */}
-        <div style={{ minWidth: `${tableMinWidth}px`, width: '100%' }}>
           {/* Body */}
           <div className="flex flex-col gap-[var(--table-row-gap)] mt-[var(--table-row-gap)]">
           {sortedData.length === 0 ? (
@@ -319,7 +326,6 @@ export function Table<T extends Record<string, any>>({
                     transition-all
                     hover:bg-[var(--table-row-hover-bg)]
                     border border-[var(--color-border-default)]
-                    overflow-hidden
                     ${isSelected 
                       ? 'bg-[var(--color-state-info-bg)] border-[var(--color-action-primary)] shadow-[inset_0_0_0_1px_var(--color-action-primary)]' 
                       : 'bg-[var(--color-surface-default)]'

@@ -141,6 +141,9 @@ import MetallicPalettePage from '@/pages/MetallicPalettePage';
 // Pages - Desktop
 import { DesktopPage } from '@/pages/DesktopPage';
 
+// Pages - Developer Resources
+import { SidebarIconsPage } from '@/pages/SidebarIconsPage';
+
 // Pages - AI Platform
 import { WorkloadDetailPage } from '@/pages/WorkloadDetailPage';
 
@@ -349,6 +352,9 @@ function AppRoutes() {
 
         {/* Desktop Routes */}
         <Route path="/desktop" element={<DesktopPage />} />
+
+        {/* Developer Resources */}
+        <Route path="/sidebar-icons" element={<SidebarIconsPage />} />
 
         {/* AI Platform Routes */}
         <Route path="/ai-platform" element={<AIPlatformPage />} />
