@@ -272,7 +272,7 @@ export function ContainerNamespacesPage() {
                     {
                       id: 'create-form',
                       label: 'Create as Form',
-                      onClick: () => console.log('Create as Form'),
+                      onClick: () => navigate('/container/namespaces/create'),
                     },
                     {
                       id: 'create-yaml',

@@ -91,6 +91,7 @@ import { ContainerDashboardPage } from '@/pages/ContainerDashboardPage';
 import { ContainerHomePage } from '@/pages/ContainerHomePage';
 import { ContainerNamespacesPage } from '@/pages/ContainerNamespacesPage';
 import { ContainerEventsPage } from '@/pages/ContainerEventsPage';
+import { CreateNamespacePage } from '@/pages/CreateNamespacePage';
 import { ContainerConsolePage } from '@/pages/ContainerConsolePage';
 
 // Pages - IAM
@@ -269,6 +270,7 @@ function AppRoutes() {
         <Route path="/container" element={<ContainerHomePage />} />
         <Route path="/container/dashboard" element={<ContainerDashboardPage />} />
         <Route path="/container/namespaces" element={<ContainerNamespacesPage />} />
+        <Route path="/container/namespaces/create" element={<CreateNamespacePage />} />
         <Route path="/container/events" element={<ContainerEventsPage />} />
         <Route path="/container/console/:instanceId" element={<ContainerConsolePage />} />
         <Route path="/container/*" element={<ContainerDashboardPage />} />
