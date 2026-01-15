@@ -111,6 +111,7 @@ export function ModalsPage() {
   const [isDeleteDomainOpen, setIsDeleteDomainOpen] = useState(false);
   const [isSwitchToDomainOpen, setIsSwitchToDomainOpen] = useState(false);
   const [isDeleteSystemAdminOpen, setIsDeleteSystemAdminOpen] = useState(false);
+  const [isUpdatePasswordPolicyOpen, setIsUpdatePasswordPolicyOpen] = useState(false);
   const [usernameCopied, setUsernameCopied] = useState(false);
   const [passwordCopied, setPasswordCopied] = useState(false);
   
@@ -370,7 +371,7 @@ export function ModalsPage() {
                           Modals
                         </span>
                         <span className="text-[12px] text-[var(--color-text-subtle)]">
-                          (26 modals)
+                          (27 modals)
                         </span>
                       </div>
                     </div>
@@ -557,6 +558,13 @@ export function ModalsPage() {
                             category="Security"
                             size="sm"
                             onOpen={() => setIsDeleteSystemAdminOpen(true)}
+                          />
+                          <ModalListItem
+                            title="Update password policy"
+                            description="Confirm applying password policy changes for length, requirements, and expiration."
+                            category="Security"
+                            size="sm"
+                            onOpen={() => setIsUpdatePasswordPolicyOpen(true)}
                           />
                         </div>
                       </VStack>
@@ -2819,6 +2827,54 @@ export function ModalsPage() {
             className="flex-1"
           >
             Delete
+          </Button>
+        </div>
+      </Modal>
+
+      {/* Update Password Policy Modal */}
+      <Modal
+        isOpen={isUpdatePasswordPolicyOpen}
+        onClose={() => setIsUpdatePasswordPolicyOpen(false)}
+        title="Update password policy"
+        description="Are you sure you want to apply these changes?"
+        size="sm"
+      >
+        <div className="flex flex-col gap-2">
+          {/* Changes Info Box */}
+          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
+            <span className="text-[11px] text-[var(--color-text-subtle)] font-medium leading-4">
+              Changes
+            </span>
+            <ul className="text-[12px] text-[var(--color-text-default)] leading-4 list-disc pl-4 space-y-0.5">
+              <li>Length: 8-64 → 1-100</li>
+              <li>Requirements: Uppercase, Lowercase, number, Special character → Uppercase, Lowercase</li>
+              <li>Exclusion rules: none → Username, Email</li>
+              <li>Password expiration: 30 → 47 days</li>
+              <li>Prevent password reuse: Off → On</li>
+            </ul>
+          </div>
+        </div>
+
+        {/* Button Group */}
+        <div className="flex gap-2 w-full">
+          <Button 
+            variant="outline" 
+            size="md" 
+            onClick={() => setIsUpdatePasswordPolicyOpen(false)}
+            className="flex-1"
+          >
+            Cancel
+          </Button>
+          <Button 
+            variant="primary" 
+            size="md" 
+            onClick={() => {
+              console.log('Password policy updated');
+              setIsUpdatePasswordPolicyOpen(false);
+            }}
+            className="flex-1"
+          >
+            Apply
           </Button>
         </div>
       </Modal>
