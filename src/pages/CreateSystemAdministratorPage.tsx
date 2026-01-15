@@ -628,7 +628,7 @@ function BasicInformationSection({
               Username <span className="text-[var(--color-state-danger)]">*</span>
             </label>
             <span className="text-[12px] text-[var(--color-text-subtle)] leading-4 mb-2">
-              This is the user's unique identifier for signing in. It cannot be changed once created.
+              This is the account's unique identifier for signing in. It cannot be changed once created.
             </span>
             <Input
               placeholder="Enter username"
