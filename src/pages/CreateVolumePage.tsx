@@ -461,11 +461,13 @@ export function CreateVolumePage() {
 
         {/* Scrollable Content Area */}
         <div className="flex-1 overflow-auto overscroll-contain sidebar-scroll">
-          <div className="pt-4 px-8 pb-20 bg-[var(--color-surface-default)] min-h-full">
+          <div className="pt-4 px-8 pb-6 bg-[var(--color-surface-default)] min-h-full">
             {/* Page Title */}
-            <h1 className="text-[length:var(--font-size-18)] font-semibold leading-[var(--line-height-28)] text-[var(--color-text-default)] max-w-[1320px] mx-auto mb-4">
-              Create volume
-            </h1>
+            <div className="flex items-center justify-between h-8 max-w-[1320px] mx-auto mb-3">
+              <h1 className="text-[length:var(--font-size-16)] font-semibold leading-6 text-[var(--color-text-default)]">
+                Create volume
+              </h1>
+            </div>
             
             <div className="flex gap-6 max-w-[1320px] mx-auto items-start">
               {/* Left Column - Main Content */}

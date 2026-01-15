@@ -375,15 +375,17 @@ export function CreateAgentPage() {
 
         {/* Scrollable Content Area */}
       <div className="flex-1 overflow-auto min-h-0 overscroll-contain sidebar-scroll">
-          <div className="bg-[var(--color-surface-default)] flex flex-col gap-6 items-center pb-[120px] pt-6 px-8 w-full min-h-full">
-            <div className="flex flex-col gap-6 items-start min-w-[1176px] relative shrink-0 w-full">
+          <div className="bg-[var(--color-surface-default)] flex flex-col gap-3 items-center pb-6 pt-4 px-8 w-full min-h-full">
+            <div className="flex flex-col gap-3 items-start min-w-[1176px] relative shrink-0 w-full">
+              <div className="flex items-center justify-between h-8 w-full">
+                <h1 className="text-[length:var(--font-size-16)] font-semibold leading-6 text-[var(--color-text-default)]">
+                  Create agent
+                </h1>
+              </div>
               <div className="flex flex-row flex-1 items-start min-h-0 relative w-full gap-6">
                 {/* Left Content */}
                 <div className="flex flex-1 flex-col min-h-0">
                   <div className="flex flex-col gap-6 w-full">
-                <h4 className="font-semibold text-[length:var(--font-size-18)] leading-[var(--line-height-28)] text-[var(--color-text-default)]">
-                  Create agent
-                </h4>
 
                 {/* Tabs */}
                 <Tabs value={activeStep} onChange={(value) => setActiveStep(value as 'configuration' | 'data-mcp')} variant="underline" size="sm">
