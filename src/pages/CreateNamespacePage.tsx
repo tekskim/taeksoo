@@ -949,11 +949,13 @@ export function CreateNamespacePage() {
         {/* Content Area */}
         <div className="flex-1 overflow-auto min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll">
           <div className="pt-4 px-8 pb-6 bg-[var(--color-surface-default)]">
-            <VStack gap={6}>
+            <VStack gap={3}>
               {/* Page Header */}
-              <h1 className="text-[18px] font-semibold text-[var(--color-text-default)] leading-[28px]">
-                Create Namespace
-              </h1>
+              <div className="flex items-center justify-between h-8">
+                <h1 className="text-[length:var(--font-size-16)] font-semibold leading-6 text-[var(--color-text-default)]">
+                  Create Namespace
+                </h1>
+              </div>
 
               {/* Main Content with Sidebar */}
               <HStack gap={6} align="start" className="w-full">

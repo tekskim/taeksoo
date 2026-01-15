@@ -2415,12 +2415,14 @@ export function CreateTemplatePage() {
 
         {/* Scrollable Content Area */}
         <div className="flex-1 overflow-auto overscroll-contain sidebar-scroll">
-          <div className="pt-4 px-8 pb-20 bg-[var(--color-surface-default)] min-h-full">
-            <VStack gap={6} className="min-w-[1176px]">
+          <div className="pt-4 px-8 pb-6 bg-[var(--color-surface-default)] min-h-full">
+            <VStack gap={3} className="min-w-[1176px]">
               {/* Page Title */}
-              <h1 className="text-[18px] font-semibold leading-7 text-[var(--color-text-default)]">
-                Create template
-              </h1>
+              <div className="flex items-center justify-between h-8">
+                <h1 className="text-[length:var(--font-size-16)] font-semibold leading-6 text-[var(--color-text-default)]">
+                  Create template
+                </h1>
+              </div>
 
               {/* Content Area */}
               <HStack gap={6} align="start" className="w-full">

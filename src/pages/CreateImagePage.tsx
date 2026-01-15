@@ -251,10 +251,10 @@ export function CreateImagePage() {
 
           {/* Scrollable Content Area */}
           <div className="flex-1 overflow-auto overscroll-contain sidebar-scroll">
-            <div className="pt-4 px-8 pb-20 bg-[var(--color-surface-default)] min-h-full">
+            <div className="pt-4 px-8 pb-6 bg-[var(--color-surface-default)] min-h-full">
               {/* Page Title */}
-              <div className="max-w-[1320px] mx-auto mb-4">
-                <h1 className="text-[length:var(--font-size-18)] font-semibold leading-[var(--line-height-28)] text-[var(--color-text-default)]">
+              <div className="flex items-center justify-between h-8 max-w-[1320px] mx-auto mb-3">
+                <h1 className="text-[length:var(--font-size-16)] font-semibold leading-6 text-[var(--color-text-default)]">
                   Create image
                 </h1>
               </div>
