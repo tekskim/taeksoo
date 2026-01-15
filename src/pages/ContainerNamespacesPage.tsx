@@ -28,7 +28,7 @@ import {
   IconStar,
   IconDownload,
   IconTrash,
-  IconChevronUp,
+  IconChevronDown,
   IconX,
   IconDotsCircleHorizontal,
   IconEdit,
@@ -276,7 +276,7 @@ export function ContainerNamespacesPage() {
                     Namespaces
                   </h1>
                 </HStack>
-                <Button variant="primary" size="md" rightIcon={<IconChevronUp size={16} stroke={1.5} />}>
+                <Button variant="primary" size="md" rightIcon={<IconChevronDown size={16} stroke={1.5} />}>
                   Create Namespace
                 </Button>
               </HStack>
