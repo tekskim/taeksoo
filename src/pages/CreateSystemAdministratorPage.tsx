@@ -14,6 +14,7 @@ import {
   Pagination,
   InlineMessage,
   StatusIndicator,
+  SelectionIndicator,
 } from '@/design-system';
 import { IAMSidebar } from '@/components/IAMSidebar';
 import { useTabs } from '@/contexts/TabContext';
@@ -954,9 +955,14 @@ function DefaultDomainSection({
                 {domainError}
               </InlineMessage>
             ) : (
-              <span className="text-[12px] text-[var(--color-text-subtle)]">
-                {selectedDomain ? `Selected` : 'Seleted'}
-              </span>
+              <SelectionIndicator
+                selectedItems={selectedDomain ? [{
+                  id: selectedDomain,
+                  label: mockDomains.find((d) => d.id === selectedDomain)?.name || selectedDomain
+                }] : []}
+                onRemove={() => onSelectionChange(null)}
+                emptyText="Selected"
+              />
             )}
           </div>
 
