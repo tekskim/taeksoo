@@ -1324,38 +1324,40 @@ export function ModalsPage() {
         <div className="flex flex-col gap-2">
           {/* Username Info Box */}
           <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
-            <div className="flex items-center justify-between">
-              <span className="text-[11px] text-[var(--color-text-subtle)] font-medium leading-4">
-                Username
+            <span className="text-[11px] text-[var(--color-text-subtle)] font-medium leading-4">
+              Username
+            </span>
+            <div className="flex items-center gap-1.5 min-h-[26px]">
+              <span className="text-[12px] text-[var(--color-text-default)] leading-4">
+                john.doe
               </span>
               <button 
-                className="text-[var(--color-text-default)] hover:text-[var(--color-action-primary)] transition-colors"
+                className="shrink-0 p-0.5 rounded hover:bg-[var(--color-surface-default)] transition-colors"
+                aria-label="Copy to clipboard"
                 onClick={() => navigator.clipboard.writeText('john.doe')}
               >
-                <IconCopy size={14} stroke={1.5} />
+                <IconCopy size={14} className="text-[var(--color-text-subtle)]" stroke={1.5} />
               </button>
             </div>
-            <span className="text-[12px] text-[var(--color-text-default)] leading-4">
-              john.doe
-            </span>
           </div>
 
           {/* Password Info Box */}
           <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
-            <div className="flex items-center justify-between">
-              <span className="text-[11px] text-[var(--color-text-subtle)] font-medium leading-4">
-                Password
+            <span className="text-[11px] text-[var(--color-text-subtle)] font-medium leading-4">
+              Password
+            </span>
+            <div className="flex items-center gap-1.5 min-h-[26px]">
+              <span className="text-[12px] text-[var(--color-text-default)] leading-4">
+                TempP@ss123!
               </span>
               <button 
-                className="text-[var(--color-text-default)] hover:text-[var(--color-action-primary)] transition-colors"
+                className="shrink-0 p-0.5 rounded hover:bg-[var(--color-surface-default)] transition-colors"
+                aria-label="Copy to clipboard"
                 onClick={() => navigator.clipboard.writeText('TempP@ss123!')}
               >
-                <IconCopy size={14} stroke={1.5} />
+                <IconCopy size={14} className="text-[var(--color-text-subtle)]" stroke={1.5} />
               </button>
             </div>
-            <span className="text-[12px] text-[var(--color-text-default)] leading-4">
-              TempP@ss123!
-            </span>
           </div>
         </div>
 
