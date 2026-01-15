@@ -365,7 +365,7 @@ function PasswordSection({
             onChange={() => onPasswordOptionChange('temporary')}
           />
           <span className="text-[12px] text-[var(--color-text-default)]">
-            Issue a temporary password (email sent automatically)
+            Auto-generated password
           </span>
         </label>
         <label className="flex items-center gap-1.5 cursor-pointer">
