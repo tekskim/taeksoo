@@ -159,7 +159,7 @@ export function ModalsPage() {
                       </div>
                     </div>
                   </Disclosure.Trigger>
-                  <Disclosure.Content>
+                  <Disclosure.Panel>
                     <VStack gap={4} className="pt-4">
                       {/* Delete Modals */}
                       <VStack gap={2}>
@@ -311,7 +311,7 @@ export function ModalsPage() {
                         </div>
                       </VStack>
                     </VStack>
-                  </Disclosure.Content>
+                  </Disclosure.Panel>
                 </Disclosure>
 
                 {/* IAM App Modals - Placeholder for future */}
@@ -329,7 +329,7 @@ export function ModalsPage() {
                       </div>
                     </div>
                   </Disclosure.Trigger>
-                  <Disclosure.Content>
+                  <Disclosure.Panel>
                     <div className="p-6 mt-4 rounded-xl border border-dashed border-[var(--color-border-default)] bg-[var(--color-surface-subtle)]">
                       <VStack gap={2} className="items-center justify-center h-full">
                         <p className="text-[14px] text-[var(--color-text-muted)]">
@@ -337,7 +337,7 @@ export function ModalsPage() {
                         </p>
                       </VStack>
                     </div>
-                  </Disclosure.Content>
+                  </Disclosure.Panel>
                 </Disclosure>
 
                 {/* Container App Modals - Placeholder for future */}
@@ -355,7 +355,7 @@ export function ModalsPage() {
                       </div>
                     </div>
                   </Disclosure.Trigger>
-                  <Disclosure.Content>
+                  <Disclosure.Panel>
                     <div className="p-6 mt-4 rounded-xl border border-dashed border-[var(--color-border-default)] bg-[var(--color-surface-subtle)]">
                       <VStack gap={2} className="items-center justify-center h-full">
                         <p className="text-[14px] text-[var(--color-text-muted)]">
@@ -363,7 +363,7 @@ export function ModalsPage() {
                         </p>
                       </VStack>
                     </div>
-                  </Disclosure.Content>
+                  </Disclosure.Panel>
                 </Disclosure>
 
                 {/* Storage App Modals - Placeholder for future */}
@@ -381,7 +381,7 @@ export function ModalsPage() {
                       </div>
                     </div>
                   </Disclosure.Trigger>
-                  <Disclosure.Content>
+                  <Disclosure.Panel>
                     <div className="p-6 mt-4 rounded-xl border border-dashed border-[var(--color-border-default)] bg-[var(--color-surface-subtle)]">
                       <VStack gap={2} className="items-center justify-center h-full">
                         <p className="text-[14px] text-[var(--color-text-muted)]">
@@ -389,7 +389,7 @@ export function ModalsPage() {
                         </p>
                       </VStack>
                     </div>
-                  </Disclosure.Content>
+                  </Disclosure.Panel>
                 </Disclosure>
               </VStack>
             </VStack>
