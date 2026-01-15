@@ -6,13 +6,13 @@ import {
   IconDatabase,
   IconTemplate,
   IconCpu,
-  IconServer,
   IconDisc,
-  IconCube,
+  IconBucket,
   IconBrandSpeedtest,
   IconArrowLeft,
   IconLayoutSidebar,
 } from '@tabler/icons-react';
+import { HardDrive } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 import ThakiLogoLight from '@/assets/thakiLogo_light.svg';
 import ThakiLogoDark from '@/assets/thakiLogo-dark.svg';
@@ -117,7 +117,7 @@ export function StorageSidebar({ isOpen = true, onToggle }: StorageSidebarProps)
               active={isActive('/storage/osds')}
             />
             <MenuItem
-              icon={<IconServer size={16} stroke={1.5} />}
+              icon={<HardDrive size={16} strokeWidth={1.5} />}
               label="Physical disks"
               href="/storage/physical-disks"
               active={isActive('/storage/physical-disks')}
@@ -137,7 +137,7 @@ export function StorageSidebar({ isOpen = true, onToggle }: StorageSidebarProps)
           {/* Object Section */}
           <MenuSection title="Object" defaultOpen={true}>
             <MenuItem
-              icon={<IconCube size={16} stroke={1.5} />}
+              icon={<IconBucket size={16} stroke={1.5} />}
               label="Buckets"
               href="/storage/buckets"
               active={isActive('/storage/buckets')}

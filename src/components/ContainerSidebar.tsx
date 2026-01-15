@@ -7,7 +7,6 @@ import {
   IconAffiliate,
   IconServer,
   IconNetwork,
-  IconDatabase,
   IconShieldLock,
   IconPlus,
   IconArrowLeft,
@@ -19,8 +18,18 @@ import {
   IconSearch,
   IconCheck,
   IconLayoutSidebar,
+  IconFolders,
+  IconBell,
+  IconRocket,
+  IconRefresh,
+  IconStack3,
+  IconFileSettings,
+  IconKey,
+  IconRuler,
+  IconScale,
+  IconAlertTriangle,
 } from '@tabler/icons-react';
-import { ArrowRightLeft, FolderCog } from 'lucide-react';
+import { ArrowRightLeft, FolderCog, HardDrive, FileCheck2, LogIn, Scaling } from 'lucide-react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import ThakiLogoLight from '@/assets/thakiLogo_light.svg';
 import ThakiLogoDark from '@/assets/thakiLogo-dark.svg';
@@ -466,7 +475,7 @@ export function ContainerSidebar({ isOpen = true, onToggle }: ContainerSidebarPr
                 active={isActive('/container/dashboard')}
               />
               <MenuItem
-                icon={<IconServer size={16} stroke={1.5} />}
+                icon={<IconFolders size={16} stroke={1.5} />}
                 label="Namespaces"
                 href="/container/namespaces"
                 active={isActive('/container/namespaces')}
@@ -478,7 +487,7 @@ export function ContainerSidebar({ isOpen = true, onToggle }: ContainerSidebarPr
                 active={isActive('/container/nodes')}
               />
               <MenuItem
-                icon={<IconDatabase size={16} stroke={1.5} />}
+                icon={<IconBell size={16} stroke={1.5} />}
                 label="Events"
                 href="/container/events"
                 active={isActive('/container/events')}
@@ -488,7 +497,7 @@ export function ContainerSidebar({ isOpen = true, onToggle }: ContainerSidebarPr
             {/* Workloads Section */}
             <MenuSection title="Workloads" defaultOpen={true}>
               <MenuItem
-                icon={<IconServer size={16} stroke={1.5} />}
+                icon={<IconRocket size={16} stroke={1.5} />}
                 label="Deployments"
                 href="/container/deployments"
                 active={isActive('/container/deployments')}
@@ -500,7 +509,7 @@ export function ContainerSidebar({ isOpen = true, onToggle }: ContainerSidebarPr
                 active={isActive('/container/statefulsets')}
               />
               <MenuItem
-                icon={<IconDatabase size={16} stroke={1.5} />}
+                icon={<IconRefresh size={16} stroke={1.5} />}
                 label="DaemonSets"
                 href="/container/daemonsets"
                 active={isActive('/container/daemonsets')}
@@ -534,13 +543,13 @@ export function ContainerSidebar({ isOpen = true, onToggle }: ContainerSidebarPr
                 active={isActive('/container/services')}
               />
               <MenuItem
-                icon={<IconNetwork size={16} stroke={1.5} />}
+                icon={<LogIn size={16} strokeWidth={1.5} />}
                 label="Ingresses"
                 href="/container/ingresses"
                 active={isActive('/container/ingresses')}
               />
               <MenuItem
-                icon={<IconAffiliate size={16} stroke={1.5} />}
+                icon={<Scaling size={16} strokeWidth={1.5} />}
                 label="Horizontal pod autoscalers"
                 href="/container/hpa"
                 active={isActive('/container/hpa')}
@@ -550,31 +559,31 @@ export function ContainerSidebar({ isOpen = true, onToggle }: ContainerSidebarPr
             {/* Storage Section */}
             <MenuSection title="Storage" defaultOpen={true}>
               <MenuItem
-                icon={<IconDatabase size={16} stroke={1.5} />}
+                icon={<HardDrive size={16} strokeWidth={1.5} />}
                 label="Persistent volumes"
                 href="/container/persistent-volumes"
                 active={isActive('/container/persistent-volumes')}
               />
               <MenuItem
-                icon={<IconDatabase size={16} stroke={1.5} />}
+                icon={<FileCheck2 size={16} strokeWidth={1.5} />}
                 label="Persistent volume claims"
                 href="/container/pvc"
                 active={isActive('/container/pvc')}
               />
               <MenuItem
-                icon={<IconDatabase size={16} stroke={1.5} />}
+                icon={<IconStack3 size={16} stroke={1.5} />}
                 label="Storage classes"
                 href="/container/storage-classes"
                 active={isActive('/container/storage-classes')}
               />
               <MenuItem
-                icon={<IconDatabase size={16} stroke={1.5} />}
+                icon={<IconFileSettings size={16} stroke={1.5} />}
                 label="ConfigMaps"
                 href="/container/configmaps"
                 active={isActive('/container/configmaps')}
               />
               <MenuItem
-                icon={<IconShieldLock size={16} stroke={1.5} />}
+                icon={<IconKey size={16} stroke={1.5} />}
                 label="Secrets"
                 href="/container/secrets"
                 active={isActive('/container/secrets')}
@@ -584,13 +593,13 @@ export function ContainerSidebar({ isOpen = true, onToggle }: ContainerSidebarPr
             {/* Policy Section */}
             <MenuSection title="Policy" defaultOpen={true}>
               <MenuItem
-                icon={<IconShieldLock size={16} stroke={1.5} />}
+                icon={<IconRuler size={16} stroke={1.5} />}
                 label="Limit ranges"
                 href="/container/limit-ranges"
                 active={isActive('/container/limit-ranges')}
               />
               <MenuItem
-                icon={<IconShieldLock size={16} stroke={1.5} />}
+                icon={<IconScale size={16} stroke={1.5} />}
                 label="Resource quotas"
                 href="/container/resource-quotas"
                 active={isActive('/container/resource-quotas')}
@@ -602,7 +611,7 @@ export function ContainerSidebar({ isOpen = true, onToggle }: ContainerSidebarPr
                 active={isActive('/container/network-policies')}
               />
               <MenuItem
-                icon={<IconShieldLock size={16} stroke={1.5} />}
+                icon={<IconAlertTriangle size={16} stroke={1.5} />}
                 label="Pod disruption budgets"
                 href="/container/pdb"
                 active={isActive('/container/pdb')}

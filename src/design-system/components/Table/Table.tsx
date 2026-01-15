@@ -183,11 +183,16 @@ export function Table<T extends Record<string, any>>({
       style.flexShrink = 0;
     } else {
       style.flex = column.flex ?? 1;
-      style.flexShrink = 1;
+      // Prevent flex columns from shrinking below their content
+      style.flexShrink = 0;
     }
     
+    // Apply minWidth: use explicit minWidth, or default 100px for flex columns
     if (column.minWidth) {
       style.minWidth = column.minWidth;
+    } else if (!column.width) {
+      // Default minWidth for flex columns to enable horizontal scroll
+      style.minWidth = '100px';
     }
     
     if (column.maxWidth) {
@@ -202,11 +207,13 @@ export function Table<T extends Record<string, any>>({
       className={`flex flex-col gap-[var(--table-row-gap)] ${className}`}
       style={rowHeight ? { '--table-row-height': rowHeight } as React.CSSProperties : undefined}
     >
-      {/* Table container */}
+      {/* Table container - overflow-x-auto enables horizontal scrolling */}
       <div
         className={`table-scroll-container overflow-x-auto ${maxHeight ? 'overflow-y-auto' : ''}`}
         style={maxHeight ? { maxHeight } : undefined}
       >
+        {/* Inner wrapper - width: fit-content prevents flex columns from shrinking */}
+        <div style={{ width: 'fit-content', minWidth: '100%' }}>
         {/* Header */}
         <div
           className={`
@@ -217,7 +224,7 @@ export function Table<T extends Record<string, any>>({
             rounded-[var(--table-row-radius)]
             ${enableStickyHeader ? 'sticky top-0 z-10' : ''}
           `}
-          style={{ minWidth: `${tableMinWidth}px` }}
+          style={{ width: 'max-content', minWidth: '100%' }}
         >
           {/* Selection column with select all checkbox */}
           {selectable && (
@@ -285,8 +292,6 @@ export function Table<T extends Record<string, any>>({
           })}
         </div>
 
-        {/* Inner container for min-width */}
-        <div style={{ minWidth: `${tableMinWidth}px`, width: '100%' }}>
           {/* Body */}
           <div className="flex flex-col gap-[var(--table-row-gap)] mt-[var(--table-row-gap)]">
           {sortedData.length === 0 ? (
@@ -326,6 +331,7 @@ export function Table<T extends Record<string, any>>({
                     }
                     ${onRowClick ? 'cursor-pointer' : ''}
                   `}
+                  style={{ width: 'max-content', minWidth: '100%' }}
                   onClick={onRowClick ? () => onRowClick(row, rowIndex) : undefined}
                 >
                   {/* Selection checkbox */}
