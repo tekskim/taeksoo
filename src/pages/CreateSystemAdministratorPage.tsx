@@ -355,7 +355,7 @@ function PasswordSection({
         Temporary Password <span className="text-[var(--color-state-danger)]">*</span>
       </label>
       <span className="text-[12px] text-[var(--color-text-subtle)] leading-4 mb-2">
-        Choose how to set the initial password for the user account.
+        The temporary password will be valid for 7 days. The account holder must sign in and change the password within this period.
       </span>
       <VStack gap={3}>
         <label className="flex items-center gap-1.5 cursor-pointer">
