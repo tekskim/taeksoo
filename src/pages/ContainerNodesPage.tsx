@@ -12,6 +12,7 @@ import {
   Pagination,
   Chip,
   ContextMenu,
+  ProgressBar,
   type TableColumn,
   type ContextMenuItem,
 } from '@/design-system';
@@ -25,11 +26,8 @@ import {
   IconFile,
   IconCopy,
   IconSearch,
-  IconStar,
   IconDownload,
   IconTrash,
-  IconChevronDown,
-  IconX,
   IconDotsCircleHorizontal,
 } from '@tabler/icons-react';
 
@@ -37,11 +35,18 @@ import {
    Types
    ---------------------------------------- */
 
-interface NamespaceRow {
+interface NodeRow {
   id: string;
-  status: 'Active' | 'Terminating' | 'Pending';
+  status: 'Ready' | 'NotReady' | 'Unknown';
   name: string;
-  description: string;
+  roles: string;
+  version: string;
+  externalIp: string;
+  internalIp: string;
+  os: string;
+  cpuUsage: number;
+  ramUsage: number;
+  podsUsage: number;
   createdAt: string;
 }
 
@@ -49,26 +54,113 @@ interface NamespaceRow {
    Mock Data
    ---------------------------------------- */
 
-const namespacesData: NamespaceRow[] = [
-  { id: '1', status: 'Active', name: 'cattle-clusters-system', description: 'description text', createdAt: '2025-11-10 12:57' },
-  { id: '2', status: 'Active', name: 'cattle-local-system', description: 'description text', createdAt: '2025-11-10 12:57' },
-  { id: '3', status: 'Active', name: 'cattle-system', description: 'description text', createdAt: '2025-11-10 12:57' },
-  { id: '4', status: 'Active', name: 'cattle-global-data', description: 'description text', createdAt: '2025-11-10 12:57' },
-  { id: '5', status: 'Active', name: 'cattle-impersonation-system', description: 'description text', createdAt: '2025-11-10 12:57' },
-  { id: '6', status: 'Active', name: 'cattle-provisioning-capi-system', description: 'description text', createdAt: '2025-11-10 12:57' },
-  { id: '7', status: 'Active', name: 'cattle-system', description: 'description text', createdAt: '2025-11-10 12:57' },
-  { id: '8', status: 'Active', name: 'default', description: 'description text', createdAt: '2025-11-10 12:57' },
-  { id: '9', status: 'Active', name: 'kube-public', description: 'description text', createdAt: '2025-11-10 12:57' },
-  { id: '10', status: 'Active', name: 'kube-system', description: 'description text', createdAt: '2025-11-10 12:57' },
-  { id: '11', status: 'Active', name: 'local', description: 'description text', createdAt: '2025-11-10 12:57' },
-  { id: '12', status: 'Active', name: 'kube-node-lease', description: 'description text', createdAt: '2025-11-10 12:57' },
+const nodesData: NodeRow[] = [
+  {
+    id: '1',
+    status: 'Ready',
+    name: 'node-control-plane-01',
+    roles: 'Control Plane',
+    version: 'v1.34',
+    externalIp: '-',
+    internalIp: '172.16.0.237',
+    os: 'Linux',
+    cpuUsage: 8,
+    ramUsage: 23,
+    podsUsage: 13,
+    createdAt: '2025-11-01 12:57',
+  },
+  {
+    id: '2',
+    status: 'Ready',
+    name: 'node-worker-01',
+    roles: 'Worker',
+    version: 'v1.34',
+    externalIp: '-',
+    internalIp: '172.16.0.238',
+    os: 'Linux',
+    cpuUsage: 45,
+    ramUsage: 67,
+    podsUsage: 42,
+    createdAt: '2025-11-01 12:58',
+  },
+  {
+    id: '3',
+    status: 'Ready',
+    name: 'node-worker-02',
+    roles: 'Worker',
+    version: 'v1.34',
+    externalIp: '-',
+    internalIp: '172.16.0.239',
+    os: 'Linux',
+    cpuUsage: 32,
+    ramUsage: 51,
+    podsUsage: 28,
+    createdAt: '2025-11-01 12:59',
+  },
+  {
+    id: '4',
+    status: 'Ready',
+    name: 'node-worker-03',
+    roles: 'Worker',
+    version: 'v1.34',
+    externalIp: '10.0.1.100',
+    internalIp: '172.16.0.240',
+    os: 'Linux',
+    cpuUsage: 78,
+    ramUsage: 82,
+    podsUsage: 65,
+    createdAt: '2025-11-02 09:15',
+  },
+  {
+    id: '5',
+    status: 'NotReady',
+    name: 'node-worker-04',
+    roles: 'Worker',
+    version: 'v1.34',
+    externalIp: '-',
+    internalIp: '172.16.0.241',
+    os: 'Linux',
+    cpuUsage: 0,
+    ramUsage: 0,
+    podsUsage: 0,
+    createdAt: '2025-11-02 09:20',
+  },
+  {
+    id: '6',
+    status: 'Ready',
+    name: 'node-gpu-01',
+    roles: 'Worker, GPU',
+    version: 'v1.34',
+    externalIp: '10.0.1.101',
+    internalIp: '172.16.0.242',
+    os: 'Linux',
+    cpuUsage: 92,
+    ramUsage: 88,
+    podsUsage: 75,
+    createdAt: '2025-11-03 14:30',
+  },
 ];
+
+/* ----------------------------------------
+   Progress Cell Component
+   ---------------------------------------- */
+
+function ProgressCell({ value }: { value: number }) {
+  return (
+    <div className="flex flex-col gap-0.5 w-24">
+      <span className="text-[12px] leading-[16px] text-[var(--color-text-default)]">
+        {value}%
+      </span>
+      <ProgressBar value={value} size="sm" />
+    </div>
+  );
+}
 
 /* ----------------------------------------
    Component
    ---------------------------------------- */
 
-export function ContainerNamespacesPage() {
+export function ContainerNodesPage() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const { tabs, activeTabId, selectTab, closeTab, addNewTab, moveTab, addTab } = useTabs();
   const [currentPage, setCurrentPage] = useState(1);
@@ -95,8 +187,8 @@ export function ContainerNamespacesPage() {
 
   // Pagination
   const rowsPerPage = 10;
-  const totalPages = Math.ceil(namespacesData.length / rowsPerPage);
-  const paginatedData = namespacesData.slice(
+  const totalPages = Math.ceil(nodesData.length / rowsPerPage);
+  const paginatedData = nodesData.slice(
     (currentPage - 1) * rowsPerPage,
     currentPage * rowsPerPage
   );
@@ -104,8 +196,14 @@ export function ContainerNamespacesPage() {
   // Sidebar width calculation: 40px icon sidebar + 200px menu sidebar when open
   const sidebarWidth = sidebarOpen ? 240 : 40;
 
+  // Copy to clipboard handler
+  const handleCopyIp = (ip: string) => {
+    navigator.clipboard.writeText(ip);
+    console.log('Copied to clipboard:', ip);
+  };
+
   // Table columns configuration
-  const columns: TableColumn<NamespaceRow>[] = [
+  const columns: TableColumn<NodeRow>[] = [
     {
       key: 'status',
       label: 'Status',
@@ -114,7 +212,7 @@ export function ContainerNamespacesPage() {
       align: 'center',
       render: (value: string) => (
         <StatusIndicator
-          status={value === 'Active' ? 'active' : value === 'Terminating' ? 'error' : 'muted'}
+          status={value === 'Ready' ? 'active' : value === 'NotReady' ? 'error' : 'muted'}
         />
       )
     },
@@ -128,7 +226,7 @@ export function ContainerNamespacesPage() {
           className="text-[var(--color-action-primary)] font-medium cursor-pointer hover:underline"
           onClick={(e) => {
             e.stopPropagation();
-            navigate(`/container/namespaces/${value}`);
+            navigate(`/container/nodes/${value}`);
           }}
         >
           {value}
@@ -136,13 +234,64 @@ export function ContainerNamespacesPage() {
       )
     },
     {
-      key: 'description',
-      label: 'Description',
+      key: 'roles',
+      label: 'Roles',
       flex: 1,
     },
     {
+      key: 'version',
+      label: 'Version',
+      flex: 1,
+    },
+    {
+      key: 'ip',
+      label: 'External/Internal IP',
+      flex: 1,
+      sortable: true,
+      render: (_, row) => (
+        <HStack gap={1.5} align="center">
+          <span className="text-[12px] leading-[16px] text-[var(--color-text-default)]">
+            {row.externalIp} / {row.internalIp}
+          </span>
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              handleCopyIp(row.internalIp);
+            }}
+            className="p-0.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+          >
+            <IconCopy size={12} stroke={1.5} className="text-[var(--color-text-default)]" />
+          </button>
+        </HStack>
+      )
+    },
+    {
+      key: 'os',
+      label: 'OS',
+      flex: 1,
+      sortable: true,
+    },
+    {
+      key: 'cpuUsage',
+      label: 'CPU',
+      flex: 1,
+      render: (value: number) => <ProgressCell value={value} />
+    },
+    {
+      key: 'ramUsage',
+      label: 'RAM',
+      flex: 1,
+      render: (value: number) => <ProgressCell value={value} />
+    },
+    {
+      key: 'podsUsage',
+      label: 'Pods',
+      flex: 1,
+      render: (value: number) => <ProgressCell value={value} />
+    },
+    {
       key: 'createdAt',
-      label: 'Created at',
+      label: 'Created At',
       flex: 1,
       sortable: true,
     },
@@ -156,12 +305,12 @@ export function ContainerNamespacesPage() {
           {
             id: 'edit-config',
             label: 'Edit Config',
-            onClick: () => console.log('Edit Config:', row.id),
+            onClick: () => navigate(`/container/nodes/${row.name}/edit`),
           },
           {
             id: 'edit-yaml',
             label: 'Edit YAML',
-            onClick: () => console.log('Edit YAML:', row.id),
+            onClick: () => navigate(`/container/nodes/${row.name}/edit-yaml`),
           },
           {
             id: 'download-yaml',
@@ -171,6 +320,7 @@ export function ContainerNamespacesPage() {
           {
             id: 'delete',
             label: 'Delete',
+            status: 'danger',
             onClick: () => console.log('Delete:', row.id),
           },
         ];
@@ -224,7 +374,7 @@ export function ContainerNamespacesPage() {
             <Breadcrumb
               items={[
                 { label: 'clusterName', href: '/container' },
-                { label: 'Namespaces' },
+                { label: 'Nodes' },
               ]}
             />
           }
@@ -236,8 +386,7 @@ export function ContainerNamespacesPage() {
                   if (shellPanel.isExpanded) {
                     shellPanel.setIsExpanded(false);
                   } else {
-                    // Open console with a default kubectl session
-                    shellPanel.openConsole('kubectl-namespaces', 'Kubectl: ClusterName');
+                    shellPanel.openConsole('kubectl-nodes', 'Kubectl: ClusterName');
                   }
                 }}
               >
@@ -270,29 +419,9 @@ export function ContainerNamespacesPage() {
               <HStack justify="between" align="center" className="w-full min-h-8">
                 <HStack gap={2} align="center">
                   <h1 className="text-[16px] leading-6 font-semibold text-[var(--color-text-default)]">
-                    Namespaces
+                    Nodes
                   </h1>
                 </HStack>
-                <ContextMenu
-                  items={[
-                    {
-                      id: 'create-form',
-                      label: 'Create as Form',
-                      onClick: () => navigate('/container/namespaces/create'),
-                    },
-                    {
-                      id: 'create-yaml',
-                      label: 'Create as YAML',
-                      onClick: () => navigate('/container/namespaces/create-yaml'),
-                    },
-                  ]}
-                  trigger="click"
-                  align="right"
-                >
-                  <Button variant="primary" size="md" rightIcon={<IconChevronDown size={16} stroke={1.5} />}>
-                    Create Namespace
-                  </Button>
-                </ContextMenu>
               </HStack>
 
               {/* Action Bar */}
@@ -300,7 +429,7 @@ export function ContainerNamespacesPage() {
                 {/* Search */}
                 <HStack gap={1} align="center">
                   <SearchInput
-                    placeholder="Search Namespaces by attributes"
+                    placeholder="Search Nodes by attributes"
                     size="sm"
                     className="w-[280px]"
                   />
@@ -350,14 +479,14 @@ export function ContainerNamespacesPage() {
                 currentPage={currentPage}
                 totalPages={totalPages}
                 onPageChange={setCurrentPage}
-                totalItems={namespacesData.length}
+                totalItems={nodesData.length}
                 selectedCount={selectedRows.length}
                 showSettings
                 onSettingsClick={() => {}}
               />
 
               {/* Table */}
-              <Table<NamespaceRow>
+              <Table<NodeRow>
                 columns={columns}
                 data={paginatedData}
                 rowKey="id"
@@ -390,4 +519,4 @@ export function ContainerNamespacesPage() {
   );
 }
 
-export default ContainerNamespacesPage;
+export default ContainerNodesPage;

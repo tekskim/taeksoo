@@ -91,8 +91,14 @@ import { ContainerDashboardPage } from '@/pages/ContainerDashboardPage';
 import { ContainerHomePage } from '@/pages/ContainerHomePage';
 import { ContainerNamespacesPage } from '@/pages/ContainerNamespacesPage';
 import { ContainerEventsPage } from '@/pages/ContainerEventsPage';
+import { ContainerNodesPage } from '@/pages/ContainerNodesPage';
 import { CreateNamespacePage } from '@/pages/CreateNamespacePage';
+import { CreateNamespaceYamlPage } from '@/pages/CreateNamespaceYamlPage';
+import { NamespaceDetailPage } from '@/pages/NamespaceDetailPage';
 import { ContainerConsolePage } from '@/pages/ContainerConsolePage';
+import { EditNodeConfigPage } from '@/pages/EditNodeConfigPage';
+import { EditNodeYamlPage } from '@/pages/EditNodeYamlPage';
+import { NodeDetailPage } from '@/pages/NodeDetailPage';
 
 // Pages - IAM
 import { IAMHomePage } from '@/pages/IAMHomePage';
@@ -271,7 +277,13 @@ function AppRoutes() {
         <Route path="/container/dashboard" element={<ContainerDashboardPage />} />
         <Route path="/container/namespaces" element={<ContainerNamespacesPage />} />
         <Route path="/container/namespaces/create" element={<CreateNamespacePage />} />
+        <Route path="/container/namespaces/create-yaml" element={<CreateNamespaceYamlPage />} />
+        <Route path="/container/namespaces/:namespaceName" element={<NamespaceDetailPage />} />
         <Route path="/container/events" element={<ContainerEventsPage />} />
+        <Route path="/container/nodes" element={<ContainerNodesPage />} />
+        <Route path="/container/nodes/:nodeName/edit" element={<EditNodeConfigPage />} />
+        <Route path="/container/nodes/:nodeName/edit-yaml" element={<EditNodeYamlPage />} />
+        <Route path="/container/nodes/:nodeName" element={<NodeDetailPage />} />
         <Route path="/container/console/:instanceId" element={<ContainerConsolePage />} />
         <Route path="/container/*" element={<ContainerDashboardPage />} />
 
