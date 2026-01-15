@@ -2017,7 +2017,7 @@ export function ModalsPage() {
             <span className="text-[11px] text-[var(--color-text-subtle)] font-medium leading-4">
               Roles that can be deleted
             </span>
-            <ul className="list-disc list-inside text-[12px] text-[var(--color-text-default)] leading-4">
+            <ul className="text-[12px] text-[var(--color-text-default)] leading-4 list-disc pl-4 space-y-0.5">
               <li>web-server-01</li>
               <li>web-server-02</li>
               <li>web-server-03</li>
@@ -2031,7 +2031,7 @@ export function ModalsPage() {
             <span className="text-[11px] text-[var(--color-text-subtle)] font-medium leading-4">
               Roles that cannot be deleted
             </span>
-            <ul className="list-disc list-inside text-[12px] text-[var(--color-text-default)] leading-4">
+            <ul className="text-[12px] text-[var(--color-text-default)] leading-4 list-disc pl-4 space-y-0.5">
               <li>my-server-04 (Locked instances cannot be deleted.)</li>
               <li>my-server-03 (Instances in current state cannot be deleted.)</li>
               <li>my-server-02</li>
@@ -2200,7 +2200,7 @@ export function ModalsPage() {
             <span className="text-[11px] text-[var(--color-text-subtle)] font-medium leading-4">
               Policies that can be deleted
             </span>
-            <ul className="list-disc list-inside text-[12px] text-[var(--color-text-default)] leading-4">
+            <ul className="text-[12px] text-[var(--color-text-default)] leading-4 list-disc pl-4 space-y-0.5">
               <li>web-server-01</li>
               <li>web-server-02</li>
               <li>web-server-03</li>
@@ -2214,7 +2214,7 @@ export function ModalsPage() {
             <span className="text-[11px] text-[var(--color-text-subtle)] font-medium leading-4">
               Policies that cannot be deleted
             </span>
-            <ul className="list-disc list-inside text-[12px] text-[var(--color-text-default)] leading-4">
+            <ul className="text-[12px] text-[var(--color-text-default)] leading-4 list-disc pl-4 space-y-0.5">
               <li>my-server-04 (Locked instances cannot be deleted.)</li>
               <li>my-server-03 (Instances in current state cannot be deleted.)</li>
               <li>my-server-02</li>
@@ -2373,7 +2373,7 @@ export function ModalsPage() {
             <span className="text-[11px] text-[var(--color-text-subtle)] font-medium leading-4">
               Changes
             </span>
-            <ul className="list-disc list-inside text-[12px] text-[var(--color-text-default)] leading-4">
+            <ul className="text-[12px] text-[var(--color-text-default)] leading-4 list-disc pl-4 space-y-0.5">
               <li>MFA enforcement: Voluntary → Required for all users</li>
             </ul>
           </div>
@@ -2425,7 +2425,7 @@ export function ModalsPage() {
             <span className="text-[11px] text-[var(--color-text-subtle)] font-medium leading-4">
               Changes
             </span>
-            <ul className="list-disc list-inside text-[12px] text-[var(--color-text-default)] leading-4">
+            <ul className="text-[12px] text-[var(--color-text-default)] leading-4 list-disc pl-4 space-y-0.5">
               <li>OTP policy: On → Off</li>
             </ul>
           </div>
@@ -2477,7 +2477,7 @@ export function ModalsPage() {
             <span className="text-[11px] text-[var(--color-text-subtle)] font-medium leading-4">
               Changes
             </span>
-            <ul className="list-disc list-inside text-[12px] text-[var(--color-text-default)] leading-4">
+            <ul className="text-[12px] text-[var(--color-text-default)] leading-4 list-disc pl-4 space-y-0.5">
               <li>Look around Window: 1 → 0</li>
               <li>Reusable token: Off → On</li>
             </ul>
@@ -2522,7 +2522,7 @@ export function ModalsPage() {
             <span className="text-[11px] text-[var(--color-text-subtle)] font-medium leading-4">
               Changes
             </span>
-            <ul className="list-disc list-inside text-[12px] text-[var(--color-text-default)] leading-4">
+            <ul className="text-[12px] text-[var(--color-text-default)] leading-4 list-disc pl-4 space-y-0.5">
               <li>Email policy: On → Off</li>
             </ul>
           </div>
@@ -2574,7 +2574,7 @@ export function ModalsPage() {
             <span className="text-[11px] text-[var(--color-text-subtle)] font-medium leading-4">
               Changes
             </span>
-            <ul className="list-disc list-inside text-[12px] text-[var(--color-text-default)] leading-4">
+            <ul className="text-[12px] text-[var(--color-text-default)] leading-4 list-disc pl-4 space-y-0.5">
               <li>Code validity period: 300 → 600 seconds</li>
               <li>Resend cooldown: 60 → 1 seconds</li>
               <li>Verification attempts(Time window): 10 → 40 minutes</li>
@@ -2621,7 +2621,7 @@ export function ModalsPage() {
             <span className="text-[11px] text-[var(--color-text-subtle)] font-medium leading-4">
               Changes
             </span>
-            <ul className="list-disc list-inside text-[12px] text-[var(--color-text-default)] leading-4">
+            <ul className="text-[12px] text-[var(--color-text-default)] leading-4 list-disc pl-4 space-y-0.5">
               <li>Session idle timeout: 30 → 10 minutes</li>
               <li>Session max lifespan: 8 → 10 hours</li>
               <li>Login timeout: 30 → 10 minutes</li>
