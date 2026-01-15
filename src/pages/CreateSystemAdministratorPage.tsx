@@ -375,7 +375,7 @@ function PasswordSection({
             onChange={() => onPasswordOptionChange('manual')}
           />
           <span className="text-[12px] text-[var(--color-text-default)]">
-            Set password manually (no email sent)
+            Manually
           </span>
         </label>
       </VStack>
