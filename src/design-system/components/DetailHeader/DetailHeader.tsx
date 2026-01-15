@@ -92,7 +92,7 @@ function DetailHeaderInfoGrid({ children, className, ...props }: DetailHeaderInf
   return (
     <div
       className={twMerge(
-        'flex items-center gap-2',
+        'flex items-center gap-3',
         'w-full',
         className
       )}

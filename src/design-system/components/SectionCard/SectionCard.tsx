@@ -52,7 +52,7 @@ function SectionCardHeader({ title, actions, showDivider = false, className, ...
   return (
     <div className={twMerge('flex flex-col w-full', className)} {...props}>
       <div className="flex items-center justify-between w-full">
-        <h5 className="text-[length:var(--font-size-14)] font-semibold leading-[var(--line-height-24)] text-[var(--color-text-default)]">
+        <h5 className="text-[length:var(--font-size-16)] font-semibold leading-[var(--line-height-24)] text-[var(--color-text-default)]">
           {title}
         </h5>
         {actions && (
