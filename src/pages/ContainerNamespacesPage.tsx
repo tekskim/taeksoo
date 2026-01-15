@@ -267,9 +267,25 @@ export function ContainerNamespacesPage() {
                     Namespaces
                   </h1>
                 </HStack>
-                <Button variant="primary" size="md" rightIcon={<IconChevronDown size={16} stroke={1.5} />}>
-                  Create Namespace
-                </Button>
+                <ContextMenu
+                  items={[
+                    {
+                      id: 'create-form',
+                      label: 'Create as Form',
+                      onClick: () => console.log('Create as Form'),
+                    },
+                    {
+                      id: 'create-yaml',
+                      label: 'Create as YAML',
+                      onClick: () => console.log('Create as YAML'),
+                    },
+                  ]}
+                  trigger="click"
+                >
+                  <Button variant="primary" size="md" rightIcon={<IconChevronDown size={16} stroke={1.5} />}>
+                    Create Namespace
+                  </Button>
+                </ContextMenu>
               </HStack>
 
               {/* Action Bar */}
