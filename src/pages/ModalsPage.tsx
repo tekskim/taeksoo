@@ -3,7 +3,7 @@ import { Sidebar } from '@/components/Sidebar';
 import { useTabs } from '@/contexts/TabContext';
 import { TopBar, Breadcrumb, TabBar } from '@/design-system';
 import { Button, VStack, HStack, Badge, Modal, Disclosure } from '@/design-system';
-import { IconAlertCircle } from '@tabler/icons-react';
+import { IconAlertCircle, IconChevronRight, IconChevronDown } from '@tabler/icons-react';
 
 /* ----------------------------------------
    Modal List Item Component
@@ -86,6 +86,12 @@ export function ModalsPage() {
   
   // IAM Modal states
   const [isDeleteUserOpen, setIsDeleteUserOpen] = useState(false);
+  
+  // Disclosure states
+  const [isComputeOpen, setIsComputeOpen] = useState(true);
+  const [isIAMOpen, setIsIAMOpen] = useState(false);
+  const [isContainerOpen, setIsContainerOpen] = useState(false);
+  const [isStorageOpen, setIsStorageOpen] = useState(false);
 
   return (
     <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
@@ -148,10 +154,15 @@ export function ModalsPage() {
               {/* Modal Categories by App */}
               <VStack gap={4}>
                 {/* Compute App Modals */}
-                <Disclosure defaultOpen>
-                  <Disclosure.Trigger className="w-full">
+                <Disclosure open={isComputeOpen} onChange={setIsComputeOpen}>
+                  <Disclosure.Trigger className="w-full [&>span:first-child]:hidden">
                     <div className="flex items-center justify-between w-full px-4 py-3 bg-[var(--color-surface-subtle)] rounded-lg border border-[var(--color-border-default)] hover:border-[var(--color-border-strong)] transition-colors">
                       <div className="flex items-center gap-3">
+                        {isComputeOpen ? (
+                          <IconChevronDown size={16} className="text-[var(--color-text-subtle)]" />
+                        ) : (
+                          <IconChevronRight size={16} className="text-[var(--color-text-subtle)]" />
+                        )}
                         <Badge variant="info" size="sm">Compute</Badge>
                         <span className="text-[14px] font-semibold text-[var(--color-text-default)]">
                           Compute Modals
@@ -318,10 +329,15 @@ export function ModalsPage() {
                 </Disclosure>
 
                 {/* IAM App Modals */}
-                <Disclosure>
-                  <Disclosure.Trigger className="w-full">
+                <Disclosure open={isIAMOpen} onChange={setIsIAMOpen}>
+                  <Disclosure.Trigger className="w-full [&>span:first-child]:hidden">
                     <div className="flex items-center justify-between w-full px-4 py-3 bg-[var(--color-surface-subtle)] rounded-lg border border-[var(--color-border-default)] hover:border-[var(--color-border-strong)] transition-colors">
                       <div className="flex items-center gap-3">
+                        {isIAMOpen ? (
+                          <IconChevronDown size={16} className="text-[var(--color-text-subtle)]" />
+                        ) : (
+                          <IconChevronRight size={16} className="text-[var(--color-text-subtle)]" />
+                        )}
                         <Badge variant="purple" size="sm">IAM</Badge>
                         <span className="text-[14px] font-semibold text-[var(--color-text-default)]">
                           IAM Modals
@@ -354,10 +370,15 @@ export function ModalsPage() {
                 </Disclosure>
 
                 {/* Container App Modals - Placeholder for future */}
-                <Disclosure>
-                  <Disclosure.Trigger className="w-full">
+                <Disclosure open={isContainerOpen} onChange={setIsContainerOpen}>
+                  <Disclosure.Trigger className="w-full [&>span:first-child]:hidden">
                     <div className="flex items-center justify-between w-full px-4 py-3 bg-[var(--color-surface-subtle)] rounded-lg border border-[var(--color-border-default)] hover:border-[var(--color-border-strong)] transition-colors">
                       <div className="flex items-center gap-3">
+                        {isContainerOpen ? (
+                          <IconChevronDown size={16} className="text-[var(--color-text-subtle)]" />
+                        ) : (
+                          <IconChevronRight size={16} className="text-[var(--color-text-subtle)]" />
+                        )}
                         <Badge variant="green" size="sm">Container</Badge>
                         <span className="text-[14px] font-semibold text-[var(--color-text-default)]">
                           Container Modals
@@ -380,10 +401,15 @@ export function ModalsPage() {
                 </Disclosure>
 
                 {/* Storage App Modals - Placeholder for future */}
-                <Disclosure>
-                  <Disclosure.Trigger className="w-full">
+                <Disclosure open={isStorageOpen} onChange={setIsStorageOpen}>
+                  <Disclosure.Trigger className="w-full [&>span:first-child]:hidden">
                     <div className="flex items-center justify-between w-full px-4 py-3 bg-[var(--color-surface-subtle)] rounded-lg border border-[var(--color-border-default)] hover:border-[var(--color-border-strong)] transition-colors">
                       <div className="flex items-center gap-3">
+                        {isStorageOpen ? (
+                          <IconChevronDown size={16} className="text-[var(--color-text-subtle)]" />
+                        ) : (
+                          <IconChevronRight size={16} className="text-[var(--color-text-subtle)]" />
+                        )}
                         <Badge variant="yellow" size="sm">Storage</Badge>
                         <span className="text-[14px] font-semibold text-[var(--color-text-default)]">
                           Storage Modals
