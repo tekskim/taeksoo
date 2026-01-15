@@ -23,6 +23,7 @@ import {
   IconChevronDown,
   IconChevronRight,
   IconSearch,
+  IconX,
 } from '@tabler/icons-react';
 
 /* ----------------------------------------
@@ -605,6 +606,10 @@ function PolicyEditorSection({
     onPermissionsErrorChange(null);
   };
 
+  const deletePermission = (id: string) => {
+    onPermissionsChange(permissions.filter((p) => p.id !== id));
+  };
+
   const updatePermission = (id: string, updates: Partial<Permission>) => {
     onPermissionsChange(
       permissions.map((p) => (p.id === id ? { ...p, ...updates } : p))
@@ -760,8 +765,19 @@ function PolicyEditorSection({
           {permissions.map((permission, index) => (
             <div
               key={permission.id}
-              className="bg-white border border-[var(--color-border-default)] rounded-[6px] p-4 w-full"
+              className="bg-white border border-[var(--color-border-default)] rounded-[6px] p-4 w-full relative"
             >
+              {/* Delete button - only show for cards after the first one */}
+              {index > 0 && (
+                <button
+                  type="button"
+                  onClick={() => deletePermission(permission.id)}
+                  className="absolute top-3 right-3 p-1 rounded hover:bg-[var(--color-surface-subtle)] text-[var(--color-text-muted)] hover:text-[var(--color-text-default)] transition-colors"
+                  aria-label="Remove permission"
+                >
+                  <IconX size={16} stroke={1.5} />
+                </button>
+              )}
               <VStack gap={6}>
                 {/* Target */}
                 <div className="flex flex-col gap-2 w-full">
