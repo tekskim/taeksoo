@@ -101,6 +101,7 @@ export function ModalsPage() {
   const [isDeletePolicyOpen, setIsDeletePolicyOpen] = useState(false);
   const [isDeletePoliciesMultipleOpen, setIsDeletePoliciesMultipleOpen] = useState(false);
   const [isRevertPolicyVersionOpen, setIsRevertPolicyVersionOpen] = useState(false);
+  const [isDeletePolicyVersionOpen, setIsDeletePolicyVersionOpen] = useState(false);
   const [usernameCopied, setUsernameCopied] = useState(false);
   const [passwordCopied, setPasswordCopied] = useState(false);
   
@@ -360,7 +361,7 @@ export function ModalsPage() {
                           Modals
                         </span>
                         <span className="text-[12px] text-[var(--color-text-subtle)]">
-                          (16 modals)
+                          (17 modals)
                         </span>
                       </div>
                     </div>
@@ -477,6 +478,13 @@ export function ModalsPage() {
                             category="Policy"
                             size="sm"
                             onOpen={() => setIsRevertPolicyVersionOpen(true)}
+                          />
+                          <ModalListItem
+                            title="Delete policy version"
+                            description="Confirm deleting a specific policy version with warning about permanent removal."
+                            category="Policy"
+                            size="sm"
+                            onOpen={() => setIsDeletePolicyVersionOpen(true)}
                           />
                         </div>
                       </VStack>
@@ -2241,6 +2249,48 @@ export function ModalsPage() {
             className="flex-1"
           >
             Revert
+          </Button>
+        </div>
+      </Modal>
+
+      {/* Delete Policy Version Modal */}
+      <Modal
+        isOpen={isDeletePolicyVersionOpen}
+        onClose={() => setIsDeletePolicyVersionOpen(false)}
+        title="Delete policy version"
+        description={`Are you sure you want to delete "VERSION"?`}
+        size="sm"
+      >
+        <div className="flex flex-col gap-2">
+          {/* Warning Alert Box */}
+          <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
+            <IconAlertCircle size={16} className="text-[var(--color-state-danger)] shrink-0 mt-0.5" stroke={1.5} />
+            <p className="text-[11px] text-[var(--color-text-default)] leading-4">
+              Deleting this version will permanently remove its policy definitions. This action cannot be undone.
+            </p>
+          </div>
+        </div>
+
+        {/* Button Group */}
+        <div className="flex gap-2 w-full">
+          <Button 
+            variant="outline" 
+            size="md" 
+            onClick={() => setIsDeletePolicyVersionOpen(false)}
+            className="flex-1"
+          >
+            Cancel
+          </Button>
+          <Button 
+            variant="primary" 
+            size="md" 
+            onClick={() => {
+              console.log('Policy version deleted');
+              setIsDeletePolicyVersionOpen(false);
+            }}
+            className="flex-1"
+          >
+            Delete
           </Button>
         </div>
       </Modal>
