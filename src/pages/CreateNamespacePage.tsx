@@ -32,7 +32,7 @@ import {
    ---------------------------------------- */
 
 type SectionStep = 'basic-info' | 'pod-security' | 'labels-annotations';
-type SectionState = 'pre' | 'active' | 'done';
+type SectionState = 'pre' | 'active' | 'done' | 'writing';
 
 // Section labels for display
 const SECTION_LABELS: Record<SectionStep, string> = {
@@ -86,6 +86,27 @@ function PreSection({ title }: PreSectionProps) {
 }
 
 /* ----------------------------------------
+   WritingSection Component
+   ---------------------------------------- */
+
+interface WritingSectionProps {
+  title: string;
+}
+
+function WritingSection({ title }: WritingSectionProps) {
+  return (
+    <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg px-4 py-3">
+      <div className="h-8 flex items-center justify-between">
+        <h5 className="text-[length:var(--font-size-14)] font-semibold leading-[var(--line-height-20)] text-[var(--color-text-default)]">
+          {title}
+        </h5>
+        <span className="text-[11px] text-[var(--color-text-subtle)]">Writing...</span>
+      </div>
+    </div>
+  );
+}
+
+/* ----------------------------------------
    DoneSection Component
    ---------------------------------------- */
 
@@ -128,6 +149,7 @@ function SummarySidebar({ sectionStatus, onCancel, onCreate, isCreateDisabled }:
   const mapState = (state: SectionState): WizardSectionState => {
     if (state === 'pre') return 'pending';
     if (state === 'active') return 'active';
+    if (state === 'writing') return 'writing';
     return 'done';
   };
 
@@ -678,13 +700,28 @@ export function CreateNamespacePage() {
     }));
   }, []);
 
-  // Handle edit
+  // Handle edit - when editing a previous section, subsequent sections become 'writing'
   const handleEdit = useCallback((section: SectionStep) => {
     setEditingSection(section);
-    setSectionStatus((prev) => ({
-      ...prev,
-      [section]: 'active',
-    }));
+    const sectionIndex = SECTION_ORDER.indexOf(section);
+
+    setSectionStatus((prev) => {
+      const newStatus = { ...prev };
+
+      // Set all sections to their appropriate state
+      SECTION_ORDER.forEach((key, index) => {
+        if (index < sectionIndex) {
+          newStatus[key] = 'done';
+        } else if (index === sectionIndex) {
+          newStatus[key] = 'active';
+        } else if (prev[key] === 'done' || prev[key] === 'active') {
+          // Subsequent sections that were done/active become 'writing'
+          newStatus[key] = 'writing';
+        }
+      });
+
+      return newStatus;
+    });
   }, []);
 
   // Handle edit cancel
@@ -695,17 +732,25 @@ export function CreateNamespacePage() {
       const newStatus = { ...prev };
       newStatus[editingSection] = 'done';
 
-      // Find next section that was active or first pre section
-      let nextActive: SectionStep | null = null;
-      for (const key of SECTION_ORDER) {
-        if (newStatus[key] === 'pre') {
-          nextActive = key;
+      // Find next writing section to activate
+      const editIndex = SECTION_ORDER.indexOf(editingSection);
+      let nextWritingFound = false;
+      for (let i = editIndex + 1; i < SECTION_ORDER.length; i++) {
+        if (newStatus[SECTION_ORDER[i]] === 'writing') {
+          newStatus[SECTION_ORDER[i]] = 'active';
+          nextWritingFound = true;
           break;
         }
       }
 
-      if (nextActive) {
-        newStatus[nextActive] = 'active';
+      // If no writing section, activate first pre section
+      if (!nextWritingFound) {
+        for (const key of SECTION_ORDER) {
+          if (newStatus[key] === 'pre') {
+            newStatus[key] = 'active';
+            break;
+          }
+        }
       }
 
       return newStatus;
@@ -722,17 +767,25 @@ export function CreateNamespacePage() {
       const newStatus = { ...prev };
       newStatus[editingSection] = 'done';
 
-      // Find next pre section to activate
-      let nextActive: SectionStep | null = null;
-      for (const key of SECTION_ORDER) {
-        if (newStatus[key] === 'pre') {
-          nextActive = key;
+      // Find next writing section to activate
+      const editIndex = SECTION_ORDER.indexOf(editingSection);
+      let nextWritingFound = false;
+      for (let i = editIndex + 1; i < SECTION_ORDER.length; i++) {
+        if (newStatus[SECTION_ORDER[i]] === 'writing') {
+          newStatus[SECTION_ORDER[i]] = 'active';
+          nextWritingFound = true;
           break;
         }
       }
 
-      if (nextActive) {
-        newStatus[nextActive] = 'active';
+      // If no writing section, activate first pre section
+      if (!nextWritingFound) {
+        for (const key of SECTION_ORDER) {
+          if (newStatus[key] === 'pre') {
+            newStatus[key] = 'active';
+            break;
+          }
+        }
       }
 
       return newStatus;
@@ -910,6 +963,9 @@ export function CreateNamespacePage() {
                   {sectionStatus['basic-info'] === 'pre' && (
                     <PreSection title={SECTION_LABELS['basic-info']} />
                   )}
+                  {sectionStatus['basic-info'] === 'writing' && (
+                    <WritingSection title={SECTION_LABELS['basic-info']} />
+                  )}
                   {sectionStatus['basic-info'] === 'active' && (
                     <BasicInfoSection
                       namespaceName={namespaceName}
@@ -937,6 +993,9 @@ export function CreateNamespacePage() {
                   {/* Pod Security Admission Section */}
                   {sectionStatus['pod-security'] === 'pre' && (
                     <PreSection title={SECTION_LABELS['pod-security']} />
+                  )}
+                  {sectionStatus['pod-security'] === 'writing' && (
+                    <WritingSection title={SECTION_LABELS['pod-security']} />
                   )}
                   {sectionStatus['pod-security'] === 'active' && (
                     <PodSecuritySection
@@ -976,6 +1035,9 @@ export function CreateNamespacePage() {
                   {/* Labels & Annotations Section */}
                   {sectionStatus['labels-annotations'] === 'pre' && (
                     <PreSection title={SECTION_LABELS['labels-annotations']} />
+                  )}
+                  {sectionStatus['labels-annotations'] === 'writing' && (
+                    <WritingSection title={SECTION_LABELS['labels-annotations']} />
                   )}
                   {sectionStatus['labels-annotations'] === 'active' && (
                     <LabelsAnnotationsSection
