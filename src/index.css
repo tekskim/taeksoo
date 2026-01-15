@@ -370,7 +370,7 @@ html.theme-transition *::after {
      Component - Button
      ---------------------------------------- */
   --button-height-sm: 28px;
-  --button-height-md: 32px;
+  --button-height-md: 28px;
   --button-height-lg: 40px;
 
   --button-min-width-sm: 60px;
@@ -392,7 +392,7 @@ html.theme-transition *::after {
   --button-radius: var(--radius-button);
 
   --button-font-size-sm: var(--font-size-11);
-  --button-font-size-md: var(--font-size-12);
+  --button-font-size-md: var(--font-size-11);
   --button-font-size-lg: var(--font-size-14);
 
   /* Button - Hover Colors */
@@ -702,7 +702,7 @@ html.theme-transition *::after {
   --tabs-padding-x: var(--spacing-3);
   --tabs-indicator-gap: var(--spacing-2-5);
   --tabs-indicator-height: 2px;
-  --tabs-panel-padding: 0;
+  --tabs-panel-padding: var(--spacing-4);
 
   /* Tabs - Size SM */
   --tabs-font-size-sm: var(--font-size-12);
@@ -1327,6 +1327,31 @@ html.theme-transition *::after {
 .shell-scroll {
   scrollbar-width: thin;
   scrollbar-color: #475569 transparent;
+}
+
+/* YAML Editor Scrollbar */
+.yaml-editor-scroll {
+  scrollbar-gutter: stable;
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-border-default) transparent;
+}
+
+.yaml-editor-scroll::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.yaml-editor-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.yaml-editor-scroll::-webkit-scrollbar-thumb {
+  background: var(--color-border-default);
+  border-radius: var(--radius-full);
+}
+
+.yaml-editor-scroll::-webkit-scrollbar-thumb:hover {
+  background: var(--color-border-strong);
 }
 
 /* Hide native search input clear button */

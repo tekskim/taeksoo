@@ -421,20 +421,20 @@ export function ContainerEventsPage() {
           <div className="pt-4 px-8 pb-6 bg-[var(--color-surface-default)]">
             <VStack gap={3}>
               {/* Header */}
-              <HStack justify="between" align="center" className="w-full">
+              <HStack justify="between" align="center" className="w-full min-h-8">
                 <HStack gap={2} align="center">
-                  <h1 className="text-[18px] font-semibold text-[var(--color-text-default)]">
+                  <h1 className="text-[16px] leading-6 font-semibold text-[var(--color-text-default)]">
                     Events
                   </h1>
                 </HStack>
               </HStack>
 
               {/* Action Bar */}
-              <HStack gap={2} align="center" className="w-full">
+              <HStack gap={2} align="center" className="w-full min-h-7">
                 {/* Search */}
                 <HStack gap={1} align="center">
                   <SearchInput
-                    placeholder="Find Event with filters"
+                    placeholder="Search Events by attributes"
                     size="sm"
                     className="w-[280px]"
                   />

@@ -21,6 +21,8 @@ export interface ChipProps extends Omit<HTMLAttributes<HTMLDivElement>, 'childre
   disabled?: boolean;
   /** Left icon */
   icon?: ReactNode;
+  /** Max width for truncation */
+  maxWidth?: string;
 }
 
 /* ----------------------------------------
@@ -34,6 +36,7 @@ export function Chip({
   onRemove,
   disabled = false,
   icon,
+  maxWidth,
   className = '',
   ...props
 }: ChipProps) {
@@ -41,6 +44,8 @@ export function Chip({
     default: `border-[var(--chip-border)] pl-[var(--chip-padding-left)] ${onRemove ? 'pr-[var(--chip-padding-right)]' : 'pr-[var(--chip-padding-left)]'}`,
     selected: `border-[var(--chip-border-selected)] pl-[var(--chip-padding-selected)] ${onRemove ? 'pr-[var(--chip-padding-right)]' : 'pr-[var(--chip-padding-selected)]'}`,
   };
+
+  const fullText = label ? `${label}: ${value}` : value;
 
   return (
     <div
@@ -54,8 +59,11 @@ export function Chip({
         'font-medium',
         variantStyles[variant],
         disabled && 'opacity-50 cursor-not-allowed',
+        maxWidth && 'max-w-full',
         className
       )}
+      style={maxWidth ? { maxWidth } : undefined}
+      title={fullText}
       {...props}
     >
       {/* Icon */}
@@ -66,14 +74,14 @@ export function Chip({
       )}
 
       {/* Label + Value */}
-      <span className="flex items-center gap-1">
+      <span className={twMerge('flex items-center gap-1', maxWidth && 'min-w-0 truncate')}>
         {label && (
           <>
-            <span className="text-[var(--color-text-default)]">{label}</span>
-            <span className="text-[var(--chip-separator-color)]">|</span>
+            <span className="text-[var(--color-text-default)] truncate">{label}</span>
+            <span className="text-[var(--chip-separator-color)] shrink-0">|</span>
           </>
         )}
-        <span className="text-[var(--color-text-default)]">{value}</span>
+        <span className="text-[var(--color-text-default)] truncate">{value}</span>
       </span>
 
       {/* Close Button */}
