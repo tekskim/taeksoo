@@ -20,6 +20,7 @@ import {
   Tooltip,
   DetailHeader,
   Chip,
+  SectionCard,
   type TableColumn,
   type ContextMenuItem,
 } from '@/design-system';
@@ -36,6 +37,7 @@ import {
   IconInfoCircle,
   IconCheck,
   IconChevronDown,
+  IconHelp,
 } from '@tabler/icons-react';
 
 /* ----------------------------------------
@@ -61,6 +63,15 @@ interface NodeData {
     memoryPressure: boolean;
     kubeletReady: boolean;
   };
+  // Basic Information fields
+  architecture: string;
+  bootId: string;
+  kernelVersion: string;
+  kubeProxyVersion: string;
+  kubeletVersion: string;
+  machineId: string;
+  operatingSystem: string;
+  systemUuid: string;
 }
 
 interface PodRow {
@@ -147,6 +158,15 @@ const mockNodeData: Record<string, NodeData> = {
       memoryPressure: false,
       kubeletReady: true,
     },
+    // Basic Information fields
+    architecture: 'amd64',
+    bootId: 'd85b0797-ae7b-40a3-b0ff-4fd479a14d1d',
+    kernelVersion: '6.8.0-85-generic',
+    kubeProxyVersion: '—',
+    kubeletVersion: 'v1.33.5+k3s1',
+    machineId: 'b319e1d4e1c84ddbbcba47baf5d9a583',
+    operatingSystem: 'linux',
+    systemUuid: 'b319e1d4-e1c84ddb-bcba-47baf5d9a583',
   },
 };
 
@@ -316,7 +336,7 @@ function ResourceUsage({ label, used, total, unit = '' }: ResourceUsageProps) {
   const percentage = Math.round((used / total) * 100);
   
   return (
-    <div className="flex-1">
+    <div className="flex-1 border border-[var(--color-border-default)] rounded-lg px-4 py-3">
       <HStack justify="between" align="center" className="mb-1">
         <span className="text-[11px] font-medium text-[var(--color-text-default)]">{label}</span>
         <span className="text-[11px] text-[var(--color-text-subtle)]">
@@ -365,8 +385,8 @@ function PodsTab({ pods }: PodsTabProps) {
     },
     { key: 'namespace', label: 'Namespace', flex: 1, sortable: true },
     { key: 'image', label: 'Image', flex: 1 },
-    { key: 'ready', label: 'Ready', width: '80px', align: 'center' },
-    { key: 'restarts', label: 'Restarts', width: '80px', align: 'center' },
+    { key: 'ready', label: 'Ready', width: '80px', align: 'left' },
+    { key: 'restarts', label: 'Restarts', width: '80px', align: 'left' },
     { key: 'ip', label: 'IP', flex: 1 },
     { key: 'node', label: 'Node', flex: 1 },
     { key: 'createdAt', label: 'Created At', flex: 1, sortable: true },
@@ -379,7 +399,7 @@ function PodsTab({ pods }: PodsTabProps) {
       </h3>
       <HStack gap={2} align="center">
         <SearchInput
-          placeholder="Find Pods with filters"
+          placeholder="Search Pods by attributes"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
           onClear={() => setSearchQuery('')}
@@ -402,45 +422,111 @@ function PodsTab({ pods }: PodsTabProps) {
    Details Tab Content
    ---------------------------------------- */
 
+interface DetailDataRowProps {
+  label: string;
+  value: string;
+  tooltip: string;
+  showDivider?: boolean;
+}
+
+function DetailDataRow({ label, value, tooltip, showDivider = true }: DetailDataRowProps) {
+  return (
+    <div className="flex flex-col gap-3 w-[268px]">
+      {showDivider && (
+        <div className="h-px w-full bg-[var(--color-border-subtle)]" />
+      )}
+      <div className="flex flex-col gap-[6px]">
+        <div className="flex items-center gap-[2px]">
+          <span className="text-[11px] font-medium leading-4 text-[var(--color-text-subtle)]">
+            {label}
+          </span>
+          <Tooltip content={tooltip}>
+            <button className="p-0 bg-transparent border-none cursor-help">
+              <IconHelp size={16} className="text-[var(--color-text-subtle)]" stroke={1.5} />
+            </button>
+          </Tooltip>
+        </div>
+        <span className="text-[12px] leading-4 text-[var(--color-text-default)]">
+          {value}
+        </span>
+      </div>
+    </div>
+  );
+}
+
 interface DetailsTabProps {
   node: NodeData;
 }
 
 function DetailsTab({ node }: DetailsTabProps) {
+  const basicInfoFields = [
+    {
+      label: 'Architecture',
+      value: node.architecture,
+      tooltip: 'Indicates the CPU architecture used by the node.',
+    },
+    {
+      label: 'Boot ID',
+      value: node.bootId,
+      tooltip: 'A unique identifier generated when the node last booted.',
+    },
+    {
+      label: 'Container Runtime Version',
+      value: node.containerRuntime,
+      tooltip: 'The container runtime and version used to run containers on the node.',
+    },
+    {
+      label: 'Image',
+      value: node.os,
+      tooltip: 'Operating system image and version running on the node.',
+    },
+    {
+      label: 'Kernel Version',
+      value: node.kernelVersion,
+      tooltip: 'The version of the Linux kernel running on the node.',
+    },
+    {
+      label: 'Kube Proxy Version',
+      value: node.kubeProxyVersion,
+      tooltip: 'The version of kube-proxy handling service networking on the node.',
+    },
+    {
+      label: 'Kubelet Version',
+      value: node.kubeletVersion,
+      tooltip: 'The version of the kubelet agent running on the node.',
+    },
+    {
+      label: 'Machine ID',
+      value: node.machineId,
+      tooltip: 'A system-level identifier that uniquely represents the node\'s machine.',
+    },
+    {
+      label: 'Operating System',
+      value: node.operatingSystem,
+      tooltip: 'The type of operating system the node is running (linux or windows).',
+    },
+    {
+      label: 'System UUID',
+      value: node.systemUuid,
+      tooltip: 'A hardware-based UUID that uniquely identifies the node.',
+    },
+  ];
+
   return (
-    <VStack gap={4}>
-      <h3 className="text-[14px] font-semibold leading-[20px] text-[var(--color-text-default)]">
-        Node Details
-      </h3>
-      <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg p-4">
-        <VStack gap={3}>
-          <HStack className="border-b border-[var(--color-border-subtle)] pb-2">
-            <span className="w-[200px] text-[12px] font-medium text-[var(--color-text-muted)]">Name</span>
-            <span className="text-[12px] text-[var(--color-text-default)]">{node.name}</span>
-          </HStack>
-          <HStack className="border-b border-[var(--color-border-subtle)] pb-2">
-            <span className="w-[200px] text-[12px] font-medium text-[var(--color-text-muted)]">Internal IP</span>
-            <span className="text-[12px] text-[var(--color-text-default)]">{node.internalIp}</span>
-          </HStack>
-          <HStack className="border-b border-[var(--color-border-subtle)] pb-2">
-            <span className="w-[200px] text-[12px] font-medium text-[var(--color-text-muted)]">Kubernetes Version</span>
-            <span className="text-[12px] text-[var(--color-text-default)]">{node.kubernetesVersion}</span>
-          </HStack>
-          <HStack className="border-b border-[var(--color-border-subtle)] pb-2">
-            <span className="w-[200px] text-[12px] font-medium text-[var(--color-text-muted)]">OS</span>
-            <span className="text-[12px] text-[var(--color-text-default)]">{node.os}</span>
-          </HStack>
-          <HStack className="border-b border-[var(--color-border-subtle)] pb-2">
-            <span className="w-[200px] text-[12px] font-medium text-[var(--color-text-muted)]">Container Runtime</span>
-            <span className="text-[12px] text-[var(--color-text-default)]">{node.containerRuntime}</span>
-          </HStack>
-          <HStack>
-            <span className="w-[200px] text-[12px] font-medium text-[var(--color-text-muted)]">Created At</span>
-            <span className="text-[12px] text-[var(--color-text-default)]">{node.createdAt}</span>
-          </HStack>
-        </VStack>
-      </div>
-    </VStack>
+    <SectionCard>
+      <SectionCard.Header title="Basic Information" />
+      <SectionCard.Content gap={3}>
+        {basicInfoFields.map((field, index) => (
+          <DetailDataRow
+            key={field.label}
+            label={field.label}
+            value={field.value}
+            tooltip={field.tooltip}
+            showDivider={index > 0}
+          />
+        ))}
+      </SectionCard.Content>
+    </SectionCard>
   );
 }
 
@@ -761,7 +847,7 @@ export function NodeDetailPage() {
               </HStack>
 
               {/* Resource Usage */}
-              <HStack gap={6} className="w-full">
+              <HStack gap={3} className="w-full">
                 <ResourceUsage label="CPU" used={node.cpu.used} total={node.cpu.total} />
                 <ResourceUsage label="Memory" used={node.memory.used} total={node.memory.total} unit={node.memory.unit} />
                 <ResourceUsage label="Pods" used={node.pods.used} total={node.pods.total} />
