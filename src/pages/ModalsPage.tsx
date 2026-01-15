@@ -88,6 +88,7 @@ export function ModalsPage() {
   const [isDeleteUserOpen, setIsDeleteUserOpen] = useState(false);
   const [isDeleteUsersMultipleOpen, setIsDeleteUsersMultipleOpen] = useState(false);
   const [isConfirmUserPasswordOpen, setIsConfirmUserPasswordOpen] = useState(false);
+  const [isUnsavedChangesOpen, setIsUnsavedChangesOpen] = useState(false);
   const [usernameCopied, setUsernameCopied] = useState(false);
   const [passwordCopied, setPasswordCopied] = useState(false);
   
@@ -347,7 +348,7 @@ export function ModalsPage() {
                           Modals
                         </span>
                         <span className="text-[12px] text-[var(--color-text-subtle)]">
-                          (3 modals)
+                          (4 modals)
                         </span>
                       </div>
                     </div>
@@ -380,6 +381,22 @@ export function ModalsPage() {
                             category="User"
                             size="sm"
                             onOpen={() => setIsConfirmUserPasswordOpen(true)}
+                          />
+                        </div>
+                      </VStack>
+
+                      {/* General Modals */}
+                      <VStack gap={2}>
+                        <h2 className="text-[14px] font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
+                          General
+                        </h2>
+                        <div className="flex flex-col gap-2">
+                          <ModalListItem
+                            title="Unsaved changes"
+                            description="Confirm leaving page with unsaved changes."
+                            category="Navigation"
+                            size="sm"
+                            onOpen={() => setIsUnsavedChangesOpen(true)}
                           />
                         </div>
                       </VStack>
@@ -1388,6 +1405,38 @@ export function ModalsPage() {
             className="flex-1"
           >
             Close
+          </Button>
+        </div>
+      </Modal>
+
+      {/* Unsaved Changes Modal */}
+      <Modal
+        isOpen={isUnsavedChangesOpen}
+        onClose={() => setIsUnsavedChangesOpen(false)}
+        title="Unsaved changes"
+        description="Any unsaved changes will be lost. Do you want to leave?"
+        size="sm"
+      >
+        {/* Button Group */}
+        <div className="flex gap-2 w-full">
+          <Button 
+            variant="outline" 
+            size="md" 
+            onClick={() => {
+              console.log('Leave clicked');
+              setIsUnsavedChangesOpen(false);
+            }}
+            className="flex-1"
+          >
+            Leave
+          </Button>
+          <Button 
+            variant="primary" 
+            size="md" 
+            onClick={() => setIsUnsavedChangesOpen(false)} 
+            className="flex-1"
+          >
+            Stay
           </Button>
         </div>
       </Modal>
