@@ -91,6 +91,7 @@ export function ModalsPage() {
   const [isUnsavedChangesOpen, setIsUnsavedChangesOpen] = useState(false);
   const [isDetachUserGroupOpen, setIsDetachUserGroupOpen] = useState(false);
   const [isDetachRoleOpen, setIsDetachRoleOpen] = useState(false);
+  const [isRemoveOtpMfaOpen, setIsRemoveOtpMfaOpen] = useState(false);
   const [usernameCopied, setUsernameCopied] = useState(false);
   const [passwordCopied, setPasswordCopied] = useState(false);
   
@@ -350,7 +351,7 @@ export function ModalsPage() {
                           Modals
                         </span>
                         <span className="text-[12px] text-[var(--color-text-subtle)]">
-                          (6 modals)
+                          (7 modals)
                         </span>
                       </div>
                     </div>
@@ -397,6 +398,13 @@ export function ModalsPage() {
                             category="User"
                             size="sm"
                             onOpen={() => setIsDetachRoleOpen(true)}
+                          />
+                          <ModalListItem
+                            title="Remove OTP MFA"
+                            description="Confirm removing OTP MFA for a user with warning about re-registration."
+                            category="User"
+                            size="sm"
+                            onOpen={() => setIsRemoveOtpMfaOpen(true)}
                           />
                         </div>
                       </VStack>
@@ -1577,6 +1585,58 @@ export function ModalsPage() {
             className="flex-1"
           >
             Detach
+          </Button>
+        </div>
+      </Modal>
+
+      {/* Remove OTP MFA Modal */}
+      <Modal
+        isOpen={isRemoveOtpMfaOpen}
+        onClose={() => setIsRemoveOtpMfaOpen(false)}
+        title="Remove OTP MFA"
+        description="Are you sure you want to remove OTP MFA for user 'DISPLAYNAME'?"
+        size="sm"
+      >
+        <div className="flex flex-col gap-2">
+          {/* User Info Box */}
+          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
+            <span className="text-[11px] text-[var(--color-text-subtle)] font-medium leading-4">
+              User
+            </span>
+            <span className="text-[12px] text-[var(--color-text-default)] leading-4">
+              DISPLAY NAME
+            </span>
+          </div>
+
+          {/* Warning Alert Box */}
+          <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
+            <IconAlertCircle size={16} className="text-[var(--color-state-danger)] shrink-0 mt-0.5" stroke={1.5} />
+            <p className="text-[11px] text-[var(--color-text-default)] leading-4">
+              Removing OTP MFA will require the user to register OTP authentication again.
+            </p>
+          </div>
+        </div>
+
+        {/* Button Group */}
+        <div className="flex gap-2 w-full">
+          <Button 
+            variant="outline" 
+            size="md" 
+            onClick={() => setIsRemoveOtpMfaOpen(false)}
+            className="flex-1"
+          >
+            Cancel
+          </Button>
+          <Button 
+            variant="primary" 
+            size="md" 
+            onClick={() => {
+              console.log('OTP MFA removed');
+              setIsRemoveOtpMfaOpen(false);
+            }}
+            className="flex-1"
+          >
+            Remove
           </Button>
         </div>
       </Modal>
