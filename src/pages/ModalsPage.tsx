@@ -2,8 +2,8 @@ import { useState } from 'react';
 import { Sidebar } from '@/components/Sidebar';
 import { useTabs } from '@/contexts/TabContext';
 import { TopBar, Breadcrumb, TabBar } from '@/design-system';
-import { Button, VStack, HStack, Badge, Modal } from '@/design-system';
-import { IconAlertCircle } from '@tabler/icons-react';
+import { Button, VStack, HStack, Badge, Modal, Disclosure } from '@/design-system';
+import { IconAlertCircle, IconChevronRight, IconChevronDown, IconCopy, IconCheck } from '@tabler/icons-react';
 
 /* ----------------------------------------
    Modal List Item Component
@@ -83,6 +83,45 @@ export function ModalsPage() {
   const [isReleaseFloatingIPMediumOpen, setIsReleaseFloatingIPMediumOpen] = useState(false);
   const [isDeleteLoadBalancerOpen, setIsDeleteLoadBalancerOpen] = useState(false);
   const [isDeleteLoadBalancersMultipleOpen, setIsDeleteLoadBalancersMultipleOpen] = useState(false);
+  
+  // IAM Modal states
+  const [isDeleteUserOpen, setIsDeleteUserOpen] = useState(false);
+  const [isDeleteUsersMultipleOpen, setIsDeleteUsersMultipleOpen] = useState(false);
+  const [isConfirmUserPasswordOpen, setIsConfirmUserPasswordOpen] = useState(false);
+  const [isUnsavedChangesOpen, setIsUnsavedChangesOpen] = useState(false);
+  const [isDetachUserGroupOpen, setIsDetachUserGroupOpen] = useState(false);
+  const [isDetachRoleOpen, setIsDetachRoleOpen] = useState(false);
+  const [isRemoveOtpMfaOpen, setIsRemoveOtpMfaOpen] = useState(false);
+  const [isTerminateAllSessionsOpen, setIsTerminateAllSessionsOpen] = useState(false);
+  const [isTerminateSessionOpen, setIsTerminateSessionOpen] = useState(false);
+  const [isRemoveUserFromGroupOpen, setIsRemoveUserFromGroupOpen] = useState(false);
+  const [isDeleteRoleOpen, setIsDeleteRoleOpen] = useState(false);
+  const [isDeleteRolesMultipleOpen, setIsDeleteRolesMultipleOpen] = useState(false);
+  const [isDetachPolicyOpen, setIsDetachPolicyOpen] = useState(false);
+  const [isDeletePolicyOpen, setIsDeletePolicyOpen] = useState(false);
+  const [isDeletePoliciesMultipleOpen, setIsDeletePoliciesMultipleOpen] = useState(false);
+  const [isRevertPolicyVersionOpen, setIsRevertPolicyVersionOpen] = useState(false);
+  const [isDeletePolicyVersionOpen, setIsDeletePolicyVersionOpen] = useState(false);
+  const [isUpdateMfaEnforcementOpen, setIsUpdateMfaEnforcementOpen] = useState(false);
+  const [isUpdateOtpPolicyOpen, setIsUpdateOtpPolicyOpen] = useState(false);
+  const [isUpdateOtpPolicySettingsOpen, setIsUpdateOtpPolicySettingsOpen] = useState(false);
+  const [isUpdateEmailPolicyOpen, setIsUpdateEmailPolicyOpen] = useState(false);
+  const [isUpdateEmailPolicySettingsOpen, setIsUpdateEmailPolicySettingsOpen] = useState(false);
+  const [isUpdateGeneralSessionPolicyOpen, setIsUpdateGeneralSessionPolicyOpen] = useState(false);
+  const [isDeleteDomainOpen, setIsDeleteDomainOpen] = useState(false);
+  const [isSwitchToDomainOpen, setIsSwitchToDomainOpen] = useState(false);
+  const [isDeleteSystemAdminOpen, setIsDeleteSystemAdminOpen] = useState(false);
+  const [isUpdatePasswordPolicyOpen, setIsUpdatePasswordPolicyOpen] = useState(false);
+  const [isUpdateAccountLockoutPolicyOpen, setIsUpdateAccountLockoutPolicyOpen] = useState(false);
+  const [isUpdateTokenPolicyOpen, setIsUpdateTokenPolicyOpen] = useState(false);
+  const [usernameCopied, setUsernameCopied] = useState(false);
+  const [passwordCopied, setPasswordCopied] = useState(false);
+  
+  // Disclosure states
+  const [isComputeOpen, setIsComputeOpen] = useState(false);
+  const [isIAMOpen, setIsIAMOpen] = useState(false);
+  const [isContainerOpen, setIsContainerOpen] = useState(false);
+  const [isStorageOpen, setIsStorageOpen] = useState(false);
 
   return (
     <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
@@ -142,173 +181,490 @@ export function ModalsPage() {
                 </p>
               </VStack>
 
-              {/* Modal Categories */}
+              {/* Modal Categories by App */}
               <VStack gap={4}>
-                {/* Delete Modals */}
-                <VStack gap={2}>
-                  <h2 className="text-[14px] font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
-                    Delete Modals
-                  </h2>
-                  <div className="flex flex-col gap-2">
-                    <ModalListItem
-                      title="Delete Snapshot"
-                      description="Confirm deletion of a snapshot with warning about permanent action."
-                      category="Confirm"
-                      size="sm"
-                      onOpen={() => setIsConfirmDeleteOpen(true)}
-                    />
-                    <ModalListItem
-                      title="Delete Security group"
-                      description="Confirm deletion of a single security group with warning."
-                      category="Confirm"
-                      size="sm"
-                      onOpen={() => setIsDeleteSecurityGroupOpen(true)}
-                    />
-                    <ModalListItem
-                      title="Delete Security groups (Multiple)"
-                      description="Confirm deletion of multiple security groups with scrollable list."
-                      category="Confirm"
-                      size="md"
-                      onOpen={() => setIsDeleteSecurityGroupsMultipleOpen(true)}
-                    />
-                    <ModalListItem
-                      title="Delete Rule"
-                      description="Confirm deletion of a single security group rule."
-                      category="Confirm"
-                      size="sm"
-                      onOpen={() => setIsDeleteRuleOpen(true)}
-                    />
-                    <ModalListItem
-                      title="Delete Rules (Multiple)"
-                      description="Confirm deletion of multiple rules with scrollable list and warning."
-                      category="Confirm"
-                      size="md"
-                      onOpen={() => setIsDeleteRulesMultipleOpen(true)}
-                    />
-                  </div>
-                </VStack>
+                {/* Compute App Modals */}
+                <Disclosure open={isComputeOpen} onChange={setIsComputeOpen}>
+                  <Disclosure.Trigger className="w-full [&>span:first-child]:hidden">
+                    <div className="flex items-center justify-between w-full px-4 py-3 bg-[var(--color-surface-subtle)] rounded-lg border border-[var(--color-border-default)] hover:border-[var(--color-border-strong)] transition-colors">
+                      <div className="flex items-center gap-3">
+                        {isComputeOpen ? (
+                          <IconChevronDown size={16} className="text-[var(--color-text-subtle)]" />
+                        ) : (
+                          <IconChevronRight size={16} className="text-[var(--color-text-subtle)]" />
+                        )}
+                        <Badge variant="info" size="sm" className="w-[70px] justify-center">Compute</Badge>
+                        <span className="text-[14px] font-semibold text-[var(--color-text-default)]">
+                          Modals
+                        </span>
+                        <span className="text-[12px] text-[var(--color-text-subtle)]">
+                          (16 modals)
+                        </span>
+                      </div>
+                    </div>
+                  </Disclosure.Trigger>
+                  <Disclosure.Panel>
+                    <VStack gap={4} className="pt-4">
+                      {/* Delete Modals */}
+                      <VStack gap={2}>
+                        <h2 className="text-[14px] font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
+                          Delete Modals
+                        </h2>
+                        <div className="flex flex-col gap-2">
+                          <ModalListItem
+                            title="Delete Snapshot"
+                            description="Confirm deletion of a snapshot with warning about permanent action."
+                            category="Confirm"
+                            size="sm"
+                            onOpen={() => setIsConfirmDeleteOpen(true)}
+                          />
+                          <ModalListItem
+                            title="Delete Security group"
+                            description="Confirm deletion of a single security group with warning."
+                            category="Confirm"
+                            size="sm"
+                            onOpen={() => setIsDeleteSecurityGroupOpen(true)}
+                          />
+                          <ModalListItem
+                            title="Delete Security groups (Multiple)"
+                            description="Confirm deletion of multiple security groups with scrollable list."
+                            category="Confirm"
+                            size="md"
+                            onOpen={() => setIsDeleteSecurityGroupsMultipleOpen(true)}
+                          />
+                          <ModalListItem
+                            title="Delete Rule"
+                            description="Confirm deletion of a single security group rule."
+                            category="Confirm"
+                            size="sm"
+                            onOpen={() => setIsDeleteRuleOpen(true)}
+                          />
+                          <ModalListItem
+                            title="Delete Rules (Multiple)"
+                            description="Confirm deletion of multiple rules with scrollable list and warning."
+                            category="Confirm"
+                            size="md"
+                            onOpen={() => setIsDeleteRulesMultipleOpen(true)}
+                          />
+                        </div>
+                      </VStack>
 
-                {/* Volume Actions */}
-                <VStack gap={2}>
-                  <h2 className="text-[14px] font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
-                    Volume Actions
-                  </h2>
-                  <div className="flex flex-col gap-2">
-                    <ModalListItem
-                      title="Detach volume"
-                      description="Confirm detachment of a volume with warning about data corruption."
-                      category="Volume"
-                      size="sm"
-                      onOpen={() => setIsDetachVolumeOpen(true)}
-                    />
-                  </div>
-                </VStack>
+                      {/* Volume Actions */}
+                      <VStack gap={2}>
+                        <h2 className="text-[14px] font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
+                          Volume Actions
+                        </h2>
+                        <div className="flex flex-col gap-2">
+                          <ModalListItem
+                            title="Detach volume"
+                            description="Confirm detachment of a volume with warning about data corruption."
+                            category="Volume"
+                            size="sm"
+                            onOpen={() => setIsDetachVolumeOpen(true)}
+                          />
+                        </div>
+                      </VStack>
 
-                {/* Backup Actions */}
-                <VStack gap={2}>
-                  <h2 className="text-[14px] font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
-                    Backup Actions
-                  </h2>
-                  <div className="flex flex-col gap-2">
-                    <ModalListItem
-                      title="Restore backup"
-                      description="Simple restore backup confirmation with volume info."
-                      category="Backup"
-                      size="sm"
-                      onOpen={() => setIsRestoreBackupSmallOpen(true)}
-                    />
-                    <ModalListItem
-                      title="Restore backup (with instance name)"
-                      description="Restore backup with volume and instance list information."
-                      category="Backup"
-                      size="md"
-                      onOpen={() => setIsRestoreBackupMediumOpen(true)}
-                    />
-                    <ModalListItem
-                      title="Restore backup (with instance name and warning)"
-                      description="Restore backup with warning alert and disabled action button."
-                      category="Backup"
-                      size="lg"
-                      onOpen={() => setIsRestoreBackupLargeOpen(true)}
-                    />
-                  </div>
-                </VStack>
+                      {/* Backup Actions */}
+                      <VStack gap={2}>
+                        <h2 className="text-[14px] font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
+                          Backup Actions
+                        </h2>
+                        <div className="flex flex-col gap-2">
+                          <ModalListItem
+                            title="Restore backup"
+                            description="Simple restore backup confirmation with volume info."
+                            category="Backup"
+                            size="sm"
+                            onOpen={() => setIsRestoreBackupSmallOpen(true)}
+                          />
+                          <ModalListItem
+                            title="Restore backup (with instance name)"
+                            description="Restore backup with volume and instance list information."
+                            category="Backup"
+                            size="md"
+                            onOpen={() => setIsRestoreBackupMediumOpen(true)}
+                          />
+                          <ModalListItem
+                            title="Restore backup (with instance name and warning)"
+                            description="Restore backup with warning alert and disabled action button."
+                            category="Backup"
+                            size="lg"
+                            onOpen={() => setIsRestoreBackupLargeOpen(true)}
+                          />
+                        </div>
+                      </VStack>
 
-                {/* Floating IP */}
-                <VStack gap={2}>
-                  <h2 className="text-[14px] font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
-                    Floating IP
-                  </h2>
-                  <div className="flex flex-col gap-2">
-                    <ModalListItem
-                      title="Disassociate floating IP"
-                      description="Confirm disassociation of a floating IP from a resource."
-                      category="Network"
-                      size="sm"
-                      onOpen={() => setIsDisassociateFloatingIPOpen(true)}
-                    />
-                    <ModalListItem
-                      title="Disassociate floating IP (Load balancer)"
-                      description="Disassociate a floating IP from a load balancer."
-                      category="Network"
-                      size="sm"
-                      onOpen={() => setIsDisassociateFloatingIPLBOpen(true)}
-                    />
-                    <ModalListItem
-                      title="Release floating IP"
-                      description="Release a single floating IP with warning about permanent action."
-                      category="Network"
-                      size="sm"
-                      onOpen={() => setIsReleaseFloatingIPSmallOpen(true)}
-                    />
-                    <ModalListItem
-                      title="Release floating IP (Associated to)"
-                      description="Release multiple floating IPs with scrollable list."
-                      category="Network"
-                      size="md"
-                      onOpen={() => setIsReleaseFloatingIPMediumOpen(true)}
-                    />
-                  </div>
-                </VStack>
+                      {/* Floating IP */}
+                      <VStack gap={2}>
+                        <h2 className="text-[14px] font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
+                          Floating IP
+                        </h2>
+                        <div className="flex flex-col gap-2">
+                          <ModalListItem
+                            title="Disassociate floating IP"
+                            description="Confirm disassociation of a floating IP from a resource."
+                            category="Network"
+                            size="sm"
+                            onOpen={() => setIsDisassociateFloatingIPOpen(true)}
+                          />
+                          <ModalListItem
+                            title="Disassociate floating IP (Load balancer)"
+                            description="Disassociate a floating IP from a load balancer."
+                            category="Network"
+                            size="sm"
+                            onOpen={() => setIsDisassociateFloatingIPLBOpen(true)}
+                          />
+                          <ModalListItem
+                            title="Release floating IP"
+                            description="Release a single floating IP with warning about permanent action."
+                            category="Network"
+                            size="sm"
+                            onOpen={() => setIsReleaseFloatingIPSmallOpen(true)}
+                          />
+                          <ModalListItem
+                            title="Release floating IP (Associated to)"
+                            description="Release multiple floating IPs with scrollable list."
+                            category="Network"
+                            size="md"
+                            onOpen={() => setIsReleaseFloatingIPMediumOpen(true)}
+                          />
+                        </div>
+                      </VStack>
 
-                {/* Load balancers */}
-                <VStack gap={2}>
-                  <h2 className="text-[14px] font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
-                    Load balancers
-                  </h2>
-                  <div className="flex flex-col gap-2">
-                    <ModalListItem
-                      title="Delete Load balancer"
-                      description="Delete a single load balancer with warning about associated resources."
-                      category="Network"
-                      size="sm"
-                      onOpen={() => setIsDeleteLoadBalancerOpen(true)}
-                    />
-                    <ModalListItem
-                      title="Release Load balancers"
-                      description="Delete multiple load balancers with scrollable list and warning."
-                      category="Network"
-                      size="md"
-                      onOpen={() => setIsDeleteLoadBalancersMultipleOpen(true)}
-                    />
-                  </div>
-                </VStack>
+                      {/* Load balancers */}
+                      <VStack gap={2}>
+                        <h2 className="text-[14px] font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
+                          Load balancers
+                        </h2>
+                        <div className="flex flex-col gap-2">
+                          <ModalListItem
+                            title="Delete Load balancer"
+                            description="Delete a single load balancer with warning about associated resources."
+                            category="Network"
+                            size="sm"
+                            onOpen={() => setIsDeleteLoadBalancerOpen(true)}
+                          />
+                          <ModalListItem
+                            title="Release Load balancers"
+                            description="Delete multiple load balancers with scrollable list and warning."
+                            category="Network"
+                            size="md"
+                            onOpen={() => setIsDeleteLoadBalancersMultipleOpen(true)}
+                          />
+                        </div>
+                      </VStack>
+                    </VStack>
+                  </Disclosure.Panel>
+                </Disclosure>
 
-                {/* Placeholder for Future Modals */}
-                <VStack gap={2}>
-                  <h2 className="text-[14px] font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
-                    Coming Soon
-                  </h2>
-                  <div className="flex flex-col gap-2">
-                    <div className="p-6 rounded-xl border border-dashed border-[var(--color-border-default)] bg-[var(--color-surface-subtle)]">
+                {/* IAM App Modals */}
+                <Disclosure open={isIAMOpen} onChange={setIsIAMOpen}>
+                  <Disclosure.Trigger className="w-full [&>span:first-child]:hidden">
+                    <div className="flex items-center justify-between w-full px-4 py-3 bg-[var(--color-surface-subtle)] rounded-lg border border-[var(--color-border-default)] hover:border-[var(--color-border-strong)] transition-colors">
+                      <div className="flex items-center gap-3">
+                        {isIAMOpen ? (
+                          <IconChevronDown size={16} className="text-[var(--color-text-subtle)]" />
+                        ) : (
+                          <IconChevronRight size={16} className="text-[var(--color-text-subtle)]" />
+                        )}
+                        <Badge variant="info" size="sm" className="w-[70px] justify-center">IAM</Badge>
+                        <span className="text-[14px] font-semibold text-[var(--color-text-default)]">
+                          Modals
+                        </span>
+                        <span className="text-[12px] text-[var(--color-text-subtle)]">
+                          (29 modals)
+                        </span>
+                      </div>
+                    </div>
+                  </Disclosure.Trigger>
+                  <Disclosure.Panel>
+                    <VStack gap={4} className="pt-4">
+                      {/* User Management Modals */}
+                      <VStack gap={2}>
+                        <h2 className="text-[14px] font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
+                          User Management
+                        </h2>
+                        <div className="flex flex-col gap-2">
+                          <ModalListItem
+                            title="Delete user"
+                            description="Confirm deletion of a user with warning about permanent action."
+                            category="User"
+                            size="sm"
+                            onOpen={() => setIsDeleteUserOpen(true)}
+                          />
+                          <ModalListItem
+                            title="Delete users (Multiple)"
+                            description="Delete multiple users with lists of deletable and non-deletable users."
+                            category="User"
+                            size="md"
+                            onOpen={() => setIsDeleteUsersMultipleOpen(true)}
+                          />
+                          <ModalListItem
+                            title="Confirm user password"
+                            description="Display username and password credentials with copy functionality."
+                            category="User"
+                            size="sm"
+                            onOpen={() => setIsConfirmUserPasswordOpen(true)}
+                          />
+                          <ModalListItem
+                            title="Detach user group"
+                            description="Confirm detaching a user from a user group with warning about permission removal."
+                            category="User"
+                            size="sm"
+                            onOpen={() => setIsDetachUserGroupOpen(true)}
+                          />
+                          <ModalListItem
+                            title="Detach role"
+                            description="Confirm detaching a role from a user with warning about permission removal."
+                            category="User"
+                            size="sm"
+                            onOpen={() => setIsDetachRoleOpen(true)}
+                          />
+                          <ModalListItem
+                            title="Remove OTP MFA"
+                            description="Confirm removing OTP MFA for a user with warning about re-registration."
+                            category="User"
+                            size="sm"
+                            onOpen={() => setIsRemoveOtpMfaOpen(true)}
+                          />
+                          <ModalListItem
+                            title="Terminate all sessions"
+                            description="Confirm terminating all sessions for a user with warning about sign-out."
+                            category="User"
+                            size="sm"
+                            onOpen={() => setIsTerminateAllSessionsOpen(true)}
+                          />
+                          <ModalListItem
+                            title="Terminate session"
+                            description="Confirm terminating a single session with warning about sign-out from device."
+                            category="User"
+                            size="sm"
+                            onOpen={() => setIsTerminateSessionOpen(true)}
+                          />
+                          <ModalListItem
+                            title="Remove user from group"
+                            description="Confirm removing a user from a group with warning about permission removal."
+                            category="User"
+                            size="sm"
+                            onOpen={() => setIsRemoveUserFromGroupOpen(true)}
+                          />
+                          <ModalListItem
+                            title="Delete role"
+                            description="Confirm deleting a role with warning about permission removal."
+                            category="Role"
+                            size="sm"
+                            onOpen={() => setIsDeleteRoleOpen(true)}
+                          />
+                          <ModalListItem
+                            title="Delete roles (Multiple)"
+                            description="Confirm deleting multiple roles with lists of deletable and non-deletable roles."
+                            category="Role"
+                            size="md"
+                            onOpen={() => setIsDeleteRolesMultipleOpen(true)}
+                          />
+                          <ModalListItem
+                            title="Detach policy"
+                            description="Confirm detaching a policy from a role with warning about permission revocation."
+                            category="Role"
+                            size="sm"
+                            onOpen={() => setIsDetachPolicyOpen(true)}
+                          />
+                          <ModalListItem
+                            title="Delete policy"
+                            description="Confirm deleting a policy with warning about permanent removal and access loss."
+                            category="Policy"
+                            size="sm"
+                            onOpen={() => setIsDeletePolicyOpen(true)}
+                          />
+                          <ModalListItem
+                            title="Delete policies (Multiple)"
+                            description="Confirm deleting multiple policies with lists of deletable/non-deletable policies."
+                            category="Policy"
+                            size="md"
+                            onOpen={() => setIsDeletePoliciesMultipleOpen(true)}
+                          />
+                          <ModalListItem
+                            title="Revert policy version"
+                            description="Confirm reverting a policy to a previous version with warning about permission changes."
+                            category="Policy"
+                            size="sm"
+                            onOpen={() => setIsRevertPolicyVersionOpen(true)}
+                          />
+                          <ModalListItem
+                            title="Delete policy version"
+                            description="Confirm deleting a specific policy version with warning about permanent removal."
+                            category="Policy"
+                            size="sm"
+                            onOpen={() => setIsDeletePolicyVersionOpen(true)}
+                          />
+                          <ModalListItem
+                            title="Update MFA enforcement policy"
+                            description="Confirm applying MFA enforcement policy changes with warning about authentication impact."
+                            category="Security"
+                            size="sm"
+                            onOpen={() => setIsUpdateMfaEnforcementOpen(true)}
+                          />
+                          <ModalListItem
+                            title="Update OTP policy"
+                            description="Confirm applying OTP policy changes with warning about MFA method availability."
+                            category="Security"
+                            size="sm"
+                            onOpen={() => setIsUpdateOtpPolicyOpen(true)}
+                          />
+                          <ModalListItem
+                            title="Update OTP policy settings"
+                            description="Confirm applying OTP policy settings changes without warning alert."
+                            category="Security"
+                            size="sm"
+                            onOpen={() => setIsUpdateOtpPolicySettingsOpen(true)}
+                          />
+                          <ModalListItem
+                            title="Update email policy"
+                            description="Confirm applying email policy changes with warning about MFA method availability."
+                            category="Security"
+                            size="sm"
+                            onOpen={() => setIsUpdateEmailPolicyOpen(true)}
+                          />
+                          <ModalListItem
+                            title="Update email policy settings"
+                            description="Confirm applying email policy settings changes without warning alert."
+                            category="Security"
+                            size="sm"
+                            onOpen={() => setIsUpdateEmailPolicySettingsOpen(true)}
+                          />
+                          <ModalListItem
+                            title="Update general session policy"
+                            description="Confirm applying session policy changes for timeout and lifespan settings."
+                            category="Security"
+                            size="sm"
+                            onOpen={() => setIsUpdateGeneralSessionPolicyOpen(true)}
+                          />
+                          <ModalListItem
+                            title="Delete domain"
+                            description="Permanently delete a domain and all its configurations."
+                            category="Security"
+                            size="sm"
+                            onOpen={() => setIsDeleteDomainOpen(true)}
+                          />
+                          <ModalListItem
+                            title="Switch to domain"
+                            description="Confirm switching to a different domain with unsaved changes warning."
+                            category="Security"
+                            size="sm"
+                            onOpen={() => setIsSwitchToDomainOpen(true)}
+                          />
+                          <ModalListItem
+                            title="Delete system administrator"
+                            description="Permanently delete a system administrator and their global access."
+                            category="Security"
+                            size="sm"
+                            onOpen={() => setIsDeleteSystemAdminOpen(true)}
+                          />
+                          <ModalListItem
+                            title="Update password policy"
+                            description="Confirm applying password policy changes for length, requirements, and expiration."
+                            category="Security"
+                            size="sm"
+                            onOpen={() => setIsUpdatePasswordPolicyOpen(true)}
+                          />
+                          <ModalListItem
+                            title="Update account lockout policy"
+                            description="Confirm applying account lockout policy changes for lockout type settings."
+                            category="Security"
+                            size="sm"
+                            onOpen={() => setIsUpdateAccountLockoutPolicyOpen(true)}
+                          />
+                          <ModalListItem
+                            title="Update token policy"
+                            description="Confirm applying token policy changes for access and refresh token lifespan."
+                            category="Security"
+                            size="sm"
+                            onOpen={() => setIsUpdateTokenPolicyOpen(true)}
+                          />
+                        </div>
+                      </VStack>
+
+                      {/* General Modals */}
+                      <VStack gap={2}>
+                        <h2 className="text-[14px] font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
+                          General
+                        </h2>
+                        <div className="flex flex-col gap-2">
+                          <ModalListItem
+                            title="Unsaved changes"
+                            description="Confirm leaving page with unsaved changes."
+                            category="Navigation"
+                            size="sm"
+                            onOpen={() => setIsUnsavedChangesOpen(true)}
+                          />
+                        </div>
+                      </VStack>
+                    </VStack>
+                  </Disclosure.Panel>
+                </Disclosure>
+
+                {/* Container App Modals - Placeholder for future */}
+                <Disclosure open={isContainerOpen} onChange={setIsContainerOpen}>
+                  <Disclosure.Trigger className="w-full [&>span:first-child]:hidden">
+                    <div className="flex items-center justify-between w-full px-4 py-3 bg-[var(--color-surface-subtle)] rounded-lg border border-[var(--color-border-default)] hover:border-[var(--color-border-strong)] transition-colors">
+                      <div className="flex items-center gap-3">
+                        {isContainerOpen ? (
+                          <IconChevronDown size={16} className="text-[var(--color-text-subtle)]" />
+                        ) : (
+                          <IconChevronRight size={16} className="text-[var(--color-text-subtle)]" />
+                        )}
+                        <Badge variant="info" size="sm" className="w-[70px] justify-center">Container</Badge>
+                        <span className="text-[14px] font-semibold text-[var(--color-text-default)]">
+                          Modals
+                        </span>
+                        <span className="text-[12px] text-[var(--color-text-subtle)]">
+                          (0 modals)
+                        </span>
+                      </div>
+                    </div>
+                  </Disclosure.Trigger>
+                  <Disclosure.Panel>
+                    <div className="p-6 mt-4 rounded-xl border border-dashed border-[var(--color-border-default)] bg-[var(--color-surface-subtle)]">
                       <VStack gap={2} className="items-center justify-center h-full">
                         <p className="text-[14px] text-[var(--color-text-muted)]">
-                          More modals will be added here...
+                          Container modals will be added here...
                         </p>
                       </VStack>
                     </div>
-                  </div>
-                </VStack>
+                  </Disclosure.Panel>
+                </Disclosure>
+
+                {/* Storage App Modals - Placeholder for future */}
+                <Disclosure open={isStorageOpen} onChange={setIsStorageOpen}>
+                  <Disclosure.Trigger className="w-full [&>span:first-child]:hidden">
+                    <div className="flex items-center justify-between w-full px-4 py-3 bg-[var(--color-surface-subtle)] rounded-lg border border-[var(--color-border-default)] hover:border-[var(--color-border-strong)] transition-colors">
+                      <div className="flex items-center gap-3">
+                        {isStorageOpen ? (
+                          <IconChevronDown size={16} className="text-[var(--color-text-subtle)]" />
+                        ) : (
+                          <IconChevronRight size={16} className="text-[var(--color-text-subtle)]" />
+                        )}
+                        <Badge variant="info" size="sm" className="w-[70px] justify-center">Storage</Badge>
+                        <span className="text-[14px] font-semibold text-[var(--color-text-default)]">
+                          Modals
+                        </span>
+                        <span className="text-[12px] text-[var(--color-text-subtle)]">
+                          (0 modals)
+                        </span>
+                      </div>
+                    </div>
+                  </Disclosure.Trigger>
+                  <Disclosure.Panel>
+                    <div className="p-6 mt-4 rounded-xl border border-dashed border-[var(--color-border-default)] bg-[var(--color-surface-subtle)]">
+                      <VStack gap={2} className="items-center justify-center h-full">
+                        <p className="text-[14px] text-[var(--color-text-muted)]">
+                          Storage modals will be added here...
+                        </p>
+                      </VStack>
+                    </div>
+                  </Disclosure.Panel>
+                </Disclosure>
               </VStack>
             </VStack>
           </div>
@@ -1057,6 +1413,1581 @@ export function ModalsPage() {
             className="flex-1"
           >
             Delete
+          </Button>
+        </div>
+      </Modal>
+
+      {/* ========================================
+          IAM MODALS
+          ======================================== */}
+
+      {/* Delete User Modal */}
+      <Modal
+        isOpen={isDeleteUserOpen}
+        onClose={() => setIsDeleteUserOpen(false)}
+        title="Delete user"
+        description={<>Are you sure you want to delete user "DISPLAY NAME"?<br />Deletes user "DISPLAY NAME" permanently.</>}
+        size="sm"
+      >
+        <div className="flex flex-col gap-2">
+          {/* User Info Box */}
+          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
+            <span className="text-[11px] text-[var(--color-text-subtle)] font-medium leading-4">
+              User
+            </span>
+            <span className="text-[12px] text-[var(--color-text-default)] leading-4">
+              DISPLAY NAME
+            </span>
+          </div>
+
+          {/* Warning Alert Box */}
+          <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
+            <IconAlertCircle size={16} className="text-[var(--color-state-danger)] shrink-0 mt-0.5" stroke={1.5} />
+            <p className="text-[11px] text-[var(--color-text-default)] leading-4">
+              Deleting this user will permanently remove all associated access and sessions. This action cannot be undone.
+            </p>
+          </div>
+        </div>
+
+        {/* Button Group */}
+        <div className="flex gap-2 w-full">
+          <Button variant="outline" size="md" onClick={() => setIsDeleteUserOpen(false)} className="flex-1">
+            Cancel
+          </Button>
+          <Button 
+            variant="primary" 
+            size="md" 
+            onClick={() => {
+              console.log('User deleted');
+              setIsDeleteUserOpen(false);
+            }} 
+            className="flex-1"
+          >
+            Delete
+          </Button>
+        </div>
+      </Modal>
+
+      {/* Delete Users (Multiple) Modal */}
+      <Modal
+        isOpen={isDeleteUsersMultipleOpen}
+        onClose={() => setIsDeleteUsersMultipleOpen(false)}
+        title="Delete users"
+        description="Are you sure you want to delete these users?"
+        size="md"
+      >
+        <div className="flex flex-col gap-2">
+          {/* Users that can be deleted Info Box */}
+          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5 max-h-[96px] overflow-y-auto sidebar-scroll">
+            <span className="text-[11px] text-[var(--color-text-subtle)] font-medium leading-4">
+              Users that can be deleted
+            </span>
+            <ul className="text-[12px] text-[var(--color-text-default)] leading-4 list-disc pl-4 space-y-0.5">
+              <li>web-server-01</li>
+              <li>web-server-02</li>
+              <li>web-server-03</li>
+              <li>web-server-05</li>
+              <li>web-server-07</li>
+            </ul>
+          </div>
+
+          {/* Users that cannot be deleted Info Box */}
+          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5 max-h-[96px] overflow-y-auto sidebar-scroll">
+            <span className="text-[11px] text-[var(--color-text-subtle)] font-medium leading-4">
+              Users that cannot be deleted
+            </span>
+            <ul className="text-[12px] text-[var(--color-text-default)] leading-4 list-disc pl-4 space-y-0.5">
+              <li>my-server-04 (Locked instances cannot be deleted.)</li>
+              <li>my-server-03 (Instances in current state cannot be deleted.)</li>
+              <li>my-server-02</li>
+              <li>my-server-82</li>
+            </ul>
+          </div>
+
+          {/* Warning Alert Box */}
+          <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
+            <IconAlertCircle size={16} className="text-[var(--color-state-danger)] shrink-0 mt-0.5" stroke={1.5} />
+            <p className="text-[11px] text-[var(--color-text-default)] leading-4">
+              Deleting these users will permanently remove all associated access and sessions. This action cannot be undone.
+            </p>
+          </div>
+        </div>
+
+        {/* Button Group */}
+        <div className="flex gap-2 w-full">
+          <Button variant="outline" size="md" onClick={() => setIsDeleteUsersMultipleOpen(false)} className="flex-1">
+            Cancel
+          </Button>
+          <Button 
+            variant="primary" 
+            size="md" 
+            onClick={() => {
+              console.log('Users deleted');
+              setIsDeleteUsersMultipleOpen(false);
+            }} 
+            className="flex-1"
+          >
+            Delete
+          </Button>
+        </div>
+      </Modal>
+
+      {/* Confirm User Password Modal */}
+      <Modal
+        isOpen={isConfirmUserPasswordOpen}
+        onClose={() => setIsConfirmUserPasswordOpen(false)}
+        title="Confirm user password"
+        description="Review the username and password. The password can only be viewed at this step."
+        size="sm"
+      >
+        <div className="flex flex-col gap-2">
+          {/* Username Info Box */}
+          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
+            <span className="text-[11px] text-[var(--color-text-subtle)] font-medium leading-4">
+              Username
+            </span>
+            <div className="flex items-center gap-1.5 min-h-[26px]">
+              <span className="text-[12px] text-[var(--color-text-default)] leading-4">
+                john.doe
+              </span>
+              <button 
+                className="shrink-0 p-0.5 rounded hover:bg-[var(--color-surface-default)] transition-colors"
+                aria-label="Copy to clipboard"
+                onClick={() => {
+                  navigator.clipboard.writeText('john.doe');
+                  setUsernameCopied(true);
+                  setTimeout(() => setUsernameCopied(false), 2000);
+                }}
+              >
+                {usernameCopied ? (
+                  <IconCheck size={12} className="text-[var(--color-state-success)]" />
+                ) : (
+                  <IconCopy size={12} className="text-[var(--color-action-primary)]" />
+                )}
+              </button>
+            </div>
+          </div>
+
+          {/* Password Info Box */}
+          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
+            <span className="text-[11px] text-[var(--color-text-subtle)] font-medium leading-4">
+              Password
+            </span>
+            <div className="flex items-center gap-1.5 min-h-[26px]">
+              <span className="text-[12px] text-[var(--color-text-default)] leading-4">
+                TempP@ss123!
+              </span>
+              <button 
+                className="shrink-0 p-0.5 rounded hover:bg-[var(--color-surface-default)] transition-colors"
+                aria-label="Copy to clipboard"
+                onClick={() => {
+                  navigator.clipboard.writeText('TempP@ss123!');
+                  setPasswordCopied(true);
+                  setTimeout(() => setPasswordCopied(false), 2000);
+                }}
+              >
+                {passwordCopied ? (
+                  <IconCheck size={12} className="text-[var(--color-state-success)]" />
+                ) : (
+                  <IconCopy size={12} className="text-[var(--color-action-primary)]" />
+                )}
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* Button Group */}
+        <div className="flex w-full">
+          <Button 
+            variant="primary" 
+            size="md" 
+            onClick={() => setIsConfirmUserPasswordOpen(false)} 
+            className="flex-1"
+          >
+            Close
+          </Button>
+        </div>
+      </Modal>
+
+      {/* Unsaved Changes Modal */}
+      <Modal
+        isOpen={isUnsavedChangesOpen}
+        onClose={() => setIsUnsavedChangesOpen(false)}
+        title="Unsaved changes"
+        description="Any unsaved changes will be lost. Do you want to leave?"
+        size="sm"
+      >
+        {/* Button Group */}
+        <div className="flex gap-2 w-full">
+          <Button 
+            variant="outline" 
+            size="md" 
+            onClick={() => {
+              console.log('Leave clicked');
+              setIsUnsavedChangesOpen(false);
+            }}
+            className="flex-1"
+          >
+            Leave
+          </Button>
+          <Button 
+            variant="primary" 
+            size="md" 
+            onClick={() => setIsUnsavedChangesOpen(false)} 
+            className="flex-1"
+          >
+            Stay
+          </Button>
+        </div>
+      </Modal>
+
+      {/* Detach User Group Modal */}
+      <Modal
+        isOpen={isDetachUserGroupOpen}
+        onClose={() => setIsDetachUserGroupOpen(false)}
+        title="Detach user group"
+        description="Are you sure you want to detach user 'DISPLAY NAME' from this group?"
+        size="sm"
+      >
+        <div className="flex flex-col gap-2">
+          {/* User Info Box */}
+          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
+            <span className="text-[11px] text-[var(--color-text-subtle)] font-medium leading-4">
+              User
+            </span>
+            <span className="text-[12px] text-[var(--color-text-default)] leading-4">
+              DISPLAY NAME
+            </span>
+          </div>
+
+          {/* User Group Info Box */}
+          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
+            <span className="text-[11px] text-[var(--color-text-subtle)] font-medium leading-4">
+              User group
+            </span>
+            <span className="text-[12px] text-[var(--color-text-default)] leading-4">
+              USERGROUP NAME
+            </span>
+          </div>
+
+          {/* Warning Alert Box */}
+          <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
+            <IconAlertCircle size={16} className="text-[var(--color-state-danger)] shrink-0 mt-0.5" stroke={1.5} />
+            <p className="text-[11px] text-[var(--color-text-default)] leading-4">
+              Detaching this user will immediately remove all permissions granted through this group.
+            </p>
+          </div>
+        </div>
+
+        {/* Button Group */}
+        <div className="flex gap-2 w-full">
+          <Button 
+            variant="outline" 
+            size="md" 
+            onClick={() => setIsDetachUserGroupOpen(false)}
+            className="flex-1"
+          >
+            Cancel
+          </Button>
+          <Button 
+            variant="primary" 
+            size="md" 
+            onClick={() => {
+              console.log('User detached from group');
+              setIsDetachUserGroupOpen(false);
+            }}
+            className="flex-1"
+          >
+            Detach
+          </Button>
+        </div>
+      </Modal>
+
+      {/* Detach Role Modal */}
+      <Modal
+        isOpen={isDetachRoleOpen}
+        onClose={() => setIsDetachRoleOpen(false)}
+        title="Detach role"
+        description={`Are you sure you want to detach role "ROLENAME" from user "DISPLAYNAME"?`}
+        size="sm"
+      >
+        <div className="flex flex-col gap-2">
+          {/* User Info Box */}
+          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
+            <span className="text-[11px] text-[var(--color-text-subtle)] font-medium leading-4">
+              User
+            </span>
+            <span className="text-[12px] text-[var(--color-text-default)] leading-4">
+              DISPLAY NAME
+            </span>
+          </div>
+
+          {/* Role Info Box */}
+          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
+            <span className="text-[11px] text-[var(--color-text-subtle)] font-medium leading-4">
+              Role
+            </span>
+            <span className="text-[12px] text-[var(--color-text-default)] leading-4">
+              ROLENAME
+            </span>
+          </div>
+
+          {/* Warning Alert Box */}
+          <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
+            <IconAlertCircle size={16} className="text-[var(--color-state-danger)] shrink-0 mt-0.5" stroke={1.5} />
+            <p className="text-[11px] text-[var(--color-text-default)] leading-4">
+              Detaching this role will immediately remove all permissions granted through this role.
+            </p>
+          </div>
+        </div>
+
+        {/* Button Group */}
+        <div className="flex gap-2 w-full">
+          <Button 
+            variant="outline" 
+            size="md" 
+            onClick={() => setIsDetachRoleOpen(false)}
+            className="flex-1"
+          >
+            Cancel
+          </Button>
+          <Button 
+            variant="primary" 
+            size="md" 
+            onClick={() => {
+              console.log('Role detached from user');
+              setIsDetachRoleOpen(false);
+            }}
+            className="flex-1"
+          >
+            Detach
+          </Button>
+        </div>
+      </Modal>
+
+      {/* Remove OTP MFA Modal */}
+      <Modal
+        isOpen={isRemoveOtpMfaOpen}
+        onClose={() => setIsRemoveOtpMfaOpen(false)}
+        title="Remove OTP MFA"
+        description="Are you sure you want to remove OTP MFA for user 'DISPLAYNAME'?"
+        size="sm"
+      >
+        <div className="flex flex-col gap-2">
+          {/* User Info Box */}
+          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
+            <span className="text-[11px] text-[var(--color-text-subtle)] font-medium leading-4">
+              User
+            </span>
+            <span className="text-[12px] text-[var(--color-text-default)] leading-4">
+              DISPLAY NAME
+            </span>
+          </div>
+
+          {/* Warning Alert Box */}
+          <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
+            <IconAlertCircle size={16} className="text-[var(--color-state-danger)] shrink-0 mt-0.5" stroke={1.5} />
+            <p className="text-[11px] text-[var(--color-text-default)] leading-4">
+              Removing OTP MFA will require the user to register OTP authentication again.
+            </p>
+          </div>
+        </div>
+
+        {/* Button Group */}
+        <div className="flex gap-2 w-full">
+          <Button 
+            variant="outline" 
+            size="md" 
+            onClick={() => setIsRemoveOtpMfaOpen(false)}
+            className="flex-1"
+          >
+            Cancel
+          </Button>
+          <Button 
+            variant="primary" 
+            size="md" 
+            onClick={() => {
+              console.log('OTP MFA removed');
+              setIsRemoveOtpMfaOpen(false);
+            }}
+            className="flex-1"
+          >
+            Remove
+          </Button>
+        </div>
+      </Modal>
+
+      {/* Terminate All Sessions Modal */}
+      <Modal
+        isOpen={isTerminateAllSessionsOpen}
+        onClose={() => setIsTerminateAllSessionsOpen(false)}
+        title="Terminate all sessions"
+        description="Are you sure you want to terminate all sessions for user 'DISPLAYNAME'?"
+        size="sm"
+      >
+        <div className="flex flex-col gap-2">
+          {/* User Info Box */}
+          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
+            <span className="text-[11px] text-[var(--color-text-subtle)] font-medium leading-4">
+              User
+            </span>
+            <span className="text-[12px] text-[var(--color-text-default)] leading-4">
+              DISPLAYNAME
+            </span>
+          </div>
+
+          {/* Warning Alert Box */}
+          <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
+            <IconAlertCircle size={16} className="text-[var(--color-state-danger)] shrink-0 mt-0.5" stroke={1.5} />
+            <p className="text-[11px] text-[var(--color-text-default)] leading-4">
+              Terminating all sessions will immediately sign the user out from all devices and require re-authentication.
+            </p>
+          </div>
+        </div>
+
+        {/* Button Group */}
+        <div className="flex gap-2 w-full">
+          <Button 
+            variant="outline" 
+            size="md" 
+            onClick={() => setIsTerminateAllSessionsOpen(false)}
+            className="flex-1"
+          >
+            Cancel
+          </Button>
+          <Button 
+            variant="primary" 
+            size="md" 
+            onClick={() => {
+              console.log('All sessions terminated');
+              setIsTerminateAllSessionsOpen(false);
+            }}
+            className="flex-1"
+          >
+            Terminate
+          </Button>
+        </div>
+      </Modal>
+
+      {/* Terminate Session Modal (Single Session) */}
+      <Modal
+        isOpen={isTerminateSessionOpen}
+        onClose={() => setIsTerminateSessionOpen(false)}
+        title="Terminate session"
+        description="Are you sure you want to terminate this session?"
+        size="sm"
+      >
+        <div className="flex flex-col gap-2">
+          {/* Session Info Box */}
+          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
+            <span className="text-[11px] text-[var(--color-text-subtle)] font-medium leading-4">
+              Session
+            </span>
+            <span className="text-[12px] text-[var(--color-text-default)] leading-4">
+              DISPLAYNAME (Browser/device)
+            </span>
+          </div>
+
+          {/* Warning Alert Box */}
+          <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
+            <IconAlertCircle size={16} className="text-[var(--color-state-danger)] shrink-0 mt-0.5" stroke={1.5} />
+            <p className="text-[11px] text-[var(--color-text-default)] leading-4">
+              Terminating this session will sign the user out from this device and require re-authentication.
+            </p>
+          </div>
+        </div>
+
+        {/* Button Group */}
+        <div className="flex gap-2 w-full">
+          <Button 
+            variant="outline" 
+            size="md" 
+            onClick={() => setIsTerminateSessionOpen(false)}
+            className="flex-1"
+          >
+            Cancel
+          </Button>
+          <Button 
+            variant="primary" 
+            size="md" 
+            onClick={() => {
+              console.log('Session terminated');
+              setIsTerminateSessionOpen(false);
+            }}
+            className="flex-1"
+          >
+            Terminate
+          </Button>
+        </div>
+      </Modal>
+
+      {/* Remove User From Group Modal */}
+      <Modal
+        isOpen={isRemoveUserFromGroupOpen}
+        onClose={() => setIsRemoveUserFromGroupOpen(false)}
+        title="Remove user"
+        description="Are you sure you want to remove user 'DISPLAYNAME' from group 'GROUPNAME'?"
+        size="sm"
+      >
+        <div className="flex flex-col gap-2">
+          {/* User Group Info Box */}
+          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
+            <span className="text-[11px] text-[var(--color-text-subtle)] font-medium leading-4">
+              User group
+            </span>
+            <span className="text-[12px] text-[var(--color-text-default)] leading-4">
+              USERGROUP NAME
+            </span>
+          </div>
+
+          {/* User Info Box */}
+          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
+            <span className="text-[11px] text-[var(--color-text-subtle)] font-medium leading-4">
+              User
+            </span>
+            <span className="text-[12px] text-[var(--color-text-default)] leading-4">
+              DISPLAY NAME
+            </span>
+          </div>
+
+          {/* Warning Alert Box */}
+          <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
+            <IconAlertCircle size={16} className="text-[var(--color-state-danger)] shrink-0 mt-0.5" stroke={1.5} />
+            <p className="text-[11px] text-[var(--color-text-default)] leading-4">
+              Removing this user will immediately remove all permissions granted through this group.
+            </p>
+          </div>
+        </div>
+
+        {/* Button Group */}
+        <div className="flex gap-2 w-full">
+          <Button 
+            variant="outline" 
+            size="md" 
+            onClick={() => setIsRemoveUserFromGroupOpen(false)}
+            className="flex-1"
+          >
+            Cancel
+          </Button>
+          <Button 
+            variant="primary" 
+            size="md" 
+            onClick={() => {
+              console.log('User removed from group');
+              setIsRemoveUserFromGroupOpen(false);
+            }}
+            className="flex-1"
+          >
+            Remove
+          </Button>
+        </div>
+      </Modal>
+
+      {/* Delete Role Modal */}
+      <Modal
+        isOpen={isDeleteRoleOpen}
+        onClose={() => setIsDeleteRoleOpen(false)}
+        title="Delete role"
+        description="Are you sure you want to delete role 'ROLENAME'?"
+        size="sm"
+      >
+        <div className="flex flex-col gap-2">
+          {/* Role Info Box */}
+          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
+            <span className="text-[11px] text-[var(--color-text-subtle)] font-medium leading-4">
+              Role
+            </span>
+            <span className="text-[12px] text-[var(--color-text-default)] leading-4">
+              ROLENAME
+            </span>
+          </div>
+
+          {/* Warning Alert Box */}
+          <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
+            <IconAlertCircle size={16} className="text-[var(--color-state-danger)] shrink-0 mt-0.5" stroke={1.5} />
+            <p className="text-[11px] text-[var(--color-text-default)] leading-4">
+              Deleting this role will immediately remove all permissions granted through this role.
+            </p>
+          </div>
+        </div>
+
+        {/* Button Group */}
+        <div className="flex gap-2 w-full">
+          <Button 
+            variant="outline" 
+            size="md" 
+            onClick={() => setIsDeleteRoleOpen(false)}
+            className="flex-1"
+          >
+            Cancel
+          </Button>
+          <Button 
+            variant="primary" 
+            size="md" 
+            onClick={() => {
+              console.log('Role deleted');
+              setIsDeleteRoleOpen(false);
+            }}
+            className="flex-1"
+          >
+            Delete
+          </Button>
+        </div>
+      </Modal>
+
+      {/* Delete Roles (Multiple) Modal */}
+      <Modal
+        isOpen={isDeleteRolesMultipleOpen}
+        onClose={() => setIsDeleteRolesMultipleOpen(false)}
+        title="Delete roles"
+        description="Are you sure you want to delete these roles?"
+        size="md"
+      >
+        <div className="flex flex-col gap-2">
+          {/* Roles that can be deleted */}
+          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5 max-h-[96px] overflow-y-auto sidebar-scroll">
+            <span className="text-[11px] text-[var(--color-text-subtle)] font-medium leading-4">
+              Roles that can be deleted
+            </span>
+            <ul className="text-[12px] text-[var(--color-text-default)] leading-4 list-disc pl-4 space-y-0.5">
+              <li>web-server-01</li>
+              <li>web-server-02</li>
+              <li>web-server-03</li>
+              <li>web-server-05</li>
+              <li>web-server-07</li>
+            </ul>
+          </div>
+
+          {/* Roles that cannot be deleted */}
+          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5 max-h-[96px] overflow-y-auto sidebar-scroll">
+            <span className="text-[11px] text-[var(--color-text-subtle)] font-medium leading-4">
+              Roles that cannot be deleted
+            </span>
+            <ul className="text-[12px] text-[var(--color-text-default)] leading-4 list-disc pl-4 space-y-0.5">
+              <li>my-server-04 (Locked instances cannot be deleted.)</li>
+              <li>my-server-03 (Instances in current state cannot be deleted.)</li>
+              <li>my-server-02</li>
+              <li>my-server-82</li>
+            </ul>
+          </div>
+
+          {/* Warning Alert Box */}
+          <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
+            <IconAlertCircle size={16} className="text-[var(--color-state-danger)] shrink-0 mt-0.5" stroke={1.5} />
+            <p className="text-[11px] text-[var(--color-text-default)] leading-4">
+              Deleting these roles will immediately remove all permissions granted through these roles.
+            </p>
+          </div>
+        </div>
+
+        {/* Button Group */}
+        <div className="flex gap-2 w-full">
+          <Button 
+            variant="outline" 
+            size="md" 
+            onClick={() => setIsDeleteRolesMultipleOpen(false)}
+            className="flex-1"
+          >
+            Cancel
+          </Button>
+          <Button 
+            variant="primary" 
+            size="md" 
+            onClick={() => {
+              console.log('Multiple roles deleted');
+              setIsDeleteRolesMultipleOpen(false);
+            }}
+            className="flex-1"
+          >
+            Delete
+          </Button>
+        </div>
+      </Modal>
+
+      {/* Detach Policy Modal */}
+      <Modal
+        isOpen={isDetachPolicyOpen}
+        onClose={() => setIsDetachPolicyOpen(false)}
+        title="Detach policy"
+        description="Are you sure you want to detach this policy from the role?"
+        size="sm"
+      >
+        <div className="flex flex-col gap-2">
+          {/* Role Info Box */}
+          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
+            <span className="text-[11px] text-[var(--color-text-subtle)] font-medium leading-4">
+              Role
+            </span>
+            <span className="text-[12px] text-[var(--color-text-default)] leading-4">
+              ROLENAME
+            </span>
+          </div>
+
+          {/* Policy Info Box */}
+          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
+            <span className="text-[11px] text-[var(--color-text-subtle)] font-medium leading-4">
+              Policy
+            </span>
+            <span className="text-[12px] text-[var(--color-text-default)] leading-4">
+              POLICYNAME
+            </span>
+          </div>
+
+          {/* Warning Alert Box */}
+          <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
+            <IconAlertCircle size={16} className="text-[var(--color-state-danger)] shrink-0 mt-0.5" stroke={1.5} />
+            <p className="text-[11px] text-[var(--color-text-default)] leading-4">
+              Detaching this policy will immediately revoke permissions granted to this role through this policy.
+            </p>
+          </div>
+        </div>
+
+        {/* Button Group */}
+        <div className="flex gap-2 w-full">
+          <Button 
+            variant="outline" 
+            size="md" 
+            onClick={() => setIsDetachPolicyOpen(false)}
+            className="flex-1"
+          >
+            Cancel
+          </Button>
+          <Button 
+            variant="primary" 
+            size="md" 
+            onClick={() => {
+              console.log('Policy detached from role');
+              setIsDetachPolicyOpen(false);
+            }}
+            className="flex-1"
+          >
+            Detach
+          </Button>
+        </div>
+      </Modal>
+
+      {/* Delete Policy Modal */}
+      <Modal
+        isOpen={isDeletePolicyOpen}
+        onClose={() => setIsDeletePolicyOpen(false)}
+        title="Delete policy"
+        description="Are you sure you want to delete this policy?"
+        size="sm"
+      >
+        <div className="flex flex-col gap-2">
+          {/* Policy Info Box */}
+          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
+            <span className="text-[11px] text-[var(--color-text-subtle)] font-medium leading-4">
+              Policy
+            </span>
+            <span className="text-[12px] text-[var(--color-text-default)] leading-4">
+              POLICYNAME
+            </span>
+          </div>
+
+          {/* Warning Alert Box */}
+          <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
+            <IconAlertCircle size={16} className="text-[var(--color-state-danger)] shrink-0 mt-0.5" stroke={1.5} />
+            <p className="text-[11px] text-[var(--color-text-default)] leading-4">
+              This policy will be permanently removed. Users or roles attached to this policy will immediately lose access permissions.
+            </p>
+          </div>
+        </div>
+
+        {/* Button Group */}
+        <div className="flex gap-2 w-full">
+          <Button 
+            variant="outline" 
+            size="md" 
+            onClick={() => setIsDeletePolicyOpen(false)}
+            className="flex-1"
+          >
+            Cancel
+          </Button>
+          <Button 
+            variant="primary" 
+            size="md" 
+            onClick={() => {
+              console.log('Policy deleted');
+              setIsDeletePolicyOpen(false);
+            }}
+            className="flex-1"
+          >
+            Delete
+          </Button>
+        </div>
+      </Modal>
+
+      {/* Delete Policies (Multiple) Modal */}
+      <Modal
+        isOpen={isDeletePoliciesMultipleOpen}
+        onClose={() => setIsDeletePoliciesMultipleOpen(false)}
+        title="Delete policies"
+        description="Are you sure you want to delete these policies"
+        size="md"
+      >
+        <div className="flex flex-col gap-2">
+          {/* Policies that can be deleted */}
+          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5 max-h-[96px] overflow-y-auto sidebar-scroll">
+            <span className="text-[11px] text-[var(--color-text-subtle)] font-medium leading-4">
+              Policies that can be deleted
+            </span>
+            <ul className="text-[12px] text-[var(--color-text-default)] leading-4 list-disc pl-4 space-y-0.5">
+              <li>web-server-01</li>
+              <li>web-server-02</li>
+              <li>web-server-03</li>
+              <li>web-server-05</li>
+              <li>web0server-07</li>
+            </ul>
+          </div>
+
+          {/* Policies that cannot be deleted */}
+          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5 max-h-[96px] overflow-y-auto sidebar-scroll">
+            <span className="text-[11px] text-[var(--color-text-subtle)] font-medium leading-4">
+              Policies that cannot be deleted
+            </span>
+            <ul className="text-[12px] text-[var(--color-text-default)] leading-4 list-disc pl-4 space-y-0.5">
+              <li>my-server-04 (Locked instances cannot be deleted.)</li>
+              <li>my-server-03 (Instances in current state cannot be deleted.)</li>
+              <li>my-server-02</li>
+              <li>my-server-82</li>
+            </ul>
+          </div>
+
+          {/* Warning Alert Box */}
+          <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
+            <IconAlertCircle size={16} className="text-[var(--color-state-danger)] shrink-0 mt-0.5" stroke={1.5} />
+            <p className="text-[11px] text-[var(--color-text-default)] leading-4">
+              These policies will be permanently removed. Users or roles attached to these policies will immediately lose access permissions.
+            </p>
+          </div>
+        </div>
+
+        {/* Button Group */}
+        <div className="flex gap-2 w-full">
+          <Button 
+            variant="outline" 
+            size="md" 
+            onClick={() => setIsDeletePoliciesMultipleOpen(false)}
+            className="flex-1"
+          >
+            Cancel
+          </Button>
+          <Button 
+            variant="primary" 
+            size="md" 
+            onClick={() => {
+              console.log('Multiple policies deleted');
+              setIsDeletePoliciesMultipleOpen(false);
+            }}
+            className="flex-1"
+          >
+            Delete
+          </Button>
+        </div>
+      </Modal>
+
+      {/* Revert Policy Version Modal */}
+      <Modal
+        isOpen={isRevertPolicyVersionOpen}
+        onClose={() => setIsRevertPolicyVersionOpen(false)}
+        title="Revert policy version"
+        description="Are you sure you want to revert policy 'POLICYNAME' to 'VERSION'?"
+        size="sm"
+      >
+        <div className="flex flex-col gap-2">
+          {/* Current Version Info Box */}
+          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
+            <span className="text-[11px] text-[var(--color-text-subtle)] font-medium leading-4">
+              Current version
+            </span>
+            <span className="text-[12px] text-[var(--color-text-default)] leading-4">
+              VERSION
+            </span>
+          </div>
+
+          {/* Target Version Info Box */}
+          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
+            <span className="text-[11px] text-[var(--color-text-subtle)] font-medium leading-4">
+              Target version
+            </span>
+            <span className="text-[12px] text-[var(--color-text-default)] leading-4">
+              VERSION
+            </span>
+          </div>
+
+          {/* Warning Alert Box */}
+          <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
+            <IconAlertCircle size={16} className="text-[var(--color-state-danger)] shrink-0 mt-0.5" stroke={1.5} />
+            <p className="text-[11px] text-[var(--color-text-default)] leading-4">
+              Reverting to this version will immediately replace the currently active policy and may change permissions for all roles using it.
+            </p>
+          </div>
+        </div>
+
+        {/* Button Group */}
+        <div className="flex gap-2 w-full">
+          <Button 
+            variant="outline" 
+            size="md" 
+            onClick={() => setIsRevertPolicyVersionOpen(false)}
+            className="flex-1"
+          >
+            Cancel
+          </Button>
+          <Button 
+            variant="primary" 
+            size="md" 
+            onClick={() => {
+              console.log('Policy version reverted');
+              setIsRevertPolicyVersionOpen(false);
+            }}
+            className="flex-1"
+          >
+            Revert
+          </Button>
+        </div>
+      </Modal>
+
+      {/* Delete Policy Version Modal */}
+      <Modal
+        isOpen={isDeletePolicyVersionOpen}
+        onClose={() => setIsDeletePolicyVersionOpen(false)}
+        title="Delete policy version"
+        description={`Are you sure you want to delete "VERSION"?`}
+        size="sm"
+      >
+        <div className="flex flex-col gap-2">
+          {/* Warning Alert Box */}
+          <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
+            <IconAlertCircle size={16} className="text-[var(--color-state-danger)] shrink-0 mt-0.5" stroke={1.5} />
+            <p className="text-[11px] text-[var(--color-text-default)] leading-4">
+              Deleting this version will permanently remove its policy definitions. This action cannot be undone.
+            </p>
+          </div>
+        </div>
+
+        {/* Button Group */}
+        <div className="flex gap-2 w-full">
+          <Button 
+            variant="outline" 
+            size="md" 
+            onClick={() => setIsDeletePolicyVersionOpen(false)}
+            className="flex-1"
+          >
+            Cancel
+          </Button>
+          <Button 
+            variant="primary" 
+            size="md" 
+            onClick={() => {
+              console.log('Policy version deleted');
+              setIsDeletePolicyVersionOpen(false);
+            }}
+            className="flex-1"
+          >
+            Delete
+          </Button>
+        </div>
+      </Modal>
+
+      {/* Update MFA Enforcement Policy Modal */}
+      <Modal
+        isOpen={isUpdateMfaEnforcementOpen}
+        onClose={() => setIsUpdateMfaEnforcementOpen(false)}
+        title="Update MFA enforcement policy"
+        description="Are you sure you want to apply these changes?"
+        size="sm"
+      >
+        <div className="flex flex-col gap-2">
+          {/* Changes Info Box */}
+          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
+            <span className="text-[11px] text-[var(--color-text-subtle)] font-medium leading-4">
+              Changes
+            </span>
+            <ul className="text-[12px] text-[var(--color-text-default)] leading-4 list-disc pl-4 space-y-0.5">
+              <li>MFA enforcement: Voluntary → Required for all users</li>
+            </ul>
+          </div>
+
+          {/* Warning Alert Box */}
+          <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
+            <IconAlertCircle size={16} className="text-[var(--color-state-danger)] shrink-0 mt-0.5" stroke={1.5} />
+            <p className="text-[11px] text-[var(--color-text-default)] leading-4">
+              Updating MFA enforcement may immediately affect authentication requirements for all users.
+            </p>
+          </div>
+        </div>
+
+        {/* Button Group */}
+        <div className="flex gap-2 w-full">
+          <Button 
+            variant="outline" 
+            size="md" 
+            onClick={() => setIsUpdateMfaEnforcementOpen(false)}
+            className="flex-1"
+          >
+            Cancel
+          </Button>
+          <Button 
+            variant="primary" 
+            size="md" 
+            onClick={() => {
+              console.log('MFA enforcement policy updated');
+              setIsUpdateMfaEnforcementOpen(false);
+            }}
+            className="flex-1"
+          >
+            Apply
+          </Button>
+        </div>
+      </Modal>
+
+      {/* Update OTP Policy Modal */}
+      <Modal
+        isOpen={isUpdateOtpPolicyOpen}
+        onClose={() => setIsUpdateOtpPolicyOpen(false)}
+        title="Update OTP policy"
+        description="Are you sure you want to apply these changes?"
+        size="sm"
+      >
+        <div className="flex flex-col gap-2">
+          {/* Changes Info Box */}
+          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
+            <span className="text-[11px] text-[var(--color-text-subtle)] font-medium leading-4">
+              Changes
+            </span>
+            <ul className="text-[12px] text-[var(--color-text-default)] leading-4 list-disc pl-4 space-y-0.5">
+              <li>OTP policy: On → Off</li>
+            </ul>
+          </div>
+
+          {/* Warning Alert Box */}
+          <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
+            <IconAlertCircle size={16} className="text-[var(--color-state-danger)] shrink-0 mt-0.5" stroke={1.5} />
+            <p className="text-[11px] text-[var(--color-text-default)] leading-4">
+              Turning off OTP authentication will remove OTP as an available MFA method for all users.
+            </p>
+          </div>
+        </div>
+
+        {/* Button Group */}
+        <div className="flex gap-2 w-full">
+          <Button 
+            variant="outline" 
+            size="md" 
+            onClick={() => setIsUpdateOtpPolicyOpen(false)}
+            className="flex-1"
+          >
+            Cancel
+          </Button>
+          <Button 
+            variant="primary" 
+            size="md" 
+            onClick={() => {
+              console.log('OTP policy updated');
+              setIsUpdateOtpPolicyOpen(false);
+            }}
+            className="flex-1"
+          >
+            Apply
+          </Button>
+        </div>
+      </Modal>
+
+      {/* Update OTP Policy Settings Modal */}
+      <Modal
+        isOpen={isUpdateOtpPolicySettingsOpen}
+        onClose={() => setIsUpdateOtpPolicySettingsOpen(false)}
+        title="Update OTP policy"
+        description="Are you sure you want to apply these changes?"
+        size="sm"
+      >
+        <div className="flex flex-col gap-2">
+          {/* Changes Info Box */}
+          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
+            <span className="text-[11px] text-[var(--color-text-subtle)] font-medium leading-4">
+              Changes
+            </span>
+            <ul className="text-[12px] text-[var(--color-text-default)] leading-4 list-disc pl-4 space-y-0.5">
+              <li>Look around Window: 1 → 0</li>
+              <li>Reusable token: Off → On</li>
+            </ul>
+          </div>
+        </div>
+
+        {/* Button Group */}
+        <div className="flex gap-2 w-full">
+          <Button 
+            variant="outline" 
+            size="md" 
+            onClick={() => setIsUpdateOtpPolicySettingsOpen(false)}
+            className="flex-1"
+          >
+            Cancel
+          </Button>
+          <Button 
+            variant="primary" 
+            size="md" 
+            onClick={() => {
+              console.log('OTP policy settings updated');
+              setIsUpdateOtpPolicySettingsOpen(false);
+            }}
+            className="flex-1"
+          >
+            Apply
+          </Button>
+        </div>
+      </Modal>
+
+      {/* Update Email Policy Modal */}
+      <Modal
+        isOpen={isUpdateEmailPolicyOpen}
+        onClose={() => setIsUpdateEmailPolicyOpen(false)}
+        title="Update email policy"
+        description="Are you sure you want to apply these changes?"
+        size="sm"
+      >
+        <div className="flex flex-col gap-2">
+          {/* Changes Info Box */}
+          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
+            <span className="text-[11px] text-[var(--color-text-subtle)] font-medium leading-4">
+              Changes
+            </span>
+            <ul className="text-[12px] text-[var(--color-text-default)] leading-4 list-disc pl-4 space-y-0.5">
+              <li>Email policy: On → Off</li>
+            </ul>
+          </div>
+
+          {/* Warning Alert Box */}
+          <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
+            <IconAlertCircle size={16} className="text-[var(--color-state-danger)] shrink-0 mt-0.5" stroke={1.5} />
+            <p className="text-[11px] text-[var(--color-text-default)] leading-4">
+              Turning off email authentication will remove email as an available MFA method for all users.
+            </p>
+          </div>
+        </div>
+
+        {/* Button Group */}
+        <div className="flex gap-2 w-full">
+          <Button 
+            variant="outline" 
+            size="md" 
+            onClick={() => setIsUpdateEmailPolicyOpen(false)}
+            className="flex-1"
+          >
+            Cancel
+          </Button>
+          <Button 
+            variant="primary" 
+            size="md" 
+            onClick={() => {
+              console.log('Email policy updated');
+              setIsUpdateEmailPolicyOpen(false);
+            }}
+            className="flex-1"
+          >
+            Apply
+          </Button>
+        </div>
+      </Modal>
+
+      {/* Update Email Policy Settings Modal */}
+      <Modal
+        isOpen={isUpdateEmailPolicySettingsOpen}
+        onClose={() => setIsUpdateEmailPolicySettingsOpen(false)}
+        title="Update email policy"
+        description="Are you sure you want to apply these changes?"
+        size="sm"
+      >
+        <div className="flex flex-col gap-2">
+          {/* Changes Info Box */}
+          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
+            <span className="text-[11px] text-[var(--color-text-subtle)] font-medium leading-4">
+              Changes
+            </span>
+            <ul className="text-[12px] text-[var(--color-text-default)] leading-4 list-disc pl-4 space-y-0.5">
+              <li>Code validity period: 300 → 600 seconds</li>
+              <li>Resend cooldown: 60 → 1 seconds</li>
+              <li>Verification attempts(Time window): 10 → 40 minutes</li>
+              <li>Verification attempts(Max attempts): 5 → 10 times</li>
+            </ul>
+          </div>
+        </div>
+
+        {/* Button Group */}
+        <div className="flex gap-2 w-full">
+          <Button 
+            variant="outline" 
+            size="md" 
+            onClick={() => setIsUpdateEmailPolicySettingsOpen(false)}
+            className="flex-1"
+          >
+            Cancel
+          </Button>
+          <Button 
+            variant="primary" 
+            size="md" 
+            onClick={() => {
+              console.log('Email policy settings updated');
+              setIsUpdateEmailPolicySettingsOpen(false);
+            }}
+            className="flex-1"
+          >
+            Apply
+          </Button>
+        </div>
+      </Modal>
+
+      {/* Update General Session Policy Modal */}
+      <Modal
+        isOpen={isUpdateGeneralSessionPolicyOpen}
+        onClose={() => setIsUpdateGeneralSessionPolicyOpen(false)}
+        title="Update general session policy"
+        description="Are you sure you want to apply these changes?"
+        size="sm"
+      >
+        <div className="flex flex-col gap-2">
+          {/* Changes Info Box */}
+          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
+            <span className="text-[11px] text-[var(--color-text-subtle)] font-medium leading-4">
+              Changes
+            </span>
+            <ul className="text-[12px] text-[var(--color-text-default)] leading-4 list-disc pl-4 space-y-0.5">
+              <li>Session idle timeout: 30 → 10 minutes</li>
+              <li>Session max lifespan: 8 → 10 hours</li>
+              <li>Login timeout: 30 → 10 minutes</li>
+              <li>Login action timeout: 5 → 3 minutes</li>
+            </ul>
+          </div>
+        </div>
+
+        {/* Button Group */}
+        <div className="flex gap-2 w-full">
+          <Button 
+            variant="outline" 
+            size="md" 
+            onClick={() => setIsUpdateGeneralSessionPolicyOpen(false)}
+            className="flex-1"
+          >
+            Cancel
+          </Button>
+          <Button 
+            variant="primary" 
+            size="md" 
+            onClick={() => {
+              console.log('General session policy updated');
+              setIsUpdateGeneralSessionPolicyOpen(false);
+            }}
+            className="flex-1"
+          >
+            Apply
+          </Button>
+        </div>
+      </Modal>
+
+      {/* Delete Domain Modal */}
+      <Modal
+        isOpen={isDeleteDomainOpen}
+        onClose={() => setIsDeleteDomainOpen(false)}
+        title="Delete domain"
+        description="Are you sure you want to delete domain 'DOMAINNAME'?"
+        size="sm"
+      >
+        <div className="flex flex-col gap-2">
+          {/* Domain Info Box */}
+          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
+            <span className="text-[11px] text-[var(--color-text-subtle)] font-medium leading-4">
+              domain
+            </span>
+            <span className="text-[12px] text-[var(--color-text-default)] leading-4">
+              DOMAINNAME
+            </span>
+          </div>
+
+          {/* Warning Alert Box */}
+          <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
+            <IconAlertCircle size={16} className="text-[var(--color-state-danger)] shrink-0 mt-0.5" stroke={1.5} />
+            <p className="text-[11px] text-[var(--color-text-default)] leading-4">
+              Deleting this domain will permanently remove all configurations, policies, and associations linked to it. This action cannot be undone.
+            </p>
+          </div>
+        </div>
+
+        {/* Button Group */}
+        <div className="flex gap-2 w-full">
+          <Button 
+            variant="outline" 
+            size="md" 
+            onClick={() => setIsDeleteDomainOpen(false)}
+            className="flex-1"
+          >
+            Cancel
+          </Button>
+          <Button 
+            variant="primary" 
+            size="md" 
+            onClick={() => {
+              console.log('Domain deleted');
+              setIsDeleteDomainOpen(false);
+            }}
+            className="flex-1"
+          >
+            Delete
+          </Button>
+        </div>
+      </Modal>
+
+      {/* Switch to Domain Modal */}
+      <Modal
+        isOpen={isSwitchToDomainOpen}
+        onClose={() => setIsSwitchToDomainOpen(false)}
+        title="Switch to domain"
+        description="Any unsaved changes may be lost when switching to another domain. Do you want to switch?"
+        size="sm"
+      >
+        <div className="flex flex-col gap-2 items-center">
+          {/* Current Domain Info Box */}
+          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5 w-full">
+            <span className="text-[11px] text-[var(--color-text-subtle)] font-medium leading-4">
+              Current domain
+            </span>
+            <span className="text-[12px] text-[var(--color-text-default)] leading-4">
+              Domain A
+            </span>
+          </div>
+
+          {/* Chevron Down Icon */}
+          <IconChevronDown size={16} className="text-[var(--color-text-default)]" stroke={1.5} />
+
+          {/* Target Domain Info Box */}
+          <div className="bg-[#eff6ff] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5 w-full">
+            <span className="text-[11px] text-[var(--color-text-subtle)] font-medium leading-4">
+              Target domain
+            </span>
+            <span className="text-[12px] text-[var(--color-text-default)] leading-4">
+              Domain B
+            </span>
+          </div>
+        </div>
+
+        {/* Button Group */}
+        <div className="flex gap-2 w-full">
+          <Button 
+            variant="outline" 
+            size="md" 
+            onClick={() => setIsSwitchToDomainOpen(false)}
+            className="flex-1"
+          >
+            Cancel
+          </Button>
+          <Button 
+            variant="primary" 
+            size="md" 
+            onClick={() => {
+              console.log('Switched to domain');
+              setIsSwitchToDomainOpen(false);
+            }}
+            className="flex-1"
+          >
+            Switch
+          </Button>
+        </div>
+      </Modal>
+
+      {/* Delete System Administrator Modal */}
+      <Modal
+        isOpen={isDeleteSystemAdminOpen}
+        onClose={() => setIsDeleteSystemAdminOpen(false)}
+        title="Delete system administrator"
+        description={`Are you sure you want to delete system administrator "DISPLAY NAME"?`}
+        size="sm"
+      >
+        <div className="flex flex-col gap-2">
+          {/* System Administrator Info Box */}
+          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
+            <span className="text-[11px] text-[var(--color-text-subtle)] font-medium leading-4">
+              System administrator
+            </span>
+            <span className="text-[12px] text-[var(--color-text-default)] leading-4">
+              DISPLAY NAME
+            </span>
+          </div>
+
+          {/* Warning Alert Box */}
+          <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
+            <IconAlertCircle size={16} className="text-[var(--color-state-danger)] shrink-0 mt-0.5" stroke={1.5} />
+            <p className="text-[11px] text-[var(--color-text-default)] leading-4">
+              Deleting this system administrator will permanently remove their global access and cannot be undone.
+            </p>
+          </div>
+        </div>
+
+        {/* Button Group */}
+        <div className="flex gap-2 w-full">
+          <Button 
+            variant="outline" 
+            size="md" 
+            onClick={() => setIsDeleteSystemAdminOpen(false)}
+            className="flex-1"
+          >
+            Cancel
+          </Button>
+          <Button 
+            variant="primary" 
+            size="md" 
+            onClick={() => {
+              console.log('System administrator deleted');
+              setIsDeleteSystemAdminOpen(false);
+            }}
+            className="flex-1"
+          >
+            Delete
+          </Button>
+        </div>
+      </Modal>
+
+      {/* Update Password Policy Modal */}
+      <Modal
+        isOpen={isUpdatePasswordPolicyOpen}
+        onClose={() => setIsUpdatePasswordPolicyOpen(false)}
+        title="Update password policy"
+        description="Are you sure you want to apply these changes?"
+        size="sm"
+      >
+        <div className="flex flex-col gap-2">
+          {/* Changes Info Box */}
+          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
+            <span className="text-[11px] text-[var(--color-text-subtle)] font-medium leading-4">
+              Changes
+            </span>
+            <ul className="text-[12px] text-[var(--color-text-default)] leading-4 list-disc pl-4 space-y-0.5">
+              <li>Length: 8-64 → 1-100</li>
+              <li>Requirements: Uppercase, Lowercase, number, Special character → Uppercase, Lowercase</li>
+              <li>Exclusion rules: none → Username, Email</li>
+              <li>Password expiration: 30 → 47 days</li>
+              <li>Prevent password reuse: Off → On</li>
+            </ul>
+          </div>
+        </div>
+
+        {/* Button Group */}
+        <div className="flex gap-2 w-full">
+          <Button 
+            variant="outline" 
+            size="md" 
+            onClick={() => setIsUpdatePasswordPolicyOpen(false)}
+            className="flex-1"
+          >
+            Cancel
+          </Button>
+          <Button 
+            variant="primary" 
+            size="md" 
+            onClick={() => {
+              console.log('Password policy updated');
+              setIsUpdatePasswordPolicyOpen(false);
+            }}
+            className="flex-1"
+          >
+            Apply
+          </Button>
+        </div>
+      </Modal>
+
+      {/* Update Account Lockout Policy Modal */}
+      <Modal
+        isOpen={isUpdateAccountLockoutPolicyOpen}
+        onClose={() => setIsUpdateAccountLockoutPolicyOpen(false)}
+        title="Update account lockout policy"
+        description="Are you sure you want to apply these changes?"
+        size="sm"
+      >
+        <div className="flex flex-col gap-2">
+          {/* Changes Info Box */}
+          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
+            <span className="text-[11px] text-[var(--color-text-subtle)] font-medium leading-4">
+              Changes
+            </span>
+            <ul className="text-[12px] text-[var(--color-text-default)] leading-4 list-disc pl-4 space-y-0.5">
+              <li>Lockout type: Lockout permanently after Temporary lockout → Lockout temporarily</li>
+            </ul>
+          </div>
+        </div>
+
+        {/* Button Group */}
+        <div className="flex gap-2 w-full">
+          <Button 
+            variant="outline" 
+            size="md" 
+            onClick={() => setIsUpdateAccountLockoutPolicyOpen(false)}
+            className="flex-1"
+          >
+            Cancel
+          </Button>
+          <Button 
+            variant="primary" 
+            size="md" 
+            onClick={() => {
+              console.log('Account lockout policy updated');
+              setIsUpdateAccountLockoutPolicyOpen(false);
+            }}
+            className="flex-1"
+          >
+            Apply
+          </Button>
+        </div>
+      </Modal>
+
+      {/* Update Token Policy Modal */}
+      <Modal
+        isOpen={isUpdateTokenPolicyOpen}
+        onClose={() => setIsUpdateTokenPolicyOpen(false)}
+        title="Update token policy"
+        description="Are you sure you want to apply these changes?"
+        size="sm"
+      >
+        <div className="flex flex-col gap-2">
+          {/* Changes Info Box */}
+          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
+            <span className="text-[11px] text-[var(--color-text-subtle)] font-medium leading-4">
+              Changes
+            </span>
+            <ul className="text-[12px] text-[var(--color-text-default)] leading-4 list-disc pl-4 space-y-0.5">
+              <li>Access token lifespan: 10 → 15 minutes</li>
+              <li>Refresh token lifespan: 7 → 3 days</li>
+            </ul>
+          </div>
+
+          {/* Warning Alert Box */}
+          <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
+            <IconAlertCircle size={16} className="text-[var(--color-state-danger)] shrink-0 mt-0.5" stroke={1.5} />
+            <p className="text-[11px] text-[var(--color-text-default)] leading-4">
+              Updating token settings may immediately affect authentication behavior across the system.
+            </p>
+          </div>
+        </div>
+
+        {/* Button Group */}
+        <div className="flex gap-2 w-full">
+          <Button 
+            variant="outline" 
+            size="md" 
+            onClick={() => setIsUpdateTokenPolicyOpen(false)}
+            className="flex-1"
+          >
+            Cancel
+          </Button>
+          <Button 
+            variant="primary" 
+            size="md" 
+            onClick={() => {
+              console.log('Token policy updated');
+              setIsUpdateTokenPolicyOpen(false);
+            }}
+            className="flex-1"
+          >
+            Apply
           </Button>
         </div>
       </Modal>

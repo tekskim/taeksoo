@@ -272,7 +272,7 @@ export const component = {
   button: {
     height: {
       sm: 'var(--button-height-sm)',   // 28px
-      md: 'var(--button-height-md)',   // 32px
+      md: 'var(--button-height-md)',   // 28px
       lg: 'var(--button-height-lg)',   // 40px
     },
     minWidth: {
@@ -297,8 +297,8 @@ export const component = {
     },
     radius: 'var(--button-radius)', // 6px
     fontSize: {
-      sm: 'var(--button-font-size-sm)', // 12px (same as md per Figma)
-      md: 'var(--button-font-size-md)', // 12px
+      sm: 'var(--button-font-size-sm)', // 11px
+      md: 'var(--button-font-size-md)', // 11px
       lg: 'var(--button-font-size-lg)', // 14px
     },
     // Border colors per Figma spec
@@ -352,7 +352,7 @@ export const component = {
   },
   searchInput: {
     heightSm: 'var(--search-input-height-sm)', // 28px
-    heightMd: 'var(--search-input-height-md)', // 32px
+    heightMd: 'var(--search-input-height-md)', // 28px
     iconSize: 'var(--search-input-icon-size)', // 12px
   },
   badge: {

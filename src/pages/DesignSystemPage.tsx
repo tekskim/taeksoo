@@ -3726,6 +3726,9 @@ export function DesignSystemPage() {
   const [demoPage3, setDemoPage3] = useState(15);
   const [demoPage4, setDemoPage4] = useState(2);
 
+  // Icon search state
+  const [iconSearchQuery, setIconSearchQuery] = useState('');
+
   // Scroll to top on mount
   useEffect(() => {
     mainRef.current?.scrollTo(0, 0);
@@ -4687,6 +4690,13 @@ outline: 2px solid var(--color-border-focus);`}
             {/* Icons */}
             <Section id="icons" title="Icons" description="Tabler Icons & Custom Icons - Stroke width 1.5, Size 16-20px">
               <VStack gap={8}>
+                {/* Icon Search */}
+                <SearchInput
+                  placeholder="Search icons..."
+                  value={iconSearchQuery}
+                  onChange={(e) => setIconSearchQuery(e.target.value)}
+                />
+
                 {/* Actions - Media Controls */}
                 <IconDisplayGrid
                   title="Actions - Media Controls"
@@ -4700,6 +4710,7 @@ outline: 2px solid var(--color-border-focus);`}
                     { Icon: IconRotateClockwise, name: 'Retry' },
                     { Icon: IconPower, name: 'Power' },
                   ]}
+                  searchQuery={iconSearchQuery}
                 />
 
                 {/* Actions - CRUD */}
@@ -4715,6 +4726,7 @@ outline: 2px solid var(--color-border-focus);`}
                     { Icon: IconTrashX, name: 'Deleting' },
                     { Icon: IconCopy, name: 'Copy' },
                   ]}
+                  searchQuery={iconSearchQuery}
                 />
 
                 {/* Actions - Transfer */}
@@ -4731,6 +4743,7 @@ outline: 2px solid var(--color-border-focus);`}
                     { Icon: IconLinkOff, name: 'Link Off' },
                     { Icon: IconExternalLink, name: 'External' },
                   ]}
+                  searchQuery={iconSearchQuery}
                 />
 
                 {/* Navigation - Chevrons & Arrows */}
@@ -4748,6 +4761,7 @@ outline: 2px solid var(--color-border-focus);`}
                     { Icon: IconCaretRightFilled, name: 'Caret R' },
                     { Icon: IconCaretDownFilled, name: 'Caret D' },
                   ]}
+                  searchQuery={iconSearchQuery}
                 />
 
                 {/* Navigation - Expand & Menu */}
@@ -4763,6 +4777,7 @@ outline: 2px solid var(--color-border-focus);`}
                     { Icon: IconDots, name: 'Meatball' },
                     { Icon: IconDotsVertical, name: 'Kebab' },
                   ]}
+                  searchQuery={iconSearchQuery}
                 />
 
                 {/* Status - Success & Error */}
@@ -4778,6 +4793,7 @@ outline: 2px solid var(--color-border-focus);`}
                     { Icon: IconInfoCircle, name: 'Info' },
                     { Icon: IconHelpCircle, name: 'Help' },
                   ]}
+                  searchQuery={iconSearchQuery}
                 />
 
                 {/* Status - State */}
@@ -4793,6 +4809,7 @@ outline: 2px solid var(--color-border-focus);`}
                     { Icon: IconProgress, name: 'Progress' },
                     { Icon: IconInfinity, name: 'Infinity' },
                   ]}
+                  searchQuery={iconSearchQuery}
                 />
 
                 {/* UI - Common */}
@@ -4809,6 +4826,7 @@ outline: 2px solid var(--color-border-focus);`}
                     { Icon: IconGridDots, name: 'Grid Dots' },
                     { Icon: IconArrowsSort, name: 'Sort' },
                   ]}
+                  searchQuery={iconSearchQuery}
                 />
 
                 {/* UI - Notifications & Favorites */}
@@ -4823,6 +4841,7 @@ outline: 2px solid var(--color-border-focus);`}
                     { Icon: IconTarget, name: 'Target' },
                     { Icon: IconPoint, name: 'Dot' },
                   ]}
+                  searchQuery={iconSearchQuery}
                 />
 
                 {/* UI - Visibility & Security */}
@@ -4837,6 +4856,7 @@ outline: 2px solid var(--color-border-focus);`}
                     { Icon: IconShieldCheck, name: 'Shield OK' },
                     { Icon: IconKey, name: 'Key' },
                   ]}
+                  searchQuery={iconSearchQuery}
                 />
 
                 {/* UI - User & Communication */}
@@ -4851,6 +4871,7 @@ outline: 2px solid var(--color-border-focus);`}
                     { Icon: IconHelp, name: 'Help' },
                     { Icon: IconQuestionMark, name: 'Question' },
                   ]}
+                  searchQuery={iconSearchQuery}
                 />
 
                 {/* UI - Theme */}
@@ -4860,6 +4881,7 @@ outline: 2px solid var(--color-border-focus);`}
                     { Icon: IconSun, name: 'Light' },
                     { Icon: IconMoon, name: 'Dark' },
                   ]}
+                  searchQuery={iconSearchQuery}
                 />
 
                 {/* Infrastructure - Compute */}
@@ -4873,6 +4895,7 @@ outline: 2px solid var(--color-border-focus);`}
                     { Icon: IconServerCog, name: 'Host Agg' },
                     { Icon: IconCloud, name: 'Cloud' },
                   ]}
+                  searchQuery={iconSearchQuery}
                 />
 
                 {/* Infrastructure - Network */}
@@ -4886,6 +4909,7 @@ outline: 2px solid var(--color-border-focus);`}
                     { Icon: IconScale, name: 'Load Bal' },
                     { Icon: IconWorldWww, name: 'Float IP' },
                   ]}
+                  searchQuery={iconSearchQuery}
                 />
 
                 {/* Infrastructure - Storage */}
@@ -4899,6 +4923,7 @@ outline: 2px solid var(--color-border-focus);`}
                     { Icon: IconBoxMultiple, name: 'Vol Type' },
                     { Icon: IconSquarePlus, name: 'Add Vol' },
                   ]}
+                  searchQuery={iconSearchQuery}
                 />
 
                 {/* Infrastructure - Security */}
@@ -4910,6 +4935,7 @@ outline: 2px solid var(--color-border-focus);`}
                     { Icon: IconKey, name: 'Key Pair' },
                     { Icon: IconCertificate, name: 'Certificate' },
                   ]}
+                  searchQuery={iconSearchQuery}
                 />
 
                 {/* Storage & Files */}
@@ -4927,6 +4953,7 @@ outline: 2px solid var(--color-border-focus);`}
                     { Icon: IconStack2, name: 'Layers' },
                     { Icon: IconCode, name: 'Code' },
                   ]}
+                  searchQuery={iconSearchQuery}
                 />
 
                 {/* Monitoring & Analytics */}
@@ -4943,6 +4970,7 @@ outline: 2px solid var(--color-border-focus);`}
                     { Icon: IconDeviceDesktopAnalytics, name: 'Analytics' },
                     { Icon: IconLayoutDashboard, name: 'Dashboard' },
                   ]}
+                  searchQuery={iconSearchQuery}
                 />
 
                 {/* Organization & Structure */}
@@ -4958,6 +4986,7 @@ outline: 2px solid var(--color-border-focus);`}
                     { Icon: IconBolt, name: 'Bolt' },
                     { Icon: IconGitBranch, name: 'Branch' },
                   ]}
+                  searchQuery={iconSearchQuery}
                 />
 
                 {/* Time & Schedule */}
@@ -4971,6 +5000,7 @@ outline: 2px solid var(--color-border-focus);`}
                     { Icon: IconArticle, name: 'Article' },
                     { Icon: IconCalendar, name: 'Calendar' },
                   ]}
+                  searchQuery={iconSearchQuery}
                 />
 
                 {/* Business & Finance */}
@@ -4980,6 +5010,7 @@ outline: 2px solid var(--color-border-focus);`}
                     { Icon: IconCurrencyDollar, name: 'Dollar' },
                     { Icon: IconLanguage, name: 'Language' },
                   ]}
+                  searchQuery={iconSearchQuery}
                 />
 
                 {/* AI & ML */}
@@ -4994,6 +5025,7 @@ outline: 2px solid var(--color-border-focus);`}
                     { Icon: IconBook, name: 'Book' },
                     { Icon: IconTestPipe, name: 'Test' },
                   ]}
+                  searchQuery={iconSearchQuery}
                 />
 
                 {/* OS / Brand Icons */}
@@ -5008,6 +5040,7 @@ outline: 2px solid var(--color-border-focus);`}
                     { Icon: IconGrid, name: 'Grid' },
                     { Icon: IconCircleDot, name: 'Other' },
                   ]}
+                  searchQuery={iconSearchQuery}
                 />
               </VStack>
             </Section>
@@ -8346,12 +8379,21 @@ function TokenCard({ title, description, items, color, textColor }: { title: str
   );
 }
 
-function IconDisplayGrid({ title, icons }: { title: string; icons: { Icon: React.ComponentType<{ size?: number; stroke?: number; className?: string }>; name: string; missing?: boolean }[] }) {
+function IconDisplayGrid({ title, icons, searchQuery = '' }: { title: string; icons: { Icon: React.ComponentType<{ size?: number; stroke?: number; className?: string }>; name: string; missing?: boolean }[]; searchQuery?: string }) {
+  const filteredIcons = searchQuery
+    ? icons.filter(({ name }) => name.toLowerCase().includes(searchQuery.toLowerCase()))
+    : icons;
+
+  // Don't render the group if no icons match the search
+  if (searchQuery && filteredIcons.length === 0) {
+    return null;
+  }
+
   return (
     <VStack gap={3}>
       <Label>{title}</Label>
       <div className="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 lg:grid-cols-10 gap-2">
-        {icons.map(({ Icon, name, missing }, i) => (
+        {filteredIcons.map(({ Icon, name, missing }, i) => (
           <div
             key={i}
             title={missing ? `⚠️ ${name} (needs custom icon)` : name}
