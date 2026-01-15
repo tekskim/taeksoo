@@ -45,6 +45,8 @@ export interface ContextMenuProps {
   className?: string;
   /** Minimum top position for dropdown */
   minTop?: number;
+  /** Alignment of dropdown relative to trigger (for click trigger) */
+  align?: 'left' | 'right';
 }
 
 export interface ContextMenuContentProps {
@@ -62,6 +64,10 @@ export interface ContextMenuContentProps {
   triggerRef?: React.RefObject<HTMLElement>;
   /** Minimum top position for dropdown */
   minTop?: number;
+  /** Alignment of dropdown relative to trigger */
+  align?: 'left' | 'right';
+  /** Trigger width for right alignment calculation */
+  triggerWidth?: number;
 }
 
 /* ----------------------------------------
@@ -341,6 +347,8 @@ const ContextMenuContent: React.FC<ContextMenuContentProps> = ({
   menuRef: externalMenuRef,
   triggerRef,
   minTop,
+  align = 'left',
+  triggerWidth = 0,
 }) => {
   const internalMenuRef = useRef<HTMLDivElement>(null);
   const menuRef = externalMenuRef ?? internalMenuRef;
@@ -354,9 +362,15 @@ const ContextMenuContent: React.FC<ContextMenuContentProps> = ({
         const viewportWidth = window.innerWidth;
         const viewportHeight = window.innerHeight;
 
-        // position.x is the button left edge
-        // Left-align menu with trigger button
-        let newX = position.x;
+        // Calculate initial X position based on alignment
+        let newX: number;
+        if (align === 'right') {
+          // Right-align: position.x is the left edge of trigger, so we need to align menu's right edge with trigger's right edge
+          newX = position.x + triggerWidth - rect.width;
+        } else {
+          // Left-align: menu left edge aligns with trigger left edge
+          newX = position.x;
+        }
         let newY = position.y;
 
         // Adjust horizontal position if menu overflows viewport
@@ -382,7 +396,7 @@ const ContextMenuContent: React.FC<ContextMenuContentProps> = ({
         setAdjustedPosition({ x: newX, y: newY });
       }
     });
-  }, [position, triggerRef, minTop]);
+  }, [position, triggerRef, minTop, align, triggerWidth]);
 
   return createPortal(
     <div
@@ -430,9 +444,11 @@ export const ContextMenu: React.FC<ContextMenuProps> = ({
   disabled = false,
   className = '',
   minTop,
+  align = 'left',
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [position, setPosition] = useState({ x: 0, y: 0 });
+  const [triggerWidth, setTriggerWidth] = useState(0);
   const triggerRef = useRef<HTMLDivElement>(null);
   const menuRef = useRef<HTMLDivElement>(null);
 
@@ -449,6 +465,7 @@ export const ContextMenu: React.FC<ContextMenuProps> = ({
       // 위치 업데이트 및 메뉴 열기
       // 같은 메뉴인 경우에도 위치를 업데이트하기 위해 먼저 닫고 다시 열기
       setPosition({ x: e.clientX, y: e.clientY });
+      setTriggerWidth(0);
       setIsOpen(true);
     } else {
       // Click trigger: toggle menu and position relative to trigger element
@@ -461,11 +478,12 @@ export const ContextMenu: React.FC<ContextMenuProps> = ({
         // Get the actual trigger element (first child) for accurate positioning
         const triggerElement = triggerRef.current.firstElementChild as HTMLElement | null;
         const rect = triggerElement?.getBoundingClientRect() ?? triggerRef.current.getBoundingClientRect();
-        // Position menu directly below the button, left-aligned
+        // Position menu directly below the button
         setPosition({ 
           x: rect.left, // Button left edge
           y: rect.bottom + 4 
         });
+        setTriggerWidth(rect.width);
       }
       setIsOpen(true);
     }
@@ -536,6 +554,8 @@ export const ContextMenu: React.FC<ContextMenuProps> = ({
           menuRef={menuRef}
           triggerRef={triggerRef}
           minTop={minTop}
+          align={align}
+          triggerWidth={triggerWidth}
         />
       )}
     </div>

@@ -11,6 +11,7 @@ import {
   SectionCard,
   Checkbox,
   InlineMessage,
+  Select,
 } from '@/design-system';
 import { IAMSidebar } from '@/components/IAMSidebar';
 import { useTabs } from '@/contexts/TabContext';
@@ -22,6 +23,7 @@ import {
   IconChevronDown,
   IconChevronRight,
   IconSearch,
+  IconX,
 } from '@tabler/icons-react';
 
 /* ----------------------------------------
@@ -375,9 +377,77 @@ interface Permission {
     delete: boolean;
     admin: boolean;
   };
+  detailedActions: Record<string, boolean>;
   allActions: boolean;
   mfaRequired: boolean;
 }
+
+/* ----------------------------------------
+   Compute Actions Data
+   ---------------------------------------- */
+
+const COMPUTE_ACTIONS = {
+  read: [
+    'ReadInstance',
+    'ReadImage',
+    'ReadVolume',
+    'ReadInstancesnapshot',
+    'ReadKeypair',
+    'ReadServergroup',
+    'ReadNetwork',
+    'ReadSecuritygroup',
+    'ReadTopology',
+    'ReadDashboard',
+  ],
+  list: [
+    'ListInstance',
+    'ListImage',
+    'ListVolume',
+    'ListInstancesnapshot',
+    'ListKeypair',
+    'ListServergroup',
+    'ListNetwork',
+    'ListSecuritygroup',
+    'ListTopology',
+    'ListDashboard',
+  ],
+  write: [
+    'WriteInstance',
+    'WriteImage',
+    'WriteVolume',
+    'WriteInstancesnapshot',
+    'WriteKeypair',
+    'WriteServergroup',
+    'WriteNetwork',
+    'WriteSecuritygroup',
+    'WriteTopology',
+    'WriteDashboard',
+  ],
+  delete: [
+    'DeleteInstance',
+    'DeleteImage',
+    'DeleteVolume',
+    'DeleteInstancesnapshot',
+    'DeleteKeypair',
+    'DeleteServergroup',
+    'DeleteNetwork',
+    'DeleteSecuritygroup',
+    'DeleteTopology',
+    'DeleteDashboard',
+  ],
+  admin: [
+    'AdminInstance',
+    'AdminImage',
+    'AdminVolume',
+    'AdminInstancesnapshot',
+    'AdminKeypair',
+    'AdminServergroup',
+    'AdminNetwork',
+    'AdminSecuritygroup',
+    'AdminTopology',
+    'AdminDashboard',
+  ],
+};
 
 /* ----------------------------------------
    PolicyEditorSection Component
@@ -407,6 +477,7 @@ const createEmptyPermission = (): Permission => ({
     delete: false,
     admin: false,
   },
+  detailedActions: {},
   allActions: false,
   mfaRequired: false,
 });
@@ -425,6 +496,7 @@ function PolicyEditorSection({
   const [conditionsExpanded, setConditionsExpanded] = useState(false);
   const [targetErrors, setTargetErrors] = useState<Record<string, boolean>>({});
   const [invalidTargetErrors, setInvalidTargetErrors] = useState<Record<string, boolean>>({});
+  const [actionErrors, setActionErrors] = useState<Record<string, boolean>>({});
 
   // Check if a permission has partial fill (some fields filled, but not all)
   const hasPartialFill = (permission: Permission): boolean => {
@@ -476,12 +548,40 @@ function PolicyEditorSection({
     return !hasErrors;
   };
 
+  // Check if at least one action is selected for a permission
+  const hasAnyActionSelected = (permission: Permission): boolean => {
+    // For compute with all fields filled, check detailed actions
+    if (shouldShowDetailedActions(permission)) {
+      return Object.values(permission.detailedActions).some((v) => v);
+    }
+    // For other cases, check basic actions
+    return Object.values(permission.actions).some((v) => v);
+  };
+
+  const validateActions = (): boolean => {
+    const errors: Record<string, boolean> = {};
+    let hasErrors = false;
+
+    permissions.forEach((permission) => {
+      if (!hasAnyActionSelected(permission)) {
+        errors[permission.id] = true;
+        hasErrors = true;
+      }
+    });
+
+    setActionErrors(errors);
+    return !hasErrors;
+  };
+
   const handleNext = () => {
     if (permissions.length === 0) {
       onPermissionsErrorChange('At least one permission is required.');
       return;
     }
     if (!validateTargetFields()) {
+      return;
+    }
+    if (!validateActions()) {
       return;
     }
     onNext();
@@ -495,12 +595,19 @@ function PolicyEditorSection({
     if (!validateTargetFields()) {
       return;
     }
+    if (!validateActions()) {
+      return;
+    }
     onEditDone();
   };
 
   const addPermission = () => {
     onPermissionsChange([...permissions, createEmptyPermission()]);
     onPermissionsErrorChange(null);
+  };
+
+  const deletePermission = (id: string) => {
+    onPermissionsChange(permissions.filter((p) => p.id !== id));
   };
 
   const updatePermission = (id: string, updates: Partial<Permission>) => {
@@ -517,6 +624,11 @@ function PolicyEditorSection({
     const allSelected = Object.values(newActions).every((v) => v);
     
     updatePermission(permissionId, { actions: newActions, allActions: allSelected });
+
+    // Clear action error if any action is now selected
+    if (actionErrors[permissionId] && Object.values(newActions).some((v) => v)) {
+      setActionErrors((prev) => ({ ...prev, [permissionId]: false }));
+    }
   };
 
   const toggleAllActions = (permissionId: string) => {
@@ -524,8 +636,18 @@ function PolicyEditorSection({
     if (!permission) return;
 
     const newValue = !permission.allActions;
+    
+    // Also toggle all detailed actions if compute
+    const newDetailedActions: Record<string, boolean> = {};
+    if (permission.application.toLowerCase() === 'compute') {
+      Object.values(COMPUTE_ACTIONS).flat().forEach((action) => {
+        newDetailedActions[action] = newValue;
+      });
+    }
+
     updatePermission(permissionId, {
       allActions: newValue,
+      detailedActions: newDetailedActions,
       actions: {
         read: newValue,
         list: newValue,
@@ -534,6 +656,78 @@ function PolicyEditorSection({
         admin: newValue,
       },
     });
+
+    // Clear action error if any action is now selected
+    if (actionErrors[permissionId] && newValue) {
+      setActionErrors((prev) => ({ ...prev, [permissionId]: false }));
+    }
+  };
+
+  // Toggle a single detailed action
+  const toggleDetailedAction = (permissionId: string, actionName: string) => {
+    const permission = permissions.find((p) => p.id === permissionId);
+    if (!permission) return;
+
+    const newDetailedActions = {
+      ...permission.detailedActions,
+      [actionName]: !permission.detailedActions[actionName],
+    };
+
+    // Update category action based on detailed actions
+    const category = actionName.replace(/^(Read|List|Write|Delete|Admin).*/, '$1').toLowerCase() as keyof Permission['actions'];
+    const categoryActions = COMPUTE_ACTIONS[category as keyof typeof COMPUTE_ACTIONS] || [];
+    const allCategorySelected = categoryActions.every((a) => newDetailedActions[a]);
+
+    const newActions = { ...permission.actions, [category]: allCategorySelected };
+    const allSelected = Object.values(newActions).every((v) => v);
+
+    updatePermission(permissionId, {
+      detailedActions: newDetailedActions,
+      actions: newActions,
+      allActions: allSelected,
+    });
+
+    // Clear action error if any action is now selected
+    if (actionErrors[permissionId] && Object.values(newDetailedActions).some((v) => v)) {
+      setActionErrors((prev) => ({ ...prev, [permissionId]: false }));
+    }
+  };
+
+  // Toggle all actions in a category (Read, List, Write, Delete, Admin)
+  const toggleCategoryActions = (permissionId: string, category: keyof Permission['actions']) => {
+    const permission = permissions.find((p) => p.id === permissionId);
+    if (!permission) return;
+
+    const categoryActions = COMPUTE_ACTIONS[category as keyof typeof COMPUTE_ACTIONS] || [];
+    const allCurrentlySelected = categoryActions.every((a) => permission.detailedActions[a]);
+    const newValue = !allCurrentlySelected;
+
+    const newDetailedActions = { ...permission.detailedActions };
+    categoryActions.forEach((action) => {
+      newDetailedActions[action] = newValue;
+    });
+
+    const newActions = { ...permission.actions, [category]: newValue };
+    const allSelected = Object.values(newActions).every((v) => v);
+
+    updatePermission(permissionId, {
+      detailedActions: newDetailedActions,
+      actions: newActions,
+      allActions: allSelected,
+    });
+
+    // Clear action error if any action is now selected
+    if (actionErrors[permissionId] && Object.values(newDetailedActions).some((v) => v)) {
+      setActionErrors((prev) => ({ ...prev, [permissionId]: false }));
+    }
+  };
+
+  // Check if application is compute AND all fields are filled
+  const shouldShowDetailedActions = (permission: Permission) => {
+    return (
+      permission.application.toLowerCase() === 'compute' &&
+      hasAllFieldsFilled(permission)
+    );
   };
 
   return (
@@ -571,79 +765,104 @@ function PolicyEditorSection({
           {permissions.map((permission, index) => (
             <div
               key={permission.id}
-              className="bg-white border border-[var(--color-border-default)] rounded-[6px] p-4 w-full"
+              className="bg-white border border-[var(--color-border-default)] rounded-[6px] p-4 w-full relative"
             >
+              {/* Delete button - only show for cards after the first one */}
+              {index > 0 && (
+                <button
+                  type="button"
+                  onClick={() => deletePermission(permission.id)}
+                  className="absolute top-3 right-3 p-1 rounded hover:bg-[var(--color-surface-subtle)] text-[var(--color-text-muted)] hover:text-[var(--color-text-default)] transition-colors"
+                  aria-label="Remove permission"
+                >
+                  <IconX size={16} stroke={1.5} />
+                </button>
+              )}
               <VStack gap={6}>
                 {/* Target */}
                 <div className="flex flex-col gap-2 w-full">
                   <span className="text-[14px] font-medium text-[var(--color-text-default)]">
                     Target
                   </span>
-                  <div className={`flex items-center gap-1 bg-white border rounded-[6px] p-1 ${
+                  <div className={`flex items-center gap-1 ${
                     targetErrors[permission.id] 
-                      ? 'border-[var(--color-state-danger)]' 
+                      ? '[&_button]:border-[var(--color-state-danger)]' 
                       : hasPartialFill(permission) 
-                        ? 'border-[var(--color-state-danger)]' 
+                        ? '[&_button]:border-[var(--color-state-danger)]' 
                         : isInvalidTargetCombination(permission)
-                          ? 'border-[var(--color-state-danger)]'
-                          : 'border-[var(--color-border-strong)]'
+                          ? '[&_button]:border-[var(--color-state-danger)]'
+                          : ''
                   }`}>
-                    <input
-                      type="text"
+                    <Select
                       placeholder="Application"
                       value={permission.application}
-                      onChange={(e) => {
-                        updatePermission(permission.id, { application: e.target.value });
+                      onChange={(value) => {
+                        updatePermission(permission.id, { application: value });
                         if (targetErrors[permission.id]) {
                           setTargetErrors((prev) => ({ ...prev, [permission.id]: false }));
                         }
                       }}
-                      className="flex-1 h-6 px-[5px] py-1 text-[12px] bg-transparent border-0 rounded-[3px] placeholder:text-[var(--color-text-muted)] text-[var(--color-text-default)] focus:outline-none"
+                      options={[
+                        { value: '*all', label: '*all' },
+                        { value: 'compute', label: 'compute' },
+                        { value: 'container', label: 'container' },
+                      ]}
+                      size="sm"
+                      fullWidth
                     />
                     <span className="text-[12px] text-[var(--color-text-default)]">:</span>
-                    <input
-                      type="text"
+                    <Select
                       placeholder="Partition"
                       value={permission.partition}
-                      onChange={(e) => {
-                        updatePermission(permission.id, { partition: e.target.value });
+                      onChange={(value) => {
+                        updatePermission(permission.id, { partition: value });
                         if (targetErrors[permission.id]) {
                           setTargetErrors((prev) => ({ ...prev, [permission.id]: false }));
                         }
                       }}
-                      className="flex-1 h-6 px-[5px] py-1 text-[12px] bg-transparent border-0 rounded-[3px] placeholder:text-[var(--color-text-muted)] text-[var(--color-text-default)] focus:outline-none"
+                      options={[
+                        { value: '*all', label: '*all' },
+                      ]}
+                      size="sm"
+                      fullWidth
                     />
                     <span className="text-[12px] text-[var(--color-text-default)]">:</span>
-                    <input
-                      type="text"
+                    <Select
                       placeholder="Resource"
                       value={permission.resource}
-                      onChange={(e) => {
-                        updatePermission(permission.id, { resource: e.target.value });
+                      onChange={(value) => {
+                        updatePermission(permission.id, { resource: value });
                         if (targetErrors[permission.id]) {
                           setTargetErrors((prev) => ({ ...prev, [permission.id]: false }));
                         }
                       }}
-                      className="flex-1 h-6 px-[5px] py-1 text-[12px] bg-transparent border-0 rounded-[3px] placeholder:text-[var(--color-text-muted)] text-[var(--color-text-default)] focus:outline-none"
+                      options={[
+                        { value: '*all', label: '*all' },
+                      ]}
+                      size="sm"
+                      fullWidth
                     />
                     <span className="text-[12px] text-[var(--color-text-default)]">:</span>
-                    <input
-                      type="text"
+                    <Select
                       placeholder="Resource ID"
                       value={permission.resourceId}
-                      onChange={(e) => {
-                        updatePermission(permission.id, { resourceId: e.target.value });
+                      onChange={(value) => {
+                        updatePermission(permission.id, { resourceId: value });
                         if (targetErrors[permission.id]) {
                           setTargetErrors((prev) => ({ ...prev, [permission.id]: false }));
                         }
                       }}
-                      className="flex-1 h-6 px-[5px] py-1 text-[12px] bg-transparent border-0 rounded-[3px] placeholder:text-[var(--color-text-muted)] text-[var(--color-text-default)] focus:outline-none"
+                      options={[
+                        { value: '*all', label: '*all' },
+                      ]}
+                      size="sm"
+                      fullWidth
                     />
                   </div>
                   {targetErrors[permission.id] && (
-                    <InlineMessage variant="error">
-                      Please fill in at least one target field.
-                    </InlineMessage>
+                    <span className="text-[11px] text-[var(--color-state-danger)] leading-[16px]">
+                      All Target fields must contain a valid value or a wildcard (∗).
+                    </span>
                   )}
                   {!targetErrors[permission.id] && hasPartialFill(permission) && (
                     <span className="text-[11px] text-[var(--color-state-danger)] leading-[16px]">
@@ -688,62 +907,111 @@ function PolicyEditorSection({
                     </label>
                   </div>
 
-                  {/* Action Cards */}
-                  <div className="flex gap-3 w-full">
-                    {(['read', 'list', 'write', 'delete', 'admin'] as const).map((action) => (
-                      <div
-                        key={action}
-                        className="flex-1 bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 cursor-pointer"
-                        onClick={() => toggleAction(permission.id, action)}
-                      >
-                        <label className="flex items-center gap-2.5 cursor-pointer">
-                          <Checkbox
-                            checked={permission.actions[action]}
-                            onChange={() => toggleAction(permission.id, action)}
-                          />
-                          <span className="text-[12px] font-normal text-[var(--color-text-default)] capitalize">
-                            {action}
-                          </span>
-                        </label>
-                      </div>
-                    ))}
-                  </div>
-                </div>
+                  {/* Action Cards - Simple view for non-compute applications */}
+                  {!shouldShowDetailedActions(permission) && (
+                    <div className={`flex gap-3 w-full h-[44px] ${actionErrors[permission.id] ? 'p-px' : ''}`}>
+                      {(['read', 'list', 'write', 'delete', 'admin'] as const).map((action) => (
+                        <div
+                          key={action}
+                          className={`flex-1 bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 cursor-pointer h-[44px] flex items-center ${
+                            actionErrors[permission.id] ? 'ring-1 ring-[var(--color-state-danger)]' : ''
+                          }`}
+                          onClick={() => toggleAction(permission.id, action)}
+                        >
+                          <label className="flex items-center gap-2.5 cursor-pointer">
+                            <Checkbox
+                              checked={permission.actions[action]}
+                              onChange={() => toggleAction(permission.id, action)}
+                            />
+                            <span className="text-[12px] font-normal text-[var(--color-text-default)] capitalize">
+                              {action}
+                            </span>
+                          </label>
+                        </div>
+                      ))}
+                    </div>
+                  )}
 
-                {/* Conditions */}
-                <div className="flex flex-col gap-3 w-full">
-                  <div className="flex flex-col gap-2">
-                    <button
-                      type="button"
-                      className="flex items-center gap-1.5 text-left"
-                      onClick={() => setConditionsExpanded(!conditionsExpanded)}
-                    >
-                      {conditionsExpanded ? (
-                        <IconChevronDown size={12} className="text-[var(--color-text-default)]" />
-                      ) : (
-                        <IconChevronRight size={12} className="text-[var(--color-text-default)]" />
-                      )}
-                      <span className="text-[14px] font-medium text-[var(--color-text-default)]">
-                        Conditions
-                      </span>
-                    </button>
-                    <span className="text-[12px] text-[var(--color-text-subtle)] leading-4">
-                      Select additional conditions required for this policy. All enabled conditions are evaluated using AND logic.
+                  {/* Detailed Action Tabs - For compute application with all fields filled */}
+                  {shouldShowDetailedActions(permission) && (
+                    <div className={`flex gap-3 w-full h-[320px] ${actionErrors[permission.id] ? 'p-px' : ''}`}>
+                      {(['read', 'list', 'write', 'delete', 'admin'] as const).map((category) => {
+                        const categoryActions = COMPUTE_ACTIONS[category];
+                        const filteredActions = searchQuery
+                          ? categoryActions.filter((a) =>
+                              a.toLowerCase().includes(searchQuery.toLowerCase())
+                            )
+                          : categoryActions;
+                        const selectedCount = categoryActions.filter(
+                          (a) => permission.detailedActions[a]
+                        ).length;
+                        const allCategorySelected = categoryActions.every(
+                          (a) => permission.detailedActions[a]
+                        );
+
+                        return (
+                          <div
+                            key={category}
+                            className={`flex-1 bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 flex flex-col min-w-0 overflow-hidden ${
+                              actionErrors[permission.id] ? 'ring-1 ring-[var(--color-state-danger)]' : ''
+                            }`}
+                          >
+                            {/* Category Header */}
+                            <label className="flex items-center gap-2.5 shrink-0 cursor-pointer">
+                              <Checkbox
+                                checked={allCategorySelected}
+                                onChange={() => toggleCategoryActions(permission.id, category)}
+                              />
+                              <span className="text-[12px] text-[var(--color-text-default)] capitalize">
+                                {category}
+                              </span>
+                              <div className="h-4 w-px bg-[var(--color-border-default)]" />
+                              <span className="text-[11px] text-[var(--color-text-subtle)]">
+                                {selectedCount > 0 ? `${selectedCount}/${categoryActions.length}` : `${categoryActions.length} items`}
+                              </span>
+                            </label>
+
+                            {/* Actions List */}
+                            <div className="flex flex-col gap-2 mt-6 overflow-y-auto overflow-x-hidden flex-1 min-h-0 legend-scroll">
+                              {filteredActions.map((actionName) => {
+                                const isSelected = permission.detailedActions[actionName];
+                                return (
+                                  <label
+                                    key={actionName}
+                                    className={`bg-white border rounded-[6px] p-2 flex items-center gap-1.5 cursor-pointer shrink-0 min-w-0 ${
+                                      isSelected
+                                        ? 'border-[var(--color-action-primary)]'
+                                        : 'border-[var(--color-border-strong)]'
+                                    }`}
+                                  >
+                                    <Checkbox
+                                      checked={isSelected}
+                                      onChange={() => toggleDetailedAction(permission.id, actionName)}
+                                    />
+                                    <span 
+                                      className="text-[12px] text-[var(--color-text-default)] truncate min-w-0"
+                                      title={actionName}
+                                    >
+                                      {actionName}
+                                    </span>
+                                  </label>
+                                );
+                              })}
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  )}
+
+                  {/* Action Error Message */}
+                  {actionErrors[permission.id] && (
+                    <span className="text-[11px] text-[var(--color-state-danger)] leading-[16px]">
+                      Please select at least one action.
                     </span>
-                  </div>
-                  
-                  {conditionsExpanded && (
-                    <label className="flex items-center gap-1.5 cursor-pointer">
-                      <Checkbox
-                        checked={permission.mfaRequired}
-                        onChange={() => updatePermission(permission.id, { mfaRequired: !permission.mfaRequired })}
-                      />
-                      <span className="text-[12px] text-[var(--color-text-default)]">
-                        Only applies if the user has completed MFA.
-                      </span>
-                    </label>
                   )}
                 </div>
+
               </VStack>
             </div>
           ))}
@@ -757,6 +1025,46 @@ function PolicyEditorSection({
           >
             Add Permission
           </Button>
+
+          {/* Conditions */}
+          <div className="flex flex-col gap-3 w-full">
+            <div className="flex flex-col gap-2">
+              <button
+                type="button"
+                className="flex items-center gap-1.5 text-left"
+                onClick={() => setConditionsExpanded(!conditionsExpanded)}
+              >
+                {conditionsExpanded ? (
+                  <IconChevronDown size={12} className="text-[var(--color-text-default)]" />
+                ) : (
+                  <IconChevronRight size={12} className="text-[var(--color-text-default)]" />
+                )}
+                <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+                  Conditions
+                </span>
+              </button>
+              <span className="text-[12px] text-[var(--color-text-subtle)] leading-4">
+                Select additional conditions required for this policy. All enabled conditions are evaluated using AND logic.
+              </span>
+            </div>
+            
+            {conditionsExpanded && (
+              <label className="flex items-center gap-1.5 cursor-pointer">
+                <Checkbox
+                  checked={permissions[0]?.mfaRequired || false}
+                  onChange={() => {
+                    // Apply MFA requirement to all permissions
+                    permissions.forEach((p) => {
+                      updatePermission(p.id, { mfaRequired: !permissions[0]?.mfaRequired });
+                    });
+                  }}
+                />
+                <span className="text-[12px] text-[var(--color-text-default)]">
+                  Only applies if the user has completed MFA.
+                </span>
+              </label>
+            )}
+          </div>
 
           {/* Error Message */}
           {permissionsError && (
@@ -986,17 +1294,19 @@ export default function CreatePolicyPage() {
 
         {/* Scrollable content */}
         <div className="flex-1 overflow-auto overscroll-contain sidebar-scroll">
-          <div className="pt-4 px-8 pb-20 bg-[var(--color-surface-default)] min-h-full">
+          <div className="pt-4 px-8 pb-6 bg-[var(--color-surface-default)] min-h-full">
 
             {/* Main content area */}
-            <VStack gap={6} className="min-w-[1176px]">
+            <VStack gap={3} className="min-w-[1176px]">
               {/* Page Title */}
-              <h1 className="text-[18px] font-semibold leading-7 text-[var(--color-text-default)]">
-                Create policy
-              </h1>
+              <div className="flex items-center justify-between h-8">
+                <h1 className="text-[length:var(--font-size-16)] font-semibold leading-6 text-[var(--color-text-default)]">
+                  Create policy
+                </h1>
+              </div>
               <HStack gap={6} align="start" className="w-full">
                 {/* Left Column - Form Sections */}
-                <VStack gap={4} className="flex-1">
+                <VStack gap={4} className="flex-1 min-w-0 max-w-[1034px]">
                   {/* Basic Information Section */}
                   {sectionStatus['basic-info'] === 'pre' && (
                     <PreSection title={SECTION_LABELS['basic-info']} />

@@ -25,11 +25,7 @@ import {
   IconFile,
   IconCopy,
   IconSearch,
-  IconStar,
   IconDownload,
-  IconTrash,
-  IconChevronDown,
-  IconX,
   IconDotsCircleHorizontal,
 } from '@tabler/icons-react';
 
@@ -37,38 +33,154 @@ import {
    Types
    ---------------------------------------- */
 
-interface NamespaceRow {
+interface EventRow {
   id: string;
-  status: 'Active' | 'Terminating' | 'Pending';
+  status: 'Normal' | 'Warning' | 'Error';
   name: string;
-  description: string;
-  createdAt: string;
+  namespace: string;
+  lastSeen: string;
+  type: string;
+  reason: string;
+  object: string;
+  subobject: string;
+  source: string;
+  message: string;
+  firstSeen: string;
+  count: number;
 }
 
 /* ----------------------------------------
    Mock Data
    ---------------------------------------- */
 
-const namespacesData: NamespaceRow[] = [
-  { id: '1', status: 'Active', name: 'cattle-clusters-system', description: 'description text', createdAt: '2025-11-10 12:57' },
-  { id: '2', status: 'Active', name: 'cattle-local-system', description: 'description text', createdAt: '2025-11-10 12:57' },
-  { id: '3', status: 'Active', name: 'cattle-system', description: 'description text', createdAt: '2025-11-10 12:57' },
-  { id: '4', status: 'Active', name: 'cattle-global-data', description: 'description text', createdAt: '2025-11-10 12:57' },
-  { id: '5', status: 'Active', name: 'cattle-impersonation-system', description: 'description text', createdAt: '2025-11-10 12:57' },
-  { id: '6', status: 'Active', name: 'cattle-provisioning-capi-system', description: 'description text', createdAt: '2025-11-10 12:57' },
-  { id: '7', status: 'Active', name: 'cattle-system', description: 'description text', createdAt: '2025-11-10 12:57' },
-  { id: '8', status: 'Active', name: 'default', description: 'description text', createdAt: '2025-11-10 12:57' },
-  { id: '9', status: 'Active', name: 'kube-public', description: 'description text', createdAt: '2025-11-10 12:57' },
-  { id: '10', status: 'Active', name: 'kube-system', description: 'description text', createdAt: '2025-11-10 12:57' },
-  { id: '11', status: 'Active', name: 'local', description: 'description text', createdAt: '2025-11-10 12:57' },
-  { id: '12', status: 'Active', name: 'kube-node-lease', description: 'description text', createdAt: '2025-11-10 12:57' },
+const eventsData: EventRow[] = [
+  {
+    id: '1',
+    status: 'Normal',
+    name: 'pod-started-successfully',
+    namespace: 'default',
+    lastSeen: '2025-10-21 08:32',
+    type: 'Normal',
+    reason: 'Started',
+    object: 'Pod-web-server-1',
+    subobject: '-',
+    source: 'kubelet, worker-node-1',
+    message: 'the web-server-1 was successfully started on node worker-node-1.',
+    firstSeen: '2025-10-21 08:30',
+    count: 2,
+  },
+  {
+    id: '2',
+    status: 'Normal',
+    name: 'pod-scheduled',
+    namespace: 'default',
+    lastSeen: '2025-10-21 08:31',
+    type: 'Normal',
+    reason: 'Scheduled',
+    object: 'Pod-web-server-1',
+    subobject: '-',
+    source: 'default-scheduler',
+    message: 'Successfully assigned default/web-server-1 to worker-node-1',
+    firstSeen: '2025-10-21 08:29',
+    count: 1,
+  },
+  {
+    id: '3',
+    status: 'Warning',
+    name: 'pod-failed-scheduling',
+    namespace: 'kube-system',
+    lastSeen: '2025-10-21 08:30',
+    type: 'Warning',
+    reason: 'FailedScheduling',
+    object: 'Pod-nginx-deployment',
+    subobject: '-',
+    source: 'default-scheduler',
+    message: 'no nodes available to schedule pods',
+    firstSeen: '2025-10-21 08:25',
+    count: 5,
+  },
+  {
+    id: '4',
+    status: 'Normal',
+    name: 'deployment-scaled',
+    namespace: 'production',
+    lastSeen: '2025-10-21 08:28',
+    type: 'Normal',
+    reason: 'ScalingReplicaSet',
+    object: 'Deployment-api-server',
+    subobject: '-',
+    source: 'deployment-controller',
+    message: 'Scaled up replica set api-server-abc123 to 3',
+    firstSeen: '2025-10-21 08:28',
+    count: 1,
+  },
+  {
+    id: '5',
+    status: 'Error',
+    name: 'pod-crash-loop',
+    namespace: 'staging',
+    lastSeen: '2025-10-21 08:27',
+    type: 'Warning',
+    reason: 'BackOff',
+    object: 'Pod-backend-service',
+    subobject: 'container-main',
+    source: 'kubelet, worker-node-2',
+    message: 'Back-off restarting failed container',
+    firstSeen: '2025-10-21 08:15',
+    count: 12,
+  },
+  {
+    id: '6',
+    status: 'Normal',
+    name: 'service-created',
+    namespace: 'default',
+    lastSeen: '2025-10-21 08:25',
+    type: 'Normal',
+    reason: 'Created',
+    object: 'Service-web-frontend',
+    subobject: '-',
+    source: 'service-controller',
+    message: 'Created service web-frontend with ClusterIP',
+    firstSeen: '2025-10-21 08:25',
+    count: 1,
+  },
+  {
+    id: '7',
+    status: 'Normal',
+    name: 'node-ready',
+    namespace: 'default',
+    lastSeen: '2025-10-21 08:20',
+    type: 'Normal',
+    reason: 'NodeReady',
+    object: 'Node-worker-node-3',
+    subobject: '-',
+    source: 'kubelet, worker-node-3',
+    message: 'Node worker-node-3 status is now: NodeReady',
+    firstSeen: '2025-10-21 08:20',
+    count: 1,
+  },
+  {
+    id: '8',
+    status: 'Warning',
+    name: 'image-pull-failed',
+    namespace: 'production',
+    lastSeen: '2025-10-21 08:18',
+    type: 'Warning',
+    reason: 'ErrImagePull',
+    object: 'Pod-database-replica',
+    subobject: 'container-db',
+    source: 'kubelet, worker-node-1',
+    message: 'Failed to pull image "postgres:16": rpc error',
+    firstSeen: '2025-10-21 08:10',
+    count: 8,
+  },
 ];
 
 /* ----------------------------------------
    Component
    ---------------------------------------- */
 
-export function ContainerNamespacesPage() {
+export function ContainerEventsPage() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const { tabs, activeTabId, selectTab, closeTab, addNewTab, moveTab, addTab } = useTabs();
   const [currentPage, setCurrentPage] = useState(1);
@@ -95,8 +207,8 @@ export function ContainerNamespacesPage() {
 
   // Pagination
   const rowsPerPage = 10;
-  const totalPages = Math.ceil(namespacesData.length / rowsPerPage);
-  const paginatedData = namespacesData.slice(
+  const totalPages = Math.ceil(eventsData.length / rowsPerPage);
+  const paginatedData = eventsData.slice(
     (currentPage - 1) * rowsPerPage,
     currentPage * rowsPerPage
   );
@@ -105,45 +217,97 @@ export function ContainerNamespacesPage() {
   const sidebarWidth = sidebarOpen ? 240 : 40;
 
   // Table columns configuration
-  const columns: TableColumn<NamespaceRow>[] = [
+  const columns: TableColumn<EventRow>[] = [
     {
       key: 'status',
       label: 'Status',
       width: '70px',
-      sortable: true,
+      sortable: false,
       align: 'center',
       render: (value: string) => (
         <StatusIndicator
-          status={value === 'Active' ? 'active' : value === 'Terminating' ? 'error' : 'muted'}
+          status={value === 'Normal' ? 'active' : value === 'Warning' ? 'paused' : 'error'}
         />
       )
     },
     {
       key: 'name',
       label: 'Name',
-      flex: 1,
+      width: '240px',
       sortable: true,
       render: (value: string) => (
-        <span
-          className="text-[var(--color-action-primary)] font-medium cursor-pointer hover:underline"
-          onClick={(e) => {
-            e.stopPropagation();
-            navigate(`/container/namespaces/${value}`);
-          }}
-        >
+        <span className="text-[12px] text-[var(--color-text-default)] truncate block" title={value}>
           {value}
         </span>
       )
     },
     {
-      key: 'description',
-      label: 'Description',
+      key: 'namespace',
+      label: 'Namespace',
       flex: 1,
+      sortable: true,
     },
     {
-      key: 'createdAt',
-      label: 'Created at',
+      key: 'lastSeen',
+      label: 'Last Seen',
       flex: 1,
+      sortable: true,
+    },
+    {
+      key: 'type',
+      label: 'Type',
+      width: '80px',
+    },
+    {
+      key: 'reason',
+      label: 'Reason',
+      width: '80px',
+    },
+    {
+      key: 'object',
+      label: 'Object',
+      flex: 1,
+      sortable: true,
+      render: (value: string) => (
+        <span className="text-[var(--color-action-primary)] cursor-pointer hover:underline">
+          {value}
+        </span>
+      )
+    },
+    {
+      key: 'subobject',
+      label: 'Subobject',
+      width: '100px',
+      sortable: true,
+    },
+    {
+      key: 'source',
+      label: 'Source',
+      flex: 1,
+      sortable: true,
+    },
+    {
+      key: 'message',
+      label: 'Message',
+      width: '240px',
+      sortable: true,
+      render: (value: string) => (
+        <span className="text-[12px] text-[var(--color-text-default)] truncate block" title={value}>
+          {value}
+        </span>
+      )
+    },
+    {
+      key: 'firstSeen',
+      label: 'First Seen',
+      flex: 1,
+      sortable: true,
+    },
+    {
+      key: 'count',
+      label: 'Count',
+      width: '60px',
+      align: 'center',
       sortable: true,
     },
     {
@@ -154,24 +318,14 @@ export function ContainerNamespacesPage() {
       render: (_, row) => {
         const menuItems: ContextMenuItem[] = [
           {
-            id: 'edit-config',
-            label: 'Edit Config',
-            onClick: () => console.log('Edit Config:', row.id),
-          },
-          {
-            id: 'edit-yaml',
-            label: 'Edit YAML',
-            onClick: () => console.log('Edit YAML:', row.id),
+            id: 'view-details',
+            label: 'View Details',
+            onClick: () => console.log('View Details:', row.id),
           },
           {
             id: 'download-yaml',
             label: 'Download YAML',
             onClick: () => console.log('Download YAML:', row.id),
-          },
-          {
-            id: 'delete',
-            label: 'Delete',
-            onClick: () => console.log('Delete:', row.id),
           },
         ];
 
@@ -224,7 +378,7 @@ export function ContainerNamespacesPage() {
             <Breadcrumb
               items={[
                 { label: 'clusterName', href: '/container' },
-                { label: 'Namespaces' },
+                { label: 'Events' },
               ]}
             />
           }
@@ -237,7 +391,7 @@ export function ContainerNamespacesPage() {
                     shellPanel.setIsExpanded(false);
                   } else {
                     // Open console with a default kubectl session
-                    shellPanel.openConsole('kubectl-namespaces', 'Kubectl: ClusterName');
+                    shellPanel.openConsole('kubectl-events', 'Kubectl: ClusterName');
                   }
                 }}
               >
@@ -270,29 +424,9 @@ export function ContainerNamespacesPage() {
               <HStack justify="between" align="center" className="w-full min-h-8">
                 <HStack gap={2} align="center">
                   <h1 className="text-[16px] leading-6 font-semibold text-[var(--color-text-default)]">
-                    Namespaces
+                    Events
                   </h1>
                 </HStack>
-                <ContextMenu
-                  items={[
-                    {
-                      id: 'create-form',
-                      label: 'Create as Form',
-                      onClick: () => navigate('/container/namespaces/create'),
-                    },
-                    {
-                      id: 'create-yaml',
-                      label: 'Create as YAML',
-                      onClick: () => navigate('/container/namespaces/create-yaml'),
-                    },
-                  ]}
-                  trigger="click"
-                  align="right"
-                >
-                  <Button variant="primary" size="md" rightIcon={<IconChevronDown size={16} stroke={1.5} />}>
-                    Create Namespace
-                  </Button>
-                </ContextMenu>
               </HStack>
 
               {/* Action Bar */}
@@ -300,7 +434,7 @@ export function ContainerNamespacesPage() {
                 {/* Search */}
                 <HStack gap={1} align="center">
                   <SearchInput
-                    placeholder="Search Namespaces by attributes"
+                    placeholder="Search Events by attributes"
                     size="sm"
                     className="w-[280px]"
                   />
@@ -316,9 +450,6 @@ export function ContainerNamespacesPage() {
                 <HStack gap={1} align="center">
                   <Button variant="secondary" size="sm" leftIcon={<IconDownload size={12} stroke={1.5} />} disabled={selectedRows.length === 0}>
                     Download YAML
-                  </Button>
-                  <Button variant="secondary" size="sm" leftIcon={<IconTrash size={12} stroke={1.5} />} disabled={selectedRows.length === 0}>
-                    Delete
                   </Button>
                 </HStack>
               </HStack>
@@ -350,14 +481,14 @@ export function ContainerNamespacesPage() {
                 currentPage={currentPage}
                 totalPages={totalPages}
                 onPageChange={setCurrentPage}
-                totalItems={namespacesData.length}
+                totalItems={eventsData.length}
                 selectedCount={selectedRows.length}
                 showSettings
                 onSettingsClick={() => {}}
               />
 
               {/* Table */}
-              <Table<NamespaceRow>
+              <Table<EventRow>
                 columns={columns}
                 data={paginatedData}
                 rowKey="id"
@@ -390,4 +521,4 @@ export function ContainerNamespacesPage() {
   );
 }
 
-export default ContainerNamespacesPage;
+export default ContainerEventsPage;
