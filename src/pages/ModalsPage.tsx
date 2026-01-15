@@ -109,6 +109,7 @@ export function ModalsPage() {
   const [isUpdateEmailPolicySettingsOpen, setIsUpdateEmailPolicySettingsOpen] = useState(false);
   const [isUpdateGeneralSessionPolicyOpen, setIsUpdateGeneralSessionPolicyOpen] = useState(false);
   const [isDeleteDomainOpen, setIsDeleteDomainOpen] = useState(false);
+  const [isSwitchToDomainOpen, setIsSwitchToDomainOpen] = useState(false);
   const [usernameCopied, setUsernameCopied] = useState(false);
   const [passwordCopied, setPasswordCopied] = useState(false);
   
@@ -368,7 +369,7 @@ export function ModalsPage() {
                           Modals
                         </span>
                         <span className="text-[12px] text-[var(--color-text-subtle)]">
-                          (24 modals)
+                          (25 modals)
                         </span>
                       </div>
                     </div>
@@ -541,6 +542,13 @@ export function ModalsPage() {
                             category="Security"
                             size="sm"
                             onOpen={() => setIsDeleteDomainOpen(true)}
+                          />
+                          <ModalListItem
+                            title="Switch to domain"
+                            description="Confirm switching to a different domain with unsaved changes warning."
+                            category="Security"
+                            size="sm"
+                            onOpen={() => setIsSwitchToDomainOpen(true)}
                           />
                         </div>
                       </VStack>
@@ -2694,6 +2702,63 @@ export function ModalsPage() {
             className="flex-1"
           >
             Delete
+          </Button>
+        </div>
+      </Modal>
+
+      {/* Switch to Domain Modal */}
+      <Modal
+        isOpen={isSwitchToDomainOpen}
+        onClose={() => setIsSwitchToDomainOpen(false)}
+        title="Switch to domain"
+        description="Any unsaved changes may be lost when switching to another domain. Do you want to switch?"
+        size="sm"
+      >
+        <div className="flex flex-col gap-2 items-center">
+          {/* Current Domain Info Box */}
+          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5 w-full">
+            <span className="text-[11px] text-[var(--color-text-subtle)] font-medium leading-4">
+              Current domain
+            </span>
+            <span className="text-[12px] text-[var(--color-text-default)] leading-4">
+              Domain A
+            </span>
+          </div>
+
+          {/* Chevron Down Icon */}
+          <IconChevronDown size={16} className="text-[var(--color-text-default)]" stroke={1.5} />
+
+          {/* Target Domain Info Box */}
+          <div className="bg-[#eff6ff] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5 w-full">
+            <span className="text-[11px] text-[var(--color-text-subtle)] font-medium leading-4">
+              Target domain
+            </span>
+            <span className="text-[12px] text-[var(--color-text-default)] leading-4">
+              Domain B
+            </span>
+          </div>
+        </div>
+
+        {/* Button Group */}
+        <div className="flex gap-2 w-full">
+          <Button 
+            variant="outline" 
+            size="md" 
+            onClick={() => setIsSwitchToDomainOpen(false)}
+            className="flex-1"
+          >
+            Cancel
+          </Button>
+          <Button 
+            variant="primary" 
+            size="md" 
+            onClick={() => {
+              console.log('Switched to domain');
+              setIsSwitchToDomainOpen(false);
+            }}
+            className="flex-1"
+          >
+            Switch
           </Button>
         </div>
       </Modal>
