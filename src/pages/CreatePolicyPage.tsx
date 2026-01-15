@@ -830,7 +830,7 @@ function PolicyEditorSection({
                   </div>
                   {targetErrors[permission.id] && (
                     <span className="text-[11px] text-[var(--color-state-danger)] leading-[16px]">
-                      Please fill in at least one target field.
+                      All Target fields must contain a valid value or a wildcard (∗).
                     </span>
                   )}
                   {!targetErrors[permission.id] && hasPartialFill(permission) && (
