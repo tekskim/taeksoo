@@ -340,7 +340,7 @@ export function ModalsPage() {
                         ) : (
                           <IconChevronRight size={16} className="text-[var(--color-text-subtle)]" />
                         )}
-                        <Badge variant="purple" size="sm">IAM</Badge>
+                        <Badge variant="info" size="sm">IAM</Badge>
                         <span className="text-[14px] font-semibold text-[var(--color-text-default)]">
                           IAM Modals
                         </span>
@@ -395,7 +395,7 @@ export function ModalsPage() {
                         ) : (
                           <IconChevronRight size={16} className="text-[var(--color-text-subtle)]" />
                         )}
-                        <Badge variant="green" size="sm">Container</Badge>
+                        <Badge variant="info" size="sm">Container</Badge>
                         <span className="text-[14px] font-semibold text-[var(--color-text-default)]">
                           Container Modals
                         </span>
@@ -426,7 +426,7 @@ export function ModalsPage() {
                         ) : (
                           <IconChevronRight size={16} className="text-[var(--color-text-subtle)]" />
                         )}
-                        <Badge variant="yellow" size="sm">Storage</Badge>
+                        <Badge variant="info" size="sm">Storage</Badge>
                         <span className="text-[14px] font-semibold text-[var(--color-text-default)]">
                           Storage Modals
                         </span>
