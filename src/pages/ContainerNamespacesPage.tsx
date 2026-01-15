@@ -273,11 +273,8 @@ export function ContainerNamespacesPage() {
               <HStack justify="between" align="center" className="w-full">
                 <HStack gap={2} align="center">
                   <h1 className="text-[18px] font-semibold text-[var(--color-text-default)]">
-                    Namespaces({namespacesData.length})
+                    Namespaces
                   </h1>
-                  <button className="p-1 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                    <IconStar size={16} className="text-[#FBBF24] fill-[#FBBF24]" stroke={1.5} />
-                  </button>
                 </HStack>
                 <Button variant="primary" size="md" rightIcon={<IconChevronUp size={16} stroke={1.5} />}>
                   Create Namespace
