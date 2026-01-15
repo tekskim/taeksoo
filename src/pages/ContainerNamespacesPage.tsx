@@ -297,7 +297,7 @@ export function ContainerNamespacesPage() {
                     size="sm"
                     className="w-[280px]"
                   />
-                  <Button variant="secondary" size="sm" iconOnly aria-label="Download">
+                  <Button variant="secondary" size="sm" iconOnly aria-label="Download" className="!w-7 !h-7 !min-w-7">
                     <IconDownload size={14} stroke={1.5} />
                   </Button>
                 </HStack>
