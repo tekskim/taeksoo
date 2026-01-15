@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Sidebar } from '@/components/Sidebar';
 import { useTabs } from '@/contexts/TabContext';
 import { TopBar, Breadcrumb, TabBar } from '@/design-system';
-import { Button, VStack, HStack, Badge, Modal } from '@/design-system';
+import { Button, VStack, HStack, Badge, Modal, Disclosure } from '@/design-system';
 import { IconAlertCircle } from '@tabler/icons-react';
 
 /* ----------------------------------------
@@ -142,173 +142,255 @@ export function ModalsPage() {
                 </p>
               </VStack>
 
-              {/* Modal Categories */}
+              {/* Modal Categories by App */}
               <VStack gap={4}>
-                {/* Delete Modals */}
-                <VStack gap={2}>
-                  <h2 className="text-[14px] font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
-                    Delete Modals
-                  </h2>
-                  <div className="flex flex-col gap-2">
-                    <ModalListItem
-                      title="Delete Snapshot"
-                      description="Confirm deletion of a snapshot with warning about permanent action."
-                      category="Confirm"
-                      size="sm"
-                      onOpen={() => setIsConfirmDeleteOpen(true)}
-                    />
-                    <ModalListItem
-                      title="Delete Security group"
-                      description="Confirm deletion of a single security group with warning."
-                      category="Confirm"
-                      size="sm"
-                      onOpen={() => setIsDeleteSecurityGroupOpen(true)}
-                    />
-                    <ModalListItem
-                      title="Delete Security groups (Multiple)"
-                      description="Confirm deletion of multiple security groups with scrollable list."
-                      category="Confirm"
-                      size="md"
-                      onOpen={() => setIsDeleteSecurityGroupsMultipleOpen(true)}
-                    />
-                    <ModalListItem
-                      title="Delete Rule"
-                      description="Confirm deletion of a single security group rule."
-                      category="Confirm"
-                      size="sm"
-                      onOpen={() => setIsDeleteRuleOpen(true)}
-                    />
-                    <ModalListItem
-                      title="Delete Rules (Multiple)"
-                      description="Confirm deletion of multiple rules with scrollable list and warning."
-                      category="Confirm"
-                      size="md"
-                      onOpen={() => setIsDeleteRulesMultipleOpen(true)}
-                    />
-                  </div>
-                </VStack>
+                {/* Compute App Modals */}
+                <Disclosure defaultOpen>
+                  <Disclosure.Trigger className="w-full">
+                    <div className="flex items-center justify-between w-full px-4 py-3 bg-[var(--color-surface-subtle)] rounded-lg border border-[var(--color-border-default)] hover:border-[var(--color-border-strong)] transition-colors">
+                      <div className="flex items-center gap-3">
+                        <Badge variant="info" size="sm">Compute</Badge>
+                        <span className="text-[14px] font-semibold text-[var(--color-text-default)]">
+                          Compute Modals
+                        </span>
+                        <span className="text-[12px] text-[var(--color-text-subtle)]">
+                          (16 modals)
+                        </span>
+                      </div>
+                    </div>
+                  </Disclosure.Trigger>
+                  <Disclosure.Content>
+                    <VStack gap={4} className="pt-4">
+                      {/* Delete Modals */}
+                      <VStack gap={2}>
+                        <h2 className="text-[14px] font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
+                          Delete Modals
+                        </h2>
+                        <div className="flex flex-col gap-2">
+                          <ModalListItem
+                            title="Delete Snapshot"
+                            description="Confirm deletion of a snapshot with warning about permanent action."
+                            category="Confirm"
+                            size="sm"
+                            onOpen={() => setIsConfirmDeleteOpen(true)}
+                          />
+                          <ModalListItem
+                            title="Delete Security group"
+                            description="Confirm deletion of a single security group with warning."
+                            category="Confirm"
+                            size="sm"
+                            onOpen={() => setIsDeleteSecurityGroupOpen(true)}
+                          />
+                          <ModalListItem
+                            title="Delete Security groups (Multiple)"
+                            description="Confirm deletion of multiple security groups with scrollable list."
+                            category="Confirm"
+                            size="md"
+                            onOpen={() => setIsDeleteSecurityGroupsMultipleOpen(true)}
+                          />
+                          <ModalListItem
+                            title="Delete Rule"
+                            description="Confirm deletion of a single security group rule."
+                            category="Confirm"
+                            size="sm"
+                            onOpen={() => setIsDeleteRuleOpen(true)}
+                          />
+                          <ModalListItem
+                            title="Delete Rules (Multiple)"
+                            description="Confirm deletion of multiple rules with scrollable list and warning."
+                            category="Confirm"
+                            size="md"
+                            onOpen={() => setIsDeleteRulesMultipleOpen(true)}
+                          />
+                        </div>
+                      </VStack>
 
-                {/* Volume Actions */}
-                <VStack gap={2}>
-                  <h2 className="text-[14px] font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
-                    Volume Actions
-                  </h2>
-                  <div className="flex flex-col gap-2">
-                    <ModalListItem
-                      title="Detach volume"
-                      description="Confirm detachment of a volume with warning about data corruption."
-                      category="Volume"
-                      size="sm"
-                      onOpen={() => setIsDetachVolumeOpen(true)}
-                    />
-                  </div>
-                </VStack>
+                      {/* Volume Actions */}
+                      <VStack gap={2}>
+                        <h2 className="text-[14px] font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
+                          Volume Actions
+                        </h2>
+                        <div className="flex flex-col gap-2">
+                          <ModalListItem
+                            title="Detach volume"
+                            description="Confirm detachment of a volume with warning about data corruption."
+                            category="Volume"
+                            size="sm"
+                            onOpen={() => setIsDetachVolumeOpen(true)}
+                          />
+                        </div>
+                      </VStack>
 
-                {/* Backup Actions */}
-                <VStack gap={2}>
-                  <h2 className="text-[14px] font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
-                    Backup Actions
-                  </h2>
-                  <div className="flex flex-col gap-2">
-                    <ModalListItem
-                      title="Restore backup"
-                      description="Simple restore backup confirmation with volume info."
-                      category="Backup"
-                      size="sm"
-                      onOpen={() => setIsRestoreBackupSmallOpen(true)}
-                    />
-                    <ModalListItem
-                      title="Restore backup (with instance name)"
-                      description="Restore backup with volume and instance list information."
-                      category="Backup"
-                      size="md"
-                      onOpen={() => setIsRestoreBackupMediumOpen(true)}
-                    />
-                    <ModalListItem
-                      title="Restore backup (with instance name and warning)"
-                      description="Restore backup with warning alert and disabled action button."
-                      category="Backup"
-                      size="lg"
-                      onOpen={() => setIsRestoreBackupLargeOpen(true)}
-                    />
-                  </div>
-                </VStack>
+                      {/* Backup Actions */}
+                      <VStack gap={2}>
+                        <h2 className="text-[14px] font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
+                          Backup Actions
+                        </h2>
+                        <div className="flex flex-col gap-2">
+                          <ModalListItem
+                            title="Restore backup"
+                            description="Simple restore backup confirmation with volume info."
+                            category="Backup"
+                            size="sm"
+                            onOpen={() => setIsRestoreBackupSmallOpen(true)}
+                          />
+                          <ModalListItem
+                            title="Restore backup (with instance name)"
+                            description="Restore backup with volume and instance list information."
+                            category="Backup"
+                            size="md"
+                            onOpen={() => setIsRestoreBackupMediumOpen(true)}
+                          />
+                          <ModalListItem
+                            title="Restore backup (with instance name and warning)"
+                            description="Restore backup with warning alert and disabled action button."
+                            category="Backup"
+                            size="lg"
+                            onOpen={() => setIsRestoreBackupLargeOpen(true)}
+                          />
+                        </div>
+                      </VStack>
 
-                {/* Floating IP */}
-                <VStack gap={2}>
-                  <h2 className="text-[14px] font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
-                    Floating IP
-                  </h2>
-                  <div className="flex flex-col gap-2">
-                    <ModalListItem
-                      title="Disassociate floating IP"
-                      description="Confirm disassociation of a floating IP from a resource."
-                      category="Network"
-                      size="sm"
-                      onOpen={() => setIsDisassociateFloatingIPOpen(true)}
-                    />
-                    <ModalListItem
-                      title="Disassociate floating IP (Load balancer)"
-                      description="Disassociate a floating IP from a load balancer."
-                      category="Network"
-                      size="sm"
-                      onOpen={() => setIsDisassociateFloatingIPLBOpen(true)}
-                    />
-                    <ModalListItem
-                      title="Release floating IP"
-                      description="Release a single floating IP with warning about permanent action."
-                      category="Network"
-                      size="sm"
-                      onOpen={() => setIsReleaseFloatingIPSmallOpen(true)}
-                    />
-                    <ModalListItem
-                      title="Release floating IP (Associated to)"
-                      description="Release multiple floating IPs with scrollable list."
-                      category="Network"
-                      size="md"
-                      onOpen={() => setIsReleaseFloatingIPMediumOpen(true)}
-                    />
-                  </div>
-                </VStack>
+                      {/* Floating IP */}
+                      <VStack gap={2}>
+                        <h2 className="text-[14px] font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
+                          Floating IP
+                        </h2>
+                        <div className="flex flex-col gap-2">
+                          <ModalListItem
+                            title="Disassociate floating IP"
+                            description="Confirm disassociation of a floating IP from a resource."
+                            category="Network"
+                            size="sm"
+                            onOpen={() => setIsDisassociateFloatingIPOpen(true)}
+                          />
+                          <ModalListItem
+                            title="Disassociate floating IP (Load balancer)"
+                            description="Disassociate a floating IP from a load balancer."
+                            category="Network"
+                            size="sm"
+                            onOpen={() => setIsDisassociateFloatingIPLBOpen(true)}
+                          />
+                          <ModalListItem
+                            title="Release floating IP"
+                            description="Release a single floating IP with warning about permanent action."
+                            category="Network"
+                            size="sm"
+                            onOpen={() => setIsReleaseFloatingIPSmallOpen(true)}
+                          />
+                          <ModalListItem
+                            title="Release floating IP (Associated to)"
+                            description="Release multiple floating IPs with scrollable list."
+                            category="Network"
+                            size="md"
+                            onOpen={() => setIsReleaseFloatingIPMediumOpen(true)}
+                          />
+                        </div>
+                      </VStack>
 
-                {/* Load balancers */}
-                <VStack gap={2}>
-                  <h2 className="text-[14px] font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
-                    Load balancers
-                  </h2>
-                  <div className="flex flex-col gap-2">
-                    <ModalListItem
-                      title="Delete Load balancer"
-                      description="Delete a single load balancer with warning about associated resources."
-                      category="Network"
-                      size="sm"
-                      onOpen={() => setIsDeleteLoadBalancerOpen(true)}
-                    />
-                    <ModalListItem
-                      title="Release Load balancers"
-                      description="Delete multiple load balancers with scrollable list and warning."
-                      category="Network"
-                      size="md"
-                      onOpen={() => setIsDeleteLoadBalancersMultipleOpen(true)}
-                    />
-                  </div>
-                </VStack>
+                      {/* Load balancers */}
+                      <VStack gap={2}>
+                        <h2 className="text-[14px] font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
+                          Load balancers
+                        </h2>
+                        <div className="flex flex-col gap-2">
+                          <ModalListItem
+                            title="Delete Load balancer"
+                            description="Delete a single load balancer with warning about associated resources."
+                            category="Network"
+                            size="sm"
+                            onOpen={() => setIsDeleteLoadBalancerOpen(true)}
+                          />
+                          <ModalListItem
+                            title="Release Load balancers"
+                            description="Delete multiple load balancers with scrollable list and warning."
+                            category="Network"
+                            size="md"
+                            onOpen={() => setIsDeleteLoadBalancersMultipleOpen(true)}
+                          />
+                        </div>
+                      </VStack>
+                    </VStack>
+                  </Disclosure.Content>
+                </Disclosure>
 
-                {/* Placeholder for Future Modals */}
-                <VStack gap={2}>
-                  <h2 className="text-[14px] font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
-                    Coming Soon
-                  </h2>
-                  <div className="flex flex-col gap-2">
-                    <div className="p-6 rounded-xl border border-dashed border-[var(--color-border-default)] bg-[var(--color-surface-subtle)]">
+                {/* IAM App Modals - Placeholder for future */}
+                <Disclosure>
+                  <Disclosure.Trigger className="w-full">
+                    <div className="flex items-center justify-between w-full px-4 py-3 bg-[var(--color-surface-subtle)] rounded-lg border border-[var(--color-border-default)] hover:border-[var(--color-border-strong)] transition-colors">
+                      <div className="flex items-center gap-3">
+                        <Badge variant="purple" size="sm">IAM</Badge>
+                        <span className="text-[14px] font-semibold text-[var(--color-text-default)]">
+                          IAM Modals
+                        </span>
+                        <span className="text-[12px] text-[var(--color-text-subtle)]">
+                          (0 modals)
+                        </span>
+                      </div>
+                    </div>
+                  </Disclosure.Trigger>
+                  <Disclosure.Content>
+                    <div className="p-6 mt-4 rounded-xl border border-dashed border-[var(--color-border-default)] bg-[var(--color-surface-subtle)]">
                       <VStack gap={2} className="items-center justify-center h-full">
                         <p className="text-[14px] text-[var(--color-text-muted)]">
-                          More modals will be added here...
+                          IAM modals will be added here...
                         </p>
                       </VStack>
                     </div>
-                  </div>
-                </VStack>
+                  </Disclosure.Content>
+                </Disclosure>
+
+                {/* Container App Modals - Placeholder for future */}
+                <Disclosure>
+                  <Disclosure.Trigger className="w-full">
+                    <div className="flex items-center justify-between w-full px-4 py-3 bg-[var(--color-surface-subtle)] rounded-lg border border-[var(--color-border-default)] hover:border-[var(--color-border-strong)] transition-colors">
+                      <div className="flex items-center gap-3">
+                        <Badge variant="green" size="sm">Container</Badge>
+                        <span className="text-[14px] font-semibold text-[var(--color-text-default)]">
+                          Container Modals
+                        </span>
+                        <span className="text-[12px] text-[var(--color-text-subtle)]">
+                          (0 modals)
+                        </span>
+                      </div>
+                    </div>
+                  </Disclosure.Trigger>
+                  <Disclosure.Content>
+                    <div className="p-6 mt-4 rounded-xl border border-dashed border-[var(--color-border-default)] bg-[var(--color-surface-subtle)]">
+                      <VStack gap={2} className="items-center justify-center h-full">
+                        <p className="text-[14px] text-[var(--color-text-muted)]">
+                          Container modals will be added here...
+                        </p>
+                      </VStack>
+                    </div>
+                  </Disclosure.Content>
+                </Disclosure>
+
+                {/* Storage App Modals - Placeholder for future */}
+                <Disclosure>
+                  <Disclosure.Trigger className="w-full">
+                    <div className="flex items-center justify-between w-full px-4 py-3 bg-[var(--color-surface-subtle)] rounded-lg border border-[var(--color-border-default)] hover:border-[var(--color-border-strong)] transition-colors">
+                      <div className="flex items-center gap-3">
+                        <Badge variant="yellow" size="sm">Storage</Badge>
+                        <span className="text-[14px] font-semibold text-[var(--color-text-default)]">
+                          Storage Modals
+                        </span>
+                        <span className="text-[12px] text-[var(--color-text-subtle)]">
+                          (0 modals)
+                        </span>
+                      </div>
+                    </div>
+                  </Disclosure.Trigger>
+                  <Disclosure.Content>
+                    <div className="p-6 mt-4 rounded-xl border border-dashed border-[var(--color-border-default)] bg-[var(--color-surface-subtle)]">
+                      <VStack gap={2} className="items-center justify-center h-full">
+                        <p className="text-[14px] text-[var(--color-text-muted)]">
+                          Storage modals will be added here...
+                        </p>
+                      </VStack>
+                    </div>
+                  </Disclosure.Content>
+                </Disclosure>
               </VStack>
             </VStack>
           </div>
