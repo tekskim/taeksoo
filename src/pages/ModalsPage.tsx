@@ -93,6 +93,7 @@ export function ModalsPage() {
   const [isDetachRoleOpen, setIsDetachRoleOpen] = useState(false);
   const [isRemoveOtpMfaOpen, setIsRemoveOtpMfaOpen] = useState(false);
   const [isTerminateAllSessionsOpen, setIsTerminateAllSessionsOpen] = useState(false);
+  const [isTerminateSessionOpen, setIsTerminateSessionOpen] = useState(false);
   const [usernameCopied, setUsernameCopied] = useState(false);
   const [passwordCopied, setPasswordCopied] = useState(false);
   
@@ -352,7 +353,7 @@ export function ModalsPage() {
                           Modals
                         </span>
                         <span className="text-[12px] text-[var(--color-text-subtle)]">
-                          (8 modals)
+                          (9 modals)
                         </span>
                       </div>
                     </div>
@@ -413,6 +414,13 @@ export function ModalsPage() {
                             category="User"
                             size="sm"
                             onOpen={() => setIsTerminateAllSessionsOpen(true)}
+                          />
+                          <ModalListItem
+                            title="Terminate session"
+                            description="Confirm terminating a single session with warning about sign-out from device."
+                            category="User"
+                            size="sm"
+                            onOpen={() => setIsTerminateSessionOpen(true)}
                           />
                         </div>
                       </VStack>
@@ -1693,6 +1701,58 @@ export function ModalsPage() {
             onClick={() => {
               console.log('All sessions terminated');
               setIsTerminateAllSessionsOpen(false);
+            }}
+            className="flex-1"
+          >
+            Terminate
+          </Button>
+        </div>
+      </Modal>
+
+      {/* Terminate Session Modal (Single Session) */}
+      <Modal
+        isOpen={isTerminateSessionOpen}
+        onClose={() => setIsTerminateSessionOpen(false)}
+        title="Terminate session"
+        description="Are you sure you want to terminate this session?"
+        size="sm"
+      >
+        <div className="flex flex-col gap-2">
+          {/* Session Info Box */}
+          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
+            <span className="text-[11px] text-[var(--color-text-subtle)] font-medium leading-4">
+              Session
+            </span>
+            <span className="text-[12px] text-[var(--color-text-default)] leading-4">
+              DISPLAYNAME (Browser/device)
+            </span>
+          </div>
+
+          {/* Warning Alert Box */}
+          <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
+            <IconAlertCircle size={16} className="text-[var(--color-state-danger)] shrink-0 mt-0.5" stroke={1.5} />
+            <p className="text-[11px] text-[var(--color-text-default)] leading-4">
+              Terminating this session will sign the user out from this device and require re-authentication.
+            </p>
+          </div>
+        </div>
+
+        {/* Button Group */}
+        <div className="flex gap-2 w-full">
+          <Button 
+            variant="outline" 
+            size="md" 
+            onClick={() => setIsTerminateSessionOpen(false)}
+            className="flex-1"
+          >
+            Cancel
+          </Button>
+          <Button 
+            variant="primary" 
+            size="md" 
+            onClick={() => {
+              console.log('Session terminated');
+              setIsTerminateSessionOpen(false);
             }}
             className="flex-1"
           >
