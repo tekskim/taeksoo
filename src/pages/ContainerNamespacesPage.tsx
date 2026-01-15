@@ -267,8 +267,8 @@ export function ContainerNamespacesPage() {
           className="flex-1 overflow-auto min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll"
           style={{ paddingBottom: shellPanel.isExpanded ? '350px' : '0' }}
         >
-          <div className="py-4 px-8 bg-[var(--color-surface-default)] min-h-full">
-            <VStack gap={4}>
+          <div className="pt-4 px-8 pb-6 bg-[var(--color-surface-default)]">
+            <VStack gap={3}>
               {/* Header */}
               <HStack justify="between" align="center" className="w-full">
                 <HStack gap={2} align="center">
