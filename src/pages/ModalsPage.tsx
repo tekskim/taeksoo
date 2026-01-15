@@ -110,6 +110,7 @@ export function ModalsPage() {
   const [isUpdateGeneralSessionPolicyOpen, setIsUpdateGeneralSessionPolicyOpen] = useState(false);
   const [isDeleteDomainOpen, setIsDeleteDomainOpen] = useState(false);
   const [isSwitchToDomainOpen, setIsSwitchToDomainOpen] = useState(false);
+  const [isDeleteSystemAdminOpen, setIsDeleteSystemAdminOpen] = useState(false);
   const [usernameCopied, setUsernameCopied] = useState(false);
   const [passwordCopied, setPasswordCopied] = useState(false);
   
@@ -369,7 +370,7 @@ export function ModalsPage() {
                           Modals
                         </span>
                         <span className="text-[12px] text-[var(--color-text-subtle)]">
-                          (25 modals)
+                          (26 modals)
                         </span>
                       </div>
                     </div>
@@ -549,6 +550,13 @@ export function ModalsPage() {
                             category="Security"
                             size="sm"
                             onOpen={() => setIsSwitchToDomainOpen(true)}
+                          />
+                          <ModalListItem
+                            title="Delete system administrator"
+                            description="Permanently delete a system administrator and their global access."
+                            category="Security"
+                            size="sm"
+                            onOpen={() => setIsDeleteSystemAdminOpen(true)}
                           />
                         </div>
                       </VStack>
@@ -2759,6 +2767,58 @@ export function ModalsPage() {
             className="flex-1"
           >
             Switch
+          </Button>
+        </div>
+      </Modal>
+
+      {/* Delete System Administrator Modal */}
+      <Modal
+        isOpen={isDeleteSystemAdminOpen}
+        onClose={() => setIsDeleteSystemAdminOpen(false)}
+        title="Delete system administrator"
+        description={`Are you sure you want to delete system administrator "DISPLAY NAME"?`}
+        size="sm"
+      >
+        <div className="flex flex-col gap-2">
+          {/* System Administrator Info Box */}
+          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
+            <span className="text-[11px] text-[var(--color-text-subtle)] font-medium leading-4">
+              System administrator
+            </span>
+            <span className="text-[12px] text-[var(--color-text-default)] leading-4">
+              DISPLAY NAME
+            </span>
+          </div>
+
+          {/* Warning Alert Box */}
+          <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
+            <IconAlertCircle size={16} className="text-[var(--color-state-danger)] shrink-0 mt-0.5" stroke={1.5} />
+            <p className="text-[11px] text-[var(--color-text-default)] leading-4">
+              Deleting this system administrator will permanently remove their global access and cannot be undone.
+            </p>
+          </div>
+        </div>
+
+        {/* Button Group */}
+        <div className="flex gap-2 w-full">
+          <Button 
+            variant="outline" 
+            size="md" 
+            onClick={() => setIsDeleteSystemAdminOpen(false)}
+            className="flex-1"
+          >
+            Cancel
+          </Button>
+          <Button 
+            variant="primary" 
+            size="md" 
+            onClick={() => {
+              console.log('System administrator deleted');
+              setIsDeleteSystemAdminOpen(false);
+            }}
+            className="flex-1"
+          >
+            Delete
           </Button>
         </div>
       </Modal>
