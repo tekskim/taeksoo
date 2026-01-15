@@ -98,6 +98,7 @@ export function ModalsPage() {
   const [isDeleteRoleOpen, setIsDeleteRoleOpen] = useState(false);
   const [isDeleteRolesMultipleOpen, setIsDeleteRolesMultipleOpen] = useState(false);
   const [isDetachPolicyOpen, setIsDetachPolicyOpen] = useState(false);
+  const [isDeletePolicyOpen, setIsDeletePolicyOpen] = useState(false);
   const [usernameCopied, setUsernameCopied] = useState(false);
   const [passwordCopied, setPasswordCopied] = useState(false);
   
@@ -357,7 +358,7 @@ export function ModalsPage() {
                           Modals
                         </span>
                         <span className="text-[12px] text-[var(--color-text-subtle)]">
-                          (13 modals)
+                          (14 modals)
                         </span>
                       </div>
                     </div>
@@ -453,6 +454,13 @@ export function ModalsPage() {
                             category="Role"
                             size="sm"
                             onOpen={() => setIsDetachPolicyOpen(true)}
+                          />
+                          <ModalListItem
+                            title="Delete policy"
+                            description="Confirm deleting a policy with warning about permanent removal and access loss."
+                            category="Policy"
+                            size="sm"
+                            onOpen={() => setIsDeletePolicyOpen(true)}
                           />
                         </div>
                       </VStack>
@@ -2034,6 +2042,58 @@ export function ModalsPage() {
             className="flex-1"
           >
             Detach
+          </Button>
+        </div>
+      </Modal>
+
+      {/* Delete Policy Modal */}
+      <Modal
+        isOpen={isDeletePolicyOpen}
+        onClose={() => setIsDeletePolicyOpen(false)}
+        title="Delete policy"
+        description="Are you sure you want to delete policy 'POLICYNAME'?"
+        size="sm"
+      >
+        <div className="flex flex-col gap-2">
+          {/* Policy Info Box */}
+          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
+            <span className="text-[11px] text-[var(--color-text-subtle)] font-medium leading-4">
+              Policy
+            </span>
+            <span className="text-[12px] text-[var(--color-text-default)] leading-4">
+              POLICYNAME
+            </span>
+          </div>
+
+          {/* Warning Alert Box */}
+          <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
+            <IconAlertCircle size={16} className="text-[var(--color-state-danger)] shrink-0 mt-0.5" stroke={1.5} />
+            <p className="text-[11px] text-[var(--color-text-default)] leading-4">
+              This policy will be permanently removed. Users or roles attached to this policy will immediately lose access permissions.
+            </p>
+          </div>
+        </div>
+
+        {/* Button Group */}
+        <div className="flex gap-2 w-full">
+          <Button 
+            variant="outline" 
+            size="md" 
+            onClick={() => setIsDeletePolicyOpen(false)}
+            className="flex-1"
+          >
+            Cancel
+          </Button>
+          <Button 
+            variant="primary" 
+            size="md" 
+            onClick={() => {
+              console.log('Policy deleted');
+              setIsDeletePolicyOpen(false);
+            }}
+            className="flex-1"
+          >
+            Delete
           </Button>
         </div>
       </Modal>
