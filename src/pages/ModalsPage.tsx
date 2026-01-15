@@ -86,6 +86,7 @@ export function ModalsPage() {
   
   // IAM Modal states
   const [isDeleteUserOpen, setIsDeleteUserOpen] = useState(false);
+  const [isDeleteUsersMultipleOpen, setIsDeleteUsersMultipleOpen] = useState(false);
   
   // Disclosure states
   const [isComputeOpen, setIsComputeOpen] = useState(true);
@@ -343,7 +344,7 @@ export function ModalsPage() {
                           IAM Modals
                         </span>
                         <span className="text-[12px] text-[var(--color-text-subtle)]">
-                          (1 modal)
+                          (2 modals)
                         </span>
                       </div>
                     </div>
@@ -362,6 +363,13 @@ export function ModalsPage() {
                             category="User"
                             size="sm"
                             onOpen={() => setIsDeleteUserOpen(true)}
+                          />
+                          <ModalListItem
+                            title="Delete users (Multiple)"
+                            description="Delete multiple users with lists of deletable and non-deletable users."
+                            category="User"
+                            size="md"
+                            onOpen={() => setIsDeleteUsersMultipleOpen(true)}
                           />
                         </div>
                       </VStack>
@@ -1225,6 +1233,70 @@ export function ModalsPage() {
             onClick={() => {
               console.log('User deleted');
               setIsDeleteUserOpen(false);
+            }} 
+            className="flex-1"
+          >
+            Delete
+          </Button>
+        </div>
+      </Modal>
+
+      {/* Delete Users (Multiple) Modal */}
+      <Modal
+        isOpen={isDeleteUsersMultipleOpen}
+        onClose={() => setIsDeleteUsersMultipleOpen(false)}
+        title="Delete users"
+        description="Are you sure you want to delete these users?"
+        size="md"
+      >
+        <div className="flex flex-col gap-2">
+          {/* Users that can be deleted Info Box */}
+          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5 max-h-[96px] overflow-y-auto sidebar-scroll">
+            <span className="text-[11px] text-[var(--color-text-subtle)] font-medium leading-4">
+              Users that can be deleted
+            </span>
+            <ul className="text-[12px] text-[var(--color-text-default)] leading-4 list-disc pl-4 space-y-0.5">
+              <li>web-server-01</li>
+              <li>web-server-02</li>
+              <li>web-server-03</li>
+              <li>web-server-05</li>
+              <li>web-server-07</li>
+            </ul>
+          </div>
+
+          {/* Users that cannot be deleted Info Box */}
+          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5 max-h-[96px] overflow-y-auto sidebar-scroll">
+            <span className="text-[11px] text-[var(--color-text-subtle)] font-medium leading-4">
+              Users that cannot be deleted
+            </span>
+            <ul className="text-[12px] text-[var(--color-text-default)] leading-4 list-disc pl-4 space-y-0.5">
+              <li>my-server-04 (Locked instances cannot be deleted.)</li>
+              <li>my-server-03 (Instances in current state cannot be deleted.)</li>
+              <li>my-server-02</li>
+              <li>my-server-82</li>
+            </ul>
+          </div>
+
+          {/* Warning Alert Box */}
+          <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
+            <IconAlertCircle size={16} className="text-[var(--color-state-danger)] shrink-0 mt-0.5" stroke={1.5} />
+            <p className="text-[11px] text-[var(--color-text-default)] leading-4">
+              Deleting these users will permanently remove all associated access and sessions. This action cannot be undone.
+            </p>
+          </div>
+        </div>
+
+        {/* Button Group */}
+        <div className="flex gap-2 w-full">
+          <Button variant="outline" size="md" onClick={() => setIsDeleteUsersMultipleOpen(false)} className="flex-1">
+            Cancel
+          </Button>
+          <Button 
+            variant="primary" 
+            size="md" 
+            onClick={() => {
+              console.log('Users deleted');
+              setIsDeleteUsersMultipleOpen(false);
             }} 
             className="flex-1"
           >
