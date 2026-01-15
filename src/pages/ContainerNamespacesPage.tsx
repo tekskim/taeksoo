@@ -281,6 +281,7 @@ export function ContainerNamespacesPage() {
                     },
                   ]}
                   trigger="click"
+                  align="right"
                 >
                   <Button variant="primary" size="md" rightIcon={<IconChevronDown size={16} stroke={1.5} />}>
                     Create Namespace
