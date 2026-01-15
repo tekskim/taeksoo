@@ -11,13 +11,9 @@ import {
   SectionCard,
   Radio,
   Toggle,
-  Table,
-  Checkbox,
   Pagination,
-  Tooltip,
-  SelectionIndicator,
   InlineMessage,
-  type TableColumn,
+  StatusIndicator,
 } from '@/design-system';
 import { IAMSidebar } from '@/components/IAMSidebar';
 import { useTabs } from '@/contexts/TabContext';
@@ -808,42 +804,10 @@ function DefaultDomainSection({
     currentPage * itemsPerPage
   );
 
-  const columns: TableColumn<Domain>[] = [
-    {
-      key: 'id',
-      label: 'Status',
-      render: () => (
-        <div className="flex items-center justify-center">
-          <div className="w-6 h-6 rounded-full bg-[#E8F5E9] flex items-center justify-center">
-            <div className="w-2.5 h-2.5 rounded-full bg-[#4CAF50]" />
-          </div>
-        </div>
-      ),
-    },
-    {
-      key: 'name',
-      label: 'Name',
-      sortable: true,
-      render: (value) => (
-        <span className="text-[12px] text-[var(--color-text-default)]">{value}</span>
-      ),
-    },
-    {
-      key: 'description',
-      label: 'Description',
-      render: (value) => (
-        <span className="text-[12px] text-[var(--color-text-default)]">{value}</span>
-      ),
-    },
-    {
-      key: 'createdAt',
-      label: 'Created at',
-      sortable: true,
-      render: (value) => (
-        <span className="text-[12px] text-[var(--color-text-default)]">{value}</span>
-      ),
-    },
-  ];
+  const handleRowClick = (domainId: string) => {
+    onSelectionChange(domainId);
+    onDomainErrorChange(null);
+  };
 
   return (
     <SectionCard isActive>
@@ -916,22 +880,71 @@ function DefaultDomainSection({
             </div>
           )}
 
-          {/* Table with radio selection */}
+          {/* Custom Table with radio selection */}
           <div className="mt-3">
-            <Table
-              columns={columns}
-              data={paginatedDomains}
-              rowKey="id"
-              selectable
-              singleSelect
-              selectedKeys={selectedDomain ? [selectedDomain] : []}
-              onSelectionChange={(ids) => {
-                onSelectionChange(ids.length > 0 ? ids[ids.length - 1] : null);
-                if (ids.length > 0) {
-                  onDomainErrorChange(null);
-                }
-              }}
-            />
+            <div className="flex flex-col gap-[var(--table-row-gap)]">
+              {/* Table Header */}
+              <div className="flex items-center h-[var(--table-header-height)] bg-[var(--table-header-bg)] rounded-[var(--table-row-radius)] border border-[var(--color-border-default)] overflow-hidden">
+                {/* Radio column header */}
+                <div className="shrink-0 w-12 px-3 py-2" />
+                {/* Status column header */}
+                <div className="w-[80px] px-3 py-2 text-[11px] font-medium text-[var(--color-text-subtle)] border-l border-[var(--color-border-default)]">
+                  Status
+                </div>
+                {/* Name column header */}
+                <div className="flex-1 px-3 py-2 text-[11px] font-medium text-[var(--color-text-subtle)] border-l border-[var(--color-border-default)]">
+                  Name
+                </div>
+                {/* Description column header */}
+                <div className="flex-1 px-3 py-2 text-[11px] font-medium text-[var(--color-text-subtle)] border-l border-[var(--color-border-default)]">
+                  Description
+                </div>
+                {/* Created at column header */}
+                <div className="w-[120px] px-3 py-2 text-[11px] font-medium text-[var(--color-text-subtle)] border-l border-[var(--color-border-default)]">
+                  Created at
+                </div>
+              </div>
+
+              {/* Table Body */}
+              <div className="flex flex-col gap-[var(--table-row-gap)]">
+                {paginatedDomains.map((domain) => (
+                  <div
+                    key={domain.id}
+                    onClick={() => handleRowClick(domain.id)}
+                    className={`flex items-center h-[var(--table-row-height)] rounded-[var(--table-row-radius)] border overflow-hidden cursor-pointer transition-all hover:bg-[var(--table-row-hover-bg)] ${
+                      selectedDomain === domain.id
+                        ? 'border-[var(--color-action-primary)] bg-[var(--color-surface-subtle)]'
+                        : 'border-[var(--color-border-default)] bg-[var(--color-surface-default)]'
+                    }`}
+                  >
+                    {/* Radio column */}
+                    <div className="shrink-0 w-12 px-3 py-2 flex items-center justify-center">
+                      <Radio
+                        value={domain.id}
+                        checked={selectedDomain === domain.id}
+                        onChange={() => handleRowClick(domain.id)}
+                      />
+                    </div>
+                    {/* Status column */}
+                    <div className="w-[80px] px-3 py-2 flex items-center justify-center border-l border-transparent">
+                      <StatusIndicator status="active" layout="icon-only" size="md" />
+                    </div>
+                    {/* Name column */}
+                    <div className="flex-1 px-3 py-2 text-[12px] text-[var(--color-text-default)] border-l border-transparent">
+                      {domain.name}
+                    </div>
+                    {/* Description column */}
+                    <div className="flex-1 px-3 py-2 text-[12px] text-[var(--color-text-default)] border-l border-transparent">
+                      {domain.description}
+                    </div>
+                    {/* Created at column */}
+                    <div className="w-[120px] px-3 py-2 text-[12px] text-[var(--color-text-default)] border-l border-transparent">
+                      {domain.createdAt}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
 
           {/* Selection indicator */}
