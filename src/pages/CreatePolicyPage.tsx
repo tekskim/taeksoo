@@ -829,9 +829,9 @@ function PolicyEditorSection({
                     />
                   </div>
                   {targetErrors[permission.id] && (
-                    <InlineMessage variant="error">
+                    <span className="text-[11px] text-[var(--color-state-danger)] leading-[16px]">
                       Please fill in at least one target field.
-                    </InlineMessage>
+                    </span>
                   )}
                   {!targetErrors[permission.id] && hasPartialFill(permission) && (
                     <span className="text-[11px] text-[var(--color-state-danger)] leading-[16px]">
