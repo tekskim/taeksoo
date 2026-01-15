@@ -2059,7 +2059,7 @@ export function ModalsPage() {
         isOpen={isDeletePolicyOpen}
         onClose={() => setIsDeletePolicyOpen(false)}
         title="Delete policy"
-        description="Are you sure you want to delete policy 'POLICYNAME'?"
+        description="Are you sure you want to delete this policy?"
         size="sm"
       >
         <div className="flex flex-col gap-2">
