@@ -106,6 +106,7 @@ export function ModalsPage() {
   const [isUpdateOtpPolicyOpen, setIsUpdateOtpPolicyOpen] = useState(false);
   const [isUpdateOtpPolicySettingsOpen, setIsUpdateOtpPolicySettingsOpen] = useState(false);
   const [isUpdateEmailPolicyOpen, setIsUpdateEmailPolicyOpen] = useState(false);
+  const [isUpdateEmailPolicySettingsOpen, setIsUpdateEmailPolicySettingsOpen] = useState(false);
   const [usernameCopied, setUsernameCopied] = useState(false);
   const [passwordCopied, setPasswordCopied] = useState(false);
   
@@ -365,7 +366,7 @@ export function ModalsPage() {
                           Modals
                         </span>
                         <span className="text-[12px] text-[var(--color-text-subtle)]">
-                          (21 modals)
+                          (22 modals)
                         </span>
                       </div>
                     </div>
@@ -517,6 +518,13 @@ export function ModalsPage() {
                             category="Security"
                             size="sm"
                             onOpen={() => setIsUpdateEmailPolicyOpen(true)}
+                          />
+                          <ModalListItem
+                            title="Update email policy settings"
+                            description="Confirm applying email policy settings changes without warning alert."
+                            category="Security"
+                            size="sm"
+                            onOpen={() => setIsUpdateEmailPolicySettingsOpen(true)}
                           />
                         </div>
                       </VStack>
@@ -2520,6 +2528,53 @@ export function ModalsPage() {
             onClick={() => {
               console.log('Email policy updated');
               setIsUpdateEmailPolicyOpen(false);
+            }}
+            className="flex-1"
+          >
+            Apply
+          </Button>
+        </div>
+      </Modal>
+
+      {/* Update Email Policy Settings Modal */}
+      <Modal
+        isOpen={isUpdateEmailPolicySettingsOpen}
+        onClose={() => setIsUpdateEmailPolicySettingsOpen(false)}
+        title="Update email policy"
+        description="Are you sure you want to apply these changes?"
+        size="sm"
+      >
+        <div className="flex flex-col gap-2">
+          {/* Changes Info Box */}
+          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
+            <span className="text-[11px] text-[var(--color-text-subtle)] font-medium leading-4">
+              Changes
+            </span>
+            <ul className="list-disc list-inside text-[12px] text-[var(--color-text-default)] leading-4">
+              <li>Code validity period: 300 → 600 seconds</li>
+              <li>Resend cooldown: 60 → 1 seconds</li>
+              <li>Verification attempts(Time window): 10 → 40 minutes</li>
+              <li>Verification attempts(Max attempts): 5 → 10 times</li>
+            </ul>
+          </div>
+        </div>
+
+        {/* Button Group */}
+        <div className="flex gap-2 w-full">
+          <Button 
+            variant="outline" 
+            size="md" 
+            onClick={() => setIsUpdateEmailPolicySettingsOpen(false)}
+            className="flex-1"
+          >
+            Cancel
+          </Button>
+          <Button 
+            variant="primary" 
+            size="md" 
+            onClick={() => {
+              console.log('Email policy settings updated');
+              setIsUpdateEmailPolicySettingsOpen(false);
             }}
             className="flex-1"
           >
