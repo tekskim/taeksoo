@@ -1909,7 +1909,7 @@ export function ModalsPage() {
       >
         <div className="flex flex-col gap-2">
           {/* Roles that can be deleted */}
-          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5 h-[96px] overflow-y-auto">
+          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5 max-h-[96px] overflow-y-auto sidebar-scroll">
             <span className="text-[11px] text-[var(--color-text-subtle)] font-medium leading-4">
               Roles that can be deleted
             </span>
@@ -1923,7 +1923,7 @@ export function ModalsPage() {
           </div>
 
           {/* Roles that cannot be deleted */}
-          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5 h-[96px] overflow-y-auto">
+          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5 max-h-[96px] overflow-y-auto sidebar-scroll">
             <span className="text-[11px] text-[var(--color-text-subtle)] font-medium leading-4">
               Roles that cannot be deleted
             </span>
