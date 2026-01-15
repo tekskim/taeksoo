@@ -3,7 +3,7 @@ import { Sidebar } from '@/components/Sidebar';
 import { useTabs } from '@/contexts/TabContext';
 import { TopBar, Breadcrumb, TabBar } from '@/design-system';
 import { Button, VStack, HStack, Badge, Modal, Disclosure } from '@/design-system';
-import { IconAlertCircle, IconChevronRight, IconChevronDown } from '@tabler/icons-react';
+import { IconAlertCircle, IconChevronRight, IconChevronDown, IconCopy } from '@tabler/icons-react';
 
 /* ----------------------------------------
    Modal List Item Component
@@ -87,6 +87,7 @@ export function ModalsPage() {
   // IAM Modal states
   const [isDeleteUserOpen, setIsDeleteUserOpen] = useState(false);
   const [isDeleteUsersMultipleOpen, setIsDeleteUsersMultipleOpen] = useState(false);
+  const [isConfirmUserPasswordOpen, setIsConfirmUserPasswordOpen] = useState(false);
   
   // Disclosure states
   const [isComputeOpen, setIsComputeOpen] = useState(true);
@@ -344,7 +345,7 @@ export function ModalsPage() {
                           IAM Modals
                         </span>
                         <span className="text-[12px] text-[var(--color-text-subtle)]">
-                          (2 modals)
+                          (3 modals)
                         </span>
                       </div>
                     </div>
@@ -370,6 +371,13 @@ export function ModalsPage() {
                             category="User"
                             size="md"
                             onOpen={() => setIsDeleteUsersMultipleOpen(true)}
+                          />
+                          <ModalListItem
+                            title="Confirm user password"
+                            description="Display username and password credentials with copy functionality."
+                            category="User"
+                            size="sm"
+                            onOpen={() => setIsConfirmUserPasswordOpen(true)}
                           />
                         </div>
                       </VStack>
@@ -1301,6 +1309,65 @@ export function ModalsPage() {
             className="flex-1"
           >
             Delete
+          </Button>
+        </div>
+      </Modal>
+
+      {/* Confirm User Password Modal */}
+      <Modal
+        isOpen={isConfirmUserPasswordOpen}
+        onClose={() => setIsConfirmUserPasswordOpen(false)}
+        title="Confirm user password"
+        description="Review the username and password. The password can only be viewed at this step."
+        size="sm"
+      >
+        <div className="flex flex-col gap-2">
+          {/* Username Info Box */}
+          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
+            <div className="flex items-center justify-between">
+              <span className="text-[11px] text-[var(--color-text-subtle)] font-medium leading-4">
+                Username
+              </span>
+              <button 
+                className="text-[var(--color-text-default)] hover:text-[var(--color-action-primary)] transition-colors"
+                onClick={() => navigator.clipboard.writeText('john.doe')}
+              >
+                <IconCopy size={14} stroke={1.5} />
+              </button>
+            </div>
+            <span className="text-[12px] text-[var(--color-text-default)] leading-4">
+              john.doe
+            </span>
+          </div>
+
+          {/* Password Info Box */}
+          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
+            <div className="flex items-center justify-between">
+              <span className="text-[11px] text-[var(--color-text-subtle)] font-medium leading-4">
+                Password
+              </span>
+              <button 
+                className="text-[var(--color-text-default)] hover:text-[var(--color-action-primary)] transition-colors"
+                onClick={() => navigator.clipboard.writeText('TempP@ss123!')}
+              >
+                <IconCopy size={14} stroke={1.5} />
+              </button>
+            </div>
+            <span className="text-[12px] text-[var(--color-text-default)] leading-4">
+              TempP@ss123!
+            </span>
+          </div>
+        </div>
+
+        {/* Button Group */}
+        <div className="flex w-full">
+          <Button 
+            variant="primary" 
+            size="md" 
+            onClick={() => setIsConfirmUserPasswordOpen(false)} 
+            className="flex-1"
+          >
+            Close
           </Button>
         </div>
       </Modal>
