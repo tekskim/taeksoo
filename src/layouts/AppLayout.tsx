@@ -214,7 +214,7 @@ export function AppLayout({ children }: AppLayoutProps) {
         </div>
 
         {/* Scrollable Content Area */}
-        <div className="flex-1 overflow-auto min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll">
+        <div className="flex-1 overflow-y-auto overflow-x-hidden min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll">
           {children || <Outlet />}
         </div>
       </main>

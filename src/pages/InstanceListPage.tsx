@@ -1,7 +1,7 @@
 import { useState, useMemo, useEffect, useRef, useLayoutEffect } from 'react';
 import {
   Button,
-  SearchInput,
+  FilterSearchInput,
   Table,
   StatusIndicator,
   Pagination,
@@ -18,6 +18,8 @@ import {
   ContextMenu,
   type TableColumn,
   type StatusType,
+  type FilterField,
+  type AppliedFilter,
   type FilterItem,
   type ContextMenuItem,
 } from '@/design-system';
@@ -126,28 +128,72 @@ const statusMap: Record<InstanceStatus, StatusType> = {
    Instances list Page
    ---------------------------------------- */
 
-// Filter type is imported from design-system as FilterItem
+// Filter fields definition for FilterSearchInput
+const filterFields: FilterField[] = [
+  {
+    id: 'name',
+    label: 'Name',
+    type: 'text',
+    placeholder: 'Enter instance name...',
+  },
+  {
+    id: 'status',
+    label: 'Status',
+    type: 'select',
+    options: [
+      { value: 'running', label: 'Running' },
+      { value: 'stopped', label: 'Stopped' },
+      { value: 'error', label: 'Error' },
+      { value: 'building', label: 'Building' },
+    ],
+  },
+  {
+    id: 'os',
+    label: 'OS',
+    type: 'select',
+    options: [
+      { value: 'ubuntu', label: 'Ubuntu' },
+      { value: 'centos', label: 'CentOS' },
+      { value: 'windows', label: 'Windows' },
+      { value: 'rocky', label: 'Rocky Linux' },
+    ],
+  },
+  {
+    id: 'flavor',
+    label: 'Flavor',
+    type: 'text',
+    placeholder: 'Enter flavor...',
+  },
+];
 
 export function InstanceListPage() {
   const { isOpen: sidebarOpen, toggle: toggleSidebar, open: openSidebar } = useSidebar();
-  const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [currentBareMetalPage, setCurrentBareMetalPage] = useState(1);
   const [activeTab, setActiveTab] = useState('vm');
-  const [activeFilters, setActiveFilters] = useState<FilterItem[]>([
-    { id: '1', field: 'Name', value: 'a' },
-    { id: '2', field: 'Name', value: 'a' },
-    { id: '3', field: 'Name', value: 'a' },
-    { id: '4', field: 'Name', value: 'aasdf' },
-  ]);
+  const [appliedFilters, setAppliedFilters] = useState<AppliedFilter[]>([]);
+
+  const handleFiltersChange = (filters: AppliedFilter[]) => {
+    setAppliedFilters(filters);
+    setCurrentPage(1);
+    setCurrentBareMetalPage(1);
+  };
 
   const removeFilter = (filterId: string) => {
-    setActiveFilters(prev => prev.filter(f => f.id !== filterId));
+    setAppliedFilters(prev => prev.filter(f => f.id !== filterId));
   };
 
   const clearAllFilters = () => {
-    setActiveFilters([]);
+    setAppliedFilters([]);
   };
+
+  // Convert AppliedFilter[] to FilterItem[] for ListToolbar
+  const toolbarFilters: FilterItem[] = appliedFilters.map(f => ({
+    id: f.id,
+    field: f.fieldLabel,
+    value: f.valueLabel || f.value,
+  }));
+
   const [showScrollTop, setShowScrollTop] = useState(false);
   const [isPreferencesOpen, setIsPreferencesOpen] = useState(false);
   const [rowsPerPage, setRowsPerPage] = useState(10);
@@ -247,33 +293,64 @@ export function InstanceListPage() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  const filteredInstances = useMemo(() => 
-    mockInstances.filter((instance) =>
-    instance.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    instance.id.toLowerCase().includes(searchQuery.toLowerCase())
-    ), [searchQuery]
-  );
+  // Filter instances based on appliedFilters
+  const filteredInstances = mockInstances.filter((instance) => {
+    if (appliedFilters.length === 0) return true;
+    
+    return appliedFilters.every((filter) => {
+      const fieldId = filter.fieldId;
+      const filterValue = filter.value.toLowerCase();
+      
+      switch (fieldId) {
+        case 'name':
+          return instance.name.toLowerCase().includes(filterValue);
+        case 'status':
+          return instance.status.toLowerCase() === filterValue;
+        case 'os':
+          return instance.os.toLowerCase().includes(filterValue);
+        case 'flavor':
+          return instance.flavor.toLowerCase().includes(filterValue);
+        default:
+          return true;
+      }
+    });
+  });
 
-  const filteredBareMetalInstances = useMemo(() => 
-    mockBareMetalInstances.filter((instance) =>
-    instance.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    instance.id.toLowerCase().includes(searchQuery.toLowerCase())
-    ), [searchQuery]
-  );
+  const filteredBareMetalInstances = mockBareMetalInstances.filter((instance) => {
+    if (appliedFilters.length === 0) return true;
+    
+    return appliedFilters.every((filter) => {
+      const fieldId = filter.fieldId;
+      const filterValue = filter.value.toLowerCase();
+      
+      switch (fieldId) {
+        case 'name':
+          return instance.name.toLowerCase().includes(filterValue);
+        case 'status':
+          return instance.status.toLowerCase() === filterValue;
+        case 'os':
+          return instance.os.toLowerCase().includes(filterValue);
+        case 'flavor':
+          return instance.flavor.toLowerCase().includes(filterValue);
+        default:
+          return true;
+      }
+    });
+  });
 
   const totalPages = Math.ceil(filteredInstances.length / rowsPerPage);
   const totalBareMetalPages = Math.ceil(filteredBareMetalInstances.length / rowsPerPage);
 
   // Get paginated data
-  const paginatedInstances = useMemo(() => {
+  const paginatedInstances = (() => {
     const start = (currentPage - 1) * rowsPerPage;
     return filteredInstances.slice(start, start + rowsPerPage);
-  }, [filteredInstances, currentPage, rowsPerPage]);
+  })();
 
-  const paginatedBareMetalInstances = useMemo(() => {
+  const paginatedBareMetalInstances = (() => {
     const start = (currentBareMetalPage - 1) * rowsPerPage;
     return filteredBareMetalInstances.slice(start, start + rowsPerPage);
-  }, [filteredBareMetalInstances, currentBareMetalPage, rowsPerPage]);
+  })();
 
   // Handle create snapshot click
   const handleCreateSnapshot = (instance: Instance) => {
@@ -431,19 +508,19 @@ export function InstanceListPage() {
     {
       key: 'fixedIp',
       label: 'Fixed IP',
-      flex: 1,
+      width: '120px',
       sortable: false,
     },
     {
       key: 'floatingIp',
       label: 'Floating IP',
-      flex: 1,
+      width: '120px',
       sortable: false,
     },
     {
       key: 'image',
       label: 'Image',
-      flex: 1,
+      width: '140px',
       sortable: true,
       render: (_, row) => (
         <div className="flex flex-col gap-0.5">
@@ -463,7 +540,7 @@ export function InstanceListPage() {
     {
       key: 'flavor',
       label: 'Flavor',
-      flex: 1,
+      width: '140px',
       sortable: true,
       render: (_, row) => (
         <div className="flex flex-col gap-0.5">
@@ -483,31 +560,31 @@ export function InstanceListPage() {
     {
       key: 'vcpu',
       label: 'vCPU',
-      flex: 1,
+      width: '70px',
       sortable: true,
     },
     {
       key: 'ram',
       label: 'RAM',
-      flex: 1,
+      width: '80px',
       sortable: true,
     },
     {
       key: 'disk',
       label: 'Disk',
-      flex: 1,
+      width: '80px',
       sortable: true,
     },
     {
       key: 'gpu',
       label: 'GPU',
-      flex: 1,
+      width: '60px',
       sortable: true,
     },
     {
       key: 'az',
       label: 'AZ',
-      flex: 1,
+      width: '100px',
       sortable: true,
     },
     {
@@ -567,7 +644,7 @@ export function InstanceListPage() {
     {
       key: 'name',
       label: 'Name',
-      flex: 1,
+      width: '160px',
       sortable: true,
       render: (_, row) => (
         <div className="flex flex-col gap-0.5">
@@ -587,13 +664,13 @@ export function InstanceListPage() {
     {
       key: 'ip',
       label: 'Fixed IP',
-      flex: 1,
+      width: '120px',
       sortable: false,
     },
     {
       key: 'image',
       label: 'Image',
-      flex: 1,
+      width: '140px',
       sortable: true,
       render: (_, row) => (
         <div className="flex flex-col gap-0.5">
@@ -613,7 +690,7 @@ export function InstanceListPage() {
     {
       key: 'flavor',
       label: 'Flavor',
-      flex: 1,
+      width: '140px',
       sortable: true,
       render: (_, row) => (
         <div className="flex flex-col gap-0.5">
@@ -633,31 +710,31 @@ export function InstanceListPage() {
     {
       key: 'cpu',
       label: 'CPU',
-      flex: 1,
+      width: '70px',
       sortable: true,
     },
     {
       key: 'ram',
       label: 'RAM',
-      flex: 1,
+      width: '80px',
       sortable: true,
     },
     {
       key: 'disk',
       label: 'Disk',
-      flex: 1,
+      width: '80px',
       sortable: true,
     },
     {
       key: 'gpu',
       label: 'GPU',
-      flex: 1,
+      width: '100px',
       sortable: true,
     },
     {
       key: 'az',
       label: 'AZ',
-      flex: 1,
+      width: '100px',
       sortable: true,
     },
     {
@@ -767,36 +844,55 @@ export function InstanceListPage() {
             <ListToolbar
               primaryActions={
                 <ListToolbar.Actions>
-                  <div className="w-[280px]">
-                    <SearchInput
-                      placeholder="Search instance by attributes"
-                      value={searchQuery}
-                      onChange={(e) => setSearchQuery(e.target.value)}
-                      onClear={() => setSearchQuery('')}
-                      size="sm"
-                      fullWidth
-                    />
-                  </div>
+                  <FilterSearchInput
+                    filters={filterFields}
+                    appliedFilters={appliedFilters}
+                    onFiltersChange={handleFiltersChange}
+                    placeholder="Search instance by attributes"
+                    size="sm"
+                    className="w-[280px]"
+                    hideAppliedFilters
+                  />
                   <Button variant="secondary" size="sm" icon={<IconDownload size={12} />} aria-label="Download" />
                 </ListToolbar.Actions>
               }
               bulkActions={
                 <ListToolbar.Actions>
-                  <Button variant="muted" size="sm" leftIcon={<IconPlayerPlay size={12} />} disabled>
+                  <Button 
+                    variant="muted" 
+                    size="sm" 
+                    leftIcon={<IconPlayerPlay size={12} />} 
+                    disabled={activeTab === 'vm' ? selectedInstances.length === 0 : selectedBareMetalInstances.length === 0}
+                  >
                     Start
                   </Button>
-                  <Button variant="muted" size="sm" leftIcon={<IconPlayerStop size={12} />} disabled>
+                  <Button 
+                    variant="muted" 
+                    size="sm" 
+                    leftIcon={<IconPlayerStop size={12} />} 
+                    disabled={activeTab === 'vm' ? selectedInstances.length === 0 : selectedBareMetalInstances.length === 0}
+                  >
                     Stop
                   </Button>
-                  <Button variant="muted" size="sm" leftIcon={<IconRefresh size={12} />} disabled>
+                  <Button 
+                    variant="muted" 
+                    size="sm" 
+                    leftIcon={<IconRefresh size={12} />} 
+                    disabled={activeTab === 'vm' ? selectedInstances.length === 0 : selectedBareMetalInstances.length === 0}
+                  >
                     Reboot
                   </Button>
-                  <Button variant="muted" size="sm" leftIcon={<IconTrash size={12} />} disabled>
+                  <Button 
+                    variant="muted" 
+                    size="sm" 
+                    leftIcon={<IconTrash size={12} />} 
+                    disabled={activeTab === 'vm' ? selectedInstances.length === 0 : selectedBareMetalInstances.length === 0}
+                  >
                     Delete
                   </Button>
                 </ListToolbar.Actions>
               }
-              filters={activeFilters}
+              filters={toolbarFilters}
               onFilterRemove={removeFilter}
               onFiltersClear={clearAllFilters}
             />
@@ -809,7 +905,7 @@ export function InstanceListPage() {
                 onPageChange={setCurrentPage}
                 showSettings
                 onSettingsClick={() => setIsPreferencesOpen(true)}
-                totalItems={mockInstances.length}
+                totalItems={filteredInstances.length}
               />
             )}
             {activeTab === 'bare-metal' && filteredBareMetalInstances.length > 0 && (
@@ -819,7 +915,7 @@ export function InstanceListPage() {
                 onPageChange={setCurrentBareMetalPage}
                 showSettings
                 onSettingsClick={() => setIsPreferencesOpen(true)}
-                totalItems={mockBareMetalInstances.length}
+                totalItems={filteredBareMetalInstances.length}
                 selectedCount={selectedBareMetalInstances.length}
               />
             )}

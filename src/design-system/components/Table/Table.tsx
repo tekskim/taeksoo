@@ -209,11 +209,14 @@ export function Table<T extends Record<string, any>>({
     >
       {/* Table container - overflow-x-auto enables horizontal scrolling */}
       <div
-        className={`table-scroll-container overflow-x-auto ${maxHeight ? 'overflow-y-auto' : ''}`}
-        style={maxHeight ? { maxHeight } : undefined}
+        className={`table-scroll-container ${maxHeight ? 'overflow-y-auto' : ''}`}
+        style={{ 
+          overflowX: 'auto',
+          ...(maxHeight ? { maxHeight } : {})
+        }}
       >
-        {/* Inner wrapper - width: fit-content prevents flex columns from shrinking */}
-        <div style={{ width: 'fit-content', minWidth: '100%' }}>
+        {/* Inner wrapper - width 100% fills container, min-width enables horizontal scroll when needed */}
+        <div style={{ width: '100%', minWidth: `${tableMinWidth}px` }}>
         {/* Header */}
         <div
           className={`
@@ -224,7 +227,6 @@ export function Table<T extends Record<string, any>>({
             rounded-[var(--table-row-radius)]
             ${enableStickyHeader ? 'sticky top-0 z-10' : ''}
           `}
-          style={{ width: 'max-content', minWidth: '100%' }}
         >
           {/* Selection column with select all checkbox */}
           {selectable && (
@@ -324,14 +326,12 @@ export function Table<T extends Record<string, any>>({
                     transition-all
                     hover:bg-[var(--table-row-hover-bg)]
                     border border-[var(--color-border-default)]
-                    overflow-hidden
                     ${isSelected 
                       ? 'bg-[var(--color-state-info-bg)] border-[var(--color-action-primary)] shadow-[inset_0_0_0_1px_var(--color-action-primary)]' 
                       : 'bg-[var(--color-surface-default)]'
                     }
                     ${onRowClick ? 'cursor-pointer' : ''}
                   `}
-                  style={{ width: 'max-content', minWidth: '100%' }}
                   onClick={onRowClick ? () => onRowClick(row, rowIndex) : undefined}
                 >
                   {/* Selection checkbox */}
