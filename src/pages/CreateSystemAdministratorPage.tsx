@@ -961,7 +961,7 @@ function DefaultDomainSection({
                   label: mockDomains.find((d) => d.id === selectedDomain)?.name || selectedDomain
                 }] : []}
                 onRemove={() => onSelectionChange(null)}
-                emptyText="Selected"
+                emptyText="No Item Selected"
               />
             )}
           </div>
