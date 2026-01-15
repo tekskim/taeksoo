@@ -90,6 +90,7 @@ export function ModalsPage() {
   const [isConfirmUserPasswordOpen, setIsConfirmUserPasswordOpen] = useState(false);
   const [isUnsavedChangesOpen, setIsUnsavedChangesOpen] = useState(false);
   const [isDetachUserGroupOpen, setIsDetachUserGroupOpen] = useState(false);
+  const [isDetachRoleOpen, setIsDetachRoleOpen] = useState(false);
   const [usernameCopied, setUsernameCopied] = useState(false);
   const [passwordCopied, setPasswordCopied] = useState(false);
   
@@ -349,7 +350,7 @@ export function ModalsPage() {
                           Modals
                         </span>
                         <span className="text-[12px] text-[var(--color-text-subtle)]">
-                          (5 modals)
+                          (6 modals)
                         </span>
                       </div>
                     </div>
@@ -389,6 +390,13 @@ export function ModalsPage() {
                             category="User"
                             size="sm"
                             onOpen={() => setIsDetachUserGroupOpen(true)}
+                          />
+                          <ModalListItem
+                            title="Detach role"
+                            description="Confirm detaching a role from a user with warning about permission removal."
+                            category="User"
+                            size="sm"
+                            onOpen={() => setIsDetachRoleOpen(true)}
                           />
                         </div>
                       </VStack>
@@ -1503,6 +1511,68 @@ export function ModalsPage() {
             onClick={() => {
               console.log('User detached from group');
               setIsDetachUserGroupOpen(false);
+            }}
+            className="flex-1"
+          >
+            Detach
+          </Button>
+        </div>
+      </Modal>
+
+      {/* Detach Role Modal */}
+      <Modal
+        isOpen={isDetachRoleOpen}
+        onClose={() => setIsDetachRoleOpen(false)}
+        title="Detach role"
+        description={`Are you sure you want to detach role "ROLENAME" from user "DISPLAYNAME"?`}
+        size="sm"
+      >
+        <div className="flex flex-col gap-2">
+          {/* User Info Box */}
+          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
+            <span className="text-[11px] text-[var(--color-text-subtle)] font-medium leading-4">
+              User
+            </span>
+            <span className="text-[12px] text-[var(--color-text-default)] leading-4">
+              DISPLAY NAME
+            </span>
+          </div>
+
+          {/* Role Info Box */}
+          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
+            <span className="text-[11px] text-[var(--color-text-subtle)] font-medium leading-4">
+              Role
+            </span>
+            <span className="text-[12px] text-[var(--color-text-default)] leading-4">
+              ROLENAME
+            </span>
+          </div>
+
+          {/* Warning Alert Box */}
+          <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
+            <IconAlertCircle size={16} className="text-[var(--color-state-danger)] shrink-0 mt-0.5" stroke={1.5} />
+            <p className="text-[11px] text-[var(--color-text-default)] leading-4">
+              Detaching this role will immediately remove all permissions granted through this role.
+            </p>
+          </div>
+        </div>
+
+        {/* Button Group */}
+        <div className="flex gap-2 w-full">
+          <Button 
+            variant="outline" 
+            size="md" 
+            onClick={() => setIsDetachRoleOpen(false)}
+            className="flex-1"
+          >
+            Cancel
+          </Button>
+          <Button 
+            variant="primary" 
+            size="md" 
+            onClick={() => {
+              console.log('Role detached from user');
+              setIsDetachRoleOpen(false);
             }}
             className="flex-1"
           >
