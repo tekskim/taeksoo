@@ -3,7 +3,7 @@ import { Sidebar } from '@/components/Sidebar';
 import { useTabs } from '@/contexts/TabContext';
 import { TopBar, Breadcrumb, TabBar } from '@/design-system';
 import { Button, VStack, HStack, Badge, Modal, Disclosure } from '@/design-system';
-import { IconAlertCircle, IconChevronRight, IconChevronDown, IconCopy } from '@tabler/icons-react';
+import { IconAlertCircle, IconChevronRight, IconChevronDown, IconCopy, IconCheck } from '@tabler/icons-react';
 
 /* ----------------------------------------
    Modal List Item Component
@@ -88,6 +88,8 @@ export function ModalsPage() {
   const [isDeleteUserOpen, setIsDeleteUserOpen] = useState(false);
   const [isDeleteUsersMultipleOpen, setIsDeleteUsersMultipleOpen] = useState(false);
   const [isConfirmUserPasswordOpen, setIsConfirmUserPasswordOpen] = useState(false);
+  const [usernameCopied, setUsernameCopied] = useState(false);
+  const [passwordCopied, setPasswordCopied] = useState(false);
   
   // Disclosure states
   const [isComputeOpen, setIsComputeOpen] = useState(false);
@@ -1334,9 +1336,17 @@ export function ModalsPage() {
               <button 
                 className="shrink-0 p-0.5 rounded hover:bg-[var(--color-surface-default)] transition-colors"
                 aria-label="Copy to clipboard"
-                onClick={() => navigator.clipboard.writeText('john.doe')}
+                onClick={() => {
+                  navigator.clipboard.writeText('john.doe');
+                  setUsernameCopied(true);
+                  setTimeout(() => setUsernameCopied(false), 2000);
+                }}
               >
-                <IconCopy size={14} className="text-[var(--color-text-subtle)]" stroke={1.5} />
+                {usernameCopied ? (
+                  <IconCheck size={12} className="text-[var(--color-state-success)]" />
+                ) : (
+                  <IconCopy size={12} className="text-[var(--color-action-primary)]" />
+                )}
               </button>
             </div>
           </div>
@@ -1353,9 +1363,17 @@ export function ModalsPage() {
               <button 
                 className="shrink-0 p-0.5 rounded hover:bg-[var(--color-surface-default)] transition-colors"
                 aria-label="Copy to clipboard"
-                onClick={() => navigator.clipboard.writeText('TempP@ss123!')}
+                onClick={() => {
+                  navigator.clipboard.writeText('TempP@ss123!');
+                  setPasswordCopied(true);
+                  setTimeout(() => setPasswordCopied(false), 2000);
+                }}
               >
-                <IconCopy size={14} className="text-[var(--color-text-subtle)]" stroke={1.5} />
+                {passwordCopied ? (
+                  <IconCheck size={12} className="text-[var(--color-state-success)]" />
+                ) : (
+                  <IconCopy size={12} className="text-[var(--color-action-primary)]" />
+                )}
               </button>
             </div>
           </div>
