@@ -90,7 +90,7 @@ export function ModalsPage() {
   const [isConfirmUserPasswordOpen, setIsConfirmUserPasswordOpen] = useState(false);
   
   // Disclosure states
-  const [isComputeOpen, setIsComputeOpen] = useState(true);
+  const [isComputeOpen, setIsComputeOpen] = useState(false);
   const [isIAMOpen, setIsIAMOpen] = useState(false);
   const [isContainerOpen, setIsContainerOpen] = useState(false);
   const [isStorageOpen, setIsStorageOpen] = useState(false);
