@@ -112,6 +112,7 @@ export function ModalsPage() {
   const [isSwitchToDomainOpen, setIsSwitchToDomainOpen] = useState(false);
   const [isDeleteSystemAdminOpen, setIsDeleteSystemAdminOpen] = useState(false);
   const [isUpdatePasswordPolicyOpen, setIsUpdatePasswordPolicyOpen] = useState(false);
+  const [isUpdateAccountLockoutPolicyOpen, setIsUpdateAccountLockoutPolicyOpen] = useState(false);
   const [usernameCopied, setUsernameCopied] = useState(false);
   const [passwordCopied, setPasswordCopied] = useState(false);
   
@@ -371,7 +372,7 @@ export function ModalsPage() {
                           Modals
                         </span>
                         <span className="text-[12px] text-[var(--color-text-subtle)]">
-                          (27 modals)
+                          (28 modals)
                         </span>
                       </div>
                     </div>
@@ -565,6 +566,13 @@ export function ModalsPage() {
                             category="Security"
                             size="sm"
                             onOpen={() => setIsUpdatePasswordPolicyOpen(true)}
+                          />
+                          <ModalListItem
+                            title="Update account lockout policy"
+                            description="Confirm applying account lockout policy changes for lockout type settings."
+                            category="Security"
+                            size="sm"
+                            onOpen={() => setIsUpdateAccountLockoutPolicyOpen(true)}
                           />
                         </div>
                       </VStack>
@@ -2871,6 +2879,50 @@ export function ModalsPage() {
             onClick={() => {
               console.log('Password policy updated');
               setIsUpdatePasswordPolicyOpen(false);
+            }}
+            className="flex-1"
+          >
+            Apply
+          </Button>
+        </div>
+      </Modal>
+
+      {/* Update Account Lockout Policy Modal */}
+      <Modal
+        isOpen={isUpdateAccountLockoutPolicyOpen}
+        onClose={() => setIsUpdateAccountLockoutPolicyOpen(false)}
+        title="Update account lockout policy"
+        description="Are you sure you want to apply these changes?"
+        size="sm"
+      >
+        <div className="flex flex-col gap-2">
+          {/* Changes Info Box */}
+          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
+            <span className="text-[11px] text-[var(--color-text-subtle)] font-medium leading-4">
+              Changes
+            </span>
+            <ul className="text-[12px] text-[var(--color-text-default)] leading-4 list-disc pl-4 space-y-0.5">
+              <li>Lockout type: Lockout permanently after Temporary lockout → Lockout temporarily</li>
+            </ul>
+          </div>
+        </div>
+
+        {/* Button Group */}
+        <div className="flex gap-2 w-full">
+          <Button 
+            variant="outline" 
+            size="md" 
+            onClick={() => setIsUpdateAccountLockoutPolicyOpen(false)}
+            className="flex-1"
+          >
+            Cancel
+          </Button>
+          <Button 
+            variant="primary" 
+            size="md" 
+            onClick={() => {
+              console.log('Account lockout policy updated');
+              setIsUpdateAccountLockoutPolicyOpen(false);
             }}
             className="flex-1"
           >
