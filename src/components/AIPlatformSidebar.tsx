@@ -6,7 +6,6 @@ import {
   IconPackages,
   IconBrain,
   IconDatabase,
-  IconServer,
   IconTemplate,
   IconBox,
   IconBolt,
@@ -14,8 +13,6 @@ import {
   IconCode,
   IconRoute,
   IconChartBar,
-  IconBrandDocker,
-  IconFlask,
   IconSettings,
   IconHelp,
   IconList,
@@ -25,6 +22,7 @@ import {
   IconLayoutSidebar,
   IconArrowLeft,
 } from '@tabler/icons-react';
+import { RefreshCw, CircleGauge, BrainCircuit } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 import ThakiLogoLight from '@/assets/thakiLogo_light.svg';
 import ThakiLogoDark from '@/assets/thakiLogo-dark.svg';
@@ -129,7 +127,7 @@ export function AIPlatformSidebar({ isOpen = true, onToggle }: AIPlatformSidebar
           {/* Infrastructure Section */}
           <MenuSection title="Infrastructure" defaultOpen={true}>
             <MenuItem
-              icon={<IconServer size={16} stroke={1.5} />}
+              icon={<CircleGauge size={16} strokeWidth={1.5} />}
               label="Workloads"
               href="/ai-platform/workloads"
               active={isActive('/ai-platform/workloads')}
@@ -185,13 +183,13 @@ export function AIPlatformSidebar({ isOpen = true, onToggle }: AIPlatformSidebar
               active={isActive('/ai-platform/benchmarks')}
             />
             <MenuItem
-              icon={<IconBrandDocker size={16} stroke={1.5} />}
+              icon={<BrainCircuit size={16} strokeWidth={1.5} />}
               label="Kubeflow"
               href="/ai-platform/kubeflow"
               active={isActive('/ai-platform/kubeflow')}
             />
             <MenuItem
-              icon={<IconFlask size={16} stroke={1.5} />}
+              icon={<RefreshCw size={16} strokeWidth={1.5} />}
               label="MLflow"
               href="/ai-platform/mlflow"
               active={isActive('/ai-platform/mlflow')}

@@ -28,8 +28,15 @@ import {
   IconRuler,
   IconScale,
   IconAlertTriangle,
+  IconTopologyStar,
+  IconTimelineEvent,
+  IconArrowsShuffle,
+  IconDatabase,
+  IconReorder,
+  IconChartPie3,
+  IconRulerMeasure,
 } from '@tabler/icons-react';
-import { ArrowRightLeft, FolderCog, HardDrive, FileCheck2, LogIn, Scaling } from 'lucide-react';
+import { ArrowRightLeft, FolderCog, HardDrive, FileCheck2, LogIn, Scaling, Group, Network } from 'lucide-react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import ThakiLogoLight from '@/assets/thakiLogo_light.svg';
 import ThakiLogoDark from '@/assets/thakiLogo-dark.svg';
@@ -481,13 +488,13 @@ export function ContainerSidebar({ isOpen = true, onToggle }: ContainerSidebarPr
                 active={isActive('/container/namespaces')}
               />
               <MenuItem
-                icon={<IconServer size={16} stroke={1.5} />}
+                icon={<IconTopologyStar size={16} stroke={1.5} />}
                 label="Nodes"
                 href="/container/nodes"
                 active={isActive('/container/nodes')}
               />
               <MenuItem
-                icon={<IconBell size={16} stroke={1.5} />}
+                icon={<IconTimelineEvent size={16} stroke={1.5} />}
                 label="Events"
                 href="/container/events"
                 active={isActive('/container/events')}
@@ -503,7 +510,7 @@ export function ContainerSidebar({ isOpen = true, onToggle }: ContainerSidebarPr
                 active={isActive('/container/deployments')}
               />
               <MenuItem
-                icon={<IconApps size={16} stroke={1.5} />}
+                icon={<Group size={16} strokeWidth={1.5} />}
                 label="StatefulSets"
                 href="/container/statefulsets"
                 active={isActive('/container/statefulsets')}
@@ -537,13 +544,13 @@ export function ContainerSidebar({ isOpen = true, onToggle }: ContainerSidebarPr
             {/* Service Discovery Section */}
             <MenuSection title="Service discovery" defaultOpen={true}>
               <MenuItem
-                icon={<IconNetwork size={16} stroke={1.5} />}
+                icon={<Network size={16} strokeWidth={1.5} />}
                 label="Services"
                 href="/container/services"
                 active={isActive('/container/services')}
               />
               <MenuItem
-                icon={<LogIn size={16} strokeWidth={1.5} />}
+                icon={<IconArrowsShuffle size={16} stroke={1.5} />}
                 label="Ingresses"
                 href="/container/ingresses"
                 active={isActive('/container/ingresses')}
@@ -565,7 +572,7 @@ export function ContainerSidebar({ isOpen = true, onToggle }: ContainerSidebarPr
                 active={isActive('/container/persistent-volumes')}
               />
               <MenuItem
-                icon={<FileCheck2 size={16} strokeWidth={1.5} />}
+                icon={<IconDatabase size={16} stroke={1.5} />}
                 label="Persistent volume claims"
                 href="/container/pvc"
                 active={isActive('/container/pvc')}
@@ -593,13 +600,13 @@ export function ContainerSidebar({ isOpen = true, onToggle }: ContainerSidebarPr
             {/* Policy Section */}
             <MenuSection title="Policy" defaultOpen={true}>
               <MenuItem
-                icon={<IconRuler size={16} stroke={1.5} />}
+                icon={<IconRulerMeasure size={16} stroke={1.5} />}
                 label="Limit ranges"
                 href="/container/limit-ranges"
                 active={isActive('/container/limit-ranges')}
               />
               <MenuItem
-                icon={<IconScale size={16} stroke={1.5} />}
+                icon={<IconChartPie3 size={16} stroke={1.5} />}
                 label="Resource quotas"
                 href="/container/resource-quotas"
                 active={isActive('/container/resource-quotas')}
@@ -611,7 +618,7 @@ export function ContainerSidebar({ isOpen = true, onToggle }: ContainerSidebarPr
                 active={isActive('/container/network-policies')}
               />
               <MenuItem
-                icon={<IconAlertTriangle size={16} stroke={1.5} />}
+                icon={<IconReorder size={16} stroke={1.5} />}
                 label="Pod disruption budgets"
                 href="/container/pdb"
                 active={isActive('/container/pdb')}

@@ -11,6 +11,7 @@ import {
   IconBrandSpeedtest,
   IconArrowLeft,
   IconLayoutSidebar,
+  IconServer2,
 } from '@tabler/icons-react';
 import { HardDrive } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
@@ -105,7 +106,7 @@ export function StorageSidebar({ isOpen = true, onToggle }: StorageSidebarProps)
               active={isActive('/storage/pools')}
             />
             <MenuItem
-              icon={<IconTemplate size={16} stroke={1.5} />}
+              icon={<IconServer2 size={16} stroke={1.5} />}
               label="Hosts"
               href="/storage/hosts"
               active={isActive('/storage/hosts')}
