@@ -1,4 +1,4 @@
-import { useRef, useCallback } from 'react';
+import { useState, useRef, useCallback, useMemo } from 'react';
 import {
   IconHome,
   IconCube,
@@ -20,6 +20,12 @@ import {
   IconLoadBalancer,
   IconCertificate,
   IconTopologyStar3,
+  IconTopologyStar,
+  IconTimelineEvent,
+  IconArrowsShuffle,
+  IconReorder,
+  IconChartPie3,
+  IconRulerMeasure,
   IconListSearch,
   IconServer2,
   IconActivity,
@@ -54,8 +60,6 @@ import {
   IconCode,
   IconRoute,
   IconChartBar,
-  IconBrandDocker,
-  IconFlask,
   IconSettings,
   IconHelp,
   IconList,
@@ -64,24 +68,53 @@ import {
   IconInfoCircle,
   IconArrowLeft,
   IconExternalLink,
+  IconSearch,
+  IconCopy,
+  IconCheck,
+  IconFile,
 } from '@tabler/icons-react';
 import { useNavigate } from 'react-router-dom';
 import { useDarkMode } from '@/hooks/useDarkMode';
-import { EthernetPort, ChevronsLeftRightEllipsis, HardDrive, LogIn, Scaling, FileCheck2 } from 'lucide-react';
+import { EthernetPort, ChevronsLeftRightEllipsis, HardDrive, LogIn, Scaling, FileCheck2, Group, Network, RefreshCw, CircleGauge, BrainCircuit } from 'lucide-react';
 import ThakiLogoLight from '@/assets/thakiLogo_light.svg';
 import ThakiLogoDark from '@/assets/thakiLogo-dark.svg';
-import { Button } from '@/design-system';
+import RouterIcon from '@/assets/Router.svg';
+import { Button, Input } from '@/design-system';
+
+/* ----------------------------------------
+   Custom SVG Icon Component
+   ---------------------------------------- */
+
+interface CustomIconProps {
+  src: string;
+  size?: number;
+  className?: string;
+}
+
+function CustomIcon({ src, size = 16, className = '' }: CustomIconProps) {
+  return (
+    <img 
+      src={src} 
+      width={size} 
+      height={size} 
+      className={`${className}`}
+      style={{ filter: 'var(--icon-filter, none)' }}
+      alt=""
+    />
+  );
+}
 
 /* ----------------------------------------
    Types
    ---------------------------------------- */
 
 interface IconItem {
-  icon: React.ComponentType<{ size?: number; stroke?: number; strokeWidth?: number; className?: string }>;
+  icon?: React.ComponentType<{ size?: number; stroke?: number; strokeWidth?: number; className?: string }>;
+  customIcon?: string; // Custom SVG import
   name: string;
   label: string;
   slug: string; // kebab-case name for URL
-  library?: 'tabler' | 'lucide'; // Icon library (default: tabler)
+  library?: 'tabler' | 'lucide' | 'custom'; // Icon library (default: tabler)
 }
 
 interface AppSection {
@@ -91,6 +124,7 @@ interface AppSection {
 
 interface AppData {
   name: string;
+  sidebarFile: string; // File path where this sidebar is defined
   sections: AppSection[];
 }
 
@@ -101,6 +135,7 @@ interface AppData {
 const appIconData: AppData[] = [
   {
     name: 'Compute',
+    sidebarFile: 'src/components/Sidebar.tsx',
     sections: [
       {
         title: 'Home',
@@ -132,7 +167,7 @@ const appIconData: AppData[] = [
         title: 'Network',
         items: [
           { icon: IconNetwork, name: 'IconNetwork', label: 'Networks', slug: 'network' },
-          { icon: IconRouter, name: 'IconRouter', label: 'Routers', slug: 'router' },
+          { customIcon: RouterIcon, name: 'Router.svg', label: 'Routers', slug: 'router', library: 'custom' },
           { icon: ChevronsLeftRightEllipsis, name: 'ChevronsLeftRightEllipsis', label: 'Ports', slug: 'chevrons-left-right-ellipsis', library: 'lucide' },
           { icon: IconWorldWww, name: 'IconWorldWww', label: 'Floating IPs', slug: 'world-www' },
           { icon: IconShieldLock, name: 'IconShieldLock', label: 'Security groups', slug: 'shield-lock' },
@@ -145,6 +180,7 @@ const appIconData: AppData[] = [
   },
   {
     name: 'Cloud Builder',
+    sidebarFile: 'src/components/Sidebar.tsx',
     sections: [
       {
         title: 'Inventory (1.0v)',
@@ -157,7 +193,7 @@ const appIconData: AppData[] = [
       {
         title: 'System info',
         items: [
-          { icon: IconActivity, name: 'IconActivity', label: 'Compute services', slug: 'activity' },
+          { icon: IconCpu, name: 'IconCpu', label: 'Compute services', slug: 'cpu' },
           { icon: IconCpu2, name: 'IconCpu2', label: 'Compute nodes', slug: 'cpu-2' },
           { icon: IconNetwork, name: 'IconNetwork', label: 'Network agents', slug: 'network' },
           { icon: IconDatabase, name: 'IconDatabase', label: 'Block storage services', slug: 'database' },
@@ -168,6 +204,7 @@ const appIconData: AppData[] = [
   },
   {
     name: 'Storage',
+    sidebarFile: 'src/components/StorageSidebar.tsx',
     sections: [
       {
         title: 'Home',
@@ -179,7 +216,7 @@ const appIconData: AppData[] = [
         title: 'Cluster',
         items: [
           { icon: IconDatabase, name: 'IconDatabase', label: 'Pools', slug: 'database' },
-          { icon: IconTemplate, name: 'IconTemplate', label: 'Hosts', slug: 'template' },
+          { icon: IconServer2, name: 'IconServer2', label: 'Hosts', slug: 'server-2' },
           { icon: IconCpu, name: 'IconCpu', label: 'OSDs', slug: 'cpu' },
           { icon: HardDrive, name: 'HardDrive', label: 'Physical disks', slug: 'hard-drive', library: 'lucide' },
         ],
@@ -206,6 +243,7 @@ const appIconData: AppData[] = [
   },
   {
     name: 'IAM',
+    sidebarFile: 'src/components/IAMSidebar.tsx',
     sections: [
       {
         title: 'Home',
@@ -254,21 +292,22 @@ const appIconData: AppData[] = [
   },
   {
     name: 'Container',
+    sidebarFile: 'src/components/ContainerSidebar.tsx',
     sections: [
       {
         title: 'Cluster',
         items: [
           { icon: IconHome, name: 'IconHome', label: 'Dashboard', slug: 'home' },
           { icon: IconFolders, name: 'IconFolders', label: 'Namespaces', slug: 'folders' },
-          { icon: IconServer, name: 'IconServer', label: 'Nodes', slug: 'server' },
-          { icon: IconBell, name: 'IconBell', label: 'Events', slug: 'bell' },
+          { icon: IconTopologyStar, name: 'IconTopologyStar', label: 'Nodes', slug: 'topology-star' },
+          { icon: IconTimelineEvent, name: 'IconTimelineEvent', label: 'Events', slug: 'timeline-event' },
         ],
       },
       {
         title: 'Workloads',
         items: [
           { icon: IconRocket, name: 'IconRocket', label: 'Deployments', slug: 'rocket' },
-          { icon: IconApps, name: 'IconApps', label: 'StatefulSets', slug: 'apps' },
+          { icon: Group, name: 'Group', label: 'StatefulSets', slug: 'group', library: 'lucide' },
           { icon: IconRefresh, name: 'IconRefresh', label: 'DaemonSets', slug: 'refresh' },
           { icon: IconClock, name: 'IconClock', label: 'Jobs', slug: 'clock' },
           { icon: IconCalendarTime, name: 'IconCalendarTime', label: 'CronJobs', slug: 'calendar-time' },
@@ -278,8 +317,8 @@ const appIconData: AppData[] = [
       {
         title: 'Service discovery',
         items: [
-          { icon: IconNetwork, name: 'IconNetwork', label: 'Services', slug: 'network' },
-          { icon: LogIn, name: 'LogIn', label: 'Ingresses', slug: 'log-in', library: 'lucide' },
+          { icon: Network, name: 'Network', label: 'Services', slug: 'network', library: 'lucide' },
+          { icon: IconArrowsShuffle, name: 'IconArrowsShuffle', label: 'Ingresses', slug: 'arrows-shuffle' },
           { icon: Scaling, name: 'Scaling', label: 'Horizontal pod autoscalers', slug: 'scaling', library: 'lucide' },
         ],
       },
@@ -287,7 +326,7 @@ const appIconData: AppData[] = [
         title: 'Storage',
         items: [
           { icon: HardDrive, name: 'HardDrive', label: 'Persistent volumes', slug: 'hard-drive', library: 'lucide' },
-          { icon: FileCheck2, name: 'FileCheck2', label: 'Persistent volume claims', slug: 'file-check-2', library: 'lucide' },
+          { icon: IconDatabase, name: 'IconDatabase', label: 'Persistent volume claims', slug: 'database' },
           { icon: IconStack3, name: 'IconStack3', label: 'Storage classes', slug: 'stack-3' },
           { icon: IconFileSettings, name: 'IconFileSettings', label: 'ConfigMaps', slug: 'file-settings' },
           { icon: IconKey, name: 'IconKey', label: 'Secrets', slug: 'key' },
@@ -296,16 +335,17 @@ const appIconData: AppData[] = [
       {
         title: 'Policy',
         items: [
-          { icon: IconRuler, name: 'IconRuler', label: 'Limit ranges', slug: 'ruler' },
-          { icon: IconScale, name: 'IconScale', label: 'Resource quotas', slug: 'scale' },
+          { icon: IconRulerMeasure, name: 'IconRulerMeasure', label: 'Limit ranges', slug: 'ruler-measure' },
+          { icon: IconChartPie3, name: 'IconChartPie3', label: 'Resource quotas', slug: 'chart-pie-3' },
           { icon: IconShieldLock, name: 'IconShieldLock', label: 'Network policies', slug: 'shield-lock' },
-          { icon: IconAlertTriangle, name: 'IconAlertTriangle', label: 'Pod disruption budgets', slug: 'alert-triangle' },
+          { icon: IconReorder, name: 'IconReorder', label: 'Pod disruption budgets', slug: 'reorder' },
         ],
       },
     ],
   },
   {
     name: 'AI Platform',
+    sidebarFile: 'src/components/AIPlatformSidebar.tsx',
     sections: [
       {
         title: 'Home',
@@ -325,7 +365,7 @@ const appIconData: AppData[] = [
       {
         title: 'Infrastructure',
         items: [
-          { icon: IconServer, name: 'IconServer', label: 'Workloads', slug: 'server' },
+          { icon: CircleGauge, name: 'CircleGauge', label: 'Workloads', slug: 'circle-gauge', library: 'lucide' },
           { icon: IconTemplate, name: 'IconTemplate', label: 'My templates', slug: 'template' },
           { icon: IconBox, name: 'IconBox', label: 'Storage', slug: 'box' },
           { icon: IconBolt, name: 'IconBolt', label: 'Serverless', slug: 'bolt' },
@@ -343,8 +383,8 @@ const appIconData: AppData[] = [
           { icon: IconCode, name: 'IconCode', label: 'DevSpace', slug: 'code' },
           { icon: IconRoute, name: 'IconRoute', label: 'Pipeline builder', slug: 'route' },
           { icon: IconChartBar, name: 'IconChartBar', label: 'Benchmarks', slug: 'chart-bar' },
-          { icon: IconBrandDocker, name: 'IconBrandDocker', label: 'Kubeflow', slug: 'brand-docker' },
-          { icon: IconFlask, name: 'IconFlask', label: 'MLflow', slug: 'flask' },
+          { icon: BrainCircuit, name: 'BrainCircuit', label: 'Kubeflow', slug: 'brain-circuit', library: 'lucide' },
+          { icon: RefreshCw, name: 'RefreshCw', label: 'MLflow', slug: 'refresh-cw', library: 'lucide' },
         ],
       },
       {
@@ -367,6 +407,7 @@ const appIconData: AppData[] = [
   },
   {
     name: 'Settings',
+    sidebarFile: 'src/pages/SettingsPage.tsx',
     sections: [
       {
         title: 'Menu',
@@ -382,23 +423,100 @@ const appIconData: AppData[] = [
 ];
 
 /* ----------------------------------------
+   Copy Button Component
+   ---------------------------------------- */
+
+interface CopyButtonProps {
+  text: string;
+  label: string;
+  className?: string;
+}
+
+function CopyButton({ text, label, className = '' }: CopyButtonProps) {
+  const [copied, setCopied] = useState(false);
+
+  const handleCopy = async () => {
+    try {
+      await navigator.clipboard.writeText(text);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch (err) {
+      console.error('Failed to copy:', err);
+    }
+  };
+
+  return (
+    <button
+      onClick={handleCopy}
+      className={`flex items-center gap-1.5 px-2 py-1 rounded-md text-[10px] font-mono bg-[var(--color-surface-muted)] hover:bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] transition-colors cursor-pointer ${className}`}
+      title={`Copy ${label}`}
+    >
+      {copied ? (
+        <IconCheck size={10} stroke={2} className="text-[var(--color-state-success)]" />
+      ) : (
+        <IconCopy size={10} stroke={1.5} className="text-[var(--color-text-subtle)]" />
+      )}
+      <span className="text-[var(--color-text-muted)] truncate max-w-[200px]">{text}</span>
+    </button>
+  );
+}
+
+/* ----------------------------------------
    Icon Card Component
    ---------------------------------------- */
 
 interface IconCardProps {
   item: IconItem;
+  sidebarFile: string;
 }
 
-function IconCard({ item }: IconCardProps) {
+function IconCard({ item, sidebarFile }: IconCardProps) {
   const Icon = item.icon;
   const isLucide = item.library === 'lucide';
-  const iconUrl = isLucide
-    ? `https://lucide.dev/icons/${item.slug}`
-    : `https://tabler.io/icons/icon/${item.slug}`;
-  const libraryLabel = isLucide ? 'Lucide' : 'Tabler';
+  const isCustom = item.library === 'custom';
+  
+  const iconUrl = isCustom
+    ? undefined
+    : isLucide
+      ? `https://lucide.dev/icons/${item.slug}`
+      : `https://tabler.io/icons/icon/${item.slug}`;
+  const libraryLabel = isCustom ? 'Custom' : isLucide ? 'Lucide' : 'Tabler';
+  const libraryPackage = isCustom ? '@/assets' : isLucide ? 'lucide-react' : '@tabler/icons-react';
   const iconRef = useRef<HTMLDivElement>(null);
 
-  const handleDownload = useCallback(() => {
+  // Generate code snippets
+  const importStatement = isCustom 
+    ? `import ${item.name.replace('.svg', 'Icon')} from '${libraryPackage}/${item.name}';`
+    : `import { ${item.name} } from '${libraryPackage}';`;
+  const jsxCode = isCustom
+    ? `<img src={${item.name.replace('.svg', 'Icon')}} width={16} height={16} />`
+    : isLucide 
+      ? `<${item.name} size={16} strokeWidth={1.5} />`
+      : `<${item.name} size={16} stroke={1.5} />`;
+
+  const handleDownload = useCallback(async () => {
+    // For custom icons, fetch the SVG file directly
+    if (isCustom && item.customIcon) {
+      try {
+        const response = await fetch(item.customIcon);
+        const svgText = await response.text();
+        const blob = new Blob([svgText], { type: 'image/svg+xml' });
+        const url = URL.createObjectURL(blob);
+        
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = `${item.slug}.svg`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+      } catch (err) {
+        console.error('Failed to download:', err);
+      }
+      return;
+    }
+
+    // For Tabler/Lucide icons, clone from DOM
     if (!iconRef.current) return;
     
     const svgElement = iconRef.current.querySelector('svg');
@@ -421,50 +539,78 @@ function IconCard({ item }: IconCardProps) {
     link.click();
     document.body.removeChild(link);
     URL.revokeObjectURL(url);
-  }, [item.slug]);
+  }, [item.slug, isCustom, item.customIcon]);
   
   return (
-    <div className="flex items-center gap-3 p-3 bg-[var(--color-surface-default)] rounded-lg border border-[var(--color-border-default)] hover:border-[var(--color-border-strong)] transition-colors">
-      <div 
-        ref={iconRef}
-        className="w-8 h-8 flex items-center justify-center bg-[var(--color-surface-subtle)] rounded-md"
-      >
-        {isLucide ? (
-          <Icon size={16} strokeWidth={1.5} className="text-[var(--color-text-default)]" />
-        ) : (
-          <Icon size={16} stroke={1.5} className="text-[var(--color-text-default)]" />
-        )}
-      </div>
-      <div className="flex-1 min-w-0">
-        <p className="text-[12px] font-medium text-[var(--color-text-default)] truncate">
-          {item.label}
-        </p>
-        <div className="flex items-center gap-1.5">
-          <p className="text-[10px] text-[var(--color-text-subtle)] font-mono truncate">
-            {item.name}
+    <div className="flex flex-col gap-3 p-4 bg-[var(--color-surface-default)] rounded-lg border border-[var(--color-border-default)] hover:border-[var(--color-border-strong)] transition-colors">
+      {/* Header: Icon + Label */}
+      <div className="flex items-center gap-3">
+        <div 
+          ref={iconRef}
+          className="w-8 h-8 flex items-center justify-center bg-[var(--color-surface-subtle)] rounded-md"
+        >
+          {isCustom && item.customIcon ? (
+            <CustomIcon src={item.customIcon} size={16} className="text-[var(--color-text-default)]" />
+          ) : isLucide && Icon ? (
+            <Icon size={16} strokeWidth={1.5} className="text-[var(--color-text-default)]" />
+          ) : Icon ? (
+            <Icon size={16} stroke={1.5} className="text-[var(--color-text-default)]" />
+          ) : null}
+        </div>
+        <div className="flex-1 min-w-0">
+          <p className="text-[13px] font-semibold text-[var(--color-text-default)]">
+            {item.label}
           </p>
-          {isLucide && (
-            <span className="text-[8px] px-1 py-0.5 bg-[var(--color-surface-muted)] rounded text-[var(--color-text-subtle)]">
-              Lucide
-            </span>
-          )}
+          <div className="flex items-center gap-1.5">
+            <p className="text-[11px] text-[var(--color-text-subtle)] font-mono">
+              {item.name}
+            </p>
+            {isLucide && (
+              <span className="text-[9px] px-1.5 py-0.5 bg-[var(--color-state-info-bg)] text-[var(--color-state-info)] rounded font-medium">
+                Lucide
+              </span>
+            )}
+            {isCustom && (
+              <span className="text-[9px] px-1.5 py-0.5 bg-[var(--color-state-warning-bg)] text-[var(--color-state-warning)] rounded font-medium">
+                Custom
+              </span>
+            )}
+          </div>
+        </div>
+        {/* Action buttons */}
+        <div className="flex items-center gap-1">
           <button
             onClick={handleDownload}
-            className="flex-shrink-0 text-[var(--color-text-subtle)] hover:text-[var(--color-action-primary)] transition-colors"
+            className="p-1.5 rounded-md text-[var(--color-text-subtle)] hover:text-[var(--color-action-primary)] hover:bg-[var(--color-surface-subtle)] transition-colors cursor-pointer"
             title="Download SVG (16px)"
           >
-            <IconDownload size={10} stroke={1.5} />
+            <IconDownload size={14} stroke={1.5} />
           </button>
-          <a
-            href={iconUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex-shrink-0 text-[var(--color-action-primary)] hover:text-[var(--color-action-primary-hover)] transition-colors"
-            title={`Open in ${libraryLabel}`}
-          >
-            <IconExternalLink size={10} stroke={1.5} />
-          </a>
+          {iconUrl && (
+            <a
+              href={iconUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="p-1.5 rounded-md text-[var(--color-action-primary)] hover:bg-[var(--color-surface-subtle)] transition-colors"
+              title={`Open in ${libraryLabel}`}
+            >
+              <IconExternalLink size={14} stroke={1.5} />
+            </a>
+          )}
         </div>
+      </div>
+
+      {/* Copy buttons */}
+      <div className="flex flex-col gap-1.5">
+        <CopyButton text={item.name} label="Icon Name" />
+        <CopyButton text={importStatement} label="Import" />
+        <CopyButton text={jsxCode} label="JSX" />
+      </div>
+
+      {/* File path */}
+      <div className="flex items-center gap-1.5 text-[10px] text-[var(--color-text-subtle)]">
+        <IconFile size={10} stroke={1.5} />
+        <span className="font-mono truncate">{sidebarFile}</span>
       </div>
     </div>
   );
@@ -476,28 +622,54 @@ function IconCard({ item }: IconCardProps) {
 
 interface AppSectionCardProps {
   app: AppData;
+  searchQuery: string;
 }
 
-function AppSectionCard({ app }: AppSectionCardProps) {
+function AppSectionCard({ app, searchQuery }: AppSectionCardProps) {
+  // Filter sections based on search query
+  const filteredSections = useMemo(() => {
+    if (!searchQuery.trim()) return app.sections;
+    
+    const query = searchQuery.toLowerCase();
+    return app.sections
+      .map(section => ({
+        ...section,
+        items: section.items.filter(item => 
+          item.label.toLowerCase().includes(query) ||
+          item.name.toLowerCase().includes(query)
+        )
+      }))
+      .filter(section => section.items.length > 0);
+  }, [app.sections, searchQuery]);
+
+  // Don't render if no results
+  if (filteredSections.length === 0) return null;
+
   return (
     <div className="bg-[var(--color-surface-default)] rounded-xl border border-[var(--color-border-default)] overflow-hidden">
       {/* App Header */}
       <div className="px-5 py-4 border-b border-[var(--color-border-default)] bg-[var(--color-surface-subtle)]">
-        <h2 className="text-[16px] font-semibold text-[var(--color-text-default)]">
-          {app.name}
-        </h2>
+        <div className="flex items-center justify-between">
+          <h2 className="text-[16px] font-semibold text-[var(--color-text-default)]">
+            {app.name}
+          </h2>
+          <div className="flex items-center gap-1.5 text-[11px] text-[var(--color-text-subtle)]">
+            <IconFile size={12} stroke={1.5} />
+            <span className="font-mono">{app.sidebarFile}</span>
+          </div>
+        </div>
       </div>
       
       {/* Sections */}
       <div className="p-5 space-y-6">
-        {app.sections.map((section, sectionIndex) => (
+        {filteredSections.map((section, sectionIndex) => (
           <div key={sectionIndex}>
             <h3 className="text-[11px] font-bold text-[var(--color-text-subtle)] uppercase tracking-wider mb-3">
               {section.title}
             </h3>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
+            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3">
               {section.items.map((item, itemIndex) => (
-                <IconCard key={itemIndex} item={item} />
+                <IconCard key={itemIndex} item={item} sidebarFile={app.sidebarFile} />
               ))}
             </div>
           </div>
@@ -514,6 +686,28 @@ function AppSectionCard({ app }: AppSectionCardProps) {
 export function SidebarIconsPage() {
   const navigate = useNavigate();
   const { isDark } = useDarkMode();
+  const [searchQuery, setSearchQuery] = useState('');
+
+  // Count total icons
+  const totalIcons = useMemo(() => {
+    return appIconData.reduce((acc, app) => 
+      acc + app.sections.reduce((sAcc, section) => sAcc + section.items.length, 0), 0
+    );
+  }, []);
+
+  // Count filtered icons
+  const filteredCount = useMemo(() => {
+    if (!searchQuery.trim()) return totalIcons;
+    const query = searchQuery.toLowerCase();
+    return appIconData.reduce((acc, app) => 
+      acc + app.sections.reduce((sAcc, section) => 
+        sAcc + section.items.filter(item => 
+          item.label.toLowerCase().includes(query) ||
+          item.name.toLowerCase().includes(query)
+        ).length, 0
+      ), 0
+    );
+  }, [searchQuery, totalIcons]);
 
   return (
     <div className="fixed inset-0 overflow-auto bg-[var(--color-surface-subtle)]">
@@ -537,6 +731,25 @@ export function SidebarIconsPage() {
               className="h-5"
             />
           </div>
+
+          {/* Search */}
+          <div className="w-[300px]">
+            <div className="relative">
+              <IconSearch 
+                size={14} 
+                stroke={1.5} 
+                className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--color-text-subtle)]" 
+              />
+              <Input
+                type="text"
+                placeholder="Search icons..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="pl-9"
+                fullWidth
+              />
+            </div>
+          </div>
         </div>
       </header>
 
@@ -548,22 +761,58 @@ export function SidebarIconsPage() {
             <h1 className="text-[28px] font-bold text-[var(--color-text-default)] mb-2">
               Sidebar Icons Reference
             </h1>
-            <p className="text-[14px] text-[var(--color-text-subtle)]">
-              각 앱별 사이드바 메뉴에 사용된 Tabler 아이콘 목록입니다. 아이콘 이름을 클릭하면 복사됩니다.
+            <p className="text-[14px] text-[var(--color-text-subtle)] mb-4">
+              각 앱별 사이드바 메뉴에 사용된 아이콘 목록입니다. 클릭하면 코드가 복사됩니다.
             </p>
-            <div className="mt-4 p-3 bg-[var(--color-surface-muted)] rounded-lg border border-[var(--color-border-default)]">
-              <code className="text-[12px] text-[var(--color-text-default)]">
-                import {'{ IconName }'} from '@tabler/icons-react';
-              </code>
+            
+            {/* Quick Reference */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+              <div className="p-4 bg-[var(--color-surface-default)] rounded-lg border border-[var(--color-border-default)]">
+                <h3 className="text-[12px] font-semibold text-[var(--color-text-default)] mb-2">Tabler Icons</h3>
+                <code className="text-[11px] text-[var(--color-text-muted)] font-mono block">
+                  import {'{ IconName }'} from '@tabler/icons-react';
+                </code>
+                <code className="text-[11px] text-[var(--color-text-subtle)] font-mono block mt-1">
+                  {'<IconName size={16} stroke={1.5} />'}
+                </code>
+              </div>
+              <div className="p-4 bg-[var(--color-surface-default)] rounded-lg border border-[var(--color-border-default)]">
+                <h3 className="text-[12px] font-semibold text-[var(--color-text-default)] mb-2">Lucide Icons</h3>
+                <code className="text-[11px] text-[var(--color-text-muted)] font-mono block">
+                  import {'{ IconName }'} from 'lucide-react';
+                </code>
+                <code className="text-[11px] text-[var(--color-text-subtle)] font-mono block mt-1">
+                  {'<IconName size={16} strokeWidth={1.5} />'}
+                </code>
+              </div>
+            </div>
+
+            {/* Stats */}
+            <div className="mt-4 text-[12px] text-[var(--color-text-subtle)]">
+              {searchQuery ? (
+                <span>Found <strong className="text-[var(--color-text-default)]">{filteredCount}</strong> of {totalIcons} icons</span>
+              ) : (
+                <span>Total <strong className="text-[var(--color-text-default)]">{totalIcons}</strong> icons across {appIconData.length} apps</span>
+              )}
             </div>
           </div>
 
           {/* App Sections */}
           <div className="space-y-8">
             {appIconData.map((app, index) => (
-              <AppSectionCard key={index} app={app} />
+              <AppSectionCard key={index} app={app} searchQuery={searchQuery} />
             ))}
           </div>
+
+          {/* No results message */}
+          {filteredCount === 0 && searchQuery && (
+            <div className="text-center py-16">
+              <IconSearch size={48} stroke={1} className="mx-auto text-[var(--color-text-subtle)] mb-4" />
+              <p className="text-[14px] text-[var(--color-text-muted)]">
+                No icons found for "<strong>{searchQuery}</strong>"
+              </p>
+            </div>
+          )}
         </div>
       </main>
 

@@ -54,6 +54,7 @@ import {
   IconPlayerPause,
   IconAlertCircle,
 } from '@tabler/icons-react';
+import { CircleGauge, BrainCircuit, RefreshCw } from 'lucide-react';
 
 /* ----------------------------------------
    AI Platform Logo Component
@@ -155,7 +156,7 @@ export function AIPlatformSidebar() {
           {/* Infrastructure Section */}
           <MenuSection title="Infrastructure" defaultOpen={true}>
             <MenuItem
-              icon={<IconStack2 size={18} stroke={1.5} />}
+              icon={<CircleGauge size={18} strokeWidth={1.5} />}
               label="Workloads"
               href="/ai-platform/workloads"
               active={isActive('/ai-platform/workloads')}
@@ -201,13 +202,13 @@ export function AIPlatformSidebar() {
               active={isActive('/ai-platform/pipeline')}
             />
             <MenuItem
-              icon={<IconBrandDocker size={18} stroke={1.5} />}
+              icon={<BrainCircuit size={18} strokeWidth={1.5} />}
               label="Kubeflow"
               href="/ai-platform/kubeflow"
               active={isActive('/ai-platform/kubeflow')}
             />
             <MenuItem
-              icon={<IconBrandDocker size={18} stroke={1.5} />}
+              icon={<RefreshCw size={18} strokeWidth={1.5} />}
               label="MLflow"
               href="/ai-platform/mlflow"
               active={isActive('/ai-platform/mlflow')}
@@ -738,7 +739,7 @@ function DashboardContent() {
         <h3 className="text-[14px] font-semibold text-[var(--color-text-default)] mb-3">Service Overview</h3>
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
           <ServiceOverviewCard
-            icon={<IconStack2 size={28} stroke={1.5} className="text-[var(--color-action-primary)]" />}
+            icon={<CircleGauge size={28} strokeWidth={1.5} className="text-[var(--color-action-primary)]" />}
             count={4}
             label="Workloads"
             onClick={() => navigate('/ai-platform/workloads')}

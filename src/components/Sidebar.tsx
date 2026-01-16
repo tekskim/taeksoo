@@ -12,7 +12,6 @@ import {
   IconDatabase,
   IconDatabaseExport,
   IconNetwork,
-  IconRouter,
   IconPlug,
   IconWorldWww,
   IconShieldLock,
@@ -32,6 +31,7 @@ import { useLocation, Link } from 'react-router-dom';
 import { useProject } from '@/contexts/ProjectContext';
 import ThakiLogoLight from '@/assets/thakiLogo_light.svg';
 import ThakiLogoDark from '@/assets/thakiLogo-dark.svg';
+import RouterIcon from '@/assets/Router.svg';
 import { ProjectSelector } from './ProjectSelector';
 
 /* ----------------------------------------
@@ -151,7 +151,7 @@ export function Sidebar({ isOpen = true, onToggle }: SidebarProps) {
 
               <MenuSection title="System info" defaultOpen={true}>
                 <MenuItem
-                  icon={<IconActivity size={16} stroke={1.5} />}
+                  icon={<IconCpu size={16} stroke={1.5} />}
                   label="Compute services"
                   href="/cloudbuilder/services"
                   active={isActive('/cloudbuilder/services')}
@@ -269,7 +269,7 @@ export function Sidebar({ isOpen = true, onToggle }: SidebarProps) {
               active={isActive('/compute/networks')}
             />
             <MenuItem
-              icon={<IconRouter size={16} stroke={1.5} />}
+              icon={<img src={RouterIcon} width={16} height={16} alt="" className="opacity-80" />}
               label="Routers"
               href="/compute/routers"
               active={isActive('/compute/routers')}
