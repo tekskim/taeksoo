@@ -309,7 +309,7 @@ export function ServerGroupsPage() {
                     filters={filterFields}
                     appliedFilters={appliedFilters}
                     onFiltersChange={setAppliedFilters}
-                    placeholder="Search server group by attributes"
+                      placeholder="Search server group by attributes"
                     className="w-[280px]"
                   />
                   <Button variant="secondary" size="sm" icon={<IconDownload size={12} />} aria-label="Download" />

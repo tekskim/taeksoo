@@ -211,7 +211,7 @@ function NamespaceSelector() {
 
   return (
     <div className="px-3 py-4 border-b border-[var(--color-border-default)]">
-      <label className="block text-[11px] font-bold text-[var(--color-text-default)] mb-1">
+      <label className="block text-[11px] leading-[16px] font-medium text-[var(--color-text-default)] mb-1">
         Namespace
       </label>
       <button
@@ -463,7 +463,7 @@ export function ContainerSidebar({ isOpen = true, onToggle }: ContainerSidebarPr
 
             {/* Bookmarks */}
             <div className="py-2">
-              <button className="flex items-center gap-2 px-0 py-1.5 text-[14px] font-semibold text-[var(--color-text-default)]">
+              <button className="flex items-center gap-2 px-0 py-1.5 text-[12px] leading-[16px] font-medium text-[var(--color-text-default)]">
                 <IconChevronDown size={12} stroke={2} className="rotate-[-90deg]" />
                 <span>Bookmarks</span>
               </button>

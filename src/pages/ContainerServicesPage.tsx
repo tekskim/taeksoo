@@ -242,8 +242,10 @@ export function ContainerServicesPage() {
       flex: 1,
       minWidth: '120px',
       sortable: true,
-      render: (value: string) => (
-        <TableLink title={value}>{value}</TableLink>
+      render: (value: string, row: ServiceRow) => (
+        <TableLink title={value} onClick={() => navigate(`/container/services/${row.id}`)}>
+          {value}
+        </TableLink>
       )
     },
     {
@@ -259,15 +261,14 @@ export function ContainerServicesPage() {
       flex: 1,
       minWidth: '140px',
       sortable: false,
-      render: (value: string[]) => (
-        <div className="flex flex-col gap-0.5">
-          {value.map((target, index) => (
-            <span key={index} className="text-[12px] text-[var(--color-text-default)] truncate" title={target}>
-              {target}
-            </span>
-          ))}
-        </div>
-      )
+      render: (value: string[]) => {
+        const text = value.join(', ');
+        return (
+          <span className="truncate block w-full" title={text}>
+            {text}
+          </span>
+        );
+      }
     },
     {
       key: 'selector',
@@ -275,15 +276,14 @@ export function ContainerServicesPage() {
       flex: 1,
       minWidth: '120px',
       sortable: false,
-      render: (value: string[]) => (
-        <div className="flex flex-col gap-0.5">
-          {value.map((selector, index) => (
-            <span key={index} className="text-[12px] text-[var(--color-text-muted)] truncate" title={selector}>
-              {selector}
-            </span>
-          ))}
-        </div>
-      )
+      render: (value: string[]) => {
+        const text = value.join(', ');
+        return (
+          <span className="truncate block w-full text-[var(--color-text-muted)]" title={text}>
+            {text}
+          </span>
+        );
+      }
     },
     {
       key: 'type',
@@ -320,7 +320,7 @@ export function ContainerServicesPage() {
           {
             id: 'edit-yaml',
             label: 'Edit YAML',
-            onClick: () => console.log('Edit YAML:', row.id),
+            onClick: () => navigate(`/container/services/${row.id}/edit-yaml`),
           },
           {
             id: 'download-yaml',
@@ -450,8 +450,8 @@ export function ContainerServicesPage() {
                     size="sm"
                     className="w-[280px]"
                   />
-                  <Button variant="secondary" size="sm" aria-label="Filter" className="!p-0 !w-7 !h-7 !min-w-7">
-                    <IconSearch size={14} stroke={1.5} />
+                  <Button variant="secondary" size="sm" aria-label="Download" className="!p-0 !w-7 !h-7 !min-w-7">
+                    <IconDownload size={14} stroke={1.5} />
                   </Button>
                 </HStack>
 
@@ -510,6 +510,7 @@ export function ContainerServicesPage() {
                 selectable
                 selectedKeys={selectedRows}
                 onSelectionChange={setSelectedRows}
+                onRowClick={(row) => navigate(`/container/services/${row.id}`)}
               />
             </VStack>
           </div>
