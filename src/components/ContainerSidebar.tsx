@@ -346,22 +346,18 @@ export function ContainerSidebar({ isOpen = true, onToggle }: ContainerSidebarPr
       return 'home';
     }
     
-    // Cluster section: Dashboard, Namespaces, Nodes, Events
+    // Cluster section: Dashboard, Namespaces, Nodes, Events, AND Workloads (Deployments, StatefulSets, DaemonSets, Jobs, CronJobs, Pods)
     if (path === '/container/dashboard' || 
         path.startsWith('/container/namespaces') || 
         path.startsWith('/container/nodes') || 
-        path.startsWith('/container/events')) {
-      return 'cluster';
-    }
-    
-    // Workloads section: Deployments, StatefulSets, DaemonSets, Jobs, CronJobs, Pods
-    if (path.startsWith('/container/deployments') ||
+        path.startsWith('/container/events') ||
+        path.startsWith('/container/deployments') ||
         path.startsWith('/container/statefulsets') ||
         path.startsWith('/container/daemonsets') ||
         path.startsWith('/container/jobs') ||
         path.startsWith('/container/cronjobs') ||
         path.startsWith('/container/pods')) {
-      return 'workloads';
+      return 'cluster';
     }
     
     return 'cluster';
@@ -394,9 +390,9 @@ export function ContainerSidebar({ isOpen = true, onToggle }: ContainerSidebarPr
           />
           <IconSidebarItem
             icon={<IconAffiliate size={16} stroke={1.5} />}
-            active={activeIconSection === 'workloads'}
-            onClick={() => navigate('/container/deployments')}
-            tooltip="Workloads"
+            active={false}
+            onClick={() => {}}
+            tooltip="Cluster"
           />
           <IconSidebarItem
             icon={<IconPlus size={16} stroke={1.5} />}

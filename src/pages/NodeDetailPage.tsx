@@ -582,7 +582,6 @@ interface TaintsTabProps {
 
 function TaintsTab({ taints }: TaintsTabProps) {
   const [currentPage, setCurrentPage] = useState(1);
-  const [searchQuery, setSearchQuery] = useState('');
 
   const columns: TableColumn<TaintRow>[] = [
     { key: 'key', label: 'Key', flex: 1, sortable: true },
@@ -595,16 +594,6 @@ function TaintsTab({ taints }: TaintsTabProps) {
       <h3 className="text-[14px] font-semibold leading-[20px] text-[var(--color-text-default)]">
         Taints
       </h3>
-      <HStack gap={2} align="center">
-        <SearchInput
-          placeholder="Search Taints by attributes"
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          onClear={() => setSearchQuery('')}
-          size="sm"
-          className="w-[280px]"
-        />
-      </HStack>
       <Pagination
         currentPage={currentPage}
         totalPages={1}
@@ -626,7 +615,6 @@ interface ConditionsTabProps {
 
 function ConditionsTab({ conditions }: ConditionsTabProps) {
   const [currentPage, setCurrentPage] = useState(1);
-  const [searchQuery, setSearchQuery] = useState('');
 
   const columns: TableColumn<ConditionRow>[] = [
     { key: 'type', label: 'Condition', flex: 1, sortable: true },
@@ -640,16 +628,6 @@ function ConditionsTab({ conditions }: ConditionsTabProps) {
       <h3 className="text-[14px] font-semibold leading-[20px] text-[var(--color-text-default)]">
         Conditions
       </h3>
-      <HStack gap={2} align="center">
-        <SearchInput
-          placeholder="Search Conditions by attributes"
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          onClear={() => setSearchQuery('')}
-          size="sm"
-          className="w-[280px]"
-        />
-      </HStack>
       <Pagination
         currentPage={currentPage}
         totalPages={1}

@@ -45,7 +45,7 @@ export function WizardSummary({
     <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-lg p-4">
       <VStack gap={3}>
         {/* Title */}
-        <span className="text-[length:var(--font-size-14)] font-semibold leading-[var(--line-height-20)] text-[var(--color-text-default)]">
+        <span className="text-[length:var(--font-size-16)] font-semibold leading-[var(--line-height-24)] text-[var(--color-text-default)]">
           {title}
         </span>
         

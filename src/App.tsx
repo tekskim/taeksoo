@@ -99,6 +99,19 @@ import { ContainerConsolePage } from '@/pages/ContainerConsolePage';
 import { EditNodeConfigPage } from '@/pages/EditNodeConfigPage';
 import { EditNodeYamlPage } from '@/pages/EditNodeYamlPage';
 import { NodeDetailPage } from '@/pages/NodeDetailPage';
+import { DeploymentsPage } from '@/pages/DeploymentsPage';
+import { CreateDeploymentPage } from '@/pages/CreateDeploymentPage';
+import { DeploymentDetailPage } from '@/pages/DeploymentDetailPage';
+import { StatefulSetsPage } from '@/pages/StatefulSetsPage';
+import { StatefulSetDetailPage } from '@/pages/StatefulSetDetailPage';
+import { DaemonSetsPage } from '@/pages/DaemonSetsPage';
+import { DaemonSetDetailPage } from '@/pages/DaemonSetDetailPage';
+import { JobsPage } from '@/pages/JobsPage';
+import { JobDetailPage } from '@/pages/JobDetailPage';
+import { CronJobsPage } from '@/pages/CronJobsPage';
+import { CronJobDetailPage } from '@/pages/CronJobDetailPage';
+import { PodsPage } from '@/pages/PodsPage';
+import { PodDetailPage } from '@/pages/PodDetailPage';
 
 // Pages - IAM
 import { IAMHomePage } from '@/pages/IAMHomePage';
@@ -288,6 +301,19 @@ function AppRoutes() {
         <Route path="/container/nodes/:nodeName/edit-yaml" element={<EditNodeYamlPage />} />
         <Route path="/container/nodes/:nodeName" element={<NodeDetailPage />} />
         <Route path="/container/console/:instanceId" element={<ContainerConsolePage />} />
+        <Route path="/container/deployments" element={<DeploymentsPage />} />
+        <Route path="/container/deployments/create" element={<CreateDeploymentPage />} />
+        <Route path="/container/deployments/:deploymentId" element={<DeploymentDetailPage />} />
+        <Route path="/container/statefulsets" element={<StatefulSetsPage />} />
+        <Route path="/container/statefulsets/:statefulsetId" element={<StatefulSetDetailPage />} />
+        <Route path="/container/daemonsets" element={<DaemonSetsPage />} />
+        <Route path="/container/daemonsets/:daemonsetId" element={<DaemonSetDetailPage />} />
+        <Route path="/container/jobs" element={<JobsPage />} />
+        <Route path="/container/jobs/:jobId" element={<JobDetailPage />} />
+        <Route path="/container/cronjobs" element={<CronJobsPage />} />
+        <Route path="/container/cronjobs/:cronjobId" element={<CronJobDetailPage />} />
+        <Route path="/container/pods" element={<PodsPage />} />
+        <Route path="/container/pods/:podId" element={<PodDetailPage />} />
         <Route path="/container/*" element={<ContainerDashboardPage />} />
 
         {/* IAM Routes */}
