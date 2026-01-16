@@ -100,6 +100,18 @@ import { EditNodeConfigPage } from '@/pages/EditNodeConfigPage';
 import { EditNodeYamlPage } from '@/pages/EditNodeYamlPage';
 import { NodeDetailPage } from '@/pages/NodeDetailPage';
 import { ContainerServicesPage } from '@/pages/ContainerServicesPage';
+import { ContainerServiceDetailPage } from '@/pages/ContainerServiceDetailPage';
+import { CreateServicePage } from '@/pages/CreateServicePage';
+import { CreateServiceYamlPage } from '@/pages/CreateServiceYamlPage';
+import { EditServiceYamlPage } from '@/pages/EditServiceYamlPage';
+import { ContainerIngressesPage } from '@/pages/ContainerIngressesPage';
+import { ContainerIngressDetailPage } from '@/pages/ContainerIngressDetailPage';
+import { CreateIngressYamlPage } from '@/pages/CreateIngressYamlPage';
+import { EditIngressYamlPage } from '@/pages/EditIngressYamlPage';
+import { ContainerHPAPage } from '@/pages/ContainerHPAPage';
+import { ContainerHPADetailPage } from '@/pages/ContainerHPADetailPage';
+import { CreateHPAYamlPage } from '@/pages/CreateHPAYamlPage';
+import { EditHPAYamlPage } from '@/pages/EditHPAYamlPage';
 import { DeploymentsPage } from '@/pages/DeploymentsPage';
 import { CreateDeploymentPage } from '@/pages/CreateDeploymentPage';
 import { DeploymentDetailPage } from '@/pages/DeploymentDetailPage';
@@ -312,6 +324,18 @@ function AppRoutes() {
         <Route path="/container/nodes/:nodeName/edit-yaml" element={<EditNodeYamlPage />} />
         <Route path="/container/nodes/:nodeName" element={<NodeDetailPage />} />
         <Route path="/container/services" element={<ContainerServicesPage />} />
+        <Route path="/container/services/create" element={<CreateServicePage />} />
+        <Route path="/container/services/create-yaml" element={<CreateServiceYamlPage />} />
+        <Route path="/container/services/:serviceId/edit-yaml" element={<EditServiceYamlPage />} />
+        <Route path="/container/services/:serviceId" element={<ContainerServiceDetailPage />} />
+        <Route path="/container/ingresses" element={<ContainerIngressesPage />} />
+        <Route path="/container/ingresses/create-yaml" element={<CreateIngressYamlPage />} />
+        <Route path="/container/ingresses/:ingressId/edit-yaml" element={<EditIngressYamlPage />} />
+        <Route path="/container/ingresses/:ingressId" element={<ContainerIngressDetailPage />} />
+        <Route path="/container/hpa" element={<ContainerHPAPage />} />
+        <Route path="/container/hpa/create-yaml" element={<CreateHPAYamlPage />} />
+        <Route path="/container/hpa/:hpaId" element={<ContainerHPADetailPage />} />
+        <Route path="/container/hpa/:hpaId/edit-yaml" element={<EditHPAYamlPage />} />
         <Route path="/container/console/:instanceId" element={<ContainerConsolePage />} />
         <Route path="/container/deployments" element={<DeploymentsPage />} />
         <Route path="/container/deployments/create" element={<CreateDeploymentPage />} />

@@ -197,7 +197,7 @@ export function AppLayout({ children }: AppLayoutProps) {
                   onClick={() => setNotificationOpen(!notificationOpen)}
                 />
                 {notificationOpen && (
-                  <div className="absolute top-full right-0 mt-2 z-50">
+                  <div className="fixed right-0 z-50" style={{ top: 'calc(var(--tabbar-height) + var(--topbar-height))' }}>
                     <NotificationCenter
                       notifications={notifications}
                       selectedId={selectedNotificationId}
