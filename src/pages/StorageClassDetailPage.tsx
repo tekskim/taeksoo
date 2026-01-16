@@ -122,7 +122,7 @@ export function StorageClassDetailPage() {
   const { storageClassId } = useParams<{ storageClassId: string }>();
   const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(true);
-  const { tabs, activeTabId, selectTab, closeTab, addNewTab, moveTab, addTab } = useTabs();
+  const { tabs, activeTabId, selectTab, closeTab, addNewTab, moveTab, addTab, updateActiveTabLabel } = useTabs();
   const [activeTab, setActiveTab] = useState('parameters');
 
   // Shell Panel state
@@ -139,6 +139,13 @@ export function StorageClassDetailPage() {
       setScData(mockStorageClassData['1']);
     }
   }, [storageClassId]);
+
+  // Update tab label to match the Storage Class name (most recent breadcrumb)
+  useEffect(() => {
+    if (scData) {
+      updateActiveTabLabel(scData.name);
+    }
+  }, [updateActiveTabLabel, scData]);
 
   // Handle opening shell tab in new browser tab
   const handleOpenInNewTab = (tab: ShellTab) => {

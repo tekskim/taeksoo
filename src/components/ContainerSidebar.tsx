@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useLayoutEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { VStack, MenuItem, MenuSection } from '@/design-system';
 import { useDarkMode } from '@/hooks/useDarkMode';
@@ -18,6 +18,7 @@ import {
   IconSearch,
   IconCheck,
   IconLayoutSidebar,
+  IconSettings,
   IconFolders,
   IconBell,
   IconRocket,
@@ -318,10 +319,41 @@ function NamespaceSelector() {
   );
 }
 
+// Store scroll position outside component to persist across re-renders
+let savedScrollPosition = 0;
+
 export function ContainerSidebar({ isOpen = true, onToggle }: ContainerSidebarProps) {
   const { isDark } = useDarkMode();
   const location = useLocation();
   const navigate = useNavigate();
+  const navRef = useRef<HTMLElement>(null);
+
+  // Restore scroll position after route change - use useLayoutEffect for synchronous update
+  useLayoutEffect(() => {
+    const nav = navRef.current;
+    if (nav && savedScrollPosition > 0) {
+      nav.scrollTop = savedScrollPosition;
+    }
+  });
+
+  // Also restore on mount with a slight delay as backup
+  useEffect(() => {
+    const nav = navRef.current;
+    if (nav && savedScrollPosition > 0) {
+      // Immediate restore
+      nav.scrollTop = savedScrollPosition;
+      // Backup restore after a short delay
+      const timeoutId = setTimeout(() => {
+        if (nav) nav.scrollTop = savedScrollPosition;
+      }, 50);
+      return () => clearTimeout(timeoutId);
+    }
+  }, []);
+
+  // Save scroll position on scroll
+  const handleNavScroll = (e: React.UIEvent<HTMLElement>) => {
+    savedScrollPosition = e.currentTarget.scrollTop;
+  };
   
   // Check if current path matches href
   const isActive = (href: string) => {
@@ -394,27 +426,19 @@ export function ContainerSidebar({ isOpen = true, onToggle }: ContainerSidebarPr
           />
         </div>
 
-        {/* Toggle button at bottom when menu sidebar is closed */}
-        {!isOpen && (
-          <div className="border-t border-[var(--color-border-subtle)] py-1 flex items-center justify-center">
-            <button 
-              type="button"
-              onClick={onToggle}
-              className="w-8 h-8 flex items-center justify-center rounded-[var(--radius-md)] transition-colors duration-[var(--duration-fast)] text-[var(--color-text-default)] hover:bg-[var(--color-surface-muted)]"
-              aria-label="Toggle sidebar"
-            >
-              <IconLayoutSidebar size={16} stroke={1.5} />
-            </button>
-          </div>
-        )}
-
-        {/* Settings at bottom */}
-        <div className="border-t border-[var(--color-border-subtle)] py-1 flex items-center justify-center">
+        {/* Settings and Cluster Management at bottom */}
+        <div className="border-t border-[var(--color-border-subtle)] py-1 flex flex-col items-center gap-1">
+          <IconSidebarItem
+            icon={<IconSettings size={16} stroke={1.5} />}
+            active={false}
+            onClick={() => navigate('/container/settings')}
+            tooltip="Settings"
+          />
           <IconSidebarItem
             icon={<FolderCog size={16} strokeWidth={1.5} />}
             active={false}
             onClick={() => {}}
-            tooltip="Settings"
+            tooltip="Cluster Management"
           />
         </div>
       </aside>
@@ -443,7 +467,7 @@ export function ContainerSidebar({ isOpen = true, onToggle }: ContainerSidebarPr
         <NamespaceSelector />
 
         {/* Navigation */}
-        <nav className="flex-1 px-3 py-3 overflow-y-auto overflow-x-hidden sidebar-scroll">
+        <nav ref={navRef} onScroll={handleNavScroll} className="flex-1 px-3 py-3 overflow-y-auto overflow-x-hidden sidebar-scroll">
           <VStack gap={4} className="w-full min-w-0">
             {/* Back to All Services */}
             <Link
