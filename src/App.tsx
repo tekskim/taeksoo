@@ -113,6 +113,16 @@ import { CronJobsPage } from '@/pages/CronJobsPage';
 import { CronJobDetailPage } from '@/pages/CronJobDetailPage';
 import { PodsPage } from '@/pages/PodsPage';
 import { PodDetailPage } from '@/pages/PodDetailPage';
+import { PersistentVolumesPage } from '@/pages/PersistentVolumesPage';
+import { PersistentVolumeDetailPage } from '@/pages/PersistentVolumeDetailPage';
+import { PersistentVolumeClaimsPage } from '@/pages/PersistentVolumeClaimsPage';
+import { PersistentVolumeClaimDetailPage } from '@/pages/PersistentVolumeClaimDetailPage';
+import { StorageClassesPage } from '@/pages/StorageClassesPage';
+import { StorageClassDetailPage } from '@/pages/StorageClassDetailPage';
+import { ConfigMapsPage } from '@/pages/ConfigMapsPage';
+import { ConfigMapDetailPage } from '@/pages/ConfigMapDetailPage';
+import { SecretsPage } from '@/pages/SecretsPage';
+import { SecretDetailPage } from '@/pages/SecretDetailPage';
 
 // Pages - IAM
 import { IAMHomePage } from '@/pages/IAMHomePage';
@@ -316,6 +326,16 @@ function AppRoutes() {
         <Route path="/container/cronjobs/:cronjobId" element={<CronJobDetailPage />} />
         <Route path="/container/pods" element={<PodsPage />} />
         <Route path="/container/pods/:podId" element={<PodDetailPage />} />
+        <Route path="/container/persistent-volumes" element={<PersistentVolumesPage />} />
+        <Route path="/container/persistent-volumes/:pvId" element={<PersistentVolumeDetailPage />} />
+        <Route path="/container/pvc" element={<PersistentVolumeClaimsPage />} />
+        <Route path="/container/pvc/:pvcId" element={<PersistentVolumeClaimDetailPage />} />
+        <Route path="/container/storage-classes" element={<StorageClassesPage />} />
+        <Route path="/container/storage-classes/:storageClassId" element={<StorageClassDetailPage />} />
+        <Route path="/container/configmaps" element={<ConfigMapsPage />} />
+        <Route path="/container/configmaps/:configMapId" element={<ConfigMapDetailPage />} />
+        <Route path="/container/secrets" element={<SecretsPage />} />
+        <Route path="/container/secrets/:secretId" element={<SecretDetailPage />} />
         <Route path="/container/*" element={<ContainerDashboardPage />} />
 
         {/* IAM Routes */}
