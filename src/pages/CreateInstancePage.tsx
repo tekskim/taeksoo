@@ -1336,7 +1336,7 @@ function FlavorSection({ selectedFlavorId, onSelectFlavor, onNext, isActive = fa
         </VStack>
       ),
     },
-    { key: 'vCPU', label: 'vCPU', sortable: true, width: '70px' },
+    { key: 'vCPU', label: 'vCPU', sortable: true, width: '64px' },
     { key: 'ram', label: 'RAM', sortable: true, width: '80px' },
     { key: 'disk', label: 'Disk', sortable: true, width: '80px' },
     { key: 'ephemeralDisk', label: 'Ephemeral disk', sortable: true, width: '100px' },

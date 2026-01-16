@@ -2,7 +2,7 @@ import { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   Button,
-  SearchInput,
+  FilterSearchInput,
   Table,
   Pagination,
   VStack,
@@ -19,6 +19,8 @@ import {
   Tab,
   type TableColumn,
   type ContextMenuItem,
+  type FilterField,
+  type AppliedFilter,
 } from '@/design-system';
 import { Sidebar } from '@/components/Sidebar';
 import { useTabs } from '@/contexts/TabContext';
@@ -79,11 +81,34 @@ const networkStatusMap: Record<NetworkStatus, 'active' | 'error' | 'building'> =
    Component
    ---------------------------------------- */
 
+// Filter fields configuration
+const filterFields: FilterField[] = [
+  { key: 'name', label: 'Name', type: 'text' },
+  { key: 'subnetCidr', label: 'Subnet CIDR', type: 'text' },
+  { key: 'external', label: 'External', type: 'select', options: [
+    { value: 'true', label: 'Yes' },
+    { value: 'false', label: 'No' },
+  ]},
+  { key: 'shared', label: 'Shared', type: 'select', options: [
+    { value: 'true', label: 'Yes' },
+    { value: 'false', label: 'No' },
+  ]},
+  { key: 'adminState', label: 'Admin State', type: 'select', options: [
+    { value: 'Up', label: 'Up' },
+    { value: 'Down', label: 'Down' },
+  ]},
+  { key: 'status', label: 'Status', type: 'select', options: [
+    { value: 'active', label: 'Active' },
+    { value: 'error', label: 'Error' },
+    { value: 'building', label: 'Building' },
+  ]},
+];
+
 export function NetworksPage() {
   const navigate = useNavigate();
   const [selectedNetworks, setSelectedNetworks] = useState<string[]>([]);
   const [sidebarOpen, setSidebarOpen] = useState(true);
-  const [searchQuery, setSearchQuery] = useState('');
+  const [appliedFilters, setAppliedFilters] = useState<AppliedFilter[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [networks] = useState(mockNetworks);
   const [activeTab, setActiveTab] = useState('current');
@@ -138,17 +163,18 @@ export function NetworksPage() {
       filtered = filtered.filter(n => n.diskTag === 'External');
     }
     
-    // Filter by search
-    if (searchQuery) {
-      const query = searchQuery.toLowerCase();
-      filtered = filtered.filter(n =>
-        n.name.toLowerCase().includes(query) ||
-        n.subnetCidr.toLowerCase().includes(query)
-      );
+    // Filter by applied filters
+    if (appliedFilters.length > 0) {
+      filtered = filtered.filter((n) => {
+        return appliedFilters.every((filter) => {
+          const value = String(n[filter.field as keyof Network] || '').toLowerCase();
+          return value.includes(filter.value.toLowerCase());
+        });
+      });
     }
     
     return filtered;
-  }, [networks, searchQuery, activeTab]);
+  }, [networks, appliedFilters, activeTab]);
 
   const totalPages = Math.ceil(filteredNetworks.length / rowsPerPage);
 
@@ -163,7 +189,7 @@ export function NetworksPage() {
     {
       key: 'status',
       label: 'Status',
-      width: '59px',
+      width: '64px',
       align: 'center',
       render: (_, row) => (
         <StatusIndicator status={networkStatusMap[row.status]} layout="icon-only" />
@@ -210,7 +236,7 @@ export function NetworksPage() {
     {
       key: 'actions',
       label: 'Action',
-      width: '72px',
+      width: '64px',
       align: 'center',
       render: (_, row) => (
         <div onClick={(e) => e.stopPropagation()}>
@@ -323,16 +349,13 @@ export function NetworksPage() {
             <ListToolbar
               primaryActions={
                 <ListToolbar.Actions>
-                  <div className="w-[280px]">
-                    <SearchInput
-                      placeholder="Search network by attributes"
-                      value={searchQuery}
-                      onChange={(e) => setSearchQuery(e.target.value)}
-                      onClear={() => setSearchQuery('')}
-                      size="sm"
-                      fullWidth
-                    />
-                  </div>
+                  <FilterSearchInput
+                    filters={filterFields}
+                    appliedFilters={appliedFilters}
+                    onFiltersChange={setAppliedFilters}
+                    placeholder="Search network by attributes"
+                    className="w-[320px]"
+                  />
                   <Button variant="secondary" size="sm" iconOnly icon={<IconDownload size={12} />} aria-label="Download" />
                 </ListToolbar.Actions>
               }

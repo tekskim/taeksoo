@@ -1,7 +1,7 @@
 import { useState, useMemo } from 'react';
 import {
   Button,
-  SearchInput,
+  FilterSearchInput,
   Table,
   Pagination,
   VStack,
@@ -14,6 +14,8 @@ import {
   StatusIndicator,
   ContextMenu,
   type TableColumn,
+  type FilterField,
+  type AppliedFilter,
 } from '@/design-system';
 import { Sidebar } from '@/components/Sidebar';
 import { useTabs } from '@/contexts/TabContext';
@@ -76,10 +78,30 @@ const routerStatusMap: Record<RouterStatus, 'active' | 'error' | 'building'> = {
    Component
    ---------------------------------------- */
 
+// Filter fields configuration
+const filterFields: FilterField[] = [
+  { key: 'name', label: 'Name', type: 'text' },
+  { key: 'externalGateway', label: 'External Gateway', type: 'select', options: [
+    { value: 'true', label: 'Yes' },
+    { value: 'false', label: 'No' },
+  ]},
+  { key: 'externalFixedIp', label: 'External Fixed IP', type: 'text' },
+  { key: 'externalNetwork', label: 'External Network', type: 'text' },
+  { key: 'adminState', label: 'Admin State', type: 'select', options: [
+    { value: 'true', label: 'Up' },
+    { value: 'false', label: 'Down' },
+  ]},
+  { key: 'status', label: 'Status', type: 'select', options: [
+    { value: 'active', label: 'Active' },
+    { value: 'error', label: 'Error' },
+    { value: 'building', label: 'Building' },
+  ]},
+];
+
 export function RoutersPage() {
   const [selectedRouters, setSelectedRouters] = useState<string[]>([]);
   const [sidebarOpen, setSidebarOpen] = useState(true);
-  const [searchQuery, setSearchQuery] = useState('');
+  const [appliedFilters, setAppliedFilters] = useState<AppliedFilter[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [routers] = useState(mockRouters);
   
@@ -115,13 +137,15 @@ export function RoutersPage() {
 
   // Filter routers based on search
   const filteredRouters = useMemo(() => {
-    if (!searchQuery) return routers;
-    const query = searchQuery.toLowerCase();
-    return routers.filter(r =>
-      r.name.toLowerCase().includes(query) ||
-      r.externalNetwork.toLowerCase().includes(query)
-    );
-  }, [routers, searchQuery]);
+    if (appliedFilters.length === 0) return routers;
+    
+    return routers.filter((r) => {
+      return appliedFilters.every((filter) => {
+        const value = String(r[filter.field as keyof Router] || '').toLowerCase();
+        return value.includes(filter.value.toLowerCase());
+      });
+    });
+  }, [routers, appliedFilters]);
 
   const totalPages = Math.ceil(filteredRouters.length / rowsPerPage);
 
@@ -136,7 +160,7 @@ export function RoutersPage() {
     {
       key: 'status',
       label: 'Status',
-      width: '59px',
+      width: '64px',
       align: 'center',
       render: (_, row) => (
         <StatusIndicator status={routerStatusMap[row.status]} layout="icon-only" />
@@ -312,16 +336,13 @@ export function RoutersPage() {
             <ListToolbar
               primaryActions={
                 <ListToolbar.Actions>
-                  <div className="w-[280px]">
-                    <SearchInput
-                      placeholder="Search router by attributes"
-                      value={searchQuery}
-                      onChange={(e) => setSearchQuery(e.target.value)}
-                      onClear={() => setSearchQuery('')}
-                      size="sm"
-                      fullWidth
-                    />
-                  </div>
+                  <FilterSearchInput
+                    filters={filterFields}
+                    appliedFilters={appliedFilters}
+                    onFiltersChange={setAppliedFilters}
+                    placeholder="Search router by attributes"
+                    className="w-[320px]"
+                  />
                   <Button variant="secondary" size="sm" iconOnly icon={<IconDownload size={12} />} aria-label="Download" />
                 </ListToolbar.Actions>
               }

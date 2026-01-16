@@ -373,7 +373,7 @@ export default function ListenerDetailPage() {
     {
       key: 'status',
       label: 'Status',
-      width: '59px',
+      width: '64px',
       align: 'center',
       render: (_, row) => (
         <StatusIndicator status={poolStatusMap[row.status]} layout="icon-only" />
@@ -425,7 +425,7 @@ export default function ListenerDetailPage() {
     {
       key: 'actions',
       label: 'Action',
-      width: '72px',
+      width: '64px',
       align: 'center',
       render: (_: unknown, row: Pool) => {
         const poolMenuItems: ContextMenuItem[] = [
@@ -449,7 +449,7 @@ export default function ListenerDetailPage() {
     {
       key: 'status',
       label: 'Status',
-      width: '59px',
+      width: '64px',
       align: 'center',
       render: (_, row) => (
         <StatusIndicator status={l7PolicyStatusMap[row.status]} layout="icon-only" />
@@ -495,7 +495,7 @@ export default function ListenerDetailPage() {
     {
       key: 'actions',
       label: 'Action',
-      width: '72px',
+      width: '64px',
       align: 'center',
       render: (_: unknown, row: L7Policy) => {
         const policyMenuItems: ContextMenuItem[] = [
@@ -520,7 +520,7 @@ export default function ListenerDetailPage() {
     {
       key: 'status',
       label: 'Status',
-      width: '59px',
+      width: '64px',
       align: 'center',
       render: (_, row) => (
         <StatusIndicator status={certificateStatusMap[row.status]} layout="icon-only" />
@@ -572,7 +572,7 @@ export default function ListenerDetailPage() {
     {
       key: 'actions',
       label: 'Action',
-      width: '72px',
+      width: '64px',
       align: 'center',
       render: (_: unknown, row: Certificate) => {
         const getCertMenuItems = (): ContextMenuItem[] => {

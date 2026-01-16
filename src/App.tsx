@@ -99,6 +99,7 @@ import { ContainerConsolePage } from '@/pages/ContainerConsolePage';
 import { EditNodeConfigPage } from '@/pages/EditNodeConfigPage';
 import { EditNodeYamlPage } from '@/pages/EditNodeYamlPage';
 import { NodeDetailPage } from '@/pages/NodeDetailPage';
+import { ContainerServicesPage } from '@/pages/ContainerServicesPage';
 import { DeploymentsPage } from '@/pages/DeploymentsPage';
 import { CreateDeploymentPage } from '@/pages/CreateDeploymentPage';
 import { DeploymentDetailPage } from '@/pages/DeploymentDetailPage';
@@ -300,6 +301,7 @@ function AppRoutes() {
         <Route path="/container/nodes/:nodeName/edit" element={<EditNodeConfigPage />} />
         <Route path="/container/nodes/:nodeName/edit-yaml" element={<EditNodeYamlPage />} />
         <Route path="/container/nodes/:nodeName" element={<NodeDetailPage />} />
+        <Route path="/container/services" element={<ContainerServicesPage />} />
         <Route path="/container/console/:instanceId" element={<ContainerConsolePage />} />
         <Route path="/container/deployments" element={<DeploymentsPage />} />
         <Route path="/container/deployments/create" element={<CreateDeploymentPage />} />

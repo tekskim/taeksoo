@@ -207,7 +207,7 @@ export function ContainerNodesPage() {
     {
       key: 'status',
       label: 'Status',
-      width: '70px',
+      width: '80px',
       sortable: true,
       align: 'center',
       render: (value: string) => (
@@ -299,7 +299,7 @@ export function ContainerNodesPage() {
     {
       key: 'actions',
       label: 'Action',
-      width: '72px',
+      width: '64px',
       align: 'center',
       render: (_, row) => {
         const menuItems: ContextMenuItem[] = [

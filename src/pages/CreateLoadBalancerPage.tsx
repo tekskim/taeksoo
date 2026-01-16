@@ -529,7 +529,7 @@ export default function CreateLoadBalancerPage() {
     {
       key: 'status',
       label: 'Status',
-      width: '70px',
+      width: '64px',
       align: 'center' as const,
       render: (_value, row) => <StatusIndicator status={row.status} />,
     },
@@ -592,7 +592,7 @@ export default function CreateLoadBalancerPage() {
     {
       key: 'status',
       label: 'Status',
-      width: '70px',
+      width: '64px',
       align: 'center' as const,
       render: (_value, row) => <StatusIndicator status={row.status} />,
     },
@@ -671,7 +671,7 @@ export default function CreateLoadBalancerPage() {
     {
       key: 'status',
       label: 'Status',
-      width: '70px',
+      width: '64px',
       align: 'center' as const,
       render: (_value, row) => <StatusIndicator status={row.status} />,
     },
@@ -754,7 +754,7 @@ export default function CreateLoadBalancerPage() {
     {
       key: 'status',
       label: 'Status',
-      width: '70px',
+      width: '64px',
       align: 'center' as const,
       render: (_value, row) => <StatusIndicator status={row.status} />,
     },

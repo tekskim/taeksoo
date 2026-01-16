@@ -1,7 +1,7 @@
 import { useState, useMemo } from 'react';
 import {
   Button,
-  SearchInput,
+  FilterSearchInput,
   Table,
   Pagination,
   VStack,
@@ -15,6 +15,8 @@ import {
   StatusIndicator,
   type TableColumn,
   type ContextMenuItem,
+  type FilterField,
+  type AppliedFilter,
 } from '@/design-system';
 import { Sidebar } from '@/components/Sidebar';
 import { useTabs } from '@/contexts/TabContext';
@@ -77,10 +79,22 @@ const volumeSnapshotStatusMap: Record<SnapshotStatus, 'active' | 'building' | 'e
    Component
    ---------------------------------------- */
 
+// Filter fields configuration
+const filterFields: FilterField[] = [
+  { key: 'name', label: 'Name', type: 'text' },
+  { key: 'sourceVolume', label: 'Source Volume', type: 'text' },
+  { key: 'status', label: 'Status', type: 'select', options: [
+    { value: 'active', label: 'Active' },
+    { value: 'creating', label: 'Creating' },
+    { value: 'error', label: 'Error' },
+    { value: 'deleting', label: 'Deleting' },
+  ]},
+];
+
 export function VolumeSnapshotsPage() {
   const [selectedSnapshots, setSelectedSnapshots] = useState<string[]>([]);
   const [sidebarOpen, setSidebarOpen] = useState(true);
-  const [searchQuery, setSearchQuery] = useState('');
+  const [appliedFilters, setAppliedFilters] = useState<AppliedFilter[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [snapshots, setSnapshots] = useState(mockVolumeSnapshots);
   
@@ -157,7 +171,7 @@ export function VolumeSnapshotsPage() {
     {
       key: 'status',
       label: 'Status',
-      width: '59px',
+      width: '64px',
       align: 'center',
       sortable: false,
       render: (_, row) => (
@@ -215,7 +229,7 @@ export function VolumeSnapshotsPage() {
     {
       key: 'actions',
       label: 'Action',
-      width: '72px',
+      width: '64px',
       align: 'center',
       render: (_, row) => {
         const menuItems: ContextMenuItem[] = [

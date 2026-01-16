@@ -256,7 +256,7 @@ export default function CertificateDetailPage() {
     {
       key: 'status',
       label: 'Status',
-      width: '59px',
+      width: '64px',
       align: 'center',
       render: (_, row) => (
         <StatusIndicator status={listenerStatusMap[row.status]} layout="icon-only" />

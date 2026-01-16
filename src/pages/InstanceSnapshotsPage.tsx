@@ -1,7 +1,7 @@
 import { useState, useMemo } from 'react';
 import {
   Button,
-  SearchInput,
+  FilterSearchInput,
   Table,
   Pagination,
   VStack,
@@ -16,6 +16,8 @@ import {
   Checkbox,
   type TableColumn,
   type ContextMenuItem,
+  type FilterField,
+  type AppliedFilter,
 } from '@/design-system';
 import { Sidebar } from '@/components/Sidebar';
 import { useTabs } from '@/contexts/TabContext';
@@ -70,9 +72,25 @@ const mockSnapshots: InstanceSnapshot[] = [
    Component
    ---------------------------------------- */
 
+// Filter fields configuration
+const filterFields: FilterField[] = [
+  { key: 'name', label: 'Name', type: 'text' },
+  { key: 'sourceInstance', label: 'Source Instance', type: 'text' },
+  { key: 'diskFormat', label: 'Disk Format', type: 'select', options: [
+    { value: 'RAW', label: 'RAW' },
+    { value: 'QCOW2', label: 'QCOW2' },
+  ]},
+  { key: 'status', label: 'Status', type: 'select', options: [
+    { value: 'active', label: 'Active' },
+    { value: 'creating', label: 'Creating' },
+    { value: 'error', label: 'Error' },
+    { value: 'deleting', label: 'Deleting' },
+  ]},
+];
+
 export function InstanceSnapshotsPage() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
-  const [searchQuery, setSearchQuery] = useState('');
+  const [appliedFilters, setAppliedFilters] = useState<AppliedFilter[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [snapshots, setSnapshots] = useState(mockSnapshots);
   const [selectedSnapshots, setSelectedSnapshots] = useState<string[]>([]);
@@ -110,14 +128,15 @@ export function InstanceSnapshotsPage() {
 
   // Filter snapshots by search
   const filteredSnapshots = useMemo(() => {
-    if (!searchQuery) return snapshots;
-    const query = searchQuery.toLowerCase();
-    return snapshots.filter(
-      (s) =>
-        s.name.toLowerCase().includes(query) ||
-        s.os.toLowerCase().includes(query)
-    );
-  }, [snapshots, searchQuery]);
+    if (appliedFilters.length === 0) return snapshots;
+    
+    return snapshots.filter((s) => {
+      return appliedFilters.every((filter) => {
+        const value = String(s[filter.field as keyof InstanceSnapshot] || '').toLowerCase();
+        return value.includes(filter.value.toLowerCase());
+      });
+    });
+  }, [snapshots, appliedFilters]);
 
   const totalPages = Math.ceil(filteredSnapshots.length / rowsPerPage);
 
@@ -187,7 +206,7 @@ export function InstanceSnapshotsPage() {
     {
       key: 'status',
       label: 'Status',
-      width: '59px',
+      width: '64px',
       align: 'center',
       sortable: false,
       render: (_, row) => (
@@ -260,7 +279,7 @@ export function InstanceSnapshotsPage() {
     {
       key: 'actions',
       label: 'Action',
-      width: '72px',
+      width: '64px',
       align: 'center',
       render: (_, row) => {
         const menuItems: ContextMenuItem[] = [
@@ -379,16 +398,13 @@ export function InstanceSnapshotsPage() {
             <ListToolbar
               primaryActions={
                 <ListToolbar.Actions>
-                  <div className="w-[280px]">
-                    <SearchInput
-                      placeholder="Search snapshot by attributes"
-                      value={searchQuery}
-                      onChange={(e) => setSearchQuery(e.target.value)}
-                      onClear={() => setSearchQuery('')}
-                      size="sm"
-                      fullWidth
-                    />
-                  </div>
+                  <FilterSearchInput
+                    filters={filterFields}
+                    appliedFilters={appliedFilters}
+                    onFiltersChange={setAppliedFilters}
+                    placeholder="Search snapshot by attributes"
+                    className="w-[320px]"
+                  />
                   <Button variant="secondary" size="sm" icon={<IconDownload size={12} />} aria-label="Download" />
                 </ListToolbar.Actions>
               }

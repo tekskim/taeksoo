@@ -1,7 +1,7 @@
 import { useState, useMemo } from 'react';
 import {
   Button,
-  SearchInput,
+  FilterSearchInput,
   Table,
   Pagination,
   VStack,
@@ -15,6 +15,8 @@ import {
   StatusIndicator,
   type TableColumn,
   type ContextMenuItem,
+  type FilterField,
+  type AppliedFilter,
 } from '@/design-system';
 import { Sidebar } from '@/components/Sidebar';
 import { useTabs } from '@/contexts/TabContext';
@@ -80,9 +82,28 @@ const volumeStatusMap: Record<VolumeStatus, 'active' | 'in-use' | 'error' | 'pen
    Component
    ---------------------------------------- */
 
+// Filter fields configuration
+const filterFields: FilterField[] = [
+  { key: 'name', label: 'Name', type: 'text' },
+  { key: 'type', label: 'Type', type: 'select', options: [
+    { value: '_DEFAULT_', label: '_DEFAULT_' },
+    { value: 'SSD', label: 'SSD' },
+    { value: 'NVMe', label: 'NVMe' },
+    { value: 'HDD', label: 'HDD' },
+  ]},
+  { key: 'diskTag', label: 'Disk Tag', type: 'text' },
+  { key: 'attachedTo', label: 'Attached To', type: 'text' },
+  { key: 'status', label: 'Status', type: 'select', options: [
+    { value: 'active', label: 'Active' },
+    { value: 'in-use', label: 'In Use' },
+    { value: 'error', label: 'Error' },
+    { value: 'pending', label: 'Pending' },
+  ]},
+];
+
 export function VolumesPage() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
-  const [searchQuery, setSearchQuery] = useState('');
+  const [appliedFilters, setAppliedFilters] = useState<AppliedFilter[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [volumes, setVolumes] = useState(mockVolumes);
   
@@ -144,18 +165,17 @@ export function VolumesPage() {
     setVolumeToDelete(null);
   };
 
-  // Filter volumes by search
+  // Filter volumes by applied filters
   const filteredVolumes = useMemo(() => {
-    if (!searchQuery) return volumes;
+    if (appliedFilters.length === 0) return volumes;
     
-    return volumes.filter(
-      (v) =>
-        v.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        v.type.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        v.diskTag.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        (v.attachedTo && v.attachedTo.toLowerCase().includes(searchQuery.toLowerCase()))
-    );
-  }, [volumes, searchQuery]);
+    return volumes.filter((v) => {
+      return appliedFilters.every((filter) => {
+        const value = String(v[filter.field as keyof Volume] || '').toLowerCase();
+        return value.includes(filter.value.toLowerCase());
+      });
+    });
+  }, [volumes, appliedFilters]);
 
   const totalPages = Math.ceil(filteredVolumes.length / rowsPerPage);
 
@@ -164,7 +184,7 @@ export function VolumesPage() {
     {
       key: 'status',
       label: 'Status',
-      width: '59px',
+      width: '64px',
       align: 'center',
       render: (_, row) => (
         <StatusIndicator status={volumeStatusMap[row.status]} layout="icon-only" />
@@ -238,7 +258,7 @@ export function VolumesPage() {
     {
       key: 'actions',
       label: 'Action',
-      width: '72px',
+      width: '64px',
       align: 'center',
       render: (_, row) => {
         const menuItems: ContextMenuItem[] = [
@@ -383,16 +403,13 @@ export function VolumesPage() {
             <ListToolbar
               primaryActions={
                 <ListToolbar.Actions>
-                  <div className="w-[280px]">
-                    <SearchInput
-                      placeholder="Search volume by attributes"
-                      value={searchQuery}
-                      onChange={(e) => setSearchQuery(e.target.value)}
-                      onClear={() => setSearchQuery('')}
-                      size="sm"
-                      fullWidth
-                    />
-                  </div>
+                  <FilterSearchInput
+                    filters={filterFields}
+                    appliedFilters={appliedFilters}
+                    onFiltersChange={setAppliedFilters}
+                    placeholder="Search volume by attributes"
+                    className="w-[320px]"
+                  />
                   <Button variant="secondary" size="sm" iconOnly icon={<IconDownload size={12} />} aria-label="Download" />
                 </ListToolbar.Actions>
               }

@@ -206,7 +206,7 @@ export function ServerGroupDetailPage() {
     {
       key: 'status',
       label: 'Status',
-      width: '59px',
+      width: '64px',
       align: 'center',
       render: (_, row) => (
         <StatusIndicator status={row.status} layout="icon-only" />
@@ -274,7 +274,7 @@ export function ServerGroupDetailPage() {
     {
       key: 'actions',
       label: 'Action',
-      width: '72px',
+      width: '64px',
       align: 'center',
       render: (_, row) => (
         <HStack gap={1} className="justify-center">

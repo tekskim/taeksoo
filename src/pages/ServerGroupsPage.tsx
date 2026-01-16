@@ -1,7 +1,7 @@
 import { useState, useMemo } from 'react';
 import {
   Button,
-  SearchInput,
+  FilterSearchInput,
   Table,
   Pagination,
   VStack,
@@ -15,6 +15,8 @@ import {
   Checkbox,
   type TableColumn,
   type ContextMenuItem,
+  type FilterField,
+  type AppliedFilter,
 } from '@/design-system';
 import { Sidebar } from '@/components/Sidebar';
 import { useTabs } from '@/contexts/TabContext';
@@ -61,10 +63,22 @@ const mockServerGroups: ServerGroup[] = [
    Component
    ---------------------------------------- */
 
+// Filter fields configuration
+const filterFields: FilterField[] = [
+  { key: 'name', label: 'Name', type: 'text' },
+  { key: 'policy', label: 'Policy', type: 'select', options: [
+    { value: 'Anti-affinity', label: 'Anti-affinity' },
+    { value: 'Affinity', label: 'Affinity' },
+    { value: 'Soft-anti-affinity', label: 'Soft-anti-affinity' },
+    { value: 'Soft-affinity', label: 'Soft-affinity' },
+  ]},
+  { key: 'instances', label: 'Instances', type: 'text' },
+];
+
 export function ServerGroupsPage() {
   const [selectedServerGroups, setSelectedServerGroups] = useState<string[]>([]);
   const [sidebarOpen, setSidebarOpen] = useState(true);
-  const [searchQuery, setSearchQuery] = useState('');
+  const [appliedFilters, setAppliedFilters] = useState<AppliedFilter[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [serverGroups, setServerGroups] = useState(mockServerGroups);
   
@@ -116,15 +130,15 @@ export function ServerGroupsPage() {
 
   // Filter server groups by search
   const filteredServerGroups = useMemo(() => {
-    if (!searchQuery) return serverGroups;
+    if (appliedFilters.length === 0) return serverGroups;
     
-    return serverGroups.filter(
-      (sg) =>
-        sg.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        sg.policy.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        sg.instances.toLowerCase().includes(searchQuery.toLowerCase())
-    );
-  }, [serverGroups, searchQuery]);
+    return serverGroups.filter((sg) => {
+      return appliedFilters.every((filter) => {
+        const value = String(sg[filter.field as keyof ServerGroup] || '').toLowerCase();
+        return value.includes(filter.value.toLowerCase());
+      });
+    });
+  }, [serverGroups, appliedFilters]);
 
   const totalPages = Math.ceil(filteredServerGroups.length / rowsPerPage);
 
@@ -184,7 +198,7 @@ export function ServerGroupsPage() {
     {
       key: 'actions',
       label: 'Action',
-      width: '72px',
+      width: '64px',
       align: 'center',
       render: (_, row) => {
         const menuItems: ContextMenuItem[] = [
@@ -291,16 +305,13 @@ export function ServerGroupsPage() {
             <ListToolbar
               primaryActions={
                 <ListToolbar.Actions>
-                  <div className="w-[280px]">
-                    <SearchInput
-                      placeholder="Search server group by attributes"
-                      value={searchQuery}
-                      onChange={(e) => setSearchQuery(e.target.value)}
-                      onClear={() => setSearchQuery('')}
-                      size="sm"
-                      fullWidth
-                    />
-                  </div>
+                  <FilterSearchInput
+                    filters={filterFields}
+                    appliedFilters={appliedFilters}
+                    onFiltersChange={setAppliedFilters}
+                    placeholder="Search server group by attributes"
+                    className="w-[320px]"
+                  />
                   <Button variant="secondary" size="sm" icon={<IconDownload size={12} />} aria-label="Download" />
                 </ListToolbar.Actions>
               }

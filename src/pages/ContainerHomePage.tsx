@@ -77,7 +77,7 @@ export function ContainerHomePage() {
     { 
       key: 'status', 
       label: 'Status', 
-      width: '70px', 
+      width: '80px', 
       align: 'center',
       sortable: true,
       render: (value: string) => (

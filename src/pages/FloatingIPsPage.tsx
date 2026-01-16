@@ -1,7 +1,7 @@
 import { useState, useMemo } from 'react';
 import {
   Button,
-  SearchInput,
+  FilterSearchInput,
   Table,
   Pagination,
   VStack,
@@ -16,6 +16,8 @@ import {
   Tooltip,
   type TableColumn,
   type ContextMenuItem,
+  type FilterField,
+  type AppliedFilter,
 } from '@/design-system';
 import { Sidebar } from '@/components/Sidebar';
 import { useTabs } from '@/contexts/TabContext';
@@ -79,10 +81,23 @@ const floatingIPStatusMap: Record<FloatingIPStatus, 'active' | 'error' | 'down'>
    Component
    ---------------------------------------- */
 
+// Filter fields configuration
+const filterFields: FilterField[] = [
+  { key: 'floatingIp', label: 'Floating IP', type: 'text' },
+  { key: 'associatedTo', label: 'Associated To', type: 'text' },
+  { key: 'fixedIp', label: 'Fixed IP', type: 'text' },
+  { key: 'network', label: 'Network', type: 'text' },
+  { key: 'status', label: 'Status', type: 'select', options: [
+    { value: 'active', label: 'Active' },
+    { value: 'error', label: 'Error' },
+    { value: 'down', label: 'Down' },
+  ]},
+];
+
 export function FloatingIPsPage() {
   const [selectedFloatingIPs, setSelectedFloatingIPs] = useState<string[]>([]);
   const [sidebarOpen, setSidebarOpen] = useState(true);
-  const [searchQuery, setSearchQuery] = useState('');
+  const [appliedFilters, setAppliedFilters] = useState<AppliedFilter[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [floatingIPs] = useState(mockFloatingIPs);
   
@@ -126,14 +141,15 @@ export function FloatingIPsPage() {
 
   // Filter floating IPs based on search
   const filteredFloatingIPs = useMemo(() => {
-    if (!searchQuery) return floatingIPs;
-    const query = searchQuery.toLowerCase();
-    return floatingIPs.filter(fip =>
-      fip.floatingIp.toLowerCase().includes(query) ||
-      fip.network.toLowerCase().includes(query) ||
-      (fip.associatedTo?.toLowerCase().includes(query) ?? false)
-    );
-  }, [floatingIPs, searchQuery]);
+    if (appliedFilters.length === 0) return floatingIPs;
+    
+    return floatingIPs.filter((fip) => {
+      return appliedFilters.every((filter) => {
+        const value = String(fip[filter.field as keyof FloatingIP] || '').toLowerCase();
+        return value.includes(filter.value.toLowerCase());
+      });
+    });
+  }, [floatingIPs, appliedFilters]);
 
   const totalPages = Math.ceil(filteredFloatingIPs.length / rowsPerPage);
 
@@ -148,7 +164,7 @@ export function FloatingIPsPage() {
     {
       key: 'status',
       label: 'Status',
-      width: '59px',
+      width: '64px',
       align: 'center',
       render: (_, row) => (
         <StatusIndicator status={floatingIPStatusMap[row.status]} layout="icon-only" />
@@ -244,7 +260,7 @@ export function FloatingIPsPage() {
     {
       key: 'actions',
       label: 'Action',
-      width: '72px',
+      width: '64px',
       align: 'center',
       render: (_, row) => (
         <div onClick={(e) => e.stopPropagation()}>
@@ -346,16 +362,13 @@ export function FloatingIPsPage() {
             <ListToolbar
               primaryActions={
                 <ListToolbar.Actions>
-                  <div className="w-[280px]">
-                    <SearchInput
-                      placeholder="Search floating IP by attributes"
-                      value={searchQuery}
-                      onChange={(e) => setSearchQuery(e.target.value)}
-                      onClear={() => setSearchQuery('')}
-                      size="sm"
-                      fullWidth
-                    />
-                  </div>
+                  <FilterSearchInput
+                    filters={filterFields}
+                    appliedFilters={appliedFilters}
+                    onFiltersChange={setAppliedFilters}
+                    placeholder="Search floating IP by attributes"
+                    className="w-[320px]"
+                  />
                   <Button variant="secondary" size="sm" iconOnly icon={<IconDownload size={12} />} aria-label="Download" />
                 </ListToolbar.Actions>
               }

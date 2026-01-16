@@ -406,7 +406,7 @@ export function MCPToolsPage() {
     {
       key: 'status',
       label: 'Status',
-      width: '59px',
+      width: '64px',
       align: 'center',
       sortable: false,
       render: (_, row) => (

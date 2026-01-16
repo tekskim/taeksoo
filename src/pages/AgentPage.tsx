@@ -306,7 +306,7 @@ export function AgentPage() {
     {
       key: 'status',
       label: 'Status',
-      width: '59px',
+      width: '64px',
       align: 'center',
       sortable: false,
       render: (_, row) => (
@@ -352,7 +352,7 @@ export function AgentPage() {
     {
       key: 'actions',
       label: 'Action',
-      width: '72px',
+      width: '64px',
       align: 'center',
       render: (_, row) => {
         const menuItems: ContextMenuItem[] = [

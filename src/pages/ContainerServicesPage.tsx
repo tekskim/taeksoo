@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
+import { createPortal } from 'react-dom';
 import {
   VStack,
   HStack,
@@ -27,167 +28,171 @@ import {
   IconSearch,
   IconDownload,
   IconDotsCircleHorizontal,
+  IconTrash,
+  IconChevronDown,
+  IconStar,
+  IconRefresh,
 } from '@tabler/icons-react';
 
 /* ----------------------------------------
    Types
    ---------------------------------------- */
 
-interface EventRow {
+interface ServiceRow {
   id: string;
-  status: 'Normal' | 'Warning' | 'Error';
+  status: 'Running' | 'Pending' | 'Error';
   name: string;
   namespace: string;
-  lastSeen: string;
-  type: string;
-  reason: string;
-  object: string;
-  subobject: string;
-  source: string;
-  message: string;
-  firstSeen: string;
-  count: number;
+  target: string[];
+  selector: string[];
+  type: 'ClusterIP' | 'ClusterIP (Headless)' | 'ExternalName' | 'LoadBalancer' | 'NodePort';
+  createdAt: string;
 }
 
 /* ----------------------------------------
    Mock Data
    ---------------------------------------- */
 
-const eventsData: EventRow[] = [
+const servicesData: ServiceRow[] = [
   {
     id: '1',
-    status: 'Normal',
-    name: 'pod-started-successfully',
-    namespace: 'default',
-    lastSeen: '2025-10-21 08:32',
-    type: 'Normal',
-    reason: 'Started',
-    object: 'Pod-web-server-1',
-    subobject: '-',
-    source: 'kubelet, worker-node-1',
-    message: 'the web-server-1 was successfully started on node worker-node-1.',
-    firstSeen: '2025-10-21 08:30',
-    count: 2,
+    status: 'Running',
+    name: 'serviceName',
+    namespace: 'namespaceName',
+    target: ['http + 80/TCP', 'https-internal + 444/TCP'],
+    selector: ['key1=value1'],
+    type: 'ClusterIP',
+    createdAt: '2025-11-10 12:57',
   },
   {
     id: '2',
-    status: 'Normal',
-    name: 'pod-scheduled',
-    namespace: 'default',
-    lastSeen: '2025-10-21 08:31',
-    type: 'Normal',
-    reason: 'Scheduled',
-    object: 'Pod-web-server-1',
-    subobject: '-',
-    source: 'default-scheduler',
-    message: 'Successfully assigned default/web-server-1 to worker-node-1',
-    firstSeen: '2025-10-21 08:29',
-    count: 1,
+    status: 'Running',
+    name: 'serviceName',
+    namespace: 'namespaceName',
+    target: ['myport + 80/TCP'],
+    selector: ['key1=value1', 'key2=value2', 'key3=value3'],
+    type: 'ClusterIP (Headless)',
+    createdAt: '2025-11-10 12:57',
   },
   {
     id: '3',
-    status: 'Warning',
-    name: 'pod-failed-scheduling',
-    namespace: 'kube-system',
-    lastSeen: '2025-10-21 08:30',
-    type: 'Warning',
-    reason: 'FailedScheduling',
-    object: 'Pod-nginx-deployment',
-    subobject: '-',
-    source: 'default-scheduler',
-    message: 'no nodes available to schedule pods',
-    firstSeen: '2025-10-21 08:25',
-    count: 5,
+    status: 'Running',
+    name: 'serviceName',
+    namespace: 'namespaceName',
+    target: ['my.database.example.com'],
+    selector: ['-'],
+    type: 'ExternalName',
+    createdAt: '2025-11-10 12:57',
   },
   {
     id: '4',
-    status: 'Normal',
-    name: 'deployment-scaled',
-    namespace: 'production',
-    lastSeen: '2025-10-21 08:28',
-    type: 'Normal',
-    reason: 'ScalingReplicaSet',
-    object: 'Deployment-api-server',
-    subobject: '-',
-    source: 'deployment-controller',
-    message: 'Scaled up replica set api-server-abc123 to 3',
-    firstSeen: '2025-10-21 08:28',
-    count: 1,
+    status: 'Running',
+    name: 'serviceName',
+    namespace: 'namespaceName',
+    target: ['80/TCP', '443/TCP'],
+    selector: ['key1=value1', 'key2=value2'],
+    type: 'LoadBalancer',
+    createdAt: '2025-11-10 12:57',
   },
   {
     id: '5',
     status: 'Error',
-    name: 'pod-crash-loop',
-    namespace: 'staging',
-    lastSeen: '2025-10-21 08:27',
-    type: 'Warning',
-    reason: 'BackOff',
-    object: 'Pod-backend-service',
-    subobject: 'container-main',
-    source: 'kubelet, worker-node-2',
-    message: 'Back-off restarting failed container',
-    firstSeen: '2025-10-21 08:15',
-    count: 12,
-  },
-  {
-    id: '6',
-    status: 'Normal',
-    name: 'service-created',
-    namespace: 'default',
-    lastSeen: '2025-10-21 08:25',
-    type: 'Normal',
-    reason: 'Created',
-    object: 'Service-web-frontend',
-    subobject: '-',
-    source: 'service-controller',
-    message: 'Created service web-frontend with ClusterIP',
-    firstSeen: '2025-10-21 08:25',
-    count: 1,
-  },
-  {
-    id: '7',
-    status: 'Normal',
-    name: 'node-ready',
-    namespace: 'default',
-    lastSeen: '2025-10-21 08:20',
-    type: 'Normal',
-    reason: 'NodeReady',
-    object: 'Node-worker-node-3',
-    subobject: '-',
-    source: 'kubelet, worker-node-3',
-    message: 'Node worker-node-3 status is now: NodeReady',
-    firstSeen: '2025-10-21 08:20',
-    count: 1,
-  },
-  {
-    id: '8',
-    status: 'Warning',
-    name: 'image-pull-failed',
-    namespace: 'production',
-    lastSeen: '2025-10-21 08:18',
-    type: 'Warning',
-    reason: 'ErrImagePull',
-    object: 'Pod-database-replica',
-    subobject: 'container-db',
-    source: 'kubelet, worker-node-1',
-    message: 'Failed to pull image "postgres:16": rpc error',
-    firstSeen: '2025-10-21 08:10',
-    count: 8,
+    name: 'serviceName',
+    namespace: 'namespaceName',
+    target: ['[Any Node]:31575'],
+    selector: ['key1=value1'],
+    type: 'NodePort',
+    createdAt: '2025-11-10 12:57',
   },
 ];
+
+/* ----------------------------------------
+   Create Service Dropdown Component
+   ---------------------------------------- */
+
+interface CreateServiceDropdownProps {
+  onCreateForm: () => void;
+  onCreateYaml: () => void;
+}
+
+function CreateServiceDropdown({ onCreateForm, onCreateYaml }: CreateServiceDropdownProps) {
+  const [isOpen, setIsOpen] = useState(false);
+  const buttonRef = useRef<HTMLButtonElement>(null);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  const getDropdownPosition = () => {
+    if (!buttonRef.current) return { top: 0, right: 0 };
+    const rect = buttonRef.current.getBoundingClientRect();
+    return {
+      top: rect.bottom + 4,
+      right: window.innerWidth - rect.right,
+    };
+  };
+
+  return (
+    <div className="relative">
+      <Button
+        ref={buttonRef}
+        variant="primary"
+        size="sm"
+        rightIcon={<IconChevronDown size={12} stroke={1.5} />}
+        onClick={() => setIsOpen(!isOpen)}
+      >
+        Create Service
+      </Button>
+      
+      {isOpen && createPortal(
+        <>
+          {/* Backdrop */}
+          <div 
+            className="fixed inset-0 z-[99]" 
+            onClick={() => setIsOpen(false)}
+          />
+          {/* Dropdown */}
+          <div
+            ref={dropdownRef}
+            className="fixed z-[100] bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg shadow-lg py-1 min-w-[140px]"
+            style={{
+              top: getDropdownPosition().top,
+              right: getDropdownPosition().right,
+            }}
+          >
+            <button
+              className="w-full px-3 py-2 text-left text-[12px] text-[var(--color-text-default)] hover:bg-[var(--color-surface-subtle)] transition-colors"
+              onClick={() => {
+                setIsOpen(false);
+                onCreateForm();
+              }}
+            >
+              Create as Form
+            </button>
+            <button
+              className="w-full px-3 py-2 text-left text-[12px] text-[var(--color-text-default)] hover:bg-[var(--color-surface-subtle)] transition-colors"
+              onClick={() => {
+                setIsOpen(false);
+                onCreateYaml();
+              }}
+            >
+              Create as YAML
+            </button>
+          </div>
+        </>,
+        document.body
+      )}
+    </div>
+  );
+}
 
 /* ----------------------------------------
    Component
    ---------------------------------------- */
 
-export function ContainerEventsPage() {
+export function ContainerServicesPage() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const { tabs, activeTabId, selectTab, closeTab, addNewTab, moveTab, addTab } = useTabs();
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedRows, setSelectedRows] = useState<string[]>([]);
-  const [filters, setFilters] = useState<{ key: string; value: string }[]>([
-    { key: 'Name', value: 'a' }
-  ]);
+  const [filters, setFilters] = useState<{ key: string; value: string }[]>([]);
   const navigate = useNavigate();
 
   // Shell Panel state
@@ -207,8 +212,8 @@ export function ContainerEventsPage() {
 
   // Pagination
   const rowsPerPage = 10;
-  const totalPages = Math.ceil(eventsData.length / rowsPerPage);
-  const paginatedData = eventsData.slice(
+  const totalPages = Math.ceil(servicesData.length / rowsPerPage);
+  const paginatedData = servicesData.slice(
     (currentPage - 1) * rowsPerPage,
     currentPage * rowsPerPage
   );
@@ -217,7 +222,7 @@ export function ContainerEventsPage() {
   const sidebarWidth = sidebarOpen ? 240 : 40;
 
   // Table columns configuration
-  const columns: TableColumn<EventRow>[] = [
+  const columns: TableColumn<ServiceRow>[] = [
     {
       key: 'status',
       label: 'Status',
@@ -226,17 +231,18 @@ export function ContainerEventsPage() {
       align: 'center',
       render: (value: string) => (
         <StatusIndicator
-          status={value === 'Normal' ? 'active' : value === 'Warning' ? 'paused' : 'error'}
+          status={value === 'Running' ? 'active' : value === 'Pending' ? 'paused' : 'error'}
         />
       )
     },
     {
       key: 'name',
       label: 'Name',
-      width: '240px',
+      flex: 1,
+      minWidth: '120px',
       sortable: true,
       render: (value: string) => (
-        <span className="text-[12px] text-[var(--color-text-default)] truncate block" title={value}>
+        <span className="text-[12px] text-[var(--color-action-primary)] cursor-pointer hover:underline truncate block" title={value}>
           {value}
         </span>
       )
@@ -245,72 +251,58 @@ export function ContainerEventsPage() {
       key: 'namespace',
       label: 'Namespace',
       flex: 1,
+      minWidth: '100px',
       sortable: true,
     },
     {
-      key: 'lastSeen',
-      label: 'Last Seen',
+      key: 'target',
+      label: 'Target',
       flex: 1,
-      sortable: true,
+      minWidth: '140px',
+      sortable: false,
+      render: (value: string[]) => (
+        <div className="flex flex-col gap-0.5">
+          {value.map((target, index) => (
+            <span key={index} className="text-[12px] text-[var(--color-text-default)] truncate" title={target}>
+              {target}
+            </span>
+          ))}
+        </div>
+      )
+    },
+    {
+      key: 'selector',
+      label: 'Selector',
+      flex: 1,
+      minWidth: '120px',
+      sortable: false,
+      render: (value: string[]) => (
+        <div className="flex flex-col gap-0.5">
+          {value.map((selector, index) => (
+            <span key={index} className="text-[12px] text-[var(--color-text-muted)] truncate" title={selector}>
+              {selector}
+            </span>
+          ))}
+        </div>
+      )
     },
     {
       key: 'type',
       label: 'Type',
-      width: '80px',
-    },
-    {
-      key: 'reason',
-      label: 'Reason',
-      width: '80px',
-    },
-    {
-      key: 'object',
-      label: 'Object',
       flex: 1,
+      minWidth: '80px',
       sortable: true,
       render: (value: string) => (
-        <span 
-          className="text-[var(--color-action-primary)] cursor-pointer hover:underline line-clamp-2"
-          title={value}
-        >
+        <span className="text-[12px] text-[var(--color-text-default)]">
           {value}
         </span>
       )
     },
     {
-      key: 'subobject',
-      label: 'Subobject',
-      width: '100px',
-      sortable: true,
-    },
-    {
-      key: 'source',
-      label: 'Source',
+      key: 'createdAt',
+      label: 'Created At',
       flex: 1,
-      sortable: true,
-    },
-    {
-      key: 'message',
-      label: 'Message',
-      width: '240px',
-      sortable: true,
-      render: (value: string) => (
-        <span className="text-[12px] text-[var(--color-text-default)] truncate block" title={value}>
-          {value}
-        </span>
-      )
-    },
-    {
-      key: 'firstSeen',
-      label: 'First Seen',
-      flex: 1,
-      sortable: true,
-    },
-    {
-      key: 'count',
-      label: 'Count',
-      width: '60px',
-      align: 'center',
+      minWidth: '100px',
       sortable: true,
     },
     {
@@ -318,6 +310,7 @@ export function ContainerEventsPage() {
       label: 'Action',
       width: '64px',
       align: 'center',
+      sticky: 'right',
       render: (_, row) => {
         const menuItems: ContextMenuItem[] = [
           {
@@ -326,9 +319,20 @@ export function ContainerEventsPage() {
             onClick: () => console.log('View Details:', row.id),
           },
           {
+            id: 'edit',
+            label: 'Edit',
+            onClick: () => console.log('Edit:', row.id),
+          },
+          {
             id: 'download-yaml',
             label: 'Download YAML',
             onClick: () => console.log('Download YAML:', row.id),
+          },
+          {
+            id: 'delete',
+            label: 'Delete',
+            onClick: () => console.log('Delete:', row.id),
+            danger: true,
           },
         ];
 
@@ -381,7 +385,7 @@ export function ContainerEventsPage() {
             <Breadcrumb
               items={[
                 { label: 'clusterName', href: '/container' },
-                { label: 'Events' },
+                { label: 'Services' },
               ]}
             />
           }
@@ -393,8 +397,7 @@ export function ContainerEventsPage() {
                   if (shellPanel.isExpanded) {
                     shellPanel.setIsExpanded(false);
                   } else {
-                    // Open console with a default kubectl session
-                    shellPanel.openConsole('kubectl-events', 'Kubectl: ClusterName');
+                    shellPanel.openConsole('kubectl-services', 'Kubectl: ClusterName');
                   }
                 }}
               >
@@ -418,7 +421,7 @@ export function ContainerEventsPage() {
 
         {/* Content Area */}
         <div 
-          className="flex-1 overflow-auto min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll"
+          className="flex-1 overflow-y-auto overflow-x-hidden min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll"
           style={{ paddingBottom: shellPanel.isExpanded ? '350px' : '0' }}
         >
           <div className="pt-4 px-8 pb-6 bg-[var(--color-surface-default)]">
@@ -427,9 +430,16 @@ export function ContainerEventsPage() {
               <HStack justify="between" align="center" className="w-full min-h-8">
                 <HStack gap={2} align="center">
                   <h1 className="text-[16px] leading-6 font-semibold text-[var(--color-text-default)]">
-                    Events
+                    Services({servicesData.length})
                   </h1>
+                  <button className="p-1 hover:bg-[var(--color-surface-subtle)] rounded transition-colors">
+                    <IconStar size={16} stroke={1.5} className="text-[var(--color-text-muted)]" />
+                  </button>
                 </HStack>
+                <CreateServiceDropdown
+                  onCreateForm={() => navigate('/container/services/create')}
+                  onCreateYaml={() => navigate('/container/services/create-yaml')}
+                />
               </HStack>
 
               {/* Action Bar */}
@@ -437,12 +447,12 @@ export function ContainerEventsPage() {
                 {/* Search */}
                 <HStack gap={1} align="center">
                   <SearchInput
-                    placeholder="Search Events by attributes"
+                    placeholder="Find Services with filters"
                     size="sm"
                     className="w-[280px]"
                   />
-                  <Button variant="secondary" size="sm" aria-label="Download" className="!p-0 !w-7 !h-7 !min-w-7">
-                    <IconDownload size={14} stroke={1.5} />
+                  <Button variant="secondary" size="sm" aria-label="Filter" className="!p-0 !w-7 !h-7 !min-w-7">
+                    <IconSearch size={14} stroke={1.5} />
                   </Button>
                 </HStack>
 
@@ -453,6 +463,9 @@ export function ContainerEventsPage() {
                 <HStack gap={1} align="center">
                   <Button variant="secondary" size="sm" leftIcon={<IconDownload size={12} stroke={1.5} />} disabled={selectedRows.length === 0}>
                     Download YAML
+                  </Button>
+                  <Button variant="secondary" size="sm" leftIcon={<IconTrash size={12} stroke={1.5} />} disabled={selectedRows.length === 0}>
+                    Delete
                   </Button>
                 </HStack>
               </HStack>
@@ -484,14 +497,14 @@ export function ContainerEventsPage() {
                 currentPage={currentPage}
                 totalPages={totalPages}
                 onPageChange={setCurrentPage}
-                totalItems={eventsData.length}
+                totalItems={servicesData.length}
                 selectedCount={selectedRows.length}
                 showSettings
                 onSettingsClick={() => {}}
               />
 
               {/* Table */}
-              <Table<EventRow>
+              <Table<ServiceRow>
                 columns={columns}
                 data={paginatedData}
                 rowKey="id"
@@ -524,4 +537,4 @@ export function ContainerEventsPage() {
   );
 }
 
-export default ContainerEventsPage;
+export default ContainerServicesPage;

@@ -285,7 +285,7 @@ export function Table<T extends Record<string, any>>({
                       ${column.align === 'center' ? 'justify-center' : column.align === 'right' ? 'justify-end flex-row-reverse' : 'justify-start'}
                     `}
                   >
-                    <span className="truncate" title={column.label}>{column.label}</span>
+                    <span className="whitespace-nowrap" title={column.label}>{column.label}</span>
                     {column.sortable && <span className="flex-shrink-0">{renderSortIcon(column.key)}</span>}
                   </div>
                 )}

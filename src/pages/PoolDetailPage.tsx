@@ -261,7 +261,7 @@ export default function PoolDetailPage() {
     {
       key: 'status',
       label: 'Status',
-      width: '59px',
+      width: '64px',
       align: 'center',
       render: (_, row) => (
         <StatusIndicator status={memberStatusMap[row.status]} layout="icon-only" />
@@ -338,7 +338,7 @@ export default function PoolDetailPage() {
     {
       key: 'actions',
       label: 'Action',
-      width: '72px',
+      width: '64px',
       align: 'center',
       render: (_: unknown, row: Member) => {
         const memberMenuItems: ContextMenuItem[] = [
