@@ -395,7 +395,7 @@ export function ContainerSidebar({ isOpen = true, onToggle }: ContainerSidebarPr
       {/* Icon Sidebar (40px) - Always visible */}
       <aside className="w-10 h-full bg-[var(--color-surface-default)] border-r border-[var(--color-border-subtle)] flex flex-col">
         {/* App Icon */}
-        <div className="h-[33px] flex items-center justify-center border-b border-[var(--color-border-subtle)]">
+        <div className="h-[36px] flex items-center justify-center border-b border-[var(--color-border-subtle)]">
           <img src={containerIcon} alt="Container" className="w-5 h-5" />
         </div>
 
