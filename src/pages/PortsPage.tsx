@@ -2,7 +2,7 @@ import { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   Button,
-  SearchInput,
+  FilterSearchInput,
   Table,
   Pagination,
   VStack,
@@ -20,6 +20,8 @@ import {
   Tooltip,
   type TableColumn,
   type ContextMenuItem,
+  type FilterField,
+  type AppliedFilter,
 } from '@/design-system';
 import { Sidebar } from '@/components/Sidebar';
 import { useTabs } from '@/contexts/TabContext';
@@ -88,11 +90,27 @@ const portStatusMap: Record<PortStatus, 'active' | 'error' | 'building' | 'down'
    Component
    ---------------------------------------- */
 
+// Filter fields configuration
+const filterFields: FilterField[] = [
+  { key: 'name', label: 'Name', type: 'text' },
+  { key: 'attachedTo', label: 'Attached To', type: 'text' },
+  { key: 'ownedNetwork', label: 'Network', type: 'text' },
+  { key: 'fixedIp', label: 'Fixed IP', type: 'text' },
+  { key: 'floatingIp', label: 'Floating IP', type: 'text' },
+  { key: 'macAddress', label: 'MAC Address', type: 'text' },
+  { key: 'status', label: 'Status', type: 'select', options: [
+    { value: 'active', label: 'Active' },
+    { value: 'error', label: 'Error' },
+    { value: 'building', label: 'Building' },
+    { value: 'down', label: 'Down' },
+  ]},
+];
+
 export function PortsPage() {
   const navigate = useNavigate();
   const [selectedPorts, setSelectedPorts] = useState<string[]>([]);
   const [sidebarOpen, setSidebarOpen] = useState(true);
-  const [searchQuery, setSearchQuery] = useState('');
+  const [appliedFilters, setAppliedFilters] = useState<AppliedFilter[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [ports] = useState(mockPorts);
   const [activeTab, setActiveTab] = useState('all');
@@ -150,18 +168,18 @@ export function PortsPage() {
       filtered = filtered.filter(p => p.attachedType === 'instance');
     }
     
-    // Filter by search
-    if (searchQuery) {
-      const query = searchQuery.toLowerCase();
-      filtered = filtered.filter(p =>
-        p.name.toLowerCase().includes(query) ||
-        p.ownedNetwork.toLowerCase().includes(query) ||
-        p.macAddress.toLowerCase().includes(query)
-      );
+    // Filter by applied filters
+    if (appliedFilters.length > 0) {
+      filtered = filtered.filter((p) => {
+        return appliedFilters.every((filter) => {
+          const value = String(p[filter.field as keyof Port] || '').toLowerCase();
+          return value.includes(filter.value.toLowerCase());
+        });
+      });
     }
     
     return filtered;
-  }, [ports, searchQuery, activeTab]);
+  }, [ports, appliedFilters, activeTab]);
 
   const totalPages = Math.ceil(filteredPorts.length / rowsPerPage);
 
@@ -176,7 +194,7 @@ export function PortsPage() {
     {
       key: 'status',
       label: 'Status',
-      width: '59px',
+      width: '64px',
       align: 'center',
       render: (_, row) => (
         <StatusIndicator status={portStatusMap[row.status]} layout="icon-only" />
@@ -282,7 +300,7 @@ export function PortsPage() {
     {
       key: 'actions',
       label: 'Action',
-      width: '72px',
+      width: '64px',
       align: 'center',
       render: (_, row) => (
         <div onClick={(e) => e.stopPropagation()}>
@@ -396,16 +414,13 @@ export function PortsPage() {
             <ListToolbar
               primaryActions={
                 <ListToolbar.Actions>
-                  <div className="w-[280px]">
-                    <SearchInput
-                      placeholder="Search port by attributes"
-                      value={searchQuery}
-                      onChange={(e) => setSearchQuery(e.target.value)}
-                      onClear={() => setSearchQuery('')}
-                      size="sm"
-                      fullWidth
-                    />
-                  </div>
+                  <FilterSearchInput
+                    filters={filterFields}
+                    appliedFilters={appliedFilters}
+                    onFiltersChange={setAppliedFilters}
+                    placeholder="Search port by attributes"
+                    className="w-[320px]"
+                  />
                   <Button variant="secondary" size="sm" iconOnly icon={<IconDownload size={12} />} aria-label="Download" />
                 </ListToolbar.Actions>
               }

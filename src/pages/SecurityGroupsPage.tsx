@@ -1,7 +1,7 @@
 import { useState, useMemo } from 'react';
 import {
   Button,
-  SearchInput,
+  FilterSearchInput,
   Table,
   Pagination,
   VStack,
@@ -15,6 +15,8 @@ import {
   StatusIndicator,
   type TableColumn,
   type ContextMenuItem,
+  type FilterField,
+  type AppliedFilter,
 } from '@/design-system';
 import { Sidebar } from '@/components/Sidebar';
 import { useTabs } from '@/contexts/TabContext';
@@ -73,10 +75,16 @@ const sgStatusMap: Record<SecurityGroupStatus, 'active' | 'error'> = {
    Component
    ---------------------------------------- */
 
+// Filter fields configuration
+const filterFields: FilterField[] = [
+  { key: 'name', label: 'Name', type: 'text' },
+  { key: 'description', label: 'Description', type: 'text' },
+];
+
 export function SecurityGroupsPage() {
   const [selectedGroups, setSelectedGroups] = useState<string[]>([]);
   const [sidebarOpen, setSidebarOpen] = useState(true);
-  const [searchQuery, setSearchQuery] = useState('');
+  const [appliedFilters, setAppliedFilters] = useState<AppliedFilter[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [securityGroups] = useState(mockSecurityGroups);
   
@@ -118,13 +126,15 @@ export function SecurityGroupsPage() {
 
   // Filter security groups based on search
   const filteredGroups = useMemo(() => {
-    if (!searchQuery) return securityGroups;
-    const query = searchQuery.toLowerCase();
-    return securityGroups.filter(sg =>
-      sg.name.toLowerCase().includes(query) ||
-      sg.description.toLowerCase().includes(query)
-    );
-  }, [securityGroups, searchQuery]);
+    if (appliedFilters.length === 0) return securityGroups;
+    
+    return securityGroups.filter((sg) => {
+      return appliedFilters.every((filter) => {
+        const value = String(sg[filter.field as keyof SecurityGroup] || '').toLowerCase();
+        return value.includes(filter.value.toLowerCase());
+      });
+    });
+  }, [securityGroups, appliedFilters]);
 
   const totalPages = Math.ceil(filteredGroups.length / rowsPerPage);
 
@@ -183,7 +193,7 @@ export function SecurityGroupsPage() {
     {
       key: 'actions',
       label: 'Action',
-      width: '72px',
+      width: '64px',
       align: 'center',
       render: (_, row) => (
         <div onClick={(e) => e.stopPropagation()}>
@@ -285,16 +295,13 @@ export function SecurityGroupsPage() {
             <ListToolbar
               primaryActions={
                 <ListToolbar.Actions>
-                  <div className="w-[280px]">
-                    <SearchInput
-                      placeholder="Search security group by attributes"
-                      value={searchQuery}
-                      onChange={(e) => setSearchQuery(e.target.value)}
-                      onClear={() => setSearchQuery('')}
-                      size="sm"
-                      fullWidth
-                    />
-                  </div>
+                  <FilterSearchInput
+                    filters={filterFields}
+                    appliedFilters={appliedFilters}
+                    onFiltersChange={setAppliedFilters}
+                    placeholder="Search security group by attributes"
+                    className="w-[320px]"
+                  />
                   <Button variant="secondary" size="sm" iconOnly icon={<IconDownload size={12} />} aria-label="Download" />
                 </ListToolbar.Actions>
               }

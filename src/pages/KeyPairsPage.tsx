@@ -1,7 +1,7 @@
 import { useState, useMemo } from 'react';
 import {
   Button,
-  SearchInput,
+  FilterSearchInput,
   Table,
   Pagination,
   VStack,
@@ -15,6 +15,8 @@ import {
   Checkbox,
   type TableColumn,
   type ContextMenuItem,
+  type FilterField,
+  type AppliedFilter,
 } from '@/design-system';
 import { Sidebar } from '@/components/Sidebar';
 import { useTabs } from '@/contexts/TabContext';
@@ -61,10 +63,16 @@ const mockKeyPairs: KeyPair[] = [
    Component
    ---------------------------------------- */
 
+// Filter fields configuration
+const filterFields: FilterField[] = [
+  { key: 'name', label: 'Name', type: 'text' },
+  { key: 'fingerprint', label: 'Fingerprint', type: 'text' },
+];
+
 export function KeyPairsPage() {
   const [selectedKeyPairs, setSelectedKeyPairs] = useState<string[]>([]);
   const [sidebarOpen, setSidebarOpen] = useState(true);
-  const [searchQuery, setSearchQuery] = useState('');
+  const [appliedFilters, setAppliedFilters] = useState<AppliedFilter[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [keyPairs, setKeyPairs] = useState(mockKeyPairs);
   
@@ -130,14 +138,15 @@ export function KeyPairsPage() {
 
   // Filter key pairs by search
   const filteredKeyPairs = useMemo(() => {
-    if (!searchQuery) return keyPairs;
+    if (appliedFilters.length === 0) return keyPairs;
     
-    return keyPairs.filter(
-      (kp) =>
-        kp.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        kp.fingerprint.toLowerCase().includes(searchQuery.toLowerCase())
-    );
-  }, [keyPairs, searchQuery]);
+    return keyPairs.filter((kp) => {
+      return appliedFilters.every((filter) => {
+        const value = String(kp[filter.field as keyof KeyPair] || '').toLowerCase();
+        return value.includes(filter.value.toLowerCase());
+      });
+    });
+  }, [keyPairs, appliedFilters]);
 
   const totalPages = Math.ceil(filteredKeyPairs.length / rowsPerPage);
 
@@ -218,7 +227,7 @@ export function KeyPairsPage() {
     {
       key: 'actions',
       label: 'Action',
-      width: '72px',
+      width: '64px',
       align: 'center',
       render: (_, row) => {
         const menuItems: ContextMenuItem[] = [
@@ -320,16 +329,13 @@ export function KeyPairsPage() {
             <ListToolbar
               primaryActions={
                 <ListToolbar.Actions>
-                  <div className="w-[280px]">
-                    <SearchInput
-                      placeholder="Search key pair by attributes"
-                      value={searchQuery}
-                      onChange={(e) => setSearchQuery(e.target.value)}
-                      onClear={() => setSearchQuery('')}
-                      size="sm"
-                      fullWidth
-                    />
-                  </div>
+                  <FilterSearchInput
+                    filters={filterFields}
+                    appliedFilters={appliedFilters}
+                    onFiltersChange={setAppliedFilters}
+                    placeholder="Search key pair by attributes"
+                    className="w-[320px]"
+                  />
                   <Button variant="secondary" size="sm" icon={<IconDownload size={12} />} aria-label="Download" />
                 </ListToolbar.Actions>
               }

@@ -249,7 +249,7 @@ export function VolumeDetailPage() {
     {
       key: 'status',
       label: 'Status',
-      width: '59px',
+      width: '64px',
       align: 'center',
       render: (_, row) => (
         <StatusIndicator status={snapshotStatusMap[row.status]} layout="icon-only" />
@@ -293,7 +293,7 @@ export function VolumeDetailPage() {
     {
       key: 'action',
       label: 'Action',
-      width: '72px',
+      width: '64px',
       align: 'center',
       render: (_, row) => (
         <div className="flex items-center justify-center">
@@ -318,7 +318,7 @@ export function VolumeDetailPage() {
     {
       key: 'status',
       label: 'Status',
-      width: '59px',
+      width: '64px',
       align: 'center',
       render: (_, row) => (
         <StatusIndicator status={backupStatusMap[row.status]} layout="icon-only" />
@@ -368,7 +368,7 @@ export function VolumeDetailPage() {
     {
       key: 'action',
       label: 'Action',
-      width: '72px',
+      width: '64px',
       align: 'center',
       render: (_, row) => (
         <div className="flex items-center justify-center">

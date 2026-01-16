@@ -97,6 +97,26 @@ const mockInstances: Instance[] = [
   { id: 'vm-008', name: 'web-server-02', status: 'building', locked: false, fixedIp: '-', floatingIp: '-', image: 'Rocky Linux 9', flavor: 'Small', vcpu: 2, ram: '4GB', disk: '50GB', gpu: '-', az: 'keystone' },
   { id: 'vm-009', name: 'analytics-01', status: 'error', locked: true, fixedIp: '10.20.30.80', floatingIp: '-', image: 'Debian 12', flavor: 'XLarge', vcpu: 16, ram: '32GB', disk: '500GB', gpu: '2', az: 'nova' },
   { id: 'vm-010', name: 'cache-server-01', status: 'running', locked: false, fixedIp: '10.20.30.90', floatingIp: '20.30.40.90', image: 'Debian 12', flavor: 'Medium', vcpu: 4, ram: '16GB', disk: '100GB', gpu: '-', az: 'keystone' },
+  { id: 'vm-011', name: 'api-gateway-01', status: 'running', locked: true, fixedIp: '10.20.30.100', floatingIp: '20.30.40.100', image: 'Ubuntu 22.04', flavor: 'Medium', vcpu: 4, ram: '8GB', disk: '100GB', gpu: '-', az: 'nova' },
+  { id: 'vm-012', name: 'api-gateway-02', status: 'running', locked: true, fixedIp: '10.20.30.101', floatingIp: '20.30.40.101', image: 'Ubuntu 22.04', flavor: 'Medium', vcpu: 4, ram: '8GB', disk: '100GB', gpu: '-', az: 'nova' },
+  { id: 'vm-013', name: 'monitoring-01', status: 'running', locked: false, fixedIp: '10.20.30.110', floatingIp: '-', image: 'CentOS 8', flavor: 'Large', vcpu: 8, ram: '32GB', disk: '500GB', gpu: '-', az: 'keystone' },
+  { id: 'vm-014', name: 'logging-server-01', status: 'running', locked: false, fixedIp: '10.20.30.120', floatingIp: '-', image: 'Debian 12', flavor: 'XLarge', vcpu: 16, ram: '64GB', disk: '2TB', gpu: '-', az: 'keystone' },
+  { id: 'vm-015', name: 'jenkins-master', status: 'running', locked: true, fixedIp: '10.20.30.130', floatingIp: '20.30.40.130', image: 'Ubuntu 22.04', flavor: 'Large', vcpu: 8, ram: '16GB', disk: '200GB', gpu: '-', az: 'nova' },
+  { id: 'vm-016', name: 'jenkins-agent-01', status: 'running', locked: false, fixedIp: '10.20.30.131', floatingIp: '-', image: 'Ubuntu 22.04', flavor: 'Medium', vcpu: 4, ram: '8GB', disk: '100GB', gpu: '-', az: 'nova' },
+  { id: 'vm-017', name: 'jenkins-agent-02', status: 'stopped', locked: false, fixedIp: '10.20.30.132', floatingIp: '-', image: 'Ubuntu 22.04', flavor: 'Medium', vcpu: 4, ram: '8GB', disk: '100GB', gpu: '-', az: 'nova' },
+  { id: 'vm-018', name: 'gitlab-server', status: 'running', locked: true, fixedIp: '10.20.30.140', floatingIp: '20.30.40.140', image: 'CentOS 8', flavor: 'XLarge', vcpu: 16, ram: '32GB', disk: '1TB', gpu: '-', az: 'keystone' },
+  { id: 'vm-019', name: 'nexus-repo', status: 'running', locked: true, fixedIp: '10.20.30.150', floatingIp: '-', image: 'Rocky Linux 9', flavor: 'Large', vcpu: 8, ram: '16GB', disk: '500GB', gpu: '-', az: 'keystone' },
+  { id: 'vm-020', name: 'redis-cluster-01', status: 'running', locked: false, fixedIp: '10.20.30.160', floatingIp: '-', image: 'Debian 12', flavor: 'Medium', vcpu: 4, ram: '16GB', disk: '50GB', gpu: '-', az: 'nova' },
+  { id: 'vm-021', name: 'redis-cluster-02', status: 'running', locked: false, fixedIp: '10.20.30.161', floatingIp: '-', image: 'Debian 12', flavor: 'Medium', vcpu: 4, ram: '16GB', disk: '50GB', gpu: '-', az: 'nova' },
+  { id: 'vm-022', name: 'redis-cluster-03', status: 'running', locked: false, fixedIp: '10.20.30.162', floatingIp: '-', image: 'Debian 12', flavor: 'Medium', vcpu: 4, ram: '16GB', disk: '50GB', gpu: '-', az: 'keystone' },
+  { id: 'vm-023', name: 'kafka-broker-01', status: 'running', locked: true, fixedIp: '10.20.30.170', floatingIp: '-', image: 'Ubuntu 22.04', flavor: 'Large', vcpu: 8, ram: '32GB', disk: '500GB', gpu: '-', az: 'nova' },
+  { id: 'vm-024', name: 'kafka-broker-02', status: 'running', locked: true, fixedIp: '10.20.30.171', floatingIp: '-', image: 'Ubuntu 22.04', flavor: 'Large', vcpu: 8, ram: '32GB', disk: '500GB', gpu: '-', az: 'nova' },
+  { id: 'vm-025', name: 'kafka-broker-03', status: 'error', locked: true, fixedIp: '10.20.30.172', floatingIp: '-', image: 'Ubuntu 22.04', flavor: 'Large', vcpu: 8, ram: '32GB', disk: '500GB', gpu: '-', az: 'keystone' },
+  { id: 'vm-026', name: 'ml-training-01', status: 'running', locked: false, fixedIp: '10.20.30.180', floatingIp: '20.30.40.180', image: 'Ubuntu 22.04', flavor: 'GPU XLarge', vcpu: 64, ram: '256GB', disk: '2TB', gpu: '8', az: 'nova' },
+  { id: 'vm-027', name: 'ml-inference-01', status: 'running', locked: false, fixedIp: '10.20.30.181', floatingIp: '20.30.40.181', image: 'Ubuntu 22.04', flavor: 'GPU Large', vcpu: 32, ram: '128GB', disk: '1TB', gpu: '4', az: 'nova' },
+  { id: 'vm-028', name: 'bastion-host', status: 'running', locked: true, fixedIp: '10.20.30.190', floatingIp: '20.30.40.190', image: 'Rocky Linux 9', flavor: 'Small', vcpu: 2, ram: '4GB', disk: '50GB', gpu: '-', az: 'keystone' },
+  { id: 'vm-029', name: 'vpn-server', status: 'running', locked: true, fixedIp: '10.20.30.200', floatingIp: '20.30.40.200', image: 'CentOS 8', flavor: 'Small', vcpu: 2, ram: '4GB', disk: '50GB', gpu: '-', az: 'keystone' },
+  { id: 'vm-030', name: 'test-instance-01', status: 'pending', locked: false, fixedIp: '-', floatingIp: '-', image: 'Ubuntu 22.04', flavor: 'Small', vcpu: 2, ram: '4GB', disk: '50GB', gpu: '-', az: 'nova' },
 ];
 
 const mockBareMetalInstances: BareMetalInstance[] = [
@@ -468,7 +488,7 @@ export function InstanceListPage() {
     {
       key: 'status',
       label: 'Status',
-      width: '59px',
+      width: '64px',
       align: 'center',
       sortable: false,
       render: (_, row) => (
@@ -478,7 +498,8 @@ export function InstanceListPage() {
     {
       key: 'name',
       label: 'Name',
-      width: '160px',
+      flex: 1,
+      minWidth: '140px',
       sortable: true,
       render: (_, row) => (
         <div className="flex flex-col gap-0.5 whitespace-nowrap">
@@ -498,7 +519,7 @@ export function InstanceListPage() {
     {
       key: 'locked',
       label: 'Locked',
-      width: '62px',
+      width: '68px',
       align: 'center',
       sortable: false,
       render: (_, row) => row.locked ? (
@@ -508,19 +529,22 @@ export function InstanceListPage() {
     {
       key: 'fixedIp',
       label: 'Fixed IP',
-      width: '120px',
+      flex: 1,
+      minWidth: '100px',
       sortable: false,
     },
     {
       key: 'floatingIp',
       label: 'Floating IP',
-      width: '120px',
+      flex: 1,
+      minWidth: '100px',
       sortable: false,
     },
     {
       key: 'image',
       label: 'Image',
-      width: '140px',
+      flex: 1,
+      minWidth: '120px',
       sortable: true,
       render: (_, row) => (
         <div className="flex flex-col gap-0.5">
@@ -540,7 +564,8 @@ export function InstanceListPage() {
     {
       key: 'flavor',
       label: 'Flavor',
-      width: '140px',
+      flex: 1,
+      minWidth: '100px',
       sortable: true,
       render: (_, row) => (
         <div className="flex flex-col gap-0.5">
@@ -566,13 +591,13 @@ export function InstanceListPage() {
     {
       key: 'ram',
       label: 'RAM',
-      width: '80px',
+      width: '70px',
       sortable: true,
     },
     {
       key: 'disk',
       label: 'Disk',
-      width: '80px',
+      width: '70px',
       sortable: true,
     },
     {
@@ -584,13 +609,13 @@ export function InstanceListPage() {
     {
       key: 'az',
       label: 'AZ',
-      width: '100px',
+      width: '80px',
       sortable: true,
     },
     {
       key: 'actions',
       label: 'Action',
-      width: '72px',
+      width: '64px',
       align: 'center',
       render: (_, row) => (
         <HStack gap={1} className="justify-center">
@@ -634,7 +659,7 @@ export function InstanceListPage() {
     {
       key: 'status',
       label: 'Status',
-      width: '59px',
+      width: '64px',
       align: 'center',
       sortable: false,
       render: (_, row) => (
@@ -644,7 +669,8 @@ export function InstanceListPage() {
     {
       key: 'name',
       label: 'Name',
-      width: '160px',
+      flex: 1,
+      minWidth: '140px',
       sortable: true,
       render: (_, row) => (
         <div className="flex flex-col gap-0.5">
@@ -664,13 +690,15 @@ export function InstanceListPage() {
     {
       key: 'ip',
       label: 'Fixed IP',
-      width: '120px',
+      flex: 1,
+      minWidth: '100px',
       sortable: false,
     },
     {
       key: 'image',
       label: 'Image',
-      width: '140px',
+      flex: 1,
+      minWidth: '120px',
       sortable: true,
       render: (_, row) => (
         <div className="flex flex-col gap-0.5">
@@ -690,7 +718,8 @@ export function InstanceListPage() {
     {
       key: 'flavor',
       label: 'Flavor',
-      width: '140px',
+      flex: 1,
+      minWidth: '100px',
       sortable: true,
       render: (_, row) => (
         <div className="flex flex-col gap-0.5">
@@ -716,31 +745,31 @@ export function InstanceListPage() {
     {
       key: 'ram',
       label: 'RAM',
-      width: '80px',
+      width: '70px',
       sortable: true,
     },
     {
       key: 'disk',
       label: 'Disk',
-      width: '80px',
+      width: '70px',
       sortable: true,
     },
     {
       key: 'gpu',
       label: 'GPU',
-      width: '100px',
+      width: '60px',
       sortable: true,
     },
     {
       key: 'az',
       label: 'AZ',
-      width: '100px',
+      width: '80px',
       sortable: true,
     },
     {
       key: 'actions',
       label: 'Action',
-      width: '72px',
+      width: '64px',
       align: 'center',
       render: (_, row) => (
         <HStack gap={1} className="justify-center">

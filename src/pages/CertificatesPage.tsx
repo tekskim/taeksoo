@@ -1,7 +1,7 @@
 import { useState, useMemo } from 'react';
 import {
   Button,
-  SearchInput,
+  FilterSearchInput,
   Table,
   Pagination,
   VStack,
@@ -18,6 +18,8 @@ import {
   Tab,
   type TableColumn,
   type ContextMenuItem,
+  type FilterField,
+  type AppliedFilter,
 } from '@/design-system';
 import { Sidebar } from '@/components/Sidebar';
 import { useTabs } from '@/contexts/TabContext';
@@ -81,9 +83,20 @@ const certStatusMap: Record<CertificateStatus, 'active' | 'error' | 'pending'> =
    Component
    ---------------------------------------- */
 
+// Filter fields configuration
+const filterFields: FilterField[] = [
+  { key: 'name', label: 'Name', type: 'text' },
+  { key: 'domain', label: 'Domain', type: 'text' },
+  { key: 'status', label: 'Status', type: 'select', options: [
+    { value: 'active', label: 'Active' },
+    { value: 'error', label: 'Error' },
+    { value: 'pending', label: 'Pending' },
+  ]},
+];
+
 export function CertificatesPage() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
-  const [searchQuery, setSearchQuery] = useState('');
+  const [appliedFilters, setAppliedFilters] = useState<AppliedFilter[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [certificates] = useState(mockCertificates);
   const [activeTab, setActiveTab] = useState('server');
@@ -152,7 +165,7 @@ export function CertificatesPage() {
     {
       key: 'status',
       label: 'Status',
-      width: '59px',
+      width: '64px',
       align: 'center',
       render: (_, row) => (
         <StatusIndicator status={certStatusMap[row.status]} layout="icon-only" />
@@ -222,7 +235,7 @@ export function CertificatesPage() {
     {
       key: 'actions',
       label: 'Action',
-      width: '72px',
+      width: '64px',
       align: 'center',
       render: (_, row) => (
         <div onClick={(e) => e.stopPropagation()}>

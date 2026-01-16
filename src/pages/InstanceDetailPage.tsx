@@ -763,7 +763,7 @@ export function InstanceDetailPage() {
                         {
                           key: 'status',
                           label: 'Status',
-                          width: '60px',
+                          width: '70px',
                           align: 'center',
                           render: (_, row: AttachedVolume) => (
                             <StatusIndicator status={row.status as any} layout="icon-only" />
@@ -812,7 +812,7 @@ export function InstanceDetailPage() {
                         {
                           key: 'action',
                           label: 'Action',
-                          width: '72px',
+                          width: '64px',
                           align: 'center',
                           render: (_: unknown, row: AttachedVolume) => {
                             const volumeMenuItems: ContextMenuItem[] = [
@@ -879,7 +879,7 @@ export function InstanceDetailPage() {
                         {
                           key: 'status',
                           label: 'Status',
-                          width: '72px',
+                          width: '70px',
                           align: 'center',
                           render: (_value: string, iface: AttachedInterface) => {
                             const statusMap: Record<string, 'active' | 'down' | 'building' | 'shutoff'> = {
@@ -957,7 +957,7 @@ export function InstanceDetailPage() {
                         {
                           key: 'action',
                           label: 'Action',
-                          width: '72px',
+                          width: '64px',
                           align: 'center' as const,
                           render: (_: unknown, iface: AttachedInterface) => {
                             const interfaceMenuItems: ContextMenuItem[] = [
@@ -1013,7 +1013,7 @@ export function InstanceDetailPage() {
                         {
                           key: 'status',
                           label: 'Status',
-                          width: '72px',
+                          width: '70px',
                           align: 'center',
                           render: (_value: string, row: FloatingIP) => (
                             <StatusIndicator status={row.status} layout="icon-only" size="md" />
@@ -1048,7 +1048,7 @@ export function InstanceDetailPage() {
                         {
                           key: 'action',
                           label: 'Action',
-                          width: '72px',
+                          width: '64px',
                           align: 'center',
                           render: (_: unknown, row: FloatingIP) => {
                             const floatingIpMenuItems: ContextMenuItem[] = [
@@ -1156,7 +1156,7 @@ export function InstanceDetailPage() {
                         {
                           key: 'action',
                           label: 'Action',
-                          width: '72px',
+                          width: '64px',
                           align: 'center' as const,
                           render: (_: unknown, row: SecurityGroup) => {
                             const securityGroupMenuItems: ContextMenuItem[] = [
@@ -1220,7 +1220,7 @@ export function InstanceDetailPage() {
                         {
                           key: 'status',
                           label: 'Status',
-                          width: '60px',
+                          width: '70px',
                           align: 'center',
                           render: (_value: string, row: InstanceSnapshot) => (
                             <StatusIndicator 
@@ -1265,7 +1265,7 @@ export function InstanceDetailPage() {
                         {
                           key: 'action',
                           label: 'Action',
-                          width: '72px',
+                          width: '64px',
                           align: 'center',
                           render: (_: unknown, row: InstanceSnapshot) => {
                             const snapshotMenuItems: ContextMenuItem[] = [

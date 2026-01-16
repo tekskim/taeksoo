@@ -1,7 +1,7 @@
 import { useState, useMemo } from 'react';
 import {
   Button,
-  SearchInput,
+  FilterSearchInput,
   Table,
   Pagination,
   VStack,
@@ -18,6 +18,8 @@ import {
   Checkbox,
   type TableColumn,
   type ContextMenuItem,
+  type FilterField,
+  type AppliedFilter,
 } from '@/design-system';
 import { Sidebar } from '@/components/Sidebar';
 import { useTabs } from '@/contexts/TabContext';
@@ -73,10 +75,21 @@ const mockTemplates: InstanceTemplate[] = [
    Component
    ---------------------------------------- */
 
+// Filter fields configuration
+const filterFields: FilterField[] = [
+  { key: 'name', label: 'Name', type: 'text' },
+  { key: 'network', label: 'Network', type: 'text' },
+  { key: 'access', label: 'Access', type: 'select', options: [
+    { value: 'Personal', label: 'Personal' },
+    { value: 'Project', label: 'Project' },
+    { value: 'Public', label: 'Public' },
+  ]},
+];
+
 export function InstanceTemplatesPage() {
   const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(true);
-  const [searchQuery, setSearchQuery] = useState('');
+  const [appliedFilters, setAppliedFilters] = useState<AppliedFilter[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [activeTab, setActiveTab] = useState('favorites');
   const [templates, setTemplates] = useState(mockTemplates);
@@ -152,17 +165,18 @@ export function InstanceTemplatesPage() {
       // 'all' shows everything
     }
 
-    // Filter by search
-    if (searchQuery) {
-      filtered = filtered.filter(
-        (t) =>
-          t.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          t.image.toLowerCase().includes(searchQuery.toLowerCase())
-      );
+    // Filter by applied filters
+    if (appliedFilters.length > 0) {
+      filtered = filtered.filter((t) => {
+        return appliedFilters.every((filter) => {
+          const value = String(t[filter.field as keyof InstanceTemplate] || '').toLowerCase();
+          return value.includes(filter.value.toLowerCase());
+        });
+      });
     }
 
     return filtered;
-  }, [templates, activeTab, searchQuery]);
+  }, [templates, activeTab, appliedFilters]);
 
   const totalPages = Math.ceil(filteredTemplates.length / rowsPerPage);
 
@@ -274,7 +288,7 @@ export function InstanceTemplatesPage() {
     {
       key: 'actions',
       label: 'Action',
-      width: '72px',
+      width: '64px',
       align: 'center',
       render: (_, row) => {
         const menuItems: ContextMenuItem[] = [
@@ -397,16 +411,13 @@ export function InstanceTemplatesPage() {
             <ListToolbar
               primaryActions={
                 <ListToolbar.Actions>
-                  <div className="w-[280px]">
-                    <SearchInput
-                      placeholder="Search template by attributes"
-                      value={searchQuery}
-                      onChange={(e) => setSearchQuery(e.target.value)}
-                      onClear={() => setSearchQuery('')}
-                      size="sm"
-                      fullWidth
-                    />
-                  </div>
+                  <FilterSearchInput
+                    filters={filterFields}
+                    appliedFilters={appliedFilters}
+                    onFiltersChange={setAppliedFilters}
+                    placeholder="Search template by attributes"
+                    className="w-[320px]"
+                  />
                   <Button variant="secondary" size="sm" icon={<IconDownload size={12} />} aria-label="Download" />
                 </ListToolbar.Actions>
               }

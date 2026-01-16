@@ -597,7 +597,7 @@ function OpenSectionTableDemo() {
     {
       key: 'status',
       label: 'Status',
-      width: '60px',
+      width: '64px',
       align: 'center',
       render: (_: unknown, row: DemoImageRow) => (
         <StatusIndicator status={row.status} />
@@ -3364,7 +3364,7 @@ function TableDemo() {
       key: 'status', 
       label: 'Status', 
       sortable: true, 
-      width: '70px',
+      width: '80px',
       align: 'center' as const,
       render: (value: string) => (
         <StatusIndicator 
@@ -3377,7 +3377,8 @@ function TableDemo() {
       key: 'name', 
       label: 'Name', 
       sortable: true, 
-      width: '180px',
+      flex: 1,
+      minWidth: '140px',
       render: (value: string, row: InstanceData) => (
         <div className="flex flex-col gap-0.5">
           <span className="font-medium text-[var(--color-action-primary)] cursor-pointer hover:underline hover:underline-offset-2">{value}</span>
@@ -3388,18 +3389,19 @@ function TableDemo() {
     { 
       key: 'locked', 
       label: 'Locked', 
-      width: '70px',
+      width: '68px',
       align: 'center' as const,
       render: (value: boolean) => value ? (
         <IconLock size={16} stroke={1.5} className="text-[var(--color-text-default)]" />
       ) : null
     },
-    { key: 'fixedIp', label: 'Fixed IP', sortable: true, width: '120px' },
+    { key: 'fixedIp', label: 'Fixed IP', sortable: true, flex: 1, minWidth: '100px' },
     { 
       key: 'image', 
       label: 'Image', 
       sortable: true, 
-      width: '150px',
+      flex: 1,
+      minWidth: '120px',
       render: (value: string, row: InstanceData) => (
         <div className="flex flex-col gap-0.5">
           <span className="font-medium text-[var(--color-action-primary)] cursor-pointer hover:underline hover:underline-offset-2">{value}</span>
@@ -3411,7 +3413,8 @@ function TableDemo() {
       key: 'flavor', 
       label: 'Flavor', 
       sortable: true, 
-      width: '130px',
+      flex: 1,
+      minWidth: '100px',
       render: (value: string, row: InstanceData) => (
         <div className="flex flex-col gap-0.5">
           <span className="font-medium text-[var(--color-action-primary)] cursor-pointer hover:underline hover:underline-offset-2">{value}</span>
@@ -3422,7 +3425,8 @@ function TableDemo() {
     { 
       key: 'actions', 
       label: 'Action', 
-      width: '80px',
+      width: '64px',
+      align: 'center' as const,
       render: () => (
         <div className="flex items-center gap-1">
           <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors text-[var(--color-text-subtle)] hover:text-[var(--color-text-default)] cursor-pointer">
@@ -3551,7 +3555,7 @@ function TableDemo() {
     { 
       key: 'status', 
       label: 'Status', 
-      width: '60px',
+      width: '64px',
       align: 'center' as const,
       render: (value: string) => (
         <StatusIndicator 
@@ -3575,7 +3579,7 @@ function TableDemo() {
 
   // Empty state columns
   const emptyColumns = [
-    { key: 'status', label: 'Status', width: '59px' },
+    { key: 'status', label: 'Status', width: '64px' },
     { key: 'name', label: 'Name', flex: 1 },
     { key: 'fixedIp', label: 'Fixed IP', width: '120px' },
     { key: 'image', label: 'Image', width: '120px' },
@@ -6970,6 +6974,12 @@ outline: 2px solid var(--color-border-focus);`}
                         Terminal/Shell output. Width: 6px, dark thumb (#475569).
                       </div>
                     </div>
+                    <div className="p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
+                      <div className="text-[length:var(--font-size-12)] font-medium text-[var(--color-text-default)] mb-2">table-scroll-container</div>
+                      <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
+                        Table horizontal scroll. Height: 6px, auto overflow-x.
+                      </div>
+                    </div>
                   </div>
                 </VStack>
 
@@ -6990,19 +7000,6 @@ outline: 2px solid var(--color-border-focus);`}
                       </div>
                     </div>
                     <div className="flex flex-col gap-2 w-[200px]">
-                      <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">legend-scroll (6px)</span>
-                      <div className="w-full h-[150px] overflow-y-auto overflow-x-hidden legend-scroll bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-md)] p-3">
-                        <div className="space-y-2 w-full">
-                          {Array.from({ length: 15 }).map((_, i) => (
-                            <div key={i} className="flex items-center gap-2 text-[length:var(--font-size-11)] text-[var(--color-text-default)]">
-                              <div className="w-3 h-3 rounded-sm" style={{ backgroundColor: `hsl(${i * 24}, 70%, 50%)` }} />
-                              Legend {i + 1}
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                    </div>
-                    <div className="flex flex-col gap-2 w-[200px]">
                       <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">shell-scroll (dark)</span>
                       <div className="w-full h-[150px] overflow-y-auto overflow-x-hidden shell-scroll bg-[#1e293b] border border-[var(--color-border-default)] rounded-[var(--radius-md)] p-3">
                         <div className="space-y-1 font-mono w-full">
@@ -7013,6 +7010,37 @@ outline: 2px solid var(--color-border-focus);`}
                           ))}
                         </div>
                       </div>
+                    </div>
+                  </div>
+                </VStack>
+
+                {/* Horizontal Scroll Examples */}
+                <VStack gap={3}>
+                  <Label>Horizontal scroll (table-scroll-container)</Label>
+                  <div className="flex flex-col gap-4">
+                    <div className="flex flex-col gap-2">
+                      <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">Table horizontal scrollbar (height: 6px)</span>
+                      <div className="w-full max-w-[500px] table-scroll-container bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-md)]" style={{ overflowX: 'auto' }}>
+                        <div className="flex gap-4 p-3" style={{ width: '800px' }}>
+                          {Array.from({ length: 10 }).map((_, i) => (
+                            <div key={i} className="flex-shrink-0 w-[120px] h-[60px] bg-[var(--color-surface-muted)] rounded-[var(--radius-md)] flex items-center justify-center text-[length:var(--font-size-11)] text-[var(--color-text-default)]">
+                              Column {i + 1}
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                    <div className="text-[length:var(--font-size-11)] text-[var(--color-text-muted)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)] font-mono whitespace-pre-wrap">
+{`// Horizontal scrollbar for tables
+<div className="table-scroll-container" style={{ overflowX: 'auto' }}>
+  <div style={{ minWidth: '800px' }}>
+    {/* table content wider than container */}
+  </div>
+</div>
+
+// CSS
+.table-scroll-container::-webkit-scrollbar { height: 6px; }
+.table-scroll-container { scrollbar-width: thin; }`}
                     </div>
                   </div>
                 </VStack>

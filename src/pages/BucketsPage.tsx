@@ -1,7 +1,7 @@
 import { useState, useMemo } from 'react';
 import {
   Button,
-  SearchInput,
+  FilterSearchInput,
   Table,
   Pagination,
   VStack,
@@ -12,6 +12,8 @@ import {
   ListToolbar,
   ContextMenu,
   type TableColumn,
+  type FilterField,
+  type AppliedFilter,
 } from '@/design-system';
 import { StorageSidebar } from '@/components/StorageSidebar';
 import { useTabs } from '@/contexts/TabContext';
@@ -171,10 +173,16 @@ function NameCell({ id, name }: NameCellProps) {
    Buckets Page
    ---------------------------------------- */
 
+// Filter fields configuration
+const filterFields: FilterField[] = [
+  { key: 'name', label: 'Name', type: 'text' },
+  { key: 'owner', label: 'Owner', type: 'text' },
+];
+
 export function BucketsPage() {
   const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(true);
-  const [searchQuery, setSearchQuery] = useState('');
+  const [appliedFilters, setAppliedFilters] = useState<AppliedFilter[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedRows, setSelectedRows] = useState<string[]>([]);
   const rowsPerPage = 10;

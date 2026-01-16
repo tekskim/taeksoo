@@ -1203,6 +1203,7 @@ html.theme-transition *::after {
   overflow-x: auto;
   overflow-y: visible;
   /* Thin scrollbar for Firefox */
+  scrollbar-gutter: stable;
   scrollbar-width: thin;
   scrollbar-color: var(--color-border-default) transparent;
 }

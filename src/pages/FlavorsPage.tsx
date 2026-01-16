@@ -1,6 +1,6 @@
 import { useState, useMemo } from 'react';
 import {
-  SearchInput,
+  FilterSearchInput,
   Table,
   Pagination,
   VStack,
@@ -16,6 +16,8 @@ import {
   ContextMenu,
   type TableColumn,
   type ContextMenuItem,
+  type FilterField,
+  type AppliedFilter,
 } from '@/design-system';
 import { Sidebar } from '@/components/Sidebar';
 import { useTabs } from '@/contexts/TabContext';
@@ -77,9 +79,19 @@ const mockFlavors: Flavor[] = [
    Component
    ---------------------------------------- */
 
+// Filter fields configuration
+const filterFields: FilterField[] = [
+  { key: 'name', label: 'Name', type: 'text' },
+  { key: 'category', label: 'Category', type: 'text' },
+  { key: 'access', label: 'Access', type: 'select', options: [
+    { value: 'Public', label: 'Public' },
+    { value: 'Private', label: 'Private' },
+  ]},
+];
+
 export function FlavorsPage() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
-  const [searchQuery, setSearchQuery] = useState('');
+  const [appliedFilters, setAppliedFilters] = useState<AppliedFilter[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [activeTab, setActiveTab] = useState('cpu');
 
@@ -133,17 +145,18 @@ export function FlavorsPage() {
         break;
     }
 
-    // Filter by search
-    if (searchQuery) {
-      filtered = filtered.filter(
-        (f) =>
-          f.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          f.category.toLowerCase().includes(searchQuery.toLowerCase())
-      );
+    // Filter by applied filters
+    if (appliedFilters.length > 0) {
+      filtered = filtered.filter((f) => {
+        return appliedFilters.every((filter) => {
+          const value = String(f[filter.field as keyof Flavor] || '').toLowerCase();
+          return value.includes(filter.value.toLowerCase());
+        });
+      });
     }
 
     return filtered;
-  }, [activeTab, searchQuery]);
+  }, [activeTab, appliedFilters]);
 
   const totalPages = Math.ceil(filteredFlavors.length / rowsPerPage);
 
@@ -232,7 +245,7 @@ export function FlavorsPage() {
     {
       key: 'actions',
       label: 'Action',
-      width: '72px',
+      width: '64px',
       align: 'center',
       render: (_, row) => {
         const menuItems: ContextMenuItem[] = [
@@ -368,16 +381,13 @@ export function FlavorsPage() {
             <ListToolbar
               primaryActions={
                 <ListToolbar.Actions>
-                  <div className="w-[280px]">
-                    <SearchInput
-                      placeholder="Search flavor by attributes"
-                      value={searchQuery}
-                      onChange={(e) => setSearchQuery(e.target.value)}
-                      onClear={() => setSearchQuery('')}
-                      size="sm"
-                      fullWidth
-                    />
-                  </div>
+                  <FilterSearchInput
+                    filters={filterFields}
+                    appliedFilters={appliedFilters}
+                    onFiltersChange={setAppliedFilters}
+                    placeholder="Search flavor by attributes"
+                    className="w-[320px]"
+                  />
                   <Button variant="secondary" size="sm" icon={<IconDownload size={12} />} aria-label="Download" />
                 </ListToolbar.Actions>
               }

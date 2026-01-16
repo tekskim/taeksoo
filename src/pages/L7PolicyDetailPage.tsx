@@ -246,7 +246,7 @@ export default function L7PolicyDetailPage() {
     {
       key: 'actions',
       label: 'Action',
-      width: '72px',
+      width: '64px',
       align: 'center',
       render: (_: unknown, row: L7Rule) => {
         const ruleMenuItems: ContextMenuItem[] = [

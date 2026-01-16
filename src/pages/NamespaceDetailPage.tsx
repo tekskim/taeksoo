@@ -539,7 +539,7 @@ function WorkloadsTab({ workloads }: WorkloadsTabProps) {
     {
       key: 'action',
       label: 'Action',
-      width: '72px',
+      width: '64px',
       align: 'center',
       render: (_: unknown, row: WorkloadRow) => (
         <ContextMenu

@@ -1,7 +1,7 @@
 import { useState, useMemo } from 'react';
 import {
   Button,
-  SearchInput,
+  FilterSearchInput,
   Table,
   Pagination,
   VStack,
@@ -15,6 +15,8 @@ import {
   StatusIndicator,
   type TableColumn,
   type ContextMenuItem,
+  type FilterField,
+  type AppliedFilter,
 } from '@/design-system';
 import { Sidebar } from '@/components/Sidebar';
 import { useTabs } from '@/contexts/TabContext';
@@ -80,11 +82,24 @@ const lbStatusMap: Record<LoadBalancerStatus, 'active' | 'error' | 'building' | 
    Component
    ---------------------------------------- */
 
+// Filter fields configuration
+const filterFields: FilterField[] = [
+  { key: 'name', label: 'Name', type: 'text' },
+  { key: 'vipAddress', label: 'VIP Address', type: 'text' },
+  { key: 'ownedNetwork', label: 'Network', type: 'text' },
+  { key: 'status', label: 'Status', type: 'select', options: [
+    { value: 'active', label: 'Active' },
+    { value: 'error', label: 'Error' },
+    { value: 'building', label: 'Building' },
+    { value: 'pending', label: 'Pending' },
+  ]},
+];
+
 export function LoadBalancersPage() {
   const navigate = useNavigate();
   const [selectedLBs, setSelectedLBs] = useState<string[]>([]);
   const [sidebarOpen, setSidebarOpen] = useState(true);
-  const [searchQuery, setSearchQuery] = useState('');
+  const [appliedFilters, setAppliedFilters] = useState<AppliedFilter[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [loadBalancers] = useState(mockLoadBalancers);
   
@@ -152,7 +167,7 @@ export function LoadBalancersPage() {
     {
       key: 'status',
       label: 'Status',
-      width: '59px',
+      width: '64px',
       align: 'center',
       render: (_, row) => (
         <StatusIndicator status={lbStatusMap[row.status]} layout="icon-only" />
@@ -250,7 +265,7 @@ export function LoadBalancersPage() {
     {
       key: 'actions',
       label: 'Action',
-      width: '72px',
+      width: '64px',
       align: 'center',
       render: (_, row) => (
         <div onClick={(e) => e.stopPropagation()}>

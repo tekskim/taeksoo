@@ -260,7 +260,7 @@ export function LoadBalancerDetailPage() {
     {
       key: 'status',
       label: 'Status',
-      width: '59px',
+      width: '64px',
       align: 'center',
       render: (_, row) => (
         <StatusIndicator status={listenerStatusMap[row.status]} layout="icon-only" />
@@ -312,7 +312,7 @@ export function LoadBalancerDetailPage() {
     {
       key: 'actions',
       label: 'Action',
-      width: '72px',
+      width: '64px',
       align: 'center',
       render: (_: unknown, row: Listener) => {
         const listenerMenuItems: ContextMenuItem[] = [
@@ -337,7 +337,7 @@ export function LoadBalancerDetailPage() {
     {
       key: 'status',
       label: 'Status',
-      width: '59px',
+      width: '64px',
       align: 'center',
       render: (_, row) => (
         <StatusIndicator status={poolStatusMap[row.status]} layout="icon-only" />
@@ -411,7 +411,7 @@ export function LoadBalancerDetailPage() {
     {
       key: 'actions',
       label: 'Action',
-      width: '72px',
+      width: '64px',
       align: 'center',
       render: (_: unknown, row: Pool) => {
         const poolMenuItems: ContextMenuItem[] = [

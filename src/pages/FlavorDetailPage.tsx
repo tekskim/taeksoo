@@ -220,7 +220,7 @@ export function FlavorDetailPage() {
     {
       key: 'status',
       label: 'Status',
-      width: '59px',
+      width: '64px',
       align: 'center',
       render: (_, row) => (
         <StatusIndicator status={row.status} layout="icon-only" />
@@ -289,7 +289,7 @@ export function FlavorDetailPage() {
     {
       key: 'action',
       label: 'Action',
-      width: '72px',
+      width: '64px',
       align: 'center',
       render: (_, row) => (
         <div className="flex items-center justify-center gap-1">

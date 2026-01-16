@@ -2,7 +2,7 @@ import { useState, useMemo, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   Button,
-  SearchInput,
+  FilterSearchInput,
   Table,
   Pagination,
   VStack,
@@ -19,6 +19,8 @@ import {
   StatusIndicator,
   type TableColumn,
   type ContextMenuItem,
+  type FilterField,
+  type AppliedFilter,
 } from '@/design-system';
 import { Sidebar } from '@/components/Sidebar';
 import { useTabs } from '@/contexts/TabContext';
@@ -72,10 +74,31 @@ const mockImages: Image[] = [
    Component
    ---------------------------------------- */
 
+// Filter fields configuration
+const filterFields: FilterField[] = [
+  { key: 'name', label: 'Name', type: 'text' },
+  { key: 'os', label: 'OS', type: 'text' },
+  { key: 'diskFormat', label: 'Disk Format', type: 'select', options: [
+    { value: 'RAW', label: 'RAW' },
+    { value: 'QCOW2', label: 'QCOW2' },
+  ]},
+  { key: 'access', label: 'Access', type: 'select', options: [
+    { value: 'Private', label: 'Private' },
+    { value: 'Shared', label: 'Shared' },
+    { value: 'Public', label: 'Public' },
+  ]},
+  { key: 'status', label: 'Status', type: 'select', options: [
+    { value: 'active', label: 'Active' },
+    { value: 'pending', label: 'Pending' },
+    { value: 'error', label: 'Error' },
+    { value: 'deactivated', label: 'Deactivated' },
+  ]},
+];
+
 export function ComputeImagesPage() {
   const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(true);
-  const [searchQuery, setSearchQuery] = useState('');
+  const [appliedFilters, setAppliedFilters] = useState<AppliedFilter[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [activeTab, setActiveTab] = useState('current');
   const [images, setImages] = useState(mockImages);
@@ -154,17 +177,18 @@ export function ComputeImagesPage() {
       // 'all' shows everything
     }
 
-    // Filter by search
-    if (searchQuery) {
-      filtered = filtered.filter(
-        (img) =>
-          img.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          img.os.toLowerCase().includes(searchQuery.toLowerCase())
-      );
+    // Filter by applied filters
+    if (appliedFilters.length > 0) {
+      filtered = filtered.filter((img) => {
+        return appliedFilters.every((filter) => {
+          const value = String(img[filter.field as keyof Image] || '').toLowerCase();
+          return value.includes(filter.value.toLowerCase());
+        });
+      });
     }
 
     return filtered;
-  }, [images, activeTab, searchQuery]);
+  }, [images, activeTab, appliedFilters]);
 
   const totalPages = Math.ceil(filteredImages.length / rowsPerPage);
 
@@ -185,7 +209,7 @@ export function ComputeImagesPage() {
     {
       key: 'status',
       label: 'Status',
-      width: '59px',
+      width: '64px',
       align: 'center',
       render: (_, row) => (
         <StatusIndicator status={row.status} layout="icon-only" />
@@ -244,7 +268,7 @@ export function ComputeImagesPage() {
     {
       key: 'actions',
       label: 'Action',
-      width: '72px',
+      width: '64px',
       align: 'center',
       render: (_, row) => {
         const menuItems: ContextMenuItem[] = [
@@ -380,16 +404,13 @@ export function ComputeImagesPage() {
             <ListToolbar
               primaryActions={
                 <ListToolbar.Actions>
-                  <div className="w-[280px]">
-                    <SearchInput
-                      placeholder="Search image by attributes"
-                      value={searchQuery}
-                      onChange={(e) => setSearchQuery(e.target.value)}
-                      onClear={() => setSearchQuery('')}
-                      size="sm"
-                      fullWidth
-                    />
-                  </div>
+                  <FilterSearchInput
+                    filters={filterFields}
+                    appliedFilters={appliedFilters}
+                    onFiltersChange={setAppliedFilters}
+                    placeholder="Search image by attributes"
+                    className="w-[320px]"
+                  />
                   <Button variant="secondary" size="sm" icon={<IconDownload size={12} />} aria-label="Download" />
                 </ListToolbar.Actions>
               }

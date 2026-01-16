@@ -378,7 +378,7 @@ function PodsTab({ pods }: PodsTabProps) {
     {
       key: 'status',
       label: 'Status',
-      width: '70px',
+      width: '64px',
       align: 'center',
       render: (value: string) => (
         <StatusIndicator

@@ -244,7 +244,7 @@ export default function RouterDetailPage() {
     {
       key: 'status',
       label: 'Status',
-      width: '59px',
+      width: '64px',
       align: 'center',
       render: (_, row) => (
         <StatusIndicator status={portStatusMap[row.status]} layout="icon-only" />
@@ -288,7 +288,7 @@ export default function RouterDetailPage() {
     {
       key: 'actions',
       label: 'Action',
-      width: '72px',
+      width: '64px',
       align: 'center',
       render: (_: unknown, row: Port) => {
         const portMenuItems: ContextMenuItem[] = [
@@ -323,7 +323,7 @@ export default function RouterDetailPage() {
     {
       key: 'actions',
       label: 'Action',
-      width: '72px',
+      width: '64px',
       align: 'center',
       render: (_: unknown, row: StaticRoute) => {
         const routeMenuItems: ContextMenuItem[] = [

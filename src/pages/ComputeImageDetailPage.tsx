@@ -115,7 +115,7 @@ function CopyableValue({ value }: CopyableValueProps) {
         aria-label="Copy to clipboard"
       >
         {copied ? (
-          <IconCheck size={16} className="text-[var(--color-state-success)]" />
+          <IconCheck size={12} className="text-[var(--color-state-success)]" />
         ) : (
           <IconCopy size={12} className="text-[var(--color-action-primary)]" />
         )}

@@ -1066,7 +1066,7 @@ function WorkloadsContent() {
     {
       key: 'status',
       label: 'Status',
-      width: '59px',
+      width: '64px',
       align: 'center' as const,
       render: (_, row) => (
         <StatusIndicator status={statusMap[row.status]} layout="icon-only" />
@@ -1146,7 +1146,7 @@ function WorkloadsContent() {
     {
       key: 'actions',
       label: 'Action',
-      width: '72px',
+      width: '64px',
       align: 'center' as const,
       render: (_, row) => (
         <div onClick={(e) => e.stopPropagation()}>
