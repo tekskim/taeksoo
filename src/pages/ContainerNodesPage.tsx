@@ -223,7 +223,8 @@ export function ContainerNodesPage() {
       sortable: true,
       render: (value: string) => (
         <span
-          className="text-[var(--color-action-primary)] font-medium cursor-pointer hover:underline"
+          className="text-[var(--color-action-primary)] font-medium cursor-pointer hover:underline line-clamp-2"
+          title={value}
           onClick={(e) => {
             e.stopPropagation();
             navigate(`/container/nodes/${value}`);

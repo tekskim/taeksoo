@@ -1391,7 +1391,7 @@ export default function HostDetailPage() {
                     <div className="flex gap-4 pt-4">
                       {/* Left Panel - Device List */}
                       <div className="w-[224px] shrink-0 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg p-3 flex flex-col gap-3">
-                        <h6 className="text-[length:var(--font-size-14)] font-semibold leading-[var(--line-height-20)] text-[var(--color-text-default)]">
+                        <h6 className="text-[length:var(--font-size-16)] font-semibold leading-[var(--line-height-24)] text-[var(--color-text-default)]">
                           Device health
                         </h6>
                         <div className="w-full h-px bg-[var(--color-border-subtle)]" />

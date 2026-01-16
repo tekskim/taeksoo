@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
+import { useDarkMode } from '@/hooks/useDarkMode';
 import {
   VStack,
   TabBar,
@@ -47,6 +48,7 @@ function CapacityProgressBar({ label, used, total, unit, percentage }: CapacityP
   const [showTooltip, setShowTooltip] = useState(false);
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const containerRef = useRef<HTMLDivElement>(null);
+  const { isDark: isDarkMode } = useDarkMode();
 
   // Determine status based on percentage thresholds
   const getStatus = (pct: number): CapacityStatus => {
@@ -57,20 +59,23 @@ function CapacityProgressBar({ label, used, total, unit, percentage }: CapacityP
 
   const status = getStatus(percentage);
 
-  // Design system color tokens
-  const statusColors: Record<CapacityStatus, { bg: string; fill: string; text: string }> = {
+  // Design system color tokens - with dark mode support
+  const statusColors: Record<CapacityStatus, { bg: string; darkBg: string; fill: string; text: string }> = {
     success: {
       bg: 'var(--color-green-100)',
+      darkBg: 'rgba(34, 197, 94, 0.15)', // green-500 with 15% opacity for dark mode
       fill: 'var(--color-state-success)',
       text: 'var(--color-green-600)',
     },
     warning: {
       bg: 'var(--color-orange-100)',
+      darkBg: 'rgba(249, 115, 22, 0.15)', // orange-500 with 15% opacity for dark mode
       fill: 'var(--color-state-warning)',
       text: 'var(--color-orange-600)',
     },
     danger: {
       bg: 'var(--color-red-100)',
+      darkBg: 'rgba(239, 68, 68, 0.15)', // red-500 with 15% opacity for dark mode
       fill: 'var(--color-state-danger)',
       text: 'var(--color-red-600)',
     },
@@ -104,11 +109,11 @@ function CapacityProgressBar({ label, used, total, unit, percentage }: CapacityP
           </span>
           <div 
             className="flex items-center px-1.5 py-0.5 rounded-[var(--radius-md)]"
-            style={{ backgroundColor: colors.bg }}
+            style={{ backgroundColor: isDarkMode ? colors.darkBg : colors.bg }}
           >
             <span 
               className="text-[length:var(--font-size-11)] leading-[var(--line-height-16)] font-medium"
-              style={{ color: colors.text }}
+              style={{ color: isDarkMode ? colors.fill : colors.text }}
             >
               {percentage}%
             </span>
@@ -134,7 +139,7 @@ function CapacityProgressBar({ label, used, total, unit, percentage }: CapacityP
           className="absolute inset-y-0 left-0 rounded-[var(--progress-bar-radius)] transition-all"
           style={{ 
             width: `${Math.min(percentage, 100)}%`,
-            backgroundColor: '#0F172A',
+            backgroundColor: isDarkMode ? 'var(--color-text-muted)' : '#0F172A',
             minWidth: percentage > 0 ? 4 : 0,
           }}
         />
@@ -146,7 +151,7 @@ function CapacityProgressBar({ label, used, total, unit, percentage }: CapacityP
             style={{ left: mousePos.x + 12, top: mousePos.y - 40 }}
           >
             <div className="flex items-center gap-1.5">
-              <div className="w-[5px] h-[5px] rounded-[1px]" style={{ backgroundColor: '#0F172A' }} />
+              <div className="w-[5px] h-[5px] rounded-[1px]" style={{ backgroundColor: isDarkMode ? 'var(--color-text-muted)' : '#0F172A' }} />
               <span className="text-[11px] leading-[14px] text-[var(--color-text-default)] whitespace-nowrap">
                 Used: {used} {unit} ({percentage}%)
               </span>
@@ -233,7 +238,7 @@ const eventsColumns: TableColumn<EventRow>[] = [
     width: '120px', 
     sortable: true,
     render: (value: string) => (
-      <span className="text-[var(--color-action-primary)] font-medium cursor-pointer hover:underline">{value}</span>
+      <span className="text-[var(--color-action-primary)] font-medium cursor-pointer hover:underline line-clamp-2 break-all" title={value}>{value}</span>
     )
   },
   { key: 'message', label: 'Message', flex: 1, sortable: true },
@@ -243,7 +248,7 @@ const eventsColumns: TableColumn<EventRow>[] = [
     width: '180px', 
     sortable: true,
     render: (value: string) => (
-      <span className="text-[var(--color-action-primary)] font-medium cursor-pointer hover:underline">{value}</span>
+      <span className="text-[var(--color-action-primary)] font-medium cursor-pointer hover:underline line-clamp-2 break-all" title={value}>{value}</span>
     )
   },
   { key: 'firstSeen', label: 'First seen', width: '100px', sortable: true },
