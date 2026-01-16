@@ -403,7 +403,7 @@ export function InstanceSnapshotsPage() {
                     appliedFilters={appliedFilters}
                     onFiltersChange={setAppliedFilters}
                     placeholder="Search snapshot by attributes"
-                    className="w-[320px]"
+                    className="w-[280px]"
                   />
                   <Button variant="secondary" size="sm" icon={<IconDownload size={12} />} aria-label="Download" />
                 </ListToolbar.Actions>

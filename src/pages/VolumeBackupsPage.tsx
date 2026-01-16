@@ -2,6 +2,7 @@ import { useState, useMemo } from 'react';
 import {
   Button,
   FilterSearchInput,
+  SearchInput,
   Table,
   Pagination,
   VStack,
@@ -84,13 +85,13 @@ const volumeBackupStatusMap: Record<BackupStatus, 'active' | 'building' | 'error
 
 // Filter fields configuration
 const filterFields: FilterField[] = [
-  { key: 'name', label: 'Name', type: 'text' },
-  { key: 'sourceVolume', label: 'Source Volume', type: 'text' },
-  { key: 'backupMode', label: 'Backup Mode', type: 'select', options: [
+  { id: 'name', label: 'Name', type: 'text' },
+  { id: 'sourceVolume', label: 'Source Volume', type: 'text' },
+  { id: 'backupMode', label: 'Backup Mode', type: 'select', options: [
     { value: 'Full Backup', label: 'Full Backup' },
     { value: 'Incremental', label: 'Incremental' },
   ]},
-  { key: 'status', label: 'Status', type: 'select', options: [
+  { id: 'status', label: 'Status', type: 'select', options: [
     { value: 'active', label: 'Active' },
     { value: 'creating', label: 'Creating' },
     { value: 'error', label: 'Error' },
@@ -105,6 +106,7 @@ export function VolumeBackupsPage() {
   const [appliedFilters, setAppliedFilters] = useState<AppliedFilter[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [backups, setBackups] = useState(mockVolumeBackups);
+  const [searchQuery, setSearchQuery] = useState('');
   
   // Delete modal state
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
@@ -157,14 +159,18 @@ export function VolumeBackupsPage() {
 
   // Filter backups by search
   const filteredBackups = useMemo(() => {
-    if (!searchQuery) return backups;
+    if (appliedFilters.length === 0) return backups;
     
-    return backups.filter(
-      (backup) =>
-        backup.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        backup.sourceVolume.toLowerCase().includes(searchQuery.toLowerCase())
-    );
-  }, [backups, searchQuery]);
+    return backups.filter((backup) => {
+      return appliedFilters.every((filter) => {
+        const value = backup[filter.fieldId as keyof VolumeBackup];
+        if (typeof value === 'string') {
+          return value.toLowerCase().includes(filter.value.toLowerCase());
+        }
+        return true;
+      });
+    });
+  }, [backups, appliedFilters]);
 
   // Pagination
   const totalPages = Math.ceil(filteredBackups.length / rowsPerPage);
@@ -362,16 +368,15 @@ export function VolumeBackupsPage() {
             <ListToolbar
               primaryActions={
                 <ListToolbar.Actions>
-                  <div className="w-[280px]">
-                    <SearchInput
-                      placeholder="Search backup by attributes"
-                      value={searchQuery}
-                      onChange={(e) => setSearchQuery(e.target.value)}
-                      onClear={() => setSearchQuery('')}
-                      size="sm"
-                      fullWidth
-                    />
-                  </div>
+                  <FilterSearchInput
+                    filters={filterFields}
+                    appliedFilters={appliedFilters}
+                    onFiltersChange={setAppliedFilters}
+                    placeholder="Search backup by attributes"
+                    size="sm"
+                    className="w-[280px]"
+                    hideAppliedFilters
+                  />
                   <Button variant="secondary" size="sm" iconOnly icon={<IconDownload size={12} />} aria-label="Download" />
                 </ListToolbar.Actions>
               }

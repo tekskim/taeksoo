@@ -265,8 +265,6 @@ export function EntryPage() {
             </h1>
             <p className="text-[14px] text-[var(--color-text-subtle)] mx-auto leading-relaxed">
               Thaki Design system SSoT는 디자인 원칙, 컴포넌트, 토큰, 가이드라인을 한 곳에 모은 '단일 기준'입니다.
-              <br />
-              디자이너와 개발자가 동일한 소스를 참고해 의사결정과 구현을 정렬하고, 제품 전반의 일관성과 개발 속도를 함께 높입니다.
             </p>
           </div>
 

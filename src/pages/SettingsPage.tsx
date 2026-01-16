@@ -453,8 +453,8 @@ export function SettingsPage({ isOpen, onClose, initialTab = 'account' }: Settin
                         </label>
                         <span className="block text-[length:var(--font-size-11)] leading-[var(--line-height-16)] text-[var(--color-text-muted)] mb-2">Last updated: {passwordLastUpdated}</span>
                         <Button variant="primary" size="sm" onClick={() => setShowPasswordChangeModal(true)}>
-                          Change Password
-                        </Button>
+                            Change Password
+                          </Button>
                       </div>
                       {/* MFA Setting */}
                       <div className="space-y-4 pt-4 border-t border-[var(--color-border-default)]">

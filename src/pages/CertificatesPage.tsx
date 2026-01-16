@@ -2,6 +2,7 @@ import { useState, useMemo } from 'react';
 import {
   Button,
   FilterSearchInput,
+  SearchInput,
   Table,
   Pagination,
   VStack,
@@ -85,9 +86,9 @@ const certStatusMap: Record<CertificateStatus, 'active' | 'error' | 'pending'> =
 
 // Filter fields configuration
 const filterFields: FilterField[] = [
-  { key: 'name', label: 'Name', type: 'text' },
-  { key: 'domain', label: 'Domain', type: 'text' },
-  { key: 'status', label: 'Status', type: 'select', options: [
+  { id: 'name', label: 'Name', type: 'text' },
+  { id: 'domain', label: 'Domain', type: 'text' },
+  { id: 'status', label: 'Status', type: 'select', options: [
     { value: 'active', label: 'Active' },
     { value: 'error', label: 'Error' },
     { value: 'pending', label: 'Pending' },
@@ -101,6 +102,7 @@ export function CertificatesPage() {
   const [certificates] = useState(mockCertificates);
   const [activeTab, setActiveTab] = useState('server');
   const [selectedCerts, setSelectedCerts] = useState<string[]>([]);
+  const [searchQuery, setSearchQuery] = useState('');
   
   // Delete modal state
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
@@ -142,15 +144,19 @@ export function CertificatesPage() {
   const filteredCerts = useMemo(() => {
     let filtered = certificates;
     filtered = filtered.filter(c => c.type === activeTab);
-    if (searchQuery) {
-      const query = searchQuery.toLowerCase();
-      filtered = filtered.filter(c =>
-        c.name.toLowerCase().includes(query) ||
-        c.domain.toLowerCase().includes(query)
-      );
+    if (appliedFilters.length > 0) {
+      filtered = filtered.filter((cert) => {
+        return appliedFilters.every((filter) => {
+          const value = cert[filter.fieldId as keyof Certificate];
+          if (typeof value === 'string') {
+            return value.toLowerCase().includes(filter.value.toLowerCase());
+          }
+          return true;
+        });
+      });
     }
     return filtered;
-  }, [certificates, searchQuery, activeTab]);
+  }, [certificates, appliedFilters, activeTab]);
 
   const totalPages = Math.ceil(filteredCerts.length / rowsPerPage);
 
@@ -295,7 +301,7 @@ export function CertificatesPage() {
               <TabList><Tab value="server">Server</Tab><Tab value="ca">CA</Tab></TabList>
             </Tabs>
             <ListToolbar
-              primaryActions={<ListToolbar.Actions><div className="w-[280px]"><SearchInput placeholder="Search certificate by attributes" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} onClear={() => setSearchQuery('')} size="sm" fullWidth /></div><Button variant="secondary" size="sm" iconOnly icon={<IconDownload size={12} />} aria-label="Download" /></ListToolbar.Actions>}
+              primaryActions={<ListToolbar.Actions><FilterSearchInput filters={filterFields} appliedFilters={appliedFilters} onFiltersChange={setAppliedFilters} placeholder="Search certificate by attributes" size="sm" className="w-[280px]" hideAppliedFilters /><Button variant="secondary" size="sm" iconOnly icon={<IconDownload size={12} />} aria-label="Download" /></ListToolbar.Actions>}
               bulkActions={<ListToolbar.Actions><Button variant="muted" size="sm" leftIcon={<IconTrash size={12} />} disabled={selectedCerts.length === 0}>Delete</Button></ListToolbar.Actions>}
             />
             <Pagination currentPage={currentPage} totalPages={totalPages} totalItems={filteredCerts.length} selectedCount={selectedCerts.length} onPageChange={setCurrentPage} showSettings onSettingsClick={() => setIsPreferencesOpen(true)} />

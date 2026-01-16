@@ -416,7 +416,7 @@ function FilterSearchInputDemo() {
         appliedFilters={appliedFilters}
         onFiltersChange={setAppliedFilters}
         placeholder="Search instance by attributes"
-        className="w-[400px]"
+        className="w-[280px]"
       />
       <div className="text-[11px] text-[var(--color-text-subtle)] bg-[var(--color-surface-muted)] p-3 rounded-md">
         <strong>Usage:</strong> Click the input to see available filters. Select a filter type, then enter a value (text) or choose from options (select).

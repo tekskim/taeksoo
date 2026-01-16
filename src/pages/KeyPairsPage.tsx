@@ -334,7 +334,7 @@ export function KeyPairsPage() {
                     appliedFilters={appliedFilters}
                     onFiltersChange={setAppliedFilters}
                     placeholder="Search key pair by attributes"
-                    className="w-[320px]"
+                    className="w-[280px]"
                   />
                   <Button variant="secondary" size="sm" icon={<IconDownload size={12} />} aria-label="Download" />
                 </ListToolbar.Actions>

@@ -2,6 +2,7 @@ import { useState, useMemo } from 'react';
 import {
   Button,
   FilterSearchInput,
+  SearchInput,
   Table,
   Pagination,
   VStack,
@@ -175,8 +176,8 @@ function NameCell({ id, name }: NameCellProps) {
 
 // Filter fields configuration
 const filterFields: FilterField[] = [
-  { key: 'name', label: 'Name', type: 'text' },
-  { key: 'owner', label: 'Owner', type: 'text' },
+  { id: 'name', label: 'Name', type: 'text' },
+  { id: 'owner', label: 'Owner', type: 'text' },
 ];
 
 export function BucketsPage() {
@@ -185,6 +186,7 @@ export function BucketsPage() {
   const [appliedFilters, setAppliedFilters] = useState<AppliedFilter[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedRows, setSelectedRows] = useState<string[]>([]);
+  const [searchQuery, setSearchQuery] = useState('');
   const rowsPerPage = 10;
 
   // Global tab management
