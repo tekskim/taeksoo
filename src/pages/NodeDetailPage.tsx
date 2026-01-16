@@ -34,10 +34,10 @@ import {
   IconSearch,
   IconDownload,
   IconDotsCircleHorizontal,
-  IconInfoCircle,
   IconCheck,
   IconChevronDown,
-  IconHelp,
+  IconInfoCircle,
+  IconTrash,
 } from '@tabler/icons-react';
 
 /* ----------------------------------------
@@ -105,6 +105,7 @@ interface ConditionRow {
   type: string;
   status: string;
   reason: string;
+  size: string;
   message: string;
   lastTransition: string;
   lastHeartbeat: string;
@@ -112,12 +113,15 @@ interface ConditionRow {
 
 interface EventRow {
   id: string;
+  lastSeen: string;
   type: string;
   reason: string;
+  subobject: string;
+  source: string;
   message: string;
-  count: number;
   firstSeen: string;
-  lastSeen: string;
+  count: number;
+  name: string;
 }
 
 /* ----------------------------------------
@@ -226,6 +230,7 @@ const mockConditionsData: ConditionRow[] = [
     type: 'MemoryPressure',
     status: 'False',
     reason: 'KubeletHasSufficientMemory',
+    size: '14 GB',
     message: 'kubelet has sufficient memory available',
     lastTransition: '2025-10-14 06:59:07',
     lastHeartbeat: '2025-01-15 10:00:00',
@@ -235,6 +240,7 @@ const mockConditionsData: ConditionRow[] = [
     type: 'DiskPressure',
     status: 'False',
     reason: 'KubeletHasNoDiskPressure',
+    size: '256 GB',
     message: 'kubelet has no disk pressure',
     lastTransition: '2025-10-14 06:59:07',
     lastHeartbeat: '2025-01-15 10:00:00',
@@ -244,6 +250,7 @@ const mockConditionsData: ConditionRow[] = [
     type: 'PIDPressure',
     status: 'False',
     reason: 'KubeletHasSufficientPID',
+    size: '32768',
     message: 'kubelet has sufficient PID available',
     lastTransition: '2025-10-14 06:59:07',
     lastHeartbeat: '2025-01-15 10:00:00',
@@ -253,6 +260,7 @@ const mockConditionsData: ConditionRow[] = [
     type: 'Ready',
     status: 'True',
     reason: 'KubeletReady',
+    size: '—',
     message: 'kubelet is posting ready status',
     lastTransition: '2025-10-14 06:59:07',
     lastHeartbeat: '2025-01-15 10:00:00',
@@ -262,21 +270,27 @@ const mockConditionsData: ConditionRow[] = [
 const mockEventsData: EventRow[] = [
   {
     id: '1',
+    lastSeen: '30m',
     type: 'Normal',
-    reason: 'NodeReady',
-    message: 'Node thakicloud status is now: NodeReady',
+    reason: 'reasonText',
+    subobject: 'subobjectText',
+    source: 'source',
+    message: 'Message text',
+    firstSeen: '30m',
     count: 1,
-    firstSeen: '2025-10-14 06:59:07',
-    lastSeen: '2025-10-14 06:59:07',
+    name: 'eventName',
   },
   {
     id: '2',
+    lastSeen: '30m',
     type: 'Normal',
-    reason: 'Starting',
-    message: 'Starting kubelet.',
+    reason: 'reasonText',
+    subobject: 'subobjectText',
+    source: 'source',
+    message: 'Message text',
+    firstSeen: '30m',
     count: 1,
-    firstSeen: '2025-10-14 06:59:05',
-    lastSeen: '2025-10-14 06:59:05',
+    name: 'eventName',
   },
 ];
 
@@ -313,7 +327,7 @@ function ConditionCard({ title, status, tooltip }: ConditionCardProps) {
         </HStack>
         <Tooltip content={tooltip}>
           <button className="p-1 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-            <IconInfoCircle size={16} className="text-[var(--color-text-subtle)]" stroke={1.5} />
+            <IconInfoCircle size={14} className="text-[var(--color-text-subtle)]" stroke={1.5} />
           </button>
         </Tooltip>
       </HStack>
@@ -422,35 +436,21 @@ function PodsTab({ pods }: PodsTabProps) {
    Details Tab Content
    ---------------------------------------- */
 
-interface DetailDataRowProps {
+interface LabelWithTooltipProps {
   label: string;
-  value: string;
   tooltip: string;
-  showDivider?: boolean;
 }
 
-function DetailDataRow({ label, value, tooltip, showDivider = true }: DetailDataRowProps) {
+function LabelWithTooltip({ label, tooltip }: LabelWithTooltipProps) {
   return (
-    <div className="flex flex-col gap-3 w-[268px]">
-      {showDivider && (
-        <div className="h-px w-full bg-[var(--color-border-subtle)]" />
-      )}
-      <div className="flex flex-col gap-[6px]">
-        <div className="flex items-center gap-[2px]">
-          <span className="text-[11px] font-medium leading-4 text-[var(--color-text-subtle)]">
-            {label}
-          </span>
-          <Tooltip content={tooltip}>
-            <button className="p-0 bg-transparent border-none cursor-help">
-              <IconHelp size={16} className="text-[var(--color-text-subtle)]" stroke={1.5} />
-            </button>
-          </Tooltip>
-        </div>
-        <span className="text-[12px] leading-4 text-[var(--color-text-default)]">
-          {value}
-        </span>
-      </div>
-    </div>
+    <span className="flex items-center gap-[2px]">
+      {label}
+      <Tooltip content={tooltip}>
+        <button className="p-0 bg-transparent border-none cursor-pointer">
+          <IconInfoCircle size={14} className="text-[var(--color-text-subtle)]" stroke={1.5} />
+        </button>
+      </Tooltip>
+    </span>
   );
 }
 
@@ -517,11 +517,10 @@ function DetailsTab({ node }: DetailsTabProps) {
       <SectionCard.Header title="Basic Information" />
       <SectionCard.Content gap={3}>
         {basicInfoFields.map((field, index) => (
-          <DetailDataRow
+          <SectionCard.DataRow
             key={field.label}
-            label={field.label}
+            label={<LabelWithTooltip label={field.label} tooltip={field.tooltip} />}
             value={field.value}
-            tooltip={field.tooltip}
             showDivider={index > 0}
           />
         ))}
@@ -539,6 +538,9 @@ interface ImagesTabProps {
 }
 
 function ImagesTab({ images }: ImagesTabProps) {
+  const [currentPage, setCurrentPage] = useState(1);
+  const [searchQuery, setSearchQuery] = useState('');
+
   const columns: TableColumn<ImageRow>[] = [
     { key: 'name', label: 'Image Name', flex: 2, sortable: true },
     { key: 'size', label: 'Size', flex: 1, sortable: true },
@@ -549,6 +551,22 @@ function ImagesTab({ images }: ImagesTabProps) {
       <h3 className="text-[14px] font-semibold leading-[20px] text-[var(--color-text-default)]">
         Images
       </h3>
+      <HStack gap={2} align="center">
+        <SearchInput
+          placeholder="Search Images by attributes"
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          onClear={() => setSearchQuery('')}
+          size="sm"
+          className="w-[280px]"
+        />
+      </HStack>
+      <Pagination
+        currentPage={currentPage}
+        totalPages={1}
+        onPageChange={setCurrentPage}
+        totalItems={images.length}
+      />
       <Table columns={columns} data={images} rowKey="id" />
     </VStack>
   );
@@ -563,6 +581,9 @@ interface TaintsTabProps {
 }
 
 function TaintsTab({ taints }: TaintsTabProps) {
+  const [currentPage, setCurrentPage] = useState(1);
+  const [searchQuery, setSearchQuery] = useState('');
+
   const columns: TableColumn<TaintRow>[] = [
     { key: 'key', label: 'Key', flex: 1, sortable: true },
     { key: 'value', label: 'Value', flex: 1, render: (v: string) => v || '-' },
@@ -574,6 +595,22 @@ function TaintsTab({ taints }: TaintsTabProps) {
       <h3 className="text-[14px] font-semibold leading-[20px] text-[var(--color-text-default)]">
         Taints
       </h3>
+      <HStack gap={2} align="center">
+        <SearchInput
+          placeholder="Search Taints by attributes"
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          onClear={() => setSearchQuery('')}
+          size="sm"
+          className="w-[280px]"
+        />
+      </HStack>
+      <Pagination
+        currentPage={currentPage}
+        totalPages={1}
+        onPageChange={setCurrentPage}
+        totalItems={taints.length}
+      />
       <Table columns={columns} data={taints} rowKey="id" />
     </VStack>
   );
@@ -588,13 +625,14 @@ interface ConditionsTabProps {
 }
 
 function ConditionsTab({ conditions }: ConditionsTabProps) {
+  const [currentPage, setCurrentPage] = useState(1);
+  const [searchQuery, setSearchQuery] = useState('');
+
   const columns: TableColumn<ConditionRow>[] = [
-    { key: 'type', label: 'Type', flex: 1, sortable: true },
-    { key: 'status', label: 'Status', width: '80px', align: 'center' },
-    { key: 'reason', label: 'Reason', flex: 1 },
-    { key: 'message', label: 'Message', flex: 2 },
-    { key: 'lastTransition', label: 'Last Transition', flex: 1, sortable: true },
-    { key: 'lastHeartbeat', label: 'Last Heartbeat', flex: 1, sortable: true },
+    { key: 'type', label: 'Condition', flex: 1, sortable: true },
+    { key: 'size', label: 'Size', flex: 1, sortable: true },
+    { key: 'message', label: 'Message', flex: 2, sortable: true },
+    { key: 'lastHeartbeat', label: 'Updated', flex: 1, sortable: true },
   ];
 
   return (
@@ -602,6 +640,22 @@ function ConditionsTab({ conditions }: ConditionsTabProps) {
       <h3 className="text-[14px] font-semibold leading-[20px] text-[var(--color-text-default)]">
         Conditions
       </h3>
+      <HStack gap={2} align="center">
+        <SearchInput
+          placeholder="Search Conditions by attributes"
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          onClear={() => setSearchQuery('')}
+          size="sm"
+          className="w-[280px]"
+        />
+      </HStack>
+      <Pagination
+        currentPage={currentPage}
+        totalPages={1}
+        onPageChange={setCurrentPage}
+        totalItems={conditions.length}
+      />
       <Table columns={columns} data={conditions} rowKey="id" />
     </VStack>
   );
@@ -616,13 +670,39 @@ interface RecentEventsTabProps {
 }
 
 function RecentEventsTab({ events }: RecentEventsTabProps) {
+  const [currentPage, setCurrentPage] = useState(1);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [selectedKeys, setSelectedKeys] = useState<string[]>([]);
+
   const columns: TableColumn<EventRow>[] = [
-    { key: 'type', label: 'Type', width: '80px' },
+    { key: 'lastSeen', label: 'Last Seen', width: '100px', sortable: true },
+    { key: 'type', label: 'Type', width: '80px', sortable: true },
     { key: 'reason', label: 'Reason', flex: 1, sortable: true },
-    { key: 'message', label: 'Message', flex: 2 },
-    { key: 'count', label: 'Count', width: '80px', align: 'center' },
-    { key: 'firstSeen', label: 'First Seen', flex: 1, sortable: true },
-    { key: 'lastSeen', label: 'Last Seen', flex: 1, sortable: true },
+    { key: 'subobject', label: 'Subobject', flex: 1, sortable: true },
+    { key: 'source', label: 'Source', flex: 1, sortable: true },
+    { key: 'message', label: 'Message', flex: 1.5, sortable: true },
+    { key: 'firstSeen', label: 'First Seen', width: '100px', sortable: true },
+    { key: 'count', label: 'Count', width: '80px', sortable: true },
+    {
+      key: 'name',
+      label: 'Name',
+      flex: 1,
+      sortable: true,
+      render: (value: string) => (
+        <span className="text-[var(--color-action-primary)]">{value}</span>
+      ),
+    },
+    {
+      key: 'action',
+      label: 'Action',
+      width: '60px',
+      align: 'center',
+      render: () => (
+        <button className="p-1 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
+          <IconDotsCircleHorizontal size={16} className="text-[var(--color-text-subtle)]" stroke={1.5} />
+        </button>
+      ),
+    },
   ];
 
   return (
@@ -630,7 +710,41 @@ function RecentEventsTab({ events }: RecentEventsTabProps) {
       <h3 className="text-[14px] font-semibold leading-[20px] text-[var(--color-text-default)]">
         Recent Events
       </h3>
-      <Table columns={columns} data={events} rowKey="id" />
+      <HStack gap={2} align="center">
+        <SearchInput
+          placeholder="Search Events by attributes"
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          onClear={() => setSearchQuery('')}
+          size="sm"
+          className="w-[280px]"
+        />
+        <HStack gap={1}>
+          <Button variant="secondary" size="sm" disabled={selectedKeys.length === 0}>
+            <IconDownload size={14} stroke={1.5} />
+            Download YAML
+          </Button>
+          <Button variant="secondary" size="sm" disabled={selectedKeys.length === 0}>
+            <IconTrash size={14} stroke={1.5} />
+            Delete
+          </Button>
+        </HStack>
+      </HStack>
+      <Pagination
+        currentPage={currentPage}
+        totalPages={1}
+        onPageChange={setCurrentPage}
+        totalItems={events.length}
+        selectedCount={selectedKeys.length}
+      />
+      <Table
+        columns={columns}
+        data={events}
+        rowKey="id"
+        selectable
+        selectedKeys={selectedKeys}
+        onSelectionChange={setSelectedKeys}
+      />
     </VStack>
   );
 }
