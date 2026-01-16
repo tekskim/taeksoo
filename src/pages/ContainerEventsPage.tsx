@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
   VStack,
   HStack,
@@ -182,13 +182,18 @@ const eventsData: EventRow[] = [
 
 export function ContainerEventsPage() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
-  const { tabs, activeTabId, selectTab, closeTab, addNewTab, moveTab, addTab } = useTabs();
+  const { tabs, activeTabId, selectTab, closeTab, addNewTab, moveTab, addTab, updateActiveTabLabel } = useTabs();
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedRows, setSelectedRows] = useState<string[]>([]);
   const [filters, setFilters] = useState<{ key: string; value: string }[]>([
     { key: 'Name', value: 'a' }
   ]);
   const navigate = useNavigate();
+
+  // Update tab label to match the page title (most recent breadcrumb)
+  useEffect(() => {
+    updateActiveTabLabel('Events');
+  }, [updateActiveTabLabel]);
 
   // Shell Panel state
   const shellPanel = useShellPanel();

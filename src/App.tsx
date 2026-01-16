@@ -135,6 +135,12 @@ import { ConfigMapsPage } from '@/pages/ConfigMapsPage';
 import { ConfigMapDetailPage } from '@/pages/ConfigMapDetailPage';
 import { SecretsPage } from '@/pages/SecretsPage';
 import { SecretDetailPage } from '@/pages/SecretDetailPage';
+import { LimitRangesPage } from '@/pages/LimitRangesPage';
+import { ResourceQuotasPage } from '@/pages/ResourceQuotasPage';
+import { NetworkPoliciesPage } from '@/pages/NetworkPoliciesPage';
+import { NetworkPolicyDetailPage } from '@/pages/NetworkPolicyDetailPage';
+import { PodDisruptionBudgetsPage } from '@/pages/PodDisruptionBudgetsPage';
+import { PodDisruptionBudgetDetailPage } from '@/pages/PodDisruptionBudgetDetailPage';
 
 // Pages - IAM
 import { IAMHomePage } from '@/pages/IAMHomePage';
@@ -360,6 +366,12 @@ function AppRoutes() {
         <Route path="/container/configmaps/:configMapId" element={<ConfigMapDetailPage />} />
         <Route path="/container/secrets" element={<SecretsPage />} />
         <Route path="/container/secrets/:secretId" element={<SecretDetailPage />} />
+        <Route path="/container/limit-ranges" element={<LimitRangesPage />} />
+        <Route path="/container/resource-quotas" element={<ResourceQuotasPage />} />
+        <Route path="/container/network-policies" element={<NetworkPoliciesPage />} />
+        <Route path="/container/network-policies/:networkPolicyId" element={<NetworkPolicyDetailPage />} />
+        <Route path="/container/pdb" element={<PodDisruptionBudgetsPage />} />
+        <Route path="/container/pdb/:pdbId" element={<PodDisruptionBudgetDetailPage />} />
         <Route path="/container/*" element={<ContainerDashboardPage />} />
 
         {/* IAM Routes */}

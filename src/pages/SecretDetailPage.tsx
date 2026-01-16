@@ -138,7 +138,7 @@ export function SecretDetailPage() {
   const { secretId } = useParams<{ secretId: string }>();
   const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(true);
-  const { tabs, activeTabId, selectTab, closeTab, addNewTab, moveTab, addTab } = useTabs();
+  const { tabs, activeTabId, selectTab, closeTab, addNewTab, moveTab, addTab, updateActiveTabLabel } = useTabs();
   const [activeTab, setActiveTab] = useState('data');
   const [visibleValues, setVisibleValues] = useState<Record<string, boolean>>({});
 
@@ -156,6 +156,13 @@ export function SecretDetailPage() {
       setSecretData(mockSecretData['1']);
     }
   }, [secretId]);
+
+  // Update tab label to match the Secret name (most recent breadcrumb)
+  useEffect(() => {
+    if (secretData) {
+      updateActiveTabLabel(secretData.name);
+    }
+  }, [updateActiveTabLabel, secretData]);
 
   // Handle opening shell tab in new browser tab
   const handleOpenInNewTab = (tab: ShellTab) => {
