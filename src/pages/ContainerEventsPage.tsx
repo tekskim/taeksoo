@@ -269,7 +269,10 @@ export function ContainerEventsPage() {
       flex: 1,
       sortable: true,
       render: (value: string) => (
-        <span className="text-[var(--color-action-primary)] cursor-pointer hover:underline">
+        <span 
+          className="text-[var(--color-action-primary)] cursor-pointer hover:underline line-clamp-2"
+          title={value}
+        >
           {value}
         </span>
       )

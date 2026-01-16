@@ -1,14 +1,1 @@
-[
-  {
-    "id": "1",
-    "date": "2026-01-09",
-    "app": "Agent/Design System",
-    "appColor": "from-gray-500 to-slate-500",
-    "changes": [
-      {
-        "text": "UI 개선 및 버그 수정",
-        "author": "remy"
-      }
-    ]
-  }
-]
+[]

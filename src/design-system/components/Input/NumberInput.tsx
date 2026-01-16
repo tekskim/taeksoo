@@ -33,6 +33,8 @@ export interface NumberInputProps
   defaultValue?: number;
   /** Change handler */
   onChange?: (value: number) => void;
+  /** Hide stepper buttons */
+  hideSteppers?: boolean;
 }
 
 /* ----------------------------------------
@@ -55,6 +57,7 @@ export const NumberInput = forwardRef<HTMLInputElement, NumberInputProps>(
       className = '',
       id,
       disabled,
+      hideSteppers = false,
       ...props
     },
     ref
@@ -125,7 +128,7 @@ export const NumberInput = forwardRef<HTMLInputElement, NumberInputProps>(
       'w-full',
       'h-[var(--number-input-height)]',
       'pl-[var(--input-padding-x)]',
-      'pr-8',
+      hideSteppers ? 'pr-[var(--input-padding-x)]' : 'pr-8',
       'py-[var(--number-input-padding-y)]',
       'text-[length:var(--input-font-size)]',
       'leading-[var(--input-line-height)]',
@@ -194,28 +197,30 @@ export const NumberInput = forwardRef<HTMLInputElement, NumberInputProps>(
           />
 
           {/* Stepper buttons */}
-          <div className="absolute right-[var(--input-icon-offset)] top-1/2 -translate-y-1/2 flex flex-col">
-            <button
-              type="button"
-              tabIndex={-1}
-              className={buttonClasses}
-              onClick={increment}
-              disabled={disabled || (max !== undefined && currentValue !== undefined && currentValue >= max)}
-              aria-label="Increase value"
-            >
-              <IconChevronUp size={12} strokeWidth={2} />
-            </button>
-            <button
-              type="button"
-              tabIndex={-1}
-              className={buttonClasses}
-              onClick={decrement}
-              disabled={disabled || (min !== undefined && currentValue !== undefined && currentValue <= min)}
-              aria-label="Decrease value"
-            >
-              <IconChevronDown size={12} strokeWidth={2} />
-            </button>
-          </div>
+          {!hideSteppers && (
+            <div className="absolute right-[var(--input-icon-offset)] top-1/2 -translate-y-1/2 flex flex-col">
+              <button
+                type="button"
+                tabIndex={-1}
+                className={buttonClasses}
+                onClick={increment}
+                disabled={disabled || (max !== undefined && currentValue !== undefined && currentValue >= max)}
+                aria-label="Increase value"
+              >
+                <IconChevronUp size={12} strokeWidth={2} />
+              </button>
+              <button
+                type="button"
+                tabIndex={-1}
+                className={buttonClasses}
+                onClick={decrement}
+                disabled={disabled || (min !== undefined && currentValue !== undefined && currentValue <= min)}
+                aria-label="Decrease value"
+              >
+                <IconChevronDown size={12} strokeWidth={2} />
+              </button>
+            </div>
+          )}
         </div>
 
         {error && (
