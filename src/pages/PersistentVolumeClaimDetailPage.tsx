@@ -350,7 +350,7 @@ export function PersistentVolumeClaimDetailPage() {
   const { pvcId } = useParams<{ pvcId: string }>();
   const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(true);
-  const { tabs, activeTabId, selectTab, closeTab, addNewTab, moveTab, addTab } = useTabs();
+  const { tabs, activeTabId, selectTab, closeTab, addNewTab, moveTab, addTab, updateActiveTabLabel } = useTabs();
   const [activeTab, setActiveTab] = useState('volume-claim');
   const [selectedEventKeys, setSelectedEventKeys] = useState<string[]>([]);
 
@@ -368,6 +368,13 @@ export function PersistentVolumeClaimDetailPage() {
       setPvcData(mockPersistentVolumeClaimData['1']);
     }
   }, [pvcId]);
+
+  // Update tab label to match the PVC name (most recent breadcrumb)
+  useEffect(() => {
+    if (pvcData) {
+      updateActiveTabLabel(pvcData.name);
+    }
+  }, [updateActiveTabLabel, pvcData]);
 
   // Handle opening shell tab in new browser tab
   const handleOpenInNewTab = (tab: ShellTab) => {

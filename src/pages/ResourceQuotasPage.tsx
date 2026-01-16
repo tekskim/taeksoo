@@ -7,11 +7,11 @@ import {
   Breadcrumb,
   Table,
   Button,
-  StatusIndicator,
   SearchInput,
   Pagination,
   Chip,
   ContextMenu,
+  StatusIndicator,
   type TableColumn,
   type ContextMenuItem,
 } from '@/design-system';
@@ -28,20 +28,20 @@ import {
   IconDownload,
   IconTrash,
   IconDotsCircleHorizontal,
-  IconRefresh,
+  IconChevronDown,
 } from '@tabler/icons-react';
 
 /* ----------------------------------------
    Types
    ---------------------------------------- */
 
-interface StatefulSetRow {
+interface ResourceQuotaRow {
   id: string;
-  status: 'Running' | 'Pending' | 'Failed' | 'Paused';
+  status: 'Active' | 'Pending' | 'Error';
   name: string;
   namespace: string;
-  image: string;
-  ready: string;
+  request: string;
+  limit: string;
   createdAt: string;
 }
 
@@ -49,78 +49,51 @@ interface StatefulSetRow {
    Mock Data
    ---------------------------------------- */
 
-const statefulSetsData: StatefulSetRow[] = [
+const resourceQuotasData: ResourceQuotaRow[] = [
   {
     id: '1',
-    status: 'Running',
-    name: 'statefulset1',
-    namespace: 'default',
-    image: 'nginx',
-    ready: '1/1',
+    status: 'Active',
+    name: 'resourcequotaName',
+    namespace: 'namespaceName',
+    request: '-',
+    limit: '-',
     createdAt: '2025-11-10 12:57',
   },
   {
     id: '2',
-    status: 'Running',
-    name: 'mysql-primary',
-    namespace: 'database',
-    image: 'mysql:8.0',
-    ready: '1/1',
+    status: 'Active',
+    name: 'compute-quota',
+    namespace: 'default',
+    request: 'cpu: 4, memory: 8Gi',
+    limit: 'cpu: 8, memory: 16Gi',
     createdAt: '2025-11-09 14:30',
   },
   {
     id: '3',
-    status: 'Running',
-    name: 'elasticsearch',
-    namespace: 'logging',
-    image: 'elasticsearch:8.10.2',
-    ready: '3/3',
+    status: 'Active',
+    name: 'storage-quota',
+    namespace: 'kube-system',
+    request: 'storage: 100Gi',
+    limit: 'storage: 500Gi',
     createdAt: '2025-11-08 09:15',
   },
   {
     id: '4',
     status: 'Pending',
-    name: 'mongodb-replica',
-    namespace: 'database',
-    image: 'mongo:7.0',
-    ready: '0/3',
-    createdAt: '2025-11-10 11:22',
-  },
-  {
-    id: '5',
-    status: 'Running',
-    name: 'kafka-broker',
-    namespace: 'messaging',
-    image: 'confluentinc/cp-kafka:7.5.0',
-    ready: '3/3',
+    name: 'object-quota',
+    namespace: 'production',
+    request: 'pods: 10, services: 5',
+    limit: 'pods: 50, services: 20',
     createdAt: '2025-11-07 16:45',
   },
   {
-    id: '6',
-    status: 'Failed',
-    name: 'zookeeper',
-    namespace: 'messaging',
-    image: 'zookeeper:3.9',
-    ready: '0/3',
-    createdAt: '2025-11-10 08:00',
-  },
-  {
-    id: '7',
-    status: 'Running',
-    name: 'redis-cluster',
-    namespace: 'cache',
-    image: 'redis:7.2-alpine',
-    ready: '6/6',
-    createdAt: '2025-11-06 10:30',
-  },
-  {
-    id: '8',
-    status: 'Running',
-    name: 'cockroachdb',
-    namespace: 'database',
-    image: 'cockroachdb/cockroach:v23.1.11',
-    ready: '3/3',
-    createdAt: '2025-11-05 12:00',
+    id: '5',
+    status: 'Active',
+    name: 'combined-quota',
+    namespace: 'monitoring',
+    request: 'cpu: 2, memory: 4Gi',
+    limit: 'cpu: 4, memory: 8Gi',
+    createdAt: '2025-11-06 11:20',
   },
 ];
 
@@ -128,7 +101,7 @@ const statefulSetsData: StatefulSetRow[] = [
    Component
    ---------------------------------------- */
 
-export function StatefulSetsPage() {
+export function ResourceQuotasPage() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const { tabs, activeTabId, selectTab, closeTab, addNewTab, moveTab, addTab, updateActiveTabLabel } = useTabs();
   const [currentPage, setCurrentPage] = useState(1);
@@ -140,7 +113,7 @@ export function StatefulSetsPage() {
 
   // Update tab label to match the page title (most recent breadcrumb)
   useEffect(() => {
-    updateActiveTabLabel('StatefulSets');
+    updateActiveTabLabel('Resource Quotas');
   }, [updateActiveTabLabel]);
 
   // Shell Panel state
@@ -160,31 +133,41 @@ export function StatefulSetsPage() {
 
   // Pagination
   const rowsPerPage = 10;
-  const totalPages = Math.ceil(statefulSetsData.length / rowsPerPage);
-  const paginatedData = statefulSetsData.slice(
+  const totalPages = Math.ceil(resourceQuotasData.length / rowsPerPage);
+  const paginatedData = resourceQuotasData.slice(
     (currentPage - 1) * rowsPerPage,
     currentPage * rowsPerPage
   );
 
-  // Sidebar width calculation: 40px icon sidebar + 200px menu sidebar when open
+  // Sidebar width calculation
   const sidebarWidth = sidebarOpen ? 240 : 40;
 
+  // Create menu items for each row
+  const createMenuItems = (row: ResourceQuotaRow): ContextMenuItem[] => {
+    return [
+      {
+        id: 'download-yaml',
+        label: 'Download YAML',
+        onClick: () => console.log('Download YAML:', row.id),
+      },
+      {
+        id: 'delete',
+        label: 'Delete',
+        status: 'danger',
+        onClick: () => console.log('Delete:', row.id),
+      }
+    ];
+  };
+
   // Table columns configuration
-  const columns: TableColumn<StatefulSetRow>[] = [
+  const columns: TableColumn<ResourceQuotaRow>[] = [
     {
       key: 'status',
       label: 'Status',
-      width: '59px',
-      sortable: true,
-      align: 'center',
+      width: '80px',
       render: (value: string) => (
-        <StatusIndicator
-          status={
-            value === 'Running' ? 'active' : 
-            value === 'Pending' ? 'building' : 
-            value === 'Failed' ? 'error' : 
-            'muted'
-          }
+        <StatusIndicator 
+          status={value === 'Active' ? 'active' : value === 'Pending' ? 'building' : 'error'} 
         />
       )
     },
@@ -193,14 +176,10 @@ export function StatefulSetsPage() {
       label: 'Name',
       flex: 1,
       sortable: true,
-      render: (value: string, row) => (
+      render: (value: string) => (
         <span
-          className="text-[var(--color-action-primary)] font-medium cursor-pointer hover:underline truncate"
+          className="text-[var(--color-text-default)] font-medium truncate"
           title={value}
-          onClick={(e) => {
-            e.stopPropagation();
-            navigate(`/container/statefulsets/${row.id}`);
-          }}
         >
           {value}
         </span>
@@ -211,21 +190,38 @@ export function StatefulSetsPage() {
       label: 'Namespace',
       flex: 1,
       sortable: true,
+      render: (value: string) => (
+        <span className="text-[var(--color-text-default)]">
+          {value}
+        </span>
+      )
     },
     {
-      key: 'image',
-      label: 'Image',
-      flex: 1.5,
+      key: 'request',
+      label: 'Request',
+      flex: 1,
+      sortable: true,
+      render: (value: string) => (
+        <span className="text-[var(--color-text-default)]">
+          {value}
+        </span>
+      )
     },
     {
-      key: 'ready',
-      label: 'Ready',
-      width: '115px',
+      key: 'limit',
+      label: 'Limit',
+      flex: 1,
+      sortable: true,
+      render: (value: string) => (
+        <span className="text-[var(--color-text-default)]">
+          {value}
+        </span>
+      )
     },
     {
       key: 'createdAt',
       label: 'Created At',
-      width: '150px',
+      flex: 1,
       sortable: true,
     },
     {
@@ -233,51 +229,15 @@ export function StatefulSetsPage() {
       label: 'Action',
       width: '72px',
       align: 'center',
-      render: (_, row) => {
-        const menuItems: ContextMenuItem[] = [
-          {
-            id: 'execute-shell',
-            label: 'Execute Shell',
-            onClick: () => shellPanel.openConsole(row.id, `Shell: ${row.name}`),
-          },
-          {
-            id: 'redeploy',
-            label: 'Redeploy',
-            onClick: () => console.log('Redeploy:', row.id),
-          },
-          {
-            id: 'edit-config',
-            label: 'Edit Config',
-            onClick: () => navigate(`/container/statefulsets/${row.id}/edit`),
-          },
-          {
-            id: 'edit-yaml',
-            label: 'Edit YAML',
-            onClick: () => navigate(`/container/statefulsets/${row.id}/edit-yaml`),
-          },
-          {
-            id: 'download-yaml',
-            label: 'Download YAML',
-            onClick: () => console.log('Download YAML:', row.id),
-          },
-          {
-            id: 'delete',
-            label: 'Delete',
-            status: 'danger',
-            onClick: () => console.log('Delete:', row.id),
-          },
-        ];
-
-        return (
-          <div onClick={(e) => e.stopPropagation()}>
-            <ContextMenu items={menuItems} trigger="click">
-              <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
-                <IconDotsCircleHorizontal size={16} stroke={1.5} className="text-[var(--action-icon-color)]" />
-              </button>
-            </ContextMenu>
-          </div>
-        );
-      },
+      render: (_, row) => (
+        <div onClick={(e) => e.stopPropagation()}>
+          <ContextMenu items={createMenuItems(row)} trigger="click">
+            <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
+              <IconDotsCircleHorizontal size={16} stroke={1.5} className="text-[var(--action-icon-color)]" />
+            </button>
+          </ContextMenu>
+        </div>
+      ),
     },
   ];
 
@@ -290,16 +250,16 @@ export function StatefulSetsPage() {
   };
 
   // Create menu items
-  const createMenuItems: ContextMenuItem[] = [
+  const createDropdownItems: ContextMenuItem[] = [
     {
       id: 'create-form',
       label: 'Create as Form',
-      onClick: () => navigate('/container/statefulsets/create'),
+      onClick: () => navigate('/container/resource-quotas/create'),
     },
     {
       id: 'create-yaml',
       label: 'Create as YAML',
-      onClick: () => navigate('/container/statefulsets/create-yaml'),
+      onClick: () => navigate('/container/resource-quotas/create-yaml'),
     },
   ];
 
@@ -331,7 +291,7 @@ export function StatefulSetsPage() {
             <Breadcrumb
               items={[
                 { label: 'clusterName', href: '/container' },
-                { label: 'StatefulSets' },
+                { label: 'Resource Quotas' },
               ]}
             />
           }
@@ -343,7 +303,7 @@ export function StatefulSetsPage() {
                   if (shellPanel.isExpanded) {
                     shellPanel.setIsExpanded(false);
                   } else {
-                    shellPanel.openConsole('kubectl-statefulsets', 'Kubectl: ClusterName');
+                    shellPanel.openConsole('kubectl-rq', 'Kubectl: ClusterName');
                   }
                 }}
               >
@@ -376,15 +336,19 @@ export function StatefulSetsPage() {
               <HStack justify="between" align="center" className="w-full min-h-8">
                 <HStack gap={2} align="center">
                   <h1 className="text-[16px] leading-6 font-semibold text-[var(--color-text-default)]">
-                    StatefulSets
+                    Resource Quotas
                   </h1>
                 </HStack>
                 
-                {/* Create StatefulSet Button with Dropdown */}
+                {/* Create Button with Dropdown */}
                 <div className="relative">
-                  <ContextMenu items={createMenuItems} trigger="click">
-                    <Button variant="primary" size="md">
-                      Create StatefulSet
+                  <ContextMenu items={createDropdownItems} trigger="click">
+                    <Button 
+                      variant="primary" 
+                      size="md"
+                      rightIcon={<IconChevronDown size={14} stroke={1.5} />}
+                    >
+                      Create Resource Quota
                     </Button>
                   </ContextMenu>
                 </div>
@@ -395,7 +359,7 @@ export function StatefulSetsPage() {
                 {/* Search */}
                 <HStack gap={1} align="center">
                   <SearchInput
-                    placeholder="Search StatefulSets by attributes"
+                    placeholder="Search resource quota by attributes"
                     size="sm"
                     className="w-[280px]"
                   />
@@ -409,14 +373,6 @@ export function StatefulSetsPage() {
 
                 {/* Actions */}
                 <HStack gap={1} align="center">
-                  <Button 
-                    variant="secondary" 
-                    size="sm" 
-                    leftIcon={<IconRefresh size={12} stroke={1.5} />} 
-                    disabled={selectedRows.length === 0}
-                  >
-                    Redeploy
-                  </Button>
                   <Button 
                     variant="secondary" 
                     size="sm" 
@@ -463,14 +419,14 @@ export function StatefulSetsPage() {
                 currentPage={currentPage}
                 totalPages={totalPages}
                 onPageChange={setCurrentPage}
-                totalItems={statefulSetsData.length}
+                totalItems={resourceQuotasData.length}
                 selectedCount={selectedRows.length}
                 showSettings
                 onSettingsClick={() => {}}
               />
 
               {/* Table */}
-              <Table<StatefulSetRow>
+              <Table<ResourceQuotaRow>
                 columns={columns}
                 data={paginatedData}
                 rowKey="id"
@@ -503,4 +459,4 @@ export function StatefulSetsPage() {
   );
 }
 
-export default StatefulSetsPage;
+export default ResourceQuotasPage;
