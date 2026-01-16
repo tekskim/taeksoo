@@ -2,6 +2,7 @@ import React from 'react';
 import { IconCheck, IconEdit, IconProgress, IconMinus } from '@tabler/icons-react';
 import { Button } from '../Button';
 import { VStack, HStack } from '../../layouts';
+import { SectionCard } from '../SectionCard/SectionCard';
 
 /* ----------------------------------------
    Wizard Section Types
@@ -86,16 +87,26 @@ export function PreSection({ title }: PreSectionProps) {
 
 interface WritingSectionProps {
   title: string;
+  onEdit?: () => void;
 }
 
-export function WritingSection({ title }: WritingSectionProps) {
+export function WritingSection({ title, onEdit }: WritingSectionProps) {
   return (
     <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg px-4 py-3">
       <div className="h-8 flex items-center justify-between">
         <h5 className="text-[length:var(--font-size-16)] font-semibold leading-[var(--line-height-24)] text-[var(--color-text-default)]">
           {title}
         </h5>
-        <span className="text-[11px] text-[var(--color-text-subtle)]">Writing...</span>
+        {onEdit ? (
+          <HStack gap={3} align="center">
+            <span className="text-[11px] text-[var(--color-text-subtle)]">Writing...</span>
+            <Button variant="outline" size="sm" leftIcon={<IconEdit size={12} />} onClick={onEdit}>
+              Edit
+            </Button>
+          </HStack>
+        ) : (
+          <span className="text-[11px] text-[var(--color-text-subtle)]">Writing...</span>
+        )}
       </div>
     </div>
   );
@@ -155,6 +166,7 @@ export function DoneSectionRow({ label, value }: DoneSectionRowProps) {
 
 /* ----------------------------------------
    DoneSection Component (완료된 섹션)
+   Uses SectionCard internally for consistency with SectionCard.DataRow
    ---------------------------------------- */
 
 interface DoneSectionProps {
@@ -165,22 +177,18 @@ interface DoneSectionProps {
 
 export function DoneSection({ title, onEdit, children }: DoneSectionProps) {
   return (
-    <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg px-4 py-3">
-      <VStack gap={0}>
-        {/* Header */}
-        <HStack justify="between" align="center" className="w-full h-8">
-          <h5 className="text-[length:var(--font-size-16)] font-semibold leading-[var(--line-height-24)] text-[var(--color-text-default)]">
-            {title}
-          </h5>
+    <SectionCard>
+      <SectionCard.Header
+        title={title}
+        showDivider
+        actions={
           <Button variant="outline" size="sm" leftIcon={<IconEdit size={12} />} onClick={onEdit}>
             Edit
           </Button>
-        </HStack>
-
-        {/* Data Rows */}
-        {children}
-      </VStack>
-    </div>
+        }
+      />
+      <SectionCard.Content>{children}</SectionCard.Content>
+    </SectionCard>
   );
 }
 
