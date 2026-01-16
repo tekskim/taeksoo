@@ -145,7 +145,7 @@ export function ConfigMapDetailPage() {
   const { configMapId } = useParams<{ configMapId: string }>();
   const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(true);
-  const { tabs, activeTabId, selectTab, closeTab, addNewTab, moveTab, addTab } = useTabs();
+  const { tabs, activeTabId, selectTab, closeTab, addNewTab, moveTab, addTab, updateActiveTabLabel } = useTabs();
   const [activeTab, setActiveTab] = useState('data');
 
   // Shell Panel state
@@ -162,6 +162,13 @@ export function ConfigMapDetailPage() {
       setConfigMapData(mockConfigMapData['1']);
     }
   }, [configMapId]);
+
+  // Update tab label to match the ConfigMap name (most recent breadcrumb)
+  useEffect(() => {
+    if (configMapData) {
+      updateActiveTabLabel(configMapData.name);
+    }
+  }, [updateActiveTabLabel, configMapData]);
 
   // Handle opening shell tab in new browser tab
   const handleOpenInNewTab = (tab: ShellTab) => {

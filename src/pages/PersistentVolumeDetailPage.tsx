@@ -133,7 +133,7 @@ export function PersistentVolumeDetailPage() {
   const { pvId } = useParams<{ pvId: string }>();
   const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(true);
-  const { tabs, activeTabId, selectTab, closeTab, addNewTab, moveTab, addTab } = useTabs();
+  const { tabs, activeTabId, selectTab, closeTab, addNewTab, moveTab, addTab, updateActiveTabLabel } = useTabs();
   const [activeTab, setActiveTab] = useState(0);
 
   // Shell Panel state
@@ -150,6 +150,13 @@ export function PersistentVolumeDetailPage() {
       setPvData(mockPersistentVolumeData['1']);
     }
   }, [pvId]);
+
+  // Update tab label to match the PV name (most recent breadcrumb)
+  useEffect(() => {
+    if (pvData) {
+      updateActiveTabLabel(pvData.name);
+    }
+  }, [updateActiveTabLabel, pvData]);
 
   // Handle opening shell tab in new browser tab
   const handleOpenInNewTab = (tab: ShellTab) => {

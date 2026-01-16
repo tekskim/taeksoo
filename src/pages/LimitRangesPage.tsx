@@ -7,11 +7,11 @@ import {
   Breadcrumb,
   Table,
   Button,
-  StatusIndicator,
   SearchInput,
   Pagination,
   Chip,
   ContextMenu,
+  StatusIndicator,
   type TableColumn,
   type ContextMenuItem,
 } from '@/design-system';
@@ -28,20 +28,18 @@ import {
   IconDownload,
   IconTrash,
   IconDotsCircleHorizontal,
-  IconRefresh,
+  IconChevronDown,
 } from '@tabler/icons-react';
 
 /* ----------------------------------------
    Types
    ---------------------------------------- */
 
-interface StatefulSetRow {
+interface LimitRangeRow {
   id: string;
-  status: 'Running' | 'Pending' | 'Failed' | 'Paused';
+  status: 'Active' | 'Pending' | 'Error';
   name: string;
   namespace: string;
-  image: string;
-  ready: string;
   createdAt: string;
 }
 
@@ -49,78 +47,41 @@ interface StatefulSetRow {
    Mock Data
    ---------------------------------------- */
 
-const statefulSetsData: StatefulSetRow[] = [
+const limitRangesData: LimitRangeRow[] = [
   {
     id: '1',
-    status: 'Running',
-    name: 'statefulset1',
-    namespace: 'default',
-    image: 'nginx',
-    ready: '1/1',
+    status: 'Active',
+    name: 'limitrangeName',
+    namespace: 'namespaceName',
     createdAt: '2025-11-10 12:57',
   },
   {
     id: '2',
-    status: 'Running',
-    name: 'mysql-primary',
-    namespace: 'database',
-    image: 'mysql:8.0',
-    ready: '1/1',
+    status: 'Active',
+    name: 'cpu-memory-limits',
+    namespace: 'default',
     createdAt: '2025-11-09 14:30',
   },
   {
     id: '3',
-    status: 'Running',
-    name: 'elasticsearch',
-    namespace: 'logging',
-    image: 'elasticsearch:8.10.2',
-    ready: '3/3',
+    status: 'Active',
+    name: 'storage-limits',
+    namespace: 'kube-system',
     createdAt: '2025-11-08 09:15',
   },
   {
     id: '4',
     status: 'Pending',
-    name: 'mongodb-replica',
-    namespace: 'database',
-    image: 'mongo:7.0',
-    ready: '0/3',
-    createdAt: '2025-11-10 11:22',
-  },
-  {
-    id: '5',
-    status: 'Running',
-    name: 'kafka-broker',
-    namespace: 'messaging',
-    image: 'confluentinc/cp-kafka:7.5.0',
-    ready: '3/3',
+    name: 'container-limits',
+    namespace: 'production',
     createdAt: '2025-11-07 16:45',
   },
   {
-    id: '6',
-    status: 'Failed',
-    name: 'zookeeper',
-    namespace: 'messaging',
-    image: 'zookeeper:3.9',
-    ready: '0/3',
-    createdAt: '2025-11-10 08:00',
-  },
-  {
-    id: '7',
-    status: 'Running',
-    name: 'redis-cluster',
-    namespace: 'cache',
-    image: 'redis:7.2-alpine',
-    ready: '6/6',
-    createdAt: '2025-11-06 10:30',
-  },
-  {
-    id: '8',
-    status: 'Running',
-    name: 'cockroachdb',
-    namespace: 'database',
-    image: 'cockroachdb/cockroach:v23.1.11',
-    ready: '3/3',
-    createdAt: '2025-11-05 12:00',
+    id: '5',
+    status: 'Active',
+    name: 'pod-limits',
+    namespace: 'monitoring',
+    createdAt: '2025-11-06 11:20',
   },
 ];
 
@@ -128,7 +89,7 @@ const statefulSetsData: StatefulSetRow[] = [
    Component
    ---------------------------------------- */
 
-export function StatefulSetsPage() {
+export function LimitRangesPage() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const { tabs, activeTabId, selectTab, closeTab, addNewTab, moveTab, addTab, updateActiveTabLabel } = useTabs();
   const [currentPage, setCurrentPage] = useState(1);
@@ -140,7 +101,7 @@ export function StatefulSetsPage() {
 
   // Update tab label to match the page title (most recent breadcrumb)
   useEffect(() => {
-    updateActiveTabLabel('StatefulSets');
+    updateActiveTabLabel('Limit Ranges');
   }, [updateActiveTabLabel]);
 
   // Shell Panel state
@@ -160,47 +121,63 @@ export function StatefulSetsPage() {
 
   // Pagination
   const rowsPerPage = 10;
-  const totalPages = Math.ceil(statefulSetsData.length / rowsPerPage);
-  const paginatedData = statefulSetsData.slice(
+  const totalPages = Math.ceil(limitRangesData.length / rowsPerPage);
+  const paginatedData = limitRangesData.slice(
     (currentPage - 1) * rowsPerPage,
     currentPage * rowsPerPage
   );
 
-  // Sidebar width calculation: 40px icon sidebar + 200px menu sidebar when open
+  // Sidebar width calculation
   const sidebarWidth = sidebarOpen ? 240 : 40;
 
+  // Create menu items for each row
+  const createMenuItems = (row: LimitRangeRow): ContextMenuItem[] => {
+    return [
+      {
+        id: 'edit-config',
+        label: 'Edit Config',
+        onClick: () => navigate(`/container/limit-ranges/${row.id}/edit`),
+      },
+      {
+        id: 'edit-yaml',
+        label: 'Edit YAML',
+        onClick: () => navigate(`/container/limit-ranges/${row.id}/edit-yaml`),
+      },
+      {
+        id: 'download-yaml',
+        label: 'Download YAML',
+        onClick: () => console.log('Download YAML:', row.id),
+      },
+      {
+        id: 'delete',
+        label: 'Delete',
+        status: 'danger',
+        onClick: () => console.log('Delete:', row.id),
+      }
+    ];
+  };
+
   // Table columns configuration
-  const columns: TableColumn<StatefulSetRow>[] = [
+  const columns: TableColumn<LimitRangeRow>[] = [
     {
       key: 'status',
       label: 'Status',
-      width: '59px',
-      sortable: true,
-      align: 'center',
+      width: '80px',
       render: (value: string) => (
-        <StatusIndicator
-          status={
-            value === 'Running' ? 'active' : 
-            value === 'Pending' ? 'building' : 
-            value === 'Failed' ? 'error' : 
-            'muted'
-          }
+        <StatusIndicator 
+          status={value === 'Active' ? 'active' : value === 'Pending' ? 'building' : 'error'} 
         />
       )
     },
     {
       key: 'name',
       label: 'Name',
-      flex: 1,
+      flex: 2,
       sortable: true,
-      render: (value: string, row) => (
+      render: (value: string) => (
         <span
-          className="text-[var(--color-action-primary)] font-medium cursor-pointer hover:underline truncate"
+          className="text-[var(--color-text-default)] font-medium truncate"
           title={value}
-          onClick={(e) => {
-            e.stopPropagation();
-            navigate(`/container/statefulsets/${row.id}`);
-          }}
         >
           {value}
         </span>
@@ -209,23 +186,18 @@ export function StatefulSetsPage() {
     {
       key: 'namespace',
       label: 'Namespace',
-      flex: 1,
+      flex: 2,
       sortable: true,
-    },
-    {
-      key: 'image',
-      label: 'Image',
-      flex: 1.5,
-    },
-    {
-      key: 'ready',
-      label: 'Ready',
-      width: '115px',
+      render: (value: string) => (
+        <span className="text-[var(--color-text-default)]">
+          {value}
+        </span>
+      )
     },
     {
       key: 'createdAt',
       label: 'Created At',
-      width: '150px',
+      flex: 1,
       sortable: true,
     },
     {
@@ -233,51 +205,15 @@ export function StatefulSetsPage() {
       label: 'Action',
       width: '72px',
       align: 'center',
-      render: (_, row) => {
-        const menuItems: ContextMenuItem[] = [
-          {
-            id: 'execute-shell',
-            label: 'Execute Shell',
-            onClick: () => shellPanel.openConsole(row.id, `Shell: ${row.name}`),
-          },
-          {
-            id: 'redeploy',
-            label: 'Redeploy',
-            onClick: () => console.log('Redeploy:', row.id),
-          },
-          {
-            id: 'edit-config',
-            label: 'Edit Config',
-            onClick: () => navigate(`/container/statefulsets/${row.id}/edit`),
-          },
-          {
-            id: 'edit-yaml',
-            label: 'Edit YAML',
-            onClick: () => navigate(`/container/statefulsets/${row.id}/edit-yaml`),
-          },
-          {
-            id: 'download-yaml',
-            label: 'Download YAML',
-            onClick: () => console.log('Download YAML:', row.id),
-          },
-          {
-            id: 'delete',
-            label: 'Delete',
-            status: 'danger',
-            onClick: () => console.log('Delete:', row.id),
-          },
-        ];
-
-        return (
-          <div onClick={(e) => e.stopPropagation()}>
-            <ContextMenu items={menuItems} trigger="click">
-              <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
-                <IconDotsCircleHorizontal size={16} stroke={1.5} className="text-[var(--action-icon-color)]" />
-              </button>
-            </ContextMenu>
-          </div>
-        );
-      },
+      render: (_, row) => (
+        <div onClick={(e) => e.stopPropagation()}>
+          <ContextMenu items={createMenuItems(row)} trigger="click">
+            <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
+              <IconDotsCircleHorizontal size={16} stroke={1.5} className="text-[var(--action-icon-color)]" />
+            </button>
+          </ContextMenu>
+        </div>
+      ),
     },
   ];
 
@@ -290,16 +226,16 @@ export function StatefulSetsPage() {
   };
 
   // Create menu items
-  const createMenuItems: ContextMenuItem[] = [
+  const createDropdownItems: ContextMenuItem[] = [
     {
       id: 'create-form',
       label: 'Create as Form',
-      onClick: () => navigate('/container/statefulsets/create'),
+      onClick: () => navigate('/container/limit-ranges/create'),
     },
     {
       id: 'create-yaml',
       label: 'Create as YAML',
-      onClick: () => navigate('/container/statefulsets/create-yaml'),
+      onClick: () => navigate('/container/limit-ranges/create-yaml'),
     },
   ];
 
@@ -331,7 +267,7 @@ export function StatefulSetsPage() {
             <Breadcrumb
               items={[
                 { label: 'clusterName', href: '/container' },
-                { label: 'StatefulSets' },
+                { label: 'Limit Ranges' },
               ]}
             />
           }
@@ -343,7 +279,7 @@ export function StatefulSetsPage() {
                   if (shellPanel.isExpanded) {
                     shellPanel.setIsExpanded(false);
                   } else {
-                    shellPanel.openConsole('kubectl-statefulsets', 'Kubectl: ClusterName');
+                    shellPanel.openConsole('kubectl-lr', 'Kubectl: ClusterName');
                   }
                 }}
               >
@@ -376,15 +312,19 @@ export function StatefulSetsPage() {
               <HStack justify="between" align="center" className="w-full min-h-8">
                 <HStack gap={2} align="center">
                   <h1 className="text-[16px] leading-6 font-semibold text-[var(--color-text-default)]">
-                    StatefulSets
+                    Limit Ranges
                   </h1>
                 </HStack>
                 
-                {/* Create StatefulSet Button with Dropdown */}
+                {/* Create Button with Dropdown */}
                 <div className="relative">
-                  <ContextMenu items={createMenuItems} trigger="click">
-                    <Button variant="primary" size="md">
-                      Create StatefulSet
+                  <ContextMenu items={createDropdownItems} trigger="click">
+                    <Button 
+                      variant="primary" 
+                      size="md"
+                      rightIcon={<IconChevronDown size={14} stroke={1.5} />}
+                    >
+                      Create Limit Range
                     </Button>
                   </ContextMenu>
                 </div>
@@ -395,7 +335,7 @@ export function StatefulSetsPage() {
                 {/* Search */}
                 <HStack gap={1} align="center">
                   <SearchInput
-                    placeholder="Search StatefulSets by attributes"
+                    placeholder="Search limit range by attributes"
                     size="sm"
                     className="w-[280px]"
                   />
@@ -409,14 +349,6 @@ export function StatefulSetsPage() {
 
                 {/* Actions */}
                 <HStack gap={1} align="center">
-                  <Button 
-                    variant="secondary" 
-                    size="sm" 
-                    leftIcon={<IconRefresh size={12} stroke={1.5} />} 
-                    disabled={selectedRows.length === 0}
-                  >
-                    Redeploy
-                  </Button>
                   <Button 
                     variant="secondary" 
                     size="sm" 
@@ -463,14 +395,14 @@ export function StatefulSetsPage() {
                 currentPage={currentPage}
                 totalPages={totalPages}
                 onPageChange={setCurrentPage}
-                totalItems={statefulSetsData.length}
+                totalItems={limitRangesData.length}
                 selectedCount={selectedRows.length}
                 showSettings
                 onSettingsClick={() => {}}
               />
 
               {/* Table */}
-              <Table<StatefulSetRow>
+              <Table<LimitRangeRow>
                 columns={columns}
                 data={paginatedData}
                 rowKey="id"
@@ -503,4 +435,4 @@ export function StatefulSetsPage() {
   );
 }
 
-export default StatefulSetsPage;
+export default LimitRangesPage;
