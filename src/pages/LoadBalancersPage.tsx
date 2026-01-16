@@ -2,6 +2,7 @@ import { useState, useMemo } from 'react';
 import {
   Button,
   FilterSearchInput,
+  SearchInput,
   Table,
   Pagination,
   VStack,
@@ -84,10 +85,10 @@ const lbStatusMap: Record<LoadBalancerStatus, 'active' | 'error' | 'building' | 
 
 // Filter fields configuration
 const filterFields: FilterField[] = [
-  { key: 'name', label: 'Name', type: 'text' },
-  { key: 'vipAddress', label: 'VIP Address', type: 'text' },
-  { key: 'ownedNetwork', label: 'Network', type: 'text' },
-  { key: 'status', label: 'Status', type: 'select', options: [
+  { id: 'name', label: 'Name', type: 'text' },
+  { id: 'vipAddress', label: 'VIP Address', type: 'text' },
+  { id: 'ownedNetwork', label: 'Network', type: 'text' },
+  { id: 'status', label: 'Status', type: 'select', options: [
     { value: 'active', label: 'Active' },
     { value: 'error', label: 'Error' },
     { value: 'building', label: 'Building' },
@@ -102,6 +103,7 @@ export function LoadBalancersPage() {
   const [appliedFilters, setAppliedFilters] = useState<AppliedFilter[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [loadBalancers] = useState(mockLoadBalancers);
+  const [searchQuery, setSearchQuery] = useState('');
   
   // Delete modal state
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
@@ -145,14 +147,18 @@ export function LoadBalancersPage() {
 
   // Filter load balancers based on search
   const filteredLBs = useMemo(() => {
-    if (!searchQuery) return loadBalancers;
-    const query = searchQuery.toLowerCase();
-    return loadBalancers.filter(lb =>
-      lb.name.toLowerCase().includes(query) ||
-      lb.vipAddress.toLowerCase().includes(query) ||
-      lb.ownedNetwork.toLowerCase().includes(query)
-    );
-  }, [loadBalancers, searchQuery]);
+    if (appliedFilters.length === 0) return loadBalancers;
+    
+    return loadBalancers.filter((lb) => {
+      return appliedFilters.every((filter) => {
+        const value = lb[filter.fieldId as keyof LoadBalancer];
+        if (typeof value === 'string') {
+          return value.toLowerCase().includes(filter.value.toLowerCase());
+        }
+        return true;
+      });
+    });
+  }, [loadBalancers, appliedFilters]);
 
   const totalPages = Math.ceil(filteredLBs.length / rowsPerPage);
 
@@ -367,16 +373,15 @@ export function LoadBalancersPage() {
             <ListToolbar
               primaryActions={
                 <ListToolbar.Actions>
-                  <div className="w-[280px]">
-                    <SearchInput
-                      placeholder="Search load balancer by attributes"
-                      value={searchQuery}
-                      onChange={(e) => setSearchQuery(e.target.value)}
-                      onClear={() => setSearchQuery('')}
-                      size="sm"
-                      fullWidth
-                    />
-                  </div>
+                  <FilterSearchInput
+                    filters={filterFields}
+                    appliedFilters={appliedFilters}
+                    onFiltersChange={setAppliedFilters}
+                    placeholder="Search load balancer by attributes"
+                    size="sm"
+                    className="w-[280px]"
+                    hideAppliedFilters
+                  />
                   <Button variant="secondary" size="sm" iconOnly icon={<IconDownload size={12} />} aria-label="Download" />
                 </ListToolbar.Actions>
               }

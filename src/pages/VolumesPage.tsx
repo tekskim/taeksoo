@@ -408,7 +408,7 @@ export function VolumesPage() {
                     appliedFilters={appliedFilters}
                     onFiltersChange={setAppliedFilters}
                     placeholder="Search volume by attributes"
-                    className="w-[320px]"
+                    className="w-[280px]"
                   />
                   <Button variant="secondary" size="sm" iconOnly icon={<IconDownload size={12} />} aria-label="Download" />
                 </ListToolbar.Actions>

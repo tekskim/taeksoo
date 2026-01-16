@@ -320,7 +320,7 @@ export function Table<T extends Record<string, any>>({
                 <div
                   key={key}
                   className={`
-                    flex items-center
+                    flex items-stretch
                     h-[var(--table-row-height)]
                     rounded-[var(--table-row-radius)]
                     transition-all
@@ -339,6 +339,7 @@ export function Table<T extends Record<string, any>>({
                     <div
                       className="
                         shrink-0
+                        flex items-center
                         w-[var(--table-checkbox-width)]
                         px-[var(--table-cell-padding-x)]
                         py-[var(--table-cell-padding-y)]

@@ -2,6 +2,7 @@ import { useState, useMemo } from 'react';
 import {
   Button,
   FilterSearchInput,
+  SearchInput,
   Table,
   Pagination,
   VStack,
@@ -81,9 +82,9 @@ const volumeSnapshotStatusMap: Record<SnapshotStatus, 'active' | 'building' | 'e
 
 // Filter fields configuration
 const filterFields: FilterField[] = [
-  { key: 'name', label: 'Name', type: 'text' },
-  { key: 'sourceVolume', label: 'Source Volume', type: 'text' },
-  { key: 'status', label: 'Status', type: 'select', options: [
+  { id: 'name', label: 'Name', type: 'text' },
+  { id: 'sourceVolume', label: 'Source Volume', type: 'text' },
+  { id: 'status', label: 'Status', type: 'select', options: [
     { value: 'active', label: 'Active' },
     { value: 'creating', label: 'Creating' },
     { value: 'error', label: 'Error' },
@@ -97,6 +98,7 @@ export function VolumeSnapshotsPage() {
   const [appliedFilters, setAppliedFilters] = useState<AppliedFilter[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [snapshots, setSnapshots] = useState(mockVolumeSnapshots);
+  const [searchQuery, setSearchQuery] = useState('');
   
   // Delete modal state
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
@@ -149,14 +151,18 @@ export function VolumeSnapshotsPage() {
 
   // Filter snapshots by search
   const filteredSnapshots = useMemo(() => {
-    if (!searchQuery) return snapshots;
+    if (appliedFilters.length === 0) return snapshots;
     
-    return snapshots.filter(
-      (snapshot) =>
-        snapshot.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        snapshot.sourceVolume.toLowerCase().includes(searchQuery.toLowerCase())
-    );
-  }, [snapshots, searchQuery]);
+    return snapshots.filter((snapshot) => {
+      return appliedFilters.every((filter) => {
+        const value = snapshot[filter.fieldId as keyof VolumeSnapshot];
+        if (typeof value === 'string') {
+          return value.toLowerCase().includes(filter.value.toLowerCase());
+        }
+        return true;
+      });
+    });
+  }, [snapshots, appliedFilters]);
 
   // Pagination
   const totalPages = Math.ceil(filteredSnapshots.length / rowsPerPage);
@@ -340,16 +346,15 @@ export function VolumeSnapshotsPage() {
             <ListToolbar
               primaryActions={
                 <ListToolbar.Actions>
-                  <div className="w-[280px]">
-                    <SearchInput
-                      placeholder="Search snapshot by attributes"
-                      value={searchQuery}
-                      onChange={(e) => setSearchQuery(e.target.value)}
-                      onClear={() => setSearchQuery('')}
-                      size="sm"
-                      fullWidth
-                    />
-                  </div>
+                  <FilterSearchInput
+                    filters={filterFields}
+                    appliedFilters={appliedFilters}
+                    onFiltersChange={setAppliedFilters}
+                    placeholder="Search snapshot by attributes"
+                    size="sm"
+                    className="w-[280px]"
+                    hideAppliedFilters
+                  />
                   <Button variant="secondary" size="sm" iconOnly icon={<IconDownload size={12} />} aria-label="Download" />
                 </ListToolbar.Actions>
               }

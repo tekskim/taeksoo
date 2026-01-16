@@ -7,6 +7,7 @@ import {
   TopBar,
   Breadcrumb,
   Table,
+  TableLink,
   Button,
   StatusIndicator,
   SearchInput,
@@ -242,9 +243,7 @@ export function ContainerServicesPage() {
       minWidth: '120px',
       sortable: true,
       render: (value: string) => (
-        <span className="text-[12px] text-[var(--color-action-primary)] cursor-pointer hover:underline truncate block" title={value}>
-          {value}
-        </span>
+        <TableLink title={value}>{value}</TableLink>
       )
     },
     {
@@ -314,14 +313,14 @@ export function ContainerServicesPage() {
       render: (_, row) => {
         const menuItems: ContextMenuItem[] = [
           {
-            id: 'view-details',
-            label: 'View Details',
-            onClick: () => console.log('View Details:', row.id),
+            id: 'edit-config',
+            label: 'Edit Config',
+            onClick: () => console.log('Edit Config:', row.id),
           },
           {
-            id: 'edit',
-            label: 'Edit',
-            onClick: () => console.log('Edit:', row.id),
+            id: 'edit-yaml',
+            label: 'Edit YAML',
+            onClick: () => console.log('Edit YAML:', row.id),
           },
           {
             id: 'download-yaml',
@@ -430,7 +429,7 @@ export function ContainerServicesPage() {
               <HStack justify="between" align="center" className="w-full min-h-8">
                 <HStack gap={2} align="center">
                   <h1 className="text-[16px] leading-6 font-semibold text-[var(--color-text-default)]">
-                    Services({servicesData.length})
+                    Services
                   </h1>
                   <button className="p-1 hover:bg-[var(--color-surface-subtle)] rounded transition-colors">
                     <IconStar size={16} stroke={1.5} className="text-[var(--color-text-muted)]" />
