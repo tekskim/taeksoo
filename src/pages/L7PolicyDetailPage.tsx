@@ -364,8 +364,8 @@ export default function L7PolicyDetailPage() {
                   </TabList>
 
                   {/* Details Tab */}
-                  <TabPanel value="details">
-                    <VStack gap={6} className="pt-6">
+                  <TabPanel value="details" className="pt-0">
+                    <VStack gap={4} className="pt-4">
                       <SectionCard>
                         <SectionCard.Header
                           title="Basic information"
@@ -400,8 +400,8 @@ export default function L7PolicyDetailPage() {
                   </TabPanel>
 
                   {/* L7 Rules Tab */}
-                  <TabPanel value="l7-rules">
-                    <VStack gap={3} className="pt-6">
+                  <TabPanel value="l7-rules" className="pt-0">
+                    <VStack gap={4} className="pt-4">
                       {/* Header */}
                       <div className="flex items-center justify-between">
                         <h3 className="text-[16px] font-semibold text-[var(--color-text-default)]">

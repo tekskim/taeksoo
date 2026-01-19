@@ -126,8 +126,8 @@ export default function IAMTokenPoliciesPage() {
                   </TabList>
 
                   {/* General Policy Tab */}
-                  <TabPanel value="general">
-                    <VStack gap={6} className="pt-6">
+                  <TabPanel value="general" className="pt-0">
+                    <VStack gap={4} className="pt-4">
                       <SectionCard>
                         <SectionCard.Header title="General Policy" />
                         <SectionCard.Content gap={6}>

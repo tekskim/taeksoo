@@ -640,7 +640,7 @@ export function InstanceDetailPage() {
 
                 {/* Details Tab Panel */}
                 <TabPanel value="details" className="pt-0">
-                  <VStack gap={4} className="pt-6">
+                  <VStack gap={4} className="pt-4">
                     {/* Basic information */}
                     <SectionCard>
                       <SectionCard.Header 
@@ -729,7 +729,7 @@ export function InstanceDetailPage() {
 
                 {/* Volumes Tab Panel */}
                 <TabPanel value="volumes" className="pt-0">
-                  <VStack gap={3} className="pt-6">
+                  <VStack gap={4} className="pt-4">
                     {/* Header */}
                     <div className="flex items-center justify-between w-full">
                       <h2 className="text-[16px] font-semibold leading-6 text-[var(--color-text-default)]">
@@ -849,7 +849,7 @@ export function InstanceDetailPage() {
 
                 {/* Interfaces Tab Panel */}
                 <TabPanel value="interfaces" className="pt-0">
-                  <VStack gap={3} className="pt-6">
+                  <VStack gap={4} className="pt-4">
                     {/* Header */}
                     <div className="flex items-center justify-between w-full">
                       <h2 className="text-[16px] font-semibold leading-6 text-[var(--color-text-default)]">
@@ -983,7 +983,7 @@ export function InstanceDetailPage() {
 
                 {/* Floating IPs Tab Panel */}
                 <TabPanel value="floating-ips" className="pt-0">
-                  <VStack gap={3} className="pt-6">
+                  <VStack gap={4} className="pt-4">
                     {/* Header */}
                     <div className="flex items-center justify-between w-full">
                       <h2 className="text-[16px] font-semibold leading-6 text-[var(--color-text-default)]">
@@ -1074,7 +1074,7 @@ export function InstanceDetailPage() {
 
                 {/* Security Tab Panel */}
                 <TabPanel value="security" className="pt-0">
-                  <VStack gap={3} className="pt-6">
+                  <VStack gap={4} className="pt-4">
                     {/* Header */}
                     <div className="flex items-center justify-between w-full">
                       <h2 className="text-[16px] font-semibold leading-6 text-[var(--color-text-default)]">
@@ -1182,7 +1182,7 @@ export function InstanceDetailPage() {
 
                 {/* Instance snapshots Tab Panel */}
                 <TabPanel value="snapshots" className="pt-0">
-                  <VStack gap={3} className="pt-6">
+                  <VStack gap={4} className="pt-4">
                     {/* Header */}
                     <div className="flex items-center justify-between w-full">
                       <h2 className="text-[16px] font-semibold leading-6 text-[var(--color-text-default)]">Instance snapshots</h2>
@@ -1309,7 +1309,7 @@ export function InstanceDetailPage() {
 
                 {/* Logs Tab Panel */}
                 <TabPanel value="logs" className="pt-0">
-                  <VStack gap={3} className="pt-6">
+                  <VStack gap={4} className="pt-4">
                     {/* Header */}
                     <div className="flex items-center h-7">
                       <h2 className="text-[16px] font-semibold text-[var(--color-text-default)]">Console Logs</h2>
@@ -1380,7 +1380,7 @@ export function InstanceDetailPage() {
 
                 {/* Action Logs Tab Panel */}
                 <TabPanel value="action-logs" className="pt-0">
-                  <VStack gap={3} className="pt-6">
+                  <VStack gap={4} className="pt-4">
                     {/* Header */}
                     <div className="flex items-center h-7">
                       <h2 className="text-[16px] font-semibold text-[var(--color-text-default)]">Action logs</h2>

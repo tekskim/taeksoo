@@ -381,8 +381,8 @@ export function FlavorDetailPage() {
                 </TabList>
 
                 {/* Details Tab Panel */}
-                <TabPanel value="details">
-                  <VStack gap={4} className="pt-6">
+                <TabPanel value="details" className="pt-0">
+                  <VStack gap={4} className="pt-4">
                     {/* Basic information */}
                     <SectionCard>
                       <SectionCard.Header title="Basic information" />
@@ -427,10 +427,10 @@ export function FlavorDetailPage() {
                 </TabPanel>
 
                 {/* Instances Tab Panel */}
-                <TabPanel value="instances">
-                  <VStack gap={3} className="pt-6">
+                <TabPanel value="instances" className="pt-0">
+                  <VStack gap={4} className="pt-4">
                     {/* Section Header */}
-                    <h2 className="text-[length:var(--font-size-14)] font-semibold text-[var(--color-text-default)]">
+                    <h2 className="text-[length:var(--font-size-16)] leading-[var(--line-height-24)] font-semibold text-[var(--color-text-default)]">
                       Instances
                     </h2>
 
@@ -467,7 +467,7 @@ export function FlavorDetailPage() {
                 </TabPanel>
 
                 {/* Parameters Tab Panel */}
-                <TabPanel value="parameters">
+                <TabPanel value="parameters" className="pt-0">
                   <div className="pt-6">
                     <div className="bg-[#141414] dark:bg-[#FAFAFA] border border-[var(--color-border-default)] rounded-md p-4 w-full min-h-[576px] overflow-auto">
                       <pre className="font-mono text-[12px] leading-[18px] text-[#e2e8f0] dark:text-[#1e293b] whitespace-pre">
