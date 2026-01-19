@@ -884,7 +884,8 @@ function ImageSection({ selectedImageId, onSelectImage, onNext, isActive = false
     {
       key: 'status',
       label: 'Status',
-      width: '60px',
+      width: '64px',
+      align: 'center',
       render: (_, row) => (
         <StatusIndicator status={row.status as 'active' | 'error' | 'building'} />
       ),
@@ -932,7 +933,8 @@ function ImageSection({ selectedImageId, onSelectImage, onNext, isActive = false
     {
       key: 'status',
       label: 'Status',
-      width: '100px',
+      width: '64px',
+      align: 'center',
       render: (value) => (
         <StatusIndicator status={value as 'active' | 'error' | 'building'} />
       ),
@@ -962,7 +964,8 @@ function ImageSection({ selectedImageId, onSelectImage, onNext, isActive = false
     {
       key: 'status',
       label: 'Status',
-      width: '100px',
+      width: '64px',
+      align: 'center',
       render: (value) => {
         // Map volume status to StatusIndicator status
         const statusMap: Record<string, 'active' | 'in-use' | 'error'> = {
@@ -1639,7 +1642,8 @@ function NetworkSection({ onNext, isActive = false, isEditing = false, onEditCan
     {
       key: 'status',
       label: 'Status',
-      width: '80px',
+      width: '64px',
+      align: 'center',
       render: (_, row) => <StatusIndicator status={row.status === 'Active' ? 'active' : 'shutoff'} />,
     },
     { key: 'name', label: 'Name', sortable: true },
@@ -1672,7 +1676,8 @@ function NetworkSection({ onNext, isActive = false, isEditing = false, onEditCan
     {
       key: 'status',
       label: 'Status',
-      width: '80px',
+      width: '64px',
+      align: 'center',
       render: (_, row) => <StatusIndicator status={row.status === 'Active' ? 'active' : 'shutoff'} />,
     },
     {
@@ -1755,7 +1760,8 @@ function NetworkSection({ onNext, isActive = false, isEditing = false, onEditCan
     {
       key: 'status',
       label: 'Status',
-      width: '80px',
+      width: '64px',
+      align: 'center',
       render: (_, row) => <StatusIndicator status={row.status === 'Active' ? 'active' : 'shutoff'} />,
     },
     {

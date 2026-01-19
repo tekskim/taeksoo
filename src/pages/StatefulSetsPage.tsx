@@ -175,7 +175,7 @@ export function StatefulSetsPage() {
     {
       key: 'status',
       label: 'Status',
-      width: '59px',
+      width: '80px',
       sortable: true,
       align: 'center',
       render: (value: string) => (
@@ -232,7 +232,7 @@ export function StatefulSetsPage() {
     {
       key: 'actions',
       label: 'Action',
-      width: '72px',
+      width: '64px',
       align: 'center',
       render: (_, row) => {
         const menuItems: ContextMenuItem[] = [

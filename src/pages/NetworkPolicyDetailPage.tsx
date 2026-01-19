@@ -351,7 +351,7 @@ export function NetworkPolicyDetailPage() {
               <DetailHeader>
                 <DetailHeader.Title>Network Policy: {networkPolicyData.name}</DetailHeader.Title>
                 <DetailHeader.Actions>
-                  <ContextMenu items={moreActionsItems} trigger="click" align="right">
+                  <ContextMenu items={moreActionsItems} trigger="click" align="left">
                     <Button
                       variant="secondary"
                       size="md"
@@ -423,7 +423,7 @@ export function NetworkPolicyDetailPage() {
                 {/* Ingress Rules Tab */}
                 <TabPanel value="ingress-rules">
                   <VStack gap={4}>
-                    <h3 className="text-[14px] font-semibold leading-[20px] text-[var(--color-text-default)]">
+                    <h3 className="text-[16px] font-semibold leading-[24px] text-[var(--color-text-default)]">
                       Ingress Rules
                     </h3>
 
@@ -630,7 +630,7 @@ export function NetworkPolicyDetailPage() {
                 {/* Egress Rules Tab */}
                 <TabPanel value="egress-rules">
                   <VStack gap={4}>
-                    <h3 className="text-[14px] font-semibold leading-[20px] text-[var(--color-text-default)]">
+                    <h3 className="text-[16px] font-semibold leading-[24px] text-[var(--color-text-default)]">
                       Egress Rules
                     </h3>
 
@@ -839,7 +839,7 @@ export function NetworkPolicyDetailPage() {
                     <VStack gap={6}>
                       {/* Selectors Section */}
                       <VStack gap={2} className="w-full">
-                        <h3 className="text-[14px] font-semibold leading-[20px] text-[var(--color-text-default)]">
+                        <h3 className="text-[16px] font-semibold leading-[24px] text-[var(--color-text-default)]">
                           Selectors
                         </h3>
 
@@ -932,7 +932,7 @@ export function NetworkPolicyDetailPage() {
                   <div className="w-full border border-[var(--color-border-default)] rounded-[8px] p-4">
                     <VStack gap={6}>
                       {/* Section Title */}
-                      <h3 className="text-[14px] font-semibold leading-[20px] text-[var(--color-text-default)]">
+                      <h3 className="text-[16px] font-semibold leading-[24px] text-[var(--color-text-default)]">
                         Labels & Annotations
                       </h3>
 

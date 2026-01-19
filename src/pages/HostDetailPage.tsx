@@ -1058,7 +1058,7 @@ export default function HostDetailPage() {
     {
       key: 'status',
       label: 'Status',
-      width: '60px',
+      width: '64px',
       align: 'center',
       render: (_, row) => {
         const statusMap: Record<string, 'active' | 'maintenance' | 'down'> = {

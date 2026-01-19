@@ -279,7 +279,7 @@ export function StorageClassDetailPage() {
               <DetailHeader>
                 <DetailHeader.Title>Storage Class: {scData.name}</DetailHeader.Title>
                 <DetailHeader.Actions>
-                  <ContextMenu items={moreActionsItems} trigger="click" align="right">
+                  <ContextMenu items={moreActionsItems} trigger="click" align="left">
                     <Button
                       variant="secondary"
                       size="md"
@@ -363,7 +363,7 @@ export function StorageClassDetailPage() {
                   <div className="w-full border border-[var(--color-border-default)] rounded-[8px] p-4">
                     <VStack gap={3}>
                       {/* Title */}
-                      <h3 className="text-[14px] font-semibold leading-[20px] text-[var(--color-text-default)]">
+                      <h3 className="text-[16px] font-semibold leading-[24px] text-[var(--color-text-default)]">
                         Parameters
                       </h3>
 
@@ -417,7 +417,7 @@ export function StorageClassDetailPage() {
                   <div className="w-full border border-[var(--color-border-default)] rounded-[8px] px-4 py-3">
                     <VStack gap={3}>
                       {/* Title */}
-                      <h3 className="text-[14px] font-semibold leading-[20px] text-[var(--color-text-default)]">
+                      <h3 className="text-[16px] font-semibold leading-[24px] text-[var(--color-text-default)]">
                         Customize
                       </h3>
 

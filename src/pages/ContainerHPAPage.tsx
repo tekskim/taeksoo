@@ -285,7 +285,7 @@ export function ContainerHPAPage() {
     {
       key: 'action',
       label: 'Action',
-      width: '72px',
+      width: '64px',
       align: 'center',
       sticky: 'right',
       render: (_, row) => {

@@ -102,7 +102,7 @@ export default function IAMDomainsPage() {
     {
       key: 'status',
       label: 'Status',
-      width: 60,
+      width: 64,
       align: 'center',
       render: (value) => (
         <StatusIndicator status={value === 'active' ? 'active' : value === 'inactive' ? 'shutoff' : 'building'} />

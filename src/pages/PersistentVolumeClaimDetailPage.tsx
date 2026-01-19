@@ -509,7 +509,7 @@ export function PersistentVolumeClaimDetailPage() {
               <DetailHeader>
                 <DetailHeader.Title>Persistent Volume Claim: {pvcData.name}</DetailHeader.Title>
                 <DetailHeader.Actions>
-                  <ContextMenu items={moreActionsItems} trigger="click" align="right">
+                  <ContextMenu items={moreActionsItems} trigger="click" align="left">
                     <Button
                       variant="secondary"
                       size="md"
@@ -603,7 +603,7 @@ export function PersistentVolumeClaimDetailPage() {
                   <div className="w-full border border-[var(--color-border-default)] rounded-[8px] p-4">
                     <VStack gap={4}>
                       {/* Title */}
-                      <h3 className="text-[14px] font-semibold leading-[20px] text-[var(--color-text-default)]">
+                      <h3 className="text-[16px] font-semibold leading-[24px] text-[var(--color-text-default)]">
                         Volume Claim
                       </h3>
                         {/* Source */}
@@ -675,7 +675,7 @@ export function PersistentVolumeClaimDetailPage() {
                   <div className="w-full border border-[var(--color-border-default)] rounded-[8px] p-4">
                     <VStack gap={4}>
                       {/* Title */}
-                      <h3 className="text-[14px] font-semibold leading-[20px] text-[var(--color-text-default)]">
+                      <h3 className="text-[16px] font-semibold leading-[24px] text-[var(--color-text-default)]">
                         Customize
                       </h3>
                       {/* Access Modes */}
@@ -712,7 +712,7 @@ export function PersistentVolumeClaimDetailPage() {
                 <TabPanel value="conditions">
                   <VStack gap={3}>
                     {/* Title */}
-                    <h3 className="text-[14px] font-semibold leading-[20px] text-[var(--color-text-default)]">
+                    <h3 className="text-[16px] font-semibold leading-[24px] text-[var(--color-text-default)]">
                       Conditions
                     </h3>
 
@@ -770,7 +770,7 @@ export function PersistentVolumeClaimDetailPage() {
                   <div className="w-full border border-[var(--color-border-default)] rounded-[8px] p-4">
                     <VStack gap={4}>
                       {/* Title */}
-                      <h3 className="text-[14px] font-semibold leading-[20px] text-[var(--color-text-default)]">
+                      <h3 className="text-[16px] font-semibold leading-[24px] text-[var(--color-text-default)]">
                         Labels & Annotations
                       </h3>
                       {/* Labels Section */}
@@ -846,7 +846,7 @@ export function PersistentVolumeClaimDetailPage() {
                 <TabPanel value="recent-events">
                   <VStack gap={3}>
                     {/* Title */}
-                    <h3 className="text-[14px] font-semibold leading-[20px] text-[var(--color-text-default)]">
+                    <h3 className="text-[16px] font-semibold leading-[24px] text-[var(--color-text-default)]">
                       Recent Events
                     </h3>
 
@@ -935,7 +935,7 @@ export function PersistentVolumeClaimDetailPage() {
                             key: 'count',
                             label: 'Count',
                             sortable: true,
-                            width: 60,
+                            width: 64,
                           },
                           {
                             key: 'name',
