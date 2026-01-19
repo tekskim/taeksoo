@@ -3,16 +3,13 @@ import {
   Drawer, 
   Button, 
   SearchInput, 
-  Tabs, 
-  TabList, 
-  Tab, 
   Pagination, 
   StatusIndicator,
   Radio,
   SelectionIndicator,
 } from '@/design-system';
 import { HStack, VStack } from '@/design-system/layouts';
-import { IconExternalLink, IconChevronDown } from '@tabler/icons-react';
+import { IconExternalLink, IconChevronDown, IconAlertCircle } from '@tabler/icons-react';
 
 /* ----------------------------------------
    Types
@@ -27,13 +24,18 @@ export interface VolumeItem {
   diskTag: string;
 }
 
-export interface AttachVolumeDrawerProps {
+export interface InstanceInfo {
+  id: string;
+  name: string;
+}
+
+export interface DetachVolumeDrawerProps {
   isOpen: boolean;
   onClose: () => void;
-  instanceName: string;
+  instance: InstanceInfo;
   volumes?: VolumeItem[];
-  onAttach?: (volumeId: string) => void;
-  onCreateNewVolume?: () => void;
+  onDetach?: (volumeId: string) => void;
+  onCreateNewNetwork?: () => void;
 }
 
 /* ----------------------------------------
@@ -43,26 +45,25 @@ export interface AttachVolumeDrawerProps {
 const mockVolumes: VolumeItem[] = Array.from({ length: 10 }, (_, i) => ({
   id: `vol-${i + 1}`,
   name: 'vol34',
-  status: 'available',
+  status: 'in-use',
   type: '_DEFAULT_',
   size: '1500GiB',
   diskTag: 'Data Disk',
 }));
 
 /* ----------------------------------------
-   AttachVolumeDrawer Component
+   DetachVolumeDrawer Component
    ---------------------------------------- */
 
-export function AttachVolumeDrawer({
+export function DetachVolumeDrawer({
   isOpen,
   onClose,
-  instanceName,
+  instance,
   volumes = mockVolumes,
-  onAttach,
-  onCreateNewVolume,
-}: AttachVolumeDrawerProps) {
+  onDetach,
+  onCreateNewNetwork,
+}: DetachVolumeDrawerProps) {
   const [selectedVolumeId, setSelectedVolumeId] = useState<string | null>(null);
-  const [activeTab, setActiveTab] = useState('available');
   const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -71,12 +72,12 @@ export function AttachVolumeDrawer({
   const itemsPerPage = 10;
   const totalPages = Math.ceil(totalItems / itemsPerPage);
 
-  const handleAttach = async () => {
+  const handleDetach = async () => {
     if (!selectedVolumeId) return;
     
     setIsSubmitting(true);
     try {
-      await onAttach?.(selectedVolumeId);
+      await onDetach?.(selectedVolumeId);
       onClose();
     } finally {
       setIsSubmitting(false);
@@ -113,62 +114,57 @@ export function AttachVolumeDrawer({
           </Button>
           <Button 
             variant="primary" 
-            onClick={handleAttach}
+            onClick={handleDetach}
             disabled={!selectedVolumeId || isSubmitting}
             size="md"
             className="w-[152px]"
           >
-            {isSubmitting ? 'Attaching...' : 'Attach'}
+            {isSubmitting ? 'Detaching...' : 'Detach'}
           </Button>
         </HStack>
       }
     >
       <VStack gap={6} className="h-full">
         {/* Header Section */}
-        <VStack gap={4}>
-          <VStack gap={1}>
+        <VStack gap={3}>
+          <VStack gap={2}>
             <h2 className="text-[16px] font-semibold text-[var(--color-text-default)] leading-6">
-              Attach Volume
+              Detach Volume
             </h2>
-            <p className="text-[12px] text-[var(--color-text-muted)] leading-4">
-              Attach an existing volume to this instance. Once attached, it will appear as a new block device inside your instance.
+            <p className="text-[12px] text-[var(--color-text-subtle)] leading-4">
+              Detach the selected volume from this instance. Once detached, it will no longer be accessible.
             </p>
           </VStack>
 
+          {/* Warning Message */}
+          <div className="w-full p-3 bg-[var(--color-state-danger-bg)] rounded-lg flex gap-2 items-start">
+            <IconAlertCircle size={16} className="text-[var(--color-state-danger)] shrink-0 mt-0.5" />
+            <p className="text-[11px] text-[var(--color-text-default)] leading-4">
+              For data consistency, stop all write operations on the instance before detaching a volume.
+            </p>
+          </div>
+
           {/* Instance Info Box */}
-          <div className="w-full p-4 bg-[var(--color-surface-subtle)] rounded-lg">
-            <div className="text-[11px] text-[var(--color-text-muted)] mb-1">Instance</div>
-            <div className="text-[14px] font-medium text-[var(--color-text-default)]">{instanceName}</div>
+          <div className="w-full px-4 py-3 bg-[var(--color-surface-subtle)] rounded-lg">
+            <div className="text-[11px] text-[var(--color-text-subtle)] mb-1.5">Instance Name</div>
+            <div className="text-[12px] text-[var(--color-text-default)]">{instance.name}</div>
           </div>
         </VStack>
 
         {/* Volume Section */}
-        <VStack gap={4} className="flex-1 min-h-0">
+        <VStack gap={3} className="flex-1 min-h-0">
           {/* Volume Header */}
           <HStack justify="between" align="center" className="w-full">
-            <h3 className="text-[14px] font-semibold text-[var(--color-text-default)]">Volume</h3>
+            <h3 className="text-[14px] font-medium text-[var(--color-text-default)]">Volumes</h3>
             <Button 
               variant="muted" 
               size="sm"
-              onClick={onCreateNewVolume}
-              rightIcon={<IconExternalLink size={14} />}
+              onClick={onCreateNewNetwork}
+              rightIcon={<IconExternalLink size={12} />}
             >
-              Create a new volume
+              Create a new network
             </Button>
           </HStack>
-
-          {/* Tabs */}
-          <Tabs
-            value={activeTab}
-            onChange={setActiveTab}
-            variant="underline"
-            size="sm"
-          >
-            <TabList>
-              <Tab value="available">Available</Tab>
-              <Tab value="shared">Shared</Tab>
-            </TabList>
-          </Tabs>
 
           {/* Search */}
           <div className="w-[280px]">
@@ -190,7 +186,7 @@ export function AttachVolumeDrawer({
               onPageChange={setCurrentPage}
             />
             <div className="w-px h-4 bg-[var(--color-border-default)] mx-2" />
-            <span className="text-[12px] text-[var(--color-text-muted)]">{totalItems} items</span>
+            <span className="text-[11px] text-[var(--color-text-subtle)]">{totalItems} items</span>
           </HStack>
 
           {/* Volume Table */}
@@ -285,4 +281,4 @@ export function AttachVolumeDrawer({
   );
 }
 
-export default AttachVolumeDrawer;
+export default DetachVolumeDrawer;
