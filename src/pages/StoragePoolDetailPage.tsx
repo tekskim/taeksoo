@@ -1068,7 +1068,7 @@ export function StoragePoolDetailPage() {
 
                   {/* Details Tab */}
                   <TabPanel value="details" className="pt-0">
-                    <VStack gap={4} className="pt-6">
+                    <VStack gap={4} className="pt-4">
                       {/* Basic information */}
                       <SectionCard>
                         <SectionCard.Header
@@ -1146,7 +1146,7 @@ export function StoragePoolDetailPage() {
 
                   {/* Performance Tab */}
                   <TabPanel value="performance" className="pt-0">
-                    <VStack gap={4} className="pt-6">
+                    <VStack gap={4} className="pt-4">
                       {/* Monitoring Time Controls */}
                       <div className="flex justify-start w-full">
                         <MonitoringTimeControls 

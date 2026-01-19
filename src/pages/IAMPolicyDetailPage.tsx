@@ -660,8 +660,8 @@ export default function IAMPolicyDetailPage() {
                   </TabList>
 
                   {/* Permissions Tab */}
-                  <TabPanel value="permissions">
-                    <VStack gap={3} className="pt-6">
+                  <TabPanel value="permissions" className="pt-0">
+                    <VStack gap={4} className="pt-4">
                       {/* Section Header */}
                       <HStack justify="between" align="center" className="w-full">
                         <h2 className="text-[16px] font-semibold leading-6 text-[var(--color-text-default)]">
@@ -769,8 +769,8 @@ export default function IAMPolicyDetailPage() {
                   </TabPanel>
 
                   {/* Roles Tab */}
-                  <TabPanel value="roles">
-                    <VStack gap={3} className="pt-6">
+                  <TabPanel value="roles" className="pt-0">
+                    <VStack gap={4} className="pt-4">
                       {/* Section Header */}
                       <HStack justify="between" align="center" className="w-full">
                         <h2 className="text-[16px] font-semibold leading-6 text-[var(--color-text-default)]">
@@ -807,8 +807,8 @@ export default function IAMPolicyDetailPage() {
                   </TabPanel>
 
                   {/* Version History Tab */}
-                  <TabPanel value="version-history">
-                    <VStack gap={3} className="pt-6">
+                  <TabPanel value="version-history" className="pt-0">
+                    <VStack gap={4} className="pt-4">
                       {/* Section Header */}
                       <div className="h-7 flex items-center">
                         <h2 className="text-[16px] font-semibold leading-6 text-[var(--color-text-default)]">

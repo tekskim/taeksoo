@@ -1134,7 +1134,7 @@ export function CreateNetworkPolicyPage() {
   const [networkPolicyNameError, setNetworkPolicyNameError] = useState<string | null>(null);
 
   // Tab management
-  const { tabs, activeTabId, closeTab, selectTab, updateActiveTabLabel, moveTab } = useTabs();
+  const { tabs, activeTabId, closeTab, selectTab, updateActiveTabLabel, moveTab, addNewTab } = useTabs();
 
   // Update tab label
   useEffect(() => {
@@ -1355,6 +1355,7 @@ export function CreateNetworkPolicyPage() {
           onTabChange={selectTab}
           onTabClose={closeTab}
           onTabReorder={moveTab}
+          onTabAdd={addNewTab}
         />
 
         {/* Top Bar */}

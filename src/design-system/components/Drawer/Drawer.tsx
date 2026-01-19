@@ -164,7 +164,7 @@ export function Drawer({
         )}
 
         {/* Content */}
-        <div className="flex-1 overflow-y-auto px-6 py-4 drawer-scroll">{children}</div>
+        <div className="flex-1 overflow-y-auto px-6 pt-4 pb-8 drawer-scroll">{children}</div>
 
         {/* Footer */}
         {footer && (

@@ -760,8 +760,8 @@ export default function ListenerDetailPage() {
                   </TabList>
 
                   {/* Details Tab */}
-                  <TabPanel value="details">
-                    <VStack gap={4} className="pt-6">
+                  <TabPanel value="details" className="pt-0">
+                    <VStack gap={4} className="pt-4">
                       {/* Basic information */}
                       <SectionCard>
                         <SectionCard.Header
@@ -816,8 +816,8 @@ export default function ListenerDetailPage() {
                   </TabPanel>
 
                   {/* Default Pool Tab */}
-                  <TabPanel value="pools">
-                    <VStack gap={4} className="pt-6">
+                  <TabPanel value="pools" className="pt-0">
+                    <VStack gap={4} className="pt-4">
                       {/* Default Pool */}
                       <SectionCard>
                         <SectionCard.Header
@@ -852,8 +852,8 @@ export default function ListenerDetailPage() {
                   </TabPanel>
 
                   {/* L7 Policies Tab */}
-                  <TabPanel value="l7-policies">
-                    <VStack gap={3} className="pt-6">
+                  <TabPanel value="l7-policies" className="pt-0">
+                    <VStack gap={4} className="pt-4">
                       {/* Header */}
                       <div className="flex items-center justify-between">
                         <h3 className="text-[16px] font-semibold text-[var(--color-text-default)]">
@@ -911,8 +911,8 @@ export default function ListenerDetailPage() {
                   </TabPanel>
 
                   {/* Certificates Tab */}
-                  <TabPanel value="certificates">
-                    <VStack gap={3} className="pt-6">
+                  <TabPanel value="certificates" className="pt-0">
+                    <VStack gap={4} className="pt-4">
                       {/* Header */}
                       <div className="flex items-center justify-between">
                         <h3 className="text-[16px] font-semibold text-[var(--color-text-default)]">

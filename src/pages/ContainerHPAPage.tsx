@@ -285,7 +285,7 @@ export function ContainerHPAPage() {
     {
       key: 'action',
       label: 'Action',
-      width: '72px',
+      width: '64px',
       align: 'center',
       sticky: 'right',
       render: (_, row) => {
@@ -435,7 +435,7 @@ export function ContainerHPAPage() {
                 {/* Search */}
                 <HStack gap={1} align="center">
                   <SearchInput
-                    placeholder="Find Horizontal Pod Autoscalers with filters"
+                    placeholder="Search horizontal pod autoscaler by attributes"
                     size="sm"
                     className="w-[280px]"
                   />

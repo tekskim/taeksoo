@@ -464,8 +464,8 @@ export default function CertificateDetailPage() {
                   </TabList>
 
                   {/* Details Tab */}
-                  <TabPanel value="details">
-                    <VStack gap={4} className="pt-6">
+                  <TabPanel value="details" className="pt-0">
+                    <VStack gap={4} className="pt-4">
                       {/* Basic information */}
                       <SectionCard>
                         <SectionCard.Header title="Basic information" />
@@ -508,8 +508,8 @@ export default function CertificateDetailPage() {
                   </TabPanel>
 
                   {/* Listeners Tab */}
-                  <TabPanel value="listeners">
-                    <VStack gap={3} className="pt-6">
+                  <TabPanel value="listeners" className="pt-0">
+                    <VStack gap={4} className="pt-4">
                       {/* Header */}
                       <div className="flex items-center justify-between">
                         <h3 className="text-[16px] font-semibold text-[var(--color-text-default)]">

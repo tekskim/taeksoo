@@ -297,7 +297,7 @@ export function ContainerHPADetailPage() {
   const hpa = mockHPAData[hpaId || ''] || mockHPAData['1'];
 
   // Tab management
-  const { tabs, activeTabId, closeTab, selectTab, updateActiveTabLabel, moveTab } = useTabs();
+  const { tabs, activeTabId, closeTab, selectTab, updateActiveTabLabel, moveTab, addNewTab } = useTabs();
 
   // Update tab label
   useEffect(() => {
@@ -344,7 +344,7 @@ export function ContainerHPADetailPage() {
     {
       id: 'edit-yaml',
       label: 'Edit YAML',
-      onClick: () => navigate(`/container/hpa/${hpa.id}/edit-yaml`),
+      onClick: () => navigate(`/container/hpa/${hpa.name}/edit-yaml`),
     },
     {
       id: 'download-yaml',
@@ -375,6 +375,7 @@ export function ContainerHPADetailPage() {
           onTabChange={selectTab}
           onTabClose={closeTab}
           onTabReorder={moveTab}
+          onTabAdd={addNewTab}
         />
 
         {/* Top Bar */}
@@ -422,7 +423,7 @@ export function ContainerHPADetailPage() {
               <DetailHeader>
                 <DetailHeader.Title>Horizontal Pod Autoscaler: {hpa.name}</DetailHeader.Title>
                 <DetailHeader.Actions>
-                  <ContextMenu items={moreActionsItems} trigger="click" align="right">
+                  <ContextMenu items={moreActionsItems} trigger="click" align="left">
                     <Button
                       variant="secondary"
                       size="md"

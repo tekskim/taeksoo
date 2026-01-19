@@ -200,8 +200,8 @@ export default function IAMLoginPoliciesPage() {
                   </TabList>
 
                   {/* Password Policy Tab */}
-                  <TabPanel value="password-policy">
-                    <VStack gap={6} className="pt-6">
+                  <TabPanel value="password-policy" className="pt-0">
+                    <VStack gap={4} className="pt-4">
                       <SectionCard>
                         <SectionCard.Header title="Password policy" />
                         <SectionCard.Content gap={6}>
@@ -470,8 +470,8 @@ export default function IAMLoginPoliciesPage() {
                   </TabPanel>
 
                   {/* Account Lockout Policy Tab */}
-                  <TabPanel value="lockout-policy">
-                    <VStack gap={6} className="pt-6">
+                  <TabPanel value="lockout-policy" className="pt-0">
+                    <VStack gap={4} className="pt-4">
                       <SectionCard>
                         <SectionCard.Header title="Account lockout policy" />
                         <SectionCard.Content gap={6}>

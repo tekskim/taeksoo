@@ -229,7 +229,7 @@ function ContainersTab({ containers, onExecuteShell, onViewLogs }: ContainersTab
     {
       key: 'status',
       label: 'Status',
-      width: '70px',
+      width: '80px',
       align: 'center',
       render: (value: string) => (
         <StatusIndicator
@@ -245,7 +245,7 @@ function ContainersTab({ containers, onExecuteShell, onViewLogs }: ContainersTab
     {
       key: 'ready',
       label: 'Ready',
-      width: '70px',
+      width: '80px',
       sortable: true,
       render: (value: boolean) => (
         value ? (
@@ -295,10 +295,10 @@ function ContainersTab({ containers, onExecuteShell, onViewLogs }: ContainersTab
     {
       key: 'action',
       label: 'Action',
-      width: '70px',
+      width: '80px',
       align: 'center',
       render: (_: unknown, row: ContainerRow) => (
-        <ContextMenu items={createContainerMenuItems(row)} trigger="click" align="right">
+        <ContextMenu items={createContainerMenuItems(row)} trigger="click" align="left">
           <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
             <IconDotsCircleHorizontal size={16} className="text-[var(--color-text-subtle)]" stroke={1.5} />
           </button>
@@ -309,7 +309,7 @@ function ContainersTab({ containers, onExecuteShell, onViewLogs }: ContainersTab
 
   return (
     <VStack gap={3}>
-      <h3 className="text-[14px] font-semibold leading-[20px] text-[var(--color-text-default)]">
+      <h3 className="text-[16px] font-semibold leading-[24px] text-[var(--color-text-default)]">
         Containers
       </h3>
       <Pagination
@@ -445,10 +445,10 @@ function RecentEventsTab({ events }: RecentEventsTabProps) {
     {
       key: 'action',
       label: 'Action',
-      width: '60px',
+      width: '64px',
       align: 'center',
       render: (_: unknown, row: EventRow) => (
-        <ContextMenu items={createEventMenuItems(row)} trigger="click">
+        <ContextMenu items={createEventMenuItems(row)} trigger="click" align="left">
           <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
             <IconDotsCircleHorizontal size={16} className="text-[var(--color-text-subtle)]" stroke={1.5} />
           </button>
@@ -459,7 +459,7 @@ function RecentEventsTab({ events }: RecentEventsTabProps) {
 
   return (
     <VStack gap={3}>
-      <h3 className="text-[14px] font-semibold leading-[20px] text-[var(--color-text-default)]">
+      <h3 className="text-[16px] font-semibold leading-[24px] text-[var(--color-text-default)]">
         Recent Events
       </h3>
       <HStack gap={2} align="center">
@@ -515,7 +515,7 @@ export function PodDetailPage() {
   const pod = mockPodData[podId || '1'] || mockPodData['1'];
 
   // Tab management
-  const { tabs, activeTabId, closeTab, selectTab, updateActiveTabLabel, moveTab } = useTabs();
+  const { tabs, activeTabId, closeTab, selectTab, updateActiveTabLabel, moveTab, addNewTab } = useTabs();
 
   // Update tab label
   useEffect(() => {
@@ -576,7 +576,7 @@ export function PodDetailPage() {
     {
       id: 'edit-yaml',
       label: 'Edit YAML',
-      onClick: () => navigate(`/container/pods/${pod.id}/edit-yaml`),
+      onClick: () => navigate(`/container/pods/${pod.name}/edit-yaml`),
     },
     {
       id: 'download-yaml',
@@ -608,6 +608,7 @@ export function PodDetailPage() {
           onTabChange={selectTab}
           onTabClose={closeTab}
           onTabReorder={moveTab}
+          onTabAdd={addNewTab}
         />
 
         {/* Top Bar */}
@@ -655,7 +656,7 @@ export function PodDetailPage() {
               <DetailHeader>
                 <DetailHeader.Title>Pod: {pod.name}</DetailHeader.Title>
                 <DetailHeader.Actions>
-                  <ContextMenu items={moreActionsItems} trigger="click" align="right">
+                  <ContextMenu items={moreActionsItems} trigger="click" align="left">
                     <Button
                       variant="secondary"
                       size="md"
