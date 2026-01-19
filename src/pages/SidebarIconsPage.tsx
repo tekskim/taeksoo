@@ -44,6 +44,7 @@ import {
   IconUsers,
   IconUsersGroup,
   IconFileDescription,
+  IconFileCode,
   IconClock,
   IconDeviceDesktop,
   IconWorld,
@@ -174,6 +175,21 @@ const appIconData: AppData[] = [
           { icon: IconLoadBalancer, name: 'IconLoadBalancer', label: 'Load balancers', slug: 'load-balancer' },
           { icon: IconCertificate, name: 'IconCertificate', label: 'Certificates', slug: 'certificate' },
           { icon: IconTopologyStar3, name: 'IconTopologyStar3', label: 'Topology', slug: 'topology-star-3' },
+        ],
+      },
+    ],
+  },
+  {
+    name: 'Compute Admin',
+    sidebarFile: 'src/components/ComputeAdminSidebar.tsx',
+    sections: [
+      {
+        title: 'Administration',
+        items: [
+          { icon: IconUsersGroup, name: 'IconUsersGroup', label: 'Tenants', slug: 'users-group' },
+          { icon: IconFileCode, name: 'IconFileCode', label: 'Metadata definition', slug: 'file-code' },
+          { icon: IconActivity, name: 'IconActivity', label: 'Monitor overview', slug: 'activity' },
+          { icon: IconServer2, name: 'IconServer2', label: 'Physical nodes', slug: 'server-2' },
         ],
       },
     ],
