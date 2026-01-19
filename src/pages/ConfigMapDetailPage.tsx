@@ -195,7 +195,7 @@ export function ConfigMapDetailPage() {
     {
       id: 'edit-yaml',
       label: 'Edit YAML',
-      onClick: () => navigate(`/container/configmaps/${configMapId}/edit-yaml`),
+      onClick: () => navigate(`/container/configmaps/${configMap.name}/edit-yaml`),
     },
     {
       id: 'download-yaml',

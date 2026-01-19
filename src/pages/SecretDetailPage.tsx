@@ -189,7 +189,7 @@ export function SecretDetailPage() {
     {
       id: 'edit-yaml',
       label: 'Edit YAML',
-      onClick: () => navigate(`/container/secrets/${secretId}/edit-yaml`),
+      onClick: () => navigate(`/container/secrets/${secret.name}/edit-yaml`),
     },
     {
       id: 'download-yaml',

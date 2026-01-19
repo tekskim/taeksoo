@@ -183,7 +183,7 @@ export function PersistentVolumeDetailPage() {
     {
       id: 'edit-yaml',
       label: 'Edit YAML',
-      onClick: () => navigate(`/container/persistent-volumes/${pvId}/edit-yaml`),
+      onClick: () => navigate(`/container/persistent-volumes/${pv.name}/edit-yaml`),
     },
     {
       id: 'download-yaml',

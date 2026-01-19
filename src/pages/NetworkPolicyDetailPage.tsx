@@ -197,7 +197,7 @@ export function NetworkPolicyDetailPage() {
     {
       id: 'edit-yaml',
       label: 'Edit YAML',
-      onClick: () => navigate(`/container/network-policies/${networkPolicyId}/edit-yaml`),
+      onClick: () => navigate(`/container/network-policies/${networkPolicy.name}/edit-yaml`),
     },
     {
       id: 'download-yaml',

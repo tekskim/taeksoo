@@ -344,7 +344,7 @@ export function ContainerHPADetailPage() {
     {
       id: 'edit-yaml',
       label: 'Edit YAML',
-      onClick: () => navigate(`/container/hpa/${hpa.id}/edit-yaml`),
+      onClick: () => navigate(`/container/hpa/${hpa.name}/edit-yaml`),
     },
     {
       id: 'download-yaml',

@@ -401,7 +401,7 @@ export function PersistentVolumeClaimDetailPage() {
     {
       id: 'edit-yaml',
       label: 'Edit YAML',
-      onClick: () => navigate(`/container/pvc/${pvcId}/edit-yaml`),
+      onClick: () => navigate(`/container/pvc/${pvc.name}/edit-yaml`),
     },
     {
       id: 'download-yaml',

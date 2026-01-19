@@ -94,6 +94,37 @@ import { ContainerEventsPage } from '@/pages/ContainerEventsPage';
 import { ContainerNodesPage } from '@/pages/ContainerNodesPage';
 import { CreateNamespacePage } from '@/pages/CreateNamespacePage';
 import { CreateNamespaceYamlPage } from '@/pages/CreateNamespaceYamlPage';
+import { EditNamespaceYamlPage } from '@/pages/EditNamespaceYamlPage';
+import { CreateDeploymentYamlPage } from '@/pages/CreateDeploymentYamlPage';
+import { EditDeploymentYamlPage } from '@/pages/EditDeploymentYamlPage';
+import { CreateStatefulSetYamlPage } from '@/pages/CreateStatefulSetYamlPage';
+import { EditStatefulSetYamlPage } from '@/pages/EditStatefulSetYamlPage';
+import { CreateDaemonSetYamlPage } from '@/pages/CreateDaemonSetYamlPage';
+import { EditDaemonSetYamlPage } from '@/pages/EditDaemonSetYamlPage';
+import { CreateJobYamlPage } from '@/pages/CreateJobYamlPage';
+import { EditJobYamlPage } from '@/pages/EditJobYamlPage';
+import { CreateCronJobYamlPage } from '@/pages/CreateCronJobYamlPage';
+import { EditCronJobYamlPage } from '@/pages/EditCronJobYamlPage';
+import { CreatePodYamlPage } from '@/pages/CreatePodYamlPage';
+import { EditPodYamlPage } from '@/pages/EditPodYamlPage';
+import { CreatePersistentVolumeYamlPage } from '@/pages/CreatePersistentVolumeYamlPage';
+import { EditPersistentVolumeYamlPage } from '@/pages/EditPersistentVolumeYamlPage';
+import { CreatePersistentVolumeClaimYamlPage } from '@/pages/CreatePersistentVolumeClaimYamlPage';
+import { EditPersistentVolumeClaimYamlPage } from '@/pages/EditPersistentVolumeClaimYamlPage';
+import { CreateStorageClassYamlPage } from '@/pages/CreateStorageClassYamlPage';
+import { EditStorageClassYamlPage } from '@/pages/EditStorageClassYamlPage';
+import { CreateConfigMapYamlPage } from '@/pages/CreateConfigMapYamlPage';
+import { EditConfigMapYamlPage } from '@/pages/EditConfigMapYamlPage';
+import { CreateSecretYamlPage } from '@/pages/CreateSecretYamlPage';
+import { EditSecretYamlPage } from '@/pages/EditSecretYamlPage';
+import { CreateLimitRangeYamlPage } from '@/pages/CreateLimitRangeYamlPage';
+import { EditLimitRangeYamlPage } from '@/pages/EditLimitRangeYamlPage';
+import { CreateResourceQuotaYamlPage } from '@/pages/CreateResourceQuotaYamlPage';
+import { EditResourceQuotaYamlPage } from '@/pages/EditResourceQuotaYamlPage';
+import { CreateNetworkPolicyYamlPage } from '@/pages/CreateNetworkPolicyYamlPage';
+import { EditNetworkPolicyYamlPage } from '@/pages/EditNetworkPolicyYamlPage';
+import { CreatePodDisruptionBudgetYamlPage } from '@/pages/CreatePodDisruptionBudgetYamlPage';
+import { EditPodDisruptionBudgetYamlPage } from '@/pages/EditPodDisruptionBudgetYamlPage';
 import { NamespaceDetailPage } from '@/pages/NamespaceDetailPage';
 import { ContainerConsolePage } from '@/pages/ContainerConsolePage';
 import { EditNodeConfigPage } from '@/pages/EditNodeConfigPage';
@@ -337,6 +368,7 @@ function AppRoutes() {
         <Route path="/container/namespaces" element={<ContainerNamespacesPage />} />
         <Route path="/container/namespaces/create" element={<CreateNamespacePage />} />
         <Route path="/container/namespaces/create-yaml" element={<CreateNamespaceYamlPage />} />
+        <Route path="/container/namespaces/:namespaceName/edit-yaml" element={<EditNamespaceYamlPage />} />
         <Route path="/container/namespaces/:namespaceName" element={<NamespaceDetailPage />} />
         <Route path="/container/events" element={<ContainerEventsPage />} />
         <Route path="/container/nodes" element={<ContainerNodesPage />} />
@@ -359,46 +391,76 @@ function AppRoutes() {
         <Route path="/container/console/:instanceId" element={<ContainerConsolePage />} />
         <Route path="/container/deployments" element={<DeploymentsPage />} />
         <Route path="/container/deployments/create" element={<CreateDeploymentPage />} />
+        <Route path="/container/deployments/create-yaml" element={<CreateDeploymentYamlPage />} />
+        <Route path="/container/deployments/:deploymentName/edit-yaml" element={<EditDeploymentYamlPage />} />
         <Route path="/container/deployments/:deploymentId" element={<DeploymentDetailPage />} />
         <Route path="/container/statefulsets" element={<StatefulSetsPage />} />
         <Route path="/container/statefulsets/create" element={<CreateStatefulSetPage />} />
+        <Route path="/container/statefulsets/create-yaml" element={<CreateStatefulSetYamlPage />} />
+        <Route path="/container/statefulsets/:statefulSetName/edit-yaml" element={<EditStatefulSetYamlPage />} />
         <Route path="/container/statefulsets/:statefulsetId" element={<StatefulSetDetailPage />} />
         <Route path="/container/daemonsets" element={<DaemonSetsPage />} />
         <Route path="/container/daemonsets/create" element={<CreateDaemonSetPage />} />
+        <Route path="/container/daemonsets/create-yaml" element={<CreateDaemonSetYamlPage />} />
+        <Route path="/container/daemonsets/:daemonSetName/edit-yaml" element={<EditDaemonSetYamlPage />} />
         <Route path="/container/daemonsets/:daemonsetId" element={<DaemonSetDetailPage />} />
         <Route path="/container/jobs" element={<JobsPage />} />
         <Route path="/container/jobs/create" element={<CreateJobPage />} />
+        <Route path="/container/jobs/create-yaml" element={<CreateJobYamlPage />} />
+        <Route path="/container/jobs/:jobName/edit-yaml" element={<EditJobYamlPage />} />
         <Route path="/container/jobs/:jobId" element={<JobDetailPage />} />
         <Route path="/container/cronjobs" element={<CronJobsPage />} />
         <Route path="/container/cronjobs/create" element={<CreateCronJobPage />} />
+        <Route path="/container/cronjobs/create-yaml" element={<CreateCronJobYamlPage />} />
+        <Route path="/container/cronjobs/:cronJobName/edit-yaml" element={<EditCronJobYamlPage />} />
         <Route path="/container/cronjobs/:cronjobId" element={<CronJobDetailPage />} />
         <Route path="/container/pods" element={<PodsPage />} />
         <Route path="/container/pods/create" element={<CreatePodPage />} />
+        <Route path="/container/pods/create-yaml" element={<CreatePodYamlPage />} />
+        <Route path="/container/pods/:podName/edit-yaml" element={<EditPodYamlPage />} />
         <Route path="/container/pods/:podId" element={<PodDetailPage />} />
         <Route path="/container/persistent-volumes" element={<PersistentVolumesPage />} />
         <Route path="/container/persistent-volumes/create" element={<CreatePersistentVolumePage />} />
+        <Route path="/container/persistent-volumes/create-yaml" element={<CreatePersistentVolumeYamlPage />} />
+        <Route path="/container/persistent-volumes/:pvName/edit-yaml" element={<EditPersistentVolumeYamlPage />} />
         <Route path="/container/persistent-volumes/:pvId" element={<PersistentVolumeDetailPage />} />
         <Route path="/container/pvc" element={<PersistentVolumeClaimsPage />} />
         <Route path="/container/pvc/create" element={<CreatePersistentVolumeClaimPage />} />
+        <Route path="/container/pvc/create-yaml" element={<CreatePersistentVolumeClaimYamlPage />} />
+        <Route path="/container/pvc/:pvcName/edit-yaml" element={<EditPersistentVolumeClaimYamlPage />} />
         <Route path="/container/pvc/:pvcId" element={<PersistentVolumeClaimDetailPage />} />
         <Route path="/container/storage-classes" element={<StorageClassesPage />} />
         <Route path="/container/storage-classes/create" element={<CreateStorageClassPage />} />
+        <Route path="/container/storage-classes/create-yaml" element={<CreateStorageClassYamlPage />} />
+        <Route path="/container/storage-classes/:storageClassName/edit-yaml" element={<EditStorageClassYamlPage />} />
         <Route path="/container/storage-classes/:storageClassId" element={<StorageClassDetailPage />} />
         <Route path="/container/configmaps" element={<ConfigMapsPage />} />
         <Route path="/container/configmaps/create" element={<CreateConfigMapPage />} />
+        <Route path="/container/configmaps/create-yaml" element={<CreateConfigMapYamlPage />} />
+        <Route path="/container/configmaps/:configMapName/edit-yaml" element={<EditConfigMapYamlPage />} />
         <Route path="/container/configmaps/:configMapId" element={<ConfigMapDetailPage />} />
         <Route path="/container/secrets" element={<SecretsPage />} />
         <Route path="/container/secrets/create" element={<CreateSecretPage />} />
+        <Route path="/container/secrets/create-yaml" element={<CreateSecretYamlPage />} />
+        <Route path="/container/secrets/:secretName/edit-yaml" element={<EditSecretYamlPage />} />
         <Route path="/container/secrets/:secretId" element={<SecretDetailPage />} />
         <Route path="/container/limit-ranges" element={<LimitRangesPage />} />
         <Route path="/container/limit-ranges/create" element={<CreateLimitRangePage />} />
+        <Route path="/container/limit-ranges/create-yaml" element={<CreateLimitRangeYamlPage />} />
+        <Route path="/container/limit-ranges/:limitRangeName/edit-yaml" element={<EditLimitRangeYamlPage />} />
         <Route path="/container/resource-quotas" element={<ResourceQuotasPage />} />
         <Route path="/container/resource-quotas/create" element={<CreateResourceQuotaPage />} />
+        <Route path="/container/resource-quotas/create-yaml" element={<CreateResourceQuotaYamlPage />} />
+        <Route path="/container/resource-quotas/:resourceQuotaName/edit-yaml" element={<EditResourceQuotaYamlPage />} />
         <Route path="/container/network-policies" element={<NetworkPoliciesPage />} />
         <Route path="/container/network-policies/create" element={<CreateNetworkPolicyPage />} />
+        <Route path="/container/network-policies/create-yaml" element={<CreateNetworkPolicyYamlPage />} />
+        <Route path="/container/network-policies/:networkPolicyName/edit-yaml" element={<EditNetworkPolicyYamlPage />} />
         <Route path="/container/network-policies/:networkPolicyId" element={<NetworkPolicyDetailPage />} />
         <Route path="/container/pdb" element={<PodDisruptionBudgetsPage />} />
         <Route path="/container/pdb/create" element={<CreatePodDisruptionBudgetPage />} />
+        <Route path="/container/pdb/create-yaml" element={<CreatePodDisruptionBudgetYamlPage />} />
+        <Route path="/container/pdb/:pdbName/edit-yaml" element={<EditPodDisruptionBudgetYamlPage />} />
         <Route path="/container/pdb/:pdbId" element={<PodDisruptionBudgetDetailPage />} />
         <Route path="/container/*" element={<ContainerDashboardPage />} />
 
