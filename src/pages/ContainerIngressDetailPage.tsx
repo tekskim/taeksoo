@@ -329,7 +329,7 @@ export function ContainerIngressDetailPage() {
               <DetailHeader>
                 <DetailHeader.Title>Ingress: {ingress.name}</DetailHeader.Title>
                 <DetailHeader.Actions>
-                  <ContextMenu items={moreActionsItems} trigger="click" align="right">
+                  <ContextMenu items={moreActionsItems} trigger="click" align="left">
                     <Button
                       variant="secondary"
                       size="md"

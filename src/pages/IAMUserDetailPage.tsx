@@ -409,7 +409,7 @@ export function IAMUserDetailPage() {
     {
       key: 'status',
       label: 'Status',
-      width: 59,
+      width: 64,
       align: 'center',
       render: (value) => (
         <StatusIndicator status={value === 'active' ? 'active' : 'shutoff'} />

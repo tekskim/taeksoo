@@ -246,7 +246,7 @@ export function OSDsPage() {
     {
       key: 'id',
       label: 'ID',
-      width: '60px',
+      width: '64px',
       sortable: true,
       render: (_, row) => <IDCell id={row.id} />,
     },

@@ -174,7 +174,7 @@ export function EditServiceYamlPage() {
   }, [serviceId]);
 
   // Tab management
-  const { tabs, activeTabId, closeTab, selectTab, updateActiveTabLabel, moveTab } = useTabs();
+  const { tabs, activeTabId, closeTab, selectTab, updateActiveTabLabel, moveTab, addNewTab } = useTabs();
 
   // Update tab label
   useEffect(() => {
@@ -250,6 +250,7 @@ export function EditServiceYamlPage() {
           onTabChange={selectTab}
           onTabClose={closeTab}
           onTabReorder={moveTab}
+          onTabAdd={addNewTab}
         />
 
         {/* Top Bar */}

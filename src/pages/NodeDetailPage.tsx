@@ -408,7 +408,7 @@ function PodsTab({ pods }: PodsTabProps) {
 
   return (
     <VStack gap={3}>
-      <h3 className="text-[14px] font-semibold leading-[20px] text-[var(--color-text-default)]">
+      <h3 className="text-[16px] font-semibold leading-[24px] text-[var(--color-text-default)]">
         Pods
       </h3>
       <HStack gap={2} align="center">
@@ -548,7 +548,7 @@ function ImagesTab({ images }: ImagesTabProps) {
 
   return (
     <VStack gap={3}>
-      <h3 className="text-[14px] font-semibold leading-[20px] text-[var(--color-text-default)]">
+      <h3 className="text-[16px] font-semibold leading-[24px] text-[var(--color-text-default)]">
         Images
       </h3>
       <HStack gap={2} align="center">
@@ -591,7 +591,7 @@ function TaintsTab({ taints }: TaintsTabProps) {
 
   return (
     <VStack gap={3}>
-      <h3 className="text-[14px] font-semibold leading-[20px] text-[var(--color-text-default)]">
+      <h3 className="text-[16px] font-semibold leading-[24px] text-[var(--color-text-default)]">
         Taints
       </h3>
       <Pagination
@@ -625,7 +625,7 @@ function ConditionsTab({ conditions }: ConditionsTabProps) {
 
   return (
     <VStack gap={3}>
-      <h3 className="text-[14px] font-semibold leading-[20px] text-[var(--color-text-default)]">
+      <h3 className="text-[16px] font-semibold leading-[24px] text-[var(--color-text-default)]">
         Conditions
       </h3>
       <Pagination
@@ -673,7 +673,7 @@ function RecentEventsTab({ events }: RecentEventsTabProps) {
     {
       key: 'action',
       label: 'Action',
-      width: '60px',
+      width: '64px',
       align: 'center',
       render: () => (
         <button className="p-1 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
@@ -685,7 +685,7 @@ function RecentEventsTab({ events }: RecentEventsTabProps) {
 
   return (
     <VStack gap={3}>
-      <h3 className="text-[14px] font-semibold leading-[20px] text-[var(--color-text-default)]">
+      <h3 className="text-[16px] font-semibold leading-[24px] text-[var(--color-text-default)]">
         Recent Events
       </h3>
       <HStack gap={2} align="center">
@@ -741,7 +741,7 @@ export function NodeDetailPage() {
   const node = mockNodeData[nodeName || ''] || mockNodeData['node-control-plane-01'];
 
   // Tab management
-  const { tabs, activeTabId, closeTab, selectTab, updateActiveTabLabel, moveTab } = useTabs();
+  const { tabs, activeTabId, closeTab, selectTab, updateActiveTabLabel, moveTab, addNewTab } = useTabs();
 
   // Update tab label
   useEffect(() => {
@@ -799,6 +799,7 @@ export function NodeDetailPage() {
           onTabChange={selectTab}
           onTabClose={closeTab}
           onTabReorder={moveTab}
+          onTabAdd={addNewTab}
         />
 
         {/* Top Bar */}
@@ -846,7 +847,7 @@ export function NodeDetailPage() {
               <DetailHeader>
                 <DetailHeader.Title>Node: {node.name}</DetailHeader.Title>
                 <DetailHeader.Actions>
-                  <ContextMenu items={moreActionsItems} trigger="click" align="right">
+                  <ContextMenu items={moreActionsItems} trigger="click" align="left">
                     <Button
                       variant="secondary"
                       size="md"

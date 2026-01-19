@@ -304,7 +304,7 @@ export function ConfigMapDetailPage() {
               <DetailHeader>
                 <DetailHeader.Title>ConfigMap: {configMapData.name}</DetailHeader.Title>
                 <DetailHeader.Actions>
-                  <ContextMenu items={moreActionsItems} trigger="click" align="right">
+                  <ContextMenu items={moreActionsItems} trigger="click" align="left">
                     <Button
                       variant="secondary"
                       size="md"
@@ -378,7 +378,7 @@ export function ConfigMapDetailPage() {
                       <VStack gap={3}>
                         {/* Section Header */}
                         <HStack gap={1} align="center">
-                          <span className="text-[14px] font-semibold leading-[20px] text-[var(--color-text-default)]">
+                          <span className="text-[16px] font-semibold leading-[24px] text-[var(--color-text-default)]">
                             Data
                           </span>
                           <span className="text-[14px] font-medium leading-[20px] text-[var(--color-text-subtle)]">
@@ -436,7 +436,7 @@ export function ConfigMapDetailPage() {
                       <VStack gap={3}>
                         {/* Section Header */}
                         <HStack gap={1} align="center">
-                          <span className="text-[14px] font-semibold leading-[20px] text-[var(--color-text-default)]">
+                          <span className="text-[16px] font-semibold leading-[24px] text-[var(--color-text-default)]">
                             Binary Data
                           </span>
                           <span className="text-[14px] font-medium leading-[20px] text-[var(--color-text-subtle)]">

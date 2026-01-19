@@ -262,7 +262,7 @@ export function HostsPage() {
     {
       key: 'status',
       label: 'Status',
-      width: '60px',
+      width: '64px',
       sortable: false,
       align: 'center',
       render: (_, row) => <StatusCell status={row.status} />,

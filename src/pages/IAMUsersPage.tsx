@@ -112,7 +112,7 @@ export function IAMUsersPage() {
     {
       key: 'status',
       label: 'Status',
-      width: 59,
+      width: 64,
       align: 'center',
       render: (_value, row) => (
         <StatusIndicator status={statusMap[row.status]} />

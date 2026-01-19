@@ -115,7 +115,7 @@ export function CreateDeploymentYamlPage() {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Tab management
-  const { tabs, activeTabId, closeTab, selectTab, updateActiveTabLabel, moveTab } = useTabs();
+  const { tabs, activeTabId, closeTab, selectTab, updateActiveTabLabel, moveTab, addNewTab } = useTabs();
 
   // Update tab label
   useEffect(() => {
@@ -189,6 +189,7 @@ export function CreateDeploymentYamlPage() {
           onTabChange={selectTab}
           onTabClose={closeTab}
           onTabReorder={moveTab}
+          onTabAdd={addNewTab}
         />
 
         {/* Top Bar */}

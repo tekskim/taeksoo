@@ -387,7 +387,7 @@ function ResourcesTab({ resources }: ResourcesTabProps) {
 
   return (
     <VStack gap={3}>
-      <h3 className="text-[14px] font-semibold leading-[20px] text-[var(--color-text-default)]">
+      <h3 className="text-[16px] font-semibold leading-[24px] text-[var(--color-text-default)]">
         Resources
       </h3>
       <Pagination
@@ -484,7 +484,7 @@ function WorkloadsTab({ workloads }: WorkloadsTabProps) {
     {
       key: 'status',
       label: 'Status',
-      width: '60px',
+      width: '64px',
       align: 'center',
       render: (_: string, row: WorkloadRow) => (
         <StatusIndicator status={row.status} layout="icon-only" size="lg" />
@@ -559,7 +559,7 @@ function WorkloadsTab({ workloads }: WorkloadsTabProps) {
 
   return (
     <VStack gap={3}>
-      <h3 className="text-[14px] font-semibold leading-[20px] text-[var(--color-text-default)]">
+      <h3 className="text-[16px] font-semibold leading-[24px] text-[var(--color-text-default)]">
         Workloads
       </h3>
       <Pagination
@@ -622,7 +622,7 @@ function ConditionsTab({ conditions }: ConditionsTabProps) {
 
   return (
     <VStack gap={3}>
-      <h3 className="text-[14px] font-semibold leading-[20px] text-[var(--color-text-default)]">
+      <h3 className="text-[16px] font-semibold leading-[24px] text-[var(--color-text-default)]">
         Conditions
       </h3>
       <Pagination
@@ -661,7 +661,7 @@ export function NamespaceDetailPage() {
   };
 
   // Tab management
-  const { tabs, activeTabId, closeTab, selectTab, updateActiveTabLabel, moveTab } = useTabs();
+  const { tabs, activeTabId, closeTab, selectTab, updateActiveTabLabel, moveTab, addNewTab } = useTabs();
 
   // Update tab label
   useEffect(() => {
@@ -718,6 +718,7 @@ export function NamespaceDetailPage() {
           onTabChange={selectTab}
           onTabClose={closeTab}
           onTabReorder={moveTab}
+          onTabAdd={addNewTab}
         />
 
         {/* Top Bar */}
@@ -765,7 +766,7 @@ export function NamespaceDetailPage() {
               <DetailHeader>
                 <DetailHeader.Title>Namespace: {namespace.name}</DetailHeader.Title>
                 <DetailHeader.Actions>
-                  <ContextMenu items={moreActionsItems} trigger="click" align="right">
+                  <ContextMenu items={moreActionsItems} trigger="click" align="left">
                     <Button
                       variant="secondary"
                       size="md"

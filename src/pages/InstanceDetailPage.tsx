@@ -763,7 +763,7 @@ export function InstanceDetailPage() {
                         {
                           key: 'status',
                           label: 'Status',
-                          width: '70px',
+                          width: '64px',
                           align: 'center',
                           render: (_, row: AttachedVolume) => (
                             <StatusIndicator status={row.status as any} layout="icon-only" />
@@ -879,7 +879,7 @@ export function InstanceDetailPage() {
                         {
                           key: 'status',
                           label: 'Status',
-                          width: '70px',
+                          width: '64px',
                           align: 'center',
                           render: (_value: string, iface: AttachedInterface) => {
                             const statusMap: Record<string, 'active' | 'down' | 'building' | 'shutoff'> = {
@@ -1013,7 +1013,7 @@ export function InstanceDetailPage() {
                         {
                           key: 'status',
                           label: 'Status',
-                          width: '70px',
+                          width: '64px',
                           align: 'center',
                           render: (_value: string, row: FloatingIP) => (
                             <StatusIndicator status={row.status} layout="icon-only" size="md" />
@@ -1220,7 +1220,7 @@ export function InstanceDetailPage() {
                         {
                           key: 'status',
                           label: 'Status',
-                          width: '70px',
+                          width: '64px',
                           align: 'center',
                           render: (_value: string, row: InstanceSnapshot) => (
                             <StatusIndicator 

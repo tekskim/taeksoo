@@ -429,7 +429,7 @@ function AddUsersSection({
     {
       key: 'status',
       label: 'Status',
-      width: '60px',
+      width: '64px',
       align: 'center',
       render: (_, row) => (
         <StatusIndicator status={row.status} />

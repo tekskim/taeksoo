@@ -216,7 +216,7 @@ export default function SecurityGroupDetailPage() {
     {
       key: 'status',
       label: 'Status',
-      width: '60px',
+      width: '64px',
       align: 'center',
       render: (_, row) => (
         <StatusIndicator status={portStatusMap[row.status]} layout="icon-only" />

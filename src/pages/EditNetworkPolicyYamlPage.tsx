@@ -116,7 +116,7 @@ export function EditNetworkPolicyYamlPage() {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Tab management
-  const { tabs, activeTabId, closeTab, selectTab, updateActiveTabLabel, moveTab } = useTabs();
+  const { tabs, activeTabId, closeTab, selectTab, updateActiveTabLabel, moveTab, addNewTab } = useTabs();
 
   // Load YAML content based on networkPolicy ID
   useEffect(() => {
@@ -198,6 +198,7 @@ export function EditNetworkPolicyYamlPage() {
           onTabChange={selectTab}
           onTabClose={closeTab}
           onTabReorder={moveTab}
+          onTabAdd={addNewTab}
         />
 
         {/* Top Bar */}

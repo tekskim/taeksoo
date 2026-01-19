@@ -116,7 +116,7 @@ export function EditDaemonSetYamlPage() {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Tab management
-  const { tabs, activeTabId, closeTab, selectTab, updateActiveTabLabel, moveTab } = useTabs();
+  const { tabs, activeTabId, closeTab, selectTab, updateActiveTabLabel, moveTab, addNewTab } = useTabs();
 
   // Load YAML content based on daemonset ID
   useEffect(() => {
@@ -198,6 +198,7 @@ export function EditDaemonSetYamlPage() {
           onTabChange={selectTab}
           onTabClose={closeTab}
           onTabReorder={moveTab}
+          onTabAdd={addNewTab}
         />
 
         {/* Top Bar */}

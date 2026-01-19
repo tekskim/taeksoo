@@ -314,7 +314,7 @@ export function ContainerEventsPage() {
     {
       key: 'count',
       label: 'Count',
-      width: '60px',
+      width: '64px',
       align: 'center',
       sortable: true,
     },
