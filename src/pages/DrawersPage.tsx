@@ -59,6 +59,9 @@ import { ManageTagsDrawer, type InstanceInfo as ManageTagsInstanceInfo } from '@
 import { RescueInstanceDrawer, type InstanceInfo as RescueInstanceInfo } from '@/components/RescueInstanceDrawer';
 import { RebuildInstanceDrawer, type InstanceInfo as RebuildInstanceInfo } from '@/components/RebuildInstanceDrawer';
 import { ResizeInstanceDrawer, type InstanceInfo as ResizeInstanceInfo } from '@/components/ResizeInstanceDrawer';
+import { CreateVolumeBackupWithSelectionDrawer } from '@/components/CreateVolumeBackupWithSelectionDrawer';
+import { RestoreFromSnapshotDrawer } from '@/components/RestoreFromSnapshotDrawer';
+import { AttachVolumeDrawer } from '@/components/AttachVolumeDrawer';
 
 /* ----------------------------------------
    Mock Data for Drawers
@@ -375,6 +378,9 @@ export function DrawersPage() {
   const [isRescueInstanceOpen, setIsRescueInstanceOpen] = useState(false);
   const [isRebuildInstanceOpen, setIsRebuildInstanceOpen] = useState(false);
   const [isResizeInstanceOpen, setIsResizeInstanceOpen] = useState(false);
+  const [isCreateVolumeBackupWithSelectionOpen, setIsCreateVolumeBackupWithSelectionOpen] = useState(false);
+  const [isRestoreFromSnapshotOpen, setIsRestoreFromSnapshotOpen] = useState(false);
+  const [isAttachVolumeOpen, setIsAttachVolumeOpen] = useState(false);
 
   // ViewPreferences state
   const [rowsPerPage, setRowsPerPage] = useState(10);
@@ -529,6 +535,24 @@ export function DrawersPage() {
                       description="Create a full backup of a volume and store it in the backup service for disaster recovery."
                       category="Volume"
                       onOpen={() => setIsCreateVolumeBackupOpen(true)}
+                    />
+                    <DrawerCard
+                      title="Create volume backup (with selection)"
+                      description="Create a volume backup with volume selection table, search, and pagination."
+                      category="Volume"
+                      onOpen={() => setIsCreateVolumeBackupWithSelectionOpen(true)}
+                    />
+                    <DrawerCard
+                      title="Restore from snapshot"
+                      description="Restore a volume from a snapshot by selecting from available snapshots."
+                      category="Volume"
+                      onOpen={() => setIsRestoreFromSnapshotOpen(true)}
+                    />
+                    <DrawerCard
+                      title="Attach volume"
+                      description="Attach a volume to an instance by selecting from available instances."
+                      category="Volume"
+                      onOpen={() => setIsAttachVolumeOpen(true)}
                     />
                     <DrawerCard
                       title="Clone volume"
@@ -1471,6 +1495,32 @@ export function DrawersPage() {
         instance={mockResizeInstance}
         onResize={(targetFlavorId, approvalMethod, autoConfirmMinutes, autoConfirmAction) => {
           console.log('Resize instance:', { targetFlavorId, approvalMethod, autoConfirmMinutes, autoConfirmAction });
+        }}
+      />
+
+      <CreateVolumeBackupWithSelectionDrawer
+        isOpen={isCreateVolumeBackupWithSelectionOpen}
+        onClose={() => setIsCreateVolumeBackupWithSelectionOpen(false)}
+        onSubmit={(volumeId, backupName, description, mode) => {
+          console.log('Create volume backup with selection:', { volumeId, backupName, description, mode });
+        }}
+      />
+
+      <RestoreFromSnapshotDrawer
+        isOpen={isRestoreFromSnapshotOpen}
+        onClose={() => setIsRestoreFromSnapshotOpen(false)}
+        volume={{ id: 'vol-03', name: 'vol-03' }}
+        onRestore={(snapshotId) => {
+          console.log('Restore from snapshot:', { snapshotId });
+        }}
+      />
+
+      <AttachVolumeDrawer
+        isOpen={isAttachVolumeOpen}
+        onClose={() => setIsAttachVolumeOpen(false)}
+        volume={{ id: 'vol-03', name: 'vol-03' }}
+        onAttach={(instanceId) => {
+          console.log('Attach volume to instance:', { instanceId });
         }}
       />
     </div>

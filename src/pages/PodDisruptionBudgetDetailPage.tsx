@@ -806,7 +806,7 @@ export function PodDisruptionBudgetDetailPage() {
                       <HStack gap={2} align="center" className="w-full">
                         <HStack gap={1} align="center">
                           <SearchInput
-                            placeholder="Find Events with filters"
+                            placeholder="Search events by attributes"
                             size="sm"
                             className="w-[200px]"
                           />

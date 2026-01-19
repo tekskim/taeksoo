@@ -1462,7 +1462,7 @@ export default function CreateLoadBalancerPage() {
 
                             {/* Search */}
                             <SearchInput
-                              placeholder="Find server certificate with filters"
+                              placeholder="Search server certificate by attributes"
                               value={sniCertificateSearch}
                               onChange={(e) => setSniCertificateSearch(e.target.value)}
                               style={{ width: '280px' }}
