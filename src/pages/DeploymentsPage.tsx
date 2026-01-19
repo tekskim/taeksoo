@@ -29,6 +29,7 @@ import {
   IconTrash,
   IconDotsCircleHorizontal,
   IconRefresh,
+  IconChevronDown,
 } from '@tabler/icons-react';
 
 /* ----------------------------------------
@@ -364,6 +365,9 @@ export function DeploymentsPage() {
         <TopBar
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
+          showNavigation={true}
+          onBack={() => window.history.back()}
+          onForward={() => window.history.forward()}
           breadcrumb={
             <Breadcrumb
               items={[
@@ -418,13 +422,11 @@ export function DeploymentsPage() {
                 </HStack>
                 
                 {/* Create Deployment Button with Dropdown */}
-                <div className="relative">
-                  <ContextMenu items={createMenuItems} trigger="click">
-                    <Button variant="primary" size="md">
-                      Create Deployment
-                    </Button>
-                  </ContextMenu>
-                </div>
+                <ContextMenu items={createMenuItems} trigger="click" align="right">
+                  <Button variant="primary" size="md" rightIcon={<IconChevronDown size={14} stroke={1.5} />}>
+                    Create Deployment
+                  </Button>
+                </ContextMenu>
               </HStack>
 
               {/* Action Bar */}

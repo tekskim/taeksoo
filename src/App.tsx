@@ -116,30 +116,44 @@ import { DeploymentsPage } from '@/pages/DeploymentsPage';
 import { CreateDeploymentPage } from '@/pages/CreateDeploymentPage';
 import { DeploymentDetailPage } from '@/pages/DeploymentDetailPage';
 import { StatefulSetsPage } from '@/pages/StatefulSetsPage';
+import { CreateStatefulSetPage } from '@/pages/CreateStatefulSetPage';
 import { StatefulSetDetailPage } from '@/pages/StatefulSetDetailPage';
 import { DaemonSetsPage } from '@/pages/DaemonSetsPage';
+import { CreateDaemonSetPage } from '@/pages/CreateDaemonSetPage';
 import { DaemonSetDetailPage } from '@/pages/DaemonSetDetailPage';
 import { JobsPage } from '@/pages/JobsPage';
+import { CreateJobPage } from '@/pages/CreateJobPage';
 import { JobDetailPage } from '@/pages/JobDetailPage';
 import { CronJobsPage } from '@/pages/CronJobsPage';
+import { CreateCronJobPage } from '@/pages/CreateCronJobPage';
 import { CronJobDetailPage } from '@/pages/CronJobDetailPage';
 import { PodsPage } from '@/pages/PodsPage';
+import { CreatePodPage } from '@/pages/CreatePodPage';
 import { PodDetailPage } from '@/pages/PodDetailPage';
 import { PersistentVolumesPage } from '@/pages/PersistentVolumesPage';
+import { CreatePersistentVolumePage } from '@/pages/CreatePersistentVolumePage';
 import { PersistentVolumeDetailPage } from '@/pages/PersistentVolumeDetailPage';
+import { CreatePersistentVolumeClaimPage } from '@/pages/CreatePersistentVolumeClaimPage';
 import { PersistentVolumeClaimsPage } from '@/pages/PersistentVolumeClaimsPage';
 import { PersistentVolumeClaimDetailPage } from '@/pages/PersistentVolumeClaimDetailPage';
 import { StorageClassesPage } from '@/pages/StorageClassesPage';
 import { StorageClassDetailPage } from '@/pages/StorageClassDetailPage';
+import { CreateStorageClassPage } from '@/pages/CreateStorageClassPage';
 import { ConfigMapsPage } from '@/pages/ConfigMapsPage';
 import { ConfigMapDetailPage } from '@/pages/ConfigMapDetailPage';
+import { CreateConfigMapPage } from '@/pages/CreateConfigMapPage';
 import { SecretsPage } from '@/pages/SecretsPage';
 import { SecretDetailPage } from '@/pages/SecretDetailPage';
+import { CreateSecretPage } from '@/pages/CreateSecretPage';
 import { LimitRangesPage } from '@/pages/LimitRangesPage';
+import { CreateLimitRangePage } from '@/pages/CreateLimitRangePage';
 import { ResourceQuotasPage } from '@/pages/ResourceQuotasPage';
+import { CreateResourceQuotaPage } from '@/pages/CreateResourceQuotaPage';
 import { NetworkPoliciesPage } from '@/pages/NetworkPoliciesPage';
+import { CreateNetworkPolicyPage } from '@/pages/CreateNetworkPolicyPage';
 import { NetworkPolicyDetailPage } from '@/pages/NetworkPolicyDetailPage';
 import { PodDisruptionBudgetsPage } from '@/pages/PodDisruptionBudgetsPage';
+import { CreatePodDisruptionBudgetPage } from '@/pages/CreatePodDisruptionBudgetPage';
 import { PodDisruptionBudgetDetailPage } from '@/pages/PodDisruptionBudgetDetailPage';
 
 // Pages - IAM
@@ -347,30 +361,44 @@ function AppRoutes() {
         <Route path="/container/deployments/create" element={<CreateDeploymentPage />} />
         <Route path="/container/deployments/:deploymentId" element={<DeploymentDetailPage />} />
         <Route path="/container/statefulsets" element={<StatefulSetsPage />} />
+        <Route path="/container/statefulsets/create" element={<CreateStatefulSetPage />} />
         <Route path="/container/statefulsets/:statefulsetId" element={<StatefulSetDetailPage />} />
         <Route path="/container/daemonsets" element={<DaemonSetsPage />} />
+        <Route path="/container/daemonsets/create" element={<CreateDaemonSetPage />} />
         <Route path="/container/daemonsets/:daemonsetId" element={<DaemonSetDetailPage />} />
         <Route path="/container/jobs" element={<JobsPage />} />
+        <Route path="/container/jobs/create" element={<CreateJobPage />} />
         <Route path="/container/jobs/:jobId" element={<JobDetailPage />} />
         <Route path="/container/cronjobs" element={<CronJobsPage />} />
+        <Route path="/container/cronjobs/create" element={<CreateCronJobPage />} />
         <Route path="/container/cronjobs/:cronjobId" element={<CronJobDetailPage />} />
         <Route path="/container/pods" element={<PodsPage />} />
+        <Route path="/container/pods/create" element={<CreatePodPage />} />
         <Route path="/container/pods/:podId" element={<PodDetailPage />} />
         <Route path="/container/persistent-volumes" element={<PersistentVolumesPage />} />
+        <Route path="/container/persistent-volumes/create" element={<CreatePersistentVolumePage />} />
         <Route path="/container/persistent-volumes/:pvId" element={<PersistentVolumeDetailPage />} />
         <Route path="/container/pvc" element={<PersistentVolumeClaimsPage />} />
+        <Route path="/container/pvc/create" element={<CreatePersistentVolumeClaimPage />} />
         <Route path="/container/pvc/:pvcId" element={<PersistentVolumeClaimDetailPage />} />
         <Route path="/container/storage-classes" element={<StorageClassesPage />} />
+        <Route path="/container/storage-classes/create" element={<CreateStorageClassPage />} />
         <Route path="/container/storage-classes/:storageClassId" element={<StorageClassDetailPage />} />
         <Route path="/container/configmaps" element={<ConfigMapsPage />} />
+        <Route path="/container/configmaps/create" element={<CreateConfigMapPage />} />
         <Route path="/container/configmaps/:configMapId" element={<ConfigMapDetailPage />} />
         <Route path="/container/secrets" element={<SecretsPage />} />
+        <Route path="/container/secrets/create" element={<CreateSecretPage />} />
         <Route path="/container/secrets/:secretId" element={<SecretDetailPage />} />
         <Route path="/container/limit-ranges" element={<LimitRangesPage />} />
+        <Route path="/container/limit-ranges/create" element={<CreateLimitRangePage />} />
         <Route path="/container/resource-quotas" element={<ResourceQuotasPage />} />
+        <Route path="/container/resource-quotas/create" element={<CreateResourceQuotaPage />} />
         <Route path="/container/network-policies" element={<NetworkPoliciesPage />} />
+        <Route path="/container/network-policies/create" element={<CreateNetworkPolicyPage />} />
         <Route path="/container/network-policies/:networkPolicyId" element={<NetworkPolicyDetailPage />} />
         <Route path="/container/pdb" element={<PodDisruptionBudgetsPage />} />
+        <Route path="/container/pdb/create" element={<CreatePodDisruptionBudgetPage />} />
         <Route path="/container/pdb/:pdbId" element={<PodDisruptionBudgetDetailPage />} />
         <Route path="/container/*" element={<ContainerDashboardPage />} />
 
