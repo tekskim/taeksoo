@@ -687,7 +687,7 @@ export function NamespaceDetailPage() {
     {
       id: 'edit-yaml',
       label: 'Edit YAML',
-      onClick: () => console.log('Edit YAML'),
+      onClick: () => navigate(`/container/namespaces/${namespaceName}/edit-yaml`),
     },
     {
       id: 'download-yaml',

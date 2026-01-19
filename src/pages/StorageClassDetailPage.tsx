@@ -177,7 +177,7 @@ export function StorageClassDetailPage() {
     {
       id: 'edit-yaml',
       label: 'Edit YAML',
-      onClick: () => navigate(`/container/storage-classes/${storageClassId}/edit-yaml`),
+      onClick: () => navigate(`/container/storage-classes/${storageClass.name}/edit-yaml`),
     },
     {
       id: 'download-yaml',

@@ -172,7 +172,7 @@ function JobsTab({ jobs }: JobsTabProps) {
       {
         id: 'edit-yaml',
         label: 'Edit YAML',
-        onClick: () => navigate(`/container/jobs/${row.id}/edit-yaml`),
+        onClick: () => navigate(`/container/jobs/${row.name}/edit-yaml`),
       },
       {
         id: 'download-yaml',
@@ -486,7 +486,7 @@ export function CronJobDetailPage() {
     {
       id: 'edit-yaml',
       label: 'Edit YAML',
-      onClick: () => navigate(`/container/cronjobs/${cronjob.id}/edit-yaml`),
+      onClick: () => navigate(`/container/cronjobs/${cronjob.name}/edit-yaml`),
     },
     {
       id: 'download-yaml',

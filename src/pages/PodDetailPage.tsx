@@ -576,7 +576,7 @@ export function PodDetailPage() {
     {
       id: 'edit-yaml',
       label: 'Edit YAML',
-      onClick: () => navigate(`/container/pods/${pod.id}/edit-yaml`),
+      onClick: () => navigate(`/container/pods/${pod.name}/edit-yaml`),
     },
     {
       id: 'download-yaml',

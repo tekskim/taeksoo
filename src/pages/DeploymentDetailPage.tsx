@@ -304,7 +304,7 @@ function PodsTab({ pods, onViewLogs, onExecuteShell }: PodsTabProps) {
       {
         id: 'edit-yaml',
         label: 'Edit YAML',
-        onClick: () => navigate(`/container/pods/${row.id}/edit-yaml`),
+        onClick: () => navigate(`/container/pods/${row.name}/edit-yaml`),
       },
       {
         id: 'download-yaml',
@@ -474,7 +474,7 @@ function ServicesTab({ services }: ServicesTabProps) {
       {
         id: 'edit-yaml',
         label: 'Edit YAML',
-        onClick: () => navigate(`/container/services/${row.id}/edit-yaml`),
+        onClick: () => navigate(`/container/services/${row.name}/edit-yaml`),
       },
       {
         id: 'download-yaml',
@@ -873,7 +873,7 @@ export function DeploymentDetailPage() {
     {
       id: 'edit-yaml',
       label: 'Edit YAML',
-      onClick: () => navigate(`/container/deployments/${deployment.id}/edit-yaml`),
+      onClick: () => navigate(`/container/deployments/${deployment.name}/edit-yaml`),
     },
     {
       id: 'download-yaml',
