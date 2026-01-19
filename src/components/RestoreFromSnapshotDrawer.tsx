@@ -9,20 +9,19 @@ import {
   SelectionIndicator,
 } from '@/design-system';
 import { HStack, VStack } from '@/design-system/layouts';
-import { IconExternalLink, IconChevronDown, IconLock } from '@tabler/icons-react';
+import { IconExternalLink, IconChevronDown } from '@tabler/icons-react';
 
 /* ----------------------------------------
    Types
    ---------------------------------------- */
 
-export interface InstanceItem {
+export interface VolumeSnapshotItem {
   id: string;
   name: string;
-  status: 'active' | 'error' | 'building' | 'shutoff';
-  isLocked: boolean;
-  fixedIP: string;
-  flavor: string;
-  attachedVolumes: string[];
+  type: string;
+  size: number; // in GiB
+  status: 'active' | 'error' | 'building';
+  createdAt: string;
 }
 
 export interface VolumeInfo {
@@ -30,57 +29,55 @@ export interface VolumeInfo {
   name: string;
 }
 
-export interface AttachVolumeDrawerProps {
+export interface RestoreFromSnapshotDrawerProps {
   isOpen: boolean;
   onClose: () => void;
   volume: VolumeInfo;
-  instances?: InstanceItem[];
-  onAttach?: (instanceId: string) => void;
+  snapshots?: VolumeSnapshotItem[];
+  onRestore?: (snapshotId: string) => void;
 }
 
 /* ----------------------------------------
    Mock Data
    ---------------------------------------- */
 
-const defaultInstances: InstanceItem[] = Array.from({ length: 115 }, (_, i) => ({
+const defaultSnapshots: VolumeSnapshotItem[] = Array.from({ length: 115 }, (_, i) => ({
   id: `29tgj${234 + i}`,
-  name: 'server-02',
+  name: 'snap-01',
+  type: '_DEFAULT_',
+  size: 1500,
   status: 'active',
-  isLocked: true,
-  fixedIP: '10.62.0.31',
-  flavor: 'm1.medium',
-  attachedVolumes: ['vol-01'],
+  createdAt: '2025-08-23',
 }));
 
 const ITEMS_PER_PAGE = 10;
 
 /* ----------------------------------------
-   AttachVolumeDrawer Component
+   RestoreFromSnapshotDrawer Component
    ---------------------------------------- */
 
-export function AttachVolumeDrawer({
+export function RestoreFromSnapshotDrawer({
   isOpen,
   onClose,
   volume,
-  instances = defaultInstances,
-  onAttach,
-}: AttachVolumeDrawerProps) {
-  // Instance selection state
-  const [selectedInstanceId, setSelectedInstanceId] = useState<string | null>(null);
+  snapshots = defaultSnapshots,
+  onRestore,
+}: RestoreFromSnapshotDrawerProps) {
+  // Snapshot selection state
+  const [selectedSnapshotId, setSelectedSnapshotId] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // Filter instances
-  const filteredInstances = instances.filter((inst) =>
-    inst.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    inst.id.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    inst.fixedIP.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    inst.flavor.toLowerCase().includes(searchQuery.toLowerCase())
+  // Filter snapshots
+  const filteredSnapshots = snapshots.filter((snap) =>
+    snap.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    snap.id.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    snap.type.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  const totalPages = Math.ceil(filteredInstances.length / ITEMS_PER_PAGE);
-  const paginatedInstances = filteredInstances.slice(
+  const totalPages = Math.ceil(filteredSnapshots.length / ITEMS_PER_PAGE);
+  const paginatedSnapshots = filteredSnapshots.slice(
     (currentPage - 1) * ITEMS_PER_PAGE,
     currentPage * ITEMS_PER_PAGE
   );
@@ -88,18 +85,18 @@ export function AttachVolumeDrawer({
   // Reset form when drawer opens
   useEffect(() => {
     if (isOpen) {
-      setSelectedInstanceId(null);
+      setSelectedSnapshotId(null);
       setSearchQuery('');
       setCurrentPage(1);
     }
   }, [isOpen]);
 
-  const handleAttach = async () => {
-    if (!selectedInstanceId) return;
+  const handleRestore = async () => {
+    if (!selectedSnapshotId) return;
     
     setIsSubmitting(true);
     try {
-      await onAttach?.(selectedInstanceId);
+      await onRestore?.(selectedSnapshotId);
       onClose();
     } finally {
       setIsSubmitting(false);
@@ -107,13 +104,13 @@ export function AttachVolumeDrawer({
   };
 
   const handleClose = () => {
-    setSelectedInstanceId(null);
+    setSelectedSnapshotId(null);
     setSearchQuery('');
     setCurrentPage(1);
     onClose();
   };
 
-  const selectedInstance = instances.find((i) => i.id === selectedInstanceId);
+  const selectedSnapshot = snapshots.find((s) => s.id === selectedSnapshotId);
 
   return (
     <Drawer
@@ -134,26 +131,26 @@ export function AttachVolumeDrawer({
           </Button>
           <Button 
             variant="primary" 
-            onClick={handleAttach}
-            disabled={!selectedInstanceId || isSubmitting}
+            onClick={handleRestore}
+            disabled={!selectedSnapshotId || isSubmitting}
             size="md"
             className="w-[152px]"
           >
-            {isSubmitting ? 'Attaching...' : 'Attach'}
+            {isSubmitting ? 'Restoring...' : 'Restore'}
           </Button>
         </HStack>
       }
     >
-      <VStack gap={3} className="h-full">
+      <VStack gap={6} className="h-full">
         {/* Header Section */}
         <VStack gap={2}>
           <VStack gap={0}>
             <h2 className="text-[16px] font-semibold text-[var(--color-text-default)] leading-6">
-              Attach Volume
+              Restore From Snapshot
             </h2>
           </VStack>
           <p className="text-[12px] text-[var(--color-text-subtle)] leading-4">
-            Attach one or more available volumes to this instance. Once attached, the volumes will appear as additional storage devices inside the instance.
+            Create a new image using this volume as the source. The image will contain all data currently stored on the volume and can be used to launch new instances.
           </p>
         </VStack>
 
@@ -169,10 +166,10 @@ export function AttachVolumeDrawer({
           </VStack>
         </div>
 
-        {/* Instances Section */}
-        <VStack gap={3} className="mt-3">
+        {/* Volume Snapshots Section */}
+        <VStack gap={3}>
           <h3 className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
-            Instances
+            Volume snapshots
           </h3>
 
           {/* Search */}
@@ -181,7 +178,7 @@ export function AttachVolumeDrawer({
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               onClear={() => setSearchQuery('')}
-              placeholder="Search instance by attributes"
+              placeholder="Search snapshot by attributes"
               size="sm"
               fullWidth
             />
@@ -191,11 +188,11 @@ export function AttachVolumeDrawer({
           <Pagination
             currentPage={currentPage}
             totalPages={totalPages}
-            totalItems={filteredInstances.length}
+            totalItems={filteredSnapshots.length}
             onPageChange={setCurrentPage}
           />
 
-          {/* Instances Table */}
+          {/* Snapshots Table */}
           <div className="flex flex-col gap-[var(--table-row-gap)]" style={{ width: '648px', maxWidth: '648px' }}>
             {/* Header */}
             <div className="flex items-stretch min-h-[var(--table-row-height)] bg-[var(--table-header-bg)] border border-[var(--color-border-default)] rounded-[var(--table-row-radius)]">
@@ -207,72 +204,62 @@ export function AttachVolumeDrawer({
                 Name
                 <IconChevronDown size={12} />
               </div>
-              <div className="w-[62px] flex items-center justify-center px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] border-l border-[var(--color-border-default)]">
-                Locked
-              </div>
               <div className="flex-1 flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] border-l border-[var(--color-border-default)]">
-                Fixed IP
+                Type
               </div>
               <div className="flex-1 flex items-center gap-1.5 px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] border-l border-[var(--color-border-default)] cursor-pointer hover:text-[var(--color-action-primary)]">
-                Flavor
+                Size
                 <IconChevronDown size={12} />
               </div>
-              <div className="flex-1 flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] border-l border-[var(--color-border-default)]">
-                Attached volumes
+              <div className="flex-1 flex items-center gap-1.5 px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] border-l border-[var(--color-border-default)] cursor-pointer hover:text-[var(--color-action-primary)]">
+                Created At
+                <IconChevronDown size={12} />
               </div>
             </div>
 
             {/* Rows */}
-            {paginatedInstances.map((inst) => (
+            {paginatedSnapshots.map((snap) => (
               <div 
-                key={inst.id}
+                key={snap.id}
                 className={`flex items-stretch min-h-[var(--table-row-height)] border rounded-[var(--table-row-radius)] cursor-pointer transition-all ${
-                  selectedInstanceId === inst.id 
+                  selectedSnapshotId === snap.id 
                     ? 'bg-[var(--color-state-info-bg)] border-[var(--color-action-primary)]' 
                     : 'bg-[var(--color-surface-default)] border-[var(--color-border-default)] hover:bg-[var(--table-row-hover-bg)]'
                 }`}
-                onClick={() => setSelectedInstanceId(inst.id)}
+                onClick={() => setSelectedSnapshotId(snap.id)}
               >
                 {/* Radio */}
                 <div className="w-[var(--table-checkbox-width)] flex items-center justify-center" onClick={(e) => e.stopPropagation()}>
                   <Radio
-                    name="instance-select"
-                    value={inst.id}
-                    checked={selectedInstanceId === inst.id}
-                    onChange={() => setSelectedInstanceId(inst.id)}
+                    name="snapshot-select"
+                    value={snap.id}
+                    checked={selectedSnapshotId === snap.id}
+                    onChange={() => setSelectedSnapshotId(snap.id)}
                   />
                 </div>
                 {/* Status */}
                 <div className="w-[59px] flex items-center justify-center">
-                  <StatusIndicator status={inst.status} layout="icon-only" size="sm" />
+                  <StatusIndicator status={snap.status} layout="icon-only" size="sm" />
                 </div>
                 {/* Name with ID */}
                 <div className="flex-1 flex flex-col justify-center gap-0.5 px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] min-w-0 overflow-hidden">
                   <HStack gap={1.5} align="center">
-                    <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-action-primary)] truncate">{inst.name}</span>
+                    <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-action-primary)] truncate">{snap.name}</span>
                     <IconExternalLink size={12} className="shrink-0 text-[var(--color-action-primary)]" />
                   </HStack>
-                  <span className="text-[11px] text-[var(--color-text-subtle)] truncate">ID : {inst.id}</span>
+                  <span className="text-[11px] text-[var(--color-text-subtle)] truncate">ID : {snap.id}</span>
                 </div>
-                {/* Locked */}
-                <div className="w-[62px] flex items-center justify-center">
-                  {inst.isLocked && (
-                    <IconLock size={16} stroke={1.5} className="text-[var(--color-text-default)]" />
-                  )}
-                </div>
-                {/* Fixed IP */}
+                {/* Type */}
                 <div className="flex-1 flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] min-w-0 overflow-hidden">
-                  <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)] truncate">{inst.fixedIP}</span>
+                  <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)] truncate">{snap.type}</span>
                 </div>
-                {/* Flavor */}
+                {/* Size */}
                 <div className="flex-1 flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] min-w-0 overflow-hidden">
-                  <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)] truncate">{inst.flavor}</span>
+                  <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)] truncate">{snap.size}GiB</span>
                 </div>
-                {/* Attached volumes */}
+                {/* Created At */}
                 <div className="flex-1 flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] min-w-0 overflow-hidden">
-                  <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)] truncate">
-                    {inst.attachedVolumes.join(', ') || '-'}
-                  </span>
+                  <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)] truncate">{snap.createdAt}</span>
                 </div>
               </div>
             ))}
@@ -280,8 +267,8 @@ export function AttachVolumeDrawer({
 
           {/* Selection Indicator */}
           <SelectionIndicator
-            selectedItems={selectedInstance ? [{ id: selectedInstance.id, label: selectedInstance.name }] : []}
-            onRemove={() => setSelectedInstanceId(null)}
+            selectedItems={selectedSnapshot ? [{ id: selectedSnapshot.id, label: selectedSnapshot.name }] : []}
+            onRemove={() => setSelectedSnapshotId(null)}
             emptyText="No item Selected"
             className="shrink-0"
             style={{ width: '648px' }}
@@ -292,4 +279,4 @@ export function AttachVolumeDrawer({
   );
 }
 
-export default AttachVolumeDrawer;
+export default RestoreFromSnapshotDrawer;

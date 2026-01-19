@@ -853,7 +853,7 @@ export function PersistentVolumeClaimDetailPage() {
                     {/* Search and Actions */}
                     <HStack gap={2} align="center">
                       <SearchInput
-                        placeholder="Find Events with filters"
+                        placeholder="Search events by attributes"
                         size="sm"
                         className="w-[280px]"
                       />
