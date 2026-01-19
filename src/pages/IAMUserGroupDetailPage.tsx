@@ -519,8 +519,8 @@ export default function IAMUserGroupDetailPage() {
                   </TabList>
 
                   {/* Users Tab */}
-                  <TabPanel value="users">
-                    <VStack gap={3} className="pt-6">
+                  <TabPanel value="users" className="pt-0">
+                    <VStack gap={4} className="pt-4">
                       {/* Section Header */}
                       <HStack justify="between" align="center" className="w-full">
                         <h2 className="text-[16px] font-semibold leading-6 text-[var(--color-text-default)]">
@@ -557,8 +557,8 @@ export default function IAMUserGroupDetailPage() {
                   </TabPanel>
 
                   {/* Roles Tab */}
-                  <TabPanel value="roles">
-                    <VStack gap={3} className="pt-6">
+                  <TabPanel value="roles" className="pt-0">
+                    <VStack gap={4} className="pt-4">
                       {/* Section Header */}
                       <HStack justify="between" align="center" className="w-full">
                         <h2 className="text-[16px] font-semibold leading-6 text-[var(--color-text-default)]">

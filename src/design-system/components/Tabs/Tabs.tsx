@@ -233,13 +233,15 @@ export function TabPanel({ value, children, className = '' }: TabPanelProps) {
   const { activeTab } = useTabsContext();
   const isActive = activeTab === value;
 
-  if (!isActive) return null;
-
   return (
     <div
       role="tabpanel"
       aria-hidden={!isActive}
-      className={twMerge('pt-[var(--tabs-panel-padding)]', className)}
+      className={twMerge(
+        'pt-[var(--tabs-panel-padding)]',
+        !isActive && 'hidden',
+        className
+      )}
     >
       {children}
     </div>

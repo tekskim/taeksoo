@@ -409,7 +409,7 @@ export function WorkloadDetailPage() {
 
                   {/* Connect Tab Panel */}
                   <TabPanel value="connect" className="pt-0">
-                    <VStack gap={6} className="pt-6">
+                    <VStack gap={4} className="pt-4">
                       {/* Quick Access Section */}
                       <div>
                         <div className="flex items-center gap-2 mb-4">
@@ -508,7 +508,7 @@ export function WorkloadDetailPage() {
 
                   {/* Details Tab Panel */}
                   <TabPanel value="details" className="pt-0">
-                    <VStack gap={4} className="pt-6">
+                    <VStack gap={4} className="pt-4">
                       {/* Basic information */}
                       <SectionCard>
                         <SectionCard.Header title="Basic information" />

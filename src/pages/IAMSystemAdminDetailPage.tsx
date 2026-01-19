@@ -448,8 +448,8 @@ export default function IAMSystemAdminDetailPage() {
                 </TabList>
 
                 {/* Security Credentials Tab */}
-                <TabPanel value="security-credentials">
-                  <VStack gap={6} className="pt-6">
+                <TabPanel value="security-credentials" className="pt-0">
+                  <VStack gap={4} className="pt-4">
                     {/* Password Section */}
                     <SectionCard>
                       <SectionCard.Header
@@ -483,8 +483,14 @@ export default function IAMSystemAdminDetailPage() {
                 </TabPanel>
 
                 {/* Sessions Tab */}
-                <TabPanel value="sessions">
-                  <VStack gap={3} className="pt-6">
+                <TabPanel value="sessions" className="pt-0">
+                  <VStack gap={4} className="pt-4">
+                    {/* Header */}
+                    <div className="flex items-center justify-between">
+                      <h3 className="text-[16px] font-semibold leading-6 text-[var(--color-text-default)]">
+                        Sessions
+                      </h3>
+                    </div>
                     {/* Action Bar */}
                     <HStack gap={2} align="center">
                       <HStack gap={1} align="center">
