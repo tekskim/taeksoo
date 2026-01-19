@@ -65,6 +65,9 @@ import { AttachVolumeDrawer } from '@/components/AttachVolumeDrawer';
 import { CreateSubnetDrawer } from '@/components/CreateSubnetDrawer';
 import { CreateRouterDrawer } from '@/components/CreateRouterDrawer';
 import { AttachPortToInstanceDrawer } from '@/components/AttachPortToInstanceDrawer';
+import { EditPortSecurityGroupsDrawer } from '@/components/EditPortSecurityGroupsDrawer';
+import { AssociateFloatingIPToLBDrawer } from '@/components/AssociateFloatingIPToLBDrawer';
+import { ChangeServerCertificateDrawer } from '@/components/ChangeServerCertificateDrawer';
 
 /* ----------------------------------------
    Mock Data for Drawers
@@ -387,6 +390,9 @@ export function DrawersPage() {
   const [isCreateSubnetOpen, setIsCreateSubnetOpen] = useState(false);
   const [isCreateRouterOpen, setIsCreateRouterOpen] = useState(false);
   const [isAttachPortToInstanceOpen, setIsAttachPortToInstanceOpen] = useState(false);
+  const [isEditPortSecurityGroupsOpen, setIsEditPortSecurityGroupsOpen] = useState(false);
+  const [isAssociateFloatingIPToLBOpen, setIsAssociateFloatingIPToLBOpen] = useState(false);
+  const [isChangeServerCertificateOpen, setIsChangeServerCertificateOpen] = useState(false);
 
   // ViewPreferences state
   const [rowsPerPage, setRowsPerPage] = useState(10);
@@ -821,6 +827,12 @@ export function DrawersPage() {
                       category="Security group"
                       onOpen={() => setIsManageSecurityGroupsOpen(true)}
                     />
+                    <DrawerCard
+                      title="Edit Port Security Groups"
+                      description="Manage security groups on a port with port security toggle and multi-select table."
+                      category="Port"
+                      onOpen={() => setIsEditPortSecurityGroupsOpen(true)}
+                    />
                   </div>
                 </VStack>
 
@@ -883,6 +895,18 @@ export function DrawersPage() {
                       description="Edit pool member settings including weight, monitor address, backup, and admin state."
                       category="Load balancer"
                       onOpen={() => setIsEditMemberOpen(true)}
+                    />
+                    <DrawerCard
+                      title="Associate Floating IP to LB"
+                      description="Associate a floating IP to a load balancer for external access."
+                      category="Load balancer"
+                      onOpen={() => setIsAssociateFloatingIPToLBOpen(true)}
+                    />
+                    <DrawerCard
+                      title="Change Server Certificate"
+                      description="Change the server certificate for a listener with certificate selection table."
+                      category="Certificate"
+                      onOpen={() => setIsChangeServerCertificateOpen(true)}
                     />
                   </div>
                 </VStack>
@@ -1573,6 +1597,44 @@ export function DrawersPage() {
         portName="port-01"
         onSubmit={(data) => {
           console.log('Attach port to instance:', data);
+        }}
+      />
+
+      <EditPortSecurityGroupsDrawer
+        isOpen={isEditPortSecurityGroupsOpen}
+        onClose={() => setIsEditPortSecurityGroupsOpen(false)}
+        port={{
+          id: 'port-001',
+          name: 'port-10',
+        }}
+        onSave={(data) => {
+          console.log('Edit port security groups:', data);
+        }}
+      />
+
+      <AssociateFloatingIPToLBDrawer
+        isOpen={isAssociateFloatingIPToLBOpen}
+        onClose={() => setIsAssociateFloatingIPToLBOpen(false)}
+        loadBalancer={{
+          id: 'lb-001',
+          name: 'web-lb-01',
+          networkId: 'net-001',
+          networkName: 'net-01',
+        }}
+        onAssociate={(floatingIpId) => {
+          console.log('Associate floating IP to LB:', floatingIpId);
+        }}
+      />
+
+      <ChangeServerCertificateDrawer
+        isOpen={isChangeServerCertificateOpen}
+        onClose={() => setIsChangeServerCertificateOpen(false)}
+        currentCertificate={{
+          name: 'server-cert-1',
+          expiresAt: '2025-10-10',
+        }}
+        onChangeCertificate={(certificateId) => {
+          console.log('Change server certificate:', certificateId);
         }}
       />
     </div>

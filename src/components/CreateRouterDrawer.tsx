@@ -284,7 +284,7 @@ export function CreateRouterDrawer({
 
           {/* Advanced Options Disclosure */}
           <Disclosure open={showAdvanced} onChange={setShowAdvanced}>
-            <Disclosure.Trigger>Advanced Options</Disclosure.Trigger>
+            <Disclosure.Trigger>Lable</Disclosure.Trigger>
             <Disclosure.Panel>
               <VStack gap={6} className="mt-3">
                 {/* Admin State */}
@@ -328,7 +328,7 @@ export function CreateRouterDrawer({
 
           {/* Network Selection (only shown when External Gateway is enabled) */}
           {externalGatewayEnabled && (
-            <VStack gap={3}>
+            <VStack gap={3} className="pb-5">
               {/* Search */}
               <div className="w-[280px]">
                 <SearchInput
