@@ -220,6 +220,9 @@ export function ContainerNamespacesPage() {
         <TopBar
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
+          showNavigation={true}
+          onBack={() => window.history.back()}
+          onForward={() => window.history.forward()}
           breadcrumb={
             <Breadcrumb
               items={[

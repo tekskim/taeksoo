@@ -116,6 +116,7 @@ import { DeploymentsPage } from '@/pages/DeploymentsPage';
 import { CreateDeploymentPage } from '@/pages/CreateDeploymentPage';
 import { DeploymentDetailPage } from '@/pages/DeploymentDetailPage';
 import { StatefulSetsPage } from '@/pages/StatefulSetsPage';
+import { CreateStatefulSetPage } from '@/pages/CreateStatefulSetPage';
 import { StatefulSetDetailPage } from '@/pages/StatefulSetDetailPage';
 import { DaemonSetsPage } from '@/pages/DaemonSetsPage';
 import { DaemonSetDetailPage } from '@/pages/DaemonSetDetailPage';
@@ -347,6 +348,7 @@ function AppRoutes() {
         <Route path="/container/deployments/create" element={<CreateDeploymentPage />} />
         <Route path="/container/deployments/:deploymentId" element={<DeploymentDetailPage />} />
         <Route path="/container/statefulsets" element={<StatefulSetsPage />} />
+        <Route path="/container/statefulsets/create" element={<CreateStatefulSetPage />} />
         <Route path="/container/statefulsets/:statefulsetId" element={<StatefulSetDetailPage />} />
         <Route path="/container/daemonsets" element={<DaemonSetsPage />} />
         <Route path="/container/daemonsets/:daemonsetId" element={<DaemonSetDetailPage />} />

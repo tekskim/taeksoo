@@ -29,6 +29,7 @@ import {
   IconTrash,
   IconDotsCircleHorizontal,
   IconRefresh,
+  IconChevronDown,
 } from '@tabler/icons-react';
 
 /* ----------------------------------------
@@ -355,6 +356,9 @@ export function DaemonSetsPage() {
         <TopBar
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
+          showNavigation={true}
+          onBack={() => window.history.back()}
+          onForward={() => window.history.forward()}
           breadcrumb={
             <Breadcrumb
               items={[
@@ -409,13 +413,11 @@ export function DaemonSetsPage() {
                 </HStack>
                 
                 {/* Create DaemonSet Button with Dropdown */}
-                <div className="relative">
-                  <ContextMenu items={createMenuItems} trigger="click">
-                    <Button variant="primary" size="md">
-                      Create DaemonSet
-                    </Button>
-                  </ContextMenu>
-                </div>
+                <ContextMenu items={createMenuItems} trigger="click" align="right">
+                  <Button variant="primary" size="md" rightIcon={<IconChevronDown size={14} stroke={1.5} />}>
+                    Create DaemonSet
+                  </Button>
+                </ContextMenu>
               </HStack>
 
               {/* Action Bar */}
