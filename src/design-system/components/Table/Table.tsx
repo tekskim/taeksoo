@@ -9,54 +9,31 @@ import { Checkbox } from '../Checkbox';
 export type SortDirection = 'asc' | 'desc' | null;
 
 export interface TableColumn<T = any> {
-  /** Unique column key */
   key: string;
-  /** Column header label */
   label: string;
-  /** Column width (e.g., '100px', '20%', 'auto') */
   width?: string;
-  /** Minimum column width (e.g., '80px') - prevents column from shrinking below this */
   minWidth?: string;
-  /** Maximum column width (e.g., '200px') - prevents column from growing beyond this */
   maxWidth?: string;
-  /** Flex grow for column */
   flex?: number;
-  /** Text alignment */
   align?: 'left' | 'center' | 'right';
-  /** Whether column is sortable */
   sortable?: boolean;
-  /** Custom header renderer */
   headerRender?: () => React.ReactNode;
-  /** Custom cell renderer */
   render?: (value: any, row: T, rowIndex: number) => React.ReactNode;
 }
 
 export interface TableProps<T = any> {
-  /** Column definitions */
   columns: TableColumn<T>[];
-  /** Data rows */
   data: T[];
-  /** Unique key field in data */
   rowKey: keyof T | ((row: T) => string);
-  /** Enable row selection with checkboxes */
   selectable?: boolean;
-  /** Selected row keys (controlled) */
   selectedKeys?: string[];
-  /** Callback when selection changes */
   onSelectionChange?: (keys: string[]) => void;
-  /** Hide the select all checkbox in header (when selectable is true) */
   hideSelectAll?: boolean;
-  /** Enable sticky header */
   stickyHeader?: boolean;
-  /** Max height for scrollable table (enables sticky header) */
   maxHeight?: string;
-  /** Callback when row is clicked */
   onRowClick?: (row: T, rowIndex: number) => void;
-  /** Empty state message */
   emptyMessage?: string;
-  /** Custom class name */
   className?: string;
-  /** Custom row height (overrides --table-row-height) */
   rowHeight?: string;
 }
 
@@ -82,7 +59,6 @@ export function Table<T extends Record<string, any>>({
   const [sortKey, setSortKey] = useState<string | null>(null);
   const [sortDirection, setSortDirection] = useState<SortDirection>(null);
 
-  // Get row key
   const getRowKey = useCallback((row: T): string => {
     if (typeof rowKey === 'function') {
       return rowKey(row);
@@ -90,7 +66,6 @@ export function Table<T extends Record<string, any>>({
     return String(row[rowKey]);
   }, [rowKey]);
 
-  // Handle sort
   const handleSort = (columnKey: string) => {
     if (sortKey === columnKey) {
       if (sortDirection === 'asc') {
@@ -105,7 +80,6 @@ export function Table<T extends Record<string, any>>({
     }
   };
 
-  // Sorted data
   const sortedData = useMemo(() => {
     if (!sortKey || !sortDirection) return data;
 
@@ -122,7 +96,6 @@ export function Table<T extends Record<string, any>>({
     });
   }, [data, sortKey, sortDirection]);
 
-  // Selection handlers
   const handleSelectRow = (key: string) => {
     if (selectedKeys.includes(key)) {
       onSelectionChange?.(selectedKeys.filter((k) => k !== key));
@@ -143,7 +116,6 @@ export function Table<T extends Record<string, any>>({
   const allSelected = sortedData.length > 0 && selectedKeys.length === sortedData.length;
   const someSelected = selectedKeys.length > 0 && selectedKeys.length < sortedData.length;
 
-  // Render sort icon
   const renderSortIcon = (columnKey: string) => {
     if (sortKey !== columnKey) {
       return <IconSelector size={14} stroke={1} className="text-[var(--color-text-disabled)]" />;
@@ -156,25 +128,6 @@ export function Table<T extends Record<string, any>>({
 
   const enableStickyHeader = stickyHeader || !!maxHeight;
 
-  // Calculate min-width based on columns
-  const tableMinWidth = useMemo(() => {
-    const widths = columns.map((col) => {
-      // Priority: width > minWidth > default
-      if (col.width) {
-        const parsed = parseInt(col.width, 10);
-        return isNaN(parsed) ? 100 : parsed;
-      }
-      if (col.minWidth) {
-        const parsed = parseInt(col.minWidth, 10);
-        return isNaN(parsed) ? 100 : parsed;
-      }
-      return 100; // default width
-    });
-    const checkboxWidth = selectable ? 48 : 0;
-    return widths.reduce((sum, w) => sum + w, checkboxWidth);
-  }, [columns, selectable]);
-
-  // Helper to get column style
   const getColumnStyle = (column: TableColumn<T>): React.CSSProperties => {
     const style: React.CSSProperties = {};
     
@@ -183,16 +136,11 @@ export function Table<T extends Record<string, any>>({
       style.flexShrink = 0;
     } else {
       style.flex = column.flex ?? 1;
-      // Prevent flex columns from shrinking below their content
-      style.flexShrink = 0;
+      style.minWidth = 0;
     }
     
-    // Apply minWidth: use explicit minWidth, or default 100px for flex columns
     if (column.minWidth) {
       style.minWidth = column.minWidth;
-    } else if (!column.width) {
-      // Default minWidth for flex columns to enable horizontal scroll
-      style.minWidth = '100px';
     }
     
     if (column.maxWidth) {
@@ -207,16 +155,10 @@ export function Table<T extends Record<string, any>>({
       className={`flex flex-col gap-[var(--table-row-gap)] ${className}`}
       style={rowHeight ? { '--table-row-height': rowHeight } as React.CSSProperties : undefined}
     >
-      {/* Table container - overflow-x-auto enables horizontal scrolling */}
       <div
-        className={`table-scroll-container ${maxHeight ? 'overflow-y-auto' : ''}`}
-        style={{ 
-          overflowX: 'auto',
-          ...(maxHeight ? { maxHeight } : {})
-        }}
+        className={`${maxHeight ? 'overflow-y-auto' : ''}`}
+        style={{ ...(maxHeight ? { maxHeight } : {}) }}
       >
-        {/* Inner wrapper - width 100% fills container, min-width enables horizontal scroll when needed */}
-        <div style={{ width: '100%', minWidth: `${tableMinWidth}px` }}>
         {/* Header */}
         <div
           className={`
@@ -228,7 +170,6 @@ export function Table<T extends Record<string, any>>({
             ${enableStickyHeader ? 'sticky top-0 z-10' : ''}
           `}
         >
-          {/* Selection column with select all checkbox */}
           {selectable && (
             <div
               className="
@@ -250,9 +191,7 @@ export function Table<T extends Record<string, any>>({
             </div>
           )}
 
-          {/* Column headers */}
           {columns.map((column, index) => {
-            // Show divider: first column gets border when selectable (to separate from checkbox), all other columns always get border
             const isFirstColumn = index === 0;
             const showDivider = isFirstColumn ? selectable : true;
             
@@ -268,6 +207,7 @@ export function Table<T extends Record<string, any>>({
                   font-medium
                   text-[var(--color-text-default)]
                   min-w-0
+                  overflow-hidden
                   ${column.align === 'center' ? 'text-center' : column.align === 'right' ? 'text-right' : 'text-left'}
                   ${column.sortable ? 'cursor-pointer select-none hover:text-[var(--color-action-primary)] transition-colors' : ''}
                   ${showDivider ? 'border-l border-[var(--color-border-default)]' : ''}
@@ -285,7 +225,7 @@ export function Table<T extends Record<string, any>>({
                       ${column.align === 'center' ? 'justify-center' : column.align === 'right' ? 'justify-end flex-row-reverse' : 'justify-start'}
                     `}
                   >
-                    <span className="whitespace-nowrap" title={column.label}>{column.label}</span>
+                    <span className="whitespace-nowrap truncate" title={column.label}>{column.label}</span>
                     {column.sortable && <span className="flex-shrink-0">{renderSortIcon(column.key)}</span>}
                   </div>
                 )}
@@ -294,8 +234,8 @@ export function Table<T extends Record<string, any>>({
           })}
         </div>
 
-          {/* Body */}
-          <div className="flex flex-col gap-[var(--table-row-gap)] mt-[var(--table-row-gap)]">
+        {/* Body */}
+        <div className="flex flex-col gap-[var(--table-row-gap)] mt-[var(--table-row-gap)]">
           {sortedData.length === 0 ? (
             <div
               className="
@@ -334,7 +274,6 @@ export function Table<T extends Record<string, any>>({
                   `}
                   onClick={onRowClick ? () => onRowClick(row, rowIndex) : undefined}
                 >
-                  {/* Selection checkbox */}
                   {selectable && (
                     <div
                       className="
@@ -354,9 +293,7 @@ export function Table<T extends Record<string, any>>({
                     </div>
                   )}
 
-                  {/* Data cells */}
                   {columns.map((column, colIndex) => {
-                    // Match divider logic from header
                     const isFirstColumn = colIndex === 0;
                     const showCellDivider = isFirstColumn ? selectable : true;
                     
@@ -364,37 +301,37 @@ export function Table<T extends Record<string, any>>({
                     const cellTitle = typeof cellValue === 'string' || typeof cellValue === 'number' ? String(cellValue) : undefined;
                     
                     return (
-                    <div
-                      key={column.key}
-                      className={`
-                        flex items-center
-                        px-[var(--table-cell-padding-x)]
-                        py-[var(--table-cell-padding-y)]
-                        text-[length:var(--table-font-size)]
-                        leading-[var(--table-line-height)]
-                        text-[var(--color-text-default)]
-                        min-w-0
-                        ${column.align === 'center' ? 'justify-center text-center' : column.align === 'right' ? 'justify-end text-right' : 'justify-start text-left'}
-                        ${showCellDivider ? 'border-l border-transparent' : ''}
-                      `}
-                      style={getColumnStyle(column)}
-                      title={cellTitle}
-                    >
-                      {column.render ? (
-                        column.render(row[column.key], row, rowIndex)
-                      ) : (
-                        <span className={`truncate w-full ${column.align === 'center' ? 'text-center' : column.align === 'right' ? 'text-right' : ''}`}>
-                          {row[column.key]}
-                        </span>
-                      )}
-                    </div>
-                  );
+                      <div
+                        key={column.key}
+                        className={`
+                          flex items-center
+                          px-[var(--table-cell-padding-x)]
+                          py-[var(--table-cell-padding-y)]
+                          text-[length:var(--table-font-size)]
+                          leading-[var(--table-line-height)]
+                          text-[var(--color-text-default)]
+                          min-w-0
+                          overflow-hidden
+                          ${column.align === 'center' ? 'justify-center text-center' : column.align === 'right' ? 'justify-end text-right' : 'justify-start text-left'}
+                          ${showCellDivider ? 'border-l border-transparent' : ''}
+                        `}
+                        style={getColumnStyle(column)}
+                        title={cellTitle}
+                      >
+                        {column.render ? (
+                          column.render(row[column.key], row, rowIndex)
+                        ) : (
+                          <span className={`truncate w-full ${column.align === 'center' ? 'text-center' : column.align === 'right' ? 'text-right' : ''}`}>
+                            {row[column.key]}
+                          </span>
+                        )}
+                      </div>
+                    );
                   })}
                 </div>
               );
             })
           )}
-        </div>
         </div>
       </div>
     </div>
