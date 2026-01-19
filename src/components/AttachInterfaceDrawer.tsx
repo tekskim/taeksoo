@@ -147,7 +147,7 @@ export function AttachInterfaceDrawer({
         </VStack>
 
         {/* Networks Section */}
-        <VStack gap={3} className="flex-1 min-h-0">
+        <VStack gap={3} className="flex-1 min-h-0 pb-5">
           {/* Networks Header */}
           <h3 className="text-[14px] font-medium text-[var(--color-text-default)]">Networks</h3>
 
