@@ -62,6 +62,9 @@ import { ResizeInstanceDrawer, type InstanceInfo as ResizeInstanceInfo } from '@
 import { CreateVolumeBackupWithSelectionDrawer } from '@/components/CreateVolumeBackupWithSelectionDrawer';
 import { RestoreFromSnapshotDrawer } from '@/components/RestoreFromSnapshotDrawer';
 import { AttachVolumeDrawer } from '@/components/AttachVolumeDrawer';
+import { CreateSubnetDrawer } from '@/components/CreateSubnetDrawer';
+import { CreateRouterDrawer } from '@/components/CreateRouterDrawer';
+import { AttachPortToInstanceDrawer } from '@/components/AttachPortToInstanceDrawer';
 
 /* ----------------------------------------
    Mock Data for Drawers
@@ -381,6 +384,9 @@ export function DrawersPage() {
   const [isCreateVolumeBackupWithSelectionOpen, setIsCreateVolumeBackupWithSelectionOpen] = useState(false);
   const [isRestoreFromSnapshotOpen, setIsRestoreFromSnapshotOpen] = useState(false);
   const [isAttachVolumeOpen, setIsAttachVolumeOpen] = useState(false);
+  const [isCreateSubnetOpen, setIsCreateSubnetOpen] = useState(false);
+  const [isCreateRouterOpen, setIsCreateRouterOpen] = useState(false);
+  const [isAttachPortToInstanceOpen, setIsAttachPortToInstanceOpen] = useState(false);
 
   // ViewPreferences state
   const [rowsPerPage, setRowsPerPage] = useState(10);
@@ -553,6 +559,24 @@ export function DrawersPage() {
                       description="Attach a volume to an instance by selecting from available instances."
                       category="Volume"
                       onOpen={() => setIsAttachVolumeOpen(true)}
+                    />
+                    <DrawerCard
+                      title="Create subnet"
+                      description="Create a new subnet with CIDR, gateway, DHCP, and advanced network settings."
+                      category="Network"
+                      onOpen={() => setIsCreateSubnetOpen(true)}
+                    />
+                    <DrawerCard
+                      title="Create router"
+                      description="Create a virtual router to route traffic between networks with external gateway options."
+                      category="Network"
+                      onOpen={() => setIsCreateRouterOpen(true)}
+                    />
+                    <DrawerCard
+                      title="Attach port to instance"
+                      description="Attach a network port to an instance with Fixed IP, Floating IP, and availability zone."
+                      category="Network"
+                      onOpen={() => setIsAttachPortToInstanceOpen(true)}
                     />
                     <DrawerCard
                       title="Clone volume"
@@ -1521,6 +1545,34 @@ export function DrawersPage() {
         volume={{ id: 'vol-03', name: 'vol-03' }}
         onAttach={(instanceId) => {
           console.log('Attach volume to instance:', { instanceId });
+        }}
+      />
+
+      <CreateSubnetDrawer
+        isOpen={isCreateSubnetOpen}
+        onClose={() => setIsCreateSubnetOpen(false)}
+        networkId="network-01"
+        networkName="private-network"
+        onSubmit={(data) => {
+          console.log('Create subnet:', data);
+        }}
+      />
+
+      <CreateRouterDrawer
+        isOpen={isCreateRouterOpen}
+        onClose={() => setIsCreateRouterOpen(false)}
+        onSubmit={(data) => {
+          console.log('Create router:', data);
+        }}
+      />
+
+      <AttachPortToInstanceDrawer
+        isOpen={isAttachPortToInstanceOpen}
+        onClose={() => setIsAttachPortToInstanceOpen(false)}
+        portId="port-01"
+        portName="port-01"
+        onSubmit={(data) => {
+          console.log('Attach port to instance:', data);
         }}
       />
     </div>
