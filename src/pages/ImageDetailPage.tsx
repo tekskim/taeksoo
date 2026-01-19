@@ -568,7 +568,7 @@ export function ImageDetailPage() {
 
                   {/* Performance Tab Panel */}
                   <TabPanel value="performance" className="pt-0">
-                    <VStack gap={6} className="pt-4">
+                    <VStack gap={4} className="pt-4">
                       {/* Monitoring Time Controls */}
                       <div className="flex justify-start w-full">
                         <MonitoringToolbar />

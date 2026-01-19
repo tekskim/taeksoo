@@ -164,7 +164,8 @@ export function ResourceQuotasPage() {
     {
       key: 'status',
       label: 'Status',
-      width: '80px',
+      width: '64px',
+      align: 'center',
       render: (value: string) => (
         <StatusIndicator 
           status={value === 'Active' ? 'active' : value === 'Pending' ? 'building' : 'error'} 
@@ -227,11 +228,11 @@ export function ResourceQuotasPage() {
     {
       key: 'actions',
       label: 'Action',
-      width: '72px',
+      width: '64px',
       align: 'center',
       render: (_, row) => (
         <div onClick={(e) => e.stopPropagation()}>
-          <ContextMenu items={createMenuItems(row)} trigger="click">
+          <ContextMenu items={createMenuItems(row)} trigger="click" align="left">
             <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
               <IconDotsCircleHorizontal size={16} stroke={1.5} className="text-[var(--action-icon-color)]" />
             </button>

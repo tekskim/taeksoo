@@ -476,8 +476,8 @@ export function VolumeDetailPage() {
                 </TabList>
 
                 {/* Details Tab Panel */}
-                <TabPanel value="details">
-                  <VStack gap={4} className="pt-6">
+                <TabPanel value="details" className="pt-0">
+                  <VStack gap={4} className="pt-4">
                     {/* Basic information */}
                     <SectionCard>
                       <SectionCard.Header title="Basic Infomation" showEditButton onEdit={() => {}} />
@@ -533,8 +533,8 @@ export function VolumeDetailPage() {
                 </TabPanel>
 
                 {/* Volume snapshots Tab Panel */}
-                <TabPanel value="snapshots">
-                  <VStack gap={3} className="pt-6">
+                <TabPanel value="snapshots" className="pt-0">
+                  <VStack gap={4} className="pt-4">
                     {/* Section Header */}
                     <div className="flex items-center justify-between w-full">
                       <h2 className="text-[length:var(--font-size-16)] font-semibold leading-6 text-[var(--color-text-default)]">
@@ -587,8 +587,8 @@ export function VolumeDetailPage() {
                 </TabPanel>
 
                 {/* Volume backups Tab Panel */}
-                <TabPanel value="backups">
-                  <VStack gap={3} className="pt-6">
+                <TabPanel value="backups" className="pt-0">
+                  <VStack gap={4} className="pt-4">
                     {/* Section Header */}
                     <div className="flex items-center justify-between w-full">
                       <h2 className="text-[length:var(--font-size-16)] font-semibold leading-6 text-[var(--color-text-default)]">

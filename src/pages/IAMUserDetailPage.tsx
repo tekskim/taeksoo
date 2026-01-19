@@ -409,7 +409,7 @@ export function IAMUserDetailPage() {
     {
       key: 'status',
       label: 'Status',
-      width: 59,
+      width: 64,
       align: 'center',
       render: (value) => (
         <StatusIndicator status={value === 'active' ? 'active' : 'shutoff'} />
@@ -674,8 +674,8 @@ export function IAMUserDetailPage() {
                   </TabList>
 
                   {/* User groups Tab */}
-                  <TabPanel value="user-groups">
-                    <VStack gap={3} className="pt-6">
+                  <TabPanel value="user-groups" className="pt-0">
+                    <VStack gap={4} className="pt-4">
                       {/* Section Header */}
                       <HStack justify="between" align="center" className="w-full">
                         <h2 className="text-[16px] font-semibold leading-6 text-[var(--color-text-default)]">
@@ -712,8 +712,8 @@ export function IAMUserDetailPage() {
                   </TabPanel>
 
                   {/* Roles Tab */}
-                  <TabPanel value="roles">
-                    <VStack gap={3} className="pt-6">
+                  <TabPanel value="roles" className="pt-0">
+                    <VStack gap={4} className="pt-4">
                       {/* Section Header */}
                       <HStack justify="between" align="center" className="w-full">
                         <h2 className="text-[16px] font-semibold leading-6 text-[var(--color-text-default)]">
@@ -750,8 +750,8 @@ export function IAMUserDetailPage() {
                   </TabPanel>
 
                   {/* Security Credentials Tab */}
-                  <TabPanel value="security-credentials">
-                    <VStack gap={3} className="pt-6">
+                  <TabPanel value="security-credentials" className="pt-0">
+                    <VStack gap={4} className="pt-4">
                       {/* Password Section */}
                       <SectionCard>
                         <SectionCard.Header
@@ -814,8 +814,8 @@ export function IAMUserDetailPage() {
                   </TabPanel>
 
                   {/* Sessions Tab */}
-                  <TabPanel value="sessions">
-                    <VStack gap={3} className="pt-6">
+                  <TabPanel value="sessions" className="pt-0">
+                    <VStack gap={4} className="pt-4">
                       {/* Section Header */}
                       <h2 className="text-[16px] font-semibold leading-6 text-[var(--color-text-default)]">
                         Sessions

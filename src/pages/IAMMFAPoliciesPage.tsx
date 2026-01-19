@@ -176,8 +176,8 @@ export default function IAMMFAPoliciesPage() {
                   </TabList>
 
                   {/* MFA Enforcement Tab */}
-                  <TabPanel value="enforcement">
-                    <VStack gap={6} className="pt-6">
+                  <TabPanel value="enforcement" className="pt-0">
+                    <VStack gap={4} className="pt-4">
                       <SectionCard>
                         <SectionCard.Header title="MFA enforcement" />
                         <SectionCard.Content gap={6}>
@@ -231,8 +231,8 @@ export default function IAMMFAPoliciesPage() {
                   </TabPanel>
 
                   {/* MFA Methods Tab */}
-                  <TabPanel value="methods">
-                    <VStack gap={6} className="pt-6">
+                  <TabPanel value="methods" className="pt-0">
+                    <VStack gap={4} className="pt-4">
                       {/* Method Sub-tabs */}
                       <div className="flex gap-2 p-[4px] h-[45px] bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-lg w-fit">
                         <button

@@ -274,7 +274,7 @@ export function CloudBuilderConsolePage() {
     const actionCol: TableColumn<Record<string, string> & { id: string }> = {
       key: 'actions',
       label: 'Action',
-      width: '72px',
+      width: '64px',
       align: 'center',
       render: (_, row) => {
         // compute-services 화면은 어떤 탭이든 동일하게 Enable/Disable 액션을 제공한다 (UI only).

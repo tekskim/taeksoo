@@ -551,8 +551,8 @@ export default function PortDetailPage() {
                   </TabList>
 
                   {/* Details Tab */}
-                  <TabPanel value="details">
-                    <VStack gap={4} className="pt-6">
+                  <TabPanel value="details" className="pt-0">
+                    <VStack gap={4} className="pt-4">
                       {/* Basic information */}
                       <SectionCard>
                         <SectionCard.Header
@@ -644,8 +644,8 @@ export default function PortDetailPage() {
                   </TabPanel>
 
                   {/* Fixed IPs Tab */}
-                  <TabPanel value="fixed-ips">
-                    <VStack gap={3} className="pt-6">
+                  <TabPanel value="fixed-ips" className="pt-0">
+                    <VStack gap={4} className="pt-4">
                       {/* Header */}
                       <div className="flex items-center justify-between">
                         <h3 className="text-[16px] font-semibold text-[var(--color-text-default)]">
@@ -697,8 +697,8 @@ export default function PortDetailPage() {
 
                   {/* Allowed Address Pairs Tab */}
                   {port.status === 'active' && (
-                  <TabPanel value="allowed-address-pairs">
-                    <VStack gap={3} className="pt-6">
+                  <TabPanel value="allowed-address-pairs" className="pt-0">
+                    <VStack gap={4} className="pt-4">
                       {/* Header */}
                       <div className="flex items-center justify-between">
                         <h3 className="text-[16px] font-semibold text-[var(--color-text-default)]">
@@ -746,8 +746,8 @@ export default function PortDetailPage() {
 
                   {/* Security Tab */}
                   {port.status === 'active' && (
-                  <TabPanel value="security">
-                    <VStack gap={3} className="pt-6">
+                  <TabPanel value="security" className="pt-0">
+                    <VStack gap={4} className="pt-4">
                       {/* Header */}
                       <div className="flex items-center justify-between">
                         <h3 className="text-[16px] font-semibold text-[var(--color-text-default)]">

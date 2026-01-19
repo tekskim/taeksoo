@@ -585,25 +585,25 @@ export function InstanceListPage() {
     {
       key: 'vcpu',
       label: 'vCPU',
-      width: '70px',
+      width: '80px',
       sortable: true,
     },
     {
       key: 'ram',
       label: 'RAM',
-      width: '70px',
+      width: '80px',
       sortable: true,
     },
     {
       key: 'disk',
       label: 'Disk',
-      width: '70px',
+      width: '80px',
       sortable: true,
     },
     {
       key: 'gpu',
       label: 'GPU',
-      width: '60px',
+      width: '64px',
       sortable: true,
     },
     {
@@ -739,25 +739,25 @@ export function InstanceListPage() {
     {
       key: 'cpu',
       label: 'CPU',
-      width: '70px',
+      width: '80px',
       sortable: true,
     },
     {
       key: 'ram',
       label: 'RAM',
-      width: '70px',
+      width: '80px',
       sortable: true,
     },
     {
       key: 'disk',
       label: 'Disk',
-      width: '70px',
+      width: '80px',
       sortable: true,
     },
     {
       key: 'gpu',
       label: 'GPU',
-      width: '60px',
+      width: '64px',
       sortable: true,
     },
     {

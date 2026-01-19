@@ -755,7 +755,7 @@ function ImageSection({
     {
       key: 'status',
       label: 'Status',
-      width: '60px',
+      width: '64px',
       render: (_, row) => (
         <StatusIndicator status={row.status as 'active' | 'error' | 'building'} />
       ),
@@ -1401,7 +1401,7 @@ function NetworkSection({
     {
       key: 'status',
       label: 'Status',
-      width: '60px',
+      width: '64px',
       render: (_, row) => <StatusIndicator status={row.status} />,
     },
     { 
@@ -1482,7 +1482,7 @@ function NetworkSection({
     {
       key: 'status',
       label: 'Status',
-      width: '60px',
+      width: '64px',
       render: (_, row) => <StatusIndicator status={row.status} />,
     },
     { 

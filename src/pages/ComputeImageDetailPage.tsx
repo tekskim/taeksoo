@@ -251,8 +251,8 @@ export function ComputeImageDetailPage() {
                 </TabList>
 
                 {/* Details Tab Panel */}
-                <TabPanel value="details">
-                  <VStack gap={4} className="pt-6">
+                <TabPanel value="details" className="pt-0">
+                  <VStack gap={4} className="pt-4">
                     {/* Basic information */}
                     <SectionCard>
                       <SectionCard.Header 
@@ -331,8 +331,8 @@ export function ComputeImageDetailPage() {
                 </TabPanel>
 
                 {/* Metadata Tab Panel */}
-                <TabPanel value="metadata">
-                  <VStack gap={4} className="pt-6">
+                <TabPanel value="metadata" className="pt-0">
+                  <VStack gap={4} className="pt-4">
                     <SectionCard>
                       <SectionCard.Header title="Metadata" />
                       <SectionCard.Content>

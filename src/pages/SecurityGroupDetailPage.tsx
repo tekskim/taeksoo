@@ -216,7 +216,7 @@ export default function SecurityGroupDetailPage() {
     {
       key: 'status',
       label: 'Status',
-      width: '60px',
+      width: '64px',
       align: 'center',
       render: (_, row) => (
         <StatusIndicator status={portStatusMap[row.status]} layout="icon-only" />
@@ -437,11 +437,11 @@ export default function SecurityGroupDetailPage() {
                     <Tab value="rules">Rules</Tab>
                   </TabList>
 
-                  <TabPanel value="rules">
-                    <VStack gap={3} className="pt-6">
+                  <TabPanel value="rules" className="pt-0">
+                    <VStack gap={4} className="pt-4">
                       {/* Header */}
                       <div className="flex items-center justify-between">
-                        <h3 className="text-[14px] font-medium text-[var(--color-text-default)]">
+                        <h3 className="text-[16px] font-semibold leading-6 text-[var(--color-text-default)]">
                           Rules
                         </h3>
                         <Button variant="secondary" size="sm" leftIcon={<IconCirclePlus size={12} />}>

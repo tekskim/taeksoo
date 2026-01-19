@@ -575,8 +575,8 @@ export default function IAMRoleDetailPage() {
                   </TabList>
 
                   {/* Policies Tab */}
-                  <TabPanel value="policies">
-                    <VStack gap={3} className="pt-6">
+                  <TabPanel value="policies" className="pt-0">
+                    <VStack gap={4} className="pt-4">
                       {/* Section Header */}
                       <HStack justify="between" align="center" className="w-full">
                         <h2 className="text-[16px] font-semibold leading-6 text-[var(--color-text-default)]">
@@ -688,8 +688,8 @@ export default function IAMRoleDetailPage() {
                   </TabPanel>
 
                   {/* Entities Attached Tab */}
-                  <TabPanel value="entities">
-                    <VStack gap={3} className="pt-6">
+                  <TabPanel value="entities" className="pt-0">
+                    <VStack gap={4} className="pt-4">
                       {/* Section Header */}
                       <h2 className="text-[16px] font-semibold leading-6 text-[var(--color-text-default)]">
                         Entities attached

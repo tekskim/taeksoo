@@ -910,7 +910,7 @@ export function OSDDetailPage() {
 
                   {/* Devices Tab */}
                   <TabPanel value="devices" className="pt-0">
-                    <VStack gap={3} className="pt-4">
+                    <VStack gap={4} className="pt-4">
                       {/* Section Header */}
                       <div className="flex items-center h-7">
                         <h2 className="text-[length:var(--font-size-16)] font-semibold leading-6 text-[var(--color-text-default)]">
@@ -1046,7 +1046,7 @@ export function OSDDetailPage() {
 
                   {/* Performance Tab */}
                   <TabPanel value="performance" className="pt-0">
-                    <VStack gap={6} className="pt-4">
+                    <VStack gap={4} className="pt-4">
                       {/* Monitoring Time Controls */}
                       <div className="flex justify-start w-full">
                         <OSDMonitoringTimeControls 

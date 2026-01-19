@@ -233,7 +233,7 @@ function PodsTab({ pods, onViewLogs, onExecuteShell }: PodsTabProps) {
       {
         id: 'edit-yaml',
         label: 'Edit YAML',
-        onClick: () => navigate(`/container/pods/${row.id}/edit-yaml`),
+        onClick: () => navigate(`/container/pods/${row.name}/edit-yaml`),
       },
       {
         id: 'download-yaml',
@@ -253,7 +253,7 @@ function PodsTab({ pods, onViewLogs, onExecuteShell }: PodsTabProps) {
     {
       key: 'status',
       label: 'Status',
-      width: '70px',
+      width: '80px',
       align: 'center',
       sortable: true,
       render: (value: string) => (
@@ -325,10 +325,10 @@ function PodsTab({ pods, onViewLogs, onExecuteShell }: PodsTabProps) {
     {
       key: 'action',
       label: 'Action',
-      width: '70px',
+      width: '80px',
       align: 'center',
       render: (_: unknown, row: PodRow) => (
-        <ContextMenu items={createPodMenuItems(row)} trigger="click" align="right">
+        <ContextMenu items={createPodMenuItems(row)} trigger="click" align="left">
           <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
             <IconDotsCircleHorizontal size={16} className="text-[var(--color-text-subtle)]" stroke={1.5} />
           </button>
@@ -339,7 +339,7 @@ function PodsTab({ pods, onViewLogs, onExecuteShell }: PodsTabProps) {
 
   return (
     <VStack gap={3}>
-      <h3 className="text-[14px] font-semibold leading-[20px] text-[var(--color-text-default)]">
+      <h3 className="text-[16px] font-semibold leading-[24px] text-[var(--color-text-default)]">
         Pods
       </h3>
       <HStack gap={2} align="center">
@@ -404,7 +404,7 @@ function ServicesTab({ services }: ServicesTabProps) {
       {
         id: 'edit-yaml',
         label: 'Edit YAML',
-        onClick: () => navigate(`/container/services/${row.id}/edit-yaml`),
+        onClick: () => navigate(`/container/services/${row.name}/edit-yaml`),
       },
       {
         id: 'download-yaml',
@@ -424,7 +424,7 @@ function ServicesTab({ services }: ServicesTabProps) {
     {
       key: 'status',
       label: 'Status',
-      width: '70px',
+      width: '80px',
       align: 'center',
       sortable: true,
       render: (value: string) => (
@@ -480,10 +480,10 @@ function ServicesTab({ services }: ServicesTabProps) {
     {
       key: 'actions',
       label: 'Action',
-      width: '72px',
+      width: '64px',
       align: 'center',
       render: (_: unknown, row: ServiceRow) => (
-        <ContextMenu items={createServiceMenuItems(row)} trigger="click">
+        <ContextMenu items={createServiceMenuItems(row)} trigger="click" align="left">
           <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
             <IconDotsCircleHorizontal size={16} className="text-[var(--color-text-subtle)]" stroke={1.5} />
           </button>
@@ -630,10 +630,10 @@ function RecentEventsTab({ events }: RecentEventsTabProps) {
     {
       key: 'action',
       label: 'Action',
-      width: '60px',
+      width: '64px',
       align: 'center',
       render: (_: unknown, row: EventRow) => (
-        <ContextMenu items={createEventMenuItems(row)} trigger="click">
+        <ContextMenu items={createEventMenuItems(row)} trigger="click" align="left">
           <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
             <IconDotsCircleHorizontal size={16} className="text-[var(--color-text-subtle)]" stroke={1.5} />
           </button>
@@ -644,7 +644,7 @@ function RecentEventsTab({ events }: RecentEventsTabProps) {
 
   return (
     <VStack gap={3}>
-      <h3 className="text-[14px] font-semibold leading-[20px] text-[var(--color-text-default)]">
+      <h3 className="text-[16px] font-semibold leading-[24px] text-[var(--color-text-default)]">
         Recent Events
       </h3>
       <HStack gap={2} align="center">
@@ -700,7 +700,7 @@ export function StatefulSetDetailPage() {
   const statefulset = mockStatefulSetData[statefulsetId || '1'] || mockStatefulSetData['1'];
 
   // Tab management
-  const { tabs, activeTabId, closeTab, selectTab, updateActiveTabLabel, moveTab } = useTabs();
+  const { tabs, activeTabId, closeTab, selectTab, updateActiveTabLabel, moveTab, addNewTab } = useTabs();
 
   // Update tab label
   useEffect(() => {
@@ -765,7 +765,7 @@ export function StatefulSetDetailPage() {
     {
       id: 'edit-yaml',
       label: 'Edit YAML',
-      onClick: () => navigate(`/container/statefulsets/${statefulset.id}/edit-yaml`),
+      onClick: () => navigate(`/container/statefulsets/${statefulset.name}/edit-yaml`),
     },
     {
       id: 'download-yaml',
@@ -797,6 +797,7 @@ export function StatefulSetDetailPage() {
           onTabChange={selectTab}
           onTabClose={closeTab}
           onTabReorder={moveTab}
+          onTabAdd={addNewTab}
         />
 
         {/* Top Bar */}
@@ -844,7 +845,7 @@ export function StatefulSetDetailPage() {
               <DetailHeader>
                 <DetailHeader.Title>StatefulSet: {statefulset.name}</DetailHeader.Title>
                 <DetailHeader.Actions>
-                  <ContextMenu items={moreActionsItems} trigger="click" align="right">
+                  <ContextMenu items={moreActionsItems} trigger="click" align="left">
                     <Button
                       variant="secondary"
                       size="md"

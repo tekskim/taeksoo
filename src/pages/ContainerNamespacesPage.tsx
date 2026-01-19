@@ -161,7 +161,7 @@ export function ContainerNamespacesPage() {
           {
             id: 'edit-yaml',
             label: 'Edit YAML',
-            onClick: () => console.log('Edit YAML:', row.id),
+            onClick: () => navigate(`/container/namespaces/${row.name}/edit-yaml`),
           },
           {
             id: 'download-yaml',

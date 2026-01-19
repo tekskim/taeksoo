@@ -426,7 +426,7 @@ export function ContainerIngressesPage() {
                 {/* Search */}
                 <HStack gap={1} align="center">
                   <SearchInput
-                    placeholder="Find Ingresses with filters"
+                    placeholder="Search ingress by attributes"
                     size="sm"
                     className="w-[280px]"
                   />

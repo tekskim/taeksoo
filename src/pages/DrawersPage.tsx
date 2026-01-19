@@ -49,6 +49,22 @@ import { EditListenerDrawer } from '@/components/EditListenerDrawer';
 import { AllocateIPDrawer } from '@/components/AllocateIPDrawer';
 import { CreateHealthMonitorDrawer } from '@/components/CreateHealthMonitorDrawer';
 import { EditMemberDrawer } from '@/components/EditMemberDrawer';
+import { DetachVolumeDrawer, type InstanceInfo as DetachInstanceInfo } from '@/components/DetachVolumeDrawer';
+import { AttachInterfaceDrawer, type InstanceInfo as AttachInterfaceInstanceInfo } from '@/components/AttachInterfaceDrawer';
+import { DetachInterfaceDrawer, type InstanceInfo as DetachInterfaceInstanceInfo } from '@/components/DetachInterfaceDrawer';
+import { AssociateFloatingIPDrawer, type InstanceInfo as AssociateFloatingIPInstanceInfo } from '@/components/AssociateFloatingIPDrawer';
+import { DisassociateFloatingIPDrawer, type InstanceInfo as DisassociateFloatingIPInstanceInfo } from '@/components/DisassociateFloatingIPDrawer';
+import { ManageSecurityGroupsDrawer, type InstanceInfo as ManageSecurityGroupsInstanceInfo } from '@/components/ManageSecurityGroupsDrawer';
+import { ManageTagsDrawer, type InstanceInfo as ManageTagsInstanceInfo } from '@/components/ManageTagsDrawer';
+import { RescueInstanceDrawer, type InstanceInfo as RescueInstanceInfo } from '@/components/RescueInstanceDrawer';
+import { RebuildInstanceDrawer, type InstanceInfo as RebuildInstanceInfo } from '@/components/RebuildInstanceDrawer';
+import { ResizeInstanceDrawer, type InstanceInfo as ResizeInstanceInfo } from '@/components/ResizeInstanceDrawer';
+import { CreateVolumeBackupWithSelectionDrawer } from '@/components/CreateVolumeBackupWithSelectionDrawer';
+import { RestoreFromSnapshotDrawer } from '@/components/RestoreFromSnapshotDrawer';
+import { AttachVolumeDrawer } from '@/components/AttachVolumeDrawer';
+import { CreateSubnetDrawer } from '@/components/CreateSubnetDrawer';
+import { CreateRouterDrawer } from '@/components/CreateRouterDrawer';
+import { AttachPortToInstanceDrawer } from '@/components/AttachPortToInstanceDrawer';
 
 /* ----------------------------------------
    Mock Data for Drawers
@@ -192,6 +208,69 @@ const mockVolumeBackupForCreate: CreateVolFromBackupVolumeBackupInfo = {
   size: 10,
 };
 
+const mockDetachInstance: DetachInstanceInfo = {
+  id: 'inst-001',
+  name: 'web-server-10',
+};
+
+const mockAttachInterfaceInstance: AttachInterfaceInstanceInfo = {
+  id: 'inst-001',
+  name: 'web-server-10',
+};
+
+const mockDetachInterfaceInstance: DetachInterfaceInstanceInfo = {
+  id: 'inst-001',
+  name: 'web-server-10',
+};
+
+const mockAssociateFloatingIPInstance: AssociateFloatingIPInstanceInfo = {
+  id: 'inst-001',
+  name: 'web-server-10',
+};
+
+const mockDisassociateFloatingIPInstance: DisassociateFloatingIPInstanceInfo = {
+  id: 'inst-001',
+  name: 'tk-test',
+};
+
+const mockManageSecurityGroupsInstance: ManageSecurityGroupsInstanceInfo = {
+  id: 'inst-001',
+  name: 'web-server-10',
+};
+
+const mockManageTagsInstance: ManageTagsInstanceInfo = {
+  id: 'inst-001',
+  name: 'my-web-01',
+};
+
+const mockRescueInstance: RescueInstanceInfo = {
+  id: 'inst-001',
+  name: 'web-server-10',
+  currentImage: 'ubuntu-24.04',
+  protocol: 'HTTP',
+};
+
+const mockRebuildInstance: RebuildInstanceInfo = {
+  id: 'inst-001',
+  name: 'web-server-10',
+  currentImage: 'ubuntu-24.04',
+};
+
+const mockResizeInstance: ResizeInstanceInfo = {
+  id: 'inst-001',
+  name: 'web-server-10',
+  currentFlavor: {
+    id: 'flavor-001',
+    name: 'xlarge',
+    vcpu: 2,
+    ram: '2GiB',
+    disk: '50GiB',
+    ephemeralDisk: '0GiB',
+    gpu: 2,
+    npu: 2,
+  },
+};
+
 /* ----------------------------------------
    Drawer List Item Component
    ---------------------------------------- */
@@ -292,6 +371,22 @@ export function DrawersPage() {
   const [isAllocateIPOpen, setIsAllocateIPOpen] = useState(false);
   const [isCreateHealthMonitorOpen, setIsCreateHealthMonitorOpen] = useState(false);
   const [isEditMemberOpen, setIsEditMemberOpen] = useState(false);
+  const [isDetachVolumeOpen, setIsDetachVolumeOpen] = useState(false);
+  const [isAttachInterfaceOpen, setIsAttachInterfaceOpen] = useState(false);
+  const [isDetachInterfaceOpen, setIsDetachInterfaceOpen] = useState(false);
+  const [isAssociateFloatingIPOpen, setIsAssociateFloatingIPOpen] = useState(false);
+  const [isDisassociateFloatingIPOpen, setIsDisassociateFloatingIPOpen] = useState(false);
+  const [isManageSecurityGroupsOpen, setIsManageSecurityGroupsOpen] = useState(false);
+  const [isManageTagsOpen, setIsManageTagsOpen] = useState(false);
+  const [isRescueInstanceOpen, setIsRescueInstanceOpen] = useState(false);
+  const [isRebuildInstanceOpen, setIsRebuildInstanceOpen] = useState(false);
+  const [isResizeInstanceOpen, setIsResizeInstanceOpen] = useState(false);
+  const [isCreateVolumeBackupWithSelectionOpen, setIsCreateVolumeBackupWithSelectionOpen] = useState(false);
+  const [isRestoreFromSnapshotOpen, setIsRestoreFromSnapshotOpen] = useState(false);
+  const [isAttachVolumeOpen, setIsAttachVolumeOpen] = useState(false);
+  const [isCreateSubnetOpen, setIsCreateSubnetOpen] = useState(false);
+  const [isCreateRouterOpen, setIsCreateRouterOpen] = useState(false);
+  const [isAttachPortToInstanceOpen, setIsAttachPortToInstanceOpen] = useState(false);
 
   // ViewPreferences state
   const [rowsPerPage, setRowsPerPage] = useState(10);
@@ -381,6 +476,30 @@ export function DrawersPage() {
                       category="Instance"
                       onOpen={() => setIsLockSettingOpen(true)}
                     />
+                    <DrawerCard
+                      title="Manage Tags"
+                      description="Add, edit, or remove tags to categorize and manage resources."
+                      category="Instance"
+                      onOpen={() => setIsManageTagsOpen(true)}
+                    />
+                    <DrawerCard
+                      title="Rescue Instance"
+                      description="Create a temporary recovery server using your instance's root disk."
+                      category="Instance"
+                      onOpen={() => setIsRescueInstanceOpen(true)}
+                    />
+                    <DrawerCard
+                      title="Rebuild Instance"
+                      description="Rebuild the instance by reinstalling the operating system using a new image."
+                      category="Instance"
+                      onOpen={() => setIsRebuildInstanceOpen(true)}
+                    />
+                    <DrawerCard
+                      title="Resize Instance"
+                      description="Change the flavor to adjust vCPU, memory, or disk capacity."
+                      category="Instance"
+                      onOpen={() => setIsResizeInstanceOpen(true)}
+                    />
                   </div>
                 </VStack>
 
@@ -422,6 +541,42 @@ export function DrawersPage() {
                       description="Create a full backup of a volume and store it in the backup service for disaster recovery."
                       category="Volume"
                       onOpen={() => setIsCreateVolumeBackupOpen(true)}
+                    />
+                    <DrawerCard
+                      title="Create volume backup (with selection)"
+                      description="Create a volume backup with volume selection table, search, and pagination."
+                      category="Volume"
+                      onOpen={() => setIsCreateVolumeBackupWithSelectionOpen(true)}
+                    />
+                    <DrawerCard
+                      title="Restore from snapshot"
+                      description="Restore a volume from a snapshot by selecting from available snapshots."
+                      category="Volume"
+                      onOpen={() => setIsRestoreFromSnapshotOpen(true)}
+                    />
+                    <DrawerCard
+                      title="Attach volume"
+                      description="Attach a volume to an instance by selecting from available instances."
+                      category="Volume"
+                      onOpen={() => setIsAttachVolumeOpen(true)}
+                    />
+                    <DrawerCard
+                      title="Create subnet"
+                      description="Create a new subnet with CIDR, gateway, DHCP, and advanced network settings."
+                      category="Network"
+                      onOpen={() => setIsCreateSubnetOpen(true)}
+                    />
+                    <DrawerCard
+                      title="Create router"
+                      description="Create a virtual router to route traffic between networks with external gateway options."
+                      category="Network"
+                      onOpen={() => setIsCreateRouterOpen(true)}
+                    />
+                    <DrawerCard
+                      title="Attach port to instance"
+                      description="Attach a network port to an instance with Fixed IP, Floating IP, and availability zone."
+                      category="Network"
+                      onOpen={() => setIsAttachPortToInstanceOpen(true)}
                     />
                     <DrawerCard
                       title="Clone volume"
@@ -488,6 +643,12 @@ export function DrawersPage() {
                       description="Create a new volume from an existing volume backup with customizable capacity, type, and availability zone."
                       category="Volume"
                       onOpen={() => setIsCreateVolumeFromBackupOpen(true)}
+                    />
+                    <DrawerCard
+                      title="Detach Volume"
+                      description="Detach a volume from an instance. Once detached, it will no longer be accessible from the instance."
+                      category="Volume"
+                      onOpen={() => setIsDetachVolumeOpen(true)}
                     />
                   </div>
                 </VStack>
@@ -603,6 +764,30 @@ export function DrawersPage() {
                       category="Port"
                       onOpen={() => setIsAllocateIPOpen(true)}
                     />
+                    <DrawerCard
+                      title="Attach Interface"
+                      description="Attach a new network interface to this instance. Connect it to another network or subnet for additional access."
+                      category="Network"
+                      onOpen={() => setIsAttachInterfaceOpen(true)}
+                    />
+                    <DrawerCard
+                      title="Detach Interface"
+                      description="Detach a network interface from this instance. This may interrupt connectivity if the selected port is primary."
+                      category="Network"
+                      onOpen={() => setIsDetachInterfaceOpen(true)}
+                    />
+                    <DrawerCard
+                      title="Associate Floating IP"
+                      description="Assign a floating IP to this instance for external network access."
+                      category="Floating IP"
+                      onOpen={() => setIsAssociateFloatingIPOpen(true)}
+                    />
+                    <DrawerCard
+                      title="Disassociate Floating IP"
+                      description="Remove the association between a floating IP and this instance. The instance will lose external network access through that IP."
+                      category="Floating IP"
+                      onOpen={() => setIsDisassociateFloatingIPOpen(true)}
+                    />
                   </div>
                 </VStack>
 
@@ -629,6 +814,12 @@ export function DrawersPage() {
                       description="Edit security group name and description."
                       category="Security group"
                       onOpen={() => setIsEditSecurityGroupOpen(true)}
+                    />
+                    <DrawerCard
+                      title="Manage Security Groups"
+                      description="Attach or detach security groups for an interface to control inbound and outbound traffic."
+                      category="Security group"
+                      onOpen={() => setIsManageSecurityGroupsOpen(true)}
                     />
                   </div>
                 </VStack>
@@ -1238,6 +1429,150 @@ export function DrawersPage() {
         }}
         onSubmit={(data) => {
           console.log('Edit member:', data);
+        }}
+      />
+
+      <DetachVolumeDrawer
+        isOpen={isDetachVolumeOpen}
+        onClose={() => setIsDetachVolumeOpen(false)}
+        instance={mockDetachInstance}
+        onDetach={(volumeId) => {
+          console.log('Detach volume:', { volumeId });
+        }}
+      />
+
+      <AttachInterfaceDrawer
+        isOpen={isAttachInterfaceOpen}
+        onClose={() => setIsAttachInterfaceOpen(false)}
+        instance={mockAttachInterfaceInstance}
+        onAttach={(networkId, fixedIp) => {
+          console.log('Attach interface:', { networkId, fixedIp });
+        }}
+      />
+
+      <DetachInterfaceDrawer
+        isOpen={isDetachInterfaceOpen}
+        onClose={() => setIsDetachInterfaceOpen(false)}
+        instance={mockDetachInterfaceInstance}
+        onDetach={(interfaceId) => {
+          console.log('Detach interface:', { interfaceId });
+        }}
+      />
+
+      <AssociateFloatingIPDrawer
+        isOpen={isAssociateFloatingIPOpen}
+        onClose={() => setIsAssociateFloatingIPOpen(false)}
+        instance={mockAssociateFloatingIPInstance}
+        onAssociate={(fixedIpId, floatingIpId) => {
+          console.log('Associate floating IP:', { fixedIpId, floatingIpId });
+        }}
+      />
+
+      <DisassociateFloatingIPDrawer
+        isOpen={isDisassociateFloatingIPOpen}
+        onClose={() => setIsDisassociateFloatingIPOpen(false)}
+        instance={mockDisassociateFloatingIPInstance}
+        onDisassociate={(floatingIpId) => {
+          console.log('Disassociate floating IP:', { floatingIpId });
+        }}
+      />
+
+      <ManageSecurityGroupsDrawer
+        isOpen={isManageSecurityGroupsOpen}
+        onClose={() => setIsManageSecurityGroupsOpen(false)}
+        instance={mockManageSecurityGroupsInstance}
+        onSave={(interfaceId, securityGroupIds) => {
+          console.log('Manage security groups:', { interfaceId, securityGroupIds });
+        }}
+      />
+
+      <ManageTagsDrawer
+        isOpen={isManageTagsOpen}
+        onClose={() => setIsManageTagsOpen(false)}
+        instance={mockManageTagsInstance}
+        onSave={(tags) => {
+          console.log('Manage tags:', tags);
+        }}
+      />
+
+      <RescueInstanceDrawer
+        isOpen={isRescueInstanceOpen}
+        onClose={() => setIsRescueInstanceOpen(false)}
+        instance={mockRescueInstance}
+        onRescue={(imageOption) => {
+          console.log('Rescue instance with image option:', imageOption);
+        }}
+      />
+
+      <RebuildInstanceDrawer
+        isOpen={isRebuildInstanceOpen}
+        onClose={() => setIsRebuildInstanceOpen(false)}
+        instance={mockRebuildInstance}
+        onRebuild={(imageOption) => {
+          console.log('Rebuild instance with image option:', imageOption);
+        }}
+      />
+
+      <ResizeInstanceDrawer
+        isOpen={isResizeInstanceOpen}
+        onClose={() => setIsResizeInstanceOpen(false)}
+        instance={mockResizeInstance}
+        onResize={(targetFlavorId, approvalMethod, autoConfirmMinutes, autoConfirmAction) => {
+          console.log('Resize instance:', { targetFlavorId, approvalMethod, autoConfirmMinutes, autoConfirmAction });
+        }}
+      />
+
+      <CreateVolumeBackupWithSelectionDrawer
+        isOpen={isCreateVolumeBackupWithSelectionOpen}
+        onClose={() => setIsCreateVolumeBackupWithSelectionOpen(false)}
+        onSubmit={(volumeId, backupName, description, mode) => {
+          console.log('Create volume backup with selection:', { volumeId, backupName, description, mode });
+        }}
+      />
+
+      <RestoreFromSnapshotDrawer
+        isOpen={isRestoreFromSnapshotOpen}
+        onClose={() => setIsRestoreFromSnapshotOpen(false)}
+        volume={{ id: 'vol-03', name: 'vol-03' }}
+        onRestore={(snapshotId) => {
+          console.log('Restore from snapshot:', { snapshotId });
+        }}
+      />
+
+      <AttachVolumeDrawer
+        isOpen={isAttachVolumeOpen}
+        onClose={() => setIsAttachVolumeOpen(false)}
+        volume={{ id: 'vol-03', name: 'vol-03' }}
+        onAttach={(instanceId) => {
+          console.log('Attach volume to instance:', { instanceId });
+        }}
+      />
+
+      <CreateSubnetDrawer
+        isOpen={isCreateSubnetOpen}
+        onClose={() => setIsCreateSubnetOpen(false)}
+        networkId="network-01"
+        networkName="private-network"
+        onSubmit={(data) => {
+          console.log('Create subnet:', data);
+        }}
+      />
+
+      <CreateRouterDrawer
+        isOpen={isCreateRouterOpen}
+        onClose={() => setIsCreateRouterOpen(false)}
+        onSubmit={(data) => {
+          console.log('Create router:', data);
+        }}
+      />
+
+      <AttachPortToInstanceDrawer
+        isOpen={isAttachPortToInstanceOpen}
+        onClose={() => setIsAttachPortToInstanceOpen(false)}
+        portId="port-01"
+        portName="port-01"
+        onSubmit={(data) => {
+          console.log('Attach port to instance:', data);
         }}
       />
     </div>

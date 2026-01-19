@@ -569,8 +569,8 @@ export default function NetworkDetailPage() {
                   </TabList>
 
                   {/* Details Tab Panel */}
-                  <TabPanel value="details">
-                    <VStack gap={4} className="pt-6">
+                  <TabPanel value="details" className="pt-0">
+                    <VStack gap={4} className="pt-4">
                       {/* Basic information */}
                       <SectionCard>
                         <SectionCard.Header 
@@ -605,11 +605,11 @@ export default function NetworkDetailPage() {
                   </TabPanel>
 
                   {/* Subnets Tab Panel */}
-                  <TabPanel value="subnets">
-                    <VStack gap={3} className="pt-6">
+                  <TabPanel value="subnets" className="pt-0">
+                    <VStack gap={4} className="pt-4">
                       {/* Header */}
                       <div className="flex items-center justify-between">
-                        <h3 className="text-[14px] font-semibold text-[var(--color-text-default)]">
+                        <h3 className="text-[16px] leading-[24px] font-semibold text-[var(--color-text-default)]">
                           Subnets
                         </h3>
                         <Button variant="secondary" size="sm" leftIcon={<IconCirclePlus size={12} />}>
@@ -658,11 +658,11 @@ export default function NetworkDetailPage() {
                   </TabPanel>
 
                   {/* Ports Tab Panel */}
-                  <TabPanel value="ports">
-                    <VStack gap={3} className="pt-6">
+                  <TabPanel value="ports" className="pt-0">
+                    <VStack gap={4} className="pt-4">
                       {/* Header */}
                       <div className="flex items-center justify-between">
-                        <h3 className="text-[14px] font-semibold text-[var(--color-text-default)]">
+                        <h3 className="text-[16px] leading-[24px] font-semibold text-[var(--color-text-default)]">
                           Ports
                         </h3>
                       </div>

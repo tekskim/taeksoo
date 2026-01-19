@@ -449,7 +449,7 @@ export function ContainerServicesPage() {
                 {/* Search */}
                 <HStack gap={1} align="center">
                   <SearchInput
-                    placeholder="Find Services with filters"
+                    placeholder="Search service by attributes"
                     size="sm"
                     className="w-[280px]"
                   />

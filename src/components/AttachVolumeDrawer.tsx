@@ -1,54 +1,58 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { 
   Drawer, 
   Button, 
-  SearchInput, 
-  Tabs, 
-  TabList, 
-  Tab, 
-  Pagination, 
-  StatusIndicator,
-  Table,
+  SearchInput,
+  Pagination,
   Radio,
-  type TableColumn,
+  StatusIndicator,
+  SelectionIndicator,
 } from '@/design-system';
 import { HStack, VStack } from '@/design-system/layouts';
-import { IconExternalLink } from '@tabler/icons-react';
+import { IconExternalLink, IconChevronDown, IconLock } from '@tabler/icons-react';
 
 /* ----------------------------------------
    Types
    ---------------------------------------- */
 
-export interface VolumeItem {
+export interface InstanceItem {
   id: string;
   name: string;
-  status: 'available' | 'in-use' | 'error';
-  type: string;
-  size: string;
-  diskTag: string;
+  status: 'active' | 'error' | 'building' | 'shutoff';
+  isLocked: boolean;
+  fixedIP: string;
+  flavor: string;
+  attachedVolumes: string[];
+}
+
+export interface VolumeInfo {
+  id: string;
+  name: string;
 }
 
 export interface AttachVolumeDrawerProps {
   isOpen: boolean;
   onClose: () => void;
-  instanceName: string;
-  volumes?: VolumeItem[];
-  onAttach?: (volumeId: string) => void;
-  onCreateNewVolume?: () => void;
+  volume: VolumeInfo;
+  instances?: InstanceItem[];
+  onAttach?: (instanceId: string) => void;
 }
 
 /* ----------------------------------------
    Mock Data
    ---------------------------------------- */
 
-const mockVolumes: VolumeItem[] = Array.from({ length: 10 }, (_, i) => ({
-  id: `vol-${i + 1}`,
-  name: 'vol34',
-  status: 'available',
-  type: '_DEFAULT_',
-  size: '1500GiB',
-  diskTag: 'Data Disk',
+const defaultInstances: InstanceItem[] = Array.from({ length: 115 }, (_, i) => ({
+  id: `29tgj${234 + i}`,
+  name: 'server-02',
+  status: 'active',
+  isLocked: true,
+  fixedIP: '10.62.0.31',
+  flavor: 'm1.medium',
+  attachedVolumes: ['vol-01'],
 }));
+
+const ITEMS_PER_PAGE = 10;
 
 /* ----------------------------------------
    AttachVolumeDrawer Component
@@ -57,27 +61,45 @@ const mockVolumes: VolumeItem[] = Array.from({ length: 10 }, (_, i) => ({
 export function AttachVolumeDrawer({
   isOpen,
   onClose,
-  instanceName,
-  volumes = mockVolumes,
+  volume,
+  instances = defaultInstances,
   onAttach,
-  onCreateNewVolume,
 }: AttachVolumeDrawerProps) {
-  const [selectedVolumeId, setSelectedVolumeId] = useState<string | null>(null);
-  const [activeTab, setActiveTab] = useState('available');
+  // Instance selection state
+  const [selectedInstanceId, setSelectedInstanceId] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const totalItems = 115;
-  const itemsPerPage = 10;
-  const totalPages = Math.ceil(totalItems / itemsPerPage);
+  // Filter instances
+  const filteredInstances = instances.filter((inst) =>
+    inst.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    inst.id.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    inst.fixedIP.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    inst.flavor.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
+  const totalPages = Math.ceil(filteredInstances.length / ITEMS_PER_PAGE);
+  const paginatedInstances = filteredInstances.slice(
+    (currentPage - 1) * ITEMS_PER_PAGE,
+    currentPage * ITEMS_PER_PAGE
+  );
+
+  // Reset form when drawer opens
+  useEffect(() => {
+    if (isOpen) {
+      setSelectedInstanceId(null);
+      setSearchQuery('');
+      setCurrentPage(1);
+    }
+  }, [isOpen]);
 
   const handleAttach = async () => {
-    if (!selectedVolumeId) return;
+    if (!selectedInstanceId) return;
     
     setIsSubmitting(true);
     try {
-      await onAttach?.(selectedVolumeId);
+      await onAttach?.(selectedInstanceId);
       onClose();
     } finally {
       setIsSubmitting(false);
@@ -85,76 +107,13 @@ export function AttachVolumeDrawer({
   };
 
   const handleClose = () => {
-    setSelectedVolumeId(null);
+    setSelectedInstanceId(null);
     setSearchQuery('');
     setCurrentPage(1);
     onClose();
   };
 
-  const filteredVolumes = volumes.filter(v => 
-    v.name.toLowerCase().includes(searchQuery.toLowerCase())
-  );
-
-  // Table columns definition
-  const columns: TableColumn<VolumeItem>[] = [
-    {
-      key: 'select',
-      label: '',
-      width: '40px',
-      align: 'center',
-      render: (_, row) => (
-        <Radio
-          name="volume-select"
-          value={row.id}
-          checked={selectedVolumeId === row.id}
-          onChange={() => setSelectedVolumeId(row.id)}
-        />
-      ),
-    },
-    {
-      key: 'status',
-      label: 'Status',
-      width: '59px',
-      align: 'center',
-      render: () => (
-        <StatusIndicator status="active" layout="icon-only" size="sm" />
-      ),
-    },
-    {
-      key: 'name',
-      label: 'Name',
-      render: (_, row) => (
-        <VStack gap={0}>
-          <HStack gap={1} align="center">
-            <span className="text-[12px] font-medium text-[var(--color-action-primary)]">{row.name}</span>
-            <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
-          </HStack>
-          <span className="text-[11px] text-[var(--color-text-muted)]">ID: 30ujh345</span>
-        </VStack>
-      ),
-    },
-    {
-      key: 'type',
-      label: 'Type',
-      render: (value) => (
-        <span className="text-[12px] text-[var(--color-text-default)]">{value}</span>
-      ),
-    },
-    {
-      key: 'size',
-      label: 'Size',
-      render: (value) => (
-        <span className="text-[12px] text-[var(--color-text-default)]">{value}</span>
-      ),
-    },
-    {
-      key: 'diskTag',
-      label: 'Disk Tag',
-      render: (value) => (
-        <span className="text-[12px] text-[var(--color-text-default)]">{value}</span>
-      ),
-    },
-  ];
+  const selectedInstance = instances.find((i) => i.id === selectedInstanceId);
 
   return (
     <Drawer
@@ -164,7 +123,7 @@ export function AttachVolumeDrawer({
       showCloseButton={false}
       width={696}
       footer={
-        <HStack gap={2} justify="center" className="w-full">
+        <HStack gap={2} justify="center" className="w-full border-t border-[var(--color-border-default)] px-6 py-4">
           <Button 
             variant="secondary" 
             onClick={handleClose}
@@ -176,7 +135,7 @@ export function AttachVolumeDrawer({
           <Button 
             variant="primary" 
             onClick={handleAttach}
-            disabled={!selectedVolumeId || isSubmitting}
+            disabled={!selectedInstanceId || isSubmitting}
             size="md"
             className="w-[152px]"
           >
@@ -185,52 +144,36 @@ export function AttachVolumeDrawer({
         </HStack>
       }
     >
-      <VStack gap={6} className="h-full">
+      <VStack gap={3} className="h-full">
         {/* Header Section */}
-        <VStack gap={4}>
-          <VStack gap={1}>
+        <VStack gap={2}>
+          <VStack gap={0}>
             <h2 className="text-[16px] font-semibold text-[var(--color-text-default)] leading-6">
               Attach Volume
             </h2>
-            <p className="text-[12px] text-[var(--color-text-muted)] leading-4">
-              Attach an existing volume to this instance. Once attached, it will appear as a new block device inside your instance.
-            </p>
           </VStack>
-
-          {/* Instance Info Box */}
-          <div className="w-full p-4 bg-[var(--color-surface-subtle)] rounded-lg">
-            <div className="text-[11px] text-[var(--color-text-muted)] mb-1">Instance</div>
-            <div className="text-[14px] font-medium text-[var(--color-text-default)]">{instanceName}</div>
-          </div>
+          <p className="text-[12px] text-[var(--color-text-subtle)] leading-4">
+            Attach one or more available volumes to this instance. Once attached, the volumes will appear as additional storage devices inside the instance.
+          </p>
         </VStack>
 
-        {/* Volume Section */}
-        <VStack gap={4} className="flex-1 min-h-0">
-          {/* Volume Header */}
-          <HStack justify="between" align="center" className="w-full">
-            <h3 className="text-[14px] font-semibold text-[var(--color-text-default)]">Volume</h3>
-            <Button 
-              variant="muted" 
-              size="sm"
-              onClick={onCreateNewVolume}
-              rightIcon={<IconExternalLink size={14} />}
-            >
-              Create a new volume
-            </Button>
-          </HStack>
+        {/* Volume Info Box */}
+        <div className="w-full bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
+          <VStack gap={1.5}>
+            <span className="text-[11px] font-medium text-[var(--color-text-subtle)] leading-4">
+              Volume
+            </span>
+            <span className="text-[12px] text-[var(--color-text-default)] leading-4">
+              {volume.name}
+            </span>
+          </VStack>
+        </div>
 
-          {/* Tabs */}
-          <Tabs
-            value={activeTab}
-            onChange={setActiveTab}
-            variant="underline"
-            size="sm"
-          >
-            <TabList>
-              <Tab value="available">Available</Tab>
-              <Tab value="shared">Shared</Tab>
-            </TabList>
-          </Tabs>
+        {/* Instances Section */}
+        <VStack gap={3} className="mt-3">
+          <h3 className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+            Instances
+          </h3>
 
           {/* Search */}
           <div className="w-[280px]">
@@ -238,34 +181,111 @@ export function AttachVolumeDrawer({
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               onClear={() => setSearchQuery('')}
-              placeholder="Search volume by attributes"
+              placeholder="Search instance by attributes"
               size="sm"
               fullWidth
             />
           </div>
 
           {/* Pagination */}
-          <HStack gap={2} align="center">
-            <Pagination
-              currentPage={currentPage}
-              totalPages={totalPages}
-              onPageChange={setCurrentPage}
-            />
-            <div className="w-px h-4 bg-[var(--color-border-default)] mx-2" />
-            <span className="text-[12px] text-[var(--color-text-muted)]">{totalItems} items</span>
-          </HStack>
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            totalItems={filteredInstances.length}
+            onPageChange={setCurrentPage}
+          />
 
-          {/* Volume Table */}
-          <div className="flex-1 overflow-auto">
-            <Table<VolumeItem>
-              columns={columns}
-              data={filteredVolumes}
-              rowKey="id"
-              selectedKeys={selectedVolumeId ? [selectedVolumeId] : []}
-              onRowClick={(row) => setSelectedVolumeId(row.id)}
-              emptyMessage="No volumes available"
-            />
+          {/* Instances Table */}
+          <div className="flex flex-col gap-[var(--table-row-gap)]" style={{ width: '648px', maxWidth: '648px' }}>
+            {/* Header */}
+            <div className="flex items-stretch min-h-[var(--table-row-height)] bg-[var(--table-header-bg)] border border-[var(--color-border-default)] rounded-[var(--table-row-radius)]">
+              <div className="w-[var(--table-checkbox-width)] flex items-center justify-center" />
+              <div className="w-[59px] flex items-center justify-center px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] border-l border-[var(--color-border-default)]">
+                Status
+              </div>
+              <div className="flex-1 flex items-center gap-1.5 px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] border-l border-[var(--color-border-default)] cursor-pointer hover:text-[var(--color-action-primary)]">
+                Name
+                <IconChevronDown size={12} />
+              </div>
+              <div className="w-[62px] flex items-center justify-center px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] border-l border-[var(--color-border-default)]">
+                Locked
+              </div>
+              <div className="flex-1 flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] border-l border-[var(--color-border-default)]">
+                Fixed IP
+              </div>
+              <div className="flex-1 flex items-center gap-1.5 px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] border-l border-[var(--color-border-default)] cursor-pointer hover:text-[var(--color-action-primary)]">
+                Flavor
+                <IconChevronDown size={12} />
+              </div>
+              <div className="flex-1 flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] border-l border-[var(--color-border-default)]">
+                Attached volumes
+              </div>
+            </div>
+
+            {/* Rows */}
+            {paginatedInstances.map((inst) => (
+              <div 
+                key={inst.id}
+                className={`flex items-stretch min-h-[var(--table-row-height)] border rounded-[var(--table-row-radius)] cursor-pointer transition-all ${
+                  selectedInstanceId === inst.id 
+                    ? 'bg-[var(--color-state-info-bg)] border-[var(--color-action-primary)]' 
+                    : 'bg-[var(--color-surface-default)] border-[var(--color-border-default)] hover:bg-[var(--table-row-hover-bg)]'
+                }`}
+                onClick={() => setSelectedInstanceId(inst.id)}
+              >
+                {/* Radio */}
+                <div className="w-[var(--table-checkbox-width)] flex items-center justify-center" onClick={(e) => e.stopPropagation()}>
+                  <Radio
+                    name="instance-select"
+                    value={inst.id}
+                    checked={selectedInstanceId === inst.id}
+                    onChange={() => setSelectedInstanceId(inst.id)}
+                  />
+                </div>
+                {/* Status */}
+                <div className="w-[59px] flex items-center justify-center">
+                  <StatusIndicator status={inst.status} layout="icon-only" size="sm" />
+                </div>
+                {/* Name with ID */}
+                <div className="flex-1 flex flex-col justify-center gap-0.5 px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] min-w-0 overflow-hidden">
+                  <HStack gap={1.5} align="center">
+                    <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-action-primary)] truncate">{inst.name}</span>
+                    <IconExternalLink size={12} className="shrink-0 text-[var(--color-action-primary)]" />
+                  </HStack>
+                  <span className="text-[11px] text-[var(--color-text-subtle)] truncate">ID : {inst.id}</span>
+                </div>
+                {/* Locked */}
+                <div className="w-[62px] flex items-center justify-center">
+                  {inst.isLocked && (
+                    <IconLock size={16} stroke={1.5} className="text-[var(--color-text-default)]" />
+                  )}
+                </div>
+                {/* Fixed IP */}
+                <div className="flex-1 flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] min-w-0 overflow-hidden">
+                  <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)] truncate">{inst.fixedIP}</span>
+                </div>
+                {/* Flavor */}
+                <div className="flex-1 flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] min-w-0 overflow-hidden">
+                  <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)] truncate">{inst.flavor}</span>
+                </div>
+                {/* Attached volumes */}
+                <div className="flex-1 flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] min-w-0 overflow-hidden">
+                  <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)] truncate">
+                    {inst.attachedVolumes.join(', ') || '-'}
+                  </span>
+                </div>
+              </div>
+            ))}
           </div>
+
+          {/* Selection Indicator */}
+          <SelectionIndicator
+            selectedItems={selectedInstance ? [{ id: selectedInstance.id, label: selectedInstance.name }] : []}
+            onRemove={() => setSelectedInstanceId(null)}
+            emptyText="No item Selected"
+            className="shrink-0"
+            style={{ width: '648px' }}
+          />
         </VStack>
       </VStack>
     </Drawer>

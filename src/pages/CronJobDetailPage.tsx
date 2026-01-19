@@ -172,7 +172,7 @@ function JobsTab({ jobs }: JobsTabProps) {
       {
         id: 'edit-yaml',
         label: 'Edit YAML',
-        onClick: () => navigate(`/container/jobs/${row.id}/edit-yaml`),
+        onClick: () => navigate(`/container/jobs/${row.name}/edit-yaml`),
       },
       {
         id: 'download-yaml',
@@ -192,7 +192,7 @@ function JobsTab({ jobs }: JobsTabProps) {
     {
       key: 'status',
       label: 'Status',
-      width: '70px',
+      width: '80px',
       align: 'center',
       sortable: true,
       render: (value: string) => (
@@ -261,10 +261,10 @@ function JobsTab({ jobs }: JobsTabProps) {
     {
       key: 'action',
       label: 'Action',
-      width: '70px',
+      width: '80px',
       align: 'center',
       render: (_: unknown, row: JobRow) => (
-        <ContextMenu items={createJobMenuItems(row)} trigger="click" align="right">
+        <ContextMenu items={createJobMenuItems(row)} trigger="click" align="left">
           <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
             <IconDotsCircleHorizontal size={16} className="text-[var(--color-text-subtle)]" stroke={1.5} />
           </button>
@@ -275,7 +275,7 @@ function JobsTab({ jobs }: JobsTabProps) {
 
   return (
     <VStack gap={3}>
-      <h3 className="text-[14px] font-semibold leading-[20px] text-[var(--color-text-default)]">
+      <h3 className="text-[16px] font-semibold leading-[24px] text-[var(--color-text-default)]">
         Jobs
       </h3>
       <HStack gap={2} align="center">
@@ -372,10 +372,10 @@ function RecentEventsTab({ events }: RecentEventsTabProps) {
     {
       key: 'action',
       label: 'Action',
-      width: '60px',
+      width: '64px',
       align: 'center',
       render: (_: unknown, row: EventRow) => (
-        <ContextMenu items={createEventMenuItems(row)} trigger="click">
+        <ContextMenu items={createEventMenuItems(row)} trigger="click" align="left">
           <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
             <IconDotsCircleHorizontal size={16} className="text-[var(--color-text-subtle)]" stroke={1.5} />
           </button>
@@ -386,7 +386,7 @@ function RecentEventsTab({ events }: RecentEventsTabProps) {
 
   return (
     <VStack gap={3}>
-      <h3 className="text-[14px] font-semibold leading-[20px] text-[var(--color-text-default)]">
+      <h3 className="text-[16px] font-semibold leading-[24px] text-[var(--color-text-default)]">
         Recent Events
       </h3>
       <HStack gap={2} align="center">
@@ -442,7 +442,7 @@ export function CronJobDetailPage() {
   const cronjob = mockCronJobData[cronjobId || '1'] || mockCronJobData['1'];
 
   // Tab management
-  const { tabs, activeTabId, closeTab, selectTab, updateActiveTabLabel, moveTab } = useTabs();
+  const { tabs, activeTabId, closeTab, selectTab, updateActiveTabLabel, moveTab, addNewTab } = useTabs();
 
   // Update tab label
   useEffect(() => {
@@ -486,7 +486,7 @@ export function CronJobDetailPage() {
     {
       id: 'edit-yaml',
       label: 'Edit YAML',
-      onClick: () => navigate(`/container/cronjobs/${cronjob.id}/edit-yaml`),
+      onClick: () => navigate(`/container/cronjobs/${cronjob.name}/edit-yaml`),
     },
     {
       id: 'download-yaml',
@@ -518,6 +518,7 @@ export function CronJobDetailPage() {
           onTabChange={selectTab}
           onTabClose={closeTab}
           onTabReorder={moveTab}
+          onTabAdd={addNewTab}
         />
 
         {/* Top Bar */}
@@ -565,7 +566,7 @@ export function CronJobDetailPage() {
               <DetailHeader>
                 <DetailHeader.Title>CronJob: {cronjob.name}</DetailHeader.Title>
                 <DetailHeader.Actions>
-                  <ContextMenu items={moreActionsItems} trigger="click" align="right">
+                  <ContextMenu items={moreActionsItems} trigger="click" align="left">
                     <Button
                       variant="secondary"
                       size="md"

@@ -470,7 +470,7 @@ export function PhysicalDisksPage() {
     {
       key: 'status',
       label: 'Status',
-      width: 60,
+      width: 64,
       align: 'center',
       sortable: false,
       render: (_, row) => <StatusCell status={row.status} />,

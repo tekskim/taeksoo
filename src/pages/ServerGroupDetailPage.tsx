@@ -389,10 +389,10 @@ export function ServerGroupDetailPage() {
                   </TabList>
 
                   {/* Instances Tab */}
-                  <TabPanel value="instances">
-                    <VStack gap={3} className="pt-6">
+                  <TabPanel value="instances" className="pt-0">
+                    <VStack gap={4} className="pt-4">
                       {/* Section Header */}
-                      <h2 className="text-[length:var(--font-size-14)] font-semibold text-[var(--color-text-default)]">
+                      <h2 className="text-[length:var(--font-size-16)] leading-[var(--line-height-24)] font-semibold text-[var(--color-text-default)]">
                         Instances
                       </h2>
 

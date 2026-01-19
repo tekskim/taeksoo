@@ -312,7 +312,7 @@ export function PodDisruptionBudgetDetailPage() {
     {
       key: 'count',
       label: 'Count',
-      width: '70px',
+      width: '80px',
       sortable: true,
     },
     {
@@ -332,7 +332,7 @@ export function PodDisruptionBudgetDetailPage() {
     {
       key: 'actions',
       label: 'Action',
-      width: '60px',
+      width: '64px',
       align: 'center',
       render: (_, row) => (
         <div onClick={(e) => e.stopPropagation()}>
@@ -448,7 +448,7 @@ export function PodDisruptionBudgetDetailPage() {
               <DetailHeader>
                 <DetailHeader.Title>Pod Disruption Budget: {pdbData.name}</DetailHeader.Title>
                 <DetailHeader.Actions>
-                  <ContextMenu items={moreActionsItems} trigger="click" align="right">
+                  <ContextMenu items={moreActionsItems} trigger="click" align="left">
                     <Button
                       variant="secondary"
                       size="md"
@@ -523,7 +523,7 @@ export function PodDisruptionBudgetDetailPage() {
                   <TabPanel value="budget">
                     <div className="w-full border border-[var(--color-border-default)] rounded-[8px] p-4">
                       <VStack gap={4}>
-                        <h3 className="text-[14px] font-semibold leading-[20px] text-[var(--color-text-default)]">
+                        <h3 className="text-[16px] font-semibold leading-[24px] text-[var(--color-text-default)]">
                           Budget
                         </h3>
 
@@ -592,7 +592,7 @@ export function PodDisruptionBudgetDetailPage() {
                       <VStack gap={6}>
                         {/* Selectors Section */}
                         <VStack gap={2} className="w-full">
-                          <h3 className="text-[14px] font-semibold leading-[20px] text-[var(--color-text-default)]">
+                          <h3 className="text-[16px] font-semibold leading-[24px] text-[var(--color-text-default)]">
                             Selectors
                           </h3>
 
@@ -683,7 +683,7 @@ export function PodDisruptionBudgetDetailPage() {
                   {/* Conditions Tab */}
                   <TabPanel value="conditions">
                     <VStack gap={3}>
-                      <h3 className="text-[14px] font-semibold leading-[20px] text-[var(--color-text-default)]">
+                      <h3 className="text-[16px] font-semibold leading-[24px] text-[var(--color-text-default)]">
                         Conditions
                       </h3>
 
@@ -714,7 +714,7 @@ export function PodDisruptionBudgetDetailPage() {
                     <div className="w-full border border-[var(--color-border-default)] rounded-[8px] p-4">
                       <VStack gap={6}>
                         {/* Section Title */}
-                        <h3 className="text-[14px] font-semibold leading-[20px] text-[var(--color-text-default)]">
+                        <h3 className="text-[16px] font-semibold leading-[24px] text-[var(--color-text-default)]">
                           Labels & Annotations
                         </h3>
 
@@ -798,7 +798,7 @@ export function PodDisruptionBudgetDetailPage() {
                   {/* Recent Events Tab */}
                   <TabPanel value="recent-events">
                     <VStack gap={3}>
-                      <h3 className="text-[14px] font-semibold leading-[20px] text-[var(--color-text-default)]">
+                      <h3 className="text-[16px] font-semibold leading-[24px] text-[var(--color-text-default)]">
                         Recent Events
                       </h3>
 
@@ -806,7 +806,7 @@ export function PodDisruptionBudgetDetailPage() {
                       <HStack gap={2} align="center" className="w-full">
                         <HStack gap={1} align="center">
                           <SearchInput
-                            placeholder="Find Events with filters"
+                            placeholder="Search events by attributes"
                             size="sm"
                             className="w-[200px]"
                           />
