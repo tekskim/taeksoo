@@ -287,6 +287,9 @@ export function ResourceQuotasPage() {
         <TopBar
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
+          showNavigation={true}
+          onBack={() => window.history.back()}
+          onForward={() => window.history.forward()}
           breadcrumb={
             <Breadcrumb
               items={[
@@ -341,17 +344,11 @@ export function ResourceQuotasPage() {
                 </HStack>
                 
                 {/* Create Button with Dropdown */}
-                <div className="relative">
-                  <ContextMenu items={createDropdownItems} trigger="click">
-                    <Button 
-                      variant="primary" 
-                      size="md"
-                      rightIcon={<IconChevronDown size={14} stroke={1.5} />}
-                    >
-                      Create Resource Quota
-                    </Button>
-                  </ContextMenu>
-                </div>
+                <ContextMenu items={createDropdownItems} trigger="click" align="right">
+                  <Button variant="primary" size="md" rightIcon={<IconChevronDown size={14} stroke={1.5} />}>
+                    Create Resource Quota
+                  </Button>
+                </ContextMenu>
               </HStack>
 
               {/* Action Bar */}
