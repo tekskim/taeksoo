@@ -164,7 +164,7 @@ export function AttachVolumeDrawer({
               Volume
             </span>
             <span className="text-[12px] text-[var(--color-text-default)] leading-4">
-              {volume.name}
+              {volume?.name || '-'}
             </span>
           </VStack>
         </div>
