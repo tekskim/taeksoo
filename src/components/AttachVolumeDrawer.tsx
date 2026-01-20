@@ -170,7 +170,7 @@ export function AttachVolumeDrawer({
         </div>
 
         {/* Instances Section */}
-        <VStack gap={3} className="mt-3">
+        <VStack gap={3} className="mt-3 pb-5">
           <h3 className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
             Instances
           </h3>

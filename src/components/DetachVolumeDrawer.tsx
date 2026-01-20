@@ -152,7 +152,7 @@ export function DetachVolumeDrawer({
         </VStack>
 
         {/* Volume Section */}
-        <VStack gap={3} className="flex-1 min-h-0">
+        <VStack gap={3} className="flex-1 min-h-0 pb-5">
           {/* Volume Header */}
           <HStack justify="between" align="center" className="w-full">
             <h3 className="text-[14px] font-medium text-[var(--color-text-default)]">Volumes</h3>
