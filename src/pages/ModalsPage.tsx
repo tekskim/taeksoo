@@ -5,6 +5,13 @@ import { TopBar, Breadcrumb, TabBar } from '@/design-system';
 import { Button, VStack, HStack, Badge, Modal, Disclosure } from '@/design-system';
 import { IconAlertCircle, IconChevronRight, IconChevronDown, IconCopy, IconCheck } from '@tabler/icons-react';
 import { DeleteClusterModal } from '@/components/DeleteClusterModal';
+import { DeleteNamespaceModal } from '@/components/DeleteNamespaceModal';
+import { DeletePodModal } from '@/components/DeletePodModal';
+import { DeleteJobModal } from '@/components/DeleteJobModal';
+import { DeleteCronJobModal } from '@/components/DeleteCronJobModal';
+import { DeleteDeploymentModal } from '@/components/DeleteDeploymentModal';
+import { DeleteStatefulSetModal } from '@/components/DeleteStatefulSetModal';
+import { DeleteDaemonSetModal } from '@/components/DeleteDaemonSetModal';
 
 /* ----------------------------------------
    Modal List Item Component
@@ -123,6 +130,13 @@ export function ModalsPage() {
   
   // Container Modal states
   const [isDeleteClusterOpen, setIsDeleteClusterOpen] = useState(false);
+  const [isDeleteNamespaceOpen, setIsDeleteNamespaceOpen] = useState(false);
+  const [isDeletePodOpen, setIsDeletePodOpen] = useState(false);
+  const [isDeleteJobOpen, setIsDeleteJobOpen] = useState(false);
+  const [isDeleteCronJobOpen, setIsDeleteCronJobOpen] = useState(false);
+  const [isDeleteDeploymentOpen, setIsDeleteDeploymentOpen] = useState(false);
+  const [isDeleteStatefulSetOpen, setIsDeleteStatefulSetOpen] = useState(false);
+  const [isDeleteDaemonSetOpen, setIsDeleteDaemonSetOpen] = useState(false);
   
   // Disclosure states
   const [isComputeOpen, setIsComputeOpen] = useState(false);
@@ -626,7 +640,7 @@ export function ModalsPage() {
                           Modals
                         </span>
                         <span className="text-[12px] text-[var(--color-text-subtle)]">
-                          (1 modal)
+                          (8 modals)
                         </span>
                       </div>
                     </div>
@@ -645,6 +659,64 @@ export function ModalsPage() {
                             category="Cluster"
                             size="sm"
                             onOpen={() => setIsDeleteClusterOpen(true)}
+                          />
+                          <ModalListItem
+                            title="Delete Namespace"
+                            description="Confirm deletion of a Kubernetes namespace."
+                            category="Namespace"
+                            size="sm"
+                            onOpen={() => setIsDeleteNamespaceOpen(true)}
+                          />
+                        </div>
+                      </VStack>
+
+                      {/* Workload Actions */}
+                      <VStack gap={2}>
+                        <h2 className="text-[14px] font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
+                          Workload Actions
+                        </h2>
+                        <div className="flex flex-col gap-2">
+                          <ModalListItem
+                            title="Delete Pod"
+                            description="Confirm deletion of a Kubernetes pod."
+                            category="Pod"
+                            size="sm"
+                            onOpen={() => setIsDeletePodOpen(true)}
+                          />
+                          <ModalListItem
+                            title="Delete Deployment"
+                            description="Confirm deletion of a Kubernetes deployment."
+                            category="Deployment"
+                            size="sm"
+                            onOpen={() => setIsDeleteDeploymentOpen(true)}
+                          />
+                          <ModalListItem
+                            title="Delete StatefulSet"
+                            description="Confirm deletion of a Kubernetes stateful set."
+                            category="StatefulSet"
+                            size="sm"
+                            onOpen={() => setIsDeleteStatefulSetOpen(true)}
+                          />
+                          <ModalListItem
+                            title="Delete DaemonSet"
+                            description="Confirm deletion of a Kubernetes daemon set."
+                            category="DaemonSet"
+                            size="sm"
+                            onOpen={() => setIsDeleteDaemonSetOpen(true)}
+                          />
+                          <ModalListItem
+                            title="Delete Job"
+                            description="Confirm deletion of a Kubernetes job."
+                            category="Job"
+                            size="sm"
+                            onOpen={() => setIsDeleteJobOpen(true)}
+                          />
+                          <ModalListItem
+                            title="Delete CronJob"
+                            description="Confirm deletion of a Kubernetes cron job."
+                            category="CronJob"
+                            size="sm"
+                            onOpen={() => setIsDeleteCronJobOpen(true)}
                           />
                         </div>
                       </VStack>
@@ -3073,6 +3145,83 @@ export function ModalsPage() {
         onConfirm={() => {
           console.log('Cluster deleted');
           setIsDeleteClusterOpen(false);
+        }}
+      />
+
+      {/* Delete Namespace Modal */}
+      <DeleteNamespaceModal
+        isOpen={isDeleteNamespaceOpen}
+        onClose={() => setIsDeleteNamespaceOpen(false)}
+        namespace={{ id: 'ns-001', name: 'default' }}
+        onConfirm={() => {
+          console.log('Namespace deleted');
+          setIsDeleteNamespaceOpen(false);
+        }}
+      />
+
+      {/* Delete Pod Modal */}
+      <DeletePodModal
+        isOpen={isDeletePodOpen}
+        onClose={() => setIsDeletePodOpen(false)}
+        pod={{ id: 'pod-001', name: 'nginx-deployment-7fb96c846b-abc12' }}
+        onConfirm={() => {
+          console.log('Pod deleted');
+          setIsDeletePodOpen(false);
+        }}
+      />
+
+      {/* Delete Job Modal */}
+      <DeleteJobModal
+        isOpen={isDeleteJobOpen}
+        onClose={() => setIsDeleteJobOpen(false)}
+        job={{ id: 'job-001', name: 'backup-job-20240115' }}
+        onConfirm={() => {
+          console.log('Job deleted');
+          setIsDeleteJobOpen(false);
+        }}
+      />
+
+      {/* Delete CronJob Modal */}
+      <DeleteCronJobModal
+        isOpen={isDeleteCronJobOpen}
+        onClose={() => setIsDeleteCronJobOpen(false)}
+        cronJob={{ id: 'cronjob-001', name: 'daily-backup' }}
+        onConfirm={() => {
+          console.log('CronJob deleted');
+          setIsDeleteCronJobOpen(false);
+        }}
+      />
+
+      {/* Delete Deployment Modal */}
+      <DeleteDeploymentModal
+        isOpen={isDeleteDeploymentOpen}
+        onClose={() => setIsDeleteDeploymentOpen(false)}
+        deployment={{ id: 'deploy-001', name: 'nginx-deployment' }}
+        onConfirm={() => {
+          console.log('Deployment deleted');
+          setIsDeleteDeploymentOpen(false);
+        }}
+      />
+
+      {/* Delete StatefulSet Modal */}
+      <DeleteStatefulSetModal
+        isOpen={isDeleteStatefulSetOpen}
+        onClose={() => setIsDeleteStatefulSetOpen(false)}
+        statefulSet={{ id: 'sts-001', name: 'mysql-statefulset' }}
+        onConfirm={() => {
+          console.log('StatefulSet deleted');
+          setIsDeleteStatefulSetOpen(false);
+        }}
+      />
+
+      {/* Delete DaemonSet Modal */}
+      <DeleteDaemonSetModal
+        isOpen={isDeleteDaemonSetOpen}
+        onClose={() => setIsDeleteDaemonSetOpen(false)}
+        daemonSet={{ id: 'ds-001', name: 'fluentd-daemonset' }}
+        onConfirm={() => {
+          console.log('DaemonSet deleted');
+          setIsDeleteDaemonSetOpen(false);
         }}
       />
     </div>
