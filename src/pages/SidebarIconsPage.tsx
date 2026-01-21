@@ -262,9 +262,9 @@ const appIconData: AppData[] = [
     sidebarFile: 'src/components/IAMSidebar.tsx',
     sections: [
       {
-        title: 'Dashboard',
+        title: 'Home',
         items: [
-          { icon: LayoutDashboard, name: 'LayoutDashboard', label: 'Dashboard', slug: 'layout-dashboard', library: 'lucide' },
+          { icon: IconHome, name: 'IconHome', label: 'Home', slug: 'home' },
         ],
       },
       {
