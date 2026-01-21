@@ -6,6 +6,7 @@ import {
   IconMoon,
   IconSun,
   IconMail,
+  IconBook,
 } from '@tabler/icons-react';
 import { Button } from '@/design-system';
 
@@ -242,6 +243,14 @@ export function EntryPage() {
               onClick={() => navigate('/design')}
             >
               Design system
+            </Button>
+            <Button
+              variant="secondary"
+              size="sm"
+              leftIcon={<IconBook size={14} stroke={1.5} />}
+              onClick={() => window.open('/tds_ssot/storybook/', '_blank')}
+            >
+              Storybook
             </Button>
             <Button
               variant="secondary"
