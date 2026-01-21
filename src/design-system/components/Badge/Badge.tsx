@@ -1,4 +1,4 @@
-import type { HTMLAttributes, ReactNode } from 'react';
+import { memo, type HTMLAttributes, type ReactNode } from 'react';
 import { twMerge } from 'tailwind-merge';
 
 /* ----------------------------------------
@@ -88,7 +88,7 @@ const sizes = {
    Badge Component
    ---------------------------------------- */
 
-export function Badge({
+export const Badge = memo(function Badge({
   theme,
   type = 'solid',
   size = 'md',
@@ -139,4 +139,4 @@ export function Badge({
       {rightIcon && <span className="shrink-0">{rightIcon}</span>}
     </span>
   );
-}
+});

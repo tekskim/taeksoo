@@ -76,7 +76,7 @@ import {
 } from '@tabler/icons-react';
 import { useNavigate } from 'react-router-dom';
 import { useDarkMode } from '@/hooks/useDarkMode';
-import { EthernetPort, ChevronsLeftRightEllipsis, HardDrive, LogIn, Scaling, FileCheck2, Group, Network, RefreshCw, CircleGauge, BrainCircuit } from 'lucide-react';
+import { EthernetPort, ChevronsLeftRightEllipsis, HardDrive, LogIn, Scaling, FileCheck2, Group, Network, RefreshCw, CircleGauge, BrainCircuit, LayoutDashboard } from 'lucide-react';
 import ThakiLogoLight from '@/assets/thakiLogo_light.svg';
 import ThakiLogoDark from '@/assets/thakiLogo-dark.svg';
 import RouterIcon from '@/assets/Router.svg';
@@ -139,9 +139,9 @@ const appIconData: AppData[] = [
     sidebarFile: 'src/components/Sidebar.tsx',
     sections: [
       {
-        title: 'Home',
+        title: 'Dashboard',
         items: [
-          { icon: IconHome, name: 'IconHome', label: 'Home', slug: 'home' },
+          { icon: LayoutDashboard, name: 'LayoutDashboard', label: 'Dashboard', slug: 'layout-dashboard', library: 'lucide' },
         ],
       },
       {
@@ -223,9 +223,9 @@ const appIconData: AppData[] = [
     sidebarFile: 'src/components/StorageSidebar.tsx',
     sections: [
       {
-        title: 'Home',
+        title: 'Dashboard',
         items: [
-          { icon: IconHome, name: 'IconHome', label: 'Home', slug: 'home' },
+          { icon: LayoutDashboard, name: 'LayoutDashboard', label: 'Dashboard', slug: 'layout-dashboard', library: 'lucide' },
         ],
       },
       {
@@ -313,7 +313,9 @@ const appIconData: AppData[] = [
       {
         title: 'Cluster',
         items: [
-          { icon: IconHome, name: 'IconHome', label: 'Dashboard', slug: 'home' },
+          { icon: IconHome, name: 'IconHome', label: 'Home', slug: 'home' },
+          { icon: LayoutDashboard, name: 'LayoutDashboard', label: 'Dashboard', slug: 'layout-dashboard', library: 'lucide' },
+          { icon: IconAffiliate, name: 'IconAffiliate', label: 'Cluster', slug: 'affiliate' },
           { icon: IconFolders, name: 'IconFolders', label: 'Namespaces', slug: 'folders' },
           { icon: IconTopologyStar, name: 'IconTopologyStar', label: 'Nodes', slug: 'topology-star' },
           { icon: IconTimelineEvent, name: 'IconTimelineEvent', label: 'Events', slug: 'timeline-event' },
@@ -364,9 +366,9 @@ const appIconData: AppData[] = [
     sidebarFile: 'src/components/AIPlatformSidebar.tsx',
     sections: [
       {
-        title: 'Home',
+        title: 'Dashboard',
         items: [
-          { icon: IconHome, name: 'IconHome', label: 'Dashboard', slug: 'home' },
+          { icon: LayoutDashboard, name: 'LayoutDashboard', label: 'Dashboard', slug: 'layout-dashboard', library: 'lucide' },
           { icon: IconCompass, name: 'IconCompass', label: 'Explore', slug: 'compass' },
         ],
       },
@@ -641,6 +643,11 @@ interface AppSectionCardProps {
   searchQuery: string;
 }
 
+// Helper to convert app name to kebab-case id
+function toKebabCase(str: string): string {
+  return str.toLowerCase().replace(/\s+/g, '-');
+}
+
 function AppSectionCard({ app, searchQuery }: AppSectionCardProps) {
   // Filter sections based on search query
   const filteredSections = useMemo(() => {
@@ -662,7 +669,10 @@ function AppSectionCard({ app, searchQuery }: AppSectionCardProps) {
   if (filteredSections.length === 0) return null;
 
   return (
-    <div className="bg-[var(--color-surface-default)] rounded-xl border border-[var(--color-border-default)] overflow-hidden">
+    <div 
+      id={toKebabCase(app.name)}
+      className="bg-[var(--color-surface-default)] rounded-xl border border-[var(--color-border-default)] overflow-hidden scroll-mt-20"
+    >
       {/* App Header */}
       <div className="px-5 py-4 border-b border-[var(--color-border-default)] bg-[var(--color-surface-subtle)]">
         <div className="flex items-center justify-between">
@@ -810,6 +820,19 @@ export function SidebarIconsPage() {
               ) : (
                 <span>Total <strong className="text-[var(--color-text-default)]">{totalIcons}</strong> icons across {appIconData.length} apps</span>
               )}
+            </div>
+
+            {/* Section Navigation */}
+            <div className="mt-6 flex flex-wrap gap-2">
+              {appIconData.map((app, index) => (
+                <a
+                  key={index}
+                  href={`#${toKebabCase(app.name)}`}
+                  className="px-3 py-1.5 text-[12px] font-medium rounded-full bg-[var(--color-surface-default)] border border-[var(--color-border-default)] text-[var(--color-text-muted)] hover:text-[var(--color-action-primary)] hover:border-[var(--color-action-primary)] transition-colors"
+                >
+                  {app.name}
+                </a>
+              ))}
             </div>
           </div>
 

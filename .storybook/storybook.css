@@ -1,0 +1,45 @@
+/* Storybook-specific styles for better scrolling and layout */
+
+/* Ensure the story container allows scrolling */
+.docs-story {
+  overflow: auto !important;
+}
+
+/* Fix iframe scrolling issues in docs */
+.sb-show-main.sb-main-padded {
+  overflow: auto !important;
+  height: 100%;
+}
+
+/* Story canvas scrolling */
+#storybook-root {
+  overflow: auto;
+  min-height: 100%;
+}
+
+/* Docs page scrolling */
+.sbdocs.sbdocs-wrapper {
+  overflow: auto !important;
+}
+
+.sbdocs.sbdocs-content {
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+/* Canvas story scrolling */
+.sb-show-main {
+  overflow: auto !important;
+}
+
+/* Ensure proper scrolling for story previews */
+.innerZoomElementWrapper > div {
+  overflow: auto !important;
+  max-height: 80vh;
+}
+
+/* Fix for centered layout stories that need scrolling */
+[data-story-block="true"] {
+  overflow: auto !important;
+  max-height: 80vh;
+}

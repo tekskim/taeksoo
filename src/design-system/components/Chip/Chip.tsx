@@ -1,4 +1,4 @@
-import type { HTMLAttributes, ReactNode } from 'react';
+import { memo, type HTMLAttributes, type ReactNode } from 'react';
 import { twMerge } from 'tailwind-merge';
 import { IconX } from '@tabler/icons-react';
 
@@ -29,7 +29,7 @@ export interface ChipProps extends Omit<HTMLAttributes<HTMLDivElement>, 'childre
    Chip Component
    ---------------------------------------- */
 
-export function Chip({
+export const Chip = memo(function Chip({
   label,
   value,
   variant = 'default',
@@ -104,5 +104,4 @@ export function Chip({
       )}
     </div>
   );
-}
-
+});
