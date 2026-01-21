@@ -10,27 +10,116 @@ const meta: Meta<typeof Drawer> = {
   title: 'Components/Drawer',
   component: Drawer,
   tags: ['autodocs'],
+  parameters: {
+    docs: {
+      description: {
+        component: `
+## Drawer 컴포넌트
+
+화면 측면에서 슬라이드되어 나타나는 패널 컴포넌트입니다.
+
+### 사용 시기
+- 상세 정보 표시
+- 설정/편집 폼
+- 네비게이션 메뉴 (모바일)
+- 필터 패널
+
+### Modal vs Drawer
+| | Modal | Drawer |
+|---|---|---|
+| **위치** | 화면 중앙 | 측면 (좌/우) |
+| **크기** | 고정 또는 반응형 | 높이 100% |
+| **사용 시점** | 중요한 결정 | 상세 정보, 폼 |
+| **배경** | 어두운 오버레이 | 어두운 오버레이 |
+
+### 접근성
+- ESC 키로 닫기 지원
+- 포커스 트랩 (Drawer 내에서만 Tab 이동)
+- aria-modal, role="dialog" 자동 적용
+- 닫기 버튼 제공
+
+### 예시
+\`\`\`tsx
+import { Drawer } from '@thaki/tds';
+
+<Drawer
+  isOpen={isOpen}
+  onClose={() => setIsOpen(false)}
+  title="설정"
+  side="right"
+  width={400}
+  footer={
+    <Button onClick={handleSave}>저장</Button>
+  }
+>
+  <p>Drawer 내용</p>
+</Drawer>
+\`\`\`
+        `,
+      },
+    },
+  },
   argTypes: {
+    isOpen: {
+      control: 'boolean',
+      description: 'Drawer 열림 상태',
+      table: {
+        type: { summary: 'boolean' },
+      },
+    },
+    title: {
+      control: 'text',
+      description: 'Drawer 헤더 제목',
+      table: {
+        type: { summary: 'string' },
+      },
+    },
     side: {
       control: 'select',
       options: ['left', 'right'],
-      description: '서랍 위치',
+      description: 'Drawer 표시 위치',
+      table: {
+        type: { summary: '"left" | "right"' },
+        defaultValue: { summary: '"right"' },
+      },
     },
     width: {
       control: 'number',
-      description: '서랍 너비 (px)',
+      description: 'Drawer 너비 (px)',
+      table: {
+        type: { summary: 'number' },
+        defaultValue: { summary: '320' },
+      },
     },
     showCloseButton: {
       control: 'boolean',
-      description: '닫기 버튼 표시',
+      description: '헤더에 닫기 버튼 표시',
+      table: {
+        type: { summary: 'boolean' },
+        defaultValue: { summary: 'true' },
+      },
     },
     closeOnBackdropClick: {
       control: 'boolean',
-      description: '배경 클릭시 닫기',
+      description: '배경 클릭시 닫기 여부',
+      table: {
+        type: { summary: 'boolean' },
+        defaultValue: { summary: 'true' },
+      },
     },
     closeOnEscape: {
       control: 'boolean',
-      description: 'ESC 키로 닫기',
+      description: 'ESC 키로 닫기 여부',
+      table: {
+        type: { summary: 'boolean' },
+        defaultValue: { summary: 'true' },
+      },
+    },
+    footer: {
+      description: 'Drawer 하단 고정 영역 (버튼 등)',
+      table: {
+        type: { summary: 'ReactNode' },
+      },
     },
   },
 };

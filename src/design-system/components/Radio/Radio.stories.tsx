@@ -7,19 +7,128 @@ const meta: Meta<typeof RadioGroup> = {
   title: 'Components/Radio',
   component: RadioGroup,
   tags: ['autodocs'],
+  parameters: {
+    docs: {
+      description: {
+        component: `
+## Radio 컴포넌트
+
+여러 옵션 중 하나만 선택할 수 있는 라디오 버튼입니다.
+
+### 구성
+- **Radio**: 개별 라디오 버튼
+- **RadioGroup**: 라디오 버튼 그룹 (name 자동 관리)
+
+### 사용 시기
+- 상호 배타적인 옵션 선택 (하나만 선택 가능)
+- 플랜 선택, 크기 선택, 정렬 방식 등
+
+### Radio vs Checkbox vs Select
+| | Radio | Checkbox | Select |
+|---|---|---|---|
+| **선택 개수** | 1개 | 0~N개 | 1개 |
+| **옵션 표시** | 항상 보임 | 항상 보임 | 드롭다운 |
+| **추천 옵션 수** | 2~5개 | 제한 없음 | 5개 이상 |
+
+### 접근성
+- 같은 name으로 그룹화
+- 화살표 키로 옵션 이동
+- 스크린리더 그룹/선택 상태 전달
+
+### 예시
+\`\`\`tsx
+import { Radio, RadioGroup } from '@thaki/tds';
+
+// 기본 사용
+<RadioGroup defaultValue="option1">
+  <Radio value="option1" label="옵션 1" />
+  <Radio value="option2" label="옵션 2" />
+</RadioGroup>
+
+// Controlled
+<RadioGroup value={plan} onChange={setPlan}>
+  <Radio value="basic" label="Basic" />
+  <Radio value="pro" label="Pro" />
+</RadioGroup>
+
+// 설명 포함
+<RadioGroup label="알림 방식" description="선호하는 알림 방식을 선택하세요">
+  <Radio value="email" label="이메일" description="이메일로 알림을 받습니다" />
+  <Radio value="push" label="푸시 알림" description="앱 푸시 알림을 받습니다" />
+</RadioGroup>
+\`\`\`
+        `,
+      },
+    },
+  },
   argTypes: {
+    label: {
+      control: 'text',
+      description: '그룹 라벨',
+      table: {
+        type: { summary: 'string' },
+      },
+    },
+    description: {
+      control: 'text',
+      description: '그룹 설명',
+      table: {
+        type: { summary: 'string' },
+      },
+    },
+    value: {
+      control: 'text',
+      description: '선택된 값 (controlled)',
+      table: {
+        type: { summary: 'string' },
+      },
+    },
+    defaultValue: {
+      control: 'text',
+      description: '초기 선택 값 (uncontrolled)',
+      table: {
+        type: { summary: 'string' },
+      },
+    },
     direction: {
       control: 'select',
       options: ['vertical', 'horizontal'],
       description: '레이아웃 방향',
+      table: {
+        type: { summary: '"vertical" | "horizontal"' },
+        defaultValue: { summary: '"vertical"' },
+      },
     },
     disabled: {
       control: 'boolean',
-      description: '비활성화 상태',
+      description: '전체 그룹 비활성화',
+      table: {
+        type: { summary: 'boolean' },
+        defaultValue: { summary: 'false' },
+      },
+    },
+    required: {
+      control: 'boolean',
+      description: '필수 필드 표시',
+      table: {
+        type: { summary: 'boolean' },
+        defaultValue: { summary: 'false' },
+      },
     },
     error: {
       control: 'boolean',
       description: '에러 상태',
+      table: {
+        type: { summary: 'boolean' },
+        defaultValue: { summary: 'false' },
+      },
+    },
+    errorMessage: {
+      control: 'text',
+      description: '에러 메시지',
+      table: {
+        type: { summary: 'string' },
+      },
     },
   },
 };

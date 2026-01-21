@@ -7,22 +7,115 @@ const meta: Meta<typeof Checkbox> = {
   title: 'Components/Checkbox',
   component: Checkbox,
   tags: ['autodocs'],
+  parameters: {
+    docs: {
+      description: {
+        component: `
+## Checkbox 컴포넌트
+
+여러 옵션 중 하나 이상을 선택할 수 있는 체크박스입니다.
+
+### 사용 시기
+- 여러 항목 중 다중 선택
+- 약관 동의, 옵션 선택
+- "모두 선택" 패턴 구현
+
+### 상태
+- **unchecked**: 선택되지 않음
+- **checked**: 선택됨
+- **indeterminate**: 부분 선택 (모두 선택 패턴에서 일부만 선택된 경우)
+
+### 접근성
+- 네이티브 \`<input type="checkbox">\` 사용
+- 라벨 클릭으로 토글 가능
+- 키보드(Space)로 토글 가능
+- 스크린리더 상태 전달
+
+### 예시
+\`\`\`tsx
+import { Checkbox } from '@thaki/tds';
+
+// 기본 사용
+<Checkbox label="동의합니다" />
+
+// Controlled
+<Checkbox 
+  checked={agreed} 
+  onChange={(e) => setAgreed(e.target.checked)} 
+  label="약관에 동의합니다"
+/>
+
+// 부분 선택 (Select All)
+<Checkbox 
+  indeterminate={someSelected} 
+  checked={allSelected}
+  label="모두 선택"
+/>
+\`\`\`
+        `,
+      },
+    },
+  },
   argTypes: {
+    label: {
+      control: 'text',
+      description: '체크박스 라벨',
+      table: {
+        type: { summary: 'ReactNode' },
+      },
+    },
+    description: {
+      control: 'text',
+      description: '라벨 아래 설명 텍스트',
+      table: {
+        type: { summary: 'ReactNode' },
+      },
+    },
     checked: {
       control: 'boolean',
-      description: '체크 상태',
+      description: '체크 상태 (controlled)',
+      table: {
+        type: { summary: 'boolean' },
+      },
+    },
+    defaultChecked: {
+      control: 'boolean',
+      description: '초기 체크 상태 (uncontrolled)',
+      table: {
+        type: { summary: 'boolean' },
+        defaultValue: { summary: 'false' },
+      },
     },
     disabled: {
       control: 'boolean',
       description: '비활성화 상태',
+      table: {
+        type: { summary: 'boolean' },
+        defaultValue: { summary: 'false' },
+      },
     },
     indeterminate: {
       control: 'boolean',
-      description: '부분 선택 상태',
+      description: '부분 선택 상태 (일부만 선택됨)',
+      table: {
+        type: { summary: 'boolean' },
+        defaultValue: { summary: 'false' },
+      },
     },
     error: {
       control: 'boolean',
       description: '에러 상태',
+      table: {
+        type: { summary: 'boolean' },
+        defaultValue: { summary: 'false' },
+      },
+    },
+    errorMessage: {
+      control: 'text',
+      description: '에러 메시지',
+      table: {
+        type: { summary: 'string' },
+      },
     },
   },
 };
