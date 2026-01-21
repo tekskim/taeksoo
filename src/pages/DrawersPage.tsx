@@ -95,6 +95,7 @@ import { EditDomainDrawer } from '@/components/EditDomainDrawer';
 import { SetDefaultDomainDrawer } from '@/components/SetDefaultDomainDrawer';
 import { AdminLockSettingDrawer } from '@/components/AdminLockSettingDrawer';
 import { EditSystemAdminDrawer } from '@/components/EditSystemAdminDrawer';
+import { ResourceTypeSearchDrawer } from '@/components/ResourceTypeSearchDrawer';
 
 /* ----------------------------------------
    Mock Data for Drawers
@@ -359,6 +360,7 @@ export function DrawersPage() {
   const [isComputeOpen, setIsComputeOpen] = useState(false);
   const [isIAMOpen, setIsIAMOpen] = useState(false);
   const [isStorageOpen, setIsStorageOpen] = useState(false);
+  const [isContainerOpen, setIsContainerOpen] = useState(false);
 
   // Drawer states
   const [isCreateSnapshotOpen, setIsCreateSnapshotOpen] = useState(false);
@@ -454,6 +456,9 @@ export function DrawersPage() {
   const [isSetDefaultDomainOpen, setIsSetDefaultDomainOpen] = useState(false);
   const [isAdminLockSettingOpen, setIsAdminLockSettingOpen] = useState(false);
   const [isEditSystemAdminOpen, setIsEditSystemAdminOpen] = useState(false);
+  
+  // Container drawer states
+  const [isResourceTypeSearchOpen, setIsResourceTypeSearchOpen] = useState(false);
 
   // ViewPreferences state
   const [rowsPerPage, setRowsPerPage] = useState(10);
@@ -1250,6 +1255,46 @@ export function DrawersPage() {
                             description="Indicate the LED on a physical disk to identify the device."
                             category="Physical Disk"
                             onOpen={() => setIsIdentifyDeviceOpen(true)}
+                          />
+                        </div>
+                      </VStack>
+                    </VStack>
+                  </Disclosure.Panel>
+                </Disclosure>
+
+                {/* Container App Drawers */}
+                <Disclosure open={isContainerOpen} onChange={setIsContainerOpen}>
+                  <Disclosure.Trigger className="w-full [&>span:first-child]:hidden">
+                    <div className="flex items-center justify-between w-full px-4 py-3 bg-[var(--color-surface-subtle)] rounded-lg border border-[var(--color-border-default)] hover:border-[var(--color-border-strong)] transition-colors">
+                      <div className="flex items-center gap-3">
+                        {isContainerOpen ? (
+                          <IconChevronDown size={16} className="text-[var(--color-text-subtle)]" />
+                        ) : (
+                          <IconChevronRight size={16} className="text-[var(--color-text-subtle)]" />
+                        )}
+                        <Badge variant="info" size="sm" className="w-[70px] justify-center">Container</Badge>
+                        <span className="text-[14px] font-semibold text-[var(--color-text-default)]">
+                          Drawers
+                        </span>
+                        <span className="text-[12px] text-[var(--color-text-subtle)]">
+                          (1 drawer)
+                        </span>
+                      </div>
+                    </div>
+                  </Disclosure.Trigger>
+                  <Disclosure.Panel>
+                    <VStack gap={4} className="pt-4">
+                      {/* Resource Search Actions */}
+                      <VStack gap={2}>
+                        <h2 className="text-[14px] font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
+                          Resource Search Actions
+                        </h2>
+                        <div className="flex flex-col gap-2">
+                          <DrawerCard
+                            title="Resource Type Search"
+                            description="Search and navigate Kubernetes resource types across clusters with categorized resource lists."
+                            category="Search"
+                            onOpen={() => setIsResourceTypeSearchOpen(true)}
                           />
                         </div>
                       </VStack>
@@ -2245,6 +2290,19 @@ export function DrawersPage() {
         }}
         onSubmit={(data) => {
           console.log('Edit system admin:', data);
+        }}
+      />
+
+      {/* =============================================
+          CONTAINER DRAWERS
+          ============================================= */}
+
+      {/* Resource Type Search Drawer */}
+      <ResourceTypeSearchDrawer
+        isOpen={isResourceTypeSearchOpen}
+        onClose={() => setIsResourceTypeSearchOpen(false)}
+        onSelect={(categoryId, resourceId, resourceName) => {
+          console.log('Resource selected:', { categoryId, resourceId, resourceName });
         }}
       />
     </div>
