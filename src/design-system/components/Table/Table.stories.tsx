@@ -33,6 +33,61 @@ const meta: Meta<typeof Table> = {
   title: 'Components/Table',
   component: Table,
   tags: ['autodocs'],
+  parameters: {
+    docs: {
+      description: {
+        component: `
+## Table 컴포넌트
+
+데이터를 행과 열로 표시하는 테이블 컴포넌트입니다.
+
+### 기능
+- **정렬**: 컬럼별 오름차순/내림차순 정렬
+- **선택**: 단일/다중 행 선택
+- **커스텀 렌더링**: 셀 내용 커스터마이징
+- **스크롤**: 고정 헤더 + 본문 스크롤
+
+### 사용 시기
+- 데이터 목록 표시
+- CRUD 작업 인터페이스
+- 대시보드 데이터 테이블
+
+### 접근성
+- 표준 HTML table 구조 사용
+- 정렬 버튼에 aria-sort 적용
+- 선택 체크박스 레이블 자동 생성
+
+### 예시
+\`\`\`tsx
+import { Table } from '@thaki/tds';
+
+const columns = [
+  { key: 'name', label: '이름', sortable: true },
+  { key: 'email', label: '이메일' },
+  { 
+    key: 'status', 
+    label: '상태',
+    render: (value) => <Badge>{value}</Badge>
+  },
+];
+
+const data = [
+  { id: '1', name: '홍길동', email: 'hong@example.com', status: 'active' },
+];
+
+<Table 
+  columns={columns} 
+  data={data} 
+  rowKey="id"
+  selectable
+  selectedKeys={selected}
+  onSelectionChange={setSelected}
+/>
+\`\`\`
+        `,
+      },
+    },
+  },
 };
 
 export default meta;

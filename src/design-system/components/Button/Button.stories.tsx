@@ -6,28 +6,110 @@ const meta: Meta<typeof Button> = {
   title: 'Components/Button',
   component: Button,
   tags: ['autodocs'],
+  parameters: {
+    docs: {
+      description: {
+        component: `
+## Button 컴포넌트
+
+사용자 액션을 트리거하는 기본 버튼 컴포넌트입니다.
+
+### 사용 시기
+- **Primary**: 페이지의 주요 액션 (저장, 제출, 확인)
+- **Secondary**: 보조 액션 (취소, 뒤로가기)
+- **Outline**: 덜 강조되는 액션
+- **Ghost**: 텍스트처럼 보이지만 클릭 가능한 영역이 필요할 때
+- **Danger**: 삭제, 제거 등 위험한 액션
+
+### 접근성
+- 아이콘만 있는 버튼은 반드시 \`aria-label\` 제공
+- 로딩 중일 때 스크린리더에 상태 전달
+- 키보드(Enter, Space)로 활성화 가능
+
+### 예시
+\`\`\`tsx
+import { Button } from '@thaki/tds';
+
+// 기본 사용
+<Button variant="primary">저장</Button>
+
+// 아이콘 포함
+<Button leftIcon={<IconPlus />}>추가</Button>
+
+// 아이콘만
+<Button icon={<IconTrash />} aria-label="삭제" variant="danger" />
+\`\`\`
+        `,
+      },
+    },
+  },
   argTypes: {
     variant: {
       control: 'select',
       options: ['primary', 'secondary', 'outline', 'ghost', 'muted', 'danger', 'warning', 'link'],
       description: '버튼 스타일 변형',
+      table: {
+        type: { summary: 'string' },
+        defaultValue: { summary: 'primary' },
+      },
     },
     size: {
       control: 'select',
       options: ['sm', 'md', 'lg'],
-      description: '버튼 크기',
+      description: '버튼 크기 (sm: 28px, md: 32px, lg: 40px)',
+      table: {
+        type: { summary: 'string' },
+        defaultValue: { summary: 'md' },
+      },
     },
     disabled: {
       control: 'boolean',
       description: '비활성화 상태',
+      table: {
+        type: { summary: 'boolean' },
+        defaultValue: { summary: 'false' },
+      },
     },
     isLoading: {
       control: 'boolean',
-      description: '로딩 상태',
+      description: '로딩 상태 (스피너 표시)',
+      table: {
+        type: { summary: 'boolean' },
+        defaultValue: { summary: 'false' },
+      },
     },
     fullWidth: {
       control: 'boolean',
-      description: '전체 너비',
+      description: '부모 컨테이너 너비에 맞춤',
+      table: {
+        type: { summary: 'boolean' },
+        defaultValue: { summary: 'false' },
+      },
+    },
+    leftIcon: {
+      description: '버튼 텍스트 왼쪽에 표시할 아이콘',
+      table: {
+        type: { summary: 'ReactNode' },
+      },
+    },
+    rightIcon: {
+      description: '버튼 텍스트 오른쪽에 표시할 아이콘',
+      table: {
+        type: { summary: 'ReactNode' },
+      },
+    },
+    icon: {
+      description: '아이콘만 표시 (텍스트 없음, aria-label 필수)',
+      table: {
+        type: { summary: 'ReactNode' },
+      },
+    },
+    as: {
+      description: '렌더링할 HTML 요소 ("button" 또는 "a")',
+      table: {
+        type: { summary: '"button" | "a"' },
+        defaultValue: { summary: '"button"' },
+      },
     },
   },
   args: {
