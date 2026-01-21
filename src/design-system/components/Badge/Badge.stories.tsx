@@ -6,25 +6,109 @@ const meta: Meta<typeof Badge> = {
   title: 'Components/Badge',
   component: Badge,
   tags: ['autodocs'],
+  parameters: {
+    docs: {
+      description: {
+        component: `
+## Badge 컴포넌트
+
+상태, 카테고리, 수량 등을 표시하는 라벨 컴포넌트입니다.
+
+### 사용 시기
+- 상태 표시 (Active, Pending, Error)
+- 카테고리/태그 표시
+- 알림 개수 표시
+- 버전 정보 표시
+
+### 테마
+| 테마 | 사용 예시 |
+|------|----------|
+| **blue** | 정보, 기본 상태 |
+| **green** | 성공, 활성, 완료 |
+| **yellow** | 경고, 대기중 |
+| **red** | 오류, 위험, 삭제 |
+| **gray** | 비활성, 초안 |
+
+### 타입
+- **solid**: 채워진 배경 (강조)
+- **subtle**: 연한 배경 (덜 강조)
+
+### 예시
+\`\`\`tsx
+import { Badge } from '@thaki/tds';
+
+// 기본 사용
+<Badge theme="green">Active</Badge>
+
+// 점 표시
+<Badge theme="green" dot>Online</Badge>
+
+// 아이콘 포함
+<Badge theme="green" leftIcon={<IconCheck />}>
+  Approved
+</Badge>
+
+// Subtle 스타일
+<Badge theme="red" type="subtle">Error</Badge>
+\`\`\`
+        `,
+      },
+    },
+  },
   argTypes: {
+    children: {
+      control: 'text',
+      description: '배지 내용',
+      table: {
+        type: { summary: 'ReactNode' },
+      },
+    },
     theme: {
       control: 'select',
       options: ['blue', 'red', 'green', 'yellow', 'gray'],
       description: '배지 색상 테마',
+      table: {
+        type: { summary: '"blue" | "red" | "green" | "yellow" | "gray"' },
+        defaultValue: { summary: '"blue"' },
+      },
     },
     type: {
       control: 'select',
       options: ['solid', 'subtle'],
       description: '배지 스타일 타입',
+      table: {
+        type: { summary: '"solid" | "subtle"' },
+        defaultValue: { summary: '"solid"' },
+      },
     },
     size: {
       control: 'select',
       options: ['sm', 'md', 'lg'],
       description: '배지 크기',
+      table: {
+        type: { summary: '"sm" | "md" | "lg"' },
+        defaultValue: { summary: '"md"' },
+      },
     },
     dot: {
       control: 'boolean',
-      description: '점 표시',
+      description: '텍스트 앞에 점 표시 (상태 강조)',
+      table: {
+        type: { summary: 'boolean' },
+        defaultValue: { summary: 'false' },
+      },
+    },
+    leftIcon: {
+      description: '텍스트 왼쪽 아이콘',
+      table: {
+        type: { summary: 'ReactNode' },
+      },
+    },
+    rightIcon: {
+      description: '텍스트 오른쪽 아이콘',
+      table: {
+        type: { summary: 'ReactNode' },
+      },
     },
   },
   args: {

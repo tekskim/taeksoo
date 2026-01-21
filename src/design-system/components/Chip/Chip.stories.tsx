@@ -7,19 +7,111 @@ const meta: Meta<typeof Chip> = {
   title: 'Components/Chip',
   component: Chip,
   tags: ['autodocs'],
+  parameters: {
+    docs: {
+      description: {
+        component: `
+## Chip 컴포넌트
+
+필터, 태그, 선택된 옵션 등을 표시하는 인터랙티브 컴포넌트입니다.
+
+### Badge vs Chip
+| | Badge | Chip |
+|---|---|---|
+| **상호작용** | 표시만 | 삭제/선택 가능 |
+| **사용 시점** | 상태 표시 | 필터, 태그 입력 |
+| **크기** | 작음 | 중간 |
+
+### 사용 시기
+- 필터 조건 표시 및 제거
+- 태그 입력/관리
+- 선택된 옵션 표시
+- 키-값 쌍 표시
+
+### 구조
+- **label**: 카테고리/키 (선택)
+- **value**: 실제 값 (필수)
+- **icon**: 아이콘 (선택)
+- **onRemove**: 삭제 버튼 (선택)
+
+### 예시
+\`\`\`tsx
+import { Chip } from '@thaki/tds';
+
+// 기본 사용
+<Chip value="Tag" />
+
+// 라벨 + 값
+<Chip label="Status" value="Active" />
+
+// 삭제 가능
+<Chip 
+  value="Filter" 
+  onRemove={() => handleRemove()} 
+/>
+
+// 아이콘 포함
+<Chip 
+  label="User" 
+  value="John" 
+  icon={<IconUser />} 
+  onRemove={() => {}}
+/>
+\`\`\`
+        `,
+      },
+    },
+  },
   argTypes: {
+    label: {
+      control: 'text',
+      description: '카테고리/키 라벨 (선택)',
+      table: {
+        type: { summary: 'string' },
+      },
+    },
+    value: {
+      control: 'text',
+      description: '표시할 값 (필수)',
+      table: {
+        type: { summary: 'string' },
+      },
+    },
     variant: {
       control: 'select',
       options: ['default', 'selected'],
-      description: '칩 변형',
+      description: '칩 스타일 변형',
+      table: {
+        type: { summary: '"default" | "selected"' },
+        defaultValue: { summary: '"default"' },
+      },
+    },
+    icon: {
+      description: '값 앞에 표시할 아이콘',
+      table: {
+        type: { summary: 'ReactNode' },
+      },
+    },
+    onRemove: {
+      description: '삭제 버튼 클릭 콜백 (제공 시 X 버튼 표시)',
+      table: {
+        type: { summary: '() => void' },
+      },
     },
     disabled: {
       control: 'boolean',
       description: '비활성화 상태',
+      table: {
+        type: { summary: 'boolean' },
+        defaultValue: { summary: 'false' },
+      },
     },
     maxWidth: {
       control: 'text',
-      description: '최대 너비 (truncation)',
+      description: '최대 너비 (초과 시 말줄임)',
+      table: {
+        type: { summary: 'string' },
+      },
     },
   },
   args: {

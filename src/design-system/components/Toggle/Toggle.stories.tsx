@@ -6,14 +6,101 @@ const meta: Meta<typeof Toggle> = {
   title: 'Components/Toggle',
   component: Toggle,
   tags: ['autodocs'],
+  parameters: {
+    docs: {
+      description: {
+        component: `
+## Toggle 컴포넌트
+
+ON/OFF 두 가지 상태를 전환하는 스위치 컴포넌트입니다.
+
+### 사용 시기
+- 설정 켜기/끄기
+- 기능 활성화/비활성화
+- 즉시 적용되는 설정 변경
+
+### Checkbox vs Toggle
+| | Checkbox | Toggle |
+|---|---|---|
+| **사용 시점** | 폼 제출 시 적용 | 즉시 적용 |
+| **다중 선택** | 가능 | 단일 설정 |
+| **시각적 피드백** | 체크 마크 | 슬라이드 애니메이션 |
+
+### 접근성
+- \`role="switch"\` 적용
+- 키보드(Space)로 토글 가능
+- 스크린리더에 ON/OFF 상태 전달
+
+### 예시
+\`\`\`tsx
+import { Toggle } from '@thaki/tds';
+
+// 기본 사용
+<Toggle label="알림 켜기" />
+
+// Controlled
+<Toggle 
+  checked={enabled} 
+  onChange={(e) => setEnabled(e.target.checked)}
+  label="다크 모드"
+/>
+
+// 설명 포함
+<Toggle 
+  label="자동 저장"
+  description="변경사항을 자동으로 저장합니다"
+/>
+\`\`\`
+        `,
+      },
+    },
+  },
   argTypes: {
+    label: {
+      control: 'text',
+      description: '토글 라벨',
+      table: {
+        type: { summary: 'string' },
+      },
+    },
+    description: {
+      control: 'text',
+      description: '라벨 아래 설명 텍스트',
+      table: {
+        type: { summary: 'string' },
+      },
+    },
     checked: {
       control: 'boolean',
-      description: '토글 상태',
+      description: '토글 상태 (controlled)',
+      table: {
+        type: { summary: 'boolean' },
+      },
+    },
+    defaultChecked: {
+      control: 'boolean',
+      description: '초기 토글 상태 (uncontrolled)',
+      table: {
+        type: { summary: 'boolean' },
+        defaultValue: { summary: 'false' },
+      },
     },
     disabled: {
       control: 'boolean',
       description: '비활성화 상태',
+      table: {
+        type: { summary: 'boolean' },
+        defaultValue: { summary: 'false' },
+      },
+    },
+    size: {
+      control: 'select',
+      options: ['sm', 'md', 'lg'],
+      description: '토글 크기',
+      table: {
+        type: { summary: '"sm" | "md" | "lg"' },
+        defaultValue: { summary: '"md"' },
+      },
     },
   },
 };

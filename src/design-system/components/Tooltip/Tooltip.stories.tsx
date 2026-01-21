@@ -7,19 +7,86 @@ const meta: Meta<typeof Tooltip> = {
   title: 'Components/Tooltip',
   component: Tooltip,
   tags: ['autodocs'],
+  parameters: {
+    docs: {
+      description: {
+        component: `
+## Tooltip 컴포넌트
+
+마우스 호버 또는 키보드 포커스 시 추가 정보를 표시하는 컴포넌트입니다.
+
+### 사용 시기
+- 아이콘 버튼 설명
+- 용어/기능 부가 설명
+- 잘린 텍스트 전체 표시
+- 비활성화된 요소 이유 설명
+
+### 주의사항
+- 중요한 정보는 Tooltip에만 두지 마세요
+- 모바일에서는 호버가 어려우므로 대안 고려
+- 너무 긴 내용은 Popover 사용 권장
+
+### 접근성
+- 포커스 시에도 툴팁 표시
+- role="tooltip" 자동 적용
+- ESC로 닫기 가능
+- 적절한 지연 시간 (200ms 권장)
+
+### 예시
+\`\`\`tsx
+import { Tooltip } from '@thaki/tds';
+
+// 기본 사용
+<Tooltip content="추가 정보">
+  <Button>호버하세요</Button>
+</Tooltip>
+
+// 위치 지정
+<Tooltip content="아래에 표시" position="bottom">
+  <span>텍스트</span>
+</Tooltip>
+
+// 아이콘에 사용
+<Tooltip content="도움말">
+  <IconInfoCircle className="cursor-help" />
+</Tooltip>
+\`\`\`
+        `,
+      },
+    },
+  },
   argTypes: {
+    content: {
+      control: 'text',
+      description: '툴팁에 표시할 내용 (텍스트 또는 JSX)',
+      table: {
+        type: { summary: 'ReactNode' },
+      },
+    },
     position: {
       control: 'select',
       options: ['top', 'bottom', 'left', 'right'],
-      description: '툴팁 위치',
+      description: '툴팁 표시 위치',
+      table: {
+        type: { summary: '"top" | "bottom" | "left" | "right"' },
+        defaultValue: { summary: '"top"' },
+      },
     },
     delay: {
       control: 'number',
-      description: '표시 지연 시간 (ms)',
+      description: '표시까지 지연 시간 (ms)',
+      table: {
+        type: { summary: 'number' },
+        defaultValue: { summary: '200' },
+      },
     },
     disabled: {
       control: 'boolean',
-      description: '비활성화',
+      description: '툴팁 비활성화',
+      table: {
+        type: { summary: 'boolean' },
+        defaultValue: { summary: 'false' },
+      },
     },
   },
   args: {
