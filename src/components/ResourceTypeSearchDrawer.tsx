@@ -172,7 +172,7 @@ export function ResourceTypeSearchDrawer({
         />
 
         {/* Resource List */}
-        <div className="overflow-auto border border-[var(--color-border-default)] rounded-[4px] max-h-[calc(100vh-200px)]">
+        <div className="overflow-auto border border-[var(--color-border-default)] rounded-[4px] max-h-[calc(100vh-200px)] drawer-scroll">
           {filteredCategories.map((category, categoryIndex) => {
             const isExpanded = expandedCategories[category.id] ?? true;
             const isCategoryHighlighted = category.id === selectedCategoryId;
