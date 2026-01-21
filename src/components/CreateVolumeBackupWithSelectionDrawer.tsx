@@ -188,7 +188,7 @@ export function CreateVolumeBackupWithSelectionDrawer({
       footer={
         <VStack gap={0} className="w-full">
           {/* Quota Section */}
-          <VStack gap={6} className="w-full border-t border-[var(--color-border-subtle)] px-6 py-4">
+          <VStack gap={6} className="w-full border-t border-[var(--color-border-subtle)] px-[var(--space-6)] py-[var(--space-4)]">
             <QuotaProgressBar
               label="Volume Backup Quota"
               used={volumeBackupQuota.used}
@@ -202,12 +202,11 @@ export function CreateVolumeBackupWithSelectionDrawer({
           </VStack>
 
           {/* Buttons */}
-          <HStack gap={2} justify="center" className="w-full border-t border-[var(--color-border-default)] px-6 py-4">
+          <HStack gap={2} justify="center" className="w-full">
             <Button 
               variant="secondary" 
               onClick={handleClose}
-              size="md"
-              className="w-[152px]"
+              className="w-[152px] h-8"
             >
               Cancel
             </Button>
@@ -215,8 +214,7 @@ export function CreateVolumeBackupWithSelectionDrawer({
               variant="primary" 
               onClick={handleSubmit}
               disabled={!selectedVolumeId || !backupName.trim() || isSubmitting}
-              size="md"
-              className="w-[152px]"
+              className="w-[152px] h-8"
             >
               {isSubmitting ? 'Creating...' : 'Create'}
             </Button>

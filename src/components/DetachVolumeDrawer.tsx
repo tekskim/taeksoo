@@ -107,8 +107,7 @@ export function DetachVolumeDrawer({
           <Button 
             variant="secondary" 
             onClick={handleClose}
-            size="md"
-            className="w-[152px]"
+            className="w-[152px] h-8"
           >
             Cancel
           </Button>
@@ -116,8 +115,7 @@ export function DetachVolumeDrawer({
             variant="primary" 
             onClick={handleDetach}
             disabled={!selectedVolumeId || isSubmitting}
-            size="md"
-            className="w-[152px]"
+            className="w-[152px] h-8"
           >
             {isSubmitting ? 'Detaching...' : 'Detach'}
           </Button>
