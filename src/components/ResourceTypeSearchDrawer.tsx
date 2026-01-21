@@ -161,92 +161,90 @@ export function ResourceTypeSearchDrawer({
   }, [categories, selectedId]);
 
   return (
-    <Drawer isOpen={isOpen} onClose={onClose} title="Resource Type Search">
-      <Drawer.Content>
-        <VStack gap={4} className="h-full">
-          {/* Search Input */}
-          <SearchInput
-            placeholder="Type to search for a resource type..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            fullWidth
-          />
+    <Drawer isOpen={isOpen} onClose={onClose} title="Resource Type Search" width={400}>
+      <VStack gap={4}>
+        {/* Search Input */}
+        <SearchInput
+          placeholder="Type to search for a resource type..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          fullWidth
+        />
 
-          {/* Resource List */}
-          <div className="flex-1 overflow-auto border border-[var(--color-border-default)] rounded-[4px]">
-            {filteredCategories.map((category, categoryIndex) => {
-              const isExpanded = expandedCategories[category.id] ?? true;
-              const isCategoryHighlighted = category.id === selectedCategoryId;
-              const isLastCategory = categoryIndex === filteredCategories.length - 1;
+        {/* Resource List */}
+        <div className="overflow-auto border border-[var(--color-border-default)] rounded-[4px] max-h-[calc(100vh-200px)]">
+          {filteredCategories.map((category, categoryIndex) => {
+            const isExpanded = expandedCategories[category.id] ?? true;
+            const isCategoryHighlighted = category.id === selectedCategoryId;
+            const isLastCategory = categoryIndex === filteredCategories.length - 1;
 
-              return (
-                <div
-                  key={category.id}
-                  className={`${!isLastCategory ? 'border-b border-[var(--color-border-default)]' : ''} ${
-                    isCategoryHighlighted ? 'bg-[var(--color-state-info-subtle)]' : ''
-                  }`}
+            return (
+              <div
+                key={category.id}
+                className={`${!isLastCategory ? 'border-b border-[var(--color-border-default)]' : ''} ${
+                  isCategoryHighlighted ? 'bg-[var(--color-state-info-subtle)]' : ''
+                }`}
+              >
+                {/* Category Header */}
+                <button
+                  type="button"
+                  onClick={() => toggleCategory(category.id)}
+                  className="flex items-center gap-2 w-full h-[34px] px-3 hover:bg-[var(--color-surface-subtle)] transition-colors"
                 >
-                  {/* Category Header */}
-                  <button
-                    type="button"
-                    onClick={() => toggleCategory(category.id)}
-                    className="flex items-center gap-2 w-full h-[34px] px-3 hover:bg-[var(--color-surface-subtle)] transition-colors"
-                  >
-                    {isExpanded ? (
-                      <IconChevronDown size={14} className="text-[var(--color-text-subtle)] shrink-0" />
-                    ) : (
-                      <IconChevronRight size={14} className="text-[var(--color-text-subtle)] shrink-0" />
-                    )}
-                    <span className="text-[12px] text-[var(--color-text-default)]">
-                      {category.name}
-                    </span>
-                  </button>
+                  {isExpanded ? (
+                    <IconChevronDown size={14} className="text-[var(--color-text-subtle)] shrink-0" />
+                  ) : (
+                    <IconChevronRight size={14} className="text-[var(--color-text-subtle)] shrink-0" />
+                  )}
+                  <span className="text-[12px] text-[var(--color-text-default)]">
+                    {category.name}
+                  </span>
+                </button>
 
-                  {/* Category Items */}
-                  {isExpanded && (
-                    <div className="flex flex-col">
-                      {category.items.map((item) => {
-                        const isSelected = item.id === selectedId;
+                {/* Category Items */}
+                {isExpanded && (
+                  <div className="flex flex-col">
+                    {category.items.map((item) => {
+                      const isSelected = item.id === selectedId;
 
-                        return (
-                          <button
-                            key={item.id}
-                            type="button"
-                            onClick={() => handleSelect(category.id, item.id, item.name)}
-                            className={`flex items-center justify-between w-full h-[30px] pl-9 pr-3 transition-colors ${
-                              isSelected
-                                ? 'bg-[var(--color-action-primary)] text-white'
-                                : 'hover:bg-[var(--color-surface-subtle)]'
+                      return (
+                        <button
+                          key={item.id}
+                          type="button"
+                          onClick={() => handleSelect(category.id, item.id, item.name)}
+                          className={`flex items-center justify-between w-full h-[30px] pl-9 pr-3 transition-colors ${
+                            isSelected
+                              ? 'bg-[var(--color-action-primary)] text-white'
+                              : 'hover:bg-[var(--color-surface-subtle)]'
+                          }`}
+                        >
+                          <span className="text-[12px] truncate">
+                            {item.name}
+                          </span>
+                          <span
+                            className={`text-[12px] shrink-0 ml-2 ${
+                              isSelected ? 'text-white' : 'text-[var(--color-text-subtle)]'
                             }`}
                           >
-                            <span className="text-[12px] truncate">
-                              {item.name}
-                            </span>
-                            <span
-                              className={`text-[12px] shrink-0 ml-2 ${
-                                isSelected ? 'text-white' : 'text-[var(--color-text-subtle)]'
-                              }`}
-                            >
-                              {item.count}
-                            </span>
-                          </button>
-                        );
-                      })}
-                    </div>
-                  )}
-                </div>
-              );
-            })}
-
-            {/* Empty State */}
-            {filteredCategories.length === 0 && (
-              <div className="flex items-center justify-center h-[100px] text-[12px] text-[var(--color-text-subtle)]">
-                No resource types found
+                            {item.count}
+                          </span>
+                        </button>
+                      );
+                    })}
+                  </div>
+                )}
               </div>
-            )}
-          </div>
-        </VStack>
-      </Drawer.Content>
+            );
+          })}
+
+          {/* Empty State */}
+          {filteredCategories.length === 0 && (
+            <div className="flex items-center justify-center h-[100px] text-[12px] text-[var(--color-text-subtle)]">
+              No resource types found
+            </div>
+          )}
+        </div>
+      </VStack>
     </Drawer>
   );
 }
