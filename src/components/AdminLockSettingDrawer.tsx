@@ -1,39 +1,48 @@
 import { useState, useEffect } from 'react';
-import { Drawer, Button, Toggle } from '@/design-system';
+import { 
+  Drawer, 
+  Button, 
+  Toggle,
+} from '@/design-system';
 import { HStack, VStack } from '@/design-system/layouts';
 
-export interface InstanceInfo {
-  id: string;
-  name: string;
-  isLocked?: boolean;
-}
+/* ----------------------------------------
+   Types
+   ---------------------------------------- */
 
-export interface LockSettingDrawerProps {
+export interface AdminLockSettingDrawerProps {
   isOpen: boolean;
   onClose: () => void;
-  instance: InstanceInfo | null;
-  onSubmit?: (isLocked: boolean) => void;
+  adminUsername?: string;
+  initialLocked?: boolean;
+  onSubmit?: (locked: boolean) => void;
 }
 
-export function LockSettingDrawer({
+/* ----------------------------------------
+   AdminLockSettingDrawer Component
+   ---------------------------------------- */
+
+export function AdminLockSettingDrawer({
   isOpen,
   onClose,
-  instance,
+  adminUsername = 'thaki.kim',
+  initialLocked = true,
   onSubmit,
-}: LockSettingDrawerProps) {
-  const [isLocked, setIsLocked] = useState(false);
+}: AdminLockSettingDrawerProps) {
+  const [locked, setLocked] = useState(initialLocked);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  // Reset state when drawer opens
   useEffect(() => {
-    if (isOpen && instance) {
-      setIsLocked(instance.isLocked ?? false);
+    if (isOpen) {
+      setLocked(initialLocked);
     }
-  }, [isOpen, instance]);
+  }, [isOpen, initialLocked]);
 
   const handleSubmit = async () => {
     setIsSubmitting(true);
     try {
-      await onSubmit?.(isLocked);
+      await onSubmit?.(locked);
       onClose();
     } finally {
       setIsSubmitting(false);
@@ -41,6 +50,7 @@ export function LockSettingDrawer({
   };
 
   const handleClose = () => {
+    setLocked(initialLocked);
     onClose();
   };
 
@@ -52,16 +62,16 @@ export function LockSettingDrawer({
       showCloseButton={false}
       width={376}
       footer={
-        <HStack gap={2} className="w-full">
-          <Button
-            variant="secondary"
+        <HStack gap={2} justify="center" className="w-full">
+          <Button 
+            variant="secondary" 
             onClick={handleClose}
             className="flex-1 h-8"
           >
             Cancel
           </Button>
-          <Button
-            variant="primary"
+          <Button 
+            variant="primary" 
             onClick={handleSubmit}
             disabled={isSubmitting}
             className="flex-1 h-8"
@@ -71,41 +81,43 @@ export function LockSettingDrawer({
         </HStack>
       }
     >
-      <VStack gap={6}>
+      <VStack gap={6} className="pb-6">
         {/* Header */}
-        <h2 className="text-[16px] font-semibold text-[var(--color-text-default)] leading-6">
-          Lock Setting
-        </h2>
+        <VStack gap={3}>
+          <VStack gap={2}>
+            <h2 className="text-[16px] font-semibold text-[var(--color-text-default)] leading-6">
+              Lock Setting
+            </h2>
+            <p className="text-[12px] text-[var(--color-text-subtle)] leading-4">
+              When a system administrator is locked, sign-in is disabled and modifications or deletion of the account are restricted.
+            </p>
+          </VStack>
 
-        {/* Instance Info */}
-        {instance && (
+          {/* Admin Info Card */}
           <div className="bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
             <VStack gap={1.5}>
               <span className="text-[11px] font-medium text-[var(--color-text-subtle)] leading-4">
-                Instance
+                System administrator
               </span>
               <span className="text-[12px] text-[var(--color-text-default)] leading-4">
-                {instance.name}
+                {adminUsername}
               </span>
             </VStack>
           </div>
-        )}
+        </VStack>
 
         {/* Lock Status */}
-        <VStack gap={2}>
+        <VStack gap={3}>
           <span className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
             Lock Status
           </span>
-          <p className="text-[12px] text-[var(--color-text-subtle)] leading-4">
-            When locked, the instance cannot be modified or deleted.
-          </p>
           <HStack gap={2} align="center">
             <Toggle
-              checked={isLocked}
-              onChange={setIsLocked}
+              checked={locked}
+              onChange={setLocked}
             />
             <span className="text-[12px] text-[var(--color-text-default)] leading-4">
-              {isLocked ? 'Locked' : 'Unlocked'}
+              {locked ? 'Locked' : 'Unlocked'}
             </span>
           </HStack>
         </VStack>
@@ -114,4 +126,4 @@ export function LockSettingDrawer({
   );
 }
 
-export default LockSettingDrawer;
+export default AdminLockSettingDrawer;

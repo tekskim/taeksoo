@@ -5701,7 +5701,7 @@ outline: 2px solid var(--color-border-focus);`}
             </Section>
 
             {/* SelectionIndicator Component */}
-            <Section id="selection-indicator" title="SelectionIndicator" description="Display component for showing table selection state. Use InlineMessage for error states.">
+            <Section id="selection-indicator" title="SelectionIndicator" description="Display component for showing table selection state. Supports error state for required selection validation.">
               <VStack gap={8}>
                 {/* Tokens */}
                 <VStack gap={3}>
@@ -5756,12 +5756,22 @@ outline: 2px solid var(--color-border-focus);`}
                   />
                 </VStack>
 
-                {/* Usage Note */}
+                {/* Error State */}
                 <VStack gap={3}>
-                  <Label>Usage Note</Label>
-                  <p className="text-[length:var(--font-size-11)] text-[var(--color-text-muted)]">
-                    For error states (e.g., required selection missing), use <code className="bg-[var(--color-surface-muted)] px-1 rounded">InlineMessage</code> component instead of this component.
-                  </p>
+                  <Label>Error State</Label>
+                  <SelectionIndicator
+                    error
+                    errorMessage="Please select a start source."
+                  />
+                </VStack>
+
+                {/* Error State with Custom Empty Text */}
+                <VStack gap={3}>
+                  <Label>Error State (uses emptyText as fallback)</Label>
+                  <SelectionIndicator
+                    error
+                    emptyText="Selection is required"
+                  />
                 </VStack>
               </VStack>
             </Section>

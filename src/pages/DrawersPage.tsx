@@ -77,6 +77,24 @@ import { AssociateFloatingIPToPortDrawer } from '@/components/AssociateFloatingI
 import { DisconnectSubnetDrawer } from '@/components/DisconnectSubnetDrawer';
 import { ManageMembersDrawer } from '@/components/ManageMembersDrawer';
 import { AllocateFloatingIPDrawer } from '@/components/AllocateFloatingIPDrawer';
+import { IdentifyDeviceDrawer } from '@/components/IdentifyDeviceDrawer';
+import { CreateFolderDrawer } from '@/components/CreateFolderDrawer';
+import { CreateObjectDrawer } from '@/components/CreateObjectDrawer';
+import { MoveFilesDrawer } from '@/components/MoveFilesDrawer';
+import { EditObjectDrawer } from '@/components/EditObjectDrawer';
+import { ManageUserGroupsDrawer } from '@/components/ManageUserGroupsDrawer';
+import { ManageUsersDrawer } from '@/components/ManageUsersDrawer';
+import { ManageRolesDrawer } from '@/components/ManageRolesDrawer';
+import { ResetPasswordDrawer } from '@/components/ResetPasswordDrawer';
+import { EditUserDrawer } from '@/components/EditUserDrawer';
+import { EditUserGroupDrawer } from '@/components/EditUserGroupDrawer';
+import { ManagePoliciesDrawer } from '@/components/ManagePoliciesDrawer';
+import { EditRoleDrawer } from '@/components/EditRoleDrawer';
+import { CreateDomainDrawer } from '@/components/CreateDomainDrawer';
+import { EditDomainDrawer } from '@/components/EditDomainDrawer';
+import { SetDefaultDomainDrawer } from '@/components/SetDefaultDomainDrawer';
+import { AdminLockSettingDrawer } from '@/components/AdminLockSettingDrawer';
+import { EditSystemAdminDrawer } from '@/components/EditSystemAdminDrawer';
 
 /* ----------------------------------------
    Mock Data for Drawers
@@ -338,7 +356,7 @@ export function DrawersPage() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
 
   // App section disclosure states
-  const [isComputeOpen, setIsComputeOpen] = useState(true);
+  const [isComputeOpen, setIsComputeOpen] = useState(false);
   const [isIAMOpen, setIsIAMOpen] = useState(false);
   const [isStorageOpen, setIsStorageOpen] = useState(false);
 
@@ -414,6 +432,28 @@ export function DrawersPage() {
   const [isDisconnectSubnetOpen, setIsDisconnectSubnetOpen] = useState(false);
   const [isManageMembersOpen, setIsManageMembersOpen] = useState(false);
   const [isAllocateFloatingIPOpen, setIsAllocateFloatingIPOpen] = useState(false);
+  
+  // Storage Drawer states
+  const [isIdentifyDeviceOpen, setIsIdentifyDeviceOpen] = useState(false);
+  const [isCreateFolderOpen, setIsCreateFolderOpen] = useState(false);
+  const [isCreateObjectOpen, setIsCreateObjectOpen] = useState(false);
+  const [isMoveFilesOpen, setIsMoveFilesOpen] = useState(false);
+  const [isEditObjectOpen, setIsEditObjectOpen] = useState(false);
+  
+  // IAM drawer states
+  const [isManageUserGroupsOpen, setIsManageUserGroupsOpen] = useState(false);
+  const [isManageUsersOpen, setIsManageUsersOpen] = useState(false);
+  const [isManageRolesOpen, setIsManageRolesOpen] = useState(false);
+  const [isResetPasswordOpen, setIsResetPasswordOpen] = useState(false);
+  const [isEditUserOpen, setIsEditUserOpen] = useState(false);
+  const [isEditUserGroupOpen, setIsEditUserGroupOpen] = useState(false);
+  const [isManagePoliciesOpen, setIsManagePoliciesOpen] = useState(false);
+  const [isEditRoleOpen, setIsEditRoleOpen] = useState(false);
+  const [isCreateDomainOpen, setIsCreateDomainOpen] = useState(false);
+  const [isEditDomainOpen, setIsEditDomainOpen] = useState(false);
+  const [isSetDefaultDomainOpen, setIsSetDefaultDomainOpen] = useState(false);
+  const [isAdminLockSettingOpen, setIsAdminLockSettingOpen] = useState(false);
+  const [isEditSystemAdminOpen, setIsEditSystemAdminOpen] = useState(false);
 
   // ViewPreferences state
   const [rowsPerPage, setRowsPerPage] = useState(10);
@@ -493,16 +533,19 @@ export function DrawersPage() {
                         <span className="text-[14px] font-semibold text-[var(--color-text-default)]">
                           Drawers
                         </span>
+                        <span className="text-[12px] text-[var(--color-text-subtle)]">
+                          (70 drawers)
+                        </span>
                       </div>
                     </div>
                   </Disclosure.Trigger>
                   <Disclosure.Panel>
                     <VStack gap={4} className="pt-4">
-                      {/* Instance Actions */}
-                      <VStack gap={2}>
-                        <h2 className="text-[14px] font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
-                          Instance Actions
-                        </h2>
+                {/* Instance Actions */}
+                <VStack gap={2}>
+                  <h2 className="text-[14px] font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
+                    Instance Actions
+                  </h2>
                   <div className="flex flex-col gap-2">
                     <DrawerCard
                       title="Create instance snapshot"
@@ -996,8 +1039,8 @@ export function DrawersPage() {
                       category="Certificate"
                       onOpen={() => setIsManageSNICertificateOpen(true)}
                     />
-                      </div>
-                    </VStack>
+                  </div>
+                </VStack>
                   </VStack>
                 </Disclosure.Panel>
               </Disclosure>
@@ -1016,18 +1059,127 @@ export function DrawersPage() {
                         <span className="text-[14px] font-semibold text-[var(--color-text-default)]">
                           Drawers
                         </span>
+                        <span className="text-[12px] text-[var(--color-text-subtle)]">
+                          (13 drawers)
+                        </span>
                       </div>
                     </div>
                   </Disclosure.Trigger>
                   <Disclosure.Panel>
                     <VStack gap={4} className="pt-4">
-                      <div className="p-6 rounded-xl border border-dashed border-[var(--color-border-default)] bg-[var(--color-surface-subtle)]">
-                        <VStack gap={2} className="items-center justify-center h-full">
-                          <p className="text-[14px] text-[var(--color-text-muted)]">
-                            IAM drawers will be added here...
-                          </p>
-                        </VStack>
-                      </div>
+                      {/* USER MANAGEMENT ACTIONS */}
+                      <VStack gap={2}>
+                        <h3 className="text-[11px] font-semibold text-[var(--color-text-subtle)] tracking-wider uppercase">
+                          User Management Actions
+                        </h3>
+                        <div className="flex flex-col gap-2">
+                          <DrawerCard
+                            title="Manage User Groups"
+                            description="Add or remove user groups for a specific user."
+                            onOpen={() => setIsManageUserGroupsOpen(true)}
+                            badge="User"
+                          />
+                          <DrawerCard
+                            title="Manage Roles"
+                            description="Add or remove roles directly assigned to a specific user."
+                            onOpen={() => setIsManageRolesOpen(true)}
+                            badge="User"
+                          />
+                          <DrawerCard
+                            title="Reset Password"
+                            description="Reset the login password for a specific user."
+                            onOpen={() => setIsResetPasswordOpen(true)}
+                            badge="User"
+                          />
+                          <DrawerCard
+                            title="Edit User"
+                            description="Edit the user's basic information like email and display name."
+                            onOpen={() => setIsEditUserOpen(true)}
+                            badge="User"
+                          />
+                        </div>
+                      </VStack>
+
+                      {/* User Group Management */}
+                      <VStack gap={2}>
+                        <h3 className="text-[11px] font-semibold text-[var(--color-text-subtle)] tracking-wider uppercase">
+                          User Group Management Actions
+                        </h3>
+                        <div className="flex flex-col gap-2">
+                          <DrawerCard
+                            title="Manage Users"
+                            description="Add or remove members of a user group."
+                            onOpen={() => setIsManageUsersOpen(true)}
+                            badge="User Group"
+                          />
+                          <DrawerCard
+                            title="Edit User Group"
+                            description="Edit the user group's basic information."
+                            onOpen={() => setIsEditUserGroupOpen(true)}
+                            badge="User Group"
+                          />
+                        </div>
+                      </VStack>
+
+                      {/* Role Management */}
+                      <VStack gap={2}>
+                        <h3 className="text-[11px] font-semibold text-[var(--color-text-subtle)] tracking-wider uppercase">
+                          Role Management Actions
+                        </h3>
+                        <div className="flex flex-col gap-2">
+                          <DrawerCard
+                            title="Manage Policies"
+                            description="Add or remove policies of a role."
+                            onOpen={() => setIsManagePoliciesOpen(true)}
+                            badge="Role"
+                          />
+                          <DrawerCard
+                            title="Edit Role"
+                            description="Edit basic information for a role."
+                            onOpen={() => setIsEditRoleOpen(true)}
+                            badge="Role"
+                          />
+                        </div>
+                      </VStack>
+
+                      {/* Domain Management */}
+                      <VStack gap={2}>
+                        <h3 className="text-[11px] font-semibold text-[var(--color-text-subtle)] tracking-wider uppercase">
+                          Domain Management Actions
+                        </h3>
+                        <div className="flex flex-col gap-2">
+                          <DrawerCard
+                            title="Create Domain"
+                            description="Create a new domain to manage resources and policies independently."
+                            onOpen={() => setIsCreateDomainOpen(true)}
+                            badge="Domain"
+                          />
+                          <DrawerCard
+                            title="Edit Domain"
+                            description="Edit the domain's basic information."
+                            onOpen={() => setIsEditDomainOpen(true)}
+                            badge="Domain"
+                          />
+                          <DrawerCard
+                            title="Set Default Domain"
+                            description="Set the default domain for the system administrator."
+                            onOpen={() => setIsSetDefaultDomainOpen(true)}
+                            badge="Domain"
+                          />
+                          <DrawerCard
+                            title="Lock Setting"
+                            description="Lock or unlock a system administrator account."
+                            onOpen={() => setIsAdminLockSettingOpen(true)}
+                            badge="Admin"
+                          />
+                          <DrawerCard
+                            title="Edit System Administrator"
+                            description="Edit the system administrator's basic information."
+                            onOpen={() => setIsEditSystemAdminOpen(true)}
+                            badge="Admin"
+                          />
+                        </div>
+                      </VStack>
                     </VStack>
                   </Disclosure.Panel>
                 </Disclosure>
@@ -1046,18 +1198,61 @@ export function DrawersPage() {
                         <span className="text-[14px] font-semibold text-[var(--color-text-default)]">
                           Drawers
                         </span>
+                        <span className="text-[12px] text-[var(--color-text-subtle)]">
+                          (5 drawers)
+                        </span>
                       </div>
                     </div>
                   </Disclosure.Trigger>
                   <Disclosure.Panel>
                     <VStack gap={4} className="pt-4">
-                      <div className="p-6 rounded-xl border border-dashed border-[var(--color-border-default)] bg-[var(--color-surface-subtle)]">
-                        <VStack gap={2} className="items-center justify-center h-full">
-                          <p className="text-[14px] text-[var(--color-text-muted)]">
-                            Storage drawers will be added here...
-                          </p>
-                        </VStack>
-                      </div>
+                      {/* Object Storage Actions */}
+                <VStack gap={2}>
+                  <h2 className="text-[14px] font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
+                          Object Storage Actions
+                  </h2>
+                  <div className="flex flex-col gap-2">
+                    <DrawerCard
+                            title="Create Folder"
+                            description="Create a new folder in a bucket with a specified parent location."
+                            category="Object Storage"
+                            onOpen={() => setIsCreateFolderOpen(true)}
+                          />
+                          <DrawerCard
+                            title="Create Object"
+                            description="Upload files to a bucket with ACL settings and tags."
+                            category="Object Storage"
+                            onOpen={() => setIsCreateObjectOpen(true)}
+                          />
+                          <DrawerCard
+                            title="Move Files"
+                            description="Move files or folders to a different location within the bucket."
+                            category="Object Storage"
+                            onOpen={() => setIsMoveFilesOpen(true)}
+                          />
+                          <DrawerCard
+                            title="Edit Object"
+                            description="Edit object name and manage tags."
+                            category="Object Storage"
+                            onOpen={() => setIsEditObjectOpen(true)}
+                    />
+                  </div>
+                </VStack>
+
+                      {/* Physical Disk Actions */}
+                <VStack gap={2}>
+                  <h2 className="text-[14px] font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
+                          Physical Disk Actions
+                  </h2>
+                  <div className="flex flex-col gap-2">
+                          <DrawerCard
+                            title="Identify Device"
+                            description="Indicate the LED on a physical disk to identify the device."
+                            category="Physical Disk"
+                            onOpen={() => setIsIdentifyDeviceOpen(true)}
+                          />
+                        </div>
+                      </VStack>
                     </VStack>
                   </Disclosure.Panel>
                 </Disclosure>
@@ -1846,6 +2041,210 @@ export function DrawersPage() {
         floatingIPQuota={{ used: 2, total: 10 }}
         onSubmit={(data) => {
           console.log('Allocate floating IP:', data);
+        }}
+      />
+
+      {/* =============================================
+          STORAGE DRAWERS
+          ============================================= */}
+
+      {/* Create Folder Drawer */}
+      <CreateFolderDrawer
+        isOpen={isCreateFolderOpen}
+        onClose={() => setIsCreateFolderOpen(false)}
+        bucketName="my-bucket"
+        currentPath="/folder A"
+        onSubmit={(folderName, parentPath) => {
+          console.log('Create folder:', folderName, 'in', parentPath);
+        }}
+      />
+
+      {/* Create Object Drawer */}
+      <CreateObjectDrawer
+        isOpen={isCreateObjectOpen}
+        onClose={() => setIsCreateObjectOpen(false)}
+        currentPath="/bucket/folder"
+        onSubmit={(data) => {
+          console.log('Create object:', data);
+        }}
+      />
+
+      {/* Move Files Drawer */}
+      <MoveFilesDrawer
+        isOpen={isMoveFilesOpen}
+        onClose={() => setIsMoveFilesOpen(false)}
+        currentPath="folder/~"
+        onSubmit={(targetPath) => {
+          console.log('Move files to:', targetPath);
+        }}
+      />
+
+      {/* Edit Object Drawer */}
+      <EditObjectDrawer
+        isOpen={isEditObjectOpen}
+        onClose={() => setIsEditObjectOpen(false)}
+        objectName="{Current Folder Name}"
+        onSubmit={(name, tags) => {
+          console.log('Edit object:', name, tags);
+        }}
+      />
+
+      {/* Identify Device Drawer */}
+      <IdentifyDeviceDrawer
+        isOpen={isIdentifyDeviceOpen}
+        onClose={() => setIsIdentifyDeviceOpen(false)}
+        onSubmit={(duration) => {
+          console.log('Identify device with duration:', duration);
+        }}
+      />
+
+      {/* Manage User Groups Drawer */}
+      <ManageUserGroupsDrawer
+        isOpen={isManageUserGroupsOpen}
+        onClose={() => setIsManageUserGroupsOpen(false)}
+        userName="thaki.kim"
+        onSubmit={(data) => {
+          console.log('Manage user groups:', data);
+        }}
+      />
+
+      {/* Manage Users Drawer */}
+      <ManageUsersDrawer
+        isOpen={isManageUsersOpen}
+        onClose={() => setIsManageUsersOpen(false)}
+        userGroupName="MemberGroup"
+        onSubmit={(data) => {
+          console.log('Manage users:', data);
+        }}
+      />
+
+      {/* Manage Roles Drawer */}
+      <ManageRolesDrawer
+        isOpen={isManageRolesOpen}
+        onClose={() => setIsManageRolesOpen(false)}
+        userName="thaki.kim"
+        onSubmit={(data) => {
+          console.log('Manage roles:', data);
+        }}
+      />
+
+      {/* Reset Password Drawer */}
+      <ResetPasswordDrawer
+        isOpen={isResetPasswordOpen}
+        onClose={() => setIsResetPasswordOpen(false)}
+        userName="thaki.kim"
+        onSubmit={(data) => {
+          console.log('Reset password:', data);
+        }}
+      />
+
+      {/* Edit User Drawer */}
+      <EditUserDrawer
+        isOpen={isEditUserOpen}
+        onClose={() => setIsEditUserOpen(false)}
+        userName="thaki-kim"
+        initialData={{
+          email: 'user@example.com',
+          displayName: '',
+          enabled: true,
+        }}
+        onSubmit={(data) => {
+          console.log('Edit user:', data);
+        }}
+      />
+
+      {/* Edit User Group Drawer */}
+      <EditUserGroupDrawer
+        isOpen={isEditUserGroupOpen}
+        onClose={() => setIsEditUserGroupOpen(false)}
+        initialData={{
+          name: 'MemberGroup',
+          description: '',
+        }}
+        onSubmit={(data) => {
+          console.log('Edit user group:', data);
+        }}
+      />
+
+      {/* Manage Policies Drawer */}
+      <ManagePoliciesDrawer
+        isOpen={isManagePoliciesOpen}
+        onClose={() => setIsManagePoliciesOpen(false)}
+        roleName="member"
+        onSubmit={(data) => {
+          console.log('Manage policies:', data);
+        }}
+      />
+
+      {/* Edit Role Drawer */}
+      <EditRoleDrawer
+        isOpen={isEditRoleOpen}
+        onClose={() => setIsEditRoleOpen(false)}
+        initialData={{
+          name: 'Member',
+          description: '',
+        }}
+        onSubmit={(data) => {
+          console.log('Edit role:', data);
+        }}
+      />
+
+      {/* Create Domain Drawer */}
+      <CreateDomainDrawer
+        isOpen={isCreateDomainOpen}
+        onClose={() => setIsCreateDomainOpen(false)}
+        onSubmit={(data) => {
+          console.log('Create domain:', data);
+        }}
+      />
+
+      {/* Edit Domain Drawer */}
+      <EditDomainDrawer
+        isOpen={isEditDomainOpen}
+        onClose={() => setIsEditDomainOpen(false)}
+        initialData={{
+          name: 'domain',
+          description: '',
+          enabled: true,
+        }}
+        onSubmit={(data) => {
+          console.log('Edit domain:', data);
+        }}
+      />
+
+      {/* Set Default Domain Drawer */}
+      <SetDefaultDomainDrawer
+        isOpen={isSetDefaultDomainOpen}
+        onClose={() => setIsSetDefaultDomainOpen(false)}
+        adminUsername="thaki.kim"
+        onSubmit={(domainId) => {
+          console.log('Set default domain:', domainId);
+        }}
+      />
+
+      {/* Admin Lock Setting Drawer */}
+      <AdminLockSettingDrawer
+        isOpen={isAdminLockSettingOpen}
+        onClose={() => setIsAdminLockSettingOpen(false)}
+        adminUsername="thaki.kim"
+        initialLocked={true}
+        onSubmit={(locked) => {
+          console.log('Admin lock setting:', locked);
+        }}
+      />
+
+      {/* Edit System Admin Drawer */}
+      <EditSystemAdminDrawer
+        isOpen={isEditSystemAdminOpen}
+        onClose={() => setIsEditSystemAdminOpen(false)}
+        initialData={{
+          username: 'thaki-kim',
+          email: 'user@example.com',
+          displayName: '',
+          enabled: true,
+        }}
+        onSubmit={(data) => {
+          console.log('Edit system admin:', data);
         }}
       />
     </div>

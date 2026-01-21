@@ -147,7 +147,7 @@ export function CreateVolumeSnapshotDrawer({
             <Button 
               variant="secondary" 
               onClick={handleClose}
-              className="flex-1"
+              className="flex-1 h-8"
             >
               Cancel
             </Button>
@@ -155,7 +155,7 @@ export function CreateVolumeSnapshotDrawer({
               variant="primary" 
               onClick={handleSubmit}
               disabled={!snapshotName.trim() || isSubmitting}
-              className="flex-1"
+              className="flex-1 h-8"
             >
               {isSubmitting ? 'Creating...' : 'Create'}
             </Button>

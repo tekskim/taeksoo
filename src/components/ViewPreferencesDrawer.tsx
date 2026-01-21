@@ -154,10 +154,10 @@ export function ViewPreferencesDrawer({
       showCloseButton={false}
       footer={
         <div className="flex gap-2">
-          <Button variant="secondary" size="sm" onClick={handleCancel} className="flex-1">
+          <Button variant="secondary" size="sm" onClick={handleCancel} className="flex-1 h-8">
             Cancel
           </Button>
-          <Button variant="primary" size="sm" onClick={handleSave} className="flex-1">
+          <Button variant="primary" size="sm" onClick={handleSave} className="flex-1 h-8">
             Save
           </Button>
         </div>
