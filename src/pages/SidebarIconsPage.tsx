@@ -313,8 +313,8 @@ const appIconData: AppData[] = [
       {
         title: 'Cluster',
         items: [
-          { icon: LayoutDashboard, name: 'LayoutDashboard', label: 'Home', slug: 'layout-dashboard', library: 'lucide' },
-          { icon: IconHome, name: 'IconHome', label: 'Dashboard', slug: 'home' },
+          { icon: IconHome, name: 'IconHome', label: 'Home', slug: 'home' },
+          { icon: LayoutDashboard, name: 'LayoutDashboard', label: 'Dashboard', slug: 'layout-dashboard', library: 'lucide' },
           { icon: IconAffiliate, name: 'IconAffiliate', label: 'Cluster', slug: 'affiliate' },
           { icon: IconFolders, name: 'IconFolders', label: 'Namespaces', slug: 'folders' },
           { icon: IconTopologyStar, name: 'IconTopologyStar', label: 'Nodes', slug: 'topology-star' },
