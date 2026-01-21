@@ -95,7 +95,7 @@ export function AddL7PolicyDrawer({
           <Button 
             variant="secondary" 
             onClick={handleClose}
-            className="flex-1"
+            className="flex-1 h-8"
           >
             Cancel
           </Button>
@@ -103,7 +103,7 @@ export function AddL7PolicyDrawer({
             variant="primary" 
             onClick={handleSubmit}
             disabled={!isValid || isSubmitting}
-            className="flex-1"
+            className="flex-1 h-8"
           >
             {isSubmitting ? 'Adding...' : 'Add'}
           </Button>

@@ -185,7 +185,7 @@ export function CreateVolumeBackupDrawer({
             <Button 
               variant="secondary" 
               onClick={handleClose}
-              className="flex-1"
+              className="flex-1 h-8"
             >
               Cancel
             </Button>
@@ -193,7 +193,7 @@ export function CreateVolumeBackupDrawer({
               variant="primary" 
               onClick={handleSubmit}
               disabled={!backupName.trim() || isSubmitting}
-              className="flex-1"
+              className="flex-1 h-8"
             >
               {isSubmitting ? 'Creating...' : 'Create'}
             </Button>

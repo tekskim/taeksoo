@@ -117,6 +117,9 @@ export function ModalsPage() {
   const [usernameCopied, setUsernameCopied] = useState(false);
   const [passwordCopied, setPasswordCopied] = useState(false);
   
+  // Storage Modal states
+  const [isDeleteBucketOpen, setIsDeleteBucketOpen] = useState(false);
+  
   // Disclosure states
   const [isComputeOpen, setIsComputeOpen] = useState(false);
   const [isIAMOpen, setIsIAMOpen] = useState(false);
@@ -635,7 +638,7 @@ export function ModalsPage() {
                   </Disclosure.Panel>
                 </Disclosure>
 
-                {/* Storage App Modals - Placeholder for future */}
+                {/* Storage App Modals */}
                 <Disclosure open={isStorageOpen} onChange={setIsStorageOpen}>
                   <Disclosure.Trigger className="w-full [&>span:first-child]:hidden">
                     <div className="flex items-center justify-between w-full px-4 py-3 bg-[var(--color-surface-subtle)] rounded-lg border border-[var(--color-border-default)] hover:border-[var(--color-border-strong)] transition-colors">
@@ -650,19 +653,29 @@ export function ModalsPage() {
                           Modals
                         </span>
                         <span className="text-[12px] text-[var(--color-text-subtle)]">
-                          (0 modals)
+                          (1 modal)
                         </span>
                       </div>
                     </div>
                   </Disclosure.Trigger>
                   <Disclosure.Panel>
-                    <div className="p-6 mt-4 rounded-xl border border-dashed border-[var(--color-border-default)] bg-[var(--color-surface-subtle)]">
-                      <VStack gap={2} className="items-center justify-center h-full">
-                        <p className="text-[14px] text-[var(--color-text-muted)]">
-                          Storage modals will be added here...
-                        </p>
+                    <VStack gap={4} className="pt-4">
+                      {/* Delete Modals */}
+                      <VStack gap={2}>
+                        <h2 className="text-[14px] font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
+                          Delete Modals
+                        </h2>
+                        <div className="flex flex-col gap-2">
+                          <ModalListItem
+                            title="Delete Bucket"
+                            description="Confirm deletion of a non-empty bucket with warning about permanent data loss."
+                            category="Bucket"
+                            size="sm"
+                            onOpen={() => setIsDeleteBucketOpen(true)}
+                          />
+                        </div>
                       </VStack>
-                    </div>
+                    </VStack>
                   </Disclosure.Panel>
                 </Disclosure>
               </VStack>
@@ -2988,6 +3001,48 @@ export function ModalsPage() {
             className="flex-1"
           >
             Apply
+          </Button>
+        </div>
+      </Modal>
+
+      {/* =============================================
+          STORAGE MODALS
+          ============================================= */}
+
+      {/* Delete Bucket Modal */}
+      <Modal
+        isOpen={isDeleteBucketOpen}
+        onClose={() => setIsDeleteBucketOpen(false)}
+        title="Delete bucket"
+        size="sm"
+      >
+        {/* Warning Alert Box */}
+        <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
+          <IconAlertCircle size={16} className="text-[var(--color-state-danger)] shrink-0 mt-0.5" stroke={1.5} />
+          <div className="text-[11px] text-[var(--color-text-default)] leading-4">
+            <p className="font-medium mb-1">Warning: Non-empty bucket</p>
+            <ul className="list-disc ml-4 space-y-0.5">
+              <li>All objects in this bucket will be deleted.</li>
+              <li>This action is irreversible.</li>
+            </ul>
+          </div>
+        </div>
+
+        {/* Button Group */}
+        <div className="flex gap-2 w-full">
+          <Button variant="outline" size="md" onClick={() => setIsDeleteBucketOpen(false)} className="flex-1">
+            Cancel
+          </Button>
+          <Button 
+            variant="primary" 
+            size="md" 
+            onClick={() => {
+              console.log('Bucket deleted');
+              setIsDeleteBucketOpen(false);
+            }}
+            className="flex-1"
+          >
+            Delete
           </Button>
         </div>
       </Modal>

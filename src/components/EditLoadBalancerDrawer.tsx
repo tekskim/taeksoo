@@ -77,7 +77,7 @@ export function EditLoadBalancerDrawer({
           <Button 
             variant="secondary" 
             onClick={handleClose}
-            className="flex-1"
+            className="flex-1 h-8"
           >
             Cancel
           </Button>
@@ -85,7 +85,7 @@ export function EditLoadBalancerDrawer({
             variant="primary" 
             onClick={handleSubmit}
             disabled={!isValid || isSubmitting}
-            className="flex-1"
+            className="flex-1 h-8"
           >
             {isSubmitting ? 'Saving...' : 'Save'}
           </Button>
