@@ -42,7 +42,7 @@ export function DeleteClusterModal({
       infoValue={cluster?.name ?? ''}
       confirmText="Delete"
       cancelText="Cancel"
-      confirmVariant="danger"
+      confirmVariant="primary"
       onConfirm={handleConfirm}
       isLoading={isLoading}
     />
