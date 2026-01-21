@@ -184,7 +184,7 @@ export function CloneVolumeDrawer({
             <Button 
               variant="secondary" 
               onClick={handleClose}
-              className="flex-1"
+              className="flex-1 h-8"
             >
               Cancel
             </Button>
@@ -192,7 +192,7 @@ export function CloneVolumeDrawer({
               variant="primary" 
               onClick={handleSubmit}
               disabled={!volumeName.trim() || isSubmitting}
-              className="flex-1"
+              className="flex-1 h-8"
             >
               {isSubmitting ? 'Cloning...' : 'Clone'}
             </Button>

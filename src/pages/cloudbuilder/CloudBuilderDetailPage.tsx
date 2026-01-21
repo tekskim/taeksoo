@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import AppLayout from '@/layouts/AppLayout';
 import {
   Button,
@@ -114,12 +114,6 @@ export function CloudBuilderDetailPage() {
             <h1 className="text-[length:var(--font-size-16)] font-semibold leading-6 text-[var(--color-text-default)]">
               {config.title}
             </h1>
-            <Link
-              to={`/cloudbuilder/${slug}`}
-              className="text-[length:var(--font-size-12)] text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
-            >
-              Back
-            </Link>
           </div>
 
           {isNetworkAgent ? (

@@ -92,14 +92,14 @@ export function DisassociateFloatingIPDrawer({
       width={700}
       footer={
         <HStack gap={2} className="w-full">
-          <Button variant="secondary" onClick={onClose} className="flex-1">
+          <Button variant="secondary" onClick={onClose} className="flex-1 h-8">
             Cancel
           </Button>
           <Button
             variant="primary"
             onClick={handleDisassociate}
             disabled={!selectedFloatingIpId}
-            className="flex-1"
+            className="flex-1 h-8"
           >
             Disassociate
           </Button>

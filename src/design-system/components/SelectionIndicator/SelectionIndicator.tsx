@@ -1,5 +1,6 @@
 import type { HTMLAttributes, ReactNode } from 'react';
 import { twMerge } from 'tailwind-merge';
+import { IconCircleX } from '@tabler/icons-react';
 import { Chip } from '../Chip';
 
 /* ----------------------------------------
@@ -24,13 +25,14 @@ export interface SelectionIndicatorProps extends Omit<HTMLAttributes<HTMLDivElem
   rightContent?: ReactNode;
   /** Whether to allow removing items */
   removable?: boolean;
+  /** Whether to show error state */
+  error?: boolean;
+  /** Error message to display when in error state and no items selected */
+  errorMessage?: string;
 }
 
 /* ----------------------------------------
    SelectionIndicator Component
-   
-   Note: For error states (e.g., required selection missing),
-   use the InlineMessage component instead.
    ---------------------------------------- */
 
 export function SelectionIndicator({
@@ -39,10 +41,13 @@ export function SelectionIndicator({
   emptyText = 'No item selected',
   rightContent,
   removable = true,
+  error = false,
+  errorMessage,
   className,
   ...props
 }: SelectionIndicatorProps) {
   const hasSelection = selectedItems.length > 0;
+  const showError = error && !hasSelection;
 
   return (
     <div
@@ -51,12 +56,15 @@ export function SelectionIndicator({
         'px-3 py-2',
         'rounded-[var(--table-row-radius)]',
         'min-h-[42px]',
-        'bg-[var(--color-surface-subtle)]',
+        showError 
+          ? 'bg-[var(--inline-message-error-bg)]' 
+          : 'bg-[var(--color-surface-subtle)]',
         className
       )}
+      role={showError ? 'status' : undefined}
       {...props}
     >
-      {/* Selection chips or empty text */}
+      {/* Selection chips, empty text, or error message */}
       <div className="flex items-center gap-2 flex-wrap">
         {hasSelection ? (
           selectedItems.map((item) => (
@@ -67,6 +75,17 @@ export function SelectionIndicator({
               onRemove={removable && onRemove ? () => onRemove(item.id) : undefined}
             />
           ))
+        ) : showError ? (
+          <>
+            <IconCircleX 
+              size={16} 
+              className="text-[var(--inline-message-error-icon)] shrink-0" 
+              strokeWidth={1.5} 
+            />
+            <span className="text-[length:var(--inline-message-font-size)] leading-[var(--inline-message-line-height)] text-[var(--inline-message-text)]">
+              {errorMessage || emptyText}
+            </span>
+          </>
         ) : (
           <span className="text-[12px] text-[var(--color-text-muted)]">
             {emptyText}
