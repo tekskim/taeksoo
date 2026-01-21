@@ -139,9 +139,9 @@ const appIconData: AppData[] = [
     sidebarFile: 'src/components/Sidebar.tsx',
     sections: [
       {
-        title: 'Home',
+        title: 'Dashboard',
         items: [
-          { icon: IconHome, name: 'IconHome', label: 'Home', slug: 'home' },
+          { icon: LayoutDashboard, name: 'LayoutDashboard', label: 'Dashboard', slug: 'layout-dashboard', library: 'lucide' },
         ],
       },
       {
@@ -223,9 +223,9 @@ const appIconData: AppData[] = [
     sidebarFile: 'src/components/StorageSidebar.tsx',
     sections: [
       {
-        title: 'Home',
+        title: 'Dashboard',
         items: [
-          { icon: IconHome, name: 'IconHome', label: 'Home', slug: 'home' },
+          { icon: LayoutDashboard, name: 'LayoutDashboard', label: 'Dashboard', slug: 'layout-dashboard', library: 'lucide' },
         ],
       },
       {
@@ -262,9 +262,9 @@ const appIconData: AppData[] = [
     sidebarFile: 'src/components/IAMSidebar.tsx',
     sections: [
       {
-        title: 'Home',
+        title: 'Dashboard',
         items: [
-          { icon: IconHome, name: 'IconHome', label: 'Home', slug: 'home' },
+          { icon: LayoutDashboard, name: 'LayoutDashboard', label: 'Dashboard', slug: 'layout-dashboard', library: 'lucide' },
         ],
       },
       {
@@ -366,9 +366,9 @@ const appIconData: AppData[] = [
     sidebarFile: 'src/components/AIPlatformSidebar.tsx',
     sections: [
       {
-        title: 'Home',
+        title: 'Dashboard',
         items: [
-          { icon: IconHome, name: 'IconHome', label: 'Dashboard', slug: 'home' },
+          { icon: LayoutDashboard, name: 'LayoutDashboard', label: 'Dashboard', slug: 'layout-dashboard', library: 'lucide' },
           { icon: IconCompass, name: 'IconCompass', label: 'Explore', slug: 'compass' },
         ],
       },
