@@ -134,8 +134,7 @@ export function ChangeServerCertificateDrawer({
             <Button 
               variant="secondary" 
               onClick={handleClose}
-              size="md"
-              className="w-[152px]"
+              className="w-[152px] h-8"
             >
               Cancel
             </Button>
@@ -143,8 +142,7 @@ export function ChangeServerCertificateDrawer({
               variant="primary" 
               onClick={handleChange}
               disabled={!selectedCertificateId || isSubmitting}
-              size="md"
-              className="w-[152px]"
+              className="w-[152px] h-8"
             >
               {isSubmitting ? 'Changing...' : 'Change'}
             </Button>

@@ -2,7 +2,8 @@ import { useState } from 'react';
 import { useTabs } from '@/contexts/TabContext';
 import { Sidebar } from '@/components/Sidebar';
 import { TopBar, Breadcrumb, TabBar } from '@/design-system';
-import { Button, VStack, HStack, Badge } from '@/design-system';
+import { Button, VStack, HStack, Badge, Disclosure } from '@/design-system';
+import { IconChevronRight, IconChevronDown } from '@tabler/icons-react';
 
 // Import all drawer components
 import { CreateInstanceSnapshotDrawer, type InstanceInfo as SnapshotInstanceInfo } from '@/components/CreateInstanceSnapshotDrawer';
@@ -52,7 +53,7 @@ import { EditMemberDrawer } from '@/components/EditMemberDrawer';
 import { DetachVolumeDrawer, type InstanceInfo as DetachInstanceInfo } from '@/components/DetachVolumeDrawer';
 import { AttachInterfaceDrawer, type InstanceInfo as AttachInterfaceInstanceInfo } from '@/components/AttachInterfaceDrawer';
 import { DetachInterfaceDrawer, type InstanceInfo as DetachInterfaceInstanceInfo } from '@/components/DetachInterfaceDrawer';
-import { AssociateFloatingIPDrawer, type InstanceInfo as AssociateFloatingIPInstanceInfo } from '@/components/AssociateFloatingIPDrawer';
+import { AssociateFloatingIPDrawer } from '@/components/AssociateFloatingIPDrawer';
 import { DisassociateFloatingIPDrawer, type InstanceInfo as DisassociateFloatingIPInstanceInfo } from '@/components/DisassociateFloatingIPDrawer';
 import { ManageSecurityGroupsDrawer, type InstanceInfo as ManageSecurityGroupsInstanceInfo } from '@/components/ManageSecurityGroupsDrawer';
 import { ManageTagsDrawer, type InstanceInfo as ManageTagsInstanceInfo } from '@/components/ManageTagsDrawer';
@@ -68,6 +69,14 @@ import { AttachPortToInstanceDrawer } from '@/components/AttachPortToInstanceDra
 import { EditPortSecurityGroupsDrawer } from '@/components/EditPortSecurityGroupsDrawer';
 import { AssociateFloatingIPToLBDrawer } from '@/components/AssociateFloatingIPToLBDrawer';
 import { ChangeServerCertificateDrawer } from '@/components/ChangeServerCertificateDrawer';
+import { ChangeCACertificateDrawer } from '@/components/ChangeCACertificateDrawer';
+import { ManageSNICertificateDrawer } from '@/components/ManageSNICertificateDrawer';
+import { ExternalGatewaySettingDrawer } from '@/components/ExternalGatewaySettingDrawer';
+import { ConnectSubnetDrawer } from '@/components/ConnectSubnetDrawer';
+import { AssociateFloatingIPToPortDrawer } from '@/components/AssociateFloatingIPToPortDrawer';
+import { DisconnectSubnetDrawer } from '@/components/DisconnectSubnetDrawer';
+import { ManageMembersDrawer } from '@/components/ManageMembersDrawer';
+import { AllocateFloatingIPDrawer } from '@/components/AllocateFloatingIPDrawer';
 
 /* ----------------------------------------
    Mock Data for Drawers
@@ -226,9 +235,8 @@ const mockDetachInterfaceInstance: DetachInterfaceInstanceInfo = {
   name: 'web-server-10',
 };
 
-const mockAssociateFloatingIPInstance: AssociateFloatingIPInstanceInfo = {
-  id: 'inst-001',
-  name: 'web-server-10',
+const mockAssociateFloatingIP = {
+  address: '172.24.4.228',
 };
 
 const mockDisassociateFloatingIPInstance: DisassociateFloatingIPInstanceInfo = {
@@ -329,6 +337,11 @@ export function DrawersPage() {
   const { tabs, activeTabId, selectTab, closeTab, addNewTab, moveTab } = useTabs();
   const [sidebarOpen, setSidebarOpen] = useState(true);
 
+  // App section disclosure states
+  const [isComputeOpen, setIsComputeOpen] = useState(true);
+  const [isIAMOpen, setIsIAMOpen] = useState(false);
+  const [isStorageOpen, setIsStorageOpen] = useState(false);
+
   // Drawer states
   const [isCreateSnapshotOpen, setIsCreateSnapshotOpen] = useState(false);
   const [isEditInstanceOpen, setIsEditInstanceOpen] = useState(false);
@@ -393,6 +406,14 @@ export function DrawersPage() {
   const [isEditPortSecurityGroupsOpen, setIsEditPortSecurityGroupsOpen] = useState(false);
   const [isAssociateFloatingIPToLBOpen, setIsAssociateFloatingIPToLBOpen] = useState(false);
   const [isChangeServerCertificateOpen, setIsChangeServerCertificateOpen] = useState(false);
+  const [isChangeCACertificateOpen, setIsChangeCACertificateOpen] = useState(false);
+  const [isManageSNICertificateOpen, setIsManageSNICertificateOpen] = useState(false);
+  const [isExternalGatewaySettingOpen, setIsExternalGatewaySettingOpen] = useState(false);
+  const [isConnectSubnetOpen, setIsConnectSubnetOpen] = useState(false);
+  const [isAssociateFloatingIPToPortOpen, setIsAssociateFloatingIPToPortOpen] = useState(false);
+  const [isDisconnectSubnetOpen, setIsDisconnectSubnetOpen] = useState(false);
+  const [isManageMembersOpen, setIsManageMembersOpen] = useState(false);
+  const [isAllocateFloatingIPOpen, setIsAllocateFloatingIPOpen] = useState(false);
 
   // ViewPreferences state
   const [rowsPerPage, setRowsPerPage] = useState(10);
@@ -458,11 +479,30 @@ export function DrawersPage() {
 
               {/* Drawer Categories */}
               <VStack gap={4}>
-                {/* Instance Actions */}
-                <VStack gap={2}>
-                  <h2 className="text-[14px] font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
-                    Instance Actions
-                  </h2>
+                {/* Compute App Drawers */}
+                <Disclosure open={isComputeOpen} onChange={setIsComputeOpen}>
+                  <Disclosure.Trigger className="w-full [&>span:first-child]:hidden">
+                    <div className="flex items-center justify-between w-full px-4 py-3 bg-[var(--color-surface-subtle)] rounded-lg border border-[var(--color-border-default)] hover:border-[var(--color-border-strong)] transition-colors">
+                      <div className="flex items-center gap-3">
+                        {isComputeOpen ? (
+                          <IconChevronDown size={16} className="text-[var(--color-text-subtle)]" />
+                        ) : (
+                          <IconChevronRight size={16} className="text-[var(--color-text-subtle)]" />
+                        )}
+                        <Badge variant="info" size="sm" className="w-[70px] justify-center">Compute</Badge>
+                        <span className="text-[14px] font-semibold text-[var(--color-text-default)]">
+                          Drawers
+                        </span>
+                      </div>
+                    </div>
+                  </Disclosure.Trigger>
+                  <Disclosure.Panel>
+                    <VStack gap={4} className="pt-4">
+                      {/* Instance Actions */}
+                      <VStack gap={2}>
+                        <h2 className="text-[14px] font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
+                          Instance Actions
+                        </h2>
                   <div className="flex flex-col gap-2">
                     <DrawerCard
                       title="Create instance snapshot"
@@ -794,6 +834,36 @@ export function DrawersPage() {
                       category="Floating IP"
                       onOpen={() => setIsDisassociateFloatingIPOpen(true)}
                     />
+                    <DrawerCard
+                      title="Allocate Floating IP"
+                      description="Allocate a new floating IP from an external network pool with optional DNS settings."
+                      category="Floating IP"
+                      onOpen={() => setIsAllocateFloatingIPOpen(true)}
+                    />
+                    <DrawerCard
+                      title="External Gateway Setting"
+                      description="Configure external gateway for a router to enable access to external networks."
+                      category="Router"
+                      onOpen={() => setIsExternalGatewaySettingOpen(true)}
+                    />
+                    <DrawerCard
+                      title="Connect Subnet"
+                      description="Connect an existing subnet to a router to enable routing between networks."
+                      category="Router"
+                      onOpen={() => setIsConnectSubnetOpen(true)}
+                    />
+                    <DrawerCard
+                      title="Associate Floating IP to Port"
+                      description="Associate a floating IP with a port to enable external network access."
+                      category="Port"
+                      onOpen={() => setIsAssociateFloatingIPToPortOpen(true)}
+                    />
+                    <DrawerCard
+                      title="Disconnect Subnet"
+                      description="Disconnect a subnet from a router to remove its routing path."
+                      category="Router"
+                      onOpen={() => setIsDisconnectSubnetOpen(true)}
+                    />
                   </div>
                 </VStack>
 
@@ -897,6 +967,12 @@ export function DrawersPage() {
                       onOpen={() => setIsEditMemberOpen(true)}
                     />
                     <DrawerCard
+                      title="Manage Members"
+                      description="Manage pool members by adding instances or external members with configurable port and weight."
+                      category="Load balancer"
+                      onOpen={() => setIsManageMembersOpen(true)}
+                    />
+                    <DrawerCard
                       title="Associate Floating IP to LB"
                       description="Associate a floating IP to a load balancer for external access."
                       category="Load balancer"
@@ -908,8 +984,83 @@ export function DrawersPage() {
                       category="Certificate"
                       onOpen={() => setIsChangeServerCertificateOpen(true)}
                     />
-                  </div>
-                </VStack>
+                    <DrawerCard
+                      title="Change CA Certificate"
+                      description="Change the CA certificate for a listener with certificate selection table."
+                      category="Certificate"
+                      onOpen={() => setIsChangeCACertificateOpen(true)}
+                    />
+                    <DrawerCard
+                      title="Manage SNI Certificate"
+                      description="Enable SNI and manage multiple SNI certificates for a listener."
+                      category="Certificate"
+                      onOpen={() => setIsManageSNICertificateOpen(true)}
+                    />
+                      </div>
+                    </VStack>
+                  </VStack>
+                </Disclosure.Panel>
+              </Disclosure>
+
+                {/* IAM App Drawers */}
+                <Disclosure open={isIAMOpen} onChange={setIsIAMOpen}>
+                  <Disclosure.Trigger className="w-full [&>span:first-child]:hidden">
+                    <div className="flex items-center justify-between w-full px-4 py-3 bg-[var(--color-surface-subtle)] rounded-lg border border-[var(--color-border-default)] hover:border-[var(--color-border-strong)] transition-colors">
+                      <div className="flex items-center gap-3">
+                        {isIAMOpen ? (
+                          <IconChevronDown size={16} className="text-[var(--color-text-subtle)]" />
+                        ) : (
+                          <IconChevronRight size={16} className="text-[var(--color-text-subtle)]" />
+                        )}
+                        <Badge variant="info" size="sm" className="w-[70px] justify-center">IAM</Badge>
+                        <span className="text-[14px] font-semibold text-[var(--color-text-default)]">
+                          Drawers
+                        </span>
+                      </div>
+                    </div>
+                  </Disclosure.Trigger>
+                  <Disclosure.Panel>
+                    <VStack gap={4} className="pt-4">
+                      <div className="p-6 rounded-xl border border-dashed border-[var(--color-border-default)] bg-[var(--color-surface-subtle)]">
+                        <VStack gap={2} className="items-center justify-center h-full">
+                          <p className="text-[14px] text-[var(--color-text-muted)]">
+                            IAM drawers will be added here...
+                          </p>
+                        </VStack>
+                      </div>
+                    </VStack>
+                  </Disclosure.Panel>
+                </Disclosure>
+
+                {/* Storage App Drawers */}
+                <Disclosure open={isStorageOpen} onChange={setIsStorageOpen}>
+                  <Disclosure.Trigger className="w-full [&>span:first-child]:hidden">
+                    <div className="flex items-center justify-between w-full px-4 py-3 bg-[var(--color-surface-subtle)] rounded-lg border border-[var(--color-border-default)] hover:border-[var(--color-border-strong)] transition-colors">
+                      <div className="flex items-center gap-3">
+                        {isStorageOpen ? (
+                          <IconChevronDown size={16} className="text-[var(--color-text-subtle)]" />
+                        ) : (
+                          <IconChevronRight size={16} className="text-[var(--color-text-subtle)]" />
+                        )}
+                        <Badge variant="info" size="sm" className="w-[70px] justify-center">Storage</Badge>
+                        <span className="text-[14px] font-semibold text-[var(--color-text-default)]">
+                          Drawers
+                        </span>
+                      </div>
+                    </div>
+                  </Disclosure.Trigger>
+                  <Disclosure.Panel>
+                    <VStack gap={4} className="pt-4">
+                      <div className="p-6 rounded-xl border border-dashed border-[var(--color-border-default)] bg-[var(--color-surface-subtle)]">
+                        <VStack gap={2} className="items-center justify-center h-full">
+                          <p className="text-[14px] text-[var(--color-text-muted)]">
+                            Storage drawers will be added here...
+                          </p>
+                        </VStack>
+                      </div>
+                    </VStack>
+                  </Disclosure.Panel>
+                </Disclosure>
 
                 {/* Table Settings */}
                 <VStack gap={2}>
@@ -923,22 +1074,6 @@ export function DrawersPage() {
                       category="Table"
                       onOpen={() => setIsViewPreferencesOpen(true)}
                     />
-                  </div>
-                </VStack>
-
-                {/* Placeholder for Future Drawers */}
-                <VStack gap={2}>
-                  <h2 className="text-[14px] font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
-                    Coming Soon
-                  </h2>
-                  <div className="flex flex-col gap-2">
-                    <div className="p-6 rounded-xl border border-dashed border-[var(--color-border-default)] bg-[var(--color-surface-subtle)]">
-                      <VStack gap={2} className="items-center justify-center h-full">
-                        <p className="text-[14px] text-[var(--color-text-muted)]">
-                          More drawers will be added here...
-                        </p>
-                      </VStack>
-                    </div>
                   </div>
                 </VStack>
               </VStack>
@@ -1486,9 +1621,9 @@ export function DrawersPage() {
       <AssociateFloatingIPDrawer
         isOpen={isAssociateFloatingIPOpen}
         onClose={() => setIsAssociateFloatingIPOpen(false)}
-        instance={mockAssociateFloatingIPInstance}
-        onAssociate={(fixedIpId, floatingIpId) => {
-          console.log('Associate floating IP:', { fixedIpId, floatingIpId });
+        floatingIP={mockAssociateFloatingIP}
+        onSubmit={(data) => {
+          console.log('Associate floating IP:', data);
         }}
       />
 
@@ -1635,6 +1770,82 @@ export function DrawersPage() {
         }}
         onChangeCertificate={(certificateId) => {
           console.log('Change server certificate:', certificateId);
+        }}
+      />
+
+      <ChangeCACertificateDrawer
+        isOpen={isChangeCACertificateOpen}
+        onClose={() => setIsChangeCACertificateOpen(false)}
+        currentCertificate={{
+          name: 'ca-cert-1',
+          expiredOn: '2025-10-10',
+        }}
+        onSubmit={(certificateId) => {
+          console.log('Change CA certificate:', certificateId);
+        }}
+      />
+
+      <ManageSNICertificateDrawer
+        isOpen={isManageSNICertificateOpen}
+        onClose={() => setIsManageSNICertificateOpen(false)}
+        initialSniEnabled={true}
+        onSubmit={(data) => {
+          console.log('Manage SNI certificate:', data);
+        }}
+      />
+
+      <ExternalGatewaySettingDrawer
+        isOpen={isExternalGatewaySettingOpen}
+        onClose={() => setIsExternalGatewaySettingOpen(false)}
+        router={{ name: 'router-01' }}
+        initialGatewayEnabled={true}
+        onSubmit={(data) => {
+          console.log('External gateway setting:', data);
+        }}
+      />
+
+      <ConnectSubnetDrawer
+        isOpen={isConnectSubnetOpen}
+        onClose={() => setIsConnectSubnetOpen(false)}
+        router={{ name: 'router-01' }}
+        onSubmit={(data) => {
+          console.log('Connect subnet:', data);
+        }}
+      />
+
+      <AssociateFloatingIPToPortDrawer
+        isOpen={isAssociateFloatingIPToPortOpen}
+        onClose={() => setIsAssociateFloatingIPToPortOpen(false)}
+        port={{ name: 'port-10' }}
+        onSubmit={(data) => {
+          console.log('Associate floating IP to port:', data);
+        }}
+      />
+
+      <DisconnectSubnetDrawer
+        isOpen={isDisconnectSubnetOpen}
+        onClose={() => setIsDisconnectSubnetOpen(false)}
+        router={{ name: 'router-01' }}
+        onSubmit={(subnetId) => {
+          console.log('Disconnect subnet:', subnetId);
+        }}
+      />
+
+      <ManageMembersDrawer
+        isOpen={isManageMembersOpen}
+        onClose={() => setIsManageMembersOpen(false)}
+        pool={{ name: 'pool-http' }}
+        onSubmit={(members) => {
+          console.log('Manage members:', members);
+        }}
+      />
+
+      <AllocateFloatingIPDrawer
+        isOpen={isAllocateFloatingIPOpen}
+        onClose={() => setIsAllocateFloatingIPOpen(false)}
+        floatingIPQuota={{ used: 2, total: 10 }}
+        onSubmit={(data) => {
+          console.log('Allocate floating IP:', data);
         }}
       />
     </div>
