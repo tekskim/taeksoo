@@ -157,7 +157,7 @@ export function ExtendVolumeDrawer({
             <Button 
               variant="secondary" 
               onClick={handleClose}
-              className="flex-1"
+              className="flex-1 h-8"
             >
               Cancel
             </Button>
@@ -165,7 +165,7 @@ export function ExtendVolumeDrawer({
               variant="primary" 
               onClick={handleSubmit}
               disabled={capacity <= (volume?.size ?? 0) || isSubmitting}
-              className="flex-1"
+              className="flex-1 h-8"
             >
               {isSubmitting ? 'Extending...' : 'Extend'}
             </Button>
