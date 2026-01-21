@@ -1,5 +1,6 @@
 import {
   forwardRef,
+  memo,
   type ElementType,
   type ComponentPropsWithoutRef,
   type ReactNode,
@@ -279,13 +280,13 @@ export const Button: ButtonComponent = forwardRef(
    Spinner (Accessible Loading Indicator)
    ---------------------------------------- */
 
-function Spinner({ size }: { size: ButtonSize }) {
-  const spinnerSizes: Record<NonNullable<ButtonSize>, string> = {
-    sm: 'size-3',
-    md: 'size-3.5',
-    lg: 'size-4',
-  };
+const spinnerSizes: Record<NonNullable<ButtonSize>, string> = {
+  sm: 'size-3',
+  md: 'size-3.5',
+  lg: 'size-4',
+};
 
+const Spinner = memo(function Spinner({ size }: { size: ButtonSize }) {
   return (
     <svg
       className={`animate-spin ${spinnerSizes[size || 'md']}`}
@@ -310,7 +311,7 @@ function Spinner({ size }: { size: ButtonSize }) {
       />
     </svg>
   );
-}
+});
 
 /* ----------------------------------------
    Exports
