@@ -173,7 +173,7 @@ export function CreateSubnetDrawer({
       footer={
         <VStack gap={0} className="w-full">
           {/* Quota Section */}
-          <VStack gap={6} className="w-full border-t border-[var(--color-border-subtle)] px-6 py-4">
+          <VStack gap={6} className="w-full border-t border-[var(--color-border-subtle)] px-[var(--space-6)] py-[var(--space-4)]">
             <QuotaProgressBar
               label="Subnet Quota"
               used={subnetQuota.used}
@@ -182,12 +182,11 @@ export function CreateSubnetDrawer({
           </VStack>
 
           {/* Buttons */}
-          <HStack gap={2} justify="center" className="w-full border-t border-[var(--color-border-default)] px-6 py-4">
+          <HStack gap={2} justify="center" className="w-full">
             <Button 
               variant="secondary" 
               onClick={handleClose}
-              size="md"
-              className="w-[152px]"
+              className="w-[152px] h-8"
             >
               Cancel
             </Button>
@@ -195,8 +194,7 @@ export function CreateSubnetDrawer({
               variant="primary" 
               onClick={handleSubmit}
               disabled={!cidr.trim() || isSubmitting}
-              size="md"
-              className="w-[152px]"
+              className="w-[152px] h-8"
             >
               {isSubmitting ? 'Creating...' : 'Create'}
             </Button>

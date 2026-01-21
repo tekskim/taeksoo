@@ -15,88 +15,86 @@ import { IconExternalLink, IconChevronDown } from '@tabler/icons-react';
    Types
    ---------------------------------------- */
 
-export interface VolumeSnapshotItem {
+export interface CACertificateItem {
   id: string;
   name: string;
-  type: string;
-  size: number; // in GiB
-  status: 'active' | 'error' | 'building';
-  createdAt: string;
+  status: 'active' | 'error' | 'building' | 'shutoff';
+  listeners: string;
+  expiresAt: string;
 }
 
-export interface VolumeInfo {
-  id: string;
+export interface CurrentCertificateInfo {
   name: string;
+  expiredOn: string;
 }
 
-export interface RestoreFromSnapshotDrawerProps {
+export interface ChangeCACertificateDrawerProps {
   isOpen: boolean;
   onClose: () => void;
-  volume: VolumeInfo;
-  snapshots?: VolumeSnapshotItem[];
-  onRestore?: (snapshotId: string) => void;
+  currentCertificate: CurrentCertificateInfo;
+  certificates?: CACertificateItem[];
+  onSubmit?: (certificateId: string) => void;
 }
 
 /* ----------------------------------------
    Mock Data
    ---------------------------------------- */
 
-const defaultSnapshots: VolumeSnapshotItem[] = Array.from({ length: 115 }, (_, i) => ({
+const defaultCertificates: CACertificateItem[] = Array.from({ length: 115 }, (_, i) => ({
   id: `29tgj${234 + i}`,
-  name: 'snap-01',
-  type: '_DEFAULT_',
-  size: 1500,
+  name: 'ca-01',
   status: 'active',
-  createdAt: '2025-08-23',
+  listeners: 'listener-1',
+  expiresAt: '2025.10.10',
 }));
 
-const ITEMS_PER_PAGE = 10;
+const ITEMS_PER_PAGE = 5;
 
 /* ----------------------------------------
-   RestoreFromSnapshotDrawer Component
+   ChangeCACertificateDrawer Component
    ---------------------------------------- */
 
-export function RestoreFromSnapshotDrawer({
+export function ChangeCACertificateDrawer({
   isOpen,
   onClose,
-  volume,
-  snapshots = defaultSnapshots,
-  onRestore,
-}: RestoreFromSnapshotDrawerProps) {
-  // Snapshot selection state
-  const [selectedSnapshotId, setSelectedSnapshotId] = useState<string | null>(null);
+  currentCertificate,
+  certificates = defaultCertificates,
+  onSubmit,
+}: ChangeCACertificateDrawerProps) {
+  // Certificate selection state
+  const [selectedCertificateId, setSelectedCertificateId] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // Filter snapshots
-  const filteredSnapshots = snapshots.filter((snap) =>
-    snap.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    snap.id.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    snap.type.toLowerCase().includes(searchQuery.toLowerCase())
+  // Filter certificates
+  const filteredCertificates = certificates.filter((cert) =>
+    cert.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    cert.id.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    cert.listeners.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  const totalPages = Math.ceil(filteredSnapshots.length / ITEMS_PER_PAGE);
-  const paginatedSnapshots = filteredSnapshots.slice(
+  const totalPages = Math.ceil(filteredCertificates.length / ITEMS_PER_PAGE);
+  const paginatedCertificates = filteredCertificates.slice(
     (currentPage - 1) * ITEMS_PER_PAGE,
     currentPage * ITEMS_PER_PAGE
   );
 
-  // Reset form when drawer opens
+  // Reset state when drawer opens
   useEffect(() => {
     if (isOpen) {
-      setSelectedSnapshotId(null);
+      setSelectedCertificateId(null);
       setSearchQuery('');
       setCurrentPage(1);
     }
   }, [isOpen]);
 
-  const handleRestore = async () => {
-    if (!selectedSnapshotId) return;
+  const handleSubmit = async () => {
+    if (!selectedCertificateId) return;
     
     setIsSubmitting(true);
     try {
-      await onRestore?.(selectedSnapshotId);
+      await onSubmit?.(selectedCertificateId);
       onClose();
     } finally {
       setIsSubmitting(false);
@@ -104,13 +102,13 @@ export function RestoreFromSnapshotDrawer({
   };
 
   const handleClose = () => {
-    setSelectedSnapshotId(null);
+    setSelectedCertificateId(null);
     setSearchQuery('');
     setCurrentPage(1);
     onClose();
   };
 
-  const selectedSnapshot = snapshots.find((s) => s.id === selectedSnapshotId);
+  const selectedCertificate = certificates.find((c) => c.id === selectedCertificateId);
 
   return (
     <Drawer
@@ -130,44 +128,39 @@ export function RestoreFromSnapshotDrawer({
           </Button>
           <Button 
             variant="primary" 
-            onClick={handleRestore}
-            disabled={!selectedSnapshotId || isSubmitting}
+            onClick={handleSubmit}
+            disabled={!selectedCertificateId || isSubmitting}
             className="w-[152px] h-8"
           >
-            {isSubmitting ? 'Restoring...' : 'Restore'}
+            {isSubmitting ? 'Changing...' : 'Change'}
           </Button>
         </HStack>
       }
     >
       <VStack gap={6} className="h-full">
         {/* Header Section */}
-        <VStack gap={2}>
-          <VStack gap={0}>
-            <h2 className="text-[16px] font-semibold text-[var(--color-text-default)] leading-6">
-              Restore From Snapshot
-            </h2>
-          </VStack>
-          <p className="text-[12px] text-[var(--color-text-subtle)] leading-4">
-            Create a new image using this volume as the source. The image will contain all data currently stored on the volume and can be used to launch new instances.
-          </p>
+        <VStack gap={3}>
+          <h2 className="text-[16px] font-semibold text-[var(--color-text-default)] leading-6">
+            Change CA Certificate
+          </h2>
+
+          {/* Current Certificate Info Box */}
+          <div className="w-full bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
+            <VStack gap={1.5}>
+              <span className="text-[11px] font-medium text-[var(--color-text-subtle)] leading-4">
+                Current CA Certificate
+              </span>
+              <span className="text-[12px] text-[var(--color-text-default)] leading-4">
+                {currentCertificate.name} (expired on {currentCertificate.expiredOn})
+              </span>
+            </VStack>
+          </div>
         </VStack>
 
-        {/* Volume Info Box */}
-        <div className="w-full bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
-          <VStack gap={1.5}>
-            <span className="text-[11px] font-medium text-[var(--color-text-subtle)] leading-4">
-              Volume
-            </span>
-            <span className="text-[12px] text-[var(--color-text-default)] leading-4">
-              {volume.name}
-            </span>
-          </VStack>
-        </div>
-
-        {/* Volume Snapshots Section */}
-        <VStack gap={3}>
+        {/* New Certificate Section */}
+        <VStack gap={3} className="w-full pb-5">
           <h3 className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
-            Volume snapshots
+            New CA Certificate
           </h3>
 
           {/* Search */}
@@ -176,7 +169,7 @@ export function RestoreFromSnapshotDrawer({
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               onClear={() => setSearchQuery('')}
-              placeholder="Search snapshot by attributes"
+              placeholder="Search certificate by attributes"
               size="sm"
               fullWidth
             />
@@ -186,11 +179,11 @@ export function RestoreFromSnapshotDrawer({
           <Pagination
             currentPage={currentPage}
             totalPages={totalPages}
-            totalItems={filteredSnapshots.length}
+            totalItems={filteredCertificates.length}
             onPageChange={setCurrentPage}
           />
 
-          {/* Snapshots Table */}
+          {/* Certificates Table */}
           <div className="flex flex-col gap-[var(--table-row-gap)]" style={{ width: '648px', maxWidth: '648px' }}>
             {/* Header */}
             <div className="flex items-stretch min-h-[var(--table-row-height)] bg-[var(--table-header-bg)] border border-[var(--color-border-default)] rounded-[var(--table-row-radius)]">
@@ -202,71 +195,64 @@ export function RestoreFromSnapshotDrawer({
                 Name
                 <IconChevronDown size={12} />
               </div>
-              <div className="flex-1 flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] border-l border-[var(--color-border-default)]">
-                Type
-              </div>
               <div className="flex-1 flex items-center gap-1.5 px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] border-l border-[var(--color-border-default)] cursor-pointer hover:text-[var(--color-action-primary)]">
-                Size
+                Listeners
                 <IconChevronDown size={12} />
               </div>
               <div className="flex-1 flex items-center gap-1.5 px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] border-l border-[var(--color-border-default)] cursor-pointer hover:text-[var(--color-action-primary)]">
-                Created At
+                Expires At
                 <IconChevronDown size={12} />
               </div>
             </div>
 
             {/* Rows */}
-            {paginatedSnapshots.map((snap) => (
+            {paginatedCertificates.map((cert) => (
               <div 
-                key={snap.id}
+                key={cert.id}
                 className={`flex items-stretch min-h-[var(--table-row-height)] border rounded-[var(--table-row-radius)] cursor-pointer transition-all ${
-                  selectedSnapshotId === snap.id 
+                  selectedCertificateId === cert.id 
                     ? 'bg-[var(--color-state-info-bg)] border-[var(--color-action-primary)]' 
                     : 'bg-[var(--color-surface-default)] border-[var(--color-border-default)] hover:bg-[var(--table-row-hover-bg)]'
                 }`}
-                onClick={() => setSelectedSnapshotId(snap.id)}
+                onClick={() => setSelectedCertificateId(cert.id)}
               >
                 {/* Radio */}
                 <div className="w-[var(--table-checkbox-width)] flex items-center justify-center" onClick={(e) => e.stopPropagation()}>
                   <Radio
-                    name="snapshot-select"
-                    value={snap.id}
-                    checked={selectedSnapshotId === snap.id}
-                    onChange={() => setSelectedSnapshotId(snap.id)}
+                    name="certificate-select"
+                    value={cert.id}
+                    checked={selectedCertificateId === cert.id}
+                    onChange={() => setSelectedCertificateId(cert.id)}
                   />
                 </div>
                 {/* Status */}
                 <div className="w-[59px] flex items-center justify-center">
-                  <StatusIndicator status={snap.status} layout="icon-only" size="sm" />
+                  <StatusIndicator status={cert.status} layout="icon-only" size="sm" />
                 </div>
                 {/* Name with ID */}
                 <div className="flex-1 flex flex-col justify-center gap-0.5 px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] min-w-0 overflow-hidden">
                   <HStack gap={1.5} align="center">
-                    <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-action-primary)] truncate">{snap.name}</span>
-                    <IconExternalLink size={12} className="shrink-0 text-[var(--color-action-primary)]" />
+                    <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-action-primary)] truncate">{cert.name}</span>
+                    <IconExternalLink size={12} stroke={1.5} className="shrink-0 text-[var(--color-action-primary)]" />
                   </HStack>
-                  <span className="text-[11px] text-[var(--color-text-subtle)] truncate">ID : {snap.id}</span>
+                  <span className="text-[11px] text-[var(--color-text-subtle)] truncate">ID : {cert.id}</span>
                 </div>
-                {/* Type */}
+                {/* Listeners */}
                 <div className="flex-1 flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] min-w-0 overflow-hidden">
-                  <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)] truncate">{snap.type}</span>
+                  <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)] truncate">{cert.listeners}</span>
                 </div>
-                {/* Size */}
+                {/* Expires At */}
                 <div className="flex-1 flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] min-w-0 overflow-hidden">
-                  <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)] truncate">{snap.size}GiB</span>
-                </div>
-                {/* Created At */}
-                <div className="flex-1 flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] min-w-0 overflow-hidden">
-                  <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)] truncate">{snap.createdAt}</span>
+                  <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)] truncate">{cert.expiresAt}</span>
                 </div>
               </div>
             ))}
           </div>
 
-          {/* Selection Indicator */}
+          {/* Selection Indicator - directly under the table */}
           <SelectionIndicator
-            selectedItems={selectedSnapshot ? [{ id: selectedSnapshot.id, label: selectedSnapshot.name }] : []}
-            onRemove={() => setSelectedSnapshotId(null)}
+            selectedItems={selectedCertificate ? [{ id: selectedCertificate.id, label: selectedCertificate.name }] : []}
+            onRemove={() => setSelectedCertificateId(null)}
             emptyText="No item Selected"
             className="shrink-0"
             style={{ width: '648px' }}
@@ -277,4 +263,4 @@ export function RestoreFromSnapshotDrawer({
   );
 }
 
-export default RestoreFromSnapshotDrawer;
+export default ChangeCACertificateDrawer;

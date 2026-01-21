@@ -130,8 +130,7 @@ export function AssociateFloatingIPToLBDrawer({
             <Button 
               variant="secondary" 
               onClick={handleClose}
-              size="md"
-              className="w-[152px]"
+              className="w-[152px] h-8"
             >
               Cancel
             </Button>
@@ -139,8 +138,7 @@ export function AssociateFloatingIPToLBDrawer({
               variant="primary" 
               onClick={handleAssociate}
               disabled={!selectedFloatingIpId || isSubmitting}
-              size="md"
-              className="w-[152px]"
+              className="w-[152px] h-8"
             >
               {isSubmitting ? 'Associating...' : 'Associate'}
             </Button>
