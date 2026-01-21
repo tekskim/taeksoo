@@ -1,4 +1,4 @@
-import { cloneElement, isValidElement, type HTMLAttributes, type ReactNode } from 'react';
+import { cloneElement, isValidElement, memo, type HTMLAttributes, type ReactNode } from 'react';
 import { twMerge } from 'tailwind-merge';
 import {
   IconAlertTriangle,
@@ -215,7 +215,7 @@ export interface StatusIndicatorProps extends Omit<HTMLAttributes<HTMLSpanElemen
    StatusIndicator Component
    ---------------------------------------- */
 
-export function StatusIndicator({
+export const StatusIndicator = memo(function StatusIndicator({
   status,
   layout = 'icon-only',
   size = 'md',
@@ -321,9 +321,5 @@ export function StatusIndicator({
       <span>{displayLabel}</span>
     </span>
   );
-}
-
-
-
-
+});
 

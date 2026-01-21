@@ -1,4 +1,4 @@
-import { forwardRef, useId, useState, type InputHTMLAttributes, type ReactNode } from 'react';
+import { forwardRef, useId, useState, useEffect, useRef, type InputHTMLAttributes, type ReactNode } from 'react';
 import { twMerge } from 'tailwind-merge';
 import { IconCheck, IconMinus } from '@tabler/icons-react';
 
@@ -39,12 +39,25 @@ export const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
       id,
       ...props
     },
-    ref
+    forwardedRef
   ) => {
     const generatedId = useId();
     const inputId = id ?? generatedId;
     const descriptionId = description ? `${inputId}-description` : undefined;
     const errorId = errorMessage ? `${inputId}-error` : undefined;
+
+    // Internal ref for indeterminate state
+    const internalRef = useRef<HTMLInputElement>(null);
+    
+    // Combine refs
+    const setRefs = (element: HTMLInputElement | null) => {
+      (internalRef as React.MutableRefObject<HTMLInputElement | null>).current = element;
+      if (typeof forwardedRef === 'function') {
+        forwardedRef(element);
+      } else if (forwardedRef) {
+        forwardedRef.current = element;
+      }
+    };
 
     // Internal state for uncontrolled mode
     const [internalChecked, setInternalChecked] = useState(defaultChecked ?? false);
@@ -52,6 +65,13 @@ export const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
     // Use controlled value if provided, otherwise use internal state
     const isControlled = checked !== undefined;
     const isCheckedValue = isControlled ? checked : internalChecked;
+
+    // Set indeterminate property on the input element (can't be set via attribute)
+    useEffect(() => {
+      if (internalRef.current) {
+        internalRef.current.indeterminate = indeterminate;
+      }
+    }, [indeterminate]);
 
     // Determine visual state
     const isChecked = isCheckedValue || indeterminate;
@@ -115,13 +135,14 @@ export const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
         >
           {/* Hidden native checkbox */}
           <input
-            ref={ref}
+            ref={setRefs}
             type="checkbox"
             id={inputId}
             checked={isCheckedValue}
             disabled={disabled}
             onChange={handleChange}
-            aria-checked={indeterminate ? 'mixed' : isCheckedValue}
+            // Note: indeterminate state is set via ref in useEffect
+            // as it cannot be set via HTML attribute
             aria-describedby={[descriptionId, errorId].filter(Boolean).join(' ') || undefined}
             aria-invalid={error || undefined}
             className="sr-only peer"
