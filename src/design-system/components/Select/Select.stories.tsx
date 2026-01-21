@@ -29,32 +29,138 @@ const meta: Meta<typeof Select> = {
   title: 'Components/Select',
   component: Select,
   tags: ['autodocs'],
+  parameters: {
+    docs: {
+      description: {
+        component: `
+## Select 컴포넌트
+
+드롭다운에서 옵션을 선택하는 폼 컴포넌트입니다.
+
+### 너비 정책
+- **고정 너비**: sm (160px), md (240px), lg (320px)
+- **fullWidth**: 부모 컨테이너에 맞춤
+
+### 사용 시기
+- 미리 정의된 옵션 중 하나 선택
+- 국가, 카테고리, 상태 등 선택
+
+### 접근성
+- 키보드 네비게이션 지원 (↑↓ 화살표, Enter, ESC)
+- aria-expanded, aria-haspopup 자동 적용
+- 스크린리더 옵션 읽기 지원
+
+### 예시
+\`\`\`tsx
+import { Select } from '@thaki/tds';
+
+const options = [
+  { value: 'kr', label: '대한민국' },
+  { value: 'us', label: 'United States' },
+];
+
+// 기본 사용
+<Select 
+  label="국가"
+  options={options}
+  placeholder="선택하세요"
+/>
+
+// Controlled
+<Select 
+  value={country}
+  onChange={setCountry}
+  options={options}
+/>
+
+// 선택 해제 가능
+<Select 
+  options={options}
+  clearable
+/>
+\`\`\`
+        `,
+      },
+    },
+  },
   argTypes: {
     size: {
       control: 'select',
       options: ['sm', 'md'],
-      description: '셀렉트 높이',
+      description: '셀렉트 높이 (sm: 28px, md: 32px)',
+      table: {
+        type: { summary: '"sm" | "md"' },
+        defaultValue: { summary: '"md"' },
+      },
     },
     width: {
       control: 'select',
       options: ['sm', 'md', 'lg'],
-      description: '셀렉트 너비 (sm: 160px, md: 240px, lg: 320px)',
+      description: '셀렉트 고정 너비',
+      table: {
+        type: { summary: '"sm" | "md" | "lg"' },
+        defaultValue: { summary: '"md"' },
+        category: '크기',
+      },
+    },
+    label: {
+      control: 'text',
+      description: '셀렉트 라벨',
+      table: {
+        type: { summary: 'string' },
+      },
+    },
+    helperText: {
+      control: 'text',
+      description: '도움말 텍스트',
+      table: {
+        type: { summary: 'string' },
+      },
+    },
+    error: {
+      control: 'text',
+      description: '에러 메시지',
+      table: {
+        type: { summary: 'string' },
+      },
     },
     disabled: {
       control: 'boolean',
       description: '비활성화 상태',
+      table: {
+        type: { summary: 'boolean' },
+        defaultValue: { summary: 'false' },
+      },
     },
     fullWidth: {
       control: 'boolean',
-      description: '전체 너비',
+      description: '부모 컨테이너 너비에 맞춤',
+      table: {
+        type: { summary: 'boolean' },
+        defaultValue: { summary: 'false' },
+      },
     },
     required: {
       control: 'boolean',
-      description: '필수 필드 표시',
+      description: '필수 필드 표시 (*)',
+      table: {
+        type: { summary: 'boolean' },
+        defaultValue: { summary: 'false' },
+      },
     },
     clearable: {
       control: 'boolean',
-      description: '선택 해제 버튼 표시',
+      description: '선택 해제 버튼 표시 (X 아이콘)',
+      table: {
+        type: { summary: 'boolean' },
+        defaultValue: { summary: 'false' },
+      },
+    },
+    options: {
+      description: '선택 가능한 옵션 배열',
+      table: {
+        type: { summary: 'Array<{ value: string; label: string; disabled?: boolean }>' },
+      },
     },
   },
   args: {

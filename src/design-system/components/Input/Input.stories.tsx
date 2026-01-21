@@ -7,32 +7,131 @@ const meta: Meta<typeof Input> = {
   title: 'Components/Input',
   component: Input,
   tags: ['autodocs'],
+  parameters: {
+    docs: {
+      description: {
+        component: `
+## Input 컴포넌트
+
+텍스트 입력을 위한 기본 폼 컴포넌트입니다.
+
+### 사용 시기
+- 단일 줄 텍스트 입력 (이름, 이메일, 비밀번호 등)
+- 검색 필드
+- 폼 내 데이터 입력
+
+### 너비 정책
+- **기본**: 고정 너비 (컴포넌트 기본값)
+- **fullWidth**: 부모 컨테이너에 맞춤
+
+### 접근성
+- \`label\` prop으로 라벨 자동 연결 (aria-labelledby)
+- 에러 메시지 스크린리더 전달 (aria-invalid, aria-describedby)
+- \`required\` 표시 자동 처리
+
+### 예시
+\`\`\`tsx
+import { Input } from '@thaki/tds';
+
+// 기본 사용
+<Input label="이름" placeholder="홍길동" />
+
+// 에러 상태
+<Input label="이메일" error="유효하지 않은 이메일입니다" />
+
+// 아이콘 포함
+<Input 
+  leftElement={<IconMail />} 
+  placeholder="이메일 입력" 
+/>
+\`\`\`
+        `,
+      },
+    },
+  },
   argTypes: {
     size: {
       control: 'select',
       options: ['sm', 'md'],
-      description: '입력 필드 크기',
+      description: '입력 필드 크기 (sm: 28px, md: 32px)',
+      table: {
+        type: { summary: '"sm" | "md"' },
+        defaultValue: { summary: '"md"' },
+      },
     },
     variant: {
       control: 'select',
       options: ['default', 'search', 'code'],
-      description: '입력 필드 변형',
+      description: '입력 필드 스타일 변형',
+      table: {
+        type: { summary: '"default" | "search" | "code"' },
+        defaultValue: { summary: '"default"' },
+      },
+    },
+    label: {
+      control: 'text',
+      description: '입력 필드 라벨',
+      table: {
+        type: { summary: 'string' },
+      },
+    },
+    helperText: {
+      control: 'text',
+      description: '도움말 텍스트 (라벨 아래 표시)',
+      table: {
+        type: { summary: 'string' },
+      },
+    },
+    error: {
+      control: 'text',
+      description: '에러 메시지 (표시 시 빨간색 테두리)',
+      table: {
+        type: { summary: 'string' },
+      },
     },
     disabled: {
       control: 'boolean',
       description: '비활성화 상태',
+      table: {
+        type: { summary: 'boolean' },
+        defaultValue: { summary: 'false' },
+      },
     },
     readOnly: {
       control: 'boolean',
       description: '읽기 전용 상태',
+      table: {
+        type: { summary: 'boolean' },
+        defaultValue: { summary: 'false' },
+      },
     },
     fullWidth: {
       control: 'boolean',
-      description: '전체 너비',
+      description: '부모 컨테이너 너비에 맞춤',
+      table: {
+        type: { summary: 'boolean' },
+        defaultValue: { summary: 'false' },
+      },
     },
     required: {
       control: 'boolean',
-      description: '필수 필드 표시',
+      description: '필수 필드 표시 (*)',
+      table: {
+        type: { summary: 'boolean' },
+        defaultValue: { summary: 'false' },
+      },
+    },
+    leftElement: {
+      description: '입력 필드 왼쪽에 표시할 요소 (아이콘 등)',
+      table: {
+        type: { summary: 'ReactNode' },
+      },
+    },
+    rightElement: {
+      description: '입력 필드 오른쪽에 표시할 요소 (아이콘, 버튼 등)',
+      table: {
+        type: { summary: 'ReactNode' },
+      },
     },
   },
   args: {

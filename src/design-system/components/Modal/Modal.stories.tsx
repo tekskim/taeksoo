@@ -8,19 +8,109 @@ const meta: Meta<typeof Modal> = {
   title: 'Components/Modal',
   component: Modal,
   tags: ['autodocs'],
+  parameters: {
+    docs: {
+      description: {
+        component: `
+## Modal 컴포넌트
+
+사용자의 주의를 집중시키는 오버레이 다이얼로그입니다.
+
+### 종류
+- **Modal**: 커스텀 콘텐츠를 담는 기본 모달
+- **ConfirmModal**: 확인/취소 액션이 있는 확인 모달
+
+### 사용 시기
+- 중요한 정보 확인
+- 삭제/제출 전 확인
+- 폼 입력 (간단한 경우)
+- 에러/경고 메시지
+
+### 접근성
+- ESC 키로 닫기 지원
+- 포커스 트랩 (모달 내에서만 Tab 이동)
+- 배경 클릭으로 닫기 (선택적)
+- aria-modal, role="dialog" 자동 적용
+
+### 예시
+\`\`\`tsx
+import { Modal, ConfirmModal } from '@thaki/tds';
+
+// 기본 모달
+<Modal
+  isOpen={isOpen}
+  onClose={() => setIsOpen(false)}
+  title="제목"
+>
+  내용
+</Modal>
+
+// 확인 모달
+<ConfirmModal
+  isOpen={isOpen}
+  onClose={() => setIsOpen(false)}
+  onConfirm={handleConfirm}
+  title="삭제 확인"
+  description="정말 삭제하시겠습니까?"
+  confirmVariant="danger"
+/>
+\`\`\`
+        `,
+      },
+    },
+  },
   argTypes: {
     size: {
       control: 'select',
       options: ['sm', 'md', 'lg'],
-      description: '모달 크기',
+      description: '모달 크기 (sm: 400px, md: 480px, lg: 640px)',
+      table: {
+        type: { summary: '"sm" | "md" | "lg"' },
+        defaultValue: { summary: '"md"' },
+      },
+    },
+    title: {
+      control: 'text',
+      description: '모달 제목',
+      table: {
+        type: { summary: 'string' },
+      },
+    },
+    description: {
+      control: 'text',
+      description: '모달 설명 (제목 아래 표시)',
+      table: {
+        type: { summary: 'string' },
+      },
     },
     closeOnBackdropClick: {
       control: 'boolean',
-      description: '배경 클릭시 닫기',
+      description: '배경 클릭시 닫기 여부',
+      table: {
+        type: { summary: 'boolean' },
+        defaultValue: { summary: 'true' },
+      },
     },
     closeOnEscape: {
       control: 'boolean',
-      description: 'Escape 키로 닫기',
+      description: 'ESC 키로 닫기 여부',
+      table: {
+        type: { summary: 'boolean' },
+        defaultValue: { summary: 'true' },
+      },
+    },
+    isOpen: {
+      control: 'boolean',
+      description: '모달 열림 상태',
+      table: {
+        type: { summary: 'boolean' },
+      },
+    },
+    onClose: {
+      description: '모달 닫기 콜백',
+      table: {
+        type: { summary: '() => void' },
+      },
     },
   },
 };
