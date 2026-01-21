@@ -4,6 +4,7 @@ import { useTabs } from '@/contexts/TabContext';
 import { TopBar, Breadcrumb, TabBar } from '@/design-system';
 import { Button, VStack, HStack, Badge, Modal, Disclosure } from '@/design-system';
 import { IconAlertCircle, IconChevronRight, IconChevronDown, IconCopy, IconCheck } from '@tabler/icons-react';
+import { DeleteClusterModal } from '@/components/DeleteClusterModal';
 
 /* ----------------------------------------
    Modal List Item Component
@@ -119,6 +120,9 @@ export function ModalsPage() {
   
   // Storage Modal states
   const [isDeleteBucketOpen, setIsDeleteBucketOpen] = useState(false);
+  
+  // Container Modal states
+  const [isDeleteClusterOpen, setIsDeleteClusterOpen] = useState(false);
   
   // Disclosure states
   const [isComputeOpen, setIsComputeOpen] = useState(false);
@@ -622,19 +626,29 @@ export function ModalsPage() {
                           Modals
                         </span>
                         <span className="text-[12px] text-[var(--color-text-subtle)]">
-                          (0 modals)
+                          (1 modal)
                         </span>
                       </div>
                     </div>
                   </Disclosure.Trigger>
                   <Disclosure.Panel>
-                    <div className="p-6 mt-4 rounded-xl border border-dashed border-[var(--color-border-default)] bg-[var(--color-surface-subtle)]">
-                      <VStack gap={2} className="items-center justify-center h-full">
-                        <p className="text-[14px] text-[var(--color-text-muted)]">
-                          Container modals will be added here...
-                        </p>
+                    <VStack gap={4} className="pt-4">
+                      {/* Cluster Actions */}
+                      <VStack gap={2}>
+                        <h2 className="text-[14px] font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
+                          Cluster Actions
+                        </h2>
+                        <div className="flex flex-col gap-2">
+                          <ModalListItem
+                            title="Delete Cluster"
+                            description="Confirm deletion of a Kubernetes cluster."
+                            category="Cluster"
+                            size="sm"
+                            onOpen={() => setIsDeleteClusterOpen(true)}
+                          />
+                        </div>
                       </VStack>
-                    </div>
+                    </VStack>
                   </Disclosure.Panel>
                 </Disclosure>
 
@@ -3046,6 +3060,21 @@ export function ModalsPage() {
           </Button>
         </div>
       </Modal>
+
+      {/* =============================================
+          CONTAINER MODALS
+          ============================================= */}
+
+      {/* Delete Cluster Modal */}
+      <DeleteClusterModal
+        isOpen={isDeleteClusterOpen}
+        onClose={() => setIsDeleteClusterOpen(false)}
+        cluster={{ id: 'cluster-001', name: 'production-cluster' }}
+        onConfirm={() => {
+          console.log('Cluster deleted');
+          setIsDeleteClusterOpen(false);
+        }}
+      />
     </div>
   );
 }
