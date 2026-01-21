@@ -165,9 +165,10 @@ export function ResourceTypeSearchDrawer({
       <VStack gap={4}>
         {/* Search Input */}
         <SearchInput
-          placeholder="Type to search for a resource type..."
+          placeholder="Search resource type by name"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
+          onClear={() => setSearchQuery('')}
           fullWidth
         />
 
