@@ -149,9 +149,9 @@ export function ResizeInstanceDrawer({
       showCloseButton={false}
       width={696}
       footer={
-        <VStack gap={4} className="w-full">
+        <VStack gap={0} className="w-full">
           {/* Quota Section */}
-          <VStack gap={6} className="w-full px-0 pt-4 border-t border-[var(--color-border-subtle)]">
+          <VStack gap={6} className="w-full border-t border-[var(--color-border-subtle)] px-[var(--space-6)] py-[var(--space-4)]">
             {/* vCPU Quota */}
             <VStack gap={2} className="w-full">
               <HStack justify="space-between" className="w-full">
@@ -192,12 +192,11 @@ export function ResizeInstanceDrawer({
           </VStack>
 
           {/* Buttons */}
-          <HStack gap={2} justify="center" className="w-full pt-4 border-t border-[var(--color-border-subtle)]">
+          <HStack gap={2} justify="center" className="w-full">
             <Button 
               variant="secondary" 
               onClick={handleClose}
-              size="md"
-              className="w-[152px]"
+              className="w-[152px] h-8"
             >
               Cancel
             </Button>
@@ -205,8 +204,7 @@ export function ResizeInstanceDrawer({
               variant="primary" 
               onClick={handleResize}
               disabled={isSubmitting || !selectedFlavorId}
-              size="md"
-              className="w-[152px]"
+              className="w-[152px] h-8"
             >
               {isSubmitting ? 'Resizing...' : 'Resize'}
             </Button>
@@ -372,8 +370,8 @@ export function ResizeInstanceDrawer({
           <div style={{ width: '648px', maxWidth: '648px' }}>
             {/* Header */}
             <div style={{ display: 'flex', width: '648px', height: '40px' }} className="bg-[var(--color-border-subtle)] border border-[var(--color-border-default)] rounded-md">
-              <div style={{ width: '90px', flexShrink: 0 }} className="flex items-center px-3">
-                <span className="text-[11px] font-medium text-[var(--color-text-default)]">Comparison</span>
+              <div style={{ width: '90px', flexShrink: 0 }} className="flex items-center justify-start px-3">
+                <span className="text-[11px] font-medium text-[var(--color-text-default)] text-left">Comparison</span>
               </div>
               <div style={{ width: '90px', flexShrink: 0 }} className="flex items-center px-3 border-l border-[var(--color-border-default)]">
                 <span className="text-[11px] font-medium text-[var(--color-text-default)]">Name</span>
@@ -400,8 +398,8 @@ export function ResizeInstanceDrawer({
 
             {/* Current Flavor Row */}
             <div style={{ display: 'flex', width: '648px', minHeight: '40px', marginTop: '4px' }} className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-md">
-              <div style={{ width: '90px', flexShrink: 0 }} className="flex items-center justify-center px-3 py-2">
-                <span className="text-[12px] text-[var(--color-text-default)] text-center">Current<br/>flavor</span>
+              <div style={{ width: '90px', flexShrink: 0 }} className="flex items-center justify-start px-3 py-2">
+                <span className="text-[12px] text-[var(--color-text-default)] text-left">Current<br/>flavor</span>
               </div>
               <div style={{ width: '90px', flexShrink: 0 }} className="flex flex-col justify-center px-3 py-2 overflow-hidden">
                 <div className="flex items-center gap-1.5">
@@ -432,8 +430,8 @@ export function ResizeInstanceDrawer({
 
             {/* Target Flavor Row */}
             <div style={{ display: 'flex', width: '648px', minHeight: '40px', marginTop: '4px' }} className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-md">
-              <div style={{ width: '90px', flexShrink: 0 }} className="flex items-center justify-center px-3 py-2">
-                <span className="text-[12px] text-[var(--color-text-default)] text-center">Target<br/>flavor</span>
+              <div style={{ width: '90px', flexShrink: 0 }} className="flex items-center justify-start px-3 py-2">
+                <span className="text-[12px] text-[var(--color-text-default)] text-left">Target<br/>flavor</span>
               </div>
               <div style={{ width: '90px', flexShrink: 0 }} className="flex flex-col justify-center px-3 py-2 overflow-hidden">
                 {selectedFlavor ? (
@@ -471,7 +469,7 @@ export function ResizeInstanceDrawer({
         </VStack>
 
         {/* Approval Method Section */}
-        <VStack gap={3}>
+        <VStack gap={3} className="pb-5">
           <span className="text-[14px] font-medium text-[var(--color-text-default)]">Approval Method</span>
           
           <VStack gap={3}>

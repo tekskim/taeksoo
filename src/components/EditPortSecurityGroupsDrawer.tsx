@@ -199,8 +199,7 @@ export function EditPortSecurityGroupsDrawer({
             <Button 
               variant="secondary" 
               onClick={handleClose}
-              size="md"
-              className="w-[152px]"
+              className="w-[152px] h-8"
             >
               Cancel
             </Button>
@@ -208,8 +207,7 @@ export function EditPortSecurityGroupsDrawer({
               variant="primary" 
               onClick={handleSave}
               disabled={isSubmitting}
-              size="md"
-              className="w-[152px]"
+              className="w-[152px] h-8"
             >
               {isSubmitting ? 'Saving...' : 'Save'}
             </Button>

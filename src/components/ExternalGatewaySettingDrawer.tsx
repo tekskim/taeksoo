@@ -5,78 +5,84 @@ import {
   SearchInput,
   Pagination,
   Radio,
+  Toggle,
   StatusIndicator,
   SelectionIndicator,
 } from '@/design-system';
 import { HStack, VStack } from '@/design-system/layouts';
-import { IconExternalLink, IconLock } from '@tabler/icons-react';
+import { IconExternalLink } from '@tabler/icons-react';
 
 /* ----------------------------------------
    Types
    ---------------------------------------- */
 
-export interface InstanceItem {
+export interface NetworkItem {
   id: string;
   name: string;
   status: 'active' | 'error' | 'building' | 'shutoff';
-  locked: boolean;
-  fixedIp: string;
-  floatingIp: string | null;
-  az: string;
+  subnetCidr: string;
+  size: string;
 }
 
-export interface AttachPortToInstanceDrawerProps {
+export interface RouterInfo {
+  name: string;
+}
+
+export interface ExternalGatewaySettingDrawerProps {
   isOpen: boolean;
   onClose: () => void;
-  portId: string;
-  portName: string;
-  instances?: InstanceItem[];
-  onSubmit?: (data: { instanceId: string }) => void;
+  router: RouterInfo;
+  initialGatewayEnabled?: boolean;
+  initialSelectedNetworkId?: string | null;
+  networks?: NetworkItem[];
+  onSubmit?: (data: { gatewayEnabled: boolean; networkId: string | null }) => void;
 }
 
 /* ----------------------------------------
    Mock Data
    ---------------------------------------- */
 
-const defaultInstances: InstanceItem[] = Array.from({ length: 115 }, (_, i) => ({
+const defaultNetworks: NetworkItem[] = Array.from({ length: 115 }, (_, i) => ({
   id: `29tgj${234 + i}`,
-  name: 'server-1',
+  name: 'net-01',
   status: 'active',
-  locked: true,
-  fixedIp: '10.62.0.31',
-  floatingIp: null,
-  az: 'zone-a',
+  subnetCidr: '10.0.0.0/24',
+  size: 'On',
 }));
 
 const ITEMS_PER_PAGE = 10;
 
 /* ----------------------------------------
-   AttachPortToInstanceDrawer Component
+   ExternalGatewaySettingDrawer Component
    ---------------------------------------- */
 
-export function AttachPortToInstanceDrawer({
+export function ExternalGatewaySettingDrawer({
   isOpen,
   onClose,
-  portId,
-  portName,
-  instances = defaultInstances,
+  router,
+  initialGatewayEnabled = true,
+  initialSelectedNetworkId = null,
+  networks = defaultNetworks,
   onSubmit,
-}: AttachPortToInstanceDrawerProps) {
-  // Instance selection state
-  const [selectedInstanceId, setSelectedInstanceId] = useState<string | null>(null);
+}: ExternalGatewaySettingDrawerProps) {
+  // Gateway toggle state
+  const [gatewayEnabled, setGatewayEnabled] = useState(initialGatewayEnabled);
+  
+  // Network selection state
+  const [selectedNetworkId, setSelectedNetworkId] = useState<string | null>(initialSelectedNetworkId);
   const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // Filter instances
-  const filteredInstances = instances.filter((inst) =>
-    inst.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    inst.id.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    inst.fixedIp.toLowerCase().includes(searchQuery.toLowerCase())
+  // Filter networks
+  const filteredNetworks = networks.filter((net) =>
+    net.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    net.id.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    net.subnetCidr.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  const totalPages = Math.ceil(filteredInstances.length / ITEMS_PER_PAGE);
-  const paginatedInstances = filteredInstances.slice(
+  const totalPages = Math.ceil(filteredNetworks.length / ITEMS_PER_PAGE);
+  const paginatedNetworks = filteredNetworks.slice(
     (currentPage - 1) * ITEMS_PER_PAGE,
     currentPage * ITEMS_PER_PAGE
   );
@@ -84,18 +90,20 @@ export function AttachPortToInstanceDrawer({
   // Reset state when drawer opens
   useEffect(() => {
     if (isOpen) {
-      setSelectedInstanceId(null);
+      setGatewayEnabled(initialGatewayEnabled);
+      setSelectedNetworkId(initialSelectedNetworkId);
       setSearchQuery('');
       setCurrentPage(1);
     }
-  }, [isOpen]);
+  }, [isOpen, initialGatewayEnabled, initialSelectedNetworkId]);
 
   const handleSubmit = async () => {
-    if (!selectedInstanceId) return;
-    
     setIsSubmitting(true);
     try {
-      await onSubmit?.({ instanceId: selectedInstanceId });
+      await onSubmit?.({
+        gatewayEnabled,
+        networkId: selectedNetworkId,
+      });
       onClose();
     } finally {
       setIsSubmitting(false);
@@ -103,19 +111,21 @@ export function AttachPortToInstanceDrawer({
   };
 
   const handleClose = () => {
-    setSelectedInstanceId(null);
+    setSelectedNetworkId(initialSelectedNetworkId);
+    setGatewayEnabled(initialGatewayEnabled);
     setSearchQuery('');
     setCurrentPage(1);
     onClose();
   };
 
-  const selectedInstance = instances.find((i) => i.id === selectedInstanceId);
+  const selectedNetwork = networks.find((n) => n.id === selectedNetworkId);
 
   return (
     <Drawer
       isOpen={isOpen}
       onClose={handleClose}
-      title="Attach to Instance"
+      title=""
+      showCloseButton={false}
       width={696}
       footer={
         <HStack gap={2} justify="center" className="w-full">
@@ -129,40 +139,64 @@ export function AttachPortToInstanceDrawer({
           <Button 
             variant="primary" 
             onClick={handleSubmit}
-            disabled={!selectedInstanceId || isSubmitting}
+            disabled={isSubmitting}
             className="w-[152px] h-8"
           >
-            {isSubmitting ? 'Attaching...' : 'Attach'}
+            {isSubmitting ? 'Saving...' : 'Save'}
           </Button>
         </HStack>
       }
     >
       <VStack gap={6} className="h-full">
-        {/* Port Info */}
-        <div className="w-full bg-[var(--color-surface-muted)] rounded-lg px-4 py-3">
-          <VStack gap={1.5}>
-            <span className="text-[11px] font-medium text-[var(--color-text-subtle)] leading-4">
-              Port name
-            </span>
-            <span className="text-[12px] text-[var(--color-text-default)] leading-4">
-              {portName}
-            </span>
+        {/* Header Section */}
+        <VStack gap={3} className="w-[648px]">
+          <VStack gap={2}>
+            <h2 className="text-[16px] font-semibold text-[var(--color-text-default)] leading-6">
+              External Gateway Setting
+            </h2>
+            <p className="text-[12px] text-[var(--color-text-subtle)] leading-4">
+              Configure or update the external gateway for this router. The external gateway connects your router to a public network, allowing instances in attached subnets to access external networks through floating IPs.
+            </p>
           </VStack>
-        </div>
 
-        {/* Instances Section */}
-        <VStack gap={3} className="w-full pb-5">
+          {/* Router Info Box */}
+          <div className="w-full bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
+            <VStack gap={1.5}>
+              <span className="text-[11px] font-medium text-[var(--color-text-subtle)] leading-4">
+                Router
+              </span>
+              <span className="text-[12px] text-[var(--color-text-default)] leading-4">
+                {router.name}
+              </span>
+            </VStack>
+          </div>
+        </VStack>
+
+        {/* External Gateway Toggle Section */}
+        <VStack gap={3}>
           <h3 className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
-            Instances
+            External gateway
           </h3>
+          <HStack gap={2} align="center">
+            <Toggle
+              checked={gatewayEnabled}
+              onChange={setGatewayEnabled}
+            />
+            <span className="text-[12px] text-[var(--color-text-default)]">
+              {gatewayEnabled ? 'Open' : 'Closed'}
+            </span>
+          </HStack>
+        </VStack>
 
+        {/* Network Selection Section */}
+        <VStack gap={3} className="w-full pb-5">
           {/* Search */}
           <div className="w-[280px]">
             <SearchInput
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               onClear={() => setSearchQuery('')}
-              placeholder="Search instance by attributes"
+              placeholder="Search network by attributes"
               size="sm"
               fullWidth
             />
@@ -172,11 +206,11 @@ export function AttachPortToInstanceDrawer({
           <Pagination
             currentPage={currentPage}
             totalPages={totalPages}
-            totalItems={filteredInstances.length}
+            totalItems={filteredNetworks.length}
             onPageChange={setCurrentPage}
           />
 
-          {/* Instances Table */}
+          {/* Networks Table */}
           <div className="flex flex-col gap-[var(--table-row-gap)]" style={{ width: '648px', maxWidth: '648px' }}>
             {/* Header */}
             <div className="flex items-stretch min-h-[var(--table-row-height)] bg-[var(--table-header-bg)] border border-[var(--color-border-default)] rounded-[var(--table-row-radius)]">
@@ -187,78 +221,62 @@ export function AttachPortToInstanceDrawer({
               <div className="flex-1 flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] border-l border-[var(--color-border-default)]">
                 Name
               </div>
-              <div className="w-[62px] flex items-center justify-center px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] border-l border-[var(--color-border-default)]">
-                Locked
+              <div className="flex-1 flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] border-l border-[var(--color-border-default)]">
+                Subnet CIDR
               </div>
               <div className="flex-1 flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] border-l border-[var(--color-border-default)]">
-                Fixed IP
-              </div>
-              <div className="flex-1 flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] border-l border-[var(--color-border-default)]">
-                Floating IP
-              </div>
-              <div className="flex-1 flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] border-l border-[var(--color-border-default)]">
-                AZ
+                Size
               </div>
             </div>
 
             {/* Rows */}
-            {paginatedInstances.map((inst) => (
+            {paginatedNetworks.map((net) => (
               <div 
-                key={inst.id}
+                key={net.id}
                 className={`flex items-stretch min-h-[var(--table-row-height)] border rounded-[var(--table-row-radius)] cursor-pointer transition-all ${
-                  selectedInstanceId === inst.id 
+                  selectedNetworkId === net.id 
                     ? 'bg-[var(--color-state-info-bg)] border-[var(--color-action-primary)]' 
                     : 'bg-[var(--color-surface-default)] border-[var(--color-border-default)] hover:bg-[var(--table-row-hover-bg)]'
                 }`}
-                onClick={() => setSelectedInstanceId(inst.id)}
+                onClick={() => setSelectedNetworkId(net.id)}
               >
                 {/* Radio */}
                 <div className="w-[var(--table-checkbox-width)] flex items-center justify-center" onClick={(e) => e.stopPropagation()}>
                   <Radio
-                    name="instance-select"
-                    value={inst.id}
-                    checked={selectedInstanceId === inst.id}
-                    onChange={() => setSelectedInstanceId(inst.id)}
+                    name="network-select"
+                    value={net.id}
+                    checked={selectedNetworkId === net.id}
+                    onChange={() => setSelectedNetworkId(net.id)}
                   />
                 </div>
                 {/* Status */}
                 <div className="w-[59px] flex items-center justify-center">
-                  <StatusIndicator status={inst.status} layout="icon-only" size="sm" />
+                  <StatusIndicator status={net.status} layout="icon-only" size="sm" />
                 </div>
                 {/* Name with ID */}
                 <div className="flex-1 flex flex-col justify-center gap-0.5 px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] min-w-0 overflow-hidden">
                   <HStack gap={1.5} align="center">
-                    <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-action-primary)] truncate">{inst.name}</span>
+                    <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-action-primary)] truncate">{net.name}</span>
                     <IconExternalLink size={12} stroke={1.5} className="shrink-0 text-[var(--color-action-primary)]" />
                   </HStack>
-                  <span className="text-[11px] text-[var(--color-text-subtle)] truncate">ID : {inst.id}</span>
+                  <span className="text-[11px] text-[var(--color-text-subtle)] truncate">ID : {net.id}</span>
                 </div>
-                {/* Locked */}
-                <div className="w-[62px] flex items-center justify-center">
-                  {inst.locked && (
-                    <IconLock size={16} stroke={1.5} className="text-[var(--color-text-default)]" />
-                  )}
-                </div>
-                {/* Fixed IP */}
+                {/* Subnet CIDR */}
                 <div className="flex-1 flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] min-w-0 overflow-hidden">
-                  <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)] truncate">{inst.fixedIp}</span>
+                  <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)] truncate">{net.subnetCidr}</span>
                 </div>
-                {/* Floating IP */}
+                {/* Size */}
                 <div className="flex-1 flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] min-w-0 overflow-hidden">
-                  <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)] truncate">{inst.floatingIp ?? '-'}</span>
-                </div>
-                {/* AZ */}
-                <div className="flex-1 flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] min-w-0 overflow-hidden">
-                  <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)] truncate">{inst.az}</span>
+                  <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)] truncate">{net.size}</span>
                 </div>
               </div>
             ))}
           </div>
 
-          {/* Selection Indicator */}
+          {/* Selection Indicator - directly under the table */}
           <SelectionIndicator
-            selectedItems={selectedInstance ? [{ id: selectedInstance.id, label: selectedInstance.name }] : []}
-            onRemove={() => setSelectedInstanceId(null)}
+            selectedItems={selectedNetwork ? [{ id: selectedNetwork.id, label: selectedNetwork.name }] : []}
+            onRemove={() => setSelectedNetworkId(null)}
             emptyText="No item Selected"
             className="shrink-0"
             style={{ width: '648px' }}
@@ -269,4 +287,4 @@ export function AttachPortToInstanceDrawer({
   );
 }
 
-export default AttachPortToInstanceDrawer;
+export default ExternalGatewaySettingDrawer;
