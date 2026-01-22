@@ -29,9 +29,8 @@ export interface RollBackDeploymentModalProps {
    ---------------------------------------- */
 
 const defaultRevisions: RevisionOption[] = [
-  { value: 'rev-3', label: 'Revision 3 - 2024-01-15 10:30:00' },
-  { value: 'rev-2', label: 'Revision 2 - 2024-01-14 14:20:00' },
-  { value: 'rev-1', label: 'Revision 1 - 2024-01-13 09:15:00' },
+  { value: 'rev-2', label: 'Revision2, created at 2025. 11. 12 5:27:00 pm (current)' },
+  { value: 'rev-1', label: 'Revision1, created at 2025. 11. 11 4:16:59 pm' },
 ];
 
 /* ----------------------------------------
