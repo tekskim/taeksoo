@@ -12,6 +12,7 @@ import { DeleteCronJobModal } from '@/components/DeleteCronJobModal';
 import { DeleteDeploymentModal } from '@/components/DeleteDeploymentModal';
 import { DeleteStatefulSetModal } from '@/components/DeleteStatefulSetModal';
 import { DeleteDaemonSetModal } from '@/components/DeleteDaemonSetModal';
+import { RedeployDeploymentModal } from '@/components/RedeployDeploymentModal';
 
 /* ----------------------------------------
    Modal List Item Component
@@ -137,6 +138,7 @@ export function ModalsPage() {
   const [isDeleteDeploymentOpen, setIsDeleteDeploymentOpen] = useState(false);
   const [isDeleteStatefulSetOpen, setIsDeleteStatefulSetOpen] = useState(false);
   const [isDeleteDaemonSetOpen, setIsDeleteDaemonSetOpen] = useState(false);
+  const [isRedeployDeploymentOpen, setIsRedeployDeploymentOpen] = useState(false);
   
   // Disclosure states
   const [isComputeOpen, setIsComputeOpen] = useState(false);
@@ -640,7 +642,7 @@ export function ModalsPage() {
                           Modals
                         </span>
                         <span className="text-[12px] text-[var(--color-text-subtle)]">
-                          (8 modals)
+                          (9 modals)
                         </span>
                       </div>
                     </div>
@@ -689,6 +691,13 @@ export function ModalsPage() {
                             category="Deployment"
                             size="sm"
                             onOpen={() => setIsDeleteDeploymentOpen(true)}
+                          />
+                          <ModalListItem
+                            title="Redeploy Deployment"
+                            description="Redeploy a Kubernetes deployment with warning about downtime."
+                            category="Deployment"
+                            size="sm"
+                            onOpen={() => setIsRedeployDeploymentOpen(true)}
                           />
                           <ModalListItem
                             title="Delete StatefulSet"
@@ -3222,6 +3231,17 @@ export function ModalsPage() {
         onConfirm={() => {
           console.log('DaemonSet deleted');
           setIsDeleteDaemonSetOpen(false);
+        }}
+      />
+
+      {/* Redeploy Deployment Modal */}
+      <RedeployDeploymentModal
+        isOpen={isRedeployDeploymentOpen}
+        onClose={() => setIsRedeployDeploymentOpen(false)}
+        deployment={{ id: 'deploy-001', name: 'nginx-deployment' }}
+        onConfirm={() => {
+          console.log('Deployment redeployed');
+          setIsRedeployDeploymentOpen(false);
         }}
       />
     </div>
