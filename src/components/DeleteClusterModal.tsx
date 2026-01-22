@@ -37,7 +37,7 @@ export function DeleteClusterModal({
       isOpen={isOpen}
       onClose={onClose}
       title="Delete Cluster"
-      description="Are you sure you want to delete this cluster?"
+      description="Are you sure you want to delete this cluster? This action cannot be undone."
       infoLabel="Cluster name"
       infoValue={cluster?.name ?? ''}
       confirmText="Delete"

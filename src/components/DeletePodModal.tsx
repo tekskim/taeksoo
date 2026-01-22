@@ -37,7 +37,7 @@ export function DeletePodModal({
       isOpen={isOpen}
       onClose={onClose}
       title="Delete Pod"
-      description="Are you sure you want to delete this pod?"
+      description="Are you sure you want to delete this pod? This action cannot be undone."
       infoLabel="Pod name"
       infoValue={pod?.name ?? ''}
       confirmText="Delete"

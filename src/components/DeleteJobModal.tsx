@@ -37,7 +37,7 @@ export function DeleteJobModal({
       isOpen={isOpen}
       onClose={onClose}
       title="Delete Job"
-      description="Are you sure you want to delete this job?"
+      description="Are you sure you want to delete this job? This action cannot be undone."
       infoLabel="Job name"
       infoValue={job?.name ?? ''}
       confirmText="Delete"
