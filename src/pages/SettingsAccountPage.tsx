@@ -293,8 +293,8 @@ export default function SettingsAccountPage() {
                 </SectionCard>
 
                 {/* Logout */}
-                <div className="pt-6 border-t border-[var(--color-border-default)]">
-                  <Button variant="danger" size="md" onClick={() => setShowLogoutModal(true)}>
+                <div className="pt-6 border-t border-[var(--color-border-default)] flex justify-end">
+                  <Button variant="secondary" size="md" onClick={() => setShowLogoutModal(true)}>
                     Logout
                   </Button>
                 </div>

@@ -21,6 +21,26 @@ const meta: Meta<typeof Button> = {
 - **Ghost**: 텍스트처럼 보이지만 클릭 가능한 영역이 필요할 때
 - **Danger**: 삭제, 제거 등 위험한 액션
 
+### 사이즈 가이드라인
+
+| 사이즈 | 높이 | 권장 사용처 |
+|--------|------|------------|
+| **SM** | 28px | 테이블 툴바, 밀집된 UI, 반복 가능한 보조 액션 |
+| **MD** | 32px | 일반 폼, 모달/드로어 액션, 독립적인 CTA |
+| **LG** | 36px | 페이지 주요 CTA, 랜딩 페이지, 히어로 섹션 |
+
+#### 판단 기준
+1. **밀집된 UI인가?** → SM
+2. **독립적인 CTA인가?** → MD/LG
+3. **반복 가능한 액션인가?** → SM
+4. **폼의 최종 제출인가?** → MD/LG
+
+#### 수직 정렬 원칙
+같은 행에 있는 요소는 같은 사이즈를 사용하세요:
+- \`Input md (32px)\` + \`Button md (32px)\` ✓
+- \`SearchInput sm (28px)\` + \`Button sm (28px)\` ✓
+- \`Input md (32px)\` + \`Button sm (28px)\` ✗ 높이 불일치
+
 ### 접근성
 - 아이콘만 있는 버튼은 반드시 \`aria-label\` 제공
 - 로딩 중일 때 스크린리더에 상태 전달
@@ -56,7 +76,7 @@ import { Button } from '@thaki/tds';
     size: {
       control: 'select',
       options: ['sm', 'md', 'lg'],
-      description: '버튼 크기 (sm: 28px, md: 32px, lg: 40px)',
+      description: '버튼 크기 (sm: 28px, md: 32px, lg: 36px)',
       table: {
         type: { summary: 'string' },
         defaultValue: { summary: 'md' },
