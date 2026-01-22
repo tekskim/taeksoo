@@ -15,6 +15,7 @@ import { DeleteDaemonSetModal } from '@/components/DeleteDaemonSetModal';
 import { RedeployDeploymentModal } from '@/components/RedeployDeploymentModal';
 import { RedeployStatefulSetModal } from '@/components/RedeployStatefulSetModal';
 import { RedeployDaemonSetModal } from '@/components/RedeployDaemonSetModal';
+import { RollBackDeploymentModal } from '@/components/RollBackDeploymentModal';
 
 /* ----------------------------------------
    Modal List Item Component
@@ -143,6 +144,7 @@ export function ModalsPage() {
   const [isRedeployDeploymentOpen, setIsRedeployDeploymentOpen] = useState(false);
   const [isRedeployStatefulSetOpen, setIsRedeployStatefulSetOpen] = useState(false);
   const [isRedeployDaemonSetOpen, setIsRedeployDaemonSetOpen] = useState(false);
+  const [isRollBackDeploymentOpen, setIsRollBackDeploymentOpen] = useState(false);
   
   // Disclosure states
   const [isComputeOpen, setIsComputeOpen] = useState(false);
@@ -646,7 +648,7 @@ export function ModalsPage() {
                           Modals
                         </span>
                         <span className="text-[12px] text-[var(--color-text-subtle)]">
-                          (11 modals)
+                          (12 modals)
                         </span>
                       </div>
                     </div>
@@ -702,6 +704,13 @@ export function ModalsPage() {
                             category="Deployment"
                             size="sm"
                             onOpen={() => setIsRedeployDeploymentOpen(true)}
+                          />
+                          <ModalListItem
+                            title="Roll Back Deployment"
+                            description="Roll back a Kubernetes deployment to a previous revision."
+                            category="Deployment"
+                            size="sm"
+                            onOpen={() => setIsRollBackDeploymentOpen(true)}
                           />
                           <ModalListItem
                             title="Delete StatefulSet"
@@ -3282,6 +3291,17 @@ export function ModalsPage() {
         onConfirm={() => {
           console.log('DaemonSet redeployed');
           setIsRedeployDaemonSetOpen(false);
+        }}
+      />
+
+      {/* Roll Back Deployment Modal */}
+      <RollBackDeploymentModal
+        isOpen={isRollBackDeploymentOpen}
+        onClose={() => setIsRollBackDeploymentOpen(false)}
+        deployment={{ id: 'deploy-001', name: 'nginx-deployment' }}
+        onConfirm={(revisionId) => {
+          console.log('Deployment rolled back to:', revisionId);
+          setIsRollBackDeploymentOpen(false);
         }}
       />
     </div>
