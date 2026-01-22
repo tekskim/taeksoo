@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import {
   Drawer,
   Button,
@@ -26,7 +26,6 @@ interface NetworkItem {
 }
 
 type AllocationMode = 'automatic-single' | 'manual-single' | 'automatic-batch';
-type DNSInputMode = 'automatic-single' | 'manual-single' | 'automatic-batch';
 
 interface AllocateFloatingIPDrawerProps {
   isOpen: boolean;
@@ -91,20 +90,24 @@ export function AllocateFloatingIPDrawer({
   const [sortColumn, setSortColumn] = useState<string>('name');
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc');
 
-  // Reset state when drawer closes
-  useEffect(() => {
-    if (!isOpen) {
-      setDescription('');
-      setSelectedNetworkId(null);
-      setAllocationMode('automatic-single');
-      setManualIPAddress('');
-      setCount(1);
-      setDnsDomain('');
-      setDnsName('');
-      setSearchQuery('');
-      setCurrentPage(1);
-    }
-  }, [isOpen]);
+  // Reset state function
+  const resetState = () => {
+    setDescription('');
+    setSelectedNetworkId(null);
+    setAllocationMode('automatic-single');
+    setManualIPAddress('');
+    setCount(1);
+    setDnsDomain('');
+    setDnsName('');
+    setSearchQuery('');
+    setCurrentPage(1);
+  };
+
+  // Handle close with reset
+  const handleClose = () => {
+    resetState();
+    onClose();
+  };
 
   // Filter networks
   const filteredNetworks = networks.filter((net) =>
@@ -150,7 +153,7 @@ export function AllocateFloatingIPDrawer({
       dnsDomain: dnsDomain || undefined,
       dnsName: dnsName || undefined,
     });
-    onClose();
+    handleClose();
   };
 
   const fqdn = dnsName && dnsDomain ? `${dnsName}.${dnsDomain}` : '';
@@ -158,7 +161,7 @@ export function AllocateFloatingIPDrawer({
   return (
     <Drawer
       isOpen={isOpen}
-      onClose={onClose}
+      onClose={handleClose}
       title="Allocate Floating IP"
       width={696}
       footer={
@@ -182,7 +185,7 @@ export function AllocateFloatingIPDrawer({
 
           {/* Buttons */}
           <HStack gap={2} justify="center" className="w-full">
-            <Button variant="secondary" onClick={onClose} className="w-[152px] h-8">
+            <Button variant="secondary" onClick={handleClose} className="w-[152px] h-8">
               Cancel
             </Button>
             <Button
