@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { 
   Drawer, 
   Button, 
@@ -146,20 +146,24 @@ export function AssociateFloatingIPDrawer({
   const [virtualAdapterSort, setVirtualAdapterSort] = useState<{ column: string; direction: 'asc' | 'desc' }>({ column: 'name', direction: 'asc' });
   const [fixedIPSort, setFixedIPSort] = useState<{ column: string; direction: 'asc' | 'desc' }>({ column: 'fixedIp', direction: 'asc' });
 
-  // Reset selections when drawer closes
-  useEffect(() => {
-    if (!isOpen) {
-      setSelectedInstanceId(null);
-      setSelectedLoadBalancerId(null);
-      setSelectedVirtualAdapterId(null);
-      setSelectedFixedIPId(null);
-      setInstanceSearch('');
-      setLoadBalancerSearch('');
-      setVirtualAdapterSearch('');
-      setFixedIPSearch('');
-      setActiveTab('instance');
-    }
-  }, [isOpen]);
+  // Reset state function
+  const resetState = () => {
+    setSelectedInstanceId(null);
+    setSelectedLoadBalancerId(null);
+    setSelectedVirtualAdapterId(null);
+    setSelectedFixedIPId(null);
+    setInstanceSearch('');
+    setLoadBalancerSearch('');
+    setVirtualAdapterSearch('');
+    setFixedIPSearch('');
+    setActiveTab('instance');
+  };
+
+  // Handle close with reset
+  const handleClose = () => {
+    resetState();
+    onClose();
+  };
 
   // Get selected items
   const selectedInstance = instances.find(i => i.id === selectedInstanceId);
@@ -267,7 +271,7 @@ export function AssociateFloatingIPDrawer({
         resourceId,
         fixedIpId: selectedFixedIPId || '',
       });
-      onClose();
+      handleClose();
     }
   };
 
@@ -283,12 +287,12 @@ export function AssociateFloatingIPDrawer({
   return (
     <Drawer 
       isOpen={isOpen} 
-      onClose={onClose} 
+      onClose={handleClose} 
       title="Associate Floating IP"
       width={696}
       footer={
         <HStack gap={2} justify="center" className="w-full">
-          <Button variant="secondary" onClick={onClose} className="w-[152px] h-8">
+          <Button variant="secondary" onClick={handleClose} className="w-[152px] h-8">
             Cancel
           </Button>
           <Button 
