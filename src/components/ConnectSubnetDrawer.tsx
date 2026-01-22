@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { 
   Drawer, 
   Button, 
@@ -66,6 +66,20 @@ const MOCK_SUBNETS: SubnetItem[] = [
 ];
 
 /* ----------------------------------------
+   Sort Icon Component
+   ---------------------------------------- */
+
+function SortIcon({ active, direction }: { active: boolean; direction: 'asc' | 'desc' }) {
+  return (
+    <IconChevronDown 
+      size={12} 
+      className={`transition-transform ${active && direction === 'asc' ? 'rotate-180' : ''}`}
+      stroke={1.5}
+    />
+  );
+}
+
+/* ----------------------------------------
    Component
    ---------------------------------------- */
 
@@ -93,17 +107,21 @@ export function ConnectSubnetDrawer({
 
   const itemsPerPage = 6;
 
-  // Reset state when drawer closes
-  useEffect(() => {
-    if (!isOpen) {
-      setSelectedNetworkId(null);
-      setSelectedSubnetId(null);
-      setNetworkSearch('');
-      setSubnetSearch('');
-      setNetworkPage(1);
-      setSubnetPage(1);
-    }
-  }, [isOpen]);
+  // Reset state function
+  const resetState = () => {
+    setSelectedNetworkId(null);
+    setSelectedSubnetId(null);
+    setNetworkSearch('');
+    setSubnetSearch('');
+    setNetworkPage(1);
+    setSubnetPage(1);
+  };
+
+  // Handle close with reset
+  const handleClose = () => {
+    resetState();
+    onClose();
+  };
 
   // Network filtering and sorting
   const filteredNetworks = networks
@@ -171,28 +189,19 @@ export function ConnectSubnetDrawer({
   const handleSubmit = () => {
     if (selectedNetworkId && selectedSubnetId) {
       onSubmit?.({ networkId: selectedNetworkId, subnetId: selectedSubnetId });
-      onClose();
+      handleClose();
     }
   };
-
-  // Sort icon component
-  const SortIcon = ({ active, direction }: { active: boolean; direction: 'asc' | 'desc' }) => (
-    <IconChevronDown 
-      size={12} 
-      className={`transition-transform ${active && direction === 'asc' ? 'rotate-180' : ''}`}
-      stroke={1.5}
-    />
-  );
 
   return (
     <Drawer 
       isOpen={isOpen} 
-      onClose={onClose} 
+      onClose={handleClose} 
       title="Connect Subnet"
       width={696}
       footer={
         <HStack gap={2} justify="center" className="w-full">
-          <Button variant="secondary" onClick={onClose} className="w-[152px] h-8">
+          <Button variant="secondary" onClick={handleClose} className="w-[152px] h-8">
             Cancel
           </Button>
           <Button 
