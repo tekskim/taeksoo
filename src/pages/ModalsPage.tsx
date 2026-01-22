@@ -4,6 +4,18 @@ import { useTabs } from '@/contexts/TabContext';
 import { TopBar, Breadcrumb, TabBar } from '@/design-system';
 import { Button, VStack, HStack, Badge, Modal, Disclosure } from '@/design-system';
 import { IconAlertCircle, IconChevronRight, IconChevronDown, IconCopy, IconCheck } from '@tabler/icons-react';
+import { DeleteClusterModal } from '@/components/DeleteClusterModal';
+import { DeleteNamespaceModal } from '@/components/DeleteNamespaceModal';
+import { DeletePodModal } from '@/components/DeletePodModal';
+import { DeleteJobModal } from '@/components/DeleteJobModal';
+import { DeleteCronJobModal } from '@/components/DeleteCronJobModal';
+import { DeleteDeploymentModal } from '@/components/DeleteDeploymentModal';
+import { DeleteStatefulSetModal } from '@/components/DeleteStatefulSetModal';
+import { DeleteDaemonSetModal } from '@/components/DeleteDaemonSetModal';
+import { RedeployDeploymentModal } from '@/components/RedeployDeploymentModal';
+import { RedeployStatefulSetModal } from '@/components/RedeployStatefulSetModal';
+import { RedeployDaemonSetModal } from '@/components/RedeployDaemonSetModal';
+import { RollBackDeploymentModal } from '@/components/RollBackDeploymentModal';
 
 /* ----------------------------------------
    Modal List Item Component
@@ -119,6 +131,20 @@ export function ModalsPage() {
   
   // Storage Modal states
   const [isDeleteBucketOpen, setIsDeleteBucketOpen] = useState(false);
+  
+  // Container Modal states
+  const [isDeleteClusterOpen, setIsDeleteClusterOpen] = useState(false);
+  const [isDeleteNamespaceOpen, setIsDeleteNamespaceOpen] = useState(false);
+  const [isDeletePodOpen, setIsDeletePodOpen] = useState(false);
+  const [isDeleteJobOpen, setIsDeleteJobOpen] = useState(false);
+  const [isDeleteCronJobOpen, setIsDeleteCronJobOpen] = useState(false);
+  const [isDeleteDeploymentOpen, setIsDeleteDeploymentOpen] = useState(false);
+  const [isDeleteStatefulSetOpen, setIsDeleteStatefulSetOpen] = useState(false);
+  const [isDeleteDaemonSetOpen, setIsDeleteDaemonSetOpen] = useState(false);
+  const [isRedeployDeploymentOpen, setIsRedeployDeploymentOpen] = useState(false);
+  const [isRedeployStatefulSetOpen, setIsRedeployStatefulSetOpen] = useState(false);
+  const [isRedeployDaemonSetOpen, setIsRedeployDaemonSetOpen] = useState(false);
+  const [isRollBackDeploymentOpen, setIsRollBackDeploymentOpen] = useState(false);
   
   // Disclosure states
   const [isComputeOpen, setIsComputeOpen] = useState(false);
@@ -622,19 +648,115 @@ export function ModalsPage() {
                           Modals
                         </span>
                         <span className="text-[12px] text-[var(--color-text-subtle)]">
-                          (0 modals)
+                          (12 modals)
                         </span>
                       </div>
                     </div>
                   </Disclosure.Trigger>
                   <Disclosure.Panel>
-                    <div className="p-6 mt-4 rounded-xl border border-dashed border-[var(--color-border-default)] bg-[var(--color-surface-subtle)]">
-                      <VStack gap={2} className="items-center justify-center h-full">
-                        <p className="text-[14px] text-[var(--color-text-muted)]">
-                          Container modals will be added here...
-                        </p>
+                    <VStack gap={4} className="pt-4">
+                      {/* Cluster Actions */}
+                      <VStack gap={2}>
+                        <h2 className="text-[14px] font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
+                          Cluster Actions
+                        </h2>
+                        <div className="flex flex-col gap-2">
+                          <ModalListItem
+                            title="Delete Cluster"
+                            description="Confirm deletion of a Kubernetes cluster."
+                            category="Cluster"
+                            size="sm"
+                            onOpen={() => setIsDeleteClusterOpen(true)}
+                          />
+                          <ModalListItem
+                            title="Delete Namespace"
+                            description="Confirm deletion of a Kubernetes namespace."
+                            category="Namespace"
+                            size="sm"
+                            onOpen={() => setIsDeleteNamespaceOpen(true)}
+                          />
+                        </div>
                       </VStack>
-                    </div>
+
+                      {/* Workload Actions */}
+                      <VStack gap={2}>
+                        <h2 className="text-[14px] font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
+                          Workload Actions
+                        </h2>
+                        <div className="flex flex-col gap-2">
+                          <ModalListItem
+                            title="Delete Pod"
+                            description="Confirm deletion of a Kubernetes pod."
+                            category="Pod"
+                            size="sm"
+                            onOpen={() => setIsDeletePodOpen(true)}
+                          />
+                          <ModalListItem
+                            title="Delete Deployment"
+                            description="Confirm deletion of a Kubernetes deployment."
+                            category="Deployment"
+                            size="sm"
+                            onOpen={() => setIsDeleteDeploymentOpen(true)}
+                          />
+                          <ModalListItem
+                            title="Redeploy Deployment"
+                            description="Redeploy a Kubernetes deployment with warning about downtime."
+                            category="Deployment"
+                            size="sm"
+                            onOpen={() => setIsRedeployDeploymentOpen(true)}
+                          />
+                          <ModalListItem
+                            title="Roll Back Deployment"
+                            description="Roll back a Kubernetes deployment to a previous revision."
+                            category="Deployment"
+                            size="sm"
+                            onOpen={() => setIsRollBackDeploymentOpen(true)}
+                          />
+                          <ModalListItem
+                            title="Delete StatefulSet"
+                            description="Confirm deletion of a Kubernetes stateful set."
+                            category="StatefulSet"
+                            size="sm"
+                            onOpen={() => setIsDeleteStatefulSetOpen(true)}
+                          />
+                          <ModalListItem
+                            title="Redeploy StatefulSet"
+                            description="Redeploy a Kubernetes stateful set with warning about downtime."
+                            category="StatefulSet"
+                            size="sm"
+                            onOpen={() => setIsRedeployStatefulSetOpen(true)}
+                          />
+                          <ModalListItem
+                            title="Delete DaemonSet"
+                            description="Confirm deletion of a Kubernetes daemon set."
+                            category="DaemonSet"
+                            size="sm"
+                            onOpen={() => setIsDeleteDaemonSetOpen(true)}
+                          />
+                          <ModalListItem
+                            title="Redeploy DaemonSet"
+                            description="Redeploy a Kubernetes daemon set with warning about downtime."
+                            category="DaemonSet"
+                            size="sm"
+                            onOpen={() => setIsRedeployDaemonSetOpen(true)}
+                          />
+                          <ModalListItem
+                            title="Delete Job"
+                            description="Confirm deletion of a Kubernetes job."
+                            category="Job"
+                            size="sm"
+                            onOpen={() => setIsDeleteJobOpen(true)}
+                          />
+                          <ModalListItem
+                            title="Delete CronJob"
+                            description="Confirm deletion of a Kubernetes cron job."
+                            category="CronJob"
+                            size="sm"
+                            onOpen={() => setIsDeleteCronJobOpen(true)}
+                          />
+                        </div>
+                      </VStack>
+                    </VStack>
                   </Disclosure.Panel>
                 </Disclosure>
 
@@ -3046,6 +3168,142 @@ export function ModalsPage() {
           </Button>
         </div>
       </Modal>
+
+      {/* =============================================
+          CONTAINER MODALS
+          ============================================= */}
+
+      {/* Delete Cluster Modal */}
+      <DeleteClusterModal
+        isOpen={isDeleteClusterOpen}
+        onClose={() => setIsDeleteClusterOpen(false)}
+        cluster={{ id: 'cluster-001', name: 'production-cluster' }}
+        onConfirm={() => {
+          console.log('Cluster deleted');
+          setIsDeleteClusterOpen(false);
+        }}
+      />
+
+      {/* Delete Namespace Modal */}
+      <DeleteNamespaceModal
+        isOpen={isDeleteNamespaceOpen}
+        onClose={() => setIsDeleteNamespaceOpen(false)}
+        namespace={{ id: 'ns-001', name: 'default' }}
+        onConfirm={() => {
+          console.log('Namespace deleted');
+          setIsDeleteNamespaceOpen(false);
+        }}
+      />
+
+      {/* Delete Pod Modal */}
+      <DeletePodModal
+        isOpen={isDeletePodOpen}
+        onClose={() => setIsDeletePodOpen(false)}
+        pod={{ id: 'pod-001', name: 'nginx-deployment-7fb96c846b-abc12' }}
+        onConfirm={() => {
+          console.log('Pod deleted');
+          setIsDeletePodOpen(false);
+        }}
+      />
+
+      {/* Delete Job Modal */}
+      <DeleteJobModal
+        isOpen={isDeleteJobOpen}
+        onClose={() => setIsDeleteJobOpen(false)}
+        job={{ id: 'job-001', name: 'backup-job-20240115' }}
+        onConfirm={() => {
+          console.log('Job deleted');
+          setIsDeleteJobOpen(false);
+        }}
+      />
+
+      {/* Delete CronJob Modal */}
+      <DeleteCronJobModal
+        isOpen={isDeleteCronJobOpen}
+        onClose={() => setIsDeleteCronJobOpen(false)}
+        cronJob={{ id: 'cronjob-001', name: 'daily-backup' }}
+        onConfirm={() => {
+          console.log('CronJob deleted');
+          setIsDeleteCronJobOpen(false);
+        }}
+      />
+
+      {/* Delete Deployment Modal */}
+      <DeleteDeploymentModal
+        isOpen={isDeleteDeploymentOpen}
+        onClose={() => setIsDeleteDeploymentOpen(false)}
+        deployment={{ id: 'deploy-001', name: 'nginx-deployment' }}
+        onConfirm={() => {
+          console.log('Deployment deleted');
+          setIsDeleteDeploymentOpen(false);
+        }}
+      />
+
+      {/* Delete StatefulSet Modal */}
+      <DeleteStatefulSetModal
+        isOpen={isDeleteStatefulSetOpen}
+        onClose={() => setIsDeleteStatefulSetOpen(false)}
+        statefulSet={{ id: 'sts-001', name: 'mysql-statefulset' }}
+        onConfirm={() => {
+          console.log('StatefulSet deleted');
+          setIsDeleteStatefulSetOpen(false);
+        }}
+      />
+
+      {/* Delete DaemonSet Modal */}
+      <DeleteDaemonSetModal
+        isOpen={isDeleteDaemonSetOpen}
+        onClose={() => setIsDeleteDaemonSetOpen(false)}
+        daemonSet={{ id: 'ds-001', name: 'fluentd-daemonset' }}
+        onConfirm={() => {
+          console.log('DaemonSet deleted');
+          setIsDeleteDaemonSetOpen(false);
+        }}
+      />
+
+      {/* Redeploy Deployment Modal */}
+      <RedeployDeploymentModal
+        isOpen={isRedeployDeploymentOpen}
+        onClose={() => setIsRedeployDeploymentOpen(false)}
+        deployment={{ id: 'deploy-001', name: 'nginx-deployment' }}
+        onConfirm={() => {
+          console.log('Deployment redeployed');
+          setIsRedeployDeploymentOpen(false);
+        }}
+      />
+
+      {/* Redeploy StatefulSet Modal */}
+      <RedeployStatefulSetModal
+        isOpen={isRedeployStatefulSetOpen}
+        onClose={() => setIsRedeployStatefulSetOpen(false)}
+        statefulSet={{ id: 'sts-001', name: 'mysql-statefulset' }}
+        onConfirm={() => {
+          console.log('StatefulSet redeployed');
+          setIsRedeployStatefulSetOpen(false);
+        }}
+      />
+
+      {/* Redeploy DaemonSet Modal */}
+      <RedeployDaemonSetModal
+        isOpen={isRedeployDaemonSetOpen}
+        onClose={() => setIsRedeployDaemonSetOpen(false)}
+        daemonSet={{ id: 'ds-001', name: 'fluentd-daemonset' }}
+        onConfirm={() => {
+          console.log('DaemonSet redeployed');
+          setIsRedeployDaemonSetOpen(false);
+        }}
+      />
+
+      {/* Roll Back Deployment Modal */}
+      <RollBackDeploymentModal
+        isOpen={isRollBackDeploymentOpen}
+        onClose={() => setIsRollBackDeploymentOpen(false)}
+        deployment={{ id: 'deploy-001', name: 'nginx-deployment' }}
+        onConfirm={(revisionId) => {
+          console.log('Deployment rolled back to:', revisionId);
+          setIsRollBackDeploymentOpen(false);
+        }}
+      />
     </div>
   );
 }

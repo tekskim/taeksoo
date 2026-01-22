@@ -20,9 +20,10 @@ export function ChatbotPanel({ isOpen, onClose }: ChatbotPanelProps) {
   const [isAnimating, setIsAnimating] = useState(false);
 
   // Handle mount/unmount with animation (following Drawer pattern)
+  // This pattern is intentional for animation - same as design-system Drawer
   useEffect(() => {
     if (isOpen) {
-      setShouldRender(true);
+      setShouldRender(true); // eslint-disable-line
       // Small delay to ensure DOM is ready for animation
       requestAnimationFrame(() => {
         requestAnimationFrame(() => {

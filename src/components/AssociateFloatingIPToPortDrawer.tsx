@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { 
   Drawer, 
   Button, 
@@ -93,17 +93,21 @@ export function AssociateFloatingIPToPortDrawer({
 
   const itemsPerPage = 5;
 
-  // Reset state when drawer opens
-  useEffect(() => {
-    if (isOpen) {
-      setSelectedFixedIpId(null);
-      setSelectedFloatingIpId(null);
-      setFixedIpSearchQuery('');
-      setFloatingIpSearchQuery('');
-      setFixedIpCurrentPage(1);
-      setFloatingIpCurrentPage(1);
-    }
-  }, [isOpen]);
+  // Reset state function
+  const resetState = () => {
+    setSelectedFixedIpId(null);
+    setSelectedFloatingIpId(null);
+    setFixedIpSearchQuery('');
+    setFloatingIpSearchQuery('');
+    setFixedIpCurrentPage(1);
+    setFloatingIpCurrentPage(1);
+  };
+
+  // Handle close with reset
+  const handleClose = () => {
+    resetState();
+    onClose();
+  };
 
   // Fixed IP filtering and sorting
   const filteredFixedIPs = fixedIPs
@@ -176,18 +180,18 @@ export function AssociateFloatingIPToPortDrawer({
     if (selectedFixedIpId && selectedFloatingIpId && onSubmit) {
       onSubmit({ fixedIpId: selectedFixedIpId, floatingIpId: selectedFloatingIpId });
     }
-    onClose();
+    handleClose();
   };
 
   return (
     <Drawer 
       isOpen={isOpen} 
-      onClose={onClose} 
+      onClose={handleClose} 
       title="Associate Floating IP"
       width={696}
       footer={
         <HStack gap={2} justify="center" className="w-full">
-          <Button variant="secondary" onClick={onClose} className="w-[152px] h-8">
+          <Button variant="secondary" onClick={handleClose} className="w-[152px] h-8">
             Cancel
           </Button>
           <Button 
