@@ -63,7 +63,6 @@ export function EditLoadBalancerDrawer({
     onClose();
   };
 
-  const isValid = name.trim().length > 0;
 
   return (
     <Drawer
@@ -84,7 +83,7 @@ export function EditLoadBalancerDrawer({
           <Button 
             variant="primary" 
             onClick={handleSubmit}
-            disabled={!isValid || isSubmitting}
+            disabled={isSubmitting}
             className="flex-1 h-8"
           >
             {isSubmitting ? 'Saving...' : 'Save'}

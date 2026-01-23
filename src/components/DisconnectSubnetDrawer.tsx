@@ -135,7 +135,7 @@ export function DisconnectSubnetDrawer({
           <Button 
             variant="primary" 
             onClick={handleSubmit}
-            disabled={!selectedSubnetId}
+            disabled={false}
             className="w-[152px] h-8"
           >
             Disconnect

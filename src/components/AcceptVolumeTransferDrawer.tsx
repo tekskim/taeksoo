@@ -24,16 +24,19 @@ export function AcceptVolumeTransferDrawer({
   const [transferId, setTransferId] = useState('');
   const [authKey, setAuthKey] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [hasAttemptedSubmit, setHasAttemptedSubmit] = useState(false);
 
   // Reset form when drawer opens
   useEffect(() => {
     if (isOpen) {
       setTransferId('');
       setAuthKey('');
+      setHasAttemptedSubmit(false);
     }
   }, [isOpen]);
 
   const handleSubmit = async () => {
+    setHasAttemptedSubmit(true);
     if (!transferId.trim() || !authKey.trim()) return;
     
     setIsSubmitting(true);
@@ -46,10 +49,9 @@ export function AcceptVolumeTransferDrawer({
   };
 
   const handleClose = () => {
+    setHasAttemptedSubmit(false);
     onClose();
   };
-
-  const isValid = transferId.trim().length > 0 && authKey.trim().length > 0;
 
   return (
     <Drawer
@@ -70,7 +72,7 @@ export function AcceptVolumeTransferDrawer({
           <Button 
             variant="primary" 
             onClick={handleSubmit}
-            disabled={!isValid || isSubmitting}
+            disabled={isSubmitting}
             className="flex-1 h-8"
           >
             {isSubmitting ? 'Accepting...' : 'Accept'}
@@ -99,7 +101,13 @@ export function AcceptVolumeTransferDrawer({
             onChange={(e) => setTransferId(e.target.value)}
             placeholder="e.g., 4f2a7c9d-xxxx-xxxx-xxxx-9e3d7e0d5a12"
             fullWidth
+            error={hasAttemptedSubmit && !transferId.trim()}
           />
+          {hasAttemptedSubmit && !transferId.trim() && (
+            <p className="text-[11px] text-[var(--color-state-danger)] leading-4">
+              Transfer ID is required
+            </p>
+          )}
         </VStack>
 
         {/* Auth Key Input */}
@@ -112,7 +120,13 @@ export function AcceptVolumeTransferDrawer({
             onChange={(e) => setAuthKey(e.target.value)}
             placeholder="Enter authorization key"
             fullWidth
+            error={hasAttemptedSubmit && !authKey.trim()}
           />
+          {hasAttemptedSubmit && !authKey.trim() && (
+            <p className="text-[11px] text-[var(--color-state-danger)] leading-4">
+              Auth Key is required
+            </p>
+          )}
         </VStack>
       </VStack>
     </Drawer>

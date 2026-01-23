@@ -138,7 +138,6 @@ export function EditListenerDrawer({
     setAllowedCidrs(allowedCidrs.filter(c => c !== cidr));
   };
 
-  const isValid = listenerName.trim().length > 0;
 
   return (
     <Drawer
@@ -159,7 +158,7 @@ export function EditListenerDrawer({
           <Button 
             variant="primary" 
             onClick={handleSubmit}
-            disabled={!isValid || isSubmitting}
+            disabled={isSubmitting}
             className="flex-1 h-8"
           >
             {isSubmitting ? 'Saving...' : 'Save'}

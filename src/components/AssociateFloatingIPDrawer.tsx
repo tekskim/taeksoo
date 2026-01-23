@@ -148,15 +148,15 @@ export function AssociateFloatingIPDrawer({
 
   // Reset state function
   const resetState = () => {
-    setSelectedInstanceId(null);
-    setSelectedLoadBalancerId(null);
-    setSelectedVirtualAdapterId(null);
-    setSelectedFixedIPId(null);
-    setInstanceSearch('');
-    setLoadBalancerSearch('');
-    setVirtualAdapterSearch('');
-    setFixedIPSearch('');
-    setActiveTab('instance');
+      setSelectedInstanceId(null);
+      setSelectedLoadBalancerId(null);
+      setSelectedVirtualAdapterId(null);
+      setSelectedFixedIPId(null);
+      setInstanceSearch('');
+      setLoadBalancerSearch('');
+      setVirtualAdapterSearch('');
+      setFixedIPSearch('');
+      setActiveTab('instance');
   };
 
   // Handle close with reset

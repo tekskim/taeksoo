@@ -71,7 +71,6 @@ export function EditRouterDrawer({
     onClose();
   };
 
-  const isValid = routerName.trim().length > 0;
 
   return (
     <Drawer
@@ -92,7 +91,7 @@ export function EditRouterDrawer({
           <Button 
             variant="primary" 
             onClick={handleSubmit}
-            disabled={!isValid || isSubmitting}
+            disabled={isSubmitting}
             className="flex-1 h-8"
           >
             {isSubmitting ? 'Saving...' : 'Save'}

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Drawer, Button, Input } from '@/design-system';
+import { Drawer, Button, Input, Radio } from '@/design-system';
 import { HStack, VStack } from '@/design-system/layouts';
 import { IconAlertCircle, IconHelp } from '@tabler/icons-react';
 import { Tooltip } from '@/design-system';
@@ -70,47 +70,6 @@ function QuotaProgressBar({ label, used, total }: QuotaProgressBarProps) {
   );
 }
 
-/* ----------------------------------------
-   RadioButton Component
-   ---------------------------------------- */
-
-interface RadioButtonProps {
-  label: string;
-  checked: boolean;
-  onChange: () => void;
-  helpText?: string;
-}
-
-function RadioButton({ label, checked, onChange, helpText }: RadioButtonProps) {
-  return (
-    <label className="flex items-center gap-1.5 cursor-pointer">
-      <div 
-        className={`w-4 h-4 rounded-full border-2 flex items-center justify-center transition-colors ${
-          checked 
-            ? 'border-[#2563eb] bg-white' 
-            : 'border-[#e2e8f0] bg-white'
-        }`}
-        onClick={onChange}
-      >
-        {checked && (
-          <div className="w-2 h-2 rounded-full bg-[#2563eb]" />
-        )}
-      </div>
-      <span className="text-[12px] text-[var(--color-text-default)] leading-4">
-        {label}
-      </span>
-      {helpText && (
-        <Tooltip content={helpText}>
-          <IconHelp 
-            size={16} 
-            className="text-[var(--color-text-default)] cursor-help" 
-            stroke={1.5}
-          />
-        </Tooltip>
-      )}
-    </label>
-  );
-}
 
 /* ----------------------------------------
    CreateVolumeBackupDrawer Component
@@ -127,6 +86,7 @@ export function CreateVolumeBackupDrawer({
   const [backupName, setBackupName] = useState('');
   const [backupMode, setBackupMode] = useState<BackupMode>('full');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [hasAttemptedSubmit, setHasAttemptedSubmit] = useState(false);
 
   // Reset form when drawer opens
   useEffect(() => {
@@ -136,10 +96,12 @@ export function CreateVolumeBackupDrawer({
       const dateStr = today.toISOString().slice(0, 10).replace(/-/g, '');
       setBackupName(`vol-backup-${dateStr}`);
       setBackupMode('full');
+      setHasAttemptedSubmit(false);
     }
   }, [isOpen, volume]);
 
   const handleSubmit = async () => {
+    setHasAttemptedSubmit(true);
     if (!backupName.trim()) return;
     
     setIsSubmitting(true);
@@ -154,6 +116,7 @@ export function CreateVolumeBackupDrawer({
   const handleClose = () => {
     setBackupName('');
     setBackupMode('full');
+    setHasAttemptedSubmit(false);
     onClose();
   };
 
@@ -192,7 +155,7 @@ export function CreateVolumeBackupDrawer({
             <Button 
               variant="primary" 
               onClick={handleSubmit}
-              disabled={!backupName.trim() || isSubmitting}
+              disabled={isSubmitting}
               className="flex-1 h-8"
             >
               {isSubmitting ? 'Creating...' : 'Create'}
@@ -247,10 +210,17 @@ export function CreateVolumeBackupDrawer({
             onChange={(e) => setBackupName(e.target.value)}
             placeholder="Enter backup name"
             fullWidth
+            error={hasAttemptedSubmit && !backupName.trim()}
           />
-          <p className="text-[11px] text-[var(--color-text-subtle)] leading-4">
-            Allowed: 1–128 characters, letters, numbers, "-", "_", ".", "()", "[]"
-          </p>
+          {hasAttemptedSubmit && !backupName.trim() ? (
+            <p className="text-[11px] text-[var(--color-state-danger)] leading-4">
+              Backup name is required
+            </p>
+          ) : (
+            <p className="text-[11px] text-[var(--color-text-subtle)] leading-4">
+              Allowed: 1–128 characters, letters, numbers, "-", "_", ".", "()", "[]"
+            </p>
+          )}
         </VStack>
 
         {/* Backup Mode */}
@@ -259,17 +229,29 @@ export function CreateVolumeBackupDrawer({
             Backup mode
           </label>
           <VStack gap={3}>
-            <RadioButton
+            <Radio
+              name="backup-mode"
+              value="full"
               label="Full Backup"
               checked={backupMode === 'full'}
               onChange={() => setBackupMode('full')}
             />
-            <RadioButton
-              label="Increment Backup"
-              checked={backupMode === 'incremental'}
-              onChange={() => setBackupMode('incremental')}
-              helpText="Incremental backup only backs up the data that has changed since the last backup, saving storage space."
-            />
+            <HStack gap={1.5} align="center">
+              <Radio
+                name="backup-mode"
+                value="incremental"
+                label="Increment Backup"
+                checked={backupMode === 'incremental'}
+                onChange={() => setBackupMode('incremental')}
+              />
+              <Tooltip content="Incremental backup only backs up the data that has changed since the last backup, saving storage space.">
+                <IconHelp 
+                  size={16} 
+                  className="text-[var(--color-text-subtle)] cursor-help" 
+                  stroke={1.5}
+                />
+              </Tooltip>
+            </HStack>
           </VStack>
         </VStack>
       </VStack>

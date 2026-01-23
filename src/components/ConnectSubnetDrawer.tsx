@@ -109,12 +109,12 @@ export function ConnectSubnetDrawer({
 
   // Reset state function
   const resetState = () => {
-    setSelectedNetworkId(null);
-    setSelectedSubnetId(null);
-    setNetworkSearch('');
-    setSubnetSearch('');
-    setNetworkPage(1);
-    setSubnetPage(1);
+      setSelectedNetworkId(null);
+      setSelectedSubnetId(null);
+      setNetworkSearch('');
+      setSubnetSearch('');
+      setNetworkPage(1);
+      setSubnetPage(1);
   };
 
   // Handle close with reset

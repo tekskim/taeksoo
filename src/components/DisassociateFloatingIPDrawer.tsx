@@ -64,6 +64,7 @@ export function DisassociateFloatingIPDrawer({
   const [selectedFloatingIpId, setSelectedFloatingIpId] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
+  const [hasAttemptedSubmit, setHasAttemptedSubmit] = useState(false);
 
   const filteredFloatingIps = floatingIps.filter((fip) =>
     fip.floatingIp.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -77,28 +78,38 @@ export function DisassociateFloatingIPDrawer({
   );
 
   const handleDisassociate = () => {
+    setHasAttemptedSubmit(true);
+    
     if (selectedFloatingIpId && onDisassociate) {
       onDisassociate(selectedFloatingIpId);
       onClose();
     }
   };
 
+  const handleClose = () => {
+    setSelectedFloatingIpId(null);
+    setSearchQuery('');
+    setCurrentPage(1);
+    setHasAttemptedSubmit(false);
+    onClose();
+  };
+
   return (
     <Drawer
       isOpen={isOpen}
-      onClose={onClose}
+      onClose={handleClose}
       title="Disassociate Floating IP"
       description="Remove the association between this floating IP and the instance. Once disassociated, the instance will lose external network access through this IP."
       width={700}
       footer={
         <HStack gap={2} className="w-full">
-          <Button variant="secondary" onClick={onClose} className="flex-1 h-8">
+          <Button variant="secondary" onClick={handleClose} className="flex-1 h-8">
             Cancel
           </Button>
           <Button
             variant="primary"
             onClick={handleDisassociate}
-            disabled={!selectedFloatingIpId}
+            disabled={false}
             className="flex-1 h-8"
           >
             Disassociate
@@ -208,6 +219,8 @@ export function DisassociateFloatingIPDrawer({
           selectedItems={selectedFloatingIpId ? [{ id: selectedFloatingIpId, label: floatingIps.find(f => f.id === selectedFloatingIpId)?.floatingIp || '' }] : []}
           onRemove={() => setSelectedFloatingIpId(null)}
           emptyText="No item selected"
+          error={hasAttemptedSubmit && !selectedFloatingIpId}
+          errorMessage="Please select a floating IP."
         />
       </VStack>
     </Drawer>

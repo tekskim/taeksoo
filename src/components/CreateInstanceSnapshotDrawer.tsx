@@ -35,6 +35,7 @@ export function CreateInstanceSnapshotDrawer({
   const [snapshotName, setSnapshotName] = useState('');
   const [description, setDescription] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [hasAttemptedSubmit, setHasAttemptedSubmit] = useState(false);
 
   // Reset form when drawer opens
   useEffect(() => {
@@ -44,10 +45,12 @@ export function CreateInstanceSnapshotDrawer({
       const dateStr = today.toISOString().slice(0, 10).replace(/-/g, '');
       setSnapshotName(`${instance.name}-snap-${dateStr}`);
       setDescription('');
+      setHasAttemptedSubmit(false);
     }
   }, [isOpen, instance]);
 
   const handleSubmit = async () => {
+    setHasAttemptedSubmit(true);
     if (!snapshotName.trim()) return;
     
     setIsSubmitting(true);
@@ -62,6 +65,7 @@ export function CreateInstanceSnapshotDrawer({
   const handleClose = () => {
     setSnapshotName('');
     setDescription('');
+    setHasAttemptedSubmit(false);
     onClose();
   };
 
@@ -84,7 +88,7 @@ export function CreateInstanceSnapshotDrawer({
           <Button 
             variant="primary" 
             onClick={handleSubmit}
-            disabled={!snapshotName.trim() || isSubmitting}
+            disabled={isSubmitting}
             className="flex-1 h-8"
           >
             {isSubmitting ? 'Creating...' : 'Create'}
@@ -138,10 +142,17 @@ export function CreateInstanceSnapshotDrawer({
             onChange={(e) => setSnapshotName(e.target.value)}
             placeholder="Enter snapshot name"
             fullWidth
+            error={hasAttemptedSubmit && !snapshotName.trim()}
           />
-          <p className="text-[11px] text-[var(--color-text-subtle)] leading-4">
-            Allowed: 1–128 characters, letters, numbers, "-", "_", ".", "()", "[]"
-          </p>
+          {hasAttemptedSubmit && !snapshotName.trim() ? (
+            <p className="text-[11px] text-[var(--color-state-danger)] leading-4">
+              Snapshot name is required
+            </p>
+          ) : (
+            <p className="text-[11px] text-[var(--color-text-subtle)] leading-4">
+              Allowed: 1–128 characters, letters, numbers, "-", "_", ".", "()", "[]"
+            </p>
+          )}
         </VStack>
 
         {/* Description Input */}

@@ -41,16 +41,19 @@ export function CreateImageFromVolumeDrawer({
   const [imageName, setImageName] = useState('');
   const [diskFormat, setDiskFormat] = useState('raw');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [hasAttemptedSubmit, setHasAttemptedSubmit] = useState(false);
 
   // Reset form when drawer opens
   useEffect(() => {
     if (isOpen) {
       setImageName('');
       setDiskFormat('raw');
+      setHasAttemptedSubmit(false);
     }
   }, [isOpen]);
 
   const handleSubmit = async () => {
+    setHasAttemptedSubmit(true);
     if (!imageName.trim()) return;
     
     setIsSubmitting(true);
@@ -65,6 +68,7 @@ export function CreateImageFromVolumeDrawer({
   const handleClose = () => {
     setImageName('');
     setDiskFormat('raw');
+    setHasAttemptedSubmit(false);
     onClose();
   };
 
@@ -87,7 +91,7 @@ export function CreateImageFromVolumeDrawer({
           <Button 
             variant="primary" 
             onClick={handleSubmit}
-            disabled={!imageName.trim() || isSubmitting}
+            disabled={isSubmitting}
             className="flex-1 h-8"
           >
             {isSubmitting ? 'Creating...' : 'Create'}
@@ -129,10 +133,17 @@ export function CreateImageFromVolumeDrawer({
             onChange={(e) => setImageName(e.target.value)}
             placeholder="e.g. db-date-image"
             fullWidth
+            error={hasAttemptedSubmit && !imageName.trim()}
           />
-          <p className="text-[11px] text-[var(--color-text-subtle)] leading-4">
-            Allowed: 1–128 characters, letters, numbers, "-", "_", ".", "()", "[]"
-          </p>
+          {hasAttemptedSubmit && !imageName.trim() ? (
+            <p className="text-[11px] text-[var(--color-state-danger)] leading-4">
+              Image name is required
+            </p>
+          ) : (
+            <p className="text-[11px] text-[var(--color-text-subtle)] leading-4">
+              Allowed: 1–128 characters, letters, numbers, "-", "_", ".", "()", "[]"
+            </p>
+          )}
         </VStack>
 
         {/* Disk Format Select */}

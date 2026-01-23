@@ -94,6 +94,7 @@ export function ResizeInstanceDrawer({
   const [autoConfirmMinutes, setAutoConfirmMinutes] = useState(5);
   const [autoConfirmAction, setAutoConfirmAction] = useState('confirm');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [hasAttemptedSubmit, setHasAttemptedSubmit] = useState(false);
 
   const ITEMS_PER_PAGE = 5;
 
@@ -111,6 +112,7 @@ export function ResizeInstanceDrawer({
   const selectedFlavor = flavors.find(f => f.id === selectedFlavorId);
 
   const handleResize = async () => {
+    setHasAttemptedSubmit(true);
     if (!selectedFlavorId) return;
     setIsSubmitting(true);
     try {
@@ -134,6 +136,7 @@ export function ResizeInstanceDrawer({
     setApprovalMethod('auto');
     setAutoConfirmMinutes(5);
     setAutoConfirmAction('confirm');
+    setHasAttemptedSubmit(false);
     onClose();
   };
 
@@ -149,9 +152,9 @@ export function ResizeInstanceDrawer({
       showCloseButton={false}
       width={696}
       footer={
-        <VStack gap={0} className="w-full">
+        <VStack gap={4} className="w-full">
           {/* Quota Section */}
-          <VStack gap={6} className="w-full border-t border-[var(--color-border-subtle)] px-[var(--space-6)] py-[var(--space-4)]">
+          <VStack gap={4} className="w-full">
             {/* vCPU Quota */}
             <VStack gap={2} className="w-full">
               <HStack justify="space-between" className="w-full">
@@ -203,7 +206,7 @@ export function ResizeInstanceDrawer({
             <Button 
               variant="primary" 
               onClick={handleResize}
-              disabled={isSubmitting || !selectedFlavorId}
+              disabled={isSubmitting}
               className="w-[152px] h-8"
             >
               {isSubmitting ? 'Resizing...' : 'Resize'}
@@ -359,6 +362,8 @@ export function ResizeInstanceDrawer({
             selectedItems={selectedFlavorId ? [{ id: selectedFlavorId, label: flavors.find(f => f.id === selectedFlavorId)?.name || '' }] : []}
             onRemove={() => setSelectedFlavorId(null)}
             emptyText="No item selected"
+            error={!selectedFlavorId && hasAttemptedSubmit}
+            errorMessage="Please select a flavor"
           />
         </VStack>
 
