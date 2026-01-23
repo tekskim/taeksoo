@@ -455,7 +455,7 @@ export function InstanceDetailPage() {
   // Action Logs tab state
   const [actionLogCurrentPage, setActionLogCurrentPage] = useState(1);
   const [actionLogSearchQuery, setActionLogSearchQuery] = useState('');
-  const [expandedLogIds, setExpandedLogIds] = useState<Set<string>>(new Set(['log-001']));
+  const [expandedLogIds, setExpandedLogIds] = useState<Set<string>>(new Set());
   const [actionLogSortKey, setActionLogSortKey] = useState<'operationName' | 'requestId' | 'requestedTime' | null>(null);
   const [actionLogSortDirection, setActionLogSortDirection] = useState<'asc' | 'desc'>('asc');
   const actionLogRowsPerPage = 10;
@@ -1086,25 +1086,15 @@ export function InstanceDetailPage() {
                     </div>
 
                     {/* Network Interface Toggle */}
-                    <div className="inline-flex items-center gap-1 p-1 h-10 bg-[var(--color-surface-subtle)] border border-[var(--color-border-subtle)] rounded-lg w-fit">
-                      {mockNetworkInterfaces.map((net) => (
-                        <button
-                          key={net.id}
-                          onClick={() => setSelectedNetworkInterface(net.id)}
-                          className={`
-                            flex items-center justify-center min-w-[80px] px-3 h-8 rounded-md
-                            text-[12px] font-medium leading-4 text-[var(--color-text-default)]
-                            transition-colors
-                            ${selectedNetworkInterface === net.id 
-                              ? 'bg-[var(--color-surface-default)] border border-[var(--color-action-primary)]' 
-                              : 'hover:bg-[var(--color-surface-default)]'
-                            }
-                          `}
-                        >
-                          {net.name}({net.ip})
-                        </button>
-                      ))}
-                    </div>
+                    <Tabs value={selectedNetworkInterface} onChange={setSelectedNetworkInterface} variant="boxed" size="sm">
+                      <TabList>
+                        {mockNetworkInterfaces.map((net) => (
+                          <Tab key={net.id} value={net.id}>
+                            {net.name}({net.ip})
+                          </Tab>
+                        ))}
+                      </TabList>
+                    </Tabs>
 
                     {/* Search */}
                     <SearchInput placeholder="Search security group by attributes" size="sm" className="w-[280px]" />
