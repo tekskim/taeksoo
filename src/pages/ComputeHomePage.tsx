@@ -270,11 +270,9 @@ export function ComputeHomePage() {
           {/* Top Row - 4 Cards */}
           <div className="grid grid-cols-4 gap-6 mb-6">
             {/* PROJECT INFO */}
-            <Card title="PROJECT INFO" bgColor="bg-[var(--color-surface-subtle)]" className="flex flex-col justify-between">
-              <div>
-                <h3 className="text-[32px] font-semibold text-[var(--color-text-default)] mb-4">proj-1</h3>
-              </div>
-              <div className="space-y-4">
+            <Card title="PROJECT INFO" bgColor="bg-[var(--color-surface-subtle)]" className="flex flex-col">
+              <h3 className="text-[32px] font-semibold text-[var(--color-text-default)]">proj-1</h3>
+              <div className="space-y-4 mt-auto">
                 <div>
                   <div className="text-[10px] text-[var(--color-text-muted)] mb-1">ID</div>
                   <div className="flex items-center gap-1">
@@ -352,8 +350,8 @@ export function ComputeHomePage() {
           {/* Bottom Row - 2 Cards */}
           <div className="grid grid-cols-[1fr_396px] gap-6">
             {/* INFRASTRUCTURE QUOTA */}
-            <Card title="INFRASTRUCTURE QUOTA" className="flex flex-col">
-              <div className="space-y-4 mt-auto">
+            <Card title="INFRASTRUCTURE QUOTA">
+              <div className="space-y-4 mt-8">
                 <div className="grid grid-cols-4 gap-4">
                   <InfraQuotaCard
                     icon={<IconDatabase size={16} stroke={1.5} />}
@@ -418,8 +416,8 @@ export function ComputeHomePage() {
             </Card>
 
             {/* RECENT ACTIVITIES */}
-            <Card title="RECENT ACTIVITIES" className="flex flex-col">
-              <div className="mt-auto">
+            <Card title="RECENT ACTIVITIES">
+              <div>
                 <ActivityItem
                   name="web-server-01"
                   resourceType="Instance"
