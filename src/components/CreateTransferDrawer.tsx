@@ -50,15 +50,18 @@ export function CreateTransferDrawer({
 }: CreateTransferDrawerProps) {
   const [transferName, setTransferName] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [hasAttemptedSubmit, setHasAttemptedSubmit] = useState(false);
 
   // Reset form when drawer opens
   useEffect(() => {
     if (isOpen) {
       setTransferName('');
+      setHasAttemptedSubmit(false);
     }
   }, [isOpen]);
 
   const handleSubmit = async () => {
+    setHasAttemptedSubmit(true);
     if (!transferName.trim()) return;
     
     setIsSubmitting(true);
@@ -71,6 +74,7 @@ export function CreateTransferDrawer({
   };
 
   const handleClose = () => {
+    setHasAttemptedSubmit(false);
     onClose();
   };
 
@@ -93,7 +97,7 @@ export function CreateTransferDrawer({
           <Button 
             variant="primary" 
             onClick={handleSubmit}
-            disabled={!transferName.trim() || isSubmitting}
+            disabled={isSubmitting}
             className="flex-1 h-8"
           >
             {isSubmitting ? 'Creating...' : 'Create'}
@@ -130,10 +134,17 @@ export function CreateTransferDrawer({
             onChange={(e) => setTransferName(e.target.value)}
             placeholder="e.g., db-volume-transfer"
             fullWidth
+            error={hasAttemptedSubmit && !transferName.trim()}
           />
-          <p className="text-[11px] text-[var(--color-text-subtle)] leading-4">
-            Allowed: 1–128 characters, letters, numbers, "-", "_", ".", "()", "[]"
-          </p>
+          {hasAttemptedSubmit && !transferName.trim() ? (
+            <p className="text-[11px] text-[var(--color-state-danger)] leading-4">
+              Transfer name is required
+            </p>
+          ) : (
+            <p className="text-[11px] text-[var(--color-text-subtle)] leading-4">
+              Allowed: 1–128 characters, letters, numbers, "-", "_", ".", "()", "[]"
+            </p>
+          )}
         </VStack>
       </VStack>
     </Drawer>

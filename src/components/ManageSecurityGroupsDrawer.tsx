@@ -91,6 +91,7 @@ export function ManageSecurityGroupsDrawer({
   const [sgPage, setSgPage] = useState(1);
 
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [hasAttemptedSubmit, setHasAttemptedSubmit] = useState(false);
 
   // Filter interfaces
   const filteredInterfaces = interfaces.filter((iface) =>
@@ -118,6 +119,8 @@ export function ManageSecurityGroupsDrawer({
   );
 
   const handleSave = async () => {
+    setHasAttemptedSubmit(true);
+    
     if (!selectedInterfaceId) return;
     
     setIsSubmitting(true);
@@ -136,6 +139,7 @@ export function ManageSecurityGroupsDrawer({
     setSgSearchQuery('');
     setInterfacePage(1);
     setSgPage(1);
+    setHasAttemptedSubmit(false);
     onClose();
   };
 
@@ -166,7 +170,7 @@ export function ManageSecurityGroupsDrawer({
           <Button 
             variant="primary" 
             onClick={handleSave}
-            disabled={!selectedInterfaceId || isSubmitting}
+            disabled={isSubmitting}
             className="w-[152px] h-8"
           >
             {isSubmitting ? 'Saving...' : 'Save'}
@@ -301,6 +305,8 @@ export function ManageSecurityGroupsDrawer({
             selectedItems={selectedInterfaceId ? [{ id: selectedInterfaceId, label: interfaces.find(i => i.id === selectedInterfaceId)?.portName || '' }] : []}
             onRemove={() => setSelectedInterfaceId(null)}
             emptyText="No item Selected"
+            error={hasAttemptedSubmit && !selectedInterfaceId}
+            errorMessage="Please select an interface."
             className="shrink-0"
             style={{ width: '648px' }}
           />

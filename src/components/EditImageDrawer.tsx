@@ -32,6 +32,7 @@ export function EditImageDrawer({
   const [imageName, setImageName] = useState('');
   const [description, setDescription] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [hasAttemptedSubmit, setHasAttemptedSubmit] = useState(false);
 
   // Reset form when drawer opens
   useEffect(() => {
@@ -42,6 +43,7 @@ export function EditImageDrawer({
   }, [isOpen, image]);
 
   const handleSubmit = async () => {
+    setHasAttemptedSubmit(true);
     if (!imageName.trim()) return;
     
     setIsSubmitting(true);
@@ -54,6 +56,7 @@ export function EditImageDrawer({
   };
 
   const handleClose = () => {
+    setHasAttemptedSubmit(false);
     onClose();
   };
 
@@ -76,7 +79,7 @@ export function EditImageDrawer({
           <Button 
             variant="primary" 
             onClick={handleSubmit}
-            disabled={!imageName.trim() || isSubmitting}
+            disabled={isSubmitting}
             className="flex-1 h-8"
           >
             {isSubmitting ? 'Saving...' : 'Save'}
@@ -100,10 +103,17 @@ export function EditImageDrawer({
             onChange={(e) => setImageName(e.target.value)}
             placeholder="Enter image name"
             fullWidth
+            error={hasAttemptedSubmit && !imageName.trim()}
           />
-          <p className="text-[11px] text-[var(--color-text-subtle)] leading-4">
-            Allowed: 1–128 characters, letters, numbers, "-", "_", ".", "()", "[]"
-          </p>
+          {hasAttemptedSubmit && !imageName.trim() ? (
+            <p className="text-[11px] text-[var(--color-state-danger)] leading-4">
+              Image name is required
+            </p>
+          ) : (
+            <p className="text-[11px] text-[var(--color-text-subtle)] leading-4">
+              Allowed: 1–128 characters, letters, numbers, "-", "_", ".", "()", "[]"
+            </p>
+          )}
         </VStack>
 
         {/* Description Input */}

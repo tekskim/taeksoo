@@ -48,7 +48,7 @@ const defaultSecurityGroups: SecurityGroupItem[] = Array.from({ length: 115 }, (
   createdAt: '2025-08-23',
 }));
 
-const ITEMS_PER_PAGE = 10;
+const ITEMS_PER_PAGE = 5;
 
 /* ----------------------------------------
    Filter Tag Component
@@ -182,37 +182,23 @@ export function EditPortSecurityGroupsDrawer({
       title="Manage Security Groups"
       width={696}
       footer={
-        <VStack gap={3}>
-          {/* Selection Indicator - Above footer buttons */}
-          {portSecurityEnabled && (
-            <SelectionIndicator
-              selectedItems={selectedSecurityGroupIds.map(id => ({ 
-                id, 
-                label: securityGroups.find(sg => sg.id === id)?.name || '' 
-              }))}
-              onRemove={(id) => setSelectedSecurityGroupIds(prev => prev.filter(sgId => sgId !== id))}
-              emptyText="No item Selected"
-              className="w-full"
-            />
-          )}
-          <HStack gap={2} justify="center" className="w-full">
-            <Button 
-              variant="secondary" 
-              onClick={handleClose}
-              className="w-[152px] h-8"
-            >
-              Cancel
-            </Button>
-            <Button 
-              variant="primary" 
-              onClick={handleSave}
-              disabled={isSubmitting}
-              className="w-[152px] h-8"
-            >
-              {isSubmitting ? 'Saving...' : 'Save'}
-            </Button>
-          </HStack>
-        </VStack>
+        <HStack gap={2} justify="center" className="w-full">
+          <Button 
+            variant="secondary" 
+            onClick={handleClose}
+            className="w-[152px] h-8"
+          >
+            Cancel
+          </Button>
+          <Button 
+            variant="primary" 
+            onClick={handleSave}
+            disabled={isSubmitting}
+            className="w-[152px] h-8"
+          >
+            {isSubmitting ? 'Saving...' : 'Save'}
+          </Button>
+        </HStack>
       }
     >
       <VStack gap={6} className="h-full">
@@ -365,6 +351,17 @@ export function EditPortSecurityGroupsDrawer({
                 </div>
               ))}
             </div>
+
+            {/* Selection Indicator - Below table */}
+            <SelectionIndicator
+              selectedItems={selectedSecurityGroupIds.map(id => ({ 
+                id, 
+                label: securityGroups.find(sg => sg.id === id)?.name || '' 
+              }))}
+              onRemove={(id) => setSelectedSecurityGroupIds(prev => prev.filter(sgId => sgId !== id))}
+              emptyText="No item Selected"
+              className="w-full"
+            />
           </VStack>
         )}
       </VStack>

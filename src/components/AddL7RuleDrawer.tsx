@@ -64,6 +64,7 @@ export function AddL7RuleDrawer({
   const [invert, setInvert] = useState(false);
   const [adminStateUp, setAdminStateUp] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [hasAttemptedSubmit, setHasAttemptedSubmit] = useState(false);
 
   // Reset form when drawer opens
   useEffect(() => {
@@ -74,10 +75,12 @@ export function AddL7RuleDrawer({
       setValue('');
       setInvert(false);
       setAdminStateUp(true);
+      setHasAttemptedSubmit(false);
     }
   }, [isOpen]);
 
   const handleSubmit = async () => {
+    setHasAttemptedSubmit(true);
     if (!compareType || !value.trim()) return;
     if (ruleTypesWithKey.includes(ruleType) && !key.trim()) return;
     
@@ -98,14 +101,11 @@ export function AddL7RuleDrawer({
   };
 
   const handleClose = () => {
+    setHasAttemptedSubmit(false);
     onClose();
   };
 
   const requiresKey = ruleTypesWithKey.includes(ruleType);
-  const isValid = 
-    compareType !== '' && 
-    value.trim().length > 0 && 
-    (!requiresKey || key.trim().length > 0);
 
   return (
     <Drawer
@@ -126,7 +126,7 @@ export function AddL7RuleDrawer({
           <Button 
             variant="primary" 
             onClick={handleSubmit}
-            disabled={!isValid || isSubmitting}
+            disabled={isSubmitting}
             className="flex-1 h-8"
           >
             {isSubmitting ? 'Adding...' : 'Add'}
@@ -192,7 +192,13 @@ export function AddL7RuleDrawer({
               ...compareTypeOptions,
             ]}
             fullWidth
+            error={hasAttemptedSubmit && !compareType}
           />
+          {hasAttemptedSubmit && !compareType && (
+            <p className="text-[11px] text-[var(--color-state-danger)] leading-4">
+              Compare type is required
+            </p>
+          )}
         </VStack>
 
         {/* Value */}
@@ -208,10 +214,17 @@ export function AddL7RuleDrawer({
             onChange={(e) => setValue(e.target.value)}
             placeholder="Enter a value to compare"
             fullWidth
+            error={hasAttemptedSubmit && !value.trim()}
           />
-          <p className="text-[11px] text-[var(--color-text-subtle)] leading-4">
-            Allowed: 1–255 characters.
-          </p>
+          {hasAttemptedSubmit && !value.trim() ? (
+            <p className="text-[11px] text-[var(--color-state-danger)] leading-4">
+              Value is required
+            </p>
+          ) : (
+            <p className="text-[11px] text-[var(--color-text-subtle)] leading-4">
+              Allowed: 1–255 characters.
+            </p>
+          )}
         </VStack>
 
         {/* Invert */}

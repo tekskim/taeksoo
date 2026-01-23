@@ -50,6 +50,7 @@ export function AddL7PolicyDrawer({
   const [position, setPosition] = useState(1);
   const [adminStateUp, setAdminStateUp] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [hasAttemptedSubmit, setHasAttemptedSubmit] = useState(false);
 
   // Reset form when drawer opens
   useEffect(() => {
@@ -60,10 +61,12 @@ export function AddL7PolicyDrawer({
       setTargetPool('');
       setPosition(1);
       setAdminStateUp(true);
+      setHasAttemptedSubmit(false);
     }
   }, [isOpen]);
 
   const handleSubmit = async () => {
+    setHasAttemptedSubmit(true);
     if (!policyName.trim()) return;
     if (action === 'forward_to_pool' && !targetPool) return;
     
@@ -77,11 +80,9 @@ export function AddL7PolicyDrawer({
   };
 
   const handleClose = () => {
+    setHasAttemptedSubmit(false);
     onClose();
   };
-
-  const isValid = policyName.trim().length > 0 && 
-    (action !== 'forward_to_pool' || targetPool.length > 0);
 
   return (
     <Drawer
@@ -102,7 +103,7 @@ export function AddL7PolicyDrawer({
           <Button 
             variant="primary" 
             onClick={handleSubmit}
-            disabled={!isValid || isSubmitting}
+            disabled={isSubmitting}
             className="flex-1 h-8"
           >
             {isSubmitting ? 'Adding...' : 'Add'}
@@ -126,10 +127,17 @@ export function AddL7PolicyDrawer({
             onChange={(e) => setPolicyName(e.target.value)}
             placeholder="e.g. policy-image-redirect"
             fullWidth
+            error={hasAttemptedSubmit && !policyName.trim()}
           />
-          <p className="text-[11px] text-[var(--color-text-subtle)] leading-4">
-            Allowed: 1–128 characters, letters, numbers, "-", "_", ".", "()", "[]"
-          </p>
+          {hasAttemptedSubmit && !policyName.trim() ? (
+            <p className="text-[11px] text-[var(--color-state-danger)] leading-4">
+              Policy name is required
+            </p>
+          ) : (
+            <p className="text-[11px] text-[var(--color-text-subtle)] leading-4">
+              Allowed: 1–128 characters, letters, numbers, "-", "_", ".", "()", "[]"
+            </p>
+          )}
         </VStack>
 
         {/* Description Input */}
@@ -159,13 +167,21 @@ export function AddL7PolicyDrawer({
           
           {/* Target Pool Select (shown when action is forward_to_pool) */}
           {action === 'forward_to_pool' && (
-            <Select
-              value={targetPool}
-              onChange={(value) => setTargetPool(value)}
-              options={pools}
-              placeholder="Select a target pool"
-              fullWidth
-            />
+            <>
+              <Select
+                value={targetPool}
+                onChange={(value) => setTargetPool(value)}
+                options={pools}
+                placeholder="Select a target pool"
+                fullWidth
+                error={hasAttemptedSubmit && !targetPool}
+              />
+              {hasAttemptedSubmit && !targetPool && (
+                <p className="text-[11px] text-[var(--color-state-danger)] leading-4">
+                  Target pool is required
+                </p>
+              )}
+            </>
           )}
         </VStack>
 

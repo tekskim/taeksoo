@@ -47,7 +47,7 @@ const defaultCertificates: SNICertificateItem[] = Array.from({ length: 115 }, (_
   expiresAt: '2025.10.10',
 }));
 
-const ITEMS_PER_PAGE = 10;
+const ITEMS_PER_PAGE = 5;
 
 /* ----------------------------------------
    ManageSNICertificateDrawer Component

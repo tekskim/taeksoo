@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Drawer, Button, Input, Select } from '@/design-system';
+import { Drawer, Button, Input, Select, Slider } from '@/design-system';
 import { HStack, VStack } from '@/design-system/layouts';
 import { IconInfinity } from '@tabler/icons-react';
 
@@ -107,6 +107,7 @@ export function CreateVolumeFromSnapshotDrawer({
   const [capacity, setCapacity] = useState(minCapacity);
   const [volumeType, setVolumeType] = useState('_DEFAULT_');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [hasAttemptedSubmit, setHasAttemptedSubmit] = useState(false);
 
   // Reset form when drawer opens
   useEffect(() => {
@@ -114,10 +115,12 @@ export function CreateVolumeFromSnapshotDrawer({
       setVolumeName('');
       setCapacity(Math.max(snapshot.size, minCapacity));
       setVolumeType('_DEFAULT_');
+      setHasAttemptedSubmit(false);
     }
   }, [isOpen, snapshot, minCapacity]);
 
   const handleSubmit = async () => {
+    setHasAttemptedSubmit(true);
     if (!volumeName.trim()) return;
     
     setIsSubmitting(true);
@@ -133,6 +136,7 @@ export function CreateVolumeFromSnapshotDrawer({
     setVolumeName('');
     setCapacity(minCapacity);
     setVolumeType('_DEFAULT_');
+    setHasAttemptedSubmit(false);
     onClose();
   };
 
@@ -140,8 +144,6 @@ export function CreateVolumeFromSnapshotDrawer({
     const clampedValue = Math.min(Math.max(value, minCapacity), maxCapacity);
     setCapacity(clampedValue);
   };
-
-  const sliderPercentage = ((capacity - minCapacity) / (maxCapacity - minCapacity)) * 100;
 
   return (
     <Drawer
@@ -188,7 +190,7 @@ export function CreateVolumeFromSnapshotDrawer({
             <Button 
               variant="primary" 
               onClick={handleSubmit}
-              disabled={!volumeName.trim() || isSubmitting}
+              disabled={isSubmitting}
               className="flex-1 h-8"
             >
               {isSubmitting ? 'Creating...' : 'Create'}
@@ -231,10 +233,17 @@ export function CreateVolumeFromSnapshotDrawer({
             onChange={(e) => setVolumeName(e.target.value)}
             placeholder="e.g. data-snap-volume"
             fullWidth
+            error={hasAttemptedSubmit && !volumeName.trim()}
           />
-          <p className="text-[11px] text-[var(--color-text-subtle)] leading-4">
-            Allowed: 1–128 characters, letters, numbers, "-", "_", ".", "()", "[]"
-          </p>
+          {hasAttemptedSubmit && !volumeName.trim() ? (
+            <p className="text-[11px] text-[var(--color-state-danger)] leading-4">
+              Volume name is required
+            </p>
+          ) : (
+            <p className="text-[11px] text-[var(--color-text-subtle)] leading-4">
+              Allowed: 1–128 characters, letters, numbers, "-", "_", ".", "()", "[]"
+            </p>
+          )}
         </VStack>
 
         {/* Capacity Slider */}
@@ -250,25 +259,12 @@ export function CreateVolumeFromSnapshotDrawer({
           
           {/* Slider */}
           <VStack gap={3} className="w-full">
-            <div className="relative w-full h-1.5">
-              <div className="absolute inset-0 bg-[var(--color-border-subtle)] rounded-lg" />
-              <div 
-                className="absolute left-0 top-0 h-full bg-[#2563eb] rounded-lg"
-                style={{ width: `${sliderPercentage}%` }}
-              />
-              <input
-                type="range"
-                min={minCapacity}
-                max={maxCapacity}
-                value={capacity}
-                onChange={(e) => handleCapacityChange(Number(e.target.value))}
-                className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-              />
-              <div 
-                className="absolute top-1/2 -translate-y-1/2 w-4 h-4 bg-white border-2 border-[#2563eb] rounded-full pointer-events-none"
-                style={{ left: `calc(${sliderPercentage}% - 8px)` }}
-              />
-            </div>
+            <Slider
+              min={minCapacity}
+              max={maxCapacity}
+              value={capacity}
+              onChange={handleCapacityChange}
+            />
             
             {/* Capacity Input */}
             <Input

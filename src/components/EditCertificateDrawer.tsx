@@ -32,16 +32,19 @@ export function EditCertificateDrawer({
   const [name, setName] = useState(certificate.name);
   const [description, setDescription] = useState(certificate.description || '');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [hasAttemptedSubmit, setHasAttemptedSubmit] = useState(false);
 
   // Reset form when drawer opens or certificate changes
   useEffect(() => {
     if (isOpen) {
       setName(certificate.name);
       setDescription(certificate.description || '');
+      setHasAttemptedSubmit(false);
     }
   }, [isOpen, certificate]);
 
   const handleSubmit = async () => {
+    setHasAttemptedSubmit(true);
     if (!name.trim()) return;
     
     setIsSubmitting(true);
@@ -54,10 +57,9 @@ export function EditCertificateDrawer({
   };
 
   const handleClose = () => {
+    setHasAttemptedSubmit(false);
     onClose();
   };
-
-  const isValid = name.trim().length > 0;
 
   return (
     <Drawer
@@ -78,7 +80,7 @@ export function EditCertificateDrawer({
           <Button 
             variant="primary" 
             onClick={handleSubmit}
-            disabled={!isValid || isSubmitting}
+            disabled={isSubmitting}
             className="flex-1 h-8"
           >
             {isSubmitting ? 'Saving...' : 'Save'}
@@ -104,10 +106,17 @@ export function EditCertificateDrawer({
             onChange={(e) => setName(e.target.value)}
             placeholder="e.g. my-ssl-cert"
             fullWidth
+            error={hasAttemptedSubmit && !name.trim()}
           />
-          <p className="text-[11px] text-[var(--color-text-subtle)] leading-4">
-            Allowed: 1–128 characters, letters, numbers, "-", "_", ".", "()", "[]"
-          </p>
+          {hasAttemptedSubmit && !name.trim() ? (
+            <p className="text-[11px] text-[var(--color-state-danger)] leading-4">
+              Certificate name is required
+            </p>
+          ) : (
+            <p className="text-[11px] text-[var(--color-text-subtle)] leading-4">
+              Allowed: 1–128 characters, letters, numbers, "-", "_", ".", "()", "[]"
+            </p>
+          )}
         </VStack>
 
         {/* Description Input */}

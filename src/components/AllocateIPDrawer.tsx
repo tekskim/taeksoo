@@ -51,6 +51,7 @@ export function AllocateIPDrawer({
   const [assignmentType, setAssignmentType] = useState<IPAssignmentType>('auto');
   const [manualIpAddress, setManualIpAddress] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [hasAttemptedSubmit, setHasAttemptedSubmit] = useState(false);
 
   // Reset form when drawer opens
   useEffect(() => {
@@ -59,10 +60,12 @@ export function AllocateIPDrawer({
       setSelectedSubnetId('');
       setAssignmentType('auto');
       setManualIpAddress('');
+      setHasAttemptedSubmit(false);
     }
   }, [isOpen]);
 
   const handleSubmit = async () => {
+    setHasAttemptedSubmit(true);
     if (!selectedSubnetId) return;
     if (assignmentType === 'manual' && !manualIpAddress.trim()) return;
     
@@ -80,6 +83,7 @@ export function AllocateIPDrawer({
   };
 
   const handleClose = () => {
+    setHasAttemptedSubmit(false);
     onClose();
   };
 
@@ -87,8 +91,6 @@ export function AllocateIPDrawer({
   const ipRangeText = selectedSubnet && selectedSubnet.ipRangeStart && selectedSubnet.ipRangeEnd
     ? `${selectedSubnet.ipRangeStart} - ${selectedSubnet.ipRangeEnd}`
     : '';
-
-  const isValid = selectedSubnetId !== '' && (assignmentType === 'auto' || manualIpAddress.trim().length > 0);
 
   const subnetOptions = [
     { value: '', label: 'Select subnet' },
@@ -119,7 +121,7 @@ export function AllocateIPDrawer({
           <Button 
             variant="primary" 
             onClick={handleSubmit}
-            disabled={!isValid || isSubmitting}
+            disabled={isSubmitting}
             className="flex-1 h-8"
           >
             {isSubmitting ? 'Attaching...' : 'Attach'}
@@ -187,7 +189,13 @@ export function AllocateIPDrawer({
                 onChange={(value) => setSelectedSubnetId(value)}
                 options={subnetOptions}
                 fullWidth
+                error={hasAttemptedSubmit && !selectedSubnetId}
               />
+              {hasAttemptedSubmit && !selectedSubnetId && (
+                <p className="text-[11px] text-[var(--color-state-danger)] leading-4">
+                  Please select a subnet
+                </p>
+              )}
 
               {/* Assignment Type */}
               <Select
@@ -199,12 +207,20 @@ export function AllocateIPDrawer({
 
               {/* Manual IP Input (shown when manual is selected) */}
               {assignmentType === 'manual' && (
-                <Input
-                  value={manualIpAddress}
-                  onChange={(e) => setManualIpAddress(e.target.value)}
-                  placeholder="e.g. 10.62.0.50"
-                  fullWidth
-                />
+                <>
+                  <Input
+                    value={manualIpAddress}
+                    onChange={(e) => setManualIpAddress(e.target.value)}
+                    placeholder="e.g. 10.62.0.50"
+                    fullWidth
+                    error={hasAttemptedSubmit && !manualIpAddress.trim()}
+                  />
+                  {hasAttemptedSubmit && !manualIpAddress.trim() && (
+                    <p className="text-[11px] text-[var(--color-state-danger)] leading-4">
+                      IP address is required
+                    </p>
+                  )}
+                </>
               )}
 
               {/* IP Range Helper Text */}

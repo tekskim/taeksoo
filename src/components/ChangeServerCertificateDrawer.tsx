@@ -70,6 +70,7 @@ export function ChangeServerCertificateDrawer({
   const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [hasAttemptedSubmit, setHasAttemptedSubmit] = useState(false);
 
   // Reset state when drawer opens
   useEffect(() => {
@@ -77,6 +78,7 @@ export function ChangeServerCertificateDrawer({
       setSelectedCertificateId(null);
       setSearchQuery('');
       setCurrentPage(1);
+      setHasAttemptedSubmit(false);
     }
   }, [isOpen]);
 
@@ -95,6 +97,8 @@ export function ChangeServerCertificateDrawer({
   );
 
   const handleChange = async () => {
+    setHasAttemptedSubmit(true);
+    
     if (!selectedCertificateId) return;
     
     setIsSubmitting(true);
@@ -110,6 +114,7 @@ export function ChangeServerCertificateDrawer({
     setSelectedCertificateId(null);
     setSearchQuery('');
     setCurrentPage(1);
+    setHasAttemptedSubmit(false);
     onClose();
   };
 
@@ -122,32 +127,23 @@ export function ChangeServerCertificateDrawer({
       title="Change Server Certificate"
       width={696}
       footer={
-        <VStack gap={3}>
-          {/* Selection Indicator - Above footer buttons */}
-          <SelectionIndicator
-            selectedItems={selectedCertificate ? [{ id: selectedCertificate.id, label: selectedCertificate.name }] : []}
-            onRemove={() => setSelectedCertificateId(null)}
-            emptyText="No item Selected"
-            className="w-full"
-          />
-          <HStack gap={2} justify="center" className="w-full">
-            <Button 
-              variant="secondary" 
-              onClick={handleClose}
-              className="w-[152px] h-8"
-            >
-              Cancel
-            </Button>
-            <Button 
-              variant="primary" 
-              onClick={handleChange}
-              disabled={!selectedCertificateId || isSubmitting}
-              className="w-[152px] h-8"
-            >
-              {isSubmitting ? 'Changing...' : 'Change'}
-            </Button>
-          </HStack>
-        </VStack>
+        <HStack gap={2} justify="center" className="w-full">
+          <Button 
+            variant="secondary" 
+            onClick={handleClose}
+            className="w-[152px] h-8"
+          >
+            Cancel
+          </Button>
+          <Button 
+            variant="primary" 
+            onClick={handleChange}
+            disabled={isSubmitting}
+            className="w-[152px] h-8"
+          >
+            {isSubmitting ? 'Changing...' : 'Change'}
+          </Button>
+        </HStack>
       }
     >
       <VStack gap={6} className="h-full">
@@ -264,6 +260,16 @@ export function ChangeServerCertificateDrawer({
               </div>
             ))}
           </div>
+
+          {/* Selection Indicator - Below table */}
+          <SelectionIndicator
+            selectedItems={selectedCertificate ? [{ id: selectedCertificate.id, label: selectedCertificate.name }] : []}
+            onRemove={() => setSelectedCertificateId(null)}
+            emptyText="No item Selected"
+            error={hasAttemptedSubmit && !selectedCertificateId}
+            errorMessage="Please select a certificate."
+            className="w-full"
+          />
         </VStack>
       </VStack>
     </Drawer>

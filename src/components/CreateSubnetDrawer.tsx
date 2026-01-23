@@ -111,6 +111,7 @@ export function CreateSubnetDrawer({
   const [dns, setDns] = useState('');
   const [hostRoutes, setHostRoutes] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [hasAttemptedSubmit, setHasAttemptedSubmit] = useState(false);
 
   // Advanced options disclosure state
   const [showAdvanced, setShowAdvanced] = useState(true);
@@ -127,10 +128,12 @@ export function CreateSubnetDrawer({
       setDns('');
       setHostRoutes('');
       setShowAdvanced(true);
+      setHasAttemptedSubmit(false);
     }
   }, [isOpen]);
 
   const handleSubmit = async () => {
+    setHasAttemptedSubmit(true);
     if (!cidr.trim()) return;
     
     setIsSubmitting(true);
@@ -160,6 +163,7 @@ export function CreateSubnetDrawer({
     setAllocationPools('');
     setDns('');
     setHostRoutes('');
+    setHasAttemptedSubmit(false);
     onClose();
   };
 
@@ -171,9 +175,9 @@ export function CreateSubnetDrawer({
       showCloseButton={false}
       width={696}
       footer={
-        <VStack gap={0} className="w-full">
+        <VStack gap={4} className="w-full">
           {/* Quota Section */}
-          <VStack gap={6} className="w-full border-t border-[var(--color-border-subtle)] px-[var(--space-6)] py-[var(--space-4)]">
+          <VStack gap={4} className="w-full">
             <QuotaProgressBar
               label="Subnet Quota"
               used={subnetQuota.used}
@@ -193,7 +197,7 @@ export function CreateSubnetDrawer({
             <Button 
               variant="primary" 
               onClick={handleSubmit}
-              disabled={!cidr.trim() || isSubmitting}
+              disabled={isSubmitting}
               className="w-[152px] h-8"
             >
               {isSubmitting ? 'Creating...' : 'Create'}
@@ -237,10 +241,17 @@ export function CreateSubnetDrawer({
             value={cidr}
             onChange={(e) => setCidr(e.target.value)}
             fullWidth
+            error={hasAttemptedSubmit && !cidr.trim()}
           />
-          <span className="text-[11px] text-[var(--color-text-subtle)]">
-            It is recommended that you use the private network address 10.0.0.0/8, 172.16.0.0/12, 192.168.0.0/16
-          </span>
+          {hasAttemptedSubmit && !cidr.trim() ? (
+            <span className="text-[11px] text-[var(--color-state-danger)]">
+              CIDR is required
+            </span>
+          ) : (
+            <span className="text-[11px] text-[var(--color-text-subtle)]">
+              It is recommended that you use the private network address 10.0.0.0/8, 172.16.0.0/12, 192.168.0.0/16
+            </span>
+          )}
         </VStack>
 
         {/* Gateway */}

@@ -58,6 +58,7 @@ export function CreateHealthMonitorDrawer({
   const [maxRetries, setMaxRetries] = useState(3);
   const [adminStateUp, setAdminStateUp] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [hasAttemptedSubmit, setHasAttemptedSubmit] = useState(false);
 
   // Reset form when drawer opens
   useEffect(() => {
@@ -68,10 +69,12 @@ export function CreateHealthMonitorDrawer({
       setTimeout(3);
       setMaxRetries(3);
       setAdminStateUp(true);
+      setHasAttemptedSubmit(false);
     }
   }, [isOpen, pool.name]);
 
   const handleSubmit = async () => {
+    setHasAttemptedSubmit(true);
     // Validation: timeout must be less than interval
     if (timeout >= interval) return;
     
@@ -92,6 +95,7 @@ export function CreateHealthMonitorDrawer({
   };
 
   const handleClose = () => {
+    setHasAttemptedSubmit(false);
     onClose();
   };
 
@@ -99,7 +103,6 @@ export function CreateHealthMonitorDrawer({
   const isTimeoutValid = timeout < interval && timeout >= 1 && timeout <= 3599;
   const isIntervalValid = interval >= 1 && interval <= 3600;
   const isMaxRetriesValid = maxRetries >= 1 && maxRetries <= 10;
-  const isValid = isTimeoutValid && isIntervalValid && isMaxRetriesValid;
 
   return (
     <Drawer
@@ -120,7 +123,7 @@ export function CreateHealthMonitorDrawer({
           <Button 
             variant="primary" 
             onClick={handleSubmit}
-            disabled={!isValid || isSubmitting}
+            disabled={isSubmitting}
             className="flex-1 h-8"
           >
             {isSubmitting ? 'Saving...' : 'Save'}
@@ -196,10 +199,17 @@ export function CreateHealthMonitorDrawer({
             min={1}
             max={3600}
             fullWidth
+            error={hasAttemptedSubmit && !isIntervalValid}
           />
-          <p className="text-[11px] text-[var(--color-text-subtle)] leading-4">
-            1 ~ 3600; Timeout &lt; Delay
-          </p>
+          {hasAttemptedSubmit && !isIntervalValid ? (
+            <p className="text-[11px] text-[var(--color-state-danger)] leading-4">
+              Interval must be between 1-3600
+            </p>
+          ) : (
+            <p className="text-[11px] text-[var(--color-text-subtle)] leading-4">
+              1 ~ 3600; Timeout &lt; Delay
+            </p>
+          )}
         </VStack>
 
         {/* Timeout (sec) */}
@@ -217,10 +227,17 @@ export function CreateHealthMonitorDrawer({
             min={1}
             max={3599}
             fullWidth
+            error={hasAttemptedSubmit && !isTimeoutValid}
           />
-          <p className="text-[11px] text-[var(--color-text-subtle)] leading-4">
-            1 ~ 3599; Timeout &lt; Delay
-          </p>
+          {hasAttemptedSubmit && !isTimeoutValid ? (
+            <p className="text-[11px] text-[var(--color-state-danger)] leading-4">
+              Timeout must be between 1-3599 and less than Interval
+            </p>
+          ) : (
+            <p className="text-[11px] text-[var(--color-text-subtle)] leading-4">
+              1 ~ 3599; Timeout &lt; Delay
+            </p>
+          )}
         </VStack>
 
         {/* Max Retries */}
@@ -238,10 +255,17 @@ export function CreateHealthMonitorDrawer({
             min={1}
             max={10}
             fullWidth
+            error={hasAttemptedSubmit && !isMaxRetriesValid}
           />
-          <p className="text-[11px] text-[var(--color-text-subtle)] leading-4">
-            1 ~ 10
-          </p>
+          {hasAttemptedSubmit && !isMaxRetriesValid ? (
+            <p className="text-[11px] text-[var(--color-state-danger)] leading-4">
+              Max Retries must be between 1-10
+            </p>
+          ) : (
+            <p className="text-[11px] text-[var(--color-text-subtle)] leading-4">
+              1 ~ 10
+            </p>
+          )}
         </VStack>
 
         {/* Admin State */}

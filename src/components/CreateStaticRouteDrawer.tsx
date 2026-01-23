@@ -50,16 +50,19 @@ export function CreateStaticRouteDrawer({
   const [destinationCidr, setDestinationCidr] = useState('');
   const [nextHop, setNextHop] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [hasAttemptedSubmit, setHasAttemptedSubmit] = useState(false);
 
   // Reset form when drawer opens
   useEffect(() => {
     if (isOpen) {
       setDestinationCidr('');
       setNextHop('');
+      setHasAttemptedSubmit(false);
     }
   }, [isOpen]);
 
   const handleSubmit = async () => {
+    setHasAttemptedSubmit(true);
     if (!destinationCidr.trim() || !nextHop.trim()) return;
     
     setIsSubmitting(true);
@@ -72,10 +75,9 @@ export function CreateStaticRouteDrawer({
   };
 
   const handleClose = () => {
+    setHasAttemptedSubmit(false);
     onClose();
   };
-
-  const isValid = destinationCidr.trim().length > 0 && nextHop.trim().length > 0;
 
   return (
     <Drawer
@@ -96,7 +98,7 @@ export function CreateStaticRouteDrawer({
           <Button 
             variant="primary" 
             onClick={handleSubmit}
-            disabled={!isValid || isSubmitting}
+            disabled={isSubmitting}
             className="flex-1 h-8"
           >
             {isSubmitting ? 'Saving...' : 'Save'}
@@ -128,7 +130,13 @@ export function CreateStaticRouteDrawer({
             onChange={(e) => setDestinationCidr(e.target.value)}
             placeholder="e.g., 10.7.61.0/24"
             fullWidth
+            error={hasAttemptedSubmit && !destinationCidr.trim()}
           />
+          {hasAttemptedSubmit && !destinationCidr.trim() && (
+            <p className="text-[11px] text-[var(--color-state-danger)] leading-4">
+              Destination CIDR is required
+            </p>
+          )}
         </VStack>
 
         {/* Next hop Input */}
@@ -141,7 +149,13 @@ export function CreateStaticRouteDrawer({
             onChange={(e) => setNextHop(e.target.value)}
             placeholder="e.g., 192.168.10.50"
             fullWidth
+            error={hasAttemptedSubmit && !nextHop.trim()}
           />
+          {hasAttemptedSubmit && !nextHop.trim() && (
+            <p className="text-[11px] text-[var(--color-state-danger)] leading-4">
+              Next hop is required
+            </p>
+          )}
         </VStack>
       </VStack>
     </Drawer>

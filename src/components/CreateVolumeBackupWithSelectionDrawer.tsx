@@ -128,6 +128,7 @@ export function CreateVolumeBackupWithSelectionDrawer({
   const [description, setDescription] = useState('');
   const [backupMode, setBackupMode] = useState<BackupMode>('full');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [hasAttemptedSubmit, setHasAttemptedSubmit] = useState(false);
 
   // Filter volumes
   const filteredVolumes = volumes.filter((vol) =>
@@ -155,6 +156,7 @@ export function CreateVolumeBackupWithSelectionDrawer({
   }, [isOpen]);
 
   const handleSubmit = async () => {
+    setHasAttemptedSubmit(true);
     if (!selectedVolumeId || !backupName.trim()) return;
     
     setIsSubmitting(true);
@@ -173,6 +175,7 @@ export function CreateVolumeBackupWithSelectionDrawer({
     setBackupName('');
     setDescription('');
     setBackupMode('full');
+    setHasAttemptedSubmit(false);
     onClose();
   };
 
@@ -186,9 +189,9 @@ export function CreateVolumeBackupWithSelectionDrawer({
       showCloseButton={false}
       width={696}
       footer={
-        <VStack gap={0} className="w-full">
+        <VStack gap={4} className="w-full">
           {/* Quota Section */}
-          <VStack gap={6} className="w-full border-t border-[var(--color-border-subtle)] px-[var(--space-6)] py-[var(--space-4)]">
+          <VStack gap={4} className="w-full">
             <QuotaProgressBar
               label="Volume Backup Quota"
               used={volumeBackupQuota.used}
@@ -213,7 +216,7 @@ export function CreateVolumeBackupWithSelectionDrawer({
             <Button 
               variant="primary" 
               onClick={handleSubmit}
-              disabled={!selectedVolumeId || !backupName.trim() || isSubmitting}
+              disabled={isSubmitting}
               className="w-[152px] h-8"
             >
               {isSubmitting ? 'Creating...' : 'Create'}
@@ -333,6 +336,8 @@ export function CreateVolumeBackupWithSelectionDrawer({
             selectedItems={selectedVolume ? [{ id: selectedVolume.id, label: selectedVolume.name }] : []}
             onRemove={() => setSelectedVolumeId(null)}
             emptyText="No item Selected"
+            error={!selectedVolumeId && hasAttemptedSubmit}
+            errorMessage="Please select a volume"
             className="shrink-0"
             style={{ width: '648px' }}
           />

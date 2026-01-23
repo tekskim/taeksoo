@@ -127,6 +127,7 @@ export function CreateVolumeFromVolumeSnapshotDrawer({
   const [capacity, setCapacity] = useState(minCapacity);
   const [volumeType, setVolumeType] = useState('_DEFAULT_');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [hasAttemptedSubmit, setHasAttemptedSubmit] = useState(false);
 
   // Reset form when drawer opens
   useEffect(() => {
@@ -135,10 +136,12 @@ export function CreateVolumeFromVolumeSnapshotDrawer({
       setDescription('');
       setCapacity(minCapacity);
       setVolumeType('_DEFAULT_');
+      setHasAttemptedSubmit(false);
     }
   }, [isOpen, minCapacity]);
 
   const handleSubmit = async () => {
+    setHasAttemptedSubmit(true);
     if (!volumeName.trim()) return;
     
     setIsSubmitting(true);
@@ -151,6 +154,7 @@ export function CreateVolumeFromVolumeSnapshotDrawer({
   };
 
   const handleClose = () => {
+    setHasAttemptedSubmit(false);
     onClose();
   };
 
@@ -201,7 +205,7 @@ export function CreateVolumeFromVolumeSnapshotDrawer({
             <Button 
               variant="primary" 
               onClick={handleSubmit}
-              disabled={!volumeName.trim() || isSubmitting}
+              disabled={isSubmitting}
               className="flex-1 h-8"
             >
               {isSubmitting ? 'Creating...' : 'Create'}
@@ -234,10 +238,17 @@ export function CreateVolumeFromVolumeSnapshotDrawer({
             onChange={(e) => setVolumeName(e.target.value)}
             placeholder="e.g. volume snapshot-copy"
             fullWidth
+            error={hasAttemptedSubmit && !volumeName.trim()}
           />
-          <p className="text-[11px] text-[var(--color-text-subtle)] leading-4">
-            Allowed: 1–128 characters, letters, numbers, "-", "_", ".", "()", "[]"
-          </p>
+          {hasAttemptedSubmit && !volumeName.trim() ? (
+            <p className="text-[11px] text-[var(--color-state-danger)] leading-4">
+              Volume name is required
+            </p>
+          ) : (
+            <p className="text-[11px] text-[var(--color-text-subtle)] leading-4">
+              Allowed: 1–128 characters, letters, numbers, "-", "_", ".", "()", "[]"
+            </p>
+          )}
         </VStack>
 
         {/* Description Input */}

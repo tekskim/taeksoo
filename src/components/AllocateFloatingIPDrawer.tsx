@@ -89,6 +89,7 @@ export function AllocateFloatingIPDrawer({
   // Sort state
   const [sortColumn, setSortColumn] = useState<string>('name');
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc');
+  const [hasAttemptedSubmit, setHasAttemptedSubmit] = useState(false);
 
   // Reset state function
   const resetState = () => {
@@ -101,6 +102,7 @@ export function AllocateFloatingIPDrawer({
     setDnsName('');
     setSearchQuery('');
     setCurrentPage(1);
+    setHasAttemptedSubmit(false);
   };
 
   // Handle close with reset
@@ -142,6 +144,8 @@ export function AllocateFloatingIPDrawer({
   const selectedNetwork = networks.find((n) => n.id === selectedNetworkId);
 
   const handleSubmit = () => {
+    setHasAttemptedSubmit(true);
+    
     if (!selectedNetworkId) return;
 
     onSubmit?.({
@@ -165,9 +169,9 @@ export function AllocateFloatingIPDrawer({
       title="Allocate Floating IP"
       width={696}
       footer={
-        <VStack gap={0} className="w-full">
+        <VStack gap={4} className="w-full">
           {/* Quota Section */}
-          <VStack gap={6} className="w-full border-t border-[var(--color-border-subtle)] px-[var(--space-6)] py-[var(--space-4)]">
+          <VStack gap={4} className="w-full">
             <VStack gap={2} className="w-full">
               <HStack justify="space-between" className="w-full">
                 <span className="text-[14px] font-medium text-[var(--color-text-default)]">Floating IP Quota</span>
@@ -191,7 +195,7 @@ export function AllocateFloatingIPDrawer({
             <Button
               variant="primary"
               onClick={handleSubmit}
-              disabled={!selectedNetworkId}
+              disabled={false}
               className="w-[152px] h-8"
             >
               Allocate
@@ -343,6 +347,8 @@ export function AllocateFloatingIPDrawer({
             selectedItems={selectedNetwork ? [{ id: selectedNetwork.id, label: selectedNetwork.name }] : []}
             onRemove={() => setSelectedNetworkId(null)}
             emptyText="No item Selected"
+            error={hasAttemptedSubmit && !selectedNetworkId}
+            errorMessage="Please select a network."
             className="shrink-0"
             style={{ width: '648px' }}
           />
