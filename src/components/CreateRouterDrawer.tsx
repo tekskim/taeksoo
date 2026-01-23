@@ -129,6 +129,7 @@ export function CreateRouterDrawer({
   const [externalGatewayEnabled, setExternalGatewayEnabled] = useState(true);
   const [selectedNetworkId, setSelectedNetworkId] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [hasAttemptedSubmit, setHasAttemptedSubmit] = useState(false);
 
   // Network selection state
   const [searchQuery, setSearchQuery] = useState('');
@@ -165,6 +166,7 @@ export function CreateRouterDrawer({
   }, [isOpen]);
 
   const handleSubmit = async () => {
+    setHasAttemptedSubmit(true);
     if (!routerName.trim()) return;
     
     setIsSubmitting(true);
@@ -190,6 +192,7 @@ export function CreateRouterDrawer({
     setSelectedNetworkId(null);
     setSearchQuery('');
     setCurrentPage(1);
+    setHasAttemptedSubmit(false);
     onClose();
   };
 
@@ -203,9 +206,9 @@ export function CreateRouterDrawer({
       showCloseButton={false}
       width={696}
       footer={
-        <VStack gap={0} className="w-full">
+        <VStack gap={4} className="w-full">
           {/* Quota Section */}
-          <VStack gap={6} className="w-full border-t border-[var(--color-border-subtle)] px-[var(--space-6)] py-[var(--space-4)]">
+          <VStack gap={4} className="w-full">
             <QuotaProgressBar
               label="Router Quota"
               used={routerQuota.used}
@@ -225,7 +228,7 @@ export function CreateRouterDrawer({
             <Button 
               variant="primary" 
               onClick={handleSubmit}
-              disabled={!routerName.trim() || isSubmitting}
+              disabled={isSubmitting}
               className="w-[152px] h-8"
             >
               {isSubmitting ? 'Creating...' : 'Create'}
@@ -256,10 +259,17 @@ export function CreateRouterDrawer({
               onChange={(e) => setRouterName(e.target.value)}
               placeholder="e.g. web-router-01"
               fullWidth
+              error={hasAttemptedSubmit && !routerName.trim()}
             />
-            <span className="text-[11px] text-[var(--color-text-subtle)]">
-              Allowed: 1–128 characters, letters, numbers, "-", "_", ".", "()", "[]"
-            </span>
+            {hasAttemptedSubmit && !routerName.trim() ? (
+              <span className="text-[11px] text-[var(--color-state-danger)]">
+                Router name is required
+              </span>
+            ) : (
+              <span className="text-[11px] text-[var(--color-text-subtle)]">
+                Allowed: 1–128 characters, letters, numbers, "-", "_", ".", "()", "[]"
+              </span>
+            )}
           </VStack>
 
           {/* Description */}

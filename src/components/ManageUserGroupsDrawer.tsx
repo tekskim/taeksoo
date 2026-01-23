@@ -45,7 +45,7 @@ const defaultUserGroups: UserGroupItem[] = Array.from({ length: 25 }, (_, i) => 
   createdAt: '2025-09-12',
 }));
 
-const ITEMS_PER_PAGE = 10;
+const ITEMS_PER_PAGE = 5;
 
 /* ----------------------------------------
    ManageUserGroupsDrawer Component

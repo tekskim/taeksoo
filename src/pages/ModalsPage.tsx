@@ -754,7 +754,7 @@ export function ModalsPage() {
                             size="sm"
                             onOpen={() => setIsDeleteCronJobOpen(true)}
                           />
-                        </div>
+                    </div>
                       </VStack>
                     </VStack>
                   </Disclosure.Panel>

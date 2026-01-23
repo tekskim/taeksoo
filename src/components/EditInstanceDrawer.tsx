@@ -66,7 +66,7 @@ export function EditInstanceDrawer({
           <Button
             variant="primary"
             onClick={handleSubmit}
-            disabled={!instanceName.trim() || isSubmitting}
+            disabled={isSubmitting}
             className="flex-1 h-8"
           >
             {isSubmitting ? 'Saving...' : 'Save'}

@@ -67,12 +67,15 @@ export function DetachVolumeDrawer({
   const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [hasAttemptedSubmit, setHasAttemptedSubmit] = useState(false);
 
   const totalItems = 115;
-  const itemsPerPage = 10;
+  const itemsPerPage = 5;
   const totalPages = Math.ceil(totalItems / itemsPerPage);
 
   const handleDetach = async () => {
+    setHasAttemptedSubmit(true);
+    
     if (!selectedVolumeId) return;
     
     setIsSubmitting(true);
@@ -88,6 +91,7 @@ export function DetachVolumeDrawer({
     setSelectedVolumeId(null);
     setSearchQuery('');
     setCurrentPage(1);
+    setHasAttemptedSubmit(false);
     onClose();
   };
 
@@ -114,7 +118,7 @@ export function DetachVolumeDrawer({
           <Button 
             variant="primary" 
             onClick={handleDetach}
-            disabled={!selectedVolumeId || isSubmitting}
+            disabled={isSubmitting}
             className="w-[152px] h-8"
           >
             {isSubmitting ? 'Detaching...' : 'Detach'}
@@ -215,7 +219,7 @@ export function DetachVolumeDrawer({
 
             {/* Rows */}
             <div style={{ width: '648px', maxWidth: '648px', marginTop: '4px', display: 'flex', flexDirection: 'column', gap: '4px' }}>
-              {filteredVolumes.map((volume) => (
+              {filteredVolumes.slice(0, itemsPerPage).map((volume) => (
                 <div 
                   key={volume.id}
                   style={{ display: 'flex', width: '648px', minHeight: '40px' }}
@@ -264,16 +268,17 @@ export function DetachVolumeDrawer({
             </div>
           </div>
 
+          {/* Selection Indicator */}
+          <SelectionIndicator
+            selectedItems={selectedVolumeId ? [{ id: selectedVolumeId, label: volumes.find(v => v.id === selectedVolumeId)?.name || '' }] : []}
+            onRemove={() => setSelectedVolumeId(null)}
+            emptyText="No item selected"
+            error={hasAttemptedSubmit && !selectedVolumeId}
+            errorMessage="Please select a volume."
+            className="shrink-0"
+            style={{ width: '648px' }}
+          />
         </VStack>
-
-        {/* Selection Indicator */}
-        <SelectionIndicator
-          selectedItems={selectedVolumeId ? [{ id: selectedVolumeId, label: volumes.find(v => v.id === selectedVolumeId)?.name || '' }] : []}
-          onRemove={() => setSelectedVolumeId(null)}
-          emptyText="No item selected"
-          className="shrink-0"
-          style={{ width: '648px' }}
-        />
       </VStack>
     </Drawer>
   );

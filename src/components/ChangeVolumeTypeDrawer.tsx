@@ -62,15 +62,18 @@ export function ChangeVolumeTypeDrawer({
 }: ChangeVolumeTypeDrawerProps) {
   const [selectedType, setSelectedType] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [hasAttemptedSubmit, setHasAttemptedSubmit] = useState(false);
 
   // Reset form when drawer opens
   useEffect(() => {
     if (isOpen) {
       setSelectedType('');
+      setHasAttemptedSubmit(false);
     }
   }, [isOpen]);
 
   const handleSubmit = async () => {
+    setHasAttemptedSubmit(true);
     if (!selectedType) return;
     
     setIsSubmitting(true);
@@ -83,6 +86,7 @@ export function ChangeVolumeTypeDrawer({
   };
 
   const handleClose = () => {
+    setHasAttemptedSubmit(false);
     onClose();
   };
 
@@ -110,7 +114,7 @@ export function ChangeVolumeTypeDrawer({
           <Button 
             variant="primary" 
             onClick={handleSubmit}
-            disabled={!selectedType || isSubmitting}
+            disabled={isSubmitting}
             className="flex-1 h-8"
           >
             {isSubmitting ? 'Saving...' : 'Save'}
@@ -162,7 +166,13 @@ export function ChangeVolumeTypeDrawer({
             options={availableTypes}
             placeholder="Please select a volume type"
             fullWidth
+            error={hasAttemptedSubmit && !selectedType}
           />
+          {hasAttemptedSubmit && !selectedType && (
+            <p className="text-[11px] text-[var(--color-state-danger)] leading-4">
+              Please select a volume type
+            </p>
+          )}
         </VStack>
       </VStack>
     </Drawer>

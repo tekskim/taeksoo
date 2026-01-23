@@ -69,12 +69,14 @@ export function AttachInterfaceDrawer({
   const [currentPage, setCurrentPage] = useState(1);
   const [fixedIpMode, setFixedIpMode] = useState('auto-assign');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [hasAttemptedSubmit, setHasAttemptedSubmit] = useState(false);
 
   const totalItems = 115;
   const itemsPerPage = 10;
   const totalPages = Math.ceil(totalItems / itemsPerPage);
 
   const handleAttach = async () => {
+    setHasAttemptedSubmit(true);
     if (!selectedNetworkId) return;
     
     setIsSubmitting(true);
@@ -91,6 +93,7 @@ export function AttachInterfaceDrawer({
     setSearchQuery('');
     setCurrentPage(1);
     setFixedIpMode('auto-assign');
+    setHasAttemptedSubmit(false);
     onClose();
   };
 
@@ -117,7 +120,7 @@ export function AttachInterfaceDrawer({
           <Button 
             variant="primary" 
             onClick={handleAttach}
-            disabled={!selectedNetworkId || isSubmitting}
+            disabled={isSubmitting}
             className="w-[152px] h-8"
           >
             {isSubmitting ? 'Attaching...' : 'Attach'}
@@ -261,6 +264,8 @@ export function AttachInterfaceDrawer({
           emptyText="No item selected"
           className="shrink-0"
           style={{ width: '648px' }}
+          error={hasAttemptedSubmit && !selectedNetworkId}
+          errorMessage="Please select a network"
         />
 
         {/* Fixed IP Section */}
@@ -269,7 +274,7 @@ export function AttachInterfaceDrawer({
           <Select
             options={[]}
             placeholder="Select subnet"
-            disabled={!selectedNetworkId}
+            disabled={false}
             fullWidth
           />
           <Select

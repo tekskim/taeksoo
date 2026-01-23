@@ -199,6 +199,7 @@ export function RegisterCertificateDrawer({
   const [privateKey, setPrivateKey] = useState('');
   const [intermediateCert, setIntermediateCert] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [hasAttemptedSubmit, setHasAttemptedSubmit] = useState(false);
 
   // Reset form when drawer opens
   useEffect(() => {
@@ -209,10 +210,12 @@ export function RegisterCertificateDrawer({
       setCertificateBody('');
       setPrivateKey('');
       setIntermediateCert('');
+      setHasAttemptedSubmit(false);
     }
   }, [isOpen]);
 
   const handleSubmit = async () => {
+    setHasAttemptedSubmit(true);
     if (!certificateName.trim() || !certificateBody.trim()) return;
     if (certificateType === 'server' && !privateKey.trim()) return;
     
@@ -233,13 +236,9 @@ export function RegisterCertificateDrawer({
   };
 
   const handleClose = () => {
+    setHasAttemptedSubmit(false);
     onClose();
   };
-
-  const isValid = 
-    certificateName.trim().length > 0 && 
-    certificateBody.trim().length > 0 &&
-    (certificateType !== 'server' || privateKey.trim().length > 0);
 
   return (
     <Drawer
@@ -260,7 +259,7 @@ export function RegisterCertificateDrawer({
           <Button 
             variant="primary" 
             onClick={handleSubmit}
-            disabled={!isValid || isSubmitting}
+            disabled={isSubmitting}
             className="flex-1 h-8"
           >
             {isSubmitting ? 'Registering...' : 'Register'}
@@ -305,10 +304,17 @@ export function RegisterCertificateDrawer({
             onChange={(e) => setCertificateName(e.target.value)}
             placeholder={certificateType === 'server' ? "e.g. my-ssl-cert" : "e.g. company-internal-ca"}
             fullWidth
+            error={hasAttemptedSubmit && !certificateName.trim()}
           />
-          <p className="text-[11px] text-[var(--color-text-subtle)] leading-4">
-            Allowed: 1–128 characters, letters, numbers, "-", "_", ".", "()", "[]"
-          </p>
+          {hasAttemptedSubmit && !certificateName.trim() ? (
+            <p className="text-[11px] text-[var(--color-state-danger)] leading-4">
+              Certificate name is required
+            </p>
+          ) : (
+            <p className="text-[11px] text-[var(--color-text-subtle)] leading-4">
+              Allowed: 1–128 characters, letters, numbers, "-", "_", ".", "()", "[]"
+            </p>
+          )}
         </VStack>
 
         {/* Description Input */}

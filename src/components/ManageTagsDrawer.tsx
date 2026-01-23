@@ -5,7 +5,7 @@ import {
   Input,
 } from '@/design-system';
 import { HStack, VStack } from '@/design-system/layouts';
-import { IconPlus, IconX } from '@tabler/icons-react';
+import { IconCirclePlus, IconX } from '@tabler/icons-react';
 
 /* ----------------------------------------
    Types
@@ -155,7 +155,7 @@ export function ManageTagsDrawer({
             disabled={tags.length >= maxTags}
             className="w-fit"
           >
-            <IconPlus size={12} className="mr-1.5" />
+            <IconCirclePlus size={12} className="mr-1.5" />
             Add Tag
           </Button>
 

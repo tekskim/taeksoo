@@ -48,7 +48,7 @@ const defaultInstances: InstanceItem[] = Array.from({ length: 115 }, (_, i) => (
   az: 'zone-a',
 }));
 
-const ITEMS_PER_PAGE = 10;
+const ITEMS_PER_PAGE = 5;
 
 /* ----------------------------------------
    AttachPortToInstanceDrawer Component
@@ -68,6 +68,7 @@ export function AttachPortToInstanceDrawer({
   const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [hasAttemptedSubmit, setHasAttemptedSubmit] = useState(false);
 
   // Filter instances
   const filteredInstances = instances.filter((inst) =>
@@ -88,10 +89,13 @@ export function AttachPortToInstanceDrawer({
       setSelectedInstanceId(null);
       setSearchQuery('');
       setCurrentPage(1);
+      setHasAttemptedSubmit(false);
     }
   }, [isOpen]);
 
   const handleSubmit = async () => {
+    setHasAttemptedSubmit(true);
+    
     if (!selectedInstanceId) return;
     
     setIsSubmitting(true);
@@ -107,6 +111,7 @@ export function AttachPortToInstanceDrawer({
     setSelectedInstanceId(null);
     setSearchQuery('');
     setCurrentPage(1);
+    setHasAttemptedSubmit(false);
     onClose();
   };
 
@@ -130,7 +135,7 @@ export function AttachPortToInstanceDrawer({
           <Button 
             variant="primary" 
             onClick={handleSubmit}
-            disabled={!selectedInstanceId || isSubmitting}
+            disabled={isSubmitting}
             className="w-[152px] h-8"
           >
             {isSubmitting ? 'Attaching...' : 'Attach'}
@@ -261,6 +266,8 @@ export function AttachPortToInstanceDrawer({
             selectedItems={selectedInstance ? [{ id: selectedInstance.id, label: selectedInstance.name }] : []}
             onRemove={() => setSelectedInstanceId(null)}
             emptyText="No item Selected"
+            error={hasAttemptedSubmit && !selectedInstanceId}
+            errorMessage="Please select an instance."
             className="shrink-0"
             style={{ width: '648px' }}
           />

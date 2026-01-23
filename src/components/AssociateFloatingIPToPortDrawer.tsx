@@ -95,12 +95,12 @@ export function AssociateFloatingIPToPortDrawer({
 
   // Reset state function
   const resetState = () => {
-    setSelectedFixedIpId(null);
-    setSelectedFloatingIpId(null);
-    setFixedIpSearchQuery('');
-    setFloatingIpSearchQuery('');
-    setFixedIpCurrentPage(1);
-    setFloatingIpCurrentPage(1);
+      setSelectedFixedIpId(null);
+      setSelectedFloatingIpId(null);
+      setFixedIpSearchQuery('');
+      setFloatingIpSearchQuery('');
+      setFixedIpCurrentPage(1);
+      setFloatingIpCurrentPage(1);
   };
 
   // Handle close with reset

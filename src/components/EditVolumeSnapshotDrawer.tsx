@@ -76,7 +76,7 @@ export function EditVolumeSnapshotDrawer({
           <Button 
             variant="primary" 
             onClick={handleSubmit}
-            disabled={!snapshotName.trim() || isSubmitting}
+            disabled={isSubmitting}
             className="flex-1 h-8"
           >
             {isSubmitting ? 'Saving...' : 'Save'}

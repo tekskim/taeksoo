@@ -28,6 +28,7 @@ export function CreateAllowedAddressPairDrawer({
   const [macAddressType, setMacAddressType] = useState<MacAddressType>('from_port');
   const [macAddress, setMacAddress] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [hasAttemptedSubmit, setHasAttemptedSubmit] = useState(false);
 
   // Reset form when drawer opens
   useEffect(() => {
@@ -35,10 +36,12 @@ export function CreateAllowedAddressPairDrawer({
       setCidr('');
       setMacAddressType('from_port');
       setMacAddress('');
+      setHasAttemptedSubmit(false);
     }
   }, [isOpen]);
 
   const handleSubmit = async () => {
+    setHasAttemptedSubmit(true);
     if (!cidr.trim()) return;
     if (macAddressType === 'manual' && !macAddress.trim()) return;
     
@@ -56,11 +59,9 @@ export function CreateAllowedAddressPairDrawer({
   };
 
   const handleClose = () => {
+    setHasAttemptedSubmit(false);
     onClose();
   };
-
-  const isValid = cidr.trim().length > 0 && 
-    (macAddressType === 'from_port' || (macAddressType === 'manual' && macAddress.trim().length > 0));
 
   return (
     <Drawer
@@ -81,7 +82,7 @@ export function CreateAllowedAddressPairDrawer({
           <Button 
             variant="primary" 
             onClick={handleSubmit}
-            disabled={!isValid || isSubmitting}
+            disabled={isSubmitting}
             className="flex-1 h-8"
           >
             {isSubmitting ? 'Creating...' : 'Create'}
@@ -110,10 +111,17 @@ export function CreateAllowedAddressPairDrawer({
             onChange={(e) => setCidr(e.target.value)}
             placeholder="e.g. 192.168.0.0/24"
             fullWidth
+            error={hasAttemptedSubmit && !cidr.trim()}
           />
-          <p className="text-[11px] text-[var(--color-text-subtle)] leading-4">
-            Prefix (/): 24~28
-          </p>
+          {hasAttemptedSubmit && !cidr.trim() ? (
+            <p className="text-[11px] text-[var(--color-state-danger)] leading-4">
+              CIDR is required
+            </p>
+          ) : (
+            <p className="text-[11px] text-[var(--color-text-subtle)] leading-4">
+              Prefix (/): 24~28
+            </p>
+          )}
         </VStack>
 
         {/* MAC Address Radio Group */}
@@ -142,12 +150,20 @@ export function CreateAllowedAddressPairDrawer({
 
           {/* Manual MAC Address Input */}
           {macAddressType === 'manual' && (
-            <Input
-              value={macAddress}
-              onChange={(e) => setMacAddress(e.target.value)}
-              placeholder="e.g. fa:16:3e:ab:cd:ef"
-              fullWidth
-            />
+            <>
+              <Input
+                value={macAddress}
+                onChange={(e) => setMacAddress(e.target.value)}
+                placeholder="e.g. fa:16:3e:ab:cd:ef"
+                fullWidth
+                error={hasAttemptedSubmit && !macAddress.trim()}
+              />
+              {hasAttemptedSubmit && !macAddress.trim() && (
+                <p className="text-[11px] text-[var(--color-state-danger)] leading-4">
+                  MAC address is required
+                </p>
+              )}
+            </>
           )}
         </VStack>
       </VStack>

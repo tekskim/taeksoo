@@ -83,6 +83,7 @@ export function CreateKeyPairDrawer({
   const [keyPairName, setKeyPairName] = useState('');
   const [publicKey, setPublicKey] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [hasAttemptedSubmit, setHasAttemptedSubmit] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -102,6 +103,7 @@ export function CreateKeyPairDrawer({
   };
 
   const handleSubmit = async () => {
+    setHasAttemptedSubmit(true);
     if (!keyPairName.trim()) return;
     if (createType === 'import' && !publicKey.trim()) return;
     
@@ -118,12 +120,9 @@ export function CreateKeyPairDrawer({
     setCreateType('create');
     setKeyPairName('');
     setPublicKey('');
+    setHasAttemptedSubmit(false);
     onClose();
   };
-
-  const isValid = createType === 'create' 
-    ? keyPairName.trim().length > 0
-    : keyPairName.trim().length > 0 && publicKey.trim().length > 0;
 
   return (
     <Drawer
@@ -155,7 +154,7 @@ export function CreateKeyPairDrawer({
             <Button 
               variant="primary" 
               onClick={handleSubmit}
-              disabled={!isValid || isSubmitting}
+              disabled={isSubmitting}
               className="flex-1 h-8"
             >
               {isSubmitting ? 'Creating...' : 'Create'}
@@ -201,10 +200,17 @@ export function CreateKeyPairDrawer({
             onChange={(e) => setKeyPairName(e.target.value)}
             placeholder="e.g. my-key"
             fullWidth
+            error={hasAttemptedSubmit && !keyPairName.trim()}
           />
-          <p className="text-[11px] text-[var(--color-text-subtle)] leading-4">
-            Allowed: 1–128 characters, letters, numbers, "-", "_", ".", "()", "[]"
-          </p>
+          {hasAttemptedSubmit && !keyPairName.trim() ? (
+            <p className="text-[11px] text-[var(--color-state-danger)] leading-4">
+              Key pair name is required
+            </p>
+          ) : (
+            <p className="text-[11px] text-[var(--color-text-subtle)] leading-4">
+              Allowed: 1–128 characters, letters, numbers, "-", "_", ".", "()", "[]"
+            </p>
+          )}
         </VStack>
 
         {/* Public Key Input (only for Import) */}
@@ -235,8 +241,13 @@ export function CreateKeyPairDrawer({
               value={publicKey}
               onChange={(e) => setPublicKey(e.target.value)}
               placeholder="Upload a file with a public key or enter it in the field."
-              className="w-full min-h-[80px] px-[10px] py-2 text-[12px] leading-4 text-[var(--color-text-default)] placeholder:text-[var(--color-text-subtle)] bg-[var(--color-surface-default)] border border-[var(--color-border-strong)] rounded-md resize-none focus:outline-none focus:ring-2 focus:ring-[var(--color-action-primary)] focus:border-transparent"
+              className={`w-full min-h-[80px] px-[10px] py-2 text-[12px] leading-4 text-[var(--color-text-default)] placeholder:text-[var(--color-text-subtle)] bg-[var(--color-surface-default)] border rounded-md resize-none focus:outline-none focus:ring-2 focus:ring-[var(--color-action-primary)] focus:border-transparent ${hasAttemptedSubmit && !publicKey.trim() ? 'border-[var(--color-state-danger)]' : 'border-[var(--color-border-strong)]'}`}
             />
+            {hasAttemptedSubmit && !publicKey.trim() && (
+              <p className="text-[11px] text-[var(--color-state-danger)] leading-4">
+                Public key is required
+              </p>
+            )}
           </VStack>
         )}
       </VStack>

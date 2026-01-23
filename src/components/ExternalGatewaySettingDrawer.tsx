@@ -50,7 +50,7 @@ const defaultNetworks: NetworkItem[] = Array.from({ length: 115 }, (_, i) => ({
   size: 'On',
 }));
 
-const ITEMS_PER_PAGE = 10;
+const ITEMS_PER_PAGE = 5;
 
 /* ----------------------------------------
    ExternalGatewaySettingDrawer Component
