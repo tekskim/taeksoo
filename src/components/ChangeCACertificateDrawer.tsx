@@ -66,6 +66,7 @@ export function ChangeCACertificateDrawer({
   const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [hasAttemptedSubmit, setHasAttemptedSubmit] = useState(false);
 
   // Filter certificates
   const filteredCertificates = certificates.filter((cert) =>
@@ -86,10 +87,13 @@ export function ChangeCACertificateDrawer({
       setSelectedCertificateId(null);
       setSearchQuery('');
       setCurrentPage(1);
+      setHasAttemptedSubmit(false);
     }
   }, [isOpen]);
 
   const handleSubmit = async () => {
+    setHasAttemptedSubmit(true);
+    
     if (!selectedCertificateId) return;
     
     setIsSubmitting(true);
@@ -105,6 +109,7 @@ export function ChangeCACertificateDrawer({
     setSelectedCertificateId(null);
     setSearchQuery('');
     setCurrentPage(1);
+    setHasAttemptedSubmit(false);
     onClose();
   };
 
@@ -129,7 +134,7 @@ export function ChangeCACertificateDrawer({
           <Button 
             variant="primary" 
             onClick={handleSubmit}
-            disabled={!selectedCertificateId || isSubmitting}
+            disabled={isSubmitting}
             className="w-[152px] h-8"
           >
             {isSubmitting ? 'Changing...' : 'Change'}
@@ -254,6 +259,8 @@ export function ChangeCACertificateDrawer({
             selectedItems={selectedCertificate ? [{ id: selectedCertificate.id, label: selectedCertificate.name }] : []}
             onRemove={() => setSelectedCertificateId(null)}
             emptyText="No item Selected"
+            error={hasAttemptedSubmit && !selectedCertificateId}
+            errorMessage="Please select a certificate."
             className="shrink-0"
             style={{ width: '648px' }}
           />

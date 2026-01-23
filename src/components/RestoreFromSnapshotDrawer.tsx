@@ -50,7 +50,7 @@ const defaultSnapshots: VolumeSnapshotItem[] = Array.from({ length: 115 }, (_, i
   createdAt: '2025-08-23',
 }));
 
-const ITEMS_PER_PAGE = 10;
+const ITEMS_PER_PAGE = 5;
 
 /* ----------------------------------------
    RestoreFromSnapshotDrawer Component
@@ -68,6 +68,7 @@ export function RestoreFromSnapshotDrawer({
   const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [hasAttemptedSubmit, setHasAttemptedSubmit] = useState(false);
 
   // Filter snapshots
   const filteredSnapshots = snapshots.filter((snap) =>
@@ -88,10 +89,13 @@ export function RestoreFromSnapshotDrawer({
       setSelectedSnapshotId(null);
       setSearchQuery('');
       setCurrentPage(1);
+      setHasAttemptedSubmit(false);
     }
   }, [isOpen]);
 
   const handleRestore = async () => {
+    setHasAttemptedSubmit(true);
+    
     if (!selectedSnapshotId) return;
     
     setIsSubmitting(true);
@@ -107,6 +111,7 @@ export function RestoreFromSnapshotDrawer({
     setSelectedSnapshotId(null);
     setSearchQuery('');
     setCurrentPage(1);
+    setHasAttemptedSubmit(false);
     onClose();
   };
 
@@ -131,7 +136,7 @@ export function RestoreFromSnapshotDrawer({
           <Button 
             variant="primary" 
             onClick={handleRestore}
-            disabled={!selectedSnapshotId || isSubmitting}
+            disabled={isSubmitting}
             className="w-[152px] h-8"
           >
             {isSubmitting ? 'Restoring...' : 'Restore'}
@@ -268,6 +273,8 @@ export function RestoreFromSnapshotDrawer({
             selectedItems={selectedSnapshot ? [{ id: selectedSnapshot.id, label: selectedSnapshot.name }] : []}
             onRemove={() => setSelectedSnapshotId(null)}
             emptyText="No item Selected"
+            error={hasAttemptedSubmit && !selectedSnapshotId}
+            errorMessage="Please select a snapshot."
             className="shrink-0"
             style={{ width: '648px' }}
           />

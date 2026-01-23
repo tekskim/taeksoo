@@ -109,6 +109,7 @@ export function CreateSecurityGroupRuleDrawer({
   const [icmpCode, setIcmpCode] = useState<number>(1);
   const [ipProtocol, setIpProtocol] = useState<string>('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [hasAttemptedSubmit, setHasAttemptedSubmit] = useState(false);
 
   // Reset form when drawer opens
   useEffect(() => {
@@ -122,6 +123,7 @@ export function CreateSecurityGroupRuleDrawer({
       setIcmpType(1);
       setIcmpCode(1);
       setIpProtocol('');
+      setHasAttemptedSubmit(false);
     }
   }, [isOpen]);
 
@@ -157,6 +159,7 @@ export function CreateSecurityGroupRuleDrawer({
   const isAllProto = protocol === 'all_proto';
 
   const handleSubmit = async () => {
+    setHasAttemptedSubmit(true);
     if (showPortInput && !portRange.trim()) return;
     if (!isAllProto && !remoteValue.trim()) return;
     
@@ -177,12 +180,9 @@ export function CreateSecurityGroupRuleDrawer({
   };
 
   const handleClose = () => {
+    setHasAttemptedSubmit(false);
     onClose();
   };
-
-  const isValid = 
-    (!showPortInput || portRange.trim().length > 0) &&
-    (isAllProto || remoteValue.trim().length > 0);
 
   return (
     <Drawer
@@ -214,7 +214,7 @@ export function CreateSecurityGroupRuleDrawer({
             <Button 
               variant="primary" 
               onClick={handleSubmit}
-              disabled={!isValid || isSubmitting}
+              disabled={isSubmitting}
               className="flex-1 h-8"
             >
               {isSubmitting ? 'Creating...' : 'Create'}
@@ -287,10 +287,17 @@ export function CreateSecurityGroupRuleDrawer({
                   onChange={(e) => setPortRange(e.target.value)}
                   placeholder=""
                   fullWidth
+                  error={hasAttemptedSubmit && !portRange.trim()}
                 />
-                <p className="text-[11px] text-[var(--color-text-subtle)] leading-4">
-                  e.g. single port '8080', port range '7000-7005'
-                </p>
+                {hasAttemptedSubmit && !portRange.trim() ? (
+                  <p className="text-[11px] text-[var(--color-state-danger)] leading-4">
+                    Port range is required
+                  </p>
+                ) : (
+                  <p className="text-[11px] text-[var(--color-text-subtle)] leading-4">
+                    e.g. single port '8080', port range '7000-7005'
+                  </p>
+                )}
               </>
             )}
           </VStack>
@@ -369,20 +376,36 @@ export function CreateSecurityGroupRuleDrawer({
               fullWidth
             />
             {remoteType === 'cidr' ? (
-              <Input
-                value={remoteValue}
-                onChange={(e) => setRemoteValue(e.target.value)}
-                placeholder="e.g. 192.168.0.0/24"
-                fullWidth
-              />
+              <>
+                <Input
+                  value={remoteValue}
+                  onChange={(e) => setRemoteValue(e.target.value)}
+                  placeholder="e.g. 192.168.0.0/24"
+                  fullWidth
+                  error={hasAttemptedSubmit && !remoteValue.trim()}
+                />
+                {hasAttemptedSubmit && !remoteValue.trim() && (
+                  <p className="text-[11px] text-[var(--color-state-danger)] leading-4">
+                    CIDR is required
+                  </p>
+                )}
+              </>
             ) : (
-              <Select
-                options={securityGroups}
-                value={remoteValue}
-                onChange={(value) => setRemoteValue(value)}
-                placeholder="Select a security group"
-                fullWidth
-              />
+              <>
+                <Select
+                  options={securityGroups}
+                  value={remoteValue}
+                  onChange={(value) => setRemoteValue(value)}
+                  placeholder="Select a security group"
+                  fullWidth
+                  error={hasAttemptedSubmit && !remoteValue.trim()}
+                />
+                {hasAttemptedSubmit && !remoteValue.trim() && (
+                  <p className="text-[11px] text-[var(--color-state-danger)] leading-4">
+                    Security group is required
+                  </p>
+                )}
+              </>
             )}
           </VStack>
         )}

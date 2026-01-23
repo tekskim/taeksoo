@@ -76,7 +76,6 @@ export function EditNetworkDrawer({
     onClose();
   };
 
-  const isValid = networkName.trim().length > 0;
 
   return (
     <Drawer
@@ -97,7 +96,7 @@ export function EditNetworkDrawer({
           <Button 
             variant="primary" 
             onClick={handleSubmit}
-            disabled={!isValid || isSubmitting}
+            disabled={isSubmitting}
             className="flex-1 h-8"
           >
             {isSubmitting ? 'Saving...' : 'Save'}

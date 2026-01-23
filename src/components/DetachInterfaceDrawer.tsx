@@ -65,12 +65,14 @@ export function DetachInterfaceDrawer({
   const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [hasAttemptedSubmit, setHasAttemptedSubmit] = useState(false);
 
   const totalItems = 115;
   const itemsPerPage = 10;
   const totalPages = Math.ceil(totalItems / itemsPerPage);
 
   const handleDetach = async () => {
+    setHasAttemptedSubmit(true);
     if (!selectedInterfaceId) return;
     
     setIsSubmitting(true);
@@ -86,6 +88,7 @@ export function DetachInterfaceDrawer({
     setSelectedInterfaceId(null);
     setSearchQuery('');
     setCurrentPage(1);
+    setHasAttemptedSubmit(false);
     onClose();
   };
 
@@ -114,7 +117,7 @@ export function DetachInterfaceDrawer({
           <Button 
             variant="primary" 
             onClick={handleDetach}
-            disabled={!selectedInterfaceId || isSubmitting}
+            disabled={isSubmitting}
             className="w-[152px] h-8"
           >
             {isSubmitting ? 'Detaching...' : 'Detach'}
@@ -259,6 +262,8 @@ export function DetachInterfaceDrawer({
           emptyText="No item selected"
           className="shrink-0"
           style={{ width: '648px' }}
+          error={hasAttemptedSubmit && !selectedInterfaceId}
+          errorMessage="Please select an interface"
         />
       </VStack>
     </Drawer>

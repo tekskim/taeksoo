@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Drawer, Button, Input } from '@/design-system';
+import { Drawer, Button, Input, Slider } from '@/design-system';
 import { HStack, VStack } from '@/design-system/layouts';
 import { IconInfinity } from '@tabler/icons-react';
 
@@ -127,7 +127,6 @@ export function ExtendVolumeDrawer({
     setCapacity(clampedValue);
   };
 
-  const sliderPercentage = ((capacity - minCapacity) / (maxCapacity - minCapacity)) * 100;
 
   return (
     <Drawer
@@ -210,25 +209,12 @@ export function ExtendVolumeDrawer({
           
           {/* Slider */}
           <VStack gap={2} className="w-full">
-            <div className="relative w-full h-1.5">
-              <div className="absolute inset-0 bg-[var(--color-border-subtle)] rounded-lg" />
-              <div 
-                className="absolute left-0 top-0 h-full bg-[#2563eb] rounded-lg"
-                style={{ width: `${sliderPercentage}%` }}
-              />
-              <input
-                type="range"
-                min={minCapacity}
-                max={maxCapacity}
-                value={capacity}
-                onChange={(e) => handleCapacityChange(Number(e.target.value))}
-                className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-              />
-              <div 
-                className="absolute top-1/2 -translate-y-1/2 w-4 h-4 bg-white border-2 border-[#2563eb] rounded-full pointer-events-none"
-                style={{ left: `calc(${sliderPercentage}% - 8px)` }}
-              />
-            </div>
+            <Slider
+              min={minCapacity}
+              max={maxCapacity}
+              value={capacity}
+              onChange={handleCapacityChange}
+            />
             
             {/* Capacity Input */}
             <Input

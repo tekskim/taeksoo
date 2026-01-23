@@ -16,7 +16,7 @@ import {
   IconGrid,
 } from '@/design-system';
 import { HStack, VStack } from '@/design-system/layouts';
-import { IconAlertCircle, IconHelp, IconChevronDown, IconExternalLink, IconDots } from '@tabler/icons-react';
+import { IconAlertCircle, IconChevronDown, IconExternalLink, IconDots } from '@tabler/icons-react';
 
 /* ----------------------------------------
    Types
@@ -205,28 +205,22 @@ export function RescueInstanceDrawer({
           <span className="text-[14px] font-medium text-[var(--color-text-default)]">Image</span>
           <VStack gap={3}>
             {/* Current Image Option */}
-            <HStack gap={1.5} align="center">
-              <Radio
-                name="image-option"
-                value="current"
-                checked={imageOption === 'current'}
-                onChange={() => setImageOption('current')}
-                label="Current image"
-              />
-              <IconHelp size={16} className="text-[var(--color-text-subtle)] cursor-help" />
-            </HStack>
+            <Radio
+              name="image-option"
+              value="current"
+              checked={imageOption === 'current'}
+              onChange={() => setImageOption('current')}
+              label="Current image"
+            />
 
             {/* Another Image Option */}
-            <HStack gap={1.5} align="center">
-              <Radio
-                name="image-option"
-                value="another"
-                checked={imageOption === 'another'}
-                onChange={() => setImageOption('another')}
-                label="Another image"
-              />
-              <IconHelp size={16} className="text-[var(--color-text-subtle)] cursor-help" />
-            </HStack>
+            <Radio
+              name="image-option"
+              value="another"
+              checked={imageOption === 'another'}
+              onChange={() => setImageOption('another')}
+              label="Another image"
+            />
           </VStack>
         </VStack>
 

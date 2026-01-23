@@ -45,7 +45,7 @@ const defaultPolicies: PolicyItem[] = Array.from({ length: 25 }, (_, i) => ({
   editedAt: '2025-09-12',
 }));
 
-const ITEMS_PER_PAGE = 10;
+const ITEMS_PER_PAGE = 5;
 
 /* ----------------------------------------
    ManagePoliciesDrawer Component

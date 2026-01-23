@@ -134,6 +134,7 @@ export function CreateVolumeFromBackupDrawer({
   const [volumeType, setVolumeType] = useState('_DEFAULT_');
   const [az, setAz] = useState('nova');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [hasAttemptedSubmit, setHasAttemptedSubmit] = useState(false);
 
   // Reset form when drawer opens
   useEffect(() => {
@@ -143,10 +144,12 @@ export function CreateVolumeFromBackupDrawer({
       setCapacity(minCapacity);
       setVolumeType('_DEFAULT_');
       setAz('nova');
+      setHasAttemptedSubmit(false);
     }
   }, [isOpen, minCapacity]);
 
   const handleSubmit = async () => {
+    setHasAttemptedSubmit(true);
     if (!volumeName.trim()) return;
     
     setIsSubmitting(true);
@@ -159,6 +162,7 @@ export function CreateVolumeFromBackupDrawer({
   };
 
   const handleClose = () => {
+    setHasAttemptedSubmit(false);
     onClose();
   };
 
@@ -209,7 +213,7 @@ export function CreateVolumeFromBackupDrawer({
             <Button 
               variant="primary" 
               onClick={handleSubmit}
-              disabled={!volumeName.trim() || isSubmitting}
+              disabled={isSubmitting}
               className="flex-1 h-8"
             >
               {isSubmitting ? 'Creating...' : 'Create'}
@@ -242,10 +246,17 @@ export function CreateVolumeFromBackupDrawer({
             onChange={(e) => setVolumeName(e.target.value)}
             placeholder="e.g. volume backup-copy"
             fullWidth
+            error={hasAttemptedSubmit && !volumeName.trim()}
           />
-          <p className="text-[11px] text-[var(--color-text-subtle)] leading-4">
-            Allowed: 1–128 characters, letters, numbers, "-", "_", ".", "()", "[]"
-          </p>
+          {hasAttemptedSubmit && !volumeName.trim() ? (
+            <p className="text-[11px] text-[var(--color-state-danger)] leading-4">
+              Volume name is required
+            </p>
+          ) : (
+            <p className="text-[11px] text-[var(--color-text-subtle)] leading-4">
+              Allowed: 1–128 characters, letters, numbers, "-", "_", ".", "()", "[]"
+            </p>
+          )}
         </VStack>
 
         {/* Description Input */}

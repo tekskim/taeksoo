@@ -52,7 +52,7 @@ const defaultInstances: InstanceItem[] = Array.from({ length: 115 }, (_, i) => (
   attachedVolumes: ['vol-01'],
 }));
 
-const ITEMS_PER_PAGE = 10;
+const ITEMS_PER_PAGE = 5;
 
 /* ----------------------------------------
    AttachVolumeDrawer Component
@@ -70,6 +70,7 @@ export function AttachVolumeDrawer({
   const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [hasAttemptedSubmit, setHasAttemptedSubmit] = useState(false);
 
   // Filter instances
   const filteredInstances = instances.filter((inst) =>
@@ -91,10 +92,13 @@ export function AttachVolumeDrawer({
       setSelectedInstanceId(null);
       setSearchQuery('');
       setCurrentPage(1);
+      setHasAttemptedSubmit(false);
     }
   }, [isOpen]);
 
   const handleAttach = async () => {
+    setHasAttemptedSubmit(true);
+    
     if (!selectedInstanceId) return;
     
     setIsSubmitting(true);
@@ -110,6 +114,7 @@ export function AttachVolumeDrawer({
     setSelectedInstanceId(null);
     setSearchQuery('');
     setCurrentPage(1);
+    setHasAttemptedSubmit(false);
     onClose();
   };
 
@@ -134,7 +139,7 @@ export function AttachVolumeDrawer({
           <Button 
             variant="primary" 
             onClick={handleAttach}
-            disabled={!selectedInstanceId || isSubmitting}
+            disabled={isSubmitting}
             className="w-[152px] h-8"
           >
             {isSubmitting ? 'Attaching...' : 'Attach'}
@@ -281,6 +286,8 @@ export function AttachVolumeDrawer({
             selectedItems={selectedInstance ? [{ id: selectedInstance.id, label: selectedInstance.name }] : []}
             onRemove={() => setSelectedInstanceId(null)}
             emptyText="No item Selected"
+            error={hasAttemptedSubmit && !selectedInstanceId}
+            errorMessage="Please select an instance."
             className="shrink-0"
             style={{ width: '648px' }}
           />

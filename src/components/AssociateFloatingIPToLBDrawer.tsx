@@ -49,7 +49,7 @@ const defaultFloatingIPs: FloatingIPItem[] = Array.from({ length: 115 }, (_, i) 
   createdAt: '2025-08-23',
 }));
 
-const ITEMS_PER_PAGE = 10;
+const ITEMS_PER_PAGE = 5;
 
 /* ----------------------------------------
    AssociateFloatingIPToLBDrawer Component
@@ -67,6 +67,7 @@ export function AssociateFloatingIPToLBDrawer({
   const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [hasAttemptedSubmit, setHasAttemptedSubmit] = useState(false);
 
   // Reset state when drawer opens
   useEffect(() => {
@@ -74,6 +75,7 @@ export function AssociateFloatingIPToLBDrawer({
       setSelectedFloatingIpId(null);
       setSearchQuery('');
       setCurrentPage(1);
+      setHasAttemptedSubmit(false);
     }
   }, [isOpen]);
 
@@ -91,6 +93,8 @@ export function AssociateFloatingIPToLBDrawer({
   );
 
   const handleAssociate = async () => {
+    setHasAttemptedSubmit(true);
+    
     if (!selectedFloatingIpId) return;
     
     setIsSubmitting(true);
@@ -106,6 +110,7 @@ export function AssociateFloatingIPToLBDrawer({
     setSelectedFloatingIpId(null);
     setSearchQuery('');
     setCurrentPage(1);
+    setHasAttemptedSubmit(false);
     onClose();
   };
 
@@ -118,32 +123,23 @@ export function AssociateFloatingIPToLBDrawer({
       title="Associate Floating IP"
       width={696}
       footer={
-        <VStack gap={3}>
-          {/* Selection Indicator - Above footer buttons */}
-          <SelectionIndicator
-            selectedItems={selectedFloatingIP ? [{ id: selectedFloatingIP.id, label: selectedFloatingIP.floatingIp }] : []}
-            onRemove={() => setSelectedFloatingIpId(null)}
-            emptyText="No item Selected"
-            className="w-full"
-          />
-          <HStack gap={2} justify="center" className="w-full">
-            <Button 
-              variant="secondary" 
-              onClick={handleClose}
-              className="w-[152px] h-8"
-            >
-              Cancel
-            </Button>
-            <Button 
-              variant="primary" 
-              onClick={handleAssociate}
-              disabled={!selectedFloatingIpId || isSubmitting}
-              className="w-[152px] h-8"
-            >
-              {isSubmitting ? 'Associating...' : 'Associate'}
-            </Button>
-          </HStack>
-        </VStack>
+        <HStack gap={2} justify="center" className="w-full">
+          <Button 
+            variant="secondary" 
+            onClick={handleClose}
+            className="w-[152px] h-8"
+          >
+            Cancel
+          </Button>
+          <Button 
+            variant="primary" 
+            onClick={handleAssociate}
+            disabled={isSubmitting}
+            className="w-[152px] h-8"
+          >
+            {isSubmitting ? 'Associating...' : 'Associate'}
+          </Button>
+        </HStack>
       }
     >
       <VStack gap={6} className="h-full">
@@ -259,6 +255,16 @@ export function AssociateFloatingIPToLBDrawer({
               </div>
             ))}
           </div>
+
+          {/* Selection Indicator - Below table */}
+          <SelectionIndicator
+            selectedItems={selectedFloatingIP ? [{ id: selectedFloatingIP.id, label: selectedFloatingIP.floatingIp }] : []}
+            onRemove={() => setSelectedFloatingIpId(null)}
+            emptyText="No item Selected"
+            error={hasAttemptedSubmit && !selectedFloatingIpId}
+            errorMessage="Please select a floating IP."
+            className="w-full"
+          />
         </VStack>
       </VStack>
     </Drawer>

@@ -87,9 +87,6 @@ export function EditMemberDrawer({
   };
 
   // Validation
-  const isWeightValid = weight >= 1 && weight <= 256;
-  const isMonitorPortValid = !monitorPort || (parseInt(monitorPort) >= 1 && parseInt(monitorPort) <= 65535);
-  const isValid = isWeightValid && isMonitorPortValid;
 
   return (
     <Drawer
@@ -110,7 +107,7 @@ export function EditMemberDrawer({
           <Button 
             variant="primary" 
             onClick={handleSubmit}
-            disabled={!isValid || isSubmitting}
+            disabled={isSubmitting}
             className="flex-1 h-8"
           >
             {isSubmitting ? 'Saving...' : 'Save'}
