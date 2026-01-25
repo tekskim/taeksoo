@@ -410,7 +410,7 @@ export function ContainerHPAPage() {
         {/* Page Content */}
         <div 
           className="flex-1 overflow-y-auto overflow-x-hidden min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll"
-          style={{ paddingBottom: shellPanel.isExpanded ? '350px' : '0' }}
+          style={{ paddingBottom: shellPanel.isExpanded ? 'var(--shell-panel-height)' : '0' }}
         >
           <div className="pt-4 px-8 pb-6 bg-[var(--color-surface-default)]">
             <VStack gap={3}>
@@ -437,7 +437,7 @@ export function ContainerHPAPage() {
                   <SearchInput
                     placeholder="Search horizontal pod autoscaler by attributes"
                     size="sm"
-                    className="w-[280px]"
+                    className="w-[var(--search-input-width)]"
                   />
                   <Button variant="secondary" size="sm" aria-label="Download" className="!p-0 !w-7 !h-7 !min-w-7">
                     <IconDownload size={14} stroke={1.5} />

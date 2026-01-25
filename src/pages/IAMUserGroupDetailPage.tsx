@@ -536,7 +536,7 @@ export default function IAMUserGroupDetailPage() {
                         placeholder="Search users by attributes"
                         value={usersSearchQuery}
                         onChange={setUsersSearchQuery}
-                        className="w-[280px]"
+                        className="w-[var(--search-input-width)]"
                       />
 
                       {/* Pagination */}
@@ -577,7 +577,7 @@ export default function IAMUserGroupDetailPage() {
                             placeholder="Search roles by attributes"
                             value={rolesSearchQuery}
                             onChange={(e) => setRolesSearchQuery(e.target.value)}
-                            className="w-[280px]"
+                            className="w-[var(--search-input-width)]"
                           />
                         </HStack>
 

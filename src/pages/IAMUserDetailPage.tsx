@@ -691,7 +691,7 @@ export function IAMUserDetailPage() {
                         placeholder="Search groups by attributes"
                         value={searchQuery}
                         onChange={setSearchQuery}
-                        className="w-[280px]"
+                        className="w-[var(--search-input-width)]"
                       />
 
                       {/* Pagination */}
@@ -729,7 +729,7 @@ export function IAMUserDetailPage() {
                         placeholder="Search roles by attributes"
                         value={rolesSearchQuery}
                         onChange={setRolesSearchQuery}
-                        className="w-[280px]"
+                        className="w-[var(--search-input-width)]"
                       />
 
                       {/* Pagination */}
@@ -827,7 +827,7 @@ export function IAMUserDetailPage() {
                           placeholder="Search session by attributes"
                           value={sessionsSearchQuery}
                           onChange={setSessionsSearchQuery}
-                          className="w-[280px]"
+                          className="w-[var(--search-input-width)]"
                         />
                         <div className="w-px h-4 bg-[var(--color-border-default)]" />
                         <Button

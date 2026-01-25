@@ -184,7 +184,7 @@ function SummarySidebar({
   };
 
   return (
-    <div className="w-[312px] shrink-0 sticky top-4 self-start">
+    <div className="w-[var(--wizard-summary-width)] shrink-0 sticky top-4 self-start">
       <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg p-4 flex flex-col gap-6">
         {/* Summary Content */}
         <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-lg p-4">

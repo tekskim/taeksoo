@@ -352,7 +352,7 @@ function QuotaSidebar({ numberOfInstances, onNumberOfInstancesChange, quota, onC
   );
 
   return (
-    <div className="w-[312px] shrink-0 sticky top-4 self-start">
+    <div className="w-[var(--wizard-summary-width)] shrink-0 sticky top-4 self-start">
       <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg p-4 flex flex-col gap-4">
         {/* Summary Card */}
         <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-lg p-4">
@@ -1063,7 +1063,7 @@ function ImageSection({ selectedImageId, onSelectImage, onNext, isActive = false
               onChange={handleSearchChange}
               onClear={() => { setSearchQuery(''); setCurrentPage(1); }}
               size="sm"
-              className="w-[280px] mt-2"
+              className="w-[var(--search-input-width)] mt-2"
             />
 
             {/* Pagination */}
@@ -1387,7 +1387,7 @@ function FlavorSection({ selectedFlavorId, onSelectFlavor, onNext, isActive = fa
             onChange={handleSearchChange}
             onClear={() => { setSearchQuery(''); setCurrentPage(1); }}
             size="sm"
-            className="w-[280px] mb-2"
+            className="w-[var(--search-input-width)] mb-2"
           />
 
           {/* Pagination */}
@@ -1834,7 +1834,7 @@ function NetworkSection({ onNext, isActive = false, isEditing = false, onEditCan
               onChange={(e) => setNetworkSearch(e.target.value)}
               onClear={() => setNetworkSearch('')}
               size="sm"
-              className="w-[280px]"
+              className="w-[var(--search-input-width)]"
             />
 
             {/* Pagination */}
@@ -1946,7 +1946,7 @@ function NetworkSection({ onNext, isActive = false, isEditing = false, onEditCan
                   onChange={(e) => setFipSearch(e.target.value)}
                   onClear={() => setFipSearch('')}
                   size="sm"
-                  className="w-[280px]"
+                  className="w-[var(--search-input-width)]"
                 />
                 <Pagination
                   currentPage={fipPage}
@@ -1973,7 +1973,7 @@ function NetworkSection({ onNext, isActive = false, isEditing = false, onEditCan
                     onChange={(e) => setFipSearch(e.target.value)}
                     onClear={() => setFipSearch('')}
                     size="sm"
-                    className="w-[280px]"
+                    className="w-[var(--search-input-width)]"
                   />
                   <Button variant="secondary" size="sm">
                     <HStack gap={1} align="center">
@@ -2024,7 +2024,7 @@ function NetworkSection({ onNext, isActive = false, isEditing = false, onEditCan
                 onChange={(e) => setSgSearch(e.target.value)}
                 onClear={() => setSgSearch('')}
                 size="sm"
-                className="w-[280px]"
+                className="w-[var(--search-input-width)]"
               />
               <Button variant="secondary" size="sm">
                 <HStack gap={1} align="center">
@@ -2093,7 +2093,7 @@ function NetworkSection({ onNext, isActive = false, isEditing = false, onEditCan
                   onChange={(e) => setPortSearch(e.target.value)}
                   onClear={() => setPortSearch('')}
                   size="sm"
-                  className="w-[280px]"
+                  className="w-[var(--search-input-width)]"
                 />
                 <Pagination
                   currentPage={portPage}
@@ -2304,7 +2304,7 @@ function AuthenticationSection({ onNext, isActive = false, isEditing = false, on
                   onChange={(e) => setKeyPairSearch(e.target.value)}
                   onClear={() => setKeyPairSearch('')}
                   size="sm"
-                  className="w-[280px]"
+                  className="w-[var(--search-input-width)]"
                 />
 
                 {/* Pagination */}
@@ -2542,7 +2542,7 @@ function AdvancedSection({ onNext, isActive = false, isEditing = false, onEditCa
                   onChange={(e) => setServerGroupSearch(e.target.value)}
                   onClear={() => setServerGroupSearch('')}
                   size="sm"
-                  className="w-[280px]"
+                  className="w-[var(--search-input-width)]"
                 />
 
                 {/* Pagination */}
@@ -2821,7 +2821,7 @@ function TemplatesSection({ templates, selectedId, onSelect, onSkip, onNext, isA
                     onChange={(e) => setSearchQuery(e.target.value)}
                     onClear={() => setSearchQuery('')}
                     size="sm"
-                    className="w-[280px]"
+                    className="w-[var(--search-input-width)]"
                   />
                   <Button variant="outline" size="sm">
                     <span>Create a new template</span>
@@ -2863,7 +2863,7 @@ function TemplatesSection({ templates, selectedId, onSelect, onSkip, onNext, isA
                     onChange={(e) => setSearchQuery(e.target.value)}
                     onClear={() => setSearchQuery('')}
                     size="sm"
-                    className="w-[280px]"
+                    className="w-[var(--search-input-width)]"
                   />
                   <Button variant="outline" size="sm">
                     <span>Create a new template</span>
@@ -2905,7 +2905,7 @@ function TemplatesSection({ templates, selectedId, onSelect, onSkip, onNext, isA
                     onChange={(e) => setSearchQuery(e.target.value)}
                     onClear={() => setSearchQuery('')}
                     size="sm"
-                    className="w-[280px]"
+                    className="w-[var(--search-input-width)]"
                   />
                   <Button variant="outline" size="sm">
                     <span>Create a new template</span>
@@ -3307,7 +3307,7 @@ export function CreateInstancePage() {
       {/* Main Content */}
       <main
         className="absolute top-0 bottom-0 right-0 flex flex-col bg-[var(--color-surface-default)] transition-[left] duration-200"
-        style={{ left: sidebarOpen ? '200px' : '0px' }}
+        style={{ left: sidebarOpen ? 'var(--layout-sidebar-width)' : '0px' }}
       >
         {/* Fixed Header Area */}
         <div className="shrink-0 bg-[var(--color-surface-default)]">

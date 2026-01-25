@@ -222,7 +222,7 @@ export default function IAMRolesPage() {
                       placeholder="Search roles by attributes"
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
-                      className="w-[280px]"
+                      className="w-[var(--search-input-width)]"
                     />
                     <Button
                       variant="secondary"

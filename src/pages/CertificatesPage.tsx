@@ -276,7 +276,7 @@ export function CertificatesPage() {
   return (
     <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
       <Sidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(prev => !prev)} />
-      <main className={`absolute top-0 bottom-0 right-0 flex flex-col bg-[var(--color-surface-default)] transition-[left] duration-200 ${sidebarOpen ? 'left-[200px]' : 'left-0'}`}>
+      <main className={`absolute top-0 bottom-0 right-0 flex flex-col bg-[var(--color-surface-default)] transition-[left] duration-200 ${sidebarOpen ? 'left-[var(--layout-sidebar-width)]' : 'left-0'}`}>
         <div className="shrink-0 bg-[var(--color-surface-default)]">
         <TabBar tabs={tabBarTabs} activeTab={activeTabId} onTabChange={selectTab} onTabClose={closeTab} onTabAdd={addNewTab}
             onTabReorder={moveTab} showAddButton={true} showWindowControls={true} />
@@ -301,7 +301,7 @@ export function CertificatesPage() {
               <TabList><Tab value="server">Server</Tab><Tab value="ca">CA</Tab></TabList>
             </Tabs>
             <ListToolbar
-              primaryActions={<ListToolbar.Actions><FilterSearchInput filters={filterFields} appliedFilters={appliedFilters} onFiltersChange={setAppliedFilters} placeholder="Search certificate by attributes" size="sm" className="w-[280px]" hideAppliedFilters /><Button variant="secondary" size="sm" iconOnly icon={<IconDownload size={12} />} aria-label="Download" /></ListToolbar.Actions>}
+              primaryActions={<ListToolbar.Actions><FilterSearchInput filters={filterFields} appliedFilters={appliedFilters} onFiltersChange={setAppliedFilters} placeholder="Search certificate by attributes" size="sm" className="w-[var(--search-input-width)]" hideAppliedFilters /><Button variant="secondary" size="sm" iconOnly icon={<IconDownload size={12} />} aria-label="Download" /></ListToolbar.Actions>}
               bulkActions={<ListToolbar.Actions><Button variant="muted" size="sm" leftIcon={<IconTrash size={12} />} disabled={selectedCerts.length === 0}>Delete</Button></ListToolbar.Actions>}
             />
             <Pagination currentPage={currentPage} totalPages={totalPages} totalItems={filteredCerts.length} selectedCount={selectedCerts.length} onPageChange={setCurrentPage} showSettings onSettingsClick={() => setIsPreferencesOpen(true)} />

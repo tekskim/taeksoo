@@ -1038,7 +1038,7 @@ export default function HostDetailPage() {
         
         if (timer && timer > 0) {
           return (
-            <span className="text-[11px] font-medium text-[#ff851a]">{formatTime(timer)}</span>
+            <span className="text-[11px] font-medium text-[var(--color-state-warning)]">{formatTime(timer)}</span>
           );
         }
         return (
@@ -1122,7 +1122,7 @@ export default function HostDetailPage() {
         <StorageSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(prev => !prev)} />
         <main
           className="absolute top-0 bottom-0 right-0 flex flex-col bg-[var(--color-surface-default)] transition-[left] duration-200"
-          style={{ left: sidebarOpen ? '200px' : '0' }}
+          style={{ left: sidebarOpen ? 'var(--layout-sidebar-width)' : '0' }}
         >
           <div className="flex-1 flex items-center justify-center">
             <p className="text-[var(--color-text-muted)]">Host not found</p>
@@ -1153,7 +1153,7 @@ export default function HostDetailPage() {
       {/* Main Content */}
       <main
         className="absolute top-0 bottom-0 right-0 flex flex-col bg-[var(--color-surface-default)] transition-[left] duration-200"
-        style={{ left: sidebarOpen ? '200px' : '0' }}
+        style={{ left: sidebarOpen ? 'var(--layout-sidebar-width)' : '0' }}
       >
         {/* Tab Bar */}
         <TabBar
@@ -1279,7 +1279,7 @@ export default function HostDetailPage() {
                       
                       {/* Search */}
                       <div className="flex items-center gap-4">
-                        <div className="w-[280px]">
+                        <div className="w-[var(--search-input-width)]">
                           <SearchInput 
                             placeholder="Search instance by attributes"
                             size="sm"
@@ -1319,7 +1319,7 @@ export default function HostDetailPage() {
                       </div>
                       
                       {/* Search */}
-                      <div className="w-[280px]">
+                      <div className="w-[var(--search-input-width)]">
                         <SearchInput 
                           placeholder="Search instance by attributes"
                           size="sm"
@@ -1358,7 +1358,7 @@ export default function HostDetailPage() {
                       </div>
                       
                       {/* Search */}
-                      <div className="w-[280px]">
+                      <div className="w-[var(--search-input-width)]">
                         <SearchInput 
                           placeholder="Search instance by attributes"
                           size="sm"

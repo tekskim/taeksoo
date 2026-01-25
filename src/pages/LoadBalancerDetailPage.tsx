@@ -434,7 +434,7 @@ export function LoadBalancerDetailPage() {
   return (
     <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
       <Sidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(prev => !prev)} />
-      <main className={`absolute top-0 bottom-0 right-0 flex flex-col bg-[var(--color-surface-default)] transition-[left] duration-200 ${sidebarOpen ? 'left-[200px]' : 'left-0'}`}>
+      <main className={`absolute top-0 bottom-0 right-0 flex flex-col bg-[var(--color-surface-default)] transition-[left] duration-200 ${sidebarOpen ? 'left-[var(--layout-sidebar-width)]' : 'left-0'}`}>
         {/* Fixed Header Area */}
         <div className="shrink-0 bg-[var(--color-surface-default)]">
           {/* Tab Bar */}
@@ -641,7 +641,7 @@ export function LoadBalancerDetailPage() {
 
                         {/* Action Bar */}
                         <div className="flex items-center gap-2">
-                          <div className="w-[280px]">
+                          <div className="w-[var(--search-input-width)]">
                             <SearchInput
                               value={listenerSearchTerm}
                               onChange={(e) => {
@@ -702,7 +702,7 @@ export function LoadBalancerDetailPage() {
 
                         {/* Action Bar */}
                         <div className="flex items-center gap-2">
-                          <div className="w-[280px]">
+                          <div className="w-[var(--search-input-width)]">
                             <SearchInput
                               value={poolSearchTerm}
                               onChange={(e) => {

@@ -677,7 +677,7 @@ export default function IAMPolicyDetailPage() {
                         placeholder="Search permissions by attributes"
                         value={permSearchQuery}
                         onChange={(e) => setPermSearchQuery(e.target.value)}
-                        className="w-[280px]"
+                        className="w-[var(--search-input-width)]"
                       />
 
                       {/* Pagination */}
@@ -786,7 +786,7 @@ export default function IAMPolicyDetailPage() {
                         placeholder="Search roles by attributes"
                         value={rolesSearchQuery}
                         onChange={(e) => setRolesSearchQuery(e.target.value)}
-                        className="w-[280px]"
+                        className="w-[var(--search-input-width)]"
                       />
 
                       {/* Pagination */}

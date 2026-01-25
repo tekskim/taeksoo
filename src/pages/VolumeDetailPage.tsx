@@ -393,7 +393,7 @@ export function VolumeDetailPage() {
       <Sidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
       <main
         className={`absolute top-0 bottom-0 right-0 flex flex-col bg-[var(--color-surface-default)] transition-[left] duration-200 ${
-          sidebarOpen ? 'left-[200px]' : 'left-0'
+          sidebarOpen ? 'left-[var(--layout-sidebar-width)]' : 'left-0'
         }`}
       >
         {/* Fixed Header Area */}
@@ -547,7 +547,7 @@ export function VolumeDetailPage() {
 
                     {/* Search */}
                     <div className="flex items-center gap-1">
-                      <div className="w-[280px]">
+                      <div className="w-[var(--search-input-width)]">
                         <SearchInput
                           placeholder="Search snapshot by attributes"
                           value={snapshotSearchQuery}
@@ -601,7 +601,7 @@ export function VolumeDetailPage() {
 
                     {/* Search */}
                     <div className="flex items-center gap-1">
-                      <div className="w-[280px]">
+                      <div className="w-[var(--search-input-width)]">
                         <SearchInput
                           placeholder="Search backup by attributes"
                           value={backupSearchQuery}

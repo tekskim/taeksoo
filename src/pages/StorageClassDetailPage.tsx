@@ -271,7 +271,7 @@ export function StorageClassDetailPage() {
         {/* Content Area */}
         <div 
           className="flex-1 overflow-auto min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll"
-          style={{ paddingBottom: shellPanel.isExpanded ? '350px' : '0' }}
+          style={{ paddingBottom: shellPanel.isExpanded ? 'var(--shell-panel-height)' : '0' }}
         >
           <div className="pt-4 px-8 pb-20 bg-[var(--color-surface-default)]">
             <VStack gap={6}>

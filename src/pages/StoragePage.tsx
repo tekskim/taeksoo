@@ -516,7 +516,7 @@ export function StoragePage() {
         <ListToolbar
           primaryActions={
             <ListToolbar.Actions>
-              <div className="w-[280px]">
+              <div className="w-[var(--search-input-width)]">
                 <SearchInput
                   placeholder="Search data sources by attributes"
                   value={searchQuery}
