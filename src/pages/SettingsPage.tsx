@@ -542,8 +542,8 @@ export function SettingsPage({ isOpen, onClose, initialTab = 'account' }: Settin
                   </SectionCard>
 
                   {/* Logout */}
-                  <div className="mt-6">
-                    <Button variant="danger" size="lg" onClick={() => setShowLogoutModal(true)}>
+                  <div className="mt-6 flex justify-end">
+                    <Button variant="secondary" size="lg" onClick={() => setShowLogoutModal(true)}>
                       Logout
                     </Button>
                   </div>
