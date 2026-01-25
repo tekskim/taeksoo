@@ -192,7 +192,7 @@ function JobsTab({ jobs }: JobsTabProps) {
     {
       key: 'status',
       label: 'Status',
-      width: '80px',
+      width: '64px',
       align: 'center',
       sortable: true,
       render: (value: string) => (
@@ -261,7 +261,7 @@ function JobsTab({ jobs }: JobsTabProps) {
     {
       key: 'action',
       label: 'Action',
-      width: '80px',
+      width: '64px',
       align: 'center',
       render: (_: unknown, row: JobRow) => (
         <ContextMenu items={createJobMenuItems(row)} trigger="click" align="left">
@@ -285,7 +285,7 @@ function JobsTab({ jobs }: JobsTabProps) {
           onChange={(e) => setSearchQuery(e.target.value)}
           onClear={() => setSearchQuery('')}
           size="sm"
-          className="w-[280px]"
+          className="w-[var(--search-input-width)]"
         />
         <HStack gap={1}>
           <Button variant="secondary" size="sm" disabled={selectedKeys.length === 0}>
@@ -396,7 +396,7 @@ function RecentEventsTab({ events }: RecentEventsTabProps) {
           onChange={(e) => setSearchQuery(e.target.value)}
           onClear={() => setSearchQuery('')}
           size="sm"
-          className="w-[280px]"
+          className="w-[var(--search-input-width)]"
         />
         <HStack gap={1}>
           <Button variant="secondary" size="sm" disabled={selectedKeys.length === 0}>

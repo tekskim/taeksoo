@@ -343,7 +343,7 @@ export function NetworkPolicyDetailPage() {
         {/* Content Area */}
         <div 
           className="flex-1 overflow-auto min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll"
-          style={{ paddingBottom: shellPanel.isExpanded ? '350px' : '0' }}
+          style={{ paddingBottom: shellPanel.isExpanded ? 'var(--shell-panel-height)' : '0' }}
         >
           <div className="pt-4 px-8 pb-20 bg-[var(--color-surface-default)]">
             <VStack gap={6}>
@@ -472,7 +472,7 @@ export function NetworkPolicyDetailPage() {
                                   options={ruleTypeOptions}
                                   value={selectedRuleData.ruleType}
                                   onChange={() => {}}
-                                  className="w-[280px]"
+                                  className="w-[var(--search-input-width)]"
                                 />
                               </VStack>
 
@@ -679,7 +679,7 @@ export function NetworkPolicyDetailPage() {
                                   options={ruleTypeOptions}
                                   value={selectedEgressRuleData.ruleType}
                                   onChange={() => {}}
-                                  className="w-[280px]"
+                                  className="w-[var(--search-input-width)]"
                                 />
                               </VStack>
 

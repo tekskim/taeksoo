@@ -253,7 +253,7 @@ function PodsTab({ pods, onViewLogs, onExecuteShell }: PodsTabProps) {
     {
       key: 'status',
       label: 'Status',
-      width: '80px',
+      width: '64px',
       align: 'center',
       sortable: true,
       render: (value: string) => (
@@ -325,7 +325,7 @@ function PodsTab({ pods, onViewLogs, onExecuteShell }: PodsTabProps) {
     {
       key: 'action',
       label: 'Action',
-      width: '80px',
+      width: '64px',
       align: 'center',
       render: (_: unknown, row: PodRow) => (
         <ContextMenu items={createPodMenuItems(row)} trigger="click" align="left">
@@ -349,7 +349,7 @@ function PodsTab({ pods, onViewLogs, onExecuteShell }: PodsTabProps) {
           onChange={(e) => setSearchQuery(e.target.value)}
           onClear={() => setSearchQuery('')}
           size="sm"
-          className="w-[280px]"
+          className="w-[var(--search-input-width)]"
         />
         <HStack gap={1}>
           <Button variant="secondary" size="sm" disabled={selectedKeys.length === 0}>
@@ -424,7 +424,7 @@ function ServicesTab({ services }: ServicesTabProps) {
     {
       key: 'status',
       label: 'Status',
-      width: '80px',
+      width: '64px',
       align: 'center',
       sortable: true,
       render: (value: string) => (
@@ -654,7 +654,7 @@ function RecentEventsTab({ events }: RecentEventsTabProps) {
           onChange={(e) => setSearchQuery(e.target.value)}
           onClear={() => setSearchQuery('')}
           size="sm"
-          className="w-[280px]"
+          className="w-[var(--search-input-width)]"
         />
         <HStack gap={1}>
           <Button variant="secondary" size="sm" disabled={selectedKeys.length === 0}>

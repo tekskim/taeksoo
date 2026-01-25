@@ -186,7 +186,7 @@ interface SummarySidebarProps {
 
 function SummarySidebar({ sectionStatus, onCancel, onCreate, isCreateEnabled }: SummarySidebarProps) {
   return (
-    <div className="w-[312px] shrink-0 sticky top-4 self-start">
+    <div className="w-[var(--wizard-summary-width)] shrink-0 sticky top-4 self-start">
       <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg p-4 flex flex-col gap-4">
         {/* Summary Card with Header and Status */}
         <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-lg p-4">
@@ -281,51 +281,51 @@ function PasswordSection({
     <div className="flex flex-col gap-2 p-1">
       <div className="flex items-center gap-2">
         {hasMinLength ? (
-          <IconCircleCheck size={16} className="text-[#22c55e]" />
+          <IconCircleCheck size={16} className="text-[var(--color-state-success)]" />
         ) : (
           <IconCircle size={16} className="text-white/50" />
         )}
-        <span className={`text-[11px] ${hasMinLength ? 'text-[#22c55e]' : 'text-white'}`}>
+        <span className={`text-[11px] ${hasMinLength ? 'text-[var(--color-state-success)]' : 'text-white'}`}>
           8-64 characters long
         </span>
       </div>
       <div className="flex items-center gap-2">
         {hasUppercase ? (
-          <IconCircleCheck size={16} className="text-[#22c55e]" />
+          <IconCircleCheck size={16} className="text-[var(--color-state-success)]" />
         ) : (
           <IconCircle size={16} className="text-white/50" />
         )}
-        <span className={`text-[11px] ${hasUppercase ? 'text-[#22c55e]' : 'text-white'}`}>
+        <span className={`text-[11px] ${hasUppercase ? 'text-[var(--color-state-success)]' : 'text-white'}`}>
           At least one uppercase letter (A-Z)
         </span>
       </div>
       <div className="flex items-center gap-2">
         {hasLowercase ? (
-          <IconCircleCheck size={16} className="text-[#22c55e]" />
+          <IconCircleCheck size={16} className="text-[var(--color-state-success)]" />
         ) : (
           <IconCircle size={16} className="text-white/50" />
         )}
-        <span className={`text-[11px] ${hasLowercase ? 'text-[#22c55e]' : 'text-white'}`}>
+        <span className={`text-[11px] ${hasLowercase ? 'text-[var(--color-state-success)]' : 'text-white'}`}>
           At least one lowercase letter (a-z)
         </span>
       </div>
       <div className="flex items-center gap-2">
         {hasNumber ? (
-          <IconCircleCheck size={16} className="text-[#22c55e]" />
+          <IconCircleCheck size={16} className="text-[var(--color-state-success)]" />
         ) : (
           <IconCircle size={16} className="text-white/50" />
         )}
-        <span className={`text-[11px] ${hasNumber ? 'text-[#22c55e]' : 'text-white'}`}>
+        <span className={`text-[11px] ${hasNumber ? 'text-[var(--color-state-success)]' : 'text-white'}`}>
           At least one number
         </span>
       </div>
       <div className="flex items-center gap-2">
         {hasSpecialChar ? (
-          <IconCircleCheck size={16} className="text-[#22c55e]" />
+          <IconCircleCheck size={16} className="text-[var(--color-state-success)]" />
         ) : (
           <IconCircle size={16} className="text-white/50" />
         )}
-        <span className={`text-[11px] ${hasSpecialChar ? 'text-[#22c55e]' : 'text-white'}`}>
+        <span className={`text-[11px] ${hasSpecialChar ? 'text-[var(--color-state-success)]' : 'text-white'}`}>
           At least one special character
         </span>
       </div>
@@ -339,11 +339,11 @@ function PasswordSection({
   const confirmPasswordTooltip = (
     <div className="flex items-center gap-2 p-1">
       {passwordsMatch ? (
-        <IconCircleCheck size={16} className="text-[#22c55e]" />
+        <IconCircleCheck size={16} className="text-[var(--color-state-success)]" />
       ) : (
         <IconCircle size={16} className="text-white/50" />
       )}
-      <span className={`text-[11px] ${passwordsMatch ? 'text-[#22c55e]' : 'text-white'}`}>
+      <span className={`text-[11px] ${passwordsMatch ? 'text-[var(--color-state-success)]' : 'text-white'}`}>
         Passwords match.
       </span>
     </div>
@@ -875,7 +875,7 @@ function UserGroupSection({
 
           {/* Search */}
           <div className="mt-4">
-            <div className="relative" style={{ width: '280px' }}>
+            <div className="relative w-[var(--search-input-width)]">
               <input
                 type="text"
                 placeholder="Search user groups by attributes"

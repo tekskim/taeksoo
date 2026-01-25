@@ -240,7 +240,7 @@ export function IAMUserGroupsPage() {
                       placeholder="Search user groups by attributes"
                       value={searchQuery}
                       onChange={setSearchQuery}
-                      className="w-[280px]"
+                      className="w-[var(--search-input-width)]"
                     />
                     <Button variant="secondary" size="sm" icon={<IconDownload size={12} />} aria-label="Download" />
                   </HStack>

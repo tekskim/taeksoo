@@ -295,7 +295,7 @@ function TemplateSidebar({ onCancel, sectionStatus }: TemplateSidebarProps) {
   );
 
   return (
-    <div className="w-[312px] shrink-0 sticky top-4 self-start">
+    <div className="w-[var(--wizard-summary-width)] shrink-0 sticky top-4 self-start">
       <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg p-4 flex flex-col gap-4">
         {/* Summary Card */}
         <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-lg p-4">
@@ -865,7 +865,7 @@ function ImageSection({
               onChange={(e) => { setSearchQuery(e.target.value); setCurrentPage(1); }}
               onClear={() => { setSearchQuery(''); setCurrentPage(1); }}
               size="sm"
-              className="w-[280px]"
+              className="w-[var(--search-input-width)]"
             />
 
             {/* Pagination - Above Table */}
@@ -1149,7 +1149,7 @@ function FlavorSection({
                 onChange={handleSearchChange}
                 onClear={() => { setSearchQuery(''); setCurrentPage(1); }}
                 size="sm"
-                className="w-[280px]"
+                className="w-[var(--search-input-width)]"
               />
               <button 
                 className="flex items-center justify-center w-[28px] h-[28px] border border-[var(--color-border-strong)] rounded-[6px] bg-white hover:bg-[var(--color-surface-subtle)]"
@@ -1564,7 +1564,7 @@ function NetworkSection({
                 onChange={(e) => { setNetworkSearch(e.target.value); setNetworkPage(1); }}
                 onClear={() => { setNetworkSearch(''); setNetworkPage(1); }}
                 size="sm"
-                className="w-[312px]"
+                className="w-[var(--wizard-summary-width)]"
               />
               <Button variant="secondary" size="sm" leftIcon={<IconExternalLink size={12} />}>
                 Create a new network
@@ -1681,7 +1681,7 @@ function NetworkSection({
                 onChange={(e) => { setSgSearch(e.target.value); setSgPage(1); }}
                 onClear={() => { setSgSearch(''); setSgPage(1); }}
                 size="sm"
-                className="w-[312px]"
+                className="w-[var(--wizard-summary-width)]"
               />
               <Button variant="secondary" size="sm" leftIcon={<IconExternalLink size={12} />}>
                 Create a new security group
@@ -1739,7 +1739,7 @@ function NetworkSection({
                   onChange={(e) => { setPortSearch(e.target.value); setPortPage(1); }}
                   onClear={() => { setPortSearch(''); setPortPage(1); }}
                   size="sm"
-                  className="w-[280px]"
+                  className="w-[var(--search-input-width)]"
                 />
 
                 {/* Port Pagination */}
@@ -2374,7 +2374,7 @@ export function CreateTemplatePage() {
       {/* Main Content */}
       <main
         className="absolute top-0 bottom-0 right-0 flex flex-col bg-[var(--color-surface-default)] transition-[left] duration-200"
-        style={{ left: sidebarOpen ? '200px' : '0px' }}
+        style={{ left: sidebarOpen ? 'var(--layout-sidebar-width)' : '0px' }}
       >
         {/* Fixed Header Area */}
         <div className="shrink-0 bg-[var(--color-surface-default)]">

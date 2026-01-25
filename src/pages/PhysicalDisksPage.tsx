@@ -343,7 +343,7 @@ function IdentifyCell({ timer, onIdentify }: IdentifyCellProps) {
 
   if (timer && timer > 0) {
     return (
-      <span className="text-[11px] font-medium text-[#ff851a]">{formatTime(timer)}</span>
+      <span className="text-[11px] font-medium text-[var(--color-state-warning)]">{formatTime(timer)}</span>
     );
   }
 
@@ -541,7 +541,7 @@ export function PhysicalDisksPage() {
 
       {/* Main Content */}
       <main
-        className={`absolute top-0 bottom-0 right-0 flex flex-col bg-[var(--color-surface-default)] transition-[left] duration-200 ${sidebarOpen ? 'left-[200px]' : 'left-0'}`}
+        className={`absolute top-0 bottom-0 right-0 flex flex-col bg-[var(--color-surface-default)] transition-[left] duration-200 ${sidebarOpen ? 'left-[var(--layout-sidebar-width)]' : 'left-0'}`}
       >
         {/* Fixed Header Area */}
         <div className="shrink-0 bg-[var(--color-surface-default)]">
@@ -598,7 +598,7 @@ export function PhysicalDisksPage() {
                 <div className="flex items-center gap-2">
                   {/* Search */}
                   <div className="flex items-center gap-1">
-                    <div className="w-[280px]">
+                    <div className="w-[var(--search-input-width)]">
                       <SearchInput
                         placeholder="Search users by attributes"
                         value={searchQuery}

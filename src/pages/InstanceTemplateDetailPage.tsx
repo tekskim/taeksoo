@@ -324,7 +324,7 @@ function SummarySidebar({ sectionStatus, onCancel, onSave, onDelete }: SummarySi
   const isAllDone = SECTION_ORDER.every((key) => sectionStatus[key] === 'done');
 
   return (
-    <div className="w-[312px] shrink-0 sticky top-4 self-start">
+    <div className="w-[var(--wizard-summary-width)] shrink-0 sticky top-4 self-start">
       <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg p-4 flex flex-col gap-4">
         {/* Summary Card using WizardSummary */}
         <WizardSummary title="Summary" items={summaryItems} />
@@ -493,7 +493,7 @@ export function InstanceTemplateDetailPage() {
       <Sidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
       <main
         className={`absolute top-0 bottom-0 right-0 flex flex-col bg-[var(--color-surface-default)] transition-[left] duration-200 ${
-          sidebarOpen ? 'left-[200px]' : 'left-0'
+          sidebarOpen ? 'left-[var(--layout-sidebar-width)]' : 'left-0'
         }`}
       >
         {/* Fixed Header Area */}

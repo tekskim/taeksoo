@@ -413,7 +413,7 @@ export function AgentPage() {
         <ListToolbar
           primaryActions={
             <ListToolbar.Actions>
-              <div className="w-[280px]">
+              <div className="w-[var(--search-input-width)]">
                 <SearchInput
                   placeholder="Search agent by attributes"
                   value={searchQuery}

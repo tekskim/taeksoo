@@ -304,13 +304,13 @@ interface StatCardProps {
 function StatCard({ label, value, color }: StatCardProps) {
   const colorStyles = {
     green: {
-      text: 'text-[#00c950]',
+      text: 'text-[var(--color-state-success)]',
     },
     blue: {
-      text: 'text-[#155dfc]',
+      text: 'text-[var(--color-state-info)]',
     },
     red: {
-      text: 'text-[#ef4444]',
+      text: 'text-[var(--color-state-danger)]',
     },
     black: {
       text: 'text-[var(--color-text-default)]',

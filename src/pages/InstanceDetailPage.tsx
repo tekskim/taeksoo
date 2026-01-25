@@ -524,7 +524,7 @@ export function InstanceDetailPage() {
       <Sidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(prev => !prev)} />
 
       {/* Main Content */}
-      <main className={`absolute top-0 bottom-0 right-0 flex flex-col bg-[var(--color-surface-default)] transition-[left] duration-200 ${sidebarOpen ? 'left-[200px]' : 'left-0'}`}>
+      <main className={`absolute top-0 bottom-0 right-0 flex flex-col bg-[var(--color-surface-default)] transition-[left] duration-200 ${sidebarOpen ? 'left-[var(--layout-sidebar-width)]' : 'left-0'}`}>
         {/* Fixed Header Area */}
         <div className="shrink-0 bg-[var(--color-surface-default)]">
         {/* Tab Bar */}
@@ -744,7 +744,7 @@ export function InstanceDetailPage() {
                     <SearchInput
                       placeholder="Search volume by attributes"
                       size="sm"
-                      className="w-[280px]"
+                      className="w-[var(--search-input-width)]"
                     />
 
                     {/* Pagination */}
@@ -861,7 +861,7 @@ export function InstanceDetailPage() {
                     </div>
 
                     {/* Search */}
-                    <SearchInput placeholder="Search interface by attributes" size="sm" className="w-[280px]" />
+                    <SearchInput placeholder="Search interface by attributes" size="sm" className="w-[var(--search-input-width)]" />
 
                     {/* Pagination */}
                     <Pagination
@@ -995,7 +995,7 @@ export function InstanceDetailPage() {
                     </div>
 
                     {/* Search */}
-                    <SearchInput placeholder="Search floating IP by attributes" size="sm" className="w-[280px]" />
+                    <SearchInput placeholder="Search floating IP by attributes" size="sm" className="w-[var(--search-input-width)]" />
 
                     {/* Pagination */}
                     <Pagination
@@ -1107,7 +1107,7 @@ export function InstanceDetailPage() {
                     </div>
 
                     {/* Search */}
-                    <SearchInput placeholder="Search security group by attributes" size="sm" className="w-[280px]" />
+                    <SearchInput placeholder="Search security group by attributes" size="sm" className="w-[var(--search-input-width)]" />
 
                     {/* Pagination */}
                     <Pagination
@@ -1201,7 +1201,7 @@ export function InstanceDetailPage() {
                           setSnapshotCurrentPage(1);
                         }}
                       size="sm"
-                        className="w-[280px]"
+                        className="w-[var(--search-input-width)]"
                       />
 
                     {/* Pagination */}
@@ -1395,7 +1395,7 @@ export function InstanceDetailPage() {
                           setActionLogSearchQuery(e.target.value);
                           setActionLogCurrentPage(1);
                         }}
-                        className="w-[280px]"
+                        className="w-[var(--search-input-width)]"
                       />
                       <Button variant="secondary" size="sm" className="!p-2 !w-7 !h-7 !min-w-7">
                         <IconDownload size={12} stroke={2} className="w-3 h-3" />

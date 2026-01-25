@@ -22,8 +22,8 @@ type ConnectionStatus = 'connected' | 'connecting' | 'disconnected';
 function ConnectionStatusIndicator({ status }: { status: ConnectionStatus }) {
   const statusConfig = {
     connected: {
-      color: 'text-[#00961e]',
-      bgColor: 'bg-[#00961e]',
+      color: 'text-[var(--color-state-success)]',
+      bgColor: 'bg-[var(--color-state-success)]',
       label: 'Connected',
     },
     connecting: {

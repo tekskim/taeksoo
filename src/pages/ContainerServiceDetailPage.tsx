@@ -268,7 +268,7 @@ function PodsTab({ pods, onViewLogs, onExecuteShell }: PodsTabProps) {
     {
       key: 'status',
       label: 'Status',
-      width: '80px',
+      width: '64px',
       align: 'center',
       sortable: true,
       render: (value: string) => (

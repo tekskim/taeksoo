@@ -229,7 +229,7 @@ function ContainersTab({ containers, onExecuteShell, onViewLogs }: ContainersTab
     {
       key: 'status',
       label: 'Status',
-      width: '80px',
+      width: '64px',
       align: 'center',
       render: (value: string) => (
         <StatusIndicator
@@ -295,7 +295,7 @@ function ContainersTab({ containers, onExecuteShell, onViewLogs }: ContainersTab
     {
       key: 'action',
       label: 'Action',
-      width: '80px',
+      width: '64px',
       align: 'center',
       render: (_: unknown, row: ContainerRow) => (
         <ContextMenu items={createContainerMenuItems(row)} trigger="click" align="left">
@@ -469,7 +469,7 @@ function RecentEventsTab({ events }: RecentEventsTabProps) {
           onChange={(e) => setSearchQuery(e.target.value)}
           onClear={() => setSearchQuery('')}
           size="sm"
-          className="w-[280px]"
+          className="w-[var(--search-input-width)]"
         />
         <HStack gap={1}>
           <Button variant="secondary" size="sm" disabled={selectedKeys.length === 0}>

@@ -381,7 +381,7 @@ export default function IAMPoliciesPage() {
                       placeholder="Search policies by attributes"
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
-                      className="w-[280px]"
+                      className="w-[var(--search-input-width)]"
                     />
 
                     {/* Download Button */}
