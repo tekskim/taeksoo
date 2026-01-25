@@ -370,8 +370,8 @@ html.theme-transition *::after {
      Component - Button
      ---------------------------------------- */
   --button-height-sm: 28px;
-  --button-height-md: 28px;
-  --button-height-lg: 40px;
+  --button-height-md: 32px;
+  --button-height-lg: 36px;
 
   --button-min-width-sm: 60px;
   --button-min-width-md: 80px;

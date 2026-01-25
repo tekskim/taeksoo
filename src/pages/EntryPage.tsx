@@ -248,7 +248,7 @@ export function EntryPage() {
               variant="secondary"
               size="sm"
               leftIcon={<IconBook size={14} stroke={1.5} />}
-              onClick={() => window.open('/tds_ssot/storybook/', '_blank')}
+              onClick={() => window.open(import.meta.env.DEV ? 'http://localhost:6006' : 'https://thakicloud.github.io/tds_ssot/storybook/', '_blank')}
             >
               Storybook
             </Button>

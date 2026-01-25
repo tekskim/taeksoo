@@ -5134,7 +5134,7 @@ outline: 2px solid var(--color-border-focus);`}
                       </thead>
                       <tbody>
                         {[
-                          { name: 'height', sm: '28px', md: '32px', lg: '40px' },
+                          { name: 'height', sm: '28px', md: '32px', lg: '36px' },
                           { name: 'min-width', sm: '60px', md: '80px', lg: '80px' },
                           { name: 'padding-x', sm: '10px', md: '12px', lg: '12px' },
                           { name: 'padding-y', sm: '6px', md: '8px', lg: '10px' },
@@ -5163,6 +5163,43 @@ outline: 2px solid var(--color-border-focus);`}
                     <Button size="sm">Small</Button>
                     <Button size="md">Medium</Button>
                     <Button size="lg">Large</Button>
+                  </div>
+                </VStack>
+
+                {/* Size Guidelines */}
+                <VStack gap={3}>
+                  <Label>Size guidelines</Label>
+                  <div className="overflow-x-auto">
+                    <table className="w-full text-[length:var(--font-size-11)]">
+                      <thead>
+                        <tr className="border-b border-[var(--color-border-default)]">
+                          <th className="text-left py-2 pr-4 font-medium text-[var(--color-text-subtle)]">Size</th>
+                          <th className="text-left py-2 pr-4 font-medium text-[var(--color-text-subtle)]">Height</th>
+                          <th className="text-left py-2 font-medium text-[var(--color-text-subtle)]">권장 사용처</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr className="border-b border-[var(--color-border-subtle)]">
+                          <td className="py-2 pr-4 font-medium">SM</td>
+                          <td className="py-2 pr-4 font-mono text-[var(--color-text-muted)]">28px</td>
+                          <td className="py-2 text-[var(--color-text-muted)]">테이블 툴바, 밀집된 UI, 반복 가능한 보조 액션</td>
+                        </tr>
+                        <tr className="border-b border-[var(--color-border-subtle)]">
+                          <td className="py-2 pr-4 font-medium">MD</td>
+                          <td className="py-2 pr-4 font-mono text-[var(--color-text-muted)]">32px</td>
+                          <td className="py-2 text-[var(--color-text-muted)]">일반 폼, 모달/드로어 액션, 독립적인 CTA</td>
+                        </tr>
+                        <tr className="border-b border-[var(--color-border-subtle)]">
+                          <td className="py-2 pr-4 font-medium">LG</td>
+                          <td className="py-2 pr-4 font-mono text-[var(--color-text-muted)]">36px</td>
+                          <td className="py-2 text-[var(--color-text-muted)]">페이지 주요 CTA, 랜딩 페이지, 히어로 섹션</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                  <div className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)] mt-1 space-y-1">
+                    <div><strong>판단 기준:</strong> 밀집된 UI? → SM | 독립적인 CTA? → MD/LG | 반복 가능한 액션? → SM | 폼의 최종 제출? → MD/LG</div>
+                    <div><strong>수직 정렬:</strong> 같은 행에 있는 요소는 같은 사이즈 사용 (Input md + Button md ✓)</div>
                   </div>
                 </VStack>
 
