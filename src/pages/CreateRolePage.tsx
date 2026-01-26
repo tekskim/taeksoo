@@ -314,7 +314,7 @@ interface SummarySidebarProps {
 
 function SummarySidebar({ sectionStatus, onCancel, onCreate, isCreateEnabled }: SummarySidebarProps) {
   return (
-    <div className="w-[312px] shrink-0 sticky top-4 self-start">
+    <div className="w-[var(--wizard-summary-width)] shrink-0 sticky top-4 self-start">
       <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg p-4 flex flex-col gap-4">
         {/* Summary Card with Header and Status */}
         <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-lg p-4">
@@ -669,7 +669,7 @@ function AddPoliciesSection({
 
           {/* Search */}
           <div className="mt-4">
-            <div className="relative" style={{ width: '280px' }}>
+            <div className="relative w-[var(--search-input-width)]">
               <input
                 type="text"
                 placeholder="Search policies by attributes"

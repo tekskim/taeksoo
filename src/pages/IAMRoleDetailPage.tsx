@@ -592,7 +592,7 @@ export default function IAMRoleDetailPage() {
                         placeholder="Search policies by attributes"
                         value={policiesSearchQuery}
                         onChange={(e) => setPoliciesSearchQuery(e.target.value)}
-                        className="w-[280px]"
+                        className="w-[var(--search-input-width)]"
                       />
 
                       {/* Pagination */}
@@ -736,7 +736,7 @@ export default function IAMRoleDetailPage() {
                         placeholder={entitiesSubTab === 'user-groups' ? 'Search user groups by attributes' : 'Search users by attributes'}
                         value={entitiesSearchQuery}
                         onChange={(e) => setEntitiesSearchQuery(e.target.value)}
-                        className="w-[280px]"
+                        className="w-[var(--search-input-width)]"
                       />
 
                       {/* Pagination */}

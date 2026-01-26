@@ -25,6 +25,8 @@ import {
 import { Sidebar } from '@/components/Sidebar';
 import { useTabs } from '@/contexts/TabContext';
 import { ViewPreferencesDrawer, type ColumnConfig } from '@/components/ViewPreferencesDrawer';
+import { CreateSubnetDrawer } from '@/components/CreateSubnetDrawer';
+import { EditNetworkDrawer } from '@/components/EditNetworkDrawer';
 import {
   IconDotsCircleHorizontal,
   IconTrash,
@@ -121,6 +123,22 @@ export function NetworksPage() {
   const [isPreferencesOpen, setIsPreferencesOpen] = useState(false);
   const [rowsPerPage, setRowsPerPage] = useState(10);
 
+  // Drawer states
+  const [createSubnetOpen, setCreateSubnetOpen] = useState(false);
+  const [editNetworkOpen, setEditNetworkOpen] = useState(false);
+  const [selectedNetworkForDrawer, setSelectedNetworkForDrawer] = useState<Network | null>(null);
+
+  // Drawer handlers
+  const handleCreateSubnet = (network: Network) => {
+    setSelectedNetworkForDrawer(network);
+    setCreateSubnetOpen(true);
+  };
+
+  const handleEditNetwork = (network: Network) => {
+    setSelectedNetworkForDrawer(network);
+    setEditNetworkOpen(true);
+  };
+
   const defaultColumnConfig: ColumnConfig[] = [
     { id: 'status', label: 'Status', visible: true, locked: true },
     { id: 'name', label: 'Name', visible: true, locked: true },
@@ -145,8 +163,8 @@ export function NetworksPage() {
 
   // Context menu items
   const getContextMenuItems = (network: Network): ContextMenuItem[] => [
-    { id: 'create-subnet', label: 'Create subnet', onClick: () => console.log('Create subnet:', network.id) },
-    { id: 'edit', label: 'Edit', onClick: () => console.log('Edit:', network.id) },
+    { id: 'create-subnet', label: 'Create subnet', onClick: () => handleCreateSubnet(network) },
+    { id: 'edit', label: 'Edit', onClick: () => handleEditNetwork(network) },
     { id: 'delete', label: 'Delete', status: 'danger', onClick: () => { setNetworkToDelete(network); setDeleteModalOpen(true); } },
   ];
 
@@ -279,7 +297,7 @@ export function NetworksPage() {
 
       <main
         className={`absolute top-0 bottom-0 right-0 flex flex-col bg-[var(--color-surface-default)] transition-[left] duration-200 ${
-          sidebarOpen ? 'left-[200px]' : 'left-0'
+          sidebarOpen ? 'left-[var(--layout-sidebar-width)]' : 'left-0'
         }`}
       >
         {/* Fixed Header Area */}
@@ -354,7 +372,7 @@ export function NetworksPage() {
                     appliedFilters={appliedFilters}
                     onFiltersChange={setAppliedFilters}
                     placeholder="Search network by attributes"
-                    className="w-[280px]"
+                    className="w-[var(--search-input-width)]"
                   />
                   <Button variant="secondary" size="sm" iconOnly icon={<IconDownload size={12} />} aria-label="Download" />
                 </ListToolbar.Actions>
@@ -422,6 +440,24 @@ export function NetworksPage() {
         columns={columnConfig}
         defaultColumns={defaultColumnConfig}
         onColumnsChange={setColumnConfig}
+      />
+
+      {/* Network Drawers */}
+      <CreateSubnetDrawer
+        isOpen={createSubnetOpen}
+        onClose={() => setCreateSubnetOpen(false)}
+        networkId={selectedNetworkForDrawer?.id}
+        networkName={selectedNetworkForDrawer?.name}
+      />
+
+      <EditNetworkDrawer
+        isOpen={editNetworkOpen}
+        onClose={() => setEditNetworkOpen(false)}
+        network={selectedNetworkForDrawer ? {
+          id: selectedNetworkForDrawer.id,
+          name: selectedNetworkForDrawer.name,
+          adminStateUp: selectedNetworkForDrawer.adminState === 'Up',
+        } : { id: '', name: '' }}
       />
     </div>
   );

@@ -98,7 +98,7 @@ function SummarySidebar({ sectionStatus, onCancel, onCreate, isCreateDisabled }:
   }));
 
   return (
-    <div className="w-[312px] shrink-0 sticky top-4 self-start">
+    <div className="w-[var(--wizard-summary-width)] shrink-0 sticky top-4 self-start">
       <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg p-4 flex flex-col gap-6">
         <WizardSummary items={summaryItems} />
 
@@ -400,7 +400,7 @@ export default function CreateVirtualAdapterPage() {
 
       <main
         className="absolute top-0 bottom-0 right-0 flex flex-col bg-[var(--color-surface-default)] transition-[left] duration-200"
-        style={{ left: sidebarOpen ? '200px' : '0px' }}
+        style={{ left: sidebarOpen ? 'var(--layout-sidebar-width)' : '0px' }}
       >
         {/* Fixed Header Area */}
         <div className="shrink-0 bg-[var(--color-surface-default)]">
@@ -595,7 +595,7 @@ export default function CreateVirtualAdapterPage() {
                           {/* Network Table Body */}
                           <VStack gap={3} align="stretch">
                             {/* Search and Pagination */}
-                            <div className="w-[280px]">
+                            <div className="w-[var(--search-input-width)]">
                               <SearchInput
                                 placeholder="Search fixed IPs by attributes"
                                 value={networkSearch}
@@ -676,7 +676,7 @@ export default function CreateVirtualAdapterPage() {
                                         { value: 'auto', label: 'Auto-allocate' },
                                         { value: 'manual', label: 'Manual' },
                                       ]}
-                                      style={{ width: '200px' }}
+                                      className="w-[var(--layout-sidebar-width)]"
                                     />
 
                                     {/* IP Range Info or Manual Input */}
@@ -848,7 +848,7 @@ export default function CreateVirtualAdapterPage() {
 
                             {/* Search + Create Button Row */}
                             <HStack justify="between" align="center">
-                              <div style={{ width: '280px' }}>
+                              <div className="w-[var(--search-input-width)]">
                                 <SearchInput
                                   placeholder="Search fixed IPs by attributes"
                                   value={securityGroupSearch}

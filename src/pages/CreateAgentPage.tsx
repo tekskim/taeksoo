@@ -671,7 +671,7 @@ export function CreateAgentPage() {
                       <SearchInput
                         placeholder="Search data by attributes"
                         size="sm"
-                        className="w-[280px]"
+                        className="w-[var(--search-input-width)]"
                           value={dataSourceSearch}
                           onChange={(e) => {
                             setDataSourceSearch(e.target.value);
@@ -721,7 +721,7 @@ export function CreateAgentPage() {
                       <SearchInput
                         placeholder="Search MCP tools by attributes"
                         size="sm"
-                        className="w-[280px]"
+                        className="w-[var(--search-input-width)]"
                           value={mcpToolSearch}
                           onChange={(e) => {
                             setMcpToolSearch(e.target.value);

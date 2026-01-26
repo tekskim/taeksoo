@@ -338,7 +338,7 @@ export function IAMHomePage() {
               {/* Row 1: Domain Info + Authentication Summary */}
               <HStack gap={3} align="stretch">
                 {/* Domain Info Card */}
-                <div className="w-[312px] shrink-0 bg-[var(--color-surface-default)] rounded-lg p-4 flex flex-col gap-6">
+                <div className="w-[var(--wizard-summary-width)] shrink-0 bg-[var(--color-surface-default)] rounded-lg p-4 flex flex-col gap-6">
                   <h2 className="text-[24px] font-semibold text-[var(--color-text-default)]">DomainA</h2>
                   <VStack gap={2}>
                     <HStack gap={2}>
@@ -425,7 +425,7 @@ export function IAMHomePage() {
               {/* Row 3: IAM Resources + Recent Events */}
               <HStack gap={3} align="start">
                 {/* IAM Resources */}
-                <div className="w-[312px] shrink-0 bg-[var(--color-surface-default)] rounded-lg pt-3 pb-4 px-4 flex flex-col gap-3">
+                <div className="w-[var(--wizard-summary-width)] shrink-0 bg-[var(--color-surface-default)] rounded-lg pt-3 pb-4 px-4 flex flex-col gap-3">
                   <h3 className="text-[14px] font-semibold text-[var(--color-text-default)]">IAM resources</h3>
                   <VStack gap={2}>
                     <ResourceCard label="User group" value="13" />

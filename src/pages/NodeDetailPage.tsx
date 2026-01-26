@@ -418,7 +418,7 @@ function PodsTab({ pods }: PodsTabProps) {
           onChange={(e) => setSearchQuery(e.target.value)}
           onClear={() => setSearchQuery('')}
           size="sm"
-          className="w-[280px]"
+          className="w-[var(--search-input-width)]"
         />
       </HStack>
       <Pagination
@@ -558,7 +558,7 @@ function ImagesTab({ images }: ImagesTabProps) {
           onChange={(e) => setSearchQuery(e.target.value)}
           onClear={() => setSearchQuery('')}
           size="sm"
-          className="w-[280px]"
+          className="w-[var(--search-input-width)]"
         />
       </HStack>
       <Pagination
@@ -695,7 +695,7 @@ function RecentEventsTab({ events }: RecentEventsTabProps) {
           onChange={(e) => setSearchQuery(e.target.value)}
           onClear={() => setSearchQuery('')}
           size="sm"
-          className="w-[280px]"
+          className="w-[var(--search-input-width)]"
         />
         <HStack gap={1}>
           <Button variant="secondary" size="sm" disabled={selectedKeys.length === 0}>

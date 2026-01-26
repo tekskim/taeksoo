@@ -480,7 +480,7 @@ export function MCPToolsPage() {
     {
       key: 'actions',
       label: 'Action',
-      width: '80px',
+      width: '64px',
       align: 'center',
       render: (_, row) => {
         const menuItems: ContextMenuItem[] = [
@@ -583,7 +583,7 @@ export function MCPToolsPage() {
     {
       key: 'actions',
       label: 'Action',
-      width: '80px',
+      width: '64px',
       align: 'center',
       render: (_, row) => {
         const menuItems: ContextMenuItem[] = [
@@ -651,7 +651,7 @@ export function MCPToolsPage() {
           <ListToolbar
             primaryActions={
               <ListToolbar.Actions>
-                <div className="w-[280px]">
+                <div className="w-[var(--search-input-width)]">
                   <SearchInput
                     placeholder="Search MCP tools by attributes"
                     value={searchQuery}
@@ -708,7 +708,7 @@ export function MCPToolsPage() {
             <ListToolbar
               primaryActions={
                 <ListToolbar.Actions>
-                  <div className="w-[280px]">
+                  <div className="w-[var(--search-input-width)]">
                     <SearchInput
                       placeholder="Search templates by attributes"
                       value={searchQuery}

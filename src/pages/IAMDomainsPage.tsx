@@ -219,7 +219,7 @@ export default function IAMDomainsPage() {
                       placeholder="Search domains by attributes"
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
-                      className="w-[280px]"
+                      className="w-[var(--search-input-width)]"
                     />
                     <Button
                       variant="secondary"

@@ -77,7 +77,7 @@ export function ContainerHomePage() {
     { 
       key: 'status', 
       label: 'Status', 
-      width: '80px', 
+      width: '64px', 
       align: 'center',
       sortable: true,
       render: (value: string) => (
@@ -185,7 +185,7 @@ export function ContainerHomePage() {
                       <SearchInput 
                         placeholder="Search clusters by attributes" 
                         size="sm" 
-                        className="w-[280px]"
+                        className="w-[var(--search-input-width)]"
                       />
                       <Pagination
                         currentPage={currentPage}
@@ -204,7 +204,7 @@ export function ContainerHomePage() {
                 </SectionCard>
 
                 {/* Create Cluster Card */}
-                <SectionCard className="w-[280px] shrink-0">
+                <SectionCard className="w-[var(--search-input-width)] shrink-0">
                   <SectionCard.Content>
                     <VStack gap={4}>
                       <h3 className="text-[14px] font-semibold text-[var(--color-text-default)]">Create a Cluster</h3>

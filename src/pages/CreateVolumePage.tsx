@@ -144,7 +144,7 @@ function SummarySidebar({ sectionStatus, onCancel, onCreate, isCreateDisabled }:
   }));
 
   return (
-    <div className="w-[312px] shrink-0 sticky top-4 self-start">
+    <div className="w-[var(--wizard-summary-width)] shrink-0 sticky top-4 self-start">
       <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg p-4 flex flex-col gap-6">
         <WizardSummary items={summaryItems} />
         
@@ -419,7 +419,7 @@ export function CreateVolumePage() {
 
       <main
         className={`absolute top-0 bottom-0 right-0 flex flex-col bg-[var(--color-surface-default)] transition-[left] duration-200 ${
-          sidebarOpen ? 'left-[200px]' : 'left-0'
+          sidebarOpen ? 'left-[var(--layout-sidebar-width)]' : 'left-0'
         }`}
       >
         {/* Fixed Header Area */}
@@ -649,7 +649,7 @@ export function CreateVolumePage() {
                               })}
                             </div>
 
-                            <div className="w-[280px]">
+                            <div className="w-[var(--search-input-width)]">
                               <SearchInput
                                 placeholder="Search images by attribute"
                                 value={imageSearchQuery}
@@ -693,7 +693,7 @@ export function CreateVolumePage() {
                         {/* Snapshot Selection */}
                         {sourceType === 'snapshot' && (
                           <VStack gap={4} align="stretch">
-                            <div className="w-[280px]">
+                            <div className="w-[var(--search-input-width)]">
                               <SearchInput
                                 placeholder="Search snapshots by attribute"
                                 value={snapshotSearchQuery}
@@ -878,7 +878,7 @@ export function CreateVolumePage() {
                             </FormField>
 
                             <VStack gap={4} align="stretch">
-                              <div className="w-[280px]">
+                              <div className="w-[var(--search-input-width)]">
                                 <SearchInput
                                   placeholder="Search volume types"
                                   value={volumeTypeSearchQuery}

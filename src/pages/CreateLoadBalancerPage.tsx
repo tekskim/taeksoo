@@ -204,7 +204,7 @@ function SummarySidebar({ sectionStatus, onCancel, onCreate, isCreateDisabled }:
   }));
 
   return (
-    <div className="w-[312px] shrink-0 sticky top-4 self-start">
+    <div className="w-[var(--wizard-summary-width)] shrink-0 sticky top-4 self-start">
       <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg p-3 flex flex-col gap-3">
         <WizardSummary items={summaryItems} />
         
@@ -906,7 +906,7 @@ export default function CreateLoadBalancerPage() {
 
       <main
         className={`absolute top-0 bottom-0 right-0 flex flex-col bg-[var(--color-surface-default)] transition-[left] duration-200 ${
-          sidebarOpen ? 'left-[200px]' : 'left-0'
+          sidebarOpen ? 'left-[var(--layout-sidebar-width)]' : 'left-0'
         }`}
       >
         {/* Fixed Header Area */}
@@ -1081,7 +1081,7 @@ export default function CreateLoadBalancerPage() {
                           </Tabs>
 
                           {/* Search */}
-                          <div style={{ width: '280px' }}>
+                          <div className="w-[var(--search-input-width)]">
                             <SearchInput
                               placeholder="Search networks by attributes"
                               value={networkSearch}
@@ -1354,7 +1354,7 @@ export default function CreateLoadBalancerPage() {
                             </FormField>
 
                             {/* Search */}
-                            <div style={{ width: '280px' }}>
+                            <div className="w-[var(--search-input-width)]">
                               <SearchInput
                                 placeholder="Search certificates by attributes"
                                 value={certificateSearch}
@@ -1404,7 +1404,7 @@ export default function CreateLoadBalancerPage() {
                               placeholder="Search certificates by attributes"
                               value={caCertificateSearch}
                               onChange={(e) => setCaCertificateSearch(e.target.value)}
-                              style={{ width: '280px' }}
+                              className="w-[var(--search-input-width)]"
                             />
 
                             {/* Pagination */}
@@ -1465,7 +1465,7 @@ export default function CreateLoadBalancerPage() {
                               placeholder="Search server certificate by attributes"
                               value={sniCertificateSearch}
                               onChange={(e) => setSniCertificateSearch(e.target.value)}
-                              style={{ width: '280px' }}
+                              className="w-[var(--search-input-width)]"
                             />
 
                             {/* Pagination */}
@@ -1511,7 +1511,7 @@ export default function CreateLoadBalancerPage() {
                               onChange={setProtocolPort}
                               min={1}
                               max={65535}
-                              style={{ width: '200px' }}
+                              className="w-[var(--layout-sidebar-width)]"
                             />
                           </FormField.Control>
                           <FormField.HelperText>1-65535</FormField.HelperText>
@@ -1541,8 +1541,7 @@ export default function CreateLoadBalancerPage() {
                                   onChange={setConnectionLimitValue}
                                   disabled={connectionLimitType === 'unlimited'}
                                   min={1}
-                                  style={{ width: '200px' }}
-                                  className={connectionLimitType === 'unlimited' ? 'bg-[var(--color-surface-subtle)]' : ''}
+                                  className={`w-[var(--layout-sidebar-width)] ${connectionLimitType === 'unlimited' ? 'bg-[var(--color-surface-subtle)]' : ''}`}
                                 />
                               </HStack>
                             </VStack>
@@ -1616,7 +1615,7 @@ export default function CreateLoadBalancerPage() {
                                     value={clientDataTimeout}
                                     onChange={setClientDataTimeout}
                                     min={0}
-                                    style={{ width: '200px' }}
+                                    className="w-[var(--layout-sidebar-width)]"
                                   />
                                 </FormField.Control>
                               </FormField>
@@ -1632,7 +1631,7 @@ export default function CreateLoadBalancerPage() {
                                     value={memberConnectTimeout}
                                     onChange={setMemberConnectTimeout}
                                     min={0}
-                                    style={{ width: '200px' }}
+                                    className="w-[var(--layout-sidebar-width)]"
                                   />
                                 </FormField.Control>
                               </FormField>
@@ -1648,7 +1647,7 @@ export default function CreateLoadBalancerPage() {
                                     value={memberDataTimeout}
                                     onChange={setMemberDataTimeout}
                                     min={0}
-                                    style={{ width: '200px' }}
+                                    className="w-[var(--layout-sidebar-width)]"
                                   />
                                 </FormField.Control>
                               </FormField>
@@ -1664,7 +1663,7 @@ export default function CreateLoadBalancerPage() {
                                     value={tcpInspectTimeout}
                                     onChange={setTcpInspectTimeout}
                                     min={0}
-                                    style={{ width: '200px' }}
+                                    className="w-[var(--layout-sidebar-width)]"
                                   />
                                 </FormField.Control>
                               </FormField>
@@ -1686,7 +1685,7 @@ export default function CreateLoadBalancerPage() {
                                           setAllowedCidrs(newCidrs);
                                         }}
                                         placeholder="e.g. 10.0.0.0/24"
-                                        style={{ width: '200px' }}
+                                        className="w-[var(--layout-sidebar-width)]"
                                       />
                                       <Button
                                         variant="ghost"
@@ -1832,7 +1831,7 @@ export default function CreateLoadBalancerPage() {
                                   value={poolAlgorithm}
                                   onChange={setPoolAlgorithm}
                                   placeholder="Select algorithm"
-                                  style={{ width: '200px' }}
+                                  className="w-[var(--layout-sidebar-width)]"
                                 />
                               </FormField.Control>
                               <FormField.HelperText>
@@ -1855,7 +1854,7 @@ export default function CreateLoadBalancerPage() {
                                   value={poolProtocol}
                                   onChange={setPoolProtocol}
                                   placeholder="Select protocol"
-                                  style={{ width: '200px' }}
+                                  className="w-[var(--layout-sidebar-width)]"
                                 />
                               </FormField.Control>
                             </FormField>
@@ -1913,7 +1912,7 @@ export default function CreateLoadBalancerPage() {
                                               value={cookieName}
                                               onChange={(e) => setCookieName(e.target.value)}
                                               disabled={sessionPersistence !== 'app_cookie'}
-                                              style={{ width: '200px' }}
+                                              className="w-[var(--layout-sidebar-width)]"
                                             />
                                             <span className="text-[11px] text-[var(--color-text-subtle)]">
                                               You can use letters, numbers, and special characters(+.-_!#$%&'*^|~).
@@ -2008,7 +2007,7 @@ export default function CreateLoadBalancerPage() {
                               placeholder="Search ports by attributes"
                               value={memberPortSearch}
                               onChange={(e) => setMemberPortSearch(e.target.value)}
-                              style={{ width: '280px' }}
+                              className="w-[var(--search-input-width)]"
                             />
                             <Pagination
                               currentPage={memberPortPage}
