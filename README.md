@@ -1,407 +1,149 @@
-# TDS (THAKI Design System)
+# TDS (THAKI Design System) - SSOT
 
-<p align="center">
-  <strong>A comprehensive React component library for building consistent, accessible, and beautiful user interfaces.</strong>
-</p>
+TDS SSOT 저장소는 Thaki Cloud 서비스 전반에 사용되는 디자인 시스템의 **Single Source of Truth**입니다. 모든 UI 컴포넌트, 디자인 토큰, 스타일 가이드를 한 곳에서 관리하며, 프로덕션 환경에 반영하기 위한 프로토타입과 컴포넌트 라이브러리 역할을 합니다.
 
-<p align="center">
-  <a href="#installation">Installation</a> •
-  <a href="#quick-start">Quick Start</a> •
-  <a href="#components">Components</a> •
-  <a href="#design-tokens">Design Tokens</a> •
-  <a href="#development">Development</a>
-</p>
+## 주요 기술 스택 및 버전
+
+- **Node.js**: v22.14.x (LTS)
+- **pnpm**: v10.8.x (루트 `package.json`의 `packageManager` 참고)
+- **TypeScript**: ~5.9
+- **React**: ^18 || ^19
+- **Rspack**: ^1.7 (번들링/개발 서버)
+- **Vite**: ^5.4 (라이브러리 빌드/Storybook)
+- **Tailwind CSS**: v4
+- ESLint / Prettier (코드 품질 관리)
+
+> 반드시 지정된 Node.js 및 pnpm 버전을 사용해 주세요. `.nvmrc` 파일을 참고하세요.
+
+## 레포지토리 구조
+
+```
+tds/
+├── .cursor/              # Cursor IDE 설정 및 규칙
+├── .github/              # GitHub Actions 워크플로우
+├── .husky/               # Git hooks (pre-commit)
+├── .storybook/           # Storybook 설정
+├── .vscode/              # VS Code 설정
+├── scripts/              # 빌드 스크립트 (토큰 생성 등)
+├── src/
+│   ├── design-system/    # 디자인 시스템 컴포넌트
+│   │   ├── components/   # UI 컴포넌트 (50+)
+│   │   ├── hooks/        # 커스텀 훅
+│   │   ├── layouts/      # 레이아웃 컴포넌트
+│   │   ├── tokens/       # 디자인 토큰 (Storybook 문서)
+│   │   └── utils/        # 유틸리티 함수
+│   ├── pages/            # 데모/프로토타입 페이지
+│   └── tokens/           # 디자인 토큰 JSON 원본
+├── docs/                 # 빌드된 데모 사이트 (GitHub Pages)
+└── dist/                 # 빌드된 라이브러리
+```
+
+## 공용 설정
+
+- **패키지 관리**: pnpm (`package.json`의 `packageManager` 필드)
+- **TypeScript**: `tsconfig.json`, `tsconfig.app.json`, `tsconfig.node.json`
+- **ESLint / Prettier**: 루트 `eslint.config.js`, `.prettierrc`에서 공통 규칙 정의
+- **디자인 토큰**: `src/tokens/*.json` → CSS Variables 자동 생성
+
+## 개발 환경 준비
+
+```bash
+# Node.js 버전 설정 (nvm 사용 시)
+nvm use
+
+# 의존성 설치
+pnpm install
+
+# 개발 서버 실행
+pnpm dev
+```
+
+## 실행 스크립트
+
+루트 `package.json`에 정의된 주요 스크립트:
+
+| 명령어               | 설명                          |
+| -------------------- | ----------------------------- |
+| `pnpm dev`           | 개발 서버 실행 (Rspack)       |
+| `pnpm build`         | 프로덕션 빌드 (데모 사이트)   |
+| `pnpm build:lib`     | 라이브러리 빌드 (npm 배포용)  |
+| `pnpm storybook`     | Storybook 실행                |
+| `pnpm test`          | 테스트 실행 (watch 모드)      |
+| `pnpm test:run`      | 테스트 1회 실행               |
+| `pnpm test:coverage` | 테스트 커버리지 리포트        |
+| `pnpm lint`          | ESLint 검사                   |
+| `pnpm lint:fix`      | ESLint 자동 수정              |
+| `pnpm format`        | Prettier 포맷팅               |
+| `pnpm tokens`        | 디자인 토큰 빌드 (JSON → CSS) |
+| `pnpm deploy`        | GitHub Pages 배포             |
+
+## 디자인 토큰 시스템
+
+디자인 토큰은 JSON 파일에서 정의하고 CSS Variables로 자동 변환됩니다:
+
+```
+src/tokens/
+├── colors.json     # 색상 토큰
+├── typography.json # 타이포그래피 토큰
+├── spacing.json    # 간격 토큰
+└── ...
+```
+
+토큰 빌드:
+
+```bash
+pnpm tokens
+```
+
+생성 결과:
+
+- `src/tokens/generated/variables.css` - CSS Variables
+- `src/tokens/generated/tailwind-preset.js` - Tailwind 프리셋
+
+## 코드 품질
+
+- ESLint + Prettier 조합을 사용하며, VS Code/Cursor 사용 시 저장 시 포맷 자동 적용
+- `.vscode/settings.json` 및 `.vscode/extensions.json` 참고
+- Pre-commit hook으로 lint-staged 자동 실행
+
+## 🔒 보안 감사
+
+### 수동 실행
+
+```bash
+# 보안 취약점 검사
+pnpm audit
+
+# 중간 이상 심각도만 검사
+pnpm audit:check
+
+# 자동 수정 시도
+pnpm audit:fix
+```
+
+## 데모 및 문서
+
+- **데모 사이트**: https://thakicloud.github.io/tds_ssot/
+- **Storybook**: `pnpm storybook` 실행 후 http://localhost:6006
+
+## 프로덕션 연동
+
+이 SSOT에서 정의된 컴포넌트와 토큰은 프로덕션([thaki-ui](https://github.com/ThakiCloud/thaki-ui))에 반영됩니다:
+
+1. **디자인 토큰**: SSOT의 토큰 값을 프로덕션에 동기화
+2. **컴포넌트 인터페이스**: Props 인터페이스 통일 후 코드 이식
+3. **스타일 가이드**: SSOT의 디자인 결정사항을 프로덕션에 적용
+
+## 참고
+
+- 컴포넌트 사용법은 Storybook 문서 또는 `src/design-system/components/` 참고
+- Cursor IDE 사용 시 `.cursor/rules/tds-design-system.mdc` 규칙 자동 적용
+- 새로운 컴포넌트 추가 시 본 문서 및 Storybook 최신 상태 유지
 
 ---
 
-## Features
-
-- 🎨 **50+ Components** - Form controls, data display, navigation, feedback, and more
-- 🌙 **Dark Mode** - Built-in dark mode support with CSS variables
-- ♿ **Accessible** - WCAG 2.1 AA compliant with proper ARIA attributes
-- 📱 **Responsive** - Mobile-first design with Tailwind CSS
-- 🧪 **Well Tested** - Comprehensive unit and accessibility tests
-- 📖 **Documented** - Interactive Storybook documentation
-- 🔧 **TypeScript** - Full TypeScript support with exported types
-
-## Installation
-
-```bash
-npm install @thaki/tds
-# or
-yarn add @thaki/tds
-# or
-pnpm add @thaki/tds
-```
-
-## Quick Start
-
-1. Import the styles in your app's entry point:
-
-```tsx
-import '@thaki/tds/styles';
-```
-
-2. Use the components:
-
-```tsx
-import { Button, Input, Select, Modal } from '@thaki/tds';
-
-function App() {
-  return (
-    <div>
-      <Input label="Name" placeholder="Enter your name" />
-      <Button variant="primary">Submit</Button>
-    </div>
-  );
-}
-```
-
-## Components
-
-### Form Controls
-
-| Component | Description |
-|-----------|-------------|
-| `Button` | Primary action buttons with variants (primary, secondary, ghost, danger) |
-| `Input` | Text input with label, helper text, and error states |
-| `NumberInput` | Numeric input with increment/decrement controls |
-| `SearchInput` | Search input with clear button |
-| `Textarea` | Multi-line text input |
-| `Select` | Dropdown selection |
-| `Checkbox` | Single checkbox with label |
-| `CheckboxGroup` | Group of checkboxes |
-| `Radio` | Single radio button |
-| `RadioGroup` | Radio button group |
-| `Toggle` | On/off switch |
-| `Slider` | Range slider |
-| `DatePicker` | Date selection |
-| `FormField` | Form field wrapper with label, helper text, and error handling |
-
-### Data Display
-
-| Component | Description |
-|-----------|-------------|
-| `Table` | Data table with sorting, selection, and custom rendering |
-| `Badge` | Status indicators and labels |
-| `Chip` | Tags and filter chips |
-| `StatusIndicator` | Status icons with different states |
-| `Pagination` | Page navigation |
-| `ProgressBar` | Progress and quota indicators |
-| `Tooltip` | Hover tooltips |
-
-### Layout
-
-| Component | Description |
-|-----------|-------------|
-| `VStack` | Vertical flex container |
-| `HStack` | Horizontal flex container |
-| `Container` | Centered content container |
-| `SectionCard` | Card with header and content sections |
-| `DetailHeader` | Page detail header with info cards |
-
-### Navigation
-
-| Component | Description |
-|-----------|-------------|
-| `Tabs` | Tab navigation (underline/boxed variants) |
-| `TabBar` | Browser-style tab bar |
-| `TopBar` | Top navigation bar |
-| `Breadcrumb` | Breadcrumb navigation |
-| `SNBMenuItem` | Sidebar navigation menu item |
-
-### Feedback
-
-| Component | Description |
-|-----------|-------------|
-| `Modal` | Modal dialog with compound components |
-| `Drawer` | Side panel |
-| `InlineMessage` | Inline alert messages |
-| `Loading` | Loading spinners and progress |
-| `ContextMenu` | Right-click context menu |
-
-### Disclosure
-
-| Component | Description |
-|-----------|-------------|
-| `Disclosure` | Expandable/collapsible sections |
-
-## Design Tokens
-
-TDS uses CSS variables for consistent styling. Override them to customize the theme:
-
-### Colors
-
-```css
-:root {
-  /* Text */
-  --color-text-default: #171717;
-  --color-text-muted: #525252;
-  --color-text-subtle: #737373;
-  --color-text-disabled: #a3a3a3;
-
-  /* Surfaces */
-  --color-surface-default: #ffffff;
-  --color-surface-subtle: #fafafa;
-  --color-surface-muted: #f5f5f5;
-
-  /* Borders */
-  --color-border-default: #e5e5e5;
-  --color-border-subtle: #f5f5f5;
-  --color-border-strong: #d4d4d4;
-
-  /* State Colors */
-  --color-state-info: #3b82f6;
-  --color-state-success: #22c55e;
-  --color-state-warning: #f97316;
-  --color-state-danger: #ef4444;
-
-  /* Action */
-  --color-action-primary: #3b82f6;
-}
-```
-
-### Typography
-
-```css
-:root {
-  /* Font Sizes */
-  --font-size-10: 10px;
-  --font-size-11: 11px;
-  --font-size-12: 12px;
-  --font-size-14: 14px;
-  --font-size-16: 16px;
-  --font-size-18: 18px;
-  --font-size-24: 24px;
-  --font-size-32: 32px;
-  --font-size-40: 40px;
-
-  /* Line Heights */
-  --line-height-14: 14px;
-  --line-height-16: 16px;
-  --line-height-18: 18px;
-  --line-height-20: 20px;
-  --line-height-24: 24px;
-  --line-height-28: 28px;
-}
-```
-
-### Spacing
-
-```css
-:root {
-  --spacing-1: 4px;
-  --spacing-2: 8px;
-  --spacing-3: 12px;
-  --spacing-4: 16px;
-  --spacing-6: 24px;
-  --spacing-8: 32px;
-}
-```
-
-### Border Radius
-
-```css
-:root {
-  --radius-sm: 4px;
-  --radius-md: 6px;
-  --radius-lg: 8px;
-  --radius-xl: 12px;
-  --radius-full: 9999px;
-}
-```
-
-## Usage Examples
-
-### Form with Validation
-
-```tsx
-import { FormField, Input, Button, Select } from '@thaki/tds';
-
-function ContactForm() {
-  const [error, setError] = useState('');
-
-  return (
-    <form>
-      <FormField required error={!!error}>
-        <FormField.Label>Email</FormField.Label>
-        <FormField.Control>
-          <Input type="email" placeholder="Enter email" fullWidth />
-        </FormField.Control>
-        {error && <FormField.ErrorMessage>{error}</FormField.ErrorMessage>}
-      </FormField>
-
-      <FormField>
-        <FormField.Label>Topic</FormField.Label>
-        <FormField.Control>
-          <Select
-            options={[
-              { value: 'support', label: 'Support' },
-              { value: 'sales', label: 'Sales' },
-            ]}
-            placeholder="Select topic"
-            fullWidth
-          />
-        </FormField.Control>
-      </FormField>
-
-      <Button variant="primary" type="submit">
-        Send
-      </Button>
-    </form>
-  );
-}
-```
-
-### Data Table
-
-```tsx
-import { Table } from '@thaki/tds';
-
-const columns = [
-  { key: 'name', header: 'Name', sortable: true },
-  { key: 'status', header: 'Status', width: '100px' },
-  { key: 'actions', header: '', width: '50px' },
-];
-
-const data = [
-  { id: '1', name: 'Item 1', status: 'Active' },
-  { id: '2', name: 'Item 2', status: 'Pending' },
-];
-
-function DataTable() {
-  return (
-    <Table
-      columns={columns}
-      data={data}
-      selectable
-      onSelectionChange={(keys) => console.log(keys)}
-    />
-  );
-}
-```
-
-### Modal Dialog
-
-```tsx
-import { Modal, Button } from '@thaki/tds';
-
-function DeleteConfirmation() {
-  const [open, setOpen] = useState(false);
-
-  return (
-    <>
-      <Button variant="danger" onClick={() => setOpen(true)}>
-        Delete
-      </Button>
-
-      <Modal open={open} onClose={() => setOpen(false)}>
-        <Modal.Header>
-          <Modal.Title>Delete Item</Modal.Title>
-          <Modal.Description>
-            Are you sure you want to delete this item?
-          </Modal.Description>
-        </Modal.Header>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={() => setOpen(false)}>
-            Cancel
-          </Button>
-          <Button variant="danger" onClick={handleDelete}>
-            Delete
-          </Button>
-        </Modal.Footer>
-      </Modal>
-    </>
-  );
-}
-```
-
-## Development
-
-### Prerequisites
-
-- Node.js 18+
-- npm 9+
-
-### Setup
-
-```bash
-# Clone the repository
-git clone https://github.com/your-org/tds.git
-cd tds
-
-# Install dependencies
-npm install
-
-# Start development server
-npm run dev
-
-# Start Storybook
-npm run storybook
-```
-
-### Scripts
-
-| Command | Description |
-|---------|-------------|
-| `npm run dev` | Start development server |
-| `npm run build` | Build for production |
-| `npm run storybook` | Start Storybook |
-| `npm run test:run` | Run tests |
-| `npm run test:coverage` | Run tests with coverage |
-| `npm run lint` | Lint code |
-
-### Project Structure
-
-```
-src/
-├── design-system/
-│   ├── components/     # UI components
-│   ├── hooks/          # Custom hooks
-│   ├── layouts/        # Layout components
-│   ├── tokens/         # Design tokens (Storybook docs)
-│   └── utils/          # Utility functions
-├── pages/              # Demo pages
-└── index.css           # Global styles & CSS variables
-```
-
-### Testing
-
-We use Vitest and React Testing Library for testing:
-
-```bash
-# Run all tests
-npm run test:run
-
-# Run tests with coverage
-npm run test:coverage
-
-# Run tests in watch mode
-npm test
-```
-
-### Accessibility
-
-All components are tested for accessibility using `vitest-axe`. Run accessibility tests:
-
-```bash
-npm run test:run -- --grep="a11y"
-```
-
-## Contributing
-
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
-
-## License
-
-MIT License - see [LICENSE](LICENSE) for details.
-
----
-
-<p align="center">
-  Built with ❤️ by THAKI Team
-</p>
+코드 일관성을 위해 ESLint와 Prettier를 사용합니다:
+
+- **ESLint**: 코드 린팅
+- **Prettier**: 코드 포맷팅
+- **에디터 설정**: 저장 시 자동 포맷팅
