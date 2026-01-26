@@ -12,6 +12,7 @@ import { Button } from '@/design-system';
 
 // App icons
 import ComputeIcon from '@/assets/compute.png';
+import ComputeAdminIcon from '@/assets/appIcon/computeadmin.png';
 import ContainerIcon from '@/assets/container.png';
 import CloudBuilderIcon from '@/assets/cloudbuilder.png';
 import AIPlatformIcon from '@/assets/aiplatform.png';
@@ -46,6 +47,15 @@ const appCards: AppCard[] = [
     description: 'Virtual machines, instances, and cloud infrastructure management',
     icon: <img src={ComputeIcon} alt="Compute" className="w-16 h-16" />,
     path: '/compute',
+    color: 'from-blue-500 to-cyan-500',
+    available: true,
+  },
+  {
+    id: 'compute-admin',
+    title: 'Compute Admin',
+    description: 'Virtual machines, instances, and cloud infrastructure management',
+    icon: <img src={ComputeAdminIcon} alt="Compute Admin" className="w-16 h-16" />,
+    path: '/compute-admin',
     color: 'from-blue-500 to-cyan-500',
     available: true,
   },

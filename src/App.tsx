@@ -346,6 +346,56 @@ function AppRoutes() {
         <Route path="/compute/topology" element={<TopologyD3Page />} />
         <Route path="/compute/console/:instanceId" element={<ConsolePage />} />
 
+        {/* Compute Admin Routes - same pages, different sidebar will be implemented later */}
+        <Route path="/compute-admin" element={<InstanceListPage />} />
+        <Route path="/compute-admin/instances" element={<InstanceListPage />} />
+        <Route path="/compute-admin/instances/create" element={<CreateInstancePage />} />
+        <Route path="/compute-admin/instances/:id" element={<InstanceDetailPage />} />
+        <Route path="/compute-admin/instance-templates" element={<InstanceTemplatesPage />} />
+        <Route path="/compute-admin/instance-templates/create" element={<CreateTemplatePage />} />
+        <Route path="/compute-admin/instance-templates/:id" element={<InstanceTemplateDetailPage />} />
+        <Route path="/compute-admin/instance-snapshots" element={<InstanceSnapshotsPage />} />
+        <Route path="/compute-admin/instance-snapshots/:id" element={<InstanceSnapshotDetailPage />} />
+        <Route path="/compute-admin/images" element={<ComputeImagesPage />} />
+        <Route path="/compute-admin/images/create" element={<CreateImagePage />} />
+        <Route path="/compute-admin/images/:id" element={<ComputeImageDetailPage />} />
+        <Route path="/compute-admin/flavors" element={<FlavorsPage />} />
+        <Route path="/compute-admin/flavors/:id" element={<FlavorDetailPage />} />
+        <Route path="/compute-admin/key-pairs" element={<KeyPairsPage />} />
+        <Route path="/compute-admin/key-pairs/:id" element={<KeyPairDetailPage />} />
+        <Route path="/compute-admin/server-groups" element={<ServerGroupsPage />} />
+        <Route path="/compute-admin/server-groups/:id" element={<ServerGroupDetailPage />} />
+        <Route path="/compute-admin/volumes" element={<VolumesPage />} />
+        <Route path="/compute-admin/volumes/create" element={<CreateVolumePage />} />
+        <Route path="/compute-admin/volumes/:id" element={<VolumeDetailPage />} />
+        <Route path="/compute-admin/volume-snapshots" element={<VolumeSnapshotsPage />} />
+        <Route path="/compute-admin/volume-snapshots/:id" element={<VolumeSnapshotDetailPage />} />
+        <Route path="/compute-admin/volume-backups" element={<VolumeBackupsPage />} />
+        <Route path="/compute-admin/volume-backups/:id" element={<VolumeBackupDetailPage />} />
+        <Route path="/compute-admin/networks" element={<NetworksPage />} />
+        <Route path="/compute-admin/networks/create" element={<CreateNetworkPage />} />
+        <Route path="/compute-admin/networks/:id" element={<NetworkDetailPage />} />
+        <Route path="/compute-admin/ports/create" element={<CreateVirtualAdapterPage />} />
+        <Route path="/compute-admin/subnets/:id" element={<SubnetDetailPage />} />
+        <Route path="/compute-admin/routers" element={<RoutersPage />} />
+        <Route path="/compute-admin/routers/:id" element={<RouterDetailPage />} />
+        <Route path="/compute-admin/ports" element={<PortsPage />} />
+        <Route path="/compute-admin/ports/:id" element={<PortDetailPage />} />
+        <Route path="/compute-admin/floating-ips" element={<FloatingIPsPage />} />
+        <Route path="/compute-admin/floating-ips/:id" element={<FloatingIPDetailPage />} />
+        <Route path="/compute-admin/security-groups" element={<SecurityGroupsPage />} />
+        <Route path="/compute-admin/security-groups/:id" element={<SecurityGroupDetailPage />} />
+        <Route path="/compute-admin/load-balancers" element={<LoadBalancersPage />} />
+        <Route path="/compute-admin/load-balancers/create" element={<CreateLoadBalancerPage />} />
+        <Route path="/compute-admin/load-balancers/:id" element={<LoadBalancerDetailPage />} />
+        <Route path="/compute-admin/listeners/:id" element={<ListenerDetailPage />} />
+        <Route path="/compute-admin/pools/:id" element={<PoolDetailPage />} />
+        <Route path="/compute-admin/l7-policies/:id" element={<L7PolicyDetailPage />} />
+        <Route path="/compute-admin/certificates" element={<CertificatesPage />} />
+        <Route path="/compute-admin/certificates/:id" element={<CertificateDetailPage />} />
+        <Route path="/compute-admin/topology" element={<TopologyD3Page />} />
+        <Route path="/compute-admin/console/:instanceId" element={<ConsolePage />} />
+
         {/* Storage Routes */}
         <Route path="/storage" element={<StorageHomePage />} />
         <Route path="/storage/pools" element={<PoolsPage />} />

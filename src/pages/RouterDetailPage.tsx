@@ -255,16 +255,18 @@ export default function RouterDetailPage() {
       label: 'Name',
       flex: 1,
       render: (_, row) => (
-        <div className="flex flex-col gap-0.5 whitespace-nowrap">
-        <Link
-          to={`/compute/ports/${row.id}`}
-          className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
-          onClick={(e) => e.stopPropagation()}
-        >
-          {row.name}
-            <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
-        </Link>
-          <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
+        <div className="flex flex-col gap-0.5 min-w-0">
+          <div className="flex items-center gap-1">
+            <Link
+              to={`/compute/ports/${row.id}`}
+              className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2 truncate"
+              onClick={(e) => e.stopPropagation()}
+            >
+              {row.name}
+            </Link>
+            <IconExternalLink size={12} className="flex-shrink-0 text-[var(--color-action-primary)]" />
+          </div>
+          <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] truncate">
             ID : {row.id}
           </span>
         </div>
@@ -571,7 +573,7 @@ export default function RouterDetailPage() {
                     <VStack gap={4} className="pt-4">
                       {/* Header */}
                       <div className="flex items-center justify-between">
-                        <h3 className="text-[16px] font-semibold text-[var(--color-text-default)]">
+                        <h3 className="text-[16px] leading-[24px] font-semibold text-[var(--color-text-default)]">
                           Static Route
                         </h3>
                         <Button variant="secondary" size="sm" leftIcon={<IconCirclePlus size={12} />}>
