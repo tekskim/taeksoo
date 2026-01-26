@@ -41,6 +41,7 @@
     "**/*.css"
   ],
   "scripts": {
+    "prepare": "husky",
     "tokens": "node scripts/build-tokens.js",
     "dev": "rspack serve",
     "dev:vite": "vite",
@@ -63,7 +64,8 @@
     "deploy": "gh-pages -d docs",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
-    "prepublishOnly": "pnpm run build:lib && pnpm run test:run"
+    "prepublishOnly": "pnpm run build:lib && pnpm run test:run",
+    "prepare": "husky"
   },
   "peerDependencies": {
     "react": "^18.0.0 || ^19.0.0",
@@ -116,7 +118,9 @@
     "eslint-plugin-storybook": "^10.1.11",
     "gh-pages": "^6.3.0",
     "globals": "^16.5.0",
+    "husky": "^9.1.7",
     "jsdom": "^27.4.0",
+    "lint-staged": "^16.2.7",
     "playwright": "^1.57.0",
     "postcss": "^8.5.6",
     "postcss-loader": "^8.2.0",
