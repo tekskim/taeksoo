@@ -21,6 +21,17 @@ import {
 import { Sidebar } from '@/components/Sidebar';
 import { useTabs } from '@/contexts/TabContext';
 import { ViewPreferencesDrawer, type ColumnConfig } from '@/components/ViewPreferencesDrawer';
+import { CreateVolumeSnapshotDrawer, type VolumeInfo as SnapshotVolumeInfo } from '@/components/CreateVolumeSnapshotDrawer';
+import { CreateVolumeBackupDrawer, type VolumeInfo as BackupVolumeInfo } from '@/components/CreateVolumeBackupDrawer';
+import { CloneVolumeDrawer, type VolumeInfo as CloneVolumeInfo } from '@/components/CloneVolumeDrawer';
+import { RestoreFromSnapshotDrawer } from '@/components/RestoreFromSnapshotDrawer';
+import { CreateImageFromVolumeDrawer, type VolumeInfo as ImageVolumeInfo } from '@/components/CreateImageFromVolumeDrawer';
+import { EditVolumeDrawer, type VolumeInfo as EditVolumeInfo } from '@/components/EditVolumeDrawer';
+import { ExtendVolumeDrawer, type VolumeInfo as ExtendVolumeInfo } from '@/components/ExtendVolumeDrawer';
+import { ChangeVolumeTypeDrawer, type VolumeInfo as ChangeTypeVolumeInfo } from '@/components/ChangeVolumeTypeDrawer';
+import { CreateTransferDrawer, type VolumeInfo as TransferVolumeInfo } from '@/components/CreateTransferDrawer';
+import { AttachVolumeDrawer } from '@/components/AttachVolumeDrawer';
+import { DetachVolumeDrawer, type InstanceInfo as DetachInstanceInfo } from '@/components/DetachVolumeDrawer';
 import {
   IconPlus,
   IconDotsCircleHorizontal,
@@ -117,6 +128,82 @@ export function VolumesPage() {
   // View Preferences state
   const [isPreferencesOpen, setIsPreferencesOpen] = useState(false);
   const [rowsPerPage, setRowsPerPage] = useState(10);
+
+  // Drawer states
+  const [createSnapshotOpen, setCreateSnapshotOpen] = useState(false);
+  const [createBackupOpen, setCreateBackupOpen] = useState(false);
+  const [cloneVolumeOpen, setCloneVolumeOpen] = useState(false);
+  const [restoreSnapshotOpen, setRestoreSnapshotOpen] = useState(false);
+  const [createImageOpen, setCreateImageOpen] = useState(false);
+  const [editVolumeOpen, setEditVolumeOpen] = useState(false);
+  const [extendVolumeOpen, setExtendVolumeOpen] = useState(false);
+  const [changeTypeOpen, setChangeTypeOpen] = useState(false);
+  const [createTransferOpen, setCreateTransferOpen] = useState(false);
+  const [attachInstanceOpen, setAttachInstanceOpen] = useState(false);
+  const [detachInstanceOpen, setDetachInstanceOpen] = useState(false);
+  const [selectedVolumeForDrawer, setSelectedVolumeForDrawer] = useState<Volume | null>(null);
+
+  // Helper to parse size string to number (e.g., '1500GiB' -> 1500)
+  const parseSizeToNumber = (size: string): number => {
+    const match = size.match(/(\d+)/);
+    return match ? parseInt(match[1], 10) : 0;
+  };
+
+  // Drawer handlers
+  const handleCreateSnapshot = (volume: Volume) => {
+    setSelectedVolumeForDrawer(volume);
+    setCreateSnapshotOpen(true);
+  };
+
+  const handleCreateBackup = (volume: Volume) => {
+    setSelectedVolumeForDrawer(volume);
+    setCreateBackupOpen(true);
+  };
+
+  const handleCloneVolume = (volume: Volume) => {
+    setSelectedVolumeForDrawer(volume);
+    setCloneVolumeOpen(true);
+  };
+
+  const handleRestoreSnapshot = (volume: Volume) => {
+    setSelectedVolumeForDrawer(volume);
+    setRestoreSnapshotOpen(true);
+  };
+
+  const handleCreateImage = (volume: Volume) => {
+    setSelectedVolumeForDrawer(volume);
+    setCreateImageOpen(true);
+  };
+
+  const handleEditVolume = (volume: Volume) => {
+    setSelectedVolumeForDrawer(volume);
+    setEditVolumeOpen(true);
+  };
+
+  const handleExtendVolume = (volume: Volume) => {
+    setSelectedVolumeForDrawer(volume);
+    setExtendVolumeOpen(true);
+  };
+
+  const handleChangeType = (volume: Volume) => {
+    setSelectedVolumeForDrawer(volume);
+    setChangeTypeOpen(true);
+  };
+
+  const handleCreateTransfer = (volume: Volume) => {
+    setSelectedVolumeForDrawer(volume);
+    setCreateTransferOpen(true);
+  };
+
+  const handleAttachInstance = (volume: Volume) => {
+    setSelectedVolumeForDrawer(volume);
+    setAttachInstanceOpen(true);
+  };
+
+  const handleDetachInstance = (volume: Volume) => {
+    setSelectedVolumeForDrawer(volume);
+    setDetachInstanceOpen(true);
+  };
 
   // Default column config
   const defaultColumnConfig: ColumnConfig[] = [
@@ -266,10 +353,10 @@ export function VolumesPage() {
             id: 'data-protection',
             label: 'Data protection',
             submenu: [
-              { id: 'create-snapshot', label: 'Create volume snapshot', onClick: () => console.log('Create snapshot:', row.id) },
-              { id: 'create-backup', label: 'Create volume backup', onClick: () => console.log('Create backup:', row.id) },
-              { id: 'clone-volume', label: 'Clone volume', onClick: () => console.log('Clone volume:', row.id) },
-              { id: 'restore-snapshot', label: 'Restore from Snapshot', onClick: () => console.log('Restore from snapshot:', row.id) },
+              { id: 'create-snapshot', label: 'Create volume snapshot', onClick: () => handleCreateSnapshot(row) },
+              { id: 'create-backup', label: 'Create volume backup', onClick: () => handleCreateBackup(row) },
+              { id: 'clone-volume', label: 'Clone volume', onClick: () => handleCloneVolume(row) },
+              { id: 'restore-snapshot', label: 'Restore from Snapshot', onClick: () => handleRestoreSnapshot(row) },
             ],
           },
           {
@@ -277,9 +364,9 @@ export function VolumesPage() {
             label: 'Operate',
             submenu: [
               { id: 'create-instance', label: 'Create instance', onClick: () => console.log('Create instance:', row.id) },
-              { id: 'create-image', label: 'Create image', onClick: () => console.log('Create image:', row.id) },
-              { id: 'attach-instance', label: 'Attach instance', onClick: () => console.log('Attach instance:', row.id) },
-              { id: 'detach-instance', label: 'Detach instance', onClick: () => console.log('Detach instance:', row.id) },
+              { id: 'create-image', label: 'Create image', onClick: () => handleCreateImage(row) },
+              { id: 'attach-instance', label: 'Attach instance', onClick: () => handleAttachInstance(row) },
+              { id: 'detach-instance', label: 'Detach instance', onClick: () => handleDetachInstance(row), disabled: !row.attachedTo },
               { id: 'boot-setting', label: 'Boot setting', onClick: () => console.log('Boot setting:', row.id) },
             ],
           },
@@ -287,15 +374,15 @@ export function VolumesPage() {
             id: 'configuration',
             label: 'Configuration',
             submenu: [
-              { id: 'edit', label: 'Edit', onClick: () => console.log('Edit:', row.id) },
-              { id: 'extend-volume', label: 'Extend volume', onClick: () => console.log('Extend volume:', row.id) },
-              { id: 'change-volume-type', label: 'Change volume Type', onClick: () => console.log('Change volume type:', row.id) },
+              { id: 'edit', label: 'Edit', onClick: () => handleEditVolume(row) },
+              { id: 'extend-volume', label: 'Extend volume', onClick: () => handleExtendVolume(row) },
+              { id: 'change-volume-type', label: 'Change volume Type', onClick: () => handleChangeType(row) },
             ],
           },
           {
             id: 'create-transfer',
             label: 'Create transfer',
-            onClick: () => console.log('Create transfer:', row.id),
+            onClick: () => handleCreateTransfer(row),
           },
           {
             id: 'cancel-transfer',
@@ -476,6 +563,113 @@ export function VolumesPage() {
         columns={columnConfig}
         defaultColumns={defaultColumnConfig}
         onColumnsChange={setColumnConfig}
+      />
+
+      {/* Volume Drawers */}
+      <CreateVolumeSnapshotDrawer
+        isOpen={createSnapshotOpen}
+        onClose={() => setCreateSnapshotOpen(false)}
+        volume={selectedVolumeForDrawer ? {
+          id: selectedVolumeForDrawer.id,
+          name: selectedVolumeForDrawer.name,
+          size: parseSizeToNumber(selectedVolumeForDrawer.size),
+        } : null}
+      />
+
+      <CreateVolumeBackupDrawer
+        isOpen={createBackupOpen}
+        onClose={() => setCreateBackupOpen(false)}
+        volume={selectedVolumeForDrawer ? {
+          id: selectedVolumeForDrawer.id,
+          name: selectedVolumeForDrawer.name,
+          size: parseSizeToNumber(selectedVolumeForDrawer.size),
+        } : null}
+      />
+
+      <CloneVolumeDrawer
+        isOpen={cloneVolumeOpen}
+        onClose={() => setCloneVolumeOpen(false)}
+        volume={selectedVolumeForDrawer ? {
+          id: selectedVolumeForDrawer.id,
+          name: selectedVolumeForDrawer.name,
+          size: parseSizeToNumber(selectedVolumeForDrawer.size),
+        } : null}
+      />
+
+      <RestoreFromSnapshotDrawer
+        isOpen={restoreSnapshotOpen}
+        onClose={() => setRestoreSnapshotOpen(false)}
+        volume={selectedVolumeForDrawer ? {
+          id: selectedVolumeForDrawer.id,
+          name: selectedVolumeForDrawer.name,
+        } : { id: '', name: '' }}
+      />
+
+      <CreateImageFromVolumeDrawer
+        isOpen={createImageOpen}
+        onClose={() => setCreateImageOpen(false)}
+        volume={selectedVolumeForDrawer ? {
+          id: selectedVolumeForDrawer.id,
+          name: selectedVolumeForDrawer.name,
+          size: parseSizeToNumber(selectedVolumeForDrawer.size),
+        } : null}
+      />
+
+      <EditVolumeDrawer
+        isOpen={editVolumeOpen}
+        onClose={() => setEditVolumeOpen(false)}
+        volume={selectedVolumeForDrawer ? {
+          id: selectedVolumeForDrawer.id,
+          name: selectedVolumeForDrawer.name,
+        } : null}
+      />
+
+      <ExtendVolumeDrawer
+        isOpen={extendVolumeOpen}
+        onClose={() => setExtendVolumeOpen(false)}
+        volume={selectedVolumeForDrawer ? {
+          id: selectedVolumeForDrawer.id,
+          name: selectedVolumeForDrawer.name,
+          size: parseSizeToNumber(selectedVolumeForDrawer.size),
+        } : null}
+      />
+
+      <ChangeVolumeTypeDrawer
+        isOpen={changeTypeOpen}
+        onClose={() => setChangeTypeOpen(false)}
+        volume={selectedVolumeForDrawer ? {
+          id: selectedVolumeForDrawer.id,
+          name: selectedVolumeForDrawer.name,
+          currentType: selectedVolumeForDrawer.type,
+        } : null}
+      />
+
+      <CreateTransferDrawer
+        isOpen={createTransferOpen}
+        onClose={() => setCreateTransferOpen(false)}
+        volume={selectedVolumeForDrawer ? {
+          id: selectedVolumeForDrawer.id,
+          name: selectedVolumeForDrawer.name,
+          size: parseSizeToNumber(selectedVolumeForDrawer.size),
+        } : null}
+      />
+
+      <AttachVolumeDrawer
+        isOpen={attachInstanceOpen}
+        onClose={() => setAttachInstanceOpen(false)}
+        volume={selectedVolumeForDrawer ? {
+          id: selectedVolumeForDrawer.id,
+          name: selectedVolumeForDrawer.name,
+        } : { id: '', name: '' }}
+      />
+
+      <DetachVolumeDrawer
+        isOpen={detachInstanceOpen}
+        onClose={() => setDetachInstanceOpen(false)}
+        instance={selectedVolumeForDrawer?.attachedTo && selectedVolumeForDrawer?.attachedToId ? {
+          id: selectedVolumeForDrawer.attachedToId,
+          name: selectedVolumeForDrawer.attachedTo,
+        } : { id: '', name: '' }}
       />
     </div>
   );

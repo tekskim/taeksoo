@@ -22,6 +22,8 @@ import {
 import { Sidebar } from '@/components/Sidebar';
 import { useTabs } from '@/contexts/TabContext';
 import { ViewPreferencesDrawer, type ColumnConfig } from '@/components/ViewPreferencesDrawer';
+import { CreateVolumeFromBackupDrawer } from '@/components/CreateVolumeFromBackupDrawer';
+import { EditVolumeBackupDrawer } from '@/components/EditVolumeBackupDrawer';
 import {
   IconPlus,
   IconDotsCircleHorizontal,
@@ -115,6 +117,28 @@ export function VolumeBackupsPage() {
   // View Preferences state
   const [isPreferencesOpen, setIsPreferencesOpen] = useState(false);
   const [rowsPerPage, setRowsPerPage] = useState(10);
+
+  // Drawer states
+  const [createVolumeOpen, setCreateVolumeOpen] = useState(false);
+  const [editBackupOpen, setEditBackupOpen] = useState(false);
+  const [selectedBackupForDrawer, setSelectedBackupForDrawer] = useState<VolumeBackup | null>(null);
+
+  // Helper to parse size string to number
+  const parseSizeToNumber = (size: string): number => {
+    const match = size.match(/(\d+)/);
+    return match ? parseInt(match[1], 10) : 0;
+  };
+
+  // Drawer handlers
+  const handleCreateVolume = (backup: VolumeBackup) => {
+    setSelectedBackupForDrawer(backup);
+    setCreateVolumeOpen(true);
+  };
+
+  const handleEditBackup = (backup: VolumeBackup) => {
+    setSelectedBackupForDrawer(backup);
+    setEditBackupOpen(true);
+  };
 
   // Default column config
   const defaultColumnConfig: ColumnConfig[] = [
@@ -256,7 +280,7 @@ export function VolumeBackupsPage() {
           {
             id: 'create-volume',
             label: 'Create volume',
-            onClick: () => console.log('Create volume from', row.name),
+            onClick: () => handleCreateVolume(row),
           },
           {
             id: 'restore',
@@ -266,7 +290,7 @@ export function VolumeBackupsPage() {
           {
             id: 'edit',
             label: 'Edit',
-            onClick: () => console.log('Edit', row.name),
+            onClick: () => handleEditBackup(row),
           },
           {
             id: 'delete',
@@ -440,6 +464,26 @@ export function VolumeBackupsPage() {
         columns={columnConfig}
         defaultColumns={defaultColumnConfig}
         onColumnsChange={setColumnConfig}
+      />
+
+      {/* Volume Backup Drawers */}
+      <CreateVolumeFromBackupDrawer
+        isOpen={createVolumeOpen}
+        onClose={() => setCreateVolumeOpen(false)}
+        volumeBackup={selectedBackupForDrawer ? {
+          id: selectedBackupForDrawer.id,
+          name: selectedBackupForDrawer.name,
+          size: parseSizeToNumber(selectedBackupForDrawer.size),
+        } : null}
+      />
+
+      <EditVolumeBackupDrawer
+        isOpen={editBackupOpen}
+        onClose={() => setEditBackupOpen(false)}
+        volumeBackup={selectedBackupForDrawer ? {
+          id: selectedBackupForDrawer.id,
+          name: selectedBackupForDrawer.name,
+        } : null}
       />
     </div>
   );

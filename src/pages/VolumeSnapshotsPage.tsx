@@ -22,6 +22,8 @@ import {
 import { Sidebar } from '@/components/Sidebar';
 import { useTabs } from '@/contexts/TabContext';
 import { ViewPreferencesDrawer, type ColumnConfig } from '@/components/ViewPreferencesDrawer';
+import { CreateVolumeFromVolumeSnapshotDrawer } from '@/components/CreateVolumeFromVolumeSnapshotDrawer';
+import { EditVolumeSnapshotDrawer } from '@/components/EditVolumeSnapshotDrawer';
 import {
   IconPlus,
   IconDotsCircleHorizontal,
@@ -107,6 +109,28 @@ export function VolumeSnapshotsPage() {
   // View Preferences state
   const [isPreferencesOpen, setIsPreferencesOpen] = useState(false);
   const [rowsPerPage, setRowsPerPage] = useState(10);
+
+  // Drawer states
+  const [createVolumeOpen, setCreateVolumeOpen] = useState(false);
+  const [editSnapshotOpen, setEditSnapshotOpen] = useState(false);
+  const [selectedSnapshotForDrawer, setSelectedSnapshotForDrawer] = useState<VolumeSnapshot | null>(null);
+
+  // Helper to parse size string to number
+  const parseSizeToNumber = (size: string): number => {
+    const match = size.match(/(\d+)/);
+    return match ? parseInt(match[1], 10) : 0;
+  };
+
+  // Drawer handlers
+  const handleCreateVolume = (snapshot: VolumeSnapshot) => {
+    setSelectedSnapshotForDrawer(snapshot);
+    setCreateVolumeOpen(true);
+  };
+
+  const handleEditSnapshot = (snapshot: VolumeSnapshot) => {
+    setSelectedSnapshotForDrawer(snapshot);
+    setEditSnapshotOpen(true);
+  };
 
   // Default column config
   const defaultColumnConfig: ColumnConfig[] = [
@@ -242,12 +266,12 @@ export function VolumeSnapshotsPage() {
           {
             id: 'create-volume',
             label: 'Create volume',
-            onClick: () => console.log('Create volume from', row.name),
+            onClick: () => handleCreateVolume(row),
           },
           {
             id: 'edit',
             label: 'Edit',
-            onClick: () => console.log('Edit', row.name),
+            onClick: () => handleEditSnapshot(row),
           },
           {
             id: 'delete',
@@ -418,6 +442,26 @@ export function VolumeSnapshotsPage() {
         columns={columnConfig}
         defaultColumns={defaultColumnConfig}
         onColumnsChange={setColumnConfig}
+      />
+
+      {/* Volume Snapshot Drawers */}
+      <CreateVolumeFromVolumeSnapshotDrawer
+        isOpen={createVolumeOpen}
+        onClose={() => setCreateVolumeOpen(false)}
+        volumeSnapshot={selectedSnapshotForDrawer ? {
+          id: selectedSnapshotForDrawer.id,
+          name: selectedSnapshotForDrawer.name,
+          size: parseSizeToNumber(selectedSnapshotForDrawer.size),
+        } : null}
+      />
+
+      <EditVolumeSnapshotDrawer
+        isOpen={editSnapshotOpen}
+        onClose={() => setEditSnapshotOpen(false)}
+        volumeSnapshot={selectedSnapshotForDrawer ? {
+          id: selectedSnapshotForDrawer.id,
+          name: selectedSnapshotForDrawer.name,
+        } : null}
       />
     </div>
   );

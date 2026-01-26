@@ -43,6 +43,17 @@ import { ViewPreferencesDrawer, type ColumnConfig } from '@/components/ViewPrefe
 import { CreateInstanceSnapshotDrawer, type InstanceInfo } from '@/components/CreateInstanceSnapshotDrawer';
 import { LockSettingDrawer, type InstanceInfo as LockInstanceInfo } from '@/components/LockSettingDrawer';
 import { EditInstanceDrawer, type InstanceInfo as EditInstanceInfo } from '@/components/EditInstanceDrawer';
+import { AttachVolumeDrawer } from '@/components/AttachVolumeDrawer';
+import { DetachVolumeDrawer, type InstanceInfo as DetachVolumeInstanceInfo } from '@/components/DetachVolumeDrawer';
+import { AttachInterfaceDrawer, type InstanceInfo as AttachInterfaceInstanceInfo } from '@/components/AttachInterfaceDrawer';
+import { DetachInterfaceDrawer, type InstanceInfo as DetachInterfaceInstanceInfo } from '@/components/DetachInterfaceDrawer';
+import { AssociateFloatingIPDrawer } from '@/components/AssociateFloatingIPDrawer';
+import { DisassociateFloatingIPDrawer, type InstanceInfo as DisassociateFloatingIPInstanceInfo } from '@/components/DisassociateFloatingIPDrawer';
+import { ManageSecurityGroupsDrawer, type InstanceInfo as ManageSecurityGroupsInstanceInfo } from '@/components/ManageSecurityGroupsDrawer';
+import { RebuildInstanceDrawer, type InstanceInfo as RebuildInstanceInfo } from '@/components/RebuildInstanceDrawer';
+import { ResizeInstanceDrawer, type InstanceInfo as ResizeInstanceInfo } from '@/components/ResizeInstanceDrawer';
+import { ManageTagsDrawer, type InstanceInfo as ManageTagsInstanceInfo } from '@/components/ManageTagsDrawer';
+import { RescueInstanceDrawer, type InstanceInfo as RescueInstanceInfo } from '@/components/RescueInstanceDrawer';
 import { ShellPanel, useShellPanel, type ShellTab } from '@/components/ShellPanel';
 import { Link, useNavigate } from 'react-router-dom';
 
@@ -231,6 +242,50 @@ export function InstanceListPage() {
   const [isEditDrawerOpen, setIsEditDrawerOpen] = useState(false);
   const [selectedInstanceForEdit, setSelectedInstanceForEdit] = useState<EditInstanceInfo | null>(null);
 
+  // Attach Volume Drawer state
+  const [isAttachVolumeDrawerOpen, setIsAttachVolumeDrawerOpen] = useState(false);
+  const [selectedInstanceForAttachVolume, setSelectedInstanceForAttachVolume] = useState<{ id: string; name: string } | null>(null);
+
+  // Detach Volume Drawer state
+  const [isDetachVolumeDrawerOpen, setIsDetachVolumeDrawerOpen] = useState(false);
+  const [selectedInstanceForDetachVolume, setSelectedInstanceForDetachVolume] = useState<DetachVolumeInstanceInfo | null>(null);
+
+  // Attach Interface Drawer state
+  const [isAttachInterfaceDrawerOpen, setIsAttachInterfaceDrawerOpen] = useState(false);
+  const [selectedInstanceForAttachInterface, setSelectedInstanceForAttachInterface] = useState<AttachInterfaceInstanceInfo | null>(null);
+
+  // Detach Interface Drawer state
+  const [isDetachInterfaceDrawerOpen, setIsDetachInterfaceDrawerOpen] = useState(false);
+  const [selectedInstanceForDetachInterface, setSelectedInstanceForDetachInterface] = useState<DetachInterfaceInstanceInfo | null>(null);
+
+  // Associate Floating IP Drawer state
+  const [isAssociateFloatingIPDrawerOpen, setIsAssociateFloatingIPDrawerOpen] = useState(false);
+  const [selectedInstanceForAssociateFloatingIP, setSelectedInstanceForAssociateFloatingIP] = useState<{ id: string; name: string } | null>(null);
+
+  // Disassociate Floating IP Drawer state
+  const [isDisassociateFloatingIPDrawerOpen, setIsDisassociateFloatingIPDrawerOpen] = useState(false);
+  const [selectedInstanceForDisassociateFloatingIP, setSelectedInstanceForDisassociateFloatingIP] = useState<DisassociateFloatingIPInstanceInfo | null>(null);
+
+  // Manage Security Groups Drawer state
+  const [isManageSecurityGroupsDrawerOpen, setIsManageSecurityGroupsDrawerOpen] = useState(false);
+  const [selectedInstanceForManageSecurityGroups, setSelectedInstanceForManageSecurityGroups] = useState<ManageSecurityGroupsInstanceInfo | null>(null);
+
+  // Rebuild Instance Drawer state
+  const [isRebuildDrawerOpen, setIsRebuildDrawerOpen] = useState(false);
+  const [selectedInstanceForRebuild, setSelectedInstanceForRebuild] = useState<RebuildInstanceInfo | null>(null);
+
+  // Resize Instance Drawer state
+  const [isResizeDrawerOpen, setIsResizeDrawerOpen] = useState(false);
+  const [selectedInstanceForResize, setSelectedInstanceForResize] = useState<ResizeInstanceInfo | null>(null);
+
+  // Manage Tags Drawer state
+  const [isManageTagsDrawerOpen, setIsManageTagsDrawerOpen] = useState(false);
+  const [selectedInstanceForManageTags, setSelectedInstanceForManageTags] = useState<ManageTagsInstanceInfo | null>(null);
+
+  // Rescue Instance Drawer state
+  const [isRescueDrawerOpen, setIsRescueDrawerOpen] = useState(false);
+  const [selectedInstanceForRescue, setSelectedInstanceForRescue] = useState<RescueInstanceInfo | null>(null);
+
   // Table selection state
   const [selectedInstances, setSelectedInstances] = useState<string[]>([]);
   const [selectedBareMetalInstances, setSelectedBareMetalInstances] = useState<string[]>([]);
@@ -404,6 +459,115 @@ export function InstanceListPage() {
     setIsEditDrawerOpen(true);
   };
 
+  // Handle attach volume click
+  const handleAttachVolume = (instance: Instance) => {
+    setSelectedInstanceForAttachVolume({
+      id: instance.id,
+      name: instance.name,
+    });
+    setIsAttachVolumeDrawerOpen(true);
+  };
+
+  // Handle detach volume click
+  const handleDetachVolume = (instance: Instance) => {
+    setSelectedInstanceForDetachVolume({
+      id: instance.id,
+      name: instance.name,
+    });
+    setIsDetachVolumeDrawerOpen(true);
+  };
+
+  // Handle attach interface click
+  const handleAttachInterface = (instance: Instance) => {
+    setSelectedInstanceForAttachInterface({
+      id: instance.id,
+      name: instance.name,
+    });
+    setIsAttachInterfaceDrawerOpen(true);
+  };
+
+  // Handle detach interface click
+  const handleDetachInterface = (instance: Instance) => {
+    setSelectedInstanceForDetachInterface({
+      id: instance.id,
+      name: instance.name,
+    });
+    setIsDetachInterfaceDrawerOpen(true);
+  };
+
+  // Handle associate floating IP click
+  const handleAssociateFloatingIP = (instance: Instance) => {
+    setSelectedInstanceForAssociateFloatingIP({
+      id: instance.id,
+      name: instance.name,
+    });
+    setIsAssociateFloatingIPDrawerOpen(true);
+  };
+
+  // Handle disassociate floating IP click
+  const handleDisassociateFloatingIP = (instance: Instance) => {
+    setSelectedInstanceForDisassociateFloatingIP({
+      id: instance.id,
+      name: instance.name,
+    });
+    setIsDisassociateFloatingIPDrawerOpen(true);
+  };
+
+  // Handle manage security groups click
+  const handleManageSecurityGroups = (instance: Instance) => {
+    setSelectedInstanceForManageSecurityGroups({
+      id: instance.id,
+      name: instance.name,
+    });
+    setIsManageSecurityGroupsDrawerOpen(true);
+  };
+
+  // Handle rebuild instance click
+  const handleRebuild = (instance: Instance) => {
+    setSelectedInstanceForRebuild({
+      id: instance.id,
+      name: instance.name,
+      currentImage: instance.image,
+    });
+    setIsRebuildDrawerOpen(true);
+  };
+
+  // Handle resize instance click
+  const handleResize = (instance: Instance) => {
+    setSelectedInstanceForResize({
+      id: instance.id,
+      name: instance.name,
+      currentFlavor: {
+        id: 'flavor-current',
+        name: instance.flavor,
+        vcpu: instance.vcpu,
+        ram: instance.ram,
+        disk: instance.disk,
+      },
+    });
+    setIsResizeDrawerOpen(true);
+  };
+
+  // Handle manage tags click
+  const handleManageTags = (instance: Instance) => {
+    setSelectedInstanceForManageTags({
+      id: instance.id,
+      name: instance.name,
+    });
+    setIsManageTagsDrawerOpen(true);
+  };
+
+  // Handle rescue instance click
+  const handleRescue = (instance: Instance) => {
+    setSelectedInstanceForRescue({
+      id: instance.id,
+      name: instance.name,
+      currentImage: instance.image,
+      protocol: 'SSH',
+    });
+    setIsRescueDrawerOpen(true);
+  };
+
   // Context menu items for instances
   const getInstanceContextMenuItems = (instance: Instance): ContextMenuItem[] => [
     { id: 'start', label: 'Start' },
@@ -416,7 +580,11 @@ export function InstanceListPage() {
     { id: 'unpause', label: 'Unpause' },
     { id: 'resume', label: 'Resume' },
     { id: 'unshelve', label: 'Unshelve' },
-    { id: 'rescue', label: 'Rescue' },
+    { 
+      id: 'rescue', 
+      label: 'Rescue',
+      onClick: () => handleRescue(instance),
+    },
     { id: 'unrescue', label: 'Unrescue', divider: true },
     {
       id: 'instance-status',
@@ -432,7 +600,11 @@ export function InstanceListPage() {
         { id: 'unpause-sub', label: 'Unpause' },
         { id: 'resume-sub', label: 'Resume' },
         { id: 'unshelve-sub', label: 'Unshelve' },
-        { id: 'rescue-sub', label: 'Rescue' },
+        { 
+          id: 'rescue-sub', 
+          label: 'Rescue',
+          onClick: () => handleRescue(instance),
+        },
         { id: 'unrescue-sub', label: 'Unrescue' },
       ],
     },
@@ -440,8 +612,17 @@ export function InstanceListPage() {
       id: 'storage-snapshot',
       label: 'Storage&Snapshot',
       submenu: [
-        { id: 'attach-volume', label: 'Attach volume' },
-        { id: 'detach-volume', label: 'Detach volume', status: 'danger' },
+        { 
+          id: 'attach-volume', 
+          label: 'Attach volume',
+          onClick: () => handleAttachVolume(instance),
+        },
+        { 
+          id: 'detach-volume', 
+          label: 'Detach volume', 
+          status: 'danger',
+          onClick: () => handleDetachVolume(instance),
+        },
         { 
           id: 'create-snapshot', 
           label: 'Create instance snapshot',
@@ -453,11 +634,33 @@ export function InstanceListPage() {
       id: 'network',
       label: 'Network',
       submenu: [
-        { id: 'attach-interface', label: 'Attach interface' },
-        { id: 'detach-interface', label: 'Detach interface', status: 'danger' },
-        { id: 'associate-floating-ip', label: 'Associate floating IP' },
-        { id: 'disassociate-floating-ip', label: 'Disassociate floating IP', status: 'danger' },
-        { id: 'manage-security-groups', label: 'Manage security groups' },
+        { 
+          id: 'attach-interface', 
+          label: 'Attach interface',
+          onClick: () => handleAttachInterface(instance),
+        },
+        { 
+          id: 'detach-interface', 
+          label: 'Detach interface', 
+          status: 'danger',
+          onClick: () => handleDetachInterface(instance),
+        },
+        { 
+          id: 'associate-floating-ip', 
+          label: 'Associate floating IP',
+          onClick: () => handleAssociateFloatingIP(instance),
+        },
+        { 
+          id: 'disassociate-floating-ip', 
+          label: 'Disassociate floating IP', 
+          status: 'danger',
+          onClick: () => handleDisassociateFloatingIP(instance),
+        },
+        { 
+          id: 'manage-security-groups', 
+          label: 'Manage security groups',
+          onClick: () => handleManageSecurityGroups(instance),
+        },
       ],
     },
     {
@@ -469,9 +672,22 @@ export function InstanceListPage() {
           label: 'Lock setting',
           onClick: () => handleLockSetting(instance),
         },
-        { id: 'rebuild', label: 'Rebuild', status: 'danger' },
-        { id: 'resize', label: 'Resize' },
-        { id: 'manage-tags', label: 'Manage tags' },
+        { 
+          id: 'rebuild', 
+          label: 'Rebuild', 
+          status: 'danger',
+          onClick: () => handleRebuild(instance),
+        },
+        { 
+          id: 'resize', 
+          label: 'Resize',
+          onClick: () => handleResize(instance),
+        },
+        { 
+          id: 'manage-tags', 
+          label: 'Manage tags',
+          onClick: () => handleManageTags(instance),
+        },
         { 
           id: 'edit', 
           label: 'Edit',
@@ -1045,6 +1261,149 @@ export function InstanceListPage() {
         onSubmit={(name, description) => {
           console.log('Editing instance:', name, 'description:', description, 'for instance:', selectedInstanceForEdit?.id);
           // TODO: Implement actual edit API call
+        }}
+      />
+
+      {/* Attach Volume Drawer */}
+      <AttachVolumeDrawer
+        isOpen={isAttachVolumeDrawerOpen}
+        onClose={() => {
+          setIsAttachVolumeDrawerOpen(false);
+          setSelectedInstanceForAttachVolume(null);
+        }}
+        volume={{ id: 'vol-001', name: 'data-volume-01', size: '100GB', status: 'available' }}
+        onAttach={(instanceId) => {
+          console.log('Attaching volume to instance:', instanceId);
+        }}
+      />
+
+      {/* Detach Volume Drawer */}
+      <DetachVolumeDrawer
+        isOpen={isDetachVolumeDrawerOpen}
+        onClose={() => {
+          setIsDetachVolumeDrawerOpen(false);
+          setSelectedInstanceForDetachVolume(null);
+        }}
+        instance={selectedInstanceForDetachVolume || { id: '', name: '' }}
+        onDetach={(volumeId) => {
+          console.log('Detaching volume:', volumeId, 'from instance:', selectedInstanceForDetachVolume?.id);
+        }}
+      />
+
+      {/* Attach Interface Drawer */}
+      <AttachInterfaceDrawer
+        isOpen={isAttachInterfaceDrawerOpen}
+        onClose={() => {
+          setIsAttachInterfaceDrawerOpen(false);
+          setSelectedInstanceForAttachInterface(null);
+        }}
+        instance={selectedInstanceForAttachInterface || { id: '', name: '' }}
+        onAttach={(networkId, fixedIp) => {
+          console.log('Attaching interface:', networkId, fixedIp, 'to instance:', selectedInstanceForAttachInterface?.id);
+        }}
+      />
+
+      {/* Detach Interface Drawer */}
+      <DetachInterfaceDrawer
+        isOpen={isDetachInterfaceDrawerOpen}
+        onClose={() => {
+          setIsDetachInterfaceDrawerOpen(false);
+          setSelectedInstanceForDetachInterface(null);
+        }}
+        instance={selectedInstanceForDetachInterface || { id: '', name: '' }}
+        onDetach={(interfaceId) => {
+          console.log('Detaching interface:', interfaceId, 'from instance:', selectedInstanceForDetachInterface?.id);
+        }}
+      />
+
+      {/* Associate Floating IP Drawer */}
+      <AssociateFloatingIPDrawer
+        isOpen={isAssociateFloatingIPDrawerOpen}
+        onClose={() => {
+          setIsAssociateFloatingIPDrawerOpen(false);
+          setSelectedInstanceForAssociateFloatingIP(null);
+        }}
+        floatingIP={{ id: 'fip-001', address: '203.0.113.10', status: 'DOWN' }}
+        onSubmit={(data) => {
+          console.log('Associating floating IP:', data);
+        }}
+      />
+
+      {/* Disassociate Floating IP Drawer */}
+      <DisassociateFloatingIPDrawer
+        isOpen={isDisassociateFloatingIPDrawerOpen}
+        onClose={() => {
+          setIsDisassociateFloatingIPDrawerOpen(false);
+          setSelectedInstanceForDisassociateFloatingIP(null);
+        }}
+        instance={selectedInstanceForDisassociateFloatingIP || { id: '', name: '' }}
+        onDisassociate={(floatingIpId) => {
+          console.log('Disassociating floating IP:', floatingIpId, 'from instance:', selectedInstanceForDisassociateFloatingIP?.id);
+        }}
+      />
+
+      {/* Manage Security Groups Drawer */}
+      <ManageSecurityGroupsDrawer
+        isOpen={isManageSecurityGroupsDrawerOpen}
+        onClose={() => {
+          setIsManageSecurityGroupsDrawerOpen(false);
+          setSelectedInstanceForManageSecurityGroups(null);
+        }}
+        instance={selectedInstanceForManageSecurityGroups || { id: '', name: '' }}
+        onSave={(interfaceId, securityGroupIds) => {
+          console.log('Saving security groups:', securityGroupIds, 'for interface:', interfaceId);
+        }}
+      />
+
+      {/* Rebuild Instance Drawer */}
+      <RebuildInstanceDrawer
+        isOpen={isRebuildDrawerOpen}
+        onClose={() => {
+          setIsRebuildDrawerOpen(false);
+          setSelectedInstanceForRebuild(null);
+        }}
+        instance={selectedInstanceForRebuild || { id: '', name: '', currentImage: '' }}
+        onRebuild={(imageOption, selectedImageId) => {
+          console.log('Rebuilding instance:', selectedInstanceForRebuild?.id, 'with image:', imageOption, selectedImageId);
+        }}
+      />
+
+      {/* Resize Instance Drawer */}
+      <ResizeInstanceDrawer
+        isOpen={isResizeDrawerOpen}
+        onClose={() => {
+          setIsResizeDrawerOpen(false);
+          setSelectedInstanceForResize(null);
+        }}
+        instance={selectedInstanceForResize || { id: '', name: '', currentFlavor: { id: '', name: '', vcpu: 0, ram: '', disk: '' } }}
+        onResize={(targetFlavorId, approvalMethod, autoConfirmMinutes, autoConfirmAction) => {
+          console.log('Resizing instance:', selectedInstanceForResize?.id, 'to flavor:', targetFlavorId, approvalMethod, autoConfirmMinutes, autoConfirmAction);
+        }}
+      />
+
+      {/* Manage Tags Drawer */}
+      <ManageTagsDrawer
+        isOpen={isManageTagsDrawerOpen}
+        onClose={() => {
+          setIsManageTagsDrawerOpen(false);
+          setSelectedInstanceForManageTags(null);
+        }}
+        instance={selectedInstanceForManageTags || { id: '', name: '' }}
+        onSave={(tags) => {
+          console.log('Saving tags:', tags, 'for instance:', selectedInstanceForManageTags?.id);
+        }}
+      />
+
+      {/* Rescue Instance Drawer */}
+      <RescueInstanceDrawer
+        isOpen={isRescueDrawerOpen}
+        onClose={() => {
+          setIsRescueDrawerOpen(false);
+          setSelectedInstanceForRescue(null);
+        }}
+        instance={selectedInstanceForRescue || { id: '', name: '', currentImage: '', protocol: '' }}
+        onRescue={(imageOption, selectedImageId) => {
+          console.log('Rescuing instance:', selectedInstanceForRescue?.id, 'with image:', imageOption, selectedImageId);
         }}
       />
 

@@ -310,9 +310,11 @@ interface DrawerListItemProps {
   description: string;
   category?: string;
   onOpen: () => void;
+  linked?: boolean;
+  linkedTo?: string;
 }
 
-function DrawerListItem({ title, description, category, onOpen }: DrawerListItemProps) {
+function DrawerListItem({ title, description, category, onOpen, linked, linkedTo }: DrawerListItemProps) {
   return (
     <div 
       className="flex items-center justify-between px-4 py-3 rounded-lg border border-[var(--color-border-default)] bg-[var(--color-surface-default)] hover:bg-[var(--color-surface-subtle)] hover:border-[var(--color-border-strong)] transition-colors cursor-pointer group"
@@ -325,9 +327,16 @@ function DrawerListItem({ title, description, category, onOpen }: DrawerListItem
           </Badge>
         )}
         <div className="min-w-0 flex-1">
-          <h3 className="text-[14px] font-medium text-[var(--color-text-default)] truncate">
-            {title}
-          </h3>
+          <HStack gap={2} className="items-center">
+            <h3 className="text-[14px] font-medium text-[var(--color-text-default)] truncate">
+              {title}
+            </h3>
+            {linked && (
+              <Badge variant="success" size="sm" className="shrink-0">
+                {linkedTo || '연결됨'}
+              </Badge>
+            )}
+          </HStack>
           <p className="text-[12px] text-[var(--color-text-subtle)] truncate mt-0.5">
             {description}
           </p>
@@ -557,42 +566,56 @@ export function DrawersPage() {
                       description="Create a snapshot of an instance to capture its current system state as an image."
                       category="Instance"
                       onOpen={() => setIsCreateSnapshotOpen(true)}
+                      linked
+                      linkedTo="Instance List"
                     />
                     <DrawerCard
                       title="Edit instance"
                       description="Edit instance name and description. Allows modification of basic instance metadata."
                       category="Instance"
                       onOpen={() => setIsEditInstanceOpen(true)}
+                      linked
+                      linkedTo="Instance List"
                     />
                     <DrawerCard
                       title="Lock setting"
                       description="Lock or unlock an instance to prevent accidental deletion or modification."
                       category="Instance"
                       onOpen={() => setIsLockSettingOpen(true)}
+                      linked
+                      linkedTo="Instance List"
                     />
                     <DrawerCard
                       title="Manage Tags"
                       description="Add, edit, or remove tags to categorize and manage resources."
                       category="Instance"
                       onOpen={() => setIsManageTagsOpen(true)}
+                      linked
+                      linkedTo="Instance List"
                     />
                     <DrawerCard
                       title="Rescue Instance"
                       description="Create a temporary recovery server using your instance's root disk."
                       category="Instance"
                       onOpen={() => setIsRescueInstanceOpen(true)}
+                      linked
+                      linkedTo="Instance List"
                     />
                     <DrawerCard
                       title="Rebuild Instance"
                       description="Rebuild the instance by reinstalling the operating system using a new image."
                       category="Instance"
                       onOpen={() => setIsRebuildInstanceOpen(true)}
+                      linked
+                      linkedTo="Instance List"
                     />
                     <DrawerCard
                       title="Resize Instance"
                       description="Change the flavor to adjust vCPU, memory, or disk capacity."
                       category="Instance"
                       onOpen={() => setIsResizeInstanceOpen(true)}
+                      linked
+                      linkedTo="Instance List"
                     />
                   </div>
                 </VStack>
@@ -608,12 +631,16 @@ export function DrawersPage() {
                       description="Edit the name and description of an instance snapshot."
                       category="Snapshot"
                       onOpen={() => setIsEditInstanceSnapshotOpen(true)}
+                      linked
+                      linkedTo="Instance Snapshots"
                     />
                     <DrawerCard
                       title="Create volume from Instance Snapshot"
                       description="Create a new volume from an instance snapshot, containing the same data as the snapshot's system disk."
                       category="Snapshot"
                       onOpen={() => setIsCreateVolumeFromSnapshotOpen(true)}
+                      linked
+                      linkedTo="Instance Snapshots"
                     />
                   </div>
                 </VStack>
@@ -629,12 +656,16 @@ export function DrawersPage() {
                       description="Create a snapshot of a volume to back up its current data state for later restoration."
                       category="Volume"
                       onOpen={() => setIsCreateVolumeSnapshotOpen(true)}
+                      linked
+                      linkedTo="Volumes"
                     />
                     <DrawerCard
                       title="Create volume backup"
                       description="Create a full backup of a volume and store it in the backup service for disaster recovery."
                       category="Volume"
                       onOpen={() => setIsCreateVolumeBackupOpen(true)}
+                      linked
+                      linkedTo="Volumes"
                     />
                     <DrawerCard
                       title="Create volume backup (with selection)"
@@ -647,18 +678,24 @@ export function DrawersPage() {
                       description="Restore a volume from a snapshot by selecting from available snapshots."
                       category="Volume"
                       onOpen={() => setIsRestoreFromSnapshotOpen(true)}
+                      linked
+                      linkedTo="Volumes"
                     />
                     <DrawerCard
                       title="Attach volume"
                       description="Attach a volume to an instance by selecting from available instances."
                       category="Volume"
                       onOpen={() => setIsAttachVolumeOpen(true)}
+                      linked
+                      linkedTo="Instance List, Volumes"
                     />
                     <DrawerCard
                       title="Create subnet"
                       description="Create a new subnet with CIDR, gateway, DHCP, and advanced network settings."
                       category="Network"
                       onOpen={() => setIsCreateSubnetOpen(true)}
+                      linked
+                      linkedTo="Networks"
                     />
                     <DrawerCard
                       title="Create router"
@@ -671,48 +708,64 @@ export function DrawersPage() {
                       description="Attach a network port to an instance with Fixed IP, Floating IP, and availability zone."
                       category="Network"
                       onOpen={() => setIsAttachPortToInstanceOpen(true)}
+                      linked
+                      linkedTo="Ports"
                     />
                     <DrawerCard
                       title="Clone volume"
                       description="Create an exact copy of a volume for testing, backup, or new instance creation."
                       category="Volume"
                       onOpen={() => setIsCloneVolumeOpen(true)}
+                      linked
+                      linkedTo="Volumes"
                     />
                     <DrawerCard
                       title="Extend volume"
                       description="Increase the size of a volume to expand its storage capacity."
                       category="Volume"
                       onOpen={() => setIsExtendVolumeOpen(true)}
+                      linked
+                      linkedTo="Volumes"
                     />
                     <DrawerCard
                       title="Create image from Volume"
                       description="Create a new image using a volume as the source. The image will contain all data currently stored on the volume."
                       category="Volume"
                       onOpen={() => setIsCreateImageFromVolumeOpen(true)}
+                      linked
+                      linkedTo="Volumes"
                     />
                     <DrawerCard
                       title="Edit Volume"
                       description="Edit the name and description of an existing volume."
                       category="Volume"
                       onOpen={() => setIsEditVolumeOpen(true)}
+                      linked
+                      linkedTo="Volumes"
                     />
                     <DrawerCard
                       title="Change volume Type"
                       description="Change the storage type of this volume to another available volume type."
                       category="Volume"
                       onOpen={() => setIsChangeVolumeTypeOpen(true)}
+                      linked
+                      linkedTo="Volumes"
                     />
                     <DrawerCard
                       title="Create transfer"
                       description="Create a transfer request to share this volume with another project."
                       category="Volume"
                       onOpen={() => setIsCreateTransferOpen(true)}
+                      linked
+                      linkedTo="Volumes"
                     />
                     <DrawerCard
                       title="Edit Volume backup"
                       description="Edit the name and description of an existing volume backup."
                       category="Volume"
                       onOpen={() => setIsEditVolumeBackupOpen(true)}
+                      linked
+                      linkedTo="Volume Backups"
                     />
                     <DrawerCard
                       title="Accept Volume Transfer"
@@ -725,24 +778,32 @@ export function DrawersPage() {
                       description="Edit the name and description of an existing volume snapshot."
                       category="Volume"
                       onOpen={() => setIsEditVolumeSnapshotOpen(true)}
+                      linked
+                      linkedTo="Volume Snapshots"
                     />
                     <DrawerCard
                       title="Create volume from Snapshot"
                       description="Create a new volume from an existing volume snapshot with customizable capacity and type."
                       category="Volume"
                       onOpen={() => setIsCreateVolumeFromVolumeSnapshotOpen(true)}
+                      linked
+                      linkedTo="Volume Snapshots"
                     />
                     <DrawerCard
                       title="Create volume from Backup"
                       description="Create a new volume from an existing volume backup with customizable capacity, type, and availability zone."
                       category="Volume"
                       onOpen={() => setIsCreateVolumeFromBackupOpen(true)}
+                      linked
+                      linkedTo="Volume Backups"
                     />
                     <DrawerCard
                       title="Detach Volume"
                       description="Detach a volume from an instance. Once detached, it will no longer be accessible from the instance."
                       category="Volume"
                       onOpen={() => setIsDetachVolumeOpen(true)}
+                      linked
+                      linkedTo="Instance List, Volumes"
                     />
                   </div>
                 </VStack>
@@ -758,12 +819,16 @@ export function DrawersPage() {
                       description="Create a new volume using the selected image. The new volume will contain an identical copy of the image data."
                       category="Image"
                       onOpen={() => setIsCreateVolumeFromImageOpen(true)}
+                      linked
+                      linkedTo="Images"
                     />
                     <DrawerCard
                       title="Edit Image"
                       description="Edit image name and description. Allows modification of basic image metadata."
                       category="Image"
                       onOpen={() => setIsEditImageOpen(true)}
+                      linked
+                      linkedTo="Images"
                     />
                   </div>
                 </VStack>
@@ -821,6 +886,8 @@ export function DrawersPage() {
                       description="Edit network settings including name, description, admin state, and port security."
                       category="Network"
                       onOpen={() => setIsEditNetworkOpen(true)}
+                      linked
+                      linkedTo="Networks"
                     />
                     <DrawerCard
                       title="Edit Router"
@@ -839,6 +906,8 @@ export function DrawersPage() {
                       description="Edit port settings including name and description."
                       category="Port"
                       onOpen={() => setIsEditPortOpen(true)}
+                      linked
+                      linkedTo="Ports"
                     />
                     <DrawerCard
                       title="Create Allowed Address Pair"
@@ -851,6 +920,8 @@ export function DrawersPage() {
                       description="Edit floating IP description."
                       category="Floating IP"
                       onOpen={() => setIsEditFloatingIPOpen(true)}
+                      linked
+                      linkedTo="Floating IPs"
                     />
                     <DrawerCard
                       title="Allocate IP"
@@ -863,24 +934,32 @@ export function DrawersPage() {
                       description="Attach a new network interface to this instance. Connect it to another network or subnet for additional access."
                       category="Network"
                       onOpen={() => setIsAttachInterfaceOpen(true)}
+                      linked
+                      linkedTo="Instance List"
                     />
                     <DrawerCard
                       title="Detach Interface"
                       description="Detach a network interface from this instance. This may interrupt connectivity if the selected port is primary."
                       category="Network"
                       onOpen={() => setIsDetachInterfaceOpen(true)}
+                      linked
+                      linkedTo="Instance List"
                     />
                     <DrawerCard
                       title="Associate Floating IP"
                       description="Assign a floating IP to this instance for external network access."
                       category="Floating IP"
                       onOpen={() => setIsAssociateFloatingIPOpen(true)}
+                      linked
+                      linkedTo="Instance List, Floating IPs"
                     />
                     <DrawerCard
                       title="Disassociate Floating IP"
                       description="Remove the association between a floating IP and this instance. The instance will lose external network access through that IP."
                       category="Floating IP"
                       onOpen={() => setIsDisassociateFloatingIPOpen(true)}
+                      linked
+                      linkedTo="Instance List, Floating IPs, LBs"
                     />
                     <DrawerCard
                       title="Allocate Floating IP"
@@ -905,6 +984,8 @@ export function DrawersPage() {
                       description="Associate a floating IP with a port to enable external network access."
                       category="Port"
                       onOpen={() => setIsAssociateFloatingIPToPortOpen(true)}
+                      linked
+                      linkedTo="Ports"
                     />
                     <DrawerCard
                       title="Disconnect Subnet"
@@ -926,6 +1007,8 @@ export function DrawersPage() {
                       description="Create a rule to define allowed inbound or outbound network traffic for your security group."
                       category="Security group"
                       onOpen={() => setIsCreateSecurityGroupRuleOpen(true)}
+                      linked
+                      linkedTo="Security Groups"
                     />
                     <DrawerCard
                       title="Create Security group"
@@ -938,18 +1021,24 @@ export function DrawersPage() {
                       description="Edit security group name and description."
                       category="Security group"
                       onOpen={() => setIsEditSecurityGroupOpen(true)}
+                      linked
+                      linkedTo="Security Groups"
                     />
                     <DrawerCard
                       title="Manage Security Groups"
                       description="Attach or detach security groups for an interface to control inbound and outbound traffic."
                       category="Security group"
                       onOpen={() => setIsManageSecurityGroupsOpen(true)}
+                      linked
+                      linkedTo="Instance List"
                     />
                     <DrawerCard
                       title="Edit Port Security Groups"
                       description="Manage security groups on a port with port security toggle and multi-select table."
                       category="Port"
                       onOpen={() => setIsEditPortSecurityGroupsOpen(true)}
+                      linked
+                      linkedTo="Ports"
                     />
                   </div>
                 </VStack>
@@ -983,6 +1072,8 @@ export function DrawersPage() {
                       description="Edit load balancer name, description, and admin state."
                       category="Load balancer"
                       onOpen={() => setIsEditLoadBalancerOpen(true)}
+                      linked
+                      linkedTo="Load Balancers"
                     />
                     <DrawerCard
                       title="Edit Pool"
@@ -1025,6 +1116,8 @@ export function DrawersPage() {
                       description="Associate a floating IP to a load balancer for external access."
                       category="Load balancer"
                       onOpen={() => setIsAssociateFloatingIPToLBOpen(true)}
+                      linked
+                      linkedTo="Load Balancers"
                     />
                     <DrawerCard
                       title="Change Server Certificate"
@@ -1081,26 +1174,32 @@ export function DrawersPage() {
                           <DrawerCard
                             title="Manage User Groups"
                             description="Add or remove user groups for a specific user."
+                            category="User"
                             onOpen={() => setIsManageUserGroupsOpen(true)}
-                            badge="User"
+                            linked
+                            linkedTo="IAM Users"
                           />
                           <DrawerCard
                             title="Manage Roles"
                             description="Add or remove roles directly assigned to a specific user."
+                            category="User"
                             onOpen={() => setIsManageRolesOpen(true)}
-                            badge="User"
+                            linked
+                            linkedTo="IAM Users, User Groups"
                           />
                           <DrawerCard
                             title="Reset Password"
                             description="Reset the login password for a specific user."
+                            category="User"
                             onOpen={() => setIsResetPasswordOpen(true)}
-                            badge="User"
                           />
                           <DrawerCard
                             title="Edit User"
                             description="Edit the user's basic information like email and display name."
+                            category="User"
                             onOpen={() => setIsEditUserOpen(true)}
-                            badge="User"
+                            linked
+                            linkedTo="IAM Users"
                           />
                         </div>
                       </VStack>
@@ -1114,14 +1213,18 @@ export function DrawersPage() {
                           <DrawerCard
                             title="Manage Users"
                             description="Add or remove members of a user group."
+                            category="User Group"
                             onOpen={() => setIsManageUsersOpen(true)}
-                            badge="User Group"
+                            linked
+                            linkedTo="IAM User Groups"
                           />
                           <DrawerCard
                             title="Edit User Group"
                             description="Edit the user group's basic information."
+                            category="User Group"
                             onOpen={() => setIsEditUserGroupOpen(true)}
-                            badge="User Group"
+                            linked
+                            linkedTo="IAM User Groups"
                           />
                         </div>
                       </VStack>
