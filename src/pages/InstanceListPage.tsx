@@ -374,18 +374,21 @@ export function InstanceListPage() {
     if (appliedFilters.length === 0) return true;
     
     return appliedFilters.every((filter) => {
-      const fieldId = filter.fieldId;
-      const filterValue = filter.value.toLowerCase();
+      const fieldId = filter?.fieldId;
+      const filterValue = (filter?.value ?? '').toLowerCase();
+      
+      if (!fieldId || !filterValue) return true;
       
       switch (fieldId) {
         case 'name':
-          return instance.name.toLowerCase().includes(filterValue);
+          return instance.name?.toLowerCase().includes(filterValue) ?? false;
         case 'status':
-          return instance.status.toLowerCase() === filterValue;
+          return instance.status?.toLowerCase() === filterValue;
         case 'os':
-          return instance.os.toLowerCase().includes(filterValue);
+          // OS filter uses image field (e.g., "Ubuntu 22.04" contains "ubuntu")
+          return instance.image?.toLowerCase().includes(filterValue) ?? false;
         case 'flavor':
-          return instance.flavor.toLowerCase().includes(filterValue);
+          return instance.flavor?.toLowerCase().includes(filterValue) ?? false;
         default:
           return true;
       }
@@ -396,18 +399,21 @@ export function InstanceListPage() {
     if (appliedFilters.length === 0) return true;
     
     return appliedFilters.every((filter) => {
-      const fieldId = filter.fieldId;
-      const filterValue = filter.value.toLowerCase();
+      const fieldId = filter?.fieldId;
+      const filterValue = (filter?.value ?? '').toLowerCase();
+      
+      if (!fieldId || !filterValue) return true;
       
       switch (fieldId) {
         case 'name':
-          return instance.name.toLowerCase().includes(filterValue);
+          return instance.name?.toLowerCase().includes(filterValue) ?? false;
         case 'status':
-          return instance.status.toLowerCase() === filterValue;
+          return instance.status?.toLowerCase() === filterValue;
         case 'os':
-          return instance.os.toLowerCase().includes(filterValue);
+          // OS filter uses image field (e.g., "BM image" contains "bm")
+          return instance.image?.toLowerCase().includes(filterValue) ?? false;
         case 'flavor':
-          return instance.flavor.toLowerCase().includes(filterValue);
+          return instance.flavor?.toLowerCase().includes(filterValue) ?? false;
         default:
           return true;
       }

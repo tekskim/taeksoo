@@ -2109,6 +2109,163 @@ function TableDemo() {
           emptyMessage="No instances found"
         />
       </VStack>
+
+      {/* Column Width Presets */}
+      <VStack gap={3}>
+        <Label>Column Width Presets</Label>
+        <p className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
+          일관된 테이블 레이아웃을 위한 표준 컬럼 너비 프리셋입니다. <code className="text-[var(--color-action-primary)]">@/design-system</code>에서 import하여 사용합니다.
+        </p>
+        
+        {/* Fixed Width */}
+        <div className="overflow-x-auto">
+          <table className="w-full text-[length:var(--font-size-11)] border-collapse">
+            <thead>
+              <tr className="border-b border-[var(--color-border-default)]">
+                <th className="text-left py-2 pr-4 font-medium text-[var(--color-text-subtle)]">Category</th>
+                <th className="text-left py-2 pr-4 font-medium text-[var(--color-text-subtle)]">Key</th>
+                <th className="text-left py-2 pr-4 font-medium text-[var(--color-text-subtle)]">Width</th>
+                <th className="text-left py-2 font-medium text-[var(--color-text-subtle)]">Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              {/* Selection/Action */}
+              <tr className="border-b border-[var(--color-border-subtle)]">
+                <td className="py-2 pr-4 font-medium text-[var(--color-text-muted)]" rowSpan={2}>Selection / Action</td>
+                <td className="py-2 pr-4 font-mono text-[var(--color-action-primary)]">select</td>
+                <td className="py-2 pr-4 font-mono text-[var(--color-text-muted)]">40px</td>
+                <td className="py-2 text-[var(--color-text-subtle)]">체크박스 선택 컬럼</td>
+              </tr>
+              <tr className="border-b border-[var(--color-border-subtle)]">
+                <td className="py-2 pr-4 font-mono text-[var(--color-action-primary)]">actions</td>
+                <td className="py-2 pr-4 font-mono text-[var(--color-text-muted)]">64px</td>
+                <td className="py-2 text-[var(--color-text-subtle)]">액션 버튼 컬럼</td>
+              </tr>
+              {/* Status */}
+              <tr className="border-b border-[var(--color-border-subtle)]">
+                <td className="py-2 pr-4 font-medium text-[var(--color-text-muted)]" rowSpan={3}>Status</td>
+                <td className="py-2 pr-4 font-mono text-[var(--color-action-primary)]">status</td>
+                <td className="py-2 pr-4 font-mono text-[var(--color-text-muted)]">64px</td>
+                <td className="py-2 text-[var(--color-text-subtle)]">상태 아이콘/텍스트</td>
+              </tr>
+              <tr className="border-b border-[var(--color-border-subtle)]">
+                <td className="py-2 pr-4 font-mono text-[var(--color-action-primary)]">health</td>
+                <td className="py-2 pr-4 font-mono text-[var(--color-text-muted)]">80px</td>
+                <td className="py-2 text-[var(--color-text-subtle)]">헬스 상태</td>
+              </tr>
+              <tr className="border-b border-[var(--color-border-subtle)]">
+                <td className="py-2 pr-4 font-mono text-[var(--color-action-primary)]">condition</td>
+                <td className="py-2 pr-4 font-mono text-[var(--color-text-muted)]">90px</td>
+                <td className="py-2 text-[var(--color-text-subtle)]">조건 상태</td>
+              </tr>
+              {/* Network */}
+              <tr className="border-b border-[var(--color-border-subtle)]">
+                <td className="py-2 pr-4 font-medium text-[var(--color-text-muted)]" rowSpan={3}>Network</td>
+                <td className="py-2 pr-4 font-mono text-[var(--color-action-primary)]">ip, fixedIp, floatingIp</td>
+                <td className="py-2 pr-4 font-mono text-[var(--color-text-muted)]">130px</td>
+                <td className="py-2 text-[var(--color-text-subtle)]">IP 주소</td>
+              </tr>
+              <tr className="border-b border-[var(--color-border-subtle)]">
+                <td className="py-2 pr-4 font-mono text-[var(--color-action-primary)]">macAddress</td>
+                <td className="py-2 pr-4 font-mono text-[var(--color-text-muted)]">150px</td>
+                <td className="py-2 text-[var(--color-text-subtle)]">MAC 주소</td>
+              </tr>
+              <tr className="border-b border-[var(--color-border-subtle)]">
+                <td className="py-2 pr-4 font-mono text-[var(--color-action-primary)]">protocol, port</td>
+                <td className="py-2 pr-4 font-mono text-[var(--color-text-muted)]">70px</td>
+                <td className="py-2 text-[var(--color-text-subtle)]">프로토콜/포트</td>
+              </tr>
+              {/* Resource */}
+              <tr className="border-b border-[var(--color-border-subtle)]">
+                <td className="py-2 pr-4 font-medium text-[var(--color-text-muted)]" rowSpan={2}>Resource</td>
+                <td className="py-2 pr-4 font-mono text-[var(--color-action-primary)]">cpu, vcpu, ram, disk</td>
+                <td className="py-2 pr-4 font-mono text-[var(--color-text-muted)]">80px</td>
+                <td className="py-2 text-[var(--color-text-subtle)]">리소스 수치</td>
+              </tr>
+              <tr className="border-b border-[var(--color-border-subtle)]">
+                <td className="py-2 pr-4 font-mono text-[var(--color-action-primary)]">memory, size</td>
+                <td className="py-2 pr-4 font-mono text-[var(--color-text-muted)]">100px</td>
+                <td className="py-2 text-[var(--color-text-subtle)]">메모리/사이즈</td>
+              </tr>
+              {/* Time */}
+              <tr className="border-b border-[var(--color-border-subtle)]">
+                <td className="py-2 pr-4 font-medium text-[var(--color-text-muted)]" rowSpan={2}>Time</td>
+                <td className="py-2 pr-4 font-mono text-[var(--color-action-primary)]">createdAt, updatedAt</td>
+                <td className="py-2 pr-4 font-mono text-[var(--color-text-muted)]">140px</td>
+                <td className="py-2 text-[var(--color-text-subtle)]">생성/수정 시간</td>
+              </tr>
+              <tr className="border-b border-[var(--color-border-subtle)]">
+                <td className="py-2 pr-4 font-mono text-[var(--color-action-primary)]">timestamp</td>
+                <td className="py-2 pr-4 font-mono text-[var(--color-text-muted)]">160px</td>
+                <td className="py-2 text-[var(--color-text-subtle)]">타임스탬프 (날짜+시간)</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        {/* Flex Width */}
+        <Label>Flexible Width Presets</Label>
+        <div className="overflow-x-auto">
+          <table className="w-full text-[length:var(--font-size-11)] border-collapse">
+            <thead>
+              <tr className="border-b border-[var(--color-border-default)]">
+                <th className="text-left py-2 pr-4 font-medium text-[var(--color-text-subtle)]">Key</th>
+                <th className="text-left py-2 pr-4 font-medium text-[var(--color-text-subtle)]">minWidth</th>
+                <th className="text-left py-2 pr-4 font-medium text-[var(--color-text-subtle)]">maxWidth</th>
+                <th className="text-left py-2 pr-4 font-medium text-[var(--color-text-subtle)]">flex</th>
+                <th className="text-left py-2 font-medium text-[var(--color-text-subtle)]">Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr className="border-b border-[var(--color-border-subtle)]">
+                <td className="py-2 pr-4 font-mono text-[var(--color-action-primary)]">name</td>
+                <td className="py-2 pr-4 font-mono text-[var(--color-text-muted)]">150px</td>
+                <td className="py-2 pr-4 font-mono text-[var(--color-text-muted)]">300px</td>
+                <td className="py-2 pr-4 font-mono text-[var(--color-text-muted)]">1</td>
+                <td className="py-2 text-[var(--color-text-subtle)]">리소스 이름</td>
+              </tr>
+              <tr className="border-b border-[var(--color-border-subtle)]">
+                <td className="py-2 pr-4 font-mono text-[var(--color-action-primary)]">description</td>
+                <td className="py-2 pr-4 font-mono text-[var(--color-text-muted)]">200px</td>
+                <td className="py-2 pr-4 font-mono text-[var(--color-text-muted)]">-</td>
+                <td className="py-2 pr-4 font-mono text-[var(--color-text-muted)]">2</td>
+                <td className="py-2 text-[var(--color-text-subtle)]">설명 텍스트</td>
+              </tr>
+              <tr className="border-b border-[var(--color-border-subtle)]">
+                <td className="py-2 pr-4 font-mono text-[var(--color-action-primary)]">message</td>
+                <td className="py-2 pr-4 font-mono text-[var(--color-text-muted)]">200px</td>
+                <td className="py-2 pr-4 font-mono text-[var(--color-text-muted)]">-</td>
+                <td className="py-2 pr-4 font-mono text-[var(--color-text-muted)]">2</td>
+                <td className="py-2 text-[var(--color-text-subtle)]">이벤트 메시지</td>
+              </tr>
+              <tr className="border-b border-[var(--color-border-subtle)]">
+                <td className="py-2 pr-4 font-mono text-[var(--color-action-primary)]">image</td>
+                <td className="py-2 pr-4 font-mono text-[var(--color-text-muted)]">120px</td>
+                <td className="py-2 pr-4 font-mono text-[var(--color-text-muted)]">250px</td>
+                <td className="py-2 pr-4 font-mono text-[var(--color-text-muted)]">1</td>
+                <td className="py-2 text-[var(--color-text-subtle)]">컨테이너 이미지</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        {/* Usage */}
+        <Label>Usage</Label>
+        <div className="p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)] font-mono text-[length:var(--font-size-11)]">
+          <span className="text-[var(--color-text-subtle)]">// Import</span><br />
+          <span className="text-[var(--color-state-info)]">import</span> {'{'} columnWidths, flexColumnPresets {'}'} <span className="text-[var(--color-state-info)]">from</span> <span className="text-[var(--color-state-success)]">'@/design-system'</span>;<br /><br />
+          <span className="text-[var(--color-text-subtle)]">// Usage</span><br />
+          <span className="text-[var(--color-state-info)]">const</span> columns = [<br />
+          &nbsp;&nbsp;{'{'} key: <span className="text-[var(--color-state-success)]">'select'</span>, width: columnWidths.<span className="text-[var(--color-action-primary)]">select</span> {'}'}, <span className="text-[var(--color-text-subtle)]">// 40px</span><br />
+          &nbsp;&nbsp;{'{'} key: <span className="text-[var(--color-state-success)]">'status'</span>, width: columnWidths.<span className="text-[var(--color-action-primary)]">status</span> {'}'}, <span className="text-[var(--color-text-subtle)]">// 64px</span><br />
+          &nbsp;&nbsp;{'{'} key: <span className="text-[var(--color-state-success)]">'name'</span>, ...flexColumnPresets.<span className="text-[var(--color-action-primary)]">name</span> {'}'}, <span className="text-[var(--color-text-subtle)]">// minWidth: 150px, flex: 1</span><br />
+          &nbsp;&nbsp;{'{'} key: <span className="text-[var(--color-state-success)]">'actions'</span>, width: columnWidths.<span className="text-[var(--color-action-primary)]">actions</span> {'}'}, <span className="text-[var(--color-text-subtle)]">// 64px</span><br />
+          ];
+        </div>
+        <p className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
+          전체 프리셋 목록: <code className="text-[var(--color-action-primary)]">src/design-system/presets/columnWidths.ts</code>
+        </p>
+      </VStack>
     </VStack>
   );
 }
