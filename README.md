@@ -126,14 +126,6 @@ pnpm audit:fix
 - **데모 사이트**: https://thakicloud.github.io/tds_ssot/
 - **Storybook**: `pnpm storybook` 실행 후 http://localhost:6006
 
-## 프로덕션 연동
-
-이 SSOT에서 정의된 컴포넌트와 토큰은 프로덕션([thaki-ui](https://github.com/ThakiCloud/thaki-ui))에 반영됩니다:
-
-1. **디자인 토큰**: SSOT의 토큰 값을 프로덕션에 동기화
-2. **컴포넌트 인터페이스**: Props 인터페이스 통일 후 코드 이식
-3. **스타일 가이드**: SSOT의 디자인 결정사항을 프로덕션에 적용
-
 ## 참고
 
 - 컴포넌트 사용법은 Storybook 문서 또는 `src/design-system/components/` 참고
