@@ -310,7 +310,7 @@ export function ConfigMapsPage() {
         {/* Content Area */}
         <div 
           className="flex-1 overflow-auto min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll"
-          style={{ paddingBottom: shellPanel.isExpanded ? '350px' : '0' }}
+          style={{ paddingBottom: shellPanel.isExpanded ? 'var(--shell-panel-height)' : '0' }}
         >
           <div className="pt-4 px-8 pb-20 bg-[var(--color-surface-default)]">
             <VStack gap={3}>
@@ -337,7 +337,7 @@ export function ConfigMapsPage() {
                   <SearchInput
                     placeholder="Search configmap by attributes"
                     size="sm"
-                    className="w-[280px]"
+                    className="w-[var(--search-input-width)]"
                   />
                   <Button variant="secondary" size="sm" aria-label="Download" className="!p-0 !w-7 !h-7 !min-w-7">
                     <IconDownload size={14} stroke={1.5} />

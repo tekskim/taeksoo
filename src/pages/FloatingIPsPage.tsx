@@ -22,6 +22,9 @@ import {
 import { Sidebar } from '@/components/Sidebar';
 import { useTabs } from '@/contexts/TabContext';
 import { ViewPreferencesDrawer, type ColumnConfig } from '@/components/ViewPreferencesDrawer';
+import { AssociateFloatingIPDrawer } from '@/components/AssociateFloatingIPDrawer';
+import { DisassociateFloatingIPDrawer } from '@/components/DisassociateFloatingIPDrawer';
+import { EditFloatingIPDrawer } from '@/components/EditFloatingIPDrawer';
 import {
   IconDotsCircleHorizontal,
   IconTrash,
@@ -109,6 +112,28 @@ export function FloatingIPsPage() {
   const [isPreferencesOpen, setIsPreferencesOpen] = useState(false);
   const [rowsPerPage, setRowsPerPage] = useState(10);
 
+  // Drawer states
+  const [associateOpen, setAssociateOpen] = useState(false);
+  const [disassociateOpen, setDisassociateOpen] = useState(false);
+  const [editOpen, setEditOpen] = useState(false);
+  const [selectedFIPForDrawer, setSelectedFIPForDrawer] = useState<FloatingIP | null>(null);
+
+  // Drawer handlers
+  const handleAssociate = (fip: FloatingIP) => {
+    setSelectedFIPForDrawer(fip);
+    setAssociateOpen(true);
+  };
+
+  const handleDisassociate = (fip: FloatingIP) => {
+    setSelectedFIPForDrawer(fip);
+    setDisassociateOpen(true);
+  };
+
+  const handleEdit = (fip: FloatingIP) => {
+    setSelectedFIPForDrawer(fip);
+    setEditOpen(true);
+  };
+
   const defaultColumnConfig: ColumnConfig[] = [
     { id: 'status', label: 'Status', visible: true, locked: true },
     { id: 'floatingIp', label: 'Floating IP', visible: true, locked: true },
@@ -133,9 +158,9 @@ export function FloatingIPsPage() {
 
   // Context menu items
   const getContextMenuItems = (fip: FloatingIP): ContextMenuItem[] => [
-    { id: 'associate', label: 'Associate', onClick: () => console.log('Associate:', fip.id) },
-    { id: 'disassociate', label: 'Disassociate', onClick: () => console.log('Disassociate:', fip.id) },
-    { id: 'edit', label: 'Edit', onClick: () => console.log('Edit:', fip.id) },
+    { id: 'associate', label: 'Associate', onClick: () => handleAssociate(fip), disabled: !!fip.associatedTo },
+    { id: 'disassociate', label: 'Disassociate', onClick: () => handleDisassociate(fip), disabled: !fip.associatedTo },
+    { id: 'edit', label: 'Edit', onClick: () => handleEdit(fip) },
     { id: 'release', label: 'Release', status: 'danger', onClick: () => { setFloatingIPToDelete(fip); setDeleteModalOpen(true); } },
   ];
 
@@ -301,7 +326,7 @@ export function FloatingIPsPage() {
 
       <main
         className={`absolute top-0 bottom-0 right-0 flex flex-col bg-[var(--color-surface-default)] transition-[left] duration-200 ${
-          sidebarOpen ? 'left-[200px]' : 'left-0'
+          sidebarOpen ? 'left-[var(--layout-sidebar-width)]' : 'left-0'
         }`}
       >
         {/* Fixed Header Area */}
@@ -367,7 +392,7 @@ export function FloatingIPsPage() {
                     appliedFilters={appliedFilters}
                     onFiltersChange={setAppliedFilters}
                     placeholder="Search floating IP by attributes"
-                    className="w-[280px]"
+                    className="w-[var(--search-input-width)]"
                   />
                   <Button variant="secondary" size="sm" iconOnly icon={<IconDownload size={12} />} aria-label="Download" />
                 </ListToolbar.Actions>
@@ -435,6 +460,31 @@ export function FloatingIPsPage() {
         columns={columnConfig}
         defaultColumns={defaultColumnConfig}
         onColumnsChange={setColumnConfig}
+      />
+
+      {/* Floating IP Drawers */}
+      <AssociateFloatingIPDrawer
+        isOpen={associateOpen}
+        onClose={() => setAssociateOpen(false)}
+        floatingIP={{ address: selectedFIPForDrawer?.floatingIp || '' }}
+      />
+
+      <DisassociateFloatingIPDrawer
+        isOpen={disassociateOpen}
+        onClose={() => setDisassociateOpen(false)}
+        instance={selectedFIPForDrawer?.associatedTo && selectedFIPForDrawer?.associatedToId ? {
+          id: selectedFIPForDrawer.associatedToId,
+          name: selectedFIPForDrawer.associatedTo,
+        } : { id: '', name: '' }}
+      />
+
+      <EditFloatingIPDrawer
+        isOpen={editOpen}
+        onClose={() => setEditOpen(false)}
+        floatingIP={{
+          id: selectedFIPForDrawer?.id || '',
+          ipAddress: selectedFIPForDrawer?.floatingIp || '',
+        }}
       />
     </div>
   );

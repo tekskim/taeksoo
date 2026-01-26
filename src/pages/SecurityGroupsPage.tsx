@@ -21,6 +21,8 @@ import {
 import { Sidebar } from '@/components/Sidebar';
 import { useTabs } from '@/contexts/TabContext';
 import { ViewPreferencesDrawer, type ColumnConfig } from '@/components/ViewPreferencesDrawer';
+import { CreateSecurityGroupRuleDrawer } from '@/components/CreateSecurityGroupRuleDrawer';
+import { EditSecurityGroupDrawer } from '@/components/EditSecurityGroupDrawer';
 import {
   IconDotsCircleHorizontal,
   IconTrash,
@@ -96,6 +98,22 @@ export function SecurityGroupsPage() {
   const [isPreferencesOpen, setIsPreferencesOpen] = useState(false);
   const [rowsPerPage, setRowsPerPage] = useState(10);
 
+  // Drawer states
+  const [createRuleOpen, setCreateRuleOpen] = useState(false);
+  const [editGroupOpen, setEditGroupOpen] = useState(false);
+  const [selectedGroupForDrawer, setSelectedGroupForDrawer] = useState<SecurityGroup | null>(null);
+
+  // Drawer handlers
+  const handleCreateRule = (sg: SecurityGroup) => {
+    setSelectedGroupForDrawer(sg);
+    setCreateRuleOpen(true);
+  };
+
+  const handleEditGroup = (sg: SecurityGroup) => {
+    setSelectedGroupForDrawer(sg);
+    setEditGroupOpen(true);
+  };
+
   const defaultColumnConfig: ColumnConfig[] = [
     { id: 'name', label: 'Name', visible: true, locked: true },
     { id: 'description', label: 'Description', visible: true },
@@ -119,8 +137,8 @@ export function SecurityGroupsPage() {
 
   // Context menu items
   const getContextMenuItems = (sg: SecurityGroup): ContextMenuItem[] => [
-    { id: 'create-rule', label: 'Create rule', onClick: () => console.log('Create rule:', sg.id) },
-    { id: 'edit', label: 'Edit', onClick: () => console.log('Edit:', sg.id) },
+    { id: 'create-rule', label: 'Create rule', onClick: () => handleCreateRule(sg) },
+    { id: 'edit', label: 'Edit', onClick: () => handleEditGroup(sg) },
     { id: 'delete', label: 'Delete', status: 'danger', onClick: () => { setGroupToDelete(sg); setDeleteModalOpen(true); } },
   ];
 
@@ -234,7 +252,7 @@ export function SecurityGroupsPage() {
 
       <main
         className={`absolute top-0 bottom-0 right-0 flex flex-col bg-[var(--color-surface-default)] transition-[left] duration-200 ${
-          sidebarOpen ? 'left-[200px]' : 'left-0'
+          sidebarOpen ? 'left-[var(--layout-sidebar-width)]' : 'left-0'
         }`}
       >
         {/* Fixed Header Area */}
@@ -300,7 +318,7 @@ export function SecurityGroupsPage() {
                     appliedFilters={appliedFilters}
                     onFiltersChange={setAppliedFilters}
                     placeholder="Search security group by attributes"
-                    className="w-[280px]"
+                    className="w-[var(--search-input-width)]"
                   />
                   <Button variant="secondary" size="sm" iconOnly icon={<IconDownload size={12} />} aria-label="Download" />
                 </ListToolbar.Actions>
@@ -368,6 +386,23 @@ export function SecurityGroupsPage() {
         columns={columnConfig}
         defaultColumns={defaultColumnConfig}
         onColumnsChange={setColumnConfig}
+      />
+
+      {/* Security Group Drawers */}
+      <CreateSecurityGroupRuleDrawer
+        isOpen={createRuleOpen}
+        onClose={() => setCreateRuleOpen(false)}
+        securityGroupId={selectedGroupForDrawer?.id}
+      />
+
+      <EditSecurityGroupDrawer
+        isOpen={editGroupOpen}
+        onClose={() => setEditGroupOpen(false)}
+        securityGroup={{
+          id: selectedGroupForDrawer?.id || '',
+          name: selectedGroupForDrawer?.name || '',
+          description: selectedGroupForDrawer?.description,
+        }}
       />
     </div>
   );

@@ -583,7 +583,7 @@ export function MailTemplatePreviewPage() {
 
       <main className="max-w-7xl mx-auto px-8 py-8">
         <div className="flex gap-8">
-          <div className="w-[280px] flex-shrink-0">
+          <div className="w-[var(--search-input-width)] flex-shrink-0">
             <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg p-4">
               <h2 className="text-[14px] font-semibold text-[var(--color-text-default)] mb-4">Template Variables</h2>
               <VStack gap={4}>{renderVariables()}</VStack>

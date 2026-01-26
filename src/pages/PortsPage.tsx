@@ -26,6 +26,10 @@ import {
 import { Sidebar } from '@/components/Sidebar';
 import { useTabs } from '@/contexts/TabContext';
 import { ViewPreferencesDrawer, type ColumnConfig } from '@/components/ViewPreferencesDrawer';
+import { AttachPortToInstanceDrawer } from '@/components/AttachPortToInstanceDrawer';
+import { AssociateFloatingIPToPortDrawer } from '@/components/AssociateFloatingIPToPortDrawer';
+import { EditPortSecurityGroupsDrawer } from '@/components/EditPortSecurityGroupsDrawer';
+import { EditPortDrawer } from '@/components/EditPortDrawer';
 import {
   IconDotsCircleHorizontal,
   IconTrash,
@@ -123,6 +127,34 @@ export function PortsPage() {
   const [isPreferencesOpen, setIsPreferencesOpen] = useState(false);
   const [rowsPerPage, setRowsPerPage] = useState(10);
 
+  // Drawer states
+  const [attachInstanceOpen, setAttachInstanceOpen] = useState(false);
+  const [associateFIPOpen, setAssociateFIPOpen] = useState(false);
+  const [manageSecurityGroupsOpen, setManageSecurityGroupsOpen] = useState(false);
+  const [editPortOpen, setEditPortOpen] = useState(false);
+  const [selectedPortForDrawer, setSelectedPortForDrawer] = useState<Port | null>(null);
+
+  // Drawer handlers
+  const handleAttachInstance = (port: Port) => {
+    setSelectedPortForDrawer(port);
+    setAttachInstanceOpen(true);
+  };
+
+  const handleAssociateFloatingIP = (port: Port) => {
+    setSelectedPortForDrawer(port);
+    setAssociateFIPOpen(true);
+  };
+
+  const handleManageSecurityGroups = (port: Port) => {
+    setSelectedPortForDrawer(port);
+    setManageSecurityGroupsOpen(true);
+  };
+
+  const handleEditPort = (port: Port) => {
+    setSelectedPortForDrawer(port);
+    setEditPortOpen(true);
+  };
+
   const defaultColumnConfig: ColumnConfig[] = [
     { id: 'status', label: 'Status', visible: true, locked: true },
     { id: 'name', label: 'Name', visible: true, locked: true },
@@ -149,13 +181,13 @@ export function PortsPage() {
 
   // Context menu items
   const getContextMenuItems = (port: Port): ContextMenuItem[] => [
-    { id: 'attach-instance', label: 'Attach instance', onClick: () => console.log('Attach instance:', port.id) },
-    { id: 'detach-instance', label: 'Detach instance', onClick: () => console.log('Detach instance:', port.id) },
-    { id: 'associate-floating-ip', label: 'Associate floating IP', onClick: () => console.log('Associate floating IP:', port.id) },
-    { id: 'disassociate-floating-ip', label: 'Disassociate floating IP', onClick: () => console.log('Disassociate floating IP:', port.id) },
+    { id: 'attach-instance', label: 'Attach instance', onClick: () => handleAttachInstance(port), disabled: !!port.attachedTo },
+    { id: 'detach-instance', label: 'Detach instance', onClick: () => console.log('Detach instance:', port.id), disabled: !port.attachedTo },
+    { id: 'associate-floating-ip', label: 'Associate floating IP', onClick: () => handleAssociateFloatingIP(port), disabled: !!port.floatingIp },
+    { id: 'disassociate-floating-ip', label: 'Disassociate floating IP', onClick: () => console.log('Disassociate floating IP:', port.id), disabled: !port.floatingIp },
     { id: 'allocate-ip', label: 'Allocate IP', onClick: () => console.log('Allocate IP:', port.id) },
-    { id: 'manage-security-groups', label: 'Manage security groups', onClick: () => console.log('Manage security groups:', port.id) },
-    { id: 'edit', label: 'Edit', onClick: () => console.log('Edit:', port.id) },
+    { id: 'manage-security-groups', label: 'Manage security groups', onClick: () => handleManageSecurityGroups(port) },
+    { id: 'edit', label: 'Edit', onClick: () => handleEditPort(port) },
     { id: 'delete', label: 'Delete', status: 'danger', onClick: () => { setPortToDelete(port); setDeleteModalOpen(true); } },
   ];
 
@@ -341,7 +373,7 @@ export function PortsPage() {
 
       <main
         className={`absolute top-0 bottom-0 right-0 flex flex-col bg-[var(--color-surface-default)] transition-[left] duration-200 ${
-          sidebarOpen ? 'left-[200px]' : 'left-0'
+          sidebarOpen ? 'left-[var(--layout-sidebar-width)]' : 'left-0'
         }`}
       >
         {/* Fixed Header Area */}
@@ -419,7 +451,7 @@ export function PortsPage() {
                     appliedFilters={appliedFilters}
                     onFiltersChange={setAppliedFilters}
                     placeholder="Search port by attributes"
-                    className="w-[280px]"
+                    className="w-[var(--search-input-width)]"
                   />
                   <Button variant="secondary" size="sm" iconOnly icon={<IconDownload size={12} />} aria-label="Download" />
                 </ListToolbar.Actions>
@@ -487,6 +519,38 @@ export function PortsPage() {
         columns={columnConfig}
         defaultColumns={defaultColumnConfig}
         onColumnsChange={setColumnConfig}
+      />
+
+      {/* Port Drawers */}
+      <AttachPortToInstanceDrawer
+        isOpen={attachInstanceOpen}
+        onClose={() => setAttachInstanceOpen(false)}
+        portId={selectedPortForDrawer?.id || ''}
+        portName={selectedPortForDrawer?.name || ''}
+      />
+
+      <AssociateFloatingIPToPortDrawer
+        isOpen={associateFIPOpen}
+        onClose={() => setAssociateFIPOpen(false)}
+        port={{ name: selectedPortForDrawer?.name || '' }}
+      />
+
+      <EditPortSecurityGroupsDrawer
+        isOpen={manageSecurityGroupsOpen}
+        onClose={() => setManageSecurityGroupsOpen(false)}
+        port={{
+          id: selectedPortForDrawer?.id || '',
+          name: selectedPortForDrawer?.name || '',
+        }}
+      />
+
+      <EditPortDrawer
+        isOpen={editPortOpen}
+        onClose={() => setEditPortOpen(false)}
+        port={{
+          id: selectedPortForDrawer?.id || '',
+          name: selectedPortForDrawer?.name || '',
+        }}
       />
     </div>
   );

@@ -498,7 +498,7 @@ export default function IAMSystemAdminDetailPage() {
                           placeholder="Search session by attributes"
                           value={sessionsSearchQuery}
                           onChange={(e) => setSessionsSearchQuery(e.target.value)}
-                          className="w-[280px]"
+                          className="w-[var(--search-input-width)]"
                         />
                         <Button
                           variant="secondary"

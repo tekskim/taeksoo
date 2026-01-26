@@ -22,6 +22,8 @@ import {
 import { Sidebar } from '@/components/Sidebar';
 import { useTabs } from '@/contexts/TabContext';
 import { ViewPreferencesDrawer, type ColumnConfig } from '@/components/ViewPreferencesDrawer';
+import { AssociateFloatingIPToLBDrawer } from '@/components/AssociateFloatingIPToLBDrawer';
+import { EditLoadBalancerDrawer } from '@/components/EditLoadBalancerDrawer';
 import {
   IconDotsCircleHorizontal,
   IconTrash,
@@ -113,6 +115,22 @@ export function LoadBalancersPage() {
   const [isPreferencesOpen, setIsPreferencesOpen] = useState(false);
   const [rowsPerPage, setRowsPerPage] = useState(10);
 
+  // Drawer states
+  const [associateFIPOpen, setAssociateFIPOpen] = useState(false);
+  const [editLBOpen, setEditLBOpen] = useState(false);
+  const [selectedLBForDrawer, setSelectedLBForDrawer] = useState<LoadBalancer | null>(null);
+
+  // Drawer handlers
+  const handleAssociateFloatingIP = (lb: LoadBalancer) => {
+    setSelectedLBForDrawer(lb);
+    setAssociateFIPOpen(true);
+  };
+
+  const handleEditLB = (lb: LoadBalancer) => {
+    setSelectedLBForDrawer(lb);
+    setEditLBOpen(true);
+  };
+
   const defaultColumnConfig: ColumnConfig[] = [
     { id: 'status', label: 'Status', visible: true, locked: true },
     { id: 'name', label: 'Name', visible: true, locked: true },
@@ -138,10 +156,10 @@ export function LoadBalancersPage() {
 
   // Context menu items
   const getContextMenuItems = (lb: LoadBalancer): ContextMenuItem[] => [
-    { id: 'associate-floating-ip', label: 'Associate floating IP', onClick: () => console.log('Associate floating IP:', lb.id) },
-    { id: 'disassociate-floating-ip', label: 'Disassociate floating IP', onClick: () => console.log('Disassociate floating IP:', lb.id) },
+    { id: 'associate-floating-ip', label: 'Associate floating IP', onClick: () => handleAssociateFloatingIP(lb), disabled: !!lb.floatingIp },
+    { id: 'disassociate-floating-ip', label: 'Disassociate floating IP', onClick: () => console.log('Disassociate floating IP:', lb.id), disabled: !lb.floatingIp },
     { id: 'create-listener', label: 'Create listener', onClick: () => console.log('Create listener:', lb.id) },
-    { id: 'edit', label: 'Edit', onClick: () => console.log('Edit:', lb.id) },
+    { id: 'edit', label: 'Edit', onClick: () => handleEditLB(lb) },
     { id: 'delete', label: 'Delete', status: 'danger', onClick: () => { setLbToDelete(lb); setDeleteModalOpen(true); } },
   ];
 
@@ -312,7 +330,7 @@ export function LoadBalancersPage() {
 
       <main
         className={`absolute top-0 bottom-0 right-0 flex flex-col bg-[var(--color-surface-default)] transition-[left] duration-200 ${
-          sidebarOpen ? 'left-[200px]' : 'left-0'
+          sidebarOpen ? 'left-[var(--layout-sidebar-width)]' : 'left-0'
         }`}
       >
         {/* Fixed Header Area */}
@@ -379,7 +397,7 @@ export function LoadBalancersPage() {
                     onFiltersChange={setAppliedFilters}
                     placeholder="Search load balancer by attributes"
                     size="sm"
-                    className="w-[280px]"
+                    className="w-[var(--search-input-width)]"
                     hideAppliedFilters
                   />
                   <Button variant="secondary" size="sm" iconOnly icon={<IconDownload size={12} />} aria-label="Download" />
@@ -448,6 +466,27 @@ export function LoadBalancersPage() {
         columns={columnConfig}
         defaultColumns={defaultColumnConfig}
         onColumnsChange={setColumnConfig}
+      />
+
+      {/* Load Balancer Drawers */}
+      <AssociateFloatingIPToLBDrawer
+        isOpen={associateFIPOpen}
+        onClose={() => setAssociateFIPOpen(false)}
+        loadBalancer={{
+          id: selectedLBForDrawer?.id || '',
+          name: selectedLBForDrawer?.name || '',
+          networkId: selectedLBForDrawer?.ownedNetworkId || '',
+          networkName: selectedLBForDrawer?.ownedNetwork || '',
+        }}
+      />
+
+      <EditLoadBalancerDrawer
+        isOpen={editLBOpen}
+        onClose={() => setEditLBOpen(false)}
+        loadBalancer={{
+          id: selectedLBForDrawer?.id || '',
+          name: selectedLBForDrawer?.name || '',
+        }}
       />
     </div>
   );

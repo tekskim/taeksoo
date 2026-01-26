@@ -18,6 +18,9 @@ import {
 } from '@/design-system';
 import { IAMSidebar } from '@/components/IAMSidebar';
 import { useTabs } from '@/contexts/TabContext';
+import { ManageUserGroupsDrawer } from '@/components/ManageUserGroupsDrawer';
+import { ManageRolesDrawer } from '@/components/ManageRolesDrawer';
+import { EditUserDrawer } from '@/components/EditUserDrawer';
 import {
   IconDownload,
   IconTrash,
@@ -107,6 +110,28 @@ export function IAMUsersPage() {
   // Selection state
   const hasSelection = selectedRows.length > 0;
 
+  // Drawer states
+  const [manageUserGroupsOpen, setManageUserGroupsOpen] = useState(false);
+  const [manageRolesOpen, setManageRolesOpen] = useState(false);
+  const [editUserOpen, setEditUserOpen] = useState(false);
+  const [selectedUserForDrawer, setSelectedUserForDrawer] = useState<User | null>(null);
+
+  // Drawer handlers
+  const handleManageUserGroups = (user: User) => {
+    setSelectedUserForDrawer(user);
+    setManageUserGroupsOpen(true);
+  };
+
+  const handleManageRoles = (user: User) => {
+    setSelectedUserForDrawer(user);
+    setManageRolesOpen(true);
+  };
+
+  const handleEditUser = (user: User) => {
+    setSelectedUserForDrawer(user);
+    setEditUserOpen(true);
+  };
+
   // Table columns
   const columns: TableColumn<User>[] = [
     {
@@ -167,11 +192,11 @@ export function IAMUsersPage() {
       render: (_value, row) => {
         const isDisabled = row.status === 'disabled';
         const menuItems: ContextMenuItem[] = [
-          { id: 'manage-user-groups', label: 'Manage user groups', disabled: isDisabled, onClick: () => console.log('Manage user groups', row.id) },
-          { id: 'manage-roles', label: 'Manage roles', disabled: isDisabled, onClick: () => console.log('Manage roles', row.id) },
+          { id: 'manage-user-groups', label: 'Manage user groups', disabled: isDisabled, onClick: () => handleManageUserGroups(row) },
+          { id: 'manage-roles', label: 'Manage roles', disabled: isDisabled, onClick: () => handleManageRoles(row) },
           { id: 'reset-password', label: 'Reset password', disabled: isDisabled, onClick: () => console.log('Reset password', row.id) },
           { id: 'lock-setting', label: 'Lock setting', onClick: () => console.log('Lock setting', row.id) },
-          { id: 'edit', label: 'Edit', disabled: isDisabled, onClick: () => console.log('Edit', row.id) },
+          { id: 'edit', label: 'Edit', disabled: isDisabled, onClick: () => handleEditUser(row) },
           { id: 'delete', label: 'Delete', status: isDisabled ? undefined : 'danger', disabled: isDisabled, onClick: () => console.log('Delete', row.id) },
         ];
         return (
@@ -249,7 +274,7 @@ export function IAMUsersPage() {
                       placeholder="Search users by attributes"
                       value={searchQuery}
                       onChange={setSearchQuery}
-                      className="w-[280px]"
+                      className="w-[var(--search-input-width)]"
                     />
                     <Button variant="secondary" size="sm" icon={<IconDownload size={12} />} aria-label="Download" />
                   </HStack>
@@ -292,6 +317,25 @@ export function IAMUsersPage() {
           </div>
         </div>
       </main>
+
+      {/* User Drawers */}
+      <ManageUserGroupsDrawer
+        isOpen={manageUserGroupsOpen}
+        onClose={() => setManageUserGroupsOpen(false)}
+        userName={selectedUserForDrawer?.username}
+      />
+
+      <ManageRolesDrawer
+        isOpen={manageRolesOpen}
+        onClose={() => setManageRolesOpen(false)}
+        userName={selectedUserForDrawer?.username}
+      />
+
+      <EditUserDrawer
+        isOpen={editUserOpen}
+        onClose={() => setEditUserOpen(false)}
+        userName={selectedUserForDrawer?.username}
+      />
     </div>
   );
 }

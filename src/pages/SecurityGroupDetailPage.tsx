@@ -320,7 +320,7 @@ export default function SecurityGroupDetailPage() {
 
       <main
         className={`absolute top-0 bottom-0 right-0 flex flex-col bg-[var(--color-surface-default)] transition-[left] duration-200 ${
-          sidebarOpen ? 'left-[200px]' : 'left-0'
+          sidebarOpen ? 'left-[var(--layout-sidebar-width)]' : 'left-0'
         }`}
       >
         {/* Fixed Header Area */}
@@ -451,7 +451,7 @@ export default function SecurityGroupDetailPage() {
 
                       {/* Toolbar */}
                       <div className="flex items-center gap-2">
-                        <div className="w-[280px]">
+                        <div className="w-[var(--search-input-width)]">
                           <SearchInput
                             placeholder="Search rules by attributes"
                             value={ruleSearchTerm}
