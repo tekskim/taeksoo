@@ -7,7 +7,6 @@ import {
   TopBar,
   Breadcrumb,
   Table,
-  SectionCard,
   type TableColumn,
 } from '@/design-system';
 import { IAMSidebar } from '@/components/IAMSidebar';

@@ -25,7 +25,6 @@ import {
   IconEdit,
   IconTrash,
   IconBell,
-  IconCopy,
   IconDownload,
   IconExternalLink,
 } from '@tabler/icons-react';

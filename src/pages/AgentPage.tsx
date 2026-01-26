@@ -15,25 +15,14 @@ import {
 } from '@/design-system';
 import { AgentPageLayout } from '@/layouts';
 import {
-  IconMessage,
-  IconRobotFace,
   IconDatabase,
   IconPuzzle,
   IconSettings,
-  IconPalette,
-  IconBell,
-  IconSearch,
   IconTrash,
-  IconChevronDown,
-  IconChevronLeft,
-  IconChevronRight,
-  IconDots,
   IconStar,
   IconStarFilled,
   IconCode,
   IconDotsVertical,
-  IconDotsCircleHorizontal,
-  IconHome,
   IconTarget,
   IconPencil,
 } from '@tabler/icons-react';

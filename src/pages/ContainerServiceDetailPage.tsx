@@ -15,8 +15,6 @@ import {
   Button,
   ContextMenu,
   StatusIndicator,
-  SearchInput,
-  Tooltip,
   DetailHeader,
   Chip,
   type TableColumn,
@@ -31,11 +29,8 @@ import {
   IconFile,
   IconCopy,
   IconSearch,
-  IconDownload,
   IconDotsCircleHorizontal,
   IconChevronDown,
-  IconInfoCircle,
-  IconTrash,
 } from '@tabler/icons-react';
 
 /* ----------------------------------------

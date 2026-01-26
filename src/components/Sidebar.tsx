@@ -11,7 +11,6 @@ import {
   IconDatabase,
   IconDatabaseExport,
   IconNetwork,
-  IconPlug,
   IconWorldWww,
   IconShieldLock,
   IconLoadBalancer,

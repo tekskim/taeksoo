@@ -3,7 +3,7 @@ import { DetailHeader } from './DetailHeader';
 import { Button } from '../Button';
 import { Chip } from '../Chip';
 import { HStack } from '../../layouts';
-import { IconEdit, IconTrash, IconPlayerPlay, IconPlayerStop } from '@tabler/icons-react';
+import { IconEdit, IconTrash, IconPlayerStop } from '@tabler/icons-react';
 
 const meta: Meta<typeof DetailHeader> = {
   title: 'Components/DetailHeader',

@@ -13,14 +13,12 @@ import {
   TabPanel,
   DetailHeader,
   SectionCard,
-  StatusIndicator,
 } from '@/design-system';
 import { Sidebar } from '@/components/Sidebar';
 import { useTabs } from '@/contexts/TabContext';
 import {
   IconTrash,
   IconBell,
-  IconCopy,
   IconEdit,
   IconLinkOff,
 } from '@tabler/icons-react';

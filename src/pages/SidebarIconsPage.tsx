@@ -14,7 +14,6 @@ import {
   IconDatabase,
   IconDatabaseExport,
   IconNetwork,
-  IconRouter,
   IconWorldWww,
   IconShieldLock,
   IconLoadBalancer,
@@ -37,9 +36,6 @@ import {
   IconRefresh,
   IconStack3,
   IconFileSettings,
-  IconRuler,
-  IconScale,
-  IconAlertTriangle,
   IconBrandSpeedtest,
   IconUsers,
   IconUsersGroup,
@@ -51,7 +47,6 @@ import {
   IconUserCog,
   IconLock,
   IconHistory,
-  IconApps,
   IconCalendarTime,
   IconBox,
   IconCompass,
@@ -76,7 +71,7 @@ import {
 } from '@tabler/icons-react';
 import { useNavigate } from 'react-router-dom';
 import { useDarkMode } from '@/hooks/useDarkMode';
-import { EthernetPort, ChevronsLeftRightEllipsis, HardDrive, LogIn, Scaling, FileCheck2, Group, Network, RefreshCw, CircleGauge, BrainCircuit, LayoutDashboard } from 'lucide-react';
+import { EthernetPort, ChevronsLeftRightEllipsis, HardDrive, Scaling, Group, Network, RefreshCw, CircleGauge, BrainCircuit, LayoutDashboard } from 'lucide-react';
 import ThakiLogoLight from '@/assets/thakiLogo_light.svg';
 import ThakiLogoDark from '@/assets/thakiLogo-dark.svg';
 import RouterIcon from '@/assets/Router.svg';

@@ -3,7 +3,6 @@ import { Modal, Drawer, ConfirmModal, Button, VStack, Input } from '@/design-sys
 import { IconAlertCircle } from '@tabler/icons-react';
 import { Label } from './HelperComponents';
 import { AttachVolumeDrawer } from '@/components/AttachVolumeDrawer';
-import { DataViewDrawer } from '@/components/DataViewDrawer';
 
 
 /* ----------------------------------------

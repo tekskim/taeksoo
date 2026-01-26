@@ -14,7 +14,7 @@ import {
   Checkbox,
   Table,
 } from '@/design-system';
-import type { WizardSummaryItem, WizardSectionState, TableColumn } from '@/design-system';
+import type { WizardSummaryItem, WizardSectionState } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
 import { useTabs } from '@/contexts/TabContext';
 import {

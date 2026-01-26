@@ -7,7 +7,6 @@ import {
   HStack,
   TabBar,
   TopBar,
-  TopBarAction,
   Breadcrumb,
   Tabs,
   TabList,
@@ -27,7 +26,6 @@ import {
   IconEdit,
   IconTrash,
   IconChevronDown,
-  IconBell,
   IconRefresh,
 } from '@tabler/icons-react';
 import { IconAction } from '@/design-system';

@@ -25,11 +25,9 @@ import {
   IconFile,
   IconCopy,
   IconSearch,
-  IconStar,
   IconDownload,
   IconTrash,
   IconChevronDown,
-  IconX,
   IconDotsCircleHorizontal,
 } from '@tabler/icons-react';
 

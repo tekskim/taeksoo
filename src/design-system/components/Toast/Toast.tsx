@@ -408,7 +408,7 @@ export function ToastContainer({
    ---------------------------------------- */
 
 let toastStore: ToastData[] = [];
-let listeners: Set<() => void> = new Set();
+const listeners: Set<() => void> = new Set();
 
 function emitChange() {
   listeners.forEach((listener) => listener());

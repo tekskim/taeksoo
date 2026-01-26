@@ -6,7 +6,6 @@ import {
   WritingSection,
   SkippedSection,
   DoneSection,
-  DoneSectionRow,
 } from './WizardSection';
 import { SectionCard } from '../SectionCard/SectionCard';
 import { VStack } from '../../layouts';

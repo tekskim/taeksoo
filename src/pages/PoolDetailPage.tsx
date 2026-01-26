@@ -27,7 +27,6 @@ import {
   IconTrash,
   IconBell,
   IconChevronDown,
-  IconCirclePlus,
   IconDotsCircleHorizontal,
   IconUsers,
 } from '@tabler/icons-react';

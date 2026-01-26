@@ -6,7 +6,6 @@ import {
   TopBar,
   Breadcrumb,
   Button,
-  Input,
   Tabs,
 } from '@/design-system';
 import { AIPlatformSidebar } from '@/components/AIPlatformSidebar';

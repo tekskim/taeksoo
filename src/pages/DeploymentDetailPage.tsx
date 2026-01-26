@@ -33,7 +33,6 @@ import {
   IconSearch,
   IconDownload,
   IconDotsCircleHorizontal,
-  IconCheck,
   IconChevronDown,
   IconInfoCircle,
   IconTrash,

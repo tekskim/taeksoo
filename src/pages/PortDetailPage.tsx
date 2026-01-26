@@ -13,7 +13,6 @@ import {
   TabPanel,
   DetailHeader,
   SectionCard,
-  StatusIndicator,
   Table,
   SearchInput,
   Pagination,
@@ -30,11 +29,8 @@ import {
   IconChevronDown,
   IconExternalLink,
   IconCopy,
-  IconPlug,
-  IconLink,
   IconDotsCircleHorizontal,
   IconCirclePlus,
-  IconSettings,
   IconAlertCircle,
 } from '@tabler/icons-react';
 

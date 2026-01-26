@@ -42,7 +42,6 @@ import {
   IconPlus,
   IconAlertCircle,
   IconTrash,
-  IconMinus,
 } from '@tabler/icons-react';
 
 /* ----------------------------------------

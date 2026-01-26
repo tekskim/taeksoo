@@ -1,4 +1,4 @@
-import { type ReactNode, type HTMLAttributes, useState, useEffect } from 'react';
+import { type HTMLAttributes, useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { twMerge } from 'tailwind-merge';
 import { IconX, IconChevronRight, IconChevronDown, IconTarget, IconLoader2, IconAlertTriangle, IconCheck } from '@tabler/icons-react';
@@ -127,8 +127,7 @@ export function FloatingCard({
   style,
   ...props
 }: FloatingCardProps) {
-  if (!isOpen) return null;
-
+  // All hooks must be called before any early returns
   const [expandedSections, setExpandedSections] = useState<Record<number, boolean>>(() => {
     const initialState: Record<number, boolean> = {};
     sections.forEach((section, index) => {
@@ -145,6 +144,9 @@ export function FloatingCard({
     });
     setExpandedSections(newState);
   }, [sections]);
+
+  // Early return after all hooks
+  if (!isOpen) return null;
 
   const toggleSection = (index: number) => {
     setExpandedSections(prev => ({

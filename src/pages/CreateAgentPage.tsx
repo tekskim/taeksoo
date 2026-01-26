@@ -14,9 +14,7 @@ import {
   Tabs,
   TabList,
   Tab,
-  Tooltip,
   FloatingCard,
-  Disclosure,
   Chip,
   SearchInput,
   Pagination,
@@ -31,7 +29,6 @@ import {
 import {
   IconBell,
   IconPalette,
-  IconX,
 } from '@tabler/icons-react';
 import { useNavigate } from 'react-router-dom';
 

@@ -4,10 +4,6 @@ import { ChatbotPanel } from '@/components/ChatbotPanel';
 import { 
   IconLayoutDashboard,
   IconCheck,
-  IconPower,
-  IconX,
-  IconWindow,
-  IconWindowMinimize,
 } from '@tabler/icons-react';
 import { Icons, ContextMenu, Modal, Button, NotificationCenter, WindowControls, Tooltip, IconWindowActive, IconWindowMinimized } from '@/design-system';
 import { motion, Reorder } from 'framer-motion';
@@ -31,16 +27,8 @@ import imgSettings from '@/assets/desktop/settings.png';
 import imgStorageAdmin from '@/assets/desktop/storage_admin.png';
 import imgComputeAdmin from '@/assets/desktop/compute_admin.png';
 import imgCloud from '@/assets/desktop/cloud.png';
-import imgChatbot from '@/assets/desktop/chatbot.png';
-import imgSymbol from '@/assets/desktop/symbol.svg';
 
 // App Icons for Dock (32x32)
-import appIconCompute from '@/assets/appIcon/compute.png';
-import appIconStorage from '@/assets/appIcon/storage.png';
-import appIconContainer from '@/assets/appIcon/container.png';
-import appIconAgentops from '@/assets/appIcon/agentops.png';
-import appIconAiplatform from '@/assets/appIcon/aiplatform.png';
-import appIconIam from '@/assets/appIcon/iam.png';
 import appIconAIChat from '@/assets/appIcon/AI Chat.png';
 
 /* ----------------------------------------

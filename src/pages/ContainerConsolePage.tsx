@@ -3,7 +3,6 @@ import { useParams, useSearchParams, useNavigate } from 'react-router-dom';
 import {
   IconTerminal2,
   IconCircleFilled,
-  IconChevronDown,
 } from '@tabler/icons-react';
 import { Select, Button, TabBar, TopBar, Breadcrumb } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';

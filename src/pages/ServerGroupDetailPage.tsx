@@ -18,7 +18,6 @@ import {
   Pagination,
   StatusIndicator,
   ContextMenu,
-  Checkbox,
   type TableColumn,
   type ContextMenuItem,
 } from '@/design-system';
