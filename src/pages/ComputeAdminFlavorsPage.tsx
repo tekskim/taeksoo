@@ -404,6 +404,9 @@ export function ComputeAdminFlavorsPage() {
               data={filteredFlavors.slice((currentPage - 1) * rowsPerPage, currentPage * rowsPerPage)}
               rowKey="id"
               emptyMessage="No flavors found"
+              selectable
+              selectedKeys={selectedFlavors}
+              onSelectionChange={setSelectedFlavors}
             />
           </VStack>
         </div>
