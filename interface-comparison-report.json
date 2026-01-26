@@ -1,0 +1,444 @@
+{
+  "generatedAt": "2026-01-26T08:20:00.159Z",
+  "summary": {
+    "identical": [],
+    "needsWork": [
+      "Badge",
+      "Button",
+      "Checkbox",
+      "InlineMessage",
+      "Input",
+      "Pagination",
+      "ProgressBar",
+      "StatusIndicator",
+      "Table",
+      "Tabs",
+      "Toggle",
+      "Tooltip"
+    ],
+    "onlyInSSOT": [
+      "Drawer",
+      "Modal",
+      "Select"
+    ],
+    "onlyInProd": [
+      "ActionModal",
+      "Dropdown"
+    ]
+  },
+  "details": [
+    {
+      "component": "Badge",
+      "diff": {
+        "onlyInSSOT": [
+          {
+            "name": "dot",
+            "value": "boolean"
+          },
+          {
+            "name": "icon",
+            "value": "ReactNode"
+          }
+        ],
+        "onlyInProd": [],
+        "different": [
+          {
+            "name": "variant",
+            "ssot": [
+              "info",
+              "success",
+              "warning",
+              "danger",
+              "default"
+            ],
+            "prod": [
+              "primary",
+              "secondary",
+              "success",
+              "warning",
+              "danger",
+              "info"
+            ],
+            "onlyInSSOT": [
+              "default"
+            ],
+            "onlyInProd": [
+              "primary",
+              "secondary"
+            ]
+          }
+        ],
+        "same": [
+          "size"
+        ]
+      }
+    },
+    {
+      "component": "Button",
+      "diff": {
+        "onlyInSSOT": [
+          {
+            "name": "iconOnly",
+            "value": "boolean"
+          },
+          {
+            "name": "icon",
+            "value": "ReactNode"
+          },
+          {
+            "name": "as",
+            "value": "ElementType"
+          }
+        ],
+        "onlyInProd": [
+          {
+            "name": "appearance",
+            "value": [
+              "solid",
+              "outline",
+              "text"
+            ]
+          }
+        ],
+        "different": [
+          {
+            "name": "variant",
+            "ssot": [
+              "primary",
+              "secondary",
+              "outline",
+              "ghost",
+              "muted",
+              "danger",
+              "warning",
+              "link"
+            ],
+            "prod": [
+              "primary",
+              "secondary",
+              "outline",
+              "ghost",
+              "danger",
+              "link"
+            ],
+            "onlyInSSOT": [
+              "muted",
+              "warning"
+            ],
+            "onlyInProd": []
+          }
+        ],
+        "same": [
+          "size",
+          "fullWidth",
+          "isLoading",
+          "leftIcon",
+          "rightIcon"
+        ]
+      }
+    },
+    {
+      "component": "Checkbox",
+      "diff": {
+        "onlyInSSOT": [
+          {
+            "name": "error",
+            "value": "boolean"
+          },
+          {
+            "name": "description",
+            "value": "string"
+          }
+        ],
+        "onlyInProd": [],
+        "different": [
+          {
+            "name": "label",
+            "ssot": "ReactNode",
+            "prod": "string"
+          }
+        ],
+        "same": [
+          "checked",
+          "disabled"
+        ]
+      }
+    },
+    {
+      "component": "InlineMessage",
+      "diff": {
+        "onlyInSSOT": [
+          {
+            "name": "title",
+            "value": "string"
+          }
+        ],
+        "onlyInProd": [],
+        "different": [],
+        "same": [
+          "variant",
+          "closable"
+        ]
+      }
+    },
+    {
+      "component": "Input",
+      "diff": {
+        "onlyInSSOT": [
+          {
+            "name": "leftIcon",
+            "value": "ReactNode"
+          },
+          {
+            "name": "rightIcon",
+            "value": "ReactNode"
+          }
+        ],
+        "onlyInProd": [],
+        "different": [],
+        "same": [
+          "size",
+          "error",
+          "fullWidth"
+        ]
+      }
+    },
+    {
+      "component": "Pagination",
+      "diff": {
+        "onlyInSSOT": [
+          {
+            "name": "currentPage",
+            "value": "number"
+          },
+          {
+            "name": "totalPages",
+            "value": "number"
+          },
+          {
+            "name": "onPageChange",
+            "value": "function"
+          },
+          {
+            "name": "showPageSize",
+            "value": "boolean"
+          }
+        ],
+        "onlyInProd": [
+          {
+            "name": "current",
+            "value": "number"
+          },
+          {
+            "name": "total",
+            "value": "number"
+          },
+          {
+            "name": "onChange",
+            "value": "function"
+          }
+        ],
+        "different": [],
+        "same": [
+          "pageSize",
+          "onPageSizeChange"
+        ]
+      }
+    },
+    {
+      "component": "ProgressBar",
+      "diff": {
+        "onlyInSSOT": [
+          {
+            "name": "variant",
+            "value": [
+              "default",
+              "success",
+              "warning",
+              "danger"
+            ]
+          },
+          {
+            "name": "size",
+            "value": [
+              "sm",
+              "md",
+              "lg"
+            ]
+          },
+          {
+            "name": "showLabel",
+            "value": "boolean"
+          }
+        ],
+        "onlyInProd": [
+          {
+            "name": "color",
+            "value": "string"
+          }
+        ],
+        "different": [],
+        "same": [
+          "value",
+          "max"
+        ]
+      }
+    },
+    {
+      "component": "StatusIndicator",
+      "diff": {
+        "onlyInSSOT": [
+          {
+            "name": "iconOnly",
+            "value": "boolean"
+          }
+        ],
+        "onlyInProd": [],
+        "different": [
+          {
+            "name": "status",
+            "ssot": [
+              "active",
+              "error",
+              "muted",
+              "building"
+            ],
+            "prod": [
+              "active",
+              "inactive",
+              "warning",
+              "error",
+              "pending"
+            ],
+            "onlyInSSOT": [
+              "muted",
+              "building"
+            ],
+            "onlyInProd": [
+              "inactive",
+              "warning",
+              "pending"
+            ]
+          }
+        ],
+        "same": [
+          "label"
+        ]
+      }
+    },
+    {
+      "component": "Table",
+      "diff": {
+        "onlyInSSOT": [
+          {
+            "name": "emptyMessage",
+            "value": "string"
+          }
+        ],
+        "onlyInProd": [
+          {
+            "name": "ellipsis",
+            "value": "boolean"
+          }
+        ],
+        "different": [],
+        "same": [
+          "columns",
+          "data",
+          "selectable",
+          "sortable",
+          "onRowClick"
+        ]
+      }
+    },
+    {
+      "component": "Tabs",
+      "diff": {
+        "onlyInSSOT": [
+          {
+            "name": "variant",
+            "value": [
+              "underline",
+              "boxed"
+            ]
+          }
+        ],
+        "onlyInProd": [],
+        "different": [],
+        "same": [
+          "value",
+          "onChange"
+        ]
+      }
+    },
+    {
+      "component": "Toggle",
+      "diff": {
+        "onlyInSSOT": [
+          {
+            "name": "label",
+            "value": "string"
+          }
+        ],
+        "onlyInProd": [],
+        "different": [
+          {
+            "name": "size",
+            "ssot": [
+              "sm",
+              "md"
+            ],
+            "prod": [
+              "sm",
+              "md",
+              "lg"
+            ],
+            "onlyInSSOT": [],
+            "onlyInProd": [
+              "lg"
+            ]
+          }
+        ],
+        "same": [
+          "checked",
+          "disabled"
+        ]
+      }
+    },
+    {
+      "component": "Tooltip",
+      "diff": {
+        "onlyInSSOT": [
+          {
+            "name": "position",
+            "value": [
+              "top",
+              "bottom",
+              "left",
+              "right"
+            ]
+          },
+          {
+            "name": "delay",
+            "value": "number"
+          }
+        ],
+        "onlyInProd": [
+          {
+            "name": "placement",
+            "value": [
+              "top",
+              "bottom",
+              "left",
+              "right"
+            ]
+          }
+        ],
+        "different": [],
+        "same": [
+          "content"
+        ]
+      }
+    }
+  ]
+}
