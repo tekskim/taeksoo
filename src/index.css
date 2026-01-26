@@ -1797,7 +1797,7 @@ input[type="search"]::-webkit-search-decoration {
 
 .timeSegmentActive {
   color: var(--color-action-primary);
-  background: var(--color-state-info-bg);
+  background: transparent;
   font-weight: 500;
   box-shadow: 0 0 0 1px var(--color-action-primary);
   border-radius: 6px;
@@ -2404,14 +2404,14 @@ input[type="search"]::-webkit-search-decoration {
   border: 1px solid #e2e8f0;
   border-radius: 6px;
   cursor: pointer;
-  color: #64748b;
+  color: var(--color-text-default);
   transition: all 0.15s ease;
 }
 
 .dark .refreshButton {
   background: var(--color-surface-default);
   border-color: var(--color-border-default);
-  color: var(--color-text-muted);
+  color: var(--color-text-default);
 }
 
 .refreshButton:hover {
@@ -2470,7 +2470,7 @@ input[type="search"]::-webkit-search-decoration {
 
 .monitoring-toolbar-segment-active {
   color: var(--color-action-primary);
-  background: var(--color-state-info-bg);
+  background: transparent;
   font-weight: 500;
   box-shadow: 0 0 0 1px var(--color-action-primary);
   border-radius: 6px;
@@ -2684,7 +2684,7 @@ input[type="search"]::-webkit-search-decoration {
   border: 1px solid var(--color-border-default);
   border-radius: 8px;
   cursor: pointer;
-  color: var(--color-text-muted);
+  color: var(--color-text-default);
   transition: all 0.15s ease;
 }
 
