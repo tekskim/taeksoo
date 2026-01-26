@@ -1,0 +1,29 @@
+/* Legacy variable name compatibility layer */
+/* Maps old variable names to new semantic token names */
+:root, [data-theme="light"], [data-theme="dark"] {
+  --color-text-default: var(--semantic-color-text);
+  --color-text-muted: var(--semantic-color-text-muted);
+  --color-text-subtle: var(--semantic-color-text-subtle);
+  --color-text-disabled: var(--semantic-color-text-disabled);
+  --color-text-inverse: var(--semantic-color-text-inverse);
+  --color-text-on-primary: var(--semantic-color-text-on-primary);
+  --color-action-primary: var(--semantic-color-primary);
+  --color-action-primary-hover: var(--semantic-color-primary-hover);
+  --color-action-primary-focus: var(--semantic-color-primary-focus);
+  --color-surface-default: var(--semantic-color-surface);
+  --color-surface-subtle: var(--semantic-color-surface-muted);
+  --color-surface-muted: var(--semantic-color-surface-hover);
+  --color-surface-inverse: var(--semantic-color-surface-tertiary);
+  --color-border-default: var(--semantic-color-border);
+  --color-border-subtle: var(--semantic-color-border-subtle);
+  --color-border-strong: var(--semantic-color-border-strong);
+  --color-border-focus: var(--semantic-color-border-focus);
+  --color-state-info: var(--semantic-color-state-info);
+  --color-state-info-bg: var(--semantic-color-state-info-bg);
+  --color-state-success: var(--semantic-color-state-success);
+  --color-state-success-bg: var(--semantic-color-state-success-bg);
+  --color-state-warning: var(--semantic-color-state-warning);
+  --color-state-warning-bg: var(--semantic-color-state-warning-bg);
+  --color-state-danger: var(--semantic-color-state-danger);
+  --color-state-danger-bg: var(--semantic-color-state-danger-bg);
+}

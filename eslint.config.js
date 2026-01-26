@@ -8,9 +8,10 @@ import reactRefresh from 'eslint-plugin-react-refresh'
 import tseslint from 'typescript-eslint'
 import unusedImports from 'eslint-plugin-unused-imports'
 import { defineConfig, globalIgnores } from 'eslint/config'
+import prettierConfig from 'eslint-config-prettier'
 
 export default defineConfig([
-  globalIgnores(['dist']),
+  globalIgnores(['dist', 'docs', 'storybook-static', 'coverage']),
   {
     files: ['**/*.{ts,tsx}'],
     ignores: ['**/*.stories.{ts,tsx}'],
@@ -18,6 +19,7 @@ export default defineConfig([
       js.configs.recommended,
       tseslint.configs.recommended,
       reactRefresh.configs.vite,
+      prettierConfig, // Prettier와 충돌하는 ESLint 규칙 비활성화
     ],
     plugins: {
       'unused-imports': unusedImports,
@@ -49,6 +51,7 @@ export default defineConfig([
     extends: [
       js.configs.recommended,
       tseslint.configs.recommended,
+      prettierConfig,
     ],
     plugins: {
       'unused-imports': unusedImports,
