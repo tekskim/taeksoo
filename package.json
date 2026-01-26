@@ -43,7 +43,7 @@
   "scripts": {
     "prepare": "husky",
     "tokens": "node scripts/build-tokens.js",
-    "dev": "rspack serve",
+    "dev": "rspack serve --mode development",
     "dev:vite": "vite",
     "build": "pnpm run tokens && rspack build",
     "build:vite": "pnpm run tokens && vite build",
