@@ -88,6 +88,12 @@ export default defineConfig({
     }),
     new rspack.DefinePlugin({
       'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'development'),
+      'import.meta.env': JSON.stringify({
+        BASE_URL: isDev ? '/' : '/tds_ssot/',
+        DEV: isDev,
+        PROD: !isDev,
+        MODE: process.env.NODE_ENV || 'development',
+      }),
     }),
     isDev && new RefreshPlugin(),
   ].filter(Boolean),
