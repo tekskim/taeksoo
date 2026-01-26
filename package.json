@@ -61,7 +61,7 @@
     "audit:check": "pnpm audit --audit-level=moderate",
     "audit:fix": "pnpm audit --fix",
     "predeploy": "pnpm run build && pnpm run build-storybook && cp -r storybook-static docs/storybook && touch docs/.nojekyll",
-    "deploy": "gh-pages -d docs",
+    "deploy": "gh-pages -d docs -t",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
     "prepublishOnly": "pnpm run build:lib && pnpm run test:run"
