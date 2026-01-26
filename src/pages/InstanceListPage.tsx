@@ -37,6 +37,7 @@ import {
   IconDownload,
   IconLock,
   IconTerminal2,
+  IconExternalLink,
 } from '@tabler/icons-react';
 import { ViewPreferencesDrawer, type ColumnConfig } from '@/components/ViewPreferencesDrawer';
 import { CreateInstanceSnapshotDrawer, type InstanceInfo } from '@/components/CreateInstanceSnapshotDrawer';
@@ -502,15 +503,18 @@ export function InstanceListPage() {
       minWidth: '140px',
       sortable: true,
       render: (_, row) => (
-        <div className="flex flex-col gap-0.5 whitespace-nowrap">
-          <Link 
-            to={`/compute/instances/${row.id}`}
-            className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
-            onClick={(e) => e.stopPropagation()}
-          >
-            {row.name}
-          </Link>
-          <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
+        <div className="flex flex-col gap-0.5 min-w-0">
+          <div className="flex items-center gap-1 flex-nowrap">
+            <Link 
+              to={`/compute/instances/${row.id}`}
+              className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2 truncate"
+              onClick={(e) => e.stopPropagation()}
+            >
+              {row.name}
+            </Link>
+            <IconExternalLink size={12} className="flex-shrink-0 text-[var(--color-action-primary)]" />
+          </div>
+          <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] truncate">
             ID : {row.id}
           </span>
         </div>

@@ -231,16 +231,18 @@ export function FlavorDetailPage() {
       label: 'Name',
       flex: 1,
       render: (_, row) => (
-        <div className="flex flex-col gap-0.5">
-          <Link
-            to={`/compute/instances/${row.id}`}
-            className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
-            onClick={(e) => e.stopPropagation()}
-          >
-            {row.name}
-            <IconExternalLink size={12} stroke={1.5} />
-          </Link>
-          <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
+        <div className="flex flex-col gap-0.5 min-w-0">
+          <div className="flex items-center gap-1">
+            <Link
+              to={`/compute/instances/${row.id}`}
+              className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2 truncate"
+              onClick={(e) => e.stopPropagation()}
+            >
+              {row.name}
+            </Link>
+            <IconExternalLink size={12} className="flex-shrink-0 text-[var(--color-action-primary)]" />
+          </div>
+          <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] truncate">
             ID : {row.id}
           </span>
         </div>
