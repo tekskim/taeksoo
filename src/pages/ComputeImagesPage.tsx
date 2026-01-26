@@ -25,6 +25,8 @@ import {
 import { Sidebar } from '@/components/Sidebar';
 import { useTabs } from '@/contexts/TabContext';
 import { ViewPreferencesDrawer, type ColumnConfig } from '@/components/ViewPreferencesDrawer';
+import { CreateVolumeFromImageDrawer } from '@/components/CreateVolumeFromImageDrawer';
+import { EditImageDrawer } from '@/components/EditImageDrawer';
 import {
   IconDotsCircleHorizontal,
   IconTrash,
@@ -111,6 +113,28 @@ export function ComputeImagesPage() {
   // View Preferences state
   const [isPreferencesOpen, setIsPreferencesOpen] = useState(false);
   const [rowsPerPage, setRowsPerPage] = useState(10);
+
+  // Drawer states
+  const [createVolumeOpen, setCreateVolumeOpen] = useState(false);
+  const [editImageOpen, setEditImageOpen] = useState(false);
+  const [selectedImageForDrawer, setSelectedImageForDrawer] = useState<Image | null>(null);
+
+  // Helper to parse size string to number
+  const parseSizeToNumber = (size: string): number => {
+    const match = size.match(/(\d+)/);
+    return match ? parseInt(match[1], 10) : 0;
+  };
+
+  // Drawer handlers
+  const handleCreateVolume = (image: Image) => {
+    setSelectedImageForDrawer(image);
+    setCreateVolumeOpen(true);
+  };
+
+  const handleEditImage = (image: Image) => {
+    setSelectedImageForDrawer(image);
+    setEditImageOpen(true);
+  };
 
   // Default column config (matching Figma: Selection, Status, Name, OS, Size, Access, Created at, Action)
   const defaultColumnConfig: ColumnConfig[] = [
@@ -285,12 +309,12 @@ export function ComputeImagesPage() {
           {
             id: 'create-volume',
             label: 'Create volume',
-            onClick: () => console.log('Create volume from image:', row.id),
+            onClick: () => handleCreateVolume(row),
           },
           {
             id: 'edit',
             label: 'Edit',
-            onClick: () => console.log('Edit image:', row.id),
+            onClick: () => handleEditImage(row),
           },
           {
             id: 'delete',
@@ -480,6 +504,26 @@ export function ComputeImagesPage() {
         columns={columnConfig}
         defaultColumns={defaultColumnConfig}
         onColumnsChange={setColumnConfig}
+      />
+
+      {/* Image Drawers */}
+      <CreateVolumeFromImageDrawer
+        isOpen={createVolumeOpen}
+        onClose={() => setCreateVolumeOpen(false)}
+        image={selectedImageForDrawer ? {
+          id: selectedImageForDrawer.id,
+          name: selectedImageForDrawer.name,
+          size: parseSizeToNumber(selectedImageForDrawer.size),
+        } : null}
+      />
+
+      <EditImageDrawer
+        isOpen={editImageOpen}
+        onClose={() => setEditImageOpen(false)}
+        image={selectedImageForDrawer ? {
+          id: selectedImageForDrawer.id,
+          name: selectedImageForDrawer.name,
+        } : null}
       />
     </div>
   );

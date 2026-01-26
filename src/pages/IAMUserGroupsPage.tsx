@@ -15,6 +15,9 @@ import {
 } from '@/design-system';
 import { IAMSidebar } from '@/components/IAMSidebar';
 import { useTabs } from '@/contexts/TabContext';
+import { ManageRolesDrawer } from '@/components/ManageRolesDrawer';
+import { ManageUsersDrawer } from '@/components/ManageUsersDrawer';
+import { EditUserGroupDrawer } from '@/components/EditUserGroupDrawer';
 import {
   IconDownload,
   IconTrash,
@@ -95,24 +98,47 @@ export function IAMUserGroupsPage() {
   // Selection state
   const hasSelection = selectedRows.length > 0;
 
+  // Drawer states
+  const [manageRolesOpen, setManageRolesOpen] = useState(false);
+  const [manageUsersOpen, setManageUsersOpen] = useState(false);
+  const [editGroupOpen, setEditGroupOpen] = useState(false);
+  const [selectedGroupForDrawer, setSelectedGroupForDrawer] = useState<UserGroup | null>(null);
+
+  // Drawer handlers
+  const handleManageRoles = (group: UserGroup) => {
+    setSelectedGroupForDrawer(group);
+    setManageRolesOpen(true);
+  };
+
+  const handleManageUsers = (group: UserGroup) => {
+    setSelectedGroupForDrawer(group);
+    setManageUsersOpen(true);
+  };
+
+  const handleEditGroup = (group: UserGroup) => {
+    setSelectedGroupForDrawer(group);
+    setEditGroupOpen(true);
+  };
+
   // Context menu items factory
-  const getContextMenuItems = (rowId: string, isInactive: boolean): ContextMenuItem[] => {
+  const getContextMenuItems = (row: UserGroup): ContextMenuItem[] => {
+    const isInactive = row.status === 'inactive';
     if (isInactive) {
       // Inactive group: Manage roles, Edit, Delete disabled; Duplicate not shown
       return [
-        { id: 'manage-roles', label: 'Manage roles', disabled: true, onClick: () => console.log('Manage roles', rowId) },
-        { id: 'manage-users', label: 'Manage users', onClick: () => console.log('Manage users', rowId) },
-        { id: 'edit', label: 'Edit', disabled: true, onClick: () => console.log('Edit', rowId) },
-        { id: 'delete', label: 'Delete', disabled: true, onClick: () => console.log('Delete', rowId) },
+        { id: 'manage-roles', label: 'Manage roles', disabled: true, onClick: () => handleManageRoles(row) },
+        { id: 'manage-users', label: 'Manage users', onClick: () => handleManageUsers(row) },
+        { id: 'edit', label: 'Edit', disabled: true, onClick: () => handleEditGroup(row) },
+        { id: 'delete', label: 'Delete', disabled: true, onClick: () => console.log('Delete', row.id) },
       ];
     }
     // Active group: all items enabled
     return [
-      { id: 'manage-roles', label: 'Manage roles', onClick: () => console.log('Manage roles', rowId) },
-      { id: 'manage-users', label: 'Manage users', onClick: () => console.log('Manage users', rowId) },
-      { id: 'duplicate', label: 'Duplicate', onClick: () => console.log('Duplicate', rowId) },
-      { id: 'edit', label: 'Edit', onClick: () => console.log('Edit', rowId) },
-      { id: 'delete', label: 'Delete', status: 'danger', onClick: () => console.log('Delete', rowId) },
+      { id: 'manage-roles', label: 'Manage roles', onClick: () => handleManageRoles(row) },
+      { id: 'manage-users', label: 'Manage users', onClick: () => handleManageUsers(row) },
+      { id: 'duplicate', label: 'Duplicate', onClick: () => console.log('Duplicate', row.id) },
+      { id: 'edit', label: 'Edit', onClick: () => handleEditGroup(row) },
+      { id: 'delete', label: 'Delete', status: 'danger', onClick: () => console.log('Delete', row.id) },
     ];
   };
 
@@ -167,7 +193,7 @@ export function IAMUserGroupsPage() {
       width: 72,
       align: 'center',
       render: (_value, row) => (
-        <ContextMenu items={getContextMenuItems(row.id, row.status === 'inactive')} trigger="click">
+        <ContextMenu items={getContextMenuItems(row)} trigger="click">
           <button
             type="button"
             className="flex items-center justify-center w-7 h-7 rounded-md bg-transparent hover:bg-[var(--color-surface-muted)] active:bg-[var(--color-border-subtle)] transition-colors cursor-pointer"
@@ -283,6 +309,28 @@ export function IAMUserGroupsPage() {
           </div>
         </div>
       </main>
+
+      {/* User Group Drawers */}
+      <ManageRolesDrawer
+        isOpen={manageRolesOpen}
+        onClose={() => setManageRolesOpen(false)}
+        userName={selectedGroupForDrawer?.name}
+      />
+
+      <ManageUsersDrawer
+        isOpen={manageUsersOpen}
+        onClose={() => setManageUsersOpen(false)}
+        userGroupName={selectedGroupForDrawer?.name}
+      />
+
+      <EditUserGroupDrawer
+        isOpen={editGroupOpen}
+        onClose={() => setEditGroupOpen(false)}
+        initialData={selectedGroupForDrawer ? {
+          name: selectedGroupForDrawer.name,
+          description: selectedGroupForDrawer.description,
+        } : undefined}
+      />
     </div>
   );
 }
