@@ -29,6 +29,7 @@ import { InstanceSnapshotDetailPage } from '@/pages/InstanceSnapshotDetailPage';
 import { ComputeAdminInstanceSnapshotDetailPage } from '@/pages/ComputeAdminInstanceSnapshotDetailPage';
 import { ComputeAdminImagesPage } from '@/pages/ComputeAdminImagesPage';
 import { ComputeAdminImageDetailPage } from '@/pages/ComputeAdminImageDetailPage';
+import { ComputeAdminCreateImagePage } from '@/pages/ComputeAdminCreateImagePage';
 import { ImagesPage } from '@/pages/ImagesPage';
 import { ComputeImagesPage } from '@/pages/ComputeImagesPage';
 import { ImageDetailPage } from '@/pages/ImageDetailPage';
@@ -367,7 +368,7 @@ function AppRoutes() {
         <Route path="/compute-admin/instance-snapshots" element={<ComputeAdminInstanceSnapshotsPage />} />
         <Route path="/compute-admin/instance-snapshots/:id" element={<ComputeAdminInstanceSnapshotDetailPage />} />
         <Route path="/compute-admin/images" element={<ComputeAdminImagesPage />} />
-        <Route path="/compute-admin/images/create" element={<CreateImagePage />} />
+        <Route path="/compute-admin/images/create" element={<ComputeAdminCreateImagePage />} />
         <Route path="/compute-admin/images/:id" element={<ComputeAdminImageDetailPage />} />
         <Route path="/compute-admin/flavors" element={<FlavorsPage />} />
         <Route path="/compute-admin/flavors/:id" element={<FlavorDetailPage />} />
