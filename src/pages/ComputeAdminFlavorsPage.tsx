@@ -82,7 +82,6 @@ const mockFlavors: Flavor[] = [
 // Filter fields configuration
 const filterFields: FilterField[] = [
   { key: 'name', label: 'Name', type: 'text' },
-  { key: 'category', label: 'Category', type: 'text' },
   { key: 'access', label: 'Access', type: 'select', options: [
     { value: 'Public', label: 'Public' },
     { value: 'Private', label: 'Private' },
@@ -105,7 +104,6 @@ export function ComputeAdminFlavorsPage() {
   // Default column config
   const defaultColumnConfig: ColumnConfig[] = [
     { id: 'name', label: 'Name', visible: true, locked: true },
-    { id: 'category', label: 'Category', visible: true },
     { id: 'vcpu', label: 'vCPU', visible: true },
     { id: 'ram', label: 'RAM', visible: true },
     { id: 'ephemeralDisk', label: 'Ephemeral disk', visible: true },
@@ -176,12 +174,6 @@ export function ComputeAdminFlavorsPage() {
           {row.name}
         </Link>
       ),
-    },
-    {
-      key: 'category',
-      label: 'Category',
-      flex: 1,
-      sortable: true,
     },
     {
       key: 'vcpu',
