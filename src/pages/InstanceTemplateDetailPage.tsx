@@ -527,23 +527,23 @@ export function InstanceTemplateDetailPage() {
 
         {/* Scrollable Content Area */}
         <div className="flex-1 overflow-auto overscroll-contain sidebar-scroll">
-          <div className="pt-4 px-8 pb-20 bg-[var(--color-surface-default)] min-h-full">
-            {/* Page Title with ID - Outside two-column layout */}
-            <div className="max-w-[1320px] mx-auto mb-4">
-              <HStack gap={1} align="center">
-                <h1 className="text-[length:var(--font-size-18)] font-semibold leading-[var(--line-height-28)] text-[var(--color-text-default)]">
-                  Edit template
-                </h1>
-                <span className="text-[length:var(--font-size-14)] font-medium leading-[var(--line-height-20)] text-[var(--color-text-subtle)]">
-                  (ID: {formData.id})
-                </span>
-              </HStack>
-            </div>
+          <div className="pt-4 px-8 pb-6 bg-[var(--color-surface-default)] min-h-full">
+            <VStack gap={3} className="min-w-[1176px]">
+              {/* Page Title with ID */}
+              <div className="flex items-center h-8">
+                <HStack gap={1} align="center">
+                  <h1 className="text-[length:var(--font-size-16)] font-semibold leading-6 text-[var(--color-text-default)]">
+                    Edit template
+                  </h1>
+                  <span className="text-[length:var(--font-size-14)] font-medium leading-[var(--line-height-20)] text-[var(--color-text-subtle)]">
+                    (ID: {formData.id})
+                  </span>
+                </HStack>
+              </div>
 
-            <div className="flex gap-6 max-w-[1320px] mx-auto items-start">
-              {/* Left Column - Main Content */}
-              <div className="flex-1 min-w-0">
-                <VStack gap={4} align="stretch">
+              <HStack gap={6} align="start" className="w-full">
+                {/* Left Column - Main Content */}
+                <VStack gap={4} className="flex-1">
                   {/* Template Information */}
                   {editingSection === 'template-info' ? (
                     <ActiveSection 
@@ -815,16 +815,16 @@ export function InstanceTemplateDetailPage() {
                     </DoneSection>
                   )}
                 </VStack>
-              </div>
 
-              {/* Right Column - Summary Sidebar */}
-              <SummarySidebar 
-                sectionStatus={sectionStatus}
-                onCancel={handleCancel}
-                onSave={handleSave}
-                onDelete={handleDelete}
-              />
-            </div>
+                {/* Right Column - Summary Sidebar */}
+                <SummarySidebar 
+                  sectionStatus={sectionStatus}
+                  onCancel={handleCancel}
+                  onSave={handleSave}
+                  onDelete={handleDelete}
+                />
+              </HStack>
+            </VStack>
           </div>
         </div>
       </main>

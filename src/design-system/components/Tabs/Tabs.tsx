@@ -115,13 +115,17 @@ export function TabList({ children, className = '' }: TabListProps) {
   const { variant } = useTabsContext();
 
   const variantStyles = {
-    underline: 'relative after:absolute after:bottom-0 after:left-0 after:right-0 after:h-px after:bg-[var(--color-border-default)] after:pointer-events-none after:z-10',
+    underline: 'flex gap-[var(--tabs-gap)] relative after:absolute after:bottom-0 after:left-0 after:right-0 after:h-px after:bg-[var(--color-border-default)] after:pointer-events-none after:z-10',
     boxed: [
       'inline-flex',
-      'p-[var(--tabs-boxed-padding)]',
-      'bg-[var(--tabs-boxed-bg)]',
-      'border border-[var(--tabs-boxed-border)]',
-      'rounded-[var(--tabs-boxed-radius)]',
+      'items-center',
+      'gap-1',
+      'p-1',
+      'h-10',
+      'bg-[var(--color-surface-subtle)]',
+      'border border-[var(--color-border-subtle)]',
+      'rounded-lg',
+      'w-fit',
     ].join(' '),
   };
 
@@ -129,7 +133,6 @@ export function TabList({ children, className = '' }: TabListProps) {
     <div
       role="tablist"
       className={twMerge(
-        'flex gap-[var(--tabs-gap)]',
         variantStyles[variant],
         className
       )}
@@ -207,15 +210,15 @@ export function Tab({ value, children, disabled = false, className = '' }: TabPr
       disabled={disabled}
       onClick={() => !disabled && setActiveTab(value)}
       className={twMerge(
-        'flex-1',
-        'px-[var(--tabs-boxed-item-padding-x)] py-[var(--tabs-boxed-item-padding-y)]',
+        'flex items-center justify-center',
+        'min-w-[80px] px-3 h-8',
         'font-medium text-center whitespace-nowrap',
-        'rounded-[var(--tabs-boxed-item-radius)]',
-        'cursor-pointer transition-all duration-[var(--duration-fast)]',
+        'rounded-md',
+        'cursor-pointer transition-colors duration-[var(--duration-fast)]',
         sizeStyles[size],
         isActive
-          ? 'bg-[var(--tabs-boxed-active-bg)] text-[var(--tabs-active-color)]'
-          : 'bg-transparent text-[var(--tabs-inactive-color)] hover:text-[var(--tabs-hover-color)]',
+          ? 'bg-[var(--color-surface-default)] text-[var(--color-action-primary)]'
+          : 'bg-transparent text-[var(--color-text-default)] hover:bg-[var(--color-surface-default)]',
         disabled && 'cursor-not-allowed opacity-50',
         className
       )}
