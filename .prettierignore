@@ -1,0 +1,18 @@
+# Build outputs
+dist/
+docs/
+build/
+
+# Dependencies
+node_modules/
+pnpm-lock.yaml
+
+# Generated files
+*.min.js
+*.min.css
+src/styles/tokens/
+
+# Other
+.git/
+coverage/
+storybook-static/
