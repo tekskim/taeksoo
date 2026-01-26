@@ -6,23 +6,24 @@ import {
   IconCamera,
   IconDisc,
   IconCpu,
-  IconKey,
-  IconServer,
   IconDatabase,
   IconDatabaseExport,
   IconNetwork,
   IconWorldWww,
   IconShieldLock,
   IconLoadBalancer,
-  IconCertificate,
-  IconTopologyStar3,
   IconArrowLeft,
+  IconServer,
+  IconServerBolt,
+  IconLayoutGrid,
+  IconUsersGroup,
+  IconFileCode,
+  IconActivity,
+  IconServer2,
 } from '@tabler/icons-react';
 import { ChevronsLeftRightEllipsis } from 'lucide-react';
 import { useLocation, Link } from 'react-router-dom';
-import { useProject } from '@/contexts/ProjectContext';
 import RouterIcon from '@/assets/Router.svg';
-import { ProjectSelector } from './ProjectSelector';
 import { AppSwitcher } from './AppSwitcher';
 
 /* ----------------------------------------
@@ -35,7 +36,6 @@ interface ComputeAdminSidebarProps {
 }
 
 export function ComputeAdminSidebar({ isOpen = true, onToggle }: ComputeAdminSidebarProps) {
-  const { projects, selectedProjectId, setSelectedProjectId } = useProject();
   const location = useLocation();
   
   // Check if current path matches href
@@ -69,16 +69,6 @@ export function ComputeAdminSidebar({ isOpen = true, onToggle }: ComputeAdminSid
     <aside className="w-[200px] h-screen bg-[var(--color-surface-default)] border-r border-[var(--color-border-default)] flex flex-col fixed left-0 top-0">
       {/* App Switcher with Toggle */}
       <AppSwitcher onToggleSidebar={onToggle} />
-
-      {/* Project Selector */}
-      <div className="px-3 py-2">
-        <ProjectSelector
-          projects={projects}
-          selectedProjectId={selectedProjectId}
-          onProjectSelect={setSelectedProjectId}
-          variant="default"
-        />
-      </div>
 
       {/* Navigation */}
       <nav className="flex-1 px-3 py-2 overflow-y-auto overflow-x-hidden sidebar-scroll">
@@ -133,16 +123,16 @@ export function ComputeAdminSidebar({ isOpen = true, onToggle }: ComputeAdminSid
               active={isActive('/compute-admin/flavors')}
             />
             <MenuItem
-              icon={<IconKey size={16} stroke={1.5} />}
-              label="Key pairs"
-              href="/compute-admin/key-pairs"
-              active={isActive('/compute-admin/key-pairs')}
+              icon={<IconServer size={16} stroke={1.5} />}
+              label="Host aggregates"
+              href="/compute-admin/host-aggregates"
+              active={isActive('/compute-admin/host-aggregates')}
             />
             <MenuItem
-              icon={<IconServer size={16} stroke={1.5} />}
-              label="Server groups"
-              href="/compute-admin/server-groups"
-              active={isActive('/compute-admin/server-groups')}
+              icon={<IconServerBolt size={16} stroke={1.5} />}
+              label="Bare metal nodes"
+              href="/compute-admin/bare-metal-nodes"
+              active={isActive('/compute-admin/bare-metal-nodes')}
             />
           </MenuSection>
 
@@ -156,7 +146,7 @@ export function ComputeAdminSidebar({ isOpen = true, onToggle }: ComputeAdminSid
             />
             <MenuItem
               icon={<IconCamera size={16} stroke={1.5} />}
-              label="Volume snapshots"
+              label="Volume Snapshots"
               href="/compute-admin/volume-snapshots"
               active={isActive('/compute-admin/volume-snapshots')}
             />
@@ -165,6 +155,12 @@ export function ComputeAdminSidebar({ isOpen = true, onToggle }: ComputeAdminSid
               label="Volume backups"
               href="/compute-admin/volume-backups"
               active={isActive('/compute-admin/volume-backups')}
+            />
+            <MenuItem
+              icon={<IconLayoutGrid size={16} stroke={1.5} />}
+              label="Volume types"
+              href="/compute-admin/volume-types"
+              active={isActive('/compute-admin/volume-types')}
             />
           </MenuSection>
 
@@ -206,17 +202,37 @@ export function ComputeAdminSidebar({ isOpen = true, onToggle }: ComputeAdminSid
               href="/compute-admin/load-balancers"
               active={isActive('/compute-admin/load-balancers')}
             />
+          </MenuSection>
+
+          {/* System Section */}
+          <MenuSection title="System" defaultOpen={true}>
             <MenuItem
-              icon={<IconCertificate size={16} stroke={1.5} />}
-              label="Certificates"
-              href="/compute-admin/certificates"
-              active={isActive('/compute-admin/certificates')}
+              icon={<IconUsersGroup size={16} stroke={1.5} />}
+              label="Tenants"
+              href="/compute-admin/tenants"
+              active={isActive('/compute-admin/tenants')}
             />
             <MenuItem
-              icon={<IconTopologyStar3 size={16} stroke={1.5} />}
-              label="Topology"
-              href="/compute-admin/topology"
-              active={isActive('/compute-admin/topology')}
+              icon={<IconFileCode size={16} stroke={1.5} />}
+              label="Metadata definition"
+              href="/compute-admin/metadata-definition"
+              active={isActive('/compute-admin/metadata-definition')}
+            />
+          </MenuSection>
+
+          {/* Monitoring Section */}
+          <MenuSection title="Monitoring" defaultOpen={true}>
+            <MenuItem
+              icon={<IconActivity size={16} stroke={1.5} />}
+              label="Monitor overview"
+              href="/compute-admin/monitor-overview"
+              active={isActive('/compute-admin/monitor-overview')}
+            />
+            <MenuItem
+              icon={<IconServer2 size={16} stroke={1.5} />}
+              label="Physical nodes"
+              href="/compute-admin/physical-nodes"
+              active={isActive('/compute-admin/physical-nodes')}
             />
           </MenuSection>
         </VStack>

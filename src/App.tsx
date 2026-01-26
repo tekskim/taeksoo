@@ -21,9 +21,12 @@ import { HomePage } from '@/pages/HomePage';
 import { ComputeHomePage } from '@/pages/ComputeHomePage';
 import { ComputeAdminHomePage } from '@/pages/ComputeAdminHomePage';
 import { InstanceTemplatesPage } from '@/pages/InstanceTemplatesPage';
+import { ComputeAdminInstanceTemplatesPage } from '@/pages/ComputeAdminInstanceTemplatesPage';
 import { InstanceTemplateDetailPage } from '@/pages/InstanceTemplateDetailPage';
 import { InstanceSnapshotsPage } from '@/pages/InstanceSnapshotsPage';
+import { ComputeAdminInstanceSnapshotsPage } from '@/pages/ComputeAdminInstanceSnapshotsPage';
 import { InstanceSnapshotDetailPage } from '@/pages/InstanceSnapshotDetailPage';
+import { ComputeAdminInstanceSnapshotDetailPage } from '@/pages/ComputeAdminInstanceSnapshotDetailPage';
 import { ImagesPage } from '@/pages/ImagesPage';
 import { ComputeImagesPage } from '@/pages/ComputeImagesPage';
 import { ImageDetailPage } from '@/pages/ImageDetailPage';
@@ -68,7 +71,11 @@ import L7PolicyDetailPage from '@/pages/L7PolicyDetailPage';
 import { TopologyD3Page } from '@/pages/TopologyD3Page';
 import { ConsolePage } from '@/pages/ConsolePage';
 import { CreateInstancePage } from '@/pages/CreateInstancePage';
+import ComputeAdminBareMetalDetailPage from '@/pages/ComputeAdminBareMetalDetailPage';
+import { ComputeAdminInstanceDetailPage } from '@/pages/ComputeAdminInstanceDetailPage';
+import { ComputeAdminInstanceListPage } from '@/pages/ComputeAdminInstanceListPage';
 import CreateTemplatePage from '@/pages/CreateTemplatePage';
+import { ComputeAdminCreateTemplatePage } from '@/pages/ComputeAdminCreateTemplatePage';
 import { CreateImagePage } from '@/pages/CreateImagePage';
 
 // Pages - Agent
@@ -349,14 +356,14 @@ function AppRoutes() {
 
         {/* Compute Admin Routes - same pages, different sidebar will be implemented later */}
         <Route path="/compute-admin" element={<ComputeAdminHomePage />} />
-        <Route path="/compute-admin/instances" element={<InstanceListPage />} />
+        <Route path="/compute-admin/instances" element={<ComputeAdminInstanceListPage />} />
         <Route path="/compute-admin/instances/create" element={<CreateInstancePage />} />
-        <Route path="/compute-admin/instances/:id" element={<InstanceDetailPage />} />
-        <Route path="/compute-admin/instance-templates" element={<InstanceTemplatesPage />} />
-        <Route path="/compute-admin/instance-templates/create" element={<CreateTemplatePage />} />
+        <Route path="/compute-admin/instances/:id" element={<ComputeAdminInstanceDetailPage />} />
+        <Route path="/compute-admin/instance-templates" element={<ComputeAdminInstanceTemplatesPage />} />
+        <Route path="/compute-admin/instance-templates/create" element={<ComputeAdminCreateTemplatePage />} />
         <Route path="/compute-admin/instance-templates/:id" element={<InstanceTemplateDetailPage />} />
-        <Route path="/compute-admin/instance-snapshots" element={<InstanceSnapshotsPage />} />
-        <Route path="/compute-admin/instance-snapshots/:id" element={<InstanceSnapshotDetailPage />} />
+        <Route path="/compute-admin/instance-snapshots" element={<ComputeAdminInstanceSnapshotsPage />} />
+        <Route path="/compute-admin/instance-snapshots/:id" element={<ComputeAdminInstanceSnapshotDetailPage />} />
         <Route path="/compute-admin/images" element={<ComputeImagesPage />} />
         <Route path="/compute-admin/images/create" element={<CreateImagePage />} />
         <Route path="/compute-admin/images/:id" element={<ComputeImageDetailPage />} />
@@ -396,6 +403,7 @@ function AppRoutes() {
         <Route path="/compute-admin/certificates/:id" element={<CertificateDetailPage />} />
         <Route path="/compute-admin/topology" element={<TopologyD3Page />} />
         <Route path="/compute-admin/console/:instanceId" element={<ConsolePage />} />
+        <Route path="/compute-admin/bare-metal/:id" element={<ComputeAdminBareMetalDetailPage />} />
 
         {/* Storage Routes */}
         <Route path="/storage" element={<StorageHomePage />} />

@@ -156,14 +156,17 @@ export function Table<T extends Record<string, any>>({
       style={rowHeight ? { '--table-row-height': rowHeight } as React.CSSProperties : undefined}
     >
       <div
-        className={`${maxHeight ? 'overflow-y-auto' : ''}`}
+        className={`overflow-x-auto ${maxHeight ? 'overflow-y-auto' : ''}`}
         style={{ ...(maxHeight ? { maxHeight } : {}) }}
       >
+        {/* Table content wrapper - ensures minimum width while allowing full width */}
+        <div className="min-w-fit w-full">
         {/* Header */}
         <div
           className={`
             flex items-stretch
             min-h-[var(--table-row-height)]
+            w-full
             bg-[var(--table-header-bg)]
             border border-[var(--color-border-default)]
             rounded-[var(--table-row-radius)]
@@ -235,7 +238,7 @@ export function Table<T extends Record<string, any>>({
         </div>
 
         {/* Body */}
-        <div className="flex flex-col gap-[var(--table-row-gap)] mt-[var(--table-row-gap)]">
+        <div className="flex flex-col gap-[var(--table-row-gap)] mt-[var(--table-row-gap)] w-full">
           {sortedData.length === 0 ? (
             <div
               className="
@@ -262,6 +265,7 @@ export function Table<T extends Record<string, any>>({
                   className={`
                     flex items-stretch
                     h-[var(--table-row-height)]
+                    w-full
                     rounded-[var(--table-row-radius)]
                     transition-all
                     hover:bg-[var(--table-row-hover-bg)]
@@ -332,6 +336,7 @@ export function Table<T extends Record<string, any>>({
               );
             })
           )}
+        </div>
         </div>
       </div>
     </div>

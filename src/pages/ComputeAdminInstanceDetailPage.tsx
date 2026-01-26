@@ -40,6 +40,7 @@ import {
   IconSearch,
   IconCopy,
   IconSelector,
+  IconLock,
 } from '@tabler/icons-react';
 
 /* ----------------------------------------
@@ -113,6 +114,7 @@ interface InstanceDetail {
   id: string;
   name: string;
   status: 'active' | 'shutoff' | 'building' | 'error' | 'paused';
+  locked: boolean;
   host: string;
   createdAt: string;
   availabilityZone: string;
@@ -124,6 +126,7 @@ interface InstanceDetail {
     disk: string;
     gpu: number;
   };
+  imageName: string;
   image: string;
   interfaces: number;
   keyPair: string;
@@ -141,11 +144,13 @@ const mockInstancesMap: Record<string, InstanceDetail> = {
     id: 'vm-001',
     name: 'worker-node-01',
     status: 'active',
+    locked: true,
     host: 'compute-03',
     createdAt: '2025-07-25 09:12:20',
     availabilityZone: 'keystone',
     description: '-',
     flavor: { name: 'Medium', vcpu: 4, ram: '8 GiB', disk: '100 GiB', gpu: 1 },
+    imageName: 'centos-7-base',
     image: 'CentOS 7',
     interfaces: 5,
     keyPair: 'default-key',
@@ -156,11 +161,13 @@ const mockInstancesMap: Record<string, InstanceDetail> = {
     id: 'vm-002',
     name: 'worker-node-02',
     status: 'active',
+    locked: false,
     host: 'compute-03',
     createdAt: '2025-07-24 10:30:00',
     availabilityZone: 'keystone',
     description: '-',
     flavor: { name: 'Medium', vcpu: 4, ram: '8 GiB', disk: '100 GiB', gpu: 1 },
+    imageName: 'centos-7-base',
     image: 'CentOS 7',
     interfaces: 3,
     keyPair: 'default-key',
@@ -171,11 +178,13 @@ const mockInstancesMap: Record<string, InstanceDetail> = {
     id: 'vm-003',
     name: 'master-node-01',
     status: 'active',
+    locked: true,
     host: 'compute-01',
     createdAt: '2025-07-20 08:00:00',
     availabilityZone: 'nova',
     description: 'Kubernetes master node',
     flavor: { name: 'Large', vcpu: 8, ram: '16 GiB', disk: '200 GiB', gpu: 0 },
+    imageName: 'ubuntu-22.04-server',
     image: 'Ubuntu 22.04',
     interfaces: 4,
     keyPair: 'master-key',
@@ -186,11 +195,13 @@ const mockInstancesMap: Record<string, InstanceDetail> = {
     id: 'vm-004',
     name: 'db-server-01',
     status: 'stopped',
+    locked: true,
     host: 'compute-02',
     createdAt: '2025-07-15 14:20:00',
     availabilityZone: 'keystone',
     description: 'Database server',
     flavor: { name: 'XLarge', vcpu: 16, ram: '64 GiB', disk: '500 GiB', gpu: 0 },
+    imageName: 'centos-8-base',
     image: 'CentOS 8',
     interfaces: 2,
     keyPair: 'db-key',
@@ -201,11 +212,13 @@ const mockInstancesMap: Record<string, InstanceDetail> = {
     id: 'vm-005',
     name: 'gpu-node-01',
     status: 'active',
+    locked: false,
     host: 'compute-gpu-01',
     createdAt: '2025-07-10 09:00:00',
     availabilityZone: 'nova',
     description: 'GPU compute node',
     flavor: { name: 'GPU Large', vcpu: 32, ram: '128 GiB', disk: '1000 GiB', gpu: 4 },
+    imageName: 'ubuntu-22.04-gpu',
     image: 'Ubuntu 22.04',
     interfaces: 2,
     keyPair: 'gpu-key',
@@ -219,11 +232,13 @@ const defaultInstanceDetail: InstanceDetail = {
   id: 'unknown',
   name: 'Unknown Instance',
   status: 'active',
+  locked: false,
   host: 'compute-03',
   createdAt: '2025-07-25 09:12:20',
   availabilityZone: 'nova',
   description: '-',
   flavor: { name: 'Medium', vcpu: 1, ram: '4 GiB', disk: '40 GiB', gpu: 1 },
+  imageName: 'unknown-image',
   image: 'Unknown',
   interfaces: 0,
   keyPair: '-',
@@ -418,7 +433,7 @@ const mockActionLogs: ActionLog[] = [
    Instance Detail Page
    ---------------------------------------- */
 
-export function InstanceDetailPage() {
+export function ComputeAdminInstanceDetailPage() {
   const { id } = useParams<{ id: string }>();
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [activeDetailTab, setActiveDetailTab] = useState('details');
@@ -455,7 +470,7 @@ export function InstanceDetailPage() {
   // Action Logs tab state
   const [actionLogCurrentPage, setActionLogCurrentPage] = useState(1);
   const [actionLogSearchQuery, setActionLogSearchQuery] = useState('');
-  const [expandedLogIds, setExpandedLogIds] = useState<Set<string>>(new Set(['log-001']));
+  const [expandedLogIds, setExpandedLogIds] = useState<Set<string>>(new Set());
   const [actionLogSortKey, setActionLogSortKey] = useState<'operationName' | 'requestId' | 'requestedTime' | null>(null);
   const [actionLogSortDirection, setActionLogSortDirection] = useState<'asc' | 'desc'>('asc');
   const actionLogRowsPerPage = 10;
@@ -547,7 +562,7 @@ export function InstanceDetailPage() {
             <Breadcrumb
               items={[
                 { label: 'Proj-1', href: '/project' },
-                { label: 'Instances list', href: '/compute/instances' },
+                { label: 'Instances list', href: '/compute-admin/instances' },
                 { label: instance.name },
               ]}
             />
@@ -569,7 +584,10 @@ export function InstanceDetailPage() {
           <VStack gap={6} className="min-w-[1176px]">
             {/* Instance Header Card */}
             <DetailHeader>
-              <DetailHeader.Title>{instance.name}</DetailHeader.Title>
+              <DetailHeader.Title>
+                {instance.locked && <IconLock size={16} stroke={1.5} className="inline-block mr-1.5 text-[var(--color-text-default)]" />}
+                {instance.name}
+              </DetailHeader.Title>
               
               <DetailHeader.Actions>
                 <Button variant="secondary" size="sm" leftIcon={<IconTerminal2 size={12} />}>
@@ -600,11 +618,22 @@ export function InstanceDetailPage() {
                         { id: 'unpause', label: 'Unpause', onClick: () => console.log('Unpause instance') },
                         { id: 'resume', label: 'Resume', onClick: () => console.log('Resume instance') },
                         { id: 'unshelve', label: 'Unshelve', onClick: () => console.log('Unshelve instance') },
+                        { id: 'rescue', label: 'Rescue', onClick: () => console.log('Rescue instance') },
+                        { id: 'unrescue', label: 'Unrescue', onClick: () => console.log('Unrescue instance') },
                       ],
                     },
-                    { id: 'storage-snapshot', label: 'Storage & Snapshot', onClick: () => console.log('Storage & Snapshot') },
-                    { id: 'network', label: 'Network', onClick: () => console.log('Network') },
-                    { id: 'configuration', label: 'Configuration', onClick: () => console.log('Configuration') },
+                    {
+                      id: 'configuration',
+                      label: 'Configuration',
+                      submenu: [
+                        { id: 'lock-setting', label: 'Lock setting', onClick: () => console.log('Lock setting') },
+                        { id: 'edit', label: 'Edit', onClick: () => console.log('Edit instance') },
+                      ],
+                    },
+                    { id: 'migrate', label: 'Migrate', onClick: () => console.log('Migrate instance') },
+                    { id: 'live-migrate', label: 'Live migrate', onClick: () => console.log('Live migrate instance') },
+                    { id: 'confirm-resize', label: 'Confirm resize', onClick: () => console.log('Confirm resize') },
+                    { id: 'revert-resize', label: 'Revert resize', onClick: () => console.log('Revert resize') },
                   ]}
                   trigger="click"
                 >
@@ -640,7 +669,7 @@ export function InstanceDetailPage() {
 
                 {/* Details Tab Panel */}
                 <TabPanel value="details" className="pt-0">
-                  <VStack gap={4} className="pt-6">
+                  <VStack gap={4} className="pt-4">
                     {/* Basic information */}
                     <SectionCard>
                       <SectionCard.Header 
@@ -671,15 +700,19 @@ export function InstanceDetailPage() {
                       </SectionCard.Content>
                     </SectionCard>
 
-                    {/* Start Source */}
+                    {/* Source */}
                     <SectionCard>
-                      <SectionCard.Header title="Start Source" />
+                      <SectionCard.Header title="Source" />
                       <SectionCard.Content>
                         <SectionCard.DataRow 
                           label="Image" 
-                          value={instance.image} 
+                          value={instance.imageName || 'image-01'} 
                           isLink 
-                          linkHref="/images" 
+                          linkHref="/compute-admin/images" 
+                        />
+                        <SectionCard.DataRow 
+                          label="OS" 
+                          value={instance.image} 
                         />
                       </SectionCard.Content>
                     </SectionCard>
@@ -691,36 +724,40 @@ export function InstanceDetailPage() {
                         <SectionCard.DataRow 
                           label="Key pair" 
                           value={instance.keyPair} 
-                          isLink 
-                          linkHref="/key-pairs" 
                         />
                       </SectionCard.Content>
                     </SectionCard>
 
                     {/* Advanced */}
                     <SectionCard>
-                      <SectionCard.Header 
-                        title="Advanced" 
-                        actions={
-                          <Button variant="secondary" size="sm">
-                            Manage tags
-                          </Button>
-                        }
-                      />
+                      <SectionCard.Header title="Advanced" />
                       <SectionCard.Content>
                         <SectionCard.DataRow 
                           label="Tags" 
-                          value="Team: Backend"
+                          value={
+                            <div className="flex gap-1.5">
+                              <span className="inline-flex items-center gap-1 px-2 py-1 text-[11px] font-medium border border-[var(--color-border-default)] rounded-md bg-[var(--color-surface-default)]">
+                                <span className="text-[var(--color-text-default)]">Team</span>
+                                <span className="text-[var(--color-border-default)]">|</span>
+                                <span className="text-[var(--color-text-default)]">dev</span>
+                              </span>
+                              <span className="inline-flex items-center gap-1 px-2 py-1 text-[11px] font-medium border border-[var(--color-border-default)] rounded-md bg-[var(--color-surface-default)]">
+                                <span className="text-[var(--color-text-default)]">Env</span>
+                                <span className="text-[var(--color-border-default)]">|</span>
+                                <span className="text-[var(--color-text-default)]">prod</span>
+                              </span>
+                            </div>
+                          }
                         />
                         <SectionCard.DataRow 
-                          label="Server group" 
+                          label="Server Group" 
                           value={instance.serverGroup} 
                           isLink 
-                          linkHref="/server-groups" 
+                          linkHref="/compute-admin/server-groups" 
                         />
                         <SectionCard.DataRow 
-                          label="User data" 
-                          value={instance.userData} 
+                          label="User Data" 
+                          value="Provided at creation" 
                         />
                       </SectionCard.Content>
                     </SectionCard>
@@ -729,15 +766,12 @@ export function InstanceDetailPage() {
 
                 {/* Volumes Tab Panel */}
                 <TabPanel value="volumes" className="pt-0">
-                  <VStack gap={3} className="pt-6">
+                  <VStack gap={4} className="pt-4">
                     {/* Header */}
-                    <div className="flex items-center justify-between w-full">
+                    <div className="flex items-center w-full">
                       <h2 className="text-[16px] font-semibold leading-6 text-[var(--color-text-default)]">
                         Volumes
                       </h2>
-                      <Button variant="secondary" size="sm" leftIcon={<IconCirclePlus size={12} />}>
-                        Attach volume
-                      </Button>
                     </div>
 
                     {/* Search */}
@@ -763,7 +797,7 @@ export function InstanceDetailPage() {
                         {
                           key: 'status',
                           label: 'Status',
-                          width: '60px',
+                          width: '64px',
                           align: 'center',
                           render: (_, row: AttachedVolume) => (
                             <StatusIndicator status={row.status as any} layout="icon-only" />
@@ -772,10 +806,11 @@ export function InstanceDetailPage() {
                         {
                           key: 'name',
                           label: 'Name',
+                          sortable: true,
                           render: (value: string, row: AttachedVolume) => (
                             <div className="flex flex-col gap-0.5">
                             <Link
-                              to={`/compute/volumes/${row.id}`}
+                              to={`/compute-admin/volumes/${row.id}`}
                               className="flex items-center gap-1.5 text-[var(--color-action-primary)] hover:underline"
                             >
                               {value}
@@ -799,6 +834,7 @@ export function InstanceDetailPage() {
                         {
                           key: 'diskTag',
                           label: 'Disk tag',
+                          sortable: true,
                         },
                         {
                           key: 'bootable',
@@ -808,37 +844,7 @@ export function InstanceDetailPage() {
                         {
                           key: 'access',
                           label: 'Created at',
-                        },
-                        {
-                          key: 'action',
-                          label: 'Action',
-                          width: '72px',
-                          align: 'center',
-                          render: (_: unknown, row: AttachedVolume) => {
-                            const volumeMenuItems: ContextMenuItem[] = [
-                              {
-                                id: 'data-protection',
-                                label: 'Data protection',
-                                submenu: [
-                                  { id: 'create-snapshot', label: 'Create volume snapshot', onClick: () => console.log('Create snapshot', row.id) },
-                                  { id: 'create-backup', label: 'Create volume backup', onClick: () => console.log('Create backup', row.id) },
-                                  { id: 'clone-volume', label: 'Clone volume', onClick: () => console.log('Clone volume', row.id) },
-                                ],
-                              },
-                              { id: 'extend-volume', label: 'Extend volume', onClick: () => console.log('Extend volume', row.id) },
-                              { id: 'bootable', label: 'Bootable', onClick: () => console.log('Toggle bootable', row.id) },
-                              { id: 'detach', label: 'Detach', status: 'danger', onClick: () => console.log('Detach volume', row.id) },
-                            ];
-                            return (
-                              <div onClick={(e) => e.stopPropagation()}>
-                                <ContextMenu items={volumeMenuItems} trigger="click">
-                                  <button className="p-1.5 rounded hover:bg-[var(--color-surface-muted)] transition-colors group">
-                              <IconDotsCircleHorizontal size={16} stroke={1.5} className="text-[var(--action-icon-color)]" />
-                            </button>
-                                </ContextMenu>
-                              </div>
-                            );
-                          },
+                          sortable: true,
                         },
                       ]}
                       data={mockAttachedVolumes}
@@ -849,15 +855,12 @@ export function InstanceDetailPage() {
 
                 {/* Interfaces Tab Panel */}
                 <TabPanel value="interfaces" className="pt-0">
-                  <VStack gap={3} className="pt-6">
+                  <VStack gap={4} className="pt-4">
                     {/* Header */}
-                    <div className="flex items-center justify-between w-full">
+                    <div className="flex items-center w-full">
                       <h2 className="text-[16px] font-semibold leading-6 text-[var(--color-text-default)]">
                         Interfaces
                       </h2>
-                      <Button variant="secondary" size="sm" leftIcon={<IconCirclePlus size={12} />}>
-                        Attach interface
-                      </Button>
                     </div>
 
                     {/* Search */}
@@ -879,7 +882,7 @@ export function InstanceDetailPage() {
                         {
                           key: 'status',
                           label: 'Status',
-                          width: '72px',
+                          width: '64px',
                           align: 'center',
                           render: (_value: string, iface: AttachedInterface) => {
                             const statusMap: Record<string, 'active' | 'down' | 'building' | 'shutoff'> = {
@@ -903,7 +906,7 @@ export function InstanceDetailPage() {
                           render: (_value: string, iface: AttachedInterface) => (
                             <div className="flex flex-col gap-0.5">
                             <Link 
-                                to={`/compute/ports/${iface.id}`}
+                                to={`/compute-admin/ports/${iface.id}`}
                                 className="font-medium text-[var(--color-action-primary)] hover:underline"
                             >
                                 {iface.name}
@@ -921,7 +924,7 @@ export function InstanceDetailPage() {
                           render: (_value: string, iface: AttachedInterface) => (
                             <div className="flex flex-col gap-0.5">
                             <Link 
-                                to={`/compute/networks/${iface.id}`}
+                                to={`/compute-admin/networks/${iface.id}`}
                                 className="font-medium text-[var(--color-action-primary)] hover:underline"
                             >
                                 {iface.network}
@@ -954,26 +957,6 @@ export function InstanceDetailPage() {
                             <span className="text-[var(--color-text-default)]">{iface.createdAt}</span>
                           ),
                         },
-                        {
-                          key: 'action',
-                          label: 'Action',
-                          width: '72px',
-                          align: 'center' as const,
-                          render: (_: unknown, iface: AttachedInterface) => {
-                            const interfaceMenuItems: ContextMenuItem[] = [
-                              { id: 'detach', label: 'Detach', status: 'danger', onClick: () => console.log('Detach interface', iface.id) },
-                            ];
-                            return (
-                              <div onClick={(e) => e.stopPropagation()}>
-                                <ContextMenu items={interfaceMenuItems} trigger="click">
-                                  <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
-                              <IconDotsCircleHorizontal size={16} stroke={1.5} className="text-[var(--action-icon-color)]" />
-                            </button>
-                                </ContextMenu>
-                              </div>
-                            );
-                          },
-                        },
                       ]}
                       data={mockAttachedInterfaces.slice((interfaceCurrentPage - 1) * interfaceRowsPerPage, interfaceCurrentPage * interfaceRowsPerPage)}
                       rowKey="id"
@@ -983,15 +966,12 @@ export function InstanceDetailPage() {
 
                 {/* Floating IPs Tab Panel */}
                 <TabPanel value="floating-ips" className="pt-0">
-                  <VStack gap={3} className="pt-6">
+                  <VStack gap={4} className="pt-4">
                     {/* Header */}
-                    <div className="flex items-center justify-between w-full">
+                    <div className="flex items-center w-full">
                       <h2 className="text-[16px] font-semibold leading-6 text-[var(--color-text-default)]">
                         Floating IPs
                       </h2>
-                      <Button variant="secondary" size="sm" leftIcon={<IconCirclePlus size={12} />}>
-                        Associate floating IP
-                      </Button>
                     </div>
 
                     {/* Search */}
@@ -1013,7 +993,7 @@ export function InstanceDetailPage() {
                         {
                           key: 'status',
                           label: 'Status',
-                          width: '72px',
+                          width: '64px',
                           align: 'center',
                           render: (_value: string, row: FloatingIP) => (
                             <StatusIndicator status={row.status} layout="icon-only" size="md" />
@@ -1025,7 +1005,7 @@ export function InstanceDetailPage() {
                           render: (_value: string, row: FloatingIP) => (
                             <div className="flex flex-col gap-0.5">
                             <Link 
-                              to={`/compute/floating-ips/${row.id}`}
+                              to={`/compute-admin/floating-ips/${row.id}`}
                                 className="font-medium text-[var(--color-action-primary)] hover:underline"
                             >
                                 {row.floatingIp}
@@ -1045,26 +1025,6 @@ export function InstanceDetailPage() {
                           label: 'Created at',
                           sortable: true,
                         },
-                        {
-                          key: 'action',
-                          label: 'Action',
-                          width: '72px',
-                          align: 'center',
-                          render: (_: unknown, row: FloatingIP) => {
-                            const floatingIpMenuItems: ContextMenuItem[] = [
-                              { id: 'disassociate', label: 'Disassociate', status: 'danger', onClick: () => console.log('Disassociate', row.id) },
-                            ];
-                            return (
-                              <div onClick={(e) => e.stopPropagation()}>
-                                <ContextMenu items={floatingIpMenuItems} trigger="click">
-                                  <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
-                                    <IconDotsCircleHorizontal size={16} stroke={1.5} className="text-[var(--action-icon-color)]" />
-                                  </button>
-                                </ContextMenu>
-                              </div>
-                            );
-                          },
-                        },
                       ]}
                       data={mockFloatingIPs.slice((floatingIpCurrentPage - 1) * floatingIpRowsPerPage, floatingIpCurrentPage * floatingIpRowsPerPage)}
                       rowKey="id"
@@ -1074,37 +1034,24 @@ export function InstanceDetailPage() {
 
                 {/* Security Tab Panel */}
                 <TabPanel value="security" className="pt-0">
-                  <VStack gap={3} className="pt-6">
+                  <VStack gap={4} className="pt-4">
                     {/* Header */}
-                    <div className="flex items-center justify-between w-full">
+                    <div className="flex items-center w-full">
                       <h2 className="text-[16px] font-semibold leading-6 text-[var(--color-text-default)]">
                         Security groups
                       </h2>
-                      <Button variant="secondary" size="sm" leftIcon={<IconCirclePlus size={12} />}>
-                        Attach Security group
-                      </Button>
                     </div>
 
                     {/* Network Interface Toggle */}
-                    <div className="inline-flex items-center gap-1 p-1 h-10 bg-[var(--color-surface-subtle)] border border-[var(--color-border-subtle)] rounded-lg w-fit">
-                      {mockNetworkInterfaces.map((net) => (
-                        <button
-                          key={net.id}
-                          onClick={() => setSelectedNetworkInterface(net.id)}
-                          className={`
-                            flex items-center justify-center min-w-[80px] px-3 h-8 rounded-md
-                            text-[12px] font-medium leading-4 text-[var(--color-text-default)]
-                            transition-colors
-                            ${selectedNetworkInterface === net.id 
-                              ? 'bg-[var(--color-surface-default)] border border-[var(--color-action-primary)]' 
-                              : 'hover:bg-[var(--color-surface-default)]'
-                            }
-                          `}
-                        >
-                          {net.name}({net.ip})
-                        </button>
-                      ))}
-                    </div>
+                    <Tabs value={selectedNetworkInterface} onChange={setSelectedNetworkInterface} variant="boxed" size="sm">
+                      <TabList>
+                        {mockNetworkInterfaces.map((net) => (
+                          <Tab key={net.id} value={net.id}>
+                            {net.name}({net.ip})
+                          </Tab>
+                        ))}
+                      </TabList>
+                    </Tabs>
 
                     {/* Search */}
                     <SearchInput placeholder="Search security group by attributes" size="sm" className="w-[280px]" />
@@ -1129,7 +1076,7 @@ export function InstanceDetailPage() {
                           render: (_value: string, row: SecurityGroup) => (
                             <div className="flex flex-col gap-0.5">
                             <Link 
-                              to={`/compute/security-groups/${row.id}`}
+                              to={`/compute-admin/security-groups/${row.id}`}
                                 className="font-medium text-[var(--color-action-primary)] hover:underline"
                             >
                               {row.name}
@@ -1153,26 +1100,6 @@ export function InstanceDetailPage() {
                             <span className="text-[var(--color-text-default)]">{row.createdAt}</span>
                           ),
                         },
-                        {
-                          key: 'action',
-                          label: 'Action',
-                          width: '72px',
-                          align: 'center' as const,
-                          render: (_: unknown, row: SecurityGroup) => {
-                            const securityGroupMenuItems: ContextMenuItem[] = [
-                              { id: 'detach', label: 'Detach', status: 'danger', onClick: () => console.log('Detach security group', row.id) },
-                            ];
-                            return (
-                              <div onClick={(e) => e.stopPropagation()}>
-                                <ContextMenu items={securityGroupMenuItems} trigger="click">
-                                  <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
-                                    <IconDotsCircleHorizontal size={16} stroke={1.5} className="text-[var(--action-icon-color)]" />
-                                  </button>
-                                </ContextMenu>
-                              </div>
-                            );
-                          },
-                        },
                       ]}
                       data={mockSecurityGroups.slice((securityCurrentPage - 1) * securityRowsPerPage, securityCurrentPage * securityRowsPerPage)}
                       rowKey="id"
@@ -1182,14 +1109,10 @@ export function InstanceDetailPage() {
 
                 {/* Instance snapshots Tab Panel */}
                 <TabPanel value="snapshots" className="pt-0">
-                  <VStack gap={3} className="pt-6">
+                  <VStack gap={4} className="pt-4">
                     {/* Header */}
-                    <div className="flex items-center justify-between w-full">
+                    <div className="flex items-center w-full">
                       <h2 className="text-[16px] font-semibold leading-6 text-[var(--color-text-default)]">Instance snapshots</h2>
-                      <Button variant="secondary" size="sm">
-                        <IconCirclePlus size={12} />
-                        Create Snapshot
-                      </Button>
                     </div>
 
                     {/* Search */}
@@ -1220,7 +1143,7 @@ export function InstanceDetailPage() {
                         {
                           key: 'status',
                           label: 'Status',
-                          width: '60px',
+                          width: '64px',
                           align: 'center',
                           render: (_value: string, row: InstanceSnapshot) => (
                             <StatusIndicator 
@@ -1236,7 +1159,7 @@ export function InstanceDetailPage() {
                           render: (_value: string, row: InstanceSnapshot) => (
                             <div className="flex flex-col gap-0.5">
                             <Link 
-                              to={`/compute/instance-snapshots/${row.id}`}
+                              to={`/compute-admin/instance-snapshots/${row.id}`}
                                 className="font-medium text-[var(--color-action-primary)] hover:underline"
                             >
                               {row.name}
@@ -1265,7 +1188,7 @@ export function InstanceDetailPage() {
                         {
                           key: 'action',
                           label: 'Action',
-                          width: '72px',
+                          width: '64px',
                           align: 'center',
                           render: (_: unknown, row: InstanceSnapshot) => {
                             const snapshotMenuItems: ContextMenuItem[] = [
@@ -1309,7 +1232,7 @@ export function InstanceDetailPage() {
 
                 {/* Logs Tab Panel */}
                 <TabPanel value="logs" className="pt-0">
-                  <VStack gap={3} className="pt-6">
+                  <VStack gap={4} className="pt-4">
                     {/* Header */}
                     <div className="flex items-center h-7">
                       <h2 className="text-[16px] font-semibold text-[var(--color-text-default)]">Console Logs</h2>
@@ -1380,7 +1303,7 @@ export function InstanceDetailPage() {
 
                 {/* Action Logs Tab Panel */}
                 <TabPanel value="action-logs" className="pt-0">
-                  <VStack gap={3} className="pt-6">
+                  <VStack gap={4} className="pt-4">
                     {/* Header */}
                     <div className="flex items-center h-7">
                       <h2 className="text-[16px] font-semibold text-[var(--color-text-default)]">Action logs</h2>
@@ -1543,5 +1466,5 @@ export function InstanceDetailPage() {
   );
 }
 
-export default InstanceDetailPage;
+export default ComputeAdminInstanceDetailPage;
 
