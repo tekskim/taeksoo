@@ -5,23 +5,16 @@ import {
   TopBarAction,
   Breadcrumb,
 } from '@/design-system';
-import { Sidebar } from '@/components/Sidebar';
+import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
 import { useTabs } from '@/contexts/TabContext';
 import {
-  IconDatabase,
-  IconNetwork,
-  IconRouter,
-  IconPlug,
-  IconWorldWww,
-  IconShieldLock,
-  IconKey,
-  IconServer,
-  IconCopy,
-  IconCheck,
   IconChevronRight,
   IconBell,
+  IconCpu,
+  IconServer,
 } from '@tabler/icons-react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Cpu, MemoryStick, HardDrive } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 /* ----------------------------------------
    Percentage Badge Component
@@ -111,30 +104,25 @@ function SummaryStatBox({ value, label }: SummaryStatBoxProps) {
 }
 
 /* ----------------------------------------
-   Infrastructure Quota Card Component
+   Tenant Usage Card Component
    ---------------------------------------- */
-interface InfraQuotaCardProps {
+interface TenantUsageCardProps {
   icon: React.ReactNode;
   label: string;
   used: number;
   total: number;
-  href: string;
 }
 
-function InfraQuotaCard({ icon, label, used, total, href }: InfraQuotaCardProps) {
+function TenantUsageCard({ icon, label, used, total }: TenantUsageCardProps) {
   const percentage = Math.round((used / total) * 100);
   
   return (
     <div className="bg-[var(--color-surface-subtle)] rounded-lg p-4">
       <div className="flex items-center justify-between mb-3">
-        <Link 
-          to={href}
-          className="flex items-center gap-1 text-[12px] font-medium text-[var(--color-text-default)] hover:text-[var(--color-action-primary)] min-w-0"
-        >
+        <div className="flex items-center gap-1 text-[12px] font-medium text-[var(--color-text-default)]">
           <span className="flex-shrink-0">{icon}</span>
           <span className="truncate">{label}</span>
-          <IconChevronRight size={12} className="text-[var(--color-text-muted)] flex-shrink-0" />
-        </Link>
+        </div>
         <PercentageBadge percentage={percentage} />
       </div>
       <div className="flex items-baseline mb-3">
@@ -152,28 +140,64 @@ function InfraQuotaCard({ icon, label, used, total, href }: InfraQuotaCardProps)
 }
 
 /* ----------------------------------------
-   Activity Item Component
+   Tenant Row Component
    ---------------------------------------- */
-interface ActivityItemProps {
+interface TenantRowProps {
   name: string;
-  resourceType: string;
-  action: string;
-  time: string;
-  isLast?: boolean;
+  enabled: boolean;
+  resources: {
+    vCPU: { used: number; total: number };
+    RAM: { used: number; total: number };
+    Disk: { used: number; total: number };
+    GPU: { used: number; total: number };
+    NPU: { used: number; total: number };
+  };
 }
 
-function ActivityItem({ name, resourceType, action, time, isLast = false }: ActivityItemProps) {
+function TenantRow({ name, enabled, resources }: TenantRowProps) {
   return (
-    <div className={`flex items-center justify-between py-2.5 ${!isLast ? 'border-b border-[var(--color-border-subtle)]' : ''}`}>
-      <div>
-        <div className="text-[12px] font-medium text-[var(--color-action-primary)]">{name}</div>
-        <div className="flex items-center gap-1.5 text-[11px] text-[var(--color-text-muted)]">
-          <span>{resourceType}</span>
-          <span className="text-[var(--color-border-default)]">|</span>
-          <span>{action}</span>
-        </div>
+    <div className="space-y-3">
+      <div className="flex items-center gap-2">
+        <span className={`px-2 py-0.5 rounded text-[10px] font-medium ${enabled ? 'bg-[var(--color-state-success)]/15 text-[var(--color-state-success)]' : 'bg-[var(--color-surface-muted)] text-[var(--color-text-muted)]'}`}>
+          {enabled ? 'Enabled' : 'Disabled'}
+        </span>
+        <button className="flex items-center gap-1 text-[12px] font-medium text-[var(--color-text-default)] hover:text-[var(--color-action-primary)]">
+          {name}
+          <IconChevronRight size={14} className="text-[var(--color-text-muted)]" />
+        </button>
       </div>
-      <span className="text-[11px] text-[var(--color-text-muted)]">{time}</span>
+      <div className="grid grid-cols-5 gap-4">
+        <TenantUsageCard
+          icon={<Cpu size={14} strokeWidth={1.5} />}
+          label="vCPU"
+          used={resources.vCPU.used}
+          total={resources.vCPU.total}
+        />
+        <TenantUsageCard
+          icon={<MemoryStick size={14} strokeWidth={1.5} />}
+          label="RAM"
+          used={resources.RAM.used}
+          total={resources.RAM.total}
+        />
+        <TenantUsageCard
+          icon={<HardDrive size={14} strokeWidth={1.5} />}
+          label="Disk"
+          used={resources.Disk.used}
+          total={resources.Disk.total}
+        />
+        <TenantUsageCard
+          icon={<IconCpu size={14} stroke={1.5} />}
+          label="GPU (T4)"
+          used={resources.GPU.used}
+          total={resources.GPU.total}
+        />
+        <TenantUsageCard
+          icon={<IconServer size={14} stroke={1.5} />}
+          label="NPU"
+          used={resources.NPU.used}
+          total={resources.NPU.total}
+        />
+      </div>
     </div>
   );
 }
@@ -198,12 +222,11 @@ function Card({ title, children, className = '', bgColor = 'bg-[var(--color-surf
 }
 
 /* ----------------------------------------
-   Main ComputeHomePage Component
+   Main ComputeAdminHomePage Component
    ---------------------------------------- */
-export function ComputeHomePage() {
+export function ComputeAdminHomePage() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const { tabs, activeTabId, selectTab, closeTab, addNewTab, moveTab } = useTabs();
-  const [copied, setCopied] = useState(false);
   const navigate = useNavigate();
 
   const tabBarTabs = tabs.map((tab) => ({
@@ -212,17 +235,9 @@ export function ComputeHomePage() {
     closable: tab.closable,
   }));
 
-  const projectId = '7284d9174e81431e93060a9bbcf2cdfd';
-
-  const handleCopyId = () => {
-    navigator.clipboard.writeText(projectId);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
-  };
-
   return (
     <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
-      <Sidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(prev => !prev)} />
+      <ComputeAdminSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(prev => !prev)} />
 
       <main className={`absolute top-0 bottom-0 right-0 flex flex-col bg-[var(--color-surface-default)] transition-[left] duration-200 ${sidebarOpen ? 'left-[200px]' : 'left-0'}`}>
         {/* Fixed Header Area */}
@@ -267,46 +282,15 @@ export function ComputeHomePage() {
         <div className="flex-1 overflow-auto min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll">
           {/* Dashboard Content */}
           <div className="px-8 py-6">
-          {/* Top Row - 4 Cards */}
-          <div className="grid grid-cols-4 gap-6 mb-6">
-            {/* PROJECT INFO */}
-            <Card title="PROJECT INFO" bgColor="bg-[var(--color-surface-subtle)]" className="flex flex-col">
-              <h3 className="text-[32px] font-semibold text-[var(--color-text-default)]">proj-1</h3>
-              <div className="space-y-4 mt-auto">
-                <div>
-                  <div className="text-[10px] text-[var(--color-text-muted)] mb-1">ID</div>
-                  <div className="flex items-center gap-1">
-                    <span className="text-[12px] text-[var(--color-text-default)]">{projectId}</span>
-                    <button 
-                      onClick={handleCopyId}
-                      className="p-1.5 -m-1 rounded-md hover:bg-[var(--color-surface-muted)] active:bg-[var(--color-surface-subtle)] transition-colors"
-                      title={copied ? 'Copied!' : 'Copy ID'}
-                    >
-                      {copied ? (
-                        <IconCheck size={12} className="text-[var(--color-state-success)]" />
-                      ) : (
-                        <IconCopy size={12} className="text-[var(--color-action-primary)]" />
-                      )}
-                    </button>
-                  </div>
-                </div>
-                <div>
-                  <div className="text-[10px] text-[var(--color-text-muted)] mb-1">Description</div>
-                  <p className="text-[12px] text-[var(--color-text-default)]">
-                    Development environment for the 'service' backend services.
-                  </p>
-                </div>
-              </div>
-            </Card>
-
-            {/* COMPUTE QUOTA */}
-            <Card title="COMPUTE QUOTA">
+          {/* Top Row - 3 Cards */}
+          <div className="grid grid-cols-3 gap-6 mb-6">
+            {/* CAPACITY SUMMARY */}
+            <Card title="CAPACITY SUMMARY">
               <div className="space-y-[22px]">
-                <ComputeQuotaBar label="vCPU" used={4} total={8} unit="vCPU" />
-                <ComputeQuotaBar label="RAM" used={22} total={32} unit="GiB" />
-                <ComputeQuotaBar label="Disk" used={4} total={6} unit="GiB" />
-                <ComputeQuotaBar label="GPU" used={6} total={8} unit="GPU" />
-                <ComputeQuotaBar label="NPU" used={6} total={8} unit="NPU" />
+                <ComputeQuotaBar label="Total vCPU" used={4} total={8} unit="vCPU" />
+                <ComputeQuotaBar label="Total RAM" used={22} total={32} unit="GiB" />
+                <ComputeQuotaBar label="Total GPU (T4)" used={6} total={8} unit="GPU" />
+                <ComputeQuotaBar label="Total NPU" used={6} total={8} unit="NPU" />
               </div>
             </Card>
 
@@ -322,7 +306,7 @@ export function ComputeHomePage() {
                   <SummaryStatBox value={0} label="Error" />
                 </div>
                 <div className="flex gap-2">
-                  <SummaryStatBox value={0} label="Shutoff" />
+                  <SummaryStatBox value={0} label="Stopped" />
                   <SummaryStatBox value={3} label="Others" />
                 </div>
               </div>
@@ -340,118 +324,51 @@ export function ComputeHomePage() {
                   <SummaryStatBox value={1} label="Error" />
                 </div>
                 <div className="flex gap-2">
-                  <SummaryStatBox value={0} label="Shutoff" />
+                  <SummaryStatBox value={0} label="Stopped" />
                   <SummaryStatBox value={1} label="Others" />
                 </div>
               </div>
             </Card>
           </div>
 
-          {/* Bottom Row - 2 Cards */}
-          <div className="grid grid-cols-[1fr_396px] gap-6">
-            {/* INFRASTRUCTURE QUOTA */}
-            <Card title="INFRASTRUCTURE QUOTA">
-              <div className="space-y-4 mt-8">
-                <div className="grid grid-cols-4 gap-4">
-                  <InfraQuotaCard
-                    icon={<IconDatabase size={16} stroke={1.5} />}
-                    label="Volumes"
-                    used={8}
-                    total={10}
-                    href="/compute/volumes"
-                  />
-                  <InfraQuotaCard
-                    icon={<IconNetwork size={16} stroke={1.5} />}
-                    label="Networks"
-                    used={10}
-                    total={100}
-                    href="/compute/networks"
-                  />
-                  <InfraQuotaCard
-                    icon={<IconRouter size={16} stroke={1.5} />}
-                    label="Routers"
-                    used={9}
-                    total={10}
-                    href="/compute/routers"
-                  />
-                  <InfraQuotaCard
-                    icon={<IconPlug size={16} stroke={1.5} />}
-                    label="Ports"
-                    used={500}
-                    total={500}
-                    href="/compute/ports"
-                  />
-                </div>
-                <div className="grid grid-cols-4 gap-4">
-                  <InfraQuotaCard
-                    icon={<IconWorldWww size={16} stroke={1.5} />}
-                    label="Floating IPs"
-                    used={2}
-                    total={50}
-                    href="/compute/floating-ips"
-                  />
-                  <InfraQuotaCard
-                    icon={<IconShieldLock size={16} stroke={1.5} />}
-                    label="Security groups"
-                    used={85}
-                    total={100}
-                    href="/compute/security-groups"
-                  />
-                  <InfraQuotaCard
-                    icon={<IconKey size={16} stroke={1.5} />}
-                    label="Key pairs"
-                    used={18}
-                    total={100}
-                    href="/compute/key-pairs"
-                  />
-                  <InfraQuotaCard
-                    icon={<IconServer size={16} stroke={1.5} />}
-                    label="Server groups"
-                    used={1}
-                    total={10}
-                    href="/compute/server-groups"
-                  />
-                </div>
-              </div>
-            </Card>
-
-            {/* RECENT ACTIVITIES */}
-            <Card title="RECENT ACTIVITIES">
-              <div>
-                <ActivityItem
-                  name="web-server-01"
-                  resourceType="Instance"
-                  action="create"
-                  time="2m ago"
-                />
-                <ActivityItem
-                  name="data-vol-03"
-                  resourceType="Volume"
-                  action="attach"
-                  time="15m ago"
-                />
-                <ActivityItem
-                  name="private-net"
-                  resourceType="Network"
-                  action="update"
-                  time="1h ago"
-                />
-                <ActivityItem
-                  name="api-server-02"
-                  resourceType="Instance"
-                  action="reboot"
-                  time="3h ago"
-                />
-                <ActivityItem
-                  name="sg-default"
-                  resourceType="Security group"
-                  action="modify"
-                  time="5h ago"
-                  isLast
-                />
-              </div>
-            </Card>
-          </div>
+          {/* Bottom Row - Tenant Usages */}
+          <Card title="TENANT USAGES">
+            <div className="space-y-6">
+              <TenantRow
+                name="Tenant A"
+                enabled={true}
+                resources={{
+                  vCPU: { used: 4, total: 8 },
+                  RAM: { used: 22, total: 32 },
+                  Disk: { used: 4, total: 6 },
+                  GPU: { used: 6, total: 8 },
+                  NPU: { used: 6, total: 8 },
+                }}
+              />
+              <TenantRow
+                name="Tenant B"
+                enabled={false}
+                resources={{
+                  vCPU: { used: 4, total: 8 },
+                  RAM: { used: 22, total: 32 },
+                  Disk: { used: 4, total: 6 },
+                  GPU: { used: 6, total: 8 },
+                  NPU: { used: 6, total: 8 },
+                }}
+              />
+              <TenantRow
+                name="Tenant C"
+                enabled={true}
+                resources={{
+                  vCPU: { used: 4, total: 8 },
+                  RAM: { used: 22, total: 32 },
+                  Disk: { used: 4, total: 6 },
+                  GPU: { used: 6, total: 8 },
+                  NPU: { used: 6, total: 8 },
+                }}
+              />
+            </div>
+          </Card>
         </div>
         </div>
       </main>
@@ -459,4 +376,4 @@ export function ComputeHomePage() {
   );
 }
 
-export default ComputeHomePage;
+export default ComputeAdminHomePage;

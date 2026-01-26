@@ -19,6 +19,7 @@ import { InstanceListPage } from '@/pages/InstanceListPage';
 import { InstanceDetailPage } from '@/pages/InstanceDetailPage';
 import { HomePage } from '@/pages/HomePage';
 import { ComputeHomePage } from '@/pages/ComputeHomePage';
+import { ComputeAdminHomePage } from '@/pages/ComputeAdminHomePage';
 import { InstanceTemplatesPage } from '@/pages/InstanceTemplatesPage';
 import { InstanceTemplateDetailPage } from '@/pages/InstanceTemplateDetailPage';
 import { InstanceSnapshotsPage } from '@/pages/InstanceSnapshotsPage';
@@ -347,7 +348,7 @@ function AppRoutes() {
         <Route path="/compute/console/:instanceId" element={<ConsolePage />} />
 
         {/* Compute Admin Routes - same pages, different sidebar will be implemented later */}
-        <Route path="/compute-admin" element={<InstanceListPage />} />
+        <Route path="/compute-admin" element={<ComputeAdminHomePage />} />
         <Route path="/compute-admin/instances" element={<InstanceListPage />} />
         <Route path="/compute-admin/instances/create" element={<CreateInstancePage />} />
         <Route path="/compute-admin/instances/:id" element={<InstanceDetailPage />} />

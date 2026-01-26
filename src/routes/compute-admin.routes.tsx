@@ -3,6 +3,7 @@ import { Route } from 'react-router-dom';
 
 // Lazy load pages - temporarily using the original Compute pages
 // TODO: Replace with compute-admin specific pages once basic routing works
+const ComputeAdminHomePage = lazy(() => import('@/pages/ComputeAdminHomePage'));
 const InstanceListPage = lazy(() => import('@/pages/InstanceListPage'));
 const InstanceDetailPage = lazy(() => import('@/pages/InstanceDetailPage'));
 const CreateInstancePage = lazy(() => import('@/pages/CreateInstancePage'));
@@ -50,7 +51,7 @@ const ConsolePage = lazy(() => import('@/pages/ConsolePage'));
 export const computeAdminRoutes = (
   <>
     {/* Compute Admin Routes */}
-    <Route path="/compute-admin" element={<InstanceListPage />} />
+    <Route path="/compute-admin" element={<ComputeAdminHomePage />} />
     <Route path="/compute-admin/instances" element={<InstanceListPage />} />
     <Route path="/compute-admin/instances/create" element={<CreateInstancePage />} />
     <Route path="/compute-admin/instances/:id" element={<InstanceDetailPage />} />

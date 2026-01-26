@@ -44,6 +44,10 @@ export function Sidebar({ isOpen = true, onToggle }: SidebarProps) {
   const { projects, selectedProjectId, setSelectedProjectId } = useProject();
   const location = useLocation();
   const isCloudBuilder = location.pathname.startsWith('/cloudbuilder') || location.pathname.startsWith('/cloud-builder');
+  const isComputeAdmin = location.pathname.startsWith('/compute-admin');
+  
+  // Base path for compute routes (either /compute or /compute-admin)
+  const basePath = isComputeAdmin ? '/compute-admin' : '/compute';
   
   // Check if current path matches href
   const isActive = (href: string) => {
@@ -52,18 +56,18 @@ export function Sidebar({ isOpen = true, onToggle }: SidebarProps) {
       return true;
     }
     // Match detail pages (e.g., /compute/volumes/vol-001 matches /compute/volumes)
-    if (href !== '/compute' && location.pathname.startsWith(href + '/')) {
+    if (href !== basePath && location.pathname.startsWith(href + '/')) {
       return true;
     }
     // Match child resources - Subnets are under Networks
-    if (href === '/compute/networks' && location.pathname.startsWith('/compute/subnets')) {
+    if (href === `${basePath}/networks` && location.pathname.startsWith(`${basePath}/subnets`)) {
       return true;
     }
     // Match child resources - Listeners, Pools, and L7 Policies are under Load Balancers
-    if (href === '/compute/load-balancers' && (
-      location.pathname.startsWith('/compute/listeners') ||
-      location.pathname.startsWith('/compute/pools') ||
-      location.pathname.startsWith('/compute/l7-policies')
+    if (href === `${basePath}/load-balancers` && (
+      location.pathname.startsWith(`${basePath}/listeners`) ||
+      location.pathname.startsWith(`${basePath}/pools`) ||
+      location.pathname.startsWith(`${basePath}/l7-policies`)
     )) {
       return true;
     }
@@ -170,8 +174,8 @@ export function Sidebar({ isOpen = true, onToggle }: SidebarProps) {
           <MenuItem
             icon={<IconHome size={16} stroke={1.5} />}
             label="Home"
-              href="/compute"
-              active={isActive('/compute')}
+            href={basePath}
+            active={isActive(basePath)}
           />
 
           {/* Compute Section */}
@@ -179,44 +183,44 @@ export function Sidebar({ isOpen = true, onToggle }: SidebarProps) {
             <MenuItem
               icon={<IconCube size={16} stroke={1.5} />}
               label="Instances"
-              href="/compute/instances"
-              active={isActive('/compute/instances')}
+              href={`${basePath}/instances`}
+              active={isActive(`${basePath}/instances`)}
             />
             <MenuItem
               icon={<IconTemplate size={16} stroke={1.5} />}
               label="Instance templates"
-              href="/compute/instance-templates"
-              active={isActive('/compute/instance-templates')}
+              href={`${basePath}/instance-templates`}
+              active={isActive(`${basePath}/instance-templates`)}
             />
             <MenuItem
               icon={<IconCamera size={16} stroke={1.5} />}
               label="Instance snapshots"
-              href="/compute/instance-snapshots"
-              active={isActive('/compute/instance-snapshots')}
+              href={`${basePath}/instance-snapshots`}
+              active={isActive(`${basePath}/instance-snapshots`)}
             />
             <MenuItem
               icon={<IconDisc size={16} stroke={1.5} />}
               label="Images"
-              href="/compute/images"
-              active={isActive('/compute/images')}
+              href={`${basePath}/images`}
+              active={isActive(`${basePath}/images`)}
             />
             <MenuItem
               icon={<IconCpu size={16} stroke={1.5} />}
               label="Flavors"
-              href="/compute/flavors"
-              active={isActive('/compute/flavors')}
+              href={`${basePath}/flavors`}
+              active={isActive(`${basePath}/flavors`)}
             />
             <MenuItem
               icon={<IconKey size={16} stroke={1.5} />}
               label="Key pairs"
-              href="/compute/key-pairs"
-              active={isActive('/compute/key-pairs')}
+              href={`${basePath}/key-pairs`}
+              active={isActive(`${basePath}/key-pairs`)}
             />
             <MenuItem
               icon={<IconServer size={16} stroke={1.5} />}
               label="Server groups"
-              href="/compute/server-groups"
-              active={isActive('/compute/server-groups')}
+              href={`${basePath}/server-groups`}
+              active={isActive(`${basePath}/server-groups`)}
             />
           </MenuSection>
 
@@ -225,20 +229,20 @@ export function Sidebar({ isOpen = true, onToggle }: SidebarProps) {
             <MenuItem
               icon={<IconDatabase size={16} stroke={1.5} />}
               label="Volumes"
-              href="/compute/volumes"
-              active={isActive('/compute/volumes')}
+              href={`${basePath}/volumes`}
+              active={isActive(`${basePath}/volumes`)}
             />
             <MenuItem
               icon={<IconCamera size={16} stroke={1.5} />}
               label="Volume snapshots"
-              href="/compute/volume-snapshots"
-              active={isActive('/compute/volume-snapshots')}
+              href={`${basePath}/volume-snapshots`}
+              active={isActive(`${basePath}/volume-snapshots`)}
             />
             <MenuItem
               icon={<IconDatabaseExport size={16} stroke={1.5} />}
               label="Volume backups"
-              href="/compute/volume-backups"
-              active={isActive('/compute/volume-backups')}
+              href={`${basePath}/volume-backups`}
+              active={isActive(`${basePath}/volume-backups`)}
             />
           </MenuSection>
 
@@ -247,50 +251,50 @@ export function Sidebar({ isOpen = true, onToggle }: SidebarProps) {
             <MenuItem
               icon={<IconNetwork size={16} stroke={1.5} />}
               label="Networks"
-              href="/compute/networks"
-              active={isActive('/compute/networks')}
+              href={`${basePath}/networks`}
+              active={isActive(`${basePath}/networks`)}
             />
             <MenuItem
               icon={<img src={RouterIcon} width={16} height={16} alt="" className="opacity-80" />}
               label="Routers"
-              href="/compute/routers"
-              active={isActive('/compute/routers')}
+              href={`${basePath}/routers`}
+              active={isActive(`${basePath}/routers`)}
             />
             <MenuItem
               icon={<ChevronsLeftRightEllipsis size={16} strokeWidth={1.5} />}
               label="Ports"
-              href="/compute/ports"
-              active={isActive('/compute/ports')}
+              href={`${basePath}/ports`}
+              active={isActive(`${basePath}/ports`)}
             />
             <MenuItem
               icon={<IconWorldWww size={16} stroke={1.5} />}
               label="Floating IPs"
-              href="/compute/floating-ips"
-              active={isActive('/compute/floating-ips')}
+              href={`${basePath}/floating-ips`}
+              active={isActive(`${basePath}/floating-ips`)}
             />
             <MenuItem
               icon={<IconShieldLock size={16} stroke={1.5} />}
               label="Security groups"
-              href="/compute/security-groups"
-              active={isActive('/compute/security-groups')}
+              href={`${basePath}/security-groups`}
+              active={isActive(`${basePath}/security-groups`)}
             />
             <MenuItem
               icon={<IconLoadBalancer size={16} stroke={1.5} />}
               label="Load balancers"
-              href="/compute/load-balancers"
-              active={isActive('/compute/load-balancers')}
+              href={`${basePath}/load-balancers`}
+              active={isActive(`${basePath}/load-balancers`)}
             />
             <MenuItem
               icon={<IconCertificate size={16} stroke={1.5} />}
               label="Certificates"
-              href="/compute/certificates"
-              active={isActive('/compute/certificates')}
+              href={`${basePath}/certificates`}
+              active={isActive(`${basePath}/certificates`)}
             />
             <MenuItem
               icon={<IconTopologyStar3 size={16} stroke={1.5} />}
               label="Topology"
-              href="/compute/topology"
-              active={isActive('/compute/topology')}
+              href={`${basePath}/topology`}
+              active={isActive(`${basePath}/topology`)}
             />
           </MenuSection>
             </>
