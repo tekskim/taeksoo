@@ -10,8 +10,8 @@ const CreateInstancePage = lazy(() => import('@/pages/CreateInstancePage'));
 const InstanceTemplatesPage = lazy(() => import('@/pages/InstanceTemplatesPage'));
 const InstanceTemplateDetailPage = lazy(() => import('@/pages/InstanceTemplateDetailPage'));
 const CreateTemplatePage = lazy(() => import('@/pages/CreateTemplatePage'));
-const InstanceSnapshotsPage = lazy(() => import('@/pages/InstanceSnapshotsPage'));
-const InstanceSnapshotDetailPage = lazy(() => import('@/pages/InstanceSnapshotDetailPage'));
+const ComputeAdminInstanceSnapshotsPage = lazy(() => import('@/pages/ComputeAdminInstanceSnapshotsPage'));
+const ComputeAdminInstanceSnapshotDetailPage = lazy(() => import('@/pages/ComputeAdminInstanceSnapshotDetailPage'));
 const ImagesPage = lazy(() => import('@/pages/ImagesPage'));
 const ImageDetailPage = lazy(() => import('@/pages/ImageDetailPage'));
 const FlavorsPage = lazy(() => import('@/pages/FlavorsPage'));
@@ -58,8 +58,8 @@ export const computeAdminRoutes = (
     <Route path="/compute-admin/instance-templates" element={<InstanceTemplatesPage />} />
     <Route path="/compute-admin/instance-templates/create" element={<CreateTemplatePage />} />
     <Route path="/compute-admin/instance-templates/:id" element={<InstanceTemplateDetailPage />} />
-    <Route path="/compute-admin/instance-snapshots" element={<InstanceSnapshotsPage />} />
-    <Route path="/compute-admin/instance-snapshots/:id" element={<InstanceSnapshotDetailPage />} />
+    <Route path="/compute-admin/instance-snapshots" element={<ComputeAdminInstanceSnapshotsPage />} />
+    <Route path="/compute-admin/instance-snapshots/:id" element={<ComputeAdminInstanceSnapshotDetailPage />} />
     <Route path="/compute-admin/images" element={<ImagesPage />} />
     <Route path="/compute-admin/images/:id" element={<ImageDetailPage />} />
     <Route path="/compute-admin/flavors" element={<FlavorsPage />} />

@@ -1,7 +1,7 @@
 import { useState, useMemo, useEffect, useRef, useLayoutEffect } from 'react';
 import {
   Button,
-  SearchInput,
+  FilterSearchInput,
   Table,
   StatusIndicator,
   Pagination,
@@ -18,6 +18,8 @@ import {
   ContextMenu,
   type TableColumn,
   type StatusType,
+  type FilterField,
+  type AppliedFilter,
   type FilterItem,
   type ContextMenuItem,
 } from '@/design-system';
@@ -54,6 +56,9 @@ interface Instance {
   name: string;
   status: InstanceStatus;
   locked: boolean;
+  tenant: string;
+  tenantId: string;
+  host: string;
   fixedIp: string;
   floatingIp: string;
   image: string;
@@ -85,16 +90,36 @@ interface BareMetalInstance {
    ---------------------------------------- */
 
 const mockInstances: Instance[] = [
-  { id: 'vm-001', name: 'worker-node-01', status: 'running', locked: true, fixedIp: '10.20.30.40', floatingIp: '20.30.40.50', image: 'CentOS 7', flavor: 'Medium', vcpu: 4, ram: '8GB', disk: '100GB', gpu: '1', az: 'keystone' },
-  { id: 'vm-002', name: 'worker-node-02', status: 'running', locked: false, fixedIp: '10.20.30.41', floatingIp: '20.30.40.51', image: 'CentOS 7', flavor: 'Medium', vcpu: 4, ram: '8GB', disk: '100GB', gpu: '1', az: 'keystone' },
-  { id: 'vm-003', name: 'master-node-01', status: 'running', locked: true, fixedIp: '10.20.30.10', floatingIp: '20.30.40.10', image: 'Ubuntu 22.04', flavor: 'Large', vcpu: 8, ram: '16GB', disk: '200GB', gpu: '-', az: 'nova' },
-  { id: 'vm-004', name: 'db-server-01', status: 'stopped', locked: true, fixedIp: '10.20.30.20', floatingIp: '-', image: 'CentOS 8', flavor: 'XLarge', vcpu: 16, ram: '64GB', disk: '500GB', gpu: '-', az: 'keystone' },
-  { id: 'vm-005', name: 'gpu-node-01', status: 'running', locked: false, fixedIp: '10.20.30.50', floatingIp: '20.30.40.60', image: 'Ubuntu 22.04', flavor: 'GPU Large', vcpu: 32, ram: '128GB', disk: '1TB', gpu: '4', az: 'nova' },
-  { id: 'vm-006', name: 'gpu-node-02', status: 'running', locked: false, fixedIp: '10.20.30.51', floatingIp: '20.30.40.61', image: 'Ubuntu 22.04', flavor: 'GPU Large', vcpu: 32, ram: '128GB', disk: '1TB', gpu: '4', az: 'nova' },
-  { id: 'vm-007', name: 'web-server-01', status: 'pending', locked: false, fixedIp: '-', floatingIp: '-', image: 'Rocky Linux 9', flavor: 'Small', vcpu: 2, ram: '4GB', disk: '50GB', gpu: '-', az: 'keystone' },
-  { id: 'vm-008', name: 'web-server-02', status: 'building', locked: false, fixedIp: '-', floatingIp: '-', image: 'Rocky Linux 9', flavor: 'Small', vcpu: 2, ram: '4GB', disk: '50GB', gpu: '-', az: 'keystone' },
-  { id: 'vm-009', name: 'analytics-01', status: 'error', locked: true, fixedIp: '10.20.30.80', floatingIp: '-', image: 'Debian 12', flavor: 'XLarge', vcpu: 16, ram: '32GB', disk: '500GB', gpu: '2', az: 'nova' },
-  { id: 'vm-010', name: 'cache-server-01', status: 'running', locked: false, fixedIp: '10.20.30.90', floatingIp: '20.30.40.90', image: 'Debian 12', flavor: 'Medium', vcpu: 4, ram: '16GB', disk: '100GB', gpu: '-', az: 'keystone' },
+  { id: 'vm-001', name: 'worker-node-01', status: 'running', locked: true, tenant: 'Tenant A', tenantId: 'tenant-001', host: 'compute-01', fixedIp: '10.20.30.40', floatingIp: '20.30.40.50', image: 'CentOS 7', flavor: 'Medium', vcpu: 4, ram: '8GB', disk: '100GB', gpu: '1', az: 'keystone' },
+  { id: 'vm-002', name: 'worker-node-02', status: 'running', locked: false, tenant: 'Tenant A', tenantId: 'tenant-001', host: 'compute-01', fixedIp: '10.20.30.41', floatingIp: '20.30.40.51', image: 'CentOS 7', flavor: 'Medium', vcpu: 4, ram: '8GB', disk: '100GB', gpu: '1', az: 'keystone' },
+  { id: 'vm-003', name: 'master-node-01', status: 'running', locked: true, tenant: 'Tenant B', tenantId: 'tenant-002', host: 'compute-02', fixedIp: '10.20.30.10', floatingIp: '20.30.40.10', image: 'Ubuntu 22.04', flavor: 'Large', vcpu: 8, ram: '16GB', disk: '200GB', gpu: '-', az: 'nova' },
+  { id: 'vm-004', name: 'db-server-01', status: 'stopped', locked: true, tenant: 'Tenant A', tenantId: 'tenant-001', host: 'compute-03', fixedIp: '10.20.30.20', floatingIp: '-', image: 'CentOS 8', flavor: 'XLarge', vcpu: 16, ram: '64GB', disk: '500GB', gpu: '-', az: 'keystone' },
+  { id: 'vm-005', name: 'gpu-node-01', status: 'running', locked: false, tenant: 'Tenant C', tenantId: 'tenant-003', host: 'gpu-compute-01', fixedIp: '10.20.30.50', floatingIp: '20.30.40.60', image: 'Ubuntu 22.04', flavor: 'GPU Large', vcpu: 32, ram: '128GB', disk: '1TB', gpu: '4', az: 'nova' },
+  { id: 'vm-006', name: 'gpu-node-02', status: 'running', locked: false, tenant: 'Tenant C', tenantId: 'tenant-003', host: 'gpu-compute-01', fixedIp: '10.20.30.51', floatingIp: '20.30.40.61', image: 'Ubuntu 22.04', flavor: 'GPU Large', vcpu: 32, ram: '128GB', disk: '1TB', gpu: '4', az: 'nova' },
+  { id: 'vm-007', name: 'web-server-01', status: 'pending', locked: false, tenant: 'Tenant B', tenantId: 'tenant-002', host: 'compute-02', fixedIp: '-', floatingIp: '-', image: 'Rocky Linux 9', flavor: 'Small', vcpu: 2, ram: '4GB', disk: '50GB', gpu: '-', az: 'keystone' },
+  { id: 'vm-008', name: 'web-server-02', status: 'building', locked: false, tenant: 'Tenant B', tenantId: 'tenant-002', host: 'compute-04', fixedIp: '-', floatingIp: '-', image: 'Rocky Linux 9', flavor: 'Small', vcpu: 2, ram: '4GB', disk: '50GB', gpu: '-', az: 'keystone' },
+  { id: 'vm-009', name: 'analytics-01', status: 'error', locked: true, tenant: 'Tenant A', tenantId: 'tenant-001', host: 'compute-05', fixedIp: '10.20.30.80', floatingIp: '-', image: 'Debian 12', flavor: 'XLarge', vcpu: 16, ram: '32GB', disk: '500GB', gpu: '2', az: 'nova' },
+  { id: 'vm-010', name: 'cache-server-01', status: 'running', locked: false, tenant: 'Tenant B', tenantId: 'tenant-002', host: 'compute-06', fixedIp: '10.20.30.90', floatingIp: '20.30.40.90', image: 'Debian 12', flavor: 'Medium', vcpu: 4, ram: '16GB', disk: '100GB', gpu: '-', az: 'keystone' },
+  { id: 'vm-011', name: 'api-gateway-01', status: 'running', locked: true, tenant: 'Tenant A', tenantId: 'tenant-001', host: 'compute-01', fixedIp: '10.20.30.100', floatingIp: '20.30.40.100', image: 'Ubuntu 22.04', flavor: 'Medium', vcpu: 4, ram: '8GB', disk: '100GB', gpu: '-', az: 'nova' },
+  { id: 'vm-012', name: 'api-gateway-02', status: 'running', locked: true, tenant: 'Tenant A', tenantId: 'tenant-001', host: 'compute-02', fixedIp: '10.20.30.101', floatingIp: '20.30.40.101', image: 'Ubuntu 22.04', flavor: 'Medium', vcpu: 4, ram: '8GB', disk: '100GB', gpu: '-', az: 'nova' },
+  { id: 'vm-013', name: 'monitoring-01', status: 'running', locked: false, tenant: 'Tenant C', tenantId: 'tenant-003', host: 'compute-03', fixedIp: '10.20.30.110', floatingIp: '-', image: 'CentOS 8', flavor: 'Large', vcpu: 8, ram: '32GB', disk: '500GB', gpu: '-', az: 'keystone' },
+  { id: 'vm-014', name: 'logging-server-01', status: 'running', locked: false, tenant: 'Tenant C', tenantId: 'tenant-003', host: 'compute-04', fixedIp: '10.20.30.120', floatingIp: '-', image: 'Debian 12', flavor: 'XLarge', vcpu: 16, ram: '64GB', disk: '2TB', gpu: '-', az: 'keystone' },
+  { id: 'vm-015', name: 'jenkins-master', status: 'running', locked: true, tenant: 'Tenant B', tenantId: 'tenant-002', host: 'compute-05', fixedIp: '10.20.30.130', floatingIp: '20.30.40.130', image: 'Ubuntu 22.04', flavor: 'Large', vcpu: 8, ram: '16GB', disk: '200GB', gpu: '-', az: 'nova' },
+  { id: 'vm-016', name: 'jenkins-agent-01', status: 'running', locked: false, tenant: 'Tenant B', tenantId: 'tenant-002', host: 'compute-06', fixedIp: '10.20.30.131', floatingIp: '-', image: 'Ubuntu 22.04', flavor: 'Medium', vcpu: 4, ram: '8GB', disk: '100GB', gpu: '-', az: 'nova' },
+  { id: 'vm-017', name: 'jenkins-agent-02', status: 'stopped', locked: false, tenant: 'Tenant B', tenantId: 'tenant-002', host: 'compute-06', fixedIp: '10.20.30.132', floatingIp: '-', image: 'Ubuntu 22.04', flavor: 'Medium', vcpu: 4, ram: '8GB', disk: '100GB', gpu: '-', az: 'nova' },
+  { id: 'vm-018', name: 'gitlab-server', status: 'running', locked: true, tenant: 'Tenant A', tenantId: 'tenant-001', host: 'compute-07', fixedIp: '10.20.30.140', floatingIp: '20.30.40.140', image: 'CentOS 8', flavor: 'XLarge', vcpu: 16, ram: '32GB', disk: '1TB', gpu: '-', az: 'keystone' },
+  { id: 'vm-019', name: 'nexus-repo', status: 'running', locked: true, tenant: 'Tenant A', tenantId: 'tenant-001', host: 'compute-08', fixedIp: '10.20.30.150', floatingIp: '-', image: 'Rocky Linux 9', flavor: 'Large', vcpu: 8, ram: '16GB', disk: '500GB', gpu: '-', az: 'keystone' },
+  { id: 'vm-020', name: 'redis-cluster-01', status: 'running', locked: false, tenant: 'Tenant C', tenantId: 'tenant-003', host: 'compute-01', fixedIp: '10.20.30.160', floatingIp: '-', image: 'Debian 12', flavor: 'Medium', vcpu: 4, ram: '16GB', disk: '50GB', gpu: '-', az: 'nova' },
+  { id: 'vm-021', name: 'redis-cluster-02', status: 'running', locked: false, tenant: 'Tenant C', tenantId: 'tenant-003', host: 'compute-02', fixedIp: '10.20.30.161', floatingIp: '-', image: 'Debian 12', flavor: 'Medium', vcpu: 4, ram: '16GB', disk: '50GB', gpu: '-', az: 'nova' },
+  { id: 'vm-022', name: 'redis-cluster-03', status: 'running', locked: false, tenant: 'Tenant C', tenantId: 'tenant-003', host: 'compute-03', fixedIp: '10.20.30.162', floatingIp: '-', image: 'Debian 12', flavor: 'Medium', vcpu: 4, ram: '16GB', disk: '50GB', gpu: '-', az: 'keystone' },
+  { id: 'vm-023', name: 'kafka-broker-01', status: 'running', locked: true, tenant: 'Tenant A', tenantId: 'tenant-001', host: 'compute-04', fixedIp: '10.20.30.170', floatingIp: '-', image: 'Ubuntu 22.04', flavor: 'Large', vcpu: 8, ram: '32GB', disk: '500GB', gpu: '-', az: 'nova' },
+  { id: 'vm-024', name: 'kafka-broker-02', status: 'running', locked: true, tenant: 'Tenant A', tenantId: 'tenant-001', host: 'compute-05', fixedIp: '10.20.30.171', floatingIp: '-', image: 'Ubuntu 22.04', flavor: 'Large', vcpu: 8, ram: '32GB', disk: '500GB', gpu: '-', az: 'nova' },
+  { id: 'vm-025', name: 'kafka-broker-03', status: 'error', locked: true, tenant: 'Tenant A', tenantId: 'tenant-001', host: 'compute-06', fixedIp: '10.20.30.172', floatingIp: '-', image: 'Ubuntu 22.04', flavor: 'Large', vcpu: 8, ram: '32GB', disk: '500GB', gpu: '-', az: 'keystone' },
+  { id: 'vm-026', name: 'ml-training-01', status: 'running', locked: false, tenant: 'Tenant C', tenantId: 'tenant-003', host: 'gpu-compute-02', fixedIp: '10.20.30.180', floatingIp: '20.30.40.180', image: 'Ubuntu 22.04', flavor: 'GPU XLarge', vcpu: 64, ram: '256GB', disk: '2TB', gpu: '8', az: 'nova' },
+  { id: 'vm-027', name: 'ml-inference-01', status: 'running', locked: false, tenant: 'Tenant C', tenantId: 'tenant-003', host: 'gpu-compute-03', fixedIp: '10.20.30.181', floatingIp: '20.30.40.181', image: 'Ubuntu 22.04', flavor: 'GPU Large', vcpu: 32, ram: '128GB', disk: '1TB', gpu: '4', az: 'nova' },
+  { id: 'vm-028', name: 'bastion-host', status: 'running', locked: true, tenant: 'Tenant A', tenantId: 'tenant-001', host: 'compute-07', fixedIp: '10.20.30.190', floatingIp: '20.30.40.190', image: 'Rocky Linux 9', flavor: 'Small', vcpu: 2, ram: '4GB', disk: '50GB', gpu: '-', az: 'keystone' },
+  { id: 'vm-029', name: 'vpn-server', status: 'running', locked: true, tenant: 'Tenant B', tenantId: 'tenant-002', host: 'compute-08', fixedIp: '10.20.30.200', floatingIp: '20.30.40.200', image: 'CentOS 8', flavor: 'Small', vcpu: 2, ram: '4GB', disk: '50GB', gpu: '-', az: 'keystone' },
+  { id: 'vm-030', name: 'test-instance-01', status: 'pending', locked: false, tenant: 'Tenant B', tenantId: 'tenant-002', host: 'compute-01', fixedIp: '-', floatingIp: '-', image: 'Ubuntu 22.04', flavor: 'Small', vcpu: 2, ram: '4GB', disk: '50GB', gpu: '-', az: 'nova' },
 ];
 
 const mockBareMetalInstances: BareMetalInstance[] = [
@@ -126,28 +151,88 @@ const statusMap: Record<InstanceStatus, StatusType> = {
    Instances list Page
    ---------------------------------------- */
 
-// Filter type is imported from design-system as FilterItem
+// Filter fields definition for FilterSearchInput
+const filterFields: FilterField[] = [
+  {
+    id: 'name',
+    label: 'Name',
+    type: 'text',
+    placeholder: 'Enter instance name...',
+  },
+  {
+    id: 'status',
+    label: 'Status',
+    type: 'select',
+    options: [
+      { value: 'running', label: 'Running' },
+      { value: 'stopped', label: 'Stopped' },
+      { value: 'error', label: 'Error' },
+      { value: 'building', label: 'Building' },
+    ],
+  },
+  {
+    id: 'tenant',
+    label: 'Tenant',
+    type: 'select',
+    options: [
+      { value: 'Tenant A', label: 'Tenant A' },
+      { value: 'Tenant B', label: 'Tenant B' },
+      { value: 'Tenant C', label: 'Tenant C' },
+    ],
+  },
+  {
+    id: 'host',
+    label: 'Host',
+    type: 'text',
+    placeholder: 'Enter host...',
+  },
+  {
+    id: 'os',
+    label: 'OS',
+    type: 'select',
+    options: [
+      { value: 'ubuntu', label: 'Ubuntu' },
+      { value: 'centos', label: 'CentOS' },
+      { value: 'windows', label: 'Windows' },
+      { value: 'rocky', label: 'Rocky Linux' },
+    ],
+  },
+  {
+    id: 'flavor',
+    label: 'Flavor',
+    type: 'text',
+    placeholder: 'Enter flavor...',
+  },
+];
 
-export function InstanceListPage() {
+export function ComputeAdminInstanceListPage() {
   const { isOpen: sidebarOpen, toggle: toggleSidebar, open: openSidebar } = useSidebar();
-  const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [currentBareMetalPage, setCurrentBareMetalPage] = useState(1);
   const [activeTab, setActiveTab] = useState('vm');
-  const [activeFilters, setActiveFilters] = useState<FilterItem[]>([
-    { id: '1', field: 'Name', value: 'a' },
-    { id: '2', field: 'Name', value: 'a' },
-    { id: '3', field: 'Name', value: 'a' },
-    { id: '4', field: 'Name', value: 'aasdf' },
-  ]);
+  const [appliedFilters, setAppliedFilters] = useState<AppliedFilter[]>([]);
+
+  const handleFiltersChange = (filters: AppliedFilter[]) => {
+    setAppliedFilters(filters);
+    setCurrentPage(1);
+    setCurrentBareMetalPage(1);
+  };
 
   const removeFilter = (filterId: string) => {
-    setActiveFilters(prev => prev.filter(f => f.id !== filterId));
+    setAppliedFilters(prev => prev.filter(f => f.id !== filterId));
   };
 
   const clearAllFilters = () => {
-    setActiveFilters([]);
+    setAppliedFilters([]);
   };
+
+  // Convert AppliedFilter[] to FilterItem[] for ListToolbar
+  const toolbarFilters: FilterItem[] = appliedFilters.map(f => ({
+    id: f.id,
+    field: f.fieldLabel,
+    value: f.valueLabel || f.value,
+  }));
+
   const [showScrollTop, setShowScrollTop] = useState(false);
   const [isPreferencesOpen, setIsPreferencesOpen] = useState(false);
   const [rowsPerPage, setRowsPerPage] = useState(10);
@@ -198,11 +283,11 @@ export function InstanceListPage() {
     addTab({
       id: tabId,
       label: tab.title,
-      path: `/compute/console/${tab.instanceId}?name=${encodeURIComponent(tab.title)}`,
+      path: `/compute-admin/console/${tab.instanceId}?name=${encodeURIComponent(tab.title)}`,
       closable: true,
     });
     // Navigate to the console page (new tab becomes active)
-    navigate(`/compute/console/${tab.instanceId}?name=${encodeURIComponent(tab.title)}`);
+    navigate(`/compute-admin/console/${tab.instanceId}?name=${encodeURIComponent(tab.title)}`);
   };
 
   // Default column config for VM instances
@@ -210,9 +295,11 @@ export function InstanceListPage() {
     { id: 'status', label: 'Status', visible: true, locked: true },
     { id: 'name', label: 'Name', visible: true, locked: true },
     { id: 'locked', label: 'Locked', visible: true },
+    { id: 'tenant', label: 'Tenant', visible: true },
+    { id: 'host', label: 'Host', visible: true },
     { id: 'fixedIp', label: 'Fixed IP', visible: true },
     { id: 'floatingIp', label: 'Floating IP', visible: true },
-    { id: 'image', label: 'Image', visible: true },
+    { id: 'image', label: 'OS', visible: true },
     { id: 'flavor', label: 'Flavor', visible: true },
     { id: 'vcpu', label: 'vCPU', visible: true },
     { id: 'ram', label: 'RAM', visible: true },
@@ -247,33 +334,64 @@ export function InstanceListPage() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  const filteredInstances = useMemo(() => 
-    mockInstances.filter((instance) =>
-    instance.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    instance.id.toLowerCase().includes(searchQuery.toLowerCase())
-    ), [searchQuery]
-  );
+  // Filter instances based on appliedFilters
+  const filteredInstances = mockInstances.filter((instance) => {
+    if (appliedFilters.length === 0) return true;
+    
+    return appliedFilters.every((filter) => {
+      const fieldId = filter.fieldId;
+      const filterValue = filter.value.toLowerCase();
+      
+      switch (fieldId) {
+        case 'name':
+          return instance.name.toLowerCase().includes(filterValue);
+        case 'status':
+          return instance.status.toLowerCase() === filterValue;
+        case 'os':
+          return instance.os.toLowerCase().includes(filterValue);
+        case 'flavor':
+          return instance.flavor.toLowerCase().includes(filterValue);
+        default:
+          return true;
+      }
+    });
+  });
 
-  const filteredBareMetalInstances = useMemo(() => 
-    mockBareMetalInstances.filter((instance) =>
-    instance.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    instance.id.toLowerCase().includes(searchQuery.toLowerCase())
-    ), [searchQuery]
-  );
+  const filteredBareMetalInstances = mockBareMetalInstances.filter((instance) => {
+    if (appliedFilters.length === 0) return true;
+    
+    return appliedFilters.every((filter) => {
+      const fieldId = filter.fieldId;
+      const filterValue = filter.value.toLowerCase();
+      
+      switch (fieldId) {
+        case 'name':
+          return instance.name.toLowerCase().includes(filterValue);
+        case 'status':
+          return instance.status.toLowerCase() === filterValue;
+        case 'os':
+          return instance.os.toLowerCase().includes(filterValue);
+        case 'flavor':
+          return instance.flavor.toLowerCase().includes(filterValue);
+        default:
+          return true;
+      }
+    });
+  });
 
   const totalPages = Math.ceil(filteredInstances.length / rowsPerPage);
   const totalBareMetalPages = Math.ceil(filteredBareMetalInstances.length / rowsPerPage);
 
   // Get paginated data
-  const paginatedInstances = useMemo(() => {
+  const paginatedInstances = (() => {
     const start = (currentPage - 1) * rowsPerPage;
     return filteredInstances.slice(start, start + rowsPerPage);
-  }, [filteredInstances, currentPage, rowsPerPage]);
+  })();
 
-  const paginatedBareMetalInstances = useMemo(() => {
+  const paginatedBareMetalInstances = (() => {
     const start = (currentBareMetalPage - 1) * rowsPerPage;
     return filteredBareMetalInstances.slice(start, start + rowsPerPage);
-  }, [filteredBareMetalInstances, currentBareMetalPage, rowsPerPage]);
+  })();
 
   // Handle create snapshot click
   const handleCreateSnapshot = (instance: Instance) => {
@@ -308,58 +426,22 @@ export function InstanceListPage() {
 
   // Context menu items for instances
   const getInstanceContextMenuItems = (instance: Instance): ContextMenuItem[] => [
-    { id: 'start', label: 'Start' },
-    { id: 'stop', label: 'Stop', status: 'danger' },
-    { id: 'reboot', label: 'Reboot', status: 'danger' },
-    { id: 'soft-reboot', label: 'Soft reboot' },
-    { id: 'pause', label: 'Pause' },
-    { id: 'suspend', label: 'Suspend' },
-    { id: 'shelve', label: 'Shelve' },
-    { id: 'unpause', label: 'Unpause' },
-    { id: 'resume', label: 'Resume' },
-    { id: 'unshelve', label: 'Unshelve' },
-    { id: 'rescue', label: 'Rescue' },
-    { id: 'unrescue', label: 'Unrescue', divider: true },
     {
       id: 'instance-status',
       label: 'Instance status',
       submenu: [
-        { id: 'start-sub', label: 'Start' },
-        { id: 'stop-sub', label: 'Stop', status: 'danger' },
-        { id: 'reboot-sub', label: 'Reboot', status: 'danger' },
-        { id: 'soft-reboot-sub', label: 'Soft reboot' },
-        { id: 'pause-sub', label: 'Pause' },
-        { id: 'suspend-sub', label: 'Suspend' },
-        { id: 'shelve-sub', label: 'Shelve' },
-        { id: 'unpause-sub', label: 'Unpause' },
-        { id: 'resume-sub', label: 'Resume' },
-        { id: 'unshelve-sub', label: 'Unshelve' },
-        { id: 'rescue-sub', label: 'Rescue' },
-        { id: 'unrescue-sub', label: 'Unrescue' },
-      ],
-    },
-    {
-      id: 'storage-snapshot',
-      label: 'Storage&Snapshot',
-      submenu: [
-        { id: 'attach-volume', label: 'Attach volume' },
-        { id: 'detach-volume', label: 'Detach volume', status: 'danger' },
-        { 
-          id: 'create-snapshot', 
-          label: 'Create instance snapshot',
-          onClick: () => handleCreateSnapshot(instance),
-        },
-      ],
-    },
-    {
-      id: 'network',
-      label: 'Network',
-      submenu: [
-        { id: 'attach-interface', label: 'Attach interface' },
-        { id: 'detach-interface', label: 'Detach interface', status: 'danger' },
-        { id: 'associate-floating-ip', label: 'Associate floating IP' },
-        { id: 'disassociate-floating-ip', label: 'Disassociate floating IP', status: 'danger' },
-        { id: 'manage-security-groups', label: 'Manage security groups' },
+        { id: 'start', label: 'Start' },
+        { id: 'stop', label: 'Stop', status: 'danger' },
+        { id: 'reboot', label: 'Reboot', status: 'danger' },
+        { id: 'soft-reboot', label: 'Soft reboot' },
+        { id: 'pause', label: 'Pause' },
+        { id: 'suspend', label: 'Suspend' },
+        { id: 'shelve', label: 'Shelve' },
+        { id: 'unpause', label: 'Unpause' },
+        { id: 'resume', label: 'Resume' },
+        { id: 'unshelve', label: 'Unshelve' },
+        { id: 'rescue', label: 'Rescue' },
+        { id: 'unrescue', label: 'Unrescue' },
       ],
     },
     {
@@ -371,9 +453,6 @@ export function InstanceListPage() {
           label: 'Lock setting',
           onClick: () => handleLockSetting(instance),
         },
-        { id: 'rebuild', label: 'Rebuild', status: 'danger' },
-        { id: 'resize', label: 'Resize' },
-        { id: 'manage-tags', label: 'Manage tags' },
         { 
           id: 'edit', 
           label: 'Edit',
@@ -381,8 +460,10 @@ export function InstanceListPage() {
         },
       ],
     },
+    { id: 'migrate', label: 'Migrate' },
+    { id: 'live-migrate', label: 'Live migrate' },
     { id: 'confirm-resize', label: 'Confirm resize' },
-    { id: 'revert-resize', label: 'Revert resize', divider: true },
+    { id: 'revert-resize', label: 'Revert resize' },
     { id: 'delete', label: 'Delete', status: 'danger' },
   ];
 
@@ -391,7 +472,7 @@ export function InstanceListPage() {
     {
       key: 'status',
       label: 'Status',
-      width: '59px',
+      width: '64px',
       align: 'center',
       sortable: false,
       render: (_, row) => (
@@ -401,18 +482,19 @@ export function InstanceListPage() {
     {
       key: 'name',
       label: 'Name',
-      width: '160px',
+      flex: 1,
+      minWidth: '140px',
       sortable: true,
       render: (_, row) => (
-        <div className="flex flex-col gap-0.5 whitespace-nowrap">
+        <div className="flex flex-col gap-0.5 min-w-0">
           <Link 
-            to={`/compute/instances/${row.id}`}
-            className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
+            to={`/compute-admin/instances/${row.id}`}
+            className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2 truncate"
             onClick={(e) => e.stopPropagation()}
           >
             {row.name}
           </Link>
-          <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
+          <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] truncate">
             ID : {row.id}
           </span>
         </div>
@@ -421,7 +503,7 @@ export function InstanceListPage() {
     {
       key: 'locked',
       label: 'Locked',
-      width: '62px',
+      width: '68px',
       align: 'center',
       sortable: false,
       render: (_, row) => row.locked ? (
@@ -429,46 +511,67 @@ export function InstanceListPage() {
       ) : null,
     },
     {
+      key: 'tenant',
+      label: 'Tenant',
+      flex: 1,
+      minWidth: '100px',
+      sortable: true,
+      render: (_, row) => (
+        <div className="flex flex-col gap-0.5">
+          <Link 
+            to={`/compute-admin/tenants/${row.tenantId}`}
+            className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {row.tenant}
+          </Link>
+          <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
+            ID: {row.tenantId}
+          </span>
+        </div>
+      ),
+    },
+    {
+      key: 'host',
+      label: 'Host',
+      flex: 1,
+      minWidth: '100px',
+      sortable: true,
+    },
+    {
       key: 'fixedIp',
       label: 'Fixed IP',
       flex: 1,
+      minWidth: '100px',
       sortable: false,
     },
     {
       key: 'floatingIp',
       label: 'Floating IP',
       flex: 1,
+      minWidth: '100px',
       sortable: false,
     },
     {
       key: 'image',
-      label: 'Image',
+      label: 'OS',
       flex: 1,
+      minWidth: '120px',
       sortable: true,
       render: (_, row) => (
-        <div className="flex flex-col gap-0.5">
-          <Link 
-            to={`/compute/images/${row.id}`}
-            className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
-            onClick={(e) => e.stopPropagation()}
-          >
-            {row.image}
-          </Link>
-          <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
-            ID : {row.id.substring(0, 8)}
-          </span>
-        </div>
+        <span className="font-medium">{row.image}</span>
       ),
     },
     {
       key: 'flavor',
       label: 'Flavor',
       flex: 1,
+      minWidth: '100px',
       sortable: true,
       render: (_, row) => (
         <div className="flex flex-col gap-0.5">
           <Link 
-            to={`/compute/flavors/${row.id}`}
+            to={`/compute-admin/flavors/${row.id}`}
             className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
             onClick={(e) => e.stopPropagation()}
           >
@@ -483,37 +586,37 @@ export function InstanceListPage() {
     {
       key: 'vcpu',
       label: 'vCPU',
-      flex: 1,
+      width: '80px',
       sortable: true,
     },
     {
       key: 'ram',
       label: 'RAM',
-      flex: 1,
+      width: '80px',
       sortable: true,
     },
     {
       key: 'disk',
       label: 'Disk',
-      flex: 1,
+      width: '80px',
       sortable: true,
     },
     {
       key: 'gpu',
       label: 'GPU',
-      flex: 1,
+      width: '64px',
       sortable: true,
     },
     {
       key: 'az',
       label: 'AZ',
-      flex: 1,
+      width: '80px',
       sortable: true,
     },
     {
       key: 'actions',
       label: 'Action',
-      width: '72px',
+      width: '64px',
       align: 'center',
       render: (_, row) => (
         <HStack gap={1} className="justify-center">
@@ -557,7 +660,7 @@ export function InstanceListPage() {
     {
       key: 'status',
       label: 'Status',
-      width: '59px',
+      width: '64px',
       align: 'center',
       sortable: false,
       render: (_, row) => (
@@ -568,11 +671,12 @@ export function InstanceListPage() {
       key: 'name',
       label: 'Name',
       flex: 1,
+      minWidth: '140px',
       sortable: true,
       render: (_, row) => (
         <div className="flex flex-col gap-0.5">
           <Link 
-            to={`/compute/bare-metal/${row.id}`}
+            to={`/compute-admin/bare-metal/${row.id}`}
             className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
             onClick={(e) => e.stopPropagation()}
           >
@@ -588,17 +692,19 @@ export function InstanceListPage() {
       key: 'ip',
       label: 'Fixed IP',
       flex: 1,
+      minWidth: '100px',
       sortable: false,
     },
     {
       key: 'image',
       label: 'Image',
       flex: 1,
+      minWidth: '120px',
       sortable: true,
       render: (_, row) => (
         <div className="flex flex-col gap-0.5">
           <Link 
-            to={`/compute/images/${row.id}`}
+            to={`/compute-admin/images/${row.id}`}
             className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
             onClick={(e) => e.stopPropagation()}
           >
@@ -614,11 +720,12 @@ export function InstanceListPage() {
       key: 'flavor',
       label: 'Flavor',
       flex: 1,
+      minWidth: '100px',
       sortable: true,
       render: (_, row) => (
         <div className="flex flex-col gap-0.5">
           <Link 
-            to={`/compute/flavors/${row.id}`}
+            to={`/compute-admin/flavors/${row.id}`}
             className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
             onClick={(e) => e.stopPropagation()}
           >
@@ -633,37 +740,37 @@ export function InstanceListPage() {
     {
       key: 'cpu',
       label: 'CPU',
-      flex: 1,
+      width: '80px',
       sortable: true,
     },
     {
       key: 'ram',
       label: 'RAM',
-      flex: 1,
+      width: '80px',
       sortable: true,
     },
     {
       key: 'disk',
       label: 'Disk',
-      flex: 1,
+      width: '80px',
       sortable: true,
     },
     {
       key: 'gpu',
       label: 'GPU',
-      flex: 1,
+      width: '64px',
       sortable: true,
     },
     {
       key: 'az',
       label: 'AZ',
-      flex: 1,
+      width: '80px',
       sortable: true,
     },
     {
       key: 'actions',
       label: 'Action',
-      width: '72px',
+      width: '64px',
       align: 'center',
       render: (_, row) => (
         <HStack gap={1} className="justify-center">
@@ -748,11 +855,6 @@ export function InstanceListPage() {
               <h1 className="text-[length:var(--font-size-16)] font-semibold leading-6 text-[var(--color-text-default)]">
                 Instances list
               </h1>
-              <Link to="/compute/instances/create">
-                <Button size="md">
-                  Create instance
-                </Button>
-              </Link>
             </div>
 
             {/* Type Tabs */}
@@ -767,36 +869,55 @@ export function InstanceListPage() {
             <ListToolbar
               primaryActions={
                 <ListToolbar.Actions>
-                  <div className="w-[280px]">
-                    <SearchInput
-                      placeholder="Search instance by attributes"
-                      value={searchQuery}
-                      onChange={(e) => setSearchQuery(e.target.value)}
-                      onClear={() => setSearchQuery('')}
-                      size="sm"
-                      fullWidth
-                    />
-                  </div>
+                  <FilterSearchInput
+                    filters={filterFields}
+                    appliedFilters={appliedFilters}
+                    onFiltersChange={handleFiltersChange}
+                    placeholder="Search instance by attributes"
+                    size="sm"
+                    className="w-[280px]"
+                    hideAppliedFilters
+                  />
                   <Button variant="secondary" size="sm" icon={<IconDownload size={12} />} aria-label="Download" />
                 </ListToolbar.Actions>
               }
               bulkActions={
                 <ListToolbar.Actions>
-                  <Button variant="muted" size="sm" leftIcon={<IconPlayerPlay size={12} />} disabled>
+                  <Button 
+                    variant="muted" 
+                    size="sm" 
+                    leftIcon={<IconPlayerPlay size={12} />} 
+                    disabled={activeTab === 'vm' ? selectedInstances.length === 0 : selectedBareMetalInstances.length === 0}
+                  >
                     Start
                   </Button>
-                  <Button variant="muted" size="sm" leftIcon={<IconPlayerStop size={12} />} disabled>
+                  <Button 
+                    variant="muted" 
+                    size="sm" 
+                    leftIcon={<IconPlayerStop size={12} />} 
+                    disabled={activeTab === 'vm' ? selectedInstances.length === 0 : selectedBareMetalInstances.length === 0}
+                  >
                     Stop
                   </Button>
-                  <Button variant="muted" size="sm" leftIcon={<IconRefresh size={12} />} disabled>
+                  <Button 
+                    variant="muted" 
+                    size="sm" 
+                    leftIcon={<IconRefresh size={12} />} 
+                    disabled={activeTab === 'vm' ? selectedInstances.length === 0 : selectedBareMetalInstances.length === 0}
+                  >
                     Reboot
                   </Button>
-                  <Button variant="muted" size="sm" leftIcon={<IconTrash size={12} />} disabled>
+                  <Button 
+                    variant="muted" 
+                    size="sm" 
+                    leftIcon={<IconTrash size={12} />} 
+                    disabled={activeTab === 'vm' ? selectedInstances.length === 0 : selectedBareMetalInstances.length === 0}
+                  >
                     Delete
                   </Button>
                 </ListToolbar.Actions>
               }
-              filters={activeFilters}
+              filters={toolbarFilters}
               onFilterRemove={removeFilter}
               onFiltersClear={clearAllFilters}
             />
@@ -809,7 +930,7 @@ export function InstanceListPage() {
                 onPageChange={setCurrentPage}
                 showSettings
                 onSettingsClick={() => setIsPreferencesOpen(true)}
-                totalItems={mockInstances.length}
+                totalItems={filteredInstances.length}
               />
             )}
             {activeTab === 'bare-metal' && filteredBareMetalInstances.length > 0 && (
@@ -819,7 +940,7 @@ export function InstanceListPage() {
                 onPageChange={setCurrentBareMetalPage}
                 showSettings
                 onSettingsClick={() => setIsPreferencesOpen(true)}
-                totalItems={mockBareMetalInstances.length}
+                totalItems={filteredBareMetalInstances.length}
                 selectedCount={selectedBareMetalInstances.length}
               />
             )}
@@ -938,7 +1059,7 @@ export function InstanceListPage() {
   );
 }
 
-export default InstanceListPage;
+export default ComputeAdminInstanceListPage;
 
 
 
