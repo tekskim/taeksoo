@@ -60,12 +60,11 @@
     "audit": "pnpm audit",
     "audit:check": "pnpm audit --audit-level=moderate",
     "audit:fix": "pnpm audit --fix",
-    "predeploy": "pnpm run build",
+    "predeploy": "pnpm run build && pnpm run build-storybook && cp -r storybook-static docs/storybook",
     "deploy": "gh-pages -d docs",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
-    "prepublishOnly": "pnpm run build:lib && pnpm run test:run",
-    "prepare": "husky"
+    "prepublishOnly": "pnpm run build:lib && pnpm run test:run"
   },
   "peerDependencies": {
     "react": "^18.0.0 || ^19.0.0",
