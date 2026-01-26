@@ -392,10 +392,13 @@ export default function SecurityGroupDetailPage() {
                 <div className="flex items-center gap-2">
                   {/* ID */}
                   <div className="flex-1 bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
-                    <div className="flex items-center justify-between">
-                      <span className="text-[length:var(--font-size-11)] font-medium text-[var(--color-text-subtle)]">
-                        ID
-                      </span>
+                    <span className="text-[length:var(--font-size-11)] font-medium text-[var(--color-text-subtle)]">
+                      ID
+                    </span>
+                    <div className="flex items-center gap-1 mt-1.5">
+                      <p className="text-[length:var(--font-size-12)] text-[var(--color-text-default)]">
+                        {securityGroup.id}
+                      </p>
                       <button
                         onClick={() => copyToClipboard(securityGroup.id)}
                         className="p-0.5 rounded hover:bg-[var(--color-surface-muted)] transition-colors"
@@ -403,9 +406,6 @@ export default function SecurityGroupDetailPage() {
                         <IconCopy size={12} className="text-[var(--color-action-primary)]" />
                       </button>
                     </div>
-                    <p className="text-[length:var(--font-size-12)] text-[var(--color-text-default)] mt-1.5">
-                      {securityGroup.id}
-                    </p>
                   </div>
 
                   {/* Description */}
