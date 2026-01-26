@@ -2,7 +2,6 @@ import { useState, useMemo } from 'react';
 import {
   Button,
   FilterSearchInput,
-  SearchInput,
   Table,
   Pagination,
   VStack,

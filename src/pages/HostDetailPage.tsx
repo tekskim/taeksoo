@@ -32,8 +32,6 @@ import { DataViewDrawer } from '@/components/DataViewDrawer';
 import {
   IconBell,
   IconRefresh,
-  IconChevronLeft,
-  IconChevronRight,
   IconDotsCircleHorizontal,
   IconArrowsMaximize,
   IconArrowsMinimize,

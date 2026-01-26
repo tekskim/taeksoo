@@ -34,7 +34,6 @@ import {
   IconChevronRight,
   IconEdit,
   IconBell,
-  IconCirclePlus,
   IconDotsCircleHorizontal,
   IconDownload,
   IconSearch,

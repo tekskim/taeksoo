@@ -12,8 +12,6 @@ import { useTabs } from '@/contexts/TabContext';
 import {
   IconRefresh,
   IconBell,
-  IconChevronLeft,
-  IconChevronRight,
   IconDotsCircleHorizontal,
   IconArrowsMaximize,
   IconArrowsMinimize,

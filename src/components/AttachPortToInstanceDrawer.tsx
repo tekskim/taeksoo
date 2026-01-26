@@ -57,7 +57,7 @@ const ITEMS_PER_PAGE = 5;
 export function AttachPortToInstanceDrawer({
   isOpen,
   onClose,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+   
   portId,
   portName,
   instances = defaultInstances,

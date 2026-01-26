@@ -64,21 +64,10 @@ export function CloudBuilderDetailPage() {
   const config = useMemo(() => getCloudBuilderListConfig(slug), [slug]);
   const row = useMemo(() => (id ? findRowById(config, id) : null), [config, id]);
 
-  // builder와 동일하게 services / compute-services는 디테일 제공하지 않음
-  const hasDetail = slug !== 'services' && slug !== 'compute-services';
-  if (!hasDetail) {
-    return (
-      <AppLayout>
-        <div className="pt-4 px-8 pb-6">
-          <div className="text-[var(--color-text-subtle)]">This page has no detail view.</div>
-        </div>
-      </AppLayout>
-    );
-  }
-
   const isNetworkAgent = slug === 'network-agents';
 
   // Enable/Disable (UI only) - shown in DetailHeader
+  // All hooks must be called before any early returns
   const [serviceStatus, setServiceStatus] = useState<string>(row?.serviceStatus ?? 'Enabled');
   const [statusModalOpen, setStatusModalOpen] = useState(false);
   const [nextStatus, setNextStatus] = useState<'Enabled' | 'Disabled'>('Disabled');
@@ -105,6 +94,18 @@ export function CloudBuilderDetailPage() {
     const configurationText = JSON.stringify(makeNetworkAgentConfiguration(seed), null, 2);
     return { createdAt, startedAt, heartbeatTimestamp, topic, resourcesSynced, description, configurationText };
   }, [isNetworkAgent, slug, id, row?.name]);
+
+  // builder와 동일하게 services / compute-services는 디테일 제공하지 않음
+  const hasDetail = slug !== 'services' && slug !== 'compute-services';
+  if (!hasDetail) {
+    return (
+      <AppLayout>
+        <div className="pt-4 px-8 pb-6">
+          <div className="text-[var(--color-text-subtle)]">This page has no detail view.</div>
+        </div>
+      </AppLayout>
+    );
+  }
 
   return (
     <AppLayout>

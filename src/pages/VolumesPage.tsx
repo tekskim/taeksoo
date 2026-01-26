@@ -21,19 +21,18 @@ import {
 import { Sidebar } from '@/components/Sidebar';
 import { useTabs } from '@/contexts/TabContext';
 import { ViewPreferencesDrawer, type ColumnConfig } from '@/components/ViewPreferencesDrawer';
-import { CreateVolumeSnapshotDrawer, type VolumeInfo as SnapshotVolumeInfo } from '@/components/CreateVolumeSnapshotDrawer';
-import { CreateVolumeBackupDrawer, type VolumeInfo as BackupVolumeInfo } from '@/components/CreateVolumeBackupDrawer';
-import { CloneVolumeDrawer, type VolumeInfo as CloneVolumeInfo } from '@/components/CloneVolumeDrawer';
+import { CreateVolumeSnapshotDrawer } from '@/components/CreateVolumeSnapshotDrawer';
+import { CreateVolumeBackupDrawer } from '@/components/CreateVolumeBackupDrawer';
+import { CloneVolumeDrawer } from '@/components/CloneVolumeDrawer';
 import { RestoreFromSnapshotDrawer } from '@/components/RestoreFromSnapshotDrawer';
-import { CreateImageFromVolumeDrawer, type VolumeInfo as ImageVolumeInfo } from '@/components/CreateImageFromVolumeDrawer';
-import { EditVolumeDrawer, type VolumeInfo as EditVolumeInfo } from '@/components/EditVolumeDrawer';
-import { ExtendVolumeDrawer, type VolumeInfo as ExtendVolumeInfo } from '@/components/ExtendVolumeDrawer';
-import { ChangeVolumeTypeDrawer, type VolumeInfo as ChangeTypeVolumeInfo } from '@/components/ChangeVolumeTypeDrawer';
-import { CreateTransferDrawer, type VolumeInfo as TransferVolumeInfo } from '@/components/CreateTransferDrawer';
+import { CreateImageFromVolumeDrawer } from '@/components/CreateImageFromVolumeDrawer';
+import { EditVolumeDrawer } from '@/components/EditVolumeDrawer';
+import { ExtendVolumeDrawer } from '@/components/ExtendVolumeDrawer';
+import { ChangeVolumeTypeDrawer } from '@/components/ChangeVolumeTypeDrawer';
+import { CreateTransferDrawer } from '@/components/CreateTransferDrawer';
 import { AttachVolumeDrawer } from '@/components/AttachVolumeDrawer';
-import { DetachVolumeDrawer, type InstanceInfo as DetachInstanceInfo } from '@/components/DetachVolumeDrawer';
+import { DetachVolumeDrawer } from '@/components/DetachVolumeDrawer';
 import {
-  IconPlus,
   IconDotsCircleHorizontal,
   IconTrash,
   IconDownload,

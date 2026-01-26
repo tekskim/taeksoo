@@ -2,7 +2,6 @@ import { useState, useMemo } from 'react';
 import {
   Button,
   FilterSearchInput,
-  SearchInput,
   Table,
   Pagination,
   VStack,
@@ -25,7 +24,6 @@ import { ViewPreferencesDrawer, type ColumnConfig } from '@/components/ViewPrefe
 import { CreateVolumeFromBackupDrawer } from '@/components/CreateVolumeFromBackupDrawer';
 import { EditVolumeBackupDrawer } from '@/components/EditVolumeBackupDrawer';
 import {
-  IconPlus,
   IconDotsCircleHorizontal,
   IconTrash,
   IconDownload,

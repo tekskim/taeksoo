@@ -32,7 +32,6 @@ import {
   IconTrash,
   IconChevronDown,
   IconStar,
-  IconRefresh,
 } from '@tabler/icons-react';
 
 /* ----------------------------------------

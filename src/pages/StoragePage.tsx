@@ -18,22 +18,11 @@ import {
   IconDatabase,
   IconPuzzle,
   IconSettings,
-  IconPalette,
-  IconBell,
-  IconSearch,
   IconTrash,
-  IconChevronDown,
-  IconChevronLeft,
-  IconChevronRight,
-  IconDots,
   IconStar,
   IconStarFilled,
-  IconPlayerPause,
   IconPencil,
-  IconCode,
-  IconDotsVertical,
   IconDotsCircleHorizontal,
-  IconCircleCheck,
   IconAlertTriangle,
   IconRefresh,
   IconLoader2,
@@ -43,7 +32,6 @@ import {
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import ThakiSymbol from '@/assets/thakiSymbol.svg';
 import { useDarkMode } from '@/hooks/useDarkMode';
-import { Sidebar } from '@/components/Sidebar';
 import { useProject } from '@/contexts/ProjectContext';
 import { ProjectSelector } from '@/components/ProjectSelector';
 

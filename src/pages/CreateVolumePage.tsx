@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import {
   Button,
   Breadcrumb,
-  HStack,
   VStack,
   TabBar,
   TopBar,
@@ -21,7 +20,6 @@ import {
   Slider,
   NumberInput,
   StatusIndicator,
-  Chip,
   IconUbuntu,
   IconGrid,
   IconRocky,

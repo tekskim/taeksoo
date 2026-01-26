@@ -12,9 +12,6 @@ import {
   IconPuzzle,
   IconBell,
   IconPalette,
-  IconMessage,
-  IconDatabase,
-  IconSettings,
   IconTarget,
   IconPencil,
 } from '@tabler/icons-react';

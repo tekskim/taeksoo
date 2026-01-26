@@ -10,7 +10,6 @@ import {
   TabBar,
   TopBar,
   Breadcrumb,
-  Checkbox,
   ContextMenu,
   type TableColumn,
   type StatusType,

@@ -23,7 +23,6 @@ import {
   Pagination,
   SearchInput,
   type ContextMenuItem,
-  type TableColumn,
 } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
 import { ShellPanel, useShellPanel, type ShellTab } from '@/components/ShellPanel';

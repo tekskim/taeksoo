@@ -6,7 +6,6 @@ import {
   Button,
   ConfirmModal,
   ContextMenu,
-  Input,
   ListToolbar,
   Modal,
   Pagination,

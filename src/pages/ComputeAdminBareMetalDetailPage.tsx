@@ -18,7 +18,6 @@ import {
   Pagination,
   StatusIndicator,
   ContextMenu,
-  type ContextMenuItem,
 } from '@/design-system';
 import { Link } from 'react-router-dom';
 import { Sidebar } from '@/components/Sidebar';
@@ -34,7 +33,6 @@ import {
   IconEdit,
   IconBell,
   IconDownload,
-  IconSearch,
   IconCopy,
   IconSelector,
   IconLock,

@@ -1,6 +1,5 @@
 import { useState, useCallback, useRef, useEffect } from 'react';
 import { 
-  Toggle, 
   Button, 
   Modal,
   SectionCard,
@@ -13,7 +12,6 @@ import type { TableColumn } from '@/design-system/components/Table/Table';
 import { 
   IconShieldCheck,
   IconCheck,
-  IconCopy,
   IconEye,
   IconEyeOff,
 } from '@tabler/icons-react';

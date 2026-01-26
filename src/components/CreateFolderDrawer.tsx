@@ -206,7 +206,7 @@ export function CreateFolderDrawer({
   const validateFolderName = (name: string): string | null => {
     if (!name) return null;
     if (name.length > 128) return 'Folder name must be 128 characters or less';
-    const validPattern = /^[a-zA-Z0-9\-_.\(\)\[\]]+$/;
+    const validPattern = /^[a-zA-Z0-9\-_.()[\]]+$/;
     if (!validPattern.test(name)) {
       return 'Invalid characters. Allowed: letters, numbers, "-", "_", ".", "()", "[]"';
     }

@@ -1,11 +1,10 @@
-import { useState, useRef, useEffect, useCallback, useMemo } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import {
   Button,
   Tooltip,
   Tabs,
   TabList,
   Tab,
-  TabPanel,
   Select,
   Table,
   SearchInput,
@@ -19,33 +18,14 @@ import {
 import { AgentPageLayout } from '@/layouts';
 import { AgentSidebar } from '@/pages/AgentPage';
 import {
-  IconMessage,
-  IconDatabase,
-  IconPuzzle,
-  IconSettings,
-  IconPalette,
-  IconBell,
-  IconSearch,
   IconTrash,
-  IconChevronDown,
-  IconChevronLeft,
-  IconChevronRight,
-  IconDots,
   IconDotsCircleHorizontal,
   IconStar,
   IconStarFilled,
   IconTarget,
   IconAlertTriangle,
-  IconLoader2,
-  IconDotsVertical,
-  IconSquare,
-  IconSquareRounded,
-  IconEye,
-  IconEyeOff,
-  IconHome,
   IconCircleX,
 } from '@tabler/icons-react';
-import { Icons } from '@/design-system';
 import { useNavigate } from 'react-router-dom';
 
 /* ----------------------------------------

@@ -3,7 +3,6 @@ import { VStack, MenuItem, MenuSection } from '@/design-system';
 import {
   IconHome,
   IconDatabase,
-  IconTemplate,
   IconCpu,
   IconDisc,
   IconBucket,

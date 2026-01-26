@@ -5,13 +5,10 @@ import { useDarkMode } from '@/hooks/useDarkMode';
 import {
   IconHome,
   IconAffiliate,
-  IconServer,
-  IconNetwork,
   IconShieldLock,
   IconPlus,
   IconArrowLeft,
   IconChevronDown,
-  IconApps,
   IconBox,
   IconClock,
   IconCalendarTime,
@@ -20,15 +17,11 @@ import {
   IconLayoutSidebar,
   IconSettings,
   IconFolders,
-  IconBell,
   IconRocket,
   IconRefresh,
   IconStack3,
   IconFileSettings,
   IconKey,
-  IconRuler,
-  IconScale,
-  IconAlertTriangle,
   IconTopologyStar,
   IconTimelineEvent,
   IconArrowsShuffle,
@@ -37,7 +30,7 @@ import {
   IconChartPie3,
   IconRulerMeasure,
 } from '@tabler/icons-react';
-import { ArrowRightLeft, FolderCog, HardDrive, FileCheck2, LogIn, Scaling, Group, Network } from 'lucide-react';
+import { ArrowRightLeft, FolderCog, HardDrive, Scaling, Group, Network } from 'lucide-react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import ThakiLogoLight from '@/assets/thakiLogo_light.svg';
 import ThakiLogoDark from '@/assets/thakiLogo-dark.svg';

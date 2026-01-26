@@ -16,7 +16,6 @@ import {
   Table,
   SearchInput,
   Pagination,
-  StatusIndicator,
   ContextMenu,
 } from '@/design-system';
 import type { TableColumn, ContextMenuItem } from '@/design-system';
@@ -26,7 +25,6 @@ import {
   IconEdit,
   IconTrash,
   IconBell,
-  IconCopy,
   IconCirclePlus,
   IconDotsCircleHorizontal,
 } from '@tabler/icons-react';

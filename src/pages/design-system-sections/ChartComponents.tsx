@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import ReactECharts from 'echarts-for-react';
-import { Tooltip, VStack, ProgressBar, Select, Button, HStack, Input } from '@/design-system';
+import { Tooltip } from '@/design-system';
 import { IconRefresh, IconDotsCircleHorizontal, IconArrowsMinimize, IconArrowsMaximize } from '@tabler/icons-react';
 import { DataViewDrawer } from '@/components/DataViewDrawer';
 

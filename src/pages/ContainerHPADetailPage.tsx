@@ -14,7 +14,6 @@ import {
   Pagination,
   Button,
   ContextMenu,
-  StatusIndicator,
   DetailHeader,
   Chip,
   SectionCard,
@@ -30,7 +29,6 @@ import {
   IconFile,
   IconCopy,
   IconSearch,
-  IconDownload,
   IconChevronDown,
 } from '@tabler/icons-react';
 

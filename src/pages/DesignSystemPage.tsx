@@ -1,5 +1,4 @@
 import { useState, useEffect, useRef } from 'react';
-import ReactECharts from 'echarts-for-react';
 import { DarkModeToggle } from '@/components/DarkModeToggle';
 import {
   Section,
@@ -11,24 +10,11 @@ import {
   IconDisplayGrid,
 } from './design-system-sections/HelperComponents';
 import {
-  chartColors,
-  primaryChartColors,
-  baseChartOptions,
-  BarChartDemo,
-  generateTimeLabels,
-  timeOptions,
-  CalendarIcon,
-  CloseIcon,
-  formatDateForDisplay,
-  TimeControls,
-  LineChart,
-  ChartWithFullScreen,
   QuotaBarDemo,
   AreaChartDemo,
   PieChartDemo,
   DoughnutChartDemo,
   HalfDoughnutChartDemo,
-  SingleValueDoughnutDemo,
 } from './design-system-sections/ChartComponents';
 import {
   ModalDemo,
@@ -48,8 +34,6 @@ import AppIconIAM from '@/assets/appIcon/iam.png';
 import AppIconSettings from '@/assets/appIcon/settings.png';
 import AppIconStorage from '@/assets/appIcon/storage.png';
 import AppIconStorageAdmin from '@/assets/appIcon/storageadmin.png';
-import { AttachVolumeDrawer } from '@/components/AttachVolumeDrawer';
-import { DataViewDrawer } from '@/components/DataViewDrawer';
 import {
   Button,
   Input,
@@ -95,16 +79,11 @@ import {
   MenuSection,
   MenuDivider,
   Tooltip,
-  Modal,
-  ConfirmModal,
   DetailHeader,
   SectionCard,
-  Drawer,
   MonitoringToolbar,
   NotificationCenter,
-  FloatingCard,
   Loading,
-  WizardSection,
   WizardSummary,
   WizardSectionStatusIcon,
   PreSection,
@@ -208,7 +187,6 @@ import {
   // System - Storage & Files
   IconDeviceFloppy,
   IconCamera,
-  IconPhoto,
   IconFile,
   IconFileText,
   IconArchive,
@@ -252,8 +230,6 @@ import {
   IconCalendar,
   IconAppWindow,
   IconBorderAll,
-  // Brand Icons
-  IconBrandUbuntu,
   IconBrandDebian,
   IconBrandWindows,
   IconBrandRedhat,
@@ -286,7 +262,6 @@ import {
   IconPoint,
   IconSquarePlus,
   IconDatabaseSearch,
-  IconBoxMultiple2,
   IconDeviceSdCard,
   IconServerCog,
   IconRobotFace,
@@ -307,9 +282,6 @@ import {
 import {
   IconExpandOff,
   IconExpandOn,
-  IconAction,
-  IconRobotCustom,
-  IconAddRobotCustom,
 } from '@/design-system/components/Icons/CustomIcons';
 import { Link } from 'react-router-dom';
 

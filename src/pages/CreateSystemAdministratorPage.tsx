@@ -26,7 +26,6 @@ import {
   IconEyeOff,
   IconCircle,
   IconCircleCheck,
-  IconExternalLink,
   IconSearch,
 } from '@tabler/icons-react';
 

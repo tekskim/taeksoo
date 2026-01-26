@@ -35,7 +35,6 @@ import {
   IconTrash,
   IconDownload,
   IconBell,
-  IconExternalLink,
   IconCube,
   IconRouter,
 } from '@tabler/icons-react';

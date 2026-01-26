@@ -14,20 +14,17 @@ import {
   Pagination,
   Button,
   ContextMenu,
-  StatusIndicator,
   DetailHeader,
   Chip,
   type TableColumn,
   type ContextMenuItem,
 } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
-import { ShellPanel, useShellPanel, type ShellTab } from '@/components/ShellPanel';
+import { ShellPanel, useShellPanel } from '@/components/ShellPanel';
 import { useTabs } from '@/contexts/TabContext';
 import {
   IconBell,
   IconTerminal2,
-  IconFile,
-  IconCopy,
   IconSearch,
   IconChevronDown,
 } from '@tabler/icons-react';

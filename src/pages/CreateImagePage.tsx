@@ -18,7 +18,6 @@ import {
   Tabs,
   TabList,
   Tab,
-  TabPanel,
   Disclosure,
   DisclosureTrigger,
   DisclosurePanel,

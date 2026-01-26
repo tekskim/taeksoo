@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { IconCheck, IconCircleCheck, IconAlertCircle, IconSquare, IconCheckbox, IconChevronUp, IconChevronDown } from '@tabler/icons-react';
+import { IconCircleCheck, IconAlertCircle, IconCheckbox, IconChevronUp, IconChevronDown } from '@tabler/icons-react';
 import { Tabs, TabList, Tab } from '../Tabs';
 import { Chip } from '../Chip';
 

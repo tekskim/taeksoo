@@ -27,8 +27,6 @@ import {
   IconDotsCircleHorizontal,
   IconArrowsMaximize,
   IconArrowsMinimize,
-  IconChevronLeft,
-  IconChevronRight,
 } from '@tabler/icons-react';
 
 /* ----------------------------------------

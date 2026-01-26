@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useParams, useNavigate, Link } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import {
   Button,
   VStack,
@@ -22,7 +22,6 @@ import {
   IconBell,
   IconCopy,
   IconCheck,
-  IconExternalLink,
   IconCirclePlus,
 } from '@tabler/icons-react';
 

@@ -18,15 +18,13 @@ import {
   Tabs,
   TabList,
   Tab,
-  WizardSummary,
   PreSection,
   WritingSection,
   SkippedSection,
   DoneSection,
-  DoneSectionRow,
   WizardSectionStatusIcon,
 } from '@/design-system';
-import type { WizardSectionState, WizardSummaryItem } from '@/design-system';
+import type { WizardSectionState } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
 import { useTabs } from '@/contexts/TabContext';
 import {
@@ -37,9 +35,7 @@ import {
   IconSearch,
   IconPlus,
   IconX,
-  IconEdit,
   IconHelp,
-  IconCheck,
 } from '@tabler/icons-react';
 
 /* ----------------------------------------

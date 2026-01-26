@@ -12,7 +12,6 @@ import {
   Radio,
   Toggle,
   Table,
-  Checkbox,
   Pagination,
   Tooltip,
   SelectionIndicator,
