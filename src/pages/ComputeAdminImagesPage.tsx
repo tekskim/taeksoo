@@ -10,9 +10,6 @@ import {
   TopBar,
   TopBarAction,
   Breadcrumb,
-  Tabs,
-  TabList,
-  Tab,
   ListToolbar,
   ContextMenu,
   ConfirmModal,
@@ -102,7 +99,6 @@ export function ComputeAdminImagesPage() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [appliedFilters, setAppliedFilters] = useState<AppliedFilter[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [activeTab, setActiveTab] = useState('current');
   const [images, setImages] = useState(mockImages);
   const [selectedImages, setSelectedImages] = useState<string[]>([]);
   
@@ -122,7 +118,7 @@ export function ComputeAdminImagesPage() {
     { id: 'os', label: 'OS', visible: true },
     { id: 'size', label: 'Size', visible: true },
     { id: 'diskFormat', label: 'Disk format', visible: true },
-    { id: 'protected', label: 'Protected', visible: true },
+    { id: 'protected', label: 'Visibility', visible: true },
     { id: 'createdAt', label: 'Created at', visible: true },
     { id: 'actions', label: 'Action', visible: true, locked: true },
   ];
@@ -162,23 +158,9 @@ export function ComputeAdminImagesPage() {
     setImageToDelete(null);
   };
 
-  // Filter images by tab and search
+  // Filter images by search
   const filteredImages = useMemo(() => {
     let filtered = images;
-
-    // Filter by tab
-    switch (activeTab) {
-      case 'current':
-        filtered = filtered.filter((img) => img.access === 'Private');
-        break;
-      case 'shared':
-        filtered = filtered.filter((img) => img.access === 'Shared');
-        break;
-      case 'public':
-        filtered = filtered.filter((img) => img.access === 'Public');
-        break;
-      // 'all' shows everything
-    }
 
     // Filter by applied filters
     if (appliedFilters.length > 0) {
@@ -191,7 +173,7 @@ export function ComputeAdminImagesPage() {
     }
 
     return filtered;
-  }, [images, activeTab, appliedFilters]);
+  }, [images, appliedFilters]);
 
   const totalPages = Math.ceil(filteredImages.length / rowsPerPage);
 
@@ -262,6 +244,7 @@ export function ComputeAdminImagesPage() {
       key: 'os',
       label: 'OS',
       flex: 1,
+      sortable: true,
     },
     {
       key: 'size',
@@ -277,10 +260,9 @@ export function ComputeAdminImagesPage() {
     },
     {
       key: 'protected',
-      label: 'Protected',
+      label: 'Visibility',
       flex: 1,
-      sortable: true,
-      render: (_, row) => row.protected ? 'On' : 'Off',
+      render: (_, row) => row.protected ? 'Private' : 'Public',
     },
     {
       key: 'createdAt',
@@ -299,6 +281,16 @@ export function ComputeAdminImagesPage() {
             id: 'edit',
             label: 'Edit',
             onClick: () => console.log('Edit image:', row.id),
+          },
+          {
+            id: 'manage-metadata',
+            label: 'Manage metadata',
+            onClick: () => console.log('Manage metadata:', row.id),
+          },
+          {
+            id: 'manage-access',
+            label: 'Manage access',
+            onClick: () => console.log('Manage access:', row.id),
           },
           {
             id: 'delete',
@@ -397,16 +389,6 @@ export function ComputeAdminImagesPage() {
                 Create image
               </Button>
             </div>
-
-            {/* Category Tabs */}
-            <Tabs value={activeTab} onChange={setActiveTab} variant="underline" size="sm">
-              <TabList>
-                <Tab value="current">Current tenant</Tab>
-                <Tab value="shared">Shared</Tab>
-                <Tab value="public">Public</Tab>
-                <Tab value="all">All</Tab>
-              </TabList>
-            </Tabs>
 
             {/* List Toolbar */}
             <ListToolbar
