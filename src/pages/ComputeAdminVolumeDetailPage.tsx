@@ -28,7 +28,6 @@ import {
   IconBell,
   IconTrash,
   IconChevronDown,
-  IconExternalLink,
   IconDownload,
   IconEdit,
 } from '@tabler/icons-react';
@@ -85,20 +84,183 @@ interface VolumeBackup {
 
 // Volume data map by ID - synced with VolumesPage mock data
 const mockVolumesMap: Record<string, VolumeDetail> = {
-  'vol-001': { id: 'vol-001', name: 'db-data', status: 'in-use', size: '1500GiB', createdAt: '2025-09-12', volumeName: 'db-data', availabilityZone: 'nova', description: 'Database data volume', attachedTo: 'web-server-1', attachedToId: 'inst-001', dataSourceType: 'Blank Volume', volumeType: '_DEFAULT_', bootable: false, encryption: false },
-  'vol-002': { id: 'vol-002', name: 'app-storage', status: 'in-use', size: '500GiB', createdAt: '2025-09-10', volumeName: 'app-storage', availabilityZone: 'nova', description: 'Application storage', attachedTo: 'app-server-1', attachedToId: 'inst-002', dataSourceType: 'Blank Volume', volumeType: '_DEFAULT_', bootable: false, encryption: false },
-  'vol-003': { id: 'vol-003', name: 'backup-vol', status: 'active', size: '2000GiB', createdAt: '2025-09-08', volumeName: 'backup-vol', availabilityZone: 'nova', description: 'Backup storage', attachedTo: null, attachedToId: null, dataSourceType: 'Blank Volume', volumeType: 'SSD', bootable: false, encryption: true },
-  'vol-004': { id: 'vol-004', name: 'log-storage', status: 'in-use', size: '100GiB', createdAt: '2025-09-05', volumeName: 'log-storage', availabilityZone: 'nova', description: 'Log storage volume', attachedTo: 'log-server', attachedToId: 'inst-003', dataSourceType: 'Blank Volume', volumeType: '_DEFAULT_', bootable: false, encryption: false },
-  'vol-005': { id: 'vol-005', name: 'cache-vol', status: 'in-use', size: '256GiB', createdAt: '2025-08-30', volumeName: 'cache-vol', availabilityZone: 'nova', description: 'Cache volume', attachedTo: 'cache-01', attachedToId: 'inst-004', dataSourceType: 'Blank Volume', volumeType: 'NVMe', bootable: false, encryption: false },
-  'vol-006': { id: 'vol-006', name: 'media-storage', status: 'active', size: '5000GiB', createdAt: '2025-08-25', volumeName: 'media-storage', availabilityZone: 'nova', description: 'Media storage volume', attachedTo: null, attachedToId: null, dataSourceType: 'Blank Volume', volumeType: 'HDD', bootable: false, encryption: false },
-  'vol-007': { id: 'vol-007', name: 'temp-vol', status: 'pending', size: '50GiB', createdAt: '2025-08-20', volumeName: 'temp-vol', availabilityZone: 'nova', description: 'Temporary volume', attachedTo: null, attachedToId: null, dataSourceType: 'Blank Volume', volumeType: '_DEFAULT_', bootable: false, encryption: false },
-  'vol-008': { id: 'vol-008', name: 'ml-data', status: 'in-use', size: '1000GiB', createdAt: '2025-08-15', volumeName: 'ml-data', availabilityZone: 'nova', description: 'ML Dataset volume', attachedTo: 'gpu-server-1', attachedToId: 'inst-005', dataSourceType: 'Blank Volume', volumeType: 'NVMe', bootable: false, encryption: true },
-  'vol-009': { id: 'vol-009', name: 'archive-vol', status: 'active', size: '10000GiB', createdAt: '2025-08-10', volumeName: 'archive-vol', availabilityZone: 'nova', description: 'Archive storage', attachedTo: null, attachedToId: null, dataSourceType: 'Blank Volume', volumeType: 'HDD', bootable: false, encryption: false },
-  'vol-010': { id: 'vol-010', name: 'boot-vol-01', status: 'in-use', size: '100GiB', createdAt: '2025-08-05', volumeName: 'boot-vol-01', availabilityZone: 'nova', description: 'Boot volume', attachedTo: 'web-server-2', attachedToId: 'inst-006', dataSourceType: 'Image', volumeType: 'SSD', bootable: true, encryption: false },
+  'vol-001': {
+    id: 'vol-001',
+    name: 'db-data',
+    status: 'in-use',
+    size: '1500GiB',
+    createdAt: '2025-09-12',
+    volumeName: 'db-data',
+    availabilityZone: 'nova',
+    description: 'Database data volume',
+    attachedTo: 'web-server-1',
+    attachedToId: 'inst-001',
+    dataSourceType: 'Blank Volume',
+    volumeType: '_DEFAULT_',
+    bootable: false,
+    encryption: false,
+  },
+  'vol-002': {
+    id: 'vol-002',
+    name: 'app-storage',
+    status: 'in-use',
+    size: '500GiB',
+    createdAt: '2025-09-10',
+    volumeName: 'app-storage',
+    availabilityZone: 'nova',
+    description: 'Application storage',
+    attachedTo: 'app-server-1',
+    attachedToId: 'inst-002',
+    dataSourceType: 'Blank Volume',
+    volumeType: '_DEFAULT_',
+    bootable: false,
+    encryption: false,
+  },
+  'vol-003': {
+    id: 'vol-003',
+    name: 'backup-vol',
+    status: 'active',
+    size: '2000GiB',
+    createdAt: '2025-09-08',
+    volumeName: 'backup-vol',
+    availabilityZone: 'nova',
+    description: 'Backup storage',
+    attachedTo: null,
+    attachedToId: null,
+    dataSourceType: 'Blank Volume',
+    volumeType: 'SSD',
+    bootable: false,
+    encryption: true,
+  },
+  'vol-004': {
+    id: 'vol-004',
+    name: 'log-storage',
+    status: 'in-use',
+    size: '100GiB',
+    createdAt: '2025-09-05',
+    volumeName: 'log-storage',
+    availabilityZone: 'nova',
+    description: 'Log storage volume',
+    attachedTo: 'log-server',
+    attachedToId: 'inst-003',
+    dataSourceType: 'Blank Volume',
+    volumeType: '_DEFAULT_',
+    bootable: false,
+    encryption: false,
+  },
+  'vol-005': {
+    id: 'vol-005',
+    name: 'cache-vol',
+    status: 'in-use',
+    size: '256GiB',
+    createdAt: '2025-08-30',
+    volumeName: 'cache-vol',
+    availabilityZone: 'nova',
+    description: 'Cache volume',
+    attachedTo: 'cache-01',
+    attachedToId: 'inst-004',
+    dataSourceType: 'Blank Volume',
+    volumeType: 'NVMe',
+    bootable: false,
+    encryption: false,
+  },
+  'vol-006': {
+    id: 'vol-006',
+    name: 'media-storage',
+    status: 'active',
+    size: '5000GiB',
+    createdAt: '2025-08-25',
+    volumeName: 'media-storage',
+    availabilityZone: 'nova',
+    description: 'Media storage volume',
+    attachedTo: null,
+    attachedToId: null,
+    dataSourceType: 'Blank Volume',
+    volumeType: 'HDD',
+    bootable: false,
+    encryption: false,
+  },
+  'vol-007': {
+    id: 'vol-007',
+    name: 'temp-vol',
+    status: 'pending',
+    size: '50GiB',
+    createdAt: '2025-08-20',
+    volumeName: 'temp-vol',
+    availabilityZone: 'nova',
+    description: 'Temporary volume',
+    attachedTo: null,
+    attachedToId: null,
+    dataSourceType: 'Blank Volume',
+    volumeType: '_DEFAULT_',
+    bootable: false,
+    encryption: false,
+  },
+  'vol-008': {
+    id: 'vol-008',
+    name: 'ml-data',
+    status: 'in-use',
+    size: '1000GiB',
+    createdAt: '2025-08-15',
+    volumeName: 'ml-data',
+    availabilityZone: 'nova',
+    description: 'ML Dataset volume',
+    attachedTo: 'gpu-server-1',
+    attachedToId: 'inst-005',
+    dataSourceType: 'Blank Volume',
+    volumeType: 'NVMe',
+    bootable: false,
+    encryption: true,
+  },
+  'vol-009': {
+    id: 'vol-009',
+    name: 'archive-vol',
+    status: 'active',
+    size: '10000GiB',
+    createdAt: '2025-08-10',
+    volumeName: 'archive-vol',
+    availabilityZone: 'nova',
+    description: 'Archive storage',
+    attachedTo: null,
+    attachedToId: null,
+    dataSourceType: 'Blank Volume',
+    volumeType: 'HDD',
+    bootable: false,
+    encryption: false,
+  },
+  'vol-010': {
+    id: 'vol-010',
+    name: 'boot-vol-01',
+    status: 'in-use',
+    size: '100GiB',
+    createdAt: '2025-08-05',
+    volumeName: 'boot-vol-01',
+    availabilityZone: 'nova',
+    description: 'Boot volume',
+    attachedTo: 'web-server-2',
+    attachedToId: 'inst-006',
+    dataSourceType: 'Image',
+    volumeType: 'SSD',
+    bootable: true,
+    encryption: false,
+  },
 };
 
 const defaultVolumeDetail: VolumeDetail = {
-  id: '12345678', name: 'volume', status: 'available', size: '0 GiB', createdAt: '-', volumeName: '-', availabilityZone: '-', description: '-', attachedTo: null, attachedToId: null, dataSourceType: '-', volumeType: '-', bootable: false, encryption: false,
+  id: '12345678',
+  name: 'volume',
+  status: 'available',
+  size: '0 GiB',
+  createdAt: '-',
+  volumeName: '-',
+  availabilityZone: '-',
+  description: '-',
+  attachedTo: null,
+  attachedToId: null,
+  dataSourceType: '-',
+  volumeType: '-',
+  bootable: false,
+  encryption: false,
 };
 
 // Mock volume snapshots
@@ -125,25 +287,25 @@ const mockVolumeBackups: VolumeBackup[] = Array.from({ length: 115 }, (_, i) => 
    ---------------------------------------- */
 
 const volumeStatusDisplayMap: Record<VolumeStatus, string> = {
-  'available': 'Available',
+  available: 'Available',
   'in-use': 'In Use',
-  'error': 'Error',
-  'creating': 'Creating',
-  'deleting': 'Deleting',
+  error: 'Error',
+  creating: 'Creating',
+  deleting: 'Deleting',
 };
 
 const snapshotStatusMap: Record<SnapshotStatus, 'active' | 'building' | 'error' | 'pending'> = {
-  'available': 'active',
-  'creating': 'building',
-  'deleting': 'pending',
-  'error': 'error',
+  available: 'active',
+  creating: 'building',
+  deleting: 'pending',
+  error: 'error',
 };
 
 const backupStatusMap: Record<BackupStatus, 'active' | 'building' | 'error' | 'pending'> = {
-  'available': 'active',
-  'creating': 'building',
-  'restoring': 'pending',
-  'error': 'error',
+  available: 'active',
+  creating: 'building',
+  restoring: 'pending',
+  error: 'error',
 };
 
 /* ----------------------------------------
@@ -152,7 +314,7 @@ const backupStatusMap: Record<BackupStatus, 'active' | 'building' | 'error' | 'p
 
 export function ComputeAdminVolumeDetailPage() {
   const { id } = useParams<{ id: string }>();
-  const volume = id ? (mockVolumesMap[id] || defaultVolumeDetail) : defaultVolumeDetail;
+  const volume = id ? mockVolumesMap[id] || defaultVolumeDetail : defaultVolumeDetail;
   const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [activeDetailTab, setActiveDetailTab] = useState('details');
@@ -200,9 +362,7 @@ export function ComputeAdminVolumeDetailPage() {
     if (!snapshotSearchQuery) return snapshots;
     const query = snapshotSearchQuery.toLowerCase();
     return snapshots.filter(
-      (snap) =>
-        snap.name.toLowerCase().includes(query) ||
-        snap.id.toLowerCase().includes(query)
+      (snap) => snap.name.toLowerCase().includes(query) || snap.id.toLowerCase().includes(query)
     );
   }, [snapshots, snapshotSearchQuery]);
 
@@ -218,8 +378,7 @@ export function ComputeAdminVolumeDetailPage() {
     const query = backupSearchQuery.toLowerCase();
     return backups.filter(
       (backup) =>
-        backup.name.toLowerCase().includes(query) ||
-        backup.id.toLowerCase().includes(query)
+        backup.name.toLowerCase().includes(query) || backup.id.toLowerCase().includes(query)
     );
   }, [backups, backupSearchQuery]);
 
@@ -393,7 +552,12 @@ export function ComputeAdminVolumeDetailPage() {
         {/* Fixed Header Area */}
         <div className="shrink-0 bg-[var(--color-surface-default)]">
           {/* Tab Bar */}
-          <TabBar tabs={tabBarTabs} activeTab={activeTabId} onTabChange={selectTab} onTabClose={closeTab} />
+          <TabBar
+            tabs={tabBarTabs}
+            activeTab={activeTabId}
+            onTabChange={selectTab}
+            onTabClose={closeTab}
+          />
 
           {/* Top Bar */}
           <TopBar
@@ -415,219 +579,251 @@ export function ComputeAdminVolumeDetailPage() {
 
         {/* Scrollable Content Area */}
         <div className="flex-1 overflow-auto overscroll-contain sidebar-scroll">
-        <div className="pt-4 px-8 pb-20 bg-[var(--color-surface-default)] min-h-full">
-          <VStack gap={6} className="min-w-[1176px]">
-            {/* Volume Header Card */}
-            <DetailHeader>
-              <DetailHeader.Title>{volume.name}</DetailHeader.Title>
-              <DetailHeader.Actions>
-                <Button variant="secondary" size="sm" leftIcon={<IconCirclePlus size={12} />}>
-                  Update status
-                </Button>
-                <Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />}>
-                  Edit
-                </Button>
-                <Button variant="secondary" size="sm" leftIcon={<IconTrash size={12} />}>
-                  Delete
-                </Button>
-                <ContextMenu
-                  items={[
-                    { id: 'migrate-volume', label: 'Migrate volume', onClick: () => console.log('Migrate volume') },
-                    { id: 'manage-metadata', label: 'Manage metadata', onClick: () => console.log('Manage metadata') },
-                  ] as ContextMenuItem[]}
-                  trigger="click"
+          <div className="pt-4 px-8 pb-20 bg-[var(--color-surface-default)] min-h-full">
+            <VStack gap={6} className="min-w-[1176px]">
+              {/* Volume Header Card */}
+              <DetailHeader>
+                <DetailHeader.Title>{volume.name}</DetailHeader.Title>
+                <DetailHeader.Actions>
+                  <Button variant="secondary" size="sm" leftIcon={<IconCirclePlus size={12} />}>
+                    Update status
+                  </Button>
+                  <Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />}>
+                    Edit
+                  </Button>
+                  <Button variant="secondary" size="sm" leftIcon={<IconTrash size={12} />}>
+                    Delete
+                  </Button>
+                  <ContextMenu
+                    items={
+                      [
+                        {
+                          id: 'migrate-volume',
+                          label: 'Migrate volume',
+                          onClick: () => console.log('Migrate volume'),
+                        },
+                        {
+                          id: 'manage-metadata',
+                          label: 'Manage metadata',
+                          onClick: () => console.log('Manage metadata'),
+                        },
+                      ] as ContextMenuItem[]
+                    }
+                    trigger="click"
+                  >
+                    <Button variant="secondary" size="sm" rightIcon={<IconChevronDown size={12} />}>
+                      More Actions
+                    </Button>
+                  </ContextMenu>
+                </DetailHeader.Actions>
+                <DetailHeader.InfoGrid>
+                  <DetailHeader.InfoCard
+                    label="Status"
+                    value={volumeStatusDisplayMap[volume.status]}
+                    status="active"
+                  />
+                  <DetailHeader.InfoCard label="ID" value={volume.id} copyable />
+                  <DetailHeader.InfoCard label="Tenant" value="tenantA" />
+                  <DetailHeader.InfoCard label="Host" value="host" />
+                  <DetailHeader.InfoCard label="Size" value={volume.size} />
+                  <DetailHeader.InfoCard label="Created at" value={volume.createdAt} />
+                </DetailHeader.InfoGrid>
+              </DetailHeader>
+
+              {/* Volume Tabs */}
+              <div className="w-full">
+                <Tabs
+                  value={activeDetailTab}
+                  onChange={setActiveDetailTab}
+                  variant="underline"
+                  size="sm"
                 >
-                <Button variant="secondary" size="sm" rightIcon={<IconChevronDown size={12} />}>
-                  More Actions
-                </Button>
-                </ContextMenu>
-              </DetailHeader.Actions>
-              <DetailHeader.InfoGrid>
-                <DetailHeader.InfoCard
-                  label="Status"
-                  value={volumeStatusDisplayMap[volume.status]}
-                  status="active"
-                />
-                <DetailHeader.InfoCard label="ID" value={volume.id} copyable />
-                <DetailHeader.InfoCard label="Tenant" value="tenantA" />
-                <DetailHeader.InfoCard label="Host" value="host" />
-                <DetailHeader.InfoCard label="Size" value={volume.size} />
-                <DetailHeader.InfoCard label="Created at" value={volume.createdAt} />
-              </DetailHeader.InfoGrid>
-            </DetailHeader>
+                  <TabList>
+                    <Tab value="details">Details</Tab>
+                    <Tab value="snapshots">Volume snapshots</Tab>
+                    <Tab value="backups">Volume backups</Tab>
+                  </TabList>
 
-            {/* Volume Tabs */}
-            <div className="w-full">
-              <Tabs value={activeDetailTab} onChange={setActiveDetailTab} variant="underline" size="sm">
-                <TabList>
-                  <Tab value="details">Details</Tab>
-                  <Tab value="snapshots">Volume snapshots</Tab>
-                  <Tab value="backups">Volume backups</Tab>
-                </TabList>
-
-                {/* Details Tab Panel */}
-                <TabPanel value="details" className="pt-0">
-                  <VStack gap={4} className="pt-4">
-                    {/* Basic information */}
-                    <SectionCard>
-                      <SectionCard.Header title="Basic Infomation" showEditButton onEdit={() => {}} />
-                      <SectionCard.Content>
-                        <SectionCard.DataRow label="Volume name" value={volume.volumeName} />
-                        <SectionCard.DataRow label="AZ(Availability zone)" value={volume.availabilityZone} />
-                        <SectionCard.DataRow label="Bootable" value="No" />
-                        <SectionCard.DataRow label="Description" value={volume.description} />
-                      </SectionCard.Content>
-                    </SectionCard>
-
-                    {/* Attachments */}
-                    <SectionCard>
-                      <SectionCard.Header title="Attachments" />
-                      <SectionCard.Content>
-                        <SectionCard.DataRow
-                          label="Instance"
-                          value={
-                            <Link
-                              to="/compute-admin/instances"
-                              className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
-                            >
-                              instance
-                            </Link>
-                          }
+                  {/* Details Tab Panel */}
+                  <TabPanel value="details" className="pt-0">
+                    <VStack gap={4} className="pt-4">
+                      {/* Basic information */}
+                      <SectionCard>
+                        <SectionCard.Header
+                          title="Basic Infomation"
+                          showEditButton
+                          onEdit={() => {}}
                         />
-                      </SectionCard.Content>
-                    </SectionCard>
+                        <SectionCard.Content>
+                          <SectionCard.DataRow label="Volume name" value={volume.volumeName} />
+                          <SectionCard.DataRow
+                            label="AZ(Availability zone)"
+                            value={volume.availabilityZone}
+                          />
+                          <SectionCard.DataRow label="Bootable" value="No" />
+                          <SectionCard.DataRow label="Description" value={volume.description} />
+                        </SectionCard.Content>
+                      </SectionCard>
 
-                    {/* Source */}
-                    <SectionCard>
-                      <SectionCard.Header title="Source" showEditButton onEdit={() => {}} />
-                      <SectionCard.Content>
-                        <SectionCard.DataRow label="Volume Snapshot" value={volume.dataSourceType} />
-                        <SectionCard.DataRow
-                          label="Image"
-                          value={
-                            <Link
-                              to="/compute-admin/images"
-                              className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
-                            >
-                              image
-                            </Link>
-                          }
+                      {/* Attachments */}
+                      <SectionCard>
+                        <SectionCard.Header title="Attachments" />
+                        <SectionCard.Content>
+                          <SectionCard.DataRow
+                            label="Instance"
+                            value={
+                              <Link
+                                to="/compute-admin/instances"
+                                className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
+                              >
+                                instance
+                              </Link>
+                            }
+                          />
+                        </SectionCard.Content>
+                      </SectionCard>
+
+                      {/* Source */}
+                      <SectionCard>
+                        <SectionCard.Header title="Source" showEditButton onEdit={() => {}} />
+                        <SectionCard.Content>
+                          <SectionCard.DataRow
+                            label="Volume Snapshot"
+                            value={volume.dataSourceType}
+                          />
+                          <SectionCard.DataRow
+                            label="Image"
+                            value={
+                              <Link
+                                to="/compute-admin/images"
+                                className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
+                              >
+                                image
+                              </Link>
+                            }
+                          />
+                        </SectionCard.Content>
+                      </SectionCard>
+
+                      {/* Specifications */}
+                      <SectionCard>
+                        <SectionCard.Header
+                          title="Specifications"
+                          showEditButton
+                          onEdit={() => {}}
                         />
-                      </SectionCard.Content>
-                    </SectionCard>
+                        <SectionCard.Content>
+                          <SectionCard.DataRow label="Size" value={volume.size} />
+                          <SectionCard.DataRow label="Volume type" value={volume.volumeType} />
+                          <SectionCard.DataRow
+                            label="Encrypted"
+                            value={volume.encryption ? 'Yes' : 'No'}
+                          />
+                        </SectionCard.Content>
+                      </SectionCard>
+                    </VStack>
+                  </TabPanel>
 
-                    {/* Specifications */}
-                    <SectionCard>
-                      <SectionCard.Header title="Specifications" showEditButton onEdit={() => {}} />
-                      <SectionCard.Content>
-                        <SectionCard.DataRow label="Size" value={volume.size} />
-                        <SectionCard.DataRow label="Volume type" value={volume.volumeType} />
-                        <SectionCard.DataRow label="Encrypted" value={volume.encryption ? 'Yes' : 'No'} />
-                      </SectionCard.Content>
-                    </SectionCard>
-                  </VStack>
-                </TabPanel>
+                  {/* Volume snapshots Tab Panel */}
+                  <TabPanel value="snapshots" className="pt-0">
+                    <VStack gap={4} className="pt-4">
+                      {/* Section Header */}
+                      <div className="flex items-center justify-between w-full">
+                        <h2 className="text-[length:var(--font-size-16)] font-semibold leading-6 text-[var(--color-text-default)]">
+                          Volume snapshots
+                        </h2>
+                      </div>
 
-                {/* Volume snapshots Tab Panel */}
-                <TabPanel value="snapshots" className="pt-0">
-                  <VStack gap={4} className="pt-4">
-                    {/* Section Header */}
-                    <div className="flex items-center justify-between w-full">
-                      <h2 className="text-[length:var(--font-size-16)] font-semibold leading-6 text-[var(--color-text-default)]">
-                        Volume snapshots
-                      </h2>
-                    </div>
-
-                    {/* Search */}
-                    <div className="flex items-center gap-1">
-                      <div className="w-[var(--search-input-width)]">
-                        <SearchInput
-                          placeholder="Search snapshot by attributes"
-                          value={snapshotSearchQuery}
-                          onChange={(e) => setSnapshotSearchQuery(e.target.value)}
-                          onClear={() => setSnapshotSearchQuery('')}
+                      {/* Search */}
+                      <div className="flex items-center gap-1">
+                        <div className="w-[var(--search-input-width)]">
+                          <SearchInput
+                            placeholder="Search snapshot by attributes"
+                            value={snapshotSearchQuery}
+                            onChange={(e) => setSnapshotSearchQuery(e.target.value)}
+                            onClear={() => setSnapshotSearchQuery('')}
+                            size="sm"
+                            fullWidth
+                          />
+                        </div>
+                        <Button
+                          variant="secondary"
                           size="sm"
-                          fullWidth
+                          iconOnly
+                          icon={<IconDownload size={12} stroke={1.5} />}
+                          aria-label="Download"
                         />
                       </div>
-                      <Button
-                        variant="secondary"
-                        size="sm"
-                        iconOnly
-                        icon={<IconDownload size={12} stroke={1.5} />}
-                        aria-label="Download"
-                      />
-                    </div>
 
-                    {/* Pagination */}
+                      {/* Pagination */}
                       <Pagination
                         currentPage={snapshotCurrentPage}
                         totalPages={snapshotTotalPages}
                         onPageChange={setSnapshotCurrentPage}
-                      totalItems={filteredSnapshots.length}
+                        totalItems={filteredSnapshots.length}
                       />
 
-                    {/* Snapshots Table */}
-                    <Table<VolumeSnapshot>
-                      columns={snapshotColumns}
-                      data={paginatedSnapshots}
-                      rowKey="id"
-                      emptyMessage="No volume snapshots found"
-                    />
-                  </VStack>
-                </TabPanel>
+                      {/* Snapshots Table */}
+                      <Table<VolumeSnapshot>
+                        columns={snapshotColumns}
+                        data={paginatedSnapshots}
+                        rowKey="id"
+                        emptyMessage="No volume snapshots found"
+                      />
+                    </VStack>
+                  </TabPanel>
 
-                {/* Volume backups Tab Panel */}
-                <TabPanel value="backups" className="pt-0">
-                  <VStack gap={4} className="pt-4">
-                    {/* Section Header */}
-                    <div className="flex items-center justify-between w-full">
-                      <h2 className="text-[length:var(--font-size-16)] font-semibold leading-6 text-[var(--color-text-default)]">
-                        Volume backups
-                      </h2>
-                    </div>
+                  {/* Volume backups Tab Panel */}
+                  <TabPanel value="backups" className="pt-0">
+                    <VStack gap={4} className="pt-4">
+                      {/* Section Header */}
+                      <div className="flex items-center justify-between w-full">
+                        <h2 className="text-[length:var(--font-size-16)] font-semibold leading-6 text-[var(--color-text-default)]">
+                          Volume backups
+                        </h2>
+                      </div>
 
-                    {/* Search */}
-                    <div className="flex items-center gap-1">
-                      <div className="w-[var(--search-input-width)]">
-                        <SearchInput
-                          placeholder="Search backup by attributes"
-                          value={backupSearchQuery}
-                          onChange={(e) => setBackupSearchQuery(e.target.value)}
-                          onClear={() => setBackupSearchQuery('')}
+                      {/* Search */}
+                      <div className="flex items-center gap-1">
+                        <div className="w-[var(--search-input-width)]">
+                          <SearchInput
+                            placeholder="Search backup by attributes"
+                            value={backupSearchQuery}
+                            onChange={(e) => setBackupSearchQuery(e.target.value)}
+                            onClear={() => setBackupSearchQuery('')}
+                            size="sm"
+                            fullWidth
+                          />
+                        </div>
+                        <Button
+                          variant="secondary"
                           size="sm"
-                          fullWidth
+                          iconOnly
+                          icon={<IconDownload size={12} stroke={1.5} />}
+                          aria-label="Download"
                         />
                       </div>
-                      <Button
-                        variant="secondary"
-                        size="sm"
-                        iconOnly
-                        icon={<IconDownload size={12} stroke={1.5} />}
-                        aria-label="Download"
-                      />
-                    </div>
 
-                    {/* Pagination */}
+                      {/* Pagination */}
                       <Pagination
                         currentPage={backupCurrentPage}
                         totalPages={backupTotalPages}
                         onPageChange={setBackupCurrentPage}
-                      totalItems={filteredBackups.length}
+                        totalItems={filteredBackups.length}
                       />
 
-                    {/* Backups Table */}
-                    <Table<VolumeBackup>
-                      columns={backupColumns}
-                      data={paginatedBackups}
-                      rowKey="id"
-                      emptyMessage="No volume backups found"
-                    />
-                  </VStack>
-                </TabPanel>
-              </Tabs>
-            </div>
-          </VStack>
+                      {/* Backups Table */}
+                      <Table<VolumeBackup>
+                        columns={backupColumns}
+                        data={paginatedBackups}
+                        rowKey="id"
+                        emptyMessage="No volume backups found"
+                      />
+                    </VStack>
+                  </TabPanel>
+                </Tabs>
+              </div>
+            </VStack>
           </div>
         </div>
       </main>
@@ -636,4 +832,3 @@ export function ComputeAdminVolumeDetailPage() {
 }
 
 export default ComputeAdminVolumeDetailPage;
-
