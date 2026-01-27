@@ -360,7 +360,7 @@ export function ComputeAdminImagesPage() {
           breadcrumb={
             <Breadcrumb
               items={[
-                { label: 'Proj-1', href: '/project' },
+                { label: 'Compute Admin', href: '/compute-admin' },
                 { label: 'Images' },
               ]}
             />

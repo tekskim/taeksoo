@@ -440,8 +440,6 @@ export default function L7PolicyDetailPage() {
                           onPageChange={setL7RuleCurrentPage}
                         totalItems={filteredL7Rules.length}
                         selectedCount={selectedL7Rules.length}
-                        showSettings
-                        onSettingsClick={() => setIsPreferencesOpen(true)}
                         />
 
                       {/* Table */}

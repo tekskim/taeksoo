@@ -10,48 +10,48 @@ import {
   TopBarAction,
   Input,
   NumberInput,
-  Select,
   SectionCard,
   FormField,
-  Toggle,
   WizardSummary,
-  Disclosure,
-  DisclosureTrigger,
-  DisclosurePanel,
   RadioGroup,
   Radio,
+  Toggle,
   SearchInput,
-  Table,
-  StatusIndicator,
   Pagination,
+  StatusIndicator,
+  Checkbox,
 } from '@/design-system';
-import type { WizardSummaryItem, WizardSectionState, TableColumn } from '@/design-system';
+import type { WizardSummaryItem, WizardSectionState } from '@/design-system';
 import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
 import { useTabs } from '@/contexts/TabContext';
 import {
   IconBell,
   IconEdit,
   IconExternalLink,
+  IconPlus,
+  IconMinus,
+  IconChevronRight,
+  IconChevronDown,
 } from '@tabler/icons-react';
 
 /* ----------------------------------------
    Types
    ---------------------------------------- */
 
-type SectionStep = 'basic-info' | 'resources' | 'advanced';
+type SectionStep = 'basic-info' | 'resources' | 'metadata';
 
 // Section labels for display
 const SECTION_LABELS: Record<SectionStep, string> = {
   'basic-info': 'Basic information',
   resources: 'Resources',
-  advanced: 'Advanced',
+  metadata: 'Metadata',
 };
 
 // Section order for navigation
 const SECTION_ORDER: SectionStep[] = [
   'basic-info',
   'resources',
-  'advanced',
+  'metadata',
 ];
 
 // Tenant type for selection
@@ -73,6 +73,7 @@ const mockTenants: Tenant[] = [
   { id: '12345684', name: 'tenant G', status: 'active', description: '-' },
   { id: '12345685', name: 'tenant H', status: 'active', description: '-' },
 ];
+
 
 /* ----------------------------------------
    Summary Sidebar Component
@@ -143,19 +144,33 @@ export function ComputeAdminCreateFlavorPage() {
   const [rootDisk, setRootDisk] = useState<number | undefined>(0);
   const [ephemeralDisk, setEphemeralDisk] = useState<number | undefined>(0);
   const [swapDisk, setSwapDisk] = useState<number | undefined>(0);
-  const [rxtxFactor, setRxtxFactor] = useState<number | undefined>(1);
 
-  // Advanced form state
-  const [cpuPolicy, setCpuPolicy] = useState('none');
-  const [cpuThreadPolicy, setCpuThreadPolicy] = useState('none');
-  const [numaNodes, setNumaNodes] = useState<number | undefined>(undefined);
-  const [advancedOpen, setAdvancedOpen] = useState(true);
+  // Metadata form state
+  const [availableMetadataSearch, setAvailableMetadataSearch] = useState('');
+  const [existingMetadataSearch, setExistingMetadataSearch] = useState('');
+  const [customMetadataKey, setCustomMetadataKey] = useState('');
+  const [expandedMetadata, setExpandedMetadata] = useState<Set<string>>(new Set());
+  const [selectedMetadata, setSelectedMetadata] = useState<Array<{ key: string; value: string }>>([]);
+
+  // Available metadata options (mock data)
+  const availableMetadataOptions = [
+    { key: 'cpu_allocation_ratio', label: 'CPU Allocation Ratio', children: ['1.0', '2.0', '4.0', '8.0', '16.0'] },
+    { key: 'ram_allocation_ratio', label: 'RAM Allocation Ratio', children: ['1.0', '1.5', '2.0'] },
+    { key: 'disk_allocation_ratio', label: 'Disk Allocation Ratio', children: ['1.0', '2.0'] },
+    { key: 'hw:cpu_policy', label: 'CPU Policy', children: ['shared', 'dedicated'] },
+    { key: 'hw:cpu_thread_policy', label: 'CPU Thread Policy', children: ['prefer', 'isolate', 'require'] },
+    { key: 'hw:numa_nodes', label: 'NUMA Nodes', children: ['1', '2', '4'] },
+    { key: 'hw:mem_page_size', label: 'Memory Page Size', children: ['small', 'large', 'any'] },
+    { key: 'quota:disk_read_bytes_sec', label: 'Disk Read Bytes/sec' },
+    { key: 'quota:disk_write_bytes_sec', label: 'Disk Write Bytes/sec' },
+    { key: 'quota:vif_inbound_average', label: 'VIF Inbound Average' },
+  ];
 
   // Section states
   const [sectionStatus, setSectionStatus] = useState<Record<SectionStep, WizardSectionState>>({
     'basic-info': 'active',
     resources: 'pre',
-    advanced: 'done',
+    metadata: 'pre',
   });
 
   // Validation error state
@@ -196,10 +211,7 @@ export function ComputeAdminCreateFlavorPage() {
       rootDisk,
       ephemeralDisk,
       swapDisk,
-      rxtxFactor,
-      cpuPolicy,
-      cpuThreadPolicy,
-      numaNodes,
+      metadata: selectedMetadata,
     });
     navigate('/compute-admin/flavors');
   };
@@ -219,54 +231,31 @@ export function ComputeAdminCreateFlavorPage() {
   const paginatedTenants = useMemo(() => {
     const start = (tenantPage - 1) * tenantsPerPage;
     return filteredTenants.slice(start, start + tenantsPerPage);
-  }, [filteredTenants, tenantPage, tenantsPerPage]);
+  }, [filteredTenants, tenantPage]);
 
   const totalTenantPages = Math.ceil(filteredTenants.length / tenantsPerPage);
 
-  // Tenant table columns
-  const tenantColumns: TableColumn<Tenant>[] = useMemo(
-    () => [
-      {
-        key: 'status',
-        label: 'Status',
-        width: '60px',
-        align: 'center' as const,
-        render: (_value: unknown, row: Tenant) => (
-          <StatusIndicator status={row.status === 'active' ? 'active' : 'muted'} />
-        ),
-      },
-      {
-        key: 'name',
-        label: 'Name',
-        sortable: true,
-        render: (_value: unknown, row: Tenant) => (
-          <div className="flex flex-col gap-0.5">
-            <Link
-              to={`/compute-admin/tenants/${row.id}`}
-              className="text-[12px] font-medium text-[var(--color-link)] hover:underline flex items-center gap-1.5"
-            >
-              {row.name}
-              <IconExternalLink size={12} />
-            </Link>
-            <span className="text-[11px] text-[var(--color-text-muted)]">
-              ID: {row.id}
-            </span>
-          </div>
-        ),
-      },
-      {
-        key: 'description',
-        label: 'Description',
-        sortable: true,
-        render: (_value: unknown, row: Tenant) => (
-          <span className="text-[12px] text-[var(--color-text-default)]">
-            {row.description}
-          </span>
-        ),
-      },
-    ],
-    []
-  );
+  // Handle tenant selection
+  const handleTenantSelect = (tenantId: string, checked: boolean) => {
+    if (checked) {
+      setSelectedTenants(prev => [...prev, tenantId]);
+    } else {
+      setSelectedTenants(prev => prev.filter(id => id !== tenantId));
+    }
+  };
+
+  const handleSelectAllTenants = (checked: boolean) => {
+    if (checked) {
+      const allIds = paginatedTenants.map(t => t.id);
+      setSelectedTenants(prev => [...new Set([...prev, ...allIds])]);
+    } else {
+      const pageIds = new Set(paginatedTenants.map(t => t.id));
+      setSelectedTenants(prev => prev.filter(id => !pageIds.has(id)));
+    }
+  };
+
+  const allPageTenantsSelected = paginatedTenants.length > 0 && 
+    paginatedTenants.every(t => selectedTenants.includes(t.id));
 
   // Section navigation
   const goToNextSection = useCallback((currentSection: SectionStep) => {
@@ -438,15 +427,11 @@ export function ComputeAdminCreateFlavorPage() {
                                 Indicates whether the flavor is available to other tenants.
                               </span>
                             </div>
-                            <HStack gap={2} align="center">
-                              <Toggle 
-                                checked={isPublic} 
-                                onChange={(e) => setIsPublic(e.target.checked)}
-                              />
-                              <span className="text-[12px] text-[var(--color-text-default)]">
-                                {isPublic ? 'On' : 'Off'}
-                              </span>
-                            </HStack>
+                            <Toggle 
+                              checked={isPublic} 
+                              onChange={(e) => setIsPublic(e.target.checked)}
+                              label={isPublic ? 'On' : 'Off'}
+                            />
                           </div>
 
                           {/* Tenant section - shown when Public is Off */}
@@ -483,17 +468,64 @@ export function ComputeAdminCreateFlavorPage() {
                                 />
                                 
                                 {/* Tenant Table */}
-                                <Table
-                                  columns={tenantColumns}
-                                  data={paginatedTenants}
-                                  rowKey="id"
-                                  selectable
-                                  selectedKeys={Array.isArray(selectedTenants) ? selectedTenants : []}
-                                  onSelectionChange={(keys) => setSelectedTenants(Array.isArray(keys) ? keys : [])}
-                                />
+                                <div className="flex flex-col gap-1 w-full">
+                                  {/* Table Header */}
+                                  <div className="flex items-center bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-md">
+                                    <div className="flex items-center justify-center p-3 w-[48px]">
+                                      <Checkbox 
+                                        checked={allPageTenantsSelected}
+                                        onChange={(e) => handleSelectAllTenants(e.target.checked)}
+                                      />
+                                    </div>
+                                    <div className="flex items-center justify-center p-3 w-[60px] border-l border-[var(--color-border-default)]">
+                                      <span className="text-[11px] font-medium text-[var(--color-text-default)]">Status</span>
+                                    </div>
+                                    <div className="flex-1 p-3 border-l border-[var(--color-border-default)]">
+                                      <span className="text-[11px] font-medium text-[var(--color-text-default)]">Name</span>
+                                    </div>
+                                    <div className="flex-1 p-3 border-l border-[var(--color-border-default)]">
+                                      <span className="text-[11px] font-medium text-[var(--color-text-default)]">Description</span>
+                                    </div>
+                                  </div>
+                                  
+                                  {/* Table Rows */}
+                                  {paginatedTenants.map((tenant) => (
+                                    <div 
+                                      key={tenant.id}
+                                      className="flex items-center bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-md"
+                                    >
+                                      <div className="flex items-center justify-center p-3 w-[48px]">
+                                        <Checkbox 
+                                          checked={selectedTenants.includes(tenant.id)}
+                                          onChange={(e) => handleTenantSelect(tenant.id, e.target.checked)}
+                                        />
+                                      </div>
+                                      <div className="flex items-center justify-center p-2 w-[60px]">
+                                        <StatusIndicator status={tenant.status === 'active' ? 'active' : 'muted'} />
+                                      </div>
+                                      <div className="flex-1 flex flex-col gap-0.5 p-3">
+                                        <Link
+                                          to={`/compute-admin/tenants/${tenant.id}`}
+                                          className="text-[12px] font-medium text-[var(--color-link)] hover:underline flex items-center gap-1.5"
+                                        >
+                                          {tenant.name}
+                                          <IconExternalLink size={12} />
+                                        </Link>
+                                        <span className="text-[11px] text-[var(--color-text-muted)]">
+                                          ID: {tenant.id}
+                                        </span>
+                                      </div>
+                                      <div className="flex-1 p-3">
+                                        <span className="text-[12px] text-[var(--color-text-default)]">
+                                          {tenant.description}
+                                        </span>
+                                      </div>
+                                    </div>
+                                  ))}
+                                </div>
                                 
                                 {/* Selection count */}
-                                <div className="bg-[var(--color-surface-subtle)] px-2 py-2 rounded-[6px]">
+                                <div className="bg-[var(--color-surface-subtle)] px-2 py-2 rounded-md">
                                   <span className="text-[12px] text-[var(--color-text-subtle)]">
                                     {selectedTenants.length === 0
                                       ? 'No item selected'
@@ -663,25 +695,6 @@ export function ComputeAdminCreateFlavorPage() {
                             </HStack>
                           </div>
 
-                          {/* RX/TX Factor */}
-                          <div className="flex flex-col gap-2">
-                            <span className="text-[14px] font-medium leading-[var(--line-height-20)] text-[var(--color-text-default)]">
-                              RX/TX factor
-                            </span>
-                            <span className="text-[12px] font-normal leading-[var(--line-height-16)] text-[var(--color-text-subtle)]">
-                              Network bandwidth weight factor.
-                            </span>
-                            <HStack gap={2} align="center">
-                              <NumberInput 
-                                value={rxtxFactor}
-                                onChange={setRxtxFactor}
-                                min={0}
-                                max={100}
-                                className="w-[100px]"
-                              />
-                            </HStack>
-                          </div>
-
                           <div className="flex items-center justify-end w-full">
                             <Button 
                               variant="primary" 
@@ -699,148 +712,275 @@ export function ComputeAdminCreateFlavorPage() {
                           <SectionCard.DataRow label="Root disk" value={`${rootDisk ?? 0} GiB`} showDivider />
                           <SectionCard.DataRow label="Ephemeral disk" value={`${ephemeralDisk ?? 0} GiB`} showDivider />
                           <SectionCard.DataRow label="Swap disk" value={`${swapDisk ?? 0} MiB`} showDivider />
-                          <SectionCard.DataRow label="RX/TX factor" value={`${rxtxFactor ?? 1}`} showDivider />
                         </SectionCard.Content>
                       )}
                     </SectionCard>
 
-                    {/* Advanced Section */}
-                    <SectionCard isActive={sectionStatus['advanced'] === 'active'}>
+                    {/* Metadata Section */}
+                    <SectionCard isActive={sectionStatus['metadata'] === 'active'}>
                       <SectionCard.Header 
-                        title={SECTION_LABELS['advanced']}
-                        showDivider={sectionStatus['advanced'] === 'active'}
+                        title={SECTION_LABELS['metadata']}
+                        showDivider={sectionStatus['metadata'] === 'active'}
                         actions={
-                          sectionStatus['advanced'] === 'done' && (
-                            <HStack gap={3} align="center">
-                              <span className="text-[12px] text-[var(--color-text-subtle)]">Auto-filled</span>
-                              <Button
-                                variant="secondary"
-                                size="sm"
-                                leftIcon={<IconEdit size={12} />}
-                                onClick={() => editSection('advanced')}
-                              >
-                                Edit
-                              </Button>
-                            </HStack>
+                          sectionStatus['metadata'] === 'done' && (
+                            <Button
+                              variant="secondary"
+                              size="sm"
+                              leftIcon={<IconEdit size={12} />}
+                              onClick={() => editSection('metadata')}
+                            >
+                              Edit
+                            </Button>
                           )
                         }
                       />
-                      {sectionStatus['advanced'] === 'active' && (
+                      {sectionStatus['metadata'] === 'active' && (
                         <SectionCard.Content gap={6}>
-                          <Disclosure 
-                            open={advancedOpen} 
-                            onChange={setAdvancedOpen}
-                          >
-                            <DisclosureTrigger>CPU & NUMA Settings</DisclosureTrigger>
-                            <DisclosurePanel>
-                              <VStack gap={4} align="stretch" className="pt-3">
-                                {/* CPU Policy */}
-                                <FormField>
-                                  <FormField.Label>CPU policy</FormField.Label>
-                                  <FormField.HelperText>
-                                    Policy that defines how vCPUs are allocated.
-                                  </FormField.HelperText>
-                                  <FormField.Control>
-                                    <Select
-                                      value={cpuPolicy}
-                                      onChange={(value) => setCpuPolicy(value)}
-                                      options={[
-                                        { value: 'none', label: 'None' },
-                                        { value: 'dedicated', label: 'Dedicated' },
-                                        { value: 'shared', label: 'Shared' },
-                                      ]}
-                                      fullWidth
-                                    />
-                                  </FormField.Control>
-                                </FormField>
+                          {/* Metadata Description */}
+                          <div className="flex flex-col gap-2">
+                            <div className="flex items-center gap-1.5">
+                              <span className="text-[14px] font-medium leading-[var(--line-height-20)] text-[var(--color-text-default)]">
+                                Metadata
+                              </span>
+                              <span className="text-[var(--color-state-danger)]">*</span>
+                            </div>
+                            <span className="text-[12px] font-normal leading-[var(--line-height-16)] text-[var(--color-text-subtle)]">
+                              Select existing metadata or define new metadata to apply to the host aggregate.
+                            </span>
+                          </div>
 
-                                {/* CPU Thread Policy */}
-                                <FormField>
-                                  <FormField.Label>CPU thread policy</FormField.Label>
-                                  <FormField.HelperText>
-                                    Policy defining how hyperthreads are used for vCPU placement.
-                                  </FormField.HelperText>
-                                  <FormField.Control>
-                                    <Select
-                                      value={cpuThreadPolicy}
-                                      onChange={(value) => setCpuThreadPolicy(value)}
-                                      options={[
-                                        { value: 'none', label: 'None' },
-                                        { value: 'prefer', label: 'Prefer' },
-                                        { value: 'isolate', label: 'Isolate' },
-                                        { value: 'require', label: 'Require' },
-                                      ]}
-                                      fullWidth
-                                    />
-                                  </FormField.Control>
-                                </FormField>
-
-                                {/* NUMA Nodes */}
-                                <div className="flex flex-col gap-2">
-                                  <span className="text-[14px] font-medium leading-[var(--line-height-20)] text-[var(--color-text-default)]">
-                                    NUMA nodes
-                                  </span>
-                                  <span className="text-[12px] font-normal leading-[var(--line-height-16)] text-[var(--color-text-subtle)]">
-                                    Number of NUMA nodes for the flavor. Leave empty for default.
-                                  </span>
-                                  <HStack gap={2} align="center">
-                                    <NumberInput 
-                                      value={numaNodes}
-                                      onChange={setNumaNodes}
-                                      min={1}
-                                      max={8}
-                                      className="w-[100px]"
-                                    />
-                                  </HStack>
+                          {/* Two Column Layout */}
+                          <div className="flex gap-6">
+                            {/* Left Column - Available Metadata */}
+                            <div className="flex-1 flex flex-col gap-2 bg-[var(--color-surface-subtle)] rounded-md p-2">
+                              <span className="text-[14px] font-medium text-[var(--color-text-default)]">Available metadata</span>
+                              
+                              {/* Search */}
+                              <SearchInput
+                                value={availableMetadataSearch}
+                                onChange={setAvailableMetadataSearch}
+                                placeholder="Search metadata"
+                                className="w-full"
+                              />
+                              
+                              {/* Custom metadata input row */}
+                              <div className="flex items-center bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-md">
+                                <div className="flex-1 px-3 py-2">
+                                  <Input
+                                    value={customMetadataKey}
+                                    onChange={(e) => setCustomMetadataKey(e.target.value)}
+                                    placeholder="Enter custom metadata key"
+                                    fullWidth
+                                  />
                                 </div>
-                              </VStack>
-                            </DisclosurePanel>
-                          </Disclosure>
+                                <div className="px-3 py-2">
+                                  <button
+                                    onClick={() => {
+                                      if (customMetadataKey.trim()) {
+                                        setSelectedMetadata(prev => [...prev, { key: customMetadataKey.trim(), value: '' }]);
+                                        setCustomMetadataKey('');
+                                      }
+                                    }}
+                                    className="flex items-center justify-center w-7 h-7 rounded-md border border-[var(--color-border-default)] hover:bg-[var(--color-surface-subtle)]"
+                                  >
+                                    <IconPlus size={12} className="text-[var(--color-text-muted)]" />
+                                  </button>
+                                </div>
+                              </div>
+                              
+                              {/* Metadata List */}
+                              <div className="flex flex-col gap-1 flex-1 overflow-y-auto">
+                                {availableMetadataOptions
+                                  .filter(item => 
+                                    !availableMetadataSearch || 
+                                    item.label.toLowerCase().includes(availableMetadataSearch.toLowerCase()) ||
+                                    item.key.toLowerCase().includes(availableMetadataSearch.toLowerCase())
+                                  )
+                                  .map((item, index, arr) => (
+                                    <div key={item.key} className="flex flex-col">
+                                      {/* Parent row */}
+                                      <div 
+                                        className={`
+                                          flex items-center bg-[var(--color-surface-default)] border border-[var(--color-border-default)]
+                                          ${expandedMetadata.has(item.key) && item.children ? 'rounded-t-md border-b-0' : 'rounded-md'}
+                                        `}
+                                      >
+                                        <div className="flex-1 flex items-center gap-2 px-3 py-2 min-h-[40px]">
+                                          <button
+                                            onClick={() => {
+                                              if (item.children) {
+                                                setExpandedMetadata(prev => {
+                                                  const newSet = new Set(prev);
+                                                  if (newSet.has(item.key)) {
+                                                    newSet.delete(item.key);
+                                                  } else {
+                                                    newSet.add(item.key);
+                                                  }
+                                                  return newSet;
+                                                });
+                                              }
+                                            }}
+                                            className="p-0.5"
+                                          >
+                                            {expandedMetadata.has(item.key) ? (
+                                              <IconChevronDown size={12} className="text-[var(--color-text-default)]" />
+                                            ) : (
+                                              <IconChevronRight size={12} className="text-[var(--color-text-default)]" />
+                                            )}
+                                          </button>
+                                          <span className="text-[12px] font-medium text-[var(--color-text-default)]">{item.label}</span>
+                                        </div>
+                                        <div className="px-3 py-2">
+                                          <button
+                                            onClick={() => {
+                                              if (!selectedMetadata.some(m => m.key === item.key)) {
+                                                setSelectedMetadata(prev => [...prev, { key: item.key, value: '' }]);
+                                              }
+                                            }}
+                                            className="flex items-center justify-center w-7 h-7 rounded-md border border-[var(--color-border-strong)] hover:bg-[var(--color-surface-subtle)]"
+                                          >
+                                            <IconPlus size={12} className="text-[var(--color-text-default)]" />
+                                          </button>
+                                        </div>
+                                      </div>
+                                      
+                                      {/* Child rows when expanded */}
+                                      {item.children && expandedMetadata.has(item.key) && (
+                                        <div className="flex flex-col">
+                                          {item.children.map((child, childIndex) => (
+                                            <div 
+                                              key={child} 
+                                              className={`
+                                                flex items-center bg-[var(--color-surface-default)] border border-[var(--color-border-default)] border-t-0
+                                                ${childIndex === item.children!.length - 1 ? 'rounded-b-md' : ''}
+                                              `}
+                                            >
+                                              <div className="flex-1 flex items-center gap-2 px-3 py-2 pl-10 min-h-[40px]">
+                                                <span className="text-[12px] font-medium text-[var(--color-text-default)]">{child}</span>
+                                              </div>
+                                              <div className="px-3 py-2">
+                                                <button
+                                                  onClick={() => {
+                                                    setSelectedMetadata(prev => {
+                                                      const existing = prev.find(m => m.key === item.key);
+                                                      if (existing) {
+                                                        return prev.map(m => m.key === item.key ? { ...m, value: child } : m);
+                                                      }
+                                                      return [...prev, { key: item.key, value: child }];
+                                                    });
+                                                  }}
+                                                  className="flex items-center justify-center w-7 h-7 rounded-md border border-[var(--color-border-strong)] hover:bg-[var(--color-surface-subtle)]"
+                                                >
+                                                  <IconPlus size={12} className="text-[var(--color-text-default)]" />
+                                                </button>
+                                              </div>
+                                            </div>
+                                          ))}
+                                        </div>
+                                      )}
+                                    </div>
+                                  ))}
+                              </div>
+                            </div>
+
+                            {/* Right Column - Existing Metadata */}
+                            <div className="flex-1 flex flex-col gap-2 bg-[var(--color-surface-subtle)] rounded-md p-2">
+                              <span className="text-[14px] font-medium text-[var(--color-text-default)]">Existing metadata</span>
+                              
+                              {/* Search */}
+                              <SearchInput
+                                value={existingMetadataSearch}
+                                onChange={setExistingMetadataSearch}
+                                placeholder="Search metadata"
+                                className="w-full"
+                              />
+                              
+                              {/* Selected Metadata List */}
+                              <div className="flex flex-col gap-1 flex-1 overflow-y-auto">
+                                {selectedMetadata
+                                  .filter(item => 
+                                    !existingMetadataSearch || 
+                                    item.key.toLowerCase().includes(existingMetadataSearch.toLowerCase())
+                                  )
+                                  .map((item, index) => (
+                                    <div 
+                                      key={`${item.key}-${index}`} 
+                                      className="flex items-center bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-md"
+                                    >
+                                      <div className="flex-1 flex items-center gap-2 px-3 py-2 min-h-[40px]">
+                                        <span className="text-[12px] font-medium text-[var(--color-text-default)] shrink-0">{item.key}</span>
+                                        <div className="w-px h-4 bg-[var(--color-border-default)]" />
+                                        <Input
+                                          value={item.value}
+                                          onChange={(e) => {
+                                            setSelectedMetadata(prev => 
+                                              prev.map((m, i) => i === index ? { ...m, value: e.target.value } : m)
+                                            );
+                                          }}
+                                          placeholder="Enter value"
+                                          fullWidth
+                                        />
+                                      </div>
+                                      <div className="px-3 py-2">
+                                        <button
+                                          onClick={() => {
+                                            setSelectedMetadata(prev => prev.filter((_, i) => i !== index));
+                                          }}
+                                          className="flex items-center justify-center w-7 h-7 rounded-md border border-[var(--color-border-strong)] hover:bg-red-50"
+                                        >
+                                          <IconMinus size={12} className="text-[var(--color-state-danger)]" />
+                                        </button>
+                                      </div>
+                                    </div>
+                                  ))}
+                                {selectedMetadata.length === 0 && (
+                                  <div className="flex items-center justify-center py-8">
+                                    <span className="text-[12px] text-[var(--color-text-muted)]">
+                                      No metadata selected
+                                    </span>
+                                  </div>
+                                )}
+                              </div>
+                            </div>
+                          </div>
 
                           {/* Action Buttons */}
                           <div className="flex items-center justify-end gap-2 w-full">
                             <Button 
                               variant="secondary" 
-                              onClick={() => {
-                                // Reset to default values
-                                setCpuPolicy('none');
-                                setCpuThreadPolicy('none');
-                                setNumaNodes(undefined);
-                              }}
+                              onClick={() => goToNextSection('metadata')}
                             >
-                              Cancel
+                              Skip
                             </Button>
                             <Button 
                               variant="primary" 
-                              onClick={() => {
-                                setSectionStatus((prev) => ({
-                                  ...prev,
-                                  advanced: 'done',
-                                }));
-                              }}
+                              onClick={() => goToNextSection('metadata')}
                             >
-                              Done
+                              Next
                             </Button>
                           </div>
                         </SectionCard.Content>
                       )}
-                      {sectionStatus['advanced'] === 'done' && (
+                      {sectionStatus['metadata'] === 'done' && (
                         <SectionCard.Content>
                           <SectionCard.DataRow 
-                            label="CPU Policy" 
-                            value={cpuPolicy === 'none' ? 'None' : cpuPolicy.charAt(0).toUpperCase() + cpuPolicy.slice(1)} 
+                            label="Metadata count" 
+                            value={`${selectedMetadata.length} item${selectedMetadata.length !== 1 ? 's' : ''}`} 
                             showDivider 
                           />
-                          <SectionCard.DataRow 
-                            label="CPU Thread Policy" 
-                            value={cpuThreadPolicy === 'none' ? 'None' : cpuThreadPolicy.charAt(0).toUpperCase() + cpuThreadPolicy.slice(1)} 
-                            showDivider 
-                          />
-                          <SectionCard.DataRow 
-                            label="NUMA Nodes" 
-                            value={numaNodes !== undefined ? `${numaNodes}` : '-'} 
-                            showDivider 
-                          />
+                          {selectedMetadata.slice(0, 3).map((item, index) => (
+                            <SectionCard.DataRow 
+                              key={index}
+                              label={item.key} 
+                              value={item.value || '-'} 
+                              showDivider 
+                            />
+                          ))}
+                          {selectedMetadata.length > 3 && (
+                            <span className="text-[12px] text-[var(--color-text-muted)]">
+                              +{selectedMetadata.length - 3} more items
+                            </span>
+                          )}
                         </SectionCard.Content>
                       )}
                     </SectionCard>

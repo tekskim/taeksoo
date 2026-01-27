@@ -46,6 +46,8 @@ import { KeyPairsPage } from '@/pages/KeyPairsPage';
 import { KeyPairDetailPage } from '@/pages/KeyPairDetailPage';
 import { ServerGroupsPage } from '@/pages/ServerGroupsPage';
 import { ServerGroupDetailPage } from '@/pages/ServerGroupDetailPage';
+import { ComputeAdminServerGroupsPage } from '@/pages/ComputeAdminServerGroupsPage';
+import { ComputeAdminServerGroupDetailPage } from '@/pages/ComputeAdminServerGroupDetailPage';
 import { VolumesPage } from '@/pages/VolumesPage';
 import { VolumeDetailPage } from '@/pages/VolumeDetailPage';
 import { CreateVolumePage } from '@/pages/CreateVolumePage';
@@ -78,11 +80,42 @@ import { TopologyD3Page } from '@/pages/TopologyD3Page';
 import { ConsolePage } from '@/pages/ConsolePage';
 import { CreateInstancePage } from '@/pages/CreateInstancePage';
 import ComputeAdminBareMetalDetailPage from '@/pages/ComputeAdminBareMetalDetailPage';
+import { ComputeAdminBareMetalNodesPage } from '@/pages/ComputeAdminBareMetalNodesPage';
 import { ComputeAdminInstanceDetailPage } from '@/pages/ComputeAdminInstanceDetailPage';
 import { ComputeAdminInstanceListPage } from '@/pages/ComputeAdminInstanceListPage';
+import { ComputeAdminCreateInstancePage } from '@/pages/ComputeAdminCreateInstancePage';
+import { ComputeAdminInstanceTemplateDetailPage } from '@/pages/ComputeAdminInstanceTemplateDetailPage';
 import CreateTemplatePage from '@/pages/CreateTemplatePage';
 import { ComputeAdminCreateTemplatePage } from '@/pages/ComputeAdminCreateTemplatePage';
 import { CreateImagePage } from '@/pages/CreateImagePage';
+import { ComputeAdminHostAggregatesPage } from '@/pages/ComputeAdminHostAggregatesPage';
+import { ComputeAdminVolumesPage } from '@/pages/ComputeAdminVolumesPage';
+import { ComputeAdminVolumeDetailPage } from '@/pages/ComputeAdminVolumeDetailPage';
+import { ComputeAdminVolumeSnapshotsPage } from '@/pages/ComputeAdminVolumeSnapshotsPage';
+import { ComputeAdminVolumeSnapshotDetailPage } from '@/pages/ComputeAdminVolumeSnapshotDetailPage';
+import { ComputeAdminVolumeBackupsPage } from '@/pages/ComputeAdminVolumeBackupsPage';
+import { ComputeAdminVolumeBackupDetailPage } from '@/pages/ComputeAdminVolumeBackupDetailPage';
+import { ComputeAdminNetworksPage } from '@/pages/ComputeAdminNetworksPage';
+import ComputeAdminNetworkDetailPage from '@/pages/ComputeAdminNetworkDetailPage';
+import ComputeAdminCreateNetworkPage from '@/pages/ComputeAdminCreateNetworkPage';
+import ComputeAdminSubnetDetailPage from '@/pages/ComputeAdminSubnetDetailPage';
+import { ComputeAdminRoutersPage } from '@/pages/ComputeAdminRoutersPage';
+import ComputeAdminRouterDetailPage from '@/pages/ComputeAdminRouterDetailPage';
+import { ComputeAdminPortsPage } from '@/pages/ComputeAdminPortsPage';
+import ComputeAdminPortDetailPage from '@/pages/ComputeAdminPortDetailPage';
+import { ComputeAdminFloatingIPsPage } from '@/pages/ComputeAdminFloatingIPsPage';
+import ComputeAdminFloatingIPDetailPage from '@/pages/ComputeAdminFloatingIPDetailPage';
+import { ComputeAdminSecurityGroupsPage } from '@/pages/ComputeAdminSecurityGroupsPage';
+import ComputeAdminSecurityGroupDetailPage from '@/pages/ComputeAdminSecurityGroupDetailPage';
+import { ComputeAdminLoadBalancersPage } from '@/pages/ComputeAdminLoadBalancersPage';
+import { ComputeAdminLoadBalancerDetailPage } from '@/pages/ComputeAdminLoadBalancerDetailPage';
+import ComputeAdminListenerDetailPage from '@/pages/ComputeAdminListenerDetailPage';
+import ComputeAdminPoolDetailPage from '@/pages/ComputeAdminPoolDetailPage';
+import ComputeAdminL7PolicyDetailPage from '@/pages/ComputeAdminL7PolicyDetailPage';
+import { ComputeAdminCertificatesPage } from '@/pages/ComputeAdminCertificatesPage';
+import ComputeAdminCertificateDetailPage from '@/pages/ComputeAdminCertificateDetailPage';
+import { ComputeAdminTopologyD3Page } from '@/pages/ComputeAdminTopologyD3Page';
+import ComputeAdminConsolePage from '@/pages/ComputeAdminConsolePage';
 
 // Pages - Agent
 import { AgentPage } from '@/pages/AgentPage';
@@ -360,14 +393,14 @@ function AppRoutes() {
         <Route path="/compute/topology" element={<TopologyD3Page />} />
         <Route path="/compute/console/:instanceId" element={<ConsolePage />} />
 
-        {/* Compute Admin Routes - same pages, different sidebar will be implemented later */}
+        {/* Compute Admin Routes - All using separate ComputeAdmin pages */}
         <Route path="/compute-admin" element={<ComputeAdminHomePage />} />
         <Route path="/compute-admin/instances" element={<ComputeAdminInstanceListPage />} />
-        <Route path="/compute-admin/instances/create" element={<CreateInstancePage />} />
+        <Route path="/compute-admin/instances/create" element={<ComputeAdminCreateInstancePage />} />
         <Route path="/compute-admin/instances/:id" element={<ComputeAdminInstanceDetailPage />} />
         <Route path="/compute-admin/instance-templates" element={<ComputeAdminInstanceTemplatesPage />} />
         <Route path="/compute-admin/instance-templates/create" element={<ComputeAdminCreateTemplatePage />} />
-        <Route path="/compute-admin/instance-templates/:id" element={<InstanceTemplateDetailPage />} />
+        <Route path="/compute-admin/instance-templates/:id" element={<ComputeAdminInstanceTemplateDetailPage />} />
         <Route path="/compute-admin/instance-snapshots" element={<ComputeAdminInstanceSnapshotsPage />} />
         <Route path="/compute-admin/instance-snapshots/:id" element={<ComputeAdminInstanceSnapshotDetailPage />} />
         <Route path="/compute-admin/images" element={<ComputeAdminImagesPage />} />
@@ -376,41 +409,38 @@ function AppRoutes() {
         <Route path="/compute-admin/flavors" element={<ComputeAdminFlavorsPage />} />
         <Route path="/compute-admin/flavors/create" element={<ComputeAdminCreateFlavorPage />} />
         <Route path="/compute-admin/flavors/:id" element={<ComputeAdminFlavorDetailPage />} />
-        <Route path="/compute-admin/key-pairs" element={<KeyPairsPage />} />
-        <Route path="/compute-admin/key-pairs/:id" element={<KeyPairDetailPage />} />
-        <Route path="/compute-admin/server-groups" element={<ServerGroupsPage />} />
-        <Route path="/compute-admin/server-groups/:id" element={<ServerGroupDetailPage />} />
-        <Route path="/compute-admin/volumes" element={<VolumesPage />} />
-        <Route path="/compute-admin/volumes/create" element={<CreateVolumePage />} />
-        <Route path="/compute-admin/volumes/:id" element={<VolumeDetailPage />} />
-        <Route path="/compute-admin/volume-snapshots" element={<VolumeSnapshotsPage />} />
-        <Route path="/compute-admin/volume-snapshots/:id" element={<VolumeSnapshotDetailPage />} />
-        <Route path="/compute-admin/volume-backups" element={<VolumeBackupsPage />} />
-        <Route path="/compute-admin/volume-backups/:id" element={<VolumeBackupDetailPage />} />
-        <Route path="/compute-admin/networks" element={<NetworksPage />} />
-        <Route path="/compute-admin/networks/create" element={<CreateNetworkPage />} />
-        <Route path="/compute-admin/networks/:id" element={<NetworkDetailPage />} />
-        <Route path="/compute-admin/ports/create" element={<CreateVirtualAdapterPage />} />
-        <Route path="/compute-admin/subnets/:id" element={<SubnetDetailPage />} />
-        <Route path="/compute-admin/routers" element={<RoutersPage />} />
-        <Route path="/compute-admin/routers/:id" element={<RouterDetailPage />} />
-        <Route path="/compute-admin/ports" element={<PortsPage />} />
-        <Route path="/compute-admin/ports/:id" element={<PortDetailPage />} />
-        <Route path="/compute-admin/floating-ips" element={<FloatingIPsPage />} />
-        <Route path="/compute-admin/floating-ips/:id" element={<FloatingIPDetailPage />} />
-        <Route path="/compute-admin/security-groups" element={<SecurityGroupsPage />} />
-        <Route path="/compute-admin/security-groups/:id" element={<SecurityGroupDetailPage />} />
-        <Route path="/compute-admin/load-balancers" element={<LoadBalancersPage />} />
-        <Route path="/compute-admin/load-balancers/create" element={<CreateLoadBalancerPage />} />
-        <Route path="/compute-admin/load-balancers/:id" element={<LoadBalancerDetailPage />} />
-        <Route path="/compute-admin/listeners/:id" element={<ListenerDetailPage />} />
-        <Route path="/compute-admin/pools/:id" element={<PoolDetailPage />} />
-        <Route path="/compute-admin/l7-policies/:id" element={<L7PolicyDetailPage />} />
-        <Route path="/compute-admin/certificates" element={<CertificatesPage />} />
-        <Route path="/compute-admin/certificates/:id" element={<CertificateDetailPage />} />
-        <Route path="/compute-admin/topology" element={<TopologyD3Page />} />
-        <Route path="/compute-admin/console/:instanceId" element={<ConsolePage />} />
-        <Route path="/compute-admin/bare-metal/:id" element={<ComputeAdminBareMetalDetailPage />} />
+        <Route path="/compute-admin/server-groups" element={<ComputeAdminServerGroupsPage />} />
+        <Route path="/compute-admin/server-groups/:id" element={<ComputeAdminServerGroupDetailPage />} />
+        <Route path="/compute-admin/host-aggregates" element={<ComputeAdminHostAggregatesPage />} />
+        <Route path="/compute-admin/bare-metal-nodes" element={<ComputeAdminBareMetalNodesPage />} />
+        <Route path="/compute-admin/bare-metal-nodes/:id" element={<ComputeAdminBareMetalDetailPage />} />
+        <Route path="/compute-admin/volumes" element={<ComputeAdminVolumesPage />} />
+        <Route path="/compute-admin/volumes/:id" element={<ComputeAdminVolumeDetailPage />} />
+        <Route path="/compute-admin/volume-snapshots" element={<ComputeAdminVolumeSnapshotsPage />} />
+        <Route path="/compute-admin/volume-snapshots/:id" element={<ComputeAdminVolumeSnapshotDetailPage />} />
+        <Route path="/compute-admin/volume-backups" element={<ComputeAdminVolumeBackupsPage />} />
+        <Route path="/compute-admin/volume-backups/:id" element={<ComputeAdminVolumeBackupDetailPage />} />
+        <Route path="/compute-admin/networks" element={<ComputeAdminNetworksPage />} />
+        <Route path="/compute-admin/networks/create" element={<ComputeAdminCreateNetworkPage />} />
+        <Route path="/compute-admin/networks/:id" element={<ComputeAdminNetworkDetailPage />} />
+        <Route path="/compute-admin/subnets/:id" element={<ComputeAdminSubnetDetailPage />} />
+        <Route path="/compute-admin/routers" element={<ComputeAdminRoutersPage />} />
+        <Route path="/compute-admin/routers/:id" element={<ComputeAdminRouterDetailPage />} />
+        <Route path="/compute-admin/ports" element={<ComputeAdminPortsPage />} />
+        <Route path="/compute-admin/ports/:id" element={<ComputeAdminPortDetailPage />} />
+        <Route path="/compute-admin/floating-ips" element={<ComputeAdminFloatingIPsPage />} />
+        <Route path="/compute-admin/floating-ips/:id" element={<ComputeAdminFloatingIPDetailPage />} />
+        <Route path="/compute-admin/security-groups" element={<ComputeAdminSecurityGroupsPage />} />
+        <Route path="/compute-admin/security-groups/:id" element={<ComputeAdminSecurityGroupDetailPage />} />
+        <Route path="/compute-admin/load-balancers" element={<ComputeAdminLoadBalancersPage />} />
+        <Route path="/compute-admin/load-balancers/:id" element={<ComputeAdminLoadBalancerDetailPage />} />
+        <Route path="/compute-admin/listeners/:id" element={<ComputeAdminListenerDetailPage />} />
+        <Route path="/compute-admin/pools/:id" element={<ComputeAdminPoolDetailPage />} />
+        <Route path="/compute-admin/l7-policies/:id" element={<ComputeAdminL7PolicyDetailPage />} />
+        <Route path="/compute-admin/certificates" element={<ComputeAdminCertificatesPage />} />
+        <Route path="/compute-admin/certificates/:id" element={<ComputeAdminCertificateDetailPage />} />
+        <Route path="/compute-admin/topology" element={<ComputeAdminTopologyD3Page />} />
+        <Route path="/compute-admin/console/:instanceId" element={<ComputeAdminConsolePage />} />
 
         {/* Storage Routes */}
         <Route path="/storage" element={<StorageHomePage />} />

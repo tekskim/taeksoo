@@ -416,8 +416,6 @@ export function ServerGroupDetailPage() {
                         onPageChange={setInstanceCurrentPage}
                         totalItems={filteredInstances.length}
                         selectedCount={selectedInstances.length}
-                        showSettings
-                        onSettingsClick={() => setIsPreferencesOpen(true)}
                       />
 
                       {/* Instances Table */}

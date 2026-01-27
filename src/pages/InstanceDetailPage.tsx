@@ -753,8 +753,6 @@ export function InstanceDetailPage() {
                       totalPages={1}
                       totalItems={10}
                       onPageChange={() => {}}
-                      showSettings
-                      onSettingsClick={() => setIsPreferencesOpen(true)}
                     />
 
                     {/* Table */}
@@ -869,8 +867,6 @@ export function InstanceDetailPage() {
                       totalPages={interfaceTotalPages}
                       onPageChange={setInterfaceCurrentPage}
                       totalItems={mockAttachedInterfaces.length}
-                      showSettings
-                      onSettingsClick={() => setIsPreferencesOpen(true)}
                     />
 
                     {/* Table */}
@@ -1003,8 +999,6 @@ export function InstanceDetailPage() {
                       totalPages={floatingIpTotalPages}
                       onPageChange={setFloatingIpCurrentPage}
                       totalItems={mockFloatingIPs.length}
-                      showSettings
-                      onSettingsClick={() => setIsPreferencesOpen(true)}
                     />
 
                     {/* Table */}
@@ -1115,8 +1109,6 @@ export function InstanceDetailPage() {
                       totalPages={securityTotalPages}
                       onPageChange={setSecurityCurrentPage}
                       totalItems={mockSecurityGroups.length}
-                      showSettings
-                      onSettingsClick={() => setIsPreferencesOpen(true)}
                     />
 
                     {/* Table */}
@@ -1210,8 +1202,6 @@ export function InstanceDetailPage() {
                       totalPages={snapshotTotalPages}
                       onPageChange={setSnapshotCurrentPage}
                       totalItems={filteredSnapshots.length}
-                      showSettings
-                      onSettingsClick={() => setIsPreferencesOpen(true)}
                     />
 
                     {/* Table */}
@@ -1408,8 +1398,6 @@ export function InstanceDetailPage() {
                       totalPages={actionLogTotalPages}
                       onPageChange={setActionLogCurrentPage}
                       totalItems={filteredActionLogs.length}
-                      showSettings
-                      onSettingsClick={() => setIsPreferencesOpen(true)}
                     />
 
                     {/* Action Logs Table */}

@@ -21,7 +21,7 @@ import {
   type TableColumn,
   type ContextMenuItem,
 } from '@/design-system';
-import { Sidebar } from '@/components/Sidebar';
+import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
 import { useTabs } from '@/contexts/TabContext';
 import {
   IconCirclePlus,
@@ -30,7 +30,6 @@ import {
   IconLock,
   IconLockOpen,
   IconTerminal2,
-  IconExternalLink,
 } from '@tabler/icons-react';
 
 /* ----------------------------------------
@@ -181,7 +180,7 @@ export function ComputeAdminFlavorDetailPage() {
   }));
 
   const breadcrumbItems = [
-    { label: 'Proj-1', href: '#' },
+    { label: 'Compute Admin', href: '/compute-admin' },
     { label: 'Flavors', href: '/compute-admin/flavors' },
     { label: flavor.name, href: `/compute-admin/flavors/${flavor.id}` },
   ];
@@ -232,16 +231,13 @@ export function ComputeAdminFlavorDetailPage() {
       flex: 1,
       render: (_, row) => (
         <div className="flex flex-col gap-0.5 min-w-0">
-          <div className="flex items-center gap-1">
-            <Link
-              to={`/compute-admin/instances/${row.id}`}
-              className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2 truncate"
-              onClick={(e) => e.stopPropagation()}
-            >
-              {row.name}
-            </Link>
-            <IconExternalLink size={12} className="flex-shrink-0 text-[var(--color-action-primary)]" />
-          </div>
+          <Link
+            to={`/compute-admin/instances/${row.id}`}
+            className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2 truncate"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {row.name}
+          </Link>
           <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] truncate">
             ID : {row.id}
           </span>
@@ -251,7 +247,7 @@ export function ComputeAdminFlavorDetailPage() {
     {
       key: 'locked',
       label: 'Locked',
-      width: '62px',
+      width: '80px',
       align: 'center',
       render: (_, row) => (
         row.locked ? (
@@ -263,7 +259,7 @@ export function ComputeAdminFlavorDetailPage() {
     },
     {
       key: 'image',
-      label: 'Image',
+      label: 'OS',
       flex: 1,
       sortable: true,
       render: (value) => <span>{value}</span>,
@@ -278,7 +274,6 @@ export function ComputeAdminFlavorDetailPage() {
       key: 'az',
       label: 'AZ',
       flex: 1,
-      sortable: true,
       render: (value) => <span>{value}</span>,
     },
     {
@@ -320,7 +315,7 @@ export function ComputeAdminFlavorDetailPage() {
 
   return (
     <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
-      <Sidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
+      <ComputeAdminSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
       <main
         className={`absolute top-0 bottom-0 right-0 flex flex-col bg-[var(--color-surface-default)] transition-[left] duration-200 ${
           sidebarOpen ? 'left-[200px]' : 'left-0'
@@ -357,19 +352,16 @@ export function ComputeAdminFlavorDetailPage() {
               <DetailHeader.Title>{flavor.name}</DetailHeader.Title>
               <DetailHeader.Actions>
                 <Button variant="secondary" size="sm" leftIcon={<IconCirclePlus size={12} />}>
-                  Create instance
-                </Button>
-                <Button variant="secondary" size="sm" leftIcon={<IconCirclePlus size={12} />}>
-                  Create volume
+                  Create instance template
                 </Button>
               </DetailHeader.Actions>
               <DetailHeader.InfoGrid>
-                <DetailHeader.InfoCard label="Category" value={flavor.category} />
                 <DetailHeader.InfoCard label="ID" value={flavor.id} copyable />
+                <DetailHeader.InfoCard label="Category" value={flavor.category} />
                 <DetailHeader.InfoCard label="vCPU" value={String(flavor.vcpu)} />
                 <DetailHeader.InfoCard label="RAM" value={flavor.ram} />
-                <DetailHeader.InfoCard label="Visibility" value={flavor.visibility} />
-                <DetailHeader.InfoCard label="Created at" value={flavor.createdAt} />
+                <DetailHeader.InfoCard label="Root Disk" value="0GiB" />
+                <DetailHeader.InfoCard label="Public" value="On" />
               </DetailHeader.InfoGrid>
             </DetailHeader>
 
@@ -390,7 +382,6 @@ export function ComputeAdminFlavorDetailPage() {
                       <SectionCard.Header title="Basic information" />
                       <SectionCard.Content>
                         <SectionCard.DataRow label="Flavor name" value={flavor.name} />
-                        <SectionCard.DataRow label="Architecture" value={flavor.architecture} />
                         <SectionCard.DataRow label="Category" value={flavor.category} />
                       </SectionCard.Content>
                     </SectionCard>
@@ -401,20 +392,9 @@ export function ComputeAdminFlavorDetailPage() {
                       <SectionCard.Content>
                         <SectionCard.DataRow label="vCPU" value={String(flavor.vcpu)} />
                         <SectionCard.DataRow label="RAM" value={flavor.ram} />
+                        <SectionCard.DataRow label="Root Disk" value="0GiB" />
                         <SectionCard.DataRow label="Ephemeral disk" value={flavor.ephemeralDisk} />
-                        <SectionCard.DataRow label="NUMA Nodes" value={flavor.numaNodes} />
-                      </SectionCard.Content>
-                    </SectionCard>
-
-                    {/* Advanced */}
-                    <SectionCard>
-                      <SectionCard.Header title="Advanced" />
-                      <SectionCard.Content>
-                        <SectionCard.DataRow label="CPU Policy" value={flavor.cpuPolicy} />
-                        <SectionCard.DataRow label="CPU Thread Policy" value={flavor.cpuThreadPolicy} />
-                        <SectionCard.DataRow label="Memory page" value={flavor.memoryPage} />
-                        <SectionCard.DataRow label="Internal network Bandwidth" value={flavor.internalNetworkBandwidth} />
-                        <SectionCard.DataRow label="Storage IOPS" value={flavor.storageIOPS} />
+                        <SectionCard.DataRow label="Swap Disk" value={flavor.numaNodes} />
                       </SectionCard.Content>
                     </SectionCard>
 
@@ -423,6 +403,14 @@ export function ComputeAdminFlavorDetailPage() {
                       <SectionCard.Header title="Security" />
                       <SectionCard.Content>
                         <SectionCard.DataRow label="Visibility" value={flavor.visibility} />
+                      </SectionCard.Content>
+                    </SectionCard>
+
+                    {/* Metadata */}
+                    <SectionCard>
+                      <SectionCard.Header title="Metadata" />
+                      <SectionCard.Content>
+                        <SectionCard.DataRow label="{metadata}" value="{value}" />
                       </SectionCard.Content>
                     </SectionCard>
                   </VStack>
@@ -454,8 +442,6 @@ export function ComputeAdminFlavorDetailPage() {
                         totalPages={instanceTotalPages}
                         onPageChange={setInstanceCurrentPage}
                       totalItems={filteredInstances.length}
-                      showSettings
-                      onSettingsClick={() => setIsPreferencesOpen(true)}
                       />
 
                     {/* Instances Table */}

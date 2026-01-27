@@ -31,7 +31,7 @@ import {
   SelectionIndicator,
 } from '@/design-system';
 import type { TableColumn } from '@/design-system/components/Table/Table';
-import { Sidebar } from '@/components/Sidebar';
+import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
 import { useTabs } from '@/contexts/TabContext';
 import { useSidebar } from '@/contexts/SidebarContext';
 import {
@@ -2623,7 +2623,7 @@ export function ComputeAdminCreateTemplatePage() {
   return (
     <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
       {/* Sidebar */}
-      <Sidebar isOpen={sidebarOpen} onToggle={toggleSidebar} />
+      <ComputeAdminSidebar isOpen={sidebarOpen} onToggle={toggleSidebar} />
 
       {/* Main Content */}
       <main
@@ -2651,7 +2651,7 @@ export function ComputeAdminCreateTemplatePage() {
             breadcrumb={
               <Breadcrumb
                 items={[
-                  { label: 'Proj-1', href: '/project' },
+                  { label: 'Compute Admin', href: '/compute-admin' },
                   { label: 'Instance templates', href: '/compute-admin/instance-templates' },
                   { label: 'Create template' },
                 ]}

@@ -549,8 +549,6 @@ export default function RouterDetailPage() {
                         onPageChange={setPortCurrentPage}
                         totalItems={filteredPorts.length}
                         selectedCount={selectedPorts.length}
-                        showSettings
-                        onSettingsClick={() => setIsPreferencesOpen(true)}
                       />
 
                       {/* Table */}
@@ -611,8 +609,6 @@ export default function RouterDetailPage() {
                         onPageChange={setRouteCurrentPage}
                         totalItems={filteredRoutes.length}
                         selectedCount={selectedRoutes.length}
-                        showSettings
-                        onSettingsClick={() => setIsPreferencesOpen(true)}
                       />
 
                       {/* Table */}

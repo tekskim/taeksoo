@@ -565,8 +565,6 @@ export default function PoolDetailPage() {
                           totalPages={totalMemberPages}
                           onPageChange={setMemberCurrentPage}
                         totalItems={filteredMembers.length}
-                        showSettings
-                        onSettingsClick={() => setIsPreferencesOpen(true)}
                         />
 
                       {/* Table */}
