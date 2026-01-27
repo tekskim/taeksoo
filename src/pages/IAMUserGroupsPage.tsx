@@ -10,6 +10,7 @@ import {
   TopBar,
   Breadcrumb,
   ContextMenu,
+  columnWidths,
   type TableColumn,
   type ContextMenuItem,
 } from '@/design-system';
@@ -148,6 +149,7 @@ export function IAMUserGroupsPage() {
       key: 'name',
       label: 'Name',
       flex: 1,
+      minWidth: columnWidths.name,
       sortable: true,
       render: (value) => (
         <Link 
@@ -161,36 +163,36 @@ export function IAMUserGroupsPage() {
     {
       key: 'type',
       label: 'Type',
-      width: 100,
+      width: columnWidths.typeLg,
     },
     {
       key: 'roles',
       label: 'Roles',
-      flex: 1,
+      width: columnWidths.roles,
       sortable: true,
     },
     {
       key: 'userCount',
       label: 'User count',
-      flex: 1,
+      width: columnWidths.userCount,
       sortable: true,
     },
     {
       key: 'description',
       label: 'Description',
-      flex: 1,
+      width: columnWidths.description,
       sortable: true,
     },
     {
       key: 'createdAt',
       label: 'Created at',
-      flex: 1,
+      width: columnWidths.createdAt,
       sortable: true,
     },
     {
       key: 'id',
       label: 'Action',
-      width: 72,
+      width: columnWidths.actionWide,
       align: 'center',
       render: (_value, row) => (
         <ContextMenu items={getContextMenuItems(row)} trigger="click">

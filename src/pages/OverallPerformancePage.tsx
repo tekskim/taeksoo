@@ -15,6 +15,7 @@ import {
   Table,
   type TableColumn,
   type TimeRangeValue,
+  columnWidths,
 } from '@/design-system';
 import { StorageSidebar } from '@/components/StorageSidebar';
 import { DataViewDrawer } from '@/components/DataViewDrawer';
@@ -865,7 +866,7 @@ export function OverallPerformancePage() {
     { 
       key: 'id', 
       label: 'Detail performance', 
-      width: '140px',
+      width: columnWidths.id,
       align: 'center' as const,
       render: () => (
         <button className="p-1.5 hover:bg-[var(--color-surface-subtle)] rounded transition-colors">
@@ -883,7 +884,7 @@ export function OverallPerformancePage() {
     { 
       key: 'id', 
       label: 'Detail performance', 
-      width: '140px',
+      width: columnWidths.id,
       align: 'center' as const,
       render: () => (
         <button className="p-1.5 hover:bg-[var(--color-surface-subtle)] rounded transition-colors">
@@ -916,7 +917,7 @@ export function OverallPerformancePage() {
     { 
       key: 'id', 
       label: 'Action', 
-      width: '80px',
+      width: columnWidths.id,
       align: 'center' as const,
       render: () => (
         <button className="p-1.5 hover:bg-[var(--color-surface-subtle)] rounded transition-colors">
@@ -1435,7 +1436,7 @@ export function OverallPerformancePage() {
                               {
                                 key: 'actions',
                                 label: 'Action',
-                                width: '100px',
+                                width: columnWidths.actions,
                                 align: 'center' as const,
                                 render: () => (
                                   <button className="p-1.5 hover:bg-[var(--color-surface-subtle)] rounded transition-colors">

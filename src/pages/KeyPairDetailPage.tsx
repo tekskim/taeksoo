@@ -78,28 +78,25 @@ function CopyableDataRow({ label, value }: CopyableValueProps) {
   };
 
   return (
-    <div className="flex flex-col gap-3 w-full">
-      <div className="h-px w-full bg-[var(--color-border-subtle)]" />
-      <div className="flex flex-col gap-1.5">
-        <span className="text-[11px] font-medium leading-4 text-[var(--color-text-subtle)]">
-          {label}
+    <div className="flex flex-col gap-1.5 w-full">
+      <span className="text-[11px] font-medium leading-4 text-[var(--color-text-subtle)]">
+        {label}
+      </span>
+      <div className="flex items-center gap-2">
+        <span className="text-[12px] leading-4 text-[var(--color-text-default)]">
+          {value}
         </span>
-        <div className="flex items-center gap-2">
-          <span className="text-[12px] leading-4 text-[var(--color-text-default)]">
-            {value}
-          </span>
-          <button
-            onClick={handleCopy}
-            className="p-0.5 rounded hover:bg-[var(--color-surface-muted)] transition-colors shrink-0"
-            aria-label="Copy to clipboard"
-          >
-            {copied ? (
-              <IconCheck size={12} className="text-[var(--color-state-success)]" />
-            ) : (
-              <IconCopy size={12} className="text-[var(--color-action-primary)]" />
-            )}
-          </button>
-        </div>
+        <button
+          onClick={handleCopy}
+          className="p-0.5 rounded hover:bg-[var(--color-surface-muted)] transition-colors shrink-0"
+          aria-label="Copy to clipboard"
+        >
+          {copied ? (
+            <IconCheck size={12} className="text-[var(--color-state-success)]" />
+          ) : (
+            <IconCopy size={12} className="text-[var(--color-action-primary)]" />
+          )}
+        </button>
       </div>
     </div>
   );

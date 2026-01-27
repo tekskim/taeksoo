@@ -25,6 +25,7 @@ import {
   Select,
   FormField,
   type TableColumn,
+  columnWidths,
 } from '@/design-system';
 import { StorageSidebar } from '@/components/StorageSidebar';
 import { useTabs } from '@/contexts/TabContext';
@@ -985,12 +986,12 @@ export default function HostDetailPage() {
 
   // Table column definitions
   const deviceColumns: TableColumn<Device>[] = [
-    { key: 'deviceId', label: 'Device ID', flex: 1, sortable: true },
-    { key: 'deviceName', label: 'Device name', flex: 1, sortable: true },
+    { key: 'deviceId', label: 'Device ID', width: columnWidths.deviceId, sortable: true },
+    { key: 'deviceName', label: 'Device name', width: columnWidths.deviceName, sortable: true },
     { 
       key: 'daemons', 
       label: 'Daemons', 
-      flex: 1,
+      width: columnWidths.daemons,
       render: (_, row) => (
         <div className="flex flex-wrap gap-0.5">
           {row.daemons.map((daemon, index) => (
@@ -1002,29 +1003,29 @@ export default function HostDetailPage() {
   ];
 
   const physicalDiskColumns: TableColumn<PhysicalDisk>[] = [
-    { key: 'devicePath', label: 'Device path', flex: 1, sortable: true },
-    { key: 'type', label: 'Type', flex: 1, sortable: true },
+    { key: 'devicePath', label: 'Device path', width: columnWidths.devicePath, sortable: true },
+    { key: 'type', label: 'Type', width: columnWidths.type, sortable: true },
     { 
       key: 'available', 
       label: 'Available', 
-      flex: 1, 
+      width: columnWidths.available, 
       sortable: true,
       render: (_, row) => row.available ? 'Yes' : '',
     },
-    { key: 'vendor', label: 'Vendor', flex: 1, sortable: true },
-    { key: 'model', label: 'Model', flex: 1, sortable: true },
-    { key: 'size', label: 'Size', flex: 1, sortable: true },
+    { key: 'vendor', label: 'Vendor', width: columnWidths.vendor, sortable: true },
+    { key: 'model', label: 'Model', width: columnWidths.model, sortable: true },
+    { key: 'size', label: 'Size', width: columnWidths.size, sortable: true },
     { 
       key: 'osd', 
       label: 'OSDs', 
-      flex: 1, 
+      width: columnWidths.osd, 
       sortable: true,
       render: (_, row) => row.osd ? <Chip value={row.osd} /> : null,
     },
     {
       key: 'identify',
       label: 'Identify',
-      width: 80,
+      width: columnWidths.identify,
       align: 'center',
       sortable: false,
       render: (_, row) => {
@@ -1058,7 +1059,7 @@ export default function HostDetailPage() {
     {
       key: 'status',
       label: 'Status',
-      width: '64px',
+      width: columnWidths.status,
       align: 'center',
       render: (_, row) => {
         const statusMap: Record<string, 'active' | 'maintenance' | 'down'> = {
@@ -1069,9 +1070,9 @@ export default function HostDetailPage() {
         return <StatusIndicator status={statusMap[row.status]} layout="icon-only" size="sm" />;
       },
     },
-    { key: 'daemonName', label: 'Daemon name', flex: 1.5, sortable: true },
-    { key: 'version', label: 'Version', flex: 1, sortable: true },
-    { key: 'lastRefreshed', label: 'Last refreshed', flex: 1 },
+    { key: 'daemonName', label: 'Daemon name', width: columnWidths.daemonName, sortable: true },
+    { key: 'version', label: 'Version', width: columnWidths.version, sortable: true },
+    { key: 'lastRefreshed', label: 'Last refreshed', width: columnWidths.lastRefreshed },
     {
       key: 'cpuUsage',
       label: 'CPU Usage',
@@ -1093,11 +1094,11 @@ export default function HostDetailPage() {
         </div>
       ),
     },
-    { key: 'memoryUsage', label: 'Memory usage', flex: 1, sortable: true },
+    { key: 'memoryUsage', label: 'Memory usage', width: columnWidths.memoryUsage, sortable: true },
     {
       key: 'daemonEvents',
       label: 'Daemon events',
-      flex: 1.5,
+      width: columnWidths.daemonEvents,
       render: (_, row) => (
         <div
           className="line-clamp-2 text-[length:var(--table-font-size)] leading-[var(--table-line-height)]"

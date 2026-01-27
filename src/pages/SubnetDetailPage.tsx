@@ -17,8 +17,10 @@ import {
   SearchInput,
   Pagination,
   StatusIndicator,
+  columnWidths,
 } from '@/design-system';
 import type { TableColumn } from '@/design-system';
+import { Tooltip } from '@/design-system';
 import { Sidebar } from '@/components/Sidebar';
 import { useTabs } from '@/contexts/TabContext';
 import {
@@ -31,7 +33,6 @@ import {
   IconServer,
   IconRouter,
 } from '@tabler/icons-react';
-import { Tooltip } from '@/design-system';
 
 /* ----------------------------------------
    Types
@@ -206,7 +207,7 @@ export default function SubnetDetailPage() {
     {
       key: 'status',
       label: 'Status',
-      width: '64px',
+      width: columnWidths.status,
       align: 'center',
       render: (_, row) => (
         <StatusIndicator status={portStatusMap[row.status]} layout="icon-only" />

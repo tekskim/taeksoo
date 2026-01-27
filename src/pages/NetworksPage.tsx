@@ -17,6 +17,7 @@ import {
   Tabs,
   TabList,
   Tab,
+  columnWidths,
   type TableColumn,
   type ContextMenuItem,
   type FilterField,
@@ -207,7 +208,7 @@ export function NetworksPage() {
     {
       key: 'status',
       label: 'Status',
-      width: '64px',
+      width: columnWidths.status,
       align: 'center',
       render: (_, row) => (
         <StatusIndicator status={networkStatusMap[row.status]} layout="icon-only" />
@@ -254,7 +255,7 @@ export function NetworksPage() {
     {
       key: 'actions',
       label: 'Action',
-      width: '64px',
+      width: columnWidths.actions,
       align: 'center',
       render: (_, row) => (
         <div onClick={(e) => e.stopPropagation()}>

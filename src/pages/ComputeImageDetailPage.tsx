@@ -288,26 +288,13 @@ export function ComputeImageDetailPage() {
                       <SectionCard.Content>
                         <SectionCard.DataRow label="Owner" value={image.owner} />
                         <SectionCard.DataRow label="Visibility" value={image.visibility} />
-                        {/* Filename with copy */}
-                        <div className="flex flex-col gap-3 w-full">
-                          <div className="h-px w-full bg-[var(--color-border-subtle)]" />
-                          <div className="flex flex-col gap-1.5">
-                            <span className="text-[11px] font-medium leading-4 text-[var(--color-text-subtle)]">
-                              Filename
-                            </span>
-                            <CopyableValue value={image.filename} />
-                          </div>
-                        </div>
-                        {/* Checksum with copy */}
-                        <div className="flex flex-col gap-3 w-full">
-                          <div className="h-px w-full bg-[var(--color-border-subtle)]" />
-                          <div className="flex flex-col gap-1.5">
-                            <span className="text-[11px] font-medium leading-4 text-[var(--color-text-subtle)]">
-                              Checksum
-                            </span>
-                            <CopyableValue value={image.checksum} />
-                          </div>
-                        </div>
+                        <SectionCard.DataRow label="Protected" value={image.protected ? 'Enabled' : 'Disabled'} />
+                        <SectionCard.DataRow label="Filename">
+                          <CopyableValue value={image.filename} />
+                        </SectionCard.DataRow>
+                        <SectionCard.DataRow label="Checksum">
+                          <CopyableValue value={image.checksum} />
+                        </SectionCard.DataRow>
                       </SectionCard.Content>
                     </SectionCard>
 

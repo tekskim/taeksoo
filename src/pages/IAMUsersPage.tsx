@@ -12,6 +12,7 @@ import {
   Breadcrumb,
   Checkbox,
   ContextMenu,
+  columnWidths,
   type TableColumn,
   type StatusType,
   type ContextMenuItem,
@@ -137,7 +138,7 @@ export function IAMUsersPage() {
     {
       key: 'status',
       label: 'Status',
-      width: 64,
+      width: columnWidths.status,
       align: 'center',
       render: (_value, row) => (
         <StatusIndicator status={statusMap[row.status]} />
@@ -147,6 +148,7 @@ export function IAMUsersPage() {
       key: 'username',
       label: 'Username',
       flex: 1,
+      minWidth: columnWidths.username,
       sortable: true,
       render: (value) => (
         <Link 
@@ -160,34 +162,34 @@ export function IAMUsersPage() {
     {
       key: 'userGroups',
       label: 'User groups',
-      flex: 1,
+      width: columnWidths.userGroups,
     },
     {
       key: 'roles',
       label: 'Roles',
-      flex: 1,
+      width: columnWidths.roles,
     },
     {
       key: 'lastSignIn',
       label: 'Last sign-in',
-      flex: 1,
+      width: columnWidths.lastSignIn,
       sortable: true,
     },
     {
       key: 'mfa',
       label: 'MFA',
-      flex: 1,
+      width: columnWidths.mfa,
     },
     {
       key: 'createdAt',
       label: 'Created at',
-      flex: 1,
+      width: columnWidths.createdAt,
       sortable: true,
     },
     {
       key: 'id',
       label: 'Action',
-      width: 72,
+      width: columnWidths.actionWide,
       align: 'center',
       render: (_value, row) => {
         const isDisabled = row.status === 'disabled';

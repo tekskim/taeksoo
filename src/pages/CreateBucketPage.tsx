@@ -13,6 +13,7 @@ import {
   SectionCard,
   Radio,
   Textarea,
+  columnWidths,
 } from '@/design-system';
 import { StorageSidebar } from '@/components/StorageSidebar';
 import { useTabs } from '@/contexts/TabContext';

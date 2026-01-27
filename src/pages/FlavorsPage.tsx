@@ -14,6 +14,7 @@ import {
   ListToolbar,
   Button,
   ContextMenu,
+  columnWidths,
   type TableColumn,
   type ContextMenuItem,
   type FilterField,
@@ -160,7 +161,7 @@ export function FlavorsPage() {
 
   const totalPages = Math.ceil(filteredFlavors.length / rowsPerPage);
 
-  // Table columns (memoized to react to activeTab changes)
+  // Table columns (using columnWidths preset)
   const columns: TableColumn<Flavor>[] = useMemo(() => [
     {
       key: 'name',
@@ -181,30 +182,32 @@ export function FlavorsPage() {
       key: 'category',
       label: 'Category',
       flex: 1,
+      minWidth: '120px',
       sortable: true,
     },
     {
       key: 'vcpu',
       label: 'vCPU',
-      flex: 1,
+      width: columnWidths.vcpu,
       sortable: true,
     },
     {
       key: 'ram',
       label: 'RAM',
-      flex: 1,
+      width: columnWidths.ram,
       sortable: true,
     },
     {
       key: 'ephemeralDisk',
       label: 'Ephemeral disk',
-      flex: 1,
+      width: columnWidths.ephemeralDisk,
       sortable: true,
     },
     {
       key: 'internalNetworkBandwidth',
       label: 'Internal network Bandwidth',
       flex: 1,
+      minWidth: '160px',
       sortable: true,
     },
     // GPU/MPU-specific columns (only shown when GPU or MPU tab is active)
@@ -212,32 +215,32 @@ export function FlavorsPage() {
       {
         key: 'gpuType',
         label: 'GPU Type',
-        flex: 1,
+        width: columnWidths.gpuType,
         sortable: true,
       },
       {
         key: 'numaNodes',
         label: 'NUMA Nodes',
-        flex: 1,
+        width: columnWidths.numaNodes,
         sortable: true,
       },
       {
         key: 'cpuPolicy',
         label: 'CPU Policy',
-        flex: 1,
+        width: columnWidths.cpuPolicy,
         sortable: true,
       },
       {
         key: 'cpuThreadPolicy',
         label: 'CPU Thread Policy',
-        flex: 1,
+        width: columnWidths.cpuThreadPolicy,
         sortable: true,
       },
     ] as TableColumn<Flavor>[] : []),
     {
       key: 'access',
       label: 'Public',
-      width: '100px',
+      width: columnWidths.access,
       render: (_, row) => (
         <span>{row.access === 'Public' ? 'On' : 'Off'}</span>
       ),
@@ -245,7 +248,7 @@ export function FlavorsPage() {
     {
       key: 'actions',
       label: 'Action',
-      width: '64px',
+      width: columnWidths.actions,
       align: 'center',
       render: (_, row) => {
         const menuItems: ContextMenuItem[] = [

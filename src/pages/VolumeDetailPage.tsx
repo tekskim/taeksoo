@@ -20,6 +20,7 @@ import {
   ContextMenu,
   type TableColumn,
   type ContextMenuItem,
+  columnWidths,
 } from '@/design-system';
 import { Sidebar } from '@/components/Sidebar';
 import { useTabs } from '@/contexts/TabContext';
@@ -249,7 +250,7 @@ export function VolumeDetailPage() {
     {
       key: 'status',
       label: 'Status',
-      width: '64px',
+      width: columnWidths.status,
       align: 'center',
       render: (_, row) => (
         <StatusIndicator status={snapshotStatusMap[row.status]} layout="icon-only" />
@@ -259,6 +260,7 @@ export function VolumeDetailPage() {
       key: 'name',
       label: 'Name',
       flex: 1,
+      minWidth: columnWidths.name,
       sortable: true,
       render: (_, row) => (
         <div className="flex flex-col gap-0.5">
@@ -279,21 +281,21 @@ export function VolumeDetailPage() {
     {
       key: 'size',
       label: 'Size',
-      flex: 1,
+      width: columnWidths.size,
       sortable: true,
       render: (value) => <span>{value}</span>,
     },
     {
       key: 'createdAt',
       label: 'Created at',
-      flex: 1,
+      width: columnWidths.createdAt,
       sortable: true,
       render: (value) => <span>{value}</span>,
     },
     {
       key: 'action',
       label: 'Action',
-      width: '64px',
+      width: columnWidths.action,
       align: 'center',
       render: (_, row) => (
         <div className="flex items-center justify-center">
@@ -318,7 +320,7 @@ export function VolumeDetailPage() {
     {
       key: 'status',
       label: 'Status',
-      width: '64px',
+      width: columnWidths.status,
       align: 'center',
       render: (_, row) => (
         <StatusIndicator status={backupStatusMap[row.status]} layout="icon-only" />
@@ -328,6 +330,7 @@ export function VolumeDetailPage() {
       key: 'name',
       label: 'Name',
       flex: 1,
+      minWidth: columnWidths.name,
       sortable: true,
       render: (_, row) => (
         <div className="flex flex-col gap-0.5">
@@ -348,27 +351,27 @@ export function VolumeDetailPage() {
     {
       key: 'backupMode',
       label: 'Backup mode',
-      flex: 1,
+      width: columnWidths.backupMode,
       render: (value) => <span>{value}</span>,
     },
     {
       key: 'size',
       label: 'Size',
-      flex: 1,
+      width: columnWidths.size,
       sortable: true,
       render: (value) => <span>{value}</span>,
     },
     {
       key: 'createdAt',
       label: 'Created at',
-      flex: 1,
+      width: columnWidths.createdAt,
       sortable: true,
       render: (value) => <span>{value}</span>,
     },
     {
       key: 'action',
       label: 'Action',
-      width: '64px',
+      width: columnWidths.action,
       align: 'center',
       render: (_, row) => (
         <div className="flex items-center justify-center">

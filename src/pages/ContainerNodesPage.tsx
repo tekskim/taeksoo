@@ -15,6 +15,7 @@ import {
   ProgressBar,
   type TableColumn,
   type ContextMenuItem,
+  columnWidths,
 } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
 import { ShellPanel, useShellPanel, type ShellTab } from '@/components/ShellPanel';
@@ -212,7 +213,7 @@ export function ContainerNodesPage() {
     {
       key: 'status',
       label: 'Status',
-      width: '64px',
+      width: columnWidths.status,
       sortable: true,
       align: 'center',
       render: (value: string) => (
@@ -228,7 +229,7 @@ export function ContainerNodesPage() {
       sortable: true,
       render: (value: string) => (
         <span
-          className="text-[var(--color-action-primary)] font-medium cursor-pointer hover:underline line-clamp-2"
+          className="text-[var(--color-action-primary)] font-medium cursor-pointer hover:underline truncate block"
           title={value}
           onClick={(e) => {
             e.stopPropagation();
@@ -242,17 +243,17 @@ export function ContainerNodesPage() {
     {
       key: 'roles',
       label: 'Roles',
-      flex: 1,
+      width: columnWidths.roles,
     },
     {
       key: 'version',
       label: 'Version',
-      flex: 1,
+      width: columnWidths.version,
     },
     {
       key: 'ip',
       label: 'External/Internal IP',
-      flex: 1,
+      width: columnWidths.ipAddress,
       sortable: true,
       render: (_, row) => (
         <HStack gap={1.5} align="center">
@@ -274,37 +275,37 @@ export function ContainerNodesPage() {
     {
       key: 'os',
       label: 'OS',
-      flex: 1,
+      width: columnWidths.os,
       sortable: true,
     },
     {
       key: 'cpuUsage',
       label: 'CPU',
-      flex: 1,
+      width: columnWidths.cpuUsage,
       render: (value: number) => <ProgressCell value={value} />
     },
     {
       key: 'ramUsage',
       label: 'RAM',
-      flex: 1,
+      width: columnWidths.ramUsage,
       render: (value: number) => <ProgressCell value={value} />
     },
     {
       key: 'podsUsage',
       label: 'Pods',
-      flex: 1,
+      width: columnWidths.podsUsage,
       render: (value: number) => <ProgressCell value={value} />
     },
     {
       key: 'createdAt',
       label: 'Created At',
-      flex: 1,
+      width: columnWidths.createdAt,
       sortable: true,
     },
     {
       key: 'actions',
       label: 'Action',
-      width: '64px',
+      width: columnWidths.actions,
       align: 'center',
       render: (_, row) => {
         const menuItems: ContextMenuItem[] = [

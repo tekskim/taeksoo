@@ -9,6 +9,7 @@ import {
   Toggle,
   Modal,
   Table,
+  columnWidths,
 } from '@/design-system';
 import type { TableColumn } from '@/design-system/components/Table/Table';
 import { SettingsSidebar } from '@/components/SettingsSidebar';
@@ -57,9 +58,9 @@ export default function SettingsAccountPage() {
   // Session table columns
   const sessionColumns: TableColumn[] = [
     { key: 'location', label: 'Location', minWidth: '180px' },
-    { key: 'ip', label: 'IP Address', width: '140px' },
+    { key: 'ip', label: 'IP Address', width: columnWidths.ip },
     { key: 'device', label: 'Device', minWidth: '140px' },
-    { key: 'timestamp', label: 'Timestamp', width: '180px' },
+    { key: 'timestamp', label: 'Timestamp', width: columnWidths.timestamp },
   ];
 
   return (

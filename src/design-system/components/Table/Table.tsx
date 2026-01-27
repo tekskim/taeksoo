@@ -134,6 +134,7 @@ export function Table<T extends Record<string, any>>({
     if (column.width) {
       style.width = column.width;
       style.flexShrink = 0;
+      style.flexGrow = 0;
     } else {
       style.flex = column.flex ?? 1;
       style.minWidth = 0;

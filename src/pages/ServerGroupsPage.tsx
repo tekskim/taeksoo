@@ -13,6 +13,7 @@ import {
   ContextMenu,
   ConfirmModal,
   Checkbox,
+  columnWidths,
   type TableColumn,
   type ContextMenuItem,
   type FilterField,
@@ -167,7 +168,7 @@ export function ServerGroupsPage() {
     setSelectedServerGroups([]);
   };
 
-  // Table columns
+  // Table columns (using columnWidths preset)
   const columns: TableColumn<ServerGroup>[] = [
     {
       key: 'name',
@@ -198,7 +199,7 @@ export function ServerGroupsPage() {
     {
       key: 'actions',
       label: 'Action',
-      width: '64px',
+      width: columnWidths.actions,
       align: 'center',
       render: (_, row) => {
         const menuItems: ContextMenuItem[] = [

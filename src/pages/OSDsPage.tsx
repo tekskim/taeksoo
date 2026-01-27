@@ -13,6 +13,7 @@ import {
   Chip,
   ProgressBar,
   type TableColumn,
+  columnWidths,
 } from '@/design-system';
 import { StorageSidebar } from '@/components/StorageSidebar';
 import { useTabs } from '@/contexts/TabContext';
@@ -246,14 +247,14 @@ export function OSDsPage() {
     {
       key: 'id',
       label: 'ID',
-      width: '64px',
+      width: columnWidths.id,
       sortable: true,
       render: (_, row) => <IDCell id={row.id} />,
     },
     {
       key: 'host',
       label: 'Host',
-      width: '300px',
+      width: columnWidths.host,
       sortable: true,
     },
     {

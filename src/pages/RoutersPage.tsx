@@ -13,6 +13,7 @@ import {
   ConfirmModal,
   StatusIndicator,
   ContextMenu,
+  columnWidths,
   type TableColumn,
   type FilterField,
   type AppliedFilter,
@@ -160,7 +161,7 @@ export function RoutersPage() {
     {
       key: 'status',
       label: 'Status',
-      width: '64px',
+      width: columnWidths.status,
       align: 'center',
       render: (_, row) => (
         <StatusIndicator status={routerStatusMap[row.status]} layout="icon-only" />
@@ -225,7 +226,7 @@ export function RoutersPage() {
     {
       key: 'actions',
       label: 'Action',
-      width: '64px',
+      width: columnWidths.actions,
       align: 'center',
       render: () => (
         <div onClick={(e) => e.stopPropagation()}>

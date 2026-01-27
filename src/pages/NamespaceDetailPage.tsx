@@ -19,6 +19,7 @@ import {
   StatusIndicator,
   type TableColumn,
   type ContextMenuItem,
+  columnWidths,
 } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
 import { useTabs } from '@/contexts/TabContext';
@@ -347,7 +348,7 @@ function ResourcesTab({ resources }: ResourcesTabProps) {
     {
       key: 'type',
       label: 'Type',
-      width: '500px',
+      width: columnWidths.type,
       sortable: true,
       render: (value: string) => (
         <span className="font-medium text-[var(--color-action-primary)] cursor-pointer hover:underline">
@@ -484,7 +485,7 @@ function WorkloadsTab({ workloads }: WorkloadsTabProps) {
     {
       key: 'status',
       label: 'Status',
-      width: '64px',
+      width: columnWidths.status,
       align: 'center',
       render: (_: string, row: WorkloadRow) => (
         <StatusIndicator status={row.status} layout="icon-only" size="lg" />
@@ -510,7 +511,7 @@ function WorkloadsTab({ workloads }: WorkloadsTabProps) {
     {
       key: 'type',
       label: 'Type',
-      width: '150px',
+      width: columnWidths.type,
       sortable: true,
     },
     {
@@ -539,7 +540,7 @@ function WorkloadsTab({ workloads }: WorkloadsTabProps) {
     {
       key: 'action',
       label: 'Action',
-      width: '64px',
+      width: columnWidths.action,
       align: 'center',
       render: (_: unknown, row: WorkloadRow) => (
         <ContextMenu

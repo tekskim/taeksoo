@@ -16,6 +16,7 @@ import {
   Select,
   FormField,
   type TableColumn,
+  columnWidths,
 } from '@/design-system';
 import { StorageSidebar } from '@/components/StorageSidebar';
 import { useTabs } from '@/contexts/TabContext';
@@ -470,7 +471,7 @@ export function PhysicalDisksPage() {
     {
       key: 'status',
       label: 'Status',
-      width: 64,
+      width: columnWidths.status,
       align: 'center',
       sortable: false,
       render: (_, row) => <StatusCell status={row.status} />,
@@ -490,7 +491,7 @@ export function PhysicalDisksPage() {
     {
       key: 'type',
       label: 'Type',
-      width: '120px',
+      width: columnWidths.type,
       sortable: true,
       render: (_, row) => <TypeCell type={row.type} />,
     },
@@ -522,7 +523,7 @@ export function PhysicalDisksPage() {
     {
       key: 'identify',
       label: 'Identify',
-      width: 80,
+      width: columnWidths.identify,
       align: 'center',
       sortable: false,
       render: (_, row) => (

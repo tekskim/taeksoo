@@ -1,3 +1,5 @@
+import { columnWidths } from '@/design-system';
+
 export type BadgeTone = 'success' | 'neutral' | 'blue' | 'warning' | 'danger';
 export type ColumnKind = 'text' | 'badge' | 'mono';
 
@@ -208,12 +210,12 @@ export function getCloudBuilderListConfig(slug: CloudBuilderSlug): CloudBuilderL
       createHref: '/cloudbuilder/servers/create',
       columns: [
         { key: 'serial', label: 'Serial', sortable: true },
-        { key: 'macPrimary', label: 'MAC (Primary)', sortable: true, kind: 'mono' },
+        { key: 'macPrimary', label: 'MAC (Primary)', sortable: true, kind: 'mono', width: columnWidths.macAddress },
         { key: 'location', label: 'Location', sortable: true },
-        { key: 'updatedAt', label: 'Updated At', sortable: true },
+        { key: 'updatedAt', label: 'Updated At', sortable: true, width: columnWidths.updatedAt },
         { key: 'nicPrimaryName', label: 'NIC (Primary Name)', sortable: true },
         { key: 'frontierNet', label: 'Frontier NET', sortable: true, kind: 'badge', badgeTones: frontierTones },
-        { key: 'mgmtIp', label: 'Mgmt IP', sortable: true, kind: 'mono' },
+        { key: 'mgmtIp', label: 'Mgmt IP', sortable: true, kind: 'mono', width: columnWidths.ip },
         { key: 'observedHealth', label: 'Observed Health', sortable: true, kind: 'badge', badgeTones: observedHealthTones },
         { key: 'provisionStatus', label: 'Provision Status', sortable: true, kind: 'badge', badgeTones: provisionStatusTones },
         { key: 'role', label: 'Role', sortable: true, kind: 'badge', badgeTones: roleTones },
@@ -304,12 +306,12 @@ export function getCloudBuilderListConfig(slug: CloudBuilderSlug): CloudBuilderL
       createHref: '/cloudbuilder/servers/create',
       columns: [
         { key: 'serial', label: 'Serial', sortable: true },
-        { key: 'macPrimary', label: 'MAC (Primary)', sortable: true, kind: 'mono' },
+        { key: 'macPrimary', label: 'MAC (Primary)', sortable: true, kind: 'mono', width: columnWidths.macAddress },
         { key: 'location', label: 'Location', sortable: true },
-        { key: 'updatedAt', label: 'Updated At', sortable: true },
+        { key: 'updatedAt', label: 'Updated At', sortable: true, width: columnWidths.updatedAt },
         { key: 'nicPrimaryName', label: 'NIC (Primary Name)', sortable: true },
         { key: 'frontierNet', label: 'Frontier NET', sortable: true, kind: 'badge', badgeTones: frontierTones },
-        { key: 'mgmtIp', label: 'Mgmt IP', sortable: true, kind: 'mono' },
+        { key: 'mgmtIp', label: 'Mgmt IP', sortable: true, kind: 'mono', width: columnWidths.ip },
         {
           key: 'observedHealth',
           label: 'Observed Health',
@@ -637,8 +639,8 @@ export function getCloudBuilderListConfig(slug: CloudBuilderSlug): CloudBuilderL
       },
       columns: [
         { key: 'id', label: 'ID', sortable: true, kind: 'mono' },
-        { key: 'name', label: 'Name', sortable: true, width: '180px' },
-        { key: 'type', label: 'Type', sortable: true, width: '200px' },
+        { key: 'name', label: 'Name', sortable: true, width: columnWidths.name },
+        { key: 'type', label: 'Type', sortable: true, width: columnWidths.typeXl },
         { key: 'host', label: 'Host', sortable: true },
         { key: 'availabilityZone', label: 'Availability Zone', sortable: true },
         { key: 'serviceStatus', label: 'Service Status', sortable: true, kind: 'badge', badgeTones: { Enabled: 'success', Disabled: 'neutral' } },
@@ -712,7 +714,7 @@ export function getCloudBuilderListConfig(slug: CloudBuilderSlug): CloudBuilderL
         { key: 'name', label: 'Name', sortable: true },
         { key: 'protocol', label: 'Protocol', sortable: true },
         { key: 'backendName', label: 'Backend Name', sortable: true },
-        { key: 'storageCapacityGiB', label: 'Storage Capacity(GiB)', sortable: true, align: 'center', width: '520px' },
+        { key: 'storageCapacityGiB', label: 'Storage Capacity(GiB)', sortable: true, align: 'center', width: columnWidths.storageCapacity },
       ],
       rows: [
         {
@@ -762,7 +764,7 @@ export function getCloudBuilderListConfig(slug: CloudBuilderSlug): CloudBuilderL
         { key: 'name', label: 'Name', sortable: true },
         { key: 'engineId', label: 'Engine ID', sortable: true, kind: 'mono' },
         { key: 'host', label: 'Host', sortable: true },
-        { key: 'status', label: 'Status', sortable: true, width: '160px' },
+        { key: 'status', label: 'Status', sortable: true, width: columnWidths.statusLg },
         { key: 'lastUpdated', label: 'Last Updated', sortable: true },
       ],
       rows: makeRows(5, (i) => ({

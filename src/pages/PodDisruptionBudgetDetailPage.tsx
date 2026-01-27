@@ -20,6 +20,7 @@ import {
   Table,
   type ContextMenuItem,
   type TableColumn,
+  columnWidths,
 } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
 import { ShellPanel, useShellPanel, type ShellTab } from '@/components/ShellPanel';
@@ -232,7 +233,7 @@ export function PodDisruptionBudgetDetailPage() {
     {
       key: 'createdAt',
       label: 'Created At',
-      width: '200px',
+      width: columnWidths.createdAt,
       sortable: true,
     },
   ];
@@ -270,13 +271,13 @@ export function PodDisruptionBudgetDetailPage() {
     {
       key: 'lastSeen',
       label: 'Last Seen',
-      width: '80px',
+      width: columnWidths.lastSeen,
       sortable: true,
     },
     {
       key: 'type',
       label: 'Type',
-      width: '80px',
+      width: columnWidths.type,
       sortable: true,
     },
     {
@@ -294,7 +295,7 @@ export function PodDisruptionBudgetDetailPage() {
     {
       key: 'source',
       label: 'Source',
-      width: '100px',
+      width: columnWidths.source,
       sortable: true,
     },
     {
@@ -306,13 +307,13 @@ export function PodDisruptionBudgetDetailPage() {
     {
       key: 'firstSeen',
       label: 'First Seen',
-      width: '100px',
+      width: columnWidths.firstSeen,
       sortable: true,
     },
     {
       key: 'count',
       label: 'Count',
-      width: '80px',
+      width: columnWidths.count,
       sortable: true,
     },
     {
@@ -332,7 +333,7 @@ export function PodDisruptionBudgetDetailPage() {
     {
       key: 'actions',
       label: 'Action',
-      width: '64px',
+      width: columnWidths.actions,
       align: 'center',
       render: (_, row) => (
         <div onClick={(e) => e.stopPropagation()}>

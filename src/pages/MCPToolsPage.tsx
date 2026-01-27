@@ -15,6 +15,7 @@ import {
   ContextMenu,
   type TableColumn,
   type ContextMenuItem,
+  columnWidths,
 } from '@/design-system';
 import { AgentPageLayout } from '@/layouts';
 import { AgentSidebar } from '@/pages/AgentPage';
@@ -380,7 +381,7 @@ export function MCPToolsPage() {
     {
       key: 'favorite',
       label: '',
-      width: '48px',
+      width: columnWidths.favorite,
       align: 'center',
       headerRender: () => (
         <div className="flex items-center justify-center w-full">
@@ -406,7 +407,7 @@ export function MCPToolsPage() {
     {
       key: 'status',
       label: 'Status',
-      width: '64px',
+      width: columnWidths.status,
       align: 'center',
       sortable: false,
       render: (_, row) => (
@@ -480,7 +481,7 @@ export function MCPToolsPage() {
     {
       key: 'actions',
       label: 'Action',
-      width: '64px',
+      width: columnWidths.actions,
       align: 'center',
       render: (_, row) => {
         const menuItems: ContextMenuItem[] = [
@@ -583,7 +584,7 @@ export function MCPToolsPage() {
     {
       key: 'actions',
       label: 'Action',
-      width: '64px',
+      width: columnWidths.actions,
       align: 'center',
       render: (_, row) => {
         const menuItems: ContextMenuItem[] = [

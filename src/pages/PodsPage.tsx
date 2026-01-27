@@ -14,6 +14,7 @@ import {
   ContextMenu,
   type TableColumn,
   type ContextMenuItem,
+  columnWidths,
 } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
 import { ShellPanel, useShellPanel, type ShellTab } from '@/components/ShellPanel';
@@ -237,7 +238,7 @@ export function PodsPage() {
     {
       key: 'status',
       label: 'Status',
-      width: '64px',
+      width: columnWidths.status,
       sortable: true,
       align: 'center',
       render: (value: string) => (
@@ -256,6 +257,7 @@ export function PodsPage() {
       key: 'name',
       label: 'Name',
       flex: 1,
+      minWidth: columnWidths.name,
       sortable: true,
       render: (value: string, row) => (
         <span
@@ -273,39 +275,39 @@ export function PodsPage() {
     {
       key: 'namespace',
       label: 'Namespace',
-      flex: 1,
+      width: columnWidths.namespace,
       sortable: true,
     },
     {
       key: 'image',
       label: 'Image',
-      flex: 1.5,
+      width: columnWidths.image,
     },
     {
       key: 'ready',
       label: 'Ready',
-      width: '80px',
+      width: columnWidths.ready,
     },
     {
       key: 'restarts',
       label: 'Restarts',
-      width: '80px',
+      width: columnWidths.restarts,
     },
     {
       key: 'ip',
       label: 'IP',
-      width: '100px',
+      width: columnWidths.ip,
     },
     {
       key: 'createdAt',
       label: 'Created At',
-      width: '150px',
+      width: columnWidths.createdAt,
       sortable: true,
     },
     {
       key: 'actions',
       label: 'Action',
-      width: '64px',
+      width: columnWidths.actions,
       align: 'center',
       render: (_, row) => (
         <div onClick={(e) => e.stopPropagation()}>

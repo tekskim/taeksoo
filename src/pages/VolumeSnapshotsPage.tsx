@@ -14,6 +14,7 @@ import {
   ContextMenu,
   ConfirmModal,
   StatusIndicator,
+  columnWidths,
   type TableColumn,
   type ContextMenuItem,
   type FilterField,
@@ -201,7 +202,7 @@ export function VolumeSnapshotsPage() {
     {
       key: 'status',
       label: 'Status',
-      width: '64px',
+      width: columnWidths.status,
       align: 'center',
       sortable: false,
       render: (_, row) => (
@@ -212,6 +213,7 @@ export function VolumeSnapshotsPage() {
       key: 'name',
       label: 'Name',
       flex: 1,
+      minWidth: columnWidths.name,
       sortable: true,
       render: (value: string, row) => (
         <Link
@@ -226,13 +228,13 @@ export function VolumeSnapshotsPage() {
     {
       key: 'size',
       label: 'Size',
-      flex: 1,
+      width: columnWidths.size,
       sortable: true,
     },
     {
       key: 'sourceVolume',
       label: 'Source volume',
-      flex: 1,
+      width: columnWidths.sourceVolume,
       sortable: false,
       render: (_, row) => (
         <div className="flex flex-col gap-0.5">
@@ -253,13 +255,13 @@ export function VolumeSnapshotsPage() {
     {
       key: 'createdAt',
       label: 'Created at',
-      flex: 1,
+      width: columnWidths.createdAt,
       sortable: true,
     },
     {
       key: 'actions',
       label: 'Action',
-      width: '64px',
+      width: columnWidths.actions,
       align: 'center',
       render: (_, row) => {
         const menuItems: ContextMenuItem[] = [

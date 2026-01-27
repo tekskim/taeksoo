@@ -13,6 +13,7 @@ import {
   ContextMenu,
   ConfirmModal,
   StatusIndicator,
+  columnWidths,
   type TableColumn,
   type ContextMenuItem,
   type FilterField,
@@ -271,7 +272,7 @@ export function VolumesPage() {
     {
       key: 'status',
       label: 'Status',
-      width: '64px',
+      width: columnWidths.status,
       align: 'center',
       render: (_, row) => (
         <StatusIndicator status={volumeStatusMap[row.status]} layout="icon-only" />
@@ -281,6 +282,7 @@ export function VolumesPage() {
       key: 'name',
       label: 'Name',
       flex: 1,
+      minWidth: columnWidths.name,
       sortable: true,
       render: (_, row) => (
         <Link
@@ -295,24 +297,25 @@ export function VolumesPage() {
     {
       key: 'size',
       label: 'Size',
-      flex: 1,
+      width: columnWidths.size,
       sortable: true,
     },
     {
       key: 'type',
       label: 'Type',
-      flex: 1,
+      width: columnWidths.type,
       sortable: true,
     },
     {
       key: 'diskTag',
       label: 'Disk tag',
-      flex: 1,
+      width: columnWidths.diskTag,
     },
     {
       key: 'attachedTo',
       label: 'Attached to',
       flex: 1,
+      minWidth: columnWidths.attachedTo,
       sortable: true,
       render: (_, row) => (
         row.attachedTo && row.attachedToId ? (
@@ -339,13 +342,13 @@ export function VolumesPage() {
     {
       key: 'createdAt',
       label: 'Created at',
-      flex: 1,
+      width: columnWidths.createdAt,
       sortable: true,
     },
     {
       key: 'actions',
       label: 'Action',
-      width: '64px',
+      width: columnWidths.actions,
       align: 'center',
       render: (_, row) => {
         const menuItems: ContextMenuItem[] = [

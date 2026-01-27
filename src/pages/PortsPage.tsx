@@ -18,6 +18,7 @@ import {
   TabList,
   Tab,
   Tooltip,
+  columnWidths,
   type TableColumn,
   type ContextMenuItem,
   type FilterField,
@@ -226,7 +227,7 @@ export function PortsPage() {
     {
       key: 'status',
       label: 'Status',
-      width: '64px',
+      width: columnWidths.status,
       align: 'center',
       render: (_, row) => (
         <StatusIndicator status={portStatusMap[row.status]} layout="icon-only" />
@@ -255,7 +256,7 @@ export function PortsPage() {
     {
       key: 'attachedTo',
       label: 'Attached to',
-      width: '160px',
+      width: columnWidths.attachedTo,
       align: 'right',
       render: (_, row) => (
         row.attachedTo ? (
@@ -290,7 +291,7 @@ export function PortsPage() {
     {
       key: 'ownedNetwork',
       label: 'Owned network',
-      width: '140px',
+      width: columnWidths.ownedNetwork,
       sortable: true,
       render: (_, row) => (
         <div className="flex flex-col gap-0.5 min-w-0">
@@ -332,7 +333,7 @@ export function PortsPage() {
     {
       key: 'actions',
       label: 'Action',
-      width: '64px',
+      width: columnWidths.actions,
       align: 'center',
       render: (_, row) => (
         <div onClick={(e) => e.stopPropagation()}>

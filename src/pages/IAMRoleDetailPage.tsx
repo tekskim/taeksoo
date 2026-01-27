@@ -16,6 +16,7 @@ import {
   ContextMenu,
   TabBar,
   Chip,
+  columnWidths,
   type TableColumn,
   type ContextMenuItem,
 } from '@/design-system';
@@ -409,7 +410,7 @@ export default function IAMRoleDetailPage() {
     {
       key: 'id',
       label: 'Action',
-      width: 72,
+      width: columnWidths.actionWide,
       align: 'center',
       render: (_value, row) => (
         <ContextMenu items={getPolicyContextMenuItems(row.id, row.type === 'Built-in')} trigger="click">

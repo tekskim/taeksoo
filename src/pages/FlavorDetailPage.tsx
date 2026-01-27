@@ -20,6 +20,7 @@ import {
   ContextMenu,
   type TableColumn,
   type ContextMenuItem,
+  columnWidths,
 } from '@/design-system';
 import { Sidebar } from '@/components/Sidebar';
 import { useTabs } from '@/contexts/TabContext';
@@ -220,7 +221,7 @@ export function FlavorDetailPage() {
     {
       key: 'status',
       label: 'Status',
-      width: '64px',
+      width: columnWidths.status,
       align: 'center',
       render: (_, row) => (
         <StatusIndicator status={row.status} layout="icon-only" />
@@ -251,7 +252,7 @@ export function FlavorDetailPage() {
     {
       key: 'locked',
       label: 'Locked',
-      width: '62px',
+      width: columnWidths.locked,
       align: 'center',
       render: (_, row) => (
         row.locked ? (
@@ -264,34 +265,34 @@ export function FlavorDetailPage() {
     {
       key: 'image',
       label: 'Image',
-      flex: 1,
+      width: columnWidths.image,
       sortable: true,
       render: (value) => <span>{value}</span>,
     },
     {
       key: 'fixedIP',
       label: 'Fixed IP',
-      flex: 1,
+      width: columnWidths.fixedIp,
       render: (value) => <span>{value}</span>,
     },
     {
       key: 'az',
       label: 'AZ',
-      flex: 1,
+      width: columnWidths.az,
       sortable: true,
       render: (value) => <span>{value}</span>,
     },
     {
       key: 'createdAt',
       label: 'Created at',
-      flex: 1,
+      width: columnWidths.createdAt,
       sortable: true,
       render: (value) => <span>{value}</span>,
     },
     {
       key: 'action',
       label: 'Action',
-      width: '64px',
+      width: columnWidths.actions,
       align: 'center',
       render: (_, row) => (
         <div className="flex items-center justify-center gap-1">

@@ -21,6 +21,7 @@ import {
   Chip,
   type TableColumn,
   type ContextMenuItem,
+  columnWidths,
 } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
 import { ShellPanel, useShellPanel } from '@/components/ShellPanel';
@@ -323,7 +324,7 @@ function PodsTab({ pods, onViewLogs, onExecuteShell }: PodsTabProps) {
     {
       key: 'status',
       label: 'Status',
-      width: '64px',
+      width: columnWidths.status,
       align: 'center',
       sortable: true,
       render: (value: string) => (
@@ -341,6 +342,7 @@ function PodsTab({ pods, onViewLogs, onExecuteShell }: PodsTabProps) {
       key: 'name',
       label: 'Name',
       flex: 1,
+      minWidth: columnWidths.name,
       sortable: true,
       render: (value: string) => (
         <span
@@ -354,31 +356,31 @@ function PodsTab({ pods, onViewLogs, onExecuteShell }: PodsTabProps) {
     {
       key: 'image',
       label: 'Image',
-      flex: 1,
+      width: columnWidths.image,
       sortable: true,
     },
     {
       key: 'ready',
       label: 'Ready',
-      width: '80px',
+      width: columnWidths.ready,
       sortable: true,
     },
     {
       key: 'restarts',
       label: 'Restarts',
-      width: '80px',
+      width: columnWidths.restarts,
       sortable: true,
     },
     {
       key: 'ip',
       label: 'IP',
-      width: '120px',
+      width: columnWidths.ip,
       sortable: true,
     },
     {
       key: 'node',
       label: 'Node',
-      flex: 1,
+      width: columnWidths.node,
       sortable: true,
       render: (value: string) => (
         <span className="text-[var(--color-action-primary)] font-medium cursor-pointer hover:underline line-clamp-2">
@@ -389,13 +391,13 @@ function PodsTab({ pods, onViewLogs, onExecuteShell }: PodsTabProps) {
     {
       key: 'createdAt',
       label: 'Created At',
-      width: '150px',
+      width: columnWidths.createdAt,
       sortable: true,
     },
     {
       key: 'action',
       label: 'Actions',
-      width: '64px',
+      width: columnWidths.action,
       align: 'center',
       render: (_: unknown, row: PodRow) => (
         <ContextMenu items={createPodMenuItems(row)} trigger="click" align="left">
@@ -493,7 +495,7 @@ function ServicesTab({ services }: ServicesTabProps) {
     {
       key: 'status',
       label: 'Status',
-      width: '64px',
+      width: columnWidths.status,
       align: 'center',
       sortable: true,
       render: (value: string) => (
@@ -510,7 +512,8 @@ function ServicesTab({ services }: ServicesTabProps) {
     {
       key: 'name',
       label: 'Name',
-      width: '300px',
+      flex: 1,
+      minWidth: columnWidths.name,
       sortable: true,
       render: (value: string, row: ServiceRow) => (
         <span
@@ -525,31 +528,31 @@ function ServicesTab({ services }: ServicesTabProps) {
     {
       key: 'target',
       label: 'Target',
-      width: '300px',
+      width: columnWidths.target,
       sortable: true,
     },
     {
       key: 'selector',
       label: 'Selector',
-      flex: 1,
+      width: columnWidths.selector,
       sortable: true,
     },
     {
       key: 'type',
       label: 'Type',
-      flex: 1,
+      width: columnWidths.type,
       sortable: true,
     },
     {
       key: 'createdAt',
       label: 'Created At',
-      flex: 1,
+      width: columnWidths.createdAt,
       sortable: true,
     },
     {
       key: 'actions',
       label: 'Actions',
-      width: '64px',
+      width: columnWidths.actions,
       align: 'center',
       render: (_: unknown, row: ServiceRow) => (
         <ContextMenu items={createServiceMenuItems(row)} trigger="click" align="left">
@@ -616,19 +619,20 @@ function ConditionsTab({ conditions }: ConditionsTabProps) {
     {
       key: 'type',
       label: 'Condition',
-      flex: 1,
+      width: columnWidths.condition,
       sortable: true,
     },
     {
       key: 'status',
       label: 'Size',
-      flex: 1,
+      width: columnWidths.conditionStatus,
       sortable: true,
     },
     {
       key: 'message',
       label: 'Message',
       flex: 1,
+      minWidth: columnWidths.message,
       sortable: true,
       render: (value: string, row: ConditionRow) => (
         <span className="line-clamp-2" title={`[${row.reason}] ${value}`}>
@@ -639,13 +643,13 @@ function ConditionsTab({ conditions }: ConditionsTabProps) {
     {
       key: 'lastUpdate',
       label: 'Updated',
-      flex: 1,
+      width: columnWidths.lastUpdate,
       sortable: true,
     },
     {
       key: 'actions',
       label: 'Actions',
-      width: '64px',
+      width: columnWidths.actions,
       align: 'center',
       render: (_: unknown, row: ConditionRow) => (
         <ContextMenu items={createConditionMenuItems(row)} trigger="click" align="left">
@@ -703,14 +707,14 @@ function RecentEventsTab({ events }: RecentEventsTabProps) {
   };
 
   const columns: TableColumn<EventRow>[] = [
-    { key: 'lastSeen', label: 'Last Seen', width: '100px', sortable: true },
-    { key: 'type', label: 'Type', width: '80px', sortable: true },
-    { key: 'reason', label: 'Reason', flex: 1, sortable: true },
-    { key: 'subobject', label: 'Subobject', flex: 1, sortable: true },
-    { key: 'source', label: 'Source', flex: 1, sortable: true },
-    { key: 'message', label: 'Message', flex: 1.5, sortable: true },
-    { key: 'firstSeen', label: 'First Seen', width: '100px', sortable: true },
-    { key: 'count', label: 'Count', width: '80px', sortable: true },
+    { key: 'lastSeen', label: 'Last Seen', width: columnWidths.lastSeen, sortable: true },
+    { key: 'type', label: 'Type', width: columnWidths.type, sortable: true },
+    { key: 'reason', label: 'Reason', width: columnWidths.reason, sortable: true },
+    { key: 'subobject', label: 'Subobject', width: columnWidths.subobject, sortable: true },
+    { key: 'source', label: 'Source', width: columnWidths.source, sortable: true },
+    { key: 'message', label: 'Message', width: columnWidths.message, sortable: true },
+    { key: 'firstSeen', label: 'First Seen', width: columnWidths.firstSeen, sortable: true },
+    { key: 'count', label: 'Count', width: columnWidths.count, sortable: true },
     {
       key: 'name',
       label: 'Name',
@@ -728,7 +732,7 @@ function RecentEventsTab({ events }: RecentEventsTabProps) {
     {
       key: 'action',
       label: 'Action',
-      width: '64px',
+      width: columnWidths.action,
       align: 'center',
       render: (_: unknown, row: EventRow) => (
         <ContextMenu items={createEventMenuItems(row)} trigger="click" align="left">

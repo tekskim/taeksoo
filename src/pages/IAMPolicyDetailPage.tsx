@@ -16,6 +16,7 @@ import {
   TabBar,
   Chip,
   ContextMenu,
+  columnWidths,
   type TableColumn,
   type ContextMenuItem,
 } from '@/design-system';
@@ -511,7 +512,7 @@ export default function IAMPolicyDetailPage() {
     {
       key: 'action',
       label: 'Action',
-      width: 80,
+      width: columnWidths.actionXl,
       align: 'center',
       render: (_, row) => {
         const isBuiltIn = row.type === 'Built-in';

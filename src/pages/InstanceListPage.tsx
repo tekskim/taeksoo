@@ -16,6 +16,7 @@ import {
   Tab,
   ListToolbar,
   ContextMenu,
+  columnWidths,
   type TableColumn,
   type StatusType,
   type FilterField,
@@ -706,12 +707,12 @@ export function InstanceListPage() {
     { id: 'delete', label: 'Delete', status: 'danger' },
   ];
 
-  // Table columns definition
+  // Table columns definition (using columnWidths preset)
   const columns: TableColumn<Instance>[] = [
     {
       key: 'status',
       label: 'Status',
-      width: '64px',
+      width: columnWidths.status,
       align: 'center',
       sortable: false,
       render: (_, row) => (
@@ -745,7 +746,7 @@ export function InstanceListPage() {
     {
       key: 'locked',
       label: 'Locked',
-      width: '68px',
+      width: columnWidths.locked,
       align: 'center',
       sortable: false,
       render: (_, row) => row.locked ? (
@@ -811,37 +812,37 @@ export function InstanceListPage() {
     {
       key: 'vcpu',
       label: 'vCPU',
-      width: '80px',
+      width: columnWidths.vcpu,
       sortable: true,
     },
     {
       key: 'ram',
       label: 'RAM',
-      width: '80px',
+      width: columnWidths.ram,
       sortable: true,
     },
     {
       key: 'disk',
       label: 'Disk',
-      width: '80px',
+      width: columnWidths.disk,
       sortable: true,
     },
     {
       key: 'gpu',
       label: 'GPU',
-      width: '64px',
+      width: columnWidths.gpu,
       sortable: true,
     },
     {
       key: 'az',
       label: 'AZ',
-      width: '80px',
+      width: columnWidths.az,
       sortable: true,
     },
     {
       key: 'actions',
       label: 'Action',
-      width: '64px',
+      width: columnWidths.actions,
       align: 'center',
       render: (_, row) => (
         <HStack gap={1} className="justify-center">
@@ -880,12 +881,12 @@ export function InstanceListPage() {
       .filter((col): col is TableColumn<Instance> => col !== undefined);
   }, [columns, columnConfig]);
 
-  // Bare Metal Table columns definition
+  // Bare Metal Table columns definition (using columnWidths preset)
   const bareMetalColumns: TableColumn<BareMetalInstance>[] = [
     {
       key: 'status',
       label: 'Status',
-      width: '64px',
+      width: columnWidths.status,
       align: 'center',
       sortable: false,
       render: (_, row) => (
@@ -965,37 +966,37 @@ export function InstanceListPage() {
     {
       key: 'cpu',
       label: 'CPU',
-      width: '80px',
+      width: columnWidths.cpu,
       sortable: true,
     },
     {
       key: 'ram',
       label: 'RAM',
-      width: '80px',
+      width: columnWidths.ram,
       sortable: true,
     },
     {
       key: 'disk',
       label: 'Disk',
-      width: '80px',
+      width: columnWidths.disk,
       sortable: true,
     },
     {
       key: 'gpu',
       label: 'GPU',
-      width: '64px',
+      width: columnWidths.gpu,
       sortable: true,
     },
     {
       key: 'az',
       label: 'AZ',
-      width: '80px',
+      width: columnWidths.az,
       sortable: true,
     },
     {
       key: 'actions',
       label: 'Action',
-      width: '64px',
+      width: columnWidths.actions,
       align: 'center',
       render: (_, row) => (
         <HStack gap={1} className="justify-center">

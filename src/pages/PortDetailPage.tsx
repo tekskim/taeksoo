@@ -19,8 +19,10 @@ import {
   Pagination,
   ContextMenu,
   Modal,
+  columnWidths,
 } from '@/design-system';
-import type { TableColumn, ContextMenuItem } from '@/design-system';
+import type { TableColumn, ContextMenuItem
+} from '@/design-system';
 import { Sidebar } from '@/components/Sidebar';
 import { useTabs } from '@/contexts/TabContext';
 import {
@@ -282,7 +284,7 @@ export default function PortDetailPage() {
     {
       key: 'actions',
       label: 'Action',
-      width: '64px',
+      width: columnWidths.actions,
       align: 'center',
       render: (_: unknown, row: FixedIP) => {
         const fixedIpMenuItems: ContextMenuItem[] = [
@@ -317,7 +319,7 @@ export default function PortDetailPage() {
     {
       key: 'actions',
       label: 'Action',
-      width: '64px',
+      width: columnWidths.actions,
       align: 'center',
       render: (_: unknown, row: AllowedAddressPair) => {
         const pairMenuItems: ContextMenuItem[] = [
@@ -374,7 +376,7 @@ export default function PortDetailPage() {
     {
       key: 'actions',
       label: 'Action',
-      width: '64px',
+      width: columnWidths.actions,
       align: 'center',
       render: (_: unknown, row: SecurityGroup) => {
         const sgMenuItems: ContextMenuItem[] = [

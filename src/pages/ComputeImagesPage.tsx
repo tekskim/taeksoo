@@ -17,6 +17,7 @@ import {
   ContextMenu,
   ConfirmModal,
   StatusIndicator,
+  columnWidths,
   type TableColumn,
   type ContextMenuItem,
   type FilterField,
@@ -228,12 +229,12 @@ export function ComputeImagesPage() {
     setSelectedImages([]);
   };
 
-  // Table columns (matching Figma design: Selection, Status, Name, OS, Size, Access, Created at, Action)
+  // Table columns (using columnWidths preset)
   const columns: TableColumn<Image>[] = [
     {
       key: 'status',
       label: 'Status',
-      width: '64px',
+      width: columnWidths.status,
       align: 'center',
       render: (_, row) => (
         <StatusIndicator status={row.status} layout="icon-only" />
@@ -292,7 +293,7 @@ export function ComputeImagesPage() {
     {
       key: 'actions',
       label: 'Action',
-      width: '64px',
+      width: columnWidths.actions,
       align: 'center',
       render: (_, row) => {
         const menuItems: ContextMenuItem[] = [

@@ -13,6 +13,7 @@ import {
   ContextMenu,
   ConfirmModal,
   Checkbox,
+  columnWidths,
   type TableColumn,
   type ContextMenuItem,
   type FilterField,
@@ -177,12 +178,13 @@ export function KeyPairsPage() {
     setSelectedKeyPairs([]);
   };
 
-  // Table columns (matching Figma design: Selection, Name, Fingerprint, Created at, Action)
+  // Table columns (using columnWidths preset)
   const columns: TableColumn<KeyPair>[] = [
     {
       key: 'name',
       label: 'Name',
-      width: '200px',
+      flex: 1,
+      minWidth: '150px',
       sortable: true,
       render: (_, row) => (
         <Link
@@ -198,6 +200,7 @@ export function KeyPairsPage() {
       key: 'fingerprint',
       label: 'Fingerprint',
       flex: 1,
+      minWidth: '280px',
       render: (_, row) => (
         <div className="flex items-center gap-2">
           <span className="font-mono text-[length:var(--font-size-11)] text-[var(--color-text-default)]">{row.fingerprint}</span>
@@ -221,13 +224,13 @@ export function KeyPairsPage() {
     {
       key: 'createdAt',
       label: 'Created at',
-      width: '150px',
+      width: columnWidths.createdAt,
       sortable: true,
     },
     {
       key: 'actions',
       label: 'Action',
-      width: '64px',
+      width: columnWidths.actions,
       align: 'center',
       render: (_, row) => {
         const menuItems: ContextMenuItem[] = [

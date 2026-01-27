@@ -10,6 +10,7 @@ import {
   ContextMenu,
   type TableColumn,
   type ContextMenuItem,
+  columnWidths,
 } from '@/design-system';
 import { AgentPageLayout } from '@/layouts';
 import {
@@ -379,7 +380,7 @@ export function StoragePage() {
     {
       key: 'favorite',
       label: '',
-      width: '48px',
+      width: columnWidths.favorite,
       align: 'center',
       sortable: false,
       render: (_, row) => (
@@ -393,7 +394,7 @@ export function StoragePage() {
     {
       key: 'status',
       label: 'Status',
-      width: '64px',
+      width: columnWidths.status,
       align: 'center',
       sortable: false,
       render: (_, row) => (
@@ -461,7 +462,7 @@ export function StoragePage() {
     {
       key: 'actions',
       label: 'Action',
-      width: '64px',
+      width: columnWidths.actions,
       align: 'center',
       render: (_, row) => {
         const menuItems: ContextMenuItem[] = [

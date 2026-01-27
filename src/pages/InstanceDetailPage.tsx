@@ -19,6 +19,7 @@ import {
   StatusIndicator,
   ContextMenu,
   type ContextMenuItem,
+  columnWidths,
 } from '@/design-system';
 import { Link } from 'react-router-dom';
 import { Sidebar } from '@/components/Sidebar';
@@ -763,7 +764,7 @@ export function InstanceDetailPage() {
                         {
                           key: 'status',
                           label: 'Status',
-                          width: '64px',
+                          width: columnWidths.status,
                           align: 'center',
                           render: (_, row: AttachedVolume) => (
                             <StatusIndicator status={row.status as any} layout="icon-only" />
@@ -772,15 +773,17 @@ export function InstanceDetailPage() {
                         {
                           key: 'name',
                           label: 'Name',
+                          flex: 1,
+                          minWidth: columnWidths.name,
                           render: (value: string, row: AttachedVolume) => (
-                            <div className="flex flex-col gap-0.5">
-                            <Link
-                              to={`/compute/volumes/${row.id}`}
-                              className="flex items-center gap-1.5 text-[var(--color-action-primary)] hover:underline"
-                            >
-                              {value}
-                            </Link>
-                              <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
+                            <div className="flex flex-col gap-0.5 min-w-0">
+                              <Link
+                                to={`/compute/volumes/${row.id}`}
+                                className="inline-flex items-center gap-1.5 font-medium text-[var(--color-action-primary)] hover:underline truncate"
+                              >
+                                {value}
+                              </Link>
+                              <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] truncate">
                                 ID : {row.id}
                               </span>
                             </div>
@@ -789,30 +792,35 @@ export function InstanceDetailPage() {
                         {
                           key: 'size',
                           label: 'Size',
+                          width: columnWidths.size,
                           sortable: true,
                         },
                         {
                           key: 'type',
                           label: 'Type',
+                          width: columnWidths.type,
                           sortable: true,
                         },
                         {
                           key: 'diskTag',
                           label: 'Disk tag',
+                          width: columnWidths.diskTag,
                         },
                         {
                           key: 'bootable',
                           label: 'Bootable',
+                          width: columnWidths.bootable,
                           render: (value: boolean) => (value ? 'Yes' : 'No'),
                         },
                         {
                           key: 'access',
                           label: 'Created at',
+                          width: columnWidths.createdAt,
                         },
                         {
                           key: 'action',
                           label: 'Action',
-                          width: '64px',
+                          width: columnWidths.actions,
                           align: 'center',
                           render: (_: unknown, row: AttachedVolume) => {
                             const volumeMenuItems: ContextMenuItem[] = [
@@ -879,7 +887,7 @@ export function InstanceDetailPage() {
                         {
                           key: 'status',
                           label: 'Status',
-                          width: '64px',
+                          width: columnWidths.status,
                           align: 'center',
                           render: (_value: string, iface: AttachedInterface) => {
                             const statusMap: Record<string, 'active' | 'down' | 'building' | 'shutoff'> = {
@@ -899,16 +907,18 @@ export function InstanceDetailPage() {
                         {
                           key: 'name',
                           label: 'Name',
+                          flex: 1,
+                          minWidth: columnWidths.name,
                           sortable: true,
                           render: (_value: string, iface: AttachedInterface) => (
-                            <div className="flex flex-col gap-0.5">
-                            <Link 
+                            <div className="flex flex-col gap-0.5 min-w-0">
+                              <Link 
                                 to={`/compute/ports/${iface.id}`}
-                                className="font-medium text-[var(--color-action-primary)] hover:underline"
-                            >
+                                className="inline-flex items-center gap-1.5 font-medium text-[var(--color-action-primary)] hover:underline truncate"
+                              >
                                 {iface.name}
-                            </Link>
-                              <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
+                              </Link>
+                              <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] truncate">
                                 ID : {iface.id}
                               </span>
                             </div>
@@ -917,16 +927,17 @@ export function InstanceDetailPage() {
                         {
                           key: 'network',
                           label: 'Network',
+                          width: columnWidths.network,
                           sortable: true,
                           render: (_value: string, iface: AttachedInterface) => (
-                            <div className="flex flex-col gap-0.5">
-                            <Link 
+                            <div className="flex flex-col gap-0.5 min-w-0">
+                              <Link 
                                 to={`/compute/networks/${iface.id}`}
-                                className="font-medium text-[var(--color-action-primary)] hover:underline"
-                            >
+                                className="inline-flex items-center gap-1.5 font-medium text-[var(--color-action-primary)] hover:underline truncate"
+                              >
                                 {iface.network}
-                            </Link>
-                              <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
+                              </Link>
+                              <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] truncate">
                                 ID : {iface.id}
                               </span>
                             </div>
@@ -935,6 +946,8 @@ export function InstanceDetailPage() {
                         {
                           key: 'fixedIp',
                           label: 'Fixed IP',
+                          flex: 1,
+                          minWidth: columnWidths.fixedIp,
                           render: (_value: string, iface: AttachedInterface) => (
                             <span className="text-[var(--color-text-default)]">{iface.fixedIp}</span>
                           ),
@@ -942,6 +955,7 @@ export function InstanceDetailPage() {
                         {
                           key: 'macAddress',
                           label: 'Mac address',
+                          width: columnWidths.macAddress,
                           render: (_value: string, iface: AttachedInterface) => (
                             <span className="text-[var(--color-text-default)]">{iface.macAddress}</span>
                           ),
@@ -949,6 +963,7 @@ export function InstanceDetailPage() {
                         {
                           key: 'createdAt',
                           label: 'Created at',
+                          width: columnWidths.createdAt,
                           sortable: true,
                           render: (_value: string, iface: AttachedInterface) => (
                             <span className="text-[var(--color-text-default)]">{iface.createdAt}</span>
@@ -957,7 +972,7 @@ export function InstanceDetailPage() {
                         {
                           key: 'action',
                           label: 'Action',
-                          width: '64px',
+                          width: columnWidths.actions,
                           align: 'center' as const,
                           render: (_: unknown, iface: AttachedInterface) => {
                             const interfaceMenuItems: ContextMenuItem[] = [
@@ -1013,7 +1028,7 @@ export function InstanceDetailPage() {
                         {
                           key: 'status',
                           label: 'Status',
-                          width: '64px',
+                          width: columnWidths.status,
                           align: 'center',
                           render: (_value: string, row: FloatingIP) => (
                             <StatusIndicator status={row.status} layout="icon-only" size="md" />
@@ -1022,15 +1037,17 @@ export function InstanceDetailPage() {
                         {
                           key: 'floatingIp',
                           label: 'Floating IP',
+                          flex: 1,
+                          minWidth: columnWidths.floatingIp,
                           render: (_value: string, row: FloatingIP) => (
-                            <div className="flex flex-col gap-0.5">
-                            <Link 
-                              to={`/compute/floating-ips/${row.id}`}
-                                className="font-medium text-[var(--color-action-primary)] hover:underline"
-                            >
+                            <div className="flex flex-col gap-0.5 min-w-0">
+                              <Link 
+                                to={`/compute/floating-ips/${row.id}`}
+                                className="inline-flex items-center gap-1.5 font-medium text-[var(--color-action-primary)] hover:underline truncate"
+                              >
                                 {row.floatingIp}
-                            </Link>
-                              <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
+                              </Link>
+                              <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] truncate">
                                 ID : {row.id}
                               </span>
                             </div>
@@ -1039,16 +1056,19 @@ export function InstanceDetailPage() {
                         {
                           key: 'fixedIp',
                           label: 'Fixed IP',
+                          flex: 1,
+                          minWidth: columnWidths.fixedIp,
                         },
                         {
                           key: 'createdAt',
                           label: 'Created at',
+                          width: columnWidths.createdAt,
                           sortable: true,
                         },
                         {
                           key: 'action',
                           label: 'Action',
-                          width: '64px',
+                          width: columnWidths.actions,
                           align: 'center',
                           render: (_: unknown, row: FloatingIP) => {
                             const floatingIpMenuItems: ContextMenuItem[] = [
@@ -1115,16 +1135,18 @@ export function InstanceDetailPage() {
                         {
                           key: 'name',
                           label: 'Name',
+                          flex: 1,
+                          minWidth: columnWidths.name,
                           sortable: true,
                           render: (_value: string, row: SecurityGroup) => (
-                            <div className="flex flex-col gap-0.5">
-                            <Link 
-                              to={`/compute/security-groups/${row.id}`}
-                                className="font-medium text-[var(--color-action-primary)] hover:underline"
-                            >
-                              {row.name}
-                            </Link>
-                              <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
+                            <div className="flex flex-col gap-0.5 min-w-0">
+                              <Link 
+                                to={`/compute/security-groups/${row.id}`}
+                                className="inline-flex items-center gap-1.5 font-medium text-[var(--color-action-primary)] hover:underline truncate"
+                              >
+                                {row.name}
+                              </Link>
+                              <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] truncate">
                                 ID : {row.id}
                               </span>
                             </div>
@@ -1133,11 +1155,14 @@ export function InstanceDetailPage() {
                         {
                           key: 'description',
                           label: 'Description',
+                          flex: 1,
+                          minWidth: columnWidths.description,
                           sortable: true,
                         },
                         {
                           key: 'createdAt',
                           label: 'Created at',
+                          width: columnWidths.createdAt,
                           sortable: true,
                           render: (_value: string, row: SecurityGroup) => (
                             <span className="text-[var(--color-text-default)]">{row.createdAt}</span>
@@ -1146,7 +1171,7 @@ export function InstanceDetailPage() {
                         {
                           key: 'action',
                           label: 'Action',
-                          width: '64px',
+                          width: columnWidths.actions,
                           align: 'center' as const,
                           render: (_: unknown, row: SecurityGroup) => {
                             const securityGroupMenuItems: ContextMenuItem[] = [
@@ -1210,7 +1235,7 @@ export function InstanceDetailPage() {
                         {
                           key: 'status',
                           label: 'Status',
-                          width: '64px',
+                          width: columnWidths.status,
                           align: 'center',
                           render: (_value: string, row: InstanceSnapshot) => (
                             <StatusIndicator 
@@ -1222,16 +1247,18 @@ export function InstanceDetailPage() {
                         {
                           key: 'name',
                           label: 'Name',
+                          flex: 1,
+                          minWidth: columnWidths.name,
                           sortable: true,
                           render: (_value: string, row: InstanceSnapshot) => (
-                            <div className="flex flex-col gap-0.5">
-                            <Link 
-                              to={`/compute/instance-snapshots/${row.id}`}
-                                className="font-medium text-[var(--color-action-primary)] hover:underline"
-                            >
-                              {row.name}
-                            </Link>
-                              <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
+                            <div className="flex flex-col gap-0.5 min-w-0">
+                              <Link 
+                                to={`/compute/instance-snapshots/${row.id}`}
+                                className="inline-flex items-center gap-1.5 font-medium text-[var(--color-action-primary)] hover:underline truncate"
+                              >
+                                {row.name}
+                              </Link>
+                              <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] truncate">
                                 ID : {row.id}
                               </span>
                             </div>
@@ -1240,22 +1267,25 @@ export function InstanceDetailPage() {
                         {
                           key: 'size',
                           label: 'Size',
+                          width: columnWidths.size,
                           sortable: true,
                         },
                         {
                           key: 'diskFormat',
                           label: 'Disk format',
+                          width: columnWidths.diskFormat,
                           sortable: true,
                         },
                         {
                           key: 'createdAt',
                           label: 'Created at',
+                          width: columnWidths.createdAt,
                           sortable: true,
                         },
                         {
                           key: 'action',
                           label: 'Action',
-                          width: '64px',
+                          width: columnWidths.actions,
                           align: 'center',
                           render: (_: unknown, row: InstanceSnapshot) => {
                             const snapshotMenuItems: ContextMenuItem[] = [

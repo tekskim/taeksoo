@@ -18,8 +18,10 @@ import {
   Pagination,
   StatusIndicator,
   ContextMenu,
+  columnWidths,
 } from '@/design-system';
-import type { TableColumn, ContextMenuItem } from '@/design-system';
+import type { TableColumn, ContextMenuItem
+} from '@/design-system';
 import { Sidebar } from '@/components/Sidebar';
 import { useTabs } from '@/contexts/TabContext';
 import {
@@ -260,7 +262,7 @@ export function LoadBalancerDetailPage() {
     {
       key: 'status',
       label: 'Status',
-      width: '64px',
+      width: columnWidths.status,
       align: 'center',
       render: (_, row) => (
         <StatusIndicator status={listenerStatusMap[row.status]} layout="icon-only" />
@@ -312,7 +314,7 @@ export function LoadBalancerDetailPage() {
     {
       key: 'actions',
       label: 'Action',
-      width: '64px',
+      width: columnWidths.actions,
       align: 'center',
       render: (_: unknown, row: Listener) => {
         const listenerMenuItems: ContextMenuItem[] = [
@@ -337,7 +339,7 @@ export function LoadBalancerDetailPage() {
     {
       key: 'status',
       label: 'Status',
-      width: '64px',
+      width: columnWidths.status,
       align: 'center',
       render: (_, row) => (
         <StatusIndicator status={poolStatusMap[row.status]} layout="icon-only" />
@@ -366,19 +368,19 @@ export function LoadBalancerDetailPage() {
     {
       key: 'protocol',
       label: 'Protocol',
-      width: '100px',
+      width: columnWidths.protocol,
       sortable: true,
     },
     {
       key: 'algorithm',
       label: 'Algorithm',
-      width: '123px',
+      width: columnWidths.algorithm,
       sortable: true,
     },
     {
       key: 'listener',
       label: 'Listener',
-      width: '123px',
+      width: columnWidths.listener,
       sortable: true,
       render: (_, row) => (
         <div className="flex flex-col gap-0.5">
@@ -398,20 +400,20 @@ export function LoadBalancerDetailPage() {
     {
       key: 'members',
       label: 'Members',
-      width: '120px',
+      width: columnWidths.members,
       sortable: true,
       align: 'center',
     },
     {
       key: 'adminState',
       label: 'Admin state',
-      width: '103px',
+      width: columnWidths.adminState,
       align: 'center',
     },
     {
       key: 'actions',
       label: 'Action',
-      width: '64px',
+      width: columnWidths.actions,
       align: 'center',
       render: (_: unknown, row: Pool) => {
         const poolMenuItems: ContextMenuItem[] = [
@@ -567,60 +569,36 @@ export function LoadBalancerDetailPage() {
                           <SectionCard.Header title="Network" />
                           <SectionCard.Content>
                             <SectionCard.DataRow label="VIP Address" value={loadBalancer.vipAddress} />
-                            <div className="flex flex-col gap-3 w-full">
-                              <div className="h-px w-full bg-[var(--color-border-subtle)]" />
-                              <div className="flex flex-col gap-1.5">
-                                <span className="text-[11px] font-medium leading-4 text-[var(--color-text-subtle)]">
-                                  Owned network
-                                </span>
-                                {loadBalancer.ownedNetwork ? (
-                                  <Link
-                                    to={`/compute/networks/${loadBalancer.ownedNetwork.id}`}
-                                    className="flex items-center gap-1.5 text-[12px] font-medium leading-4 text-[var(--color-action-primary)] hover:underline"
-                                  >
-                                    {loadBalancer.ownedNetwork.name}
-                                  </Link>
-                                ) : (
-                                  <span className="text-[12px] leading-4 text-[var(--color-text-default)]">-</span>
-                                )}
-                              </div>
-                            </div>
-                            <div className="flex flex-col gap-3 w-full">
-                              <div className="h-px w-full bg-[var(--color-border-subtle)]" />
-                              <div className="flex flex-col gap-1.5">
-                                <span className="text-[11px] font-medium leading-4 text-[var(--color-text-subtle)]">
-                                  Subnet
-                                </span>
-                                {loadBalancer.subnet ? (
-                                  <Link
-                                    to={`/compute/subnets/${loadBalancer.subnet.id}`}
-                                    className="flex items-center gap-1.5 text-[12px] font-medium leading-4 text-[var(--color-action-primary)] hover:underline"
-                                  >
-                                    {loadBalancer.subnet.name}
-                                  </Link>
-                                ) : (
-                                  <span className="text-[12px] leading-4 text-[var(--color-text-default)]">-</span>
-                                )}
-                              </div>
-                            </div>
-                            <div className="flex flex-col gap-3 w-full">
-                              <div className="h-px w-full bg-[var(--color-border-subtle)]" />
-                              <div className="flex flex-col gap-1.5">
-                                <span className="text-[11px] font-medium leading-4 text-[var(--color-text-subtle)]">
-                                  Floating IP
-                                </span>
-                                {loadBalancer.floatingIp ? (
-                                  <Link
-                                    to={`/compute/floating-ips/${loadBalancer.floatingIp.id}`}
-                                    className="flex items-center gap-1.5 text-[12px] font-medium leading-4 text-[var(--color-action-primary)] hover:underline"
-                                  >
-                                    {loadBalancer.floatingIp.name}
-                                  </Link>
-                                ) : (
-                                  <span className="text-[12px] leading-4 text-[var(--color-text-default)]">-</span>
-                                )}
-                              </div>
-                            </div>
+                            <SectionCard.DataRow label="Owned network">
+                              {loadBalancer.ownedNetwork ? (
+                                <Link
+                                  to={`/compute/networks/${loadBalancer.ownedNetwork.id}`}
+                                  className="flex items-center gap-1.5 font-medium text-[var(--color-action-primary)] hover:underline"
+                                >
+                                  {loadBalancer.ownedNetwork.name}
+                                </Link>
+                              ) : '-'}
+                            </SectionCard.DataRow>
+                            <SectionCard.DataRow label="Subnet">
+                              {loadBalancer.subnet ? (
+                                <Link
+                                  to={`/compute/subnets/${loadBalancer.subnet.id}`}
+                                  className="flex items-center gap-1.5 font-medium text-[var(--color-action-primary)] hover:underline"
+                                >
+                                  {loadBalancer.subnet.name}
+                                </Link>
+                              ) : '-'}
+                            </SectionCard.DataRow>
+                            <SectionCard.DataRow label="Floating IP">
+                              {loadBalancer.floatingIp ? (
+                                <Link
+                                  to={`/compute/floating-ips/${loadBalancer.floatingIp.id}`}
+                                  className="flex items-center gap-1.5 font-medium text-[var(--color-action-primary)] hover:underline"
+                                >
+                                  {loadBalancer.floatingIp.name}
+                                </Link>
+                              ) : '-'}
+                            </SectionCard.DataRow>
                           </SectionCard.Content>
                         </SectionCard>
                       </VStack>

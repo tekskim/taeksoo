@@ -16,6 +16,7 @@ import {
   ContextMenu,
   type TableColumn,
   type ContextMenuItem,
+  columnWidths,
 } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
 import { ShellPanel, useShellPanel, type ShellTab } from '@/components/ShellPanel';
@@ -216,7 +217,7 @@ export function ContainerIngressesPage() {
     {
       key: 'status',
       label: 'Status',
-      width: '64px',
+      width: columnWidths.status,
       sortable: false,
       align: 'center',
       render: (value: string) => (
@@ -277,14 +278,13 @@ export function ContainerIngressesPage() {
     {
       key: 'createdAt',
       label: 'Created At',
-      flex: 1,
-      minWidth: '120px',
+      width: columnWidths.createdAt,
       sortable: true,
     },
     {
       key: 'actions',
       label: 'Action',
-      width: '64px',
+      width: columnWidths.actions,
       align: 'center',
       sticky: 'right',
       render: (_, row) => {
