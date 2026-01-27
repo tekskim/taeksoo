@@ -328,14 +328,13 @@ export function ComputeAdminVolumeDetailPage() {
       sortable: true,
       render: (_, row) => (
         <div className="flex flex-col gap-0.5">
-        <Link
-          to={`/compute-admin/volume-backups/${row.id}`}
-          className="inline-flex items-center gap-1.5 font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
-          onClick={(e) => e.stopPropagation()}
-        >
-          {row.name}
-          <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
-        </Link>
+          <Link
+            to={`/compute-admin/volume-backups/${row.id}`}
+            className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {row.name}
+          </Link>
           <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
             ID : {row.id}
           </span>
