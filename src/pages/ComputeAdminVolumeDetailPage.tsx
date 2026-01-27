@@ -28,7 +28,6 @@ import {
   IconBell,
   IconTrash,
   IconChevronDown,
-  IconDotsCircleHorizontal,
   IconExternalLink,
   IconDownload,
   IconEdit,

@@ -10,10 +10,8 @@ import {
   TopBarAction,
   Breadcrumb,
   ListToolbar,
-  ContextMenu,
   ConfirmModal,
   type TableColumn,
-  type ContextMenuItem,
   type FilterField,
   type AppliedFilter,
 } from '@/design-system';
@@ -21,7 +19,6 @@ import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
 import { useTabs } from '@/contexts/TabContext';
 import { ViewPreferencesDrawer, type ColumnConfig } from '@/components/ViewPreferencesDrawer';
 import {
-  IconDotsCircleHorizontal,
   IconTrash,
   IconDownload,
   IconBell,
