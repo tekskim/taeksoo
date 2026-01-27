@@ -199,11 +199,15 @@ function JobsTab({ jobs }: JobsTabProps) {
       render: (value: string) => (
         <StatusIndicator
           status={
-            value === 'Completed' ? 'active' :
-            value === 'Running' ? 'building' :
-            value === 'Pending' ? 'pending' :
-            value === 'Failed' ? 'error' :
-            'pending'
+            value === 'Completed'
+              ? 'active'
+              : value === 'Running'
+                ? 'building'
+                : value === 'Pending'
+                  ? 'pending'
+                  : value === 'Failed'
+                    ? 'error'
+                    : 'pending'
           }
         />
       ),
@@ -267,7 +271,11 @@ function JobsTab({ jobs }: JobsTabProps) {
       render: (_: unknown, row: JobRow) => (
         <ContextMenu items={createJobMenuItems(row)} trigger="click" align="left">
           <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-            <IconDotsCircleHorizontal size={16} className="text-[var(--color-text-subtle)]" stroke={1.5} />
+            <IconDotsCircleHorizontal
+              size={16}
+              className="text-[var(--color-text-subtle)]"
+              stroke={1.5}
+            />
           </button>
         </ContextMenu>
       ),
@@ -378,7 +386,11 @@ function RecentEventsTab({ events }: RecentEventsTabProps) {
       render: (_: unknown, row: EventRow) => (
         <ContextMenu items={createEventMenuItems(row)} trigger="click" align="left">
           <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-            <IconDotsCircleHorizontal size={16} className="text-[var(--color-text-subtle)]" stroke={1.5} />
+            <IconDotsCircleHorizontal
+              size={16}
+              className="text-[var(--color-text-subtle)]"
+              stroke={1.5}
+            />
           </button>
         </ContextMenu>
       ),
@@ -443,7 +455,8 @@ export function CronJobDetailPage() {
   const cronjob = mockCronJobData[cronjobId || '1'] || mockCronJobData['1'];
 
   // Tab management
-  const { tabs, activeTabId, closeTab, selectTab, updateActiveTabLabel, moveTab, addNewTab } = useTabs();
+  const { tabs, activeTabId, closeTab, selectTab, updateActiveTabLabel, moveTab, addNewTab } =
+    useTabs();
 
   // Update tab label
   useEffect(() => {
@@ -583,20 +596,9 @@ export function CronJobDetailPage() {
                     value={cronjob.status}
                     status={cronjob.status === 'Active' ? 'active' : 'suspended'}
                   />
-                  <DetailHeader.InfoCard
-                    label="Namespace"
-                    value={cronjob.namespace}
-                    copyable
-                  />
-                  <DetailHeader.InfoCard
-                    label="Image"
-                    value={cronjob.image}
-                    copyable
-                  />
-                  <DetailHeader.InfoCard
-                    label="Created At"
-                    value={cronjob.createdAt}
-                  />
+                  <DetailHeader.InfoCard label="Namespace" value={cronjob.namespace} copyable />
+                  <DetailHeader.InfoCard label="Image" value={cronjob.image} copyable />
+                  <DetailHeader.InfoCard label="Created At" value={cronjob.createdAt} />
                 </DetailHeader.InfoGrid>
 
                 {/* Labels & Annotations Cards */}
@@ -607,9 +609,11 @@ export function CronJobDetailPage() {
                         Labels ({Object.keys(cronjob.labels).length})
                       </span>
                       <div className="flex flex-wrap items-center gap-1 min-w-0 w-full">
-                        {Object.entries(cronjob.labels).slice(0, 1).map(([key, val]) => (
-                          <Chip key={key} value={`${key}: ${val}`} maxWidth="100%" />
-                        ))}
+                        {Object.entries(cronjob.labels)
+                          .slice(0, 1)
+                          .map(([key, val]) => (
+                            <Chip key={key} value={`${key}: ${val}`} maxWidth="100%" />
+                          ))}
                         {Object.keys(cronjob.labels).length > 1 && (
                           <span className="text-[11px] text-[var(--color-text-default)] cursor-pointer hover:underline">
                             (+{Object.keys(cronjob.labels).length - 1})
@@ -624,9 +628,11 @@ export function CronJobDetailPage() {
                         Annotations ({Object.keys(cronjob.annotations).length})
                       </span>
                       <div className="flex flex-wrap items-center gap-1 min-w-0 w-full">
-                        {Object.entries(cronjob.annotations).slice(0, 1).map(([key, val]) => (
-                          <Chip key={key} value={`${key}: ${val}`} maxWidth="100%" />
-                        ))}
+                        {Object.entries(cronjob.annotations)
+                          .slice(0, 1)
+                          .map(([key, val]) => (
+                            <Chip key={key} value={`${key}: ${val}`} maxWidth="100%" />
+                          ))}
                         {Object.keys(cronjob.annotations).length > 1 && (
                           <span className="text-[11px] text-[var(--color-text-default)] cursor-pointer hover:underline">
                             (+{Object.keys(cronjob.annotations).length - 1})

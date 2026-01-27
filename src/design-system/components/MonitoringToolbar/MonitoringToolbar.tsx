@@ -92,7 +92,9 @@ export const MonitoringToolbar: React.FC<MonitoringToolbarProps> = ({
   const isCustomPeriodControlled = controlledCustomPeriod !== undefined;
 
   const [internalTimeRange, setInternalTimeRange] = useState<TimeRangeValue>(defaultTimeRange);
-  const [internalCustomPeriod, setInternalCustomPeriod] = useState<CustomPeriod | null>(defaultCustomPeriod);
+  const [internalCustomPeriod, setInternalCustomPeriod] = useState<CustomPeriod | null>(
+    defaultCustomPeriod
+  );
 
   const timeRange = isTimeRangeControlled ? controlledTimeRange : internalTimeRange;
   const customPeriod = isCustomPeriodControlled ? controlledCustomPeriod : internalCustomPeriod;
@@ -197,7 +199,9 @@ export const MonitoringToolbar: React.FC<MonitoringToolbarProps> = ({
             key={option.value}
             type="button"
             className={`monitoring-toolbar-segment ${
-              timeRange === option.value && !hasCustomPeriod ? 'monitoring-toolbar-segment-active' : ''
+              timeRange === option.value && !hasCustomPeriod
+                ? 'monitoring-toolbar-segment-active'
+                : ''
             }`}
             onClick={() => handleTimeRangeClick(option.value)}
           >
@@ -210,17 +214,14 @@ export const MonitoringToolbar: React.FC<MonitoringToolbarProps> = ({
       <div className="monitoring-toolbar-period" ref={datePickerRef}>
         {hasCustomPeriod ? (
           <div className="monitoring-toolbar-period-tag">
-            <span 
-              className="monitoring-toolbar-period-tag-text" 
-              onClick={handlePeriodTextClick}
-            >
+            <span className="monitoring-toolbar-period-tag-text" onClick={handlePeriodTextClick}>
               {formatDateForDisplay(customPeriod.start)}
               <span className="monitoring-toolbar-period-tag-divider">—</span>
               {formatDateForDisplay(customPeriod.end)}
             </span>
-            <button 
+            <button
               type="button"
-              className="monitoring-toolbar-period-tag-close" 
+              className="monitoring-toolbar-period-tag-close"
               onClick={handleClearCustomPeriod}
               aria-label="Clear custom period"
             >
@@ -248,7 +249,9 @@ export const MonitoringToolbar: React.FC<MonitoringToolbarProps> = ({
                 onClick={() => setSelectingStart(true)}
               >
                 <span className="monitoring-toolbar-date-label">START</span>
-                <span className="monitoring-toolbar-date-value">{formatDateForDisplay(tempStartDate)}</span>
+                <span className="monitoring-toolbar-date-value">
+                  {formatDateForDisplay(tempStartDate)}
+                </span>
               </div>
               <div className="monitoring-toolbar-date-separator">~</div>
               <div
@@ -256,7 +259,9 @@ export const MonitoringToolbar: React.FC<MonitoringToolbarProps> = ({
                 onClick={() => setSelectingStart(false)}
               >
                 <span className="monitoring-toolbar-date-label">END</span>
-                <span className="monitoring-toolbar-date-value">{formatDateForDisplay(tempEndDate)}</span>
+                <span className="monitoring-toolbar-date-value">
+                  {formatDateForDisplay(tempEndDate)}
+                </span>
               </div>
             </div>
 
@@ -307,5 +312,3 @@ export const MonitoringToolbar: React.FC<MonitoringToolbarProps> = ({
 };
 
 export default MonitoringToolbar;
-
-

@@ -28,12 +28,7 @@ import { useTabs } from '@/contexts/TabContext';
 import { ViewPreferencesDrawer, type ColumnConfig } from '@/components/ViewPreferencesDrawer';
 import { CreateVolumeFromImageDrawer } from '@/components/CreateVolumeFromImageDrawer';
 import { EditImageDrawer } from '@/components/EditImageDrawer';
-import {
-  IconDotsCircleHorizontal,
-  IconTrash,
-  IconDownload,
-  IconBell,
-} from '@tabler/icons-react';
+import { IconDotsCircleHorizontal, IconTrash, IconDownload, IconBell } from '@tabler/icons-react';
 import { Link } from 'react-router-dom';
 
 /* ----------------------------------------
@@ -61,16 +56,126 @@ interface Image {
    ---------------------------------------- */
 
 const mockImages: Image[] = [
-  { id: '29tgj234', name: 'Ubuntu-22.04-base', os: 'Ubuntu24.04', size: '16GiB', diskFormat: 'RAW', protected: true, access: 'Private', description: 'Base Ubuntu 22.04 image', createdAt: '2025-09-12', status: 'active' },
-  { id: 'img-002', name: 'CentOS-8-minimal', os: 'CentOS8', size: '8GiB', diskFormat: 'QCOW2', protected: false, access: 'Private', description: 'Minimal CentOS 8 installation', createdAt: '2025-09-10', status: 'active' },
-  { id: 'img-003', name: 'Rocky-Linux-9', os: 'Rocky Linux 9', size: '12GiB', diskFormat: 'RAW', protected: true, access: 'Shared', description: 'Rocky Linux 9 server image', createdAt: '2025-09-08', status: 'active' },
-  { id: 'img-004', name: 'Debian-12-standard', os: 'Debian 12', size: '10GiB', diskFormat: 'QCOW2', protected: false, access: 'Public', description: 'Standard Debian 12 image', createdAt: '2025-09-05', status: 'active' },
-  { id: 'img-005', name: 'Ubuntu-20.04-LTS', os: 'Ubuntu20.04', size: '14GiB', diskFormat: 'RAW', protected: true, access: 'Private', description: 'Ubuntu 20.04 LTS server', createdAt: '2025-08-28', status: 'active' },
-  { id: 'img-006', name: 'Windows-Server-2022', os: 'Windows Server 2022', size: '32GiB', diskFormat: 'QCOW2', protected: false, access: 'Shared', description: 'Windows Server 2022 Datacenter', createdAt: '2025-08-25', status: 'pending' },
-  { id: 'img-007', name: 'Alpine-3.18-minimal', os: 'Alpine 3.18', size: '256MiB', diskFormat: 'RAW', protected: false, access: 'Public', description: 'Lightweight Alpine Linux', createdAt: '2025-08-20', status: 'active' },
-  { id: 'img-008', name: 'Fedora-39-workstation', os: 'Fedora 39', size: '20GiB', diskFormat: 'RAW', protected: true, access: 'Private', description: 'Fedora 39 workstation image', createdAt: '2025-08-15', status: 'active' },
-  { id: 'img-009', name: 'Oracle-Linux-8', os: 'Oracle Linux 8', size: '18GiB', diskFormat: 'QCOW2', protected: false, access: 'Shared', description: 'Oracle Linux 8 for databases', createdAt: '2025-08-10', status: 'deactivated' },
-  { id: 'img-010', name: 'Ubuntu-22.04-GPU', os: 'Ubuntu22.04', size: '24GiB', diskFormat: 'RAW', protected: true, access: 'Private', description: 'Ubuntu with GPU drivers', createdAt: '2025-08-05', status: 'active' },
+  {
+    id: '29tgj234',
+    name: 'Ubuntu-22.04-base',
+    os: 'Ubuntu24.04',
+    size: '16GiB',
+    diskFormat: 'RAW',
+    protected: true,
+    access: 'Private',
+    description: 'Base Ubuntu 22.04 image',
+    createdAt: '2025-09-12',
+    status: 'active',
+  },
+  {
+    id: 'img-002',
+    name: 'CentOS-8-minimal',
+    os: 'CentOS8',
+    size: '8GiB',
+    diskFormat: 'QCOW2',
+    protected: false,
+    access: 'Private',
+    description: 'Minimal CentOS 8 installation',
+    createdAt: '2025-09-10',
+    status: 'active',
+  },
+  {
+    id: 'img-003',
+    name: 'Rocky-Linux-9',
+    os: 'Rocky Linux 9',
+    size: '12GiB',
+    diskFormat: 'RAW',
+    protected: true,
+    access: 'Shared',
+    description: 'Rocky Linux 9 server image',
+    createdAt: '2025-09-08',
+    status: 'active',
+  },
+  {
+    id: 'img-004',
+    name: 'Debian-12-standard',
+    os: 'Debian 12',
+    size: '10GiB',
+    diskFormat: 'QCOW2',
+    protected: false,
+    access: 'Public',
+    description: 'Standard Debian 12 image',
+    createdAt: '2025-09-05',
+    status: 'active',
+  },
+  {
+    id: 'img-005',
+    name: 'Ubuntu-20.04-LTS',
+    os: 'Ubuntu20.04',
+    size: '14GiB',
+    diskFormat: 'RAW',
+    protected: true,
+    access: 'Private',
+    description: 'Ubuntu 20.04 LTS server',
+    createdAt: '2025-08-28',
+    status: 'active',
+  },
+  {
+    id: 'img-006',
+    name: 'Windows-Server-2022',
+    os: 'Windows Server 2022',
+    size: '32GiB',
+    diskFormat: 'QCOW2',
+    protected: false,
+    access: 'Shared',
+    description: 'Windows Server 2022 Datacenter',
+    createdAt: '2025-08-25',
+    status: 'pending',
+  },
+  {
+    id: 'img-007',
+    name: 'Alpine-3.18-minimal',
+    os: 'Alpine 3.18',
+    size: '256MiB',
+    diskFormat: 'RAW',
+    protected: false,
+    access: 'Public',
+    description: 'Lightweight Alpine Linux',
+    createdAt: '2025-08-20',
+    status: 'active',
+  },
+  {
+    id: 'img-008',
+    name: 'Fedora-39-workstation',
+    os: 'Fedora 39',
+    size: '20GiB',
+    diskFormat: 'RAW',
+    protected: true,
+    access: 'Private',
+    description: 'Fedora 39 workstation image',
+    createdAt: '2025-08-15',
+    status: 'active',
+  },
+  {
+    id: 'img-009',
+    name: 'Oracle-Linux-8',
+    os: 'Oracle Linux 8',
+    size: '18GiB',
+    diskFormat: 'QCOW2',
+    protected: false,
+    access: 'Shared',
+    description: 'Oracle Linux 8 for databases',
+    createdAt: '2025-08-10',
+    status: 'deactivated',
+  },
+  {
+    id: 'img-010',
+    name: 'Ubuntu-22.04-GPU',
+    os: 'Ubuntu22.04',
+    size: '24GiB',
+    diskFormat: 'RAW',
+    protected: true,
+    access: 'Private',
+    description: 'Ubuntu with GPU drivers',
+    createdAt: '2025-08-05',
+    status: 'active',
+  },
 ];
 
 /* ----------------------------------------
@@ -81,21 +186,36 @@ const mockImages: Image[] = [
 const filterFields: FilterField[] = [
   { key: 'name', label: 'Name', type: 'text' },
   { key: 'os', label: 'OS', type: 'text' },
-  { key: 'diskFormat', label: 'Disk Format', type: 'select', options: [
-    { value: 'RAW', label: 'RAW' },
-    { value: 'QCOW2', label: 'QCOW2' },
-  ]},
-  { key: 'access', label: 'Access', type: 'select', options: [
-    { value: 'Private', label: 'Private' },
-    { value: 'Shared', label: 'Shared' },
-    { value: 'Public', label: 'Public' },
-  ]},
-  { key: 'status', label: 'Status', type: 'select', options: [
-    { value: 'active', label: 'Active' },
-    { value: 'pending', label: 'Pending' },
-    { value: 'error', label: 'Error' },
-    { value: 'deactivated', label: 'Deactivated' },
-  ]},
+  {
+    key: 'diskFormat',
+    label: 'Disk Format',
+    type: 'select',
+    options: [
+      { value: 'RAW', label: 'RAW' },
+      { value: 'QCOW2', label: 'QCOW2' },
+    ],
+  },
+  {
+    key: 'access',
+    label: 'Access',
+    type: 'select',
+    options: [
+      { value: 'Private', label: 'Private' },
+      { value: 'Shared', label: 'Shared' },
+      { value: 'Public', label: 'Public' },
+    ],
+  },
+  {
+    key: 'status',
+    label: 'Status',
+    type: 'select',
+    options: [
+      { value: 'active', label: 'Active' },
+      { value: 'pending', label: 'Pending' },
+      { value: 'error', label: 'Error' },
+      { value: 'deactivated', label: 'Deactivated' },
+    ],
+  },
 ];
 
 export function ComputeImagesPage() {
@@ -106,7 +226,7 @@ export function ComputeImagesPage() {
   const [activeTab, setActiveTab] = useState('current');
   const [images, setImages] = useState(mockImages);
   const [selectedImages, setSelectedImages] = useState<string[]>([]);
-  
+
   // Delete modal state
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [imageToDelete, setImageToDelete] = useState<Image | null>(null);
@@ -236,9 +356,7 @@ export function ComputeImagesPage() {
       label: 'Status',
       width: columnWidths.status,
       align: 'center',
-      render: (_, row) => (
-        <StatusIndicator status={row.status} layout="icon-only" />
-      ),
+      render: (_, row) => <StatusIndicator status={row.status} layout="icon-only" />,
     },
     {
       key: 'name',
@@ -247,13 +365,13 @@ export function ComputeImagesPage() {
       sortable: true,
       render: (_, row) => (
         <div className="flex flex-col gap-0.5">
-        <Link
-          to={`/compute/images/${row.id}`}
-          className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
-          onClick={(e) => e.stopPropagation()}
-        >
-          {row.name}
-        </Link>
+          <Link
+            to={`/compute/images/${row.id}`}
+            className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {row.name}
+          </Link>
           <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
             ID : {row.id}
           </span>
@@ -282,7 +400,7 @@ export function ComputeImagesPage() {
       label: 'Protected',
       flex: 1,
       sortable: true,
-      render: (_, row) => row.protected ? 'On' : 'Off',
+      render: (_, row) => (row.protected ? 'On' : 'Off'),
     },
     {
       key: 'createdAt',
@@ -324,12 +442,16 @@ export function ComputeImagesPage() {
             onClick: () => handleDeleteClick(row),
           },
         ];
-        
+
         return (
           <div onClick={(e) => e.stopPropagation()}>
             <ContextMenu items={menuItems} trigger="click">
               <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
-                <IconDotsCircleHorizontal size={16} stroke={1.5} className="text-[var(--action-icon-color)]" />
+                <IconDotsCircleHorizontal
+                  size={16}
+                  stroke={1.5}
+                  className="text-[var(--action-icon-color)]"
+                />
               </button>
             </ContextMenu>
           </div>
@@ -340,9 +462,7 @@ export function ComputeImagesPage() {
 
   // Filter and order columns based on preferences
   const visibleColumns = useMemo(() => {
-    const visibleColumnIds = columnConfig
-      .filter((col) => col.visible)
-      .map((col) => col.id);
+    const visibleColumnIds = columnConfig.filter((col) => col.visible).map((col) => col.id);
 
     const columnMap = new Map(columns.map((col) => [col.key, col]));
 
@@ -353,7 +473,7 @@ export function ComputeImagesPage() {
 
   return (
     <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
-      <Sidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(prev => !prev)} />
+      <Sidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen((prev) => !prev)} />
 
       <main
         className={`absolute top-0 bottom-0 right-0 flex flex-col bg-[var(--color-surface-default)] transition-[left] duration-200 ${
@@ -362,123 +482,121 @@ export function ComputeImagesPage() {
       >
         {/* Fixed Header Area */}
         <div className="shrink-0 bg-[var(--color-surface-default)]">
-        {/* Tab Bar */}
-        <TabBar
-          tabs={tabBarTabs}
-          activeTab={activeTabId}
-          onTabChange={selectTab}
-          onTabClose={closeTab}
-          onTabAdd={addNewTab}
-          onTabReorder={moveTab}
-          showAddButton={true}
-          showWindowControls={true}
-          onWindowClose={handleWindowClose}
-        />
+          {/* Tab Bar */}
+          <TabBar
+            tabs={tabBarTabs}
+            activeTab={activeTabId}
+            onTabChange={selectTab}
+            onTabClose={closeTab}
+            onTabAdd={addNewTab}
+            onTabReorder={moveTab}
+            showAddButton={true}
+            showWindowControls={true}
+            onWindowClose={handleWindowClose}
+          />
 
-        {/* Top Bar */}
-        <TopBar
-          showSidebarToggle={!sidebarOpen}
-          onSidebarToggle={() => setSidebarOpen(true)}
-          showNavigation={true}
-          onBack={() => window.history.back()}
-          onForward={() => window.history.forward()}
-          breadcrumb={
-            <Breadcrumb
-              items={[
-                { label: 'Proj-1', href: '/project' },
-                { label: 'Images' },
-              ]}
-            />
-          }
-          actions={
-            <TopBarAction
-              icon={<IconBell size={16} stroke={1.5} />}
-              aria-label="Notifications"
-              badge={true}
-            />
-          }
-        />
+          {/* Top Bar */}
+          <TopBar
+            showSidebarToggle={!sidebarOpen}
+            onSidebarToggle={() => setSidebarOpen(true)}
+            showNavigation={true}
+            onBack={() => window.history.back()}
+            onForward={() => window.history.forward()}
+            breadcrumb={
+              <Breadcrumb items={[{ label: 'Proj-1', href: '/project' }, { label: 'Images' }]} />
+            }
+            actions={
+              <TopBarAction
+                icon={<IconBell size={16} stroke={1.5} />}
+                aria-label="Notifications"
+                badge={true}
+              />
+            }
+          />
         </div>
 
         {/* Scrollable Content Area */}
         <div className="flex-1 overflow-auto overscroll-contain sidebar-scroll">
-        {/* Page Content */}
-        <div className="pt-4 px-8 pb-6 bg-[var(--color-surface-default)]">
-          <VStack gap={3}>
-            {/* Page Header */}
-            <div className="flex items-center justify-between h-8">
-              <h1 className="text-[length:var(--font-size-16)] font-semibold leading-6 text-[var(--color-text-default)]">
-                Images
-              </h1>
-              <Button onClick={() => navigate('/compute/images/create')}>
-                Create image
-              </Button>
-            </div>
+          {/* Page Content */}
+          <div className="pt-4 px-8 pb-6 bg-[var(--color-surface-default)]">
+            <VStack gap={3}>
+              {/* Page Header */}
+              <div className="flex items-center justify-between h-8">
+                <h1 className="text-[length:var(--font-size-16)] font-semibold leading-6 text-[var(--color-text-default)]">
+                  Images
+                </h1>
+                <Button onClick={() => navigate('/compute/images/create')}>Create image</Button>
+              </div>
 
-            {/* Category Tabs */}
-            <Tabs value={activeTab} onChange={setActiveTab} variant="underline" size="sm">
-              <TabList>
-                <Tab value="current">Current tenant</Tab>
-                <Tab value="shared">Shared</Tab>
-                <Tab value="public">Public</Tab>
-                <Tab value="all">All</Tab>
-              </TabList>
-            </Tabs>
+              {/* Category Tabs */}
+              <Tabs value={activeTab} onChange={setActiveTab} variant="underline" size="sm">
+                <TabList>
+                  <Tab value="current">Current tenant</Tab>
+                  <Tab value="shared">Shared</Tab>
+                  <Tab value="public">Public</Tab>
+                  <Tab value="all">All</Tab>
+                </TabList>
+              </Tabs>
 
-            {/* List Toolbar */}
-            <ListToolbar
-              primaryActions={
-                <ListToolbar.Actions>
-                  <FilterSearchInput
-                    filters={filterFields}
-                    appliedFilters={appliedFilters}
-                    onFiltersChange={setAppliedFilters}
-                    placeholder="Search image by attributes"
-                    className="w-[var(--search-input-width)]"
-                  />
-                  <Button variant="secondary" size="sm" icon={<IconDownload size={12} />} aria-label="Download" />
-                </ListToolbar.Actions>
-              }
-              bulkActions={
-                <ListToolbar.Actions>
-                  <Button
-                    variant="muted"
-                    size="sm"
-                    leftIcon={<IconTrash size={12} />}
-                    disabled={selectedImages.length === 0}
-                    onClick={handleBulkDelete}
-                  >
-                    Delete
-                  </Button>
-                </ListToolbar.Actions>
-              }
-            />
-
-            {/* Pagination */}
-            {filteredImages.length > 0 && (
-              <Pagination
-                currentPage={currentPage}
-                totalPages={totalPages}
-                onPageChange={setCurrentPage}
-                showSettings
-                onSettingsClick={() => setIsPreferencesOpen(true)}
-                totalItems={filteredImages.length}
-                selectedCount={selectedImages.length}
+              {/* List Toolbar */}
+              <ListToolbar
+                primaryActions={
+                  <ListToolbar.Actions>
+                    <FilterSearchInput
+                      filters={filterFields}
+                      appliedFilters={appliedFilters}
+                      onFiltersChange={setAppliedFilters}
+                      placeholder="Search image by attributes"
+                      className="w-[var(--search-input-width)]"
+                    />
+                    <Button
+                      variant="secondary"
+                      size="sm"
+                      icon={<IconDownload size={12} />}
+                      aria-label="Download"
+                    />
+                  </ListToolbar.Actions>
+                }
+                bulkActions={
+                  <ListToolbar.Actions>
+                    <Button
+                      variant="muted"
+                      size="sm"
+                      leftIcon={<IconTrash size={12} />}
+                      disabled={selectedImages.length === 0}
+                      onClick={handleBulkDelete}
+                    >
+                      Delete
+                    </Button>
+                  </ListToolbar.Actions>
+                }
               />
-            )}
 
-            {/* Image Table */}
-            <Table<Image>
-              columns={visibleColumns}
-              data={paginatedImages}
-              rowKey="id"
-              emptyMessage="No images found"
-              selectable
-              selectedKeys={selectedImages}
-              onSelectionChange={setSelectedImages}
-            />
-          </VStack>
-        </div>
+              {/* Pagination */}
+              {filteredImages.length > 0 && (
+                <Pagination
+                  currentPage={currentPage}
+                  totalPages={totalPages}
+                  onPageChange={setCurrentPage}
+                  showSettings
+                  onSettingsClick={() => setIsPreferencesOpen(true)}
+                  totalItems={filteredImages.length}
+                  selectedCount={selectedImages.length}
+                />
+              )}
+
+              {/* Image Table */}
+              <Table<Image>
+                columns={visibleColumns}
+                data={paginatedImages}
+                rowKey="id"
+                emptyMessage="No images found"
+                selectable
+                selectedKeys={selectedImages}
+                onSelectionChange={setSelectedImages}
+              />
+            </VStack>
+          </div>
         </div>
       </main>
 
@@ -511,20 +629,28 @@ export function ComputeImagesPage() {
       <CreateVolumeFromImageDrawer
         isOpen={createVolumeOpen}
         onClose={() => setCreateVolumeOpen(false)}
-        image={selectedImageForDrawer ? {
-          id: selectedImageForDrawer.id,
-          name: selectedImageForDrawer.name,
-          size: parseSizeToNumber(selectedImageForDrawer.size),
-        } : null}
+        image={
+          selectedImageForDrawer
+            ? {
+                id: selectedImageForDrawer.id,
+                name: selectedImageForDrawer.name,
+                size: parseSizeToNumber(selectedImageForDrawer.size),
+              }
+            : null
+        }
       />
 
       <EditImageDrawer
         isOpen={editImageOpen}
         onClose={() => setEditImageOpen(false)}
-        image={selectedImageForDrawer ? {
-          id: selectedImageForDrawer.id,
-          name: selectedImageForDrawer.name,
-        } : null}
+        image={
+          selectedImageForDrawer
+            ? {
+                id: selectedImageForDrawer.id,
+                name: selectedImageForDrawer.name,
+              }
+            : null
+        }
       />
     </div>
   );

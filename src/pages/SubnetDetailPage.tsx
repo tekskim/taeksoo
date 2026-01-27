@@ -27,9 +27,7 @@ import {
   IconEdit,
   IconTrash,
   IconBell,
-  IconCopy,
   IconExternalLink,
-  IconDotsCircleHorizontal,
   IconServer,
   IconRouter,
 } from '@tabler/icons-react';
@@ -103,8 +101,20 @@ const mockSubnetDetail: SubnetDetail = {
 const mockSubnets: Record<string, SubnetDetail> = {
   '29tg234000': mockSubnetDetail,
   'subnet-001': mockSubnetDetail,
-  'subnet-002': { ...mockSubnetDetail, id: 'subnet-002', name: 'subnet-2', cidr: '192.168.3.0/24', gatewayIp: '192.168.3.1' },
-  'subnet-003': { ...mockSubnetDetail, id: 'subnet-003', name: 'subnet-3', cidr: '192.168.4.0/24', gatewayIp: '192.168.4.1' },
+  'subnet-002': {
+    ...mockSubnetDetail,
+    id: 'subnet-002',
+    name: 'subnet-2',
+    cidr: '192.168.3.0/24',
+    gatewayIp: '192.168.3.1',
+  },
+  'subnet-003': {
+    ...mockSubnetDetail,
+    id: 'subnet-003',
+    name: 'subnet-3',
+    cidr: '192.168.4.0/24',
+    gatewayIp: '192.168.4.1',
+  },
 };
 
 const mockPorts: Port[] = Array.from({ length: 115 }, (_, i) => ({
@@ -131,9 +141,9 @@ const mockPorts: Port[] = Array.from({ length: 115 }, (_, i) => ({
    ---------------------------------------- */
 
 const portStatusMap: Record<PortStatus, 'active' | 'error' | 'shutoff' | 'building'> = {
-  'active': 'active',
-  'down': 'shutoff',
-  'build': 'building',
+  active: 'active',
+  down: 'shutoff',
+  build: 'building',
 };
 
 /* ----------------------------------------
@@ -142,8 +152,9 @@ const portStatusMap: Record<PortStatus, 'active' | 'error' | 'shutoff' | 'buildi
 
 export default function SubnetDetailPage() {
   const { id } = useParams<{ id: string }>();
-  const { tabs, activeTabId, closeTab, selectTab, addNewTab, updateActiveTabLabel, moveTab } = useTabs();
-  
+  const { tabs, activeTabId, closeTab, selectTab, addNewTab, updateActiveTabLabel, moveTab } =
+    useTabs();
+
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [activeDetailTab, setActiveDetailTab] = useState('details');
   const [copiedId, setCopiedId] = useState(false);
@@ -175,7 +186,7 @@ export default function SubnetDetailPage() {
   ];
 
   // Convert tabs to TabBar format
-  const tabBarTabs = tabs.map(tab => ({
+  const tabBarTabs = tabs.map((tab) => ({
     id: tab.id,
     label: tab.label,
     closable: tab.closable,
@@ -189,7 +200,7 @@ export default function SubnetDetailPage() {
 
   // Ports filtering and pagination
   const filteredPorts = mockPorts.filter(
-    port =>
+    (port) =>
       port.name.toLowerCase().includes(portSearchTerm.toLowerCase()) ||
       port.macAddress.toLowerCase().includes(portSearchTerm.toLowerCase()) ||
       port.fixedIp.toLowerCase().includes(portSearchTerm.toLowerCase()) ||
@@ -209,9 +220,7 @@ export default function SubnetDetailPage() {
       label: 'Status',
       width: columnWidths.status,
       align: 'center',
-      render: (_, row) => (
-        <StatusIndicator status={portStatusMap[row.status]} layout="icon-only" />
-      ),
+      render: (_, row) => <StatusIndicator status={portStatusMap[row.status]} layout="icon-only" />,
     },
     {
       key: 'name',
@@ -238,34 +247,43 @@ export default function SubnetDetailPage() {
       key: 'attachedTo',
       label: 'Attached to',
       flex: 1,
-      render: (_, row) => row.attachedTo ? (
-        <div className="flex items-center justify-between w-full">
-          <div className="flex flex-col gap-0.5">
-            <Link
-              to={row.attachedTo.type === 'router' ? `/routers/${row.attachedTo.id}` : `/instances/${row.attachedTo.id}`}
-              className="inline-flex items-center gap-1 font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
-              onClick={(e) => e.stopPropagation()}
-            >
-              {row.attachedTo.name}
-              <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
-            </Link>
-            <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
-              ID : {row.attachedTo.id}
-            </span>
-          </div>
-          <Tooltip content={row.attachedTo.type === 'router' ? 'Router' : 'Instance'} position="top" delay={0}>
-            <div className="flex items-center justify-center p-1 border border-[var(--color-border-default)] rounded bg-[var(--color-surface-default)] cursor-pointer hover:bg-[var(--color-surface-muted)] transition-colors">
-              {row.attachedTo.type === 'router' ? (
-                <IconRouter size={12} className="text-[var(--color-text-subtle)]" />
-              ) : (
-                <IconServer size={12} className="text-[var(--color-text-subtle)]" />
-              )}
+      render: (_, row) =>
+        row.attachedTo ? (
+          <div className="flex items-center justify-between w-full">
+            <div className="flex flex-col gap-0.5">
+              <Link
+                to={
+                  row.attachedTo.type === 'router'
+                    ? `/routers/${row.attachedTo.id}`
+                    : `/instances/${row.attachedTo.id}`
+                }
+                className="inline-flex items-center gap-1 font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
+                onClick={(e) => e.stopPropagation()}
+              >
+                {row.attachedTo.name}
+                <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
+              </Link>
+              <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
+                ID : {row.attachedTo.id}
+              </span>
             </div>
-          </Tooltip>
-        </div>
-      ) : (
-        <span className="text-[var(--color-text-muted)]">-</span>
-      ),
+            <Tooltip
+              content={row.attachedTo.type === 'router' ? 'Router' : 'Instance'}
+              position="top"
+              delay={0}
+            >
+              <div className="flex items-center justify-center p-1 border border-[var(--color-border-default)] rounded bg-[var(--color-surface-default)] cursor-pointer hover:bg-[var(--color-surface-muted)] transition-colors">
+                {row.attachedTo.type === 'router' ? (
+                  <IconRouter size={12} className="text-[var(--color-text-subtle)]" />
+                ) : (
+                  <IconServer size={12} className="text-[var(--color-text-subtle)]" />
+                )}
+              </div>
+            </Tooltip>
+          </div>
+        ) : (
+          <span className="text-[var(--color-text-muted)]">-</span>
+        ),
     },
     {
       key: 'ownedNetwork',
@@ -296,7 +314,10 @@ export default function SubnetDetailPage() {
         <span className="text-[var(--color-text-default)]">
           {row.securityGroups[0]}
           {row.securityGroups.length > 1 && (
-            <span className="text-[var(--color-text-subtle)]"> (+{row.securityGroups.length - 1})</span>
+            <span className="text-[var(--color-text-subtle)]">
+              {' '}
+              (+{row.securityGroups.length - 1})
+            </span>
           )}
         </span>
       ),
@@ -370,18 +391,10 @@ export default function SubnetDetailPage() {
                 <DetailHeader.Title>{subnet.name}</DetailHeader.Title>
 
                 <DetailHeader.Actions>
-                  <Button
-                    variant="secondary"
-                    size="sm"
-                    leftIcon={<IconEdit size={12} />}
-                  >
+                  <Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />}>
                     Edit
                   </Button>
-                  <Button
-                    variant="secondary"
-                    size="sm"
-                    leftIcon={<IconTrash size={12} />}
-                  >
+                  <Button variant="secondary" size="sm" leftIcon={<IconTrash size={12} />}>
                     Delete
                   </Button>
                 </DetailHeader.Actions>
@@ -394,11 +407,7 @@ export default function SubnetDetailPage() {
                     onCopy={handleCopyId}
                     className="flex-1"
                   />
-                  <DetailHeader.InfoCard
-                    label="CIDR"
-                    value={subnet.cidr}
-                    className="flex-1"
-                  />
+                  <DetailHeader.InfoCard label="CIDR" value={subnet.cidr} className="flex-1" />
                   <DetailHeader.InfoCard
                     label="Gateway IPP"
                     value={subnet.gatewayIp}
@@ -437,7 +446,10 @@ export default function SubnetDetailPage() {
                           <SectionCard.DataRow label="Subnet name" value={subnet.name} />
                           <SectionCard.DataRow label="CIDR" value={subnet.cidr} />
                           <SectionCard.DataRow label="Gateway IPP" value={subnet.gatewayIp} />
-                          <SectionCard.DataRow label="Allocation pools" value={subnet.allocationPools} />
+                          <SectionCard.DataRow
+                            label="Allocation pools"
+                            value={subnet.allocationPools}
+                          />
                           <SectionCard.DataRow label="DHCP" value={subnet.dhcp ? 'On' : 'Off'} />
                           <SectionCard.DataRow label="DNS" value={subnet.dns} />
                           <SectionCard.DataRow label="Host routes" value={subnet.hostRoutes} />
@@ -456,7 +468,10 @@ export default function SubnetDetailPage() {
                                 className="inline-flex items-center gap-1.5 font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
                               >
                                 {subnet.network.name}
-                                <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
+                                <IconExternalLink
+                                  size={12}
+                                  className="text-[var(--color-action-primary)]"
+                                />
                               </Link>
                             }
                           />
@@ -488,22 +503,16 @@ export default function SubnetDetailPage() {
                       </div>
 
                       {/* Pagination */}
-                        <Pagination
-                          currentPage={portCurrentPage}
-                          totalPages={totalPortPages}
-                          onPageChange={setPortCurrentPage}
+                      <Pagination
+                        currentPage={portCurrentPage}
+                        totalPages={totalPortPages}
+                        onPageChange={setPortCurrentPage}
                         totalItems={filteredPorts.length}
                         selectedCount={selectedPorts.length}
-                        showSettings
-                        onSettingsClick={() => setIsPreferencesOpen(true)}
-                        />
+                      />
 
                       {/* Table */}
-                      <Table
-                        columns={portColumns}
-                        data={paginatedPorts}
-                        rowKey="id"
-                      />
+                      <Table columns={portColumns} data={paginatedPorts} rowKey="id" />
                     </VStack>
                   </TabPanel>
                 </Tabs>
@@ -515,4 +524,3 @@ export default function SubnetDetailPage() {
     </div>
   );
 }
-

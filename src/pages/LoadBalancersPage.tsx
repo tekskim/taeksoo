@@ -2,7 +2,6 @@ import { useState, useMemo } from 'react';
 import {
   Button,
   FilterSearchInput,
-  SearchInput,
   Table,
   Pagination,
   VStack,
@@ -25,12 +24,7 @@ import { useTabs } from '@/contexts/TabContext';
 import { ViewPreferencesDrawer, type ColumnConfig } from '@/components/ViewPreferencesDrawer';
 import { AssociateFloatingIPToLBDrawer } from '@/components/AssociateFloatingIPToLBDrawer';
 import { EditLoadBalancerDrawer } from '@/components/EditLoadBalancerDrawer';
-import {
-  IconDotsCircleHorizontal,
-  IconTrash,
-  IconDownload,
-  IconBell,
-} from '@tabler/icons-react';
+import { IconDotsCircleHorizontal, IconTrash, IconDownload, IconBell } from '@tabler/icons-react';
 import { Link, useNavigate } from 'react-router-dom';
 
 /* ----------------------------------------
@@ -59,16 +53,146 @@ interface LoadBalancer {
    ---------------------------------------- */
 
 const mockLoadBalancers: LoadBalancer[] = [
-  { id: 'lb-001', name: 'web-lb-01', vipAddress: '192.168.10.13', ownedNetwork: 'net-02', ownedNetworkId: 'net-002', floatingIp: '192.168.10.13', floatingIpId: 'fip-001', listeners: 'listener-http-80', listenerId: '29tgj234', listenerCount: 2, createdAt: '2025-10-03', status: 'active' },
-  { id: 'lb-002', name: 'api-lb', vipAddress: '192.168.10.14', ownedNetwork: 'net-01', ownedNetworkId: 'net-001', floatingIp: '192.168.10.14', floatingIpId: 'fip-002', listeners: 'listener-https-443', listenerId: '38fk29dk', listenerCount: 0, createdAt: '2025-10-02', status: 'active' },
-  { id: 'lb-003', name: 'app-lb', vipAddress: '192.168.10.15', ownedNetwork: 'net-03', ownedNetworkId: 'net-003', floatingIp: '192.168.10.15', floatingIpId: 'fip-003', listeners: 'listener-tcp-8080', listenerId: '9dk38fj2', listenerCount: 1, createdAt: '2025-10-01', status: 'building' },
-  { id: 'lb-004', name: 'db-lb', vipAddress: '192.168.10.16', ownedNetwork: 'net-01', ownedNetworkId: 'net-001', floatingIp: '-', floatingIpId: '', listeners: 'listener-mysql-3306', listenerId: 'k29dk38f', listenerCount: 0, createdAt: '2025-09-28', status: 'active' },
-  { id: 'lb-005', name: 'cache-lb', vipAddress: '192.168.10.17', ownedNetwork: 'net-02', ownedNetworkId: 'net-002', floatingIp: '-', floatingIpId: '', listeners: 'listener-redis-6379', listenerId: 'fj29dk38', listenerCount: 0, createdAt: '2025-09-25', status: 'active' },
-  { id: 'lb-006', name: 'internal-lb', vipAddress: '192.168.10.18', ownedNetwork: 'net-04', ownedNetworkId: 'net-004', floatingIp: '-', floatingIpId: '', listeners: 'listener-grpc-9090', listenerId: '8fj29dk3', listenerCount: 3, createdAt: '2025-09-20', status: 'error' },
-  { id: 'lb-007', name: 'streaming-lb', vipAddress: '192.168.10.19', ownedNetwork: 'net-01', ownedNetworkId: 'net-001', floatingIp: '192.168.10.19', floatingIpId: 'fip-007', listeners: 'listener-rtmp-1935', listenerId: 'dk38fj29', listenerCount: 0, createdAt: '2025-09-15', status: 'active' },
-  { id: 'lb-008', name: 'mail-lb', vipAddress: '192.168.10.20', ownedNetwork: 'net-02', ownedNetworkId: 'net-002', floatingIp: '192.168.10.20', floatingIpId: 'fip-008', listeners: 'listener-smtp-25', listenerId: '29dk38fj', listenerCount: 0, createdAt: '2025-09-10', status: 'pending' },
-  { id: 'lb-009', name: 'vpn-lb', vipAddress: '192.168.10.21', ownedNetwork: 'net-03', ownedNetworkId: 'net-003', floatingIp: '192.168.10.21', floatingIpId: 'fip-009', listeners: 'listener-openvpn-1194', listenerId: '3fj29dk8', listenerCount: 0, createdAt: '2025-09-05', status: 'active' },
-  { id: 'lb-010', name: 'monitoring-lb', vipAddress: '192.168.10.22', ownedNetwork: 'net-01', ownedNetworkId: 'net-001', floatingIp: '-', floatingIpId: '', listeners: 'listener-http-3000', listenerId: 'j29dk38f', listenerCount: 4, createdAt: '2025-09-01', status: 'active' },
+  {
+    id: 'lb-001',
+    name: 'web-lb-01',
+    vipAddress: '192.168.10.13',
+    ownedNetwork: 'net-02',
+    ownedNetworkId: 'net-002',
+    floatingIp: '192.168.10.13',
+    floatingIpId: 'fip-001',
+    listeners: 'listener-http-80',
+    listenerId: '29tgj234',
+    listenerCount: 2,
+    createdAt: '2025-10-03',
+    status: 'active',
+  },
+  {
+    id: 'lb-002',
+    name: 'api-lb',
+    vipAddress: '192.168.10.14',
+    ownedNetwork: 'net-01',
+    ownedNetworkId: 'net-001',
+    floatingIp: '192.168.10.14',
+    floatingIpId: 'fip-002',
+    listeners: 'listener-https-443',
+    listenerId: '38fk29dk',
+    listenerCount: 0,
+    createdAt: '2025-10-02',
+    status: 'active',
+  },
+  {
+    id: 'lb-003',
+    name: 'app-lb',
+    vipAddress: '192.168.10.15',
+    ownedNetwork: 'net-03',
+    ownedNetworkId: 'net-003',
+    floatingIp: '192.168.10.15',
+    floatingIpId: 'fip-003',
+    listeners: 'listener-tcp-8080',
+    listenerId: '9dk38fj2',
+    listenerCount: 1,
+    createdAt: '2025-10-01',
+    status: 'building',
+  },
+  {
+    id: 'lb-004',
+    name: 'db-lb',
+    vipAddress: '192.168.10.16',
+    ownedNetwork: 'net-01',
+    ownedNetworkId: 'net-001',
+    floatingIp: '-',
+    floatingIpId: '',
+    listeners: 'listener-mysql-3306',
+    listenerId: 'k29dk38f',
+    listenerCount: 0,
+    createdAt: '2025-09-28',
+    status: 'active',
+  },
+  {
+    id: 'lb-005',
+    name: 'cache-lb',
+    vipAddress: '192.168.10.17',
+    ownedNetwork: 'net-02',
+    ownedNetworkId: 'net-002',
+    floatingIp: '-',
+    floatingIpId: '',
+    listeners: 'listener-redis-6379',
+    listenerId: 'fj29dk38',
+    listenerCount: 0,
+    createdAt: '2025-09-25',
+    status: 'active',
+  },
+  {
+    id: 'lb-006',
+    name: 'internal-lb',
+    vipAddress: '192.168.10.18',
+    ownedNetwork: 'net-04',
+    ownedNetworkId: 'net-004',
+    floatingIp: '-',
+    floatingIpId: '',
+    listeners: 'listener-grpc-9090',
+    listenerId: '8fj29dk3',
+    listenerCount: 3,
+    createdAt: '2025-09-20',
+    status: 'error',
+  },
+  {
+    id: 'lb-007',
+    name: 'streaming-lb',
+    vipAddress: '192.168.10.19',
+    ownedNetwork: 'net-01',
+    ownedNetworkId: 'net-001',
+    floatingIp: '192.168.10.19',
+    floatingIpId: 'fip-007',
+    listeners: 'listener-rtmp-1935',
+    listenerId: 'dk38fj29',
+    listenerCount: 0,
+    createdAt: '2025-09-15',
+    status: 'active',
+  },
+  {
+    id: 'lb-008',
+    name: 'mail-lb',
+    vipAddress: '192.168.10.20',
+    ownedNetwork: 'net-02',
+    ownedNetworkId: 'net-002',
+    floatingIp: '192.168.10.20',
+    floatingIpId: 'fip-008',
+    listeners: 'listener-smtp-25',
+    listenerId: '29dk38fj',
+    listenerCount: 0,
+    createdAt: '2025-09-10',
+    status: 'pending',
+  },
+  {
+    id: 'lb-009',
+    name: 'vpn-lb',
+    vipAddress: '192.168.10.21',
+    ownedNetwork: 'net-03',
+    ownedNetworkId: 'net-003',
+    floatingIp: '192.168.10.21',
+    floatingIpId: 'fip-009',
+    listeners: 'listener-openvpn-1194',
+    listenerId: '3fj29dk8',
+    listenerCount: 0,
+    createdAt: '2025-09-05',
+    status: 'active',
+  },
+  {
+    id: 'lb-010',
+    name: 'monitoring-lb',
+    vipAddress: '192.168.10.22',
+    ownedNetwork: 'net-01',
+    ownedNetworkId: 'net-001',
+    floatingIp: '-',
+    floatingIpId: '',
+    listeners: 'listener-http-3000',
+    listenerId: 'j29dk38f',
+    listenerCount: 4,
+    createdAt: '2025-09-01',
+    status: 'active',
+  },
 ];
 
 /* ----------------------------------------
@@ -76,10 +200,10 @@ const mockLoadBalancers: LoadBalancer[] = [
    ---------------------------------------- */
 
 const lbStatusMap: Record<LoadBalancerStatus, 'active' | 'error' | 'building' | 'pending'> = {
-  'active': 'active',
-  'error': 'error',
-  'building': 'building',
-  'pending': 'pending',
+  active: 'active',
+  error: 'error',
+  building: 'building',
+  pending: 'pending',
 };
 
 /* ----------------------------------------
@@ -91,12 +215,17 @@ const filterFields: FilterField[] = [
   { id: 'name', label: 'Name', type: 'text' },
   { id: 'vipAddress', label: 'VIP Address', type: 'text' },
   { id: 'ownedNetwork', label: 'Network', type: 'text' },
-  { id: 'status', label: 'Status', type: 'select', options: [
-    { value: 'active', label: 'Active' },
-    { value: 'error', label: 'Error' },
-    { value: 'building', label: 'Building' },
-    { value: 'pending', label: 'Pending' },
-  ]},
+  {
+    id: 'status',
+    label: 'Status',
+    type: 'select',
+    options: [
+      { value: 'active', label: 'Active' },
+      { value: 'error', label: 'Error' },
+      { value: 'building', label: 'Building' },
+      { value: 'pending', label: 'Pending' },
+    ],
+  },
 ];
 
 export function LoadBalancersPage() {
@@ -107,7 +236,7 @@ export function LoadBalancersPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const [loadBalancers] = useState(mockLoadBalancers);
   const [searchQuery, setSearchQuery] = useState('');
-  
+
   // Delete modal state
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [lbToDelete, setLbToDelete] = useState<LoadBalancer | null>(null);
@@ -157,17 +286,39 @@ export function LoadBalancersPage() {
 
   // Context menu items
   const getContextMenuItems = (lb: LoadBalancer): ContextMenuItem[] => [
-    { id: 'associate-floating-ip', label: 'Associate floating IP', onClick: () => handleAssociateFloatingIP(lb), disabled: !!lb.floatingIp },
-    { id: 'disassociate-floating-ip', label: 'Disassociate floating IP', onClick: () => console.log('Disassociate floating IP:', lb.id), disabled: !lb.floatingIp },
-    { id: 'create-listener', label: 'Create listener', onClick: () => console.log('Create listener:', lb.id) },
+    {
+      id: 'associate-floating-ip',
+      label: 'Associate floating IP',
+      onClick: () => handleAssociateFloatingIP(lb),
+      disabled: !!lb.floatingIp,
+    },
+    {
+      id: 'disassociate-floating-ip',
+      label: 'Disassociate floating IP',
+      onClick: () => console.log('Disassociate floating IP:', lb.id),
+      disabled: !lb.floatingIp,
+    },
+    {
+      id: 'create-listener',
+      label: 'Create listener',
+      onClick: () => console.log('Create listener:', lb.id),
+    },
     { id: 'edit', label: 'Edit', onClick: () => handleEditLB(lb) },
-    { id: 'delete', label: 'Delete', status: 'danger', onClick: () => { setLbToDelete(lb); setDeleteModalOpen(true); } },
+    {
+      id: 'delete',
+      label: 'Delete',
+      status: 'danger',
+      onClick: () => {
+        setLbToDelete(lb);
+        setDeleteModalOpen(true);
+      },
+    },
   ];
 
   // Filter load balancers based on search
   const filteredLBs = useMemo(() => {
     if (appliedFilters.length === 0) return loadBalancers;
-    
+
     return loadBalancers.filter((lb) => {
       return appliedFilters.every((filter) => {
         const value = lb[filter.fieldId as keyof LoadBalancer];
@@ -194,9 +345,7 @@ export function LoadBalancersPage() {
       label: 'Status',
       width: columnWidths.status,
       align: 'center',
-      render: (_, row) => (
-        <StatusIndicator status={lbStatusMap[row.status]} layout="icon-only" />
-      ),
+      render: (_, row) => <StatusIndicator status={lbStatusMap[row.status]} layout="icon-only" />,
     },
     {
       key: 'name',
@@ -206,7 +355,7 @@ export function LoadBalancersPage() {
       render: (_, row) => (
         <div className="flex flex-col gap-0.5">
           <Link
-          to={`/compute/load-balancers/${row.id}`}
+            to={`/compute/load-balancers/${row.id}`}
             className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
             onClick={(e) => e.stopPropagation()}
           >
@@ -231,7 +380,7 @@ export function LoadBalancersPage() {
       render: (_, row) => (
         <div className="flex flex-col gap-0.5">
           <Link
-          to={`/compute/networks/${row.ownedNetworkId}`}
+            to={`/compute/networks/${row.ownedNetworkId}`}
             className="inline-flex items-center gap-1.5 font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
             onClick={(e) => e.stopPropagation()}
           >
@@ -247,11 +396,11 @@ export function LoadBalancersPage() {
       key: 'floatingIp',
       label: 'Floating IP',
       flex: 1,
-      render: (_, row) => (
+      render: (_, row) =>
         row.floatingIpId ? (
           <div className="flex flex-col gap-0.5">
             <Link
-          to={`/compute/floating-ips/${row.floatingIpId}`}
+              to={`/compute/floating-ips/${row.floatingIpId}`}
               className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
               onClick={(e) => e.stopPropagation()}
             >
@@ -261,8 +410,9 @@ export function LoadBalancersPage() {
               ID : {row.floatingIpId}
             </span>
           </div>
-        ) : '-'
-      ),
+        ) : (
+          '-'
+        ),
     },
     {
       key: 'listeners',
@@ -296,7 +446,11 @@ export function LoadBalancersPage() {
         <div onClick={(e) => e.stopPropagation()}>
           <ContextMenu items={getContextMenuItems(row)} trigger="click">
             <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
-              <IconDotsCircleHorizontal size={16} stroke={1.5} className="text-[var(--action-icon-color)]" />
+              <IconDotsCircleHorizontal
+                size={16}
+                stroke={1.5}
+                className="text-[var(--action-icon-color)]"
+              />
             </button>
           </ContextMenu>
         </div>
@@ -306,9 +460,7 @@ export function LoadBalancersPage() {
 
   // Filter and order columns based on preferences
   const visibleColumns = useMemo(() => {
-    const visibleColumnIds = columnConfig
-      .filter((col) => col.visible)
-      .map((col) => col.id);
+    const visibleColumnIds = columnConfig.filter((col) => col.visible).map((col) => col.id);
 
     const columnMap = new Map(columns.map((col) => [col.key, col]));
 
@@ -327,7 +479,7 @@ export function LoadBalancersPage() {
 
   return (
     <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
-      <Sidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(prev => !prev)} />
+      <Sidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen((prev) => !prev)} />
 
       <main
         className={`absolute top-0 bottom-0 right-0 flex flex-col bg-[var(--color-surface-default)] transition-[left] duration-200 ${
@@ -336,110 +488,117 @@ export function LoadBalancersPage() {
       >
         {/* Fixed Header Area */}
         <div className="shrink-0 bg-[var(--color-surface-default)]">
-        {/* Tab Bar */}
-        <TabBar
-          tabs={tabBarTabs}
-          activeTab={activeTabId}
-          onTabChange={selectTab}
-          onTabClose={closeTab}
-          onTabAdd={addNewTab}
+          {/* Tab Bar */}
+          <TabBar
+            tabs={tabBarTabs}
+            activeTab={activeTabId}
+            onTabChange={selectTab}
+            onTabClose={closeTab}
+            onTabAdd={addNewTab}
             onTabReorder={moveTab}
-          showAddButton={true}
-          showWindowControls={true}
-        />
+            showAddButton={true}
+            showWindowControls={true}
+          />
 
-        {/* Top Bar */}
-        <TopBar
-          showSidebarToggle={!sidebarOpen}
-          onSidebarToggle={() => setSidebarOpen(true)}
-          showNavigation={true}
-          onBack={() => window.history.back()}
-          onForward={() => window.history.forward()}
-          breadcrumb={
-            <Breadcrumb
-              items={[
-                { label: 'Proj-1', href: '/project' },
-                { label: 'Load balancers' },
-              ]}
-            />
-          }
-          actions={
-            <TopBarAction
-              icon={<IconBell size={16} stroke={1} />}
-              aria-label="Notifications"
-              badge={true}
-            />
-          }
-        />
+          {/* Top Bar */}
+          <TopBar
+            showSidebarToggle={!sidebarOpen}
+            onSidebarToggle={() => setSidebarOpen(true)}
+            showNavigation={true}
+            onBack={() => window.history.back()}
+            onForward={() => window.history.forward()}
+            breadcrumb={
+              <Breadcrumb
+                items={[{ label: 'Proj-1', href: '/project' }, { label: 'Load balancers' }]}
+              />
+            }
+            actions={
+              <TopBarAction
+                icon={<IconBell size={16} stroke={1} />}
+                aria-label="Notifications"
+                badge={true}
+              />
+            }
+          />
         </div>
 
         {/* Scrollable Content Area */}
         <div className="flex-1 overflow-auto overscroll-contain sidebar-scroll">
-        {/* Main Content */}
-        <div className="pt-4 px-8 pb-6 bg-[var(--color-surface-default)]">
-          <VStack gap={3}>
-            {/* Page Header */}
-            <div className="flex justify-between items-center h-8 w-full">
-              <h1 className="text-[length:var(--font-size-16)] font-semibold leading-6 text-[var(--color-text-default)]">
-                Load balancers
-              </h1>
-              <Button variant="primary" size="md" onClick={() => navigate('/compute/load-balancers/create')}>
-                Create Load Balancer
-              </Button>
-            </div>
+          {/* Main Content */}
+          <div className="pt-4 px-8 pb-6 bg-[var(--color-surface-default)]">
+            <VStack gap={3}>
+              {/* Page Header */}
+              <div className="flex justify-between items-center h-8 w-full">
+                <h1 className="text-[length:var(--font-size-16)] font-semibold leading-6 text-[var(--color-text-default)]">
+                  Load balancers
+                </h1>
+                <Button
+                  variant="primary"
+                  size="md"
+                  onClick={() => navigate('/compute/load-balancers/create')}
+                >
+                  Create Load Balancer
+                </Button>
+              </div>
 
-            {/* Toolbar */}
-            <ListToolbar
-              primaryActions={
-                <ListToolbar.Actions>
-                  <FilterSearchInput
-                    filters={filterFields}
-                    appliedFilters={appliedFilters}
-                    onFiltersChange={setAppliedFilters}
-                    placeholder="Search load balancer by attributes"
-                    size="sm"
-                    className="w-[var(--search-input-width)]"
-                    hideAppliedFilters
-                  />
-                  <Button variant="secondary" size="sm" iconOnly icon={<IconDownload size={12} />} aria-label="Download" />
-                </ListToolbar.Actions>
-              }
-              bulkActions={
-                <ListToolbar.Actions>
-                  <Button
-                    variant="muted"
-                    size="sm"
-                    leftIcon={<IconTrash size={12} />}
-                    disabled={selectedLBs.length === 0}
-                  >
-                    Delete
-                  </Button>
-                </ListToolbar.Actions>
-              }
-            />
+              {/* Toolbar */}
+              <ListToolbar
+                primaryActions={
+                  <ListToolbar.Actions>
+                    <FilterSearchInput
+                      filters={filterFields}
+                      appliedFilters={appliedFilters}
+                      onFiltersChange={setAppliedFilters}
+                      placeholder="Search load balancer by attributes"
+                      size="sm"
+                      className="w-[var(--search-input-width)]"
+                      hideAppliedFilters
+                    />
+                    <Button
+                      variant="secondary"
+                      size="sm"
+                      iconOnly
+                      icon={<IconDownload size={12} />}
+                      aria-label="Download"
+                    />
+                  </ListToolbar.Actions>
+                }
+                bulkActions={
+                  <ListToolbar.Actions>
+                    <Button
+                      variant="muted"
+                      size="sm"
+                      leftIcon={<IconTrash size={12} />}
+                      disabled={selectedLBs.length === 0}
+                    >
+                      Delete
+                    </Button>
+                  </ListToolbar.Actions>
+                }
+              />
 
-            {/* Pagination */}
-            <Pagination
-              currentPage={currentPage}
-              totalPages={totalPages}
-              totalItems={filteredLBs.length}
-              selectedCount={selectedLBs.length}
-              onPageChange={setCurrentPage}
-              showSettings
-              onSettingsClick={() => setIsPreferencesOpen(true)}
-            />
+              {/* Pagination */}
+              <Pagination
+                currentPage={currentPage}
+                totalPages={totalPages}
+                totalItems={filteredLBs.length}
+                selectedCount={selectedLBs.length}
+                onPageChange={setCurrentPage}
+                showSettings
+                onSettingsClick={() => setIsPreferencesOpen(true)}
+              />
 
-            {/* Table */}
-            <Table
-              columns={visibleColumns}
-              data={paginatedLBs}
-              rowKey="id"
-              selectable
-              selectedKeys={selectedLBs}
-              onSelectionChange={setSelectedLBs}
-            />
-          </VStack>
-        </div>
+              {/* Table */}
+              <Table
+                columns={visibleColumns}
+                data={paginatedLBs}
+                rowKey="id"
+                selectable
+                selectedKeys={selectedLBs}
+                onSelectionChange={setSelectedLBs}
+              />
+            </VStack>
+          </div>
         </div>
       </main>
 

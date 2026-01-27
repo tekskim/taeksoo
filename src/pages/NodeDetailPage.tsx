@@ -310,11 +310,13 @@ function ConditionCard({ title, status, tooltip }: ConditionCardProps) {
     <div className="flex-1 border border-[var(--color-border-default)] rounded-lg px-4 py-3">
       <HStack justify="between" align="center">
         <HStack gap={2} align="center">
-          <div className={`w-5 h-5 rounded-full flex items-center justify-center ${
-            status === 'Ready' 
-              ? 'bg-[var(--color-state-success)]' 
-              : 'bg-[var(--color-state-danger)]'
-          }`}>
+          <div
+            className={`w-5 h-5 rounded-full flex items-center justify-center ${
+              status === 'Ready'
+                ? 'bg-[var(--color-state-success)]'
+                : 'bg-[var(--color-state-danger)]'
+            }`}
+          >
             <IconCheck size={12} className="text-white" stroke={2} />
           </div>
           <VStack gap={0.5}>
@@ -349,7 +351,7 @@ interface ResourceUsageProps {
 
 function ResourceUsage({ label, used, total, unit = '' }: ResourceUsageProps) {
   const percentage = Math.round((used / total) * 100);
-  
+
   return (
     <div className="flex-1 border border-[var(--color-border-default)] rounded-lg px-4 py-3">
       <HStack justify="between" align="center" className="mb-1">
@@ -499,7 +501,7 @@ function DetailsTab({ node }: DetailsTabProps) {
     {
       label: 'Machine ID',
       value: node.machineId,
-      tooltip: 'A system-level identifier that uniquely represents the node\'s machine.',
+      tooltip: "A system-level identifier that uniquely represents the node's machine.",
     },
     {
       label: 'Operating System',
@@ -678,7 +680,11 @@ function RecentEventsTab({ events }: RecentEventsTabProps) {
       align: 'center',
       render: () => (
         <button className="p-1 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-          <IconDotsCircleHorizontal size={16} className="text-[var(--color-text-subtle)]" stroke={1.5} />
+          <IconDotsCircleHorizontal
+            size={16}
+            className="text-[var(--color-text-subtle)]"
+            stroke={1.5}
+          />
         </button>
       ),
     },
@@ -742,7 +748,8 @@ export function NodeDetailPage() {
   const node = mockNodeData[nodeName || ''] || mockNodeData['node-control-plane-01'];
 
   // Tab management
-  const { tabs, activeTabId, closeTab, selectTab, updateActiveTabLabel, moveTab, addNewTab } = useTabs();
+  const { tabs, activeTabId, closeTab, selectTab, updateActiveTabLabel, moveTab, addNewTab } =
+    useTabs();
 
   // Update tab label
   useEffect(() => {
@@ -864,31 +871,27 @@ export function NodeDetailPage() {
                     value={node.status === 'Ready' ? 'Active' : 'Not Ready'}
                     status={node.status === 'Ready' ? 'active' : 'error'}
                   />
-                  <DetailHeader.InfoCard
-                    label="Internal IP"
-                    value={node.internalIp}
-                    copyable
-                  />
+                  <DetailHeader.InfoCard label="Internal IP" value={node.internalIp} copyable />
                   <DetailHeader.InfoCard
                     label="Kubernetes Version"
                     value={node.kubernetesVersion}
                   />
-                  <DetailHeader.InfoCard
-                    label="OS"
-                    value={node.os}
-                  />
-                  <DetailHeader.InfoCard
-                    label="Container Runtime"
-                    value={node.containerRuntime}
-                  />
+                  <DetailHeader.InfoCard label="OS" value={node.os} />
+                  <DetailHeader.InfoCard label="Container Runtime" value={node.containerRuntime} />
                   <DetailHeader.InfoCard
                     label={`Labels (${Object.keys(node.labels).length})`}
                     value={
                       Object.keys(node.labels).length > 0 ? (
                         <div className="flex flex-wrap gap-1 min-w-0 w-full">
-                          {Object.entries(node.labels).slice(0, 1).map(([key, val]) => (
-                            <Chip key={key} value={val ? `${key}: ${val}` : key} maxWidth="100%" />
-                          ))}
+                          {Object.entries(node.labels)
+                            .slice(0, 1)
+                            .map(([key, val]) => (
+                              <Chip
+                                key={key}
+                                value={val ? `${key}: ${val}` : key}
+                                maxWidth="100%"
+                              />
+                            ))}
                         </div>
                       ) : (
                         '-'
@@ -900,19 +903,22 @@ export function NodeDetailPage() {
                     value={
                       Object.keys(node.annotations).length > 0 ? (
                         <div className="flex flex-wrap gap-1 min-w-0 w-full">
-                          {Object.entries(node.annotations).slice(0, 1).map(([key, val]) => (
-                            <Chip key={key} value={val ? `${key}: ${val}` : key} maxWidth="100%" />
-                          ))}
+                          {Object.entries(node.annotations)
+                            .slice(0, 1)
+                            .map(([key, val]) => (
+                              <Chip
+                                key={key}
+                                value={val ? `${key}: ${val}` : key}
+                                maxWidth="100%"
+                              />
+                            ))}
                         </div>
                       ) : (
                         '-'
                       )
                     }
                   />
-                  <DetailHeader.InfoCard
-                    label="Created At"
-                    value={node.createdAt}
-                  />
+                  <DetailHeader.InfoCard label="Created At" value={node.createdAt} />
                 </DetailHeader.InfoGrid>
               </DetailHeader>
 
@@ -943,7 +949,12 @@ export function NodeDetailPage() {
               {/* Resource Usage */}
               <HStack gap={3} className="w-full">
                 <ResourceUsage label="CPU" used={node.cpu.used} total={node.cpu.total} />
-                <ResourceUsage label="Memory" used={node.memory.used} total={node.memory.total} unit={node.memory.unit} />
+                <ResourceUsage
+                  label="Memory"
+                  used={node.memory.used}
+                  total={node.memory.total}
+                  unit={node.memory.unit}
+                />
                 <ResourceUsage label="Pods" used={node.pods.used} total={node.pods.total} />
               </HStack>
 

@@ -18,7 +18,6 @@ import {
   Pagination,
   StatusIndicator,
   ContextMenu,
-  Checkbox,
   type TableColumn,
   type ContextMenuItem,
   columnWidths,
@@ -81,21 +80,122 @@ const mockServerGroupsMap: Record<string, ServerGroupDetail> = {
 };
 
 const defaultServerGroupDetail: ServerGroupDetail = {
-  id: 'unknown', name: 'Unknown Server group', policy: '-',
+  id: 'unknown',
+  name: 'Unknown Server group',
+  policy: '-',
 };
 
 const mockServerGroupInstances: ServerGroupInstance[] = [
-  { id: '29tgj234', name: 'web-server-01', status: 'active', locked: true, image: 'Ubuntu2404', fixedIP: '10.62.0.30', az: 'zone-o', createdAt: '2025-09-30' },
-  { id: '29tgj235', name: 'web-server-01', status: 'active', locked: true, image: 'Ubuntu2404', fixedIP: '10.62.0.30', az: 'zone-o', createdAt: '2025-09-30' },
-  { id: '29tgj236', name: 'web-server-01', status: 'active', locked: true, image: 'Ubuntu2404', fixedIP: '10.62.0.30', az: 'zone-o', createdAt: '2025-09-30' },
-  { id: '29tgj237', name: 'web-server-01', status: 'error', locked: false, image: 'Ubuntu2404', fixedIP: '10.62.0.30', az: 'zone-o', createdAt: '2025-09-30' },
-  { id: '29tgj238', name: 'web-server-01', status: 'active', locked: true, image: 'Ubuntu2404', fixedIP: '10.62.0.30', az: 'zone-o', createdAt: '2025-09-30' },
-  { id: '29tgj239', name: 'web-server-01', status: 'shutoff', locked: false, image: 'Ubuntu2404', fixedIP: '10.62.0.30', az: 'zone-o', createdAt: '2025-09-30' },
-  { id: '29tgj240', name: 'web-server-01', status: 'active', locked: true, image: 'Ubuntu2404', fixedIP: '10.62.0.30', az: 'zone-o', createdAt: '2025-09-30' },
-  { id: '29tgj241', name: 'web-server-01', status: 'active', locked: false, image: 'Ubuntu2404', fixedIP: '10.62.0.30', az: 'zone-o', createdAt: '2025-09-30' },
-  { id: '29tgj242', name: 'web-server-01', status: 'building', locked: false, image: 'Ubuntu2404', fixedIP: '10.62.0.30', az: 'zone-o', createdAt: '2025-09-30' },
-  { id: '29tgj243', name: 'web-server-01', status: 'active', locked: true, image: 'Ubuntu2404', fixedIP: '10.62.0.30', az: 'zone-o', createdAt: '2025-09-30' },
-  { id: '29tgj244', name: 'web-server-01', status: 'paused', locked: false, image: 'Ubuntu2404', fixedIP: '10.62.0.30', az: 'zone-o', createdAt: '2025-09-30' },
+  {
+    id: '29tgj234',
+    name: 'web-server-01',
+    status: 'active',
+    locked: true,
+    image: 'Ubuntu2404',
+    fixedIP: '10.62.0.30',
+    az: 'zone-o',
+    createdAt: '2025-09-30',
+  },
+  {
+    id: '29tgj235',
+    name: 'web-server-01',
+    status: 'active',
+    locked: true,
+    image: 'Ubuntu2404',
+    fixedIP: '10.62.0.30',
+    az: 'zone-o',
+    createdAt: '2025-09-30',
+  },
+  {
+    id: '29tgj236',
+    name: 'web-server-01',
+    status: 'active',
+    locked: true,
+    image: 'Ubuntu2404',
+    fixedIP: '10.62.0.30',
+    az: 'zone-o',
+    createdAt: '2025-09-30',
+  },
+  {
+    id: '29tgj237',
+    name: 'web-server-01',
+    status: 'error',
+    locked: false,
+    image: 'Ubuntu2404',
+    fixedIP: '10.62.0.30',
+    az: 'zone-o',
+    createdAt: '2025-09-30',
+  },
+  {
+    id: '29tgj238',
+    name: 'web-server-01',
+    status: 'active',
+    locked: true,
+    image: 'Ubuntu2404',
+    fixedIP: '10.62.0.30',
+    az: 'zone-o',
+    createdAt: '2025-09-30',
+  },
+  {
+    id: '29tgj239',
+    name: 'web-server-01',
+    status: 'shutoff',
+    locked: false,
+    image: 'Ubuntu2404',
+    fixedIP: '10.62.0.30',
+    az: 'zone-o',
+    createdAt: '2025-09-30',
+  },
+  {
+    id: '29tgj240',
+    name: 'web-server-01',
+    status: 'active',
+    locked: true,
+    image: 'Ubuntu2404',
+    fixedIP: '10.62.0.30',
+    az: 'zone-o',
+    createdAt: '2025-09-30',
+  },
+  {
+    id: '29tgj241',
+    name: 'web-server-01',
+    status: 'active',
+    locked: false,
+    image: 'Ubuntu2404',
+    fixedIP: '10.62.0.30',
+    az: 'zone-o',
+    createdAt: '2025-09-30',
+  },
+  {
+    id: '29tgj242',
+    name: 'web-server-01',
+    status: 'building',
+    locked: false,
+    image: 'Ubuntu2404',
+    fixedIP: '10.62.0.30',
+    az: 'zone-o',
+    createdAt: '2025-09-30',
+  },
+  {
+    id: '29tgj243',
+    name: 'web-server-01',
+    status: 'active',
+    locked: true,
+    image: 'Ubuntu2404',
+    fixedIP: '10.62.0.30',
+    az: 'zone-o',
+    createdAt: '2025-09-30',
+  },
+  {
+    id: '29tgj244',
+    name: 'web-server-01',
+    status: 'paused',
+    locked: false,
+    image: 'Ubuntu2404',
+    fixedIP: '10.62.0.30',
+    az: 'zone-o',
+    createdAt: '2025-09-30',
+  },
 ];
 
 /* ----------------------------------------
@@ -135,21 +235,24 @@ export function ServerGroupDetailPage() {
   const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [activeDetailTab, setActiveDetailTab] = useState('instances');
-  
+
   // Instance search and pagination state
   const [instanceSearchQuery, setInstanceSearchQuery] = useState('');
   const [instanceCurrentPage, setInstanceCurrentPage] = useState(1);
   const [selectedInstances, setSelectedInstances] = useState<string[]>([]);
   const instancesPerPage = 10;
-  
+
   // Preferences state
   const [isPreferencesOpen, setIsPreferencesOpen] = useState(false);
 
   // Get server group data based on URL ID
-  const serverGroup = id ? (mockServerGroupsMap[id] || defaultServerGroupDetail) : defaultServerGroupDetail;
+  const serverGroup = id
+    ? mockServerGroupsMap[id] || defaultServerGroupDetail
+    : defaultServerGroupDetail;
 
   // Global tab management
-  const { tabs, activeTabId, closeTab, selectTab, addNewTab, updateActiveTabLabel, moveTab } = useTabs();
+  const { tabs, activeTabId, closeTab, selectTab, addNewTab, updateActiveTabLabel, moveTab } =
+    useTabs();
 
   // Update tab label to server group name
   useEffect(() => {
@@ -199,7 +302,12 @@ export function ServerGroupDetailPage() {
     { id: 'stop', label: 'Stop', onClick: () => console.log('Stop', instance.id) },
     { id: 'reboot', label: 'Reboot', onClick: () => console.log('Reboot', instance.id) },
     { id: 'divider1', type: 'divider' },
-    { id: 'delete', label: 'Delete', status: 'danger', onClick: () => console.log('Delete', instance.id) },
+    {
+      id: 'delete',
+      label: 'Delete',
+      status: 'danger',
+      onClick: () => console.log('Delete', instance.id),
+    },
   ];
 
   // Instance table columns
@@ -209,25 +317,28 @@ export function ServerGroupDetailPage() {
       label: 'Status',
       width: columnWidths.status,
       align: 'center',
-      render: (_, row) => (
-        <StatusIndicator status={row.status} layout="icon-only" />
-      ),
+      render: (_, row) => <StatusIndicator status={row.status} layout="icon-only" />,
     },
     {
       key: 'name',
       label: 'Name',
       flex: 1,
       render: (_, row) => (
-        <div className="flex flex-col gap-0.5">
-          <Link
-            to={`/compute/instances/${row.id}`}
-            className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
-            onClick={(e) => e.stopPropagation()}
-          >
-            {row.name}
-            <IconExternalLink size={12} stroke={1.5} />
-          </Link>
-          <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
+        <div className="flex flex-col gap-0.5 min-w-0">
+          <div className="flex items-center gap-1">
+            <Link
+              to={`/compute/instances/${row.id}`}
+              className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2 truncate"
+              onClick={(e) => e.stopPropagation()}
+            >
+              {row.name}
+            </Link>
+            <IconExternalLink
+              size={12}
+              className="flex-shrink-0 text-[var(--color-action-primary)]"
+            />
+          </div>
+          <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] truncate">
             ID : {row.id}
           </span>
         </div>
@@ -238,13 +349,12 @@ export function ServerGroupDetailPage() {
       label: 'Locked',
       width: columnWidths.locked,
       align: 'center',
-      render: (_, row) => (
+      render: (_, row) =>
         row.locked ? (
           <IconLock size={16} stroke={1.5} className="text-[var(--color-text-default)]" />
         ) : (
           <IconLockOpen size={16} stroke={1.5} className="text-[var(--color-text-subtle)]" />
-        )
-      ),
+        ),
     },
     {
       key: 'image',
@@ -279,7 +389,7 @@ export function ServerGroupDetailPage() {
       align: 'center',
       render: (_, row) => (
         <HStack gap={1} className="justify-center">
-          <button 
+          <button
             className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group"
             onClick={(e) => {
               e.stopPropagation();
@@ -289,17 +399,21 @@ export function ServerGroupDetailPage() {
           >
             <IconTerminal2 size={16} stroke={1.5} className="text-[var(--action-icon-color)]" />
           </button>
-        <ContextMenu
-          items={getInstanceContextMenuItems(row)}
-          trigger={
-            <button
+          <ContextMenu
+            items={getInstanceContextMenuItems(row)}
+            trigger={
+              <button
                 className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group"
-              onClick={(e) => e.stopPropagation()}
-            >
-              <IconDotsCircleHorizontal size={16} stroke={1.5} className="text-[var(--action-icon-color)]" />
-            </button>
-          }
-        />
+                onClick={(e) => e.stopPropagation()}
+              >
+                <IconDotsCircleHorizontal
+                  size={16}
+                  stroke={1.5}
+                  className="text-[var(--action-icon-color)]"
+                />
+              </button>
+            }
+          />
         </HStack>
       ),
     },
@@ -374,17 +488,18 @@ export function ServerGroupDetailPage() {
                 </DetailHeader.Actions>
                 <DetailHeader.InfoGrid>
                   <DetailHeader.InfoCard label="Policy" value={serverGroup.policy} />
-                  <DetailHeader.InfoCard 
-                    label="ID" 
-                    value={serverGroup.id} 
-                    copyable
-                  />
+                  <DetailHeader.InfoCard label="ID" value={serverGroup.id} copyable />
                 </DetailHeader.InfoGrid>
               </DetailHeader>
 
               {/* Tabs Content */}
               <div className="w-full">
-                <Tabs value={activeDetailTab} onChange={setActiveDetailTab} variant="underline" size="sm">
+                <Tabs
+                  value={activeDetailTab}
+                  onChange={setActiveDetailTab}
+                  variant="underline"
+                  size="sm"
+                >
                   <TabList>
                     <Tab value="instances">Instances</Tab>
                   </TabList>
@@ -416,8 +531,6 @@ export function ServerGroupDetailPage() {
                         onPageChange={setInstanceCurrentPage}
                         totalItems={filteredInstances.length}
                         selectedCount={selectedInstances.length}
-                        showSettings
-                        onSettingsClick={() => setIsPreferencesOpen(true)}
                       />
 
                       {/* Instances Table */}
@@ -440,11 +553,3 @@ export function ServerGroupDetailPage() {
 }
 
 export default ServerGroupDetailPage;
-
-
-
-
-
-
-
-

@@ -1,5 +1,4 @@
 import { VStack, MenuItem, MenuSection } from '@/design-system';
-import { useDarkMode } from '@/hooks/useDarkMode';
 import {
   IconHome,
   IconUsers,
@@ -13,12 +12,10 @@ import {
   IconLock,
   IconClock,
   IconHistory,
-  IconLayoutSidebar,
   IconArrowLeft,
 } from '@tabler/icons-react';
 import { Link, useLocation } from 'react-router-dom';
-import ThakiLogoLight from '@/assets/thakiLogo_light.svg';
-import ThakiLogoDark from '@/assets/thakiLogo-dark.svg';
+import { AppSwitcher } from './AppSwitcher';
 
 /* ----------------------------------------
    IAM Sidebar Component
@@ -30,9 +27,8 @@ interface IAMSidebarProps {
 }
 
 export function IAMSidebar({ isOpen = true, onToggle }: IAMSidebarProps) {
-  const { isDark } = useDarkMode();
   const location = useLocation();
-  
+
   // Check if current path matches href
   const isActive = (href: string) => {
     // Exact match
@@ -45,27 +41,13 @@ export function IAMSidebar({ isOpen = true, onToggle }: IAMSidebarProps) {
     }
     return false;
   };
-  
+
   if (!isOpen) return null;
 
   return (
     <aside className="w-[200px] h-screen bg-[var(--color-surface-default)] border-r border-[var(--color-border-default)] flex flex-col fixed left-0 top-0">
-      {/* Logo */}
-      <div className="h-8 px-3 flex items-center justify-between">
-        <img 
-          src={isDark ? ThakiLogoDark : ThakiLogoLight} 
-          alt="THAKI Cloud" 
-          className="h-4"
-        />
-        <button 
-          type="button"
-          onClick={onToggle}
-          className="p-1 hover:bg-[var(--color-surface-muted)] rounded transition-colors cursor-pointer"
-          aria-label="Toggle sidebar"
-        >
-          <IconLayoutSidebar size={16} className="text-[var(--color-text-muted)] pointer-events-none" stroke={1.5} />
-        </button>
-      </div>
+      {/* App Switcher with Toggle */}
+      <AppSwitcher onToggleSidebar={onToggle} />
 
       {/* Navigation */}
       <nav className="flex-1 px-3 py-2 overflow-y-auto overflow-x-hidden sidebar-scroll">
@@ -185,4 +167,3 @@ export function IAMSidebar({ isOpen = true, onToggle }: IAMSidebarProps) {
 }
 
 export default IAMSidebar;
-

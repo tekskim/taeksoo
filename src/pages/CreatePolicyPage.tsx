@@ -10,7 +10,6 @@ import {
   Input,
   SectionCard,
   Checkbox,
-  InlineMessage,
   Select,
 } from '@/design-system';
 import { IAMSidebar } from '@/components/IAMSidebar';
@@ -131,7 +130,11 @@ function SectionStatusIcon({ status }: { status: SectionState }) {
   if (status === 'active') {
     return (
       <div className="w-4 h-4 shrink-0">
-        <IconProgress size={16} stroke={1.5} className="text-[var(--color-text-subtle)] animate-spin" />
+        <IconProgress
+          size={16}
+          stroke={1.5}
+          className="text-[var(--color-text-subtle)] animate-spin"
+        />
       </div>
     );
   }
@@ -140,7 +143,9 @@ function SectionStatusIcon({ status }: { status: SectionState }) {
     return null;
   }
 
-  return <div className="w-4 h-4 shrink-0 rounded-full border border-[var(--color-border-default)]" />;
+  return (
+    <div className="w-4 h-4 shrink-0 rounded-full border border-[var(--color-border-default)]" />
+  );
 }
 
 /* ----------------------------------------
@@ -154,7 +159,12 @@ interface SummarySidebarProps {
   isCreateEnabled: boolean;
 }
 
-function SummarySidebar({ sectionStatus, onCancel, onCreate, isCreateEnabled }: SummarySidebarProps) {
+function SummarySidebar({
+  sectionStatus,
+  onCancel,
+  onCreate,
+  isCreateEnabled,
+}: SummarySidebarProps) {
   return (
     <div className="w-[var(--wizard-summary-width)] shrink-0 sticky top-4 self-start">
       <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg p-4 flex flex-col gap-4">
@@ -177,7 +187,9 @@ function SummarySidebar({ sectionStatus, onCancel, onCreate, isCreateEnabled }: 
                       {SECTION_LABELS[sectionKey]}
                     </span>
                     {isWriting ? (
-                      <span className="text-[11px] text-[var(--color-text-subtle)]">Writing...</span>
+                      <span className="text-[11px] text-[var(--color-text-subtle)]">
+                        Writing...
+                      </span>
                     ) : (
                       <SectionStatusIcon status={sectionStatus[sectionKey]} />
                     )}
@@ -204,7 +216,7 @@ function SummarySidebar({ sectionStatus, onCancel, onCreate, isCreateEnabled }: 
                 </span>
               </div>
               <div className="w-full h-1 bg-[var(--color-border-subtle)] rounded-lg overflow-hidden">
-                <div 
+                <div
                   className="h-full bg-[var(--color-state-success)] rounded-lg"
                   style={{ width: '40%' }}
                 />
@@ -319,7 +331,8 @@ function BasicInformationSection({
                 </span>
               )}
               <span className="text-[11px] text-[var(--color-text-subtle)] leading-[16px]">
-                You can use letters, numbers, and special characters (+=,.@-_), and the length must be between 2-128 characters.
+                You can use letters, numbers, and special characters (+=,.@-_), and the length must
+                be between 2-128 characters.
               </span>
             </div>
           </div>
@@ -339,7 +352,8 @@ function BasicInformationSection({
               fullWidth
             />
             <span className="text-[11px] text-[var(--color-text-subtle)] leading-[16px] mt-1">
-              You can use letters, numbers, and special characters (+=,.@-_()[]), and maximum 255 characters.
+              You can use letters, numbers, and special characters (+=,.@-_()[]), and maximum 255
+              characters.
             </span>
           </div>
 
@@ -534,10 +548,11 @@ function PolicyEditorSection({
     let hasErrors = false;
 
     permissions.forEach((permission) => {
-      const isTargetEmpty = !permission.application.trim() && 
-                            !permission.partition.trim() && 
-                            !permission.resource.trim() && 
-                            !permission.resourceId.trim();
+      const isTargetEmpty =
+        !permission.application.trim() &&
+        !permission.partition.trim() &&
+        !permission.resource.trim() &&
+        !permission.resourceId.trim();
       if (isTargetEmpty) {
         errors[permission.id] = true;
         hasErrors = true;
@@ -611,9 +626,7 @@ function PolicyEditorSection({
   };
 
   const updatePermission = (id: string, updates: Partial<Permission>) => {
-    onPermissionsChange(
-      permissions.map((p) => (p.id === id ? { ...p, ...updates } : p))
-    );
+    onPermissionsChange(permissions.map((p) => (p.id === id ? { ...p, ...updates } : p)));
   };
 
   const toggleAction = (permissionId: string, action: keyof Permission['actions']) => {
@@ -622,7 +635,7 @@ function PolicyEditorSection({
 
     const newActions = { ...permission.actions, [action]: !permission.actions[action] };
     const allSelected = Object.values(newActions).every((v) => v);
-    
+
     updatePermission(permissionId, { actions: newActions, allActions: allSelected });
 
     // Clear action error if any action is now selected
@@ -636,13 +649,15 @@ function PolicyEditorSection({
     if (!permission) return;
 
     const newValue = !permission.allActions;
-    
+
     // Also toggle all detailed actions if compute
     const newDetailedActions: Record<string, boolean> = {};
     if (permission.application.toLowerCase() === 'compute') {
-      Object.values(COMPUTE_ACTIONS).flat().forEach((action) => {
-        newDetailedActions[action] = newValue;
-      });
+      Object.values(COMPUTE_ACTIONS)
+        .flat()
+        .forEach((action) => {
+          newDetailedActions[action] = newValue;
+        });
     }
 
     updatePermission(permissionId, {
@@ -674,7 +689,9 @@ function PolicyEditorSection({
     };
 
     // Update category action based on detailed actions
-    const category = actionName.replace(/^(Read|List|Write|Delete|Admin).*/, '$1').toLowerCase() as keyof Permission['actions'];
+    const category = actionName
+      .replace(/^(Read|List|Write|Delete|Admin).*/, '$1')
+      .toLowerCase() as keyof Permission['actions'];
     const categoryActions = COMPUTE_ACTIONS[category as keyof typeof COMPUTE_ACTIONS] || [];
     const allCategorySelected = categoryActions.every((a) => newDetailedActions[a]);
 
@@ -724,10 +741,7 @@ function PolicyEditorSection({
 
   // Check if application is compute AND all fields are filled
   const shouldShowDetailedActions = (permission: Permission) => {
-    return (
-      permission.application.toLowerCase() === 'compute' &&
-      hasAllFieldsFilled(permission)
-    );
+    return permission.application.toLowerCase() === 'compute' && hasAllFieldsFilled(permission);
   };
 
   return (
@@ -753,11 +767,14 @@ function PolicyEditorSection({
           {/* Permissions Label */}
           <div className="flex flex-col gap-2">
             <div className="flex gap-[3px]">
-              <span className="text-[14px] font-medium text-[var(--color-text-default)]">Permissions</span>
+              <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+                Permissions
+              </span>
               <span className="text-[var(--color-state-danger)]">*</span>
             </div>
             <span className="text-[12px] text-[var(--color-text-subtle)] leading-4">
-              A permission consists of a Target resource and allowed Actions. You can create a single policy for various targets by adding multiple permissions.
+              A permission consists of a Target resource and allowed Actions. You can create a
+              single policy for various targets by adding multiple permissions.
             </span>
           </div>
 
@@ -784,15 +801,17 @@ function PolicyEditorSection({
                   <span className="text-[14px] font-medium text-[var(--color-text-default)]">
                     Target
                   </span>
-                  <div className={`flex items-center gap-1 ${
-                    targetErrors[permission.id] 
-                      ? '[&_button]:border-[var(--color-state-danger)]' 
-                      : hasPartialFill(permission) 
-                        ? '[&_button]:border-[var(--color-state-danger)]' 
-                        : isInvalidTargetCombination(permission)
+                  <div
+                    className={`flex items-center gap-1 ${
+                      targetErrors[permission.id]
+                        ? '[&_button]:border-[var(--color-state-danger)]'
+                        : hasPartialFill(permission)
                           ? '[&_button]:border-[var(--color-state-danger)]'
-                          : ''
-                  }`}>
+                          : isInvalidTargetCombination(permission)
+                            ? '[&_button]:border-[var(--color-state-danger)]'
+                            : ''
+                    }`}
+                  >
                     <Select
                       placeholder="Application"
                       value={permission.application}
@@ -820,9 +839,7 @@ function PolicyEditorSection({
                           setTargetErrors((prev) => ({ ...prev, [permission.id]: false }));
                         }
                       }}
-                      options={[
-                        { value: '*all', label: '*all' },
-                      ]}
+                      options={[{ value: '*all', label: '*all' }]}
                       size="sm"
                       fullWidth
                     />
@@ -836,9 +853,7 @@ function PolicyEditorSection({
                           setTargetErrors((prev) => ({ ...prev, [permission.id]: false }));
                         }
                       }}
-                      options={[
-                        { value: '*all', label: '*all' },
-                      ]}
+                      options={[{ value: '*all', label: '*all' }]}
                       size="sm"
                       fullWidth
                     />
@@ -852,9 +867,7 @@ function PolicyEditorSection({
                           setTargetErrors((prev) => ({ ...prev, [permission.id]: false }));
                         }
                       }}
-                      options={[
-                        { value: '*all', label: '*all' },
-                      ]}
+                      options={[{ value: '*all', label: '*all' }]}
                       size="sm"
                       fullWidth
                     />
@@ -869,11 +882,14 @@ function PolicyEditorSection({
                       All Target fields must contain a valid value or a wildcard (∗).
                     </span>
                   )}
-                  {!targetErrors[permission.id] && !hasPartialFill(permission) && isInvalidTargetCombination(permission) && (
-                    <span className="text-[11px] text-[var(--color-state-danger)] leading-[16px]">
-                      The entered Target combination is invalid for the Thaki Cloud system structure. Please verify fields.
-                    </span>
-                  )}
+                  {!targetErrors[permission.id] &&
+                    !hasPartialFill(permission) &&
+                    isInvalidTargetCombination(permission) && (
+                      <span className="text-[11px] text-[var(--color-state-danger)] leading-[16px]">
+                        The entered Target combination is invalid for the Thaki Cloud system
+                        structure. Please verify fields.
+                      </span>
+                    )}
                 </div>
 
                 {/* Actions */}
@@ -881,7 +897,7 @@ function PolicyEditorSection({
                   <span className="text-[14px] font-medium text-[var(--color-text-default)]">
                     Actions
                   </span>
-                  
+
                   {/* Search and All Actions */}
                   <div className="flex items-center gap-2">
                     <div className="relative w-[var(--search-input-width)]">
@@ -903,18 +919,24 @@ function PolicyEditorSection({
                         checked={permission.allActions}
                         onChange={() => toggleAllActions(permission.id)}
                       />
-                      <span className="text-[12px] text-[var(--color-text-default)]">All actions</span>
+                      <span className="text-[12px] text-[var(--color-text-default)]">
+                        All actions
+                      </span>
                     </label>
                   </div>
 
                   {/* Action Cards - Simple view for non-compute applications */}
                   {!shouldShowDetailedActions(permission) && (
-                    <div className={`flex gap-3 w-full h-[44px] ${actionErrors[permission.id] ? 'p-px' : ''}`}>
+                    <div
+                      className={`flex gap-3 w-full h-[44px] ${actionErrors[permission.id] ? 'p-px' : ''}`}
+                    >
                       {(['read', 'list', 'write', 'delete', 'admin'] as const).map((action) => (
                         <div
                           key={action}
                           className={`flex-1 bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 cursor-pointer h-[44px] flex items-center ${
-                            actionErrors[permission.id] ? 'ring-1 ring-[var(--color-state-danger)]' : ''
+                            actionErrors[permission.id]
+                              ? 'ring-1 ring-[var(--color-state-danger)]'
+                              : ''
                           }`}
                           onClick={() => toggleAction(permission.id, action)}
                         >
@@ -934,7 +956,9 @@ function PolicyEditorSection({
 
                   {/* Detailed Action Tabs - For compute application with all fields filled */}
                   {shouldShowDetailedActions(permission) && (
-                    <div className={`flex gap-3 w-full h-[320px] ${actionErrors[permission.id] ? 'p-px' : ''}`}>
+                    <div
+                      className={`flex gap-3 w-full h-[320px] ${actionErrors[permission.id] ? 'p-px' : ''}`}
+                    >
                       {(['read', 'list', 'write', 'delete', 'admin'] as const).map((category) => {
                         const categoryActions = COMPUTE_ACTIONS[category];
                         const filteredActions = searchQuery
@@ -953,7 +977,9 @@ function PolicyEditorSection({
                           <div
                             key={category}
                             className={`flex-1 bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 flex flex-col min-w-0 overflow-hidden ${
-                              actionErrors[permission.id] ? 'ring-1 ring-[var(--color-state-danger)]' : ''
+                              actionErrors[permission.id]
+                                ? 'ring-1 ring-[var(--color-state-danger)]'
+                                : ''
                             }`}
                           >
                             {/* Category Header */}
@@ -967,7 +993,9 @@ function PolicyEditorSection({
                               </span>
                               <div className="h-4 w-px bg-[var(--color-border-default)]" />
                               <span className="text-[11px] text-[var(--color-text-subtle)]">
-                                {selectedCount > 0 ? `${selectedCount}/${categoryActions.length}` : `${categoryActions.length} items`}
+                                {selectedCount > 0
+                                  ? `${selectedCount}/${categoryActions.length}`
+                                  : `${categoryActions.length} items`}
                               </span>
                             </label>
 
@@ -986,9 +1014,11 @@ function PolicyEditorSection({
                                   >
                                     <Checkbox
                                       checked={isSelected}
-                                      onChange={() => toggleDetailedAction(permission.id, actionName)}
+                                      onChange={() =>
+                                        toggleDetailedAction(permission.id, actionName)
+                                      }
                                     />
-                                    <span 
+                                    <span
                                       className="text-[12px] text-[var(--color-text-default)] truncate min-w-0"
                                       title={actionName}
                                     >
@@ -1011,7 +1041,6 @@ function PolicyEditorSection({
                     </span>
                   )}
                 </div>
-
               </VStack>
             </div>
           ))}
@@ -1044,10 +1073,11 @@ function PolicyEditorSection({
                 </span>
               </button>
               <span className="text-[12px] text-[var(--color-text-subtle)] leading-4">
-                Select additional conditions required for this policy. All enabled conditions are evaluated using AND logic.
+                Select additional conditions required for this policy. All enabled conditions are
+                evaluated using AND logic.
               </span>
             </div>
-            
+
             {conditionsExpanded && (
               <label className="flex items-center gap-1.5 cursor-pointer">
                 <Checkbox
@@ -1096,7 +1126,8 @@ function PolicyEditorSection({
 
 export default function CreatePolicyPage() {
   const navigate = useNavigate();
-  const { tabs, activeTabId, selectTab, closeTab, addNewTab, updateActiveTabLabel, moveTab } = useTabs();
+  const { tabs, activeTabId, selectTab, closeTab, addNewTab, updateActiveTabLabel, moveTab } =
+    useTabs();
 
   // Update tab label on mount
   useEffect(() => {
@@ -1266,7 +1297,7 @@ export default function CreatePolicyPage() {
       >
         {/* Tab Bar */}
         <TabBar
-          tabs={tabs.map(tab => ({ id: tab.id, label: tab.label, closable: tab.closable }))}
+          tabs={tabs.map((tab) => ({ id: tab.id, label: tab.label, closable: tab.closable }))}
           activeTab={activeTabId}
           onTabChange={selectTab}
           onTabClose={closeTab}
@@ -1295,7 +1326,6 @@ export default function CreatePolicyPage() {
         {/* Scrollable content */}
         <div className="flex-1 overflow-auto overscroll-contain sidebar-scroll">
           <div className="pt-4 px-8 pb-6 bg-[var(--color-surface-default)] min-h-full">
-
             {/* Main content area */}
             <VStack gap={3} className="min-w-[1176px]">
               {/* Page Title */}
@@ -1333,7 +1363,11 @@ export default function CreatePolicyPage() {
                       title={SECTION_LABELS['basic-info']}
                       onEdit={() => handleEdit('basic-info')}
                     >
-                      <SectionCard.DataRow label="Policy name" value={policyName} showDivider={false} />
+                      <SectionCard.DataRow
+                        label="Policy name"
+                        value={policyName}
+                        showDivider={false}
+                      />
                       <SectionCard.DataRow label="Description" value={description || '-'} />
                     </DoneSection>
                   )}

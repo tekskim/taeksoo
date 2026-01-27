@@ -115,15 +115,10 @@ export const WithSidebarToggle: Story = {
       onSidebarToggle={() => console.log('Toggle sidebar')}
       breadcrumb={
         <Breadcrumb
-          items={[
-            { label: 'Container', href: '/container' },
-            { label: 'Deployments' },
-          ]}
+          items={[{ label: 'Container', href: '/container' }, { label: 'Deployments' }]}
         />
       }
-      actions={
-        <TopBarAction icon={<IconUser size={16} />} aria-label="Profile" />
-      }
+      actions={<TopBarAction icon={<IconUser size={16} />} aria-label="Profile" />}
     />
   ),
 };
@@ -132,13 +127,7 @@ export const WithSidebarToggle: Story = {
 export const WithNotificationBadge: Story = {
   render: () => (
     <TopBar
-      breadcrumb={
-        <Breadcrumb
-          items={[
-            { label: 'Dashboard' },
-          ]}
-        />
-      }
+      breadcrumb={<Breadcrumb items={[{ label: 'Dashboard' }]} />}
       actions={
         <>
           <TopBarAction icon={<IconBell size={16} />} aria-label="Notifications" badge />
@@ -155,12 +144,7 @@ export const WithoutNavigation: Story = {
     <TopBar
       showNavigation={false}
       breadcrumb={
-        <Breadcrumb
-          items={[
-            { label: 'Settings', href: '/settings' },
-            { label: 'Account' },
-          ]}
-        />
+        <Breadcrumb items={[{ label: 'Settings', href: '/settings' }, { label: 'Account' }]} />
       }
     />
   ),
@@ -172,13 +156,7 @@ export const DisabledNavigation: Story = {
     <TopBar
       canGoBack={false}
       canGoForward={false}
-      breadcrumb={
-        <Breadcrumb
-          items={[
-            { label: 'Home' },
-          ]}
-        />
-      }
+      breadcrumb={<Breadcrumb items={[{ label: 'Home' }]} />}
     />
   ),
 };
@@ -186,12 +164,7 @@ export const DisabledNavigation: Story = {
 // Minimal
 export const Minimal: Story = {
   render: () => (
-    <TopBar
-      showNavigation={false}
-      breadcrumb={
-        <Breadcrumb items={[{ label: 'Simple Page' }]} />
-      }
-    />
+    <TopBar showNavigation={false} breadcrumb={<Breadcrumb items={[{ label: 'Simple Page' }]} />} />
   ),
 };
 

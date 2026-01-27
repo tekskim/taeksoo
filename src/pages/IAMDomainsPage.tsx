@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
 import { IconDownload } from '@tabler/icons-react';
 import { ArrowRightLeft } from 'lucide-react';
 import {
@@ -38,15 +37,69 @@ interface Domain {
    ---------------------------------------- */
 const mockDomains: Domain[] = [
   { id: 'domain-001', name: 'domain', description: '-', status: 'active', createdAt: '2025-09-12' },
-  { id: 'domain-002', name: 'production', description: 'Production environment', status: 'active', createdAt: '2025-08-15' },
-  { id: 'domain-003', name: 'staging', description: 'Staging environment', status: 'active', createdAt: '2025-07-20' },
-  { id: 'domain-004', name: 'development', description: 'Development environment', status: 'active', createdAt: '2025-06-10' },
-  { id: 'domain-005', name: 'testing', description: 'Testing domain', status: 'inactive', createdAt: '2025-09-01' },
-  { id: 'domain-006', name: 'qa-domain', description: 'QA testing', status: 'active', createdAt: '2025-08-25' },
-  { id: 'domain-007', name: 'sandbox', description: 'Sandbox environment', status: 'pending', createdAt: '2025-09-10' },
-  { id: 'domain-008', name: 'demo', description: 'Demo environment', status: 'active', createdAt: '2025-07-05' },
-  { id: 'domain-009', name: 'internal', description: 'Internal domain', status: 'active', createdAt: '2025-06-01' },
-  { id: 'domain-010', name: 'external', description: 'External access domain', status: 'active', createdAt: '2025-05-15' },
+  {
+    id: 'domain-002',
+    name: 'production',
+    description: 'Production environment',
+    status: 'active',
+    createdAt: '2025-08-15',
+  },
+  {
+    id: 'domain-003',
+    name: 'staging',
+    description: 'Staging environment',
+    status: 'active',
+    createdAt: '2025-07-20',
+  },
+  {
+    id: 'domain-004',
+    name: 'development',
+    description: 'Development environment',
+    status: 'active',
+    createdAt: '2025-06-10',
+  },
+  {
+    id: 'domain-005',
+    name: 'testing',
+    description: 'Testing domain',
+    status: 'inactive',
+    createdAt: '2025-09-01',
+  },
+  {
+    id: 'domain-006',
+    name: 'qa-domain',
+    description: 'QA testing',
+    status: 'active',
+    createdAt: '2025-08-25',
+  },
+  {
+    id: 'domain-007',
+    name: 'sandbox',
+    description: 'Sandbox environment',
+    status: 'pending',
+    createdAt: '2025-09-10',
+  },
+  {
+    id: 'domain-008',
+    name: 'demo',
+    description: 'Demo environment',
+    status: 'active',
+    createdAt: '2025-07-05',
+  },
+  {
+    id: 'domain-009',
+    name: 'internal',
+    description: 'Internal domain',
+    status: 'active',
+    createdAt: '2025-06-01',
+  },
+  {
+    id: 'domain-010',
+    name: 'external',
+    description: 'External access domain',
+    status: 'active',
+    createdAt: '2025-05-15',
+  },
 ];
 
 /* ----------------------------------------
@@ -57,7 +110,8 @@ export default function IAMDomainsPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedRows, setSelectedRows] = useState<string[]>([]);
-  const { tabs, activeTabId, selectTab, closeTab, addNewTab, updateActiveTabLabel, moveTab } = useTabs();
+  const { tabs, activeTabId, selectTab, closeTab, addNewTab, updateActiveTabLabel, moveTab } =
+    useTabs();
   const itemsPerPage = 10;
 
   // Update tab label on mount
@@ -69,9 +123,10 @@ export default function IAMDomainsPage() {
   const sidebarWidth = sidebarOpen ? 200 : 0;
 
   // Filter domains by search query
-  const filteredDomains = mockDomains.filter(domain =>
-    domain.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    domain.description.toLowerCase().includes(searchQuery.toLowerCase())
+  const filteredDomains = mockDomains.filter(
+    (domain) =>
+      domain.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      domain.description.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   // Pagination
@@ -106,7 +161,9 @@ export default function IAMDomainsPage() {
       width: columnWidths.status,
       align: 'center',
       render: (value) => (
-        <StatusIndicator status={value === 'active' ? 'active' : value === 'inactive' ? 'shutoff' : 'building'} />
+        <StatusIndicator
+          status={value === 'active' ? 'active' : value === 'inactive' ? 'shutoff' : 'building'}
+        />
       ),
     },
     {
@@ -115,9 +172,7 @@ export default function IAMDomainsPage() {
       flex: 1,
       sortable: true,
       render: (value) => (
-        <span className="font-medium text-[var(--color-text-default)]">
-          {value}
-        </span>
+        <span className="font-medium text-[var(--color-text-default)]">{value}</span>
       ),
     },
     {
@@ -144,7 +199,11 @@ export default function IAMDomainsPage() {
             className="p-1.5 rounded-md hover:bg-[var(--color-surface-subtle)] transition-colors"
             title="Open console"
           >
-            <ArrowRightLeft size={16} strokeWidth={1.5} className="text-[var(--color-text-default)]" />
+            <ArrowRightLeft
+              size={16}
+              strokeWidth={1.5}
+              className="text-[var(--color-text-default)]"
+            />
           </button>
           <ContextMenu items={getContextMenuItems(row)} trigger="click">
             <button
@@ -171,7 +230,7 @@ export default function IAMDomainsPage() {
       >
         {/* Tab Bar */}
         <TabBar
-          tabs={tabs.map(tab => ({ id: tab.id, label: tab.label, closable: tab.closable }))}
+          tabs={tabs.map((tab) => ({ id: tab.id, label: tab.label, closable: tab.closable }))}
           activeTab={activeTabId}
           onTabChange={selectTab}
           onTabClose={closeTab}
@@ -186,14 +245,7 @@ export default function IAMDomainsPage() {
           showNavigation
           onBack={() => window.history.back()}
           onForward={() => window.history.forward()}
-          breadcrumb={
-            <Breadcrumb
-              items={[
-                { label: 'IAM', href: '/iam' },
-                { label: 'Domains' },
-              ]}
-            />
-          }
+          breadcrumb={<Breadcrumb items={[{ label: 'IAM', href: '/iam' }, { label: 'Domains' }]} />}
         />
 
         {/* Scrollable Content */}
@@ -242,11 +294,7 @@ export default function IAMDomainsPage() {
                 />
 
                 {/* Table */}
-                <Table<Domain>
-                  columns={columns}
-                  data={paginatedDomains}
-                  rowKey="id"
-                />
+                <Table<Domain> columns={columns} data={paginatedDomains} rowKey="id" />
               </VStack>
             </VStack>
           </div>
@@ -255,4 +303,3 @@ export default function IAMDomainsPage() {
     </div>
   );
 }
-

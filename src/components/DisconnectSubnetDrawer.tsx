@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
-import { 
-  Drawer, 
-  Button, 
+import {
+  Drawer,
+  Button,
   SearchInput,
   Pagination,
   Radio,
@@ -41,16 +41,86 @@ export interface DisconnectSubnetDrawerProps {
    ---------------------------------------- */
 
 const mockSubnets: SubnetItem[] = [
-  { id: 'sub-1', name: 'subnet-01', subnetCidr: '10.0.0.0/24', allocationPools: '10.7.21.0/200 - 10.7.21.0/299', networkName: 'net-01', networkId: '45ghj567' },
-  { id: 'sub-2', name: 'subnet-01', subnetCidr: '10.0.0.0/24', allocationPools: '10.7.21.0/200 - 10.7.21.0/299', networkName: 'net-01', networkId: '45ghj567' },
-  { id: 'sub-3', name: 'subnet-01', subnetCidr: '10.0.0.0/24', allocationPools: '10.7.21.0/200 - 10.7.21.0/299', networkName: 'net-01', networkId: '45ghj567' },
-  { id: 'sub-4', name: 'subnet-01', subnetCidr: '10.0.0.0/24', allocationPools: '10.7.21.0/200 - 10.7.21.0/299', networkName: 'net-01', networkId: '45ghj567' },
-  { id: 'sub-5', name: 'subnet-01', subnetCidr: '10.0.0.0/24', allocationPools: '10.7.21.0/200 - 10.7.21.0/299', networkName: 'net-01', networkId: '45ghj567' },
-  { id: 'sub-6', name: 'subnet-01', subnetCidr: '10.0.0.0/24', allocationPools: '10.7.21.0/200 - 10.7.21.0/299', networkName: 'net-01', networkId: '45ghj567' },
-  { id: 'sub-7', name: 'subnet-01', subnetCidr: '10.0.0.0/24', allocationPools: '10.7.21.0/200 - 10.7.21.0/299', networkName: 'net-01', networkId: '45ghj567' },
-  { id: 'sub-8', name: 'subnet-01', subnetCidr: '10.0.0.0/24', allocationPools: '10.7.21.0/200 - 10.7.21.0/299', networkName: 'net-01', networkId: '45ghj567' },
-  { id: 'sub-9', name: 'subnet-01', subnetCidr: '10.0.0.0/24', allocationPools: '10.7.21.0/200 - 10.7.21.0/299', networkName: 'net-01', networkId: '45ghj567' },
-  { id: 'sub-10', name: 'subnet-01', subnetCidr: '10.0.0.0/24', allocationPools: '10.7.21.0/200 - 10.7.21.0/299', networkName: 'net-01', networkId: '45ghj567' },
+  {
+    id: 'sub-1',
+    name: 'subnet-01',
+    subnetCidr: '10.0.0.0/24',
+    allocationPools: '10.7.21.0/200 - 10.7.21.0/299',
+    networkName: 'net-01',
+    networkId: '45ghj567',
+  },
+  {
+    id: 'sub-2',
+    name: 'subnet-01',
+    subnetCidr: '10.0.0.0/24',
+    allocationPools: '10.7.21.0/200 - 10.7.21.0/299',
+    networkName: 'net-01',
+    networkId: '45ghj567',
+  },
+  {
+    id: 'sub-3',
+    name: 'subnet-01',
+    subnetCidr: '10.0.0.0/24',
+    allocationPools: '10.7.21.0/200 - 10.7.21.0/299',
+    networkName: 'net-01',
+    networkId: '45ghj567',
+  },
+  {
+    id: 'sub-4',
+    name: 'subnet-01',
+    subnetCidr: '10.0.0.0/24',
+    allocationPools: '10.7.21.0/200 - 10.7.21.0/299',
+    networkName: 'net-01',
+    networkId: '45ghj567',
+  },
+  {
+    id: 'sub-5',
+    name: 'subnet-01',
+    subnetCidr: '10.0.0.0/24',
+    allocationPools: '10.7.21.0/200 - 10.7.21.0/299',
+    networkName: 'net-01',
+    networkId: '45ghj567',
+  },
+  {
+    id: 'sub-6',
+    name: 'subnet-01',
+    subnetCidr: '10.0.0.0/24',
+    allocationPools: '10.7.21.0/200 - 10.7.21.0/299',
+    networkName: 'net-01',
+    networkId: '45ghj567',
+  },
+  {
+    id: 'sub-7',
+    name: 'subnet-01',
+    subnetCidr: '10.0.0.0/24',
+    allocationPools: '10.7.21.0/200 - 10.7.21.0/299',
+    networkName: 'net-01',
+    networkId: '45ghj567',
+  },
+  {
+    id: 'sub-8',
+    name: 'subnet-01',
+    subnetCidr: '10.0.0.0/24',
+    allocationPools: '10.7.21.0/200 - 10.7.21.0/299',
+    networkName: 'net-01',
+    networkId: '45ghj567',
+  },
+  {
+    id: 'sub-9',
+    name: 'subnet-01',
+    subnetCidr: '10.0.0.0/24',
+    allocationPools: '10.7.21.0/200 - 10.7.21.0/299',
+    networkName: 'net-01',
+    networkId: '45ghj567',
+  },
+  {
+    id: 'sub-10',
+    name: 'subnet-01',
+    subnetCidr: '10.0.0.0/24',
+    allocationPools: '10.7.21.0/200 - 10.7.21.0/299',
+    networkName: 'net-01',
+    networkId: '45ghj567',
+  },
 ];
 
 /* ----------------------------------------
@@ -83,10 +153,11 @@ export function DisconnectSubnetDrawer({
 
   // Filtering and sorting
   const filteredSubnets = subnets
-    .filter(item =>
-      item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      item.subnetCidr.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      item.networkName.toLowerCase().includes(searchQuery.toLowerCase())
+    .filter(
+      (item) =>
+        item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        item.subnetCidr.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        item.networkName.toLowerCase().includes(searchQuery.toLowerCase())
     )
     .sort((a, b) => {
       if (!sortField) return 0;
@@ -103,11 +174,11 @@ export function DisconnectSubnetDrawer({
 
   const totalPages = Math.ceil(filteredSubnets.length / itemsPerPage);
 
-  const selectedSubnet = subnets.find(item => item.id === selectedSubnetId);
+  const selectedSubnet = subnets.find((item) => item.id === selectedSubnetId);
 
   const handleSort = (field: 'name' | 'networkName') => {
     if (sortField === field) {
-      setSortDirection(prev => prev === 'asc' ? 'desc' : 'asc');
+      setSortDirection((prev) => (prev === 'asc' ? 'desc' : 'asc'));
     } else {
       setSortField(field);
       setSortDirection('asc');
@@ -122,9 +193,9 @@ export function DisconnectSubnetDrawer({
   };
 
   return (
-    <Drawer 
-      isOpen={isOpen} 
-      onClose={onClose} 
+    <Drawer
+      isOpen={isOpen}
+      onClose={onClose}
       title="Disconnect Subnet"
       width={696}
       footer={
@@ -132,8 +203,8 @@ export function DisconnectSubnetDrawer({
           <Button variant="secondary" onClick={onClose} className="w-[152px] h-8">
             Cancel
           </Button>
-          <Button 
-            variant="primary" 
+          <Button
+            variant="primary"
             onClick={handleSubmit}
             disabled={false}
             className="w-[152px] h-8"
@@ -152,7 +223,8 @@ export function DisconnectSubnetDrawer({
 
           {/* Warning Message */}
           <InlineMessage variant="error">
-            Disconnecting this subnet will immediately stop routing traffic through this router. Instances in the subnet may lose network connectivity.
+            Disconnecting this subnet will immediately stop routing traffic through this router.
+            Instances in the subnet may lose network connectivity.
           </InlineMessage>
 
           {/* Router Info */}
@@ -160,9 +232,7 @@ export function DisconnectSubnetDrawer({
             <p className="text-[11px] font-medium text-[var(--color-text-subtle)] leading-4 mb-1.5">
               Router
             </p>
-            <p className="text-[12px] text-[var(--color-text-default)] leading-4">
-              {router.name}
-            </p>
+            <p className="text-[12px] text-[var(--color-text-default)] leading-4">{router.name}</p>
           </div>
         </VStack>
 
@@ -195,25 +265,39 @@ export function DisconnectSubnetDrawer({
             {/* Header */}
             <div className="flex items-center bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-md">
               <div className="w-[40px] p-3" />
-              <div 
+              <div
                 className="flex-1 px-3 py-2 h-[40px] flex items-center gap-1.5 border-l border-[var(--color-border-default)] cursor-pointer hover:bg-[var(--color-surface-muted)]"
                 onClick={() => handleSort('name')}
               >
-                <span className="text-[11px] font-medium text-[var(--color-text-default)]">Name</span>
-                <IconChevronDown size={12} className={`transition-transform ${sortField === 'name' && sortDirection === 'desc' ? 'rotate-180' : ''}`} />
+                <span className="text-[11px] font-medium text-[var(--color-text-default)]">
+                  Name
+                </span>
+                <IconChevronDown
+                  size={12}
+                  className={`transition-transform ${sortField === 'name' && sortDirection === 'desc' ? 'rotate-180' : ''}`}
+                />
               </div>
               <div className="flex-1 px-3 py-2 h-[40px] flex items-center border-l border-[var(--color-border-default)]">
-                <span className="text-[11px] font-medium text-[var(--color-text-default)]">Subnet CIDR</span>
+                <span className="text-[11px] font-medium text-[var(--color-text-default)]">
+                  Subnet CIDR
+                </span>
               </div>
               <div className="flex-1 px-3 py-2 h-[40px] flex items-center border-l border-[var(--color-border-default)]">
-                <span className="text-[11px] font-medium text-[var(--color-text-default)]">Allocation Pools</span>
+                <span className="text-[11px] font-medium text-[var(--color-text-default)]">
+                  Allocation Pools
+                </span>
               </div>
-              <div 
+              <div
                 className="flex-1 px-3 py-2 h-[40px] flex items-center gap-1.5 border-l border-[var(--color-border-default)] cursor-pointer hover:bg-[var(--color-surface-muted)]"
                 onClick={() => handleSort('networkName')}
               >
-                <span className="text-[11px] font-medium text-[var(--color-text-default)]">Network</span>
-                <IconChevronDown size={12} className={`transition-transform ${sortField === 'networkName' && sortDirection === 'desc' ? 'rotate-180' : ''}`} />
+                <span className="text-[11px] font-medium text-[var(--color-text-default)]">
+                  Network
+                </span>
+                <IconChevronDown
+                  size={12}
+                  className={`transition-transform ${sortField === 'networkName' && sortDirection === 'desc' ? 'rotate-180' : ''}`}
+                />
               </div>
             </div>
 
@@ -270,7 +354,9 @@ export function DisconnectSubnetDrawer({
 
           {/* Selection Indicator */}
           <SelectionIndicator
-            selectedItems={selectedSubnet ? [{ id: selectedSubnet.id, label: selectedSubnet.name }] : []}
+            selectedItems={
+              selectedSubnet ? [{ id: selectedSubnet.id, label: selectedSubnet.name }] : []
+            }
             onRemove={() => setSelectedSubnetId(null)}
             emptyText="No item Selected"
           />

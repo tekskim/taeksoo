@@ -94,17 +94,17 @@ const ContextMenuItemComponent: React.FC<{
       const itemRect = itemRef.current.getBoundingClientRect();
       const viewportWidth = window.innerWidth;
       const viewportHeight = window.innerHeight;
-      
+
       const preferredDirection = item.submenuDirection || 'right';
       let newX = submenuPosition.x;
       let newY = submenuPosition.y;
       let newDirection: 'left' | 'right' = preferredDirection;
-      
+
       if (preferredDirection === 'left') {
         // Position to the left of the parent item
         newX = itemRect.left - submenuRect.width - 4;
         newDirection = 'left';
-        
+
         // Check if submenu overflows left edge
         if (newX < 8) {
           newX = 8;
@@ -113,25 +113,25 @@ const ContextMenuItemComponent: React.FC<{
         // Position to the right (default)
         newX = itemRect.right + 4;
         newDirection = 'right';
-        
+
         // Check if submenu overflows right edge
         if (newX + submenuRect.width > viewportWidth - 8) {
           // Fallback to left if right doesn't fit
           newX = itemRect.left - submenuRect.width - 4;
           newDirection = 'left';
-          
+
           // Check if left also overflows
           if (newX < 8) {
             newX = 8;
           }
         }
       }
-      
+
       // Check if submenu overflows bottom edge
       if (newY + submenuRect.height > viewportHeight - 8) {
         newY = Math.max(8, viewportHeight - submenuRect.height - 8);
       }
-      
+
       if (newX !== submenuPosition.x || newY !== submenuPosition.y) {
         setSubmenuPosition({ x: newX, y: newY });
       }
@@ -155,7 +155,10 @@ const ContextMenuItemComponent: React.FC<{
 
     window.addEventListener('close-context-submenus', handleCloseOtherSubmenus as EventListener);
     return () => {
-      window.removeEventListener('close-context-submenus', handleCloseOtherSubmenus as EventListener);
+      window.removeEventListener(
+        'close-context-submenus',
+        handleCloseOtherSubmenus as EventListener
+      );
     };
   }, [item.submenu, itemId]);
 
@@ -169,10 +172,10 @@ const ContextMenuItemComponent: React.FC<{
     if (item.submenu && itemRef.current) {
       // Close other submenus before opening this one
       window.dispatchEvent(new CustomEvent('close-context-submenus', { detail: { itemId } }));
-      
+
       const rect = itemRef.current.getBoundingClientRect();
       const direction = item.submenuDirection || 'right';
-      
+
       // Position based on submenuDirection
       if (direction === 'left') {
         // Position to the left - we'll calculate exact position after render
@@ -262,9 +265,10 @@ const ContextMenuItemComponent: React.FC<{
         cursor-pointer
         transition-colors duration-[var(--duration-fast)]
         ${item.divider ? 'border-b border-[var(--color-border-subtle)]' : ''}
-        ${item.status === 'danger'
-          ? 'text-[var(--color-state-danger-text)] hover:bg-[var(--color-state-danger-bg)]'
-          : 'text-[var(--color-text-default)] hover:bg-[var(--context-menu-hover-bg)]'
+        ${
+          item.status === 'danger'
+            ? 'text-[var(--color-state-danger-text)] hover:bg-[var(--color-state-danger-bg)]'
+            : 'text-[var(--color-text-default)] hover:bg-[var(--context-menu-hover-bg)]'
         }
         ${item.disabled ? 'opacity-50 cursor-not-allowed' : ''}
         ${showSubmenu ? 'bg-[var(--context-menu-hover-bg)]' : ''}
@@ -278,9 +282,7 @@ const ContextMenuItemComponent: React.FC<{
         )}
         <span className="flex-1">{item.label}</span>
       </div>
-      {hasSubmenu && (
-        <IconChevronRight size={12} stroke={1} className="ml-6 shrink-0" />
-      )}
+      {hasSubmenu && <IconChevronRight size={12} stroke={1} className="ml-6 shrink-0" />}
     </div>
   );
 
@@ -295,14 +297,16 @@ const ContextMenuItemComponent: React.FC<{
       )}
 
       {/* Submenu - rendered via portal */}
-      {showSubmenu && item.submenu && createPortal(
-        <div
-          ref={submenuRef}
-          onMouseDown={(e) => e.stopPropagation()}
-          onClick={(e) => e.stopPropagation()}
-          onMouseEnter={handleSubmenuMouseEnter}
-          onMouseLeave={handleSubmenuMouseLeave}
-          className="
+      {showSubmenu &&
+        item.submenu &&
+        createPortal(
+          <div
+            ref={submenuRef}
+            onMouseDown={(e) => e.stopPropagation()}
+            onClick={(e) => e.stopPropagation()}
+            onMouseEnter={handleSubmenuMouseEnter}
+            onMouseLeave={handleSubmenuMouseLeave}
+            className="
             fixed
             flex flex-col
             bg-[var(--color-surface-default)]
@@ -314,23 +318,23 @@ const ContextMenuItemComponent: React.FC<{
             max-h-[calc(100vh-16px)]
             overflow-y-auto
           "
-          style={{
-            left: submenuPosition.x,
-            top: submenuPosition.y,
-          }}
-        >
-          {item.submenu.map((subItem) => (
-            <ContextMenuItemComponent
-              key={subItem.id}
-              item={subItem}
-              onClose={onClose}
-              parentDirection={submenuDirection}
-              itemId={subItem.id}
-            />
-          ))}
-        </div>,
-        document.body
-      )}
+            style={{
+              left: submenuPosition.x,
+              top: submenuPosition.y,
+            }}
+          >
+            {item.submenu.map((subItem) => (
+              <ContextMenuItemComponent
+                key={subItem.id}
+                item={subItem}
+                onClose={onClose}
+                parentDirection={submenuDirection}
+                itemId={subItem.id}
+              />
+            ))}
+          </div>,
+          document.body
+        )}
     </>
   );
 };
@@ -452,42 +456,46 @@ export const ContextMenu: React.FC<ContextMenuProps> = ({
   const triggerRef = useRef<HTMLDivElement>(null);
   const menuRef = useRef<HTMLDivElement>(null);
 
-  const handleOpen = useCallback((e: React.MouseEvent) => {
-    if (disabled) return;
-    
-    if (trigger === 'contextmenu') {
-      e.preventDefault();
-      
-      // 다른 컨텍스트 메뉴가 열릴 때 이전 메뉴를 닫기 위한 커스텀 이벤트 발생
-      const closeEvent = new CustomEvent('contextmenu:close-all');
-      document.dispatchEvent(closeEvent);
-      
-      // 위치 업데이트 및 메뉴 열기
-      // 같은 메뉴인 경우에도 위치를 업데이트하기 위해 먼저 닫고 다시 열기
-      setPosition({ x: e.clientX, y: e.clientY });
-      setTriggerWidth(0);
-      setIsOpen(true);
-    } else {
-      // Click trigger: toggle menu and position relative to trigger element
-      if (isOpen) {
-        setIsOpen(false);
-        return;
+  const handleOpen = useCallback(
+    (e: React.MouseEvent) => {
+      if (disabled) return;
+
+      if (trigger === 'contextmenu') {
+        e.preventDefault();
+
+        // 다른 컨텍스트 메뉴가 열릴 때 이전 메뉴를 닫기 위한 커스텀 이벤트 발생
+        const closeEvent = new CustomEvent('contextmenu:close-all');
+        document.dispatchEvent(closeEvent);
+
+        // 위치 업데이트 및 메뉴 열기
+        // 같은 메뉴인 경우에도 위치를 업데이트하기 위해 먼저 닫고 다시 열기
+        setPosition({ x: e.clientX, y: e.clientY });
+        setTriggerWidth(0);
+        setIsOpen(true);
+      } else {
+        // Click trigger: toggle menu and position relative to trigger element
+        if (isOpen) {
+          setIsOpen(false);
+          return;
+        }
+
+        if (triggerRef.current) {
+          // Get the actual trigger element (first child) for accurate positioning
+          const triggerElement = triggerRef.current.firstElementChild as HTMLElement | null;
+          const rect =
+            triggerElement?.getBoundingClientRect() ?? triggerRef.current.getBoundingClientRect();
+          // Position menu directly below the button
+          setPosition({
+            x: rect.left, // Button left edge
+            y: rect.bottom + 4,
+          });
+          setTriggerWidth(rect.width);
+        }
+        setIsOpen(true);
       }
-      
-      if (triggerRef.current) {
-        // Get the actual trigger element (first child) for accurate positioning
-        const triggerElement = triggerRef.current.firstElementChild as HTMLElement | null;
-        const rect = triggerElement?.getBoundingClientRect() ?? triggerRef.current.getBoundingClientRect();
-        // Position menu directly below the button
-        setPosition({ 
-          x: rect.left, // Button left edge
-          y: rect.bottom + 4 
-        });
-        setTriggerWidth(rect.width);
-      }
-      setIsOpen(true);
-    }
-  }, [disabled, trigger, isOpen]);
+    },
+    [disabled, trigger, isOpen]
+  );
 
   const handleClose = useCallback(() => {
     setIsOpen(false);
@@ -497,7 +505,7 @@ export const ContextMenu: React.FC<ContextMenuProps> = ({
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
       if (!isOpen) return;
-      
+
       const target = e.target as Node;
       // Click inside trigger OR inside menu (portal) should NOT close.
       if (triggerRef.current?.contains(target)) return;
@@ -539,9 +547,8 @@ export const ContextMenu: React.FC<ContextMenuProps> = ({
     };
   }, [isOpen, handleClose]);
 
-  const triggerProps = trigger === 'contextmenu'
-    ? { onContextMenu: handleOpen }
-    : { onClickCapture: handleOpen };
+  const triggerProps =
+    trigger === 'contextmenu' ? { onContextMenu: handleOpen } : { onClickCapture: handleOpen };
 
   return (
     <div ref={triggerRef} className={`inline-block w-fit ${className}`} {...triggerProps}>
@@ -563,4 +570,3 @@ export const ContextMenu: React.FC<ContextMenuProps> = ({
 };
 
 export default ContextMenu;
-

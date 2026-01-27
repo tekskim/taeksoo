@@ -127,7 +127,8 @@ const mockSessions: ActiveSession[] = [
 
 export default function IAMActiveSessionsPage() {
   const navigate = useNavigate();
-  const { tabs, activeTabId, selectTab, closeTab, addNewTab, updateActiveTabLabel, moveTab } = useTabs();
+  const { tabs, activeTabId, selectTab, closeTab, addNewTab, updateActiveTabLabel, moveTab } =
+    useTabs();
 
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
@@ -142,10 +143,11 @@ export default function IAMActiveSessionsPage() {
   const sidebarWidth = sidebarOpen ? 200 : 0;
 
   // Filter sessions by search query
-  const filteredSessions = mockSessions.filter(session =>
-    session.user.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    session.ipAddress.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    session.device.toLowerCase().includes(searchQuery.toLowerCase())
+  const filteredSessions = mockSessions.filter(
+    (session) =>
+      session.user.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      session.ipAddress.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      session.device.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   // Pagination
@@ -170,10 +172,7 @@ export default function IAMActiveSessionsPage() {
   ];
 
   // Breadcrumb items
-  const breadcrumbItems = [
-    { label: 'IAM', href: '/iam' },
-    { label: 'Active sessions' },
-  ];
+  const breadcrumbItems = [{ label: 'IAM', href: '/iam' }, { label: 'Active sessions' }];
 
   // Table columns
   const columns: TableColumn<ActiveSession>[] = [
@@ -241,7 +240,7 @@ export default function IAMActiveSessionsPage() {
         style={{ left: `${sidebarWidth}px` }}
       >
         <TabBar
-          tabs={tabs.map(tab => ({ id: tab.id, label: tab.label, closable: tab.closable }))}
+          tabs={tabs.map((tab) => ({ id: tab.id, label: tab.label, closable: tab.closable }))}
           activeTab={activeTabId}
           onTabChange={selectTab}
           onTabClose={closeTab}
@@ -323,4 +322,3 @@ export default function IAMActiveSessionsPage() {
     </div>
   );
 }
-

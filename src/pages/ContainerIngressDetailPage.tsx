@@ -14,7 +14,6 @@ import {
   Pagination,
   Button,
   ContextMenu,
-  StatusIndicator,
   DetailHeader,
   Chip,
   type TableColumn,
@@ -22,16 +21,9 @@ import {
   columnWidths,
 } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
-import { ShellPanel, useShellPanel, type ShellTab } from '@/components/ShellPanel';
+import { ShellPanel, useShellPanel } from '@/components/ShellPanel';
 import { useTabs } from '@/contexts/TabContext';
-import {
-  IconBell,
-  IconTerminal2,
-  IconFile,
-  IconCopy,
-  IconSearch,
-  IconChevronDown,
-} from '@tabler/icons-react';
+import { IconBell, IconTerminal2, IconSearch, IconChevronDown } from '@tabler/icons-react';
 
 /* ----------------------------------------
    Types
@@ -346,19 +338,9 @@ export function ContainerIngressDetailPage() {
                     value={ingress.status}
                     status={getStatusType(ingress.status)}
                   />
-                  <DetailHeader.InfoCard
-                    label="Namespace"
-                    value={ingress.namespace}
-                    copyable
-                  />
-                  <DetailHeader.InfoCard
-                    label="Ingress Class"
-                    value={ingress.ingressClass}
-                  />
-                  <DetailHeader.InfoCard
-                    label="Created At"
-                    value={ingress.createdAt}
-                  />
+                  <DetailHeader.InfoCard label="Namespace" value={ingress.namespace} copyable />
+                  <DetailHeader.InfoCard label="Ingress Class" value={ingress.ingressClass} />
+                  <DetailHeader.InfoCard label="Created At" value={ingress.createdAt} />
                 </DetailHeader.InfoGrid>
 
                 {/* Labels & Annotations Cards */}
@@ -369,9 +351,11 @@ export function ContainerIngressDetailPage() {
                         Labels ({Object.keys(ingress.labels).length})
                       </span>
                       <div className="flex flex-wrap items-center gap-1 min-w-0 w-full">
-                        {Object.entries(ingress.labels).slice(0, 1).map(([key, val]) => (
-                          <Chip key={key} value={`${key}: ${val}`} maxWidth="100%" />
-                        ))}
+                        {Object.entries(ingress.labels)
+                          .slice(0, 1)
+                          .map(([key, val]) => (
+                            <Chip key={key} value={`${key}: ${val}`} maxWidth="100%" />
+                          ))}
                         {Object.keys(ingress.labels).length > 1 && (
                           <span className="text-[11px] text-[var(--color-text-default)] cursor-pointer hover:underline">
                             (+{Object.keys(ingress.labels).length - 1})
@@ -386,9 +370,11 @@ export function ContainerIngressDetailPage() {
                         Annotations ({Object.keys(ingress.annotations).length})
                       </span>
                       <div className="flex flex-wrap items-center gap-1 min-w-0 w-full">
-                        {Object.entries(ingress.annotations).slice(0, 1).map(([key, val]) => (
-                          <Chip key={key} value={`${key}: ${val}`} maxWidth="100%" />
-                        ))}
+                        {Object.entries(ingress.annotations)
+                          .slice(0, 1)
+                          .map(([key, val]) => (
+                            <Chip key={key} value={`${key}: ${val}`} maxWidth="100%" />
+                          ))}
                         {Object.keys(ingress.annotations).length > 1 && (
                           <span className="text-[11px] text-[var(--color-text-default)] cursor-pointer hover:underline">
                             (+{Object.keys(ingress.annotations).length - 1})

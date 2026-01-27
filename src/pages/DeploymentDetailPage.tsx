@@ -34,7 +34,6 @@ import {
   IconSearch,
   IconDownload,
   IconDotsCircleHorizontal,
-  IconCheck,
   IconChevronDown,
   IconInfoCircle,
   IconTrash,
@@ -164,7 +163,14 @@ const mockPodsData: PodRow[] = [
     ip: '10.11.0.11',
     node: 'nodeName',
     createdAt: '2025-07-25 09:12:20',
-    containers: ['container-0', 'container-1', 'container-2', 'container-3', 'container-4', 'container-5'],
+    containers: [
+      'container-0',
+      'container-1',
+      'container-2',
+      'container-3',
+      'container-4',
+      'container-5',
+    ],
   },
   {
     id: '2',
@@ -330,10 +336,13 @@ function PodsTab({ pods, onViewLogs, onExecuteShell }: PodsTabProps) {
       render: (value: string) => (
         <StatusIndicator
           status={
-            value === 'Running' ? 'active' :
-            value === 'Pending' ? 'building' :
-            value === 'Failed' ? 'error' :
-            'muted'
+            value === 'Running'
+              ? 'active'
+              : value === 'Pending'
+                ? 'building'
+                : value === 'Failed'
+                  ? 'error'
+                  : 'muted'
           }
         />
       ),
@@ -402,7 +411,11 @@ function PodsTab({ pods, onViewLogs, onExecuteShell }: PodsTabProps) {
       render: (_: unknown, row: PodRow) => (
         <ContextMenu items={createPodMenuItems(row)} trigger="click" align="left">
           <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-            <IconDotsCircleHorizontal size={16} className="text-[var(--color-text-subtle)]" stroke={1.5} />
+            <IconDotsCircleHorizontal
+              size={16}
+              className="text-[var(--color-text-subtle)]"
+              stroke={1.5}
+            />
           </button>
         </ContextMenu>
       ),
@@ -501,10 +514,13 @@ function ServicesTab({ services }: ServicesTabProps) {
       render: (value: string) => (
         <StatusIndicator
           status={
-            value === 'Running' ? 'active' :
-            value === 'Pending' ? 'building' :
-            value === 'Failed' ? 'error' :
-            'muted'
+            value === 'Running'
+              ? 'active'
+              : value === 'Pending'
+                ? 'building'
+                : value === 'Failed'
+                  ? 'error'
+                  : 'muted'
           }
         />
       ),
@@ -557,7 +573,11 @@ function ServicesTab({ services }: ServicesTabProps) {
       render: (_: unknown, row: ServiceRow) => (
         <ContextMenu items={createServiceMenuItems(row)} trigger="click" align="left">
           <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-            <IconDotsCircleHorizontal size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
+            <IconDotsCircleHorizontal
+              size={16}
+              className="text-[var(--color-text-muted)]"
+              stroke={1.5}
+            />
           </button>
         </ContextMenu>
       ),
@@ -654,7 +674,11 @@ function ConditionsTab({ conditions }: ConditionsTabProps) {
       render: (_: unknown, row: ConditionRow) => (
         <ContextMenu items={createConditionMenuItems(row)} trigger="click" align="left">
           <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-            <IconDotsCircleHorizontal size={16} className="text-[var(--color-text-subtle)]" stroke={1.5} />
+            <IconDotsCircleHorizontal
+              size={16}
+              className="text-[var(--color-text-subtle)]"
+              stroke={1.5}
+            />
           </button>
         </ContextMenu>
       ),
@@ -737,7 +761,11 @@ function RecentEventsTab({ events }: RecentEventsTabProps) {
       render: (_: unknown, row: EventRow) => (
         <ContextMenu items={createEventMenuItems(row)} trigger="click" align="left">
           <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-            <IconDotsCircleHorizontal size={16} className="text-[var(--color-text-subtle)]" stroke={1.5} />
+            <IconDotsCircleHorizontal
+              size={16}
+              className="text-[var(--color-text-subtle)]"
+              stroke={1.5}
+            />
           </button>
         </ContextMenu>
       ),
@@ -802,7 +830,8 @@ export function DeploymentDetailPage() {
   const deployment = mockDeploymentData[deploymentId || ''] || mockDeploymentData['1'];
 
   // Tab management
-  const { tabs, activeTabId, closeTab, selectTab, updateActiveTabLabel, moveTab, addNewTab } = useTabs();
+  const { tabs, activeTabId, closeTab, selectTab, updateActiveTabLabel, moveTab, addNewTab } =
+    useTabs();
 
   // Update tab label
   useEffect(() => {
@@ -971,26 +1000,18 @@ export function DeploymentDetailPage() {
                     label="Status"
                     value={deployment.status === 'Running' ? 'Active' : deployment.status}
                     status={
-                      deployment.status === 'Running' ? 'active' :
-                      deployment.status === 'Pending' ? 'building' :
-                      deployment.status === 'Failed' ? 'error' :
-                      'muted'
+                      deployment.status === 'Running'
+                        ? 'active'
+                        : deployment.status === 'Pending'
+                          ? 'building'
+                          : deployment.status === 'Failed'
+                            ? 'error'
+                            : 'muted'
                     }
                   />
-                  <DetailHeader.InfoCard
-                    label="Namespace"
-                    value={deployment.namespace}
-                    copyable
-                  />
-                  <DetailHeader.InfoCard
-                    label="Image"
-                    value={deployment.image}
-                    copyable
-                  />
-                  <DetailHeader.InfoCard
-                    label="Created At"
-                    value={deployment.createdAt}
-                  />
+                  <DetailHeader.InfoCard label="Namespace" value={deployment.namespace} copyable />
+                  <DetailHeader.InfoCard label="Image" value={deployment.image} copyable />
+                  <DetailHeader.InfoCard label="Created At" value={deployment.createdAt} />
                 </DetailHeader.InfoGrid>
 
                 {/* Metric Cards */}
@@ -1025,9 +1046,11 @@ export function DeploymentDetailPage() {
                         Labels ({Object.keys(deployment.labels).length})
                       </span>
                       <div className="flex flex-wrap items-center gap-1 min-w-0 w-full">
-                        {Object.entries(deployment.labels).slice(0, 1).map(([key, val]) => (
-                          <Chip key={key} value={`${key}: ${val}`} maxWidth="100%" />
-                        ))}
+                        {Object.entries(deployment.labels)
+                          .slice(0, 1)
+                          .map(([key, val]) => (
+                            <Chip key={key} value={`${key}: ${val}`} maxWidth="100%" />
+                          ))}
                         {Object.keys(deployment.labels).length > 1 && (
                           <span className="text-[11px] text-[var(--color-text-default)] cursor-pointer hover:underline">
                             (+{Object.keys(deployment.labels).length - 1})
@@ -1042,9 +1065,11 @@ export function DeploymentDetailPage() {
                         Annotations ({Object.keys(deployment.annotations).length})
                       </span>
                       <div className="flex flex-wrap items-center gap-1 min-w-0 w-full">
-                        {Object.entries(deployment.annotations).slice(0, 1).map(([key, val]) => (
-                          <Chip key={key} value={`${key}: ${val}`} maxWidth="100%" />
-                        ))}
+                        {Object.entries(deployment.annotations)
+                          .slice(0, 1)
+                          .map(([key, val]) => (
+                            <Chip key={key} value={`${key}: ${val}`} maxWidth="100%" />
+                          ))}
                         {Object.keys(deployment.annotations).length > 1 && (
                           <span className="text-[11px] text-[var(--color-text-default)] cursor-pointer hover:underline">
                             (+{Object.keys(deployment.annotations).length - 1})
@@ -1066,7 +1091,11 @@ export function DeploymentDetailPage() {
                 </TabList>
 
                 <TabPanel value="pods">
-                  <PodsTab pods={mockPodsData} onViewLogs={handleViewLogs} onExecuteShell={handleExecuteShell} />
+                  <PodsTab
+                    pods={mockPodsData}
+                    onViewLogs={handleViewLogs}
+                    onExecuteShell={handleExecuteShell}
+                  />
                 </TabPanel>
                 <TabPanel value="services">
                   <ServicesTab services={mockServicesData} />

@@ -37,16 +37,96 @@ interface Role {
    Mock Data
    ---------------------------------------- */
 const mockRoles: Role[] = [
-  { id: 'role-001', name: 'admin', type: 'Built-in', policies: 'FullAccess', description: 'Full administrative access', scope: 'Global', createdAt: '2025-06-01' },
-  { id: 'role-002', name: 'compute-admin', type: 'Built-in', policies: 'ReadCompute (+3)', description: '-', scope: '-', createdAt: '2025-09-12' },
-  { id: 'role-003', name: 'network-viewer', type: 'Built-in', policies: 'ViewNetwork (+1)', description: 'Read-only network access', scope: 'Project', createdAt: '2025-07-15' },
-  { id: 'role-004', name: 'storage-manager', type: 'Custom', policies: 'ManageStorage (+2)', description: 'Storage management role', scope: 'Project', createdAt: '2025-08-20' },
-  { id: 'role-005', name: 'developer', type: 'Custom', policies: 'DeveloperAccess', description: 'Developer access role', scope: 'Project', createdAt: '2025-09-01' },
-  { id: 'role-006', name: 'qa-tester', type: 'Custom', policies: 'QAAccess (+1)', description: 'QA tester access', scope: 'Project', createdAt: '2025-09-05' },
-  { id: 'role-007', name: 'security-admin', type: 'Built-in', policies: 'SecurityFullAccess', description: 'Security administration', scope: 'Global', createdAt: '2025-06-15' },
-  { id: 'role-008', name: 'billing-viewer', type: 'Built-in', policies: 'ViewBilling', description: 'View billing information', scope: 'Organization', createdAt: '2025-07-01' },
-  { id: 'role-009', name: 'support-agent', type: 'Custom', policies: 'SupportAccess (+2)', description: 'Customer support access', scope: 'Global', createdAt: '2025-08-10' },
-  { id: 'role-010', name: 'read-only', type: 'Built-in', policies: 'ReadAll', description: 'Read-only access to all', scope: 'Project', createdAt: '2025-06-20' },
+  {
+    id: 'role-001',
+    name: 'admin',
+    type: 'Built-in',
+    policies: 'FullAccess',
+    description: 'Full administrative access',
+    scope: 'Global',
+    createdAt: '2025-06-01',
+  },
+  {
+    id: 'role-002',
+    name: 'compute-admin',
+    type: 'Built-in',
+    policies: 'ReadCompute (+3)',
+    description: '-',
+    scope: '-',
+    createdAt: '2025-09-12',
+  },
+  {
+    id: 'role-003',
+    name: 'network-viewer',
+    type: 'Built-in',
+    policies: 'ViewNetwork (+1)',
+    description: 'Read-only network access',
+    scope: 'Project',
+    createdAt: '2025-07-15',
+  },
+  {
+    id: 'role-004',
+    name: 'storage-manager',
+    type: 'Custom',
+    policies: 'ManageStorage (+2)',
+    description: 'Storage management role',
+    scope: 'Project',
+    createdAt: '2025-08-20',
+  },
+  {
+    id: 'role-005',
+    name: 'developer',
+    type: 'Custom',
+    policies: 'DeveloperAccess',
+    description: 'Developer access role',
+    scope: 'Project',
+    createdAt: '2025-09-01',
+  },
+  {
+    id: 'role-006',
+    name: 'qa-tester',
+    type: 'Custom',
+    policies: 'QAAccess (+1)',
+    description: 'QA tester access',
+    scope: 'Project',
+    createdAt: '2025-09-05',
+  },
+  {
+    id: 'role-007',
+    name: 'security-admin',
+    type: 'Built-in',
+    policies: 'SecurityFullAccess',
+    description: 'Security administration',
+    scope: 'Global',
+    createdAt: '2025-06-15',
+  },
+  {
+    id: 'role-008',
+    name: 'billing-viewer',
+    type: 'Built-in',
+    policies: 'ViewBilling',
+    description: 'View billing information',
+    scope: 'Organization',
+    createdAt: '2025-07-01',
+  },
+  {
+    id: 'role-009',
+    name: 'support-agent',
+    type: 'Custom',
+    policies: 'SupportAccess (+2)',
+    description: 'Customer support access',
+    scope: 'Global',
+    createdAt: '2025-08-10',
+  },
+  {
+    id: 'role-010',
+    name: 'read-only',
+    type: 'Built-in',
+    policies: 'ReadAll',
+    description: 'Read-only access to all',
+    scope: 'Project',
+    createdAt: '2025-06-20',
+  },
 ];
 
 /* ----------------------------------------
@@ -58,7 +138,8 @@ export default function IAMRolesPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedRows, setSelectedRows] = useState<string[]>([]);
-  const { tabs, activeTabId, selectTab, closeTab, addNewTab, updateActiveTabLabel, moveTab } = useTabs();
+  const { tabs, activeTabId, selectTab, closeTab, addNewTab, updateActiveTabLabel, moveTab } =
+    useTabs();
   const itemsPerPage = 10;
 
   // Update tab label on mount
@@ -70,10 +151,11 @@ export default function IAMRolesPage() {
   const sidebarWidth = sidebarOpen ? 200 : 0;
 
   // Filter roles by search query
-  const filteredRoles = mockRoles.filter(role =>
-    role.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    role.policies.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    role.description.toLowerCase().includes(searchQuery.toLowerCase())
+  const filteredRoles = mockRoles.filter(
+    (role) =>
+      role.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      role.policies.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      role.description.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   // Pagination
@@ -88,18 +170,37 @@ export default function IAMRolesPage() {
     if (isBuiltIn) {
       // Built-in roles: Manage policies, Edit, Delete disabled
       return [
-        { id: 'manage-policies', label: 'Manage policies', disabled: true, onClick: () => console.log('Manage policies', rowId) },
+        {
+          id: 'manage-policies',
+          label: 'Manage policies',
+          disabled: true,
+          onClick: () => console.log('Manage policies', rowId),
+        },
         { id: 'duplicate', label: 'Duplicate', onClick: () => console.log('Duplicate', rowId) },
         { id: 'edit', label: 'Edit', disabled: true, onClick: () => console.log('Edit', rowId) },
-        { id: 'delete', label: 'Delete', disabled: true, onClick: () => console.log('Delete', rowId) },
+        {
+          id: 'delete',
+          label: 'Delete',
+          disabled: true,
+          onClick: () => console.log('Delete', rowId),
+        },
       ];
     }
     // Custom roles: all items enabled
     return [
-      { id: 'manage-policies', label: 'Manage policies', onClick: () => console.log('Manage policies', rowId) },
+      {
+        id: 'manage-policies',
+        label: 'Manage policies',
+        onClick: () => console.log('Manage policies', rowId),
+      },
       { id: 'duplicate', label: 'Duplicate', onClick: () => console.log('Duplicate', rowId) },
       { id: 'edit', label: 'Edit', onClick: () => console.log('Edit', rowId) },
-      { id: 'delete', label: 'Delete', status: 'danger', onClick: () => console.log('Delete', rowId) },
+      {
+        id: 'delete',
+        label: 'Delete',
+        status: 'danger',
+        onClick: () => console.log('Delete', rowId),
+      },
     ];
   };
 
@@ -175,7 +276,7 @@ export default function IAMRolesPage() {
       >
         {/* Tab Bar */}
         <TabBar
-          tabs={tabs.map(tab => ({ id: tab.id, label: tab.label, closable: tab.closable }))}
+          tabs={tabs.map((tab) => ({ id: tab.id, label: tab.label, closable: tab.closable }))}
           activeTab={activeTabId}
           onTabChange={selectTab}
           onTabClose={closeTab}
@@ -190,14 +291,7 @@ export default function IAMRolesPage() {
           showNavigation
           onBack={() => window.history.back()}
           onForward={() => window.history.forward()}
-          breadcrumb={
-            <Breadcrumb
-              items={[
-                { label: 'IAM', href: '/iam' },
-                { label: 'Roles' },
-              ]}
-            />
-          }
+          breadcrumb={<Breadcrumb items={[{ label: 'IAM', href: '/iam' }, { label: 'Roles' }]} />}
         />
 
         {/* Scrollable Content */}

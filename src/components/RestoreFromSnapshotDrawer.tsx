@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
-import { 
-  Drawer, 
-  Button, 
+import {
+  Drawer,
+  Button,
   SearchInput,
   Pagination,
   Radio,
@@ -71,10 +71,11 @@ export function RestoreFromSnapshotDrawer({
   const [hasAttemptedSubmit, setHasAttemptedSubmit] = useState(false);
 
   // Filter snapshots
-  const filteredSnapshots = snapshots.filter((snap) =>
-    snap.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    snap.id.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    snap.type.toLowerCase().includes(searchQuery.toLowerCase())
+  const filteredSnapshots = snapshots.filter(
+    (snap) =>
+      snap.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      snap.id.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      snap.type.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   const totalPages = Math.ceil(filteredSnapshots.length / ITEMS_PER_PAGE);
@@ -95,9 +96,9 @@ export function RestoreFromSnapshotDrawer({
 
   const handleRestore = async () => {
     setHasAttemptedSubmit(true);
-    
+
     if (!selectedSnapshotId) return;
-    
+
     setIsSubmitting(true);
     try {
       await onRestore?.(selectedSnapshotId);
@@ -126,15 +127,11 @@ export function RestoreFromSnapshotDrawer({
       width={696}
       footer={
         <HStack gap={2} justify="center" className="w-full">
-          <Button 
-            variant="secondary" 
-            onClick={handleClose}
-            className="w-[152px] h-8"
-          >
+          <Button variant="secondary" onClick={handleClose} className="w-[152px] h-8">
             Cancel
           </Button>
-          <Button 
-            variant="primary" 
+          <Button
+            variant="primary"
             onClick={handleRestore}
             disabled={isSubmitting}
             className="w-[152px] h-8"
@@ -153,7 +150,8 @@ export function RestoreFromSnapshotDrawer({
             </h2>
           </VStack>
           <p className="text-[12px] text-[var(--color-text-subtle)] leading-4">
-            Create a new image using this volume as the source. The image will contain all data currently stored on the volume and can be used to launch new instances.
+            Create a new image using this volume as the source. The image will contain all data
+            currently stored on the volume and can be used to launch new instances.
           </p>
         </VStack>
 
@@ -196,7 +194,10 @@ export function RestoreFromSnapshotDrawer({
           />
 
           {/* Snapshots Table */}
-          <div className="flex flex-col gap-[var(--table-row-gap)]" style={{ width: '648px', maxWidth: '648px' }}>
+          <div
+            className="flex flex-col gap-[var(--table-row-gap)]"
+            style={{ width: '648px', maxWidth: '648px' }}
+          >
             {/* Header */}
             <div className="flex items-stretch min-h-[var(--table-row-height)] bg-[var(--table-header-bg)] border border-[var(--color-border-default)] rounded-[var(--table-row-radius)]">
               <div className="w-[var(--table-checkbox-width)] flex items-center justify-center" />
@@ -222,17 +223,20 @@ export function RestoreFromSnapshotDrawer({
 
             {/* Rows */}
             {paginatedSnapshots.map((snap) => (
-              <div 
+              <div
                 key={snap.id}
                 className={`flex items-stretch min-h-[var(--table-row-height)] border rounded-[var(--table-row-radius)] cursor-pointer transition-all ${
-                  selectedSnapshotId === snap.id 
-                    ? 'bg-[var(--color-state-info-bg)] border-[var(--color-action-primary)]' 
+                  selectedSnapshotId === snap.id
+                    ? 'bg-[var(--color-state-info-bg)] border-[var(--color-action-primary)]'
                     : 'bg-[var(--color-surface-default)] border-[var(--color-border-default)] hover:bg-[var(--table-row-hover-bg)]'
                 }`}
                 onClick={() => setSelectedSnapshotId(snap.id)}
               >
                 {/* Radio */}
-                <div className="w-[var(--table-checkbox-width)] flex items-center justify-center" onClick={(e) => e.stopPropagation()}>
+                <div
+                  className="w-[var(--table-checkbox-width)] flex items-center justify-center"
+                  onClick={(e) => e.stopPropagation()}
+                >
                   <Radio
                     name="snapshot-select"
                     value={snap.id}
@@ -247,22 +251,35 @@ export function RestoreFromSnapshotDrawer({
                 {/* Name with ID */}
                 <div className="flex-1 flex flex-col justify-center gap-0.5 px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] min-w-0 overflow-hidden">
                   <HStack gap={1.5} align="center">
-                    <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-action-primary)] truncate">{snap.name}</span>
-                    <IconExternalLink size={12} className="shrink-0 text-[var(--color-action-primary)]" />
+                    <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-action-primary)] truncate">
+                      {snap.name}
+                    </span>
+                    <IconExternalLink
+                      size={12}
+                      className="shrink-0 text-[var(--color-action-primary)]"
+                    />
                   </HStack>
-                  <span className="text-[11px] text-[var(--color-text-subtle)] truncate">ID : {snap.id}</span>
+                  <span className="text-[11px] text-[var(--color-text-subtle)] truncate">
+                    ID : {snap.id}
+                  </span>
                 </div>
                 {/* Type */}
                 <div className="flex-1 flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] min-w-0 overflow-hidden">
-                  <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)] truncate">{snap.type}</span>
+                  <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)] truncate">
+                    {snap.type}
+                  </span>
                 </div>
                 {/* Size */}
                 <div className="flex-1 flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] min-w-0 overflow-hidden">
-                  <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)] truncate">{snap.size}GiB</span>
+                  <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)] truncate">
+                    {snap.size}GiB
+                  </span>
                 </div>
                 {/* Created At */}
                 <div className="flex-1 flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] min-w-0 overflow-hidden">
-                  <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)] truncate">{snap.createdAt}</span>
+                  <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)] truncate">
+                    {snap.createdAt}
+                  </span>
                 </div>
               </div>
             ))}
@@ -270,7 +287,9 @@ export function RestoreFromSnapshotDrawer({
 
           {/* Selection Indicator */}
           <SelectionIndicator
-            selectedItems={selectedSnapshot ? [{ id: selectedSnapshot.id, label: selectedSnapshot.name }] : []}
+            selectedItems={
+              selectedSnapshot ? [{ id: selectedSnapshot.id, label: selectedSnapshot.name }] : []
+            }
             onRemove={() => setSelectedSnapshotId(null)}
             emptyText="No item Selected"
             error={hasAttemptedSubmit && !selectedSnapshotId}

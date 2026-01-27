@@ -1,9 +1,9 @@
 import { useState } from 'react';
-import { 
-  Drawer, 
-  Button, 
-  SearchInput, 
-  Pagination, 
+import {
+  Drawer,
+  Button,
+  SearchInput,
+  Pagination,
   StatusIndicator,
   Radio,
   SelectionIndicator,
@@ -75,9 +75,9 @@ export function DetachVolumeDrawer({
 
   const handleDetach = async () => {
     setHasAttemptedSubmit(true);
-    
+
     if (!selectedVolumeId) return;
-    
+
     setIsSubmitting(true);
     try {
       await onDetach?.(selectedVolumeId);
@@ -95,7 +95,7 @@ export function DetachVolumeDrawer({
     onClose();
   };
 
-  const filteredVolumes = volumes.filter(v => 
+  const filteredVolumes = volumes.filter((v) =>
     v.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
@@ -108,15 +108,11 @@ export function DetachVolumeDrawer({
       width={696}
       footer={
         <HStack gap={2} justify="center" className="w-full">
-          <Button 
-            variant="secondary" 
-            onClick={handleClose}
-            className="w-[152px] h-8"
-          >
+          <Button variant="secondary" onClick={handleClose} className="w-[152px] h-8">
             Cancel
           </Button>
-          <Button 
-            variant="primary" 
+          <Button
+            variant="primary"
             onClick={handleDetach}
             disabled={isSubmitting}
             className="w-[152px] h-8"
@@ -134,15 +130,20 @@ export function DetachVolumeDrawer({
               Detach Volume
             </h2>
             <p className="text-[12px] text-[var(--color-text-subtle)] leading-4">
-              Detach the selected volume from this instance. Once detached, it will no longer be accessible.
+              Detach the selected volume from this instance. Once detached, it will no longer be
+              accessible.
             </p>
           </VStack>
 
           {/* Warning Message */}
           <div className="w-full p-3 bg-[var(--color-state-danger-bg)] rounded-lg flex gap-2 items-start">
-            <IconAlertCircle size={16} className="text-[var(--color-state-danger)] shrink-0 mt-0.5" />
+            <IconAlertCircle
+              size={16}
+              className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
+            />
             <p className="text-[11px] text-[var(--color-text-default)] leading-4">
-              For data consistency, stop all write operations on the instance before detaching a volume.
+              For data consistency, stop all write operations on the instance before detaching a
+              volume.
             </p>
           </div>
 
@@ -158,8 +159,8 @@ export function DetachVolumeDrawer({
           {/* Volume Header */}
           <HStack justify="between" align="center" className="w-full">
             <h3 className="text-[14px] font-medium text-[var(--color-text-default)]">Volumes</h3>
-            <Button 
-              variant="muted" 
+            <Button
+              variant="muted"
               size="sm"
               onClick={onCreateNewNetwork}
               rightIcon={<IconExternalLink size={12} />}
@@ -192,46 +193,93 @@ export function DetachVolumeDrawer({
           </HStack>
 
           {/* Volume Table */}
-          <div className="flex-1 overflow-y-auto sidebar-scroll" style={{ width: '648px', maxWidth: '648px', overflowX: 'hidden', paddingRight: '2px' }}>
+          <div
+            className="flex-1 overflow-y-auto sidebar-scroll"
+            style={{ width: '648px', maxWidth: '648px', overflowX: 'hidden', paddingRight: '2px' }}
+          >
             {/* Header */}
-            <div style={{ display: 'flex', width: '648px', height: '40px' }} className="bg-[var(--color-border-subtle)] border border-[var(--color-border-default)] rounded-md">
-              <div style={{ width: '40px', flexShrink: 0 }} className="flex items-center justify-center" />
-              <div style={{ width: '59px', flexShrink: 0 }} className="flex items-center justify-center px-3 border-l border-[var(--color-border-default)]">
-                <span className="text-[11px] font-medium text-[var(--color-text-default)]">Status</span>
+            <div
+              style={{ display: 'flex', width: '648px', height: '40px' }}
+              className="bg-[var(--color-border-subtle)] border border-[var(--color-border-default)] rounded-md"
+            >
+              <div
+                style={{ width: '40px', flexShrink: 0 }}
+                className="flex items-center justify-center"
+              />
+              <div
+                style={{ width: '59px', flexShrink: 0 }}
+                className="flex items-center justify-center px-3 border-l border-[var(--color-border-default)]"
+              >
+                <span className="text-[11px] font-medium text-[var(--color-text-default)]">
+                  Status
+                </span>
               </div>
-              <div style={{ width: '137px', flexShrink: 0 }} className="flex items-center gap-1.5 px-3 border-l border-[var(--color-border-default)] cursor-pointer hover:text-[var(--color-action-primary)]">
-                <span className="text-[11px] font-medium text-[var(--color-text-default)]">Name</span>
+              <div
+                style={{ width: '137px', flexShrink: 0 }}
+                className="flex items-center gap-1.5 px-3 border-l border-[var(--color-border-default)] cursor-pointer hover:text-[var(--color-action-primary)]"
+              >
+                <span className="text-[11px] font-medium text-[var(--color-text-default)]">
+                  Name
+                </span>
                 <IconChevronDown size={12} className="text-[var(--color-text-default)]" />
               </div>
-              <div style={{ width: '137px', flexShrink: 0 }} className="flex items-center gap-1.5 px-3 border-l border-[var(--color-border-default)] cursor-pointer hover:text-[var(--color-action-primary)]">
-                <span className="text-[11px] font-medium text-[var(--color-text-default)]">Type</span>
+              <div
+                style={{ width: '137px', flexShrink: 0 }}
+                className="flex items-center gap-1.5 px-3 border-l border-[var(--color-border-default)] cursor-pointer hover:text-[var(--color-action-primary)]"
+              >
+                <span className="text-[11px] font-medium text-[var(--color-text-default)]">
+                  Type
+                </span>
                 <IconChevronDown size={12} className="text-[var(--color-text-default)]" />
               </div>
-              <div style={{ width: '137px', flexShrink: 0 }} className="flex items-center gap-1.5 px-3 border-l border-[var(--color-border-default)] cursor-pointer hover:text-[var(--color-action-primary)]">
-                <span className="text-[11px] font-medium text-[var(--color-text-default)]">Size</span>
+              <div
+                style={{ width: '137px', flexShrink: 0 }}
+                className="flex items-center gap-1.5 px-3 border-l border-[var(--color-border-default)] cursor-pointer hover:text-[var(--color-action-primary)]"
+              >
+                <span className="text-[11px] font-medium text-[var(--color-text-default)]">
+                  Size
+                </span>
                 <IconChevronDown size={12} className="text-[var(--color-text-default)]" />
               </div>
-              <div style={{ width: '138px', flexShrink: 0 }} className="flex items-center gap-1.5 px-3 border-l border-[var(--color-border-default)] cursor-pointer hover:text-[var(--color-action-primary)]">
-                <span className="text-[11px] font-medium text-[var(--color-text-default)]">Disk Tag</span>
+              <div
+                style={{ width: '138px', flexShrink: 0 }}
+                className="flex items-center gap-1.5 px-3 border-l border-[var(--color-border-default)] cursor-pointer hover:text-[var(--color-action-primary)]"
+              >
+                <span className="text-[11px] font-medium text-[var(--color-text-default)]">
+                  Disk Tag
+                </span>
                 <IconChevronDown size={12} className="text-[var(--color-text-default)]" />
               </div>
             </div>
 
             {/* Rows */}
-            <div style={{ width: '648px', maxWidth: '648px', marginTop: '4px', display: 'flex', flexDirection: 'column', gap: '4px' }}>
+            <div
+              style={{
+                width: '648px',
+                maxWidth: '648px',
+                marginTop: '4px',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '4px',
+              }}
+            >
               {filteredVolumes.slice(0, itemsPerPage).map((volume) => (
-                <div 
+                <div
                   key={volume.id}
                   style={{ display: 'flex', width: '648px', minHeight: '40px' }}
                   className={`border rounded-md cursor-pointer transition-all ${
-                    selectedVolumeId === volume.id 
-                      ? 'bg-[var(--color-state-info-bg)] border-[var(--color-action-primary)]' 
+                    selectedVolumeId === volume.id
+                      ? 'bg-[var(--color-state-info-bg)] border-[var(--color-action-primary)]'
                       : 'bg-[var(--color-surface-default)] border-[var(--color-border-default)] hover:bg-[var(--table-row-hover-bg)]'
                   }`}
                   onClick={() => setSelectedVolumeId(volume.id)}
                 >
                   {/* Radio */}
-                  <div style={{ width: '40px', flexShrink: 0 }} className="flex items-center justify-center" onClick={(e) => e.stopPropagation()}>
+                  <div
+                    style={{ width: '40px', flexShrink: 0 }}
+                    className="flex items-center justify-center"
+                    onClick={(e) => e.stopPropagation()}
+                  >
                     <Radio
                       name="volume-select"
                       value={volume.id}
@@ -240,28 +288,56 @@ export function DetachVolumeDrawer({
                     />
                   </div>
                   {/* Status */}
-                  <div style={{ width: '59px', flexShrink: 0 }} className="flex items-center justify-center">
+                  <div
+                    style={{ width: '59px', flexShrink: 0 }}
+                    className="flex items-center justify-center"
+                  >
                     <StatusIndicator status="active" layout="icon-only" size="sm" />
                   </div>
                   {/* Name */}
-                  <div style={{ width: '137px', flexShrink: 0 }} className="flex flex-col gap-0.5 justify-center px-3 py-2 overflow-hidden">
+                  <div
+                    style={{ width: '137px', flexShrink: 0 }}
+                    className="flex flex-col gap-0.5 justify-center px-3 py-2 overflow-hidden"
+                  >
                     <div className="flex items-center gap-1.5">
-                      <span className="text-[12px] font-medium text-[var(--color-action-primary)] truncate">{volume.name}</span>
-                      <IconExternalLink size={12} className="shrink-0 text-[var(--color-action-primary)]" />
+                      <span className="text-[12px] font-medium text-[var(--color-action-primary)] truncate">
+                        {volume.name}
+                      </span>
+                      <IconExternalLink
+                        size={12}
+                        className="shrink-0 text-[var(--color-action-primary)]"
+                      />
                     </div>
-                    <span className="text-[11px] text-[var(--color-text-subtle)] truncate">ID : 30ujh345</span>
+                    <span className="text-[11px] text-[var(--color-text-subtle)] truncate">
+                      ID : 30ujh345
+                    </span>
                   </div>
                   {/* Type */}
-                  <div style={{ width: '137px', flexShrink: 0 }} className="flex items-center px-3 py-2 overflow-hidden">
-                    <span className="text-[12px] text-[var(--color-text-default)] truncate">{volume.type}</span>
+                  <div
+                    style={{ width: '137px', flexShrink: 0 }}
+                    className="flex items-center px-3 py-2 overflow-hidden"
+                  >
+                    <span className="text-[12px] text-[var(--color-text-default)] truncate">
+                      {volume.type}
+                    </span>
                   </div>
                   {/* Size */}
-                  <div style={{ width: '137px', flexShrink: 0 }} className="flex items-center px-3 py-2 overflow-hidden">
-                    <span className="text-[12px] text-[var(--color-text-default)] truncate">{volume.size}</span>
+                  <div
+                    style={{ width: '137px', flexShrink: 0 }}
+                    className="flex items-center px-3 py-2 overflow-hidden"
+                  >
+                    <span className="text-[12px] text-[var(--color-text-default)] truncate">
+                      {volume.size}
+                    </span>
                   </div>
                   {/* Disk Tag */}
-                  <div style={{ width: '138px', flexShrink: 0 }} className="flex items-center px-3 py-2 overflow-hidden">
-                    <span className="text-[12px] text-[var(--color-text-default)] truncate">{volume.diskTag}</span>
+                  <div
+                    style={{ width: '138px', flexShrink: 0 }}
+                    className="flex items-center px-3 py-2 overflow-hidden"
+                  >
+                    <span className="text-[12px] text-[var(--color-text-default)] truncate">
+                      {volume.diskTag}
+                    </span>
                   </div>
                 </div>
               ))}
@@ -270,7 +346,16 @@ export function DetachVolumeDrawer({
 
           {/* Selection Indicator */}
           <SelectionIndicator
-            selectedItems={selectedVolumeId ? [{ id: selectedVolumeId, label: volumes.find(v => v.id === selectedVolumeId)?.name || '' }] : []}
+            selectedItems={
+              selectedVolumeId
+                ? [
+                    {
+                      id: selectedVolumeId,
+                      label: volumes.find((v) => v.id === selectedVolumeId)?.name || '',
+                    },
+                  ]
+                : []
+            }
             onRemove={() => setSelectedVolumeId(null)}
             emptyText="No item selected"
             error={hasAttemptedSubmit && !selectedVolumeId}

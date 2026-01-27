@@ -43,7 +43,7 @@ export function EditVolumeSnapshotDrawer({
 
   const handleSubmit = async () => {
     if (!snapshotName.trim()) return;
-    
+
     setIsSubmitting(true);
     try {
       await onSubmit?.(snapshotName, description);
@@ -66,15 +66,11 @@ export function EditVolumeSnapshotDrawer({
       width={376}
       footer={
         <HStack gap={2} className="w-full">
-          <Button 
-            variant="secondary" 
-            onClick={handleClose}
-            className="flex-1 h-8"
-          >
+          <Button variant="secondary" onClick={handleClose} className="flex-1 h-8">
             Cancel
           </Button>
-          <Button 
-            variant="primary" 
+          <Button
+            variant="primary"
             onClick={handleSubmit}
             disabled={isSubmitting}
             className="flex-1 h-8"
@@ -112,9 +108,7 @@ export function EditVolumeSnapshotDrawer({
             <label className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
               Description
             </label>
-            <span className="text-[12px] text-[var(--color-text-subtle)]">
-              (optional)
-            </span>
+            <span className="text-[12px] text-[var(--color-text-subtle)]">(optional)</span>
           </HStack>
           <Input
             value={description}
@@ -129,5 +123,3 @@ export function EditVolumeSnapshotDrawer({
 }
 
 export default EditVolumeSnapshotDrawer;
-
-

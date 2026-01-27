@@ -84,8 +84,8 @@ const mockNetworkPolicyData: Record<string, NetworkPolicyData> = {
     status: 'Active',
     namespace: 'default',
     createdAt: '2025-07-25 09:12:20',
-    labels: { 'app': 'web' },
-    annotations: { 'description': 'Network policy for web app' },
+    labels: { app: 'web' },
+    annotations: { description: 'Network policy for web app' },
     ingressRules: [
       {
         id: 'rule1',
@@ -114,7 +114,7 @@ const mockNetworkPolicyData: Record<string, NetworkPolicyData> = {
         allowedPorts: [{ port: '53', protocol: 'UDP' }],
       },
     ],
-    podSelector: { 'app': 'web', 'tier': 'frontend' },
+    podSelector: { app: 'web', tier: 'frontend' },
     matchingPods: [
       { name: 'deploymentName-77f6bb9c69-4aw7f', createdAt: '2025-07-25 09:12:20' },
       { name: 'deploymentName-77f6bb9c69-8xk2p', createdAt: '2025-07-25 09:12:20' },
@@ -144,7 +144,16 @@ export function NetworkPolicyDetailPage() {
   const { networkPolicyId } = useParams<{ networkPolicyId: string }>();
   const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(true);
-  const { tabs, activeTabId, selectTab, closeTab, addNewTab, moveTab, addTab, updateActiveTabLabel } = useTabs();
+  const {
+    tabs,
+    activeTabId,
+    selectTab,
+    closeTab,
+    addNewTab,
+    moveTab,
+    addTab,
+    updateActiveTabLabel,
+  } = useTabs();
   const [activeTab, setActiveTab] = useState('ingress-rules');
   const [selectedRule, setSelectedRule] = useState<string>('rule1');
   const [selectedEgressRule, setSelectedEgressRule] = useState<string>('egress1');
@@ -222,8 +231,10 @@ export function NetworkPolicyDetailPage() {
   const annotationsCount = Object.keys(networkPolicyData.annotations).length;
 
   // Get selected rule data
-  const selectedRuleData = networkPolicyData.ingressRules.find(r => r.id === selectedRule);
-  const selectedEgressRuleData = networkPolicyData.egressRules.find(r => r.id === selectedEgressRule);
+  const selectedRuleData = networkPolicyData.ingressRules.find((r) => r.id === selectedRule);
+  const selectedEgressRuleData = networkPolicyData.egressRules.find(
+    (r) => r.id === selectedEgressRule
+  );
 
   // Rule type options
   const ruleTypeOptions = [
@@ -290,7 +301,7 @@ export function NetworkPolicyDetailPage() {
       >
         {/* Tab Bar */}
         <TabBar
-          tabs={tabs.map(tab => ({ id: tab.id, label: tab.label, closable: tab.closable }))}
+          tabs={tabs.map((tab) => ({ id: tab.id, label: tab.label, closable: tab.closable }))}
           activeTab={activeTabId}
           onTabChange={selectTab}
           onTabClose={closeTab}
@@ -313,7 +324,7 @@ export function NetworkPolicyDetailPage() {
           }
           actions={
             <>
-              <button 
+              <button
                 className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
                 onClick={() => {
                   if (shellPanel.isExpanded) {
@@ -323,7 +334,15 @@ export function NetworkPolicyDetailPage() {
                   }
                 }}
               >
-                <IconTerminal2 size={16} className={shellPanel.isExpanded ? "text-[var(--color-action-primary)]" : "text-[var(--color-text-muted)]"} stroke={1.5} />
+                <IconTerminal2
+                  size={16}
+                  className={
+                    shellPanel.isExpanded
+                      ? 'text-[var(--color-action-primary)]'
+                      : 'text-[var(--color-text-muted)]'
+                  }
+                  stroke={1.5}
+                />
               </button>
               <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
                 <IconFile size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
@@ -342,7 +361,7 @@ export function NetworkPolicyDetailPage() {
         />
 
         {/* Content Area */}
-        <div 
+        <div
           className="flex-1 overflow-auto min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll"
           style={{ paddingBottom: shellPanel.isExpanded ? 'var(--shell-panel-height)' : '0' }}
         >
@@ -370,25 +389,24 @@ export function NetworkPolicyDetailPage() {
                       networkPolicyData.status === 'Active'
                         ? 'active'
                         : networkPolicyData.status === 'Pending'
-                        ? 'pending'
-                        : 'error'
+                          ? 'pending'
+                          : 'error'
                     }
                   />
                   <DetailHeader.InfoCard
                     label="Namespace"
                     value={
-                      <span 
+                      <span
                         className="text-[var(--color-action-primary)] cursor-pointer hover:underline"
-                        onClick={() => navigate(`/container/namespaces/${networkPolicyData.namespace}`)}
+                        onClick={() =>
+                          navigate(`/container/namespaces/${networkPolicyData.namespace}`)
+                        }
                       >
                         {networkPolicyData.namespace}
                       </span>
                     }
                   />
-                  <DetailHeader.InfoCard
-                    label="Created At"
-                    value={networkPolicyData.createdAt}
-                  />
+                  <DetailHeader.InfoCard label="Created At" value={networkPolicyData.createdAt} />
                   <DetailHeader.InfoCard
                     label={`Labels (${labelsCount})`}
                     value={
@@ -445,7 +463,11 @@ export function NetworkPolicyDetailPage() {
                               >
                                 <span>{rule.name}</span>
                                 {rule.id !== 'rule1' && (
-                                  <IconX size={12} stroke={1.5} className="text-[var(--color-text-muted)]" />
+                                  <IconX
+                                    size={12}
+                                    stroke={1.5}
+                                    className="text-[var(--color-text-muted)]"
+                                  />
                                 )}
                               </button>
                             ))}
@@ -482,13 +504,19 @@ export function NetworkPolicyDetailPage() {
                                 <HStack gap={2} className="mb-2">
                                   <div className="w-[100px]" />
                                   <div className="flex-1">
-                                    <span className="text-[11px] font-medium text-[var(--color-text-default)]">Key</span>
+                                    <span className="text-[11px] font-medium text-[var(--color-text-default)]">
+                                      Key
+                                    </span>
                                   </div>
                                   <div className="flex-1">
-                                    <span className="text-[11px] font-medium text-[var(--color-text-default)]">Operator</span>
+                                    <span className="text-[11px] font-medium text-[var(--color-text-default)]">
+                                      Operator
+                                    </span>
                                   </div>
                                   <div className="flex-1">
-                                    <span className="text-[11px] font-medium text-[var(--color-text-default)]">Value</span>
+                                    <span className="text-[11px] font-medium text-[var(--color-text-default)]">
+                                      Value
+                                    </span>
                                   </div>
                                   <div className="w-[28px]" />
                                 </HStack>
@@ -496,7 +524,9 @@ export function NetworkPolicyDetailPage() {
                                 {/* Namespace Row */}
                                 <HStack gap={2} className="mb-2" align="center">
                                   <div className="w-[100px]">
-                                    <span className="text-[11px] font-medium text-[var(--color-text-default)]">Namespace</span>
+                                    <span className="text-[11px] font-medium text-[var(--color-text-default)]">
+                                      Namespace
+                                    </span>
                                   </div>
                                   <div className="flex-1">
                                     <Input
@@ -509,7 +539,10 @@ export function NetworkPolicyDetailPage() {
                                   <div className="flex-1">
                                     <Select
                                       options={operatorOptions}
-                                      value={selectedRuleData.namespaceSelectors[0]?.operator || 'In List'}
+                                      value={
+                                        selectedRuleData.namespaceSelectors[0]?.operator ||
+                                        'In List'
+                                      }
                                       onChange={() => {}}
                                       size="sm"
                                       fullWidth
@@ -529,7 +562,9 @@ export function NetworkPolicyDetailPage() {
                                 {/* Pod Row */}
                                 <HStack gap={2} className="mb-2" align="center">
                                   <div className="w-[100px]">
-                                    <span className="text-[11px] font-medium text-[var(--color-text-default)]">Pod</span>
+                                    <span className="text-[11px] font-medium text-[var(--color-text-default)]">
+                                      Pod
+                                    </span>
                                   </div>
                                   <div className="flex-1">
                                     <Input
@@ -542,7 +577,9 @@ export function NetworkPolicyDetailPage() {
                                   <div className="flex-1">
                                     <Select
                                       options={operatorOptions}
-                                      value={selectedRuleData.podSelectors[0]?.operator || 'In List'}
+                                      value={
+                                        selectedRuleData.podSelectors[0]?.operator || 'In List'
+                                      }
                                       onChange={() => {}}
                                       size="sm"
                                       fullWidth
@@ -557,10 +594,13 @@ export function NetworkPolicyDetailPage() {
                                     />
                                   </div>
                                   <button className="w-[28px] h-[28px] flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                                    <IconX size={14} stroke={1.5} className="text-[var(--color-text-muted)]" />
+                                    <IconX
+                                      size={14}
+                                      stroke={1.5}
+                                      className="text-[var(--color-text-muted)]"
+                                    />
                                   </button>
                                 </HStack>
-
                               </div>
 
                               {/* Matching Pods */}
@@ -652,7 +692,11 @@ export function NetworkPolicyDetailPage() {
                               >
                                 <span>{rule.name}</span>
                                 {rule.id !== 'egress1' && (
-                                  <IconX size={12} stroke={1.5} className="text-[var(--color-text-muted)]" />
+                                  <IconX
+                                    size={12}
+                                    stroke={1.5}
+                                    className="text-[var(--color-text-muted)]"
+                                  />
                                 )}
                               </button>
                             ))}
@@ -689,13 +733,19 @@ export function NetworkPolicyDetailPage() {
                                 <HStack gap={2} className="mb-2">
                                   <div className="w-[100px]" />
                                   <div className="flex-1">
-                                    <span className="text-[11px] font-medium text-[var(--color-text-default)]">Key</span>
+                                    <span className="text-[11px] font-medium text-[var(--color-text-default)]">
+                                      Key
+                                    </span>
                                   </div>
                                   <div className="flex-1">
-                                    <span className="text-[11px] font-medium text-[var(--color-text-default)]">Operator</span>
+                                    <span className="text-[11px] font-medium text-[var(--color-text-default)]">
+                                      Operator
+                                    </span>
                                   </div>
                                   <div className="flex-1">
-                                    <span className="text-[11px] font-medium text-[var(--color-text-default)]">Value</span>
+                                    <span className="text-[11px] font-medium text-[var(--color-text-default)]">
+                                      Value
+                                    </span>
                                   </div>
                                   <div className="w-[28px]" />
                                 </HStack>
@@ -703,11 +753,15 @@ export function NetworkPolicyDetailPage() {
                                 {/* Namespace Row */}
                                 <HStack gap={2} className="mb-2" align="center">
                                   <div className="w-[100px]">
-                                    <span className="text-[11px] font-medium text-[var(--color-text-default)]">Namespace</span>
+                                    <span className="text-[11px] font-medium text-[var(--color-text-default)]">
+                                      Namespace
+                                    </span>
                                   </div>
                                   <div className="flex-1">
                                     <Input
-                                      value={selectedEgressRuleData.namespaceSelectors[0]?.key || 'foo'}
+                                      value={
+                                        selectedEgressRuleData.namespaceSelectors[0]?.key || 'foo'
+                                      }
                                       onChange={() => {}}
                                       size="sm"
                                       fullWidth
@@ -716,7 +770,10 @@ export function NetworkPolicyDetailPage() {
                                   <div className="flex-1">
                                     <Select
                                       options={operatorOptions}
-                                      value={selectedEgressRuleData.namespaceSelectors[0]?.operator || 'In List'}
+                                      value={
+                                        selectedEgressRuleData.namespaceSelectors[0]?.operator ||
+                                        'In List'
+                                      }
                                       onChange={() => {}}
                                       size="sm"
                                       fullWidth
@@ -724,7 +781,9 @@ export function NetworkPolicyDetailPage() {
                                   </div>
                                   <div className="flex-1">
                                     <Input
-                                      value={selectedEgressRuleData.namespaceSelectors[0]?.value || 'bar'}
+                                      value={
+                                        selectedEgressRuleData.namespaceSelectors[0]?.value || 'bar'
+                                      }
                                       onChange={() => {}}
                                       size="sm"
                                       fullWidth
@@ -736,7 +795,9 @@ export function NetworkPolicyDetailPage() {
                                 {/* Pod Row */}
                                 <HStack gap={2} className="mb-2" align="center">
                                   <div className="w-[100px]">
-                                    <span className="text-[11px] font-medium text-[var(--color-text-default)]">Pod</span>
+                                    <span className="text-[11px] font-medium text-[var(--color-text-default)]">
+                                      Pod
+                                    </span>
                                   </div>
                                   <div className="flex-1">
                                     <Input
@@ -749,7 +810,10 @@ export function NetworkPolicyDetailPage() {
                                   <div className="flex-1">
                                     <Select
                                       options={operatorOptions}
-                                      value={selectedEgressRuleData.podSelectors[0]?.operator || 'In List'}
+                                      value={
+                                        selectedEgressRuleData.podSelectors[0]?.operator ||
+                                        'In List'
+                                      }
                                       onChange={() => {}}
                                       size="sm"
                                       fullWidth
@@ -764,7 +828,11 @@ export function NetworkPolicyDetailPage() {
                                     />
                                   </div>
                                   <button className="w-[28px] h-[28px] flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                                    <IconX size={14} stroke={1.5} className="text-[var(--color-text-muted)]" />
+                                    <IconX
+                                      size={14}
+                                      stroke={1.5}
+                                      className="text-[var(--color-text-muted)]"
+                                    />
                                   </button>
                                 </HStack>
                               </div>
@@ -814,7 +882,9 @@ export function NetworkPolicyDetailPage() {
                                     </label>
                                     <Select
                                       options={protocolOptions}
-                                      value={selectedEgressRuleData.allowedPorts[0]?.protocol || 'UDP'}
+                                      value={
+                                        selectedEgressRuleData.allowedPorts[0]?.protocol || 'UDP'
+                                      }
                                       onChange={() => {}}
                                       size="sm"
                                       fullWidth
@@ -850,13 +920,19 @@ export function NetworkPolicyDetailPage() {
                             {/* Column Headers */}
                             <HStack gap={2} className="w-full">
                               <div className="flex-1">
-                                <span className="text-[11px] font-medium text-[var(--color-text-default)]">Key</span>
+                                <span className="text-[11px] font-medium text-[var(--color-text-default)]">
+                                  Key
+                                </span>
                               </div>
                               <div className="flex-1">
-                                <span className="text-[11px] font-medium text-[var(--color-text-default)]">Operator</span>
+                                <span className="text-[11px] font-medium text-[var(--color-text-default)]">
+                                  Operator
+                                </span>
                               </div>
                               <div className="flex-1">
-                                <span className="text-[11px] font-medium text-[var(--color-text-default)]">Value</span>
+                                <span className="text-[11px] font-medium text-[var(--color-text-default)]">
+                                  Value
+                                </span>
                               </div>
                             </HStack>
 
@@ -865,12 +941,12 @@ export function NetworkPolicyDetailPage() {
                               Object.entries(networkPolicyData.podSelector).map(([key, value]) => (
                                 <HStack key={key} gap={2} className="w-full">
                                   <div className="flex-1">
-                                    <Input 
-                                      value={key} 
-                                      onChange={() => {}} 
-                                      size="sm" 
-                                      fullWidth 
-                                      disabled 
+                                    <Input
+                                      value={key}
+                                      onChange={() => {}}
+                                      size="sm"
+                                      fullWidth
+                                      disabled
                                       className="bg-[var(--color-surface-muted)]"
                                     />
                                   </div>
@@ -885,12 +961,12 @@ export function NetworkPolicyDetailPage() {
                                     />
                                   </div>
                                   <div className="flex-1">
-                                    <Input 
-                                      value={value} 
-                                      onChange={() => {}} 
-                                      size="sm" 
-                                      fullWidth 
-                                      disabled 
+                                    <Input
+                                      value={value}
+                                      onChange={() => {}}
+                                      size="sm"
+                                      fullWidth
+                                      disabled
                                       className="bg-[var(--color-surface-muted)]"
                                     />
                                   </div>
@@ -947,10 +1023,14 @@ export function NetworkPolicyDetailPage() {
                             {/* Column Headers */}
                             <HStack gap={2} className="w-full">
                               <div className="flex-1">
-                                <span className="text-[11px] font-medium text-[var(--color-text-default)]">Key</span>
+                                <span className="text-[11px] font-medium text-[var(--color-text-default)]">
+                                  Key
+                                </span>
                               </div>
                               <div className="flex-1">
-                                <span className="text-[11px] font-medium text-[var(--color-text-default)]">Value</span>
+                                <span className="text-[11px] font-medium text-[var(--color-text-default)]">
+                                  Value
+                                </span>
                               </div>
                             </HStack>
                             {/* Label Rows */}
@@ -958,10 +1038,22 @@ export function NetworkPolicyDetailPage() {
                               Object.entries(networkPolicyData.labels).map(([key, value]) => (
                                 <HStack key={key} gap={2} className="w-full">
                                   <div className="flex-1">
-                                    <Input value={key} onChange={() => {}} size="sm" fullWidth disabled />
+                                    <Input
+                                      value={key}
+                                      onChange={() => {}}
+                                      size="sm"
+                                      fullWidth
+                                      disabled
+                                    />
                                   </div>
                                   <div className="flex-1">
-                                    <Input value={value} onChange={() => {}} size="sm" fullWidth disabled />
+                                    <Input
+                                      value={value}
+                                      onChange={() => {}}
+                                      size="sm"
+                                      fullWidth
+                                      disabled
+                                    />
                                   </div>
                                 </HStack>
                               ))
@@ -984,10 +1076,14 @@ export function NetworkPolicyDetailPage() {
                             {/* Column Headers */}
                             <HStack gap={2} className="w-full">
                               <div className="flex-1">
-                                <span className="text-[11px] font-medium text-[var(--color-text-default)]">Key</span>
+                                <span className="text-[11px] font-medium text-[var(--color-text-default)]">
+                                  Key
+                                </span>
                               </div>
                               <div className="flex-1">
-                                <span className="text-[11px] font-medium text-[var(--color-text-default)]">Value</span>
+                                <span className="text-[11px] font-medium text-[var(--color-text-default)]">
+                                  Value
+                                </span>
                               </div>
                             </HStack>
                             {/* Annotation Rows */}
@@ -995,10 +1091,22 @@ export function NetworkPolicyDetailPage() {
                               Object.entries(networkPolicyData.annotations).map(([key, value]) => (
                                 <HStack key={key} gap={2} className="w-full">
                                   <div className="flex-1">
-                                    <Input value={key} onChange={() => {}} size="sm" fullWidth disabled />
+                                    <Input
+                                      value={key}
+                                      onChange={() => {}}
+                                      size="sm"
+                                      fullWidth
+                                      disabled
+                                    />
                                   </div>
                                   <div className="flex-1">
-                                    <Input value={value} onChange={() => {}} size="sm" fullWidth disabled />
+                                    <Input
+                                      value={value}
+                                      onChange={() => {}}
+                                      size="sm"
+                                      fullWidth
+                                      disabled
+                                    />
                                   </div>
                                 </HStack>
                               ))

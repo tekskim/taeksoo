@@ -1,7 +1,7 @@
 import { useState } from 'react';
-import { 
-  Drawer, 
-  Button, 
+import {
+  Drawer,
+  Button,
   SearchInput,
   Pagination,
   Radio,
@@ -57,12 +57,54 @@ const mockFixedIPs: FixedIPItem[] = [
 ];
 
 const mockFloatingIPs: FloatingIPItem[] = [
-  { id: 'flp-1', floatingIp: '203.0.140.25', status: 'active', networkName: 'net-02', networkId: '17kfj123', description: '-' },
-  { id: 'flp-2', floatingIp: '203.0.140.25', status: 'active', networkName: 'net-02', networkId: '17kfj123', description: '-' },
-  { id: 'flp-3', floatingIp: '203.0.140.25', status: 'active', networkName: 'net-02', networkId: '17kfj123', description: '-' },
-  { id: 'flp-4', floatingIp: '203.0.140.25', status: 'active', networkName: 'net-02', networkId: '17kfj123', description: '-' },
-  { id: 'flp-5', floatingIp: '203.0.140.25', status: 'active', networkName: 'net-02', networkId: '17kfj123', description: '-' },
-  { id: 'flp-6', floatingIp: '203.0.140.25', status: 'active', networkName: 'net-02', networkId: '17kfj123', description: '-' },
+  {
+    id: 'flp-1',
+    floatingIp: '203.0.140.25',
+    status: 'active',
+    networkName: 'net-02',
+    networkId: '17kfj123',
+    description: '-',
+  },
+  {
+    id: 'flp-2',
+    floatingIp: '203.0.140.25',
+    status: 'active',
+    networkName: 'net-02',
+    networkId: '17kfj123',
+    description: '-',
+  },
+  {
+    id: 'flp-3',
+    floatingIp: '203.0.140.25',
+    status: 'active',
+    networkName: 'net-02',
+    networkId: '17kfj123',
+    description: '-',
+  },
+  {
+    id: 'flp-4',
+    floatingIp: '203.0.140.25',
+    status: 'active',
+    networkName: 'net-02',
+    networkId: '17kfj123',
+    description: '-',
+  },
+  {
+    id: 'flp-5',
+    floatingIp: '203.0.140.25',
+    status: 'active',
+    networkName: 'net-02',
+    networkId: '17kfj123',
+    description: '-',
+  },
+  {
+    id: 'flp-6',
+    floatingIp: '203.0.140.25',
+    status: 'active',
+    networkName: 'net-02',
+    networkId: '17kfj123',
+    description: '-',
+  },
 ];
 
 /* ----------------------------------------
@@ -88,19 +130,21 @@ export function AssociateFloatingIPToPortDrawer({
   const [selectedFloatingIpId, setSelectedFloatingIpId] = useState<string | null>(null);
   const [floatingIpSearchQuery, setFloatingIpSearchQuery] = useState('');
   const [floatingIpCurrentPage, setFloatingIpCurrentPage] = useState(1);
-  const [floatingIpSortField, setFloatingIpSortField] = useState<'floatingIp' | 'networkName' | 'description' | null>('floatingIp');
+  const [floatingIpSortField, setFloatingIpSortField] = useState<
+    'floatingIp' | 'networkName' | 'description' | null
+  >('floatingIp');
   const [floatingIpSortDirection, setFloatingIpSortDirection] = useState<'asc' | 'desc'>('asc');
 
   const itemsPerPage = 5;
 
   // Reset state function
   const resetState = () => {
-      setSelectedFixedIpId(null);
-      setSelectedFloatingIpId(null);
-      setFixedIpSearchQuery('');
-      setFloatingIpSearchQuery('');
-      setFixedIpCurrentPage(1);
-      setFloatingIpCurrentPage(1);
+    setSelectedFixedIpId(null);
+    setSelectedFloatingIpId(null);
+    setFixedIpSearchQuery('');
+    setFloatingIpSearchQuery('');
+    setFixedIpCurrentPage(1);
+    setFloatingIpCurrentPage(1);
   };
 
   // Handle close with reset
@@ -111,10 +155,11 @@ export function AssociateFloatingIPToPortDrawer({
 
   // Fixed IP filtering and sorting
   const filteredFixedIPs = fixedIPs
-    .filter(item => 
-      item.fixedIp.toLowerCase().includes(fixedIpSearchQuery.toLowerCase()) ||
-      item.macAddress.toLowerCase().includes(fixedIpSearchQuery.toLowerCase()) ||
-      item.subnetCidr.toLowerCase().includes(fixedIpSearchQuery.toLowerCase())
+    .filter(
+      (item) =>
+        item.fixedIp.toLowerCase().includes(fixedIpSearchQuery.toLowerCase()) ||
+        item.macAddress.toLowerCase().includes(fixedIpSearchQuery.toLowerCase()) ||
+        item.subnetCidr.toLowerCase().includes(fixedIpSearchQuery.toLowerCase())
     )
     .sort((a, b) => {
       if (!fixedIpSortField) return 0;
@@ -133,10 +178,11 @@ export function AssociateFloatingIPToPortDrawer({
 
   // Floating IP filtering and sorting
   const filteredFloatingIPs = floatingIPs
-    .filter(item =>
-      item.floatingIp.toLowerCase().includes(floatingIpSearchQuery.toLowerCase()) ||
-      item.networkName.toLowerCase().includes(floatingIpSearchQuery.toLowerCase()) ||
-      item.description.toLowerCase().includes(floatingIpSearchQuery.toLowerCase())
+    .filter(
+      (item) =>
+        item.floatingIp.toLowerCase().includes(floatingIpSearchQuery.toLowerCase()) ||
+        item.networkName.toLowerCase().includes(floatingIpSearchQuery.toLowerCase()) ||
+        item.description.toLowerCase().includes(floatingIpSearchQuery.toLowerCase())
     )
     .sort((a, b) => {
       if (!floatingIpSortField) return 0;
@@ -154,13 +200,13 @@ export function AssociateFloatingIPToPortDrawer({
   const floatingIpTotalPages = Math.ceil(filteredFloatingIPs.length / itemsPerPage);
 
   // Selected items
-  const selectedFixedIp = fixedIPs.find(item => item.id === selectedFixedIpId);
-  const selectedFloatingIp = floatingIPs.find(item => item.id === selectedFloatingIpId);
+  const selectedFixedIp = fixedIPs.find((item) => item.id === selectedFixedIpId);
+  const selectedFloatingIp = floatingIPs.find((item) => item.id === selectedFloatingIpId);
 
   // Handlers
   const handleFixedIpSort = (field: 'fixedIp') => {
     if (fixedIpSortField === field) {
-      setFixedIpSortDirection(prev => prev === 'asc' ? 'desc' : 'asc');
+      setFixedIpSortDirection((prev) => (prev === 'asc' ? 'desc' : 'asc'));
     } else {
       setFixedIpSortField(field);
       setFixedIpSortDirection('asc');
@@ -169,7 +215,7 @@ export function AssociateFloatingIPToPortDrawer({
 
   const handleFloatingIpSort = (field: 'floatingIp' | 'networkName' | 'description') => {
     if (floatingIpSortField === field) {
-      setFloatingIpSortDirection(prev => prev === 'asc' ? 'desc' : 'asc');
+      setFloatingIpSortDirection((prev) => (prev === 'asc' ? 'desc' : 'asc'));
     } else {
       setFloatingIpSortField(field);
       setFloatingIpSortDirection('asc');
@@ -184,9 +230,9 @@ export function AssociateFloatingIPToPortDrawer({
   };
 
   return (
-    <Drawer 
-      isOpen={isOpen} 
-      onClose={handleClose} 
+    <Drawer
+      isOpen={isOpen}
+      onClose={handleClose}
       title="Associate Floating IP"
       width={696}
       footer={
@@ -194,8 +240,8 @@ export function AssociateFloatingIPToPortDrawer({
           <Button variant="secondary" onClick={handleClose} className="w-[152px] h-8">
             Cancel
           </Button>
-          <Button 
-            variant="primary" 
+          <Button
+            variant="primary"
             onClick={handleSubmit}
             disabled={!selectedFixedIpId || !selectedFloatingIpId}
             className="w-[152px] h-8"
@@ -216,9 +262,7 @@ export function AssociateFloatingIPToPortDrawer({
           <p className="text-[11px] font-medium text-[var(--color-text-subtle)] leading-4 mb-1.5">
             Port
           </p>
-          <p className="text-[12px] text-[var(--color-text-default)] leading-4">
-            {port.name}
-          </p>
+          <p className="text-[12px] text-[var(--color-text-default)] leading-4">{port.name}</p>
         </div>
 
         {/* Fixed IP Section */}
@@ -250,18 +294,27 @@ export function AssociateFloatingIPToPortDrawer({
             {/* Header */}
             <div className="flex items-center bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-md">
               <div className="w-[40px] p-3" />
-              <div 
+              <div
                 className="flex-1 px-3 py-2 h-[40px] flex items-center gap-1.5 border-l border-[var(--color-border-default)] cursor-pointer hover:bg-[var(--color-surface-muted)]"
                 onClick={() => handleFixedIpSort('fixedIp')}
               >
-                <span className="text-[11px] font-medium text-[var(--color-text-default)]">Fixed IP</span>
-                <IconChevronDown size={12} className={`transition-transform ${fixedIpSortField === 'fixedIp' && fixedIpSortDirection === 'desc' ? 'rotate-180' : ''}`} />
+                <span className="text-[11px] font-medium text-[var(--color-text-default)]">
+                  Fixed IP
+                </span>
+                <IconChevronDown
+                  size={12}
+                  className={`transition-transform ${fixedIpSortField === 'fixedIp' && fixedIpSortDirection === 'desc' ? 'rotate-180' : ''}`}
+                />
               </div>
               <div className="flex-1 px-3 py-2 h-[40px] flex items-center border-l border-[var(--color-border-default)]">
-                <span className="text-[11px] font-medium text-[var(--color-text-default)]">MAC Address</span>
+                <span className="text-[11px] font-medium text-[var(--color-text-default)]">
+                  MAC Address
+                </span>
               </div>
               <div className="flex-1 px-3 py-2 h-[40px] flex items-center border-l border-[var(--color-border-default)]">
-                <span className="text-[11px] font-medium text-[var(--color-text-default)]">Subnet CIDR</span>
+                <span className="text-[11px] font-medium text-[var(--color-text-default)]">
+                  Subnet CIDR
+                </span>
               </div>
             </div>
 
@@ -301,7 +354,9 @@ export function AssociateFloatingIPToPortDrawer({
 
           {/* Selection Indicator for Fixed IP */}
           <SelectionIndicator
-            selectedItems={selectedFixedIp ? [{ id: selectedFixedIp.id, label: selectedFixedIp.fixedIp }] : []}
+            selectedItems={
+              selectedFixedIp ? [{ id: selectedFixedIp.id, label: selectedFixedIp.fixedIp }] : []
+            }
             onRemove={() => setSelectedFixedIpId(null)}
             emptyText="No item Selected"
           />
@@ -340,28 +395,45 @@ export function AssociateFloatingIPToPortDrawer({
             <div className="flex items-center bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-md">
               <div className="w-[40px] p-3" />
               <div className="w-[59px] px-3 py-2 h-[40px] flex items-center justify-center border-l border-[var(--color-border-default)]">
-                <span className="text-[11px] font-medium text-[var(--color-text-default)]">Status</span>
+                <span className="text-[11px] font-medium text-[var(--color-text-default)]">
+                  Status
+                </span>
               </div>
-              <div 
+              <div
                 className="flex-1 px-3 py-2 h-[40px] flex items-center gap-1.5 border-l border-[var(--color-border-default)] cursor-pointer hover:bg-[var(--color-surface-muted)]"
                 onClick={() => handleFloatingIpSort('floatingIp')}
               >
-                <span className="text-[11px] font-medium text-[var(--color-text-default)]">Floating IP</span>
-                <IconChevronDown size={12} className={`transition-transform ${floatingIpSortField === 'floatingIp' && floatingIpSortDirection === 'desc' ? 'rotate-180' : ''}`} />
+                <span className="text-[11px] font-medium text-[var(--color-text-default)]">
+                  Floating IP
+                </span>
+                <IconChevronDown
+                  size={12}
+                  className={`transition-transform ${floatingIpSortField === 'floatingIp' && floatingIpSortDirection === 'desc' ? 'rotate-180' : ''}`}
+                />
               </div>
-              <div 
+              <div
                 className="flex-1 px-3 py-2 h-[40px] flex items-center gap-1.5 border-l border-[var(--color-border-default)] cursor-pointer hover:bg-[var(--color-surface-muted)]"
                 onClick={() => handleFloatingIpSort('networkName')}
               >
-                <span className="text-[11px] font-medium text-[var(--color-text-default)]">Network</span>
-                <IconChevronDown size={12} className={`transition-transform ${floatingIpSortField === 'networkName' && floatingIpSortDirection === 'desc' ? 'rotate-180' : ''}`} />
+                <span className="text-[11px] font-medium text-[var(--color-text-default)]">
+                  Network
+                </span>
+                <IconChevronDown
+                  size={12}
+                  className={`transition-transform ${floatingIpSortField === 'networkName' && floatingIpSortDirection === 'desc' ? 'rotate-180' : ''}`}
+                />
               </div>
-              <div 
+              <div
                 className="flex-1 px-3 py-2 h-[40px] flex items-center gap-1.5 border-l border-[var(--color-border-default)] cursor-pointer hover:bg-[var(--color-surface-muted)]"
                 onClick={() => handleFloatingIpSort('description')}
               >
-                <span className="text-[11px] font-medium text-[var(--color-text-default)]">Description</span>
-                <IconChevronDown size={12} className={`transition-transform ${floatingIpSortField === 'description' && floatingIpSortDirection === 'desc' ? 'rotate-180' : ''}`} />
+                <span className="text-[11px] font-medium text-[var(--color-text-default)]">
+                  Description
+                </span>
+                <IconChevronDown
+                  size={12}
+                  className={`transition-transform ${floatingIpSortField === 'description' && floatingIpSortDirection === 'desc' ? 'rotate-180' : ''}`}
+                />
               </div>
             </div>
 
@@ -416,7 +488,11 @@ export function AssociateFloatingIPToPortDrawer({
 
           {/* Selection Indicator for Floating IP */}
           <SelectionIndicator
-            selectedItems={selectedFloatingIp ? [{ id: selectedFloatingIp.id, label: selectedFloatingIp.floatingIp }] : []}
+            selectedItems={
+              selectedFloatingIp
+                ? [{ id: selectedFloatingIp.id, label: selectedFloatingIp.floatingIp }]
+                : []
+            }
             onRemove={() => setSelectedFloatingIpId(null)}
             emptyText="No item Selected"
           />

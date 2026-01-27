@@ -1,9 +1,5 @@
 import React, { useState, useRef, useCallback, useEffect } from 'react';
-import {
-  IconX,
-  IconExternalLink,
-  IconTerminal2,
-} from '@tabler/icons-react';
+import { IconX, IconExternalLink, IconTerminal2 } from '@tabler/icons-react';
 import { Select, Button } from '@/design-system';
 
 /* ----------------------------------------
@@ -77,9 +73,7 @@ function ConnectionStatusIndicator({ status }: { status: ConnectionStatus }) {
   return (
     <div className="flex items-center gap-1.5 ml-3">
       <span className={`size-2 rounded-full ${config.color}`} />
-      <span className="text-[12px] text-[var(--color-text-default)]">
-        {config.label}
-      </span>
+      <span className="text-[12px] text-[var(--color-text-default)]">{config.label}</span>
     </div>
   );
 }
@@ -101,9 +95,10 @@ function ShellTabButton({ tab, isActive, onClick, onClose, onOpenInNewTab }: She
     <div
       className={`
         relative flex items-center gap-2 px-3 h-9 cursor-pointer transition-colors border-r border-[var(--color-border-subtle)]
-        ${isActive 
-          ? 'bg-[var(--color-surface-default)]' 
-          : 'bg-[var(--color-surface-subtle)] hover:bg-[var(--color-surface-muted)]'
+        ${
+          isActive
+            ? 'bg-[var(--color-surface-default)]'
+            : 'bg-[var(--color-surface-subtle)] hover:bg-[var(--color-surface-muted)]'
         }
       `}
       onClick={onClick}
@@ -112,8 +107,14 @@ function ShellTabButton({ tab, isActive, onClick, onClose, onOpenInNewTab }: She
       {isActive && (
         <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-[var(--color-action-primary)]" />
       )}
-      <IconTerminal2 size={14} className={isActive ? 'text-[var(--color-text-default)]' : 'text-[var(--color-text-muted)]'} stroke={1.5} />
-      <span className={`flex-1 truncate text-[length:var(--tabbar-font-size)] leading-[var(--tabbar-line-height)] font-medium max-w-[140px] ${isActive ? 'text-[var(--color-text-default)]' : 'text-[var(--color-text-muted)]'}`}>
+      <IconTerminal2
+        size={14}
+        className={isActive ? 'text-[var(--color-text-default)]' : 'text-[var(--color-text-muted)]'}
+        stroke={1.5}
+      />
+      <span
+        className={`flex-1 truncate text-[length:var(--tabbar-font-size)] leading-[var(--tabbar-line-height)] font-medium max-w-[140px] ${isActive ? 'text-[var(--color-text-default)]' : 'text-[var(--color-text-muted)]'}`}
+      >
         {tab.title}
       </span>
       <button
@@ -164,15 +165,14 @@ export function ShellPanel({
   const [selectedContainer, setSelectedContainer] = useState('container-0');
   const contentRef = useRef<HTMLDivElement>(null);
 
-  const activeTab = tabs.find(t => t.id === activeTabId);
-  
+  const activeTab = tabs.find((t) => t.id === activeTabId);
+
   // Container options for Select
   const containerOptions = [
     { value: 'container-0', label: 'Container: container-0' },
     { value: 'container-1', label: 'Container: container-1' },
     { value: 'container-2', label: 'Container: container-2' },
   ];
-
 
   // Calculate max height (content area height - 100px)
   const getMaxHeight = useCallback(() => {
@@ -235,7 +235,6 @@ export function ShellPanel({
     }
   }, [activeTabId, onContentChange, onClear]);
 
-
   // Don't render anything if no tabs or not expanded
   if (!isExpanded || tabs.length === 0) {
     return null;
@@ -246,7 +245,7 @@ export function ShellPanel({
       className="fixed bottom-0 right-0 z-40 bg-[var(--color-surface-default)] border-t border-l border-[var(--color-border-default)] shadow-lg flex flex-col"
       style={{
         height: `${height}px`,
-        left: sidebarWidth !== undefined ? `${sidebarWidth}px` : (sidebarOpen ? '200px' : '0px'),
+        left: sidebarWidth !== undefined ? `${sidebarWidth}px` : sidebarOpen ? '200px' : '0px',
         transition: isResizing ? 'none' : 'left 0.2s ease-out, height 0.1s ease-out',
       }}
     >
@@ -260,7 +259,7 @@ export function ShellPanel({
       <div className="flex items-center bg-[var(--color-surface-subtle)]">
         {/* Tabs */}
         <div className="flex items-center overflow-x-auto scrollbar-none">
-          {tabs.map(tab => (
+          {tabs.map((tab) => (
             <ShellTabButton
               key={tab.id}
               tab={tab}
@@ -304,18 +303,12 @@ export function ShellPanel({
           />
 
           {/* Clear Button - Using Design System */}
-          <Button
-            size="sm"
-            variant="secondary"
-            onClick={handleClear}
-          >
+          <Button size="sm" variant="secondary" onClick={handleClear}>
             Clear
           </Button>
 
           {/* Connection Status */}
-          {activeTab && (
-            <ConnectionStatusIndicator status={activeTab.connectionStatus} />
-          )}
+          {activeTab && <ConnectionStatusIndicator status={activeTab.connectionStatus} />}
         </div>
       </div>
     </div>
@@ -335,66 +328,70 @@ export function useShellPanel(options: UseShellPanelOptions = {}) {
   const [tabs, setTabs] = useState<ShellTab[]>([]);
   const [activeTabId, setActiveTabId] = useState<string | null>(null);
 
-  const openConsole = useCallback((instanceId: string, instanceName: string) => {
-    // Check if tab already exists
-    const existingTab = tabs.find(t => t.instanceId === instanceId);
-    if (existingTab) {
-      setActiveTabId(existingTab.id);
-      setIsExpanded(true);
-      return;
-    }
-
-    // Create new tab
-    const newTab: ShellTab = {
-      id: `console-${instanceId}-${Date.now()}`,
-      title: instanceName,
-      content: '',
-      connectionStatus: 'connecting',
-      instanceId,
-      container: 'container-0',
-    };
-
-    setTabs(prev => [...prev, newTab]);
-    setActiveTabId(newTab.id);
-    setIsExpanded(true);
-
-    // Simulate connection and logs
-    setTimeout(() => {
-      const sampleLogs = generateSampleLogs(instanceName);
-      setTabs(prev => prev.map(t => 
-        t.id === newTab.id 
-          ? { ...t, connectionStatus: 'connected' as ConnectionStatus, content: sampleLogs }
-          : t
-      ));
-    }, 1000);
-  }, [tabs]);
-
-  const closeTab = useCallback((tabId: string) => {
-    setTabs(prev => {
-      const newTabs = prev.filter(t => t.id !== tabId);
-      
-      // If closing active tab, switch to another
-      if (activeTabId === tabId && newTabs.length > 0) {
-        setActiveTabId(newTabs[newTabs.length - 1].id);
-      } else if (newTabs.length === 0) {
-        setActiveTabId(null);
-        setIsExpanded(false);
+  const openConsole = useCallback(
+    (instanceId: string, instanceName: string) => {
+      // Check if tab already exists
+      const existingTab = tabs.find((t) => t.instanceId === instanceId);
+      if (existingTab) {
+        setActiveTabId(existingTab.id);
+        setIsExpanded(true);
+        return;
       }
-      
-      return newTabs;
-    });
-  }, [activeTabId]);
+
+      // Create new tab
+      const newTab: ShellTab = {
+        id: `console-${instanceId}-${Date.now()}`,
+        title: instanceName,
+        content: '',
+        connectionStatus: 'connecting',
+        instanceId,
+        container: 'container-0',
+      };
+
+      setTabs((prev) => [...prev, newTab]);
+      setActiveTabId(newTab.id);
+      setIsExpanded(true);
+
+      // Simulate connection and logs
+      setTimeout(() => {
+        const sampleLogs = generateSampleLogs(instanceName);
+        setTabs((prev) =>
+          prev.map((t) =>
+            t.id === newTab.id
+              ? { ...t, connectionStatus: 'connected' as ConnectionStatus, content: sampleLogs }
+              : t
+          )
+        );
+      }, 1000);
+    },
+    [tabs]
+  );
+
+  const closeTab = useCallback(
+    (tabId: string) => {
+      setTabs((prev) => {
+        const newTabs = prev.filter((t) => t.id !== tabId);
+
+        // If closing active tab, switch to another
+        if (activeTabId === tabId && newTabs.length > 0) {
+          setActiveTabId(newTabs[newTabs.length - 1].id);
+        } else if (newTabs.length === 0) {
+          setActiveTabId(null);
+          setIsExpanded(false);
+        }
+
+        return newTabs;
+      });
+    },
+    [activeTabId]
+  );
 
   const updateContent = useCallback((tabId: string, content: string) => {
-    setTabs(prev => prev.map(t => 
-      t.id === tabId ? { ...t, content } : t
-    ));
+    setTabs((prev) => prev.map((t) => (t.id === tabId ? { ...t, content } : t)));
   }, []);
 
   const clearContent = useCallback((tabId: string) => {
-    setTabs(prev => prev.map(t => 
-      t.id === tabId ? { ...t, content: '' } : t
-    ));
+    setTabs((prev) => prev.map((t) => (t.id === tabId ? { ...t, content: '' } : t)));
   }, []);
 
   return {
@@ -414,10 +411,20 @@ export function useShellPanel(options: UseShellPanelOptions = {}) {
 function generateSampleLogs(_instanceName: string): string {
   const now = new Date();
   const formatDate = (d: Date) => {
-    return d.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: '2-digit', year: 'numeric' });
+    return d.toLocaleDateString('en-US', {
+      weekday: 'short',
+      month: 'short',
+      day: '2-digit',
+      year: 'numeric',
+    });
   };
   const formatTime = (d: Date) => {
-    return d.toLocaleTimeString('en-US', { hour12: true, hour: '2-digit', minute: '2-digit', second: '2-digit' });
+    return d.toLocaleTimeString('en-US', {
+      hour12: true,
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+    });
   };
 
   const logs = [

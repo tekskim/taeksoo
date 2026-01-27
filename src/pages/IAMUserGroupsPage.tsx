@@ -19,10 +19,7 @@ import { useTabs } from '@/contexts/TabContext';
 import { ManageRolesDrawer } from '@/components/ManageRolesDrawer';
 import { ManageUsersDrawer } from '@/components/ManageUsersDrawer';
 import { EditUserGroupDrawer } from '@/components/EditUserGroupDrawer';
-import {
-  IconDownload,
-  IconTrash,
-} from '@tabler/icons-react';
+import { IconDownload, IconTrash } from '@tabler/icons-react';
 import { IconAction } from '@/design-system';
 import { Link, useNavigate } from 'react-router-dom';
 
@@ -49,16 +46,106 @@ interface UserGroup {
    ---------------------------------------- */
 
 const mockUserGroups: UserGroup[] = [
-  { id: 'ug-001', name: 'dev-admin-group', type: 'Custom', status: 'active', roles: 'admin (+3)', userCount: 100, description: 'Development team administrators', createdAt: '2025-09-12' },
-  { id: 'ug-002', name: 'ops-team', type: 'Custom', status: 'inactive', roles: 'network-admin (+1)', userCount: 25, description: 'Operations team', createdAt: '2025-09-10' },
-  { id: 'ug-003', name: 'qa-team', type: 'Custom', status: 'active', roles: 'qa-lead (+2)', userCount: 15, description: 'Quality assurance team', createdAt: '2025-09-08' },
-  { id: 'ug-004', name: 'viewers', type: 'Built-in', status: 'active', roles: 'Viewer (+3)', userCount: 130, description: '-', createdAt: '2025-09-12' },
-  { id: 'ug-005', name: 'administrators', type: 'Built-in', status: 'active', roles: 'super-admin', userCount: 5, description: 'System administrators', createdAt: '2025-08-01' },
-  { id: 'ug-006', name: 'developers', type: 'Custom', status: 'active', roles: 'developer (+2)', userCount: 45, description: 'Development team', createdAt: '2025-08-15' },
-  { id: 'ug-007', name: 'security-team', type: 'Custom', status: 'inactive', roles: 'security-admin', userCount: 8, description: 'Security operations', createdAt: '2025-07-20' },
-  { id: 'ug-008', name: 'support-team', type: 'Custom', status: 'active', roles: 'support (+1)', userCount: 20, description: 'Customer support team', createdAt: '2025-07-10' },
-  { id: 'ug-009', name: 'data-analysts', type: 'Custom', status: 'active', roles: 'analyst', userCount: 12, description: 'Data analysis team', createdAt: '2025-06-25' },
-  { id: 'ug-010', name: 'external-users', type: 'Custom', status: 'inactive', roles: 'viewer', userCount: 50, description: 'External partners', createdAt: '2025-06-01' },
+  {
+    id: 'ug-001',
+    name: 'dev-admin-group',
+    type: 'Custom',
+    status: 'active',
+    roles: 'admin (+3)',
+    userCount: 100,
+    description: 'Development team administrators',
+    createdAt: '2025-09-12',
+  },
+  {
+    id: 'ug-002',
+    name: 'ops-team',
+    type: 'Custom',
+    status: 'inactive',
+    roles: 'network-admin (+1)',
+    userCount: 25,
+    description: 'Operations team',
+    createdAt: '2025-09-10',
+  },
+  {
+    id: 'ug-003',
+    name: 'qa-team',
+    type: 'Custom',
+    status: 'active',
+    roles: 'qa-lead (+2)',
+    userCount: 15,
+    description: 'Quality assurance team',
+    createdAt: '2025-09-08',
+  },
+  {
+    id: 'ug-004',
+    name: 'viewers',
+    type: 'Built-in',
+    status: 'active',
+    roles: 'Viewer (+3)',
+    userCount: 130,
+    description: '-',
+    createdAt: '2025-09-12',
+  },
+  {
+    id: 'ug-005',
+    name: 'administrators',
+    type: 'Built-in',
+    status: 'active',
+    roles: 'super-admin',
+    userCount: 5,
+    description: 'System administrators',
+    createdAt: '2025-08-01',
+  },
+  {
+    id: 'ug-006',
+    name: 'developers',
+    type: 'Custom',
+    status: 'active',
+    roles: 'developer (+2)',
+    userCount: 45,
+    description: 'Development team',
+    createdAt: '2025-08-15',
+  },
+  {
+    id: 'ug-007',
+    name: 'security-team',
+    type: 'Custom',
+    status: 'inactive',
+    roles: 'security-admin',
+    userCount: 8,
+    description: 'Security operations',
+    createdAt: '2025-07-20',
+  },
+  {
+    id: 'ug-008',
+    name: 'support-team',
+    type: 'Custom',
+    status: 'active',
+    roles: 'support (+1)',
+    userCount: 20,
+    description: 'Customer support team',
+    createdAt: '2025-07-10',
+  },
+  {
+    id: 'ug-009',
+    name: 'data-analysts',
+    type: 'Custom',
+    status: 'active',
+    roles: 'analyst',
+    userCount: 12,
+    description: 'Data analysis team',
+    createdAt: '2025-06-25',
+  },
+  {
+    id: 'ug-010',
+    name: 'external-users',
+    type: 'Custom',
+    status: 'inactive',
+    roles: 'viewer',
+    userCount: 50,
+    description: 'External partners',
+    createdAt: '2025-06-01',
+  },
 ];
 
 /* ----------------------------------------
@@ -71,7 +158,8 @@ export function IAMUserGroupsPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedRows, setSelectedRows] = useState<string[]>([]);
-  const { tabs, activeTabId, selectTab, closeTab, addNewTab, updateActiveTabLabel, moveTab } = useTabs();
+  const { tabs, activeTabId, selectTab, closeTab, addNewTab, updateActiveTabLabel, moveTab } =
+    useTabs();
 
   // Update tab label on mount
   useEffect(() => {
@@ -82,10 +170,11 @@ export function IAMUserGroupsPage() {
   const sidebarWidth = sidebarOpen ? 200 : 0;
 
   // Filter user groups by search query
-  const filteredGroups = mockUserGroups.filter(group =>
-    group.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    group.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    group.roles.toLowerCase().includes(searchQuery.toLowerCase())
+  const filteredGroups = mockUserGroups.filter(
+    (group) =>
+      group.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      group.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      group.roles.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   // Pagination
@@ -127,10 +216,20 @@ export function IAMUserGroupsPage() {
     if (isInactive) {
       // Inactive group: Manage roles, Edit, Delete disabled; Duplicate not shown
       return [
-        { id: 'manage-roles', label: 'Manage roles', disabled: true, onClick: () => handleManageRoles(row) },
+        {
+          id: 'manage-roles',
+          label: 'Manage roles',
+          disabled: true,
+          onClick: () => handleManageRoles(row),
+        },
         { id: 'manage-users', label: 'Manage users', onClick: () => handleManageUsers(row) },
         { id: 'edit', label: 'Edit', disabled: true, onClick: () => handleEditGroup(row) },
-        { id: 'delete', label: 'Delete', disabled: true, onClick: () => console.log('Delete', row.id) },
+        {
+          id: 'delete',
+          label: 'Delete',
+          disabled: true,
+          onClick: () => console.log('Delete', row.id),
+        },
       ];
     }
     // Active group: all items enabled
@@ -139,7 +238,12 @@ export function IAMUserGroupsPage() {
       { id: 'manage-users', label: 'Manage users', onClick: () => handleManageUsers(row) },
       { id: 'duplicate', label: 'Duplicate', onClick: () => console.log('Duplicate', row.id) },
       { id: 'edit', label: 'Edit', onClick: () => handleEditGroup(row) },
-      { id: 'delete', label: 'Delete', status: 'danger', onClick: () => console.log('Delete', row.id) },
+      {
+        id: 'delete',
+        label: 'Delete',
+        status: 'danger',
+        onClick: () => console.log('Delete', row.id),
+      },
     ];
   };
 
@@ -152,7 +256,7 @@ export function IAMUserGroupsPage() {
       minWidth: columnWidths.name,
       sortable: true,
       render: (value) => (
-        <Link 
+        <Link
           to={`/iam/user-groups/${value}`}
           className="text-[var(--color-action-primary)] font-medium hover:underline"
         >
@@ -219,7 +323,7 @@ export function IAMUserGroupsPage() {
       >
         {/* Tab Bar */}
         <TabBar
-          tabs={tabs.map(tab => ({ id: tab.id, label: tab.label, closable: tab.closable }))}
+          tabs={tabs.map((tab) => ({ id: tab.id, label: tab.label, closable: tab.closable }))}
           activeTab={activeTabId}
           onTabChange={selectTab}
           onTabClose={closeTab}
@@ -235,12 +339,7 @@ export function IAMUserGroupsPage() {
           onBack={() => window.history.back()}
           onForward={() => window.history.forward()}
           breadcrumb={
-            <Breadcrumb
-              items={[
-                { label: 'IAM', href: '/iam' },
-                { label: 'User groups' },
-              ]}
-            />
+            <Breadcrumb items={[{ label: 'IAM', href: '/iam' }, { label: 'User groups' }]} />
           }
         />
 
@@ -253,7 +352,11 @@ export function IAMUserGroupsPage() {
                 <h1 className="text-[16px] font-semibold leading-6 text-[var(--color-text-default)]">
                   User groups
                 </h1>
-                <Button variant="primary" size="sm" onClick={() => navigate('/iam/user-groups/create')}>
+                <Button
+                  variant="primary"
+                  size="sm"
+                  onClick={() => navigate('/iam/user-groups/create')}
+                >
                   Create user group
                 </Button>
               </HStack>
@@ -270,15 +373,20 @@ export function IAMUserGroupsPage() {
                       onChange={setSearchQuery}
                       className="w-[var(--search-input-width)]"
                     />
-                    <Button variant="secondary" size="sm" icon={<IconDownload size={12} />} aria-label="Download" />
+                    <Button
+                      variant="secondary"
+                      size="sm"
+                      icon={<IconDownload size={12} />}
+                      aria-label="Download"
+                    />
                   </HStack>
 
                   {/* Divider */}
                   <div className="w-px h-4 bg-[var(--color-border-default)]" />
 
                   {/* Actions */}
-                  <Button 
-                    variant="secondary" 
+                  <Button
+                    variant="secondary"
                     size="sm"
                     disabled={!hasSelection}
                     leftIcon={<IconTrash size={12} />}
@@ -328,14 +436,17 @@ export function IAMUserGroupsPage() {
       <EditUserGroupDrawer
         isOpen={editGroupOpen}
         onClose={() => setEditGroupOpen(false)}
-        initialData={selectedGroupForDrawer ? {
-          name: selectedGroupForDrawer.name,
-          description: selectedGroupForDrawer.description,
-        } : undefined}
+        initialData={
+          selectedGroupForDrawer
+            ? {
+                name: selectedGroupForDrawer.name,
+                description: selectedGroupForDrawer.description,
+              }
+            : undefined
+        }
       />
     </div>
   );
 }
 
 export default IAMUserGroupsPage;
-

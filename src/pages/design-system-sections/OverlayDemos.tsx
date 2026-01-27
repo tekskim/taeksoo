@@ -3,25 +3,33 @@ import { Modal, Drawer, ConfirmModal, Button, VStack, Input } from '@/design-sys
 import { IconAlertCircle } from '@tabler/icons-react';
 import { Label } from './HelperComponents';
 import { AttachVolumeDrawer } from '@/components/AttachVolumeDrawer';
-import { DataViewDrawer } from '@/components/DataViewDrawer';
-
 
 /* ----------------------------------------
    Modal Demo Components
    ---------------------------------------- */
 
 // Basic Modal Demo
-export function ModalDemo({ variant }: { variant: 'basic' | 'delete' | 'size-sm' | 'size-md' | 'size-lg' }) {
+export function ModalDemo({
+  variant,
+}: {
+  variant: 'basic' | 'delete' | 'size-sm' | 'size-md' | 'size-lg';
+}) {
   const [isOpen, setIsOpen] = useState(false);
 
   const getButtonLabel = () => {
     switch (variant) {
-      case 'basic': return 'Open Basic Modal';
-      case 'delete': return 'Open Delete Modal';
-      case 'size-sm': return 'Small (320px)';
-      case 'size-md': return 'Medium (400px)';
-      case 'size-lg': return 'Large (560px)';
-      default: return 'Open Modal';
+      case 'basic':
+        return 'Open Basic Modal';
+      case 'delete':
+        return 'Open Delete Modal';
+      case 'size-sm':
+        return 'Small (320px)';
+      case 'size-md':
+        return 'Medium (400px)';
+      case 'size-lg':
+        return 'Large (560px)';
+      default:
+        return 'Open Modal';
     }
   };
 
@@ -87,19 +95,25 @@ export function ModalDemo({ variant }: { variant: 'basic' | 'delete' | 'size-sm'
 }
 
 // Modal Use Case Demos
-export function ModalUseCaseDemo({ useCase }: { useCase: 'delete-single' | 'delete-multiple' | 'disassociate' | 'restore-warning' }) {
+export function ModalUseCaseDemo({
+  useCase,
+}: {
+  useCase: 'delete-single' | 'delete-multiple' | 'disassociate' | 'restore-warning';
+}) {
   const [isOpen, setIsOpen] = useState(false);
 
   const config = {
     'delete-single': {
       button: 'Delete (Single)',
       title: 'Delete Security group',
-      description: 'Are you sure you want to delete this security group? This action cannot be undone.',
+      description:
+        'Are you sure you want to delete this security group? This action cannot be undone.',
       size: 'sm' as const,
       infoLabel: 'Security group',
       infoValue: 'sg-01',
       hasWarning: true,
-      warningText: 'This action will permanently delete the security group and all its rules. If this group is attached to any instances, their network traffic may be affected.',
+      warningText:
+        'This action will permanently delete the security group and all its rules. If this group is attached to any instances, their network traffic may be affected.',
       actionText: 'Delete',
       actionVariant: 'danger' as const,
     },
@@ -115,10 +129,11 @@ export function ModalUseCaseDemo({ useCase }: { useCase: 'delete-single' | 'dele
       actionText: 'Delete',
       actionVariant: 'danger' as const,
     },
-    'disassociate': {
+    disassociate: {
       button: 'Disassociate',
       title: 'Disassociate floating IP',
-      description: 'Disassociating will detach the floating IP from the selected resource. External access via this IP will stop immediately.',
+      description:
+        'Disassociating will detach the floating IP from the selected resource. External access via this IP will stop immediately.',
       size: 'sm' as const,
       infoLabel: 'Floating IP',
       infoValue: '123.45.67.8',
@@ -138,7 +153,8 @@ export function ModalUseCaseDemo({ useCase }: { useCase: 'delete-single' | 'dele
       secondInfoLabel: 'Instance name',
       secondInfoList: ['web-server-1 (Running)', 'dev-team (Running)'],
       hasWarning: true,
-      warningText: 'Restore cannot proceed. Change the backup status to Available or shut down the attached instance.',
+      warningText:
+        'Restore cannot proceed. Change the backup status to Available or shut down the attached instance.',
       actionText: 'Restore',
       actionVariant: 'primary' as const,
       disabled: true,
@@ -161,7 +177,9 @@ export function ModalUseCaseDemo({ useCase }: { useCase: 'delete-single' | 'dele
       >
         <div className="flex flex-col gap-2">
           {/* Info Box */}
-          <div className={`bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5 ${'infoList' in c ? 'max-h-[96px] overflow-y-auto sidebar-scroll' : ''}`}>
+          <div
+            className={`bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5 ${'infoList' in c ? 'max-h-[96px] overflow-y-auto sidebar-scroll' : ''}`}
+          >
             <span className="text-[11px] text-[var(--color-text-subtle)] font-medium leading-4">
               {c.infoLabel}
             </span>
@@ -172,7 +190,9 @@ export function ModalUseCaseDemo({ useCase }: { useCase: 'delete-single' | 'dele
             )}
             {'infoList' in c && (
               <ul className="text-[12px] text-[var(--color-text-default)] leading-4 list-disc pl-4 space-y-0.5">
-                {c.infoList?.map((item, i) => <li key={i}>{item}</li>)}
+                {c.infoList?.map((item, i) => (
+                  <li key={i}>{item}</li>
+                ))}
               </ul>
             )}
           </div>
@@ -184,7 +204,9 @@ export function ModalUseCaseDemo({ useCase }: { useCase: 'delete-single' | 'dele
                 {c.secondInfoLabel}
               </span>
               <ul className="text-[12px] text-[var(--color-text-default)] leading-4 list-disc pl-4 space-y-0.5">
-                {c.secondInfoList?.map((item, i) => <li key={i}>{item}</li>)}
+                {c.secondInfoList?.map((item, i) => (
+                  <li key={i}>{item}</li>
+                ))}
               </ul>
             </div>
           )}
@@ -192,7 +214,11 @@ export function ModalUseCaseDemo({ useCase }: { useCase: 'delete-single' | 'dele
           {/* Warning Alert */}
           {c.hasWarning && (
             <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
-              <IconAlertCircle size={16} className="text-[var(--color-state-danger)] shrink-0 mt-0.5" stroke={1.5} />
+              <IconAlertCircle
+                size={16}
+                className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
+                stroke={1.5}
+              />
               <p className="text-[11px] text-[var(--color-text-default)] leading-4">
                 {c.warningText}
               </p>
@@ -205,10 +231,10 @@ export function ModalUseCaseDemo({ useCase }: { useCase: 'delete-single' | 'dele
           <Button variant="outline" size="md" onClick={() => setIsOpen(false)} className="flex-1">
             Cancel
           </Button>
-          <Button 
-            variant={c.actionVariant} 
-            size="md" 
-            onClick={() => setIsOpen(false)} 
+          <Button
+            variant={c.actionVariant}
+            size="md"
+            onClick={() => setIsOpen(false)}
             className="flex-1"
             disabled={'disabled' in c && c.disabled}
           >
@@ -245,7 +271,8 @@ export function DrawerDemo() {
         <VStack gap={4}>
           <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] p-4">
             <p className="text-[length:var(--font-size-12)] text-[var(--color-text-default)]">
-              This is a basic drawer with content. Drawers are useful for secondary content, forms, or detail views.
+              This is a basic drawer with content. Drawers are useful for secondary content, forms,
+              or detail views.
             </p>
           </div>
           <VStack gap={2}>
@@ -316,4 +343,3 @@ export function DrawerDemo() {
     </div>
   );
 }
-

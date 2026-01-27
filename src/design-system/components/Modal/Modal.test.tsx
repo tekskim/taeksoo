@@ -57,7 +57,7 @@ describe('Modal', () => {
       if (backdrop) {
         await user.click(backdrop);
       }
-      
+
       expect(handleClose).toHaveBeenCalled();
     });
 
@@ -89,9 +89,7 @@ describe('Modal', () => {
     it('does not close on Escape when closeOnEscape is false', async () => {
       const user = userEvent.setup();
       const handleClose = vi.fn();
-      render(
-        <Modal isOpen={true} onClose={handleClose} title="Title" closeOnEscape={false} />
-      );
+      render(<Modal isOpen={true} onClose={handleClose} title="Title" closeOnEscape={false} />);
 
       await user.keyboard('{Escape}');
 
@@ -124,7 +122,7 @@ describe('Modal', () => {
       expect(document.body.style.overflow).toBe('hidden');
 
       rerender(<Modal isOpen={false} onClose={() => {}} title="Title" />);
-      
+
       await waitFor(() => {
         expect(document.body.style.overflow).toBe('');
       });
@@ -186,17 +184,12 @@ describe('ConfirmModal', () => {
       const user = userEvent.setup();
       const handleConfirm = vi.fn();
       render(
-        <ConfirmModal
-          isOpen={true}
-          onClose={() => {}}
-          onConfirm={handleConfirm}
-          title="Confirm"
-        />
+        <ConfirmModal isOpen={true} onClose={() => {}} onConfirm={handleConfirm} title="Confirm" />
       );
 
       // Find confirm button (the second button, first is Cancel)
       const buttons = screen.getAllByRole('button');
-      const confirmButton = buttons.find(b => b.textContent === 'Confirm');
+      const confirmButton = buttons.find((b) => b.textContent === 'Confirm');
       if (confirmButton) {
         await user.click(confirmButton);
       }
@@ -208,12 +201,7 @@ describe('ConfirmModal', () => {
       const user = userEvent.setup();
       const handleClose = vi.fn();
       render(
-        <ConfirmModal
-          isOpen={true}
-          onClose={handleClose}
-          onConfirm={() => {}}
-          title="Confirm"
-        />
+        <ConfirmModal isOpen={true} onClose={handleClose} onConfirm={() => {}} title="Confirm" />
       );
 
       await user.click(screen.getByText('Cancel'));

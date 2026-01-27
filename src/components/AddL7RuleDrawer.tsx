@@ -6,7 +6,15 @@ import { HStack, VStack } from '@/design-system/layouts';
    Types
    ---------------------------------------- */
 
-type RuleType = 'HEADER' | 'COOKIE' | 'FILE_TYPE' | 'HOST_NAME' | 'PATH' | 'SSL_CONN_HAS_CERT' | 'SSL_VERIFY_RESULT' | 'SSL_DN_FIELD';
+type RuleType =
+  | 'HEADER'
+  | 'COOKIE'
+  | 'FILE_TYPE'
+  | 'HOST_NAME'
+  | 'PATH'
+  | 'SSL_CONN_HAS_CERT'
+  | 'SSL_VERIFY_RESULT'
+  | 'SSL_DN_FIELD';
 type CompareType = 'CONTAINS' | 'ENDS_WITH' | 'EQUAL_TO' | 'REGEX' | 'STARTS_WITH';
 
 export interface AddL7RuleDrawerProps {
@@ -52,11 +60,7 @@ const ruleTypesWithKey: RuleType[] = ['HEADER', 'COOKIE', 'SSL_DN_FIELD'];
    AddL7RuleDrawer Component
    ---------------------------------------- */
 
-export function AddL7RuleDrawer({
-  isOpen,
-  onClose,
-  onSubmit,
-}: AddL7RuleDrawerProps) {
+export function AddL7RuleDrawer({ isOpen, onClose, onSubmit }: AddL7RuleDrawerProps) {
   const [ruleType, setRuleType] = useState<RuleType>('HEADER');
   const [key, setKey] = useState('');
   const [compareType, setCompareType] = useState<CompareType | ''>('');
@@ -83,7 +87,7 @@ export function AddL7RuleDrawer({
     setHasAttemptedSubmit(true);
     if (!compareType || !value.trim()) return;
     if (ruleTypesWithKey.includes(ruleType) && !key.trim()) return;
-    
+
     setIsSubmitting(true);
     try {
       await onSubmit?.({
@@ -116,15 +120,11 @@ export function AddL7RuleDrawer({
       width={376}
       footer={
         <HStack gap={2} className="w-full">
-          <Button 
-            variant="secondary" 
-            onClick={handleClose}
-            className="flex-1 h-8"
-          >
+          <Button variant="secondary" onClick={handleClose} className="flex-1 h-8">
             Cancel
           </Button>
-          <Button 
-            variant="primary" 
+          <Button
+            variant="primary"
             onClick={handleSubmit}
             disabled={isSubmitting}
             className="flex-1 h-8"
@@ -148,7 +148,8 @@ export function AddL7RuleDrawer({
             Rule Type
           </label>
           <p className="text-[12px] text-[var(--color-text-subtle)] leading-4">
-            Select the part of the incoming request to inspect, such as the URL path or a specific HTTP header.
+            Select the part of the incoming request to inspect, such as the URL path or a specific
+            HTTP header.
           </p>
           <Select
             value={ruleType}
@@ -159,14 +160,20 @@ export function AddL7RuleDrawer({
             options={ruleTypeOptions}
             fullWidth
           />
-          
+
           {/* Key Input (shown for HEADER, COOKIE, SSL_DN_FIELD) */}
           {requiresKey && (
             <>
               <Input
                 value={key}
                 onChange={(e) => setKey(e.target.value)}
-                placeholder={ruleType === 'HEADER' ? 'e.g. User-Agent' : ruleType === 'COOKIE' ? 'e.g. session_id' : 'e.g. CN'}
+                placeholder={
+                  ruleType === 'HEADER'
+                    ? 'e.g. User-Agent'
+                    : ruleType === 'COOKIE'
+                      ? 'e.g. session_id'
+                      : 'e.g. CN'
+                }
                 fullWidth
               />
               <p className="text-[11px] text-[var(--color-text-subtle)] leading-4">
@@ -187,10 +194,7 @@ export function AddL7RuleDrawer({
           <Select
             value={compareType}
             onChange={(value) => setCompareType(value as CompareType | '')}
-            options={[
-              { value: '', label: 'Select a compare type' },
-              ...compareTypeOptions,
-            ]}
+            options={[{ value: '', label: 'Select a compare type' }, ...compareTypeOptions]}
             fullWidth
             error={hasAttemptedSubmit && !compareType}
           />
@@ -233,10 +237,7 @@ export function AddL7RuleDrawer({
             Invert
           </label>
           <HStack gap={2} className="items-center">
-            <Toggle 
-              checked={invert} 
-              onChange={(e) => setInvert(e.target.checked)} 
-            />
+            <Toggle checked={invert} onChange={(e) => setInvert(e.target.checked)} />
             <span className="text-[12px] text-[var(--color-text-default)] leading-4">
               {invert ? 'On' : 'Off'}
             </span>
@@ -249,10 +250,7 @@ export function AddL7RuleDrawer({
             Admin State
           </label>
           <HStack gap={2} className="items-center">
-            <Toggle 
-              checked={adminStateUp} 
-              onChange={(e) => setAdminStateUp(e.target.checked)} 
-            />
+            <Toggle checked={adminStateUp} onChange={(e) => setAdminStateUp(e.target.checked)} />
             <span className="text-[12px] text-[var(--color-text-default)] leading-4">
               {adminStateUp ? 'Up' : 'Down'}
             </span>
@@ -264,4 +262,3 @@ export function AddL7RuleDrawer({
 }
 
 export default AddL7RuleDrawer;
-

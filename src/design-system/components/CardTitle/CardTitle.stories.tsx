@@ -149,7 +149,9 @@ export const WithIcon: Story = {
     title: 'starred-template',
     description: 'Your favorite template',
     side: 'icon',
-    sideIcon: <IconStar size={20} className="text-[var(--color-state-warning)]" fill="currentColor" />,
+    sideIcon: (
+      <IconStar size={20} className="text-[var(--color-state-warning)]" fill="currentColor" />
+    ),
   },
 };
 

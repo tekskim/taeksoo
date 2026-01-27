@@ -1,4 +1,12 @@
-import { createContext, useContext, useCallback, useState, useEffect, useRef, type ReactNode } from 'react';
+import {
+  createContext,
+  useContext,
+  useCallback,
+  useState,
+  useEffect,
+  useRef,
+  type ReactNode,
+} from 'react';
 import { twMerge } from 'tailwind-merge';
 import {
   IconCircleCheck,
@@ -15,7 +23,13 @@ import {
    ---------------------------------------- */
 
 export type ToastVariant = 'success' | 'warning' | 'error' | 'info';
-export type ToastPosition = 'top-right' | 'top-left' | 'bottom-right' | 'bottom-left' | 'top-center' | 'bottom-center';
+export type ToastPosition =
+  | 'top-right'
+  | 'top-left'
+  | 'bottom-right'
+  | 'bottom-left'
+  | 'top-center'
+  | 'bottom-center';
 
 export interface ToastLink {
   /** Link label text */
@@ -81,13 +95,25 @@ export interface ToastContextValue {
   /** Show a toast */
   toast: (options: Omit<ToastData, 'id'>) => string;
   /** Show a success toast */
-  success: (message: string, options?: Partial<Omit<ToastData, 'id' | 'variant' | 'message'>>) => string;
+  success: (
+    message: string,
+    options?: Partial<Omit<ToastData, 'id' | 'variant' | 'message'>>
+  ) => string;
   /** Show a warning toast */
-  warning: (message: string, options?: Partial<Omit<ToastData, 'id' | 'variant' | 'message'>>) => string;
+  warning: (
+    message: string,
+    options?: Partial<Omit<ToastData, 'id' | 'variant' | 'message'>>
+  ) => string;
   /** Show an error toast */
-  error: (message: string, options?: Partial<Omit<ToastData, 'id' | 'variant' | 'message'>>) => string;
+  error: (
+    message: string,
+    options?: Partial<Omit<ToastData, 'id' | 'variant' | 'message'>>
+  ) => string;
   /** Show an info toast */
-  info: (message: string, options?: Partial<Omit<ToastData, 'id' | 'variant' | 'message'>>) => string;
+  info: (
+    message: string,
+    options?: Partial<Omit<ToastData, 'id' | 'variant' | 'message'>>
+  ) => string;
   /** Dismiss a specific toast */
   dismiss: (id: string) => void;
   /** Dismiss all toasts */
@@ -99,8 +125,12 @@ export interface ToastContextValue {
    ---------------------------------------- */
 
 const variantIcons: Record<ToastVariant, ReactNode> = {
-  success: <IconCircleCheck size={20} className="text-[var(--toast-success-icon)]" strokeWidth={1.5} />,
-  warning: <IconAlertTriangle size={20} className="text-[var(--toast-warning-icon)]" strokeWidth={1.5} />,
+  success: (
+    <IconCircleCheck size={20} className="text-[var(--toast-success-icon)]" strokeWidth={1.5} />
+  ),
+  warning: (
+    <IconAlertTriangle size={20} className="text-[var(--toast-warning-icon)]" strokeWidth={1.5} />
+  ),
   error: <IconCircleX size={20} className="text-[var(--toast-error-icon)]" strokeWidth={1.5} />,
   info: <IconInfoCircle size={20} className="text-[var(--toast-info-icon)]" strokeWidth={1.5} />,
 };
@@ -213,9 +243,7 @@ export function Toast({ toast, onDismiss, className = '' }: ToastProps) {
         'hover:border-[var(--color-action-primary)] hover:border-2',
         // Animation
         'transition-all duration-200 ease-out',
-        isExiting 
-          ? 'opacity-0 translate-x-2' 
-          : 'opacity-100 translate-x-0 animate-toast-in',
+        isExiting ? 'opacity-0 translate-x-2' : 'opacity-100 translate-x-0 animate-toast-in',
         className
       )}
       onMouseEnter={handleMouseEnter}
@@ -224,9 +252,7 @@ export function Toast({ toast, onDismiss, className = '' }: ToastProps) {
       {/* Header Row */}
       <div className="flex gap-[var(--space-2)]">
         {/* Icon */}
-        <span className="shrink-0 mt-0.5">
-          {variantIcons[toast.variant]}
-        </span>
+        <span className="shrink-0 mt-0.5">{variantIcons[toast.variant]}</span>
 
         {/* Content */}
         <div className="flex-1 min-w-0 flex flex-col gap-[var(--space-2)]">
@@ -236,12 +262,12 @@ export function Toast({ toast, onDismiss, className = '' }: ToastProps) {
               {toast.title}
             </p>
           )}
-          
+
           {/* Message */}
           <p className="text-[length:var(--toast-font-size)] leading-[var(--toast-line-height)] text-[var(--toast-text)]">
             {toast.message}
           </p>
-          
+
           {/* Project Badge */}
           {toast.project && (
             <span className="inline-flex self-start px-[var(--space-1-5)] py-[var(--space-0-5)] text-[length:var(--font-size-11)] leading-[var(--line-height-16)] text-[var(--toast-project-text)] bg-[var(--toast-project-bg)] rounded-[var(--radius-sm)]">
@@ -271,7 +297,7 @@ export function Toast({ toast, onDismiss, className = '' }: ToastProps) {
               <IconX size={16} strokeWidth={1.5} />
             </button>
           )}
-          
+
           {/* Timestamp */}
           <span className="text-[length:var(--font-size-11)] leading-[var(--line-height-16)] text-[var(--toast-time-color)]">
             {formatTime(timestamp)}
@@ -338,9 +364,9 @@ export function Toast({ toast, onDismiss, className = '' }: ToastProps) {
             aria-expanded={isDetailExpanded}
           >
             <span>View detail</span>
-            <IconChevronUp 
-              size={16} 
-              strokeWidth={1.5} 
+            <IconChevronUp
+              size={16}
+              strokeWidth={1.5}
               className={twMerge(
                 'transition-transform duration-[var(--duration-fast)]',
                 !isDetailExpanded && 'rotate-180'
@@ -371,10 +397,10 @@ export function Toast({ toast, onDismiss, className = '' }: ToastProps) {
    Toast Container Component
    ---------------------------------------- */
 
-export function ToastContainer({ 
-  position = 'top-right', 
+export function ToastContainer({
+  position = 'top-right',
   maxToasts = 5,
-  className = '' 
+  className = '',
 }: ToastContainerProps) {
   const { toasts, dismiss } = useToastStore();
   const visibleToasts = toasts.slice(0, maxToasts);
@@ -393,11 +419,7 @@ export function ToastContainer({
       aria-label="알림"
     >
       {visibleToasts.map((toast) => (
-        <Toast
-          key={toast.id}
-          toast={toast}
-          onDismiss={dismiss}
-        />
+        <Toast key={toast.id} toast={toast} onDismiss={dismiss} />
       ))}
     </div>
   );
@@ -408,7 +430,7 @@ export function ToastContainer({
    ---------------------------------------- */
 
 let toastStore: ToastData[] = [];
-let listeners: Set<() => void> = new Set();
+const listeners: Set<() => void> = new Set();
 
 function emitChange() {
   listeners.forEach((listener) => listener());
@@ -462,27 +484,42 @@ export function ToastProvider({ children }: { children: ReactNode }) {
     return `toast-${++toastIdCounter}-${Date.now()}`;
   }, []);
 
-  const toast = useCallback((options: Omit<ToastData, 'id'>) => {
-    const id = generateId();
-    addToast({ ...options, id, timestamp: options.timestamp ?? new Date() });
-    return id;
-  }, [generateId]);
+  const toast = useCallback(
+    (options: Omit<ToastData, 'id'>) => {
+      const id = generateId();
+      addToast({ ...options, id, timestamp: options.timestamp ?? new Date() });
+      return id;
+    },
+    [generateId]
+  );
 
-  const success = useCallback((message: string, options?: Partial<Omit<ToastData, 'id' | 'variant' | 'message'>>) => {
-    return toast({ variant: 'success', message, ...options });
-  }, [toast]);
+  const success = useCallback(
+    (message: string, options?: Partial<Omit<ToastData, 'id' | 'variant' | 'message'>>) => {
+      return toast({ variant: 'success', message, ...options });
+    },
+    [toast]
+  );
 
-  const warning = useCallback((message: string, options?: Partial<Omit<ToastData, 'id' | 'variant' | 'message'>>) => {
-    return toast({ variant: 'warning', message, ...options });
-  }, [toast]);
+  const warning = useCallback(
+    (message: string, options?: Partial<Omit<ToastData, 'id' | 'variant' | 'message'>>) => {
+      return toast({ variant: 'warning', message, ...options });
+    },
+    [toast]
+  );
 
-  const error = useCallback((message: string, options?: Partial<Omit<ToastData, 'id' | 'variant' | 'message'>>) => {
-    return toast({ variant: 'error', message, ...options });
-  }, [toast]);
+  const error = useCallback(
+    (message: string, options?: Partial<Omit<ToastData, 'id' | 'variant' | 'message'>>) => {
+      return toast({ variant: 'error', message, ...options });
+    },
+    [toast]
+  );
 
-  const info = useCallback((message: string, options?: Partial<Omit<ToastData, 'id' | 'variant' | 'message'>>) => {
-    return toast({ variant: 'info', message, ...options });
-  }, [toast]);
+  const info = useCallback(
+    (message: string, options?: Partial<Omit<ToastData, 'id' | 'variant' | 'message'>>) => {
+      return toast({ variant: 'info', message, ...options });
+    },
+    [toast]
+  );
 
   const dismiss = useCallback((id: string) => {
     removeToast(id);
@@ -502,9 +539,5 @@ export function ToastProvider({ children }: { children: ReactNode }) {
     dismissAll,
   };
 
-  return (
-    <ToastContext.Provider value={value}>
-      {children}
-    </ToastContext.Provider>
-  );
+  return <ToastContext.Provider value={value}>{children}</ToastContext.Provider>;
 }

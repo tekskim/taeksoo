@@ -38,16 +38,96 @@ interface SystemAdmin {
    Mock Data
    ---------------------------------------- */
 const mockSystemAdmins: SystemAdmin[] = [
-  { id: 'admin-001', username: 'thaki-kim', status: 'active', locked: true, lastSignIn: '2025-09-12', mfa: 'OTP / Email', createdAt: '2025-09-12' },
-  { id: 'admin-002', username: 'alex-jones', status: 'active', locked: false, lastSignIn: '2025-09-11', mfa: 'OTP', createdAt: '2025-08-15' },
-  { id: 'admin-003', username: 'sarah-lee', status: 'active', locked: false, lastSignIn: '2025-09-10', mfa: 'Email', createdAt: '2025-07-20' },
-  { id: 'admin-004', username: 'john-doe', status: 'inactive', locked: true, lastSignIn: '2025-08-25', mfa: '-', createdAt: '2025-06-10' },
-  { id: 'admin-005', username: 'jane-smith', status: 'active', locked: false, lastSignIn: '2025-09-12', mfa: 'OTP / Email', createdAt: '2025-09-01' },
-  { id: 'admin-006', username: 'mike-wilson', status: 'active', locked: false, lastSignIn: '2025-09-08', mfa: 'OTP', createdAt: '2025-08-25' },
-  { id: 'admin-007', username: 'emily-davis', status: 'pending', locked: false, lastSignIn: '-', mfa: '-', createdAt: '2025-09-10' },
-  { id: 'admin-008', username: 'chris-martin', status: 'active', locked: true, lastSignIn: '2025-09-05', mfa: 'Email', createdAt: '2025-07-05' },
-  { id: 'admin-009', username: 'lisa-anderson', status: 'active', locked: false, lastSignIn: '2025-09-12', mfa: 'OTP', createdAt: '2025-06-01' },
-  { id: 'admin-010', username: 'david-brown', status: 'active', locked: false, lastSignIn: '2025-09-11', mfa: 'OTP / Email', createdAt: '2025-05-15' },
+  {
+    id: 'admin-001',
+    username: 'thaki-kim',
+    status: 'active',
+    locked: true,
+    lastSignIn: '2025-09-12',
+    mfa: 'OTP / Email',
+    createdAt: '2025-09-12',
+  },
+  {
+    id: 'admin-002',
+    username: 'alex-jones',
+    status: 'active',
+    locked: false,
+    lastSignIn: '2025-09-11',
+    mfa: 'OTP',
+    createdAt: '2025-08-15',
+  },
+  {
+    id: 'admin-003',
+    username: 'sarah-lee',
+    status: 'active',
+    locked: false,
+    lastSignIn: '2025-09-10',
+    mfa: 'Email',
+    createdAt: '2025-07-20',
+  },
+  {
+    id: 'admin-004',
+    username: 'john-doe',
+    status: 'inactive',
+    locked: true,
+    lastSignIn: '2025-08-25',
+    mfa: '-',
+    createdAt: '2025-06-10',
+  },
+  {
+    id: 'admin-005',
+    username: 'jane-smith',
+    status: 'active',
+    locked: false,
+    lastSignIn: '2025-09-12',
+    mfa: 'OTP / Email',
+    createdAt: '2025-09-01',
+  },
+  {
+    id: 'admin-006',
+    username: 'mike-wilson',
+    status: 'active',
+    locked: false,
+    lastSignIn: '2025-09-08',
+    mfa: 'OTP',
+    createdAt: '2025-08-25',
+  },
+  {
+    id: 'admin-007',
+    username: 'emily-davis',
+    status: 'pending',
+    locked: false,
+    lastSignIn: '-',
+    mfa: '-',
+    createdAt: '2025-09-10',
+  },
+  {
+    id: 'admin-008',
+    username: 'chris-martin',
+    status: 'active',
+    locked: true,
+    lastSignIn: '2025-09-05',
+    mfa: 'Email',
+    createdAt: '2025-07-05',
+  },
+  {
+    id: 'admin-009',
+    username: 'lisa-anderson',
+    status: 'active',
+    locked: false,
+    lastSignIn: '2025-09-12',
+    mfa: 'OTP',
+    createdAt: '2025-06-01',
+  },
+  {
+    id: 'admin-010',
+    username: 'david-brown',
+    status: 'active',
+    locked: false,
+    lastSignIn: '2025-09-11',
+    mfa: 'OTP / Email',
+    createdAt: '2025-05-15',
+  },
 ];
 
 /* ----------------------------------------
@@ -59,7 +139,8 @@ export default function IAMSystemAdministratorsPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedRows, setSelectedRows] = useState<string[]>([]);
-  const { tabs, activeTabId, selectTab, closeTab, addNewTab, updateActiveTabLabel, moveTab } = useTabs();
+  const { tabs, activeTabId, selectTab, closeTab, addNewTab, updateActiveTabLabel, moveTab } =
+    useTabs();
   const itemsPerPage = 10;
 
   // Update tab label on mount
@@ -71,9 +152,10 @@ export default function IAMSystemAdministratorsPage() {
   const sidebarWidth = sidebarOpen ? 200 : 0;
 
   // Filter admins by search query
-  const filteredAdmins = mockSystemAdmins.filter(admin =>
-    admin.username.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    admin.mfa.toLowerCase().includes(searchQuery.toLowerCase())
+  const filteredAdmins = mockSystemAdmins.filter(
+    (admin) =>
+      admin.username.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      admin.mfa.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   // Pagination
@@ -103,7 +185,9 @@ export default function IAMSystemAdministratorsPage() {
       width: columnWidths.status,
       align: 'center',
       render: (value) => (
-        <StatusIndicator status={value === 'active' ? 'active' : value === 'inactive' ? 'shutoff' : 'building'} />
+        <StatusIndicator
+          status={value === 'active' ? 'active' : value === 'inactive' ? 'shutoff' : 'building'}
+        />
       ),
     },
     {
@@ -127,7 +211,9 @@ export default function IAMSystemAdministratorsPage() {
       align: 'center',
       render: (value) => (
         <div className="flex items-center justify-center w-full">
-          {value ? <IconLock size={16} stroke={1.5} className="text-[var(--color-text-default)]" /> : null}
+          {value ? (
+            <IconLock size={16} stroke={1.5} className="text-[var(--color-text-default)]" />
+          ) : null}
         </div>
       ),
     },
@@ -178,7 +264,7 @@ export default function IAMSystemAdministratorsPage() {
       >
         {/* Tab Bar */}
         <TabBar
-          tabs={tabs.map(tab => ({ id: tab.id, label: tab.label, closable: tab.closable }))}
+          tabs={tabs.map((tab) => ({ id: tab.id, label: tab.label, closable: tab.closable }))}
           activeTab={activeTabId}
           onTabChange={selectTab}
           onTabClose={closeTab}
@@ -195,10 +281,7 @@ export default function IAMSystemAdministratorsPage() {
           onForward={() => window.history.forward()}
           breadcrumb={
             <Breadcrumb
-              items={[
-                { label: 'IAM', href: '/iam' },
-                { label: 'System administrators' },
-              ]}
+              items={[{ label: 'IAM', href: '/iam' }, { label: 'System administrators' }]}
             />
           }
         />
@@ -212,7 +295,11 @@ export default function IAMSystemAdministratorsPage() {
                 <h1 className="text-[16px] font-semibold leading-6 text-[var(--color-text-default)]">
                   System administrators
                 </h1>
-                <Button variant="primary" size="sm" onClick={() => navigate('/iam/system-administrators/create')}>
+                <Button
+                  variant="primary"
+                  size="sm"
+                  onClick={() => navigate('/iam/system-administrators/create')}
+                >
                   Create account
                 </Button>
               </HStack>
@@ -249,11 +336,7 @@ export default function IAMSystemAdministratorsPage() {
                 />
 
                 {/* Table */}
-                <Table<SystemAdmin>
-                  columns={columns}
-                  data={paginatedAdmins}
-                  rowKey="id"
-                />
+                <Table<SystemAdmin> columns={columns} data={paginatedAdmins} rowKey="id" />
               </VStack>
             </VStack>
           </div>
@@ -262,4 +345,3 @@ export default function IAMSystemAdministratorsPage() {
     </div>
   );
 }
-

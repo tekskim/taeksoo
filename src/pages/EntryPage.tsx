@@ -2,16 +2,12 @@ import { useNavigate } from 'react-router-dom';
 import { useDarkMode } from '@/hooks/useDarkMode';
 import ThakiLogoLight from '@/assets/thakiLogo_light.svg';
 import ThakiLogoDark from '@/assets/thakiLogo-dark.svg';
-import {
-  IconMoon,
-  IconSun,
-  IconMail,
-  IconBook,
-} from '@tabler/icons-react';
+import { IconMoon, IconSun, IconMail, IconBook } from '@tabler/icons-react';
 import { Button } from '@/design-system';
 
 // App icons
 import ComputeIcon from '@/assets/compute.png';
+import ComputeAdminIcon from '@/assets/appIcon/computeadmin.png';
 import ContainerIcon from '@/assets/container.png';
 import CloudBuilderIcon from '@/assets/cloudbuilder.png';
 import AIPlatformIcon from '@/assets/aiplatform.png';
@@ -46,6 +42,15 @@ const appCards: AppCard[] = [
     description: 'Virtual machines, instances, and cloud infrastructure management',
     icon: <img src={ComputeIcon} alt="Compute" className="w-16 h-16" />,
     path: '/compute',
+    color: 'from-blue-500 to-cyan-500',
+    available: true,
+  },
+  {
+    id: 'compute-admin',
+    title: 'Compute Admin',
+    description: 'Virtual machines, instances, and cloud infrastructure management',
+    icon: <img src={ComputeAdminIcon} alt="Compute Admin" className="w-16 h-16" />,
+    path: '/compute-admin',
     color: 'from-blue-500 to-cyan-500',
     available: true,
   },
@@ -107,7 +112,11 @@ const appCards: AppCard[] = [
     id: 'mail-template',
     title: 'Mail Template',
     description: 'Email templates for authentication, notifications, and marketing',
-    icon: <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-rose-500 to-pink-500 flex items-center justify-center"><IconMail size={32} className="text-white" stroke={1.5} /></div>,
+    icon: (
+      <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-rose-500 to-pink-500 flex items-center justify-center">
+        <IconMail size={32} className="text-white" stroke={1.5} />
+      </div>
+    ),
     path: '/mail-template',
     color: 'from-rose-500 to-pink-500',
     available: true,
@@ -156,14 +165,15 @@ function AppCardComponent({ card, onClick }: AppCardComponentProps) {
         border border-[var(--color-border-default)]
         transition-all duration-300 ease-out
         text-left
-        ${isAvailable 
-          ? 'hover:border-[var(--color-border-strong)] hover:shadow-xl hover:-translate-y-1 cursor-pointer' 
-          : 'opacity-60 cursor-not-allowed'
+        ${
+          isAvailable
+            ? 'hover:border-[var(--color-border-strong)] hover:shadow-xl hover:-translate-y-1 cursor-pointer'
+            : 'opacity-60 cursor-not-allowed'
         }
       `}
     >
       {/* Gradient Background */}
-      <div 
+      <div
         className={`
           absolute inset-0 bg-gradient-to-br ${card.color} opacity-0
           transition-opacity duration-300
@@ -174,7 +184,7 @@ function AppCardComponent({ card, onClick }: AppCardComponentProps) {
       {/* Content */}
       <div className="relative h-full p-6 flex flex-col">
         {/* Icon */}
-        <div 
+        <div
           className={`
             w-16 h-16
             transition-transform duration-300 origin-center
@@ -228,34 +238,35 @@ export function EntryPage() {
         <div className="max-w-7xl mx-auto px-8 h-14 flex items-center justify-between">
           {/* Logo */}
           <div className="flex items-center gap-3">
-            <img 
-              src={isDark ? ThakiLogoDark : ThakiLogoLight} 
-              alt="THAKI Cloud" 
-              className="h-5"
-            />
+            <img src={isDark ? ThakiLogoDark : ThakiLogoLight} alt="THAKI Cloud" className="h-5" />
           </div>
 
           {/* Actions */}
           <div className="flex items-center gap-3">
-            <Button
-              variant="secondary"
-              size="sm"
-              onClick={() => navigate('/design')}
-            >
+            <Button variant="secondary" size="sm" onClick={() => navigate('/design')}>
               Design system
             </Button>
             <Button
               variant="secondary"
               size="sm"
               leftIcon={<IconBook size={14} stroke={1.5} />}
-              onClick={() => window.open(import.meta.env.DEV ? 'http://localhost:6006' : 'https://thakicloud.github.io/tds_ssot/storybook/', '_blank')}
+              onClick={() =>
+                window.open(
+                  import.meta.env.DEV
+                    ? 'http://localhost:6006'
+                    : 'https://thakicloud.github.io/tds_ssot/storybook/',
+                  '_blank'
+                )
+              }
             >
               Storybook
             </Button>
             <Button
               variant="secondary"
               size="sm"
-              leftIcon={isDark ? <IconSun size={14} stroke={1.5} /> : <IconMoon size={14} stroke={1.5} />}
+              leftIcon={
+                isDark ? <IconSun size={14} stroke={1.5} /> : <IconMoon size={14} stroke={1.5} />
+              }
               onClick={toggleDarkMode}
             >
               {isDark ? 'Light mode' : 'Dark mode'}
@@ -273,18 +284,15 @@ export function EntryPage() {
               Thaki Design system SSoT
             </h1>
             <p className="text-[14px] text-[var(--color-text-subtle)] mx-auto leading-relaxed">
-              Thaki Design system SSoT는 디자인 원칙, 컴포넌트, 토큰, 가이드라인을 한 곳에 모은 '단일 기준'입니다.
+              Thaki Design system SSoT는 디자인 원칙, 컴포넌트, 토큰, 가이드라인을 한 곳에 모은
+              '단일 기준'입니다.
             </p>
           </div>
 
           {/* App Grid */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             {appCards.map((card) => (
-              <AppCardComponent
-                key={card.id}
-                card={card}
-                onClick={() => handleCardClick(card)}
-              />
+              <AppCardComponent key={card.id} card={card} onClick={() => handleCardClick(card)} />
             ))}
           </div>
 
@@ -295,25 +303,13 @@ export function EntryPage() {
                 Developer Resources
               </p>
               <div className="flex items-center justify-center gap-4 mt-4 flex-wrap">
-                <Button
-                  variant="muted"
-                  size="md"
-                  onClick={() => navigate('/design/drawers')}
-                >
+                <Button variant="muted" size="md" onClick={() => navigate('/design/drawers')}>
                   Drawers
                 </Button>
-                <Button
-                  variant="muted"
-                  size="md"
-                  onClick={() => navigate('/design/modals')}
-                >
+                <Button variant="muted" size="md" onClick={() => navigate('/design/modals')}>
                   Modals
                 </Button>
-                <Button
-                  variant="muted"
-                  size="md"
-                  onClick={() => navigate('/sidebar-icons')}
-                >
+                <Button variant="muted" size="md" onClick={() => navigate('/sidebar-icons')}>
                   Sidebar Icons
                 </Button>
                 <Button
@@ -326,7 +322,6 @@ export function EntryPage() {
               </div>
             </div>
           </div>
-
         </div>
       </main>
 
@@ -343,4 +338,3 @@ export function EntryPage() {
 }
 
 export default EntryPage;
-

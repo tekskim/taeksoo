@@ -47,7 +47,11 @@ export function BreadcrumbNavigation({
             className="p-0.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors duration-[var(--duration-fast)] cursor-pointer"
             aria-label="Go back"
           >
-            <IconChevronLeft size={16} className="text-[var(--color-text-default)]" strokeWidth={1.5} />
+            <IconChevronLeft
+              size={16}
+              className="text-[var(--color-text-default)]"
+              strokeWidth={1.5}
+            />
           </button>
           <div className="w-px h-2 bg-[var(--color-border-default)]" />
           <button
@@ -55,7 +59,11 @@ export function BreadcrumbNavigation({
             className="p-0.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors duration-[var(--duration-fast)] cursor-pointer"
             aria-label="Go forward"
           >
-            <IconChevronRight size={16} className="text-[var(--color-text-default)]" strokeWidth={1.5} />
+            <IconChevronRight
+              size={16}
+              className="text-[var(--color-text-default)]"
+              strokeWidth={1.5}
+            />
           </button>
         </div>
 

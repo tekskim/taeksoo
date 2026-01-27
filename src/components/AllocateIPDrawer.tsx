@@ -68,7 +68,7 @@ export function AllocateIPDrawer({
     setHasAttemptedSubmit(true);
     if (!selectedSubnetId) return;
     if (assignmentType === 'manual' && !manualIpAddress.trim()) return;
-    
+
     setIsSubmitting(true);
     try {
       await onSubmit?.({
@@ -87,14 +87,15 @@ export function AllocateIPDrawer({
     onClose();
   };
 
-  const selectedSubnet = subnets.find(s => s.id === selectedSubnetId);
-  const ipRangeText = selectedSubnet && selectedSubnet.ipRangeStart && selectedSubnet.ipRangeEnd
-    ? `${selectedSubnet.ipRangeStart} - ${selectedSubnet.ipRangeEnd}`
-    : '';
+  const selectedSubnet = subnets.find((s) => s.id === selectedSubnetId);
+  const ipRangeText =
+    selectedSubnet && selectedSubnet.ipRangeStart && selectedSubnet.ipRangeEnd
+      ? `${selectedSubnet.ipRangeStart} - ${selectedSubnet.ipRangeEnd}`
+      : '';
 
   const subnetOptions = [
     { value: '', label: 'Select subnet' },
-    ...subnets.map(s => ({ value: s.id, label: `${s.name} (${s.cidr})` })),
+    ...subnets.map((s) => ({ value: s.id, label: `${s.name} (${s.cidr})` })),
   ];
 
   const assignmentOptions = [
@@ -111,15 +112,11 @@ export function AllocateIPDrawer({
       width={376}
       footer={
         <HStack gap={2} className="w-full">
-          <Button 
-            variant="secondary" 
-            onClick={handleClose}
-            className="flex-1 h-8"
-          >
+          <Button variant="secondary" onClick={handleClose} className="flex-1 h-8">
             Cancel
           </Button>
-          <Button 
-            variant="primary" 
+          <Button
+            variant="primary"
             onClick={handleSubmit}
             disabled={isSubmitting}
             className="flex-1 h-8"
@@ -136,7 +133,8 @@ export function AllocateIPDrawer({
             Allocate IP
           </h2>
           <p className="text-[12px] text-[var(--color-text-subtle)] leading-4">
-            Assign an additional fixed IP address to this port. Select a subnet from the list below and choose whether to assign an IP automatically or manually.
+            Assign an additional fixed IP address to this port. Select a subnet from the list below
+            and choose whether to assign an IP automatically or manually.
           </p>
         </VStack>
 
@@ -145,12 +143,7 @@ export function AllocateIPDrawer({
           <label className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
             Port
           </label>
-          <Input
-            value={port.name}
-            readOnly
-            disabled
-            fullWidth
-          />
+          <Input value={port.name} readOnly disabled fullWidth />
         </VStack>
 
         {/* Owned Network (Read-only) */}
@@ -158,12 +151,7 @@ export function AllocateIPDrawer({
           <label className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
             Owned Network
           </label>
-          <Input
-            value={port.networkName}
-            readOnly
-            disabled
-            fullWidth
-          />
+          <Input value={port.networkName} readOnly disabled fullWidth />
         </VStack>
 
         {/* IP Settings (Collapsible) */}
@@ -238,4 +226,3 @@ export function AllocateIPDrawer({
 }
 
 export default AllocateIPDrawer;
-

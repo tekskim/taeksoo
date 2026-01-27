@@ -96,4 +96,3 @@ export const computeRoutes = (
     <Route path="/compute/console/:instanceId" element={<ConsolePage />} />
   </>
 );
-

@@ -55,7 +55,7 @@ export function CreateImageFromVolumeDrawer({
   const handleSubmit = async () => {
     setHasAttemptedSubmit(true);
     if (!imageName.trim()) return;
-    
+
     setIsSubmitting(true);
     try {
       await onSubmit?.(imageName, diskFormat);
@@ -81,15 +81,11 @@ export function CreateImageFromVolumeDrawer({
       width={376}
       footer={
         <HStack gap={2} className="w-full">
-          <Button 
-            variant="secondary" 
-            onClick={handleClose}
-            className="flex-1 h-8"
-          >
+          <Button variant="secondary" onClick={handleClose} className="flex-1 h-8">
             Cancel
           </Button>
-          <Button 
-            variant="primary" 
+          <Button
+            variant="primary"
             onClick={handleSubmit}
             disabled={isSubmitting}
             className="flex-1 h-8"
@@ -108,15 +104,14 @@ export function CreateImageFromVolumeDrawer({
               Create Image from Volume
             </h2>
             <p className="text-[12px] text-[var(--color-text-subtle)] leading-4">
-              Create a new image using this volume as the source. The image will contain all data currently stored on the volume and can be used to launch new instances.
+              Create a new image using this volume as the source. The image will contain all data
+              currently stored on the volume and can be used to launch new instances.
             </p>
           </VStack>
 
           {/* Volume Info Box */}
           <div className="w-full px-4 py-3 bg-[var(--color-surface-subtle)] rounded-lg">
-            <p className="text-[11px] font-medium text-[var(--color-text-subtle)] mb-1.5">
-              Volume
-            </p>
+            <p className="text-[11px] font-medium text-[var(--color-text-subtle)] mb-1.5">Volume</p>
             <p className="text-[12px] text-[var(--color-text-default)]">
               {volume ? `${volume.name} (${volume.size}GiB)` : '-'}
             </p>
@@ -151,12 +146,7 @@ export function CreateImageFromVolumeDrawer({
           <label className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
             Disk Format
           </label>
-          <Select
-            options={diskFormats}
-            value={diskFormat}
-            onChange={setDiskFormat}
-            fullWidth
-          />
+          <Select options={diskFormats} value={diskFormat} onChange={setDiskFormat} fullWidth />
         </VStack>
       </VStack>
     </Drawer>
@@ -164,5 +154,3 @@ export function CreateImageFromVolumeDrawer({
 }
 
 export default CreateImageFromVolumeDrawer;
-
-

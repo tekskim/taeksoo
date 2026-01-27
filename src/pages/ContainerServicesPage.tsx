@@ -33,7 +33,6 @@ import {
   IconTrash,
   IconChevronDown,
   IconStar,
-  IconRefresh,
 } from '@tabler/icons-react';
 
 /* ----------------------------------------
@@ -142,45 +141,43 @@ function CreateServiceDropdown({ onCreateForm, onCreateYaml }: CreateServiceDrop
       >
         Create Service
       </Button>
-      
-      {isOpen && createPortal(
-        <>
-          {/* Backdrop */}
-          <div 
-            className="fixed inset-0 z-[99]" 
-            onClick={() => setIsOpen(false)}
-          />
-          {/* Dropdown */}
-          <div
-            ref={dropdownRef}
-            className="fixed z-[100] bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg shadow-lg py-1 min-w-[140px]"
-            style={{
-              top: getDropdownPosition().top,
-              right: getDropdownPosition().right,
-            }}
-          >
-            <button
-              className="w-full px-3 py-2 text-left text-[12px] text-[var(--color-text-default)] hover:bg-[var(--color-surface-subtle)] transition-colors"
-              onClick={() => {
-                setIsOpen(false);
-                onCreateForm();
+
+      {isOpen &&
+        createPortal(
+          <>
+            {/* Backdrop */}
+            <div className="fixed inset-0 z-[99]" onClick={() => setIsOpen(false)} />
+            {/* Dropdown */}
+            <div
+              ref={dropdownRef}
+              className="fixed z-[100] bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg shadow-lg py-1 min-w-[140px]"
+              style={{
+                top: getDropdownPosition().top,
+                right: getDropdownPosition().right,
               }}
             >
-              Create as Form
-            </button>
-            <button
-              className="w-full px-3 py-2 text-left text-[12px] text-[var(--color-text-default)] hover:bg-[var(--color-surface-subtle)] transition-colors"
-              onClick={() => {
-                setIsOpen(false);
-                onCreateYaml();
-              }}
-            >
-              Create as YAML
-            </button>
-          </div>
-        </>,
-        document.body
-      )}
+              <button
+                className="w-full px-3 py-2 text-left text-[12px] text-[var(--color-text-default)] hover:bg-[var(--color-surface-subtle)] transition-colors"
+                onClick={() => {
+                  setIsOpen(false);
+                  onCreateForm();
+                }}
+              >
+                Create as Form
+              </button>
+              <button
+                className="w-full px-3 py-2 text-left text-[12px] text-[var(--color-text-default)] hover:bg-[var(--color-surface-subtle)] transition-colors"
+                onClick={() => {
+                  setIsOpen(false);
+                  onCreateYaml();
+                }}
+              >
+                Create as YAML
+              </button>
+            </div>
+          </>,
+          document.body
+        )}
     </div>
   );
 }
@@ -235,7 +232,7 @@ export function ContainerServicesPage() {
         <StatusIndicator
           status={value === 'Running' ? 'active' : value === 'Pending' ? 'paused' : 'error'}
         />
-      )
+      ),
     },
     {
       key: 'name',
@@ -246,7 +243,7 @@ export function ContainerServicesPage() {
         <TableLink title={value} onClick={() => navigate(`/container/services/${row.id}`)}>
           {value}
         </TableLink>
-      )
+      ),
     },
     {
       key: 'namespace',
@@ -266,7 +263,7 @@ export function ContainerServicesPage() {
             {text}
           </span>
         );
-      }
+      },
     },
     {
       key: 'selector',
@@ -280,7 +277,7 @@ export function ContainerServicesPage() {
             {text}
           </span>
         );
-      }
+      },
     },
     {
       key: 'type',
@@ -288,10 +285,8 @@ export function ContainerServicesPage() {
       width: columnWidths.type,
       sortable: true,
       render: (value: string) => (
-        <span className="text-[12px] text-[var(--color-text-default)]">
-          {value}
-        </span>
-      )
+        <span className="text-[12px] text-[var(--color-text-default)]">{value}</span>
+      ),
     },
     {
       key: 'createdAt',
@@ -335,7 +330,11 @@ export function ContainerServicesPage() {
           <div onClick={(e) => e.stopPropagation()}>
             <ContextMenu items={menuItems} trigger="click">
               <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
-                <IconDotsCircleHorizontal size={16} stroke={1.5} className="text-[var(--action-icon-color)]" />
+                <IconDotsCircleHorizontal
+                  size={16}
+                  stroke={1.5}
+                  className="text-[var(--action-icon-color)]"
+                />
               </button>
             </ContextMenu>
           </div>
@@ -364,7 +363,7 @@ export function ContainerServicesPage() {
       >
         {/* Tab Bar */}
         <TabBar
-          tabs={tabs.map(tab => ({ id: tab.id, label: tab.label, closable: tab.closable }))}
+          tabs={tabs.map((tab) => ({ id: tab.id, label: tab.label, closable: tab.closable }))}
           activeTab={activeTabId}
           onTabChange={selectTab}
           onTabClose={closeTab}
@@ -381,15 +380,12 @@ export function ContainerServicesPage() {
           onForward={() => window.history.forward()}
           breadcrumb={
             <Breadcrumb
-              items={[
-                { label: 'clusterName', href: '/container' },
-                { label: 'Services' },
-              ]}
+              items={[{ label: 'clusterName', href: '/container' }, { label: 'Services' }]}
             />
           }
           actions={
             <>
-              <button 
+              <button
                 className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
                 onClick={() => {
                   if (shellPanel.isExpanded) {
@@ -399,7 +395,15 @@ export function ContainerServicesPage() {
                   }
                 }}
               >
-                <IconTerminal2 size={16} className={shellPanel.isExpanded ? "text-[var(--color-action-primary)]" : "text-[var(--color-text-muted)]"} stroke={1.5} />
+                <IconTerminal2
+                  size={16}
+                  className={
+                    shellPanel.isExpanded
+                      ? 'text-[var(--color-action-primary)]'
+                      : 'text-[var(--color-text-muted)]'
+                  }
+                  stroke={1.5}
+                />
               </button>
               <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
                 <IconFile size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
@@ -418,7 +422,7 @@ export function ContainerServicesPage() {
         />
 
         {/* Content Area */}
-        <div 
+        <div
           className="flex-1 overflow-y-auto overflow-x-hidden min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll"
           style={{ paddingBottom: shellPanel.isExpanded ? 'var(--shell-panel-height)' : '0' }}
         >
@@ -449,7 +453,12 @@ export function ContainerServicesPage() {
                     size="sm"
                     className="w-[var(--search-input-width)]"
                   />
-                  <Button variant="secondary" size="sm" aria-label="Download" className="!p-0 !w-7 !h-7 !min-w-7">
+                  <Button
+                    variant="secondary"
+                    size="sm"
+                    aria-label="Download"
+                    className="!p-0 !w-7 !h-7 !min-w-7"
+                  >
                     <IconDownload size={14} stroke={1.5} />
                   </Button>
                 </HStack>
@@ -459,10 +468,20 @@ export function ContainerServicesPage() {
 
                 {/* Actions */}
                 <HStack gap={1} align="center">
-                  <Button variant="secondary" size="sm" leftIcon={<IconDownload size={12} stroke={1.5} />} disabled={selectedRows.length === 0}>
+                  <Button
+                    variant="secondary"
+                    size="sm"
+                    leftIcon={<IconDownload size={12} stroke={1.5} />}
+                    disabled={selectedRows.length === 0}
+                  >
                     Download YAML
                   </Button>
-                  <Button variant="secondary" size="sm" leftIcon={<IconTrash size={12} stroke={1.5} />} disabled={selectedRows.length === 0}>
+                  <Button
+                    variant="secondary"
+                    size="sm"
+                    leftIcon={<IconTrash size={12} stroke={1.5} />}
+                    disabled={selectedRows.length === 0}
+                  >
                     Delete
                   </Button>
                 </HStack>
@@ -470,7 +489,11 @@ export function ContainerServicesPage() {
 
               {/* Filter Bar */}
               {filters.length > 0 && (
-                <HStack justify="between" align="center" className="w-full pl-2 pr-4 py-2 bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)]">
+                <HStack
+                  justify="between"
+                  align="center"
+                  className="w-full pl-2 pr-4 py-2 bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)]"
+                >
                   <HStack gap={1} align="center">
                     {filters.map((filter, index) => (
                       <Chip

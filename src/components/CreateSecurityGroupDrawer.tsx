@@ -22,18 +22,10 @@ export interface CreateSecurityGroupDrawerProps {
    QuotaProgressBar Component
    ---------------------------------------- */
 
-function QuotaProgressBar({ 
-  label, 
-  used, 
-  limit 
-}: { 
-  label: string; 
-  used: number; 
-  limit: number;
-}) {
+function QuotaProgressBar({ label, used, limit }: { label: string; used: number; limit: number }) {
   const currentPercent = Math.min((used / limit) * 100, 100);
   const nextPercent = Math.min(((used + 1) / limit) * 100, 100);
-  
+
   return (
     <VStack gap={2} className="w-full">
       <HStack className="w-full justify-between">
@@ -46,12 +38,12 @@ function QuotaProgressBar({
       </HStack>
       <div className="w-full h-1 bg-[var(--color-border-subtle)] rounded-lg overflow-hidden relative">
         {/* Next usage (lighter green) */}
-        <div 
+        <div
           className="absolute h-full bg-[#bbf7d0] rounded-lg transition-all duration-300"
           style={{ width: `${nextPercent}%` }}
         />
         {/* Current usage (darker green) */}
-        <div 
+        <div
           className="absolute h-full bg-[var(--color-status-success)] rounded-lg transition-all duration-300"
           style={{ width: `${currentPercent}%` }}
         />
@@ -87,7 +79,7 @@ export function CreateSecurityGroupDrawer({
   const handleSubmit = async () => {
     setHasAttemptedSubmit(true);
     if (!name.trim()) return;
-    
+
     setIsSubmitting(true);
     try {
       await onSubmit?.(name, description);
@@ -113,24 +105,16 @@ export function CreateSecurityGroupDrawer({
         <VStack gap={4} className="w-full">
           {/* Quota Section */}
           <div className="w-full border-t border-[var(--color-border-subtle)] pt-4">
-            <QuotaProgressBar 
-              label="Security Group Quota" 
-              used={quota.used} 
-              limit={quota.limit} 
-            />
+            <QuotaProgressBar label="Security Group Quota" used={quota.used} limit={quota.limit} />
           </div>
-          
+
           {/* Buttons */}
           <HStack gap={2} className="w-full border-t border-[var(--color-border-default)] pt-4">
-            <Button 
-              variant="secondary" 
-              onClick={handleClose}
-              className="flex-1 h-8"
-            >
+            <Button variant="secondary" onClick={handleClose} className="flex-1 h-8">
               Cancel
             </Button>
-            <Button 
-              variant="primary" 
+            <Button
+              variant="primary"
               onClick={handleSubmit}
               disabled={isSubmitting}
               className="flex-1 h-8"
@@ -195,5 +179,3 @@ export function CreateSecurityGroupDrawer({
 }
 
 export default CreateSecurityGroupDrawer;
-
-

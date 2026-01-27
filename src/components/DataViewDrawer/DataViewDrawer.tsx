@@ -15,7 +15,7 @@ export const DataViewDrawer: React.FC<DataViewDrawerProps> = ({
   onClose,
   title,
   series,
-  timeLabels: _timeLabels
+  timeLabels: _timeLabels,
 }) => {
   // Close on ESC key
   useEffect(() => {
@@ -49,11 +49,11 @@ export const DataViewDrawer: React.FC<DataViewDrawerProps> = ({
     const year = now.getFullYear();
     const month = String(now.getMonth() + 1).padStart(2, '0');
     const day = String(now.getDate()).padStart(2, '0');
-    
+
     // Generate more time labels by extending with 5-minute intervals over past 2 hours
     const extendedLabels: string[] = [];
     const startHour = Math.max(0, now.getHours() - 2);
-    
+
     for (let h = startHour; h <= now.getHours(); h++) {
       for (let m = 0; m < 60; m += 5) {
         const hourStr = String(h).padStart(2, '0');
@@ -61,19 +61,19 @@ export const DataViewDrawer: React.FC<DataViewDrawerProps> = ({
         extendedLabels.push(`${year}-${month}-${day} ${hourStr}:${minStr}:00`);
       }
     }
-    
+
     return extendedLabels;
   };
 
   const fullTimeLabels = generateFullTimeLabels();
-  
+
   // Generate data values for extended rows
   const getDataValue = (seriesIdx: number, rowIdx: number) => {
     const s = series[seriesIdx];
     if (s.data[rowIdx % s.data.length] !== undefined) {
       // Add some variation to make data look realistic
       const baseValue = s.data[rowIdx % s.data.length];
-      const variation = (Math.sin(rowIdx * 0.5) * 0.2 + 1);
+      const variation = Math.sin(rowIdx * 0.5) * 0.2 + 1;
       return (baseValue * variation).toFixed(2);
     }
     return '-';
@@ -88,7 +88,7 @@ export const DataViewDrawer: React.FC<DataViewDrawerProps> = ({
           <div className={styles.header}>
             <h2 className={styles.title}>{title}</h2>
           </div>
-          
+
           <div className={styles.tableContainer}>
             <table className={styles.table}>
               <thead>
@@ -104,9 +104,7 @@ export const DataViewDrawer: React.FC<DataViewDrawerProps> = ({
                   <tr key={rowIdx}>
                     <td>{time}</td>
                     {series.map((_, colIdx) => (
-                      <td key={colIdx}>
-                        {getDataValue(colIdx, rowIdx)}
-                      </td>
+                      <td key={colIdx}>{getDataValue(colIdx, rowIdx)}</td>
                     ))}
                   </tr>
                 ))}
@@ -114,7 +112,7 @@ export const DataViewDrawer: React.FC<DataViewDrawerProps> = ({
             </table>
           </div>
         </div>
-        
+
         <div className={styles.footer}>
           <button className={styles.closeButton} onClick={onClose}>
             Close
@@ -127,4 +125,3 @@ export const DataViewDrawer: React.FC<DataViewDrawerProps> = ({
 };
 
 export default DataViewDrawer;
-

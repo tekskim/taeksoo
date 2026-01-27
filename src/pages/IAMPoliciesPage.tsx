@@ -16,12 +16,7 @@ import {
 } from '@/design-system';
 import { IAMSidebar } from '@/components/IAMSidebar';
 import { useTabs } from '@/contexts/TabContext';
-import {
-  IconDownload,
-  IconChevronDown,
-  IconChevronRight,
-  IconTrash,
-} from '@tabler/icons-react';
+import { IconDownload, IconChevronDown, IconChevronRight, IconTrash } from '@tabler/icons-react';
 import { IconAction } from '@/design-system';
 import { Link } from 'react-router-dom';
 
@@ -61,8 +56,18 @@ const mockPolicies: Policy[] = [
     description: '-',
     editedAt: '2025-09-12',
     permissions: [
-      { application: 'Compute', partition: 'tenantA', resource: 'Instance', actions: ['Read', 'List'] },
-      { application: 'Compute', partition: 'tenantA', resource: 'Volume', actions: ['Read', 'List', 'Write'] },
+      {
+        application: 'Compute',
+        partition: 'tenantA',
+        resource: 'Instance',
+        actions: ['Read', 'List'],
+      },
+      {
+        application: 'Compute',
+        partition: 'tenantA',
+        resource: 'Volume',
+        actions: ['Read', 'List', 'Write'],
+      },
     ],
   },
   {
@@ -74,9 +79,24 @@ const mockPolicies: Policy[] = [
     description: '-',
     editedAt: '2025-09-12',
     permissions: [
-      { application: 'Compute', partition: 'tenantA', resource: 'AI_server', actions: ['Read', 'List', 'Write', 'Delete', 'Admin'] },
-      { application: 'Container', partition: '*all', resource: '*all', actions: ['Read', 'List', 'Write'] },
-      { application: 'IAM', partition: '-', resource: '*all', actions: ['Read', 'List', 'Write', 'Delete', 'Admin'] },
+      {
+        application: 'Compute',
+        partition: 'tenantA',
+        resource: 'AI_server',
+        actions: ['Read', 'List', 'Write', 'Delete', 'Admin'],
+      },
+      {
+        application: 'Container',
+        partition: '*all',
+        resource: '*all',
+        actions: ['Read', 'List', 'Write'],
+      },
+      {
+        application: 'IAM',
+        partition: '-',
+        resource: '*all',
+        actions: ['Read', 'List', 'Write', 'Delete', 'Admin'],
+      },
       { application: 'Storage', partition: '-', resource: 'block_01', actions: ['Read'] },
     ],
   },
@@ -89,9 +109,24 @@ const mockPolicies: Policy[] = [
     description: 'Full access to compute resources',
     editedAt: '2025-08-15',
     permissions: [
-      { application: 'Compute', partition: '*all', resource: 'Instance', actions: ['Read', 'List', 'Write', 'Delete', 'Admin'] },
-      { application: 'Compute', partition: '*all', resource: 'Volume', actions: ['Read', 'List', 'Write', 'Delete', 'Admin'] },
-      { application: 'Compute', partition: '*all', resource: 'Image', actions: ['Read', 'List', 'Write', 'Delete'] },
+      {
+        application: 'Compute',
+        partition: '*all',
+        resource: 'Instance',
+        actions: ['Read', 'List', 'Write', 'Delete', 'Admin'],
+      },
+      {
+        application: 'Compute',
+        partition: '*all',
+        resource: 'Volume',
+        actions: ['Read', 'List', 'Write', 'Delete', 'Admin'],
+      },
+      {
+        application: 'Compute',
+        partition: '*all',
+        resource: 'Image',
+        actions: ['Read', 'List', 'Write', 'Delete'],
+      },
     ],
   },
   {
@@ -116,9 +151,24 @@ const mockPolicies: Policy[] = [
     description: 'Network administration policy',
     editedAt: '2025-07-20',
     permissions: [
-      { application: 'Network', partition: '*all', resource: 'VPC', actions: ['Read', 'List', 'Write', 'Delete', 'Admin'] },
-      { application: 'Network', partition: '*all', resource: 'Subnet', actions: ['Read', 'List', 'Write', 'Delete'] },
-      { application: 'Network', partition: '*all', resource: 'Router', actions: ['Read', 'List', 'Write', 'Delete'] },
+      {
+        application: 'Network',
+        partition: '*all',
+        resource: 'VPC',
+        actions: ['Read', 'List', 'Write', 'Delete', 'Admin'],
+      },
+      {
+        application: 'Network',
+        partition: '*all',
+        resource: 'Subnet',
+        actions: ['Read', 'List', 'Write', 'Delete'],
+      },
+      {
+        application: 'Network',
+        partition: '*all',
+        resource: 'Router',
+        actions: ['Read', 'List', 'Write', 'Delete'],
+      },
     ],
   },
   {
@@ -130,9 +180,24 @@ const mockPolicies: Policy[] = [
     description: 'Container deployment permissions',
     editedAt: '2025-07-15',
     permissions: [
-      { application: 'Container', partition: 'tenantA', resource: 'Deployment', actions: ['Read', 'List', 'Write'] },
-      { application: 'Container', partition: 'tenantA', resource: 'Service', actions: ['Read', 'List', 'Write'] },
-      { application: 'Container', partition: 'tenantA', resource: 'Pod', actions: ['Read', 'List'] },
+      {
+        application: 'Container',
+        partition: 'tenantA',
+        resource: 'Deployment',
+        actions: ['Read', 'List', 'Write'],
+      },
+      {
+        application: 'Container',
+        partition: 'tenantA',
+        resource: 'Service',
+        actions: ['Read', 'List', 'Write'],
+      },
+      {
+        application: 'Container',
+        partition: 'tenantA',
+        resource: 'Pod',
+        actions: ['Read', 'List'],
+      },
     ],
   },
   {
@@ -158,8 +223,18 @@ const mockPolicies: Policy[] = [
     description: 'Security audit permissions',
     editedAt: '2025-06-25',
     permissions: [
-      { application: 'Security', partition: '*all', resource: 'AuditLog', actions: ['Read', 'List'] },
-      { application: 'Security', partition: '*all', resource: 'Compliance', actions: ['Read', 'List'] },
+      {
+        application: 'Security',
+        partition: '*all',
+        resource: 'AuditLog',
+        actions: ['Read', 'List'],
+      },
+      {
+        application: 'Security',
+        partition: '*all',
+        resource: 'Compliance',
+        actions: ['Read', 'List'],
+      },
       { application: 'IAM', partition: '-', resource: 'Session', actions: ['Read', 'List'] },
     ],
   },
@@ -172,8 +247,18 @@ const mockPolicies: Policy[] = [
     description: 'Database administration policy',
     editedAt: '2025-06-20',
     permissions: [
-      { application: 'Database', partition: '*all', resource: 'Instance', actions: ['Read', 'List', 'Write', 'Delete', 'Admin'] },
-      { application: 'Database', partition: '*all', resource: 'Backup', actions: ['Read', 'List', 'Write', 'Delete'] },
+      {
+        application: 'Database',
+        partition: '*all',
+        resource: 'Instance',
+        actions: ['Read', 'List', 'Write', 'Delete', 'Admin'],
+      },
+      {
+        application: 'Database',
+        partition: '*all',
+        resource: 'Backup',
+        actions: ['Read', 'List', 'Write', 'Delete'],
+      },
     ],
   },
   {
@@ -258,7 +343,8 @@ function PolicyDetails({ permissions }: PolicyDetailsProps) {
 
 export default function IAMPoliciesPage() {
   const navigate = useNavigate();
-  const { tabs, activeTabId, selectTab, closeTab, addNewTab, updateActiveTabLabel, moveTab } = useTabs();
+  const { tabs, activeTabId, selectTab, closeTab, addNewTab, updateActiveTabLabel, moveTab } =
+    useTabs();
 
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
@@ -274,10 +360,11 @@ export default function IAMPoliciesPage() {
   const sidebarWidth = sidebarOpen ? 200 : 0;
 
   // Filter policies by search query
-  const filteredPolicies = mockPolicies.filter(policy =>
-    policy.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    policy.apps.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    policy.roles.toLowerCase().includes(searchQuery.toLowerCase())
+  const filteredPolicies = mockPolicies.filter(
+    (policy) =>
+      policy.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      policy.apps.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      policy.roles.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   // Pagination
@@ -289,7 +376,7 @@ export default function IAMPoliciesPage() {
 
   // Toggle policy expansion
   const togglePolicyExpansion = (policyId: string) => {
-    setExpandedPolicies(prev => {
+    setExpandedPolicies((prev) => {
       const newSet = new Set(prev);
       if (newSet.has(policyId)) {
         newSet.delete(policyId);
@@ -302,9 +389,9 @@ export default function IAMPoliciesPage() {
 
   // Toggle row selection
   const toggleRowSelection = (policyId: string) => {
-    setSelectedRows(prev => {
+    setSelectedRows((prev) => {
       if (prev.includes(policyId)) {
-        return prev.filter(id => id !== policyId);
+        return prev.filter((id) => id !== policyId);
       }
       return [...prev, policyId];
     });
@@ -315,26 +402,41 @@ export default function IAMPoliciesPage() {
     if (isBuiltIn) {
       // Built-in policies: Edit and Delete disabled
       return [
-        { id: 'manage-roles', label: 'Manage roles', onClick: () => console.log('Manage roles', rowId) },
+        {
+          id: 'manage-roles',
+          label: 'Manage roles',
+          onClick: () => console.log('Manage roles', rowId),
+        },
         { id: 'duplicate', label: 'Duplicate', onClick: () => console.log('Duplicate', rowId) },
         { id: 'edit', label: 'Edit', disabled: true, onClick: () => console.log('Edit', rowId) },
-        { id: 'delete', label: 'Delete', disabled: true, onClick: () => console.log('Delete', rowId) },
+        {
+          id: 'delete',
+          label: 'Delete',
+          disabled: true,
+          onClick: () => console.log('Delete', rowId),
+        },
       ];
     }
     // Custom policies: all items enabled
     return [
-      { id: 'manage-roles', label: 'Manage roles', onClick: () => console.log('Manage roles', rowId) },
+      {
+        id: 'manage-roles',
+        label: 'Manage roles',
+        onClick: () => console.log('Manage roles', rowId),
+      },
       { id: 'duplicate', label: 'Duplicate', onClick: () => console.log('Duplicate', rowId) },
       { id: 'edit', label: 'Edit', onClick: () => console.log('Edit', rowId) },
-      { id: 'delete', label: 'Delete', status: 'danger', onClick: () => console.log('Delete', rowId) },
+      {
+        id: 'delete',
+        label: 'Delete',
+        status: 'danger',
+        onClick: () => console.log('Delete', rowId),
+      },
     ];
   };
 
   // Breadcrumb items
-  const breadcrumbItems = [
-    { label: 'IAM', href: '/iam' },
-    { label: 'Policies' },
-  ];
+  const breadcrumbItems = [{ label: 'IAM', href: '/iam' }, { label: 'Policies' }];
 
   return (
     <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
@@ -344,7 +446,7 @@ export default function IAMPoliciesPage() {
         style={{ left: `${sidebarWidth}px` }}
       >
         <TabBar
-          tabs={tabs.map(tab => ({ id: tab.id, label: tab.label, closable: tab.closable }))}
+          tabs={tabs.map((tab) => ({ id: tab.id, label: tab.label, closable: tab.closable }))}
           activeTab={activeTabId}
           onTabChange={selectTab}
           onTabClose={closeTab}
@@ -367,7 +469,11 @@ export default function IAMPoliciesPage() {
                 <h1 className="text-[16px] font-semibold leading-6 text-[var(--color-text-default)]">
                   Policies
                 </h1>
-                <Button variant="primary" size="sm" onClick={() => navigate('/iam/policies/create')}>
+                <Button
+                  variant="primary"
+                  size="sm"
+                  onClick={() => navigate('/iam/policies/create')}
+                >
                   Create policy
                 </Button>
               </HStack>
@@ -421,11 +527,16 @@ export default function IAMPoliciesPage() {
                     {/* Checkbox column */}
                     <div className="w-[40px] flex items-center justify-center px-3 py-2">
                       <Checkbox
-                        checked={selectedRows.length > 0 && selectedRows.length === paginatedPolicies.length}
-                        indeterminate={selectedRows.length > 0 && selectedRows.length < paginatedPolicies.length}
+                        checked={
+                          selectedRows.length > 0 &&
+                          selectedRows.length === paginatedPolicies.length
+                        }
+                        indeterminate={
+                          selectedRows.length > 0 && selectedRows.length < paginatedPolicies.length
+                        }
                         onChange={(e) => {
                           if (e.target.checked) {
-                            setSelectedRows(paginatedPolicies.map(p => p.id));
+                            setSelectedRows(paginatedPolicies.map((p) => p.id));
                           } else {
                             setSelectedRows([]);
                           }
@@ -462,7 +573,9 @@ export default function IAMPoliciesPage() {
                       className="rounded-[var(--table-row-radius)] border border-[var(--color-border-default)] bg-[var(--color-surface-default)] transition-colors overflow-hidden"
                     >
                       {/* Main Row */}
-                      <div className={`flex items-stretch min-h-[var(--table-row-height)] hover:bg-[var(--table-row-hover-bg)] transition-colors`}>
+                      <div
+                        className={`flex items-stretch min-h-[var(--table-row-height)] hover:bg-[var(--table-row-hover-bg)] transition-colors`}
+                      >
                         {/* Checkbox */}
                         <div className="w-[40px] flex items-center justify-center px-3 py-2">
                           <Checkbox
@@ -511,12 +624,19 @@ export default function IAMPoliciesPage() {
                         </div>
                         {/* Action */}
                         <div className="w-[72px] flex items-center justify-center px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)]">
-                          <ContextMenu items={getContextMenuItems(policy.id, policy.type === 'Built-in')} trigger="click">
+                          <ContextMenu
+                            items={getContextMenuItems(policy.id, policy.type === 'Built-in')}
+                            trigger="click"
+                          >
                             <button
                               type="button"
                               className="flex items-center justify-center w-7 h-7 rounded-md bg-transparent hover:bg-[var(--color-surface-muted)] active:bg-[var(--color-border-subtle)] transition-colors cursor-pointer"
                             >
-                              <IconAction size={16} stroke={1} className="text-[var(--color-text-default)]" />
+                              <IconAction
+                                size={16}
+                                stroke={1}
+                                className="text-[var(--color-text-default)]"
+                              />
                             </button>
                           </ContextMenu>
                         </div>
@@ -537,4 +657,3 @@ export default function IAMPoliciesPage() {
     </div>
   );
 }
-

@@ -1,20 +1,29 @@
 import React from 'react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { IconEdit, IconTrash, IconCopy, IconDownload, IconShare, IconSettings, IconFolder, IconFile } from '@tabler/icons-react';
+import {
+  IconEdit,
+  IconTrash,
+  IconCopy,
+  IconDownload,
+  IconShare,
+  IconSettings,
+  IconFolder,
+  IconFile,
+} from '@tabler/icons-react';
 import { ContextMenu } from './ContextMenu';
 import { Button } from '../Button/Button';
 
 /**
  * # ContextMenu
- * 
+ *
  * 우클릭 또는 클릭으로 열리는 컨텍스트 메뉴 컴포넌트입니다.
- * 
+ *
  * ## 언제 사용하나요?
  * - 테이블 행이나 카드에서 추가 액션 제공
  * - 파일/폴더 관리 메뉴
  * - 편집기에서 컨텍스트 액션
  * - 드롭다운 메뉴 대체
- * 
+ *
  * ## 기능
  * - **trigger**: 'contextmenu' (우클릭) 또는 'click' (클릭)
  * - **submenu**: 중첩 서브메뉴 지원
@@ -22,7 +31,7 @@ import { Button } from '../Button/Button';
  * - **status**: 'default' 또는 'danger' (삭제 등)
  * - **tooltip**: 항목에 툴팁 추가
  * - **icon**: 항목 앞에 아이콘 표시
- * 
+ *
  * ## 접근성
  * - Escape 키로 메뉴 닫기
  * - 외부 클릭으로 메뉴 닫기
@@ -69,7 +78,12 @@ const basicItems = [
   { id: 'edit', label: 'Edit', onClick: () => console.log('Edit clicked') },
   { id: 'copy', label: 'Copy', onClick: () => console.log('Copy clicked') },
   { id: 'paste', label: 'Paste', onClick: () => console.log('Paste clicked') },
-  { id: 'delete', label: 'Delete', status: 'danger' as const, onClick: () => console.log('Delete clicked') },
+  {
+    id: 'delete',
+    label: 'Delete',
+    status: 'danger' as const,
+    onClick: () => console.log('Delete clicked'),
+  },
 ];
 
 export const Default: Story = {
@@ -102,7 +116,13 @@ const itemsWithIcons = [
   { id: 'copy', label: 'Copy', icon: <IconCopy size={14} />, onClick: () => {} },
   { id: 'download', label: 'Download', icon: <IconDownload size={14} />, onClick: () => {} },
   { id: 'share', label: 'Share', icon: <IconShare size={14} />, divider: true, onClick: () => {} },
-  { id: 'delete', label: 'Delete', icon: <IconTrash size={14} />, status: 'danger' as const, onClick: () => {} },
+  {
+    id: 'delete',
+    label: 'Delete',
+    icon: <IconTrash size={14} />,
+    status: 'danger' as const,
+    onClick: () => {},
+  },
 ];
 
 export const WithIcons: Story = {
@@ -140,17 +160,35 @@ export const WithDividers: Story = {
    ---------------------------------------- */
 
 const itemsWithSubmenu = [
-  { id: 'new', label: 'New', submenu: [
-    { id: 'new-file', label: 'File', icon: <IconFile size={14} />, onClick: () => console.log('New File') },
-    { id: 'new-folder', label: 'Folder', icon: <IconFolder size={14} />, onClick: () => console.log('New Folder') },
-  ]},
+  {
+    id: 'new',
+    label: 'New',
+    submenu: [
+      {
+        id: 'new-file',
+        label: 'File',
+        icon: <IconFile size={14} />,
+        onClick: () => console.log('New File'),
+      },
+      {
+        id: 'new-folder',
+        label: 'Folder',
+        icon: <IconFolder size={14} />,
+        onClick: () => console.log('New Folder'),
+      },
+    ],
+  },
   { id: 'open', label: 'Open', onClick: () => {} },
   { id: 'save', label: 'Save', divider: true, onClick: () => {} },
-  { id: 'export', label: 'Export', submenu: [
-    { id: 'export-pdf', label: 'PDF', onClick: () => console.log('Export PDF') },
-    { id: 'export-png', label: 'PNG', onClick: () => console.log('Export PNG') },
-    { id: 'export-svg', label: 'SVG', onClick: () => console.log('Export SVG') },
-  ]},
+  {
+    id: 'export',
+    label: 'Export',
+    submenu: [
+      { id: 'export-pdf', label: 'PDF', onClick: () => console.log('Export PDF') },
+      { id: 'export-png', label: 'PNG', onClick: () => console.log('Export PNG') },
+      { id: 'export-svg', label: 'SVG', onClick: () => console.log('Export SVG') },
+    ],
+  },
 ];
 
 export const WithSubmenu: Story = {
@@ -187,9 +225,28 @@ export const WithDisabledItems: Story = {
    ---------------------------------------- */
 
 const itemsWithTooltips = [
-  { id: 'edit', label: 'Edit', tooltip: 'Edit this item', tooltipPosition: 'right' as const, onClick: () => {} },
-  { id: 'copy', label: 'Copy', tooltip: 'Copy to clipboard', tooltipPosition: 'right' as const, onClick: () => {} },
-  { id: 'delete', label: 'Delete', tooltip: 'This action cannot be undone', tooltipPosition: 'right' as const, status: 'danger' as const, onClick: () => {} },
+  {
+    id: 'edit',
+    label: 'Edit',
+    tooltip: 'Edit this item',
+    tooltipPosition: 'right' as const,
+    onClick: () => {},
+  },
+  {
+    id: 'copy',
+    label: 'Copy',
+    tooltip: 'Copy to clipboard',
+    tooltipPosition: 'right' as const,
+    onClick: () => {},
+  },
+  {
+    id: 'delete',
+    label: 'Delete',
+    tooltip: 'This action cannot be undone',
+    tooltipPosition: 'right' as const,
+    status: 'danger' as const,
+    onClick: () => {},
+  },
 ];
 
 export const WithTooltips: Story = {
@@ -224,7 +281,11 @@ export const Disabled: Story = {
     items: basicItems,
     trigger: 'click',
     disabled: true,
-    children: <Button variant="secondary" disabled>Disabled menu</Button>,
+    children: (
+      <Button variant="secondary" disabled>
+        Disabled menu
+      </Button>
+    ),
   },
 };
 
@@ -276,16 +337,26 @@ export const FileExplorerMenu: Story = {
   render: () => {
     const fileMenuItems = [
       { id: 'open', label: 'Open', onClick: () => {} },
-      { id: 'open-with', label: 'Open With...', submenu: [
-        { id: 'vscode', label: 'VS Code', onClick: () => {} },
-        { id: 'sublime', label: 'Sublime Text', onClick: () => {} },
-        { id: 'notepad', label: 'Notepad', onClick: () => {} },
-      ]},
+      {
+        id: 'open-with',
+        label: 'Open With...',
+        submenu: [
+          { id: 'vscode', label: 'VS Code', onClick: () => {} },
+          { id: 'sublime', label: 'Sublime Text', onClick: () => {} },
+          { id: 'notepad', label: 'Notepad', onClick: () => {} },
+        ],
+      },
       { id: 'rename', label: 'Rename', divider: true, onClick: () => {} },
       { id: 'copy', label: 'Copy', icon: <IconCopy size={14} />, onClick: () => {} },
       { id: 'cut', label: 'Cut', onClick: () => {} },
       { id: 'paste', label: 'Paste', divider: true, onClick: () => {} },
-      { id: 'delete', label: 'Move to Trash', icon: <IconTrash size={14} />, status: 'danger' as const, onClick: () => {} },
+      {
+        id: 'delete',
+        label: 'Move to Trash',
+        icon: <IconTrash size={14} />,
+        status: 'danger' as const,
+        onClick: () => {},
+      },
     ];
 
     return (

@@ -1,21 +1,8 @@
 import { useState, useEffect } from 'react';
-import {
-  VStack,
-  HStack,
-  TabBar,
-  TopBar,
-  Breadcrumb,
-  Button,
-  Tabs,
-} from '@/design-system';
+import { VStack, HStack, TabBar, TopBar, Breadcrumb, Button, Tabs } from '@/design-system';
 import { AIPlatformSidebar } from '@/components/AIPlatformSidebar';
 import { useTabs } from '@/contexts/TabContext';
-import {
-  IconBell,
-  IconSearch,
-  IconRefresh,
-  IconFileDescription,
-} from '@tabler/icons-react';
+import { IconBell, IconSearch, IconRefresh, IconFileDescription } from '@tabler/icons-react';
 
 /* ----------------------------------------
    Empty State Component
@@ -31,11 +18,11 @@ function EmptyState({ icon, title, description }: EmptyStateProps) {
   return (
     <div className="bg-[var(--color-surface-default)] rounded-lg border border-[var(--color-border-subtle)] p-16">
       <VStack gap={4} align="center">
-        <div className="text-[var(--color-text-disabled)]">
-          {icon}
-        </div>
+        <div className="text-[var(--color-text-disabled)]">{icon}</div>
         <VStack gap={2} align="center">
-          <span className="text-[16px] font-semibold text-[var(--color-text-default)]">{title}</span>
+          <span className="text-[16px] font-semibold text-[var(--color-text-default)]">
+            {title}
+          </span>
           <span className="text-[14px] text-[var(--color-text-subtle)]">{description}</span>
         </VStack>
       </VStack>
@@ -50,7 +37,8 @@ function EmptyState({ icon, title, description }: EmptyStateProps) {
 export function TextGenerationPage() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [activeTab, setActiveTab] = useState('experiments');
-  const { tabs, activeTabId, selectTab, closeTab, addNewTab, updateActiveTabLabel, moveTab } = useTabs();
+  const { tabs, activeTabId, selectTab, closeTab, addNewTab, updateActiveTabLabel, moveTab } =
+    useTabs();
 
   // Update tab label on mount
   useEffect(() => {
@@ -78,7 +66,7 @@ export function TextGenerationPage() {
       >
         {/* Tab Bar */}
         <TabBar
-          tabs={tabs.map(tab => ({ id: tab.id, label: tab.label, closable: tab.closable }))}
+          tabs={tabs.map((tab) => ({ id: tab.id, label: tab.label, closable: tab.closable }))}
           activeTab={activeTabId}
           onTabChange={selectTab}
           onTabClose={closeTab}

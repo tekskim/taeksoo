@@ -22,12 +22,7 @@ import {
 } from '@/design-system';
 import { IAMSidebar } from '@/components/IAMSidebar';
 import { useTabs } from '@/contexts/TabContext';
-import {
-  IconEdit,
-  IconTrash,
-  IconChevronDown,
-  IconChevronRight,
-} from '@tabler/icons-react';
+import { IconEdit, IconTrash, IconChevronDown, IconChevronRight } from '@tabler/icons-react';
 import { IconAction } from '@/design-system';
 import { Link } from 'react-router-dom';
 
@@ -80,19 +75,19 @@ interface AttachedUser {
    ---------------------------------------- */
 
 const mockRolesMap: Record<string, RoleDetail> = {
-  'admin': {
+  admin: {
     name: 'admin',
     description: 'Full administrative access',
     type: 'Built-in',
     createdAt: '2025-06-01 09:00:00',
   },
-  'Member': {
+  Member: {
     name: 'Member',
     description: 'member role',
     type: 'Custom',
     createdAt: '2025-07-25 09:12:20',
   },
-  'viewer': {
+  viewer: {
     name: 'viewer',
     description: 'Read-only access',
     type: 'Built-in',
@@ -127,8 +122,18 @@ const mockRolePolicies: RolePolicy[] = [
     description: '-',
     editedAt: '2025-09-12',
     permissions: [
-      { application: 'Compute', partition: 'tenantA', resource: 'Instance', actions: ['Read', 'List'] },
-      { application: 'Compute', partition: 'tenantA', resource: 'Volume', actions: ['Read', 'List', 'Write'] },
+      {
+        application: 'Compute',
+        partition: 'tenantA',
+        resource: 'Instance',
+        actions: ['Read', 'List'],
+      },
+      {
+        application: 'Compute',
+        partition: 'tenantA',
+        resource: 'Volume',
+        actions: ['Read', 'List', 'Write'],
+      },
     ],
   },
   {
@@ -139,9 +144,24 @@ const mockRolePolicies: RolePolicy[] = [
     description: '-',
     editedAt: '2025-09-12',
     permissions: [
-      { application: 'Compute', partition: 'tenantA', resource: 'AI_server', actions: ['Read', 'List', 'Write', 'Delete', 'Admin'] },
-      { application: 'Container', partition: 'clusterA', resource: 'All(*)', actions: ['Read', 'List', 'Write'] },
-      { application: 'IAM', partition: '-', resource: 'All(*)', actions: ['Read', 'List', 'Write', 'Delete', 'Admin'] },
+      {
+        application: 'Compute',
+        partition: 'tenantA',
+        resource: 'AI_server',
+        actions: ['Read', 'List', 'Write', 'Delete', 'Admin'],
+      },
+      {
+        application: 'Container',
+        partition: 'clusterA',
+        resource: 'All(*)',
+        actions: ['Read', 'List', 'Write'],
+      },
+      {
+        application: 'IAM',
+        partition: '-',
+        resource: 'All(*)',
+        actions: ['Read', 'List', 'Write', 'Delete', 'Admin'],
+      },
       { application: 'Storage', partition: '-', resource: 'Host', actions: ['Read'] },
     ],
   },
@@ -153,26 +173,83 @@ const mockRolePolicies: RolePolicy[] = [
     description: 'Network management policy',
     editedAt: '2025-09-15',
     permissions: [
-      { application: 'Network', partition: 'vpcA', resource: 'Subnet', actions: ['Read', 'List', 'Write'] },
-      { application: 'Network', partition: 'vpcA', resource: 'SecurityGroup', actions: ['Read', 'List', 'Write', 'Delete'] },
-      { application: 'Network', partition: '-', resource: 'LoadBalancer', actions: ['Read', 'List'] },
+      {
+        application: 'Network',
+        partition: 'vpcA',
+        resource: 'Subnet',
+        actions: ['Read', 'List', 'Write'],
+      },
+      {
+        application: 'Network',
+        partition: 'vpcA',
+        resource: 'SecurityGroup',
+        actions: ['Read', 'List', 'Write', 'Delete'],
+      },
+      {
+        application: 'Network',
+        partition: '-',
+        resource: 'LoadBalancer',
+        actions: ['Read', 'List'],
+      },
     ],
   },
 ];
 
 const mockAttachedUserGroups: AttachedUserGroup[] = [
-  { id: 'ug-001', name: 'dev-admin-group', type: 'Built-in', userCount: 130, createdAt: '2025-09-12' },
+  {
+    id: 'ug-001',
+    name: 'dev-admin-group',
+    type: 'Built-in',
+    userCount: 130,
+    createdAt: '2025-09-12',
+  },
   { id: 'ug-002', name: 'ops-team', type: 'Custom', userCount: 45, createdAt: '2025-08-15' },
-  { id: 'ug-003', name: 'security-group', type: 'Built-in', userCount: 22, createdAt: '2025-07-20' },
+  {
+    id: 'ug-003',
+    name: 'security-group',
+    type: 'Built-in',
+    userCount: 22,
+    createdAt: '2025-07-20',
+  },
   { id: 'ug-004', name: 'data-analysts', type: 'Custom', userCount: 67, createdAt: '2025-06-10' },
 ];
 
 const mockAttachedUsers: AttachedUser[] = [
-  { id: 'u-001', name: 'thaki-kim', type: 'Built-in', lastSignIn: '2025-12-10 14:30', createdAt: '2025-09-12' },
-  { id: 'u-002', name: 'alex.johnson', type: 'Custom', lastSignIn: '2025-12-09 09:15', createdAt: '2025-08-15' },
-  { id: 'u-003', name: 'maria.garcia', type: 'Built-in', lastSignIn: '2025-12-08 16:45', createdAt: '2025-07-20' },
-  { id: 'u-004', name: 'john.doe', type: 'Custom', lastSignIn: '2025-12-07 11:20', createdAt: '2025-06-10' },
-  { id: 'u-005', name: 'emma.wilson', type: 'Built-in', lastSignIn: '2025-12-05 08:00', createdAt: '2025-05-05' },
+  {
+    id: 'u-001',
+    name: 'thaki-kim',
+    type: 'Built-in',
+    lastSignIn: '2025-12-10 14:30',
+    createdAt: '2025-09-12',
+  },
+  {
+    id: 'u-002',
+    name: 'alex.johnson',
+    type: 'Custom',
+    lastSignIn: '2025-12-09 09:15',
+    createdAt: '2025-08-15',
+  },
+  {
+    id: 'u-003',
+    name: 'maria.garcia',
+    type: 'Built-in',
+    lastSignIn: '2025-12-08 16:45',
+    createdAt: '2025-07-20',
+  },
+  {
+    id: 'u-004',
+    name: 'john.doe',
+    type: 'Custom',
+    lastSignIn: '2025-12-07 11:20',
+    createdAt: '2025-06-10',
+  },
+  {
+    id: 'u-005',
+    name: 'emma.wilson',
+    type: 'Built-in',
+    lastSignIn: '2025-12-05 08:00',
+    createdAt: '2025-05-05',
+  },
 ];
 
 /* ----------------------------------------
@@ -191,9 +268,7 @@ function InfoCard({ label, value }: InfoCardProps) {
         <span className="text-[11px] font-medium leading-4 text-[var(--color-text-subtle)]">
           {label}
         </span>
-        <span className="text-[12px] leading-4 text-[var(--color-text-default)]">
-          {value}
-        </span>
+        <span className="text-[12px] leading-4 text-[var(--color-text-default)]">{value}</span>
       </div>
     </div>
   );
@@ -267,7 +342,8 @@ function PolicyDetails({ permissions }: PolicyDetailsProps) {
 export default function IAMRoleDetailPage() {
   const { roleName } = useParams<{ roleName: string }>();
   const navigate = useNavigate();
-  const { tabs, activeTabId, selectTab, closeTab, addNewTab, updateActiveTabLabel, moveTab } = useTabs();
+  const { tabs, activeTabId, selectTab, closeTab, addNewTab, updateActiveTabLabel, moveTab } =
+    useTabs();
 
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [activeTab, setActiveTab] = useState<string>('policies');
@@ -289,17 +365,17 @@ export default function IAMRoleDetailPage() {
   const sidebarWidth = sidebarOpen ? 200 : 0;
 
   // Filter policies by search query
-  const filteredPolicies = mockRolePolicies.filter(policy =>
+  const filteredPolicies = mockRolePolicies.filter((policy) =>
     policy.name.toLowerCase().includes(policiesSearchQuery.toLowerCase())
   );
 
   // Filter user groups by search query
-  const filteredUserGroups = mockAttachedUserGroups.filter(group =>
+  const filteredUserGroups = mockAttachedUserGroups.filter((group) =>
     group.name.toLowerCase().includes(entitiesSearchQuery.toLowerCase())
   );
 
   // Filter users by search query
-  const filteredUsers = mockAttachedUsers.filter(user =>
+  const filteredUsers = mockAttachedUsers.filter((user) =>
     user.name.toLowerCase().includes(entitiesSearchQuery.toLowerCase())
   );
 
@@ -324,7 +400,7 @@ export default function IAMRoleDetailPage() {
 
   // Toggle policy expansion
   const togglePolicyExpansion = (policyId: string) => {
-    setExpandedPolicies(prev => {
+    setExpandedPolicies((prev) => {
       const newSet = new Set(prev);
       if (newSet.has(policyId)) {
         newSet.delete(policyId);
@@ -337,12 +413,12 @@ export default function IAMRoleDetailPage() {
 
   // Context menu items factory
   const getPolicyContextMenuItems = (rowId: string, isBuiltIn: boolean): ContextMenuItem[] => [
-    { 
-      id: 'detach', 
-      label: 'Detach', 
+    {
+      id: 'detach',
+      label: 'Detach',
       status: isBuiltIn ? undefined : 'danger',
       disabled: isBuiltIn,
-      onClick: () => console.log('Detach policy', rowId) 
+      onClick: () => console.log('Detach policy', rowId),
     },
   ];
 
@@ -413,7 +489,10 @@ export default function IAMRoleDetailPage() {
       width: columnWidths.actionWide,
       align: 'center',
       render: (_value, row) => (
-        <ContextMenu items={getPolicyContextMenuItems(row.id, row.type === 'Built-in')} trigger="click">
+        <ContextMenu
+          items={getPolicyContextMenuItems(row.id, row.type === 'Built-in')}
+          trigger="click"
+        >
           <button
             type="button"
             className="flex items-center justify-center w-7 h-7 rounded-md bg-transparent hover:bg-[var(--color-surface-muted)] active:bg-[var(--color-border-subtle)] transition-colors cursor-pointer"
@@ -519,7 +598,7 @@ export default function IAMRoleDetailPage() {
         style={{ left: `${sidebarWidth}px` }}
       >
         <TabBar
-          tabs={tabs.map(tab => ({ id: tab.id, label: tab.label, closable: tab.closable }))}
+          tabs={tabs.map((tab) => ({ id: tab.id, label: tab.label, closable: tab.closable }))}
           activeTab={activeTabId}
           onTabChange={selectTab}
           onTabClose={closeTab}
@@ -547,13 +626,25 @@ export default function IAMRoleDetailPage() {
 
                   {/* Action Buttons */}
                   <HStack gap={1}>
-                    <Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} stroke={1.5} />}>
+                    <Button
+                      variant="secondary"
+                      size="sm"
+                      leftIcon={<IconEdit size={12} stroke={1.5} />}
+                    >
                       Edit
                     </Button>
-                    <Button variant="secondary" size="sm" leftIcon={<IconTrash size={12} stroke={1.5} />}>
+                    <Button
+                      variant="secondary"
+                      size="sm"
+                      leftIcon={<IconTrash size={12} stroke={1.5} />}
+                    >
                       Delete
                     </Button>
-                    <Button variant="secondary" size="sm" rightIcon={<IconChevronDown size={12} stroke={1.5} />}>
+                    <Button
+                      variant="secondary"
+                      size="sm"
+                      rightIcon={<IconChevronDown size={12} stroke={1.5} />}
+                    >
                       More Actions
                     </Button>
                   </HStack>
@@ -638,7 +729,9 @@ export default function IAMRoleDetailPage() {
                             <div className="flex items-center min-h-[var(--table-row-height)] hover:bg-[var(--table-row-hover-bg)] transition-colors">
                               <div className="flex-1 flex items-center gap-2 px-3 py-2 text-[12px] text-[var(--color-text-default)]">
                                 <button
-                                  onClick={() => policy.permissions && togglePolicyExpansion(policy.id)}
+                                  onClick={() =>
+                                    policy.permissions && togglePolicyExpansion(policy.id)
+                                  }
                                   className={`p-0.5 hover:bg-[var(--color-surface-subtle)] rounded ${!policy.permissions ? 'invisible' : ''}`}
                                 >
                                   {expandedPolicies.has(policy.id) ? (
@@ -667,12 +760,22 @@ export default function IAMRoleDetailPage() {
                                 {policy.editedAt}
                               </div>
                               <div className="w-[72px] flex items-center justify-center px-3 py-2 border-l border-transparent">
-                                <ContextMenu items={getPolicyContextMenuItems(policy.id, policy.type === 'Built-in')} trigger="click">
+                                <ContextMenu
+                                  items={getPolicyContextMenuItems(
+                                    policy.id,
+                                    policy.type === 'Built-in'
+                                  )}
+                                  trigger="click"
+                                >
                                   <button
                                     type="button"
                                     className="flex items-center justify-center w-7 h-7 rounded-md bg-transparent hover:bg-[var(--color-surface-muted)] active:bg-[var(--color-border-subtle)] transition-colors cursor-pointer"
                                   >
-                                    <IconAction size={16} stroke={1} className="text-[var(--color-text-default)]" />
+                                    <IconAction
+                                      size={16}
+                                      stroke={1}
+                                      className="text-[var(--color-text-default)]"
+                                    />
                                   </button>
                                 </ContextMenu>
                               </div>
@@ -734,7 +837,11 @@ export default function IAMRoleDetailPage() {
 
                       {/* Search */}
                       <SearchInput
-                        placeholder={entitiesSubTab === 'user-groups' ? 'Search user groups by attributes' : 'Search users by attributes'}
+                        placeholder={
+                          entitiesSubTab === 'user-groups'
+                            ? 'Search user groups by attributes'
+                            : 'Search users by attributes'
+                        }
                         value={entitiesSearchQuery}
                         onChange={(e) => setEntitiesSearchQuery(e.target.value)}
                         className="w-[var(--search-input-width)]"
@@ -743,8 +850,14 @@ export default function IAMRoleDetailPage() {
                       {/* Pagination */}
                       <Pagination
                         currentPage={entitiesCurrentPage}
-                        totalPages={entitiesSubTab === 'user-groups' ? userGroupsTotalPages : usersTotalPages}
-                        totalItems={entitiesSubTab === 'user-groups' ? filteredUserGroups.length : filteredUsers.length}
+                        totalPages={
+                          entitiesSubTab === 'user-groups' ? userGroupsTotalPages : usersTotalPages
+                        }
+                        totalItems={
+                          entitiesSubTab === 'user-groups'
+                            ? filteredUserGroups.length
+                            : filteredUsers.length
+                        }
                         onPageChange={setEntitiesCurrentPage}
                       />
 
@@ -773,4 +886,3 @@ export default function IAMRoleDetailPage() {
     </div>
   );
 }
-

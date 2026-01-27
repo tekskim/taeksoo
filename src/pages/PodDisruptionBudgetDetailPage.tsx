@@ -93,11 +93,11 @@ const mockPdbData: Record<string, PodDisruptionBudgetData> = {
     status: 'Active',
     namespace: 'default',
     createdAt: '2025-07-25 09:12:20',
-    labels: { 'app': 'web' },
-    annotations: { 'description': 'PDB for web application' },
+    labels: { app: 'web' },
+    annotations: { description: 'PDB for web application' },
     minAvailable: '2',
     maxUnavailable: '',
-    selector: { 'app': 'web', 'tier': 'frontend' },
+    selector: { app: 'web', tier: 'frontend' },
     matchingPods: [
       { name: 'web-deployment-77f6bb9c69-4aw7f', createdAt: '2025-07-25 09:12:20' },
       { name: 'web-deployment-77f6bb9c69-8xk2p', createdAt: '2025-07-25 09:12:20' },
@@ -144,11 +144,11 @@ const mockPdbData: Record<string, PodDisruptionBudgetData> = {
     status: 'Active',
     namespace: 'production',
     createdAt: '2025-11-09 14:30',
-    labels: { 'env': 'production' },
+    labels: { env: 'production' },
     annotations: {},
     minAvailable: '',
     maxUnavailable: '1',
-    selector: { 'app': 'api' },
+    selector: { app: 'api' },
     matchingPods: [],
     conditions: [],
     recentEvents: [],
@@ -170,7 +170,16 @@ export function PodDisruptionBudgetDetailPage() {
   const { pdbId } = useParams<{ pdbId: string }>();
   const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(true);
-  const { tabs, activeTabId, selectTab, closeTab, addNewTab, moveTab, addTab, updateActiveTabLabel } = useTabs();
+  const {
+    tabs,
+    activeTabId,
+    selectTab,
+    closeTab,
+    addNewTab,
+    moveTab,
+    addTab,
+    updateActiveTabLabel,
+  } = useTabs();
   const [activeTab, setActiveTab] = useState('budget');
   const [matchingPodsPage, setMatchingPodsPage] = useState(1);
   const [selectedEvents, setSelectedEvents] = useState<string[]>([]);
@@ -337,12 +346,24 @@ export function PodDisruptionBudgetDetailPage() {
       align: 'center',
       render: (_, row) => (
         <div onClick={(e) => e.stopPropagation()}>
-          <ContextMenu items={[
-            { id: 'view', label: 'View Details', onClick: () => console.log('View:', row.id) },
-            { id: 'delete', label: 'Delete', status: 'danger', onClick: () => console.log('Delete:', row.id) },
-          ]} trigger="click">
+          <ContextMenu
+            items={[
+              { id: 'view', label: 'View Details', onClick: () => console.log('View:', row.id) },
+              {
+                id: 'delete',
+                label: 'Delete',
+                status: 'danger',
+                onClick: () => console.log('Delete:', row.id),
+              },
+            ]}
+            trigger="click"
+          >
             <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors">
-              <IconDotsCircleHorizontal size={16} stroke={1.5} className="text-[var(--color-text-muted)]" />
+              <IconDotsCircleHorizontal
+                size={16}
+                stroke={1.5}
+                className="text-[var(--color-text-muted)]"
+              />
             </button>
           </ContextMenu>
         </div>
@@ -387,7 +408,7 @@ export function PodDisruptionBudgetDetailPage() {
       >
         {/* Tab Bar */}
         <TabBar
-          tabs={tabs.map(tab => ({ id: tab.id, label: tab.label, closable: tab.closable }))}
+          tabs={tabs.map((tab) => ({ id: tab.id, label: tab.label, closable: tab.closable }))}
           activeTab={activeTabId}
           onTabChange={selectTab}
           onTabClose={closeTab}
@@ -410,7 +431,7 @@ export function PodDisruptionBudgetDetailPage() {
           }
           actions={
             <>
-              <button 
+              <button
                 className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
                 onClick={() => {
                   if (shellPanel.isExpanded) {
@@ -420,7 +441,15 @@ export function PodDisruptionBudgetDetailPage() {
                   }
                 }}
               >
-                <IconTerminal2 size={16} className={shellPanel.isExpanded ? "text-[var(--color-action-primary)]" : "text-[var(--color-text-muted)]"} stroke={1.5} />
+                <IconTerminal2
+                  size={16}
+                  className={
+                    shellPanel.isExpanded
+                      ? 'text-[var(--color-action-primary)]'
+                      : 'text-[var(--color-text-muted)]'
+                  }
+                  stroke={1.5}
+                />
               </button>
               <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
                 <IconFile size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
@@ -439,7 +468,7 @@ export function PodDisruptionBudgetDetailPage() {
         />
 
         {/* Content Area */}
-        <div 
+        <div
           className="flex-1 overflow-auto min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll"
           style={{ paddingBottom: shellPanel.isExpanded ? 'var(--shell-panel-height)' : '0' }}
         >
@@ -467,14 +496,14 @@ export function PodDisruptionBudgetDetailPage() {
                       pdbData.status === 'Active'
                         ? 'active'
                         : pdbData.status === 'Pending'
-                        ? 'pending'
-                        : 'error'
+                          ? 'pending'
+                          : 'error'
                     }
                   />
                   <DetailHeader.InfoCard
                     label="Namespace"
                     value={
-                      <span 
+                      <span
                         className="text-[var(--color-action-primary)] cursor-pointer hover:underline"
                         onClick={() => navigate(`/container/namespaces/${pdbData.namespace}`)}
                       >
@@ -482,10 +511,7 @@ export function PodDisruptionBudgetDetailPage() {
                       </span>
                     }
                   />
-                  <DetailHeader.InfoCard
-                    label="Created At"
-                    value={pdbData.createdAt}
-                  />
+                  <DetailHeader.InfoCard label="Created At" value={pdbData.createdAt} />
                   <DetailHeader.InfoCard
                     label={`Labels (${labelsCount})`}
                     value={
@@ -603,13 +629,19 @@ export function PodDisruptionBudgetDetailPage() {
                               {/* Column Headers */}
                               <HStack gap={2} className="w-full">
                                 <div className="flex-1">
-                                  <span className="text-[11px] font-medium text-[var(--color-text-default)]">Key</span>
+                                  <span className="text-[11px] font-medium text-[var(--color-text-default)]">
+                                    Key
+                                  </span>
                                 </div>
                                 <div className="flex-1">
-                                  <span className="text-[11px] font-medium text-[var(--color-text-default)]">Operator</span>
+                                  <span className="text-[11px] font-medium text-[var(--color-text-default)]">
+                                    Operator
+                                  </span>
                                 </div>
                                 <div className="flex-1">
-                                  <span className="text-[11px] font-medium text-[var(--color-text-default)]">Value</span>
+                                  <span className="text-[11px] font-medium text-[var(--color-text-default)]">
+                                    Value
+                                  </span>
                                 </div>
                               </HStack>
 
@@ -618,12 +650,12 @@ export function PodDisruptionBudgetDetailPage() {
                                 Object.entries(pdbData.selector).map(([key, value]) => (
                                   <HStack key={key} gap={2} className="w-full">
                                     <div className="flex-1">
-                                      <Input 
-                                        value={key} 
-                                        onChange={() => {}} 
-                                        size="sm" 
-                                        fullWidth 
-                                        disabled 
+                                      <Input
+                                        value={key}
+                                        onChange={() => {}}
+                                        size="sm"
+                                        fullWidth
+                                        disabled
                                         className="bg-[var(--color-surface-muted)]"
                                       />
                                     </div>
@@ -638,12 +670,12 @@ export function PodDisruptionBudgetDetailPage() {
                                       />
                                     </div>
                                     <div className="flex-1">
-                                      <Input 
-                                        value={value} 
-                                        onChange={() => {}} 
-                                        size="sm" 
-                                        fullWidth 
-                                        disabled 
+                                      <Input
+                                        value={value}
+                                        onChange={() => {}}
+                                        size="sm"
+                                        fullWidth
+                                        disabled
                                         className="bg-[var(--color-surface-muted)]"
                                       />
                                     </div>
@@ -729,10 +761,14 @@ export function PodDisruptionBudgetDetailPage() {
                               {/* Column Headers */}
                               <HStack gap={2} className="w-full">
                                 <div className="flex-1">
-                                  <span className="text-[11px] font-medium text-[var(--color-text-default)]">Key</span>
+                                  <span className="text-[11px] font-medium text-[var(--color-text-default)]">
+                                    Key
+                                  </span>
                                 </div>
                                 <div className="flex-1">
-                                  <span className="text-[11px] font-medium text-[var(--color-text-default)]">Value</span>
+                                  <span className="text-[11px] font-medium text-[var(--color-text-default)]">
+                                    Value
+                                  </span>
                                 </div>
                               </HStack>
                               {/* Label Rows */}
@@ -740,10 +776,22 @@ export function PodDisruptionBudgetDetailPage() {
                                 Object.entries(pdbData.labels).map(([key, value]) => (
                                   <HStack key={key} gap={2} className="w-full">
                                     <div className="flex-1">
-                                      <Input value={key} onChange={() => {}} size="sm" fullWidth disabled />
+                                      <Input
+                                        value={key}
+                                        onChange={() => {}}
+                                        size="sm"
+                                        fullWidth
+                                        disabled
+                                      />
                                     </div>
                                     <div className="flex-1">
-                                      <Input value={value} onChange={() => {}} size="sm" fullWidth disabled />
+                                      <Input
+                                        value={value}
+                                        onChange={() => {}}
+                                        size="sm"
+                                        fullWidth
+                                        disabled
+                                      />
                                     </div>
                                   </HStack>
                                 ))
@@ -766,10 +814,14 @@ export function PodDisruptionBudgetDetailPage() {
                               {/* Column Headers */}
                               <HStack gap={2} className="w-full">
                                 <div className="flex-1">
-                                  <span className="text-[11px] font-medium text-[var(--color-text-default)]">Key</span>
+                                  <span className="text-[11px] font-medium text-[var(--color-text-default)]">
+                                    Key
+                                  </span>
                                 </div>
                                 <div className="flex-1">
-                                  <span className="text-[11px] font-medium text-[var(--color-text-default)]">Value</span>
+                                  <span className="text-[11px] font-medium text-[var(--color-text-default)]">
+                                    Value
+                                  </span>
                                 </div>
                               </HStack>
                               {/* Annotation Rows */}
@@ -777,10 +829,22 @@ export function PodDisruptionBudgetDetailPage() {
                                 Object.entries(pdbData.annotations).map(([key, value]) => (
                                   <HStack key={key} gap={2} className="w-full">
                                     <div className="flex-1">
-                                      <Input value={key} onChange={() => {}} size="sm" fullWidth disabled />
+                                      <Input
+                                        value={key}
+                                        onChange={() => {}}
+                                        size="sm"
+                                        fullWidth
+                                        disabled
+                                      />
                                     </div>
                                     <div className="flex-1">
-                                      <Input value={value} onChange={() => {}} size="sm" fullWidth disabled />
+                                      <Input
+                                        value={value}
+                                        onChange={() => {}}
+                                        size="sm"
+                                        fullWidth
+                                        disabled
+                                      />
                                     </div>
                                   </HStack>
                                 ))
@@ -813,17 +877,17 @@ export function PodDisruptionBudgetDetailPage() {
                           />
                         </HStack>
 
-                        <Button 
-                          variant="secondary" 
-                          size="sm" 
+                        <Button
+                          variant="secondary"
+                          size="sm"
                           leftIcon={<IconDownload size={12} stroke={1.5} />}
                           disabled={selectedEvents.length === 0}
                         >
                           Download YAML
                         </Button>
-                        <Button 
-                          variant="secondary" 
-                          size="sm" 
+                        <Button
+                          variant="secondary"
+                          size="sm"
                           leftIcon={<IconTrash size={12} stroke={1.5} />}
                           disabled={selectedEvents.length === 0}
                         >

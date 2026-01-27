@@ -1,14 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import {
-  TopBar,
-  TopBarAction,
-  Breadcrumb,
-  Button,
-  Drawer,
-  Input,
-  Textarea,
-} from '@/design-system';
+import { TopBar, TopBarAction, Breadcrumb, Button, Drawer, Input, Textarea } from '@/design-system';
 import {
   IconBell,
   IconSearch,
@@ -32,17 +24,17 @@ interface AgentCardProps {
   onFavoriteToggle?: () => void;
 }
 
-function AgentCard({ 
-  title, 
-  description, 
-  modelName, 
-  isFavorite = false, 
+function AgentCard({
+  title,
+  description,
+  modelName,
+  isFavorite = false,
   isSelected = false,
   onClick,
   onFavoriteToggle,
 }: AgentCardProps) {
   return (
-    <div 
+    <div
       onClick={onClick}
       className={`
         bg-[var(--color-surface-default)] 
@@ -50,9 +42,10 @@ function AgentCard({
         flex flex-col gap-2
         cursor-pointer 
         transition-all duration-150
-        ${isSelected 
-          ? 'border-[var(--color-action-primary)] border-2 shadow-sm' 
-          : 'border-[var(--color-border-default)] hover:bg-[#F9FAFB]'
+        ${
+          isSelected
+            ? 'border-[var(--color-action-primary)] border-2 shadow-sm'
+            : 'border-[var(--color-border-default)] hover:bg-[#F9FAFB]'
         }
       `}
     >
@@ -66,7 +59,7 @@ function AgentCard({
             {description}
           </p>
         </div>
-        <button 
+        <button
           onClick={(e) => {
             e.stopPropagation();
             onFavoriteToggle?.();
@@ -80,7 +73,7 @@ function AgentCard({
           )}
         </button>
       </div>
-      
+
       {/* Model badge */}
       <div className="flex items-center">
         <span className="bg-[var(--color-surface-subtle)] text-[var(--color-text-muted)] text-[11px] font-medium px-2 py-1 rounded">
@@ -96,7 +89,7 @@ function AgentCard({
    ---------------------------------------- */
 function ChatSidebar() {
   const navigate = useNavigate();
-  
+
   return (
     <div className="bg-[var(--color-surface-subtle)] border-r border-[var(--color-border-default)] flex flex-col h-full w-[200px] shrink-0">
       <div className="flex flex-col w-full flex-1 overflow-y-auto min-h-0">
@@ -110,7 +103,7 @@ function ChatSidebar() {
               <button className="bg-[var(--color-surface-subtle)] relative rounded-md shrink-0 size-6 hover:bg-[var(--color-surface-muted)] transition-colors flex items-center justify-center">
                 <IconSearch size={12} stroke={1} className="text-[var(--color-text-muted)]" />
               </button>
-              <button 
+              <button
                 onClick={() => navigate('/chat')}
                 className="bg-[var(--color-surface-subtle)] relative rounded-md shrink-0 size-6 hover:bg-[var(--color-surface-muted)] transition-colors flex items-center justify-center"
               >
@@ -172,14 +165,94 @@ interface Agent {
 }
 
 const mockAgents: Agent[] = [
-  { id: '1', title: 'SQL Optimizer', description: 'Analyzes and optimizes SQL queries for better performance', modelName: 'GPT-4o', provider: 'openai', temperature: 0.7, systemPrompt: 'You are a helpful assistant.', connectedDataSources: [], isFavorite: true },
-  { id: '2', title: 'Code Reviewer', description: 'Reviews code and suggests improvements', modelName: 'claude-sonnet-4-5-20250929', provider: 'anthropic', temperature: 0.7, systemPrompt: 'You are a helpful assistant.', connectedDataSources: [], isFavorite: false },
-  { id: '3', title: 'Data Analyst', description: 'Helps analyze datasets and create visualizations', modelName: 'GPT-4o', provider: 'openai', temperature: 0.5, systemPrompt: 'You are a data analysis expert.', connectedDataSources: ['BigQuery', 'Snowflake'], isFavorite: false },
-  { id: '4', title: 'DevOps Helper', description: 'Assists with CI/CD pipelines and infrastructure', modelName: 'claude-sonnet-4-5-20250929', provider: 'anthropic', temperature: 0.7, systemPrompt: 'You are a helpful assistant.', connectedDataSources: [], isFavorite: true },
-  { id: '5', title: 'API Designer', description: 'Helps design RESTful APIs and documentation', modelName: 'GPT-4o', provider: 'openai', temperature: 0.7, systemPrompt: 'You are a helpful assistant.', connectedDataSources: [], isFavorite: false },
-  { id: '6', title: 'Test Writer', description: 'Generates unit tests and integration tests', modelName: 'claude-sonnet-4-5-20250929', provider: 'anthropic', temperature: 0.7, systemPrompt: 'You are a helpful assistant.', connectedDataSources: [], isFavorite: false },
-  { id: '7', title: 'Doc Generator', description: 'Creates documentation from code comments', modelName: 'GPT-4o', provider: 'openai', temperature: 0.7, systemPrompt: 'You are a helpful assistant.', connectedDataSources: [], isFavorite: true },
-  { id: '8', title: 'Bug Hunter', description: 'Identifies potential bugs and security issues', modelName: 'claude-sonnet-4-5-20250929', provider: 'anthropic', temperature: 0.7, systemPrompt: 'You are a helpful assistant.', connectedDataSources: [], isFavorite: false },
+  {
+    id: '1',
+    title: 'SQL Optimizer',
+    description: 'Analyzes and optimizes SQL queries for better performance',
+    modelName: 'GPT-4o',
+    provider: 'openai',
+    temperature: 0.7,
+    systemPrompt: 'You are a helpful assistant.',
+    connectedDataSources: [],
+    isFavorite: true,
+  },
+  {
+    id: '2',
+    title: 'Code Reviewer',
+    description: 'Reviews code and suggests improvements',
+    modelName: 'claude-sonnet-4-5-20250929',
+    provider: 'anthropic',
+    temperature: 0.7,
+    systemPrompt: 'You are a helpful assistant.',
+    connectedDataSources: [],
+    isFavorite: false,
+  },
+  {
+    id: '3',
+    title: 'Data Analyst',
+    description: 'Helps analyze datasets and create visualizations',
+    modelName: 'GPT-4o',
+    provider: 'openai',
+    temperature: 0.5,
+    systemPrompt: 'You are a data analysis expert.',
+    connectedDataSources: ['BigQuery', 'Snowflake'],
+    isFavorite: false,
+  },
+  {
+    id: '4',
+    title: 'DevOps Helper',
+    description: 'Assists with CI/CD pipelines and infrastructure',
+    modelName: 'claude-sonnet-4-5-20250929',
+    provider: 'anthropic',
+    temperature: 0.7,
+    systemPrompt: 'You are a helpful assistant.',
+    connectedDataSources: [],
+    isFavorite: true,
+  },
+  {
+    id: '5',
+    title: 'API Designer',
+    description: 'Helps design RESTful APIs and documentation',
+    modelName: 'GPT-4o',
+    provider: 'openai',
+    temperature: 0.7,
+    systemPrompt: 'You are a helpful assistant.',
+    connectedDataSources: [],
+    isFavorite: false,
+  },
+  {
+    id: '6',
+    title: 'Test Writer',
+    description: 'Generates unit tests and integration tests',
+    modelName: 'claude-sonnet-4-5-20250929',
+    provider: 'anthropic',
+    temperature: 0.7,
+    systemPrompt: 'You are a helpful assistant.',
+    connectedDataSources: [],
+    isFavorite: false,
+  },
+  {
+    id: '7',
+    title: 'Doc Generator',
+    description: 'Creates documentation from code comments',
+    modelName: 'GPT-4o',
+    provider: 'openai',
+    temperature: 0.7,
+    systemPrompt: 'You are a helpful assistant.',
+    connectedDataSources: [],
+    isFavorite: true,
+  },
+  {
+    id: '8',
+    title: 'Bug Hunter',
+    description: 'Identifies potential bugs and security issues',
+    modelName: 'claude-sonnet-4-5-20250929',
+    provider: 'anthropic',
+    temperature: 0.7,
+    systemPrompt: 'You are a helpful assistant.',
+    connectedDataSources: [],
+    isFavorite: false,
+  },
 ];
 
 /* ----------------------------------------
@@ -193,7 +266,13 @@ interface NewChatDrawerProps {
   onStartChat: (chatName: string, additionalInstructions: string) => void;
 }
 
-function NewChatDrawer({ isOpen, onClose, agent, onFavoriteToggle, onStartChat }: NewChatDrawerProps) {
+function NewChatDrawer({
+  isOpen,
+  onClose,
+  agent,
+  onFavoriteToggle,
+  onStartChat,
+}: NewChatDrawerProps) {
   const [chatName, setChatName] = useState('');
   const [additionalInstructions, setAdditionalInstructions] = useState('');
 
@@ -237,7 +316,7 @@ function NewChatDrawer({ isOpen, onClose, agent, onFavoriteToggle, onStartChat }
               {agent.description}
             </p>
           </div>
-          <button 
+          <button
             onClick={(e) => {
               e.stopPropagation();
               onFavoriteToggle?.();
@@ -257,7 +336,7 @@ function NewChatDrawer({ isOpen, onClose, agent, onFavoriteToggle, onStartChat }
           <p className="font-semibold text-[length:var(--font-size-14)] leading-[var(--line-height-20)] text-[var(--color-text-default)]">
             Model information
           </p>
-          
+
           <div className="flex flex-col gap-3">
             <div className="flex flex-col gap-1 pb-3 border-b border-[var(--color-border-subtle)]">
               <p className="text-[length:var(--font-size-11)] leading-[var(--line-height-16)] text-[var(--color-action-primary)]">
@@ -267,7 +346,7 @@ function NewChatDrawer({ isOpen, onClose, agent, onFavoriteToggle, onStartChat }
                 {agent.provider}
               </p>
             </div>
-            
+
             <div className="flex flex-col gap-1 pb-3 border-b border-[var(--color-border-subtle)]">
               <p className="text-[length:var(--font-size-11)] leading-[var(--line-height-16)] text-[var(--color-action-primary)]">
                 Model Name
@@ -276,7 +355,7 @@ function NewChatDrawer({ isOpen, onClose, agent, onFavoriteToggle, onStartChat }
                 {agent.modelName}
               </p>
             </div>
-            
+
             <div className="flex flex-col gap-1 pb-3 border-b border-[var(--color-border-subtle)]">
               <p className="text-[length:var(--font-size-11)] leading-[var(--line-height-16)] text-[var(--color-action-primary)]">
                 Temperature
@@ -285,13 +364,13 @@ function NewChatDrawer({ isOpen, onClose, agent, onFavoriteToggle, onStartChat }
                 {agent.temperature}
               </p>
             </div>
-            
+
             <div className="flex flex-col gap-1">
               <p className="text-[length:var(--font-size-11)] leading-[var(--line-height-16)] text-[var(--color-action-primary)]">
                 Connected Data sources
               </p>
               <p className="text-[length:var(--font-size-12)] leading-[var(--line-height-16)] text-[var(--color-text-default)]">
-                {agent.connectedDataSources.length > 0 
+                {agent.connectedDataSources.length > 0
                   ? agent.connectedDataSources.join(', ')
                   : 'No connected data sources'}
               </p>
@@ -316,7 +395,7 @@ function NewChatDrawer({ isOpen, onClose, agent, onFavoriteToggle, onStartChat }
           <p className="font-semibold text-[length:var(--font-size-14)] leading-[var(--line-height-20)] text-[var(--color-text-default)]">
             Chat name
           </p>
-          <Input 
+          <Input
             value={chatName}
             onChange={(e) => setChatName(e.target.value)}
             placeholder="e.g., Project planning meeting, code review, etc."
@@ -329,7 +408,7 @@ function NewChatDrawer({ isOpen, onClose, agent, onFavoriteToggle, onStartChat }
           <p className="font-semibold text-[length:var(--font-size-14)] leading-[var(--line-height-20)] text-[var(--color-text-default)]">
             Additional instructions
           </p>
-          <Textarea 
+          <Textarea
             value={additionalInstructions}
             onChange={(e) => setAdditionalInstructions(e.target.value)}
             placeholder="Enter any specific instructions you would like to provide to the agent for this chat session."
@@ -354,7 +433,7 @@ export function ChatPage() {
   const [agents, setAgents] = useState(mockAgents);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
-  const selectedAgent = agents.find(a => a.id === selectedAgentId) || null;
+  const selectedAgent = agents.find((a) => a.id === selectedAgentId) || null;
 
   const handleAgentClick = (agentId: string) => {
     setSelectedAgentId(agentId);
@@ -362,97 +441,93 @@ export function ChatPage() {
   };
 
   const handleFavoriteToggle = (agentId: string) => {
-    setAgents(prev => prev.map(agent => 
-      agent.id === agentId 
-        ? { ...agent, isFavorite: !agent.isFavorite }
-        : agent
-    ));
+    setAgents((prev) =>
+      prev.map((agent) =>
+        agent.id === agentId ? { ...agent, isFavorite: !agent.isFavorite } : agent
+      )
+    );
   };
 
   const handleStartChat = (chatName: string, additionalInstructions: string) => {
-    console.log('Starting chat:', { agent: selectedAgent?.title, chatName, additionalInstructions });
+    console.log('Starting chat:', {
+      agent: selectedAgent?.title,
+      chatName,
+      additionalInstructions,
+    });
     // Here you would typically navigate to the chat or create a new chat session
   };
 
   return (
     <>
-          {/* TopBar - Full width */}
-          <TopBar
-            showSidebarToggle={false}
-            showNavigation={true}
-            canGoBack={false}
-            canGoForward={false}
-            onBack={() => {}}
-            onForward={() => {}}
-            breadcrumb={
-              <Breadcrumb 
-                items={[
-                  { label: 'Home', href: '/agent' },
-                  { label: 'Chat' }
-                ]} 
-              />
-            }
-            actions={
-              <>
-                <TopBarAction
-                  icon={<IconPalette size={16} stroke={1} />}
-                  aria-label="Design system"
-                  onClick={() => navigate('/design-system')}
-                />
-                <TopBarAction
-                  icon={<IconBell size={16} stroke={1} />}
-                  aria-label="Notifications"
-                  badge={true}
-                />
-              </>
-            }
-          />
+      {/* TopBar - Full width */}
+      <TopBar
+        showSidebarToggle={false}
+        showNavigation={true}
+        canGoBack={false}
+        canGoForward={false}
+        onBack={() => {}}
+        onForward={() => {}}
+        breadcrumb={<Breadcrumb items={[{ label: 'Home', href: '/agent' }, { label: 'Chat' }]} />}
+        actions={
+          <>
+            <TopBarAction
+              icon={<IconPalette size={16} stroke={1} />}
+              aria-label="Design system"
+              onClick={() => navigate('/design-system')}
+            />
+            <TopBarAction
+              icon={<IconBell size={16} stroke={1} />}
+              aria-label="Notifications"
+              badge={true}
+            />
+          </>
+        }
+      />
 
-          {/* Sidebar and Content */}
-          <div className="flex flex-1 min-h-0 min-w-[var(--layout-content-min-width)]">
-            {/* Chat Sidebar */}
-            <ChatSidebar />
+      {/* Sidebar and Content */}
+      <div className="flex flex-1 min-h-0 min-w-[var(--layout-content-min-width)]">
+        {/* Chat Sidebar */}
+        <ChatSidebar />
 
-            {/* Content Container */}
-            <div className="flex-1 flex flex-col gap-4 px-6 pt-4 pb-[120px] overflow-y-auto min-h-0">
-            {/* Header */}
-            <div className="flex flex-col gap-2">
-              <h4 className="font-semibold text-[length:var(--font-size-18)] leading-[var(--line-height-28)] text-[var(--color-text-default)]">
-                New Chat
-              </h4>
-              <p className="text-[length:var(--font-size-12)] leading-[var(--line-height-16)] text-[var(--color-text-subtle)]">
-                Choose an agent and start a new chat.
+        {/* Content Container */}
+        <div className="flex-1 flex flex-col gap-4 px-6 pt-4 pb-[120px] overflow-y-auto min-h-0">
+          {/* Header */}
+          <div className="flex flex-col gap-2">
+            <h4 className="font-semibold text-[length:var(--font-size-18)] leading-[var(--line-height-28)] text-[var(--color-text-default)]">
+              New Chat
+            </h4>
+            <p className="text-[length:var(--font-size-12)] leading-[var(--line-height-16)] text-[var(--color-text-subtle)]">
+              Choose an agent and start a new chat.
+            </p>
+          </div>
+
+          {/* Filters */}
+          <div className="flex items-center">
+            <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-strong)] flex items-center justify-between w-[var(--search-input-width)] pl-2.5 pr-2 py-1.5 rounded-md">
+              <p className="text-[length:var(--font-size-11)] leading-[var(--line-height-16)] text-[var(--color-text-subtle)]">
+                Search agent by attributes
               </p>
-            </div>
-
-            {/* Filters */}
-            <div className="flex items-center">
-              <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-strong)] flex items-center justify-between w-[var(--search-input-width)] pl-2.5 pr-2 py-1.5 rounded-md">
-                <p className="text-[length:var(--font-size-11)] leading-[var(--line-height-16)] text-[var(--color-text-subtle)]">
-                  Search agent by attributes
-                </p>
-                <IconSearch size={12} stroke={1} className="text-[var(--color-text-muted)]" />
-              </div>
-            </div>
-
-            {/* Agent Cards Grid */}
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-2">
-              {agents.map((agent) => (
-                <AgentCard
-                  key={agent.id}
-                  title={agent.title}
-                  description={agent.description}
-                  modelName={agent.modelName}
-                  isFavorite={agent.isFavorite}
-                  isSelected={selectedAgentId === agent.id && isDrawerOpen}
-                  onClick={() => handleAgentClick(agent.id)}
-                  onFavoriteToggle={() => handleFavoriteToggle(agent.id)}
-                />
-              ))}
-            </div>
-
+              <IconSearch size={12} stroke={1} className="text-[var(--color-text-muted)]" />
             </div>
           </div>
+
+          {/* Agent Cards Grid */}
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-2">
+            {agents.map((agent) => (
+              <AgentCard
+                key={agent.id}
+                title={agent.title}
+                description={agent.description}
+                modelName={agent.modelName}
+                isFavorite={agent.isFavorite}
+                isSelected={selectedAgentId === agent.id && isDrawerOpen}
+                onClick={() => handleAgentClick(agent.id)}
+                onFavoriteToggle={() => handleFavoriteToggle(agent.id)}
+              />
+            ))}
+          </div>
+        </div>
+      </div>
 
       {/* New Chat Drawer */}
       <NewChatDrawer
@@ -467,4 +542,3 @@ export function ChatPage() {
 }
 
 export default ChatPage;
-

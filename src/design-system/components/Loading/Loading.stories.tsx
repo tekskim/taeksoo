@@ -3,19 +3,19 @@ import { Loading } from './Loading';
 
 /**
  * # Loading
- * 
+ *
  * 로딩 상태를 표시하는 컴포넌트입니다.
- * 
+ *
  * ## 언제 사용하나요?
  * - 데이터를 불러오는 중일 때
  * - 비동기 작업이 진행 중일 때
  * - 버튼 클릭 후 처리 중일 때
- * 
+ *
  * ## Variants
  * - **spinner**: 기본 스피너 (아이콘 + 텍스트)
  * - **progress**: 진행률 표시 (프로그레스 바 포함)
  * - **button**: 버튼 형태의 로딩 상태
- * 
+ *
  * ## 접근성
  * - 스크린 리더가 로딩 상태를 인식할 수 있도록 텍스트 제공
  * - 애니메이션이 있어 시각적으로 상태 변화 인지 가능
@@ -27,7 +27,8 @@ const meta = {
     layout: 'centered',
     docs: {
       description: {
-        component: '로딩 상태를 표시하는 컴포넌트입니다. spinner, progress, button 세 가지 variant를 제공합니다.',
+        component:
+          '로딩 상태를 표시하는 컴포넌트입니다. spinner, progress, button 세 가지 variant를 제공합니다.',
       },
     },
   },
@@ -237,12 +238,12 @@ export const AllVariants: Story = {
         <span className="text-xs text-gray-500 mt-2">spinner</span>
       </div>
       <div className="flex flex-col items-center gap-2">
-        <Loading 
-          variant="progress" 
-          text="Uploading file" 
+        <Loading
+          variant="progress"
+          text="Uploading file"
           description="document.pdf"
-          progress={65} 
-          statusText="65% complete" 
+          progress={65}
+          statusText="65% complete"
         />
         <span className="text-xs text-gray-500 mt-2">progress</span>
       </div>

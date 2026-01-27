@@ -20,11 +20,7 @@ import {
 } from '@/design-system';
 import { IAMSidebar } from '@/components/IAMSidebar';
 import { useTabs } from '@/contexts/TabContext';
-import {
-  IconRefresh,
-  IconInfoCircle,
-  IconDeviceMobile,
-} from '@tabler/icons-react';
+import { IconRefresh, IconInfoCircle, IconDeviceMobile } from '@tabler/icons-react';
 
 /* ----------------------------------------
    MFA policies Page
@@ -35,7 +31,8 @@ export default function IAMMFAPoliciesPage() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [activeTab, setActiveTab] = useState('enforcement');
   const [mfaEnforcement, setMfaEnforcement] = useState<'voluntary' | 'required'>('voluntary');
-  const { tabs, activeTabId, selectTab, closeTab, addNewTab, updateActiveTabLabel, moveTab } = useTabs();
+  const { tabs, activeTabId, selectTab, closeTab, addNewTab, updateActiveTabLabel, moveTab } =
+    useTabs();
 
   // MFA Methods state
   const [activeMethodTab, setActiveMethodTab] = useState<'otp' | 'email'>('otp');
@@ -57,17 +54,14 @@ export default function IAMMFAPoliciesPage() {
   const sidebarWidth = sidebarOpen ? 200 : 0;
 
   // Tab Bar tabs
-  const tabBarTabs = tabs.map(tab => ({
+  const tabBarTabs = tabs.map((tab) => ({
     id: tab.id,
     label: tab.label,
     closable: tab.closable ?? true,
   }));
 
   // Breadcrumb items
-  const breadcrumbItems = [
-    { label: 'IAM', href: '/iam' },
-    { label: 'MFA policies' },
-  ];
+  const breadcrumbItems = [{ label: 'IAM', href: '/iam' }, { label: 'MFA policies' }];
 
   // Handle reset to default
   const handleResetToDefault = () => {
@@ -126,10 +120,7 @@ export default function IAMMFAPoliciesPage() {
   return (
     <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
       {/* Sidebar */}
-      <IAMSidebar
-        isOpen={sidebarOpen}
-        onToggle={() => setSidebarOpen(!sidebarOpen)}
-      />
+      <IAMSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
 
       {/* Main Content */}
       <main
@@ -183,7 +174,8 @@ export default function IAMMFAPoliciesPage() {
                         <SectionCard.Content gap={6}>
                           {/* Description */}
                           <p className="text-[12px] leading-[16px] text-[var(--color-text-subtle)]">
-                            Choose whether to make Multi-Factor Authentication (MFA) mandatory for all users, or let them enable it voluntarily.
+                            Choose whether to make Multi-Factor Authentication (MFA) mandatory for
+                            all users, or let them enable it voluntarily.
                           </p>
 
                           {/* Radio Options */}
@@ -195,7 +187,11 @@ export default function IAMMFAPoliciesPage() {
                                 label="Voluntary"
                               />
                               <Tooltip content="Users can choose whether to enable MFA for their accounts.">
-                                <IconInfoCircle size={16} stroke={1.5} className="text-[var(--color-text-subtle)]" />
+                                <IconInfoCircle
+                                  size={16}
+                                  stroke={1.5}
+                                  className="text-[var(--color-text-subtle)]"
+                                />
                               </Tooltip>
                             </HStack>
                             <Radio
@@ -284,7 +280,8 @@ export default function IAMMFAPoliciesPage() {
                                   <span className="ml-1 text-[var(--color-state-danger)]">*</span>
                                 </HStack>
                                 <p className="text-[11px] leading-4 text-[var(--color-text-subtle)]">
-                                  Allows for slight time differences between the server and the user's device to prevent login failures. 1 is recommended.
+                                  Allows for slight time differences between the server and the
+                                  user's device to prevent login failures. 1 is recommended.
                                 </p>
                               </VStack>
                               <VStack gap={2}>
@@ -313,7 +310,8 @@ export default function IAMMFAPoliciesPage() {
                                   Reusable token
                                 </span>
                                 <p className="text-[12px] leading-4 text-[var(--color-text-subtle)]">
-                                  For security, always keep this disabled. Enabling it may expose the system to replay attacks.
+                                  For security, always keep this disabled. Enabling it may expose
+                                  the system to replay attacks.
                                 </p>
                               </VStack>
                               <Toggle
@@ -398,7 +396,8 @@ export default function IAMMFAPoliciesPage() {
                                   <span className="ml-1 text-[var(--color-state-danger)]">*</span>
                                 </HStack>
                                 <p className="text-[11px] leading-4 text-[var(--color-text-subtle)]">
-                                  Set the time limit within which the user must enter the email code.
+                                  Set the time limit within which the user must enter the email
+                                  code.
                                 </p>
                               </VStack>
                               <VStack gap={2}>
@@ -435,7 +434,8 @@ export default function IAMMFAPoliciesPage() {
                                   <span className="ml-1 text-[var(--color-state-danger)]">*</span>
                                 </HStack>
                                 <p className="text-[11px] leading-4 text-[var(--color-text-subtle)]">
-                                  The minimum time a user must wait before requesting a new authentication code.
+                                  The minimum time a user must wait before requesting a new
+                                  authentication code.
                                 </p>
                               </VStack>
                               <VStack gap={2}>
@@ -472,7 +472,8 @@ export default function IAMMFAPoliciesPage() {
                                   <span className="ml-1 text-[var(--color-state-danger)]">*</span>
                                 </HStack>
                                 <p className="text-[11px] leading-4 text-[var(--color-text-subtle)]">
-                                  Protect user accounts from unusual activities by limiting the number of verification attempts allowed within a time frame.
+                                  Protect user accounts from unusual activities by limiting the
+                                  number of verification attempts allowed within a time frame.
                                 </p>
                               </VStack>
                               <VStack gap={2}>
@@ -552,4 +553,3 @@ export default function IAMMFAPoliciesPage() {
     </div>
   );
 }
-

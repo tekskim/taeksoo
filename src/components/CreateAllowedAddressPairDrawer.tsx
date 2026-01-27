@@ -44,14 +44,10 @@ export function CreateAllowedAddressPairDrawer({
     setHasAttemptedSubmit(true);
     if (!cidr.trim()) return;
     if (macAddressType === 'manual' && !macAddress.trim()) return;
-    
+
     setIsSubmitting(true);
     try {
-      await onSubmit?.(
-        cidr,
-        macAddressType,
-        macAddressType === 'manual' ? macAddress : undefined
-      );
+      await onSubmit?.(cidr, macAddressType, macAddressType === 'manual' ? macAddress : undefined);
       onClose();
     } finally {
       setIsSubmitting(false);
@@ -72,15 +68,11 @@ export function CreateAllowedAddressPairDrawer({
       width={376}
       footer={
         <HStack gap={2} className="w-full">
-          <Button 
-            variant="secondary" 
-            onClick={handleClose}
-            className="flex-1 h-8"
-          >
+          <Button variant="secondary" onClick={handleClose} className="flex-1 h-8">
             Cancel
           </Button>
-          <Button 
-            variant="primary" 
+          <Button
+            variant="primary"
             onClick={handleSubmit}
             disabled={isSubmitting}
             className="flex-1 h-8"
@@ -137,10 +129,10 @@ export function CreateAllowedAddressPairDrawer({
               <HStack gap={2} className="items-center">
                 <Radio value="from_port" label="From Port" />
                 <Tooltip content="Use the MAC address assigned to this port automatically.">
-                  <IconHelp 
-                    size={16} 
-                    stroke={1} 
-                    className="text-[var(--color-text-subtle)] cursor-help" 
+                  <IconHelp
+                    size={16}
+                    stroke={1}
+                    className="text-[var(--color-text-subtle)] cursor-help"
                   />
                 </Tooltip>
               </HStack>
@@ -172,5 +164,3 @@ export function CreateAllowedAddressPairDrawer({
 }
 
 export default CreateAllowedAddressPairDrawer;
-
-

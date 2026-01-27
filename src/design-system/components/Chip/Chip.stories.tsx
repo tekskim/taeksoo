@@ -341,11 +341,7 @@ export const TagInput: Story = {
         <label className="block text-sm font-medium mb-2">Tags</label>
         <div className="flex flex-wrap gap-2 p-2 border border-[var(--color-border-default)] rounded min-h-[80px]">
           {tags.map((tag) => (
-            <Chip
-              key={tag}
-              value={tag}
-              onRemove={() => handleRemove(tag)}
-            />
+            <Chip key={tag} value={tag} onRemove={() => handleRemove(tag)} />
           ))}
           <input
             type="text"
@@ -356,9 +352,7 @@ export const TagInput: Story = {
             className="flex-1 min-w-[100px] outline-none bg-transparent text-sm"
           />
         </div>
-        <p className="text-xs text-[var(--color-text-muted)] mt-1">
-          Press Enter to add a tag
-        </p>
+        <p className="text-xs text-[var(--color-text-muted)] mt-1">Press Enter to add a tag</p>
       </div>
     );
   },

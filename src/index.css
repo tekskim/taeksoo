@@ -1,5 +1,5 @@
-@import "tailwindcss";
-@import "./styles/tokens/index.css";
+@import 'tailwindcss';
+@import './styles/tokens/index.css';
 
 /* ========================================
    Theme Transition - Prevent flicker
@@ -9,7 +9,8 @@ html {
   color-scheme: light dark;
 }
 
-html, body {
+html,
+body {
   overflow: hidden;
   height: 100%;
 }
@@ -19,11 +20,12 @@ html.theme-transition,
 html.theme-transition *,
 html.theme-transition *::before,
 html.theme-transition *::after {
-  transition: background-color 0.3s ease, 
-              border-color 0.3s ease, 
-              color 0.15s ease,
-              fill 0.15s ease,
-              stroke 0.15s ease !important;
+  transition:
+    background-color 0.3s ease,
+    border-color 0.3s ease,
+    color 0.15s ease,
+    fill 0.15s ease,
+    stroke 0.15s ease !important;
   transition-delay: 0s !important;
 }
 
@@ -211,8 +213,9 @@ html.theme-transition *::after {
   /* ----------------------------------------
      Primitive - Font Family
      ---------------------------------------- */
-  --font-sans: "Mona Sans Variable", "Mona Sans", -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
-  --font-mono: Menlo, "Fira Code", Consolas, monospace;
+  --font-sans:
+    'Mona Sans Variable', 'Mona Sans', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+  --font-mono: Menlo, 'Fira Code', Consolas, monospace;
 
   /* ----------------------------------------
      Primitive - Border Radius
@@ -292,7 +295,7 @@ html.theme-transition *::after {
   --layout-sidebar-width: 200px;
   --layout-sidebar-width-collapsed: 40px;
   --layout-content-min-width: calc(var(--layout-min-width) - var(--layout-sidebar-width));
-  
+
   /* Common widths */
   --search-input-width: 280px;
   --wizard-summary-width: 312px;
@@ -300,7 +303,7 @@ html.theme-transition *::after {
   --modal-width-sm: 400px;
   --modal-width-md: 480px;
   --modal-width-lg: 640px;
-  
+
   /* Shell Panel */
   --shell-panel-height: 350px;
 
@@ -327,7 +330,7 @@ html.theme-transition *::after {
   --color-surface-subtle: var(--color-slate-50);
   --color-surface-muted: var(--color-slate-100);
   --color-surface-inverse: var(--color-slate-900);
-  --color-surface-contrast: #0f172a;           /* Dark background for code/terminal areas */
+  --color-surface-contrast: #0f172a; /* Dark background for code/terminal areas */
 
   /* Border */
   --color-border-default: var(--color-slate-200);
@@ -362,7 +365,7 @@ html.theme-transition *::after {
 
   /* Extended Surface Colors */
   --color-surface-sunken: var(--color-slate-50);
-  
+
   /* Extended Border Colors */
   --color-border-muted: var(--color-slate-100);
 
@@ -826,44 +829,44 @@ html.theme-transition *::after {
   --checkbox-size: 16px;
   --checkbox-radius: var(--radius-sm);
   --checkbox-gap: var(--spacing-1-5);
-  
+
   /* Checkbox - Default */
   --checkbox-bg: var(--color-white);
   --checkbox-border: var(--color-border-strong);
   --checkbox-border-hover: var(--color-action-primary);
-  
+
   /* Checkbox - Checked */
   --checkbox-checked-bg: var(--color-action-primary);
   --checkbox-icon-color: white;
-  
+
   /* Checkbox - Disabled */
   --checkbox-disabled-bg: var(--color-surface-muted);
   --checkbox-disabled-border: var(--color-border-default);
   --checkbox-disabled-checked-bg: var(--color-slate-200);
   --checkbox-icon-disabled: var(--color-slate-400);
-  
+
   /* Checkbox - Error */
   --checkbox-error-bg: var(--color-red-500);
   --checkbox-error-border: var(--color-red-500);
   --checkbox-error-text: var(--color-red-500);
-  
+
   /* Checkbox - Label */
   --checkbox-label-size: var(--font-size-12);
   --checkbox-label-line-height: var(--line-height-16);
   --checkbox-label-color: var(--color-text-default);
   --checkbox-label-disabled: var(--color-text-disabled);
   --checkbox-label-error: var(--color-text-default);
-  
+
   /* Checkbox - Description */
   --checkbox-description-gap: var(--spacing-1);
   --checkbox-description-size: var(--font-size-11);
   --checkbox-description-line-height: var(--line-height-16);
   --checkbox-description-color: var(--color-text-subtle);
-  
+
   /* Checkbox - Error message */
   --checkbox-error-size: var(--font-size-11);
   --checkbox-error-line-height: var(--line-height-16);
-  
+
   /* CheckboxGroup */
   --checkbox-group-gap: var(--spacing-3);
   --checkbox-group-label-size: var(--font-size-12);
@@ -971,28 +974,28 @@ html.theme-transition *::after {
   --color-action-primary-active: var(--color-blue-300);
 
   /* Text - Linear Style (높은 대비) */
-  --color-text-default: #EBEBEB;           /* 거의 흰색 */
-  --color-text-muted: #A0A0A0;             /* 중간 회색 */
-  --color-text-subtle: #6B6B6B;            /* 연한 회색 */
-  --color-text-disabled: #4A4A4A;          /* 비활성 텍스트 */
-  --color-text-inverse: #0D0D0D;           /* 역전 텍스트 */
+  --color-text-default: #ebebeb; /* 거의 흰색 */
+  --color-text-muted: #a0a0a0; /* 중간 회색 */
+  --color-text-subtle: #6b6b6b; /* 연한 회색 */
+  --color-text-disabled: #4a4a4a; /* 비활성 텍스트 */
+  --color-text-inverse: #0d0d0d; /* 역전 텍스트 */
 
   /* Surface - RunPod Style */
-  --color-surface-default: #1C1C1C;        /* 카드, 모달 배경 */
-  --color-surface-subtle: #141414;         /* 앱 배경 (가장 어두움) */
-  --color-surface-muted: #252525;          /* 호버, 강조 배경 */
-  --color-surface-inverse: #FAFAFA;        /* 밝은 표면 */
-  --color-surface-contrast: #0a0a0a;       /* Dark background for code/terminal areas */
+  --color-surface-default: #1c1c1c; /* 카드, 모달 배경 */
+  --color-surface-subtle: #141414; /* 앱 배경 (가장 어두움) */
+  --color-surface-muted: #252525; /* 호버, 강조 배경 */
+  --color-surface-inverse: #fafafa; /* 밝은 표면 */
+  --color-surface-contrast: #0a0a0a; /* Dark background for code/terminal areas */
 
   /* Border - Apple Style */
-  --color-border-default: #3a3a3a;         /* 기본 보더 (Apple HIG 참고) */
-  --color-border-subtle: #2e2e2e;          /* 미세한 구분선 */
-  --color-border-strong: #4a4a4a;          /* 강조 보더 */
+  --color-border-default: #3a3a3a; /* 기본 보더 (Apple HIG 참고) */
+  --color-border-subtle: #2e2e2e; /* 미세한 구분선 */
+  --color-border-strong: #4a4a4a; /* 강조 보더 */
   --color-border-focus: var(--color-blue-400);
 
   /* State - Info */
   --color-state-info: var(--color-blue-400);
-  --color-state-info-bg: rgba(59, 130, 246, 0.12);  /* blue-500 12% - 더 은은하게 */
+  --color-state-info-bg: rgba(59, 130, 246, 0.12); /* blue-500 12% - 더 은은하게 */
   --color-state-info-text: var(--color-blue-300);
 
   /* State - Success (유지) */
@@ -1007,7 +1010,7 @@ html.theme-transition *::after {
 
   /* State - Danger (유지) */
   --color-state-danger: var(--color-red-400);
-  --color-state-danger-bg: rgba(239, 68, 68, 0.12);  /* red-500 12% - matches inline message error */
+  --color-state-danger-bg: rgba(239, 68, 68, 0.12); /* red-500 12% - matches inline message error */
   --color-state-danger-text: var(--color-red-200);
 
   /* Extended Text Colors - Dark Mode */
@@ -1018,7 +1021,7 @@ html.theme-transition *::after {
   /* Extended Surface Colors - Dark Mode */
   --color-surface-sunken: #141414;
   --color-action-primary-subtle: rgba(59, 130, 246, 0.15);
-  
+
   /* Extended Border Colors - Dark Mode */
   --color-border-muted: #2e2e2e;
 
@@ -1032,94 +1035,94 @@ html.theme-transition *::after {
   --color-status-error-subtle: rgba(239, 68, 68, 0.15);
 
   /* Input - Disabled (Dark Mode) */
-  --input-bg-disabled: #252525;              /* surface-muted */
-  --input-text-disabled: #4A4A4A;            /* text-disabled */
+  --input-bg-disabled: #252525; /* surface-muted */
+  --input-text-disabled: #4a4a4a; /* text-disabled */
 
   /* Select (Dark Mode) */
-  --select-bg-disabled: #252525;             /* surface-muted */
-  --select-menu-bg: #1C1C1C;                 /* surface-default */
-  --select-menu-border: #444444;             /* border-strong */
-  --select-item-hover-bg: #252525;           /* surface-muted */
-  --select-item-selected-bg: rgba(59, 130, 246, 0.15);  /* blue with opacity */
-  --select-item-selected-text: var(--color-blue-400);   /* 밝은 파랑 */
+  --select-bg-disabled: #252525; /* surface-muted */
+  --select-menu-bg: #1c1c1c; /* surface-default */
+  --select-menu-border: #444444; /* border-strong */
+  --select-item-hover-bg: #252525; /* surface-muted */
+  --select-item-selected-bg: rgba(59, 130, 246, 0.15); /* blue with opacity */
+  --select-item-selected-text: var(--color-blue-400); /* 밝은 파랑 */
 
   /* Radio (Dark Mode) */
-  --radio-bg: #1C1C1C;                       /* surface-default */
-  --radio-border: #444444;                   /* 더 밝은 보더 */
+  --radio-bg: #1c1c1c; /* surface-default */
+  --radio-border: #444444; /* 더 밝은 보더 */
   --radio-disabled-bg: #252525;
   --radio-disabled-border: #333333;
-  --radio-disabled-dot: #4A4A4A;
+  --radio-disabled-dot: #4a4a4a;
 
   /* Toggle (Dark Mode) */
-  --toggle-bg: #333333;                      /* Off 상태 배경 */
-  --toggle-disabled-bg: #1C1C1C;
+  --toggle-bg: #333333; /* Off 상태 배경 */
+  --toggle-disabled-bg: #1c1c1c;
   --toggle-checked-disabled-bg: #333333;
-  --toggle-thumb-disabled: #4A4A4A;
+  --toggle-thumb-disabled: #4a4a4a;
 
   /* Checkbox (Dark Mode) */
-  --checkbox-bg: #1C1C1C;                    /* surface-default */
-  --checkbox-border: var(--color-border-strong);  /* SearchInput과 동일 */
+  --checkbox-bg: #1c1c1c; /* surface-default */
+  --checkbox-border: var(--color-border-strong); /* SearchInput과 동일 */
   --checkbox-disabled-bg: #252525;
   --checkbox-disabled-border: #333333;
   --checkbox-disabled-checked-bg: #333333;
-  --checkbox-icon-disabled: #4A4A4A;
+  --checkbox-icon-disabled: #4a4a4a;
 
   /* InlineMessage (Dark Mode) - 은은한 반투명 */
-  --inline-message-success-bg: rgba(34, 197, 94, 0.12);   /* green-500 12% */
+  --inline-message-success-bg: rgba(34, 197, 94, 0.12); /* green-500 12% */
   --inline-message-success-icon: var(--color-green-400);
-  --inline-message-warning-bg: rgba(249, 115, 22, 0.12);  /* orange-500 12% */
+  --inline-message-warning-bg: rgba(249, 115, 22, 0.12); /* orange-500 12% */
   --inline-message-warning-icon: var(--color-orange-400);
-  --inline-message-error-bg: rgba(239, 68, 68, 0.12);     /* red-500 12% */
+  --inline-message-error-bg: rgba(239, 68, 68, 0.12); /* red-500 12% */
   --inline-message-error-icon: var(--color-red-400);
-  --inline-message-info-bg: rgba(59, 130, 246, 0.12);     /* blue-500 12% */
+  --inline-message-info-bg: rgba(59, 130, 246, 0.12); /* blue-500 12% */
   --inline-message-info-icon: var(--color-blue-400);
 
   /* Breadcrumb (Dark Mode) */
-  --breadcrumb-text-color: #A0A0A0;          /* 더 밝은 회색 */
-  --breadcrumb-text-hover: #EBEBEB;          /* 거의 흰색 */
-  --breadcrumb-text-current: #EBEBEB;        /* 거의 흰색 */
-  --breadcrumb-separator-color: #6B6B6B;     /* 구분자는 약간 어둡게 */
+  --breadcrumb-text-color: #a0a0a0; /* 더 밝은 회색 */
+  --breadcrumb-text-hover: #ebebeb; /* 거의 흰색 */
+  --breadcrumb-text-current: #ebebeb; /* 거의 흰색 */
+  --breadcrumb-separator-color: #6b6b6b; /* 구분자는 약간 어둡게 */
 
   /* Tabs (Dark Mode) */
-  --tabs-inactive-color: #A0A0A0;            /* 비활성 탭 - 더 밝게 */
-  --tabs-hover-color: #EBEBEB;               /* 호버 - 거의 흰색 */
+  --tabs-inactive-color: #a0a0a0; /* 비활성 탭 - 더 밝게 */
+  --tabs-hover-color: #ebebeb; /* 호버 - 거의 흰색 */
 
   /* Pagination (Dark Mode) */
-  --pagination-hover-bg: #2a2a2a;            /* 명확한 호버 배경 */
-  --pagination-text: #A0A0A0;                /* 비활성 페이지 */
-  --pagination-text-hover: #EBEBEB;          /* 호버 텍스트 */
+  --pagination-hover-bg: #2a2a2a; /* 명확한 호버 배경 */
+  --pagination-text: #a0a0a0; /* 비활성 페이지 */
+  --pagination-text-hover: #ebebeb; /* 호버 텍스트 */
 
   /* Status Indicator (Dark Mode) */
-  --status-text: var(--color-white);         /* 컬러 배경 위에는 항상 흰색 텍스트 */
+  --status-text: var(--color-white); /* 컬러 배경 위에는 항상 흰색 텍스트 */
 
   /* Menu Item (Dark Mode) */
-  --menu-item-hover-bg: #2a2a2a;                    /* 호버 배경 - 밝아지는 방향 */
-  --menu-item-active-bg: rgba(59, 130, 246, 0.15);  /* blue-500 with 15% opacity */
-  --menu-item-active-text: var(--color-blue-400);   /* 더 밝은 파랑 */
+  --menu-item-hover-bg: #2a2a2a; /* 호버 배경 - 밝아지는 방향 */
+  --menu-item-active-bg: rgba(59, 130, 246, 0.15); /* blue-500 with 15% opacity */
+  --menu-item-active-text: var(--color-blue-400); /* 더 밝은 파랑 */
 
   /* DatePicker (Dark Mode) */
-  --datepicker-range-bg: #253754;                   /* 기간 선택 배경 - solid color */
-  --datepicker-hover-bg: #2a2a2a;                   /* 호버 배경 */
+  --datepicker-range-bg: #253754; /* 기간 선택 배경 - solid color */
+  --datepicker-hover-bg: #2a2a2a; /* 호버 배경 */
 
   /* ContextMenu (Dark Mode) */
-  --context-menu-hover-bg: #2a2a2a;                 /* 메뉴 아이템 호버 배경 */
+  --context-menu-hover-bg: #2a2a2a; /* 메뉴 아이템 호버 배경 */
 
   /* Table (Dark Mode) */
-  --table-header-bg: var(--color-surface-muted);    /* 테이블 헤더 배경 (#252525) */
-  --table-row-hover-bg: #2a2a2a;                    /* 테이블 행 호버 배경 */
+  --table-header-bg: var(--color-surface-muted); /* 테이블 헤더 배경 (#252525) */
+  --table-row-hover-bg: #2a2a2a; /* 테이블 행 호버 배경 */
 
   /* TopBar (Dark Mode) */
-  --topbar-button-hover-bg: #2a2a2a;                /* 버튼 호버 배경 */
+  --topbar-button-hover-bg: #2a2a2a; /* 버튼 호버 배경 */
 
   /* TabBar (Dark Mode) */
-  --tabbar-hover-bg: #2a2a2a;                       /* 탭바 호버 배경 */
+  --tabbar-hover-bg: #2a2a2a; /* 탭바 호버 배경 */
 
   /* Button (Dark Mode) - 일관되게 밝아지는 방향 */
-  --button-secondary-hover-bg: #2a2a2a;             /* surface-default보다 밝게 */
-  --button-ghost-hover-bg: #2a2a2a;                 /* 동일하게 */
+  --button-secondary-hover-bg: #2a2a2a; /* surface-default보다 밝게 */
+  --button-ghost-hover-bg: #2a2a2a; /* 동일하게 */
 
   /* Action Icon (Dark Mode) */
-  --action-icon-color: #EBEBEB;
+  --action-icon-color: #ebebeb;
 }
 
 /* ========================================
@@ -1150,17 +1153,40 @@ html.theme-transition *::after {
   }
 
   /* Typography defaults */
-  h1, h2, h3, h4, h5, h6 {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
     font-weight: var(--font-weight-semibold);
     color: var(--color-text-default);
   }
 
-  h1 { font-size: var(--font-size-40); line-height: var(--line-height-48); }
-  h2 { font-size: var(--font-size-32); line-height: var(--line-height-40); }
-  h3 { font-size: var(--font-size-24); line-height: var(--line-height-32); }
-  h4 { font-size: var(--font-size-18); line-height: var(--line-height-28); }
-  h5 { font-size: var(--font-size-16); line-height: var(--line-height-24); }
-  h6 { font-size: var(--font-size-14); line-height: var(--line-height-20); }
+  h1 {
+    font-size: var(--font-size-40);
+    line-height: var(--line-height-48);
+  }
+  h2 {
+    font-size: var(--font-size-32);
+    line-height: var(--line-height-40);
+  }
+  h3 {
+    font-size: var(--font-size-24);
+    line-height: var(--line-height-32);
+  }
+  h4 {
+    font-size: var(--font-size-18);
+    line-height: var(--line-height-28);
+  }
+  h5 {
+    font-size: var(--font-size-16);
+    line-height: var(--line-height-24);
+  }
+  h6 {
+    font-size: var(--font-size-14);
+    line-height: var(--line-height-20);
+  }
 
   p {
     color: var(--color-text-muted);
@@ -1390,8 +1416,8 @@ html.theme-transition *::after {
 }
 
 /* Hide native search input clear button */
-input[type="search"]::-webkit-search-cancel-button,
-input[type="search"]::-webkit-search-decoration {
+input[type='search']::-webkit-search-cancel-button,
+input[type='search']::-webkit-search-decoration {
   -webkit-appearance: none;
   appearance: none;
 }
@@ -1407,8 +1433,10 @@ input[type="search"]::-webkit-search-decoration {
   --chart-card-height: 334px;
   --chart-header-height: 28px;
   --chart-padding-y: 16px;
-  --chart-area-height: calc(var(--chart-card-height) - var(--chart-header-height) - var(--chart-padding-y));
-  
+  --chart-area-height: calc(
+    var(--chart-card-height) - var(--chart-header-height) - var(--chart-padding-y)
+  );
+
   background: var(--color-surface-default);
   border: 1px solid var(--color-border-default);
   border-radius: 8px;
@@ -1551,7 +1579,9 @@ input[type="search"]::-webkit-search-decoration {
   border: 1px solid var(--color-border-default);
   border-radius: 6px;
   position: relative;
-  transition: background 0.2s, border-color 0.2s;
+  transition:
+    background 0.2s,
+    border-color 0.2s;
 }
 
 .toggleSwitch::after {
@@ -1563,7 +1593,9 @@ input[type="search"]::-webkit-search-decoration {
   border-radius: 50%;
   top: 1px;
   left: 1px;
-  transition: transform 0.2s, background 0.2s;
+  transition:
+    transform 0.2s,
+    background 0.2s;
 }
 
 .toggleSwitchActive {
@@ -1687,8 +1719,9 @@ input[type="search"]::-webkit-search-decoration {
   height: 100%;
   display: flex;
   flex-direction: column;
-  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25),
-              0 0 0 1px rgba(0, 0, 0, 0.05);
+  box-shadow:
+    0 25px 50px -12px rgba(0, 0, 0, 0.25),
+    0 0 0 1px rgba(0, 0, 0, 0.05);
   border-radius: 16px;
   background: var(--color-surface-default);
   padding: 20px;
@@ -2135,7 +2168,7 @@ input[type="search"]::-webkit-search-decoration {
 }
 
 /* Remove border/padding from DatePicker when inside calendarDropdown */
-.calendarDropdown > [class*="inline-flex"][class*="flex-col"] {
+.calendarDropdown > [class*='inline-flex'][class*='flex-col'] {
   border: none;
   padding: 0;
 }
@@ -2587,7 +2620,7 @@ input[type="search"]::-webkit-search-decoration {
 }
 
 /* Remove border/padding from DatePicker when inside monitoring toolbar dropdown */
-.monitoring-toolbar-dropdown > [class*="inline-flex"][class*="flex-col"] {
+.monitoring-toolbar-dropdown > [class*='inline-flex'][class*='flex-col'] {
   border: none;
   padding: 0;
 }

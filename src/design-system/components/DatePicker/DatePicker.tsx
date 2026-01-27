@@ -295,7 +295,8 @@ export const DatePicker: React.FC<DatePickerProps> = ({
           <IconChevronLeft size={16} stroke={1} />
         </button>
 
-        <span className="
+        <span
+          className="
           w-[64px]
           text-[length:var(--font-size-16)]
           leading-[var(--line-height-24)]
@@ -303,7 +304,8 @@ export const DatePicker: React.FC<DatePickerProps> = ({
           text-[var(--color-text-default)]
           text-left
           select-none
-        ">
+        "
+        >
           {monthYearText}
         </span>
 
@@ -362,7 +364,8 @@ export const DatePicker: React.FC<DatePickerProps> = ({
             const isSelected = day.isSelected || day.isRangeStart || day.isRangeEnd;
             // Only show range background when both start and end are selected
             const hasCompleteRange = rangeValue.start && rangeValue.end;
-            const isInRange = hasCompleteRange && (day.isInRange || day.isRangeStart || day.isRangeEnd);
+            const isInRange =
+              hasCompleteRange && (day.isInRange || day.isRangeStart || day.isRangeEnd);
             const colIndex = index % 7;
             const isFirstCol = colIndex === 0;
             const isLastCol = colIndex === 6;
@@ -380,7 +383,7 @@ export const DatePicker: React.FC<DatePickerProps> = ({
               >
                 {/* Range background layer - only when both start and end are selected */}
                 {hasCompleteRange && isInRange && !day.isRangeStart && !day.isRangeEnd && (
-                  <div 
+                  <div
                     className="absolute bg-[var(--datepicker-range-bg)]"
                     style={{
                       top: 0,
@@ -390,28 +393,32 @@ export const DatePicker: React.FC<DatePickerProps> = ({
                     }}
                   />
                 )}
-                {hasCompleteRange && day.isRangeStart && !isSameDay(rangeValue.start!, rangeValue.end!) && (
-                  <div 
-                    className="absolute bg-[var(--datepicker-range-bg)]"
-                    style={{
-                      top: 0,
-                      bottom: 0,
-                      left: 16,
-                      right: isLastCol ? 0 : -3,
-                    }}
-                  />
-                )}
-                {hasCompleteRange && day.isRangeEnd && !isSameDay(rangeValue.start!, rangeValue.end!) && (
-                  <div 
-                    className="absolute bg-[var(--datepicker-range-bg)]"
-                    style={{
-                      top: 0,
-                      bottom: 0,
-                      left: isFirstCol ? 0 : -3,
-                      right: 16,
-                    }}
-                  />
-                )}
+                {hasCompleteRange &&
+                  day.isRangeStart &&
+                  !isSameDay(rangeValue.start!, rangeValue.end!) && (
+                    <div
+                      className="absolute bg-[var(--datepicker-range-bg)]"
+                      style={{
+                        top: 0,
+                        bottom: 0,
+                        left: 16,
+                        right: isLastCol ? 0 : -3,
+                      }}
+                    />
+                  )}
+                {hasCompleteRange &&
+                  day.isRangeEnd &&
+                  !isSameDay(rangeValue.start!, rangeValue.end!) && (
+                    <div
+                      className="absolute bg-[var(--datepicker-range-bg)]"
+                      style={{
+                        top: 0,
+                        bottom: 0,
+                        left: isFirstCol ? 0 : -3,
+                        right: 16,
+                      }}
+                    />
+                  )}
 
                 <button
                   type="button"
@@ -428,11 +435,12 @@ export const DatePicker: React.FC<DatePickerProps> = ({
                     font-medium
                     rounded-full
                     transition-colors duration-[var(--duration-fast)]
-                    ${isSelected
-                      ? 'bg-[var(--color-action-primary)] text-[var(--color-text-on-primary)]'
-                      : day.isCurrentMonth
-                        ? 'text-[var(--color-text-default)] hover:bg-[var(--datepicker-hover-bg)]'
-                        : 'text-[var(--color-text-muted)] hover:bg-[var(--datepicker-hover-bg)]'
+                    ${
+                      isSelected
+                        ? 'bg-[var(--color-action-primary)] text-[var(--color-text-on-primary)]'
+                        : day.isCurrentMonth
+                          ? 'text-[var(--color-text-default)] hover:bg-[var(--datepicker-hover-bg)]'
+                          : 'text-[var(--color-text-muted)] hover:bg-[var(--datepicker-hover-bg)]'
                     }
                     ${day.isDisabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}
                     ${day.isToday && !isSelected ? 'ring-1 ring-[var(--color-action-primary)]' : ''}
@@ -464,4 +472,3 @@ export const DatePicker: React.FC<DatePickerProps> = ({
 };
 
 export default DatePicker;
-
