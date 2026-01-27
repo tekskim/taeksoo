@@ -17,19 +17,13 @@ import {
   SearchInput,
   Pagination,
   StatusIndicator,
+  Badge,
+  Tooltip,
 } from '@/design-system';
 import type { TableColumn } from '@/design-system';
 import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
 import { useTabs } from '@/contexts/TabContext';
-import {
-  IconEdit,
-  IconTrash,
-  IconBell,
-  IconExternalLink,
-  IconServer,
-  IconRouter,
-} from '@tabler/icons-react';
-import { Tooltip } from '@/design-system';
+import { IconEdit, IconTrash, IconBell, IconCube, IconRouter } from '@tabler/icons-react';
 
 /* ----------------------------------------
    Types
@@ -64,14 +58,12 @@ interface Port {
     id: string;
     type: 'instance' | 'router';
   } | null;
-  ownedNetwork: {
-    name: string;
-    id: string;
-  };
   securityGroups: string[];
   fixedIp: string;
   floatingIp: string;
   macAddress: string;
+  adminState: 'Up' | 'Down';
+  createdAt: string;
 }
 
 /* ----------------------------------------
@@ -118,21 +110,19 @@ const mockSubnets: Record<string, SubnetDetail> = {
 
 const mockPorts: Port[] = Array.from({ length: 115 }, (_, i) => ({
   id: `port-${String(i + 1).padStart(3, '0')}`,
-  name: `port-${String(i + 1).padStart(2, '0')}`,
+  name: 'port',
   status: ['active', 'down', 'build'][i % 3] as PortStatus,
   attachedTo: {
-    name: `web-${String(i + 1).padStart(2, '0')}`,
-    id: `29tgj${String(i).padStart(3, '0')}`,
+    name: 'my-server',
+    id: '12345678',
     type: i % 5 === 0 ? 'router' : 'instance',
   },
-  ownedNetwork: {
-    name: 'net-01',
-    id: '29ttgj234',
-  },
-  securityGroups: ['default-sg', 'web-sg', 'db-sg', 'app-sg', 'monitor-sg'].slice(0, (i % 5) + 1),
-  fixedIp: `10760.${91 + (i % 10)}`,
-  floatingIp: `10765.${39 + (i % 10)}`,
-  macAddress: `fa:16:3e:34:85:${String(32 + (i % 50)).padStart(2, '0')}`,
+  securityGroups: ['default', 'web-sg', 'db-sg', 'app-sg'].slice(0, (i % 4) + 1),
+  fixedIp: '10.70.0.48',
+  floatingIp: i % 3 === 0 ? '' : '-',
+  macAddress: 'fa:16:3e:77:62:19',
+  adminState: i % 7 === 0 ? 'Down' : 'Up',
+  createdAt: 'Dec 15, 2025',
 }));
 
 /* ----------------------------------------
@@ -230,40 +220,38 @@ export default function SubnetDetailPage() {
         <div className="flex flex-col gap-0.5">
           <Link
             to={`/compute-admin/ports/${row.id}`}
-            className="inline-flex items-center gap-1 font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
+            className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
             onClick={(e) => e.stopPropagation()}
           >
             {row.name}
-            <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
           </Link>
           <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
-            Action
+            ID: {row.id}
           </span>
         </div>
       ),
     },
     {
       key: 'attachedTo',
-      label: 'Attached to',
+      label: 'Attached To',
       flex: 1,
       render: (_, row) =>
         row.attachedTo ? (
-          <div className="flex items-center justify-between w-full">
-            <div className="flex flex-col gap-0.5">
+          <div className="flex items-center justify-between gap-2 w-full">
+            <div className="flex flex-col gap-0.5 min-w-0">
               <Link
                 to={
                   row.attachedTo.type === 'router'
-                    ? `/routers/${row.attachedTo.id}`
-                    : `/instances/${row.attachedTo.id}`
+                    ? `/compute-admin/routers/${row.attachedTo.id}`
+                    : `/compute-admin/instances/${row.attachedTo.id}`
                 }
-                className="inline-flex items-center gap-1 font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
+                className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2 truncate"
                 onClick={(e) => e.stopPropagation()}
               >
                 {row.attachedTo.name}
-                <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
               </Link>
-              <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
-                ID : {row.attachedTo.id}
+              <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] truncate">
+                ID: {row.attachedTo.id}
               </span>
             </div>
             <Tooltip
@@ -271,11 +259,11 @@ export default function SubnetDetailPage() {
               position="top"
               delay={0}
             >
-              <div className="flex items-center justify-center p-1 border border-[var(--color-border-default)] rounded bg-[var(--color-surface-default)] cursor-pointer hover:bg-[var(--color-surface-muted)] transition-colors">
+              <div className="flex-shrink-0 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[4px] p-1">
                 {row.attachedTo.type === 'router' ? (
-                  <IconRouter size={12} className="text-[var(--color-text-subtle)]" />
+                  <IconRouter size={12} stroke={1.5} className="text-[var(--color-text-subtle)]" />
                 ) : (
-                  <IconServer size={12} className="text-[var(--color-text-subtle)]" />
+                  <IconCube size={12} stroke={1.5} className="text-[var(--color-text-subtle)]" />
                 )}
               </div>
             </Tooltip>
@@ -285,39 +273,13 @@ export default function SubnetDetailPage() {
         ),
     },
     {
-      key: 'ownedNetwork',
-      label: 'Owned network',
-      flex: 1,
-      sortable: true,
-      render: (_, row) => (
-        <div className="flex flex-col gap-0.5">
-          <Link
-            to={`/compute-admin/networks/${row.ownedNetwork.id}`}
-            className="inline-flex items-center gap-1 font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
-            onClick={(e) => e.stopPropagation()}
-          >
-            {row.ownedNetwork.name}
-            <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
-          </Link>
-          <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
-            ID : {row.ownedNetwork.id}
-          </span>
-        </div>
-      ),
-    },
-    {
       key: 'securityGroups',
       label: 'SG',
       flex: 1,
       render: (_, row) => (
         <span className="text-[var(--color-text-default)]">
           {row.securityGroups[0]}
-          {row.securityGroups.length > 1 && (
-            <span className="text-[var(--color-text-subtle)]">
-              {' '}
-              (+{row.securityGroups.length - 1})
-            </span>
-          )}
+          {row.securityGroups.length > 1 && ` (+${row.securityGroups.length - 1})`}
         </span>
       ),
     },
@@ -330,11 +292,46 @@ export default function SubnetDetailPage() {
       key: 'floatingIp',
       label: 'Floating IP',
       flex: 1,
+      render: (_, row) => (
+        <span className="text-[var(--color-text-default)]">{row.floatingIp || '-'}</span>
+      ),
     },
     {
       key: 'macAddress',
       label: 'MAC Address',
       flex: 1,
+    },
+    {
+      key: 'adminState',
+      label: 'Admin State',
+      flex: 1,
+      render: (_, row) => (
+        <Badge variant={row.adminState === 'Up' ? 'success' : 'error'} size="sm">
+          {row.adminState}
+        </Badge>
+      ),
+    },
+    {
+      key: 'createdAt',
+      label: 'Created At',
+      flex: 1,
+      sortable: true,
+    },
+    {
+      key: 'actions',
+      label: 'Action',
+      width: '72px',
+      align: 'center',
+      render: (_: unknown, row: Port) => (
+        <div onClick={(e) => e.stopPropagation()}>
+          <button
+            className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors"
+            onClick={() => console.log('Delete port', row.id)}
+          >
+            <IconTrash size={16} stroke={1.5} className="text-[var(--color-state-danger)]" />
+          </button>
+        </div>
+      ),
     },
   ];
 
@@ -408,7 +405,7 @@ export default function SubnetDetailPage() {
                   />
                   <DetailHeader.InfoCard label="CIDR" value={subnet.cidr} className="flex-1" />
                   <DetailHeader.InfoCard
-                    label="Gateway IPP"
+                    label="Gateway IP"
                     value={subnet.gatewayIp}
                     className="flex-1"
                   />
@@ -444,13 +441,12 @@ export default function SubnetDetailPage() {
                         <SectionCard.Content>
                           <SectionCard.DataRow label="Subnet name" value={subnet.name} />
                           <SectionCard.DataRow label="CIDR" value={subnet.cidr} />
-                          <SectionCard.DataRow label="Gateway IPP" value={subnet.gatewayIp} />
+                          <SectionCard.DataRow label="Gateway IP" value={subnet.gatewayIp} />
+                          <SectionCard.DataRow label="DHCP" value={subnet.dhcp ? 'On' : 'Off'} />
                           <SectionCard.DataRow
                             label="Allocation pools"
                             value={subnet.allocationPools}
                           />
-                          <SectionCard.DataRow label="DHCP" value={subnet.dhcp ? 'On' : 'Off'} />
-                          <SectionCard.DataRow label="DNS" value={subnet.dns} />
                           <SectionCard.DataRow label="Host routes" value={subnet.hostRoutes} />
                         </SectionCard.Content>
                       </SectionCard>
@@ -464,13 +460,9 @@ export default function SubnetDetailPage() {
                             value={
                               <Link
                                 to={`/compute-admin/networks/${subnet.network.id}`}
-                                className="inline-flex items-center gap-1.5 font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
+                                className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
                               >
                                 {subnet.network.name}
-                                <IconExternalLink
-                                  size={12}
-                                  className="text-[var(--color-action-primary)]"
-                                />
                               </Link>
                             }
                           />
@@ -511,7 +503,14 @@ export default function SubnetDetailPage() {
                       />
 
                       {/* Table */}
-                      <Table columns={portColumns} data={paginatedPorts} rowKey="id" />
+                      <Table
+                        columns={portColumns}
+                        data={paginatedPorts}
+                        rowKey="id"
+                        selectable
+                        selectedKeys={selectedPorts}
+                        onSelectionChange={setSelectedPorts}
+                      />
                     </VStack>
                   </TabPanel>
                 </Tabs>

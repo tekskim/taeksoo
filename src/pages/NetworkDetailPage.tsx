@@ -537,7 +537,7 @@ export default function NetworkDetailPage() {
     },
     {
       key: 'gatewayIp',
-      label: 'Gateway IPP',
+      label: 'Gateway IP',
       flex: 1,
       sortable: true,
     },

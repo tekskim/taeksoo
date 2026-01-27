@@ -64,6 +64,13 @@ export function ComputeAdminSidebar({ isOpen = true, onToggle }: ComputeAdminSid
     ) {
       return true;
     }
+    // Match child resources - QoS Specs are under Volume Types
+    if (
+      href === '/compute-admin/volume-types' &&
+      location.pathname.startsWith('/compute-admin/qos-specs')
+    ) {
+      return true;
+    }
     return false;
   };
 
