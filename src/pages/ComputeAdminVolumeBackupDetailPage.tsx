@@ -16,13 +16,7 @@ import {
 } from '@/design-system';
 import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
 import { useTabs } from '@/contexts/TabContext';
-import {
-  IconCirclePlus,
-  IconTrash,
-  IconEdit,
-  IconBell,
-  IconExternalLink,
-} from '@tabler/icons-react';
+import { IconCirclePlus, IconTrash, IconEdit, IconBell } from '@tabler/icons-react';
 
 /* ----------------------------------------
    Types
@@ -377,7 +371,6 @@ export function ComputeAdminVolumeBackupDetailPage() {
                                 className="inline-flex items-center gap-1.5 text-[12px] font-medium leading-4 text-[var(--color-action-primary)] hover:underline"
                               >
                                 {backup.sourceVolume}
-                                <IconExternalLink size={12} stroke={1.5} />
                               </Link>
                             </div>
                           </div>
