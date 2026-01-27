@@ -6,7 +6,6 @@ import {
   TabBar,
   SectionCard,
   Input,
-  Toggle,
   Modal,
   Table,
   columnWidths,
@@ -36,7 +35,10 @@ export default function SettingsAccountPage() {
 
   // 2-Step Verification State
   const [twoStepEnabled, setTwoStepEnabled] = useState(false);
-  const [authenticatorSetup, setAuthenticatorSetup] = useState<{ configured: boolean; addedAt?: string }>({ configured: false });
+  const [authenticatorSetup, setAuthenticatorSetup] = useState<{
+    configured: boolean;
+    addedAt?: string;
+  }>({ configured: false });
 
   // Modal State
   const [showLogoutModal, setShowLogoutModal] = useState(false);
@@ -48,11 +50,41 @@ export default function SettingsAccountPage() {
 
   // Session data
   const sessions = [
-    { id: '1', location: 'Gangnam-gu, Seoul, South Korea', ip: '211.234.56.78', device: 'Chrome on macOS', timestamp: '2026-01-06 14:32:18 +0900' },
-    { id: '2', location: 'Gangnam-gu, Seoul, South Korea', ip: '211.234.56.78', device: 'Safari on iOS', timestamp: '2026-01-05 09:15:42 +0900' },
-    { id: '3', location: 'Mapo-gu, Seoul, South Korea', ip: '175.192.44.123', device: 'Firefox on Windows', timestamp: '2026-01-04 18:22:05 +0900' },
-    { id: '4', location: 'Seocho-gu, Seoul, South Korea', ip: '121.167.88.45', device: 'Edge on Windows', timestamp: '2026-01-03 11:45:33 +0900' },
-    { id: '5', location: 'Bundang-gu, Seongnam, South Korea', ip: '58.123.201.67', device: 'Chrome on Android', timestamp: '2026-01-02 08:10:22 +0900' },
+    {
+      id: '1',
+      location: 'Gangnam-gu, Seoul, South Korea',
+      ip: '211.234.56.78',
+      device: 'Chrome on macOS',
+      timestamp: '2026-01-06 14:32:18 +0900',
+    },
+    {
+      id: '2',
+      location: 'Gangnam-gu, Seoul, South Korea',
+      ip: '211.234.56.78',
+      device: 'Safari on iOS',
+      timestamp: '2026-01-05 09:15:42 +0900',
+    },
+    {
+      id: '3',
+      location: 'Mapo-gu, Seoul, South Korea',
+      ip: '175.192.44.123',
+      device: 'Firefox on Windows',
+      timestamp: '2026-01-04 18:22:05 +0900',
+    },
+    {
+      id: '4',
+      location: 'Seocho-gu, Seoul, South Korea',
+      ip: '121.167.88.45',
+      device: 'Edge on Windows',
+      timestamp: '2026-01-03 11:45:33 +0900',
+    },
+    {
+      id: '5',
+      location: 'Bundang-gu, Seongnam, South Korea',
+      ip: '58.123.201.67',
+      device: 'Chrome on Android',
+      timestamp: '2026-01-02 08:10:22 +0900',
+    },
   ];
 
   // Session table columns
@@ -69,13 +101,9 @@ export default function SettingsAccountPage() {
       <div className="relative flex items-center w-full h-[var(--tabbar-height)] bg-[var(--color-surface-default)] shrink-0 after:absolute after:bottom-0 after:left-0 after:right-0 after:h-px after:bg-[var(--color-border-default)]">
         {/* Logo Area */}
         <div className="w-[200px] h-full px-3 flex items-center">
-          <img 
-            src={isDark ? ThakiLogoDark : ThakiLogoLight} 
-            alt="THAKI Cloud" 
-            className="h-4"
-          />
+          <img src={isDark ? ThakiLogoDark : ThakiLogoLight} alt="THAKI Cloud" className="h-4" />
         </div>
-        
+
         {/* TabBar (Window controls only) */}
         <div className="flex-1">
           <TabBar
@@ -131,7 +159,7 @@ export default function SettingsAccountPage() {
                       <span className="text-[14px] font-medium leading-5 text-[var(--color-text-default)]">
                         Name
                       </span>
-                      <Input 
+                      <Input
                         value={name}
                         onChange={(e) => setName(e.target.value)}
                         className="w-[400px]"
@@ -171,14 +199,21 @@ export default function SettingsAccountPage() {
                         </p>
                       </VStack>
                       {!isEditingPassword ? (
-                        <Button variant="primary" size="sm" onClick={() => setIsEditingPassword(true)} className="w-fit">
+                        <Button
+                          variant="primary"
+                          size="sm"
+                          onClick={() => setIsEditingPassword(true)}
+                          className="w-fit"
+                        >
                           Change Password
                         </Button>
                       ) : (
                         <VStack gap={3} className="max-w-[400px]">
                           <VStack gap={2}>
-                            <span className="text-[12px] font-medium text-[var(--color-text-default)]">Enter a new password</span>
-                            <Input 
+                            <span className="text-[12px] font-medium text-[var(--color-text-default)]">
+                              Enter a new password
+                            </span>
+                            <Input
                               type="password"
                               value={newPassword}
                               onChange={(e) => setNewPassword(e.target.value)}
@@ -186,8 +221,10 @@ export default function SettingsAccountPage() {
                             />
                           </VStack>
                           <VStack gap={2}>
-                            <span className="text-[12px] font-medium text-[var(--color-text-default)]">Confirm your new password</span>
-                            <Input 
+                            <span className="text-[12px] font-medium text-[var(--color-text-default)]">
+                              Confirm your new password
+                            </span>
+                            <Input
                               type="password"
                               value={confirmPassword}
                               onChange={(e) => setConfirmPassword(e.target.value)}
@@ -195,25 +232,41 @@ export default function SettingsAccountPage() {
                             />
                           </VStack>
                           <div className="flex gap-2">
-                            <Button variant="secondary" size="sm" onClick={() => {
-                              setIsEditingPassword(false);
-                              setNewPassword('');
-                              setConfirmPassword('');
-                            }}>Cancel</Button>
-                            <Button 
-                              variant="primary" 
-                              size="sm" 
+                            <Button
+                              variant="secondary"
+                              size="sm"
+                              onClick={() => {
+                                setIsEditingPassword(false);
+                                setNewPassword('');
+                                setConfirmPassword('');
+                              }}
+                            >
+                              Cancel
+                            </Button>
+                            <Button
+                              variant="primary"
+                              size="sm"
                               onClick={() => {
                                 const now = new Date();
-                                const formattedDate = now.toLocaleDateString('en-CA') + ' ' + 
-                                  now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false });
+                                const formattedDate =
+                                  now.toLocaleDateString('en-CA') +
+                                  ' ' +
+                                  now.toLocaleTimeString('en-US', {
+                                    hour: '2-digit',
+                                    minute: '2-digit',
+                                    hour12: false,
+                                  });
                                 setPasswordLastUpdated(formattedDate);
                                 setIsEditingPassword(false);
                                 setNewPassword('');
                                 setConfirmPassword('');
                               }}
-                              disabled={!newPassword || !confirmPassword || newPassword !== confirmPassword}
-                            >Save</Button>
+                              disabled={
+                                !newPassword || !confirmPassword || newPassword !== confirmPassword
+                              }
+                            >
+                              Save
+                            </Button>
                           </div>
                         </VStack>
                       )}
@@ -235,46 +288,49 @@ export default function SettingsAccountPage() {
 
                       {/* Verification Methods - Always visible */}
                       <div className="flex items-center justify-between p-4 border border-[var(--color-border-default)] rounded-lg bg-[var(--color-surface-subtle)]">
-                          <div className="flex items-center gap-3">
-                            <div className="w-10 h-10 rounded-lg bg-[var(--color-action-primary-subtle)] flex items-center justify-center">
-                              <IconShieldCheck size={20} className="text-[var(--color-action-primary)]" />
-                            </div>
-                            <div>
-                              <div className="text-[12px] font-medium text-[var(--color-text-default)]">
-                                Authenticator App
-                              </div>
-                              {authenticatorSetup.configured ? (
-                                <div className="flex items-center gap-1.5 text-[12px] text-[var(--color-state-success)]">
-                                  <IconCheck size={12} />
-                                  <span>Added {authenticatorSetup.addedAt}</span>
-                                </div>
-                              ) : (
-                                <div className="text-[12px] text-[var(--color-text-muted)]">
-                                  Use Google Authenticator, Authy, etc.
-                                </div>
-                              )}
-                            </div>
+                        <div className="flex items-center gap-3">
+                          <div className="w-10 h-10 rounded-lg bg-[var(--color-action-primary-subtle)] flex items-center justify-center">
+                            <IconShieldCheck
+                              size={20}
+                              className="text-[var(--color-action-primary)]"
+                            />
                           </div>
-                          <Button 
-                            variant={authenticatorSetup.configured ? "secondary" : "primary"} 
-                            size="sm"
-                            onClick={() => {
-                              if (authenticatorSetup.configured) {
-                                setAuthenticatorSetup({ configured: false });
-                              } else {
-                                const now = new Date();
-                                const formattedDate = now.toLocaleDateString('en-US', { 
-                                  year: 'numeric', 
-                                  month: 'short', 
-                                  day: 'numeric',
-                                });
-                                setAuthenticatorSetup({ configured: true, addedAt: formattedDate });
-                              }
-                            }}
-                          >
-                            {authenticatorSetup.configured ? 'Remove' : 'Set up'}
-                          </Button>
+                          <div>
+                            <div className="text-[12px] font-medium text-[var(--color-text-default)]">
+                              Authenticator App
+                            </div>
+                            {authenticatorSetup.configured ? (
+                              <div className="flex items-center gap-1.5 text-[12px] text-[var(--color-state-success)]">
+                                <IconCheck size={12} />
+                                <span>Added {authenticatorSetup.addedAt}</span>
+                              </div>
+                            ) : (
+                              <div className="text-[12px] text-[var(--color-text-muted)]">
+                                Use Google Authenticator, Authy, etc.
+                              </div>
+                            )}
+                          </div>
                         </div>
+                        <Button
+                          variant={authenticatorSetup.configured ? 'secondary' : 'primary'}
+                          size="sm"
+                          onClick={() => {
+                            if (authenticatorSetup.configured) {
+                              setAuthenticatorSetup({ configured: false });
+                            } else {
+                              const now = new Date();
+                              const formattedDate = now.toLocaleDateString('en-US', {
+                                year: 'numeric',
+                                month: 'short',
+                                day: 'numeric',
+                              });
+                              setAuthenticatorSetup({ configured: true, addedAt: formattedDate });
+                            }
+                          }}
+                        >
+                          {authenticatorSetup.configured ? 'Remove' : 'Set up'}
+                        </Button>
+                      </div>
                     </VStack>
                   </SectionCard.Content>
                 </SectionCard>
@@ -283,7 +339,9 @@ export default function SettingsAccountPage() {
                 <SectionCard>
                   <SectionCard.Header title="Sessions" />
                   <SectionCard.Content>
-                    <p className="text-[12px] leading-[18px] text-[var(--color-text-muted)] mb-4">View your recent login sessions.</p>
+                    <p className="text-[12px] leading-[18px] text-[var(--color-text-muted)] mb-4">
+                      View your recent login sessions.
+                    </p>
                     <Table
                       columns={sessionColumns}
                       data={sessions}
@@ -306,18 +364,23 @@ export default function SettingsAccountPage() {
       </div>
 
       {/* Logout Confirmation Modal */}
-      <Modal
-        isOpen={showLogoutModal}
-        onClose={() => setShowLogoutModal(false)}
-        title="Logout"
-      >
-        <p className="text-sm text-[var(--color-text-default)] mb-6">Are you sure you want to logout of your account?</p>
+      <Modal isOpen={showLogoutModal} onClose={() => setShowLogoutModal(false)} title="Logout">
+        <p className="text-sm text-[var(--color-text-default)] mb-6">
+          Are you sure you want to logout of your account?
+        </p>
         <div className="flex justify-end gap-3">
-          <Button variant="secondary" onClick={() => setShowLogoutModal(false)}>Cancel</Button>
-          <Button variant="danger" onClick={() => {
-            setShowLogoutModal(false);
-            window.location.href = '/';
-          }}>Logout</Button>
+          <Button variant="secondary" onClick={() => setShowLogoutModal(false)}>
+            Cancel
+          </Button>
+          <Button
+            variant="danger"
+            onClick={() => {
+              setShowLogoutModal(false);
+              window.location.href = '/';
+            }}
+          >
+            Logout
+          </Button>
         </div>
       </Modal>
     </div>
