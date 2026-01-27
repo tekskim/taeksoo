@@ -1,10 +1,6 @@
 import { ReactNode, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import {
-  TopBar,
-  TopBarAction,
-  Breadcrumb,
-} from '@/design-system';
+import { TopBar, TopBarAction, Breadcrumb } from '@/design-system';
 import { IconBell, IconPalette } from '@tabler/icons-react';
 
 /* ----------------------------------------
@@ -41,12 +37,12 @@ export interface AgentPageLayoutProps {
 
 /**
  * AgentPageLayout
- * 
+ *
  * Reusable layout component for Agent service pages.
  * Provides consistent structure with TopBar and content area.
- * 
+ *
  * Note: TabBar and Sidebar are now provided by AgentAppLayout wrapper.
- * 
+ *
  * @example
  * ```tsx
  * <AgentPageLayout
@@ -102,15 +98,11 @@ export function AgentPageLayout({
                 </h4>
               </div>
             </div>
-            {headerActions && (
-              <div className="flex items-center gap-2">{headerActions}</div>
-            )}
+            {headerActions && <div className="flex items-center gap-2">{headerActions}</div>}
           </div>
 
           {/* Page Content */}
-          <div className="flex flex-col gap-6 w-full">
-            {children}
-          </div>
+          <div className="flex flex-col gap-6 w-full">{children}</div>
         </div>
       </div>
     ),
@@ -119,26 +111,19 @@ export function AgentPageLayout({
 
   return (
     <>
-          <TopBar
-            showSidebarToggle={false}
-            showNavigation={showNavigation}
-            canGoBack={false}
-            canGoForward={false}
-            onBack={() => {}}
-            onForward={() => {}}
-            breadcrumb={
-              <Breadcrumb 
-                items={[
-                  { label: 'Home', href: '/agent' },
-                  ...breadcrumbItems
-                ]} 
-              />
-            }
-            actions={topBarActions || defaultTopBarActions}
-          />
+      <TopBar
+        showSidebarToggle={false}
+        showNavigation={showNavigation}
+        canGoBack={false}
+        canGoForward={false}
+        onBack={() => {}}
+        onForward={() => {}}
+        breadcrumb={<Breadcrumb items={[{ label: 'Home', href: '/agent' }, ...breadcrumbItems]} />}
+        actions={topBarActions || defaultTopBarActions}
+      />
 
-          {/* Main Content */}
-          {contentWrapper ? contentWrapper(mainContent) : mainContent}
+      {/* Main Content */}
+      {contentWrapper ? contentWrapper(mainContent) : mainContent}
     </>
   );
 }

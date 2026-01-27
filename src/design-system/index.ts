@@ -1,6 +1,6 @@
 /**
  * TDS Design System
- * 
+ *
  * 사용법:
  * import { Button, Input, Badge, Container, Stack, MenuItem, MenuSection } from '@/design-system';
  * import { Icons } from '@/design-system';

@@ -67,11 +67,7 @@ export const Chip = memo(function Chip({
       {...props}
     >
       {/* Icon */}
-      {icon && (
-        <span className="shrink-0 text-[var(--color-text-default)]">
-          {icon}
-        </span>
-      )}
+      {icon && <span className="shrink-0 text-[var(--color-text-default)]">{icon}</span>}
 
       {/* Label + Value */}
       <span className={twMerge('flex items-center gap-1', maxWidth && 'min-w-0 truncate')}>
@@ -95,7 +91,7 @@ export const Chip = memo(function Chip({
             'hover:text-[var(--color-text-muted)]',
             'rounded-sm',
             'transition-colors duration-[var(--duration-fast)]',
-            'focus:outline-none focus:ring-1 focus:ring-[var(--color-border-focus)]',
+            'focus:outline-none focus:ring-1 focus:ring-[var(--color-border-focus)]'
           )}
           aria-label={`Remove ${label ? `${label}: ${value}` : value}`}
         >

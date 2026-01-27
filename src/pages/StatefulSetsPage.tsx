@@ -131,11 +131,20 @@ const statefulSetsData: StatefulSetRow[] = [
 
 export function StatefulSetsPage() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
-  const { tabs, activeTabId, selectTab, closeTab, addNewTab, moveTab, addTab, updateActiveTabLabel } = useTabs();
+  const {
+    tabs,
+    activeTabId,
+    selectTab,
+    closeTab,
+    addNewTab,
+    moveTab,
+    addTab,
+    updateActiveTabLabel,
+  } = useTabs();
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedRows, setSelectedRows] = useState<string[]>([]);
   const [filters, setFilters] = useState<{ key: string; value: string }[]>([
-    { key: 'Name', value: 'a' }
+    { key: 'Name', value: 'a' },
   ]);
   const navigate = useNavigate();
 
@@ -181,13 +190,16 @@ export function StatefulSetsPage() {
       render: (value: string) => (
         <StatusIndicator
           status={
-            value === 'Running' ? 'active' : 
-            value === 'Pending' ? 'building' : 
-            value === 'Failed' ? 'error' : 
-            'muted'
+            value === 'Running'
+              ? 'active'
+              : value === 'Pending'
+                ? 'building'
+                : value === 'Failed'
+                  ? 'error'
+                  : 'muted'
           }
         />
-      )
+      ),
     },
     {
       key: 'name',
@@ -205,7 +217,7 @@ export function StatefulSetsPage() {
         >
           {value}
         </span>
-      )
+      ),
     },
     {
       key: 'namespace',
@@ -273,7 +285,11 @@ export function StatefulSetsPage() {
           <div onClick={(e) => e.stopPropagation()}>
             <ContextMenu items={menuItems} trigger="click">
               <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
-                <IconDotsCircleHorizontal size={16} stroke={1.5} className="text-[var(--action-icon-color)]" />
+                <IconDotsCircleHorizontal
+                  size={16}
+                  stroke={1.5}
+                  className="text-[var(--action-icon-color)]"
+                />
               </button>
             </ContextMenu>
           </div>
@@ -316,7 +332,7 @@ export function StatefulSetsPage() {
       >
         {/* Tab Bar */}
         <TabBar
-          tabs={tabs.map(tab => ({ id: tab.id, label: tab.label, closable: tab.closable }))}
+          tabs={tabs.map((tab) => ({ id: tab.id, label: tab.label, closable: tab.closable }))}
           activeTab={activeTabId}
           onTabChange={selectTab}
           onTabClose={closeTab}
@@ -333,15 +349,12 @@ export function StatefulSetsPage() {
           onForward={() => window.history.forward()}
           breadcrumb={
             <Breadcrumb
-              items={[
-                { label: 'clusterName', href: '/container' },
-                { label: 'StatefulSets' },
-              ]}
+              items={[{ label: 'clusterName', href: '/container' }, { label: 'StatefulSets' }]}
             />
           }
           actions={
             <>
-              <button 
+              <button
                 className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
                 onClick={() => {
                   if (shellPanel.isExpanded) {
@@ -351,7 +364,15 @@ export function StatefulSetsPage() {
                   }
                 }}
               >
-                <IconTerminal2 size={16} className={shellPanel.isExpanded ? "text-[var(--color-action-primary)]" : "text-[var(--color-text-muted)]"} stroke={1.5} />
+                <IconTerminal2
+                  size={16}
+                  className={
+                    shellPanel.isExpanded
+                      ? 'text-[var(--color-action-primary)]'
+                      : 'text-[var(--color-text-muted)]'
+                  }
+                  stroke={1.5}
+                />
               </button>
               <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
                 <IconFile size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
@@ -370,7 +391,7 @@ export function StatefulSetsPage() {
         />
 
         {/* Content Area */}
-        <div 
+        <div
           className="flex-1 overflow-auto min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll"
           style={{ paddingBottom: shellPanel.isExpanded ? 'var(--shell-panel-height)' : '0' }}
         >
@@ -383,10 +404,14 @@ export function StatefulSetsPage() {
                     StatefulSets
                   </h1>
                 </HStack>
-                
+
                 {/* Create StatefulSet Button with Dropdown */}
                 <ContextMenu items={createMenuItems} trigger="click" align="right">
-                  <Button variant="primary" size="md" rightIcon={<IconChevronDown size={14} stroke={1.5} />}>
+                  <Button
+                    variant="primary"
+                    size="md"
+                    rightIcon={<IconChevronDown size={14} stroke={1.5} />}
+                  >
                     Create StatefulSet
                   </Button>
                 </ContextMenu>
@@ -401,7 +426,12 @@ export function StatefulSetsPage() {
                     size="sm"
                     className="w-[var(--search-input-width)]"
                   />
-                  <Button variant="secondary" size="sm" aria-label="Download" className="!p-0 !w-7 !h-7 !min-w-7">
+                  <Button
+                    variant="secondary"
+                    size="sm"
+                    aria-label="Download"
+                    className="!p-0 !w-7 !h-7 !min-w-7"
+                  >
                     <IconDownload size={14} stroke={1.5} />
                   </Button>
                 </HStack>
@@ -411,26 +441,26 @@ export function StatefulSetsPage() {
 
                 {/* Actions */}
                 <HStack gap={1} align="center">
-                  <Button 
-                    variant="secondary" 
-                    size="sm" 
-                    leftIcon={<IconRefresh size={12} stroke={1.5} />} 
+                  <Button
+                    variant="secondary"
+                    size="sm"
+                    leftIcon={<IconRefresh size={12} stroke={1.5} />}
                     disabled={selectedRows.length === 0}
                   >
                     Redeploy
                   </Button>
-                  <Button 
-                    variant="secondary" 
-                    size="sm" 
-                    leftIcon={<IconDownload size={12} stroke={1.5} />} 
+                  <Button
+                    variant="secondary"
+                    size="sm"
+                    leftIcon={<IconDownload size={12} stroke={1.5} />}
                     disabled={selectedRows.length === 0}
                   >
                     Download YAML
                   </Button>
-                  <Button 
-                    variant="secondary" 
-                    size="sm" 
-                    leftIcon={<IconTrash size={12} stroke={1.5} />} 
+                  <Button
+                    variant="secondary"
+                    size="sm"
+                    leftIcon={<IconTrash size={12} stroke={1.5} />}
                     disabled={selectedRows.length === 0}
                   >
                     Delete
@@ -440,7 +470,11 @@ export function StatefulSetsPage() {
 
               {/* Filter Bar */}
               {filters.length > 0 && (
-                <HStack justify="between" align="center" className="w-full pl-2 pr-4 py-2 bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)]">
+                <HStack
+                  justify="between"
+                  align="center"
+                  className="w-full pl-2 pr-4 py-2 bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)]"
+                >
                   <HStack gap={1} align="center">
                     {filters.map((filter, index) => (
                       <Chip

@@ -19,7 +19,7 @@ describe('Chip Accessibility', () => {
 
   it('should have no accessibility violations with different variants', async () => {
     const variants = ['default', 'outlined'] as const;
-    
+
     for (const variant of variants) {
       const { container } = render(<Chip label="Tag" variant={variant} />);
       const results = await axe(container);
@@ -28,9 +28,7 @@ describe('Chip Accessibility', () => {
   });
 
   it('should have no accessibility violations with remove button', async () => {
-    const { container } = render(
-      <Chip label="Removable" onRemove={() => {}} />
-    );
+    const { container } = render(<Chip label="Removable" onRemove={() => {}} />);
     const results = await axe(container);
     expect(results).toHaveNoViolations();
   });
@@ -42,9 +40,7 @@ describe('Chip Accessibility', () => {
   });
 
   it('should have no accessibility violations with icon', async () => {
-    const { container } = render(
-      <Chip label="Tagged" icon={<IconTag size={12} />} />
-    );
+    const { container } = render(<Chip label="Tagged" icon={<IconTag size={12} />} />);
     const results = await axe(container);
     expect(results).toHaveNoViolations();
   });

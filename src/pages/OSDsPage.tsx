@@ -16,10 +16,7 @@ import {
 } from '@/design-system';
 import { StorageSidebar } from '@/components/StorageSidebar';
 import { useTabs } from '@/contexts/TabContext';
-import {
-  IconRefresh,
-  IconBell,
-} from '@tabler/icons-react';
+import { IconRefresh, IconBell } from '@tabler/icons-react';
 
 /* ----------------------------------------
    Types
@@ -155,10 +152,7 @@ function StatusCell({ status }: StatusCellProps) {
   return (
     <div className="flex gap-0.5">
       {status.map((s, index) => (
-        <Chip
-          key={index}
-          value={s}
-        />
+        <Chip key={index} value={s} />
       ))}
     </div>
   );
@@ -173,9 +167,7 @@ interface DeviceClassCellProps {
 }
 
 function DeviceClassCell({ deviceClass }: DeviceClassCellProps) {
-  return (
-    <Chip value={deviceClass} />
-  );
+  return <Chip value={deviceClass} />;
 }
 
 /* ----------------------------------------
@@ -225,12 +217,15 @@ export function OSDsPage() {
   }));
 
   // Filter OSDs based on search
-  const filteredOSDs = useMemo(() =>
-    mockOSDs.filter((osd) =>
-      osd.host.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      osd.id.toString().includes(searchQuery) ||
-      osd.deviceClass.toLowerCase().includes(searchQuery.toLowerCase())
-    ), [searchQuery]
+  const filteredOSDs = useMemo(
+    () =>
+      mockOSDs.filter(
+        (osd) =>
+          osd.host.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          osd.id.toString().includes(searchQuery) ||
+          osd.deviceClass.toLowerCase().includes(searchQuery.toLowerCase())
+      ),
+    [searchQuery]
   );
 
   const totalPages = Math.ceil(filteredOSDs.length / rowsPerPage);
@@ -312,7 +307,7 @@ export function OSDsPage() {
   return (
     <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
       {/* Sidebar */}
-      <StorageSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(prev => !prev)} />
+      <StorageSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen((prev) => !prev)} />
 
       {/* Main Content */}
       <main
@@ -340,18 +335,10 @@ export function OSDsPage() {
             onBack={() => window.history.back()}
             onForward={() => window.history.forward()}
             breadcrumb={
-              <Breadcrumb
-                items={[
-                  { label: 'Home', href: '/storage' },
-                  { label: 'OSDs' },
-                ]}
-              />
+              <Breadcrumb items={[{ label: 'Home', href: '/storage' }, { label: 'OSDs' }]} />
             }
             actions={
-              <TopBarAction
-                icon={<IconBell size={16} stroke={1.5} />}
-                aria-label="Notifications"
-              />
+              <TopBarAction icon={<IconBell size={16} stroke={1.5} />} aria-label="Notifications" />
             }
           />
         </div>
@@ -421,4 +408,3 @@ export function OSDsPage() {
 }
 
 export default OSDsPage;
-

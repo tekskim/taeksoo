@@ -31,16 +31,13 @@ export interface EditNetworkDrawerProps {
    EditNetworkDrawer Component
    ---------------------------------------- */
 
-export function EditNetworkDrawer({
-  isOpen,
-  onClose,
-  network,
-  onSubmit,
-}: EditNetworkDrawerProps) {
+export function EditNetworkDrawer({ isOpen, onClose, network, onSubmit }: EditNetworkDrawerProps) {
   const [networkName, setNetworkName] = useState(network.name);
   const [description, setDescription] = useState(network.description || '');
   const [adminStateUp, setAdminStateUp] = useState(network.adminStateUp ?? true);
-  const [portSecurityEnabled, setPortSecurityEnabled] = useState(network.portSecurityEnabled ?? true);
+  const [portSecurityEnabled, setPortSecurityEnabled] = useState(
+    network.portSecurityEnabled ?? true
+  );
   const [isAdvancedExpanded, setIsAdvancedExpanded] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -57,15 +54,10 @@ export function EditNetworkDrawer({
 
   const handleSubmit = async () => {
     if (!networkName.trim()) return;
-    
+
     setIsSubmitting(true);
     try {
-      await onSubmit?.(
-        networkName,
-        description,
-        adminStateUp,
-        portSecurityEnabled
-      );
+      await onSubmit?.(networkName, description, adminStateUp, portSecurityEnabled);
       onClose();
     } finally {
       setIsSubmitting(false);
@@ -76,7 +68,6 @@ export function EditNetworkDrawer({
     onClose();
   };
 
-
   return (
     <Drawer
       isOpen={isOpen}
@@ -86,15 +77,11 @@ export function EditNetworkDrawer({
       width={376}
       footer={
         <HStack gap={2} className="w-full">
-          <Button 
-            variant="secondary" 
-            onClick={handleClose}
-            className="flex-1 h-8"
-          >
+          <Button variant="secondary" onClick={handleClose} className="flex-1 h-8">
             Cancel
           </Button>
-          <Button 
-            variant="primary" 
+          <Button
+            variant="primary"
             onClick={handleSubmit}
             disabled={isSubmitting}
             className="flex-1 h-8"
@@ -170,13 +157,14 @@ export function EditNetworkDrawer({
                   Admin State
                 </label>
                 <p className="text-[12px] text-[var(--color-text-subtle)] leading-4">
-                  Setting it to "Down" disables all related network or control operations, regardless of runtime status.
+                  Setting it to "Down" disables all related network or control operations,
+                  regardless of runtime status.
                 </p>
               </VStack>
               <HStack gap={2} className="items-center">
-                <Toggle 
-                  checked={adminStateUp} 
-                  onChange={(e) => setAdminStateUp(e.target.checked)} 
+                <Toggle
+                  checked={adminStateUp}
+                  onChange={(e) => setAdminStateUp(e.target.checked)}
                 />
                 <span className="text-[12px] text-[var(--color-text-default)] leading-4">
                   {adminStateUp ? 'Up' : 'Down'}
@@ -191,13 +179,14 @@ export function EditNetworkDrawer({
                   Port Security
                 </label>
                 <p className="text-[12px] text-[var(--color-text-subtle)] leading-4">
-                  Enhances security by allowing only permitted devices to access this network. It is recommended to keep this enabled in most cases.
+                  Enhances security by allowing only permitted devices to access this network. It is
+                  recommended to keep this enabled in most cases.
                 </p>
               </VStack>
               <HStack gap={2} className="items-center">
-                <Toggle 
-                  checked={portSecurityEnabled} 
-                  onChange={(e) => setPortSecurityEnabled(e.target.checked)} 
+                <Toggle
+                  checked={portSecurityEnabled}
+                  onChange={(e) => setPortSecurityEnabled(e.target.checked)}
                 />
                 <span className="text-[12px] text-[var(--color-text-default)] leading-4">
                   {portSecurityEnabled ? 'On' : 'Off'}
@@ -212,4 +201,3 @@ export function EditNetworkDrawer({
 }
 
 export default EditNetworkDrawer;
-

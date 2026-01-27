@@ -97,9 +97,7 @@ const mockPersistentVolumeData: Record<string, PersistentVolumeData> = {
       },
       {
         id: '2',
-        items: [
-          { id: '2-1', key: 'key3', operator: '>', value: 'value3' },
-        ],
+        items: [{ id: '2-1', key: 'key3', operator: '>', value: 'value3' }],
       },
     ],
   },
@@ -109,7 +107,7 @@ const mockPersistentVolumeData: Record<string, PersistentVolumeData> = {
     status: 'Bound',
     createdAt: '2025-07-24 14:30:00',
     labels: {
-      'app': 'postgres',
+      app: 'postgres',
     },
     annotations: {
       'pv.kubernetes.io/provisioned-by': 'nfs.csi.k8s.io',
@@ -133,7 +131,16 @@ export function PersistentVolumeDetailPage() {
   const { pvId } = useParams<{ pvId: string }>();
   const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(true);
-  const { tabs, activeTabId, selectTab, closeTab, addNewTab, moveTab, addTab, updateActiveTabLabel } = useTabs();
+  const {
+    tabs,
+    activeTabId,
+    selectTab,
+    closeTab,
+    addNewTab,
+    moveTab,
+    addTab,
+    updateActiveTabLabel,
+  } = useTabs();
   const [activeTab, setActiveTab] = useState(0);
 
   // Shell Panel state
@@ -238,7 +245,7 @@ export function PersistentVolumeDetailPage() {
       >
         {/* Tab Bar */}
         <TabBar
-          tabs={tabs.map(tab => ({ id: tab.id, label: tab.label, closable: tab.closable }))}
+          tabs={tabs.map((tab) => ({ id: tab.id, label: tab.label, closable: tab.closable }))}
           activeTab={activeTabId}
           onTabChange={selectTab}
           onTabClose={closeTab}
@@ -261,7 +268,7 @@ export function PersistentVolumeDetailPage() {
           }
           actions={
             <>
-              <button 
+              <button
                 className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
                 onClick={() => {
                   if (shellPanel.isExpanded) {
@@ -271,7 +278,15 @@ export function PersistentVolumeDetailPage() {
                   }
                 }}
               >
-                <IconTerminal2 size={16} className={shellPanel.isExpanded ? "text-[var(--color-action-primary)]" : "text-[var(--color-text-muted)]"} stroke={1.5} />
+                <IconTerminal2
+                  size={16}
+                  className={
+                    shellPanel.isExpanded
+                      ? 'text-[var(--color-action-primary)]'
+                      : 'text-[var(--color-text-muted)]'
+                  }
+                  stroke={1.5}
+                />
               </button>
               <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
                 <IconFile size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
@@ -290,7 +305,7 @@ export function PersistentVolumeDetailPage() {
         />
 
         {/* Content Area */}
-        <div 
+        <div
           className="flex-1 overflow-auto min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll"
           style={{ paddingBottom: shellPanel.isExpanded ? 'var(--shell-panel-height)' : '0' }}
         >
@@ -318,23 +333,22 @@ export function PersistentVolumeDetailPage() {
                       pvData.status === 'Bound' || pvData.status === 'Available'
                         ? 'active'
                         : pvData.status === 'Pending'
-                        ? 'pending'
-                        : pvData.status === 'Failed'
-                        ? 'error'
-                        : 'muted'
+                          ? 'pending'
+                          : pvData.status === 'Failed'
+                            ? 'error'
+                            : 'muted'
                     }
                   />
-                  <DetailHeader.InfoCard
-                    label="Created At"
-                    value={pvData.createdAt}
-                  />
+                  <DetailHeader.InfoCard label="Created At" value={pvData.createdAt} />
                   <DetailHeader.InfoCard
                     label={`Labels (${labelsCount})`}
                     value={
                       <div className="flex flex-wrap items-center gap-1 min-w-0">
-                        {Object.entries(pvData.labels).slice(0, 1).map(([key, val]) => (
-                          <Chip key={key} value={`${key}: ${val}`} maxWidth="100%" />
-                        ))}
+                        {Object.entries(pvData.labels)
+                          .slice(0, 1)
+                          .map(([key, val]) => (
+                            <Chip key={key} value={`${key}: ${val}`} maxWidth="100%" />
+                          ))}
                         {labelsCount > 1 && (
                           <span className="text-[11px] text-[var(--color-text-default)] cursor-pointer hover:underline">
                             (+{labelsCount - 1})
@@ -347,9 +361,11 @@ export function PersistentVolumeDetailPage() {
                     label={`Annotations (${annotationsCount})`}
                     value={
                       <div className="flex flex-wrap items-center gap-1 min-w-0">
-                        {Object.entries(pvData.annotations).slice(0, 1).map(([key, val]) => (
-                          <Chip key={key} value={`${key}: ${val}`} maxWidth="100%" />
-                        ))}
+                        {Object.entries(pvData.annotations)
+                          .slice(0, 1)
+                          .map(([key, val]) => (
+                            <Chip key={key} value={`${key}: ${val}`} maxWidth="100%" />
+                          ))}
                         {annotationsCount > 1 && (
                           <span className="text-[11px] text-[var(--color-text-default)] cursor-pointer hover:underline">
                             (+{annotationsCount - 1})
@@ -445,7 +461,7 @@ export function PersistentVolumeDetailPage() {
                           </h3>
                           <VStack gap={2} className="w-full">
                             {pvData.nodeSelectors.map((group) => (
-                              <div 
+                              <div
                                 key={group.id}
                                 className="w-full border border-[var(--color-border-default)] rounded-[var(--radius-md)] p-3"
                               >

@@ -23,7 +23,7 @@ export function ChatbotPanel({ isOpen, onClose }: ChatbotPanelProps) {
   // This pattern is intentional for animation - same as design-system Drawer
   useEffect(() => {
     if (isOpen) {
-      setShouldRender(true);  
+      setShouldRender(true);
       // Small delay to ensure DOM is ready for animation
       requestAnimationFrame(() => {
         requestAnimationFrame(() => {
@@ -43,17 +43,14 @@ export function ChatbotPanel({ isOpen, onClose }: ChatbotPanelProps) {
   if (!shouldRender) return null;
 
   return (
-    <div 
+    <div
       className={`
         fixed top-[52px] right-0 bottom-0 w-[400px]
         bg-[var(--color-surface-default)] 
         shadow-lg border-l border-[var(--color-border-subtle)] 
         overflow-hidden z-[3000] flex flex-col
         transition-all duration-300 ease-out
-        ${isAnimating 
-          ? 'opacity-100 translate-x-0' 
-          : 'opacity-0 translate-x-full'
-        }
+        ${isAnimating ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-full'}
       `}
     >
       {/* Header */}
@@ -61,7 +58,7 @@ export function ChatbotPanel({ isOpen, onClose }: ChatbotPanelProps) {
         <span className="text-[length:var(--font-size-12)] leading-[var(--line-height-18)] font-medium text-[var(--color-text-default)]">
           AI Assistant
         </span>
-        <button 
+        <button
           className="w-7 h-7 flex items-center justify-center text-[var(--color-text-muted)] hover:text-[var(--color-text-default)] hover:bg-[var(--color-surface-subtle)] rounded transition-colors cursor-pointer"
           onClick={onClose}
           title="Collapse"
@@ -84,5 +81,3 @@ export function ChatbotPanel({ isOpen, onClose }: ChatbotPanelProps) {
 }
 
 export default ChatbotPanel;
-
-

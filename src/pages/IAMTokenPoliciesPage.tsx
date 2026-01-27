@@ -26,7 +26,8 @@ export default function IAMTokenPoliciesPage() {
   const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [activeTab, setActiveTab] = useState('general');
-  const { tabs, activeTabId, selectTab, closeTab, addNewTab, updateActiveTabLabel, moveTab } = useTabs();
+  const { tabs, activeTabId, selectTab, closeTab, addNewTab, updateActiveTabLabel, moveTab } =
+    useTabs();
 
   // Token policy state
   const [accessTokenLifespan, setAccessTokenLifespan] = useState(10); // Minutes
@@ -41,17 +42,14 @@ export default function IAMTokenPoliciesPage() {
   const sidebarWidth = sidebarOpen ? 200 : 0;
 
   // Tab Bar tabs
-  const tabBarTabs = tabs.map(tab => ({
+  const tabBarTabs = tabs.map((tab) => ({
     id: tab.id,
     label: tab.label,
     closable: tab.closable ?? true,
   }));
 
   // Breadcrumb items
-  const breadcrumbItems = [
-    { label: 'IAM', href: '/iam' },
-    { label: 'Token policies' },
-  ];
+  const breadcrumbItems = [{ label: 'IAM', href: '/iam' }, { label: 'Token policies' }];
 
   // Handle reset to default
   const handleResetToDefault = () => {
@@ -77,10 +75,7 @@ export default function IAMTokenPoliciesPage() {
   return (
     <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
       {/* Sidebar */}
-      <IAMSidebar
-        isOpen={sidebarOpen}
-        onToggle={() => setSidebarOpen(!sidebarOpen)}
-      />
+      <IAMSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
 
       {/* Main Content */}
       <main
@@ -141,7 +136,8 @@ export default function IAMTokenPoliciesPage() {
                                 <span className="ml-1 text-[var(--color-state-danger)]">*</span>
                               </HStack>
                               <p className="text-[12px] leading-4 text-[var(--color-text-subtle)]">
-                                Defines how long an access token remains valid before it needs to be renewed.
+                                Defines how long an access token remains valid before it needs to be
+                                renewed.
                               </p>
                             </VStack>
                             <VStack gap={2}>
@@ -233,4 +229,3 @@ export default function IAMTokenPoliciesPage() {
     </div>
   );
 }
-

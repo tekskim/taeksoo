@@ -72,14 +72,7 @@ const FormFieldRoot = forwardRef<HTMLDivElement, FormFieldProps>(
 
     return (
       <FormFieldContext.Provider value={contextValue}>
-        <div
-          ref={ref}
-          className={twMerge(
-            'flex flex-col gap-2',
-            className
-          )}
-          {...props}
-        >
+        <div ref={ref} className={twMerge('flex flex-col gap-2', className)} {...props}>
           {children}
         </div>
       </FormFieldContext.Provider>
@@ -115,9 +108,7 @@ const FormFieldLabel = forwardRef<HTMLLabelElement, FormFieldLabelProps>(
         {...props}
       >
         {children}
-        {isRequired && (
-          <span className="ml-1 text-[var(--color-state-danger)]">*</span>
-        )}
+        {isRequired && <span className="ml-1 text-[var(--color-state-danger)]">*</span>}
       </label>
     );
   }
@@ -132,11 +123,7 @@ FormFieldLabel.displayName = 'FormField.Label';
 const FormFieldControl = forwardRef<HTMLDivElement, FormFieldControlProps>(
   ({ children, className, ...props }, ref) => {
     return (
-      <div
-        ref={ref}
-        className={twMerge('w-full', className)}
-        {...props}
-      >
+      <div ref={ref} className={twMerge('w-full', className)} {...props}>
         {children}
       </div>
     );
@@ -211,4 +198,3 @@ export const FormField = Object.assign(FormFieldRoot, {
   HelperText: FormFieldHelperText,
   ErrorMessage: FormFieldErrorMessage,
 });
-

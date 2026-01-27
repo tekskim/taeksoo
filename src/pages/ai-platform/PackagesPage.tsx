@@ -1,13 +1,5 @@
 import { useState, useEffect } from 'react';
-import {
-  VStack,
-  HStack,
-  TabBar,
-  TopBar,
-  Breadcrumb,
-  Button,
-  Badge,
-} from '@/design-system';
+import { VStack, HStack, TabBar, TopBar, Breadcrumb, Button, Badge } from '@/design-system';
 import { AIPlatformSidebar } from '@/components/AIPlatformSidebar';
 import { useTabs } from '@/contexts/TabContext';
 import {
@@ -42,11 +34,13 @@ function ThakiImageCard({
     <div className="bg-[var(--color-surface-default)] rounded-lg border border-[var(--color-border-subtle)] p-4 flex flex-col gap-3">
       {/* Header */}
       <HStack gap={3} align="start">
-        <IconStar size={20} className="text-[var(--color-action-primary)] shrink-0 mt-0.5" stroke={1.5} />
+        <IconStar
+          size={20}
+          className="text-[var(--color-action-primary)] shrink-0 mt-0.5"
+          stroke={1.5}
+        />
         <VStack gap={1} className="flex-1 min-w-0">
-          <span className="text-[14px] font-semibold text-[var(--color-text-default)]">
-            {name}
-          </span>
+          <span className="text-[14px] font-semibold text-[var(--color-text-default)]">{name}</span>
           <span className="text-[12px] text-[var(--color-text-subtle)]">
             {versionsCount} versions available
           </span>
@@ -97,11 +91,13 @@ function CommonImageCard({ name, onDeploy }: CommonImageCardProps) {
     <div className="bg-[var(--color-surface-default)] rounded-lg border border-[var(--color-border-subtle)] p-4 flex flex-col gap-3">
       {/* Header */}
       <HStack gap={3} align="start">
-        <IconPackage size={20} className="text-[var(--color-text-muted)] shrink-0 mt-0.5" stroke={1.5} />
+        <IconPackage
+          size={20}
+          className="text-[var(--color-text-muted)] shrink-0 mt-0.5"
+          stroke={1.5}
+        />
         <VStack gap={1} className="flex-1 min-w-0">
-          <span className="text-[14px] font-semibold text-[var(--color-text-default)]">
-            {name}
-          </span>
+          <span className="text-[14px] font-semibold text-[var(--color-text-default)]">{name}</span>
           <span className="text-[11px] px-2 py-0.5 bg-[var(--color-surface-subtle)] text-[var(--color-text-muted)] rounded w-fit">
             Common Image
           </span>
@@ -137,9 +133,7 @@ function SectionHeader({ icon, title, count }: SectionHeaderProps) {
   return (
     <HStack gap={2} align="center">
       {icon}
-      <span className="text-[16px] font-semibold text-[var(--color-text-default)]">
-        {title}
-      </span>
+      <span className="text-[16px] font-semibold text-[var(--color-text-default)]">{title}</span>
       <Badge variant="info" size="sm">
         {count}
       </Badge>
@@ -200,7 +194,8 @@ const commonImages: CommonImageCardProps[] = [
 
 export function PackagesPage() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
-  const { tabs, activeTabId, selectTab, closeTab, addNewTab, updateActiveTabLabel, moveTab } = useTabs();
+  const { tabs, activeTabId, selectTab, closeTab, addNewTab, updateActiveTabLabel, moveTab } =
+    useTabs();
 
   useEffect(() => {
     updateActiveTabLabel('Packages');
@@ -217,7 +212,7 @@ export function PackagesPage() {
         style={{ left: `${sidebarWidth}px` }}
       >
         <TabBar
-          tabs={tabs.map(tab => ({ id: tab.id, label: tab.label, closable: tab.closable }))}
+          tabs={tabs.map((tab) => ({ id: tab.id, label: tab.label, closable: tab.closable }))}
           activeTab={activeTabId}
           onTabChange={selectTab}
           onTabClose={closeTab}
@@ -230,11 +225,7 @@ export function PackagesPage() {
           onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
           breadcrumb={
             <Breadcrumb
-              items={[
-                { label: 'AI Platform' },
-                { label: 'Hub' },
-                { label: 'Packages' },
-              ]}
+              items={[{ label: 'AI Platform' }, { label: 'Hub' }, { label: 'Packages' }]}
             />
           }
           actions={
@@ -270,7 +261,13 @@ export function PackagesPage() {
               {/* Thaki Images Section */}
               <VStack gap={4}>
                 <SectionHeader
-                  icon={<IconStar size={20} className="text-[var(--color-action-primary)]" stroke={1.5} />}
+                  icon={
+                    <IconStar
+                      size={20}
+                      className="text-[var(--color-action-primary)]"
+                      stroke={1.5}
+                    />
+                  }
                   title="Thaki Images"
                   count={thakiImages.length}
                 />
@@ -288,7 +285,13 @@ export function PackagesPage() {
               {/* Common Images Section */}
               <VStack gap={4}>
                 <SectionHeader
-                  icon={<IconPackage size={20} className="text-[var(--color-text-muted)]" stroke={1.5} />}
+                  icon={
+                    <IconPackage
+                      size={20}
+                      className="text-[var(--color-text-muted)]"
+                      stroke={1.5}
+                    />
+                  }
                   title="Common Images"
                   count={commonImages.length}
                 />

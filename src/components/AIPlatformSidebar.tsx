@@ -39,7 +39,7 @@ interface AIPlatformSidebarProps {
 export function AIPlatformSidebar({ isOpen = true, onToggle }: AIPlatformSidebarProps) {
   const { isDark } = useDarkMode();
   const location = useLocation();
-  
+
   // Check if current path matches href
   const isActive = (href: string) => {
     // Exact match
@@ -52,25 +52,25 @@ export function AIPlatformSidebar({ isOpen = true, onToggle }: AIPlatformSidebar
     }
     return false;
   };
-  
+
   if (!isOpen) return null;
 
   return (
     <aside className="w-[200px] h-screen bg-[var(--color-surface-default)] border-r border-[var(--color-border-default)] flex flex-col fixed left-0 top-0">
       {/* Logo */}
       <div className="h-8 px-3 flex items-center justify-between">
-        <img 
-          src={isDark ? ThakiLogoDark : ThakiLogoLight} 
-          alt="THAKI Cloud" 
-          className="h-4"
-        />
-        <button 
+        <img src={isDark ? ThakiLogoDark : ThakiLogoLight} alt="THAKI Cloud" className="h-4" />
+        <button
           type="button"
           onClick={onToggle}
           className="p-1 hover:bg-[var(--color-surface-muted)] rounded transition-colors cursor-pointer"
           aria-label="Toggle sidebar"
         >
-          <IconLayoutSidebar size={16} className="text-[var(--color-text-muted)] pointer-events-none" stroke={1.5} />
+          <IconLayoutSidebar
+            size={16}
+            className="text-[var(--color-text-muted)] pointer-events-none"
+            stroke={1.5}
+          />
         </button>
       </div>
 

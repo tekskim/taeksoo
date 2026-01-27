@@ -239,7 +239,9 @@ export const Pagination: React.FC<PaginationProps> = ({
           <span className="text-[length:var(--font-size-11)] leading-[var(--line-height-16)] text-[var(--color-text-subtle)]">
             {selectedCount > 0 ? (
               <span>
-                <span className="text-[var(--color-text-default)] font-medium">{selectedCount} selected</span>
+                <span className="text-[var(--color-text-default)] font-medium">
+                  {selectedCount} selected
+                </span>
                 <span className="text-[var(--color-text-muted)]"> / {totalItems} items</span>
               </span>
             ) : (
@@ -253,4 +255,3 @@ export const Pagination: React.FC<PaginationProps> = ({
 };
 
 export default Pagination;
-

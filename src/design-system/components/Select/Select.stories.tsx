@@ -232,7 +232,7 @@ export const WithDefaultValue: Story = {
 export const Controlled: Story = {
   render: function ControlledSelect() {
     const [value, setValue] = useState('option2');
-    
+
     return (
       <div className="flex flex-col gap-4">
         <Select
@@ -351,38 +351,22 @@ export const FormExample: Story = {
 export const AllStates: Story = {
   render: () => (
     <div className="flex flex-col gap-4 w-[320px]">
-      <Select 
-        label="Default" 
-        options={defaultOptions} 
-        placeholder="Default state" 
-        fullWidth 
+      <Select label="Default" options={defaultOptions} placeholder="Default state" fullWidth />
+      <Select label="With Value" options={defaultOptions} defaultValue="option1" fullWidth />
+      <Select label="Disabled" options={defaultOptions} placeholder="Disabled" disabled fullWidth />
+      <Select
+        label="Error"
+        options={defaultOptions}
+        placeholder="Select option"
+        error="This field has an error"
+        fullWidth
       />
-      <Select 
-        label="With Value" 
-        options={defaultOptions} 
-        defaultValue="option1" 
-        fullWidth 
-      />
-      <Select 
-        label="Disabled" 
-        options={defaultOptions} 
-        placeholder="Disabled" 
-        disabled 
-        fullWidth 
-      />
-      <Select 
-        label="Error" 
-        options={defaultOptions} 
-        placeholder="Select option" 
-        error="This field has an error" 
-        fullWidth 
-      />
-      <Select 
-        label="Clearable with Value" 
-        options={defaultOptions} 
-        defaultValue="option2" 
-        clearable 
-        fullWidth 
+      <Select
+        label="Clearable with Value"
+        options={defaultOptions}
+        defaultValue="option2"
+        clearable
+        fullWidth
       />
     </div>
   ),

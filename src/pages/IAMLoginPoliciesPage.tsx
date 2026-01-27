@@ -39,7 +39,8 @@ export default function IAMLoginPoliciesPage() {
   const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [activeTab, setActiveTab] = useState('password-policy');
-  const { tabs, activeTabId, selectTab, closeTab, addNewTab, updateActiveTabLabel, moveTab } = useTabs();
+  const { tabs, activeTabId, selectTab, closeTab, addNewTab, updateActiveTabLabel, moveTab } =
+    useTabs();
 
   // Password policy state
   const [minLength, setMinLength] = useState(8);
@@ -75,17 +76,14 @@ export default function IAMLoginPoliciesPage() {
   const sidebarWidth = sidebarOpen ? 200 : 0;
 
   // Tab Bar tabs
-  const tabBarTabs = tabs.map(tab => ({
+  const tabBarTabs = tabs.map((tab) => ({
     id: tab.id,
     label: tab.label,
     closable: tab.closable ?? true,
   }));
 
   // Breadcrumb items
-  const breadcrumbItems = [
-    { label: 'IAM', href: '/iam' },
-    { label: 'Login policies' },
-  ];
+  const breadcrumbItems = [{ label: 'IAM', href: '/iam' }, { label: 'Login policies' }];
 
   // Handle reset to default for password policy
   const handleResetPasswordPolicy = () => {
@@ -150,10 +148,7 @@ export default function IAMLoginPoliciesPage() {
   return (
     <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
       {/* Sidebar */}
-      <IAMSidebar
-        isOpen={sidebarOpen}
-        onToggle={() => setSidebarOpen(!sidebarOpen)}
-      />
+      <IAMSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
 
       {/* Main Content */}
       <main
@@ -260,7 +255,8 @@ export default function IAMLoginPoliciesPage() {
                                 />
                               </div>
                               <p className="text-[11px] leading-4 text-[var(--color-text-subtle)]">
-                                6 - 128 / Maximum length must be greater than or equal to the minimum length.
+                                6 - 128 / Maximum length must be greater than or equal to the
+                                minimum length.
                               </p>
                             </VStack>
                           </VStack>
@@ -348,7 +344,8 @@ export default function IAMLoginPoliciesPage() {
                                 <span className="ml-1 text-[var(--color-state-danger)]">*</span>
                               </HStack>
                               <p className="text-[12px] leading-4 text-[var(--color-text-subtle)]">
-                                Sets the validity period for passwords. After the specified duration, users are required to create a new password.
+                                Sets the validity period for passwords. After the specified
+                                duration, users are required to create a new password.
                               </p>
                             </VStack>
                             <Toggle
@@ -405,7 +402,11 @@ export default function IAMLoginPoliciesPage() {
                                     By resent history
                                   </span>
                                   <Tooltip content="Prevents reusing the last 'N' passwords.">
-                                    <IconInfoCircle size={16} stroke={1.5} className="text-[var(--color-text-subtle)]" />
+                                    <IconInfoCircle
+                                      size={16}
+                                      stroke={1.5}
+                                      className="text-[var(--color-text-subtle)]"
+                                    />
                                   </Tooltip>
                                   <NumberInput
                                     value={reuseHistoryCount}
@@ -422,7 +423,11 @@ export default function IAMLoginPoliciesPage() {
                                     By recent period
                                   </span>
                                   <Tooltip content="Prevents reusing any password used within the last 'N' days.">
-                                    <IconInfoCircle size={16} stroke={1.5} className="text-[var(--color-text-subtle)]" />
+                                    <IconInfoCircle
+                                      size={16}
+                                      stroke={1.5}
+                                      className="text-[var(--color-text-subtle)]"
+                                    />
                                   </Tooltip>
                                   <NumberInput
                                     value={reusePeriodDays}
@@ -457,7 +462,11 @@ export default function IAMLoginPoliciesPage() {
                               <IconRefresh size={12} stroke={1.5} />
                               Reset to default
                             </button>
-                            <Button variant="secondary" size="sm" onClick={handleResetPasswordPolicy}>
+                            <Button
+                              variant="secondary"
+                              size="sm"
+                              onClick={handleResetPasswordPolicy}
+                            >
                               Reload
                             </Button>
                             <Button variant="primary" size="sm" onClick={handleSave}>
@@ -520,7 +529,8 @@ export default function IAMLoginPoliciesPage() {
                                 <span className="ml-1 text-[var(--color-state-danger)]">*</span>
                               </HStack>
                               <p className="text-[11px] leading-4 text-[var(--color-text-subtle)]">
-                                The maximum number of failed login attempts allowed before the account is locked.
+                                The maximum number of failed login attempts allowed before the
+                                account is locked.
                               </p>
                             </VStack>
                             <VStack gap={2}>
@@ -553,7 +563,8 @@ export default function IAMLoginPoliciesPage() {
                                   <span className="ml-1 text-[var(--color-state-danger)]">*</span>
                                 </HStack>
                                 <p className="text-[11px] leading-4 text-[var(--color-text-subtle)]">
-                                  The total number of temporary lockouts allowed before the account is permanently locked.
+                                  The total number of temporary lockouts allowed before the account
+                                  is permanently locked.
                                 </p>
                               </VStack>
                               <VStack gap={2}>
@@ -574,7 +585,8 @@ export default function IAMLoginPoliciesPage() {
                           )}
 
                           {/* Only show these sections when lockout type has temporary behavior */}
-                          {(lockoutType === 'temporary' || lockoutType === 'permanent_after_temporary') && (
+                          {(lockoutType === 'temporary' ||
+                            lockoutType === 'permanent_after_temporary') && (
                             <>
                               {/* Divider */}
                               <div className="h-px w-full bg-[var(--color-border-subtle)]" />
@@ -589,7 +601,8 @@ export default function IAMLoginPoliciesPage() {
                                     <span className="ml-1 text-[var(--color-state-danger)]">*</span>
                                   </HStack>
                                   <p className="text-[11px] leading-4 text-[var(--color-text-subtle)]">
-                                    Defines how the wait time increases after repeated failed login attempts.
+                                    Defines how the wait time increases after repeated failed login
+                                    attempts.
                                   </p>
                                 </VStack>
                                 <VStack gap={3}>
@@ -603,7 +616,11 @@ export default function IAMLoginPoliciesPage() {
                                       Linear
                                     </span>
                                     <Tooltip content="Wait time increases only when failures are multiples of factor">
-                                      <IconInfoCircle size={16} stroke={1.5} className="text-[var(--color-text-subtle)]" />
+                                      <IconInfoCircle
+                                        size={16}
+                                        stroke={1.5}
+                                        className="text-[var(--color-text-subtle)]"
+                                      />
                                     </Tooltip>
                                   </HStack>
                                   <HStack className="gap-[6px]" align="center">
@@ -616,7 +633,11 @@ export default function IAMLoginPoliciesPage() {
                                       Multiple
                                     </span>
                                     <Tooltip content="Wait time increases after every failure starting from factor">
-                                      <IconInfoCircle size={16} stroke={1.5} className="text-[var(--color-text-subtle)]" />
+                                      <IconInfoCircle
+                                        size={16}
+                                        stroke={1.5}
+                                        className="text-[var(--color-text-subtle)]"
+                                      />
                                     </Tooltip>
                                   </HStack>
                                 </VStack>
@@ -635,7 +656,8 @@ export default function IAMLoginPoliciesPage() {
                                     <span className="ml-1 text-[var(--color-state-danger)]">*</span>
                                   </HStack>
                                   <p className="text-[11px] leading-4 text-[var(--color-text-subtle)]">
-                                    Amount of time added to the wait time for each additional failed login attempt.
+                                    Amount of time added to the wait time for each additional failed
+                                    login attempt.
                                   </p>
                                 </VStack>
                                 <HStack gap={2} align="center">
@@ -667,7 +689,8 @@ export default function IAMLoginPoliciesPage() {
                                     <span className="ml-1 text-[var(--color-state-danger)]">*</span>
                                   </HStack>
                                   <p className="text-[11px] leading-4 text-[var(--color-text-subtle)]">
-                                    The maximum time a user must wait before retrying, regardless of failure count.
+                                    The maximum time a user must wait before retrying, regardless of
+                                    failure count.
                                   </p>
                                 </VStack>
                                 <HStack gap={2} align="center">
@@ -699,7 +722,8 @@ export default function IAMLoginPoliciesPage() {
                                     <span className="ml-1 text-[var(--color-state-danger)]">*</span>
                                   </HStack>
                                   <p className="text-[11px] leading-4 text-[var(--color-text-subtle)]">
-                                    Set the time limit within which the user must enter the email code.
+                                    Set the time limit within which the user must enter the email
+                                    code.
                                   </p>
                                 </VStack>
                                 <HStack gap={2} align="center">
@@ -733,7 +757,11 @@ export default function IAMLoginPoliciesPage() {
                               <IconRefresh size={12} stroke={1.5} />
                               Reset to default
                             </button>
-                            <Button variant="secondary" size="sm" onClick={handleResetLockoutPolicy}>
+                            <Button
+                              variant="secondary"
+                              size="sm"
+                              onClick={handleResetLockoutPolicy}
+                            >
                               Reload
                             </Button>
                             <Button variant="primary" size="sm" onClick={handleSave}>
@@ -753,4 +781,3 @@ export default function IAMLoginPoliciesPage() {
     </div>
   );
 }
-

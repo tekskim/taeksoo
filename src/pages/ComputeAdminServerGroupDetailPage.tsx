@@ -20,12 +20,7 @@ import {
 } from '@/design-system';
 import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
 import { useTabs } from '@/contexts/TabContext';
-import {
-  IconTrash,
-  IconBell,
-  IconLock,
-  IconLockOpen,
-} from '@tabler/icons-react';
+import { IconTrash, IconBell, IconLock, IconLockOpen } from '@tabler/icons-react';
 
 /* ----------------------------------------
    Types
@@ -66,15 +61,72 @@ const mockServerGroupsMap: Record<string, ServerGroupDetail> = {
 };
 
 const defaultServerGroupDetail: ServerGroupDetail = {
-  id: 'unknown', name: 'Unknown Server group', policy: 'Anti-affinity',
+  id: 'unknown',
+  name: 'Unknown Server group',
+  policy: 'Anti-affinity',
 };
 
 const mockServerGroupInstances: ServerGroupInstance[] = [
-  { id: '29tgj234', name: 'web-server-01', status: 'active', locked: true, host: 'compute-01', fixedIP: '10.62.0.30', floatingIP: '20.20.20.30', az: 'zone-a', os: 'ubuntu 24.04', createdAt: 'Dec 25, 2025' },
-  { id: '29tgj235', name: 'web-server-02', status: 'active', locked: true, host: 'compute-01', fixedIP: '10.62.0.31', floatingIP: '20.20.20.31', az: 'zone-a', os: 'ubuntu 24.04', createdAt: 'Dec 25, 2025' },
-  { id: '29tgj236', name: 'web-server-03', status: 'active', locked: true, host: 'compute-02', fixedIP: '10.62.0.32', floatingIP: '20.20.20.32', az: 'zone-b', os: 'ubuntu 24.04', createdAt: 'Dec 25, 2025' },
-  { id: '29tgj237', name: 'web-server-04', status: 'error', locked: false, host: 'compute-02', fixedIP: '10.62.0.33', floatingIP: '-', az: 'zone-b', os: 'ubuntu 24.04', createdAt: 'Dec 25, 2025' },
-  { id: '29tgj238', name: 'web-server-05', status: 'active', locked: true, host: 'compute-03', fixedIP: '10.62.0.34', floatingIP: '20.20.20.34', az: 'zone-a', os: 'ubuntu 24.04', createdAt: 'Dec 25, 2025' },
+  {
+    id: '29tgj234',
+    name: 'web-server-01',
+    status: 'active',
+    locked: true,
+    host: 'compute-01',
+    fixedIP: '10.62.0.30',
+    floatingIP: '20.20.20.30',
+    az: 'zone-a',
+    os: 'ubuntu 24.04',
+    createdAt: 'Dec 25, 2025',
+  },
+  {
+    id: '29tgj235',
+    name: 'web-server-02',
+    status: 'active',
+    locked: true,
+    host: 'compute-01',
+    fixedIP: '10.62.0.31',
+    floatingIP: '20.20.20.31',
+    az: 'zone-a',
+    os: 'ubuntu 24.04',
+    createdAt: 'Dec 25, 2025',
+  },
+  {
+    id: '29tgj236',
+    name: 'web-server-03',
+    status: 'active',
+    locked: true,
+    host: 'compute-02',
+    fixedIP: '10.62.0.32',
+    floatingIP: '20.20.20.32',
+    az: 'zone-b',
+    os: 'ubuntu 24.04',
+    createdAt: 'Dec 25, 2025',
+  },
+  {
+    id: '29tgj237',
+    name: 'web-server-04',
+    status: 'error',
+    locked: false,
+    host: 'compute-02',
+    fixedIP: '10.62.0.33',
+    floatingIP: '-',
+    az: 'zone-b',
+    os: 'ubuntu 24.04',
+    createdAt: 'Dec 25, 2025',
+  },
+  {
+    id: '29tgj238',
+    name: 'web-server-05',
+    status: 'active',
+    locked: true,
+    host: 'compute-03',
+    fixedIP: '10.62.0.34',
+    floatingIP: '20.20.20.34',
+    az: 'zone-a',
+    os: 'ubuntu 24.04',
+    createdAt: 'Dec 25, 2025',
+  },
 ];
 
 /* ----------------------------------------
@@ -86,17 +138,20 @@ export function ComputeAdminServerGroupDetailPage() {
   const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [activeDetailTab, setActiveDetailTab] = useState('instances');
-  
+
   const [instanceSearchQuery, setInstanceSearchQuery] = useState('');
   const [instanceCurrentPage, setInstanceCurrentPage] = useState(1);
   const [selectedInstances, setSelectedInstances] = useState<string[]>([]);
   const instancesPerPage = 10;
-  
+
   const [isPreferencesOpen, setIsPreferencesOpen] = useState(false);
 
-  const serverGroup = id ? (mockServerGroupsMap[id] || defaultServerGroupDetail) : defaultServerGroupDetail;
+  const serverGroup = id
+    ? mockServerGroupsMap[id] || defaultServerGroupDetail
+    : defaultServerGroupDetail;
 
-  const { tabs, activeTabId, closeTab, selectTab, addNewTab, updateActiveTabLabel, moveTab } = useTabs();
+  const { tabs, activeTabId, closeTab, selectTab, addNewTab, updateActiveTabLabel, moveTab } =
+    useTabs();
 
   useEffect(() => {
     if (serverGroup.name) {
@@ -120,9 +175,7 @@ export function ComputeAdminServerGroupDetailPage() {
     if (!instanceSearchQuery) return mockServerGroupInstances;
     const query = instanceSearchQuery.toLowerCase();
     return mockServerGroupInstances.filter(
-      (inst) =>
-        inst.name.toLowerCase().includes(query) ||
-        inst.id.toLowerCase().includes(query)
+      (inst) => inst.name.toLowerCase().includes(query) || inst.id.toLowerCase().includes(query)
     );
   }, [instanceSearchQuery]);
 
@@ -165,13 +218,12 @@ export function ComputeAdminServerGroupDetailPage() {
       label: 'Locked',
       width: '80px',
       align: 'center',
-      render: (_, row) => (
+      render: (_, row) =>
         row.locked ? (
           <IconLock size={16} stroke={1.5} className="text-[var(--color-text-default)]" />
         ) : (
           <IconLockOpen size={16} stroke={1.5} className="text-[var(--color-text-subtle)]" />
-        )
-      ),
+        ),
     },
     {
       key: 'host',
@@ -187,7 +239,7 @@ export function ComputeAdminServerGroupDetailPage() {
       key: 'floatingIP',
       label: 'Floating IP',
       flex: 1,
-      render: (_, row) => (
+      render: (_, row) =>
         row.floatingIP !== '-' ? (
           <Link
             to={`/compute-admin/floating-ips/${row.floatingIP}`}
@@ -198,8 +250,7 @@ export function ComputeAdminServerGroupDetailPage() {
           </Link>
         ) : (
           <span className="text-[var(--color-text-default)]">-</span>
-        )
-      ),
+        ),
     },
     {
       key: 'az',
@@ -276,7 +327,12 @@ export function ComputeAdminServerGroupDetailPage() {
               </DetailHeader>
 
               <div className="w-full">
-                <Tabs value={activeDetailTab} onChange={setActiveDetailTab} variant="underline" size="sm">
+                <Tabs
+                  value={activeDetailTab}
+                  onChange={setActiveDetailTab}
+                  variant="underline"
+                  size="sm"
+                >
                   <TabList>
                     <Tab value="instances">Instances</Tab>
                   </TabList>

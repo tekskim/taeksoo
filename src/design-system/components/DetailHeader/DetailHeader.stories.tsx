@@ -65,8 +65,12 @@ export const Default: Story = {
       <div className="flex items-start justify-between">
         <DetailHeader.Title>nginx-deployment</DetailHeader.Title>
         <DetailHeader.Actions>
-          <Button size="sm" variant="secondary" leftIcon={<IconEdit size={14} />}>Edit</Button>
-          <Button size="sm" variant="danger" leftIcon={<IconTrash size={14} />}>Delete</Button>
+          <Button size="sm" variant="secondary" leftIcon={<IconEdit size={14} />}>
+            Edit
+          </Button>
+          <Button size="sm" variant="danger" leftIcon={<IconTrash size={14} />}>
+            Delete
+          </Button>
         </DetailHeader.Actions>
       </div>
       <DetailHeader.InfoGrid>
@@ -113,14 +117,14 @@ export const WithCustomValue: Story = {
     <DetailHeader>
       <DetailHeader.Title>web-server</DetailHeader.Title>
       <DetailHeader.InfoGrid>
-        <DetailHeader.InfoCard 
-          label="Labels" 
+        <DetailHeader.InfoCard
+          label="Labels"
           value={
             <HStack gap={1}>
               <Chip value="app=web" variant="muted" />
               <Chip value="env=prod" variant="muted" />
             </HStack>
-          } 
+          }
         />
         <DetailHeader.InfoCard label="Created" value="2024-01-15 10:30" />
       </DetailHeader.InfoGrid>
@@ -136,9 +140,15 @@ export const VMDetail: Story = {
       <div className="flex items-start justify-between">
         <DetailHeader.Title>production-vm-01</DetailHeader.Title>
         <DetailHeader.Actions>
-          <Button size="sm" variant="secondary" leftIcon={<IconPlayerStop size={14} />}>Stop</Button>
-          <Button size="sm" variant="secondary" leftIcon={<IconEdit size={14} />}>Edit</Button>
-          <Button size="sm" variant="danger" leftIcon={<IconTrash size={14} />}>Delete</Button>
+          <Button size="sm" variant="secondary" leftIcon={<IconPlayerStop size={14} />}>
+            Stop
+          </Button>
+          <Button size="sm" variant="secondary" leftIcon={<IconEdit size={14} />}>
+            Edit
+          </Button>
+          <Button size="sm" variant="danger" leftIcon={<IconTrash size={14} />}>
+            Delete
+          </Button>
         </DetailHeader.Actions>
       </div>
       <DetailHeader.InfoGrid>
@@ -159,8 +169,12 @@ export const ServiceDetail: Story = {
       <div className="flex items-start justify-between">
         <DetailHeader.Title>frontend-service</DetailHeader.Title>
         <DetailHeader.Actions>
-          <Button size="sm" variant="secondary">Edit YAML</Button>
-          <Button size="sm" variant="danger">Delete</Button>
+          <Button size="sm" variant="secondary">
+            Edit YAML
+          </Button>
+          <Button size="sm" variant="danger">
+            Delete
+          </Button>
         </DetailHeader.Actions>
       </div>
       <DetailHeader.InfoGrid>

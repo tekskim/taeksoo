@@ -30,7 +30,13 @@ export interface CreateVolumeFromBackupDrawerProps {
   defaultTypeCapacityQuota?: QuotaInfo;
   minCapacity?: number;
   maxCapacity?: number;
-  onSubmit?: (volumeName: string, description: string, capacity: number, volumeType: string, az: string) => void;
+  onSubmit?: (
+    volumeName: string,
+    description: string,
+    capacity: number,
+    volumeType: string,
+    az: string
+  ) => void;
 }
 
 /* ----------------------------------------
@@ -44,9 +50,7 @@ function InfoBox({ label, value }: { label: string; value: string }) {
         <span className="text-[11px] font-medium text-[var(--color-text-subtle)] leading-4">
           {label}
         </span>
-        <span className="text-[12px] text-[var(--color-text-default)] leading-4">
-          {value}
-        </span>
+        <span className="text-[12px] text-[var(--color-text-default)] leading-4">{value}</span>
       </VStack>
     </div>
   );
@@ -75,15 +79,11 @@ function QuotaProgressBar({ label, used, total, adding = 1 }: QuotaProgressBarPr
           {label}
         </span>
         <HStack gap={0} className="items-center">
-          <span className="text-[12px] text-[var(--color-text-default)] leading-4">
-            {used}/
-          </span>
+          <span className="text-[12px] text-[var(--color-text-default)] leading-4">{used}/</span>
           {isInfinity ? (
             <IconInfinity size={16} className="text-[var(--color-text-default)]" stroke={1} />
           ) : (
-            <span className="text-[12px] text-[var(--color-text-default)] leading-4">
-              {total}
-            </span>
+            <span className="text-[12px] text-[var(--color-text-default)] leading-4">{total}</span>
           )}
         </HStack>
       </HStack>
@@ -94,7 +94,10 @@ function QuotaProgressBar({ label, used, total, adding = 1 }: QuotaProgressBarPr
         />
         <div
           className="h-1 rounded-lg bg-green-200 -mr-1 z-[2]"
-          style={{ width: `${Math.min(addingPercentage, 100 - percentage)}%`, minWidth: addingPercentage > 0 ? '4px' : '0' }}
+          style={{
+            width: `${Math.min(addingPercentage, 100 - percentage)}%`,
+            minWidth: addingPercentage > 0 ? '4px' : '0',
+          }}
         />
         <div className="flex-1 h-1 rounded-lg bg-[var(--color-border-subtle)] -mr-1 z-[1]" />
       </div>
@@ -151,7 +154,7 @@ export function CreateVolumeFromBackupDrawer({
   const handleSubmit = async () => {
     setHasAttemptedSubmit(true);
     if (!volumeName.trim()) return;
-    
+
     setIsSubmitting(true);
     try {
       await onSubmit?.(volumeName, description, capacity, volumeType, az);
@@ -203,15 +206,11 @@ export function CreateVolumeFromBackupDrawer({
 
           {/* Buttons */}
           <HStack gap={2} className="w-full border-t border-[var(--color-border-default)] pt-4">
-            <Button 
-              variant="secondary" 
-              onClick={handleClose}
-              className="flex-1 h-8"
-            >
+            <Button variant="secondary" onClick={handleClose} className="flex-1 h-8">
               Cancel
             </Button>
-            <Button 
-              variant="primary" 
+            <Button
+              variant="primary"
               onClick={handleSubmit}
               disabled={isSubmitting}
               className="flex-1 h-8"
@@ -230,9 +229,9 @@ export function CreateVolumeFromBackupDrawer({
           </h2>
 
           {/* Volume Backup Info */}
-          <InfoBox 
-            label="Volume Backup" 
-            value={volumeBackup ? `${volumeBackup.name} (${volumeBackup.size}GiB)` : '-'} 
+          <InfoBox
+            label="Volume Backup"
+            value={volumeBackup ? `${volumeBackup.name} (${volumeBackup.size}GiB)` : '-'}
           />
         </VStack>
 
@@ -265,9 +264,7 @@ export function CreateVolumeFromBackupDrawer({
             <label className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
               Description
             </label>
-            <span className="text-[12px] text-[var(--color-text-subtle)]">
-              (optional)
-            </span>
+            <span className="text-[12px] text-[var(--color-text-subtle)]">(optional)</span>
           </HStack>
           <Input
             value={description}
@@ -288,12 +285,7 @@ export function CreateVolumeFromBackupDrawer({
             </span>
           </HStack>
           <VStack gap={5} className="w-full">
-            <Slider
-              value={capacity}
-              onChange={setCapacity}
-              min={minCapacity}
-              max={maxCapacity}
-            />
+            <Slider value={capacity} onChange={setCapacity} min={minCapacity} max={maxCapacity} />
             <Input
               type="number"
               value={capacity.toString()}
@@ -314,9 +306,7 @@ export function CreateVolumeFromBackupDrawer({
             <label className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
               Volume type
             </label>
-            <span className="text-[12px] text-[var(--color-text-subtle)]">
-              (optional)
-            </span>
+            <span className="text-[12px] text-[var(--color-text-subtle)]">(optional)</span>
           </HStack>
           <Select
             value={volumeType}
@@ -344,4 +334,3 @@ export function CreateVolumeFromBackupDrawer({
 }
 
 export default CreateVolumeFromBackupDrawer;
-

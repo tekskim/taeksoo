@@ -16,13 +16,7 @@ import {
 } from '@/design-system';
 import { Sidebar } from '@/components/Sidebar';
 import { useTabs } from '@/contexts/TabContext';
-import {
-  IconTrash,
-  IconEdit,
-  IconBell,
-  IconCopy,
-  IconCheck,
-} from '@tabler/icons-react';
+import { IconTrash, IconEdit, IconBell, IconCopy, IconCheck } from '@tabler/icons-react';
 
 /* ----------------------------------------
    Types
@@ -43,20 +37,95 @@ interface KeyPairDetail {
 
 // Key pair data map by ID - synced with KeyPairsPage mock data
 const mockKeyPairsMap: Record<string, KeyPairDetail> = {
-  'kp-001': { id: 'kp-001', name: 'tk-keypair', userId: '514aa9f6265d4fb397b4345000b2ee9f', fingerprint: '02:c1:ff:54:df:d9:69:0e:bb:46:a9:c8:0c:dc:2f:bb', publicKey: 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDk...', createdAt: '2025-09-10' },
-  'kp-002': { id: 'kp-002', name: 'dev-keypair', userId: '514aa9f6265d4fb397b4345000b2ee9f', fingerprint: 'a3:b2:c1:d4:e5:f6:07:18:29:3a:4b:5c:6d:7e:8f:90', publicKey: 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDl...', createdAt: '2025-09-08' },
-  'kp-003': { id: 'kp-003', name: 'prod-keypair', userId: '514aa9f6265d4fb397b4345000b2ee9f', fingerprint: '11:22:33:44:55:66:77:88:99:aa:bb:cc:dd:ee:ff:00', publicKey: 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDm...', createdAt: '2025-09-05' },
-  'kp-004': { id: 'kp-004', name: 'staging-keypair', userId: '514aa9f6265d4fb397b4345000b2ee9f', fingerprint: 'ff:ee:dd:cc:bb:aa:99:88:77:66:55:44:33:22:11:00', publicKey: 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDn...', createdAt: '2025-08-30' },
-  'kp-005': { id: 'kp-005', name: 'test-keypair', userId: '514aa9f6265d4fb397b4345000b2ee9f', fingerprint: '12:34:56:78:9a:bc:de:f0:12:34:56:78:9a:bc:de:f0', publicKey: 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDo...', createdAt: '2025-08-25' },
-  'kp-006': { id: 'kp-006', name: 'backup-keypair', userId: '514aa9f6265d4fb397b4345000b2ee9f', fingerprint: 'ab:cd:ef:01:23:45:67:89:ab:cd:ef:01:23:45:67:89', publicKey: 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDp...', createdAt: '2025-08-20' },
-  'kp-007': { id: 'kp-007', name: 'jenkins-keypair', userId: '514aa9f6265d4fb397b4345000b2ee9f', fingerprint: '98:76:54:32:10:fe:dc:ba:98:76:54:32:10:fe:dc:ba', publicKey: 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDq...', createdAt: '2025-08-15' },
-  'kp-008': { id: 'kp-008', name: 'ansible-keypair', userId: '514aa9f6265d4fb397b4345000b2ee9f', fingerprint: '01:02:03:04:05:06:07:08:09:0a:0b:0c:0d:0e:0f:10', publicKey: 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDr...', createdAt: '2025-08-10' },
-  'kp-009': { id: 'kp-009', name: 'terraform-keypair', userId: '514aa9f6265d4fb397b4345000b2ee9f', fingerprint: 'f0:e1:d2:c3:b4:a5:96:87:78:69:5a:4b:3c:2d:1e:0f', publicKey: 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDs...', createdAt: '2025-08-05' },
-  'kp-010': { id: 'kp-010', name: 'github-deploy-key', userId: '514aa9f6265d4fb397b4345000b2ee9f', fingerprint: 'aa:bb:cc:dd:ee:ff:00:11:22:33:44:55:66:77:88:99', publicKey: 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDt...', createdAt: '2025-08-01' },
+  'kp-001': {
+    id: 'kp-001',
+    name: 'tk-keypair',
+    userId: '514aa9f6265d4fb397b4345000b2ee9f',
+    fingerprint: '02:c1:ff:54:df:d9:69:0e:bb:46:a9:c8:0c:dc:2f:bb',
+    publicKey: 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDk...',
+    createdAt: '2025-09-10',
+  },
+  'kp-002': {
+    id: 'kp-002',
+    name: 'dev-keypair',
+    userId: '514aa9f6265d4fb397b4345000b2ee9f',
+    fingerprint: 'a3:b2:c1:d4:e5:f6:07:18:29:3a:4b:5c:6d:7e:8f:90',
+    publicKey: 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDl...',
+    createdAt: '2025-09-08',
+  },
+  'kp-003': {
+    id: 'kp-003',
+    name: 'prod-keypair',
+    userId: '514aa9f6265d4fb397b4345000b2ee9f',
+    fingerprint: '11:22:33:44:55:66:77:88:99:aa:bb:cc:dd:ee:ff:00',
+    publicKey: 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDm...',
+    createdAt: '2025-09-05',
+  },
+  'kp-004': {
+    id: 'kp-004',
+    name: 'staging-keypair',
+    userId: '514aa9f6265d4fb397b4345000b2ee9f',
+    fingerprint: 'ff:ee:dd:cc:bb:aa:99:88:77:66:55:44:33:22:11:00',
+    publicKey: 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDn...',
+    createdAt: '2025-08-30',
+  },
+  'kp-005': {
+    id: 'kp-005',
+    name: 'test-keypair',
+    userId: '514aa9f6265d4fb397b4345000b2ee9f',
+    fingerprint: '12:34:56:78:9a:bc:de:f0:12:34:56:78:9a:bc:de:f0',
+    publicKey: 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDo...',
+    createdAt: '2025-08-25',
+  },
+  'kp-006': {
+    id: 'kp-006',
+    name: 'backup-keypair',
+    userId: '514aa9f6265d4fb397b4345000b2ee9f',
+    fingerprint: 'ab:cd:ef:01:23:45:67:89:ab:cd:ef:01:23:45:67:89',
+    publicKey: 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDp...',
+    createdAt: '2025-08-20',
+  },
+  'kp-007': {
+    id: 'kp-007',
+    name: 'jenkins-keypair',
+    userId: '514aa9f6265d4fb397b4345000b2ee9f',
+    fingerprint: '98:76:54:32:10:fe:dc:ba:98:76:54:32:10:fe:dc:ba',
+    publicKey: 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDq...',
+    createdAt: '2025-08-15',
+  },
+  'kp-008': {
+    id: 'kp-008',
+    name: 'ansible-keypair',
+    userId: '514aa9f6265d4fb397b4345000b2ee9f',
+    fingerprint: '01:02:03:04:05:06:07:08:09:0a:0b:0c:0d:0e:0f:10',
+    publicKey: 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDr...',
+    createdAt: '2025-08-10',
+  },
+  'kp-009': {
+    id: 'kp-009',
+    name: 'terraform-keypair',
+    userId: '514aa9f6265d4fb397b4345000b2ee9f',
+    fingerprint: 'f0:e1:d2:c3:b4:a5:96:87:78:69:5a:4b:3c:2d:1e:0f',
+    publicKey: 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDs...',
+    createdAt: '2025-08-05',
+  },
+  'kp-010': {
+    id: 'kp-010',
+    name: 'github-deploy-key',
+    userId: '514aa9f6265d4fb397b4345000b2ee9f',
+    fingerprint: 'aa:bb:cc:dd:ee:ff:00:11:22:33:44:55:66:77:88:99',
+    publicKey: 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDt...',
+    createdAt: '2025-08-01',
+  },
 };
 
 const defaultKeyPairDetail: KeyPairDetail = {
-  id: 'unknown', name: 'Unknown Key pair', userId: '-', fingerprint: '-', publicKey: '-', createdAt: '-',
+  id: 'unknown',
+  name: 'Unknown Key pair',
+  userId: '-',
+  fingerprint: '-',
+  publicKey: '-',
+  createdAt: '-',
 };
 
 /* ----------------------------------------
@@ -85,9 +154,7 @@ function CopyableDataRow({ label, value }: CopyableValueProps) {
           {label}
         </span>
         <div className="flex items-center gap-2">
-          <span className="text-[12px] leading-4 text-[var(--color-text-default)]">
-            {value}
-          </span>
+          <span className="text-[12px] leading-4 text-[var(--color-text-default)]">{value}</span>
           <button
             onClick={handleCopy}
             className="p-0.5 rounded hover:bg-[var(--color-surface-muted)] transition-colors shrink-0"
@@ -114,12 +181,13 @@ export function KeyPairDetailPage() {
   const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [activeDetailTab, setActiveDetailTab] = useState('details');
-  
+
   // Get key pair data based on URL ID
-  const keyPair = id ? (mockKeyPairsMap[id] || defaultKeyPairDetail) : defaultKeyPairDetail;
+  const keyPair = id ? mockKeyPairsMap[id] || defaultKeyPairDetail : defaultKeyPairDetail;
 
   // Global tab management
-  const { tabs, activeTabId, closeTab, selectTab, addNewTab, updateActiveTabLabel, moveTab } = useTabs();
+  const { tabs, activeTabId, closeTab, selectTab, addNewTab, updateActiveTabLabel, moveTab } =
+    useTabs();
 
   // Update tab label to key pair name
   useEffect(() => {
@@ -189,68 +257,69 @@ export function KeyPairDetailPage() {
         <div className="flex-1 overflow-auto overscroll-contain sidebar-scroll">
           {/* Page Content */}
           <div className="pt-4 px-8 pb-20 bg-[var(--color-surface-default)] min-h-full">
-          <VStack gap={6} className="min-w-[1176px]">
-            {/* Detail header */}
-            <DetailHeader>
-              <DetailHeader.Title>{keyPair.name}</DetailHeader.Title>
-              <DetailHeader.Actions>
-                <Button
-                  variant="secondary"
+            <VStack gap={6} className="min-w-[1176px]">
+              {/* Detail header */}
+              <DetailHeader>
+                <DetailHeader.Title>{keyPair.name}</DetailHeader.Title>
+                <DetailHeader.Actions>
+                  <Button
+                    variant="secondary"
+                    size="sm"
+                    leftIcon={<IconTrash size={12} stroke={1.5} />}
+                  >
+                    Delete
+                  </Button>
+                </DetailHeader.Actions>
+                <DetailHeader.InfoGrid>
+                  <DetailHeader.InfoCard label="Created at" value={keyPair.createdAt} />
+                </DetailHeader.InfoGrid>
+              </DetailHeader>
+
+              {/* Tabs Content */}
+              <div className="w-full">
+                <Tabs
+                  value={activeDetailTab}
+                  onChange={setActiveDetailTab}
+                  variant="underline"
                   size="sm"
-                  leftIcon={<IconTrash size={12} stroke={1.5} />}
                 >
-                  Delete
-                </Button>
-              </DetailHeader.Actions>
-              <DetailHeader.InfoGrid>
-                <DetailHeader.InfoCard label="Created at" value={keyPair.createdAt} />
-              </DetailHeader.InfoGrid>
-            </DetailHeader>
+                  <TabList>
+                    <Tab value="details">Details</Tab>
+                  </TabList>
 
-            {/* Tabs Content */}
-            <div className="w-full">
-              <Tabs value={activeDetailTab} onChange={setActiveDetailTab} variant="underline" size="sm">
-                <TabList>
-                  <Tab value="details">Details</Tab>
-                </TabList>
+                  {/* Details Tab */}
+                  <TabPanel value="details" className="pt-0">
+                    <VStack gap={4} className="pt-4">
+                      {/* Basic information */}
+                      <SectionCard>
+                        <SectionCard.Header
+                          title="Basic information"
+                          actions={
+                            <Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />}>
+                              Edit
+                            </Button>
+                          }
+                        />
+                        <SectionCard.Content>
+                          <SectionCard.DataRow label="Key pair Name" value={keyPair.name} />
+                          <CopyableDataRow label="User ID" value={keyPair.userId} />
+                        </SectionCard.Content>
+                      </SectionCard>
 
-                {/* Details Tab */}
-                <TabPanel value="details" className="pt-0">
-                  <VStack gap={4} className="pt-4">
-                    {/* Basic information */}
-                    <SectionCard>
-                      <SectionCard.Header 
-                        title="Basic information" 
-                        actions={
-                          <Button
-                            variant="secondary"
-                            size="sm"
-                            leftIcon={<IconEdit size={12} />}
-                          >
-                            Edit
-                          </Button>
-                        }
-                      />
-                      <SectionCard.Content>
-                        <SectionCard.DataRow label="Key pair Name" value={keyPair.name} />
-                        <CopyableDataRow label="User ID" value={keyPair.userId} />
-                      </SectionCard.Content>
-                    </SectionCard>
-
-                    {/* Key Identity */}
-                    <SectionCard>
-                      <SectionCard.Header title="Key Identity" />
-                      <SectionCard.Content>
-                        <CopyableDataRow label="Fingerprint" value={keyPair.fingerprint} />
-                        <CopyableDataRow label="Public key" value={keyPair.publicKey} />
-                      </SectionCard.Content>
-                    </SectionCard>
-                  </VStack>
-                </TabPanel>
-              </Tabs>
-            </div>
-          </VStack>
-        </div>
+                      {/* Key Identity */}
+                      <SectionCard>
+                        <SectionCard.Header title="Key Identity" />
+                        <SectionCard.Content>
+                          <CopyableDataRow label="Fingerprint" value={keyPair.fingerprint} />
+                          <CopyableDataRow label="Public key" value={keyPair.publicKey} />
+                        </SectionCard.Content>
+                      </SectionCard>
+                    </VStack>
+                  </TabPanel>
+                </Tabs>
+              </div>
+            </VStack>
+          </div>
         </div>
       </main>
     </div>

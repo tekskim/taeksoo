@@ -120,9 +120,7 @@ function DatasetCard({
         </HStack>
 
         {/* Description */}
-        <p className="text-[13px] text-[var(--color-text-muted)] leading-relaxed">
-          {description}
-        </p>
+        <p className="text-[13px] text-[var(--color-text-muted)] leading-relaxed">{description}</p>
 
         {/* Meta Info */}
         <HStack gap={4} align="center" className="flex-wrap">
@@ -195,14 +193,14 @@ export function DatasetsPage() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [activeTab, setActiveTab] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
-  const { tabs, activeTabId, selectTab, closeTab, addNewTab, updateActiveTabLabel, moveTab } = useTabs();
+  const { tabs, activeTabId, selectTab, closeTab, addNewTab, updateActiveTabLabel, moveTab } =
+    useTabs();
 
   useEffect(() => {
     updateActiveTabLabel('Datasets');
   }, [updateActiveTabLabel]);
 
   const sidebarWidth = sidebarOpen ? 200 : 0;
-
 
   // Sample datasets data
   const datasets = [
@@ -212,7 +210,8 @@ export function DatasetsPage() {
       source: 'Thaki',
       size: '7MB',
       rows: '0',
-      description: 'A large-scale code reasoning dataset designed for supervised fine-tuning (SFT) that includes instruction-style prompts and solutions across various coding tasks. This dataset focuses on enhancing code understanding and problem-solving capabilities in programming contexts.',
+      description:
+        'A large-scale code reasoning dataset designed for supervised fine-tuning (SFT) that includes instruction-style prompts and solutions across various coding tasks. This dataset focuses on enhancing code understanding and problem-solving capabilities in programming contexts.',
       license: 'legal',
       language: 'en',
       tags: ['sft', 'gkd', 'grpo'],
@@ -225,7 +224,8 @@ export function DatasetsPage() {
       source: 'Thaki',
       size: '14MB',
       rows: '49.6K',
-      description: 'A mathematical reasoning dataset from NVIDIA\'s AceReason series, containing 49,585 training examples with message-based prompts and solutions for advanced math problem solving.',
+      description:
+        "A mathematical reasoning dataset from NVIDIA's AceReason series, containing 49,585 training examples with message-based prompts and solutions for advanced math problem solving.",
       license: 'accounting',
       language: 'en',
       tags: ['sft', 'gkd', 'grpo'],
@@ -238,7 +238,8 @@ export function DatasetsPage() {
       source: 'Thaki',
       size: '162MB',
       rows: '12.9K',
-      description: 'A dataset containing DPO (Direct Preference Optimization) pairs for training language models on instruction following. Includes chosen and rejected response pairs for preference learning.',
+      description:
+        'A dataset containing DPO (Direct Preference Optimization) pairs for training language models on instruction following. Includes chosen and rejected response pairs for preference learning.',
       license: 'apache-2.0',
       language: 'en',
       tags: ['dpo', 'preference'],
@@ -251,7 +252,8 @@ export function DatasetsPage() {
       source: 'Thaki',
       size: '458MB',
       rows: '61.1K',
-      description: 'UltraFeedback binarized dataset for training language models using preference learning. Contains high-quality feedback pairs with binary preference labels.',
+      description:
+        'UltraFeedback binarized dataset for training language models using preference learning. Contains high-quality feedback pairs with binary preference labels.',
       license: 'mit',
       language: 'en',
       tags: ['rlhf', 'feedback', 'preference'],
@@ -264,7 +266,8 @@ export function DatasetsPage() {
       source: 'Thaki',
       size: '2.3GB',
       rows: '4.2M',
-      description: 'A large-scale instruction tuning dataset based on FLAN collection with GPT-4 and GPT-3.5 generated responses. Designed for training general-purpose instruction-following models.',
+      description:
+        'A large-scale instruction tuning dataset based on FLAN collection with GPT-4 and GPT-3.5 generated responses. Designed for training general-purpose instruction-following models.',
       language: 'en',
       tags: ['sft', 'instruction'],
       downloads: '28.5K',
@@ -273,19 +276,23 @@ export function DatasetsPage() {
   ];
 
   // Filter datasets based on active tab
-  const filteredDatasets = datasets.filter((dataset) => {
-    if (activeTab === 'thaki') {
-      return dataset.source === 'Thaki';
-    }
-    if (activeTab === 'custom') {
-      return dataset.source === 'Custom';
-    }
-    return true;
-  }).filter((dataset) => {
-    if (!searchQuery) return true;
-    return dataset.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-           dataset.description.toLowerCase().includes(searchQuery.toLowerCase());
-  });
+  const filteredDatasets = datasets
+    .filter((dataset) => {
+      if (activeTab === 'thaki') {
+        return dataset.source === 'Thaki';
+      }
+      if (activeTab === 'custom') {
+        return dataset.source === 'Custom';
+      }
+      return true;
+    })
+    .filter((dataset) => {
+      if (!searchQuery) return true;
+      return (
+        dataset.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        dataset.description.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+    });
 
   return (
     <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
@@ -309,11 +316,7 @@ export function DatasetsPage() {
         <TopBar
           breadcrumb={
             <Breadcrumb
-              items={[
-                { label: 'AI Platform' },
-                { label: 'Hub' },
-                { label: 'Datasets' },
-              ]}
+              items={[{ label: 'AI Platform' }, { label: 'Hub' }, { label: 'Datasets' }]}
             />
           }
           actions={
@@ -403,7 +406,7 @@ export function DatasetsPage() {
                   title="No datasets found"
                   description={
                     activeTab === 'custom'
-                      ? 'You haven\'t uploaded any custom datasets yet. Upload your first dataset to get started.'
+                      ? "You haven't uploaded any custom datasets yet. Upload your first dataset to get started."
                       : 'No datasets match your search criteria. Try adjusting your filters.'
                   }
                 />

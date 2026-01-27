@@ -336,7 +336,7 @@ const mockEventLogs: EventLog[] = [
    ---------------------------------------- */
 function EventDetailsConsole({ details }: { details: EventLog['details'] }) {
   const jsonString = JSON.stringify(details, null, 2);
-  
+
   return (
     <div className="border-x border-b border-[var(--color-border-default)] rounded-b-md overflow-hidden">
       <div className="bg-[var(--color-surface-contrast)] p-4 font-mono text-[12px] leading-[18px] text-white overflow-x-auto">
@@ -354,7 +354,8 @@ export default function IAMEventLogsPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [expandedLogs, setExpandedLogs] = useState<Set<string>>(new Set());
-  const { tabs, activeTabId, selectTab, closeTab, addNewTab, updateActiveTabLabel, moveTab } = useTabs();
+  const { tabs, activeTabId, selectTab, closeTab, addNewTab, updateActiveTabLabel, moveTab } =
+    useTabs();
   const itemsPerPage = 10;
 
   // Update tab label on mount
@@ -366,11 +367,12 @@ export default function IAMEventLogsPage() {
   const sidebarWidth = sidebarOpen ? 200 : 0;
 
   // Filter logs by search query
-  const filteredLogs = mockEventLogs.filter(log =>
-    log.eventName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    log.user.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    log.ipAddress.includes(searchQuery) ||
-    log.eventId.includes(searchQuery)
+  const filteredLogs = mockEventLogs.filter(
+    (log) =>
+      log.eventName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      log.user.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      log.ipAddress.includes(searchQuery) ||
+      log.eventId.includes(searchQuery)
   );
 
   // Pagination
@@ -382,7 +384,7 @@ export default function IAMEventLogsPage() {
 
   // Toggle expanded log
   const toggleExpanded = (logId: string) => {
-    setExpandedLogs(prev => {
+    setExpandedLogs((prev) => {
       const newSet = new Set(prev);
       if (newSet.has(logId)) {
         newSet.delete(logId);
@@ -405,7 +407,7 @@ export default function IAMEventLogsPage() {
       >
         {/* Tab Bar */}
         <TabBar
-          tabs={tabs.map(tab => ({ id: tab.id, label: tab.label, closable: tab.closable }))}
+          tabs={tabs.map((tab) => ({ id: tab.id, label: tab.label, closable: tab.closable }))}
           activeTab={activeTabId}
           onTabChange={selectTab}
           onTabClose={closeTab}
@@ -421,12 +423,7 @@ export default function IAMEventLogsPage() {
           onBack={() => window.history.back()}
           onForward={() => window.history.forward()}
           breadcrumb={
-            <Breadcrumb
-              items={[
-                { label: 'IAM', href: '/iam' },
-                { label: 'Event logs' },
-              ]}
-            />
+            <Breadcrumb items={[{ label: 'IAM', href: '/iam' }, { label: 'Event logs' }]} />
           }
         />
 
@@ -521,9 +518,15 @@ export default function IAMEventLogsPage() {
                               }}
                             >
                               {isExpanded ? (
-                                <IconChevronDown size={12} className="text-[var(--color-text-default)]" />
+                                <IconChevronDown
+                                  size={12}
+                                  className="text-[var(--color-text-default)]"
+                                />
                               ) : (
-                                <IconChevronRight size={12} className="text-[var(--color-text-default)]" />
+                                <IconChevronRight
+                                  size={12}
+                                  className="text-[var(--color-text-default)]"
+                                />
                               )}
                             </button>
                             <div className="flex flex-col gap-0.5">
@@ -559,7 +562,9 @@ export default function IAMEventLogsPage() {
 
                           {/* Result Cell */}
                           <div className="flex-1 px-3 py-2 flex items-center border-l border-transparent">
-                            <span className={`text-[12px] ${log.result === 'success' ? 'text-[var(--color-action-primary)]' : 'text-[var(--color-state-danger)]'}`}>
+                            <span
+                              className={`text-[12px] ${log.result === 'success' ? 'text-[var(--color-action-primary)]' : 'text-[var(--color-state-danger)]'}`}
+                            >
                               {log.result === 'success' ? 'Success' : 'Failure'}
                             </span>
                           </div>
@@ -573,9 +578,7 @@ export default function IAMEventLogsPage() {
                         </div>
 
                         {/* Expanded Details */}
-                        {isExpanded && (
-                          <EventDetailsConsole details={log.details} />
-                        )}
+                        {isExpanded && <EventDetailsConsole details={log.details} />}
                       </div>
                     );
                   })}
@@ -588,4 +591,3 @@ export default function IAMEventLogsPage() {
     </div>
   );
 }
-

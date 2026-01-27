@@ -6,5 +6,3 @@ export type {
   FormFieldHelperTextProps,
   FormFieldErrorMessageProps,
 } from './FormField';
-
-

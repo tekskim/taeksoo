@@ -37,7 +37,7 @@ interface ComputeAdminSidebarProps {
 
 export function ComputeAdminSidebar({ isOpen = true, onToggle }: ComputeAdminSidebarProps) {
   const location = useLocation();
-  
+
   // Check if current path matches href
   const isActive = (href: string) => {
     // Exact match
@@ -49,20 +49,24 @@ export function ComputeAdminSidebar({ isOpen = true, onToggle }: ComputeAdminSid
       return true;
     }
     // Match child resources - Subnets are under Networks
-    if (href === '/compute-admin/networks' && location.pathname.startsWith('/compute-admin/subnets')) {
+    if (
+      href === '/compute-admin/networks' &&
+      location.pathname.startsWith('/compute-admin/subnets')
+    ) {
       return true;
     }
     // Match child resources - Listeners, Pools, and L7 Policies are under Load Balancers
-    if (href === '/compute-admin/load-balancers' && (
-      location.pathname.startsWith('/compute-admin/listeners') ||
-      location.pathname.startsWith('/compute-admin/pools') ||
-      location.pathname.startsWith('/compute-admin/l7-policies')
-    )) {
+    if (
+      href === '/compute-admin/load-balancers' &&
+      (location.pathname.startsWith('/compute-admin/listeners') ||
+        location.pathname.startsWith('/compute-admin/pools') ||
+        location.pathname.startsWith('/compute-admin/l7-policies'))
+    ) {
       return true;
     }
     return false;
   };
-  
+
   if (!isOpen) return null;
 
   return (

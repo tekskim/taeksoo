@@ -19,11 +19,7 @@ import {
 import type { WizardSummaryItem, WizardSectionState } from '@/design-system';
 import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
 import { useTabs } from '@/contexts/TabContext';
-import {
-  IconBell,
-  IconEdit,
-  IconTrash,
-} from '@tabler/icons-react';
+import { IconBell, IconEdit, IconTrash } from '@tabler/icons-react';
 
 /* ----------------------------------------
    Types
@@ -252,8 +248,8 @@ interface DoneSectionProps {
 function DoneSection({ title, onEdit, children }: DoneSectionProps) {
   return (
     <SectionCard>
-      <SectionCard.Header 
-        title={title} 
+      <SectionCard.Header
+        title={title}
         showDivider
         actions={
           <Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />} onClick={onEdit}>
@@ -261,9 +257,7 @@ function DoneSection({ title, onEdit, children }: DoneSectionProps) {
           </Button>
         }
       />
-      <SectionCard.Content>
-        {children}
-      </SectionCard.Content>
+      <SectionCard.Content>{children}</SectionCard.Content>
     </SectionCard>
   );
 }
@@ -282,8 +276,8 @@ interface ActiveSectionProps {
 function ActiveSection({ title, onSave, onCancel, children }: ActiveSectionProps) {
   return (
     <SectionCard isActive>
-      <SectionCard.Header 
-        title={title} 
+      <SectionCard.Header
+        title={title}
         showDivider
         actions={
           <HStack gap={2}>
@@ -296,9 +290,7 @@ function ActiveSection({ title, onSave, onCancel, children }: ActiveSectionProps
           </HStack>
         }
       />
-      <SectionCard.Content>
-        {children}
-      </SectionCard.Content>
+      <SectionCard.Content>{children}</SectionCard.Content>
     </SectionCard>
   );
 }
@@ -331,19 +323,10 @@ function SummarySidebar({ sectionStatus, onCancel, onSave, onDelete }: SummarySi
 
         {/* Action Buttons */}
         <HStack gap={2}>
-          <Button
-            variant="secondary"
-            onClick={onCancel}
-            className="w-[80px]"
-          >
+          <Button variant="secondary" onClick={onCancel} className="w-[80px]">
             Cancel
           </Button>
-          <Button
-            variant="primary"
-            onClick={onSave}
-            className="flex-1"
-            disabled={!isAllDone}
-          >
+          <Button variant="primary" onClick={onSave} className="flex-1" disabled={!isAllDone}>
             Save
           </Button>
         </HStack>
@@ -373,24 +356,31 @@ export function ComputeAdminInstanceTemplateDetailPage() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(true);
-  
+
   // Get template based on URL id
-  const originalTemplate = id ? (mockTemplatesMap[id] || defaultTemplateDetail) : defaultTemplateDetail;
-  
+  const originalTemplate = id
+    ? mockTemplatesMap[id] || defaultTemplateDetail
+    : defaultTemplateDetail;
+
   // Editable form state
   const [formData, setFormData] = useState<InstanceTemplateDetail>(originalTemplate);
-  
+
   // Track which section is being edited (null = all done)
   const [editingSection, setEditingSection] = useState<SectionStep | null>(null);
-  
+
   // Section status for summary sidebar
-  const [sectionStatus, setSectionStatus] = useState<Record<SectionStep, WizardSectionState>>(() => {
-    const initial: Record<SectionStep, WizardSectionState> = {} as Record<SectionStep, WizardSectionState>;
-    SECTION_ORDER.forEach((key) => {
-      initial[key] = 'done';
-    });
-    return initial;
-  });
+  const [sectionStatus, setSectionStatus] = useState<Record<SectionStep, WizardSectionState>>(
+    () => {
+      const initial: Record<SectionStep, WizardSectionState> = {} as Record<
+        SectionStep,
+        WizardSectionState
+      >;
+      SECTION_ORDER.forEach((key) => {
+        initial[key] = 'done';
+      });
+      return initial;
+    }
+  );
 
   const { tabs, activeTabId, closeTab, selectTab, updateActiveTabLabel } = useTabs();
 
@@ -546,8 +536,8 @@ export function ComputeAdminInstanceTemplateDetailPage() {
                 <VStack gap={4} className="flex-1">
                   {/* Template Information */}
                   {editingSection === 'template-info' ? (
-                    <ActiveSection 
-                      title={SECTION_LABELS['template-info']} 
+                    <ActiveSection
+                      title={SECTION_LABELS['template-info']}
                       onSave={() => handleSectionSave('template-info')}
                       onCancel={() => handleSectionCancel('template-info')}
                     >
@@ -555,18 +545,18 @@ export function ComputeAdminInstanceTemplateDetailPage() {
                         <FormField>
                           <FormField.Label>Template name</FormField.Label>
                           <FormField.Control>
-                            <Input 
-                              value={formData.name} 
+                            <Input
+                              value={formData.name}
                               onChange={(e) => updateFormData('name', e.target.value)}
-                              fullWidth 
+                              fullWidth
                             />
                           </FormField.Control>
                         </FormField>
                         <FormField>
                           <FormField.Label>Favorite</FormField.Label>
                           <FormField.Control>
-                            <Toggle 
-                              checked={formData.favorite} 
+                            <Toggle
+                              checked={formData.favorite}
                               onChange={(checked) => updateFormData('favorite', checked)}
                             />
                           </FormField.Control>
@@ -574,8 +564,8 @@ export function ComputeAdminInstanceTemplateDetailPage() {
                         <FormField>
                           <FormField.Label>Description</FormField.Label>
                           <FormField.Control>
-                            <Textarea 
-                              value={formData.description === '-' ? '' : formData.description} 
+                            <Textarea
+                              value={formData.description === '-' ? '' : formData.description}
                               onChange={(e) => updateFormData('description', e.target.value || '-')}
                               rows={3}
                             />
@@ -584,17 +574,27 @@ export function ComputeAdminInstanceTemplateDetailPage() {
                       </VStack>
                     </ActiveSection>
                   ) : (
-                    <DoneSection title={SECTION_LABELS['template-info']} onEdit={() => handleEdit('template-info')}>
-                      <SectionCard.DataRow label="Template name" value={formData.name} showDivider={false} />
-                      <SectionCard.DataRow label="Favorite" value={formData.favorite ? 'Yes' : '-'} />
+                    <DoneSection
+                      title={SECTION_LABELS['template-info']}
+                      onEdit={() => handleEdit('template-info')}
+                    >
+                      <SectionCard.DataRow
+                        label="Template name"
+                        value={formData.name}
+                        showDivider={false}
+                      />
+                      <SectionCard.DataRow
+                        label="Favorite"
+                        value={formData.favorite ? 'Yes' : '-'}
+                      />
                       <SectionCard.DataRow label="Description" value={formData.description} />
                     </DoneSection>
                   )}
 
                   {/* Basic information */}
                   {editingSection === 'basic-info' ? (
-                    <ActiveSection 
-                      title={SECTION_LABELS['basic-info']} 
+                    <ActiveSection
+                      title={SECTION_LABELS['basic-info']}
                       onSave={() => handleSectionSave('basic-info')}
                       onCancel={() => handleSectionCancel('basic-info')}
                     >
@@ -602,7 +602,7 @@ export function ComputeAdminInstanceTemplateDetailPage() {
                         <FormField>
                           <FormField.Label>Availability zone</FormField.Label>
                           <FormField.Control>
-                            <Select 
+                            <Select
                               options={availabilityZoneOptions}
                               value={formData.availabilityZone}
                               onChange={(value) => updateFormData('availabilityZone', value)}
@@ -613,15 +613,22 @@ export function ComputeAdminInstanceTemplateDetailPage() {
                       </VStack>
                     </ActiveSection>
                   ) : (
-                    <DoneSection title={SECTION_LABELS['basic-info']} onEdit={() => handleEdit('basic-info')}>
-                      <SectionCard.DataRow label="Availability zone" value={formData.availabilityZone} showDivider={false} />
+                    <DoneSection
+                      title={SECTION_LABELS['basic-info']}
+                      onEdit={() => handleEdit('basic-info')}
+                    >
+                      <SectionCard.DataRow
+                        label="Availability zone"
+                        value={formData.availabilityZone}
+                        showDivider={false}
+                      />
                     </DoneSection>
                   )}
 
                   {/* Source */}
                   {editingSection === 'source' ? (
-                    <ActiveSection 
-                      title={SECTION_LABELS.source} 
+                    <ActiveSection
+                      title={SECTION_LABELS.source}
                       onSave={() => handleSectionSave('source')}
                       onCancel={() => handleSectionCancel('source')}
                     >
@@ -629,7 +636,7 @@ export function ComputeAdminInstanceTemplateDetailPage() {
                         <FormField>
                           <FormField.Label>Image</FormField.Label>
                           <FormField.Control>
-                            <Select 
+                            <Select
                               options={imageOptions}
                               value={formData.image}
                               onChange={(value) => updateFormData('image', value)}
@@ -640,21 +647,21 @@ export function ComputeAdminInstanceTemplateDetailPage() {
                         <FormField>
                           <FormField.Label>System disk</FormField.Label>
                           <FormField.Control>
-                            <Input 
-                              value={formData.systemDisk} 
+                            <Input
+                              value={formData.systemDisk}
                               onChange={(e) => updateFormData('systemDisk', e.target.value)}
-                              fullWidth 
+                              fullWidth
                             />
                           </FormField.Control>
                         </FormField>
                         <FormField>
                           <FormField.Label>Data disk</FormField.Label>
                           <FormField.Control>
-                            <Input 
-                              value={formData.dataDisk === '-' ? '' : formData.dataDisk} 
+                            <Input
+                              value={formData.dataDisk === '-' ? '' : formData.dataDisk}
                               onChange={(e) => updateFormData('dataDisk', e.target.value || '-')}
                               placeholder="Optional"
-                              fullWidth 
+                              fullWidth
                             />
                           </FormField.Control>
                         </FormField>
@@ -662,7 +669,11 @@ export function ComputeAdminInstanceTemplateDetailPage() {
                     </ActiveSection>
                   ) : (
                     <DoneSection title={SECTION_LABELS.source} onEdit={() => handleEdit('source')}>
-                      <SectionCard.DataRow label="Image" value={formData.image} showDivider={false} />
+                      <SectionCard.DataRow
+                        label="Image"
+                        value={formData.image}
+                        showDivider={false}
+                      />
                       <SectionCard.DataRow label="System disk" value={formData.systemDisk} />
                       <SectionCard.DataRow label="Data disk" value={formData.dataDisk} />
                     </DoneSection>
@@ -670,8 +681,8 @@ export function ComputeAdminInstanceTemplateDetailPage() {
 
                   {/* Flavor */}
                   {editingSection === 'flavor' ? (
-                    <ActiveSection 
-                      title={SECTION_LABELS.flavor} 
+                    <ActiveSection
+                      title={SECTION_LABELS.flavor}
                       onSave={() => handleSectionSave('flavor')}
                       onCancel={() => handleSectionCancel('flavor')}
                     >
@@ -679,7 +690,7 @@ export function ComputeAdminInstanceTemplateDetailPage() {
                         <FormField>
                           <FormField.Label>Flavor</FormField.Label>
                           <FormField.Control>
-                            <Select 
+                            <Select
                               options={flavorOptions}
                               value={formData.flavor}
                               onChange={(value) => updateFormData('flavor', value)}
@@ -691,9 +702,9 @@ export function ComputeAdminInstanceTemplateDetailPage() {
                     </ActiveSection>
                   ) : (
                     <DoneSection title={SECTION_LABELS.flavor} onEdit={() => handleEdit('flavor')}>
-                      <SectionCard.DataRow 
-                        label="Flavor" 
-                        value={`${formData.flavor} (${formData.vcpu} vCPU / ${formData.ram} / ${formData.disk})`} 
+                      <SectionCard.DataRow
+                        label="Flavor"
+                        value={`${formData.flavor} (${formData.vcpu} vCPU / ${formData.ram} / ${formData.disk})`}
                         showDivider={false}
                       />
                     </DoneSection>
@@ -701,8 +712,8 @@ export function ComputeAdminInstanceTemplateDetailPage() {
 
                   {/* Network */}
                   {editingSection === 'network' ? (
-                    <ActiveSection 
-                      title={SECTION_LABELS.network} 
+                    <ActiveSection
+                      title={SECTION_LABELS.network}
                       onSave={() => handleSectionSave('network')}
                       onCancel={() => handleSectionCancel('network')}
                     >
@@ -710,56 +721,75 @@ export function ComputeAdminInstanceTemplateDetailPage() {
                         <FormField>
                           <FormField.Label>Network</FormField.Label>
                           <FormField.Control>
-                            <Input 
-                              value={formData.network === '-' ? '' : formData.network} 
+                            <Input
+                              value={formData.network === '-' ? '' : formData.network}
                               onChange={(e) => updateFormData('network', e.target.value || '-')}
                               placeholder="Select network"
-                              fullWidth 
+                              fullWidth
                             />
                           </FormField.Control>
                         </FormField>
                         <FormField>
                           <FormField.Label>Floating IP</FormField.Label>
                           <FormField.Control>
-                            <Input 
-                              value={formData.floatingIp === '-' ? '' : formData.floatingIp} 
+                            <Input
+                              value={formData.floatingIp === '-' ? '' : formData.floatingIp}
                               onChange={(e) => updateFormData('floatingIp', e.target.value || '-')}
                               placeholder="Optional"
-                              fullWidth 
+                              fullWidth
                             />
                           </FormField.Control>
                         </FormField>
                         <FormField>
                           <FormField.Label>Security groups</FormField.Label>
                           <FormField.Control>
-                            <Input 
-                              value={formData.securityGroups.join(', ')} 
-                              onChange={(e) => updateFormData('securityGroups', e.target.value.split(',').map(s => s.trim()).filter(Boolean))}
+                            <Input
+                              value={formData.securityGroups.join(', ')}
+                              onChange={(e) =>
+                                updateFormData(
+                                  'securityGroups',
+                                  e.target.value
+                                    .split(',')
+                                    .map((s) => s.trim())
+                                    .filter(Boolean)
+                                )
+                              }
                               placeholder="Comma-separated"
-                              fullWidth 
+                              fullWidth
                             />
                           </FormField.Control>
                         </FormField>
                         <FormField>
                           <FormField.Label>Port</FormField.Label>
                           <FormField.Control>
-                            <Input 
-                              value={formData.port === '-' ? '' : formData.port} 
+                            <Input
+                              value={formData.port === '-' ? '' : formData.port}
                               onChange={(e) => updateFormData('port', e.target.value || '-')}
                               placeholder="Optional"
-                              fullWidth 
+                              fullWidth
                             />
                           </FormField.Control>
                         </FormField>
                       </VStack>
                     </ActiveSection>
                   ) : (
-                    <DoneSection title={SECTION_LABELS.network} onEdit={() => handleEdit('network')}>
-                      <SectionCard.DataRow label="Network" value={formData.network} showDivider={false} />
+                    <DoneSection
+                      title={SECTION_LABELS.network}
+                      onEdit={() => handleEdit('network')}
+                    >
+                      <SectionCard.DataRow
+                        label="Network"
+                        value={formData.network}
+                        showDivider={false}
+                      />
                       <SectionCard.DataRow label="Floating IP" value={formData.floatingIp} />
-                      <SectionCard.DataRow 
-                        label="Security group" 
-                        value={formData.securityGroups.length > 0 ? formData.securityGroups.join(', ') : '-'} 
+                      <SectionCard.DataRow
+                        label="Security group"
+                        value={
+                          formData.securityGroups.length > 0
+                            ? formData.securityGroups.join(', ')
+                            : '-'
+                        }
                       />
                       <SectionCard.DataRow label="Port" value={formData.port} />
                     </DoneSection>
@@ -767,8 +797,8 @@ export function ComputeAdminInstanceTemplateDetailPage() {
 
                   {/* Advanced */}
                   {editingSection === 'advanced' ? (
-                    <ActiveSection 
-                      title={SECTION_LABELS.advanced} 
+                    <ActiveSection
+                      title={SECTION_LABELS.advanced}
                       onSave={() => handleSectionSave('advanced')}
                       onCancel={() => handleSectionCancel('advanced')}
                     >
@@ -776,26 +806,31 @@ export function ComputeAdminInstanceTemplateDetailPage() {
                         <FormField>
                           <FormField.Label>Tags</FormField.Label>
                           <FormField.Control>
-                            <Input 
-                              value={formData.tags.map(t => `${t.key}:${t.value}`).join(', ')} 
+                            <Input
+                              value={formData.tags.map((t) => `${t.key}:${t.value}`).join(', ')}
                               onChange={(e) => {
-                                const tags = e.target.value.split(',').map(s => {
-                                  const [key, value] = s.trim().split(':');
-                                  return { key: key || '', value: value || '' };
-                                }).filter(t => t.key);
+                                const tags = e.target.value
+                                  .split(',')
+                                  .map((s) => {
+                                    const [key, value] = s.trim().split(':');
+                                    return { key: key || '', value: value || '' };
+                                  })
+                                  .filter((t) => t.key);
                                 updateFormData('tags', tags);
                               }}
                               placeholder="key:value, key:value"
-                              fullWidth 
+                              fullWidth
                             />
                           </FormField.Control>
-                          <FormField.HelperText>Enter tags as key:value pairs, separated by commas</FormField.HelperText>
+                          <FormField.HelperText>
+                            Enter tags as key:value pairs, separated by commas
+                          </FormField.HelperText>
                         </FormField>
                         <FormField>
                           <FormField.Label>User data</FormField.Label>
                           <FormField.Control>
-                            <Textarea 
-                              value={formData.userData === '-' ? '' : formData.userData} 
+                            <Textarea
+                              value={formData.userData === '-' ? '' : formData.userData}
                               onChange={(e) => updateFormData('userData', e.target.value || '-')}
                               rows={5}
                               placeholder="Enter cloud-init script or user data"
@@ -805,10 +840,17 @@ export function ComputeAdminInstanceTemplateDetailPage() {
                       </VStack>
                     </ActiveSection>
                   ) : (
-                    <DoneSection title={SECTION_LABELS.advanced} onEdit={() => handleEdit('advanced')}>
-                      <SectionCard.DataRow 
-                        label="Tag" 
-                        value={formData.tags.length > 0 ? formData.tags.map(t => `${t.key}: ${t.value}`).join(', ') : '-'} 
+                    <DoneSection
+                      title={SECTION_LABELS.advanced}
+                      onEdit={() => handleEdit('advanced')}
+                    >
+                      <SectionCard.DataRow
+                        label="Tag"
+                        value={
+                          formData.tags.length > 0
+                            ? formData.tags.map((t) => `${t.key}: ${t.value}`).join(', ')
+                            : '-'
+                        }
                         showDivider={false}
                       />
                       <SectionCard.DataRow label="User data" value={formData.userData || '-'} />
@@ -817,7 +859,7 @@ export function ComputeAdminInstanceTemplateDetailPage() {
                 </VStack>
 
                 {/* Right Column - Summary Sidebar */}
-                <SummarySidebar 
+                <SummarySidebar
                   sectionStatus={sectionStatus}
                   onCancel={handleCancel}
                   onSave={handleSave}

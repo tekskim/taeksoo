@@ -2,9 +2,9 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { MenuItem } from './MenuItem';
 import { MenuSection } from './MenuSection';
 import { MenuDivider } from './MenuDivider';
-import { 
-  IconHome, 
-  IconSettings, 
+import {
+  IconHome,
+  IconSettings,
   IconUser,
   IconFolder,
   IconFile,
@@ -134,25 +134,10 @@ export const WithoutIcon: Story = {
 export const AllStates: Story = {
   render: () => (
     <div className="flex flex-col gap-1">
-      <MenuItem
-        icon={<IconHome size={14} stroke={1.5} />}
-        label="Default"
-      />
-      <MenuItem
-        icon={<IconFolder size={14} stroke={1.5} />}
-        label="Active"
-        active
-      />
-      <MenuItem
-        icon={<IconSettings size={14} stroke={1.5} />}
-        label="Disabled"
-        disabled
-      />
-      <MenuItem
-        icon={<IconFile size={14} stroke={1.5} />}
-        label="With Badge"
-        badge="Beta"
-      />
+      <MenuItem icon={<IconHome size={14} stroke={1.5} />} label="Default" />
+      <MenuItem icon={<IconFolder size={14} stroke={1.5} />} label="Active" active />
+      <MenuItem icon={<IconSettings size={14} stroke={1.5} />} label="Disabled" disabled />
+      <MenuItem icon={<IconFile size={14} stroke={1.5} />} label="With Badge" badge="Beta" />
     </div>
   ),
 };
@@ -168,34 +153,26 @@ export const SidebarMenu: Story = {
         href="/dashboard"
         active
       />
-      <MenuItem
-        icon={<IconUser size={14} stroke={1.5} />}
-        label="Profile"
-        href="/profile"
-      />
+      <MenuItem icon={<IconUser size={14} stroke={1.5} />} label="Profile" href="/profile" />
       <MenuItem
         icon={<IconFolder size={14} stroke={1.5} />}
         label="Projects"
         href="/projects"
         badge="12"
       />
-      
+
       <MenuDivider />
-      
+
       <MenuSection label="Settings" />
       <MenuItem
         icon={<IconSettings size={14} stroke={1.5} />}
         label="Preferences"
         href="/settings"
       />
-      <MenuItem
-        icon={<IconTrash size={14} stroke={1.5} />}
-        label="Trash"
-        href="/trash"
-      />
-      
+      <MenuItem icon={<IconTrash size={14} stroke={1.5} />} label="Trash" href="/trash" />
+
       <MenuDivider />
-      
+
       <MenuItem
         icon={<IconLogout size={14} stroke={1.5} />}
         label="Logout"

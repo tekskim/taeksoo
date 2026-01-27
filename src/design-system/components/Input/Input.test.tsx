@@ -66,7 +66,7 @@ describe('Input', () => {
       const user = userEvent.setup();
       render(<Input disabled />);
       const input = screen.getByRole('textbox');
-      
+
       await user.type(input, 'test');
       expect(input).toHaveValue('');
     });
@@ -82,7 +82,7 @@ describe('Input', () => {
       const user = userEvent.setup();
       render(<Input readOnly defaultValue="initial" />);
       const input = screen.getByRole('textbox');
-      
+
       await user.type(input, 'test');
       expect(input).toHaveValue('initial');
     });
@@ -93,10 +93,10 @@ describe('Input', () => {
       const user = userEvent.setup();
       const handleChange = vi.fn();
       render(<Input onChange={handleChange} />);
-      
+
       const input = screen.getByRole('textbox');
       await user.type(input, 'hello');
-      
+
       expect(handleChange).toHaveBeenCalled();
       expect(input).toHaveValue('hello');
     });
@@ -104,13 +104,11 @@ describe('Input', () => {
     it('supports controlled value', async () => {
       const user = userEvent.setup();
       const handleChange = vi.fn();
-      
-      const { rerender } = render(
-        <Input value="initial" onChange={handleChange} />
-      );
-      
+
+      const { rerender } = render(<Input value="initial" onChange={handleChange} />);
+
       expect(screen.getByRole('textbox')).toHaveValue('initial');
-      
+
       // Simulate controlled update
       rerender(<Input value="updated" onChange={handleChange} />);
       expect(screen.getByRole('textbox')).toHaveValue('updated');
@@ -162,10 +160,10 @@ describe('Input', () => {
     it('generates unique id when not provided', () => {
       render(<Input label="Field 1" />);
       render(<Input label="Field 2" />);
-      
+
       const input1 = screen.getByLabelText('Field 1');
       const input2 = screen.getByLabelText('Field 2');
-      
+
       expect(input1.id).not.toBe(input2.id);
     });
 

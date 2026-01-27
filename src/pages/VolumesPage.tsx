@@ -65,16 +65,116 @@ interface Volume {
    ---------------------------------------- */
 
 const mockVolumes: Volume[] = [
-  { id: 'vol-001', name: 'db-data', size: '1500GiB', type: '_DEFAULT_', diskTag: 'Data disk', attachedTo: 'web-server-1', attachedToId: 'inst-001', createdAt: '2025-09-12', status: 'in-use' },
-  { id: 'vol-002', name: 'app-storage', size: '500GiB', type: '_DEFAULT_', diskTag: 'Data disk', attachedTo: 'app-server-1', attachedToId: 'inst-002', createdAt: '2025-09-10', status: 'in-use' },
-  { id: 'vol-003', name: 'backup-vol', size: '2000GiB', type: 'SSD', diskTag: 'Backup', attachedTo: null, attachedToId: null, createdAt: '2025-09-08', status: 'active' },
-  { id: 'vol-004', name: 'log-storage', size: '100GiB', type: '_DEFAULT_', diskTag: 'Logs', attachedTo: 'log-server', attachedToId: 'inst-003', createdAt: '2025-09-05', status: 'in-use' },
-  { id: 'vol-005', name: 'cache-vol', size: '256GiB', type: 'NVMe', diskTag: 'Cache', attachedTo: 'cache-01', attachedToId: 'inst-004', createdAt: '2025-08-30', status: 'in-use' },
-  { id: 'vol-006', name: 'media-storage', size: '5000GiB', type: 'HDD', diskTag: 'Media', attachedTo: null, attachedToId: null, createdAt: '2025-08-25', status: 'active' },
-  { id: 'vol-007', name: 'temp-vol', size: '50GiB', type: '_DEFAULT_', diskTag: 'Temporary', attachedTo: null, attachedToId: null, createdAt: '2025-08-20', status: 'pending' },
-  { id: 'vol-008', name: 'ml-data', size: '1000GiB', type: 'NVMe', diskTag: 'ML Dataset', attachedTo: 'gpu-server-1', attachedToId: 'inst-005', createdAt: '2025-08-15', status: 'in-use' },
-  { id: 'vol-009', name: 'archive-vol', size: '10000GiB', type: 'HDD', diskTag: 'Archive', attachedTo: null, attachedToId: null, createdAt: '2025-08-10', status: 'active' },
-  { id: 'vol-010', name: 'boot-vol-01', size: '100GiB', type: 'SSD', diskTag: 'Boot', attachedTo: 'web-server-2', attachedToId: 'inst-006', createdAt: '2025-08-05', status: 'in-use' },
+  {
+    id: 'vol-001',
+    name: 'db-data',
+    size: '1500GiB',
+    type: '_DEFAULT_',
+    diskTag: 'Data disk',
+    attachedTo: 'web-server-1',
+    attachedToId: 'inst-001',
+    createdAt: '2025-09-12',
+    status: 'in-use',
+  },
+  {
+    id: 'vol-002',
+    name: 'app-storage',
+    size: '500GiB',
+    type: '_DEFAULT_',
+    diskTag: 'Data disk',
+    attachedTo: 'app-server-1',
+    attachedToId: 'inst-002',
+    createdAt: '2025-09-10',
+    status: 'in-use',
+  },
+  {
+    id: 'vol-003',
+    name: 'backup-vol',
+    size: '2000GiB',
+    type: 'SSD',
+    diskTag: 'Backup',
+    attachedTo: null,
+    attachedToId: null,
+    createdAt: '2025-09-08',
+    status: 'active',
+  },
+  {
+    id: 'vol-004',
+    name: 'log-storage',
+    size: '100GiB',
+    type: '_DEFAULT_',
+    diskTag: 'Logs',
+    attachedTo: 'log-server',
+    attachedToId: 'inst-003',
+    createdAt: '2025-09-05',
+    status: 'in-use',
+  },
+  {
+    id: 'vol-005',
+    name: 'cache-vol',
+    size: '256GiB',
+    type: 'NVMe',
+    diskTag: 'Cache',
+    attachedTo: 'cache-01',
+    attachedToId: 'inst-004',
+    createdAt: '2025-08-30',
+    status: 'in-use',
+  },
+  {
+    id: 'vol-006',
+    name: 'media-storage',
+    size: '5000GiB',
+    type: 'HDD',
+    diskTag: 'Media',
+    attachedTo: null,
+    attachedToId: null,
+    createdAt: '2025-08-25',
+    status: 'active',
+  },
+  {
+    id: 'vol-007',
+    name: 'temp-vol',
+    size: '50GiB',
+    type: '_DEFAULT_',
+    diskTag: 'Temporary',
+    attachedTo: null,
+    attachedToId: null,
+    createdAt: '2025-08-20',
+    status: 'pending',
+  },
+  {
+    id: 'vol-008',
+    name: 'ml-data',
+    size: '1000GiB',
+    type: 'NVMe',
+    diskTag: 'ML Dataset',
+    attachedTo: 'gpu-server-1',
+    attachedToId: 'inst-005',
+    createdAt: '2025-08-15',
+    status: 'in-use',
+  },
+  {
+    id: 'vol-009',
+    name: 'archive-vol',
+    size: '10000GiB',
+    type: 'HDD',
+    diskTag: 'Archive',
+    attachedTo: null,
+    attachedToId: null,
+    createdAt: '2025-08-10',
+    status: 'active',
+  },
+  {
+    id: 'vol-010',
+    name: 'boot-vol-01',
+    size: '100GiB',
+    type: 'SSD',
+    diskTag: 'Boot',
+    attachedTo: 'web-server-2',
+    attachedToId: 'inst-006',
+    createdAt: '2025-08-05',
+    status: 'in-use',
+  },
 ];
 
 /* ----------------------------------------
@@ -82,10 +182,10 @@ const mockVolumes: Volume[] = [
    ---------------------------------------- */
 
 const volumeStatusMap: Record<VolumeStatus, 'active' | 'in-use' | 'error' | 'pending'> = {
-  'active': 'active',
+  active: 'active',
   'in-use': 'in-use',
-  'error': 'error',
-  'pending': 'pending',
+  error: 'error',
+  pending: 'pending',
 };
 
 /* ----------------------------------------
@@ -95,20 +195,30 @@ const volumeStatusMap: Record<VolumeStatus, 'active' | 'in-use' | 'error' | 'pen
 // Filter fields configuration
 const filterFields: FilterField[] = [
   { key: 'name', label: 'Name', type: 'text' },
-  { key: 'type', label: 'Type', type: 'select', options: [
-    { value: '_DEFAULT_', label: '_DEFAULT_' },
-    { value: 'SSD', label: 'SSD' },
-    { value: 'NVMe', label: 'NVMe' },
-    { value: 'HDD', label: 'HDD' },
-  ]},
+  {
+    key: 'type',
+    label: 'Type',
+    type: 'select',
+    options: [
+      { value: '_DEFAULT_', label: '_DEFAULT_' },
+      { value: 'SSD', label: 'SSD' },
+      { value: 'NVMe', label: 'NVMe' },
+      { value: 'HDD', label: 'HDD' },
+    ],
+  },
   { key: 'diskTag', label: 'Disk Tag', type: 'text' },
   { key: 'attachedTo', label: 'Attached To', type: 'text' },
-  { key: 'status', label: 'Status', type: 'select', options: [
-    { value: 'active', label: 'Active' },
-    { value: 'in-use', label: 'In Use' },
-    { value: 'error', label: 'Error' },
-    { value: 'pending', label: 'Pending' },
-  ]},
+  {
+    key: 'status',
+    label: 'Status',
+    type: 'select',
+    options: [
+      { value: 'active', label: 'Active' },
+      { value: 'in-use', label: 'In Use' },
+      { value: 'error', label: 'Error' },
+      { value: 'pending', label: 'Pending' },
+    ],
+  },
 ];
 
 export function VolumesPage() {
@@ -116,7 +226,7 @@ export function VolumesPage() {
   const [appliedFilters, setAppliedFilters] = useState<AppliedFilter[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [volumes, setVolumes] = useState(mockVolumes);
-  
+
   // Delete modal state
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [volumeToDelete, setVolumeToDelete] = useState<Volume | null>(null);
@@ -254,7 +364,7 @@ export function VolumesPage() {
   // Filter volumes by applied filters
   const filteredVolumes = useMemo(() => {
     if (appliedFilters.length === 0) return volumes;
-    
+
     return volumes.filter((v) => {
       return appliedFilters.every((filter) => {
         const value = String(v[filter.field as keyof Volume] || '').toLowerCase();
@@ -313,7 +423,7 @@ export function VolumesPage() {
       label: 'Attached to',
       flex: 1,
       sortable: true,
-      render: (_, row) => (
+      render: (_, row) =>
         row.attachedTo && row.attachedToId ? (
           <div className="flex flex-col gap-0.5">
             <button
@@ -332,8 +442,7 @@ export function VolumesPage() {
           </div>
         ) : (
           <span className="text-[var(--color-text-muted)]">-</span>
-        )
-      ),
+        ),
     },
     {
       key: 'createdAt',
@@ -352,21 +461,50 @@ export function VolumesPage() {
             id: 'data-protection',
             label: 'Data protection',
             submenu: [
-              { id: 'create-snapshot', label: 'Create volume snapshot', onClick: () => handleCreateSnapshot(row) },
-              { id: 'create-backup', label: 'Create volume backup', onClick: () => handleCreateBackup(row) },
+              {
+                id: 'create-snapshot',
+                label: 'Create volume snapshot',
+                onClick: () => handleCreateSnapshot(row),
+              },
+              {
+                id: 'create-backup',
+                label: 'Create volume backup',
+                onClick: () => handleCreateBackup(row),
+              },
               { id: 'clone-volume', label: 'Clone volume', onClick: () => handleCloneVolume(row) },
-              { id: 'restore-snapshot', label: 'Restore from Snapshot', onClick: () => handleRestoreSnapshot(row) },
+              {
+                id: 'restore-snapshot',
+                label: 'Restore from Snapshot',
+                onClick: () => handleRestoreSnapshot(row),
+              },
             ],
           },
           {
             id: 'operate',
             label: 'Operate',
             submenu: [
-              { id: 'create-instance', label: 'Create instance', onClick: () => console.log('Create instance:', row.id) },
+              {
+                id: 'create-instance',
+                label: 'Create instance',
+                onClick: () => console.log('Create instance:', row.id),
+              },
               { id: 'create-image', label: 'Create image', onClick: () => handleCreateImage(row) },
-              { id: 'attach-instance', label: 'Attach instance', onClick: () => handleAttachInstance(row) },
-              { id: 'detach-instance', label: 'Detach instance', onClick: () => handleDetachInstance(row), disabled: !row.attachedTo },
-              { id: 'boot-setting', label: 'Boot setting', onClick: () => console.log('Boot setting:', row.id) },
+              {
+                id: 'attach-instance',
+                label: 'Attach instance',
+                onClick: () => handleAttachInstance(row),
+              },
+              {
+                id: 'detach-instance',
+                label: 'Detach instance',
+                onClick: () => handleDetachInstance(row),
+                disabled: !row.attachedTo,
+              },
+              {
+                id: 'boot-setting',
+                label: 'Boot setting',
+                onClick: () => console.log('Boot setting:', row.id),
+              },
             ],
           },
           {
@@ -374,8 +512,16 @@ export function VolumesPage() {
             label: 'Configuration',
             submenu: [
               { id: 'edit', label: 'Edit', onClick: () => handleEditVolume(row) },
-              { id: 'extend-volume', label: 'Extend volume', onClick: () => handleExtendVolume(row) },
-              { id: 'change-volume-type', label: 'Change volume Type', onClick: () => handleChangeType(row) },
+              {
+                id: 'extend-volume',
+                label: 'Extend volume',
+                onClick: () => handleExtendVolume(row),
+              },
+              {
+                id: 'change-volume-type',
+                label: 'Change volume Type',
+                onClick: () => handleChangeType(row),
+              },
             ],
           },
           {
@@ -395,12 +541,16 @@ export function VolumesPage() {
             onClick: () => handleDeleteClick(row),
           },
         ];
-        
+
         return (
           <div onClick={(e) => e.stopPropagation()}>
             <ContextMenu items={menuItems} trigger="click">
               <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
-                <IconDotsCircleHorizontal size={16} stroke={1.5} className="text-[var(--action-icon-color)]" />
+                <IconDotsCircleHorizontal
+                  size={16}
+                  stroke={1.5}
+                  className="text-[var(--action-icon-color)]"
+                />
               </button>
             </ContextMenu>
           </div>
@@ -411,9 +561,7 @@ export function VolumesPage() {
 
   // Filter and order columns based on preferences
   const visibleColumns = useMemo(() => {
-    const visibleColumnIds = columnConfig
-      .filter((col) => col.visible)
-      .map((col) => col.id);
+    const visibleColumnIds = columnConfig.filter((col) => col.visible).map((col) => col.id);
 
     const columnMap = new Map(columns.map((col) => [col.key, col]));
 
@@ -424,7 +572,7 @@ export function VolumesPage() {
 
   return (
     <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
-      <Sidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(prev => !prev)} />
+      <Sidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen((prev) => !prev)} />
 
       <main
         className={`absolute top-0 bottom-0 right-0 flex flex-col bg-[var(--color-surface-default)] transition-[left] duration-200 ${
@@ -453,12 +601,7 @@ export function VolumesPage() {
             onBack={() => window.history.back()}
             onForward={() => window.history.forward()}
             breadcrumb={
-              <Breadcrumb
-                items={[
-                  { label: 'Proj-1', href: '/project' },
-                  { label: 'Volumes' },
-                ]}
-              />
+              <Breadcrumb items={[{ label: 'Proj-1', href: '/project' }, { label: 'Volumes' }]} />
             }
             actions={
               <TopBarAction
@@ -474,68 +617,82 @@ export function VolumesPage() {
         <div className="flex-1 overflow-auto overscroll-contain sidebar-scroll">
           {/* Page Content */}
           <div className="pt-4 px-8 pb-6 bg-[var(--color-surface-default)]">
-          <VStack gap={3}>
-            {/* Page Header */}
-            <div className="flex items-center justify-between h-8">
-              <h1 className="text-[length:var(--font-size-16)] font-semibold leading-6 text-[var(--color-text-default)]">
-                Volumes
-              </h1>
-              <Button size="md" as={Link} to="/compute/volumes/create">
-                Create volume
-              </Button>
-            </div>
+            <VStack gap={3}>
+              {/* Page Header */}
+              <div className="flex items-center justify-between h-8">
+                <h1 className="text-[length:var(--font-size-16)] font-semibold leading-6 text-[var(--color-text-default)]">
+                  Volumes
+                </h1>
+                <Button size="md" as={Link} to="/compute/volumes/create">
+                  Create volume
+                </Button>
+              </div>
 
-            {/* List Toolbar */}
-            <ListToolbar
-              primaryActions={
-                <ListToolbar.Actions>
-                  <FilterSearchInput
-                    filters={filterFields}
-                    appliedFilters={appliedFilters}
-                    onFiltersChange={setAppliedFilters}
-                    placeholder="Search volume by attributes"
-                    className="w-[var(--search-input-width)]"
-                  />
-                  <Button variant="secondary" size="sm" iconOnly icon={<IconDownload size={12} />} aria-label="Download" />
-                </ListToolbar.Actions>
-              }
-              bulkActions={
-                <ListToolbar.Actions>
-                  <Button variant="muted" size="sm" leftIcon={<IconTrash size={12} />} disabled>
-                    Delete
-                  </Button>
-                  <Button variant="muted" size="sm" leftIcon={<IconTransfer size={12} />} disabled>
-                    Accept Volume Transfer
-                  </Button>
-                </ListToolbar.Actions>
-              }
-            />
-
-            {/* Pagination */}
-            {filteredVolumes.length > 0 && (
-              <Pagination
-                currentPage={currentPage}
-                totalPages={totalPages}
-                onPageChange={setCurrentPage}
-                showSettings
-                onSettingsClick={() => setIsPreferencesOpen(true)}
-                totalItems={filteredVolumes.length}
-                selectedCount={selectedVolumes.length}
+              {/* List Toolbar */}
+              <ListToolbar
+                primaryActions={
+                  <ListToolbar.Actions>
+                    <FilterSearchInput
+                      filters={filterFields}
+                      appliedFilters={appliedFilters}
+                      onFiltersChange={setAppliedFilters}
+                      placeholder="Search volume by attributes"
+                      className="w-[var(--search-input-width)]"
+                    />
+                    <Button
+                      variant="secondary"
+                      size="sm"
+                      iconOnly
+                      icon={<IconDownload size={12} />}
+                      aria-label="Download"
+                    />
+                  </ListToolbar.Actions>
+                }
+                bulkActions={
+                  <ListToolbar.Actions>
+                    <Button variant="muted" size="sm" leftIcon={<IconTrash size={12} />} disabled>
+                      Delete
+                    </Button>
+                    <Button
+                      variant="muted"
+                      size="sm"
+                      leftIcon={<IconTransfer size={12} />}
+                      disabled
+                    >
+                      Accept Volume Transfer
+                    </Button>
+                  </ListToolbar.Actions>
+                }
               />
-            )}
 
-            {/* Volumes Table */}
-            <Table<Volume>
-              columns={visibleColumns}
-              data={filteredVolumes.slice((currentPage - 1) * rowsPerPage, currentPage * rowsPerPage)}
-              rowKey="id"
-              emptyMessage="No volumes found"
-              selectable
-              selectedKeys={selectedVolumes}
-              onSelectionChange={setSelectedVolumes}
-            />
-          </VStack>
-        </div>
+              {/* Pagination */}
+              {filteredVolumes.length > 0 && (
+                <Pagination
+                  currentPage={currentPage}
+                  totalPages={totalPages}
+                  onPageChange={setCurrentPage}
+                  showSettings
+                  onSettingsClick={() => setIsPreferencesOpen(true)}
+                  totalItems={filteredVolumes.length}
+                  selectedCount={selectedVolumes.length}
+                />
+              )}
+
+              {/* Volumes Table */}
+              <Table<Volume>
+                columns={visibleColumns}
+                data={filteredVolumes.slice(
+                  (currentPage - 1) * rowsPerPage,
+                  currentPage * rowsPerPage
+                )}
+                rowKey="id"
+                emptyMessage="No volumes found"
+                selectable
+                selectedKeys={selectedVolumes}
+                onSelectionChange={setSelectedVolumes}
+              />
+            </VStack>
+          </div>
         </div>
       </main>
 
@@ -568,111 +725,154 @@ export function VolumesPage() {
       <CreateVolumeSnapshotDrawer
         isOpen={createSnapshotOpen}
         onClose={() => setCreateSnapshotOpen(false)}
-        volume={selectedVolumeForDrawer ? {
-          id: selectedVolumeForDrawer.id,
-          name: selectedVolumeForDrawer.name,
-          size: parseSizeToNumber(selectedVolumeForDrawer.size),
-        } : null}
+        volume={
+          selectedVolumeForDrawer
+            ? {
+                id: selectedVolumeForDrawer.id,
+                name: selectedVolumeForDrawer.name,
+                size: parseSizeToNumber(selectedVolumeForDrawer.size),
+              }
+            : null
+        }
       />
 
       <CreateVolumeBackupDrawer
         isOpen={createBackupOpen}
         onClose={() => setCreateBackupOpen(false)}
-        volume={selectedVolumeForDrawer ? {
-          id: selectedVolumeForDrawer.id,
-          name: selectedVolumeForDrawer.name,
-          size: parseSizeToNumber(selectedVolumeForDrawer.size),
-        } : null}
+        volume={
+          selectedVolumeForDrawer
+            ? {
+                id: selectedVolumeForDrawer.id,
+                name: selectedVolumeForDrawer.name,
+                size: parseSizeToNumber(selectedVolumeForDrawer.size),
+              }
+            : null
+        }
       />
 
       <CloneVolumeDrawer
         isOpen={cloneVolumeOpen}
         onClose={() => setCloneVolumeOpen(false)}
-        volume={selectedVolumeForDrawer ? {
-          id: selectedVolumeForDrawer.id,
-          name: selectedVolumeForDrawer.name,
-          size: parseSizeToNumber(selectedVolumeForDrawer.size),
-        } : null}
+        volume={
+          selectedVolumeForDrawer
+            ? {
+                id: selectedVolumeForDrawer.id,
+                name: selectedVolumeForDrawer.name,
+                size: parseSizeToNumber(selectedVolumeForDrawer.size),
+              }
+            : null
+        }
       />
 
       <RestoreFromSnapshotDrawer
         isOpen={restoreSnapshotOpen}
         onClose={() => setRestoreSnapshotOpen(false)}
-        volume={selectedVolumeForDrawer ? {
-          id: selectedVolumeForDrawer.id,
-          name: selectedVolumeForDrawer.name,
-        } : { id: '', name: '' }}
+        volume={
+          selectedVolumeForDrawer
+            ? {
+                id: selectedVolumeForDrawer.id,
+                name: selectedVolumeForDrawer.name,
+              }
+            : { id: '', name: '' }
+        }
       />
 
       <CreateImageFromVolumeDrawer
         isOpen={createImageOpen}
         onClose={() => setCreateImageOpen(false)}
-        volume={selectedVolumeForDrawer ? {
-          id: selectedVolumeForDrawer.id,
-          name: selectedVolumeForDrawer.name,
-          size: parseSizeToNumber(selectedVolumeForDrawer.size),
-        } : null}
+        volume={
+          selectedVolumeForDrawer
+            ? {
+                id: selectedVolumeForDrawer.id,
+                name: selectedVolumeForDrawer.name,
+                size: parseSizeToNumber(selectedVolumeForDrawer.size),
+              }
+            : null
+        }
       />
 
       <EditVolumeDrawer
         isOpen={editVolumeOpen}
         onClose={() => setEditVolumeOpen(false)}
-        volume={selectedVolumeForDrawer ? {
-          id: selectedVolumeForDrawer.id,
-          name: selectedVolumeForDrawer.name,
-        } : null}
+        volume={
+          selectedVolumeForDrawer
+            ? {
+                id: selectedVolumeForDrawer.id,
+                name: selectedVolumeForDrawer.name,
+              }
+            : null
+        }
       />
 
       <ExtendVolumeDrawer
         isOpen={extendVolumeOpen}
         onClose={() => setExtendVolumeOpen(false)}
-        volume={selectedVolumeForDrawer ? {
-          id: selectedVolumeForDrawer.id,
-          name: selectedVolumeForDrawer.name,
-          size: parseSizeToNumber(selectedVolumeForDrawer.size),
-        } : null}
+        volume={
+          selectedVolumeForDrawer
+            ? {
+                id: selectedVolumeForDrawer.id,
+                name: selectedVolumeForDrawer.name,
+                size: parseSizeToNumber(selectedVolumeForDrawer.size),
+              }
+            : null
+        }
       />
 
       <ChangeVolumeTypeDrawer
         isOpen={changeTypeOpen}
         onClose={() => setChangeTypeOpen(false)}
-        volume={selectedVolumeForDrawer ? {
-          id: selectedVolumeForDrawer.id,
-          name: selectedVolumeForDrawer.name,
-          currentType: selectedVolumeForDrawer.type,
-        } : null}
+        volume={
+          selectedVolumeForDrawer
+            ? {
+                id: selectedVolumeForDrawer.id,
+                name: selectedVolumeForDrawer.name,
+                currentType: selectedVolumeForDrawer.type,
+              }
+            : null
+        }
       />
 
       <CreateTransferDrawer
         isOpen={createTransferOpen}
         onClose={() => setCreateTransferOpen(false)}
-        volume={selectedVolumeForDrawer ? {
-          id: selectedVolumeForDrawer.id,
-          name: selectedVolumeForDrawer.name,
-          size: parseSizeToNumber(selectedVolumeForDrawer.size),
-        } : null}
+        volume={
+          selectedVolumeForDrawer
+            ? {
+                id: selectedVolumeForDrawer.id,
+                name: selectedVolumeForDrawer.name,
+                size: parseSizeToNumber(selectedVolumeForDrawer.size),
+              }
+            : null
+        }
       />
 
       <AttachVolumeDrawer
         isOpen={attachInstanceOpen}
         onClose={() => setAttachInstanceOpen(false)}
-        volume={selectedVolumeForDrawer ? {
-          id: selectedVolumeForDrawer.id,
-          name: selectedVolumeForDrawer.name,
-        } : { id: '', name: '' }}
+        volume={
+          selectedVolumeForDrawer
+            ? {
+                id: selectedVolumeForDrawer.id,
+                name: selectedVolumeForDrawer.name,
+              }
+            : { id: '', name: '' }
+        }
       />
 
       <DetachVolumeDrawer
         isOpen={detachInstanceOpen}
         onClose={() => setDetachInstanceOpen(false)}
-        instance={selectedVolumeForDrawer?.attachedTo && selectedVolumeForDrawer?.attachedToId ? {
-          id: selectedVolumeForDrawer.attachedToId,
-          name: selectedVolumeForDrawer.attachedTo,
-        } : { id: '', name: '' }}
+        instance={
+          selectedVolumeForDrawer?.attachedTo && selectedVolumeForDrawer?.attachedToId
+            ? {
+                id: selectedVolumeForDrawer.attachedToId,
+                name: selectedVolumeForDrawer.attachedTo,
+              }
+            : { id: '', name: '' }
+        }
       />
     </div>
   );
 }
 
 export default VolumesPage;
-

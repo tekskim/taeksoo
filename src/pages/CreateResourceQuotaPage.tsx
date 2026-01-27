@@ -36,16 +36,12 @@ type SectionState = 'pre' | 'active' | 'done' | 'writing';
 // Section labels for display
 const SECTION_LABELS: Record<SectionStep, string> = {
   'basic-info': 'Basic Information',
-  'data': 'Resource Quotas',
+  data: 'Resource Quotas',
   'labels-annotations': 'Labels & Annotations',
 };
 
 // Section order for navigation
-const SECTION_ORDER: SectionStep[] = [
-  'basic-info',
-  'data',
-  'labels-annotations',
-];
+const SECTION_ORDER: SectionStep[] = ['basic-info', 'data', 'labels-annotations'];
 
 // Namespace options
 const NAMESPACE_OPTIONS = [
@@ -143,7 +139,12 @@ interface SummarySidebarProps {
   isCreateDisabled: boolean;
 }
 
-function SummarySidebar({ sectionStatus, onCancel, onCreate, isCreateDisabled }: SummarySidebarProps) {
+function SummarySidebar({
+  sectionStatus,
+  onCancel,
+  onCreate,
+  isCreateDisabled,
+}: SummarySidebarProps) {
   // Map SectionState to WizardSectionState
   const mapState = (state: SectionState): WizardSectionState => {
     if (state === 'pre') return 'pending';
@@ -162,14 +163,14 @@ function SummarySidebar({ sectionStatus, onCancel, onCreate, isCreateDisabled }:
     <div className="w-[var(--wizard-summary-width)] shrink-0 sticky top-4 self-start">
       <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg p-4 flex flex-col gap-6">
         <WizardSummary items={summaryItems} />
-        
+
         {/* Action Buttons */}
         <HStack gap={2}>
           <Button variant="secondary" onClick={onCancel} className="w-[80px]">
             Cancel
           </Button>
-          <Button 
-            variant="primary" 
+          <Button
+            variant="primary"
             onClick={onCreate}
             disabled={isCreateDisabled}
             className="flex-1"
@@ -407,9 +408,7 @@ function ResourceQuotasSection({
 
   const updateQuotaItem = (id: string, field: 'resourceType' | 'limit', value: string) => {
     onQuotaItemsChange(
-      quotaItems.map((item) =>
-        item.id === id ? { ...item, [field]: value } : item
-      )
+      quotaItems.map((item) => (item.id === id ? { ...item, [field]: value } : item))
     );
   };
 
@@ -587,7 +586,7 @@ function LabelsAnnotationsSection({
                 Specify the labels used to identify and categorize the resource.
               </p>
             </VStack>
-            
+
             {labels.map((label, index) => (
               <HStack gap={2} key={index} className="w-full">
                 <Input
@@ -631,7 +630,7 @@ function LabelsAnnotationsSection({
                 Specify the annotations used to provide additional metadata for the resource.
               </p>
             </VStack>
-            
+
             {annotations.map((annotation, index) => (
               <HStack gap={2} key={index} className="w-full">
                 <Input
@@ -702,7 +701,7 @@ export function CreateResourceQuotaPage() {
   // Section states
   const [sectionStatus, setSectionStatus] = useState<Record<SectionStep, SectionState>>({
     'basic-info': 'active',
-    'data': 'pre',
+    data: 'pre',
     'labels-annotations': 'pre',
   });
 
@@ -713,7 +712,8 @@ export function CreateResourceQuotaPage() {
   const [resourceQuotaNameError, setResourceQuotaNameError] = useState<string | null>(null);
 
   // Tab management
-  const { tabs, activeTabId, closeTab, selectTab, updateActiveTabLabel, moveTab, addNewTab } = useTabs();
+  const { tabs, activeTabId, closeTab, selectTab, updateActiveTabLabel, moveTab, addNewTab } =
+    useTabs();
 
   // Update tab label
   useEffect(() => {
@@ -859,45 +859,49 @@ export function CreateResourceQuotaPage() {
       annotations,
     });
     navigate('/container/resource-quotas');
-  }, [
-    resourceQuotaName,
-    namespace,
-    description,
-    quotaItems,
-    labels,
-    annotations,
-    navigate,
-  ]);
+  }, [resourceQuotaName, namespace, description, quotaItems, labels, annotations, navigate]);
 
   // Label management
   const addLabel = useCallback(() => {
     setLabels([...labels, { key: '', value: '' }]);
   }, [labels]);
 
-  const removeLabel = useCallback((index: number) => {
-    setLabels(labels.filter((_, i) => i !== index));
-  }, [labels]);
+  const removeLabel = useCallback(
+    (index: number) => {
+      setLabels(labels.filter((_, i) => i !== index));
+    },
+    [labels]
+  );
 
-  const updateLabel = useCallback((index: number, field: 'key' | 'value', value: string) => {
-    const newLabels = [...labels];
-    newLabels[index][field] = value;
-    setLabels(newLabels);
-  }, [labels]);
+  const updateLabel = useCallback(
+    (index: number, field: 'key' | 'value', value: string) => {
+      const newLabels = [...labels];
+      newLabels[index][field] = value;
+      setLabels(newLabels);
+    },
+    [labels]
+  );
 
   // Annotation management
   const addAnnotation = useCallback(() => {
     setAnnotations([...annotations, { key: '', value: '' }]);
   }, [annotations]);
 
-  const removeAnnotation = useCallback((index: number) => {
-    setAnnotations(annotations.filter((_, i) => i !== index));
-  }, [annotations]);
+  const removeAnnotation = useCallback(
+    (index: number) => {
+      setAnnotations(annotations.filter((_, i) => i !== index));
+    },
+    [annotations]
+  );
 
-  const updateAnnotation = useCallback((index: number, field: 'key' | 'value', value: string) => {
-    const newAnnotations = [...annotations];
-    newAnnotations[index][field] = value;
-    setAnnotations(newAnnotations);
-  }, [annotations]);
+  const updateAnnotation = useCallback(
+    (index: number, field: 'key' | 'value', value: string) => {
+      const newAnnotations = [...annotations];
+      newAnnotations[index][field] = value;
+      setAnnotations(newAnnotations);
+    },
+    [annotations]
+  );
 
   // Check if create button should be disabled
   const isCreateDisabled = !resourceQuotaName.trim();
@@ -1013,16 +1017,18 @@ export function CreateResourceQuotaPage() {
                       title={SECTION_LABELS['basic-info']}
                       onEdit={() => handleEdit('basic-info')}
                     >
-                      <SectionCard.DataRow label="Namespace" value={namespace || '-'} showDivider={false} />
+                      <SectionCard.DataRow
+                        label="Namespace"
+                        value={namespace || '-'}
+                        showDivider={false}
+                      />
                       <SectionCard.DataRow label="Resource Quota Name" value={resourceQuotaName} />
                       <SectionCard.DataRow label="Description" value={description || '-'} />
                     </DoneSection>
                   )}
 
                   {/* Data Section */}
-                  {sectionStatus['data'] === 'pre' && (
-                    <PreSection title={SECTION_LABELS['data']} />
-                  )}
+                  {sectionStatus['data'] === 'pre' && <PreSection title={SECTION_LABELS['data']} />}
                   {sectionStatus['data'] === 'writing' && (
                     <WritingSection title={SECTION_LABELS['data']} />
                   )}
@@ -1037,14 +1043,15 @@ export function CreateResourceQuotaPage() {
                     />
                   )}
                   {sectionStatus['data'] === 'done' && (
-                    <DoneSection
-                      title={SECTION_LABELS['data']}
-                      onEdit={() => handleEdit('data')}
-                    >
-                      <SectionCard.DataRow 
-                        label="Resource Quotas" 
-                        value={quotaItems.length > 0 ? `${quotaItems.length} quota(s) configured` : 'No quotas configured'} 
-                        showDivider={false} 
+                    <DoneSection title={SECTION_LABELS['data']} onEdit={() => handleEdit('data')}>
+                      <SectionCard.DataRow
+                        label="Resource Quotas"
+                        value={
+                          quotaItems.length > 0
+                            ? `${quotaItems.length} quota(s) configured`
+                            : 'No quotas configured'
+                        }
+                        showDivider={false}
                       />
                     </DoneSection>
                   )}
@@ -1077,7 +1084,11 @@ export function CreateResourceQuotaPage() {
                       title={SECTION_LABELS['labels-annotations']}
                       onEdit={() => handleEdit('labels-annotations')}
                     >
-                      <SectionCard.DataRow label="Labels" value={getLabelsDisplay()} showDivider={false} />
+                      <SectionCard.DataRow
+                        label="Labels"
+                        value={getLabelsDisplay()}
+                        showDivider={false}
+                      />
                       <SectionCard.DataRow label="Annotations" value={getAnnotationsDisplay()} />
                     </DoneSection>
                   )}

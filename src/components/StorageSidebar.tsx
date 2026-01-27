@@ -28,7 +28,7 @@ interface StorageSidebarProps {
 export function StorageSidebar({ isOpen = true, onToggle }: StorageSidebarProps) {
   const [selectedProjectId, setSelectedProjectId] = useState(mockProjects[0].id);
   const location = useLocation();
-  
+
   // Check if current path matches href
   const isActive = (href: string) => {
     // Exact match
@@ -41,7 +41,7 @@ export function StorageSidebar({ isOpen = true, onToggle }: StorageSidebarProps)
     }
     return false;
   };
-  
+
   if (!isOpen) return null;
 
   return (
@@ -142,4 +142,3 @@ export function StorageSidebar({ isOpen = true, onToggle }: StorageSidebarProps)
 }
 
 export default StorageSidebar;
-

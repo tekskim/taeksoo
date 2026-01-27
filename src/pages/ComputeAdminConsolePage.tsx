@@ -1,9 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { useParams, useSearchParams, useNavigate } from 'react-router-dom';
-import {
-  IconDownload,
-  IconTerminal2,
-} from '@tabler/icons-react';
+import { IconDownload, IconTerminal2 } from '@tabler/icons-react';
 import { Select, Button, TabBar, TopBar, Breadcrumb } from '@/design-system';
 import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
 import { useTabs } from '@/contexts/TabContext';
@@ -40,9 +37,7 @@ function ConnectionStatusIndicator({ status }: { status: ConnectionStatus }) {
   return (
     <div className="flex items-center gap-1.5 ml-3">
       <span className={`size-2 rounded-full ${config.color}`} />
-      <span className="text-[12px] text-[var(--color-text-default)]">
-        {config.label}
-      </span>
+      <span className="text-[12px] text-[var(--color-text-default)]">{config.label}</span>
     </div>
   );
 }
@@ -56,19 +51,19 @@ export function ComputeAdminConsolePage() {
   const [searchParams] = useSearchParams();
   const instanceName = searchParams.get('name') || instanceId || 'Console';
   const navigate = useNavigate();
-  
+
   const [connectionStatus, setConnectionStatus] = useState<ConnectionStatus>('connecting');
   const [content, setContent] = useState('');
   const [selectedContainer, setSelectedContainer] = useState('container-0');
   const [viewTime, setViewTime] = useState('last-15');
   const { isOpen: sidebarOpen, toggle: toggleSidebar } = useSidebar();
   const contentRef = useRef<HTMLDivElement>(null);
-  
+
   // Tab management
   const { tabs, activeTabId, selectTab, closeTab, addTab } = useTabs();
-  
+
   // Convert tabs to TabBar format
-  const tabBarTabs = tabs.map(tab => ({
+  const tabBarTabs = tabs.map((tab) => ({
     id: tab.id,
     label: tab.label,
     closable: tab.closable,
@@ -76,7 +71,7 @@ export function ComputeAdminConsolePage() {
 
   // Handle tab change
   const handleTabChange = (tabId: string) => {
-    const tab = tabs.find(t => t.id === tabId);
+    const tab = tabs.find((t) => t.id === tabId);
     if (tab) {
       selectTab(tabId);
       navigate(tab.path);
@@ -158,7 +153,7 @@ export function ComputeAdminConsolePage() {
   return (
     <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
       <ComputeAdminSidebar isOpen={sidebarOpen} onToggle={toggleSidebar} />
-      
+
       <main
         className={`absolute top-0 bottom-0 right-0 flex flex-col bg-[var(--color-surface-default)] transition-[left] duration-200 ${
           sidebarOpen ? 'left-[var(--layout-sidebar-width)]' : 'left-0'
@@ -195,75 +190,71 @@ export function ComputeAdminConsolePage() {
             }
           />
         </div>
-          
-          {/* Console Content */}
-          <div className="flex flex-col h-[calc(100vh-var(--tabbar-height)-var(--topbar-height))]">
-            {/* Header - Same style as ShellPanel tab */}
-            <div className="flex items-center gap-2 px-6 py-3 border-b border-[var(--color-border-default)] bg-[var(--color-surface-subtle)]">
-              <IconTerminal2 size={14} className="text-[var(--color-text-muted)]" stroke={1} />
-              <span className="text-[length:var(--tabbar-font-size)] leading-[var(--tabbar-line-height)] font-medium text-[var(--color-text-default)]">
-                {instanceName}
+
+        {/* Console Content */}
+        <div className="flex flex-col h-[calc(100vh-var(--tabbar-height)-var(--topbar-height))]">
+          {/* Header - Same style as ShellPanel tab */}
+          <div className="flex items-center gap-2 px-6 py-3 border-b border-[var(--color-border-default)] bg-[var(--color-surface-subtle)]">
+            <IconTerminal2 size={14} className="text-[var(--color-text-muted)]" stroke={1} />
+            <span className="text-[length:var(--tabbar-font-size)] leading-[var(--tabbar-line-height)] font-medium text-[var(--color-text-default)]">
+              {instanceName}
+            </span>
+          </div>
+
+          {/* Log Content - Dark background */}
+          <div
+            ref={contentRef}
+            className="flex-1 overflow-auto p-4 font-mono text-[12px] leading-5 bg-[#0d1117] text-slate-300 shell-scroll"
+          >
+            {content ? (
+              <pre className="whitespace-pre-wrap break-all m-0">{content}</pre>
+            ) : (
+              <span className="text-slate-600">
+                {connectionStatus === 'connecting' ? 'Connecting...' : 'No output'}
               </span>
+            )}
+          </div>
+
+          {/* Bottom Status Bar - Same as ShellPanel */}
+          <div className="flex items-center justify-between px-3 py-2 border-t border-[var(--color-border-default)] bg-[var(--color-surface-subtle)]">
+            <div className="flex items-center gap-1">
+              {/* Container Select */}
+              <Select
+                value={selectedContainer}
+                onChange={setSelectedContainer}
+                options={containerOptions}
+                placeholder="Container"
+              />
+
+              {/* Clear Button */}
+              <Button size="sm" variant="secondary" onClick={handleClear}>
+                Clear
+              </Button>
+
+              {/* Download Button - Custom style for 28x28 */}
+              <button
+                onClick={handleDownload}
+                aria-label="Download"
+                className="inline-flex items-center justify-center size-[28px] rounded-[var(--button-radius)] bg-[var(--color-surface-default)] text-[var(--color-text-default)] border border-[var(--color-border-strong)] hover:bg-[var(--button-secondary-hover-bg)] transition-colors"
+              >
+                <IconDownload size={14} stroke={1} />
+              </button>
+
+              {/* Connection Status indicator */}
+              <ConnectionStatusIndicator status={connectionStatus} />
             </div>
 
-            {/* Log Content - Dark background */}
-            <div
-              ref={contentRef}
-              className="flex-1 overflow-auto p-4 font-mono text-[12px] leading-5 bg-[#0d1117] text-slate-300 shell-scroll"
-            >
-              {content ? (
-                <pre className="whitespace-pre-wrap break-all m-0">{content}</pre>
-              ) : (
-                <span className="text-slate-600">
-                  {connectionStatus === 'connecting' ? 'Connecting...' : 'No output'}
-                </span>
-              )}
-            </div>
-
-            {/* Bottom Status Bar - Same as ShellPanel */}
-            <div className="flex items-center justify-between px-3 py-2 border-t border-[var(--color-border-default)] bg-[var(--color-surface-subtle)]">
-              <div className="flex items-center gap-1">
-                {/* Container Select */}
-                <Select
-                  value={selectedContainer}
-                  onChange={setSelectedContainer}
-                  options={containerOptions}
-                  placeholder="Container"
-                />
-
-                {/* Clear Button */}
-                <Button
-                  size="sm"
-                  variant="secondary"
-                  onClick={handleClear}
-                >
-                  Clear
-                </Button>
-
-                {/* Download Button - Custom style for 28x28 */}
-                <button
-                  onClick={handleDownload}
-                  aria-label="Download"
-                  className="inline-flex items-center justify-center size-[28px] rounded-[var(--button-radius)] bg-[var(--color-surface-default)] text-[var(--color-text-default)] border border-[var(--color-border-strong)] hover:bg-[var(--button-secondary-hover-bg)] transition-colors"
-                >
-                  <IconDownload size={14} stroke={1} />
-                </button>
-
-                {/* Connection Status indicator */}
-                <ConnectionStatusIndicator status={connectionStatus} />
-              </div>
-
-              <div className="flex items-center gap-3">
-                {/* View Time Select */}
-                <Select
-                  value={viewTime}
-                  onChange={setViewTime}
-                  options={viewTimeOptions}
-                  placeholder="View"
-                />
-              </div>
+            <div className="flex items-center gap-3">
+              {/* View Time Select */}
+              <Select
+                value={viewTime}
+                onChange={setViewTime}
+                options={viewTimeOptions}
+                placeholder="View"
+              />
             </div>
           </div>
+        </div>
       </main>
     </div>
   );
@@ -273,10 +264,20 @@ export function ComputeAdminConsolePage() {
 function generateSampleLogs(_instanceName: string): string {
   const now = new Date();
   const formatDate = (d: Date) => {
-    return d.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: '2-digit', year: 'numeric' });
+    return d.toLocaleDateString('en-US', {
+      weekday: 'short',
+      month: 'short',
+      day: '2-digit',
+      year: 'numeric',
+    });
   };
   const formatTime = (d: Date) => {
-    return d.toLocaleTimeString('en-US', { hour12: true, hour: '2-digit', minute: '2-digit', second: '2-digit' });
+    return d.toLocaleTimeString('en-US', {
+      hour12: true,
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+    });
   };
 
   const logs = [
@@ -296,4 +297,3 @@ function generateSampleLogs(_instanceName: string): string {
 }
 
 export default ComputeAdminConsolePage;
-

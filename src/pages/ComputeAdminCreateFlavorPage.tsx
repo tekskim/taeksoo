@@ -48,11 +48,7 @@ const SECTION_LABELS: Record<SectionStep, string> = {
 };
 
 // Section order for navigation
-const SECTION_ORDER: SectionStep[] = [
-  'basic-info',
-  'resources',
-  'metadata',
-];
+const SECTION_ORDER: SectionStep[] = ['basic-info', 'resources', 'metadata'];
 
 // Tenant type for selection
 interface Tenant {
@@ -74,7 +70,6 @@ const mockTenants: Tenant[] = [
   { id: '12345685', name: 'tenant H', status: 'active', description: '-' },
 ];
 
-
 /* ----------------------------------------
    Summary Sidebar Component
    ---------------------------------------- */
@@ -86,7 +81,12 @@ interface SummarySidebarProps {
   isCreateDisabled: boolean;
 }
 
-function SummarySidebar({ sectionStatus, onCancel, onCreate, isCreateDisabled }: SummarySidebarProps) {
+function SummarySidebar({
+  sectionStatus,
+  onCancel,
+  onCreate,
+  isCreateDisabled,
+}: SummarySidebarProps) {
   const summaryItems: WizardSummaryItem[] = SECTION_ORDER.map((key) => ({
     key,
     label: SECTION_LABELS[key],
@@ -97,15 +97,15 @@ function SummarySidebar({ sectionStatus, onCancel, onCreate, isCreateDisabled }:
     <div className="w-[312px] shrink-0 sticky top-4 self-start">
       <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg p-4 flex flex-col gap-6">
         <WizardSummary items={summaryItems} />
-        
+
         {/* Action Buttons */}
         <div className="flex flex-col w-full">
           <div className="flex gap-2 items-center justify-end w-full">
             <Button variant="secondary" onClick={onCancel}>
               Cancel
             </Button>
-            <Button 
-              variant="primary" 
+            <Button
+              variant="primary"
               onClick={onCreate}
               disabled={isCreateDisabled}
               className="flex-1"
@@ -131,7 +131,7 @@ export function ComputeAdminCreateFlavorPage() {
   const [flavorName, setFlavorName] = useState('');
   const [category, setCategory] = useState<'cpu' | 'gpu' | 'npu' | 'bare-metal'>('cpu');
   const [isPublic, setIsPublic] = useState(true);
-  
+
   // Tenant selection state (when isPublic is false)
   const [tenantSearch, setTenantSearch] = useState('');
   const [selectedTenants, setSelectedTenants] = useState<string[]>([]);
@@ -150,15 +150,25 @@ export function ComputeAdminCreateFlavorPage() {
   const [existingMetadataSearch, setExistingMetadataSearch] = useState('');
   const [customMetadataKey, setCustomMetadataKey] = useState('');
   const [expandedMetadata, setExpandedMetadata] = useState<Set<string>>(new Set());
-  const [selectedMetadata, setSelectedMetadata] = useState<Array<{ key: string; value: string }>>([]);
+  const [selectedMetadata, setSelectedMetadata] = useState<Array<{ key: string; value: string }>>(
+    []
+  );
 
   // Available metadata options (mock data)
   const availableMetadataOptions = [
-    { key: 'cpu_allocation_ratio', label: 'CPU Allocation Ratio', children: ['1.0', '2.0', '4.0', '8.0', '16.0'] },
+    {
+      key: 'cpu_allocation_ratio',
+      label: 'CPU Allocation Ratio',
+      children: ['1.0', '2.0', '4.0', '8.0', '16.0'],
+    },
     { key: 'ram_allocation_ratio', label: 'RAM Allocation Ratio', children: ['1.0', '1.5', '2.0'] },
     { key: 'disk_allocation_ratio', label: 'Disk Allocation Ratio', children: ['1.0', '2.0'] },
     { key: 'hw:cpu_policy', label: 'CPU Policy', children: ['shared', 'dedicated'] },
-    { key: 'hw:cpu_thread_policy', label: 'CPU Thread Policy', children: ['prefer', 'isolate', 'require'] },
+    {
+      key: 'hw:cpu_thread_policy',
+      label: 'CPU Thread Policy',
+      children: ['prefer', 'isolate', 'require'],
+    },
     { key: 'hw:numa_nodes', label: 'NUMA Nodes', children: ['1', '2', '4'] },
     { key: 'hw:mem_page_size', label: 'Memory Page Size', children: ['small', 'large', 'any'] },
     { key: 'quota:disk_read_bytes_sec', label: 'Disk Read Bytes/sec' },
@@ -221,9 +231,7 @@ export function ComputeAdminCreateFlavorPage() {
     if (!tenantSearch.trim()) return mockTenants;
     const searchLower = tenantSearch.toLowerCase();
     return mockTenants.filter(
-      (t) =>
-        t.name.toLowerCase().includes(searchLower) ||
-        t.id.toLowerCase().includes(searchLower)
+      (t) => t.name.toLowerCase().includes(searchLower) || t.id.toLowerCase().includes(searchLower)
     );
   }, [tenantSearch]);
 
@@ -238,47 +246,50 @@ export function ComputeAdminCreateFlavorPage() {
   // Handle tenant selection
   const handleTenantSelect = (tenantId: string, checked: boolean) => {
     if (checked) {
-      setSelectedTenants(prev => [...prev, tenantId]);
+      setSelectedTenants((prev) => [...prev, tenantId]);
     } else {
-      setSelectedTenants(prev => prev.filter(id => id !== tenantId));
+      setSelectedTenants((prev) => prev.filter((id) => id !== tenantId));
     }
   };
 
   const handleSelectAllTenants = (checked: boolean) => {
     if (checked) {
-      const allIds = paginatedTenants.map(t => t.id);
-      setSelectedTenants(prev => [...new Set([...prev, ...allIds])]);
+      const allIds = paginatedTenants.map((t) => t.id);
+      setSelectedTenants((prev) => [...new Set([...prev, ...allIds])]);
     } else {
-      const pageIds = new Set(paginatedTenants.map(t => t.id));
-      setSelectedTenants(prev => prev.filter(id => !pageIds.has(id)));
+      const pageIds = new Set(paginatedTenants.map((t) => t.id));
+      setSelectedTenants((prev) => prev.filter((id) => !pageIds.has(id)));
     }
   };
 
-  const allPageTenantsSelected = paginatedTenants.length > 0 && 
-    paginatedTenants.every(t => selectedTenants.includes(t.id));
+  const allPageTenantsSelected =
+    paginatedTenants.length > 0 && paginatedTenants.every((t) => selectedTenants.includes(t.id));
 
   // Section navigation
-  const goToNextSection = useCallback((currentSection: SectionStep) => {
-    // Validate basic-info section
-    if (currentSection === 'basic-info') {
-      if (!flavorName.trim()) {
-        setShowFlavorNameError(true);
-        return;
+  const goToNextSection = useCallback(
+    (currentSection: SectionStep) => {
+      // Validate basic-info section
+      if (currentSection === 'basic-info') {
+        if (!flavorName.trim()) {
+          setShowFlavorNameError(true);
+          return;
+        }
+        setShowFlavorNameError(false);
       }
-      setShowFlavorNameError(false);
-    }
 
-    const currentIndex = SECTION_ORDER.indexOf(currentSection);
-    const nextSection = SECTION_ORDER[currentIndex + 1];
-    
-    if (nextSection) {
-      setSectionStatus((prev) => ({
-        ...prev,
-        [currentSection]: 'done',
-        [nextSection]: 'active',
-      }));
-    }
-  }, [flavorName]);
+      const currentIndex = SECTION_ORDER.indexOf(currentSection);
+      const nextSection = SECTION_ORDER[currentIndex + 1];
+
+      if (nextSection) {
+        setSectionStatus((prev) => ({
+          ...prev,
+          [currentSection]: 'done',
+          [nextSection]: 'active',
+        }));
+      }
+    },
+    [flavorName]
+  );
 
   const editSection = useCallback((section: SectionStep) => {
     setSectionStatus((prev) => {
@@ -350,7 +361,7 @@ export function ComputeAdminCreateFlavorPage() {
                   <VStack gap={4} className="flex-1">
                     {/* Basic information Section */}
                     <SectionCard isActive={sectionStatus['basic-info'] === 'active'}>
-                      <SectionCard.Header 
+                      <SectionCard.Header
                         title={SECTION_LABELS['basic-info']}
                         showDivider={sectionStatus['basic-info'] === 'active'}
                         actions={
@@ -372,8 +383,8 @@ export function ComputeAdminCreateFlavorPage() {
                           <FormField required error={showFlavorNameError}>
                             <FormField.Label>Flavor name</FormField.Label>
                             <FormField.Control>
-                              <Input 
-                                value={flavorName} 
+                              <Input
+                                value={flavorName}
                                 onChange={(e) => {
                                   setFlavorName(e.target.value);
                                   if (e.target.value.trim()) {
@@ -391,7 +402,8 @@ export function ComputeAdminCreateFlavorPage() {
                               </FormField.ErrorMessage>
                             )}
                             <FormField.HelperText>
-                              You can use letters, numbers, and special characters (+=,.@-_), and the length must be between 2-128 characters.
+                              You can use letters, numbers, and special characters (+=,.@-_), and
+                              the length must be between 2-128 characters.
                             </FormField.HelperText>
                           </FormField>
 
@@ -406,7 +418,12 @@ export function ComputeAdminCreateFlavorPage() {
                             <span className="text-[12px] font-normal leading-[var(--line-height-16)] text-[var(--color-text-subtle)]">
                               Choose the resource category to apply to the flavor.
                             </span>
-                            <RadioGroup value={category} onChange={(val) => setCategory(val as 'cpu' | 'gpu' | 'npu' | 'bare-metal')}>
+                            <RadioGroup
+                              value={category}
+                              onChange={(val) =>
+                                setCategory(val as 'cpu' | 'gpu' | 'npu' | 'bare-metal')
+                              }
+                            >
                               <Radio value="cpu" label="CPU" />
                               <Radio value="gpu" label="GPU" />
                               <Radio value="npu" label="NPU" />
@@ -427,8 +444,8 @@ export function ComputeAdminCreateFlavorPage() {
                                 Indicates whether the flavor is available to other tenants.
                               </span>
                             </div>
-                            <Toggle 
-                              checked={isPublic} 
+                            <Toggle
+                              checked={isPublic}
                               onChange={(e) => setIsPublic(e.target.checked)}
                               label={isPublic ? 'On' : 'Off'}
                             />
@@ -448,7 +465,7 @@ export function ComputeAdminCreateFlavorPage() {
                                   Select the tenant that can use the flavor.
                                 </span>
                               </div>
-                              
+
                               <div className="flex flex-col gap-3">
                                 {/* Search */}
                                 <SearchInput
@@ -457,7 +474,7 @@ export function ComputeAdminCreateFlavorPage() {
                                   placeholder="Search tenants by attributes"
                                   className="w-[280px]"
                                 />
-                                
+
                                 {/* Pagination */}
                                 <Pagination
                                   currentPage={tenantPage}
@@ -466,42 +483,52 @@ export function ComputeAdminCreateFlavorPage() {
                                   totalItems={filteredTenants.length}
                                   showItemCount
                                 />
-                                
+
                                 {/* Tenant Table */}
                                 <div className="flex flex-col gap-1 w-full">
                                   {/* Table Header */}
                                   <div className="flex items-center bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-md">
                                     <div className="flex items-center justify-center p-3 w-[48px]">
-                                      <Checkbox 
+                                      <Checkbox
                                         checked={allPageTenantsSelected}
                                         onChange={(e) => handleSelectAllTenants(e.target.checked)}
                                       />
                                     </div>
                                     <div className="flex items-center justify-center p-3 w-[60px] border-l border-[var(--color-border-default)]">
-                                      <span className="text-[11px] font-medium text-[var(--color-text-default)]">Status</span>
+                                      <span className="text-[11px] font-medium text-[var(--color-text-default)]">
+                                        Status
+                                      </span>
                                     </div>
                                     <div className="flex-1 p-3 border-l border-[var(--color-border-default)]">
-                                      <span className="text-[11px] font-medium text-[var(--color-text-default)]">Name</span>
+                                      <span className="text-[11px] font-medium text-[var(--color-text-default)]">
+                                        Name
+                                      </span>
                                     </div>
                                     <div className="flex-1 p-3 border-l border-[var(--color-border-default)]">
-                                      <span className="text-[11px] font-medium text-[var(--color-text-default)]">Description</span>
+                                      <span className="text-[11px] font-medium text-[var(--color-text-default)]">
+                                        Description
+                                      </span>
                                     </div>
                                   </div>
-                                  
+
                                   {/* Table Rows */}
                                   {paginatedTenants.map((tenant) => (
-                                    <div 
+                                    <div
                                       key={tenant.id}
                                       className="flex items-center bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-md"
                                     >
                                       <div className="flex items-center justify-center p-3 w-[48px]">
-                                        <Checkbox 
+                                        <Checkbox
                                           checked={selectedTenants.includes(tenant.id)}
-                                          onChange={(e) => handleTenantSelect(tenant.id, e.target.checked)}
+                                          onChange={(e) =>
+                                            handleTenantSelect(tenant.id, e.target.checked)
+                                          }
                                         />
                                       </div>
                                       <div className="flex items-center justify-center p-2 w-[60px]">
-                                        <StatusIndicator status={tenant.status === 'active' ? 'active' : 'muted'} />
+                                        <StatusIndicator
+                                          status={tenant.status === 'active' ? 'active' : 'muted'}
+                                        />
                                       </div>
                                       <div className="flex-1 flex flex-col gap-0.5 p-3">
                                         <Link
@@ -523,7 +550,7 @@ export function ComputeAdminCreateFlavorPage() {
                                     </div>
                                   ))}
                                 </div>
-                                
+
                                 {/* Selection count */}
                                 <div className="bg-[var(--color-surface-subtle)] px-2 py-2 rounded-md">
                                   <span className="text-[12px] text-[var(--color-text-subtle)]">
@@ -537,10 +564,7 @@ export function ComputeAdminCreateFlavorPage() {
                           )}
 
                           <div className="flex items-center justify-end w-full">
-                            <Button 
-                              variant="primary" 
-                              onClick={() => goToNextSection('basic-info')}
-                            >
+                            <Button variant="primary" onClick={() => goToNextSection('basic-info')}>
                               Next
                             </Button>
                           </div>
@@ -548,18 +572,32 @@ export function ComputeAdminCreateFlavorPage() {
                       )}
                       {sectionStatus['basic-info'] === 'done' && (
                         <SectionCard.Content>
-                          <SectionCard.DataRow label="Flavor name" value={flavorName || '-'} showDivider />
-                          <SectionCard.DataRow label="Category" value={category === 'bare-metal' ? 'Bare Metal' : category.toUpperCase()} showDivider />
-                          <SectionCard.DataRow label="Public" value={isPublic ? 'On' : 'Off'} showDivider />
+                          <SectionCard.DataRow
+                            label="Flavor name"
+                            value={flavorName || '-'}
+                            showDivider
+                          />
+                          <SectionCard.DataRow
+                            label="Category"
+                            value={
+                              category === 'bare-metal' ? 'Bare Metal' : category.toUpperCase()
+                            }
+                            showDivider
+                          />
+                          <SectionCard.DataRow
+                            label="Public"
+                            value={isPublic ? 'On' : 'Off'}
+                            showDivider
+                          />
                           {!isPublic && (
-                            <SectionCard.DataRow 
-                              label="Tenants" 
+                            <SectionCard.DataRow
+                              label="Tenants"
                               value={
-                                selectedTenants.length === 0 
-                                  ? 'None selected' 
+                                selectedTenants.length === 0
+                                  ? 'None selected'
                                   : `${selectedTenants.length} tenant${selectedTenants.length > 1 ? 's' : ''} selected`
-                              } 
-                              showDivider 
+                              }
+                              showDivider
                             />
                           )}
                         </SectionCard.Content>
@@ -568,7 +606,7 @@ export function ComputeAdminCreateFlavorPage() {
 
                     {/* Resources Section */}
                     <SectionCard isActive={sectionStatus['resources'] === 'active'}>
-                      <SectionCard.Header 
+                      <SectionCard.Header
                         title={SECTION_LABELS['resources']}
                         showDivider={sectionStatus['resources'] === 'active'}
                         actions={
@@ -598,14 +636,16 @@ export function ComputeAdminCreateFlavorPage() {
                               Number of virtual CPUs for instances using this flavor.
                             </span>
                             <HStack gap={2} align="center">
-                              <NumberInput 
+                              <NumberInput
                                 value={vcpu}
                                 onChange={setVcpu}
                                 min={1}
                                 max={128}
                                 className="w-[100px]"
                               />
-                              <span className="text-[12px] text-[var(--color-text-default)]">cores</span>
+                              <span className="text-[12px] text-[var(--color-text-default)]">
+                                cores
+                              </span>
                             </HStack>
                           </div>
 
@@ -621,14 +661,16 @@ export function ComputeAdminCreateFlavorPage() {
                               Amount of memory for instances using this flavor.
                             </span>
                             <HStack gap={2} align="center">
-                              <NumberInput 
+                              <NumberInput
                                 value={ram}
                                 onChange={setRam}
                                 min={1}
                                 max={1024}
                                 className="w-[100px]"
                               />
-                              <span className="text-[12px] text-[var(--color-text-default)]">GiB</span>
+                              <span className="text-[12px] text-[var(--color-text-default)]">
+                                GiB
+                              </span>
                             </HStack>
                           </div>
 
@@ -644,14 +686,16 @@ export function ComputeAdminCreateFlavorPage() {
                               Size of the root disk. Use 0 for no local disk (boot from volume).
                             </span>
                             <HStack gap={2} align="center">
-                              <NumberInput 
+                              <NumberInput
                                 value={rootDisk}
                                 onChange={setRootDisk}
                                 min={0}
                                 max={10000}
                                 className="w-[100px]"
                               />
-                              <span className="text-[12px] text-[var(--color-text-default)]">GiB</span>
+                              <span className="text-[12px] text-[var(--color-text-default)]">
+                                GiB
+                              </span>
                             </HStack>
                           </div>
 
@@ -661,17 +705,20 @@ export function ComputeAdminCreateFlavorPage() {
                               Ephemeral disk
                             </span>
                             <span className="text-[12px] font-normal leading-[var(--line-height-16)] text-[var(--color-text-subtle)]">
-                              Size of temporary disk. This disk is deleted when the instance is terminated.
+                              Size of temporary disk. This disk is deleted when the instance is
+                              terminated.
                             </span>
                             <HStack gap={2} align="center">
-                              <NumberInput 
+                              <NumberInput
                                 value={ephemeralDisk}
                                 onChange={setEphemeralDisk}
                                 min={0}
                                 max={10000}
                                 className="w-[100px]"
                               />
-                              <span className="text-[12px] text-[var(--color-text-default)]">GiB</span>
+                              <span className="text-[12px] text-[var(--color-text-default)]">
+                                GiB
+                              </span>
                             </HStack>
                           </div>
 
@@ -684,22 +731,21 @@ export function ComputeAdminCreateFlavorPage() {
                               Size of swap space. Use 0 for no swap.
                             </span>
                             <HStack gap={2} align="center">
-                              <NumberInput 
+                              <NumberInput
                                 value={swapDisk}
                                 onChange={setSwapDisk}
                                 min={0}
                                 max={10000}
                                 className="w-[100px]"
                               />
-                              <span className="text-[12px] text-[var(--color-text-default)]">MiB</span>
+                              <span className="text-[12px] text-[var(--color-text-default)]">
+                                MiB
+                              </span>
                             </HStack>
                           </div>
 
                           <div className="flex items-center justify-end w-full">
-                            <Button 
-                              variant="primary" 
-                              onClick={() => goToNextSection('resources')}
-                            >
+                            <Button variant="primary" onClick={() => goToNextSection('resources')}>
                               Next
                             </Button>
                           </div>
@@ -707,18 +753,34 @@ export function ComputeAdminCreateFlavorPage() {
                       )}
                       {sectionStatus['resources'] === 'done' && (
                         <SectionCard.Content>
-                          <SectionCard.DataRow label="vCPU" value={`${vcpu ?? 0} cores`} showDivider />
+                          <SectionCard.DataRow
+                            label="vCPU"
+                            value={`${vcpu ?? 0} cores`}
+                            showDivider
+                          />
                           <SectionCard.DataRow label="RAM" value={`${ram ?? 0} GiB`} showDivider />
-                          <SectionCard.DataRow label="Root disk" value={`${rootDisk ?? 0} GiB`} showDivider />
-                          <SectionCard.DataRow label="Ephemeral disk" value={`${ephemeralDisk ?? 0} GiB`} showDivider />
-                          <SectionCard.DataRow label="Swap disk" value={`${swapDisk ?? 0} MiB`} showDivider />
+                          <SectionCard.DataRow
+                            label="Root disk"
+                            value={`${rootDisk ?? 0} GiB`}
+                            showDivider
+                          />
+                          <SectionCard.DataRow
+                            label="Ephemeral disk"
+                            value={`${ephemeralDisk ?? 0} GiB`}
+                            showDivider
+                          />
+                          <SectionCard.DataRow
+                            label="Swap disk"
+                            value={`${swapDisk ?? 0} MiB`}
+                            showDivider
+                          />
                         </SectionCard.Content>
                       )}
                     </SectionCard>
 
                     {/* Metadata Section */}
                     <SectionCard isActive={sectionStatus['metadata'] === 'active'}>
-                      <SectionCard.Header 
+                      <SectionCard.Header
                         title={SECTION_LABELS['metadata']}
                         showDivider={sectionStatus['metadata'] === 'active'}
                         actions={
@@ -745,7 +807,8 @@ export function ComputeAdminCreateFlavorPage() {
                               <span className="text-[var(--color-state-danger)]">*</span>
                             </div>
                             <span className="text-[12px] font-normal leading-[var(--line-height-16)] text-[var(--color-text-subtle)]">
-                              Select existing metadata or define new metadata to apply to the host aggregate.
+                              Select existing metadata or define new metadata to apply to the host
+                              aggregate.
                             </span>
                           </div>
 
@@ -753,8 +816,10 @@ export function ComputeAdminCreateFlavorPage() {
                           <div className="flex gap-6">
                             {/* Left Column - Available Metadata */}
                             <div className="flex-1 flex flex-col gap-2 bg-[var(--color-surface-subtle)] rounded-md p-2">
-                              <span className="text-[14px] font-medium text-[var(--color-text-default)]">Available metadata</span>
-                              
+                              <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+                                Available metadata
+                              </span>
+
                               {/* Search */}
                               <SearchInput
                                 value={availableMetadataSearch}
@@ -762,7 +827,7 @@ export function ComputeAdminCreateFlavorPage() {
                                 placeholder="Search metadata"
                                 className="w-full"
                               />
-                              
+
                               {/* Custom metadata input row */}
                               <div className="flex items-center bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-md">
                                 <div className="flex-1 px-3 py-2">
@@ -777,29 +842,40 @@ export function ComputeAdminCreateFlavorPage() {
                                   <button
                                     onClick={() => {
                                       if (customMetadataKey.trim()) {
-                                        setSelectedMetadata(prev => [...prev, { key: customMetadataKey.trim(), value: '' }]);
+                                        setSelectedMetadata((prev) => [
+                                          ...prev,
+                                          { key: customMetadataKey.trim(), value: '' },
+                                        ]);
                                         setCustomMetadataKey('');
                                       }
                                     }}
                                     className="flex items-center justify-center w-7 h-7 rounded-md border border-[var(--color-border-default)] hover:bg-[var(--color-surface-subtle)]"
                                   >
-                                    <IconPlus size={12} className="text-[var(--color-text-muted)]" />
+                                    <IconPlus
+                                      size={12}
+                                      className="text-[var(--color-text-muted)]"
+                                    />
                                   </button>
                                 </div>
                               </div>
-                              
+
                               {/* Metadata List */}
                               <div className="flex flex-col gap-1 flex-1 overflow-y-auto">
                                 {availableMetadataOptions
-                                  .filter(item => 
-                                    !availableMetadataSearch || 
-                                    item.label.toLowerCase().includes(availableMetadataSearch.toLowerCase()) ||
-                                    item.key.toLowerCase().includes(availableMetadataSearch.toLowerCase())
+                                  .filter(
+                                    (item) =>
+                                      !availableMetadataSearch ||
+                                      item.label
+                                        .toLowerCase()
+                                        .includes(availableMetadataSearch.toLowerCase()) ||
+                                      item.key
+                                        .toLowerCase()
+                                        .includes(availableMetadataSearch.toLowerCase())
                                   )
                                   .map((item, index, arr) => (
                                     <div key={item.key} className="flex flex-col">
                                       {/* Parent row */}
-                                      <div 
+                                      <div
                                         className={`
                                           flex items-center bg-[var(--color-surface-default)] border border-[var(--color-border-default)]
                                           ${expandedMetadata.has(item.key) && item.children ? 'rounded-t-md border-b-0' : 'rounded-md'}
@@ -809,7 +885,7 @@ export function ComputeAdminCreateFlavorPage() {
                                           <button
                                             onClick={() => {
                                               if (item.children) {
-                                                setExpandedMetadata(prev => {
+                                                setExpandedMetadata((prev) => {
                                                   const newSet = new Set(prev);
                                                   if (newSet.has(item.key)) {
                                                     newSet.delete(item.key);
@@ -823,55 +899,85 @@ export function ComputeAdminCreateFlavorPage() {
                                             className="p-0.5"
                                           >
                                             {expandedMetadata.has(item.key) ? (
-                                              <IconChevronDown size={12} className="text-[var(--color-text-default)]" />
+                                              <IconChevronDown
+                                                size={12}
+                                                className="text-[var(--color-text-default)]"
+                                              />
                                             ) : (
-                                              <IconChevronRight size={12} className="text-[var(--color-text-default)]" />
+                                              <IconChevronRight
+                                                size={12}
+                                                className="text-[var(--color-text-default)]"
+                                              />
                                             )}
                                           </button>
-                                          <span className="text-[12px] font-medium text-[var(--color-text-default)]">{item.label}</span>
+                                          <span className="text-[12px] font-medium text-[var(--color-text-default)]">
+                                            {item.label}
+                                          </span>
                                         </div>
                                         <div className="px-3 py-2">
                                           <button
                                             onClick={() => {
-                                              if (!selectedMetadata.some(m => m.key === item.key)) {
-                                                setSelectedMetadata(prev => [...prev, { key: item.key, value: '' }]);
+                                              if (
+                                                !selectedMetadata.some((m) => m.key === item.key)
+                                              ) {
+                                                setSelectedMetadata((prev) => [
+                                                  ...prev,
+                                                  { key: item.key, value: '' },
+                                                ]);
                                               }
                                             }}
                                             className="flex items-center justify-center w-7 h-7 rounded-md border border-[var(--color-border-strong)] hover:bg-[var(--color-surface-subtle)]"
                                           >
-                                            <IconPlus size={12} className="text-[var(--color-text-default)]" />
+                                            <IconPlus
+                                              size={12}
+                                              className="text-[var(--color-text-default)]"
+                                            />
                                           </button>
                                         </div>
                                       </div>
-                                      
+
                                       {/* Child rows when expanded */}
                                       {item.children && expandedMetadata.has(item.key) && (
                                         <div className="flex flex-col">
                                           {item.children.map((child, childIndex) => (
-                                            <div 
-                                              key={child} 
+                                            <div
+                                              key={child}
                                               className={`
                                                 flex items-center bg-[var(--color-surface-default)] border border-[var(--color-border-default)] border-t-0
                                                 ${childIndex === item.children!.length - 1 ? 'rounded-b-md' : ''}
                                               `}
                                             >
                                               <div className="flex-1 flex items-center gap-2 px-3 py-2 pl-10 min-h-[40px]">
-                                                <span className="text-[12px] font-medium text-[var(--color-text-default)]">{child}</span>
+                                                <span className="text-[12px] font-medium text-[var(--color-text-default)]">
+                                                  {child}
+                                                </span>
                                               </div>
                                               <div className="px-3 py-2">
                                                 <button
                                                   onClick={() => {
-                                                    setSelectedMetadata(prev => {
-                                                      const existing = prev.find(m => m.key === item.key);
+                                                    setSelectedMetadata((prev) => {
+                                                      const existing = prev.find(
+                                                        (m) => m.key === item.key
+                                                      );
                                                       if (existing) {
-                                                        return prev.map(m => m.key === item.key ? { ...m, value: child } : m);
+                                                        return prev.map((m) =>
+                                                          m.key === item.key
+                                                            ? { ...m, value: child }
+                                                            : m
+                                                        );
                                                       }
-                                                      return [...prev, { key: item.key, value: child }];
+                                                      return [
+                                                        ...prev,
+                                                        { key: item.key, value: child },
+                                                      ];
                                                     });
                                                   }}
                                                   className="flex items-center justify-center w-7 h-7 rounded-md border border-[var(--color-border-strong)] hover:bg-[var(--color-surface-subtle)]"
                                                 >
-                                                  <IconPlus size={12} className="text-[var(--color-text-default)]" />
+                                                  <IconPlus
+                                                    size={12}
+                                                    className="text-[var(--color-text-default)]"
+                                                  />
                                                 </button>
                                               </div>
                                             </div>
@@ -885,8 +991,10 @@ export function ComputeAdminCreateFlavorPage() {
 
                             {/* Right Column - Existing Metadata */}
                             <div className="flex-1 flex flex-col gap-2 bg-[var(--color-surface-subtle)] rounded-md p-2">
-                              <span className="text-[14px] font-medium text-[var(--color-text-default)]">Existing metadata</span>
-                              
+                              <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+                                Existing metadata
+                              </span>
+
                               {/* Search */}
                               <SearchInput
                                 value={existingMetadataSearch}
@@ -894,27 +1002,34 @@ export function ComputeAdminCreateFlavorPage() {
                                 placeholder="Search metadata"
                                 className="w-full"
                               />
-                              
+
                               {/* Selected Metadata List */}
                               <div className="flex flex-col gap-1 flex-1 overflow-y-auto">
                                 {selectedMetadata
-                                  .filter(item => 
-                                    !existingMetadataSearch || 
-                                    item.key.toLowerCase().includes(existingMetadataSearch.toLowerCase())
+                                  .filter(
+                                    (item) =>
+                                      !existingMetadataSearch ||
+                                      item.key
+                                        .toLowerCase()
+                                        .includes(existingMetadataSearch.toLowerCase())
                                   )
                                   .map((item, index) => (
-                                    <div 
-                                      key={`${item.key}-${index}`} 
+                                    <div
+                                      key={`${item.key}-${index}`}
                                       className="flex items-center bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-md"
                                     >
                                       <div className="flex-1 flex items-center gap-2 px-3 py-2 min-h-[40px]">
-                                        <span className="text-[12px] font-medium text-[var(--color-text-default)] shrink-0">{item.key}</span>
+                                        <span className="text-[12px] font-medium text-[var(--color-text-default)] shrink-0">
+                                          {item.key}
+                                        </span>
                                         <div className="w-px h-4 bg-[var(--color-border-default)]" />
                                         <Input
                                           value={item.value}
                                           onChange={(e) => {
-                                            setSelectedMetadata(prev => 
-                                              prev.map((m, i) => i === index ? { ...m, value: e.target.value } : m)
+                                            setSelectedMetadata((prev) =>
+                                              prev.map((m, i) =>
+                                                i === index ? { ...m, value: e.target.value } : m
+                                              )
                                             );
                                           }}
                                           placeholder="Enter value"
@@ -924,11 +1039,16 @@ export function ComputeAdminCreateFlavorPage() {
                                       <div className="px-3 py-2">
                                         <button
                                           onClick={() => {
-                                            setSelectedMetadata(prev => prev.filter((_, i) => i !== index));
+                                            setSelectedMetadata((prev) =>
+                                              prev.filter((_, i) => i !== index)
+                                            );
                                           }}
                                           className="flex items-center justify-center w-7 h-7 rounded-md border border-[var(--color-border-strong)] hover:bg-red-50"
                                         >
-                                          <IconMinus size={12} className="text-[var(--color-state-danger)]" />
+                                          <IconMinus
+                                            size={12}
+                                            className="text-[var(--color-state-danger)]"
+                                          />
                                         </button>
                                       </div>
                                     </div>
@@ -946,16 +1066,10 @@ export function ComputeAdminCreateFlavorPage() {
 
                           {/* Action Buttons */}
                           <div className="flex items-center justify-end gap-2 w-full">
-                            <Button 
-                              variant="secondary" 
-                              onClick={() => goToNextSection('metadata')}
-                            >
+                            <Button variant="secondary" onClick={() => goToNextSection('metadata')}>
                               Skip
                             </Button>
-                            <Button 
-                              variant="primary" 
-                              onClick={() => goToNextSection('metadata')}
-                            >
+                            <Button variant="primary" onClick={() => goToNextSection('metadata')}>
                               Next
                             </Button>
                           </div>
@@ -963,17 +1077,17 @@ export function ComputeAdminCreateFlavorPage() {
                       )}
                       {sectionStatus['metadata'] === 'done' && (
                         <SectionCard.Content>
-                          <SectionCard.DataRow 
-                            label="Metadata count" 
-                            value={`${selectedMetadata.length} item${selectedMetadata.length !== 1 ? 's' : ''}`} 
-                            showDivider 
+                          <SectionCard.DataRow
+                            label="Metadata count"
+                            value={`${selectedMetadata.length} item${selectedMetadata.length !== 1 ? 's' : ''}`}
+                            showDivider
                           />
                           {selectedMetadata.slice(0, 3).map((item, index) => (
-                            <SectionCard.DataRow 
+                            <SectionCard.DataRow
                               key={index}
-                              label={item.key} 
-                              value={item.value || '-'} 
-                              showDivider 
+                              label={item.key}
+                              value={item.value || '-'}
+                              showDivider
                             />
                           ))}
                           {selectedMetadata.length > 3 && (
@@ -987,7 +1101,7 @@ export function ComputeAdminCreateFlavorPage() {
                   </VStack>
 
                   {/* Right Column - Summary Sidebar */}
-                  <SummarySidebar 
+                  <SummarySidebar
                     sectionStatus={sectionStatus}
                     onCancel={handleCancel}
                     onCreate={handleCreate}

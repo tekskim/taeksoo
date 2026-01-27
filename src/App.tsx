@@ -307,330 +307,421 @@ import { SystemAdminPage } from '@/pages/ai-platform/SystemAdminPage';
 // Layouts
 import { AgentAppLayout } from '@/layouts';
 
-const defaultTabs = [
-  { id: 'home', label: 'Home', path: '/compute', closable: true },
-];
+const defaultTabs = [{ id: 'home', label: 'Home', path: '/compute', closable: true }];
 
 function AppRoutes() {
   return (
-      <Routes>
-        {/* Entry Page */}
-        <Route path="/" element={<EntryPage />} />
+    <Routes>
+      {/* Entry Page */}
+      <Route path="/" element={<EntryPage />} />
 
-        {/* Settings & Mail Template Routes */}
-        <Route path="/settings" element={<SettingsPageWrapper />} />
-        <Route path="/mail-template" element={<MailTemplatePage />} />
-        <Route path="/mail-template/:templateId" element={<MailTemplatePreviewPage />} />
+      {/* Settings & Mail Template Routes */}
+      <Route path="/settings" element={<SettingsPageWrapper />} />
+      <Route path="/mail-template" element={<MailTemplatePage />} />
+      <Route path="/mail-template/:templateId" element={<MailTemplatePreviewPage />} />
 
-        {/* Agent Routes - Shared TabBar via AgentAppLayout */}
-        <Route element={<AgentAppLayout />}>
-          <Route path="/agent" element={<HomePage />} />
-          <Route path="/agent/list" element={<AgentPage />} />
-          <Route path="/agent/create" element={<CreateAgentPage />} />
-          <Route path="/chat" element={<ChatPage />} />
-          <Route path="/agent/storage" element={<StoragePage />} />
-          <Route path="/mcp-tools" element={<MCPToolsPage />} />
-        </Route>
+      {/* Agent Routes - Shared TabBar via AgentAppLayout */}
+      <Route element={<AgentAppLayout />}>
+        <Route path="/agent" element={<HomePage />} />
+        <Route path="/agent/list" element={<AgentPage />} />
+        <Route path="/agent/create" element={<CreateAgentPage />} />
+        <Route path="/chat" element={<ChatPage />} />
+        <Route path="/agent/storage" element={<StoragePage />} />
+        <Route path="/mcp-tools" element={<MCPToolsPage />} />
+      </Route>
 
-        {/* Cloud Builder Routes */}
-        <Route path="/cloudbuilder" element={<CloudBuilderConsolePage />} />
-        <Route path="/cloudbuilder/:slug" element={<CloudBuilderConsolePage />} />
-        <Route path="/cloudbuilder/:slug/create" element={<CloudBuilderCreatePage />} />
-        <Route path="/cloudbuilder/:slug/detail/:id" element={<CloudBuilderDetailPage />} />
-        {/* Backward compatible route */}
-        <Route path="/cloud-builder" element={<CloudBuilderConsolePage />} />
-        <Route path="/cloud-builder/:slug" element={<CloudBuilderConsolePage />} />
-        <Route path="/cloud-builder/:slug/create" element={<CloudBuilderCreatePage />} />
-        <Route path="/cloud-builder/:slug/detail/:id" element={<CloudBuilderDetailPage />} />
+      {/* Cloud Builder Routes */}
+      <Route path="/cloudbuilder" element={<CloudBuilderConsolePage />} />
+      <Route path="/cloudbuilder/:slug" element={<CloudBuilderConsolePage />} />
+      <Route path="/cloudbuilder/:slug/create" element={<CloudBuilderCreatePage />} />
+      <Route path="/cloudbuilder/:slug/detail/:id" element={<CloudBuilderDetailPage />} />
+      {/* Backward compatible route */}
+      <Route path="/cloud-builder" element={<CloudBuilderConsolePage />} />
+      <Route path="/cloud-builder/:slug" element={<CloudBuilderConsolePage />} />
+      <Route path="/cloud-builder/:slug/create" element={<CloudBuilderCreatePage />} />
+      <Route path="/cloud-builder/:slug/detail/:id" element={<CloudBuilderDetailPage />} />
 
-        {/* Compute Routes */}
-        <Route path="/compute" element={<ComputeHomePage />} />
-        <Route path="/compute/instances" element={<InstanceListPage />} />
-        <Route path="/compute/instances/create" element={<CreateInstancePage />} />
-        <Route path="/compute/instances/:id" element={<InstanceDetailPage />} />
-        <Route path="/compute/instance-templates" element={<InstanceTemplatesPage />} />
-        <Route path="/compute/instance-templates/create" element={<CreateTemplatePage />} />
-        <Route path="/compute/instance-templates/:id" element={<InstanceTemplateDetailPage />} />
-        <Route path="/compute/instance-snapshots" element={<InstanceSnapshotsPage />} />
-        <Route path="/compute/instance-snapshots/:id" element={<InstanceSnapshotDetailPage />} />
-        <Route path="/compute/images" element={<ComputeImagesPage />} />
-        <Route path="/compute/images/create" element={<CreateImagePage />} />
-        <Route path="/compute/images/:id" element={<ComputeImageDetailPage />} />
-        <Route path="/compute/flavors" element={<FlavorsPage />} />
-        <Route path="/compute/flavors/:id" element={<FlavorDetailPage />} />
-        <Route path="/compute/key-pairs" element={<KeyPairsPage />} />
-        <Route path="/compute/key-pairs/:id" element={<KeyPairDetailPage />} />
-        <Route path="/compute/server-groups" element={<ServerGroupsPage />} />
-        <Route path="/compute/server-groups/:id" element={<ServerGroupDetailPage />} />
-        <Route path="/compute/volumes" element={<VolumesPage />} />
-        <Route path="/compute/volumes/create" element={<CreateVolumePage />} />
-        <Route path="/compute/volumes/:id" element={<VolumeDetailPage />} />
-        <Route path="/compute/volume-snapshots" element={<VolumeSnapshotsPage />} />
-        <Route path="/compute/volume-snapshots/:id" element={<VolumeSnapshotDetailPage />} />
-        <Route path="/compute/volume-backups" element={<VolumeBackupsPage />} />
-        <Route path="/compute/volume-backups/:id" element={<VolumeBackupDetailPage />} />
-        <Route path="/compute/networks" element={<NetworksPage />} />
-        <Route path="/compute/networks/create" element={<CreateNetworkPage />} />
-        <Route path="/compute/networks/:id" element={<NetworkDetailPage />} />
-        <Route path="/compute/ports/create" element={<CreateVirtualAdapterPage />} />
-        <Route path="/compute/subnets/:id" element={<SubnetDetailPage />} />
-        <Route path="/compute/routers" element={<RoutersPage />} />
-        <Route path="/compute/routers/:id" element={<RouterDetailPage />} />
-        <Route path="/compute/ports" element={<PortsPage />} />
-        <Route path="/compute/ports/:id" element={<PortDetailPage />} />
-        <Route path="/compute/floating-ips" element={<FloatingIPsPage />} />
-        <Route path="/compute/floating-ips/:id" element={<FloatingIPDetailPage />} />
-        <Route path="/compute/security-groups" element={<SecurityGroupsPage />} />
-        <Route path="/compute/security-groups/:id" element={<SecurityGroupDetailPage />} />
-        <Route path="/compute/load-balancers" element={<LoadBalancersPage />} />
-        <Route path="/compute/load-balancers/create" element={<CreateLoadBalancerPage />} />
-        <Route path="/compute/load-balancers/:id" element={<LoadBalancerDetailPage />} />
-        <Route path="/compute/listeners/:id" element={<ListenerDetailPage />} />
-        <Route path="/compute/pools/:id" element={<PoolDetailPage />} />
-        <Route path="/compute/l7-policies/:id" element={<L7PolicyDetailPage />} />
-        <Route path="/compute/certificates" element={<CertificatesPage />} />
-        <Route path="/compute/certificates/:id" element={<CertificateDetailPage />} />
-        <Route path="/compute/topology" element={<TopologyD3Page />} />
-        <Route path="/compute/console/:instanceId" element={<ConsolePage />} />
+      {/* Compute Routes */}
+      <Route path="/compute" element={<ComputeHomePage />} />
+      <Route path="/compute/instances" element={<InstanceListPage />} />
+      <Route path="/compute/instances/create" element={<CreateInstancePage />} />
+      <Route path="/compute/instances/:id" element={<InstanceDetailPage />} />
+      <Route path="/compute/instance-templates" element={<InstanceTemplatesPage />} />
+      <Route path="/compute/instance-templates/create" element={<CreateTemplatePage />} />
+      <Route path="/compute/instance-templates/:id" element={<InstanceTemplateDetailPage />} />
+      <Route path="/compute/instance-snapshots" element={<InstanceSnapshotsPage />} />
+      <Route path="/compute/instance-snapshots/:id" element={<InstanceSnapshotDetailPage />} />
+      <Route path="/compute/images" element={<ComputeImagesPage />} />
+      <Route path="/compute/images/create" element={<CreateImagePage />} />
+      <Route path="/compute/images/:id" element={<ComputeImageDetailPage />} />
+      <Route path="/compute/flavors" element={<FlavorsPage />} />
+      <Route path="/compute/flavors/:id" element={<FlavorDetailPage />} />
+      <Route path="/compute/key-pairs" element={<KeyPairsPage />} />
+      <Route path="/compute/key-pairs/:id" element={<KeyPairDetailPage />} />
+      <Route path="/compute/server-groups" element={<ServerGroupsPage />} />
+      <Route path="/compute/server-groups/:id" element={<ServerGroupDetailPage />} />
+      <Route path="/compute/volumes" element={<VolumesPage />} />
+      <Route path="/compute/volumes/create" element={<CreateVolumePage />} />
+      <Route path="/compute/volumes/:id" element={<VolumeDetailPage />} />
+      <Route path="/compute/volume-snapshots" element={<VolumeSnapshotsPage />} />
+      <Route path="/compute/volume-snapshots/:id" element={<VolumeSnapshotDetailPage />} />
+      <Route path="/compute/volume-backups" element={<VolumeBackupsPage />} />
+      <Route path="/compute/volume-backups/:id" element={<VolumeBackupDetailPage />} />
+      <Route path="/compute/networks" element={<NetworksPage />} />
+      <Route path="/compute/networks/create" element={<CreateNetworkPage />} />
+      <Route path="/compute/networks/:id" element={<NetworkDetailPage />} />
+      <Route path="/compute/ports/create" element={<CreateVirtualAdapterPage />} />
+      <Route path="/compute/subnets/:id" element={<SubnetDetailPage />} />
+      <Route path="/compute/routers" element={<RoutersPage />} />
+      <Route path="/compute/routers/:id" element={<RouterDetailPage />} />
+      <Route path="/compute/ports" element={<PortsPage />} />
+      <Route path="/compute/ports/:id" element={<PortDetailPage />} />
+      <Route path="/compute/floating-ips" element={<FloatingIPsPage />} />
+      <Route path="/compute/floating-ips/:id" element={<FloatingIPDetailPage />} />
+      <Route path="/compute/security-groups" element={<SecurityGroupsPage />} />
+      <Route path="/compute/security-groups/:id" element={<SecurityGroupDetailPage />} />
+      <Route path="/compute/load-balancers" element={<LoadBalancersPage />} />
+      <Route path="/compute/load-balancers/create" element={<CreateLoadBalancerPage />} />
+      <Route path="/compute/load-balancers/:id" element={<LoadBalancerDetailPage />} />
+      <Route path="/compute/listeners/:id" element={<ListenerDetailPage />} />
+      <Route path="/compute/pools/:id" element={<PoolDetailPage />} />
+      <Route path="/compute/l7-policies/:id" element={<L7PolicyDetailPage />} />
+      <Route path="/compute/certificates" element={<CertificatesPage />} />
+      <Route path="/compute/certificates/:id" element={<CertificateDetailPage />} />
+      <Route path="/compute/topology" element={<TopologyD3Page />} />
+      <Route path="/compute/console/:instanceId" element={<ConsolePage />} />
 
-        {/* Compute Admin Routes - All using separate ComputeAdmin pages */}
-        <Route path="/compute-admin" element={<ComputeAdminHomePage />} />
-        <Route path="/compute-admin/instances" element={<ComputeAdminInstanceListPage />} />
-        <Route path="/compute-admin/instances/create" element={<ComputeAdminCreateInstancePage />} />
-        <Route path="/compute-admin/instances/:id" element={<ComputeAdminInstanceDetailPage />} />
-        <Route path="/compute-admin/instance-templates" element={<ComputeAdminInstanceTemplatesPage />} />
-        <Route path="/compute-admin/instance-templates/create" element={<ComputeAdminCreateTemplatePage />} />
-        <Route path="/compute-admin/instance-templates/:id" element={<ComputeAdminInstanceTemplateDetailPage />} />
-        <Route path="/compute-admin/instance-snapshots" element={<ComputeAdminInstanceSnapshotsPage />} />
-        <Route path="/compute-admin/instance-snapshots/:id" element={<ComputeAdminInstanceSnapshotDetailPage />} />
-        <Route path="/compute-admin/images" element={<ComputeAdminImagesPage />} />
-        <Route path="/compute-admin/images/create" element={<ComputeAdminCreateImagePage />} />
-        <Route path="/compute-admin/images/:id" element={<ComputeAdminImageDetailPage />} />
-        <Route path="/compute-admin/flavors" element={<ComputeAdminFlavorsPage />} />
-        <Route path="/compute-admin/flavors/create" element={<ComputeAdminCreateFlavorPage />} />
-        <Route path="/compute-admin/flavors/:id" element={<ComputeAdminFlavorDetailPage />} />
-        <Route path="/compute-admin/server-groups" element={<ComputeAdminServerGroupsPage />} />
-        <Route path="/compute-admin/server-groups/:id" element={<ComputeAdminServerGroupDetailPage />} />
-        <Route path="/compute-admin/host-aggregates" element={<ComputeAdminHostAggregatesPage />} />
-        <Route path="/compute-admin/bare-metal-nodes" element={<ComputeAdminBareMetalNodesPage />} />
-        <Route path="/compute-admin/bare-metal-nodes/:id" element={<ComputeAdminBareMetalDetailPage />} />
-        <Route path="/compute-admin/volumes" element={<ComputeAdminVolumesPage />} />
-        <Route path="/compute-admin/volumes/:id" element={<ComputeAdminVolumeDetailPage />} />
-        <Route path="/compute-admin/volume-snapshots" element={<ComputeAdminVolumeSnapshotsPage />} />
-        <Route path="/compute-admin/volume-snapshots/:id" element={<ComputeAdminVolumeSnapshotDetailPage />} />
-        <Route path="/compute-admin/volume-backups" element={<ComputeAdminVolumeBackupsPage />} />
-        <Route path="/compute-admin/volume-backups/:id" element={<ComputeAdminVolumeBackupDetailPage />} />
-        <Route path="/compute-admin/networks" element={<ComputeAdminNetworksPage />} />
-        <Route path="/compute-admin/networks/create" element={<ComputeAdminCreateNetworkPage />} />
-        <Route path="/compute-admin/networks/:id" element={<ComputeAdminNetworkDetailPage />} />
-        <Route path="/compute-admin/subnets/:id" element={<ComputeAdminSubnetDetailPage />} />
-        <Route path="/compute-admin/routers" element={<ComputeAdminRoutersPage />} />
-        <Route path="/compute-admin/routers/:id" element={<ComputeAdminRouterDetailPage />} />
-        <Route path="/compute-admin/ports" element={<ComputeAdminPortsPage />} />
-        <Route path="/compute-admin/ports/:id" element={<ComputeAdminPortDetailPage />} />
-        <Route path="/compute-admin/floating-ips" element={<ComputeAdminFloatingIPsPage />} />
-        <Route path="/compute-admin/floating-ips/:id" element={<ComputeAdminFloatingIPDetailPage />} />
-        <Route path="/compute-admin/security-groups" element={<ComputeAdminSecurityGroupsPage />} />
-        <Route path="/compute-admin/security-groups/:id" element={<ComputeAdminSecurityGroupDetailPage />} />
-        <Route path="/compute-admin/load-balancers" element={<ComputeAdminLoadBalancersPage />} />
-        <Route path="/compute-admin/load-balancers/:id" element={<ComputeAdminLoadBalancerDetailPage />} />
-        <Route path="/compute-admin/listeners/:id" element={<ComputeAdminListenerDetailPage />} />
-        <Route path="/compute-admin/pools/:id" element={<ComputeAdminPoolDetailPage />} />
-        <Route path="/compute-admin/l7-policies/:id" element={<ComputeAdminL7PolicyDetailPage />} />
-        <Route path="/compute-admin/certificates" element={<ComputeAdminCertificatesPage />} />
-        <Route path="/compute-admin/certificates/:id" element={<ComputeAdminCertificateDetailPage />} />
-        <Route path="/compute-admin/topology" element={<ComputeAdminTopologyD3Page />} />
-        <Route path="/compute-admin/console/:instanceId" element={<ComputeAdminConsolePage />} />
+      {/* Compute Admin Routes - All using separate ComputeAdmin pages */}
+      <Route path="/compute-admin" element={<ComputeAdminHomePage />} />
+      <Route path="/compute-admin/instances" element={<ComputeAdminInstanceListPage />} />
+      <Route path="/compute-admin/instances/create" element={<ComputeAdminCreateInstancePage />} />
+      <Route path="/compute-admin/instances/:id" element={<ComputeAdminInstanceDetailPage />} />
+      <Route
+        path="/compute-admin/instance-templates"
+        element={<ComputeAdminInstanceTemplatesPage />}
+      />
+      <Route
+        path="/compute-admin/instance-templates/create"
+        element={<ComputeAdminCreateTemplatePage />}
+      />
+      <Route
+        path="/compute-admin/instance-templates/:id"
+        element={<ComputeAdminInstanceTemplateDetailPage />}
+      />
+      <Route
+        path="/compute-admin/instance-snapshots"
+        element={<ComputeAdminInstanceSnapshotsPage />}
+      />
+      <Route
+        path="/compute-admin/instance-snapshots/:id"
+        element={<ComputeAdminInstanceSnapshotDetailPage />}
+      />
+      <Route path="/compute-admin/images" element={<ComputeAdminImagesPage />} />
+      <Route path="/compute-admin/images/create" element={<ComputeAdminCreateImagePage />} />
+      <Route path="/compute-admin/images/:id" element={<ComputeAdminImageDetailPage />} />
+      <Route path="/compute-admin/flavors" element={<ComputeAdminFlavorsPage />} />
+      <Route path="/compute-admin/flavors/create" element={<ComputeAdminCreateFlavorPage />} />
+      <Route path="/compute-admin/flavors/:id" element={<ComputeAdminFlavorDetailPage />} />
+      <Route path="/compute-admin/server-groups" element={<ComputeAdminServerGroupsPage />} />
+      <Route
+        path="/compute-admin/server-groups/:id"
+        element={<ComputeAdminServerGroupDetailPage />}
+      />
+      <Route path="/compute-admin/host-aggregates" element={<ComputeAdminHostAggregatesPage />} />
+      <Route path="/compute-admin/bare-metal-nodes" element={<ComputeAdminBareMetalNodesPage />} />
+      <Route
+        path="/compute-admin/bare-metal-nodes/:id"
+        element={<ComputeAdminBareMetalDetailPage />}
+      />
+      <Route path="/compute-admin/volumes" element={<ComputeAdminVolumesPage />} />
+      <Route path="/compute-admin/volumes/:id" element={<ComputeAdminVolumeDetailPage />} />
+      <Route path="/compute-admin/volume-snapshots" element={<ComputeAdminVolumeSnapshotsPage />} />
+      <Route
+        path="/compute-admin/volume-snapshots/:id"
+        element={<ComputeAdminVolumeSnapshotDetailPage />}
+      />
+      <Route path="/compute-admin/volume-backups" element={<ComputeAdminVolumeBackupsPage />} />
+      <Route
+        path="/compute-admin/volume-backups/:id"
+        element={<ComputeAdminVolumeBackupDetailPage />}
+      />
+      <Route path="/compute-admin/networks" element={<ComputeAdminNetworksPage />} />
+      <Route path="/compute-admin/networks/create" element={<ComputeAdminCreateNetworkPage />} />
+      <Route path="/compute-admin/networks/:id" element={<ComputeAdminNetworkDetailPage />} />
+      <Route path="/compute-admin/subnets/:id" element={<ComputeAdminSubnetDetailPage />} />
+      <Route path="/compute-admin/routers" element={<ComputeAdminRoutersPage />} />
+      <Route path="/compute-admin/routers/:id" element={<ComputeAdminRouterDetailPage />} />
+      <Route path="/compute-admin/ports" element={<ComputeAdminPortsPage />} />
+      <Route path="/compute-admin/ports/:id" element={<ComputeAdminPortDetailPage />} />
+      <Route path="/compute-admin/floating-ips" element={<ComputeAdminFloatingIPsPage />} />
+      <Route
+        path="/compute-admin/floating-ips/:id"
+        element={<ComputeAdminFloatingIPDetailPage />}
+      />
+      <Route path="/compute-admin/security-groups" element={<ComputeAdminSecurityGroupsPage />} />
+      <Route
+        path="/compute-admin/security-groups/:id"
+        element={<ComputeAdminSecurityGroupDetailPage />}
+      />
+      <Route path="/compute-admin/load-balancers" element={<ComputeAdminLoadBalancersPage />} />
+      <Route
+        path="/compute-admin/load-balancers/:id"
+        element={<ComputeAdminLoadBalancerDetailPage />}
+      />
+      <Route path="/compute-admin/listeners/:id" element={<ComputeAdminListenerDetailPage />} />
+      <Route path="/compute-admin/pools/:id" element={<ComputeAdminPoolDetailPage />} />
+      <Route path="/compute-admin/l7-policies/:id" element={<ComputeAdminL7PolicyDetailPage />} />
+      <Route path="/compute-admin/certificates" element={<ComputeAdminCertificatesPage />} />
+      <Route
+        path="/compute-admin/certificates/:id"
+        element={<ComputeAdminCertificateDetailPage />}
+      />
+      <Route path="/compute-admin/topology" element={<ComputeAdminTopologyD3Page />} />
+      <Route path="/compute-admin/console/:instanceId" element={<ComputeAdminConsolePage />} />
 
-        {/* Storage Routes */}
-        <Route path="/storage" element={<StorageHomePage />} />
-        <Route path="/storage/pools" element={<PoolsPage />} />
-        <Route path="/storage/pools/:id" element={<StoragePoolDetailPage />} />
-        <Route path="/storage/hosts" element={<HostsPage />} />
-        <Route path="/storage/hosts/:id" element={<HostDetailPage />} />
-        <Route path="/storage/osds" element={<OSDsPage />} />
-        <Route path="/storage/osds/:id" element={<OSDDetailPage />} />
-        <Route path="/storage/physical-disks" element={<PhysicalDisksPage />} />
-        <Route path="/storage/images" element={<ImagesPage />} />
-        <Route path="/storage/images/:id" element={<ImageDetailPage />} />
-        <Route path="/storage/buckets" element={<BucketsPage />} />
-        <Route path="/storage/buckets/create" element={<CreateBucketPage />} />
-        <Route path="/storage/buckets/:id" element={<BucketDetailPage />} />
-        <Route path="/storage/performance" element={<OverallPerformancePage />} />
+      {/* Storage Routes */}
+      <Route path="/storage" element={<StorageHomePage />} />
+      <Route path="/storage/pools" element={<PoolsPage />} />
+      <Route path="/storage/pools/:id" element={<StoragePoolDetailPage />} />
+      <Route path="/storage/hosts" element={<HostsPage />} />
+      <Route path="/storage/hosts/:id" element={<HostDetailPage />} />
+      <Route path="/storage/osds" element={<OSDsPage />} />
+      <Route path="/storage/osds/:id" element={<OSDDetailPage />} />
+      <Route path="/storage/physical-disks" element={<PhysicalDisksPage />} />
+      <Route path="/storage/images" element={<ImagesPage />} />
+      <Route path="/storage/images/:id" element={<ImageDetailPage />} />
+      <Route path="/storage/buckets" element={<BucketsPage />} />
+      <Route path="/storage/buckets/create" element={<CreateBucketPage />} />
+      <Route path="/storage/buckets/:id" element={<BucketDetailPage />} />
+      <Route path="/storage/performance" element={<OverallPerformancePage />} />
 
-        {/* Container Routes */}
-        <Route path="/container" element={<ContainerHomePage />} />
-        <Route path="/container/dashboard" element={<ContainerDashboardPage />} />
-        <Route path="/container/namespaces" element={<ContainerNamespacesPage />} />
-        <Route path="/container/namespaces/create" element={<CreateNamespacePage />} />
-        <Route path="/container/namespaces/create-yaml" element={<CreateNamespaceYamlPage />} />
-        <Route path="/container/namespaces/:namespaceName/edit-yaml" element={<EditNamespaceYamlPage />} />
-        <Route path="/container/namespaces/:namespaceName" element={<NamespaceDetailPage />} />
-        <Route path="/container/events" element={<ContainerEventsPage />} />
-        <Route path="/container/nodes" element={<ContainerNodesPage />} />
-        <Route path="/container/nodes/:nodeName/edit" element={<EditNodeConfigPage />} />
-        <Route path="/container/nodes/:nodeName/edit-yaml" element={<EditNodeYamlPage />} />
-        <Route path="/container/nodes/:nodeName" element={<NodeDetailPage />} />
-        <Route path="/container/services" element={<ContainerServicesPage />} />
-        <Route path="/container/services/create" element={<CreateServicePage />} />
-        <Route path="/container/services/create-yaml" element={<CreateServiceYamlPage />} />
-        <Route path="/container/services/:serviceId/edit-yaml" element={<EditServiceYamlPage />} />
-        <Route path="/container/services/:serviceId" element={<ContainerServiceDetailPage />} />
-        <Route path="/container/ingresses" element={<ContainerIngressesPage />} />
-        <Route path="/container/ingresses/create-yaml" element={<CreateIngressYamlPage />} />
-        <Route path="/container/ingresses/:ingressId/edit-yaml" element={<EditIngressYamlPage />} />
-        <Route path="/container/ingresses/:ingressId" element={<ContainerIngressDetailPage />} />
-        <Route path="/container/hpa" element={<ContainerHPAPage />} />
-        <Route path="/container/hpa/create-yaml" element={<CreateHPAYamlPage />} />
-        <Route path="/container/hpa/:hpaId" element={<ContainerHPADetailPage />} />
-        <Route path="/container/hpa/:hpaId/edit-yaml" element={<EditHPAYamlPage />} />
-        <Route path="/container/console/:instanceId" element={<ContainerConsolePage />} />
-        <Route path="/container/deployments" element={<DeploymentsPage />} />
-        <Route path="/container/deployments/create" element={<CreateDeploymentPage />} />
-        <Route path="/container/deployments/create-yaml" element={<CreateDeploymentYamlPage />} />
-        <Route path="/container/deployments/:deploymentName/edit-yaml" element={<EditDeploymentYamlPage />} />
-        <Route path="/container/deployments/:deploymentId" element={<DeploymentDetailPage />} />
-        <Route path="/container/statefulsets" element={<StatefulSetsPage />} />
-        <Route path="/container/statefulsets/create" element={<CreateStatefulSetPage />} />
-        <Route path="/container/statefulsets/create-yaml" element={<CreateStatefulSetYamlPage />} />
-        <Route path="/container/statefulsets/:statefulSetName/edit-yaml" element={<EditStatefulSetYamlPage />} />
-        <Route path="/container/statefulsets/:statefulsetId" element={<StatefulSetDetailPage />} />
-        <Route path="/container/daemonsets" element={<DaemonSetsPage />} />
-        <Route path="/container/daemonsets/create" element={<CreateDaemonSetPage />} />
-        <Route path="/container/daemonsets/create-yaml" element={<CreateDaemonSetYamlPage />} />
-        <Route path="/container/daemonsets/:daemonSetName/edit-yaml" element={<EditDaemonSetYamlPage />} />
-        <Route path="/container/daemonsets/:daemonsetId" element={<DaemonSetDetailPage />} />
-        <Route path="/container/jobs" element={<JobsPage />} />
-        <Route path="/container/jobs/create" element={<CreateJobPage />} />
-        <Route path="/container/jobs/create-yaml" element={<CreateJobYamlPage />} />
-        <Route path="/container/jobs/:jobName/edit-yaml" element={<EditJobYamlPage />} />
-        <Route path="/container/jobs/:jobId" element={<JobDetailPage />} />
-        <Route path="/container/cronjobs" element={<CronJobsPage />} />
-        <Route path="/container/cronjobs/create" element={<CreateCronJobPage />} />
-        <Route path="/container/cronjobs/create-yaml" element={<CreateCronJobYamlPage />} />
-        <Route path="/container/cronjobs/:cronJobName/edit-yaml" element={<EditCronJobYamlPage />} />
-        <Route path="/container/cronjobs/:cronjobId" element={<CronJobDetailPage />} />
-        <Route path="/container/pods" element={<PodsPage />} />
-        <Route path="/container/pods/create" element={<CreatePodPage />} />
-        <Route path="/container/pods/create-yaml" element={<CreatePodYamlPage />} />
-        <Route path="/container/pods/:podName/edit-yaml" element={<EditPodYamlPage />} />
-        <Route path="/container/pods/:podId" element={<PodDetailPage />} />
-        <Route path="/container/persistent-volumes" element={<PersistentVolumesPage />} />
-        <Route path="/container/persistent-volumes/create" element={<CreatePersistentVolumePage />} />
-        <Route path="/container/persistent-volumes/create-yaml" element={<CreatePersistentVolumeYamlPage />} />
-        <Route path="/container/persistent-volumes/:pvName/edit-yaml" element={<EditPersistentVolumeYamlPage />} />
-        <Route path="/container/persistent-volumes/:pvId" element={<PersistentVolumeDetailPage />} />
-        <Route path="/container/pvc" element={<PersistentVolumeClaimsPage />} />
-        <Route path="/container/pvc/create" element={<CreatePersistentVolumeClaimPage />} />
-        <Route path="/container/pvc/create-yaml" element={<CreatePersistentVolumeClaimYamlPage />} />
-        <Route path="/container/pvc/:pvcName/edit-yaml" element={<EditPersistentVolumeClaimYamlPage />} />
-        <Route path="/container/pvc/:pvcId" element={<PersistentVolumeClaimDetailPage />} />
-        <Route path="/container/storage-classes" element={<StorageClassesPage />} />
-        <Route path="/container/storage-classes/create" element={<CreateStorageClassPage />} />
-        <Route path="/container/storage-classes/create-yaml" element={<CreateStorageClassYamlPage />} />
-        <Route path="/container/storage-classes/:storageClassName/edit-yaml" element={<EditStorageClassYamlPage />} />
-        <Route path="/container/storage-classes/:storageClassId" element={<StorageClassDetailPage />} />
-        <Route path="/container/configmaps" element={<ConfigMapsPage />} />
-        <Route path="/container/configmaps/create" element={<CreateConfigMapPage />} />
-        <Route path="/container/configmaps/create-yaml" element={<CreateConfigMapYamlPage />} />
-        <Route path="/container/configmaps/:configMapName/edit-yaml" element={<EditConfigMapYamlPage />} />
-        <Route path="/container/configmaps/:configMapId" element={<ConfigMapDetailPage />} />
-        <Route path="/container/secrets" element={<SecretsPage />} />
-        <Route path="/container/secrets/create" element={<CreateSecretPage />} />
-        <Route path="/container/secrets/create-yaml" element={<CreateSecretYamlPage />} />
-        <Route path="/container/secrets/:secretName/edit-yaml" element={<EditSecretYamlPage />} />
-        <Route path="/container/secrets/:secretId" element={<SecretDetailPage />} />
-        <Route path="/container/limit-ranges" element={<LimitRangesPage />} />
-        <Route path="/container/limit-ranges/create" element={<CreateLimitRangePage />} />
-        <Route path="/container/limit-ranges/create-yaml" element={<CreateLimitRangeYamlPage />} />
-        <Route path="/container/limit-ranges/:limitRangeName/edit-yaml" element={<EditLimitRangeYamlPage />} />
-        <Route path="/container/resource-quotas" element={<ResourceQuotasPage />} />
-        <Route path="/container/resource-quotas/create" element={<CreateResourceQuotaPage />} />
-        <Route path="/container/resource-quotas/create-yaml" element={<CreateResourceQuotaYamlPage />} />
-        <Route path="/container/resource-quotas/:resourceQuotaName/edit-yaml" element={<EditResourceQuotaYamlPage />} />
-        <Route path="/container/network-policies" element={<NetworkPoliciesPage />} />
-        <Route path="/container/network-policies/create" element={<CreateNetworkPolicyPage />} />
-        <Route path="/container/network-policies/create-yaml" element={<CreateNetworkPolicyYamlPage />} />
-        <Route path="/container/network-policies/:networkPolicyName/edit-yaml" element={<EditNetworkPolicyYamlPage />} />
-        <Route path="/container/network-policies/:networkPolicyId" element={<NetworkPolicyDetailPage />} />
-        <Route path="/container/pdb" element={<PodDisruptionBudgetsPage />} />
-        <Route path="/container/pdb/create" element={<CreatePodDisruptionBudgetPage />} />
-        <Route path="/container/pdb/create-yaml" element={<CreatePodDisruptionBudgetYamlPage />} />
-        <Route path="/container/pdb/:pdbName/edit-yaml" element={<EditPodDisruptionBudgetYamlPage />} />
-        <Route path="/container/pdb/:pdbId" element={<PodDisruptionBudgetDetailPage />} />
-        <Route path="/container/*" element={<ContainerDashboardPage />} />
+      {/* Container Routes */}
+      <Route path="/container" element={<ContainerHomePage />} />
+      <Route path="/container/dashboard" element={<ContainerDashboardPage />} />
+      <Route path="/container/namespaces" element={<ContainerNamespacesPage />} />
+      <Route path="/container/namespaces/create" element={<CreateNamespacePage />} />
+      <Route path="/container/namespaces/create-yaml" element={<CreateNamespaceYamlPage />} />
+      <Route
+        path="/container/namespaces/:namespaceName/edit-yaml"
+        element={<EditNamespaceYamlPage />}
+      />
+      <Route path="/container/namespaces/:namespaceName" element={<NamespaceDetailPage />} />
+      <Route path="/container/events" element={<ContainerEventsPage />} />
+      <Route path="/container/nodes" element={<ContainerNodesPage />} />
+      <Route path="/container/nodes/:nodeName/edit" element={<EditNodeConfigPage />} />
+      <Route path="/container/nodes/:nodeName/edit-yaml" element={<EditNodeYamlPage />} />
+      <Route path="/container/nodes/:nodeName" element={<NodeDetailPage />} />
+      <Route path="/container/services" element={<ContainerServicesPage />} />
+      <Route path="/container/services/create" element={<CreateServicePage />} />
+      <Route path="/container/services/create-yaml" element={<CreateServiceYamlPage />} />
+      <Route path="/container/services/:serviceId/edit-yaml" element={<EditServiceYamlPage />} />
+      <Route path="/container/services/:serviceId" element={<ContainerServiceDetailPage />} />
+      <Route path="/container/ingresses" element={<ContainerIngressesPage />} />
+      <Route path="/container/ingresses/create-yaml" element={<CreateIngressYamlPage />} />
+      <Route path="/container/ingresses/:ingressId/edit-yaml" element={<EditIngressYamlPage />} />
+      <Route path="/container/ingresses/:ingressId" element={<ContainerIngressDetailPage />} />
+      <Route path="/container/hpa" element={<ContainerHPAPage />} />
+      <Route path="/container/hpa/create-yaml" element={<CreateHPAYamlPage />} />
+      <Route path="/container/hpa/:hpaId" element={<ContainerHPADetailPage />} />
+      <Route path="/container/hpa/:hpaId/edit-yaml" element={<EditHPAYamlPage />} />
+      <Route path="/container/console/:instanceId" element={<ContainerConsolePage />} />
+      <Route path="/container/deployments" element={<DeploymentsPage />} />
+      <Route path="/container/deployments/create" element={<CreateDeploymentPage />} />
+      <Route path="/container/deployments/create-yaml" element={<CreateDeploymentYamlPage />} />
+      <Route
+        path="/container/deployments/:deploymentName/edit-yaml"
+        element={<EditDeploymentYamlPage />}
+      />
+      <Route path="/container/deployments/:deploymentId" element={<DeploymentDetailPage />} />
+      <Route path="/container/statefulsets" element={<StatefulSetsPage />} />
+      <Route path="/container/statefulsets/create" element={<CreateStatefulSetPage />} />
+      <Route path="/container/statefulsets/create-yaml" element={<CreateStatefulSetYamlPage />} />
+      <Route
+        path="/container/statefulsets/:statefulSetName/edit-yaml"
+        element={<EditStatefulSetYamlPage />}
+      />
+      <Route path="/container/statefulsets/:statefulsetId" element={<StatefulSetDetailPage />} />
+      <Route path="/container/daemonsets" element={<DaemonSetsPage />} />
+      <Route path="/container/daemonsets/create" element={<CreateDaemonSetPage />} />
+      <Route path="/container/daemonsets/create-yaml" element={<CreateDaemonSetYamlPage />} />
+      <Route
+        path="/container/daemonsets/:daemonSetName/edit-yaml"
+        element={<EditDaemonSetYamlPage />}
+      />
+      <Route path="/container/daemonsets/:daemonsetId" element={<DaemonSetDetailPage />} />
+      <Route path="/container/jobs" element={<JobsPage />} />
+      <Route path="/container/jobs/create" element={<CreateJobPage />} />
+      <Route path="/container/jobs/create-yaml" element={<CreateJobYamlPage />} />
+      <Route path="/container/jobs/:jobName/edit-yaml" element={<EditJobYamlPage />} />
+      <Route path="/container/jobs/:jobId" element={<JobDetailPage />} />
+      <Route path="/container/cronjobs" element={<CronJobsPage />} />
+      <Route path="/container/cronjobs/create" element={<CreateCronJobPage />} />
+      <Route path="/container/cronjobs/create-yaml" element={<CreateCronJobYamlPage />} />
+      <Route path="/container/cronjobs/:cronJobName/edit-yaml" element={<EditCronJobYamlPage />} />
+      <Route path="/container/cronjobs/:cronjobId" element={<CronJobDetailPage />} />
+      <Route path="/container/pods" element={<PodsPage />} />
+      <Route path="/container/pods/create" element={<CreatePodPage />} />
+      <Route path="/container/pods/create-yaml" element={<CreatePodYamlPage />} />
+      <Route path="/container/pods/:podName/edit-yaml" element={<EditPodYamlPage />} />
+      <Route path="/container/pods/:podId" element={<PodDetailPage />} />
+      <Route path="/container/persistent-volumes" element={<PersistentVolumesPage />} />
+      <Route path="/container/persistent-volumes/create" element={<CreatePersistentVolumePage />} />
+      <Route
+        path="/container/persistent-volumes/create-yaml"
+        element={<CreatePersistentVolumeYamlPage />}
+      />
+      <Route
+        path="/container/persistent-volumes/:pvName/edit-yaml"
+        element={<EditPersistentVolumeYamlPage />}
+      />
+      <Route path="/container/persistent-volumes/:pvId" element={<PersistentVolumeDetailPage />} />
+      <Route path="/container/pvc" element={<PersistentVolumeClaimsPage />} />
+      <Route path="/container/pvc/create" element={<CreatePersistentVolumeClaimPage />} />
+      <Route path="/container/pvc/create-yaml" element={<CreatePersistentVolumeClaimYamlPage />} />
+      <Route
+        path="/container/pvc/:pvcName/edit-yaml"
+        element={<EditPersistentVolumeClaimYamlPage />}
+      />
+      <Route path="/container/pvc/:pvcId" element={<PersistentVolumeClaimDetailPage />} />
+      <Route path="/container/storage-classes" element={<StorageClassesPage />} />
+      <Route path="/container/storage-classes/create" element={<CreateStorageClassPage />} />
+      <Route
+        path="/container/storage-classes/create-yaml"
+        element={<CreateStorageClassYamlPage />}
+      />
+      <Route
+        path="/container/storage-classes/:storageClassName/edit-yaml"
+        element={<EditStorageClassYamlPage />}
+      />
+      <Route
+        path="/container/storage-classes/:storageClassId"
+        element={<StorageClassDetailPage />}
+      />
+      <Route path="/container/configmaps" element={<ConfigMapsPage />} />
+      <Route path="/container/configmaps/create" element={<CreateConfigMapPage />} />
+      <Route path="/container/configmaps/create-yaml" element={<CreateConfigMapYamlPage />} />
+      <Route
+        path="/container/configmaps/:configMapName/edit-yaml"
+        element={<EditConfigMapYamlPage />}
+      />
+      <Route path="/container/configmaps/:configMapId" element={<ConfigMapDetailPage />} />
+      <Route path="/container/secrets" element={<SecretsPage />} />
+      <Route path="/container/secrets/create" element={<CreateSecretPage />} />
+      <Route path="/container/secrets/create-yaml" element={<CreateSecretYamlPage />} />
+      <Route path="/container/secrets/:secretName/edit-yaml" element={<EditSecretYamlPage />} />
+      <Route path="/container/secrets/:secretId" element={<SecretDetailPage />} />
+      <Route path="/container/limit-ranges" element={<LimitRangesPage />} />
+      <Route path="/container/limit-ranges/create" element={<CreateLimitRangePage />} />
+      <Route path="/container/limit-ranges/create-yaml" element={<CreateLimitRangeYamlPage />} />
+      <Route
+        path="/container/limit-ranges/:limitRangeName/edit-yaml"
+        element={<EditLimitRangeYamlPage />}
+      />
+      <Route path="/container/resource-quotas" element={<ResourceQuotasPage />} />
+      <Route path="/container/resource-quotas/create" element={<CreateResourceQuotaPage />} />
+      <Route
+        path="/container/resource-quotas/create-yaml"
+        element={<CreateResourceQuotaYamlPage />}
+      />
+      <Route
+        path="/container/resource-quotas/:resourceQuotaName/edit-yaml"
+        element={<EditResourceQuotaYamlPage />}
+      />
+      <Route path="/container/network-policies" element={<NetworkPoliciesPage />} />
+      <Route path="/container/network-policies/create" element={<CreateNetworkPolicyPage />} />
+      <Route
+        path="/container/network-policies/create-yaml"
+        element={<CreateNetworkPolicyYamlPage />}
+      />
+      <Route
+        path="/container/network-policies/:networkPolicyName/edit-yaml"
+        element={<EditNetworkPolicyYamlPage />}
+      />
+      <Route
+        path="/container/network-policies/:networkPolicyId"
+        element={<NetworkPolicyDetailPage />}
+      />
+      <Route path="/container/pdb" element={<PodDisruptionBudgetsPage />} />
+      <Route path="/container/pdb/create" element={<CreatePodDisruptionBudgetPage />} />
+      <Route path="/container/pdb/create-yaml" element={<CreatePodDisruptionBudgetYamlPage />} />
+      <Route
+        path="/container/pdb/:pdbName/edit-yaml"
+        element={<EditPodDisruptionBudgetYamlPage />}
+      />
+      <Route path="/container/pdb/:pdbId" element={<PodDisruptionBudgetDetailPage />} />
+      <Route path="/container/*" element={<ContainerDashboardPage />} />
 
-        {/* IAM Routes */}
-        <Route path="/iam" element={<IAMHomePage />} />
-        <Route path="/iam/users" element={<IAMUsersPage />} />
-        <Route path="/iam/users/create" element={<CreateUserPage />} />
-        <Route path="/iam/users/:username" element={<IAMUserDetailPage />} />
-        <Route path="/iam/user-groups" element={<IAMUserGroupsPage />} />
-        <Route path="/iam/user-groups/create" element={<CreateUserGroupPage />} />
-        <Route path="/iam/user-groups/:groupName" element={<IAMUserGroupDetailPage />} />
-        <Route path="/iam/roles" element={<IAMRolesPage />} />
-        <Route path="/iam/roles/create" element={<CreateRolePage />} />
-        <Route path="/iam/roles/:roleName" element={<IAMRoleDetailPage />} />
-        <Route path="/iam/policies" element={<IAMPoliciesPage />} />
-        <Route path="/iam/policies/create" element={<CreatePolicyPage />} />
-        <Route path="/iam/policies/:policyId" element={<IAMPolicyDetailPage />} />
-        <Route path="/iam/active-sessions" element={<IAMActiveSessionsPage />} />
-        <Route path="/iam/domains" element={<IAMDomainsPage />} />
-        <Route path="/iam/system-administrators" element={<IAMSystemAdministratorsPage />} />
-        <Route path="/iam/system-administrators/create" element={<CreateSystemAdministratorPage />} />
-        <Route path="/iam/system-administrators/:username" element={<IAMSystemAdminDetailPage />} />
-        <Route path="/iam/event-logs" element={<IAMEventLogsPage />} />
-        <Route path="/iam/mfa-policies" element={<IAMMFAPoliciesPage />} />
-        <Route path="/iam/session-policies" element={<IAMSessionPoliciesPage />} />
-        <Route path="/iam/token-policies" element={<IAMTokenPoliciesPage />} />
-        <Route path="/iam/login-policies" element={<IAMLoginPoliciesPage />} />
-        <Route path="/iam/*" element={<IAMHomePage />} />
+      {/* IAM Routes */}
+      <Route path="/iam" element={<IAMHomePage />} />
+      <Route path="/iam/users" element={<IAMUsersPage />} />
+      <Route path="/iam/users/create" element={<CreateUserPage />} />
+      <Route path="/iam/users/:username" element={<IAMUserDetailPage />} />
+      <Route path="/iam/user-groups" element={<IAMUserGroupsPage />} />
+      <Route path="/iam/user-groups/create" element={<CreateUserGroupPage />} />
+      <Route path="/iam/user-groups/:groupName" element={<IAMUserGroupDetailPage />} />
+      <Route path="/iam/roles" element={<IAMRolesPage />} />
+      <Route path="/iam/roles/create" element={<CreateRolePage />} />
+      <Route path="/iam/roles/:roleName" element={<IAMRoleDetailPage />} />
+      <Route path="/iam/policies" element={<IAMPoliciesPage />} />
+      <Route path="/iam/policies/create" element={<CreatePolicyPage />} />
+      <Route path="/iam/policies/:policyId" element={<IAMPolicyDetailPage />} />
+      <Route path="/iam/active-sessions" element={<IAMActiveSessionsPage />} />
+      <Route path="/iam/domains" element={<IAMDomainsPage />} />
+      <Route path="/iam/system-administrators" element={<IAMSystemAdministratorsPage />} />
+      <Route path="/iam/system-administrators/create" element={<CreateSystemAdministratorPage />} />
+      <Route path="/iam/system-administrators/:username" element={<IAMSystemAdminDetailPage />} />
+      <Route path="/iam/event-logs" element={<IAMEventLogsPage />} />
+      <Route path="/iam/mfa-policies" element={<IAMMFAPoliciesPage />} />
+      <Route path="/iam/session-policies" element={<IAMSessionPoliciesPage />} />
+      <Route path="/iam/token-policies" element={<IAMTokenPoliciesPage />} />
+      <Route path="/iam/login-policies" element={<IAMLoginPoliciesPage />} />
+      <Route path="/iam/*" element={<IAMHomePage />} />
 
-        {/* AI Platform Routes */}
-        <Route path="/ai-platform" element={<AIPlatformPage />} />
-        <Route path="/ai-platform/explore" element={<ExplorePage />} />
-        <Route path="/ai-platform/packages" element={<PackagesPage />} />
-        <Route path="/ai-platform/models" element={<ModelsPage />} />
-        <Route path="/ai-platform/datasets" element={<DatasetsPage />} />
-        <Route path="/ai-platform/workloads" element={<WorkloadsPage />} />
-        <Route path="/ai-platform/my-templates" element={<MyTemplatesPage />} />
-        <Route path="/ai-platform/storage" element={<AIPlatformStoragePage />} />
-        <Route path="/ai-platform/serverless" element={<ServerlessPage />} />
-        <Route path="/ai-platform/text-generation" element={<TextGenerationPage />} />
-        <Route path="/ai-platform/devspace" element={<DevSpacePage />} />
-        <Route path="/ai-platform/pipeline-builder" element={<PipelineBuilderPage />} />
-        <Route path="/ai-platform/benchmarks" element={<BenchmarksPage />} />
-        <Route path="/ai-platform/kubeflow" element={<KubeflowPage />} />
-        <Route path="/ai-platform/mlflow" element={<MLflowPage />} />
-        <Route path="/ai-platform/settings" element={<AIPlatformSettingsPage />} />
-        <Route path="/ai-platform/faq" element={<FAQPage />} />
-        <Route path="/ai-platform/kueue" element={<KueuePage />} />
-        <Route path="/ai-platform/monitoring" element={<MonitoringPage />} />
-        <Route path="/ai-platform/dependencies" element={<DependenciesPage />} />
-        <Route path="/ai-platform/system-admin" element={<SystemAdminPage />} />
-        <Route path="/ai-platform/*" element={<AIPlatformPage />} />
+      {/* AI Platform Routes */}
+      <Route path="/ai-platform" element={<AIPlatformPage />} />
+      <Route path="/ai-platform/explore" element={<ExplorePage />} />
+      <Route path="/ai-platform/packages" element={<PackagesPage />} />
+      <Route path="/ai-platform/models" element={<ModelsPage />} />
+      <Route path="/ai-platform/datasets" element={<DatasetsPage />} />
+      <Route path="/ai-platform/workloads" element={<WorkloadsPage />} />
+      <Route path="/ai-platform/my-templates" element={<MyTemplatesPage />} />
+      <Route path="/ai-platform/storage" element={<AIPlatformStoragePage />} />
+      <Route path="/ai-platform/serverless" element={<ServerlessPage />} />
+      <Route path="/ai-platform/text-generation" element={<TextGenerationPage />} />
+      <Route path="/ai-platform/devspace" element={<DevSpacePage />} />
+      <Route path="/ai-platform/pipeline-builder" element={<PipelineBuilderPage />} />
+      <Route path="/ai-platform/benchmarks" element={<BenchmarksPage />} />
+      <Route path="/ai-platform/kubeflow" element={<KubeflowPage />} />
+      <Route path="/ai-platform/mlflow" element={<MLflowPage />} />
+      <Route path="/ai-platform/settings" element={<AIPlatformSettingsPage />} />
+      <Route path="/ai-platform/faq" element={<FAQPage />} />
+      <Route path="/ai-platform/kueue" element={<KueuePage />} />
+      <Route path="/ai-platform/monitoring" element={<MonitoringPage />} />
+      <Route path="/ai-platform/dependencies" element={<DependenciesPage />} />
+      <Route path="/ai-platform/system-admin" element={<SystemAdminPage />} />
+      <Route path="/ai-platform/*" element={<AIPlatformPage />} />
 
-        {/* Design System Routes */}
-        <Route path="/design" element={<DesignSystemPage />} />
-        <Route path="/design-system" element={<DesignSystemPage />} />
-        <Route path="/design/components" element={<DesignSystemPage />} />
-        <Route path="/design/drawers" element={<DrawersPage />} />
-        <Route path="/design/modals" element={<ModalsPage />} />
-        <Route path="/design/gradients" element={<GradientShowcasePage />} />
-        <Route path="/design/colors" element={<ColorPalettePage />} />
-        <Route path="/design/metallic" element={<MetallicPalettePage />} />
+      {/* Design System Routes */}
+      <Route path="/design" element={<DesignSystemPage />} />
+      <Route path="/design-system" element={<DesignSystemPage />} />
+      <Route path="/design/components" element={<DesignSystemPage />} />
+      <Route path="/design/drawers" element={<DrawersPage />} />
+      <Route path="/design/modals" element={<ModalsPage />} />
+      <Route path="/design/gradients" element={<GradientShowcasePage />} />
+      <Route path="/design/colors" element={<ColorPalettePage />} />
+      <Route path="/design/metallic" element={<MetallicPalettePage />} />
 
-        {/* Desktop Routes */}
-        <Route path="/desktop" element={<DesktopPage />} />
+      {/* Desktop Routes */}
+      <Route path="/desktop" element={<DesktopPage />} />
 
-        {/* Developer Resources */}
-        <Route path="/sidebar-icons" element={<SidebarIconsPage />} />
+      {/* Developer Resources */}
+      <Route path="/sidebar-icons" element={<SidebarIconsPage />} />
 
-        {/* AI Platform Routes */}
-        <Route path="/ai-platform" element={<AIPlatformPage />} />
-        <Route path="/ai-platform/workloads/:id" element={<WorkloadDetailPage />} />
-        <Route path="/ai-platform/*" element={<AIPlatformPage />} />
-      </Routes>
+      {/* AI Platform Routes */}
+      <Route path="/ai-platform" element={<AIPlatformPage />} />
+      <Route path="/ai-platform/workloads/:id" element={<WorkloadDetailPage />} />
+      <Route path="/ai-platform/*" element={<AIPlatformPage />} />
+    </Routes>
   );
 }
 

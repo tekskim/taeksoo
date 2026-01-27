@@ -75,8 +75,10 @@ export const Default: Story = {
 // Controlled
 export const Controlled: Story = {
   render: function ControlledStory() {
-    const [timeRange, setTimeRange] = useState<'30m' | '1h' | '3h' | '6h' | '12h' | '24h' | '1d' | '1w' | 'custom'>('1h');
-    
+    const [timeRange, setTimeRange] = useState<
+      '30m' | '1h' | '3h' | '6h' | '12h' | '24h' | '1d' | '1w' | 'custom'
+    >('1h');
+
     return (
       <div className="flex flex-col gap-4">
         <MonitoringToolbar
@@ -84,9 +86,7 @@ export const Controlled: Story = {
           onTimeRangeChange={setTimeRange}
           onRefresh={() => console.log('Refresh')}
         />
-        <p className="text-sm text-[var(--color-text-muted)]">
-          Selected: {timeRange}
-        </p>
+        <p className="text-sm text-[var(--color-text-muted)]">Selected: {timeRange}</p>
       </div>
     );
   },
@@ -122,12 +122,14 @@ export const CustomOptions: Story = {
 // With Custom Period
 export const WithCustomPeriod: Story = {
   render: function CustomPeriodStory() {
-    const [timeRange, setTimeRange] = useState<'30m' | '1h' | '3h' | '6h' | '12h' | '24h' | '1d' | '1w' | 'custom'>('custom');
+    const [timeRange, setTimeRange] = useState<
+      '30m' | '1h' | '3h' | '6h' | '12h' | '24h' | '1d' | '1w' | 'custom'
+    >('custom');
     const [customPeriod, setCustomPeriod] = useState<{ start: Date; end: Date } | null>({
       start: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000),
       end: new Date(),
     });
-    
+
     return (
       <div className="flex flex-col gap-4">
         <MonitoringToolbar
@@ -138,10 +140,9 @@ export const WithCustomPeriod: Story = {
           onRefresh={() => console.log('Refresh')}
         />
         <p className="text-sm text-[var(--color-text-muted)]">
-          {customPeriod 
+          {customPeriod
             ? `Custom: ${customPeriod.start.toLocaleDateString()} - ${customPeriod.end.toLocaleDateString()}`
-            : `Selected: ${timeRange}`
-          }
+            : `Selected: ${timeRange}`}
         </p>
       </div>
     );

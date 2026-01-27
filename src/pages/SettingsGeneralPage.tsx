@@ -1,13 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import {
-  HStack,
-  VStack,
-  TabBar,
-  SectionCard,
-  Select,
-  Toggle,
-} from '@/design-system';
+import { HStack, VStack, TabBar, SectionCard, Select, Toggle } from '@/design-system';
 import { SettingsSidebar } from '@/components/SettingsSidebar';
 import { useDarkMode } from '@/hooks/useDarkMode';
 import ThakiLogoLight from '@/assets/thakiLogo_light.svg';
@@ -72,13 +65,9 @@ export default function SettingsGeneralPage() {
       <div className="relative flex items-center w-full h-[var(--tabbar-height)] bg-[var(--color-surface-default)] shrink-0 after:absolute after:bottom-0 after:left-0 after:right-0 after:h-px after:bg-[var(--color-border-default)]">
         {/* Logo Area */}
         <div className="w-[200px] h-full px-3 flex items-center">
-          <img 
-            src={isDark ? ThakiLogoDark : ThakiLogoLight} 
-            alt="THAKI Cloud" 
-            className="h-4"
-          />
+          <img src={isDark ? ThakiLogoDark : ThakiLogoLight} alt="THAKI Cloud" className="h-4" />
         </div>
-        
+
         {/* TabBar (Window controls only) */}
         <div className="flex-1">
           <TabBar
@@ -184,8 +173,11 @@ export default function SettingsGeneralPage() {
                             const checked = e.target.checked;
                             setUseLocationTimezone(checked);
                             if (checked) {
-                              const detectedTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-                              const matchingOption = timezoneOptions.find(opt => opt.value === detectedTimezone);
+                              const detectedTimezone =
+                                Intl.DateTimeFormat().resolvedOptions().timeZone;
+                              const matchingOption = timezoneOptions.find(
+                                (opt) => opt.value === detectedTimezone
+                              );
                               if (matchingOption) {
                                 setTimezone(detectedTimezone);
                               }

@@ -5,22 +5,22 @@ import { Breadcrumb } from './Breadcrumb';
 
 /**
  * # Breadcrumb
- * 
+ *
  * 현재 페이지의 위치를 계층 구조로 표시하는 네비게이션 컴포넌트입니다.
- * 
+ *
  * ## 언제 사용하나요?
  * - 사용자가 현재 위치를 파악해야 할 때
  * - 상위 페이지로 쉽게 이동해야 할 때
  * - 깊은 계층 구조의 페이지에서
  * - 파일 탐색기나 폴더 구조 표시
- * 
+ *
  * ## 기능
  * - React Router `Link` 컴포넌트 사용
  * - 커스텀 구분자 지원
  * - 아이콘 지원
  * - 긴 경로 축소 (maxItems)
  * - 클릭 핸들러 지원
- * 
+ *
  * ## 접근성
  * - `nav` 요소에 `aria-label="Breadcrumb"` 적용
  * - 현재 페이지에 `aria-current="page"` 적용
@@ -82,10 +82,7 @@ export const Default: Story = {
 export const TwoLevels: Story = {
   name: 'Two Levels',
   args: {
-    items: [
-      { label: 'Dashboard', href: '/' },
-      { label: 'Settings' },
-    ],
+    items: [{ label: 'Dashboard', href: '/' }, { label: 'Settings' }],
   },
 };
 

@@ -1,18 +1,7 @@
 import { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { 
-  Button,
-  VStack, 
-  HStack,
-  Input,
-} from '@/design-system';
-import { 
-  IconArrowLeft,
-  IconCopy,
-  IconCheck,
-  IconCode,
-  IconEye,
-} from '@tabler/icons-react';
+import { Button, VStack, HStack, Input } from '@/design-system';
+import { IconArrowLeft, IconCopy, IconCheck, IconCode, IconEye } from '@tabler/icons-react';
 
 /* ----------------------------------------
    Template Configurations
@@ -44,14 +33,13 @@ const LOGO_URL = 'https://thakicloud.github.io/tds_ssot/assets/thakiLogo_light-D
 
 function ThakiLogo() {
   return (
-    <img 
-      src={LOGO_URL} 
-      alt="THAKI Cloud" 
+    <img
+      src={LOGO_URL}
+      alt="THAKI Cloud"
       style={{ height: '20px', display: 'block', alignSelf: 'flex-start' }}
     />
   );
 }
-
 
 /* ----------------------------------------
    1. Account Invitation Template
@@ -77,32 +65,68 @@ function AccountInvitationTemplate({
       <div className="bg-white rounded-lg p-6 w-full flex flex-col gap-6">
         <ThakiLogo />
         <div className="text-[12px] leading-[18px] mt-4" style={{ color: '#64748b' }}>
-          <p className="mb-4">Hello <span className="text-[12px] font-medium" style={{ color: '#0f172a' }}>{displayName}</span>,</p>
+          <p className="mb-4">
+            Hello{' '}
+            <span className="text-[12px] font-medium" style={{ color: '#0f172a' }}>
+              {displayName}
+            </span>
+            ,
+          </p>
           <p className="mb-0">
-            Your administrator from <span className="text-[12px] font-medium" style={{ color: '#0f172a' }}>{domainName}</span> in Thaki Cloud has created a new account for you.
+            Your administrator from{' '}
+            <span className="text-[12px] font-medium" style={{ color: '#0f172a' }}>
+              {domainName}
+            </span>{' '}
+            in Thaki Cloud has created a new account for you.
             <br />
             To get started, please set your password using the secure link below.
           </p>
         </div>
-        <div className="rounded-lg px-4 py-3 flex flex-col gap-1.5 w-full" style={{ backgroundColor: '#f8fafc' }}>
-          <span className="text-[11px] font-medium leading-4" style={{ color: '#64748b' }}>Your username</span>
-          <span className="text-[14px] font-medium leading-5" style={{ color: '#0f172a' }}>{username}</span>
+        <div
+          className="rounded-lg px-4 py-3 flex flex-col gap-1.5 w-full"
+          style={{ backgroundColor: '#f8fafc' }}
+        >
+          <span className="text-[11px] font-medium leading-4" style={{ color: '#64748b' }}>
+            Your username
+          </span>
+          <span className="text-[14px] font-medium leading-5" style={{ color: '#0f172a' }}>
+            {username}
+          </span>
         </div>
         <Button as="a" href={actionUrl} variant="primary" size="lg" className="self-start">
           Get Started
         </Button>
-        <div className="flex items-start gap-2 p-3 rounded-md w-full" style={{ backgroundColor: '#fff7ed' }}>
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#ea580c" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="flex-shrink-0 mt-0.5">
+        <div
+          className="flex items-start gap-2 p-3 rounded-md w-full"
+          style={{ backgroundColor: '#fff7ed' }}
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="#ea580c"
+            strokeWidth="1.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            className="flex-shrink-0 mt-0.5"
+          >
             <path d="M10.24 3.957l-8.424 14.566a1.998 1.998 0 0 0 1.735 2.917h16.848a1.998 1.998 0 0 0 1.735 -2.917l-8.424 -14.566a1.998 1.998 0 0 0 -3.47 0z" />
             <path d="M12 9v4" />
             <path d="M12 17h.01" />
           </svg>
           <span className="text-[11px] leading-4" style={{ color: '#475569' }}>
-            This link will expire in <span className="font-medium" style={{ color: '#0f172a' }}>{expiryDays} days.</span>
+            This link will expire in{' '}
+            <span className="font-medium" style={{ color: '#0f172a' }}>
+              {expiryDays} days.
+            </span>
           </span>
         </div>
       </div>
-      <span className="text-[11px] leading-4 text-center w-full" style={{ color: '#64748b' }}>© Thaki Cloud, All rights reserved.</span>
+      <span className="text-[11px] leading-4 text-center w-full" style={{ color: '#64748b' }}>
+        © Thaki Cloud, All rights reserved.
+      </span>
     </div>
   );
 }
@@ -131,32 +155,69 @@ function ResetPasswordTemplate({
       <div className="bg-white rounded-lg p-6 w-full flex flex-col gap-6">
         <ThakiLogo />
         <div className="text-[12px] leading-[18px] mt-4" style={{ color: '#0f172a' }}>
-          <p className="mb-4">Hello <span className="text-[12px] font-medium" style={{ color: '#0f172a' }}>{displayName}</span>,</p>
+          <p className="mb-4">
+            Hello{' '}
+            <span className="text-[12px] font-medium" style={{ color: '#0f172a' }}>
+              {displayName}
+            </span>
+            ,
+          </p>
           <p className="mb-0">
-            Your administrator from <span className="text-[12px] font-medium" style={{ color: '#0f172a' }}>{domainName}</span> in Thaki Cloud has reset your password.
+            Your administrator from{' '}
+            <span className="text-[12px] font-medium" style={{ color: '#0f172a' }}>
+              {domainName}
+            </span>{' '}
+            in Thaki Cloud has reset your password.
             <br />
-            To regain access to your account, please create a new password using the secure link below.
+            To regain access to your account, please create a new password using the secure link
+            below.
           </p>
         </div>
-        <div className="rounded-lg px-4 py-3 flex flex-col gap-1.5 w-full" style={{ backgroundColor: '#f8fafc' }}>
-          <span className="text-[11px] font-medium leading-4" style={{ color: '#64748b' }}>Your username</span>
-          <span className="text-[14px] font-medium leading-5" style={{ color: '#0f172a' }}>{username}</span>
+        <div
+          className="rounded-lg px-4 py-3 flex flex-col gap-1.5 w-full"
+          style={{ backgroundColor: '#f8fafc' }}
+        >
+          <span className="text-[11px] font-medium leading-4" style={{ color: '#64748b' }}>
+            Your username
+          </span>
+          <span className="text-[14px] font-medium leading-5" style={{ color: '#0f172a' }}>
+            {username}
+          </span>
         </div>
         <Button as="a" href={actionUrl} variant="primary" size="lg" className="self-start">
           Reset password
         </Button>
-        <div className="flex items-start gap-2 p-3 rounded-md w-full" style={{ backgroundColor: '#fff7ed' }}>
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#ea580c" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="flex-shrink-0 mt-0.5">
+        <div
+          className="flex items-start gap-2 p-3 rounded-md w-full"
+          style={{ backgroundColor: '#fff7ed' }}
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="#ea580c"
+            strokeWidth="1.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            className="flex-shrink-0 mt-0.5"
+          >
             <path d="M10.24 3.957l-8.424 14.566a1.998 1.998 0 0 0 1.735 2.917h16.848a1.998 1.998 0 0 0 1.735 -2.917l-8.424 -14.566a1.998 1.998 0 0 0 -3.47 0z" />
             <path d="M12 9v4" />
             <path d="M12 17h.01" />
           </svg>
           <span className="text-[11px] leading-4" style={{ color: '#475569' }}>
-            This temporary password will expire in <span className="font-medium" style={{ color: '#0f172a' }}>{expiryHours} hour.</span>
+            This temporary password will expire in{' '}
+            <span className="font-medium" style={{ color: '#0f172a' }}>
+              {expiryHours} hour.
+            </span>
           </span>
         </div>
       </div>
-      <span className="text-[11px] leading-4 text-center w-full" style={{ color: '#64748b' }}>© Thaki Cloud, All rights reserved.</span>
+      <span className="text-[11px] leading-4 text-center w-full" style={{ color: '#64748b' }}>
+        © Thaki Cloud, All rights reserved.
+      </span>
     </div>
   );
 }
@@ -179,40 +240,75 @@ function EmailMFATemplate({
   expirySeconds,
 }: EmailMFAProps) {
   // Format code as "123 456" (split in middle)
-  const formattedCode = verificationCode.length === 6 
-    ? `${verificationCode.slice(0, 3)} ${verificationCode.slice(3)}`
-    : verificationCode;
+  const formattedCode =
+    verificationCode.length === 6
+      ? `${verificationCode.slice(0, 3)} ${verificationCode.slice(3)}`
+      : verificationCode;
 
   return (
     <div className="flex flex-col gap-3 items-start w-full max-w-[600px]">
       <div className="bg-white rounded-lg p-6 w-full flex flex-col gap-6">
         <ThakiLogo />
         <div className="text-[12px] leading-[18px] mt-4" style={{ color: '#0f172a' }}>
-          <p className="mb-4">Hello <span className="text-[12px] font-medium" style={{ color: '#0f172a' }}>{displayName}</span>,</p>
+          <p className="mb-4">
+            Hello{' '}
+            <span className="text-[12px] font-medium" style={{ color: '#0f172a' }}>
+              {displayName}
+            </span>
+            ,
+          </p>
           <p className="mb-0">
-            To complete your sign-in to <span className="text-[12px] font-medium" style={{ color: '#0f172a' }}>{domainName}</span> in Thaki Cloud, we need to verify your identity.
+            To complete your sign-in to{' '}
+            <span className="text-[12px] font-medium" style={{ color: '#0f172a' }}>
+              {domainName}
+            </span>{' '}
+            in Thaki Cloud, we need to verify your identity.
             <br />
             Please enter the verification code below into the sign-in screen.
           </p>
         </div>
-        <div className="rounded-lg px-4 py-3 flex flex-col gap-1.5 w-full" style={{ backgroundColor: '#f8fafc' }}>
-          <span className="text-[11px] font-medium leading-4" style={{ color: '#64748b' }}>Verification code</span>
+        <div
+          className="rounded-lg px-4 py-3 flex flex-col gap-1.5 w-full"
+          style={{ backgroundColor: '#f8fafc' }}
+        >
+          <span className="text-[11px] font-medium leading-4" style={{ color: '#64748b' }}>
+            Verification code
+          </span>
           <span className="text-[14px] font-medium leading-5" style={{ color: '#0f172a' }}>
             {formattedCode}
           </span>
         </div>
-        <div className="flex items-start gap-2 p-3 rounded-md w-full" style={{ backgroundColor: '#fff7ed' }}>
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#ea580c" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="flex-shrink-0 mt-0.5">
+        <div
+          className="flex items-start gap-2 p-3 rounded-md w-full"
+          style={{ backgroundColor: '#fff7ed' }}
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="#ea580c"
+            strokeWidth="1.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            className="flex-shrink-0 mt-0.5"
+          >
             <path d="M10.24 3.957l-8.424 14.566a1.998 1.998 0 0 0 1.735 2.917h16.848a1.998 1.998 0 0 0 1.735 -2.917l-8.424 -14.566a1.998 1.998 0 0 0 -3.47 0z" />
             <path d="M12 9v4" />
             <path d="M12 17h.01" />
           </svg>
           <span className="text-[11px] leading-4" style={{ color: '#475569' }}>
-            This temporary password will expire in <span className="font-medium" style={{ color: '#0f172a' }}>{expirySeconds} seconds.</span>
+            This temporary password will expire in{' '}
+            <span className="font-medium" style={{ color: '#0f172a' }}>
+              {expirySeconds} seconds.
+            </span>
           </span>
         </div>
       </div>
-      <span className="text-[11px] leading-4 text-center w-full" style={{ color: '#64748b' }}>© Thaki Cloud, All rights reserved.</span>
+      <span className="text-[11px] leading-4 text-center w-full" style={{ color: '#64748b' }}>
+        © Thaki Cloud, All rights reserved.
+      </span>
     </div>
   );
 }
@@ -361,9 +457,10 @@ function generateResetPasswordHTML(props: ResetPasswordProps): string {
 
 function generateEmailMFAHTML(props: EmailMFAProps): string {
   // Format code as "123 456"
-  const formattedCode = props.verificationCode.length === 6 
-    ? `${props.verificationCode.slice(0, 3)} ${props.verificationCode.slice(3)}`
-    : props.verificationCode;
+  const formattedCode =
+    props.verificationCode.length === 6
+      ? `${props.verificationCode.slice(0, 3)} ${props.verificationCode.slice(3)}`
+      : props.verificationCode;
 
   return `<!DOCTYPE html>
 <html lang="en">
@@ -437,18 +534,18 @@ export function MailTemplatePreviewPage() {
   const { templateId } = useParams<{ templateId: string }>();
   const [copied, setCopied] = useState(false);
   const [viewMode, setViewMode] = useState<'preview' | 'code'>('preview');
-  
+
   // Account Invitation fields
   const [displayName, setDisplayName] = useState('{DISPLAY_NAME}');
   const [domainName, setDomainName] = useState('{DOMAIN_NAME}');
   const [username, setUsername] = useState('{USERNAME}');
   const [expiryDays, setExpiryDays] = useState(7);
   const [actionUrl, setActionUrl] = useState('https://cloud.thaki.io/set-password?token=xxx');
-  
+
   // Reset Password fields
   const [expiryHours, setExpiryHours] = useState(1);
   const [resetUrl, setResetUrl] = useState('https://cloud.thaki.io/reset-password?token=xxx');
-  
+
   // Email MFA fields
   const [verificationCode, setVerificationCode] = useState('123456');
   const [mfaExpirySeconds, setMfaExpirySeconds] = useState(30);
@@ -458,11 +555,28 @@ export function MailTemplatePreviewPage() {
   const getHtmlCode = () => {
     switch (templateId) {
       case 'reset-password':
-        return generateResetPasswordHTML({ displayName, domainName, username, expiryHours, actionUrl: resetUrl });
+        return generateResetPasswordHTML({
+          displayName,
+          domainName,
+          username,
+          expiryHours,
+          actionUrl: resetUrl,
+        });
       case 'email-mfa':
-        return generateEmailMFAHTML({ displayName, domainName, verificationCode, expirySeconds: mfaExpirySeconds });
+        return generateEmailMFAHTML({
+          displayName,
+          domainName,
+          verificationCode,
+          expirySeconds: mfaExpirySeconds,
+        });
       default:
-        return generateAccountInvitationHTML({ displayName, domainName, username, expiryDays, actionUrl });
+        return generateAccountInvitationHTML({
+          displayName,
+          domainName,
+          username,
+          expiryDays,
+          actionUrl,
+        });
     }
   };
 
@@ -482,23 +596,42 @@ export function MailTemplatePreviewPage() {
         return (
           <>
             <VStack gap={1}>
-              <label className="text-[11px] font-medium text-[var(--color-text-subtle)]">Display Name</label>
-              <Input value={displayName} onChange={(e) => setDisplayName(e.target.value)} fullWidth />
+              <label className="text-[11px] font-medium text-[var(--color-text-subtle)]">
+                Display Name
+              </label>
+              <Input
+                value={displayName}
+                onChange={(e) => setDisplayName(e.target.value)}
+                fullWidth
+              />
             </VStack>
             <VStack gap={1}>
-              <label className="text-[11px] font-medium text-[var(--color-text-subtle)]">Domain Name</label>
+              <label className="text-[11px] font-medium text-[var(--color-text-subtle)]">
+                Domain Name
+              </label>
               <Input value={domainName} onChange={(e) => setDomainName(e.target.value)} fullWidth />
             </VStack>
             <VStack gap={1}>
-              <label className="text-[11px] font-medium text-[var(--color-text-subtle)]">Username</label>
+              <label className="text-[11px] font-medium text-[var(--color-text-subtle)]">
+                Username
+              </label>
               <Input value={username} onChange={(e) => setUsername(e.target.value)} fullWidth />
             </VStack>
             <VStack gap={1}>
-              <label className="text-[11px] font-medium text-[var(--color-text-subtle)]">Expiry (hours)</label>
-              <Input type="number" value={expiryHours} onChange={(e) => setExpiryHours(Number(e.target.value))} fullWidth />
+              <label className="text-[11px] font-medium text-[var(--color-text-subtle)]">
+                Expiry (hours)
+              </label>
+              <Input
+                type="number"
+                value={expiryHours}
+                onChange={(e) => setExpiryHours(Number(e.target.value))}
+                fullWidth
+              />
             </VStack>
             <VStack gap={1}>
-              <label className="text-[11px] font-medium text-[var(--color-text-subtle)]">Reset URL</label>
+              <label className="text-[11px] font-medium text-[var(--color-text-subtle)]">
+                Reset URL
+              </label>
               <Input value={resetUrl} onChange={(e) => setResetUrl(e.target.value)} fullWidth />
             </VStack>
           </>
@@ -507,20 +640,41 @@ export function MailTemplatePreviewPage() {
         return (
           <>
             <VStack gap={1}>
-              <label className="text-[11px] font-medium text-[var(--color-text-subtle)]">Display Name</label>
-              <Input value={displayName} onChange={(e) => setDisplayName(e.target.value)} fullWidth />
+              <label className="text-[11px] font-medium text-[var(--color-text-subtle)]">
+                Display Name
+              </label>
+              <Input
+                value={displayName}
+                onChange={(e) => setDisplayName(e.target.value)}
+                fullWidth
+              />
             </VStack>
             <VStack gap={1}>
-              <label className="text-[11px] font-medium text-[var(--color-text-subtle)]">Domain Name</label>
+              <label className="text-[11px] font-medium text-[var(--color-text-subtle)]">
+                Domain Name
+              </label>
               <Input value={domainName} onChange={(e) => setDomainName(e.target.value)} fullWidth />
             </VStack>
             <VStack gap={1}>
-              <label className="text-[11px] font-medium text-[var(--color-text-subtle)]">Verification Code</label>
-              <Input value={verificationCode} onChange={(e) => setVerificationCode(e.target.value)} fullWidth />
+              <label className="text-[11px] font-medium text-[var(--color-text-subtle)]">
+                Verification Code
+              </label>
+              <Input
+                value={verificationCode}
+                onChange={(e) => setVerificationCode(e.target.value)}
+                fullWidth
+              />
             </VStack>
             <VStack gap={1}>
-              <label className="text-[11px] font-medium text-[var(--color-text-subtle)]">Expiry (seconds)</label>
-              <Input type="number" value={mfaExpirySeconds} onChange={(e) => setMfaExpirySeconds(Number(e.target.value))} fullWidth />
+              <label className="text-[11px] font-medium text-[var(--color-text-subtle)]">
+                Expiry (seconds)
+              </label>
+              <Input
+                type="number"
+                value={mfaExpirySeconds}
+                onChange={(e) => setMfaExpirySeconds(Number(e.target.value))}
+                fullWidth
+              />
             </VStack>
           </>
         );
@@ -528,23 +682,42 @@ export function MailTemplatePreviewPage() {
         return (
           <>
             <VStack gap={1}>
-              <label className="text-[11px] font-medium text-[var(--color-text-subtle)]">Display Name</label>
-              <Input value={displayName} onChange={(e) => setDisplayName(e.target.value)} fullWidth />
+              <label className="text-[11px] font-medium text-[var(--color-text-subtle)]">
+                Display Name
+              </label>
+              <Input
+                value={displayName}
+                onChange={(e) => setDisplayName(e.target.value)}
+                fullWidth
+              />
             </VStack>
             <VStack gap={1}>
-              <label className="text-[11px] font-medium text-[var(--color-text-subtle)]">Domain Name</label>
+              <label className="text-[11px] font-medium text-[var(--color-text-subtle)]">
+                Domain Name
+              </label>
               <Input value={domainName} onChange={(e) => setDomainName(e.target.value)} fullWidth />
             </VStack>
             <VStack gap={1}>
-              <label className="text-[11px] font-medium text-[var(--color-text-subtle)]">Username</label>
+              <label className="text-[11px] font-medium text-[var(--color-text-subtle)]">
+                Username
+              </label>
               <Input value={username} onChange={(e) => setUsername(e.target.value)} fullWidth />
             </VStack>
             <VStack gap={1}>
-              <label className="text-[11px] font-medium text-[var(--color-text-subtle)]">Expiry (days)</label>
-              <Input type="number" value={expiryDays} onChange={(e) => setExpiryDays(Number(e.target.value))} fullWidth />
+              <label className="text-[11px] font-medium text-[var(--color-text-subtle)]">
+                Expiry (days)
+              </label>
+              <Input
+                type="number"
+                value={expiryDays}
+                onChange={(e) => setExpiryDays(Number(e.target.value))}
+                fullWidth
+              />
             </VStack>
             <VStack gap={1}>
-              <label className="text-[11px] font-medium text-[var(--color-text-subtle)]">Action URL</label>
+              <label className="text-[11px] font-medium text-[var(--color-text-subtle)]">
+                Action URL
+              </label>
               <Input value={actionUrl} onChange={(e) => setActionUrl(e.target.value)} fullWidth />
             </VStack>
           </>
@@ -555,11 +728,34 @@ export function MailTemplatePreviewPage() {
   const renderPreview = () => {
     switch (templateId) {
       case 'reset-password':
-        return <ResetPasswordTemplate displayName={displayName} domainName={domainName} username={username} expiryHours={expiryHours} actionUrl={resetUrl} />;
+        return (
+          <ResetPasswordTemplate
+            displayName={displayName}
+            domainName={domainName}
+            username={username}
+            expiryHours={expiryHours}
+            actionUrl={resetUrl}
+          />
+        );
       case 'email-mfa':
-        return <EmailMFATemplate displayName={displayName} domainName={domainName} verificationCode={verificationCode} expirySeconds={mfaExpirySeconds} />;
+        return (
+          <EmailMFATemplate
+            displayName={displayName}
+            domainName={domainName}
+            verificationCode={verificationCode}
+            expirySeconds={mfaExpirySeconds}
+          />
+        );
       default:
-        return <AccountInvitationTemplate displayName={displayName} domainName={domainName} username={username} expiryDays={expiryDays} actionUrl={actionUrl} />;
+        return (
+          <AccountInvitationTemplate
+            displayName={displayName}
+            domainName={domainName}
+            username={username}
+            expiryDays={expiryDays}
+            actionUrl={actionUrl}
+          />
+        );
     }
   };
 
@@ -568,13 +764,41 @@ export function MailTemplatePreviewPage() {
       <header className="sticky top-0 z-50 bg-[var(--color-surface-default)] border-b border-[var(--color-border-default)]">
         <div className="max-w-7xl mx-auto px-8 h-14 flex items-center justify-between">
           <HStack gap={3} align="center">
-            <Button variant="ghost" size="sm" icon={<IconArrowLeft size={16} stroke={1.5} />} onClick={() => navigate('/mail-template')} />
-            <h1 className="text-[16px] font-semibold text-[var(--color-text-default)]">{config.title}</h1>
+            <Button
+              variant="ghost"
+              size="sm"
+              icon={<IconArrowLeft size={16} stroke={1.5} />}
+              onClick={() => navigate('/mail-template')}
+            />
+            <h1 className="text-[16px] font-semibold text-[var(--color-text-default)]">
+              {config.title}
+            </h1>
           </HStack>
           <HStack gap={2}>
-            <Button variant={viewMode === 'preview' ? 'primary' : 'secondary'} size="sm" icon={<IconEye size={14} stroke={1.5} />} onClick={() => setViewMode('preview')}>Preview</Button>
-            <Button variant={viewMode === 'code' ? 'primary' : 'secondary'} size="sm" icon={<IconCode size={14} stroke={1.5} />} onClick={() => setViewMode('code')}>HTML</Button>
-            <Button variant="secondary" size="sm" icon={copied ? <IconCheck size={14} stroke={1.5} /> : <IconCopy size={14} stroke={1.5} />} onClick={handleCopyHTML}>
+            <Button
+              variant={viewMode === 'preview' ? 'primary' : 'secondary'}
+              size="sm"
+              icon={<IconEye size={14} stroke={1.5} />}
+              onClick={() => setViewMode('preview')}
+            >
+              Preview
+            </Button>
+            <Button
+              variant={viewMode === 'code' ? 'primary' : 'secondary'}
+              size="sm"
+              icon={<IconCode size={14} stroke={1.5} />}
+              onClick={() => setViewMode('code')}
+            >
+              HTML
+            </Button>
+            <Button
+              variant="secondary"
+              size="sm"
+              icon={
+                copied ? <IconCheck size={14} stroke={1.5} /> : <IconCopy size={14} stroke={1.5} />
+              }
+              onClick={handleCopyHTML}
+            >
               {copied ? 'Copied!' : 'Copy HTML'}
             </Button>
           </HStack>
@@ -585,14 +809,19 @@ export function MailTemplatePreviewPage() {
         <div className="flex gap-8">
           <div className="w-[var(--search-input-width)] flex-shrink-0">
             <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg p-4">
-              <h2 className="text-[14px] font-semibold text-[var(--color-text-default)] mb-4">Template Variables</h2>
+              <h2 className="text-[14px] font-semibold text-[var(--color-text-default)] mb-4">
+                Template Variables
+              </h2>
               <VStack gap={4}>{renderVariables()}</VStack>
             </div>
           </div>
 
           <div className="flex-1 min-w-[700px]" style={{ colorScheme: 'light' }}>
             {viewMode === 'preview' ? (
-              <div className="rounded-lg p-8 min-h-[600px] flex justify-center items-start pt-12" style={{ backgroundColor: '#f8fafc' }}>
+              <div
+                className="rounded-lg p-8 min-h-[600px] flex justify-center items-start pt-12"
+                style={{ backgroundColor: '#f8fafc' }}
+              >
                 {renderPreview()}
               </div>
             ) : (

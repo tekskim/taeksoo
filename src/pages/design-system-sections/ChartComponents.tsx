@@ -1,7 +1,12 @@
 import { useState, useRef, useEffect } from 'react';
 import ReactECharts from 'echarts-for-react';
 import { Tooltip } from '@/design-system';
-import { IconRefresh, IconDotsCircleHorizontal, IconArrowsMinimize, IconArrowsMaximize } from '@tabler/icons-react';
+import {
+  IconRefresh,
+  IconDotsCircleHorizontal,
+  IconArrowsMinimize,
+  IconArrowsMaximize,
+} from '@tabler/icons-react';
 import { DataViewDrawer } from '@/components/DataViewDrawer';
 
 /* ----------------------------------------
@@ -46,7 +51,7 @@ export const baseChartOptions = {
     right: '16px',
     top: '30px',
     bottom: '16px',
-    containLabel: true
+    containLabel: true,
   },
   xAxis: {
     type: 'category' as const,
@@ -55,33 +60,38 @@ export const baseChartOptions = {
     axisLabel: {
       color: chartColors.slate400,
       fontSize: 10,
-      padding: [0, 0, 0, 15]
+      padding: [0, 0, 0, 15],
     },
-    boundaryGap: false
+    boundaryGap: false,
   },
   yAxis: {
     type: 'value' as const,
     axisLine: { show: false },
     axisTick: { show: false },
     splitLine: {
-      lineStyle: { color: chartColors.slate100, opacity: 0.5 }
+      lineStyle: { color: chartColors.slate100, opacity: 0.5 },
     },
     axisLabel: {
       color: chartColors.slate400,
-      fontSize: 10
-    }
+      fontSize: 10,
+    },
   },
   tooltip: {
     trigger: 'axis' as const,
     backgroundColor: 'white',
     borderColor: '#e2e8f0',
     textStyle: { color: chartColors.slate800, fontSize: 11 },
-    formatter: (params: Array<{ marker: string; seriesName: string; value: number; axisValueLabel: string }>) => {
+    formatter: (
+      params: Array<{ marker: string; seriesName: string; value: number; axisValueLabel: string }>
+    ) => {
       if (!Array.isArray(params) || params.length === 0) return '';
       const time = params[0].axisValueLabel;
-      const items = params.map(p => 
-        `<div style="display: flex; align-items: center; gap: 8px;"><span style="display: inline-block; width: 8px; height: 8px; border-radius: 9999px; background-color: ${p.color};"></span><span>${p.seriesName}</span><span style="font-weight: 500; margin-left: auto;">${p.value}</span></div>`
-      ).join('');
+      const items = params
+        .map(
+          (p) =>
+            `<div style="display: flex; align-items: center; gap: 8px;"><span style="display: inline-block; width: 8px; height: 8px; border-radius: 9999px; background-color: ${p.color};"></span><span>${p.seriesName}</span><span style="font-weight: 500; margin-left: auto;">${p.value}</span></div>`
+        )
+        .join('');
       return `<div style="font-size: 11px;">${time}<div style="margin-top: 4px;">${items}</div></div>`;
     },
     axisPointer: {
@@ -89,10 +99,10 @@ export const baseChartOptions = {
       snap: true,
       lineStyle: {
         color: chartColors.slate400,
-        type: 'dashed'
-      }
-    }
-  }
+        type: 'dashed',
+      },
+    },
+  },
 };
 
 /* ----------------------------------------
@@ -116,21 +126,23 @@ export function BarChartDemo({ variant }: { variant: 'vertical' | 'horizontal' |
           axisLine: { show: false },
           axisTick: { show: false },
           splitLine: { lineStyle: { color: chartColors.slate100, opacity: 0.5 } },
-          axisLabel: { color: chartColors.slate400, fontSize: 10 }
+          axisLabel: { color: chartColors.slate400, fontSize: 10 },
         },
         yAxis: {
           type: 'category' as const,
           data: labels,
           axisLine: { show: false },
           axisTick: { show: false },
-          axisLabel: { color: chartColors.slate400, fontSize: 10 }
+          axisLabel: { color: chartColors.slate400, fontSize: 10 },
         },
-        series: [{
-          type: 'bar',
-          data: currentData,
-          itemStyle: { color: primaryChartColors[0], borderRadius: [0, 4, 4, 0] },
-          barWidth: '50%'
-        }]
+        series: [
+          {
+            type: 'bar',
+            data: currentData,
+            itemStyle: { color: primaryChartColors[0], borderRadius: [0, 4, 4, 0] },
+            barWidth: '50%',
+          },
+        ],
       };
     }
 
@@ -142,12 +154,12 @@ export function BarChartDemo({ variant }: { variant: 'vertical' | 'horizontal' |
           data: labels,
           axisLine: { show: false },
           axisTick: { show: false },
-          axisLabel: { color: chartColors.slate400, fontSize: 10 }
+          axisLabel: { color: chartColors.slate400, fontSize: 10 },
         },
         yAxis: {
           ...baseChartOptions.yAxis,
           min: 0,
-          max: 100
+          max: 100,
         },
         series: [
           {
@@ -155,15 +167,15 @@ export function BarChartDemo({ variant }: { variant: 'vertical' | 'horizontal' |
             type: 'bar',
             data: currentData,
             itemStyle: { color: primaryChartColors[0], borderRadius: [4, 4, 0, 0] },
-            barGap: '10%'
+            barGap: '10%',
           },
           {
             name: 'Previous',
             type: 'bar',
             data: previousData,
-            itemStyle: { color: primaryChartColors[1], borderRadius: [4, 4, 0, 0] }
-          }
-        ]
+            itemStyle: { color: primaryChartColors[1], borderRadius: [4, 4, 0, 0] },
+          },
+        ],
       };
     }
 
@@ -175,34 +187,51 @@ export function BarChartDemo({ variant }: { variant: 'vertical' | 'horizontal' |
         data: labels,
         axisLine: { show: false },
         axisTick: { show: false },
-        axisLabel: { color: chartColors.slate400, fontSize: 10 }
+        axisLabel: { color: chartColors.slate400, fontSize: 10 },
       },
       yAxis: {
         ...baseChartOptions.yAxis,
         min: 0,
-        max: 100
+        max: 100,
       },
-      series: [{
-        type: 'bar',
-        data: currentData,
-        itemStyle: { color: primaryChartColors[0], borderRadius: [4, 4, 0, 0] },
-        barWidth: '50%'
-      }]
+      series: [
+        {
+          type: 'bar',
+          data: currentData,
+          itemStyle: { color: primaryChartColors[0], borderRadius: [4, 4, 0, 0] },
+          barWidth: '50%',
+        },
+      ],
     };
   };
 
   return (
     <div className="w-full bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-md)] p-4">
-      <ReactECharts option={getOption()} style={{ height: variant === 'horizontal' ? '250px' : '200px' }} notMerge={true} opts={{ devicePixelRatio: window.devicePixelRatio }} />
+      <ReactECharts
+        option={getOption()}
+        style={{ height: variant === 'horizontal' ? '250px' : '200px' }}
+        notMerge={true}
+        opts={{ devicePixelRatio: window.devicePixelRatio }}
+      />
       {variant === 'grouped' && (
         <div className="flex gap-4 mt-2 justify-start">
           <div className="flex items-center gap-1.5">
-            <div className="w-2 h-2 rounded-sm" style={{ backgroundColor: primaryChartColors[0] }} />
-            <span className="text-[length:var(--font-size-11)] text-[var(--color-text-muted)]">Current</span>
+            <div
+              className="w-2 h-2 rounded-sm"
+              style={{ backgroundColor: primaryChartColors[0] }}
+            />
+            <span className="text-[length:var(--font-size-11)] text-[var(--color-text-muted)]">
+              Current
+            </span>
           </div>
           <div className="flex items-center gap-1.5">
-            <div className="w-2 h-2 rounded-sm" style={{ backgroundColor: primaryChartColors[1] }} />
-            <span className="text-[length:var(--font-size-11)] text-[var(--color-text-muted)]">Previous</span>
+            <div
+              className="w-2 h-2 rounded-sm"
+              style={{ backgroundColor: primaryChartColors[1] }}
+            />
+            <span className="text-[length:var(--font-size-11)] text-[var(--color-text-muted)]">
+              Previous
+            </span>
           </div>
         </div>
       )}
@@ -224,7 +253,6 @@ export const generateTimeLabels = () => {
   return labels;
 };
 
-
 // LineChart Component (from storage-dashboard)
 interface LineChartSeries {
   name: string;
@@ -243,7 +271,16 @@ export const timeOptions = [
 
 // Icons for time controls
 export const CalendarIcon = () => (
-  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+  <svg
+    width="12"
+    height="12"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
     <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
     <line x1="16" y1="2" x2="16" y2="6" />
     <line x1="8" y1="2" x2="8" y2="6" />
@@ -252,12 +289,20 @@ export const CalendarIcon = () => (
 );
 
 export const CloseIcon = () => (
-  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+  <svg
+    width="12"
+    height="12"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
     <line x1="18" y1="6" x2="6" y2="18" />
     <line x1="6" y1="6" x2="18" y2="18" />
   </svg>
 );
-
 
 // Helper function for date formatting
 export const formatDateForDisplay = (date: Date | null) => {
@@ -271,7 +316,7 @@ export const formatDateForDisplay = (date: Date | null) => {
 // TimeControls Component
 export function TimeControls({
   onTimeRangeChange,
-  onRefresh
+  onRefresh,
 }: {
   onTimeRangeChange?: (value: string) => void;
   onRefresh?: () => void;
@@ -363,9 +408,9 @@ export function TimeControls({
     const lastDay = new Date(year, month + 1, 0);
     const daysInMonth = lastDay.getDate();
     const startingDay = firstDay.getDay();
-    
+
     const days: { date: Date; isCurrentMonth: boolean; isToday: boolean }[] = [];
-    
+
     // Previous month days
     const prevMonth = new Date(year, month, 0);
     const prevMonthDays = prevMonth.getDate();
@@ -373,10 +418,10 @@ export function TimeControls({
       days.push({
         date: new Date(year, month - 1, prevMonthDays - i),
         isCurrentMonth: false,
-        isToday: false
+        isToday: false,
       });
     }
-    
+
     // Current month days
     const today = new Date();
     for (let i = 1; i <= daysInMonth; i++) {
@@ -384,20 +429,20 @@ export function TimeControls({
       days.push({
         date: d,
         isCurrentMonth: true,
-        isToday: d.toDateString() === today.toDateString()
+        isToday: d.toDateString() === today.toDateString(),
       });
     }
-    
+
     // Next month days
     const remainingDays = 42 - days.length;
     for (let i = 1; i <= remainingDays; i++) {
       days.push({
         date: new Date(year, month + 1, i),
         isCurrentMonth: false,
-        isToday: false
+        isToday: false,
       });
     }
-    
+
     return days;
   };
 
@@ -446,8 +491,8 @@ export function TimeControls({
     <div className="fullScreenTimeControls">
       {/* Time Range Buttons */}
       <div className="timeSegments">
-        {timeOptions.map(option => (
-          <button 
+        {timeOptions.map((option) => (
+          <button
             key={option.value}
             className={`timeSegment ${timeRange === option.value && !customPeriod ? 'timeSegmentActive' : ''}`}
             onClick={() => handleTimeRangeClick(option.value)}
@@ -468,10 +513,10 @@ export function TimeControls({
             </span>
             <button className="periodTagClose" onClick={handleClearCustomPeriod}>
               <CloseIcon />
-          </button>
-        </div>
+            </button>
+          </div>
         ) : (
-          <button 
+          <button
             className={`customPeriodBtn ${showDatePicker ? 'customPeriodBtnActive' : ''}`}
             onClick={handleCustomPeriodClick}
           >
@@ -485,7 +530,7 @@ export function TimeControls({
           <div className="calendarDropdown">
             {/* Date Range Header */}
             <div className="calendarHeader">
-              <div 
+              <div
                 className={`calendarDateBox ${selectingStart ? 'calendarDateBoxActive' : ''}`}
                 onClick={() => setSelectingStart(true)}
               >
@@ -493,7 +538,7 @@ export function TimeControls({
                 <span className="calendarDateValue">{formatCalendarDate(tempStartDate)}</span>
               </div>
               <div className="calendarDateSeparator">~</div>
-              <div 
+              <div
                 className={`calendarDateBox ${!selectingStart ? 'calendarDateBoxActive' : ''}`}
                 onClick={() => setSelectingStart(false)}
               >
@@ -516,8 +561,12 @@ export function TimeControls({
 
             {/* Actions */}
             <div className="calendarActions">
-              <button className="calendarCancel" onClick={() => setShowDatePicker(false)}>Cancel</button>
-              <button className="calendarApply" onClick={handleApplyCustomPeriod}>Apply</button>
+              <button className="calendarCancel" onClick={() => setShowDatePicker(false)}>
+                Cancel
+              </button>
+              <button className="calendarApply" onClick={handleApplyCustomPeriod}>
+                Apply
+              </button>
             </div>
           </div>
         )}
@@ -531,16 +580,16 @@ export function TimeControls({
   );
 }
 
-export function LineChart({ 
-  title, 
-  series, 
+export function LineChart({
+  title,
+  series,
   yAxisFormatter = (v: number) => `${v}`,
   height = '100%',
   onFullScreen,
   isFullScreen = false,
   onExitFullScreen,
-  timeControls
-}: { 
+  timeControls,
+}: {
   title: string;
   series: LineChartSeries[];
   yAxisFormatter?: (value: number) => string;
@@ -551,17 +600,17 @@ export function LineChart({
   timeControls?: React.ReactNode;
 }) {
   const [visibleSeries, setVisibleSeries] = useState<Record<string, boolean>>(
-    Object.fromEntries(series.map(s => [s.name, true]))
+    Object.fromEntries(series.map((s) => [s.name, true]))
   );
   const [menuOpen, setMenuOpen] = useState(false);
   const [showDataView, setShowDataView] = useState(false);
 
   const timeLabels = generateTimeLabels();
 
-  const allVisible = Object.values(visibleSeries).every(v => v);
+  const allVisible = Object.values(visibleSeries).every((v) => v);
   const toggleAll = () => {
     const newState = !allVisible;
-    setVisibleSeries(Object.fromEntries(series.map(s => [s.name, newState])));
+    setVisibleSeries(Object.fromEntries(series.map((s) => [s.name, newState])));
   };
 
   const handleFullScreen = () => {
@@ -570,7 +619,7 @@ export function LineChart({
   };
 
   // Calculate y-axis bounds for exactly 5 labels
-  const visibleData = series.filter(s => visibleSeries[s.name]).flatMap(s => s.data);
+  const visibleData = series.filter((s) => visibleSeries[s.name]).flatMap((s) => s.data);
   const dataMax = visibleData.length > 0 ? Math.max(...visibleData) : 100;
   const niceMax = Math.ceil(dataMax / 4) * 4; // Round up to nearest multiple of 4
   const yInterval = niceMax / 4; // 4 intervals = 5 labels
@@ -582,9 +631,9 @@ export function LineChart({
       right: '16px',
       top: '20px',
       bottom: '16px',
-      containLabel: true
+      containLabel: true,
     },
-        xAxis: {
+    xAxis: {
       type: 'category' as const,
       data: timeLabels,
       axisLine: { show: false },
@@ -592,11 +641,11 @@ export function LineChart({
       axisLabel: {
         color: chartColors.slate400,
         fontSize: 10,
-        padding: [0, 0, 0, 15]
+        padding: [0, 0, 0, 15],
       },
-      boundaryGap: false
-        },
-        yAxis: {
+      boundaryGap: false,
+    },
+    yAxis: {
       type: 'value' as const,
       min: 0,
       max: niceMax,
@@ -604,35 +653,46 @@ export function LineChart({
       axisLine: { show: false },
       axisTick: { show: false },
       splitLine: {
-        lineStyle: { color: chartColors.slate100, opacity: 0.5 }
+        lineStyle: { color: chartColors.slate100, opacity: 0.5 },
       },
       axisLabel: {
         color: chartColors.slate400,
         fontSize: 10,
-        formatter: yAxisFormatter
-      }
+        formatter: yAxisFormatter,
+      },
     },
     tooltip: {
       trigger: 'axis' as const,
       backgroundColor: 'white',
       borderColor: '#e2e8f0',
-      textStyle: { 
-        color: chartColors.slate800, 
-        fontSize: 11, 
-        fontFamily: 'Mona Sans, -apple-system, BlinkMacSystemFont, sans-serif' 
+      textStyle: {
+        color: chartColors.slate800,
+        fontSize: 11,
+        fontFamily: 'Mona Sans, -apple-system, BlinkMacSystemFont, sans-serif',
       },
-      formatter: (params: Array<{ marker: string; seriesName: string; value: number; axisValueLabel: string; color: string }>) => {
+      formatter: (
+        params: Array<{
+          marker: string;
+          seriesName: string;
+          value: number;
+          axisValueLabel: string;
+          color: string;
+        }>
+      ) => {
         if (!Array.isArray(params) || params.length === 0) return '';
         const time = params[0].axisValueLabel;
-        const items = params.map(p => 
-          `<div style="display: flex; align-items: center; gap: 8px;"><span style="display: inline-block; width: 8px; height: 8px; border-radius: 9999px; background-color: ${p.color};"></span><span>${p.seriesName}</span><span style="font-weight: 500; margin-left: auto;">${yAxisFormatter(p.value)}</span></div>`
-        ).join('');
+        const items = params
+          .map(
+            (p) =>
+              `<div style="display: flex; align-items: center; gap: 8px;"><span style="display: inline-block; width: 8px; height: 8px; border-radius: 9999px; background-color: ${p.color};"></span><span>${p.seriesName}</span><span style="font-weight: 500; margin-left: auto;">${yAxisFormatter(p.value)}</span></div>`
+          )
+          .join('');
         return `<div style="font-size: 11px;">${time}<div style="margin-top: 4px;">${items}</div></div>`;
-      }
+      },
     },
     series: series
-      .filter(s => visibleSeries[s.name])
-      .map(s => ({
+      .filter((s) => visibleSeries[s.name])
+      .map((s) => ({
         name: s.name,
         type: 'line',
         smooth: true,
@@ -642,8 +702,8 @@ export function LineChart({
         lineStyle: { color: s.color, width: 1 },
         itemStyle: { color: s.color },
         areaStyle: { color: s.color, opacity: 0.1 },
-        data: s.data
-      }))
+        data: s.data,
+      })),
   };
 
   return (
@@ -651,9 +711,7 @@ export function LineChart({
       {/* Header */}
       <div className="chartHeader">
         <span className="chartTitle">{title}</span>
-        {isFullScreen && timeControls && (
-          <div className="chartHeaderCenter">{timeControls}</div>
-        )}
+        {isFullScreen && timeControls && <div className="chartHeaderCenter">{timeControls}</div>}
         <div className="chartControls">
           {/* Toggle Button - only show for multiple series */}
           {series.length > 1 && (
@@ -665,12 +723,15 @@ export function LineChart({
               <span className="toggleDivider">|</span>
             </>
           )}
-          
+
           {/* Menu Button */}
           <div className="menuContainer">
-            <button 
+            <button
               className="menuTrigger"
-              onClick={(e) => { e.stopPropagation(); setMenuOpen(!menuOpen); }}
+              onClick={(e) => {
+                e.stopPropagation();
+                setMenuOpen(!menuOpen);
+              }}
             >
               <IconDotsCircleHorizontal size={16} stroke={1.5} />
             </button>
@@ -682,17 +743,23 @@ export function LineChart({
                 <button className="contextMenuItem" onClick={() => setMenuOpen(false)}>
                   Download CSV
                 </button>
-                <button className="contextMenuItemLast" onClick={() => { setMenuOpen(false); setShowDataView(true); }}>
+                <button
+                  className="contextMenuItemLast"
+                  onClick={() => {
+                    setMenuOpen(false);
+                    setShowDataView(true);
+                  }}
+                >
                   Data View
                 </button>
               </div>
             )}
           </div>
-          
+
           {/* Expand/Minimize Button */}
-          <button 
-            className="expandTrigger" 
-            title={isFullScreen ? "Minimize" : "Expand"}
+          <button
+            className="expandTrigger"
+            title={isFullScreen ? 'Minimize' : 'Expand'}
             onClick={isFullScreen ? onExitFullScreen : handleFullScreen}
           >
             {isFullScreen ? (
@@ -703,18 +770,23 @@ export function LineChart({
           </button>
         </div>
       </div>
-      
+
       {/* Chart Body */}
       <div className="chartBody">
         <div className="chartWrapper">
-          <ReactECharts option={option} style={{ height: '100%', width: '100%' }} notMerge={true} opts={{ devicePixelRatio: window.devicePixelRatio }} />
+          <ReactECharts
+            option={option}
+            style={{ height: '100%', width: '100%' }}
+            notMerge={true}
+            opts={{ devicePixelRatio: window.devicePixelRatio }}
+          />
         </div>
         <div className="chartLegend">
           {series.map((s, i) => (
-            <div 
+            <div
               key={i}
               className={`legendItem ${!visibleSeries[s.name] ? 'legendItemHidden' : ''}`}
-              onClick={() => setVisibleSeries(prev => ({ ...prev, [s.name]: !prev[s.name] }))}
+              onClick={() => setVisibleSeries((prev) => ({ ...prev, [s.name]: !prev[s.name] }))}
             >
               <div className="legendDot" style={{ backgroundColor: s.color }} />
               <span>{s.name}</span>
@@ -722,7 +794,7 @@ export function LineChart({
           ))}
         </div>
       </div>
-      
+
       {/* Data View Drawer */}
       <DataViewDrawer
         isOpen={showDataView}
@@ -747,7 +819,7 @@ export function ChartWithFullScreen({
   title,
   series,
   yAxisFormatter = (v: number) => `${v}`,
-  height = '100%'
+  height = '100%',
 }: {
   title: string;
   series: LineChartSeries[];
@@ -807,38 +879,58 @@ export function ChartWithFullScreen({
 }
 
 // QuotaBarDemo Component
-export function QuotaBarDemo({ label, used, total, unit }: { label: string; used: number; total: number; unit: string }) {
+export function QuotaBarDemo({
+  label,
+  used,
+  total,
+  unit,
+}: {
+  label: string;
+  used: number;
+  total: number;
+  unit: string;
+}) {
   const percentage = Math.round((used / total) * 100);
-  
+
   const getColors = () => {
-    if (percentage >= 100) return {
-      bg: 'bg-[var(--color-status-error)]/15',
-      text: 'text-[var(--color-status-error)]'
-    };
-    if (percentage >= 70) return {
-      bg: 'bg-[var(--color-status-warning)]/15',
-      text: 'text-[var(--color-status-warning)]'
-    };
+    if (percentage >= 100)
+      return {
+        bg: 'bg-[var(--color-status-error)]/15',
+        text: 'text-[var(--color-status-error)]',
+      };
+    if (percentage >= 70)
+      return {
+        bg: 'bg-[var(--color-status-warning)]/15',
+        text: 'text-[var(--color-status-warning)]',
+      };
     return {
       bg: 'bg-[var(--color-status-success)]/15',
-      text: 'text-[var(--color-status-success)]'
+      text: 'text-[var(--color-status-success)]',
     };
   };
-  
+
   const colors = getColors();
-  
+
   return (
     <div className="flex flex-col gap-1.5">
       <div className="flex items-center justify-between">
-        <span className="text-[length:var(--font-size-11)] leading-[var(--line-height-16)] font-medium text-[var(--color-text-default)]">{label}</span>
+        <span className="text-[length:var(--font-size-11)] leading-[var(--line-height-16)] font-medium text-[var(--color-text-default)]">
+          {label}
+        </span>
         <div className="flex items-center gap-2">
-          <span className="text-[length:var(--font-size-11)] leading-[var(--line-height-16)] text-[var(--color-text-muted)]">{used}/{total} {unit}</span>
+          <span className="text-[length:var(--font-size-11)] leading-[var(--line-height-16)] text-[var(--color-text-muted)]">
+            {used}/{total} {unit}
+          </span>
           <div className={`flex items-center px-1.5 py-0.5 rounded-md ${colors.bg}`}>
-            <span className={`text-[length:var(--font-size-11)] leading-[var(--line-height-16)] font-medium ${colors.text}`}>{percentage}%</span>
+            <span
+              className={`text-[length:var(--font-size-11)] leading-[var(--line-height-16)] font-medium ${colors.text}`}
+            >
+              {percentage}%
+            </span>
           </div>
         </div>
       </div>
-      <Tooltip 
+      <Tooltip
         content={
           <div className="flex flex-col gap-1">
             <div className="flex items-center gap-2">
@@ -851,7 +943,7 @@ export function QuotaBarDemo({ label, used, total, unit }: { label: string; used
       >
         <div className="w-full">
           <div className="h-[3px] rounded-sm bg-[var(--color-surface-muted)] overflow-hidden cursor-pointer">
-            <div 
+            <div
               className="h-full rounded-sm bg-[var(--color-text-muted)] transition-all"
               style={{ width: `${Math.min(percentage, 100)}%` }}
             />
@@ -870,7 +962,7 @@ export function AreaChartDemo({ variant }: { variant: 'basic' | 'stacked' | 'nod
 
   if (variant === 'basic') {
     return (
-      <ChartWithFullScreen 
+      <ChartWithFullScreen
         title="Network Traffic"
         series={networkTrafficSeries}
         yAxisFormatter={(v) => `${v} MB/s`}
@@ -885,7 +977,7 @@ export function AreaChartDemo({ variant }: { variant: 'basic' | 'stacked' | 'nod
       { name: 'Traffic', data: [], color: chartColors.cyan400 },
     ];
     return (
-      <ChartWithFullScreen 
+      <ChartWithFullScreen
         title="Network Traffic"
         series={emptySeriesData}
         yAxisFormatter={(v) => `${v} MB/s`}
@@ -903,7 +995,7 @@ export function AreaChartDemo({ variant }: { variant: 'basic' | 'stacked' | 'nod
   ];
 
   return (
-    <ChartWithFullScreen 
+    <ChartWithFullScreen
       title="CPU Utilization"
       series={cpuUtilizationSeries}
       yAxisFormatter={(v) => `${v.toFixed(2)}%`}
@@ -918,16 +1010,16 @@ export function AreaChartDemo({ variant }: { variant: 'basic' | 'stacked' | 'nod
 
 // Extended color palette for pie charts with many segments
 const extendedChartColors = [
-  chartColors.cyan400,     // cyan
-  chartColors.emerald400,  // emerald/green
-  chartColors.amber400,    // amber/yellow
-  chartColors.violet400,   // violet/purple
-  chartColors.fuchsia400,  // fuchsia/pink
-  chartColors.red400,      // red/coral
-  chartColors.slate400,    // slate/gray
-  '#60a5fa',               // blue-400
-  '#f472b6',               // pink-400
-  '#4ade80',               // green-400
+  chartColors.cyan400, // cyan
+  chartColors.emerald400, // emerald/green
+  chartColors.amber400, // amber/yellow
+  chartColors.violet400, // violet/purple
+  chartColors.fuchsia400, // fuchsia/pink
+  chartColors.red400, // red/coral
+  chartColors.slate400, // slate/gray
+  '#60a5fa', // blue-400
+  '#f472b6', // pink-400
+  '#4ade80', // green-400
 ];
 
 interface PieChartData {
@@ -935,26 +1027,26 @@ interface PieChartData {
   value: number;
 }
 
-export function PieChartDemo({ 
-  title, 
+export function PieChartDemo({
+  title,
   data,
-  showPercentOnSlice = true 
-}: { 
-  title: string; 
+  showPercentOnSlice = true,
+}: {
+  title: string;
   data: PieChartData[];
   showPercentOnSlice?: boolean;
 }) {
   const total = data.reduce((sum, item) => sum + item.value, 0);
-  
+
   const chartData = data.map((item, index) => ({
     ...item,
-    itemStyle: { color: extendedChartColors[index % extendedChartColors.length] }
+    itemStyle: { color: extendedChartColors[index % extendedChartColors.length] },
   }));
 
   const legendData = data.map((item, index) => ({
     label: item.name,
     value: Math.round((item.value / total) * 100),
-    color: extendedChartColors[index % extendedChartColors.length]
+    color: extendedChartColors[index % extendedChartColors.length],
   }));
 
   const getOption = () => ({
@@ -969,11 +1061,17 @@ export function PieChartDemo({
       textStyle: {
         color: '#1e293b',
         fontSize: 11,
-        fontFamily: 'Mona Sans, -apple-system, BlinkMacSystemFont, sans-serif'
+        fontFamily: 'Mona Sans, -apple-system, BlinkMacSystemFont, sans-serif',
       },
-      formatter: (params: { marker: string; name: string; value: number; percent: number; color: string }) => {
+      formatter: (params: {
+        marker: string;
+        name: string;
+        value: number;
+        percent: number;
+        color: string;
+      }) => {
         return `<span style="display: inline-block; width: 8px; height: 8px; border-radius: 9999px; background-color: ${params.color}; margin-right: 6px;"></span>${params.name}<br/><span style="font-weight: 500; margin-left: 14px;">${params.value} (${params.percent.toFixed(0)}%)</span>`;
-      }
+      },
     },
     animation: false,
     series: [
@@ -982,47 +1080,60 @@ export function PieChartDemo({
         radius: '80%',
         center: ['50%', '50%'],
         avoidLabelOverlap: true,
-        label: showPercentOnSlice ? {
-          show: true,
-          position: 'inside',
-          formatter: (params: { percent: number }) => {
-            return params.percent >= 15 ? `${params.percent.toFixed(0)}%` : '';
-          },
-          fontSize: 12,
-          fontWeight: 600,
-          color: '#ffffff',
-          fontFamily: 'Mona Sans, -apple-system, BlinkMacSystemFont, sans-serif'
-        } : {
-          show: false
-        },
+        label: showPercentOnSlice
+          ? {
+              show: true,
+              position: 'inside',
+              formatter: (params: { percent: number }) => {
+                return params.percent >= 15 ? `${params.percent.toFixed(0)}%` : '';
+              },
+              fontSize: 12,
+              fontWeight: 600,
+              color: '#ffffff',
+              fontFamily: 'Mona Sans, -apple-system, BlinkMacSystemFont, sans-serif',
+            }
+          : {
+              show: false,
+            },
         emphasis: {
           scale: true,
           scaleSize: 5,
           itemStyle: {
             shadowBlur: 10,
             shadowOffsetX: 0,
-            shadowColor: 'rgba(0, 0, 0, 0.2)'
-          }
+            shadowColor: 'rgba(0, 0, 0, 0.2)',
+          },
         },
         labelLine: {
-          show: false
+          show: false,
         },
-        data: chartData
-      }
-    ]
+        data: chartData,
+      },
+    ],
   });
 
   return (
     <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] p-5 flex flex-col gap-4 w-[var(--search-input-width)]">
-      <span className="text-[length:var(--font-size-13)] font-medium text-[var(--color-text-default)]">{title}</span>
+      <span className="text-[length:var(--font-size-13)] font-medium text-[var(--color-text-default)]">
+        {title}
+      </span>
       <div className="flex justify-center">
-        <ReactECharts option={getOption()} style={{ height: '180px', width: '180px' }} opts={{ devicePixelRatio: window.devicePixelRatio }} />
+        <ReactECharts
+          option={getOption()}
+          style={{ height: '180px', width: '180px' }}
+          opts={{ devicePixelRatio: window.devicePixelRatio }}
+        />
       </div>
       <div className="flex flex-wrap items-center gap-x-4 gap-y-2 justify-center max-h-[60px] overflow-y-auto legend-scroll">
         {legendData.map((item, i) => (
           <div key={i} className="flex items-center gap-1.5">
-            <div className="w-2.5 h-2.5 rounded-sm shrink-0" style={{ backgroundColor: item.color }} />
-            <span className="text-[length:var(--font-size-11)] text-[var(--color-text-muted)]">{item.label}</span>
+            <div
+              className="w-2.5 h-2.5 rounded-sm shrink-0"
+              style={{ backgroundColor: item.color }}
+            />
+            <span className="text-[length:var(--font-size-11)] text-[var(--color-text-muted)]">
+              {item.label}
+            </span>
           </div>
         ))}
       </div>
@@ -1034,12 +1145,12 @@ export function PieChartDemo({
    Doughnut chart Demo (ECharts - matches SingleValueDoughnutCard from storage)
    ---------------------------------------- */
 
-export function DoughnutChartDemo({ 
-  title, 
+export function DoughnutChartDemo({
+  title,
   value,
-  color
-}: { 
-  title: string; 
+  color,
+}: {
+  title: string;
   value: number;
   color?: string;
 }) {
@@ -1056,7 +1167,7 @@ export function DoughnutChartDemo({
 
   const getOption = () => ({
     tooltip: {
-      show: false
+      show: false,
     },
     animation: false,
     series: [
@@ -1068,22 +1179,22 @@ export function DoughnutChartDemo({
         silent: true,
         itemStyle: {
           borderRadius: 0,
-          borderWidth: 0
+          borderWidth: 0,
         },
         label: {
-          show: false
+          show: false,
         },
         labelLine: {
-          show: false
+          show: false,
         },
         emphasis: {
-          disabled: true
+          disabled: true,
         },
         data: [
           { value: value, itemStyle: { color: mainColor } },
-          { value: 100 - value, itemStyle: { color: bgColor } }
-        ]
-      }
+          { value: 100 - value, itemStyle: { color: bgColor } },
+        ],
+      },
     ],
     graphic: [
       {
@@ -1097,17 +1208,23 @@ export function DoughnutChartDemo({
           fill: getColor('--color-text-default', '#0f172a'),
           fontSize: 18,
           fontWeight: 500,
-          fontFamily: 'Mona Sans, -apple-system, BlinkMacSystemFont, sans-serif'
-        }
-      }
-    ]
+          fontFamily: 'Mona Sans, -apple-system, BlinkMacSystemFont, sans-serif',
+        },
+      },
+    ],
   });
 
   return (
     <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] p-5 flex flex-col gap-4 w-[var(--search-input-width)]">
-      <span className="text-[length:var(--font-size-13)] font-medium text-[var(--color-text-default)]">{title}</span>
+      <span className="text-[length:var(--font-size-13)] font-medium text-[var(--color-text-default)]">
+        {title}
+      </span>
       <div className="flex justify-center">
-        <ReactECharts option={getOption()} style={{ height: '180px', width: '180px' }} opts={{ devicePixelRatio: window.devicePixelRatio }} />
+        <ReactECharts
+          option={getOption()}
+          style={{ height: '180px', width: '180px' }}
+          opts={{ devicePixelRatio: window.devicePixelRatio }}
+        />
       </div>
     </div>
   );
@@ -1117,11 +1234,25 @@ export function DoughnutChartDemo({
    Half-Doughnut chart Demo (ECharts - from storage-dashboard)
    ---------------------------------------- */
 
-export function HalfDoughnutChartDemo({ value, label, status = 'default', used, total, unit }: { value: number; label: string; status?: 'default' | 'success' | 'warning' | 'error'; used?: number; total?: number; unit?: string }) {
+export function HalfDoughnutChartDemo({
+  value,
+  label,
+  status = 'default',
+  used,
+  total,
+  unit,
+}: {
+  value: number;
+  label: string;
+  status?: 'default' | 'success' | 'warning' | 'error';
+  used?: number;
+  total?: number;
+  unit?: string;
+}) {
   const [showTooltip, setShowTooltip] = useState(false);
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const containerRef = useRef<HTMLDivElement>(null);
-  
+
   // Chart dimensions
   const chartWidth = 180;
   const chartHeight = 160;
@@ -1131,7 +1262,7 @@ export function HalfDoughnutChartDemo({ value, label, status = 'default', used, 
   const arcWidth = 14;
   const innerRadius = radius - arcWidth;
   const outerRadius = radius;
-  
+
   // Get color from design system CSS variables
   const getColor = (cssVar: string, fallback: string) => {
     if (typeof window !== 'undefined') {
@@ -1150,22 +1281,23 @@ export function HalfDoughnutChartDemo({ value, label, status = 'default', used, 
 
   const color = colorMap[status];
   const available = total !== undefined && used !== undefined ? total - used : 0;
-  const availablePercent = total !== undefined && used !== undefined ? Math.round((available / total) * 100) : 0;
+  const availablePercent =
+    total !== undefined && used !== undefined ? Math.round((available / total) * 100) : 0;
 
   // Check if mouse is over the gauge arc
   const isOverGaugeArc = (mx: number, my: number) => {
     const dx = mx - centerX;
     const dy = my - centerY;
     const distance = Math.sqrt(dx * dx + dy * dy);
-    
+
     // Check if within the arc ring
     if (distance < innerRadius - 4 || distance > outerRadius + 4) return false;
-    
+
     // Check if within the arc angle range (210° to -30°, which is 210° to 330° in standard coords)
     // Convert to angle: atan2 gives -PI to PI, we need to convert
     let angle = Math.atan2(-dy, dx) * (180 / Math.PI); // Negate dy because canvas Y is inverted
     if (angle < 0) angle += 360;
-    
+
     // The gauge goes from 210° (start) to 330° (-30° = 330°) clockwise
     // In standard math coords: 210° is bottom-left, 330° is bottom-right
     return angle >= 150 && angle <= 330; // Approximate visible arc range
@@ -1176,11 +1308,11 @@ export function HalfDoughnutChartDemo({ value, label, status = 'default', used, 
       const rect = containerRef.current.getBoundingClientRect();
       const relX = e.clientX - rect.left;
       const relY = e.clientY - rect.top;
-      
+
       // Adjust for padding (p-4 = 16px)
       const chartX = relX - 16;
       const chartY = relY - 16;
-      
+
       setMousePos({ x: relX, y: relY });
       setShowTooltip(isOverGaugeArc(chartX, chartY));
     }
@@ -1205,67 +1337,79 @@ export function HalfDoughnutChartDemo({ value, label, status = 'default', used, 
             width: 14,
             color: [
               [value / 100, color],
-              [1, getColor('--color-border-subtle', '#f1f5f9')]
-            ]
-          }
+              [1, getColor('--color-border-subtle', '#f1f5f9')],
+            ],
+          },
         },
         pointer: {
-          show: false
+          show: false,
         },
         axisTick: {
-          show: false
+          show: false,
         },
         splitLine: {
-          show: false
+          show: false,
         },
         axisLabel: {
-          show: false
+          show: false,
         },
         title: {
-          show: false
+          show: false,
         },
         detail: {
-          show: false
-        }
-      }
-    ]
+          show: false,
+        },
+      },
+    ],
   });
 
   return (
-    <div 
+    <div
       ref={containerRef}
       className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] p-4 relative"
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
     >
       <div className="relative">
-        <ReactECharts option={getOption()} style={{ height: '160px', width: '180px' }} opts={{ devicePixelRatio: window.devicePixelRatio }} />
+        <ReactECharts
+          option={getOption()}
+          style={{ height: '160px', width: '180px' }}
+          opts={{ devicePixelRatio: window.devicePixelRatio }}
+        />
       </div>
       <div className="absolute inset-0 flex flex-col items-center justify-center pt-8 pointer-events-none">
-        <span className="text-[24px] leading-[28px] font-semibold text-[var(--color-text-default)]">{value}%</span>
+        <span className="text-[24px] leading-[28px] font-semibold text-[var(--color-text-default)]">
+          {value}%
+        </span>
         {used !== undefined && total !== undefined ? (
-          <span className="text-[12px] text-[var(--color-text-subtle)]">{used}{unit}/{total}{unit}</span>
+          <span className="text-[12px] text-[var(--color-text-subtle)]">
+            {used}
+            {unit}/{total}
+            {unit}
+          </span>
         ) : (
           <span className="text-[12px] text-[var(--color-text-subtle)]">{label}</span>
         )}
       </div>
-      
+
       {/* Tooltip */}
       {showTooltip && used !== undefined && total !== undefined && (
-        <div 
+        <div
           className="absolute z-10 backdrop-blur-[40px] bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px] shadow-[0px_0px_4px_0px_rgba(0,0,0,0.1)] px-2 py-1.5 flex flex-col gap-1 pointer-events-none"
           style={{ left: mousePos.x + 12, top: mousePos.y + 12 }}
         >
           <div className="flex items-center gap-1.5">
             <div className="w-[5px] h-[5px] rounded-[1px]" style={{ backgroundColor: color }} />
             <span className="text-[11px] leading-[14px] text-[var(--color-text-default)] whitespace-nowrap">
-              Used: {used}{unit} ({value}%)
+              Used: {used}
+              {unit} ({value}%)
             </span>
           </div>
           <div className="flex items-center gap-1.5">
             <div className="w-[5px] h-[5px] rounded-[1px] bg-[var(--color-border-subtle)]" />
             <span className="text-[11px] leading-[14px] text-[var(--color-text-default)] whitespace-nowrap">
-              Available: {available.toFixed(1)}{unit} ({availablePercent}%)
+              Available: {available.toFixed(1)}
+              {unit} ({availablePercent}%)
             </span>
           </div>
         </div>
@@ -1278,12 +1422,12 @@ export function HalfDoughnutChartDemo({ value, label, status = 'default', used, 
    Single Value Doughnut chart Demo (ECharts)
    ---------------------------------------- */
 
-export function SingleValueDoughnutDemo({ 
-  title, 
+export function SingleValueDoughnutDemo({
+  title,
   value,
-  color
-}: { 
-  title: string; 
+  color,
+}: {
+  title: string;
   value: number;
   color?: string;
 }) {
@@ -1300,7 +1444,7 @@ export function SingleValueDoughnutDemo({
 
   const getOption = () => ({
     tooltip: {
-      show: false
+      show: false,
     },
     animationDuration: 1000,
     animationEasing: 'cubicOut' as const,
@@ -1313,22 +1457,22 @@ export function SingleValueDoughnutDemo({
         silent: true,
         itemStyle: {
           borderRadius: 0,
-          borderWidth: 0
+          borderWidth: 0,
         },
         label: {
-          show: false
+          show: false,
         },
         labelLine: {
-          show: false
+          show: false,
         },
         emphasis: {
-          disabled: true
+          disabled: true,
         },
         data: [
           { value: value, itemStyle: { color: mainColor } },
-          { value: 100 - value, itemStyle: { color: bgColor } }
-        ]
-      }
+          { value: 100 - value, itemStyle: { color: bgColor } },
+        ],
+      },
     ],
     graphic: [
       {
@@ -1342,16 +1486,20 @@ export function SingleValueDoughnutDemo({
           fill: getColor('--color-text-default', '#0f172a'),
           fontSize: 18,
           fontWeight: 500,
-          fontFamily: 'Mona Sans, -apple-system, BlinkMacSystemFont, sans-serif'
-        }
-      }
-    ]
+          fontFamily: 'Mona Sans, -apple-system, BlinkMacSystemFont, sans-serif',
+        },
+      },
+    ],
   });
 
   return (
     <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] p-4">
       <h4 className="text-[13px] font-medium text-[var(--color-text-default)] mb-2">{title}</h4>
-      <ReactECharts option={getOption()} style={{ height: '180px', width: '200px' }} opts={{ devicePixelRatio: window.devicePixelRatio }} />
+      <ReactECharts
+        option={getOption()}
+        style={{ height: '180px', width: '200px' }}
+        opts={{ devicePixelRatio: window.devicePixelRatio }}
+      />
     </div>
   );
 }

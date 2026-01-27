@@ -20,10 +20,7 @@ import { useTabs } from '@/contexts/TabContext';
 import { ManageUserGroupsDrawer } from '@/components/ManageUserGroupsDrawer';
 import { ManageRolesDrawer } from '@/components/ManageRolesDrawer';
 import { EditUserDrawer } from '@/components/EditUserDrawer';
-import {
-  IconDownload,
-  IconTrash,
-} from '@tabler/icons-react';
+import { IconDownload, IconTrash } from '@tabler/icons-react';
 import { IconAction } from '@/design-system';
 import { Link, useNavigate } from 'react-router-dom';
 
@@ -49,16 +46,106 @@ interface User {
    ---------------------------------------- */
 
 const mockUsers: User[] = [
-  { id: 'user-001', username: 'thaki-kim', status: 'active', userGroups: 'dev-admin-group (+2)', roles: 'compute-admin (+3)', lastSignIn: '2025-09-12', mfa: 'OTP / Email', createdAt: '2025-09-12' },
-  { id: 'user-002', username: 'alex.johnson', status: 'active', userGroups: 'dev-team', roles: 'viewer', lastSignIn: '2025-09-11', mfa: 'OTP', createdAt: '2025-08-15' },
-  { id: 'user-003', username: 'sara.connor', status: 'active', userGroups: 'ops-team (+1)', roles: 'network-admin (+1)', lastSignIn: '2025-09-10', mfa: 'Email', createdAt: '2025-07-20' },
-  { id: 'user-004', username: 'john.doe', status: 'disabled', userGroups: 'guest', roles: 'viewer', lastSignIn: '2025-08-01', mfa: '-', createdAt: '2025-06-10' },
-  { id: 'user-005', username: 'jane.smith', status: 'active', userGroups: 'admin-group', roles: 'super-admin', lastSignIn: '2025-09-12', mfa: 'OTP / Email', createdAt: '2025-01-05' },
-  { id: 'user-006', username: 'mike.wilson', status: 'locked', userGroups: 'dev-team', roles: 'developer', lastSignIn: '2025-09-05', mfa: 'OTP', createdAt: '2025-04-18' },
-  { id: 'user-007', username: 'emily.chen', status: 'active', userGroups: 'qa-team (+2)', roles: 'qa-lead (+2)', lastSignIn: '2025-09-11', mfa: 'Email', createdAt: '2025-03-22' },
-  { id: 'user-008', username: 'david.lee', status: 'active', userGroups: 'ops-team', roles: 'storage-admin', lastSignIn: '2025-09-12', mfa: 'OTP / Email', createdAt: '2025-02-14' },
-  { id: 'user-009', username: 'lisa.park', status: 'disabled', userGroups: 'external', roles: 'viewer', lastSignIn: '2025-07-15', mfa: '-', createdAt: '2025-05-30' },
-  { id: 'user-010', username: 'chris.taylor', status: 'active', userGroups: 'dev-admin-group', roles: 'iam-admin (+1)', lastSignIn: '2025-09-12', mfa: 'OTP', createdAt: '2025-01-28' },
+  {
+    id: 'user-001',
+    username: 'thaki-kim',
+    status: 'active',
+    userGroups: 'dev-admin-group (+2)',
+    roles: 'compute-admin (+3)',
+    lastSignIn: '2025-09-12',
+    mfa: 'OTP / Email',
+    createdAt: '2025-09-12',
+  },
+  {
+    id: 'user-002',
+    username: 'alex.johnson',
+    status: 'active',
+    userGroups: 'dev-team',
+    roles: 'viewer',
+    lastSignIn: '2025-09-11',
+    mfa: 'OTP',
+    createdAt: '2025-08-15',
+  },
+  {
+    id: 'user-003',
+    username: 'sara.connor',
+    status: 'active',
+    userGroups: 'ops-team (+1)',
+    roles: 'network-admin (+1)',
+    lastSignIn: '2025-09-10',
+    mfa: 'Email',
+    createdAt: '2025-07-20',
+  },
+  {
+    id: 'user-004',
+    username: 'john.doe',
+    status: 'disabled',
+    userGroups: 'guest',
+    roles: 'viewer',
+    lastSignIn: '2025-08-01',
+    mfa: '-',
+    createdAt: '2025-06-10',
+  },
+  {
+    id: 'user-005',
+    username: 'jane.smith',
+    status: 'active',
+    userGroups: 'admin-group',
+    roles: 'super-admin',
+    lastSignIn: '2025-09-12',
+    mfa: 'OTP / Email',
+    createdAt: '2025-01-05',
+  },
+  {
+    id: 'user-006',
+    username: 'mike.wilson',
+    status: 'locked',
+    userGroups: 'dev-team',
+    roles: 'developer',
+    lastSignIn: '2025-09-05',
+    mfa: 'OTP',
+    createdAt: '2025-04-18',
+  },
+  {
+    id: 'user-007',
+    username: 'emily.chen',
+    status: 'active',
+    userGroups: 'qa-team (+2)',
+    roles: 'qa-lead (+2)',
+    lastSignIn: '2025-09-11',
+    mfa: 'Email',
+    createdAt: '2025-03-22',
+  },
+  {
+    id: 'user-008',
+    username: 'david.lee',
+    status: 'active',
+    userGroups: 'ops-team',
+    roles: 'storage-admin',
+    lastSignIn: '2025-09-12',
+    mfa: 'OTP / Email',
+    createdAt: '2025-02-14',
+  },
+  {
+    id: 'user-009',
+    username: 'lisa.park',
+    status: 'disabled',
+    userGroups: 'external',
+    roles: 'viewer',
+    lastSignIn: '2025-07-15',
+    mfa: '-',
+    createdAt: '2025-05-30',
+  },
+  {
+    id: 'user-010',
+    username: 'chris.taylor',
+    status: 'active',
+    userGroups: 'dev-admin-group',
+    roles: 'iam-admin (+1)',
+    lastSignIn: '2025-09-12',
+    mfa: 'OTP',
+    createdAt: '2025-01-28',
+  },
 ];
 
 /* ----------------------------------------
@@ -81,7 +168,8 @@ export function IAMUsersPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedRows, setSelectedRows] = useState<string[]>([]);
-  const { tabs, activeTabId, selectTab, closeTab, addNewTab, updateActiveTabLabel, moveTab } = useTabs();
+  const { tabs, activeTabId, selectTab, closeTab, addNewTab, updateActiveTabLabel, moveTab } =
+    useTabs();
 
   // Update tab label on mount
   useEffect(() => {
@@ -92,10 +180,11 @@ export function IAMUsersPage() {
   const sidebarWidth = sidebarOpen ? 200 : 0;
 
   // Filter users by search query
-  const filteredUsers = mockUsers.filter(user =>
-    user.username.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    user.userGroups.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    user.roles.toLowerCase().includes(searchQuery.toLowerCase())
+  const filteredUsers = mockUsers.filter(
+    (user) =>
+      user.username.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      user.userGroups.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      user.roles.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   // Pagination
@@ -138,9 +227,7 @@ export function IAMUsersPage() {
       label: 'Status',
       width: 64,
       align: 'center',
-      render: (_value, row) => (
-        <StatusIndicator status={statusMap[row.status]} />
-      ),
+      render: (_value, row) => <StatusIndicator status={statusMap[row.status]} />,
     },
     {
       key: 'username',
@@ -148,7 +235,7 @@ export function IAMUsersPage() {
       flex: 1,
       sortable: true,
       render: (value) => (
-        <Link 
+        <Link
           to={`/iam/users/${value}`}
           className="text-[var(--color-action-primary)] font-medium hover:underline"
         >
@@ -191,12 +278,37 @@ export function IAMUsersPage() {
       render: (_value, row) => {
         const isDisabled = row.status === 'disabled';
         const menuItems: ContextMenuItem[] = [
-          { id: 'manage-user-groups', label: 'Manage user groups', disabled: isDisabled, onClick: () => handleManageUserGroups(row) },
-          { id: 'manage-roles', label: 'Manage roles', disabled: isDisabled, onClick: () => handleManageRoles(row) },
-          { id: 'reset-password', label: 'Reset password', disabled: isDisabled, onClick: () => console.log('Reset password', row.id) },
-          { id: 'lock-setting', label: 'Lock setting', onClick: () => console.log('Lock setting', row.id) },
+          {
+            id: 'manage-user-groups',
+            label: 'Manage user groups',
+            disabled: isDisabled,
+            onClick: () => handleManageUserGroups(row),
+          },
+          {
+            id: 'manage-roles',
+            label: 'Manage roles',
+            disabled: isDisabled,
+            onClick: () => handleManageRoles(row),
+          },
+          {
+            id: 'reset-password',
+            label: 'Reset password',
+            disabled: isDisabled,
+            onClick: () => console.log('Reset password', row.id),
+          },
+          {
+            id: 'lock-setting',
+            label: 'Lock setting',
+            onClick: () => console.log('Lock setting', row.id),
+          },
           { id: 'edit', label: 'Edit', disabled: isDisabled, onClick: () => handleEditUser(row) },
-          { id: 'delete', label: 'Delete', status: isDisabled ? undefined : 'danger', disabled: isDisabled, onClick: () => console.log('Delete', row.id) },
+          {
+            id: 'delete',
+            label: 'Delete',
+            status: isDisabled ? undefined : 'danger',
+            disabled: isDisabled,
+            onClick: () => console.log('Delete', row.id),
+          },
         ];
         return (
           <ContextMenu items={menuItems} trigger="click">
@@ -224,7 +336,7 @@ export function IAMUsersPage() {
       >
         {/* Tab Bar */}
         <TabBar
-          tabs={tabs.map(tab => ({ id: tab.id, label: tab.label, closable: tab.closable }))}
+          tabs={tabs.map((tab) => ({ id: tab.id, label: tab.label, closable: tab.closable }))}
           activeTab={activeTabId}
           onTabChange={selectTab}
           onTabClose={closeTab}
@@ -239,14 +351,7 @@ export function IAMUsersPage() {
           showNavigation={true}
           onBack={() => window.history.back()}
           onForward={() => window.history.forward()}
-          breadcrumb={
-            <Breadcrumb
-              items={[
-                { label: 'IAM', href: '/iam' },
-                { label: 'Users' },
-              ]}
-            />
-          }
+          breadcrumb={<Breadcrumb items={[{ label: 'IAM', href: '/iam' }, { label: 'Users' }]} />}
         />
 
         {/* Content */}
@@ -275,15 +380,20 @@ export function IAMUsersPage() {
                       onChange={setSearchQuery}
                       className="w-[var(--search-input-width)]"
                     />
-                    <Button variant="secondary" size="sm" icon={<IconDownload size={12} />} aria-label="Download" />
+                    <Button
+                      variant="secondary"
+                      size="sm"
+                      icon={<IconDownload size={12} />}
+                      aria-label="Download"
+                    />
                   </HStack>
 
                   {/* Divider */}
                   <div className="w-px h-4 bg-[var(--color-border-default)]" />
 
                   {/* Actions */}
-                  <Button 
-                    variant="secondary" 
+                  <Button
+                    variant="secondary"
                     size="sm"
                     disabled={!hasSelection}
                     leftIcon={<IconTrash size={12} />}
@@ -340,4 +450,3 @@ export function IAMUsersPage() {
 }
 
 export default IAMUsersPage;
-

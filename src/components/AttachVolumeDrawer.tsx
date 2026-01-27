@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
-import { 
-  Drawer, 
-  Button, 
+import {
+  Drawer,
+  Button,
   SearchInput,
   Pagination,
   Radio,
@@ -73,11 +73,12 @@ export function AttachVolumeDrawer({
   const [hasAttemptedSubmit, setHasAttemptedSubmit] = useState(false);
 
   // Filter instances
-  const filteredInstances = instances.filter((inst) =>
-    inst.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    inst.id.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    inst.fixedIP.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    inst.flavor.toLowerCase().includes(searchQuery.toLowerCase())
+  const filteredInstances = instances.filter(
+    (inst) =>
+      inst.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      inst.id.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      inst.fixedIP.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      inst.flavor.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   const totalPages = Math.ceil(filteredInstances.length / ITEMS_PER_PAGE);
@@ -98,9 +99,9 @@ export function AttachVolumeDrawer({
 
   const handleAttach = async () => {
     setHasAttemptedSubmit(true);
-    
+
     if (!selectedInstanceId) return;
-    
+
     setIsSubmitting(true);
     try {
       await onAttach?.(selectedInstanceId);
@@ -129,15 +130,11 @@ export function AttachVolumeDrawer({
       width={696}
       footer={
         <HStack gap={2} justify="center" className="w-full">
-          <Button 
-            variant="secondary" 
-            onClick={handleClose}
-            className="w-[152px] h-8"
-          >
+          <Button variant="secondary" onClick={handleClose} className="w-[152px] h-8">
             Cancel
           </Button>
-          <Button 
-            variant="primary" 
+          <Button
+            variant="primary"
             onClick={handleAttach}
             disabled={isSubmitting}
             className="w-[152px] h-8"
@@ -156,7 +153,8 @@ export function AttachVolumeDrawer({
             </h2>
           </VStack>
           <p className="text-[12px] text-[var(--color-text-subtle)] leading-4">
-            Attach one or more available volumes to this instance. Once attached, the volumes will appear as additional storage devices inside the instance.
+            Attach one or more available volumes to this instance. Once attached, the volumes will
+            appear as additional storage devices inside the instance.
           </p>
         </VStack>
 
@@ -199,7 +197,10 @@ export function AttachVolumeDrawer({
           />
 
           {/* Instances Table */}
-          <div className="flex flex-col gap-[var(--table-row-gap)]" style={{ width: '648px', maxWidth: '648px' }}>
+          <div
+            className="flex flex-col gap-[var(--table-row-gap)]"
+            style={{ width: '648px', maxWidth: '648px' }}
+          >
             {/* Header */}
             <div className="flex items-stretch min-h-[var(--table-row-height)] bg-[var(--table-header-bg)] border border-[var(--color-border-default)] rounded-[var(--table-row-radius)]">
               <div className="w-[var(--table-checkbox-width)] flex items-center justify-center" />
@@ -227,17 +228,20 @@ export function AttachVolumeDrawer({
 
             {/* Rows */}
             {paginatedInstances.map((inst) => (
-              <div 
+              <div
                 key={inst.id}
                 className={`flex items-stretch min-h-[var(--table-row-height)] border rounded-[var(--table-row-radius)] cursor-pointer transition-all ${
-                  selectedInstanceId === inst.id 
-                    ? 'bg-[var(--color-state-info-bg)] border-[var(--color-action-primary)]' 
+                  selectedInstanceId === inst.id
+                    ? 'bg-[var(--color-state-info-bg)] border-[var(--color-action-primary)]'
                     : 'bg-[var(--color-surface-default)] border-[var(--color-border-default)] hover:bg-[var(--table-row-hover-bg)]'
                 }`}
                 onClick={() => setSelectedInstanceId(inst.id)}
               >
                 {/* Radio */}
-                <div className="w-[var(--table-checkbox-width)] flex items-center justify-center" onClick={(e) => e.stopPropagation()}>
+                <div
+                  className="w-[var(--table-checkbox-width)] flex items-center justify-center"
+                  onClick={(e) => e.stopPropagation()}
+                >
                   <Radio
                     name="instance-select"
                     value={inst.id}
@@ -252,10 +256,17 @@ export function AttachVolumeDrawer({
                 {/* Name with ID */}
                 <div className="flex-1 flex flex-col justify-center gap-0.5 px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] min-w-0 overflow-hidden">
                   <HStack gap={1.5} align="center">
-                    <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-action-primary)] truncate">{inst.name}</span>
-                    <IconExternalLink size={12} className="shrink-0 text-[var(--color-action-primary)]" />
+                    <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-action-primary)] truncate">
+                      {inst.name}
+                    </span>
+                    <IconExternalLink
+                      size={12}
+                      className="shrink-0 text-[var(--color-action-primary)]"
+                    />
                   </HStack>
-                  <span className="text-[11px] text-[var(--color-text-subtle)] truncate">ID : {inst.id}</span>
+                  <span className="text-[11px] text-[var(--color-text-subtle)] truncate">
+                    ID : {inst.id}
+                  </span>
                 </div>
                 {/* Locked */}
                 <div className="w-[62px] flex items-center justify-center">
@@ -265,11 +276,15 @@ export function AttachVolumeDrawer({
                 </div>
                 {/* Fixed IP */}
                 <div className="flex-1 flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] min-w-0 overflow-hidden">
-                  <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)] truncate">{inst.fixedIP}</span>
+                  <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)] truncate">
+                    {inst.fixedIP}
+                  </span>
                 </div>
                 {/* Flavor */}
                 <div className="flex-1 flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] min-w-0 overflow-hidden">
-                  <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)] truncate">{inst.flavor}</span>
+                  <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)] truncate">
+                    {inst.flavor}
+                  </span>
                 </div>
                 {/* Attached volumes */}
                 <div className="flex-1 flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] min-w-0 overflow-hidden">
@@ -283,7 +298,9 @@ export function AttachVolumeDrawer({
 
           {/* Selection Indicator */}
           <SelectionIndicator
-            selectedItems={selectedInstance ? [{ id: selectedInstance.id, label: selectedInstance.name }] : []}
+            selectedItems={
+              selectedInstance ? [{ id: selectedInstance.id, label: selectedInstance.name }] : []
+            }
             onRemove={() => setSelectedInstanceId(null)}
             emptyText="No item Selected"
             error={hasAttemptedSubmit && !selectedInstanceId}

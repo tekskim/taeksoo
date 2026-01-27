@@ -4,22 +4,22 @@ import { Slider } from './Slider';
 
 /**
  * # Slider
- * 
+ *
  * 범위 내에서 값을 선택하는 슬라이더 컴포넌트입니다.
- * 
+ *
  * ## 언제 사용하나요?
  * - 볼륨, 밝기 등 연속적인 값 조절
  * - 가격 범위 필터
  * - 줌 레벨 조절
  * - 수량 선택
- * 
+ *
  * ## 기능
  * - **min/max**: 최소/최대 값 설정
  * - **step**: 증가 단위 설정
  * - **showValue**: 현재 값 표시
  * - **formatValue**: 값 포맷팅 (%, px 등)
  * - **Controlled/Uncontrolled**: 두 가지 모드 지원
- * 
+ *
  * ## 접근성
  * - `role="slider"` 적용
  * - `aria-valuemin`, `aria-valuemax`, `aria-valuenow` 속성
@@ -219,7 +219,7 @@ export const AtMaximum: Story = {
 export const Controlled: Story = {
   render: () => {
     const [value, setValue] = useState(50);
-    
+
     return (
       <div className="flex flex-col gap-4 w-full">
         <Slider
@@ -249,9 +249,7 @@ export const Controlled: Story = {
           >
             Max
           </button>
-          <span className="text-sm text-gray-500 ml-auto">
-            Current: {value}
-          </span>
+          <span className="text-sm text-gray-500 ml-auto">Current: {value}</span>
         </div>
       </div>
     );
@@ -266,7 +264,7 @@ export const VolumeControl: Story = {
   name: 'Use Case - Volume Control',
   render: () => {
     const [volume, setVolume] = useState(70);
-    
+
     return (
       <div className="flex flex-col gap-2 w-full">
         <label className="text-sm font-medium">Volume</label>
@@ -288,7 +286,7 @@ export const BrightnessControl: Story = {
   name: 'Use Case - Brightness',
   render: () => {
     const [brightness, setBrightness] = useState(80);
-    
+
     return (
       <div className="flex flex-col gap-2 w-full">
         <label className="text-sm font-medium">Brightness</label>
@@ -310,7 +308,7 @@ export const PriceFilter: Story = {
   name: 'Use Case - Price Filter',
   render: () => {
     const [maxPrice, setMaxPrice] = useState(500);
-    
+
     return (
       <div className="flex flex-col gap-2 w-full">
         <div className="flex justify-between text-sm">
@@ -338,7 +336,7 @@ export const ZoomLevel: Story = {
   name: 'Use Case - Zoom Level',
   render: () => {
     const [zoom, setZoom] = useState(100);
-    
+
     return (
       <div className="flex items-center gap-3 w-full">
         <button
@@ -378,33 +376,15 @@ export const MultipleSliders: Story = {
     <div className="flex flex-col gap-6 w-full">
       <div className="flex flex-col gap-2">
         <label className="text-sm font-medium">Red</label>
-        <Slider
-          min={0}
-          max={255}
-          defaultValue={128}
-          showValue
-          aria-label="Red channel"
-        />
+        <Slider min={0} max={255} defaultValue={128} showValue aria-label="Red channel" />
       </div>
       <div className="flex flex-col gap-2">
         <label className="text-sm font-medium">Green</label>
-        <Slider
-          min={0}
-          max={255}
-          defaultValue={200}
-          showValue
-          aria-label="Green channel"
-        />
+        <Slider min={0} max={255} defaultValue={200} showValue aria-label="Green channel" />
       </div>
       <div className="flex flex-col gap-2">
         <label className="text-sm font-medium">Blue</label>
-        <Slider
-          min={0}
-          max={255}
-          defaultValue={64}
-          showValue
-          aria-label="Blue channel"
-        />
+        <Slider min={0} max={255} defaultValue={64} showValue aria-label="Blue channel" />
       </div>
     </div>
   ),

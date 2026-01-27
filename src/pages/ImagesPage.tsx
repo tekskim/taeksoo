@@ -14,11 +14,7 @@ import {
 } from '@/design-system';
 import { StorageSidebar } from '@/components/StorageSidebar';
 import { useTabs } from '@/contexts/TabContext';
-import {
-  IconRefresh,
-  IconBell,
-  IconDownload,
-} from '@tabler/icons-react';
+import { IconRefresh, IconBell, IconDownload } from '@tabler/icons-react';
 import { Link } from 'react-router-dom';
 
 /* ----------------------------------------
@@ -233,12 +229,14 @@ export function ImagesPage() {
   }));
 
   // Filter images based on search
-  const filteredImages = useMemo(() =>
-    mockImages.filter((image) =>
-      image.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      image.pool.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      image.parent.toLowerCase().includes(searchQuery.toLowerCase())
-    ),
+  const filteredImages = useMemo(
+    () =>
+      mockImages.filter(
+        (image) =>
+          image.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          image.pool.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          image.parent.toLowerCase().includes(searchQuery.toLowerCase())
+      ),
     [searchQuery]
   );
 
@@ -309,7 +307,7 @@ export function ImagesPage() {
   return (
     <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
       {/* Sidebar */}
-      <StorageSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(prev => !prev)} />
+      <StorageSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen((prev) => !prev)} />
 
       {/* Main Content */}
       <main
@@ -337,18 +335,10 @@ export function ImagesPage() {
             onBack={() => window.history.back()}
             onForward={() => window.history.forward()}
             breadcrumb={
-              <Breadcrumb
-                items={[
-                  { label: 'Home', href: '/storage' },
-                  { label: 'Images' },
-                ]}
-              />
+              <Breadcrumb items={[{ label: 'Home', href: '/storage' }, { label: 'Images' }]} />
             }
             actions={
-              <TopBarAction
-                icon={<IconBell size={16} stroke={1.5} />}
-                aria-label="Notifications"
-              />
+              <TopBarAction icon={<IconBell size={16} stroke={1.5} />} aria-label="Notifications" />
             }
           />
         </div>
@@ -409,11 +399,7 @@ export function ImagesPage() {
               )}
 
               {/* Table */}
-              <Table
-                columns={columns}
-                data={paginatedImages}
-                getRowId={(row) => row.id}
-              />
+              <Table columns={columns} data={paginatedImages} getRowId={(row) => row.id} />
             </VStack>
           </div>
         </div>

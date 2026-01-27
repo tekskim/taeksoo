@@ -1,7 +1,7 @@
 import { useState } from 'react';
-import { 
-  Drawer, 
-  Button, 
+import {
+  Drawer,
+  Button,
   Radio,
   Disclosure,
   Tabs,
@@ -67,9 +67,10 @@ type OSFilter = 'ubuntu' | 'windows' | 'rocky' | 'other';
 
 const osChipStyle = (active: boolean) => `
   inline-flex items-center gap-1 px-2 py-1.5 rounded-[4px] cursor-pointer text-[12px] font-medium transition-colors
-  ${active 
-    ? 'bg-[var(--color-surface-default)] text-[var(--color-text-default)] shadow-sm' 
-    : 'bg-transparent text-[var(--color-text-muted)] hover:text-[var(--color-text-default)]'
+  ${
+    active
+      ? 'bg-[var(--color-surface-default)] text-[var(--color-text-default)] shadow-sm'
+      : 'bg-transparent text-[var(--color-text-muted)] hover:text-[var(--color-text-default)]'
   }
 `;
 
@@ -86,21 +87,21 @@ export function RescueInstanceDrawer({
   const [imageOption, setImageOption] = useState<'current' | 'another'>('current');
   const [isAdvancedOpen, setIsAdvancedOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  
+
   // Image selection state
   const [imageTab, setImageTab] = useState<ImageTab>('image');
   const [osFilter, setOsFilter] = useState<OSFilter>('ubuntu');
   const [imageSearchQuery, setImageSearchQuery] = useState('');
   const [imageCurrentPage, setImageCurrentPage] = useState(1);
   const [selectedImageId, setSelectedImageId] = useState<string | null>(null);
-  
+
   const ITEMS_PER_PAGE = 5;
-  
+
   // Filter images based on search
   const filteredImages = mockImages.filter((img) =>
     img.name.toLowerCase().includes(imageSearchQuery.toLowerCase())
   );
-  
+
   const totalPages = Math.ceil(filteredImages.length / ITEMS_PER_PAGE);
   const paginatedImages = filteredImages.slice(
     (imageCurrentPage - 1) * ITEMS_PER_PAGE,
@@ -135,15 +136,11 @@ export function RescueInstanceDrawer({
       width={696}
       footer={
         <HStack gap={2} justify="center" className="w-full">
-          <Button 
-            variant="secondary" 
-            onClick={handleClose}
-            className="w-[152px] h-8"
-          >
+          <Button variant="secondary" onClick={handleClose} className="w-[152px] h-8">
             Cancel
           </Button>
-          <Button 
-            variant="primary" 
+          <Button
+            variant="primary"
             onClick={handleRescue}
             disabled={isSubmitting}
             className="w-[152px] h-8"
@@ -167,7 +164,10 @@ export function RescueInstanceDrawer({
 
           {/* Warning Message */}
           <div className="w-full p-3 bg-[var(--color-state-danger-bg)] rounded-lg flex gap-2 items-start">
-            <IconAlertCircle size={16} className="text-[var(--color-state-danger)] shrink-0 mt-0.5" />
+            <IconAlertCircle
+              size={16}
+              className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
+            />
             <p className="text-[11px] text-[var(--color-text-default)] leading-4">
               Rescue mode will stop your instance and attach its root disk to a temporary server.
               <br />
@@ -186,9 +186,13 @@ export function RescueInstanceDrawer({
 
         {/* Current Image Field */}
         <VStack gap={2}>
-          <span className="text-[14px] font-medium text-[var(--color-text-default)]">Current Image</span>
+          <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+            Current Image
+          </span>
           <div className="w-full px-2.5 py-2 border border-[var(--color-border-subtle)] rounded-md bg-white">
-            <span className="text-[12px] text-[var(--color-text-default)]">{instance.currentImage}</span>
+            <span className="text-[12px] text-[var(--color-text-default)]">
+              {instance.currentImage}
+            </span>
           </div>
         </VStack>
 
@@ -196,7 +200,9 @@ export function RescueInstanceDrawer({
         <VStack gap={2}>
           <span className="text-[14px] font-medium text-[var(--color-text-default)]">Protocol</span>
           <div className="w-full px-2.5 py-2 border border-[var(--color-border-subtle)] rounded-md bg-white">
-            <span className="text-[12px] text-[var(--color-text-default)]">{instance.protocol}</span>
+            <span className="text-[12px] text-[var(--color-text-default)]">
+              {instance.protocol}
+            </span>
           </div>
         </VStack>
 
@@ -243,30 +249,42 @@ export function RescueInstanceDrawer({
 
             {/* OS Filter Capsule Tabs */}
             <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-1 inline-flex w-fit">
-              <button 
+              <button
                 className={osChipStyle(osFilter === 'ubuntu')}
-                onClick={() => { setOsFilter('ubuntu'); setImageCurrentPage(1); }}
+                onClick={() => {
+                  setOsFilter('ubuntu');
+                  setImageCurrentPage(1);
+                }}
               >
                 <IconUbuntu size={14} />
                 <span>Ubuntu</span>
               </button>
-              <button 
+              <button
                 className={osChipStyle(osFilter === 'windows')}
-                onClick={() => { setOsFilter('windows'); setImageCurrentPage(1); }}
+                onClick={() => {
+                  setOsFilter('windows');
+                  setImageCurrentPage(1);
+                }}
               >
                 <IconGrid size={14} />
                 <span>Windows</span>
               </button>
-              <button 
+              <button
                 className={osChipStyle(osFilter === 'rocky')}
-                onClick={() => { setOsFilter('rocky'); setImageCurrentPage(1); }}
+                onClick={() => {
+                  setOsFilter('rocky');
+                  setImageCurrentPage(1);
+                }}
               >
                 <IconRocky size={14} />
                 <span>Rocky</span>
               </button>
-              <button 
+              <button
                 className={osChipStyle(osFilter === 'other')}
-                onClick={() => { setOsFilter('other'); setImageCurrentPage(1); }}
+                onClick={() => {
+                  setOsFilter('other');
+                  setImageCurrentPage(1);
+                }}
               >
                 <IconDots size={14} />
                 <span>Other</span>
@@ -292,39 +310,89 @@ export function RescueInstanceDrawer({
             {/* Image Table */}
             <div style={{ width: '648px', maxWidth: '648px' }}>
               {/* Header */}
-              <div style={{ display: 'flex', width: '648px', height: '40px' }} className="bg-[var(--color-border-subtle)] border border-[var(--color-border-default)] rounded-md">
-                <div style={{ width: '40px', flexShrink: 0 }} className="flex items-center justify-center" />
-                <div style={{ width: '59px', flexShrink: 0 }} className="flex items-center justify-center px-3 border-l border-[var(--color-border-default)]">
-                  <span className="text-[11px] font-medium text-[var(--color-text-default)]">Status</span>
+              <div
+                style={{ display: 'flex', width: '648px', height: '40px' }}
+                className="bg-[var(--color-border-subtle)] border border-[var(--color-border-default)] rounded-md"
+              >
+                <div
+                  style={{ width: '40px', flexShrink: 0 }}
+                  className="flex items-center justify-center"
+                />
+                <div
+                  style={{ width: '59px', flexShrink: 0 }}
+                  className="flex items-center justify-center px-3 border-l border-[var(--color-border-default)]"
+                >
+                  <span className="text-[11px] font-medium text-[var(--color-text-default)]">
+                    Status
+                  </span>
                 </div>
-                <div style={{ width: '149px', flexShrink: 0 }} className="flex items-center gap-1.5 px-3 border-l border-[var(--color-border-default)] cursor-pointer hover:text-[var(--color-action-primary)]">
-                  <span className="text-[11px] font-medium text-[var(--color-text-default)]">Name</span>
+                <div
+                  style={{ width: '149px', flexShrink: 0 }}
+                  className="flex items-center gap-1.5 px-3 border-l border-[var(--color-border-default)] cursor-pointer hover:text-[var(--color-action-primary)]"
+                >
+                  <span className="text-[11px] font-medium text-[var(--color-text-default)]">
+                    Name
+                  </span>
                   <IconChevronDown size={12} className="text-[var(--color-text-default)]" />
                 </div>
-                <div style={{ width: '80px', flexShrink: 0 }} className="flex items-center gap-1.5 px-3 border-l border-[var(--color-border-default)] cursor-pointer hover:text-[var(--color-action-primary)]">
-                  <span className="text-[11px] font-medium text-[var(--color-text-default)]">Version</span>
+                <div
+                  style={{ width: '80px', flexShrink: 0 }}
+                  className="flex items-center gap-1.5 px-3 border-l border-[var(--color-border-default)] cursor-pointer hover:text-[var(--color-action-primary)]"
+                >
+                  <span className="text-[11px] font-medium text-[var(--color-text-default)]">
+                    Version
+                  </span>
                   <IconChevronDown size={12} className="text-[var(--color-text-default)]" />
                 </div>
-                <div style={{ width: '80px', flexShrink: 0 }} className="flex items-center gap-1.5 px-3 border-l border-[var(--color-border-default)] cursor-pointer hover:text-[var(--color-action-primary)]">
-                  <span className="text-[11px] font-medium text-[var(--color-text-default)]">Size</span>
+                <div
+                  style={{ width: '80px', flexShrink: 0 }}
+                  className="flex items-center gap-1.5 px-3 border-l border-[var(--color-border-default)] cursor-pointer hover:text-[var(--color-action-primary)]"
+                >
+                  <span className="text-[11px] font-medium text-[var(--color-text-default)]">
+                    Size
+                  </span>
                   <IconChevronDown size={12} className="text-[var(--color-text-default)]" />
                 </div>
-                <div style={{ width: '80px', flexShrink: 0 }} className="flex items-center gap-1.5 px-3 border-l border-[var(--color-border-default)] cursor-pointer hover:text-[var(--color-action-primary)]">
-                  <span className="text-[11px] font-medium text-[var(--color-text-default)]">Min Disk</span>
+                <div
+                  style={{ width: '80px', flexShrink: 0 }}
+                  className="flex items-center gap-1.5 px-3 border-l border-[var(--color-border-default)] cursor-pointer hover:text-[var(--color-action-primary)]"
+                >
+                  <span className="text-[11px] font-medium text-[var(--color-text-default)]">
+                    Min Disk
+                  </span>
                   <IconChevronDown size={12} className="text-[var(--color-text-default)]" />
                 </div>
-                <div style={{ width: '80px', flexShrink: 0 }} className="flex items-center gap-1.5 px-3 border-l border-[var(--color-border-default)] cursor-pointer hover:text-[var(--color-action-primary)]">
-                  <span className="text-[11px] font-medium text-[var(--color-text-default)]">Min RAM</span>
+                <div
+                  style={{ width: '80px', flexShrink: 0 }}
+                  className="flex items-center gap-1.5 px-3 border-l border-[var(--color-border-default)] cursor-pointer hover:text-[var(--color-action-primary)]"
+                >
+                  <span className="text-[11px] font-medium text-[var(--color-text-default)]">
+                    Min RAM
+                  </span>
                   <IconChevronDown size={12} className="text-[var(--color-text-default)]" />
                 </div>
-                <div style={{ width: '80px', flexShrink: 0 }} className="flex items-center gap-1.5 px-3 border-l border-[var(--color-border-default)] cursor-pointer hover:text-[var(--color-action-primary)]">
-                  <span className="text-[11px] font-medium text-[var(--color-text-default)]">Visibility</span>
+                <div
+                  style={{ width: '80px', flexShrink: 0 }}
+                  className="flex items-center gap-1.5 px-3 border-l border-[var(--color-border-default)] cursor-pointer hover:text-[var(--color-action-primary)]"
+                >
+                  <span className="text-[11px] font-medium text-[var(--color-text-default)]">
+                    Visibility
+                  </span>
                   <IconChevronDown size={12} className="text-[var(--color-text-default)]" />
                 </div>
               </div>
 
               {/* Body */}
-              <div style={{ width: '648px', maxWidth: '648px', marginTop: '4px', display: 'flex', flexDirection: 'column', gap: '4px' }}>
+              <div
+                style={{
+                  width: '648px',
+                  maxWidth: '648px',
+                  marginTop: '4px',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '4px',
+                }}
+              >
                 {paginatedImages.map((img) => (
                   <div
                     key={img.id}
@@ -336,7 +404,10 @@ export function RescueInstanceDrawer({
                         : 'bg-[var(--color-surface-default)] border-[var(--color-border-default)] hover:bg-[var(--table-row-hover-bg)]'
                     }`}
                   >
-                    <div style={{ width: '40px', flexShrink: 0 }} className="flex items-center justify-center">
+                    <div
+                      style={{ width: '40px', flexShrink: 0 }}
+                      className="flex items-center justify-center"
+                    >
                       <Radio
                         name="image-select"
                         value={img.id}
@@ -344,30 +415,68 @@ export function RescueInstanceDrawer({
                         onChange={() => setSelectedImageId(img.id)}
                       />
                     </div>
-                    <div style={{ width: '59px', flexShrink: 0 }} className="flex items-center justify-center px-3">
+                    <div
+                      style={{ width: '59px', flexShrink: 0 }}
+                      className="flex items-center justify-center px-3"
+                    >
                       <StatusIndicator status="active" layout="icon-only" size="sm" />
                     </div>
-                    <div style={{ width: '149px', flexShrink: 0 }} className="flex flex-col justify-center px-3 py-2 overflow-hidden">
+                    <div
+                      style={{ width: '149px', flexShrink: 0 }}
+                      className="flex flex-col justify-center px-3 py-2 overflow-hidden"
+                    >
                       <div className="flex items-center gap-1.5">
-                        <span className="text-[12px] font-medium text-[var(--color-action-primary)] truncate">{img.name}</span>
-                        <IconExternalLink size={12} className="shrink-0 text-[var(--color-action-primary)]" />
+                        <span className="text-[12px] font-medium text-[var(--color-action-primary)] truncate">
+                          {img.name}
+                        </span>
+                        <IconExternalLink
+                          size={12}
+                          className="shrink-0 text-[var(--color-action-primary)]"
+                        />
                       </div>
-                      <span className="text-[11px] text-[var(--color-text-subtle)] truncate">{img.bootable}</span>
+                      <span className="text-[11px] text-[var(--color-text-subtle)] truncate">
+                        {img.bootable}
+                      </span>
                     </div>
-                    <div style={{ width: '80px', flexShrink: 0 }} className="flex items-center px-3 py-2 overflow-hidden">
-                      <span className="text-[12px] text-[var(--color-text-default)] truncate">{img.version}</span>
+                    <div
+                      style={{ width: '80px', flexShrink: 0 }}
+                      className="flex items-center px-3 py-2 overflow-hidden"
+                    >
+                      <span className="text-[12px] text-[var(--color-text-default)] truncate">
+                        {img.version}
+                      </span>
                     </div>
-                    <div style={{ width: '80px', flexShrink: 0 }} className="flex items-center px-3 py-2 overflow-hidden">
-                      <span className="text-[12px] text-[var(--color-text-default)] truncate">{img.size}</span>
+                    <div
+                      style={{ width: '80px', flexShrink: 0 }}
+                      className="flex items-center px-3 py-2 overflow-hidden"
+                    >
+                      <span className="text-[12px] text-[var(--color-text-default)] truncate">
+                        {img.size}
+                      </span>
                     </div>
-                    <div style={{ width: '80px', flexShrink: 0 }} className="flex items-center px-3 py-2 overflow-hidden">
-                      <span className="text-[12px] text-[var(--color-text-default)] truncate">{img.minDisk}</span>
+                    <div
+                      style={{ width: '80px', flexShrink: 0 }}
+                      className="flex items-center px-3 py-2 overflow-hidden"
+                    >
+                      <span className="text-[12px] text-[var(--color-text-default)] truncate">
+                        {img.minDisk}
+                      </span>
                     </div>
-                    <div style={{ width: '80px', flexShrink: 0 }} className="flex items-center px-3 py-2 overflow-hidden">
-                      <span className="text-[12px] text-[var(--color-text-default)] truncate">{img.minRam}</span>
+                    <div
+                      style={{ width: '80px', flexShrink: 0 }}
+                      className="flex items-center px-3 py-2 overflow-hidden"
+                    >
+                      <span className="text-[12px] text-[var(--color-text-default)] truncate">
+                        {img.minRam}
+                      </span>
                     </div>
-                    <div style={{ width: '80px', flexShrink: 0 }} className="flex items-center px-3 py-2 overflow-hidden">
-                      <span className="text-[12px] text-[var(--color-text-default)] truncate">{img.visibility}</span>
+                    <div
+                      style={{ width: '80px', flexShrink: 0 }}
+                      className="flex items-center px-3 py-2 overflow-hidden"
+                    >
+                      <span className="text-[12px] text-[var(--color-text-default)] truncate">
+                        {img.visibility}
+                      </span>
                     </div>
                   </div>
                 ))}
@@ -377,7 +486,16 @@ export function RescueInstanceDrawer({
             {/* Selection Indicator */}
             <SelectionIndicator
               style={{ width: '648px' }}
-              selectedItems={selectedImageId ? [{ id: selectedImageId, label: mockImages.find(img => img.id === selectedImageId)?.name || '' }] : []}
+              selectedItems={
+                selectedImageId
+                  ? [
+                      {
+                        id: selectedImageId,
+                        label: mockImages.find((img) => img.id === selectedImageId)?.name || '',
+                      },
+                    ]
+                  : []
+              }
               onRemove={() => setSelectedImageId(null)}
               emptyText="No item selected"
             />

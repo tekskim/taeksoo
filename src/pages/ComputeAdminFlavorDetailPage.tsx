@@ -77,25 +77,279 @@ interface FlavorInstance {
 
 // Flavor data map by ID - synced with ComputeAdminFlavorsPage mock data
 const mockFlavorsMap: Record<string, FlavorDetail> = {
-  'flv-001': { id: 'flv-001', name: 'c5.large', category: 'Compute Optimized', vcpu: 2, ram: '16GiB', visibility: 'Public', createdAt: '2025-09-15', architecture: 'X86 Architecture', ephemeralDisk: '0GiB', numaNodes: '0', cpuPolicy: 'Shared', cpuThreadPolicy: 'Prefer', memoryPage: 'Any', internalNetworkBandwidth: '-', storageIOPS: '-' },
-  'flv-002': { id: 'flv-002', name: 'c5.xlarge', category: 'Compute Optimized', vcpu: 4, ram: '32GiB', visibility: 'Public', createdAt: '2025-09-10', architecture: 'X86 Architecture', ephemeralDisk: '0GiB', numaNodes: '0', cpuPolicy: 'Shared', cpuThreadPolicy: 'Prefer', memoryPage: 'Any', internalNetworkBandwidth: '10Gbps', storageIOPS: '-' },
-  'flv-003': { id: 'flv-003', name: 'm5.large', category: 'General Purpose', vcpu: 2, ram: '8GiB', visibility: 'Public', createdAt: '2025-09-05', architecture: 'X86 Architecture', ephemeralDisk: '0GiB', numaNodes: '0', cpuPolicy: 'Shared', cpuThreadPolicy: 'Prefer', memoryPage: 'Any', internalNetworkBandwidth: '-', storageIOPS: '-' },
-  'flv-004': { id: 'flv-004', name: 'm5.xlarge', category: 'General Purpose', vcpu: 4, ram: '16GiB', visibility: 'Public', createdAt: '2025-09-01', architecture: 'X86 Architecture', ephemeralDisk: '0GiB', numaNodes: '0', cpuPolicy: 'Shared', cpuThreadPolicy: 'Prefer', memoryPage: 'Any', internalNetworkBandwidth: '10Gbps', storageIOPS: '-' },
-  'flv-005': { id: 'flv-005', name: 'r5.large', category: 'Memory Optimized', vcpu: 2, ram: '16GiB', visibility: 'Public', createdAt: '2025-08-30', architecture: 'X86 Architecture', ephemeralDisk: '0GiB', numaNodes: '0', cpuPolicy: 'Shared', cpuThreadPolicy: 'Prefer', memoryPage: 'Any', internalNetworkBandwidth: '-', storageIOPS: '-' },
-  'flv-006': { id: 'flv-006', name: 'r5.xlarge', category: 'Memory Optimized', vcpu: 4, ram: '32GiB', visibility: 'Public', createdAt: '2025-08-25', architecture: 'X86 Architecture', ephemeralDisk: '0GiB', numaNodes: '0', cpuPolicy: 'Dedicated', cpuThreadPolicy: 'Prefer', memoryPage: 'Any', internalNetworkBandwidth: '10Gbps', storageIOPS: '-' },
-  'flv-007': { id: 'flv-007', name: 't3.micro', category: 'Burstable', vcpu: 2, ram: '1GiB', visibility: 'Public', createdAt: '2025-08-20', architecture: 'X86 Architecture', ephemeralDisk: '0GiB', numaNodes: '0', cpuPolicy: 'Shared', cpuThreadPolicy: 'Prefer', memoryPage: 'Any', internalNetworkBandwidth: '-', storageIOPS: '-' },
-  'flv-008': { id: 'flv-008', name: 't3.small', category: 'Burstable', vcpu: 2, ram: '2GiB', visibility: 'Public', createdAt: '2025-08-15', architecture: 'X86 Architecture', ephemeralDisk: '0GiB', numaNodes: '0', cpuPolicy: 'Shared', cpuThreadPolicy: 'Prefer', memoryPage: 'Any', internalNetworkBandwidth: '-', storageIOPS: '-' },
-  'flv-009': { id: 'flv-009', name: 'g4dn.xlarge', category: 'GPU Accelerated', vcpu: 4, ram: '16GiB', visibility: 'Public', createdAt: '2025-08-10', architecture: 'X86 Architecture', ephemeralDisk: '125GiB', numaNodes: '1', cpuPolicy: 'Dedicated', cpuThreadPolicy: 'Isolate', memoryPage: 'Large', internalNetworkBandwidth: '25Gbps', storageIOPS: '3000' },
-  'flv-010': { id: 'flv-010', name: 'g4dn.2xlarge', category: 'GPU Accelerated', vcpu: 8, ram: '32GiB', visibility: 'Public', createdAt: '2025-08-05', architecture: 'X86 Architecture', ephemeralDisk: '225GiB', numaNodes: '1', cpuPolicy: 'Dedicated', cpuThreadPolicy: 'Isolate', memoryPage: 'Large', internalNetworkBandwidth: '25Gbps', storageIOPS: '5000' },
-  'flv-011': { id: 'flv-011', name: 'p3.2xlarge', category: 'GPU Compute', vcpu: 8, ram: '61GiB', visibility: 'Public', createdAt: '2025-08-01', architecture: 'X86 Architecture', ephemeralDisk: '0GiB', numaNodes: '1', cpuPolicy: 'Dedicated', cpuThreadPolicy: 'Isolate', memoryPage: 'Large', internalNetworkBandwidth: '10Gbps', storageIOPS: '3000' },
-  'flv-012': { id: 'flv-012', name: 'inf1.xlarge', category: 'ML Inference', vcpu: 4, ram: '8GiB', visibility: 'Public', createdAt: '2025-07-28', architecture: 'X86 Architecture', ephemeralDisk: '0GiB', numaNodes: '0', cpuPolicy: 'Dedicated', cpuThreadPolicy: 'Prefer', memoryPage: 'Any', internalNetworkBandwidth: '25Gbps', storageIOPS: '-' },
-  'flv-013': { id: 'flv-013', name: 'inf1.2xlarge', category: 'ML Inference', vcpu: 8, ram: '16GiB', visibility: 'Public', createdAt: '2025-07-25', architecture: 'X86 Architecture', ephemeralDisk: '0GiB', numaNodes: '0', cpuPolicy: 'Dedicated', cpuThreadPolicy: 'Prefer', memoryPage: 'Any', internalNetworkBandwidth: '25Gbps', storageIOPS: '-' },
-  'flv-014': { id: 'flv-014', name: 'custom.small', category: 'Custom', vcpu: 2, ram: '4GiB', visibility: 'Private', createdAt: '2025-07-20', architecture: 'X86 Architecture', ephemeralDisk: '20GiB', numaNodes: '0', cpuPolicy: 'Shared', cpuThreadPolicy: 'Prefer', memoryPage: 'Any', internalNetworkBandwidth: '-', storageIOPS: '-' },
-  'flv-015': { id: 'flv-015', name: 'custom.medium', category: 'Custom', vcpu: 4, ram: '8GiB', visibility: 'Private', createdAt: '2025-07-15', architecture: 'X86 Architecture', ephemeralDisk: '50GiB', numaNodes: '0', cpuPolicy: 'Shared', cpuThreadPolicy: 'Prefer', memoryPage: 'Any', internalNetworkBandwidth: '10Gbps', storageIOPS: '-' },
+  'flv-001': {
+    id: 'flv-001',
+    name: 'c5.large',
+    category: 'Compute Optimized',
+    vcpu: 2,
+    ram: '16GiB',
+    visibility: 'Public',
+    createdAt: '2025-09-15',
+    architecture: 'X86 Architecture',
+    ephemeralDisk: '0GiB',
+    numaNodes: '0',
+    cpuPolicy: 'Shared',
+    cpuThreadPolicy: 'Prefer',
+    memoryPage: 'Any',
+    internalNetworkBandwidth: '-',
+    storageIOPS: '-',
+  },
+  'flv-002': {
+    id: 'flv-002',
+    name: 'c5.xlarge',
+    category: 'Compute Optimized',
+    vcpu: 4,
+    ram: '32GiB',
+    visibility: 'Public',
+    createdAt: '2025-09-10',
+    architecture: 'X86 Architecture',
+    ephemeralDisk: '0GiB',
+    numaNodes: '0',
+    cpuPolicy: 'Shared',
+    cpuThreadPolicy: 'Prefer',
+    memoryPage: 'Any',
+    internalNetworkBandwidth: '10Gbps',
+    storageIOPS: '-',
+  },
+  'flv-003': {
+    id: 'flv-003',
+    name: 'm5.large',
+    category: 'General Purpose',
+    vcpu: 2,
+    ram: '8GiB',
+    visibility: 'Public',
+    createdAt: '2025-09-05',
+    architecture: 'X86 Architecture',
+    ephemeralDisk: '0GiB',
+    numaNodes: '0',
+    cpuPolicy: 'Shared',
+    cpuThreadPolicy: 'Prefer',
+    memoryPage: 'Any',
+    internalNetworkBandwidth: '-',
+    storageIOPS: '-',
+  },
+  'flv-004': {
+    id: 'flv-004',
+    name: 'm5.xlarge',
+    category: 'General Purpose',
+    vcpu: 4,
+    ram: '16GiB',
+    visibility: 'Public',
+    createdAt: '2025-09-01',
+    architecture: 'X86 Architecture',
+    ephemeralDisk: '0GiB',
+    numaNodes: '0',
+    cpuPolicy: 'Shared',
+    cpuThreadPolicy: 'Prefer',
+    memoryPage: 'Any',
+    internalNetworkBandwidth: '10Gbps',
+    storageIOPS: '-',
+  },
+  'flv-005': {
+    id: 'flv-005',
+    name: 'r5.large',
+    category: 'Memory Optimized',
+    vcpu: 2,
+    ram: '16GiB',
+    visibility: 'Public',
+    createdAt: '2025-08-30',
+    architecture: 'X86 Architecture',
+    ephemeralDisk: '0GiB',
+    numaNodes: '0',
+    cpuPolicy: 'Shared',
+    cpuThreadPolicy: 'Prefer',
+    memoryPage: 'Any',
+    internalNetworkBandwidth: '-',
+    storageIOPS: '-',
+  },
+  'flv-006': {
+    id: 'flv-006',
+    name: 'r5.xlarge',
+    category: 'Memory Optimized',
+    vcpu: 4,
+    ram: '32GiB',
+    visibility: 'Public',
+    createdAt: '2025-08-25',
+    architecture: 'X86 Architecture',
+    ephemeralDisk: '0GiB',
+    numaNodes: '0',
+    cpuPolicy: 'Dedicated',
+    cpuThreadPolicy: 'Prefer',
+    memoryPage: 'Any',
+    internalNetworkBandwidth: '10Gbps',
+    storageIOPS: '-',
+  },
+  'flv-007': {
+    id: 'flv-007',
+    name: 't3.micro',
+    category: 'Burstable',
+    vcpu: 2,
+    ram: '1GiB',
+    visibility: 'Public',
+    createdAt: '2025-08-20',
+    architecture: 'X86 Architecture',
+    ephemeralDisk: '0GiB',
+    numaNodes: '0',
+    cpuPolicy: 'Shared',
+    cpuThreadPolicy: 'Prefer',
+    memoryPage: 'Any',
+    internalNetworkBandwidth: '-',
+    storageIOPS: '-',
+  },
+  'flv-008': {
+    id: 'flv-008',
+    name: 't3.small',
+    category: 'Burstable',
+    vcpu: 2,
+    ram: '2GiB',
+    visibility: 'Public',
+    createdAt: '2025-08-15',
+    architecture: 'X86 Architecture',
+    ephemeralDisk: '0GiB',
+    numaNodes: '0',
+    cpuPolicy: 'Shared',
+    cpuThreadPolicy: 'Prefer',
+    memoryPage: 'Any',
+    internalNetworkBandwidth: '-',
+    storageIOPS: '-',
+  },
+  'flv-009': {
+    id: 'flv-009',
+    name: 'g4dn.xlarge',
+    category: 'GPU Accelerated',
+    vcpu: 4,
+    ram: '16GiB',
+    visibility: 'Public',
+    createdAt: '2025-08-10',
+    architecture: 'X86 Architecture',
+    ephemeralDisk: '125GiB',
+    numaNodes: '1',
+    cpuPolicy: 'Dedicated',
+    cpuThreadPolicy: 'Isolate',
+    memoryPage: 'Large',
+    internalNetworkBandwidth: '25Gbps',
+    storageIOPS: '3000',
+  },
+  'flv-010': {
+    id: 'flv-010',
+    name: 'g4dn.2xlarge',
+    category: 'GPU Accelerated',
+    vcpu: 8,
+    ram: '32GiB',
+    visibility: 'Public',
+    createdAt: '2025-08-05',
+    architecture: 'X86 Architecture',
+    ephemeralDisk: '225GiB',
+    numaNodes: '1',
+    cpuPolicy: 'Dedicated',
+    cpuThreadPolicy: 'Isolate',
+    memoryPage: 'Large',
+    internalNetworkBandwidth: '25Gbps',
+    storageIOPS: '5000',
+  },
+  'flv-011': {
+    id: 'flv-011',
+    name: 'p3.2xlarge',
+    category: 'GPU Compute',
+    vcpu: 8,
+    ram: '61GiB',
+    visibility: 'Public',
+    createdAt: '2025-08-01',
+    architecture: 'X86 Architecture',
+    ephemeralDisk: '0GiB',
+    numaNodes: '1',
+    cpuPolicy: 'Dedicated',
+    cpuThreadPolicy: 'Isolate',
+    memoryPage: 'Large',
+    internalNetworkBandwidth: '10Gbps',
+    storageIOPS: '3000',
+  },
+  'flv-012': {
+    id: 'flv-012',
+    name: 'inf1.xlarge',
+    category: 'ML Inference',
+    vcpu: 4,
+    ram: '8GiB',
+    visibility: 'Public',
+    createdAt: '2025-07-28',
+    architecture: 'X86 Architecture',
+    ephemeralDisk: '0GiB',
+    numaNodes: '0',
+    cpuPolicy: 'Dedicated',
+    cpuThreadPolicy: 'Prefer',
+    memoryPage: 'Any',
+    internalNetworkBandwidth: '25Gbps',
+    storageIOPS: '-',
+  },
+  'flv-013': {
+    id: 'flv-013',
+    name: 'inf1.2xlarge',
+    category: 'ML Inference',
+    vcpu: 8,
+    ram: '16GiB',
+    visibility: 'Public',
+    createdAt: '2025-07-25',
+    architecture: 'X86 Architecture',
+    ephemeralDisk: '0GiB',
+    numaNodes: '0',
+    cpuPolicy: 'Dedicated',
+    cpuThreadPolicy: 'Prefer',
+    memoryPage: 'Any',
+    internalNetworkBandwidth: '25Gbps',
+    storageIOPS: '-',
+  },
+  'flv-014': {
+    id: 'flv-014',
+    name: 'custom.small',
+    category: 'Custom',
+    vcpu: 2,
+    ram: '4GiB',
+    visibility: 'Private',
+    createdAt: '2025-07-20',
+    architecture: 'X86 Architecture',
+    ephemeralDisk: '20GiB',
+    numaNodes: '0',
+    cpuPolicy: 'Shared',
+    cpuThreadPolicy: 'Prefer',
+    memoryPage: 'Any',
+    internalNetworkBandwidth: '-',
+    storageIOPS: '-',
+  },
+  'flv-015': {
+    id: 'flv-015',
+    name: 'custom.medium',
+    category: 'Custom',
+    vcpu: 4,
+    ram: '8GiB',
+    visibility: 'Private',
+    createdAt: '2025-07-15',
+    architecture: 'X86 Architecture',
+    ephemeralDisk: '50GiB',
+    numaNodes: '0',
+    cpuPolicy: 'Shared',
+    cpuThreadPolicy: 'Prefer',
+    memoryPage: 'Any',
+    internalNetworkBandwidth: '10Gbps',
+    storageIOPS: '-',
+  },
 };
 
 const defaultFlavorDetail: FlavorDetail = {
-  id: 'unknown', name: 'Unknown Flavor', category: '-', vcpu: 0, ram: '0GiB', visibility: 'Public', createdAt: '-', architecture: '-', ephemeralDisk: '0GiB', numaNodes: '0', cpuPolicy: '-', cpuThreadPolicy: '-', memoryPage: '-', internalNetworkBandwidth: '-', storageIOPS: '-',
+  id: 'unknown',
+  name: 'Unknown Flavor',
+  category: '-',
+  vcpu: 0,
+  ram: '0GiB',
+  visibility: 'Public',
+  createdAt: '-',
+  architecture: '-',
+  ephemeralDisk: '0GiB',
+  numaNodes: '0',
+  cpuPolicy: '-',
+  cpuThreadPolicy: '-',
+  memoryPage: '-',
+  internalNetworkBandwidth: '-',
+  storageIOPS: '-',
 };
 
 // Mock flavor parameters (raw API response)
@@ -141,26 +395,25 @@ const mockFlavorInstances: FlavorInstance[] = Array.from({ length: 115 }, (_, i)
   createdAt: `2025-09-${String(30 - (i % 28)).padStart(2, '0')}`,
 }));
 
-
 /* ----------------------------------------
    Flavor Detail Page
    ---------------------------------------- */
 
 export function ComputeAdminFlavorDetailPage() {
   const { id } = useParams<{ id: string }>();
-  const flavor = id ? (mockFlavorsMap[id] || defaultFlavorDetail) : defaultFlavorDetail;
+  const flavor = id ? mockFlavorsMap[id] || defaultFlavorDetail : defaultFlavorDetail;
   const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [activeDetailTab, setActiveDetailTab] = useState('details');
-  
+
   // Instances tab state
   const [instanceSearchQuery, setInstanceSearchQuery] = useState('');
   const [instanceCurrentPage, setInstanceCurrentPage] = useState(1);
   const instancesPerPage = 10;
-  
+
   // Preferences state
   const [isPreferencesOpen, setIsPreferencesOpen] = useState(false);
-  
+
   // Flavor data is already fetched based on ID above
   const instances = mockFlavorInstances;
 
@@ -221,9 +474,7 @@ export function ComputeAdminFlavorDetailPage() {
       label: 'Status',
       width: '64px',
       align: 'center',
-      render: (_, row) => (
-        <StatusIndicator status={row.status} layout="icon-only" />
-      ),
+      render: (_, row) => <StatusIndicator status={row.status} layout="icon-only" />,
     },
     {
       key: 'name',
@@ -249,13 +500,12 @@ export function ComputeAdminFlavorDetailPage() {
       label: 'Locked',
       width: '80px',
       align: 'center',
-      render: (_, row) => (
+      render: (_, row) =>
         row.locked ? (
           <IconLock size={16} stroke={1.5} className="text-[var(--color-text-subtle)]" />
         ) : (
           <IconLockOpen size={16} stroke={1.5} className="text-[var(--color-text-subtle)]" />
-        )
-      ),
+        ),
     },
     {
       key: 'image',
@@ -304,7 +554,11 @@ export function ComputeAdminFlavorDetailPage() {
                 className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group"
                 onClick={(e) => e.stopPropagation()}
               >
-                <IconDotsCircleHorizontal size={16} stroke={1.5} className="text-[var(--action-icon-color)]" />
+                <IconDotsCircleHorizontal
+                  size={16}
+                  stroke={1.5}
+                  className="text-[var(--action-icon-color)]"
+                />
               </button>
             }
           />
@@ -323,150 +577,163 @@ export function ComputeAdminFlavorDetailPage() {
       >
         {/* Fixed Header Area */}
         <div className="shrink-0 bg-[var(--color-surface-default)]">
-        {/* Tab Bar */}
-        <TabBar tabs={tabBarTabs} activeTab={activeTabId} onTabChange={selectTab} onTabClose={closeTab} />
-        {/* Top Bar */}
-        <TopBar
-          showSidebarToggle={!sidebarOpen}
-          onSidebarToggle={() => setSidebarOpen(true)}
-          showNavigation={true}
-          onBack={() => navigate(-1)}
-          onForward={() => window.history.forward()}
-          breadcrumb={<Breadcrumb items={breadcrumbItems} />}
-          actions={
-            <TopBarAction
-              icon={<IconBell size={16} stroke={1} />}
-              aria-label="Notifications"
-              badge={true}
-            />
-          }
-        />
+          {/* Tab Bar */}
+          <TabBar
+            tabs={tabBarTabs}
+            activeTab={activeTabId}
+            onTabChange={selectTab}
+            onTabClose={closeTab}
+          />
+          {/* Top Bar */}
+          <TopBar
+            showSidebarToggle={!sidebarOpen}
+            onSidebarToggle={() => setSidebarOpen(true)}
+            showNavigation={true}
+            onBack={() => navigate(-1)}
+            onForward={() => window.history.forward()}
+            breadcrumb={<Breadcrumb items={breadcrumbItems} />}
+            actions={
+              <TopBarAction
+                icon={<IconBell size={16} stroke={1} />}
+                aria-label="Notifications"
+                badge={true}
+              />
+            }
+          />
         </div>
 
         {/* Scrollable Content Area */}
         <div className="flex-1 overflow-auto overscroll-contain sidebar-scroll">
-        <div className="pt-4 px-8 pb-20 bg-[var(--color-surface-default)] min-h-full">
-          <VStack gap={6} className="min-w-[1176px]">
-            {/* Flavor Header Card */}
-            <DetailHeader>
-              <DetailHeader.Title>{flavor.name}</DetailHeader.Title>
-              <DetailHeader.Actions>
-                <Button variant="secondary" size="sm" leftIcon={<IconCirclePlus size={12} />}>
-                  Create instance template
-                </Button>
-              </DetailHeader.Actions>
-              <DetailHeader.InfoGrid>
-                <DetailHeader.InfoCard label="ID" value={flavor.id} copyable />
-                <DetailHeader.InfoCard label="Category" value={flavor.category} />
-                <DetailHeader.InfoCard label="vCPU" value={String(flavor.vcpu)} />
-                <DetailHeader.InfoCard label="RAM" value={flavor.ram} />
-                <DetailHeader.InfoCard label="Root Disk" value="0GiB" />
-                <DetailHeader.InfoCard label="Public" value="On" />
-              </DetailHeader.InfoGrid>
-            </DetailHeader>
+          <div className="pt-4 px-8 pb-20 bg-[var(--color-surface-default)] min-h-full">
+            <VStack gap={6} className="min-w-[1176px]">
+              {/* Flavor Header Card */}
+              <DetailHeader>
+                <DetailHeader.Title>{flavor.name}</DetailHeader.Title>
+                <DetailHeader.Actions>
+                  <Button variant="secondary" size="sm" leftIcon={<IconCirclePlus size={12} />}>
+                    Create instance template
+                  </Button>
+                </DetailHeader.Actions>
+                <DetailHeader.InfoGrid>
+                  <DetailHeader.InfoCard label="ID" value={flavor.id} copyable />
+                  <DetailHeader.InfoCard label="Category" value={flavor.category} />
+                  <DetailHeader.InfoCard label="vCPU" value={String(flavor.vcpu)} />
+                  <DetailHeader.InfoCard label="RAM" value={flavor.ram} />
+                  <DetailHeader.InfoCard label="Root Disk" value="0GiB" />
+                  <DetailHeader.InfoCard label="Public" value="On" />
+                </DetailHeader.InfoGrid>
+              </DetailHeader>
 
-            {/* Flavor Tabs */}
-            <div className="w-full">
-              <Tabs value={activeDetailTab} onChange={setActiveDetailTab} variant="underline" size="sm">
-                <TabList>
-                  <Tab value="details">Details</Tab>
-                  <Tab value="instances">Instances</Tab>
-                  <Tab value="parameters">Parameters</Tab>
-                </TabList>
+              {/* Flavor Tabs */}
+              <div className="w-full">
+                <Tabs
+                  value={activeDetailTab}
+                  onChange={setActiveDetailTab}
+                  variant="underline"
+                  size="sm"
+                >
+                  <TabList>
+                    <Tab value="details">Details</Tab>
+                    <Tab value="instances">Instances</Tab>
+                    <Tab value="parameters">Parameters</Tab>
+                  </TabList>
 
-                {/* Details Tab Panel */}
-                <TabPanel value="details" className="pt-0">
-                  <VStack gap={4} className="pt-4">
-                    {/* Basic information */}
-                    <SectionCard>
-                      <SectionCard.Header title="Basic information" />
-                      <SectionCard.Content>
-                        <SectionCard.DataRow label="Flavor name" value={flavor.name} />
-                        <SectionCard.DataRow label="Category" value={flavor.category} />
-                      </SectionCard.Content>
-                    </SectionCard>
+                  {/* Details Tab Panel */}
+                  <TabPanel value="details" className="pt-0">
+                    <VStack gap={4} className="pt-4">
+                      {/* Basic information */}
+                      <SectionCard>
+                        <SectionCard.Header title="Basic information" />
+                        <SectionCard.Content>
+                          <SectionCard.DataRow label="Flavor name" value={flavor.name} />
+                          <SectionCard.DataRow label="Category" value={flavor.category} />
+                        </SectionCard.Content>
+                      </SectionCard>
 
-                    {/* Specification */}
-                    <SectionCard>
-                      <SectionCard.Header title="Specification" />
-                      <SectionCard.Content>
-                        <SectionCard.DataRow label="vCPU" value={String(flavor.vcpu)} />
-                        <SectionCard.DataRow label="RAM" value={flavor.ram} />
-                        <SectionCard.DataRow label="Root Disk" value="0GiB" />
-                        <SectionCard.DataRow label="Ephemeral disk" value={flavor.ephemeralDisk} />
-                        <SectionCard.DataRow label="Swap Disk" value={flavor.numaNodes} />
-                      </SectionCard.Content>
-                    </SectionCard>
+                      {/* Specification */}
+                      <SectionCard>
+                        <SectionCard.Header title="Specification" />
+                        <SectionCard.Content>
+                          <SectionCard.DataRow label="vCPU" value={String(flavor.vcpu)} />
+                          <SectionCard.DataRow label="RAM" value={flavor.ram} />
+                          <SectionCard.DataRow label="Root Disk" value="0GiB" />
+                          <SectionCard.DataRow
+                            label="Ephemeral disk"
+                            value={flavor.ephemeralDisk}
+                          />
+                          <SectionCard.DataRow label="Swap Disk" value={flavor.numaNodes} />
+                        </SectionCard.Content>
+                      </SectionCard>
 
-                    {/* Security */}
-                    <SectionCard>
-                      <SectionCard.Header title="Security" />
-                      <SectionCard.Content>
-                        <SectionCard.DataRow label="Visibility" value={flavor.visibility} />
-                      </SectionCard.Content>
-                    </SectionCard>
+                      {/* Security */}
+                      <SectionCard>
+                        <SectionCard.Header title="Security" />
+                        <SectionCard.Content>
+                          <SectionCard.DataRow label="Visibility" value={flavor.visibility} />
+                        </SectionCard.Content>
+                      </SectionCard>
 
-                    {/* Metadata */}
-                    <SectionCard>
-                      <SectionCard.Header title="Metadata" />
-                      <SectionCard.Content>
-                        <SectionCard.DataRow label="{metadata}" value="{value}" />
-                      </SectionCard.Content>
-                    </SectionCard>
-                  </VStack>
-                </TabPanel>
+                      {/* Metadata */}
+                      <SectionCard>
+                        <SectionCard.Header title="Metadata" />
+                        <SectionCard.Content>
+                          <SectionCard.DataRow label="{metadata}" value="{value}" />
+                        </SectionCard.Content>
+                      </SectionCard>
+                    </VStack>
+                  </TabPanel>
 
-                {/* Instances Tab Panel */}
-                <TabPanel value="instances" className="pt-0">
-                  <VStack gap={4} className="pt-4">
-                    {/* Section Header */}
-                    <h2 className="text-[length:var(--font-size-16)] leading-[var(--line-height-24)] font-semibold text-[var(--color-text-default)]">
-                      Instances
-                    </h2>
+                  {/* Instances Tab Panel */}
+                  <TabPanel value="instances" className="pt-0">
+                    <VStack gap={4} className="pt-4">
+                      {/* Section Header */}
+                      <h2 className="text-[length:var(--font-size-16)] leading-[var(--line-height-24)] font-semibold text-[var(--color-text-default)]">
+                        Instances
+                      </h2>
 
-                    {/* Search */}
-                    <div className="w-[280px]">
-                      <SearchInput
-                        placeholder="Search instance by attributes"
-                        value={instanceSearchQuery}
-                        onChange={(e) => setInstanceSearchQuery(e.target.value)}
-                        onClear={() => setInstanceSearchQuery('')}
-                        size="sm"
-                        fullWidth
-                      />
-                    </div>
+                      {/* Search */}
+                      <div className="w-[280px]">
+                        <SearchInput
+                          placeholder="Search instance by attributes"
+                          value={instanceSearchQuery}
+                          onChange={(e) => setInstanceSearchQuery(e.target.value)}
+                          onClear={() => setInstanceSearchQuery('')}
+                          size="sm"
+                          fullWidth
+                        />
+                      </div>
 
-                    {/* Pagination */}
+                      {/* Pagination */}
                       <Pagination
                         currentPage={instanceCurrentPage}
                         totalPages={instanceTotalPages}
                         onPageChange={setInstanceCurrentPage}
-                      totalItems={filteredInstances.length}
+                        totalItems={filteredInstances.length}
                       />
 
-                    {/* Instances Table */}
-                    <Table<FlavorInstance>
-                      columns={instanceColumns}
-                      data={paginatedInstances}
-                      rowKey="id"
-                      emptyMessage="No instances found"
-                    />
-                  </VStack>
-                </TabPanel>
+                      {/* Instances Table */}
+                      <Table<FlavorInstance>
+                        columns={instanceColumns}
+                        data={paginatedInstances}
+                        rowKey="id"
+                        emptyMessage="No instances found"
+                      />
+                    </VStack>
+                  </TabPanel>
 
-                {/* Parameters Tab Panel */}
-                <TabPanel value="parameters" className="pt-0">
-                  <div className="pt-6">
-                    <div className="bg-[#141414] dark:bg-[#FAFAFA] border border-[var(--color-border-default)] rounded-md p-4 w-full min-h-[576px] overflow-auto">
-                      <pre className="font-mono text-[12px] leading-[18px] text-[#e2e8f0] dark:text-[#1e293b] whitespace-pre">
-{JSON.stringify(mockFlavorParameters, null, 5)}
-                      </pre>
+                  {/* Parameters Tab Panel */}
+                  <TabPanel value="parameters" className="pt-0">
+                    <div className="pt-6">
+                      <div className="bg-[#141414] dark:bg-[#FAFAFA] border border-[var(--color-border-default)] rounded-md p-4 w-full min-h-[576px] overflow-auto">
+                        <pre className="font-mono text-[12px] leading-[18px] text-[#e2e8f0] dark:text-[#1e293b] whitespace-pre">
+                          {JSON.stringify(mockFlavorParameters, null, 5)}
+                        </pre>
+                      </div>
                     </div>
-                  </div>
-                </TabPanel>
-              </Tabs>
-            </div>
-          </VStack>
+                  </TabPanel>
+                </Tabs>
+              </div>
+            </VStack>
           </div>
         </div>
       </main>

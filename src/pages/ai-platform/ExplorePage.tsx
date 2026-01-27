@@ -62,9 +62,7 @@ function TemplateCard({
           <span className="text-[14px] font-semibold text-[var(--color-text-default)] truncate">
             {name}
           </span>
-          <span className="text-[12px] text-[var(--color-text-subtle)] truncate">
-            {imageUrl}
-          </span>
+          <span className="text-[12px] text-[var(--color-text-subtle)] truncate">{imageUrl}</span>
         </VStack>
         <button className="p-1 hover:bg-[var(--color-surface-subtle)] rounded transition-colors">
           <IconStar size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
@@ -210,7 +208,8 @@ export function ExplorePage() {
   const [category, setCategory] = useState('all');
   const [sortBy, setSortBy] = useState('newest');
   const [featuredOnly, setFeaturedOnly] = useState(false);
-  const { tabs, activeTabId, selectTab, closeTab, addNewTab, updateActiveTabLabel, moveTab } = useTabs();
+  const { tabs, activeTabId, selectTab, closeTab, addNewTab, updateActiveTabLabel, moveTab } =
+    useTabs();
 
   useEffect(() => {
     updateActiveTabLabel('Explore');
@@ -254,7 +253,7 @@ export function ExplorePage() {
         style={{ left: `${sidebarWidth}px` }}
       >
         <TabBar
-          tabs={tabs.map(tab => ({ id: tab.id, label: tab.label, closable: tab.closable }))}
+          tabs={tabs.map((tab) => ({ id: tab.id, label: tab.label, closable: tab.closable }))}
           activeTab={activeTabId}
           onTabChange={selectTab}
           onTabClose={closeTab}
@@ -265,14 +264,7 @@ export function ExplorePage() {
         <TopBar
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
-          breadcrumb={
-            <Breadcrumb
-              items={[
-                { label: 'AI Platform' },
-                { label: 'Explore' },
-              ]}
-            />
-          }
+          breadcrumb={<Breadcrumb items={[{ label: 'AI Platform' }, { label: 'Explore' }]} />}
           actions={
             <>
               <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">

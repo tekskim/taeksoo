@@ -32,9 +32,10 @@ export function TabBar({ tabs, onTabClose, onTabClick, onNewTab }: TabBarProps) 
             key={tab.id}
             className={`
               flex items-center gap-3 px-3 py-2 cursor-pointer
-              ${tab.active
-                ? 'bg-[var(--color-surface-default)] border-r border-[var(--color-border-default)]'
-                : 'hover:bg-[var(--color-surface-muted)]'
+              ${
+                tab.active
+                  ? 'bg-[var(--color-surface-default)] border-r border-[var(--color-border-default)]'
+                  : 'hover:bg-[var(--color-surface-muted)]'
               }
             `}
             onClick={() => onTabClick?.(tab.id)}
@@ -94,4 +95,3 @@ function WindowControl({ type }: { type: 'minimize' | 'maximize' | 'close' }) {
 }
 
 export default TabBar;
-

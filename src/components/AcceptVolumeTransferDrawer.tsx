@@ -38,7 +38,7 @@ export function AcceptVolumeTransferDrawer({
   const handleSubmit = async () => {
     setHasAttemptedSubmit(true);
     if (!transferId.trim() || !authKey.trim()) return;
-    
+
     setIsSubmitting(true);
     try {
       await onSubmit?.(transferId, authKey);
@@ -62,15 +62,11 @@ export function AcceptVolumeTransferDrawer({
       width={376}
       footer={
         <HStack gap={2} className="w-full">
-          <Button 
-            variant="secondary" 
-            onClick={handleClose}
-            className="flex-1 h-8"
-          >
+          <Button variant="secondary" onClick={handleClose} className="flex-1 h-8">
             Cancel
           </Button>
-          <Button 
-            variant="primary" 
+          <Button
+            variant="primary"
             onClick={handleSubmit}
             disabled={isSubmitting}
             className="flex-1 h-8"
@@ -87,7 +83,8 @@ export function AcceptVolumeTransferDrawer({
             Accept Volume Transfer
           </h2>
           <p className="text-[12px] text-[var(--color-text-subtle)] leading-4">
-            Accept a volume transfer using the provided transfer ID and authorization key. Once accepted, the volume will be moved to your project and ownership cannot be reverted.
+            Accept a volume transfer using the provided transfer ID and authorization key. Once
+            accepted, the volume will be moved to your project and ownership cannot be reverted.
           </p>
         </VStack>
 
@@ -134,5 +131,3 @@ export function AcceptVolumeTransferDrawer({
 }
 
 export default AcceptVolumeTransferDrawer;
-
-

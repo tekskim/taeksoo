@@ -235,7 +235,7 @@ export const WithBothIcons: Story = {
 export const PasswordToggle: Story = {
   render: function PasswordToggleComponent() {
     const [showPassword, setShowPassword] = useState(false);
-    
+
     return (
       <Input
         label="Password"
@@ -293,12 +293,7 @@ export const FullWidth: Story = {
 export const FormExample: Story = {
   render: () => (
     <div className="flex flex-col gap-4 w-[320px]">
-      <Input
-        label="Full Name"
-        placeholder="John Doe"
-        required
-        fullWidth
-      />
+      <Input label="Full Name" placeholder="John Doe" required fullWidth />
       <Input
         label="Email"
         type="email"

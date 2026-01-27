@@ -1,9 +1,9 @@
 import { useState } from 'react';
-import { 
-  Drawer, 
-  Button, 
-  SearchInput, 
-  Pagination, 
+import {
+  Drawer,
+  Button,
+  SearchInput,
+  Pagination,
   StatusIndicator,
   Radio,
   Checkbox,
@@ -94,10 +94,11 @@ export function ManageSecurityGroupsDrawer({
   const [hasAttemptedSubmit, setHasAttemptedSubmit] = useState(false);
 
   // Filter interfaces
-  const filteredInterfaces = interfaces.filter((iface) =>
-    iface.portName.toLowerCase().includes(interfaceSearchQuery.toLowerCase()) ||
-    iface.networkName.toLowerCase().includes(interfaceSearchQuery.toLowerCase()) ||
-    iface.ipAddress.includes(interfaceSearchQuery)
+  const filteredInterfaces = interfaces.filter(
+    (iface) =>
+      iface.portName.toLowerCase().includes(interfaceSearchQuery.toLowerCase()) ||
+      iface.networkName.toLowerCase().includes(interfaceSearchQuery.toLowerCase()) ||
+      iface.ipAddress.includes(interfaceSearchQuery)
   );
 
   const interfaceTotalPages = Math.ceil(filteredInterfaces.length / ITEMS_PER_PAGE);
@@ -107,9 +108,10 @@ export function ManageSecurityGroupsDrawer({
   );
 
   // Filter security groups
-  const filteredSecurityGroups = securityGroups.filter((sg) =>
-    sg.name.toLowerCase().includes(sgSearchQuery.toLowerCase()) ||
-    sg.description.toLowerCase().includes(sgSearchQuery.toLowerCase())
+  const filteredSecurityGroups = securityGroups.filter(
+    (sg) =>
+      sg.name.toLowerCase().includes(sgSearchQuery.toLowerCase()) ||
+      sg.description.toLowerCase().includes(sgSearchQuery.toLowerCase())
   );
 
   const sgTotalPages = Math.ceil(filteredSecurityGroups.length / ITEMS_PER_PAGE);
@@ -120,9 +122,9 @@ export function ManageSecurityGroupsDrawer({
 
   const handleSave = async () => {
     setHasAttemptedSubmit(true);
-    
+
     if (!selectedInterfaceId) return;
-    
+
     setIsSubmitting(true);
     try {
       await onSave?.(selectedInterfaceId, selectedSecurityGroupIds);
@@ -145,9 +147,7 @@ export function ManageSecurityGroupsDrawer({
 
   const handleSecurityGroupToggle = (sgId: string) => {
     setSelectedSecurityGroupIds((prev) =>
-      prev.includes(sgId)
-        ? prev.filter((id) => id !== sgId)
-        : [...prev, sgId]
+      prev.includes(sgId) ? prev.filter((id) => id !== sgId) : [...prev, sgId]
     );
   };
 
@@ -160,15 +160,11 @@ export function ManageSecurityGroupsDrawer({
       width={696}
       footer={
         <HStack gap={2} justify="center" className="w-full">
-          <Button 
-            variant="secondary" 
-            onClick={handleClose}
-            className="w-[152px] h-8"
-          >
+          <Button variant="secondary" onClick={handleClose} className="w-[152px] h-8">
             Cancel
           </Button>
-          <Button 
-            variant="primary" 
+          <Button
+            variant="primary"
             onClick={handleSave}
             disabled={isSubmitting}
             className="w-[152px] h-8"
@@ -186,7 +182,8 @@ export function ManageSecurityGroupsDrawer({
               Manage Security Groups
             </h2>
             <p className="text-[12px] text-[var(--color-text-subtle)] leading-4">
-              You can attach or detach security groups for the selected interface. These rules control inbound and outbound traffic for the instance.
+              You can attach or detach security groups for the selected interface. These rules
+              control inbound and outbound traffic for the instance.
             </p>
           </VStack>
 
@@ -224,42 +221,86 @@ export function ManageSecurityGroupsDrawer({
           {/* Interfaces Table */}
           <div style={{ width: '648px', maxWidth: '648px' }}>
             {/* Header */}
-            <div style={{ display: 'flex', width: '648px', height: '40px' }} className="bg-[var(--color-border-subtle)] border border-[var(--color-border-default)] rounded-md">
-              <div style={{ width: '40px', flexShrink: 0 }} className="flex items-center justify-center" />
-              <div style={{ width: '59px', flexShrink: 0 }} className="flex items-center justify-center px-3 border-l border-[var(--color-border-default)]">
-                <span className="text-[11px] font-medium text-[var(--color-text-default)]">Status</span>
+            <div
+              style={{ display: 'flex', width: '648px', height: '40px' }}
+              className="bg-[var(--color-border-subtle)] border border-[var(--color-border-default)] rounded-md"
+            >
+              <div
+                style={{ width: '40px', flexShrink: 0 }}
+                className="flex items-center justify-center"
+              />
+              <div
+                style={{ width: '59px', flexShrink: 0 }}
+                className="flex items-center justify-center px-3 border-l border-[var(--color-border-default)]"
+              >
+                <span className="text-[11px] font-medium text-[var(--color-text-default)]">
+                  Status
+                </span>
               </div>
-              <div style={{ width: '137px', flexShrink: 0 }} className="flex items-center gap-1.5 px-3 border-l border-[var(--color-border-default)] cursor-pointer hover:text-[var(--color-action-primary)]">
-                <span className="text-[11px] font-medium text-[var(--color-text-default)]">Network</span>
+              <div
+                style={{ width: '137px', flexShrink: 0 }}
+                className="flex items-center gap-1.5 px-3 border-l border-[var(--color-border-default)] cursor-pointer hover:text-[var(--color-action-primary)]"
+              >
+                <span className="text-[11px] font-medium text-[var(--color-text-default)]">
+                  Network
+                </span>
                 <IconChevronDown size={12} className="text-[var(--color-text-default)]" />
               </div>
-              <div style={{ width: '137px', flexShrink: 0 }} className="flex items-center gap-1.5 px-3 border-l border-[var(--color-border-default)] cursor-pointer hover:text-[var(--color-action-primary)]">
-                <span className="text-[11px] font-medium text-[var(--color-text-default)]">Port ID</span>
+              <div
+                style={{ width: '137px', flexShrink: 0 }}
+                className="flex items-center gap-1.5 px-3 border-l border-[var(--color-border-default)] cursor-pointer hover:text-[var(--color-action-primary)]"
+              >
+                <span className="text-[11px] font-medium text-[var(--color-text-default)]">
+                  Port ID
+                </span>
                 <IconChevronDown size={12} className="text-[var(--color-text-default)]" />
               </div>
-              <div style={{ width: '137px', flexShrink: 0 }} className="flex items-center px-3 border-l border-[var(--color-border-default)]">
-                <span className="text-[11px] font-medium text-[var(--color-text-default)]">IP Address</span>
+              <div
+                style={{ width: '137px', flexShrink: 0 }}
+                className="flex items-center px-3 border-l border-[var(--color-border-default)]"
+              >
+                <span className="text-[11px] font-medium text-[var(--color-text-default)]">
+                  IP Address
+                </span>
               </div>
-              <div style={{ width: '138px', flexShrink: 0 }} className="flex items-center px-3 border-l border-[var(--color-border-default)]">
-                <span className="text-[11px] font-medium text-[var(--color-text-default)]">Mac Address</span>
+              <div
+                style={{ width: '138px', flexShrink: 0 }}
+                className="flex items-center px-3 border-l border-[var(--color-border-default)]"
+              >
+                <span className="text-[11px] font-medium text-[var(--color-text-default)]">
+                  Mac Address
+                </span>
               </div>
             </div>
 
             {/* Rows */}
-            <div style={{ width: '648px', maxWidth: '648px', marginTop: '4px', display: 'flex', flexDirection: 'column', gap: '4px' }}>
+            <div
+              style={{
+                width: '648px',
+                maxWidth: '648px',
+                marginTop: '4px',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '4px',
+              }}
+            >
               {paginatedInterfaces.map((iface) => (
-                <div 
+                <div
                   key={iface.id}
                   style={{ display: 'flex', width: '648px', minHeight: '40px' }}
                   className={`border rounded-md cursor-pointer transition-all ${
-                    selectedInterfaceId === iface.id 
-                      ? 'bg-[var(--color-state-info-bg)] border-[var(--color-action-primary)]' 
+                    selectedInterfaceId === iface.id
+                      ? 'bg-[var(--color-state-info-bg)] border-[var(--color-action-primary)]'
                       : 'bg-[var(--color-surface-default)] border-[var(--color-border-default)] hover:bg-[var(--table-row-hover-bg)]'
                   }`}
                   onClick={() => setSelectedInterfaceId(iface.id)}
                 >
                   {/* Radio */}
-                  <div style={{ width: '40px', flexShrink: 0 }} className="flex items-center justify-center" onClick={(e) => e.stopPropagation()}>
+                  <div
+                    style={{ width: '40px', flexShrink: 0 }}
+                    className="flex items-center justify-center"
+                    onClick={(e) => e.stopPropagation()}
+                  >
                     <Radio
                       name="interface-select"
                       value={iface.id}
@@ -268,32 +309,65 @@ export function ManageSecurityGroupsDrawer({
                     />
                   </div>
                   {/* Status */}
-                  <div style={{ width: '59px', flexShrink: 0 }} className="flex items-center justify-center">
+                  <div
+                    style={{ width: '59px', flexShrink: 0 }}
+                    className="flex items-center justify-center"
+                  >
                     <StatusIndicator status="active" layout="icon-only" size="sm" />
                   </div>
                   {/* Network */}
-                  <div style={{ width: '137px', flexShrink: 0 }} className="flex flex-col gap-0.5 justify-center px-3 py-2 overflow-hidden">
+                  <div
+                    style={{ width: '137px', flexShrink: 0 }}
+                    className="flex flex-col gap-0.5 justify-center px-3 py-2 overflow-hidden"
+                  >
                     <div className="flex items-center gap-1.5">
-                      <span className="text-[12px] font-medium text-[var(--color-action-primary)] truncate">{iface.portName}</span>
-                      <IconExternalLink size={12} className="shrink-0 text-[var(--color-action-primary)]" />
+                      <span className="text-[12px] font-medium text-[var(--color-action-primary)] truncate">
+                        {iface.portName}
+                      </span>
+                      <IconExternalLink
+                        size={12}
+                        className="shrink-0 text-[var(--color-action-primary)]"
+                      />
                     </div>
-                    <span className="text-[11px] text-[var(--color-text-subtle)] truncate">ID : 17kfj123</span>
+                    <span className="text-[11px] text-[var(--color-text-subtle)] truncate">
+                      ID : 17kfj123
+                    </span>
                   </div>
                   {/* Port ID */}
-                  <div style={{ width: '137px', flexShrink: 0 }} className="flex flex-col gap-0.5 justify-center px-3 py-2 overflow-hidden">
+                  <div
+                    style={{ width: '137px', flexShrink: 0 }}
+                    className="flex flex-col gap-0.5 justify-center px-3 py-2 overflow-hidden"
+                  >
                     <div className="flex items-center gap-1.5">
-                      <span className="text-[12px] font-medium text-[var(--color-action-primary)] truncate">{iface.networkName}</span>
-                      <IconExternalLink size={12} className="shrink-0 text-[var(--color-action-primary)]" />
+                      <span className="text-[12px] font-medium text-[var(--color-action-primary)] truncate">
+                        {iface.networkName}
+                      </span>
+                      <IconExternalLink
+                        size={12}
+                        className="shrink-0 text-[var(--color-action-primary)]"
+                      />
                     </div>
-                    <span className="text-[11px] text-[var(--color-text-subtle)] truncate">ID : 17kfj123</span>
+                    <span className="text-[11px] text-[var(--color-text-subtle)] truncate">
+                      ID : 17kfj123
+                    </span>
                   </div>
                   {/* IP Address */}
-                  <div style={{ width: '137px', flexShrink: 0 }} className="flex items-center px-3 py-2 overflow-hidden">
-                    <span className="text-[12px] text-[var(--color-text-default)] truncate">{iface.ipAddress}</span>
+                  <div
+                    style={{ width: '137px', flexShrink: 0 }}
+                    className="flex items-center px-3 py-2 overflow-hidden"
+                  >
+                    <span className="text-[12px] text-[var(--color-text-default)] truncate">
+                      {iface.ipAddress}
+                    </span>
                   </div>
                   {/* MAC Address */}
-                  <div style={{ width: '138px', flexShrink: 0 }} className="flex items-center px-3 py-2 overflow-hidden">
-                    <span className="text-[12px] text-[var(--color-text-default)] truncate">{iface.macAddress}</span>
+                  <div
+                    style={{ width: '138px', flexShrink: 0 }}
+                    className="flex items-center px-3 py-2 overflow-hidden"
+                  >
+                    <span className="text-[12px] text-[var(--color-text-default)] truncate">
+                      {iface.macAddress}
+                    </span>
                   </div>
                 </div>
               ))}
@@ -302,7 +376,16 @@ export function ManageSecurityGroupsDrawer({
 
           {/* Interface Selection Indicator */}
           <SelectionIndicator
-            selectedItems={selectedInterfaceId ? [{ id: selectedInterfaceId, label: interfaces.find(i => i.id === selectedInterfaceId)?.portName || '' }] : []}
+            selectedItems={
+              selectedInterfaceId
+                ? [
+                    {
+                      id: selectedInterfaceId,
+                      label: interfaces.find((i) => i.id === selectedInterfaceId)?.portName || '',
+                    },
+                  ]
+                : []
+            }
             onRemove={() => setSelectedInterfaceId(null)}
             emptyText="No item Selected"
             error={hasAttemptedSubmit && !selectedInterfaceId}
@@ -314,7 +397,9 @@ export function ManageSecurityGroupsDrawer({
 
         {/* Security Groups Section */}
         <VStack gap={3} className="pb-5">
-          <h3 className="text-[14px] font-medium text-[var(--color-text-default)]">Security Groups</h3>
+          <h3 className="text-[14px] font-medium text-[var(--color-text-default)]">
+            Security Groups
+          </h3>
 
           {/* Pagination */}
           <Pagination
@@ -339,57 +424,111 @@ export function ManageSecurityGroupsDrawer({
           {/* Security Groups Table */}
           <div style={{ width: '648px', maxWidth: '648px' }}>
             {/* Header */}
-            <div style={{ display: 'flex', width: '648px', height: '40px' }} className="bg-[var(--color-border-subtle)] border border-[var(--color-border-default)] rounded-md">
-              <div style={{ width: '40px', flexShrink: 0 }} className="flex items-center justify-center" />
-              <div style={{ width: '203px', flexShrink: 0 }} className="flex items-center gap-1.5 px-3 border-l border-[var(--color-border-default)] cursor-pointer hover:text-[var(--color-action-primary)]">
-                <span className="text-[11px] font-medium text-[var(--color-text-default)]">Name</span>
+            <div
+              style={{ display: 'flex', width: '648px', height: '40px' }}
+              className="bg-[var(--color-border-subtle)] border border-[var(--color-border-default)] rounded-md"
+            >
+              <div
+                style={{ width: '40px', flexShrink: 0 }}
+                className="flex items-center justify-center"
+              />
+              <div
+                style={{ width: '203px', flexShrink: 0 }}
+                className="flex items-center gap-1.5 px-3 border-l border-[var(--color-border-default)] cursor-pointer hover:text-[var(--color-action-primary)]"
+              >
+                <span className="text-[11px] font-medium text-[var(--color-text-default)]">
+                  Name
+                </span>
                 <IconChevronDown size={12} className="text-[var(--color-text-default)]" />
               </div>
-              <div style={{ width: '203px', flexShrink: 0 }} className="flex items-center gap-1.5 px-3 border-l border-[var(--color-border-default)] cursor-pointer hover:text-[var(--color-action-primary)]">
-                <span className="text-[11px] font-medium text-[var(--color-text-default)]">Description</span>
+              <div
+                style={{ width: '203px', flexShrink: 0 }}
+                className="flex items-center gap-1.5 px-3 border-l border-[var(--color-border-default)] cursor-pointer hover:text-[var(--color-action-primary)]"
+              >
+                <span className="text-[11px] font-medium text-[var(--color-text-default)]">
+                  Description
+                </span>
                 <IconChevronDown size={12} className="text-[var(--color-text-default)]" />
               </div>
-              <div style={{ width: '202px', flexShrink: 0 }} className="flex items-center gap-1.5 px-3 border-l border-[var(--color-border-default)] cursor-pointer hover:text-[var(--color-action-primary)]">
-                <span className="text-[11px] font-medium text-[var(--color-text-default)]">Created At</span>
+              <div
+                style={{ width: '202px', flexShrink: 0 }}
+                className="flex items-center gap-1.5 px-3 border-l border-[var(--color-border-default)] cursor-pointer hover:text-[var(--color-action-primary)]"
+              >
+                <span className="text-[11px] font-medium text-[var(--color-text-default)]">
+                  Created At
+                </span>
                 <IconChevronDown size={12} className="text-[var(--color-text-default)]" />
               </div>
             </div>
 
             {/* Rows */}
-            <div style={{ width: '648px', maxWidth: '648px', marginTop: '4px', display: 'flex', flexDirection: 'column', gap: '4px' }}>
+            <div
+              style={{
+                width: '648px',
+                maxWidth: '648px',
+                marginTop: '4px',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '4px',
+              }}
+            >
               {paginatedSecurityGroups.map((sg) => (
-                <div 
+                <div
                   key={sg.id}
                   style={{ display: 'flex', width: '648px', minHeight: '40px' }}
                   className={`border rounded-md cursor-pointer transition-all ${
-                    selectedSecurityGroupIds.includes(sg.id) 
-                      ? 'bg-[var(--color-state-info-bg)] border-[var(--color-action-primary)]' 
+                    selectedSecurityGroupIds.includes(sg.id)
+                      ? 'bg-[var(--color-state-info-bg)] border-[var(--color-action-primary)]'
                       : 'bg-[var(--color-surface-default)] border-[var(--color-border-default)] hover:bg-[var(--table-row-hover-bg)]'
                   }`}
                   onClick={() => handleSecurityGroupToggle(sg.id)}
                 >
                   {/* Checkbox */}
-                  <div style={{ width: '40px', flexShrink: 0 }} className="flex items-center justify-center" onClick={(e) => e.stopPropagation()}>
+                  <div
+                    style={{ width: '40px', flexShrink: 0 }}
+                    className="flex items-center justify-center"
+                    onClick={(e) => e.stopPropagation()}
+                  >
                     <Checkbox
                       checked={selectedSecurityGroupIds.includes(sg.id)}
                       onChange={() => handleSecurityGroupToggle(sg.id)}
                     />
                   </div>
                   {/* Name */}
-                  <div style={{ width: '203px', flexShrink: 0 }} className="flex flex-col gap-0.5 justify-center px-3 py-2 overflow-hidden">
+                  <div
+                    style={{ width: '203px', flexShrink: 0 }}
+                    className="flex flex-col gap-0.5 justify-center px-3 py-2 overflow-hidden"
+                  >
                     <div className="flex items-center gap-1.5">
-                      <span className="text-[12px] font-medium text-[var(--color-action-primary)] truncate">{sg.name}</span>
-                      <IconExternalLink size={12} className="shrink-0 text-[var(--color-action-primary)]" />
+                      <span className="text-[12px] font-medium text-[var(--color-action-primary)] truncate">
+                        {sg.name}
+                      </span>
+                      <IconExternalLink
+                        size={12}
+                        className="shrink-0 text-[var(--color-action-primary)]"
+                      />
                     </div>
-                    <span className="text-[11px] text-[var(--color-text-subtle)] truncate">ID : 21stu345</span>
+                    <span className="text-[11px] text-[var(--color-text-subtle)] truncate">
+                      ID : 21stu345
+                    </span>
                   </div>
                   {/* Description */}
-                  <div style={{ width: '203px', flexShrink: 0 }} className="flex items-center px-3 py-2 overflow-hidden">
-                    <span className="text-[12px] text-[var(--color-text-default)] truncate">{sg.description}</span>
+                  <div
+                    style={{ width: '203px', flexShrink: 0 }}
+                    className="flex items-center px-3 py-2 overflow-hidden"
+                  >
+                    <span className="text-[12px] text-[var(--color-text-default)] truncate">
+                      {sg.description}
+                    </span>
                   </div>
                   {/* Created At */}
-                  <div style={{ width: '202px', flexShrink: 0 }} className="flex items-center px-3 py-2 overflow-hidden">
-                    <span className="text-[12px] text-[var(--color-text-default)] truncate">{sg.createdAt}</span>
+                  <div
+                    style={{ width: '202px', flexShrink: 0 }}
+                    className="flex items-center px-3 py-2 overflow-hidden"
+                  >
+                    <span className="text-[12px] text-[var(--color-text-default)] truncate">
+                      {sg.createdAt}
+                    </span>
                   </div>
                 </div>
               ))}
@@ -398,11 +537,13 @@ export function ManageSecurityGroupsDrawer({
 
           {/* Security Groups Selection Indicator */}
           <SelectionIndicator
-            selectedItems={selectedSecurityGroupIds.map(id => ({ 
-              id, 
-              label: securityGroups.find(sg => sg.id === id)?.name || '' 
+            selectedItems={selectedSecurityGroupIds.map((id) => ({
+              id,
+              label: securityGroups.find((sg) => sg.id === id)?.name || '',
             }))}
-            onRemove={(id) => setSelectedSecurityGroupIds(prev => prev.filter(sgId => sgId !== id))}
+            onRemove={(id) =>
+              setSelectedSecurityGroupIds((prev) => prev.filter((sgId) => sgId !== id))
+            }
             emptyText="No item Selected"
             className="shrink-0"
             style={{ width: '648px' }}

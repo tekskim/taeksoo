@@ -21,8 +21,8 @@ export function SectionCard({ children, isActive = false, className, ...props }:
         'gap-3',
         'bg-[var(--color-surface-default)]',
         'rounded-[var(--radius-md)]',
-        isActive 
-          ? 'border-2 border-[var(--color-action-primary)] pt-[11px] pb-[15px] px-[15px]' 
+        isActive
+          ? 'border-2 border-[var(--color-action-primary)] pt-[11px] pb-[15px] px-[15px]'
           : 'border border-[var(--color-border-default)] pt-3 pb-4 px-4',
         'w-full',
         className
@@ -47,22 +47,22 @@ export interface SectionCardHeaderProps extends HTMLAttributes<HTMLDivElement> {
   showDivider?: boolean;
 }
 
-function SectionCardHeader({ title, actions, showDivider = true, className, ...props }: SectionCardHeaderProps) {
+function SectionCardHeader({
+  title,
+  actions,
+  showDivider = true,
+  className,
+  ...props
+}: SectionCardHeaderProps) {
   return (
     <div className="flex flex-col w-full gap-3">
       <div className={twMerge('flex items-center justify-between w-full', className)} {...props}>
         <h5 className="text-[length:var(--font-size-16)] font-semibold leading-[var(--line-height-24)] text-[var(--color-text-default)]">
           {title}
         </h5>
-        {actions && (
-          <div className="flex items-center gap-2">
-            {actions}
-          </div>
-        )}
+        {actions && <div className="flex items-center gap-2">{actions}</div>}
       </div>
-      {showDivider && (
-        <div className="h-px w-full bg-[var(--color-border-subtle)]" />
-      )}
+      {showDivider && <div className="h-px w-full bg-[var(--color-border-subtle)]" />}
     </div>
   );
 }
@@ -84,7 +84,7 @@ function DataRowDivider() {
 function SectionCardContent({ children, className, ...props }: SectionCardContentProps) {
   // Convert children to array and filter valid elements
   const childArray = Children.toArray(children).filter(isValidElement);
-  
+
   return (
     <div className={twMerge('flex flex-col w-full gap-3', className)} {...props}>
       {childArray.map((child, index) => (
@@ -128,9 +128,11 @@ function SectionCardDataRow({
   // Determine what to render: children take precedence over value
   const renderValue = () => {
     if (children) {
-      return <div className="text-[12px] leading-4 text-[var(--color-text-default)]">{children}</div>;
+      return (
+        <div className="text-[12px] leading-4 text-[var(--color-text-default)]">{children}</div>
+      );
     }
-    
+
     if (isLink) {
       return (
         <Link
@@ -141,12 +143,8 @@ function SectionCardDataRow({
         </Link>
       );
     }
-    
-    return (
-      <span className="text-[12px] leading-4 text-[var(--color-text-default)]">
-        {value}
-      </span>
-    );
+
+    return <span className="text-[12px] leading-4 text-[var(--color-text-default)]">{value}</span>;
   };
 
   return (
@@ -167,8 +165,4 @@ SectionCard.Header = SectionCardHeader;
 SectionCard.Content = SectionCardContent;
 SectionCard.DataRow = SectionCardDataRow;
 
-export {
-  SectionCardHeader,
-  SectionCardContent,
-  SectionCardDataRow,
-};
+export { SectionCardHeader, SectionCardContent, SectionCardDataRow };

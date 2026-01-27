@@ -22,12 +22,7 @@ import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
 import { useTabs } from '@/contexts/TabContext';
 import { ViewPreferencesDrawer, type ColumnConfig } from '@/components/ViewPreferencesDrawer';
 import { EditVolumeDrawer } from '@/components/EditVolumeDrawer';
-import {
-  IconDotsCircleHorizontal,
-  IconTrash,
-  IconDownload,
-  IconBell,
-} from '@tabler/icons-react';
+import { IconDotsCircleHorizontal, IconTrash, IconDownload, IconBell } from '@tabler/icons-react';
 import { Link } from 'react-router-dom';
 
 /* ----------------------------------------
@@ -56,16 +51,146 @@ interface Volume {
    ---------------------------------------- */
 
 const mockVolumes: Volume[] = [
-  { id: '12345678', name: 'volume', tenant: 'tenant', tenantId: '12345678', host: 'host', size: '1500GiB', type: '_DEFAULT_', diskTag: 'Data Disk', attachedTo: 'instance', attachedToId: '12345678', createdAt: 'Dec 25, 2025', status: 'active' },
-  { id: '12345679', name: 'volume', tenant: 'tenant', tenantId: '12345679', host: 'host', size: '1500GiB', type: '_DEFAULT_', diskTag: 'Data Disk', attachedTo: 'instance', attachedToId: '12345679', createdAt: 'Dec 25, 2025', status: 'active' },
-  { id: '12345680', name: 'volume', tenant: 'tenant', tenantId: '12345680', host: 'host', size: '1500GiB', type: '_DEFAULT_', diskTag: 'Data Disk', attachedTo: 'instance', attachedToId: '12345680', createdAt: 'Dec 25, 2025', status: 'active' },
-  { id: '12345681', name: 'volume', tenant: 'tenant', tenantId: '12345681', host: 'host', size: '1500GiB', type: '_DEFAULT_', diskTag: 'Data Disk', attachedTo: null, attachedToId: null, createdAt: 'Dec 25, 2025', status: 'active' },
-  { id: '12345682', name: 'volume', tenant: null, tenantId: null, host: 'host', size: '1500GiB', type: '_DEFAULT_', diskTag: 'Data Disk', attachedTo: null, attachedToId: null, createdAt: 'Dec 25, 2025', status: 'pending' },
-  { id: '12345683', name: 'volume', tenant: null, tenantId: null, host: null, size: '1500GiB', type: 'SSD', diskTag: 'Backup', attachedTo: null, attachedToId: null, createdAt: 'Dec 25, 2025', status: 'active' },
-  { id: '12345684', name: 'volume', tenant: 'tenant', tenantId: '12345684', host: 'host', size: '500GiB', type: 'NVMe', diskTag: 'Cache', attachedTo: 'instance', attachedToId: '12345684', createdAt: 'Dec 25, 2025', status: 'in-use' },
-  { id: '12345685', name: 'volume', tenant: 'tenant', tenantId: '12345685', host: 'host', size: '2000GiB', type: 'HDD', diskTag: 'Archive', attachedTo: null, attachedToId: null, createdAt: 'Dec 25, 2025', status: 'active' },
-  { id: '12345686', name: 'volume', tenant: null, tenantId: null, host: null, size: '100GiB', type: '_DEFAULT_', diskTag: 'Boot', attachedTo: null, attachedToId: null, createdAt: 'Dec 25, 2025', status: 'error' },
-  { id: '12345687', name: 'volume', tenant: 'tenant', tenantId: '12345687', host: 'host', size: '1000GiB', type: 'NVMe', diskTag: 'ML Dataset', attachedTo: 'instance', attachedToId: '12345687', createdAt: 'Dec 25, 2025', status: 'in-use' },
+  {
+    id: '12345678',
+    name: 'volume',
+    tenant: 'tenant',
+    tenantId: '12345678',
+    host: 'host',
+    size: '1500GiB',
+    type: '_DEFAULT_',
+    diskTag: 'Data Disk',
+    attachedTo: 'instance',
+    attachedToId: '12345678',
+    createdAt: 'Dec 25, 2025',
+    status: 'active',
+  },
+  {
+    id: '12345679',
+    name: 'volume',
+    tenant: 'tenant',
+    tenantId: '12345679',
+    host: 'host',
+    size: '1500GiB',
+    type: '_DEFAULT_',
+    diskTag: 'Data Disk',
+    attachedTo: 'instance',
+    attachedToId: '12345679',
+    createdAt: 'Dec 25, 2025',
+    status: 'active',
+  },
+  {
+    id: '12345680',
+    name: 'volume',
+    tenant: 'tenant',
+    tenantId: '12345680',
+    host: 'host',
+    size: '1500GiB',
+    type: '_DEFAULT_',
+    diskTag: 'Data Disk',
+    attachedTo: 'instance',
+    attachedToId: '12345680',
+    createdAt: 'Dec 25, 2025',
+    status: 'active',
+  },
+  {
+    id: '12345681',
+    name: 'volume',
+    tenant: 'tenant',
+    tenantId: '12345681',
+    host: 'host',
+    size: '1500GiB',
+    type: '_DEFAULT_',
+    diskTag: 'Data Disk',
+    attachedTo: null,
+    attachedToId: null,
+    createdAt: 'Dec 25, 2025',
+    status: 'active',
+  },
+  {
+    id: '12345682',
+    name: 'volume',
+    tenant: null,
+    tenantId: null,
+    host: 'host',
+    size: '1500GiB',
+    type: '_DEFAULT_',
+    diskTag: 'Data Disk',
+    attachedTo: null,
+    attachedToId: null,
+    createdAt: 'Dec 25, 2025',
+    status: 'pending',
+  },
+  {
+    id: '12345683',
+    name: 'volume',
+    tenant: null,
+    tenantId: null,
+    host: null,
+    size: '1500GiB',
+    type: 'SSD',
+    diskTag: 'Backup',
+    attachedTo: null,
+    attachedToId: null,
+    createdAt: 'Dec 25, 2025',
+    status: 'active',
+  },
+  {
+    id: '12345684',
+    name: 'volume',
+    tenant: 'tenant',
+    tenantId: '12345684',
+    host: 'host',
+    size: '500GiB',
+    type: 'NVMe',
+    diskTag: 'Cache',
+    attachedTo: 'instance',
+    attachedToId: '12345684',
+    createdAt: 'Dec 25, 2025',
+    status: 'in-use',
+  },
+  {
+    id: '12345685',
+    name: 'volume',
+    tenant: 'tenant',
+    tenantId: '12345685',
+    host: 'host',
+    size: '2000GiB',
+    type: 'HDD',
+    diskTag: 'Archive',
+    attachedTo: null,
+    attachedToId: null,
+    createdAt: 'Dec 25, 2025',
+    status: 'active',
+  },
+  {
+    id: '12345686',
+    name: 'volume',
+    tenant: null,
+    tenantId: null,
+    host: null,
+    size: '100GiB',
+    type: '_DEFAULT_',
+    diskTag: 'Boot',
+    attachedTo: null,
+    attachedToId: null,
+    createdAt: 'Dec 25, 2025',
+    status: 'error',
+  },
+  {
+    id: '12345687',
+    name: 'volume',
+    tenant: 'tenant',
+    tenantId: '12345687',
+    host: 'host',
+    size: '1000GiB',
+    type: 'NVMe',
+    diskTag: 'ML Dataset',
+    attachedTo: 'instance',
+    attachedToId: '12345687',
+    createdAt: 'Dec 25, 2025',
+    status: 'in-use',
+  },
 ];
 
 /* ----------------------------------------
@@ -73,10 +198,10 @@ const mockVolumes: Volume[] = [
    ---------------------------------------- */
 
 const volumeStatusMap: Record<VolumeStatus, 'active' | 'in-use' | 'error' | 'pending'> = {
-  'active': 'active',
+  active: 'active',
   'in-use': 'in-use',
-  'error': 'error',
-  'pending': 'pending',
+  error: 'error',
+  pending: 'pending',
 };
 
 /* ----------------------------------------
@@ -86,20 +211,30 @@ const volumeStatusMap: Record<VolumeStatus, 'active' | 'in-use' | 'error' | 'pen
 // Filter fields configuration
 const filterFields: FilterField[] = [
   { key: 'name', label: 'Name', type: 'text' },
-  { key: 'type', label: 'Type', type: 'select', options: [
-    { value: '_DEFAULT_', label: '_DEFAULT_' },
-    { value: 'SSD', label: 'SSD' },
-    { value: 'NVMe', label: 'NVMe' },
-    { value: 'HDD', label: 'HDD' },
-  ]},
+  {
+    key: 'type',
+    label: 'Type',
+    type: 'select',
+    options: [
+      { value: '_DEFAULT_', label: '_DEFAULT_' },
+      { value: 'SSD', label: 'SSD' },
+      { value: 'NVMe', label: 'NVMe' },
+      { value: 'HDD', label: 'HDD' },
+    ],
+  },
   { key: 'diskTag', label: 'Disk Tag', type: 'text' },
   { key: 'attachedTo', label: 'Attached To', type: 'text' },
-  { key: 'status', label: 'Status', type: 'select', options: [
-    { value: 'active', label: 'Active' },
-    { value: 'in-use', label: 'In Use' },
-    { value: 'error', label: 'Error' },
-    { value: 'pending', label: 'Pending' },
-  ]},
+  {
+    key: 'status',
+    label: 'Status',
+    type: 'select',
+    options: [
+      { value: 'active', label: 'Active' },
+      { value: 'in-use', label: 'In Use' },
+      { value: 'error', label: 'Error' },
+      { value: 'pending', label: 'Pending' },
+    ],
+  },
 ];
 
 export function ComputeAdminVolumesPage() {
@@ -107,7 +242,7 @@ export function ComputeAdminVolumesPage() {
   const [appliedFilters, setAppliedFilters] = useState<AppliedFilter[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [volumes, setVolumes] = useState(mockVolumes);
-  
+
   // Delete modal state
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [volumeToDelete, setVolumeToDelete] = useState<Volume | null>(null);
@@ -176,7 +311,7 @@ export function ComputeAdminVolumesPage() {
   // Filter volumes by applied filters
   const filteredVolumes = useMemo(() => {
     if (appliedFilters.length === 0) return volumes;
-    
+
     return volumes.filter((v) => {
       return appliedFilters.every((filter) => {
         const value = String(v[filter.field as keyof Volume] || '').toLowerCase();
@@ -212,9 +347,7 @@ export function ComputeAdminVolumesPage() {
           >
             {row.name}
           </Link>
-          <span className="text-[11px] text-[var(--color-text-muted)]">
-            ID: {row.id}
-          </span>
+          <span className="text-[11px] text-[var(--color-text-muted)]">ID: {row.id}</span>
         </div>
       ),
     },
@@ -223,22 +356,21 @@ export function ComputeAdminVolumesPage() {
       label: 'Tenant',
       flex: 1,
       sortable: true,
-      render: (_, row) => row.tenant && row.tenantId ? (
-        <div className="flex flex-col gap-0.5">
-          <Link
-            to={`/compute-admin/tenants/${row.tenantId}`}
-            className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
-            onClick={(e) => e.stopPropagation()}
-          >
-            {row.tenant}
-          </Link>
-          <span className="text-[11px] text-[var(--color-text-muted)]">
-            ID: {row.tenantId}
-          </span>
-        </div>
-      ) : (
-        <span className="text-[var(--color-text-muted)]">-</span>
-      ),
+      render: (_, row) =>
+        row.tenant && row.tenantId ? (
+          <div className="flex flex-col gap-0.5">
+            <Link
+              to={`/compute-admin/tenants/${row.tenantId}`}
+              className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
+              onClick={(e) => e.stopPropagation()}
+            >
+              {row.tenant}
+            </Link>
+            <span className="text-[11px] text-[var(--color-text-muted)]">ID: {row.tenantId}</span>
+          </div>
+        ) : (
+          <span className="text-[var(--color-text-muted)]">-</span>
+        ),
     },
     {
       key: 'host',
@@ -267,7 +399,7 @@ export function ComputeAdminVolumesPage() {
       key: 'attachedTo',
       label: 'Attached To',
       flex: 1,
-      render: (_, row) => (
+      render: (_, row) =>
         row.attachedTo && row.attachedToId ? (
           <div className="flex flex-col gap-0.5">
             <Link
@@ -283,8 +415,7 @@ export function ComputeAdminVolumesPage() {
           </div>
         ) : (
           <span className="text-[var(--color-text-muted)]">-</span>
-        )
-      ),
+        ),
     },
     {
       key: 'createdAt',
@@ -300,17 +431,38 @@ export function ComputeAdminVolumesPage() {
       render: (_, row) => {
         const menuItems: ContextMenuItem[] = [
           { id: 'edit', label: 'Edit', onClick: () => handleEditVolume(row) },
-          { id: 'update-status', label: 'Update status', onClick: () => console.log('Update status:', row.id) },
-          { id: 'migrate-volume', label: 'Migrate volume', onClick: () => console.log('Migrate volume:', row.id) },
-          { id: 'manage-metadata', label: 'Manage metadata', onClick: () => console.log('Manage metadata:', row.id) },
-          { id: 'delete', label: 'Delete', status: 'danger', onClick: () => handleDeleteClick(row) },
+          {
+            id: 'update-status',
+            label: 'Update status',
+            onClick: () => console.log('Update status:', row.id),
+          },
+          {
+            id: 'migrate-volume',
+            label: 'Migrate volume',
+            onClick: () => console.log('Migrate volume:', row.id),
+          },
+          {
+            id: 'manage-metadata',
+            label: 'Manage metadata',
+            onClick: () => console.log('Manage metadata:', row.id),
+          },
+          {
+            id: 'delete',
+            label: 'Delete',
+            status: 'danger',
+            onClick: () => handleDeleteClick(row),
+          },
         ];
-        
+
         return (
           <div onClick={(e) => e.stopPropagation()}>
             <ContextMenu items={menuItems} trigger="click">
               <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
-                <IconDotsCircleHorizontal size={16} stroke={1.5} className="text-[var(--action-icon-color)]" />
+                <IconDotsCircleHorizontal
+                  size={16}
+                  stroke={1.5}
+                  className="text-[var(--action-icon-color)]"
+                />
               </button>
             </ContextMenu>
           </div>
@@ -321,9 +473,7 @@ export function ComputeAdminVolumesPage() {
 
   // Filter and order columns based on preferences
   const visibleColumns = useMemo(() => {
-    const visibleColumnIds = columnConfig
-      .filter((col) => col.visible)
-      .map((col) => col.id);
+    const visibleColumnIds = columnConfig.filter((col) => col.visible).map((col) => col.id);
 
     const columnMap = new Map(columns.map((col) => [col.key, col]));
 
@@ -334,7 +484,7 @@ export function ComputeAdminVolumesPage() {
 
   return (
     <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
-      <ComputeAdminSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(prev => !prev)} />
+      <ComputeAdminSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen((prev) => !prev)} />
 
       <main
         className={`absolute top-0 bottom-0 right-0 flex flex-col bg-[var(--color-surface-default)] transition-[left] duration-200 ${
@@ -364,10 +514,7 @@ export function ComputeAdminVolumesPage() {
             onForward={() => window.history.forward()}
             breadcrumb={
               <Breadcrumb
-                items={[
-                  { label: 'Compute Admin', href: '/compute-admin' },
-                  { label: 'Volumes' },
-                ]}
+                items={[{ label: 'Compute Admin', href: '/compute-admin' }, { label: 'Volumes' }]}
               />
             }
             actions={
@@ -384,62 +531,76 @@ export function ComputeAdminVolumesPage() {
         <div className="flex-1 overflow-auto overscroll-contain sidebar-scroll">
           {/* Page Content */}
           <div className="pt-4 px-8 pb-6 bg-[var(--color-surface-default)]">
-          <VStack gap={3}>
-            {/* Page Header */}
-            <div className="flex items-center justify-between h-8">
-              <h1 className="text-[length:var(--font-size-16)] font-semibold leading-6 text-[var(--color-text-default)]">
-                Volumes
-              </h1>
-            </div>
+            <VStack gap={3}>
+              {/* Page Header */}
+              <div className="flex items-center justify-between h-8">
+                <h1 className="text-[length:var(--font-size-16)] font-semibold leading-6 text-[var(--color-text-default)]">
+                  Volumes
+                </h1>
+              </div>
 
-            {/* List Toolbar */}
-            <ListToolbar
-              primaryActions={
-                <ListToolbar.Actions>
-                  <FilterSearchInput
-                    filters={filterFields}
-                    appliedFilters={appliedFilters}
-                    onFiltersChange={setAppliedFilters}
-                    placeholder="Search volume by attributes"
-                    className="w-[var(--search-input-width)]"
-                  />
-                  <Button variant="secondary" size="sm" iconOnly icon={<IconDownload size={12} />} aria-label="Download" />
-                </ListToolbar.Actions>
-              }
-              bulkActions={
-                <ListToolbar.Actions>
-                  <Button variant="muted" size="sm" leftIcon={<IconTrash size={12} />} disabled={selectedVolumes.length === 0}>
-                    Delete
-                  </Button>
-                </ListToolbar.Actions>
-              }
-            />
-
-            {/* Pagination */}
-            {filteredVolumes.length > 0 && (
-              <Pagination
-                currentPage={currentPage}
-                totalPages={totalPages}
-                onPageChange={setCurrentPage}
-                showSettings
-                onSettingsClick={() => setIsPreferencesOpen(true)}
-                totalItems={filteredVolumes.length}
-                selectedCount={selectedVolumes.length}
+              {/* List Toolbar */}
+              <ListToolbar
+                primaryActions={
+                  <ListToolbar.Actions>
+                    <FilterSearchInput
+                      filters={filterFields}
+                      appliedFilters={appliedFilters}
+                      onFiltersChange={setAppliedFilters}
+                      placeholder="Search volume by attributes"
+                      className="w-[var(--search-input-width)]"
+                    />
+                    <Button
+                      variant="secondary"
+                      size="sm"
+                      iconOnly
+                      icon={<IconDownload size={12} />}
+                      aria-label="Download"
+                    />
+                  </ListToolbar.Actions>
+                }
+                bulkActions={
+                  <ListToolbar.Actions>
+                    <Button
+                      variant="muted"
+                      size="sm"
+                      leftIcon={<IconTrash size={12} />}
+                      disabled={selectedVolumes.length === 0}
+                    >
+                      Delete
+                    </Button>
+                  </ListToolbar.Actions>
+                }
               />
-            )}
 
-            {/* Volumes Table */}
-            <Table<Volume>
-              columns={visibleColumns}
-              data={filteredVolumes.slice((currentPage - 1) * rowsPerPage, currentPage * rowsPerPage)}
-              rowKey="id"
-              emptyMessage="No volumes found"
-              selectable
-              selectedKeys={selectedVolumes}
-              onSelectionChange={setSelectedVolumes}
-            />
-          </VStack>
-        </div>
+              {/* Pagination */}
+              {filteredVolumes.length > 0 && (
+                <Pagination
+                  currentPage={currentPage}
+                  totalPages={totalPages}
+                  onPageChange={setCurrentPage}
+                  showSettings
+                  onSettingsClick={() => setIsPreferencesOpen(true)}
+                  totalItems={filteredVolumes.length}
+                  selectedCount={selectedVolumes.length}
+                />
+              )}
+
+              {/* Volumes Table */}
+              <Table<Volume>
+                columns={visibleColumns}
+                data={filteredVolumes.slice(
+                  (currentPage - 1) * rowsPerPage,
+                  currentPage * rowsPerPage
+                )}
+                rowKey="id"
+                emptyMessage="No volumes found"
+                selectable
+                selectedKeys={selectedVolumes}
+                onSelectionChange={setSelectedVolumes}
+              />
+            </VStack>
+          </div>
         </div>
       </main>
 
@@ -472,14 +633,17 @@ export function ComputeAdminVolumesPage() {
       <EditVolumeDrawer
         isOpen={editVolumeOpen}
         onClose={() => setEditVolumeOpen(false)}
-        volume={selectedVolumeForDrawer ? {
-          id: selectedVolumeForDrawer.id,
-          name: selectedVolumeForDrawer.name,
-        } : null}
+        volume={
+          selectedVolumeForDrawer
+            ? {
+                id: selectedVolumeForDrawer.id,
+                name: selectedVolumeForDrawer.name,
+              }
+            : null
+        }
       />
     </div>
   );
 }
 
 export default ComputeAdminVolumesPage;
-

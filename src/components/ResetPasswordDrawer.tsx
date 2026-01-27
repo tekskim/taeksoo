@@ -1,10 +1,5 @@
 import { useState, useEffect } from 'react';
-import { 
-  Drawer, 
-  Button, 
-  Radio,
-  Input,
-} from '@/design-system';
+import { Drawer, Button, Radio, Input } from '@/design-system';
 import { HStack, VStack } from '@/design-system/layouts';
 import { IconEye, IconEyeOff, IconCheck, IconX } from '@tabler/icons-react';
 
@@ -41,7 +36,10 @@ const passwordRequirements: PasswordRequirement[] = [
   { label: 'At least one uppercase letter (A-Z)', check: (p) => /[A-Z]/.test(p) },
   { label: 'At least one lowercase letter (a-z)', check: (p) => /[a-z]/.test(p) },
   { label: 'At least one number', check: (p) => /[0-9]/.test(p) },
-  { label: 'At least one special character', check: (p) => /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(p) },
+  {
+    label: 'At least one special character',
+    check: (p) => /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(p),
+  },
 ];
 
 /* ----------------------------------------
@@ -79,7 +77,7 @@ export function ResetPasswordDrawer({
 
   const handleSubmit = async () => {
     if (!canSubmit) return;
-    
+
     setIsSubmitting(true);
     try {
       await onSubmit?.({
@@ -111,15 +109,11 @@ export function ResetPasswordDrawer({
       showCloseButton={false}
       footer={
         <HStack gap={2} className="w-full">
-          <Button 
-            variant="secondary" 
-            onClick={handleClose}
-            className="flex-1 h-8"
-          >
+          <Button variant="secondary" onClick={handleClose} className="flex-1 h-8">
             Cancel
           </Button>
-          <Button 
-            variant="primary" 
+          <Button
+            variant="primary"
             onClick={handleSubmit}
             disabled={isSubmitting || !canSubmit}
             className="flex-1 h-8"
@@ -181,10 +175,7 @@ export function ResetPasswordDrawer({
               </span>
             </label>
             <label className="flex items-center gap-1.5 cursor-pointer">
-              <Radio
-                checked={resetOption === 'manual'}
-                onChange={() => setResetOption('manual')}
-              />
+              <Radio checked={resetOption === 'manual'} onChange={() => setResetOption('manual')} />
               <span className="text-[12px] text-[var(--color-text-default)] leading-4">
                 Set password manually (no email sent)
               </span>
@@ -263,11 +254,17 @@ export function ResetPasswordDrawer({
                   return (
                     <HStack key={index} gap={1.5} align="center">
                       {isMet ? (
-                        <IconCheck size={12} stroke={2} className="text-[var(--color-state-success)]" />
+                        <IconCheck
+                          size={12}
+                          stroke={2}
+                          className="text-[var(--color-state-success)]"
+                        />
                       ) : (
                         <IconX size={12} stroke={2} className="text-[var(--color-text-muted)]" />
                       )}
-                      <span className={`text-[11px] leading-4 ${isMet ? 'text-[var(--color-state-success)]' : 'text-[var(--color-text-muted)]'}`}>
+                      <span
+                        className={`text-[11px] leading-4 ${isMet ? 'text-[var(--color-state-success)]' : 'text-[var(--color-text-muted)]'}`}
+                      >
                         {req.label}
                       </span>
                     </HStack>

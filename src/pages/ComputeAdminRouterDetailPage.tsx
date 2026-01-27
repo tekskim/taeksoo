@@ -83,20 +83,194 @@ interface StaticRoute {
 
 // Router data map by ID - synced with RoutersPage mock data
 const mockRoutersMap: Record<string, RouterDetail> = {
-  '29tgj234': { id: '29tgj234', name: 'router-01', status: 'active', adminState: 'Up', access: 'Project', externalGateway: true, createdAt: '2025-09-15', routerName: 'router-01', availabilityZone: 'nova', availabilityZoneHint: 'zone-01 (+3)', description: '-', network: { name: 'net-01', id: '29tgj234' }, snat: true, subnet: { name: 'subnet-01', id: 'subnet-001' }, gatewayIp: '10.7.60.91' },
-  'router-002': { id: 'router-002', name: 'main-router', status: 'active', adminState: 'Up', access: 'Project', externalGateway: true, createdAt: '2025-09-10', routerName: 'main-router', availabilityZone: 'nova', availabilityZoneHint: 'zone-01', description: 'Main router', network: { name: 'external-net', id: 'net-002' }, snat: true, subnet: { name: 'subnet-02', id: 'subnet-002' }, gatewayIp: '10.7.60.92' },
-  'router-003': { id: 'router-003', name: 'dev-router', status: 'active', adminState: 'Up', access: 'Project', externalGateway: false, createdAt: '2025-09-08', routerName: 'dev-router', availabilityZone: 'nova', availabilityZoneHint: 'zone-02', description: 'Development router', network: { name: '-', id: '' }, snat: false, subnet: { name: '-', id: '' }, gatewayIp: '-' },
-  'router-004': { id: 'router-004', name: 'prod-router', status: 'building', adminState: 'Up', access: 'Project', externalGateway: true, createdAt: '2025-09-05', routerName: 'prod-router', availabilityZone: 'nova', availabilityZoneHint: 'zone-01', description: 'Production router', network: { name: 'prod-net', id: 'net-003' }, snat: true, subnet: { name: 'subnet-03', id: 'subnet-003' }, gatewayIp: '10.7.60.93' },
-  'router-005': { id: 'router-005', name: 'test-router', status: 'active', adminState: 'Down', access: 'Project', externalGateway: false, createdAt: '2025-09-01', routerName: 'test-router', availabilityZone: 'nova', availabilityZoneHint: 'zone-03', description: 'Test router', network: { name: '-', id: '' }, snat: false, subnet: { name: '-', id: '' }, gatewayIp: '-' },
-  'router-006': { id: 'router-006', name: 'backup-router', status: 'active', adminState: 'Up', access: 'Project', externalGateway: true, createdAt: '2025-08-28', routerName: 'backup-router', availabilityZone: 'nova', availabilityZoneHint: 'zone-01', description: 'Backup router', network: { name: 'backup-net', id: 'net-004' }, snat: true, subnet: { name: 'subnet-04', id: 'subnet-004' }, gatewayIp: '10.7.60.94' },
-  'router-007': { id: 'router-007', name: 'dmz-router', status: 'error', adminState: 'Down', access: 'Project', externalGateway: true, createdAt: '2025-08-25', routerName: 'dmz-router', availabilityZone: 'nova', availabilityZoneHint: 'zone-01', description: 'DMZ router', network: { name: 'dmz-net', id: 'net-005' }, snat: true, subnet: { name: 'subnet-05', id: 'subnet-005' }, gatewayIp: '10.7.60.95' },
-  'router-008': { id: 'router-008', name: 'internal-router', status: 'active', adminState: 'Up', access: 'Project', externalGateway: false, createdAt: '2025-08-20', routerName: 'internal-router', availabilityZone: 'nova', availabilityZoneHint: 'zone-02', description: 'Internal router', network: { name: '-', id: '' }, snat: false, subnet: { name: '-', id: '' }, gatewayIp: '-' },
-  'router-009': { id: 'router-009', name: 'edge-router', status: 'active', adminState: 'Up', access: 'Project', externalGateway: true, createdAt: '2025-08-15', routerName: 'edge-router', availabilityZone: 'nova', availabilityZoneHint: 'zone-01', description: 'Edge router', network: { name: 'edge-net', id: 'net-006' }, snat: true, subnet: { name: 'subnet-06', id: 'subnet-006' }, gatewayIp: '10.7.60.96' },
-  'router-010': { id: 'router-010', name: 'vpn-router', status: 'active', adminState: 'Up', access: 'Project', externalGateway: true, createdAt: '2025-08-10', routerName: 'vpn-router', availabilityZone: 'nova', availabilityZoneHint: 'zone-01', description: 'VPN router', network: { name: 'vpn-net', id: 'net-007' }, snat: true, subnet: { name: 'subnet-07', id: 'subnet-007' }, gatewayIp: '10.7.60.97' },
+  '29tgj234': {
+    id: '29tgj234',
+    name: 'router-01',
+    status: 'active',
+    adminState: 'Up',
+    access: 'Project',
+    externalGateway: true,
+    createdAt: '2025-09-15',
+    routerName: 'router-01',
+    availabilityZone: 'nova',
+    availabilityZoneHint: 'zone-01 (+3)',
+    description: '-',
+    network: { name: 'net-01', id: '29tgj234' },
+    snat: true,
+    subnet: { name: 'subnet-01', id: 'subnet-001' },
+    gatewayIp: '10.7.60.91',
+  },
+  'router-002': {
+    id: 'router-002',
+    name: 'main-router',
+    status: 'active',
+    adminState: 'Up',
+    access: 'Project',
+    externalGateway: true,
+    createdAt: '2025-09-10',
+    routerName: 'main-router',
+    availabilityZone: 'nova',
+    availabilityZoneHint: 'zone-01',
+    description: 'Main router',
+    network: { name: 'external-net', id: 'net-002' },
+    snat: true,
+    subnet: { name: 'subnet-02', id: 'subnet-002' },
+    gatewayIp: '10.7.60.92',
+  },
+  'router-003': {
+    id: 'router-003',
+    name: 'dev-router',
+    status: 'active',
+    adminState: 'Up',
+    access: 'Project',
+    externalGateway: false,
+    createdAt: '2025-09-08',
+    routerName: 'dev-router',
+    availabilityZone: 'nova',
+    availabilityZoneHint: 'zone-02',
+    description: 'Development router',
+    network: { name: '-', id: '' },
+    snat: false,
+    subnet: { name: '-', id: '' },
+    gatewayIp: '-',
+  },
+  'router-004': {
+    id: 'router-004',
+    name: 'prod-router',
+    status: 'building',
+    adminState: 'Up',
+    access: 'Project',
+    externalGateway: true,
+    createdAt: '2025-09-05',
+    routerName: 'prod-router',
+    availabilityZone: 'nova',
+    availabilityZoneHint: 'zone-01',
+    description: 'Production router',
+    network: { name: 'prod-net', id: 'net-003' },
+    snat: true,
+    subnet: { name: 'subnet-03', id: 'subnet-003' },
+    gatewayIp: '10.7.60.93',
+  },
+  'router-005': {
+    id: 'router-005',
+    name: 'test-router',
+    status: 'active',
+    adminState: 'Down',
+    access: 'Project',
+    externalGateway: false,
+    createdAt: '2025-09-01',
+    routerName: 'test-router',
+    availabilityZone: 'nova',
+    availabilityZoneHint: 'zone-03',
+    description: 'Test router',
+    network: { name: '-', id: '' },
+    snat: false,
+    subnet: { name: '-', id: '' },
+    gatewayIp: '-',
+  },
+  'router-006': {
+    id: 'router-006',
+    name: 'backup-router',
+    status: 'active',
+    adminState: 'Up',
+    access: 'Project',
+    externalGateway: true,
+    createdAt: '2025-08-28',
+    routerName: 'backup-router',
+    availabilityZone: 'nova',
+    availabilityZoneHint: 'zone-01',
+    description: 'Backup router',
+    network: { name: 'backup-net', id: 'net-004' },
+    snat: true,
+    subnet: { name: 'subnet-04', id: 'subnet-004' },
+    gatewayIp: '10.7.60.94',
+  },
+  'router-007': {
+    id: 'router-007',
+    name: 'dmz-router',
+    status: 'error',
+    adminState: 'Down',
+    access: 'Project',
+    externalGateway: true,
+    createdAt: '2025-08-25',
+    routerName: 'dmz-router',
+    availabilityZone: 'nova',
+    availabilityZoneHint: 'zone-01',
+    description: 'DMZ router',
+    network: { name: 'dmz-net', id: 'net-005' },
+    snat: true,
+    subnet: { name: 'subnet-05', id: 'subnet-005' },
+    gatewayIp: '10.7.60.95',
+  },
+  'router-008': {
+    id: 'router-008',
+    name: 'internal-router',
+    status: 'active',
+    adminState: 'Up',
+    access: 'Project',
+    externalGateway: false,
+    createdAt: '2025-08-20',
+    routerName: 'internal-router',
+    availabilityZone: 'nova',
+    availabilityZoneHint: 'zone-02',
+    description: 'Internal router',
+    network: { name: '-', id: '' },
+    snat: false,
+    subnet: { name: '-', id: '' },
+    gatewayIp: '-',
+  },
+  'router-009': {
+    id: 'router-009',
+    name: 'edge-router',
+    status: 'active',
+    adminState: 'Up',
+    access: 'Project',
+    externalGateway: true,
+    createdAt: '2025-08-15',
+    routerName: 'edge-router',
+    availabilityZone: 'nova',
+    availabilityZoneHint: 'zone-01',
+    description: 'Edge router',
+    network: { name: 'edge-net', id: 'net-006' },
+    snat: true,
+    subnet: { name: 'subnet-06', id: 'subnet-006' },
+    gatewayIp: '10.7.60.96',
+  },
+  'router-010': {
+    id: 'router-010',
+    name: 'vpn-router',
+    status: 'active',
+    adminState: 'Up',
+    access: 'Project',
+    externalGateway: true,
+    createdAt: '2025-08-10',
+    routerName: 'vpn-router',
+    availabilityZone: 'nova',
+    availabilityZoneHint: 'zone-01',
+    description: 'VPN router',
+    network: { name: 'vpn-net', id: 'net-007' },
+    snat: true,
+    subnet: { name: 'subnet-07', id: 'subnet-007' },
+    gatewayIp: '10.7.60.97',
+  },
 };
 
 const defaultRouterDetail: RouterDetail = {
-  id: 'unknown', name: 'Unknown Router', status: 'active', adminState: 'Up', access: 'Project', externalGateway: false, createdAt: '-', routerName: '-', availabilityZone: '-', availabilityZoneHint: '-', description: '-', network: { name: '-', id: '' }, snat: false, subnet: { name: '-', id: '' }, gatewayIp: '-',
+  id: 'unknown',
+  name: 'Unknown Router',
+  status: 'active',
+  adminState: 'Up',
+  access: 'Project',
+  externalGateway: false,
+  createdAt: '-',
+  routerName: '-',
+  availabilityZone: '-',
+  availabilityZoneHint: '-',
+  description: '-',
+  network: { name: '-', id: '' },
+  snat: false,
+  subnet: { name: '-', id: '' },
+  gatewayIp: '-',
 };
 
 const mockPorts: Port[] = Array.from({ length: 115 }, (_, i) => ({
@@ -119,15 +293,15 @@ const mockStaticRoutes: StaticRoute[] = Array.from({ length: 115 }, (_, i) => ({
    ---------------------------------------- */
 
 const routerStatusMap: Record<RouterStatus, 'active' | 'building' | 'error'> = {
-  'active': 'active',
-  'building': 'building',
-  'error': 'error',
+  active: 'active',
+  building: 'building',
+  error: 'error',
 };
 
 const portStatusMap: Record<PortStatus, 'active' | 'building' | 'shutoff'> = {
-  'active': 'active',
-  'build': 'building',
-  'down': 'shutoff',
+  active: 'active',
+  build: 'building',
+  down: 'shutoff',
 };
 
 /* ----------------------------------------
@@ -136,11 +310,12 @@ const portStatusMap: Record<PortStatus, 'active' | 'building' | 'shutoff'> = {
 
 export default function RouterDetailPage() {
   const { id } = useParams<{ id: string }>();
-  const { tabs, activeTabId, closeTab, selectTab, addNewTab, updateActiveTabLabel, moveTab } = useTabs();
-  
+  const { tabs, activeTabId, closeTab, selectTab, addNewTab, updateActiveTabLabel, moveTab } =
+    useTabs();
+
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [activeDetailTab, setActiveDetailTab] = useState('details');
-  
+
   // Port state
   const [portSearchTerm, setPortSearchTerm] = useState('');
   const [portCurrentPage, setPortCurrentPage] = useState(1);
@@ -148,18 +323,18 @@ export default function RouterDetailPage() {
   const [portSortDirection, setPortSortDirection] = useState<'asc' | 'desc'>('asc');
   const [selectedPorts, setSelectedPorts] = useState<string[]>([]);
   const portsPerPage = 10;
-  
+
   // Static route state
   const [routeSearchTerm, setRouteSearchTerm] = useState('');
   const [routeCurrentPage, setRouteCurrentPage] = useState(1);
   const [selectedRoutes, setSelectedRoutes] = useState<string[]>([]);
   const routesPerPage = 10;
-  
+
   // Preferences state
   const [isPreferencesOpen, setIsPreferencesOpen] = useState(false);
 
   // Get router data based on URL ID
-  const router = id ? (mockRoutersMap[id] || defaultRouterDetail) : defaultRouterDetail;
+  const router = id ? mockRoutersMap[id] || defaultRouterDetail : defaultRouterDetail;
   const ports = mockPorts;
   const staticRoutes = mockStaticRoutes;
 
@@ -185,10 +360,11 @@ export default function RouterDetailPage() {
 
   // Filter and paginate ports
   const filteredPorts = useMemo(() => {
-    return ports.filter(port =>
-      port.name.toLowerCase().includes(portSearchTerm.toLowerCase()) ||
-      port.id.toLowerCase().includes(portSearchTerm.toLowerCase()) ||
-      port.macAddress.toLowerCase().includes(portSearchTerm.toLowerCase())
+    return ports.filter(
+      (port) =>
+        port.name.toLowerCase().includes(portSearchTerm.toLowerCase()) ||
+        port.id.toLowerCase().includes(portSearchTerm.toLowerCase()) ||
+        port.macAddress.toLowerCase().includes(portSearchTerm.toLowerCase())
     );
   }, [ports, portSearchTerm]);
 
@@ -197,10 +373,10 @@ export default function RouterDetailPage() {
     sorted.sort((a, b) => {
       const aValue = a[portSortBy as keyof Port];
       const bValue = b[portSortBy as keyof Port];
-      
+
       if (typeof aValue === 'string' && typeof bValue === 'string') {
-        return portSortDirection === 'asc' 
-          ? aValue.localeCompare(bValue) 
+        return portSortDirection === 'asc'
+          ? aValue.localeCompare(bValue)
           : bValue.localeCompare(aValue);
       }
       return 0;
@@ -217,7 +393,7 @@ export default function RouterDetailPage() {
 
   const handlePortSort = (key: string) => {
     if (portSortBy === key) {
-      setPortSortDirection(prev => prev === 'asc' ? 'desc' : 'asc');
+      setPortSortDirection((prev) => (prev === 'asc' ? 'desc' : 'asc'));
     } else {
       setPortSortBy(key);
       setPortSortDirection('asc');
@@ -226,9 +402,10 @@ export default function RouterDetailPage() {
 
   // Filter and paginate static routes
   const filteredRoutes = useMemo(() => {
-    return staticRoutes.filter(route =>
-      route.destination.toLowerCase().includes(routeSearchTerm.toLowerCase()) ||
-      route.nextHop.toLowerCase().includes(routeSearchTerm.toLowerCase())
+    return staticRoutes.filter(
+      (route) =>
+        route.destination.toLowerCase().includes(routeSearchTerm.toLowerCase()) ||
+        route.nextHop.toLowerCase().includes(routeSearchTerm.toLowerCase())
     );
   }, [staticRoutes, routeSearchTerm]);
 
@@ -246,9 +423,7 @@ export default function RouterDetailPage() {
       label: 'Status',
       width: '64px',
       align: 'center',
-      render: (_, row) => (
-        <StatusIndicator status={portStatusMap[row.status]} layout="icon-only" />
-      ),
+      render: (_, row) => <StatusIndicator status={portStatusMap[row.status]} layout="icon-only" />,
     },
     {
       key: 'name',
@@ -264,7 +439,10 @@ export default function RouterDetailPage() {
             >
               {row.name}
             </Link>
-            <IconExternalLink size={12} className="flex-shrink-0 text-[var(--color-action-primary)]" />
+            <IconExternalLink
+              size={12}
+              className="flex-shrink-0 text-[var(--color-action-primary)]"
+            />
           </div>
           <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] truncate">
             ID : {row.id}
@@ -294,13 +472,22 @@ export default function RouterDetailPage() {
       align: 'center',
       render: (_: unknown, row: Port) => {
         const portMenuItems: ContextMenuItem[] = [
-          { id: 'disconnect', label: 'Disconnect', status: 'danger', onClick: () => console.log('Disconnect port', row.id) },
+          {
+            id: 'disconnect',
+            label: 'Disconnect',
+            status: 'danger',
+            onClick: () => console.log('Disconnect port', row.id),
+          },
         ];
         return (
           <div onClick={(e) => e.stopPropagation()}>
             <ContextMenu items={portMenuItems} trigger="click">
               <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
-                <IconDotsCircleHorizontal size={16} stroke={1.5} className="text-[var(--action-icon-color)]" />
+                <IconDotsCircleHorizontal
+                  size={16}
+                  stroke={1.5}
+                  className="text-[var(--action-icon-color)]"
+                />
               </button>
             </ContextMenu>
           </div>
@@ -329,13 +516,22 @@ export default function RouterDetailPage() {
       align: 'center',
       render: (_: unknown, row: StaticRoute) => {
         const routeMenuItems: ContextMenuItem[] = [
-          { id: 'delete', label: 'Delete', status: 'danger', onClick: () => console.log('Delete route', row.id) },
+          {
+            id: 'delete',
+            label: 'Delete',
+            status: 'danger',
+            onClick: () => console.log('Delete route', row.id),
+          },
         ];
         return (
           <div onClick={(e) => e.stopPropagation()}>
             <ContextMenu items={routeMenuItems} trigger="click">
               <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
-                <IconDotsCircleHorizontal size={16} stroke={1.5} className="text-[var(--action-icon-color)]" />
+                <IconDotsCircleHorizontal
+                  size={16}
+                  stroke={1.5}
+                  className="text-[var(--action-icon-color)]"
+                />
               </button>
             </ContextMenu>
           </div>
@@ -347,7 +543,7 @@ export default function RouterDetailPage() {
   return (
     <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
       <ComputeAdminSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
-      
+
       <main
         className={`absolute top-0 bottom-0 right-0 flex flex-col bg-[var(--color-surface-default)] transition-[left] duration-200 ${
           sidebarOpen ? 'left-[var(--layout-sidebar-width)]' : 'left-0'
@@ -411,9 +607,9 @@ export default function RouterDetailPage() {
                     ]}
                     trigger="click"
                   >
-                  <Button variant="secondary" size="sm" rightIcon={<IconChevronDown size={12} />}>
-                    More Actions
-                  </Button>
+                    <Button variant="secondary" size="sm" rightIcon={<IconChevronDown size={12} />}>
+                      More Actions
+                    </Button>
                   </ContextMenu>
                 </DetailHeader.Actions>
                 <DetailHeader.InfoGrid>
@@ -425,14 +621,22 @@ export default function RouterDetailPage() {
                   <DetailHeader.InfoCard label="ID" value={router.id} copyable />
                   <DetailHeader.InfoCard label="Admin state" value={router.adminState} />
                   <DetailHeader.InfoCard label="Access" value={router.access} />
-                  <DetailHeader.InfoCard label="External gateway" value={router.externalGateway ? 'Yes' : 'No'} />
+                  <DetailHeader.InfoCard
+                    label="External gateway"
+                    value={router.externalGateway ? 'Yes' : 'No'}
+                  />
                   <DetailHeader.InfoCard label="Created at" value={router.createdAt} />
                 </DetailHeader.InfoGrid>
               </DetailHeader>
 
               {/* Router Tabs */}
               <div className="w-full">
-                <Tabs value={activeDetailTab} onChange={setActiveDetailTab} variant="underline" size="sm">
+                <Tabs
+                  value={activeDetailTab}
+                  onChange={setActiveDetailTab}
+                  variant="underline"
+                  size="sm"
+                >
                   <TabList>
                     <Tab value="details">Details</Tab>
                     <Tab value="ports">Ports</Tab>
@@ -444,8 +648,8 @@ export default function RouterDetailPage() {
                     <VStack gap={4} className="pt-4">
                       {/* Basic information */}
                       <SectionCard>
-                        <SectionCard.Header 
-                          title="Basic information" 
+                        <SectionCard.Header
+                          title="Basic information"
                           actions={
                             <Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />}>
                               Edit
@@ -454,25 +658,35 @@ export default function RouterDetailPage() {
                         />
                         <SectionCard.Content>
                           <SectionCard.DataRow label="Router name" value={router.routerName} />
-                          <SectionCard.DataRow label="AZ(Availability zone)" value={router.availabilityZone} />
-                          <SectionCard.DataRow label="AZ(Availability zone) Hint" value={router.availabilityZoneHint} />
+                          <SectionCard.DataRow
+                            label="AZ(Availability zone)"
+                            value={router.availabilityZone}
+                          />
+                          <SectionCard.DataRow
+                            label="AZ(Availability zone) Hint"
+                            value={router.availabilityZoneHint}
+                          />
                           <SectionCard.DataRow label="Description" value={router.description} />
                         </SectionCard.Content>
                       </SectionCard>
 
                       {/* External network */}
                       <SectionCard>
-                        <SectionCard.Header 
-                          title="External network" 
+                        <SectionCard.Header
+                          title="External network"
                           actions={
-                            <Button variant="secondary" size="sm" leftIcon={<IconSettings size={12} />}>
+                            <Button
+                              variant="secondary"
+                              size="sm"
+                              leftIcon={<IconSettings size={12} />}
+                            >
                               Setting
                             </Button>
                           }
                         />
                         <SectionCard.Content>
-                          <SectionCard.DataRow 
-                            label="Network" 
+                          <SectionCard.DataRow
+                            label="Network"
                             value={
                               router.network ? (
                                 <Link
@@ -480,14 +694,19 @@ export default function RouterDetailPage() {
                                   className="inline-flex items-center gap-1.5 font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
                                 >
                                   {router.network.name}
-                                  <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
+                                  <IconExternalLink
+                                    size={12}
+                                    className="text-[var(--color-action-primary)]"
+                                  />
                                 </Link>
-                              ) : '-'
-                            } 
+                              ) : (
+                                '-'
+                              )
+                            }
                           />
                           <SectionCard.DataRow label="SNAT" value={router.snat ? 'Yes' : 'No'} />
-                          <SectionCard.DataRow 
-                            label="Subnet" 
+                          <SectionCard.DataRow
+                            label="Subnet"
                             value={
                               router.subnet ? (
                                 <Link
@@ -495,10 +714,15 @@ export default function RouterDetailPage() {
                                   className="inline-flex items-center gap-1.5 font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
                                 >
                                   {router.subnet.name}
-                                  <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
+                                  <IconExternalLink
+                                    size={12}
+                                    className="text-[var(--color-action-primary)]"
+                                  />
                                 </Link>
-                              ) : '-'
-                            } 
+                              ) : (
+                                '-'
+                              )
+                            }
                           />
                           <SectionCard.DataRow label="Gateway IPP" value={router.gatewayIp} />
                         </SectionCard.Content>
@@ -514,7 +738,11 @@ export default function RouterDetailPage() {
                         <h3 className="text-[16px] leading-[24px] font-semibold text-[var(--color-text-default)]">
                           Ports
                         </h3>
-                        <Button variant="secondary" size="sm" leftIcon={<IconCirclePlus size={12} />}>
+                        <Button
+                          variant="secondary"
+                          size="sm"
+                          leftIcon={<IconCirclePlus size={12} />}
+                        >
                           Connect subnet
                         </Button>
                       </div>
@@ -532,9 +760,9 @@ export default function RouterDetailPage() {
                           />
                         </div>
                         <div className="h-4 w-px bg-[var(--color-border-default)]" />
-                        <Button 
-                          variant="secondary" 
-                          size="sm" 
+                        <Button
+                          variant="secondary"
+                          size="sm"
                           leftIcon={<IconLink size={12} />}
                           disabled={selectedPorts.length === 0}
                         >
@@ -574,7 +802,11 @@ export default function RouterDetailPage() {
                         <h3 className="text-[16px] leading-[24px] font-semibold text-[var(--color-text-default)]">
                           Static Route
                         </h3>
-                        <Button variant="secondary" size="sm" leftIcon={<IconCirclePlus size={12} />}>
+                        <Button
+                          variant="secondary"
+                          size="sm"
+                          leftIcon={<IconCirclePlus size={12} />}
+                        >
                           Create static Route
                         </Button>
                       </div>
@@ -592,9 +824,9 @@ export default function RouterDetailPage() {
                           />
                         </div>
                         <div className="h-4 w-px bg-[var(--color-border-default)]" />
-                        <Button 
-                          variant="secondary" 
-                          size="sm" 
+                        <Button
+                          variant="secondary"
+                          size="sm"
                           leftIcon={<IconTrash size={12} />}
                           disabled
                         >
@@ -631,4 +863,3 @@ export default function RouterDetailPage() {
     </div>
   );
 }
-

@@ -56,14 +56,7 @@ export interface ListToolbarDividerProps {
 }
 
 export function ListToolbarDivider({ className }: ListToolbarDividerProps) {
-  return (
-    <div 
-      className={twMerge(
-        'h-4 w-px bg-[var(--color-border-default)]',
-        className
-      )} 
-    />
-  );
+  return <div className={twMerge('h-4 w-px bg-[var(--color-border-default)]', className)} />;
 }
 
 export interface ListToolbarFiltersProps {
@@ -165,4 +158,3 @@ ListToolbar.Divider = ListToolbarDivider;
 ListToolbar.Filters = ListToolbarFilters;
 
 export default ListToolbar;
-

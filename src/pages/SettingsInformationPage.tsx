@@ -1,10 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import {
-  VStack,
-  TabBar,
-  SectionCard,
-  DetailHeader,
-} from '@/design-system';
+import { VStack, TabBar, SectionCard, DetailHeader } from '@/design-system';
 import { SettingsSidebar } from '@/components/SettingsSidebar';
 import { useDarkMode } from '@/hooks/useDarkMode';
 import { IconExternalLink } from '@tabler/icons-react';
@@ -30,13 +25,9 @@ export default function SettingsInformationPage() {
       <div className="relative flex items-center w-full h-[var(--tabbar-height)] bg-[var(--color-surface-default)] shrink-0 after:absolute after:bottom-0 after:left-0 after:right-0 after:h-px after:bg-[var(--color-border-default)]">
         {/* Logo Area */}
         <div className="w-[200px] h-full px-3 flex items-center">
-          <img 
-            src={isDark ? ThakiLogoDark : ThakiLogoLight} 
-            alt="THAKI Cloud" 
-            className="h-4"
-          />
+          <img src={isDark ? ThakiLogoDark : ThakiLogoLight} alt="THAKI Cloud" className="h-4" />
         </div>
-        
+
         {/* TabBar (Window controls only) */}
         <div className="flex-1">
           <TabBar
@@ -88,19 +79,19 @@ export default function SettingsInformationPage() {
                   <SectionCard.Header title="Terms" />
                   <SectionCard.Content>
                     <div className="flex flex-col gap-2">
-                      <a 
-                        href="https://thaki.cloud/terms" 
-                        target="_blank" 
-                        rel="noopener noreferrer" 
+                      <a
+                        href="https://thaki.cloud/terms"
+                        target="_blank"
+                        rel="noopener noreferrer"
                         className="inline-flex items-center gap-1.5 text-sm font-medium text-[var(--color-action-primary)] hover:underline w-fit"
                       >
                         Terms of Service
                         <IconExternalLink size={14} stroke={1.5} />
                       </a>
-                      <a 
-                        href="https://thaki.cloud/privacy" 
-                        target="_blank" 
-                        rel="noopener noreferrer" 
+                      <a
+                        href="https://thaki.cloud/privacy"
+                        target="_blank"
+                        rel="noopener noreferrer"
                         className="inline-flex items-center gap-1.5 text-sm font-medium text-[var(--color-action-primary)] hover:underline w-fit"
                       >
                         Privacy Policy
@@ -115,19 +106,19 @@ export default function SettingsInformationPage() {
                   <SectionCard.Header title="Support" />
                   <SectionCard.Content>
                     <div className="flex flex-col gap-2">
-                      <a 
-                        href="https://thaki.cloud" 
-                        target="_blank" 
-                        rel="noopener noreferrer" 
+                      <a
+                        href="https://thaki.cloud"
+                        target="_blank"
+                        rel="noopener noreferrer"
                         className="inline-flex items-center gap-1.5 text-sm font-medium text-[var(--color-action-primary)] hover:underline w-fit"
                       >
                         Official Website
                         <IconExternalLink size={14} stroke={1.5} />
                       </a>
-                      <a 
-                        href="https://support.thaki.cloud" 
-                        target="_blank" 
-                        rel="noopener noreferrer" 
+                      <a
+                        href="https://support.thaki.cloud"
+                        target="_blank"
+                        rel="noopener noreferrer"
                         className="inline-flex items-center gap-1.5 text-sm font-medium text-[var(--color-action-primary)] hover:underline w-fit"
                       >
                         Support Center

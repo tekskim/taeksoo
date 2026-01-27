@@ -160,7 +160,7 @@ const mockPersistentVolumeClaimData: Record<string, PersistentVolumeClaimData> =
     namespace: 'database',
     createdAt: '2025-11-09 14:30',
     labels: {
-      'app': 'postgres',
+      app: 'postgres',
     },
     annotations: {
       'pv.kubernetes.io/bind-completed': 'yes',
@@ -205,7 +205,7 @@ const mockPersistentVolumeClaimData: Record<string, PersistentVolumeClaimData> =
     namespace: 'cache',
     createdAt: '2025-11-08 09:15',
     labels: {
-      'app': 'redis',
+      app: 'redis',
     },
     annotations: {},
     source: 'existing-pv',
@@ -301,7 +301,7 @@ const mockPersistentVolumeClaimData: Record<string, PersistentVolumeClaimData> =
     namespace: 'logging',
     createdAt: '2025-11-07 16:45',
     labels: {
-      'app': 'elasticsearch',
+      app: 'elasticsearch',
     },
     annotations: {
       'pv.kubernetes.io/bind-completed': 'yes',
@@ -349,7 +349,16 @@ export function PersistentVolumeClaimDetailPage() {
   const { pvcId } = useParams<{ pvcId: string }>();
   const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(true);
-  const { tabs, activeTabId, selectTab, closeTab, addNewTab, moveTab, addTab, updateActiveTabLabel } = useTabs();
+  const {
+    tabs,
+    activeTabId,
+    selectTab,
+    closeTab,
+    addNewTab,
+    moveTab,
+    addTab,
+    updateActiveTabLabel,
+  } = useTabs();
   const [activeTab, setActiveTab] = useState('volume-claim');
   const [selectedEventKeys, setSelectedEventKeys] = useState<string[]>([]);
 
@@ -446,7 +455,7 @@ export function PersistentVolumeClaimDetailPage() {
       >
         {/* Tab Bar */}
         <TabBar
-          tabs={tabs.map(tab => ({ id: tab.id, label: tab.label, closable: tab.closable }))}
+          tabs={tabs.map((tab) => ({ id: tab.id, label: tab.label, closable: tab.closable }))}
           activeTab={activeTabId}
           onTabChange={selectTab}
           onTabClose={closeTab}
@@ -469,7 +478,7 @@ export function PersistentVolumeClaimDetailPage() {
           }
           actions={
             <>
-              <button 
+              <button
                 className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
                 onClick={() => {
                   if (shellPanel.isExpanded) {
@@ -479,7 +488,15 @@ export function PersistentVolumeClaimDetailPage() {
                   }
                 }}
               >
-                <IconTerminal2 size={16} className={shellPanel.isExpanded ? "text-[var(--color-action-primary)]" : "text-[var(--color-text-muted)]"} stroke={1.5} />
+                <IconTerminal2
+                  size={16}
+                  className={
+                    shellPanel.isExpanded
+                      ? 'text-[var(--color-action-primary)]'
+                      : 'text-[var(--color-text-muted)]'
+                  }
+                  stroke={1.5}
+                />
               </button>
               <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
                 <IconFile size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
@@ -498,7 +515,7 @@ export function PersistentVolumeClaimDetailPage() {
         />
 
         {/* Content Area */}
-        <div 
+        <div
           className="flex-1 overflow-auto min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll"
           style={{ paddingBottom: shellPanel.isExpanded ? 'var(--shell-panel-height)' : '0' }}
         >
@@ -526,14 +543,14 @@ export function PersistentVolumeClaimDetailPage() {
                       pvcData.status === 'Bound'
                         ? 'active'
                         : pvcData.status === 'Pending'
-                        ? 'pending'
-                        : 'error'
+                          ? 'pending'
+                          : 'error'
                     }
                   />
                   <DetailHeader.InfoCard
                     label="Namespace"
                     value={
-                      <span 
+                      <span
                         className="text-[12px] text-[var(--color-action-primary)] cursor-pointer hover:underline"
                         onClick={() => navigate(`/container/namespaces/${pvcData.namespace}`)}
                       >
@@ -541,18 +558,17 @@ export function PersistentVolumeClaimDetailPage() {
                       </span>
                     }
                   />
-                  <DetailHeader.InfoCard
-                    label="Created At"
-                    value={pvcData.createdAt}
-                  />
+                  <DetailHeader.InfoCard label="Created At" value={pvcData.createdAt} />
                   <DetailHeader.InfoCard
                     label={`Labels (${labelsCount})`}
                     value={
                       labelsCount > 0 ? (
                         <div className="flex flex-wrap items-center gap-1 min-w-0">
-                          {Object.entries(pvcData.labels).slice(0, 1).map(([key, val]) => (
-                            <Chip key={key} value={`${key}: ${val}`} maxWidth="100%" />
-                          ))}
+                          {Object.entries(pvcData.labels)
+                            .slice(0, 1)
+                            .map(([key, val]) => (
+                              <Chip key={key} value={`${key}: ${val}`} maxWidth="100%" />
+                            ))}
                           {labelsCount > 1 && (
                             <span className="text-[11px] text-[var(--color-text-default)] cursor-pointer hover:underline">
                               (+{labelsCount - 1})
@@ -569,9 +585,11 @@ export function PersistentVolumeClaimDetailPage() {
                     value={
                       annotationsCount > 0 ? (
                         <div className="flex flex-wrap items-center gap-1 min-w-0">
-                          {Object.entries(pvcData.annotations).slice(0, 1).map(([key, val]) => (
-                            <Chip key={key} value={`${key}: ${val}`} maxWidth="100%" />
-                          ))}
+                          {Object.entries(pvcData.annotations)
+                            .slice(0, 1)
+                            .map(([key, val]) => (
+                              <Chip key={key} value={`${key}: ${val}`} maxWidth="100%" />
+                            ))}
                           {annotationsCount > 1 && (
                             <span className="text-[11px] text-[var(--color-text-default)] cursor-pointer hover:underline">
                               (+{annotationsCount - 1})
@@ -605,65 +623,63 @@ export function PersistentVolumeClaimDetailPage() {
                       <h3 className="text-[16px] font-semibold leading-[24px] text-[var(--color-text-default)]">
                         Volume Claim
                       </h3>
-                        {/* Source */}
-                        <VStack gap={1.5} align="start">
-                          <h4 className="text-[14px] font-medium text-[var(--color-text-default)]">
-                            Source
-                          </h4>
-                          <RadioGroup
-                            value={pvcData.source}
-                            onChange={() => {}}
-                          >
-                            <VStack gap={1} align="start">
-                              <Radio
-                                value="storage-class"
-                                label="Use a Storage Class to provision a new Persistent Volume"
-                                disabled
-                              />
-                              <Radio
-                                value="existing-pv"
-                                label="Use an existing Persistent Volume"
-                                disabled
-                              />
-                            </VStack>
-                          </RadioGroup>
-                        </VStack>
+                      {/* Source */}
+                      <VStack gap={1.5} align="start">
+                        <h4 className="text-[14px] font-medium text-[var(--color-text-default)]">
+                          Source
+                        </h4>
+                        <RadioGroup value={pvcData.source} onChange={() => {}}>
+                          <VStack gap={1} align="start">
+                            <Radio
+                              value="storage-class"
+                              label="Use a Storage Class to provision a new Persistent Volume"
+                              disabled
+                            />
+                            <Radio
+                              value="existing-pv"
+                              label="Use an existing Persistent Volume"
+                              disabled
+                            />
+                          </VStack>
+                        </RadioGroup>
+                      </VStack>
 
-                        {/* Storage Class */}
-                        <VStack gap={2} align="start" className="w-full">
-                          <label className="text-[11px] font-medium text-[var(--color-text-default)]">
-                            Storage Class
-                          </label>
-                          <Select
-                            options={storageClassOptions}
-                            value={pvcData.storageClass}
-                            onChange={() => {}}
-                            placeholder="Default Storage Class"
-                            fullWidth
-                            disabled
-                          />
-                        </VStack>
+                      {/* Storage Class */}
+                      <VStack gap={2} align="start" className="w-full">
+                        <label className="text-[11px] font-medium text-[var(--color-text-default)]">
+                          Storage Class
+                        </label>
+                        <Select
+                          options={storageClassOptions}
+                          value={pvcData.storageClass}
+                          onChange={() => {}}
+                          placeholder="Default Storage Class"
+                          fullWidth
+                          disabled
+                        />
+                      </VStack>
 
-                        {/* Request Storage */}
-                        <VStack gap={2} align="start" className="w-full">
-                          <label className="text-[14px] font-medium text-[var(--color-text-default)]">
-                            Request Storage <span className="text-[var(--color-state-warning)]">*</span>
-                          </label>
-                          <div className="flex items-center gap-3 w-full">
-                            <div className="flex-1">
-                              <NumberInput
-                                value={pvcData.requestStorage}
-                                onChange={() => {}}
-                                min={1}
-                                fullWidth
-                                disabled
-                              />
-                            </div>
-                            <span className="text-[12px] text-[var(--color-text-default)]">
-                              {pvcData.storageUnit}
-                            </span>
+                      {/* Request Storage */}
+                      <VStack gap={2} align="start" className="w-full">
+                        <label className="text-[14px] font-medium text-[var(--color-text-default)]">
+                          Request Storage{' '}
+                          <span className="text-[var(--color-state-warning)]">*</span>
+                        </label>
+                        <div className="flex items-center gap-3 w-full">
+                          <div className="flex-1">
+                            <NumberInput
+                              value={pvcData.requestStorage}
+                              onChange={() => {}}
+                              min={1}
+                              fullWidth
+                              disabled
+                            />
                           </div>
-                        </VStack>
+                          <span className="text-[12px] text-[var(--color-text-default)]">
+                            {pvcData.storageUnit}
+                          </span>
+                        </div>
+                      </VStack>
                     </VStack>
                   </div>
                 </TabPanel>
@@ -773,70 +789,72 @@ export function PersistentVolumeClaimDetailPage() {
                         Labels & Annotations
                       </h3>
                       {/* Labels Section */}
-                        <VStack gap={4} align="start" className="w-full">
-                          <h4 className="text-[14px] font-medium text-[var(--color-text-default)]">
-                            Labels
-                          </h4>
-                          <VStack gap={2} align="start" className="w-full">
-                            {labelsCount > 0 ? (
-                              Object.entries(pvcData.labels).map(([key, val]) => (
-                                <div key={key} className="flex gap-2 w-full">
-                                  <div className="flex-1">
-                                    <label className="text-[11px] font-medium text-[var(--color-text-default)] mb-2 block">
-                                      Key
-                                    </label>
-                                    <div className="w-full h-[36px] px-[10px] py-[8px] bg-[var(--color-border-default)] border border-[var(--color-border-strong)] rounded-[6px] text-[12px] text-[var(--color-text-default)]">
-                                      {key}
-                                    </div>
-                                  </div>
-                                  <div className="flex-1">
-                                    <label className="text-[11px] font-medium text-[var(--color-text-default)] mb-2 block">
-                                      Value
-                                    </label>
-                                    <div className="w-full h-[36px] px-[10px] py-[8px] bg-[var(--color-border-default)] border border-[var(--color-border-strong)] rounded-[6px] text-[12px] text-[var(--color-text-default)]">
-                                      {val}
-                                    </div>
+                      <VStack gap={4} align="start" className="w-full">
+                        <h4 className="text-[14px] font-medium text-[var(--color-text-default)]">
+                          Labels
+                        </h4>
+                        <VStack gap={2} align="start" className="w-full">
+                          {labelsCount > 0 ? (
+                            Object.entries(pvcData.labels).map(([key, val]) => (
+                              <div key={key} className="flex gap-2 w-full">
+                                <div className="flex-1">
+                                  <label className="text-[11px] font-medium text-[var(--color-text-default)] mb-2 block">
+                                    Key
+                                  </label>
+                                  <div className="w-full h-[36px] px-[10px] py-[8px] bg-[var(--color-border-default)] border border-[var(--color-border-strong)] rounded-[6px] text-[12px] text-[var(--color-text-default)]">
+                                    {key}
                                   </div>
                                 </div>
-                              ))
-                            ) : (
-                              <p className="text-[12px] text-[var(--color-text-subtle)]">No labels</p>
-                            )}
-                          </VStack>
+                                <div className="flex-1">
+                                  <label className="text-[11px] font-medium text-[var(--color-text-default)] mb-2 block">
+                                    Value
+                                  </label>
+                                  <div className="w-full h-[36px] px-[10px] py-[8px] bg-[var(--color-border-default)] border border-[var(--color-border-strong)] rounded-[6px] text-[12px] text-[var(--color-text-default)]">
+                                    {val}
+                                  </div>
+                                </div>
+                              </div>
+                            ))
+                          ) : (
+                            <p className="text-[12px] text-[var(--color-text-subtle)]">No labels</p>
+                          )}
                         </VStack>
+                      </VStack>
 
-                        {/* Annotations Section */}
-                        <VStack gap={4} align="start" className="w-full">
-                          <h4 className="text-[14px] font-medium text-[var(--color-text-default)]">
-                            Annotations
-                          </h4>
-                          <VStack gap={2} align="start" className="w-full">
-                            {annotationsCount > 0 ? (
-                              Object.entries(pvcData.annotations).map(([key, val]) => (
-                                <div key={key} className="flex gap-2 w-full">
-                                  <div className="flex-1">
-                                    <label className="text-[11px] font-medium text-[var(--color-text-default)] mb-2 block">
-                                      Key
-                                    </label>
-                                    <div className="w-full h-[36px] px-[10px] py-[8px] bg-[var(--color-border-default)] border border-[var(--color-border-strong)] rounded-[6px] text-[12px] text-[var(--color-text-default)]">
-                                      {key}
-                                    </div>
-                                  </div>
-                                  <div className="flex-1">
-                                    <label className="text-[11px] font-medium text-[var(--color-text-default)] mb-2 block">
-                                      Value
-                                    </label>
-                                    <div className="w-full h-[36px] px-[10px] py-[8px] bg-[var(--color-border-default)] border border-[var(--color-border-strong)] rounded-[6px] text-[12px] text-[var(--color-text-default)]">
-                                      {val}
-                                    </div>
+                      {/* Annotations Section */}
+                      <VStack gap={4} align="start" className="w-full">
+                        <h4 className="text-[14px] font-medium text-[var(--color-text-default)]">
+                          Annotations
+                        </h4>
+                        <VStack gap={2} align="start" className="w-full">
+                          {annotationsCount > 0 ? (
+                            Object.entries(pvcData.annotations).map(([key, val]) => (
+                              <div key={key} className="flex gap-2 w-full">
+                                <div className="flex-1">
+                                  <label className="text-[11px] font-medium text-[var(--color-text-default)] mb-2 block">
+                                    Key
+                                  </label>
+                                  <div className="w-full h-[36px] px-[10px] py-[8px] bg-[var(--color-border-default)] border border-[var(--color-border-strong)] rounded-[6px] text-[12px] text-[var(--color-text-default)]">
+                                    {key}
                                   </div>
                                 </div>
-                              ))
-                            ) : (
-                              <p className="text-[12px] text-[var(--color-text-subtle)]">No annotations</p>
-                            )}
-                          </VStack>
+                                <div className="flex-1">
+                                  <label className="text-[11px] font-medium text-[var(--color-text-default)] mb-2 block">
+                                    Value
+                                  </label>
+                                  <div className="w-full h-[36px] px-[10px] py-[8px] bg-[var(--color-border-default)] border border-[var(--color-border-strong)] rounded-[6px] text-[12px] text-[var(--color-text-default)]">
+                                    {val}
+                                  </div>
+                                </div>
+                              </div>
+                            ))
+                          ) : (
+                            <p className="text-[12px] text-[var(--color-text-subtle)]">
+                              No annotations
+                            </p>
+                          )}
                         </VStack>
+                      </VStack>
                     </VStack>
                   </div>
                 </TabPanel>

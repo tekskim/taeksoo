@@ -55,11 +55,11 @@ export function AppSwitcher({ currentAppId, onToggleSidebar }: AppSwitcherProps)
   // Determine current app from path if not provided
   const getCurrentApp = () => {
     if (currentAppId) {
-      return apps.find(app => app.id === currentAppId);
+      return apps.find((app) => app.id === currentAppId);
     }
     // Try to match by path
     const currentPath = location.pathname;
-    return apps.find(app => currentPath.startsWith(app.path)) || apps[0];
+    return apps.find((app) => currentPath.startsWith(app.path)) || apps[0];
   };
 
   const currentApp = getCurrentApp();
@@ -75,13 +75,17 @@ export function AppSwitcher({ currentAppId, onToggleSidebar }: AppSwitcherProps)
         </>
       )}
       {onToggleSidebar && (
-        <button 
+        <button
           type="button"
           onClick={onToggleSidebar}
           className="p-1 hover:bg-[var(--color-surface-muted)] rounded transition-colors cursor-pointer flex-shrink-0"
           aria-label="Toggle sidebar"
         >
-          <IconLayoutSidebar size={16} className="text-[var(--color-text-muted)] pointer-events-none" stroke={1.5} />
+          <IconLayoutSidebar
+            size={16}
+            className="text-[var(--color-text-muted)] pointer-events-none"
+            stroke={1.5}
+          />
         </button>
       )}
     </div>

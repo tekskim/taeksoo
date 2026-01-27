@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react';
-import { 
-  Drawer, 
-  Button, 
-  SearchInput, 
-  Pagination, 
+import {
+  Drawer,
+  Button,
+  SearchInput,
+  Pagination,
   Radio,
   SelectionIndicator,
   StatusIndicator,
@@ -83,11 +83,12 @@ export function ChangeServerCertificateDrawer({
   }, [isOpen]);
 
   // Filter certificates
-  const filteredCertificates = certificates.filter((cert) =>
-    cert.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    cert.domain.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    cert.id.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    cert.listeners.toLowerCase().includes(searchQuery.toLowerCase())
+  const filteredCertificates = certificates.filter(
+    (cert) =>
+      cert.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      cert.domain.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      cert.id.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      cert.listeners.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   const totalPages = Math.ceil(filteredCertificates.length / ITEMS_PER_PAGE);
@@ -98,9 +99,9 @@ export function ChangeServerCertificateDrawer({
 
   const handleChange = async () => {
     setHasAttemptedSubmit(true);
-    
+
     if (!selectedCertificateId) return;
-    
+
     setIsSubmitting(true);
     try {
       await onChangeCertificate?.(selectedCertificateId);
@@ -128,15 +129,11 @@ export function ChangeServerCertificateDrawer({
       width={696}
       footer={
         <HStack gap={2} justify="center" className="w-full">
-          <Button 
-            variant="secondary" 
-            onClick={handleClose}
-            className="w-[152px] h-8"
-          >
+          <Button variant="secondary" onClick={handleClose} className="w-[152px] h-8">
             Cancel
           </Button>
-          <Button 
-            variant="primary" 
+          <Button
+            variant="primary"
             onClick={handleChange}
             disabled={isSubmitting}
             className="w-[152px] h-8"
@@ -191,39 +188,52 @@ export function ChangeServerCertificateDrawer({
             <div className="flex items-stretch min-h-[40px] bg-[var(--color-border-subtle)] border border-[var(--color-border-default)] rounded-md">
               <div className="w-[40px] flex items-center justify-center shrink-0" />
               <div className="w-[59px] flex items-center justify-center px-3 border-l border-[var(--color-border-default)]">
-                <span className="text-[11px] font-medium text-[var(--color-text-default)] leading-4">Status</span>
+                <span className="text-[11px] font-medium text-[var(--color-text-default)] leading-4">
+                  Status
+                </span>
               </div>
               <div className="flex-1 flex items-center gap-1.5 px-3 border-l border-[var(--color-border-default)] cursor-pointer hover:text-[var(--color-action-primary)]">
-                <span className="text-[11px] font-medium text-[var(--color-text-default)] leading-4">Name</span>
+                <span className="text-[11px] font-medium text-[var(--color-text-default)] leading-4">
+                  Name
+                </span>
                 <IconChevronDown size={12} className="text-[var(--color-text-default)]" />
               </div>
               <div className="flex-1 flex items-center gap-1.5 px-3 border-l border-[var(--color-border-default)] cursor-pointer hover:text-[var(--color-action-primary)]">
-                <span className="text-[11px] font-medium text-[var(--color-text-default)] leading-4">Domain</span>
+                <span className="text-[11px] font-medium text-[var(--color-text-default)] leading-4">
+                  Domain
+                </span>
                 <IconChevronDown size={12} className="text-[var(--color-text-default)]" />
               </div>
               <div className="flex-1 flex items-center gap-1.5 px-3 border-l border-[var(--color-border-default)] cursor-pointer hover:text-[var(--color-action-primary)]">
-                <span className="text-[11px] font-medium text-[var(--color-text-default)] leading-4">Listeners</span>
+                <span className="text-[11px] font-medium text-[var(--color-text-default)] leading-4">
+                  Listeners
+                </span>
                 <IconChevronDown size={12} className="text-[var(--color-text-default)]" />
               </div>
               <div className="flex-1 flex items-center gap-1.5 px-3 border-l border-[var(--color-border-default)] cursor-pointer hover:text-[var(--color-action-primary)]">
-                <span className="text-[11px] font-medium text-[var(--color-text-default)] leading-4">Expires At</span>
+                <span className="text-[11px] font-medium text-[var(--color-text-default)] leading-4">
+                  Expires At
+                </span>
                 <IconChevronDown size={12} className="text-[var(--color-text-default)]" />
               </div>
             </div>
 
             {/* Rows */}
             {paginatedCertificates.map((cert) => (
-              <div 
+              <div
                 key={cert.id}
                 className={`flex items-stretch min-h-[40px] border rounded-md cursor-pointer transition-all ${
-                  selectedCertificateId === cert.id 
-                    ? 'bg-[var(--color-state-info-bg)] border-[var(--color-action-primary)]' 
+                  selectedCertificateId === cert.id
+                    ? 'bg-[var(--color-state-info-bg)] border-[var(--color-action-primary)]'
                     : 'bg-[var(--color-surface-default)] border-[var(--color-border-default)] hover:bg-[var(--table-row-hover-bg)]'
                 }`}
                 onClick={() => setSelectedCertificateId(cert.id)}
               >
                 {/* Radio */}
-                <div className="w-[40px] flex items-center justify-center shrink-0" onClick={(e) => e.stopPropagation()}>
+                <div
+                  className="w-[40px] flex items-center justify-center shrink-0"
+                  onClick={(e) => e.stopPropagation()}
+                >
                   <Radio
                     name="certificate-select"
                     value={cert.id}
@@ -238,24 +248,38 @@ export function ChangeServerCertificateDrawer({
                 {/* Name */}
                 <div className="flex-1 flex flex-col gap-0.5 justify-center px-3 py-2 overflow-hidden min-w-0">
                   <div className="flex items-center gap-1.5">
-                    <span className="text-[12px] font-medium text-[var(--color-action-primary)] leading-4 truncate">{cert.name}</span>
-                    <IconExternalLink size={12} className="shrink-0 text-[var(--color-action-primary)]" />
+                    <span className="text-[12px] font-medium text-[var(--color-action-primary)] leading-4 truncate">
+                      {cert.name}
+                    </span>
+                    <IconExternalLink
+                      size={12}
+                      className="shrink-0 text-[var(--color-action-primary)]"
+                    />
                   </div>
-                  <span className="text-[11px] text-[var(--color-text-subtle)] leading-4 truncate">ID : {cert.id}</span>
+                  <span className="text-[11px] text-[var(--color-text-subtle)] leading-4 truncate">
+                    ID : {cert.id}
+                  </span>
                 </div>
                 {/* Domain */}
                 <div className="flex-1 flex items-center px-3 py-2 overflow-hidden min-w-0">
-                  <span className="text-[12px] text-[var(--color-text-default)] leading-4 truncate">{cert.domain}</span>
+                  <span className="text-[12px] text-[var(--color-text-default)] leading-4 truncate">
+                    {cert.domain}
+                  </span>
                 </div>
                 {/* Listeners */}
                 <div className="flex-1 flex items-center px-3 py-2 overflow-hidden min-w-0">
                   <span className="text-[12px] text-[var(--color-text-default)] leading-4 truncate">
-                    {cert.listeners}{cert.listenersCount && cert.listenersCount > 0 ? ` (+${cert.listenersCount})` : ''}
+                    {cert.listeners}
+                    {cert.listenersCount && cert.listenersCount > 0
+                      ? ` (+${cert.listenersCount})`
+                      : ''}
                   </span>
                 </div>
                 {/* Expires At */}
                 <div className="flex-1 flex items-center px-3 py-2 overflow-hidden min-w-0">
-                  <span className="text-[12px] text-[var(--color-text-default)] leading-4 truncate">{cert.expiresAt}</span>
+                  <span className="text-[12px] text-[var(--color-text-default)] leading-4 truncate">
+                    {cert.expiresAt}
+                  </span>
                 </div>
               </div>
             ))}
@@ -263,7 +287,11 @@ export function ChangeServerCertificateDrawer({
 
           {/* Selection Indicator - Below table */}
           <SelectionIndicator
-            selectedItems={selectedCertificate ? [{ id: selectedCertificate.id, label: selectedCertificate.name }] : []}
+            selectedItems={
+              selectedCertificate
+                ? [{ id: selectedCertificate.id, label: selectedCertificate.name }]
+                : []
+            }
             onRemove={() => setSelectedCertificateId(null)}
             emptyText="No item Selected"
             error={hasAttemptedSubmit && !selectedCertificateId}

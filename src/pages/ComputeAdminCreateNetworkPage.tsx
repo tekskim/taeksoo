@@ -21,10 +21,7 @@ import type { WizardSummaryItem, WizardSectionState } from '@/design-system';
 import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
 import { useTabs } from '@/contexts/TabContext';
 import { useSidebar } from '@/contexts/SidebarContext';
-import {
-  IconBell,
-  IconEdit,
-} from '@tabler/icons-react';
+import { IconBell, IconEdit } from '@tabler/icons-react';
 
 /* ----------------------------------------
    Types
@@ -35,14 +32,11 @@ type SectionStep = 'basic-info' | 'subnet';
 // Section labels for display
 const SECTION_LABELS: Record<SectionStep, string> = {
   'basic-info': 'Basic information',
-  'subnet': 'Subnet',
+  subnet: 'Subnet',
 };
 
 // Section order for navigation
-const SECTION_ORDER: SectionStep[] = [
-  'basic-info',
-  'subnet',
-];
+const SECTION_ORDER: SectionStep[] = ['basic-info', 'subnet'];
 
 /* ----------------------------------------
    Summary Sidebar Component
@@ -55,7 +49,12 @@ interface SummarySidebarProps {
   isCreateDisabled: boolean;
 }
 
-function SummarySidebar({ sectionStatus, onCancel, onCreate, isCreateDisabled }: SummarySidebarProps) {
+function SummarySidebar({
+  sectionStatus,
+  onCancel,
+  onCreate,
+  isCreateDisabled,
+}: SummarySidebarProps) {
   const summaryItems: WizardSummaryItem[] = SECTION_ORDER.map((key) => ({
     key,
     label: SECTION_LABELS[key],
@@ -66,14 +65,14 @@ function SummarySidebar({ sectionStatus, onCancel, onCreate, isCreateDisabled }:
     <div className="w-[var(--wizard-summary-width)] shrink-0 sticky top-4 self-start">
       <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg p-4 flex flex-col gap-6">
         <WizardSummary items={summaryItems} />
-        
+
         {/* Action Buttons */}
         <HStack gap={2}>
           <Button variant="outline" onClick={onCancel} className="w-[80px]">
             Cancel
           </Button>
-          <Button 
-            variant="primary" 
+          <Button
+            variant="primary"
             onClick={onCreate}
             disabled={isCreateDisabled}
             className="flex-1"
@@ -98,7 +97,7 @@ export default function CreateNetworkPage() {
   // Section status state
   const [sectionStatus, setSectionStatus] = useState<Record<SectionStep, WizardSectionState>>({
     'basic-info': 'active',
-    'subnet': 'pending',
+    subnet: 'pending',
   });
 
   // Form state - Basic Info
@@ -159,14 +158,16 @@ export default function CreateNetworkPage() {
       adminState: adminState ? 'Up' : 'Down',
       portSecurity: portSecurity ? 'On' : 'Off',
       mtu,
-      subnet: createSubnet ? {
-        subnetName,
-        cidr,
-        gateway: gateway ? gatewayIp : null,
-        dhcp,
-        allocationPools,
-        hostRoutes,
-      } : null,
+      subnet: createSubnet
+        ? {
+            subnetName,
+            cidr,
+            gateway: gateway ? gatewayIp : null,
+            dhcp,
+            allocationPools,
+            hostRoutes,
+          }
+        : null,
     });
     navigate('/compute-admin/networks');
   };
@@ -207,7 +208,11 @@ export default function CreateNetworkPage() {
             }
             actions={
               <>
-                <TopBarAction icon={<IconBell size={18} />} onClick={() => {}} aria-label="Notifications" />
+                <TopBarAction
+                  icon={<IconBell size={18} />}
+                  onClick={() => {}}
+                  aria-label="Notifications"
+                />
               </>
             }
           />
@@ -230,7 +235,7 @@ export default function CreateNetworkPage() {
                 <VStack gap={4} className="flex-1">
                   {/* Basic information Section */}
                   <SectionCard isActive={sectionStatus['basic-info'] === 'active'}>
-                    <SectionCard.Header 
+                    <SectionCard.Header
                       title={SECTION_LABELS['basic-info']}
                       showDivider={sectionStatus['basic-info'] === 'active'}
                       actions={
@@ -256,7 +261,10 @@ export default function CreateNetworkPage() {
                               <Input
                                 placeholder="e.g. private-net"
                                 value={networkName}
-                                onChange={(e) => { setNetworkName(e.target.value); setNetworkNameError(null); }}
+                                onChange={(e) => {
+                                  setNetworkName(e.target.value);
+                                  setNetworkNameError(null);
+                                }}
                                 fullWidth
                                 error={!!networkNameError}
                               />
@@ -283,7 +291,8 @@ export default function CreateNetworkPage() {
                                   Admin state
                                 </span>
                                 <span className="text-[12px] text-[var(--color-text-subtle)] leading-[16px]">
-                                  Setting it to "Down" disables all related network or control operations, regardless of runtime status.
+                                  Setting it to "Down" disables all related network or control
+                                  operations, regardless of runtime status.
                                 </span>
                                 <Toggle
                                   checked={adminState}
@@ -298,7 +307,9 @@ export default function CreateNetworkPage() {
                                   Port security
                                 </span>
                                 <span className="text-[12px] text-[var(--color-text-subtle)] leading-[16px]">
-                                  Enhances security by allowing only permitted devices to access this network. It is recommended to keep this enabled in most cases.
+                                  Enhances security by allowing only permitted devices to access
+                                  this network. It is recommended to keep this enabled in most
+                                  cases.
                                 </span>
                                 <Toggle
                                   checked={portSecurity}
@@ -313,7 +324,9 @@ export default function CreateNetworkPage() {
                                   MTU
                                 </span>
                                 <span className="text-[12px] text-[var(--color-text-subtle)] leading-[16px]">
-                                  Specifies the maximum transmission unit (MTU) size for a network packet. Leave blank to use the system default unless you have a specific requirement.
+                                  Specifies the maximum transmission unit (MTU) size for a network
+                                  packet. Leave blank to use the system default unless you have a
+                                  specific requirement.
                                 </span>
                                 <div className="flex items-center gap-2">
                                   <div className="w-[130px]">
@@ -325,9 +338,13 @@ export default function CreateNetworkPage() {
                                       placeholder=""
                                     />
                                   </div>
-                                  <span className="text-[12px] text-[var(--color-text-default)]">bytes</span>
+                                  <span className="text-[12px] text-[var(--color-text-default)]">
+                                    bytes
+                                  </span>
                                 </div>
-                                <span className="text-[11px] text-[var(--color-text-subtle)]">68 - 9000</span>
+                                <span className="text-[11px] text-[var(--color-text-subtle)]">
+                                  68 - 9000
+                                </span>
                               </VStack>
                             </VStack>
                           </Disclosure.Panel>
@@ -353,8 +370,8 @@ export default function CreateNetworkPage() {
 
                         {/* Next Button */}
                         <div className="flex items-center justify-end w-full">
-                          <Button 
-                            variant="primary" 
+                          <Button
+                            variant="primary"
                             onClick={() => {
                               if (!networkName.trim()) {
                                 setNetworkNameError('Please enter a network name.');
@@ -364,7 +381,7 @@ export default function CreateNetworkPage() {
                               setSectionStatus((prev) => ({
                                 ...prev,
                                 'basic-info': 'done',
-                                'subnet': 'active',
+                                subnet: 'active',
                               }));
                             }}
                           >
@@ -375,33 +392,22 @@ export default function CreateNetworkPage() {
                     )}
                     {sectionStatus['basic-info'] === 'done' && (
                       <SectionCard.Content>
-                        <SectionCard.DataRow 
-                          label="Network name" 
-                          value={networkName} 
-                          showDivider 
+                        <SectionCard.DataRow label="Network name" value={networkName} showDivider />
+                        <SectionCard.DataRow
+                          label="Admin state"
+                          value={adminState ? 'Up' : 'Down'}
+                          showDivider
                         />
-                        <SectionCard.DataRow 
-                          label="Admin state" 
-                          value={adminState ? 'Up' : 'Down'} 
-                          showDivider 
-                        />
-                        <SectionCard.DataRow 
-                          label="Port security" 
-                          value={portSecurity ? 'On' : 'Off'} 
-                          showDivider 
+                        <SectionCard.DataRow
+                          label="Port security"
+                          value={portSecurity ? 'On' : 'Off'}
+                          showDivider
                         />
                         {mtu && (
-                          <SectionCard.DataRow 
-                            label="MTU" 
-                            value={`${mtu} bytes`} 
-                            showDivider 
-                          />
+                          <SectionCard.DataRow label="MTU" value={`${mtu} bytes`} showDivider />
                         )}
                         {description && (
-                          <SectionCard.DataRow 
-                            label="Description" 
-                            value={description} 
-                          />
+                          <SectionCard.DataRow label="Description" value={description} />
                         )}
                       </SectionCard.Content>
                     )}
@@ -409,7 +415,7 @@ export default function CreateNetworkPage() {
 
                   {/* Subnet Section */}
                   <SectionCard isActive={sectionStatus['subnet'] === 'active'}>
-                    <SectionCard.Header 
+                    <SectionCard.Header
                       title={SECTION_LABELS['subnet']}
                       showDivider={sectionStatus['subnet'] === 'active'}
                       actions={
@@ -453,7 +459,8 @@ export default function CreateNetworkPage() {
                                 />
                               </FormField.Control>
                               <FormField.HelperText>
-                                Allowed: 1–128 characters, letters, numbers, "-", "_", ".", "()", "[]"
+                                Allowed: 1–128 characters, letters, numbers, "-", "_", ".", "()",
+                                "[]"
                               </FormField.HelperText>
                             </FormField>
 
@@ -468,9 +475,7 @@ export default function CreateNetworkPage() {
                                   fullWidth
                                 />
                               </FormField.Control>
-                              <FormField.HelperText>
-                                Prefix (/): 24~28
-                              </FormField.HelperText>
+                              <FormField.HelperText>Prefix (/): 24~28</FormField.HelperText>
                             </FormField>
 
                             {/* Gateway */}
@@ -496,7 +501,8 @@ export default function CreateNetworkPage() {
                                   />
                                 </FormField.Control>
                                 <FormField.HelperText>
-                                  Gateway must be an IP address within the subnet range, excluding the network and broadcast addresses.
+                                  Gateway must be an IP address within the subnet range, excluding
+                                  the network and broadcast addresses.
                                 </FormField.HelperText>
                               </FormField>
                             )}
@@ -522,7 +528,9 @@ export default function CreateNetworkPage() {
                                   <FormField>
                                     <FormField.Label>Allocation pools</FormField.Label>
                                     <span className="text-[12px] text-[var(--color-text-subtle)] leading-[16px]">
-                                      Manually define the range of IP addresses to be automatically allocated by DHCP. IPs outside this range will not be allocated, which is useful for reserving static IPs.
+                                      Manually define the range of IP addresses to be automatically
+                                      allocated by DHCP. IPs outside this range will not be
+                                      allocated, which is useful for reserving static IPs.
                                     </span>
                                     <FormField.Control>
                                       <Textarea
@@ -542,7 +550,8 @@ export default function CreateNetworkPage() {
                                   <FormField>
                                     <FormField.Label>Host routes</FormField.Label>
                                     <span className="text-[12px] text-[var(--color-text-subtle)] leading-[16px]">
-                                      An advanced feature for manually specifying a route to a specific network destination.
+                                      An advanced feature for manually specifying a route to a
+                                      specific network destination.
                                     </span>
                                     <FormField.Control>
                                       <Textarea
@@ -565,12 +574,12 @@ export default function CreateNetworkPage() {
 
                         {/* Done Button */}
                         <div className="flex items-center justify-end w-full">
-                          <Button 
-                            variant="primary" 
+                          <Button
+                            variant="primary"
                             onClick={() => {
                               setSectionStatus((prev) => ({
                                 ...prev,
-                                'subnet': 'done',
+                                subnet: 'done',
                               }));
                             }}
                             disabled={createSubnet && !cidr.trim()}
@@ -582,34 +591,27 @@ export default function CreateNetworkPage() {
                     )}
                     {sectionStatus['subnet'] === 'done' && (
                       <SectionCard.Content>
-                        <SectionCard.DataRow 
-                          label="Create subnet" 
-                          value={createSubnet ? 'Yes' : 'No'} 
-                          showDivider 
+                        <SectionCard.DataRow
+                          label="Create subnet"
+                          value={createSubnet ? 'Yes' : 'No'}
+                          showDivider
                         />
                         {createSubnet && (
                           <>
                             {subnetName && (
-                              <SectionCard.DataRow 
-                                label="Subnet name" 
-                                value={subnetName} 
-                                showDivider 
+                              <SectionCard.DataRow
+                                label="Subnet name"
+                                value={subnetName}
+                                showDivider
                               />
                             )}
-                            <SectionCard.DataRow 
-                              label="CIDR" 
-                              value={cidr} 
-                              showDivider 
+                            <SectionCard.DataRow label="CIDR" value={cidr} showDivider />
+                            <SectionCard.DataRow
+                              label="Gateway"
+                              value={gateway ? gatewayIp || 'Auto' : 'Off'}
+                              showDivider
                             />
-                            <SectionCard.DataRow 
-                              label="Gateway" 
-                              value={gateway ? (gatewayIp || 'Auto') : 'Off'} 
-                              showDivider 
-                            />
-                            <SectionCard.DataRow 
-                              label="DHCP" 
-                              value={dhcp ? 'On' : 'Off'} 
-                            />
+                            <SectionCard.DataRow label="DHCP" value={dhcp ? 'On' : 'Off'} />
                           </>
                         )}
                       </SectionCard.Content>
@@ -632,4 +634,3 @@ export default function CreateNetworkPage() {
     </div>
   );
 }
-

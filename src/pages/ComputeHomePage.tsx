@@ -1,10 +1,5 @@
 import { useState } from 'react';
-import {
-  TabBar,
-  TopBar,
-  TopBarAction,
-  Breadcrumb,
-} from '@/design-system';
+import { TabBar, TopBar, TopBarAction, Breadcrumb } from '@/design-system';
 import { Sidebar } from '@/components/Sidebar';
 import { useTabs } from '@/contexts/TabContext';
 import {
@@ -32,25 +27,27 @@ interface PercentageBadgeProps {
 
 function PercentageBadge({ percentage }: PercentageBadgeProps) {
   const getColors = () => {
-    if (percentage >= 100) return {
-      bg: 'bg-[var(--color-state-danger)]/15',
-      dot: 'bg-[var(--color-state-danger)]',
-      text: 'text-[var(--color-state-danger)]'
-    };
-    if (percentage >= 70) return {
-      bg: 'bg-[var(--color-state-warning)]/15',
-      dot: 'bg-[var(--color-state-warning)]',
-      text: 'text-[var(--color-state-warning)]'
-    };
+    if (percentage >= 100)
+      return {
+        bg: 'bg-[var(--color-state-danger)]/15',
+        dot: 'bg-[var(--color-state-danger)]',
+        text: 'text-[var(--color-state-danger)]',
+      };
+    if (percentage >= 70)
+      return {
+        bg: 'bg-[var(--color-state-warning)]/15',
+        dot: 'bg-[var(--color-state-warning)]',
+        text: 'text-[var(--color-state-warning)]',
+      };
     return {
       bg: 'bg-[var(--color-state-success)]/15',
       dot: 'bg-[var(--color-state-success)]',
-      text: 'text-[var(--color-state-success)]'
+      text: 'text-[var(--color-state-success)]',
     };
   };
-  
+
   const colors = getColors();
-  
+
   return (
     <div className={`flex items-center px-1.5 py-0.5 rounded-md ${colors.bg}`}>
       <span className={`text-[11px] font-medium ${colors.text}`}>{percentage}%</span>
@@ -70,18 +67,20 @@ interface ComputeQuotaBarProps {
 
 function ComputeQuotaBar({ label, used, total, unit }: ComputeQuotaBarProps) {
   const percentage = Math.round((used / total) * 100);
-  
+
   return (
     <div className="flex flex-col gap-2">
       <div className="flex items-center justify-between">
         <span className="text-[12px] font-medium text-[var(--color-text-default)]">{label}</span>
         <div className="flex items-center gap-2">
-          <span className="text-[11px] text-[var(--color-text-muted)]">{used}/{total} {unit}</span>
+          <span className="text-[11px] text-[var(--color-text-muted)]">
+            {used}/{total} {unit}
+          </span>
           <PercentageBadge percentage={percentage} />
         </div>
       </div>
       <div className="h-1 rounded-sm bg-[var(--color-surface-muted)] overflow-hidden">
-        <div 
+        <div
           className="h-full rounded-sm bg-[var(--color-text-muted)]"
           style={{ width: `${Math.min(percentage, 100)}%` }}
         />
@@ -99,11 +98,14 @@ interface SummaryStatBoxProps {
 }
 
 function SummaryStatBox({ value, label }: SummaryStatBoxProps) {
-  const textColor = value === 0 ? 'text-[var(--color-text-muted)]' : 'text-[var(--color-text-default)]';
+  const textColor =
+    value === 0 ? 'text-[var(--color-text-muted)]' : 'text-[var(--color-text-default)]';
   const isClickable = label !== 'Others';
-  
+
   return (
-    <div className={`flex-1 bg-[var(--color-surface-subtle)] rounded-lg p-4 border-2 border-transparent transition-colors ${isClickable ? 'hover:border-[var(--color-action-primary)] cursor-pointer' : ''}`}>
+    <div
+      className={`flex-1 bg-[var(--color-surface-subtle)] rounded-lg p-4 border-2 border-transparent transition-colors ${isClickable ? 'hover:border-[var(--color-action-primary)] cursor-pointer' : ''}`}
+    >
       <div className={`text-[20px] font-medium ${textColor} pb-1`}>{value}</div>
       <div className="text-[11px] text-[var(--color-text-subtle)]">{label}</div>
     </div>
@@ -123,11 +125,11 @@ interface InfraQuotaCardProps {
 
 function InfraQuotaCard({ icon, label, used, total, href }: InfraQuotaCardProps) {
   const percentage = Math.round((used / total) * 100);
-  
+
   return (
     <div className="bg-[var(--color-surface-subtle)] rounded-lg p-4">
       <div className="flex items-center justify-between mb-3">
-        <Link 
+        <Link
           to={href}
           className="flex items-center gap-1 text-[12px] font-medium text-[var(--color-text-default)] hover:text-[var(--color-action-primary)] min-w-0"
         >
@@ -142,7 +144,7 @@ function InfraQuotaCard({ icon, label, used, total, href }: InfraQuotaCardProps)
         <span className="text-[14px] text-[var(--color-text-muted)] pt-1.5">/{total}</span>
       </div>
       <div className="h-1 rounded-sm bg-[var(--color-surface-muted)] overflow-hidden">
-        <div 
+        <div
           className="h-full rounded-sm bg-[var(--color-text-muted)]"
           style={{ width: `${Math.min(percentage, 100)}%` }}
         />
@@ -164,7 +166,9 @@ interface ActivityItemProps {
 
 function ActivityItem({ name, resourceType, action, time, isLast = false }: ActivityItemProps) {
   return (
-    <div className={`flex items-center justify-between py-2.5 ${!isLast ? 'border-b border-[var(--color-border-subtle)]' : ''}`}>
+    <div
+      className={`flex items-center justify-between py-2.5 ${!isLast ? 'border-b border-[var(--color-border-subtle)]' : ''}`}
+    >
       <div>
         <div className="text-[12px] font-medium text-[var(--color-action-primary)]">{name}</div>
         <div className="flex items-center gap-1.5 text-[11px] text-[var(--color-text-muted)]">
@@ -188,10 +192,19 @@ interface CardProps {
   bgColor?: string;
 }
 
-function Card({ title, children, className = '', bgColor = 'bg-[var(--color-surface-default)]' }: CardProps) {
+function Card({
+  title,
+  children,
+  className = '',
+  bgColor = 'bg-[var(--color-surface-default)]',
+}: CardProps) {
   return (
-    <div className={`p-4 rounded-2xl border border-[var(--color-border-default)] ${bgColor} ${className}`}>
-      <h6 className="text-[length:var(--font-size-12)] leading-[var(--line-height-16)] font-semibold text-[var(--color-text-muted)] mb-4">{title}</h6>
+    <div
+      className={`p-4 rounded-2xl border border-[var(--color-border-default)] ${bgColor} ${className}`}
+    >
+      <h6 className="text-[length:var(--font-size-12)] leading-[var(--line-height-16)] font-semibold text-[var(--color-text-muted)] mb-4">
+        {title}
+      </h6>
       {children}
     </div>
   );
@@ -222,9 +235,11 @@ export function ComputeHomePage() {
 
   return (
     <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
-      <Sidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(prev => !prev)} />
+      <Sidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen((prev) => !prev)} />
 
-      <main className={`absolute top-0 bottom-0 right-0 flex flex-col bg-[var(--color-surface-default)] transition-[left] duration-200 ${sidebarOpen ? 'left-[var(--layout-sidebar-width)]' : 'left-0'}`}>
+      <main
+        className={`absolute top-0 bottom-0 right-0 flex flex-col bg-[var(--color-surface-default)] transition-[left] duration-200 ${sidebarOpen ? 'left-[var(--layout-sidebar-width)]' : 'left-0'}`}
+      >
         {/* Fixed Header Area */}
         <div className="shrink-0 bg-[var(--color-surface-default)]">
           <TabBar
@@ -246,12 +261,7 @@ export function ComputeHomePage() {
             onBack={() => window.history.back()}
             onForward={() => window.history.forward()}
             breadcrumb={
-              <Breadcrumb
-              items={[
-                { label: 'Proj-1', href: '/project' },
-                { label: 'Home' },
-              ]}
-            />
+              <Breadcrumb items={[{ label: 'Proj-1', href: '/project' }, { label: 'Home' }]} />
             }
             actions={
               <TopBarAction
@@ -267,192 +277,206 @@ export function ComputeHomePage() {
         <div className="flex-1 overflow-auto min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll">
           {/* Dashboard Content */}
           <div className="px-8 py-6">
-          {/* Top Row - 4 Cards */}
-          <div className="grid grid-cols-4 gap-6 mb-6">
-            {/* PROJECT INFO */}
-            <Card title="PROJECT INFO" bgColor="bg-[var(--color-surface-subtle)]" className="flex flex-col">
-              <h3 className="text-[32px] font-semibold text-[var(--color-text-default)]">proj-1</h3>
-              <div className="space-y-4 mt-auto">
-                <div>
-                  <div className="text-[10px] text-[var(--color-text-muted)] mb-1">ID</div>
-                  <div className="flex items-center gap-1">
-                    <span className="text-[12px] text-[var(--color-text-default)]">{projectId}</span>
-                    <button 
-                      onClick={handleCopyId}
-                      className="p-1.5 -m-1 rounded-md hover:bg-[var(--color-surface-muted)] active:bg-[var(--color-surface-subtle)] transition-colors"
-                      title={copied ? 'Copied!' : 'Copy ID'}
-                    >
-                      {copied ? (
-                        <IconCheck size={12} className="text-[var(--color-state-success)]" />
-                      ) : (
-                        <IconCopy size={12} className="text-[var(--color-action-primary)]" />
-                      )}
-                    </button>
+            {/* Top Row - 4 Cards */}
+            <div className="grid grid-cols-4 gap-6 mb-6">
+              {/* PROJECT INFO */}
+              <Card
+                title="PROJECT INFO"
+                bgColor="bg-[var(--color-surface-subtle)]"
+                className="flex flex-col"
+              >
+                <h3 className="text-[32px] font-semibold text-[var(--color-text-default)]">
+                  proj-1
+                </h3>
+                <div className="space-y-4 mt-auto">
+                  <div>
+                    <div className="text-[10px] text-[var(--color-text-muted)] mb-1">ID</div>
+                    <div className="flex items-center gap-1">
+                      <span className="text-[12px] text-[var(--color-text-default)]">
+                        {projectId}
+                      </span>
+                      <button
+                        onClick={handleCopyId}
+                        className="p-1.5 -m-1 rounded-md hover:bg-[var(--color-surface-muted)] active:bg-[var(--color-surface-subtle)] transition-colors"
+                        title={copied ? 'Copied!' : 'Copy ID'}
+                      >
+                        {copied ? (
+                          <IconCheck size={12} className="text-[var(--color-state-success)]" />
+                        ) : (
+                          <IconCopy size={12} className="text-[var(--color-action-primary)]" />
+                        )}
+                      </button>
+                    </div>
+                  </div>
+                  <div>
+                    <div className="text-[10px] text-[var(--color-text-muted)] mb-1">
+                      Description
+                    </div>
+                    <p className="text-[12px] text-[var(--color-text-default)]">
+                      Development environment for the 'service' backend services.
+                    </p>
                   </div>
                 </div>
+              </Card>
+
+              {/* COMPUTE QUOTA */}
+              <Card title="COMPUTE QUOTA">
+                <div className="space-y-[22px]">
+                  <ComputeQuotaBar label="vCPU" used={4} total={8} unit="vCPU" />
+                  <ComputeQuotaBar label="RAM" used={22} total={32} unit="GiB" />
+                  <ComputeQuotaBar label="Disk" used={4} total={6} unit="GiB" />
+                  <ComputeQuotaBar label="GPU" used={6} total={8} unit="GPU" />
+                  <ComputeQuotaBar label="NPU" used={6} total={8} unit="NPU" />
+                </div>
+              </Card>
+
+              {/* INSTANCE SUMMARY */}
+              <Card title="INSTANCE SUMMARY" className="flex flex-col">
+                <div className="mb-4">
+                  <div className="text-[24px] leading-[32px] font-semibold text-[var(--color-text-default)]">
+                    13
+                  </div>
+                  <div className="text-[12px] text-[var(--color-text-subtle)]">Total</div>
+                </div>
+                <div className="space-y-2 mt-auto">
+                  <div className="flex gap-2">
+                    <SummaryStatBox value={10} label="Active" />
+                    <SummaryStatBox value={0} label="Error" />
+                  </div>
+                  <div className="flex gap-2">
+                    <SummaryStatBox value={0} label="Shutoff" />
+                    <SummaryStatBox value={3} label="Others" />
+                  </div>
+                </div>
+              </Card>
+
+              {/* BARE METAL SUMMARY */}
+              <Card title="BARE METAL SUMMARY" className="flex flex-col">
+                <div className="mb-4">
+                  <div className="text-[24px] leading-[32px] font-semibold text-[var(--color-text-default)]">
+                    8
+                  </div>
+                  <div className="text-[12px] text-[var(--color-text-subtle)]">Total</div>
+                </div>
+                <div className="space-y-2 mt-auto">
+                  <div className="flex gap-2">
+                    <SummaryStatBox value={6} label="Active" />
+                    <SummaryStatBox value={1} label="Error" />
+                  </div>
+                  <div className="flex gap-2">
+                    <SummaryStatBox value={0} label="Shutoff" />
+                    <SummaryStatBox value={1} label="Others" />
+                  </div>
+                </div>
+              </Card>
+            </div>
+
+            {/* Bottom Row - 2 Cards */}
+            <div className="grid grid-cols-[1fr_396px] gap-6">
+              {/* INFRASTRUCTURE QUOTA */}
+              <Card title="INFRASTRUCTURE QUOTA">
+                <div className="space-y-4 mt-8">
+                  <div className="grid grid-cols-4 gap-4">
+                    <InfraQuotaCard
+                      icon={<IconDatabase size={16} stroke={1.5} />}
+                      label="Volumes"
+                      used={8}
+                      total={10}
+                      href="/compute/volumes"
+                    />
+                    <InfraQuotaCard
+                      icon={<IconNetwork size={16} stroke={1.5} />}
+                      label="Networks"
+                      used={10}
+                      total={100}
+                      href="/compute/networks"
+                    />
+                    <InfraQuotaCard
+                      icon={<IconRouter size={16} stroke={1.5} />}
+                      label="Routers"
+                      used={9}
+                      total={10}
+                      href="/compute/routers"
+                    />
+                    <InfraQuotaCard
+                      icon={<IconPlug size={16} stroke={1.5} />}
+                      label="Ports"
+                      used={500}
+                      total={500}
+                      href="/compute/ports"
+                    />
+                  </div>
+                  <div className="grid grid-cols-4 gap-4">
+                    <InfraQuotaCard
+                      icon={<IconWorldWww size={16} stroke={1.5} />}
+                      label="Floating IPs"
+                      used={2}
+                      total={50}
+                      href="/compute/floating-ips"
+                    />
+                    <InfraQuotaCard
+                      icon={<IconShieldLock size={16} stroke={1.5} />}
+                      label="Security groups"
+                      used={85}
+                      total={100}
+                      href="/compute/security-groups"
+                    />
+                    <InfraQuotaCard
+                      icon={<IconKey size={16} stroke={1.5} />}
+                      label="Key pairs"
+                      used={18}
+                      total={100}
+                      href="/compute/key-pairs"
+                    />
+                    <InfraQuotaCard
+                      icon={<IconServer size={16} stroke={1.5} />}
+                      label="Server groups"
+                      used={1}
+                      total={10}
+                      href="/compute/server-groups"
+                    />
+                  </div>
+                </div>
+              </Card>
+
+              {/* RECENT ACTIVITIES */}
+              <Card title="RECENT ACTIVITIES">
                 <div>
-                  <div className="text-[10px] text-[var(--color-text-muted)] mb-1">Description</div>
-                  <p className="text-[12px] text-[var(--color-text-default)]">
-                    Development environment for the 'service' backend services.
-                  </p>
+                  <ActivityItem
+                    name="web-server-01"
+                    resourceType="Instance"
+                    action="create"
+                    time="2m ago"
+                  />
+                  <ActivityItem
+                    name="data-vol-03"
+                    resourceType="Volume"
+                    action="attach"
+                    time="15m ago"
+                  />
+                  <ActivityItem
+                    name="private-net"
+                    resourceType="Network"
+                    action="update"
+                    time="1h ago"
+                  />
+                  <ActivityItem
+                    name="api-server-02"
+                    resourceType="Instance"
+                    action="reboot"
+                    time="3h ago"
+                  />
+                  <ActivityItem
+                    name="sg-default"
+                    resourceType="Security group"
+                    action="modify"
+                    time="5h ago"
+                    isLast
+                  />
                 </div>
-              </div>
-            </Card>
-
-            {/* COMPUTE QUOTA */}
-            <Card title="COMPUTE QUOTA">
-              <div className="space-y-[22px]">
-                <ComputeQuotaBar label="vCPU" used={4} total={8} unit="vCPU" />
-                <ComputeQuotaBar label="RAM" used={22} total={32} unit="GiB" />
-                <ComputeQuotaBar label="Disk" used={4} total={6} unit="GiB" />
-                <ComputeQuotaBar label="GPU" used={6} total={8} unit="GPU" />
-                <ComputeQuotaBar label="NPU" used={6} total={8} unit="NPU" />
-              </div>
-            </Card>
-
-            {/* INSTANCE SUMMARY */}
-            <Card title="INSTANCE SUMMARY" className="flex flex-col">
-              <div className="mb-4">
-                <div className="text-[24px] leading-[32px] font-semibold text-[var(--color-text-default)]">13</div>
-                <div className="text-[12px] text-[var(--color-text-subtle)]">Total</div>
-              </div>
-              <div className="space-y-2 mt-auto">
-                <div className="flex gap-2">
-                  <SummaryStatBox value={10} label="Active" />
-                  <SummaryStatBox value={0} label="Error" />
-                </div>
-                <div className="flex gap-2">
-                  <SummaryStatBox value={0} label="Shutoff" />
-                  <SummaryStatBox value={3} label="Others" />
-                </div>
-              </div>
-            </Card>
-
-            {/* BARE METAL SUMMARY */}
-            <Card title="BARE METAL SUMMARY" className="flex flex-col">
-              <div className="mb-4">
-                <div className="text-[24px] leading-[32px] font-semibold text-[var(--color-text-default)]">8</div>
-                <div className="text-[12px] text-[var(--color-text-subtle)]">Total</div>
-              </div>
-              <div className="space-y-2 mt-auto">
-                <div className="flex gap-2">
-                  <SummaryStatBox value={6} label="Active" />
-                  <SummaryStatBox value={1} label="Error" />
-                </div>
-                <div className="flex gap-2">
-                  <SummaryStatBox value={0} label="Shutoff" />
-                  <SummaryStatBox value={1} label="Others" />
-                </div>
-              </div>
-            </Card>
+              </Card>
+            </div>
           </div>
-
-          {/* Bottom Row - 2 Cards */}
-          <div className="grid grid-cols-[1fr_396px] gap-6">
-            {/* INFRASTRUCTURE QUOTA */}
-            <Card title="INFRASTRUCTURE QUOTA">
-              <div className="space-y-4 mt-8">
-                <div className="grid grid-cols-4 gap-4">
-                  <InfraQuotaCard
-                    icon={<IconDatabase size={16} stroke={1.5} />}
-                    label="Volumes"
-                    used={8}
-                    total={10}
-                    href="/compute/volumes"
-                  />
-                  <InfraQuotaCard
-                    icon={<IconNetwork size={16} stroke={1.5} />}
-                    label="Networks"
-                    used={10}
-                    total={100}
-                    href="/compute/networks"
-                  />
-                  <InfraQuotaCard
-                    icon={<IconRouter size={16} stroke={1.5} />}
-                    label="Routers"
-                    used={9}
-                    total={10}
-                    href="/compute/routers"
-                  />
-                  <InfraQuotaCard
-                    icon={<IconPlug size={16} stroke={1.5} />}
-                    label="Ports"
-                    used={500}
-                    total={500}
-                    href="/compute/ports"
-                  />
-                </div>
-                <div className="grid grid-cols-4 gap-4">
-                  <InfraQuotaCard
-                    icon={<IconWorldWww size={16} stroke={1.5} />}
-                    label="Floating IPs"
-                    used={2}
-                    total={50}
-                    href="/compute/floating-ips"
-                  />
-                  <InfraQuotaCard
-                    icon={<IconShieldLock size={16} stroke={1.5} />}
-                    label="Security groups"
-                    used={85}
-                    total={100}
-                    href="/compute/security-groups"
-                  />
-                  <InfraQuotaCard
-                    icon={<IconKey size={16} stroke={1.5} />}
-                    label="Key pairs"
-                    used={18}
-                    total={100}
-                    href="/compute/key-pairs"
-                  />
-                  <InfraQuotaCard
-                    icon={<IconServer size={16} stroke={1.5} />}
-                    label="Server groups"
-                    used={1}
-                    total={10}
-                    href="/compute/server-groups"
-                  />
-                </div>
-              </div>
-            </Card>
-
-            {/* RECENT ACTIVITIES */}
-            <Card title="RECENT ACTIVITIES">
-              <div>
-                <ActivityItem
-                  name="web-server-01"
-                  resourceType="Instance"
-                  action="create"
-                  time="2m ago"
-                />
-                <ActivityItem
-                  name="data-vol-03"
-                  resourceType="Volume"
-                  action="attach"
-                  time="15m ago"
-                />
-                <ActivityItem
-                  name="private-net"
-                  resourceType="Network"
-                  action="update"
-                  time="1h ago"
-                />
-                <ActivityItem
-                  name="api-server-02"
-                  resourceType="Instance"
-                  action="reboot"
-                  time="3h ago"
-                />
-                <ActivityItem
-                  name="sg-default"
-                  resourceType="Security group"
-                  action="modify"
-                  time="5h ago"
-                  isLast
-                />
-              </div>
-            </Card>
-          </div>
-        </div>
         </div>
       </main>
     </div>
