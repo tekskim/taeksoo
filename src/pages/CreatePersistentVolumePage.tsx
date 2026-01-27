@@ -42,11 +42,7 @@ const SECTION_LABELS: Record<SectionStep, string> = {
 };
 
 // Section order for navigation
-const SECTION_ORDER: SectionStep[] = [
-  'basic-info',
-  'storage-config',
-  'labels-annotations',
-];
+const SECTION_ORDER: SectionStep[] = ['basic-info', 'storage-config', 'labels-annotations'];
 
 // Access Mode options
 const ACCESS_MODE_OPTIONS = [
@@ -165,7 +161,12 @@ interface SummarySidebarProps {
   isCreateDisabled: boolean;
 }
 
-function SummarySidebar({ sectionStatus, onCancel, onCreate, isCreateDisabled }: SummarySidebarProps) {
+function SummarySidebar({
+  sectionStatus,
+  onCancel,
+  onCreate,
+  isCreateDisabled,
+}: SummarySidebarProps) {
   // Map SectionState to WizardSectionState
   const mapState = (state: SectionState): WizardSectionState => {
     if (state === 'pre') return 'pending';
@@ -184,14 +185,14 @@ function SummarySidebar({ sectionStatus, onCancel, onCreate, isCreateDisabled }:
     <div className="w-[var(--wizard-summary-width)] shrink-0 sticky top-4 self-start">
       <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg p-4 flex flex-col gap-6">
         <WizardSummary items={summaryItems} />
-        
+
         {/* Action Buttons */}
         <HStack gap={2}>
           <Button variant="secondary" onClick={onCancel} className="w-[80px]">
             Cancel
           </Button>
-          <Button 
-            variant="primary" 
+          <Button
+            variant="primary"
             onClick={onCreate}
             disabled={isCreateDisabled}
             className="flex-1"
@@ -361,8 +362,16 @@ const STORAGE_CLASS_OPTIONS = [
    ---------------------------------------- */
 
 interface StorageConfigSectionProps {
-  accessModes: { singleNodeReadWrite: boolean; manyNodesReadOnly: boolean; manyNodesReadWrite: boolean };
-  onAccessModesChange: (modes: { singleNodeReadWrite: boolean; manyNodesReadOnly: boolean; manyNodesReadWrite: boolean }) => void;
+  accessModes: {
+    singleNodeReadWrite: boolean;
+    manyNodesReadOnly: boolean;
+    manyNodesReadWrite: boolean;
+  };
+  onAccessModesChange: (modes: {
+    singleNodeReadWrite: boolean;
+    manyNodesReadOnly: boolean;
+    manyNodesReadWrite: boolean;
+  }) => void;
   storageClassName: string;
   onStorageClassNameChange: (value: string) => void;
   mountOptions: MountOption[];
@@ -421,7 +430,9 @@ function StorageConfigSection({
 
   const removeNodeSelectorRule = (selectorIndex: number, ruleIndex: number) => {
     const newSelectors = [...nodeSelectors];
-    newSelectors[selectorIndex].rules = newSelectors[selectorIndex].rules.filter((_, i) => i !== ruleIndex);
+    newSelectors[selectorIndex].rules = newSelectors[selectorIndex].rules.filter(
+      (_, i) => i !== ruleIndex
+    );
     if (newSelectors[selectorIndex].rules.length === 0) {
       onNodeSelectorsChange(nodeSelectors.filter((_, i) => i !== selectorIndex));
     } else {
@@ -468,17 +479,23 @@ function StorageConfigSection({
             <VStack gap={1.5}>
               <Checkbox
                 checked={accessModes.singleNodeReadWrite}
-                onChange={(e) => onAccessModesChange({ ...accessModes, singleNodeReadWrite: e.target.checked })}
+                onChange={(e) =>
+                  onAccessModesChange({ ...accessModes, singleNodeReadWrite: e.target.checked })
+                }
                 label="Single Node Read-Write"
               />
               <Checkbox
                 checked={accessModes.manyNodesReadOnly}
-                onChange={(e) => onAccessModesChange({ ...accessModes, manyNodesReadOnly: e.target.checked })}
+                onChange={(e) =>
+                  onAccessModesChange({ ...accessModes, manyNodesReadOnly: e.target.checked })
+                }
                 label="Many Nodes Read-Only"
               />
               <Checkbox
                 checked={accessModes.manyNodesReadWrite}
-                onChange={(e) => onAccessModesChange({ ...accessModes, manyNodesReadWrite: e.target.checked })}
+                onChange={(e) =>
+                  onAccessModesChange({ ...accessModes, manyNodesReadWrite: e.target.checked })
+                }
                 label="Many Nodes Read-Write"
               />
             </VStack>
@@ -546,37 +563,61 @@ function StorageConfigSection({
                   <VStack gap={2}>
                     {/* Header row */}
                     <div className="grid grid-cols-[1fr_1fr_1fr_23px] gap-2">
-                      <span className="text-[11px] font-medium text-[var(--color-text-default)] leading-[16.5px]">Key</span>
-                      <span className="text-[11px] font-medium text-[var(--color-text-default)] leading-[16.5px]">Operator</span>
-                      <span className="text-[11px] font-medium text-[var(--color-text-default)] leading-[16.5px]">Value</span>
+                      <span className="text-[11px] font-medium text-[var(--color-text-default)] leading-[16.5px]">
+                        Key
+                      </span>
+                      <span className="text-[11px] font-medium text-[var(--color-text-default)] leading-[16.5px]">
+                        Operator
+                      </span>
+                      <span className="text-[11px] font-medium text-[var(--color-text-default)] leading-[16.5px]">
+                        Value
+                      </span>
                       <div />
                     </div>
                     {/* Rule rows */}
                     {selector.rules.map((rule, ruleIndex) => (
-                      <div key={ruleIndex} className="grid grid-cols-[1fr_1fr_1fr_23px] gap-2 items-center">
+                      <div
+                        key={ruleIndex}
+                        className="grid grid-cols-[1fr_1fr_1fr_23px] gap-2 items-center"
+                      >
                         <Input
                           placeholder="input key"
                           value={rule.key}
-                          onChange={(e) => updateNodeSelectorRule(selectorIndex, ruleIndex, 'key', e.target.value)}
+                          onChange={(e) =>
+                            updateNodeSelectorRule(selectorIndex, ruleIndex, 'key', e.target.value)
+                          }
                           fullWidth
                         />
                         <Select
                           options={OPERATOR_OPTIONS}
                           value={rule.operator}
-                          onChange={(value) => updateNodeSelectorRule(selectorIndex, ruleIndex, 'operator', value)}
+                          onChange={(value) =>
+                            updateNodeSelectorRule(selectorIndex, ruleIndex, 'operator', value)
+                          }
                           fullWidth
                         />
                         <Input
                           placeholder="input value"
                           value={rule.value}
-                          onChange={(e) => updateNodeSelectorRule(selectorIndex, ruleIndex, 'value', e.target.value)}
+                          onChange={(e) =>
+                            updateNodeSelectorRule(
+                              selectorIndex,
+                              ruleIndex,
+                              'value',
+                              e.target.value
+                            )
+                          }
                           fullWidth
                         />
                         <button
                           onClick={() => removeNodeSelectorRule(selectorIndex, ruleIndex)}
                           className="p-1 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
                         >
-                          <IconX size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
+                          <IconX
+                            size={16}
+                            className="text-[var(--color-text-muted)]"
+                            stroke={1.5}
+                          />
                         </button>
                       </div>
                     ))}
@@ -686,7 +727,7 @@ function LabelsAnnotationsSection({
                 Specify the labels used to identify and categorize the resource.
               </p>
             </VStack>
-            
+
             {labels.map((label, index) => (
               <HStack gap={2} key={index} className="w-full">
                 <Input
@@ -730,7 +771,7 @@ function LabelsAnnotationsSection({
                 Specify the annotations used to provide additional metadata for the resource.
               </p>
             </VStack>
-            
+
             {annotations.map((annotation, index) => (
               <HStack gap={2} key={index} className="w-full">
                 <Input
@@ -818,7 +859,8 @@ export function CreatePersistentVolumePage() {
   const [pvNameError, setNamespaceNameError] = useState<string | null>(null);
 
   // Tab management
-  const { tabs, activeTabId, closeTab, selectTab, updateActiveTabLabel, moveTab, addNewTab } = useTabs();
+  const { tabs, activeTabId, closeTab, selectTab, updateActiveTabLabel, moveTab, addNewTab } =
+    useTabs();
 
   // Update tab label
   useEffect(() => {
@@ -985,30 +1027,42 @@ export function CreatePersistentVolumePage() {
     setLabels([...labels, { key: '', value: '' }]);
   }, [labels]);
 
-  const removeLabel = useCallback((index: number) => {
-    setLabels(labels.filter((_, i) => i !== index));
-  }, [labels]);
+  const removeLabel = useCallback(
+    (index: number) => {
+      setLabels(labels.filter((_, i) => i !== index));
+    },
+    [labels]
+  );
 
-  const updateLabel = useCallback((index: number, field: 'key' | 'value', value: string) => {
-    const newLabels = [...labels];
-    newLabels[index][field] = value;
-    setLabels(newLabels);
-  }, [labels]);
+  const updateLabel = useCallback(
+    (index: number, field: 'key' | 'value', value: string) => {
+      const newLabels = [...labels];
+      newLabels[index][field] = value;
+      setLabels(newLabels);
+    },
+    [labels]
+  );
 
   // Annotation management
   const addAnnotation = useCallback(() => {
     setAnnotations([...annotations, { key: '', value: '' }]);
   }, [annotations]);
 
-  const removeAnnotation = useCallback((index: number) => {
-    setAnnotations(annotations.filter((_, i) => i !== index));
-  }, [annotations]);
+  const removeAnnotation = useCallback(
+    (index: number) => {
+      setAnnotations(annotations.filter((_, i) => i !== index));
+    },
+    [annotations]
+  );
 
-  const updateAnnotation = useCallback((index: number, field: 'key' | 'value', value: string) => {
-    const newAnnotations = [...annotations];
-    newAnnotations[index][field] = value;
-    setAnnotations(newAnnotations);
-  }, [annotations]);
+  const updateAnnotation = useCallback(
+    (index: number, field: 'key' | 'value', value: string) => {
+      const newAnnotations = [...annotations];
+      newAnnotations[index][field] = value;
+      setAnnotations(newAnnotations);
+    },
+    [annotations]
+  );
 
   // Check if create button should be disabled
   const isCreateDisabled = !pvName.trim();
@@ -1163,10 +1217,31 @@ export function CreatePersistentVolumePage() {
                       title={SECTION_LABELS['storage-config']}
                       onEdit={() => handleEdit('storage-config')}
                     >
-                      <SectionCard.DataRow label="Access Modes" value={getAccessModesDisplay()} showDivider={false} />
-                      {storageClassName && <SectionCard.DataRow label="Storage Class" value={storageClassName} />}
-                      {mountOptions.length > 0 && <SectionCard.DataRow label="Mount Options" value={mountOptions.map(o => o.key).filter(k => k).join(', ') || 'None'} />}
-                      {nodeSelectors.length > 0 && <SectionCard.DataRow label="Node Selectors" value={`${nodeSelectors.length} selector(s)`} />}
+                      <SectionCard.DataRow
+                        label="Access Modes"
+                        value={getAccessModesDisplay()}
+                        showDivider={false}
+                      />
+                      {storageClassName && (
+                        <SectionCard.DataRow label="Storage Class" value={storageClassName} />
+                      )}
+                      {mountOptions.length > 0 && (
+                        <SectionCard.DataRow
+                          label="Mount Options"
+                          value={
+                            mountOptions
+                              .map((o) => o.key)
+                              .filter((k) => k)
+                              .join(', ') || 'None'
+                          }
+                        />
+                      )}
+                      {nodeSelectors.length > 0 && (
+                        <SectionCard.DataRow
+                          label="Node Selectors"
+                          value={`${nodeSelectors.length} selector(s)`}
+                        />
+                      )}
                     </DoneSection>
                   )}
 
@@ -1198,7 +1273,11 @@ export function CreatePersistentVolumePage() {
                       title={SECTION_LABELS['labels-annotations']}
                       onEdit={() => handleEdit('labels-annotations')}
                     >
-                      <SectionCard.DataRow label="Labels" value={getLabelsDisplay()} showDivider={false} />
+                      <SectionCard.DataRow
+                        label="Labels"
+                        value={getLabelsDisplay()}
+                        showDivider={false}
+                      />
                       <SectionCard.DataRow label="Annotations" value={getAnnotationsDisplay()} />
                     </DoneSection>
                   )}

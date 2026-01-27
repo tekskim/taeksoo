@@ -1,7 +1,6 @@
 import { useState, useMemo } from 'react';
 import {
   Button,
-  FilterSearchInput,
   SearchInput,
   Table,
   Pagination,
@@ -200,11 +199,13 @@ export function BucketsPage() {
   }));
 
   // Filter buckets based on search
-  const filteredBuckets = useMemo(() =>
-    mockBuckets.filter((bucket) =>
-      bucket.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      bucket.owner.toLowerCase().includes(searchQuery.toLowerCase())
-    ),
+  const filteredBuckets = useMemo(
+    () =>
+      mockBuckets.filter(
+        (bucket) =>
+          bucket.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          bucket.owner.toLowerCase().includes(searchQuery.toLowerCase())
+      ),
     [searchQuery]
   );
 
@@ -289,7 +290,11 @@ export function BucketsPage() {
             className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors"
             aria-label="More actions"
           >
-            <IconDotsCircleHorizontal size={16} stroke={1.5} className="text-[var(--color-text-default)]" />
+            <IconDotsCircleHorizontal
+              size={16}
+              stroke={1.5}
+              className="text-[var(--color-text-default)]"
+            />
           </button>
         </ContextMenu>
       ),
@@ -301,7 +306,7 @@ export function BucketsPage() {
   return (
     <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
       {/* Sidebar */}
-      <StorageSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(prev => !prev)} />
+      <StorageSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen((prev) => !prev)} />
 
       {/* Main Content */}
       <main
@@ -329,18 +334,10 @@ export function BucketsPage() {
             onBack={() => window.history.back()}
             onForward={() => window.history.forward()}
             breadcrumb={
-              <Breadcrumb
-                items={[
-                  { label: 'Home', href: '/storage' },
-                  { label: 'Buckets' },
-                ]}
-              />
+              <Breadcrumb items={[{ label: 'Home', href: '/storage' }, { label: 'Buckets' }]} />
             }
             actions={
-              <TopBarAction
-                icon={<IconBell size={16} stroke={1.5} />}
-                aria-label="Notifications"
-              />
+              <TopBarAction icon={<IconBell size={16} stroke={1.5} />} aria-label="Notifications" />
             }
           />
         </div>
@@ -354,7 +351,11 @@ export function BucketsPage() {
                 <h1 className="text-[length:var(--font-size-16)] font-semibold leading-6 text-[var(--color-text-default)]">
                   Buckets
                 </h1>
-                <Button variant="primary" size="sm" onClick={() => navigate('/storage/buckets/create')}>
+                <Button
+                  variant="primary"
+                  size="sm"
+                  onClick={() => navigate('/storage/buckets/create')}
+                >
                   Create Bucket
                 </Button>
               </div>
@@ -433,4 +434,3 @@ export function BucketsPage() {
 }
 
 export default BucketsPage;
-

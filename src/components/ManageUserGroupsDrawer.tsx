@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
-import { 
-  Drawer, 
-  Button, 
+import {
+  Drawer,
+  Button,
   SearchInput,
   Pagination,
   Checkbox,
@@ -60,18 +60,21 @@ export function ManageUserGroupsDrawer({
   onSubmit,
 }: ManageUserGroupsDrawerProps) {
   // User group selection state
-  const [selectedGroupIds, setSelectedGroupIds] = useState<Set<string>>(new Set(initialSelectedIds));
+  const [selectedGroupIds, setSelectedGroupIds] = useState<Set<string>>(
+    new Set(initialSelectedIds)
+  );
   const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [hasAttemptedSubmit, setHasAttemptedSubmit] = useState(false);
 
   // Filter user groups
-  const filteredGroups = userGroups.filter((group) =>
-    group.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    group.id.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    group.type.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    group.roles.toLowerCase().includes(searchQuery.toLowerCase())
+  const filteredGroups = userGroups.filter(
+    (group) =>
+      group.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      group.id.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      group.type.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      group.roles.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   const totalPages = Math.ceil(filteredGroups.length / ITEMS_PER_PAGE);
@@ -88,7 +91,6 @@ export function ManageUserGroupsDrawer({
       setCurrentPage(1);
       setHasAttemptedSubmit(false);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOpen]);
 
   const handleToggleGroup = (groupId: string) => {
@@ -105,12 +107,12 @@ export function ManageUserGroupsDrawer({
 
   const handleSubmit = async () => {
     setHasAttemptedSubmit(true);
-    
+
     // Validate required fields
     if (selectedGroupIds.size === 0) {
       return; // Don't submit if no groups selected
     }
-    
+
     setIsSubmitting(true);
     try {
       await onSubmit?.({
@@ -144,10 +146,10 @@ export function ManageUserGroupsDrawer({
     .map((group) => ({ id: group.id, label: group.name }));
 
   // Select all logic
-  const allCurrentPageSelected = paginatedGroups.length > 0 && 
-    paginatedGroups.every((group) => selectedGroupIds.has(group.id));
+  const allCurrentPageSelected =
+    paginatedGroups.length > 0 && paginatedGroups.every((group) => selectedGroupIds.has(group.id));
   const someCurrentPageSelected = paginatedGroups.some((group) => selectedGroupIds.has(group.id));
-  
+
   const handleSelectAll = () => {
     if (allCurrentPageSelected) {
       // Deselect all on current page
@@ -175,15 +177,11 @@ export function ManageUserGroupsDrawer({
       width={696}
       footer={
         <HStack gap={2} justify="center" className="w-full">
-          <Button 
-            variant="secondary" 
-            onClick={handleClose}
-            className="w-[152px] h-8"
-          >
+          <Button variant="secondary" onClick={handleClose} className="w-[152px] h-8">
             Cancel
           </Button>
-          <Button 
-            variant="primary" 
+          <Button
+            variant="primary"
             onClick={handleSubmit}
             disabled={isSubmitting}
             className="w-[152px] h-8"
@@ -231,7 +229,8 @@ export function ManageUserGroupsDrawer({
               </span>
             </div>
             <p className="text-[12px] text-[var(--color-text-subtle)] leading-4">
-              Select the user groups this user will belong to. The user will automatically inherit the permissions assigned to those groups.
+              Select the user groups this user will belong to. The user will automatically inherit
+              the permissions assigned to those groups.
             </p>
           </VStack>
 
@@ -289,17 +288,20 @@ export function ManageUserGroupsDrawer({
 
             {/* Rows */}
             {paginatedGroups.map((group) => (
-              <div 
+              <div
                 key={group.id}
                 className={`flex items-stretch min-h-[var(--table-row-height)] border rounded-[var(--table-row-radius)] cursor-pointer transition-all ${
-                  selectedGroupIds.has(group.id) 
-                    ? 'bg-[var(--color-state-info-bg)] border-[var(--color-action-primary)]' 
+                  selectedGroupIds.has(group.id)
+                    ? 'bg-[var(--color-state-info-bg)] border-[var(--color-action-primary)]'
                     : 'bg-[var(--color-surface-default)] border-[var(--color-border-default)] hover:bg-[var(--table-row-hover-bg)]'
                 }`}
                 onClick={() => handleToggleGroup(group.id)}
               >
                 {/* Checkbox */}
-                <div className="w-[var(--table-checkbox-width)] flex items-center justify-center" onClick={(e) => e.stopPropagation()}>
+                <div
+                  className="w-[var(--table-checkbox-width)] flex items-center justify-center"
+                  onClick={(e) => e.stopPropagation()}
+                >
                   <Checkbox
                     checked={selectedGroupIds.has(group.id)}
                     onChange={() => handleToggleGroup(group.id)}
@@ -307,24 +309,38 @@ export function ManageUserGroupsDrawer({
                 </div>
                 {/* Name with link */}
                 <div className="flex-1 flex items-center gap-1.5 px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] min-w-0 overflow-hidden">
-                  <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-action-primary)] truncate">{group.name}</span>
-                  <IconExternalLink size={12} stroke={1.5} className="shrink-0 text-[var(--color-action-primary)]" />
+                  <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-action-primary)] truncate">
+                    {group.name}
+                  </span>
+                  <IconExternalLink
+                    size={12}
+                    stroke={1.5}
+                    className="shrink-0 text-[var(--color-action-primary)]"
+                  />
                 </div>
                 {/* Type */}
                 <div className="flex-1 flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] min-w-0 overflow-hidden">
-                  <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)]">{group.type}</span>
+                  <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)]">
+                    {group.type}
+                  </span>
                 </div>
                 {/* Roles */}
                 <div className="flex-1 flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] min-w-0 overflow-hidden">
-                  <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)] truncate">{group.roles}</span>
+                  <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)] truncate">
+                    {group.roles}
+                  </span>
                 </div>
                 {/* User count */}
                 <div className="flex-1 flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] min-w-0 overflow-hidden">
-                  <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)]">{group.userCount}</span>
+                  <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)]">
+                    {group.userCount}
+                  </span>
                 </div>
                 {/* Created at */}
                 <div className="flex-1 flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] min-w-0 overflow-hidden">
-                  <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)]">{group.createdAt}</span>
+                  <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)]">
+                    {group.createdAt}
+                  </span>
                 </div>
               </div>
             ))}

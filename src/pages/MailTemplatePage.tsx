@@ -1,20 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { 
-  Button, 
-  VStack, 
-  HStack,
-  SectionCard,
-  Input,
-  Badge,
-} from '@/design-system';
-import { 
-  IconArrowLeft,
-  IconPlus,
-  IconMail,
-  IconKey,
-  IconShieldCheck,
-} from '@tabler/icons-react';
+import { Button, VStack, HStack, SectionCard, Input, Badge } from '@/design-system';
+import { IconArrowLeft, IconPlus, IconMail, IconKey, IconShieldCheck } from '@tabler/icons-react';
 
 /* ----------------------------------------
    Types
@@ -75,8 +62,9 @@ export function MailTemplatePage() {
   const [selectedType, setSelectedType] = useState<string | null>(null);
 
   const filteredTemplates = mockTemplates.filter((template) => {
-    const matchesSearch = template.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                         template.subject.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesSearch =
+      template.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      template.subject.toLowerCase().includes(searchQuery.toLowerCase());
     const matchesType = !selectedType || template.type === selectedType;
     return matchesSearch && matchesType;
   });
@@ -104,11 +92,7 @@ export function MailTemplatePage() {
               </h1>
             </div>
           </HStack>
-          <Button
-            variant="primary"
-            size="sm"
-            icon={<IconPlus size={14} stroke={1.5} />}
-          >
+          <Button variant="primary" size="sm" icon={<IconPlus size={14} stroke={1.5} />}>
             Create template
           </Button>
         </div>
@@ -154,7 +138,7 @@ export function MailTemplatePage() {
             {filteredTemplates.map((template) => {
               const config = typeConfig[template.type];
               const Icon = config.icon;
-              
+
               return (
                 <SectionCard key={template.id}>
                   <div className="p-4">
@@ -167,7 +151,7 @@ export function MailTemplatePage() {
                           {config.label}
                         </Badge>
                       </HStack>
-                      
+
                       <VStack gap={1}>
                         <span className="text-[14px] font-medium text-[var(--color-text-default)]">
                           {template.name}
@@ -176,17 +160,21 @@ export function MailTemplatePage() {
                           {template.subject}
                         </span>
                       </VStack>
-                      
+
                       <span className="text-[11px] text-[var(--color-text-subtle)] line-clamp-2">
                         {template.description}
                       </span>
-                      
-                      <HStack justify="between" align="center" className="w-full pt-2 border-t border-[var(--color-border-subtle)]">
+
+                      <HStack
+                        justify="between"
+                        align="center"
+                        className="w-full pt-2 border-t border-[var(--color-border-subtle)]"
+                      >
                         <span className="text-[10px] text-[var(--color-text-subtle)]">
                           Modified {template.lastModified}
                         </span>
-                        <Button 
-                          variant="ghost" 
+                        <Button
+                          variant="ghost"
                           size="sm"
                           onClick={() => navigate(`/mail-template/${template.id}`)}
                         >
@@ -202,10 +190,12 @@ export function MailTemplatePage() {
 
           {filteredTemplates.length === 0 && (
             <div className="text-center py-12">
-              <IconMail size={48} className="mx-auto text-[var(--color-text-subtle)] mb-4" stroke={1} />
-              <p className="text-[14px] text-[var(--color-text-subtle)]">
-                No templates found
-              </p>
+              <IconMail
+                size={48}
+                className="mx-auto text-[var(--color-text-subtle)] mb-4"
+                stroke={1}
+              />
+              <p className="text-[14px] text-[var(--color-text-subtle)]">No templates found</p>
             </div>
           )}
         </VStack>

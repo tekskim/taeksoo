@@ -215,13 +215,13 @@ const mockCertificates: Certificate[] = Array.from({ length: 115 }, (_, i) => {
   const type = types[i % 3];
   const namePrefix = type === 'Server' ? 'server-cert' : type === 'CA' ? 'ca-cert' : 'sni-cert';
   return {
-  id: `cert-${String(i + 1).padStart(3, '0')}`,
+    id: `cert-${String(i + 1).padStart(3, '0')}`,
     name: `${namePrefix}-${String(i + 1).padStart(2, '0')}`,
-  status: ['active', 'active', 'active', 'error', 'pending'][i % 5] as CertificateStatus,
+    status: ['active', 'active', 'active', 'error', 'pending'][i % 5] as CertificateStatus,
     type,
     domain: type === 'CA' ? 'N/A' : `*.domain${i}.com`,
-    issuer: ['DigiCert', 'Let\'s Encrypt', 'Comodo', 'GlobalSign', 'Sectigo'][i % 5],
-  expiresAt: `2026-${String((i % 12) + 1).padStart(2, '0')}-${String((i % 28) + 1).padStart(2, '0')}`,
+    issuer: ['DigiCert', "Let's Encrypt", 'Comodo', 'GlobalSign', 'Sectigo'][i % 5],
+    expiresAt: `2026-${String((i % 12) + 1).padStart(2, '0')}-${String((i % 28) + 1).padStart(2, '0')}`,
   };
 });
 
@@ -259,14 +259,15 @@ const certificateStatusMap: Record<CertificateStatus, 'active' | 'error' | 'pend
 
 export default function ListenerDetailPage() {
   const { id } = useParams<{ id: string }>();
-  const { tabs, activeTabId, closeTab, selectTab, addNewTab, updateActiveTabLabel, moveTab } = useTabs();
-  
+  const { tabs, activeTabId, closeTab, selectTab, addNewTab, updateActiveTabLabel, moveTab } =
+    useTabs();
+
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [activeDetailTab, setActiveDetailTab] = useState('details');
   const [copiedId, setCopiedId] = useState(false);
 
   // Get listener based on URL id
-  const listener = id ? (mockListenersMap[id] || defaultListenerDetail) : defaultListenerDetail;
+  const listener = id ? mockListenersMap[id] || defaultListenerDetail : defaultListenerDetail;
 
   // Update tab label when listener name changes
   useEffect(() => {
@@ -298,12 +299,15 @@ export default function ListenerDetailPage() {
   const breadcrumbItems = [
     { label: 'Proj-1', href: '/' },
     { label: 'Load balancers', href: '/compute/load-balancers' },
-    { label: listener.loadBalancer?.name || 'Unknown', href: `/load-balancers/${listener.loadBalancer?.id}` },
+    {
+      label: listener.loadBalancer?.name || 'Unknown',
+      href: `/load-balancers/${listener.loadBalancer?.id}`,
+    },
     { label: listener.name },
   ];
 
   // Convert tabs to TabBar format
-  const tabBarTabs = tabs.map(tab => ({
+  const tabBarTabs = tabs.map((tab) => ({
     id: tab.id,
     label: tab.label,
     closable: tab.closable,
@@ -319,10 +323,11 @@ export default function ListenerDetailPage() {
   const filteredPools = useMemo(() => {
     if (!poolSearchTerm) return mockPools;
     const query = poolSearchTerm.toLowerCase();
-    return mockPools.filter(pool =>
-      pool.name.toLowerCase().includes(query) ||
-      pool.protocol.toLowerCase().includes(query) ||
-      pool.algorithm.toLowerCase().includes(query)
+    return mockPools.filter(
+      (pool) =>
+        pool.name.toLowerCase().includes(query) ||
+        pool.protocol.toLowerCase().includes(query) ||
+        pool.algorithm.toLowerCase().includes(query)
     );
   }, [poolSearchTerm]);
 
@@ -337,9 +342,9 @@ export default function ListenerDetailPage() {
   const filteredL7Policies = useMemo(() => {
     if (!l7PolicySearchTerm) return mockL7Policies;
     const query = l7PolicySearchTerm.toLowerCase();
-    return mockL7Policies.filter(policy =>
-      policy.name.toLowerCase().includes(query) ||
-      policy.behavior.toLowerCase().includes(query)
+    return mockL7Policies.filter(
+      (policy) =>
+        policy.name.toLowerCase().includes(query) || policy.behavior.toLowerCase().includes(query)
     );
   }, [l7PolicySearchTerm]);
 
@@ -354,10 +359,11 @@ export default function ListenerDetailPage() {
   const filteredCertificates = useMemo(() => {
     if (!certificateSearchTerm) return mockCertificates;
     const query = certificateSearchTerm.toLowerCase();
-    return mockCertificates.filter(cert =>
-      cert.name.toLowerCase().includes(query) ||
-      cert.type.toLowerCase().includes(query) ||
-      cert.domain.toLowerCase().includes(query)
+    return mockCertificates.filter(
+      (cert) =>
+        cert.name.toLowerCase().includes(query) ||
+        cert.type.toLowerCase().includes(query) ||
+        cert.domain.toLowerCase().includes(query)
     );
   }, [certificateSearchTerm]);
 
@@ -375,9 +381,7 @@ export default function ListenerDetailPage() {
       label: 'Status',
       width: '64px',
       align: 'center',
-      render: (_, row) => (
-        <StatusIndicator status={poolStatusMap[row.status]} layout="icon-only" />
-      ),
+      render: (_, row) => <StatusIndicator status={poolStatusMap[row.status]} layout="icon-only" />,
     },
     {
       key: 'name',
@@ -429,13 +433,22 @@ export default function ListenerDetailPage() {
       align: 'center',
       render: (_: unknown, row: Pool) => {
         const poolMenuItems: ContextMenuItem[] = [
-          { id: 'delete', label: 'Delete', status: 'danger', onClick: () => console.log('Delete pool', row.id) },
+          {
+            id: 'delete',
+            label: 'Delete',
+            status: 'danger',
+            onClick: () => console.log('Delete pool', row.id),
+          },
         ];
         return (
           <div onClick={(e) => e.stopPropagation()}>
             <ContextMenu items={poolMenuItems} trigger="click">
               <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
-                <IconDotsCircleHorizontal size={16} stroke={1.5} className="text-[var(--action-icon-color)]" />
+                <IconDotsCircleHorizontal
+                  size={16}
+                  stroke={1.5}
+                  className="text-[var(--action-icon-color)]"
+                />
               </button>
             </ContextMenu>
           </div>
@@ -485,7 +498,7 @@ export default function ListenerDetailPage() {
       label: 'Position',
       flex: 1,
       sortable: true,
-      render: (_, row) => row.position !== null ? row.position : '-',
+      render: (_, row) => (row.position !== null ? row.position : '-'),
     },
     {
       key: 'adminState',
@@ -499,14 +512,28 @@ export default function ListenerDetailPage() {
       align: 'center',
       render: (_: unknown, row: L7Policy) => {
         const policyMenuItems: ContextMenuItem[] = [
-          { id: 'edit', label: 'Edit', icon: <IconEdit size={14} stroke={1.5} />, onClick: () => console.log('Edit policy', row.id) },
-          { id: 'delete', label: 'Delete', status: 'danger', onClick: () => console.log('Delete policy', row.id) },
+          {
+            id: 'edit',
+            label: 'Edit',
+            icon: <IconEdit size={14} stroke={1.5} />,
+            onClick: () => console.log('Edit policy', row.id),
+          },
+          {
+            id: 'delete',
+            label: 'Delete',
+            status: 'danger',
+            onClick: () => console.log('Delete policy', row.id),
+          },
         ];
         return (
           <div onClick={(e) => e.stopPropagation()}>
             <ContextMenu items={policyMenuItems} trigger="click">
               <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
-                <IconDotsCircleHorizontal size={16} stroke={1.5} className="text-[var(--action-icon-color)]" />
+                <IconDotsCircleHorizontal
+                  size={16}
+                  stroke={1.5}
+                  className="text-[var(--action-icon-color)]"
+                />
               </button>
             </ContextMenu>
           </div>
@@ -578,11 +605,32 @@ export default function ListenerDetailPage() {
         const getCertMenuItems = (): ContextMenuItem[] => {
           switch (row.type) {
             case 'Server':
-              return [{ id: 'change-server-cert', label: 'Change server Certificate', icon: <IconCertificate size={14} stroke={1.5} />, onClick: () => console.log('Change server certificate', row.id) }];
+              return [
+                {
+                  id: 'change-server-cert',
+                  label: 'Change server Certificate',
+                  icon: <IconCertificate size={14} stroke={1.5} />,
+                  onClick: () => console.log('Change server certificate', row.id),
+                },
+              ];
             case 'CA':
-              return [{ id: 'change-ca-cert', label: 'Change CA Certificate', icon: <IconCertificate size={14} stroke={1.5} />, onClick: () => console.log('Change CA certificate', row.id) }];
+              return [
+                {
+                  id: 'change-ca-cert',
+                  label: 'Change CA Certificate',
+                  icon: <IconCertificate size={14} stroke={1.5} />,
+                  onClick: () => console.log('Change CA certificate', row.id),
+                },
+              ];
             case 'SNI':
-              return [{ id: 'remove-sni-cert', label: 'Remove', status: 'danger', onClick: () => console.log('Remove SNI certificate', row.id) }];
+              return [
+                {
+                  id: 'remove-sni-cert',
+                  label: 'Remove',
+                  status: 'danger',
+                  onClick: () => console.log('Remove SNI certificate', row.id),
+                },
+              ];
             default:
               return [];
           }
@@ -592,7 +640,11 @@ export default function ListenerDetailPage() {
           <div onClick={(e) => e.stopPropagation()}>
             <ContextMenu items={certMenuItems} trigger="click">
               <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
-                <IconDotsCircleHorizontal size={16} stroke={1.5} className="text-[var(--action-icon-color)]" />
+                <IconDotsCircleHorizontal
+                  size={16}
+                  stroke={1.5}
+                  className="text-[var(--action-icon-color)]"
+                />
               </button>
             </ContextMenu>
           </div>
@@ -653,18 +705,10 @@ export default function ListenerDetailPage() {
                 <DetailHeader.Title>{listener.name}</DetailHeader.Title>
 
                 <DetailHeader.Actions>
-                  <Button
-                    variant="secondary"
-                    size="sm"
-                    leftIcon={<IconEdit size={12} />}
-                  >
+                  <Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />}>
                     Edit
                   </Button>
-                  <Button
-                    variant="secondary"
-                    size="sm"
-                    leftIcon={<IconTrash size={12} />}
-                  >
+                  <Button variant="secondary" size="sm" leftIcon={<IconTrash size={12} />}>
                     Delete
                   </Button>
                   <ContextMenu
@@ -715,13 +759,9 @@ export default function ListenerDetailPage() {
                       },
                     ]}
                   >
-                  <Button
-                    variant="secondary"
-                    size="sm"
-                    rightIcon={<IconChevronDown size={12} />}
-                  >
-                    More Actions
-                  </Button>
+                    <Button variant="secondary" size="sm" rightIcon={<IconChevronDown size={12} />}>
+                      More Actions
+                    </Button>
                   </ContextMenu>
                 </DetailHeader.Actions>
 
@@ -738,14 +778,8 @@ export default function ListenerDetailPage() {
                     onCopy={handleCopyId}
                     className="flex-1"
                   />
-                  <DetailHeader.InfoCard
-                    label="Admin state"
-                    value={listener.adminState}
-                  />
-                  <DetailHeader.InfoCard
-                    label="Created at"
-                    value={listener.createdAt}
-                  />
+                  <DetailHeader.InfoCard label="Admin state" value={listener.adminState} />
+                  <DetailHeader.InfoCard label="Created at" value={listener.createdAt} />
                 </DetailHeader.InfoGrid>
               </DetailHeader>
 
@@ -777,13 +811,34 @@ export default function ListenerDetailPage() {
                           <SectionCard.DataRow label="Description" value={listener.description} />
                           <SectionCard.DataRow label="Protocol" value={listener.protocol} />
                           <SectionCard.DataRow label="Port" value={String(listener.port)} />
-                          <SectionCard.DataRow label="Connection limit" value={listener.connectionLimit} />
-                          <SectionCard.DataRow label="Custom headers" value={listener.customHeaders} />
-                          <SectionCard.DataRow label="Client data Timeout" value={listener.clientDataTimeout} />
-                          <SectionCard.DataRow label="Member connect Timeout" value={listener.memberConnectTimeout} />
-                          <SectionCard.DataRow label="Member data Timeout" value={listener.memberDataTimeout} />
-                          <SectionCard.DataRow label="TCP Inspect Timeout" value={listener.tcpInspectTimeout} />
-                          <SectionCard.DataRow label="Allowed CIDRs" value={listener.allowedCidrs} />
+                          <SectionCard.DataRow
+                            label="Connection limit"
+                            value={listener.connectionLimit}
+                          />
+                          <SectionCard.DataRow
+                            label="Custom headers"
+                            value={listener.customHeaders}
+                          />
+                          <SectionCard.DataRow
+                            label="Client data Timeout"
+                            value={listener.clientDataTimeout}
+                          />
+                          <SectionCard.DataRow
+                            label="Member connect Timeout"
+                            value={listener.memberConnectTimeout}
+                          />
+                          <SectionCard.DataRow
+                            label="Member data Timeout"
+                            value={listener.memberDataTimeout}
+                          />
+                          <SectionCard.DataRow
+                            label="TCP Inspect Timeout"
+                            value={listener.tcpInspectTimeout}
+                          />
+                          <SectionCard.DataRow
+                            label="Allowed CIDRs"
+                            value={listener.allowedCidrs}
+                          />
                           <SectionCard.DataRow label="Admin state" value={listener.adminState} />
                         </SectionCard.Content>
                       </SectionCard>
@@ -806,7 +861,9 @@ export default function ListenerDetailPage() {
                                   {listener.loadBalancer.name}
                                 </Link>
                               ) : (
-                                <span className="text-[12px] leading-4 text-[var(--color-text-default)]">-</span>
+                                <span className="text-[12px] leading-4 text-[var(--color-text-default)]">
+                                  -
+                                </span>
                               )}
                             </div>
                           </div>
@@ -824,28 +881,47 @@ export default function ListenerDetailPage() {
                           title="Default Pool"
                           actions={
                             <>
-                              <Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />}>
+                              <Button
+                                variant="secondary"
+                                size="sm"
+                                leftIcon={<IconEdit size={12} />}
+                              >
                                 Edit
-                        </Button>
-                              <Button variant="secondary" size="sm" leftIcon={<IconTrash size={12} />}>
-                          Delete
-                        </Button>
+                              </Button>
+                              <Button
+                                variant="secondary"
+                                size="sm"
+                                leftIcon={<IconTrash size={12} />}
+                              >
+                                Delete
+                              </Button>
                             </>
                           }
                         />
                         <SectionCard.Content>
                           <SectionCard.DataRow label="Name" value={mockPools[0]?.name || '-'} />
-                          <SectionCard.DataRow 
-                            label="Status" 
+                          <SectionCard.DataRow
+                            label="Status"
                             value={
-                              <StatusIndicator status={poolStatusMap[mockPools[0]?.status] || 'down'} />
-                            } 
+                              <StatusIndicator
+                                status={poolStatusMap[mockPools[0]?.status] || 'down'}
+                              />
+                            }
                           />
                           <SectionCard.DataRow label="Description" value="-" />
-                          <SectionCard.DataRow label="Algorithm" value={mockPools[0]?.algorithm || '-'} />
-                          <SectionCard.DataRow label="Protocol" value={mockPools[0]?.protocol || '-'} />
+                          <SectionCard.DataRow
+                            label="Algorithm"
+                            value={mockPools[0]?.algorithm || '-'}
+                          />
+                          <SectionCard.DataRow
+                            label="Protocol"
+                            value={mockPools[0]?.protocol || '-'}
+                          />
                           <SectionCard.DataRow label="Session persistence" value="-" />
-                          <SectionCard.DataRow label="Admin state" value={mockPools[0]?.adminState || '-'} />
+                          <SectionCard.DataRow
+                            label="Admin state"
+                            value={mockPools[0]?.adminState || '-'}
+                          />
                         </SectionCard.Content>
                       </SectionCard>
                     </VStack>
@@ -859,7 +935,11 @@ export default function ListenerDetailPage() {
                         <h3 className="text-[16px] font-semibold text-[var(--color-text-default)]">
                           L7 Policies
                         </h3>
-                        <Button variant="secondary" size="sm" leftIcon={<IconCirclePlus size={12} />}>
+                        <Button
+                          variant="secondary"
+                          size="sm"
+                          leftIcon={<IconCirclePlus size={12} />}
+                        >
                           Add L7 Policy
                         </Button>
                       </div>
@@ -888,15 +968,13 @@ export default function ListenerDetailPage() {
                       </div>
 
                       {/* Pagination */}
-                        <Pagination
-                          currentPage={l7PolicyCurrentPage}
-                          totalPages={totalL7PolicyPages}
-                          onPageChange={setL7PolicyCurrentPage}
+                      <Pagination
+                        currentPage={l7PolicyCurrentPage}
+                        totalPages={totalL7PolicyPages}
+                        onPageChange={setL7PolicyCurrentPage}
                         totalItems={filteredL7Policies.length}
                         selectedCount={selectedL7Policies.length}
-                        showSettings
-                        onSettingsClick={() => setIsPreferencesOpen(true)}
-                        />
+                      />
 
                       {/* Table */}
                       <Table
@@ -927,7 +1005,7 @@ export default function ListenerDetailPage() {
                           </Button>
                           <Button variant="secondary" size="sm">
                             Manage SNI Certificates
-                        </Button>
+                          </Button>
                         </div>
                       </div>
 
@@ -955,14 +1033,12 @@ export default function ListenerDetailPage() {
                       </div>
 
                       {/* Pagination */}
-                        <Pagination
-                          currentPage={certificateCurrentPage}
-                          totalPages={totalCertificatePages}
-                          onPageChange={setCertificateCurrentPage}
+                      <Pagination
+                        currentPage={certificateCurrentPage}
+                        totalPages={totalCertificatePages}
+                        onPageChange={setCertificateCurrentPage}
                         totalItems={filteredCertificates.length}
-                        showSettings
-                        onSettingsClick={() => setIsPreferencesOpen(true)}
-                        />
+                      />
 
                       {/* Table */}
                       <Table
@@ -981,4 +1057,3 @@ export default function ListenerDetailPage() {
     </div>
   );
 }
-

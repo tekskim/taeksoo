@@ -100,9 +100,7 @@ export function Tabs({
 
   return (
     <TabsContext.Provider value={{ activeTab, setActiveTab, size, variant }}>
-      <div className={twMerge('flex flex-col h-fit', className)}>
-        {children}
-      </div>
+      <div className={twMerge('flex flex-col h-fit', className)}>{children}</div>
     </TabsContext.Provider>
   );
 }
@@ -115,7 +113,8 @@ export function TabList({ children, className = '' }: TabListProps) {
   const { variant } = useTabsContext();
 
   const variantStyles = {
-    underline: 'flex gap-[var(--tabs-gap)] relative after:absolute after:bottom-0 after:left-0 after:right-0 after:h-px after:bg-[var(--color-border-default)] after:pointer-events-none after:z-10',
+    underline:
+      'flex gap-[var(--tabs-gap)] relative after:absolute after:bottom-0 after:left-0 after:right-0 after:h-px after:bg-[var(--color-border-default)] after:pointer-events-none after:z-10',
     boxed: [
       'inline-flex',
       'items-center',
@@ -130,13 +129,7 @@ export function TabList({ children, className = '' }: TabListProps) {
   };
 
   return (
-    <div
-      role="tablist"
-      className={twMerge(
-        variantStyles[variant],
-        className
-      )}
-    >
+    <div role="tablist" className={twMerge(variantStyles[variant], className)}>
       {children}
     </div>
   );
@@ -181,7 +174,7 @@ export function Tab({ value, children, disabled = false, className = '' }: TabPr
             sizeStyles[size],
             isActive
               ? 'text-[var(--tabs-active-color)]'
-              : 'text-[var(--tabs-inactive-color)] hover:text-[var(--tabs-hover-color)]',
+              : 'text-[var(--tabs-inactive-color)] hover:text-[var(--tabs-hover-color)]'
           )}
         >
           {children}
@@ -193,7 +186,7 @@ export function Tab({ value, children, disabled = false, className = '' }: TabPr
             'relative z-20',
             'w-full h-[var(--tabs-indicator-height)]',
             'transition-colors duration-[var(--duration-fast)]',
-            isActive ? 'bg-[var(--tabs-indicator-color)]' : 'bg-transparent',
+            isActive ? 'bg-[var(--tabs-indicator-color)]' : 'bg-transparent'
           )}
         />
       </button>
@@ -240,11 +233,7 @@ export function TabPanel({ value, children, className = '' }: TabPanelProps) {
     <div
       role="tabpanel"
       aria-hidden={!isActive}
-      className={twMerge(
-        'pt-[var(--tabs-panel-padding)]',
-        !isActive && 'hidden',
-        className
-      )}
+      className={twMerge('pt-[var(--tabs-panel-padding)]', !isActive && 'hidden', className)}
     >
       {children}
     </div>

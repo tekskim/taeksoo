@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
-import { 
-  Drawer, 
-  Button, 
+import {
+  Drawer,
+  Button,
   Input,
   SearchInput,
   Pagination,
@@ -83,26 +83,22 @@ function QuotaProgressBar({ label, used, total }: QuotaProgressBarProps) {
           {label}
         </span>
         <HStack gap={0} align="center">
-          <span className="text-[12px] text-[var(--color-text-default)] leading-4">
-            {used}/
-          </span>
+          <span className="text-[12px] text-[var(--color-text-default)] leading-4">{used}/</span>
           {isUnlimited ? (
             <IconInfinity size={16} className="text-[var(--color-text-default)]" />
           ) : (
-            <span className="text-[12px] text-[var(--color-text-default)] leading-4">
-              {total}
-            </span>
+            <span className="text-[12px] text-[var(--color-text-default)] leading-4">{total}</span>
           )}
         </HStack>
       </HStack>
       <div className="w-full h-1 bg-[var(--color-border-subtle)] rounded-lg relative overflow-hidden">
         {/* Current usage (darker green) */}
-        <div 
+        <div
           className="absolute left-0 top-0 h-full bg-[#4ade80] rounded-lg z-[2]"
           style={{ width: isUnlimited ? '5%' : `${Math.min(percentage, 100)}%` }}
         />
         {/* Next usage preview (lighter green) */}
-        <div 
+        <div
           className="absolute left-0 top-0 h-full bg-[#bbf7d0] rounded-lg z-[1]"
           style={{ width: isUnlimited ? '10%' : `${Math.min(nextPercentage, 100)}%` }}
         />
@@ -139,10 +135,11 @@ export function CreateRouterDrawer({
   const [showAdvanced, setShowAdvanced] = useState(true);
 
   // Filter networks
-  const filteredNetworks = networks.filter((net) =>
-    net.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    net.id.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    net.subnetCidr.toLowerCase().includes(searchQuery.toLowerCase())
+  const filteredNetworks = networks.filter(
+    (net) =>
+      net.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      net.id.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      net.subnetCidr.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   const totalPages = Math.ceil(filteredNetworks.length / ITEMS_PER_PAGE);
@@ -168,7 +165,7 @@ export function CreateRouterDrawer({
   const handleSubmit = async () => {
     setHasAttemptedSubmit(true);
     if (!routerName.trim()) return;
-    
+
     setIsSubmitting(true);
     try {
       await onSubmit?.({
@@ -176,7 +173,7 @@ export function CreateRouterDrawer({
         description,
         adminStateUp,
         externalGatewayEnabled,
-        externalNetworkId: externalGatewayEnabled ? selectedNetworkId ?? undefined : undefined,
+        externalNetworkId: externalGatewayEnabled ? (selectedNetworkId ?? undefined) : undefined,
       });
       onClose();
     } finally {
@@ -218,15 +215,11 @@ export function CreateRouterDrawer({
 
           {/* Buttons */}
           <HStack gap={2} justify="center" className="w-full">
-            <Button 
-              variant="secondary" 
-              onClick={handleClose}
-              className="w-[152px] h-8"
-            >
+            <Button variant="secondary" onClick={handleClose} className="w-[152px] h-8">
               Cancel
             </Button>
-            <Button 
-              variant="primary" 
+            <Button
+              variant="primary"
               onClick={handleSubmit}
               disabled={isSubmitting}
               className="w-[152px] h-8"
@@ -244,7 +237,9 @@ export function CreateRouterDrawer({
             Create Router
           </h2>
           <p className="text-[12px] text-[var(--color-text-subtle)] leading-4">
-            Create a virtual router to route traffic between different networks or subnets. You can optionally connect the router to an external network to enable internet access or floating IP usage.
+            Create a virtual router to route traffic between different networks or subnets. You can
+            optionally connect the router to an external network to enable internet access or
+            floating IP usage.
           </p>
         </VStack>
 
@@ -302,7 +297,8 @@ export function CreateRouterDrawer({
                       Admin State
                     </span>
                     <span className="text-[12px] text-[var(--color-text-subtle)] leading-4">
-                      Setting it to "Down" disables all related network or control operations, regardless of runtime status.
+                      Setting it to "Down" disables all related network or control operations,
+                      regardless of runtime status.
                     </span>
                   </VStack>
                   <Toggle
@@ -321,7 +317,8 @@ export function CreateRouterDrawer({
                     <span className="text-[12px] text-[var(--color-text-subtle)] leading-4">
                       The external gateway connects your router to an external (public) network.
                       <br />
-                      When enabled, instances in the connected subnets can access the internet using floating IPs.
+                      When enabled, instances in the connected subnets can access the internet using
+                      floating IPs.
                     </span>
                   </VStack>
                   <Toggle
@@ -358,7 +355,10 @@ export function CreateRouterDrawer({
               />
 
               {/* Networks Table */}
-              <div className="flex flex-col gap-[var(--table-row-gap)]" style={{ width: '648px', maxWidth: '648px' }}>
+              <div
+                className="flex flex-col gap-[var(--table-row-gap)]"
+                style={{ width: '648px', maxWidth: '648px' }}
+              >
                 {/* Header */}
                 <div className="flex items-stretch min-h-[var(--table-row-height)] bg-[var(--table-header-bg)] border border-[var(--color-border-default)] rounded-[var(--table-row-radius)]">
                   <div className="w-[var(--table-checkbox-width)] flex items-center justify-center" />
@@ -378,17 +378,20 @@ export function CreateRouterDrawer({
 
                 {/* Rows */}
                 {paginatedNetworks.map((net) => (
-                  <div 
+                  <div
                     key={net.id}
                     className={`flex items-stretch min-h-[var(--table-row-height)] border rounded-[var(--table-row-radius)] cursor-pointer transition-all ${
-                      selectedNetworkId === net.id 
-                        ? 'bg-[var(--color-state-info-bg)] border-[var(--color-action-primary)]' 
+                      selectedNetworkId === net.id
+                        ? 'bg-[var(--color-state-info-bg)] border-[var(--color-action-primary)]'
                         : 'bg-[var(--color-surface-default)] border-[var(--color-border-default)] hover:bg-[var(--table-row-hover-bg)]'
                     }`}
                     onClick={() => setSelectedNetworkId(net.id)}
                   >
                     {/* Radio */}
-                    <div className="w-[var(--table-checkbox-width)] flex items-center justify-center" onClick={(e) => e.stopPropagation()}>
+                    <div
+                      className="w-[var(--table-checkbox-width)] flex items-center justify-center"
+                      onClick={(e) => e.stopPropagation()}
+                    >
                       <Radio
                         name="network-select"
                         value={net.id}
@@ -403,18 +406,30 @@ export function CreateRouterDrawer({
                     {/* Name with ID */}
                     <div className="flex-1 flex flex-col justify-center gap-0.5 px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] min-w-0 overflow-hidden">
                       <HStack gap={1.5} align="center">
-                        <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-action-primary)] truncate">{net.name}</span>
-                        <IconExternalLink size={12} stroke={1.5} className="shrink-0 text-[var(--color-action-primary)]" />
+                        <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-action-primary)] truncate">
+                          {net.name}
+                        </span>
+                        <IconExternalLink
+                          size={12}
+                          stroke={1.5}
+                          className="shrink-0 text-[var(--color-action-primary)]"
+                        />
                       </HStack>
-                      <span className="text-[11px] text-[var(--color-text-subtle)] truncate">ID : {net.id}</span>
+                      <span className="text-[11px] text-[var(--color-text-subtle)] truncate">
+                        ID : {net.id}
+                      </span>
                     </div>
                     {/* Subnet CIDR */}
                     <div className="flex-1 flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] min-w-0 overflow-hidden">
-                      <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)] truncate">{net.subnetCidr}</span>
+                      <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)] truncate">
+                        {net.subnetCidr}
+                      </span>
                     </div>
                     {/* Size */}
                     <div className="flex-1 flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] min-w-0 overflow-hidden">
-                      <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)] truncate">{net.size}</span>
+                      <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)] truncate">
+                        {net.size}
+                      </span>
                     </div>
                   </div>
                 ))}
@@ -422,7 +437,9 @@ export function CreateRouterDrawer({
 
               {/* Selection Indicator */}
               <SelectionIndicator
-                selectedItems={selectedNetwork ? [{ id: selectedNetwork.id, label: selectedNetwork.name }] : []}
+                selectedItems={
+                  selectedNetwork ? [{ id: selectedNetwork.id, label: selectedNetwork.name }] : []
+                }
                 onRemove={() => setSelectedNetworkId(null)}
                 emptyText="No item Selected"
                 className="shrink-0"

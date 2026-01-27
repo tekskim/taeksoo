@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
-import { 
-  Drawer, 
-  Button, 
+import {
+  Drawer,
+  Button,
   SearchInput,
   Pagination,
   Radio,
@@ -67,18 +67,21 @@ export function ExternalGatewaySettingDrawer({
 }: ExternalGatewaySettingDrawerProps) {
   // Gateway toggle state
   const [gatewayEnabled, setGatewayEnabled] = useState(initialGatewayEnabled);
-  
+
   // Network selection state
-  const [selectedNetworkId, setSelectedNetworkId] = useState<string | null>(initialSelectedNetworkId);
+  const [selectedNetworkId, setSelectedNetworkId] = useState<string | null>(
+    initialSelectedNetworkId
+  );
   const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Filter networks
-  const filteredNetworks = networks.filter((net) =>
-    net.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    net.id.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    net.subnetCidr.toLowerCase().includes(searchQuery.toLowerCase())
+  const filteredNetworks = networks.filter(
+    (net) =>
+      net.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      net.id.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      net.subnetCidr.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   const totalPages = Math.ceil(filteredNetworks.length / ITEMS_PER_PAGE);
@@ -129,15 +132,11 @@ export function ExternalGatewaySettingDrawer({
       width={696}
       footer={
         <HStack gap={2} justify="center" className="w-full">
-          <Button 
-            variant="secondary" 
-            onClick={handleClose}
-            className="w-[152px] h-8"
-          >
+          <Button variant="secondary" onClick={handleClose} className="w-[152px] h-8">
             Cancel
           </Button>
-          <Button 
-            variant="primary" 
+          <Button
+            variant="primary"
             onClick={handleSubmit}
             disabled={isSubmitting}
             className="w-[152px] h-8"
@@ -155,7 +154,9 @@ export function ExternalGatewaySettingDrawer({
               External Gateway Setting
             </h2>
             <p className="text-[12px] text-[var(--color-text-subtle)] leading-4">
-              Configure or update the external gateway for this router. The external gateway connects your router to a public network, allowing instances in attached subnets to access external networks through floating IPs.
+              Configure or update the external gateway for this router. The external gateway
+              connects your router to a public network, allowing instances in attached subnets to
+              access external networks through floating IPs.
             </p>
           </VStack>
 
@@ -178,10 +179,7 @@ export function ExternalGatewaySettingDrawer({
             External gateway
           </h3>
           <HStack gap={2} align="center">
-            <Toggle
-              checked={gatewayEnabled}
-              onChange={setGatewayEnabled}
-            />
+            <Toggle checked={gatewayEnabled} onChange={setGatewayEnabled} />
             <span className="text-[12px] text-[var(--color-text-default)]">
               {gatewayEnabled ? 'Open' : 'Closed'}
             </span>
@@ -211,7 +209,10 @@ export function ExternalGatewaySettingDrawer({
           />
 
           {/* Networks Table */}
-          <div className="flex flex-col gap-[var(--table-row-gap)]" style={{ width: '648px', maxWidth: '648px' }}>
+          <div
+            className="flex flex-col gap-[var(--table-row-gap)]"
+            style={{ width: '648px', maxWidth: '648px' }}
+          >
             {/* Header */}
             <div className="flex items-stretch min-h-[var(--table-row-height)] bg-[var(--table-header-bg)] border border-[var(--color-border-default)] rounded-[var(--table-row-radius)]">
               <div className="w-[var(--table-checkbox-width)] flex items-center justify-center" />
@@ -231,17 +232,20 @@ export function ExternalGatewaySettingDrawer({
 
             {/* Rows */}
             {paginatedNetworks.map((net) => (
-              <div 
+              <div
                 key={net.id}
                 className={`flex items-stretch min-h-[var(--table-row-height)] border rounded-[var(--table-row-radius)] cursor-pointer transition-all ${
-                  selectedNetworkId === net.id 
-                    ? 'bg-[var(--color-state-info-bg)] border-[var(--color-action-primary)]' 
+                  selectedNetworkId === net.id
+                    ? 'bg-[var(--color-state-info-bg)] border-[var(--color-action-primary)]'
                     : 'bg-[var(--color-surface-default)] border-[var(--color-border-default)] hover:bg-[var(--table-row-hover-bg)]'
                 }`}
                 onClick={() => setSelectedNetworkId(net.id)}
               >
                 {/* Radio */}
-                <div className="w-[var(--table-checkbox-width)] flex items-center justify-center" onClick={(e) => e.stopPropagation()}>
+                <div
+                  className="w-[var(--table-checkbox-width)] flex items-center justify-center"
+                  onClick={(e) => e.stopPropagation()}
+                >
                   <Radio
                     name="network-select"
                     value={net.id}
@@ -256,18 +260,30 @@ export function ExternalGatewaySettingDrawer({
                 {/* Name with ID */}
                 <div className="flex-1 flex flex-col justify-center gap-0.5 px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] min-w-0 overflow-hidden">
                   <HStack gap={1.5} align="center">
-                    <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-action-primary)] truncate">{net.name}</span>
-                    <IconExternalLink size={12} stroke={1.5} className="shrink-0 text-[var(--color-action-primary)]" />
+                    <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-action-primary)] truncate">
+                      {net.name}
+                    </span>
+                    <IconExternalLink
+                      size={12}
+                      stroke={1.5}
+                      className="shrink-0 text-[var(--color-action-primary)]"
+                    />
                   </HStack>
-                  <span className="text-[11px] text-[var(--color-text-subtle)] truncate">ID : {net.id}</span>
+                  <span className="text-[11px] text-[var(--color-text-subtle)] truncate">
+                    ID : {net.id}
+                  </span>
                 </div>
                 {/* Subnet CIDR */}
                 <div className="flex-1 flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] min-w-0 overflow-hidden">
-                  <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)] truncate">{net.subnetCidr}</span>
+                  <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)] truncate">
+                    {net.subnetCidr}
+                  </span>
                 </div>
                 {/* Size */}
                 <div className="flex-1 flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] min-w-0 overflow-hidden">
-                  <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)] truncate">{net.size}</span>
+                  <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)] truncate">
+                    {net.size}
+                  </span>
                 </div>
               </div>
             ))}
@@ -275,7 +291,9 @@ export function ExternalGatewaySettingDrawer({
 
           {/* Selection Indicator - directly under the table */}
           <SelectionIndicator
-            selectedItems={selectedNetwork ? [{ id: selectedNetwork.id, label: selectedNetwork.name }] : []}
+            selectedItems={
+              selectedNetwork ? [{ id: selectedNetwork.id, label: selectedNetwork.name }] : []
+            }
             onRemove={() => setSelectedNetworkId(null)}
             emptyText="No item Selected"
             className="shrink-0"

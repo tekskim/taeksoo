@@ -287,11 +287,21 @@ export const Disabled: Story = {
 export const DisabledVariants: Story = {
   render: () => (
     <div className="flex flex-wrap gap-4">
-      <Button variant="primary" disabled>Primary</Button>
-      <Button variant="secondary" disabled>Secondary</Button>
-      <Button variant="outline" disabled>Outline</Button>
-      <Button variant="ghost" disabled>Ghost</Button>
-      <Button variant="danger" disabled>Danger</Button>
+      <Button variant="primary" disabled>
+        Primary
+      </Button>
+      <Button variant="secondary" disabled>
+        Secondary
+      </Button>
+      <Button variant="outline" disabled>
+        Outline
+      </Button>
+      <Button variant="ghost" disabled>
+        Ghost
+      </Button>
+      <Button variant="danger" disabled>
+        Danger
+      </Button>
     </div>
   ),
 };

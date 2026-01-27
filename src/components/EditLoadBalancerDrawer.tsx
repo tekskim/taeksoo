@@ -49,7 +49,7 @@ export function EditLoadBalancerDrawer({
 
   const handleSubmit = async () => {
     if (!name.trim()) return;
-    
+
     setIsSubmitting(true);
     try {
       await onSubmit?.(name, description, adminStateUp);
@@ -63,7 +63,6 @@ export function EditLoadBalancerDrawer({
     onClose();
   };
 
-
   return (
     <Drawer
       isOpen={isOpen}
@@ -73,15 +72,11 @@ export function EditLoadBalancerDrawer({
       width={376}
       footer={
         <HStack gap={2} className="w-full">
-          <Button 
-            variant="secondary" 
-            onClick={handleClose}
-            className="flex-1 h-8"
-          >
+          <Button variant="secondary" onClick={handleClose} className="flex-1 h-8">
             Cancel
           </Button>
-          <Button 
-            variant="primary" 
+          <Button
+            variant="primary"
             onClick={handleSubmit}
             disabled={isSubmitting}
             className="flex-1 h-8"
@@ -151,10 +146,7 @@ export function EditLoadBalancerDrawer({
           {/* Admin State Toggle (Collapsible) */}
           {isAdvancedExpanded && (
             <HStack gap={2} className="items-center">
-              <Toggle 
-                checked={adminStateUp} 
-                onChange={(e) => setAdminStateUp(e.target.checked)} 
-              />
+              <Toggle checked={adminStateUp} onChange={(e) => setAdminStateUp(e.target.checked)} />
               <span className="text-[12px] text-[var(--color-text-default)] leading-4">
                 {adminStateUp ? 'Up' : 'Down'}
               </span>
@@ -167,4 +159,3 @@ export function EditLoadBalancerDrawer({
 }
 
 export default EditLoadBalancerDrawer;
-

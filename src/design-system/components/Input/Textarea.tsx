@@ -7,8 +7,10 @@ import { twMerge } from 'tailwind-merge';
 
 export type TextareaVariant = 'default' | 'code';
 
-export interface TextareaProps
-  extends Omit<TextareaHTMLAttributes<HTMLTextAreaElement>, 'children'> {
+export interface TextareaProps extends Omit<
+  TextareaHTMLAttributes<HTMLTextAreaElement>,
+  'children'
+> {
   /** Textarea variant */
   variant?: TextareaVariant;
   /** Label text */
@@ -77,10 +79,12 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
 
     // Focus styles (not applied for readOnly)
     // Use box-shadow instead of border-width change to prevent text jumping
-    const focusStyles = !readOnly ? [
-      'focus:border-[var(--input-border-focus)]',
-      'focus:shadow-[0_0_0_1px_var(--input-border-focus)]',
-    ] : [];
+    const focusStyles = !readOnly
+      ? [
+          'focus:border-[var(--input-border-focus)]',
+          'focus:shadow-[0_0_0_1px_var(--input-border-focus)]',
+        ]
+      : [];
 
     // Variant styles
     const variantStyles: Record<TextareaVariant, string> = {
@@ -101,9 +105,7 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
       : '';
 
     // ReadOnly styles
-    const readOnlyStyles = readOnly && !disabled
-      ? 'cursor-default'
-      : '';
+    const readOnlyStyles = readOnly && !disabled ? 'cursor-default' : '';
 
     const textareaClasses = twMerge(
       baseStyles.join(' '),
@@ -115,10 +117,7 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
       className
     );
 
-    const wrapperClasses = [
-      'flex flex-col gap-2',
-      fullWidth ? 'w-full' : 'w-fit',
-    ].join(' ');
+    const wrapperClasses = ['flex flex-col gap-2', fullWidth ? 'w-full' : 'w-fit'].join(' ');
 
     return (
       <div className={wrapperClasses}>
@@ -128,15 +127,16 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
             className="font-medium text-[var(--color-text-default)] text-[14px] leading-5"
           >
             {label}
-            {required && (
-              <span className="text-[var(--color-state-danger)] ml-0.5">*</span>
-            )}
+            {required && <span className="text-[var(--color-state-danger)] ml-0.5">*</span>}
           </label>
         )}
 
         {/* Helper Text - below label */}
         {helperText && !error && (
-          <p id={`${inputId}-helper`} className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
+          <p
+            id={`${inputId}-helper`}
+            className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]"
+          >
             {helperText}
           </p>
         )}
@@ -164,4 +164,3 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
 );
 
 Textarea.displayName = 'Textarea';
-

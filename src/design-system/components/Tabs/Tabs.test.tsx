@@ -137,7 +137,9 @@ describe('Tabs', () => {
         <Tabs defaultValue="tab1" onChange={handleChange}>
           <TabList>
             <Tab value="tab1">Tab 1</Tab>
-            <Tab value="tab2" disabled>Tab 2</Tab>
+            <Tab value="tab2" disabled>
+              Tab 2
+            </Tab>
           </TabList>
           <TabPanel value="tab1">Content 1</TabPanel>
           <TabPanel value="tab2">Content 2</TabPanel>
@@ -155,7 +157,9 @@ describe('Tabs', () => {
         <Tabs defaultValue="tab1">
           <TabList>
             <Tab value="tab1">Tab 1</Tab>
-            <Tab value="tab2" disabled>Tab 2</Tab>
+            <Tab value="tab2" disabled>
+              Tab 2
+            </Tab>
           </TabList>
           <TabPanel value="tab1">Content 1</TabPanel>
           <TabPanel value="tab2">Content 2</TabPanel>
@@ -175,7 +179,7 @@ describe('Tabs', () => {
 
       expect(tabs[0]).toHaveAttribute('aria-selected', 'true');
       expect(tabs[1]).toHaveAttribute('aria-selected', 'false');
-      
+
       expect(panels[0]).toHaveAttribute('aria-hidden', 'false');
       expect(panels[1]).toHaveAttribute('aria-hidden', 'true');
     });

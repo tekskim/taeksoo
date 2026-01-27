@@ -26,10 +26,10 @@ export interface SNBMenuItemProps {
 
 /**
  * SNBMenuItem - Side Navigation Bar Menu Item
- * 
+ *
  * A menu item component for the narrow side navigation bar.
  * Supports default, hover, and selected states with appropriate styling.
- * 
+ *
  * Design tokens used:
  * - default: bg-white, icon: #64748b (text-muted)
  * - hover: bg-[#f8fafc] (surface-subtle), icon: #334155 (text-default)
@@ -87,7 +87,8 @@ export function SNBMenuItem({
       return React.Children.map(children, (child) => {
         if (React.isValidElement(child)) {
           return React.cloneElement(child as React.ReactElement<{ className?: string }>, {
-            className: `${(child.props as { className?: string }).className || ''} ${iconColorStyles[status]}`.trim(),
+            className:
+              `${(child.props as { className?: string }).className || ''} ${iconColorStyles[status]}`.trim(),
           });
         }
         return child;
@@ -98,7 +99,8 @@ export function SNBMenuItem({
       // Clone icon to add the color class
       if (React.isValidElement(icon)) {
         return React.cloneElement(icon as React.ReactElement<{ className?: string }>, {
-          className: `${(icon.props as { className?: string }).className || ''} ${iconColorStyles[status]}`.trim(),
+          className:
+            `${(icon.props as { className?: string }).className || ''} ${iconColorStyles[status]}`.trim(),
         });
       }
       return icon;
@@ -116,7 +118,9 @@ export function SNBMenuItem({
     >
       {type === 'icon' && renderIcon()}
       {type === 'text' && (
-        <span className={`font-semibold text-[length:var(--font-size-18)] leading-[length:var(--line-height-28)] ${textColorStyles[status]}`}>
+        <span
+          className={`font-semibold text-[length:var(--font-size-18)] leading-[length:var(--line-height-28)] ${textColorStyles[status]}`}
+        >
           {text}
         </span>
       )}
@@ -125,5 +129,3 @@ export function SNBMenuItem({
 }
 
 export default SNBMenuItem;
-
-

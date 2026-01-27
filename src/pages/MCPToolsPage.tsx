@@ -1,11 +1,10 @@
-import { useState, useRef, useEffect, useCallback, useMemo } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import {
   Button,
   Tooltip,
   Tabs,
   TabList,
   Tab,
-  TabPanel,
   Select,
   Table,
   SearchInput,
@@ -19,33 +18,14 @@ import {
 import { AgentPageLayout } from '@/layouts';
 import { AgentSidebar } from '@/pages/AgentPage';
 import {
-  IconMessage,
-  IconDatabase,
-  IconPuzzle,
-  IconSettings,
-  IconPalette,
-  IconBell,
-  IconSearch,
   IconTrash,
-  IconChevronDown,
-  IconChevronLeft,
-  IconChevronRight,
-  IconDots,
   IconDotsCircleHorizontal,
   IconStar,
   IconStarFilled,
   IconTarget,
   IconAlertTriangle,
-  IconLoader2,
-  IconDotsVertical,
-  IconSquare,
-  IconSquareRounded,
-  IconEye,
-  IconEyeOff,
-  IconHome,
   IconCircleX,
 } from '@tabler/icons-react';
-import { Icons } from '@/design-system';
 import { useNavigate } from 'react-router-dom';
 
 /* ----------------------------------------
@@ -60,7 +40,7 @@ interface StatusCardProps {
 function StatusCard({ label, count, status }: StatusCardProps) {
   let bgColor = 'bg-[var(--color-surface-subtle,#f8fafc)]';
   let iconBg = 'bg-[var(--color-text-muted,#475569)]';
-  
+
   if (status === 'active') {
     bgColor = 'bg-[var(--color-state-success-bg,#f0fdf4)]';
     iconBg = 'bg-[var(--color-success,#4ade80)]';
@@ -71,22 +51,18 @@ function StatusCard({ label, count, status }: StatusCardProps) {
 
   const getStatusIcon = () => {
     if (status === 'active') {
-      return (
-        <IconTarget size={12} stroke={1} className="text-white" />
-      );
+      return <IconTarget size={12} stroke={1} className="text-white" />;
     } else if (status === 'deactive') {
-      return (
-        <IconCircleX size={12} stroke={1.5} className="text-white" />
-      );
+      return <IconCircleX size={12} stroke={1.5} className="text-white" />;
     } else if (status === 'error') {
-      return (
-        <IconAlertTriangle size={12} stroke={1} className="text-white" />
-      );
+      return <IconAlertTriangle size={12} stroke={1} className="text-white" />;
     }
   };
 
   return (
-    <div className={`${bgColor} flex flex-[1_0_0] items-center justify-between min-h-px min-w-px px-4 py-3 relative rounded-lg shrink-0`}>
+    <div
+      className={`${bgColor} flex flex-[1_0_0] items-center justify-between min-h-px min-w-px px-4 py-3 relative rounded-lg shrink-0`}
+    >
       <div className="flex flex-col gap-1.5 items-start leading-4 not-italic relative shrink-0">
         <p className="font-medium text-[length:var(--font-size-11)] leading-[var(--line-height-16)] text-[var(--color-text-subtle)]">
           {label}
@@ -95,7 +71,9 @@ function StatusCard({ label, count, status }: StatusCardProps) {
           {count}
         </p>
       </div>
-      <div className={`${iconBg} flex gap-0 items-center justify-center p-1 relative rounded-2xl shrink-0 size-6`}>
+      <div
+        className={`${iconBg} flex gap-0 items-center justify-center p-1 relative rounded-2xl shrink-0 size-6`}
+      >
         {getStatusIcon()}
       </div>
     </div>
@@ -148,17 +126,22 @@ export function MCPToolsPage() {
   const [selectedTemplates, setSelectedTemplates] = useState<string[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [activeTab, setActiveTab] = useState('my-servers');
-  const [templateVisibility, setTemplateVisibility] = useState<Record<string, 'visible' | 'hidden'>>({});
+  const [templateVisibility, setTemplateVisibility] = useState<
+    Record<string, 'visible' | 'hidden'>
+  >({});
   const [searchQuery, setSearchQuery] = useState('');
   const [rowsPerPage, setRowsPerPage] = useState(10);
 
   // Status mapping for StatusIndicator
-  const statusMap: Record<MCPToolRow['status'], 'active' | 'error' | 'building' | 'deactivated' | 'pending'> = {
-    'active': 'active',
-    'deactive': 'deactivated',
-    'error': 'error',
-    'processing': 'building',
-    'deleted': 'pending',
+  const statusMap: Record<
+    MCPToolRow['status'],
+    'active' | 'error' | 'building' | 'deactivated' | 'pending'
+  > = {
+    active: 'active',
+    deactive: 'deactivated',
+    error: 'error',
+    processing: 'building',
+    deleted: 'pending',
   };
 
   // Templates mock data
@@ -166,7 +149,7 @@ export function MCPToolsPage() {
     id: `template-${i + 1}`,
     title: i === 0 ? 'LableLableLal' : 'Lable',
     isOfficial: i === 0,
-    visibility: i === 1 ? 'visible' : (i % 2 === 0 ? 'visible' : 'hidden'),
+    visibility: i === 1 ? 'visible' : i % 2 === 0 ? 'visible' : 'hidden',
     category: 'Communication',
     tools: 99,
     updatedAt: 'Nov 11, 2025, 2:51 PM',
@@ -176,7 +159,7 @@ export function MCPToolsPage() {
   // Initialize template visibility state
   useEffect(() => {
     const initialVisibility: Record<string, 'visible' | 'hidden'> = {};
-    templates.forEach(template => {
+    templates.forEach((template) => {
       initialVisibility[template.id] = template.visibility;
     });
     setTemplateVisibility(initialVisibility);
@@ -185,11 +168,112 @@ export function MCPToolsPage() {
   // Catalog mock data
   const catalogTools: MCPToolCard[] = Array.from({ length: 30 }, (_, i) => {
     const services = [
-      { name: 'Brave Search', category: 'Search', thumbnail: 'https://brave.com/favicon.ico', description: 'Search the web using Brave Search API. Get real-time search results, news, and web content for AI-powered research. Search the web', tags: ['Search', 'API', 'Web', 'Research', 'News', 'Content', 'Real-time', 'AI', 'Brave', 'Browser', 'Results', 'Query'] },
-      { name: 'Slack', category: 'Communication', thumbnail: 'https://a.slack-edge.com/80588/marketing/img/icons/icon_slack_hash_colored.png', description: 'Integrate with Slack workspace. Send messages, manage channels, and interact with your team through Slack API.', tags: ['Messaging', 'Team', 'Real-time', 'Channels', 'Notifications', 'Collaboration', 'Workspace', 'Bot', 'Integration', 'API', 'Chat', 'Workflow'] },
-      { name: 'Google Cloud', category: 'Cloud', thumbnail: 'https://www.gstatic.com/devrel-devsite/prod/v45f61267e22832169f15f7bd89df90716b1247c7ea97ba8f337e025024a0b67/cloud/images/favicons/onecloud/favicon.ico', description: 'Access Google Cloud Platform services. Manage compute, storage, and data analytics resources through GCP APIs.', tags: ['Infrastructure', 'Storage', 'Compute', 'BigQuery', 'Cloud Functions', 'GCP', 'Analytics', 'Data', 'Serverless', 'API', 'Resources', 'Management'] },
-      { name: 'GitHub', category: 'Development', thumbnail: 'https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png', description: 'Interact with GitHub repositories. Manage issues, pull requests, and automate development workflows.', tags: ['CI/CD', 'Version Control', 'Automation', 'Pull Request', 'Workflow', 'Repository', 'Issues', 'Code', 'Git', 'DevOps', 'Integration', 'Projects'] },
-      { name: 'Notion', category: 'Productivity', thumbnail: 'https://www.notion.so/images/logo-ios.png', description: 'Connect to Notion workspaces. Read and write pages, databases, and manage your knowledge base.', tags: ['Documentation', 'Notes', 'Wiki', 'Database', 'Templates', 'Knowledge', 'Pages', 'Workspace', 'Collaboration', 'Organization', 'Content', 'Management'] },
+      {
+        name: 'Brave Search',
+        category: 'Search',
+        thumbnail: 'https://brave.com/favicon.ico',
+        description:
+          'Search the web using Brave Search API. Get real-time search results, news, and web content for AI-powered research. Search the web',
+        tags: [
+          'Search',
+          'API',
+          'Web',
+          'Research',
+          'News',
+          'Content',
+          'Real-time',
+          'AI',
+          'Brave',
+          'Browser',
+          'Results',
+          'Query',
+        ],
+      },
+      {
+        name: 'Slack',
+        category: 'Communication',
+        thumbnail: 'https://a.slack-edge.com/80588/marketing/img/icons/icon_slack_hash_colored.png',
+        description:
+          'Integrate with Slack workspace. Send messages, manage channels, and interact with your team through Slack API.',
+        tags: [
+          'Messaging',
+          'Team',
+          'Real-time',
+          'Channels',
+          'Notifications',
+          'Collaboration',
+          'Workspace',
+          'Bot',
+          'Integration',
+          'API',
+          'Chat',
+          'Workflow',
+        ],
+      },
+      {
+        name: 'Google Cloud',
+        category: 'Cloud',
+        thumbnail:
+          'https://www.gstatic.com/devrel-devsite/prod/v45f61267e22832169f15f7bd89df90716b1247c7ea97ba8f337e025024a0b67/cloud/images/favicons/onecloud/favicon.ico',
+        description:
+          'Access Google Cloud Platform services. Manage compute, storage, and data analytics resources through GCP APIs.',
+        tags: [
+          'Infrastructure',
+          'Storage',
+          'Compute',
+          'BigQuery',
+          'Cloud Functions',
+          'GCP',
+          'Analytics',
+          'Data',
+          'Serverless',
+          'API',
+          'Resources',
+          'Management',
+        ],
+      },
+      {
+        name: 'GitHub',
+        category: 'Development',
+        thumbnail: 'https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png',
+        description:
+          'Interact with GitHub repositories. Manage issues, pull requests, and automate development workflows.',
+        tags: [
+          'CI/CD',
+          'Version Control',
+          'Automation',
+          'Pull Request',
+          'Workflow',
+          'Repository',
+          'Issues',
+          'Code',
+          'Git',
+          'DevOps',
+          'Integration',
+          'Projects',
+        ],
+      },
+      {
+        name: 'Notion',
+        category: 'Productivity',
+        thumbnail: 'https://www.notion.so/images/logo-ios.png',
+        description:
+          'Connect to Notion workspaces. Read and write pages, databases, and manage your knowledge base.',
+        tags: [
+          'Documentation',
+          'Notes',
+          'Wiki',
+          'Database',
+          'Templates',
+          'Knowledge',
+          'Pages',
+          'Workspace',
+          'Collaboration',
+          'Organization',
+          'Content',
+          'Management',
+        ],
+      },
     ];
     const service = services[i % services.length];
     return {
@@ -223,7 +307,8 @@ export function MCPToolsPage() {
       status: 'deactive',
       title: 'Google Cloud Platform',
       mcpServer: {
-        thumbnail: 'https://www.gstatic.com/devrel-devsite/prod/v45f61267e22832169f15f7bd89df90716b1247c7ea97ba8f337e025024a0b67/cloud/images/favicons/onecloud/favicon.ico',
+        thumbnail:
+          'https://www.gstatic.com/devrel-devsite/prod/v45f61267e22832169f15f7bd89df90716b1247c7ea97ba8f337e025024a0b67/cloud/images/favicons/onecloud/favicon.ico',
         label: 'google-cloud',
       },
       category: 'Cloud',
@@ -301,7 +386,8 @@ export function MCPToolsPage() {
       status: 'active',
       title: 'Jira Project Management',
       mcpServer: {
-        thumbnail: 'https://wac-cdn.atlassian.com/dam/jcr:616e6748-ad8c-48d9-ae93-e49019ed5259/Jira.svg',
+        thumbnail:
+          'https://wac-cdn.atlassian.com/dam/jcr:616e6748-ad8c-48d9-ae93-e49019ed5259/Jira.svg',
         label: 'jira',
       },
       category: 'Productivity',
@@ -339,7 +425,7 @@ export function MCPToolsPage() {
   // Filter tools by search
   const filteredTools = useMemo(() => {
     if (!searchQuery) return mcpTools;
-    
+
     return mcpTools.filter(
       (t) =>
         t.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -356,7 +442,7 @@ export function MCPToolsPage() {
   // Filter templates by search
   const filteredTemplates = useMemo(() => {
     if (!searchQuery) return templates;
-    
+
     return templates.filter(
       (t) =>
         t.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -409,9 +495,7 @@ export function MCPToolsPage() {
       width: '64px',
       align: 'center',
       sortable: false,
-      render: (_, row) => (
-        <StatusIndicator status={statusMap[row.status]} layout="icon-only" />
-      ),
+      render: (_, row) => <StatusIndicator status={statusMap[row.status]} layout="icon-only" />,
     },
     {
       key: 'title',
@@ -427,9 +511,9 @@ export function MCPToolsPage() {
       render: (_, row) => (
         <div className="flex items-center gap-2">
           <div className="w-5 h-5 rounded bg-[var(--color-surface-subtle)] flex items-center justify-center overflow-hidden shrink-0 p-0.5">
-            <img 
-              src={row.mcpServer.thumbnail} 
-              alt={row.mcpServer.label} 
+            <img
+              src={row.mcpServer.thumbnail}
+              alt={row.mcpServer.label}
               className="w-full h-full object-contain"
               onError={(e) => {
                 const target = e.target as HTMLImageElement;
@@ -467,8 +551,8 @@ export function MCPToolsPage() {
             <span className="text-[11px] text-[var(--color-text-subtle)]">
               +{row.tags.length - 3}
             </span>
-        )}
-      </div>
+          )}
+        </div>
       ),
     },
     {
@@ -492,11 +576,15 @@ export function MCPToolsPage() {
           },
         ];
 
-  return (
+        return (
           <div onClick={(e) => e.stopPropagation()}>
             <ContextMenu items={menuItems} trigger="click">
               <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors">
-                <IconDotsCircleHorizontal size={16} stroke={1.5} className="text-[var(--action-icon-color)]" />
+                <IconDotsCircleHorizontal
+                  size={16}
+                  stroke={1.5}
+                  className="text-[var(--action-icon-color)]"
+                />
               </button>
             </ContextMenu>
           </div>
@@ -591,7 +679,7 @@ export function MCPToolsPage() {
             id: 'toggle-visibility',
             label: templateVisibility[row.id] === 'visible' ? 'Hide' : 'Show',
             onClick: () => {
-              setTemplateVisibility(prev => ({
+              setTemplateVisibility((prev) => ({
                 ...prev,
                 [row.id]: prev[row.id] === 'visible' ? 'hidden' : 'visible',
               }));
@@ -604,15 +692,19 @@ export function MCPToolsPage() {
             onClick: () => console.log('Delete:', row.id),
           },
         ];
-        
+
         return (
           <div onClick={(e) => e.stopPropagation()}>
             <ContextMenu items={menuItems} trigger="click">
               <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors">
-                <IconDotsCircleHorizontal size={16} stroke={1.5} className="text-[var(--action-icon-color)]" />
+                <IconDotsCircleHorizontal
+                  size={16}
+                  stroke={1.5}
+                  className="text-[var(--action-icon-color)]"
+                />
               </button>
             </ContextMenu>
-                  </div>
+          </div>
         );
       },
     },
@@ -624,28 +716,28 @@ export function MCPToolsPage() {
       breadcrumbItems={[{ label: 'MCP tools' }]}
       sidebar={<AgentSidebar />}
     >
-              {/* Tabs */}
-              <div className="w-full">
-                <Tabs value={activeTab} onChange={setActiveTab} variant="underline" size="sm">
-                  <TabList>
-                    <Tab value="my-servers">My servers</Tab>
-                    <Tab value="catalog">Catalog</Tab>
-                    <Tab value="templates">Templates</Tab>
-                  </TabList>
-                </Tabs>
-              </div>
+      {/* Tabs */}
+      <div className="w-full">
+        <Tabs value={activeTab} onChange={setActiveTab} variant="underline" size="sm">
+          <TabList>
+            <Tab value="my-servers">My servers</Tab>
+            <Tab value="catalog">Catalog</Tab>
+            <Tab value="templates">Templates</Tab>
+          </TabList>
+        </Tabs>
+      </div>
 
-              {/* Status Cards - Only for My servers tab */}
-              {activeTab === 'my-servers' && (
-                <div className="flex gap-2 items-center relative shrink-0 w-full">
-                  <StatusCard label="Active" count={7} status="active" />
-                  <StatusCard label="Deactive" count={1} status="deactive" />
-                  <StatusCard label="Error" count={1} status="error" />
-                </div>
-              )}
+      {/* Status Cards - Only for My servers tab */}
+      {activeTab === 'my-servers' && (
+        <div className="flex gap-2 items-center relative shrink-0 w-full">
+          <StatusCard label="Active" count={7} status="active" />
+          <StatusCard label="Deactive" count={1} status="deactive" />
+          <StatusCard label="Error" count={1} status="error" />
+        </div>
+      )}
 
       {/* List Toolbar, Pagination, Table - Grouped with 12px gap */}
-                {activeTab === 'my-servers' && (
+      {activeTab === 'my-servers' && (
         <div className="flex flex-col gap-3 w-full">
           {/* List Toolbar */}
           <ListToolbar
@@ -660,15 +752,15 @@ export function MCPToolsPage() {
                     size="sm"
                     fullWidth
                   />
-              </div>
+                </div>
               </ListToolbar.Actions>
             }
             bulkActions={
               <ListToolbar.Actions>
-                <Button 
-                  variant="muted" 
-                  size="sm" 
-                  leftIcon={<IconTrash size={12} />} 
+                <Button
+                  variant="muted"
+                  size="sm"
+                  leftIcon={<IconTrash size={12} />}
                   disabled={selectedTools.length === 0}
                 >
                   Delete
@@ -677,7 +769,7 @@ export function MCPToolsPage() {
             }
           />
 
-              {/* Pagination */}
+          {/* Pagination */}
           {filteredTools.length > 0 && (
             <Pagination
               currentPage={currentPage}
@@ -697,8 +789,8 @@ export function MCPToolsPage() {
             selectable
             selectedKeys={selectedTools}
             onSelectionChange={setSelectedTools}
-                    />
-                  </div>
+          />
+        </div>
       )}
 
       {activeTab === 'templates' && (
@@ -721,11 +813,7 @@ export function MCPToolsPage() {
                 </ListToolbar.Actions>
               }
             />
-            <Button
-              size="sm"
-              variant="primary"
-              onClick={() => {}}
-            >
+            <Button size="sm" variant="primary" onClick={() => {}}>
               Create template
             </Button>
           </div>
@@ -751,29 +839,29 @@ export function MCPToolsPage() {
             selectedKeys={selectedTemplates}
             onSelectionChange={setSelectedTemplates}
           />
-                </div>
-              )}
+        </div>
+      )}
 
-              {activeTab === 'catalog' && (
-                /* Catalog Grid */
-                <div className="grid grid-cols-3 gap-4 relative shrink-0 w-full">
-                  {catalogTools.map((tool) => (
-                    <div
-                      key={tool.id}
-                      className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] flex flex-col gap-3 items-start p-4 rounded-md relative shrink-0"
-                    >
-                      {/* Thumbnail */}
-                      <div className="flex items-center justify-center w-6 h-6 shrink-0 rounded-[6px] border border-[var(--color-border-default)] overflow-hidden bg-[var(--color-surface-subtle)]">
-                        <img 
-                          src={tool.thumbnail} 
-                          alt={tool.title}
-                          className="w-full h-full object-cover"
-                          onError={(e) => {
-                            const target = e.target as HTMLImageElement;
-                            target.style.display = 'none';
-                            const parent = target.parentElement;
-                            if (parent) {
-                              parent.innerHTML = `
+      {activeTab === 'catalog' && (
+        /* Catalog Grid */
+        <div className="grid grid-cols-3 gap-4 relative shrink-0 w-full">
+          {catalogTools.map((tool) => (
+            <div
+              key={tool.id}
+              className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] flex flex-col gap-3 items-start p-4 rounded-md relative shrink-0"
+            >
+              {/* Thumbnail */}
+              <div className="flex items-center justify-center w-6 h-6 shrink-0 rounded-[6px] border border-[var(--color-border-default)] overflow-hidden bg-[var(--color-surface-subtle)]">
+                <img
+                  src={tool.thumbnail}
+                  alt={tool.title}
+                  className="w-full h-full object-cover"
+                  onError={(e) => {
+                    const target = e.target as HTMLImageElement;
+                    target.style.display = 'none';
+                    const parent = target.parentElement;
+                    if (parent) {
+                      parent.innerHTML = `
                                 <div class="flex flex-wrap w-full h-full">
                                   <div class="w-1/2 h-1/2 bg-yellow-400"></div>
                                   <div class="w-1/2 h-1/2 bg-green-400"></div>
@@ -781,56 +869,54 @@ export function MCPToolsPage() {
                                   <div class="w-1/2 h-1/2 bg-red-400"></div>
                                 </div>
                               `;
-                            }
-                          }}
-                        />
-                      </div>
+                    }
+                  }}
+                />
+              </div>
 
-                      {/* Title */}
-                      <div className="flex flex-col items-start justify-center relative shrink-0 w-full">
-                        <p className="font-medium text-[length:var(--font-size-14)] leading-[var(--line-height-20)] text-[var(--color-text-default)]">
-                          {tool.title}
-                        </p>
-                      </div>
+              {/* Title */}
+              <div className="flex flex-col items-start justify-center relative shrink-0 w-full">
+                <p className="font-medium text-[length:var(--font-size-14)] leading-[var(--line-height-20)] text-[var(--color-text-default)]">
+                  {tool.title}
+                </p>
+              </div>
 
-                      {/* Category */}
-                      <div className="flex flex-col items-start justify-center relative shrink-0">
-                        <p className="text-[length:var(--font-size-12)] leading-[var(--line-height-16)] text-[var(--color-action-primary)]">
-                          {tool.category}
-                        </p>
-                      </div>
+              {/* Category */}
+              <div className="flex flex-col items-start justify-center relative shrink-0">
+                <p className="text-[length:var(--font-size-12)] leading-[var(--line-height-16)] text-[var(--color-action-primary)]">
+                  {tool.category}
+                </p>
+              </div>
 
-                      {/* Description */}
-                      <div className="flex flex-col items-start justify-center relative shrink-0 w-full">
-                        <p className="text-[length:var(--font-size-12)] leading-[var(--line-height-20)] text-[var(--color-text-subtle)] line-clamp-3">
-                          {tool.description}
-                        </p>
-                      </div>
+              {/* Description */}
+              <div className="flex flex-col items-start justify-center relative shrink-0 w-full">
+                <p className="text-[length:var(--font-size-12)] leading-[var(--line-height-20)] text-[var(--color-text-subtle)] line-clamp-3">
+                  {tool.description}
+                </p>
+              </div>
 
-                      {/* Tags */}
-                      <div className="flex gap-1 items-center flex-wrap relative shrink-0 w-full">
-                        {tool.tags.slice(0, 10).map((tag, idx) => (
-                          <div
-                            key={idx}
-                            className="bg-[var(--color-surface-subtle,#f8fafc)] border border-[var(--color-border-default,#e2e8f0)] px-2 py-0.5 rounded-md text-[11px] leading-4 text-[var(--color-text-default)] whitespace-nowrap flex-shrink-0"
-                          >
-                            {tag}
-                          </div>
-                        ))}
-                        {tool.tags.length > 10 && (
-                          <span className="text-[11px] text-[var(--color-text-default)] whitespace-nowrap flex-shrink-0 ml-1">
-                            +{tool.tags.length - 10}
-                          </span>
-                        )}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              )}
-
+              {/* Tags */}
+              <div className="flex gap-1 items-center flex-wrap relative shrink-0 w-full">
+                {tool.tags.slice(0, 10).map((tag, idx) => (
+                  <div
+                    key={idx}
+                    className="bg-[var(--color-surface-subtle,#f8fafc)] border border-[var(--color-border-default,#e2e8f0)] px-2 py-0.5 rounded-md text-[11px] leading-4 text-[var(--color-text-default)] whitespace-nowrap flex-shrink-0"
+                  >
+                    {tag}
+                  </div>
+                ))}
+                {tool.tags.length > 10 && (
+                  <span className="text-[11px] text-[var(--color-text-default)] whitespace-nowrap flex-shrink-0 ml-1">
+                    +{tool.tags.length - 10}
+                  </span>
+                )}
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
     </AgentPageLayout>
   );
 }
 
 export default MCPToolsPage;
-

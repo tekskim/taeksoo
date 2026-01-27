@@ -15,25 +15,14 @@ import {
 } from '@/design-system';
 import { AgentPageLayout } from '@/layouts';
 import {
-  IconMessage,
-  IconRobotFace,
   IconDatabase,
   IconPuzzle,
   IconSettings,
-  IconPalette,
-  IconBell,
-  IconSearch,
   IconTrash,
-  IconChevronDown,
-  IconChevronLeft,
-  IconChevronRight,
-  IconDots,
   IconStar,
   IconStarFilled,
   IconCode,
   IconDotsVertical,
-  IconDotsCircleHorizontal,
-  IconHome,
   IconTarget,
   IconPencil,
 } from '@tabler/icons-react';
@@ -54,7 +43,7 @@ interface StatusCardProps {
 function StatusCard({ label, count, status }: StatusCardProps) {
   let bgColor = 'bg-[var(--color-surface-subtle,#f8fafc)]';
   let iconBg = 'bg-[var(--color-text-muted,#475569)]';
-  
+
   if (status === 'active') {
     bgColor = 'bg-[var(--color-state-success-bg,#f0fdf4)]';
     iconBg = 'bg-[var(--color-success,#4ade80)]';
@@ -62,9 +51,7 @@ function StatusCard({ label, count, status }: StatusCardProps) {
 
   const getStatusIcon = () => {
     if (status === 'active') {
-      return (
-        <IconTarget size={12} stroke={1} className="text-white" />
-      );
+      return <IconTarget size={12} stroke={1} className="text-white" />;
     } else if (status === 'inactive') {
       return (
         <div className="flex flex-col gap-0.5 items-center justify-center">
@@ -73,14 +60,14 @@ function StatusCard({ label, count, status }: StatusCardProps) {
         </div>
       );
     } else if (status === 'draft') {
-      return (
-        <IconPencil size={12} stroke={1} className="text-white" />
-      );
+      return <IconPencil size={12} stroke={1} className="text-white" />;
     }
   };
 
   return (
-    <div className={`${bgColor} flex flex-[1_0_0] items-center justify-between min-h-px min-w-px px-4 py-3 relative rounded-lg shrink-0`}>
+    <div
+      className={`${bgColor} flex flex-[1_0_0] items-center justify-between min-h-px min-w-px px-4 py-3 relative rounded-lg shrink-0`}
+    >
       <div className="flex flex-col gap-1.5 items-start leading-4 not-italic relative shrink-0">
         <p className="font-medium text-[length:var(--font-size-11)] leading-[var(--line-height-16)] text-[var(--color-text-subtle)]">
           {label}
@@ -89,7 +76,9 @@ function StatusCard({ label, count, status }: StatusCardProps) {
           {count}
         </p>
       </div>
-      <div className={`${iconBg} flex gap-0 items-center justify-center p-1 relative rounded-2xl shrink-0 size-6`}>
+      <div
+        className={`${iconBg} flex gap-0 items-center justify-center p-1 relative rounded-2xl shrink-0 size-6`}
+      >
         {getStatusIcon()}
       </div>
     </div>
@@ -106,8 +95,8 @@ export function AgentSidebar() {
 
   // Helper to check if path is active
   const isActive = (paths: string[]) => {
-    return paths.some(path => 
-      path.endsWith('*') 
+    return paths.some((path) =>
+      path.endsWith('*')
         ? location.pathname.startsWith(path.slice(0, -1))
         : location.pathname === path
     );
@@ -120,11 +109,7 @@ export function AgentSidebar() {
         to="/agent"
         className="border-b border-[var(--color-border-default)] flex h-[36px] items-center justify-center w-full hover:bg-[var(--color-surface-muted)] transition-colors shrink-0"
       >
-        <img 
-          src={AgentLogo} 
-          alt="Agent" 
-          className="h-6 w-6"
-        />
+        <img src={AgentLogo} alt="Agent" className="h-6 w-6" />
       </Link>
 
       {/* Sidebar Container */}
@@ -159,7 +144,12 @@ export function AgentSidebar() {
             {/* Agent */}
             <Tooltip content="Agent" position="right">
               <SNBMenuItem
-                isSelected={isActive(['/agent/list', '/agent/list/*', '/agent/create', '/agent/create/*'])}
+                isSelected={isActive([
+                  '/agent/list',
+                  '/agent/list/*',
+                  '/agent/create',
+                  '/agent/create/*',
+                ])}
                 onClick={() => navigate('/agent/list')}
               >
                 <Icons.Robot size={22} stroke={1} />
@@ -265,15 +255,15 @@ export function AgentPage() {
 
   // Status mapping for StatusIndicator
   const statusMap: Record<AgentRow['status'], 'active' | 'shutoff' | 'pending'> = {
-    'active': 'active',
-    'inactive': 'shutoff',
-    'draft': 'pending',
+    active: 'active',
+    inactive: 'shutoff',
+    draft: 'pending',
   };
 
   // Filter agents by search
   const filteredAgents = useMemo(() => {
     if (!searchQuery) return agents;
-    
+
     return agents.filter(
       (a) =>
         a.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -295,13 +285,12 @@ export function AgentPage() {
       width: '48px',
       align: 'center',
       sortable: false,
-      render: (_, row) => (
+      render: (_, row) =>
         row.favorite ? (
           <IconStarFilled size={16} className="text-yellow-500" />
         ) : (
           <IconStar size={16} stroke={1.5} className="text-[var(--color-text-muted)]" />
-        )
-      ),
+        ),
     },
     {
       key: 'status',
@@ -309,9 +298,7 @@ export function AgentPage() {
       width: '64px',
       align: 'center',
       sortable: false,
-      render: (_, row) => (
-        <StatusIndicator status={statusMap[row.status]} layout="icon-only" />
-      ),
+      render: (_, row) => <StatusIndicator status={statusMap[row.status]} layout="icon-only" />,
     },
     {
       key: 'name',
@@ -368,17 +355,24 @@ export function AgentPage() {
             onClick: () => console.log('Delete:', row.id),
           },
         ];
-        
+
         return (
-          <div className="flex gap-1 items-center justify-center" onClick={(e) => e.stopPropagation()}>
+          <div
+            className="flex gap-1 items-center justify-center"
+            onClick={(e) => e.stopPropagation()}
+          >
             <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors">
               <IconCode size={16} stroke={1.5} className="text-[var(--color-text-muted)]" />
             </button>
             <ContextMenu items={menuItems} trigger="click">
-                              <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors">
-                                <IconDotsVertical size={16} stroke={1.5} className="text-[var(--color-text-muted)]" />
-                              </button>
-                            </ContextMenu>
+              <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors">
+                <IconDotsVertical
+                  size={16}
+                  stroke={1.5}
+                  className="text-[var(--color-text-muted)]"
+                />
+              </button>
+            </ContextMenu>
           </div>
         );
       },
@@ -390,22 +384,17 @@ export function AgentPage() {
       title="Agent"
       breadcrumbItems={[{ label: 'Agent' }]}
       headerActions={
-        <Button
-          variant="primary"
-          size="md"
-          onClick={() => navigate('/agent/create')}
-        >
+        <Button variant="primary" size="md" onClick={() => navigate('/agent/create')}>
           Create agent
         </Button>
       }
     >
-
       {/* Status Cards */}
       <div className="flex gap-2 items-center relative shrink-0 w-full">
-                <StatusCard label="Active" count={5} status="active" />
-                <StatusCard label="Inactive" count={5} status="inactive" />
-                <StatusCard label="Draft" count={5} status="draft" />
-              </div>
+        <StatusCard label="Active" count={5} status="active" />
+        <StatusCard label="Inactive" count={5} status="inactive" />
+        <StatusCard label="Draft" count={5} status="draft" />
+      </div>
 
       {/* List Toolbar, Pagination, Table - Grouped with 12px gap */}
       <div className="flex flex-col gap-3 w-full">
@@ -427,10 +416,10 @@ export function AgentPage() {
           }
           bulkActions={
             <ListToolbar.Actions>
-              <Button 
-                variant="muted" 
-                size="sm" 
-                leftIcon={<IconTrash size={12} />} 
+              <Button
+                variant="muted"
+                size="sm"
+                leftIcon={<IconTrash size={12} />}
                 disabled={selectedAgents.length === 0}
               >
                 Delete

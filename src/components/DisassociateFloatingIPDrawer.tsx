@@ -1,9 +1,9 @@
 import { useState } from 'react';
-import { 
-  Drawer, 
-  Button, 
-  SearchInput, 
-  Pagination, 
+import {
+  Drawer,
+  Button,
+  SearchInput,
+  Pagination,
   StatusIndicator,
   Radio,
   SelectionIndicator,
@@ -66,9 +66,10 @@ export function DisassociateFloatingIPDrawer({
   const [currentPage, setCurrentPage] = useState(1);
   const [hasAttemptedSubmit, setHasAttemptedSubmit] = useState(false);
 
-  const filteredFloatingIps = floatingIps.filter((fip) =>
-    fip.floatingIp.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    fip.fixedIp.toLowerCase().includes(searchQuery.toLowerCase())
+  const filteredFloatingIps = floatingIps.filter(
+    (fip) =>
+      fip.floatingIp.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      fip.fixedIp.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   const totalPages = Math.ceil(filteredFloatingIps.length / ITEMS_PER_PAGE);
@@ -79,7 +80,7 @@ export function DisassociateFloatingIPDrawer({
 
   const handleDisassociate = () => {
     setHasAttemptedSubmit(true);
-    
+
     if (selectedFloatingIpId && onDisassociate) {
       onDisassociate(selectedFloatingIpId);
       onClose();
@@ -128,7 +129,9 @@ export function DisassociateFloatingIPDrawer({
         <VStack gap={3}>
           {/* Header */}
           <div className="flex items-center gap-1 h-7">
-            <span className="text-[14px] font-medium text-[var(--color-text-default)]">Floating IPs</span>
+            <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+              Floating IPs
+            </span>
           </div>
 
           {/* Search */}
@@ -150,39 +153,77 @@ export function DisassociateFloatingIPDrawer({
           {/* Floating IP Table */}
           <div style={{ width: '648px', maxWidth: '648px' }}>
             {/* Header */}
-            <div style={{ display: 'flex', width: '648px', height: '40px' }} className="bg-[var(--color-border-subtle)] border border-[var(--color-border-default)] rounded-md">
-              <div style={{ width: '40px', flexShrink: 0 }} className="flex items-center justify-center" />
-              <div style={{ width: '59px', flexShrink: 0 }} className="flex items-center justify-center px-3 border-l border-[var(--color-border-default)]">
-                <span className="text-[11px] font-medium text-[var(--color-text-default)]">Status</span>
+            <div
+              style={{ display: 'flex', width: '648px', height: '40px' }}
+              className="bg-[var(--color-border-subtle)] border border-[var(--color-border-default)] rounded-md"
+            >
+              <div
+                style={{ width: '40px', flexShrink: 0 }}
+                className="flex items-center justify-center"
+              />
+              <div
+                style={{ width: '59px', flexShrink: 0 }}
+                className="flex items-center justify-center px-3 border-l border-[var(--color-border-default)]"
+              >
+                <span className="text-[11px] font-medium text-[var(--color-text-default)]">
+                  Status
+                </span>
               </div>
-              <div style={{ width: '183px', flexShrink: 0 }} className="flex items-center gap-1.5 px-3 border-l border-[var(--color-border-default)] cursor-pointer hover:text-[var(--color-action-primary)]">
-                <span className="text-[11px] font-medium text-[var(--color-text-default)]">Floating IP</span>
+              <div
+                style={{ width: '183px', flexShrink: 0 }}
+                className="flex items-center gap-1.5 px-3 border-l border-[var(--color-border-default)] cursor-pointer hover:text-[var(--color-action-primary)]"
+              >
+                <span className="text-[11px] font-medium text-[var(--color-text-default)]">
+                  Floating IP
+                </span>
                 <IconChevronDown size={12} className="text-[var(--color-text-default)]" />
               </div>
-              <div style={{ width: '183px', flexShrink: 0 }} className="flex items-center gap-1.5 px-3 border-l border-[var(--color-border-default)] cursor-pointer hover:text-[var(--color-action-primary)]">
-                <span className="text-[11px] font-medium text-[var(--color-text-default)]">Fixed IP</span>
+              <div
+                style={{ width: '183px', flexShrink: 0 }}
+                className="flex items-center gap-1.5 px-3 border-l border-[var(--color-border-default)] cursor-pointer hover:text-[var(--color-action-primary)]"
+              >
+                <span className="text-[11px] font-medium text-[var(--color-text-default)]">
+                  Fixed IP
+                </span>
                 <IconChevronDown size={12} className="text-[var(--color-text-default)]" />
               </div>
-              <div style={{ width: '183px', flexShrink: 0 }} className="flex items-center gap-1.5 px-3 border-l border-[var(--color-border-default)] cursor-pointer hover:text-[var(--color-action-primary)]">
-                <span className="text-[11px] font-medium text-[var(--color-text-default)]">Created At</span>
+              <div
+                style={{ width: '183px', flexShrink: 0 }}
+                className="flex items-center gap-1.5 px-3 border-l border-[var(--color-border-default)] cursor-pointer hover:text-[var(--color-action-primary)]"
+              >
+                <span className="text-[11px] font-medium text-[var(--color-text-default)]">
+                  Created At
+                </span>
                 <IconChevronDown size={12} className="text-[var(--color-text-default)]" />
               </div>
             </div>
 
             {/* Body */}
-            <div style={{ width: '648px', maxWidth: '648px', marginTop: '4px', display: 'flex', flexDirection: 'column', gap: '4px' }}>
+            <div
+              style={{
+                width: '648px',
+                maxWidth: '648px',
+                marginTop: '4px',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '4px',
+              }}
+            >
               {paginatedFloatingIps.map((fip) => (
                 <div
                   key={fip.id}
                   onClick={() => setSelectedFloatingIpId(fip.id)}
                   style={{ display: 'flex', width: '648px', minHeight: '40px' }}
                   className={`border rounded-md cursor-pointer transition-all ${
-                    selectedFloatingIpId === fip.id 
-                      ? 'bg-[var(--color-state-info-bg)] border-[var(--color-action-primary)]' 
+                    selectedFloatingIpId === fip.id
+                      ? 'bg-[var(--color-state-info-bg)] border-[var(--color-action-primary)]'
                       : 'bg-[var(--color-surface-default)] border-[var(--color-border-default)] hover:bg-[var(--table-row-hover-bg)]'
                   }`}
                 >
-                  <div style={{ width: '40px', flexShrink: 0 }} className="flex items-center justify-center">
+                  <div
+                    style={{ width: '40px', flexShrink: 0 }}
+                    className="flex items-center justify-center"
+                  >
                     <Radio
                       name="floating-ip-select"
                       value={fip.id}
@@ -190,21 +231,44 @@ export function DisassociateFloatingIPDrawer({
                       onChange={() => setSelectedFloatingIpId(fip.id)}
                     />
                   </div>
-                  <div style={{ width: '59px', flexShrink: 0 }} className="flex items-center justify-center px-3">
+                  <div
+                    style={{ width: '59px', flexShrink: 0 }}
+                    className="flex items-center justify-center px-3"
+                  >
                     <StatusIndicator status="active" layout="icon-only" size="sm" />
                   </div>
-                  <div style={{ width: '183px', flexShrink: 0 }} className="flex flex-col gap-0.5 justify-center px-3 py-2 overflow-hidden">
+                  <div
+                    style={{ width: '183px', flexShrink: 0 }}
+                    className="flex flex-col gap-0.5 justify-center px-3 py-2 overflow-hidden"
+                  >
                     <div className="flex items-center gap-1.5">
-                      <span className="text-[12px] font-medium text-[var(--color-action-primary)] truncate">{fip.floatingIp}</span>
-                      <IconExternalLink size={12} className="shrink-0 text-[var(--color-action-primary)]" />
+                      <span className="text-[12px] font-medium text-[var(--color-action-primary)] truncate">
+                        {fip.floatingIp}
+                      </span>
+                      <IconExternalLink
+                        size={12}
+                        className="shrink-0 text-[var(--color-action-primary)]"
+                      />
                     </div>
-                    <span className="text-[11px] text-[var(--color-text-subtle)] truncate">ID : 17kfj123</span>
+                    <span className="text-[11px] text-[var(--color-text-subtle)] truncate">
+                      ID : 17kfj123
+                    </span>
                   </div>
-                  <div style={{ width: '183px', flexShrink: 0 }} className="flex items-center px-3 py-2 overflow-hidden">
-                    <span className="text-[12px] text-[var(--color-text-default)] truncate">{fip.fixedIp}</span>
+                  <div
+                    style={{ width: '183px', flexShrink: 0 }}
+                    className="flex items-center px-3 py-2 overflow-hidden"
+                  >
+                    <span className="text-[12px] text-[var(--color-text-default)] truncate">
+                      {fip.fixedIp}
+                    </span>
                   </div>
-                  <div style={{ width: '183px', flexShrink: 0 }} className="flex items-center px-3 py-2 overflow-hidden">
-                    <span className="text-[12px] text-[var(--color-text-default)] truncate">{fip.createdAt}</span>
+                  <div
+                    style={{ width: '183px', flexShrink: 0 }}
+                    className="flex items-center px-3 py-2 overflow-hidden"
+                  >
+                    <span className="text-[12px] text-[var(--color-text-default)] truncate">
+                      {fip.createdAt}
+                    </span>
                   </div>
                 </div>
               ))}
@@ -216,7 +280,16 @@ export function DisassociateFloatingIPDrawer({
         <SelectionIndicator
           className="shrink-0"
           style={{ width: '648px' }}
-          selectedItems={selectedFloatingIpId ? [{ id: selectedFloatingIpId, label: floatingIps.find(f => f.id === selectedFloatingIpId)?.floatingIp || '' }] : []}
+          selectedItems={
+            selectedFloatingIpId
+              ? [
+                  {
+                    id: selectedFloatingIpId,
+                    label: floatingIps.find((f) => f.id === selectedFloatingIpId)?.floatingIp || '',
+                  },
+                ]
+              : []
+          }
           onRemove={() => setSelectedFloatingIpId(null)}
           emptyText="No item selected"
           error={hasAttemptedSubmit && !selectedFloatingIpId}

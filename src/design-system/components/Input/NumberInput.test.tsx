@@ -51,10 +51,10 @@ describe('NumberInput', () => {
 
       render(<NumberInput value={10} onChange={handleChange} />);
       const input = screen.getByRole('spinbutton');
-      
+
       await user.clear(input);
       await user.type(input, '25');
-      
+
       expect(handleChange).toHaveBeenCalled();
     });
 
@@ -63,9 +63,9 @@ describe('NumberInput', () => {
       const user = userEvent.setup();
 
       render(<NumberInput value={5} onChange={handleChange} />);
-      
+
       await user.click(screen.getByRole('button', { name: 'Increase value' }));
-      
+
       expect(handleChange).toHaveBeenCalledWith(6);
     });
 
@@ -74,9 +74,9 @@ describe('NumberInput', () => {
       const user = userEvent.setup();
 
       render(<NumberInput value={5} onChange={handleChange} />);
-      
+
       await user.click(screen.getByRole('button', { name: 'Decrease value' }));
-      
+
       expect(handleChange).toHaveBeenCalledWith(4);
     });
   });
@@ -90,11 +90,11 @@ describe('NumberInput', () => {
     it('updates internal value on input change', async () => {
       const user = userEvent.setup();
       render(<NumberInput defaultValue={0} />);
-      
+
       const input = screen.getByRole('spinbutton');
       await user.clear(input);
       await user.type(input, '15');
-      
+
       expect(input).toHaveValue(15);
     });
   });
@@ -105,9 +105,9 @@ describe('NumberInput', () => {
       const user = userEvent.setup();
 
       render(<NumberInput value={5} onChange={handleChange} min={0} />);
-      
+
       await user.click(screen.getByRole('button', { name: 'Decrease value' }));
-      
+
       // Should clamp to 4 (value - step), not below min
       expect(handleChange).toHaveBeenCalledWith(4);
     });
@@ -117,9 +117,9 @@ describe('NumberInput', () => {
       const user = userEvent.setup();
 
       render(<NumberInput value={95} onChange={handleChange} max={100} />);
-      
+
       await user.click(screen.getByRole('button', { name: 'Increase value' }));
-      
+
       expect(handleChange).toHaveBeenCalledWith(96);
     });
 
@@ -128,7 +128,7 @@ describe('NumberInput', () => {
       const user = userEvent.setup();
 
       render(<NumberInput value={100} onChange={handleChange} max={100} />);
-      
+
       const incrementButton = screen.getByRole('button', { name: 'Increase value' });
       expect(incrementButton).toBeDisabled();
     });
@@ -138,7 +138,7 @@ describe('NumberInput', () => {
       const user = userEvent.setup();
 
       render(<NumberInput value={0} onChange={handleChange} min={0} />);
-      
+
       const decrementButton = screen.getByRole('button', { name: 'Decrease value' });
       expect(decrementButton).toBeDisabled();
     });
@@ -150,9 +150,9 @@ describe('NumberInput', () => {
       const user = userEvent.setup();
 
       render(<NumberInput value={10} onChange={handleChange} step={5} />);
-      
+
       await user.click(screen.getByRole('button', { name: 'Increase value' }));
-      
+
       expect(handleChange).toHaveBeenCalledWith(15);
     });
 
@@ -161,9 +161,9 @@ describe('NumberInput', () => {
       const user = userEvent.setup();
 
       render(<NumberInput value={10} onChange={handleChange} step={5} />);
-      
+
       await user.click(screen.getByRole('button', { name: 'Decrease value' }));
-      
+
       expect(handleChange).toHaveBeenCalledWith(5);
     });
 
@@ -172,9 +172,9 @@ describe('NumberInput', () => {
       const user = userEvent.setup();
 
       render(<NumberInput value={1} onChange={handleChange} step={0.1} />);
-      
+
       await user.click(screen.getByRole('button', { name: 'Increase value' }));
-      
+
       expect(handleChange).toHaveBeenCalledWith(1.1);
     });
   });
@@ -185,11 +185,11 @@ describe('NumberInput', () => {
       const user = userEvent.setup();
 
       render(<NumberInput value={10} onChange={handleChange} />);
-      
+
       const input = screen.getByRole('spinbutton');
       await user.click(input);
       await user.keyboard('{ArrowUp}');
-      
+
       expect(handleChange).toHaveBeenCalledWith(11);
     });
 
@@ -198,22 +198,22 @@ describe('NumberInput', () => {
       const user = userEvent.setup();
 
       render(<NumberInput value={10} onChange={handleChange} />);
-      
+
       const input = screen.getByRole('spinbutton');
       await user.click(input);
       await user.keyboard('{ArrowDown}');
-      
+
       expect(handleChange).toHaveBeenCalledWith(9);
     });
 
     it('does not respond to keyboard when disabled', async () => {
       const handleChange = vi.fn();
-      
+
       render(<NumberInput value={10} onChange={handleChange} disabled />);
-      
+
       const input = screen.getByRole('spinbutton');
       fireEvent.keyDown(input, { key: 'ArrowUp' });
-      
+
       expect(handleChange).not.toHaveBeenCalled();
     });
   });
@@ -229,9 +229,9 @@ describe('NumberInput', () => {
       const user = userEvent.setup();
 
       render(<NumberInput value={10} onChange={handleChange} disabled />);
-      
+
       await user.click(screen.getByRole('button', { name: 'Increase value' }));
-      
+
       expect(handleChange).not.toHaveBeenCalled();
     });
 
@@ -240,9 +240,9 @@ describe('NumberInput', () => {
       const user = userEvent.setup();
 
       render(<NumberInput value={10} onChange={handleChange} disabled />);
-      
+
       await user.click(screen.getByRole('button', { name: 'Decrease value' }));
-      
+
       expect(handleChange).not.toHaveBeenCalled();
     });
   });
@@ -290,10 +290,10 @@ describe('NumberInput', () => {
       const user = userEvent.setup();
 
       render(<NumberInput value={10} onChange={handleChange} />);
-      
+
       const input = screen.getByRole('spinbutton');
       await user.clear(input);
-      
+
       // When cleared, should not call onChange with NaN
       expect(handleChange).not.toHaveBeenCalledWith(NaN);
     });
@@ -303,9 +303,9 @@ describe('NumberInput', () => {
       const user = userEvent.setup();
 
       render(<NumberInput onChange={handleChange} />);
-      
+
       await user.click(screen.getByRole('button', { name: 'Increase value' }));
-      
+
       expect(handleChange).toHaveBeenCalledWith(1);
     });
   });

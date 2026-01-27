@@ -16,13 +16,7 @@ import {
 } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
 import { useTabs } from '@/contexts/TabContext';
-import {
-  IconBell,
-  IconTerminal2,
-  IconFile,
-  IconCopy,
-  IconSearch,
-} from '@tabler/icons-react';
+import { IconBell, IconTerminal2, IconFile, IconCopy, IconSearch } from '@tabler/icons-react';
 
 /* ----------------------------------------
    Types
@@ -44,14 +38,86 @@ interface ClusterRow {
    ---------------------------------------- */
 
 const clustersData: ClusterRow[] = [
-  { id: '1', name: 'Cluster1', status: 'Running', kubernetesVersion: 'v1.24', createdAt: '2025-11-11 8:59', cpu: '-', memory: '-', pods: '-' },
-  { id: '2', name: 'ClusterName', status: 'Running', kubernetesVersion: 'v1.29.1', createdAt: '2025-10-30 21:28', cpu: '-', memory: '-', pods: '-' },
-  { id: '3', name: 'ClusterName', status: 'Running', kubernetesVersion: 'v1.33.4', createdAt: '2025-10-30 21:28', cpu: '8 cores', memory: '-', pods: '10/110' },
-  { id: '4', name: 'ClusterName', status: 'Running', kubernetesVersion: 'v1.33.4', createdAt: '2025-10-30 21:28', cpu: '-', memory: '16 GiB', pods: '-' },
-  { id: '5', name: 'ClusterName', status: 'Running', kubernetesVersion: 'v1.33.4', createdAt: '2025-10-30 21:28', cpu: '-', memory: '-', pods: '-' },
-  { id: '6', name: 'ClusterName', status: 'Running', kubernetesVersion: 'v1.33.4', createdAt: '2025-10-30 21:28', cpu: '-', memory: '-', pods: '-' },
-  { id: '7', name: 'ClusterName', status: 'Running', kubernetesVersion: 'v1.33.4', createdAt: '2025-10-30 21:28', cpu: '-', memory: '16 GiB', pods: '10/110' },
-  { id: '8', name: 'ClusterName', status: 'Running', kubernetesVersion: 'v1.33.4', createdAt: '2025-10-30 21:28', cpu: '-', memory: '-', pods: '45/100' },
+  {
+    id: '1',
+    name: 'Cluster1',
+    status: 'Running',
+    kubernetesVersion: 'v1.24',
+    createdAt: '2025-11-11 8:59',
+    cpu: '-',
+    memory: '-',
+    pods: '-',
+  },
+  {
+    id: '2',
+    name: 'ClusterName',
+    status: 'Running',
+    kubernetesVersion: 'v1.29.1',
+    createdAt: '2025-10-30 21:28',
+    cpu: '-',
+    memory: '-',
+    pods: '-',
+  },
+  {
+    id: '3',
+    name: 'ClusterName',
+    status: 'Running',
+    kubernetesVersion: 'v1.33.4',
+    createdAt: '2025-10-30 21:28',
+    cpu: '8 cores',
+    memory: '-',
+    pods: '10/110',
+  },
+  {
+    id: '4',
+    name: 'ClusterName',
+    status: 'Running',
+    kubernetesVersion: 'v1.33.4',
+    createdAt: '2025-10-30 21:28',
+    cpu: '-',
+    memory: '16 GiB',
+    pods: '-',
+  },
+  {
+    id: '5',
+    name: 'ClusterName',
+    status: 'Running',
+    kubernetesVersion: 'v1.33.4',
+    createdAt: '2025-10-30 21:28',
+    cpu: '-',
+    memory: '-',
+    pods: '-',
+  },
+  {
+    id: '6',
+    name: 'ClusterName',
+    status: 'Running',
+    kubernetesVersion: 'v1.33.4',
+    createdAt: '2025-10-30 21:28',
+    cpu: '-',
+    memory: '-',
+    pods: '-',
+  },
+  {
+    id: '7',
+    name: 'ClusterName',
+    status: 'Running',
+    kubernetesVersion: 'v1.33.4',
+    createdAt: '2025-10-30 21:28',
+    cpu: '-',
+    memory: '16 GiB',
+    pods: '10/110',
+  },
+  {
+    id: '8',
+    name: 'ClusterName',
+    status: 'Running',
+    kubernetesVersion: 'v1.33.4',
+    createdAt: '2025-10-30 21:28',
+    cpu: '-',
+    memory: '-',
+    pods: '45/100',
+  },
 ];
 
 /* ----------------------------------------
@@ -62,7 +128,8 @@ export function ContainerHomePage() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
   const navigate = useNavigate();
-  const { tabs, activeTabId, selectTab, closeTab, addNewTab, updateActiveTabLabel, moveTab } = useTabs();
+  const { tabs, activeTabId, selectTab, closeTab, addNewTab, updateActiveTabLabel, moveTab } =
+    useTabs();
 
   // Update tab label on mount
   useEffect(() => {
@@ -74,31 +141,31 @@ export function ContainerHomePage() {
 
   // Table columns
   const columns: TableColumn<ClusterRow>[] = [
-    { 
-      key: 'status', 
-      label: 'Status', 
-      width: '64px', 
+    {
+      key: 'status',
+      label: 'Status',
+      width: '64px',
       align: 'center',
       sortable: true,
       render: (value: string) => (
-        <StatusIndicator 
-          status={value === 'Running' ? 'active' : value === 'Error' ? 'error' : 'muted'} 
+        <StatusIndicator
+          status={value === 'Running' ? 'active' : value === 'Error' ? 'error' : 'muted'}
         />
-      )
+      ),
     },
-    { 
-      key: 'name', 
-      label: 'Name', 
-      flex: 1, 
+    {
+      key: 'name',
+      label: 'Name',
+      flex: 1,
       sortable: true,
       render: (value: string) => (
-        <span 
+        <span
           className="text-[var(--color-action-primary)] font-medium cursor-pointer hover:underline"
           onClick={() => navigate('/container/dashboard')}
         >
           {value}
         </span>
-      )
+      ),
     },
     { key: 'kubernetesVersion', label: 'Kubernetes version', width: '160px', sortable: true },
     { key: 'createdAt', label: 'Created at', width: '160px', sortable: true },
@@ -119,7 +186,7 @@ export function ContainerHomePage() {
       >
         {/* Tab Bar */}
         <TabBar
-          tabs={tabs.map(tab => ({ id: tab.id, label: tab.label, closable: tab.closable }))}
+          tabs={tabs.map((tab) => ({ id: tab.id, label: tab.label, closable: tab.closable }))}
           activeTab={activeTabId}
           onTabChange={selectTab}
           onTabClose={closeTab}
@@ -131,13 +198,7 @@ export function ContainerHomePage() {
         <TopBar
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
-          breadcrumb={
-            <Breadcrumb
-              items={[
-                { label: 'Home' },
-              ]}
-            />
-          }
+          breadcrumb={<Breadcrumb items={[{ label: 'Home' }]} />}
           actions={
             <>
               <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
@@ -167,9 +228,12 @@ export function ContainerHomePage() {
               <SectionCard className="bg-[var(--color-surface-subtle)]">
                 <SectionCard.Content>
                   <VStack gap={2}>
-                    <h1 className="text-[24px] font-semibold text-[var(--color-text-default)]">Welcome to Thaki Cloud Container</h1>
+                    <h1 className="text-[24px] font-semibold text-[var(--color-text-default)]">
+                      Welcome to Thaki Cloud Container
+                    </h1>
                     <p className="text-[14px] text-[var(--color-text-muted)]">
-                      Manage effortlessly, scale and optimize your Kubernetes clusters, workloads, and resources from a single platform.
+                      Manage effortlessly, scale and optimize your Kubernetes clusters, workloads,
+                      and resources from a single platform.
                     </p>
                   </VStack>
                 </SectionCard.Content>
@@ -182,9 +246,9 @@ export function ContainerHomePage() {
                   <SectionCard.Header title="Clusters" />
                   <SectionCard.Content>
                     <VStack gap={4}>
-                      <SearchInput 
-                        placeholder="Search clusters by attributes" 
-                        size="sm" 
+                      <SearchInput
+                        placeholder="Search clusters by attributes"
+                        size="sm"
                         className="w-[var(--search-input-width)]"
                       />
                       <Pagination
@@ -207,9 +271,12 @@ export function ContainerHomePage() {
                 <SectionCard className="w-[var(--search-input-width)] shrink-0">
                   <SectionCard.Content>
                     <VStack gap={4}>
-                      <h3 className="text-[14px] font-semibold text-[var(--color-text-default)]">Create a Cluster</h3>
+                      <h3 className="text-[14px] font-semibold text-[var(--color-text-default)]">
+                        Create a Cluster
+                      </h3>
                       <p className="text-[12px] text-[var(--color-text-muted)] leading-relaxed">
-                        Create a Kubernetes cluster to start running and managing your containerized workloads.
+                        Create a Kubernetes cluster to start running and managing your containerized
+                        workloads.
                       </p>
                       <div className="w-full flex justify-end">
                         <Button variant="primary" size="md">
@@ -229,4 +296,3 @@ export function ContainerHomePage() {
 }
 
 export default ContainerHomePage;
-

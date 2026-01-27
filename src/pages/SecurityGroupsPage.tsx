@@ -12,7 +12,6 @@ import {
   ListToolbar,
   ContextMenu,
   ConfirmModal,
-  StatusIndicator,
   type TableColumn,
   type ContextMenuItem,
   type FilterField,
@@ -23,12 +22,7 @@ import { useTabs } from '@/contexts/TabContext';
 import { ViewPreferencesDrawer, type ColumnConfig } from '@/components/ViewPreferencesDrawer';
 import { CreateSecurityGroupRuleDrawer } from '@/components/CreateSecurityGroupRuleDrawer';
 import { EditSecurityGroupDrawer } from '@/components/EditSecurityGroupDrawer';
-import {
-  IconDotsCircleHorizontal,
-  IconTrash,
-  IconDownload,
-  IconBell,
-} from '@tabler/icons-react';
+import { IconDotsCircleHorizontal, IconTrash, IconDownload, IconBell } from '@tabler/icons-react';
 import { Link } from 'react-router-dom';
 
 /* ----------------------------------------
@@ -52,16 +46,96 @@ interface SecurityGroup {
    ---------------------------------------- */
 
 const mockSecurityGroups: SecurityGroup[] = [
-  { id: 'sg-001', name: 'sg-01', description: 'Web server access group', ingressRules: 3, egressRules: 3, createdAt: '2024-01-15', status: 'active' },
-  { id: 'sg-002', name: 'default', description: 'Default security group', ingressRules: 2, egressRules: 2, createdAt: '2024-01-10', status: 'active' },
-  { id: 'sg-003', name: 'db-sg', description: 'Database access group', ingressRules: 5, egressRules: 1, createdAt: '2024-02-01', status: 'active' },
-  { id: 'sg-004', name: 'app-sg', description: 'Application server security group', ingressRules: 8, egressRules: 4, createdAt: '2024-02-15', status: 'active' },
-  { id: 'sg-005', name: 'lb-sg', description: 'Load balancer security group', ingressRules: 4, egressRules: 2, createdAt: '2024-03-01', status: 'active' },
-  { id: 'sg-006', name: 'cache-sg', description: 'Cache server access group', ingressRules: 2, egressRules: 1, createdAt: '2024-03-10', status: 'active' },
-  { id: 'sg-007', name: 'monitor-sg', description: 'Monitoring access group', ingressRules: 6, egressRules: 3, createdAt: '2024-04-01', status: 'error' },
-  { id: 'sg-008', name: 'vpn-sg', description: 'VPN access group', ingressRules: 10, egressRules: 5, createdAt: '2024-04-15', status: 'active' },
-  { id: 'sg-009', name: 'admin-sg', description: 'Admin access group', ingressRules: 15, egressRules: 8, createdAt: '2024-05-01', status: 'active' },
-  { id: 'sg-010', name: 'test-sg', description: 'Test environment security group', ingressRules: 1, egressRules: 1, createdAt: '2024-05-10', status: 'active' },
+  {
+    id: 'sg-001',
+    name: 'sg-01',
+    description: 'Web server access group',
+    ingressRules: 3,
+    egressRules: 3,
+    createdAt: '2024-01-15',
+    status: 'active',
+  },
+  {
+    id: 'sg-002',
+    name: 'default',
+    description: 'Default security group',
+    ingressRules: 2,
+    egressRules: 2,
+    createdAt: '2024-01-10',
+    status: 'active',
+  },
+  {
+    id: 'sg-003',
+    name: 'db-sg',
+    description: 'Database access group',
+    ingressRules: 5,
+    egressRules: 1,
+    createdAt: '2024-02-01',
+    status: 'active',
+  },
+  {
+    id: 'sg-004',
+    name: 'app-sg',
+    description: 'Application server security group',
+    ingressRules: 8,
+    egressRules: 4,
+    createdAt: '2024-02-15',
+    status: 'active',
+  },
+  {
+    id: 'sg-005',
+    name: 'lb-sg',
+    description: 'Load balancer security group',
+    ingressRules: 4,
+    egressRules: 2,
+    createdAt: '2024-03-01',
+    status: 'active',
+  },
+  {
+    id: 'sg-006',
+    name: 'cache-sg',
+    description: 'Cache server access group',
+    ingressRules: 2,
+    egressRules: 1,
+    createdAt: '2024-03-10',
+    status: 'active',
+  },
+  {
+    id: 'sg-007',
+    name: 'monitor-sg',
+    description: 'Monitoring access group',
+    ingressRules: 6,
+    egressRules: 3,
+    createdAt: '2024-04-01',
+    status: 'error',
+  },
+  {
+    id: 'sg-008',
+    name: 'vpn-sg',
+    description: 'VPN access group',
+    ingressRules: 10,
+    egressRules: 5,
+    createdAt: '2024-04-15',
+    status: 'active',
+  },
+  {
+    id: 'sg-009',
+    name: 'admin-sg',
+    description: 'Admin access group',
+    ingressRules: 15,
+    egressRules: 8,
+    createdAt: '2024-05-01',
+    status: 'active',
+  },
+  {
+    id: 'sg-010',
+    name: 'test-sg',
+    description: 'Test environment security group',
+    ingressRules: 1,
+    egressRules: 1,
+    createdAt: '2024-05-10',
+    status: 'active',
+  },
 ];
 
 /* ----------------------------------------
@@ -69,8 +143,8 @@ const mockSecurityGroups: SecurityGroup[] = [
    ---------------------------------------- */
 
 const sgStatusMap: Record<SecurityGroupStatus, 'active' | 'error'> = {
-  'active': 'active',
-  'error': 'error',
+  active: 'active',
+  error: 'error',
 };
 
 /* ----------------------------------------
@@ -89,7 +163,7 @@ export function SecurityGroupsPage() {
   const [appliedFilters, setAppliedFilters] = useState<AppliedFilter[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [securityGroups] = useState(mockSecurityGroups);
-  
+
   // Delete modal state
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [groupToDelete, setGroupToDelete] = useState<SecurityGroup | null>(null);
@@ -139,13 +213,21 @@ export function SecurityGroupsPage() {
   const getContextMenuItems = (sg: SecurityGroup): ContextMenuItem[] => [
     { id: 'create-rule', label: 'Create rule', onClick: () => handleCreateRule(sg) },
     { id: 'edit', label: 'Edit', onClick: () => handleEditGroup(sg) },
-    { id: 'delete', label: 'Delete', status: 'danger', onClick: () => { setGroupToDelete(sg); setDeleteModalOpen(true); } },
+    {
+      id: 'delete',
+      label: 'Delete',
+      status: 'danger',
+      onClick: () => {
+        setGroupToDelete(sg);
+        setDeleteModalOpen(true);
+      },
+    },
   ];
 
   // Filter security groups based on search
   const filteredGroups = useMemo(() => {
     if (appliedFilters.length === 0) return securityGroups;
-    
+
     return securityGroups.filter((sg) => {
       return appliedFilters.every((filter) => {
         const value = String(sg[filter.field as keyof SecurityGroup] || '').toLowerCase();
@@ -172,7 +254,7 @@ export function SecurityGroupsPage() {
       render: (_, row) => (
         <div className="flex flex-col gap-0.5">
           <Link
-          to={`/compute/security-groups/${row.id}`}
+            to={`/compute/security-groups/${row.id}`}
             className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
             onClick={(e) => e.stopPropagation()}
           >
@@ -217,7 +299,11 @@ export function SecurityGroupsPage() {
         <div onClick={(e) => e.stopPropagation()}>
           <ContextMenu items={getContextMenuItems(row)} trigger="click">
             <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
-              <IconDotsCircleHorizontal size={16} stroke={1.5} className="text-[var(--action-icon-color)]" />
+              <IconDotsCircleHorizontal
+                size={16}
+                stroke={1.5}
+                className="text-[var(--action-icon-color)]"
+              />
             </button>
           </ContextMenu>
         </div>
@@ -227,9 +313,7 @@ export function SecurityGroupsPage() {
 
   // Filter and order columns based on preferences
   const visibleColumns = useMemo(() => {
-    const visibleColumnIds = columnConfig
-      .filter((col) => col.visible)
-      .map((col) => col.id);
+    const visibleColumnIds = columnConfig.filter((col) => col.visible).map((col) => col.id);
 
     const columnMap = new Map(columns.map((col) => [col.key, col]));
 
@@ -248,7 +332,7 @@ export function SecurityGroupsPage() {
 
   return (
     <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
-      <Sidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(prev => !prev)} />
+      <Sidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen((prev) => !prev)} />
 
       <main
         className={`absolute top-0 bottom-0 right-0 flex flex-col bg-[var(--color-surface-default)] transition-[left] duration-200 ${
@@ -257,108 +341,111 @@ export function SecurityGroupsPage() {
       >
         {/* Fixed Header Area */}
         <div className="shrink-0 bg-[var(--color-surface-default)]">
-        {/* Tab Bar */}
-        <TabBar
-          tabs={tabBarTabs}
-          activeTab={activeTabId}
-          onTabChange={selectTab}
-          onTabClose={closeTab}
-          onTabAdd={addNewTab}
+          {/* Tab Bar */}
+          <TabBar
+            tabs={tabBarTabs}
+            activeTab={activeTabId}
+            onTabChange={selectTab}
+            onTabClose={closeTab}
+            onTabAdd={addNewTab}
             onTabReorder={moveTab}
-          showAddButton={true}
-          showWindowControls={true}
-        />
+            showAddButton={true}
+            showWindowControls={true}
+          />
 
-        {/* Top Bar */}
-        <TopBar
-          showSidebarToggle={!sidebarOpen}
-          onSidebarToggle={() => setSidebarOpen(true)}
-          showNavigation={true}
-          onBack={() => window.history.back()}
-          onForward={() => window.history.forward()}
-          breadcrumb={
-            <Breadcrumb
-              items={[
-                { label: 'Proj-1', href: '/project' },
-                { label: 'Security groups' },
-              ]}
-            />
-          }
-          actions={
-            <TopBarAction
-              icon={<IconBell size={16} stroke={1} />}
-              aria-label="Notifications"
-              badge={true}
-            />
-          }
-        />
+          {/* Top Bar */}
+          <TopBar
+            showSidebarToggle={!sidebarOpen}
+            onSidebarToggle={() => setSidebarOpen(true)}
+            showNavigation={true}
+            onBack={() => window.history.back()}
+            onForward={() => window.history.forward()}
+            breadcrumb={
+              <Breadcrumb
+                items={[{ label: 'Proj-1', href: '/project' }, { label: 'Security groups' }]}
+              />
+            }
+            actions={
+              <TopBarAction
+                icon={<IconBell size={16} stroke={1} />}
+                aria-label="Notifications"
+                badge={true}
+              />
+            }
+          />
         </div>
 
         {/* Scrollable Content Area */}
         <div className="flex-1 overflow-auto overscroll-contain sidebar-scroll">
-        {/* Main Content */}
-        <div className="pt-4 px-8 pb-6 bg-[var(--color-surface-default)]">
-          <VStack gap={3}>
-            {/* Page Header */}
-            <div className="flex justify-between items-center h-8 w-full">
-              <h1 className="text-[length:var(--font-size-16)] font-semibold leading-6 text-[var(--color-text-default)]">
-                Security groups
-              </h1>
-              <Button variant="primary" size="md">
-                Create Security group
-              </Button>
-            </div>
+          {/* Main Content */}
+          <div className="pt-4 px-8 pb-6 bg-[var(--color-surface-default)]">
+            <VStack gap={3}>
+              {/* Page Header */}
+              <div className="flex justify-between items-center h-8 w-full">
+                <h1 className="text-[length:var(--font-size-16)] font-semibold leading-6 text-[var(--color-text-default)]">
+                  Security groups
+                </h1>
+                <Button variant="primary" size="md">
+                  Create Security group
+                </Button>
+              </div>
 
-            {/* Toolbar */}
-            <ListToolbar
-              primaryActions={
-                <ListToolbar.Actions>
-                  <FilterSearchInput
-                    filters={filterFields}
-                    appliedFilters={appliedFilters}
-                    onFiltersChange={setAppliedFilters}
-                    placeholder="Search security group by attributes"
-                    className="w-[var(--search-input-width)]"
-                  />
-                  <Button variant="secondary" size="sm" iconOnly icon={<IconDownload size={12} />} aria-label="Download" />
-                </ListToolbar.Actions>
-              }
-              bulkActions={
-                <ListToolbar.Actions>
-                  <Button
-                    variant="muted"
-                    size="sm"
-                    leftIcon={<IconTrash size={12} />}
-                    disabled={selectedGroups.length === 0}
-                  >
-                    Delete
-                  </Button>
-                </ListToolbar.Actions>
-              }
-            />
+              {/* Toolbar */}
+              <ListToolbar
+                primaryActions={
+                  <ListToolbar.Actions>
+                    <FilterSearchInput
+                      filters={filterFields}
+                      appliedFilters={appliedFilters}
+                      onFiltersChange={setAppliedFilters}
+                      placeholder="Search security group by attributes"
+                      className="w-[var(--search-input-width)]"
+                    />
+                    <Button
+                      variant="secondary"
+                      size="sm"
+                      iconOnly
+                      icon={<IconDownload size={12} />}
+                      aria-label="Download"
+                    />
+                  </ListToolbar.Actions>
+                }
+                bulkActions={
+                  <ListToolbar.Actions>
+                    <Button
+                      variant="muted"
+                      size="sm"
+                      leftIcon={<IconTrash size={12} />}
+                      disabled={selectedGroups.length === 0}
+                    >
+                      Delete
+                    </Button>
+                  </ListToolbar.Actions>
+                }
+              />
 
-            {/* Pagination */}
-            <Pagination
-              currentPage={currentPage}
-              totalPages={totalPages}
-              totalItems={filteredGroups.length}
-              selectedCount={selectedGroups.length}
-              onPageChange={setCurrentPage}
-              showSettings
-              onSettingsClick={() => setIsPreferencesOpen(true)}
-            />
+              {/* Pagination */}
+              <Pagination
+                currentPage={currentPage}
+                totalPages={totalPages}
+                totalItems={filteredGroups.length}
+                selectedCount={selectedGroups.length}
+                onPageChange={setCurrentPage}
+                showSettings
+                onSettingsClick={() => setIsPreferencesOpen(true)}
+              />
 
-            {/* Table */}
-            <Table
-              columns={visibleColumns}
-              data={paginatedGroups}
-              rowKey="id"
-              selectable
-              selectedKeys={selectedGroups}
-              onSelectionChange={setSelectedGroups}
-            />
-          </VStack>
-        </div>
+              {/* Table */}
+              <Table
+                columns={visibleColumns}
+                data={paginatedGroups}
+                rowKey="id"
+                selectable
+                selectedKeys={selectedGroups}
+                onSelectionChange={setSelectedGroups}
+              />
+            </VStack>
+          </div>
         </div>
       </main>
 

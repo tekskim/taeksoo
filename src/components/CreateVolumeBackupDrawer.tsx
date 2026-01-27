@@ -56,12 +56,12 @@ function QuotaProgressBar({ label, used, total }: QuotaProgressBarProps) {
       </HStack>
       <div className="w-full h-1 bg-[var(--color-border-subtle)] rounded-lg relative overflow-hidden">
         {/* Current usage (darker green) */}
-        <div 
+        <div
           className="absolute left-0 top-0 h-full bg-[#4ade80] rounded-lg z-[2]"
           style={{ width: `${Math.min(percentage, 100)}%` }}
         />
         {/* Next usage preview (lighter green) */}
-        <div 
+        <div
           className="absolute left-0 top-0 h-full bg-[#bbf7d0] rounded-lg z-[1]"
           style={{ width: `${Math.min(nextPercentage, 100)}%` }}
         />
@@ -69,7 +69,6 @@ function QuotaProgressBar({ label, used, total }: QuotaProgressBarProps) {
     </VStack>
   );
 }
-
 
 /* ----------------------------------------
    CreateVolumeBackupDrawer Component
@@ -103,7 +102,7 @@ export function CreateVolumeBackupDrawer({
   const handleSubmit = async () => {
     setHasAttemptedSubmit(true);
     if (!backupName.trim()) return;
-    
+
     setIsSubmitting(true);
     try {
       await onSubmit?.(backupName, backupMode);
@@ -145,15 +144,11 @@ export function CreateVolumeBackupDrawer({
 
           {/* Buttons */}
           <HStack gap={2} className="w-full border-t border-[var(--color-border-default)] pt-4">
-            <Button 
-              variant="secondary" 
-              onClick={handleClose}
-              className="flex-1 h-8"
-            >
+            <Button variant="secondary" onClick={handleClose} className="flex-1 h-8">
               Cancel
             </Button>
-            <Button 
-              variant="primary" 
+            <Button
+              variant="primary"
               onClick={handleSubmit}
               disabled={isSubmitting}
               className="flex-1 h-8"
@@ -173,15 +168,14 @@ export function CreateVolumeBackupDrawer({
               Create Volume Backup
             </h2>
             <p className="text-[12px] text-[var(--color-text-subtle)] leading-4">
-              Create a full backup of this volume and store it in the backup service. The backup can be used to restore the volume or create new volumes in the future.
+              Create a full backup of this volume and store it in the backup service. The backup can
+              be used to restore the volume or create new volumes in the future.
             </p>
           </VStack>
 
           {/* Volume Info Box */}
           <div className="w-full px-4 py-3 bg-[var(--color-surface-subtle)] rounded-lg">
-            <p className="text-[11px] font-medium text-[var(--color-text-subtle)] mb-1.5">
-              Volume
-            </p>
+            <p className="text-[11px] font-medium text-[var(--color-text-subtle)] mb-1.5">Volume</p>
             <p className="text-[12px] text-[var(--color-text-default)]">
               {volume ? `${volume.name} (${volume.size}GiB)` : '-'}
             </p>
@@ -189,13 +183,14 @@ export function CreateVolumeBackupDrawer({
 
           {/* Warning Message */}
           <div className="w-full flex gap-2 p-3 bg-[var(--color-state-danger-bg)] rounded-lg">
-            <IconAlertCircle 
-              size={16} 
-              className="text-[var(--color-state-danger)] shrink-0 mt-0.5" 
+            <IconAlertCircle
+              size={16}
+              className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
               stroke={1.5}
             />
             <p className="text-[11px] text-[var(--color-text-default)] leading-4">
-              For data consistency, stop all write operations on the instance before creating a backup.
+              For data consistency, stop all write operations on the instance before creating a
+              backup.
             </p>
           </div>
         </VStack>
@@ -245,9 +240,9 @@ export function CreateVolumeBackupDrawer({
                 onChange={() => setBackupMode('incremental')}
               />
               <Tooltip content="Incremental backup only backs up the data that has changed since the last backup, saving storage space.">
-                <IconHelp 
-                  size={16} 
-                  className="text-[var(--color-text-subtle)] cursor-help" 
+                <IconHelp
+                  size={16}
+                  className="text-[var(--color-text-subtle)] cursor-help"
                   stroke={1.5}
                 />
               </Tooltip>
@@ -260,4 +255,3 @@ export function CreateVolumeBackupDrawer({
 }
 
 export default CreateVolumeBackupDrawer;
-

@@ -8,7 +8,7 @@ import { HStack, VStack } from '@/design-system/layouts';
 
 export type RuleDirection = 'ingress' | 'egress';
 
-export type ProtocolType = 
+export type ProtocolType =
   | 'all_proto'
   | 'custom_tcp'
   | 'custom_udp'
@@ -78,9 +78,9 @@ function QuotaProgressBar({ label, used, total }: QuotaProgressBarProps) {
         {/* Reserved portion (next item) */}
         <div
           className="absolute top-0 h-full bg-[var(--color-status-success-subtle)] rounded-lg"
-          style={{ 
-            left: `${Math.min(percentage, 100)}%`, 
-            width: `${Math.min((1 / total) * 100, 100 - percentage)}%` 
+          style={{
+            left: `${Math.min(percentage, 100)}%`,
+            width: `${Math.min((1 / total) * 100, 100 - percentage)}%`,
           }}
         />
       </div>
@@ -153,8 +153,9 @@ export function CreateSecurityGroupRuleDrawer({
   ];
 
   // Check if protocol requires port input
-  const showPortInput = ['custom_tcp', 'custom_udp'].includes(protocol) && portRangeType === 'custom';
-  
+  const showPortInput =
+    ['custom_tcp', 'custom_udp'].includes(protocol) && portRangeType === 'custom';
+
   // Check if protocol is "All Proto" - hides Port Range and Remote sections
   const isAllProto = protocol === 'all_proto';
 
@@ -162,17 +163,10 @@ export function CreateSecurityGroupRuleDrawer({
     setHasAttemptedSubmit(true);
     if (showPortInput && !portRange.trim()) return;
     if (!isAllProto && !remoteValue.trim()) return;
-    
+
     setIsSubmitting(true);
     try {
-      await onSubmit?.(
-        direction,
-        protocol,
-        portRangeType,
-        portRange,
-        remoteType,
-        remoteValue
-      );
+      await onSubmit?.(direction, protocol, portRangeType, portRange, remoteType, remoteValue);
       onClose();
     } finally {
       setIsSubmitting(false);
@@ -204,15 +198,11 @@ export function CreateSecurityGroupRuleDrawer({
 
           {/* Buttons */}
           <HStack gap={2} className="w-full border-t border-[var(--color-border-default)] pt-4">
-            <Button 
-              variant="secondary" 
-              onClick={handleClose}
-              className="flex-1 h-8"
-            >
+            <Button variant="secondary" onClick={handleClose} className="flex-1 h-8">
               Cancel
             </Button>
-            <Button 
-              variant="primary" 
+            <Button
+              variant="primary"
               onClick={handleSubmit}
               disabled={isSubmitting}
               className="flex-1 h-8"
@@ -239,10 +229,7 @@ export function CreateSecurityGroupRuleDrawer({
           <label className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
             Direction
           </label>
-          <RadioGroup 
-            value={direction} 
-            onChange={(value) => setDirection(value as RuleDirection)}
-          >
+          <RadioGroup value={direction} onChange={(value) => setDirection(value as RuleDirection)}>
             <VStack gap={3}>
               <Radio value="ingress" label="Ingress" />
               <Radio value="egress" label="Egress" />
@@ -257,7 +244,8 @@ export function CreateSecurityGroupRuleDrawer({
           </label>
           {!isAllProto && (
             <p className="text-[12px] text-[var(--color-text-subtle)] leading-4">
-              Select a protocol type to define the rule's traffic. 'Custom' allows specifying specific port numbers.
+              Select a protocol type to define the rule's traffic. 'Custom' allows specifying
+              specific port numbers.
             </p>
           )}
           <Select
@@ -318,9 +306,7 @@ export function CreateSecurityGroupRuleDrawer({
                 max={255}
                 fullWidth
               />
-              <p className="text-[11px] text-[var(--color-text-subtle)] leading-4">
-                0-255
-              </p>
+              <p className="text-[11px] text-[var(--color-text-subtle)] leading-4">0-255</p>
             </VStack>
 
             <VStack gap={2} className="w-full">
@@ -335,9 +321,7 @@ export function CreateSecurityGroupRuleDrawer({
                 max={255}
                 fullWidth
               />
-              <p className="text-[11px] text-[var(--color-text-subtle)] leading-4">
-                0-255
-              </p>
+              <p className="text-[11px] text-[var(--color-text-subtle)] leading-4">0-255</p>
             </VStack>
           </>
         )}
@@ -415,4 +399,3 @@ export function CreateSecurityGroupRuleDrawer({
 }
 
 export default CreateSecurityGroupRuleDrawer;
-

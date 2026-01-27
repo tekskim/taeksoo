@@ -23,16 +23,7 @@ export interface RadioProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 
 
 export const Radio = forwardRef<HTMLInputElement, RadioProps>(
   (
-    {
-      label,
-      description,
-      value,
-      disabled: propDisabled,
-      className = '',
-      id,
-      children,
-      ...props
-    },
+    { label, description, value, disabled: propDisabled, className = '', id, children, ...props },
     ref
   ) => {
     // Support children as alternative to label
@@ -84,7 +75,7 @@ export const Radio = forwardRef<HTMLInputElement, RadioProps>(
                 ? 'bg-[var(--radio-disabled-bg)]'
                 : isChecked
                   ? 'border-[length:var(--radio-checked-border-width)] border-[var(--radio-checked-border)] bg-[var(--radio-bg)]'
-                  : 'border-[length:var(--radio-border-width)] border-[var(--radio-border)] bg-[var(--radio-bg)]',
+                  : 'border-[length:var(--radio-border-width)] border-[var(--radio-border)] bg-[var(--radio-bg)]'
             )}
           />
 
@@ -93,9 +84,7 @@ export const Radio = forwardRef<HTMLInputElement, RadioProps>(
             <span
               className={twMerge(
                 'text-[length:var(--radio-label-size)] leading-[var(--radio-label-line-height)] font-normal',
-                disabled
-                  ? 'text-[var(--radio-label-disabled)]'
-                  : 'text-[var(--radio-label-color)]'
+                disabled ? 'text-[var(--radio-label-disabled)]' : 'text-[var(--radio-label-color)]'
               )}
             >
               {displayLabel}
@@ -118,4 +107,3 @@ export const Radio = forwardRef<HTMLInputElement, RadioProps>(
 );
 
 Radio.displayName = 'Radio';
-

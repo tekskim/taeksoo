@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
-import { 
-  Drawer, 
-  Button, 
+import {
+  Drawer,
+  Button,
   SearchInput,
   Pagination,
   Checkbox,
@@ -65,11 +65,12 @@ export function ManageRolesDrawer({
   const [hasAttemptedSubmit, setHasAttemptedSubmit] = useState(false);
 
   // Filter roles
-  const filteredRoles = roles.filter((role) =>
-    role.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    role.id.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    role.type.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    role.policies.toLowerCase().includes(searchQuery.toLowerCase())
+  const filteredRoles = roles.filter(
+    (role) =>
+      role.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      role.id.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      role.type.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      role.policies.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   const totalPages = Math.ceil(filteredRoles.length / ITEMS_PER_PAGE);
@@ -86,7 +87,6 @@ export function ManageRolesDrawer({
       setCurrentPage(1);
       setHasAttemptedSubmit(false);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOpen]);
 
   const handleToggleRole = (roleId: string) => {
@@ -103,12 +103,12 @@ export function ManageRolesDrawer({
 
   const handleSubmit = async () => {
     setHasAttemptedSubmit(true);
-    
+
     // Validate required fields
     if (selectedRoleIds.size === 0) {
       return; // Don't submit if no roles selected
     }
-    
+
     setIsSubmitting(true);
     try {
       await onSubmit?.({
@@ -142,10 +142,10 @@ export function ManageRolesDrawer({
     .map((role) => ({ id: role.id, label: role.name }));
 
   // Select all logic
-  const allCurrentPageSelected = paginatedRoles.length > 0 && 
-    paginatedRoles.every((role) => selectedRoleIds.has(role.id));
+  const allCurrentPageSelected =
+    paginatedRoles.length > 0 && paginatedRoles.every((role) => selectedRoleIds.has(role.id));
   const someCurrentPageSelected = paginatedRoles.some((role) => selectedRoleIds.has(role.id));
-  
+
   const handleSelectAll = () => {
     if (allCurrentPageSelected) {
       // Deselect all on current page
@@ -173,15 +173,11 @@ export function ManageRolesDrawer({
       width={696}
       footer={
         <HStack gap={2} justify="center" className="w-full">
-          <Button 
-            variant="secondary" 
-            onClick={handleClose}
-            className="w-[152px] h-8"
-          >
+          <Button variant="secondary" onClick={handleClose} className="w-[152px] h-8">
             Cancel
           </Button>
-          <Button 
-            variant="primary" 
+          <Button
+            variant="primary"
             onClick={handleSubmit}
             disabled={isSubmitting}
             className="w-[152px] h-8"
@@ -199,7 +195,8 @@ export function ManageRolesDrawer({
               Manage roles
             </h2>
             <p className="text-[12px] text-[var(--color-text-subtle)] leading-4">
-              Manages roles directly assigned to the user. The user receives permissions from both direct assignments and roles inherited from groups.
+              Manages roles directly assigned to the user. The user receives permissions from both
+              direct assignments and roles inherited from groups.
             </p>
           </VStack>
 
@@ -229,7 +226,8 @@ export function ManageRolesDrawer({
               </span>
             </div>
             <p className="text-[12px] text-[var(--color-text-subtle)] leading-4">
-              Select roles to assign to this user. If a role's permissions change, the user's permissions are updated automatically.
+              Select roles to assign to this user. If a role's permissions change, the user's
+              permissions are updated automatically.
             </p>
           </VStack>
 
@@ -283,17 +281,20 @@ export function ManageRolesDrawer({
 
             {/* Rows */}
             {paginatedRoles.map((role) => (
-              <div 
+              <div
                 key={role.id}
                 className={`flex items-stretch min-h-[var(--table-row-height)] border rounded-[var(--table-row-radius)] cursor-pointer transition-all ${
-                  selectedRoleIds.has(role.id) 
-                    ? 'bg-[var(--color-state-info-bg)] border-[var(--color-action-primary)]' 
+                  selectedRoleIds.has(role.id)
+                    ? 'bg-[var(--color-state-info-bg)] border-[var(--color-action-primary)]'
                     : 'bg-[var(--color-surface-default)] border-[var(--color-border-default)] hover:bg-[var(--table-row-hover-bg)]'
                 }`}
                 onClick={() => handleToggleRole(role.id)}
               >
                 {/* Checkbox */}
-                <div className="w-[var(--table-checkbox-width)] flex items-center justify-center" onClick={(e) => e.stopPropagation()}>
+                <div
+                  className="w-[var(--table-checkbox-width)] flex items-center justify-center"
+                  onClick={(e) => e.stopPropagation()}
+                >
                   <Checkbox
                     checked={selectedRoleIds.has(role.id)}
                     onChange={() => handleToggleRole(role.id)}
@@ -301,20 +302,32 @@ export function ManageRolesDrawer({
                 </div>
                 {/* Name with link */}
                 <div className="flex-1 flex items-center gap-1.5 px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] min-w-0 overflow-hidden">
-                  <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-action-primary)] truncate">{role.name}</span>
-                  <IconExternalLink size={12} stroke={1.5} className="shrink-0 text-[var(--color-action-primary)]" />
+                  <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-action-primary)] truncate">
+                    {role.name}
+                  </span>
+                  <IconExternalLink
+                    size={12}
+                    stroke={1.5}
+                    className="shrink-0 text-[var(--color-action-primary)]"
+                  />
                 </div>
                 {/* Type */}
                 <div className="flex-1 flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] min-w-0 overflow-hidden">
-                  <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)]">{role.type}</span>
+                  <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)]">
+                    {role.type}
+                  </span>
                 </div>
                 {/* Policies */}
                 <div className="flex-1 flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] min-w-0 overflow-hidden">
-                  <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)] truncate">{role.policies}</span>
+                  <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)] truncate">
+                    {role.policies}
+                  </span>
                 </div>
                 {/* Created at */}
                 <div className="flex-1 flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] min-w-0 overflow-hidden">
-                  <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)]">{role.createdAt}</span>
+                  <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)]">
+                    {role.createdAt}
+                  </span>
                 </div>
               </div>
             ))}

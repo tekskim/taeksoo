@@ -1,4 +1,4 @@
-export { 
+export {
   WizardSection,
   WizardSectionStatusIcon,
   PreSection,
@@ -8,7 +8,7 @@ export {
   DoneSectionRow,
 } from './WizardSection';
 
-export type { 
+export type {
   WizardSectionState,
   WizardSectionProps,
   PreSectionProps,

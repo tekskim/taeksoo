@@ -27,8 +27,6 @@ import {
   IconDotsCircleHorizontal,
   IconArrowsMaximize,
   IconArrowsMinimize,
-  IconChevronLeft,
-  IconChevronRight,
 } from '@tabler/icons-react';
 
 /* ----------------------------------------
@@ -61,7 +59,16 @@ const timeOptions: { label: string; value: TimePeriod }[] = [
 
 // Icons for time controls
 const CalendarIcon = () => (
-  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+  <svg
+    width="12"
+    height="12"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
     <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
     <line x1="16" y1="2" x2="16" y2="6" />
     <line x1="8" y1="2" x2="8" y2="6" />
@@ -70,7 +77,16 @@ const CalendarIcon = () => (
 );
 
 const CloseIcon = () => (
-  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+  <svg
+    width="12"
+    height="12"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
     <line x1="18" y1="6" x2="6" y2="18" />
     <line x1="6" y1="6" x2="18" y2="18" />
   </svg>
@@ -90,10 +106,7 @@ interface MonitoringTimeControlsProps {
   onRefresh?: () => void;
 }
 
-function MonitoringTimeControls({
-  onTimeRangeChange,
-  onRefresh
-}: MonitoringTimeControlsProps) {
+function MonitoringTimeControls({ onTimeRangeChange, onRefresh }: MonitoringTimeControlsProps) {
   const [timeRange, setTimeRange] = useState<TimePeriod>('30m');
   const [customPeriod, setCustomPeriod] = useState<{ start: Date; end: Date } | null>(null);
   const [showDatePicker, setShowDatePicker] = useState(false);
@@ -181,9 +194,9 @@ function MonitoringTimeControls({
     const lastDay = new Date(year, month + 1, 0);
     const daysInMonth = lastDay.getDate();
     const startingDay = firstDay.getDay();
-    
+
     const days: { date: Date; isCurrentMonth: boolean; isToday: boolean }[] = [];
-    
+
     // Previous month days
     const prevMonth = new Date(year, month, 0);
     const prevMonthDays = prevMonth.getDate();
@@ -191,10 +204,10 @@ function MonitoringTimeControls({
       days.push({
         date: new Date(year, month - 1, prevMonthDays - i),
         isCurrentMonth: false,
-        isToday: false
+        isToday: false,
       });
     }
-    
+
     // Current month days
     const today = new Date();
     for (let i = 1; i <= daysInMonth; i++) {
@@ -202,20 +215,20 @@ function MonitoringTimeControls({
       days.push({
         date: d,
         isCurrentMonth: true,
-        isToday: d.toDateString() === today.toDateString()
+        isToday: d.toDateString() === today.toDateString(),
       });
     }
-    
+
     // Next month days
     const remainingDays = 42 - days.length;
     for (let i = 1; i <= remainingDays; i++) {
       days.push({
         date: new Date(year, month + 1, i),
         isCurrentMonth: false,
-        isToday: false
+        isToday: false,
       });
     }
-    
+
     return days;
   };
 
@@ -264,8 +277,8 @@ function MonitoringTimeControls({
     <div className="fullScreenTimeControls">
       {/* Time Range Buttons */}
       <div className="timeSegments">
-        {timeOptions.map(option => (
-          <button 
+        {timeOptions.map((option) => (
+          <button
             key={option.value}
             className={`timeSegment ${timeRange === option.value && !customPeriod ? 'timeSegmentActive' : ''}`}
             onClick={() => handleTimeRangeClick(option.value)}
@@ -289,7 +302,7 @@ function MonitoringTimeControls({
             </button>
           </div>
         ) : (
-          <button 
+          <button
             className={`customPeriodBtn ${showDatePicker ? 'customPeriodBtnActive' : ''}`}
             onClick={handleCustomPeriodClick}
           >
@@ -303,7 +316,7 @@ function MonitoringTimeControls({
           <div className="calendarDropdown">
             {/* Date Range Header */}
             <div className="calendarHeader">
-              <div 
+              <div
                 className={`calendarDateBox ${selectingStart ? 'calendarDateBoxActive' : ''}`}
                 onClick={() => setSelectingStart(true)}
               >
@@ -311,7 +324,7 @@ function MonitoringTimeControls({
                 <span className="calendarDateValue">{formatCalendarDate(tempStartDate)}</span>
               </div>
               <div className="calendarDateSeparator">~</div>
-              <div 
+              <div
                 className={`calendarDateBox ${!selectingStart ? 'calendarDateBoxActive' : ''}`}
                 onClick={() => setSelectingStart(false)}
               >
@@ -334,8 +347,12 @@ function MonitoringTimeControls({
 
             {/* Actions */}
             <div className="calendarActions">
-              <button className="calendarCancel" onClick={() => setShowDatePicker(false)}>Cancel</button>
-              <button className="calendarApply" onClick={handleApplyCustomPeriod}>Apply</button>
+              <button className="calendarCancel" onClick={() => setShowDatePicker(false)}>
+                Cancel
+              </button>
+              <button className="calendarApply" onClick={handleApplyCustomPeriod}>
+                Apply
+              </button>
             </div>
           </div>
         )}
@@ -404,21 +421,22 @@ function CapacityGauge({ percentage, used, total, unit = 'TiB' }: CapacityGaugeP
 
   const color = colorMap[status];
   const available = total !== undefined && used !== undefined ? total - used : 0;
-  const availablePercent = total !== undefined && used !== undefined ? Math.round((available / total) * 100) : 0;
+  const availablePercent =
+    total !== undefined && used !== undefined ? Math.round((available / total) * 100) : 0;
 
   // Check if mouse is over the gauge arc
   const isOverGaugeArc = (mx: number, my: number) => {
     const dx = mx - centerX;
     const dy = my - centerY;
     const distance = Math.sqrt(dx * dx + dy * dy);
-    
+
     // Check if within the arc ring
     if (distance < innerRadius - 4 || distance > outerRadius + 4) return false;
-    
+
     // Check if within the arc angle range (210° to -30°)
     let angle = Math.atan2(-dy, dx) * (180 / Math.PI);
     if (angle < 0) angle += 360;
-    
+
     return angle >= 150 && angle <= 330;
   };
 
@@ -427,13 +445,13 @@ function CapacityGauge({ percentage, used, total, unit = 'TiB' }: CapacityGaugeP
       const rect = containerRef.current.getBoundingClientRect();
       const relX = e.clientX - rect.left;
       const relY = e.clientY - rect.top;
-      
+
       // Calculate chart position within container
       const containerWidth = rect.width;
       const containerHeight = rect.height;
       const chartX = relX - (containerWidth - chartWidth) / 2;
       const chartY = relY - (containerHeight - chartHeight) / 2;
-      
+
       setMousePos({ x: relX, y: relY });
       setShowTooltip(isOverGaugeArc(chartX, chartY));
     }
@@ -458,22 +476,22 @@ function CapacityGauge({ percentage, used, total, unit = 'TiB' }: CapacityGaugeP
             width: 20,
             color: [
               [percentage / 100, color],
-              [1, getColor('--color-border-subtle', '#f1f5f9')]
-            ]
-          }
+              [1, getColor('--color-border-subtle', '#f1f5f9')],
+            ],
+          },
         },
         pointer: { show: false },
         axisTick: { show: false },
         splitLine: { show: false },
         axisLabel: { show: false },
         title: { show: false },
-        detail: { show: false }
-      }
-    ]
+        detail: { show: false },
+      },
+    ],
   };
 
   return (
-    <div 
+    <div
       ref={containerRef}
       className="relative h-[180px] flex items-center justify-center"
       onMouseMove={handleMouseMove}
@@ -485,26 +503,32 @@ function CapacityGauge({ percentage, used, total, unit = 'TiB' }: CapacityGaugeP
           {percentage.toFixed(1)}%
         </span>
         {used !== undefined && total !== undefined && (
-          <span className="text-[12px] text-[var(--color-text-subtle)]">{used}{unit}/{total}{unit}</span>
+          <span className="text-[12px] text-[var(--color-text-subtle)]">
+            {used}
+            {unit}/{total}
+            {unit}
+          </span>
         )}
       </div>
-      
+
       {/* Tooltip */}
       {showTooltip && used !== undefined && total !== undefined && (
-        <div 
+        <div
           className="absolute z-10 backdrop-blur-[40px] bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px] shadow-[0px_0px_4px_0px_rgba(0,0,0,0.1)] px-2 py-1.5 flex flex-col gap-1 pointer-events-none"
           style={{ left: mousePos.x + 12, top: mousePos.y + 12 }}
         >
           <div className="flex items-center gap-1.5">
             <div className="w-[5px] h-[5px] rounded-[1px]" style={{ backgroundColor: color }} />
             <span className="text-[11px] leading-[14px] text-[var(--color-text-default)] whitespace-nowrap">
-              Used: {used}{unit} ({Math.round(percentage)}%)
+              Used: {used}
+              {unit} ({Math.round(percentage)}%)
             </span>
           </div>
           <div className="flex items-center gap-1.5">
             <div className="w-[5px] h-[5px] rounded-[1px] bg-[var(--color-border-subtle)]" />
             <span className="text-[11px] leading-[14px] text-[var(--color-text-default)] whitespace-nowrap">
-              Available: {available.toFixed(1)}{unit} ({availablePercent}%)
+              Available: {available.toFixed(1)}
+              {unit} ({availablePercent}%)
             </span>
           </div>
         </div>
@@ -559,18 +583,18 @@ interface PerformanceChartProps {
   timeControls?: React.ReactNode;
 }
 
-function PerformanceChart({ 
-  title, 
-  series, 
-  timeLabels, 
+function PerformanceChart({
+  title,
+  series,
+  timeLabels,
   yAxisUnit = '',
   isFullScreen = false,
   onFullScreen,
   onExitFullScreen,
-  timeControls
+  timeControls,
 }: PerformanceChartProps) {
   const [visibleSeries, setVisibleSeries] = useState<Record<string, boolean>>(
-    Object.fromEntries(series.map(s => [s.name, true]))
+    Object.fromEntries(series.map((s) => [s.name, true]))
   );
   const [menuOpen, setMenuOpen] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(false);
@@ -600,10 +624,10 @@ function PerformanceChart({
     return () => observer.disconnect();
   }, []);
 
-  const allVisible = Object.values(visibleSeries).every(v => v);
+  const allVisible = Object.values(visibleSeries).every((v) => v);
   const toggleAll = () => {
     const newState = !allVisible;
-    setVisibleSeries(Object.fromEntries(series.map(s => [s.name, newState])));
+    setVisibleSeries(Object.fromEntries(series.map((s) => [s.name, newState])));
   };
 
   const handleFullScreen = () => {
@@ -619,14 +643,14 @@ function PerformanceChart({
   const tooltipTextColor = isDarkMode ? '#e5e5e5' : chartColors.slate800;
 
   // Calculate max value for exactly 5 Y-axis labels (4 intervals) with nice numbers
-  const allData = series.filter(s => visibleSeries[s.name]).flatMap(s => s.data);
+  const allData = series.filter((s) => visibleSeries[s.name]).flatMap((s) => s.data);
   const dataMax = Math.max(...allData, 0);
-  
+
   // Calculate nice interval based on data magnitude
   const rawInterval = dataMax / 4;
   const magnitude = Math.pow(10, Math.floor(Math.log10(rawInterval || 1)));
   const normalizedInterval = rawInterval / magnitude;
-  
+
   // Round UP to nice number to ensure interval covers data: 1, 2, 2.5, 5, 10
   let niceNormalizedInterval;
   if (normalizedInterval <= 1) niceNormalizedInterval = 1;
@@ -634,7 +658,7 @@ function PerformanceChart({
   else if (normalizedInterval <= 2.5) niceNormalizedInterval = 2.5;
   else if (normalizedInterval <= 5) niceNormalizedInterval = 5;
   else niceNormalizedInterval = 10;
-  
+
   const niceInterval = niceNormalizedInterval * magnitude;
   const niceMax = niceInterval * 4; // Always exactly 4 intervals = 5 labels
 
@@ -645,7 +669,7 @@ function PerformanceChart({
       right: '16px',
       top: '20px',
       bottom: '16px',
-      containLabel: false
+      containLabel: false,
     },
     xAxis: {
       type: 'category' as const,
@@ -655,9 +679,9 @@ function PerformanceChart({
       axisLabel: {
         color: chartColors.slate400,
         fontSize: 10,
-        padding: [0, 0, 0, 15]
+        padding: [0, 0, 0, 15],
       },
-      boundaryGap: false
+      boundaryGap: false,
     },
     yAxis: {
       type: 'value' as const,
@@ -667,13 +691,13 @@ function PerformanceChart({
       axisLine: { show: false },
       axisTick: { show: false },
       splitLine: {
-        lineStyle: { color: splitLineColor, opacity: splitLineOpacity }
+        lineStyle: { color: splitLineColor, opacity: splitLineOpacity },
       },
       axisLabel: {
         color: chartColors.slate400,
         fontSize: 10,
-        formatter: (v: number) => `${v}${yAxisUnit}`
-      }
+        formatter: (v: number) => `${v}${yAxisUnit}`,
+      },
     },
     tooltip: {
       trigger: 'axis' as const,
@@ -682,20 +706,25 @@ function PerformanceChart({
       textStyle: {
         color: tooltipTextColor,
         fontSize: 11,
-        fontFamily: 'Mona Sans, -apple-system, BlinkMacSystemFont, sans-serif'
+        fontFamily: 'Mona Sans, -apple-system, BlinkMacSystemFont, sans-serif',
       },
-      formatter: (params: Array<{ marker: string; seriesName: string; value: number; axisValueLabel: string }>) => {
+      formatter: (
+        params: Array<{ marker: string; seriesName: string; value: number; axisValueLabel: string }>
+      ) => {
         if (!Array.isArray(params) || params.length === 0) return '';
         const time = params[0].axisValueLabel;
-        const items = params.map(p => 
-          `<div style="display: flex; align-items: center; gap: 8px;"><span style="display: inline-block; width: 8px; height: 8px; border-radius: 9999px; background-color: ${p.color};"></span><span>${p.seriesName}</span><span style="font-weight: 500; margin-left: auto;">${p.value}</span></div>`
-        ).join('');
+        const items = params
+          .map(
+            (p) =>
+              `<div style="display: flex; align-items: center; gap: 8px;"><span style="display: inline-block; width: 8px; height: 8px; border-radius: 9999px; background-color: ${p.color};"></span><span>${p.seriesName}</span><span style="font-weight: 500; margin-left: auto;">${p.value}</span></div>`
+          )
+          .join('');
         return `<div style="font-size: 11px; font-family: Mona Sans, -apple-system, BlinkMacSystemFont, sans-serif;">${time}<div style="margin-top: 4px;">${items}</div></div>`;
-      }
+      },
     },
     series: series
-      .filter(s => visibleSeries[s.name])
-      .map(s => ({
+      .filter((s) => visibleSeries[s.name])
+      .map((s) => ({
         name: s.name,
         type: 'line',
         smooth: true,
@@ -705,8 +734,8 @@ function PerformanceChart({
         lineStyle: { color: s.color, width: 1 },
         itemStyle: { color: s.color },
         areaStyle: { color: s.color, opacity: 0.1 },
-        data: s.data
-      }))
+        data: s.data,
+      })),
   };
 
   return (
@@ -714,9 +743,7 @@ function PerformanceChart({
       {/* Header */}
       <div className="chartHeader">
         <span className="chartTitle">{title}</span>
-        {isFullScreen && timeControls && (
-          <div className="chartHeaderCenter">{timeControls}</div>
-        )}
+        {isFullScreen && timeControls && <div className="chartHeaderCenter">{timeControls}</div>}
         <div className="chartControls">
           {/* Toggle Button - only show for multiple series */}
           {series.length > 1 && (
@@ -728,12 +755,15 @@ function PerformanceChart({
               <span className="toggleDivider">|</span>
             </>
           )}
-          
+
           {/* Menu Button */}
           <div className="menuContainer">
-            <button 
+            <button
               className="menuTrigger"
-              onClick={(e) => { e.stopPropagation(); setMenuOpen(!menuOpen); }}
+              onClick={(e) => {
+                e.stopPropagation();
+                setMenuOpen(!menuOpen);
+              }}
             >
               <IconDotsCircleHorizontal size={16} stroke={1.5} />
             </button>
@@ -745,17 +775,23 @@ function PerformanceChart({
                 <button className="contextMenuItem" onClick={() => setMenuOpen(false)}>
                   Download CSV
                 </button>
-                <button className="contextMenuItemLast" onClick={() => { setMenuOpen(false); setShowDataView(true); }}>
+                <button
+                  className="contextMenuItemLast"
+                  onClick={() => {
+                    setMenuOpen(false);
+                    setShowDataView(true);
+                  }}
+                >
                   Data View
                 </button>
               </div>
             )}
           </div>
-          
+
           {/* Expand/Minimize Button */}
-          <button 
-            className="expandTrigger" 
-            title={isFullScreen ? "Minimize" : "Expand"}
+          <button
+            className="expandTrigger"
+            title={isFullScreen ? 'Minimize' : 'Expand'}
             onClick={isFullScreen ? onExitFullScreen : handleFullScreen}
           >
             {isFullScreen ? (
@@ -766,28 +802,28 @@ function PerformanceChart({
           </button>
         </div>
       </div>
-      
+
       {/* Chart Body */}
       <div className="chartBody">
         <div className="chartWrapper" ref={wrapperRef}>
-          <ReactECharts 
+          <ReactECharts
             key={isFullScreen ? 'fullscreen' : 'normal'}
             ref={chartRef}
-            option={option} 
-            style={{ 
+            option={option}
+            style={{
               height: isFullScreen ? 'calc(100vh - 200px)' : '100%',
-              width: isFullScreen ? 'calc(100vw - 300px)' : '100%'
-            }} 
+              width: isFullScreen ? 'calc(100vw - 300px)' : '100%',
+            }}
             notMerge={true}
             onChartReady={handleChartReady}
           />
         </div>
         <div className="chartLegend">
           {series.map((s, i) => (
-            <div 
+            <div
               key={i}
               className={`legendItem ${!visibleSeries[s.name] ? 'legendItemHidden' : ''}`}
-              onClick={() => setVisibleSeries(prev => ({ ...prev, [s.name]: !prev[s.name] }))}
+              onClick={() => setVisibleSeries((prev) => ({ ...prev, [s.name]: !prev[s.name] }))}
             >
               <div className="legendDot" style={{ backgroundColor: s.color }} />
               <span>{s.name}</span>
@@ -821,7 +857,7 @@ function ChartWithFullScreen({
   title,
   series,
   timeLabels,
-  yAxisUnit = ''
+  yAxisUnit = '',
 }: {
   title: string;
   series: ChartSeries[];
@@ -866,10 +902,16 @@ function ChartWithFullScreen({
         yAxisUnit={yAxisUnit}
         onFullScreen={() => setFullScreenChart({ title, series, timeLabels, yAxisUnit })}
       />
-      
+
       {fullScreenChart && (
         <>
-          <div className="fullScreenOverlay" onClick={() => { setFullScreenChart(null); setContainerReady(false); }} />
+          <div
+            className="fullScreenOverlay"
+            onClick={() => {
+              setFullScreenChart(null);
+              setContainerReady(false);
+            }}
+          />
           <div className="fullScreenFloating" ref={fullScreenContainerRef}>
             {containerReady && (
               <PerformanceChart
@@ -878,7 +920,10 @@ function ChartWithFullScreen({
                 timeLabels={fullScreenChart.timeLabels}
                 yAxisUnit={fullScreenChart.yAxisUnit}
                 isFullScreen={true}
-                onExitFullScreen={() => { setFullScreenChart(null); setContainerReady(false); }}
+                onExitFullScreen={() => {
+                  setFullScreenChart(null);
+                  setContainerReady(false);
+                }}
                 timeControls={<MonitoringTimeControls />}
               />
             )}
@@ -969,8 +1014,9 @@ const mockStoragePoolDetail: StoragePoolDetail = {
 
 export function StoragePoolDetailPage() {
   const { id } = useParams<{ id: string }>();
-  const { tabs, activeTabId, closeTab, selectTab, addNewTab, updateActiveTabLabel, moveTab } = useTabs();
-  
+  const { tabs, activeTabId, closeTab, selectTab, addNewTab, updateActiveTabLabel, moveTab } =
+    useTabs();
+
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [activeDetailTab, setActiveDetailTab] = useState('details');
 
@@ -994,7 +1040,7 @@ export function StoragePoolDetailPage() {
   ];
 
   // Convert tabs to TabBar format
-  const tabBarTabs = tabs.map(tab => ({
+  const tabBarTabs = tabs.map((tab) => ({
     id: tab.id,
     label: tab.label,
     closable: tab.closable,
@@ -1003,7 +1049,7 @@ export function StoragePoolDetailPage() {
   return (
     <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
       {/* Sidebar */}
-      <StorageSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(prev => !prev)} />
+      <StorageSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen((prev) => !prev)} />
 
       {/* Main Content */}
       <main
@@ -1034,10 +1080,7 @@ export function StoragePoolDetailPage() {
             onForward={() => window.history.forward()}
             breadcrumb={<Breadcrumb items={breadcrumbItems} />}
             actions={
-              <TopBarAction
-                icon={<IconBell size={16} stroke={1.5} />}
-                aria-label="Notifications"
-              />
+              <TopBarAction icon={<IconBell size={16} stroke={1.5} />} aria-label="Notifications" />
             }
           />
         </div>
@@ -1051,7 +1094,11 @@ export function StoragePoolDetailPage() {
               <DetailHeader>
                 <DetailHeader.Title>{pool.name}</DetailHeader.Title>
                 <DetailHeader.InfoGrid>
-                  <DetailHeader.InfoCard label="Data protection" value={pool.dataProtection} status="active" />
+                  <DetailHeader.InfoCard
+                    label="Data protection"
+                    value={pool.dataProtection}
+                    status="active"
+                  />
                   <DetailHeader.InfoCard label="Applications" value={pool.applications} copyable />
                   <DetailHeader.InfoCard label="PG Status" value={pool.pgStatus} />
                   <DetailHeader.InfoCard label="Crush ruleset" value={pool.crushRuleset} />
@@ -1060,7 +1107,12 @@ export function StoragePoolDetailPage() {
 
               {/* Tabs */}
               <div className="w-full">
-                <Tabs value={activeDetailTab} onChange={setActiveDetailTab} variant="underline" size="sm">
+                <Tabs
+                  value={activeDetailTab}
+                  onChange={setActiveDetailTab}
+                  variant="underline"
+                  size="sm"
+                >
                   <TabList>
                     <Tab value="details">Details</Tab>
                     <Tab value="performance">Performance</Tab>
@@ -1097,9 +1149,18 @@ export function StoragePoolDetailPage() {
                       <SectionCard>
                         <SectionCard.Header title="Pool flags & limits" />
                         <SectionCard.Content>
-                          <SectionCard.DataRow label="No Scrub" value={pool.noScrub ? 'Enabled' : 'Disabled'} />
-                          <SectionCard.DataRow label="No Deep Scrub" value={pool.noDeepScrub ? 'Enabled' : 'Disabled'} />
-                          <SectionCard.DataRow label="Max objects" value={pool.maxObjects === 0 ? 'unlimited' : String(pool.maxObjects)} />
+                          <SectionCard.DataRow
+                            label="No Scrub"
+                            value={pool.noScrub ? 'Enabled' : 'Disabled'}
+                          />
+                          <SectionCard.DataRow
+                            label="No Deep Scrub"
+                            value={pool.noDeepScrub ? 'Enabled' : 'Disabled'}
+                          />
+                          <SectionCard.DataRow
+                            label="Max objects"
+                            value={pool.maxObjects === 0 ? 'unlimited' : String(pool.maxObjects)}
+                          />
                           <SectionCard.DataRow label="Max bytes" value={pool.maxBytes} />
                         </SectionCard.Content>
                       </SectionCard>
@@ -1108,8 +1169,14 @@ export function StoragePoolDetailPage() {
                       <SectionCard>
                         <SectionCard.Header title="Load balancing" />
                         <SectionCard.Content>
-                          <SectionCard.DataRow label="PG Autoscale Mode" value={pool.pgAutoscaleMode} />
-                          <SectionCard.DataRow label="Target size Ratio" value={String(pool.targetSizeRatio)} />
+                          <SectionCard.DataRow
+                            label="PG Autoscale Mode"
+                            value={pool.pgAutoscaleMode}
+                          />
+                          <SectionCard.DataRow
+                            label="Target size Ratio"
+                            value={String(pool.targetSizeRatio)}
+                          />
                         </SectionCard.Content>
                       </SectionCard>
 
@@ -1118,7 +1185,10 @@ export function StoragePoolDetailPage() {
                         <SectionCard.Header title="Snapshots & history" />
                         <SectionCard.Content>
                           <SectionCard.DataRow label="Snapshots" value={String(pool.snapshots)} />
-                          <SectionCard.DataRow label="Last snapshot Date" value={pool.lastSnapshotDate} />
+                          <SectionCard.DataRow
+                            label="Last snapshot Date"
+                            value={pool.lastSnapshotDate}
+                          />
                         </SectionCard.Content>
                       </SectionCard>
 
@@ -1137,8 +1207,14 @@ export function StoragePoolDetailPage() {
                       <SectionCard>
                         <SectionCard.Header title="Advanced" />
                         <SectionCard.Content>
-                          <SectionCard.DataRow label="Compression mode" value={pool.compressionMode} />
-                          <SectionCard.DataRow label="Compression algorithm" value={pool.compressionAlgorithm} />
+                          <SectionCard.DataRow
+                            label="Compression mode"
+                            value={pool.compressionMode}
+                          />
+                          <SectionCard.DataRow
+                            label="Compression algorithm"
+                            value={pool.compressionAlgorithm}
+                          />
                         </SectionCard.Content>
                       </SectionCard>
                     </VStack>
@@ -1149,7 +1225,7 @@ export function StoragePoolDetailPage() {
                     <VStack gap={4} className="pt-4">
                       {/* Monitoring Time Controls */}
                       <div className="flex justify-start w-full">
-                        <MonitoringTimeControls 
+                        <MonitoringTimeControls
                           onTimeRangeChange={(value) => console.log('Time range changed:', value)}
                           onRefresh={() => console.log('Refresh clicked')}
                         />
@@ -1159,12 +1235,16 @@ export function StoragePoolDetailPage() {
                       <div className="grid grid-cols-2 gap-4">
                         {/* Capacity Used */}
                         <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg p-4">
-                          <h4 className="text-[14px] font-medium text-[var(--color-text-default)] mb-4">Capacity used</h4>
+                          <h4 className="text-[14px] font-medium text-[var(--color-text-default)] mb-4">
+                            Capacity used
+                          </h4>
                           <CapacityGauge percentage={88.2} used={167.6} total={190.0} unit="TiB" />
                         </div>
                         {/* Time Till Full */}
                         <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg p-4">
-                          <h4 className="text-[14px] font-medium text-[var(--color-text-default)] mb-4">Time till full</h4>
+                          <h4 className="text-[14px] font-medium text-[var(--color-text-default)] mb-4">
+                            Time till full
+                          </h4>
                           <TimeTillFull value={12.3} unit="weeks" />
                         </div>
                       </div>
@@ -1175,7 +1255,11 @@ export function StoragePoolDetailPage() {
                         <ChartWithFullScreen
                           title="Object Ingress/Egress"
                           series={[
-                            { name: 'Objects per second', data: [0.15, 0.25, 0.35, 0.3, 0.2, 0.4], color: chartColors.emerald500 }
+                            {
+                              name: 'Objects per second',
+                              data: [0.15, 0.25, 0.35, 0.3, 0.2, 0.4],
+                              color: chartColors.emerald500,
+                            },
                           ]}
                           timeLabels={timeLabels}
                           yAxisUnit=""
@@ -1184,8 +1268,16 @@ export function StoragePoolDetailPage() {
                         <ChartWithFullScreen
                           title="Client IOPS"
                           series={[
-                            { name: 'reads', data: [200, 350, 500, 450, 300, 600], color: chartColors.blue500 },
-                            { name: 'writes', data: [100, 200, 300, 250, 150, 350], color: chartColors.emerald500 }
+                            {
+                              name: 'reads',
+                              data: [200, 350, 500, 450, 300, 600],
+                              color: chartColors.blue500,
+                            },
+                            {
+                              name: 'writes',
+                              data: [100, 200, 300, 250, 150, 350],
+                              color: chartColors.emerald500,
+                            },
                           ]}
                           timeLabels={timeLabels}
                           yAxisUnit=""
@@ -1194,8 +1286,16 @@ export function StoragePoolDetailPage() {
                         <ChartWithFullScreen
                           title="Client Throughput"
                           series={[
-                            { name: 'reads', data: [80, 100, 120, 110, 90, 130], color: chartColors.blue500 },
-                            { name: 'writes', data: [60, 80, 100, 90, 70, 110], color: chartColors.emerald500 }
+                            {
+                              name: 'reads',
+                              data: [80, 100, 120, 110, 90, 130],
+                              color: chartColors.blue500,
+                            },
+                            {
+                              name: 'writes',
+                              data: [60, 80, 100, 90, 70, 110],
+                              color: chartColors.emerald500,
+                            },
                           ]}
                           timeLabels={timeLabels}
                           yAxisUnit=""
@@ -1204,7 +1304,11 @@ export function StoragePoolDetailPage() {
                         <ChartWithFullScreen
                           title="Objects"
                           series={[
-                            { name: 'Number of Objects', data: [2.9, 2.905, 2.91, 2.915, 2.92, 2.96], color: chartColors.emerald500 }
+                            {
+                              name: 'Number of Objects',
+                              data: [2.9, 2.905, 2.91, 2.915, 2.92, 2.96],
+                              color: chartColors.emerald500,
+                            },
                           ]}
                           timeLabels={timeLabels}
                           yAxisUnit=""
@@ -1223,4 +1327,3 @@ export function StoragePoolDetailPage() {
 }
 
 export default StoragePoolDetailPage;
-

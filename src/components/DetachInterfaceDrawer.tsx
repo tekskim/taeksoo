@@ -1,9 +1,9 @@
 import { useState } from 'react';
-import { 
-  Drawer, 
-  Button, 
-  SearchInput, 
-  Pagination, 
+import {
+  Drawer,
+  Button,
+  SearchInput,
+  Pagination,
   StatusIndicator,
   Radio,
   SelectionIndicator,
@@ -74,7 +74,7 @@ export function DetachInterfaceDrawer({
   const handleDetach = async () => {
     setHasAttemptedSubmit(true);
     if (!selectedInterfaceId) return;
-    
+
     setIsSubmitting(true);
     try {
       await onDetach?.(selectedInterfaceId);
@@ -92,10 +92,11 @@ export function DetachInterfaceDrawer({
     onClose();
   };
 
-  const filteredInterfaces = interfaces.filter(iface => 
-    iface.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    iface.fixedIp.includes(searchQuery) ||
-    iface.macAddress.toLowerCase().includes(searchQuery.toLowerCase())
+  const filteredInterfaces = interfaces.filter(
+    (iface) =>
+      iface.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      iface.fixedIp.includes(searchQuery) ||
+      iface.macAddress.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   return (
@@ -107,15 +108,11 @@ export function DetachInterfaceDrawer({
       width={696}
       footer={
         <HStack gap={2} justify="center" className="w-full">
-          <Button 
-            variant="secondary" 
-            onClick={handleClose}
-            className="w-[152px] h-8"
-          >
+          <Button variant="secondary" onClick={handleClose} className="w-[152px] h-8">
             Cancel
           </Button>
-          <Button 
-            variant="primary" 
+          <Button
+            variant="primary"
             onClick={handleDetach}
             disabled={isSubmitting}
             className="w-[152px] h-8"
@@ -133,7 +130,8 @@ export function DetachInterfaceDrawer({
               Detach Interface
             </h2>
             <p className="text-[12px] text-[var(--color-text-subtle)] leading-4">
-              Detach a network interface from this instance. This may interrupt connectivity if the selected port is primary.
+              Detach a network interface from this instance. This may interrupt connectivity if the
+              selected port is primary.
             </p>
           </VStack>
 
@@ -147,7 +145,8 @@ export function DetachInterfaceDrawer({
           <div className="w-full p-3 bg-[#fef2f2] rounded-lg flex gap-2 items-start">
             <IconAlertCircle size={16} className="shrink-0 text-[#f87171] mt-0.5" />
             <p className="text-[11px] text-[var(--color-text-default)] leading-4">
-              For data consistency, stop all write operations on the instance before detaching a interface.
+              For data consistency, stop all write operations on the instance before detaching a
+              interface.
             </p>
           </div>
         </VStack>
@@ -181,43 +180,90 @@ export function DetachInterfaceDrawer({
           </HStack>
 
           {/* Interfaces Table */}
-          <div className="flex-1 overflow-y-auto sidebar-scroll" style={{ width: '648px', maxWidth: '648px', overflowX: 'hidden', paddingRight: '2px' }}>
+          <div
+            className="flex-1 overflow-y-auto sidebar-scroll"
+            style={{ width: '648px', maxWidth: '648px', overflowX: 'hidden', paddingRight: '2px' }}
+          >
             {/* Header */}
-            <div style={{ display: 'flex', width: '648px', height: '40px' }} className="bg-[var(--color-border-subtle)] border border-[var(--color-border-default)] rounded-md">
-              <div style={{ width: '40px', flexShrink: 0 }} className="flex items-center justify-center" />
-              <div style={{ width: '59px', flexShrink: 0 }} className="flex items-center justify-center px-3 border-l border-[var(--color-border-default)]">
-                <span className="text-[11px] font-medium text-[var(--color-text-default)]">Status</span>
+            <div
+              style={{ display: 'flex', width: '648px', height: '40px' }}
+              className="bg-[var(--color-border-subtle)] border border-[var(--color-border-default)] rounded-md"
+            >
+              <div
+                style={{ width: '40px', flexShrink: 0 }}
+                className="flex items-center justify-center"
+              />
+              <div
+                style={{ width: '59px', flexShrink: 0 }}
+                className="flex items-center justify-center px-3 border-l border-[var(--color-border-default)]"
+              >
+                <span className="text-[11px] font-medium text-[var(--color-text-default)]">
+                  Status
+                </span>
               </div>
-              <div style={{ width: '125px', flexShrink: 0 }} className="flex items-center gap-1.5 px-3 border-l border-[var(--color-border-default)] cursor-pointer hover:text-[var(--color-action-primary)]">
-                <span className="text-[11px] font-medium text-[var(--color-text-default)]">Name</span>
+              <div
+                style={{ width: '125px', flexShrink: 0 }}
+                className="flex items-center gap-1.5 px-3 border-l border-[var(--color-border-default)] cursor-pointer hover:text-[var(--color-action-primary)]"
+              >
+                <span className="text-[11px] font-medium text-[var(--color-text-default)]">
+                  Name
+                </span>
                 <IconChevronDown size={12} className="text-[var(--color-text-default)]" />
               </div>
-              <div style={{ width: '108px', flexShrink: 0 }} className="flex items-center px-3 border-l border-[var(--color-border-default)]">
-                <span className="text-[11px] font-medium text-[var(--color-text-default)]">Fixed IP</span>
+              <div
+                style={{ width: '108px', flexShrink: 0 }}
+                className="flex items-center px-3 border-l border-[var(--color-border-default)]"
+              >
+                <span className="text-[11px] font-medium text-[var(--color-text-default)]">
+                  Fixed IP
+                </span>
               </div>
-              <div style={{ width: '108px', flexShrink: 0 }} className="flex items-center px-3 border-l border-[var(--color-border-default)]">
-                <span className="text-[11px] font-medium text-[var(--color-text-default)]">Floating IP</span>
+              <div
+                style={{ width: '108px', flexShrink: 0 }}
+                className="flex items-center px-3 border-l border-[var(--color-border-default)]"
+              >
+                <span className="text-[11px] font-medium text-[var(--color-text-default)]">
+                  Floating IP
+                </span>
               </div>
-              <div style={{ width: '148px', flexShrink: 0 }} className="flex items-center px-3 border-l border-[var(--color-border-default)]">
-                <span className="text-[11px] font-medium text-[var(--color-text-default)]">MAC Address</span>
+              <div
+                style={{ width: '148px', flexShrink: 0 }}
+                className="flex items-center px-3 border-l border-[var(--color-border-default)]"
+              >
+                <span className="text-[11px] font-medium text-[var(--color-text-default)]">
+                  MAC Address
+                </span>
               </div>
             </div>
 
             {/* Rows */}
-            <div style={{ width: '648px', maxWidth: '648px', marginTop: '4px', display: 'flex', flexDirection: 'column', gap: '4px' }}>
+            <div
+              style={{
+                width: '648px',
+                maxWidth: '648px',
+                marginTop: '4px',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '4px',
+              }}
+            >
               {filteredInterfaces.map((iface) => (
-                <div 
+                <div
                   key={iface.id}
                   style={{ display: 'flex', width: '648px', minHeight: '40px' }}
                   className={`border rounded-md cursor-pointer transition-all ${
-                    selectedInterfaceId === iface.id 
-                      ? 'bg-[var(--color-state-info-bg)] border-[var(--color-action-primary)]' 
+                    selectedInterfaceId === iface.id
+                      ? 'bg-[var(--color-state-info-bg)] border-[var(--color-action-primary)]'
                       : 'bg-[var(--color-surface-default)] border-[var(--color-border-default)] hover:bg-[var(--table-row-hover-bg)]'
                   }`}
                   onClick={() => setSelectedInterfaceId(iface.id)}
                 >
                   {/* Radio */}
-                  <div style={{ width: '40px', flexShrink: 0 }} className="flex items-center justify-center" onClick={(e) => e.stopPropagation()}>
+                  <div
+                    style={{ width: '40px', flexShrink: 0 }}
+                    className="flex items-center justify-center"
+                    onClick={(e) => e.stopPropagation()}
+                  >
                     <Radio
                       name="interface-select"
                       value={iface.id}
@@ -226,28 +272,56 @@ export function DetachInterfaceDrawer({
                     />
                   </div>
                   {/* Status */}
-                  <div style={{ width: '59px', flexShrink: 0 }} className="flex items-center justify-center">
+                  <div
+                    style={{ width: '59px', flexShrink: 0 }}
+                    className="flex items-center justify-center"
+                  >
                     <StatusIndicator status="active" layout="icon-only" size="sm" />
                   </div>
                   {/* Name */}
-                  <div style={{ width: '125px', flexShrink: 0 }} className="flex flex-col gap-0.5 justify-center px-3 py-2 overflow-hidden">
+                  <div
+                    style={{ width: '125px', flexShrink: 0 }}
+                    className="flex flex-col gap-0.5 justify-center px-3 py-2 overflow-hidden"
+                  >
                     <div className="flex items-center gap-1.5">
-                      <span className="text-[12px] font-medium text-[var(--color-action-primary)] truncate">{iface.name}</span>
-                      <IconExternalLink size={12} className="shrink-0 text-[var(--color-action-primary)]" />
+                      <span className="text-[12px] font-medium text-[var(--color-action-primary)] truncate">
+                        {iface.name}
+                      </span>
+                      <IconExternalLink
+                        size={12}
+                        className="shrink-0 text-[var(--color-action-primary)]"
+                      />
                     </div>
-                    <span className="text-[11px] text-[var(--color-text-subtle)] truncate">ID : 17kfj123</span>
+                    <span className="text-[11px] text-[var(--color-text-subtle)] truncate">
+                      ID : 17kfj123
+                    </span>
                   </div>
                   {/* Fixed IP */}
-                  <div style={{ width: '108px', flexShrink: 0 }} className="flex items-center px-3 py-2 overflow-hidden">
-                    <span className="text-[12px] text-[var(--color-text-default)] truncate">{iface.fixedIp}</span>
+                  <div
+                    style={{ width: '108px', flexShrink: 0 }}
+                    className="flex items-center px-3 py-2 overflow-hidden"
+                  >
+                    <span className="text-[12px] text-[var(--color-text-default)] truncate">
+                      {iface.fixedIp}
+                    </span>
                   </div>
                   {/* Floating IP */}
-                  <div style={{ width: '108px', flexShrink: 0 }} className="flex items-center px-3 py-2 overflow-hidden">
-                    <span className="text-[12px] text-[var(--color-text-default)] truncate">{iface.floatingIp}</span>
+                  <div
+                    style={{ width: '108px', flexShrink: 0 }}
+                    className="flex items-center px-3 py-2 overflow-hidden"
+                  >
+                    <span className="text-[12px] text-[var(--color-text-default)] truncate">
+                      {iface.floatingIp}
+                    </span>
                   </div>
                   {/* MAC Address */}
-                  <div style={{ width: '148px', flexShrink: 0 }} className="flex items-center px-3 py-2 overflow-hidden">
-                    <span className="text-[12px] text-[var(--color-text-default)] truncate">{iface.macAddress}</span>
+                  <div
+                    style={{ width: '148px', flexShrink: 0 }}
+                    className="flex items-center px-3 py-2 overflow-hidden"
+                  >
+                    <span className="text-[12px] text-[var(--color-text-default)] truncate">
+                      {iface.macAddress}
+                    </span>
                   </div>
                 </div>
               ))}
@@ -257,7 +331,16 @@ export function DetachInterfaceDrawer({
 
         {/* Selection Indicator */}
         <SelectionIndicator
-          selectedItems={selectedInterfaceId ? [{ id: selectedInterfaceId, label: interfaces.find(i => i.id === selectedInterfaceId)?.name || '' }] : []}
+          selectedItems={
+            selectedInterfaceId
+              ? [
+                  {
+                    id: selectedInterfaceId,
+                    label: interfaces.find((i) => i.id === selectedInterfaceId)?.name || '',
+                  },
+                ]
+              : []
+          }
           onRemove={() => setSelectedInterfaceId(null)}
           emptyText="No item selected"
           className="shrink-0"

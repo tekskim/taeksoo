@@ -93,7 +93,9 @@ export function CheckboxGroup({
         <div
           className={twMerge(
             'flex',
-            direction === 'vertical' ? 'flex-col gap-[var(--checkbox-group-item-gap)]' : 'flex-row flex-wrap gap-[var(--checkbox-group-item-gap-horizontal)]'
+            direction === 'vertical'
+              ? 'flex-col gap-[var(--checkbox-group-item-gap)]'
+              : 'flex-row flex-wrap gap-[var(--checkbox-group-item-gap-horizontal)]'
           )}
         >
           {children}
@@ -113,4 +115,3 @@ export function CheckboxGroup({
     </CheckboxGroupContext.Provider>
   );
 }
-

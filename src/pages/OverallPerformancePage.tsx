@@ -20,9 +20,9 @@ import { StorageSidebar } from '@/components/StorageSidebar';
 import { DataViewDrawer } from '@/components/DataViewDrawer';
 import { useTabs } from '@/contexts/TabContext';
 import { useDarkMode } from '@/hooks/useDarkMode';
-import { 
-  IconBell, 
-  IconDotsCircleHorizontal, 
+import {
+  IconBell,
+  IconDotsCircleHorizontal,
   IconArrowsMaximize,
   IconArrowsMinimize,
   IconTerminal2,
@@ -137,11 +137,66 @@ interface PoolOverviewRow {
 }
 
 const poolOverviewData: PoolOverviewRow[] = [
-  { id: '1', poolName: '.mgr', type: 'replica:3', usableFree: '10.57 GiB', percentUsed: '0.00%', growth5d: '896.02 KiB', growthPositive: true, iops: '0.00', bandwidth: '0.00 B/s', stored: '8.50 GiB' },
-  { id: '2', poolName: '.mgr', type: 'replica:4', usableFree: '15.23 GiB', percentUsed: '0.05%', growth5d: '1.20 MiB', growthPositive: true, iops: '0.00', bandwidth: '0.00 B/s', stored: '9.00 GiB' },
-  { id: '3', poolName: '.mgr', type: 'replica:5', usableFree: '20.45 GiB', percentUsed: '0.10%', growth5d: '1.50 MiB', growthPositive: true, iops: '0.00', bandwidth: '0.00 B/s', stored: '10.00 GiB' },
-  { id: '4', poolName: '.mgr', type: 'replica:3', usableFree: '10.57 GiB', percentUsed: '0.00%', growth5d: '0.00 B', growthPositive: false, iops: '0.00', bandwidth: '0.00 B/s', stored: '8.50 GiB' },
-  { id: '5', poolName: '.mgr', type: 'replica:3', usableFree: '10.57 GiB', percentUsed: '0.00%', growth5d: '-525.01 B', growthPositive: false, iops: '0.00', bandwidth: '0.00 B/s', stored: '8.50 GiB' },
+  {
+    id: '1',
+    poolName: '.mgr',
+    type: 'replica:3',
+    usableFree: '10.57 GiB',
+    percentUsed: '0.00%',
+    growth5d: '896.02 KiB',
+    growthPositive: true,
+    iops: '0.00',
+    bandwidth: '0.00 B/s',
+    stored: '8.50 GiB',
+  },
+  {
+    id: '2',
+    poolName: '.mgr',
+    type: 'replica:4',
+    usableFree: '15.23 GiB',
+    percentUsed: '0.05%',
+    growth5d: '1.20 MiB',
+    growthPositive: true,
+    iops: '0.00',
+    bandwidth: '0.00 B/s',
+    stored: '9.00 GiB',
+  },
+  {
+    id: '3',
+    poolName: '.mgr',
+    type: 'replica:5',
+    usableFree: '20.45 GiB',
+    percentUsed: '0.10%',
+    growth5d: '1.50 MiB',
+    growthPositive: true,
+    iops: '0.00',
+    bandwidth: '0.00 B/s',
+    stored: '10.00 GiB',
+  },
+  {
+    id: '4',
+    poolName: '.mgr',
+    type: 'replica:3',
+    usableFree: '10.57 GiB',
+    percentUsed: '0.00%',
+    growth5d: '0.00 B',
+    growthPositive: false,
+    iops: '0.00',
+    bandwidth: '0.00 B/s',
+    stored: '8.50 GiB',
+  },
+  {
+    id: '5',
+    poolName: '.mgr',
+    type: 'replica:3',
+    usableFree: '10.57 GiB',
+    percentUsed: '0.00%',
+    growth5d: '-525.01 B',
+    growthPositive: false,
+    iops: '0.00',
+    bandwidth: '0.00 B/s',
+    stored: '8.50 GiB',
+  },
 ];
 
 /* ----------------------------------------
@@ -159,11 +214,31 @@ const hostsStats: StatCard[] = [
 
 // CPU Busy chart series
 const cpuBusySeries = [
-  { name: 'b0x/2e1-ceph0dg-c01', color: chartColors.cyan400, data: [0.2, 0.25, 0.35, 0.4, 0.38, 0.55] },
-  { name: 'b0x/2e1-ceph0dg-c02', color: chartColors.emerald400, data: [0.35, 0.45, 0.5, 0.55, 0.6, 0.75] },
-  { name: 'b0x/2e1-ceph0dg-c03', color: chartColors.amber400, data: [0.5, 0.6, 0.7, 0.85, 0.9, 1.1] },
-  { name: 'b0x/2e1-ceph0dg001', color: chartColors.violet400, data: [0.6, 0.7, 0.8, 0.95, 1.0, 1.2] },
-  { name: 'b0x/2e1-ceph0dg002', color: chartColors.pink400, data: [0.15, 0.2, 0.18, 0.22, 0.25, 0.3] },
+  {
+    name: 'b0x/2e1-ceph0dg-c01',
+    color: chartColors.cyan400,
+    data: [0.2, 0.25, 0.35, 0.4, 0.38, 0.55],
+  },
+  {
+    name: 'b0x/2e1-ceph0dg-c02',
+    color: chartColors.emerald400,
+    data: [0.35, 0.45, 0.5, 0.55, 0.6, 0.75],
+  },
+  {
+    name: 'b0x/2e1-ceph0dg-c03',
+    color: chartColors.amber400,
+    data: [0.5, 0.6, 0.7, 0.85, 0.9, 1.1],
+  },
+  {
+    name: 'b0x/2e1-ceph0dg001',
+    color: chartColors.violet400,
+    data: [0.6, 0.7, 0.8, 0.95, 1.0, 1.2],
+  },
+  {
+    name: 'b0x/2e1-ceph0dg002',
+    color: chartColors.pink400,
+    data: [0.15, 0.2, 0.18, 0.22, 0.25, 0.3],
+  },
 ];
 
 // Network load chart series
@@ -219,9 +294,9 @@ const osdWriteLatencyData: OsdLatencyRow[] = [
 
 // OSD Read Latencies chart series
 const osdReadLatenciesSeries = [
-  { name: '@95%ile', color: chartColors.violet400, data: [0.28, 0.32, 0.38, 0.35, 0.33, 0.30] },
-  { name: 'AVG read', color: chartColors.emerald400, data: [0.18, 0.20, 0.25, 0.28, 0.26, 0.22] },
-  { name: 'MAX read', color: chartColors.amber400, data: [0.22, 0.25, 0.30, 0.32, 0.30, 0.26] },
+  { name: '@95%ile', color: chartColors.violet400, data: [0.28, 0.32, 0.38, 0.35, 0.33, 0.3] },
+  { name: 'AVG read', color: chartColors.emerald400, data: [0.18, 0.2, 0.25, 0.28, 0.26, 0.22] },
+  { name: 'MAX read', color: chartColors.amber400, data: [0.22, 0.25, 0.3, 0.32, 0.3, 0.26] },
 ];
 
 // OSD Write Latencies chart series
@@ -311,26 +386,26 @@ interface PieChartData {
   value: number;
 }
 
-function PieChartCard({ 
-  title, 
+function PieChartCard({
+  title,
   data,
-  showPercentOnSlice = true 
-}: { 
-  title: string; 
+  showPercentOnSlice = true,
+}: {
+  title: string;
   data: PieChartData[];
   showPercentOnSlice?: boolean;
 }) {
   const total = data.reduce((sum, item) => sum + item.value, 0);
-  
+
   const chartData = data.map((item, index) => ({
     ...item,
-    itemStyle: { color: extendedChartColors[index % extendedChartColors.length] }
+    itemStyle: { color: extendedChartColors[index % extendedChartColors.length] },
   }));
 
   const legendData = data.map((item, index) => ({
     label: item.name,
     value: Math.round((item.value / total) * 100),
-    color: extendedChartColors[index % extendedChartColors.length]
+    color: extendedChartColors[index % extendedChartColors.length],
   }));
 
   const getOption = () => ({
@@ -344,11 +419,11 @@ function PieChartCard({
       padding: [8, 12],
       textStyle: {
         color: '#1e293b',
-        fontSize: 11
+        fontSize: 11,
       },
       formatter: (params: { marker: string; name: string; value: number; percent: number }) => {
         return `<span style="display: inline-block; width: 8px; height: 8px; border-radius: 9999px; background-color: ${params.color}; margin-right: 6px;"></span>${params.name}<br/><span style="font-weight: 600; margin-left: 14px;">${params.value} (${params.percent.toFixed(0)}%)</span>`;
-      }
+      },
     },
     animation: false,
     series: [
@@ -357,46 +432,55 @@ function PieChartCard({
         radius: '80%',
         center: ['50%', '50%'],
         avoidLabelOverlap: true,
-        label: showPercentOnSlice ? {
-          show: true,
-          position: 'inside',
-          formatter: (params: { percent: number }) => {
-            return params.percent >= 15 ? `${params.percent.toFixed(0)}%` : '';
-          },
-          fontSize: 12,
-          fontWeight: 600,
-          color: '#ffffff'
-        } : {
-          show: false
-        },
+        label: showPercentOnSlice
+          ? {
+              show: true,
+              position: 'inside',
+              formatter: (params: { percent: number }) => {
+                return params.percent >= 15 ? `${params.percent.toFixed(0)}%` : '';
+              },
+              fontSize: 12,
+              fontWeight: 600,
+              color: '#ffffff',
+            }
+          : {
+              show: false,
+            },
         emphasis: {
           scale: true,
           scaleSize: 5,
           itemStyle: {
             shadowBlur: 10,
             shadowOffsetX: 0,
-            shadowColor: 'rgba(0, 0, 0, 0.2)'
-          }
+            shadowColor: 'rgba(0, 0, 0, 0.2)',
+          },
         },
         labelLine: {
-          show: false
+          show: false,
         },
-        data: chartData
-      }
-    ]
+        data: chartData,
+      },
+    ],
   });
 
   return (
     <div className="flex-1 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] p-5 flex flex-col gap-4">
-      <span className="text-[length:var(--font-size-13)] font-medium text-[var(--color-text-default)]">{title}</span>
+      <span className="text-[length:var(--font-size-13)] font-medium text-[var(--color-text-default)]">
+        {title}
+      </span>
       <div className="flex justify-center">
         <ReactECharts option={getOption()} style={{ height: '180px', width: '180px' }} />
       </div>
       <div className="flex flex-wrap items-center gap-x-4 gap-y-2 justify-center max-h-[60px] overflow-y-auto legend-scroll">
         {legendData.map((item, i) => (
           <div key={i} className="flex items-center gap-1.5">
-            <div className="w-2.5 h-2.5 rounded-sm shrink-0" style={{ backgroundColor: item.color }} />
-            <span className="text-[length:var(--font-size-11)] text-[var(--color-text-muted)]">{item.label}</span>
+            <div
+              className="w-2.5 h-2.5 rounded-sm shrink-0"
+              style={{ backgroundColor: item.color }}
+            />
+            <span className="text-[length:var(--font-size-11)] text-[var(--color-text-muted)]">
+              {item.label}
+            </span>
           </div>
         ))}
       </div>
@@ -408,13 +492,13 @@ function PieChartCard({
    SingleValueDoughnut Component (from design system)
    ---------------------------------------- */
 
-function SingleValueDoughnutCard({ 
-  title, 
+function SingleValueDoughnutCard({
+  title,
   value,
   color,
-  className
-}: { 
-  title: string; 
+  className,
+}: {
+  title: string;
   value: number;
   color?: string;
   className?: string;
@@ -432,7 +516,7 @@ function SingleValueDoughnutCard({
 
   const getOption = () => ({
     tooltip: {
-      show: false
+      show: false,
     },
     animation: false,
     series: [
@@ -444,22 +528,22 @@ function SingleValueDoughnutCard({
         silent: true,
         itemStyle: {
           borderRadius: 0,
-          borderWidth: 0
+          borderWidth: 0,
         },
         label: {
-          show: false
+          show: false,
         },
         labelLine: {
-          show: false
+          show: false,
         },
         emphasis: {
-          disabled: true
+          disabled: true,
         },
         data: [
           { value: value, itemStyle: { color: mainColor } },
-          { value: 100 - value, itemStyle: { color: bgColor } }
-        ]
-      }
+          { value: 100 - value, itemStyle: { color: bgColor } },
+        ],
+      },
     ],
     graphic: [
       {
@@ -473,15 +557,19 @@ function SingleValueDoughnutCard({
           fill: getColor('--color-text-default', '#0f172a'),
           fontSize: 18,
           fontWeight: 500,
-          fontFamily: 'Mona Sans, -apple-system, BlinkMacSystemFont, sans-serif'
-        }
-      }
-    ]
+          fontFamily: 'Mona Sans, -apple-system, BlinkMacSystemFont, sans-serif',
+        },
+      },
+    ],
   });
 
   return (
-    <div className={`bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] p-5 flex flex-col gap-4 ${className || 'flex-1'}`}>
-      <span className="text-[length:var(--font-size-13)] font-medium text-[var(--color-text-default)]">{title}</span>
+    <div
+      className={`bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] p-5 flex flex-col gap-4 ${className || 'flex-1'}`}
+    >
+      <span className="text-[length:var(--font-size-13)] font-medium text-[var(--color-text-default)]">
+        {title}
+      </span>
       <div className="flex justify-center">
         <ReactECharts option={getOption()} style={{ height: '180px', width: '180px' }} />
       </div>
@@ -505,7 +593,11 @@ function StatCardItem({ label, value, unit }: StatCardProps) {
       <p className="text-[11px] text-[var(--color-text-subtle)] mb-2 whitespace-nowrap">{label}</p>
       <p className="text-[24px] font-semibold text-[var(--color-text-default)] whitespace-nowrap">
         {value}
-        {unit && <span className="text-[14px] font-normal text-[var(--color-text-muted)] ml-1">{unit}</span>}
+        {unit && (
+          <span className="text-[14px] font-normal text-[var(--color-text-muted)] ml-1">
+            {unit}
+          </span>
+        )}
       </p>
     </div>
   );
@@ -525,20 +617,28 @@ interface ChartCardProps {
   onRefresh?: () => void;
 }
 
-function ChartCard({ title, series, yAxisFormatter = (v: number) => `${v}`, isDarkMode, timeRange, onTimeRangeChange, onRefresh }: ChartCardProps) {
-  const [visibleSeries, setVisibleSeries] = useState<Record<string, boolean>>(
-    () => Object.fromEntries(series.map(s => [s.name, true]))
+function ChartCard({
+  title,
+  series,
+  yAxisFormatter = (v: number) => `${v}`,
+  isDarkMode,
+  timeRange,
+  onTimeRangeChange,
+  onRefresh,
+}: ChartCardProps) {
+  const [visibleSeries, setVisibleSeries] = useState<Record<string, boolean>>(() =>
+    Object.fromEntries(series.map((s) => [s.name, true]))
   );
   const [menuOpen, setMenuOpen] = useState(false);
   const [isFullScreen, setIsFullScreen] = useState(false);
   const [showDataView, setShowDataView] = useState(false);
 
   const timeLabels = generateTimeLabels();
-  const allVisible = Object.values(visibleSeries).every(v => v);
+  const allVisible = Object.values(visibleSeries).every((v) => v);
 
   const toggleAll = () => {
     const newState = !allVisible;
-    setVisibleSeries(Object.fromEntries(series.map(s => [s.name, newState])));
+    setVisibleSeries(Object.fromEntries(series.map((s) => [s.name, newState])));
   };
 
   const handleFullScreen = () => {
@@ -551,7 +651,7 @@ function ChartCard({ title, series, yAxisFormatter = (v: number) => `${v}`, isDa
   };
 
   // Calculate y-axis bounds for exactly 5 labels
-  const visibleData = series.filter(s => visibleSeries[s.name]).flatMap(s => s.data);
+  const visibleData = series.filter((s) => visibleSeries[s.name]).flatMap((s) => s.data);
   const dataMax = visibleData.length > 0 ? Math.max(...visibleData) : 100;
   const niceMax = Math.ceil(dataMax / 4) * 4; // Round up to nearest multiple of 4
   const yInterval = niceMax / 4; // 4 intervals = 5 labels
@@ -570,7 +670,7 @@ function ChartCard({ title, series, yAxisFormatter = (v: number) => `${v}`, isDa
       right: '16px',
       top: '20px',
       bottom: '16px',
-      containLabel: true
+      containLabel: true,
     },
     xAxis: {
       type: 'category' as const,
@@ -580,9 +680,9 @@ function ChartCard({ title, series, yAxisFormatter = (v: number) => `${v}`, isDa
       axisLabel: {
         color: chartColors.slate400,
         fontSize: 10,
-        padding: [0, 0, 0, 15]
+        padding: [0, 0, 0, 15],
       },
-      boundaryGap: false
+      boundaryGap: false,
     },
     yAxis: {
       type: 'value' as const,
@@ -592,35 +692,40 @@ function ChartCard({ title, series, yAxisFormatter = (v: number) => `${v}`, isDa
       axisLine: { show: false },
       axisTick: { show: false },
       splitLine: {
-        lineStyle: { color: splitLineColor, opacity: splitLineOpacity }
+        lineStyle: { color: splitLineColor, opacity: splitLineOpacity },
       },
       axisLabel: {
         color: chartColors.slate400,
         fontSize: 10,
-        formatter: yAxisFormatter
-      }
+        formatter: yAxisFormatter,
+      },
     },
     tooltip: {
       trigger: 'axis' as const,
       backgroundColor: tooltipBg,
       borderColor: tooltipBorder,
-      textStyle: { 
-        color: tooltipTextColor, 
-        fontSize: 11, 
-        fontFamily: 'Mona Sans, -apple-system, BlinkMacSystemFont, sans-serif' 
+      textStyle: {
+        color: tooltipTextColor,
+        fontSize: 11,
+        fontFamily: 'Mona Sans, -apple-system, BlinkMacSystemFont, sans-serif',
       },
-      formatter: (params: Array<{ marker: string; seriesName: string; value: number; axisValueLabel: string }>) => {
+      formatter: (
+        params: Array<{ marker: string; seriesName: string; value: number; axisValueLabel: string }>
+      ) => {
         if (!Array.isArray(params) || params.length === 0) return '';
         const time = params[0].axisValueLabel;
-        const items = params.map(p => 
-          `<div style="display: flex; align-items: center; gap: 8px;"><span style="display: inline-block; width: 8px; height: 8px; border-radius: 9999px; background-color: ${p.color};"></span><span>${p.seriesName}</span><span style="font-weight: 500; margin-left: auto;">${p.value}</span></div>`
-        ).join('');
+        const items = params
+          .map(
+            (p) =>
+              `<div style="display: flex; align-items: center; gap: 8px;"><span style="display: inline-block; width: 8px; height: 8px; border-radius: 9999px; background-color: ${p.color};"></span><span>${p.seriesName}</span><span style="font-weight: 500; margin-left: auto;">${p.value}</span></div>`
+          )
+          .join('');
         return `<div style="font-size: 11px; font-family: Mona Sans, -apple-system, BlinkMacSystemFont, sans-serif;">${time}<div style="margin-top: 4px;">${items}</div></div>`;
-      }
+      },
     },
     series: series
-      .filter(s => visibleSeries[s.name])
-      .map(s => ({
+      .filter((s) => visibleSeries[s.name])
+      .map((s) => ({
         name: s.name,
         type: 'line',
         smooth: true,
@@ -630,8 +735,8 @@ function ChartCard({ title, series, yAxisFormatter = (v: number) => `${v}`, isDa
         lineStyle: { color: s.color, width: 1 },
         itemStyle: { color: s.color },
         areaStyle: { color: s.color, opacity: 0.1 },
-        data: s.data
-      }))
+        data: s.data,
+      })),
   };
 
   const chartContent = (
@@ -660,12 +765,15 @@ function ChartCard({ title, series, yAxisFormatter = (v: number) => `${v}`, isDa
               <span className="toggleDivider">|</span>
             </>
           )}
-          
+
           {/* Menu Button */}
           <div className="menuContainer">
-            <button 
+            <button
               className="menuTrigger"
-              onClick={(e) => { e.stopPropagation(); setMenuOpen(!menuOpen); }}
+              onClick={(e) => {
+                e.stopPropagation();
+                setMenuOpen(!menuOpen);
+              }}
             >
               <IconDotsCircleHorizontal size={16} stroke={1.5} />
             </button>
@@ -677,17 +785,23 @@ function ChartCard({ title, series, yAxisFormatter = (v: number) => `${v}`, isDa
                 <button className="contextMenuItem" onClick={() => setMenuOpen(false)}>
                   Download CSV
                 </button>
-                <button className="contextMenuItemLast" onClick={() => { setMenuOpen(false); setShowDataView(true); }}>
+                <button
+                  className="contextMenuItemLast"
+                  onClick={() => {
+                    setMenuOpen(false);
+                    setShowDataView(true);
+                  }}
+                >
                   Data View
                 </button>
               </div>
             )}
           </div>
-          
+
           {/* Expand/Minimize Button */}
-          <button 
-            className="expandTrigger" 
-            title={isFullScreen ? "Minimize" : "Expand"}
+          <button
+            className="expandTrigger"
+            title={isFullScreen ? 'Minimize' : 'Expand'}
             onClick={isFullScreen ? handleExitFullScreen : handleFullScreen}
           >
             {isFullScreen ? (
@@ -698,7 +812,7 @@ function ChartCard({ title, series, yAxisFormatter = (v: number) => `${v}`, isDa
           </button>
         </div>
       </div>
-      
+
       {/* Chart Body */}
       <div className="chartBody">
         <div className="chartWrapper">
@@ -706,10 +820,10 @@ function ChartCard({ title, series, yAxisFormatter = (v: number) => `${v}`, isDa
         </div>
         <div className="chartLegend">
           {series.map((s, i) => (
-            <div 
+            <div
               key={i}
               className={`legendItem ${!visibleSeries[s.name] ? 'legendItemHidden' : ''}`}
-              onClick={() => setVisibleSeries(prev => ({ ...prev, [s.name]: !prev[s.name] }))}
+              onClick={() => setVisibleSeries((prev) => ({ ...prev, [s.name]: !prev[s.name] }))}
             >
               <div className="legendDot" style={{ backgroundColor: s.color }} />
               <span>{s.name}</span>
@@ -717,7 +831,7 @@ function ChartCard({ title, series, yAxisFormatter = (v: number) => `${v}`, isDa
           ))}
         </div>
       </div>
-      
+
       {/* Data View Drawer */}
       <DataViewDrawer
         isOpen={showDataView}
@@ -733,9 +847,7 @@ function ChartCard({ title, series, yAxisFormatter = (v: number) => `${v}`, isDa
     return (
       <>
         <div className="fullScreenOverlay" onClick={handleExitFullScreen} />
-        <div className="fullScreenFloating">
-          {chartContent}
-        </div>
+        <div className="fullScreenFloating">{chartContent}</div>
       </>
     );
   }
@@ -753,9 +865,13 @@ interface EmptyStateChartCardProps {
   isDarkMode: boolean;
 }
 
-function EmptyStateChartCard({ title, yAxisFormatter = (v: number) => `${v}`, isDarkMode }: EmptyStateChartCardProps) {
+function EmptyStateChartCard({
+  title,
+  yAxisFormatter = (v: number) => `${v}`,
+  isDarkMode,
+}: EmptyStateChartCardProps) {
   const timeLabels = generateTimeLabels();
-  
+
   // Theme-aware colors
   const splitLineColor = isDarkMode ? 'rgba(255, 255, 255, 0.08)' : chartColors.slate100;
   const splitLineOpacity = isDarkMode ? 1 : 0.5;
@@ -767,7 +883,7 @@ function EmptyStateChartCard({ title, yAxisFormatter = (v: number) => `${v}`, is
       right: '16px',
       top: '20px',
       bottom: '16px',
-      containLabel: true
+      containLabel: true,
     },
     xAxis: {
       type: 'category' as const,
@@ -777,9 +893,9 @@ function EmptyStateChartCard({ title, yAxisFormatter = (v: number) => `${v}`, is
       axisLabel: {
         color: chartColors.slate400,
         fontSize: 10,
-        padding: [0, 0, 0, 15]
+        padding: [0, 0, 0, 15],
       },
-      boundaryGap: false
+      boundaryGap: false,
     },
     yAxis: {
       type: 'value' as const,
@@ -789,15 +905,15 @@ function EmptyStateChartCard({ title, yAxisFormatter = (v: number) => `${v}`, is
       axisLine: { show: false },
       axisTick: { show: false },
       splitLine: {
-        lineStyle: { color: splitLineColor, opacity: splitLineOpacity }
+        lineStyle: { color: splitLineColor, opacity: splitLineOpacity },
       },
       axisLabel: {
         color: chartColors.slate400,
         fontSize: 10,
-        formatter: yAxisFormatter
-      }
+        formatter: yAxisFormatter,
+      },
     },
-    series: []
+    series: [],
   };
 
   return (
@@ -811,7 +927,7 @@ function EmptyStateChartCard({ title, yAxisFormatter = (v: number) => `${v}`, is
           </button>
         </div>
       </div>
-      
+
       {/* Chart Body */}
       <div className="chartBody">
         <div className="chartWrapper">
@@ -848,30 +964,36 @@ export function OverallPerformancePage() {
     { key: 'type', label: 'Type', flex: 1, sortable: false },
     { key: 'usableFree', label: 'Usable free', flex: 1, sortable: true },
     { key: 'percentUsed', label: '% Used', flex: 1, sortable: true },
-    { 
-      key: 'growth5d', 
-      label: 'Growth (5d)', 
-      flex: 1, 
+    {
+      key: 'growth5d',
+      label: 'Growth (5d)',
+      flex: 1,
       sortable: true,
       render: (_, row) => (
-        <span className={row.growthPositive ? 'text-[var(--color-state-success)]' : 'text-[var(--color-state-danger)]'}>
+        <span
+          className={
+            row.growthPositive
+              ? 'text-[var(--color-state-success)]'
+              : 'text-[var(--color-state-danger)]'
+          }
+        >
           {row.growth5d}
         </span>
-      )
+      ),
     },
     { key: 'iops', label: 'IOPS', flex: 1, sortable: true },
     { key: 'bandwidth', label: 'Bandwidth', flex: 1, sortable: true },
     { key: 'stored', label: 'Stored', flex: 1, sortable: true },
-    { 
-      key: 'id', 
-      label: 'Detail performance', 
+    {
+      key: 'id',
+      label: 'Detail performance',
       width: '140px',
       align: 'center' as const,
       render: () => (
         <button className="p-1.5 hover:bg-[var(--color-surface-subtle)] rounded transition-colors">
           <IconTerminal2 size={16} stroke={1.5} className="text-[var(--color-text-muted)]" />
         </button>
-      )
+      ),
     },
   ];
 
@@ -880,16 +1002,16 @@ export function OverallPerformancePage() {
     { key: 'hostname', label: 'Hostname', flex: 2, sortable: true },
     { key: 'totalMemory', label: 'Total memory', flex: 1, sortable: true },
     { key: 'rawCapacity', label: 'Raw capacity', flex: 1, sortable: true },
-    { 
-      key: 'id', 
-      label: 'Detail performance', 
+    {
+      key: 'id',
+      label: 'Detail performance',
       width: '140px',
       align: 'center' as const,
       render: () => (
         <button className="p-1.5 hover:bg-[var(--color-surface-subtle)] rounded transition-colors">
           <IconTerminal2 size={16} stroke={1.5} className="text-[var(--color-text-muted)]" />
         </button>
-      )
+      ),
     },
   ];
 
@@ -901,28 +1023,28 @@ export function OverallPerformancePage() {
 
   // Top Slow OSD Ops table columns
   const slowOsdOpsColumns: TableColumn<SlowOsdOpsRow>[] = [
-    { 
-      key: 'osdId', 
-      label: 'OSD ID', 
-      flex: 2, 
+    {
+      key: 'osdId',
+      label: 'OSD ID',
+      flex: 2,
       sortable: true,
       render: (_, row) => (
         <span className="text-[var(--color-action-primary)] hover:underline cursor-pointer">
           {row.osdId}
         </span>
-      )
+      ),
     },
     { key: 'slowOps', label: 'Slow ops', flex: 2, sortable: true },
-    { 
-      key: 'id', 
-      label: 'Action', 
+    {
+      key: 'id',
+      label: 'Action',
       width: '80px',
       align: 'center' as const,
       render: () => (
         <button className="p-1.5 hover:bg-[var(--color-surface-subtle)] rounded transition-colors">
           <IconTerminal2 size={16} stroke={1.5} className="text-[var(--color-text-muted)]" />
         </button>
-      )
+      ),
     },
   ];
 
@@ -958,10 +1080,7 @@ export function OverallPerformancePage() {
             onForward={() => window.history.forward()}
             breadcrumb={
               <Breadcrumb
-                items={[
-                  { label: 'Home', href: '/storage' },
-                  { label: 'Overall performance' },
-                ]}
+                items={[{ label: 'Home', href: '/storage' }, { label: 'Overall performance' }]}
               />
             }
             actions={
@@ -1214,19 +1333,13 @@ export function OverallPerformancePage() {
 
                       {/* Pie charts Row */}
                       <div className="flex gap-6">
-                        <PieChartCard 
-                          title="OSD Types Summary"
-                          data={osdTypesSummaryData}
-                        />
-                        <PieChartCard 
+                        <PieChartCard title="OSD Types Summary" data={osdTypesSummaryData} />
+                        <PieChartCard
                           title="OSD Objectstore Types"
                           data={osdObjectstoreTypesData}
                         />
-                        <PieChartCard 
-                          title="OSD Size Summary"
-                          data={osdSizeSummaryData}
-                        />
-                        <SingleValueDoughnutCard 
+                        <PieChartCard title="OSD Size Summary" data={osdSizeSummaryData} />
+                        <SingleValueDoughnutCard
                           title="OSD onode Hits Ratio"
                           value={98.3}
                           color="#ef4444"
@@ -1295,15 +1408,33 @@ export function OverallPerformancePage() {
                             <SectionCard.Content gap={0} className="overflow-auto flex-1">
                               <Table<{ id: string; imageName: string; throughput: string }>
                                 columns={[
-                                  { key: 'imageName', label: 'Image name', flex: 1, sortable: true },
-                                  { key: 'throughput', label: 'Throughput', flex: 1, sortable: true },
+                                  {
+                                    key: 'imageName',
+                                    label: 'Image name',
+                                    flex: 1,
+                                    sortable: true,
+                                  },
+                                  {
+                                    key: 'throughput',
+                                    label: 'Throughput',
+                                    flex: 1,
+                                    sortable: true,
+                                  },
                                 ]}
                                 data={[
-                                  { id: '1', imageName: 'ubuntu-22.04-base', throughput: '125 MB/s' },
+                                  {
+                                    id: '1',
+                                    imageName: 'ubuntu-22.04-base',
+                                    throughput: '125 MB/s',
+                                  },
                                   { id: '2', imageName: 'centos-8-minimal', throughput: '98 MB/s' },
                                   { id: '3', imageName: 'debian-11-server', throughput: '87 MB/s' },
                                   { id: '4', imageName: 'rocky-linux-9', throughput: '82 MB/s' },
-                                  { id: '5', imageName: 'fedora-38-workstation', throughput: '76 MB/s' },
+                                  {
+                                    id: '5',
+                                    imageName: 'fedora-38-workstation',
+                                    throughput: '76 MB/s',
+                                  },
                                   { id: '6', imageName: 'alpine-3.18', throughput: '71 MB/s' },
                                   { id: '7', imageName: 'arch-linux-2024', throughput: '68 MB/s' },
                                   { id: '8', imageName: 'opensuse-leap-15', throughput: '65 MB/s' },
@@ -1320,7 +1451,12 @@ export function OverallPerformancePage() {
                             <SectionCard.Content gap={0} className="overflow-auto flex-1">
                               <Table<{ id: string; imageName: string; latency: string }>
                                 columns={[
-                                  { key: 'imageName', label: 'Image name', flex: 1, sortable: true },
+                                  {
+                                    key: 'imageName',
+                                    label: 'Image name',
+                                    flex: 1,
+                                    sortable: true,
+                                  },
                                   { key: 'latency', label: 'Latency', flex: 1, sortable: true },
                                 ]}
                                 data={[
@@ -1347,10 +1483,26 @@ export function OverallPerformancePage() {
                           <ChartCard
                             title="IOPS"
                             series={[
-                              { name: 'image-001', color: chartColors.cyan400, data: [120, 125, 130, 128, 135, 140, 138, 142, 145, 140] },
-                              { name: 'image-002', color: chartColors.emerald400, data: [100, 105, 110, 108, 115, 120, 118, 122, 125, 120] },
-                              { name: 'image-003', color: chartColors.amber400, data: [80, 85, 90, 88, 95, 100, 98, 102, 105, 100] },
-                              { name: 'image-004', color: chartColors.violet400, data: [60, 65, 70, 68, 75, 80, 78, 82, 85, 80] },
+                              {
+                                name: 'image-001',
+                                color: chartColors.cyan400,
+                                data: [120, 125, 130, 128, 135, 140, 138, 142, 145, 140],
+                              },
+                              {
+                                name: 'image-002',
+                                color: chartColors.emerald400,
+                                data: [100, 105, 110, 108, 115, 120, 118, 122, 125, 120],
+                              },
+                              {
+                                name: 'image-003',
+                                color: chartColors.amber400,
+                                data: [80, 85, 90, 88, 95, 100, 98, 102, 105, 100],
+                              },
+                              {
+                                name: 'image-004',
+                                color: chartColors.violet400,
+                                data: [60, 65, 70, 68, 75, 80, 78, 82, 85, 80],
+                              },
                             ]}
                             yAxisFormatter={(v) => `${v}`}
                             isDarkMode={isDark}
@@ -1363,8 +1515,16 @@ export function OverallPerformancePage() {
                           <ChartCard
                             title="Throughput"
                             series={[
-                              { name: 'read', color: chartColors.cyan400, data: [450, 480, 520, 490, 550, 580, 540, 600, 580, 560] },
-                              { name: 'write', color: chartColors.emerald400, data: [120, 150, 180, 160, 200, 220, 190, 250, 230, 210] },
+                              {
+                                name: 'read',
+                                color: chartColors.cyan400,
+                                data: [450, 480, 520, 490, 550, 580, 540, 600, 580, 560],
+                              },
+                              {
+                                name: 'write',
+                                color: chartColors.emerald400,
+                                data: [120, 150, 180, 160, 200, 220, 190, 250, 230, 210],
+                              },
                             ]}
                             yAxisFormatter={(v) => `${v}`}
                             isDarkMode={isDark}
@@ -1381,10 +1541,26 @@ export function OverallPerformancePage() {
                           <ChartCard
                             title="Average Latency"
                             series={[
-                              { name: 'image-001', color: chartColors.cyan400, data: [12, 14, 13, 15, 14, 16, 15, 17, 16, 15] },
-                              { name: 'image-002', color: chartColors.emerald400, data: [18, 20, 19, 21, 20, 22, 21, 23, 22, 21] },
-                              { name: 'image-003', color: chartColors.amber400, data: [8, 10, 9, 11, 10, 12, 11, 13, 12, 11] },
-                              { name: 'image-004', color: chartColors.violet400, data: [22, 24, 23, 25, 24, 26, 25, 27, 26, 25] },
+                              {
+                                name: 'image-001',
+                                color: chartColors.cyan400,
+                                data: [12, 14, 13, 15, 14, 16, 15, 17, 16, 15],
+                              },
+                              {
+                                name: 'image-002',
+                                color: chartColors.emerald400,
+                                data: [18, 20, 19, 21, 20, 22, 21, 23, 22, 21],
+                              },
+                              {
+                                name: 'image-003',
+                                color: chartColors.amber400,
+                                data: [8, 10, 9, 11, 10, 12, 11, 13, 12, 11],
+                              },
+                              {
+                                name: 'image-004',
+                                color: chartColors.violet400,
+                                data: [22, 24, 23, 25, 24, 26, 25, 27, 26, 25],
+                              },
                             ]}
                             yAxisFormatter={(v) => `${v} ms`}
                             isDarkMode={isDark}
@@ -1397,8 +1573,16 @@ export function OverallPerformancePage() {
                           <ChartCard
                             title="Highest IOPS"
                             series={[
-                              { name: 'read', color: chartColors.cyan400, data: [500, 520, 540, 530, 560, 580, 570, 600, 590, 580] },
-                              { name: 'write', color: chartColors.emerald400, data: [150, 160, 170, 165, 180, 190, 185, 200, 195, 190] },
+                              {
+                                name: 'read',
+                                color: chartColors.cyan400,
+                                data: [500, 520, 540, 530, 560, 580, 570, 600, 590, 580],
+                              },
+                              {
+                                name: 'write',
+                                color: chartColors.emerald400,
+                                data: [150, 160, 170, 165, 180, 190, 185, 200, 195, 190],
+                              },
                             ]}
                             yAxisFormatter={(v) => `${v}`}
                             isDarkMode={isDark}
@@ -1413,12 +1597,17 @@ export function OverallPerformancePage() {
                       <SectionCard>
                         <SectionCard.Header title="Images Overview" />
                         <SectionCard.Content gap={0}>
-                          <Table<{ id: string; imageName: string; iops: string; throughput: string }>
+                          <Table<{
+                            id: string;
+                            imageName: string;
+                            iops: string;
+                            throughput: string;
+                          }>
                             columns={[
-                              { 
-                                key: 'imageName', 
-                                label: 'Image name', 
-                                flex: 1, 
+                              {
+                                key: 'imageName',
+                                label: 'Image name',
+                                flex: 1,
                                 sortable: true,
                                 render: (_, row) => (
                                   <Link
@@ -1439,16 +1628,40 @@ export function OverallPerformancePage() {
                                 align: 'center' as const,
                                 render: () => (
                                   <button className="p-1.5 hover:bg-[var(--color-surface-subtle)] rounded transition-colors">
-                                    <IconTerminal2 size={16} stroke={1.5} className="text-[var(--color-text-muted)]" />
+                                    <IconTerminal2
+                                      size={16}
+                                      stroke={1.5}
+                                      className="text-[var(--color-text-muted)]"
+                                    />
                                   </button>
-                                )
+                                ),
                               },
                             ]}
                             data={[
-                              { id: 'img-001', imageName: 'ubuntu-22.04-base', iops: '1,250', throughput: '125 MB/s' },
-                              { id: 'img-002', imageName: 'centos-8-minimal', iops: '980', throughput: '98 MB/s' },
-                              { id: 'img-003', imageName: 'debian-11-server', iops: '870', throughput: '87 MB/s' },
-                              { id: 'img-004', imageName: 'windows-server-2019', iops: '650', throughput: '65 MB/s' },
+                              {
+                                id: 'img-001',
+                                imageName: 'ubuntu-22.04-base',
+                                iops: '1,250',
+                                throughput: '125 MB/s',
+                              },
+                              {
+                                id: 'img-002',
+                                imageName: 'centos-8-minimal',
+                                iops: '980',
+                                throughput: '98 MB/s',
+                              },
+                              {
+                                id: 'img-003',
+                                imageName: 'debian-11-server',
+                                iops: '870',
+                                throughput: '87 MB/s',
+                              },
+                              {
+                                id: 'img-004',
+                                imageName: 'windows-server-2019',
+                                iops: '650',
+                                throughput: '65 MB/s',
+                              },
                             ]}
                             rowKey="id"
                           />
@@ -1467,4 +1680,3 @@ export function OverallPerformancePage() {
 }
 
 export default OverallPerformancePage;
-

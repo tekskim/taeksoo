@@ -1,10 +1,9 @@
-import { useState, useCallback } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   Button,
   Breadcrumb,
   NumberInput,
-  ProgressBar,
   HStack,
   VStack,
   TabBar,
@@ -15,18 +14,14 @@ import {
   Tabs,
   TabList,
   Tab,
-  TabPanel,
   SearchInput,
   Radio,
   Input,
   Select,
   Textarea,
-  Disclosure,
   SectionCard,
   Checkbox,
   StatusIndicator,
-  Chip,
-  FormField,
   Toggle,
   IconUbuntu,
   IconGrid,
@@ -47,12 +42,9 @@ import {
   IconDots,
   IconDownload,
   IconEdit,
-  IconExclamationMark,
   IconExternalLink,
   IconPlus,
   IconProgress,
-  IconStar,
-  IconStarFilled,
   IconUpload,
   IconX,
 } from '@tabler/icons-react';
@@ -168,12 +160,72 @@ interface ServerGroupRow {
 }
 
 const mockImages: ImageRow[] = [
-  { id: 'e920j30d', status: 'active', name: 'ubuntu-24.04-tk-base', version: '24.04', size: '709.98 MiB', minDisk: '10.00 MiB', minRam: '0 MiB', access: 'Public', os: 'ubuntu' },
-  { id: 'e920j31d', status: 'active', name: 'ubuntu-24.04-tk-base', version: '24.04', size: '709.98 MiB', minDisk: '10.00 MiB', minRam: '0 MiB', access: 'Public', os: 'ubuntu' },
-  { id: 'e920j32d', status: 'active', name: 'ubuntu-24.04-tk-base', version: '24.04', size: '709.98 MiB', minDisk: '10.00 MiB', minRam: '0 MiB', access: 'Public', os: 'ubuntu' },
-  { id: 'e920j35d', status: 'active', name: 'ubuntu-22.04-tk-base', version: '22.04', size: '650.12 MiB', minDisk: '10.00 MiB', minRam: '0 MiB', access: 'Public', os: 'ubuntu' },
-  { id: 'e920j37d', status: 'active', name: 'windows-server-2022', version: '2022', size: '4.5 GiB', minDisk: '40.00 GiB', minRam: '2 GiB', access: 'Public', os: 'windows' },
-  { id: 'e920j39d', status: 'active', name: 'rocky-9.3-tk-base', version: '9.3', size: '890.23 MiB', minDisk: '10.00 MiB', minRam: '0 MiB', access: 'Public', os: 'rocky' },
+  {
+    id: 'e920j30d',
+    status: 'active',
+    name: 'ubuntu-24.04-tk-base',
+    version: '24.04',
+    size: '709.98 MiB',
+    minDisk: '10.00 MiB',
+    minRam: '0 MiB',
+    access: 'Public',
+    os: 'ubuntu',
+  },
+  {
+    id: 'e920j31d',
+    status: 'active',
+    name: 'ubuntu-24.04-tk-base',
+    version: '24.04',
+    size: '709.98 MiB',
+    minDisk: '10.00 MiB',
+    minRam: '0 MiB',
+    access: 'Public',
+    os: 'ubuntu',
+  },
+  {
+    id: 'e920j32d',
+    status: 'active',
+    name: 'ubuntu-24.04-tk-base',
+    version: '24.04',
+    size: '709.98 MiB',
+    minDisk: '10.00 MiB',
+    minRam: '0 MiB',
+    access: 'Public',
+    os: 'ubuntu',
+  },
+  {
+    id: 'e920j35d',
+    status: 'active',
+    name: 'ubuntu-22.04-tk-base',
+    version: '22.04',
+    size: '650.12 MiB',
+    minDisk: '10.00 MiB',
+    minRam: '0 MiB',
+    access: 'Public',
+    os: 'ubuntu',
+  },
+  {
+    id: 'e920j37d',
+    status: 'active',
+    name: 'windows-server-2022',
+    version: '2022',
+    size: '4.5 GiB',
+    minDisk: '40.00 GiB',
+    minRam: '2 GiB',
+    access: 'Public',
+    os: 'windows',
+  },
+  {
+    id: 'e920j39d',
+    status: 'active',
+    name: 'rocky-9.3-tk-base',
+    version: '9.3',
+    size: '890.23 MiB',
+    minDisk: '10.00 MiB',
+    minRam: '0 MiB',
+    access: 'Public',
+    os: 'rocky',
+  },
 ];
 
 const mockFlavors: FlavorRow[] = [
@@ -186,21 +238,101 @@ const mockFlavors: FlavorRow[] = [
   { id: '78mno123', name: 'i3.xlarge', vCPU: 4, ram: '30.5GiB', disk: '950GiB', isPublic: true },
   { id: '90pqr456', name: 'r5.xlarge', vCPU: 4, ram: '32GiB', disk: '100GiB', isPublic: true },
   { id: '12stu789', name: 'm5.xlarge', vCPU: 4, ram: '16GiB', disk: '100GiB', isPublic: true },
-  { id: '34vwx012', name: 't3.large', vCPU: 2, ram: '8GiB', disk: '30GiB', isPublic: true, hasWarning: true },
+  {
+    id: '34vwx012',
+    name: 't3.large',
+    vCPU: 2,
+    ram: '8GiB',
+    disk: '30GiB',
+    isPublic: true,
+    hasWarning: true,
+  },
   { id: '56yza345', name: 'c5.xlarge', vCPU: 4, ram: '8GiB', disk: '50GiB', isPublic: true },
   { id: '78bcd678', name: 'p3.2xlarge', vCPU: 8, ram: '61GiB', disk: '500GiB', isPublic: false },
 ];
 
 const mockNetworks: NetworkRow[] = [
-  { id: 'd32059d1', name: 'network', subnetCidr: '192.168.10.0/24', isExternal: true, shared: 'Public', status: 'active', category: 'current' },
-  { id: 'd32059d2', name: 'network', subnetCidr: '192.168.10.0/24', isExternal: true, shared: 'Public', status: 'active', category: 'current' },
-  { id: 'd32059d3', name: 'network', subnetCidr: '192.168.10.0/24', isExternal: true, shared: 'Public', status: 'active', category: 'current' },
-  { id: 'd32059d4', name: 'network', subnetCidr: '192.168.10.0/24', isExternal: true, shared: 'Public', status: 'active', category: 'current' },
-  { id: 'd32059d5', name: 'network', subnetCidr: '192.168.10.0/24', isExternal: true, shared: 'Public', status: 'building', category: 'current' },
-  { id: 'd32059d6', name: 'shared-net-1', subnetCidr: '10.0.1.0/24', isExternal: false, shared: 'Public', status: 'active', category: 'shared' },
-  { id: 'd32059d7', name: 'shared-net-2', subnetCidr: '10.0.2.0/24', isExternal: false, shared: 'Public', status: 'active', category: 'shared' },
-  { id: 'd32059d8', name: 'external-net-1', subnetCidr: '203.0.113.0/24', isExternal: true, shared: 'Public', status: 'active', category: 'external' },
-  { id: 'd32059d9', name: 'external-net-2', subnetCidr: '198.51.100.0/24', isExternal: true, shared: 'Private', status: 'active', category: 'external' },
+  {
+    id: 'd32059d1',
+    name: 'network',
+    subnetCidr: '192.168.10.0/24',
+    isExternal: true,
+    shared: 'Public',
+    status: 'active',
+    category: 'current',
+  },
+  {
+    id: 'd32059d2',
+    name: 'network',
+    subnetCidr: '192.168.10.0/24',
+    isExternal: true,
+    shared: 'Public',
+    status: 'active',
+    category: 'current',
+  },
+  {
+    id: 'd32059d3',
+    name: 'network',
+    subnetCidr: '192.168.10.0/24',
+    isExternal: true,
+    shared: 'Public',
+    status: 'active',
+    category: 'current',
+  },
+  {
+    id: 'd32059d4',
+    name: 'network',
+    subnetCidr: '192.168.10.0/24',
+    isExternal: true,
+    shared: 'Public',
+    status: 'active',
+    category: 'current',
+  },
+  {
+    id: 'd32059d5',
+    name: 'network',
+    subnetCidr: '192.168.10.0/24',
+    isExternal: true,
+    shared: 'Public',
+    status: 'building',
+    category: 'current',
+  },
+  {
+    id: 'd32059d6',
+    name: 'shared-net-1',
+    subnetCidr: '10.0.1.0/24',
+    isExternal: false,
+    shared: 'Public',
+    status: 'active',
+    category: 'shared',
+  },
+  {
+    id: 'd32059d7',
+    name: 'shared-net-2',
+    subnetCidr: '10.0.2.0/24',
+    isExternal: false,
+    shared: 'Public',
+    status: 'active',
+    category: 'shared',
+  },
+  {
+    id: 'd32059d8',
+    name: 'external-net-1',
+    subnetCidr: '203.0.113.0/24',
+    isExternal: true,
+    shared: 'Public',
+    status: 'active',
+    category: 'external',
+  },
+  {
+    id: 'd32059d9',
+    name: 'external-net-2',
+    subnetCidr: '198.51.100.0/24',
+    isExternal: true,
+    shared: 'Private',
+    status: 'active',
+    category: 'external',
+  },
 ];
 
 const mockSecurityGroups: SecurityGroupRow[] = [
@@ -212,11 +344,51 @@ const mockSecurityGroups: SecurityGroupRow[] = [
 ];
 
 const mockPorts: PortRow[] = [
-  { id: 'port1', name: 'port', ownedNetwork: 'network', ownedNetworkId: 'd32059d1', fixedIP: '10.76.0.135', macAddress: '10.76.0.135', status: 'active' },
-  { id: 'port2', name: 'port', ownedNetwork: 'network', ownedNetworkId: 'd32059d2', fixedIP: '10.76.0.135', macAddress: '10.76.0.135', status: 'active' },
-  { id: 'port3', name: 'port', ownedNetwork: 'network', ownedNetworkId: 'd32059d3', fixedIP: '10.76.0.135', macAddress: '10.76.0.135', status: 'active' },
-  { id: 'port4', name: 'port', ownedNetwork: 'network', ownedNetworkId: 'd32059d4', fixedIP: '10.76.0.135', macAddress: '10.76.0.135', status: 'active' },
-  { id: 'port5', name: 'port', ownedNetwork: 'network', ownedNetworkId: 'd32059d5', fixedIP: '10.76.0.135', macAddress: '10.76.0.155', status: 'error' },
+  {
+    id: 'port1',
+    name: 'port',
+    ownedNetwork: 'network',
+    ownedNetworkId: 'd32059d1',
+    fixedIP: '10.76.0.135',
+    macAddress: '10.76.0.135',
+    status: 'active',
+  },
+  {
+    id: 'port2',
+    name: 'port',
+    ownedNetwork: 'network',
+    ownedNetworkId: 'd32059d2',
+    fixedIP: '10.76.0.135',
+    macAddress: '10.76.0.135',
+    status: 'active',
+  },
+  {
+    id: 'port3',
+    name: 'port',
+    ownedNetwork: 'network',
+    ownedNetworkId: 'd32059d3',
+    fixedIP: '10.76.0.135',
+    macAddress: '10.76.0.135',
+    status: 'active',
+  },
+  {
+    id: 'port4',
+    name: 'port',
+    ownedNetwork: 'network',
+    ownedNetworkId: 'd32059d4',
+    fixedIP: '10.76.0.135',
+    macAddress: '10.76.0.135',
+    status: 'active',
+  },
+  {
+    id: 'port5',
+    name: 'port',
+    ownedNetwork: 'network',
+    ownedNetworkId: 'd32059d5',
+    fixedIP: '10.76.0.135',
+    macAddress: '10.76.0.155',
+    status: 'error',
+  },
 ];
 
 const mockKeyPairs: KeyPairRow[] = [
@@ -254,25 +426,29 @@ function SectionStatusIcon({ status }: { status: SectionState }) {
       </div>
     );
   }
-  
+
   if (status === 'active') {
     return (
       <div className="w-4 h-4 shrink-0">
-        <IconProgress size={16} stroke={1.5} className="text-[var(--color-text-subtle)] animate-spin" />
+        <IconProgress
+          size={16}
+          stroke={1.5}
+          className="text-[var(--color-text-subtle)] animate-spin"
+        />
       </div>
     );
   }
-  
+
   if (status === 'writing') {
     return null;
   }
-  
+
   if (status === 'pre') {
     return (
       <div className="w-4 h-4 shrink-0 rounded-full border border-[var(--color-border-default)]" />
     );
   }
-  
+
   return (
     <div className="w-4 h-4 shrink-0 rounded-full border border-[var(--color-border-default)] flex items-center justify-center">
       <div className="w-2 h-0.5 bg-[var(--color-text-subtle)]" />
@@ -306,17 +482,16 @@ function TemplateSidebar({ onCancel, sectionStatus }: TemplateSidebarProps) {
             <div className="flex flex-col">
               {SECTION_ORDER.map((sectionKey) => {
                 const isWriting = sectionStatus[sectionKey] === 'writing';
-                
+
                 return (
-                  <div
-                    key={sectionKey}
-                    className="flex items-center justify-between py-1"
-                  >
+                  <div key={sectionKey} className="flex items-center justify-between py-1">
                     <span className="text-[12px] leading-5 text-[var(--color-text-default)]">
                       {SECTION_LABELS[sectionKey]}
                     </span>
                     {isWriting ? (
-                      <span className="text-[11px] text-[var(--color-text-subtle)]">Writing...</span>
+                      <span className="text-[11px] text-[var(--color-text-subtle)]">
+                        Writing...
+                      </span>
                     ) : (
                       <SectionStatusIcon status={sectionStatus[sectionKey]} />
                     )}
@@ -329,18 +504,10 @@ function TemplateSidebar({ onCancel, sectionStatus }: TemplateSidebarProps) {
 
         {/* Action Buttons */}
         <HStack gap={2}>
-          <Button
-            variant="outline"
-            onClick={onCancel}
-            className="w-[80px]"
-          >
+          <Button variant="outline" onClick={onCancel} className="w-[80px]">
             Cancel
           </Button>
-          <Button
-            variant="primary"
-            disabled={!isAllCompleted}
-            className="flex-1"
-          >
+          <Button variant="primary" disabled={!isAllCompleted} className="flex-1">
             Create
           </Button>
         </HStack>
@@ -407,7 +574,9 @@ function SkippedSection({ title, onEdit }: SkippedSectionProps) {
           {title}
         </h5>
         <div className="flex items-center gap-3">
-          <span className="text-[length:var(--font-size-12)] leading-[var(--line-height-18)] text-[var(--color-text-muted)]">Not configured</span>
+          <span className="text-[length:var(--font-size-12)] leading-[var(--line-height-18)] text-[var(--color-text-muted)]">
+            Not configured
+          </span>
           <Button variant="outline" size="sm" leftIcon={<IconEdit size={12} />} onClick={onEdit}>
             Edit
           </Button>
@@ -430,8 +599,8 @@ interface DoneSectionProps {
 function DoneSection({ title, onEdit, children }: DoneSectionProps) {
   return (
     <SectionCard>
-      <SectionCard.Header 
-        title={title} 
+      <SectionCard.Header
+        title={title}
         showDivider
         actions={
           <Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />} onClick={onEdit}>
@@ -439,9 +608,7 @@ function DoneSection({ title, onEdit, children }: DoneSectionProps) {
           </Button>
         }
       />
-      <SectionCard.Content>
-        {children}
-      </SectionCard.Content>
+      <SectionCard.Content>{children}</SectionCard.Content>
     </SectionCard>
   );
 }
@@ -504,15 +671,21 @@ function TemplateInformationSection({
 
   return (
     <SectionCard isActive={isActive}>
-      <SectionCard.Header 
-        title="Template Information" 
+      <SectionCard.Header
+        title="Template Information"
         showDivider
-        actions={isEditing ? (
-          <HStack gap={2}>
-            <Button variant="secondary" size="sm" onClick={onEditCancel}>Cancel</Button>
-            <Button variant="primary" size="sm" onClick={handleEditDone}>Done</Button>
-          </HStack>
-        ) : undefined}
+        actions={
+          isEditing ? (
+            <HStack gap={2}>
+              <Button variant="secondary" size="sm" onClick={onEditCancel}>
+                Cancel
+              </Button>
+              <Button variant="primary" size="sm" onClick={handleEditDone}>
+                Done
+              </Button>
+            </HStack>
+          ) : undefined
+        }
       />
       <SectionCard.Content gap={6} className="pt-2">
         {/* Template name */}
@@ -535,7 +708,8 @@ function TemplateInformationSection({
             )}
           </VStack>
           <span className="text-[length:var(--font-size-12)] leading-[var(--line-height-16)] text-[var(--color-text-subtle)]">
-            You can use letters, numbers, and special characters (+=,.@-_), and the length must be between 2-128 characters.
+            You can use letters, numbers, and special characters (+=,.@-_), and the length must be
+            between 2-128 characters.
           </span>
         </VStack>
 
@@ -551,7 +725,8 @@ function TemplateInformationSection({
             fullWidth
           />
           <span className="text-[length:var(--font-size-12)] leading-[var(--line-height-16)] text-[var(--color-text-subtle)]">
-            You can use letters, numbers, and special characters (+=,.@-_()[]), and maximum 255 characters.
+            You can use letters, numbers, and special characters (+=,.@-_()[]), and maximum 255
+            characters.
           </span>
         </VStack>
 
@@ -610,15 +785,21 @@ function BasicInformationSection({
 }: BasicInformationSectionProps) {
   return (
     <SectionCard isActive={isActive}>
-      <SectionCard.Header 
-        title="Basic information" 
+      <SectionCard.Header
+        title="Basic information"
         showDivider
-        actions={isEditing ? (
-          <HStack gap={2}>
-            <Button variant="secondary" size="sm" onClick={onEditCancel}>Cancel</Button>
-            <Button variant="primary" size="sm" onClick={onEditDone}>Done</Button>
-          </HStack>
-        ) : undefined}
+        actions={
+          isEditing ? (
+            <HStack gap={2}>
+              <Button variant="secondary" size="sm" onClick={onEditCancel}>
+                Cancel
+              </Button>
+              <Button variant="primary" size="sm" onClick={onEditDone}>
+                Done
+              </Button>
+            </HStack>
+          ) : undefined
+        }
       />
       <SectionCard.Content gap={6} className="pt-2">
         {/* AZ (Availability zone) */}
@@ -719,22 +900,25 @@ function ImageSection({
     onEditDone?.();
   };
 
-  const filteredImages = mockImages.filter(img => {
+  const filteredImages = mockImages.filter((img) => {
     const matchesOs = osFilter === 'other' || img.os === osFilter;
-    const matchesSearch = searchQuery === '' || 
-      img.name.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesSearch =
+      searchQuery === '' || img.name.toLowerCase().includes(searchQuery.toLowerCase());
     return matchesOs && matchesSearch;
   });
 
   const totalPages = Math.ceil(filteredImages.length / itemsPerPage) || 1;
-  const paginatedImages = filteredImages.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
+  const paginatedImages = filteredImages.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
 
   // Get selected image info
-  const selectedImage = mockImages.find(img => img.id === selectedImageId);
+  const selectedImage = mockImages.find((img) => img.id === selectedImageId);
 
   // Add data disk handler
   const handleAddDataDisk = () => {
-    setDataDisks(prev => [...prev, { id: `dd-${Date.now()}`, type: '_DEFAULT_', size: 10 }]);
+    setDataDisks((prev) => [...prev, { id: `dd-${Date.now()}`, type: '_DEFAULT_', size: 10 }]);
   };
 
   const imageColumns: TableColumn<ImageRow>[] = [
@@ -760,14 +944,17 @@ function ImageSection({
         <StatusIndicator status={row.status as 'active' | 'error' | 'building'} />
       ),
     },
-    { 
-      key: 'name', 
-      label: 'Name', 
+    {
+      key: 'name',
+      label: 'Name',
       sortable: true,
       render: (value, row) => (
         <VStack gap={0}>
           <HStack gap={1} align="center">
-            <a href="#" className="text-[var(--color-action-primary)] hover:underline text-[length:var(--font-size-12)] leading-[var(--line-height-18)] font-medium">
+            <a
+              href="#"
+              className="text-[var(--color-action-primary)] hover:underline text-[length:var(--font-size-12)] leading-[var(--line-height-18)] font-medium"
+            >
               {value}
             </a>
             <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
@@ -786,23 +973,30 @@ function ImageSection({
   // OS filter chip style - matches Figma design with container
   const osChipStyle = (active: boolean) => `
     inline-flex items-center gap-1.5 px-3 py-2 rounded-[4px] cursor-pointer text-[12px] font-medium transition-colors
-    ${active 
-      ? 'bg-[var(--color-surface-default)] text-[var(--color-text-default)] shadow-sm' 
-      : 'bg-transparent text-[var(--color-text-muted)] hover:text-[var(--color-text-default)]'
+    ${
+      active
+        ? 'bg-[var(--color-surface-default)] text-[var(--color-text-default)] shadow-sm'
+        : 'bg-transparent text-[var(--color-text-muted)] hover:text-[var(--color-text-default)]'
     }
   `;
 
   return (
     <SectionCard isActive={isActive}>
-      <SectionCard.Header 
-        title="Source" 
+      <SectionCard.Header
+        title="Source"
         showDivider
-        actions={isEditing ? (
-          <HStack gap={2}>
-            <Button variant="secondary" size="sm" onClick={onEditCancel}>Cancel</Button>
-            <Button variant="primary" size="sm" onClick={handleEditDone}>Done</Button>
-          </HStack>
-        ) : undefined}
+        actions={
+          isEditing ? (
+            <HStack gap={2}>
+              <Button variant="secondary" size="sm" onClick={onEditCancel}>
+                Cancel
+              </Button>
+              <Button variant="primary" size="sm" onClick={handleEditDone}>
+                Done
+              </Button>
+            </HStack>
+          ) : undefined
+        }
       />
       <SectionCard.Content>
         <VStack gap={4} className="pt-2">
@@ -812,9 +1006,10 @@ function ImageSection({
               Start source
             </span>
             <span className="text-[12px] text-[var(--color-text-subtle)]">
-              Select a template to launch the instance. You can start from an OS image, a snapshot, or an existing volume.
+              Select a template to launch the instance. You can start from an OS image, a snapshot,
+              or an existing volume.
             </span>
-            
+
             {/* Source Tabs */}
             <Tabs value={sourceTab} onChange={setSourceTab} variant="underline" size="sm">
               <TabList>
@@ -827,30 +1022,42 @@ function ImageSection({
             {/* OS Filter Chips Container - Only for Image tab */}
             {sourceTab === 'image' && (
               <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-1 inline-flex w-fit">
-                <button 
+                <button
                   className={osChipStyle(osFilter === 'other')}
-                  onClick={() => { setOsFilter('other'); setCurrentPage(1); }}
+                  onClick={() => {
+                    setOsFilter('other');
+                    setCurrentPage(1);
+                  }}
                 >
                   <IconDots size={14} />
                   <span>Others</span>
                 </button>
-                <button 
+                <button
                   className={osChipStyle(osFilter === 'ubuntu')}
-                  onClick={() => { setOsFilter('ubuntu'); setCurrentPage(1); }}
+                  onClick={() => {
+                    setOsFilter('ubuntu');
+                    setCurrentPage(1);
+                  }}
                 >
                   <IconUbuntu size={14} />
                   <span>Ubuntu</span>
                 </button>
-                <button 
+                <button
                   className={osChipStyle(osFilter === 'windows')}
-                  onClick={() => { setOsFilter('windows'); setCurrentPage(1); }}
+                  onClick={() => {
+                    setOsFilter('windows');
+                    setCurrentPage(1);
+                  }}
                 >
                   <IconGrid size={14} />
                   <span>Windows</span>
                 </button>
-                <button 
+                <button
                   className={osChipStyle(osFilter === 'rocky')}
-                  onClick={() => { setOsFilter('rocky'); setCurrentPage(1); }}
+                  onClick={() => {
+                    setOsFilter('rocky');
+                    setCurrentPage(1);
+                  }}
                 >
                   <IconRocky size={14} />
                   <span>Rocky</span>
@@ -862,8 +1069,14 @@ function ImageSection({
             <SearchInput
               placeholder="Search image by attributes"
               value={searchQuery}
-              onChange={(e) => { setSearchQuery(e.target.value); setCurrentPage(1); }}
-              onClear={() => { setSearchQuery(''); setCurrentPage(1); }}
+              onChange={(e) => {
+                setSearchQuery(e.target.value);
+                setCurrentPage(1);
+              }}
+              onClear={() => {
+                setSearchQuery('');
+                setCurrentPage(1);
+              }}
               size="sm"
               className="w-[var(--search-input-width)]"
             />
@@ -887,7 +1100,9 @@ function ImageSection({
             {/* Selection Indicator for Image */}
             <SelectionIndicator
               className="mt-2"
-              selectedItems={selectedImage ? [{ id: selectedImage.id, label: selectedImage.name }] : []}
+              selectedItems={
+                selectedImage ? [{ id: selectedImage.id, label: selectedImage.name }] : []
+              }
               onRemove={() => onSelectImage('')}
             />
           </VStack>
@@ -903,7 +1118,7 @@ function ImageSection({
             <span className="text-[12px] text-[var(--color-text-subtle)]">
               Configure whether to create a system disk for booting.
             </span>
-            
+
             {/* Toggle */}
             <Toggle
               checked={createSystemDisk}
@@ -916,7 +1131,9 @@ function ImageSection({
               <div className="w-full bg-white border border-[var(--color-border-default)] rounded-[6px] px-4 py-2">
                 <HStack gap={6} align="center">
                   <HStack gap={1.5} align="center">
-                    <span className="text-[14px] font-medium text-[var(--color-text-default)]">Type</span>
+                    <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+                      Type
+                    </span>
                     <Select
                       options={storageTypeOptions}
                       value={storageType}
@@ -925,7 +1142,9 @@ function ImageSection({
                     />
                   </HStack>
                   <HStack gap={1.5} align="center">
-                    <span className="text-[14px] font-medium text-[var(--color-text-default)]">Size</span>
+                    <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+                      Size
+                    </span>
                     <NumberInput
                       value={storageSize}
                       onChange={onStorageSizeChange}
@@ -953,10 +1172,10 @@ function ImageSection({
             <span className="text-[12px] text-[var(--color-text-subtle)]">
               Attach additional volumes for data storage.
             </span>
-            
-            <Button 
-              variant="outline" 
-              size="sm" 
+
+            <Button
+              variant="outline"
+              size="sm"
               leftIcon={<IconPlus size={12} />}
               onClick={handleAddDataDisk}
             >
@@ -967,9 +1186,7 @@ function ImageSection({
           {/* Error Message */}
           {imageError && (
             <div className="mt-2">
-              <InlineMessage variant="error">
-                {imageError}
-              </InlineMessage>
+              <InlineMessage variant="error">{imageError}</InlineMessage>
             </div>
           )}
 
@@ -1042,9 +1259,8 @@ function FlavorSection({
   };
 
   // Filter flavors based on search query
-  const filteredFlavors = mockFlavors.filter(flavor => {
-    return searchQuery === '' || 
-      flavor.name.toLowerCase().includes(searchQuery.toLowerCase());
+  const filteredFlavors = mockFlavors.filter((flavor) => {
+    return searchQuery === '' || flavor.name.toLowerCase().includes(searchQuery.toLowerCase());
   });
 
   // Paginate filtered flavors
@@ -1059,7 +1275,7 @@ function FlavorSection({
   };
 
   // Get selected flavor for summary
-  const selectedFlavor = mockFlavors.find(f => f.id === selectedFlavorId);
+  const selectedFlavor = mockFlavors.find((f) => f.id === selectedFlavorId);
 
   // Table columns matching Figma design
   const flavorColumns: TableColumn<FlavorRow>[] = [
@@ -1078,14 +1294,18 @@ function FlavorSection({
         </div>
       ),
     },
-    { 
-      key: 'name', 
-      label: 'Name', 
+    {
+      key: 'name',
+      label: 'Name',
       sortable: true,
       render: (value, row) => (
         <VStack gap={0} align="start">
           <HStack gap={1.5} align="center">
-            <a href="#" className="text-[var(--color-action-primary)] hover:underline text-[12px] leading-[16px] font-medium" onClick={(e) => e.preventDefault()}>
+            <a
+              href="#"
+              className="text-[var(--color-action-primary)] hover:underline text-[12px] leading-[16px] font-medium"
+              onClick={(e) => e.preventDefault()}
+            >
               {value}
             </a>
             <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
@@ -1093,31 +1313,39 @@ function FlavorSection({
               <IconAlertCircle size={16} className="text-[var(--color-state-danger)]" />
             )}
           </HStack>
-          <span className="text-[11px] text-[var(--color-text-muted)] leading-[16px]">ID: {row.id}</span>
+          <span className="text-[11px] text-[var(--color-text-muted)] leading-[16px]">
+            ID: {row.id}
+          </span>
         </VStack>
       ),
     },
     { key: 'vCPU', label: 'vCPU', sortable: true },
     { key: 'ram', label: 'RAM', sortable: true },
     { key: 'disk', label: 'Root disk', sortable: true },
-    { 
-      key: 'isPublic', 
+    {
+      key: 'isPublic',
       label: 'Public',
-      render: (value) => value ? 'On' : 'Off',
+      render: (value) => (value ? 'On' : 'Off'),
     },
   ];
 
   return (
     <SectionCard isActive={isActive}>
-      <SectionCard.Header 
-        title="Flavor" 
+      <SectionCard.Header
+        title="Flavor"
         showDivider
-        actions={isEditing ? (
-          <HStack gap={2}>
-            <Button variant="secondary" size="sm" onClick={onEditCancel}>Cancel</Button>
-            <Button variant="primary" size="sm" onClick={handleEditDone}>Done</Button>
-          </HStack>
-        ) : undefined}
+        actions={
+          isEditing ? (
+            <HStack gap={2}>
+              <Button variant="secondary" size="sm" onClick={onEditCancel}>
+                Cancel
+              </Button>
+              <Button variant="primary" size="sm" onClick={handleEditDone}>
+                Done
+              </Button>
+            </HStack>
+          ) : undefined
+        }
       />
       <SectionCard.Content>
         <VStack gap={6} className="pt-2">
@@ -1147,11 +1375,14 @@ function FlavorSection({
                 placeholder="Search flavors by attributes"
                 value={searchQuery}
                 onChange={handleSearchChange}
-                onClear={() => { setSearchQuery(''); setCurrentPage(1); }}
+                onClear={() => {
+                  setSearchQuery('');
+                  setCurrentPage(1);
+                }}
                 size="sm"
                 className="w-[var(--search-input-width)]"
               />
-              <button 
+              <button
                 className="flex items-center justify-center w-[28px] h-[28px] border border-[var(--color-border-strong)] rounded-[6px] bg-white hover:bg-[var(--color-surface-subtle)]"
                 title="Download"
               >
@@ -1178,17 +1409,21 @@ function FlavorSection({
             {/* Error Message or Selection Indicator for Flavor */}
             {flavorError && !selectedFlavor ? (
               <div className="mt-2">
-                <InlineMessage variant="error">
-                  {flavorError}
-                </InlineMessage>
+                <InlineMessage variant="error">{flavorError}</InlineMessage>
               </div>
             ) : (
               <SelectionIndicator
                 className="mt-2"
-                selectedItems={selectedFlavor ? [{
-                  id: selectedFlavor.id,
-                  label: `${selectedFlavor.name} (${selectedFlavor.vCPU} vCPU, ${selectedFlavor.ram}, ${selectedFlavor.disk})`
-                }] : []}
+                selectedItems={
+                  selectedFlavor
+                    ? [
+                        {
+                          id: selectedFlavor.id,
+                          label: `${selectedFlavor.name} (${selectedFlavor.vCPU} vCPU, ${selectedFlavor.ram}, ${selectedFlavor.disk})`,
+                        },
+                      ]
+                    : []
+                }
                 onRemove={() => onSelectFlavor('')}
               />
             )}
@@ -1251,21 +1486,21 @@ function NetworkSection({
 
   const handleNextClick = () => {
     let hasError = false;
-    
+
     if (selectedNetworkIds.size === 0) {
       setNetworkError('Please select at least one network.');
       hasError = true;
     } else {
       setNetworkError(null);
     }
-    
+
     if (selectedSecurityGroups.size === 0) {
       setSgError('Please select at least one security group.');
       hasError = true;
     } else {
       setSgError(null);
     }
-    
+
     if (!hasError) {
       onNext();
     }
@@ -1273,21 +1508,21 @@ function NetworkSection({
 
   const handleEditDone = () => {
     let hasError = false;
-    
+
     if (selectedNetworkIds.size === 0) {
       setNetworkError('Please select at least one network.');
       hasError = true;
     } else {
       setNetworkError(null);
     }
-    
+
     if (selectedSecurityGroups.size === 0) {
       setSgError('Please select at least one security group.');
       hasError = true;
     } else {
       setSgError(null);
     }
-    
+
     if (!hasError) {
       onEditDone?.();
     }
@@ -1297,16 +1532,16 @@ function NetworkSection({
   const [networkTab, setNetworkTab] = useState('current');
   const [networkSearch, setNetworkSearch] = useState('');
   const [networkPage, setNetworkPage] = useState(1);
-  
+
   // Security group state
   const [sgSearch, setSgSearch] = useState('');
   const [sgPage, setSgPage] = useState(1);
-  
+
   // Virtual LAN state
   const [virtualLANs, setVirtualLANs] = useState<VirtualLAN[]>([
-    { id: 'vlan1', network: 'network', subnet: 'subnet', autoAssign: 'Auto-assign' }
+    { id: 'vlan1', network: 'network', subnet: 'subnet', autoAssign: 'Auto-assign' },
   ]);
-  
+
   // Port section state
   const [portExpanded, setPortExpanded] = useState(true);
   const [portSearch, setPortSearch] = useState('');
@@ -1316,10 +1551,10 @@ function NetworkSection({
   const itemsPerPage = 5;
 
   // Filter networks based on tab and search
-  const filteredNetworks = mockNetworks.filter(n => {
+  const filteredNetworks = mockNetworks.filter((n) => {
     const matchesTab = n.category === networkTab;
-    const matchesSearch = networkSearch === '' || 
-      n.name.toLowerCase().includes(networkSearch.toLowerCase());
+    const matchesSearch =
+      networkSearch === '' || n.name.toLowerCase().includes(networkSearch.toLowerCase());
     return matchesTab && matchesSearch;
   });
 
@@ -1330,21 +1565,16 @@ function NetworkSection({
   );
 
   // Filter security groups
-  const filteredSGs = mockSecurityGroups.filter(sg => {
-    return sgSearch === '' || 
-      sg.name.toLowerCase().includes(sgSearch.toLowerCase());
+  const filteredSGs = mockSecurityGroups.filter((sg) => {
+    return sgSearch === '' || sg.name.toLowerCase().includes(sgSearch.toLowerCase());
   });
 
   const sgTotalPages = Math.ceil(filteredSGs.length / itemsPerPage) || 1;
-  const paginatedSGs = filteredSGs.slice(
-    (sgPage - 1) * itemsPerPage,
-    sgPage * itemsPerPage
-  );
+  const paginatedSGs = filteredSGs.slice((sgPage - 1) * itemsPerPage, sgPage * itemsPerPage);
 
   // Filter ports
-  const filteredPorts = mockPorts.filter(p => {
-    return portSearch === '' || 
-      p.name.toLowerCase().includes(portSearch.toLowerCase());
+  const filteredPorts = mockPorts.filter((p) => {
+    return portSearch === '' || p.name.toLowerCase().includes(portSearch.toLowerCase());
   });
 
   const portTotalPages = Math.ceil(filteredPorts.length / itemsPerPage) || 1;
@@ -1354,22 +1584,25 @@ function NetworkSection({
   );
 
   // Get selected items for chips
-  const selectedNetworks = mockNetworks.filter(n => selectedNetworkIds.has(n.id));
-  const selectedSGs = mockSecurityGroups.filter(sg => selectedSecurityGroups.has(sg.id));
-  const selectedPorts = mockPorts.filter(p => selectedPortIds.has(p.id));
+  const selectedNetworks = mockNetworks.filter((n) => selectedNetworkIds.has(n.id));
+  const selectedSGs = mockSecurityGroups.filter((sg) => selectedSecurityGroups.has(sg.id));
+  const selectedPorts = mockPorts.filter((p) => selectedPortIds.has(p.id));
 
   // Virtual LAN handlers
   const addVirtualLAN = () => {
-    setVirtualLANs([...virtualLANs, {
-      id: `vlan${Date.now()}`,
-      network: 'network',
-      subnet: 'subnet',
-      autoAssign: 'Auto-assign'
-    }]);
+    setVirtualLANs([
+      ...virtualLANs,
+      {
+        id: `vlan${Date.now()}`,
+        network: 'network',
+        subnet: 'subnet',
+        autoAssign: 'Auto-assign',
+      },
+    ]);
   };
 
   const removeVirtualLAN = (id: string) => {
-    setVirtualLANs(virtualLANs.filter(v => v.id !== id));
+    setVirtualLANs(virtualLANs.filter((v) => v.id !== id));
   };
 
   // Port toggle handler
@@ -1404,27 +1637,33 @@ function NetworkSection({
       width: '64px',
       render: (_, row) => <StatusIndicator status={row.status} />,
     },
-    { 
-      key: 'name', 
-      label: 'Name', 
+    {
+      key: 'name',
+      label: 'Name',
       sortable: true,
       render: (value, row) => (
         <VStack gap={0} align="start">
           <HStack gap={1.5} align="center">
-            <a href="#" className="text-[var(--color-action-primary)] hover:underline text-[12px] leading-[16px] font-medium" onClick={(e) => e.preventDefault()}>
+            <a
+              href="#"
+              className="text-[var(--color-action-primary)] hover:underline text-[12px] leading-[16px] font-medium"
+              onClick={(e) => e.preventDefault()}
+            >
               {value}
             </a>
             <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
           </HStack>
-          <span className="text-[11px] text-[var(--color-text-muted)] leading-[16px]">ID: {row.id}</span>
+          <span className="text-[11px] text-[var(--color-text-muted)] leading-[16px]">
+            ID: {row.id}
+          </span>
         </VStack>
       ),
     },
     { key: 'subnetCidr', label: 'Subnet CIDR', sortable: true },
-    { 
-      key: 'isExternal', 
+    {
+      key: 'isExternal',
       label: 'External',
-      render: (value) => value ? 'Yes' : 'No',
+      render: (value) => (value ? 'Yes' : 'No'),
     },
     { key: 'shared', label: 'Shared' },
   ];
@@ -1444,19 +1683,25 @@ function NetworkSection({
         </div>
       ),
     },
-    { 
-      key: 'name', 
-      label: 'Name', 
+    {
+      key: 'name',
+      label: 'Name',
       sortable: true,
       render: (value, row) => (
         <VStack gap={0} align="start">
           <HStack gap={1.5} align="center">
-            <a href="#" className="text-[var(--color-action-primary)] hover:underline text-[12px] leading-[16px] font-medium" onClick={(e) => e.preventDefault()}>
+            <a
+              href="#"
+              className="text-[var(--color-action-primary)] hover:underline text-[12px] leading-[16px] font-medium"
+              onClick={(e) => e.preventDefault()}
+            >
               {value}
             </a>
             <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
           </HStack>
-          <span className="text-[11px] text-[var(--color-text-muted)] leading-[16px]">ID: {row.id}</span>
+          <span className="text-[11px] text-[var(--color-text-muted)] leading-[16px]">
+            ID: {row.id}
+          </span>
         </VStack>
       ),
     },
@@ -1485,36 +1730,50 @@ function NetworkSection({
       width: '64px',
       render: (_, row) => <StatusIndicator status={row.status} />,
     },
-    { 
-      key: 'name', 
-      label: 'Name', 
+    {
+      key: 'name',
+      label: 'Name',
       sortable: true,
       render: (value, row) => (
         <VStack gap={0} align="start">
           <HStack gap={1.5} align="center">
-            <a href="#" className="text-[var(--color-action-primary)] hover:underline text-[12px] leading-[16px] font-medium" onClick={(e) => e.preventDefault()}>
+            <a
+              href="#"
+              className="text-[var(--color-action-primary)] hover:underline text-[12px] leading-[16px] font-medium"
+              onClick={(e) => e.preventDefault()}
+            >
               {value}
             </a>
             <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
-            {row.status === 'error' && <IconAlertCircle size={12} className="text-[var(--color-state-danger)]" />}
+            {row.status === 'error' && (
+              <IconAlertCircle size={12} className="text-[var(--color-state-danger)]" />
+            )}
           </HStack>
-          <span className="text-[11px] text-[var(--color-text-muted)] leading-[16px]">ID: {row.id}</span>
+          <span className="text-[11px] text-[var(--color-text-muted)] leading-[16px]">
+            ID: {row.id}
+          </span>
         </VStack>
       ),
     },
-    { 
-      key: 'ownedNetwork', 
-      label: 'Owned network', 
+    {
+      key: 'ownedNetwork',
+      label: 'Owned network',
       sortable: true,
       render: (value, row) => (
         <VStack gap={0} align="start">
           <HStack gap={1.5} align="center">
-            <a href="#" className="text-[var(--color-action-primary)] hover:underline text-[12px] leading-[16px] font-medium" onClick={(e) => e.preventDefault()}>
+            <a
+              href="#"
+              className="text-[var(--color-action-primary)] hover:underline text-[12px] leading-[16px] font-medium"
+              onClick={(e) => e.preventDefault()}
+            >
               {value}
             </a>
             <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
           </HStack>
-          <span className="text-[11px] text-[var(--color-text-muted)] leading-[16px]">ID: {row.ownedNetworkId}</span>
+          <span className="text-[11px] text-[var(--color-text-muted)] leading-[16px]">
+            ID: {row.ownedNetworkId}
+          </span>
         </VStack>
       ),
     },
@@ -1524,15 +1783,21 @@ function NetworkSection({
 
   return (
     <SectionCard isActive={isActive}>
-      <SectionCard.Header 
-        title="Network" 
+      <SectionCard.Header
+        title="Network"
         showDivider
-        actions={isEditing ? (
-          <HStack gap={2}>
-            <Button variant="secondary" size="sm" onClick={onEditCancel}>Cancel</Button>
-            <Button variant="primary" size="sm" onClick={handleEditDone}>Done</Button>
-          </HStack>
-        ) : undefined}
+        actions={
+          isEditing ? (
+            <HStack gap={2}>
+              <Button variant="secondary" size="sm" onClick={onEditCancel}>
+                Cancel
+              </Button>
+              <Button variant="primary" size="sm" onClick={handleEditDone}>
+                Done
+              </Button>
+            </HStack>
+          ) : undefined
+        }
       />
       <SectionCard.Content>
         <VStack gap={6} className="pt-2">
@@ -1543,12 +1808,21 @@ function NetworkSection({
                 Network<span className="ml-[3px] text-[var(--color-state-danger)]">*</span>
               </span>
               <span className="text-[12px] text-[var(--color-text-subtle)] leading-[16px]">
-                If you select a port, selecting a network is optional. You may still add another network if required.
+                If you select a port, selecting a network is optional. You may still add another
+                network if required.
               </span>
             </VStack>
 
             {/* Network Tabs */}
-            <Tabs value={networkTab} onChange={(v) => { setNetworkTab(v); setNetworkPage(1); }} variant="underline" size="sm">
+            <Tabs
+              value={networkTab}
+              onChange={(v) => {
+                setNetworkTab(v);
+                setNetworkPage(1);
+              }}
+              variant="underline"
+              size="sm"
+            >
               <TabList>
                 <Tab value="current">Current tenant</Tab>
                 <Tab value="shared">Shared</Tab>
@@ -1561,8 +1835,14 @@ function NetworkSection({
               <SearchInput
                 placeholder="Search networks by attributes"
                 value={networkSearch}
-                onChange={(e) => { setNetworkSearch(e.target.value); setNetworkPage(1); }}
-                onClear={() => { setNetworkSearch(''); setNetworkPage(1); }}
+                onChange={(e) => {
+                  setNetworkSearch(e.target.value);
+                  setNetworkPage(1);
+                }}
+                onClear={() => {
+                  setNetworkSearch('');
+                  setNetworkPage(1);
+                }}
                 size="sm"
                 className="w-[var(--wizard-summary-width)]"
               />
@@ -1590,14 +1870,12 @@ function NetworkSection({
             {/* Error Message or Selection Indicator for Networks */}
             {networkError && selectedNetworks.length === 0 ? (
               <div className="mt-2">
-                <InlineMessage variant="error">
-                  {networkError}
-                </InlineMessage>
+                <InlineMessage variant="error">{networkError}</InlineMessage>
               </div>
             ) : (
               <SelectionIndicator
                 className="mt-2"
-                selectedItems={selectedNetworks.map(n => ({ id: n.id, label: n.name }))}
+                selectedItems={selectedNetworks.map((n) => ({ id: n.id, label: n.name }))}
                 onRemove={(id) => handleNetworkToggle(id)}
               />
             )}
@@ -1610,16 +1888,22 @@ function NetworkSection({
                 Virtual LAN
               </span>
               <span className="text-[12px] text-[var(--color-text-subtle)] leading-[16px]">
-                Each selected network requires at least one Virtual LAN configuration. Each VLAN represents a virtual network card (NIC) attached to the selected network.
+                Each selected network requires at least one Virtual LAN configuration. Each VLAN
+                represents a virtual network card (NIC) attached to the selected network.
               </span>
             </VStack>
 
             {/* Virtual LAN Rows */}
             {virtualLANs.map((vlan) => (
-              <div key={vlan.id} className="flex items-center gap-4 px-4 py-2 bg-white border border-[var(--color-border-default)] rounded-[6px]">
+              <div
+                key={vlan.id}
+                className="flex items-center gap-4 px-4 py-2 bg-white border border-[var(--color-border-default)] rounded-[6px]"
+              >
                 <HStack gap={4} align="center">
                   <HStack gap={1.5} align="center">
-                    <span className="text-[14px] font-medium text-[var(--color-text-default)]">Network</span>
+                    <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+                      Network
+                    </span>
                     <Select
                       options={[{ value: 'network', label: 'network' }]}
                       value={vlan.network}
@@ -1628,7 +1912,9 @@ function NetworkSection({
                     />
                   </HStack>
                   <HStack gap={1.5} align="center">
-                    <span className="text-[14px] font-medium text-[var(--color-text-default)]">Subnet</span>
+                    <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+                      Subnet
+                    </span>
                     <Select
                       options={[{ value: 'subnet', label: 'subnet' }]}
                       value={vlan.subnet}
@@ -1643,7 +1929,7 @@ function NetworkSection({
                     className="w-[120px]"
                   />
                 </HStack>
-                <button 
+                <button
                   className="ml-auto p-1 hover:bg-[var(--color-surface-subtle)] rounded"
                   onClick={() => removeVirtualLAN(vlan.id)}
                 >
@@ -1678,8 +1964,14 @@ function NetworkSection({
               <SearchInput
                 placeholder="Search security groups by attributes"
                 value={sgSearch}
-                onChange={(e) => { setSgSearch(e.target.value); setSgPage(1); }}
-                onClear={() => { setSgSearch(''); setSgPage(1); }}
+                onChange={(e) => {
+                  setSgSearch(e.target.value);
+                  setSgPage(1);
+                }}
+                onClear={() => {
+                  setSgSearch('');
+                  setSgPage(1);
+                }}
                 size="sm"
                 className="w-[var(--wizard-summary-width)]"
               />
@@ -1707,14 +1999,12 @@ function NetworkSection({
             {/* Error Message or Selection Indicator for Security Groups */}
             {sgError && selectedSGs.length === 0 ? (
               <div className="mt-2">
-                <InlineMessage variant="error">
-                  {sgError}
-                </InlineMessage>
+                <InlineMessage variant="error">{sgError}</InlineMessage>
               </div>
             ) : (
               <SelectionIndicator
                 className="mt-2"
-                selectedItems={selectedSGs.map(sg => ({ id: sg.id, label: sg.name }))}
+                selectedItems={selectedSGs.map((sg) => ({ id: sg.id, label: sg.name }))}
                 onRemove={(id) => handleSecurityGroupToggle(id)}
               />
             )}
@@ -1726,7 +2016,11 @@ function NetworkSection({
               className="flex items-center gap-1 text-[14px] font-medium text-[var(--color-text-default)]"
               onClick={() => setPortExpanded(!portExpanded)}
             >
-              {portExpanded ? <IconCaretDownFilled size={12} /> : <IconCaretRightFilled size={12} />}
+              {portExpanded ? (
+                <IconCaretDownFilled size={12} />
+              ) : (
+                <IconCaretRightFilled size={12} />
+              )}
               Port
             </button>
 
@@ -1736,8 +2030,14 @@ function NetworkSection({
                 <SearchInput
                   placeholder="Search ports by attributes"
                   value={portSearch}
-                  onChange={(e) => { setPortSearch(e.target.value); setPortPage(1); }}
-                  onClear={() => { setPortSearch(''); setPortPage(1); }}
+                  onChange={(e) => {
+                    setPortSearch(e.target.value);
+                    setPortPage(1);
+                  }}
+                  onClear={() => {
+                    setPortSearch('');
+                    setPortPage(1);
+                  }}
                   size="sm"
                   className="w-[var(--search-input-width)]"
                 />
@@ -1761,7 +2061,7 @@ function NetworkSection({
                 {/* Selection Indicator for Ports */}
                 <SelectionIndicator
                   className="mt-2"
-                  selectedItems={selectedPorts.map(p => ({ id: p.id, label: p.id }))}
+                  selectedItems={selectedPorts.map((p) => ({ id: p.id, label: p.id }))}
                   onRemove={(id) => handlePortToggle(id)}
                 />
               </VStack>
@@ -1857,15 +2157,21 @@ function AuthenticationSection({
 
   return (
     <SectionCard isActive={isActive}>
-      <SectionCard.Header 
-        title="Authentication" 
+      <SectionCard.Header
+        title="Authentication"
         showDivider
-        actions={isEditing ? (
-          <HStack gap={2}>
-            <Button variant="secondary" size="sm" onClick={onEditCancel}>Cancel</Button>
-            <Button variant="primary" size="sm" onClick={handleEditDone}>Done</Button>
-          </HStack>
-        ) : undefined}
+        actions={
+          isEditing ? (
+            <HStack gap={2}>
+              <Button variant="secondary" size="sm" onClick={onEditCancel}>
+                Cancel
+              </Button>
+              <Button variant="primary" size="sm" onClick={handleEditDone}>
+                Done
+              </Button>
+            </HStack>
+          ) : undefined
+        }
       />
       <SectionCard.Content>
         <VStack gap={0}>
@@ -1908,17 +2214,23 @@ function AuthenticationSection({
                 {/* Error Message or Selection Indicator for Key Pair */}
                 {authError && !selectedKeyPairId ? (
                   <div className="mt-2">
-                    <InlineMessage variant="error">
-                      {authError}
-                    </InlineMessage>
+                    <InlineMessage variant="error">{authError}</InlineMessage>
                   </div>
                 ) : (
                   <SelectionIndicator
                     className="mt-2"
-                    selectedItems={selectedKeyPairId ? [{
-                      id: selectedKeyPairId,
-                      label: mockKeyPairs.find(k => k.id === selectedKeyPairId)?.name || selectedKeyPairId
-                    }] : []}
+                    selectedItems={
+                      selectedKeyPairId
+                        ? [
+                            {
+                              id: selectedKeyPairId,
+                              label:
+                                mockKeyPairs.find((k) => k.id === selectedKeyPairId)?.name ||
+                                selectedKeyPairId,
+                            },
+                          ]
+                        : []
+                    }
                     onRemove={() => onSelectKeyPair('')}
                   />
                 )}
@@ -1930,10 +2242,7 @@ function AuthenticationSection({
             <>
               <div className="w-full h-px bg-[var(--color-border-subtle)] my-6" />
               <HStack justify="end">
-                <Button 
-                  variant="primary" 
-                  onClick={handleNextClick}
-                >
+                <Button variant="primary" onClick={handleNextClick}>
                   Next
                 </Button>
               </HStack>
@@ -1979,7 +2288,7 @@ function AdvancedSection({
 }: AdvancedSectionProps) {
   const MAX_TAGS = 50;
   const MAX_USER_DATA_KB = 16;
-  
+
   // Calculate user data size in KB
   const userDataSizeKB = new Blob([userData]).size / 1024;
   const userDataSizeDisplay = userDataSizeKB < 0.01 ? '0' : userDataSizeKB.toFixed(2);
@@ -2021,47 +2330,52 @@ function AdvancedSection({
 
   return (
     <SectionCard isActive={isActive}>
-      <SectionCard.Header 
-        title="Advanced" 
+      <SectionCard.Header
+        title="Advanced"
         showDivider
-        actions={isEditing ? (
-          <HStack gap={2}>
-            <Button variant="secondary" size="sm" onClick={onEditCancel}>Cancel</Button>
-            <Button variant="primary" size="sm" onClick={onEditDone}>Done</Button>
-          </HStack>
-        ) : undefined}
+        actions={
+          isEditing ? (
+            <HStack gap={2}>
+              <Button variant="secondary" size="sm" onClick={onEditCancel}>
+                Cancel
+              </Button>
+              <Button variant="primary" size="sm" onClick={onEditDone}>
+                Done
+              </Button>
+            </HStack>
+          ) : undefined
+        }
       />
       <SectionCard.Content>
         <VStack gap={6} className="pt-2">
           {/* Tags Section */}
           <VStack gap={3} align="stretch">
             <VStack gap={2} align="stretch">
-              <span className="text-[14px] font-medium text-[var(--color-text-default)]">
-                Tags
-              </span>
+              <span className="text-[14px] font-medium text-[var(--color-text-default)]">Tags</span>
               <span className="text-[12px] text-[var(--color-text-subtle)]">
-                A tag consists of a Key that defines the resource category and a Value that describes it. Each resource can have up to 50 tags.
+                A tag consists of a Key that defines the resource category and a Value that
+                describes it. Each resource can have up to 50 tags.
               </span>
             </VStack>
-            
+
             {/* Tag entries */}
             {tags.length > 0 && (
               <VStack gap={2} align="stretch">
                 {tags.map((tag, index) => (
                   <HStack key={index} gap={3} align="center">
-                    <Input 
-                      placeholder="Key" 
+                    <Input
+                      placeholder="Key"
                       value={tag.key}
                       onChange={(e) => handleTagChange(index, 'key', e.target.value)}
                       className="flex-1"
                     />
-                    <Input 
-                      placeholder="Value" 
+                    <Input
+                      placeholder="Value"
                       value={tag.value}
                       onChange={(e) => handleTagChange(index, 'value', e.target.value)}
                       className="flex-1"
                     />
-                    <button 
+                    <button
                       onClick={() => handleRemoveTag(index)}
                       className="p-1 text-[var(--color-text-subtle)] hover:text-[var(--color-text-default)]"
                     >
@@ -2071,7 +2385,7 @@ function AdvancedSection({
                 ))}
               </VStack>
             )}
-            
+
             <HStack gap={3} align="center">
               <button
                 onClick={handleAddTag}
@@ -2097,7 +2411,7 @@ function AdvancedSection({
                 Enter a script or cloud-init configuration to run when the instance first boots.
               </span>
             </VStack>
-            
+
             <VStack gap={3} align="stretch">
               <button
                 onClick={handleFileUpload}
@@ -2106,7 +2420,7 @@ function AdvancedSection({
                 <IconUpload size={12} />
                 Upload a file
               </button>
-              
+
               <VStack gap={2} align="stretch">
                 <Textarea
                   placeholder="e.g. #!/bin/bash ...  or  #cloud-config ..."
@@ -2180,7 +2494,9 @@ export function CreateTemplatePage() {
 
   // Network state
   const [selectedNetworkIds, setSelectedNetworkIds] = useState<Set<string>>(new Set());
-  const [selectedSecurityGroups, setSelectedSecurityGroups] = useState<Set<string>>(new Set(['sg2']));
+  const [selectedSecurityGroups, setSelectedSecurityGroups] = useState<Set<string>>(
+    new Set(['sg2'])
+  );
 
   // Authentication state
   const [loginType, setLoginType] = useState<'keypair' | 'password'>('keypair');
@@ -2191,7 +2507,7 @@ export function CreateTemplatePage() {
   const [userData, setUserData] = useState('');
 
   // Convert tabs for TabBar
-  const tabBarTabs = tabs.map(tab => ({
+  const tabBarTabs = tabs.map((tab) => ({
     id: tab.id,
     label: tab.label,
     closable: tab.closable,
@@ -2210,13 +2526,13 @@ export function CreateTemplatePage() {
     const nextSection = SECTION_ORDER[currentIndex + 1];
 
     if (nextSection) {
-      setSectionStatus(prev => ({
+      setSectionStatus((prev) => ({
         ...prev,
         [section]: 'done',
         [nextSection]: 'active',
       }));
     } else {
-      setSectionStatus(prev => ({
+      setSectionStatus((prev) => ({
         ...prev,
         [section]: 'done',
       }));
@@ -2226,9 +2542,9 @@ export function CreateTemplatePage() {
   // Handle Edit
   const handleEdit = (section: SectionStep) => {
     if (editingSection) {
-      setEditingWritingSections(prev => [...prev, editingSection]);
-      
-      setSectionStatus(prev => {
+      setEditingWritingSections((prev) => [...prev, editingSection]);
+
+      setSectionStatus((prev) => {
         const newStatus = { ...prev };
         newStatus[editingSection] = 'writing';
         newStatus[section] = 'active';
@@ -2237,18 +2553,18 @@ export function CreateTemplatePage() {
       setEditingSection(section);
     } else {
       setEditingSection(section);
-      
-      setSectionStatus(prev => {
+
+      setSectionStatus((prev) => {
         const newStatus = { ...prev };
-        
+
         for (const key of SECTION_ORDER) {
           if (newStatus[key] === 'active' && key !== section) {
             newStatus[key] = 'writing';
           }
         }
-        
+
         newStatus[section] = 'active';
-        
+
         return newStatus;
       });
     }
@@ -2257,23 +2573,23 @@ export function CreateTemplatePage() {
   // Handle Edit Cancel
   const handleEditCancel = () => {
     if (editingSection) {
-      const topmostWriting = SECTION_ORDER.find(key => sectionStatus[key] === 'writing');
+      const topmostWriting = SECTION_ORDER.find((key) => sectionStatus[key] === 'writing');
       const wasEditing = topmostWriting && editingWritingSections.includes(topmostWriting);
-      
-      setSectionStatus(prev => {
+
+      setSectionStatus((prev) => {
         const newStatus = { ...prev };
         newStatus[editingSection] = 'done';
-        
+
         if (topmostWriting) {
           newStatus[topmostWriting] = 'active';
         }
-        
+
         return newStatus;
       });
-      
+
       if (wasEditing && topmostWriting) {
         setEditingSection(topmostWriting);
-        setEditingWritingSections(prev => prev.filter(s => s !== topmostWriting));
+        setEditingWritingSections((prev) => prev.filter((s) => s !== topmostWriting));
       } else {
         setEditingSection(null);
       }
@@ -2283,23 +2599,23 @@ export function CreateTemplatePage() {
   // Handle Edit Done
   const handleEditDone = () => {
     if (editingSection) {
-      const topmostWriting = SECTION_ORDER.find(key => sectionStatus[key] === 'writing');
+      const topmostWriting = SECTION_ORDER.find((key) => sectionStatus[key] === 'writing');
       const wasEditing = topmostWriting && editingWritingSections.includes(topmostWriting);
-      
-      setSectionStatus(prev => {
+
+      setSectionStatus((prev) => {
         const newStatus = { ...prev };
         newStatus[editingSection] = 'done';
-        
+
         if (topmostWriting) {
           newStatus[topmostWriting] = 'active';
         }
-        
+
         return newStatus;
       });
-      
+
       if (wasEditing && topmostWriting) {
         setEditingSection(topmostWriting);
-        setEditingWritingSections(prev => prev.filter(s => s !== topmostWriting));
+        setEditingWritingSections((prev) => prev.filter((s) => s !== topmostWriting));
       } else {
         setEditingSection(null);
       }
@@ -2308,7 +2624,7 @@ export function CreateTemplatePage() {
 
   // Network toggle handlers
   const handleNetworkToggle = (id: string) => {
-    setSelectedNetworkIds(prev => {
+    setSelectedNetworkIds((prev) => {
       const newSet = new Set(prev);
       if (newSet.has(id)) {
         newSet.delete(id);
@@ -2320,7 +2636,7 @@ export function CreateTemplatePage() {
   };
 
   const handleSecurityGroupToggle = (id: string) => {
-    setSelectedSecurityGroups(prev => {
+    setSelectedSecurityGroups((prev) => {
       const newSet = new Set(prev);
       if (newSet.has(id)) {
         newSet.delete(id);
@@ -2334,13 +2650,13 @@ export function CreateTemplatePage() {
   // Get summary data
   const getImageSummary = () => {
     if (!selectedImageId) return null;
-    const image = mockImages.find(i => i.id === selectedImageId);
+    const image = mockImages.find((i) => i.id === selectedImageId);
     return image ? image.name : null;
   };
 
   const getFlavorSummary = () => {
     if (!selectedFlavorId) return null;
-    const flavor = mockFlavors.find(f => f.id === selectedFlavorId);
+    const flavor = mockFlavors.find((f) => f.id === selectedFlavorId);
     return flavor ? `${flavor.vCPU}vCPU/${flavor.ram}/${flavor.disk}` : null;
   };
 
@@ -2349,18 +2665,18 @@ export function CreateTemplatePage() {
   };
 
   const getNetworkSummary = () => {
-    const networks = mockNetworks.filter(n => selectedNetworkIds.has(n.id));
-    return networks.map(n => n.name).join(', ') || '-';
+    const networks = mockNetworks.filter((n) => selectedNetworkIds.has(n.id));
+    return networks.map((n) => n.name).join(', ') || '-';
   };
 
   const getSecurityGroupSummary = () => {
-    const sgs = mockSecurityGroups.filter(sg => selectedSecurityGroups.has(sg.id));
-    return sgs.map(sg => sg.name).join(', ') || '-';
+    const sgs = mockSecurityGroups.filter((sg) => selectedSecurityGroups.has(sg.id));
+    return sgs.map((sg) => sg.name).join(', ') || '-';
   };
 
   const getAuthSummary = () => {
     if (loginType === 'keypair') {
-      const kp = mockKeyPairs.find(k => k.id === selectedKeyPairId);
+      const kp = mockKeyPairs.find((k) => k.id === selectedKeyPairId);
       return kp ? `Key pair: ${kp.name}` : 'Key pair: -';
     }
     return 'Password';
@@ -2451,8 +2767,15 @@ export function CreateTemplatePage() {
                     />
                   )}
                   {sectionStatus['template-info'] === 'done' && (
-                    <DoneSection title={SECTION_LABELS['template-info']} onEdit={() => handleEdit('template-info')}>
-                      <SectionCard.DataRow label="Template name" value={templateName || '-'} showDivider={false} />
+                    <DoneSection
+                      title={SECTION_LABELS['template-info']}
+                      onEdit={() => handleEdit('template-info')}
+                    >
+                      <SectionCard.DataRow
+                        label="Template name"
+                        value={templateName || '-'}
+                        showDivider={false}
+                      />
                       <SectionCard.DataRow label="Description" value={templateDescription || '-'} />
                       <SectionCard.DataRow label="Favorite" value={isFavorite ? 'Yes' : 'No'} />
                     </DoneSection>
@@ -2477,15 +2800,23 @@ export function CreateTemplatePage() {
                     />
                   )}
                   {sectionStatus['basic-info'] === 'done' && (
-                    <DoneSection title={SECTION_LABELS['basic-info']} onEdit={() => handleEdit('basic-info')}>
-                      <SectionCard.DataRow label="AZ (Availability zone)" value={azOptions.find(az => az.value === availabilityZone)?.label || availabilityZone} showDivider={false} />
+                    <DoneSection
+                      title={SECTION_LABELS['basic-info']}
+                      onEdit={() => handleEdit('basic-info')}
+                    >
+                      <SectionCard.DataRow
+                        label="AZ (Availability zone)"
+                        value={
+                          azOptions.find((az) => az.value === availabilityZone)?.label ||
+                          availabilityZone
+                        }
+                        showDivider={false}
+                      />
                     </DoneSection>
                   )}
 
                   {/* Image Section */}
-                  {sectionStatus.image === 'pre' && (
-                    <PreSection title={SECTION_LABELS.image} />
-                  )}
+                  {sectionStatus.image === 'pre' && <PreSection title={SECTION_LABELS.image} />}
                   {sectionStatus.image === 'writing' && (
                     <WritingSection title={SECTION_LABELS.image} />
                   )}
@@ -2508,15 +2839,17 @@ export function CreateTemplatePage() {
                   )}
                   {sectionStatus.image === 'done' && (
                     <DoneSection title={SECTION_LABELS.image} onEdit={() => handleEdit('image')}>
-                      <SectionCard.DataRow label="Image" value={getImageSummary() || '-'} showDivider={false} />
+                      <SectionCard.DataRow
+                        label="Image"
+                        value={getImageSummary() || '-'}
+                        showDivider={false}
+                      />
                       <SectionCard.DataRow label="System disk" value={getStorageSummary()} />
                     </DoneSection>
                   )}
 
                   {/* Flavor Section */}
-                  {sectionStatus.flavor === 'pre' && (
-                    <PreSection title={SECTION_LABELS.flavor} />
-                  )}
+                  {sectionStatus.flavor === 'pre' && <PreSection title={SECTION_LABELS.flavor} />}
                   {sectionStatus.flavor === 'writing' && (
                     <WritingSection title={SECTION_LABELS.flavor} />
                   )}
@@ -2533,14 +2866,16 @@ export function CreateTemplatePage() {
                   )}
                   {sectionStatus.flavor === 'done' && (
                     <DoneSection title={SECTION_LABELS.flavor} onEdit={() => handleEdit('flavor')}>
-                      <SectionCard.DataRow label="Flavor" value={getFlavorSummary() || '-'} showDivider={false} />
+                      <SectionCard.DataRow
+                        label="Flavor"
+                        value={getFlavorSummary() || '-'}
+                        showDivider={false}
+                      />
                     </DoneSection>
                   )}
 
                   {/* Network Section */}
-                  {sectionStatus.network === 'pre' && (
-                    <PreSection title={SECTION_LABELS.network} />
-                  )}
+                  {sectionStatus.network === 'pre' && <PreSection title={SECTION_LABELS.network} />}
                   {sectionStatus.network === 'writing' && (
                     <WritingSection title={SECTION_LABELS.network} />
                   )}
@@ -2558,9 +2893,19 @@ export function CreateTemplatePage() {
                     />
                   )}
                   {sectionStatus.network === 'done' && (
-                    <DoneSection title={SECTION_LABELS.network} onEdit={() => handleEdit('network')}>
-                      <SectionCard.DataRow label="Network" value={getNetworkSummary()} showDivider={false} />
-                      <SectionCard.DataRow label="Security groups" value={getSecurityGroupSummary()} />
+                    <DoneSection
+                      title={SECTION_LABELS.network}
+                      onEdit={() => handleEdit('network')}
+                    >
+                      <SectionCard.DataRow
+                        label="Network"
+                        value={getNetworkSummary()}
+                        showDivider={false}
+                      />
+                      <SectionCard.DataRow
+                        label="Security groups"
+                        value={getSecurityGroupSummary()}
+                      />
                     </DoneSection>
                   )}
 
@@ -2585,25 +2930,27 @@ export function CreateTemplatePage() {
                     />
                   )}
                   {sectionStatus.advanced === 'done' && (
-                    <DoneSection title={SECTION_LABELS.advanced} onEdit={() => handleEdit('advanced')}>
-                      <SectionCard.DataRow 
-                        label="Tags" 
-                        value={tags.length > 0 ? `${tags.length} tag${tags.length > 1 ? 's' : ''}` : '-'} 
+                    <DoneSection
+                      title={SECTION_LABELS.advanced}
+                      onEdit={() => handleEdit('advanced')}
+                    >
+                      <SectionCard.DataRow
+                        label="Tags"
+                        value={
+                          tags.length > 0 ? `${tags.length} tag${tags.length > 1 ? 's' : ''}` : '-'
+                        }
                         showDivider={false}
                       />
-                      <SectionCard.DataRow 
-                        label="User data" 
-                        value={userData ? 'Configured' : '-'} 
+                      <SectionCard.DataRow
+                        label="User data"
+                        value={userData ? 'Configured' : '-'}
                       />
                     </DoneSection>
                   )}
                 </VStack>
 
                 {/* Right Column - Sidebar */}
-                <TemplateSidebar
-                  onCancel={handleCancel}
-                  sectionStatus={sectionStatus}
-                />
+                <TemplateSidebar onCancel={handleCancel} sectionStatus={sectionStatus} />
               </HStack>
             </VStack>
           </div>

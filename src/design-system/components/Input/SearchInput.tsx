@@ -8,8 +8,10 @@ import { IconSearch, IconX } from '@tabler/icons-react';
 
 export type SearchInputSize = 'sm' | 'md';
 
-export interface SearchInputProps
-  extends Omit<InputHTMLAttributes<HTMLInputElement>, 'size' | 'type'> {
+export interface SearchInputProps extends Omit<
+  InputHTMLAttributes<HTMLInputElement>,
+  'size' | 'type'
+> {
   /** Input size */
   size?: SearchInputSize;
   /** Label text */
@@ -60,12 +62,15 @@ export const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
     const currentValue = value !== undefined ? value : internalValue;
     const hasValue = String(currentValue).length > 0;
 
-    const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-      if (value === undefined) {
-        setInternalValue(e.target.value);
-      }
-      onChange?.(e);
-    }, [value, onChange]);
+    const handleChange = useCallback(
+      (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (value === undefined) {
+          setInternalValue(e.target.value);
+        }
+        onChange?.(e);
+      },
+      [value, onChange]
+    );
 
     const handleClear = useCallback(() => {
       if (value === undefined) {
@@ -80,7 +85,7 @@ export const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
     const widthClasses = className.match(widthClassRegex) || [];
     const marginClasses = className.match(marginClassRegex) || [];
     const hasWidthClass = widthClasses.length > 0;
-    
+
     // Remove width and margin classes from input className
     const inputClassName = className
       .replace(widthClassRegex, '')
@@ -107,16 +112,18 @@ export const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
       // Use box-shadow instead of border-width change to prevent text jumping
       'focus:border-[var(--input-border-focus)]',
       'focus:shadow-[0_0_0_1px_var(--input-border-focus)]',
-      disabled ? 'bg-[var(--input-bg-disabled)] text-[var(--input-text-disabled)] cursor-not-allowed' : '',
+      disabled
+        ? 'bg-[var(--input-bg-disabled)] text-[var(--input-text-disabled)] cursor-not-allowed'
+        : '',
       sizes[size],
       inputClassName
     );
-    
+
     const wrapperClasses = twMerge(
       'flex flex-col gap-[var(--input-label-gap)]',
       // Default to w-full so the input fills its container
       fullWidth || !hasWidthClass ? 'w-full' : widthClasses.join(' '),
-      marginClasses.join(' '),
+      marginClasses.join(' ')
     );
 
     return (
@@ -167,8 +174,3 @@ export const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
 );
 
 SearchInput.displayName = 'SearchInput';
-
-
-
-
-

@@ -38,8 +38,18 @@ const colorPalette: ColorGroup[] = [
     title: 'Text',
     description: '텍스트 및 타이포그래피 컬러',
     colors: [
-      { name: 'text-primary', hex: '#f5f5f5', rgb: 'rgb(245, 245, 245)', usage: '주요 텍스트 (이슈 제목)' },
-      { name: 'text-secondary', hex: '#a1a1a1', rgb: 'rgb(161, 161, 161)', usage: '보조 텍스트 (날짜, ID)' },
+      {
+        name: 'text-primary',
+        hex: '#f5f5f5',
+        rgb: 'rgb(245, 245, 245)',
+        usage: '주요 텍스트 (이슈 제목)',
+      },
+      {
+        name: 'text-secondary',
+        hex: '#a1a1a1',
+        rgb: 'rgb(161, 161, 161)',
+        usage: '보조 텍스트 (날짜, ID)',
+      },
       { name: 'text-tertiary', hex: '#6b6b6b', rgb: 'rgb(107, 107, 107)', usage: '힌트 텍스트' },
       { name: 'text-muted', hex: '#4a4a4a', rgb: 'rgb(74, 74, 74)', usage: '비활성 텍스트' },
       { name: 'text-link', hex: '#b3b3ff', rgb: 'rgb(179, 179, 255)', usage: '링크 텍스트' },
@@ -59,8 +69,18 @@ const colorPalette: ColorGroup[] = [
     title: 'Brand & Accent',
     description: 'Linear 브랜드 및 강조 컬러',
     colors: [
-      { name: 'linear-purple', hex: '#5e6ad2', rgb: 'rgb(94, 106, 210)', usage: 'Linear 브랜드 컬러' },
-      { name: 'linear-purple-light', hex: '#7c85de', rgb: 'rgb(124, 133, 222)', usage: '브랜드 라이트' },
+      {
+        name: 'linear-purple',
+        hex: '#5e6ad2',
+        rgb: 'rgb(94, 106, 210)',
+        usage: 'Linear 브랜드 컬러',
+      },
+      {
+        name: 'linear-purple-light',
+        hex: '#7c85de',
+        rgb: 'rgb(124, 133, 222)',
+        usage: '브랜드 라이트',
+      },
       { name: 'linear-purple-dark', hex: '#4850b8', rgb: 'rgb(72, 80, 184)', usage: '브랜드 다크' },
       { name: 'accent-violet', hex: '#8b5cf6', rgb: 'rgb(139, 92, 246)', usage: '특별 강조' },
       { name: 'team-green', hex: '#26b562', rgb: 'rgb(38, 181, 98)', usage: '팀 아이콘 (Pbpbp)' },
@@ -70,11 +90,31 @@ const colorPalette: ColorGroup[] = [
     title: 'Issue Status',
     description: '이슈 상태별 컬러',
     colors: [
-      { name: 'status-todo', hex: '#6b6b6b', rgb: 'rgb(107, 107, 107)', usage: 'Todo 상태 (회색 원)' },
-      { name: 'status-in-progress', hex: '#f2c94c', rgb: 'rgb(242, 201, 76)', usage: 'In Progress (노랑)' },
+      {
+        name: 'status-todo',
+        hex: '#6b6b6b',
+        rgb: 'rgb(107, 107, 107)',
+        usage: 'Todo 상태 (회색 원)',
+      },
+      {
+        name: 'status-in-progress',
+        hex: '#f2c94c',
+        rgb: 'rgb(242, 201, 76)',
+        usage: 'In Progress (노랑)',
+      },
       { name: 'status-done', hex: '#5e6ad2', rgb: 'rgb(94, 106, 210)', usage: 'Done (보라)' },
-      { name: 'status-cancelled', hex: '#6b6b6b', rgb: 'rgb(107, 107, 107)', usage: 'Cancelled (회색)' },
-      { name: 'status-duplicate', hex: '#6b6b6b', rgb: 'rgb(107, 107, 107)', usage: 'Duplicate (회색)' },
+      {
+        name: 'status-cancelled',
+        hex: '#6b6b6b',
+        rgb: 'rgb(107, 107, 107)',
+        usage: 'Cancelled (회색)',
+      },
+      {
+        name: 'status-duplicate',
+        hex: '#6b6b6b',
+        rgb: 'rgb(107, 107, 107)',
+        usage: 'Duplicate (회색)',
+      },
     ],
   },
   {
@@ -85,7 +125,12 @@ const colorPalette: ColorGroup[] = [
       { name: 'priority-high', hex: '#f2c94c', rgb: 'rgb(242, 201, 76)', usage: 'High (노랑)' },
       { name: 'priority-medium', hex: '#5e6ad2', rgb: 'rgb(94, 106, 210)', usage: 'Medium (보라)' },
       { name: 'priority-low', hex: '#4ea7fc', rgb: 'rgb(78, 167, 252)', usage: 'Low (파랑)' },
-      { name: 'priority-none', hex: '#6b6b6b', rgb: 'rgb(107, 107, 107)', usage: 'No Priority (회색)' },
+      {
+        name: 'priority-none',
+        hex: '#6b6b6b',
+        rgb: 'rgb(107, 107, 107)',
+        usage: 'No Priority (회색)',
+      },
     ],
   },
   {
@@ -139,7 +184,7 @@ function CopyButton({ text }: { text: string }) {
 
 function ColorCard({ color }: { color: ColorSwatch }) {
   const isLightColor = color.hex === '#ffffff';
-  
+
   return (
     <div className="group relative">
       {/* Color Swatch */}
@@ -151,7 +196,7 @@ function ColorCard({ color }: { color: ColorSwatch }) {
           <div className="absolute inset-0 rounded-t-lg border border-neutral-700" />
         )}
       </div>
-      
+
       {/* Color Info */}
       <div className="bg-neutral-900 rounded-b-lg p-3 border border-t-0 border-white/10">
         <div className="flex items-center justify-between mb-1">
@@ -201,61 +246,96 @@ function PreviewSidebar() {
         </div>
         <span className="text-[#f5f5f5] text-sm font-medium">pbpbp</span>
         <svg className="w-3 h-3 text-[#6b6b6b] ml-auto" fill="currentColor" viewBox="0 0 20 20">
-          <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" />
+          <path
+            fillRule="evenodd"
+            d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+          />
         </svg>
       </div>
-      
+
       {/* Navigation */}
       <div className="space-y-0.5 px-2">
         <div className="flex items-center gap-2 px-2 py-1.5 rounded text-[#a1a1a1] text-[13px] hover:bg-[#262626] cursor-pointer">
           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4" />
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={1.5}
+              d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"
+            />
           </svg>
           Inbox
         </div>
         <div className="flex items-center gap-2 px-2 py-1.5 rounded text-[#a1a1a1] text-[13px] hover:bg-[#262626] cursor-pointer">
           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={1.5}
+              d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+            />
           </svg>
           My issues
         </div>
       </div>
-      
+
       {/* Workspace Section */}
       <div className="mt-4 px-2">
-        <div className="text-[11px] text-[#4a4a4a] uppercase tracking-wider mb-1 px-2 font-medium">Workspace</div>
+        <div className="text-[11px] text-[#4a4a4a] uppercase tracking-wider mb-1 px-2 font-medium">
+          Workspace
+        </div>
         <div className="space-y-0.5">
           <div className="flex items-center gap-2 px-2 py-1.5 rounded text-[#a1a1a1] text-[13px] hover:bg-[#262626] cursor-pointer">
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" />
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={1.5}
+                d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"
+              />
             </svg>
             Projects
           </div>
           <div className="flex items-center gap-2 px-2 py-1.5 rounded text-[#a1a1a1] text-[13px] hover:bg-[#262626] cursor-pointer">
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 6h16M4 10h16M4 14h16M4 18h16" />
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={1.5}
+                d="M4 6h16M4 10h16M4 14h16M4 18h16"
+              />
             </svg>
             Views
           </div>
         </div>
       </div>
-      
+
       {/* Teams Section */}
       <div className="mt-4 px-2">
-        <div className="text-[11px] text-[#4a4a4a] uppercase tracking-wider mb-1 px-2 font-medium">Your teams</div>
+        <div className="text-[11px] text-[#4a4a4a] uppercase tracking-wider mb-1 px-2 font-medium">
+          Your teams
+        </div>
         <div className="flex items-center gap-2 px-2 py-1.5 rounded bg-[#262626]">
           <div className="w-4 h-4 rounded bg-[#26b562]" />
           <span className="text-[#f5f5f5] text-[13px]">Pbpbp</span>
         </div>
       </div>
-      
+
       {/* Try Section */}
       <div className="mt-auto px-2 pt-4">
-        <div className="text-[11px] text-[#4a4a4a] uppercase tracking-wider mb-1 px-2 font-medium">Try</div>
+        <div className="text-[11px] text-[#4a4a4a] uppercase tracking-wider mb-1 px-2 font-medium">
+          Try
+        </div>
         <div className="space-y-1 text-[12px]">
-          <div className="px-2 py-1 text-[#a1a1a1] hover:text-[#f5f5f5] cursor-pointer">Import issues</div>
-          <div className="px-2 py-1 text-[#a1a1a1] hover:text-[#f5f5f5] cursor-pointer">Invite to pbpbp…</div>
-          <div className="px-2 py-1 text-[#a1a1a1] hover:text-[#f5f5f5] cursor-pointer">Link GitHub</div>
+          <div className="px-2 py-1 text-[#a1a1a1] hover:text-[#f5f5f5] cursor-pointer">
+            Import issues
+          </div>
+          <div className="px-2 py-1 text-[#a1a1a1] hover:text-[#f5f5f5] cursor-pointer">
+            Invite to pbpbp…
+          </div>
+          <div className="px-2 py-1 text-[#a1a1a1] hover:text-[#f5f5f5] cursor-pointer">
+            Link GitHub
+          </div>
         </div>
       </div>
     </div>
@@ -284,12 +364,17 @@ function PreviewContent() {
           Backlog
         </div>
       </div>
-      
+
       {/* Filter Bar */}
       <div className="flex items-center gap-2 px-4 py-2 border-b border-[#222222]">
         <button className="flex items-center gap-1 px-2 py-1 text-[12px] text-[#a1a1a1] hover:bg-[#262626] rounded">
           <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={1.5}
+              d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"
+            />
           </svg>
           Filter
         </button>
@@ -297,19 +382,22 @@ function PreviewContent() {
           Display
         </button>
       </div>
-      
+
       {/* Issue Group */}
       <div className="flex-1 p-2">
         {/* Group Header */}
         <div className="flex items-center gap-2 px-2 py-1.5">
           <svg className="w-3 h-3 text-[#6b6b6b]" fill="currentColor" viewBox="0 0 20 20">
-            <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" />
+            <path
+              fillRule="evenodd"
+              d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+            />
           </svg>
           <div className="w-3.5 h-3.5 rounded-full border-2 border-[#6b6b6b]" />
           <span className="text-[#a1a1a1] text-[13px]">Todo</span>
           <span className="text-[#4a4a4a] text-[12px]">4</span>
         </div>
-        
+
         {/* Issues */}
         <div className="space-y-0.5 mt-1">
           {issues.map((issue) => (
@@ -342,8 +430,8 @@ export default function ColorPalettePage() {
     <VStack className="min-h-screen w-full bg-neutral-950">
       {/* Simple Header */}
       <div className="sticky top-0 z-10 bg-neutral-900/80 backdrop-blur-sm border-b border-neutral-800 px-6 py-3">
-        <Link 
-          to="/" 
+        <Link
+          to="/"
           className="inline-flex items-center gap-2 text-neutral-400 hover:text-white transition-colors"
         >
           <IconArrowLeft size={16} />
@@ -352,36 +440,33 @@ export default function ColorPalettePage() {
       </div>
 
       <VStack className="flex-1 overflow-auto p-6 gap-6">
+        {/* Header */}
+        <div className="mb-4">
+          <h1 className="text-3xl font-bold text-white mb-2">Linear Dark Mode Color Palette</h1>
+          <p className="text-neutral-400">Linear 앱 다크모드 UI에서 추출한 컬러 팔레트입니다.</p>
+        </div>
 
-          {/* Header */}
-          <div className="mb-4">
-            <h1 className="text-3xl font-bold text-white mb-2">
-              Linear Dark Mode Color Palette
-            </h1>
-            <p className="text-neutral-400">
-              Linear 앱 다크모드 UI에서 추출한 컬러 팔레트입니다.
-            </p>
+        {/* Live Preview */}
+        <div className="mb-8">
+          <h2 className="text-xl font-semibold text-white mb-4">Live Preview</h2>
+          <div className="flex rounded-lg overflow-hidden border border-neutral-800 max-w-3xl">
+            <PreviewSidebar />
+            <PreviewContent />
           </div>
+        </div>
 
-          {/* Live Preview */}
-          <div className="mb-8">
-            <h2 className="text-xl font-semibold text-white mb-4">Live Preview</h2>
-            <div className="flex rounded-lg overflow-hidden border border-neutral-800 max-w-3xl">
-              <PreviewSidebar />
-              <PreviewContent />
-            </div>
-          </div>
+        {/* Color Palette Groups */}
+        {colorPalette.map((group) => (
+          <ColorGroup key={group.title} group={group} />
+        ))}
 
-          {/* Color Palette Groups */}
-          {colorPalette.map((group) => (
-            <ColorGroup key={group.title} group={group} />
-          ))}
-
-          {/* CSS Variables */}
-          <div className="mt-8 p-6 bg-[#171717] rounded-lg border border-[#222222]">
-            <h2 className="text-xl font-semibold text-white mb-4">CSS Variables (Linear Dark Mode)</h2>
-            <pre className="text-sm text-neutral-300 font-mono overflow-x-auto">
-{`:root {
+        {/* CSS Variables */}
+        <div className="mt-8 p-6 bg-[#171717] rounded-lg border border-[#222222]">
+          <h2 className="text-xl font-semibold text-white mb-4">
+            CSS Variables (Linear Dark Mode)
+          </h2>
+          <pre className="text-sm text-neutral-300 font-mono overflow-x-auto">
+            {`:root {
   /* =========================
      LINEAR DARK MODE PALETTE
      ========================= */
@@ -439,14 +524,14 @@ export default function ColorPalettePage() {
   --linear-label-purple: #5e6ad2;
   --linear-label-pink: #f075e2;
 }`}
-            </pre>
-          </div>
+          </pre>
+        </div>
 
-          {/* Tailwind Config */}
-          <div className="mt-4 p-6 bg-[#171717] rounded-lg border border-[#222222]">
-            <h2 className="text-xl font-semibold text-white mb-4">Tailwind Config</h2>
-            <pre className="text-sm text-neutral-300 font-mono overflow-x-auto">
-{`// tailwind.config.js - Linear Dark Mode Theme
+        {/* Tailwind Config */}
+        <div className="mt-4 p-6 bg-[#171717] rounded-lg border border-[#222222]">
+          <h2 className="text-xl font-semibold text-white mb-4">Tailwind Config</h2>
+          <pre className="text-sm text-neutral-300 font-mono overflow-x-auto">
+            {`// tailwind.config.js - Linear Dark Mode Theme
 module.exports = {
   theme: {
     extend: {
@@ -516,10 +601,9 @@ module.exports = {
     },
   },
 }`}
-            </pre>
-          </div>
-        </VStack>
+          </pre>
+        </div>
+      </VStack>
     </VStack>
   );
 }
-

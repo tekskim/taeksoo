@@ -124,13 +124,7 @@ type Story = StoryObj<typeof Pagination>;
 export const Default: Story = {
   render: function DefaultPagination() {
     const [page, setPage] = useState(1);
-    return (
-      <Pagination
-        currentPage={page}
-        totalPages={10}
-        onPageChange={setPage}
-      />
-    );
+    return <Pagination currentPage={page} totalPages={10} onPageChange={setPage} />;
   },
 };
 
@@ -139,12 +133,7 @@ export const WithTotalItems: Story = {
   render: function WithTotalItems() {
     const [page, setPage] = useState(1);
     return (
-      <Pagination
-        currentPage={page}
-        totalPages={10}
-        totalItems={100}
-        onPageChange={setPage}
-      />
+      <Pagination currentPage={page} totalPages={10} totalItems={100} onPageChange={setPage} />
     );
   },
 };
@@ -187,12 +176,7 @@ export const ManyPages: Story = {
   render: function ManyPages() {
     const [page, setPage] = useState(25);
     return (
-      <Pagination
-        currentPage={page}
-        totalPages={100}
-        totalItems={1000}
-        onPageChange={setPage}
-      />
+      <Pagination currentPage={page} totalPages={100} totalItems={1000} onPageChange={setPage} />
     );
   },
 };
@@ -201,14 +185,7 @@ export const ManyPages: Story = {
 export const FewPages: Story = {
   render: function FewPages() {
     const [page, setPage] = useState(1);
-    return (
-      <Pagination
-        currentPage={page}
-        totalPages={3}
-        totalItems={30}
-        onPageChange={setPage}
-      />
-    );
+    return <Pagination currentPage={page} totalPages={3} totalItems={30} onPageChange={setPage} />;
   },
 };
 
@@ -216,13 +193,7 @@ export const FewPages: Story = {
 export const FirstPage: Story = {
   render: function FirstPage() {
     const [page, setPage] = useState(1);
-    return (
-      <Pagination
-        currentPage={page}
-        totalPages={10}
-        onPageChange={setPage}
-      />
-    );
+    return <Pagination currentPage={page} totalPages={10} onPageChange={setPage} />;
   },
 };
 
@@ -230,26 +201,13 @@ export const FirstPage: Story = {
 export const LastPage: Story = {
   render: function LastPage() {
     const [page, setPage] = useState(10);
-    return (
-      <Pagination
-        currentPage={page}
-        totalPages={10}
-        onPageChange={setPage}
-      />
-    );
+    return <Pagination currentPage={page} totalPages={10} onPageChange={setPage} />;
   },
 };
 
 // Disabled
 export const Disabled: Story = {
-  render: () => (
-    <Pagination
-      currentPage={5}
-      totalPages={10}
-      disabled
-      onPageChange={() => {}}
-    />
-  ),
+  render: () => <Pagination currentPage={5} totalPages={10} disabled onPageChange={() => {}} />,
 };
 
 // Full Example
@@ -270,13 +228,13 @@ export const FullExample: Story = {
           onPageChange={setPage}
         />
         <div className="flex gap-4 text-sm">
-          <button 
+          <button
             className="text-[var(--color-action-primary)]"
-            onClick={() => setSelectedCount(s => s + 1)}
+            onClick={() => setSelectedCount((s) => s + 1)}
           >
             Select more
           </button>
-          <button 
+          <button
             className="text-[var(--color-action-primary)]"
             onClick={() => setSelectedCount(0)}
           >

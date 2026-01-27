@@ -14,7 +14,7 @@ import { Link, useLocation } from 'react-router-dom';
 
 export function SettingsSidebar() {
   const location = useLocation();
-  
+
   // Check if current path matches href
   const isActive = (href: string) => {
     // Exact match

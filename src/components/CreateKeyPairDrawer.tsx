@@ -31,8 +31,8 @@ interface QuotaProgressBarProps {
 
 function QuotaProgressBar({ label, used, total }: QuotaProgressBarProps) {
   const isUnlimited = total === null;
-  const percentage = isUnlimited ? 20 : (total > 0 ? (used / total) * 100 : 0);
-  const nextPercentage = isUnlimited ? 20 : (total > 0 ? ((used + 1) / total) * 100 : 0);
+  const percentage = isUnlimited ? 20 : total > 0 ? (used / total) * 100 : 0;
+  const nextPercentage = isUnlimited ? 20 : total > 0 ? ((used + 1) / total) * 100 : 0;
 
   return (
     <VStack gap={2} className="w-full">
@@ -41,26 +41,22 @@ function QuotaProgressBar({ label, used, total }: QuotaProgressBarProps) {
           {label}
         </span>
         <HStack gap={0} className="items-center">
-          <span className="text-[12px] text-[var(--color-text-default)] leading-4">
-            {used}/
-          </span>
+          <span className="text-[12px] text-[var(--color-text-default)] leading-4">{used}/</span>
           {isUnlimited ? (
             <IconInfinity size={16} className="text-[var(--color-text-default)]" stroke={1} />
           ) : (
-            <span className="text-[12px] text-[var(--color-text-default)] leading-4">
-              {total}
-            </span>
+            <span className="text-[12px] text-[var(--color-text-default)] leading-4">{total}</span>
           )}
         </HStack>
       </HStack>
       <div className="w-full h-1 bg-[var(--color-border-subtle)] rounded-lg relative overflow-hidden">
         {/* Current usage (darker green) */}
-        <div 
+        <div
           className="absolute left-0 top-0 h-full bg-[#4ade80] rounded-lg z-[2]"
           style={{ width: `${Math.min(percentage, 100)}%` }}
         />
         {/* Next usage preview (lighter green) */}
-        <div 
+        <div
           className="absolute left-0 top-0 h-full bg-[#bbf7d0] rounded-lg z-[1]"
           style={{ width: `${Math.min(nextPercentage, 100)}%` }}
         />
@@ -106,7 +102,7 @@ export function CreateKeyPairDrawer({
     setHasAttemptedSubmit(true);
     if (!keyPairName.trim()) return;
     if (createType === 'import' && !publicKey.trim()) return;
-    
+
     setIsSubmitting(true);
     try {
       await onSubmit?.(keyPairName, createType, createType === 'import' ? publicKey : undefined);
@@ -144,15 +140,11 @@ export function CreateKeyPairDrawer({
 
           {/* Buttons */}
           <HStack gap={2} className="w-full border-t border-[var(--color-border-default)] pt-4">
-            <Button 
-              variant="secondary" 
-              onClick={handleClose}
-              className="flex-1 h-8"
-            >
+            <Button variant="secondary" onClick={handleClose} className="flex-1 h-8">
               Cancel
             </Button>
-            <Button 
-              variant="primary" 
+            <Button
+              variant="primary"
               onClick={handleSubmit}
               disabled={isSubmitting}
               className="flex-1 h-8"
@@ -179,8 +171,8 @@ export function CreateKeyPairDrawer({
           <label className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
             Create type
           </label>
-          <RadioGroup 
-            value={createType} 
+          <RadioGroup
+            value={createType}
             onChange={(value) => setCreateType(value as 'create' | 'import')}
           >
             <VStack gap={3}>
@@ -256,4 +248,3 @@ export function CreateKeyPairDrawer({
 }
 
 export default CreateKeyPairDrawer;
-

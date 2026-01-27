@@ -1,10 +1,5 @@
 import { useState, useEffect } from 'react';
-import { 
-  Drawer, 
-  Button, 
-  Input,
-  Toggle,
-} from '@/design-system';
+import { Drawer, Button, Input, Toggle } from '@/design-system';
 import { HStack, VStack } from '@/design-system/layouts';
 
 /* ----------------------------------------
@@ -92,15 +87,11 @@ export function EditSystemAdminDrawer({
       width={376}
       footer={
         <HStack gap={2} justify="center" className="w-full">
-          <Button 
-            variant="secondary" 
-            onClick={handleClose}
-            className="flex-1 h-8"
-          >
+          <Button variant="secondary" onClick={handleClose} className="flex-1 h-8">
             Cancel
           </Button>
-          <Button 
-            variant="primary" 
+          <Button
+            variant="primary"
             onClick={handleSubmit}
             disabled={isSubmitting || (hasAttemptedSubmit && !isEmailValid)}
             className="flex-1 h-8"
@@ -179,13 +170,11 @@ export function EditSystemAdminDrawer({
             Status
           </span>
           <p className="text-[12px] text-[var(--color-text-subtle)] leading-4">
-            Select the account's status. If 'disabled', the system administrator will be prevented from signing in.
+            Select the account's status. If 'disabled', the system administrator will be prevented
+            from signing in.
           </p>
           <HStack gap={2} align="center">
-            <Toggle
-              checked={enabled}
-              onChange={setEnabled}
-            />
+            <Toggle checked={enabled} onChange={setEnabled} />
             <span className="text-[12px] text-[var(--color-text-default)] leading-4">
               {enabled ? 'Enabled' : 'Disabled'}
             </span>

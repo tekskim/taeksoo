@@ -42,7 +42,6 @@ import {
   IconPlus,
   IconAlertCircle,
   IconTrash,
-  IconMinus,
 } from '@tabler/icons-react';
 
 /* ----------------------------------------
@@ -63,11 +62,46 @@ interface NetworkRow {
 
 // Mock network data
 const mockNetworks: NetworkRow[] = [
-  { id: '29tgj234', name: 'net-01', status: 'active', subnetCidr: '10.0.0.0/24', external: 'Yes', shared: 'On' },
-  { id: '38rhk345', name: 'net-02', status: 'active', subnetCidr: '10.0.1.0/24', external: 'Yes', shared: 'On' },
-  { id: '47sil456', name: 'net-03', status: 'active', subnetCidr: '10.0.2.0/24', external: 'No', shared: 'Off' },
-  { id: '56tjm567', name: 'net-04', status: 'error', subnetCidr: '10.0.3.0/24', external: 'No', shared: 'Off' },
-  { id: '65ukn678', name: 'net-05', status: 'active', subnetCidr: '10.0.4.0/24', external: 'Yes', shared: 'On' },
+  {
+    id: '29tgj234',
+    name: 'net-01',
+    status: 'active',
+    subnetCidr: '10.0.0.0/24',
+    external: 'Yes',
+    shared: 'On',
+  },
+  {
+    id: '38rhk345',
+    name: 'net-02',
+    status: 'active',
+    subnetCidr: '10.0.1.0/24',
+    external: 'Yes',
+    shared: 'On',
+  },
+  {
+    id: '47sil456',
+    name: 'net-03',
+    status: 'active',
+    subnetCidr: '10.0.2.0/24',
+    external: 'No',
+    shared: 'Off',
+  },
+  {
+    id: '56tjm567',
+    name: 'net-04',
+    status: 'error',
+    subnetCidr: '10.0.3.0/24',
+    external: 'No',
+    shared: 'Off',
+  },
+  {
+    id: '65ukn678',
+    name: 'net-05',
+    status: 'active',
+    subnetCidr: '10.0.4.0/24',
+    external: 'Yes',
+    shared: 'On',
+  },
 ];
 
 // Certificate table row type
@@ -85,11 +119,61 @@ interface CertificateRow {
 
 // Mock certificate data
 const mockCertificates: CertificateRow[] = [
-  { id: '29tgj234', name: 'sc-1', status: 'active', san: '.domain.com', listener: 'net', listenerId: '294u92s2', listenerCount: 3, expiresAt: '2025-12-31', createdAt: '2025-10-01' },
-  { id: '38rhk345', name: 'sc-2', status: 'active', san: '.domain.com', listener: 'net', listenerId: '294u92s2', listenerCount: 3, expiresAt: '2025-12-31', createdAt: '2025-10-01' },
-  { id: '47sil456', name: 'sc-3', status: 'active', san: '.domain.com', listener: 'net', listenerId: '294u92s2', listenerCount: 3, expiresAt: '2025-12-31', createdAt: '2025-10-01' },
-  { id: '56tjm567', name: 'sc-4', status: 'active', san: '.domain.com', listener: 'net', listenerId: '294u92s2', listenerCount: 3, expiresAt: '2025-12-31', createdAt: '2025-10-01' },
-  { id: '65ukn678', name: 'sc-5', status: 'paused', san: '.domain.com', listener: 'net', listenerId: '294u92s2', listenerCount: 3, expiresAt: '2025-12-31', createdAt: '2025-10-01' },
+  {
+    id: '29tgj234',
+    name: 'sc-1',
+    status: 'active',
+    san: '.domain.com',
+    listener: 'net',
+    listenerId: '294u92s2',
+    listenerCount: 3,
+    expiresAt: '2025-12-31',
+    createdAt: '2025-10-01',
+  },
+  {
+    id: '38rhk345',
+    name: 'sc-2',
+    status: 'active',
+    san: '.domain.com',
+    listener: 'net',
+    listenerId: '294u92s2',
+    listenerCount: 3,
+    expiresAt: '2025-12-31',
+    createdAt: '2025-10-01',
+  },
+  {
+    id: '47sil456',
+    name: 'sc-3',
+    status: 'active',
+    san: '.domain.com',
+    listener: 'net',
+    listenerId: '294u92s2',
+    listenerCount: 3,
+    expiresAt: '2025-12-31',
+    createdAt: '2025-10-01',
+  },
+  {
+    id: '56tjm567',
+    name: 'sc-4',
+    status: 'active',
+    san: '.domain.com',
+    listener: 'net',
+    listenerId: '294u92s2',
+    listenerCount: 3,
+    expiresAt: '2025-12-31',
+    createdAt: '2025-10-01',
+  },
+  {
+    id: '65ukn678',
+    name: 'sc-5',
+    status: 'paused',
+    san: '.domain.com',
+    listener: 'net',
+    listenerId: '294u92s2',
+    listenerCount: 3,
+    expiresAt: '2025-12-31',
+    createdAt: '2025-10-01',
+  },
 ];
 
 // CA Certificate table row type
@@ -106,11 +190,56 @@ interface CaCertificateRow {
 
 // Mock CA certificate data
 const mockCaCertificates: CaCertificateRow[] = [
-  { id: '29tgj234', name: 'ca-1', status: 'active', listener: 'net', listenerId: '294u92s2', listenerCount: 3, expiresAt: '2025-12-31', createdAt: '2025-10-01' },
-  { id: '38rhk345', name: 'ca-2', status: 'active', listener: 'net', listenerId: '294u92s2', listenerCount: 3, expiresAt: '2025-12-31', createdAt: '2025-10-01' },
-  { id: '47sil456', name: 'ca-3', status: 'active', listener: 'net', listenerId: '294u92s2', listenerCount: 3, expiresAt: '2025-12-31', createdAt: '2025-10-01' },
-  { id: '56tjm567', name: 'ca-4', status: 'active', listener: 'net', listenerId: '294u92s2', listenerCount: 3, expiresAt: '2025-12-31', createdAt: '2025-10-01' },
-  { id: '65ukn678', name: 'ca-5', status: 'paused', listener: 'net', listenerId: '294u92s2', listenerCount: 3, expiresAt: '2025-12-31', createdAt: '2025-10-01' },
+  {
+    id: '29tgj234',
+    name: 'ca-1',
+    status: 'active',
+    listener: 'net',
+    listenerId: '294u92s2',
+    listenerCount: 3,
+    expiresAt: '2025-12-31',
+    createdAt: '2025-10-01',
+  },
+  {
+    id: '38rhk345',
+    name: 'ca-2',
+    status: 'active',
+    listener: 'net',
+    listenerId: '294u92s2',
+    listenerCount: 3,
+    expiresAt: '2025-12-31',
+    createdAt: '2025-10-01',
+  },
+  {
+    id: '47sil456',
+    name: 'ca-3',
+    status: 'active',
+    listener: 'net',
+    listenerId: '294u92s2',
+    listenerCount: 3,
+    expiresAt: '2025-12-31',
+    createdAt: '2025-10-01',
+  },
+  {
+    id: '56tjm567',
+    name: 'ca-4',
+    status: 'active',
+    listener: 'net',
+    listenerId: '294u92s2',
+    listenerCount: 3,
+    expiresAt: '2025-12-31',
+    createdAt: '2025-10-01',
+  },
+  {
+    id: '65ukn678',
+    name: 'ca-5',
+    status: 'paused',
+    listener: 'net',
+    listenerId: '294u92s2',
+    listenerCount: 3,
+    expiresAt: '2025-12-31',
+    createdAt: '2025-10-01',
+  },
 ];
 
 // SNI Certificate table row type
@@ -128,11 +257,61 @@ interface SniCertificateRow {
 
 // Mock SNI certificate data
 const mockSniCertificates: SniCertificateRow[] = [
-  { id: '29tgj234', name: 'sc-1', status: 'active', domain: '.domain.com', listener: 'net', listenerId: '294u92s2', listenerCount: 3, expiresAt: '2025-12-31', createdAt: '2025-10-01' },
-  { id: '38rhk345', name: 'sc-2', status: 'active', domain: '.domain.com', listener: 'net', listenerId: '294u92s2', listenerCount: 3, expiresAt: '2025-12-31', createdAt: '2025-10-01' },
-  { id: '47sil456', name: 'sc-3', status: 'active', domain: '.domain.com', listener: 'net', listenerId: '294u92s2', listenerCount: 3, expiresAt: '2025-12-31', createdAt: '2025-10-01' },
-  { id: '56tjm567', name: 'sc-4', status: 'active', domain: '.domain.com', listener: 'net', listenerId: '294u92s2', listenerCount: 3, expiresAt: '2025-12-31', createdAt: '2025-10-01' },
-  { id: '65ukn678', name: 'sc-5', status: 'paused', domain: '.domain.com', listener: 'net', listenerId: '294u92s2', listenerCount: 3, expiresAt: '2025-12-31', createdAt: '2025-10-01' },
+  {
+    id: '29tgj234',
+    name: 'sc-1',
+    status: 'active',
+    domain: '.domain.com',
+    listener: 'net',
+    listenerId: '294u92s2',
+    listenerCount: 3,
+    expiresAt: '2025-12-31',
+    createdAt: '2025-10-01',
+  },
+  {
+    id: '38rhk345',
+    name: 'sc-2',
+    status: 'active',
+    domain: '.domain.com',
+    listener: 'net',
+    listenerId: '294u92s2',
+    listenerCount: 3,
+    expiresAt: '2025-12-31',
+    createdAt: '2025-10-01',
+  },
+  {
+    id: '47sil456',
+    name: 'sc-3',
+    status: 'active',
+    domain: '.domain.com',
+    listener: 'net',
+    listenerId: '294u92s2',
+    listenerCount: 3,
+    expiresAt: '2025-12-31',
+    createdAt: '2025-10-01',
+  },
+  {
+    id: '56tjm567',
+    name: 'sc-4',
+    status: 'active',
+    domain: '.domain.com',
+    listener: 'net',
+    listenerId: '294u92s2',
+    listenerCount: 3,
+    expiresAt: '2025-12-31',
+    createdAt: '2025-10-01',
+  },
+  {
+    id: '65ukn678',
+    name: 'sc-5',
+    status: 'paused',
+    domain: '.domain.com',
+    listener: 'net',
+    listenerId: '294u92s2',
+    listenerCount: 3,
+    expiresAt: '2025-12-31',
+    createdAt: '2025-10-01',
+  },
 ];
 
 // Port row type for member selection
@@ -160,30 +339,54 @@ interface AllocatedMember {
 
 // Mock port data for member selection
 const mockPorts: PortRow[] = [
-  { id: '45ghj567', name: 'port', attachedInstance: 'instance', attachedInstanceId: '45ghj567', ipAddresses: ['10.63.0.47', '10.63.0.48', '10.63.0.49'] },
-  { id: '56hik678', name: '(no name)', attachedInstance: null, attachedInstanceId: null, ipAddresses: ['10.63.0.47', '10.63.0.50'] },
-  { id: '67ijl789', name: '(no name)', attachedInstance: null, attachedInstanceId: null, ipAddresses: ['10.63.0.47', '10.63.0.51'] },
-  { id: '78jkm890', name: '(no name)', attachedInstance: null, attachedInstanceId: null, ipAddresses: ['10.63.0.47', '10.63.0.52'] },
-  { id: '89kln901', name: '(no name)', attachedInstance: null, attachedInstanceId: null, ipAddresses: [] },
+  {
+    id: '45ghj567',
+    name: 'port',
+    attachedInstance: 'instance',
+    attachedInstanceId: '45ghj567',
+    ipAddresses: ['10.63.0.47', '10.63.0.48', '10.63.0.49'],
+  },
+  {
+    id: '56hik678',
+    name: '(no name)',
+    attachedInstance: null,
+    attachedInstanceId: null,
+    ipAddresses: ['10.63.0.47', '10.63.0.50'],
+  },
+  {
+    id: '67ijl789',
+    name: '(no name)',
+    attachedInstance: null,
+    attachedInstanceId: null,
+    ipAddresses: ['10.63.0.47', '10.63.0.51'],
+  },
+  {
+    id: '78jkm890',
+    name: '(no name)',
+    attachedInstance: null,
+    attachedInstanceId: null,
+    ipAddresses: ['10.63.0.47', '10.63.0.52'],
+  },
+  {
+    id: '89kln901',
+    name: '(no name)',
+    attachedInstance: null,
+    attachedInstanceId: null,
+    ipAddresses: [],
+  },
 ];
 
 // Section labels for display
 const SECTION_LABELS: Record<SectionStep, string> = {
   'basic-info': 'Basic information',
-  'listener': 'Listener',
-  'pool': 'Pool',
-  'member': 'Member',
+  listener: 'Listener',
+  pool: 'Pool',
+  member: 'Member',
   'health-monitor': 'Health monitor',
 };
 
 // Section order for navigation
-const SECTION_ORDER: SectionStep[] = [
-  'basic-info',
-  'listener',
-  'pool',
-  'member',
-  'health-monitor',
-];
+const SECTION_ORDER: SectionStep[] = ['basic-info', 'listener', 'pool', 'member', 'health-monitor'];
 
 /* ----------------------------------------
    Summary Sidebar Component
@@ -196,7 +399,12 @@ interface SummarySidebarProps {
   isCreateDisabled: boolean;
 }
 
-function SummarySidebar({ sectionStatus, onCancel, onCreate, isCreateDisabled }: SummarySidebarProps) {
+function SummarySidebar({
+  sectionStatus,
+  onCancel,
+  onCreate,
+  isCreateDisabled,
+}: SummarySidebarProps) {
   const summaryItems: WizardSummaryItem[] = SECTION_ORDER.map((key) => ({
     key,
     label: SECTION_LABELS[key],
@@ -207,14 +415,14 @@ function SummarySidebar({ sectionStatus, onCancel, onCreate, isCreateDisabled }:
     <div className="w-[var(--wizard-summary-width)] shrink-0 sticky top-4 self-start">
       <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg p-3 flex flex-col gap-3">
         <WizardSummary items={summaryItems} />
-        
+
         {/* Action Buttons */}
         <HStack gap={2}>
           <Button variant="secondary" onClick={onCancel} className="w-[80px]">
             Cancel
           </Button>
-          <Button 
-            variant="primary" 
+          <Button
+            variant="primary"
             onClick={onCreate}
             disabled={isCreateDisabled}
             className="flex-1"
@@ -239,15 +447,15 @@ export default function CreateLoadBalancerPage() {
   // Section status state
   const [sectionStatus, setSectionStatus] = useState<Record<SectionStep, WizardSectionState>>({
     'basic-info': 'active',
-    'listener': 'pre',
-    'pool': 'pre',
-    'member': 'pre',
+    listener: 'pre',
+    pool: 'pre',
+    member: 'pre',
     'health-monitor': 'pre',
   });
 
   // Compute which section is currently active (only one should be active at a time)
   const activeSection = useMemo(() => {
-    return SECTION_ORDER.find(section => sectionStatus[section] === 'active') || null;
+    return SECTION_ORDER.find((section) => sectionStatus[section] === 'active') || null;
   }, [sectionStatus]);
 
   // Basic Information form state
@@ -319,7 +527,9 @@ export default function CreateLoadBalancerPage() {
   const [listenerDescription, setListenerDescription] = useState('');
   const [listenerProtocol, setListenerProtocol] = useState('');
   const [protocolPort, setProtocolPort] = useState(80);
-  const [connectionLimitType, setConnectionLimitType] = useState<'unlimited' | 'limited'>('unlimited');
+  const [connectionLimitType, setConnectionLimitType] = useState<'unlimited' | 'limited'>(
+    'unlimited'
+  );
   const [connectionLimitValue, setConnectionLimitValue] = useState<number | undefined>(undefined);
   const [listenerAdminState, setListenerAdminState] = useState(false);
   const [xForwardedFor, setXForwardedFor] = useState(false);
@@ -355,7 +565,9 @@ export default function CreateLoadBalancerPage() {
   const [poolProtocol, setPoolProtocol] = useState('HTTP');
   const [poolAdminState, setPoolAdminState] = useState(false);
   const [poolAdvancedOpen, setPoolAdvancedOpen] = useState(false);
-  const [sessionPersistence, setSessionPersistence] = useState<'none' | 'source_ip' | 'http_cookie' | 'app_cookie'>('none');
+  const [sessionPersistence, setSessionPersistence] = useState<
+    'none' | 'source_ip' | 'http_cookie' | 'app_cookie'
+  >('none');
   const [cookieName, setCookieName] = useState('');
 
   // Member form state
@@ -392,9 +604,12 @@ export default function CreateLoadBalancerPage() {
       if (listenerProtocol === 'UDP') {
         return [{ value: 'UDP', label: 'UDP' }];
       }
-      return [{ value: 'TCP', label: 'TCP' }, { value: 'UDP', label: 'UDP' }];
+      return [
+        { value: 'TCP', label: 'TCP' },
+        { value: 'UDP', label: 'UDP' },
+      ];
     }
-    
+
     // Amphora provider
     if (listenerProtocol === 'HTTP') {
       return [{ value: 'HTTP', label: 'HTTP' }];
@@ -418,7 +633,7 @@ export default function CreateLoadBalancerPage() {
     if (listenerProtocol === 'UDP') {
       return [{ value: 'UDP', label: 'UDP' }];
     }
-    
+
     // Default fallback
     return [
       { value: 'HTTP', label: 'HTTP' },
@@ -443,7 +658,7 @@ export default function CreateLoadBalancerPage() {
       }
       return [{ value: 'TCP', label: 'TCP' }];
     }
-    
+
     // Amphora provider
     if (listenerProtocol === 'HTTP' || listenerProtocol === 'TERMINATED_HTTPS') {
       return [
@@ -479,7 +694,7 @@ export default function CreateLoadBalancerPage() {
         { value: 'TCP', label: 'TCP' },
       ];
     }
-    
+
     // Default fallback
     return [
       { value: 'HTTP', label: 'HTTP' },
@@ -507,311 +722,326 @@ export default function CreateLoadBalancerPage() {
 
   // Get selected network details
   const selectedNetworkDetails = useMemo(() => {
-    return mockNetworks.find(n => n.id === selectedNetwork);
+    return mockNetworks.find((n) => n.id === selectedNetwork);
   }, [selectedNetwork]);
 
   // Network table columns
-  const networkColumns: TableColumn<NetworkRow>[] = useMemo(() => [
-    {
-      key: 'select',
-      label: '',
-      width: '40px',
-      render: (_value, row) => (
-        <div className="flex items-center justify-center" onClick={(e) => e.stopPropagation()}>
-          <Radio
-            value={row.id}
-            checked={selectedNetwork === row.id}
-            onChange={() => { setSelectedNetwork(row.id); setNetworkError(null); }}
-          />
-        </div>
-      ),
-    },
-    {
-      key: 'status',
-      label: 'Status',
-      width: '64px',
-      align: 'center' as const,
-      render: (_value, row) => <StatusIndicator status={row.status} />,
-    },
-    {
-      key: 'name',
-      label: 'Name',
-      flex: 1,
-      sortable: true,
-      render: (_value, row) => (
-        <VStack gap={0.5} align="start">
-          <HStack gap={1.5} align="center">
-            <span className="text-[var(--color-action-primary)] text-[12px] font-medium">
-              {row.name}
-            </span>
-            <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
-            {row.status === 'error' && (
-              <IconAlertCircle size={12} className="text-[var(--color-state-danger)]" />
-            )}
-          </HStack>
-          <span className="text-[11px] text-[var(--color-text-subtle)]">
-            ID: {row.id}
-          </span>
-        </VStack>
-      ),
-    },
-    {
-      key: 'subnetCidr',
-      label: 'Subnet CIDR',
-      flex: 1,
-    },
-    {
-      key: 'external',
-      label: 'External',
-      flex: 1,
-    },
-    {
-      key: 'shared',
-      label: 'Shared',
-      flex: 1,
-    },
-  ], [selectedNetwork]);
+  const networkColumns: TableColumn<NetworkRow>[] = useMemo(
+    () => [
+      {
+        key: 'select',
+        label: '',
+        width: '40px',
+        render: (_value, row) => (
+          <div className="flex items-center justify-center" onClick={(e) => e.stopPropagation()}>
+            <Radio
+              value={row.id}
+              checked={selectedNetwork === row.id}
+              onChange={() => {
+                setSelectedNetwork(row.id);
+                setNetworkError(null);
+              }}
+            />
+          </div>
+        ),
+      },
+      {
+        key: 'status',
+        label: 'Status',
+        width: '64px',
+        align: 'center' as const,
+        render: (_value, row) => <StatusIndicator status={row.status} />,
+      },
+      {
+        key: 'name',
+        label: 'Name',
+        flex: 1,
+        sortable: true,
+        render: (_value, row) => (
+          <VStack gap={0.5} align="start">
+            <HStack gap={1.5} align="center">
+              <span className="text-[var(--color-action-primary)] text-[12px] font-medium">
+                {row.name}
+              </span>
+              <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
+              {row.status === 'error' && (
+                <IconAlertCircle size={12} className="text-[var(--color-state-danger)]" />
+              )}
+            </HStack>
+            <span className="text-[11px] text-[var(--color-text-subtle)]">ID: {row.id}</span>
+          </VStack>
+        ),
+      },
+      {
+        key: 'subnetCidr',
+        label: 'Subnet CIDR',
+        flex: 1,
+      },
+      {
+        key: 'external',
+        label: 'External',
+        flex: 1,
+      },
+      {
+        key: 'shared',
+        label: 'Shared',
+        flex: 1,
+      },
+    ],
+    [selectedNetwork]
+  );
 
   // Certificate table columns
-  const certificateColumns: TableColumn<CertificateRow>[] = useMemo(() => [
-    {
-      key: 'select',
-      label: '',
-      width: '40px',
-      render: (_value, row) => (
-        <div className="flex items-center justify-center" onClick={(e) => e.stopPropagation()}>
-          <Radio
-            value={row.id}
-            checked={selectedCertificate === row.id}
-            onChange={() => setSelectedCertificate(row.id)}
-            disabled={row.status !== 'active'}
-          />
-        </div>
-      ),
-    },
-    {
-      key: 'status',
-      label: 'Status',
-      width: '64px',
-      align: 'center' as const,
-      render: (_value, row) => <StatusIndicator status={row.status} />,
-    },
-    {
-      key: 'name',
-      label: 'Name',
-      flex: 1,
-      sortable: true,
-      render: (_value, row) => (
-        <VStack gap={0.5} align="start">
-          <HStack gap={1.5} align="center">
-            <span className="text-[var(--color-action-primary)] text-[12px] font-medium">
-              {row.name}
-            </span>
-            <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
-            {row.status === 'paused' && (
-              <IconAlertCircle size={12} className="text-[var(--color-state-danger)]" />
-            )}
-          </HStack>
-          <span className="text-[11px] text-[var(--color-text-subtle)]">
-            ID: {row.id}
-          </span>
-        </VStack>
-      ),
-    },
-    {
-      key: 'san',
-      label: 'SAN',
-      flex: 1,
-      sortable: true,
-    },
-    {
-      key: 'listener',
-      label: 'Listener',
-      flex: 1,
-      sortable: true,
-      render: (_value, row) => (
-        <VStack gap={0.5} align="start">
-          <HStack gap={1} align="center">
-            <span className="text-[12px] text-[var(--color-text-default)]">{row.listener}</span>
-            <span className="text-[12px] text-[var(--color-text-default)]">(+{row.listenerCount})</span>
-          </HStack>
-          <span className="text-[11px] text-[var(--color-text-subtle)]">ID:{row.listenerId}</span>
-        </VStack>
-      ),
-    },
-    {
-      key: 'expiresAt',
-      label: 'Expires At',
-      flex: 1,
-    },
-    {
-      key: 'createdAt',
-      label: 'Created At',
-      flex: 1,
-    },
-  ], [selectedCertificate]);
-
-  // CA Certificate table columns
-  const caCertificateColumns: TableColumn<CaCertificateRow>[] = useMemo(() => [
-    {
-      key: 'select',
-      label: '',
-      width: '40px',
-      render: (_value, row) => (
-        <div className="flex items-center justify-center" onClick={(e) => e.stopPropagation()}>
-          <Radio
-            value={row.id}
-            checked={selectedCaCertificate === row.id}
-            onChange={() => setSelectedCaCertificate(row.id)}
-            disabled={row.status === 'paused'}
-          />
-        </div>
-      ),
-    },
-    {
-      key: 'status',
-      label: 'Status',
-      width: '64px',
-      align: 'center' as const,
-      render: (_value, row) => <StatusIndicator status={row.status} />,
-    },
-    {
-      key: 'name',
-      label: 'Name',
-      flex: 1,
-      sortable: true,
-      render: (_value, row) => (
-        <VStack gap={0.5} align="start">
-          <HStack gap={1.5} align="center">
-            <span className="text-[var(--color-action-primary)] text-[12px] font-medium">
-              {row.name}
-            </span>
-            <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
-            {row.status === 'paused' && (
-              <IconAlertCircle size={12} className="text-[var(--color-state-danger)]" />
-            )}
-          </HStack>
-          <span className="text-[11px] text-[var(--color-text-subtle)]">
-            ID: {row.id}
-          </span>
-        </VStack>
-      ),
-    },
-    {
-      key: 'listener',
-      label: 'Listeners',
-      flex: 1,
-      sortable: true,
-      render: (_value, row) => (
-        <VStack gap={0.5} align="start">
-          <HStack gap={1} align="center">
-            <span className="text-[12px] text-[var(--color-text-default)]">{row.listener}</span>
-            <span className="text-[12px] text-[var(--color-text-default)]">(+{row.listenerCount})</span>
-          </HStack>
-          <span className="text-[11px] text-[var(--color-text-subtle)]">ID:{row.listenerId}</span>
-        </VStack>
-      ),
-    },
-    {
-      key: 'expiresAt',
-      label: 'Expires At',
-      flex: 1,
-    },
-    {
-      key: 'createdAt',
-      label: 'Created At',
-      flex: 1,
-    },
-  ], [selectedCaCertificate]);
-
-  // SNI Certificate table columns (with checkboxes for multi-select)
-  const sniCertificateColumns: TableColumn<SniCertificateRow>[] = useMemo(() => [
-    {
-      key: 'select',
-      label: '',
-      width: '40px',
-      render: (_value, row) => (
-        <div className="flex items-center justify-center" onClick={(e) => e.stopPropagation()}>
-          <Checkbox
-            checked={selectedSniCertificates.has(row.id)}
-            onChange={(e) => {
-              const isChecked = e.target.checked;
-              setSelectedSniCertificates(prev => {
-                const next = new Set(prev);
-                if (isChecked) {
-                  next.add(row.id);
-                } else {
-                  next.delete(row.id);
-                }
-                return next;
-              });
-            }}
-            disabled={row.status === 'paused'}
-          />
-        </div>
-      ),
-    },
-    {
-      key: 'status',
-      label: 'Status',
-      width: '64px',
-      align: 'center' as const,
-      render: (_value, row) => <StatusIndicator status={row.status} />,
-    },
-    {
-      key: 'name',
-      label: 'Name',
-      flex: 1,
-      sortable: true,
-      render: (_value, row) => (
-        <VStack gap={0.5} align="start">
-          <HStack gap={1.5} align="center">
-            <span className="text-[var(--color-action-primary)] text-[12px] font-medium">
-              {row.name}
-            </span>
-            <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
-            {row.status === 'paused' && (
-              <IconAlertCircle size={12} className="text-[var(--color-state-danger)]" />
-            )}
-          </HStack>
-          <span className="text-[11px] text-[var(--color-text-subtle)]">
-            ID: {row.id}
-          </span>
-        </VStack>
-      ),
-    },
-    {
-      key: 'domain',
-      label: 'Domain',
-      flex: 1,
-      sortable: true,
-    },
-    {
-      key: 'listener',
-      label: 'Listener',
-      flex: 1,
-      sortable: true,
-      render: (_value, row) => (
-        <HStack gap={1} align="center">
+  const certificateColumns: TableColumn<CertificateRow>[] = useMemo(
+    () => [
+      {
+        key: 'select',
+        label: '',
+        width: '40px',
+        render: (_value, row) => (
+          <div className="flex items-center justify-center" onClick={(e) => e.stopPropagation()}>
+            <Radio
+              value={row.id}
+              checked={selectedCertificate === row.id}
+              onChange={() => setSelectedCertificate(row.id)}
+              disabled={row.status !== 'active'}
+            />
+          </div>
+        ),
+      },
+      {
+        key: 'status',
+        label: 'Status',
+        width: '64px',
+        align: 'center' as const,
+        render: (_value, row) => <StatusIndicator status={row.status} />,
+      },
+      {
+        key: 'name',
+        label: 'Name',
+        flex: 1,
+        sortable: true,
+        render: (_value, row) => (
           <VStack gap={0.5} align="start">
-            <span className="text-[12px] text-[var(--color-text-default)]">{row.listener}</span>
+            <HStack gap={1.5} align="center">
+              <span className="text-[var(--color-action-primary)] text-[12px] font-medium">
+                {row.name}
+              </span>
+              <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
+              {row.status === 'paused' && (
+                <IconAlertCircle size={12} className="text-[var(--color-state-danger)]" />
+              )}
+            </HStack>
+            <span className="text-[11px] text-[var(--color-text-subtle)]">ID: {row.id}</span>
+          </VStack>
+        ),
+      },
+      {
+        key: 'san',
+        label: 'SAN',
+        flex: 1,
+        sortable: true,
+      },
+      {
+        key: 'listener',
+        label: 'Listener',
+        flex: 1,
+        sortable: true,
+        render: (_value, row) => (
+          <VStack gap={0.5} align="start">
+            <HStack gap={1} align="center">
+              <span className="text-[12px] text-[var(--color-text-default)]">{row.listener}</span>
+              <span className="text-[12px] text-[var(--color-text-default)]">
+                (+{row.listenerCount})
+              </span>
+            </HStack>
             <span className="text-[11px] text-[var(--color-text-subtle)]">ID:{row.listenerId}</span>
           </VStack>
-          <span className="text-[12px] text-[var(--color-text-default)]">(+{row.listenerCount})</span>
-        </HStack>
-      ),
-    },
-    {
-      key: 'expiresAt',
-      label: 'Expires At',
-      flex: 1,
-    },
-    {
-      key: 'createdAt',
-      label: 'Created At',
-      flex: 1,
-    },
-  ], [selectedSniCertificates]);
+        ),
+      },
+      {
+        key: 'expiresAt',
+        label: 'Expires At',
+        flex: 1,
+      },
+      {
+        key: 'createdAt',
+        label: 'Created At',
+        flex: 1,
+      },
+    ],
+    [selectedCertificate]
+  );
+
+  // CA Certificate table columns
+  const caCertificateColumns: TableColumn<CaCertificateRow>[] = useMemo(
+    () => [
+      {
+        key: 'select',
+        label: '',
+        width: '40px',
+        render: (_value, row) => (
+          <div className="flex items-center justify-center" onClick={(e) => e.stopPropagation()}>
+            <Radio
+              value={row.id}
+              checked={selectedCaCertificate === row.id}
+              onChange={() => setSelectedCaCertificate(row.id)}
+              disabled={row.status === 'paused'}
+            />
+          </div>
+        ),
+      },
+      {
+        key: 'status',
+        label: 'Status',
+        width: '64px',
+        align: 'center' as const,
+        render: (_value, row) => <StatusIndicator status={row.status} />,
+      },
+      {
+        key: 'name',
+        label: 'Name',
+        flex: 1,
+        sortable: true,
+        render: (_value, row) => (
+          <VStack gap={0.5} align="start">
+            <HStack gap={1.5} align="center">
+              <span className="text-[var(--color-action-primary)] text-[12px] font-medium">
+                {row.name}
+              </span>
+              <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
+              {row.status === 'paused' && (
+                <IconAlertCircle size={12} className="text-[var(--color-state-danger)]" />
+              )}
+            </HStack>
+            <span className="text-[11px] text-[var(--color-text-subtle)]">ID: {row.id}</span>
+          </VStack>
+        ),
+      },
+      {
+        key: 'listener',
+        label: 'Listeners',
+        flex: 1,
+        sortable: true,
+        render: (_value, row) => (
+          <VStack gap={0.5} align="start">
+            <HStack gap={1} align="center">
+              <span className="text-[12px] text-[var(--color-text-default)]">{row.listener}</span>
+              <span className="text-[12px] text-[var(--color-text-default)]">
+                (+{row.listenerCount})
+              </span>
+            </HStack>
+            <span className="text-[11px] text-[var(--color-text-subtle)]">ID:{row.listenerId}</span>
+          </VStack>
+        ),
+      },
+      {
+        key: 'expiresAt',
+        label: 'Expires At',
+        flex: 1,
+      },
+      {
+        key: 'createdAt',
+        label: 'Created At',
+        flex: 1,
+      },
+    ],
+    [selectedCaCertificate]
+  );
+
+  // SNI Certificate table columns (with checkboxes for multi-select)
+  const sniCertificateColumns: TableColumn<SniCertificateRow>[] = useMemo(
+    () => [
+      {
+        key: 'select',
+        label: '',
+        width: '40px',
+        render: (_value, row) => (
+          <div className="flex items-center justify-center" onClick={(e) => e.stopPropagation()}>
+            <Checkbox
+              checked={selectedSniCertificates.has(row.id)}
+              onChange={(e) => {
+                const isChecked = e.target.checked;
+                setSelectedSniCertificates((prev) => {
+                  const next = new Set(prev);
+                  if (isChecked) {
+                    next.add(row.id);
+                  } else {
+                    next.delete(row.id);
+                  }
+                  return next;
+                });
+              }}
+              disabled={row.status === 'paused'}
+            />
+          </div>
+        ),
+      },
+      {
+        key: 'status',
+        label: 'Status',
+        width: '64px',
+        align: 'center' as const,
+        render: (_value, row) => <StatusIndicator status={row.status} />,
+      },
+      {
+        key: 'name',
+        label: 'Name',
+        flex: 1,
+        sortable: true,
+        render: (_value, row) => (
+          <VStack gap={0.5} align="start">
+            <HStack gap={1.5} align="center">
+              <span className="text-[var(--color-action-primary)] text-[12px] font-medium">
+                {row.name}
+              </span>
+              <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
+              {row.status === 'paused' && (
+                <IconAlertCircle size={12} className="text-[var(--color-state-danger)]" />
+              )}
+            </HStack>
+            <span className="text-[11px] text-[var(--color-text-subtle)]">ID: {row.id}</span>
+          </VStack>
+        ),
+      },
+      {
+        key: 'domain',
+        label: 'Domain',
+        flex: 1,
+        sortable: true,
+      },
+      {
+        key: 'listener',
+        label: 'Listener',
+        flex: 1,
+        sortable: true,
+        render: (_value, row) => (
+          <HStack gap={1} align="center">
+            <VStack gap={0.5} align="start">
+              <span className="text-[12px] text-[var(--color-text-default)]">{row.listener}</span>
+              <span className="text-[11px] text-[var(--color-text-subtle)]">
+                ID:{row.listenerId}
+              </span>
+            </VStack>
+            <span className="text-[12px] text-[var(--color-text-default)]">
+              (+{row.listenerCount})
+            </span>
+          </HStack>
+        ),
+      },
+      {
+        key: 'expiresAt',
+        label: 'Expires At',
+        flex: 1,
+      },
+      {
+        key: 'createdAt',
+        label: 'Created At',
+        flex: 1,
+      },
+    ],
+    [selectedSniCertificates]
+  );
 
   // Tab bar management
   const tabBarTabs = tabs.map((tab) => ({
@@ -839,28 +1069,28 @@ export default function CreateLoadBalancerPage() {
   // Validation handler for basic-info section
   const handleBasicInfoNext = () => {
     let hasError = false;
-    
+
     if (!loadBalancerName.trim()) {
       setLbNameError('Please enter a load balancer name.');
       hasError = true;
     } else {
       setLbNameError(null);
     }
-    
+
     if (!provider) {
       setProviderError('Please select a provider.');
       hasError = true;
     } else {
       setProviderError(null);
     }
-    
+
     if (!selectedNetwork) {
       setNetworkError('Please select a network.');
       hasError = true;
     } else {
       setNetworkError(null);
     }
-    
+
     if (!hasError) {
       goToNextSection('basic-info');
     }
@@ -991,7 +1221,10 @@ export default function CreateLoadBalancerPage() {
                               <Input
                                 placeholder="Enter Load balancer name"
                                 value={loadBalancerName}
-                                onChange={(e) => { setLoadBalancerName(e.target.value); setLbNameError(null); }}
+                                onChange={(e) => {
+                                  setLoadBalancerName(e.target.value);
+                                  setLbNameError(null);
+                                }}
                                 fullWidth
                                 error={!!lbNameError}
                               />
@@ -1003,7 +1236,8 @@ export default function CreateLoadBalancerPage() {
                             </VStack>
                           </FormField.Control>
                           <FormField.HelperText>
-                            You can use letters, numbers, and special characters (+=,.@-_), and the length must be between 2-128 characters.
+                            You can use letters, numbers, and special characters (+=,.@-_), and the
+                            length must be between 2-128 characters.
                           </FormField.HelperText>
                         </FormField>
 
@@ -1019,7 +1253,8 @@ export default function CreateLoadBalancerPage() {
                             />
                           </FormField.Control>
                           <FormField.HelperText>
-                            You can use letters, numbers, and special characters (+=,.@-_()[]), and maximum 255 characters.
+                            You can use letters, numbers, and special characters (+=,.@-_()[]), and
+                            maximum 255 characters.
                           </FormField.HelperText>
                         </FormField>
 
@@ -1038,7 +1273,10 @@ export default function CreateLoadBalancerPage() {
                                   onChange={() => handleProviderChange('ovn')}
                                   label="OVN"
                                 />
-                                <IconInfoCircle size={16} className="text-[var(--color-text-subtle)]" />
+                                <IconInfoCircle
+                                  size={16}
+                                  className="text-[var(--color-text-subtle)]"
+                                />
                               </HStack>
                               <HStack gap={1.5} align="center">
                                 <Radio
@@ -1047,7 +1285,10 @@ export default function CreateLoadBalancerPage() {
                                   onChange={() => handleProviderChange('amphora')}
                                   label="Amphora"
                                 />
-                                <IconInfoCircle size={16} className="text-[var(--color-text-subtle)]" />
+                                <IconInfoCircle
+                                  size={16}
+                                  className="text-[var(--color-text-subtle)]"
+                                />
                               </HStack>
                             </VStack>
                             {providerError && (
@@ -1070,7 +1311,9 @@ export default function CreateLoadBalancerPage() {
                           {/* Network Tabs */}
                           <Tabs
                             value={networkTab}
-                            onChange={(value) => setNetworkTab(value as 'current' | 'shared' | 'external')}
+                            onChange={(value) =>
+                              setNetworkTab(value as 'current' | 'shared' | 'external')
+                            }
                             variant="underline"
                           >
                             <TabList>
@@ -1103,7 +1346,10 @@ export default function CreateLoadBalancerPage() {
                               columns={networkColumns}
                               data={mockNetworks}
                               getRowId={(row) => row.id}
-                              onRowClick={(row) => { setSelectedNetwork(row.id); setNetworkError(null); }}
+                              onRowClick={(row) => {
+                                setSelectedNetwork(row.id);
+                                setNetworkError(null);
+                              }}
                             />
                           ) : (
                             <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-md p-4 text-center text-[12px] text-[var(--color-text-default)]">
@@ -1114,17 +1360,23 @@ export default function CreateLoadBalancerPage() {
                           {/* Error Message or Selection Indicator for Network */}
                           {networkError && !selectedNetwork ? (
                             <div className="mt-2">
-                              <InlineMessage variant="error">
-                                {networkError}
-                              </InlineMessage>
+                              <InlineMessage variant="error">{networkError}</InlineMessage>
                             </div>
                           ) : (
                             <SelectionIndicator
                               className="mt-2"
-                              selectedItems={selectedNetwork ? [{
-                                id: selectedNetwork,
-                                label: mockNetworks.find(n => n.id === selectedNetwork)?.name || selectedNetwork
-                              }] : []}
+                              selectedItems={
+                                selectedNetwork
+                                  ? [
+                                      {
+                                        id: selectedNetwork,
+                                        label:
+                                          mockNetworks.find((n) => n.id === selectedNetwork)
+                                            ?.name || selectedNetwork,
+                                      },
+                                    ]
+                                  : []
+                              }
                               onRemove={() => setSelectedNetwork('')}
                             />
                           )}
@@ -1134,14 +1386,24 @@ export default function CreateLoadBalancerPage() {
                         <FormField required>
                           <FormField.Label>VIP Address</FormField.Label>
                           <FormField.HelperText>
-                            Select the subnet for the VIP. You can assign an IP automatically or manually enter one within the subnet range.
+                            Select the subnet for the VIP. You can assign an IP automatically or
+                            manually enter one within the subnet range.
                           </FormField.HelperText>
                           <div className="mt-3 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-md px-4 py-2 flex items-center gap-2">
                             <HStack gap={2} align="center">
-                              <span className="text-[12px] font-medium text-[var(--color-text-default)]">Subnet</span>
+                              <span className="text-[12px] font-medium text-[var(--color-text-default)]">
+                                Subnet
+                              </span>
                               <Select
                                 options={[
-                                  ...(selectedNetworkDetails ? [{ value: selectedNetworkDetails.subnetCidr, label: selectedNetworkDetails.subnetCidr }] : []),
+                                  ...(selectedNetworkDetails
+                                    ? [
+                                        {
+                                          value: selectedNetworkDetails.subnetCidr,
+                                          label: selectedNetworkDetails.subnetCidr,
+                                        },
+                                      ]
+                                    : []),
                                   { value: '10.0.0.0/24', label: '10.0.0.0/24' },
                                   { value: '10.0.1.0/24', label: '10.0.1.0/24' },
                                 ]}
@@ -1152,7 +1414,9 @@ export default function CreateLoadBalancerPage() {
                               />
                             </HStack>
                             <HStack gap={2} align="center">
-                              <span className="text-[14px] font-medium text-[var(--color-text-default)]">VIP</span>
+                              <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+                                VIP
+                              </span>
                               <Select
                                 options={[
                                   { value: 'auto', label: 'Auto-assign' },
@@ -1171,7 +1435,9 @@ export default function CreateLoadBalancerPage() {
                                   style={{ width: '160px' }}
                                 />
                               )}
-                              <span className="text-[11px] text-[var(--color-text-subtle)]">10.62.0.31 - 10.62.0.77</span>
+                              <span className="text-[11px] text-[var(--color-text-subtle)]">
+                                10.62.0.31 - 10.62.0.77
+                              </span>
                             </HStack>
                           </div>
                         </FormField>
@@ -1180,7 +1446,8 @@ export default function CreateLoadBalancerPage() {
                         <FormField>
                           <FormField.Label>Load balancer admin state</FormField.Label>
                           <FormField.HelperText>
-                            Set the administrative state of the load balancer. 'UP' enables traffic handling, while 'DOWN' disables it.
+                            Set the administrative state of the load balancer. 'UP' enables traffic
+                            handling, while 'DOWN' disables it.
                           </FormField.HelperText>
                           <div className="mt-2">
                             <Toggle
@@ -1193,10 +1460,7 @@ export default function CreateLoadBalancerPage() {
 
                         {/* Next Button */}
                         <div className="flex items-center justify-end w-full">
-                          <Button 
-                            variant="primary" 
-                            onClick={handleBasicInfoNext}
-                          >
+                          <Button variant="primary" onClick={handleBasicInfoNext}>
                             Next
                           </Button>
                         </div>
@@ -1271,7 +1535,8 @@ export default function CreateLoadBalancerPage() {
                             />
                           </FormField.Control>
                           <FormField.HelperText>
-                            You can use letters, numbers, and special characters (+=,.@-_), and the length must be between 2-128 characters.
+                            You can use letters, numbers, and special characters (+=,.@-_), and the
+                            length must be between 2-128 characters.
                           </FormField.HelperText>
                         </FormField>
 
@@ -1287,7 +1552,8 @@ export default function CreateLoadBalancerPage() {
                             />
                           </FormField.Control>
                           <FormField.HelperText>
-                            You can use letters, numbers, and special characters (+=,.@-_()[]), and maximum 255 characters.
+                            You can use letters, numbers, and special characters (+=,.@-_()[]), and
+                            maximum 255 characters.
                           </FormField.HelperText>
                         </FormField>
 
@@ -1349,7 +1615,8 @@ export default function CreateLoadBalancerPage() {
                             <FormField required>
                               <FormField.Label>Server Certificates</FormField.Label>
                               <p className="text-[12px] text-[var(--color-text-subtle)]">
-                                Select a server certificate for the listener to handle HTTPS traffic.
+                                Select a server certificate for the listener to handle HTTPS
+                                traffic.
                               </p>
                             </FormField>
 
@@ -1380,10 +1647,18 @@ export default function CreateLoadBalancerPage() {
                             {/* Selection Indicator for Certificate */}
                             <SelectionIndicator
                               className="mt-2"
-                              selectedItems={selectedCertificate ? [{
-                                id: selectedCertificate,
-                                label: mockCertificates.find(c => c.id === selectedCertificate)?.name || selectedCertificate
-                              }] : []}
+                              selectedItems={
+                                selectedCertificate
+                                  ? [
+                                      {
+                                        id: selectedCertificate,
+                                        label:
+                                          mockCertificates.find((c) => c.id === selectedCertificate)
+                                            ?.name || selectedCertificate,
+                                      },
+                                    ]
+                                  : []
+                              }
                               onRemove={() => setSelectedCertificate('')}
                             />
                           </VStack>
@@ -1425,10 +1700,19 @@ export default function CreateLoadBalancerPage() {
                             {/* Selection Indicator for CA Certificate */}
                             <SelectionIndicator
                               className="mt-2"
-                              selectedItems={selectedCaCertificate ? [{
-                                id: selectedCaCertificate,
-                                label: mockCaCertificates.find(c => c.id === selectedCaCertificate)?.name || selectedCaCertificate
-                              }] : []}
+                              selectedItems={
+                                selectedCaCertificate
+                                  ? [
+                                      {
+                                        id: selectedCaCertificate,
+                                        label:
+                                          mockCaCertificates.find(
+                                            (c) => c.id === selectedCaCertificate
+                                          )?.name || selectedCaCertificate,
+                                      },
+                                    ]
+                                  : []
+                              }
                               onRemove={() => setSelectedCaCertificate('')}
                             />
                           </VStack>
@@ -1439,13 +1723,11 @@ export default function CreateLoadBalancerPage() {
                           <FormField>
                             <FormField.Label>SNI</FormField.Label>
                             <p className="text-[12px] text-[var(--color-text-subtle)] mb-2">
-                              Add more certificates here to host multiple, different HTTPS websites on this single listener.
+                              Add more certificates here to host multiple, different HTTPS websites
+                              on this single listener.
                             </p>
                             <HStack gap={2} align="center">
-                              <Toggle
-                                checked={sniEnabled}
-                                onChange={setSniEnabled}
-                              />
+                              <Toggle checked={sniEnabled} onChange={setSniEnabled} />
                               <span className="text-[12px] text-[var(--color-text-default)]">
                                 {sniEnabled ? 'On' : 'Off'}
                               </span>
@@ -1486,9 +1768,9 @@ export default function CreateLoadBalancerPage() {
                             {/* Selection Indicator for SNI Certificates */}
                             <SelectionIndicator
                               className="mt-2"
-                              selectedItems={Array.from(selectedSniCertificates).map(id => ({
+                              selectedItems={Array.from(selectedSniCertificates).map((id) => ({
                                 id,
-                                label: mockSniCertificates.find(c => c.id === id)?.name || id
+                                label: mockSniCertificates.find((c) => c.id === id)?.name || id,
                               }))}
                               onRemove={(id) => {
                                 const newSet = new Set(selectedSniCertificates);
@@ -1521,7 +1803,8 @@ export default function CreateLoadBalancerPage() {
                         <FormField required>
                           <FormField.Label>Connection limit</FormField.Label>
                           <p className="text-[12px] text-[var(--color-text-subtle)] mb-2">
-                            Defines the maximum number of concurrent connections the listener can handle.
+                            Defines the maximum number of concurrent connections the listener can
+                            handle.
                           </p>
                           <FormField.Control>
                             <VStack gap={3} align="start">
@@ -1552,7 +1835,8 @@ export default function CreateLoadBalancerPage() {
                         <FormField>
                           <FormField.Label>Listener admin state</FormField.Label>
                           <p className="text-[12px] text-[var(--color-text-subtle)] mb-2">
-                            Set the administrative state of the listener. 'UP' enables traffic handling, while 'DOWN' disables it.
+                            Set the administrative state of the listener. 'UP' enables traffic
+                            handling, while 'DOWN' disables it.
                           </p>
                           <FormField.Control>
                             <HStack gap={2} align="center">
@@ -1569,9 +1853,7 @@ export default function CreateLoadBalancerPage() {
 
                         {/* Advanced Section */}
                         <Disclosure defaultOpen={false}>
-                          <Disclosure.Trigger>
-                            Advanced
-                          </Disclosure.Trigger>
+                          <Disclosure.Trigger>Advanced</Disclosure.Trigger>
                           <Disclosure.Panel>
                             <VStack gap={6} className="mt-4">
                               {/* Custom headers */}
@@ -1588,7 +1870,10 @@ export default function CreateLoadBalancerPage() {
                                       label="X-Forwarded-For"
                                     />
                                     <Tooltip content="Captures the original client IP address">
-                                      <IconInfoCircle size={16} className="text-[var(--color-text-muted)]" />
+                                      <IconInfoCircle
+                                        size={16}
+                                        className="text-[var(--color-text-muted)]"
+                                      />
                                     </Tooltip>
                                   </HStack>
                                   <HStack gap={2} align="center">
@@ -1598,7 +1883,10 @@ export default function CreateLoadBalancerPage() {
                                       label="X-Forwarded-Port"
                                     />
                                     <Tooltip content="Captures the original client port">
-                                      <IconInfoCircle size={16} className="text-[var(--color-text-muted)]" />
+                                      <IconInfoCircle
+                                        size={16}
+                                        className="text-[var(--color-text-muted)]"
+                                      />
                                     </Tooltip>
                                   </HStack>
                                 </VStack>
@@ -1624,7 +1912,8 @@ export default function CreateLoadBalancerPage() {
                               <FormField>
                                 <FormField.Label>Member connect timeout (ms)</FormField.Label>
                                 <p className="text-[12px] text-[var(--color-text-subtle)] mb-2">
-                                  Maximum time to wait when establishing a connection to a backend member.
+                                  Maximum time to wait when establishing a connection to a backend
+                                  member.
                                 </p>
                                 <FormField.Control>
                                   <NumberInput
@@ -1656,7 +1945,8 @@ export default function CreateLoadBalancerPage() {
                               <FormField>
                                 <FormField.Label>TCP Inspect Timeout (ms)</FormField.Label>
                                 <p className="text-[12px] text-[var(--color-text-subtle)] mb-2">
-                                  Timeout for TCP packet inspection or handshake. 0 disables this feature.
+                                  Timeout for TCP packet inspection or handshake. 0 disables this
+                                  feature.
                                 </p>
                                 <FormField.Control>
                                   <NumberInput
@@ -1691,7 +1981,9 @@ export default function CreateLoadBalancerPage() {
                                         variant="ghost"
                                         size="sm"
                                         onClick={() => {
-                                          setAllowedCidrs(allowedCidrs.filter((_, i) => i !== index));
+                                          setAllowedCidrs(
+                                            allowedCidrs.filter((_, i) => i !== index)
+                                          );
                                         }}
                                       >
                                         Remove
@@ -1714,8 +2006,8 @@ export default function CreateLoadBalancerPage() {
 
                         {/* Next button */}
                         <div className="flex items-center justify-end w-full">
-                          <Button 
-                            variant="primary" 
+                          <Button
+                            variant="primary"
                             onClick={() => goToNextSection('listener')}
                             disabled={!listenerName.trim() || !listenerProtocol || !protocolPort}
                           >
@@ -1726,17 +2018,18 @@ export default function CreateLoadBalancerPage() {
                     )}
                     {sectionStatus['listener'] === 'done' && (
                       <SectionCard.Content>
-                        <SectionCard.DataRow
-                          label="Listener name"
-                          value={listenerName}
-                        />
+                        <SectionCard.DataRow label="Listener name" value={listenerName} />
                         <SectionCard.DataRow
                           label="Protocol / Port"
                           value={`${listenerProtocol} / ${protocolPort}`}
                         />
                         <SectionCard.DataRow
                           label="Connection limit"
-                          value={connectionLimitType === 'unlimited' ? 'Unlimited' : String(connectionLimitValue)}
+                          value={
+                            connectionLimitType === 'unlimited'
+                              ? 'Unlimited'
+                              : String(connectionLimitValue)
+                          }
                         />
                         <SectionCard.DataRow
                           label="Admin state"
@@ -1768,12 +2061,11 @@ export default function CreateLoadBalancerPage() {
                       <SectionCard.Content gap={6} className="pt-2">
                         {/* Create Pool toggle */}
                         <VStack gap={2} align="start">
-                          <span className="text-[14px] font-medium text-[var(--color-text-default)]">Create Pool</span>
+                          <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+                            Create Pool
+                          </span>
                           <HStack gap={2} align="center">
-                            <Toggle
-                              checked={createPool}
-                              onChange={setCreatePool}
-                            />
+                            <Toggle checked={createPool} onChange={setCreatePool} />
                             <span className="text-[12px] text-[var(--color-text-default)]">
                               {createPool ? 'Yes' : 'No'}
                             </span>
@@ -1794,7 +2086,8 @@ export default function CreateLoadBalancerPage() {
                                 />
                               </FormField.Control>
                               <FormField.HelperText>
-                                You can use letters, numbers, and special characters (+=,.@-_), and the length must be between 2-128 characters.
+                                You can use letters, numbers, and special characters (+=,.@-_), and
+                                the length must be between 2-128 characters.
                               </FormField.HelperText>
                             </FormField>
 
@@ -1810,7 +2103,8 @@ export default function CreateLoadBalancerPage() {
                                 />
                               </FormField.Control>
                               <FormField.HelperText>
-                                You can use letters, numbers, and special characters (+=,.@-_()[]), and maximum 255 characters.
+                                You can use letters, numbers, and special characters (+=,.@-_()[]),
+                                and maximum 255 characters.
                               </FormField.HelperText>
                             </FormField>
 
@@ -1818,7 +2112,9 @@ export default function CreateLoadBalancerPage() {
                             <FormField required>
                               <FormField.Label>Pool algorithm</FormField.Label>
                               <p className="text-[12px] text-[var(--color-text-subtle)] mb-2">
-                                Select how incoming requests are distributed across backend members. The chosen algorithm determines how traffic is routed to each server.
+                                Select how incoming requests are distributed across backend members.
+                                The chosen algorithm determines how traffic is routed to each
+                                server.
                               </p>
                               <FormField.Control>
                                 <Select
@@ -1835,10 +2131,14 @@ export default function CreateLoadBalancerPage() {
                                 />
                               </FormField.Control>
                               <FormField.HelperText>
-                                {poolAlgorithm === 'ROUND_ROBIN' && 'Round Robin: Each new connection request is assigned to the next server in order, ensuring even distribution. Best for short-lived HTTP connections.'}
-                                {poolAlgorithm === 'LEAST_CONNECTIONS' && 'Least Connections: Sends traffic to the server with the fewest active connections. Suitable for long-lived sessions.'}
-                                {poolAlgorithm === 'SOURCE_IP' && 'Source IP: Uses client\'s source IP to maintain consistent routing to the same backend.'}
-                                {poolAlgorithm === 'SOURCE_IP_PORT' && 'Source IP Port: Routes traffic based on both client IP and source port to maintain consistent session mapping.'}
+                                {poolAlgorithm === 'ROUND_ROBIN' &&
+                                  'Round Robin: Each new connection request is assigned to the next server in order, ensuring even distribution. Best for short-lived HTTP connections.'}
+                                {poolAlgorithm === 'LEAST_CONNECTIONS' &&
+                                  'Least Connections: Sends traffic to the server with the fewest active connections. Suitable for long-lived sessions.'}
+                                {poolAlgorithm === 'SOURCE_IP' &&
+                                  "Source IP: Uses client's source IP to maintain consistent routing to the same backend."}
+                                {poolAlgorithm === 'SOURCE_IP_PORT' &&
+                                  'Source IP Port: Routes traffic based on both client IP and source port to maintain consistent session mapping.'}
                               </FormField.HelperText>
                             </FormField>
 
@@ -1846,7 +2146,8 @@ export default function CreateLoadBalancerPage() {
                             <FormField required>
                               <FormField.Label>Pool protocol</FormField.Label>
                               <p className="text-[12px] text-[var(--color-text-subtle)] mb-2">
-                                Select the protocol used to communicate with backend members. It must match or be compatible with the listener's protocol.
+                                Select the protocol used to communicate with backend members. It
+                                must match or be compatible with the listener's protocol.
                               </p>
                               <FormField.Control>
                                 <Select
@@ -1861,15 +2162,15 @@ export default function CreateLoadBalancerPage() {
 
                             {/* Pool admin state */}
                             <VStack gap={2} align="start">
-                              <span className="text-[14px] font-medium text-[var(--color-text-default)]">Pool admin state</span>
+                              <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+                                Pool admin state
+                              </span>
                               <p className="text-[12px] text-[var(--color-text-subtle)]">
-                                Set the administrative state of the pool. 'UP' enables traffic handling, while 'DOWN' disables it.
+                                Set the administrative state of the pool. 'UP' enables traffic
+                                handling, while 'DOWN' disables it.
                               </p>
                               <HStack gap={2} align="center">
-                                <Toggle
-                                  checked={poolAdminState}
-                                  onChange={setPoolAdminState}
-                                />
+                                <Toggle checked={poolAdminState} onChange={setPoolAdminState} />
                                 <span className="text-[12px] text-[var(--color-text-default)]">
                                   {poolAdminState ? 'Up' : 'Down'}
                                 </span>
@@ -1881,20 +2182,29 @@ export default function CreateLoadBalancerPage() {
                               open={poolAdvancedOpen}
                               onChange={(open) => setPoolAdvancedOpen(open)}
                             >
-                              <Disclosure.Trigger>
-                                Advanced
-                              </Disclosure.Trigger>
+                              <Disclosure.Trigger>Advanced</Disclosure.Trigger>
                               <Disclosure.Panel>
                                 <VStack gap={4} align="stretch" className="pt-4">
                                   {/* Session persistence */}
                                   <VStack gap={3} align="start">
-                                    <span className="text-[14px] font-medium text-[var(--color-text-default)]">Session persistence</span>
+                                    <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+                                      Session persistence
+                                    </span>
                                     <p className="text-[12px] text-[var(--color-text-subtle)]">
-                                      Select the protocol used to communicate with backend members. It must match or be compatible with the listener's protocol.
+                                      Select the protocol used to communicate with backend members.
+                                      It must match or be compatible with the listener's protocol.
                                     </p>
                                     <RadioGroup
                                       value={sessionPersistence}
-                                      onChange={(value) => setSessionPersistence(value as 'none' | 'source_ip' | 'http_cookie' | 'app_cookie')}
+                                      onChange={(value) =>
+                                        setSessionPersistence(
+                                          value as
+                                            | 'none'
+                                            | 'source_ip'
+                                            | 'http_cookie'
+                                            | 'app_cookie'
+                                        )
+                                      }
                                     >
                                       <VStack gap={3} align="start">
                                         <Radio value="none" label="None" />
@@ -1915,7 +2225,8 @@ export default function CreateLoadBalancerPage() {
                                               className="w-[var(--layout-sidebar-width)]"
                                             />
                                             <span className="text-[11px] text-[var(--color-text-subtle)]">
-                                              You can use letters, numbers, and special characters(+.-_!#$%&'*^|~).
+                                              You can use letters, numbers, and special
+                                              characters(+.-_!#$%&'*^|~).
                                             </span>
                                           </VStack>
                                         )}
@@ -1929,10 +2240,7 @@ export default function CreateLoadBalancerPage() {
                         )}
 
                         <div className="flex items-center justify-end w-full">
-                          <Button 
-                            variant="primary" 
-                            onClick={() => goToNextSection('pool')}
-                          >
+                          <Button variant="primary" onClick={() => goToNextSection('pool')}>
                             Next
                           </Button>
                         </div>
@@ -1946,22 +2254,20 @@ export default function CreateLoadBalancerPage() {
                         />
                         {createPool && (
                           <>
-                            <SectionCard.DataRow
-                              label="Pool name"
-                              value={poolName}
-                            />
+                            <SectionCard.DataRow label="Pool name" value={poolName} />
                             <SectionCard.DataRow
                               label="Pool algorithm"
                               value={
-                                poolAlgorithm === 'ROUND_ROBIN' ? 'Round Robin' : 
-                                poolAlgorithm === 'LEAST_CONNECTIONS' ? 'Least Connections' : 
-                                poolAlgorithm === 'SOURCE_IP' ? 'Source IP' : 'Source IP Port'
+                                poolAlgorithm === 'ROUND_ROBIN'
+                                  ? 'Round Robin'
+                                  : poolAlgorithm === 'LEAST_CONNECTIONS'
+                                    ? 'Least Connections'
+                                    : poolAlgorithm === 'SOURCE_IP'
+                                      ? 'Source IP'
+                                      : 'Source IP Port'
                               }
                             />
-                            <SectionCard.DataRow
-                              label="Pool protocol"
-                              value={poolProtocol}
-                            />
+                            <SectionCard.DataRow label="Pool protocol" value={poolProtocol} />
                             <SectionCard.DataRow
                               label="Pool admin state"
                               value={poolAdminState ? 'Up' : 'Down'}
@@ -1995,9 +2301,12 @@ export default function CreateLoadBalancerPage() {
                         {/* Ports Section */}
                         <VStack gap={3} align="stretch">
                           <VStack gap={2} align="start">
-                            <span className="text-[14px] font-medium text-[var(--color-text-default)]">Ports</span>
+                            <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+                              Ports
+                            </span>
                             <p className="text-[12px] text-[var(--color-text-subtle)]">
-                              Select one of the IP addresses associated with the port to add as a member.
+                              Select one of the IP addresses associated with the port to add as a
+                              member.
                             </p>
                           </VStack>
 
@@ -2021,22 +2330,40 @@ export default function CreateLoadBalancerPage() {
                           <div className="w-full border border-[var(--color-border-default)] rounded-md overflow-hidden">
                             {/* Table Header */}
                             <div className="flex bg-[var(--color-surface-subtle)] border-b border-[var(--color-border-default)]">
-                              <div className="flex-1 px-3 py-2 text-[11px] font-medium text-[var(--color-text-default)]">Name</div>
-                              <div className="flex-1 px-3 py-2 text-[11px] font-medium text-[var(--color-text-default)]">Attached instance</div>
-                              <div className="flex-1 px-3 py-2 text-[11px] font-medium text-[var(--color-text-default)]">IP Address</div>
-                              <div className="flex-1 px-3 py-2 text-[11px] font-medium text-[var(--color-text-default)] text-center">Action</div>
+                              <div className="flex-1 px-3 py-2 text-[11px] font-medium text-[var(--color-text-default)]">
+                                Name
+                              </div>
+                              <div className="flex-1 px-3 py-2 text-[11px] font-medium text-[var(--color-text-default)]">
+                                Attached instance
+                              </div>
+                              <div className="flex-1 px-3 py-2 text-[11px] font-medium text-[var(--color-text-default)]">
+                                IP Address
+                              </div>
+                              <div className="flex-1 px-3 py-2 text-[11px] font-medium text-[var(--color-text-default)] text-center">
+                                Action
+                              </div>
                             </div>
                             {/* Table Rows */}
                             {mockPorts.map((port) => (
-                              <div key={port.id} className="flex items-center border-b border-[var(--color-border-default)] last:border-b-0 bg-[var(--color-surface-default)]">
+                              <div
+                                key={port.id}
+                                className="flex items-center border-b border-[var(--color-border-default)] last:border-b-0 bg-[var(--color-surface-default)]"
+                              >
                                 {/* Name Cell */}
                                 <div className="flex-1 px-3 py-2">
                                   <VStack gap={0.5} align="start">
                                     <HStack gap={1.5} align="center">
-                                      <span className="text-[12px] font-medium text-[var(--color-action-primary)]">{port.name}</span>
-                                      <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
+                                      <span className="text-[12px] font-medium text-[var(--color-action-primary)]">
+                                        {port.name}
+                                      </span>
+                                      <IconExternalLink
+                                        size={12}
+                                        className="text-[var(--color-action-primary)]"
+                                      />
                                     </HStack>
-                                    <span className="text-[11px] text-[var(--color-text-subtle)]">ID: {port.id}</span>
+                                    <span className="text-[11px] text-[var(--color-text-subtle)]">
+                                      ID: {port.id}
+                                    </span>
                                   </VStack>
                                 </div>
                                 {/* Attached Instance Cell */}
@@ -2044,26 +2371,45 @@ export default function CreateLoadBalancerPage() {
                                   {port.attachedInstance ? (
                                     <VStack gap={0.5} align="start">
                                       <HStack gap={1.5} align="center">
-                                        <span className="text-[12px] font-medium text-[var(--color-action-primary)]">{port.attachedInstance}</span>
-                                        <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
+                                        <span className="text-[12px] font-medium text-[var(--color-action-primary)]">
+                                          {port.attachedInstance}
+                                        </span>
+                                        <IconExternalLink
+                                          size={12}
+                                          className="text-[var(--color-action-primary)]"
+                                        />
                                       </HStack>
-                                      <span className="text-[11px] text-[var(--color-text-subtle)]">ID: {port.attachedInstanceId}</span>
+                                      <span className="text-[11px] text-[var(--color-text-subtle)]">
+                                        ID: {port.attachedInstanceId}
+                                      </span>
                                     </VStack>
                                   ) : (
-                                    <span className="text-[12px] text-[var(--color-text-default)]">-</span>
+                                    <span className="text-[12px] text-[var(--color-text-default)]">
+                                      -
+                                    </span>
                                   )}
                                 </div>
                                 {/* IP Address Cell */}
                                 <div className="flex-1 px-3 py-2 flex items-center">
                                   {port.ipAddresses.length > 0 ? (
                                     <Select
-                                      options={port.ipAddresses.map(ip => ({ value: ip, label: ip }))}
+                                      options={port.ipAddresses.map((ip) => ({
+                                        value: ip,
+                                        label: ip,
+                                      }))}
                                       value={portIpSelections[port.id] || port.ipAddresses[0]}
-                                      onChange={(value) => setPortIpSelections(prev => ({ ...prev, [port.id]: value }))}
+                                      onChange={(value) =>
+                                        setPortIpSelections((prev) => ({
+                                          ...prev,
+                                          [port.id]: value,
+                                        }))
+                                      }
                                       style={{ width: '152px' }}
                                     />
                                   ) : (
-                                    <span className="text-[12px] text-[var(--color-text-subtle)]">-</span>
+                                    <span className="text-[12px] text-[var(--color-text-subtle)]">
+                                      -
+                                    </span>
                                   )}
                                 </div>
                                 {/* Action Cell */}
@@ -2074,20 +2420,29 @@ export default function CreateLoadBalancerPage() {
                                     leftIcon={<IconPlus size={12} />}
                                     disabled={port.ipAddresses.length === 0}
                                     onClick={() => {
-                                      const selectedIp = portIpSelections[port.id] || port.ipAddresses[0];
-                                      if (selectedIp && !allocatedMembers.find(m => m.portId === port.id && m.ipAddress === selectedIp)) {
-                                        setAllocatedMembers(prev => [...prev, {
-                                          id: `member-${Date.now()}`,
-                                          portId: port.id,
-                                          portName: port.name,
-                                          ipAddress: selectedIp,
-                                          instanceName: port.attachedInstance,
-                                          weight: 1,
-                                          monitorPort: 80,
-                                          monitorAddress: selectedIp,
-                                          backup: false,
-                                          adminStateUp: true,
-                                        }]);
+                                      const selectedIp =
+                                        portIpSelections[port.id] || port.ipAddresses[0];
+                                      if (
+                                        selectedIp &&
+                                        !allocatedMembers.find(
+                                          (m) => m.portId === port.id && m.ipAddress === selectedIp
+                                        )
+                                      ) {
+                                        setAllocatedMembers((prev) => [
+                                          ...prev,
+                                          {
+                                            id: `member-${Date.now()}`,
+                                            portId: port.id,
+                                            portName: port.name,
+                                            ipAddress: selectedIp,
+                                            instanceName: port.attachedInstance,
+                                            weight: 1,
+                                            monitorPort: 80,
+                                            monitorAddress: selectedIp,
+                                            backup: false,
+                                            adminStateUp: true,
+                                          },
+                                        ]);
                                       }
                                     }}
                                   >
@@ -2103,11 +2458,14 @@ export default function CreateLoadBalancerPage() {
                         <VStack gap={3} align="start">
                           <VStack gap={2} align="start">
                             <HStack gap={1} align="center">
-                              <span className="text-[14px] font-medium text-[var(--color-text-default)]">Allocated Members</span>
+                              <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+                                Allocated Members
+                              </span>
                               <span className="text-[var(--color-state-danger)]">*</span>
                             </HStack>
                             <p className="text-[12px] text-[var(--color-text-subtle)]">
-                              Adding a member registers a new backend server to the pool, while removing a member excludes it from load balancing.
+                              Adding a member registers a new backend server to the pool, while
+                              removing a member excludes it from load balancing.
                             </p>
                           </VStack>
 
@@ -2116,12 +2474,15 @@ export default function CreateLoadBalancerPage() {
                             size="sm"
                             leftIcon={<IconPlus size={12} />}
                             onClick={() => {
-                              setExternalMembers(prev => [...prev, {
-                                id: `ext-${Date.now()}`,
-                                ipAddress: '',
-                                port: undefined,
-                                weight: 1,
-                              }]);
+                              setExternalMembers((prev) => [
+                                ...prev,
+                                {
+                                  id: `ext-${Date.now()}`,
+                                  ipAddress: '',
+                                  port: undefined,
+                                  weight: 1,
+                                },
+                              ]);
                             }}
                           >
                             Add External Member
@@ -2135,27 +2496,37 @@ export default function CreateLoadBalancerPage() {
                             >
                               {/* IP Address */}
                               <div className="flex-1 flex flex-col gap-2">
-                                <span className="text-[12px] font-medium text-[var(--color-text-default)]">IP Address</span>
+                                <span className="text-[12px] font-medium text-[var(--color-text-default)]">
+                                  IP Address
+                                </span>
                                 <Input
                                   placeholder="Enter IP address"
                                   value={extMember.ipAddress}
                                   onChange={(e) => {
-                                    setExternalMembers(prev => prev.map(m => 
-                                      m.id === extMember.id ? { ...m, ipAddress: e.target.value } : m
-                                    ));
+                                    setExternalMembers((prev) =>
+                                      prev.map((m) =>
+                                        m.id === extMember.id
+                                          ? { ...m, ipAddress: e.target.value }
+                                          : m
+                                      )
+                                    );
                                   }}
                                   fullWidth
                                 />
                               </div>
                               {/* Port */}
                               <div className="flex-1 flex flex-col gap-2">
-                                <span className="text-[12px] font-medium text-[var(--color-text-default)]">Port</span>
+                                <span className="text-[12px] font-medium text-[var(--color-text-default)]">
+                                  Port
+                                </span>
                                 <NumberInput
                                   value={extMember.port}
                                   onChange={(value) => {
-                                    setExternalMembers(prev => prev.map(m => 
-                                      m.id === extMember.id ? { ...m, port: value } : m
-                                    ));
+                                    setExternalMembers((prev) =>
+                                      prev.map((m) =>
+                                        m.id === extMember.id ? { ...m, port: value } : m
+                                      )
+                                    );
                                   }}
                                   min={1}
                                   max={65535}
@@ -2164,13 +2535,17 @@ export default function CreateLoadBalancerPage() {
                               </div>
                               {/* Weights */}
                               <div className="flex-1 flex flex-col gap-2">
-                                <span className="text-[12px] font-medium text-[var(--color-text-default)]">Weights</span>
+                                <span className="text-[12px] font-medium text-[var(--color-text-default)]">
+                                  Weights
+                                </span>
                                 <NumberInput
                                   value={extMember.weight}
                                   onChange={(value) => {
-                                    setExternalMembers(prev => prev.map(m => 
-                                      m.id === extMember.id ? { ...m, weight: value } : m
-                                    ));
+                                    setExternalMembers((prev) =>
+                                      prev.map((m) =>
+                                        m.id === extMember.id ? { ...m, weight: value } : m
+                                      )
+                                    );
                                   }}
                                   min={1}
                                   max={256}
@@ -2182,7 +2557,9 @@ export default function CreateLoadBalancerPage() {
                                 variant="secondary"
                                 size="sm"
                                 onClick={() => {
-                                  setExternalMembers(prev => prev.filter(m => m.id !== extMember.id));
+                                  setExternalMembers((prev) =>
+                                    prev.filter((m) => m.id !== extMember.id)
+                                  );
                                 }}
                               >
                                 Remove
@@ -2194,28 +2571,54 @@ export default function CreateLoadBalancerPage() {
                           {allocatedMembers.length > 0 && (
                             <div className="w-full border border-[var(--color-border-default)] rounded-md overflow-hidden">
                               <div className="flex bg-[var(--color-surface-subtle)] border-b border-[var(--color-border-default)]">
-                                <div className="flex-1 px-3 py-2 text-[11px] font-medium text-[var(--color-text-default)]">IP Address</div>
-                                <div className="flex-1 px-3 py-2 text-[11px] font-medium text-[var(--color-text-default)]">Port</div>
-                                <div className="flex-1 px-3 py-2 text-[11px] font-medium text-[var(--color-text-default)]">Instance</div>
-                                <div className="w-[80px] px-3 py-2 text-[11px] font-medium text-[var(--color-text-default)] text-center">Action</div>
+                                <div className="flex-1 px-3 py-2 text-[11px] font-medium text-[var(--color-text-default)]">
+                                  IP Address
+                                </div>
+                                <div className="flex-1 px-3 py-2 text-[11px] font-medium text-[var(--color-text-default)]">
+                                  Port
+                                </div>
+                                <div className="flex-1 px-3 py-2 text-[11px] font-medium text-[var(--color-text-default)]">
+                                  Instance
+                                </div>
+                                <div className="w-[80px] px-3 py-2 text-[11px] font-medium text-[var(--color-text-default)] text-center">
+                                  Action
+                                </div>
                               </div>
                               {allocatedMembers.map((member) => (
-                                <div key={member.id} className="flex items-center border-b border-[var(--color-border-default)] last:border-b-0 bg-[var(--color-surface-default)]">
-                                  <div className="flex-1 px-3 py-2 text-[12px] text-[var(--color-text-default)]">{member.ipAddress}</div>
+                                <div
+                                  key={member.id}
+                                  className="flex items-center border-b border-[var(--color-border-default)] last:border-b-0 bg-[var(--color-surface-default)]"
+                                >
+                                  <div className="flex-1 px-3 py-2 text-[12px] text-[var(--color-text-default)]">
+                                    {member.ipAddress}
+                                  </div>
                                   <div className="flex-1 px-3 py-2">
                                     <VStack gap={0.5} align="start">
-                                      <span className="text-[12px] text-[var(--color-action-primary)]">{member.portName}</span>
-                                      <span className="text-[11px] text-[var(--color-text-subtle)]">ID: {member.portId}</span>
+                                      <span className="text-[12px] text-[var(--color-action-primary)]">
+                                        {member.portName}
+                                      </span>
+                                      <span className="text-[11px] text-[var(--color-text-subtle)]">
+                                        ID: {member.portId}
+                                      </span>
                                     </VStack>
                                   </div>
-                                  <div className="flex-1 px-3 py-2 text-[12px] text-[var(--color-text-default)]">{member.instanceName || '-'}</div>
+                                  <div className="flex-1 px-3 py-2 text-[12px] text-[var(--color-text-default)]">
+                                    {member.instanceName || '-'}
+                                  </div>
                                   <div className="w-[80px] px-3 py-2 flex items-center justify-center">
                                     <Button
                                       variant="ghost"
                                       size="sm"
-                                      onClick={() => setAllocatedMembers(prev => prev.filter(m => m.id !== member.id))}
+                                      onClick={() =>
+                                        setAllocatedMembers((prev) =>
+                                          prev.filter((m) => m.id !== member.id)
+                                        )
+                                      }
                                     >
-                                      <IconTrash size={14} className="text-[var(--color-state-danger)]" />
+                                      <IconTrash
+                                        size={14}
+                                        className="text-[var(--color-state-danger)]"
+                                      />
                                     </Button>
                                   </div>
                                 </div>
@@ -2226,16 +2629,10 @@ export default function CreateLoadBalancerPage() {
 
                         {/* Buttons */}
                         <HStack gap={2} align="center" justify="end" className="w-full">
-                          <Button 
-                            variant="secondary" 
-                            onClick={() => goToNextSection('member')}
-                          >
+                          <Button variant="secondary" onClick={() => goToNextSection('member')}>
                             Skip
                           </Button>
-                          <Button 
-                            variant="primary" 
-                            onClick={() => goToNextSection('member')}
-                          >
+                          <Button variant="primary" onClick={() => goToNextSection('member')}>
                             Next
                           </Button>
                         </HStack>
@@ -2245,7 +2642,11 @@ export default function CreateLoadBalancerPage() {
                       <SectionCard.Content>
                         <SectionCard.DataRow
                           label="Allocated Members"
-                          value={allocatedMembers.length > 0 ? `${allocatedMembers.length} member(s)` : 'Skipped'}
+                          value={
+                            allocatedMembers.length > 0
+                              ? `${allocatedMembers.length} member(s)`
+                              : 'Skipped'
+                          }
                         />
                       </SectionCard.Content>
                     )}
@@ -2273,7 +2674,9 @@ export default function CreateLoadBalancerPage() {
                       <SectionCard.Content gap={6} className="pt-2">
                         {/* Create Health Monitor toggle */}
                         <VStack gap={2} align="start">
-                          <span className="text-[14px] font-medium text-[var(--color-text-default)]">Create Health Monitor</span>
+                          <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+                            Create Health Monitor
+                          </span>
                           <HStack gap={2} align="center">
                             <Toggle
                               checked={createHealthMonitor}
@@ -2299,7 +2702,8 @@ export default function CreateLoadBalancerPage() {
                                 />
                               </FormField.Control>
                               <FormField.HelperText>
-                                You can use letters, numbers, and special characters (+=,.@-_), and the length must be between 2-128 characters.
+                                You can use letters, numbers, and special characters (+=,.@-_), and
+                                the length must be between 2-128 characters.
                               </FormField.HelperText>
                             </FormField>
 
@@ -2336,7 +2740,8 @@ export default function CreateLoadBalancerPage() {
                                 />
                               </FormField.Control>
                               <FormField.HelperText>
-                                Only numbers are allowed, and the value must be between 1–3,600 seconds.
+                                Only numbers are allowed, and the value must be between 1–3,600
+                                seconds.
                               </FormField.HelperText>
                             </FormField>
 
@@ -2356,7 +2761,8 @@ export default function CreateLoadBalancerPage() {
                                 />
                               </FormField.Control>
                               <FormField.HelperText>
-                                Only numbers are allowed, and the value must be between 1–3,599 seconds.
+                                Only numbers are allowed, and the value must be between 1–3,599
+                                seconds.
                               </FormField.HelperText>
                             </FormField>
 
@@ -2364,7 +2770,8 @@ export default function CreateLoadBalancerPage() {
                             <FormField required>
                               <FormField.Label>Max retries</FormField.Label>
                               <p className="text-[12px] text-[var(--color-text-subtle)] mb-2">
-                                Specifies the number of retries before marking the health check as failed.
+                                Specifies the number of retries before marking the health check as
+                                failed.
                               </p>
                               <FormField.Control>
                                 <NumberInput
@@ -2382,9 +2789,12 @@ export default function CreateLoadBalancerPage() {
 
                             {/* Health monitor admin state */}
                             <VStack gap={2} align="start">
-                              <span className="text-[14px] font-medium text-[var(--color-text-default)]">Health monitor admin state</span>
+                              <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+                                Health monitor admin state
+                              </span>
                               <p className="text-[12px] text-[var(--color-text-subtle)]">
-                                Set the administrative state of the health monitor. 'UP' enables traffic handling, while 'DOWN' disables it.
+                                Set the administrative state of the health monitor. 'UP' enables
+                                traffic handling, while 'DOWN' disables it.
                               </p>
                               <HStack gap={2} align="center">
                                 <Toggle
@@ -2400,8 +2810,8 @@ export default function CreateLoadBalancerPage() {
                         )}
 
                         <div className="flex items-center justify-end w-full">
-                          <Button 
-                            variant="primary" 
+                          <Button
+                            variant="primary"
                             onClick={() => goToNextSection('health-monitor')}
                           >
                             Next
@@ -2463,4 +2873,3 @@ export default function CreateLoadBalancerPage() {
     </div>
   );
 }
-

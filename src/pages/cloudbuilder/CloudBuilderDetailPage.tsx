@@ -1,16 +1,13 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import AppLayout from '@/layouts/AppLayout';
-import {
-  Button,
-  DetailHeader,
-  Modal,
-  Textarea,
-  SectionCard,
-  VStack,
-} from '@/design-system';
+import { Button, DetailHeader, Modal, Textarea, SectionCard, VStack } from '@/design-system';
 import { IconCopy } from '@tabler/icons-react';
-import { getCloudBuilderListConfig, type CloudBuilderSlug, CLOUD_BUILDER_SLUGS } from './consoleListConfig';
+import {
+  getCloudBuilderListConfig,
+  type CloudBuilderSlug,
+  CLOUD_BUILDER_SLUGS,
+} from './consoleListConfig';
 
 function isCloudBuilderSlug(v: string | undefined): v is CloudBuilderSlug {
   return !!v && (CLOUD_BUILDER_SLUGS as readonly string[]).includes(v);
@@ -39,8 +36,8 @@ function seededDateTime(seed: string) {
   const mm = (base % 12) + 1;
   const dd = (base % 28) + 1;
   const hh = base % 24;
-  const min = ((base >>> 8) % 60) || 0;
-  const sec = ((base >>> 16) % 60) || 0;
+  const min = (base >>> 8) % 60 || 0;
+  const sec = (base >>> 16) % 60 || 0;
   return `${yyyy}-${pad2(mm)}-${pad2(dd)} ${pad2(hh)}:${pad2(min)}:${pad2(sec)}`;
 }
 
@@ -64,21 +61,10 @@ export function CloudBuilderDetailPage() {
   const config = useMemo(() => getCloudBuilderListConfig(slug), [slug]);
   const row = useMemo(() => (id ? findRowById(config, id) : null), [config, id]);
 
-  // builder와 동일하게 services / compute-services는 디테일 제공하지 않음
-  const hasDetail = slug !== 'services' && slug !== 'compute-services';
-  if (!hasDetail) {
-    return (
-      <AppLayout>
-        <div className="pt-4 px-8 pb-6">
-          <div className="text-[var(--color-text-subtle)]">This page has no detail view.</div>
-        </div>
-      </AppLayout>
-    );
-  }
-
   const isNetworkAgent = slug === 'network-agents';
 
   // Enable/Disable (UI only) - shown in DetailHeader
+  // All hooks must be called before any early returns
   const [serviceStatus, setServiceStatus] = useState<string>(row?.serviceStatus ?? 'Enabled');
   const [statusModalOpen, setStatusModalOpen] = useState(false);
   const [nextStatus, setNextStatus] = useState<'Enabled' | 'Disabled'>('Disabled');
@@ -103,8 +89,28 @@ export function CloudBuilderDetailPage() {
       stableInt(`agent-resources:${seed}`) % 2 === 0 ? '-' : String((stableInt(seed) % 1000) + 1);
     const description = '-';
     const configurationText = JSON.stringify(makeNetworkAgentConfiguration(seed), null, 2);
-    return { createdAt, startedAt, heartbeatTimestamp, topic, resourcesSynced, description, configurationText };
+    return {
+      createdAt,
+      startedAt,
+      heartbeatTimestamp,
+      topic,
+      resourcesSynced,
+      description,
+      configurationText,
+    };
   }, [isNetworkAgent, slug, id, row?.name]);
+
+  // builder와 동일하게 services / compute-services는 디테일 제공하지 않음
+  const hasDetail = slug !== 'services' && slug !== 'compute-services';
+  if (!hasDetail) {
+    return (
+      <AppLayout>
+        <div className="pt-4 px-8 pb-6">
+          <div className="text-[var(--color-text-subtle)]">This page has no detail view.</div>
+        </div>
+      </AppLayout>
+    );
+  }
 
   return (
     <AppLayout>
@@ -146,12 +152,17 @@ export function CloudBuilderDetailPage() {
                   value={row?.serviceState ?? 'Up'}
                   status={(row?.serviceState ?? 'Up') === 'Up' ? 'active' : 'down'}
                 />
-                <DetailHeader.InfoCard label="Created at" value={networkAgentMeta?.createdAt ?? '-'} />
+                <DetailHeader.InfoCard
+                  label="Created at"
+                  value={networkAgentMeta?.createdAt ?? '-'}
+                />
               </DetailHeader.InfoGrid>
             </DetailHeader>
           ) : (
             <DetailHeader>
-              <DetailHeader.Title>{row?.name ?? row?.serial ?? `${config.title} #${id}`}</DetailHeader.Title>
+              <DetailHeader.Title>
+                {row?.name ?? row?.serial ?? `${config.title} #${id}`}
+              </DetailHeader.Title>
               <DetailHeader.InfoGrid>
                 <DetailHeader.InfoCard label="ID" value={row?.id ?? id} copyable />
               </DetailHeader.InfoGrid>
@@ -163,15 +174,35 @@ export function CloudBuilderDetailPage() {
               <SectionCard>
                 <SectionCard.Header title="Basic information" />
                 <SectionCard.Content>
-                  <SectionCard.DataRow label="Agent name" value={row?.name ?? '-'} showDivider={false} className="hidden" />
+                  <SectionCard.DataRow
+                    label="Agent name"
+                    value={row?.name ?? '-'}
+                    showDivider={false}
+                    className="hidden"
+                  />
                   <SectionCard.DataRow label="Type" value={row?.type ?? '-'} />
                   <SectionCard.DataRow label="Host" value={row?.host ?? '-'} />
-                  <SectionCard.DataRow label="Availability zone" value={row?.availabilityZone ?? '-'} />
+                  <SectionCard.DataRow
+                    label="Availability zone"
+                    value={row?.availabilityZone ?? '-'}
+                  />
                   <SectionCard.DataRow label="Topic" value={networkAgentMeta?.topic ?? '-'} />
-                  <SectionCard.DataRow label="Resources synced" value={networkAgentMeta?.resourcesSynced ?? '-'} />
-                  <SectionCard.DataRow label="Heartbeat timestamp" value={networkAgentMeta?.heartbeatTimestamp ?? '-'} />
-                  <SectionCard.DataRow label="Started at" value={networkAgentMeta?.startedAt ?? '-'} />
-                  <SectionCard.DataRow label="Description" value={networkAgentMeta?.description ?? '-'} />
+                  <SectionCard.DataRow
+                    label="Resources synced"
+                    value={networkAgentMeta?.resourcesSynced ?? '-'}
+                  />
+                  <SectionCard.DataRow
+                    label="Heartbeat timestamp"
+                    value={networkAgentMeta?.heartbeatTimestamp ?? '-'}
+                  />
+                  <SectionCard.DataRow
+                    label="Started at"
+                    value={networkAgentMeta?.startedAt ?? '-'}
+                  />
+                  <SectionCard.DataRow
+                    label="Description"
+                    value={networkAgentMeta?.description ?? '-'}
+                  />
                 </SectionCard.Content>
               </SectionCard>
 
@@ -195,7 +226,7 @@ export function CloudBuilderDetailPage() {
                 />
                 <SectionCard.Content gap={3}>
                   <pre className="max-h-[420px] overflow-auto rounded-lg border border-[var(--color-border-default)] bg-[var(--color-surface-subtle)] p-3 text-[12px] leading-5 text-[var(--color-text-default)]">
-{networkAgentMeta?.configurationText ?? ''}
+                    {networkAgentMeta?.configurationText ?? ''}
                   </pre>
                 </SectionCard.Content>
               </SectionCard>
@@ -249,7 +280,11 @@ export function CloudBuilderDetailPage() {
                     <Button
                       variant="primary"
                       size="md"
-                      disabled={nextStatus === 'Disabled' && !!config.statusAction?.requireDisableReason && !disableReason.trim()}
+                      disabled={
+                        nextStatus === 'Disabled' &&
+                        !!config.statusAction?.requireDisableReason &&
+                        !disableReason.trim()
+                      }
                       onClick={() => {
                         // UI only: update local status to reflect the change
                         setServiceStatus(nextStatus);
@@ -273,7 +308,10 @@ export function CloudBuilderDetailPage() {
                     .map(([k, v], idx, arr) => (
                       <>
                         {k === 'purpose' && (
-                          <div key={`divider-${k}`} className="w-full h-px bg-[var(--color-border-subtle)]" />
+                          <div
+                            key={`divider-${k}`}
+                            className="w-full h-px bg-[var(--color-border-subtle)]"
+                          />
                         )}
                         <SectionCard.DataRow
                           key={k}
@@ -298,5 +336,3 @@ export function CloudBuilderDetailPage() {
 }
 
 export default CloudBuilderDetailPage;
-
-

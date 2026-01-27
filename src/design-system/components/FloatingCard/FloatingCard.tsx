@@ -1,18 +1,22 @@
-import { type ReactNode, type HTMLAttributes, useState, useEffect } from 'react';
+import { type HTMLAttributes, useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { twMerge } from 'tailwind-merge';
-import { IconX, IconChevronRight, IconChevronDown, IconTarget, IconLoader2, IconAlertTriangle, IconCheck } from '@tabler/icons-react';
+import {
+  IconX,
+  IconChevronRight,
+  IconChevronDown,
+  IconTarget,
+  IconLoader2,
+  IconAlertTriangle,
+  IconCheck,
+} from '@tabler/icons-react';
 import { Button, NumberInput, ProgressBar } from '@/design-system';
 
 /* ----------------------------------------
    Types
    ---------------------------------------- */
 
-export type FloatingCardPosition = 
-  | 'top-left'
-  | 'top-right'
-  | 'bottom-left'
-  | 'bottom-right';
+export type FloatingCardPosition = 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right';
 
 export type SectionStatus = 'processing' | 'warning' | 'success' | 'default';
 
@@ -90,13 +94,23 @@ function StatusIcon({ status }: { status: SectionStatus }) {
       );
     case 'processing':
       return (
-        <div className="size-4 rounded-full border border-[var(--color-text-muted)] shrink-0 flex items-center justify-center" style={{ borderStyle: 'dashed' }}>
-          <IconLoader2 size={10} stroke={2} className="text-[var(--color-text-muted)] animate-spin" />
+        <div
+          className="size-4 rounded-full border border-[var(--color-text-muted)] shrink-0 flex items-center justify-center"
+          style={{ borderStyle: 'dashed' }}
+        >
+          <IconLoader2
+            size={10}
+            stroke={2}
+            className="text-[var(--color-text-muted)] animate-spin"
+          />
         </div>
       );
     default:
       return (
-        <div className="size-4 rounded-full border border-[var(--color-border-default)] shrink-0" style={{ borderStyle: 'dashed' }} />
+        <div
+          className="size-4 rounded-full border border-[var(--color-border-default)] shrink-0"
+          style={{ borderStyle: 'dashed' }}
+        />
       );
   }
 }
@@ -127,8 +141,7 @@ export function FloatingCard({
   style,
   ...props
 }: FloatingCardProps) {
-  if (!isOpen) return null;
-
+  // All hooks must be called before any early returns
   const [expandedSections, setExpandedSections] = useState<Record<number, boolean>>(() => {
     const initialState: Record<number, boolean> = {};
     sections.forEach((section, index) => {
@@ -146,8 +159,11 @@ export function FloatingCard({
     setExpandedSections(newState);
   }, [sections]);
 
+  // Early return after all hooks
+  if (!isOpen) return null;
+
   const toggleSection = (index: number) => {
-    setExpandedSections(prev => ({
+    setExpandedSections((prev) => ({
       ...prev,
       [index]: !prev[index],
     }));
@@ -175,11 +191,7 @@ export function FloatingCard({
   };
 
   const cardContent = (
-    <div
-      className={twMerge(baseStyles.join(' '), className)}
-      style={cardStyle}
-      {...props}
-    >
+    <div className={twMerge(baseStyles.join(' '), className)} style={cardStyle} {...props}>
       {showCloseButton && onClose && (
         <button
           type="button"
@@ -203,11 +215,11 @@ export function FloatingCard({
           <IconX size={16} stroke={1} />
         </button>
       )}
-      
+
       <div className="flex flex-col h-fit min-h-0 gap-0">
         {/* Summary Section - Scrollable, separated from Quota */}
         {/* Title is required, sections are optional */}
-        <div 
+        <div
           className="overflow-y-auto flex flex-col gap-4 shrink-0 m-4 rounded-md"
           style={{
             maxHeight: '340px',
@@ -226,12 +238,15 @@ export function FloatingCard({
           {sections && sections.length > 0 && (
             <div className="flex flex-col gap-6 w-full">
               {sections.map((section, sectionIndex) => {
-                const allSuccess = section.items.length > 0 && section.items.every(item => item.status === 'success');
+                const allSuccess =
+                  section.items.length > 0 &&
+                  section.items.every((item) => item.status === 'success');
                 const showIcon = section.showSuccessIcon && allSuccess;
-                
+
                 // If section has items, it should be collapsible and show toggle
-                const isCollapsible = section.collapsible ?? (section.items.length > 0);
-                const isExpanded = expandedSections[sectionIndex] ?? (section.defaultExpanded ?? true);
+                const isCollapsible = section.collapsible ?? section.items.length > 0;
+                const isExpanded =
+                  expandedSections[sectionIndex] ?? section.defaultExpanded ?? true;
 
                 return (
                   <div key={sectionIndex} className="flex flex-col gap-2 w-full">
@@ -244,9 +259,17 @@ export function FloatingCard({
                       >
                         <div className="flex items-center gap-1">
                           {isExpanded ? (
-                            <IconChevronDown size={12} stroke={1} className="text-[var(--color-text-muted)] group-hover:text-[var(--color-text-default)] transition-colors" />
+                            <IconChevronDown
+                              size={12}
+                              stroke={1}
+                              className="text-[var(--color-text-muted)] group-hover:text-[var(--color-text-default)] transition-colors"
+                            />
                           ) : (
-                            <IconChevronRight size={12} stroke={1} className="text-[var(--color-text-muted)] group-hover:text-[var(--color-text-default)] transition-colors" />
+                            <IconChevronRight
+                              size={12}
+                              stroke={1}
+                              className="text-[var(--color-text-muted)] group-hover:text-[var(--color-text-default)] transition-colors"
+                            />
                           )}
                           <span className="font-medium text-[length:var(--font-size-12)] leading-[var(--line-height-18)] text-[var(--color-text-default)]">
                             {section.tabTitle}
@@ -270,7 +293,7 @@ export function FloatingCard({
                         )}
                       </div>
                     )}
-                    
+
                     {/* Section Items (하위 섹션 타이틀) - Only show when expanded */}
                     {isCollapsible && isExpanded && section.items.length > 0 && (
                       <div className="flex flex-col gap-1 pl-4 w-full">
@@ -299,11 +322,14 @@ export function FloatingCard({
 
         {/* Quota Section - Fixed with white background, separated area */}
         {quota.length > 0 && (
-          <div className="shrink-0 m-4 rounded-md" style={{
-            padding: '16px',
-            border: '1px solid var(--color-border-default, #E2E8F0)',
-            background: 'var(--color-surface-default, #FFF)',
-          }}>
+          <div
+            className="shrink-0 m-4 rounded-md"
+            style={{
+              padding: '16px',
+              border: '1px solid var(--color-border-default, #E2E8F0)',
+              background: 'var(--color-surface-default, #FFF)',
+            }}
+          >
             <div className="flex flex-col items-start gap-3 w-full">
               <h3 className="font-medium text-[length:var(--font-size-12)] leading-[var(--line-height-18)] text-[var(--color-text-default)]">
                 Quota
@@ -316,11 +342,12 @@ export function FloatingCard({
                         {item.label}
                       </span>
                       <span className="text-[length:var(--font-size-12)] leading-[var(--line-height-18)] text-[var(--color-text-muted)]">
-                        {item.current}/{item.total}{item.unit ? ` ${item.unit}` : ''}
+                        {item.current}/{item.total}
+                        {item.unit ? ` ${item.unit}` : ''}
                       </span>
                     </div>
-                    <ProgressBar 
-                      value={item.current} 
+                    <ProgressBar
+                      value={item.current}
                       max={item.total}
                       variant="default"
                       showValue={false}
@@ -352,12 +379,7 @@ export function FloatingCard({
         {(onCancel || onAction) && (
           <div className="px-6 pb-6 pt-4 flex flex-row gap-2 shrink-0 bg-[var(--color-surface-default)]">
             {onCancel && (
-              <Button
-                variant="secondary"
-                size="md"
-                onClick={onCancel}
-                className="flex-[0.3]"
-              >
+              <Button variant="secondary" size="md" onClick={onCancel} className="flex-[0.3]">
                 {cancelLabel}
               </Button>
             )}

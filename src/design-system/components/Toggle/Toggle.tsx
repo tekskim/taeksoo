@@ -93,7 +93,7 @@ export const Toggle = forwardRef<HTMLInputElement, ToggleProps>(
                   : 'bg-[var(--toggle-checked-bg)]'
                 : disabled
                   ? 'bg-[var(--toggle-disabled-bg)]'
-                  : 'bg-[var(--toggle-bg)]',
+                  : 'bg-[var(--toggle-bg)]'
             )}
           >
             {/* Toggle thumb */}
@@ -104,11 +104,9 @@ export const Toggle = forwardRef<HTMLInputElement, ToggleProps>(
                 'rounded-full',
                 'transition-transform duration-[var(--duration-fast)]',
                 // Thumb color
-                disabled
-                  ? 'bg-[var(--toggle-thumb-disabled)]'
-                  : 'bg-[var(--toggle-thumb)]',
+                disabled ? 'bg-[var(--toggle-thumb-disabled)]' : 'bg-[var(--toggle-thumb)]',
                 // Position based on state
-                isChecked && 'translate-x-[var(--toggle-thumb-translate)]',
+                isChecked && 'translate-x-[var(--toggle-thumb-translate)]'
               )}
             />
           </span>
@@ -143,8 +141,3 @@ export const Toggle = forwardRef<HTMLInputElement, ToggleProps>(
 );
 
 Toggle.displayName = 'Toggle';
-
-
-
-
-

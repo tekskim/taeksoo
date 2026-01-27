@@ -36,16 +36,12 @@ type SectionState = 'pre' | 'active' | 'done' | 'writing';
 // Section labels for display
 const SECTION_LABELS: Record<SectionStep, string> = {
   'basic-info': 'Basic Information',
-  'data': 'Container Resource Limit',
+  data: 'Container Resource Limit',
   'labels-annotations': 'Labels & Annotations',
 };
 
 // Section order for navigation
-const SECTION_ORDER: SectionStep[] = [
-  'basic-info',
-  'data',
-  'labels-annotations',
-];
+const SECTION_ORDER: SectionStep[] = ['basic-info', 'data', 'labels-annotations'];
 
 // Namespace options
 const NAMESPACE_OPTIONS = [
@@ -143,7 +139,12 @@ interface SummarySidebarProps {
   isCreateDisabled: boolean;
 }
 
-function SummarySidebar({ sectionStatus, onCancel, onCreate, isCreateDisabled }: SummarySidebarProps) {
+function SummarySidebar({
+  sectionStatus,
+  onCancel,
+  onCreate,
+  isCreateDisabled,
+}: SummarySidebarProps) {
   // Map SectionState to WizardSectionState
   const mapState = (state: SectionState): WizardSectionState => {
     if (state === 'pre') return 'pending';
@@ -162,14 +163,14 @@ function SummarySidebar({ sectionStatus, onCancel, onCreate, isCreateDisabled }:
     <div className="w-[var(--wizard-summary-width)] shrink-0 sticky top-4 self-start">
       <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg p-4 flex flex-col gap-6">
         <WizardSummary items={summaryItems} />
-        
+
         {/* Action Buttons */}
         <HStack gap={2}>
           <Button variant="secondary" onClick={onCancel} className="w-[80px]">
             Cancel
           </Button>
-          <Button 
-            variant="primary" 
+          <Button
+            variant="primary"
             onClick={onCreate}
             disabled={isCreateDisabled}
             className="flex-1"
@@ -373,98 +374,98 @@ function ContainerResourceLimitSection({
         <VStack gap={3}>
           {/* Resource Limit Grid */}
           <div className="grid grid-cols-2 gap-4 w-full">
-              {/* CPU Reservation */}
-              <VStack gap={2}>
-                <VStack gap={1}>
-                  <span className="text-[11px] font-medium text-[var(--color-text-default)] leading-[16.5px]">
-                    CPU Reservation
-                  </span>
-                  <span className="text-[12px] text-[var(--color-text-subtle)] leading-[16px]">
-                    Specify the minimum CPU amount reserved for the container.
-                  </span>
-                </VStack>
-                <div className="relative w-full">
-                  <Input
-                    placeholder="1000"
-                    value={resourceLimit.cpuReservation}
-                    onChange={(e) => updateField('cpuReservation', e.target.value)}
-                    fullWidth
-                  />
-                  <span className="absolute right-3 top-1/2 -translate-y-1/2 text-[12px] text-[var(--color-text-default)]">
-                    mCPUs
-                  </span>
-                </div>
+            {/* CPU Reservation */}
+            <VStack gap={2}>
+              <VStack gap={1}>
+                <span className="text-[11px] font-medium text-[var(--color-text-default)] leading-[16.5px]">
+                  CPU Reservation
+                </span>
+                <span className="text-[12px] text-[var(--color-text-subtle)] leading-[16px]">
+                  Specify the minimum CPU amount reserved for the container.
+                </span>
               </VStack>
+              <div className="relative w-full">
+                <Input
+                  placeholder="1000"
+                  value={resourceLimit.cpuReservation}
+                  onChange={(e) => updateField('cpuReservation', e.target.value)}
+                  fullWidth
+                />
+                <span className="absolute right-3 top-1/2 -translate-y-1/2 text-[12px] text-[var(--color-text-default)]">
+                  mCPUs
+                </span>
+              </div>
+            </VStack>
 
-              {/* CPU Limit */}
-              <VStack gap={2}>
-                <VStack gap={1}>
-                  <span className="text-[11px] font-medium text-[var(--color-text-default)] leading-[16.5px]">
-                    CPU Limit
-                  </span>
-                  <span className="text-[12px] text-[var(--color-text-subtle)] leading-[16px]">
-                    Specify the maximum CPU amount the container is allowed to use.
-                  </span>
-                </VStack>
-                <div className="relative w-full">
-                  <Input
-                    placeholder="1000"
-                    value={resourceLimit.cpuLimit}
-                    onChange={(e) => updateField('cpuLimit', e.target.value)}
-                    fullWidth
-                  />
-                  <span className="absolute right-3 top-1/2 -translate-y-1/2 text-[12px] text-[var(--color-text-default)]">
-                    mCPUs
-                  </span>
-                </div>
+            {/* CPU Limit */}
+            <VStack gap={2}>
+              <VStack gap={1}>
+                <span className="text-[11px] font-medium text-[var(--color-text-default)] leading-[16.5px]">
+                  CPU Limit
+                </span>
+                <span className="text-[12px] text-[var(--color-text-subtle)] leading-[16px]">
+                  Specify the maximum CPU amount the container is allowed to use.
+                </span>
               </VStack>
+              <div className="relative w-full">
+                <Input
+                  placeholder="1000"
+                  value={resourceLimit.cpuLimit}
+                  onChange={(e) => updateField('cpuLimit', e.target.value)}
+                  fullWidth
+                />
+                <span className="absolute right-3 top-1/2 -translate-y-1/2 text-[12px] text-[var(--color-text-default)]">
+                  mCPUs
+                </span>
+              </div>
+            </VStack>
 
-              {/* Memory Reservation */}
-              <VStack gap={2}>
-                <VStack gap={1}>
-                  <span className="text-[11px] font-medium text-[var(--color-text-default)] leading-[16.5px]">
-                    Memory Reservation
-                  </span>
-                  <span className="text-[12px] text-[var(--color-text-subtle)] leading-[16px]">
-                    Specify the minimum memory capacity reserved for the container.
-                  </span>
-                </VStack>
-                <div className="relative w-full">
-                  <Input
-                    placeholder="128"
-                    value={resourceLimit.memoryReservation}
-                    onChange={(e) => updateField('memoryReservation', e.target.value)}
-                    fullWidth
-                  />
-                  <span className="absolute right-3 top-1/2 -translate-y-1/2 text-[12px] text-[var(--color-text-default)]">
-                    GiB
-                  </span>
-                </div>
+            {/* Memory Reservation */}
+            <VStack gap={2}>
+              <VStack gap={1}>
+                <span className="text-[11px] font-medium text-[var(--color-text-default)] leading-[16.5px]">
+                  Memory Reservation
+                </span>
+                <span className="text-[12px] text-[var(--color-text-subtle)] leading-[16px]">
+                  Specify the minimum memory capacity reserved for the container.
+                </span>
               </VStack>
+              <div className="relative w-full">
+                <Input
+                  placeholder="128"
+                  value={resourceLimit.memoryReservation}
+                  onChange={(e) => updateField('memoryReservation', e.target.value)}
+                  fullWidth
+                />
+                <span className="absolute right-3 top-1/2 -translate-y-1/2 text-[12px] text-[var(--color-text-default)]">
+                  GiB
+                </span>
+              </div>
+            </VStack>
 
-              {/* Memory Limit */}
-              <VStack gap={2}>
-                <VStack gap={1}>
-                  <span className="text-[11px] font-medium text-[var(--color-text-default)] leading-[16.5px]">
-                    Memory Limit
-                  </span>
-                  <span className="text-[12px] text-[var(--color-text-subtle)] leading-[16px]">
-                    Specify the maximum memory capacity the container is allowed to use.
-                  </span>
-                </VStack>
-                <div className="relative w-full">
-                  <Input
-                    placeholder="128"
-                    value={resourceLimit.memoryLimit}
-                    onChange={(e) => updateField('memoryLimit', e.target.value)}
-                    fullWidth
-                  />
-                  <span className="absolute right-3 top-1/2 -translate-y-1/2 text-[12px] text-[var(--color-text-default)]">
-                    GiB
-                  </span>
-                </div>
+            {/* Memory Limit */}
+            <VStack gap={2}>
+              <VStack gap={1}>
+                <span className="text-[11px] font-medium text-[var(--color-text-default)] leading-[16.5px]">
+                  Memory Limit
+                </span>
+                <span className="text-[12px] text-[var(--color-text-subtle)] leading-[16px]">
+                  Specify the maximum memory capacity the container is allowed to use.
+                </span>
               </VStack>
-            </div>
+              <div className="relative w-full">
+                <Input
+                  placeholder="128"
+                  value={resourceLimit.memoryLimit}
+                  onChange={(e) => updateField('memoryLimit', e.target.value)}
+                  fullWidth
+                />
+                <span className="absolute right-3 top-1/2 -translate-y-1/2 text-[12px] text-[var(--color-text-default)]">
+                  GiB
+                </span>
+              </div>
+            </VStack>
+          </div>
 
           {/* Next Button */}
           {!isEditing && (
@@ -543,7 +544,7 @@ function LabelsAnnotationsSection({
                 Specify the labels used to identify and categorize the resource.
               </p>
             </VStack>
-            
+
             {labels.map((label, index) => (
               <HStack gap={2} key={index} className="w-full">
                 <Input
@@ -587,7 +588,7 @@ function LabelsAnnotationsSection({
                 Specify the annotations used to provide additional metadata for the resource.
               </p>
             </VStack>
-            
+
             {annotations.map((annotation, index) => (
               <HStack gap={2} key={index} className="w-full">
                 <Input
@@ -663,7 +664,7 @@ export function CreateLimitRangePage() {
   // Section states
   const [sectionStatus, setSectionStatus] = useState<Record<SectionStep, SectionState>>({
     'basic-info': 'active',
-    'data': 'pre',
+    data: 'pre',
     'labels-annotations': 'pre',
   });
 
@@ -674,7 +675,8 @@ export function CreateLimitRangePage() {
   const [limitRangeNameError, setLimitRangeNameError] = useState<string | null>(null);
 
   // Tab management
-  const { tabs, activeTabId, closeTab, selectTab, updateActiveTabLabel, moveTab, addNewTab } = useTabs();
+  const { tabs, activeTabId, closeTab, selectTab, updateActiveTabLabel, moveTab, addNewTab } =
+    useTabs();
 
   // Update tab label
   useEffect(() => {
@@ -820,45 +822,49 @@ export function CreateLimitRangePage() {
       annotations,
     });
     navigate('/container/limit-ranges');
-  }, [
-    limitRangeName,
-    namespace,
-    description,
-    resourceLimit,
-    labels,
-    annotations,
-    navigate,
-  ]);
+  }, [limitRangeName, namespace, description, resourceLimit, labels, annotations, navigate]);
 
   // Label management
   const addLabel = useCallback(() => {
     setLabels([...labels, { key: '', value: '' }]);
   }, [labels]);
 
-  const removeLabel = useCallback((index: number) => {
-    setLabels(labels.filter((_, i) => i !== index));
-  }, [labels]);
+  const removeLabel = useCallback(
+    (index: number) => {
+      setLabels(labels.filter((_, i) => i !== index));
+    },
+    [labels]
+  );
 
-  const updateLabel = useCallback((index: number, field: 'key' | 'value', value: string) => {
-    const newLabels = [...labels];
-    newLabels[index][field] = value;
-    setLabels(newLabels);
-  }, [labels]);
+  const updateLabel = useCallback(
+    (index: number, field: 'key' | 'value', value: string) => {
+      const newLabels = [...labels];
+      newLabels[index][field] = value;
+      setLabels(newLabels);
+    },
+    [labels]
+  );
 
   // Annotation management
   const addAnnotation = useCallback(() => {
     setAnnotations([...annotations, { key: '', value: '' }]);
   }, [annotations]);
 
-  const removeAnnotation = useCallback((index: number) => {
-    setAnnotations(annotations.filter((_, i) => i !== index));
-  }, [annotations]);
+  const removeAnnotation = useCallback(
+    (index: number) => {
+      setAnnotations(annotations.filter((_, i) => i !== index));
+    },
+    [annotations]
+  );
 
-  const updateAnnotation = useCallback((index: number, field: 'key' | 'value', value: string) => {
-    const newAnnotations = [...annotations];
-    newAnnotations[index][field] = value;
-    setAnnotations(newAnnotations);
-  }, [annotations]);
+  const updateAnnotation = useCallback(
+    (index: number, field: 'key' | 'value', value: string) => {
+      const newAnnotations = [...annotations];
+      newAnnotations[index][field] = value;
+      setAnnotations(newAnnotations);
+    },
+    [annotations]
+  );
 
   // Check if create button should be disabled
   const isCreateDisabled = !limitRangeName.trim();
@@ -974,16 +980,18 @@ export function CreateLimitRangePage() {
                       title={SECTION_LABELS['basic-info']}
                       onEdit={() => handleEdit('basic-info')}
                     >
-                      <SectionCard.DataRow label="Namespace" value={namespace || '-'} showDivider={false} />
+                      <SectionCard.DataRow
+                        label="Namespace"
+                        value={namespace || '-'}
+                        showDivider={false}
+                      />
                       <SectionCard.DataRow label="Limit Range Name" value={limitRangeName} />
                       <SectionCard.DataRow label="Description" value={description || '-'} />
                     </DoneSection>
                   )}
 
                   {/* Data Section */}
-                  {sectionStatus['data'] === 'pre' && (
-                    <PreSection title={SECTION_LABELS['data']} />
-                  )}
+                  {sectionStatus['data'] === 'pre' && <PreSection title={SECTION_LABELS['data']} />}
                   {sectionStatus['data'] === 'writing' && (
                     <WritingSection title={SECTION_LABELS['data']} />
                   )}
@@ -998,14 +1006,32 @@ export function CreateLimitRangePage() {
                     />
                   )}
                   {sectionStatus['data'] === 'done' && (
-                    <DoneSection
-                      title={SECTION_LABELS['data']}
-                      onEdit={() => handleEdit('data')}
-                    >
-                      <SectionCard.DataRow label="CPU Reservation" value={resourceLimit.cpuReservation ? `${resourceLimit.cpuReservation} mCPUs` : '-'} />
-                      <SectionCard.DataRow label="CPU Limit" value={resourceLimit.cpuLimit ? `${resourceLimit.cpuLimit} mCPUs` : '-'} />
-                      <SectionCard.DataRow label="Memory Reservation" value={resourceLimit.memoryReservation ? `${resourceLimit.memoryReservation} GiB` : '-'} />
-                      <SectionCard.DataRow label="Memory Limit" value={resourceLimit.memoryLimit ? `${resourceLimit.memoryLimit} GiB` : '-'} showDivider={false} />
+                    <DoneSection title={SECTION_LABELS['data']} onEdit={() => handleEdit('data')}>
+                      <SectionCard.DataRow
+                        label="CPU Reservation"
+                        value={
+                          resourceLimit.cpuReservation
+                            ? `${resourceLimit.cpuReservation} mCPUs`
+                            : '-'
+                        }
+                      />
+                      <SectionCard.DataRow
+                        label="CPU Limit"
+                        value={resourceLimit.cpuLimit ? `${resourceLimit.cpuLimit} mCPUs` : '-'}
+                      />
+                      <SectionCard.DataRow
+                        label="Memory Reservation"
+                        value={
+                          resourceLimit.memoryReservation
+                            ? `${resourceLimit.memoryReservation} GiB`
+                            : '-'
+                        }
+                      />
+                      <SectionCard.DataRow
+                        label="Memory Limit"
+                        value={resourceLimit.memoryLimit ? `${resourceLimit.memoryLimit} GiB` : '-'}
+                        showDivider={false}
+                      />
                     </DoneSection>
                   )}
 
@@ -1037,7 +1063,11 @@ export function CreateLimitRangePage() {
                       title={SECTION_LABELS['labels-annotations']}
                       onEdit={() => handleEdit('labels-annotations')}
                     >
-                      <SectionCard.DataRow label="Labels" value={getLabelsDisplay()} showDivider={false} />
+                      <SectionCard.DataRow
+                        label="Labels"
+                        value={getLabelsDisplay()}
+                        showDivider={false}
+                      />
                       <SectionCard.DataRow label="Annotations" value={getAnnotationsDisplay()} />
                     </DoneSection>
                   )}

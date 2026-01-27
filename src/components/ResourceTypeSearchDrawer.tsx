@@ -36,9 +36,7 @@ const defaultCategories: ResourceCategory[] = [
     id: 'cluster-management',
     name: 'Cluster Management',
     expanded: true,
-    items: [
-      { id: 'clusters', name: 'Clusters', count: 1 },
-    ],
+    items: [{ id: 'clusters', name: 'Clusters', count: 1 }],
   },
   {
     id: 'cluster',
@@ -131,8 +129,7 @@ export function ResourceTypeSearchDrawer({
         ...category,
         items: category.items.filter(
           (item) =>
-            item.name.toLowerCase().includes(query) ||
-            category.name.toLowerCase().includes(query)
+            item.name.toLowerCase().includes(query) || category.name.toLowerCase().includes(query)
         ),
       }))
       .filter((category) => category.items.length > 0);
@@ -193,9 +190,15 @@ export function ResourceTypeSearchDrawer({
                   className="flex items-center gap-2 w-full h-[34px] px-3 hover:bg-[var(--color-surface-subtle)] transition-colors"
                 >
                   {isExpanded ? (
-                    <IconChevronDown size={14} className="text-[var(--color-text-subtle)] shrink-0" />
+                    <IconChevronDown
+                      size={14}
+                      className="text-[var(--color-text-subtle)] shrink-0"
+                    />
                   ) : (
-                    <IconChevronRight size={14} className="text-[var(--color-text-subtle)] shrink-0" />
+                    <IconChevronRight
+                      size={14}
+                      className="text-[var(--color-text-subtle)] shrink-0"
+                    />
                   )}
                   <span className="text-[12px] text-[var(--color-text-default)]">
                     {category.name}
@@ -219,9 +222,7 @@ export function ResourceTypeSearchDrawer({
                               : 'hover:bg-[var(--color-surface-subtle)]'
                           }`}
                         >
-                          <span className="text-[12px] truncate">
-                            {item.name}
-                          </span>
+                          <span className="text-[12px] truncate">{item.name}</span>
                           <span
                             className={`text-[12px] shrink-0 ml-2 ${
                               isSelected ? 'text-white' : 'text-[var(--color-text-subtle)]'

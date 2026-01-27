@@ -1,7 +1,7 @@
 import { useState } from 'react';
-import { 
-  Drawer, 
-  Button, 
+import {
+  Drawer,
+  Button,
   SearchInput,
   Pagination,
   Radio,
@@ -72,11 +72,47 @@ export interface AssociateFloatingIPDrawerProps {
    ---------------------------------------- */
 
 const mockInstances: InstanceItem[] = [
-  { id: '45ghj567', name: 'server-2', status: 'error', locked: true, fixedIp: '10.62.0.30', network: 'net-01', hasAlert: true },
-  { id: '45ghj568', name: 'server-2', status: 'active', locked: true, fixedIp: '10.62.0.30', network: 'net-01' },
-  { id: '45ghj569', name: 'server-2', status: 'active', locked: true, fixedIp: '10.62.0.30', network: 'net-01' },
-  { id: '45ghj570', name: 'server-2', status: 'active', locked: true, fixedIp: '10.62.0.30', network: 'net-01' },
-  { id: '45ghj571', name: 'server-2', status: 'active', locked: true, fixedIp: '10.62.0.30', network: 'net-01' },
+  {
+    id: '45ghj567',
+    name: 'server-2',
+    status: 'error',
+    locked: true,
+    fixedIp: '10.62.0.30',
+    network: 'net-01',
+    hasAlert: true,
+  },
+  {
+    id: '45ghj568',
+    name: 'server-2',
+    status: 'active',
+    locked: true,
+    fixedIp: '10.62.0.30',
+    network: 'net-01',
+  },
+  {
+    id: '45ghj569',
+    name: 'server-2',
+    status: 'active',
+    locked: true,
+    fixedIp: '10.62.0.30',
+    network: 'net-01',
+  },
+  {
+    id: '45ghj570',
+    name: 'server-2',
+    status: 'active',
+    locked: true,
+    fixedIp: '10.62.0.30',
+    network: 'net-01',
+  },
+  {
+    id: '45ghj571',
+    name: 'server-2',
+    status: 'active',
+    locked: true,
+    fixedIp: '10.62.0.30',
+    network: 'net-01',
+  },
 ];
 
 const mockFixedIPs: FixedIPItem[] = [
@@ -126,7 +162,9 @@ export function AssociateFloatingIPDrawer({
   onSubmit,
 }: AssociateFloatingIPDrawerProps) {
   // Tab state
-  const [activeTab, setActiveTab] = useState<'instance' | 'loadBalancer' | 'virtualAdapter'>('instance');
+  const [activeTab, setActiveTab] = useState<'instance' | 'loadBalancer' | 'virtualAdapter'>(
+    'instance'
+  );
 
   // Selection states
   const [selectedInstanceId, setSelectedInstanceId] = useState<string | null>(null);
@@ -141,22 +179,34 @@ export function AssociateFloatingIPDrawer({
   const [fixedIPSearch, setFixedIPSearch] = useState('');
 
   // Sorting states
-  const [instanceSort, setInstanceSort] = useState<{ column: string; direction: 'asc' | 'desc' }>({ column: 'name', direction: 'asc' });
-  const [loadBalancerSort, setLoadBalancerSort] = useState<{ column: string; direction: 'asc' | 'desc' }>({ column: 'name', direction: 'asc' });
-  const [virtualAdapterSort, setVirtualAdapterSort] = useState<{ column: string; direction: 'asc' | 'desc' }>({ column: 'name', direction: 'asc' });
-  const [fixedIPSort, setFixedIPSort] = useState<{ column: string; direction: 'asc' | 'desc' }>({ column: 'fixedIp', direction: 'asc' });
+  const [instanceSort, setInstanceSort] = useState<{ column: string; direction: 'asc' | 'desc' }>({
+    column: 'name',
+    direction: 'asc',
+  });
+  const [loadBalancerSort, setLoadBalancerSort] = useState<{
+    column: string;
+    direction: 'asc' | 'desc';
+  }>({ column: 'name', direction: 'asc' });
+  const [virtualAdapterSort, setVirtualAdapterSort] = useState<{
+    column: string;
+    direction: 'asc' | 'desc';
+  }>({ column: 'name', direction: 'asc' });
+  const [fixedIPSort, setFixedIPSort] = useState<{ column: string; direction: 'asc' | 'desc' }>({
+    column: 'fixedIp',
+    direction: 'asc',
+  });
 
   // Reset state function
   const resetState = () => {
-      setSelectedInstanceId(null);
-      setSelectedLoadBalancerId(null);
-      setSelectedVirtualAdapterId(null);
-      setSelectedFixedIPId(null);
-      setInstanceSearch('');
-      setLoadBalancerSearch('');
-      setVirtualAdapterSearch('');
-      setFixedIPSearch('');
-      setActiveTab('instance');
+    setSelectedInstanceId(null);
+    setSelectedLoadBalancerId(null);
+    setSelectedVirtualAdapterId(null);
+    setSelectedFixedIPId(null);
+    setInstanceSearch('');
+    setLoadBalancerSearch('');
+    setVirtualAdapterSearch('');
+    setFixedIPSearch('');
+    setActiveTab('instance');
   };
 
   // Handle close with reset
@@ -166,37 +216,38 @@ export function AssociateFloatingIPDrawer({
   };
 
   // Get selected items
-  const selectedInstance = instances.find(i => i.id === selectedInstanceId);
-  const selectedLoadBalancer = loadBalancers.find(lb => lb.id === selectedLoadBalancerId);
-  const selectedVirtualAdapter = virtualAdapters.find(va => va.id === selectedVirtualAdapterId);
-  const selectedFixedIP = activeTab === 'virtualAdapter' 
-    ? mockVirtualAdapterFixedIPs.find(f => f.id === selectedFixedIPId)
-    : fixedIPs.find(f => f.id === selectedFixedIPId);
+  const selectedInstance = instances.find((i) => i.id === selectedInstanceId);
+  const selectedLoadBalancer = loadBalancers.find((lb) => lb.id === selectedLoadBalancerId);
+  const selectedVirtualAdapter = virtualAdapters.find((va) => va.id === selectedVirtualAdapterId);
+  const selectedFixedIP =
+    activeTab === 'virtualAdapter'
+      ? mockVirtualAdapterFixedIPs.find((f) => f.id === selectedFixedIPId)
+      : fixedIPs.find((f) => f.id === selectedFixedIPId);
 
   // Sort helpers
   const handleInstanceSort = (column: string) => {
-    setInstanceSort(prev => ({
+    setInstanceSort((prev) => ({
       column,
       direction: prev.column === column && prev.direction === 'asc' ? 'desc' : 'asc',
     }));
   };
 
   const handleLoadBalancerSort = (column: string) => {
-    setLoadBalancerSort(prev => ({
+    setLoadBalancerSort((prev) => ({
       column,
       direction: prev.column === column && prev.direction === 'asc' ? 'desc' : 'asc',
     }));
   };
 
   const handleVirtualAdapterSort = (column: string) => {
-    setVirtualAdapterSort(prev => ({
+    setVirtualAdapterSort((prev) => ({
       column,
       direction: prev.column === column && prev.direction === 'asc' ? 'desc' : 'asc',
     }));
   };
 
   const handleFixedIPSort = (column: string) => {
-    setFixedIPSort(prev => ({
+    setFixedIPSort((prev) => ({
       column,
       direction: prev.column === column && prev.direction === 'asc' ? 'desc' : 'asc',
     }));
@@ -204,9 +255,10 @@ export function AssociateFloatingIPDrawer({
 
   // Filter and sort instances
   const filteredInstances = instances
-    .filter(instance => 
-      instance.name.toLowerCase().includes(instanceSearch.toLowerCase()) ||
-      instance.id.toLowerCase().includes(instanceSearch.toLowerCase())
+    .filter(
+      (instance) =>
+        instance.name.toLowerCase().includes(instanceSearch.toLowerCase()) ||
+        instance.id.toLowerCase().includes(instanceSearch.toLowerCase())
     )
     .sort((a, b) => {
       const aValue = a[instanceSort.column as keyof InstanceItem];
@@ -217,9 +269,10 @@ export function AssociateFloatingIPDrawer({
 
   // Filter and sort load balancers
   const filteredLoadBalancers = loadBalancers
-    .filter(lb => 
-      lb.name.toLowerCase().includes(loadBalancerSearch.toLowerCase()) ||
-      lb.id.toLowerCase().includes(loadBalancerSearch.toLowerCase())
+    .filter(
+      (lb) =>
+        lb.name.toLowerCase().includes(loadBalancerSearch.toLowerCase()) ||
+        lb.id.toLowerCase().includes(loadBalancerSearch.toLowerCase())
     )
     .sort((a, b) => {
       const aValue = a[loadBalancerSort.column as keyof LoadBalancerItem];
@@ -230,9 +283,10 @@ export function AssociateFloatingIPDrawer({
 
   // Filter and sort virtual adapters
   const filteredVirtualAdapters = virtualAdapters
-    .filter(va => 
-      va.name.toLowerCase().includes(virtualAdapterSearch.toLowerCase()) ||
-      va.id.toLowerCase().includes(virtualAdapterSearch.toLowerCase())
+    .filter(
+      (va) =>
+        va.name.toLowerCase().includes(virtualAdapterSearch.toLowerCase()) ||
+        va.id.toLowerCase().includes(virtualAdapterSearch.toLowerCase())
     )
     .sort((a, b) => {
       const aValue = a[virtualAdapterSort.column as keyof VirtualAdapterItem];
@@ -243,9 +297,10 @@ export function AssociateFloatingIPDrawer({
 
   // Filter and sort fixed IPs
   const filteredFixedIPs = fixedIPs
-    .filter(fip => 
-      fip.fixedIp.toLowerCase().includes(fixedIPSearch.toLowerCase()) ||
-      fip.macAddress.toLowerCase().includes(fixedIPSearch.toLowerCase())
+    .filter(
+      (fip) =>
+        fip.fixedIp.toLowerCase().includes(fixedIPSearch.toLowerCase()) ||
+        fip.macAddress.toLowerCase().includes(fixedIPSearch.toLowerCase())
     )
     .sort((a, b) => {
       const aValue = a[fixedIPSort.column as keyof FixedIPItem];
@@ -276,18 +331,20 @@ export function AssociateFloatingIPDrawer({
   };
 
   // Render sort icon
-  const renderSortIcon = (column: string, sortState: { column: string; direction: 'asc' | 'desc' }) => (
-    <IconChevronDown 
-      size={12} 
+  const renderSortIcon = (
+    column: string,
+    sortState: { column: string; direction: 'asc' | 'desc' }
+  ) => (
+    <IconChevronDown
+      size={12}
       className={`transition-transform ${sortState.column === column && sortState.direction === 'desc' ? 'rotate-180' : ''}`}
     />
   );
 
-
   return (
-    <Drawer 
-      isOpen={isOpen} 
-      onClose={handleClose} 
+    <Drawer
+      isOpen={isOpen}
+      onClose={handleClose}
       title="Associate Floating IP"
       width={696}
       footer={
@@ -295,8 +352,8 @@ export function AssociateFloatingIPDrawer({
           <Button variant="secondary" onClick={handleClose} className="w-[152px] h-8">
             Cancel
           </Button>
-          <Button 
-            variant="primary" 
+          <Button
+            variant="primary"
             onClick={handleSubmit}
             disabled={!getSelectedResourceId()}
             className="w-[152px] h-8"
@@ -310,8 +367,12 @@ export function AssociateFloatingIPDrawer({
         {/* Floating IP Info */}
         <VStack gap={3}>
           <div className="bg-[var(--color-surface-subtle)] px-4 py-3 rounded-lg w-full">
-            <p className="text-[11px] text-[var(--color-text-subtle)] leading-4 mb-1.5">Floating IP</p>
-            <p className="text-[12px] text-[var(--color-text-default)] leading-4">{floatingIP.address}</p>
+            <p className="text-[11px] text-[var(--color-text-subtle)] leading-4 mb-1.5">
+              Floating IP
+            </p>
+            <p className="text-[12px] text-[var(--color-text-default)] leading-4">
+              {floatingIP.address}
+            </p>
           </div>
         </VStack>
 
@@ -354,12 +415,7 @@ export function AssociateFloatingIPDrawer({
               </div>
 
               {/* Pagination */}
-              <Pagination
-                currentPage={1}
-                totalPages={5}
-                totalItems={115}
-                onPageChange={() => {}}
-              />
+              <Pagination currentPage={1} totalPages={5} totalItems={115} onPageChange={() => {}} />
 
               {/* Table */}
               <div className="flex flex-col gap-[var(--table-row-gap)] w-full">
@@ -367,29 +423,39 @@ export function AssociateFloatingIPDrawer({
                 <div className="flex items-stretch min-h-[var(--table-row-height)] bg-[var(--table-header-bg)] border border-[var(--color-border-default)] rounded-[var(--table-row-radius)]">
                   <div className="w-[var(--table-checkbox-width)] flex items-center justify-center" />
                   <div className="w-[59px] px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] flex items-center justify-center border-l border-[var(--color-border-default)]">
-                    <span className="text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)]">Status</span>
+                    <span className="text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)]">
+                      Status
+                    </span>
                   </div>
-                  <div 
+                  <div
                     className="flex-1 px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] flex items-center gap-1.5 border-l border-[var(--color-border-default)] cursor-pointer hover:bg-[var(--color-surface-muted)]"
                     onClick={() => handleInstanceSort('name')}
                   >
-                    <span className="text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)]">Name</span>
+                    <span className="text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)]">
+                      Name
+                    </span>
                     {renderSortIcon('name', instanceSort)}
                   </div>
                   <div className="w-[62px] px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] flex items-center border-l border-[var(--color-border-default)]">
-                    <span className="text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)]">Locked</span>
+                    <span className="text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)]">
+                      Locked
+                    </span>
                   </div>
                   <div className="flex-1 px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] flex items-center border-l border-[var(--color-border-default)]">
-                    <span className="text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)]">Fixed IP</span>
+                    <span className="text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)]">
+                      Fixed IP
+                    </span>
                   </div>
                   <div className="flex-1 px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] flex items-center border-l border-[var(--color-border-default)]">
-                    <span className="text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)]">Network</span>
+                    <span className="text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)]">
+                      Network
+                    </span>
                   </div>
                 </div>
 
                 {/* Rows */}
                 {filteredInstances.map((instance) => (
-                  <div 
+                  <div
                     key={instance.id}
                     className={`flex items-stretch min-h-[var(--table-row-height)] bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--table-row-radius)] cursor-pointer hover:bg-[var(--table-row-hover-bg)] transition-all ${selectedInstanceId === instance.id ? 'border-[var(--color-action-primary)] bg-[var(--color-state-info-bg)]' : ''}`}
                     onClick={() => setSelectedInstanceId(instance.id)}
@@ -405,28 +471,43 @@ export function AssociateFloatingIPDrawer({
                     </div>
                     <div className="flex-1 px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] flex flex-col justify-center gap-0.5">
                       <HStack gap={1.5} align="center">
-                        <a 
-                          href="#" 
+                        <a
+                          href="#"
                           className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-action-primary)] hover:underline"
                           onClick={(e) => e.stopPropagation()}
                         >
                           {instance.name}
                         </a>
-                        <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
+                        <IconExternalLink
+                          size={12}
+                          className="text-[var(--color-action-primary)]"
+                        />
                         {instance.hasAlert && (
                           <IconAlertCircle size={16} className="text-[var(--color-state-danger)]" />
                         )}
                       </HStack>
-                      <span className="text-[11px] text-[var(--color-text-subtle)]">ID : {instance.id}</span>
+                      <span className="text-[11px] text-[var(--color-text-subtle)]">
+                        ID : {instance.id}
+                      </span>
                     </div>
                     <div className="w-[62px] flex items-center justify-center">
-                      {instance.locked && <IconLock size={16} stroke={1.5} className="text-[var(--color-text-default)]" />}
+                      {instance.locked && (
+                        <IconLock
+                          size={16}
+                          stroke={1.5}
+                          className="text-[var(--color-text-default)]"
+                        />
+                      )}
                     </div>
                     <div className="flex-1 px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] flex items-center">
-                      <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)]">{instance.fixedIp}</span>
+                      <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)]">
+                        {instance.fixedIp}
+                      </span>
                     </div>
                     <div className="flex-1 px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] flex items-center">
-                      <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)]">{instance.network}</span>
+                      <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)]">
+                        {instance.network}
+                      </span>
                     </div>
                   </div>
                 ))}
@@ -434,7 +515,11 @@ export function AssociateFloatingIPDrawer({
 
               {/* Selection Indicator */}
               <SelectionIndicator
-                selectedItems={selectedInstance ? [{ id: selectedInstance.id, label: selectedInstance.name }] : []}
+                selectedItems={
+                  selectedInstance
+                    ? [{ id: selectedInstance.id, label: selectedInstance.name }]
+                    : []
+                }
                 onRemove={() => setSelectedInstanceId(null)}
                 emptyText="No item Selected"
               />
@@ -455,12 +540,7 @@ export function AssociateFloatingIPDrawer({
               </div>
 
               {/* Pagination */}
-              <Pagination
-                currentPage={1}
-                totalPages={5}
-                totalItems={115}
-                onPageChange={() => {}}
-              />
+              <Pagination currentPage={1} totalPages={5} totalItems={115} onPageChange={() => {}} />
 
               {/* Table */}
               <div className="flex flex-col gap-[var(--table-row-gap)] w-full">
@@ -468,27 +548,33 @@ export function AssociateFloatingIPDrawer({
                 <div className="flex items-stretch min-h-[var(--table-row-height)] bg-[var(--table-header-bg)] border border-[var(--color-border-default)] rounded-[var(--table-row-radius)]">
                   <div className="w-[var(--table-checkbox-width)] flex items-center justify-center" />
                   <div className="w-[59px] px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] flex items-center justify-center border-l border-[var(--color-border-default)]">
-                    <span className="text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)]">Status</span>
+                    <span className="text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)]">
+                      Status
+                    </span>
                   </div>
-                  <div 
+                  <div
                     className="flex-1 px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] flex items-center gap-1.5 border-l border-[var(--color-border-default)] cursor-pointer hover:bg-[var(--color-surface-muted)]"
                     onClick={() => handleLoadBalancerSort('name')}
                   >
-                    <span className="text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)]">Name</span>
+                    <span className="text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)]">
+                      Name
+                    </span>
                     {renderSortIcon('name', loadBalancerSort)}
                   </div>
-                  <div 
+                  <div
                     className="flex-1 px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] flex items-center gap-1.5 border-l border-[var(--color-border-default)] cursor-pointer hover:bg-[var(--color-surface-muted)]"
                     onClick={() => handleLoadBalancerSort('vipAddress')}
                   >
-                    <span className="text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)]">VIP Address</span>
+                    <span className="text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)]">
+                      VIP Address
+                    </span>
                     {renderSortIcon('vipAddress', loadBalancerSort)}
                   </div>
                 </div>
 
                 {/* Rows */}
                 {filteredLoadBalancers.map((lb) => (
-                  <div 
+                  <div
                     key={lb.id}
                     className={`flex items-stretch min-h-[var(--table-row-height)] bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--table-row-radius)] cursor-pointer hover:bg-[var(--table-row-hover-bg)] transition-all ${selectedLoadBalancerId === lb.id ? 'border-[var(--color-action-primary)] bg-[var(--color-state-info-bg)]' : ''}`}
                     onClick={() => setSelectedLoadBalancerId(lb.id)}
@@ -504,22 +590,29 @@ export function AssociateFloatingIPDrawer({
                     </div>
                     <div className="flex-1 px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] flex flex-col justify-center gap-0.5">
                       <HStack gap={1.5} align="center">
-                        <a 
-                          href="#" 
+                        <a
+                          href="#"
                           className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-action-primary)] hover:underline"
                           onClick={(e) => e.stopPropagation()}
                         >
                           {lb.name}
                         </a>
-                        <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
+                        <IconExternalLink
+                          size={12}
+                          className="text-[var(--color-action-primary)]"
+                        />
                         {lb.status === 'error' && (
                           <IconAlertCircle size={16} className="text-[var(--color-state-danger)]" />
                         )}
                       </HStack>
-                      <span className="text-[11px] text-[var(--color-text-subtle)]">ID : {lb.id}</span>
+                      <span className="text-[11px] text-[var(--color-text-subtle)]">
+                        ID : {lb.id}
+                      </span>
                     </div>
                     <div className="flex-1 px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] flex items-center">
-                      <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)]">{lb.vipAddress}</span>
+                      <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)]">
+                        {lb.vipAddress}
+                      </span>
                     </div>
                   </div>
                 ))}
@@ -527,7 +620,11 @@ export function AssociateFloatingIPDrawer({
 
               {/* Selection Indicator */}
               <SelectionIndicator
-                selectedItems={selectedLoadBalancer ? [{ id: selectedLoadBalancer.id, label: selectedLoadBalancer.name }] : []}
+                selectedItems={
+                  selectedLoadBalancer
+                    ? [{ id: selectedLoadBalancer.id, label: selectedLoadBalancer.name }]
+                    : []
+                }
                 onRemove={() => setSelectedLoadBalancerId(null)}
                 emptyText="No item Selected"
               />
@@ -548,12 +645,7 @@ export function AssociateFloatingIPDrawer({
               </div>
 
               {/* Pagination */}
-              <Pagination
-                currentPage={1}
-                totalPages={5}
-                totalItems={115}
-                onPageChange={() => {}}
-              />
+              <Pagination currentPage={1} totalPages={5} totalItems={115} onPageChange={() => {}} />
 
               {/* Table */}
               <div className="flex flex-col gap-[var(--table-row-gap)] w-full">
@@ -561,30 +653,38 @@ export function AssociateFloatingIPDrawer({
                 <div className="flex items-stretch min-h-[var(--table-row-height)] bg-[var(--table-header-bg)] border border-[var(--color-border-default)] rounded-[var(--table-row-radius)]">
                   <div className="w-[var(--table-checkbox-width)] flex items-center justify-center" />
                   <div className="w-[59px] px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] flex items-center justify-center border-l border-[var(--color-border-default)]">
-                    <span className="text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)]">Status</span>
+                    <span className="text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)]">
+                      Status
+                    </span>
                   </div>
-                  <div 
+                  <div
                     className="flex-1 px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] flex items-center gap-1.5 border-l border-[var(--color-border-default)] cursor-pointer hover:bg-[var(--color-surface-muted)]"
                     onClick={() => handleVirtualAdapterSort('name')}
                   >
-                    <span className="text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)]">Name</span>
+                    <span className="text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)]">
+                      Name
+                    </span>
                     {renderSortIcon('name', virtualAdapterSort)}
                   </div>
                   <div className="flex-1 px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] flex items-center border-l border-[var(--color-border-default)]">
-                    <span className="text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)]">Fixed IP</span>
+                    <span className="text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)]">
+                      Fixed IP
+                    </span>
                   </div>
-                  <div 
+                  <div
                     className="flex-1 px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] flex items-center gap-1.5 border-l border-[var(--color-border-default)] cursor-pointer hover:bg-[var(--color-surface-muted)]"
                     onClick={() => handleVirtualAdapterSort('description')}
                   >
-                    <span className="text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)]">Description</span>
+                    <span className="text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)]">
+                      Description
+                    </span>
                     {renderSortIcon('description', virtualAdapterSort)}
                   </div>
                 </div>
 
                 {/* Rows */}
                 {filteredVirtualAdapters.map((va) => (
-                  <div 
+                  <div
                     key={va.id}
                     className={`flex items-stretch min-h-[var(--table-row-height)] bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--table-row-radius)] cursor-pointer hover:bg-[var(--table-row-hover-bg)] transition-all ${selectedVirtualAdapterId === va.id ? 'border-[var(--color-action-primary)] bg-[var(--color-state-info-bg)]' : ''}`}
                     onClick={() => setSelectedVirtualAdapterId(va.id)}
@@ -600,22 +700,31 @@ export function AssociateFloatingIPDrawer({
                     </div>
                     <div className="flex-1 px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] flex flex-col justify-center gap-0.5">
                       <HStack gap={1.5} align="center">
-                        <a 
-                          href="#" 
+                        <a
+                          href="#"
                           className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-action-primary)] hover:underline"
                           onClick={(e) => e.stopPropagation()}
                         >
                           {va.name}
                         </a>
-                        <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
+                        <IconExternalLink
+                          size={12}
+                          className="text-[var(--color-action-primary)]"
+                        />
                       </HStack>
-                      <span className="text-[11px] text-[var(--color-text-subtle)]">ID : {va.id}</span>
+                      <span className="text-[11px] text-[var(--color-text-subtle)]">
+                        ID : {va.id}
+                      </span>
                     </div>
                     <div className="flex-1 px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] flex items-center">
-                      <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)]">{va.fixedIp}</span>
+                      <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)]">
+                        {va.fixedIp}
+                      </span>
                     </div>
                     <div className="flex-1 px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] flex items-center">
-                      <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)]">{va.description}</span>
+                      <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)]">
+                        {va.description}
+                      </span>
                     </div>
                   </div>
                 ))}
@@ -623,7 +732,11 @@ export function AssociateFloatingIPDrawer({
 
               {/* Selection Indicator */}
               <SelectionIndicator
-                selectedItems={selectedVirtualAdapter ? [{ id: selectedVirtualAdapter.id, label: selectedVirtualAdapter.name }] : []}
+                selectedItems={
+                  selectedVirtualAdapter
+                    ? [{ id: selectedVirtualAdapter.id, label: selectedVirtualAdapter.name }]
+                    : []
+                }
                 onRemove={() => setSelectedVirtualAdapterId(null)}
                 emptyText="No item Selected"
               />
@@ -654,75 +767,84 @@ export function AssociateFloatingIPDrawer({
             </div>
 
             {/* Pagination */}
-            <Pagination
-              currentPage={1}
-              totalPages={5}
-              totalItems={115}
-              onPageChange={() => {}}
-            />
+            <Pagination currentPage={1} totalPages={5} totalItems={115} onPageChange={() => {}} />
 
-          {/* Table */}
-          <div className="flex flex-col gap-[var(--table-row-gap)] w-full">
-            {/* Header */}
-            <div className="flex items-stretch min-h-[var(--table-row-height)] bg-[var(--table-header-bg)] border border-[var(--color-border-default)] rounded-[var(--table-row-radius)]">
-              <div className="w-[var(--table-checkbox-width)] flex items-center justify-center" />
-              <div 
-                className="flex-1 px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] flex items-center gap-1.5 border-l border-[var(--color-border-default)] cursor-pointer hover:bg-[var(--color-surface-muted)]"
-                onClick={() => handleFixedIPSort('fixedIp')}
-              >
-                <span className="text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)]">Fixed IP</span>
-                {renderSortIcon('fixedIp', fixedIPSort)}
+            {/* Table */}
+            <div className="flex flex-col gap-[var(--table-row-gap)] w-full">
+              {/* Header */}
+              <div className="flex items-stretch min-h-[var(--table-row-height)] bg-[var(--table-header-bg)] border border-[var(--color-border-default)] rounded-[var(--table-row-radius)]">
+                <div className="w-[var(--table-checkbox-width)] flex items-center justify-center" />
+                <div
+                  className="flex-1 px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] flex items-center gap-1.5 border-l border-[var(--color-border-default)] cursor-pointer hover:bg-[var(--color-surface-muted)]"
+                  onClick={() => handleFixedIPSort('fixedIp')}
+                >
+                  <span className="text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)]">
+                    Fixed IP
+                  </span>
+                  {renderSortIcon('fixedIp', fixedIPSort)}
+                </div>
+                <div
+                  className="flex-1 px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] flex items-center gap-1.5 border-l border-[var(--color-border-default)] cursor-pointer hover:bg-[var(--color-surface-muted)]"
+                  onClick={() => handleFixedIPSort('macAddress')}
+                >
+                  <span className="text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)]">
+                    Mac Address
+                  </span>
+                  {renderSortIcon('macAddress', fixedIPSort)}
+                </div>
+                <div
+                  className="flex-1 px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] flex items-center gap-1.5 border-l border-[var(--color-border-default)] cursor-pointer hover:bg-[var(--color-surface-muted)]"
+                  onClick={() => handleFixedIPSort('network')}
+                >
+                  <span className="text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)]">
+                    Network
+                  </span>
+                  {renderSortIcon('network', fixedIPSort)}
+                </div>
               </div>
-              <div 
-                className="flex-1 px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] flex items-center gap-1.5 border-l border-[var(--color-border-default)] cursor-pointer hover:bg-[var(--color-surface-muted)]"
-                onClick={() => handleFixedIPSort('macAddress')}
-              >
-                <span className="text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)]">Mac Address</span>
-                {renderSortIcon('macAddress', fixedIPSort)}
-              </div>
-              <div 
-                className="flex-1 px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] flex items-center gap-1.5 border-l border-[var(--color-border-default)] cursor-pointer hover:bg-[var(--color-surface-muted)]"
-                onClick={() => handleFixedIPSort('network')}
-              >
-                <span className="text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)]">Network</span>
-                {renderSortIcon('network', fixedIPSort)}
-              </div>
+
+              {/* Rows */}
+              {filteredFixedIPs.map((fip) => (
+                <div
+                  key={fip.id}
+                  className={`flex items-stretch min-h-[var(--table-row-height)] bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--table-row-radius)] cursor-pointer hover:bg-[var(--table-row-hover-bg)] transition-all ${selectedFixedIPId === fip.id ? 'border-[var(--color-action-primary)] bg-[var(--color-state-info-bg)]' : ''}`}
+                  onClick={() => setSelectedFixedIPId(fip.id)}
+                >
+                  <div className="w-[var(--table-checkbox-width)] flex items-center justify-center">
+                    <Radio
+                      checked={selectedFixedIPId === fip.id}
+                      onChange={() => setSelectedFixedIPId(fip.id)}
+                    />
+                  </div>
+                  <div className="flex-1 px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] flex items-center">
+                    <HStack gap={1.5} align="center">
+                      <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)]">
+                        {fip.fixedIp}
+                      </span>
+                      {fip.hasAlert && (
+                        <IconAlertCircle size={16} className="text-[var(--color-state-danger)]" />
+                      )}
+                    </HStack>
+                  </div>
+                  <div className="flex-1 px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] flex items-center">
+                    <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)]">
+                      {fip.macAddress}
+                    </span>
+                  </div>
+                  <div className="flex-1 px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] flex items-center">
+                    <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)]">
+                      {fip.network}
+                    </span>
+                  </div>
+                </div>
+              ))}
             </div>
-
-            {/* Rows */}
-            {filteredFixedIPs.map((fip) => (
-              <div 
-                key={fip.id}
-                className={`flex items-stretch min-h-[var(--table-row-height)] bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--table-row-radius)] cursor-pointer hover:bg-[var(--table-row-hover-bg)] transition-all ${selectedFixedIPId === fip.id ? 'border-[var(--color-action-primary)] bg-[var(--color-state-info-bg)]' : ''}`}
-                onClick={() => setSelectedFixedIPId(fip.id)}
-              >
-                <div className="w-[var(--table-checkbox-width)] flex items-center justify-center">
-                  <Radio
-                    checked={selectedFixedIPId === fip.id}
-                    onChange={() => setSelectedFixedIPId(fip.id)}
-                  />
-                </div>
-                <div className="flex-1 px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] flex items-center">
-                  <HStack gap={1.5} align="center">
-                    <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)]">{fip.fixedIp}</span>
-                    {fip.hasAlert && (
-                      <IconAlertCircle size={16} className="text-[var(--color-state-danger)]" />
-                    )}
-                  </HStack>
-                </div>
-                <div className="flex-1 px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] flex items-center">
-                  <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)]">{fip.macAddress}</span>
-                </div>
-                <div className="flex-1 px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] flex items-center">
-                  <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)]">{fip.network}</span>
-                </div>
-              </div>
-            ))}
-          </div>
 
             {/* Selection Indicator */}
             <SelectionIndicator
-              selectedItems={selectedFixedIP ? [{ id: selectedFixedIP.id, label: selectedFixedIP.fixedIp }] : []}
+              selectedItems={
+                selectedFixedIP ? [{ id: selectedFixedIP.id, label: selectedFixedIP.fixedIp }] : []
+              }
               onRemove={() => setSelectedFixedIPId(null)}
               emptyText="No item Selected"
             />
@@ -747,37 +869,36 @@ export function AssociateFloatingIPDrawer({
             </div>
 
             {/* Pagination */}
-            <Pagination
-              currentPage={1}
-              totalPages={5}
-              totalItems={115}
-              onPageChange={() => {}}
-            />
+            <Pagination currentPage={1} totalPages={5} totalItems={115} onPageChange={() => {}} />
 
             {/* Table */}
             <div className="flex flex-col gap-[var(--table-row-gap)] w-full">
               {/* Header */}
               <div className="flex items-stretch min-h-[var(--table-row-height)] bg-[var(--table-header-bg)] border border-[var(--color-border-default)] rounded-[var(--table-row-radius)]">
                 <div className="w-[var(--table-checkbox-width)] flex items-center justify-center" />
-                <div 
+                <div
                   className="flex-1 px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] flex items-center gap-1.5 border-l border-[var(--color-border-default)] cursor-pointer hover:bg-[var(--color-surface-muted)]"
                   onClick={() => handleFixedIPSort('fixedIp')}
                 >
-                  <span className="text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)]">Fixed IP</span>
+                  <span className="text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)]">
+                    Fixed IP
+                  </span>
                   {renderSortIcon('fixedIp', fixedIPSort)}
                 </div>
-                <div 
+                <div
                   className="flex-1 px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] flex items-center gap-1.5 border-l border-[var(--color-border-default)] cursor-pointer hover:bg-[var(--color-surface-muted)]"
                   onClick={() => handleFixedIPSort('ownedSubnet')}
                 >
-                  <span className="text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)]">Owned Subnet</span>
+                  <span className="text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)]">
+                    Owned Subnet
+                  </span>
                   {renderSortIcon('ownedSubnet', fixedIPSort)}
                 </div>
               </div>
 
               {/* Rows */}
               {mockVirtualAdapterFixedIPs.map((fip) => (
-                <div 
+                <div
                   key={fip.id}
                   className={`flex items-stretch min-h-[var(--table-row-height)] bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--table-row-radius)] cursor-pointer hover:bg-[var(--table-row-hover-bg)] transition-all ${selectedFixedIPId === fip.id ? 'border-[var(--color-action-primary)] bg-[var(--color-state-info-bg)]' : ''}`}
                   onClick={() => setSelectedFixedIPId(fip.id)}
@@ -789,10 +910,14 @@ export function AssociateFloatingIPDrawer({
                     />
                   </div>
                   <div className="flex-1 px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] flex items-center">
-                    <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)]">{fip.fixedIp}</span>
+                    <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)]">
+                      {fip.fixedIp}
+                    </span>
                   </div>
                   <div className="flex-1 px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] flex items-center">
-                    <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)]">{fip.ownedSubnet || '-'}</span>
+                    <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)]">
+                      {fip.ownedSubnet || '-'}
+                    </span>
                   </div>
                 </div>
               ))}
@@ -800,7 +925,9 @@ export function AssociateFloatingIPDrawer({
 
             {/* Selection Indicator */}
             <SelectionIndicator
-              selectedItems={selectedFixedIP ? [{ id: selectedFixedIP.id, label: selectedFixedIP.fixedIp }] : []}
+              selectedItems={
+                selectedFixedIP ? [{ id: selectedFixedIP.id, label: selectedFixedIP.fixedIp }] : []
+              }
               onRemove={() => setSelectedFixedIPId(null)}
               emptyText="No item Selected"
             />

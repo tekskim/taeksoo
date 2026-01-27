@@ -1,12 +1,10 @@
 import { useState, useRef, useEffect } from 'react';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
+import { TabBar, TopBar, TopBarAction, Breadcrumb } from '@/design-system';
 import {
-  TabBar,
-  TopBar,
-  TopBarAction,
-  Breadcrumb,
-} from '@/design-system';
-import { NotificationCenter, type NotificationItem } from '@/design-system/components/NotificationCenter';
+  NotificationCenter,
+  type NotificationItem,
+} from '@/design-system/components/NotificationCenter';
 import { Sidebar } from '@/components/Sidebar';
 import { useTabs } from '@/contexts/TabContext';
 import { IconBell } from '@tabler/icons-react';
@@ -110,9 +108,7 @@ export function AppLayout({ children }: AppLayoutProps) {
 
   // Handle mark notification as read
   const handleMarkAsRead = (id: string) => {
-    setNotifications((prev) =>
-      prev.map((n) => (n.id === id ? { ...n, isRead: true } : n))
-    );
+    setNotifications((prev) => prev.map((n) => (n.id === id ? { ...n, isRead: true } : n)));
   };
 
   // Handle mark all as read
@@ -182,10 +178,7 @@ export function AppLayout({ children }: AppLayoutProps) {
             onForward={() => window.history.forward()}
             breadcrumb={
               <Breadcrumb
-                items={[
-                  { label: 'Proj-1', href: '/project' },
-                  { label: currentLabel },
-                ]}
+                items={[{ label: 'Proj-1', href: '/project' }, { label: currentLabel }]}
               />
             }
             actions={
@@ -197,7 +190,10 @@ export function AppLayout({ children }: AppLayoutProps) {
                   onClick={() => setNotificationOpen(!notificationOpen)}
                 />
                 {notificationOpen && (
-                  <div className="fixed right-0 z-50" style={{ top: 'calc(var(--tabbar-height) + var(--topbar-height))' }}>
+                  <div
+                    className="fixed right-0 z-50"
+                    style={{ top: 'calc(var(--tabbar-height) + var(--topbar-height))' }}
+                  >
                     <NotificationCenter
                       notifications={notifications}
                       selectedId={selectedNotificationId}
@@ -223,4 +219,3 @@ export function AppLayout({ children }: AppLayoutProps) {
 }
 
 export default AppLayout;
-

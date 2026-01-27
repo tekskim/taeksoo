@@ -72,10 +72,10 @@ const mockConfigMapData: Record<string, ConfigMapData> = {
     namespace: 'nginx-ingress',
     createdAt: '2025-11-09 14:30',
     labels: {
-      'app': 'nginx',
+      app: 'nginx',
     },
     annotations: {
-      'description': 'Nginx configuration',
+      description: 'Nginx configuration',
     },
     data: {
       'nginx.conf': 'worker_processes 1;\nevents { worker_connections 1024; }',
@@ -106,8 +106,8 @@ const mockConfigMapData: Record<string, ConfigMapData> = {
     },
     annotations: {},
     data: {
-      'Corefile': '.:53 {\n    errors\n    health\n    kubernetes cluster.local\n}',
-      'NodeHosts': '# Kubernetes-managed hosts file',
+      Corefile: '.:53 {\n    errors\n    health\n    kubernetes cluster.local\n}',
+      NodeHosts: '# Kubernetes-managed hosts file',
       'Corefile.bak': '# Backup configuration',
       'custom.zones': '# Custom DNS zones',
     },
@@ -120,13 +120,14 @@ const mockConfigMapData: Record<string, ConfigMapData> = {
     namespace: 'monitoring',
     createdAt: '2025-11-06 11:20',
     labels: {
-      'app': 'prometheus',
+      app: 'prometheus',
     },
     annotations: {
       'prometheus.io/scrape': 'true',
     },
     data: {
-      'prometheus.yml': 'global:\n  scrape_interval: 15s\nscrape_configs:\n  - job_name: prometheus',
+      'prometheus.yml':
+        'global:\n  scrape_interval: 15s\nscrape_configs:\n  - job_name: prometheus',
       'rules.yml': 'groups:\n  - name: example\n    rules: []',
       'alerts.yml': 'groups:\n  - name: alerts\n    rules: []',
       'recording.yml': '# Recording rules',
@@ -145,7 +146,16 @@ export function ConfigMapDetailPage() {
   const { configMapId } = useParams<{ configMapId: string }>();
   const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(true);
-  const { tabs, activeTabId, selectTab, closeTab, addNewTab, moveTab, addTab, updateActiveTabLabel } = useTabs();
+  const {
+    tabs,
+    activeTabId,
+    selectTab,
+    closeTab,
+    addNewTab,
+    moveTab,
+    addTab,
+    updateActiveTabLabel,
+  } = useTabs();
   const [activeTab, setActiveTab] = useState('data');
 
   // Shell Panel state
@@ -242,7 +252,7 @@ export function ConfigMapDetailPage() {
       >
         {/* Tab Bar */}
         <TabBar
-          tabs={tabs.map(tab => ({ id: tab.id, label: tab.label, closable: tab.closable }))}
+          tabs={tabs.map((tab) => ({ id: tab.id, label: tab.label, closable: tab.closable }))}
           activeTab={activeTabId}
           onTabChange={selectTab}
           onTabClose={closeTab}
@@ -265,7 +275,7 @@ export function ConfigMapDetailPage() {
           }
           actions={
             <>
-              <button 
+              <button
                 className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
                 onClick={() => {
                   if (shellPanel.isExpanded) {
@@ -275,7 +285,15 @@ export function ConfigMapDetailPage() {
                   }
                 }}
               >
-                <IconTerminal2 size={16} className={shellPanel.isExpanded ? "text-[var(--color-action-primary)]" : "text-[var(--color-text-muted)]"} stroke={1.5} />
+                <IconTerminal2
+                  size={16}
+                  className={
+                    shellPanel.isExpanded
+                      ? 'text-[var(--color-action-primary)]'
+                      : 'text-[var(--color-text-muted)]'
+                  }
+                  stroke={1.5}
+                />
               </button>
               <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
                 <IconFile size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
@@ -294,7 +312,7 @@ export function ConfigMapDetailPage() {
         />
 
         {/* Content Area */}
-        <div 
+        <div
           className="flex-1 overflow-auto min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll"
           style={{ paddingBottom: shellPanel.isExpanded ? 'var(--shell-panel-height)' : '0' }}
         >
@@ -322,14 +340,14 @@ export function ConfigMapDetailPage() {
                       configMapData.status === 'Active'
                         ? 'active'
                         : configMapData.status === 'Pending'
-                        ? 'pending'
-                        : 'error'
+                          ? 'pending'
+                          : 'error'
                     }
                   />
                   <DetailHeader.InfoCard
                     label="Namespace"
                     value={
-                      <span 
+                      <span
                         className="text-[var(--color-action-primary)] cursor-pointer hover:underline"
                         onClick={() => navigate(`/container/namespaces/${configMapData.namespace}`)}
                       >
@@ -337,10 +355,7 @@ export function ConfigMapDetailPage() {
                       </span>
                     }
                   />
-                  <DetailHeader.InfoCard
-                    label="Created At"
-                    value={configMapData.createdAt}
-                  />
+                  <DetailHeader.InfoCard label="Created At" value={configMapData.createdAt} />
                   <DetailHeader.InfoCard
                     label={`Labels (${labelsCount})`}
                     value={
@@ -416,7 +431,11 @@ export function ConfigMapDetailPage() {
                                       onClick={() => copyToClipboard(value)}
                                       aria-label="Copy value"
                                     >
-                                      <IconCopy size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
+                                      <IconCopy
+                                        size={16}
+                                        className="text-[var(--color-text-muted)]"
+                                        stroke={1.5}
+                                      />
                                     </button>
                                   </div>
                                 </div>
@@ -474,7 +493,11 @@ export function ConfigMapDetailPage() {
                                       onClick={() => copyToClipboard(value)}
                                       aria-label="Copy value"
                                     >
-                                      <IconCopy size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
+                                      <IconCopy
+                                        size={16}
+                                        className="text-[var(--color-text-muted)]"
+                                        stroke={1.5}
+                                      />
                                     </button>
                                   </div>
                                 </div>

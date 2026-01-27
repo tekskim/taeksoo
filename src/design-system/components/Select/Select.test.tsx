@@ -41,9 +41,9 @@ describe('Select', () => {
     it('opens dropdown on click', async () => {
       const user = userEvent.setup();
       render(<Select options={defaultOptions} />);
-      
+
       await user.click(screen.getByRole('combobox'));
-      
+
       await waitFor(() => {
         expect(screen.getByRole('listbox')).toBeInTheDocument();
       });
@@ -52,9 +52,9 @@ describe('Select', () => {
     it('shows all options when open', async () => {
       const user = userEvent.setup();
       render(<Select options={defaultOptions} />);
-      
+
       await user.click(screen.getByRole('combobox'));
-      
+
       await waitFor(() => {
         expect(screen.getByRole('option', { name: 'Option 1' })).toBeInTheDocument();
         expect(screen.getByRole('option', { name: 'Option 2' })).toBeInTheDocument();
@@ -65,14 +65,14 @@ describe('Select', () => {
     it('closes on Escape key', async () => {
       const user = userEvent.setup();
       render(<Select options={defaultOptions} />);
-      
+
       await user.click(screen.getByRole('combobox'));
       await waitFor(() => {
         expect(screen.getByRole('listbox')).toBeInTheDocument();
       });
-      
+
       await user.keyboard('{Escape}');
-      
+
       await waitFor(() => {
         expect(screen.queryByRole('listbox')).not.toBeInTheDocument();
       });
@@ -84,28 +84,28 @@ describe('Select', () => {
       const user = userEvent.setup();
       const handleChange = vi.fn();
       render(<Select options={defaultOptions} onChange={handleChange} />);
-      
+
       await user.click(screen.getByRole('combobox'));
       await waitFor(() => {
         expect(screen.getByRole('listbox')).toBeInTheDocument();
       });
-      
+
       await user.click(screen.getByRole('option', { name: 'Option 2' }));
-      
+
       expect(handleChange).toHaveBeenCalledWith('option2');
     });
 
     it('displays selected value', async () => {
       const user = userEvent.setup();
       render(<Select options={defaultOptions} />);
-      
+
       await user.click(screen.getByRole('combobox'));
       await waitFor(() => {
         expect(screen.getByRole('listbox')).toBeInTheDocument();
       });
-      
+
       await user.click(screen.getByRole('option', { name: 'Option 1' }));
-      
+
       await waitFor(() => {
         expect(screen.getByText('Option 1')).toBeInTheDocument();
       });
@@ -126,10 +126,10 @@ describe('Select', () => {
     it('opens with Enter key', async () => {
       const user = userEvent.setup();
       render(<Select options={defaultOptions} />);
-      
+
       screen.getByRole('combobox').focus();
       await user.keyboard('{Enter}');
-      
+
       await waitFor(() => {
         expect(screen.getByRole('listbox')).toBeInTheDocument();
       });
@@ -138,10 +138,10 @@ describe('Select', () => {
     it('opens with Space key', async () => {
       const user = userEvent.setup();
       render(<Select options={defaultOptions} />);
-      
+
       screen.getByRole('combobox').focus();
       await user.keyboard(' ');
-      
+
       await waitFor(() => {
         expect(screen.getByRole('listbox')).toBeInTheDocument();
       });
@@ -150,10 +150,10 @@ describe('Select', () => {
     it('opens with ArrowDown key', async () => {
       const user = userEvent.setup();
       render(<Select options={defaultOptions} />);
-      
+
       screen.getByRole('combobox').focus();
       await user.keyboard('{ArrowDown}');
-      
+
       await waitFor(() => {
         expect(screen.getByRole('listbox')).toBeInTheDocument();
       });
@@ -163,16 +163,16 @@ describe('Select', () => {
       const user = userEvent.setup();
       const handleChange = vi.fn();
       render(<Select options={defaultOptions} onChange={handleChange} />);
-      
+
       await user.click(screen.getByRole('combobox'));
       await waitFor(() => {
         expect(screen.getByRole('listbox')).toBeInTheDocument();
       });
-      
+
       // Navigate down and select
       await user.keyboard('{ArrowDown}');
       await user.keyboard('{Enter}');
-      
+
       expect(handleChange).toHaveBeenCalled();
     });
   });
@@ -186,9 +186,9 @@ describe('Select', () => {
     it('does not open when disabled', async () => {
       const user = userEvent.setup();
       render(<Select options={defaultOptions} disabled />);
-      
+
       await user.click(screen.getByRole('combobox'));
-      
+
       expect(screen.queryByRole('listbox')).not.toBeInTheDocument();
     });
   });
@@ -200,10 +200,10 @@ describe('Select', () => {
         { value: '1', label: 'Enabled' },
         { value: '2', label: 'Disabled', disabled: true },
       ];
-      
+
       render(<Select options={optionsWithDisabled} />);
       await user.click(screen.getByRole('combobox'));
-      
+
       await waitFor(() => {
         const disabledOption = screen.getByRole('option', { name: 'Disabled' });
         expect(disabledOption).toHaveAttribute('aria-disabled', 'true');
@@ -227,7 +227,7 @@ describe('Select', () => {
     it('shows clear button when clearable and has value', async () => {
       const user = userEvent.setup();
       render(<Select options={defaultOptions} clearable value="option1" />);
-      
+
       // Look for clear button by aria-label
       expect(screen.getByRole('button', { name: 'Clear selection' })).toBeInTheDocument();
     });
@@ -235,32 +235,19 @@ describe('Select', () => {
     it('clears value when clear button clicked', async () => {
       const user = userEvent.setup();
       const handleChange = vi.fn();
-      render(
-        <Select 
-          options={defaultOptions} 
-          clearable 
-          value="option1" 
-          onChange={handleChange} 
-        />
-      );
-      
+      render(<Select options={defaultOptions} clearable value="option1" onChange={handleChange} />);
+
       await user.click(screen.getByRole('button', { name: 'Clear selection' }));
-      
+
       expect(handleChange).toHaveBeenCalledWith('');
     });
 
     it('shows clear option in dropdown when clearable', async () => {
       const user = userEvent.setup();
-      render(
-        <Select 
-          options={defaultOptions} 
-          clearable 
-          clearLabel="Clear selection" 
-        />
-      );
-      
+      render(<Select options={defaultOptions} clearable clearLabel="Clear selection" />);
+
       await user.click(screen.getByRole('combobox'));
-      
+
       await waitFor(() => {
         expect(screen.getByText('Clear selection')).toBeInTheDocument();
       });
@@ -293,12 +280,12 @@ describe('Select', () => {
     it('has aria-expanded attribute', async () => {
       const user = userEvent.setup();
       render(<Select options={defaultOptions} />);
-      
+
       const combobox = screen.getByRole('combobox');
       expect(combobox).toHaveAttribute('aria-expanded', 'false');
-      
+
       await user.click(combobox);
-      
+
       await waitFor(() => {
         expect(combobox).toHaveAttribute('aria-expanded', 'true');
       });
@@ -312,9 +299,9 @@ describe('Select', () => {
     it('has aria-controls pointing to listbox', async () => {
       const user = userEvent.setup();
       render(<Select options={defaultOptions} />);
-      
+
       await user.click(screen.getByRole('combobox'));
-      
+
       await waitFor(() => {
         const combobox = screen.getByRole('combobox');
         const listbox = screen.getByRole('listbox');

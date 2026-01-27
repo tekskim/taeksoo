@@ -36,16 +36,13 @@ export interface EditMemberDrawerProps {
    EditMemberDrawer Component
    ---------------------------------------- */
 
-export function EditMemberDrawer({
-  isOpen,
-  onClose,
-  member,
-  onSubmit,
-}: EditMemberDrawerProps) {
+export function EditMemberDrawer({ isOpen, onClose, member, onSubmit }: EditMemberDrawerProps) {
   const [weight, setWeight] = useState(member.weight);
   const [isAdvancedExpanded, setIsAdvancedExpanded] = useState(true);
   const [monitorIpAddress, setMonitorIpAddress] = useState(member.monitorIpAddress || '');
-  const [monitorPort, setMonitorPort] = useState<string>(member.monitorPort ? String(member.monitorPort) : '');
+  const [monitorPort, setMonitorPort] = useState<string>(
+    member.monitorPort ? String(member.monitorPort) : ''
+  );
   const [backup, setBackup] = useState(member.backup);
   const [adminStateUp, setAdminStateUp] = useState(member.adminStateUp);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -66,7 +63,7 @@ export function EditMemberDrawer({
     // Validation
     if (weight < 1 || weight > 256) return;
     if (monitorPort && (parseInt(monitorPort) < 1 || parseInt(monitorPort) > 65535)) return;
-    
+
     setIsSubmitting(true);
     try {
       await onSubmit?.({
@@ -97,15 +94,11 @@ export function EditMemberDrawer({
       width={376}
       footer={
         <HStack gap={2} className="w-full">
-          <Button 
-            variant="secondary" 
-            onClick={handleClose}
-            className="flex-1 h-8"
-          >
+          <Button variant="secondary" onClick={handleClose} className="flex-1 h-8">
             Cancel
           </Button>
-          <Button 
-            variant="primary" 
+          <Button
+            variant="primary"
             onClick={handleSubmit}
             disabled={isSubmitting}
             className="flex-1 h-8"
@@ -128,12 +121,7 @@ export function EditMemberDrawer({
           <label className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
             Source
           </label>
-          <Input
-            value={member.source}
-            readOnly
-            disabled
-            fullWidth
-          />
+          <Input value={member.source} readOnly disabled fullWidth />
         </VStack>
 
         {/* IP Address (Read-only) */}
@@ -141,12 +129,7 @@ export function EditMemberDrawer({
           <label className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
             IP Address
           </label>
-          <Input
-            value={member.ipAddress}
-            readOnly
-            disabled
-            fullWidth
-          />
+          <Input value={member.ipAddress} readOnly disabled fullWidth />
         </VStack>
 
         {/* Port (Read-only) */}
@@ -154,12 +137,7 @@ export function EditMemberDrawer({
           <label className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
             Port
           </label>
-          <Input
-            value={String(member.port)}
-            readOnly
-            disabled
-            fullWidth
-          />
+          <Input value={String(member.port)} readOnly disabled fullWidth />
         </VStack>
 
         {/* Weight */}
@@ -175,9 +153,7 @@ export function EditMemberDrawer({
             max={256}
             fullWidth
           />
-          <p className="text-[11px] text-[var(--color-text-subtle)] leading-4">
-            1~256
-          </p>
+          <p className="text-[11px] text-[var(--color-text-subtle)] leading-4">1~256</p>
         </VStack>
 
         {/* Advanced Options (Collapsible) */}
@@ -222,9 +198,7 @@ export function EditMemberDrawer({
                   placeholder="e.g. 8080"
                   fullWidth
                 />
-                <p className="text-[11px] text-[var(--color-text-subtle)] leading-4">
-                  1~65535
-                </p>
+                <p className="text-[11px] text-[var(--color-text-subtle)] leading-4">1~65535</p>
               </VStack>
 
               {/* Backup */}
@@ -233,10 +207,7 @@ export function EditMemberDrawer({
                   Backup
                 </label>
                 <HStack gap={2} className="items-center">
-                  <Toggle 
-                    checked={backup} 
-                    onChange={(e) => setBackup(e.target.checked)} 
-                  />
+                  <Toggle checked={backup} onChange={(e) => setBackup(e.target.checked)} />
                   <span className="text-[12px] text-[var(--color-text-default)] leading-4">
                     {backup ? 'On' : 'Off'}
                   </span>
@@ -249,9 +220,9 @@ export function EditMemberDrawer({
                   Admin State
                 </label>
                 <HStack gap={2} className="items-center">
-                  <Toggle 
-                    checked={adminStateUp} 
-                    onChange={(e) => setAdminStateUp(e.target.checked)} 
+                  <Toggle
+                    checked={adminStateUp}
+                    onChange={(e) => setAdminStateUp(e.target.checked)}
                   />
                   <span className="text-[12px] text-[var(--color-text-default)] leading-4">
                     {adminStateUp ? 'Up' : 'Down'}
@@ -267,4 +238,3 @@ export function EditMemberDrawer({
 }
 
 export default EditMemberDrawer;
-

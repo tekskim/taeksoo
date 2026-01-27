@@ -62,12 +62,12 @@ const createMockToast = (overrides: Partial<ToastData>): ToastData => ({
 // Success
 export const Success: Story = {
   render: () => (
-    <Toast 
-      toast={createMockToast({ 
-        variant: 'success', 
-        message: 'Instance created successfully' 
-      })} 
-      onDismiss={() => {}} 
+    <Toast
+      toast={createMockToast({
+        variant: 'success',
+        message: 'Instance created successfully',
+      })}
+      onDismiss={() => {}}
     />
   ),
 };
@@ -75,12 +75,12 @@ export const Success: Story = {
 // Warning
 export const Warning: Story = {
   render: () => (
-    <Toast 
-      toast={createMockToast({ 
-        variant: 'warning', 
-        message: 'Your session will expire in 5 minutes' 
-      })} 
-      onDismiss={() => {}} 
+    <Toast
+      toast={createMockToast({
+        variant: 'warning',
+        message: 'Your session will expire in 5 minutes',
+      })}
+      onDismiss={() => {}}
     />
   ),
 };
@@ -88,12 +88,12 @@ export const Warning: Story = {
 // Error
 export const Error: Story = {
   render: () => (
-    <Toast 
-      toast={createMockToast({ 
-        variant: 'error', 
-        message: 'Failed to connect to the server' 
-      })} 
-      onDismiss={() => {}} 
+    <Toast
+      toast={createMockToast({
+        variant: 'error',
+        message: 'Failed to connect to the server',
+      })}
+      onDismiss={() => {}}
     />
   ),
 };
@@ -101,12 +101,12 @@ export const Error: Story = {
 // Info
 export const Info: Story = {
   render: () => (
-    <Toast 
-      toast={createMockToast({ 
-        variant: 'info', 
-        message: 'A new update is available' 
-      })} 
-      onDismiss={() => {}} 
+    <Toast
+      toast={createMockToast({
+        variant: 'info',
+        message: 'A new update is available',
+      })}
+      onDismiss={() => {}}
     />
   ),
 };
@@ -114,13 +114,13 @@ export const Info: Story = {
 // With Title
 export const WithTitle: Story = {
   render: () => (
-    <Toast 
-      toast={createMockToast({ 
+    <Toast
+      toast={createMockToast({
         variant: 'success',
         title: 'Deployment Complete',
-        message: 'Your application has been deployed to production' 
-      })} 
-      onDismiss={() => {}} 
+        message: 'Your application has been deployed to production',
+      })}
+      onDismiss={() => {}}
     />
   ),
 };
@@ -128,14 +128,14 @@ export const WithTitle: Story = {
 // With Project Badge
 export const WithProject: Story = {
   render: () => (
-    <Toast 
-      toast={createMockToast({ 
+    <Toast
+      toast={createMockToast({
         variant: 'info',
         title: 'Build Started',
         message: 'Pipeline #1234 has started',
-        project: 'my-project'
-      })} 
-      onDismiss={() => {}} 
+        project: 'my-project',
+      })}
+      onDismiss={() => {}}
     />
   ),
 };
@@ -143,16 +143,16 @@ export const WithProject: Story = {
 // With Link
 export const WithLink: Story = {
   render: () => (
-    <Toast 
-      toast={createMockToast({ 
+    <Toast
+      toast={createMockToast({
         variant: 'success',
         message: 'Instance web-server-01 is now running',
         link: {
           label: 'View instance',
-          href: '#'
-        }
-      })} 
-      onDismiss={() => {}} 
+          href: '#',
+        },
+      })}
+      onDismiss={() => {}}
     />
   ),
 };
@@ -160,17 +160,17 @@ export const WithLink: Story = {
 // With Action Button
 export const WithAction: Story = {
   render: () => (
-    <Toast 
-      toast={createMockToast({ 
+    <Toast
+      toast={createMockToast({
         variant: 'warning',
         message: 'Certificate expires in 7 days',
         action: {
           label: 'Renew',
           icon: <IconExternalLink size={14} />,
-          onClick: () => console.log('Action clicked')
-        }
-      })} 
-      onDismiss={() => {}} 
+          onClick: () => console.log('Action clicked'),
+        },
+      })}
+      onDismiss={() => {}}
     />
   ),
 };
@@ -178,17 +178,18 @@ export const WithAction: Story = {
 // With Detail Section
 export const WithDetail: Story = {
   render: () => (
-    <Toast 
-      toast={createMockToast({ 
+    <Toast
+      toast={createMockToast({
         variant: 'error',
         title: 'Connection Failed',
         message: 'Unable to establish connection to database',
         detail: {
           code: 'ECONNREFUSED',
-          content: 'The server at 10.0.1.50:5432 refused the connection. Please check if the database server is running and accepting connections.'
-        }
-      })} 
-      onDismiss={() => {}} 
+          content:
+            'The server at 10.0.1.50:5432 refused the connection. Please check if the database server is running and accepting connections.',
+        },
+      })}
+      onDismiss={() => {}}
     />
   ),
 };
@@ -196,14 +197,14 @@ export const WithDetail: Story = {
 // Non-dismissible
 export const NonDismissible: Story = {
   render: () => (
-    <Toast 
-      toast={createMockToast({ 
+    <Toast
+      toast={createMockToast({
         variant: 'info',
         message: 'Processing your request...',
         dismissible: false,
-        duration: 0
-      })} 
-      onDismiss={() => {}} 
+        duration: 0,
+      })}
+      onDismiss={() => {}}
     />
   ),
 };
@@ -212,21 +213,21 @@ export const NonDismissible: Story = {
 export const AllVariants: Story = {
   render: () => (
     <div className="flex flex-col gap-3">
-      <Toast 
-        toast={createMockToast({ variant: 'success', message: 'Success message' })} 
-        onDismiss={() => {}} 
+      <Toast
+        toast={createMockToast({ variant: 'success', message: 'Success message' })}
+        onDismiss={() => {}}
       />
-      <Toast 
-        toast={createMockToast({ variant: 'warning', message: 'Warning message' })} 
-        onDismiss={() => {}} 
+      <Toast
+        toast={createMockToast({ variant: 'warning', message: 'Warning message' })}
+        onDismiss={() => {}}
       />
-      <Toast 
-        toast={createMockToast({ variant: 'error', message: 'Error message' })} 
-        onDismiss={() => {}} 
+      <Toast
+        toast={createMockToast({ variant: 'error', message: 'Error message' })}
+        onDismiss={() => {}}
       />
-      <Toast 
-        toast={createMockToast({ variant: 'info', message: 'Info message' })} 
-        onDismiss={() => {}} 
+      <Toast
+        toast={createMockToast({ variant: 'info', message: 'Info message' })}
+        onDismiss={() => {}}
       />
     </div>
   ),
@@ -238,39 +239,31 @@ function InteractiveDemo() {
 
   return (
     <div className="flex flex-wrap gap-2">
-      <Button 
-        size="sm" 
+      <Button
+        size="sm"
         variant="primary"
         onClick={() => success('Operation completed successfully!')}
       >
         Success
       </Button>
-      <Button 
-        size="sm" 
+      <Button
+        size="sm"
         variant="secondary"
         onClick={() => warning('Please review before proceeding')}
       >
         Warning
       </Button>
-      <Button 
-        size="sm" 
+      <Button
+        size="sm"
         variant="danger"
         onClick={() => error('Something went wrong', { title: 'Error' })}
       >
         Error
       </Button>
-      <Button 
-        size="sm" 
-        variant="secondary"
-        onClick={() => info('New features are available')}
-      >
+      <Button size="sm" variant="secondary" onClick={() => info('New features are available')}>
         Info
       </Button>
-      <Button 
-        size="sm" 
-        variant="ghost"
-        onClick={() => dismissAll()}
-      >
+      <Button size="sm" variant="ghost" onClick={() => dismissAll()}>
         Clear All
       </Button>
     </div>

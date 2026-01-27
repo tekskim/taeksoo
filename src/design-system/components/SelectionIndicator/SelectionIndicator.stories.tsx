@@ -94,9 +94,7 @@ export const WithSelectedItems: Story = {
 // Single Selection
 export const SingleSelection: Story = {
   args: {
-    selectedItems: [
-      { id: '1', label: 'production-cluster' },
-    ],
+    selectedItems: [{ id: '1', label: 'production-cluster' }],
     onRemove: (id) => console.log('Remove:', id),
   },
 };
@@ -173,11 +171,7 @@ export const InFormContext: Story = {
           { id: '2', label: 'prod-web-02' },
         ]}
         onRemove={(id) => console.log('Remove:', id)}
-        rightContent={
-          <span className="text-xs text-[var(--color-text-muted)]">
-            2 selected
-          </span>
-        }
+        rightContent={<span className="text-xs text-[var(--color-text-muted)]">2 selected</span>}
       />
     </div>
   ),
