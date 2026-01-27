@@ -18,6 +18,7 @@ import {
   SectionCard,
   SearchInput,
   Pagination,
+  columnWidths,
   type TableColumn,
   type ContextMenuItem,
 } from '@/design-system';
@@ -301,7 +302,7 @@ export default function IAMSystemAdminDetailPage() {
     {
       key: 'id',
       label: 'Action',
-      width: 72,
+      width: columnWidths.actionWide,
       align: 'center',
       render: (_value, row) => (
         <ContextMenu items={mfaContextMenuItems} onSelect={(itemId) => console.log(itemId, row.id)}>
@@ -344,7 +345,7 @@ export default function IAMSystemAdminDetailPage() {
     {
       key: 'id',
       label: 'Action',
-      width: 72,
+      width: columnWidths.actionWide,
       align: 'center',
       render: (_value, row) => (
         <ContextMenu items={sessionContextMenuItems} onSelect={(itemId) => console.log(itemId, row.id)}>

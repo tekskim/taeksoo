@@ -13,6 +13,7 @@ import {
   ContextMenu,
   ConfirmModal,
   StatusIndicator,
+  columnWidths,
   type TableColumn,
   type ContextMenuItem,
   type FilterField,
@@ -193,25 +194,25 @@ export function SecurityGroupsPage() {
     {
       key: 'ingressRules',
       label: 'Ingress rules',
-      flex: 1,
+      width: columnWidths.ingressRules,
       sortable: true,
     },
     {
       key: 'egressRules',
       label: 'Egress rules',
-      flex: 1,
+      width: columnWidths.egressRules,
       sortable: true,
     },
     {
       key: 'createdAt',
       label: 'Created at',
-      flex: 1,
+      width: columnWidths.createdAt,
       sortable: true,
     },
     {
       key: 'actions',
       label: 'Action',
-      width: '64px',
+      width: columnWidths.actions,
       align: 'center',
       render: (_, row) => (
         <div onClick={(e) => e.stopPropagation()}>

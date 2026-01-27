@@ -14,6 +14,7 @@ import {
   ContextMenu,
   type TableColumn,
   type ContextMenuItem,
+  columnWidths,
 } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
 import { ShellPanel, useShellPanel, type ShellTab } from '@/components/ShellPanel';
@@ -193,7 +194,7 @@ export function DeploymentsPage() {
     {
       key: 'status',
       label: 'Status',
-      width: '64px',
+      width: columnWidths.status,
       sortable: true,
       align: 'center',
       render: (value: string) => (
@@ -211,6 +212,7 @@ export function DeploymentsPage() {
       key: 'name',
       label: 'Name',
       flex: 1,
+      minWidth: columnWidths.name,
       sortable: true,
       render: (value: string, row) => (
         <span
@@ -228,39 +230,39 @@ export function DeploymentsPage() {
     {
       key: 'namespace',
       label: 'Namespace',
-      flex: 1,
+      width: columnWidths.namespace,
       sortable: true,
     },
     {
       key: 'image',
       label: 'Image',
-      flex: 1.5,
+      width: columnWidths.image,
     },
     {
       key: 'ready',
       label: 'Ready',
-      width: '115px',
+      width: columnWidths.ready,
     },
     {
       key: 'upToDate',
       label: 'Up-To-Date',
-      width: '115px',
+      width: columnWidths.upToDate,
     },
     {
       key: 'available',
       label: 'Available',
-      width: '115px',
+      width: columnWidths.available,
     },
     {
       key: 'createdAt',
       label: 'Created At',
-      width: '150px',
+      width: columnWidths.createdAt,
       sortable: true,
     },
     {
       key: 'actions',
       label: 'Action',
-      width: '64px',
+      width: columnWidths.actions,
       align: 'center',
       render: (_, row) => {
         const menuItems: ContextMenuItem[] = [

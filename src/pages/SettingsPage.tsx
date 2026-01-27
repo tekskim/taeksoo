@@ -8,6 +8,7 @@ import {
   WindowControls,
   Pagination,
   Table,
+  columnWidths,
 } from '@/design-system';
 import type { TableColumn } from '@/design-system/components/Table/Table';
 import { 
@@ -95,9 +96,9 @@ export function SettingsPage({ isOpen, onClose, initialTab = 'account' }: Settin
 
   // Session table columns
   const sessionColumns: TableColumn[] = [
-    { key: 'ipAddress', label: 'IP Address', width: '140px' },
+    { key: 'ipAddress', label: 'IP Address', width: columnWidths.ipAddress },
     { key: 'device', label: 'Device', flex: 1 },
-    { key: 'timestamp', label: 'Timestamp', width: '180px' },
+    { key: 'timestamp', label: 'Timestamp', width: columnWidths.timestamp },
   ];
   
   // Reset focus when window opens

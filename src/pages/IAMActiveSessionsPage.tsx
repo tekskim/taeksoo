@@ -11,6 +11,7 @@ import {
   Breadcrumb,
   ContextMenu,
   TabBar,
+  columnWidths,
   type TableColumn,
   type ContextMenuItem,
 } from '@/design-system';
@@ -180,6 +181,7 @@ export default function IAMActiveSessionsPage() {
       key: 'user',
       label: 'User',
       flex: 1,
+      minWidth: columnWidths.user,
       sortable: true,
       render: (value) => (
         <Link
@@ -193,30 +195,30 @@ export default function IAMActiveSessionsPage() {
     {
       key: 'started',
       label: 'Started',
-      flex: 1,
+      width: columnWidths.started,
       sortable: true,
     },
     {
       key: 'lastAccess',
       label: 'Last access',
-      flex: 1,
+      width: columnWidths.lastAccess,
       sortable: true,
     },
     {
       key: 'ipAddress',
       label: 'IP address',
-      flex: 1,
+      width: columnWidths.ipAddress,
       sortable: true,
     },
     {
       key: 'device',
       label: 'Device',
-      flex: 1,
+      width: columnWidths.device,
     },
     {
       key: 'id',
       label: 'Action',
-      width: 72,
+      width: columnWidths.actionWide,
       align: 'center',
       render: (_, row) => (
         <ContextMenu items={getContextMenuItems(row)} trigger="click">

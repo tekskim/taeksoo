@@ -18,8 +18,10 @@ import {
   Pagination,
   StatusIndicator,
   ContextMenu,
+  columnWidths,
 } from '@/design-system';
-import type { TableColumn, ContextMenuItem } from '@/design-system';
+import type { TableColumn, ContextMenuItem
+} from '@/design-system';
 import { Sidebar } from '@/components/Sidebar';
 import { useTabs } from '@/contexts/TabContext';
 import {
@@ -261,7 +263,7 @@ export default function PoolDetailPage() {
     {
       key: 'status',
       label: 'Status',
-      width: '64px',
+      width: columnWidths.status,
       align: 'center',
       render: (_, row) => (
         <StatusIndicator status={memberStatusMap[row.status]} layout="icon-only" />
@@ -338,7 +340,7 @@ export default function PoolDetailPage() {
     {
       key: 'actions',
       label: 'Action',
-      width: '64px',
+      width: columnWidths.actions,
       align: 'center',
       render: (_: unknown, row: Member) => {
         const memberMenuItems: ContextMenuItem[] = [

@@ -13,6 +13,7 @@ import {
   SearchInput,
   Pagination,
   type TableColumn,
+  columnWidths,
 } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
 import { useTabs } from '@/contexts/TabContext';
@@ -77,7 +78,7 @@ export function ContainerHomePage() {
     { 
       key: 'status', 
       label: 'Status', 
-      width: '64px', 
+      width: columnWidths.status, 
       align: 'center',
       sortable: true,
       render: (value: string) => (
@@ -100,11 +101,11 @@ export function ContainerHomePage() {
         </span>
       )
     },
-    { key: 'kubernetesVersion', label: 'Kubernetes version', width: '160px', sortable: true },
-    { key: 'createdAt', label: 'Created at', width: '160px', sortable: true },
-    { key: 'cpu', label: 'CPU', width: '100px', sortable: true },
-    { key: 'memory', label: 'Memory', width: '100px', sortable: true },
-    { key: 'pods', label: 'Pods', width: '100px', sortable: true },
+    { key: 'kubernetesVersion', label: 'Kubernetes version', width: columnWidths.kubernetesVersion, sortable: true },
+    { key: 'createdAt', label: 'Created at', width: columnWidths.createdAt, sortable: true },
+    { key: 'cpu', label: 'CPU', width: columnWidths.cpu, sortable: true },
+    { key: 'memory', label: 'Memory', width: columnWidths.memory, sortable: true },
+    { key: 'pods', label: 'Pods', width: columnWidths.pods, sortable: true },
   ];
 
   return (

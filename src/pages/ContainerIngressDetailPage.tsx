@@ -19,6 +19,7 @@ import {
   Chip,
   type TableColumn,
   type ContextMenuItem,
+  columnWidths,
 } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
 import { ShellPanel, useShellPanel, type ShellTab } from '@/components/ShellPanel';
@@ -121,13 +122,13 @@ function RulesTab({ rules }: RulesTabProps) {
     {
       key: 'pathType',
       label: 'Path Type',
-      width: '300px',
+      width: columnWidths.pathType,
       sortable: true,
     },
     {
       key: 'path',
       label: 'Path',
-      width: '300px',
+      width: columnWidths.path,
       sortable: true,
       render: (value: string) => (
         <span className="text-[var(--color-action-primary)] cursor-pointer hover:underline">

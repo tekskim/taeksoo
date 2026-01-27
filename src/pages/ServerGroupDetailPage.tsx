@@ -21,6 +21,7 @@ import {
   Checkbox,
   type TableColumn,
   type ContextMenuItem,
+  columnWidths,
 } from '@/design-system';
 import { Sidebar } from '@/components/Sidebar';
 import { useTabs } from '@/contexts/TabContext';
@@ -206,7 +207,7 @@ export function ServerGroupDetailPage() {
     {
       key: 'status',
       label: 'Status',
-      width: '64px',
+      width: columnWidths.status,
       align: 'center',
       render: (_, row) => (
         <StatusIndicator status={row.status} layout="icon-only" />
@@ -235,7 +236,7 @@ export function ServerGroupDetailPage() {
     {
       key: 'locked',
       label: 'Locked',
-      width: '62px',
+      width: columnWidths.locked,
       align: 'center',
       render: (_, row) => (
         row.locked ? (
@@ -274,7 +275,7 @@ export function ServerGroupDetailPage() {
     {
       key: 'actions',
       label: 'Action',
-      width: '64px',
+      width: columnWidths.actions,
       align: 'center',
       render: (_, row) => (
         <HStack gap={1} className="justify-center">

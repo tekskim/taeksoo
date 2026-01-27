@@ -20,6 +20,7 @@ import {
   Chip,
   type TableColumn,
   type ContextMenuItem,
+  columnWidths,
 } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
 import { ShellPanel, useShellPanel, type ShellTab } from '@/components/ShellPanel';
@@ -223,7 +224,7 @@ function PodsTab({ pods, onViewLogs, onExecuteShell }: PodsTabProps) {
     {
       key: 'status',
       label: 'Status',
-      width: '64px',
+      width: columnWidths.status,
       align: 'center',
       sortable: true,
       render: (value: string) => (
@@ -261,19 +262,19 @@ function PodsTab({ pods, onViewLogs, onExecuteShell }: PodsTabProps) {
     {
       key: 'ready',
       label: 'Ready',
-      width: '80px',
+      width: columnWidths.ready,
       sortable: true,
     },
     {
       key: 'restarts',
       label: 'Restarts',
-      width: '80px',
+      width: columnWidths.restarts,
       sortable: true,
     },
     {
       key: 'ip',
       label: 'IP',
-      width: '120px',
+      width: columnWidths.ip,
       sortable: true,
     },
     {
@@ -290,13 +291,13 @@ function PodsTab({ pods, onViewLogs, onExecuteShell }: PodsTabProps) {
     {
       key: 'createdAt',
       label: 'Created At',
-      width: '150px',
+      width: columnWidths.createdAt,
       sortable: true,
     },
     {
       key: 'action',
       label: 'Action',
-      width: '64px',
+      width: columnWidths.action,
       align: 'center',
       render: (_: unknown, row: PodRow) => (
         <ContextMenu items={createPodMenuItems(row)} trigger="click" align="left">
@@ -441,14 +442,14 @@ function RecentEventsTab({ events }: RecentEventsTabProps) {
   };
 
   const columns: TableColumn<EventRow>[] = [
-    { key: 'lastSeen', label: 'Last Seen', width: '100px', sortable: true },
-    { key: 'type', label: 'Type', width: '80px', sortable: true },
+    { key: 'lastSeen', label: 'Last Seen', width: columnWidths.lastSeen, sortable: true },
+    { key: 'type', label: 'Type', width: columnWidths.type, sortable: true },
     { key: 'reason', label: 'Reason', flex: 1, sortable: true },
     { key: 'subobject', label: 'Subobject', flex: 1, sortable: true },
     { key: 'source', label: 'Source', flex: 1, sortable: true },
     { key: 'message', label: 'Message', flex: 1.5, sortable: true },
-    { key: 'firstSeen', label: 'First Seen', width: '100px', sortable: true },
-    { key: 'count', label: 'Count', width: '80px', sortable: true },
+    { key: 'firstSeen', label: 'First Seen', width: columnWidths.firstSeen, sortable: true },
+    { key: 'count', label: 'Count', width: columnWidths.count, sortable: true },
     {
       key: 'name',
       label: 'Name',
@@ -466,7 +467,7 @@ function RecentEventsTab({ events }: RecentEventsTabProps) {
     {
       key: 'action',
       label: 'Action',
-      width: '64px',
+      width: columnWidths.action,
       align: 'center',
       render: (_: unknown, row: EventRow) => (
         <ContextMenu items={createEventMenuItems(row)} trigger="click" align="left">

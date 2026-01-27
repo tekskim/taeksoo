@@ -115,6 +115,7 @@ import {
   IconUbuntu,
   IconRocky,
   IconGrid,
+  columnWidths,
 } from '@/design-system';
 import type { WizardSectionState, WizardSummaryItem } from '@/design-system';
 import type { NotificationItem } from '@/design-system/components/NotificationCenter';
@@ -617,7 +618,7 @@ function OpenSectionTableDemo() {
     {
       key: 'select',
       label: '',
-      width: '40px',
+      width: columnWidths.select,
       render: (_: unknown, row: DemoImageRow) => (
         <div className="flex items-center justify-center" onClick={(e) => e.stopPropagation()}>
           <Radio
@@ -631,7 +632,7 @@ function OpenSectionTableDemo() {
     {
       key: 'status',
       label: 'Status',
-      width: '64px',
+      width: columnWidths.status,
       align: 'center',
       render: (_: unknown, row: DemoImageRow) => (
         <StatusIndicator status={row.status} />
@@ -641,7 +642,7 @@ function OpenSectionTableDemo() {
       key: 'name', 
       label: 'Name', 
       sortable: true,
-      width: '200px',
+      width: columnWidths.name,
       render: (value: string, row: DemoImageRow) => (
         <VStack gap={0}>
           <span className="text-[var(--color-action-primary)] text-[length:var(--font-size-12)] leading-[var(--line-height-18)] font-medium">
@@ -1734,7 +1735,7 @@ function TableDemo() {
       key: 'status', 
       label: 'Status', 
       sortable: true, 
-      width: '64px',
+      width: columnWidths.status,
       align: 'center' as const,
       render: (value: string) => (
         <StatusIndicator 
@@ -1759,7 +1760,7 @@ function TableDemo() {
     { 
       key: 'locked', 
       label: 'Locked', 
-      width: '68px',
+      width: columnWidths.locked,
       align: 'center' as const,
       render: (value: boolean) => value ? (
         <IconLock size={16} stroke={1.5} className="text-[var(--color-text-default)]" />
@@ -1795,7 +1796,7 @@ function TableDemo() {
     { 
       key: 'actions', 
       label: 'Action', 
-      width: '64px',
+      width: columnWidths.actions,
       align: 'center' as const,
       render: () => (
         <div className="flex items-center gap-1">
@@ -1815,7 +1816,7 @@ function TableDemo() {
     { 
       key: 'name', 
       label: 'Name', 
-      width: '180px',
+      width: columnWidths.name,
       render: (value: string, row: InstanceData) => (
         <div className="flex flex-col gap-0.5">
           <span className="font-medium text-[var(--color-action-primary)] cursor-pointer hover:underline hover:underline-offset-2">{value}</span>
@@ -1823,7 +1824,7 @@ function TableDemo() {
         </div>
       )
     },
-    { key: 'fixedIp', label: 'Fixed IP', width: '120px' },
+    { key: 'fixedIp', label: 'Fixed IP', width: columnWidths.fixedIp },
     { 
       key: 'attachedTo', 
       label: 'Attached to', 
@@ -1867,7 +1868,7 @@ function TableDemo() {
     { 
       key: 'name', 
       label: 'Name', 
-      width: '180px',
+      width: columnWidths.name,
       render: (value: string) => (
         <span className="font-medium text-[var(--color-action-primary)] cursor-pointer hover:underline hover:underline-offset-2">{value}</span>
       )
@@ -1896,7 +1897,7 @@ function TableDemo() {
         </div>
       )
     },
-    { key: 'createdAt', label: 'Created at', width: '140px' },
+    { key: 'createdAt', label: 'Created at', width: columnWidths.createdAt },
   ];
 
   // Columns without copy button (40px row height demo)
@@ -1904,7 +1905,7 @@ function TableDemo() {
     { 
       key: 'name', 
       label: 'Name', 
-      width: '180px',
+      width: columnWidths.name,
       render: (value: string) => (
         <span className="font-medium text-[var(--color-action-primary)] cursor-pointer hover:underline hover:underline-offset-2">{value}</span>
       )
@@ -1917,7 +1918,7 @@ function TableDemo() {
         <span className="text-[length:var(--font-size-12)] leading-[var(--line-height-18)] text-[var(--color-text-default)]">{row.fingerprint}</span>
       )
     },
-    { key: 'createdAt', label: 'Created at', width: '140px' },
+    { key: 'createdAt', label: 'Created at', width: columnWidths.createdAt },
   ];
 
   // Compact columns for horizontal scroll demo
@@ -1925,7 +1926,7 @@ function TableDemo() {
     { 
       key: 'status', 
       label: 'Status', 
-      width: '64px',
+      width: columnWidths.status,
       align: 'center' as const,
       render: (value: string) => (
         <StatusIndicator 
@@ -1937,22 +1938,22 @@ function TableDemo() {
     { 
       key: 'name', 
       label: 'Name', 
-      width: '150px',
+      width: columnWidths.name,
       render: (value: string) => (
         <span className="font-medium text-[var(--color-action-primary)] cursor-pointer hover:underline hover:underline-offset-2">{value}</span>
       )
     },
-    { key: 'fixedIp', label: 'Fixed IP', width: '110px' },
-    { key: 'image', label: 'Image', width: '110px' },
-    { key: 'flavor', label: 'Flavor', width: '90px' },
+    { key: 'fixedIp', label: 'Fixed IP', width: columnWidths.fixedIp },
+    { key: 'image', label: 'Image', width: columnWidths.image },
+    { key: 'flavor', label: 'Flavor', width: columnWidths.flavor },
   ];
 
   // Empty state columns
   const emptyColumns = [
-    { key: 'status', label: 'Status', width: '64px' },
+    { key: 'status', label: 'Status', width: columnWidths.status },
     { key: 'name', label: 'Name', flex: 1 },
-    { key: 'fixedIp', label: 'Fixed IP', width: '120px' },
-    { key: 'image', label: 'Image', width: '120px' },
+    { key: 'fixedIp', label: 'Fixed IP', width: columnWidths.fixedIp },
+    { key: 'image', label: 'Image', width: columnWidths.image },
   ];
 
   return (
@@ -2253,13 +2254,13 @@ function TableDemo() {
         <Label>Usage</Label>
         <div className="p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)] font-mono text-[length:var(--font-size-11)]">
           <span className="text-[var(--color-text-subtle)]">// Import</span><br />
-          <span className="text-[var(--color-state-info)]">import</span> {'{'} columnWidths, flexColumnPresets {'}'} <span className="text-[var(--color-state-info)]">from</span> <span className="text-[var(--color-state-success)]">'@/design-system'</span>;<br /><br />
-          <span className="text-[var(--color-text-subtle)]">// Usage</span><br />
+          <span className="text-[var(--color-state-info)]">import</span> {'{'} columnWidths {'}'} <span className="text-[var(--color-state-info)]">from</span> <span className="text-[var(--color-state-success)]">'@/design-system'</span>;<br /><br />
+          <span className="text-[var(--color-text-subtle)]">// 고정 너비 + 가변 너비 혼합 사용</span><br />
           <span className="text-[var(--color-state-info)]">const</span> columns = [<br />
-          &nbsp;&nbsp;{'{'} key: <span className="text-[var(--color-state-success)]">'select'</span>, width: columnWidths.<span className="text-[var(--color-action-primary)]">select</span> {'}'}, <span className="text-[var(--color-text-subtle)]">// 40px</span><br />
-          &nbsp;&nbsp;{'{'} key: <span className="text-[var(--color-state-success)]">'status'</span>, width: columnWidths.<span className="text-[var(--color-action-primary)]">status</span> {'}'}, <span className="text-[var(--color-text-subtle)]">// 64px</span><br />
-          &nbsp;&nbsp;{'{'} key: <span className="text-[var(--color-state-success)]">'name'</span>, ...flexColumnPresets.<span className="text-[var(--color-action-primary)]">name</span> {'}'}, <span className="text-[var(--color-text-subtle)]">// minWidth: 150px, flex: 1</span><br />
-          &nbsp;&nbsp;{'{'} key: <span className="text-[var(--color-state-success)]">'actions'</span>, width: columnWidths.<span className="text-[var(--color-action-primary)]">actions</span> {'}'}, <span className="text-[var(--color-text-subtle)]">// 64px</span><br />
+          &nbsp;&nbsp;{'{'} key: <span className="text-[var(--color-state-success)]">'select'</span>, width: columnWidths.<span className="text-[var(--color-action-primary)]">select</span> {'}'}, <span className="text-[var(--color-text-subtle)]">// 고정 40px</span><br />
+          &nbsp;&nbsp;{'{'} key: <span className="text-[var(--color-state-success)]">'status'</span>, width: columnWidths.<span className="text-[var(--color-action-primary)]">status</span> {'}'}, <span className="text-[var(--color-text-subtle)]">// 고정 64px</span><br />
+          &nbsp;&nbsp;{'{'} key: <span className="text-[var(--color-state-success)]">'name'</span>, flex: <span className="text-[var(--color-action-primary)]">1</span> {'}'}, <span className="text-[var(--color-text-subtle)]">// 남은 공간 채움</span><br />
+          &nbsp;&nbsp;{'{'} key: <span className="text-[var(--color-state-success)]">'actions'</span>, width: columnWidths.<span className="text-[var(--color-action-primary)]">actions</span> {'}'}, <span className="text-[var(--color-text-subtle)]">// 고정 64px</span><br />
           ];
         </div>
         <p className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">

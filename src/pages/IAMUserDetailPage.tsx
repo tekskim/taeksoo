@@ -18,6 +18,7 @@ import {
   StatusIndicator,
   ContextMenu,
   SectionCard,
+  columnWidths,
   type TableColumn,
   type ContextMenuItem,
 } from '@/design-system';
@@ -389,7 +390,7 @@ export function IAMUserDetailPage() {
     {
       key: 'id',
       label: 'Action',
-      width: 72,
+      width: columnWidths.actionWide,
       align: 'center',
       render: (_value, row) => (
         <ContextMenu items={getSessionContextMenuItems(row.id)} trigger="click">
@@ -409,7 +410,7 @@ export function IAMUserDetailPage() {
     {
       key: 'status',
       label: 'Status',
-      width: 64,
+      width: columnWidths.status,
       align: 'center',
       render: (value) => (
         <StatusIndicator status={value === 'active' ? 'active' : 'shutoff'} />
@@ -442,7 +443,7 @@ export function IAMUserDetailPage() {
     {
       key: 'id',
       label: 'Action',
-      width: 72,
+      width: columnWidths.actionWide,
       align: 'center',
       render: (_value, row) => (
         <ContextMenu items={getAccessKeyContextMenuItems(row.id)} trigger="click">
@@ -497,7 +498,7 @@ export function IAMUserDetailPage() {
     {
       key: 'id',
       label: 'Action',
-      width: 72,
+      width: columnWidths.actionWide,
       align: 'center',
       render: (_value, row) => (
         <ContextMenu items={getRoleContextMenuItems(row.id)} trigger="click">
@@ -549,7 +550,7 @@ export function IAMUserDetailPage() {
     {
       key: 'id',
       label: 'Action',
-      width: 72,
+      width: columnWidths.actionWide,
       align: 'center',
       render: (_value, row) => (
         <ContextMenu items={getGroupContextMenuItems(row.id)} trigger="click">

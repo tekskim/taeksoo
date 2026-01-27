@@ -14,6 +14,7 @@ import {
   ContextMenu,
   type TableColumn,
   type ContextMenuItem,
+  columnWidths,
 } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
 import { ShellPanel, useShellPanel, type ShellTab } from '@/components/ShellPanel';
@@ -226,7 +227,7 @@ export function ContainerEventsPage() {
     {
       key: 'status',
       label: 'Status',
-      width: '64px',
+      width: columnWidths.status,
       sortable: false,
       align: 'center',
       render: (value: string) => (
@@ -238,7 +239,7 @@ export function ContainerEventsPage() {
     {
       key: 'name',
       label: 'Name',
-      width: '240px',
+      flex: 1,
       sortable: true,
       render: (value: string) => (
         <span className="text-[12px] text-[var(--color-text-default)] truncate block" title={value}>
@@ -249,29 +250,29 @@ export function ContainerEventsPage() {
     {
       key: 'namespace',
       label: 'Namespace',
-      flex: 1,
+      width: columnWidths.namespace,
       sortable: true,
     },
     {
       key: 'lastSeen',
       label: 'Last Seen',
-      flex: 1,
+      width: columnWidths.lastSeen,
       sortable: true,
     },
     {
       key: 'type',
       label: 'Type',
-      width: '80px',
+      width: columnWidths.type,
     },
     {
       key: 'reason',
       label: 'Reason',
-      width: '80px',
+      width: columnWidths.reason,
     },
     {
       key: 'object',
       label: 'Object',
-      flex: 1,
+      width: columnWidths.object,
       sortable: true,
       render: (value: string) => (
         <span 
@@ -285,19 +286,19 @@ export function ContainerEventsPage() {
     {
       key: 'subobject',
       label: 'Subobject',
-      width: '100px',
+      width: columnWidths.subobject,
       sortable: true,
     },
     {
       key: 'source',
       label: 'Source',
-      flex: 1,
+      width: columnWidths.source,
       sortable: true,
     },
     {
       key: 'message',
       label: 'Message',
-      width: '240px',
+      flex: 1,
       sortable: true,
       render: (value: string) => (
         <span className="text-[12px] text-[var(--color-text-default)] truncate block" title={value}>
@@ -308,20 +309,20 @@ export function ContainerEventsPage() {
     {
       key: 'firstSeen',
       label: 'First Seen',
-      flex: 1,
+      width: columnWidths.firstSeen,
       sortable: true,
     },
     {
       key: 'count',
       label: 'Count',
-      width: '64px',
+      width: columnWidths.count,
       align: 'center',
       sortable: true,
     },
     {
       key: 'actions',
       label: 'Action',
-      width: '64px',
+      width: columnWidths.actions,
       align: 'center',
       render: (_, row) => {
         const menuItems: ContextMenuItem[] = [

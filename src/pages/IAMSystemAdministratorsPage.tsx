@@ -13,6 +13,7 @@ import {
   ContextMenu,
   TabBar,
   StatusIndicator,
+  columnWidths,
   type TableColumn,
   type ContextMenuItem,
 } from '@/design-system';
@@ -99,7 +100,7 @@ export default function IAMSystemAdministratorsPage() {
     {
       key: 'status',
       label: 'Status',
-      width: 64,
+      width: columnWidths.status,
       align: 'center',
       render: (value) => (
         <StatusIndicator status={value === 'active' ? 'active' : value === 'inactive' ? 'shutoff' : 'building'} />
@@ -122,7 +123,7 @@ export default function IAMSystemAdministratorsPage() {
     {
       key: 'locked',
       label: 'Locked',
-      width: 70,
+      width: columnWidths.lockedWide,
       align: 'center',
       render: (value) => (
         <div className="flex items-center justify-center w-full">
@@ -150,7 +151,7 @@ export default function IAMSystemAdministratorsPage() {
     {
       key: 'id',
       label: 'Action',
-      width: 72,
+      width: columnWidths.actionWide,
       align: 'center',
       render: (_value, row) => (
         <ContextMenu items={contextMenuItems} onSelect={(itemId) => console.log(itemId, row.id)}>

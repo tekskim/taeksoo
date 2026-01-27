@@ -22,6 +22,7 @@ import {
   Table,
   Pagination,
   SearchInput,
+  columnWidths,
   type ContextMenuItem,
   type TableColumn,
 } from '@/design-system';
@@ -894,30 +895,30 @@ export function PersistentVolumeClaimDetailPage() {
                             key: 'lastSeen',
                             label: 'Last Seen',
                             sortable: true,
-                            width: 80,
+                            width: columnWidths.lastSeen,
                           },
                           {
                             key: 'type',
                             label: 'Type',
                             sortable: true,
-                            width: 80,
+                            width: columnWidths.type,
                           },
                           {
                             key: 'reason',
                             label: 'Reason',
                             sortable: true,
-                            width: 120,
+                            width: columnWidths.reason,
                           },
                           {
                             key: 'subobject',
                             label: 'Subobject',
-                            width: 100,
+                            width: columnWidths.subobject,
                           },
                           {
                             key: 'source',
                             label: 'Source',
                             sortable: true,
-                            width: 120,
+                            width: columnWidths.source,
                           },
                           {
                             key: 'message',
@@ -929,19 +930,19 @@ export function PersistentVolumeClaimDetailPage() {
                             key: 'firstSeen',
                             label: 'First Seen',
                             sortable: true,
-                            width: 80,
+                            width: columnWidths.firstSeen,
                           },
                           {
                             key: 'count',
                             label: 'Count',
                             sortable: true,
-                            width: 64,
+                            width: columnWidths.count,
                           },
                           {
                             key: 'name',
                             label: 'Name',
                             sortable: true,
-                            width: 180,
+                            width: columnWidths.name,
                             render: (value: string) => (
                               <span className="text-[var(--color-action-primary)] cursor-pointer hover:underline font-medium">
                                 {value}

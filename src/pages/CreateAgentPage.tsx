@@ -27,6 +27,7 @@ import {
   StatusIndicator,
   SelectionIndicator,
   type TableColumn,
+  columnWidths,
 } from '@/design-system';
 import {
   IconBell,
@@ -210,7 +211,7 @@ export function CreateAgentPage() {
     {
       key: 'status',
       label: 'Status',
-      width: '64px',
+      width: columnWidths.status,
       align: 'center',
       sortable: false,
       render: (_, row) => (
@@ -248,7 +249,7 @@ export function CreateAgentPage() {
     {
       key: 'status',
       label: 'Status',
-      width: '64px',
+      width: columnWidths.status,
       align: 'center',
       sortable: false,
       render: (_, row) => (

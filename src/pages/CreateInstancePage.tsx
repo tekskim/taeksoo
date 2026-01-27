@@ -33,6 +33,7 @@ import {
   IconUbuntu,
   IconGrid,
   IconRocky,
+  columnWidths,
 } from '@/design-system';
 import type { TableColumn } from '@/design-system/components/Table/Table';
 import { Sidebar } from '@/components/Sidebar';
@@ -870,7 +871,7 @@ function ImageSection({ selectedImageId, onSelectImage, onNext, isActive = false
     {
       key: 'select',
       label: '',
-      width: '40px',
+      width: columnWidths.select,
       render: (_, row) => (
         <div className="flex items-center justify-center" onClick={(e) => e.stopPropagation()}>
           <Radio
@@ -884,7 +885,7 @@ function ImageSection({ selectedImageId, onSelectImage, onNext, isActive = false
     {
       key: 'status',
       label: 'Status',
-      width: '64px',
+      width: columnWidths.status,
       align: 'center',
       render: (_, row) => (
         <StatusIndicator status={row.status as 'active' | 'error' | 'building'} />
@@ -894,7 +895,7 @@ function ImageSection({ selectedImageId, onSelectImage, onNext, isActive = false
       key: 'name', 
       label: 'Name', 
       sortable: true,
-      width: '300px',
+      width: columnWidths.name,
       render: (value, row) => (
         <VStack gap={0}>
           <HStack gap={1} align="center">
@@ -907,11 +908,11 @@ function ImageSection({ selectedImageId, onSelectImage, onNext, isActive = false
         </VStack>
       ),
     },
-    { key: 'version', label: 'Version', sortable: true, width: '80px' },
-    { key: 'size', label: 'Size', sortable: true, width: '100px' },
-    { key: 'minDisk', label: 'Min disk', sortable: true, width: '90px' },
-    { key: 'minRam', label: 'Min RAM', sortable: true, width: '100px' },
-    { key: 'access', label: 'Visibility', sortable: true, width: '80px' },
+    { key: 'version', label: 'Version', sortable: true, width: columnWidths.version },
+    { key: 'size', label: 'Size', sortable: true, width: columnWidths.size },
+    { key: 'minDisk', label: 'Min disk', sortable: true, width: columnWidths.minDisk },
+    { key: 'minRam', label: 'Min RAM', sortable: true, width: columnWidths.minRam },
+    { key: 'access', label: 'Visibility', sortable: true, width: columnWidths.access },
   ];
 
   // Snapshot Table columns
@@ -919,7 +920,7 @@ function ImageSection({ selectedImageId, onSelectImage, onNext, isActive = false
     {
       key: 'select',
       label: '',
-      width: '40px',
+      width: columnWidths.select,
       render: (_, row) => (
         <div className="flex items-center justify-center" onClick={(e) => e.stopPropagation()}>
           <Radio
@@ -933,16 +934,16 @@ function ImageSection({ selectedImageId, onSelectImage, onNext, isActive = false
     {
       key: 'status',
       label: 'Status',
-      width: '64px',
+      width: columnWidths.status,
       align: 'center',
       render: (value) => (
         <StatusIndicator status={value as 'active' | 'error' | 'building'} />
       ),
     },
     { key: 'name', label: 'Name', sortable: true },
-    { key: 'size', label: 'Size', sortable: true, width: '100px' },
-    { key: 'sourceInstance', label: 'Source instance', sortable: true, width: '140px' },
-    { key: 'createdAt', label: 'Created at', sortable: true, width: '110px' },
+    { key: 'size', label: 'Size', sortable: true, width: columnWidths.size },
+    { key: 'sourceInstance', label: 'Source instance', sortable: true, width: columnWidths.sourceInstance },
+    { key: 'createdAt', label: 'Created at', sortable: true, width: columnWidths.createdAt },
   ];
 
   // Bootable Volume Table columns
@@ -950,7 +951,7 @@ function ImageSection({ selectedImageId, onSelectImage, onNext, isActive = false
     {
       key: 'select',
       label: '',
-      width: '40px',
+      width: columnWidths.select,
       render: (_, row) => (
         <div className="flex items-center justify-center" onClick={(e) => e.stopPropagation()}>
           <Radio
@@ -964,7 +965,7 @@ function ImageSection({ selectedImageId, onSelectImage, onNext, isActive = false
     {
       key: 'status',
       label: 'Status',
-      width: '64px',
+      width: columnWidths.status,
       align: 'center',
       render: (value) => {
         // Map volume status to StatusIndicator status
@@ -977,9 +978,9 @@ function ImageSection({ selectedImageId, onSelectImage, onNext, isActive = false
       },
     },
     { key: 'name', label: 'Name', sortable: true },
-    { key: 'size', label: 'Size', sortable: true, width: '80px' },
-    { key: 'type', label: 'Type', sortable: true, width: '80px' },
-    { key: 'createdAt', label: 'Created at', sortable: true, width: '110px' },
+    { key: 'size', label: 'Size', sortable: true, width: columnWidths.size },
+    { key: 'type', label: 'Type', sortable: true, width: columnWidths.type },
+    { key: 'createdAt', label: 'Created at', sortable: true, width: columnWidths.createdAt },
   ];
 
   const osChipStyle = (active: boolean) => `
@@ -1309,7 +1310,7 @@ function FlavorSection({ selectedFlavorId, onSelectFlavor, onNext, isActive = fa
     {
       key: 'select',
       label: '',
-      width: '40px',
+      width: columnWidths.select,
       render: (_, row) => (
         <div className="flex items-center justify-center" onClick={(e) => e.stopPropagation()}>
           <Radio
@@ -1339,11 +1340,11 @@ function FlavorSection({ selectedFlavorId, onSelectFlavor, onNext, isActive = fa
         </VStack>
       ),
     },
-    { key: 'vCPU', label: 'vCPU', sortable: true, width: '64px' },
-    { key: 'ram', label: 'RAM', sortable: true, width: '80px' },
-    { key: 'disk', label: 'Disk', sortable: true, width: '80px' },
-    { key: 'ephemeralDisk', label: 'Ephemeral disk', sortable: true, width: '100px' },
-    { key: 'networkBandwidth', label: 'Internal network Bandwidth', sortable: true, width: '120px' },
+    { key: 'vCPU', label: 'vCPU', sortable: true, width: columnWidths.vCPU },
+    { key: 'ram', label: 'RAM', sortable: true, width: columnWidths.ram },
+    { key: 'disk', label: 'Disk', sortable: true, width: columnWidths.disk },
+    { key: 'ephemeralDisk', label: 'Ephemeral disk', sortable: true, width: columnWidths.ephemeralDisk },
+    { key: 'networkBandwidth', label: 'Internal network Bandwidth', sortable: true, width: columnWidths.networkBandwidth },
   ];
 
   return (
@@ -1584,7 +1585,7 @@ function NetworkSection({ onNext, isActive = false, isEditing = false, onEditCan
     {
       key: 'select',
       label: '',
-      width: '40px',
+      width: columnWidths.select,
       render: (_, row) => (
         <div className="flex items-center justify-center" onClick={(e) => e.stopPropagation()}>
           <Checkbox
@@ -1628,7 +1629,7 @@ function NetworkSection({ onNext, isActive = false, isEditing = false, onEditCan
     {
       key: 'select',
       label: '',
-      width: '40px',
+      width: columnWidths.select,
       render: (_, row) => (
         <div className="flex items-center justify-center" onClick={(e) => e.stopPropagation()}>
           <Radio
@@ -1642,7 +1643,7 @@ function NetworkSection({ onNext, isActive = false, isEditing = false, onEditCan
     {
       key: 'status',
       label: 'Status',
-      width: '64px',
+      width: columnWidths.status,
       align: 'center',
       render: (_, row) => <StatusIndicator status={row.status === 'Active' ? 'active' : 'shutoff'} />,
     },
@@ -1655,7 +1656,7 @@ function NetworkSection({ onNext, isActive = false, isEditing = false, onEditCan
     {
       key: 'select',
       label: '',
-      width: '40px',
+      width: columnWidths.select,
       render: (_, row) => (
         <div className="flex items-center justify-center" onClick={(e) => e.stopPropagation()}>
           <Checkbox
@@ -1676,7 +1677,7 @@ function NetworkSection({ onNext, isActive = false, isEditing = false, onEditCan
     {
       key: 'status',
       label: 'Status',
-      width: '64px',
+      width: columnWidths.status,
       align: 'center',
       render: (_, row) => <StatusIndicator status={row.status === 'Active' ? 'active' : 'shutoff'} />,
     },
@@ -1700,7 +1701,7 @@ function NetworkSection({ onNext, isActive = false, isEditing = false, onEditCan
     {
       key: 'select',
       label: '',
-      width: '40px',
+      width: columnWidths.select,
       render: (_, row) => (
         <div className="flex items-center justify-center" onClick={(e) => e.stopPropagation()}>
           <Checkbox
@@ -1746,7 +1747,7 @@ function NetworkSection({ onNext, isActive = false, isEditing = false, onEditCan
     {
       key: 'select',
       label: '',
-      width: '40px',
+      width: columnWidths.select,
       render: (_, row) => (
         <div className="flex items-center justify-center" onClick={(e) => e.stopPropagation()}>
           <Radio
@@ -1760,7 +1761,7 @@ function NetworkSection({ onNext, isActive = false, isEditing = false, onEditCan
     {
       key: 'status',
       label: 'Status',
-      width: '64px',
+      width: columnWidths.status,
       align: 'center',
       render: (_, row) => <StatusIndicator status={row.status === 'Active' ? 'active' : 'shutoff'} />,
     },
@@ -2245,7 +2246,7 @@ function AuthenticationSection({ onNext, isActive = false, isEditing = false, on
     {
       key: 'select',
       label: '',
-      width: '40px',
+      width: columnWidths.select,
       render: (_, row) => (
         <div className="flex items-center justify-center" onClick={(e) => e.stopPropagation()}>
           <Radio
@@ -2482,7 +2483,7 @@ function AdvancedSection({ onNext, isActive = false, isEditing = false, onEditCa
     {
       key: 'select',
       label: '',
-      width: '40px',
+      width: columnWidths.select,
       render: (_, row) => (
         <div className="flex items-center justify-center" onClick={(e) => e.stopPropagation()}>
           <Radio
@@ -2494,7 +2495,7 @@ function AdvancedSection({ onNext, isActive = false, isEditing = false, onEditCa
       ),
     },
     { key: 'name', label: 'Name', sortable: true },
-    { key: 'memberCount', label: 'Member count', sortable: true, width: '120px' },
+    { key: 'memberCount', label: 'Member count', sortable: true, width: columnWidths.memberCount },
     { key: 'policy', label: 'Policy', sortable: true },
   ];
 
@@ -2691,7 +2692,7 @@ function TemplatesSection({ templates, selectedId, onSelect, onSkip, onNext, isA
     {
       key: 'select',
       label: '',
-      width: '40px',
+      width: columnWidths.select,
       render: (_, row) => (
         <div className="flex items-center justify-center" onClick={(e) => e.stopPropagation()}>
           <Radio
@@ -2705,7 +2706,7 @@ function TemplatesSection({ templates, selectedId, onSelect, onSkip, onNext, isA
     {
       key: 'favorite',
       label: '',
-      width: '40px',
+      width: columnWidths.favorite,
       render: (_, row) => (
         <div className="flex items-center justify-center">
           {row.isFavorite ? (
@@ -2742,13 +2743,13 @@ function TemplatesSection({ templates, selectedId, onSelect, onSkip, onNext, isA
     {
       key: 'visibility',
       label: 'Visibility',
-      width: '100px',
+      width: columnWidths.visibility,
       sortable: true,
     },
     {
       key: 'createdAt',
       label: 'Created at',
-      width: '120px',
+      width: columnWidths.createdAt,
       sortable: true,
     },
   ];

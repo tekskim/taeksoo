@@ -33,6 +33,7 @@ import {
   IconRocky,
   InlineMessage,
   SelectionIndicator,
+  columnWidths,
 } from '@/design-system';
 import type { TableColumn } from '@/design-system/components/Table/Table';
 import { Sidebar } from '@/components/Sidebar';
@@ -741,7 +742,7 @@ function ImageSection({
     {
       key: 'select',
       label: '',
-      width: '40px',
+      width: columnWidths.select,
       render: (_, row) => (
         <div className="flex items-center justify-center" onClick={(e) => e.stopPropagation()}>
           <Radio
@@ -755,7 +756,7 @@ function ImageSection({
     {
       key: 'status',
       label: 'Status',
-      width: '64px',
+      width: columnWidths.status,
       render: (_, row) => (
         <StatusIndicator status={row.status as 'active' | 'error' | 'building'} />
       ),
@@ -776,11 +777,11 @@ function ImageSection({
         </VStack>
       ),
     },
-    { key: 'version', label: 'Version', sortable: true, width: '80px' },
-    { key: 'size', label: 'Size', sortable: true, width: '100px' },
-    { key: 'minDisk', label: 'Min disk', sortable: true, width: '90px' },
-    { key: 'minRam', label: 'Min RAM', sortable: true, width: '100px' },
-    { key: 'access', label: 'Visibility', sortable: true, width: '80px' },
+    { key: 'version', label: 'Version', sortable: true, width: columnWidths.version },
+    { key: 'size', label: 'Size', sortable: true, width: columnWidths.size },
+    { key: 'minDisk', label: 'Min disk', sortable: true, width: columnWidths.minDisk },
+    { key: 'minRam', label: 'Min RAM', sortable: true, width: columnWidths.minRam },
+    { key: 'access', label: 'Visibility', sortable: true, width: columnWidths.access },
   ];
 
   // OS filter chip style - matches Figma design with container
@@ -1066,7 +1067,7 @@ function FlavorSection({
     {
       key: 'select',
       label: '',
-      width: '40px',
+      width: columnWidths.select,
       render: (_, row) => (
         <div className="flex items-center justify-center" onClick={(e) => e.stopPropagation()}>
           <Radio
@@ -1388,7 +1389,7 @@ function NetworkSection({
     {
       key: 'select',
       label: '',
-      width: '40px',
+      width: columnWidths.select,
       render: (_, row) => (
         <div className="flex items-center justify-center" onClick={(e) => e.stopPropagation()}>
           <Checkbox
@@ -1401,7 +1402,7 @@ function NetworkSection({
     {
       key: 'status',
       label: 'Status',
-      width: '64px',
+      width: columnWidths.status,
       render: (_, row) => <StatusIndicator status={row.status} />,
     },
     { 
@@ -1434,7 +1435,7 @@ function NetworkSection({
     {
       key: 'select',
       label: '',
-      width: '40px',
+      width: columnWidths.select,
       render: (_, row) => (
         <div className="flex items-center justify-center" onClick={(e) => e.stopPropagation()}>
           <Checkbox
@@ -1469,7 +1470,7 @@ function NetworkSection({
     {
       key: 'select',
       label: '',
-      width: '40px',
+      width: columnWidths.select,
       render: (_, row) => (
         <div className="flex items-center justify-center" onClick={(e) => e.stopPropagation()}>
           <Checkbox
@@ -1482,7 +1483,7 @@ function NetworkSection({
     {
       key: 'status',
       label: 'Status',
-      width: '64px',
+      width: columnWidths.status,
       render: (_, row) => <StatusIndicator status={row.status} />,
     },
     { 
@@ -1839,7 +1840,7 @@ function AuthenticationSection({
     {
       key: 'select',
       label: '',
-      width: '40px',
+      width: columnWidths.select,
       render: (_, row) => (
         <div className="flex items-center justify-center" onClick={(e) => e.stopPropagation()}>
           <Radio
@@ -1852,7 +1853,7 @@ function AuthenticationSection({
     },
     { key: 'name', label: 'Name', sortable: true },
     { key: 'fingerprint', label: 'Fingerprint' },
-    { key: 'createdAt', label: 'Created at', sortable: true, width: '120px' },
+    { key: 'createdAt', label: 'Created at', sortable: true, width: columnWidths.createdAt },
   ];
 
   return (

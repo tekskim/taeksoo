@@ -14,6 +14,7 @@ import {
   ContextMenu,
   type TableColumn,
   type ContextMenuItem,
+  columnWidths,
 } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
 import { ShellPanel, useShellPanel, type ShellTab } from '@/components/ShellPanel';
@@ -190,7 +191,7 @@ export function PersistentVolumeClaimsPage() {
     {
       key: 'status',
       label: 'Status',
-      width: '64px',
+      width: columnWidths.status,
       sortable: true,
       align: 'center',
       render: (value: string) => (
@@ -207,7 +208,8 @@ export function PersistentVolumeClaimsPage() {
     {
       key: 'name',
       label: 'Name',
-      width: '150px',
+      flex: 1,
+      minWidth: '120px',
       sortable: true,
       render: (value: string, row) => (
         <span
@@ -225,7 +227,8 @@ export function PersistentVolumeClaimsPage() {
     {
       key: 'namespace',
       label: 'Namespace',
-      width: '120px',
+      flex: 1,
+      minWidth: '80px',
       sortable: true,
     },
     {
@@ -244,22 +247,24 @@ export function PersistentVolumeClaimsPage() {
     {
       key: 'capacity',
       label: 'Capacity',
-      width: '100px',
+      width: columnWidths.capacity,
     },
     {
       key: 'accessModes',
       label: 'Access Modes',
-      width: '120px',
+      width: columnWidths.accessModes,
     },
     {
       key: 'storageClass',
       label: 'Storage Class',
-      width: '120px',
+      flex: 1,
+      minWidth: '100px',
     },
     {
       key: 'volumeAttributesClass',
       label: 'VolumeAttributesClass',
-      width: '160px',
+      flex: 1,
+      minWidth: '120px',
       sortable: true,
       render: (value: string) => (
         value ? value : <span className="text-[var(--color-text-subtle)]">-</span>
@@ -268,13 +273,13 @@ export function PersistentVolumeClaimsPage() {
     {
       key: 'createdAt',
       label: 'Created At',
-      width: '150px',
+      width: columnWidths.createdAt,
       sortable: true,
     },
     {
       key: 'actions',
       label: 'Action',
-      width: '64px',
+      width: columnWidths.actions,
       align: 'center',
       render: (_, row) => (
         <div onClick={(e) => e.stopPropagation()}>

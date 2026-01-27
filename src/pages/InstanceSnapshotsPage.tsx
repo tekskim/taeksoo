@@ -14,6 +14,7 @@ import {
   ContextMenu,
   ConfirmModal,
   Checkbox,
+  columnWidths,
   type TableColumn,
   type ContextMenuItem,
   type FilterField,
@@ -225,12 +226,12 @@ export function InstanceSnapshotsPage() {
     deleting: 'shutoff',
   };
 
-  // Table columns
+  // Table columns (using columnWidths preset)
   const columns: TableColumn<InstanceSnapshot>[] = [
     {
       key: 'status',
       label: 'Status',
-      width: '64px',
+      width: columnWidths.status,
       align: 'center',
       sortable: false,
       render: (_, row) => (
@@ -241,6 +242,7 @@ export function InstanceSnapshotsPage() {
       key: 'name',
       label: 'Name',
       flex: 1,
+      minWidth: columnWidths.name,
       sortable: true,
       render: (_, row) => (
         <div className="flex flex-col gap-0.5">
@@ -260,19 +262,19 @@ export function InstanceSnapshotsPage() {
     {
       key: 'size',
       label: 'Size',
-      flex: 1,
+      width: columnWidths.size,
       sortable: true,
     },
     {
       key: 'diskFormat',
       label: 'Disk format',
-      flex: 1,
+      width: columnWidths.diskFormat,
       sortable: true,
     },
     {
       key: 'sourceInstance',
       label: 'Source instance',
-      flex: 1,
+      width: columnWidths.sourceInstance,
       sortable: true,
       render: (_, row) => (
         <div className="flex flex-col gap-0.5">
@@ -292,18 +294,18 @@ export function InstanceSnapshotsPage() {
     {
       key: 'description',
       label: 'Description',
-      flex: 1,
+      width: columnWidths.description,
     },
     {
       key: 'createdAt',
       label: 'Created at',
-      flex: 1,
+      width: columnWidths.createdAt,
       sortable: true,
     },
     {
       key: 'actions',
       label: 'Action',
-      width: '64px',
+      width: columnWidths.actions,
       align: 'center',
       render: (_, row) => {
         const menuItems: ContextMenuItem[] = [

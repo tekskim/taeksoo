@@ -12,6 +12,7 @@ import {
   HStack,
   ContextMenu,
   TabBar,
+  columnWidths,
   type TableColumn,
   type ContextMenuItem,
 } from '@/design-system';
@@ -108,6 +109,7 @@ export default function IAMRolesPage() {
       key: 'name',
       label: 'Name',
       flex: 1,
+      minWidth: columnWidths.name,
       sortable: true,
       render: (value) => (
         <Link
@@ -121,32 +123,32 @@ export default function IAMRolesPage() {
     {
       key: 'type',
       label: 'Type',
-      width: 100,
+      width: columnWidths.typeLg,
     },
     {
       key: 'policies',
       label: 'Policies',
-      flex: 1,
+      width: columnWidths.policies,
     },
     {
       key: 'description',
       label: 'Description',
-      flex: 1,
+      width: columnWidths.description,
     },
     {
       key: 'scope',
       label: 'Scope',
-      flex: 1,
+      width: columnWidths.scope,
     },
     {
       key: 'createdAt',
       label: 'Created at',
-      flex: 1,
+      width: columnWidths.createdAt,
     },
     {
       key: 'id',
       label: 'Action',
-      width: 72,
+      width: columnWidths.actionWide,
       align: 'center',
       render: (_value, row) => (
         <ContextMenu items={getContextMenuItems(row.id, row.type === 'Built-in')} trigger="click">

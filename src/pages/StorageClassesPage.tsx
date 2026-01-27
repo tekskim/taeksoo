@@ -14,6 +14,7 @@ import {
   ContextMenu,
   type TableColumn,
   type ContextMenuItem,
+  columnWidths,
 } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
 import { ShellPanel, useShellPanel, type ShellTab } from '@/components/ShellPanel';
@@ -176,7 +177,7 @@ export function StorageClassesPage() {
     {
       key: 'status',
       label: 'Status',
-      width: '64px',
+      width: columnWidths.status,
       sortable: true,
       align: 'center',
       render: (value: string) => (
@@ -193,11 +194,12 @@ export function StorageClassesPage() {
     {
       key: 'name',
       label: 'Name',
-      flex: 2,
+      flex: 1,
+      minWidth: columnWidths.name,
       sortable: true,
       render: (value: string, row) => (
         <span
-          className="text-[var(--color-action-primary)] font-medium cursor-pointer hover:underline truncate"
+          className="text-[var(--color-action-primary)] font-medium cursor-pointer hover:underline truncate block"
           title={value}
           onClick={(e) => {
             e.stopPropagation();
@@ -211,7 +213,7 @@ export function StorageClassesPage() {
     {
       key: 'isDefault',
       label: 'Default',
-      width: '100px',
+      width: columnWidths.default,
       render: (value: boolean) => (
         value ? (
           <IconCheck size={16} className="text-[var(--color-text-default)]" stroke={2} />
@@ -223,13 +225,14 @@ export function StorageClassesPage() {
     {
       key: 'createdAt',
       label: 'Created At',
-      width: '150px',
+      width: columnWidths.createdAt,
       sortable: true,
     },
     {
       key: 'actions',
       label: 'Action',
-      width: '64px',
+      width: columnWidths.actions,
+      minWidth: columnWidths.actions,
       align: 'center',
       render: (_, row) => (
         <div onClick={(e) => e.stopPropagation()}>

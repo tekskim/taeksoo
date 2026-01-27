@@ -21,6 +21,7 @@ import {
   Chip,
   type TableColumn,
   type ContextMenuItem,
+  columnWidths,
 } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
 import { ShellPanel, useShellPanel, type ShellTab } from '@/components/ShellPanel';
@@ -268,7 +269,7 @@ function PodsTab({ pods, onViewLogs, onExecuteShell }: PodsTabProps) {
     {
       key: 'status',
       label: 'Status',
-      width: '64px',
+      width: columnWidths.status,
       align: 'center',
       sortable: true,
       render: (value: string) => (
@@ -285,7 +286,7 @@ function PodsTab({ pods, onViewLogs, onExecuteShell }: PodsTabProps) {
     {
       key: 'name',
       label: 'Name',
-      width: '300px',
+      width: columnWidths.name,
       sortable: true,
       render: (value: string, row: PodRow) => (
         <span
@@ -300,7 +301,7 @@ function PodsTab({ pods, onViewLogs, onExecuteShell }: PodsTabProps) {
     {
       key: 'image',
       label: 'Image',
-      width: '300px',
+      width: columnWidths.image,
       sortable: true,
     },
     {
@@ -341,7 +342,7 @@ function PodsTab({ pods, onViewLogs, onExecuteShell }: PodsTabProps) {
     {
       key: 'action',
       label: 'Action',
-      width: '64px',
+      width: columnWidths.action,
       align: 'center',
       render: (_: unknown, row: PodRow) => (
         <ContextMenu items={createPodMenuItems(row)} trigger="click" align="left">
@@ -392,13 +393,13 @@ function PortsTab({ ports }: PortsTabProps) {
     {
       key: 'name',
       label: 'Name',
-      width: '200px',
+      width: columnWidths.name,
       sortable: true,
     },
     {
       key: 'port',
       label: 'Port',
-      width: '150px',
+      width: columnWidths.port,
       sortable: true,
     },
     {
@@ -464,13 +465,13 @@ function SelectorsTab({ selectors }: SelectorsTabProps) {
     {
       key: 'key',
       label: 'Key',
-      width: '300px',
+      width: columnWidths.key,
       sortable: true,
     },
     {
       key: 'value',
       label: 'Value',
-      width: '300px',
+      width: columnWidths.value,
       sortable: true,
     },
   ];

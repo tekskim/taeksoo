@@ -11,6 +11,7 @@ import {
   Breadcrumb,
   StatusIndicator,
   Chip,
+  columnWidths,
   type TableColumn,
 } from '@/design-system';
 import { StorageSidebar } from '@/components/StorageSidebar';
@@ -256,13 +257,13 @@ export function HostsPage() {
     return filteredHosts.slice(start, start + rowsPerPage);
   }, [filteredHosts, currentPage, rowsPerPage]);
 
-  // Table columns definition
+  // Table columns definition (using columnWidths preset)
   // Using minWidth for headers that need space, flex for expandable columns
   const columns: TableColumn<Host>[] = [
     {
       key: 'status',
       label: 'Status',
-      width: '64px',
+      width: columnWidths.status,
       sortable: false,
       align: 'center',
       render: (_, row) => <StatusCell status={row.status} />,
@@ -303,50 +304,43 @@ export function HostsPage() {
     {
       key: 'cpus',
       label: 'CPUs',
-      minWidth: '65px',
-      maxWidth: '75px',
+      width: columnWidths.cpus,
       sortable: true,
     },
     {
       key: 'cores',
       label: 'Cores',
-      minWidth: '65px',
-      maxWidth: '75px',
+      width: columnWidths.cores,
       sortable: true,
     },
     {
       key: 'totalMemory',
       label: 'Total memory',
-      minWidth: '100px',
-      maxWidth: '120px',
+      width: columnWidths.totalMemory,
       sortable: true,
     },
     {
       key: 'rawCapacity',
       label: 'Raw capacity',
-      minWidth: '100px',
-      maxWidth: '120px',
+      width: columnWidths.rawCapacity,
       sortable: true,
     },
     {
       key: 'hdds',
       label: 'HDDs',
-      minWidth: '60px',
-      maxWidth: '75px',
+      width: columnWidths.hdds,
       sortable: true,
     },
     {
       key: 'flash',
       label: 'Flash',
-      minWidth: '60px',
-      maxWidth: '75px',
+      width: columnWidths.flash,
       sortable: true,
     },
     {
       key: 'nics',
       label: 'NICs',
-      minWidth: '60px',
-      maxWidth: '75px',
+      width: columnWidths.nics,
       sortable: true,
     },
   ];

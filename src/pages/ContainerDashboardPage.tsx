@@ -15,6 +15,7 @@ import {
   Button,
   Pagination,
   type TableColumn,
+  columnWidths,
 } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
 import { useTabs } from '@/contexts/TabContext';
@@ -231,29 +232,31 @@ const eventsData: EventRow[] = [
 ];
 
 const eventsColumns: TableColumn<EventRow>[] = [
-  { key: 'reason', label: 'Reason', width: '120px', sortable: true },
+  { key: 'reason', label: 'Reason', flex: 1, minWidth: '80px', sortable: true },
   { 
     key: 'object', 
     label: 'Object', 
-    width: '120px', 
+    flex: 1,
+    minWidth: '80px',
     sortable: true,
     render: (value: string) => (
       <span className="text-[var(--color-action-primary)] font-medium cursor-pointer hover:underline line-clamp-2 break-all" title={value}>{value}</span>
     )
   },
-  { key: 'message', label: 'Message', flex: 1, sortable: true },
+  { key: 'message', label: 'Message', flex: 2, minWidth: '100px', sortable: true },
   { 
     key: 'name', 
     label: 'Name', 
-    width: '180px', 
+    flex: 1,
+    minWidth: '100px',
     sortable: true,
     render: (value: string) => (
       <span className="text-[var(--color-action-primary)] font-medium cursor-pointer hover:underline line-clamp-2 break-all" title={value}>{value}</span>
     )
   },
-  { key: 'firstSeen', label: 'First seen', width: '100px', sortable: true },
-  { key: 'lastSeen', label: 'Last seen', width: '100px', sortable: true },
-  { key: 'count', label: 'Count', width: '80px', sortable: true },
+  { key: 'firstSeen', label: 'First seen', width: columnWidths.firstSeen, sortable: true },
+  { key: 'lastSeen', label: 'Last seen', width: columnWidths.lastSeen, sortable: true },
+  { key: 'count', label: 'Count', width: columnWidths.count, sortable: true },
 ];
 
 /* ----------------------------------------

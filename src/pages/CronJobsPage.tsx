@@ -14,6 +14,7 @@ import {
   ContextMenu,
   type TableColumn,
   type ContextMenuItem,
+  columnWidths,
 } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
 import { ShellPanel, useShellPanel, type ShellTab } from '@/components/ShellPanel';
@@ -220,7 +221,7 @@ export function CronJobsPage() {
     {
       key: 'status',
       label: 'Status',
-      width: '64px',
+      width: columnWidths.status,
       sortable: true,
       align: 'center',
       render: (value: string) => (
@@ -238,10 +239,11 @@ export function CronJobsPage() {
       key: 'name',
       label: 'Name',
       flex: 1,
+      minWidth: columnWidths.name,
       sortable: true,
       render: (value: string, row) => (
         <span
-          className="text-[var(--color-action-primary)] font-medium cursor-pointer hover:underline truncate"
+          className="text-[var(--color-action-primary)] font-medium cursor-pointer hover:underline truncate block"
           title={value}
           onClick={(e) => {
             e.stopPropagation();
@@ -255,34 +257,34 @@ export function CronJobsPage() {
     {
       key: 'namespace',
       label: 'Namespace',
-      flex: 1,
+      width: columnWidths.namespace,
       sortable: true,
     },
     {
       key: 'image',
       label: 'Image',
-      flex: 1.5,
+      width: columnWidths.image,
     },
     {
       key: 'schedule',
       label: 'Schedule',
-      width: '100px',
+      width: columnWidths.schedule,
     },
     {
       key: 'lastSchedule',
       label: 'Last Schedule',
-      width: '120px',
+      width: columnWidths.lastSchedule,
     },
     {
       key: 'createdAt',
       label: 'Created At',
-      width: '150px',
+      width: columnWidths.createdAt,
       sortable: true,
     },
     {
       key: 'actions',
       label: 'Action',
-      width: '64px',
+      width: columnWidths.actions,
       align: 'center',
       render: (_, row) => (
         <div onClick={(e) => e.stopPropagation()}>

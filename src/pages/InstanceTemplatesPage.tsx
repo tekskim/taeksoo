@@ -16,6 +16,7 @@ import {
   ContextMenu,
   ConfirmModal,
   Checkbox,
+  columnWidths,
   type TableColumn,
   type ContextMenuItem,
   type FilterField,
@@ -230,12 +231,12 @@ export function InstanceTemplatesPage() {
   const allCurrentPageSelected = currentPageIds.length > 0 && currentPageIds.every((id) => selectedTemplates.includes(id));
   const someCurrentPageSelected = currentPageIds.some((id) => selectedTemplates.includes(id));
 
-  // Table columns
+  // Table columns (using columnWidths preset)
   const columns: TableColumn<InstanceTemplate>[] = [
     {
       key: 'favorite',
       label: '',
-      width: '48px',
+      width: columnWidths.favorite,
       align: 'center',
       headerRender: () => (
         <div className="flex items-center justify-center w-full">
@@ -262,6 +263,7 @@ export function InstanceTemplatesPage() {
       key: 'name',
       label: 'Name',
       flex: 1,
+      minWidth: columnWidths.name,
       sortable: true,
       render: (_, row) => (
         <Link
@@ -276,19 +278,19 @@ export function InstanceTemplatesPage() {
     {
       key: 'image',
       label: 'Description',
-      flex: 1,
+      width: columnWidths.description,
       sortable: true,
     },
     {
       key: 'flavor',
       label: 'Created at',
-      flex: 1,
+      width: columnWidths.createdAt,
       sortable: true,
     },
     {
       key: 'actions',
       label: 'Action',
-      width: '64px',
+      width: columnWidths.actions,
       align: 'center',
       render: (_, row) => {
         const menuItems: ContextMenuItem[] = [

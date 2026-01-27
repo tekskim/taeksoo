@@ -14,6 +14,7 @@ import {
   ContextMenu,
   type TableColumn,
   type ContextMenuItem,
+  columnWidths,
 } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
 import { ShellPanel, useShellPanel, type ShellTab } from '@/components/ShellPanel';
@@ -193,7 +194,7 @@ export function DaemonSetsPage() {
     {
       key: 'status',
       label: 'Status',
-      width: '64px',
+      width: columnWidths.status,
       sortable: true,
       align: 'center',
       render: (value: string) => (
@@ -211,10 +212,11 @@ export function DaemonSetsPage() {
       key: 'name',
       label: 'Name',
       flex: 1,
+      minWidth: columnWidths.name,
       sortable: true,
       render: (value: string, row) => (
         <span
-          className="text-[var(--color-action-primary)] font-medium cursor-pointer hover:underline truncate"
+          className="text-[var(--color-action-primary)] font-medium cursor-pointer hover:underline truncate block"
           title={value}
           onClick={(e) => {
             e.stopPropagation();
@@ -228,39 +230,39 @@ export function DaemonSetsPage() {
     {
       key: 'namespace',
       label: 'Namespace',
-      flex: 1,
+      width: columnWidths.namespace,
       sortable: true,
     },
     {
       key: 'image',
       label: 'Image',
-      flex: 1.5,
+      width: columnWidths.image,
     },
     {
       key: 'ready',
       label: 'Ready',
-      width: '80px',
+      width: columnWidths.ready,
     },
     {
       key: 'current',
       label: 'Current',
-      width: '80px',
+      width: columnWidths.current,
     },
     {
       key: 'desired',
       label: 'Desired',
-      width: '80px',
+      width: columnWidths.desired,
     },
     {
       key: 'createdAt',
       label: 'Created At',
-      width: '150px',
+      width: columnWidths.createdAt,
       sortable: true,
     },
     {
       key: 'actions',
       label: 'Action',
-      width: '64px',
+      width: columnWidths.actions,
       align: 'center',
       render: (_, row) => {
         const menuItems: ContextMenuItem[] = [

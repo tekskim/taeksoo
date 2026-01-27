@@ -19,6 +19,7 @@ import {
   ContextMenu,
   type ContextMenuItem,
   StatusIndicator,
+  columnWidths,
 } from '@/design-system';
 import { useTabs } from '@/contexts/TabContext';
 import { useProject } from '@/contexts/ProjectContext';
@@ -1066,7 +1067,7 @@ function WorkloadsContent() {
     {
       key: 'status',
       label: 'Status',
-      width: '64px',
+      width: columnWidths.status,
       align: 'center' as const,
       render: (_, row) => (
         <StatusIndicator status={statusMap[row.status]} layout="icon-only" />
@@ -1146,7 +1147,7 @@ function WorkloadsContent() {
     {
       key: 'actions',
       label: 'Action',
-      width: '64px',
+      width: columnWidths.actions,
       align: 'center' as const,
       render: (_, row) => (
         <div onClick={(e) => e.stopPropagation()}>

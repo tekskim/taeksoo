@@ -19,6 +19,7 @@ import {
   ProgressBar,
   type ContextMenuItem,
   type TableColumn,
+  columnWidths,
 } from '@/design-system';
 import { IconDotsCircleHorizontal, IconDownload, IconPlus, IconTrash } from '@tabler/icons-react';
 import {
@@ -28,7 +29,8 @@ import {
   type CloudBuilderSlug,
   type ListColumn,
 } from './consoleListConfig';
-import { Textarea } from '@/design-system';
+import { Textarea
+} from '@/design-system';
 
 function isCloudBuilderSlug(v: string | undefined): v is CloudBuilderSlug {
   return !!v && (CLOUD_BUILDER_SLUGS as readonly string[]).includes(v);
@@ -274,7 +276,7 @@ export function CloudBuilderConsolePage() {
     const actionCol: TableColumn<Record<string, string> & { id: string }> = {
       key: 'actions',
       label: 'Action',
-      width: '64px',
+      width: columnWidths.actions,
       align: 'center',
       render: (_, row) => {
         // compute-services 화면은 어떤 탭이든 동일하게 Enable/Disable 액션을 제공한다 (UI only).

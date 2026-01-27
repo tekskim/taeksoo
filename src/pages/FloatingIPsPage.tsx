@@ -14,6 +14,7 @@ import {
   ConfirmModal,
   StatusIndicator,
   Tooltip,
+  columnWidths,
   type TableColumn,
   type ContextMenuItem,
   type FilterField,
@@ -189,7 +190,7 @@ export function FloatingIPsPage() {
     {
       key: 'status',
       label: 'Status',
-      width: '64px',
+      width: columnWidths.status,
       align: 'center',
       render: (_, row) => (
         <StatusIndicator status={floatingIPStatusMap[row.status]} layout="icon-only" />
@@ -218,7 +219,7 @@ export function FloatingIPsPage() {
     {
       key: 'associatedTo',
       label: 'Associated to',
-      width: '160px',
+      width: columnWidths.associatedTo,
       align: 'right',
       render: (_, row) => (
         row.associatedTo ? (
@@ -256,7 +257,7 @@ export function FloatingIPsPage() {
     {
       key: 'network',
       label: 'Network',
-      width: '140px',
+      width: columnWidths.network,
       sortable: true,
       render: (_, row) => (
         <div className="flex flex-col gap-0.5 min-w-0">
@@ -285,7 +286,7 @@ export function FloatingIPsPage() {
     {
       key: 'actions',
       label: 'Action',
-      width: '64px',
+      width: columnWidths.actions,
       align: 'center',
       render: (_, row) => (
         <div onClick={(e) => e.stopPropagation()}>
