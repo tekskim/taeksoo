@@ -284,7 +284,7 @@ export function IAMUserGroupsPage() {
     {
       key: 'description',
       label: 'Description',
-      width: columnWidths.description,
+      flex: 1,
       sortable: true,
     },
     {

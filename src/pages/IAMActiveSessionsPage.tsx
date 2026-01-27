@@ -212,7 +212,7 @@ export default function IAMActiveSessionsPage() {
     {
       key: 'device',
       label: 'Device',
-      width: columnWidths.device,
+      flex: 1,
     },
     {
       key: 'id',

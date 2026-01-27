@@ -416,13 +416,11 @@ export function LoadBalancerDetailPage() {
       label: 'Members',
       width: columnWidths.members,
       sortable: true,
-      align: 'center',
     },
     {
       key: 'adminState',
       label: 'Admin state',
       width: columnWidths.adminState,
-      align: 'center',
     },
     {
       key: 'actions',

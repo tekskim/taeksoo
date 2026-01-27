@@ -18,6 +18,13 @@
  * - sortable 컬럼은 소팅 아이콘(~16px) 공간 필요
  * - 컬럼 8개 이상 테이블은 flex + minWidth 권장
  * - 총 고정 너비 800px 초과 시 오버플로우 위험
+ *
+ * @changelog
+ * 2026-01-26: 헤더 truncate 방지를 위한 너비 조정
+ *   - gpu: 64px → 80px
+ *   - type: 80px → 100px
+ *   - protocol: 70px → 90px
+ *   - adminState: 64px → 100px
  */
 
 export const columnWidths = {
@@ -81,7 +88,7 @@ export const columnWidths = {
   userCount: '80px',
 
   // 타입/분류 ------------------------------------------------------------------
-  type: '80px',
+  type: '100px',
   typeLg: '100px',
   typeXl: '200px',
   category: '140px',
@@ -105,7 +112,7 @@ export const columnWidths = {
   ram: '80px',
   memory: '100px',
   disk: '80px',
-  gpu: '64px',
+  gpu: '80px',
   ephemeralDisk: '100px',
 
   // 인스턴스 ------------------------------------------------------------------
@@ -192,7 +199,7 @@ export const columnWidths = {
   associatedResources: '160px',
 
   // 프로토콜/방향 --------------------------------------------------------------
-  protocol: '70px',
+  protocol: '90px',
   direction: '80px',
   etherType: '100px',
   remoteIpPrefix: '140px',
@@ -222,7 +229,7 @@ export const columnWidths = {
   // ============================================================================
 
   // 상태 ----------------------------------------------------------------------
-  adminState: '64px',
+  adminState: '100px',
   adminStateUp: '100px',
   provisioningStatus: '120px',
   operatingStatus: '120px',

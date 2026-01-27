@@ -413,15 +413,13 @@ export function ComputeAdminLoadBalancerDetailPage() {
     {
       key: 'members',
       label: 'Members',
-      width: '120px',
+      width: columnWidths.members,
       sortable: true,
-      align: 'center',
     },
     {
       key: 'adminState',
       label: 'Admin state',
-      width: '103px',
-      align: 'center',
+      width: columnWidths.adminState,
     },
     {
       key: 'actions',
