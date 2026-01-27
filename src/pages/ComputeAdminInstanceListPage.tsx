@@ -1245,7 +1245,7 @@ export function ComputeAdminInstanceListPage() {
     {
       key: 'gpu',
       label: 'GPU',
-      width: '64px',
+      width: columnWidths.gpu,
       sortable: true,
     },
     {
@@ -1399,7 +1399,7 @@ export function ComputeAdminInstanceListPage() {
     {
       key: 'gpu',
       label: 'GPU',
-      width: '64px',
+      width: columnWidths.gpu,
       sortable: true,
     },
     {

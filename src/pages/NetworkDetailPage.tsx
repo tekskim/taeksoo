@@ -551,7 +551,7 @@ export default function NetworkDetailPage() {
     {
       key: 'createdAt',
       label: 'Created at',
-      flex: 1,
+      width: columnWidths.createdAt,
       sortable: true,
     },
     {
