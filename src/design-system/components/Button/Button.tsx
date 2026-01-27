@@ -119,17 +119,17 @@ const buttonVariants = cva(
       {
         iconOnly: true,
         size: 'sm',
-        className: 'size-[var(--button-height-sm)] p-[var(--button-padding-y-sm)]',
+        className: 'w-[var(--button-height-sm)] h-[var(--button-height-sm)] min-w-0 px-0 py-0',
       },
       {
         iconOnly: true,
         size: 'md',
-        className: 'size-[var(--button-height-md)] p-[var(--button-padding-y-md)]',
+        className: 'w-[var(--button-height-md)] h-[var(--button-height-md)] min-w-0 px-0 py-0',
       },
       {
         iconOnly: true,
         size: 'lg',
-        className: 'size-[var(--button-height-lg)] p-[var(--button-padding-y-lg)]',
+        className: 'w-[var(--button-height-lg)] h-[var(--button-height-lg)] min-w-0 px-0 py-0',
       },
       // Link variant - remove size constraints
       {

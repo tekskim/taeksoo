@@ -116,6 +116,9 @@ import { ComputeAdminCertificatesPage } from '@/pages/ComputeAdminCertificatesPa
 import ComputeAdminCertificateDetailPage from '@/pages/ComputeAdminCertificateDetailPage';
 import { ComputeAdminTopologyD3Page } from '@/pages/ComputeAdminTopologyD3Page';
 import ComputeAdminConsolePage from '@/pages/ComputeAdminConsolePage';
+import ComputeAdminVolumeTypesPage from '@/pages/ComputeAdminVolumeTypesPage';
+import ComputeAdminVolumeTypeDetailPage from '@/pages/ComputeAdminVolumeTypeDetailPage';
+import ComputeAdminQoSSpecDetailPage from '@/pages/ComputeAdminQoSSpecDetailPage';
 
 // Pages - Agent
 import { AgentPage } from '@/pages/AgentPage';
@@ -445,6 +448,12 @@ function AppRoutes() {
         path="/compute-admin/volume-backups/:id"
         element={<ComputeAdminVolumeBackupDetailPage />}
       />
+      <Route path="/compute-admin/volume-types" element={<ComputeAdminVolumeTypesPage />} />
+      <Route
+        path="/compute-admin/volume-types/:id"
+        element={<ComputeAdminVolumeTypeDetailPage />}
+      />
+      <Route path="/compute-admin/qos-specs/:id" element={<ComputeAdminQoSSpecDetailPage />} />
       <Route path="/compute-admin/networks" element={<ComputeAdminNetworksPage />} />
       <Route path="/compute-admin/networks/create" element={<ComputeAdminCreateNetworkPage />} />
       <Route path="/compute-admin/networks/:id" element={<ComputeAdminNetworkDetailPage />} />
