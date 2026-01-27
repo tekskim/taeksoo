@@ -13,6 +13,7 @@ import {
   ConfirmModal,
   StatusIndicator,
   ContextMenu,
+  Badge,
   type TableColumn,
   type FilterField,
   type AppliedFilter,
@@ -20,13 +21,7 @@ import {
 import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
 import { useTabs } from '@/contexts/TabContext';
 import { ViewPreferencesDrawer, type ColumnConfig } from '@/components/ViewPreferencesDrawer';
-import {
-  IconTrash,
-  IconDownload,
-  IconBell,
-  IconExternalLink,
-  IconDotsCircleHorizontal,
-} from '@tabler/icons-react';
+import { IconTrash, IconDownload, IconBell, IconDotsCircleHorizontal } from '@tabler/icons-react';
 import { Link } from 'react-router-dom';
 
 /* ----------------------------------------
@@ -38,13 +33,16 @@ type RouterStatus = 'active' | 'error' | 'building';
 interface Router {
   id: string;
   name: string;
+  tenant: string;
+  tenantId: string;
   portsCount: number;
   externalGateway: boolean;
   externalFixedIp: string;
   externalNetwork: string;
   externalNetworkId: string;
-  adminState: boolean;
+  adminState: 'Up' | 'Down';
   status: RouterStatus;
+  createdAt: string;
 }
 
 /* ----------------------------------------
@@ -55,112 +53,142 @@ const mockRouters: Router[] = [
   {
     id: '29tgj234',
     name: 'router-01',
+    tenant: 'tenant-alpha',
+    tenantId: 'tenant-001',
     portsCount: 5,
     externalGateway: true,
     externalFixedIp: '10.7.60.91',
     externalNetwork: 'net-01',
     externalNetworkId: '29tgj234',
-    adminState: true,
+    adminState: 'Up',
     status: 'active',
+    createdAt: '2025-12-25',
   },
   {
     id: 'router-002',
     name: 'main-router',
+    tenant: 'tenant-beta',
+    tenantId: 'tenant-002',
     portsCount: 3,
     externalGateway: true,
     externalFixedIp: '10.7.60.92',
     externalNetwork: 'external-net',
     externalNetworkId: 'net-002',
-    adminState: true,
+    adminState: 'Up',
     status: 'active',
+    createdAt: '2025-12-24',
   },
   {
     id: 'router-003',
     name: 'dev-router',
+    tenant: 'tenant-gamma',
+    tenantId: 'tenant-003',
     portsCount: 2,
     externalGateway: false,
     externalFixedIp: '-',
     externalNetwork: '-',
     externalNetworkId: '',
-    adminState: true,
+    adminState: 'Up',
     status: 'active',
+    createdAt: '2025-12-23',
   },
   {
     id: 'router-004',
     name: 'prod-router',
+    tenant: 'tenant-alpha',
+    tenantId: 'tenant-001',
     portsCount: 8,
     externalGateway: true,
     externalFixedIp: '10.7.60.93',
     externalNetwork: 'prod-net',
     externalNetworkId: 'net-003',
-    adminState: true,
+    adminState: 'Up',
     status: 'building',
+    createdAt: '2025-12-22',
   },
   {
     id: 'router-005',
     name: 'test-router',
+    tenant: 'tenant-delta',
+    tenantId: 'tenant-004',
     portsCount: 1,
     externalGateway: false,
     externalFixedIp: '-',
     externalNetwork: '-',
     externalNetworkId: '',
-    adminState: false,
+    adminState: 'Down',
     status: 'active',
+    createdAt: '2025-12-21',
   },
   {
     id: 'router-006',
     name: 'backup-router',
+    tenant: 'tenant-beta',
+    tenantId: 'tenant-002',
     portsCount: 4,
     externalGateway: true,
     externalFixedIp: '10.7.60.94',
     externalNetwork: 'backup-net',
     externalNetworkId: 'net-004',
-    adminState: true,
+    adminState: 'Up',
     status: 'active',
+    createdAt: '2025-12-20',
   },
   {
     id: 'router-007',
     name: 'dmz-router',
+    tenant: 'tenant-epsilon',
+    tenantId: 'tenant-005',
     portsCount: 6,
     externalGateway: true,
     externalFixedIp: '10.7.60.95',
     externalNetwork: 'dmz-net',
     externalNetworkId: 'net-005',
-    adminState: false,
+    adminState: 'Down',
     status: 'error',
+    createdAt: '2025-12-19',
   },
   {
     id: 'router-008',
     name: 'internal-router',
+    tenant: 'tenant-gamma',
+    tenantId: 'tenant-003',
     portsCount: 2,
     externalGateway: false,
     externalFixedIp: '-',
     externalNetwork: '-',
     externalNetworkId: '',
-    adminState: true,
+    adminState: 'Up',
     status: 'active',
+    createdAt: '2025-12-18',
   },
   {
     id: 'router-009',
     name: 'edge-router',
+    tenant: 'tenant-alpha',
+    tenantId: 'tenant-001',
     portsCount: 7,
     externalGateway: true,
     externalFixedIp: '10.7.60.96',
     externalNetwork: 'edge-net',
     externalNetworkId: 'net-006',
-    adminState: true,
+    adminState: 'Up',
     status: 'active',
+    createdAt: '2025-12-17',
   },
   {
     id: 'router-010',
     name: 'vpn-router',
+    tenant: 'tenant-delta',
+    tenantId: 'tenant-004',
     portsCount: 3,
     externalGateway: true,
     externalFixedIp: '10.7.60.97',
     externalNetwork: 'vpn-net',
     externalNetworkId: 'net-007',
-    adminState: true,
+    adminState: 'Up',
     status: 'active',
+    createdAt: '2025-12-16',
   },
 ];
 
@@ -181,13 +209,14 @@ const routerStatusMap: Record<RouterStatus, 'active' | 'error' | 'building'> = {
 // Filter fields configuration
 const filterFields: FilterField[] = [
   { key: 'name', label: 'Name', type: 'text' },
+  { key: 'tenant', label: 'Tenant', type: 'text' },
   {
     key: 'externalGateway',
     label: 'External Gateway',
     type: 'select',
     options: [
-      { value: 'true', label: 'Yes' },
-      { value: 'false', label: 'No' },
+      { value: 'true', label: 'Open' },
+      { value: 'false', label: 'Closed' },
     ],
   },
   { key: 'externalFixedIp', label: 'External Fixed IP', type: 'text' },
@@ -197,8 +226,8 @@ const filterFields: FilterField[] = [
     label: 'Admin State',
     type: 'select',
     options: [
-      { value: 'true', label: 'Up' },
-      { value: 'false', label: 'Down' },
+      { value: 'Up', label: 'Up' },
+      { value: 'Down', label: 'Down' },
     ],
   },
   {
@@ -231,10 +260,12 @@ export function ComputeAdminRoutersPage() {
   const defaultColumnConfig: ColumnConfig[] = [
     { id: 'status', label: 'Status', visible: true, locked: true },
     { id: 'name', label: 'Name', visible: true, locked: true },
-    { id: 'externalGateway', label: 'External gateway', visible: true },
-    { id: 'externalFixedIp', label: 'External fixed IP', visible: true },
-    { id: 'externalNetwork', label: 'External network', visible: true },
-    { id: 'adminState', label: 'Admin state', visible: true },
+    { id: 'tenant', label: 'Tenant', visible: true },
+    { id: 'externalGateway', label: 'External Gateway', visible: true },
+    { id: 'externalFixedIp', label: 'External Fixed IP', visible: true },
+    { id: 'externalNetwork', label: 'External Network', visible: true },
+    { id: 'adminState', label: 'Admin State', visible: true },
+    { id: 'createdAt', label: 'Created At', visible: true },
     { id: 'actions', label: 'Action', visible: true, locked: true },
   ];
 
@@ -287,30 +318,54 @@ export function ComputeAdminRoutersPage() {
       flex: 1,
       sortable: true,
       render: (_, row) => (
-        <Link
-          to={`/compute-admin/routers/${row.id}`}
-          className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
-          onClick={(e) => e.stopPropagation()}
-        >
-          {row.name}
-        </Link>
+        <div className="flex flex-col gap-0.5">
+          <Link
+            to={`/compute-admin/routers/${row.id}`}
+            className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {row.name}
+          </Link>
+          <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
+            ID: {row.id}
+          </span>
+        </div>
+      ),
+    },
+    {
+      key: 'tenant',
+      label: 'Tenant',
+      flex: 1,
+      sortable: true,
+      render: (_, row) => (
+        <div className="flex flex-col gap-0.5">
+          <Link
+            to={`/compute-admin/tenants/${row.tenantId}`}
+            className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {row.tenant}
+          </Link>
+          <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
+            ID: {row.tenantId}
+          </span>
+        </div>
       ),
     },
     {
       key: 'externalGateway',
-      label: 'External gateway',
+      label: 'External Gateway',
       flex: 1,
-      render: (value: boolean) => (value ? 'Yes' : 'No'),
+      render: (value: boolean) => (value ? 'Open' : 'Closed'),
     },
     {
       key: 'externalFixedIp',
-      label: 'External fixed IP',
+      label: 'External Fixed IP',
       flex: 1,
-      sortable: true,
     },
     {
       key: 'externalNetwork',
-      label: 'External network',
+      label: 'External Network',
       flex: 1,
       sortable: true,
       render: (_, row) =>
@@ -318,40 +373,44 @@ export function ComputeAdminRoutersPage() {
           <div className="flex flex-col gap-0.5">
             <Link
               to={`/compute-admin/networks/${row.externalNetworkId}`}
-              className="inline-flex items-center gap-1.5 font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
+              className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
               onClick={(e) => e.stopPropagation()}
             >
               {row.externalNetwork}
-              <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
             </Link>
             <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
-              ID : {row.externalNetworkId}
+              ID: {row.externalNetworkId}
             </span>
           </div>
         ) : (
-          '-'
+          <span className="text-[var(--color-text-muted)]">-</span>
         ),
     },
     {
       key: 'adminState',
-      label: 'Admin state',
+      label: 'Admin State',
       flex: 1,
-      render: (value: boolean) => (value ? 'Up' : 'Down'),
+      render: (value: 'Up' | 'Down') => (
+        <Badge variant={value === 'Up' ? 'success' : 'error'} size="sm">
+          {value}
+        </Badge>
+      ),
+    },
+    {
+      key: 'createdAt',
+      label: 'Created At',
+      flex: 1,
+      sortable: true,
     },
     {
       key: 'actions',
       label: 'Action',
-      width: '64px',
+      width: '72px',
       align: 'center',
       render: () => (
         <div onClick={(e) => e.stopPropagation()}>
           <ContextMenu
             items={[
-              { label: 'Connect subnet', onClick: () => {} },
-              { label: 'Disconnect subnet', onClick: () => {} },
-              { label: 'External gateway Setting', onClick: () => {} },
-              { label: 'Enable SNAT', onClick: () => {} },
-              { label: 'Disable SNAT', onClick: () => {} },
               { label: 'Edit', onClick: () => {} },
               { label: 'Delete', onClick: () => {}, variant: 'danger' },
             ]}
