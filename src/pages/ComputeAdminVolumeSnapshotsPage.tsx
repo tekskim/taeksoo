@@ -404,14 +404,14 @@ export function ComputeAdminVolumeSnapshotsPage() {
       render: (_, row) => {
         const menuItems: ContextMenuItem[] = [
           {
-            id: 'create-volume',
-            label: 'Create volume',
-            onClick: () => handleCreateVolume(row),
+            id: 'update-status',
+            label: 'Update status',
+            onClick: () => handleEditSnapshot(row),
           },
           {
-            id: 'edit',
-            label: 'Edit',
-            onClick: () => handleEditSnapshot(row),
+            id: 'manage-metadata',
+            label: 'Manage metadata',
+            onClick: () => handleCreateVolume(row),
           },
           {
             id: 'delete',
