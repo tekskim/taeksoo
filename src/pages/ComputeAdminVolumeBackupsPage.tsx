@@ -23,13 +23,7 @@ import { useTabs } from '@/contexts/TabContext';
 import { ViewPreferencesDrawer, type ColumnConfig } from '@/components/ViewPreferencesDrawer';
 import { CreateVolumeFromBackupDrawer } from '@/components/CreateVolumeFromBackupDrawer';
 import { EditVolumeBackupDrawer } from '@/components/EditVolumeBackupDrawer';
-import {
-  IconDotsCircleHorizontal,
-  IconTrash,
-  IconDownload,
-  IconBell,
-  IconExternalLink,
-} from '@tabler/icons-react';
+import { IconDotsCircleHorizontal, IconTrash, IconDownload, IconBell } from '@tabler/icons-react';
 import { Link } from 'react-router-dom';
 
 /* ----------------------------------------
@@ -42,6 +36,8 @@ type BackupMode = 'Full Backup' | 'Incremental';
 interface VolumeBackup {
   id: string;
   name: string;
+  tenant: string;
+  tenantId: string;
   size: string;
   sourceVolume: string;
   sourceVolumeId: string;
@@ -58,6 +54,8 @@ const mockVolumeBackups: VolumeBackup[] = [
   {
     id: 'vbak-001',
     name: 'db-data-backup',
+    tenant: 'tenantA',
+    tenantId: 'tenant-001',
     size: '1500GiB',
     sourceVolume: 'vol-1',
     sourceVolumeId: 'vol-001',
@@ -68,6 +66,8 @@ const mockVolumeBackups: VolumeBackup[] = [
   {
     id: 'vbak-002',
     name: 'app-storage-backup',
+    tenant: 'tenantB',
+    tenantId: 'tenant-002',
     size: '500GiB',
     sourceVolume: 'vol-2',
     sourceVolumeId: 'vol-002',
@@ -78,6 +78,8 @@ const mockVolumeBackups: VolumeBackup[] = [
   {
     id: 'vbak-003',
     name: 'backup-vol-backup',
+    tenant: 'tenantA',
+    tenantId: 'tenant-001',
     size: '2000GiB',
     sourceVolume: 'vol-3',
     sourceVolumeId: 'vol-003',
@@ -88,6 +90,8 @@ const mockVolumeBackups: VolumeBackup[] = [
   {
     id: 'vbak-004',
     name: 'log-storage-backup',
+    tenant: 'tenantC',
+    tenantId: 'tenant-003',
     size: '100GiB',
     sourceVolume: 'vol-4',
     sourceVolumeId: 'vol-004',
@@ -98,6 +102,8 @@ const mockVolumeBackups: VolumeBackup[] = [
   {
     id: 'vbak-005',
     name: 'cache-vol-backup',
+    tenant: 'tenantB',
+    tenantId: 'tenant-002',
     size: '256GiB',
     sourceVolume: 'vol-5',
     sourceVolumeId: 'vol-005',
@@ -108,6 +114,8 @@ const mockVolumeBackups: VolumeBackup[] = [
   {
     id: 'vbak-006',
     name: 'media-storage-backup',
+    tenant: 'tenantA',
+    tenantId: 'tenant-001',
     size: '5000GiB',
     sourceVolume: 'vol-6',
     sourceVolumeId: 'vol-006',
@@ -118,6 +126,8 @@ const mockVolumeBackups: VolumeBackup[] = [
   {
     id: 'vbak-007',
     name: 'temp-vol-backup',
+    tenant: 'tenantC',
+    tenantId: 'tenant-003',
     size: '50GiB',
     sourceVolume: 'vol-7',
     sourceVolumeId: 'vol-007',
@@ -128,6 +138,8 @@ const mockVolumeBackups: VolumeBackup[] = [
   {
     id: 'vbak-008',
     name: 'ml-data-backup',
+    tenant: 'tenantB',
+    tenantId: 'tenant-002',
     size: '1000GiB',
     sourceVolume: 'vol-8',
     sourceVolumeId: 'vol-008',
@@ -138,6 +150,8 @@ const mockVolumeBackups: VolumeBackup[] = [
   {
     id: 'vbak-009',
     name: 'archive-vol-backup',
+    tenant: 'tenantA',
+    tenantId: 'tenant-001',
     size: '10000GiB',
     sourceVolume: 'vol-9',
     sourceVolumeId: 'vol-009',
@@ -148,6 +162,8 @@ const mockVolumeBackups: VolumeBackup[] = [
   {
     id: 'vbak-010',
     name: 'boot-vol-backup',
+    tenant: 'tenantC',
+    tenantId: 'tenant-003',
     size: '100GiB',
     sourceVolume: 'vol-10',
     sourceVolumeId: 'vol-010',
@@ -242,10 +258,11 @@ export function ComputeAdminVolumeBackupsPage() {
   const defaultColumnConfig: ColumnConfig[] = [
     { id: 'status', label: 'Status', visible: true, locked: true },
     { id: 'name', label: 'Name', visible: true, locked: true },
+    { id: 'tenant', label: 'Tenant', visible: true },
+    { id: 'backupMode', label: 'Backup Mode', visible: true },
     { id: 'size', label: 'Size', visible: true },
-    { id: 'sourceVolume', label: 'Source volume', visible: true },
-    { id: 'backupMode', label: 'Backup mode', visible: true },
-    { id: 'createdAt', label: 'Created at', visible: true },
+    { id: 'sourceVolume', label: 'Source Volume', visible: true },
+    { id: 'createdAt', label: 'Created At', visible: true },
     { id: 'actions', label: 'Action', visible: true, locked: true },
   ];
   const [columnConfig, setColumnConfig] = useState<ColumnConfig[]>(defaultColumnConfig);
@@ -320,14 +337,41 @@ export function ComputeAdminVolumeBackupsPage() {
       flex: 1,
       sortable: true,
       render: (value: string, row) => (
-        <Link
-          to={`/compute-admin/volume-backups/${row.id}`}
-          className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
-          onClick={(e) => e.stopPropagation()}
-        >
-          {value}
-        </Link>
+        <div className="flex flex-col gap-0.5">
+          <Link
+            to={`/compute-admin/volume-backups/${row.id}`}
+            className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {value}
+          </Link>
+          <span className="text-[11px] text-[var(--color-text-muted)]">ID: {row.id}</span>
+        </div>
       ),
+    },
+    {
+      key: 'tenant',
+      label: 'Tenant',
+      flex: 1,
+      sortable: true,
+      render: (_, row) => (
+        <div className="flex flex-col gap-0.5">
+          <Link
+            to={`/compute-admin/tenants/${row.tenantId}`}
+            className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {row.tenant}
+          </Link>
+          <span className="text-[11px] text-[var(--color-text-muted)]">ID: {row.tenantId}</span>
+        </div>
+      ),
+    },
+    {
+      key: 'backupMode',
+      label: 'Backup Mode',
+      flex: 1,
+      sortable: false,
     },
     {
       key: 'size',
@@ -337,34 +381,27 @@ export function ComputeAdminVolumeBackupsPage() {
     },
     {
       key: 'sourceVolume',
-      label: 'Source volume',
+      label: 'Source Volume',
       flex: 1,
-      sortable: true,
+      sortable: false,
       render: (_, row) => (
         <div className="flex flex-col gap-0.5">
           <Link
             to={`/compute-admin/volumes/${row.sourceVolumeId}`}
-            className="inline-flex items-center gap-1.5 font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
+            className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
             onClick={(e) => e.stopPropagation()}
           >
             {row.sourceVolume}
-            <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
           </Link>
-          <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
-            ID : {row.sourceVolumeId}
+          <span className="text-[11px] text-[var(--color-text-muted)]">
+            ID: {row.sourceVolumeId}
           </span>
         </div>
       ),
     },
     {
-      key: 'backupMode',
-      label: 'Backup mode',
-      flex: 1,
-      sortable: true,
-    },
-    {
       key: 'createdAt',
-      label: 'Created at',
+      label: 'Created At',
       flex: 1,
       sortable: true,
     },
@@ -376,18 +413,8 @@ export function ComputeAdminVolumeBackupsPage() {
       render: (_, row) => {
         const menuItems: ContextMenuItem[] = [
           {
-            id: 'create-volume',
-            label: 'Create volume',
-            onClick: () => handleCreateVolume(row),
-          },
-          {
-            id: 'restore',
-            label: 'Restore backup',
-            onClick: () => console.log('Restore', row.name),
-          },
-          {
-            id: 'edit',
-            label: 'Edit',
+            id: 'update-status',
+            label: 'Update status',
             onClick: () => handleEditBackup(row),
           },
           {
