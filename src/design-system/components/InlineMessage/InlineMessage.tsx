@@ -31,19 +31,43 @@ export interface InlineMessageProps extends HTMLAttributes<HTMLDivElement> {
 const variantStyles: Record<InlineMessageVariant, { bg: string; icon: ReactNode }> = {
   success: {
     bg: 'bg-[var(--inline-message-success-bg)]',
-    icon: <IconCircleCheck size={16} className="text-[var(--inline-message-success-icon)]" strokeWidth={1.5} />,
+    icon: (
+      <IconCircleCheck
+        size={16}
+        className="text-[var(--inline-message-success-icon)]"
+        strokeWidth={1.5}
+      />
+    ),
   },
   warning: {
     bg: 'bg-[var(--inline-message-warning-bg)]',
-    icon: <IconAlertTriangle size={16} className="text-[var(--inline-message-warning-icon)]" strokeWidth={1.5} />,
+    icon: (
+      <IconAlertTriangle
+        size={16}
+        className="text-[var(--inline-message-warning-icon)]"
+        strokeWidth={1.5}
+      />
+    ),
   },
   error: {
     bg: 'bg-[var(--inline-message-error-bg)]',
-    icon: <IconCircleX size={16} className="text-[var(--inline-message-error-icon)]" strokeWidth={1.5} />,
+    icon: (
+      <IconCircleX
+        size={16}
+        className="text-[var(--inline-message-error-icon)]"
+        strokeWidth={1.5}
+      />
+    ),
   },
   info: {
     bg: 'bg-[var(--inline-message-info-bg)]',
-    icon: <IconInfoCircle size={16} className="text-[var(--inline-message-info-icon)]" strokeWidth={1.5} />,
+    icon: (
+      <IconInfoCircle
+        size={16}
+        className="text-[var(--inline-message-info-icon)]"
+        strokeWidth={1.5}
+      />
+    ),
   },
 };
 
@@ -74,11 +98,7 @@ export function InlineMessage({
       {...props}
     >
       {/* Icon */}
-      {!hideIcon && (
-        <span className="shrink-0 mt-px">
-          {icon ?? styles.icon}
-        </span>
-      )}
+      {!hideIcon && <span className="shrink-0 mt-px">{icon ?? styles.icon}</span>}
 
       {/* Message Content */}
       <p className="text-[length:var(--inline-message-font-size)] leading-[var(--inline-message-line-height)] text-[var(--inline-message-text)]">
@@ -87,8 +107,3 @@ export function InlineMessage({
     </div>
   );
 }
-
-
-
-
-

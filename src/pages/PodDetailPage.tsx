@@ -116,7 +116,14 @@ const mockPodData: Record<string, PodData> = {
       'meta.helm.sh/release-name': 'pod',
       'meta.helm.sh/release-namespace': 'default',
     },
-    containers: ['container-0', 'container-1', 'container-2', 'container-3', 'container-4', 'container-5'],
+    containers: [
+      'container-0',
+      'container-1',
+      'container-2',
+      'container-3',
+      'container-4',
+      'container-5',
+    ],
   },
   '2': {
     id: '2',
@@ -129,7 +136,7 @@ const mockPodData: Record<string, PodData> = {
     workloadType: 'Deployment',
     node: 'worker-node-1',
     labels: {
-      'app': 'nginx',
+      app: 'nginx',
     },
     annotations: {},
     containers: ['nginx'],
@@ -235,10 +242,13 @@ function ContainersTab({ containers, onExecuteShell, onViewLogs }: ContainersTab
       render: (value: string) => (
         <StatusIndicator
           status={
-            value === 'Running' ? 'active' :
-            value === 'Waiting' ? 'pending' :
-            value === 'Terminated' ? 'error' :
-            'pending'
+            value === 'Running'
+              ? 'active'
+              : value === 'Waiting'
+                ? 'pending'
+                : value === 'Terminated'
+                  ? 'error'
+                  : 'pending'
           }
         />
       ),
@@ -248,13 +258,12 @@ function ContainersTab({ containers, onExecuteShell, onViewLogs }: ContainersTab
       label: 'Ready',
       width: columnWidths.ready,
       sortable: true,
-      render: (value: boolean) => (
+      render: (value: boolean) =>
         value ? (
           <IconCheck size={16} className="text-[var(--color-state-success)]" stroke={2} />
         ) : (
           <span className="text-[var(--color-text-subtle)]">-</span>
-        )
-      ),
+        ),
     },
     {
       key: 'name',
@@ -273,13 +282,12 @@ function ContainersTab({ containers, onExecuteShell, onViewLogs }: ContainersTab
       label: 'Init Container',
       width: columnWidths.initContainer,
       sortable: true,
-      render: (value: boolean) => (
+      render: (value: boolean) =>
         value ? (
           <span className="text-[var(--color-text-default)]">Completed</span>
         ) : (
           <span className="text-[var(--color-text-subtle)]">-</span>
-        )
-      ),
+        ),
     },
     {
       key: 'restarts',
@@ -301,7 +309,11 @@ function ContainersTab({ containers, onExecuteShell, onViewLogs }: ContainersTab
       render: (_: unknown, row: ContainerRow) => (
         <ContextMenu items={createContainerMenuItems(row)} trigger="click" align="left">
           <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-            <IconDotsCircleHorizontal size={16} className="text-[var(--color-text-subtle)]" stroke={1.5} />
+            <IconDotsCircleHorizontal
+              size={16}
+              className="text-[var(--color-text-subtle)]"
+              stroke={1.5}
+            />
           </button>
         </ContextMenu>
       ),
@@ -451,7 +463,11 @@ function RecentEventsTab({ events }: RecentEventsTabProps) {
       render: (_: unknown, row: EventRow) => (
         <ContextMenu items={createEventMenuItems(row)} trigger="click" align="left">
           <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-            <IconDotsCircleHorizontal size={16} className="text-[var(--color-text-subtle)]" stroke={1.5} />
+            <IconDotsCircleHorizontal
+              size={16}
+              className="text-[var(--color-text-subtle)]"
+              stroke={1.5}
+            />
           </button>
         </ContextMenu>
       ),
@@ -516,7 +532,8 @@ export function PodDetailPage() {
   const pod = mockPodData[podId || '1'] || mockPodData['1'];
 
   // Tab management
-  const { tabs, activeTabId, closeTab, selectTab, updateActiveTabLabel, moveTab, addNewTab } = useTabs();
+  const { tabs, activeTabId, closeTab, selectTab, updateActiveTabLabel, moveTab, addNewTab } =
+    useTabs();
 
   // Update tab label
   useEffect(() => {
@@ -672,11 +689,15 @@ export function PodDetailPage() {
                     label="Status"
                     value={pod.status === 'Running' ? 'Active' : pod.status}
                     status={
-                      pod.status === 'Running' ? 'active' :
-                      pod.status === 'Succeeded' ? 'active' :
-                      pod.status === 'Pending' ? 'pending' :
-                      pod.status === 'Failed' ? 'error' :
-                      'pending'
+                      pod.status === 'Running'
+                        ? 'active'
+                        : pod.status === 'Succeeded'
+                          ? 'active'
+                          : pod.status === 'Pending'
+                            ? 'pending'
+                            : pod.status === 'Failed'
+                              ? 'error'
+                              : 'pending'
                     }
                   />
                   <DetailHeader.InfoCard
@@ -685,15 +706,8 @@ export function PodDetailPage() {
                     link={`/container/namespaces/${pod.namespace}`}
                     copyable
                   />
-                  <DetailHeader.InfoCard
-                    label="Pod IP"
-                    value={pod.podIP}
-                    copyable
-                  />
-                  <DetailHeader.InfoCard
-                    label="Created At"
-                    value={pod.createdAt}
-                  />
+                  <DetailHeader.InfoCard label="Pod IP" value={pod.podIP} copyable />
+                  <DetailHeader.InfoCard label="Created At" value={pod.createdAt} />
                 </DetailHeader.InfoGrid>
 
                 {/* Second row: Workload, Node, Labels, Annotations */}
@@ -730,9 +744,11 @@ export function PodDetailPage() {
                         Labels ({Object.keys(pod.labels).length})
                       </span>
                       <div className="flex flex-wrap items-center gap-1 min-w-0 w-full">
-                        {Object.entries(pod.labels).slice(0, 1).map(([key, val]) => (
-                          <Chip key={key} value={`${key}: ${val}`} maxWidth="100%" />
-                        ))}
+                        {Object.entries(pod.labels)
+                          .slice(0, 1)
+                          .map(([key, val]) => (
+                            <Chip key={key} value={`${key}: ${val}`} maxWidth="100%" />
+                          ))}
                         {Object.keys(pod.labels).length > 1 && (
                           <span className="text-[11px] text-[var(--color-text-default)] cursor-pointer hover:underline">
                             (+{Object.keys(pod.labels).length - 1})
@@ -747,9 +763,11 @@ export function PodDetailPage() {
                         Annotations ({Object.keys(pod.annotations).length})
                       </span>
                       <div className="flex flex-wrap items-center gap-1 min-w-0 w-full">
-                        {Object.entries(pod.annotations).slice(0, 1).map(([key, val]) => (
-                          <Chip key={key} value={`${key}: ${val}`} maxWidth="100%" />
-                        ))}
+                        {Object.entries(pod.annotations)
+                          .slice(0, 1)
+                          .map(([key, val]) => (
+                            <Chip key={key} value={`${key}: ${val}`} maxWidth="100%" />
+                          ))}
                         {Object.keys(pod.annotations).length > 1 && (
                           <span className="text-[11px] text-[var(--color-text-default)] cursor-pointer hover:underline">
                             (+{Object.keys(pod.annotations).length - 1})
@@ -770,8 +788,8 @@ export function PodDetailPage() {
                 </TabList>
 
                 <TabPanel value="containers">
-                  <ContainersTab 
-                    containers={mockContainersData} 
+                  <ContainersTab
+                    containers={mockContainersData}
                     onExecuteShell={handleExecuteShell}
                     onViewLogs={handleViewLogs}
                   />

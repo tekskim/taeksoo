@@ -4,24 +4,24 @@ import { DatePicker } from './DatePicker';
 
 /**
  * # DatePicker
- * 
+ *
  * 날짜를 선택하는 캘린더 컴포넌트입니다.
- * 
+ *
  * ## 언제 사용하나요?
  * - 단일 날짜 선택 (예약일, 생일 등)
  * - 날짜 범위 선택 (여행 기간, 필터 등)
  * - 이벤트가 있는 날짜 표시
  * - 예약 가능한 날짜 표시
- * 
+ *
  * ## 모드
  * - **single**: 단일 날짜 선택
  * - **range**: 시작일~종료일 범위 선택
- * 
+ *
  * ## 기능
  * - **eventDates**: 이벤트가 있는 날짜에 점 표시
  * - **minDate/maxDate**: 선택 가능한 날짜 범위 제한
  * - **firstDayOfWeek**: 주 시작일 설정 (일요일/월요일)
- * 
+ *
  * ## 접근성
  * - 각 날짜 버튼에 `aria-label` 제공
  * - `aria-selected`로 선택 상태 표시
@@ -34,7 +34,8 @@ const meta = {
     layout: 'centered',
     docs: {
       description: {
-        component: '날짜를 선택하는 캘린더 컴포넌트입니다. 단일 날짜 또는 날짜 범위를 선택할 수 있습니다.',
+        component:
+          '날짜를 선택하는 캘린더 컴포넌트입니다. 단일 날짜 또는 날짜 범위를 선택할 수 있습니다.',
       },
     },
   },
@@ -74,14 +75,10 @@ export const SingleMode: Story = {
   name: 'Single Date Selection',
   render: () => {
     const [date, setDate] = useState<Date | null>(null);
-    
+
     return (
       <div className="flex flex-col gap-4 items-center">
-        <DatePicker
-          mode="single"
-          value={date}
-          onChange={setDate}
-        />
+        <DatePicker mode="single" value={date} onChange={setDate} />
         <p className="text-sm text-gray-600">
           Selected: {date ? date.toLocaleDateString() : 'None'}
         </p>
@@ -97,16 +94,13 @@ export const RangeMode: Story = {
       start: null,
       end: null,
     });
-    
+
     return (
       <div className="flex flex-col gap-4 items-center">
-        <DatePicker
-          mode="range"
-          rangeValue={range}
-          onRangeChange={setRange}
-        />
+        <DatePicker mode="range" rangeValue={range} onRangeChange={setRange} />
         <p className="text-sm text-gray-600">
-          Range: {range.start?.toLocaleDateString() || 'Start'} ~ {range.end?.toLocaleDateString() || 'End'}
+          Range: {range.start?.toLocaleDateString() || 'Start'} ~{' '}
+          {range.end?.toLocaleDateString() || 'End'}
         </p>
       </div>
     );
@@ -122,14 +116,8 @@ export const WithPreselectedDate: Story = {
   render: () => {
     const today = new Date();
     const [date, setDate] = useState<Date | null>(today);
-    
-    return (
-      <DatePicker
-        mode="single"
-        value={date}
-        onChange={setDate}
-      />
-    );
+
+    return <DatePicker mode="single" value={date} onChange={setDate} />;
   },
 };
 
@@ -139,19 +127,13 @@ export const WithPreselectedRange: Story = {
     const today = new Date();
     const nextWeek = new Date(today);
     nextWeek.setDate(today.getDate() + 7);
-    
+
     const [range, setRange] = useState<{ start: Date | null; end: Date | null }>({
       start: today,
       end: nextWeek,
     });
-    
-    return (
-      <DatePicker
-        mode="range"
-        rangeValue={range}
-        onRangeChange={setRange}
-      />
-    );
+
+    return <DatePicker mode="range" rangeValue={range} onRangeChange={setRange} />;
   },
 };
 
@@ -169,20 +151,13 @@ export const WithEventDates: Story = {
       new Date(today.getFullYear(), today.getMonth(), 18),
       new Date(today.getFullYear(), today.getMonth(), 25),
     ];
-    
+
     const [date, setDate] = useState<Date | null>(null);
-    
+
     return (
       <div className="flex flex-col gap-4 items-center">
-        <DatePicker
-          mode="single"
-          value={date}
-          onChange={setDate}
-          eventDates={eventDates}
-        />
-        <p className="text-xs text-gray-500">
-          Dates with dots have events
-        </p>
+        <DatePicker mode="single" value={date} onChange={setDate} eventDates={eventDates} />
+        <p className="text-xs text-gray-500">Dates with dots have events</p>
       </div>
     );
   },
@@ -200,9 +175,9 @@ export const WithMinMaxDates: Story = {
     minDate.setDate(today.getDate() - 5);
     const maxDate = new Date(today);
     maxDate.setDate(today.getDate() + 14);
-    
+
     const [date, setDate] = useState<Date | null>(null);
-    
+
     return (
       <div className="flex flex-col gap-4 items-center">
         <DatePicker
@@ -212,9 +187,7 @@ export const WithMinMaxDates: Story = {
           minDate={minDate}
           maxDate={maxDate}
         />
-        <p className="text-xs text-gray-500">
-          Only dates within ±2 weeks are selectable
-        </p>
+        <p className="text-xs text-gray-500">Only dates within ±2 weeks are selectable</p>
       </div>
     );
   },
@@ -228,18 +201,11 @@ export const MondayStart: Story = {
   name: 'Monday Start',
   render: () => {
     const [date, setDate] = useState<Date | null>(null);
-    
+
     return (
       <div className="flex flex-col gap-4 items-center">
-        <DatePicker
-          mode="single"
-          value={date}
-          onChange={setDate}
-          firstDayOfWeek={1}
-        />
-        <p className="text-xs text-gray-500">
-          Week starts on Monday
-        </p>
+        <DatePicker mode="single" value={date} onChange={setDate} firstDayOfWeek={1} />
+        <p className="text-xs text-gray-500">Week starts on Monday</p>
       </div>
     );
   },
@@ -249,18 +215,11 @@ export const SundayStart: Story = {
   name: 'Sunday Start (Default)',
   render: () => {
     const [date, setDate] = useState<Date | null>(null);
-    
+
     return (
       <div className="flex flex-col gap-4 items-center">
-        <DatePicker
-          mode="single"
-          value={date}
-          onChange={setDate}
-          firstDayOfWeek={0}
-        />
-        <p className="text-xs text-gray-500">
-          Week starts on Sunday
-        </p>
+        <DatePicker mode="single" value={date} onChange={setDate} firstDayOfWeek={0} />
+        <p className="text-xs text-gray-500">Week starts on Sunday</p>
       </div>
     );
   },
@@ -293,9 +252,9 @@ export const BookingCalendar: Story = {
       new Date(today.getFullYear(), today.getMonth(), 22),
       new Date(today.getFullYear(), today.getMonth(), 23),
     ];
-    
+
     const [date, setDate] = useState<Date | null>(null);
-    
+
     return (
       <div className="flex flex-col gap-4 items-center">
         <h3 className="text-sm font-medium">Select Check-in Date</h3>
@@ -329,11 +288,12 @@ export const TravelDateRange: Story = {
       start: null,
       end: null,
     });
-    
-    const nights = range.start && range.end
-      ? Math.ceil((range.end.getTime() - range.start.getTime()) / (1000 * 60 * 60 * 24))
-      : 0;
-    
+
+    const nights =
+      range.start && range.end
+        ? Math.ceil((range.end.getTime() - range.start.getTime()) / (1000 * 60 * 60 * 24))
+        : 0;
+
     return (
       <div className="flex flex-col gap-4 items-center">
         <h3 className="text-sm font-medium">Select Travel Dates</h3>
@@ -365,31 +325,21 @@ export const EventScheduler: Story = {
       new Date(today.getFullYear(), today.getMonth(), 21),
       new Date(today.getFullYear(), today.getMonth(), 28),
     ];
-    
+
     const [date, setDate] = useState<Date | null>(null);
-    
-    const selectedEvent = date && events.find(e => 
-      e.getDate() === date.getDate() && 
-      e.getMonth() === date.getMonth()
-    );
-    
+
+    const selectedEvent =
+      date &&
+      events.find((e) => e.getDate() === date.getDate() && e.getMonth() === date.getMonth());
+
     return (
       <div className="flex flex-col gap-4 items-center">
         <h3 className="text-sm font-medium">Upcoming Events</h3>
-        <DatePicker
-          mode="single"
-          value={date}
-          onChange={setDate}
-          eventDates={events}
-        />
+        <DatePicker mode="single" value={date} onChange={setDate} eventDates={events} />
         {selectedEvent ? (
-          <p className="text-sm text-green-600">
-            Event on {selectedEvent.toLocaleDateString()}
-          </p>
+          <p className="text-sm text-green-600">Event on {selectedEvent.toLocaleDateString()}</p>
         ) : (
-          <p className="text-xs text-gray-500">
-            Click on a date with a dot to see the event
-          </p>
+          <p className="text-xs text-gray-500">Click on a date with a dot to see the event</p>
         )}
       </div>
     );

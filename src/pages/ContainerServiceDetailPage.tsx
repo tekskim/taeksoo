@@ -15,8 +15,6 @@ import {
   Button,
   ContextMenu,
   StatusIndicator,
-  SearchInput,
-  Tooltip,
   DetailHeader,
   Chip,
   type TableColumn,
@@ -32,11 +30,8 @@ import {
   IconFile,
   IconCopy,
   IconSearch,
-  IconDownload,
   IconDotsCircleHorizontal,
   IconChevronDown,
-  IconInfoCircle,
-  IconTrash,
 } from '@tabler/icons-react';
 
 /* ----------------------------------------
@@ -275,10 +270,13 @@ function PodsTab({ pods, onViewLogs, onExecuteShell }: PodsTabProps) {
       render: (value: string) => (
         <StatusIndicator
           status={
-            value === 'Running' ? 'active' :
-            value === 'Pending' ? 'building' :
-            value === 'Failed' ? 'error' :
-            'muted'
+            value === 'Running'
+              ? 'active'
+              : value === 'Pending'
+                ? 'building'
+                : value === 'Failed'
+                  ? 'error'
+                  : 'muted'
           }
         />
       ),
@@ -347,7 +345,11 @@ function PodsTab({ pods, onViewLogs, onExecuteShell }: PodsTabProps) {
       render: (_: unknown, row: PodRow) => (
         <ContextMenu items={createPodMenuItems(row)} trigger="click" align="left">
           <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-            <IconDotsCircleHorizontal size={16} className="text-[var(--color-text-subtle)]" stroke={1.5} />
+            <IconDotsCircleHorizontal
+              size={16}
+              className="text-[var(--color-text-subtle)]"
+              stroke={1.5}
+            />
           </button>
         </ContextMenu>
       ),
@@ -426,11 +428,14 @@ function PortsTab({ ports }: PortsTabProps) {
       label: 'Public Ports',
       flex: 1,
       sortable: true,
-      render: (value: string | undefined) => value ? (
-        <span className="text-[var(--color-action-primary)] cursor-pointer hover:underline">
-          {value}
-        </span>
-      ) : '-',
+      render: (value: string | undefined) =>
+        value ? (
+          <span className="text-[var(--color-action-primary)] cursor-pointer hover:underline">
+            {value}
+          </span>
+        ) : (
+          '-'
+        ),
     },
   ];
 
@@ -565,7 +570,8 @@ export function ContainerServiceDetailPage() {
   const service = mockServiceData[serviceId || ''] || mockServiceData['1'];
 
   // Tab management
-  const { tabs, activeTabId, closeTab, selectTab, updateActiveTabLabel, moveTab, addNewTab } = useTabs();
+  const { tabs, activeTabId, closeTab, selectTab, updateActiveTabLabel, moveTab, addNewTab } =
+    useTabs();
 
   // Update tab label
   useEffect(() => {
@@ -703,30 +709,23 @@ export function ContainerServiceDetailPage() {
                     label="Status"
                     value={service.status === 'Running' ? 'Active' : service.status}
                     status={
-                      service.status === 'Running' ? 'active' :
-                      service.status === 'Pending' ? 'building' :
-                      service.status === 'Error' ? 'error' :
-                      'muted'
+                      service.status === 'Running'
+                        ? 'active'
+                        : service.status === 'Pending'
+                          ? 'building'
+                          : service.status === 'Error'
+                            ? 'error'
+                            : 'muted'
                     }
                   />
-                  <DetailHeader.InfoCard
-                    label="Namespace"
-                    value={service.namespace}
-                    copyable
-                  />
+                  <DetailHeader.InfoCard label="Namespace" value={service.namespace} copyable />
                   <DetailHeader.InfoCard
                     label="Type"
                     value={`${service.type} - Cluster IP: ${service.clusterIP}`}
                     copyable
                   />
-                  <DetailHeader.InfoCard
-                    label="Session Affinity"
-                    value={service.sessionAffinity}
-                  />
-                  <DetailHeader.InfoCard
-                    label="Created At"
-                    value={service.createdAt}
-                  />
+                  <DetailHeader.InfoCard label="Session Affinity" value={service.sessionAffinity} />
+                  <DetailHeader.InfoCard label="Created At" value={service.createdAt} />
                 </DetailHeader.InfoGrid>
 
                 {/* Second row: Labels, Annotations */}
@@ -737,9 +736,11 @@ export function ContainerServiceDetailPage() {
                         Labels ({Object.keys(service.labels).length})
                       </span>
                       <div className="flex flex-wrap items-center gap-1 min-w-0 w-full">
-                        {Object.entries(service.labels).slice(0, 1).map(([key, val]) => (
-                          <Chip key={key} value={`${key}: ${val}`} maxWidth="100%" />
-                        ))}
+                        {Object.entries(service.labels)
+                          .slice(0, 1)
+                          .map(([key, val]) => (
+                            <Chip key={key} value={`${key}: ${val}`} maxWidth="100%" />
+                          ))}
                         {Object.keys(service.labels).length > 1 && (
                           <span className="text-[11px] text-[var(--color-text-default)] cursor-pointer hover:underline">
                             (+{Object.keys(service.labels).length - 1})
@@ -754,9 +755,11 @@ export function ContainerServiceDetailPage() {
                         Annotations ({Object.keys(service.annotations).length})
                       </span>
                       <div className="flex flex-wrap items-center gap-1 min-w-0 w-full">
-                        {Object.entries(service.annotations).slice(0, 1).map(([key, val]) => (
-                          <Chip key={key} value={`${key}: ${val}`} maxWidth="100%" />
-                        ))}
+                        {Object.entries(service.annotations)
+                          .slice(0, 1)
+                          .map(([key, val]) => (
+                            <Chip key={key} value={`${key}: ${val}`} maxWidth="100%" />
+                          ))}
                         {Object.keys(service.annotations).length > 1 && (
                           <span className="text-[11px] text-[var(--color-text-default)] cursor-pointer hover:underline">
                             (+{Object.keys(service.annotations).length - 1})
@@ -778,7 +781,11 @@ export function ContainerServiceDetailPage() {
                 </TabList>
 
                 <TabPanel value="pods">
-                  <PodsTab pods={mockPodsData} onViewLogs={handleViewLogs} onExecuteShell={handleExecuteShell} />
+                  <PodsTab
+                    pods={mockPodsData}
+                    onViewLogs={handleViewLogs}
+                    onExecuteShell={handleExecuteShell}
+                  />
                 </TabPanel>
                 <TabPanel value="ports">
                   <PortsTab ports={mockPortsData} />

@@ -1,0 +1,404 @@
+import { useState, useEffect } from 'react';
+import { useParams, useNavigate, Link } from 'react-router-dom';
+import {
+  Button,
+  VStack,
+  TabBar,
+  TopBar,
+  TopBarAction,
+  Breadcrumb,
+  Tabs,
+  TabList,
+  Tab,
+  TabPanel,
+  DetailHeader,
+  SectionCard,
+} from '@/design-system';
+import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
+import { useTabs } from '@/contexts/TabContext';
+import {
+  IconCirclePlus,
+  IconTrash,
+  IconEdit,
+  IconBell,
+  IconExternalLink,
+  IconRestore,
+} from '@tabler/icons-react';
+
+/* ----------------------------------------
+   Types
+   ---------------------------------------- */
+
+type BackupStatus = 'available' | 'creating' | 'restoring' | 'error' | 'deleting';
+type BackupMode = 'Full Backup' | 'Incremental';
+
+interface VolumeBackupDetail {
+  id: string;
+  name: string;
+  status: BackupStatus;
+  size: string;
+  createdAt: string;
+  description: string;
+  sourceVolume: string;
+  sourceVolumeId: string;
+  backupMode: BackupMode;
+  container: string;
+  availabilityZone: string;
+}
+
+/* ----------------------------------------
+   Mock Data
+   ---------------------------------------- */
+
+// Volume backup data map by ID - synced with VolumeBackupsPage mock data
+const mockBackupDetails: Record<string, VolumeBackupDetail> = {
+  'vbak-001': {
+    id: 'vbak-001',
+    name: 'db-data-backup',
+    status: 'available',
+    size: '1500GiB',
+    createdAt: '2025-09-12',
+    description: 'Database data backup',
+    sourceVolume: 'vol-1',
+    sourceVolumeId: 'vol-001',
+    backupMode: 'Full Backup',
+    container: 'cinder-backups',
+    availabilityZone: 'nova',
+  },
+  'vbak-002': {
+    id: 'vbak-002',
+    name: 'app-storage-backup',
+    status: 'available',
+    size: '500GiB',
+    createdAt: '2025-09-10',
+    description: 'Application storage backup',
+    sourceVolume: 'vol-2',
+    sourceVolumeId: 'vol-002',
+    backupMode: 'Incremental',
+    container: 'cinder-backups',
+    availabilityZone: 'nova',
+  },
+  'vbak-003': {
+    id: 'vbak-003',
+    name: 'backup-vol-backup',
+    status: 'available',
+    size: '2000GiB',
+    createdAt: '2025-09-08',
+    description: 'Backup volume snapshot',
+    sourceVolume: 'vol-3',
+    sourceVolumeId: 'vol-003',
+    backupMode: 'Full Backup',
+    container: 'cinder-backups',
+    availabilityZone: 'nova',
+  },
+  'vbak-004': {
+    id: 'vbak-004',
+    name: 'log-storage-backup',
+    status: 'creating',
+    size: '100GiB',
+    createdAt: '2025-09-05',
+    description: 'Log storage backup',
+    sourceVolume: 'vol-4',
+    sourceVolumeId: 'vol-004',
+    backupMode: 'Incremental',
+    container: 'cinder-backups',
+    availabilityZone: 'nova',
+  },
+  'vbak-005': {
+    id: 'vbak-005',
+    name: 'cache-vol-backup',
+    status: 'available',
+    size: '256GiB',
+    createdAt: '2025-08-30',
+    description: 'Cache volume backup',
+    sourceVolume: 'vol-5',
+    sourceVolumeId: 'vol-005',
+    backupMode: 'Full Backup',
+    container: 'cinder-backups',
+    availabilityZone: 'nova',
+  },
+  'vbak-006': {
+    id: 'vbak-006',
+    name: 'media-storage-backup',
+    status: 'restoring',
+    size: '5000GiB',
+    createdAt: '2025-08-25',
+    description: 'Media storage backup',
+    sourceVolume: 'vol-6',
+    sourceVolumeId: 'vol-006',
+    backupMode: 'Full Backup',
+    container: 'cinder-backups',
+    availabilityZone: 'nova',
+  },
+  'vbak-007': {
+    id: 'vbak-007',
+    name: 'temp-vol-backup',
+    status: 'error',
+    size: '50GiB',
+    createdAt: '2025-08-20',
+    description: 'Temporary volume backup',
+    sourceVolume: 'vol-7',
+    sourceVolumeId: 'vol-007',
+    backupMode: 'Incremental',
+    container: 'cinder-backups',
+    availabilityZone: 'nova',
+  },
+  'vbak-008': {
+    id: 'vbak-008',
+    name: 'ml-data-backup',
+    status: 'available',
+    size: '1000GiB',
+    createdAt: '2025-08-15',
+    description: 'ML data backup',
+    sourceVolume: 'vol-8',
+    sourceVolumeId: 'vol-008',
+    backupMode: 'Full Backup',
+    container: 'cinder-backups',
+    availabilityZone: 'nova',
+  },
+  'vbak-009': {
+    id: 'vbak-009',
+    name: 'archive-vol-backup',
+    status: 'available',
+    size: '10000GiB',
+    createdAt: '2025-08-10',
+    description: 'Archive volume backup',
+    sourceVolume: 'vol-9',
+    sourceVolumeId: 'vol-009',
+    backupMode: 'Full Backup',
+    container: 'cinder-backups',
+    availabilityZone: 'nova',
+  },
+  'vbak-010': {
+    id: 'vbak-010',
+    name: 'boot-vol-backup',
+    status: 'deleting',
+    size: '100GiB',
+    createdAt: '2025-08-05',
+    description: 'Boot volume backup',
+    sourceVolume: 'vol-10',
+    sourceVolumeId: 'vol-010',
+    backupMode: 'Incremental',
+    container: 'cinder-backups',
+    availabilityZone: 'nova',
+  },
+};
+
+// Default backup for unknown IDs
+const defaultBackup: VolumeBackupDetail = {
+  id: 'unknown',
+  name: 'Unknown Backup',
+  status: 'available',
+  size: '0 GiB',
+  createdAt: '-',
+  description: '-',
+  sourceVolume: '-',
+  sourceVolumeId: '-',
+  backupMode: '-',
+  container: '-',
+  availabilityZone: '-',
+};
+
+/* ----------------------------------------
+   Status Mapping
+   ---------------------------------------- */
+
+const statusDisplayMap: Record<BackupStatus, string> = {
+  available: 'Available',
+  creating: 'Creating',
+  restoring: 'Restoring',
+  error: 'Error',
+  deleting: 'Deleting',
+};
+
+const statusIndicatorMap: Record<BackupStatus, 'active' | 'building' | 'error' | 'pending'> = {
+  available: 'active',
+  creating: 'building',
+  restoring: 'building',
+  error: 'error',
+  deleting: 'pending',
+};
+
+/* ----------------------------------------
+   Volume backup Detail Page
+   ---------------------------------------- */
+
+export function ComputeAdminVolumeBackupDetailPage() {
+  const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
+  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [activeDetailTab, setActiveDetailTab] = useState('details');
+
+  // Get backup data based on the ID
+  const backup = id && mockBackupDetails[id] ? mockBackupDetails[id] : defaultBackup;
+
+  // Global tab management
+  const { tabs, activeTabId, closeTab, selectTab, addNewTab, updateActiveTabLabel, moveTab } =
+    useTabs();
+
+  // Update tab label to backup name
+  useEffect(() => {
+    if (backup.name) {
+      updateActiveTabLabel(backup.name);
+    }
+  }, [backup.name, updateActiveTabLabel]);
+
+  // Convert tabs to TabBar format
+  const tabBarTabs = tabs.map((tab) => ({
+    id: tab.id,
+    label: tab.label,
+    closable: tab.closable,
+  }));
+
+  // Breadcrumb items
+  const breadcrumbItems = [
+    { label: 'Compute Admin', href: '/' },
+    { label: 'Volumes', href: '/compute-admin/volume-backups' },
+    { label: backup.name },
+  ];
+
+  return (
+    <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
+      {/* Sidebar */}
+      <ComputeAdminSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
+
+      {/* Main Content */}
+      <main
+        className={`absolute top-0 bottom-0 right-0 flex flex-col bg-[var(--color-surface-default)] transition-[left] duration-200 ${
+          sidebarOpen ? 'left-[var(--layout-sidebar-width)]' : 'left-0'
+        }`}
+      >
+        {/* Fixed Header Area */}
+        <div className="shrink-0 bg-[var(--color-surface-default)]">
+          {/* Tab Bar */}
+          <TabBar
+            tabs={tabBarTabs}
+            activeTab={activeTabId}
+            onTabChange={selectTab}
+            onTabClose={closeTab}
+            onTabAdd={addNewTab}
+            onTabReorder={moveTab}
+            showAddButton={true}
+            showWindowControls={true}
+          />
+
+          {/* Top Bar */}
+          <TopBar
+            showSidebarToggle={!sidebarOpen}
+            onSidebarToggle={() => setSidebarOpen(true)}
+            showNavigation={true}
+            onBack={() => navigate('/volume-backups')}
+            onForward={() => window.history.forward()}
+            breadcrumb={<Breadcrumb items={breadcrumbItems} />}
+            actions={
+              <TopBarAction
+                icon={<IconBell size={16} stroke={1.5} />}
+                aria-label="Notifications"
+                badge={true}
+              />
+            }
+          />
+        </div>
+
+        {/* Scrollable Content Area */}
+        <div className="flex-1 overflow-auto overscroll-contain sidebar-scroll">
+          {/* Page Content */}
+          <div className="pt-4 px-8 pb-20 bg-[var(--color-surface-default)] min-h-full">
+            <VStack gap={6} className="min-w-[1176px]">
+              {/* Backup Header Card */}
+              <DetailHeader>
+                <DetailHeader.Title>{backup.name}</DetailHeader.Title>
+                <DetailHeader.Actions>
+                  <Button variant="secondary" size="sm" leftIcon={<IconCirclePlus size={12} />}>
+                    Create volume
+                  </Button>
+                  <Button variant="secondary" size="sm" leftIcon={<IconRestore size={12} />}>
+                    Restore backup
+                  </Button>
+                  <Button variant="secondary" size="sm" leftIcon={<IconTrash size={12} />}>
+                    Delete
+                  </Button>
+                </DetailHeader.Actions>
+                <DetailHeader.InfoGrid>
+                  <DetailHeader.InfoCard
+                    label="Status"
+                    value={statusDisplayMap[backup.status]}
+                    status={statusIndicatorMap[backup.status]}
+                  />
+                  <DetailHeader.InfoCard label="ID" value={backup.id} copyable />
+                  <DetailHeader.InfoCard label="Size" value={backup.size} />
+                  <DetailHeader.InfoCard label="Created at" value={backup.createdAt} />
+                </DetailHeader.InfoGrid>
+              </DetailHeader>
+
+              {/* Backup Tabs */}
+              <div className="w-full">
+                <Tabs
+                  value={activeDetailTab}
+                  onChange={setActiveDetailTab}
+                  variant="underline"
+                  size="sm"
+                >
+                  <TabList>
+                    <Tab value="details">Details</Tab>
+                  </TabList>
+
+                  {/* Details Tab Panel */}
+                  <TabPanel value="details" className="pt-0">
+                    <VStack gap={4} className="pt-4">
+                      {/* Basic information */}
+                      <SectionCard>
+                        <SectionCard.Header
+                          title="Basic Infomation"
+                          actions={
+                            <Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />}>
+                              Edit
+                            </Button>
+                          }
+                        />
+                        <SectionCard.Content>
+                          <SectionCard.DataRow label="Volume backup Name" value={backup.name} />
+                          <SectionCard.DataRow label="Description" value={backup.description} />
+                        </SectionCard.Content>
+                      </SectionCard>
+
+                      {/* Source */}
+                      <SectionCard>
+                        <SectionCard.Header title="Source" />
+                        <SectionCard.Content>
+                          <div className="flex flex-col gap-3 w-full">
+                            <div className="h-px w-full bg-[var(--color-border-subtle)]" />
+                            <div className="flex flex-col gap-1.5">
+                              <span className="text-[11px] font-medium leading-4 text-[var(--color-text-subtle)]">
+                                Volume
+                              </span>
+                              <Link
+                                to={`/compute-admin/volumes/${backup.sourceVolumeId}`}
+                                className="inline-flex items-center gap-1.5 text-[12px] font-medium leading-4 text-[var(--color-action-primary)] hover:underline"
+                              >
+                                {backup.sourceVolume}
+                                <IconExternalLink size={12} stroke={1.5} />
+                              </Link>
+                            </div>
+                          </div>
+                        </SectionCard.Content>
+                      </SectionCard>
+
+                      {/* Specifications */}
+                      <SectionCard>
+                        <SectionCard.Header title="Specifications" />
+                        <SectionCard.Content>
+                          <SectionCard.DataRow label="Size" value={backup.size} />
+                        </SectionCard.Content>
+                      </SectionCard>
+                    </VStack>
+                  </TabPanel>
+                </Tabs>
+              </div>
+            </VStack>
+          </div>
+        </div>
+      </main>
+    </div>
+  );
+}

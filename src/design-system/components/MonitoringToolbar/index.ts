@@ -5,5 +5,3 @@ export type {
   TimeRangeOption,
   CustomPeriod,
 } from './MonitoringToolbar';
-
-

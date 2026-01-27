@@ -1,13 +1,6 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import {
-  Button,
-  Breadcrumb,
-  HStack,
-  VStack,
-  TabBar,
-  TopBar,
-} from '@/design-system';
+import { Button, Breadcrumb, VStack, TabBar, TopBar } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
 import { useTabs } from '@/contexts/TabContext';
 import {
@@ -234,7 +227,8 @@ export function EditNodeYamlPage() {
   const [yamlContent, setYamlContent] = useState(() => getSampleNodeYaml(nodeName));
 
   // Tab management
-  const { tabs, activeTabId, closeTab, selectTab, updateActiveTabLabel, moveTab, addNewTab } = useTabs();
+  const { tabs, activeTabId, closeTab, selectTab, updateActiveTabLabel, moveTab, addNewTab } =
+    useTabs();
 
   // Update tab label
   useEffect(() => {

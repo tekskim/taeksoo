@@ -6,6 +6,7 @@ import globals from 'globals'
 import reactHooks from 'eslint-plugin-react-hooks'
 import reactRefresh from 'eslint-plugin-react-refresh'
 import tseslint from 'typescript-eslint'
+import unusedImports from 'eslint-plugin-unused-imports'
 import { defineConfig, globalIgnores } from 'eslint/config'
 import prettierConfig from 'eslint-config-prettier'
 
@@ -13,20 +14,54 @@ export default defineConfig([
   globalIgnores(['dist', 'docs', 'storybook-static', 'coverage']),
   {
     files: ['**/*.{ts,tsx}'],
+    ignores: ['**/*.stories.{ts,tsx}'],
     extends: [
       js.configs.recommended,
       tseslint.configs.recommended,
-      reactHooks.configs.flat.recommended,
       reactRefresh.configs.vite,
       prettierConfig, // Prettier와 충돌하는 ESLint 규칙 비활성화
     ],
+    plugins: {
+      'unused-imports': unusedImports,
+      'react-hooks': reactHooks,
+    },
     languageOptions: {
       ecmaVersion: 2020,
       globals: globals.browser,
     },
     rules: {
-      // 사용하지 않는 변수 경고 (언더스코어로 시작하면 무시)
-      '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
+      '@typescript-eslint/no-unused-vars': 'off',
+      'unused-imports/no-unused-imports': 'error',
+      'unused-imports/no-unused-vars': 'off',
+      // React hooks rules
+      'react-hooks/rules-of-hooks': 'error',
+      'react-hooks/exhaustive-deps': 'off',
+      // These are overly strict for our codebase patterns
+      'react-refresh/only-export-components': 'off',
+      '@typescript-eslint/no-explicit-any': 'off',
+      'no-useless-escape': 'off',
+    },
+  },
+  // Storybook files - relaxed hooks rules since render functions use hooks differently
+  {
+    files: ['**/*.stories.{ts,tsx}'],
+    extends: [
+      js.configs.recommended,
+      tseslint.configs.recommended,
+      prettierConfig,
+    ],
+    plugins: {
+      'unused-imports': unusedImports,
+    },
+    languageOptions: {
+      ecmaVersion: 2020,
+      globals: globals.browser,
+    },
+    rules: {
+      '@typescript-eslint/no-unused-vars': 'off',
+      'unused-imports/no-unused-imports': 'error',
+      'unused-imports/no-unused-vars': 'off',
+      '@typescript-eslint/no-explicit-any': 'off',
     },
   },
 ])

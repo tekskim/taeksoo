@@ -96,9 +96,7 @@ export function CreateObjectDrawer({
   };
 
   const handleTagChange = (tagId: string, field: 'key' | 'value', value: string) => {
-    setTags((prev) =>
-      prev.map((t) => (t.id === tagId ? { ...t, [field]: value } : t))
-    );
+    setTags((prev) => prev.map((t) => (t.id === tagId ? { ...t, [field]: value } : t)));
   };
 
   const handleUploadClick = () => {
@@ -173,12 +171,7 @@ export function CreateObjectDrawer({
           <label className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
             Upload Files
           </label>
-          <Button
-            variant="secondary"
-            size="sm"
-            onClick={handleUploadClick}
-            className="w-fit"
-          >
+          <Button variant="secondary" size="sm" onClick={handleUploadClick} className="w-fit">
             <IconUpload size={12} className="mr-1.5" />
             Upload a File
           </Button>
@@ -189,19 +182,27 @@ export function CreateObjectDrawer({
               {/* Header */}
               <div className="flex items-center bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-md">
                 <div className="flex-1 px-3 py-2 h-10 flex items-center">
-                  <span className="text-[11px] font-medium text-[var(--color-text-default)]">Name</span>
+                  <span className="text-[11px] font-medium text-[var(--color-text-default)]">
+                    Name
+                  </span>
                   <IconChevronDown size={12} className="ml-1.5 text-[var(--color-text-subtle)]" />
                 </div>
                 <div className="flex-1 px-3 py-2 h-10 flex items-center">
-                  <span className="text-[11px] font-medium text-[var(--color-text-default)]">Type</span>
+                  <span className="text-[11px] font-medium text-[var(--color-text-default)]">
+                    Type
+                  </span>
                   <IconChevronDown size={12} className="ml-1.5 text-[var(--color-text-subtle)]" />
                 </div>
                 <div className="flex-1 px-3 py-2 h-10 flex items-center">
-                  <span className="text-[11px] font-medium text-[var(--color-text-default)]">Size</span>
+                  <span className="text-[11px] font-medium text-[var(--color-text-default)]">
+                    Size
+                  </span>
                   <IconChevronDown size={12} className="ml-1.5 text-[var(--color-text-subtle)]" />
                 </div>
                 <div className="flex-1 px-3 py-2 h-10 flex items-center">
-                  <span className="text-[11px] font-medium text-[var(--color-text-default)]">Count</span>
+                  <span className="text-[11px] font-medium text-[var(--color-text-default)]">
+                    Count
+                  </span>
                   <IconChevronDown size={12} className="ml-1.5 text-[var(--color-text-subtle)]" />
                 </div>
                 <div className="w-10 p-3" />
@@ -214,16 +215,24 @@ export function CreateObjectDrawer({
                   className="flex items-center bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-md"
                 >
                   <div className="flex-1 px-3 py-2 min-h-[40px] flex items-center">
-                    <span className="text-[12px] text-[var(--color-text-default)]">{file.name}</span>
+                    <span className="text-[12px] text-[var(--color-text-default)]">
+                      {file.name}
+                    </span>
                   </div>
                   <div className="flex-1 px-3 py-2 min-h-[40px] flex items-center">
-                    <span className="text-[12px] text-[var(--color-text-default)]">{file.type}</span>
+                    <span className="text-[12px] text-[var(--color-text-default)]">
+                      {file.type}
+                    </span>
                   </div>
                   <div className="flex-1 px-3 py-2 min-h-[40px] flex items-center">
-                    <span className="text-[12px] text-[var(--color-text-default)]">{file.size}</span>
+                    <span className="text-[12px] text-[var(--color-text-default)]">
+                      {file.size}
+                    </span>
                   </div>
                   <div className="flex-1 px-3 py-2 min-h-[40px] flex items-center">
-                    <span className="text-[12px] text-[var(--color-text-default)]">{file.count}</span>
+                    <span className="text-[12px] text-[var(--color-text-default)]">
+                      {file.count}
+                    </span>
                   </div>
                   <div className="w-10 p-3 flex items-center justify-center">
                     <button
@@ -291,7 +300,8 @@ export function CreateObjectDrawer({
           )}
 
           <p className="text-[11px] text-[var(--color-text-subtle)] leading-4">
-            Any changes to the ACL will overwrite previous one. You can choose any of the available options to modify the specified user group.
+            Any changes to the ACL will overwrite previous one. You can choose any of the available
+            options to modify the specified user group.
           </p>
         </VStack>
 
@@ -311,10 +321,14 @@ export function CreateObjectDrawer({
             {/* Header */}
             <div className="flex items-center bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-md">
               <div className="flex-1 px-3 py-2 h-10 flex items-center">
-                <span className="text-[11px] font-medium text-[var(--color-text-default)]">Key</span>
+                <span className="text-[11px] font-medium text-[var(--color-text-default)]">
+                  Key
+                </span>
               </div>
               <div className="flex-1 px-3 py-2 h-10 flex items-center">
-                <span className="text-[11px] font-medium text-[var(--color-text-default)]">Value</span>
+                <span className="text-[11px] font-medium text-[var(--color-text-default)]">
+                  Value
+                </span>
               </div>
               <div className="w-10 p-3" />
             </div>

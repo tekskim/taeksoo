@@ -1,9 +1,9 @@
 /**
  * TDS Icon Library
- * 
+ *
  * Figma 아이콘을 @tabler/icons-react에 매핑합니다.
  * 사용법: import { Icons } from '@/design-system';
- * 
+ *
  * 예시:
  * <Icons.Play size={16} />
  * <Icons.ChevronDown size={20} strokeWidth={1.5} />
@@ -11,34 +11,174 @@
 
 // Custom Icons (Figma 디자인에 맞는 비율)
 
-
-
-
-
-
-
-
-
-
-
-
-
-
 export type { CustomIconProps } from './CustomIcons';
 
 // Custom Icons (Figma 디자인에 맞는 비율)
-export { IconAction, IconActivity, IconAdd, IconAddRobot, IconAdjustmentsAlt, IconBrain, IconBranch, IconBuilding, IconCahatbot, IconCategory } from './CustomIcons';
-export { IconChat, IconCheckcircle, IconChevrondown, IconChevronleft, IconChevronright, IconChevronup, IconClosesmall, IconCloudComputing, IconCodeConsole } from './CustomIcons';
-export { IconCopy, IconDashboards, IconDelete, IconDeviceDesktopAnalytics, IconDollarSign, IconDot, IconDownload } from './CustomIcons';
-export { IconEdit, IconErrorWarning, IconExpandOff, IconExpandOn, IconExternallink, IconFavoriteoff, IconFlavor, IconHelp, IconHide, IconHome, IconHourglassHigh } from './CustomIcons';
-export { IconInfo, IconKeypairs, IconLayers, IconLink, IconList, IconLoadbalancer, IconLock, IconMicrosoft, IconMoreKebab, IconMoreMeatball } from './CustomIcons';
-export { IconNetworks, IconNewtab, IconNotification, IconOther, IconPaused, IconPlay, IconPlusCircle, IconProgress, IconRefresh, IconRequest } from './CustomIcons';
-export { IconReset1, IconReset2, IconRouters1, IconSchedule, IconSearch, IconSecurity, IconSecurityerror, IconServer, IconSetting, IconShare } from './CustomIcons';
-export { IconShow, IconSidebar, IconSnapshot, IconStop, IconStorage, IconTemplate, IconTimeout, IconTopology, IconUpload } from './CustomIcons';
-export { IconUserCircle, IconZap, IconRobotCustom, IconAddRobotCustom, IconWindowActive, IconWindowMinimized } from './CustomIcons';
+export {
+  IconAction,
+  IconActivity,
+  IconAdd,
+  IconAddRobot,
+  IconAdjustmentsAlt,
+  IconBrain,
+  IconBranch,
+  IconBuilding,
+  IconCahatbot,
+  IconCategory,
+} from './CustomIcons';
+export {
+  IconChat,
+  IconCheckcircle,
+  IconChevrondown,
+  IconChevronleft,
+  IconChevronright,
+  IconChevronup,
+  IconClosesmall,
+  IconCloudComputing,
+  IconCodeConsole,
+} from './CustomIcons';
+export {
+  IconCopy,
+  IconDashboards,
+  IconDelete,
+  IconDeviceDesktopAnalytics,
+  IconDollarSign,
+  IconDot,
+  IconDownload,
+} from './CustomIcons';
+export {
+  IconEdit,
+  IconErrorWarning,
+  IconExpandOff,
+  IconExpandOn,
+  IconExternallink,
+  IconFavoriteoff,
+  IconFlavor,
+  IconHelp,
+  IconHide,
+  IconHome,
+  IconHourglassHigh,
+} from './CustomIcons';
+export {
+  IconInfo,
+  IconKeypairs,
+  IconLayers,
+  IconLink,
+  IconList,
+  IconLoadbalancer,
+  IconLock,
+  IconMicrosoft,
+  IconMoreKebab,
+  IconMoreMeatball,
+} from './CustomIcons';
+export {
+  IconNetworks,
+  IconNewtab,
+  IconNotification,
+  IconOther,
+  IconPaused,
+  IconPlay,
+  IconPlusCircle,
+  IconProgress,
+  IconRefresh,
+  IconRequest,
+} from './CustomIcons';
+export {
+  IconReset1,
+  IconReset2,
+  IconRouters1,
+  IconSchedule,
+  IconSearch,
+  IconSecurity,
+  IconSecurityerror,
+  IconServer,
+  IconSetting,
+  IconShare,
+} from './CustomIcons';
+export {
+  IconShow,
+  IconSidebar,
+  IconSnapshot,
+  IconStop,
+  IconStorage,
+  IconTemplate,
+  IconTimeout,
+  IconTopology,
+  IconUpload,
+} from './CustomIcons';
+export {
+  IconUserCircle,
+  IconZap,
+  IconRobotCustom,
+  IconAddRobotCustom,
+  IconWindowActive,
+  IconWindowMinimized,
+} from './CustomIcons';
 // Newly added icons from SVG files (these replace existing ones)
-export { IconActive, IconAddVolume, IconAlert, IconAttach, IconBackup, IconCertificate, IconChart, IconCheckCircle, IconDeactivated, IconDeleting, IconDrawerClose, IconError, IconFavoriteOn, IconFile, IconFloatingIp, IconHardDrive, IconHostAggregates, IconHypervisor, IconImages, IconInstances, IconInuse, IconKey, IconLoadBalancer, IconMaintenance, IconMorekebab, IconNetwork, IconNotificationnew, IconOrder, IconPlugin, IconPorts, IconPorts2, IconPublish, IconReboot, IconRouters, IconSecurityError, IconSecurityGroup, IconShelved, IconSuspended, IconVerify, IconVolumeSearch, IconVolumeType, IconWarning, IconAffiliate, IconArticlehistory, IconCard, IconCheck, IconCloudcomputing, IconFinetuning, IconHistory, IconLanguage, IconNewchat, IconPending, IconPuzzle, IconReset, IconRetry, IconRocky, IconSpeed, IconStudy, IconTransfer, IconUbuntu, IconUnlink, IconGrid } from './CustomIcons';
-
+export {
+  IconActive,
+  IconAddVolume,
+  IconAlert,
+  IconAttach,
+  IconBackup,
+  IconCertificate,
+  IconChart,
+  IconCheckCircle,
+  IconDeactivated,
+  IconDeleting,
+  IconDrawerClose,
+  IconError,
+  IconFavoriteOn,
+  IconFile,
+  IconFloatingIp,
+  IconHardDrive,
+  IconHostAggregates,
+  IconHypervisor,
+  IconImages,
+  IconInstances,
+  IconInuse,
+  IconKey,
+  IconLoadBalancer,
+  IconMaintenance,
+  IconMorekebab,
+  IconNetwork,
+  IconNotificationnew,
+  IconOrder,
+  IconPlugin,
+  IconPorts,
+  IconPorts2,
+  IconPublish,
+  IconReboot,
+  IconRouters,
+  IconSecurityError,
+  IconSecurityGroup,
+  IconShelved,
+  IconSuspended,
+  IconVerify,
+  IconVolumeSearch,
+  IconVolumeType,
+  IconWarning,
+  IconAffiliate,
+  IconArticlehistory,
+  IconCard,
+  IconCheck,
+  IconCloudcomputing,
+  IconFinetuning,
+  IconHistory,
+  IconLanguage,
+  IconNewchat,
+  IconPending,
+  IconPuzzle,
+  IconReset,
+  IconRetry,
+  IconRocky,
+  IconSpeed,
+  IconStudy,
+  IconTransfer,
+  IconUbuntu,
+  IconUnlink,
+  IconGrid,
+} from './CustomIcons';
 
 // Navigation & UI
 export {
@@ -166,20 +306,6 @@ export {
   IconArticle as ArticleHistory,
 } from '@tabler/icons-react';
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 // Files & Templates
 export {
   IconTemplate as Template,
@@ -243,7 +369,15 @@ export {
    ---------------------------------------- */
 
 import { type IconProps } from '@tabler/icons-react';
-import { IconExpandOn, IconExpandOff, IconRobotCustom, IconAddRobotCustom, IconHistory, IconTimeout, IconChat } from './CustomIcons';
+import {
+  IconExpandOn,
+  IconExpandOff,
+  IconRobotCustom,
+  IconAddRobotCustom,
+  IconHistory,
+  IconTimeout,
+  IconChat,
+} from './CustomIcons';
 
 export type TDSIconProps = IconProps;
 
@@ -378,7 +512,7 @@ import {
 
 /**
  * Icons 객체 - Figma 아이콘 이름으로 접근
- * 
+ *
  * 사용법:
  * import { Icons } from '@/design-system';
  * <Icons.ChevronDown size={16} />
@@ -549,4 +683,3 @@ export const Icons = {
 } as const;
 
 export type IconName = keyof typeof Icons;
-

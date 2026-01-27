@@ -14,7 +14,7 @@ import {
   Checkbox,
   Table,
 } from '@/design-system';
-import type { WizardSummaryItem, WizardSectionState, TableColumn } from '@/design-system';
+import type { WizardSummaryItem, WizardSectionState } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
 import { useTabs } from '@/contexts/TabContext';
 import {
@@ -38,18 +38,13 @@ type SectionState = 'pre' | 'active' | 'done' | 'writing';
 // Section labels for display
 const SECTION_LABELS: Record<SectionStep, string> = {
   'basic-info': 'Basic Information',
-  'data': 'Ingress Rules',
-  'selector': 'Selector',
+  data: 'Ingress Rules',
+  selector: 'Selector',
   'labels-annotations': 'Labels & Annotations',
 };
 
 // Section order for navigation
-const SECTION_ORDER: SectionStep[] = [
-  'basic-info',
-  'data',
-  'selector',
-  'labels-annotations',
-];
+const SECTION_ORDER: SectionStep[] = ['basic-info', 'data', 'selector', 'labels-annotations'];
 
 // Namespace options
 const NAMESPACE_OPTIONS = [
@@ -147,7 +142,12 @@ interface SummarySidebarProps {
   isCreateDisabled: boolean;
 }
 
-function SummarySidebar({ sectionStatus, onCancel, onCreate, isCreateDisabled }: SummarySidebarProps) {
+function SummarySidebar({
+  sectionStatus,
+  onCancel,
+  onCreate,
+  isCreateDisabled,
+}: SummarySidebarProps) {
   // Map SectionState to WizardSectionState
   const mapState = (state: SectionState): WizardSectionState => {
     if (state === 'pre') return 'pending';
@@ -166,14 +166,14 @@ function SummarySidebar({ sectionStatus, onCancel, onCreate, isCreateDisabled }:
     <div className="w-[var(--wizard-summary-width)] shrink-0 sticky top-4 self-start">
       <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg p-4 flex flex-col gap-6">
         <WizardSummary items={summaryItems} />
-        
+
         {/* Action Buttons */}
         <HStack gap={2}>
           <Button variant="secondary" onClick={onCancel} className="w-[80px]">
             Cancel
           </Button>
-          <Button 
-            variant="primary" 
+          <Button
+            variant="primary"
             onClick={onCreate}
             disabled={isCreateDisabled}
             className="flex-1"
@@ -563,7 +563,11 @@ function IngressRulesSection({
                           }}
                           className="p-0.5 hover:bg-[var(--color-surface-muted)] rounded"
                         >
-                          <IconX size={14} className="text-[var(--color-text-muted)]" stroke={1.5} />
+                          <IconX
+                            size={14}
+                            className="text-[var(--color-text-muted)]"
+                            stroke={1.5}
+                          />
                         </button>
                       )}
                     </button>
@@ -587,7 +591,7 @@ function IngressRulesSection({
                       <span className="text-[14px] font-medium text-[var(--color-text-default)]">
                         Targets
                       </span>
-                      
+
                       {activeRule.targets.map((target) => (
                         <div key={target.id} className="flex gap-3 items-start">
                           <div className="flex-1 border border-[var(--color-border-strong)] rounded-md p-3">
@@ -611,7 +615,9 @@ function IngressRulesSection({
                                   <Input
                                     placeholder="e.g. 1.1.1.0/24"
                                     value={target.cidr}
-                                    onChange={(e) => updateTarget(target.id, 'cidr', e.target.value)}
+                                    onChange={(e) =>
+                                      updateTarget(target.id, 'cidr', e.target.value)
+                                    }
                                     fullWidth
                                   />
                                 </VStack>
@@ -629,7 +635,11 @@ function IngressRulesSection({
                             onClick={() => removeTarget(target.id)}
                             className="p-1 hover:bg-[var(--color-surface-muted)] rounded transition-colors mt-2"
                           >
-                            <IconX size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
+                            <IconX
+                              size={16}
+                              className="text-[var(--color-text-muted)]"
+                              stroke={1.5}
+                            />
                           </button>
                         </div>
                       ))}
@@ -661,7 +671,9 @@ function IngressRulesSection({
                                 <Input
                                   placeholder="e.g. 8080"
                                   value={port.port}
-                                  onChange={(e) => updateAllowedPort(port.id, 'port', e.target.value)}
+                                  onChange={(e) =>
+                                    updateAllowedPort(port.id, 'port', e.target.value)
+                                  }
                                   fullWidth
                                 />
                               </VStack>
@@ -672,7 +684,9 @@ function IngressRulesSection({
                                 <Select
                                   options={PROTOCOL_OPTIONS}
                                   value={port.protocol}
-                                  onChange={(value) => updateAllowedPort(port.id, 'protocol', value)}
+                                  onChange={(value) =>
+                                    updateAllowedPort(port.id, 'protocol', value)
+                                  }
                                   fullWidth
                                 />
                               </VStack>
@@ -682,7 +696,11 @@ function IngressRulesSection({
                             onClick={() => removeAllowedPort(port.id)}
                             className="p-1 hover:bg-[var(--color-surface-muted)] rounded transition-colors mt-2"
                           >
-                            <IconX size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
+                            <IconX
+                              size={16}
+                              className="text-[var(--color-text-muted)]"
+                              stroke={1.5}
+                            />
                           </button>
                         </div>
                       ))}
@@ -759,9 +777,7 @@ function SelectorSection({
   // Update a selector rule
   const updateRule = (id: string, field: keyof SelectorRule, value: string) => {
     onSelectorRulesChange(
-      selectorRules.map((rule) =>
-        rule.id === id ? { ...rule, [field]: value } : rule
-      )
+      selectorRules.map((rule) => (rule.id === id ? { ...rule, [field]: value } : rule))
     );
   };
 
@@ -996,7 +1012,7 @@ function LabelsAnnotationsSection({
                 Specify the labels used to identify and categorize the resource.
               </p>
             </VStack>
-            
+
             {labels.map((label, index) => (
               <HStack gap={2} key={index} className="w-full">
                 <Input
@@ -1040,7 +1056,7 @@ function LabelsAnnotationsSection({
                 Specify the annotations used to provide additional metadata for the resource.
               </p>
             </VStack>
-            
+
             {annotations.map((annotation, index) => (
               <HStack gap={2} key={index} className="w-full">
                 <Input
@@ -1122,8 +1138,8 @@ export function CreateNetworkPolicyPage() {
   // Section states
   const [sectionStatus, setSectionStatus] = useState<Record<SectionStep, SectionState>>({
     'basic-info': 'active',
-    'data': 'pre',
-    'selector': 'pre',
+    data: 'pre',
+    selector: 'pre',
     'labels-annotations': 'pre',
   });
 
@@ -1134,7 +1150,8 @@ export function CreateNetworkPolicyPage() {
   const [networkPolicyNameError, setNetworkPolicyNameError] = useState<string | null>(null);
 
   // Tab management
-  const { tabs, activeTabId, closeTab, selectTab, updateActiveTabLabel, moveTab, addNewTab } = useTabs();
+  const { tabs, activeTabId, closeTab, selectTab, updateActiveTabLabel, moveTab, addNewTab } =
+    useTabs();
 
   // Update tab label
   useEffect(() => {
@@ -1299,30 +1316,42 @@ export function CreateNetworkPolicyPage() {
     setLabels([...labels, { key: '', value: '' }]);
   }, [labels]);
 
-  const removeLabel = useCallback((index: number) => {
-    setLabels(labels.filter((_, i) => i !== index));
-  }, [labels]);
+  const removeLabel = useCallback(
+    (index: number) => {
+      setLabels(labels.filter((_, i) => i !== index));
+    },
+    [labels]
+  );
 
-  const updateLabel = useCallback((index: number, field: 'key' | 'value', value: string) => {
-    const newLabels = [...labels];
-    newLabels[index][field] = value;
-    setLabels(newLabels);
-  }, [labels]);
+  const updateLabel = useCallback(
+    (index: number, field: 'key' | 'value', value: string) => {
+      const newLabels = [...labels];
+      newLabels[index][field] = value;
+      setLabels(newLabels);
+    },
+    [labels]
+  );
 
   // Annotation management
   const addAnnotation = useCallback(() => {
     setAnnotations([...annotations, { key: '', value: '' }]);
   }, [annotations]);
 
-  const removeAnnotation = useCallback((index: number) => {
-    setAnnotations(annotations.filter((_, i) => i !== index));
-  }, [annotations]);
+  const removeAnnotation = useCallback(
+    (index: number) => {
+      setAnnotations(annotations.filter((_, i) => i !== index));
+    },
+    [annotations]
+  );
 
-  const updateAnnotation = useCallback((index: number, field: 'key' | 'value', value: string) => {
-    const newAnnotations = [...annotations];
-    newAnnotations[index][field] = value;
-    setAnnotations(newAnnotations);
-  }, [annotations]);
+  const updateAnnotation = useCallback(
+    (index: number, field: 'key' | 'value', value: string) => {
+      const newAnnotations = [...annotations];
+      newAnnotations[index][field] = value;
+      setAnnotations(newAnnotations);
+    },
+    [annotations]
+  );
 
   // Check if create button should be disabled
   const isCreateDisabled = !networkPolicyName.trim();
@@ -1438,16 +1467,18 @@ export function CreateNetworkPolicyPage() {
                       title={SECTION_LABELS['basic-info']}
                       onEdit={() => handleEdit('basic-info')}
                     >
-                      <SectionCard.DataRow label="Namespace" value={namespace || '-'} showDivider={false} />
+                      <SectionCard.DataRow
+                        label="Namespace"
+                        value={namespace || '-'}
+                        showDivider={false}
+                      />
                       <SectionCard.DataRow label="Name" value={networkPolicyName} />
                       <SectionCard.DataRow label="Description" value={description || '-'} />
                     </DoneSection>
                   )}
 
                   {/* Data Section */}
-                  {sectionStatus['data'] === 'pre' && (
-                    <PreSection title={SECTION_LABELS['data']} />
-                  )}
+                  {sectionStatus['data'] === 'pre' && <PreSection title={SECTION_LABELS['data']} />}
                   {sectionStatus['data'] === 'writing' && (
                     <WritingSection title={SECTION_LABELS['data']} />
                   )}
@@ -1464,18 +1495,15 @@ export function CreateNetworkPolicyPage() {
                     />
                   )}
                   {sectionStatus['data'] === 'done' && (
-                    <DoneSection
-                      title={SECTION_LABELS['data']}
-                      onEdit={() => handleEdit('data')}
-                    >
-                      <SectionCard.DataRow 
-                        label="Ingress Enabled" 
-                        value={ingressEnabled ? 'Yes' : 'No'} 
+                    <DoneSection title={SECTION_LABELS['data']} onEdit={() => handleEdit('data')}>
+                      <SectionCard.DataRow
+                        label="Ingress Enabled"
+                        value={ingressEnabled ? 'Yes' : 'No'}
                       />
-                      <SectionCard.DataRow 
-                        label="Rules" 
-                        value={ingressEnabled ? `${ingressRules.length} rule(s) configured` : '-'} 
-                        showDivider={false} 
+                      <SectionCard.DataRow
+                        label="Rules"
+                        value={ingressEnabled ? `${ingressRules.length} rule(s) configured` : '-'}
+                        showDivider={false}
                       />
                     </DoneSection>
                   )}
@@ -1502,10 +1530,14 @@ export function CreateNetworkPolicyPage() {
                       title={SECTION_LABELS['selector']}
                       onEdit={() => handleEdit('selector')}
                     >
-                      <SectionCard.DataRow 
-                        label="Selector Rules" 
-                        value={selectorRules.length > 0 ? `${selectorRules.length} rule(s) configured` : 'No rules configured'} 
-                        showDivider={false} 
+                      <SectionCard.DataRow
+                        label="Selector Rules"
+                        value={
+                          selectorRules.length > 0
+                            ? `${selectorRules.length} rule(s) configured`
+                            : 'No rules configured'
+                        }
+                        showDivider={false}
                       />
                     </DoneSection>
                   )}
@@ -1538,7 +1570,11 @@ export function CreateNetworkPolicyPage() {
                       title={SECTION_LABELS['labels-annotations']}
                       onEdit={() => handleEdit('labels-annotations')}
                     >
-                      <SectionCard.DataRow label="Labels" value={getLabelsDisplay()} showDivider={false} />
+                      <SectionCard.DataRow
+                        label="Labels"
+                        value={getLabelsDisplay()}
+                        showDivider={false}
+                      />
                       <SectionCard.DataRow label="Annotations" value={getAnnotationsDisplay()} />
                     </DoneSection>
                   )}

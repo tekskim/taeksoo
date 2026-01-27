@@ -176,7 +176,9 @@ export const WithoutDivider: Story = {
       }
       bulkActions={
         <ListToolbar.Actions>
-          <Button variant="secondary" size="sm">Action</Button>
+          <Button variant="secondary" size="sm">
+            Action
+          </Button>
         </ListToolbar.Actions>
       }
     />
@@ -206,9 +208,7 @@ export const CustomChildren: Story = {
       <div className="flex items-center justify-between w-full">
         <SearchInput placeholder="Search..." size="sm" />
         <div className="flex items-center gap-2">
-          <span className="text-sm text-[var(--color-text-muted)]">
-            Showing 1-10 of 100
-          </span>
+          <span className="text-sm text-[var(--color-text-muted)]">Showing 1-10 of 100</span>
           <Button variant="primary" size="sm">
             Create New
           </Button>

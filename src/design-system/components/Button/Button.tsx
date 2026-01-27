@@ -132,9 +132,21 @@ const buttonVariants = cva(
         className: 'size-[var(--button-height-lg)] p-[var(--button-padding-y-lg)]',
       },
       // Link variant - remove size constraints
-      { variant: 'link', size: 'sm', className: 'h-auto min-w-0 px-0 py-0 text-[length:var(--button-font-size-sm)]' },
-      { variant: 'link', size: 'md', className: 'h-auto min-w-0 px-0 py-0 text-[length:var(--button-font-size-md)]' },
-      { variant: 'link', size: 'lg', className: 'h-auto min-w-0 px-0 py-0 text-[length:var(--button-font-size-lg)]' },
+      {
+        variant: 'link',
+        size: 'sm',
+        className: 'h-auto min-w-0 px-0 py-0 text-[length:var(--button-font-size-sm)]',
+      },
+      {
+        variant: 'link',
+        size: 'md',
+        className: 'h-auto min-w-0 px-0 py-0 text-[length:var(--button-font-size-md)]',
+      },
+      {
+        variant: 'link',
+        size: 'lg',
+        className: 'h-auto min-w-0 px-0 py-0 text-[length:var(--button-font-size-lg)]',
+      },
     ],
     defaultVariants: {
       variant: 'primary',
@@ -153,20 +165,18 @@ type AsProp<C extends ElementType> = {
 
 type PropsToOmit<C extends ElementType, P> = keyof (AsProp<C> & P);
 
-type PolymorphicComponentProp<
-  C extends ElementType,
-  Props = object
-> = React.PropsWithChildren<Props & AsProp<C>> &
+type PolymorphicComponentProp<C extends ElementType, Props = object> = React.PropsWithChildren<
+  Props & AsProp<C>
+> &
   Omit<ComponentPropsWithoutRef<C>, PropsToOmit<C, Props>>;
 
-type PolymorphicRef<C extends ElementType> =
-  ComponentPropsWithoutRef<C>['ref'] extends never
-    ? React.Ref<Element>
-    : ComponentPropsWithoutRef<C>['ref'];
+type PolymorphicRef<C extends ElementType> = ComponentPropsWithoutRef<C>['ref'] extends never
+  ? React.Ref<Element>
+  : ComponentPropsWithoutRef<C>['ref'];
 
 type PolymorphicComponentPropWithRef<
   C extends ElementType,
-  Props = object
+  Props = object,
 > = PolymorphicComponentProp<C, Props> & { ref?: PolymorphicRef<C> };
 
 /* ----------------------------------------
@@ -195,8 +205,10 @@ type TextButtonProps = {
   children?: ReactNode;
 };
 
-export type ButtonProps<C extends ElementType = 'button'> =
-  PolymorphicComponentPropWithRef<C, ButtonBaseProps & (IconOnlyProps | TextButtonProps)>;
+export type ButtonProps<C extends ElementType = 'button'> = PolymorphicComponentPropWithRef<
+  C,
+  ButtonBaseProps & (IconOnlyProps | TextButtonProps)
+>;
 
 /* ----------------------------------------
    Button Component
@@ -241,7 +253,12 @@ export const Button: ButtonComponent = forwardRef(
 
     const buttonProps =
       Component === 'button'
-        ? { type: ((props as { type?: 'button' | 'submit' | 'reset' }).type || 'button') as 'button' | 'submit' | 'reset' }
+        ? {
+            type: ((props as { type?: 'button' | 'submit' | 'reset' }).type || 'button') as
+              | 'button'
+              | 'submit'
+              | 'reset',
+          }
         : {};
 
     return (
@@ -296,14 +313,7 @@ const Spinner = memo(function Spinner({ size }: { size: ButtonSize }) {
       aria-hidden="true"
       focusable="false"
     >
-      <circle
-        className="opacity-25"
-        cx="12"
-        cy="12"
-        r="10"
-        stroke="currentColor"
-        strokeWidth="4"
-      />
+      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
       <path
         className="opacity-75"
         fill="currentColor"

@@ -183,7 +183,7 @@ export const SettingsExample: Story = {
     return (
       <div className="w-[320px] flex flex-col gap-4 p-4 bg-[var(--color-surface-default)] rounded-lg border border-[var(--color-border-default)]">
         <h3 className="text-[14px] font-semibold">Settings</h3>
-        
+
         <div className="flex flex-col gap-3">
           <div className="flex items-center justify-between">
             <span className="text-[12px]">Push notifications</span>
@@ -192,29 +192,20 @@ export const SettingsExample: Story = {
               onChange={() => handleChange('notifications')}
             />
           </div>
-          
+
           <div className="flex items-center justify-between">
             <span className="text-[12px]">Dark mode</span>
-            <Toggle
-              checked={settings.darkMode}
-              onChange={() => handleChange('darkMode')}
-            />
+            <Toggle checked={settings.darkMode} onChange={() => handleChange('darkMode')} />
           </div>
-          
+
           <div className="flex items-center justify-between">
             <span className="text-[12px]">Auto-save</span>
-            <Toggle
-              checked={settings.autoSave}
-              onChange={() => handleChange('autoSave')}
-            />
+            <Toggle checked={settings.autoSave} onChange={() => handleChange('autoSave')} />
           </div>
-          
+
           <div className="flex items-center justify-between">
             <span className="text-[12px]">Analytics</span>
-            <Toggle
-              checked={settings.analytics}
-              onChange={() => handleChange('analytics')}
-            />
+            <Toggle checked={settings.analytics} onChange={() => handleChange('analytics')} />
           </div>
         </div>
       </div>
@@ -230,10 +221,7 @@ export const AllStates: Story = {
       <Toggle label="Default (on)" defaultChecked />
       <Toggle label="Disabled (off)" disabled />
       <Toggle label="Disabled (on)" disabled defaultChecked />
-      <Toggle
-        label="With description"
-        description="This is a helpful description text."
-      />
+      <Toggle label="With description" description="This is a helpful description text." />
     </div>
   ),
 };

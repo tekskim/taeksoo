@@ -1,10 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import {
-  TopBar,
-  TopBarAction,
-  Breadcrumb,
-  VStack,
-} from '@/design-system';
+import { TopBar, TopBarAction, Breadcrumb, VStack } from '@/design-system';
 import {
   IconMessagePlus,
   IconRobotFace,
@@ -12,9 +7,6 @@ import {
   IconPuzzle,
   IconBell,
   IconPalette,
-  IconMessage,
-  IconDatabase,
-  IconSettings,
   IconTarget,
   IconPencil,
 } from '@tabler/icons-react';
@@ -28,12 +20,15 @@ interface StatCardProps {
 }
 
 function StatCard({ value, label }: StatCardProps) {
-  const textColor = value === 0 ? 'text-[var(--color-text-muted)]' : 'text-[var(--color-text-default)]';
-  
+  const textColor =
+    value === 0 ? 'text-[var(--color-text-muted)]' : 'text-[var(--color-text-default)]';
+
   return (
     <div className="flex-1 bg-[var(--color-surface-subtle)] rounded-lg p-4 border-2 border-transparent transition-colors hover:border-[var(--color-action-primary)] cursor-pointer">
       <div className={`text-[20px] font-medium ${textColor} pb-1`}>{value}</div>
-      <div className="text-[length:var(--font-size-11)] leading-[var(--line-height-16)] text-[var(--color-text-subtle)]">{label}</div>
+      <div className="text-[length:var(--font-size-11)] leading-[var(--line-height-16)] text-[var(--color-text-subtle)]">
+        {label}
+      </div>
     </div>
   );
 }
@@ -50,7 +45,7 @@ interface StatusCardProps {
 function StatusCard({ label, count, status }: StatusCardProps) {
   let bgColor = 'bg-[var(--color-surface-subtle)]';
   let iconBg = 'bg-[var(--color-text-muted)]';
-  
+
   if (status === 'active') {
     bgColor = 'bg-[#f0fdf4]';
     iconBg = 'bg-[#4ade80]';
@@ -103,7 +98,9 @@ function QuickActionCard({ icon, label, highlighted = false, onClick }: QuickAct
     <button
       onClick={onClick}
       className={`flex-1 bg-[var(--color-surface-subtle)] rounded-lg p-4 text-left transition-colors hover:bg-[var(--color-surface-muted)] ${
-        highlighted ? 'border-2 border-[var(--color-action-primary)]' : 'border-2 border-transparent hover:border-[var(--color-action-primary)]'
+        highlighted
+          ? 'border-2 border-[var(--color-action-primary)]'
+          : 'border-2 border-transparent hover:border-[var(--color-action-primary)]'
       }`}
     >
       <div className="pb-1">
@@ -128,7 +125,7 @@ interface ChatItemProps {
 
 function ChatItem({ title, description, createdAt, onClick }: ChatItemProps) {
   return (
-    <div 
+    <div
       onClick={onClick}
       className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg px-4 py-3 cursor-pointer transition-colors hover:border-[var(--color-border-focus)]"
     >
@@ -190,13 +187,7 @@ export function HomePage() {
         showNavigation={true}
         onBack={() => window.history.back()}
         onForward={() => window.history.forward()}
-        breadcrumb={
-          <Breadcrumb
-            items={[
-              { label: 'Home' },
-            ]}
-          />
-        }
+        breadcrumb={<Breadcrumb items={[{ label: 'Home' }]} />}
         actions={
           <>
             <TopBarAction
@@ -216,11 +207,10 @@ export function HomePage() {
       {/* Scrollable Content Area */}
       <div className="flex-1 overflow-auto overscroll-contain sidebar-scroll">
         <div className="px-8 py-6 pb-[120px] flex flex-col gap-[var(--spacing-6)]">
-          
           {/* Header & Stats Cards */}
           <VStack gap={6}>
             <SectionTitle>Home</SectionTitle>
-            
+
             {/* Stats Cards */}
             <div className="flex gap-[var(--spacing-2)] w-full">
               <StatCard value={10} label="Chat sessions" />
@@ -233,7 +223,7 @@ export function HomePage() {
           {/* Quick Action Section */}
           <VStack gap={4}>
             <SectionTitle>Quick action</SectionTitle>
-            
+
             <div className="flex gap-[var(--spacing-2)] w-full">
               <QuickActionCard
                 icon={<IconMessagePlus size={20} stroke={1.5} />}
@@ -249,10 +239,7 @@ export function HomePage() {
                 icon={<IconSquarePlus size={20} stroke={1.5} />}
                 label="New data source"
               />
-              <QuickActionCard
-                icon={<IconPuzzle size={20} stroke={1.5} />}
-                label="Manage tools"
-              />
+              <QuickActionCard icon={<IconPuzzle size={20} stroke={1.5} />} label="Manage tools" />
             </div>
           </VStack>
 

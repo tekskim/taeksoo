@@ -211,4 +211,3 @@ export function CardTitle({
 }
 
 export default CardTitle;
-

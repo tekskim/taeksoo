@@ -23,12 +23,7 @@ import {
 import { IconAction } from '@/design-system/components/Icons';
 import { IAMSidebar } from '@/components/IAMSidebar';
 import { useTabs } from '@/contexts/TabContext';
-import {
-  IconEdit,
-  IconTrash,
-  IconChevronDown,
-  IconChevronRight,
-} from '@tabler/icons-react';
+import { IconEdit, IconTrash, IconChevronDown, IconChevronRight } from '@tabler/icons-react';
 import { Link } from 'react-router-dom';
 
 /* ----------------------------------------
@@ -247,9 +242,7 @@ const mockVersionHistory: PolicyVersion[] = [
     conditions: '-',
     editedBy: 'thaki-kim',
     editedAt: '2025-08-20',
-    statements: [
-      '{app}:{partition}:{resource}:{resourceId}:{actionclass}:{action}',
-    ],
+    statements: ['{app}:{partition}:{resource}:{resourceId}:{actionclass}:{action}'],
   },
   {
     id: 'v-001',
@@ -280,12 +273,8 @@ interface InfoCardProps {
 function InfoCard({ label, value }: InfoCardProps) {
   return (
     <div className="basis-0 grow bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3 flex flex-col gap-1.5">
-      <span className="text-[11px] font-medium text-[var(--color-text-subtle)]">
-        {label}
-      </span>
-      <span className="text-[12px] text-[var(--color-text-default)]">
-        {value}
-      </span>
+      <span className="text-[11px] font-medium text-[var(--color-text-subtle)]">{label}</span>
+      <span className="text-[12px] text-[var(--color-text-default)]">{value}</span>
     </div>
   );
 }
@@ -379,16 +368,19 @@ function VersionDetails({ statements }: VersionDetailsProps) {
 export default function IAMPolicyDetailPage() {
   const { policyId } = useParams<{ policyId: string }>();
   const navigate = useNavigate();
-  const { tabs, activeTabId, selectTab, closeTab, addNewTab, updateActiveTabLabel, moveTab } = useTabs();
+  const { tabs, activeTabId, selectTab, closeTab, addNewTab, updateActiveTabLabel, moveTab } =
+    useTabs();
 
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [activeTab, setActiveTab] = useState('permissions');
-  
+
   // Permissions tab state
   const [permSearchQuery, setPermSearchQuery] = useState('');
   const [permCurrentPage, setPermCurrentPage] = useState(1);
-  const [expandedPermissions, setExpandedPermissions] = useState<Set<string>>(new Set(['perm-002']));
-  
+  const [expandedPermissions, setExpandedPermissions] = useState<Set<string>>(
+    new Set(['perm-002'])
+  );
+
   // Roles tab state
   const [rolesSearchQuery, setRolesSearchQuery] = useState('');
   const [rolesCurrentPage, setRolesCurrentPage] = useState(1);
@@ -409,10 +401,11 @@ export default function IAMPolicyDetailPage() {
   }, [policy, updateActiveTabLabel]);
 
   // Filter permissions
-  const filteredPermissions = mockPermissions.filter(perm =>
-    perm.app.toLowerCase().includes(permSearchQuery.toLowerCase()) ||
-    perm.partition.toLowerCase().includes(permSearchQuery.toLowerCase()) ||
-    perm.resource.toLowerCase().includes(permSearchQuery.toLowerCase())
+  const filteredPermissions = mockPermissions.filter(
+    (perm) =>
+      perm.app.toLowerCase().includes(permSearchQuery.toLowerCase()) ||
+      perm.partition.toLowerCase().includes(permSearchQuery.toLowerCase()) ||
+      perm.resource.toLowerCase().includes(permSearchQuery.toLowerCase())
   );
 
   const permTotalPages = Math.ceil(filteredPermissions.length / itemsPerPage);
@@ -422,7 +415,7 @@ export default function IAMPolicyDetailPage() {
   );
 
   // Filter attached roles
-  const filteredRoles = mockAttachedRoles.filter(role =>
+  const filteredRoles = mockAttachedRoles.filter((role) =>
     role.name.toLowerCase().includes(rolesSearchQuery.toLowerCase())
   );
 
@@ -434,7 +427,7 @@ export default function IAMPolicyDetailPage() {
 
   // Toggle permission expansion
   const togglePermissionExpansion = (permId: string) => {
-    setExpandedPermissions(prev => {
+    setExpandedPermissions((prev) => {
       const newSet = new Set(prev);
       if (newSet.has(permId)) {
         newSet.delete(permId);
@@ -447,7 +440,7 @@ export default function IAMPolicyDetailPage() {
 
   // Toggle version expansion
   const toggleVersionExpansion = (versionId: string) => {
-    setExpandedVersions(prev => {
+    setExpandedVersions((prev) => {
       const newSet = new Set(prev);
       if (newSet.has(versionId)) {
         newSet.delete(versionId);
@@ -568,7 +561,7 @@ export default function IAMPolicyDetailPage() {
           style={{ left: `${sidebarWidth}px` }}
         >
           <TabBar
-            tabs={tabs.map(tab => ({ id: tab.id, label: tab.label, closable: tab.closable }))}
+            tabs={tabs.map((tab) => ({ id: tab.id, label: tab.label, closable: tab.closable }))}
             activeTab={activeTabId}
             onTabChange={selectTab}
             onTabClose={closeTab}
@@ -581,7 +574,14 @@ export default function IAMPolicyDetailPage() {
             showNavigation
             onBack={() => navigate(-1)}
             onForward={() => navigate(1)}
-            breadcrumb={<Breadcrumb items={[{ label: 'IAM', href: '/iam' }, { label: 'Policies', href: '/iam/policies' }]} />}
+            breadcrumb={
+              <Breadcrumb
+                items={[
+                  { label: 'IAM', href: '/iam' },
+                  { label: 'Policies', href: '/iam/policies' },
+                ]}
+              />
+            }
           />
           <div className="flex-1 flex items-center justify-center">
             <p className="text-[var(--color-text-muted)]">Policy not found</p>
@@ -599,7 +599,7 @@ export default function IAMPolicyDetailPage() {
         style={{ left: `${sidebarWidth}px` }}
       >
         <TabBar
-          tabs={tabs.map(tab => ({ id: tab.id, label: tab.label, closable: tab.closable }))}
+          tabs={tabs.map((tab) => ({ id: tab.id, label: tab.label, closable: tab.closable }))}
           activeTab={activeTabId}
           onTabChange={selectTab}
           onTabClose={closeTab}
@@ -634,7 +634,11 @@ export default function IAMPolicyDetailPage() {
                       Delete
                     </Button>
                     <ContextMenu items={moreActionsItems} trigger="click">
-                      <Button variant="secondary" size="sm" rightIcon={<IconChevronDown size={12} />}>
+                      <Button
+                        variant="secondary"
+                        size="sm"
+                        rightIcon={<IconChevronDown size={12} />}
+                      >
                         More Actions
                       </Button>
                     </ContextMenu>
@@ -695,19 +699,31 @@ export default function IAMPolicyDetailPage() {
                         <div className="flex items-stretch min-h-[var(--table-row-height)] bg-[var(--table-header-bg)] border border-[var(--color-border-default)] rounded-[var(--table-row-radius)]">
                           <div className="flex-1 flex items-center gap-1.5 px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)]">
                             App
-                            <IconChevronDown size={12} className="text-[var(--color-text-default)]" />
+                            <IconChevronDown
+                              size={12}
+                              className="text-[var(--color-text-default)]"
+                            />
                           </div>
                           <div className="flex-1 flex items-center gap-1.5 px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] border-l border-[var(--color-border-default)]">
                             Partition
-                            <IconChevronDown size={12} className="text-[var(--color-text-default)]" />
+                            <IconChevronDown
+                              size={12}
+                              className="text-[var(--color-text-default)]"
+                            />
                           </div>
                           <div className="flex-1 flex items-center gap-1.5 px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] border-l border-[var(--color-border-default)]">
                             Resource
-                            <IconChevronDown size={12} className="text-[var(--color-text-default)]" />
+                            <IconChevronDown
+                              size={12}
+                              className="text-[var(--color-text-default)]"
+                            />
                           </div>
                           <div className="flex-1 flex items-center gap-1.5 px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] border-l border-[var(--color-border-default)]">
                             Action class
-                            <IconChevronDown size={12} className="text-[var(--color-text-default)]" />
+                            <IconChevronDown
+                              size={12}
+                              className="text-[var(--color-text-default)]"
+                            />
                           </div>
                         </div>
 
@@ -826,19 +842,31 @@ export default function IAMPolicyDetailPage() {
                           </div>
                           <div className="flex-1 flex items-center gap-1.5 px-3 py-0 text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] border-l border-[var(--color-border-default)] cursor-pointer select-none hover:text-[var(--color-action-primary)] transition-colors">
                             Version
-                            <IconChevronDown size={12} className="text-[var(--color-text-default)]" />
+                            <IconChevronDown
+                              size={12}
+                              className="text-[var(--color-text-default)]"
+                            />
                           </div>
                           <div className="flex-1 flex items-center gap-1.5 px-3 py-0 text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] border-l border-[var(--color-border-default)] cursor-pointer select-none hover:text-[var(--color-action-primary)] transition-colors">
                             Conditions
-                            <IconChevronDown size={12} className="text-[var(--color-text-default)]" />
+                            <IconChevronDown
+                              size={12}
+                              className="text-[var(--color-text-default)]"
+                            />
                           </div>
                           <div className="flex-1 flex items-center gap-1.5 px-3 py-0 text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] border-l border-[var(--color-border-default)] cursor-pointer select-none hover:text-[var(--color-action-primary)] transition-colors">
                             Edited by
-                            <IconChevronDown size={12} className="text-[var(--color-text-default)]" />
+                            <IconChevronDown
+                              size={12}
+                              className="text-[var(--color-text-default)]"
+                            />
                           </div>
                           <div className="flex-1 flex items-center gap-1.5 px-3 py-0 text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] border-l border-[var(--color-border-default)] cursor-pointer select-none hover:text-[var(--color-action-primary)] transition-colors">
                             Edited at
-                            <IconChevronDown size={12} className="text-[var(--color-text-default)]" />
+                            <IconChevronDown
+                              size={12}
+                              className="text-[var(--color-text-default)]"
+                            />
                           </div>
                           <div className="w-[72px] flex items-center justify-center px-3 py-0 text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] border-l border-[var(--color-border-default)]">
                             Action
@@ -907,7 +935,11 @@ export default function IAMPolicyDetailPage() {
                                     type="button"
                                     className="flex items-center justify-center w-7 h-7 rounded-md bg-transparent hover:bg-[var(--color-surface-muted)] active:bg-[var(--color-border-subtle)] transition-colors cursor-pointer"
                                   >
-                                    <IconAction size={16} stroke={1} className="text-[var(--color-text-default)]" />
+                                    <IconAction
+                                      size={16}
+                                      stroke={1}
+                                      className="text-[var(--color-text-default)]"
+                                    />
                                   </button>
                                 </ContextMenu>
                               </div>
@@ -931,4 +963,3 @@ export default function IAMPolicyDetailPage() {
     </div>
   );
 }
-

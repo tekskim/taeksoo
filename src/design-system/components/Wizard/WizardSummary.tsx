@@ -28,7 +28,7 @@ interface WizardSummaryProps {
 
 /**
  * WizardSummary - 마법사(Wizard) 패턴의 요약 컴포넌트
- * 
+ *
  * 각 섹션의 진행 상태를 시각적으로 표시합니다.
  * - done: 녹색 체크 아이콘
  * - active: 회전하는 진행 아이콘
@@ -36,11 +36,7 @@ interface WizardSummaryProps {
  * - skipped: 마이너스 아이콘
  * - pre: 빈 원 아이콘
  */
-export function WizardSummary({ 
-  title = 'Summary', 
-  items, 
-  onItemClick 
-}: WizardSummaryProps) {
+export function WizardSummary({ title = 'Summary', items, onItemClick }: WizardSummaryProps) {
   return (
     <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-lg p-4">
       <VStack gap={3}>
@@ -48,21 +44,21 @@ export function WizardSummary({
         <span className="text-[length:var(--font-size-16)] font-semibold leading-[var(--line-height-24)] text-[var(--color-text-default)]">
           {title}
         </span>
-        
+
         {/* Section List */}
         <VStack gap={0}>
           {items.map((item) => (
-            <HStack 
+            <HStack
               key={item.key}
-              justify="between" 
-              align="center" 
+              justify="between"
+              align="center"
               className={`py-1 ${onItemClick ? 'cursor-pointer hover:bg-[var(--color-surface-muted)] rounded px-1 -mx-1' : ''}`}
               onClick={() => onItemClick?.(item.key)}
             >
               <span className="text-[length:var(--font-size-12)] leading-[var(--line-height-18)] text-[var(--color-text-default)]">
                 {item.label}
               </span>
-              
+
               {item.status === 'writing' ? (
                 <span className="text-[11px] text-[var(--color-text-subtle)]">Writing...</span>
               ) : (

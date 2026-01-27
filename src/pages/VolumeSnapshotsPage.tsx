@@ -2,7 +2,6 @@ import { useState, useMemo } from 'react';
 import {
   Button,
   FilterSearchInput,
-  SearchInput,
   Table,
   Pagination,
   VStack,
@@ -26,7 +25,6 @@ import { ViewPreferencesDrawer, type ColumnConfig } from '@/components/ViewPrefe
 import { CreateVolumeFromVolumeSnapshotDrawer } from '@/components/CreateVolumeFromVolumeSnapshotDrawer';
 import { EditVolumeSnapshotDrawer } from '@/components/EditVolumeSnapshotDrawer';
 import {
-  IconPlus,
   IconDotsCircleHorizontal,
   IconTrash,
   IconDownload,
@@ -56,28 +54,109 @@ interface VolumeSnapshot {
    ---------------------------------------- */
 
 const mockVolumeSnapshots: VolumeSnapshot[] = [
-  { id: 'vsnap-001', name: 'db-data-snap', size: '1500GiB', sourceVolume: 'vol-1', sourceVolumeId: 'vol-001', createdAt: '2025-09-12', status: 'active' },
-  { id: 'vsnap-002', name: 'app-storage-snap', size: '500GiB', sourceVolume: 'vol-2', sourceVolumeId: 'vol-002', createdAt: '2025-09-10', status: 'active' },
-  { id: 'vsnap-003', name: 'backup-vol-snap', size: '2000GiB', sourceVolume: 'vol-3', sourceVolumeId: 'vol-003', createdAt: '2025-09-08', status: 'active' },
-  { id: 'vsnap-004', name: 'log-storage-snap', size: '100GiB', sourceVolume: 'vol-4', sourceVolumeId: 'vol-004', createdAt: '2025-09-05', status: 'creating' },
-  { id: 'vsnap-005', name: 'cache-vol-snap', size: '256GiB', sourceVolume: 'vol-5', sourceVolumeId: 'vol-005', createdAt: '2025-08-30', status: 'active' },
-  { id: 'vsnap-006', name: 'media-storage-snap', size: '5000GiB', sourceVolume: 'vol-6', sourceVolumeId: 'vol-006', createdAt: '2025-08-25', status: 'active' },
-  { id: 'vsnap-007', name: 'temp-vol-snap', size: '50GiB', sourceVolume: 'vol-7', sourceVolumeId: 'vol-007', createdAt: '2025-08-20', status: 'error' },
-  { id: 'vsnap-008', name: 'ml-data-snap', size: '1000GiB', sourceVolume: 'vol-8', sourceVolumeId: 'vol-008', createdAt: '2025-08-15', status: 'active' },
-  { id: 'vsnap-009', name: 'archive-vol-snap', size: '10000GiB', sourceVolume: 'vol-9', sourceVolumeId: 'vol-009', createdAt: '2025-08-10', status: 'active' },
-  { id: 'vsnap-010', name: 'boot-vol-snap', size: '100GiB', sourceVolume: 'vol-10', sourceVolumeId: 'vol-010', createdAt: '2025-08-05', status: 'deleting' },
+  {
+    id: 'vsnap-001',
+    name: 'db-data-snap',
+    size: '1500GiB',
+    sourceVolume: 'vol-1',
+    sourceVolumeId: 'vol-001',
+    createdAt: '2025-09-12',
+    status: 'active',
+  },
+  {
+    id: 'vsnap-002',
+    name: 'app-storage-snap',
+    size: '500GiB',
+    sourceVolume: 'vol-2',
+    sourceVolumeId: 'vol-002',
+    createdAt: '2025-09-10',
+    status: 'active',
+  },
+  {
+    id: 'vsnap-003',
+    name: 'backup-vol-snap',
+    size: '2000GiB',
+    sourceVolume: 'vol-3',
+    sourceVolumeId: 'vol-003',
+    createdAt: '2025-09-08',
+    status: 'active',
+  },
+  {
+    id: 'vsnap-004',
+    name: 'log-storage-snap',
+    size: '100GiB',
+    sourceVolume: 'vol-4',
+    sourceVolumeId: 'vol-004',
+    createdAt: '2025-09-05',
+    status: 'creating',
+  },
+  {
+    id: 'vsnap-005',
+    name: 'cache-vol-snap',
+    size: '256GiB',
+    sourceVolume: 'vol-5',
+    sourceVolumeId: 'vol-005',
+    createdAt: '2025-08-30',
+    status: 'active',
+  },
+  {
+    id: 'vsnap-006',
+    name: 'media-storage-snap',
+    size: '5000GiB',
+    sourceVolume: 'vol-6',
+    sourceVolumeId: 'vol-006',
+    createdAt: '2025-08-25',
+    status: 'active',
+  },
+  {
+    id: 'vsnap-007',
+    name: 'temp-vol-snap',
+    size: '50GiB',
+    sourceVolume: 'vol-7',
+    sourceVolumeId: 'vol-007',
+    createdAt: '2025-08-20',
+    status: 'error',
+  },
+  {
+    id: 'vsnap-008',
+    name: 'ml-data-snap',
+    size: '1000GiB',
+    sourceVolume: 'vol-8',
+    sourceVolumeId: 'vol-008',
+    createdAt: '2025-08-15',
+    status: 'active',
+  },
+  {
+    id: 'vsnap-009',
+    name: 'archive-vol-snap',
+    size: '10000GiB',
+    sourceVolume: 'vol-9',
+    sourceVolumeId: 'vol-009',
+    createdAt: '2025-08-10',
+    status: 'active',
+  },
+  {
+    id: 'vsnap-010',
+    name: 'boot-vol-snap',
+    size: '100GiB',
+    sourceVolume: 'vol-10',
+    sourceVolumeId: 'vol-010',
+    createdAt: '2025-08-05',
+    status: 'deleting',
+  },
 ];
 
 /* ----------------------------------------
    Status Mapping
    ---------------------------------------- */
 
-const volumeSnapshotStatusMap: Record<SnapshotStatus, 'active' | 'building' | 'error' | 'pending'> = {
-  'active': 'active',
-  'creating': 'building',
-  'error': 'error',
-  'deleting': 'pending',
-};
+const volumeSnapshotStatusMap: Record<SnapshotStatus, 'active' | 'building' | 'error' | 'pending'> =
+  {
+    active: 'active',
+    creating: 'building',
+    error: 'error',
+    deleting: 'pending',
+  };
 
 /* ----------------------------------------
    Component
@@ -87,12 +166,17 @@ const volumeSnapshotStatusMap: Record<SnapshotStatus, 'active' | 'building' | 'e
 const filterFields: FilterField[] = [
   { id: 'name', label: 'Name', type: 'text' },
   { id: 'sourceVolume', label: 'Source Volume', type: 'text' },
-  { id: 'status', label: 'Status', type: 'select', options: [
-    { value: 'active', label: 'Active' },
-    { value: 'creating', label: 'Creating' },
-    { value: 'error', label: 'Error' },
-    { value: 'deleting', label: 'Deleting' },
-  ]},
+  {
+    id: 'status',
+    label: 'Status',
+    type: 'select',
+    options: [
+      { value: 'active', label: 'Active' },
+      { value: 'creating', label: 'Creating' },
+      { value: 'error', label: 'Error' },
+      { value: 'deleting', label: 'Deleting' },
+    ],
+  },
 ];
 
 export function VolumeSnapshotsPage() {
@@ -102,7 +186,7 @@ export function VolumeSnapshotsPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const [snapshots, setSnapshots] = useState(mockVolumeSnapshots);
   const [searchQuery, setSearchQuery] = useState('');
-  
+
   // Delete modal state
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [snapshotToDelete, setSnapshotToDelete] = useState<VolumeSnapshot | null>(null);
@@ -114,7 +198,9 @@ export function VolumeSnapshotsPage() {
   // Drawer states
   const [createVolumeOpen, setCreateVolumeOpen] = useState(false);
   const [editSnapshotOpen, setEditSnapshotOpen] = useState(false);
-  const [selectedSnapshotForDrawer, setSelectedSnapshotForDrawer] = useState<VolumeSnapshot | null>(null);
+  const [selectedSnapshotForDrawer, setSelectedSnapshotForDrawer] = useState<VolumeSnapshot | null>(
+    null
+  );
 
   // Helper to parse size string to number
   const parseSizeToNumber = (size: string): number => {
@@ -154,7 +240,6 @@ export function VolumeSnapshotsPage() {
     closable: tab.closable,
   }));
 
-
   // Handle delete snapshot
   const handleDeleteClick = (snapshot: VolumeSnapshot) => {
     setSnapshotToDelete(snapshot);
@@ -177,7 +262,7 @@ export function VolumeSnapshotsPage() {
   // Filter snapshots by search
   const filteredSnapshots = useMemo(() => {
     if (appliedFilters.length === 0) return snapshots;
-    
+
     return snapshots.filter((snapshot) => {
       return appliedFilters.every((filter) => {
         const value = snapshot[filter.fieldId as keyof VolumeSnapshot];
@@ -239,7 +324,7 @@ export function VolumeSnapshotsPage() {
       render: (_, row) => (
         <div className="flex flex-col gap-0.5">
           <Link
-          to={`/compute/volumes/${row.sourceVolumeId}`}
+            to={`/compute/volumes/${row.sourceVolumeId}`}
             className="inline-flex items-center gap-1.5 font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
             onClick={(e) => e.stopPropagation()}
           >
@@ -287,7 +372,11 @@ export function VolumeSnapshotsPage() {
           <div onClick={(e) => e.stopPropagation()}>
             <ContextMenu items={menuItems} trigger="click">
               <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
-                <IconDotsCircleHorizontal size={16} stroke={1.5} className="text-[var(--action-icon-color)]" />
+                <IconDotsCircleHorizontal
+                  size={16}
+                  stroke={1.5}
+                  className="text-[var(--action-icon-color)]"
+                />
               </button>
             </ContextMenu>
           </div>
@@ -298,9 +387,7 @@ export function VolumeSnapshotsPage() {
 
   // Filter and order columns based on preferences
   const visibleColumns = useMemo(() => {
-    const visibleColumnIds = columnConfig
-      .filter((col) => col.visible)
-      .map((col) => col.id);
+    const visibleColumnIds = columnConfig.filter((col) => col.visible).map((col) => col.id);
 
     const columnMap = new Map(columns.map((col) => [col.key, col]));
 
@@ -311,7 +398,7 @@ export function VolumeSnapshotsPage() {
 
   return (
     <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
-      <Sidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(prev => !prev)} />
+      <Sidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen((prev) => !prev)} />
 
       <main
         className={`absolute top-0 bottom-0 right-0 flex flex-col bg-[var(--color-surface-default)] transition-[left] duration-200 ${
@@ -341,10 +428,7 @@ export function VolumeSnapshotsPage() {
             onForward={() => window.history.forward()}
             breadcrumb={
               <Breadcrumb
-                items={[
-                  { label: 'Proj-1', href: '/project' },
-                  { label: 'Volume snapshots' },
-                ]}
+                items={[{ label: 'Proj-1', href: '/project' }, { label: 'Volume snapshots' }]}
               />
             }
             actions={
@@ -360,66 +444,72 @@ export function VolumeSnapshotsPage() {
         {/* Scrollable Content Area */}
         <div className="flex-1 overflow-auto overscroll-contain sidebar-scroll">
           <div className="pt-4 px-8 pb-6 bg-[var(--color-surface-default)]">
-          <VStack gap={3}>
-            {/* Page Header */}
-            <div className="flex items-center justify-between h-8">
-              <h1 className="text-[length:var(--font-size-16)] font-semibold leading-6 text-[var(--color-text-default)]">
-                Volume snapshots
-              </h1>
-            </div>
+            <VStack gap={3}>
+              {/* Page Header */}
+              <div className="flex items-center justify-between h-8">
+                <h1 className="text-[length:var(--font-size-16)] font-semibold leading-6 text-[var(--color-text-default)]">
+                  Volume snapshots
+                </h1>
+              </div>
 
-            {/* List Toolbar */}
-            <ListToolbar
-              primaryActions={
-                <ListToolbar.Actions>
-                  <FilterSearchInput
-                    filters={filterFields}
-                    appliedFilters={appliedFilters}
-                    onFiltersChange={setAppliedFilters}
-                    placeholder="Search snapshot by attributes"
-                    size="sm"
-                    className="w-[var(--search-input-width)]"
-                    hideAppliedFilters
-                  />
-                  <Button variant="secondary" size="sm" iconOnly icon={<IconDownload size={12} />} aria-label="Download" />
-                </ListToolbar.Actions>
-              }
-              bulkActions={
-                <ListToolbar.Actions>
-                  <Button
-                    variant="muted"
-                    size="sm"
-                    leftIcon={<IconTrash size={12} />}
-                    disabled={selectedSnapshots.length === 0}
-                  >
-                    Delete
-                  </Button>
-                </ListToolbar.Actions>
-              }
-            />
+              {/* List Toolbar */}
+              <ListToolbar
+                primaryActions={
+                  <ListToolbar.Actions>
+                    <FilterSearchInput
+                      filters={filterFields}
+                      appliedFilters={appliedFilters}
+                      onFiltersChange={setAppliedFilters}
+                      placeholder="Search snapshot by attributes"
+                      size="sm"
+                      className="w-[var(--search-input-width)]"
+                      hideAppliedFilters
+                    />
+                    <Button
+                      variant="secondary"
+                      size="sm"
+                      iconOnly
+                      icon={<IconDownload size={12} />}
+                      aria-label="Download"
+                    />
+                  </ListToolbar.Actions>
+                }
+                bulkActions={
+                  <ListToolbar.Actions>
+                    <Button
+                      variant="muted"
+                      size="sm"
+                      leftIcon={<IconTrash size={12} />}
+                      disabled={selectedSnapshots.length === 0}
+                    >
+                      Delete
+                    </Button>
+                  </ListToolbar.Actions>
+                }
+              />
 
-            {/* Pagination */}
-            <Pagination
-              currentPage={currentPage}
-              totalPages={totalPages}
-              totalItems={filteredSnapshots.length}
-              selectedCount={selectedSnapshots.length}
-              onPageChange={setCurrentPage}
-              showSettings
-              onSettingsClick={() => setIsPreferencesOpen(true)}
-            />
+              {/* Pagination */}
+              <Pagination
+                currentPage={currentPage}
+                totalPages={totalPages}
+                totalItems={filteredSnapshots.length}
+                selectedCount={selectedSnapshots.length}
+                onPageChange={setCurrentPage}
+                showSettings
+                onSettingsClick={() => setIsPreferencesOpen(true)}
+              />
 
-            {/* Table */}
-            <Table
-              columns={visibleColumns}
-              data={paginatedSnapshots}
-              rowKey="id"
-              selectable
-              selectedKeys={selectedSnapshots}
-              onSelectionChange={setSelectedSnapshots}
-            />
-          </VStack>
-        </div>
+              {/* Table */}
+              <Table
+                columns={visibleColumns}
+                data={paginatedSnapshots}
+                rowKey="id"
+                selectable
+                selectedKeys={selectedSnapshots}
+                onSelectionChange={setSelectedSnapshots}
+              />
+            </VStack>
+          </div>
         </div>
       </main>
 
@@ -450,24 +540,31 @@ export function VolumeSnapshotsPage() {
       <CreateVolumeFromVolumeSnapshotDrawer
         isOpen={createVolumeOpen}
         onClose={() => setCreateVolumeOpen(false)}
-        volumeSnapshot={selectedSnapshotForDrawer ? {
-          id: selectedSnapshotForDrawer.id,
-          name: selectedSnapshotForDrawer.name,
-          size: parseSizeToNumber(selectedSnapshotForDrawer.size),
-        } : null}
+        volumeSnapshot={
+          selectedSnapshotForDrawer
+            ? {
+                id: selectedSnapshotForDrawer.id,
+                name: selectedSnapshotForDrawer.name,
+                size: parseSizeToNumber(selectedSnapshotForDrawer.size),
+              }
+            : null
+        }
       />
 
       <EditVolumeSnapshotDrawer
         isOpen={editSnapshotOpen}
         onClose={() => setEditSnapshotOpen(false)}
-        volumeSnapshot={selectedSnapshotForDrawer ? {
-          id: selectedSnapshotForDrawer.id,
-          name: selectedSnapshotForDrawer.name,
-        } : null}
+        volumeSnapshot={
+          selectedSnapshotForDrawer
+            ? {
+                id: selectedSnapshotForDrawer.id,
+                name: selectedSnapshotForDrawer.name,
+              }
+            : null
+        }
       />
     </div>
   );
 }
 
 export default VolumeSnapshotsPage;
-

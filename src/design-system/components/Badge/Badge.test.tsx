@@ -57,7 +57,11 @@ describe('Badge', () => {
     });
 
     it('applies subtle type', () => {
-      render(<Badge theme="blue" type="subtle">Subtle</Badge>);
+      render(
+        <Badge theme="blue" type="subtle">
+          Subtle
+        </Badge>
+      );
       const badge = screen.getByText('Subtle');
       expect(badge).toHaveClass('bg-[var(--color-state-info-bg)]');
     });
@@ -85,20 +89,12 @@ describe('Badge', () => {
 
   describe('Icons', () => {
     it('renders left icon', () => {
-      render(
-        <Badge leftIcon={<IconCheck data-testid="left-icon" />}>
-          With Icon
-        </Badge>
-      );
+      render(<Badge leftIcon={<IconCheck data-testid="left-icon" />}>With Icon</Badge>);
       expect(screen.getByTestId('left-icon')).toBeInTheDocument();
     });
 
     it('renders right icon', () => {
-      render(
-        <Badge rightIcon={<IconCheck data-testid="right-icon" />}>
-          With Icon
-        </Badge>
-      );
+      render(<Badge rightIcon={<IconCheck data-testid="right-icon" />}>With Icon</Badge>);
       expect(screen.getByTestId('right-icon')).toBeInTheDocument();
     });
 
@@ -139,7 +135,11 @@ describe('Badge', () => {
     });
 
     it('theme prop takes precedence over variant', () => {
-      render(<Badge variant="success" theme="red">Mixed</Badge>);
+      render(
+        <Badge variant="success" theme="red">
+          Mixed
+        </Badge>
+      );
       const badge = screen.getByText('Mixed');
       expect(badge).toHaveClass('bg-[var(--color-state-danger)]');
     });

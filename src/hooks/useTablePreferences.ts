@@ -54,9 +54,7 @@ export function useTablePreferences<T>({
 
   // Filter and order columns based on preferences
   const visibleColumns = useMemo(() => {
-    const visibleColumnIds = columnConfig
-      .filter((col) => col.visible)
-      .map((col) => col.id);
+    const visibleColumnIds = columnConfig.filter((col) => col.visible).map((col) => col.id);
 
     // Create a map for quick column lookup
     const columnMap = new Map(columns.map((col) => [col.key, col]));
@@ -103,8 +101,3 @@ export function useTablePreferences<T>({
 }
 
 export default useTablePreferences;
-
-
-
-
-

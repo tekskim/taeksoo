@@ -98,11 +98,7 @@ export function Disclosure({
    Disclosure.Trigger
    ---------------------------------------- */
 
-export function DisclosureTrigger({
-  children,
-  className,
-  ...props
-}: DisclosureTriggerProps) {
+export function DisclosureTrigger({ children, className, ...props }: DisclosureTriggerProps) {
   const { isOpen, toggle, triggerId, panelId } = useDisclosureContext();
 
   return (
@@ -142,11 +138,7 @@ export function DisclosureTrigger({
    Disclosure.Panel
    ---------------------------------------- */
 
-export function DisclosurePanel({
-  children,
-  className,
-  ...props
-}: DisclosurePanelProps) {
+export function DisclosurePanel({ children, className, ...props }: DisclosurePanelProps) {
   const { isOpen, triggerId, panelId } = useDisclosureContext();
 
   if (!isOpen) return null;
@@ -167,8 +159,3 @@ export function DisclosurePanel({
 // Compound component pattern
 Disclosure.Trigger = DisclosureTrigger;
 Disclosure.Panel = DisclosurePanel;
-
-
-
-
-

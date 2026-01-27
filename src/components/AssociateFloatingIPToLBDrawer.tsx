@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react';
-import { 
-  Drawer, 
-  Button, 
-  SearchInput, 
-  Pagination, 
+import {
+  Drawer,
+  Button,
+  SearchInput,
+  Pagination,
   Radio,
   SelectionIndicator,
 } from '@/design-system';
@@ -80,10 +80,11 @@ export function AssociateFloatingIPToLBDrawer({
   }, [isOpen]);
 
   // Filter floating IPs
-  const filteredFloatingIPs = floatingIPs.filter((fip) =>
-    fip.floatingIp.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    fip.networkName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    fip.id.toLowerCase().includes(searchQuery.toLowerCase())
+  const filteredFloatingIPs = floatingIPs.filter(
+    (fip) =>
+      fip.floatingIp.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      fip.networkName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      fip.id.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   const totalPages = Math.ceil(filteredFloatingIPs.length / ITEMS_PER_PAGE);
@@ -94,9 +95,9 @@ export function AssociateFloatingIPToLBDrawer({
 
   const handleAssociate = async () => {
     setHasAttemptedSubmit(true);
-    
+
     if (!selectedFloatingIpId) return;
-    
+
     setIsSubmitting(true);
     try {
       await onAssociate?.(selectedFloatingIpId);
@@ -124,15 +125,11 @@ export function AssociateFloatingIPToLBDrawer({
       width={696}
       footer={
         <HStack gap={2} justify="center" className="w-full">
-          <Button 
-            variant="secondary" 
-            onClick={handleClose}
-            className="w-[152px] h-8"
-          >
+          <Button variant="secondary" onClick={handleClose} className="w-[152px] h-8">
             Cancel
           </Button>
-          <Button 
-            variant="primary" 
+          <Button
+            variant="primary"
             onClick={handleAssociate}
             disabled={isSubmitting}
             className="w-[152px] h-8"
@@ -202,32 +199,41 @@ export function AssociateFloatingIPToLBDrawer({
             <div className="flex items-stretch min-h-[40px] bg-[var(--color-border-subtle)] border border-[var(--color-border-default)] rounded-md">
               <div className="w-[40px] flex items-center justify-center shrink-0" />
               <div className="flex-1 flex items-center gap-1.5 px-3 border-l border-[var(--color-border-default)] cursor-pointer hover:text-[var(--color-action-primary)]">
-                <span className="text-[11px] font-medium text-[var(--color-text-default)] leading-4">Floating IP</span>
+                <span className="text-[11px] font-medium text-[var(--color-text-default)] leading-4">
+                  Floating IP
+                </span>
                 <IconChevronDown size={12} className="text-[var(--color-text-default)]" />
               </div>
               <div className="flex-1 flex items-center gap-1.5 px-3 border-l border-[var(--color-border-default)] cursor-pointer hover:text-[var(--color-action-primary)]">
-                <span className="text-[11px] font-medium text-[var(--color-text-default)] leading-4">Network</span>
+                <span className="text-[11px] font-medium text-[var(--color-text-default)] leading-4">
+                  Network
+                </span>
                 <IconChevronDown size={12} className="text-[var(--color-text-default)]" />
               </div>
               <div className="flex-1 flex items-center gap-1.5 px-3 border-l border-[var(--color-border-default)] cursor-pointer hover:text-[var(--color-action-primary)]">
-                <span className="text-[11px] font-medium text-[var(--color-text-default)] leading-4">Created At</span>
+                <span className="text-[11px] font-medium text-[var(--color-text-default)] leading-4">
+                  Created At
+                </span>
                 <IconChevronDown size={12} className="text-[var(--color-text-default)]" />
               </div>
             </div>
 
             {/* Rows */}
             {paginatedFloatingIPs.map((fip) => (
-              <div 
+              <div
                 key={fip.id}
                 className={`flex items-stretch min-h-[40px] border rounded-md cursor-pointer transition-all ${
-                  selectedFloatingIpId === fip.id 
-                    ? 'bg-[var(--color-state-info-bg)] border-[var(--color-action-primary)]' 
+                  selectedFloatingIpId === fip.id
+                    ? 'bg-[var(--color-state-info-bg)] border-[var(--color-action-primary)]'
                     : 'bg-[var(--color-surface-default)] border-[var(--color-border-default)] hover:bg-[var(--table-row-hover-bg)]'
                 }`}
                 onClick={() => setSelectedFloatingIpId(fip.id)}
               >
                 {/* Radio */}
-                <div className="w-[40px] flex items-center justify-center shrink-0" onClick={(e) => e.stopPropagation()}>
+                <div
+                  className="w-[40px] flex items-center justify-center shrink-0"
+                  onClick={(e) => e.stopPropagation()}
+                >
                   <Radio
                     name="floating-ip-select"
                     value={fip.id}
@@ -238,19 +244,32 @@ export function AssociateFloatingIPToLBDrawer({
                 {/* Floating IP */}
                 <div className="flex-1 flex flex-col gap-0.5 justify-center px-3 py-2 overflow-hidden min-w-0">
                   <div className="flex items-center gap-1.5">
-                    <span className="text-[12px] font-medium text-[var(--color-action-primary)] leading-4 truncate">{fip.floatingIp}</span>
-                    <IconExternalLink size={12} className="shrink-0 text-[var(--color-action-primary)]" />
+                    <span className="text-[12px] font-medium text-[var(--color-action-primary)] leading-4 truncate">
+                      {fip.floatingIp}
+                    </span>
+                    <IconExternalLink
+                      size={12}
+                      className="shrink-0 text-[var(--color-action-primary)]"
+                    />
                   </div>
-                  <span className="text-[11px] text-[var(--color-text-subtle)] leading-4 truncate">ID : {fip.id}</span>
+                  <span className="text-[11px] text-[var(--color-text-subtle)] leading-4 truncate">
+                    ID : {fip.id}
+                  </span>
                 </div>
                 {/* Network */}
                 <div className="flex-1 flex flex-col gap-0.5 justify-center px-3 py-2 overflow-hidden min-w-0">
-                  <span className="text-[12px] text-[var(--color-text-default)] leading-4 truncate">{fip.networkName}</span>
-                  <span className="text-[11px] text-[var(--color-text-subtle)] leading-4 truncate">ID : {fip.networkId}</span>
+                  <span className="text-[12px] text-[var(--color-text-default)] leading-4 truncate">
+                    {fip.networkName}
+                  </span>
+                  <span className="text-[11px] text-[var(--color-text-subtle)] leading-4 truncate">
+                    ID : {fip.networkId}
+                  </span>
                 </div>
                 {/* Created At */}
                 <div className="flex-1 flex items-center px-3 py-2 overflow-hidden min-w-0">
-                  <span className="text-[12px] text-[var(--color-text-default)] leading-4 truncate">{fip.createdAt}</span>
+                  <span className="text-[12px] text-[var(--color-text-default)] leading-4 truncate">
+                    {fip.createdAt}
+                  </span>
                 </div>
               </div>
             ))}
@@ -258,7 +277,11 @@ export function AssociateFloatingIPToLBDrawer({
 
           {/* Selection Indicator - Below table */}
           <SelectionIndicator
-            selectedItems={selectedFloatingIP ? [{ id: selectedFloatingIP.id, label: selectedFloatingIP.floatingIp }] : []}
+            selectedItems={
+              selectedFloatingIP
+                ? [{ id: selectedFloatingIP.id, label: selectedFloatingIP.floatingIp }]
+                : []
+            }
             onRemove={() => setSelectedFloatingIpId(null)}
             emptyText="No item Selected"
             error={hasAttemptedSubmit && !selectedFloatingIpId}

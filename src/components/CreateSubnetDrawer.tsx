@@ -1,12 +1,5 @@
 import { useState, useEffect } from 'react';
-import { 
-  Drawer, 
-  Button, 
-  Input,
-  Textarea,
-  Toggle,
-  Disclosure,
-} from '@/design-system';
+import { Drawer, Button, Input, Textarea, Toggle, Disclosure } from '@/design-system';
 import { HStack, VStack } from '@/design-system/layouts';
 import { IconInfinity } from '@tabler/icons-react';
 
@@ -61,26 +54,22 @@ function QuotaProgressBar({ label, used, total }: QuotaProgressBarProps) {
           {label}
         </span>
         <HStack gap={0} align="center">
-          <span className="text-[12px] text-[var(--color-text-default)] leading-4">
-            {used}/
-          </span>
+          <span className="text-[12px] text-[var(--color-text-default)] leading-4">{used}/</span>
           {isUnlimited ? (
             <IconInfinity size={16} className="text-[var(--color-text-default)]" />
           ) : (
-            <span className="text-[12px] text-[var(--color-text-default)] leading-4">
-              {total}
-            </span>
+            <span className="text-[12px] text-[var(--color-text-default)] leading-4">{total}</span>
           )}
         </HStack>
       </HStack>
       <div className="w-full h-1 bg-[var(--color-border-subtle)] rounded-lg relative overflow-hidden">
         {/* Current usage (darker green) */}
-        <div 
+        <div
           className="absolute left-0 top-0 h-full bg-[#4ade80] rounded-lg z-[2]"
           style={{ width: isUnlimited ? '5%' : `${Math.min(percentage, 100)}%` }}
         />
         {/* Next usage preview (lighter green) */}
-        <div 
+        <div
           className="absolute left-0 top-0 h-full bg-[#bbf7d0] rounded-lg z-[1]"
           style={{ width: isUnlimited ? '10%' : `${Math.min(nextPercentage, 100)}%` }}
         />
@@ -135,7 +124,7 @@ export function CreateSubnetDrawer({
   const handleSubmit = async () => {
     setHasAttemptedSubmit(true);
     if (!cidr.trim()) return;
-    
+
     setIsSubmitting(true);
     try {
       await onSubmit?.({
@@ -187,15 +176,11 @@ export function CreateSubnetDrawer({
 
           {/* Buttons */}
           <HStack gap={2} justify="center" className="w-full">
-            <Button 
-              variant="secondary" 
-              onClick={handleClose}
-              className="w-[152px] h-8"
-            >
+            <Button variant="secondary" onClick={handleClose} className="w-[152px] h-8">
               Cancel
             </Button>
-            <Button 
-              variant="primary" 
+            <Button
+              variant="primary"
               onClick={handleSubmit}
               disabled={isSubmitting}
               className="w-[152px] h-8"
@@ -222,11 +207,7 @@ export function CreateSubnetDrawer({
               (Optional)
             </span>
           </HStack>
-          <Input
-            value={subnetName}
-            onChange={(e) => setSubnetName(e.target.value)}
-            fullWidth
-          />
+          <Input value={subnetName} onChange={(e) => setSubnetName(e.target.value)} fullWidth />
           <span className="text-[11px] text-[var(--color-text-subtle)]">
             Allowed: 1–128 characters, letters, numbers, "-", "_", ".", "()", "[]"
           </span>
@@ -244,12 +225,11 @@ export function CreateSubnetDrawer({
             error={hasAttemptedSubmit && !cidr.trim()}
           />
           {hasAttemptedSubmit && !cidr.trim() ? (
-            <span className="text-[11px] text-[var(--color-state-danger)]">
-              CIDR is required
-            </span>
+            <span className="text-[11px] text-[var(--color-state-danger)]">CIDR is required</span>
           ) : (
             <span className="text-[11px] text-[var(--color-text-subtle)]">
-              It is recommended that you use the private network address 10.0.0.0/8, 172.16.0.0/12, 192.168.0.0/16
+              It is recommended that you use the private network address 10.0.0.0/8, 172.16.0.0/12,
+              192.168.0.0/16
             </span>
           )}
         </VStack>
@@ -267,13 +247,10 @@ export function CreateSubnetDrawer({
             />
             {gatewayEnabled && (
               <>
-                <Input
-                  value={gatewayIp}
-                  onChange={(e) => setGatewayIp(e.target.value)}
-                  fullWidth
-                />
+                <Input value={gatewayIp} onChange={(e) => setGatewayIp(e.target.value)} fullWidth />
                 <span className="text-[11px] text-[var(--color-text-subtle)]">
-                  Gateway must be an IP address within the subnet range, excluding the network and broadcast addresses.
+                  Gateway must be an IP address within the subnet range, excluding the network and
+                  broadcast addresses.
                 </span>
               </>
             )}
@@ -308,7 +285,9 @@ export function CreateSubnetDrawer({
                   </span>
                 </HStack>
                 <span className="text-[12px] text-[var(--color-text-subtle)] leading-4">
-                  Manually define the range of IP addresses to be automatically allocated by DHCP. IPs outside this range will not be allocated, which is useful for reserving static IPs.
+                  Manually define the range of IP addresses to be automatically allocated by DHCP.
+                  IPs outside this range will not be allocated, which is useful for reserving static
+                  IPs.
                 </span>
                 <Textarea
                   value={allocationPools}
@@ -333,7 +312,8 @@ export function CreateSubnetDrawer({
                   </span>
                 </HStack>
                 <span className="text-[12px] text-[var(--color-text-subtle)] leading-4">
-                  The address of the server that acts like a phonebook for the internet, translating domain names into IP addresses for your instances.
+                  The address of the server that acts like a phonebook for the internet, translating
+                  domain names into IP addresses for your instances.
                 </span>
                 <Textarea
                   value={dns}
@@ -358,7 +338,8 @@ export function CreateSubnetDrawer({
                   </span>
                 </HStack>
                 <span className="text-[12px] text-[var(--color-text-subtle)] leading-4">
-                  An advanced feature for manually specifying a route to a specific network destination.
+                  An advanced feature for manually specifying a route to a specific network
+                  destination.
                 </span>
                 <Textarea
                   value={hostRoutes}

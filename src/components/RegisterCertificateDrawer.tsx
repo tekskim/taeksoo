@@ -40,7 +40,7 @@ function FileUploadSection({
   description,
   value,
   onChange,
-  placeholder = "e.g. -----BEGIN CERTIFICATE----- ...",
+  placeholder = 'e.g. -----BEGIN CERTIFICATE----- ...',
   maxSizeKB = 64,
 }: FileUploadSectionProps) {
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -66,9 +66,7 @@ function FileUploadSection({
       <label className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
         {label}
       </label>
-      <p className="text-[12px] text-[var(--color-text-subtle)] leading-4">
-        {description}
-      </p>
+      <p className="text-[12px] text-[var(--color-text-subtle)] leading-4">{description}</p>
       <input
         type="file"
         ref={fileInputRef}
@@ -76,8 +74,8 @@ function FileUploadSection({
         className="hidden"
         accept=".crt,.pem,.key,.cer,.txt"
       />
-      <Button 
-        variant="secondary" 
+      <Button
+        variant="secondary"
         onClick={handleUploadClick}
         leftIcon={<IconUpload size={12} stroke={1} />}
       >
@@ -148,12 +146,10 @@ function CollapsibleSection({
         )}
         {label}
       </button>
-      
+
       {isExpanded && (
         <>
-          <p className="text-[12px] text-[var(--color-text-subtle)] leading-4">
-            {description}
-          </p>
+          <p className="text-[12px] text-[var(--color-text-subtle)] leading-4">{description}</p>
           <input
             type="file"
             ref={fileInputRef}
@@ -161,8 +157,8 @@ function CollapsibleSection({
             className="hidden"
             accept=".crt,.pem,.key,.cer,.txt"
           />
-          <Button 
-            variant="secondary" 
+          <Button
+            variant="secondary"
             onClick={handleUploadClick}
             leftIcon={<IconUpload size={12} stroke={1} />}
           >
@@ -218,7 +214,7 @@ export function RegisterCertificateDrawer({
     setHasAttemptedSubmit(true);
     if (!certificateName.trim() || !certificateBody.trim()) return;
     if (certificateType === 'server' && !privateKey.trim()) return;
-    
+
     setIsSubmitting(true);
     try {
       await onSubmit?.(
@@ -249,15 +245,11 @@ export function RegisterCertificateDrawer({
       width={376}
       footer={
         <HStack gap={2} className="w-full">
-          <Button 
-            variant="secondary" 
-            onClick={handleClose}
-            className="flex-1 h-8"
-          >
+          <Button variant="secondary" onClick={handleClose} className="flex-1 h-8">
             Cancel
           </Button>
-          <Button 
-            variant="primary" 
+          <Button
+            variant="primary"
             onClick={handleSubmit}
             disabled={isSubmitting}
             className="flex-1 h-8"
@@ -283,8 +275,8 @@ export function RegisterCertificateDrawer({
           <label className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
             Type
           </label>
-          <RadioGroup 
-            value={certificateType} 
+          <RadioGroup
+            value={certificateType}
             onChange={(value) => setCertificateType(value as CertificateType)}
           >
             <VStack gap={3}>
@@ -302,7 +294,9 @@ export function RegisterCertificateDrawer({
           <Input
             value={certificateName}
             onChange={(e) => setCertificateName(e.target.value)}
-            placeholder={certificateType === 'server' ? "e.g. my-ssl-cert" : "e.g. company-internal-ca"}
+            placeholder={
+              certificateType === 'server' ? 'e.g. my-ssl-cert' : 'e.g. company-internal-ca'
+            }
             fullWidth
             error={hasAttemptedSubmit && !certificateName.trim()}
           />
@@ -325,7 +319,11 @@ export function RegisterCertificateDrawer({
           <Input
             value={description}
             onChange={(e) => setDescription(e.target.value)}
-            placeholder={certificateType === 'server' ? "e.g. SSL certificate for web application HTTPS" : "e.g. Internal Root Certificate Authority"}
+            placeholder={
+              certificateType === 'server'
+                ? 'e.g. SSL certificate for web application HTTPS'
+                : 'e.g. Internal Root Certificate Authority'
+            }
             fullWidth
           />
         </VStack>
@@ -364,4 +362,3 @@ export function RegisterCertificateDrawer({
 }
 
 export default RegisterCertificateDrawer;
-

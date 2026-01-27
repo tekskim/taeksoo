@@ -137,8 +137,10 @@ describe('ProgressBar', () => {
       const { container } = render(
         <ProgressBar value={30} newValue={20} max={100} variant="quota" />
       );
-      
-      const progressBar = container.querySelector('.relative.h-\\[var\\(--progress-bar-height\\)\\]');
+
+      const progressBar = container.querySelector(
+        '.relative.h-\\[var\\(--progress-bar-height\\)\\]'
+      );
       if (progressBar) {
         await user.hover(progressBar);
         expect(screen.getByText('Used: 30')).toBeInTheDocument();

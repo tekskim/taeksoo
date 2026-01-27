@@ -37,9 +37,7 @@ function InfoBox({ label, value }: { label: string; value: string }) {
         <span className="text-[11px] font-medium text-[var(--color-text-subtle)] leading-4">
           {label}
         </span>
-        <span className="text-[12px] text-[var(--color-text-default)] leading-4">
-          {value}
-        </span>
+        <span className="text-[12px] text-[var(--color-text-default)] leading-4">{value}</span>
       </VStack>
     </div>
   );
@@ -75,7 +73,7 @@ export function ChangeVolumeTypeDrawer({
   const handleSubmit = async () => {
     setHasAttemptedSubmit(true);
     if (!selectedType) return;
-    
+
     setIsSubmitting(true);
     try {
       await onSubmit?.(selectedType);
@@ -91,9 +89,7 @@ export function ChangeVolumeTypeDrawer({
   };
 
   // Filter out current type from available options
-  const availableTypes = volumeTypes.filter(
-    (type) => type.value !== volume?.currentType
-  );
+  const availableTypes = volumeTypes.filter((type) => type.value !== volume?.currentType);
 
   return (
     <Drawer
@@ -104,15 +100,11 @@ export function ChangeVolumeTypeDrawer({
       width={376}
       footer={
         <HStack gap={2} className="w-full">
-          <Button 
-            variant="secondary" 
-            onClick={handleClose}
-            className="flex-1 h-8"
-          >
+          <Button variant="secondary" onClick={handleClose} className="flex-1 h-8">
             Cancel
           </Button>
-          <Button 
-            variant="primary" 
+          <Button
+            variant="primary"
             onClick={handleSubmit}
             disabled={isSubmitting}
             className="flex-1 h-8"
@@ -130,7 +122,8 @@ export function ChangeVolumeTypeDrawer({
               Change Type
             </h2>
             <p className="text-[12px] text-[var(--color-text-subtle)] leading-4">
-              Change the storage type of this volume to another available volume type. The operation may take some time.
+              Change the storage type of this volume to another available volume type. The operation
+              may take some time.
             </p>
           </VStack>
 
@@ -143,16 +136,10 @@ export function ChangeVolumeTypeDrawer({
           </div>
 
           {/* Volume Info */}
-          <InfoBox 
-            label="Volume" 
-            value={volume?.name ?? '-'} 
-          />
+          <InfoBox label="Volume" value={volume?.name ?? '-'} />
 
           {/* Current Volume Type Info */}
-          <InfoBox 
-            label="Current Volume Type" 
-            value={volume?.currentType ?? '-'} 
-          />
+          <InfoBox label="Current Volume Type" value={volume?.currentType ?? '-'} />
         </VStack>
 
         {/* New Volume Type Select */}
@@ -180,4 +167,3 @@ export function ChangeVolumeTypeDrawer({
 }
 
 export default ChangeVolumeTypeDrawer;
-

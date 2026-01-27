@@ -57,13 +57,7 @@ export const Loading: React.FC<LoadingProps> = ({
   // Spinner variant
   if (variant === 'spinner') {
     return (
-      <div
-        className={twMerge(
-          'flex flex-col items-center',
-          sizeConfig.gap,
-          className
-        )}
-      >
+      <div className={twMerge('flex flex-col items-center', sizeConfig.gap, className)}>
         <IconLoader2
           size={sizeConfig.icon}
           stroke={1.5}
@@ -88,21 +82,12 @@ export const Loading: React.FC<LoadingProps> = ({
     const clampedProgress = Math.min(Math.max(progress, 0), 100);
 
     return (
-      <div
-        className={twMerge(
-          'flex flex-col items-center gap-3',
-          className
-        )}
-      >
+      <div className={twMerge('flex flex-col items-center gap-3', className)}>
         {/* Title and Description */}
         <div className="flex flex-col items-center gap-2 text-[var(--color-text-default)]">
-          <p className="font-medium text-[14px] leading-5">
-            {text}
-          </p>
+          <p className="font-medium text-[14px] leading-5">{text}</p>
           {description && (
-            <p className="font-normal text-[12px] leading-4 text-center">
-              {description}
-            </p>
+            <p className="font-normal text-[12px] leading-4 text-center">{description}</p>
           )}
         </div>
 
@@ -141,11 +126,7 @@ export const Loading: React.FC<LoadingProps> = ({
             'cursor-not-allowed'
           )}
         >
-          <IconLoader2
-            size={16}
-            stroke={2}
-            className="text-white animate-spin"
-          />
+          <IconLoader2 size={16} stroke={2} className="text-white animate-spin" />
           <span className="font-medium text-[12px] leading-4 text-white text-center">
             {buttonLabel}
           </span>
@@ -158,5 +139,3 @@ export const Loading: React.FC<LoadingProps> = ({
 };
 
 export default Loading;
-
-

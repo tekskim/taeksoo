@@ -28,11 +28,7 @@ const DURATION_OPTIONS = [
    IdentifyDeviceDrawer Component
    ---------------------------------------- */
 
-export function IdentifyDeviceDrawer({
-  isOpen,
-  onClose,
-  onSubmit,
-}: IdentifyDeviceDrawerProps) {
+export function IdentifyDeviceDrawer({ isOpen, onClose, onSubmit }: IdentifyDeviceDrawerProps) {
   const [duration, setDuration] = useState('5');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -60,15 +56,11 @@ export function IdentifyDeviceDrawer({
       width={376}
       footer={
         <HStack gap={2} justify="center" className="w-full">
-          <Button 
-            variant="secondary" 
-            onClick={handleClose}
-            className="w-[152px] h-8"
-          >
+          <Button variant="secondary" onClick={handleClose} className="w-[152px] h-8">
             Cancel
           </Button>
-          <Button 
-            variant="primary" 
+          <Button
+            variant="primary"
             onClick={handleSubmit}
             disabled={isSubmitting}
             className="w-[152px] h-8"

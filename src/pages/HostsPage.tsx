@@ -16,12 +16,7 @@ import {
 } from '@/design-system';
 import { StorageSidebar } from '@/components/StorageSidebar';
 import { useTabs } from '@/contexts/TabContext';
-import {
-  IconRefresh,
-  IconBell,
-  IconTrash,
-  IconDownload,
-} from '@tabler/icons-react';
+import { IconRefresh, IconBell, IconTrash, IconDownload } from '@tabler/icons-react';
 import { Link } from 'react-router-dom';
 
 /* ----------------------------------------
@@ -172,9 +167,7 @@ function StatusCell({ status }: StatusCellProps) {
     offline: 'down',
   };
 
-  return (
-    <StatusIndicator status={statusMap[status]} layout="icon-only" size="sm" />
-  );
+  return <StatusIndicator status={statusMap[status]} layout="icon-only" size="sm" />;
 }
 
 /* ----------------------------------------
@@ -240,13 +233,16 @@ export function HostsPage() {
   }));
 
   // Filter hosts based on search
-  const filteredHosts = useMemo(() =>
-    mockHosts.filter((host) =>
-      host.hostname.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      host.id.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      host.model.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      host.labels.some(label => label.toLowerCase().includes(searchQuery.toLowerCase()))
-    ), [searchQuery]
+  const filteredHosts = useMemo(
+    () =>
+      mockHosts.filter(
+        (host) =>
+          host.hostname.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          host.id.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          host.model.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          host.labels.some((label) => label.toLowerCase().includes(searchQuery.toLowerCase()))
+      ),
+    [searchQuery]
   );
 
   const totalPages = Math.ceil(filteredHosts.length / rowsPerPage);
@@ -348,7 +344,7 @@ export function HostsPage() {
   return (
     <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
       {/* Sidebar */}
-      <StorageSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(prev => !prev)} />
+      <StorageSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen((prev) => !prev)} />
 
       {/* Main Content */}
       <main
@@ -376,18 +372,10 @@ export function HostsPage() {
             onBack={() => window.history.back()}
             onForward={() => window.history.forward()}
             breadcrumb={
-              <Breadcrumb
-                items={[
-                  { label: 'Home', href: '/storage' },
-                  { label: 'Hosts' },
-                ]}
-              />
+              <Breadcrumb items={[{ label: 'Home', href: '/storage' }, { label: 'Hosts' }]} />
             }
             actions={
-              <TopBarAction
-                icon={<IconBell size={16} stroke={1.5} />}
-                aria-label="Notifications"
-              />
+              <TopBarAction icon={<IconBell size={16} stroke={1.5} />} aria-label="Notifications" />
             }
           />
         </div>
@@ -471,4 +459,3 @@ export function HostsPage() {
 }
 
 export default HostsPage;
-

@@ -65,18 +65,20 @@ export function EditListenerDrawer({
     listener.connectionLimit === -1 ? 1000 : listener.connectionLimit
   );
   const [isAdvancedExpanded, setIsAdvancedExpanded] = useState(false);
-  
+
   // Advanced options
   const [xForwardedFor, setXForwardedFor] = useState(listener.xForwardedFor ?? false);
   const [xForwardedPort, setXForwardedPort] = useState(listener.xForwardedPort ?? false);
   const [clientDataTimeout, setClientDataTimeout] = useState(listener.clientDataTimeout ?? 50000);
-  const [memberConnectTimeout, setMemberConnectTimeout] = useState(listener.memberConnectTimeout ?? 50000);
+  const [memberConnectTimeout, setMemberConnectTimeout] = useState(
+    listener.memberConnectTimeout ?? 50000
+  );
   const [memberDataTimeout, setMemberDataTimeout] = useState(listener.memberDataTimeout ?? 50000);
   const [tcpInspectTimeout, setTcpInspectTimeout] = useState(listener.tcpInspectTimeout ?? 0);
   const [allowedCidrs, setAllowedCidrs] = useState<string[]>(listener.allowedCidrs ?? []);
   const [newCidr, setNewCidr] = useState('');
   const [adminStateUp, setAdminStateUp] = useState(listener.adminStateUp);
-  
+
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Reset form when drawer opens
@@ -101,7 +103,7 @@ export function EditListenerDrawer({
 
   const handleSubmit = async () => {
     if (!listenerName.trim()) return;
-    
+
     setIsSubmitting(true);
     try {
       await onSubmit?.({
@@ -135,9 +137,8 @@ export function EditListenerDrawer({
   };
 
   const handleRemoveCidr = (cidr: string) => {
-    setAllowedCidrs(allowedCidrs.filter(c => c !== cidr));
+    setAllowedCidrs(allowedCidrs.filter((c) => c !== cidr));
   };
-
 
   return (
     <Drawer
@@ -148,15 +149,11 @@ export function EditListenerDrawer({
       width={376}
       footer={
         <HStack gap={2} className="w-full">
-          <Button 
-            variant="secondary" 
-            onClick={handleClose}
-            className="flex-1 h-8"
-          >
+          <Button variant="secondary" onClick={handleClose} className="flex-1 h-8">
             Cancel
           </Button>
-          <Button 
-            variant="primary" 
+          <Button
+            variant="primary"
             onClick={handleSubmit}
             disabled={isSubmitting}
             className="flex-1 h-8"
@@ -193,7 +190,8 @@ export function EditListenerDrawer({
         {/* Description */}
         <VStack gap={2} className="w-full">
           <label className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
-            Description <span className="text-[12px] text-[var(--color-text-subtle)]">(optional)</span>
+            Description{' '}
+            <span className="text-[12px] text-[var(--color-text-subtle)]">(optional)</span>
           </label>
           <Input
             value={description}
@@ -208,12 +206,7 @@ export function EditListenerDrawer({
           <label className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
             Protocol
           </label>
-          <Input
-            value={listener.protocol}
-            readOnly
-            disabled
-            fullWidth
-          />
+          <Input value={listener.protocol} readOnly disabled fullWidth />
         </VStack>
 
         {/* Port (Read-only) */}
@@ -221,12 +214,7 @@ export function EditListenerDrawer({
           <label className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
             Port
           </label>
-          <Input
-            value={String(listener.port)}
-            readOnly
-            disabled
-            fullWidth
-          />
+          <Input value={String(listener.port)} readOnly disabled fullWidth />
         </VStack>
 
         {/* Connection Limit */}
@@ -234,14 +222,14 @@ export function EditListenerDrawer({
           <label className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
             Connection Limit
           </label>
-          <RadioGroup 
-            value={connectionLimitType} 
+          <RadioGroup
+            value={connectionLimitType}
             onChange={(value) => setConnectionLimitType(value as ConnectionLimitType)}
           >
             <Radio value="unlimited">Unlimited</Radio>
             <Radio value="limited">Limited</Radio>
           </RadioGroup>
-          
+
           {connectionLimitType === 'limited' && (
             <Input
               type="number"
@@ -266,7 +254,9 @@ export function EditListenerDrawer({
               <IconChevronRight size={12} stroke={1} />
             )}
             Advanced
-            <span className="text-[12px] text-[var(--color-text-subtle)] font-normal">(Optional)</span>
+            <span className="text-[12px] text-[var(--color-text-subtle)] font-normal">
+              (Optional)
+            </span>
           </button>
 
           {isAdvancedExpanded && (
@@ -371,8 +361,13 @@ export function EditListenerDrawer({
 
                 {/* CIDR Input Row */}
                 {allowedCidrs.length === 0 && (
-                  <HStack gap={3} className="w-full items-center bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-md px-4 py-2">
-                    <span className="text-[14px] font-medium text-[var(--color-text-default)]">Key</span>
+                  <HStack
+                    gap={3}
+                    className="w-full items-center bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-md px-4 py-2"
+                  >
+                    <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+                      Key
+                    </span>
                     <Input
                       value={newCidr}
                       onChange={(e) => setNewCidr(e.target.value)}
@@ -389,8 +384,14 @@ export function EditListenerDrawer({
 
                 {/* CIDR List */}
                 {allowedCidrs.map((cidr, index) => (
-                  <HStack key={index} gap={3} className="w-full items-center bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-md px-4 py-2">
-                    <span className="text-[14px] font-medium text-[var(--color-text-default)]">Key</span>
+                  <HStack
+                    key={index}
+                    gap={3}
+                    className="w-full items-center bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-md px-4 py-2"
+                  >
+                    <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+                      Key
+                    </span>
                     <div className="flex-1 px-2.5 py-2 bg-[var(--color-surface-default)] border border-[var(--color-border-strong)] rounded-md text-[12px] text-[var(--color-text-default)]">
                       {cidr}
                     </div>
@@ -405,8 +406,13 @@ export function EditListenerDrawer({
                 ))}
 
                 {allowedCidrs.length > 0 && (
-                  <HStack gap={3} className="w-full items-center bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-md px-4 py-2">
-                    <span className="text-[14px] font-medium text-[var(--color-text-default)]">Key</span>
+                  <HStack
+                    gap={3}
+                    className="w-full items-center bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-md px-4 py-2"
+                  >
+                    <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+                      Key
+                    </span>
                     <Input
                       value={newCidr}
                       onChange={(e) => setNewCidr(e.target.value)}
@@ -428,9 +434,9 @@ export function EditListenerDrawer({
                   Listener Admin State
                 </label>
                 <HStack gap={2} className="items-center">
-                  <Toggle 
-                    checked={adminStateUp} 
-                    onChange={(e) => setAdminStateUp(e.target.checked)} 
+                  <Toggle
+                    checked={adminStateUp}
+                    onChange={(e) => setAdminStateUp(e.target.checked)}
                   />
                   <span className="text-[12px] text-[var(--color-text-default)] leading-4">
                     {adminStateUp ? 'Up' : 'Down'}
@@ -446,4 +452,3 @@ export function EditListenerDrawer({
 }
 
 export default EditListenerDrawer;
-

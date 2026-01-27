@@ -14,10 +14,10 @@ export interface AgentAppLayoutProps {
 
 /**
  * AgentAppLayout
- * 
+ *
  * Shared layout component for all Agent service pages.
  * Provides consistent TabBar, Sidebar structure across all pages.
- * 
+ *
  * The TabBar state is shared across all pages using TabContext.
  */
 export function AgentAppLayout({ children }: AgentAppLayoutProps) {

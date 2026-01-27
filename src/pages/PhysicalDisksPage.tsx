@@ -20,12 +20,7 @@ import {
 } from '@/design-system';
 import { StorageSidebar } from '@/components/StorageSidebar';
 import { useTabs } from '@/contexts/TabContext';
-import {
-  IconRefresh,
-  IconBell,
-  IconTrash,
-  IconDownload,
-} from '@tabler/icons-react';
+import { IconRefresh, IconBell, IconTrash, IconDownload } from '@tabler/icons-react';
 import { Siren } from 'lucide-react';
 
 /* ----------------------------------------
@@ -195,10 +190,10 @@ interface StatusCellProps {
 
 function StatusCell({ status }: StatusCellProps) {
   const statusMap: Record<PhysicalDisk['status'], 'active' | 'error' | 'shutoff' | 'down'> = {
-    'available': 'shutoff',
+    available: 'shutoff',
     'in-use': 'active',
-    'error': 'error',
-    'offline': 'down',
+    error: 'error',
+    offline: 'down',
   };
 
   return <StatusIndicator status={statusMap[status]} />;
@@ -230,21 +225,21 @@ function OSDsCell({ osds, maxVisible = 2 }: OSDsCellProps) {
   const [popoverPosition, setPopoverPosition] = useState({ top: 0, left: 0 });
   const triggerRef = useRef<HTMLSpanElement>(null);
   const popoverRef = useRef<HTMLDivElement>(null);
-  
+
   const visibleOsds = osds.slice(0, maxVisible);
   const remainingCount = osds.length - maxVisible;
 
   const updatePosition = useCallback(() => {
     if (!triggerRef.current) return;
-    
+
     const rect = triggerRef.current.getBoundingClientRect();
     const popoverHeight = 100; // Approximate height
     const gap = 8;
-    
+
     // Check if there's enough space above
     const spaceAbove = rect.top;
     const showAbove = spaceAbove > popoverHeight + gap;
-    
+
     setPopoverPosition({
       top: showAbove ? rect.top - gap : rect.bottom + gap,
       left: rect.left + rect.width / 2,
@@ -263,8 +258,8 @@ function OSDsCell({ osds, maxVisible = 2 }: OSDsCellProps) {
     };
   }, [isPopoverOpen, updatePosition]);
 
-  const showAbove = triggerRef.current 
-    ? triggerRef.current.getBoundingClientRect().top > 100 
+  const showAbove = triggerRef.current
+    ? triggerRef.current.getBoundingClientRect().top > 100
     : true;
 
   return (
@@ -282,43 +277,44 @@ function OSDsCell({ osds, maxVisible = 2 }: OSDsCellProps) {
           >
             +{remainingCount}
           </span>
-          {isPopoverOpen && createPortal(
-            <div
-              ref={popoverRef}
-              className="fixed z-[9999]"
-              style={{
-                top: popoverPosition.top,
-                left: popoverPosition.left,
-                transform: showAbove ? 'translate(-50%, -100%)' : 'translate(-50%, 0)',
-              }}
-              onMouseEnter={() => setIsPopoverOpen(true)}
-              onMouseLeave={() => setIsPopoverOpen(false)}
-            >
-              <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg shadow-lg p-3 min-w-[120px] max-w-[240px]">
-                <div className="text-[10px] font-medium text-[var(--color-text-muted)] mb-2">
-                  All OSDs ({osds.length})
+          {isPopoverOpen &&
+            createPortal(
+              <div
+                ref={popoverRef}
+                className="fixed z-[9999]"
+                style={{
+                  top: popoverPosition.top,
+                  left: popoverPosition.left,
+                  transform: showAbove ? 'translate(-50%, -100%)' : 'translate(-50%, 0)',
+                }}
+                onMouseEnter={() => setIsPopoverOpen(true)}
+                onMouseLeave={() => setIsPopoverOpen(false)}
+              >
+                <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg shadow-lg p-3 min-w-[120px] max-w-[240px]">
+                  <div className="text-[10px] font-medium text-[var(--color-text-muted)] mb-2">
+                    All OSDs ({osds.length})
+                  </div>
+                  <div className="flex flex-wrap gap-1">
+                    {osds.map((osd, index) => (
+                      <Chip key={index} value={osd} />
+                    ))}
+                  </div>
                 </div>
-                <div className="flex flex-wrap gap-1">
-                  {osds.map((osd, index) => (
-                    <Chip key={index} value={osd} />
-                  ))}
-                </div>
-              </div>
-              {/* Arrow */}
-              {showAbove ? (
-                <div className="absolute top-full left-1/2 -translate-x-1/2 -mt-px">
-                  <div className="w-0 h-0 border-l-[6px] border-l-transparent border-r-[6px] border-r-transparent border-t-[6px] border-t-[var(--color-border-default)]" />
-                  <div className="absolute top-0 left-1/2 -translate-x-1/2 -mt-[1px] w-0 h-0 border-l-[5px] border-l-transparent border-r-[5px] border-r-transparent border-t-[5px] border-t-[var(--color-surface-default)]" />
-                </div>
-              ) : (
-                <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-[-1px]">
-                  <div className="w-0 h-0 border-l-[6px] border-l-transparent border-r-[6px] border-r-transparent border-b-[6px] border-b-[var(--color-border-default)]" />
-                  <div className="absolute bottom-0 left-1/2 -translate-x-1/2 mb-[-1px] w-0 h-0 border-l-[5px] border-l-transparent border-r-[5px] border-r-transparent border-b-[5px] border-b-[var(--color-surface-default)]" />
-                </div>
-              )}
-            </div>,
-            document.body
-          )}
+                {/* Arrow */}
+                {showAbove ? (
+                  <div className="absolute top-full left-1/2 -translate-x-1/2 -mt-px">
+                    <div className="w-0 h-0 border-l-[6px] border-l-transparent border-r-[6px] border-r-transparent border-t-[6px] border-t-[var(--color-border-default)]" />
+                    <div className="absolute top-0 left-1/2 -translate-x-1/2 -mt-[1px] w-0 h-0 border-l-[5px] border-l-transparent border-r-[5px] border-r-transparent border-t-[5px] border-t-[var(--color-surface-default)]" />
+                  </div>
+                ) : (
+                  <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-[-1px]">
+                    <div className="w-0 h-0 border-l-[6px] border-l-transparent border-r-[6px] border-r-transparent border-b-[6px] border-b-[var(--color-border-default)]" />
+                    <div className="absolute bottom-0 left-1/2 -translate-x-1/2 mb-[-1px] w-0 h-0 border-l-[5px] border-l-transparent border-r-[5px] border-r-transparent border-b-[5px] border-b-[var(--color-surface-default)]" />
+                  </div>
+                )}
+              </div>,
+              document.body
+            )}
         </>
       )}
     </div>
@@ -344,7 +340,9 @@ function IdentifyCell({ timer, onIdentify }: IdentifyCellProps) {
 
   if (timer && timer > 0) {
     return (
-      <span className="text-[11px] font-medium text-[var(--color-state-warning)]">{formatTime(timer)}</span>
+      <span className="text-[11px] font-medium text-[var(--color-state-warning)]">
+        {formatTime(timer)}
+      </span>
     );
   }
 
@@ -373,7 +371,7 @@ export function PhysicalDisksPage() {
   const [isIdentifyDrawerOpen, setIsIdentifyDrawerOpen] = useState(false);
   const [selectedDiskId, setSelectedDiskId] = useState<string | null>(null);
   const [identifyDuration, setIdentifyDuration] = useState('1');
-  
+
   // Timer state for each disk (in seconds)
   const [diskTimers, setDiskTimers] = useState<Record<string, number>>({});
 
@@ -421,14 +419,17 @@ export function PhysicalDisksPage() {
   }));
 
   // Filter disks based on search
-  const filteredDisks = useMemo(() =>
-    mockPhysicalDisks.filter((disk) =>
-      disk.hostname.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      disk.devicePath.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      disk.vendor.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      disk.model.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      disk.type.toLowerCase().includes(searchQuery.toLowerCase())
-    ), [searchQuery]
+  const filteredDisks = useMemo(
+    () =>
+      mockPhysicalDisks.filter(
+        (disk) =>
+          disk.hostname.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          disk.devicePath.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          disk.vendor.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          disk.model.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          disk.type.toLowerCase().includes(searchQuery.toLowerCase())
+      ),
+    [searchQuery]
   );
 
   const totalPages = Math.ceil(filteredDisks.length / rowsPerPage);
@@ -527,9 +528,9 @@ export function PhysicalDisksPage() {
       align: 'center',
       sortable: false,
       render: (_, row) => (
-        <IdentifyCell 
-          timer={diskTimers[row.id] ?? row.identifyTimer} 
-          onIdentify={() => handleIdentify(row.id)} 
+        <IdentifyCell
+          timer={diskTimers[row.id] ?? row.identifyTimer}
+          onIdentify={() => handleIdentify(row.id)}
         />
       ),
     },
@@ -538,7 +539,7 @@ export function PhysicalDisksPage() {
   return (
     <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
       {/* Sidebar */}
-      <StorageSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(prev => !prev)} />
+      <StorageSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen((prev) => !prev)} />
 
       {/* Main Content */}
       <main
@@ -567,17 +568,11 @@ export function PhysicalDisksPage() {
             onForward={() => window.history.forward()}
             breadcrumb={
               <Breadcrumb
-                items={[
-                  { label: 'Home', href: '/storage' },
-                  { label: 'Physical disks' },
-                ]}
+                items={[{ label: 'Home', href: '/storage' }, { label: 'Physical disks' }]}
               />
             }
             actions={
-              <TopBarAction
-                icon={<IconBell size={16} stroke={1.5} />}
-                aria-label="Notifications"
-              />
+              <TopBarAction icon={<IconBell size={16} stroke={1.5} />} aria-label="Notifications" />
             }
           />
         </div>
@@ -650,11 +645,7 @@ export function PhysicalDisksPage() {
               )}
 
               {/* Table */}
-              <Table
-                columns={columns}
-                data={paginatedDisks}
-                getRowId={(row) => row.id}
-              />
+              <Table columns={columns} data={paginatedDisks} getRowId={(row) => row.id} />
             </VStack>
           </div>
         </div>
@@ -668,18 +659,10 @@ export function PhysicalDisksPage() {
         width={360}
         footer={
           <div className="flex gap-2 w-full">
-            <Button
-              variant="secondary"
-              onClick={handleCloseIdentifyDrawer}
-              className="flex-1"
-            >
+            <Button variant="secondary" onClick={handleCloseIdentifyDrawer} className="flex-1">
               Cancel
             </Button>
-            <Button
-              variant="primary"
-              onClick={handleExecuteIdentify}
-              className="flex-1"
-            >
+            <Button variant="primary" onClick={handleExecuteIdentify} className="flex-1">
               Execute
             </Button>
           </div>
@@ -707,4 +690,3 @@ export function PhysicalDisksPage() {
 }
 
 export default PhysicalDisksPage;
-

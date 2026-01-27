@@ -1,9 +1,5 @@
 import React, { type ReactNode } from 'react';
-import {
-  IconLayoutSidebar,
-  IconArrowLeft,
-  IconArrowRight,
-} from '@tabler/icons-react';
+import { IconLayoutSidebar, IconArrowLeft, IconArrowRight } from '@tabler/icons-react';
 
 /* ----------------------------------------
    Types
@@ -125,9 +121,7 @@ export const TopBar: React.FC<TopBarProps> = ({
       </div>
 
       {/* Right Section: Actions */}
-      <div className="flex items-center gap-[var(--topbar-action-gap)]">
-        {actions}
-      </div>
+      <div className="flex items-center gap-[var(--topbar-action-gap)]">{actions}</div>
     </header>
   );
 };
@@ -200,4 +194,3 @@ export const TopBarAction: React.FC<TopBarActionProps> = ({
 };
 
 export default TopBar;
-

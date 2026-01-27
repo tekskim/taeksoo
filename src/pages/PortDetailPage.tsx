@@ -13,7 +13,6 @@ import {
   TabPanel,
   DetailHeader,
   SectionCard,
-  StatusIndicator,
   Table,
   SearchInput,
   Pagination,
@@ -32,11 +31,8 @@ import {
   IconChevronDown,
   IconExternalLink,
   IconCopy,
-  IconPlug,
-  IconLink,
   IconDotsCircleHorizontal,
   IconCirclePlus,
-  IconSettings,
   IconAlertCircle,
 } from '@tabler/icons-react';
 
@@ -88,20 +84,139 @@ interface SecurityGroup {
 
 // Port data map by ID - synced with PortsPage mock data
 const mockPortsMap: Record<string, PortDetail> = {
-  'port-001': { id: 'port-001', name: 'port-01', status: 'active', createdAt: '2025-09-15', description: '-', portSecurity: true, ownedNetwork: { name: 'net-01', id: 'net-001' }, subnet: { name: 'subnet-01', id: 'subnet-001' }, macAddress: 'fa:16:3e:34:85:32', attachedTo: { name: 'web-01', id: 'inst-001', type: 'instance' } },
-  'port-002': { id: 'port-002', name: 'port-02', status: 'active', createdAt: '2025-09-10', description: '-', portSecurity: true, ownedNetwork: { name: 'net-02', id: 'net-002' }, subnet: { name: 'subnet-02', id: 'subnet-002' }, macAddress: 'fa:16:3e:34:85:33', attachedTo: { name: 'app-server', id: 'inst-002', type: 'instance' } },
-  'port-003': { id: 'port-003', name: 'port-03', status: 'down', createdAt: '2025-09-08', description: '-', portSecurity: true, ownedNetwork: { name: 'net-03', id: 'net-003' }, subnet: { name: 'subnet-03', id: 'subnet-003' }, macAddress: 'fa:16:3e:34:85:34', attachedTo: null },
-  'port-004': { id: 'port-004', name: 'db-port', status: 'active', createdAt: '2025-09-05', description: 'Database port', portSecurity: true, ownedNetwork: { name: 'net-01', id: 'net-001' }, subnet: { name: 'subnet-01', id: 'subnet-001' }, macAddress: 'fa:16:3e:34:85:35', attachedTo: { name: 'db-server', id: 'inst-003', type: 'instance' } },
-  'port-005': { id: 'port-005', name: 'router-port-1', status: 'active', createdAt: '2025-09-01', description: 'Router port', portSecurity: false, ownedNetwork: { name: 'net-01', id: 'net-001' }, subnet: { name: 'subnet-01', id: 'subnet-001' }, macAddress: 'fa:16:3e:34:85:36', attachedTo: { name: 'main-router', id: 'router-001', type: 'router' } },
-  'port-006': { id: 'port-006', name: 'lb-port', status: 'active', createdAt: '2025-08-28', description: 'Load balancer port', portSecurity: true, ownedNetwork: { name: 'net-02', id: 'net-002' }, subnet: { name: 'subnet-02', id: 'subnet-002' }, macAddress: 'fa:16:3e:34:85:37', attachedTo: { name: 'load-balancer-01', id: 'lb-001', type: 'instance' } },
-  'port-007': { id: 'port-007', name: 'cache-port', status: 'active', createdAt: '2025-08-25', description: 'Cache port', portSecurity: true, ownedNetwork: { name: 'net-01', id: 'net-001' }, subnet: { name: 'subnet-01', id: 'subnet-001' }, macAddress: 'fa:16:3e:34:85:38', attachedTo: { name: 'redis-01', id: 'inst-004', type: 'instance' } },
-  'port-008': { id: 'port-008', name: 'monitor-port', status: 'build', createdAt: '2025-08-20', description: 'Monitoring port', portSecurity: true, ownedNetwork: { name: 'net-03', id: 'net-003' }, subnet: { name: 'subnet-03', id: 'subnet-003' }, macAddress: 'fa:16:3e:34:85:39', attachedTo: { name: 'prometheus', id: 'inst-005', type: 'instance' } },
-  'port-009': { id: 'port-009', name: 'test-port', status: 'down', createdAt: '2025-08-15', description: 'Test port', portSecurity: true, ownedNetwork: { name: 'net-04', id: 'net-004' }, subnet: { name: 'subnet-04', id: 'subnet-004' }, macAddress: 'fa:16:3e:34:85:40', attachedTo: null },
-  'port-010': { id: 'port-010', name: 'vpn-port', status: 'active', createdAt: '2025-08-10', description: 'VPN port', portSecurity: true, ownedNetwork: { name: 'net-01', id: 'net-001' }, subnet: { name: 'subnet-01', id: 'subnet-001' }, macAddress: 'fa:16:3e:34:85:41', attachedTo: { name: 'vpn-gateway', id: 'vpn-001', type: 'instance' } },
+  'port-001': {
+    id: 'port-001',
+    name: 'port-01',
+    status: 'active',
+    createdAt: '2025-09-15',
+    description: '-',
+    portSecurity: true,
+    ownedNetwork: { name: 'net-01', id: 'net-001' },
+    subnet: { name: 'subnet-01', id: 'subnet-001' },
+    macAddress: 'fa:16:3e:34:85:32',
+    attachedTo: { name: 'web-01', id: 'inst-001', type: 'instance' },
+  },
+  'port-002': {
+    id: 'port-002',
+    name: 'port-02',
+    status: 'active',
+    createdAt: '2025-09-10',
+    description: '-',
+    portSecurity: true,
+    ownedNetwork: { name: 'net-02', id: 'net-002' },
+    subnet: { name: 'subnet-02', id: 'subnet-002' },
+    macAddress: 'fa:16:3e:34:85:33',
+    attachedTo: { name: 'app-server', id: 'inst-002', type: 'instance' },
+  },
+  'port-003': {
+    id: 'port-003',
+    name: 'port-03',
+    status: 'down',
+    createdAt: '2025-09-08',
+    description: '-',
+    portSecurity: true,
+    ownedNetwork: { name: 'net-03', id: 'net-003' },
+    subnet: { name: 'subnet-03', id: 'subnet-003' },
+    macAddress: 'fa:16:3e:34:85:34',
+    attachedTo: null,
+  },
+  'port-004': {
+    id: 'port-004',
+    name: 'db-port',
+    status: 'active',
+    createdAt: '2025-09-05',
+    description: 'Database port',
+    portSecurity: true,
+    ownedNetwork: { name: 'net-01', id: 'net-001' },
+    subnet: { name: 'subnet-01', id: 'subnet-001' },
+    macAddress: 'fa:16:3e:34:85:35',
+    attachedTo: { name: 'db-server', id: 'inst-003', type: 'instance' },
+  },
+  'port-005': {
+    id: 'port-005',
+    name: 'router-port-1',
+    status: 'active',
+    createdAt: '2025-09-01',
+    description: 'Router port',
+    portSecurity: false,
+    ownedNetwork: { name: 'net-01', id: 'net-001' },
+    subnet: { name: 'subnet-01', id: 'subnet-001' },
+    macAddress: 'fa:16:3e:34:85:36',
+    attachedTo: { name: 'main-router', id: 'router-001', type: 'router' },
+  },
+  'port-006': {
+    id: 'port-006',
+    name: 'lb-port',
+    status: 'active',
+    createdAt: '2025-08-28',
+    description: 'Load balancer port',
+    portSecurity: true,
+    ownedNetwork: { name: 'net-02', id: 'net-002' },
+    subnet: { name: 'subnet-02', id: 'subnet-002' },
+    macAddress: 'fa:16:3e:34:85:37',
+    attachedTo: { name: 'load-balancer-01', id: 'lb-001', type: 'instance' },
+  },
+  'port-007': {
+    id: 'port-007',
+    name: 'cache-port',
+    status: 'active',
+    createdAt: '2025-08-25',
+    description: 'Cache port',
+    portSecurity: true,
+    ownedNetwork: { name: 'net-01', id: 'net-001' },
+    subnet: { name: 'subnet-01', id: 'subnet-001' },
+    macAddress: 'fa:16:3e:34:85:38',
+    attachedTo: { name: 'redis-01', id: 'inst-004', type: 'instance' },
+  },
+  'port-008': {
+    id: 'port-008',
+    name: 'monitor-port',
+    status: 'build',
+    createdAt: '2025-08-20',
+    description: 'Monitoring port',
+    portSecurity: true,
+    ownedNetwork: { name: 'net-03', id: 'net-003' },
+    subnet: { name: 'subnet-03', id: 'subnet-003' },
+    macAddress: 'fa:16:3e:34:85:39',
+    attachedTo: { name: 'prometheus', id: 'inst-005', type: 'instance' },
+  },
+  'port-009': {
+    id: 'port-009',
+    name: 'test-port',
+    status: 'down',
+    createdAt: '2025-08-15',
+    description: 'Test port',
+    portSecurity: true,
+    ownedNetwork: { name: 'net-04', id: 'net-004' },
+    subnet: { name: 'subnet-04', id: 'subnet-004' },
+    macAddress: 'fa:16:3e:34:85:40',
+    attachedTo: null,
+  },
+  'port-010': {
+    id: 'port-010',
+    name: 'vpn-port',
+    status: 'active',
+    createdAt: '2025-08-10',
+    description: 'VPN port',
+    portSecurity: true,
+    ownedNetwork: { name: 'net-01', id: 'net-001' },
+    subnet: { name: 'subnet-01', id: 'subnet-001' },
+    macAddress: 'fa:16:3e:34:85:41',
+    attachedTo: { name: 'vpn-gateway', id: 'vpn-001', type: 'instance' },
+  },
 };
 
 const defaultPortDetail: PortDetail = {
-  id: 'unknown', name: 'Unknown Port', status: 'active', createdAt: '-', description: '-', portSecurity: false, ownedNetwork: { name: '-', id: '' }, subnet: { name: '-', id: '' }, macAddress: '-', attachedTo: null,
+  id: 'unknown',
+  name: 'Unknown Port',
+  status: 'active',
+  createdAt: '-',
+  description: '-',
+  portSecurity: false,
+  ownedNetwork: { name: '-', id: '' },
+  subnet: { name: '-', id: '' },
+  macAddress: '-',
+  attachedTo: null,
 };
 
 const mockFixedIPs: FixedIP[] = Array.from({ length: 115 }, (_, i) => ({
@@ -130,9 +245,9 @@ const mockSecurityGroups: SecurityGroup[] = Array.from({ length: 115 }, (_, i) =
    ---------------------------------------- */
 
 const portStatusMap: Record<PortStatus, 'active' | 'shutoff' | 'building'> = {
-  'active': 'active',
-  'down': 'shutoff',
-  'build': 'building',
+  active: 'active',
+  down: 'shutoff',
+  build: 'building',
 };
 
 /* ----------------------------------------
@@ -141,8 +256,9 @@ const portStatusMap: Record<PortStatus, 'active' | 'shutoff' | 'building'> = {
 
 export default function PortDetailPage() {
   const { id } = useParams<{ id: string }>();
-  const { tabs, activeTabId, closeTab, selectTab, addNewTab, updateActiveTabLabel, moveTab } = useTabs();
-  
+  const { tabs, activeTabId, closeTab, selectTab, addNewTab, updateActiveTabLabel, moveTab } =
+    useTabs();
+
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [activeDetailTab, setActiveDetailTab] = useState('details');
   const [copiedMac, setCopiedMac] = useState(false);
@@ -161,21 +277,21 @@ export default function PortDetailPage() {
   const [sgSearchTerm, setSgSearchTerm] = useState('');
   const [sgCurrentPage, setSgCurrentPage] = useState(1);
   const sgPerPage = 10;
-  
+
   // Selection state
   const [selectedFixedIPs, setSelectedFixedIPs] = useState<string[]>([]);
   const [selectedAaps, setSelectedAaps] = useState<string[]>([]);
   const [selectedSgs, setSelectedSgs] = useState<string[]>([]);
-  
+
   // Preferences state
   const [isPreferencesOpen, setIsPreferencesOpen] = useState(false);
-  
+
   // Detach security group modal state
   const [detachModalOpen, setDetachModalOpen] = useState(false);
   const [securityGroupToDetach, setSecurityGroupToDetach] = useState<SecurityGroup | null>(null);
 
   // Get port data based on URL ID
-  const port = id ? (mockPortsMap[id] || defaultPortDetail) : defaultPortDetail;
+  const port = id ? mockPortsMap[id] || defaultPortDetail : defaultPortDetail;
   const fixedIPs = mockFixedIPs;
   const allowedAddressPairs = mockAllowedAddressPairs;
   const securityGroups = mockSecurityGroups;
@@ -189,10 +305,11 @@ export default function PortDetailPage() {
 
   // Filter and paginate Fixed IPs
   const filteredFixedIPs = useMemo(() => {
-    return fixedIPs.filter((ip) =>
-      ip.fixedIp.toLowerCase().includes(fixedIpSearchTerm.toLowerCase()) ||
-      ip.ownedSubnet.name.toLowerCase().includes(fixedIpSearchTerm.toLowerCase()) ||
-      (ip.floatingIp?.address.toLowerCase().includes(fixedIpSearchTerm.toLowerCase()) ?? false)
+    return fixedIPs.filter(
+      (ip) =>
+        ip.fixedIp.toLowerCase().includes(fixedIpSearchTerm.toLowerCase()) ||
+        ip.ownedSubnet.name.toLowerCase().includes(fixedIpSearchTerm.toLowerCase()) ||
+        (ip.floatingIp?.address.toLowerCase().includes(fixedIpSearchTerm.toLowerCase()) ?? false)
     );
   }, [fixedIPs, fixedIpSearchTerm]);
 
@@ -205,9 +322,10 @@ export default function PortDetailPage() {
 
   // Filter and paginate Allowed Address Pairs
   const filteredAaps = useMemo(() => {
-    return allowedAddressPairs.filter((aap) =>
-      aap.ipAddress.toLowerCase().includes(aapSearchTerm.toLowerCase()) ||
-      aap.macAddress.toLowerCase().includes(aapSearchTerm.toLowerCase())
+    return allowedAddressPairs.filter(
+      (aap) =>
+        aap.ipAddress.toLowerCase().includes(aapSearchTerm.toLowerCase()) ||
+        aap.macAddress.toLowerCase().includes(aapSearchTerm.toLowerCase())
     );
   }, [allowedAddressPairs, aapSearchTerm]);
 
@@ -220,9 +338,10 @@ export default function PortDetailPage() {
 
   // Filter and paginate Security groups
   const filteredSgs = useMemo(() => {
-    return securityGroups.filter((sg) =>
-      sg.name.toLowerCase().includes(sgSearchTerm.toLowerCase()) ||
-      sg.description.toLowerCase().includes(sgSearchTerm.toLowerCase())
+    return securityGroups.filter(
+      (sg) =>
+        sg.name.toLowerCase().includes(sgSearchTerm.toLowerCase()) ||
+        sg.description.toLowerCase().includes(sgSearchTerm.toLowerCase())
     );
   }, [securityGroups, sgSearchTerm]);
 
@@ -244,22 +363,23 @@ export default function PortDetailPage() {
       key: 'floatingIp',
       label: 'Floating IP',
       flex: 1,
-      render: (_, row) => row.floatingIp ? (
-        <div className="flex flex-col gap-0.5">
-          <Link
-            to={`/compute/floating-ips/${row.floatingIp.id}`}
-            className="inline-flex items-center gap-1.5 font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
-            onClick={(e) => e.stopPropagation()}
-          >
-            {row.floatingIp.address}
-          </Link>
-          <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
-            ID : {row.floatingIp.id}
-          </span>
-        </div>
-      ) : (
-        <span className="text-[var(--color-text-subtle)]">-</span>
-      ),
+      render: (_, row) =>
+        row.floatingIp ? (
+          <div className="flex flex-col gap-0.5">
+            <Link
+              to={`/compute/floating-ips/${row.floatingIp.id}`}
+              className="inline-flex items-center gap-1.5 font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
+              onClick={(e) => e.stopPropagation()}
+            >
+              {row.floatingIp.address}
+            </Link>
+            <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
+              ID : {row.floatingIp.id}
+            </span>
+          </div>
+        ) : (
+          <span className="text-[var(--color-text-subtle)]">-</span>
+        ),
     },
     {
       key: 'ownedSubnet',
@@ -288,14 +408,28 @@ export default function PortDetailPage() {
       align: 'center',
       render: (_: unknown, row: FixedIP) => {
         const fixedIpMenuItems: ContextMenuItem[] = [
-          { id: 'disassociate-floating-ip', label: 'Disassociate floating IP', status: 'danger', onClick: () => console.log('Disassociate floating IP', row.id) },
-          { id: 'release-fixed-ip', label: 'Release fixed IP', status: 'danger', onClick: () => console.log('Release fixed IP', row.id) },
+          {
+            id: 'disassociate-floating-ip',
+            label: 'Disassociate floating IP',
+            status: 'danger',
+            onClick: () => console.log('Disassociate floating IP', row.id),
+          },
+          {
+            id: 'release-fixed-ip',
+            label: 'Release fixed IP',
+            status: 'danger',
+            onClick: () => console.log('Release fixed IP', row.id),
+          },
         ];
         return (
           <div onClick={(e) => e.stopPropagation()}>
             <ContextMenu items={fixedIpMenuItems} trigger="click">
               <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
-                <IconDotsCircleHorizontal size={16} stroke={1.5} className="text-[var(--action-icon-color)]" />
+                <IconDotsCircleHorizontal
+                  size={16}
+                  stroke={1.5}
+                  className="text-[var(--action-icon-color)]"
+                />
               </button>
             </ContextMenu>
           </div>
@@ -323,13 +457,22 @@ export default function PortDetailPage() {
       align: 'center',
       render: (_: unknown, row: AllowedAddressPair) => {
         const pairMenuItems: ContextMenuItem[] = [
-          { id: 'delete', label: 'Delete', status: 'danger', onClick: () => console.log('Delete address pair', row.id) },
+          {
+            id: 'delete',
+            label: 'Delete',
+            status: 'danger',
+            onClick: () => console.log('Delete address pair', row.id),
+          },
         ];
         return (
           <div onClick={(e) => e.stopPropagation()}>
             <ContextMenu items={pairMenuItems} trigger="click">
               <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
-                <IconDotsCircleHorizontal size={16} stroke={1.5} className="text-[var(--action-icon-color)]" />
+                <IconDotsCircleHorizontal
+                  size={16}
+                  stroke={1.5}
+                  className="text-[var(--action-icon-color)]"
+                />
               </button>
             </ContextMenu>
           </div>
@@ -380,21 +523,25 @@ export default function PortDetailPage() {
       align: 'center',
       render: (_: unknown, row: SecurityGroup) => {
         const sgMenuItems: ContextMenuItem[] = [
-          { 
-            id: 'detach', 
-            label: 'Detach', 
-            status: 'danger', 
+          {
+            id: 'detach',
+            label: 'Detach',
+            status: 'danger',
             onClick: () => {
               setSecurityGroupToDetach(row);
               setDetachModalOpen(true);
-            }
+            },
           },
         ];
         return (
           <div onClick={(e) => e.stopPropagation()}>
             <ContextMenu items={sgMenuItems} trigger="click">
               <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
-                <IconDotsCircleHorizontal size={16} stroke={1.5} className="text-[var(--action-icon-color)]" />
+                <IconDotsCircleHorizontal
+                  size={16}
+                  stroke={1.5}
+                  className="text-[var(--action-icon-color)]"
+                />
               </button>
             </ContextMenu>
           </div>
@@ -438,7 +585,7 @@ export default function PortDetailPage() {
   return (
     <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
       <Sidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
-      
+
       <main
         className={`absolute top-0 bottom-0 right-0 flex flex-col bg-[var(--color-surface-default)] transition-[left] duration-200 ${
           sidebarOpen ? 'left-[var(--layout-sidebar-width)]' : 'left-0'
@@ -531,10 +678,7 @@ export default function PortDetailPage() {
                     label="Port security"
                     value={port.portSecurity ? 'On' : 'Off'}
                   />
-                  <DetailHeader.InfoCard
-                    label="Created at"
-                    value={port.createdAt}
-                  />
+                  <DetailHeader.InfoCard label="Created at" value={port.createdAt} />
                 </DetailHeader.InfoGrid>
               </DetailHeader>
 
@@ -547,9 +691,7 @@ export default function PortDetailPage() {
                     {port.status === 'active' && (
                       <Tab value="allowed-address-pairs">Allowed Address Pairs</Tab>
                     )}
-                    {port.status === 'active' && (
-                      <Tab value="security">Security</Tab>
-                    )}
+                    {port.status === 'active' && <Tab value="security">Security</Tab>}
                   </TabList>
 
                   {/* Details Tab */}
@@ -583,7 +725,10 @@ export default function PortDetailPage() {
                                 className="inline-flex items-center gap-1.5 font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
                               >
                                 {port.ownedNetwork.name}
-                                <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
+                                <IconExternalLink
+                                  size={12}
+                                  className="text-[var(--color-action-primary)]"
+                                />
                               </Link>
                             }
                           />
@@ -595,7 +740,10 @@ export default function PortDetailPage() {
                                 className="inline-flex items-center gap-1.5 font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
                               >
                                 {port.subnet.name}
-                                <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
+                                <IconExternalLink
+                                  size={12}
+                                  className="text-[var(--color-action-primary)]"
+                                />
                               </Link>
                             }
                           />
@@ -609,7 +757,11 @@ export default function PortDetailPage() {
                                   className="p-1 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
                                   title={copiedMac ? 'Copied!' : 'Copy MAC Address'}
                                 >
-                                  <IconCopy size={12} stroke={1.5} className="text-[var(--color-action-primary)]" />
+                                  <IconCopy
+                                    size={12}
+                                    stroke={1.5}
+                                    className="text-[var(--color-action-primary)]"
+                                  />
                                 </button>
                               </div>
                             }
@@ -626,14 +778,18 @@ export default function PortDetailPage() {
                             value={
                               port.attachedTo ? (
                                 <Link
-                                  to={port.attachedTo.type === 'instance' 
-                                    ? `/instances/${port.attachedTo.id}` 
-                                    : `/routers/${port.attachedTo.id}`
+                                  to={
+                                    port.attachedTo.type === 'instance'
+                                      ? `/instances/${port.attachedTo.id}`
+                                      : `/routers/${port.attachedTo.id}`
                                   }
                                   className="inline-flex items-center gap-1.5 font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
                                 >
                                   {port.attachedTo.name}
-                                  <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
+                                  <IconExternalLink
+                                    size={12}
+                                    className="text-[var(--color-action-primary)]"
+                                  />
                                 </Link>
                               ) : (
                                 '-'
@@ -683,116 +839,102 @@ export default function PortDetailPage() {
                           onPageChange={setFixedIpCurrentPage}
                           totalItems={filteredFixedIPs.length}
                           selectedCount={selectedFixedIPs.length}
-                          showSettings
-                          onSettingsClick={() => setIsPreferencesOpen(true)}
                         />
                       </div>
 
                       {/* Table */}
-                      <Table
-                        columns={fixedIpColumns}
-                        data={paginatedFixedIPs}
-                        rowKey="id"
-                      />
+                      <Table columns={fixedIpColumns} data={paginatedFixedIPs} rowKey="id" />
                     </VStack>
                   </TabPanel>
 
                   {/* Allowed Address Pairs Tab */}
                   {port.status === 'active' && (
-                  <TabPanel value="allowed-address-pairs" className="pt-0">
-                    <VStack gap={4} className="pt-4">
-                      {/* Header */}
-                      <div className="flex items-center justify-between">
-                        <h3 className="text-[16px] font-semibold text-[var(--color-text-default)]">
-                          Allowed Address Pairs
-                        </h3>
-                        <Button variant="secondary" size="sm" leftIcon={<IconCirclePlus size={12} />}>
-                          Create Allowed Address Pair
-                        </Button>
-                      </div>
+                    <TabPanel value="allowed-address-pairs" className="pt-0">
+                      <VStack gap={4} className="pt-4">
+                        {/* Header */}
+                        <div className="flex items-center justify-between">
+                          <h3 className="text-[16px] font-semibold text-[var(--color-text-default)]">
+                            Allowed Address Pairs
+                          </h3>
+                          <Button
+                            variant="secondary"
+                            size="sm"
+                            leftIcon={<IconCirclePlus size={12} />}
+                          >
+                            Create Allowed Address Pair
+                          </Button>
+                        </div>
 
-                      {/* Search */}
-                      <div className="w-[var(--search-input-width)]">
-                        <SearchInput
-                          value={aapSearchTerm}
-                          onChange={(e) => {
-                            setAapSearchTerm(e.target.value);
-                            setAapCurrentPage(1);
-                          }}
-                          placeholder="Search address pair by attributes"
-                        />
-                      </div>
+                        {/* Search */}
+                        <div className="w-[var(--search-input-width)]">
+                          <SearchInput
+                            value={aapSearchTerm}
+                            onChange={(e) => {
+                              setAapSearchTerm(e.target.value);
+                              setAapCurrentPage(1);
+                            }}
+                            placeholder="Search address pair by attributes"
+                          />
+                        </div>
 
-                      {/* Pagination */}
-                      <div className="flex items-center gap-2">
-                        <Pagination
-                          currentPage={aapCurrentPage}
-                          totalPages={totalAapPages}
-                          onPageChange={setAapCurrentPage}
-                          totalItems={filteredAaps.length}
-                          selectedCount={selectedAaps.length}
-                          showSettings
-                          onSettingsClick={() => setIsPreferencesOpen(true)}
-                        />
-                      </div>
+                        {/* Pagination */}
+                        <div className="flex items-center gap-2">
+                          <Pagination
+                            currentPage={aapCurrentPage}
+                            totalPages={totalAapPages}
+                            onPageChange={setAapCurrentPage}
+                            totalItems={filteredAaps.length}
+                            selectedCount={selectedAaps.length}
+                          />
+                        </div>
 
-                      {/* Table */}
-                      <Table
-                        columns={aapColumns}
-                        data={paginatedAaps}
-                        rowKey="id"
-                      />
-                    </VStack>
-                  </TabPanel>
+                        {/* Table */}
+                        <Table columns={aapColumns} data={paginatedAaps} rowKey="id" />
+                      </VStack>
+                    </TabPanel>
                   )}
 
                   {/* Security Tab */}
                   {port.status === 'active' && (
-                  <TabPanel value="security" className="pt-0">
-                    <VStack gap={4} className="pt-4">
-                      {/* Header */}
-                      <div className="flex items-center justify-between">
-                        <h3 className="text-[16px] font-semibold text-[var(--color-text-default)]">
-                          Security groups
-                        </h3>
-                        <Button variant="secondary" size="sm">
-                          Manage security Group
-                        </Button>
-                      </div>
+                    <TabPanel value="security" className="pt-0">
+                      <VStack gap={4} className="pt-4">
+                        {/* Header */}
+                        <div className="flex items-center justify-between">
+                          <h3 className="text-[16px] font-semibold text-[var(--color-text-default)]">
+                            Security groups
+                          </h3>
+                          <Button variant="secondary" size="sm">
+                            Manage security Group
+                          </Button>
+                        </div>
 
-                      {/* Search */}
-                      <div className="w-[var(--search-input-width)]">
-                        <SearchInput
-                          value={sgSearchTerm}
-                          onChange={(e) => {
-                            setSgSearchTerm(e.target.value);
-                            setSgCurrentPage(1);
-                          }}
-                          placeholder="Search security group by attributes"
-                        />
-                      </div>
+                        {/* Search */}
+                        <div className="w-[var(--search-input-width)]">
+                          <SearchInput
+                            value={sgSearchTerm}
+                            onChange={(e) => {
+                              setSgSearchTerm(e.target.value);
+                              setSgCurrentPage(1);
+                            }}
+                            placeholder="Search security group by attributes"
+                          />
+                        </div>
 
-                      {/* Pagination */}
-                      <div className="flex items-center gap-2">
-                        <Pagination
-                          currentPage={sgCurrentPage}
-                          totalPages={totalSgPages}
-                          onPageChange={setSgCurrentPage}
-                          totalItems={filteredSgs.length}
-                          selectedCount={selectedSgs.length}
-                          showSettings
-                          onSettingsClick={() => setIsPreferencesOpen(true)}
-                        />
-                      </div>
+                        {/* Pagination */}
+                        <div className="flex items-center gap-2">
+                          <Pagination
+                            currentPage={sgCurrentPage}
+                            totalPages={totalSgPages}
+                            onPageChange={setSgCurrentPage}
+                            totalItems={filteredSgs.length}
+                            selectedCount={selectedSgs.length}
+                          />
+                        </div>
 
-                      {/* Table */}
-                      <Table
-                        columns={sgColumns}
-                        data={paginatedSgs}
-                        rowKey="id"
-                      />
-                    </VStack>
-                  </TabPanel>
+                        {/* Table */}
+                        <Table columns={sgColumns} data={paginatedSgs} rowKey="id" />
+                      </VStack>
+                    </TabPanel>
                   )}
                 </Tabs>
               </div>
@@ -822,7 +964,7 @@ export default function PortDetailPage() {
               {port.name}
             </span>
           </div>
-          
+
           {/* Security group Info */}
           <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
             <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] font-medium leading-4">
@@ -832,7 +974,7 @@ export default function PortDetailPage() {
               {securityGroupToDetach?.name || '-'}
             </span>
           </div>
-          
+
           {/* Warning Box */}
           <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
             <IconAlertCircle size={16} className="text-red-400 flex-shrink-0 mt-0.5" />
@@ -868,4 +1010,3 @@ export default function PortDetailPage() {
     </div>
   );
 }
-

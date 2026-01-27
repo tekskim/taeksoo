@@ -54,7 +54,11 @@ export function RedeployStatefulSetModal({
 
         {/* Warning Alert */}
         <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
-          <IconAlertCircle size={16} className="text-[var(--color-state-danger)] shrink-0 mt-0.5" stroke={1.5} />
+          <IconAlertCircle
+            size={16}
+            className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
+            stroke={1.5}
+          />
           <p className="text-[11px] text-[var(--color-text-default)] leading-4">
             Redeploying will restart the selected workloads and may cause temporary downtime.
           </p>

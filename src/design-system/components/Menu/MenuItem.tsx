@@ -51,13 +51,15 @@ export function MenuItem({
   const stateStyles = active
     ? 'bg-[var(--color-state-info-bg)] text-[var(--color-action-primary)] font-medium'
     : disabled
-    ? 'text-[var(--color-text-disabled)] cursor-not-allowed'
-    : 'text-[var(--color-text-default)] hover:bg-[var(--color-surface-subtle)] font-normal';
+      ? 'text-[var(--color-text-disabled)] cursor-not-allowed'
+      : 'text-[var(--color-text-default)] hover:bg-[var(--color-surface-subtle)] font-normal';
 
   const content = (
     <>
       {icon && (
-        <span className={`shrink-0 ${active ? 'text-[var(--color-action-primary)]' : 'text-[var(--color-text-default)]'}`}>
+        <span
+          className={`shrink-0 ${active ? 'text-[var(--color-action-primary)]' : 'text-[var(--color-text-default)]'}`}
+        >
           {icon}
         </span>
       )}

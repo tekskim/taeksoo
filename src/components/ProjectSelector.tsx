@@ -4,7 +4,6 @@ import { IconSearch, IconCheck, IconFolder } from '@tabler/icons-react';
 import { ArrowRightLeft } from 'lucide-react';
 import { type Project } from '@/contexts/ProjectContext';
 import { Tooltip } from '@/design-system';
-import FolderOpenIcon from '@/assets/icons/folder-open.svg';
 
 /* ----------------------------------------
    Types
@@ -81,7 +80,6 @@ export function ProjectSelector({
     };
   }, [isOpen]);
 
-
   const handleProjectClick = (project: Project) => {
     if (project.disabled) return;
     onProjectSelect(project.id);
@@ -110,23 +108,22 @@ export function ProjectSelector({
     };
   };
 
-  const buttonClass = variant === 'compact'
-    ? "px-2.5 py-1 h-[var(--topbar-button-size)] rounded-md bg-[var(--color-surface-subtle)] hover:bg-[var(--color-surface-muted)] transition-colors flex items-center justify-between gap-2"
-    : variant === 'sidebar-icon'
-    ? "size-[38px] rounded-lg bg-[var(--color-surface-default)] hover:bg-[var(--color-surface-muted)] transition-colors flex items-center justify-center shrink-0"
-    : "w-full px-2.5 py-1.5 rounded-md bg-[var(--color-surface-subtle)] hover:bg-[var(--color-surface-muted)] transition-colors flex items-center justify-between";
+  const buttonClass =
+    variant === 'compact'
+      ? 'px-2.5 py-1 h-[var(--topbar-button-size)] rounded-md bg-[var(--color-surface-subtle)] hover:bg-[var(--color-surface-muted)] transition-colors flex items-center justify-between gap-2'
+      : variant === 'sidebar-icon'
+        ? 'size-[38px] rounded-lg bg-[var(--color-surface-default)] hover:bg-[var(--color-surface-muted)] transition-colors flex items-center justify-center shrink-0'
+        : 'w-full px-2.5 py-1.5 rounded-md bg-[var(--color-surface-subtle)] hover:bg-[var(--color-surface-muted)] transition-colors flex items-center justify-between';
 
   const buttonElement = (
-    <button
-      ref={buttonRef}
-      onClick={() => setIsOpen(!isOpen)}
-      className={buttonClass}
-    >
+    <button ref={buttonRef} onClick={() => setIsOpen(!isOpen)} className={buttonClass}>
       {variant === 'sidebar-icon' ? (
         <IconFolder size={20} className="text-[var(--color-text-muted)]" stroke={1.5} />
       ) : (
         <>
-          <span className={`font-medium text-[var(--color-text-default)] ${variant === 'compact' ? 'text-[12px]' : 'text-[11px]'}`}>
+          <span
+            className={`font-medium text-[var(--color-text-default)] ${variant === 'compact' ? 'text-[12px]' : 'text-[11px]'}`}
+          >
             {selectedProject?.name || 'Select Project'}
           </span>
           <ArrowRightLeft
@@ -145,7 +142,14 @@ export function ProjectSelector({
       {variant === 'sidebar-icon' && selectedProject ? (
         <Tooltip
           content={
-            <div style={{ maxWidth: '300px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+            <div
+              style={{
+                maxWidth: '300px',
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+                whiteSpace: 'nowrap',
+              }}
+            >
               {selectedProject.name}
             </div>
           }
@@ -271,4 +275,3 @@ export function ProjectSelector({
 }
 
 export default ProjectSelector;
-

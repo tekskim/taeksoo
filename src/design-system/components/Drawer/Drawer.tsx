@@ -114,11 +114,7 @@ export function Drawer({
     'shadow-2xl',
     'transition-transform duration-300 ease-out',
     side === 'right' ? 'right-0' : 'left-0',
-    isAnimating
-      ? 'translate-x-0'
-      : side === 'right'
-      ? 'translate-x-full'
-      : '-translate-x-full',
+    isAnimating ? 'translate-x-0' : side === 'right' ? 'translate-x-full' : '-translate-x-full',
     className
   );
 
@@ -168,9 +164,7 @@ export function Drawer({
 
         {/* Footer */}
         {footer && (
-          <div className="border-t border-[var(--color-border-default)] px-6 py-4">
-            {footer}
-          </div>
+          <div className="border-t border-[var(--color-border-default)] px-6 py-4">{footer}</div>
         )}
       </aside>
     </>,
@@ -179,4 +173,3 @@ export function Drawer({
 }
 
 export default Drawer;
-

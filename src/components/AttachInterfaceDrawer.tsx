@@ -1,9 +1,9 @@
 import { useState } from 'react';
-import { 
-  Drawer, 
-  Button, 
-  SearchInput, 
-  Pagination, 
+import {
+  Drawer,
+  Button,
+  SearchInput,
+  Pagination,
   StatusIndicator,
   Radio,
   SelectionIndicator,
@@ -78,7 +78,7 @@ export function AttachInterfaceDrawer({
   const handleAttach = async () => {
     setHasAttemptedSubmit(true);
     if (!selectedNetworkId) return;
-    
+
     setIsSubmitting(true);
     try {
       await onAttach?.(selectedNetworkId, fixedIpMode);
@@ -97,7 +97,7 @@ export function AttachInterfaceDrawer({
     onClose();
   };
 
-  const filteredNetworks = networks.filter(n => 
+  const filteredNetworks = networks.filter((n) =>
     n.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
@@ -110,15 +110,11 @@ export function AttachInterfaceDrawer({
       width={696}
       footer={
         <HStack gap={2} justify="center" className="w-full">
-          <Button 
-            variant="secondary" 
-            onClick={handleClose}
-            className="w-[152px] h-8"
-          >
+          <Button variant="secondary" onClick={handleClose} className="w-[152px] h-8">
             Cancel
           </Button>
-          <Button 
-            variant="primary" 
+          <Button
+            variant="primary"
             onClick={handleAttach}
             disabled={isSubmitting}
             className="w-[152px] h-8"
@@ -136,7 +132,8 @@ export function AttachInterfaceDrawer({
               Attach Interface
             </h2>
             <p className="text-[12px] text-[var(--color-text-subtle)] leading-4">
-              Attach a new network interface to this instance. You can connect it to another network or subnet for additional access.
+              Attach a new network interface to this instance. You can connect it to another network
+              or subnet for additional access.
             </p>
           </VStack>
 
@@ -176,46 +173,98 @@ export function AttachInterfaceDrawer({
           </HStack>
 
           {/* Networks Table */}
-          <div className="flex-1 overflow-y-auto sidebar-scroll" style={{ width: '648px', maxWidth: '648px', overflowX: 'hidden', paddingRight: '2px' }}>
+          <div
+            className="flex-1 overflow-y-auto sidebar-scroll"
+            style={{ width: '648px', maxWidth: '648px', overflowX: 'hidden', paddingRight: '2px' }}
+          >
             {/* Header */}
-            <div style={{ display: 'flex', width: '648px', height: '40px' }} className="bg-[var(--color-border-subtle)] border border-[var(--color-border-default)] rounded-md">
-              <div style={{ width: '40px', flexShrink: 0 }} className="flex items-center justify-center" />
-              <div style={{ width: '59px', flexShrink: 0 }} className="flex items-center justify-center px-3 border-l border-[var(--color-border-default)]">
-                <span className="text-[11px] font-medium text-[var(--color-text-default)]">Status</span>
+            <div
+              style={{ display: 'flex', width: '648px', height: '40px' }}
+              className="bg-[var(--color-border-subtle)] border border-[var(--color-border-default)] rounded-md"
+            >
+              <div
+                style={{ width: '40px', flexShrink: 0 }}
+                className="flex items-center justify-center"
+              />
+              <div
+                style={{ width: '59px', flexShrink: 0 }}
+                className="flex items-center justify-center px-3 border-l border-[var(--color-border-default)]"
+              >
+                <span className="text-[11px] font-medium text-[var(--color-text-default)]">
+                  Status
+                </span>
               </div>
-              <div style={{ width: '110px', flexShrink: 0 }} className="flex items-center gap-1.5 px-3 border-l border-[var(--color-border-default)] cursor-pointer hover:text-[var(--color-action-primary)]">
-                <span className="text-[11px] font-medium text-[var(--color-text-default)]">Name</span>
+              <div
+                style={{ width: '110px', flexShrink: 0 }}
+                className="flex items-center gap-1.5 px-3 border-l border-[var(--color-border-default)] cursor-pointer hover:text-[var(--color-action-primary)]"
+              >
+                <span className="text-[11px] font-medium text-[var(--color-text-default)]">
+                  Name
+                </span>
                 <IconChevronDown size={12} className="text-[var(--color-text-default)]" />
               </div>
-              <div style={{ width: '110px', flexShrink: 0 }} className="flex items-center px-3 border-l border-[var(--color-border-default)]">
-                <span className="text-[11px] font-medium text-[var(--color-text-default)]">Subnet CIDR</span>
+              <div
+                style={{ width: '110px', flexShrink: 0 }}
+                className="flex items-center px-3 border-l border-[var(--color-border-default)]"
+              >
+                <span className="text-[11px] font-medium text-[var(--color-text-default)]">
+                  Subnet CIDR
+                </span>
               </div>
-              <div style={{ width: '80px', flexShrink: 0 }} className="flex items-center px-3 border-l border-[var(--color-border-default)]">
-                <span className="text-[11px] font-medium text-[var(--color-text-default)]">External</span>
+              <div
+                style={{ width: '80px', flexShrink: 0 }}
+                className="flex items-center px-3 border-l border-[var(--color-border-default)]"
+              >
+                <span className="text-[11px] font-medium text-[var(--color-text-default)]">
+                  External
+                </span>
               </div>
-              <div style={{ width: '80px', flexShrink: 0 }} className="flex items-center px-3 border-l border-[var(--color-border-default)]">
-                <span className="text-[11px] font-medium text-[var(--color-text-default)]">Shared</span>
+              <div
+                style={{ width: '80px', flexShrink: 0 }}
+                className="flex items-center px-3 border-l border-[var(--color-border-default)]"
+              >
+                <span className="text-[11px] font-medium text-[var(--color-text-default)]">
+                  Shared
+                </span>
               </div>
-              <div style={{ width: '109px', flexShrink: 0 }} className="flex items-center px-3 border-l border-[var(--color-border-default)]">
-                <span className="text-[11px] font-medium text-[var(--color-text-default)]">In This Project</span>
+              <div
+                style={{ width: '109px', flexShrink: 0 }}
+                className="flex items-center px-3 border-l border-[var(--color-border-default)]"
+              >
+                <span className="text-[11px] font-medium text-[var(--color-text-default)]">
+                  In This Project
+                </span>
               </div>
             </div>
 
             {/* Rows */}
-            <div style={{ width: '648px', maxWidth: '648px', marginTop: '4px', display: 'flex', flexDirection: 'column', gap: '4px' }}>
+            <div
+              style={{
+                width: '648px',
+                maxWidth: '648px',
+                marginTop: '4px',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '4px',
+              }}
+            >
               {filteredNetworks.map((network) => (
-                <div 
+                <div
                   key={network.id}
                   style={{ display: 'flex', width: '648px', minHeight: '40px' }}
                   className={`border rounded-md cursor-pointer transition-all ${
-                    selectedNetworkId === network.id 
-                      ? 'bg-[var(--color-state-info-bg)] border-[var(--color-action-primary)]' 
+                    selectedNetworkId === network.id
+                      ? 'bg-[var(--color-state-info-bg)] border-[var(--color-action-primary)]'
                       : 'bg-[var(--color-surface-default)] border-[var(--color-border-default)] hover:bg-[var(--table-row-hover-bg)]'
                   }`}
                   onClick={() => setSelectedNetworkId(network.id)}
                 >
                   {/* Radio */}
-                  <div style={{ width: '40px', flexShrink: 0 }} className="flex items-center justify-center" onClick={(e) => e.stopPropagation()}>
+                  <div
+                    style={{ width: '40px', flexShrink: 0 }}
+                    className="flex items-center justify-center"
+                    onClick={(e) => e.stopPropagation()}
+                  >
                     <Radio
                       name="network-select"
                       value={network.id}
@@ -224,32 +273,65 @@ export function AttachInterfaceDrawer({
                     />
                   </div>
                   {/* Status */}
-                  <div style={{ width: '59px', flexShrink: 0 }} className="flex items-center justify-center">
+                  <div
+                    style={{ width: '59px', flexShrink: 0 }}
+                    className="flex items-center justify-center"
+                  >
                     <StatusIndicator status="active" layout="icon-only" size="sm" />
                   </div>
                   {/* Name */}
-                  <div style={{ width: '110px', flexShrink: 0 }} className="flex flex-col gap-0.5 justify-center px-3 py-2 overflow-hidden">
+                  <div
+                    style={{ width: '110px', flexShrink: 0 }}
+                    className="flex flex-col gap-0.5 justify-center px-3 py-2 overflow-hidden"
+                  >
                     <div className="flex items-center gap-1.5">
-                      <span className="text-[12px] font-medium text-[var(--color-action-primary)] truncate">{network.name}</span>
-                      <IconExternalLink size={12} className="shrink-0 text-[var(--color-action-primary)]" />
+                      <span className="text-[12px] font-medium text-[var(--color-action-primary)] truncate">
+                        {network.name}
+                      </span>
+                      <IconExternalLink
+                        size={12}
+                        className="shrink-0 text-[var(--color-action-primary)]"
+                      />
                     </div>
-                    <span className="text-[11px] text-[var(--color-text-subtle)] truncate">ID : 17kfj123</span>
+                    <span className="text-[11px] text-[var(--color-text-subtle)] truncate">
+                      ID : 17kfj123
+                    </span>
                   </div>
                   {/* Subnet CIDR */}
-                  <div style={{ width: '110px', flexShrink: 0 }} className="flex items-center px-3 py-2 overflow-hidden">
-                    <span className="text-[12px] text-[var(--color-text-default)] truncate">{network.subnetCidr}</span>
+                  <div
+                    style={{ width: '110px', flexShrink: 0 }}
+                    className="flex items-center px-3 py-2 overflow-hidden"
+                  >
+                    <span className="text-[12px] text-[var(--color-text-default)] truncate">
+                      {network.subnetCidr}
+                    </span>
                   </div>
                   {/* External */}
-                  <div style={{ width: '80px', flexShrink: 0 }} className="flex items-center px-3 py-2 overflow-hidden">
-                    <span className="text-[12px] text-[var(--color-text-default)] truncate">{network.external ? 'Yes' : 'No'}</span>
+                  <div
+                    style={{ width: '80px', flexShrink: 0 }}
+                    className="flex items-center px-3 py-2 overflow-hidden"
+                  >
+                    <span className="text-[12px] text-[var(--color-text-default)] truncate">
+                      {network.external ? 'Yes' : 'No'}
+                    </span>
                   </div>
                   {/* Shared */}
-                  <div style={{ width: '80px', flexShrink: 0 }} className="flex items-center px-3 py-2 overflow-hidden">
-                    <span className="text-[12px] text-[var(--color-text-default)] truncate">{network.shared ? 'On' : 'Off'}</span>
+                  <div
+                    style={{ width: '80px', flexShrink: 0 }}
+                    className="flex items-center px-3 py-2 overflow-hidden"
+                  >
+                    <span className="text-[12px] text-[var(--color-text-default)] truncate">
+                      {network.shared ? 'On' : 'Off'}
+                    </span>
                   </div>
                   {/* In This Project */}
-                  <div style={{ width: '109px', flexShrink: 0 }} className="flex items-center px-3 py-2 overflow-hidden">
-                    <span className="text-[12px] text-[var(--color-text-default)] truncate">{network.inThisProject ? 'Yes' : 'No'}</span>
+                  <div
+                    style={{ width: '109px', flexShrink: 0 }}
+                    className="flex items-center px-3 py-2 overflow-hidden"
+                  >
+                    <span className="text-[12px] text-[var(--color-text-default)] truncate">
+                      {network.inThisProject ? 'Yes' : 'No'}
+                    </span>
                   </div>
                 </div>
               ))}
@@ -259,7 +341,16 @@ export function AttachInterfaceDrawer({
 
         {/* Selection Indicator */}
         <SelectionIndicator
-          selectedItems={selectedNetworkId ? [{ id: selectedNetworkId, label: networks.find(n => n.id === selectedNetworkId)?.name || '' }] : []}
+          selectedItems={
+            selectedNetworkId
+              ? [
+                  {
+                    id: selectedNetworkId,
+                    label: networks.find((n) => n.id === selectedNetworkId)?.name || '',
+                  },
+                ]
+              : []
+          }
           onRemove={() => setSelectedNetworkId(null)}
           emptyText="No item selected"
           className="shrink-0"
@@ -271,12 +362,7 @@ export function AttachInterfaceDrawer({
         {/* Fixed IP Section */}
         <VStack gap={2} className="shrink-0" style={{ width: '648px' }}>
           <h3 className="text-[14px] font-medium text-[var(--color-text-default)]">Fixed IP</h3>
-          <Select
-            options={[]}
-            placeholder="Select subnet"
-            disabled={false}
-            fullWidth
-          />
+          <Select options={[]} placeholder="Select subnet" disabled={false} fullWidth />
           <Select
             options={[
               { value: 'auto-assign', label: 'Auto-assign' },

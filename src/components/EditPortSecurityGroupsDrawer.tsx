@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react';
-import { 
-  Drawer, 
-  Button, 
-  SearchInput, 
-  Pagination, 
+import {
+  Drawer,
+  Button,
+  SearchInput,
+  Pagination,
   Checkbox,
   Toggle,
   SelectionIndicator,
@@ -66,7 +66,7 @@ function FilterTag({ label, value, onRemove }: FilterTagProps) {
       <span className="text-[11px] font-medium text-[var(--color-text-default)]">{label}</span>
       <span className="text-[11px] text-[var(--color-border-default)]">|</span>
       <span className="text-[11px] font-medium text-[var(--color-text-default)]">{value}</span>
-      <button 
+      <button
         onClick={onRemove}
         className="flex items-center justify-center hover:bg-[var(--color-surface-subtle)] rounded"
       >
@@ -91,9 +91,10 @@ export function EditPortSecurityGroupsDrawer({
 }: EditPortSecurityGroupsDrawerProps) {
   // Port security toggle state
   const [portSecurityEnabled, setPortSecurityEnabled] = useState(initialPortSecurityEnabled);
-  
+
   // Security Groups state
-  const [selectedSecurityGroupIds, setSelectedSecurityGroupIds] = useState<string[]>(initialSelectedGroupIds);
+  const [selectedSecurityGroupIds, setSelectedSecurityGroupIds] =
+    useState<string[]>(initialSelectedGroupIds);
   const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -110,18 +111,18 @@ export function EditPortSecurityGroupsDrawer({
       setCurrentPage(1);
       setActiveFilter(null);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOpen]);
 
   // Filter security groups
   const filteredSecurityGroups = securityGroups.filter((sg) => {
-    const matchesSearch = searchQuery === '' || 
+    const matchesSearch =
+      searchQuery === '' ||
       sg.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       sg.description.toLowerCase().includes(searchQuery.toLowerCase());
-    
-    const matchesFilter = !activeFilter || 
-      sg.name.toLowerCase().includes(activeFilter.value.toLowerCase());
-    
+
+    const matchesFilter =
+      !activeFilter || sg.name.toLowerCase().includes(activeFilter.value.toLowerCase());
+
     return matchesSearch && matchesFilter;
   });
 
@@ -155,9 +156,7 @@ export function EditPortSecurityGroupsDrawer({
 
   const handleSecurityGroupToggle = (sgId: string) => {
     setSelectedSecurityGroupIds((prev) =>
-      prev.includes(sgId)
-        ? prev.filter((id) => id !== sgId)
-        : [...prev, sgId]
+      prev.includes(sgId) ? prev.filter((id) => id !== sgId) : [...prev, sgId]
     );
   };
 
@@ -183,15 +182,11 @@ export function EditPortSecurityGroupsDrawer({
       width={696}
       footer={
         <HStack gap={2} justify="center" className="w-full">
-          <Button 
-            variant="secondary" 
-            onClick={handleClose}
-            className="w-[152px] h-8"
-          >
+          <Button variant="secondary" onClick={handleClose} className="w-[152px] h-8">
             Cancel
           </Button>
-          <Button 
-            variant="primary" 
+          <Button
+            variant="primary"
             onClick={handleSave}
             disabled={isSubmitting}
             className="w-[152px] h-8"
@@ -205,7 +200,8 @@ export function EditPortSecurityGroupsDrawer({
         {/* Header Section */}
         <VStack gap={3}>
           <p className="text-[12px] text-[var(--color-text-subtle)] leading-4">
-            When disabled, no security groups will be applied, and anti-spoofing checks are turned off.
+            When disabled, no security groups will be applied, and anti-spoofing checks are turned
+            off.
           </p>
 
           {/* Port Info Box */}
@@ -284,46 +280,70 @@ export function EditPortSecurityGroupsDrawer({
               <div className="flex items-stretch min-h-[40px] bg-[var(--color-border-subtle)] border border-[var(--color-border-default)] rounded-md">
                 <div className="w-[40px] flex items-center justify-center shrink-0">
                   <Checkbox
-                    checked={paginatedSecurityGroups.length > 0 && paginatedSecurityGroups.every(sg => selectedSecurityGroupIds.includes(sg.id))}
-                    indeterminate={paginatedSecurityGroups.some(sg => selectedSecurityGroupIds.includes(sg.id)) && !paginatedSecurityGroups.every(sg => selectedSecurityGroupIds.includes(sg.id))}
+                    checked={
+                      paginatedSecurityGroups.length > 0 &&
+                      paginatedSecurityGroups.every((sg) =>
+                        selectedSecurityGroupIds.includes(sg.id)
+                      )
+                    }
+                    indeterminate={
+                      paginatedSecurityGroups.some((sg) =>
+                        selectedSecurityGroupIds.includes(sg.id)
+                      ) &&
+                      !paginatedSecurityGroups.every((sg) =>
+                        selectedSecurityGroupIds.includes(sg.id)
+                      )
+                    }
                     onChange={() => {
-                      const allSelected = paginatedSecurityGroups.every(sg => selectedSecurityGroupIds.includes(sg.id));
+                      const allSelected = paginatedSecurityGroups.every((sg) =>
+                        selectedSecurityGroupIds.includes(sg.id)
+                      );
                       if (allSelected) {
                         // Deselect all on current page
-                        setSelectedSecurityGroupIds(prev => prev.filter(id => !paginatedSecurityGroups.some(sg => sg.id === id)));
+                        setSelectedSecurityGroupIds((prev) =>
+                          prev.filter((id) => !paginatedSecurityGroups.some((sg) => sg.id === id))
+                        );
                       } else {
                         // Select all on current page
-                        setSelectedSecurityGroupIds(prev => [...new Set([...prev, ...paginatedSecurityGroups.map(sg => sg.id)])]);
+                        setSelectedSecurityGroupIds((prev) => [
+                          ...new Set([...prev, ...paginatedSecurityGroups.map((sg) => sg.id)]),
+                        ]);
                       }
                     }}
                   />
                 </div>
                 <div className="flex-1 flex items-center gap-1.5 px-3 border-l border-[var(--color-border-default)]">
-                  <span className="text-[11px] font-medium text-[var(--color-text-default)] leading-4">Name</span>
+                  <span className="text-[11px] font-medium text-[var(--color-text-default)] leading-4">
+                    Name
+                  </span>
                 </div>
                 <div className="flex-1 flex items-center gap-1.5 px-3 border-l border-[var(--color-border-default)] cursor-pointer hover:text-[var(--color-action-primary)]">
-                  <span className="text-[11px] font-medium text-[var(--color-text-default)] leading-4">Description</span>
+                  <span className="text-[11px] font-medium text-[var(--color-text-default)] leading-4">
+                    Description
+                  </span>
                   <IconChevronDown size={12} className="text-[var(--color-text-default)]" />
                 </div>
                 <div className="flex-1 flex items-center gap-1.5 px-3 border-l border-[var(--color-border-default)] cursor-pointer hover:text-[var(--color-action-primary)]">
-                  <span className="text-[11px] font-medium text-[var(--color-text-default)] leading-4">Created At</span>
+                  <span className="text-[11px] font-medium text-[var(--color-text-default)] leading-4">
+                    Created At
+                  </span>
                   <IconChevronDown size={12} className="text-[var(--color-text-default)]" />
                 </div>
               </div>
 
               {/* Rows */}
               {paginatedSecurityGroups.map((sg) => (
-                <div 
+                <div
                   key={sg.id}
                   className={`flex items-stretch min-h-[40px] border rounded-md cursor-pointer transition-all ${
-                    selectedSecurityGroupIds.includes(sg.id) 
-                      ? 'bg-[var(--color-state-info-bg)] border-[var(--color-action-primary)]' 
+                    selectedSecurityGroupIds.includes(sg.id)
+                      ? 'bg-[var(--color-state-info-bg)] border-[var(--color-action-primary)]'
                       : 'bg-[var(--color-surface-default)] border-[var(--color-border-default)] hover:bg-[var(--table-row-hover-bg)]'
                   }`}
                   onClick={() => handleSecurityGroupToggle(sg.id)}
                 >
                   {/* Checkbox */}
-                  <div 
+                  <div
                     className="w-[40px] flex items-center justify-center shrink-0"
                     onClick={(e) => e.stopPropagation()}
                   >
@@ -335,18 +355,29 @@ export function EditPortSecurityGroupsDrawer({
                   {/* Name */}
                   <div className="flex-1 flex flex-col gap-0.5 justify-center px-3 py-2 overflow-hidden min-w-0">
                     <div className="flex items-center gap-1.5">
-                      <span className="text-[12px] font-medium text-[var(--color-action-primary)] leading-4 truncate">{sg.name}</span>
-                      <IconExternalLink size={12} className="shrink-0 text-[var(--color-action-primary)]" />
+                      <span className="text-[12px] font-medium text-[var(--color-action-primary)] leading-4 truncate">
+                        {sg.name}
+                      </span>
+                      <IconExternalLink
+                        size={12}
+                        className="shrink-0 text-[var(--color-action-primary)]"
+                      />
                     </div>
-                    <span className="text-[11px] text-[var(--color-text-subtle)] leading-4 truncate">ID : {sg.id}</span>
+                    <span className="text-[11px] text-[var(--color-text-subtle)] leading-4 truncate">
+                      ID : {sg.id}
+                    </span>
                   </div>
                   {/* Description */}
                   <div className="flex-1 flex items-center px-3 py-2 overflow-hidden min-w-0">
-                    <span className="text-[12px] text-[var(--color-text-default)] leading-4 truncate">{sg.description}</span>
+                    <span className="text-[12px] text-[var(--color-text-default)] leading-4 truncate">
+                      {sg.description}
+                    </span>
                   </div>
                   {/* Created At */}
                   <div className="flex-1 flex items-center px-3 py-2 overflow-hidden min-w-0">
-                    <span className="text-[12px] text-[var(--color-text-default)] leading-4 truncate">{sg.createdAt}</span>
+                    <span className="text-[12px] text-[var(--color-text-default)] leading-4 truncate">
+                      {sg.createdAt}
+                    </span>
                   </div>
                 </div>
               ))}
@@ -354,11 +385,13 @@ export function EditPortSecurityGroupsDrawer({
 
             {/* Selection Indicator - Below table */}
             <SelectionIndicator
-              selectedItems={selectedSecurityGroupIds.map(id => ({ 
-                id, 
-                label: securityGroups.find(sg => sg.id === id)?.name || '' 
+              selectedItems={selectedSecurityGroupIds.map((id) => ({
+                id,
+                label: securityGroups.find((sg) => sg.id === id)?.name || '',
               }))}
-              onRemove={(id) => setSelectedSecurityGroupIds(prev => prev.filter(sgId => sgId !== id))}
+              onRemove={(id) =>
+                setSelectedSecurityGroupIds((prev) => prev.filter((sgId) => sgId !== id))
+              }
               emptyText="No item Selected"
               className="w-full"
             />

@@ -20,9 +20,6 @@ import { useTabs } from '@/contexts/TabContext';
 import { DataViewDrawer } from '@/components/DataViewDrawer';
 import {
   IconBell,
-  IconRefresh,
-  IconChevronLeft,
-  IconChevronRight,
   IconDotsCircleHorizontal,
   IconArrowsMaximize,
   IconArrowsMinimize,
@@ -39,7 +36,6 @@ const chartColors = {
   slate100: '#f1f5f9',
   slate800: '#1e293b',
 };
-
 
 /* ----------------------------------------
    Performance Line Chart Component
@@ -62,18 +58,18 @@ interface PerformanceChartProps {
   timeControls?: React.ReactNode;
 }
 
-function PerformanceChart({ 
-  title, 
-  series, 
-  timeLabels, 
+function PerformanceChart({
+  title,
+  series,
+  timeLabels,
   yAxisUnit = '',
   isFullScreen = false,
   onFullScreen,
   onExitFullScreen,
-  timeControls
+  timeControls,
 }: PerformanceChartProps) {
   const [visibleSeries, setVisibleSeries] = useState<Record<string, boolean>>(
-    Object.fromEntries(series.map(s => [s.name, true]))
+    Object.fromEntries(series.map((s) => [s.name, true]))
   );
   const [menuOpen, setMenuOpen] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(false);
@@ -103,10 +99,10 @@ function PerformanceChart({
     return () => observer.disconnect();
   }, []);
 
-  const allVisible = Object.values(visibleSeries).every(v => v);
+  const allVisible = Object.values(visibleSeries).every((v) => v);
   const toggleAll = () => {
     const newState = !allVisible;
-    setVisibleSeries(Object.fromEntries(series.map(s => [s.name, newState])));
+    setVisibleSeries(Object.fromEntries(series.map((s) => [s.name, newState])));
   };
 
   const handleFullScreen = () => {
@@ -122,20 +118,20 @@ function PerformanceChart({
   const tooltipTextColor = isDarkMode ? '#e5e5e5' : chartColors.slate800;
 
   // Calculate max value for exactly 5 Y-axis labels
-  const allData = series.filter(s => visibleSeries[s.name]).flatMap(s => s.data);
+  const allData = series.filter((s) => visibleSeries[s.name]).flatMap((s) => s.data);
   const dataMax = Math.max(...allData, 0);
-  
+
   const rawInterval = dataMax / 4;
   const magnitude = Math.pow(10, Math.floor(Math.log10(rawInterval || 1)));
   const normalizedInterval = rawInterval / magnitude;
-  
+
   let niceNormalizedInterval;
   if (normalizedInterval <= 1) niceNormalizedInterval = 1;
   else if (normalizedInterval <= 2) niceNormalizedInterval = 2;
   else if (normalizedInterval <= 2.5) niceNormalizedInterval = 2.5;
   else if (normalizedInterval <= 5) niceNormalizedInterval = 5;
   else niceNormalizedInterval = 10;
-  
+
   const niceInterval = niceNormalizedInterval * magnitude;
   const niceMax = niceInterval * 4;
 
@@ -146,7 +142,7 @@ function PerformanceChart({
       right: '16px',
       top: '20px',
       bottom: '16px',
-      containLabel: false
+      containLabel: false,
     },
     xAxis: {
       type: 'category' as const,
@@ -156,9 +152,9 @@ function PerformanceChart({
       axisLabel: {
         color: chartColors.slate400,
         fontSize: 10,
-        padding: [0, 0, 0, 15]
+        padding: [0, 0, 0, 15],
       },
-      boundaryGap: false
+      boundaryGap: false,
     },
     yAxis: {
       type: 'value' as const,
@@ -168,13 +164,13 @@ function PerformanceChart({
       axisLine: { show: false },
       axisTick: { show: false },
       splitLine: {
-        lineStyle: { color: splitLineColor, opacity: splitLineOpacity }
+        lineStyle: { color: splitLineColor, opacity: splitLineOpacity },
       },
       axisLabel: {
         color: chartColors.slate400,
         fontSize: 10,
-        formatter: (v: number) => `${v}${yAxisUnit}`
-      }
+        formatter: (v: number) => `${v}${yAxisUnit}`,
+      },
     },
     tooltip: {
       trigger: 'axis' as const,
@@ -183,20 +179,25 @@ function PerformanceChart({
       textStyle: {
         color: tooltipTextColor,
         fontSize: 11,
-        fontFamily: 'Mona Sans, -apple-system, BlinkMacSystemFont, sans-serif'
+        fontFamily: 'Mona Sans, -apple-system, BlinkMacSystemFont, sans-serif',
       },
-      formatter: (params: Array<{ marker: string; seriesName: string; value: number; axisValueLabel: string }>) => {
+      formatter: (
+        params: Array<{ marker: string; seriesName: string; value: number; axisValueLabel: string }>
+      ) => {
         if (!Array.isArray(params) || params.length === 0) return '';
         const time = params[0].axisValueLabel;
-        const items = params.map(p => 
-          `<div style="display: flex; align-items: center; gap: 8px;"><span style="display: inline-block; width: 8px; height: 8px; border-radius: 9999px; background-color: ${p.color};"></span><span>${p.seriesName}</span><span style="font-weight: 500; margin-left: auto;">${p.value}</span></div>`
-        ).join('');
+        const items = params
+          .map(
+            (p) =>
+              `<div style="display: flex; align-items: center; gap: 8px;"><span style="display: inline-block; width: 8px; height: 8px; border-radius: 9999px; background-color: ${p.color};"></span><span>${p.seriesName}</span><span style="font-weight: 500; margin-left: auto;">${p.value}</span></div>`
+          )
+          .join('');
         return `<div style="font-size: 11px; font-family: Mona Sans, -apple-system, BlinkMacSystemFont, sans-serif;">${time}<div style="margin-top: 4px;">${items}</div></div>`;
-      }
+      },
     },
     series: series
-      .filter(s => visibleSeries[s.name])
-      .map(s => ({
+      .filter((s) => visibleSeries[s.name])
+      .map((s) => ({
         name: s.name,
         type: 'line',
         smooth: true,
@@ -206,8 +207,8 @@ function PerformanceChart({
         lineStyle: { color: s.color, width: 1 },
         itemStyle: { color: s.color },
         areaStyle: { color: s.color, opacity: 0.1 },
-        data: s.data
-      }))
+        data: s.data,
+      })),
   };
 
   return (
@@ -215,9 +216,7 @@ function PerformanceChart({
       {/* Header */}
       <div className="chartHeader">
         <span className="chartTitle">{title}</span>
-        {isFullScreen && timeControls && (
-          <div className="chartHeaderCenter">{timeControls}</div>
-        )}
+        {isFullScreen && timeControls && <div className="chartHeaderCenter">{timeControls}</div>}
         <div className="chartControls">
           {/* Toggle Button - only show for multiple series */}
           {series.length > 1 && (
@@ -229,12 +228,15 @@ function PerformanceChart({
               <span className="toggleDivider">|</span>
             </>
           )}
-          
+
           {/* Menu Button */}
           <div className="menuContainer">
-            <button 
+            <button
               className="menuTrigger"
-              onClick={(e) => { e.stopPropagation(); setMenuOpen(!menuOpen); }}
+              onClick={(e) => {
+                e.stopPropagation();
+                setMenuOpen(!menuOpen);
+              }}
             >
               <IconDotsCircleHorizontal size={16} stroke={1.5} />
             </button>
@@ -246,17 +248,23 @@ function PerformanceChart({
                 <button className="contextMenuItem" onClick={() => setMenuOpen(false)}>
                   Download CSV
                 </button>
-                <button className="contextMenuItemLast" onClick={() => { setMenuOpen(false); setShowDataView(true); }}>
+                <button
+                  className="contextMenuItemLast"
+                  onClick={() => {
+                    setMenuOpen(false);
+                    setShowDataView(true);
+                  }}
+                >
                   Data View
                 </button>
               </div>
             )}
           </div>
-          
+
           {/* Expand/Minimize Button */}
-          <button 
-            className="expandTrigger" 
-            title={isFullScreen ? "Minimize" : "Expand"}
+          <button
+            className="expandTrigger"
+            title={isFullScreen ? 'Minimize' : 'Expand'}
             onClick={isFullScreen ? onExitFullScreen : handleFullScreen}
           >
             {isFullScreen ? (
@@ -267,28 +275,28 @@ function PerformanceChart({
           </button>
         </div>
       </div>
-      
+
       {/* Chart Body */}
       <div className="chartBody">
         <div className="chartWrapper" ref={wrapperRef}>
-          <ReactECharts 
+          <ReactECharts
             key={isFullScreen ? 'fullscreen' : 'normal'}
             ref={chartRef}
-            option={option} 
-            style={{ 
+            option={option}
+            style={{
               height: isFullScreen ? 'calc(100vh - 200px)' : '100%',
-              width: isFullScreen ? 'calc(100vw - 300px)' : '100%'
-            }} 
+              width: isFullScreen ? 'calc(100vw - 300px)' : '100%',
+            }}
             notMerge={true}
             onChartReady={handleChartReady}
           />
         </div>
         <div className="chartLegend">
           {series.map((s, i) => (
-            <div 
+            <div
               key={i}
               className={`legendItem ${!visibleSeries[s.name] ? 'legendItemHidden' : ''}`}
-              onClick={() => setVisibleSeries(prev => ({ ...prev, [s.name]: !prev[s.name] }))}
+              onClick={() => setVisibleSeries((prev) => ({ ...prev, [s.name]: !prev[s.name] }))}
             >
               <div className="legendDot" style={{ backgroundColor: s.color }} />
               <span>{s.name}</span>
@@ -322,7 +330,7 @@ function ImageChartWithFullScreen({
   title,
   series,
   timeLabels,
-  yAxisUnit = ''
+  yAxisUnit = '',
 }: {
   title: string;
   series: ChartSeries[];
@@ -367,10 +375,16 @@ function ImageChartWithFullScreen({
         yAxisUnit={yAxisUnit}
         onFullScreen={() => setFullScreenChart({ title, series, timeLabels, yAxisUnit })}
       />
-      
+
       {fullScreenChart && (
         <>
-          <div className="fullScreenOverlay" onClick={() => { setFullScreenChart(null); setContainerReady(false); }} />
+          <div
+            className="fullScreenOverlay"
+            onClick={() => {
+              setFullScreenChart(null);
+              setContainerReady(false);
+            }}
+          />
           <div className="fullScreenFloating" ref={fullScreenContainerRef}>
             {containerReady && (
               <PerformanceChart
@@ -379,7 +393,10 @@ function ImageChartWithFullScreen({
                 timeLabels={fullScreenChart.timeLabels}
                 yAxisUnit={fullScreenChart.yAxisUnit}
                 isFullScreen={true}
-                onExitFullScreen={() => { setFullScreenChart(null); setContainerReady(false); }}
+                onExitFullScreen={() => {
+                  setFullScreenChart(null);
+                  setContainerReady(false);
+                }}
                 timeControls={<MonitoringToolbar />}
               />
             )}
@@ -445,7 +462,8 @@ export function ImageDetailPage() {
   const [activeTab, setActiveTab] = useState('performance');
 
   // Global tab management
-  const { tabs, activeTabId, closeTab, selectTab, addNewTab, updateActiveTabLabel, moveTab } = useTabs();
+  const { tabs, activeTabId, closeTab, selectTab, addNewTab, updateActiveTabLabel, moveTab } =
+    useTabs();
 
   // Use mock data (in real app, fetch based on id)
   const imageData = mockImageDetail;
@@ -482,7 +500,7 @@ export function ImageDetailPage() {
   return (
     <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
       {/* Sidebar */}
-      <StorageSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(prev => !prev)} />
+      <StorageSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen((prev) => !prev)} />
 
       {/* Main Content */}
       <main
@@ -519,10 +537,7 @@ export function ImageDetailPage() {
               />
             }
             actions={
-              <TopBarAction
-                icon={<IconBell size={16} stroke={1.5} />}
-                aria-label="Notifications"
-              />
+              <TopBarAction icon={<IconBell size={16} stroke={1.5} />} aria-label="Notifications" />
             }
           />
         </div>
@@ -535,23 +550,10 @@ export function ImageDetailPage() {
               <DetailHeader>
                 <DetailHeader.Title>{imageData.name}</DetailHeader.Title>
                 <DetailHeader.InfoGrid>
-                  <DetailHeader.InfoCard
-                    label="Pool"
-                    value={imageData.pool}
-                    status="active"
-                  />
-                  <DetailHeader.InfoCard
-                    label="Size"
-                    value={imageData.size}
-                  />
-                  <DetailHeader.InfoCard
-                    label="Objects"
-                    value={String(imageData.objects)}
-                  />
-                  <DetailHeader.InfoCard
-                    label="Object size"
-                    value={imageData.objectSize}
-                  />
+                  <DetailHeader.InfoCard label="Pool" value={imageData.pool} status="active" />
+                  <DetailHeader.InfoCard label="Size" value={imageData.size} />
+                  <DetailHeader.InfoCard label="Objects" value={String(imageData.objects)} />
+                  <DetailHeader.InfoCard label="Object size" value={imageData.objectSize} />
                   <DetailHeader.InfoCard
                     label="Total provisioned"
                     value={imageData.totalProvisioned}

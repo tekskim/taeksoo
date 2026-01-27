@@ -1,23 +1,9 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import {
-  Button,
-  Breadcrumb,
-  HStack,
-  VStack,
-  TabBar,
-  TopBar,
-  InlineMessage,
-} from '@/design-system';
+import { Button, Breadcrumb, HStack, VStack, TabBar, TopBar, InlineMessage } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
 import { useTabs } from '@/contexts/TabContext';
-import {
-  IconBell,
-  IconTerminal2,
-  IconFile,
-  IconCopy,
-  IconSearch,
-} from '@tabler/icons-react';
+import { IconBell, IconTerminal2, IconFile, IconCopy, IconSearch } from '@tabler/icons-react';
 
 /* ----------------------------------------
    Mock HPA YAML Data
@@ -182,7 +168,8 @@ export function EditHPAYamlPage() {
   }, [hpaId]);
 
   // Tab management
-  const { tabs, activeTabId, closeTab, selectTab, updateActiveTabLabel, moveTab, addNewTab } = useTabs();
+  const { tabs, activeTabId, closeTab, selectTab, updateActiveTabLabel, moveTab, addNewTab } =
+    useTabs();
 
   // Update tab label
   useEffect(() => {
@@ -299,9 +286,7 @@ export function EditHPAYamlPage() {
         />
 
         {/* Page Content */}
-        <div
-          className="flex-1 overflow-hidden min-w-[var(--layout-content-min-width)] flex flex-col"
-        >
+        <div className="flex-1 overflow-hidden min-w-[var(--layout-content-min-width)] flex flex-col">
           <div className="flex-1 flex flex-col pt-4 px-8 pb-6 bg-[var(--color-surface-default)] min-h-0">
             <VStack gap={6} className="flex-1 min-h-0">
               {/* Header */}
@@ -310,16 +295,13 @@ export function EditHPAYamlPage() {
                   HPA: {hpaName}
                 </h1>
                 <InlineMessage variant="warning">
-                  This HPA is managed by a Helm app; changes made here will likely be overwritten the next time Helm runs.
+                  This HPA is managed by a Helm app; changes made here will likely be overwritten
+                  the next time Helm runs.
                 </InlineMessage>
               </VStack>
 
               {/* YAML Editor */}
-              <YamlEditor
-                value={yamlContent}
-                onChange={setYamlContent}
-                onCopy={handleCopy}
-              />
+              <YamlEditor value={yamlContent} onChange={setYamlContent} onCopy={handleCopy} />
 
               {/* Footer */}
               <div className="flex-shrink-0 h-[61px] flex items-center justify-between border-t border-[var(--color-border-strong)]">

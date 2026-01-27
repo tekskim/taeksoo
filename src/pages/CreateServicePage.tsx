@@ -77,9 +77,9 @@ const SERVICE_TYPE_DESCRIPTIONS: Record<string, string> = {
   Headless:
     'Headless Service (clusterIP: None) that allows direct access to Pod IPs without load balancing.',
   LoadBalancer:
-    'Expose the Service externally using a cloud provider\'s load balancer. Traffic from the external load balancer is directed to the backend Pods.',
+    "Expose the Service externally using a cloud provider's load balancer. Traffic from the external load balancer is directed to the backend Pods.",
   NodePort:
-    'Expose the Service on each Node\'s IP at a static port. A ClusterIP Service, to which the NodePort Service routes, is automatically created.',
+    "Expose the Service on each Node's IP at a static port. A ClusterIP Service, to which the NodePort Service routes, is automatically created.",
 };
 
 // Namespace options
@@ -284,7 +284,8 @@ export function CreateServicePage() {
   const [nameError, setNameError] = useState<string | null>(null);
 
   // Tab management
-  const { tabs, activeTabId, closeTab, selectTab, updateActiveTabLabel, moveTab, addNewTab } = useTabs();
+  const { tabs, activeTabId, closeTab, selectTab, updateActiveTabLabel, moveTab, addNewTab } =
+    useTabs();
 
   // Update tab label
   useEffect(() => {
@@ -620,7 +621,8 @@ export function CreateServicePage() {
                             <VStack gap={1}>
                               {index === 0 && (
                                 <label className="text-[11px] font-medium text-[var(--color-text-default)]">
-                                  Port Name <span className="text-[var(--color-state-danger)]">*</span>
+                                  Port Name{' '}
+                                  <span className="text-[var(--color-state-danger)]">*</span>
                                 </label>
                               )}
                               <Input
@@ -865,10 +867,7 @@ export function CreateServicePage() {
                           value={sessionAffinity}
                           onChange={(value) => setSessionAffinity(value as 'None' | 'ClientIP')}
                         >
-                          <Radio
-                            value="None"
-                            label="There is no session affinity configured"
-                          />
+                          <Radio value="None" label="There is no session affinity configured" />
                           <Radio value="ClientIP" label="Client IP" />
                         </RadioGroup>
 

@@ -102,7 +102,9 @@ export const WithIcons: Story = {
         activeTab={activeTab}
         onTabChange={selectTab}
         onTabClose={closeTab}
-        onTabAdd={() => addTab({ id: `new-${Date.now()}`, label: 'New Tab', icon: <IconFile size={14} /> })}
+        onTabAdd={() =>
+          addTab({ id: `new-${Date.now()}`, label: 'New Tab', icon: <IconFile size={14} /> })
+        }
       />
     );
   },

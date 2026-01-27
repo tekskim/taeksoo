@@ -79,15 +79,15 @@ const mockSnapshotsMap: Record<string, SnapshotDetail> = {
     filename: '/v2/images/93c91160-75f8-40e4-899f-372539fb98a6/file',
     checksum: 'ffc34736c70569953d58a15a52b8a3bd',
     metadata: {
-      'hw_scsi_model': 'virtio-scsi',
-      'hw_qemu_guest_agent': 'yes',
-      'os_distro': 'ubuntu',
-      'hw_disk_bus': 'scsi',
-      'os_version': '22.04',
-      'os_require_quiesce': 'yes',
-      'image_type': 'snapshot',
-      'owner_user_name': 'admin',
-      'owner_project_name': 'test',
+      hw_scsi_model: 'virtio-scsi',
+      hw_qemu_guest_agent: 'yes',
+      os_distro: 'ubuntu',
+      hw_disk_bus: 'scsi',
+      os_version: '22.04',
+      os_require_quiesce: 'yes',
+      image_type: 'snapshot',
+      owner_user_name: 'admin',
+      owner_project_name: 'test',
     },
   },
   'snap-002': {
@@ -109,9 +109,9 @@ const mockSnapshotsMap: Record<string, SnapshotDetail> = {
     filename: '/v2/images/db-server-snapshot/file',
     checksum: 'abc123def456',
     metadata: {
-      'os_distro': 'centos',
-      'os_version': '8',
-      'image_type': 'snapshot',
+      os_distro: 'centos',
+      os_version: '8',
+      image_type: 'snapshot',
     },
   },
   'snap-003': {
@@ -133,9 +133,9 @@ const mockSnapshotsMap: Record<string, SnapshotDetail> = {
     filename: '/v2/images/app-server-snapshot/file',
     checksum: 'xyz789abc',
     metadata: {
-      'os_distro': 'debian',
-      'os_version': '12',
-      'image_type': 'snapshot',
+      os_distro: 'debian',
+      os_version: '12',
+      image_type: 'snapshot',
     },
   },
 };
@@ -180,9 +180,7 @@ function CopyableValue({ value }: CopyableValueProps) {
 
   return (
     <div className="flex items-center gap-2">
-      <span className="text-[12px] leading-4 text-[var(--color-text-default)]">
-        {value}
-      </span>
+      <span className="text-[12px] leading-4 text-[var(--color-text-default)]">{value}</span>
       <button
         onClick={handleCopy}
         className="p-1 rounded hover:bg-[var(--color-surface-muted)] transition-colors"
@@ -207,12 +205,13 @@ export function InstanceSnapshotDetailPage() {
   const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [activeDetailTab, setActiveDetailTab] = useState('details');
-  
+
   // Get snapshot based on URL id
-  const snapshot = id ? (mockSnapshotsMap[id] || defaultSnapshotDetail) : defaultSnapshotDetail;
+  const snapshot = id ? mockSnapshotsMap[id] || defaultSnapshotDetail : defaultSnapshotDetail;
 
   // Global tab management
-  const { tabs, activeTabId, closeTab, selectTab, addNewTab, updateActiveTabLabel, moveTab } = useTabs();
+  const { tabs, activeTabId, closeTab, selectTab, addNewTab, updateActiveTabLabel, moveTab } =
+    useTabs();
 
   // Update tab label when snapshot name changes
   useEffect(() => {
@@ -282,145 +281,171 @@ export function InstanceSnapshotDetailPage() {
         <div className="flex-1 overflow-auto overscroll-contain sidebar-scroll">
           {/* Page Content */}
           <div className="pt-4 px-8 pb-20 bg-[var(--color-surface-default)] min-h-full">
-          <VStack gap={6} className="min-w-[1176px]">
-            {/* Snapshot Header Card */}
-            <DetailHeader>
-              <DetailHeader.Title>{snapshot.name}</DetailHeader.Title>
-              <DetailHeader.Actions>
-                <Button variant="secondary" size="sm" leftIcon={<IconCirclePlus size={12} />}>
-                  Create instance
-                </Button>
-                <Button variant="secondary" size="sm" leftIcon={<IconTrash size={12} />}>
-                  Delete
-                </Button>
-                <ContextMenu
-                  items={[
-                    { id: 'create-volume', label: 'Create volume', onClick: () => console.log('Create volume') },
-                    { id: 'edit', label: 'Edit', onClick: () => console.log('Edit') },
-                  ] as ContextMenuItem[]}
-                  trigger="click"
-                >
-                  <Button variant="secondary" size="sm" rightIcon={<IconChevronDown size={12} />}>
-                    More Actions
+            <VStack gap={6} className="min-w-[1176px]">
+              {/* Snapshot Header Card */}
+              <DetailHeader>
+                <DetailHeader.Title>{snapshot.name}</DetailHeader.Title>
+                <DetailHeader.Actions>
+                  <Button variant="secondary" size="sm" leftIcon={<IconCirclePlus size={12} />}>
+                    Create instance
                   </Button>
-                </ContextMenu>
-              </DetailHeader.Actions>
-              <DetailHeader.InfoGrid>
-                <DetailHeader.InfoCard label="Status" value="Active" status="active" />
-                <DetailHeader.InfoCard label="ID" value={snapshot.id} copyable />
-                <DetailHeader.InfoCard label="Size" value={snapshot.size} />
-                <DetailHeader.InfoCard label="Created at" value={snapshot.createdAt} />
-              </DetailHeader.InfoGrid>
-            </DetailHeader>
+                  <Button variant="secondary" size="sm" leftIcon={<IconTrash size={12} />}>
+                    Delete
+                  </Button>
+                  <ContextMenu
+                    items={
+                      [
+                        {
+                          id: 'create-volume',
+                          label: 'Create volume',
+                          onClick: () => console.log('Create volume'),
+                        },
+                        { id: 'edit', label: 'Edit', onClick: () => console.log('Edit') },
+                      ] as ContextMenuItem[]
+                    }
+                    trigger="click"
+                  >
+                    <Button variant="secondary" size="sm" rightIcon={<IconChevronDown size={12} />}>
+                      More Actions
+                    </Button>
+                  </ContextMenu>
+                </DetailHeader.Actions>
+                <DetailHeader.InfoGrid>
+                  <DetailHeader.InfoCard label="Status" value="Active" status="active" />
+                  <DetailHeader.InfoCard label="ID" value={snapshot.id} copyable />
+                  <DetailHeader.InfoCard label="Size" value={snapshot.size} />
+                  <DetailHeader.InfoCard label="Created at" value={snapshot.createdAt} />
+                </DetailHeader.InfoGrid>
+              </DetailHeader>
 
-            {/* Snapshot Tabs */}
-            <div className="w-full">
-              <Tabs value={activeDetailTab} onChange={setActiveDetailTab} variant="underline" size="sm">
-                <TabList>
-                  <Tab value="details">Details</Tab>
-                  <Tab value="metadata">Metadata</Tab>
-                </TabList>
+              {/* Snapshot Tabs */}
+              <div className="w-full">
+                <Tabs
+                  value={activeDetailTab}
+                  onChange={setActiveDetailTab}
+                  variant="underline"
+                  size="sm"
+                >
+                  <TabList>
+                    <Tab value="details">Details</Tab>
+                    <Tab value="metadata">Metadata</Tab>
+                  </TabList>
 
-                {/* Details Tab Panel */}
-                <TabPanel value="details" className="pt-0">
-                  <VStack gap={4} className="pt-4">
-                    {/* Basic information */}
-                    <SectionCard>
-                      <SectionCard.Header 
-                        title="Basic information" 
-                        actions={<Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />}>Edit</Button>}
-                      />
-                      <SectionCard.Content>
-                        <SectionCard.DataRow label="Snapshot name" value={snapshot.name} />
-                        <SectionCard.DataRow label="Description" value={snapshot.description} />
-                      </SectionCard.Content>
-                    </SectionCard>
-
-                    {/* Source */}
-                    <SectionCard>
-                      <SectionCard.Header title="Source" />
-                      <SectionCard.Content>
-                        <SectionCard.DataRow 
-                          label="Instance" 
-                          value={
-                            <Link
-                              to="/instances"
-                              className="inline-flex items-center gap-1.5 text-[12px] font-medium leading-4 text-[var(--color-action-primary)] hover:underline"
-                            >
-                              {snapshot.sourceInstance}
-                              <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
-                            </Link>
+                  {/* Details Tab Panel */}
+                  <TabPanel value="details" className="pt-0">
+                    <VStack gap={4} className="pt-4">
+                      {/* Basic information */}
+                      <SectionCard>
+                        <SectionCard.Header
+                          title="Basic information"
+                          actions={
+                            <Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />}>
+                              Edit
+                            </Button>
                           }
                         />
-                      </SectionCard.Content>
-                    </SectionCard>
+                        <SectionCard.Content>
+                          <SectionCard.DataRow label="Snapshot name" value={snapshot.name} />
+                          <SectionCard.DataRow label="Description" value={snapshot.description} />
+                        </SectionCard.Content>
+                      </SectionCard>
 
-                    {/* Specifications */}
-                    <SectionCard>
-                      <SectionCard.Header title="Specifications" />
-                      <SectionCard.Content>
-                        <SectionCard.DataRow label="Size" value={snapshot.size} />
-                        <SectionCard.DataRow label="OS" value={snapshot.os} />
-                        <SectionCard.DataRow label="Min disk / Min RAM" value={`${snapshot.minDisk} / ${snapshot.minRam}`} />
-                        <SectionCard.DataRow label="Disk format / Container Format" value={`${snapshot.diskFormat} / ${snapshot.containerFormat}`} />
-                      </SectionCard.Content>
-                    </SectionCard>
-
-                    {/* Security */}
-                    <SectionCard>
-                      <SectionCard.Header title="Security" />
-                      <SectionCard.Content>
-                        <SectionCard.DataRow label="Owner" value={snapshot.owner} />
-                        <SectionCard.DataRow label="Visibility" value={snapshot.visibility} />
-                        <SectionCard.DataRow label="Protected" value={snapshot.protected ? 'Enabled' : 'Disabled'} />
-                        <div className="flex flex-col gap-3 w-full">
-                          <div className="h-px w-full bg-[var(--color-border-subtle)]" />
-                          <div className="flex flex-col gap-1.5">
-                            <span className="text-[11px] font-medium leading-4 text-[var(--color-text-subtle)]">
-                              Filename
-                            </span>
-                            <CopyableValue value={snapshot.filename} />
-                          </div>
-                        </div>
-                        <div className="flex flex-col gap-3 w-full">
-                          <div className="h-px w-full bg-[var(--color-border-subtle)]" />
-                          <div className="flex flex-col gap-1.5">
-                            <span className="text-[11px] font-medium leading-4 text-[var(--color-text-subtle)]">
-                              Checksum
-                            </span>
-                            <CopyableValue value={snapshot.checksum} />
-                          </div>
-                        </div>
-                      </SectionCard.Content>
-                    </SectionCard>
-                  </VStack>
-                </TabPanel>
-
-                {/* Metadata Tab Panel */}
-                <TabPanel value="metadata" className="pt-0">
-                  <VStack gap={4} className="pt-4">
-                    <SectionCard>
-                      <SectionCard.Header title="Metadata" />
-                      <SectionCard.Content>
-                        {Object.entries(snapshot.metadata).map(([key, value], index) => (
+                      {/* Source */}
+                      <SectionCard>
+                        <SectionCard.Header title="Source" />
+                        <SectionCard.Content>
                           <SectionCard.DataRow
-                            key={key}
-                            label={key}
-                            value={value}
-                            showDivider={index === 0 ? true : true}
+                            label="Instance"
+                            value={
+                              <Link
+                                to="/instances"
+                                className="inline-flex items-center gap-1.5 text-[12px] font-medium leading-4 text-[var(--color-action-primary)] hover:underline"
+                              >
+                                {snapshot.sourceInstance}
+                                <IconExternalLink
+                                  size={12}
+                                  className="text-[var(--color-action-primary)]"
+                                />
+                              </Link>
+                            }
                           />
-                        ))}
-                      </SectionCard.Content>
-                    </SectionCard>
-                  </VStack>
-                </TabPanel>
-              </Tabs>
-            </div>
-          </VStack>
-        </div>
+                        </SectionCard.Content>
+                      </SectionCard>
+
+                      {/* Specifications */}
+                      <SectionCard>
+                        <SectionCard.Header title="Specifications" />
+                        <SectionCard.Content>
+                          <SectionCard.DataRow label="Size" value={snapshot.size} />
+                          <SectionCard.DataRow label="OS" value={snapshot.os} />
+                          <SectionCard.DataRow
+                            label="Min disk / Min RAM"
+                            value={`${snapshot.minDisk} / ${snapshot.minRam}`}
+                          />
+                          <SectionCard.DataRow
+                            label="Disk format / Container Format"
+                            value={`${snapshot.diskFormat} / ${snapshot.containerFormat}`}
+                          />
+                        </SectionCard.Content>
+                      </SectionCard>
+
+                      {/* Security */}
+                      <SectionCard>
+                        <SectionCard.Header title="Security" />
+                        <SectionCard.Content>
+                          <SectionCard.DataRow label="Owner" value={snapshot.owner} />
+                          <SectionCard.DataRow label="Visibility" value={snapshot.visibility} />
+                          <SectionCard.DataRow
+                            label="Protected"
+                            value={snapshot.protected ? 'Enabled' : 'Disabled'}
+                          />
+                          <div className="flex flex-col gap-3 w-full">
+                            <div className="h-px w-full bg-[var(--color-border-subtle)]" />
+                            <div className="flex flex-col gap-1.5">
+                              <span className="text-[11px] font-medium leading-4 text-[var(--color-text-subtle)]">
+                                Filename
+                              </span>
+                              <CopyableValue value={snapshot.filename} />
+                            </div>
+                          </div>
+                          <div className="flex flex-col gap-3 w-full">
+                            <div className="h-px w-full bg-[var(--color-border-subtle)]" />
+                            <div className="flex flex-col gap-1.5">
+                              <span className="text-[11px] font-medium leading-4 text-[var(--color-text-subtle)]">
+                                Checksum
+                              </span>
+                              <CopyableValue value={snapshot.checksum} />
+                            </div>
+                          </div>
+                        </SectionCard.Content>
+                      </SectionCard>
+                    </VStack>
+                  </TabPanel>
+
+                  {/* Metadata Tab Panel */}
+                  <TabPanel value="metadata" className="pt-0">
+                    <VStack gap={4} className="pt-4">
+                      <SectionCard>
+                        <SectionCard.Header title="Metadata" />
+                        <SectionCard.Content>
+                          {Object.entries(snapshot.metadata).map(([key, value], index) => (
+                            <SectionCard.DataRow
+                              key={key}
+                              label={key}
+                              value={value}
+                              showDivider={index === 0 ? true : true}
+                            />
+                          ))}
+                        </SectionCard.Content>
+                      </SectionCard>
+                    </VStack>
+                  </TabPanel>
+                </Tabs>
+              </div>
+            </VStack>
+          </div>
         </div>
       </main>
     </div>
   );
 }
-

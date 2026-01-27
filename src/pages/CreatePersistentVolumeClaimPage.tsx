@@ -185,7 +185,12 @@ interface SummarySidebarProps {
   isCreateDisabled: boolean;
 }
 
-function SummarySidebar({ sectionStatus, onCancel, onCreate, isCreateDisabled }: SummarySidebarProps) {
+function SummarySidebar({
+  sectionStatus,
+  onCancel,
+  onCreate,
+  isCreateDisabled,
+}: SummarySidebarProps) {
   // Map SectionState to WizardSectionState
   const mapState = (state: SectionState): WizardSectionState => {
     if (state === 'pre') return 'pending';
@@ -204,14 +209,14 @@ function SummarySidebar({ sectionStatus, onCancel, onCreate, isCreateDisabled }:
     <div className="w-[var(--wizard-summary-width)] shrink-0 sticky top-4 self-start">
       <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg p-4 flex flex-col gap-6">
         <WizardSummary items={summaryItems} />
-        
+
         {/* Action Buttons */}
         <HStack gap={2}>
           <Button variant="secondary" onClick={onCancel} className="w-[80px]">
             Cancel
           </Button>
-          <Button 
-            variant="primary" 
+          <Button
+            variant="primary"
             onClick={onCreate}
             disabled={isCreateDisabled}
             className="flex-1"
@@ -409,10 +414,7 @@ function VolumeClaimSection({
                   value="storage-class"
                   label="Use a Storage Class to provision a new Persistent Volume"
                 />
-                <Radio
-                  value="existing-pv"
-                  label="Use an existing Persistent Volume"
-                />
+                <Radio value="existing-pv" label="Use an existing Persistent Volume" />
               </VStack>
             </RadioGroup>
           </VStack>
@@ -500,14 +502,21 @@ const OPERATOR_OPTIONS = [
   { value: 'Lt', label: 'less than' },
 ];
 
-
 /* ----------------------------------------
    StorageConfigSection Component
    ---------------------------------------- */
 
 interface StorageConfigSectionProps {
-  accessModes: { singleNodeReadWrite: boolean; manyNodesReadOnly: boolean; manyNodesReadWrite: boolean };
-  onAccessModesChange: (modes: { singleNodeReadWrite: boolean; manyNodesReadOnly: boolean; manyNodesReadWrite: boolean }) => void;
+  accessModes: {
+    singleNodeReadWrite: boolean;
+    manyNodesReadOnly: boolean;
+    manyNodesReadWrite: boolean;
+  };
+  onAccessModesChange: (modes: {
+    singleNodeReadWrite: boolean;
+    manyNodesReadOnly: boolean;
+    manyNodesReadWrite: boolean;
+  }) => void;
   onNext: () => void;
   isEditing: boolean;
   onEditCancel: () => void;
@@ -550,17 +559,23 @@ function StorageConfigSection({
             <VStack gap={1.5}>
               <Checkbox
                 checked={accessModes.singleNodeReadWrite}
-                onChange={(e) => onAccessModesChange({ ...accessModes, singleNodeReadWrite: e.target.checked })}
+                onChange={(e) =>
+                  onAccessModesChange({ ...accessModes, singleNodeReadWrite: e.target.checked })
+                }
                 label="Single Node Read-Write"
               />
               <Checkbox
                 checked={accessModes.manyNodesReadOnly}
-                onChange={(e) => onAccessModesChange({ ...accessModes, manyNodesReadOnly: e.target.checked })}
+                onChange={(e) =>
+                  onAccessModesChange({ ...accessModes, manyNodesReadOnly: e.target.checked })
+                }
                 label="Many Nodes Read-Only"
               />
               <Checkbox
                 checked={accessModes.manyNodesReadWrite}
-                onChange={(e) => onAccessModesChange({ ...accessModes, manyNodesReadWrite: e.target.checked })}
+                onChange={(e) =>
+                  onAccessModesChange({ ...accessModes, manyNodesReadWrite: e.target.checked })
+                }
                 label="Many Nodes Read-Write"
               />
             </VStack>
@@ -643,7 +658,7 @@ function LabelsAnnotationsSection({
                 Specify the labels used to identify and categorize the resource.
               </p>
             </VStack>
-            
+
             {labels.map((label, index) => (
               <HStack gap={2} key={index} className="w-full">
                 <Input
@@ -687,7 +702,7 @@ function LabelsAnnotationsSection({
                 Specify the annotations used to provide additional metadata for the resource.
               </p>
             </VStack>
-            
+
             {annotations.map((annotation, index) => (
               <HStack gap={2} key={index} className="w-full">
                 <Input
@@ -779,7 +794,8 @@ export function CreatePersistentVolumeClaimPage() {
   const [pvcNameError, setNamespaceNameError] = useState<string | null>(null);
 
   // Tab management
-  const { tabs, activeTabId, closeTab, selectTab, updateActiveTabLabel, moveTab, addNewTab } = useTabs();
+  const { tabs, activeTabId, closeTab, selectTab, updateActiveTabLabel, moveTab, addNewTab } =
+    useTabs();
 
   // Update tab label
   useEffect(() => {
@@ -949,30 +965,42 @@ export function CreatePersistentVolumeClaimPage() {
     setLabels([...labels, { key: '', value: '' }]);
   }, [labels]);
 
-  const removeLabel = useCallback((index: number) => {
-    setLabels(labels.filter((_, i) => i !== index));
-  }, [labels]);
+  const removeLabel = useCallback(
+    (index: number) => {
+      setLabels(labels.filter((_, i) => i !== index));
+    },
+    [labels]
+  );
 
-  const updateLabel = useCallback((index: number, field: 'key' | 'value', value: string) => {
-    const newLabels = [...labels];
-    newLabels[index][field] = value;
-    setLabels(newLabels);
-  }, [labels]);
+  const updateLabel = useCallback(
+    (index: number, field: 'key' | 'value', value: string) => {
+      const newLabels = [...labels];
+      newLabels[index][field] = value;
+      setLabels(newLabels);
+    },
+    [labels]
+  );
 
   // Annotation management
   const addAnnotation = useCallback(() => {
     setAnnotations([...annotations, { key: '', value: '' }]);
   }, [annotations]);
 
-  const removeAnnotation = useCallback((index: number) => {
-    setAnnotations(annotations.filter((_, i) => i !== index));
-  }, [annotations]);
+  const removeAnnotation = useCallback(
+    (index: number) => {
+      setAnnotations(annotations.filter((_, i) => i !== index));
+    },
+    [annotations]
+  );
 
-  const updateAnnotation = useCallback((index: number, field: 'key' | 'value', value: string) => {
-    const newAnnotations = [...annotations];
-    newAnnotations[index][field] = value;
-    setAnnotations(newAnnotations);
-  }, [annotations]);
+  const updateAnnotation = useCallback(
+    (index: number, field: 'key' | 'value', value: string) => {
+      const newAnnotations = [...annotations];
+      newAnnotations[index][field] = value;
+      setAnnotations(newAnnotations);
+    },
+    [annotations]
+  );
 
   // Check if create button should be disabled
   const isCreateDisabled = !pvcName.trim();
@@ -1127,15 +1155,18 @@ export function CreatePersistentVolumeClaimPage() {
                       title={SECTION_LABELS['volume-claim']}
                       onEdit={() => handleEdit('volume-claim')}
                     >
-                      <SectionCard.DataRow 
-                        label="Source" 
-                        value={sourceType === 'storage-class' ? 'Storage Class' : 'Existing PV'} 
-                        showDivider={false} 
+                      <SectionCard.DataRow
+                        label="Source"
+                        value={sourceType === 'storage-class' ? 'Storage Class' : 'Existing PV'}
+                        showDivider={false}
                       />
                       {sourceType === 'storage-class' && (
                         <SectionCard.DataRow label="Storage Class" value={storageClass} />
                       )}
-                      <SectionCard.DataRow label="Request Storage" value={`${requestStorage} ${storageUnit}`} />
+                      <SectionCard.DataRow
+                        label="Request Storage"
+                        value={`${requestStorage} ${storageUnit}`}
+                      />
                     </DoneSection>
                   )}
 
@@ -1161,7 +1192,11 @@ export function CreatePersistentVolumeClaimPage() {
                       title={SECTION_LABELS['storage-config']}
                       onEdit={() => handleEdit('storage-config')}
                     >
-                      <SectionCard.DataRow label="Access Modes" value={getAccessModesDisplay()} showDivider={false} />
+                      <SectionCard.DataRow
+                        label="Access Modes"
+                        value={getAccessModesDisplay()}
+                        showDivider={false}
+                      />
                     </DoneSection>
                   )}
 
@@ -1193,7 +1228,11 @@ export function CreatePersistentVolumeClaimPage() {
                       title={SECTION_LABELS['labels-annotations']}
                       onEdit={() => handleEdit('labels-annotations')}
                     >
-                      <SectionCard.DataRow label="Labels" value={getLabelsDisplay()} showDivider={false} />
+                      <SectionCard.DataRow
+                        label="Labels"
+                        value={getLabelsDisplay()}
+                        showDivider={false}
+                      />
                       <SectionCard.DataRow label="Annotations" value={getAnnotationsDisplay()} />
                     </DoneSection>
                   )}

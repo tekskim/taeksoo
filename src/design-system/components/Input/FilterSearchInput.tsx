@@ -1,4 +1,12 @@
-import { forwardRef, useState, useCallback, useRef, useEffect, type InputHTMLAttributes, type KeyboardEvent } from 'react';
+import {
+  forwardRef,
+  useState,
+  useCallback,
+  useRef,
+  useEffect,
+  type InputHTMLAttributes,
+  type KeyboardEvent,
+} from 'react';
 import { twMerge } from 'tailwind-merge';
 import { IconSearch } from '@tabler/icons-react';
 import { Chip } from '../Chip';
@@ -40,8 +48,10 @@ export interface AppliedFilter {
   valueLabel?: string;
 }
 
-export interface FilterSearchInputProps
-  extends Omit<InputHTMLAttributes<HTMLInputElement>, 'size' | 'type' | 'onChange' | 'value'> {
+export interface FilterSearchInputProps extends Omit<
+  InputHTMLAttributes<HTMLInputElement>,
+  'size' | 'type' | 'onChange' | 'value'
+> {
   /** Input size */
   size?: FilterSearchInputSize;
   /** Available filter fields */
@@ -88,13 +98,13 @@ interface FilterDropdownProps {
   isOpen: boolean;
 }
 
-function FilterDropdown({ 
-  filters, 
-  onFilterSelect, 
-  selectedFilter, 
+function FilterDropdown({
+  filters,
+  onFilterSelect,
+  selectedFilter,
   onOptionSelect,
   onBack,
-  isOpen 
+  isOpen,
 }: FilterDropdownProps) {
   if (!isOpen) return null;
 
@@ -179,7 +189,7 @@ export const FilterSearchInput = forwardRef<HTMLInputElement, FilterSearchInputP
   ) => {
     const containerRef = useRef<HTMLDivElement>(null);
     const inputRef = useRef<HTMLInputElement>(null);
-    
+
     // State
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const [selectedFilter, setSelectedFilter] = useState<FilterField | null>(null);
@@ -223,66 +233,75 @@ export const FilterSearchInput = forwardRef<HTMLInputElement, FilterSearchInputP
     }, []);
 
     // Handle option selection (for select type filters)
-    const handleOptionSelect = useCallback((option: { value: string; label: string }) => {
-      if (!selectedFilter) return;
+    const handleOptionSelect = useCallback(
+      (option: { value: string; label: string }) => {
+        if (!selectedFilter) return;
 
-      const newFilter: AppliedFilter = {
-        id: `${selectedFilter.id}-${Date.now()}`,
-        fieldId: selectedFilter.id,
-        fieldLabel: selectedFilter.label,
-        value: option.value,
-        valueLabel: option.label,
-      };
+        const newFilter: AppliedFilter = {
+          id: `${selectedFilter.id}-${Date.now()}`,
+          fieldId: selectedFilter.id,
+          fieldLabel: selectedFilter.label,
+          value: option.value,
+          valueLabel: option.label,
+        };
 
-      const newFilters = [...appliedFilters, newFilter];
-      onFiltersChange?.(newFilters);
-      
-      // Reset state
-      setSelectedFilter(null);
-      setInputValue('');
-      setIsDropdownOpen(false);
-    }, [selectedFilter, appliedFilters, onFiltersChange]);
+        const newFilters = [...appliedFilters, newFilter];
+        onFiltersChange?.(newFilters);
 
-    // Handle text input submission
-    const handleKeyDown = useCallback((e: KeyboardEvent<HTMLInputElement>) => {
-      if (e.key === 'Enter' && inputValue.trim()) {
-        if (selectedFilter && selectedFilter.type === 'text') {
-          // Submit filter
-          const newFilter: AppliedFilter = {
-            id: `${selectedFilter.id}-${Date.now()}`,
-            fieldId: selectedFilter.id,
-            fieldLabel: selectedFilter.label,
-            value: inputValue.trim(),
-          };
-
-          const newFilters = [...appliedFilters, newFilter];
-          onFiltersChange?.(newFilters);
-          
-          // Reset state
-          setSelectedFilter(null);
-          setInputValue('');
-          setIsDropdownOpen(false);
-        } else if (!selectedFilter) {
-          // Regular search
-          onSearchChange?.(inputValue.trim());
-        }
-      } else if (e.key === 'Escape') {
-        setIsDropdownOpen(false);
+        // Reset state
         setSelectedFilter(null);
         setInputValue('');
-      } else if (e.key === 'Backspace' && inputValue === '' && selectedFilter) {
-        // Go back to filter list
-        setSelectedFilter(null);
-      }
-    }, [inputValue, selectedFilter, appliedFilters, onFiltersChange, onSearchChange]);
+        setIsDropdownOpen(false);
+      },
+      [selectedFilter, appliedFilters, onFiltersChange]
+    );
+
+    // Handle text input submission
+    const handleKeyDown = useCallback(
+      (e: KeyboardEvent<HTMLInputElement>) => {
+        if (e.key === 'Enter' && inputValue.trim()) {
+          if (selectedFilter && selectedFilter.type === 'text') {
+            // Submit filter
+            const newFilter: AppliedFilter = {
+              id: `${selectedFilter.id}-${Date.now()}`,
+              fieldId: selectedFilter.id,
+              fieldLabel: selectedFilter.label,
+              value: inputValue.trim(),
+            };
+
+            const newFilters = [...appliedFilters, newFilter];
+            onFiltersChange?.(newFilters);
+
+            // Reset state
+            setSelectedFilter(null);
+            setInputValue('');
+            setIsDropdownOpen(false);
+          } else if (!selectedFilter) {
+            // Regular search
+            onSearchChange?.(inputValue.trim());
+          }
+        } else if (e.key === 'Escape') {
+          setIsDropdownOpen(false);
+          setSelectedFilter(null);
+          setInputValue('');
+        } else if (e.key === 'Backspace' && inputValue === '' && selectedFilter) {
+          // Go back to filter list
+          setSelectedFilter(null);
+        }
+      },
+      [inputValue, selectedFilter, appliedFilters, onFiltersChange, onSearchChange]
+    );
 
     // Handle input change
-    const handleInputChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-      setInputValue(e.target.value);
-      if (!selectedFilter && filters.length === 0) {
-        onSearchChange?.(e.target.value);
-      }
-    }, [selectedFilter, filters.length, onSearchChange]);
+    const handleInputChange = useCallback(
+      (e: React.ChangeEvent<HTMLInputElement>) => {
+        setInputValue(e.target.value);
+        if (!selectedFilter && filters.length === 0) {
+          onSearchChange?.(e.target.value);
+        }
+      },
+      [selectedFilter, filters.length, onSearchChange]
+    );
 
     // Handle back button in dropdown
     const handleBack = useCallback(() => {
@@ -290,11 +309,14 @@ export const FilterSearchInput = forwardRef<HTMLInputElement, FilterSearchInputP
     }, []);
 
     // Handle filter removal
-    const handleFilterRemove = useCallback((filterId: string) => {
-      onFilterRemove?.(filterId);
-      const newFilters = appliedFilters.filter(f => f.id !== filterId);
-      onFiltersChange?.(newFilters);
-    }, [appliedFilters, onFilterRemove, onFiltersChange]);
+    const handleFilterRemove = useCallback(
+      (filterId: string) => {
+        onFilterRemove?.(filterId);
+        const newFilters = appliedFilters.filter((f) => f.id !== filterId);
+        onFiltersChange?.(newFilters);
+      },
+      [appliedFilters, onFilterRemove, onFiltersChange]
+    );
 
     // Handle clear all filters
     const handleClearFilters = useCallback(() => {
@@ -315,7 +337,9 @@ export const FilterSearchInput = forwardRef<HTMLInputElement, FilterSearchInputP
       if (selectedFilter) {
         return (
           <span className="flex items-center gap-1 px-2 py-0.5 bg-[var(--color-surface-subtle)] rounded text-[11px] mr-1">
-            <span className="font-medium text-[var(--color-text-default)]">{selectedFilter.label}</span>
+            <span className="font-medium text-[var(--color-text-default)]">
+              {selectedFilter.label}
+            </span>
             <span className="text-[var(--color-border-strong)]">|</span>
           </span>
         );
@@ -331,7 +355,7 @@ export const FilterSearchInput = forwardRef<HTMLInputElement, FilterSearchInputP
 
     const wrapperClasses = twMerge(
       'flex flex-col gap-2',
-      fullWidth || !hasWidthClass ? 'w-full' : widthClasses.join(' '),
+      fullWidth || !hasWidthClass ? 'w-full' : widthClasses.join(' ')
     );
 
     const inputContainerClasses = twMerge(
@@ -344,7 +368,8 @@ export const FilterSearchInput = forwardRef<HTMLInputElement, FilterSearchInputP
       'border-[var(--input-border)]',
       'rounded-[var(--input-radius)]',
       'transition-all duration-[var(--duration-fast)]',
-      isFocused && 'border-[var(--input-border-focus)] shadow-[0_0_0_1px_var(--input-border-focus)]',
+      isFocused &&
+        'border-[var(--input-border-focus)] shadow-[0_0_0_1px_var(--input-border-focus)]',
       disabled && 'bg-[var(--input-bg-disabled)] cursor-not-allowed',
       sizes[size],
       inputClassName
@@ -357,7 +382,7 @@ export const FilterSearchInput = forwardRef<HTMLInputElement, FilterSearchInputP
           <div className={inputContainerClasses}>
             {/* Filter prefix (when filter is selected) */}
             {getInputPrefix()}
-            
+
             {/* Input field */}
             <input
               ref={(node) => {
@@ -435,4 +460,3 @@ export const FilterSearchInput = forwardRef<HTMLInputElement, FilterSearchInputP
 FilterSearchInput.displayName = 'FilterSearchInput';
 
 export default FilterSearchInput;
-

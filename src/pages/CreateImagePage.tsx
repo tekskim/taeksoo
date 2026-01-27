@@ -18,7 +18,6 @@ import {
   Tabs,
   TabList,
   Tab,
-  TabPanel,
   Disclosure,
   DisclosureTrigger,
   DisclosurePanel,
@@ -26,11 +25,7 @@ import {
 import type { WizardSummaryItem, WizardSectionState } from '@/design-system';
 import { Sidebar } from '@/components/Sidebar';
 import { useTabs } from '@/contexts/TabContext';
-import {
-  IconBell,
-  IconEdit,
-  IconUpload,
-} from '@tabler/icons-react';
+import { IconBell, IconEdit, IconUpload } from '@tabler/icons-react';
 
 /* ----------------------------------------
    Types
@@ -47,13 +42,7 @@ const SECTION_LABELS: Record<SectionStep, string> = {
 };
 
 // Section order for navigation
-const SECTION_ORDER: SectionStep[] = [
-  'basic-info',
-  'source',
-  'specification',
-  'advanced',
-];
-
+const SECTION_ORDER: SectionStep[] = ['basic-info', 'source', 'specification', 'advanced'];
 
 /* ----------------------------------------
    Summary Sidebar Component
@@ -66,7 +55,12 @@ interface SummarySidebarProps {
   isCreateDisabled: boolean;
 }
 
-function SummarySidebar({ sectionStatus, onCancel, onCreate, isCreateDisabled }: SummarySidebarProps) {
+function SummarySidebar({
+  sectionStatus,
+  onCancel,
+  onCreate,
+  isCreateDisabled,
+}: SummarySidebarProps) {
   const summaryItems: WizardSummaryItem[] = SECTION_ORDER.map((key) => ({
     key,
     label: SECTION_LABELS[key],
@@ -77,15 +71,15 @@ function SummarySidebar({ sectionStatus, onCancel, onCreate, isCreateDisabled }:
     <div className="w-[var(--wizard-summary-width)] shrink-0 sticky top-4 self-start">
       <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg p-4 flex flex-col gap-6">
         <WizardSummary items={summaryItems} />
-        
+
         {/* Action Buttons */}
         <div className="flex flex-col w-full">
           <div className="flex gap-2 items-center justify-end w-full">
             <Button variant="secondary" onClick={onCancel}>
               Cancel
             </Button>
-            <Button 
-              variant="primary" 
+            <Button
+              variant="primary"
               onClick={onCreate}
               disabled={isCreateDisabled}
               className="flex-1"
@@ -111,7 +105,7 @@ export function CreateImagePage() {
   const [imageName, setImageName] = useState('');
   const [description, setDescription] = useState('');
   const [isProtected, setIsProtected] = useState(false);
-  
+
   // Source section state
   const [sourceType, setSourceType] = useState<'file' | 'url'>('file');
   const [sourceUrl, setSourceUrl] = useState('');
@@ -152,10 +146,7 @@ export function CreateImagePage() {
     closable: tab.closable,
   }));
 
-  const breadcrumbItems = [
-    { label: 'Images', href: '/compute/images' },
-    { label: 'Create image' },
-  ];
+  const breadcrumbItems = [{ label: 'Images', href: '/compute/images' }, { label: 'Create image' }];
 
   // Navigation handlers
   const handleCancel = () => {
@@ -186,7 +177,7 @@ export function CreateImagePage() {
   const goToNextSection = useCallback((currentSection: SectionStep) => {
     const currentIndex = SECTION_ORDER.indexOf(currentSection);
     const nextSection = SECTION_ORDER[currentIndex + 1];
-    
+
     if (nextSection) {
       setSectionStatus((prev) => ({
         ...prev,
@@ -265,7 +256,7 @@ export function CreateImagePage() {
                   <VStack gap={4} align="stretch">
                     {/* Basic information Section */}
                     <SectionCard isActive={sectionStatus['basic-info'] === 'active'}>
-                      <SectionCard.Header 
+                      <SectionCard.Header
                         title={SECTION_LABELS['basic-info']}
                         showDivider={sectionStatus['basic-info'] === 'active'}
                         actions={
@@ -286,30 +277,32 @@ export function CreateImagePage() {
                           <FormField required>
                             <FormField.Label>Image name</FormField.Label>
                             <FormField.Control>
-                              <Input 
-                                value={imageName} 
+                              <Input
+                                value={imageName}
                                 onChange={(e) => setImageName(e.target.value)}
                                 placeholder="Enter image name"
-                                fullWidth 
+                                fullWidth
                               />
                             </FormField.Control>
                             <FormField.HelperText>
-                              You can use letters, numbers, and special characters (+=,.@-_), and the length must be between 2-128 characters.
+                              You can use letters, numbers, and special characters (+=,.@-_), and
+                              the length must be between 2-128 characters.
                             </FormField.HelperText>
                           </FormField>
 
                           <FormField>
                             <FormField.Label>Description</FormField.Label>
                             <FormField.Control>
-                              <Input 
-                                value={description} 
+                              <Input
+                                value={description}
                                 onChange={(e) => setDescription(e.target.value)}
                                 placeholder="Enter description"
-                                fullWidth 
+                                fullWidth
                               />
                             </FormField.Control>
                             <FormField.HelperText>
-                              You can use letters, numbers, and special characters (+=,.@-_()[]), and maximum 255 characters.
+                              You can use letters, numbers, and special characters (+=,.@-_()[]),
+                              and maximum 255 characters.
                             </FormField.HelperText>
                           </FormField>
 
@@ -323,10 +316,7 @@ export function CreateImagePage() {
                               </span>
                             </div>
                             <HStack gap={2} align="center">
-                              <Toggle 
-                                checked={isProtected} 
-                                onChange={setIsProtected}
-                              />
+                              <Toggle checked={isProtected} onChange={setIsProtected} />
                               <span className="text-[12px] text-[var(--color-text-default)]">
                                 {isProtected ? 'Yes' : 'No'}
                               </span>
@@ -334,8 +324,8 @@ export function CreateImagePage() {
                           </div>
 
                           <div className="flex items-center justify-end w-full">
-                            <Button 
-                              variant="primary" 
+                            <Button
+                              variant="primary"
                               onClick={() => goToNextSection('basic-info')}
                               disabled={!imageName.trim()}
                             >
@@ -346,16 +336,28 @@ export function CreateImagePage() {
                       )}
                       {sectionStatus['basic-info'] === 'done' && (
                         <SectionCard.Content>
-                          <SectionCard.DataRow label="Image name" value={imageName || '-'} showDivider />
-                          <SectionCard.DataRow label="Description" value={description || '-'} showDivider />
-                          <SectionCard.DataRow label="Protected" value={isProtected ? 'Yes' : 'No'} showDivider />
+                          <SectionCard.DataRow
+                            label="Image name"
+                            value={imageName || '-'}
+                            showDivider
+                          />
+                          <SectionCard.DataRow
+                            label="Description"
+                            value={description || '-'}
+                            showDivider
+                          />
+                          <SectionCard.DataRow
+                            label="Protected"
+                            value={isProtected ? 'Yes' : 'No'}
+                            showDivider
+                          />
                         </SectionCard.Content>
                       )}
                     </SectionCard>
 
                     {/* Source Section */}
                     <SectionCard isActive={sectionStatus['source'] === 'active'}>
-                      <SectionCard.Header 
+                      <SectionCard.Header
                         title={SECTION_LABELS['source']}
                         showDivider={sectionStatus['source'] === 'active'}
                         actions={
@@ -388,10 +390,10 @@ export function CreateImagePage() {
 
                           {/* Upload type Tabs */}
                           <div className="flex flex-col gap-3 w-full">
-                            <Tabs 
-                              value={sourceType} 
-                              onChange={(value) => setSourceType(value as 'file' | 'url')} 
-                              variant="underline" 
+                            <Tabs
+                              value={sourceType}
+                              onChange={(value) => setSourceType(value as 'file' | 'url')}
+                              variant="underline"
                               size="sm"
                             >
                               <TabList>
@@ -419,11 +421,11 @@ export function CreateImagePage() {
                             {/* File URL */}
                             {sourceType === 'url' && (
                               <VStack gap={3} align="stretch">
-                                <Input 
-                                  value={sourceUrl} 
+                                <Input
+                                  value={sourceUrl}
                                   onChange={(e) => setSourceUrl(e.target.value)}
                                   placeholder="e.g. https://example.com/image.qcow2"
-                                  fullWidth 
+                                  fullWidth
                                 />
                                 <span className="text-[11px] font-normal leading-[var(--line-height-16)] text-[var(--color-text-subtle)]">
                                   The URL must start with http:// or https://.
@@ -436,8 +438,8 @@ export function CreateImagePage() {
                           <div className="w-full h-px bg-[var(--color-border-subtle)]" />
 
                           <div className="flex items-center justify-end w-full">
-                            <Button 
-                              variant="primary" 
+                            <Button
+                              variant="primary"
                               onClick={() => goToNextSection('source')}
                               disabled={sourceType === 'url' && !sourceUrl.trim()}
                             >
@@ -448,10 +450,10 @@ export function CreateImagePage() {
                       )}
                       {sectionStatus['source'] === 'done' && (
                         <SectionCard.Content>
-                          <SectionCard.DataRow 
-                            label="Upload type" 
-                            value={sourceType === 'file' ? 'Upload File' : 'File URL'} 
-                            showDivider 
+                          <SectionCard.DataRow
+                            label="Upload type"
+                            value={sourceType === 'file' ? 'Upload File' : 'File URL'}
+                            showDivider
                           />
                           {sourceType === 'url' && (
                             <SectionCard.DataRow label="URL" value={sourceUrl || '-'} showDivider />
@@ -462,13 +464,15 @@ export function CreateImagePage() {
 
                     {/* Specification Section */}
                     <SectionCard isActive={sectionStatus['specification'] === 'active'}>
-                      <SectionCard.Header 
+                      <SectionCard.Header
                         title={SECTION_LABELS['specification']}
                         showDivider={sectionStatus['specification'] === 'active'}
                         actions={
                           sectionStatus['specification'] === 'done' && (
                             <HStack gap={3} align="center">
-                              <span className="text-[12px] text-[var(--color-text-subtle)]">Auto-filled</span>
+                              <span className="text-[12px] text-[var(--color-text-subtle)]">
+                                Auto-filled
+                              </span>
                               <Button
                                 variant="secondary"
                                 size="sm"
@@ -487,7 +491,8 @@ export function CreateImagePage() {
                           <FormField required>
                             <FormField.Label>Disk format</FormField.Label>
                             <FormField.HelperText>
-                              Select the disk format for the image. It must match the actual type of the uploaded file.
+                              Select the disk format for the image. It must match the actual type of
+                              the uploaded file.
                             </FormField.HelperText>
                             <FormField.Control>
                               <Select
@@ -539,11 +544,11 @@ export function CreateImagePage() {
                               This metadata helps categorize image.
                             </FormField.HelperText>
                             <FormField.Control>
-                              <Input 
-                                value={osVersion} 
+                              <Input
+                                value={osVersion}
                                 onChange={(e) => setOsVersion(e.target.value)}
                                 placeholder="e.g. 22.04, 8, 2019"
-                                fullWidth 
+                                fullWidth
                               />
                             </FormField.Control>
                           </FormField>
@@ -552,23 +557,21 @@ export function CreateImagePage() {
                           <FormField required>
                             <FormField.Label>OS admin</FormField.Label>
                             <FormField.HelperText>
-                              Enter the default administrator account used when launching instances from this image.
+                              Enter the default administrator account used when launching instances
+                              from this image.
                             </FormField.HelperText>
                             <FormField.Control>
-                              <Input 
-                                value={osAdmin} 
+                              <Input
+                                value={osAdmin}
                                 onChange={(e) => setOsAdmin(e.target.value)}
                                 placeholder="e.g. ubuntu(ubuntu), administrator(windows)"
-                                fullWidth 
+                                fullWidth
                               />
                             </FormField.Control>
                           </FormField>
 
                           {/* Advanced Section */}
-                          <Disclosure 
-                            open={specAdvancedOpen} 
-                            onChange={setSpecAdvancedOpen}
-                          >
+                          <Disclosure open={specAdvancedOpen} onChange={setSpecAdvancedOpen}>
                             <DisclosureTrigger>Advanced</DisclosureTrigger>
                             <DisclosurePanel>
                               <VStack gap={4} align="stretch" className="pt-3">
@@ -578,17 +581,20 @@ export function CreateImagePage() {
                                     Min system disk
                                   </span>
                                   <span className="text-[12px] font-normal leading-[var(--line-height-16)] text-[var(--color-text-subtle)]">
-                                    Defines the minimum disk size required to boot an instance from this image.
+                                    Defines the minimum disk size required to boot an instance from
+                                    this image.
                                   </span>
                                   <HStack gap={2} align="center">
-                                    <NumberInput 
+                                    <NumberInput
                                       value={minDisk}
                                       onChange={setMinDisk}
                                       min={0}
                                       max={500}
                                       className="w-[80px]"
                                     />
-                                    <span className="text-[12px] text-[var(--color-text-default)]">GiB</span>
+                                    <span className="text-[12px] text-[var(--color-text-default)]">
+                                      GiB
+                                    </span>
                                   </HStack>
                                   <span className="text-[11px] font-normal leading-[var(--line-height-16)] text-[var(--color-text-subtle)]">
                                     0-500 GiB
@@ -601,17 +607,20 @@ export function CreateImagePage() {
                                     Min RAM
                                   </span>
                                   <span className="text-[12px] font-normal leading-[var(--line-height-16)] text-[var(--color-text-subtle)]">
-                                    Defines the minimum amount of RAM required to boot an instance from this image.
+                                    Defines the minimum amount of RAM required to boot an instance
+                                    from this image.
                                   </span>
                                   <HStack gap={2} align="center">
-                                    <NumberInput 
+                                    <NumberInput
                                       value={minRam}
                                       onChange={setMinRam}
                                       min={0}
                                       max={500}
                                       className="w-[80px]"
                                     />
-                                    <span className="text-[12px] text-[var(--color-text-default)]">GiB</span>
+                                    <span className="text-[12px] text-[var(--color-text-default)]">
+                                      GiB
+                                    </span>
                                   </HStack>
                                   <span className="text-[11px] font-normal leading-[var(--line-height-16)] text-[var(--color-text-subtle)]">
                                     0-500 GiB
@@ -622,8 +631,8 @@ export function CreateImagePage() {
                           </Disclosure>
 
                           <div className="flex items-center justify-end w-full">
-                            <Button 
-                              variant="primary" 
+                            <Button
+                              variant="primary"
                               onClick={() => goToNextSection('specification')}
                               disabled={!diskFormat || !os || !osVersion.trim() || !osAdmin.trim()}
                             >
@@ -634,19 +643,31 @@ export function CreateImagePage() {
                       )}
                       {sectionStatus['specification'] === 'done' && (
                         <SectionCard.Content>
-                          <SectionCard.DataRow label="Disk format" value={diskFormat.toUpperCase()} showDivider />
-                          <SectionCard.DataRow label="OS" value={os || '-'} showDivider />
-                          <SectionCard.DataRow label="OS Version" value={osVersion || '-'} showDivider />
-                          <SectionCard.DataRow label="OS Admin" value={osAdmin || '-'} showDivider />
-                          <SectionCard.DataRow 
-                            label="Min system Disk" 
-                            value={minDisk !== undefined ? `${minDisk} GiB` : '-'} 
-                            showDivider 
+                          <SectionCard.DataRow
+                            label="Disk format"
+                            value={diskFormat.toUpperCase()}
+                            showDivider
                           />
-                          <SectionCard.DataRow 
-                            label="Min RAM" 
-                            value={minRam !== undefined ? `${minRam} GiB` : '-'} 
-                            showDivider 
+                          <SectionCard.DataRow label="OS" value={os || '-'} showDivider />
+                          <SectionCard.DataRow
+                            label="OS Version"
+                            value={osVersion || '-'}
+                            showDivider
+                          />
+                          <SectionCard.DataRow
+                            label="OS Admin"
+                            value={osAdmin || '-'}
+                            showDivider
+                          />
+                          <SectionCard.DataRow
+                            label="Min system Disk"
+                            value={minDisk !== undefined ? `${minDisk} GiB` : '-'}
+                            showDivider
+                          />
+                          <SectionCard.DataRow
+                            label="Min RAM"
+                            value={minRam !== undefined ? `${minRam} GiB` : '-'}
+                            showDivider
                           />
                         </SectionCard.Content>
                       )}
@@ -654,13 +675,15 @@ export function CreateImagePage() {
 
                     {/* Advanced Section */}
                     <SectionCard isActive={sectionStatus['advanced'] === 'active'}>
-                      <SectionCard.Header 
+                      <SectionCard.Header
                         title={SECTION_LABELS['advanced']}
                         showDivider={sectionStatus['advanced'] === 'active'}
                         actions={
                           sectionStatus['advanced'] === 'done' && (
                             <HStack gap={3} align="center">
-                              <span className="text-[12px] text-[var(--color-text-subtle)]">Auto-filled</span>
+                              <span className="text-[12px] text-[var(--color-text-subtle)]">
+                                Auto-filled
+                              </span>
                               <Button
                                 variant="secondary"
                                 size="sm"
@@ -682,14 +705,12 @@ export function CreateImagePage() {
                                 QEMU guest agent
                               </span>
                               <span className="text-[12px] font-normal leading-[var(--line-height-16)] text-[var(--color-text-subtle)]">
-                                Enables communication and status retrieval between the hypervisor and the instance.
+                                Enables communication and status retrieval between the hypervisor
+                                and the instance.
                               </span>
                             </div>
                             <HStack gap={2} align="center">
-                              <Toggle 
-                                checked={qemuGuestAgent} 
-                                onChange={setQemuGuestAgent}
-                              />
+                              <Toggle checked={qemuGuestAgent} onChange={setQemuGuestAgent} />
                               <span className="text-[12px] text-[var(--color-text-default)]">
                                 {qemuGuestAgent ? 'On' : 'Off'}
                               </span>
@@ -739,8 +760,8 @@ export function CreateImagePage() {
 
                           {/* Action Buttons */}
                           <div className="flex items-center justify-end gap-2 w-full">
-                            <Button 
-                              variant="secondary" 
+                            <Button
+                              variant="secondary"
                               onClick={() => {
                                 // Reset to default values
                                 setQemuGuestAgent(true);
@@ -750,8 +771,8 @@ export function CreateImagePage() {
                             >
                               Cancel
                             </Button>
-                            <Button 
-                              variant="primary" 
+                            <Button
+                              variant="primary"
                               onClick={() => {
                                 setSectionStatus((prev) => ({
                                   ...prev,
@@ -766,20 +787,28 @@ export function CreateImagePage() {
                       )}
                       {sectionStatus['advanced'] === 'done' && (
                         <SectionCard.Content>
-                          <SectionCard.DataRow 
-                            label="QEMU Guest Agent" 
-                            value={qemuGuestAgent ? 'On' : 'Off'} 
-                            showDivider 
+                          <SectionCard.DataRow
+                            label="QEMU Guest Agent"
+                            value={qemuGuestAgent ? 'On' : 'Off'}
+                            showDivider
                           />
-                          <SectionCard.DataRow 
-                            label="CPU Policy" 
-                            value={cpuPolicy === 'none' ? 'None' : cpuPolicy.charAt(0).toUpperCase() + cpuPolicy.slice(1)} 
-                            showDivider 
+                          <SectionCard.DataRow
+                            label="CPU Policy"
+                            value={
+                              cpuPolicy === 'none'
+                                ? 'None'
+                                : cpuPolicy.charAt(0).toUpperCase() + cpuPolicy.slice(1)
+                            }
+                            showDivider
                           />
-                          <SectionCard.DataRow 
-                            label="CPU Thread Policy" 
-                            value={cpuThreadPolicy === 'none' ? 'None' : cpuThreadPolicy.charAt(0).toUpperCase() + cpuThreadPolicy.slice(1)} 
-                            showDivider 
+                          <SectionCard.DataRow
+                            label="CPU Thread Policy"
+                            value={
+                              cpuThreadPolicy === 'none'
+                                ? 'None'
+                                : cpuThreadPolicy.charAt(0).toUpperCase() + cpuThreadPolicy.slice(1)
+                            }
+                            showDivider
                           />
                         </SectionCard.Content>
                       )}
@@ -788,7 +817,7 @@ export function CreateImagePage() {
                 </div>
 
                 {/* Right Column - Summary Sidebar */}
-                <SummarySidebar 
+                <SummarySidebar
                   sectionStatus={sectionStatus}
                   onCancel={handleCancel}
                   onCreate={handleCreate}

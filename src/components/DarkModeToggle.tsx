@@ -11,7 +11,11 @@ interface DarkModeToggleProps {
   scrollContainerRef?: React.RefObject<HTMLElement>;
 }
 
-export function DarkModeToggle({ showLabel = false, size = 'md', scrollContainerRef }: DarkModeToggleProps) {
+export function DarkModeToggle({
+  showLabel = false,
+  size = 'md',
+  scrollContainerRef,
+}: DarkModeToggleProps) {
   const { theme, setTheme } = useDarkMode();
   const [isScrolled, setIsScrolled] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -45,7 +49,10 @@ export function DarkModeToggle({ showLabel = false, size = 'md', scrollContainer
   return (
     <>
       {/* 기본 위치의 토글 */}
-      <div ref={containerRef} className="flex items-center gap-1 p-1 rounded-lg bg-[var(--color-surface-subtle)]">
+      <div
+        ref={containerRef}
+        className="flex items-center gap-1 p-1 rounded-lg bg-[var(--color-surface-subtle)]"
+      >
         {themes.map((t) => (
           <Button
             key={t.value}
@@ -109,6 +116,3 @@ export function DarkModeToggleButton({ size = 'md' }: { size?: 'sm' | 'md' | 'lg
     </button>
   );
 }
-
-
-

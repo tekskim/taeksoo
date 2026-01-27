@@ -135,45 +135,43 @@ function CreateHPADropdown({ onCreateForm, onCreateYaml }: CreateHPADropdownProp
       >
         Create Horizontal Pod Autoscaler
       </Button>
-      
-      {isOpen && createPortal(
-        <>
-          {/* Backdrop */}
-          <div 
-            className="fixed inset-0 z-[99]" 
-            onClick={() => setIsOpen(false)}
-          />
-          {/* Dropdown */}
-          <div
-            ref={dropdownRef}
-            className="fixed z-[100] bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg shadow-lg py-1 min-w-[140px]"
-            style={{
-              top: getDropdownPosition().top,
-              right: getDropdownPosition().right,
-            }}
-          >
-            <button
-              className="w-full px-3 py-2 text-left text-[12px] text-[var(--color-text-default)] hover:bg-[var(--color-surface-subtle)] transition-colors"
-              onClick={() => {
-                setIsOpen(false);
-                onCreateForm();
+
+      {isOpen &&
+        createPortal(
+          <>
+            {/* Backdrop */}
+            <div className="fixed inset-0 z-[99]" onClick={() => setIsOpen(false)} />
+            {/* Dropdown */}
+            <div
+              ref={dropdownRef}
+              className="fixed z-[100] bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg shadow-lg py-1 min-w-[140px]"
+              style={{
+                top: getDropdownPosition().top,
+                right: getDropdownPosition().right,
               }}
             >
-              Create as Form
-            </button>
-            <button
-              className="w-full px-3 py-2 text-left text-[12px] text-[var(--color-text-default)] hover:bg-[var(--color-surface-subtle)] transition-colors"
-              onClick={() => {
-                setIsOpen(false);
-                onCreateYaml();
-              }}
-            >
-              Create as YAML
-            </button>
-          </div>
-        </>,
-        document.body
-      )}
+              <button
+                className="w-full px-3 py-2 text-left text-[12px] text-[var(--color-text-default)] hover:bg-[var(--color-surface-subtle)] transition-colors"
+                onClick={() => {
+                  setIsOpen(false);
+                  onCreateForm();
+                }}
+              >
+                Create as Form
+              </button>
+              <button
+                className="w-full px-3 py-2 text-left text-[12px] text-[var(--color-text-default)] hover:bg-[var(--color-surface-subtle)] transition-colors"
+                onClick={() => {
+                  setIsOpen(false);
+                  onCreateYaml();
+                }}
+              >
+                Create as YAML
+              </button>
+            </div>
+          </>,
+          document.body
+        )}
     </div>
   );
 }
@@ -228,12 +226,7 @@ export function ContainerHPAPage() {
       width: columnWidths.status,
       align: 'center',
       sortable: false,
-      render: (value) => (
-        <StatusIndicator
-          status={getStatusType(value)}
-          showIcon
-        />
-      ),
+      render: (value) => <StatusIndicator status={getStatusType(value)} showIcon />,
     },
     {
       key: 'name',
@@ -241,11 +234,7 @@ export function ContainerHPAPage() {
       flex: 1,
       sortable: true,
       render: (value, row) => (
-        <TableLink
-          onClick={() => navigate(`/container/hpa/${row.id}`)}
-        >
-          {value}
-        </TableLink>
+        <TableLink onClick={() => navigate(`/container/hpa/${row.id}`)}>{value}</TableLink>
       ),
     },
     {
@@ -318,7 +307,11 @@ export function ContainerHPAPage() {
           <div onClick={(e) => e.stopPropagation()}>
             <ContextMenu items={menuItems} trigger="click">
               <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
-                <IconDotsCircleHorizontal size={16} stroke={1.5} className="text-[var(--action-icon-color)]" />
+                <IconDotsCircleHorizontal
+                  size={16}
+                  stroke={1.5}
+                  className="text-[var(--action-icon-color)]"
+                />
               </button>
             </ContextMenu>
           </div>
@@ -355,7 +348,7 @@ export function ContainerHPAPage() {
       >
         {/* TabBar */}
         <TabBar
-          tabs={tabs.map(tab => ({ id: tab.id, label: tab.label, closable: tab.closable }))}
+          tabs={tabs.map((tab) => ({ id: tab.id, label: tab.label, closable: tab.closable }))}
           activeTab={activeTabId}
           onTabChange={selectTab}
           onTabClose={closeTab}
@@ -380,7 +373,7 @@ export function ContainerHPAPage() {
           }
           actions={
             <>
-              <button 
+              <button
                 className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
                 onClick={() => {
                   if (shellPanel.isExpanded) {
@@ -390,7 +383,15 @@ export function ContainerHPAPage() {
                   }
                 }}
               >
-                <IconTerminal2 size={16} className={shellPanel.isExpanded ? "text-[var(--color-action-primary)]" : "text-[var(--color-text-muted)]"} stroke={1.5} />
+                <IconTerminal2
+                  size={16}
+                  className={
+                    shellPanel.isExpanded
+                      ? 'text-[var(--color-action-primary)]'
+                      : 'text-[var(--color-text-muted)]'
+                  }
+                  stroke={1.5}
+                />
               </button>
               <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
                 <IconFile size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
@@ -409,7 +410,7 @@ export function ContainerHPAPage() {
         />
 
         {/* Page Content */}
-        <div 
+        <div
           className="flex-1 overflow-y-auto overflow-x-hidden min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll"
           style={{ paddingBottom: shellPanel.isExpanded ? 'var(--shell-panel-height)' : '0' }}
         >
@@ -440,7 +441,12 @@ export function ContainerHPAPage() {
                     size="sm"
                     className="w-[var(--search-input-width)]"
                   />
-                  <Button variant="secondary" size="sm" aria-label="Download" className="!p-0 !w-7 !h-7 !min-w-7">
+                  <Button
+                    variant="secondary"
+                    size="sm"
+                    aria-label="Download"
+                    className="!p-0 !w-7 !h-7 !min-w-7"
+                  >
                     <IconDownload size={14} stroke={1.5} />
                   </Button>
                 </HStack>

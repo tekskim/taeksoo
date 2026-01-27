@@ -107,9 +107,11 @@ export function Tooltip({
   // Arrow position styles based on tooltip position
   const arrowStyles: Record<TooltipPosition, string> = {
     top: 'bottom-0 left-1/2 -translate-x-1/2 translate-y-full border-l-transparent border-r-transparent border-b-transparent border-t-[var(--tooltip-bg)]',
-    bottom: 'top-0 left-1/2 -translate-x-1/2 -translate-y-full border-l-transparent border-r-transparent border-t-transparent border-b-[var(--tooltip-bg)]',
+    bottom:
+      'top-0 left-1/2 -translate-x-1/2 -translate-y-full border-l-transparent border-r-transparent border-t-transparent border-b-[var(--tooltip-bg)]',
     left: 'right-0 top-1/2 translate-x-full -translate-y-1/2 border-t-transparent border-b-transparent border-r-transparent border-l-[var(--tooltip-bg)]',
-    right: 'left-0 top-1/2 -translate-x-full -translate-y-1/2 border-t-transparent border-b-transparent border-l-transparent border-r-[var(--tooltip-bg)]',
+    right:
+      'left-0 top-1/2 -translate-x-full -translate-y-1/2 border-t-transparent border-b-transparent border-l-transparent border-r-[var(--tooltip-bg)]',
   };
 
   return (
@@ -131,8 +133,8 @@ export function Tooltip({
             ref={tooltipRef}
             role="tooltip"
             className="fixed z-[var(--z-tooltip)] pointer-events-none transition-opacity duration-[var(--duration-fast)]"
-            style={{ 
-              left: coords.x, 
+            style={{
+              left: coords.x,
               top: coords.y,
               opacity: isPositioned ? 1 : 0,
             }}

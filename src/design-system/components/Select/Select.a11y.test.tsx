@@ -20,11 +20,7 @@ describe('Select Accessibility', () => {
 
   it('should have no accessibility violations with helper text', async () => {
     const { container } = render(
-      <Select
-        label="Country"
-        options={options}
-        helperText="Choose your country"
-      />
+      <Select label="Country" options={options} helperText="Choose your country" />
     );
     const results = await axe(container);
     expect(results).toHaveNoViolations();
@@ -32,28 +28,20 @@ describe('Select Accessibility', () => {
 
   it('should have no accessibility violations with error', async () => {
     const { container } = render(
-      <Select
-        label="Country"
-        options={options}
-        error="Please select a country"
-      />
+      <Select label="Country" options={options} error="Please select a country" />
     );
     const results = await axe(container);
     expect(results).toHaveNoViolations();
   });
 
   it('should have no accessibility violations when disabled', async () => {
-    const { container } = render(
-      <Select label="Country" options={options} disabled />
-    );
+    const { container } = render(<Select label="Country" options={options} disabled />);
     const results = await axe(container);
     expect(results).toHaveNoViolations();
   });
 
   it('should have no accessibility violations when required', async () => {
-    const { container } = render(
-      <Select label="Country" options={options} required />
-    );
+    const { container } = render(<Select label="Country" options={options} required />);
     const results = await axe(container);
     expect(results).toHaveNoViolations();
   });

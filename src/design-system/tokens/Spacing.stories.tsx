@@ -40,10 +40,7 @@ const SpacingSample = ({ name, value }: { name: string; value: string }) => (
       <div className="font-mono text-sm">{name}</div>
       <div className="text-xs text-[var(--color-text-muted)]">{value}</div>
     </div>
-    <div 
-      className="bg-[var(--color-action-primary)] h-4"
-      style={{ width: `var(${name})` }}
-    />
+    <div className="bg-[var(--color-action-primary)] h-4" style={{ width: `var(${name})` }} />
   </div>
 );
 
@@ -119,7 +116,7 @@ export const ComponentSpacing: Story = {
   render: () => (
     <div className="flex flex-col gap-6">
       <h3 className="text-sm font-semibold">Common Component Spacing</h3>
-      
+
       <div>
         <h4 className="text-xs font-medium text-[var(--color-text-muted)] mb-2">Button Padding</h4>
         <table className="w-full text-sm">
@@ -151,7 +148,9 @@ export const ComponentSpacing: Story = {
       </div>
 
       <div>
-        <h4 className="text-xs font-medium text-[var(--color-text-muted)] mb-2">Input/Select Width</h4>
+        <h4 className="text-xs font-medium text-[var(--color-text-muted)] mb-2">
+          Input/Select Width
+        </h4>
         <table className="w-full text-sm">
           <thead>
             <tr className="border-b border-[var(--color-border-default)]">

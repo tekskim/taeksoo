@@ -1,10 +1,5 @@
 import { useState, useEffect } from 'react';
-import { 
-  Drawer, 
-  Button, 
-  Input,
-  Toggle,
-} from '@/design-system';
+import { Drawer, Button, Input, Toggle } from '@/design-system';
 import { HStack, VStack } from '@/design-system/layouts';
 
 /* ----------------------------------------
@@ -77,15 +72,11 @@ export function EditUserDrawer({
       showCloseButton={false}
       footer={
         <HStack gap={2} className="w-full">
-          <Button 
-            variant="secondary" 
-            onClick={handleClose}
-            className="flex-1 h-8"
-          >
+          <Button variant="secondary" onClick={handleClose} className="flex-1 h-8">
             Cancel
           </Button>
-          <Button 
-            variant="primary" 
+          <Button
+            variant="primary"
             onClick={handleSubmit}
             disabled={isSubmitting || !email.trim()}
             className="flex-1 h-8"
@@ -168,10 +159,7 @@ export function EditUserDrawer({
             Select the user's status. If 'Disabled', the user will be prevented from signing in.
           </p>
           <HStack gap={2} align="center">
-            <Toggle
-              checked={enabled}
-              onChange={(checked) => setEnabled(checked)}
-            />
+            <Toggle checked={enabled} onChange={(checked) => setEnabled(checked)} />
             <span className="text-[12px] text-[var(--color-text-default)] leading-4">
               {enabled ? 'Enabled' : 'Disabled'}
             </span>

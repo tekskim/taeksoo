@@ -100,22 +100,11 @@ export const WindowControls: React.FC<WindowControlsProps> = ({
 }) => {
   return (
     <div className={`flex items-center gap-[var(--window-control-gap)] ${className}`}>
-      {showMinimize && (
-        <WindowControl type="minimize" onClick={onMinimize} disabled={disabled} />
-      )}
-      {showMaximize && (
-        <WindowControl type="maximize" onClick={onMaximize} disabled={disabled} />
-      )}
-      {showClose && (
-        <WindowControl type="close" onClick={onClose} disabled={disabled} />
-      )}
+      {showMinimize && <WindowControl type="minimize" onClick={onMinimize} disabled={disabled} />}
+      {showMaximize && <WindowControl type="maximize" onClick={onMaximize} disabled={disabled} />}
+      {showClose && <WindowControl type="close" onClick={onClose} disabled={disabled} />}
     </div>
   );
 };
 
 export default WindowControl;
-
-
-
-
-

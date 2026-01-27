@@ -16,7 +16,6 @@ import {
   Table,
   SearchInput,
   Pagination,
-  StatusIndicator,
   ContextMenu,
   columnWidths,
 } from '@/design-system';
@@ -28,7 +27,6 @@ import {
   IconEdit,
   IconTrash,
   IconBell,
-  IconCopy,
   IconCirclePlus,
   IconDotsCircleHorizontal,
 } from '@tabler/icons-react';
@@ -116,7 +114,9 @@ const mockL7Rules: L7Rule[] = Array.from({ length: 25 }, (_, i) => ({
   name: `rule-${String(i + 1).padStart(2, '0')}`,
   status: ['active', 'active', 'down', 'error'][i % 4] as L7RuleStatus,
   type: ['HOST_NAME', 'PATH', 'FILE_TYPE', 'HEADER', 'COOKIE'][i % 5] as L7Rule['type'],
-  compareType: ['STARTS_WITH', 'ENDS_WITH', 'CONTAINS', 'EQUAL_TO', 'REGEX'][i % 5] as L7Rule['compareType'],
+  compareType: ['STARTS_WITH', 'ENDS_WITH', 'CONTAINS', 'EQUAL_TO', 'REGEX'][
+    i % 5
+  ] as L7Rule['compareType'],
   value: i % 2 === 0 ? '/api/*' : 'www.example.com',
   key: i % 3 === 0 ? 'X-Custom-Header' : null,
   invert: i % 4 === 0,
@@ -145,8 +145,9 @@ const l7RuleStatusMap: Record<L7RuleStatus, 'active' | 'building' | 'error'> = {
 
 export default function L7PolicyDetailPage() {
   const { id } = useParams<{ id: string }>();
-  const { tabs, activeTabId, closeTab, selectTab, addNewTab, updateActiveTabLabel, moveTab } = useTabs();
-  
+  const { tabs, activeTabId, closeTab, selectTab, addNewTab, updateActiveTabLabel, moveTab } =
+    useTabs();
+
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [activeDetailTab, setActiveDetailTab] = useState('details');
   const [copiedId, setCopiedId] = useState(false);
@@ -173,13 +174,16 @@ export default function L7PolicyDetailPage() {
   const breadcrumbItems = [
     { label: 'Proj-1', href: '/' },
     { label: 'Load balancers', href: '/compute/load-balancers' },
-    { label: l7Policy.listener?.loadBalancer?.name || 'Unknown', href: `/load-balancers/${l7Policy.listener?.loadBalancer?.id}` },
+    {
+      label: l7Policy.listener?.loadBalancer?.name || 'Unknown',
+      href: `/load-balancers/${l7Policy.listener?.loadBalancer?.id}`,
+    },
     { label: l7Policy.listener?.name || 'Unknown', href: `/listeners/${l7Policy.listener?.id}` },
     { label: l7Policy.name },
   ];
 
   // Convert tabs to TabBar format
-  const tabBarTabs = tabs.map(tab => ({
+  const tabBarTabs = tabs.map((tab) => ({
     id: tab.id,
     label: tab.label,
     closable: tab.closable,
@@ -193,10 +197,11 @@ export default function L7PolicyDetailPage() {
 
   // Filtered L7 rules
   const filteredL7Rules = l7RuleSearchTerm
-    ? mockL7Rules.filter(rule =>
-        rule.name.toLowerCase().includes(l7RuleSearchTerm.toLowerCase()) ||
-        rule.type.toLowerCase().includes(l7RuleSearchTerm.toLowerCase()) ||
-        rule.value.toLowerCase().includes(l7RuleSearchTerm.toLowerCase())
+    ? mockL7Rules.filter(
+        (rule) =>
+          rule.name.toLowerCase().includes(l7RuleSearchTerm.toLowerCase()) ||
+          rule.type.toLowerCase().includes(l7RuleSearchTerm.toLowerCase()) ||
+          rule.value.toLowerCase().includes(l7RuleSearchTerm.toLowerCase())
       )
     : mockL7Rules;
 
@@ -238,7 +243,7 @@ export default function L7PolicyDetailPage() {
       key: 'invert',
       label: 'Invert',
       flex: 1,
-      render: (_, row) => row.invert ? 'On' : 'Off',
+      render: (_, row) => (row.invert ? 'On' : 'Off'),
     },
     {
       key: 'adminState',
@@ -253,13 +258,22 @@ export default function L7PolicyDetailPage() {
       render: (_: unknown, row: L7Rule) => {
         const ruleMenuItems: ContextMenuItem[] = [
           { id: 'edit', label: 'Edit', onClick: () => console.log('Edit rule', row.id) },
-          { id: 'delete', label: 'Delete', status: 'danger', onClick: () => console.log('Delete rule', row.id) },
+          {
+            id: 'delete',
+            label: 'Delete',
+            status: 'danger',
+            onClick: () => console.log('Delete rule', row.id),
+          },
         ];
         return (
           <div onClick={(e) => e.stopPropagation()}>
             <ContextMenu items={ruleMenuItems} trigger="click">
               <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
-                <IconDotsCircleHorizontal size={16} stroke={1.5} className="text-[var(--action-icon-color)]" />
+                <IconDotsCircleHorizontal
+                  size={16}
+                  stroke={1.5}
+                  className="text-[var(--action-icon-color)]"
+                />
               </button>
             </ContextMenu>
           </div>
@@ -346,14 +360,8 @@ export default function L7PolicyDetailPage() {
                     copyable
                     onCopy={handleCopyId}
                   />
-                  <DetailHeader.InfoCard
-                    label="Admin state"
-                    value={l7Policy.adminState}
-                  />
-                  <DetailHeader.InfoCard
-                    label="Created at"
-                    value={l7Policy.createdAt}
-                  />
+                  <DetailHeader.InfoCard label="Admin state" value={l7Policy.adminState} />
+                  <DetailHeader.InfoCard label="Created at" value={l7Policy.createdAt} />
                 </DetailHeader.InfoGrid>
               </DetailHeader>
 
@@ -391,7 +399,9 @@ export default function L7PolicyDetailPage() {
                                 >
                                   {l7Policy.behaviorDetail.name}
                                 </Link>
-                              ) : '-'
+                              ) : (
+                                '-'
+                              )
                             }
                           />
                           <SectionCard.DataRow label="Position" value={String(l7Policy.position)} />
@@ -409,7 +419,11 @@ export default function L7PolicyDetailPage() {
                         <h3 className="text-[16px] font-semibold text-[var(--color-text-default)]">
                           L7 Rules
                         </h3>
-                        <Button variant="secondary" size="sm" leftIcon={<IconCirclePlus size={12} />}>
+                        <Button
+                          variant="secondary"
+                          size="sm"
+                          leftIcon={<IconCirclePlus size={12} />}
+                        >
                           Create L7 Rule
                         </Button>
                       </div>
@@ -438,15 +452,13 @@ export default function L7PolicyDetailPage() {
                       </div>
 
                       {/* Pagination */}
-                        <Pagination
-                          currentPage={l7RuleCurrentPage}
-                          totalPages={totalL7RulePages}
-                          onPageChange={setL7RuleCurrentPage}
+                      <Pagination
+                        currentPage={l7RuleCurrentPage}
+                        totalPages={totalL7RulePages}
+                        onPageChange={setL7RuleCurrentPage}
                         totalItems={filteredL7Rules.length}
                         selectedCount={selectedL7Rules.length}
-                        showSettings
-                        onSettingsClick={() => setIsPreferencesOpen(true)}
-                        />
+                      />
 
                       {/* Table */}
                       <Table
@@ -468,4 +480,3 @@ export default function L7PolicyDetailPage() {
     </div>
   );
 }
-

@@ -109,16 +109,16 @@ export const TabBar: React.FC<TabBarProps> = ({
   const handleDrop = (e: React.DragEvent, targetTabId: string) => {
     e.preventDefault();
     setDragOverTabId(null);
-    
+
     if (!draggedTabId || !onTabReorder) return;
-    
-    const fromIndex = tabs.findIndex(t => t.id === draggedTabId);
-    const toIndex = tabs.findIndex(t => t.id === targetTabId);
-    
+
+    const fromIndex = tabs.findIndex((t) => t.id === draggedTabId);
+    const toIndex = tabs.findIndex((t) => t.id === targetTabId);
+
     if (fromIndex !== -1 && toIndex !== -1 && fromIndex !== toIndex) {
       onTabReorder(fromIndex, toIndex);
     }
-    
+
     setDraggedTabId(null);
   };
 
@@ -173,9 +173,10 @@ export const TabBar: React.FC<TabBarProps> = ({
                 cursor-pointer
                 transition-colors duration-[var(--duration-fast)]
                 border-r border-[var(--color-border-subtle)]
-                ${isActive
-                  ? 'bg-[var(--color-surface-default)]'
-                  : 'bg-[var(--color-surface-subtle)] hover:bg-[var(--color-surface-muted)]'
+                ${
+                  isActive
+                    ? 'bg-[var(--color-surface-default)]'
+                    : 'bg-[var(--color-surface-subtle)] hover:bg-[var(--color-surface-muted)]'
                 }
                 ${isDragging ? 'opacity-50' : ''}
                 ${isDragOver ? 'border-l-2 border-l-[var(--color-action-primary)]' : ''}
@@ -183,16 +184,16 @@ export const TabBar: React.FC<TabBarProps> = ({
             >
               {/* Active indicator */}
               {isActive && (
-                <div 
-                  className="absolute bottom-0 left-0 right-0 h-[2px] bg-[var(--color-action-primary)] z-20"
-                />
+                <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-[var(--color-action-primary)] z-20" />
               )}
               {/* Icon */}
               {tab.icon && (
-                <span className={`
+                <span
+                  className={`
                   shrink-0
                   ${isActive ? 'text-[var(--color-text-default)]' : 'text-[var(--color-text-muted)]'}
-                `}>
+                `}
+                >
                   {tab.icon}
                 </span>
               )}
@@ -205,9 +206,8 @@ export const TabBar: React.FC<TabBarProps> = ({
                   text-[length:var(--tabbar-font-size)]
                   leading-[var(--tabbar-line-height)]
                   font-medium
-                  ${isActive
-                    ? 'text-[var(--color-text-default)]'
-                    : 'text-[var(--color-text-muted)]'
+                  ${
+                    isActive ? 'text-[var(--color-text-default)]' : 'text-[var(--color-text-muted)]'
                   }
                 `}
               >
@@ -225,9 +225,10 @@ export const TabBar: React.FC<TabBarProps> = ({
                     flex items-center justify-center
                     rounded-[var(--radius-sm)]
                     transition-all duration-[var(--duration-fast)]
-                    ${isActive
-                      ? 'text-[var(--color-text-muted)] hover:text-[var(--color-text-default)] hover:bg-[var(--color-surface-muted)]'
-                      : 'opacity-0 group-hover:opacity-100 text-[var(--color-text-muted)] hover:text-[var(--color-text-default)] hover:bg-[var(--color-border-default)]'
+                    ${
+                      isActive
+                        ? 'text-[var(--color-text-muted)] hover:text-[var(--color-text-default)] hover:bg-[var(--color-surface-muted)]'
+                        : 'opacity-0 group-hover:opacity-100 text-[var(--color-text-muted)] hover:text-[var(--color-text-default)] hover:bg-[var(--color-border-default)]'
                     }
                   `}
                   aria-label={`Close ${tab.label}`}
@@ -336,23 +337,18 @@ export interface UseTabBarOptions {
 }
 
 export function useTabBar(options: UseTabBarOptions = {}) {
-  const {
-    initialTabs = [],
-    initialActiveTab,
-    onCreateTab,
-  } = options;
+  const { initialTabs = [], initialActiveTab, onCreateTab } = options;
 
   const [tabs, setTabs] = useState<TabBarItem[]>(initialTabs);
-  const [activeTab, setActiveTab] = useState<string>(
-    initialActiveTab || initialTabs[0]?.id || ''
-  );
+  const [activeTab, setActiveTab] = useState<string>(initialActiveTab || initialTabs[0]?.id || '');
 
   const addTab = (tab?: TabBarItem) => {
-    const newTab = tab || onCreateTab?.() || {
-      id: `tab-${Date.now()}`,
-      label: `New Tab`,
-      closable: true,
-    };
+    const newTab = tab ||
+      onCreateTab?.() || {
+        id: `tab-${Date.now()}`,
+        label: `New Tab`,
+        closable: true,
+      };
     setTabs((prev) => [...prev, newTab]);
     setActiveTab(newTab.id);
     return newTab;
@@ -361,14 +357,14 @@ export function useTabBar(options: UseTabBarOptions = {}) {
   const closeTab = (tabId: string) => {
     setTabs((prev) => {
       const newTabs = prev.filter((t) => t.id !== tabId);
-      
+
       // If closing active tab, switch to adjacent tab
       if (activeTab === tabId && newTabs.length > 0) {
         const closedIndex = prev.findIndex((t) => t.id === tabId);
         const newActiveIndex = Math.min(closedIndex, newTabs.length - 1);
         setActiveTab(newTabs[newActiveIndex].id);
       }
-      
+
       return newTabs;
     });
   };
@@ -388,4 +384,3 @@ export function useTabBar(options: UseTabBarOptions = {}) {
 }
 
 export default TabBar;
-

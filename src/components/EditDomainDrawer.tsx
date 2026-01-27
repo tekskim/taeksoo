@@ -1,10 +1,5 @@
 import { useState, useEffect } from 'react';
-import { 
-  Drawer, 
-  Button, 
-  Input,
-  Toggle,
-} from '@/design-system';
+import { Drawer, Button, Input, Toggle } from '@/design-system';
 import { HStack, VStack } from '@/design-system/layouts';
 
 /* ----------------------------------------
@@ -56,7 +51,7 @@ export function EditDomainDrawer({
     if (!name.trim()) {
       return;
     }
-    
+
     setIsSubmitting(true);
     try {
       await onSubmit?.({
@@ -89,15 +84,11 @@ export function EditDomainDrawer({
       width={376}
       footer={
         <HStack gap={2} justify="center" className="w-full">
-          <Button 
-            variant="secondary" 
-            onClick={handleClose}
-            className="flex-1 h-8"
-          >
+          <Button variant="secondary" onClick={handleClose} className="flex-1 h-8">
             Cancel
           </Button>
-          <Button 
-            variant="primary" 
+          <Button
+            variant="primary"
             onClick={handleSubmit}
             disabled={isSubmitting || !isNameValid || !isDescriptionValid}
             className="flex-1 h-8"
@@ -135,7 +126,8 @@ export function EditDomainDrawer({
             fullWidth
           />
           <p className="text-[11px] text-[var(--color-text-subtle)] leading-4">
-            You can use letters, numbers, and special characters (+=,.@-_), and the length must be between 2-128 characters.
+            You can use letters, numbers, and special characters (+=,.@-_), and the length must be
+            between 2-128 characters.
           </p>
         </VStack>
 
@@ -151,7 +143,8 @@ export function EditDomainDrawer({
             fullWidth
           />
           <p className="text-[11px] text-[var(--color-text-subtle)] leading-4">
-            You can use letters, numbers, and special characters (+=,.@-_()[]), and maximum 255 characters.
+            You can use letters, numbers, and special characters (+=,.@-_()[]), and maximum 255
+            characters.
           </p>
         </VStack>
 
@@ -161,13 +154,11 @@ export function EditDomainDrawer({
             Status
           </span>
           <p className="text-[12px] text-[var(--color-text-subtle)] leading-4">
-            Select the domain's status. If 'disabled', users in this domain will not be able to sign in.
+            Select the domain's status. If 'disabled', users in this domain will not be able to sign
+            in.
           </p>
           <HStack gap={2} align="center">
-            <Toggle
-              checked={enabled}
-              onChange={setEnabled}
-            />
+            <Toggle checked={enabled} onChange={setEnabled} />
             <span className="text-[12px] text-[var(--color-text-default)] leading-4">
               {enabled ? 'Enabled' : 'Disabled'}
             </span>

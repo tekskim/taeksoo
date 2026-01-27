@@ -1,7 +1,7 @@
 import { useState } from 'react';
-import { 
-  Drawer, 
-  Button, 
+import {
+  Drawer,
+  Button,
   Radio,
   Tabs,
   TabList,
@@ -55,7 +55,12 @@ export interface ResizeInstanceDrawerProps {
   instance: InstanceInfo;
   flavors?: FlavorItem[];
   quota?: QuotaInfo;
-  onResize?: (targetFlavorId: string, approvalMethod: 'manual' | 'auto', autoConfirmMinutes?: number, autoConfirmAction?: string) => void;
+  onResize?: (
+    targetFlavorId: string,
+    approvalMethod: 'manual' | 'auto',
+    autoConfirmMinutes?: number,
+    autoConfirmAction?: string
+  ) => void;
 }
 
 /* ----------------------------------------
@@ -109,7 +114,7 @@ export function ResizeInstanceDrawer({
     currentPage * ITEMS_PER_PAGE
   );
 
-  const selectedFlavor = flavors.find(f => f.id === selectedFlavorId);
+  const selectedFlavor = flavors.find((f) => f.id === selectedFlavorId);
 
   const handleResize = async () => {
     setHasAttemptedSubmit(true);
@@ -158,17 +163,21 @@ export function ResizeInstanceDrawer({
             {/* vCPU Quota */}
             <VStack gap={2} className="w-full">
               <HStack justify="space-between" className="w-full">
-                <span className="text-[14px] font-medium text-[var(--color-text-default)]">vCPU Quota</span>
-                <span className="text-[12px] text-[var(--color-text-default)]">{quota.vcpu.used}/{quota.vcpu.total}</span>
+                <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+                  vCPU Quota
+                </span>
+                <span className="text-[12px] text-[var(--color-text-default)]">
+                  {quota.vcpu.used}/{quota.vcpu.total}
+                </span>
               </HStack>
               <div className="w-full h-1 flex pr-1">
-                <div 
-                  className="h-1 rounded-lg bg-[var(--color-state-success)] z-[3] -mr-1" 
-                  style={{ width: `${vcpuUsedPercent}%` }} 
+                <div
+                  className="h-1 rounded-lg bg-[var(--color-state-success)] z-[3] -mr-1"
+                  style={{ width: `${vcpuUsedPercent}%` }}
                 />
-                <div 
-                  className="h-1 rounded-lg bg-green-200 z-[2] -mr-1" 
-                  style={{ width: `${vcpuUsedPercent}%` }} 
+                <div
+                  className="h-1 rounded-lg bg-green-200 z-[2] -mr-1"
+                  style={{ width: `${vcpuUsedPercent}%` }}
                 />
                 <div className="flex-1 h-1 rounded-lg bg-[var(--color-border-subtle)] z-[1]" />
               </div>
@@ -177,17 +186,21 @@ export function ResizeInstanceDrawer({
             {/* RAM Quota */}
             <VStack gap={2} className="w-full">
               <HStack justify="space-between" className="w-full">
-                <span className="text-[14px] font-medium text-[var(--color-text-default)]">RAM Quota (GiB)</span>
-                <span className="text-[12px] text-[var(--color-text-default)]">{quota.ram.used}/{quota.ram.total}</span>
+                <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+                  RAM Quota (GiB)
+                </span>
+                <span className="text-[12px] text-[var(--color-text-default)]">
+                  {quota.ram.used}/{quota.ram.total}
+                </span>
               </HStack>
               <div className="w-full h-1 flex pr-1">
-                <div 
-                  className="h-1 rounded-lg bg-[var(--color-state-success)] z-[3] -mr-1" 
-                  style={{ width: `${ramUsedPercent}%` }} 
+                <div
+                  className="h-1 rounded-lg bg-[var(--color-state-success)] z-[3] -mr-1"
+                  style={{ width: `${ramUsedPercent}%` }}
                 />
-                <div 
-                  className="h-1 rounded-lg bg-green-200 z-[2] -mr-1" 
-                  style={{ width: `${ramUsedPercent}%` }} 
+                <div
+                  className="h-1 rounded-lg bg-green-200 z-[2] -mr-1"
+                  style={{ width: `${ramUsedPercent}%` }}
                 />
                 <div className="flex-1 h-1 rounded-lg bg-[var(--color-border-subtle)] z-[1]" />
               </div>
@@ -196,15 +209,11 @@ export function ResizeInstanceDrawer({
 
           {/* Buttons */}
           <HStack gap={2} justify="center" className="w-full">
-            <Button 
-              variant="secondary" 
-              onClick={handleClose}
-              className="w-[152px] h-8"
-            >
+            <Button variant="secondary" onClick={handleClose} className="w-[152px] h-8">
               Cancel
             </Button>
-            <Button 
-              variant="primary" 
+            <Button
+              variant="primary"
               onClick={handleResize}
               disabled={isSubmitting}
               className="w-[152px] h-8"
@@ -229,9 +238,13 @@ export function ResizeInstanceDrawer({
 
           {/* Warning Message */}
           <div className="w-full p-3 bg-[var(--color-state-danger-bg)] rounded-lg flex gap-2 items-start">
-            <IconAlertCircle size={16} className="text-[var(--color-state-danger)] shrink-0 mt-0.5" />
+            <IconAlertCircle
+              size={16}
+              className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
+            />
             <p className="text-[11px] text-[var(--color-text-default)] leading-4">
-              The instance will be stopped and restarted automatically during resize. All running processes and connections will be interrupted.
+              The instance will be stopped and restarted automatically during resize. All running
+              processes and connections will be interrupted.
             </p>
           </div>
 
@@ -280,36 +293,81 @@ export function ResizeInstanceDrawer({
           {/* Flavor Table */}
           <div style={{ width: '648px', maxWidth: '648px' }}>
             {/* Header */}
-            <div style={{ display: 'flex', width: '648px', height: '40px' }} className="bg-[var(--color-border-subtle)] border border-[var(--color-border-default)] rounded-md">
-              <div style={{ width: '40px', flexShrink: 0 }} className="flex items-center justify-center" />
-              <div style={{ width: '120px', flexShrink: 0 }} className="flex items-center gap-1.5 px-3 border-l border-[var(--color-border-default)] cursor-pointer hover:text-[var(--color-action-primary)]">
-                <span className="text-[11px] font-medium text-[var(--color-text-default)]">Name</span>
+            <div
+              style={{ display: 'flex', width: '648px', height: '40px' }}
+              className="bg-[var(--color-border-subtle)] border border-[var(--color-border-default)] rounded-md"
+            >
+              <div
+                style={{ width: '40px', flexShrink: 0 }}
+                className="flex items-center justify-center"
+              />
+              <div
+                style={{ width: '120px', flexShrink: 0 }}
+                className="flex items-center gap-1.5 px-3 border-l border-[var(--color-border-default)] cursor-pointer hover:text-[var(--color-action-primary)]"
+              >
+                <span className="text-[11px] font-medium text-[var(--color-text-default)]">
+                  Name
+                </span>
                 <IconChevronDown size={12} className="text-[var(--color-text-default)]" />
               </div>
-              <div style={{ width: '80px', flexShrink: 0 }} className="flex items-center gap-1.5 px-3 border-l border-[var(--color-border-default)] cursor-pointer hover:text-[var(--color-action-primary)]">
-                <span className="text-[11px] font-medium text-[var(--color-text-default)]">vCPU</span>
+              <div
+                style={{ width: '80px', flexShrink: 0 }}
+                className="flex items-center gap-1.5 px-3 border-l border-[var(--color-border-default)] cursor-pointer hover:text-[var(--color-action-primary)]"
+              >
+                <span className="text-[11px] font-medium text-[var(--color-text-default)]">
+                  vCPU
+                </span>
                 <IconChevronDown size={12} className="text-[var(--color-text-default)]" />
               </div>
-              <div style={{ width: '80px', flexShrink: 0 }} className="flex items-center gap-1.5 px-3 border-l border-[var(--color-border-default)] cursor-pointer hover:text-[var(--color-action-primary)]">
-                <span className="text-[11px] font-medium text-[var(--color-text-default)]">RAM</span>
+              <div
+                style={{ width: '80px', flexShrink: 0 }}
+                className="flex items-center gap-1.5 px-3 border-l border-[var(--color-border-default)] cursor-pointer hover:text-[var(--color-action-primary)]"
+              >
+                <span className="text-[11px] font-medium text-[var(--color-text-default)]">
+                  RAM
+                </span>
                 <IconChevronDown size={12} className="text-[var(--color-text-default)]" />
               </div>
-              <div style={{ width: '80px', flexShrink: 0 }} className="flex items-center gap-1.5 px-3 border-l border-[var(--color-border-default)] cursor-pointer hover:text-[var(--color-action-primary)]">
-                <span className="text-[11px] font-medium text-[var(--color-text-default)]">Disk</span>
+              <div
+                style={{ width: '80px', flexShrink: 0 }}
+                className="flex items-center gap-1.5 px-3 border-l border-[var(--color-border-default)] cursor-pointer hover:text-[var(--color-action-primary)]"
+              >
+                <span className="text-[11px] font-medium text-[var(--color-text-default)]">
+                  Disk
+                </span>
                 <IconChevronDown size={12} className="text-[var(--color-text-default)]" />
               </div>
-              <div style={{ width: '108px', flexShrink: 0 }} className="flex items-center gap-1.5 px-3 border-l border-[var(--color-border-default)] cursor-pointer hover:text-[var(--color-action-primary)]">
-                <span className="text-[11px] font-medium text-[var(--color-text-default)]">Ephemeral Disk</span>
+              <div
+                style={{ width: '108px', flexShrink: 0 }}
+                className="flex items-center gap-1.5 px-3 border-l border-[var(--color-border-default)] cursor-pointer hover:text-[var(--color-action-primary)]"
+              >
+                <span className="text-[11px] font-medium text-[var(--color-text-default)]">
+                  Ephemeral Disk
+                </span>
                 <IconChevronDown size={12} className="text-[var(--color-text-default)]" />
               </div>
-              <div style={{ width: '140px', flexShrink: 0 }} className="flex items-center gap-1.5 px-3 border-l border-[var(--color-border-default)] cursor-pointer hover:text-[var(--color-action-primary)]">
-                <span className="text-[11px] font-medium text-[var(--color-text-default)]">Internal Network Bandwidth</span>
+              <div
+                style={{ width: '140px', flexShrink: 0 }}
+                className="flex items-center gap-1.5 px-3 border-l border-[var(--color-border-default)] cursor-pointer hover:text-[var(--color-action-primary)]"
+              >
+                <span className="text-[11px] font-medium text-[var(--color-text-default)]">
+                  Internal Network Bandwidth
+                </span>
                 <IconChevronDown size={12} className="text-[var(--color-text-default)]" />
               </div>
             </div>
 
             {/* Body */}
-            <div style={{ width: '648px', maxWidth: '648px', marginTop: '4px', display: 'flex', flexDirection: 'column', gap: '4px' }}>
+            <div
+              style={{
+                width: '648px',
+                maxWidth: '648px',
+                marginTop: '4px',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '4px',
+              }}
+            >
               {paginatedFlavors.map((flavor) => (
                 <div
                   key={flavor.id}
@@ -321,7 +379,10 @@ export function ResizeInstanceDrawer({
                       : 'bg-[var(--color-surface-default)] border-[var(--color-border-default)] hover:bg-[var(--table-row-hover-bg)]'
                   }`}
                 >
-                  <div style={{ width: '40px', flexShrink: 0 }} className="flex items-center justify-center">
+                  <div
+                    style={{ width: '40px', flexShrink: 0 }}
+                    className="flex items-center justify-center"
+                  >
                     <Radio
                       name="flavor-select"
                       value={flavor.id}
@@ -329,27 +390,62 @@ export function ResizeInstanceDrawer({
                       onChange={() => setSelectedFlavorId(flavor.id)}
                     />
                   </div>
-                  <div style={{ width: '120px', flexShrink: 0 }} className="flex flex-col justify-center px-3 py-2 overflow-hidden">
+                  <div
+                    style={{ width: '120px', flexShrink: 0 }}
+                    className="flex flex-col justify-center px-3 py-2 overflow-hidden"
+                  >
                     <div className="flex items-center gap-1.5">
-                      <span className="text-[12px] font-medium text-[var(--color-action-primary)] truncate">{flavor.name}</span>
-                      <IconExternalLink size={12} className="shrink-0 text-[var(--color-action-primary)]" />
+                      <span className="text-[12px] font-medium text-[var(--color-action-primary)] truncate">
+                        {flavor.name}
+                      </span>
+                      <IconExternalLink
+                        size={12}
+                        className="shrink-0 text-[var(--color-action-primary)]"
+                      />
                     </div>
-                    <span className="text-[11px] text-[var(--color-text-subtle)] truncate">ID : 17kfj123</span>
+                    <span className="text-[11px] text-[var(--color-text-subtle)] truncate">
+                      ID : 17kfj123
+                    </span>
                   </div>
-                  <div style={{ width: '80px', flexShrink: 0 }} className="flex items-center px-3 py-2 overflow-hidden">
-                    <span className="text-[12px] text-[var(--color-text-default)] truncate">{flavor.vcpu}</span>
+                  <div
+                    style={{ width: '80px', flexShrink: 0 }}
+                    className="flex items-center px-3 py-2 overflow-hidden"
+                  >
+                    <span className="text-[12px] text-[var(--color-text-default)] truncate">
+                      {flavor.vcpu}
+                    </span>
                   </div>
-                  <div style={{ width: '80px', flexShrink: 0 }} className="flex items-center px-3 py-2 overflow-hidden">
-                    <span className="text-[12px] text-[var(--color-text-default)] truncate">{flavor.ram}</span>
+                  <div
+                    style={{ width: '80px', flexShrink: 0 }}
+                    className="flex items-center px-3 py-2 overflow-hidden"
+                  >
+                    <span className="text-[12px] text-[var(--color-text-default)] truncate">
+                      {flavor.ram}
+                    </span>
                   </div>
-                  <div style={{ width: '80px', flexShrink: 0 }} className="flex items-center px-3 py-2 overflow-hidden">
-                    <span className="text-[12px] text-[var(--color-text-default)] truncate">{flavor.disk}</span>
+                  <div
+                    style={{ width: '80px', flexShrink: 0 }}
+                    className="flex items-center px-3 py-2 overflow-hidden"
+                  >
+                    <span className="text-[12px] text-[var(--color-text-default)] truncate">
+                      {flavor.disk}
+                    </span>
                   </div>
-                  <div style={{ width: '108px', flexShrink: 0 }} className="flex items-center px-3 py-2 overflow-hidden">
-                    <span className="text-[12px] text-[var(--color-text-default)] truncate">{flavor.ephemeralDisk}</span>
+                  <div
+                    style={{ width: '108px', flexShrink: 0 }}
+                    className="flex items-center px-3 py-2 overflow-hidden"
+                  >
+                    <span className="text-[12px] text-[var(--color-text-default)] truncate">
+                      {flavor.ephemeralDisk}
+                    </span>
                   </div>
-                  <div style={{ width: '140px', flexShrink: 0 }} className="flex items-center px-3 py-2 overflow-hidden">
-                    <span className="text-[12px] text-[var(--color-text-default)] truncate">{flavor.internalBandwidth}</span>
+                  <div
+                    style={{ width: '140px', flexShrink: 0 }}
+                    className="flex items-center px-3 py-2 overflow-hidden"
+                  >
+                    <span className="text-[12px] text-[var(--color-text-default)] truncate">
+                      {flavor.internalBandwidth}
+                    </span>
                   </div>
                 </div>
               ))}
@@ -359,7 +455,16 @@ export function ResizeInstanceDrawer({
           {/* Selection Indicator */}
           <SelectionIndicator
             style={{ width: '648px' }}
-            selectedItems={selectedFlavorId ? [{ id: selectedFlavorId, label: flavors.find(f => f.id === selectedFlavorId)?.name || '' }] : []}
+            selectedItems={
+              selectedFlavorId
+                ? [
+                    {
+                      id: selectedFlavorId,
+                      label: flavors.find((f) => f.id === selectedFlavorId)?.name || '',
+                    },
+                  ]
+                : []
+            }
             onRemove={() => setSelectedFlavorId(null)}
             emptyText="No item selected"
             error={!selectedFlavorId && hasAttemptedSubmit}
@@ -369,104 +474,215 @@ export function ResizeInstanceDrawer({
 
         {/* Flavor Comparison Section */}
         <VStack gap={3}>
-          <span className="text-[14px] font-medium text-[var(--color-text-default)]">Flavor Comparison</span>
+          <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+            Flavor Comparison
+          </span>
 
           {/* Comparison Table */}
           <div style={{ width: '648px', maxWidth: '648px' }}>
             {/* Header */}
-            <div style={{ display: 'flex', width: '648px', height: '40px' }} className="bg-[var(--color-border-subtle)] border border-[var(--color-border-default)] rounded-md">
-              <div style={{ width: '90px', flexShrink: 0 }} className="flex items-center justify-start px-3">
-                <span className="text-[11px] font-medium text-[var(--color-text-default)] text-left">Comparison</span>
+            <div
+              style={{ display: 'flex', width: '648px', height: '40px' }}
+              className="bg-[var(--color-border-subtle)] border border-[var(--color-border-default)] rounded-md"
+            >
+              <div
+                style={{ width: '90px', flexShrink: 0 }}
+                className="flex items-center justify-start px-3"
+              >
+                <span className="text-[11px] font-medium text-[var(--color-text-default)] text-left">
+                  Comparison
+                </span>
               </div>
-              <div style={{ width: '90px', flexShrink: 0 }} className="flex items-center px-3 border-l border-[var(--color-border-default)]">
-                <span className="text-[11px] font-medium text-[var(--color-text-default)]">Name</span>
+              <div
+                style={{ width: '90px', flexShrink: 0 }}
+                className="flex items-center px-3 border-l border-[var(--color-border-default)]"
+              >
+                <span className="text-[11px] font-medium text-[var(--color-text-default)]">
+                  Name
+                </span>
               </div>
-              <div style={{ width: '65px', flexShrink: 0 }} className="flex items-center px-3 border-l border-[var(--color-border-default)]">
-                <span className="text-[11px] font-medium text-[var(--color-text-default)]">vCPU</span>
+              <div
+                style={{ width: '65px', flexShrink: 0 }}
+                className="flex items-center px-3 border-l border-[var(--color-border-default)]"
+              >
+                <span className="text-[11px] font-medium text-[var(--color-text-default)]">
+                  vCPU
+                </span>
               </div>
-              <div style={{ width: '65px', flexShrink: 0 }} className="flex items-center px-3 border-l border-[var(--color-border-default)]">
-                <span className="text-[11px] font-medium text-[var(--color-text-default)]">RAM</span>
+              <div
+                style={{ width: '65px', flexShrink: 0 }}
+                className="flex items-center px-3 border-l border-[var(--color-border-default)]"
+              >
+                <span className="text-[11px] font-medium text-[var(--color-text-default)]">
+                  RAM
+                </span>
               </div>
-              <div style={{ width: '65px', flexShrink: 0 }} className="flex items-center px-3 border-l border-[var(--color-border-default)]">
-                <span className="text-[11px] font-medium text-[var(--color-text-default)]">Disk</span>
+              <div
+                style={{ width: '65px', flexShrink: 0 }}
+                className="flex items-center px-3 border-l border-[var(--color-border-default)]"
+              >
+                <span className="text-[11px] font-medium text-[var(--color-text-default)]">
+                  Disk
+                </span>
               </div>
-              <div style={{ width: '95px', flexShrink: 0 }} className="flex items-center px-3 border-l border-[var(--color-border-default)]">
-                <span className="text-[11px] font-medium text-[var(--color-text-default)]">Ephemeral Disk</span>
+              <div
+                style={{ width: '95px', flexShrink: 0 }}
+                className="flex items-center px-3 border-l border-[var(--color-border-default)]"
+              >
+                <span className="text-[11px] font-medium text-[var(--color-text-default)]">
+                  Ephemeral Disk
+                </span>
               </div>
-              <div style={{ width: '65px', flexShrink: 0 }} className="flex items-center px-3 border-l border-[var(--color-border-default)]">
-                <span className="text-[11px] font-medium text-[var(--color-text-default)]">GPU</span>
+              <div
+                style={{ width: '65px', flexShrink: 0 }}
+                className="flex items-center px-3 border-l border-[var(--color-border-default)]"
+              >
+                <span className="text-[11px] font-medium text-[var(--color-text-default)]">
+                  GPU
+                </span>
               </div>
-              <div style={{ width: '113px', flexShrink: 0 }} className="flex items-center px-3 border-l border-[var(--color-border-default)]">
-                <span className="text-[11px] font-medium text-[var(--color-text-default)]">NPU</span>
+              <div
+                style={{ width: '113px', flexShrink: 0 }}
+                className="flex items-center px-3 border-l border-[var(--color-border-default)]"
+              >
+                <span className="text-[11px] font-medium text-[var(--color-text-default)]">
+                  NPU
+                </span>
               </div>
             </div>
 
             {/* Current Flavor Row */}
-            <div style={{ display: 'flex', width: '648px', minHeight: '40px', marginTop: '4px' }} className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-md">
-              <div style={{ width: '90px', flexShrink: 0 }} className="flex items-center justify-start px-3 py-2">
-                <span className="text-[12px] text-[var(--color-text-default)] text-left">Current<br/>flavor</span>
+            <div
+              style={{ display: 'flex', width: '648px', minHeight: '40px', marginTop: '4px' }}
+              className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-md"
+            >
+              <div
+                style={{ width: '90px', flexShrink: 0 }}
+                className="flex items-center justify-start px-3 py-2"
+              >
+                <span className="text-[12px] text-[var(--color-text-default)] text-left">
+                  Current
+                  <br />
+                  flavor
+                </span>
               </div>
-              <div style={{ width: '90px', flexShrink: 0 }} className="flex flex-col justify-center px-3 py-2 overflow-hidden">
+              <div
+                style={{ width: '90px', flexShrink: 0 }}
+                className="flex flex-col justify-center px-3 py-2 overflow-hidden"
+              >
                 <div className="flex items-center gap-1.5">
-                  <span className="text-[12px] font-medium text-[var(--color-action-primary)] truncate">{instance.currentFlavor.name}</span>
-                  <IconExternalLink size={12} className="shrink-0 text-[var(--color-action-primary)]" />
+                  <span className="text-[12px] font-medium text-[var(--color-action-primary)] truncate">
+                    {instance.currentFlavor.name}
+                  </span>
+                  <IconExternalLink
+                    size={12}
+                    className="shrink-0 text-[var(--color-action-primary)]"
+                  />
                 </div>
-                <span className="text-[11px] text-[var(--color-text-subtle)] truncate">ID : 90jkl567</span>
+                <span className="text-[11px] text-[var(--color-text-subtle)] truncate">
+                  ID : 90jkl567
+                </span>
               </div>
               <div style={{ width: '65px', flexShrink: 0 }} className="flex items-center px-3 py-2">
-                <span className="text-[12px] text-[var(--color-text-default)]">{instance.currentFlavor.vcpu}</span>
+                <span className="text-[12px] text-[var(--color-text-default)]">
+                  {instance.currentFlavor.vcpu}
+                </span>
               </div>
               <div style={{ width: '65px', flexShrink: 0 }} className="flex items-center px-3 py-2">
-                <span className="text-[12px] text-[var(--color-text-default)]">{instance.currentFlavor.ram}</span>
+                <span className="text-[12px] text-[var(--color-text-default)]">
+                  {instance.currentFlavor.ram}
+                </span>
               </div>
               <div style={{ width: '65px', flexShrink: 0 }} className="flex items-center px-3 py-2">
-                <span className="text-[12px] text-[var(--color-text-default)]">{instance.currentFlavor.disk}</span>
+                <span className="text-[12px] text-[var(--color-text-default)]">
+                  {instance.currentFlavor.disk}
+                </span>
               </div>
               <div style={{ width: '95px', flexShrink: 0 }} className="flex items-center px-3 py-2">
-                <span className="text-[12px] text-[var(--color-text-default)]">{instance.currentFlavor.ephemeralDisk}</span>
+                <span className="text-[12px] text-[var(--color-text-default)]">
+                  {instance.currentFlavor.ephemeralDisk}
+                </span>
               </div>
               <div style={{ width: '65px', flexShrink: 0 }} className="flex items-center px-3 py-2">
-                <span className="text-[12px] text-[var(--color-text-default)]">{instance.currentFlavor.gpu}</span>
+                <span className="text-[12px] text-[var(--color-text-default)]">
+                  {instance.currentFlavor.gpu}
+                </span>
               </div>
-              <div style={{ width: '113px', flexShrink: 0 }} className="flex items-center px-3 py-2">
-                <span className="text-[12px] text-[var(--color-text-default)]">{instance.currentFlavor.npu}</span>
+              <div
+                style={{ width: '113px', flexShrink: 0 }}
+                className="flex items-center px-3 py-2"
+              >
+                <span className="text-[12px] text-[var(--color-text-default)]">
+                  {instance.currentFlavor.npu}
+                </span>
               </div>
             </div>
 
             {/* Target Flavor Row */}
-            <div style={{ display: 'flex', width: '648px', minHeight: '40px', marginTop: '4px' }} className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-md">
-              <div style={{ width: '90px', flexShrink: 0 }} className="flex items-center justify-start px-3 py-2">
-                <span className="text-[12px] text-[var(--color-text-default)] text-left">Target<br/>flavor</span>
+            <div
+              style={{ display: 'flex', width: '648px', minHeight: '40px', marginTop: '4px' }}
+              className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-md"
+            >
+              <div
+                style={{ width: '90px', flexShrink: 0 }}
+                className="flex items-center justify-start px-3 py-2"
+              >
+                <span className="text-[12px] text-[var(--color-text-default)] text-left">
+                  Target
+                  <br />
+                  flavor
+                </span>
               </div>
-              <div style={{ width: '90px', flexShrink: 0 }} className="flex flex-col justify-center px-3 py-2 overflow-hidden">
+              <div
+                style={{ width: '90px', flexShrink: 0 }}
+                className="flex flex-col justify-center px-3 py-2 overflow-hidden"
+              >
                 {selectedFlavor ? (
                   <>
                     <div className="flex items-center gap-1.5">
-                      <span className="text-[12px] font-medium text-[var(--color-action-primary)] truncate">{selectedFlavor.name}</span>
-                      <IconExternalLink size={12} className="shrink-0 text-[var(--color-action-primary)]" />
+                      <span className="text-[12px] font-medium text-[var(--color-action-primary)] truncate">
+                        {selectedFlavor.name}
+                      </span>
+                      <IconExternalLink
+                        size={12}
+                        className="shrink-0 text-[var(--color-action-primary)]"
+                      />
                     </div>
-                    <span className="text-[11px] text-[var(--color-text-subtle)] truncate">ID : 90jkl567</span>
+                    <span className="text-[11px] text-[var(--color-text-subtle)] truncate">
+                      ID : 90jkl567
+                    </span>
                   </>
                 ) : (
                   <span className="text-[12px] text-[var(--color-text-subtle)]">-</span>
                 )}
               </div>
               <div style={{ width: '65px', flexShrink: 0 }} className="flex items-center px-3 py-2">
-                <span className="text-[12px] text-[var(--color-text-default)]">{selectedFlavor?.vcpu ?? '-'}</span>
+                <span className="text-[12px] text-[var(--color-text-default)]">
+                  {selectedFlavor?.vcpu ?? '-'}
+                </span>
               </div>
               <div style={{ width: '65px', flexShrink: 0 }} className="flex items-center px-3 py-2">
-                <span className="text-[12px] text-[var(--color-text-default)]">{selectedFlavor?.ram ?? '-'}</span>
+                <span className="text-[12px] text-[var(--color-text-default)]">
+                  {selectedFlavor?.ram ?? '-'}
+                </span>
               </div>
               <div style={{ width: '65px', flexShrink: 0 }} className="flex items-center px-3 py-2">
-                <span className="text-[12px] text-[var(--color-text-default)]">{selectedFlavor?.disk ?? '-'}</span>
+                <span className="text-[12px] text-[var(--color-text-default)]">
+                  {selectedFlavor?.disk ?? '-'}
+                </span>
               </div>
               <div style={{ width: '95px', flexShrink: 0 }} className="flex items-center px-3 py-2">
-                <span className="text-[12px] text-[var(--color-text-default)]">{selectedFlavor?.ephemeralDisk ?? '-'}</span>
+                <span className="text-[12px] text-[var(--color-text-default)]">
+                  {selectedFlavor?.ephemeralDisk ?? '-'}
+                </span>
               </div>
               <div style={{ width: '65px', flexShrink: 0 }} className="flex items-center px-3 py-2">
                 <span className="text-[12px] text-[var(--color-text-default)]">-</span>
               </div>
-              <div style={{ width: '113px', flexShrink: 0 }} className="flex items-center px-3 py-2">
+              <div
+                style={{ width: '113px', flexShrink: 0 }}
+                className="flex items-center px-3 py-2"
+              >
                 <span className="text-[12px] text-[var(--color-text-default)]">-</span>
               </div>
             </div>
@@ -475,8 +691,10 @@ export function ResizeInstanceDrawer({
 
         {/* Approval Method Section */}
         <VStack gap={3} className="pb-5">
-          <span className="text-[14px] font-medium text-[var(--color-text-default)]">Approval Method</span>
-          
+          <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+            Approval Method
+          </span>
+
           <VStack gap={3}>
             {/* Manual confirm option */}
             <Radio
@@ -504,7 +722,9 @@ export function ResizeInstanceDrawer({
           {approvalMethod === 'auto' && (
             <div className="w-full px-4 py-2 border border-[var(--color-border-default)] rounded-md flex items-center gap-6">
               <HStack gap={1.5} align="center">
-                <span className="text-[14px] font-medium text-[var(--color-text-default)]">After</span>
+                <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+                  After
+                </span>
                 <NumberInput
                   value={autoConfirmMinutes}
                   onChange={setAutoConfirmMinutes}
