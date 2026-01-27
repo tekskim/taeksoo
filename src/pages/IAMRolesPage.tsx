@@ -234,7 +234,7 @@ export default function IAMRolesPage() {
     {
       key: 'description',
       label: 'Description',
-      width: columnWidths.description,
+      flex: 1,
     },
     {
       key: 'scope',

@@ -378,7 +378,7 @@ export function ServerGroupDetailPage() {
     {
       key: 'createdAt',
       label: 'Created at',
-      flex: 1,
+      width: columnWidths.createdAt,
       sortable: true,
       render: (value) => <span>{value}</span>,
     },

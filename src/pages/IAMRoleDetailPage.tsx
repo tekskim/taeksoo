@@ -534,7 +534,7 @@ export default function IAMRoleDetailPage() {
     {
       key: 'createdAt',
       label: 'Created at',
-      flex: 1,
+      width: columnWidths.createdAt,
       sortable: true,
     },
   ];
@@ -569,7 +569,7 @@ export default function IAMRoleDetailPage() {
     {
       key: 'createdAt',
       label: 'Created at',
-      flex: 1,
+      width: columnWidths.createdAt,
       sortable: true,
     },
   ];

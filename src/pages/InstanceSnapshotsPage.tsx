@@ -418,7 +418,7 @@ export function InstanceSnapshotsPage() {
     {
       key: 'description',
       label: 'Description',
-      width: columnWidths.description,
+      flex: 1,
     },
     {
       key: 'createdAt',
