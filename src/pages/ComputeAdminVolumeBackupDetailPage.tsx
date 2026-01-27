@@ -22,7 +22,6 @@ import {
   IconEdit,
   IconBell,
   IconExternalLink,
-  IconRestore,
 } from '@tabler/icons-react';
 
 /* ----------------------------------------
@@ -310,10 +309,10 @@ export function ComputeAdminVolumeBackupDetailPage() {
                 <DetailHeader.Title>{backup.name}</DetailHeader.Title>
                 <DetailHeader.Actions>
                   <Button variant="secondary" size="sm" leftIcon={<IconCirclePlus size={12} />}>
-                    Create volume
+                    Update status
                   </Button>
-                  <Button variant="secondary" size="sm" leftIcon={<IconRestore size={12} />}>
-                    Restore backup
+                  <Button variant="secondary" size="sm" leftIcon={<IconCirclePlus size={12} />}>
+                    Manage metadata
                   </Button>
                   <Button variant="secondary" size="sm" leftIcon={<IconTrash size={12} />}>
                     Delete
@@ -326,6 +325,7 @@ export function ComputeAdminVolumeBackupDetailPage() {
                     status={statusIndicatorMap[backup.status]}
                   />
                   <DetailHeader.InfoCard label="ID" value={backup.id} copyable />
+                  <DetailHeader.InfoCard label="Tenant" value="tenantA" />
                   <DetailHeader.InfoCard label="Size" value={backup.size} />
                   <DetailHeader.InfoCard label="Created at" value={backup.createdAt} />
                 </DetailHeader.InfoGrid>
@@ -388,6 +388,7 @@ export function ComputeAdminVolumeBackupDetailPage() {
                       <SectionCard>
                         <SectionCard.Header title="Specifications" />
                         <SectionCard.Content>
+                          <SectionCard.DataRow label="Backup Mode" value="Full Backup" />
                           <SectionCard.DataRow label="Size" value={backup.size} />
                         </SectionCard.Content>
                       </SectionCard>
